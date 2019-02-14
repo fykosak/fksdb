@@ -1,15 +1,16 @@
-$(document).ready(function() {
+$(document).ready(function () {
     var linkFormat = '/submit/download/%d';
+
     function createDownloadLink(taskData) {
         var el = $('<a>');
-        el.attr('class', 'btn btn-xs btn-default');
+        el.attr('class', 'btn btn-sm btn-secondary');
         el.attr('href', linkFormat.replace('%d', taskData.submit_id));
         el.text('Download ' + taskData.task.label);
         return el;
     }
 
     function createDatetime(taskData, dataEl, data) {
-        var el = $('<input type="text">');
+        var el = $('<input type="text" class="form-control form-control-sm">');
         el.attr('placeholder', 'Úloha ' + taskData.task.label);
 
         //el.attr('class', 'inboxField');
@@ -18,7 +19,7 @@ $(document).ready(function() {
         if (taskData) {
             alt.val(taskData.submitted_on);
         }
-        el.change(function() {
+        el.change(function () {
             if (!el.val()) {
                 taskData.submitted_on = null;
             } else {
@@ -52,11 +53,11 @@ $(document).ready(function() {
     }
 
     $("input.inbox").submitFields({
-        createElements: function(taskData, allData, dataEl, containerEl) {
+        createElements: function (taskData, allData, dataEl, containerEl) {
             var substEl = createElement(taskData, dataEl, allData);
 
             var li = $('<li>');
-            li.addClass('inbox-field');
+            li.addClass('inbox-field col');
             if (!taskData || !taskData.submit_id || taskData.source === 'upload') {
                 li.addClass('swappable');
             }
@@ -66,46 +67,12 @@ $(document).ready(function() {
 
 
         },
-        initContainer: function(containerEl, ctId) {
+        initContainer: function (containerEl, ctId) {
             var list = $('<ul>');
-            list.attr('class', 'inbox-swappable');
+            list.attr('class', 'inbox-swappable row');
             list.data('contestant', ctId);
             containerEl.append(list);
             return list;
         }
     });
-    $('ul.inbox-swappable').swappable({
-        items: '.swappable',
-        cursorAt: {top: -5},
-        update: function(event, ui) {
-            var item = ui.item;
-            var container = item.parent();
-            var dataEl = container.parent().children('input.inbox');
-            var fingerprintEl = $('input[name="__fp"]');
-            var ctId = container.data('contestant');
-
-            var order = $(this).swappable('toArray');
-
-            var data = {order: order, ctId: ctId};
-            $.post('?do=swapSubmits', data, function(response) {
-                for (var tasknr in response.data) {
-                    // refresh content of li-s one by one
-                    var taskData = response.data[tasknr];
-                    var li = container.children('li:nth-child(' + tasknr + ')');
-                    li.empty();
-                    var innerElement = createElement(taskData, dataEl, response.data);
-                    li.append(innerElement);
-                    // update fingerprint
-                    fingerprintEl.val(response.fingerprint);
-                }
-                console.log('DONE');
-            }).fail(function() {
-                alert('Error :-(');
-                window.location.reload();
-            });
-        }
-    });
-
-
 });
-

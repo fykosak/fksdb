@@ -2,8 +2,9 @@
 
 namespace Submits;
 
-use ModelContest;
-use ModelSubmit;
+use FKSDB\ORM\ModelContest;
+use FKSDB\ORM\ModelContestant;
+use FKSDB\ORM\ModelSubmit;
 use Nette\Database\Table\Selection;
 use ServiceContestant;
 use ServiceSubmit;
@@ -11,9 +12,9 @@ use ServiceTask;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @todo Prominent example for necessity of caching.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class SeriesTable {
@@ -57,62 +58,94 @@ class SeriesTable {
      */
     private $taskFilter;
 
+    /**
+     * SeriesTable constructor.
+     * @param ServiceContestant $serviceContestant
+     * @param ServiceTask $serviceTask
+     * @param ServiceSubmit $serviceSubmit
+     */
     function __construct(ServiceContestant $serviceContestant, ServiceTask $serviceTask, ServiceSubmit $serviceSubmit) {
         $this->serviceContestant = $serviceContestant;
         $this->serviceTask = $serviceTask;
         $this->serviceSubmit = $serviceSubmit;
     }
 
+    /**
+     * @return ModelContest
+     */
     public function getContest() {
         return $this->contest;
     }
 
+    /**
+     * @param ModelContest $contest
+     */
     public function setContest(ModelContest $contest) {
         $this->contest = $contest;
     }
 
+    /**
+     * @return int
+     */
     public function getYear() {
         return $this->year;
     }
 
+    /**
+     * @param $year
+     */
     public function setYear($year) {
         $this->year = $year;
     }
 
+    /**
+     * @return int
+     */
     public function getSeries() {
         return $this->series;
     }
 
+    /**
+     * @param $series
+     */
     public function setSeries($series) {
         $this->series = $series;
     }
 
+    /**
+     * @return array|null
+     */
     public function getTaskFilter() {
         return $this->taskFilter;
     }
 
+    /**
+     * @param $taskFilter
+     */
     public function setTaskFilter($taskFilter) {
         $this->taskFilter = $taskFilter;
     }
 
     /**
-     * @param int $series when not null return only contestants with submits in the series
      * @return Selection
      */
-    public function getContestants($series = null) {
-        return $this->serviceContestant->getTable()->where(array(
-                    'contest_id' => $this->getContest()->contest_id,
-                    'year' => $this->getYear(),
-                ))->order('person.family_name, person.other_name, person.person_id');
+    public function getContestants(): Selection {
+        return $this->serviceContestant->getTable()->where([
+            'contest_id' => $this->getContest()->contest_id,
+            'year' => $this->getYear(),
+        ])->order('person.family_name, person.other_name, person.person_id');
         //TODO series
     }
 
-    public function getTasks() {
-        $tasks = $this->serviceTask->getTable()->where(array(
+    /**
+     * @return Selection
+     */
+    public function getTasks(): Selection {
+        $tasks = $this->serviceTask->getTable()->where([
             'contest_id' => $this->getContest()->contest_id,
             'year' => $this->getYear(),
             'series' => $this->getSeries(),
-        ));
+        ]);
 
         if ($this->getTaskFilter() !== null) {
             $tasks->where('task_id', $this->getTaskFilter());
@@ -120,22 +153,22 @@ class SeriesTable {
         return $tasks->order('tasknr');
     }
 
-    public function getSubmitsTable($ctId = null, $task = null) {
+    /**
+     * @return array
+     */
+    public function getSubmitsTable(): array {
         $submits = $this->serviceSubmit->getTable()
-                ->where('ct_id', $this->getContestants())
-                ->where('task_id', $this->getTasks());
+            ->where('ct_id', $this->getContestants())
+            ->where('task_id', $this->getTasks());
 
         // store submits in 2D hash for better access
-        $submitsTable = array();
-        foreach ($submits as $submit) {
+        $submitsTable = [];
+        foreach ($submits as $row) {
+            $submit = ModelSubmit::createFromTableRow($row);
             if (!isset($submitsTable[$submit->ct_id])) {
-                $submitsTable[$submit->ct_id] = array();
+                $submitsTable[$submit->ct_id] = [];
             }
-            $submitsTable[$submit->ct_id][$submit->task_id] = ModelSubmit::createFromTableRow($submit);
-        }
-
-        if ($ctId !== null) {
-            return $submitsTable[$ctId];
+            $submitsTable[$submit->ct_id][$submit->task_id] = $submit;
         }
         return $submitsTable;
     }
@@ -146,18 +179,19 @@ class SeriesTable {
     public function formatAsFormValues() {
         $submitsTable = $this->getSubmitsTable();
         $contestants = $this->getContestants();
-        $result = array();
-        foreach ($contestants as $contestant) {
+        $result = [];
+        foreach ($contestants as $contestantRow) {
+            $contestant = ModelContestant::createFromTableRow($contestantRow);
             $ctId = $contestant->ct_id;
             if (isset($submitsTable[$ctId])) {
-                $result[$ctId] = array(self::FORM_SUBMIT => $submitsTable[$ctId]);
+                $result[$ctId] = [self::FORM_SUBMIT => $submitsTable[$ctId]];
             } else {
-                $result[$ctId] = array(self::FORM_SUBMIT => null);
+                $result[$ctId] = [self::FORM_SUBMIT => null];
             }
         }
-        return array(
+        return [
             self::FORM_CONTESTANT => $result
-        );
+        ];
     }
 
     /**
@@ -167,6 +201,9 @@ class SeriesTable {
         $fingerprint = '';
         foreach ($this->getSubmitsTable() as $submits) {
             foreach ($submits as $submit) {
+                /**
+                 * @var ModelSubmit $submit
+                 */
                 $fingerprint .= $submit->getFingerprint();
             }
         }

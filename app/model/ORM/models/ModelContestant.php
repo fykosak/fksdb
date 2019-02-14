@@ -1,31 +1,41 @@
 <?php
 
+namespace FKSDB\ORM;
+
+use AbstractModelSingle;
+use Nette\Database\Table\ActiveRow;
 use Nette\Security\IResource;
 
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @property ActiveRow person
+ * @property ActiveRow contest
+ * @property int ct_id
+ * @property int contest_id
+ * @property int year
  */
 class ModelContestant extends AbstractModelSingle implements IResource {
-
     /**
      * @return ModelPerson
      */
-    public function getPerson() {
-        //$data = $this->getTable()->getConnection()->table(DbNames::TAB_PERSON)->where('person_id = ?', $this->person_id)->fetch();
+    public function getPerson(): ModelPerson {
         $data = $this->person;
         return ModelPerson::createFromTableRow($data);
     }
-    
+
     /**
      * @return ModelContest
      */
-    public function getContest() {
+    public function getContest(): ModelContest {
         $data = $this->contest;
         return ModelContest::createFromTableRow($data);
     }
 
-    public function getResourceId() {
+    /**
+     * @return string
+     */
+    public function getResourceId(): string {
         return 'contestant';
     }
 

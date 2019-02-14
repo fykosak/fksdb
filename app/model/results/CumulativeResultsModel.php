@@ -16,11 +16,12 @@ class CumulativeResultsModel extends AbstractResultsModel {
      * Cache
      * @var array
      */
-    private $dataColumns = array();
+    private $dataColumns = [];
 
     /**
      * Definition of header.
-     * 
+     *
+     * @param ModelCategory $category
      * @return array
      */
     public function getDataColumns($category) {
@@ -29,7 +30,7 @@ class CumulativeResultsModel extends AbstractResultsModel {
         }
 
         if (!isset($this->dataColumns[$category->id])) {
-            $dataColumns = array();
+            $dataColumns = [];
             $sum = 0;
             foreach ($this->getSeries() as $series) {
                 // sum points as sum of tasks
@@ -37,7 +38,7 @@ class CumulativeResultsModel extends AbstractResultsModel {
                 foreach ($this->getTasks($series) as $task) {
                     $points += $this->evaluationStrategy->getTaskPoints($task, $category);
                 }
-            
+
                 $dataColumns[] = array(
                     self::COL_DEF_LABEL => $series,
                     self::COL_DEF_LIMIT => $points,
@@ -60,27 +61,40 @@ class CumulativeResultsModel extends AbstractResultsModel {
         return $this->dataColumns[$category->id];
     }
 
+    /**
+     * @return array|mixed
+     */
     public function getSeries() {
         return $this->series;
     }
 
+    /**
+     * @param mixed $series
+     */
     public function setSeries($series) {
         $this->dataColumns = null;
         $this->series = $series;
         // invalidate cache of columns
-        $this->dataColumns = array();
+        $this->dataColumns = [];
     }
 
+    /**
+     * @return array
+     */
     public function getCategories() {
         return $this->evaluationStrategy->getCategories();
     }
 
+    /**
+     * @param $category
+     * @return mixed|string
+     */
     protected function composeQuery($category) {
         if (!$this->series) {
             throw new \Nette\InvalidStateException('Series not set.');
         }
 
-        $select = array();
+        $select = [];
         $select[] = "IF(p.display_name IS NULL, CONCAT(p.other_name, ' ', p.family_name), p.display_name) AS `" . self::DATA_NAME . "`";
         $select[] = "sch.name_abbrev AS `" . self::DATA_SCHOOL . "`";
 
@@ -127,4 +141,4 @@ left join submit s ON s.task_id = t.task_id AND s.ct_id = ct.ct_id";
 
 }
 
-?>
+

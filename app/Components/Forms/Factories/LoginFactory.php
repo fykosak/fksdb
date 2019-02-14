@@ -8,7 +8,7 @@ use Nette\Forms\ControlGroup;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class LoginFactory {
@@ -22,9 +22,12 @@ class LoginFactory {
     const REQUIRE_PASSWORD = 0x8;
 
     /**
-     * @param type $options
+     * @param int $options
+     * @param ControlGroup|null $group
+     * @param null $loginRule
+     * @return ModelContainer
      */
-    public function createLogin($options = 0, ControlGroup $group = null, $loginRule = null) {
+    public function createLogin($options = 0, ControlGroup $group = null, $loginRule = null): ModelContainer {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
 
@@ -43,14 +46,14 @@ class LoginFactory {
 
             if ($options & self::VERIFY_OLD_PASSWORD) {
                 $newPwd->addConditionOn($container['old_password'], Form::FILLED)
-                        ->addRule(Form::FILLED, _("Je třeba nastavit nové heslo."));
+                    ->addRule(Form::FILLED, _("Je třeba nastavit nové heslo."));
             } else if ($options & self::REQUIRE_PASSWORD) {
                 $newPwd->addRule(Form::FILLED, _("Heslo nemůže být prázdné."));
             }
 
 
             $container->addPassword('password_verify', _('Heslo (ověření)'))
-                    ->addRule(Form::EQUAL, _('Zadaná hesla se neshodují.'), $newPwd);
+                ->addRule(Form::EQUAL, _('Zadaná hesla se neshodují.'), $newPwd);
         }
 
         if ($options & self::SHOW_ACTIVE) {

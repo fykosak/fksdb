@@ -1,5 +1,6 @@
 <?php
 
+use FKSDB\ORM\ModelContest;
 use Nette\Database\Connection;
 use Nette\Diagnostics\Debugger;
 use Nette\InvalidArgumentException;
@@ -23,13 +24,18 @@ class ResultsModelFactory extends Object implements IXMLNodeSerializer {
      */
     private $serviceTask;
 
+    /**
+     * ResultsModelFactory constructor.
+     * @param Connection $connection
+     * @param ServiceTask $serviceTask
+     */
     public function __construct(Connection $connection, ServiceTask $serviceTask) {
         $this->connection = $connection;
         $this->serviceTask = $serviceTask;
     }
 
     /**
-     * 
+     *
      * @param ModelContest $contest
      * @param int $year
      * @return IResultsModel
@@ -43,7 +49,7 @@ class ResultsModelFactory extends Object implements IXMLNodeSerializer {
     }
 
     /**
-     * 
+     *
      * @param ModelContest $contest
      * @param int $year
      * @return IResultsModel
@@ -57,7 +63,7 @@ class ResultsModelFactory extends Object implements IXMLNodeSerializer {
     }
 
     /**
-     * 
+     *
      * @param ModelContest $contest
      * @param int $year
      * @return IResultsModel
@@ -69,9 +75,9 @@ class ResultsModelFactory extends Object implements IXMLNodeSerializer {
         }
         return new BrojureResultsModel($contest, $this->serviceTask, $this->connection, $year, $evaluationStrategy);
     }
-    
+
     /**
-     * 
+     *
      * @param ModelContest $contest
      * @param int $year
      * @return IResultsModel
@@ -82,7 +88,7 @@ class ResultsModelFactory extends Object implements IXMLNodeSerializer {
     }
 
     /**
-     * 
+     *
      * @param ModelContest $contest
      * @param int $year
      * @return \IEvaluationStrategy|null
@@ -111,6 +117,14 @@ class ResultsModelFactory extends Object implements IXMLNodeSerializer {
         return null;
     }
 
+    /**
+     * @param $dataSource
+     * @param DOMNode $node
+     * @param DOMDocument $doc
+     * @param $format
+     * @return mixed|void
+     * @throws SoapFault
+     */
     public function fillNode($dataSource, DOMNode $node, DOMDocument $doc, $format) {
         if (!$dataSource instanceof IResultsModel) {
             throw new InvalidArgumentException('Expected IResultsModel, got ' . get_class($dataSource) . '.');
@@ -173,4 +187,4 @@ class ResultsModelFactory extends Object implements IXMLNodeSerializer {
 
 }
 
-?>
+

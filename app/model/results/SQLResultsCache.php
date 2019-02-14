@@ -1,5 +1,7 @@
 <?php
 
+use FKSDB\ORM\ModelContest;
+
 /**
  * Fill caclulated points into database.
  *
@@ -17,21 +19,26 @@ class SQLResultsCache {
      */
     private $serviceTask;
 
+    /**
+     * SQLResultsCache constructor.
+     * @param \Nette\Database\Connection $connection
+     * @param ServiceTask $serviceTask
+     */
     function __construct(\Nette\Database\Connection $connection, ServiceTask $serviceTask) {
         $this->connection = $connection;
         $this->serviceTask = $serviceTask;
     }
 
     /**
-     * 
+     *
      * @param ModelContest $contest
      * @param int $year
      */
     public function invalidate(ModelContest $contest = null, $year = null) {
-        $data = array(
+        $data = [
             'calc_points' => null,
-        );
-        $conditions = array('1 = 1');
+        ];
+        $conditions = ['1 = 1'];
         if ($contest !== null) {
             $conditions[] = 'contest_id = ' . $contest->contest_id;
         }
@@ -49,7 +56,7 @@ class SQLResultsCache {
     }
 
     /**
-     * 
+     *
      * @param ModelContest $contest
      * @param int $year
      */
@@ -60,15 +67,15 @@ class SQLResultsCache {
         }
 
         $tasks = $this->serviceTask->getTable()
-                ->where(array(
+                ->where([
             'contest_id' => $contest->contest_id,
             'year' => $year,
-        ));
+                ]);
 
 
         $this->connection->beginTransaction();
         foreach ($tasks as $task) {
-            $conditions = array();
+            $conditions = [];
             $conditions[] = 't.contest_id = ' . $contest->contest_id;
             $conditions[] = 't.year = ' . (int) $year;
             $conditions[] = 's.task_id = ' . $task->task_id;
@@ -89,4 +96,4 @@ class SQLResultsCache {
 
 }
 
-?>
+

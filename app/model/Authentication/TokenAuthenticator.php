@@ -2,8 +2,8 @@
 
 namespace Authentication;
 
-use ModelAuthToken;
-use ModelLogin;
+use FKSDB\ORM\ModelAuthToken;
+use FKSDB\ORM\ModelLogin;
 use Nette\Http\Session;
 use Nette\InvalidStateException;
 use Nette\Security\AuthenticationException;
@@ -29,6 +29,13 @@ class TokenAuthenticator extends AbstractAuthenticator {
      */
     private $session;
 
+    /**
+     * TokenAuthenticator constructor.
+     * @param ServiceAuthToken $authTokenService
+     * @param Session $session
+     * @param ServiceLogin $serviceLogin
+     * @param YearCalculator $yearCalculator
+     */
     function __construct(ServiceAuthToken $authTokenService, Session $session, ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
         parent::__construct($serviceLogin, $yearCalculator);
         $this->authTokenService = $authTokenService;
@@ -60,7 +67,7 @@ class TokenAuthenticator extends AbstractAuthenticator {
 
     /**
      * Get rid off token and user is no more authenticated by the token(?).
-     * 
+     *
      * @return void
      */
     public function disposeAuthToken() {
@@ -72,7 +79,7 @@ class TokenAuthenticator extends AbstractAuthenticator {
     }
 
     /**
-     * @param enum|null $tokenType  require specific token type
+     * @param string $tokenType  require specific token type
      * @return bool true iff user has been authenticated by the authentication token
      */
     public function isAuthenticatedByToken($tokenType = null) {
@@ -83,6 +90,9 @@ class TokenAuthenticator extends AbstractAuthenticator {
         return false;
     }
 
+    /**
+     * @return array
+     */
     public function getTokenData() {
         if (!$this->isAuthenticatedByToken()) {
             throw new InvalidStateException('Not authenticated by token.');
@@ -99,6 +109,9 @@ class TokenAuthenticator extends AbstractAuthenticator {
         unset($section->data);
     }
 
+    /**
+     * @param ModelAuthToken $token
+     */
     private function storeAuthToken(ModelAuthToken $token) {
         $section = $this->session->getSection(self::SESSION_NS);
         $section->token = $token->token;

@@ -1,5 +1,6 @@
 <?php
 
+use FKSDB\ORM\ModelRegion;
 use Nette\Diagnostics\Debugger;
 use Nette\InvalidArgumentException;
 use ORM\IModel;
@@ -12,8 +13,12 @@ class ServiceAddress extends AbstractServiceSingle {
     const PATTERN = '/[0-9]{5}/';
 
     protected $tableName = DbNames::TAB_ADDRESS;
-    protected $modelClassName = 'ModelAddress';
+    protected $modelClassName = 'FKSDB\ORM\ModelAddress';
 
+    /**
+     * @param IModel $model
+     * @return mixed|void
+     */
     public function save(IModel &$model) {
         if (!$model instanceof $this->modelClassName) {
             throw new InvalidArgumentException('Service for class ' . $this->modelClassName . ' cannot store ' . get_class($model));
@@ -25,7 +30,7 @@ class ServiceAddress extends AbstractServiceSingle {
     }
 
     /**
-     * 
+     *
      * @param string $postalCode
      * @return int
      * @throws InvalidPostalCode
@@ -49,9 +54,9 @@ class ServiceAddress extends AbstractServiceSingle {
             Debugger::log("Czechoslovak PSC not found '$postalCode'", Debugger::WARNING);
             $firstChar = substr($postalCode, 0, 1);
 
-            if (in_array($firstChar, array('1', '2', '3', '4', '5', '6', '7'))) {
+            if (in_array($firstChar, ['1', '2', '3', '4', '5', '6', '7'])) {
                 return ModelRegion::CZECH_REPUBLIC;
-            } else if (in_array($firstChar, array('8', '9', '0'))) {
+            } else if (in_array($firstChar, ['8', '9', '0'])) {
                 return ModelRegion::SLOVAKIA;
             } else {
                 throw new InvalidPostalCode($postalCode);
@@ -60,13 +65,13 @@ class ServiceAddress extends AbstractServiceSingle {
     }
 
     /**
-     * 
-     * @param strnig $postalCode
+     *
+     * @param string $postalCode
      * @return boolean
      */
-    public function tryInferRegion($postalCode) {
+    public function tryInferRegion($postalCode): bool {
         try {
-            $r = $this->inferRegion($postalCode);
+            $this->inferRegion($postalCode);
             return true;
         } catch (InvalidPostalCode $e) {
             return false;
@@ -74,12 +79,3 @@ class ServiceAddress extends AbstractServiceSingle {
     }
 
 }
-
-class InvalidPostalCode extends InvalidArgumentException {
-
-    public function __construct($postalCode, $code = null, $previous = null) {
-        parent::__construct("Invalid postal code '$postalCode'.", $code, $previous);
-    }
-
-}
-

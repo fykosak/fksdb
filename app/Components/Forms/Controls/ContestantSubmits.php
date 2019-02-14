@@ -2,22 +2,21 @@
 
 namespace FKSDB\Components\Forms\Controls;
 
-use FKS\Application\IJavaScriptCollector;
+use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Components\ClientDataTrait;
+use FKSDB\ORM\ModelContestant;
+use FKSDB\ORM\ModelSubmit;
 use FormUtils;
 use InvalidArgumentException;
-use ModelContestant;
-use ModelSubmit;
 use Nette\DateTime;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 use ServiceSubmit;
-use ServiceTaskStudyYear;
 use Traversable;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ContestantSubmits extends BaseControl {
@@ -25,7 +24,7 @@ class ContestantSubmits extends BaseControl {
     use ClientDataTrait;
 
     /**
-     * @var Traversable|array of ModelTask
+     * @var Traversable|array of FKSDB\ORM\ModelTask
      */
     private $tasks;
 
@@ -38,14 +37,8 @@ class ContestantSubmits extends BaseControl {
      * @var ServiceSubmit
      */
     private $submitService;
-
     /**
-     * @var ServiceTaskStudyYear
-     */
-    private $serviceTaskStudyYear;
-
-    /**
-     * @var ModelContestant
+     * @var \FKSDB\ORM\ModelContestant
      */
     private $contestant;
 
@@ -60,22 +53,26 @@ class ContestantSubmits extends BaseControl {
     private $className;
 
     /**
-     * 
+     *
      * @param Traversable|array $tasks
-     * @param \FKSDB\Components\Forms\Controls\ServiceSubmit $submitService
+     * @param ModelContestant $contestant
+     * @param ServiceSubmit $submitService
+     * @param $acYear
      * @param string|null $label
      */
-    function __construct($tasks, ModelContestant $contestant, ServiceSubmit $submitService, ServiceTaskStudyYear $serviceTaskStudyYear, $acYear, $label = null) {
+    function __construct($tasks, ModelContestant $contestant, ServiceSubmit $submitService, $acYear, $label = null) {
         parent::__construct($label);
-        $this->monitor('FKS\Application\IJavaScriptCollector');
+        $this->monitor('FKSDB\Application\IJavaScriptCollector');
 
         $this->setTasks($tasks);
         $this->submitService = $submitService;
         $this->contestant = $contestant;
-        $this->serviceTaskStudyYear = $serviceTaskStudyYear;
         $this->acYear = $acYear;
     }
 
+    /**
+     * @param $component
+     */
     protected function attached($component) {
         parent::attached($component);
         if ($component instanceof IJavaScriptCollector) {
@@ -83,21 +80,34 @@ class ContestantSubmits extends BaseControl {
         }
     }
 
+    /**
+     * @return string
+     */
     public function getClassName() {
         return $this->className;
     }
 
+    /**
+     * @param $className
+     */
     public function setClassName($className) {
         $this->className = $className;
     }
 
+    /**
+     * @param $tasks
+     */
     private function setTasks($tasks) {
-        $this->tasks = array();
+        $this->tasks = [];
         foreach ($tasks as $task) {
             $this->tasks[$task->tasknr] = $task;
         }
     }
 
+    /**
+     * @param $taskId
+     * @return mixed|null
+     */
     private function getTask($taskId) {
         foreach ($this->tasks as $task) {
             if ($task->task_id == $taskId) {
@@ -107,19 +117,11 @@ class ContestantSubmits extends BaseControl {
         return null;
     }
 
-    private function isTaskDisabled($taskId) {
+    /**
+     * @return bool
+     */
+    private function isTaskDisabled() {
         return false;
-        // TODO loading person history took too long, implement better study_year detection
-//        $history = $this->contestant->getPerson()->getHistory($this->acYear);
-//        $studyYear = ($history && isset($history->study_year)) ? $history->study_year : null;
-//        if ($studyYear === null) {
-//            return false;
-//        }
-//        $taskStudyYear = $this->serviceTaskStudyYear->findByPrimary(array(
-//            'task_id' => $taskId,
-//            'study_year' => $studyYear,
-//        ));
-//        return $taskStudyYear === null;
     }
 
     /**
@@ -139,19 +141,22 @@ class ContestantSubmits extends BaseControl {
         return $control;
     }
 
+    /**
+     * @return string
+     */
     public function getRawValue() {
         return $this->rawValue;
     }
 
     /**
-     * 
-     * @param array|Traversable|string $value of ModelTask
+     *
+     * @param array|Traversable|string $value of FKSDB\ORM\ModelTask
      * @return \FKSDB\Components\Forms\Controls\ContestantSubmits
      * @throws InvalidArgumentException
      */
     public function setValue($value) {
         if (!$value) {
-            $this->rawValue = $this->serializeValue(array());
+            $this->rawValue = $this->serializeValue([]);
             $this->value = $this->deserializeValue($this->rawValue);
         } else if (is_string($value)) {
             $this->rawValue = $value;
@@ -164,8 +169,12 @@ class ContestantSubmits extends BaseControl {
         return $this;
     }
 
+    /**
+     * @param $value
+     * @return false|string
+     */
     private function serializeValue($value) {
-        $result = array();
+        $result = [];
 
         foreach ($value as $submit) {
             if (!$submit) {
@@ -195,10 +204,14 @@ class ContestantSubmits extends BaseControl {
         return json_encode($result);
     }
 
+    /**
+     * @param $value
+     * @return array
+     */
     private function deserializeValue($value) {
         $value = json_decode($value, true);
 
-        $result = array();
+        $result = [];
 
         foreach ($value as $tasknr => $serializedSubmit) {
             if (!$serializedSubmit) {
@@ -211,17 +224,26 @@ class ContestantSubmits extends BaseControl {
         return $result;
     }
 
+    /**
+     * @param ModelSubmit $submit
+     * @return array
+     */
     private function serializeSubmit(ModelSubmit $submit) {
         $data = $submit->toArray();
         $format = $this->sourceToFormat($submit->source);
         $data['submitted_on'] = $data['submitted_on'] ? $data['submitted_on']->format($format) : null;
-        $data['task'] = array(
+        $data['task'] = [
             'label' => $this->getTask($submit->task_id)->label,
-            'disabled' => $this->isTaskDisabled($submit->task_id),
-        ); // ORM workaround
+            'disabled' => $this->isTaskDisabled(),
+        ]; // ORM workaround
         return $data;
     }
 
+    /**
+     * @param $data
+     * @param $tasknr
+     * @return \AbstractModelSingle|ModelSubmit|null
+     */
     private function deserializeSubmit($data, $tasknr) {
         unset($data['submit_id']); // security
         $data['ct_id'] = $this->contestant->ct_id; // security
@@ -243,9 +265,10 @@ class ContestantSubmits extends BaseControl {
 
     /**
      * Workaround to perform server-side conversion of dates.
-     * 
+     *
      * @todo Improve client side so that this is not needed anymore.
      * @param string $source
+     * @param bool $parse
      * @return string
      */
     private function sourceToFormat($source, $parse = false) {

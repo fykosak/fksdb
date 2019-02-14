@@ -3,20 +3,20 @@
 namespace Events\Model\Grid;
 
 use Events\UndeclaredEventException;
-use ModelEvent;
-use ModelPerson;
+use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\ModelPerson;
+use Nette\DI\Container;
 use ORM\Tables\TypedTableSelection;
-use SystemContainer;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
- * 
+ *
  * @method SingleEventSource where()
  * @method SingleEventSource order()
  * @method SingleEventSource limit()
- * @method SingleEventSource count() 
+ * @method SingleEventSource count()
  */
 class RelatedPersonSource extends AggregatedPersonSource implements IHolderSource {
 
@@ -25,11 +25,21 @@ class RelatedPersonSource extends AggregatedPersonSource implements IHolderSourc
      */
     private $person;
 
-    function __construct(ModelPerson $person, TypedTableSelection $events, SystemContainer $container) {
+    /**
+     * RelatedPersonSource constructor.
+     * @param ModelPerson $person
+     * @param TypedTableSelection $events
+     * @param Container $container
+     */
+    function __construct(ModelPerson $person, TypedTableSelection $events, Container $container) {
         parent::__construct($events, $container);
         $this->person = $person;
     }
 
+    /**
+     * @param ModelEvent $event
+     * @return SingleEventSource|null
+     */
     public function processEvent(ModelEvent $event) {
         $personId = $this->person->getPrimary();
 
@@ -40,7 +50,7 @@ class RelatedPersonSource extends AggregatedPersonSource implements IHolderSourc
 	}
 
 
-        $subconditions = array();
+        $subconditions = [];
         $count = 0;
 
         $primaryPersonIds = $eventSource->getDummyHolder()->getPrimaryHolder()->getPersonIds();

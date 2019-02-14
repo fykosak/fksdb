@@ -7,7 +7,7 @@ use News;
 
 /**
  * Just proof of concept.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class DashboardPresenter extends BasePresenter {
@@ -16,6 +16,9 @@ class DashboardPresenter extends BasePresenter {
      */
     private $news;
 
+    /**
+     * @param News $news
+     */
     public function injectNews(News $news) {
         $this->news = $news;
     }
@@ -36,6 +39,7 @@ class DashboardPresenter extends BasePresenter {
 
     public function titleDefault() {
         $this->setTitle(_('Pultík'));
+        $this->setIcon('fa fa-dashboard');
     }
 
     public function renderDefault() {

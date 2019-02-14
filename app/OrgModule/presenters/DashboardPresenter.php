@@ -2,23 +2,17 @@
 
 namespace OrgModule;
 
-use ServiceSubmit;
+use FKSDB\ORM\ModelLogin;
 
 /**
  * Homepage presenter.
  */
 class DashboardPresenter extends BasePresenter {
 
-    /**
-     * @var ServiceSubmit
-     */
-    private $serviceSubmit;
-
-    public function injectServiceSubmit(ServiceSubmit $serviceSubmit) {
-        $this->serviceSubmit = $serviceSubmit;
-    }
-
     public function authorizedDefault() {
+        /**
+         * @var ModelLogin $login
+         */
         $login = $this->getUser()->getIdentity();
         $access = $login ? $login->isOrg($this->yearCalculator) : false;
         $this->setAuthorized($access);
@@ -26,10 +20,6 @@ class DashboardPresenter extends BasePresenter {
 
     public function titleDefault() {
         $this->setTitle(_('Organizátorský pultík'));
+        $this->setIcon('fa fa-dashboard');
     }
-
-    public function renderDefault() {
-        
-    }
-
 }

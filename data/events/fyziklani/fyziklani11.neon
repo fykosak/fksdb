@@ -21,25 +21,37 @@ parameters:
                     label: "Hostel Kolbenka"
             teacher:
                 person:
-                    other_name: true
-                    family_name: true
+                    other_name:
+                        required: true
+                    family_name:
+                        required: true
                 person_info:
-                    email: true
-                    id_number: false
+                    email:
+                        required: true
+                    id_number:
+                        required: false
                 person_has_flag:
-                    spam_mff: true
+                    spam_mff:
+                        required: true
             participant:
                 person:
-                    other_name: true
-                    family_name: true
+                    other_name:
+                        required: true
+                    family_name:
+                        required: true
                 person_info:
-                    email: true
-                    id_number: false
+                    email:
+                        required: true
+                    id_number:
+                        required: false
                 person_history:
-                    school_id: true
-                    study_year: true
+                    school_id:
+                        required: true
+                    study_year:
+                        required: true
                 person_has_flag:
-                    spam_mff: true
+                    spam_mff:
+                        required: true
             dep:
                 require:
                     team.teacher_id.person_info.id_number: team.teacher_accomodation
@@ -66,30 +78,9 @@ events:
                 default: 2
             teamsPerSchool:
                 default: 2
-            availablePoints:
-                default: [5, 3, 2, 1]
-            tasksOnBoard:
-                default: 7
-            refreshDelay:
-                default: 30000
-            resultsHardDisplay:
-                default: false
-            # TODO make relative to game
-            resultsDisplay:
-                default: '1970-01-01T00:00:00'
-            # TODO make relative to game
-            resultsHide:
-                default: '1970-01-01T01:00:00'
-            # TODO infer from event begin date
-            gameStart:
-                default: '1970-01-01T00:00:00'
-            # TODO infer from event end date
-            gameEnd:
-                default: '1970-01-01T01:00:00'
-            rooms:
-                default: []
-            buildings:
-                default: [M, F, S]
+            gameSetup:
+                default:
+                    %events.fyziklaniGameSetup%
 
         baseMachines:
             #

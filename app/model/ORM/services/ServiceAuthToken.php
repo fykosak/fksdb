@@ -1,5 +1,7 @@
 <?php
 
+use FKSDB\ORM\ModelAuthToken;
+use FKSDB\ORM\ModelLogin;
 use Nette\DateTime;
 use Nette\Utils\Strings;
 
@@ -11,14 +13,16 @@ class ServiceAuthToken extends AbstractServiceSingle {
     const TOKEN_LENGTH = 32; // for 62 characters ~ 128 bit
 
     protected $tableName = DbNames::TAB_AUTH_TOKEN;
-    protected $modelClassName = 'ModelAuthToken';
+    protected $modelClassName = 'FKSDB\ORM\ModelAuthToken';
 
     /**
      *
+     * @param ModelLogin $login
      * @param string $type
      * @param \Nette\DateTime $until
+     * @param null $data
+     * @param bool $refresh
      * @param \Nette\DateTime $since
-     * @param ModelLogin $login
      * @return ModelAuthToken
      */
     public function createToken(ModelLogin $login, $type, DateTime $until = null, $data = null, $refresh = false, DateTime $since = null) {
@@ -50,13 +54,13 @@ class ServiceAuthToken extends AbstractServiceSingle {
                 $tokenData = Strings::random(self::TOKEN_LENGTH, 'a-zA-Z0-9');
             } while ($this->verifyToken($tokenData));
 
-            $token = $this->createNew(array(
+            $token = $this->createNew([
                 'login_id' => $login->login_id,
                 'token' => $tokenData,
                 'data' => $data,
                 'since' => $since,
                 'type' => $type
-            ));
+            ]);
         }
         $token->until = $until;
 
@@ -70,8 +74,8 @@ class ServiceAuthToken extends AbstractServiceSingle {
 
     /**
      *
-     * @param string $token
-     * @partm bool $strict
+     * @param $tokenData
+     * @param bool $strict
      * @return ModelAuthToken|null
      */
     public function verifyToken($tokenData, $strict = true) {
@@ -93,7 +97,7 @@ class ServiceAuthToken extends AbstractServiceSingle {
 
     /**
      *
-     * @param ModelAuthToken|string $tokenData
+     * @param $token
      */
     public function disposeToken($token) {
         if (!$token instanceof ModelAuthToken) {
@@ -102,6 +106,23 @@ class ServiceAuthToken extends AbstractServiceSingle {
         if ($token) {
             $this->dispose($token);
         }
+    }
+
+    /**
+     * @param $eventId
+     * @return array
+     */
+    public function findTokensByEventId($eventId) {
+        $res = $this->getTable()
+            ->where('type', ModelAuthToken::TYPE_EVENT_NOTIFY)
+            ->where('since <= NOW()')
+            ->where('until IS NULL OR until >= NOW()')
+            ->where('data LIKE ?', $eventId.':%');
+        $tokens = [];
+        foreach($res as $token) {
+            $tokens[] = ModelAuthToken::createFromTableRow($token);
+        }
+        return $tokens;
     }
 
     //TODO garbage collection

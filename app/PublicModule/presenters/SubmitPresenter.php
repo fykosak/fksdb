@@ -2,10 +2,11 @@
 
 namespace PublicModule;
 
+use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Grids\SubmitsGrid;
-use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
+use FKSDB\ORM\ModelSubmit;
 use ModelException;
-use ModelSubmit;
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\FileResponse;
 use Nette\Application\UI\Form;
@@ -18,7 +19,7 @@ use Submits\ProcessingException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class SubmitPresenter extends BasePresenter {
@@ -34,14 +35,23 @@ class SubmitPresenter extends BasePresenter {
      */
     private $submitStorage;
 
+    /**
+     * @param ServiceTask $taskService
+     */
     public function injectTaskService(ServiceTask $taskService) {
         $this->taskService = $taskService;
     }
 
+    /**
+     * @param ServiceSubmit $submitService
+     */
     public function injectSubmitService(ServiceSubmit $submitService) {
         $this->submitService = $submitService;
     }
 
+    /**
+     * @param ISubmitStorage $submitStorage
+     */
     public function injectSubmitStorage(ISubmitStorage $submitStorage) {
         $this->submitStorage = $submitStorage;
     }
@@ -52,8 +62,13 @@ class SubmitPresenter extends BasePresenter {
 
     public function titleDefault() {
         $this->setTitle(_('Odevzdat řešení'));
+        $this->setIcon('fa fa-cloud-upload');
     }
 
+    /**
+     * @param $id
+     * @throws BadRequestException
+     */
     public function authorizedDownload($id) {
         $submit = $this->submitService->findByPrimary($id);
 
@@ -85,6 +100,11 @@ class SubmitPresenter extends BasePresenter {
         }
     }
 
+    /**
+     * @param $id
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function actionDownload($id) {
         $submit = $this->submitService->findByPrimary($id);
 
@@ -98,12 +118,17 @@ class SubmitPresenter extends BasePresenter {
         $this->sendResponse($response);
     }
 
+    /**
+     * @param $name
+     * @return FormControl
+     * @throws BadRequestException
+     */
     public function createComponentUploadForm($name) {
-        $form = new Form();
-        $form->setRenderer(new BootstrapRenderer());
+        $control = new FormControl();
+        $form = $control->getForm();
 
         $prevDeadline = null;
-        $taskIds = array();
+        $taskIds = [];
         $personHistory = $this->getUser()->getIdentity()->getPerson()->getHistory($this->getSelectedAcademicYear());
         $studyYear = ($personHistory && isset($personHistory->study_year)) ? $personHistory->study_year : null;
         if ($studyYear === null) {
@@ -118,12 +143,13 @@ class SubmitPresenter extends BasePresenter {
             if ($submit && $submit->source == ModelSubmit::SOURCE_POST) {
                 continue; // prevDeadline will work though
             }
-
-            $container = $form->addContainer('task' . $task->task_id);
+            $container = new ModelContainer();
+            $form->addComponent($container, 'task' . $task->task_id);
+            //$container = $form->addContainer();
             $upload = $container->addUpload('file', $task->getFQName());
             $conditionedUpload = $upload
-                    ->addCondition(Form::FILLED)
-                    ->addRule(Form::MIME_TYPE, _('Lze nahrávat pouze PDF soubory.'), 'application/pdf'); //TODO verify this check at production server
+                ->addCondition(Form::FILLED)
+                ->addRule(Form::MIME_TYPE, _('Lze nahrávat pouze PDF soubory.'), 'application/pdf'); //TODO verify this check at production server
 
             if (!in_array($studyYear, array_keys($task->getStudyYears()))) {
                 $upload->setOption('description', _('Úloha není určena pro Tvou kategorii.'));
@@ -150,9 +176,14 @@ class SubmitPresenter extends BasePresenter {
             $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
         }
 
-        return $form;
+        return $control;
     }
 
+    /**
+     * @param $name
+     * @return SubmitsGrid
+     * @throws BadRequestException
+     */
     public function createComponentSubmitsGrid($name) {
         $grid = new SubmitsGrid($this->submitService, $this->submitStorage, $this->getContestant());
 
@@ -161,7 +192,9 @@ class SubmitPresenter extends BasePresenter {
 
     /**
      * @internal
-     * @param type $form
+     * @param mixed $form
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
      */
     public function handleUploadFormSuccess($form) {
         $values = $form->getValues();
@@ -231,6 +264,10 @@ class SubmitPresenter extends BasePresenter {
         }
     }
 
+    /**
+     * @return \Nette\Database\Table\Selection
+     * @throws BadRequestException
+     */
     private function getAvailableTasks() {
         $tasks = $this->taskService->getTable();
         $tasks->where('contest_id = ? AND year = ?', $this->getSelectedContest()->contest_id, $this->getSelectedYear());

@@ -5,9 +5,8 @@ namespace Exports;
 use BasePresenter;
 use DOMDocument;
 use DOMNode;
-use Exports\StoredQuery;
+use FKSDB\ORM\ModelStoredQuery;
 use ISeriesPresenter;
-use ModelStoredQuery;
 use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
 use Nette\InvalidArgumentException;
@@ -18,7 +17,7 @@ use WebService\IXMLNodeSerializer;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class StoredQueryFactory implements IXMLNodeSerializer {
@@ -43,19 +42,35 @@ class StoredQueryFactory implements IXMLNodeSerializer {
      */
     private $presenter;
 
+    /**
+     * StoredQueryFactory constructor.
+     * @param Connection $connection
+     * @param ServiceStoredQuery $serviceStoredQuery
+     */
     function __construct(Connection $connection, ServiceStoredQuery $serviceStoredQuery) {
         $this->connection = $connection;
         $this->serviceStoredQuery = $serviceStoredQuery;
     }
 
+    /**
+     * @return ISeriesPresenter
+     */
     public function getPresenter() {
         return $this->presenter;
     }
 
+    /**
+     * @param ISeriesPresenter $presenter
+     */
     public function setPresenter(ISeriesPresenter $presenter) {
         $this->presenter = $presenter;
     }
 
+    /**
+     * @param ModelStoredQuery $patternQuery
+     * @return StoredQuery
+     * @throws BadRequestException
+     */
     public function createQuery(ModelStoredQuery $patternQuery) {
         $storedQuery = new StoredQuery($patternQuery, $this->connection);
         $this->presenterContextToQuery($storedQuery);
@@ -63,11 +78,18 @@ class StoredQueryFactory implements IXMLNodeSerializer {
         return $storedQuery;
     }
 
-    public function createQueryFromSQL($sql, $parameters, $queryData = array()) {
+    /**
+     * @param $sql
+     * @param $parameters
+     * @param array $queryData
+     * @return StoredQuery
+     * @throws BadRequestException
+     */
+    public function createQueryFromSQL($sql, $parameters, $queryData = []) {
         $patternQuery = $this->serviceStoredQuery->createNew(array_merge(array(
             'sql' => $sql,
             'php_post_proc' => 0,
-                        ), $queryData));
+        ), $queryData));
 
         $patternQuery->setParameters($parameters);
         $storedQuery = new StoredQuery($patternQuery, $this->connection);
@@ -76,6 +98,11 @@ class StoredQueryFactory implements IXMLNodeSerializer {
         return $storedQuery;
     }
 
+    /**
+     * @param $qid
+     * @param $parameters
+     * @return StoredQuery
+     */
     public function createQueryFromQid($qid, $parameters) {
         $patternQuery = $this->serviceStoredQuery->findByQid($qid);
         if (!$patternQuery) {
@@ -87,6 +114,10 @@ class StoredQueryFactory implements IXMLNodeSerializer {
         return $storedQuery;
     }
 
+    /**
+     * @param StoredQuery $storedQuery
+     * @throws BadRequestException
+     */
     private function presenterContextToQuery(StoredQuery $storedQuery) {
         if (!$this->getPresenter()) {
             throw new InvalidStateException("Must provide provider of context for implicit parameters.");
@@ -111,6 +142,14 @@ class StoredQueryFactory implements IXMLNodeSerializer {
         ));
     }
 
+    /**
+     * @param $dataSource
+     * @param DOMNode $node
+     * @param DOMDocument $doc
+     * @param $format
+     * @return mixed|void
+     * @throws BadRequestException
+     */
     public function fillNode($dataSource, DOMNode $node, DOMDocument $doc, $format) {
         if (!$dataSource instanceof StoredQuery) {
             throw new InvalidArgumentException('Expected StoredQuery, got ' . get_class($dataSource) . '.');
@@ -147,6 +186,8 @@ class StoredQueryFactory implements IXMLNodeSerializer {
                     $colNode = $doc->createElement('col');
                 } elseif ($format == self::EXPORT_FORMAT_2) {
                     $colNode = $doc->createElement(Utils::xmlName($colName));
+                } else {
+                    throw new BadRequestException(_('Unsupported format'));
                 }
                 $textNode = $doc->createTextNode($value);
                 $colNode->appendChild($textNode);

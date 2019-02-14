@@ -1,10 +1,9 @@
-{layout ../@layout.v4.latte}
+{layout '../@layout.latte'}
 {block head}
     {include #parent}
-    <link rel="stylesheet" media="screen" href="{$basePath}/css/login.css"/>
 {/block}
 {block body}
-    <div class="h-100" id="wrap">
+    <main class="h-100 login" id="wrap">
         <div class="form-signin card">
             <div class="row mx-3" style="height:6rem">
                 <img class="col-6" src="/images/contests/fykos-gray.svg" alt="fykos"/>
@@ -19,5 +18,5 @@
                 {control languageNav}
             </div>
         </div>
-    </div>
+    </main>
 {/block}

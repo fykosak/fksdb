@@ -1,5 +1,8 @@
 <?php
 
+use FKSDB\ORM\ModelStoredQueryTag;
+use FKSDB\ORM\ModelStoredQueryTagType;
+
 /**
  *
  * @author Lukáš Timko <lukast@fykos.cz>

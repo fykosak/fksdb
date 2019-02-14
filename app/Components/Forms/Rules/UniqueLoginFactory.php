@@ -2,12 +2,12 @@
 
 namespace FKSDB\Components\Forms\Rules;
 
-use ModelLogin;
+use FKSDB\ORM\ModelLogin;
 use ServiceLogin;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class UniqueLoginFactory {
@@ -17,10 +17,18 @@ class UniqueLoginFactory {
      */
     private $serviceLogin;
 
+    /**
+     * UniqueLoginFactory constructor.
+     * @param ServiceLogin $serviceLogin
+     */
     function __construct(ServiceLogin $serviceLogin) {
         $this->serviceLogin = $serviceLogin;
     }
 
+    /**
+     * @param ModelLogin|null $login
+     * @return UniqueLogin
+     */
     public function create(ModelLogin $login = null) {
         $rule = new UniqueLogin($this->serviceLogin);
         $rule->setIgnoredLogin($login);

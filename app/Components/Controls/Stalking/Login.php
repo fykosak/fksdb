@@ -2,25 +2,16 @@
 
 namespace FKSDB\Components\Controls\Stalking;
 
-use Nette\Application\UI\Control;
-
-class Login extends Control {
-    private $mode;
-    /**
-     * @var \ModelPerson;
-     */
-    private $modelPerson;
-
-    public function __construct(\ModelPerson $modelPerson, $mode = null) {
-        parent::__construct();
-        $this->mode = $mode;
-        $this->modelPerson = $modelPerson;
-    }
+/**
+ * Class Login
+ * @package FKSDB\Components\Controls\Stalking
+ */
+class Login extends StalkingComponent {
 
     public function render() {
-        $template = $this->template;
+        $this->beforeRender();
         $this->template->login = $this->modelPerson->getLogin();
-        $template->setFile(__DIR__ . '/Login.latte');
-        $template->render();
+        $this->template->setFile(__DIR__ . '/Login.latte');
+        $this->template->render();
     }
 }

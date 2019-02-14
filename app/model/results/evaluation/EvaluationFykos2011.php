@@ -10,6 +10,9 @@ class EvaluationFykos2011 implements IEvaluationStrategy {
 
     private $categories = null;
 
+    /**
+     * @return array|null
+     */
     public function getCategories() {
         if ($this->categories == null) {
             $this->categories = array(
@@ -22,6 +25,10 @@ class EvaluationFykos2011 implements IEvaluationStrategy {
         return $this->categories;
     }
 
+    /**
+     * @param ModelCategory $category
+     * @return array|int
+     */
     public function categoryToStudyYears($category) {
         switch ($category->id) {
             case ModelCategory::CAT_HS_1:
@@ -38,6 +45,10 @@ class EvaluationFykos2011 implements IEvaluationStrategy {
         }
     }
 
+    /**
+     * @param \Nette\Database\Row $task
+     * @return string
+     */
     public function getPointsColumn($task) {
         if ($task->label == '1' || $task->label == '2') {
             return "IF(ct.study_year IN (6,7,8,9,1,2), 2 * s.raw_points, s.raw_points)";
@@ -46,10 +57,18 @@ class EvaluationFykos2011 implements IEvaluationStrategy {
         }
     }
 
+    /**
+     * @return string
+     */
     public function getSumColumn() {
         return "IF(t.label IN ('1', '2'), IF(ct.study_year IN (6,7,8,9,1,2), 2 * s.raw_points, s.raw_points), s.raw_points)";
     }
 
+    /**
+     * @param \Nette\Database\Row $task
+     * @param ModelCategory $category
+     * @return float|int
+     */
     public function getTaskPoints($task, \ModelCategory $category) {
         switch ($category->id) {
             case ModelCategory::CAT_ES_6:
@@ -69,6 +88,10 @@ class EvaluationFykos2011 implements IEvaluationStrategy {
         }
     }
 
+    /**
+     * @param ModelCategory $category
+     * @return int|string
+     */
     public function getTaskPointsColumn(\ModelCategory $category) {
         switch ($category->id) {
             case ModelCategory::CAT_ES_6:
@@ -82,7 +105,7 @@ class EvaluationFykos2011 implements IEvaluationStrategy {
             default:
                 return 'IF(s.raw_points IS NOT NULL, t.points, NULL)';
         }
-        
+
     }
 
 }

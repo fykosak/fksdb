@@ -9,7 +9,7 @@ use ORM\Tables\MultiTableSelection;
 /**
  * Service for object representing one side of M:N relation, or entity in is-a relation ship.
  * Joined side is in a sense primary (search, select, delete).
- * 
+ *
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 abstract class AbstractServiceMulti extends Object implements IService {
@@ -28,17 +28,20 @@ abstract class AbstractServiceMulti extends Object implements IService {
      * @var AbstractServiceSingle
      */
     protected $joinedService;
+    /**
+     * @var string
+     */
+    protected $joiningColumn;
 
     /**
      * @var array of AbstractService  singleton instances of descedants
      */
-    protected static $instances = array();
+    protected static $instances = [];
 
     /**
-     * 
+     *
      * @param AbstractServiceSingle $mainService
      * @param AbstractServiceSingle $joinedService
-     * @param string $modelClassName
      */
     public function __construct($mainService, $joinedService) {
         $this->setMainService($mainService);
@@ -47,7 +50,7 @@ abstract class AbstractServiceMulti extends Object implements IService {
 
     /**
      * Use this method to create new models!
-     * 
+     *
      * @param array $data
      * @return AbstractModelMulti
      */
@@ -61,7 +64,7 @@ abstract class AbstractServiceMulti extends Object implements IService {
     }
 
     /**
-     * 
+     *
      * @param AbstractModelSingle $mainModel
      * @param AbstractModelSingle $joinedModel
      * @return AbstractModelMulti
@@ -72,19 +75,24 @@ abstract class AbstractServiceMulti extends Object implements IService {
         return $result;
     }
 
-    public function updateModel(IModel $model, $data) {
+    /**
+     * @param IModel $model
+     * @param $data
+     * @param bool $alive
+     * @return mixed|void
+     */
+    public function updateModel(IModel $model, $data, $alive = true) {
         if (!$model instanceof $this->modelClassName) {
             throw new InvalidArgumentException('Service for class ' . $this->modelClassName . ' cannot store ' . get_class($model));
         }
-
-        $this->getMainService()->updateModel($model->getMainModel(), $data);
-        $this->getJoinedService()->updateModel($model->getJoinedModel(), $data);
+        $this->getMainService()->updateModel($model->getMainModel(), $data, $alive);
+        $this->getJoinedService()->updateModel($model->getJoinedModel(), $data, $alive);
     }
 
     /**
      * Use this method to store a model!
-     * 
-     * @param AbstractModelMulti $model
+     *
+     * @param IModel $model
      */
     public function save(IModel &$model) {
         if (!$model instanceof $this->modelClassName) {
@@ -103,8 +111,8 @@ abstract class AbstractServiceMulti extends Object implements IService {
 
     /**
      * Use this method to delete a model!
-     * 
-     * @param AbstractModelMulti $model
+     *
+     * @param IModel $model
      * @throws InvalidArgumentException
      * @throws InvalidStateException
      */
@@ -116,28 +124,43 @@ abstract class AbstractServiceMulti extends Object implements IService {
         //TODO here should be deletion of mainModel as well, consider parametrizing this
     }
 
+    /**
+     * @return AbstractServiceSingle
+     */
     public function getMainService() {
         return $this->mainService;
     }
 
+    /**
+     * @param AbstractServiceSingle $mainService
+     */
     protected function setMainService(AbstractServiceSingle $mainService) {
         $this->mainService = $mainService;
     }
 
+    /**
+     * @return AbstractServiceSingle
+     */
     public function getJoinedService() {
         return $this->joinedService;
     }
 
+    /**
+     * @param AbstractServiceSingle $joinedService
+     */
     protected function setJoinedService(AbstractServiceSingle $joinedService) {
         $this->joinedService = $joinedService;
     }
 
+    /**
+     * @return string
+     */
     public function getJoiningColumn() {
         return $this->joiningColumn;
     }
 
     /**
-     * 
+     *
      * @param int $key ID of the joined models
      * @return AbstractModelMulti|null
      */
@@ -148,12 +171,15 @@ abstract class AbstractServiceMulti extends Object implements IService {
         }
         $this->modelClassName;
         $mainModel = $this->getMainService()
-                ->getTable()
-                ->where($this->joiningColumn, $joinedModel->{$this->joiningColumn})
-                ->fetch(); //?? is this always unique??
+            ->getTable()
+            ->where($this->joiningColumn, $joinedModel->{$this->joiningColumn})
+            ->fetch(); //?? is this always unique??
         return $this->composeModel($mainModel, $joinedModel);
     }
 
+    /**
+     * @return \Nette\Database\Table\Selection|MultiTableSelection
+     */
     public function getTable() {
         $joinedTable = $this->getJoinedService()->getTable()->getName();
         $mainTable = $this->getMainService()->getTable()->getName();
@@ -167,4 +193,4 @@ abstract class AbstractServiceMulti extends Object implements IService {
 
 }
 
-?>
+

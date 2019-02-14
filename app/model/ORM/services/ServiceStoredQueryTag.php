@@ -6,9 +6,9 @@
 class ServiceStoredQueryTag extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_STORED_QUERY_TAG;
-    protected $modelClassName = 'ModelStoredQueryTag';
-    
-    /** 
+    protected $modelClassName = 'FKSDB\ORM\ModelStoredQueryTag';
+
+    /**
      * @param int|null $tagTypeId
      * @return Nette\Database\Table\Selection|null
      */
@@ -20,4 +20,3 @@ class ServiceStoredQueryTag extends AbstractServiceSingle {
         return $result ? : null;
     }
 }
-

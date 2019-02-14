@@ -1,12 +1,19 @@
 <?php
 
-use Nette\Security\IResource;
+namespace FKSDB\ORM;
+
+use AbstractModelSingle;
+use DbNames;
 use Exports\StoredQueryPostProcessing;
+use InvalidArgumentException;
+use ModelMStoredQueryTag;
+use Nette\Security\IResource;
 
 /**
  * @todo Better (general) support for related collection setter.
- * 
+ *
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @property string php_post_proc
  */
 class ModelStoredQuery extends AbstractModelSingle implements IResource {
 
@@ -17,6 +24,10 @@ class ModelStoredQuery extends AbstractModelSingle implements IResource {
      */
     private $postProcessing;
 
+    /**
+     * @param bool $outer
+     * @return array
+     */
     public function getParameters($outer = true) {
         if ($this->outerParameters && $outer) {
             return $this->outerParameters;
@@ -24,7 +35,7 @@ class ModelStoredQuery extends AbstractModelSingle implements IResource {
             if (!isset($this->query_id)) {
                 $this->query_id = null;
             }
-            $result = array();
+            $result = [];
             foreach ($this->related(DbNames::TAB_STORED_QUERY_PARAM, 'query_id') as $row) {
                 $result[] = ModelStoredQueryParameter::createFromTableRow($row);
             }
@@ -32,10 +43,16 @@ class ModelStoredQuery extends AbstractModelSingle implements IResource {
         }
     }
 
+    /**
+     * @param $value
+     */
     public function setParameters($value) {
         $this->outerParameters = $value;
     }
 
+    /**
+     * @return StoredQueryPostProcessing
+     */
     public function getPostProcessing() {
         if ($this->postProcessing == null && $this->php_post_proc) {
             $className = $this->php_post_proc;
@@ -46,25 +63,27 @@ class ModelStoredQuery extends AbstractModelSingle implements IResource {
         }
         return $this->postProcessing;
     }
-    
+
+    /**
+     * @return \Nette\Database\Table\GroupedSelection
+     */
     public function getTags() {
         if (!isset($this->query_id)) {
             $this->query_id = null;
         }
         return $this->related(DbNames::TAB_STORED_QUERY_TAG, 'query_id');
     }
-    
+
     /**
      * @return ModelMStoredQueryTag[]
      */
     public function getMStoredQueryTags() {
         $tags = $this->getTags();
-        
+
         if (!$tags || count($tags) == 0) {
-            return array();
+            return [];
         }
-        
-        $result = array();
+        $result = [];
         foreach ($tags as $tag) {
             $tag->tag_type_id; // stupid touch
             $tagType = $tag->ref(DbNames::TAB_STORED_QUERY_TAG_TYPE, 'tag_type_id');
@@ -75,7 +94,10 @@ class ModelStoredQuery extends AbstractModelSingle implements IResource {
         return $result;
     }
 
-    public function getResourceId() {
+    /**
+     * @return string
+     */
+    public function getResourceId(): string {
         return 'storedQuery';
     }
 

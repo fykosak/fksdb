@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Controls;
 
-use ModelContest;
-use ModelRole;
+use FKSDB\ORM\ModelContest;
+use FKSDB\ORM\ModelRole;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
@@ -12,7 +12,7 @@ use YearCalculator;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ContestChooser extends Control {
@@ -38,7 +38,7 @@ class ContestChooser extends Control {
     private $yearDefinition;
 
     /**
-     * @var ModelContest[]
+     * @var \FKSDB\ORM\ModelContest[]
      */
     private $contests;
 
@@ -58,7 +58,7 @@ class ContestChooser extends Control {
     private $serviceContest;
 
     /**
-     * @var ModelContest
+     * @var \FKSDB\ORM\ModelContest
      */
     private $contest;
 
@@ -74,7 +74,7 @@ class ContestChooser extends Control {
     private $initialized = false;
 
     /**
-     * @var enum DEFAULT_*
+     * @var string DEFAULT_*
      */
     private $defaultContest = self::DEFAULT_SMART_FIRST;
 
@@ -84,13 +84,14 @@ class ContestChooser extends Control {
     private $contestSource = 0xffffffff;
 
     /**
-     * 
+     *
 
      * @param Session $session
      * @param YearCalculator $yearCalculator
      * @param ServiceContest $serviceContest
      */
     function __construct(Session $session, YearCalculator $yearCalculator, ServiceContest $serviceContest) {
+        parent::__construct();
         $this->session = $session;
         $this->yearCalculator = $yearCalculator;
         $this->serviceContest = $serviceContest;
@@ -104,29 +105,44 @@ class ContestChooser extends Control {
     }
 
     /**
-     * 
+     *
      * @param mixed $yearDefinition enum
      */
     public function setYears($yearDefinition) {
         $this->yearDefinition = $yearDefinition;
     }
 
+    /**
+     * @return string
+     */
     public function getDefaultContest() {
         return $this->defaultContest;
     }
 
+    /**
+     * @param $defaultContest
+     */
     public function setDefaultContest($defaultContest) {
         $this->defaultContest = $defaultContest;
     }
 
+    /**
+     * @return int
+     */
     public function getContestSource() {
         return $this->contestSource;
     }
 
+    /**
+     * @param $contestSource
+     */
     public function setContestSource($contestSource) {
         $this->contestSource = $contestSource;
     }
 
+    /**
+     * @return bool
+     */
     public function isValid() {
         $this->init();
         return $this->valid;
@@ -149,11 +165,17 @@ class ContestChooser extends Control {
         }
     }
 
+    /**
+     * @return ModelContest
+     */
     public function getContest() {
         $this->init();
         return $this->contest;
     }
 
+    /**
+     * @return int
+     */
     public function getYear() {
         $this->init();
         return $this->year;
@@ -239,7 +261,7 @@ class ContestChooser extends Control {
                 $pk = $this->serviceContest->getPrimary();
                 $contests = $this->serviceContest->fetchPairs($pk, $pk);
             } else { // implicity -- by role
-                $contests = array();
+                $contests = [];
                 $login = $this->getLogin();
                 if ($login) {
                     if ($this->contestsDefinition == ModelRole::ORG) {
@@ -252,9 +274,10 @@ class ContestChooser extends Control {
                     }
                 }
             }
-            $this->contests = array();
+            $this->contests = [];
             foreach ($contests as $id) {
-                $contest = $this->serviceContest->findByPrimary($id);
+                $row = $this->serviceContest->findByPrimary($id);
+                $contest = ModelContest::createFromTableRow($row);
                 $years = $this->getYears($contest);
                 $this->contests[$id] = (object) array(
                             'contest' => $contest,
@@ -266,6 +289,10 @@ class ContestChooser extends Control {
         return $this->contests;
     }
 
+    /**
+     * @param ModelContest $contest
+     * @return array
+     */
     private function getYears(ModelContest $contest) {
         if ($this->yearDefinition === self::YEARS_ALL || $this->contestsDefinition == ModelRole::ORG) {
             $min = $this->yearCalculator->getFirstYear($contest);
@@ -278,7 +305,7 @@ class ContestChooser extends Control {
                 return array($currentYear);
             }
             $contestants = $login->getPerson()->getContestants($contest->contest_id);
-            $years = array();
+            $years = [];
             foreach ($contestants as $contestant) {
                 $years[] = $contestant->year;
             }
@@ -288,10 +315,17 @@ class ContestChooser extends Control {
         }
     }
 
+    /**
+     * @return \Nette\Security\IIdentity|NULL
+     */
     private function getLogin() {
         return $this->getPresenter()->getUser()->getIdentity();
     }
 
+    /**
+     * @param null $class
+     * @throws BadRequestException
+     */
     public function render($class = null) {
         if (!$this->isValid()) {
             throw new BadRequestException('No contests available.', 403);
@@ -305,6 +339,10 @@ class ContestChooser extends Control {
         $this->template->render();
     }
 
+    /**
+     * @param $contestId
+     * @throws \Nette\Application\AbortException
+     */
     public function handleChange($contestId) {
         $presenter = $this->getPresenter();
         $backupYear = null;
@@ -326,6 +364,11 @@ class ContestChooser extends Control {
         }
     }
 
+    /**
+     * @param $contest
+     * @param $year
+     * @throws \Nette\Application\AbortException
+     */
     public function handleChangeYear($contest, $year) {
         $presenter = $this->getPresenter();
         $presenter->redirect('this', array(
@@ -333,6 +376,12 @@ class ContestChooser extends Control {
             'year' => $year));
     }
 
+    /**
+     * @param $session
+     * @param $contest
+     * @param null $override
+     * @return int|mixed|null
+     */
     private function calculateYear($session, $contest, $override = null) {
         $presenter = $this->getPresenter();
         $year = null;

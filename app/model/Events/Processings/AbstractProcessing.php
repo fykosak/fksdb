@@ -5,7 +5,7 @@ namespace Events\Processings;
 use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
 use Events\Model\Holder\Holder;
-use FKS\Logging\ILogger;
+use FKSDB\Logging\ILogger;
 use Nette\ArrayHash;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Form;
@@ -14,7 +14,7 @@ use Nette\Object;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 abstract class AbstractProcessing extends Object implements IProcessing {
@@ -28,6 +28,14 @@ abstract class AbstractProcessing extends Object implements IProcessing {
     private $holder;
     private $values;
 
+    /**
+     * @param $states
+     * @param ArrayHash $values
+     * @param Machine $machine
+     * @param Holder $holder
+     * @param ILogger $logger
+     * @param Form|null $form
+     */
     public final function process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
         $this->states = $states;
         $this->holder = $holder;
@@ -36,14 +44,27 @@ abstract class AbstractProcessing extends Object implements IProcessing {
         $this->_process($states, $values, $machine, $holder, $logger, $form);
     }
 
+    /**
+     * @param $states
+     * @param ArrayHash $values
+     * @param Machine $machine
+     * @param Holder $holder
+     * @param ILogger $logger
+     * @param Form|null $form
+     * @return mixed
+     */
     abstract protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null);
 
+    /**
+     * @param $mask
+     * @return bool
+     */
     protected final function hasWildcart($mask) {
         return strpos($mask, self::WILDCART) !== false;
     }
 
     /**
-     * 
+     *
      * @param string $mask
      * @return IControl[]
      */
@@ -53,7 +74,7 @@ abstract class AbstractProcessing extends Object implements IProcessing {
         $pMask = preg_quote($pMask);
         $pMask = str_replace('__WC__', '(.+)', $pMask);
         $pattern = "/^$pMask\$/";
-        $result = array();
+        $result = [];
         foreach ($keys as $key) {
             if (preg_match($pattern, $key)) {
                 $result[] = $this->valuesPathCache[$key];
@@ -63,7 +84,7 @@ abstract class AbstractProcessing extends Object implements IProcessing {
     }
 
     /**
-     * 
+     *
      * @param string $mask
      * @return IControl[]
      */
@@ -73,7 +94,7 @@ abstract class AbstractProcessing extends Object implements IProcessing {
         $pMask = preg_quote($pMask);
         $pMask = str_replace('__WC__', '(.+)', $pMask);
         $pattern = "/^$pMask\$/";
-        $result = array();
+        $result = [];
         foreach ($keys as $key) {
             if (preg_match($pattern, $key)) {
                 $result[] = $this->formPathCache[$key];
@@ -87,7 +108,8 @@ abstract class AbstractProcessing extends Object implements IProcessing {
      * from it wasn't loaded.
      * When it returns false, correct value can be loaded from the model
      * (which is not updated yet).
-     * 
+     *
+     * @param $name
      * @return boolean
      */
     protected final function isBaseReallyEmpty($name) {
@@ -101,10 +123,14 @@ abstract class AbstractProcessing extends Object implements IProcessing {
         return false;
     }
 
+    /**
+     * @param ArrayHash $values
+     * @param string $prefix
+     */
     private function setValues(ArrayHash $values, $prefix = '') {
         if (!$prefix) {
             $this->values = $values;
-            $this->valuesPathCache = array();
+            $this->valuesPathCache = [];
         }
 
         foreach ($values as $key => $value) {
@@ -117,8 +143,11 @@ abstract class AbstractProcessing extends Object implements IProcessing {
         }
     }
 
+    /**
+     * @param Form $form
+     */
     private function setForm($form) {
-        $this->formPathCache = array();
+        $this->formPathCache = [];
         if (!$form) {
             return;
         }

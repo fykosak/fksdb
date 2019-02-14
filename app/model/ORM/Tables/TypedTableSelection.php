@@ -15,6 +15,12 @@ class TypedTableSelection extends TableSelection {
      */
     protected $modelClassName;
 
+    /**
+     * TypedTableSelection constructor.
+     * @param $modelClassName
+     * @param $table
+     * @param Connection $connection
+     */
     public function __construct($modelClassName, $table, Connection $connection) {
         parent::__construct($table, $connection);
         $this->modelClassName = $modelClassName;
@@ -22,9 +28,9 @@ class TypedTableSelection extends TableSelection {
 
     /**
      * This override ensures returned objects are of correct class.
-     * 
+     *
      * @param array $row
-     * @return AbstractModelSingle
+     * @return \AbstractModelSingle
      */
     protected function createRow(array $row) {
         $className = $this->modelClassName;

@@ -1,16 +1,17 @@
 <?php
 
 use Authentication\PasswordAuthenticator;
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\LoginFactory;
 use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use FKSDB\Components\Forms\Rules\UniqueLoginFactory;
-use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
+use FKSDB\ORM\ModelAuthToken;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\BaseControl;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class SettingsPresenter extends AuthenticatedPresenter {
@@ -37,18 +38,42 @@ class SettingsPresenter extends AuthenticatedPresenter {
      */
     private $uniqueLoginFactory;
 
+    /**
+     * @param LoginFactory $loginFactory
+     */
+    /**
+     * @param LoginFactory $loginFactory
+     */
     public function injectLoginFactory(LoginFactory $loginFactory) {
         $this->loginFactory = $loginFactory;
     }
 
+    /**
+     * @param ServiceLogin $loginService
+     */
+    /**
+     * @param ServiceLogin $loginService
+     */
     public function injectLoginService(ServiceLogin $loginService) {
         $this->loginService = $loginService;
     }
 
+    /**
+     * @param UniqueEmailFactory $uniqueEmailFactory
+     */
+    /**
+     * @param UniqueEmailFactory $uniqueEmailFactory
+     */
     public function injectUniqueEmailFactory(UniqueEmailFactory $uniqueEmailFactory) {
         $this->uniqueEmailFactory = $uniqueEmailFactory;
     }
 
+    /**
+     * @param UniqueLoginFactory $uniqueLoginFactory
+     */
+    /**
+     * @param UniqueLoginFactory $uniqueLoginFactory
+     */
     public function injectUniqueLoginFactory(UniqueLoginFactory $uniqueLoginFactory) {
         $this->uniqueLoginFactory = $uniqueLoginFactory;
     }
@@ -58,12 +83,15 @@ class SettingsPresenter extends AuthenticatedPresenter {
     }
 
     public function renderDefault() {
+        /**
+         * @var \FKSDB\ORM\ModelLogin $login
+         */
         $login = $this->getUser()->getIdentity();
 
-        $defaults = array(
+        $defaults = [
             self::CONT_LOGIN => $login->toArray(),
-        );
-        $this->getComponent('settingsForm')->setDefaults($defaults);
+        ];
+        $this->getComponent('settingsForm')->getForm()->setDefaults($defaults);
 
         if ($this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN)) {
             $this->flashMessage(_('Nastavte si nové heslo.'), self::FLASH_WARNING);
@@ -74,17 +102,27 @@ class SettingsPresenter extends AuthenticatedPresenter {
         }
     }
 
+    /**
+     * @param $name
+     * @return FormControl
+     */
+    /**
+     * @param $name
+     * @return FormControl
+     */
     protected function createComponentSettingsForm($name) {
-        $form = new Form();
-        $form->setRenderer(new BootstrapRenderer());
-
+        $control = new FormControl();
+        $form = $control->getForm();
+        /**
+         * @var \FKSDB\ORM\ModelLogin $login
+         */
         $login = $this->getUser()->getIdentity();
         $tokenAuthentication =
-                $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN) ||
-                $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_RECOVERY);
+            $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN) ||
+            $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_RECOVERY);
 
         $group = $form->addGroup(_('Autentizace'));
-        $emailRule = $this->uniqueEmailFactory->create($login->getPerson(), $login); //TODO em use it somewhere
+        $emailRule = $this->uniqueEmailFactory->create($login->getPerson()); //TODO em use it somewhere
         $loginRule = $this->uniqueLoginFactory->create($login);
 
         if ($tokenAuthentication) {
@@ -99,11 +137,11 @@ class SettingsPresenter extends AuthenticatedPresenter {
 
         if ($loginContainer->getComponent('old_password', false)) {
             $loginContainer['old_password']
-                    ->addCondition(Form::FILLED)
-                    ->addRule(function(BaseControl $control) use($login) {
-                                $hash = PasswordAuthenticator::calculateHash($control->getValue(), $login);
-                                return $hash == $login->hash;
-                            }, 'Špatně zadané staré heslo.');
+                ->addCondition(Form::FILLED)
+                ->addRule(function (BaseControl $control) use ($login) {
+                    $hash = PasswordAuthenticator::calculateHash($control->getValue(), $login);
+                    return $hash == $login->hash;
+                }, 'Špatně zadané staré heslo.');
         }
 
         $form->setCurrentGroup();
@@ -111,18 +149,19 @@ class SettingsPresenter extends AuthenticatedPresenter {
         $form->addSubmit('send', _('Uložit'));
 
         $form->onSuccess[] = array($this, 'handleSettingsFormSuccess');
-        return $form;
+        return $control;
     }
 
     /**
      * @internal
      * @param Form $form
+     * @throws \Nette\Application\AbortException
      */
     public function handleSettingsFormSuccess(Form $form) {
         $values = $form->getValues();
         $tokenAuthentication =
-                $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN) ||
-                $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_RECOVERY);
+            $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN) ||
+            $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_RECOVERY);
         $login = $this->getUser()->getIdentity();
 
         $loginData = FormUtils::emptyStrToNull($values[self::CONT_LOGIN]);
@@ -134,10 +173,9 @@ class SettingsPresenter extends AuthenticatedPresenter {
         $this->loginService->save($login);
         $this->flashMessage(_('Uživatelské informace upraveny.'), self::FLASH_SUCCESS);
         if ($tokenAuthentication) {
-            $this->flashMessage(_('Heslo nastaveno.'), self::FLASH_SUCCESS); //TODO here may be Facebook ID            
+            $this->flashMessage(_('Heslo nastaveno.'), self::FLASH_SUCCESS); //TODO here may be Facebook ID
             $this->getTokenAuthenticator()->disposeAuthToken(); // from now on same like password authentication
         }
         $this->redirect('this');
     }
-
 }

@@ -20,10 +20,14 @@ class ModelCategory {
 
     public $id = null;
 
+    /**
+     * ModelCategory constructor.
+     * @param $id
+     */
     function __construct($id) {
         $this->id = $id;
     }
 
 }
 
-?>
+

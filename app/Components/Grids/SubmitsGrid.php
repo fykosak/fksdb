@@ -2,9 +2,9 @@
 
 namespace FKSDB\Components\Grids;
 
-use ModelContestant;
+use FKSDB\ORM\ModelContestant;
+use FKSDB\ORM\ModelSubmit;
 use ModelException;
-use ModelSubmit;
 use Nette\Application\BadRequestException;
 use Nette\Diagnostics\Debugger;
 use Nette\Utils\Html;
@@ -27,10 +27,16 @@ class SubmitsGrid extends BaseGrid {
     private $submitStorage;
 
     /**
-     * @var ModelContestant 
+     * @var ModelContestant
      */
     private $contestant;
 
+    /**
+     * SubmitsGrid constructor.
+     * @param ServiceSubmit $submitService
+     * @param FilesystemSubmitStorage $submitStorage
+     * @param ModelContestant $contestant
+     */
     function __construct(ServiceSubmit $submitService, FilesystemSubmitStorage $submitStorage, ModelContestant $contestant) {
         parent::__construct();
 
@@ -39,14 +45,18 @@ class SubmitsGrid extends BaseGrid {
         $this->contestant = $contestant;
     }
 
+    /**
+     * @param $presenter
+     * @throws \NiftyGrid\DuplicateButtonException
+     * @throws \NiftyGrid\DuplicateColumnException
+     */
     protected function configure($presenter) {
         parent::configure($presenter);
-
         //
         // data
         //
         $submits = $this->submitService->getSubmits();
-        $submits->where('ct_id = ?', $this->contestant->ct_id); //TODO year + contest? 
+        $submits->where('ct_id = ?', $this->contestant->ct_id); //TODO year + contest?
 
         $this->setDataSource(new NDataSource($submits));
         $this->setDefaultOrder('series DESC, tasknr ASC');
@@ -75,18 +85,17 @@ class SubmitsGrid extends BaseGrid {
         //
         // operations
         //
-        $that = $this;
-        $this->addButton("revoke", _("Zrušit"))
-                ->setClass("btn btn-xs btn-warning")
-                ->setText('Zrušit') //todo i18n
-                ->setShow(function($row) use($that) {
-                            return $that->canRevoke($row);
+        $this->addButton('revoke', _('Zrušit'))
+                ->setClass('btn btn-xs btn-warning')
+                ->setText(_('Zrušit'))
+                ->setShow(function($row) {
+                            return $this->canRevoke($row);
                         })
-                ->setLink(function($row) use ($that) {
-                            return $that->link("revoke!", $row->submit_id);
+                ->setLink(function($row) {
+                            return $this->link('revoke!', $row->submit_id);
                         })
                 ->setConfirmationDialog(function($row) {
-                            return "Opravdu vzít řešení úlohy {$row->getTask()->getFQName()} zpět?"; //todo i18n
+                            return \sprintf(_('Opravdu vzít řešení úlohy %s zpět?'),$row->getTask()->getFQName());
                         });
 
 
@@ -98,6 +107,11 @@ class SubmitsGrid extends BaseGrid {
         $this->enableSorting = false;
     }
 
+    /**
+     * @param $id
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function handleRevoke($id) {
         $submit = $this->submitService->findByPrimary($id);
 
@@ -132,7 +146,7 @@ class SubmitsGrid extends BaseGrid {
 
     /**
      * @internal
-     * @param \FKSDB\Components\Grids\ModelSubmit $submit
+     * @param ModelSubmit $submit
      * @return boolean
      */
     public function canRevoke(ModelSubmit $submit) {

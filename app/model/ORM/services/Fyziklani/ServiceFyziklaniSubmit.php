@@ -1,5 +1,8 @@
 <?php
 
+use FKSDB\ORM\ModelEvent;
+use Nette\Database\Table\Selection;
+
 /**
  * @author Lukáš Timko <lukast@fykos.cz>
  */
@@ -9,63 +12,60 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
     protected $modelClassName = 'ModelFyziklaniSubmit';
 
     /**
-     * @param $taskId integer
-     * @param $teamId integer
+     * @param int $taskId
+     * @param int $teamId integer
      * @return ModelFyziklaniSubmit|null
      */
-    public function findByTaskAndTeam($taskId, $teamId) {
+    public function findByTaskAndTeam(int $taskId, int $teamId) {
         if (!$taskId || !$teamId) {
             return null;
         }
-        /**
-         * @var $result ModelFyziklaniSubmit
-         */
-        $result = $this->getTable()->where(array(
+        $row = $this->getTable()->where([
             'fyziklani_task_id' => $taskId,
             'e_fyziklani_team_id' => $teamId
-        ))->fetch();
-        return $result ?: null;
+        ])->fetch();
+        return $row ? ModelFyziklaniSubmit::createFromTableRow($row) : null;
     }
 
     /**
      * Syntactic sugar.
-     * @param $eventId integer
-     * @return \Nette\Database\Table\Selection|null
+     * @param ModelEvent $event
+     * @return Selection
      */
-    public function findAll($eventId) {
-        $result = $this->getTable();
-        if ($eventId) {
-            $result->where('e_fyziklani_team_id.event_id', $eventId);
-        }
-        return $result ?: null;
+    public function findAll(ModelEvent $event): Selection {
+        return $this->getTable()->where('e_fyziklani_team_id.event_id', $event->event_id);
     }
 
-    public function submitExist($taskID, $teamID) {
-        if (is_null($this->findByTaskAndTeam($taskID, $teamID))) {
+    /**
+     * @param int $taskId
+     * @param int $teamId
+     * @return bool
+     */
+    public function submitExist(int $taskId, int $teamId): bool {
+        $submit = $this->findByTaskAndTeam($taskId, $teamId);
+        if (is_null($submit)) {
             return false;
         }
-        if (is_null($this->findByTaskAndTeam($taskID, $teamID)->points)) {
+        if (is_null($submit->points)) {
             return false;
         }
         return true;
     }
 
-    public function getSubmits($eventId, $lastUpdated = null) {
-        $query = $this->getTable()->where('e_fyziklani_team.event_id', $eventId);
+    /**
+     * @param ModelEvent $event
+     * @param null $lastUpdated
+     * @return array
+     */
+    public function getSubmitsAsArray(ModelEvent $event, $lastUpdated = null): array {
+        $query = $this->getTable()->where('e_fyziklani_team.event_id', $event->event_id);
         $submits = [];
         if ($lastUpdated) {
             $query->where('modified >= ?', $lastUpdated);
         }
-        /**
-         * @var $submit ModelFyziklaniSubmit
-         */
-        foreach ($query as $submit) {
-            $submits[$submit->fyziklani_submit_id] = [
-                'points' => $submit->points,
-                'teamId' => $submit->e_fyziklani_team_id,
-                'taskId' => $submit->fyziklani_task_id,
-                'created' => $submit->created->__toString(),
-            ];
+        foreach ($query as $row) {
+            $submit = ModelFyziklaniSubmit::createFromTableRow($row);
+            $submits[$submit->fyziklani_submit_id] = $submit->__toArray();
         }
         return $submits;
     }

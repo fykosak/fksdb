@@ -2,25 +2,29 @@
 
 namespace FKSDB\Components\Forms\Rules;
 
-use FKS\Components\Forms\Controls\WriteonlyInput;
+use FKSDB\Components\Forms\Controls\WriteOnlyInput;
 use Nette\Forms\Controls\BaseControl;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  * @author David Grudl
  * @see http://latrine.dgx.cz/jak-overit-platne-ic-a-rodne-cislo
  */
 class BornNumber {
 
+    /**
+     * @param BaseControl $control
+     * @return bool
+     */
     public function __invoke(BaseControl $control) {
         $rc = $control->getValue();
         // suppose once validated is always valid
-        if($rc == WriteonlyInput::VALUE_ORIGINAL) {
+        if($rc == WriteOnlyInput::VALUE_ORIGINAL) {
             return true;
         }
-        $matches = array();
+        $matches = [];
         // "be liberal in what you receive"
         if (!preg_match('#^\s*(\d\d)(\d\d)(\d\d)[ /]*(\d\d\d)(\d?)\s*$#', $rc, $matches)) {
             return FALSE;
@@ -44,7 +48,7 @@ class BornNumber {
         $originalYear = $year;
         $originalMonth = $month;
         $originalDay = $day;
-        // kontrola data        
+        // kontrola data
         $year += $year < 54 ? 2000 : 1900;
 
         // k měsíci může být připočteno 20, 50 nebo 70
@@ -58,7 +62,7 @@ class BornNumber {
         if (!checkdate($month, $day, $year)) {
             return FALSE;
         }
-        
+
         $normalized = "$originalYear$originalMonth$originalDay/$ext$c";
         $control->setValue($normalized);
 

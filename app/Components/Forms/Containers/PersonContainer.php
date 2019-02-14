@@ -2,14 +2,14 @@
 
 namespace FKSDB\Components\Forms\Containers;
 
-use FKS\Components\Forms\Controls\PersonId;
-use FKS\Utils\Promise;
+use FKSDB\Components\Forms\Controls\PersonId;
+use FKSDB\Utils\Promise;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
-use Nette\InvalidStateException;
+
 use Nette\Utils\Arrays;
 use Persons\PersonHandler2;
 use Persons\ResolutionException;
@@ -17,7 +17,7 @@ use ServicePerson;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class PersonContainer extends Container {
@@ -30,7 +30,7 @@ class PersonContainer extends Container {
     const SUBMIT_CLEAR = '__clear';
 
     private $searchType;
-    private $hiddenComponents = array();
+    private $hiddenComponents = [];
 
     /**
      * @var PersonId
@@ -66,6 +66,15 @@ class PersonContainer extends Container {
     private $createResolution = PersonHandler2::RESOLUTION_EXCEPTION;
     private $updateResolution = PersonHandler2::RESOLUTION_OVERWRITE;
 
+    /**
+     * PersonContainer constructor.
+     * @param PersonId $personId
+     * @param PersonFactory $personFactory
+     * @param PersonProvider $personProvider
+     * @param ServicePerson $servicePerson
+     * @param PersonHandler2 $handler
+     * @param $acYear
+     */
     public function __construct(PersonId $personId, PersonFactory $personFactory, PersonProvider $personProvider, ServicePerson $servicePerson, PersonHandler2 $handler, $acYear) {
         parent::__construct();
         $this->monitor('Nette\Forms\Form');
@@ -82,6 +91,9 @@ class PersonContainer extends Container {
         $personId->setPersonContainer($this);
     }
 
+    /**
+     * @return mixed
+     */
     public function getSearchType() {
         return $this->searchType;
     }
@@ -107,30 +119,52 @@ class PersonContainer extends Container {
         }
     }
 
+    /**
+     * @return bool
+     */
     public function getAllowClear() {
         return $this->allowClear;
     }
 
+    /**
+     * @param $allowClear
+     */
     public function setAllowClear($allowClear) {
         $this->allowClear = $allowClear;
     }
 
+    /**
+     * @return mixed
+     */
     public function getCreateResolution() {
         return $this->createResolution;
     }
 
+    /**
+     * @param $createResolution
+     */
     public function setCreateResolution($createResolution) {
         $this->createResolution = $createResolution;
     }
 
+    /**
+     * @return mixed
+     */
     public function getUpdateResolution() {
         return $this->updateResolution;
     }
 
+    /**
+     * @param $updateResolution
+     */
     public function setUpdateResolution($updateResolution) {
         $this->updateResolution = $updateResolution;
     }
 
+    /**
+     * @param $value
+     * @throws \Nette\Utils\RegexpException
+     */
     public function showSearch($value) {
         static $searchComponents = array(
     self::CONTROL_SEARCH,
@@ -156,6 +190,9 @@ class PersonContainer extends Container {
         }
     }
 
+    /**
+     * @param $value
+     */
     public function setClearButton($value) {
         if (!$this->getAllowClear()) {
             $value = false;
@@ -176,21 +213,24 @@ class PersonContainer extends Container {
     }
 
     //TODO move to person ID?
+
+    /**
+     * @param Form $form
+     */
     private function createOrUpdatePerson(Form $form) {
         $personId = $this->personId->getValue();
         if (!$personId) {
             return;
         }
-        $that = $this;
         $values = $this->getValues();
-        $promise = new Promise(function() use($form, $that, $personId, $values) {
+        $promise = new Promise(function() use($form,$personId, $values) {
                     if ($personId === PersonId::VALUE_PROMISE) {
                         try {
-                            $person = $this->handler->createFromValues($values, $that->acYear, $that->getCreateResolution());
+                            $person = $this->handler->createFromValues($values, $this->acYear, $this->getCreateResolution());
                             return $person;
                         } catch (ResolutionException $e) {
                             $form->addError(_('Data se neshodují s evidovanou osobou. Byla doplněna evidovaná data.')); //TODO should contain GUI name of the container
-                            $that->personId->setValue($e->getPerson());
+                            $this->personId->setValue($e->getPerson());
                             throw $e;
                         }
                     } else if ($personId) {
@@ -205,43 +245,47 @@ class PersonContainer extends Container {
 
     private $attachedOnValidate = false;
 
+    /**
+     * @param $obj
+     */
     protected function attached($obj) {
         parent::attached($obj);
         if (!$this->attachedOnValidate && $obj instanceof Form) {
-            $that = $this;
-            $obj->onValidate[] = function(Form $form) use($that) {
-                        $that->createOrUpdatePerson($form);
+            $obj->onValidate[] = function(Form $form) {
+                        $this->createOrUpdatePerson($form);
                     };
             $this->attachedOnValidate = true;
         }
     }
 
     private function createClearButton() {
-        $that = $this;
         $this->addSubmit(self::SUBMIT_CLEAR, 'X')
                         ->setValidationScope(false)
-                ->onClick[] = function(SubmitButton $submit) use($that) {
-                    $that->personId->setValue(null);
+                ->onClick[] = function(SubmitButton $submit) {
+                    $this->personId->setValue(null);
                 };
     }
 
     private function createSearchButton() {
-        $that = $this;
         $this->addSubmit(self::SUBMIT_SEARCH, 'Najít')
                         ->setValidationScope(false)
-                ->onClick[] = function(SubmitButton $submit) use($that) {
-                    $term = $that->getComponent(self::CONTROL_SEARCH)->getValue();
-                    $person = $that->findPerson($term);
-                    $values = array();
+                ->onClick[] = function(SubmitButton $submit) {
+                    $term = $this->getComponent(self::CONTROL_SEARCH)->getValue();
+                    $person = $this->findPerson($term);
+                    $values = [];
                     if (!$person) {
                         $person = PersonId::VALUE_PROMISE;
-                        $values = $that->getPersonSearchData($term);
+                        $values = $this->getPersonSearchData($term);
                     }
-                    $that->personId->setValue($person);
-                    $that->setValues($values);
+                    $this->personId->setValue($person);
+                    $this->setValues($values);
                 };
     }
 
+    /**
+     * @param $term
+     * @return \FKSDB\ORM\ModelPerson|\Nette\Database\Table\ActiveRow|null
+     */
     private function findPerson($term) {
         switch ($this->searchType) {
             case PersonContainer::SEARCH_EMAIL:
@@ -252,6 +296,10 @@ class PersonContainer extends Container {
         return null;
     }
 
+    /**
+     * @param $term
+     * @return array
+     */
     private function getPersonSearchData($term) {
         switch ($this->searchType) {
             case PersonContainer::SEARCH_EMAIL:
@@ -260,7 +308,7 @@ class PersonContainer extends Container {
                 );
         }
 
-        return array();
+        return [];
     }
 
 }

@@ -2,14 +2,14 @@
 
 namespace Astrid;
 
-use FKS\Config\GlobalParameters;
-use ModelContest;
+use FKSDB\Config\GlobalParameters;
+use FKSDB\ORM\ModelContest;
 use Nette\InvalidStateException;
 use RuntimeException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class Downloader {
@@ -44,6 +44,15 @@ class Downloader {
      */
     private $parameters;
 
+    /**
+     * Downloader constructor.
+     * @param $httpUser
+     * @param $httpPassword
+     * @param $host
+     * @param $tmpDir
+     * @param $contestMap
+     * @param GlobalParameters $parameters
+     */
     public function __construct($httpUser, $httpPassword, $host, $tmpDir, $contestMap, GlobalParameters $parameters) {
         $this->httpUser = $httpUser;
         $this->httpPassword = $httpPassword;
@@ -54,7 +63,7 @@ class Downloader {
     }
 
     /**
-     * @param \Tasks\ModelContest $contest
+     * @param \FKSDB\ORM\ModelContest $contest
      * @param int $year
      * @param int $series
      * @param string $language
@@ -73,7 +82,7 @@ class Downloader {
     }
 
     /**
-     * @param \Tasks\ModelContest $contest
+     * @param \FKSDB\ORM\ModelContest $contest
      * @param int $year
      * @param int $series
      * @return string filename of downloaded XML file
@@ -86,6 +95,11 @@ class Downloader {
         return $this->download($path);
     }
 
+    /**
+     * @param ModelContest $contest
+     * @param $year
+     * @return bool|string
+     */
     public function downloadFyziklaniRooms(ModelContest $contest, $year) {
         $mask = $this->parameters['fyziklani']['roomsPath'];
         $contestName = isset($this->contestMap[$contest->contest_id]) ? $this->contestMap[$contest->contest_id] : $contest->contest_id;
@@ -94,6 +108,10 @@ class Downloader {
         return $this->download($path);
     }
 
+    /**
+     * @param $path
+     * @return bool|string
+     */
     private function download($path) {
         $src = "https://{$this->httpUser}:{$this->httpPassword}@{$this->host}{$path}";
         $dst = tempnam($this->tmpDir, 'task');
@@ -107,6 +125,10 @@ class Downloader {
 
 }
 
+/**
+ * Class DownloadException
+ * @package Astrid
+ */
 class DownloadException extends RuntimeException {
-    
+
 }

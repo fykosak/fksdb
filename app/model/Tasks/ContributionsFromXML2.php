@@ -6,11 +6,11 @@ use Pipeline\Stage;
 use ServiceOrg;
 use ServiceTaskContribution;
 use SimpleXMLElement;
-use Tasks\SeriesData;
+
 
 /**
  * @note Assumes TasksFromXML has been run previously.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ContributionsFromXML2 extends Stage {
@@ -21,7 +21,7 @@ class ContributionsFromXML2 extends Stage {
     private $data;
 
     /**
-     * @var array   contribution type => xml element 
+     * @var array   contribution type => xml element
      */
     private static $contributionFromXML = [
         'author' => 'authors/author',
@@ -38,11 +38,19 @@ class ContributionsFromXML2 extends Stage {
      */
     private $serviceOrg;
 
+    /**
+     * ContributionsFromXML2 constructor.
+     * @param ServiceTaskContribution $taskContributionService
+     * @param ServiceOrg $serviceOrg
+     */
     public function __construct(ServiceTaskContribution $taskContributionService, ServiceOrg $serviceOrg) {
         $this->taskContributionService = $taskContributionService;
         $this->serviceOrg = $serviceOrg;
     }
 
+    /**
+     * @param mixed $data
+     */
     public function setInput($data) {
         $this->data = $data;
     }
@@ -54,10 +62,16 @@ class ContributionsFromXML2 extends Stage {
         }
     }
 
+    /**
+     * @return mixed|SeriesData
+     */
     public function getOutput() {
         return $this->data;
     }
 
+    /**
+     * @param SimpleXMLElement $XMLTask
+     */
     private function processTask(SimpleXMLElement $XMLTask) {
         $tasks = $this->data->getTasks();
         $tasknr = (int) (string) $XMLTask->number;
@@ -68,8 +82,8 @@ class ContributionsFromXML2 extends Stage {
         foreach (self::$contributionFromXML as $type => $XMLElement) {
             list($parent, $child) = explode('/', $XMLElement);
             $parentEl = $XMLTask->{$parent}[0];
-            // parse contributors            
-            $contributors = array();
+            // parse contributors
+            $contributors = [];
             if (!$parentEl || !isset($parentEl->{$child})) {
                 continue;
             }
@@ -79,8 +93,8 @@ class ContributionsFromXML2 extends Stage {
                 if (!$signature) {
                     continue;
                 }
-                
-                
+
+
                 $org = $this->serviceOrg->findByTeXSignature($signature, $this->data->getContest()->contest_id);
 
                 if (!$org) {

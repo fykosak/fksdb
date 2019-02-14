@@ -1,5 +1,7 @@
 <?php
 
+use FKSDB\ORM\ModelContest;
+
 /**
  * General results sheet with contestants and their ranks.
  *
@@ -32,6 +34,14 @@ abstract class AbstractResultsModel implements IResultsModel {
      */
     protected $evaluationStrategy;
 
+    /**
+     * AbstractResultsModel constructor.
+     * @param ModelContest $contest
+     * @param ServiceTask $serviceTask
+     * @param \Nette\Database\Connection $connection
+     * @param $year
+     * @param IEvaluationStrategy $evaluationStrategy
+     */
     function __construct(ModelContest $contest, ServiceTask $serviceTask, \Nette\Database\Connection $connection, $year, IEvaluationStrategy $evaluationStrategy) {
         $this->contest = $contest;
         $this->serviceTask = $serviceTask;
@@ -69,26 +79,30 @@ abstract class AbstractResultsModel implements IResultsModel {
      * @return array
      */
     public function getMetaColumns() {
-        return array(
+        return [
             self::DATA_NAME,
             self::DATA_SCHOOL,
             self::DATA_RANK_FROM,
             self::DATA_RANK_TO,
-        );
+        ];
     }
 
+    /**
+     * @param $category
+     * @return mixed
+     */
     abstract protected function composeQuery($category);
 
     /**
      * @note Work only with numeric types.
-     * @param type $conditions
-     * @return type
+     * @param mixed $conditions
+     * @return string
      */
     protected function conditionsToWhere($conditions) {
-        $where = array();
+        $where = [];
         foreach ($conditions as $col => $value) {
             if (is_array($value)) {
-                $set = array();
+                $set = [];
                 $hasNull = false;
                 foreach ($value as $subvalue) {
                     if ($subvalue === null) {
@@ -113,20 +127,20 @@ abstract class AbstractResultsModel implements IResultsModel {
     }
 
     /**
+     * @param $series
      * @return \Nette\Database\Table\Selection
-     * @throws \Nette\InvalidStateException
      */
     protected function getTasks($series) {
         return $this->serviceTask->getTable()
-                        ->select('task_id, label, points,series')
-                        ->where(array(
-                            'contest_id' => $this->contest->contest_id,
-                            'year' => $this->year,
-                            'series' => $series,
-                        ))
-                        ->order('tasknr');
+            ->select('task_id, label, points,series')
+            ->where([
+                'contest_id' => $this->contest->contest_id,
+                'year' => $this->year,
+                'series' => $series,
+            ])
+            ->order('tasknr');
     }
 
 }
 
-?>
+

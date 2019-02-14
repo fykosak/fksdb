@@ -2,7 +2,7 @@
 
 namespace Submits;
 
-use ModelSubmit;
+use FKSDB\ORM\ModelSubmit;
 
 /**
  *
@@ -10,11 +10,23 @@ use ModelSubmit;
  */
 interface IStorageProcessing {
 
-    public function setInputFile($filename);
+    /**
+     * @param string $filename
+     * @return mixed
+     */
+    public function setInputFile(string $filename);
 
-    public function setOutputFile($filename);
+    /**
+     * @param string $filename
+     * @return mixed
+     */
+    public function setOutputFile(string $filename);
 
+    /**
+     * @param ModelSubmit $submit
+     * @return mixed
+     */
     public function process(ModelSubmit $submit);
 }
 
-?>
+

@@ -7,7 +7,7 @@ use Events\Machine\Machine;
 use Events\Model\Holder\Holder;
 use Events\Processings\AbstractProcessing;
 use Events\SubmitProcessingException;
-use FKS\Logging\ILogger;
+use FKSDB\Logging\ILogger;
 use Nette\ArrayHash;
 use Nette\Forms\Form;
 use YearCalculator;
@@ -30,11 +30,25 @@ class CategoryProcessing extends AbstractProcessing {
      */
     private $serviceSchool;
 
+    /**
+     * CategoryProcessing constructor.
+     * @param YearCalculator $yearCalculator
+     * @param \ServiceSchool $serviceSchool
+     */
     function __construct(YearCalculator $yearCalculator, \ServiceSchool $serviceSchool) {
         $this->yearCalculator = $yearCalculator;
         $this->serviceSchool = $serviceSchool;
     }
 
+    /**
+     * @param $states
+     * @param ArrayHash $values
+     * @param Machine $machine
+     * @param Holder $holder
+     * @param ILogger $logger
+     * @param Form|null $form
+     * @return mixed|void
+     */
     protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
 
         if (!isset($values['team'])) {
@@ -47,7 +61,7 @@ class CategoryProcessing extends AbstractProcessing {
         $year = $event->year;
         $acYear = $this->yearCalculator->getAcademicYear($contest, $year);
 
-        $participants = array();
+        $participants = [];
         foreach ($holder as $name => $baseHolder) {
             if ($name == 'team') {
                 continue;
@@ -57,7 +71,7 @@ class CategoryProcessing extends AbstractProcessing {
 
             $studyYearControl = reset($studyYearControl);
             $schoolControl = reset($schoolControl);
-            
+
             $schoolValue = $schoolControl ? $schoolControl->getValue() : null;
             $studyYearValue = $studyYearControl ? $studyYearControl->getValue() : null;
 
@@ -66,7 +80,7 @@ class CategoryProcessing extends AbstractProcessing {
                     continue;
                 }
                 /**
-                 * @var $person \ModelPerson
+                 * @var \FKSDB\ORM\ModelPerson $person
                  */
                 $person = $baseHolder->getModel()->getMainModel()->person;
                 $history = $person->related('person_history')->where('ac_year', $acYear)->fetch();
@@ -87,25 +101,29 @@ class CategoryProcessing extends AbstractProcessing {
         $values['team']['category'] = $values['team']['force_a'] ? "A" : $this->getCategory($participants);
         $original = $holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
 
-        if ($original != $result) {
-            $logger->log(sprintf(_('Tým zařazen do kategorie %s.'), $result), ILogger::INFO);
+        if ($original != $values['team']['category']) {
+            $logger->log(sprintf(_('Tým zařazen do kategorie %s.'), $values['team']['category']), ILogger::INFO);
         }
     }
 
+    /**
+     * @param $participants
+     * @return string
+     */
     private function getCategory($participants) {
         $coefficient_sum = 0;
         $count_4 = 0;
         $count_3 = 0;
         $abroad = 0;
 
-        foreach ($participants as $participant) {            
+        foreach ($participants as $participant) {
             $country = $this->serviceSchool->getTable()
-                    ->select('address.region.country_iso')
-                    ->where(['school_id' => $participant['school_id']])->fetch();
+                ->select('address.region.country_iso')
+                ->where(['school_id' => $participant['school_id']])->fetch();
             if (!in_array($country->country_iso, array('CZ', 'SK'))) {
                 $abroad += 1;
-            }            
-            
+            }
+
             $studyYear = $participant['study_year'];
             $coefficient = ($studyYear >= 1 && $studyYear <= 4) ? $studyYear : 0;
             $coefficient_sum += $coefficient;
@@ -119,9 +137,10 @@ class CategoryProcessing extends AbstractProcessing {
 
         $category_handle = $participants ? ($coefficient_sum / count($participants)) : 999;
 
-        if ($abroad > 0) {
-            $result = 'F';
-        } else if ($category_handle <= 2 && $count_4 == 0 && $count_3 <= 2) {
+        // if ($abroad > 0) {
+        //     $result = 'F';
+        // } else
+        if ($category_handle <= 2 && $count_4 == 0 && $count_3 <= 2) {
             $result = 'C';
         } else if ($category_handle <= 3 && $count_4 <= 2) {
             $result = 'B';

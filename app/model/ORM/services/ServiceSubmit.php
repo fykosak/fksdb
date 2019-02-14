@@ -1,5 +1,6 @@
 <?php
 
+use FKSDB\ORM\ModelSubmit;
 use Nette\Database\Table\Selection;
 
 /**
@@ -8,12 +9,12 @@ use Nette\Database\Table\Selection;
 class ServiceSubmit extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_SUBMIT;
-    protected $modelClassName = 'ModelSubmit';
-    private $submit_cache = array();
+    protected $modelClassName = 'FKSDB\ORM\ModelSubmit';
+    private $submit_cache = [];
 
     /**
      * Syntactic sugar.
-     * 
+     *
      * @param int $ctId
      * @param int $taskId
      * @return ModelSubmit|null
@@ -22,10 +23,10 @@ class ServiceSubmit extends AbstractServiceSingle {
         $key = $ctId . ':' . $taskId;
 
         if (!array_key_exists($key, $this->submit_cache)) {
-            $result = $this->getTable()->where(array(
+            $result = $this->getTable()->where([
                         'ct_id' => $ctId,
                         'task_id' => $taskId,
-                    ))->fetch();
+            ])->fetch();
 
             if ($result !== false) {
                 $this->submit_cache[$key] = $result;
@@ -37,7 +38,7 @@ class ServiceSubmit extends AbstractServiceSingle {
     }
 
     /**
-     * 
+     *
      * @return Selection
      */
     public function getSubmits() {
@@ -48,4 +49,3 @@ class ServiceSubmit extends AbstractServiceSingle {
     }
 
 }
-

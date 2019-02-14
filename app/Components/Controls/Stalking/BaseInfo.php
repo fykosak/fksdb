@@ -2,25 +2,16 @@
 
 namespace FKSDB\Components\Controls\Stalking;
 
-use Nette\Application\UI\Control;
-
-class BaseInfo extends Control {
-    private $mode;
-    /**
-     * @var \ModelPerson;
-     */
-    private $modelPerson;
-
-    public function __construct(\ModelPerson $modelPerson, $mode = null) {
-        parent::__construct();
-        $this->mode = $mode;
-        $this->modelPerson = $modelPerson;
-    }
+/**
+ * Class BaseInfo
+ * @package FKSDB\Components\Controls\Stalking
+ */
+class BaseInfo extends StalkingComponent {
 
     public function render() {
-        $template = $this->template;
+        $this->beforeRender();
         $this->template->info = $this->modelPerson->getInfo();
-        $template->setFile(__DIR__ . '/BaseInfo.latte');
-        $template->render();
+        $this->template->setFile(__DIR__ . '/BaseInfo.latte');
+        $this->template->render();
     }
 }

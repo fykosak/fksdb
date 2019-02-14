@@ -1,6 +1,6 @@
 <?php
 
-use ORM\CachingServiceTrait;
+use FKSDB\ORM\ModelEventParticipant;
 use ORM\IModel;
 
 /**
@@ -8,11 +8,12 @@ use ORM\IModel;
  */
 class ServiceEventParticipant extends AbstractServiceSingle {
 
-    use CachingServiceTrait;
-
     protected $tableName = DbNames::TAB_EVENT_PARTICIPANT;
-    protected $modelClassName = 'ModelEventParticipant';
+    protected $modelClassName = 'FKSDB\ORM\ModelEventParticipant';
 
+    /**
+     * @param IModel $model
+     */
     public function save(IModel &$model) {
         try {
             parent::save($model);
@@ -24,13 +25,23 @@ class ServiceEventParticipant extends AbstractServiceSingle {
         }
     }
 
-}
+    /**
+     * @param IModel $model
+     * @param array $data
+     * @param bool $alive
+     * @return mixed|void
+     */
+    public function updateModel(IModel $model, $data, $alive = true) {
+        /**
+         * @var ModelEventParticipant $model
+         */
+        parent::updateModel($model, $data, $alive);
+        if (!$alive && !$model->isNew()) {
+            $person = $model->getPerson();
+            if ($person) {
+                $person->removeAccommodationForEvent($model->event_id);
+            }
 
-class DuplicateApplicationException extends ModelException {
-
-    public function __construct(ModelPerson $person, $previous = null) {
-        $message = sprintf(_('Osoba %s je na akci již přihlášena.'), $person->getFullname());
-        parent::__construct($message, null, $previous);
+        }
     }
-
 }

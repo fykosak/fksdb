@@ -2,17 +2,18 @@
 
 namespace FKSDB\Components\Controls\Choosers;
 
-use Nette\Application\BadRequestException;
+
 use Nette\Application\UI\Control;
-use Nette\Diagnostics\Debugger;
 use Nette\Http\Session;
+use Nette\Templating\FileTemplate;
 use Nette\Templating\Template;
-use OrgModule\BasePresenter;
+
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Jakub Šafin <xellos@fykos.cz>
+ * @property FileTemplate $template
  */
 class LanguageChooser extends Control {
 
@@ -60,26 +61,40 @@ class LanguageChooser extends Control {
         $this->languages = $languages;
     }
 
+    /**
+     * @return mixed
+     */
     public function getLanguages() {
         return $this->languages;
     }
 
+    /**
+     * @return mixed
+     */
     public function getDefaultLanguage() {
         return $this->defaultLanguage;
     }
 
+    /**
+     * @param $defaultLanguage
+     */
     public function setDefaultLanguage($defaultLanguage) {
         $this->defaultLanguage = $defaultLanguage;
     }
 
+    /**
+     * @param $language
+     * @return bool
+     */
     public function isLanguage($language) {
         return in_array($language, $this->languages);
     }
 
     /**
-     * @param $params object
+     * @param object $params
      * @return boolean
      * Redirect to correct address accorging to the resolved values.
+     * @throws \Exception
      */
     public function syncRedirect(&$params) {
         $this->init($params);
@@ -92,10 +107,17 @@ class LanguageChooser extends Control {
         return false;
     }
 
+    /**
+     * @return mixed
+     */
     public function getLanguage() {
         return $this->language;
     }
 
+    /**
+     * @param $params
+     * @throws \Exception
+     */
     private function init($params) {
         if ($this->initialized) {
             return;
@@ -124,22 +146,31 @@ class LanguageChooser extends Control {
 
     /**
      * @return array of existing languages
+     * @throws \Exception
      */
     private function getSupportedLanguages() {
-        /**
-         * @var $presenter \AuthenticationPresenter
-         */
         $presenter = $this->getPresenter();
+        if (!($presenter instanceof \BasePresenter)) {
+            throw new \Exception('Wrong presenter');
+        }
         return $presenter->getTranslator()->getSupportedLanguages();
 
     }
 
+    /**
+     * @param null $class
+     * @return \Nette\Templating\ITemplate|Template
+     */
     protected function createTemplate($class = NULL) {
         /**
-         * @var $template Template
+         * @var Template $template
          */
+        $presenter = $this->getPresenter();
+
         $template = parent::createTemplate($class);
-        $template->setTranslator($this->getPresenter()->getTranslator());
+        if ($presenter instanceof \BasePresenter) {
+            $template->setTranslator($presenter->getTranslator());
+        }
         return $template;
     }
 
@@ -149,13 +180,17 @@ class LanguageChooser extends Control {
         $this->template->languageNames = $this->languageNames;
         $this->template->currentLanguage = $this->getLanguage() ? $this->getLanguage() : null;
 
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR.'LanguageChooser.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'LanguageChooser.latte');
         $this->template->render();
     }
 
+    /**
+     * @param $language
+     * @throws \Nette\Application\AbortException
+     */
     public function handleChangeLang($language) {
         /**
-         * @var $presenter \BasePresenter
+         * @var \BasePresenter $presenter
          */
         $presenter = $this->getPresenter();
         $translator = $presenter->getTranslator();

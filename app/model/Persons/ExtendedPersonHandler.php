@@ -4,13 +4,13 @@ namespace Persons;
 
 use Authentication\AccountManager;
 use BasePresenter;
-use FKS\Components\Forms\Controls\ModelDataConflictException;
+use FKSDB\Components\Forms\Controls\ModelDataConflictException;
+use FKSDB\ORM\ModelContest;
+use FKSDB\ORM\ModelPerson;
 use FormUtils;
 use Mail\MailTemplateFactory;
 use Mail\SendFailedException;
-use ModelContest;
 use ModelException;
-use ModelPerson;
 use Nette\Database\Connection;
 use Nette\Diagnostics\Debugger;
 use Nette\Forms\Form;
@@ -22,7 +22,7 @@ use ServicePerson;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ExtendedPersonHandler extends Object {
@@ -80,6 +80,14 @@ class ExtendedPersonHandler extends Object {
      */
     private $person;
 
+    /**
+     * ExtendedPersonHandler constructor.
+     * @param IService $service
+     * @param ServicePerson $servicePerson
+     * @param Connection $connection
+     * @param MailTemplateFactory $mailTemplateFactory
+     * @param AccountManager $accountManager
+     */
     function __construct(IService $service, ServicePerson $servicePerson, Connection $connection, MailTemplateFactory $mailTemplateFactory, AccountManager $accountManager) {
         $this->service = $service;
         $this->servicePerson = $servicePerson;
@@ -88,38 +96,68 @@ class ExtendedPersonHandler extends Object {
         $this->accountManager = $accountManager;
     }
 
+    /**
+     * @return ModelContest
+     */
     public function getContest() {
         return $this->contest;
     }
 
+    /**
+     * @param ModelContest $contest
+     */
     public function setContest(ModelContest $contest) {
         $this->contest = $contest;
     }
 
+    /**
+     * @return int
+     */
     public function getYear() {
         return $this->year;
     }
 
+    /**
+     * @param $year
+     */
     public function setYear($year) {
         $this->year = $year;
     }
 
+    /**
+     * @return string
+     */
     public function getInvitationLang() {
         return $this->invitationLang;
     }
 
+    /**
+     * @param $invitationLang
+     */
     public function setInvitationLang($invitationLang) {
         $this->invitationLang = $invitationLang;
     }
 
+    /**
+     * @return ModelPerson
+     */
     public function getPerson() {
         return $this->person;
     }
 
+    /**
+     * @param Form $form
+     * @return mixed
+     */
     protected final function getReferencedPerson(Form $form) {
         return $form[self::CONT_AGGR][self::EL_PERSON]->getModel();
     }
 
+    /**
+     * @param Form $form
+     * @param IExtendedPersonPresenter $presenter
+     * @return bool
+     */
     public final function handleForm(Form $form, IExtendedPersonPresenter $presenter) {
         $connection = $this->connection;
         try {
@@ -135,7 +173,7 @@ class ExtendedPersonHandler extends Object {
             // create login
             $email = $person->getInfo() ? $person->getInfo()->email : null;
             $login = $person->getLogin();
-            $hasLogin = (bool) $login;
+            $hasLogin = (bool)$login;
             if ($email && !$login) {
                 $template = $this->mailTemplateFactory->createLoginInvitation($presenter, $this->getInvitationLang());
                 try {
@@ -186,6 +224,11 @@ class ExtendedPersonHandler extends Object {
         }
     }
 
+    /**
+     * @param ModelPerson $person
+     * @param $values
+     * @param $presenter
+     */
     protected function storeExtendedModel(ModelPerson $person, $values, $presenter) {
         if ($this->contest === null || $this->year === null) {
             throw new InvalidStateException('Must set contest and year before storing contestant.');

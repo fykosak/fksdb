@@ -1,18 +1,24 @@
 <?php
 
+namespace FKSDB\ORM;
+
+use AbstractModelSingle;
 use Nette\Utils\Strings;
 
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property $contest_id integer
- * @property $name string
+ * @property int $contest_id
+ * @property string $name
  */
 class ModelContest extends AbstractModelSingle {
     const ID_FYKOS = 1;
     const ID_VYFUK = 2;
 
-    public function getContestSymbol() {
+    /**
+     * @return string
+     */
+    public function getContestSymbol(): string {
         return strtolower(Strings::webalize($this->name));
     }
 }

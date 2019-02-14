@@ -1,41 +1,44 @@
 <div class="card mb-3 border-primary">
-    <h4 class="card-header bg-primary text-white">Address</h4>
+    <h4 class="card-header bg-primary text-white">{_('Address')}</h4>
     <div class="card-body">
+        {if $mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL || $mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_RESTRICT }
+            {if count($MAddress)}
+                {foreach $MAddress as $address}
+                    {if $address->type == 'P'}
+                        <h3>{_('Permanent address')}</h3>
+                    {else}
+                        <h3>{_('Delivery address')}</h3>
+                    {/if}
+                    <div>
+                        {if !is_null($address->first_row)}
+                            <div>{$address->first_row}</div>
+                        {/if}
+                        {if !is_null($address->second_row)}
+                            <div>{$address->second_row}</div>
+                        {/if}
 
-        {if count($MAddress)}
-            {foreach $MAddress as $address}
-                {if $address->type == 'P'}
-                    <h3>Permanent addres</h3>
-                {else}
-                    <h3>Delivery addres</h3>
-                {/if}
-                <div>
-                    {if !is_null($address->first_row)}
-                        <div>{$address->first_row}</div>
-                    {/if}
-                    {if !is_null($address->second_row)}
-                        <div>{$address->second_row}</div>
-                    {/if}
+                        {if !is_null($address->target)}
+                            <div>{$address->target}</div>
+                        {/if}
 
-                    {if !is_null($address->target)}
-                        <div>{$address->target}</div>
-                    {/if}
+                        {if !is_null($address->city)}
+                            <div>{$address->city}</div>
+                        {/if}
 
-                    {if !is_null($address->city)}
-                        <div>{$address->city}</div>
-                    {/if}
+                        {if !is_null($address->postal_code)}
+                            <div>{$address->postal_code}</div>
+                        {/if}
+                        {if !is_null($address->region_id)}
+                            <div>{$address->getAddress()->region->name}</div>
+                        {/if}
+                    </div>
 
-                    {if !is_null($address->postal_code)}
-                        <div>{$address->postal_code}</div>
-                    {/if}
-                    {if !is_null($address->region_id)}
-                        <div>{$address->getAddress()->region->name}</div>
-                    {/if}
-                </div>
-
-            {/foreach}
+                {/foreach}
+            {else}
+                <span class="badge-warning badge">{_('No records')}</span>
+            {/if}
         {else}
-            <span class="label-warning label">No records</span>
+            {control permissionDenied}
         {/if}
     </div>
 </div>

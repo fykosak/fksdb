@@ -2,15 +2,16 @@
 
 namespace OrgModule;
 
-use DbNames;
+use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Controls\FormControl\OptimisticFormControl;
+use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\ContestantSubmits;
 use FKSDB\Components\Forms\Factories\PersonFactory;
-use FKSDB\Components\Forms\OptimisticForm;
-use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
-use ModelSubmit;
-use ModelTaskContribution;
-use Nette\Application\BadRequestException;
+use FKSDB\ORM\ModelContestant;
+use FKSDB\ORM\ModelSubmit;
+use FKSDB\ORM\ModelTask;
+use FKSDB\ORM\ModelTaskContribution;
 use Nette\Application\UI\Form;
 use Nette\Caching\Cache;
 use Nette\Security\Permission;
@@ -18,10 +19,13 @@ use ServiceContestant;
 use ServicePerson;
 use ServiceSubmit;
 use ServiceTaskContribution;
-use ServiceTaskStudyYear;
 use Submits\ISubmitStorage;
 use Submits\SeriesTable;
 
+/**
+ * Class InboxPresenter
+ * @package OrgModule
+ */
 class InboxPresenter extends SeriesPresenter {
 
     const POST_CT_ID = 'ctId';
@@ -54,11 +58,6 @@ class InboxPresenter extends SeriesPresenter {
     private $serviceContestant;
 
     /**
-     * @var ServiceTaskStudyYear
-     */
-    private $serviceTaskStudyYear;
-
-    /**
      * @var SeriesTable
      */
     private $seriesTable;
@@ -68,34 +67,51 @@ class InboxPresenter extends SeriesPresenter {
      */
     private $personFactory;
 
+    /**
+     * @param ISubmitStorage $submitStorage
+     */
     public function injectSubmitStorage(ISubmitStorage $submitStorage) {
         $this->submitStorage = $submitStorage;
     }
 
+    /**
+     * @param ServiceTaskContribution $serviceTaskContribution
+     */
     public function injectServiceTaskContribution(ServiceTaskContribution $serviceTaskContribution) {
         $this->serviceTaskContribution = $serviceTaskContribution;
     }
 
+    /**
+     * @param ServicePerson $servicePerson
+     */
     public function injectServicePerson(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
     }
 
+    /**
+     * @param ServiceSubmit $serviceSubmit
+     */
     public function injectServiceSubmit(ServiceSubmit $serviceSubmit) {
         $this->serviceSubmit = $serviceSubmit;
     }
 
+    /**
+     * @param ServiceContestant $serviceContestant
+     */
     public function injectServiceContestant(ServiceContestant $serviceContestant) {
         $this->serviceContestant = $serviceContestant;
     }
 
-    public function injectServiceTaskStudyYear(ServiceTaskStudyYear $serviceTaskStudyYear) {
-        $this->serviceTaskStudyYear = $serviceTaskStudyYear;
-    }
-
+    /**
+     * @param SeriesTable $seriesTable
+     */
     public function injectSeriesTable(SeriesTable $seriesTable) {
         $this->seriesTable = $seriesTable;
     }
 
+    /**
+     * @param PersonFactory $personFactory
+     */
     public function injectPersonFactory(PersonFactory $personFactory) {
         $this->personFactory = $personFactory;
     }
@@ -117,14 +133,20 @@ class InboxPresenter extends SeriesPresenter {
 
     public function titleDefault() {
         $this->setTitle(_('Příjem řešení'));
+        $this->setIcon('fa fa-envelope-open');
     }
 
     public function renderDefault() {
-        $this['inboxForm']->setDefaults();
+        /**
+         * @var OptimisticFormControl $control
+         */
+        $control = $this->getComponent('inboxForm');
+        $control->getForm()->setDefaults();
     }
 
     public function titleHandout() {
         $this->setTitle(_('Rozdělení úloh opravovatelům'));
+        $this->setIcon('fa fa-inbox');
     }
 
     public function actionHandout() {
@@ -135,8 +157,9 @@ class InboxPresenter extends SeriesPresenter {
     }
 
     public function renderHandout() {
-        $taskIds = array();
-        foreach ($this->seriesTable->getTasks() as $task) {
+        $taskIds = [];
+        foreach ($this->seriesTable->getTasks() as $row) {
+            $task = ModelTask::createFromTableRow($row);
             $taskIds[] = $task->task_id;
         }
         $contributions = $this->serviceTaskContribution->getTable()->where(array(
@@ -144,72 +167,94 @@ class InboxPresenter extends SeriesPresenter {
             'task_id' => $taskIds,
         ));
 
-        $values = array();
-        foreach ($contributions as $contribution) {
+        $values = [];
+        foreach ($contributions as $row) {
+            $contribution = ModelTaskContribution::createFromTableRow($row);
             $taskId = $contribution->task_id;
             $personId = $contribution->person_id;
             $key = self::TASK_PREFIX . $taskId;
             if (!isset($values[$key])) {
-                $values[$key] = array();
+                $values[$key] = [];
             }
             $values[$key][] = $personId;
         }
-        $this['handoutForm']->setDefaults($values);
+        /**
+         * @var FormControl $control
+         */
+        $control = $this->getComponent('handoutForm');
+        $control->getForm()->setDefaults($values);
+
     }
 
-    protected function createComponentInboxForm($name) {
-        $form = new OptimisticForm(
-                array($this->seriesTable, 'getFingerprint'), array($this->seriesTable, 'formatAsFormValues')
-        );
-        $renderer = new BootstrapRenderer();
-        $renderer->setColLeft(2);
-        $renderer->setColRight(10);
-        $form->setRenderer($renderer);
+    /**
+     * @return OptimisticFormControl
+     * @throws \Nette\Application\BadRequestException
+     */
+    protected function createComponentInboxForm() {
+        $controlForm = new OptimisticFormControl([$this->seriesTable, 'getFingerprint'], [$this->seriesTable, 'formatAsFormValues']);
+        /*$form = new OptimisticForm(
+            array($this->seriesTable, 'getFingerprint'), array($this->seriesTable, 'formatAsFormValues')
+        );*/
+        $form = $controlForm->getForm();
+        /*  $renderer = new BootstrapRenderer();
+          $renderer->setColLeft(2);
+          $renderer->setColRight(10);
+          $form->setRenderer($renderer);*/
 
         $contestants = $this->seriesTable->getContestants();
         $tasks = $this->seriesTable->getTasks();
-        $this->serviceTaskStudyYear->preloadCache(array(
-            'task_id' => $tasks,
-        ));
+        $container = new ModelContainer();
+        $form->addComponent($container, SeriesTable::FORM_CONTESTANT);
+        // $container = $form->addContainer(SeriesTable::FORM_CONTESTANT);
 
-
-        $container = $form->addContainer(SeriesTable::FORM_CONTESTANT);
-
-        foreach ($contestants as $contestant) {
-            $control = new ContestantSubmits($tasks, $contestant, $this->serviceSubmit, $this->serviceTaskStudyYear, $this->getSelectedAcademicYear(), $contestant->getPerson()->getFullname());
+        foreach ($contestants as $row) {
+            $contestant = ModelContestant::createFromTableRow($row);
+            $control = new ContestantSubmits($tasks, $contestant, $this->serviceSubmit, $this->getSelectedAcademicYear(), $contestant->getPerson()->getFullName());
             $control->setClassName('inbox');
-
-            $namingContainer = $container->addContainer($contestant->ct_id);
+            $namingContainer = new ModelContainer();
+            $container->addComponent($namingContainer, $contestant->ct_id);
+            // $namingContainer = $container->addContainer($contestant->ct_id);
             $namingContainer->addComponent($control, SeriesTable::FORM_SUBMIT);
         }
 
         $form->addSubmit('save', _('Uložit'));
-        $form->onSuccess[] = array($this, 'inboxFormSuccess');
+        $form->onSuccess[] = function (Form $form) {
+            $this->inboxFormSuccess($form);
+        };
 
-        // JS dependencies        
+        // JS dependencies
         $this->registerJSFile('js/datePicker.js');
         $this->registerJSFile('js/jquery.ui.swappable.js');
         $this->registerJSFile('js/inbox.js');
 
-        return $form;
+        return $controlForm;
     }
 
+    /**
+     * @return FormControl
+     * @throws \Nette\Application\BadRequestException
+     */
     protected function createComponentHandoutForm() {
-        $form = new Form();
-        $form->setRenderer(new BootstrapRenderer());
+        $formControl = new FormControl();
+        $form = $formControl->getForm();
 
-        foreach ($this->seriesTable->getTasks() as $task) {
+        foreach ($this->seriesTable->getTasks() as $row) {
+            $task = ModelTask::createFromTableRow($row);
             $control = $this->personFactory->createPersonSelect(false, $task->getFQName(), $this->getOrgProvider());
-            $control->setMultiselect(true);
+            $control->setMultiSelect(true);
             $form->addComponent($control, self::TASK_PREFIX . $task->task_id);
         }
 
         $form->addSubmit('save', _('Uložit'));
         $form->onSuccess[] = callback($this, 'handoutFormSuccess');
 
-        return $form;
+        return $formControl;
     }
 
+    /**
+     * @param Form $form
+     * @throws \Nette\Application\AbortException
+     */
     public function inboxFormSuccess(Form $form) {
         $values = $form->getValues();
 
@@ -218,7 +263,11 @@ class InboxPresenter extends SeriesPresenter {
         foreach ($values[SeriesTable::FORM_CONTESTANT] as $container) {
             $submits = $container[SeriesTable::FORM_SUBMIT];
 
-            foreach ($submits as $submit) {
+            foreach ($submits as $row) {
+                /**
+                 * @var ModelSubmit $submit
+                 */
+                $submit = $row;
                 // ACL granularity is very rough, we just check it in action* method
                 if ($submit->isEmpty()) {
                     $this->serviceSubmit->dispose($submit);
@@ -232,16 +281,21 @@ class InboxPresenter extends SeriesPresenter {
         $this->redirect('this');
     }
 
+    /**
+     * @param Form $form
+     * @throws \Nette\Application\AbortException
+     */
     public function handoutFormSuccess(Form $form) {
         $values = $form->getValues();
 
-        $ORMservice = $this->serviceTaskContribution;
-        $connection = $ORMservice->getConnection();
+        $service = $this->serviceTaskContribution;
+        $connection = $service->getConnection();
 
         $connection->beginTransaction();
 
-        foreach ($this->seriesTable->getTasks() as $task) {
-            $ORMservice->getTable()->where(array(
+        foreach ($this->seriesTable->getTasks() as $row) {
+            $task = ModelTask::createFromTableRow($row);
+            $service->getTable()->where(array(
                 'task_id' => $task->task_id,
                 'type' => ModelTaskContribution::TYPE_GRADE
             ))->delete();
@@ -252,8 +306,8 @@ class InboxPresenter extends SeriesPresenter {
                     'person_id' => $personId,
                     'type' => ModelTaskContribution::TYPE_GRADE,
                 );
-                $contribution = $ORMservice->createNew($data);
-                $ORMservice->save($contribution);
+                $contribution = $service->createNew($data);
+                $service->save($contribution);
             }
         }
 
@@ -263,136 +317,12 @@ class InboxPresenter extends SeriesPresenter {
         $this->redirect('this');
     }
 
-    public function handleSwapSubmits() {
-        if (!$this->isAjax()) {
-            throw new BadRequestException('AJAX only.', 405);
-        }
-
-        $post = $this->getHttpRequest()->getPost();
-
-        $ctId = $post[self::POST_CT_ID];
-        $order = $post[self::POST_ORDER];
-        $series = $this->getSelectedSeries();
-
-        $tasks = array();
-        foreach ($this->seriesTable->getTasks() as $task) {
-            $task->task_id; // stupid touch
-            $tasks[$task->tasknr] = $task;
-        }
-
-        $uploadSubmits = array();
-        $submits = $this->serviceSubmit->getSubmits()->where(array(
-                    DbNames::TAB_SUBMIT . '.ct_id' => $ctId,
-                    DbNames::TAB_TASK . '.series' => $series
-                ))->order(DbNames::TAB_TASK . '.tasknr');
-        foreach ($submits as $row) {
-            if ($row->source == ModelSubmit::SOURCE_POST) {
-                unset($tasks[$row->tasknr]);
-            } else {
-                $uploadSubmits[$row->submit_id] = $this->serviceSubmit->createNew($row->toArray());
-                $uploadSubmits[$row->submit_id]->setNew(false);
-            }
-        }
-        $nTasks = array(); // reindexed tasks
-        foreach ($tasks as $task) {
-            $nTasks[] = $task;
-        }
-
-
-        /*
-         * Prepare new tasks for properly ordered submit.
-         */
-        $orderedSubmits = array();
-        $orderedTasks = array();
-
-        $nr = -1;
-        foreach ($order as $submitData) {
-            ++$nr;
-            list($text, $submitId) = explode('-', $submitData);
-            if ($submitId == 'null') {
-                continue;
-            }
-            $orderedSubmits[] = $uploadSubmits[$submitId];
-            $orderedTasks[] = $nTasks[$nr]->task_id;
-        }
-
-        /*
-         * Create ORM copies of submits and delete old, then save the new ones
-         * (two-pass because of unique constraint).
-         */
-        $connection = $this->serviceSubmit->getConnection();
-        $connection->beginTransaction();
-
-        $newSubmits = array();
-        foreach (array_combine($orderedTasks, $orderedSubmits) as $taskId => $submit) {
-            if ($taskId == $submit->task_id) {
-                $newSubmits[] = $submit;
-            } else {
-                $data = $submit->toArray();
-                unset($data['submit_id']);
-                $newSubmit = $this->serviceSubmit->createNew($data);
-                $newSubmit->task_id = $taskId;
-
-                $submit->getTask(); // stupid touch
-                $this->serviceSubmit->dispose($submit);
-
-                $newSubmits[] = $newSubmit;
-            }
-        }
-
-        for ($i = 0; $i < count($newSubmits); ++$i) {
-            $this->serviceSubmit->save($newSubmits[$i]);
-        }
-
-        /*
-         * Store files with the new submits.
-         */
-        $this->submitStorage->beginTransaction();
-
-        foreach (array_keys($orderedSubmits) as $i) {
-            $this->restampSubmit($orderedSubmits[$i], $newSubmits[$i]);
-        }
-
-        $this->submitStorage->commit();
-        $connection->commit();
-
-        /**
-         * Prepare AJAX response
-         */
-        $contestant = $this->serviceContestant->findByPrimary($ctId);
-        $submits = $this->seriesTable->getSubmitsTable($ctId);
-        $dummyElement = new ContestantSubmits($this->seriesTable->getTasks(), $contestant, $this->serviceSubmit);
-        $dummyElement->setValue($submits);
-
-        $this->payload->data = json_decode($dummyElement->getRawValue()); // sorry, back and forth
-        $this->payload->fingerprint = $this->seriesTable->getFingerprint();
-        $this->sendPayload();
-    }
-
-    /**
-     * 
-     * @param ModelSubmit $oldSubmit
-     * @param ModelSubmit $newSubmit
-     * @return void
-     */
-    private function restampSubmit(ModelSubmit $oldSubmit, ModelSubmit $newSubmit) {
-        if ($oldSubmit->submit_id == $newSubmit->submit_id) {
-            return;
-        }
-
-        $filename = $this->submitStorage->retrieveFile($oldSubmit, ISubmitStorage::TYPE_ORIGINAL);
-        $tempDir = $this->globalParameters['tempDir'];
-        $backup = tempnam($tempDir, 'restamp');
-        copy($filename, $backup);
-
-        $this->submitStorage->deleteFile($oldSubmit); //TODO include in the transaction?
-
-        $this->submitStorage->storeFile($backup, $newSubmit);
-        // backup file is renamed in file storage
-    }
-
     private $orgProvider;
 
+    /**
+     * @return PersonProvider
+     * @throws \Nette\Application\BadRequestException
+     */
     private function getOrgProvider() {
         if (!$this->orgProvider) {
             $this->orgProvider = new PersonProvider($this->servicePerson);

@@ -5,6 +5,7 @@ use Authentication\PasswordAuthenticator;
 use Authentication\TokenAuthenticator;
 use Authorization\ContestAuthorizator;
 use Authorization\EventAuthorizator;
+use FKSDB\ORM\ModelAuthToken;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Diagnostics\Debugger;
@@ -51,34 +52,58 @@ abstract class AuthenticatedPresenter extends BasePresenter {
      */
     protected $contestAuthorizator;
 
+    /**
+     * @param TokenAuthenticator $tokenAuthenticator
+     */
     public function injectTokenAuthenticator(TokenAuthenticator $tokenAuthenticator) {
         $this->tokenAuthenticator = $tokenAuthenticator;
     }
 
+    /**
+     * @param PasswordAuthenticator $passwordAuthenticator
+     */
     public function injectPasswordAuthenticator(PasswordAuthenticator $passwordAuthenticator) {
         $this->passwordAuthenticator = $passwordAuthenticator;
     }
 
+    /**
+     * @param GithubAuthenticator $githubAuthenticator
+     */
     public function injectGithubAuthenticator(GithubAuthenticator $githubAuthenticator) {
         $this->githubAuthenticator = $githubAuthenticator;
     }
 
+    /**
+     * @param ContestAuthorizator $contestAuthorizator
+     */
     public function injectContestAuthorizator(ContestAuthorizator $contestAuthorizator) {
         $this->contestAuthorizator = $contestAuthorizator;
     }
 
-    public function getContestAuthorizator() {
+    /**
+     * @return ContestAuthorizator
+     */
+    public function getContestAuthorizator(): ContestAuthorizator {
         return $this->contestAuthorizator;
     }
 
+    /**
+     * @param EventAuthorizator $eventAuthorizator
+     */
     public function injectEventAuthorizator(EventAuthorizator $eventAuthorizator) {
         $this->eventAuthorizator = $eventAuthorizator;
     }
 
+    /**
+     * @return EventAuthorizator
+     */
     public function getEventAuthorizator() {
         return $this->eventAuthorizator;
     }
 
+    /**
+     * @return TokenAuthenticator
+     */
     public function getTokenAuthenticator() {
         return $this->tokenAuthenticator;
     }
@@ -92,6 +117,10 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         return 'authorized' . $action;
     }
 
+    /**
+     * @param $element
+     * @throws ForbiddenRequestException
+     */
     public function checkRequirements($element) {
         parent::checkRequirements($element);
         if ($element instanceof ReflectionClass) {
@@ -103,6 +132,11 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         }
     }
 
+    /**
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws \Nette\Application\AbortException
+     */
     protected function startup() {
         parent::startup();
 
@@ -128,6 +162,9 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         }
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     */
     private function optionalLoginRedirect() {
         if (!$this->requiresLogin()) {
             return;
@@ -135,15 +172,18 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         $this->loginRedirect();
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     */
     protected final function loginRedirect() {
         if ($this->user->logoutReason === UserStorage::INACTIVITY) {
             $reason = AuthenticationPresenter::REASON_TIMEOUT;
         } else {
             $reason = AuthenticationPresenter::REASON_AUTH;
         }
-        $backlink = $this->application->storeRequest(); //TODO this doesn't work in cross domain environment
+
         $this->redirect(':Authentication:login', array(
-            'backlink' => $backlink,
+            'backlink' => $this->storeRequest(),
             AuthenticationPresenter::PARAM_REASON => $reason
         ));
     }
@@ -174,10 +214,16 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         return null;
     }
 
+    /**
+     * @throws ForbiddenRequestException
+     */
     protected function unauthorizedAccess() {
         throw new ForbiddenRequestException();
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     */
     private function tryAuthToken() {
         $tokenData = $this->getParam(TokenAuthenticator::PARAM_AUTH_TOKEN);
 
@@ -201,6 +247,9 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         }
     }
 
+    /**
+     *
+     */
     private function tryHttpAuth() {
         if (!isset($_SERVER['PHP_AUTH_USER'])) {
             $this->httpAuthPrompt();
@@ -224,6 +273,9 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         }
     }
 
+    /**
+     *
+     */
     private function httpAuthPrompt() {
         $realm = $this->getHttpRealm();
         if ($realm && $this->requiresLogin()) {
@@ -234,6 +286,9 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         }
     }
 
+    /**
+     * @throws BadRequestException
+     */
     private function tryGithub() {
         if (!$this->getHttpRequest()->getHeader('X-GitHub-Event')) {
             return;

@@ -16,17 +16,17 @@ class DetailResultsModel extends AbstractResultsModel {
      * Cache
      * @var array
      */
-    private $dataColumns = array();
+    private $dataColumns = [];
 
     /**
      * Definition of header.
-     * 
+     *
      * @param ModelCategory $category
      * @return array
      */
     public function getDataColumns($category) {
         if (!isset($this->dataColumns[$category->id])) {
-            $dataColumns = array();
+            $dataColumns = [];
             $sum = 0;
             foreach ($this->getTasks($this->series) as $task) {
                 $taskPoints = $this->evaluationStrategy->getTaskPoints($task, $category);
@@ -47,26 +47,39 @@ class DetailResultsModel extends AbstractResultsModel {
         return $this->dataColumns[$category->id];
     }
 
+    /**
+     * @return int|mixed
+     */
     public function getSeries() {
         return $this->series;
     }
 
+    /**
+     * @param mixed $series
+     */
     public function setSeries($series) {
         $this->series = $series;
         // invalidate cache of columns
-        $this->dataColumns = array();
+        $this->dataColumns = [];
     }
 
+    /**
+     * @return array
+     */
     public function getCategories() {
         return $this->evaluationStrategy->getCategories();
     }
 
+    /**
+     * @param $category
+     * @return mixed|string
+     */
     protected function composeQuery($category) {
         if (!$this->series) {
             throw new \Nette\InvalidStateException('Series not set.');
         }
 
-        $select = array();
+        $select = [];
         $select[] = "IF(p.display_name IS NULL, CONCAT(p.other_name, ' ', p.family_name), p.display_name) AS `" . self::DATA_NAME . "`";
         $select[] = "sch.name_abbrev AS `" . self::DATA_SCHOOL . "`";
 
@@ -112,4 +125,4 @@ left join submit s ON s.task_id = t.task_id AND s.ct_id = ct.ct_id";
 
 }
 
-?>
+

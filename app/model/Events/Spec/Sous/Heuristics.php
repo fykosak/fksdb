@@ -7,7 +7,7 @@ use Exports\StoredQueryPostProcessing;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class Heuristics extends StoredQueryPostProcessing {
@@ -26,12 +26,19 @@ class Heuristics extends StoredQueryPostProcessing {
     const RULE4MW = '4WM';
     const RULE4FW = '4WF';
 
+    /**
+     * @return mixed|string
+     */
     public function getDescription() {
         return 'Z výsledkovky vybere zvance a náhradníky na soustředění (http://wiki.fykos.cz/fykos:soustredeni:zasady:heuristikazvani).
             Hierarchický kód určuje pravidlo a případně podpravidlo, dle nějž je osoba zvaná/náhradníkovaná.
 ';
     }
 
+    /**
+     * @param $data
+     * @return array|mixed
+     */
     public function processData($data) {
         $result = iterator_to_array($data);
         $P = $this->findP($result);
@@ -194,6 +201,10 @@ class Heuristics extends StoredQueryPostProcessing {
         return $result;
     }
 
+    /**
+     * @param $data
+     * @return float|int
+     */
     private function findP($data) {
         $Z = $this->parameters['par_z'];
         $P = ceil(($Z - self::RESERVE_1) / self::CAT_COUNT) + 1;
@@ -211,14 +222,27 @@ class Heuristics extends StoredQueryPostProcessing {
         return $P;
     }
 
+    /**
+     * @param $row
+     * @param $P
+     * @return bool
+     */
     private function inviting($row, $P) {
         return $row['category'] == 4 ? ($row['cat_rank'] <= $P - self::P_4) : ($row['cat_rank'] <= $P);
     }
 
+    /**
+     * @param $row
+     * @return bool
+     */
     private function checkInvMin($row) {
         return $row['points'] >= $this->parameters['min_z'];
     }
 
+    /**
+     * @param $row
+     * @return bool
+     */
     private function checkSpMin($row) {
         return $row['points'] >= $this->parameters['min_n'];
     }

@@ -2,13 +2,13 @@
 
 namespace FKSDB\model\Fyziklani\Rooms;
 
-use FKS\Logging\MemoryLogger;
-use ModelEvent;
+use FKSDB\Logging\MemoryLogger;
+use FKSDB\ORM\ModelEvent;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 use Pipeline\Pipeline;
 
 /**
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class PipelineFactory {
@@ -18,15 +18,19 @@ class PipelineFactory {
      */
     private $serviceTeam;
 
+    /**
+     * PipelineFactory constructor.
+     * @param ServiceFyziklaniTeam $serviceTeam
+     */
     function __construct(ServiceFyziklaniTeam $serviceTeam) {
         $this->serviceTeam = $serviceTeam;
     }
 
     /**
-     * 
+     * @param ModelEvent $event
      * @return Pipeline
      */
-    public function create(ModelEvent $event) {
+    public function create(ModelEvent $event): Pipeline {
         $pipeline = new Pipeline();
         $pipeline->setLogger(new MemoryLogger());
 

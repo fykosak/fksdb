@@ -1,5 +1,6 @@
 <?php
 
+use FKSDB\ORM\ModelPerson;
 use ORM\IModel;
 
 /**
@@ -8,28 +9,12 @@ use ORM\IModel;
 class ServicePerson extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_PERSON;
-    protected $modelClassName = 'ModelPerson';
+    protected $modelClassName = 'FKSDB\ORM\ModelPerson';
 
     /**
      * Syntactic sugar.
-     * 
-     * @deprecated
-     * @see ServiceOrg::findByTeXSignature($signature, $contest_id)
-     * @param type $signature
-     * @return ModelPerson|null
-     */
-    public function findByTeXSignature($signature) {
-        if (!$signature) {
-            return null;
-        }
-        $result = $this->getTable()->where('person_info:tex_signature', $signature)->fetch();
-        return $result ? : null;
-    }
-
-    /**
-     * Syntactic sugar.
-     * 
-     * @param type $email
+     *
+     * @param mixed $email
      * @return ModelPerson|null
      */
     public function findByEmail($email) {
@@ -37,9 +22,13 @@ class ServicePerson extends AbstractServiceSingle {
             return null;
         }
         $result = $this->getTable()->where('person_info:email', $email)->fetch();
-        return $result ? : null;
+        return $result ? ModelPerson::createFromTableRow($result) : null;
     }
 
+    /**
+     * @param IModel $model
+     * @return mixed|void
+     */
     public function save(IModel &$model) {
         if (!isset($model->gender)) {
             $model->inferGender();

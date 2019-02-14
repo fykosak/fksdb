@@ -9,7 +9,7 @@ use Tasks\SeriesData;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class TasksFromXML extends Stage {
@@ -29,11 +29,19 @@ class TasksFromXML extends Stage {
      */
     private $taskService;
 
+    /**
+     * TasksFromXML constructor.
+     * @param array $xmlToColumnMap
+     * @param ServiceTask $taskService
+     */
     public function __construct(array $xmlToColumnMap, ServiceTask $taskService) {
         $this->xmlToColumnMap = $xmlToColumnMap;
         $this->taskService = $taskService;
     }
 
+    /**
+     * @param mixed $data
+     */
     public function setInput($data) {
         $this->data = $data;
     }
@@ -44,17 +52,23 @@ class TasksFromXML extends Stage {
         }
     }
 
+    /**
+     * @return mixed|SeriesData
+     */
     public function getOutput() {
         return $this->data;
     }
 
+    /**
+     * @param SimpleXMLElement $XMLTask
+     */
     private function processTask(SimpleXMLElement $XMLTask) {
         $contest = $this->data->getContest();
         $year = $this->data->getYear();
         $series = $this->data->getSeries();
         $tasknr = (int) (string) $XMLTask->number;
 
-        // obtain ModelTask
+        // obtain FKSDB\ORM\ModelTask
         $task = $this->taskService->findBySeries($contest, $year, $series, $tasknr);
         if ($task == null) {
             $task = $this->taskService->createNew(array(

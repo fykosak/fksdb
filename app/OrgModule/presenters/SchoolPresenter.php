@@ -2,11 +2,11 @@
 
 namespace OrgModule;
 
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\SchoolFactory;
 use FKSDB\Components\Grids\SchoolsGrid;
 use FormUtils;
-use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelException;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
@@ -17,7 +17,7 @@ use ServiceSchool;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class SchoolPresenter extends EntityPresenter {
@@ -47,88 +47,128 @@ class SchoolPresenter extends EntityPresenter {
      */
     private $addressFactory;
 
+    /**
+     * @param ServiceSchool $serviceSchool
+     */
     public function injectServiceSchool(ServiceSchool $serviceSchool) {
         $this->serviceSchool = $serviceSchool;
     }
 
+    /**
+     * @param ServiceAddress $serviceAddress
+     */
     public function injectServiceAddress(ServiceAddress $serviceAddress) {
         $this->serviceAddress = $serviceAddress;
     }
 
+    /**
+     * @param SchoolFactory $schoolFactory
+     */
     public function injectSchoolFactory(SchoolFactory $schoolFactory) {
         $this->schoolFactory = $schoolFactory;
     }
 
+    /**
+     * @param AddressFactory $addressFactory
+     */
     public function injectAddressFactory(AddressFactory $addressFactory) {
         $this->addressFactory = $addressFactory;
     }
 
     public function titleList() {
         $this->setTitle(_('Školy'));
+        $this->setIcon('fa fa-university');
     }
 
     public function titleCreate() {
         $this->setTitle(_('Založit školu'));
+        $this->setIcon('fa fa-plus');
     }
 
-    public function titleEdit($id) {
+    public function titleEdit() {
         $school = $this->getModel();
         $this->setTitle(sprintf(_('Úprava školy %s'), $school->name_abbrev));
+        $this->setIcon('fa fa-pencil');
     }
 
-    public function actionDelete($id) {
+    public function actionDelete() {
         // This should set active flag to false.
-        throw new NotImplementedException();
+        throw new NotImplementedException(null, 501);
     }
 
+    /**
+     * @param $name
+     * @return FormControl
+     */
     protected function createComponentCreateComponent($name) {
-        $form = $this->createForm();
+        $control = $this->createForm();
+        $form = $control->getForm();
 
         $form->addSubmit('send', _('Vložit'));
-        $form->onSuccess[] = array($this, 'handleCreateFormSuccess');
+        $form->onSuccess[] = [$this, 'handleCreateFormSuccess'];
 
-        return $form;
+        return $control;
     }
 
+    /**
+     * @param $name
+     * @return FormControl
+     */
     protected function createComponentEditComponent($name) {
-        $form = $this->createForm();
-
+        $control = $this->createForm();
+        $form = $control->getForm();
         $form->addSubmit('send', _('Uložit'));
-        $form->onSuccess[] = array($this, 'handleEditFormSuccess');
+        $form->onSuccess[] = [$this, 'handleEditFormSuccess'];
 
-        return $form;
+        return $control;
     }
 
+    /**
+     * @param IModel|null $model
+     * @param Form $form
+     */
     protected function setDefaults(IModel $model = null, Form $form) {
         if (!$model) {
             return;
         }
-        $defaults = array(
+        /**
+         * @var \FKSDB\ORM\ModelEventAccommodation $model
+         */
+        $defaults = [
             self::CONT_SCHOOL => $model->toArray(),
-            self::CONT_ADDRESS => $model->getAddress()->toArray(),
-        );
+            self::CONT_ADDRESS => $model->getAddress() ? $model->getAddress()->toArray() : null,
+        ];
+
         $form->setDefaults($defaults);
     }
 
+    /**
+     * @param $name
+     * @return SchoolsGrid
+     */
     protected function createComponentGrid($name) {
-        $grid = new SchoolsGrid($this->serviceSchool);
-
-        return $grid;
+        return new SchoolsGrid($this->serviceSchool);
     }
 
+    /**
+     * @return FormControl
+     */
     private function createForm() {
-        $form = new Form();
-        $form->setRenderer(new BootstrapRenderer());
-
+        $control = new FormControl();
+        $form = $control->getForm();
         $schoolContainer = $this->schoolFactory->createSchool();
         $form->addComponent($schoolContainer, self::CONT_SCHOOL);
 
         $addressContainer = $this->addressFactory->createAddress(AddressFactory::REQUIRED | AddressFactory::NOT_WRITEONLY);
         $form->addComponent($addressContainer, self::CONT_ADDRESS);
 
-        return $form;
+        return $control;
     }
 
+    /**
+     * @param $id
+     * @return \AbstractModelSingle|\Nette\Database\Table\ActiveRow|null
+     */
     protected function loadModel($id) {
         return $this->serviceSchool->findByPrimary($id);
     }
@@ -136,6 +176,7 @@ class SchoolPresenter extends EntityPresenter {
     /**
      * @internal
      * @param Form $form
+     * @throws \Nette\Application\AbortException
      */
     public function handleCreateFormSuccess(Form $form) {
         $connection = $this->serviceSchool->getConnection();
@@ -170,7 +211,7 @@ class SchoolPresenter extends EntityPresenter {
             }
 
             $this->flashMessage(_('Škola založena'), self::FLASH_SUCCESS);
-            $this->backlinkRedirect();
+            $this->backLinkRedirect();
             $this->redirect('list'); // if there's no backlink
         } catch (ModelException $e) {
             $connection->rollBack();
@@ -182,6 +223,7 @@ class SchoolPresenter extends EntityPresenter {
     /**
      * @internal
      * @param Form $form
+     * @throws \Nette\Application\AbortException
      */
     public function handleEditFormSuccess(Form $form) {
         $connection = $this->serviceSchool->getConnection();
@@ -216,7 +258,7 @@ class SchoolPresenter extends EntityPresenter {
             }
 
             $this->flashMessage(_('Škola upravena'), self::FLASH_SUCCESS);
-            $this->backlinkRedirect();
+            $this->backLinkRedirect();
             $this->redirect('list'); // if there's no backlink
         } catch (ModelException $e) {
             $connection->rollBack();

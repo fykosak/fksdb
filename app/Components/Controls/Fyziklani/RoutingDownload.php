@@ -1,13 +1,13 @@
 <?php
 
-namespace  FKSDB\Components\Controls\Fyziklani;
+namespace FKSDB\Components\Controls\Fyziklani;
 
-use FKS\Application\IJavaScriptCollector;
-
+use FKSDB\Application\IJavaScriptCollector;
+use FKSDB\ORM\ModelEvent;
 use Nette\Application\UI\Control;
-use Nette\ComponentModel\IContainer;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
+use ORM\Services\Events\ServiceFyziklaniTeam;
 
 
 /**
@@ -16,21 +16,6 @@ use Nette\Templating\FileTemplate;
  *
  */
 class RoutingDownload extends Control {
-
-    /**
-     * @var array
-     */
-    private $buildings;
-
-    /**
-     * @var array
-     */
-    private $rooms;
-    /**
-     * @var array
-     */
-    private $teams;
-
     /**
      * @var bool
      */
@@ -39,33 +24,52 @@ class RoutingDownload extends Control {
      * @var
      */
     private $translator;
+    /**
+     * @var ModelEvent
+     */
+    private $event;
+    /**
+     * @var ServiceFyziklaniTeam
+     */
+    private $serviceFyziklaniTeam;
+    /**
+     * @var \ServiceFyziklaniRoom
+     */
+    private $serviceFyziklaniRoom;
 
-    public function __construct(ITranslator $translator) {
+    /**
+     * RoutingDownload constructor.
+     * @param ModelEvent $event
+     * @param ITranslator $translator
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @param \ServiceFyziklaniRoom $serviceFyziklaniRoom
+     */
+    public function __construct(ModelEvent $event, ITranslator $translator, ServiceFyziklaniTeam $serviceFyziklaniTeam, \ServiceFyziklaniRoom $serviceFyziklaniRoom) {
         $this->translator = $translator;
+        $this->event = $event;
+        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+        $this->serviceFyziklaniRoom = $serviceFyziklaniRoom;
+
         parent::__construct();
     }
 
-    public function setRooms($rooms) {
-        $this->rooms = $rooms;
-    }
-
-    public function setBuildings($buildings) {
-        $this->buildings = $buildings;
-    }
-
-    public function setTeams($teams) {
-        $this->teams = $teams;
-    }
-
+    /**
+     *
+     */
     public function render() {
-        $this->template->rooms = $this->rooms;
-        $this->template->buildings = $this->buildings;
-        $this->template->teams = $this->teams;
+        $rooms = $this->serviceFyziklaniRoom->getRoomsByIds($this->event->getParameter('gameSetup')['rooms']);
+
+        $this->template->rooms = $rooms;
+        $this->template->buildings = $this->event->getParameter('gameSetup')['buildings'];
+        $this->template->teams = $this->serviceFyziklaniTeam->getTeamsAsArray($this->event);
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'RoutingDownload.latte');
         $this->template->setTranslator($this->translator);
         $this->template->render();
     }
 
+    /**
+     * @param $obj
+     */
     protected function attached($obj) {
         parent::attached($obj);
         if (!self::$JSAttached && $obj instanceof IJavaScriptCollector) {
@@ -75,4 +79,5 @@ class RoutingDownload extends Control {
             $obj->registerJSFile('https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.33/vfs_fonts.js');
         }
     }
+
 }

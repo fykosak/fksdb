@@ -2,7 +2,7 @@
 
 namespace OrgModule;
 
-use FKS\Components\Controls\FormControl;
+use FKSDB\Components\Controls\FormControl\FormControl;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use ORM\IModel;
@@ -12,7 +12,7 @@ use ORM\IModel;
  *   - check ACL
  *   - fill default form values
  *   - handling submitted data must be implemented in descendants
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 abstract class EntityPresenter extends BasePresenter {
@@ -36,6 +36,10 @@ abstract class EntityPresenter extends BasePresenter {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->modelResourceId, 'create', $this->getSelectedContest()));
     }
 
+    /**
+     * @param $id
+     * @throws BadRequestException
+     */
     public function authorizedEdit($id) {
         $model = $this->getModel();
         if (!$model) {
@@ -48,6 +52,10 @@ abstract class EntityPresenter extends BasePresenter {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->modelResourceId, 'list', $this->getSelectedContest()));
     }
 
+    /**
+     * @param $id
+     * @throws BadRequestException
+     */
     public function authorizedDelete($id) {
         $model = $this->getModel();
         if (!$model) {
@@ -56,6 +64,9 @@ abstract class EntityPresenter extends BasePresenter {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed($model, 'delete', $this->getSelectedContest()));
     }
 
+    /**
+     * @param $id
+     */
     public function renderEdit($id) {
         $component = $this->getComponent(self::COMP_EDIT_FORM);
         $form = ($component instanceof FormControl) ? $component->getForm() : $component;
@@ -68,6 +79,9 @@ abstract class EntityPresenter extends BasePresenter {
         $this->setDefaults($this->getModel(), $form);
     }
 
+    /**
+     * @return \AbstractModelSingle|null|IModel
+     */
     public final function getModel() {
         if ($this->model === false) {
             $this->model = $this->getParam('id') ? $this->loadModel($this->getParam('id')) : null;
@@ -76,6 +90,10 @@ abstract class EntityPresenter extends BasePresenter {
         return $this->model;
     }
 
+    /**
+     * @param IModel|null $model
+     * @param Form $form
+     */
     protected function setDefaults(IModel $model = null, Form $form) {
         if (!$model) {
             return;
@@ -84,13 +102,26 @@ abstract class EntityPresenter extends BasePresenter {
     }
 
     /**
-     * @return AbstracModelSingle
+     * @param $id
+     * @return \AbstractModelSingle
      */
     abstract protected function loadModel($id);
 
+    /**
+     * @param $name
+     * @return mixed
+     */
     abstract protected function createComponentEditComponent($name);
 
+    /**
+     * @param $name
+     * @return mixed
+     */
     abstract protected function createComponentCreateComponent($name);
 
+    /**
+     * @param $name
+     * @return mixed
+     */
     abstract protected function createComponentGrid($name);
 }

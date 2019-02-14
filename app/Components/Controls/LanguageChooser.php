@@ -8,7 +8,7 @@ use Nette\Http\Session;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Jakub Šafin <xellos@fykos.cz>
  */
 class LanguageChooser extends Control {
@@ -29,62 +29,86 @@ class LanguageChooser extends Control {
     private $session;
 
     /**
-     * @var ModelLanguage
+     * @var mixed
      */
     private $language;
-    private $languageNames = array('cs' => 'Čeština', 'en' => 'English', 'sk' => 'Slovenčina');
+    /**
+     * @var array
+     */
+    private $languageNames = ['cs' => 'Čeština', 'en' => 'English', 'sk' => 'Slovenčina'];
 
     /**
      * @var boolean
      */
     private $valid;
+    /**
+     * @var bool
+     */
     private $initialized = false;
 
     /**
-     * @var enum DEFAULT_*
+     * @var string
      */
     private $defaultLanguage = self::DEFAULT_FIRST;
 
     /**
-     * 
-
+     *
      * @param Session $session
-     * @param ServiceLanguage $serviceLanguage
      */
     function __construct(Session $session) {
+        parent::__construct();
         $this->session = $session;
     }
 
     /**
-     * @param mixed $languageDefinition role enum|ALL_LANGUAGES|array of languages
+     * @param $languages
      */
     public function setLanguages($languages) {
         $this->languages = $languages;
     }
 
+    /**
+     * @return mixed
+     */
     public function getLanguages() {
         return $this->languages;
     }
 
+    /**
+     * @return string
+     */
     public function getDefaultLanguage() {
         return $this->defaultLanguage;
     }
 
+    /**
+     * @param $defaultLanguage
+     */
     public function setDefaultLanguage($defaultLanguage) {
         $this->defaultLanguage = $defaultLanguage;
     }
 
+    /**
+     * @param $language
+     * @return bool
+     */
     public function isLanguage($language) {
         return in_array($language, $this->languages);
     }
 
+    /**
+     * @return bool
+     * @throws BadRequestException
+     */
     public function isValid() {
         $this->init();
         return $this->valid;
     }
 
     /**
-     * Redirect to correct address accorging to the resolved values.
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     *  Redirect to correct address accorging to the resolved values.
      */
     public function syncRedirect() {
         $this->init();
@@ -97,11 +121,18 @@ class LanguageChooser extends Control {
         }
     }
 
+    /**
+     * @return mixed
+     * @throws BadRequestException
+     */
     public function getLanguage() {
         $this->init();
         return $this->language;
     }
 
+    /**
+     * @throws BadRequestException
+     */
     private function init() {
         if ($this->initialized) {
             return;
@@ -137,12 +168,20 @@ class LanguageChooser extends Control {
         return $this->getPresenter()->getTranslator()->getSupportedLanguages();
     }
 
+    /**
+     * @param null $class
+     * @return \Nette\Templating\ITemplate
+     */
     protected function createTemplate($class = NULL) {
         $template = parent::createTemplate($class);
         $template->setTranslator($this->getPresenter()->getTranslator());
         return $template;
     }
 
+    /**
+     * @param $class
+     * @throws BadRequestException
+     */
     public function render($class) {
         if (!$this->isValid()) {
             throw new BadRequestException('No languages available.', 404);
@@ -156,6 +195,10 @@ class LanguageChooser extends Control {
         $this->template->render();
     }
 
+    /**
+     * @param $language
+     * @throws \Nette\Application\AbortException
+     */
     public function handleChangeLang($language) {
         $presenter = $this->getPresenter();
         $translator = $presenter->getTranslator();
