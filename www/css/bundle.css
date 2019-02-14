@@ -17,6 +17,13 @@
 .results-presentation .team-row:nth-child(even) {
   background-color: #eee;
 }
+.results-presentation .team-row > div {
+  align-items: center;
+  display: flex;
+}
+.results-presentation .team-row .progress {
+  width: 100%;
+}
 .results-presentation .team-row .team-name-col {
   text-align: justify;
   white-space: nowrap;
@@ -48,12 +55,13 @@ main.no-bg {
   width: 100%;
 }
 .fyziklani-results .inner-headline .image-wp, .fyziklani-statistics .inner-headline .image-wp {
-  padding-top: 3rem;
+  padding-top: 6rem;
 }
 .fyziklani-results .inner-headline .sponsors img, .fyziklani-statistics .inner-headline .sponsors img {
   max-width: 50%;
 }
 .fyziklani-results .inner-headline .logo, .fyziklani-statistics .inner-headline .logo {
+  padding-top: 7rem;
   display: block;
 }
 .fyziklani-results .logo, .fyziklani-statistics .logo {
@@ -64,17 +72,27 @@ main.no-bg {
   padding: 0.25em;
   font-weight: bold;
 }
+.fyziklani-results .clock .time-value, .fyziklani-results .clock .time-label, .fyziklani-statistics .clock .time-value, .fyziklani-statistics .clock .time-label {
+  width: 100%;
+  text-align: center;
+}
 .fyziklani-results .clock > span, .fyziklani-statistics .clock > span {
   display: flex;
   flex-wrap: wrap;
 }
 .fyziklani-results .clock.clock-small, .fyziklani-statistics .clock.clock-small {
   font-size: 200%;
+  display: flex;
+  width: 100%;
+  justify-content: center;
   background: white;
   position: fixed;
   bottom: 0;
   left: 0;
   z-index: 10000;
+}
+.fyziklani-results .clock.clock-small > span, .fyziklani-statistics .clock.clock-small > span {
+  flex-grow: initial;
 }
 .fyziklani-results .clock.clock-small .time-label, .fyziklani-statistics .clock.clock-small .time-label {
   width: 100%;
@@ -84,11 +102,9 @@ main.no-bg {
   text-align: center;
 }
 .fyziklani-results .clock.clock-big .time-value, .fyziklani-statistics .clock.clock-big .time-value {
-  width: 100%;
   font-size: 8rem;
 }
 .fyziklani-results .clock.clock-big .time-label, .fyziklani-statistics .clock.clock-big .time-label {
-  width: 100%;
   font-size: 2rem;
 }
 .fyziklani-results .image-wp, .fyziklani-results .clock, .fyziklani-statistics .image-wp, .fyziklani-statistics .clock {
