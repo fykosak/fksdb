@@ -1,11 +1,11 @@
 <?php
 
-namespace ORM\Services\Events;
+namespace FKSDB\ORM\Services\Fyziklani;
 
 use AbstractServiceSingle;
 use DbNames;
 use FKSDB\ORM\ModelEvent;
-use ORM\Models\Events\ModelFyziklaniTeam;
+use FKSDB\ORM\Models\Events\ModelFyziklaniTeam;
 
 /**
  * @author Michal Červeňák <miso@fykos.cz>
@@ -14,7 +14,7 @@ class ServiceFyziklaniTeam extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_E_FYZIKLANI_TEAM;
 
-    protected $modelClassName = 'ORM\Models\Events\ModelFyziklaniTeam';
+    protected $modelClassName = 'FKSDB\ORM\Models\Events\ModelFyziklaniTeam';
 
     /**
      * Syntactic sugar.
@@ -33,13 +33,13 @@ class ServiceFyziklaniTeam extends AbstractServiceSingle {
      */
     public function teamExist(int $teamId, ModelEvent $event): bool {
         /**
-         * @var ModelFyziklaniTeam $team
+         * @var \FKSDB\ORM\Models\Events\ModelFyziklaniTeam $team
          */
         $row = $this->findByPrimary($teamId);
         if (!$row) {
             return false;
         }
-        $team = ModelFyziklaniTeam::createFromTableRow($row);
+        $team = \FKSDB\ORM\Models\Events\ModelFyziklaniTeam::createFromTableRow($row);
         return $team && $team->event_id == $event->event_id;
     }
 
@@ -61,7 +61,7 @@ class ServiceFyziklaniTeam extends AbstractServiceSingle {
         $teams = [];
 
         foreach ($this->findPossiblyAttending($event) as $row) {
-            $team = ModelFyziklaniTeam::createFromTableRow($row);
+            $team = \FKSDB\ORM\Models\Events\ModelFyziklaniTeam::createFromTableRow($row);
             $teams[] = $team->__toArray(true);
         }
         return $teams;

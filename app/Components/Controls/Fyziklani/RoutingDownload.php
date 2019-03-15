@@ -4,10 +4,10 @@ namespace FKSDB\Components\Controls\Fyziklani;
 
 use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
-use ORM\Services\Events\ServiceFyziklaniTeam;
 
 
 /**
@@ -41,7 +41,7 @@ class RoutingDownload extends Control {
      * RoutingDownload constructor.
      * @param ModelEvent $event
      * @param ITranslator $translator
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam $serviceFyziklaniTeam
      * @param \ServiceFyziklaniRoom $serviceFyziklaniRoom
      */
     public function __construct(ModelEvent $event, ITranslator $translator, ServiceFyziklaniTeam $serviceFyziklaniTeam, \ServiceFyziklaniRoom $serviceFyziklaniRoom) {

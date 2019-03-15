@@ -5,10 +5,10 @@ namespace FKSDB\Components\Grids\Fyziklani;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\Events\ModelFyziklaniTeam;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FyziklaniModule\BasePresenter;
 use NiftyGrid\DataSource\NDataSource;
-use ORM\Models\Events\ModelFyziklaniTeam;
-use ORM\Services\Events\ServiceFyziklaniTeam;
 
 /**
  *
@@ -17,7 +17,7 @@ use ORM\Services\Events\ServiceFyziklaniTeam;
  */
 class CloseTeamsGrid extends BaseGrid {
     /**
-     * @var ServiceFyziklaniTeam
+     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam
      */
     private $serviceFyziklaniTeam;
     /**
@@ -28,7 +28,7 @@ class CloseTeamsGrid extends BaseGrid {
     /**
      * FyziklaniTeamsGrid constructor.
      * @param ModelEvent $event
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam $serviceFyziklaniTeam
      */
     public function __construct(ModelEvent $event, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
@@ -50,7 +50,7 @@ class CloseTeamsGrid extends BaseGrid {
 
         $this->addColumn('room', _('Místnost'))->setRenderer(function ($row) {
             /**
-             * @var ModelFyziklaniTeam $row
+             * @var \FKSDB\ORM\Models\Events\ModelFyziklaniTeam $row
              */
             $position = $row->getPosition();
             if (!$position) {

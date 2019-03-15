@@ -7,11 +7,11 @@ $container = require '../../bootstrap.php';
 use Events\EventTestCase;
 use Events\Model\Holder\Holder;
 use FKSDB\Logging\DevNullLogger;
+use FKSDB\ORM\Models\Events\ModelFyziklaniTeam;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use MockEnvironment\MockApplicationTrait;
 use Nette\ArrayHash;
 use Nette\DI\Container;
-use ORM\Models\Events\ModelFyziklaniTeam;
-use ORM\Services\Events\ServiceFyziklaniTeam;
 use ServiceEvent;
 use Tester\Assert;
 

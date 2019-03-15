@@ -4,8 +4,8 @@ namespace FKSDB\Components\Controls\Fyziklani;
 
 use FKSDB\Components\React\ReactComponent;
 use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\DI\Container;
-use ORM\Services\Events\ServiceFyziklaniTeam;
 
 /**
  * Class FyziklaniReactControl
@@ -53,7 +53,7 @@ abstract class FyziklaniReactControl extends ReactComponent {
      * @param ModelEvent $event
      * @param \ServiceFyziklaniRoom $serviceFyziklaniRoom
      * @param \ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam $serviceFyziklaniTeam
      * @param \ServiceFyziklaniTask $serviceFyziklaniTask
      * @param \ServiceFyziklaniSubmit $serviceFyziklaniSubmit
      */

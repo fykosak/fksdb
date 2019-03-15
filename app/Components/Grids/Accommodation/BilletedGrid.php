@@ -6,8 +6,8 @@ use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\ModelEventOrg;
 use FKSDB\ORM\ModelEventParticipant;
 use FKSDB\ORM\ModelEventPersonAccommodation;
+use FKSDB\ORM\Models\Events\ModelFyziklaniTeam;
 use Nette\Utils\Html;
-use ORM\Models\Events\ModelFyziklaniTeam;
 
 /**
  * Class BilletedGrid
