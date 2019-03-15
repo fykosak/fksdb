@@ -15,7 +15,7 @@ events:
         event_type_id: [10]
         eventYears: [8] # specify for which years this machine is valid, by default all years
         tableLayout: event.grid
-        formLayout: tabor/tabor8.form
+        formLayout: tabor/tabor7.form
         paramScheme:
             notifyBcc:
                 default: vyfuk@vyfuk.mff.cuni.cz
