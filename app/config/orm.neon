@@ -42,6 +42,7 @@ services:
     ServiceTeacher:          ServiceTeacher
     ServicePayment:          ServicePayment
     ServicePaymentAccommodation: FKSDB\ORM\Services\ServicePaymentAccommodation
+
     fyziklani.ServiceFyziklaniGameSetup: FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniGameSetup
     fyziklani.ServiceFyziklaniTeam:             FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam
 
