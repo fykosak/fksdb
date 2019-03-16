@@ -1,6 +1,6 @@
 <?php
 
-namespace ORM\Models\Events;
+namespace FKSDB\ORM\Models\Events;
 
 use AbstractModelSingle;
 
@@ -9,5 +9,5 @@ use AbstractModelSingle;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ModelVikendParticipant extends AbstractModelSingle {
-    
+
 }

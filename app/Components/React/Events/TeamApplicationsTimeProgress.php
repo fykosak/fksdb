@@ -4,9 +4,9 @@ namespace FKSDB\Components\React\ReactComponent\Events;
 
 use FKSDB\Components\React\ReactComponent;
 use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\DI\Container;
 use Nette\Utils\Json;
-use ORM\Services\Events\ServiceFyziklaniTeam;
 
 /**
  * Class TeamApplicationsTimeProgress
@@ -14,7 +14,7 @@ use ORM\Services\Events\ServiceFyziklaniTeam;
  */
 class TeamApplicationsTimeProgress extends ReactComponent {
     /**
-     * @var ServiceFyziklaniTeam
+     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam
      */
     private $serviceFyziklaniTeam;
 
@@ -27,9 +27,9 @@ class TeamApplicationsTimeProgress extends ReactComponent {
      * TeamApplicationsTimeProgress constructor.
      * @param Container $context
      * @param array $events
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam $serviceFyziklaniTeam
      */
-    public function __construct(Container $context, array $events, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
+    public function __construct(Container $context, array $events, \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam $serviceFyziklaniTeam) {
         parent::__construct($context);
         $this->events = $events;
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;

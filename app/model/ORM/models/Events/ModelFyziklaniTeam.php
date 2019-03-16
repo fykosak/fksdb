@@ -1,6 +1,6 @@
 <?php
 
-namespace ORM\Models\Events;
+namespace FKSDB\ORM\Models\Events;
 
 use AbstractModelSingle;
 use DbNames;

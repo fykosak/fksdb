@@ -3,9 +3,9 @@
 namespace FKSDB\model\Fyziklani;
 
 use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\Events\ModelFyziklaniTeam;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Diagnostics\Debugger;
-use ORM\Models\Events\ModelFyziklaniTeam;
-use ORM\Services\Events\ServiceFyziklaniTeam;
 
 /**
  * Class TaskCodeHandler
@@ -32,7 +32,7 @@ class TaskCodeHandler {
 
     /**
      * TaskCodeHandler constructor.
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam $serviceFyziklaniTeam
      * @param \ServiceFyziklaniTask $serviceFyziklaniTask
      * @param \ServiceFyziklaniSubmit $serviceFyziklaniSubmit
      * @param ModelEvent $event
@@ -134,7 +134,7 @@ class TaskCodeHandler {
 
     /**
      * @param string $code
-     * @return ModelFyziklaniTeam
+     * @return \FKSDB\ORM\Models\Events\ModelFyziklaniTeam
      * @throws TaskCodeException
      */
     public function getTeamFromCode(string $code): ModelFyziklaniTeam {

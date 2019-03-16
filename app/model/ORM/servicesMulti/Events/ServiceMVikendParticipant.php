@@ -3,8 +3,8 @@
 namespace ORM\ServicesMulti\Events;
 
 use AbstractServiceMulti;
+use FKSDB\ORM\Services\Events\ServiceVikendParticipant;
 use ORM\IModel;
-use ORM\Services\Events\ServiceVikendParticipant;
 use ServiceEventParticipant;
 
 /**

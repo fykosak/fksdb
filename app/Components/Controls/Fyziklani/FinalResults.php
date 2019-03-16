@@ -5,10 +5,10 @@ namespace FKSDB\Components\Controls\Fyziklani;
 use FKSDB\Components\Grids\Fyziklani\ResultsCategoryGrid;
 use FKSDB\Components\Grids\Fyziklani\ResultsTotalGrid;
 use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
-use ORM\Services\Events\ServiceFyziklaniTeam;
 
 /**
  * Class OrgResults
@@ -17,7 +17,7 @@ use ORM\Services\Events\ServiceFyziklaniTeam;
  */
 class FinalResults extends Control {
     /**
-     * @var ServiceFyziklaniTeam
+     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam
      */
     private $serviceFyziklaniTeam;
     /**

@@ -20,10 +20,10 @@ use FKSDB\Components\Grids\Fyziklani\TaskGrid;
 use FKSDB\Components\Grids\Fyziklani\TeamSubmitsGrid;
 use FKSDB\model\Fyziklani\TaskCodeHandlerFactory;
 use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\Events\ModelFyziklaniTeam;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\DI\Container;
 use Nette\Localization\ITranslator;
-use ORM\Models\Events\ModelFyziklaniTeam;
-use ORM\Services\Events\ServiceFyziklaniTeam;
 use ServiceFyziklaniSubmit;
 
 /**
@@ -229,7 +229,7 @@ class FyziklaniFactory {
     }
 
     /**
-     * @param ModelFyziklaniTeam $team
+     * @param \FKSDB\ORM\Models\Events\ModelFyziklaniTeam $team
      * @return TeamSubmitsGrid
      */
     public function createTeamSubmitsGrid(ModelFyziklaniTeam $team): TeamSubmitsGrid {

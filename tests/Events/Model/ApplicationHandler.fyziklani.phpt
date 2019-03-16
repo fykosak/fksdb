@@ -7,11 +7,11 @@ $container = require '../../bootstrap.php';
 use Events\EventTestCase;
 use Events\Model\Holder\Holder;
 use FKSDB\Logging\DevNullLogger;
+use FKSDB\ORM\Models\Events\ModelFyziklaniTeam;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use MockEnvironment\MockApplicationTrait;
 use Nette\ArrayHash;
 use Nette\DI\Container;
-use ORM\Models\Events\ModelFyziklaniTeam;
-use ORM\Services\Events\ServiceFyziklaniTeam;
 use ServiceEvent;
 use Tester\Assert;
 
@@ -50,7 +50,7 @@ class ApplicationHandlerTest extends EventTestCase {
         $this->connection->query("INSERT INTO event (event_id, event_type_id, year, event_year, begin, end, name)"
                 . "                          VALUES (1, 1, 1, 1, '2001-01-02', '2001-01-02', 'Testovací Fyziklání')");
 
-        $this->serviceTeam = $this->getContainer()->getService('event.ServiceFyziklaniTeam');
+        $this->serviceTeam = $this->getContainer()->getService('fyziklani.ServiceFyziklaniTeam');
         $this->serviceEvent = $this->getContainer()->getService('ServiceEvent');
 
 

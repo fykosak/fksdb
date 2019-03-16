@@ -2,8 +2,8 @@
 
 namespace FKSDB\model\Fyziklani;
 
+use FKSDB\ORM\Models\Events\ModelFyziklaniTeam;
 use Nette\Application\BadRequestException;
-use ORM\Models\Events\ModelFyziklaniTeam;
 
 /**
  * Class ClosedSubmittingException

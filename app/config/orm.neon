@@ -42,18 +42,24 @@ services:
     ServiceTeacher:          ServiceTeacher
     ServicePayment:          ServicePayment
     ServicePaymentAccommodation: FKSDB\ORM\Services\ServicePaymentAccommodation
+
     fyziklani.ServiceFyziklaniGameSetup: FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniGameSetup
+    fyziklani.ServiceFyziklaniTeam:             FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam
 
     event.ServiceEventParticipant:          ServiceEventParticipant
-    event.ServiceDsefGroup:                 ORM\Services\Events\ServiceDsefGroup
-    event.ServiceDsefParticipant:           ORM\Services\Events\ServiceDsefParticipant
+    event.ServiceDsefGroup:                 FKSDB\ORM\Services\Events\ServiceDsefGroup
+    event.ServiceDsefParticipant:           FKSDB\ORM\Services\Events\ServiceDsefParticipant
     event.ServiceMDsefParticipant:          ORM\ServicesMulti\Events\ServiceMDsefParticipant
-    event.ServiceFyziklaniTeam:             ORM\Services\Events\ServiceFyziklaniTeam
-    event.ServiceFyziklaniParticipant:      ORM\Services\Events\ServiceFyziklaniParticipant
+
+
+    event.ServiceFyziklaniParticipant:      FKSDB\ORM\Services\Events\ServiceFyziklaniParticipant
     event.ServiceMFyziklaniParticipant:     ORM\ServicesMulti\Events\ServiceMFyziklaniParticipant
-    event.ServiceSousParticipant:           ORM\Services\Events\ServiceSousParticipant
+
+    event.ServiceSousParticipant:           FKSDB\ORM\Services\Events\ServiceSousParticipant
     event.ServiceMSousParticipant:          ORM\ServicesMulti\Events\ServiceMSousParticipant
-    event.ServiceTsafParticipant:           ORM\Services\Events\ServiceTsafParticipant
+
+    event.ServiceTsafParticipant:           FKSDB\ORM\Services\Events\ServiceTsafParticipant
     event.ServiceMTsafParticipant:          ORM\ServicesMulti\Events\ServiceMTsafParticipant
-    event.ServiceVikendParticipant:         ORM\Services\Events\ServiceVikendParticipant
+
+    event.ServiceVikendParticipant:         FKSDB\ORM\Services\Events\ServiceVikendParticipant
     event.ServiceMVikendParticipant:        ORM\ServicesMulti\Events\ServiceMVikendParticipant

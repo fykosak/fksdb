@@ -1,8 +1,8 @@
 <?php
 
+use FKSDB\ORM\Models\Events\ModelFyziklaniTeam;
 use Nette\Database\Table\ActiveRow;
 use Nette\DateTime;
-use ORM\Models\Events\ModelFyziklaniTeam;
 
 /**
  *

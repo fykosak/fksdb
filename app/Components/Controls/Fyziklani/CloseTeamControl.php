@@ -7,13 +7,12 @@ use FKSDB\Components\Factories\FyziklaniFactory;
 use FKSDB\Components\Grids\Fyziklani\TeamSubmitsGrid;
 use FKSDB\model\Fyziklani\ClosedSubmittingException;
 use FKSDB\ORM\ModelEvent;
-use Nette\Application\BadRequestException;
+use FKSDB\ORM\Models\Events\ModelFyziklaniTeam;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\UI\BadSignalException;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
-use ORM\Models\Events\ModelFyziklaniTeam;
-use ORM\Services\Events\ServiceFyziklaniTeam;
 
 /**
  * Class CloseTeamControl
@@ -22,7 +21,7 @@ use ORM\Services\Events\ServiceFyziklaniTeam;
  */
 class CloseTeamControl extends Control {
     /**
-     * @var ServiceFyziklaniTeam
+     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam
      */
     private $serviceFyziklaniTeam;
     /**
