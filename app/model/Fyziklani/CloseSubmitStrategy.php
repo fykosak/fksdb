@@ -9,7 +9,7 @@
 namespace FKSDB\model\Fyziklani;
 
 use FKSDB\ORM\ModelEvent;
-use FKSDB\ORM\Models\Events\ModelFyziklaniTeam;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FyziklaniModule\BasePresenter;
 use Nette\Application\BadRequestException;
@@ -157,7 +157,7 @@ class CloseSubmitStrategy {
         $sum = 0;
         $count = 0;
         foreach ($team->getSubmits() as $row) {
-            $submit = \ModelFyziklaniSubmit::createFromTableRow($row);
+            $submit = \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit::createFromTableRow($row);
             if ($submit->points !== null) {
                 $sum += $submit->points;
                 $count++;

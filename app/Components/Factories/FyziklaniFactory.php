@@ -20,11 +20,15 @@ use FKSDB\Components\Grids\Fyziklani\TaskGrid;
 use FKSDB\Components\Grids\Fyziklani\TeamSubmitsGrid;
 use FKSDB\model\Fyziklani\TaskCodeHandlerFactory;
 use FKSDB\ORM\ModelEvent;
-use FKSDB\ORM\Models\Events\ModelFyziklaniTeam;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use Nette\DI\Container;
 use Nette\Localization\ITranslator;
-use ServiceFyziklaniSubmit;
+
 
 /**
  * Class FyziklaniFactory
@@ -33,12 +37,12 @@ use ServiceFyziklaniSubmit;
 class FyziklaniFactory {
 
     /**
-     * @var \ServiceFyziklaniRoom
+     * @var ServiceFyziklaniRoom
      */
     private $serviceFyziklaniRoom;
 
     /**
-     * @var \ServiceFyziklaniTeamPosition
+     * @var ServiceFyziklaniTeamPosition
      */
     private $serviceFyziklaniTeamPosition;
 
@@ -48,7 +52,7 @@ class FyziklaniFactory {
     private $serviceFyziklaniTeam;
 
     /**
-     * @var \ServiceFyziklaniTask
+     * @var ServiceFyziklaniTask
      */
     private $serviceFyziklaniTask;
     /**
@@ -70,21 +74,21 @@ class FyziklaniFactory {
 
     /**
      * FyziklaniFactory constructor.
-     * @param \ServiceFyziklaniRoom $serviceFyziklaniRoom
-     * @param \ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
+     * @param ServiceFyziklaniRoom $serviceFyziklaniRoom
+     * @param ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
      * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @param \ServiceFyziklaniTask $serviceFyziklaniTask
+     * @param ServiceFyziklaniTask $serviceFyziklaniTask
      * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
      * @param TaskCodeHandlerFactory $taskCodeHandlerFactory
      * @param Container $context
      * @param ITranslator $translator
      */
     public function __construct(
-        \ServiceFyziklaniRoom $serviceFyziklaniRoom,
-        \ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition,
+        ServiceFyziklaniRoom $serviceFyziklaniRoom,
+        ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition,
         ServiceFyziklaniTeam $serviceFyziklaniTeam,
-        \ServiceFyziklaniTask $serviceFyziklaniTask,
-        \ServiceFyziklaniSubmit $serviceFyziklaniSubmit,
+        ServiceFyziklaniTask $serviceFyziklaniTask,
+        ServiceFyziklaniSubmit $serviceFyziklaniSubmit,
         TaskCodeHandlerFactory $taskCodeHandlerFactory,
         Container $context,
         ITranslator $translator
@@ -229,7 +233,7 @@ class FyziklaniFactory {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\Events\ModelFyziklaniTeam $team
+     * @param \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam $team
      * @return TeamSubmitsGrid
      */
     public function createTeamSubmitsGrid(ModelFyziklaniTeam $team): TeamSubmitsGrid {

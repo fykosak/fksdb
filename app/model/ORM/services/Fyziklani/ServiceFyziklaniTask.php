@@ -1,6 +1,11 @@
 <?php
 
+namespace FKSDB\ORM\Services\Fyziklani;
+
+use AbstractServiceSingle;
+use DbNames;
 use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use Nette\Database\Table\Selection;
 
 /**
@@ -9,7 +14,7 @@ use Nette\Database\Table\Selection;
 class ServiceFyziklaniTask extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_FYZIKLANI_TASK;
-    protected $modelClassName = 'ModelFyziklaniTask';
+    protected $modelClassName = 'FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask';
 
     /**
      * Syntactic sugar.

@@ -19,11 +19,11 @@ use Nette\Templating\FileTemplate;
  */
 class EditSubmitControl extends Control {
     /**
-     * @var \ServiceFyziklaniSubmit
+     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit
      */
     private $serviceFyziklaniSubmit;
     /**
-     * @var \ModelFyziklaniSubmit
+     * @var \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit
      */
     private $submit;
     /**
@@ -38,10 +38,10 @@ class EditSubmitControl extends Control {
     /**
      * EditSubmitControl constructor.
      * @param ModelEvent $event
-     * @param \ServiceFyziklaniSubmit $serviceFyziklaniSubmit
+     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit $serviceFyziklaniSubmit
      * @param ITranslator $translator
      */
-    public function __construct(ModelEvent $event, \ServiceFyziklaniSubmit $serviceFyziklaniSubmit, ITranslator $translator) {
+    public function __construct(ModelEvent $event, \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit $serviceFyziklaniSubmit, ITranslator $translator) {
         parent::__construct();
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
         $this->translator = $translator;
@@ -71,7 +71,7 @@ class EditSubmitControl extends Control {
         if (!$this->submit) {
             throw new BadRequestException(_('Neexistující submit.'), 404);
         }
-        $this->submit = \ModelFyziklaniSubmit::createFromTableRow($row);
+        $this->submit = \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit::createFromTableRow($row);
 
         $team = $this->submit->getTeam();
         if (!$team->hasOpenSubmitting()) {

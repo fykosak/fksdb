@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Grids\Fyziklani;
 
 use FKSDB\Components\Grids\BaseGrid;
-use ServiceFyziklaniSubmit;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 
 /**
  *
@@ -14,13 +14,13 @@ abstract class SubmitsGrid extends BaseGrid {
 
     /**
      *
-     * @var ServiceFyziklaniSubmit
+     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit
      */
     protected $serviceFyziklaniSubmit;
 
     /**
      * FyziklaniSubmitsGrid constructor.
-     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
+     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit $serviceFyziklaniSubmit
      */
     public function __construct(ServiceFyziklaniSubmit $serviceFyziklaniSubmit) {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
@@ -29,7 +29,7 @@ abstract class SubmitsGrid extends BaseGrid {
 
     protected function addColumnTask() {
         $this->addColumn('label', _('Úloha'))->setRenderer(function ($row) {
-            $model = \ModelFyziklaniSubmit::createFromTableRow($row);
+            $model = \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit::createFromTableRow($row);
             return $model->getTask()->label;
         });
     }

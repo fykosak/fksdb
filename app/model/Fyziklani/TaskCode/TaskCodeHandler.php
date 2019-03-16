@@ -3,7 +3,9 @@
 namespace FKSDB\model\Fyziklani;
 
 use FKSDB\ORM\ModelEvent;
-use FKSDB\ORM\Models\Events\ModelFyziklaniTeam;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Diagnostics\Debugger;
 
@@ -14,11 +16,11 @@ use Nette\Diagnostics\Debugger;
 class TaskCodeHandler {
 
     /**
-     * @var \ServiceFyziklaniSubmit
+     * @var ServiceFyziklaniSubmit
      */
     private $serviceFyziklaniSubmit;
     /**
-     * @var \ServiceFyziklaniTask
+     * @var ServiceFyziklaniTask
      */
     private $serviceFyziklaniTask;
     /**
@@ -32,12 +34,12 @@ class TaskCodeHandler {
 
     /**
      * TaskCodeHandler constructor.
-     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @param \ServiceFyziklaniTask $serviceFyziklaniTask
-     * @param \ServiceFyziklaniSubmit $serviceFyziklaniSubmit
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @param ServiceFyziklaniTask $serviceFyziklaniTask
+     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
      * @param ModelEvent $event
      */
-    public function __construct(ServiceFyziklaniTeam $serviceFyziklaniTeam, \ServiceFyziklaniTask $serviceFyziklaniTask, \ServiceFyziklaniSubmit $serviceFyziklaniSubmit, ModelEvent $event) {
+    public function __construct(ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceFyziklaniTask $serviceFyziklaniTask, ServiceFyziklaniSubmit $serviceFyziklaniSubmit, ModelEvent $event) {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
@@ -50,6 +52,7 @@ class TaskCodeHandler {
      * @return string
      * @throws ClosedSubmittingException
      * @throws TaskCodeException
+     * @throws \Exception
      */
     public function preProcess(string $code, int $points): string {
         try {
@@ -134,7 +137,7 @@ class TaskCodeHandler {
 
     /**
      * @param string $code
-     * @return \FKSDB\ORM\Models\Events\ModelFyziklaniTeam
+     * @return \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam
      * @throws TaskCodeException
      */
     public function getTeamFromCode(string $code): ModelFyziklaniTeam {
@@ -151,10 +154,10 @@ class TaskCodeHandler {
 
     /**
      * @param string $code
-     * @return \ModelFyziklaniTask
+     * @return \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask
      * @throws TaskCodeException
      */
-    public function getTaskFromCode(string $code): \ModelFyziklaniTask {
+    public function getTaskFromCode(string $code): \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask {
         $fullCode = TaskCodePreprocessor::createFullCode($code);
         /* správny label */
         $taskLabel = TaskCodePreprocessor::extractTaskLabel($fullCode);

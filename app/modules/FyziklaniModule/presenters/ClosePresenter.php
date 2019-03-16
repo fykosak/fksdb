@@ -5,7 +5,7 @@ namespace FyziklaniModule;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Fyziklani\CloseControl;
 use FKSDB\Components\Controls\Fyziklani\CloseTeamControl;
-use FKSDB\ORM\Models\Events\ModelFyziklaniTeam;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Application\BadRequestException;
 
 /**
@@ -19,7 +19,7 @@ class ClosePresenter extends BasePresenter {
     private $team;
 
     /**
-     * @return \FKSDB\ORM\Models\Events\ModelFyziklaniTeam
+     * @return \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam
      */
     private function getTeam(): ModelFyziklaniTeam {
         return $this->team;

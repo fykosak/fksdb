@@ -2,7 +2,7 @@
 
 namespace FKSDB\model\Fyziklani;
 
-use FKSDB\ORM\Models\Events\ModelFyziklaniTeam;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Application\BadRequestException;
 
 /**
@@ -12,7 +12,7 @@ use Nette\Application\BadRequestException;
 class ClosedSubmittingException extends BadRequestException {
     /**
      * ClosedSubmittingException constructor.
-     * @param ModelFyziklaniTeam $team
+     * @param \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam $team
      * @param int $code
      * @param \Exception|NULL $previous
      */
