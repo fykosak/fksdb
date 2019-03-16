@@ -36,7 +36,7 @@ class ServiceStoredQuery extends AbstractServiceSingle {
      * Syntactic sugar.
      *
      * @param string|null $qid
-     * @return \FKSDB\ORM\Models\\FKSDB\ORM\Models\StoredQuery\ModelStoredQuery|null
+     * @return \FKSDB\ORM\Models\StoredQuery\ModelStoredQuery|null
      */
     public function findByQid($qid) {
         if (!$qid) {
