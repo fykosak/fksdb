@@ -6,8 +6,9 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Factories\FyziklaniFactory;
 use FKSDB\Components\Grids\Fyziklani\TeamSubmitsGrid;
 use FKSDB\model\Fyziklani\ClosedSubmittingException;
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\UI\BadSignalException;
 use Nette\Application\UI\Control;
@@ -128,7 +129,7 @@ class CloseTeamControl extends Control {
         $submits = $this->team->getSubmits();
         $sum = 0;
         foreach ($submits as $row) {
-            $submit = \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit::createFromTableRow($row);
+            $submit = ModelFyziklaniSubmit::createFromTableRow($row);
             $sum += $submit->points;
         }
         $this->serviceFyziklaniTeam->updateModel($this->team, ['points' => $sum]);

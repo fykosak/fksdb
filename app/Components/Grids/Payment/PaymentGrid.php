@@ -4,7 +4,7 @@
 namespace FKSDB\Components\Grids\Payment;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\ORM\ModelPayment;
+use FKSDB\ORM\Models\ModelPayment;
 use Nette\Utils\Html;
 
 /**

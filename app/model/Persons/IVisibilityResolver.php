@@ -2,7 +2,7 @@
 
 namespace Persons;
 
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\Models\ModelPerson;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -12,7 +12,7 @@ use FKSDB\ORM\ModelPerson;
 interface IVisibilityResolver {
 
     /**
-     * @param ModelPerson $person
+     * @param \FKSDB\ORM\Models\ModelPerson $person
      * @return mixed
      */
     public function isVisible(ModelPerson $person);

@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\ORM;
+namespace FKSDB\ORM\Models;
 
 use AbstractModelSingle;
 use Authentication\PasswordAuthenticator;
@@ -55,7 +55,7 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
 
     /**
      * @param YearCalculator $yearCalculator
-     * @return array of FKSDB\ORM\ModelOrg|null indexed by contest_id (i.e. impersonal orgs)
+     * @return array of FKSDB\ORM\Models\ModelOrg|null indexed by contest_id (i.e. impersonal orgs)
      */
     public function getActiveOrgs(YearCalculator $yearCalculator) {
         if ($this->getPerson()) {

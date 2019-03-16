@@ -2,9 +2,9 @@
 
 namespace Authentication;
 
-use FKSDB\ORM\ModelAuthToken;
-use FKSDB\ORM\ModelLogin;
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\Models\ModelAuthToken;
+use FKSDB\ORM\Models\ModelLogin;
+use FKSDB\ORM\Models\ModelPerson;
 use Mail\SendFailedException;
 use Nette\DateTime;
 use Nette\InvalidStateException;
@@ -95,9 +95,9 @@ class AccountManager {
      * Creates login and invites user to set up the account.
      *
      * @param ITemplate $template template of the mail
-     * @param ModelPerson $person
+     * @param \FKSDB\ORM\Models\ModelPerson $person
      * @param string $email
-     * @return \FKSDB\ORM\ModelLogin
+     * @return \FKSDB\ORM\Models\ModelLogin
      * @throws SendFailedException
      */
     public function createLoginWithInvitation(ITemplate $template, ModelPerson $person, $email) {
@@ -131,7 +131,7 @@ class AccountManager {
 
     /**
      * @param ITemplate $template
-     * @param ModelLogin $login
+     * @param \FKSDB\ORM\Models\ModelLogin $login
      */
     public function sendRecovery(ITemplate $template, ModelLogin $login) {
         $person = $login->getPerson();
@@ -171,7 +171,7 @@ class AccountManager {
     }
 
     /**
-     * @param ModelLogin $login
+     * @param \FKSDB\ORM\Models\ModelLogin $login
      */
     public function cancelRecovery(ModelLogin $login) {
         $this->serviceAuthToken->getTable()->where(array(
@@ -184,7 +184,7 @@ class AccountManager {
      * @param ModelPerson $person
      * @param null $login
      * @param null $password
-     * @return \AbstractModelSingle|ModelLogin
+     * @return \AbstractModelSingle|\FKSDB\ORM\Models\ModelLogin
      */
     public final function createLogin(ModelPerson $person, $login = null, $password = null) {
         $login = $this->serviceLogin->createNew(array(

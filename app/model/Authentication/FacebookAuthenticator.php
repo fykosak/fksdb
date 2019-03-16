@@ -2,7 +2,7 @@
 
 namespace Authentication;
 
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\Models\ModelPerson;
 use Nette\Diagnostics\Debugger;
 use Nette\Security\AuthenticationException;
 use Nette\Security\Identity;
@@ -100,7 +100,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
 
     /**
      * @param $fbUser
-     * @return \AbstractModelSingle|\FKSDB\ORM\ModelLogin
+     * @return \AbstractModelSingle|\FKSDB\ORM\Models\ModelLogin
      */
     private function registerFromFB($fbUser) {
         $person = $this->servicePerson->createNew($this->getPersonData($fbUser));

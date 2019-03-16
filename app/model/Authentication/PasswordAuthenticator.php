@@ -2,8 +2,8 @@
 
 namespace Authentication;
 
-use FKSDB\ORM\ModelLogin;
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\Models\ModelLogin;
+use FKSDB\ORM\Models\ModelPerson;
 use Nette\Security\IAuthenticator;
 use Nette\Security\IIdentity;
 use ServiceLogin;
@@ -91,7 +91,7 @@ class PasswordAuthenticator extends AbstractAuthenticator implements IAuthentica
 
     /**
      * @param string $password
-     * @param \FKSDB\ORM\ModelLogin $login
+     * @param \FKSDB\ORM\Models\ModelLogin $login
      * @return string
      */
     public static function calculateHash($password, $login) {

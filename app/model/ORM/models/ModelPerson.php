@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\ORM;
+namespace FKSDB\ORM\Models;
 
 use AbstractModelSingle;
 use DbNames;
@@ -298,9 +298,9 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     }
 
     /**
-     * @internal To get active orgs call FKSDB\ORM\ModelLogin::getActiveOrgs
+     * @internal To get active orgs call FKSDB\ORM\Models\ModelLogin::getActiveOrgs
      * @param YearCalculator $yearCalculator
-     * @return array of FKSDB\ORM\ModelOrg indexed by contest_id
+     * @return array of FKSDB\ORM\Models\ModelOrg indexed by contest_id
      */
     public function getActiveOrgs(YearCalculator $yearCalculator) {
         $result = [];
@@ -318,7 +318,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * Active contestant := contestant in the highest year but not older than the current year.
      *
      * @param YearCalculator $yearCalculator
-     * @return array of FKSDB\ORM\ModelContestant indexed by contest_id
+     * @return array of FKSDB\ORM\Models\ModelContestant indexed by contest_id
      */
     public function getActiveContestants(YearCalculator $yearCalculator) {
         $result = [];

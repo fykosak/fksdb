@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Grids;
 
 use Authorization\ContestAuthorizator;
-use FKSDB\ORM\ModelStoredQuery;
+use FKSDB\ORM\Models\ModelStoredQuery;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;
 use OrgModule\ExportPresenter;

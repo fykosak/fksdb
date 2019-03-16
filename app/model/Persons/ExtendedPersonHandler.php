@@ -5,8 +5,8 @@ namespace Persons;
 use Authentication\AccountManager;
 use BasePresenter;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
-use FKSDB\ORM\ModelContest;
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Models\ModelPerson;
 use FormUtils;
 use Mail\MailTemplateFactory;
 use Mail\SendFailedException;
@@ -61,7 +61,7 @@ class ExtendedPersonHandler extends Object {
     private $accountManager;
 
     /**
-     * @var ModelContest
+     * @var \FKSDB\ORM\Models\ModelContest
      */
     private $contest;
 
@@ -97,14 +97,14 @@ class ExtendedPersonHandler extends Object {
     }
 
     /**
-     * @return ModelContest
+     * @return \FKSDB\ORM\Models\ModelContest
      */
     public function getContest() {
         return $this->contest;
     }
 
     /**
-     * @param ModelContest $contest
+     * @param \FKSDB\ORM\Models\ModelContest $contest
      */
     public function setContest(ModelContest $contest) {
         $this->contest = $contest;
@@ -139,7 +139,7 @@ class ExtendedPersonHandler extends Object {
     }
 
     /**
-     * @return ModelPerson
+     * @return \FKSDB\ORM\Models\ModelPerson
      */
     public function getPerson() {
         return $this->person;

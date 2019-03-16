@@ -1,7 +1,7 @@
 <?php
 
-use FKSDB\ORM\ModelContest;
-use FKSDB\ORM\ModelTask;
+use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Models\ModelTask;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -9,16 +9,16 @@ use FKSDB\ORM\ModelTask;
 class ServiceTask extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_TASK;
-    protected $modelClassName = 'FKSDB\ORM\ModelTask';
+    protected $modelClassName = 'FKSDB\ORM\Models\ModelTask';
 
     /**
      * Syntactic sugar.
      *
-     * @param ModelContest $contest
+     * @param \FKSDB\ORM\Models\ModelContest $contest
      * @param int $year
      * @param int $series
      * @param int $tasknr
-     * @return ModelTask|null
+     * @return \FKSDB\ORM\Models\ModelTask|null
      */
     public function findBySeries(ModelContest $contest, $year, $series, $tasknr) {
         $result = $this->getTable()->where([

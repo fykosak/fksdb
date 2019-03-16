@@ -4,7 +4,7 @@ namespace FKSDB\ORM\Services;
 
 use AbstractServiceSingle;
 use DbNames;
-use FKSDB\ORM\ModelPayment;
+use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\Payment\Handler\DuplicateAccommodationPaymentException;
 use Nette\ArrayHash;
 use Submits\StorageException;
@@ -15,7 +15,7 @@ use Submits\StorageException;
  */
 class ServicePaymentAccommodation extends AbstractServiceSingle {
     protected $tableName = DbNames::TAB_PAYMENT_ACCOMMODATION;
-    protected $modelClassName = 'FKSDB\ORM\ModelPaymentAccommodation';
+    protected $modelClassName = 'FKSDB\ORM\Models\ModelPaymentAccommodation';
 
     /**
      * @param ArrayHash $data
@@ -31,7 +31,7 @@ class ServicePaymentAccommodation extends AbstractServiceSingle {
              throw new EmptyDataException(_('Nebola vybraná žiadá položka'));
          };*/
         /**
-         * @var \FKSDB\ORM\ModelPaymentAccommodation $row
+         * @var \FKSDB\ORM\Models\ModelPaymentAccommodation $row
          */
         foreach ($oldRows as $row) {
             if (in_array($row->event_person_accommodation_id, $newAccommodationIds)) {
@@ -48,7 +48,7 @@ class ServicePaymentAccommodation extends AbstractServiceSingle {
         foreach ($newAccommodationIds as $id) {
 
             /**
-             * @var \FKSDB\ORM\ModelPaymentAccommodation $model
+             * @var \FKSDB\ORM\Models\ModelPaymentAccommodation $model
              */
             $model = $this->createNew(['payment_id' => $payment->payment_id, 'event_person_accommodation_id' => $id]);
             $count = $this->getTable()->where('event_person_accommodation_id', $id)->where('payment.state !=? OR payment.state IS NULL', ModelPayment::STATE_CANCELED)->count();

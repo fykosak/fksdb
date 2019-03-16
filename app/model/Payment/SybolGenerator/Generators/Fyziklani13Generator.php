@@ -2,7 +2,7 @@
 
 namespace FKSDB\Payment\SymbolGenerator\Generators;
 
-use FKSDB\ORM\ModelPayment;
+use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\Payment\PriceCalculator\Price;
 use FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException;
 use FKSDB\Payment\SymbolGenerator\AbstractSymbolGenerator;

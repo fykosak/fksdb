@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Grids\Deduplicate;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\Models\ModelPerson;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;
 use ORM\Tables\TypedTableSelection;
@@ -115,7 +115,7 @@ class PersonsGrid extends BaseGrid {
     }
 
     /**
-     * @param ModelPerson $person
+     * @param \FKSDB\ORM\Models\ModelPerson $person
      * @return Html
      * @throws \Nette\Application\UI\InvalidLinkException
      */

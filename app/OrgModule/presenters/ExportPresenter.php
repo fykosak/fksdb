@@ -13,10 +13,10 @@ use FKSDB\Components\Controls\StoredQueryComponent;
 use FKSDB\Components\Controls\StoredQueryTagCloud;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory as StoredQueryFormFactory;
 use FKSDB\Components\Grids\StoredQueriesGrid;
-use FKSDB\ORM\ModelContest;
-use FKSDB\ORM\ModelPerson;
-use FKSDB\ORM\ModelPostContact;
-use FKSDB\ORM\ModelStoredQuery;
+use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Models\ModelPostContact;
+use FKSDB\ORM\Models\ModelStoredQuery;
 use FormUtils;
 use IResultsModel;
 use ModelException;
@@ -84,7 +84,7 @@ class ExportPresenter extends SeriesPresenter {
     private $storedQuery;
 
     /**
-     * @var ModelStoredQuery
+     * @var \FKSDB\ORM\Models\ModelStoredQuery
      */
     private $patternQuery = false;
 

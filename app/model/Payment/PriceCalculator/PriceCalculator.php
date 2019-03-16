@@ -2,8 +2,8 @@
 
 namespace FKSDB\Payment\PriceCalculator;
 
-use FKSDB\ORM\ModelEvent;
-use FKSDB\ORM\ModelPayment;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\Payment\PriceCalculator\PreProcess\AbstractPreProcess;
 
 /**
@@ -16,7 +16,7 @@ class PriceCalculator {
      */
     private $preProcess = [];
     /**
-     * @var ModelEvent
+     * @var \FKSDB\ORM\Models\ModelEvent
      */
     private $event;
     /**
@@ -26,7 +26,7 @@ class PriceCalculator {
 
     /**
      * PriceCalculator constructor.
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      */
     public function __construct(ModelEvent $event) {
         $this->event = $event;
@@ -60,7 +60,7 @@ class PriceCalculator {
     }
 
     /**
-     * @param ModelPayment $modelPayment
+     * @param \FKSDB\ORM\Models\ModelPayment $modelPayment
      * @return array[]
      */
     public function getGridItems(ModelPayment $modelPayment): array {

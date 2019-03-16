@@ -2,8 +2,8 @@
 
 namespace Authentication;
 
-use FKSDB\ORM\ModelAuthToken;
-use FKSDB\ORM\ModelLogin;
+use FKSDB\ORM\Models\ModelAuthToken;
+use FKSDB\ORM\Models\ModelLogin;
 use Nette\Http\Session;
 use Nette\InvalidStateException;
 use Nette\Security\AuthenticationException;
@@ -44,7 +44,7 @@ class TokenAuthenticator extends AbstractAuthenticator {
 
     /**
      * @param string $tokenData
-     * @return ModelLogin
+     * @return \FKSDB\ORM\Models\ModelLogin
      * @throws AuthenticationException
      */
     public function authenticate($tokenData) {
@@ -110,7 +110,7 @@ class TokenAuthenticator extends AbstractAuthenticator {
     }
 
     /**
-     * @param ModelAuthToken $token
+     * @param \FKSDB\ORM\Models\ModelAuthToken $token
      */
     private function storeAuthToken(ModelAuthToken $token) {
         $section = $this->session->getSection(self::SESSION_NS);

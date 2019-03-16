@@ -55,7 +55,7 @@ class TeacherPresenter extends ExtendedPersonPresenter {
 
     public function titleEdit() {
         /**
-         * @var \FKSDB\ORM\ModelTeacher $model
+         * @var \FKSDB\ORM\Models\ModelTeacher $model
          */
         $model = $this->getModel();
         $this->setTitle(sprintf(_('Edit teacher %s'), $model->getPerson()->getFullName()));

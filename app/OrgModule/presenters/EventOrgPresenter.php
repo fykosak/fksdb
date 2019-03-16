@@ -4,7 +4,7 @@ namespace OrgModule;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Grids\EventOrgsGrid;
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\UI\Form;
 use ORM\IModel;
 use Persons\ExtendedPersonHandler;
@@ -31,7 +31,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
     private $serviceEvent;
 
     /**
-     * @var ModelEvent
+     * @var \FKSDB\ORM\Models\ModelEvent
      */
     private $modelEvent;
 
@@ -164,7 +164,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
     }
 
     /**
-     * @return ModelEvent
+     * @return \FKSDB\ORM\Models\ModelEvent
      */
     private function getEvent(): ModelEvent {
         if (!$this->modelEvent) {

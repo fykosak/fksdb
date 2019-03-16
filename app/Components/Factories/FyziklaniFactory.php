@@ -19,8 +19,8 @@ use FKSDB\Components\Grids\Fyziklani\AllSubmitsGrid;
 use FKSDB\Components\Grids\Fyziklani\TaskGrid;
 use FKSDB\Components\Grids\Fyziklani\TeamSubmitsGrid;
 use FKSDB\model\Fyziklani\TaskCodeHandlerFactory;
-use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
@@ -114,7 +114,7 @@ class FyziklaniFactory {
     }
 
     /**
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @return QREntryControl
      */
     public function createQREntryControl(ModelEvent $event): QREntryControl {
@@ -133,7 +133,7 @@ class FyziklaniFactory {
     /* *************** CLOSING ***************/
 
     /**
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @return CloseControl
      */
     public function createCloseControl(ModelEvent $event): CloseControl {
@@ -141,7 +141,7 @@ class FyziklaniFactory {
     }
 
     /**
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @return CloseTeamControl
      */
     public function createCloseTeamControl(ModelEvent $event): CloseTeamControl {
@@ -151,7 +151,7 @@ class FyziklaniFactory {
     /* ************** ROUTING *************/
 
     /**
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @return RoutingEdit
      */
     public function createRoutingEdit(ModelEvent $event): RoutingEdit {
@@ -176,7 +176,7 @@ class FyziklaniFactory {
     }
 
     /**
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @return ResultsPresentation
      */
     public function createResultsPresentation(ModelEvent $event): ResultsPresentation {

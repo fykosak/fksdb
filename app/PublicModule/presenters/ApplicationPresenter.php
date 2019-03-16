@@ -15,9 +15,8 @@ use FKSDB\Components\Events\ApplicationsGrid;
 use FKSDB\Components\Grids\Events\LayoutResolver;
 use FKSDB\Logging\FlashDumpFactory;
 use FKSDB\Logging\MemoryLogger;
-use FKSDB\ORM\ModelAuthToken;
-use FKSDB\ORM\ModelEventParticipant;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\ORM\Models\ModelAuthToken;
+use FKSDB\ORM\Models\ModelEventParticipant;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
@@ -34,7 +33,7 @@ class ApplicationPresenter extends BasePresenter {
     const PARAM_AFTER = 'a';
 
     /**
-     * @var \FKSDB\ORM\ModelEvent
+     * @var \FKSDB\ORM\Models\ModelEvent
      */
     private $event = false;
 
@@ -305,7 +304,7 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @return \FKSDB\ORM\ModelEvent|\Nette\Database\Table\ActiveRow|null
+     * @return \FKSDB\ORM\Models\ModelEvent|\Nette\Database\Table\ActiveRow|null
      */
     private function getEvent() {
         if ($this->event === false) {

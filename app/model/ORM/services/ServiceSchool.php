@@ -6,7 +6,7 @@
 class ServiceSchool extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_SCHOOL;
-    protected $modelClassName = 'FKSDB\ORM\ModelSchool';
+    protected $modelClassName = 'FKSDB\ORM\Models\ModelSchool';
 
     /**
      * @return \Nette\Database\Table\Selection

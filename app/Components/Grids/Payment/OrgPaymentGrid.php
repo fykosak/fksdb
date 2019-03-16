@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Grids\Payment;
 
-use FKSDB\ORM\ModelEvent;
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Models\ModelPerson;
 use NiftyGrid\DataSource\NDataSource;
 
 /**
@@ -12,14 +12,14 @@ use NiftyGrid\DataSource\NDataSource;
  */
 class OrgPaymentGrid extends PaymentGrid {
     /**
-     * @var ModelEvent
+     * @var \FKSDB\ORM\Models\ModelEvent
      */
     private $event;
 
     /**
      * OrgPaymentGrid constructor.
      * @param \ServicePayment $servicePayment
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      */
     public function __construct(\ServicePayment $servicePayment, ModelEvent $event) {
         parent::__construct($servicePayment);

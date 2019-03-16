@@ -8,7 +8,7 @@ use Nette\Database\Table\Selection;
 class ServiceEventAccommodation extends \AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_EVENT_ACCOMMODATION;
-    protected $modelClassName = 'FKSDB\ORM\ModelEventAccommodation';
+    protected $modelClassName = 'FKSDB\ORM\Models\ModelEventAccommodation';
 
     /**
      * @param $eventId

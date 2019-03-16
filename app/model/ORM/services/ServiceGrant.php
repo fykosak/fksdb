@@ -6,7 +6,7 @@
 class ServiceGrant extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_ROLE;
-    protected $modelClassName = 'FKSDB\ORM\ModelGrant';
+    protected $modelClassName = 'FKSDB\ORM\Models\ModelGrant';
 
 }
 

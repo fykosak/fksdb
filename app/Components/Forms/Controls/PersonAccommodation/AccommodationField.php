@@ -4,8 +4,8 @@ namespace FKSDB\Components\Forms\Controls\PersonAccommodation;
 
 use FKSDB\Components\React\IReactComponent;
 use FKSDB\Components\React\ReactField;
-use FKSDB\ORM\ModelEvent;
-use FKSDB\ORM\ModelEventAccommodation;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Models\ModelEventAccommodation;
 use Nette\Forms\Controls\TextInput;
 
 /**

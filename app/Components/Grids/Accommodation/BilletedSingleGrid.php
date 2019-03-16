@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Grids\Accommodation;
 
 use EventModule\AccommodationPresenter;
-use FKSDB\ORM\ModelEventAccommodation;
+use FKSDB\ORM\Models\ModelEventAccommodation;
 use NiftyGrid\DataSource\NDataSource;
 
 /**

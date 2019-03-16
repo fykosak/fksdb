@@ -259,12 +259,12 @@ class EventsExtension extends CompilerExtension {
         $def = $this->getContainerBuilder()->addDefinition(self::MAIN_FACTORY);
         $def->setShared(false);
         $def->setClass(self::CLASS_MACHINE);
-        $def->setParameters(['FKSDB\ORM\ModelEvent event']);
+        $def->setParameters(['FKSDB\ORM\Models\ModelEvent event']);
 
         $def = $this->getContainerBuilder()->addDefinition(self::MAIN_HOLDER);
         $def->setShared(false);
         $def->setClass(self::CLASS_HOLDER);
-        $def->setParameters(['FKSDB\ORM\ModelEvent event']);
+        $def->setParameters(['FKSDB\ORM\Models\ModelEvent event']);
     }
 
     /**
@@ -458,7 +458,7 @@ class EventsExtension extends CompilerExtension {
         $factory->setShared(false);
         $factory->setClass(self::CLASS_HOLDER);
         $factory->setInternal(true);
-        $factory->setParameters(['FKSDB\ORM\ModelEvent event']);
+        $factory->setParameters(['FKSDB\ORM\Models\ModelEvent event']);
 
         /*
          * Create and add base machines into the machine (i.e. creating instances).

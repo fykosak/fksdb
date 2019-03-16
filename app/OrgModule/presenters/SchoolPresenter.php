@@ -132,7 +132,7 @@ class SchoolPresenter extends EntityPresenter {
             return;
         }
         /**
-         * @var \FKSDB\ORM\ModelEventAccommodation $model
+         * @var \FKSDB\ORM\Models\ModelEventAccommodation $model
          */
         $defaults = [
             self::CONT_SCHOOL => $model->toArray(),

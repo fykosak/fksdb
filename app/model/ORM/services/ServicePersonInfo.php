@@ -8,7 +8,7 @@ use ORM\IModel;
 class ServicePersonInfo extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_PERSON_INFO;
-    protected $modelClassName = 'FKSDB\ORM\ModelPersonInfo';
+    protected $modelClassName = 'FKSDB\ORM\Models\ModelPersonInfo';
 
     /**
      * @param null $data

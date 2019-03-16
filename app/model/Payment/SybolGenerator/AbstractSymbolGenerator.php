@@ -2,7 +2,7 @@
 
 namespace FKSDB\Payment\SymbolGenerator;
 
-use FKSDB\ORM\ModelPayment;
+use FKSDB\ORM\Models\ModelPayment;
 
 /**
  * Class AbstractSymbolGenerator
@@ -23,7 +23,7 @@ abstract class AbstractSymbolGenerator {
     }
 
     /**
-     * @param ModelPayment $modelPayment
+     * @param \FKSDB\ORM\Models\ModelPayment $modelPayment
      * @return mixed
      * @throws AlreadyGeneratedSymbolsException
      */

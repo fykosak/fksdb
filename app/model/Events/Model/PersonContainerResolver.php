@@ -3,7 +3,7 @@
 namespace Events\Model;
 
 use Events\Model\Holder\Field;
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\Models\ModelPerson;
 use Nette\Object;
 use Persons\IModifiabilityResolver;
 use Persons\IVisibilityResolver;

@@ -3,7 +3,7 @@
 namespace FKSDB\Transitions;
 
 use Authorization\EventAuthorizator;
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\Payment\PriceCalculator\PriceCalculatorFactory;
 use FKSDB\Payment\SymbolGenerator\SymbolGeneratorFactory;
 use FKSDB\Payment\Transition\Transitions\Fyziklani13Payment;
@@ -66,7 +66,7 @@ class MachineFactory {
     }
 
     /**
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @return Machine
      */
     public function setUpMachine(ModelEvent $event): Machine {
@@ -78,7 +78,7 @@ class MachineFactory {
     }
 
     /**
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @return AbstractTransitionsGenerator
      * @throws NotImplementedException
      */

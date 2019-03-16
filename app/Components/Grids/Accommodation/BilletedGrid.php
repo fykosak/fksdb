@@ -3,10 +3,10 @@
 namespace FKSDB\Components\Grids\Accommodation;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\ORM\ModelEventOrg;
-use FKSDB\ORM\ModelEventParticipant;
-use FKSDB\ORM\ModelEventPersonAccommodation;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\ORM\Models\ModelEventOrg;
+use FKSDB\ORM\Models\ModelEventParticipant;
+use FKSDB\ORM\Models\ModelEventPersonAccommodation;
 use Nette\Utils\Html;
 
 /**

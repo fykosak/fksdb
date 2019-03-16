@@ -5,7 +5,7 @@ namespace FKSDB\Components\Controls\Payment;
 use EventModule\PaymentPresenter;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
-use FKSDB\ORM\ModelPayment;
+use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\Payment\PriceCalculator\Price;
 use FKSDB\Payment\Transition\PaymentMachine;
 use Nette\Application\UI\Control;
@@ -35,7 +35,7 @@ class DetailControl extends Control {
      * DetailControl constructor.
      * @param ITranslator $translator
      * @param PaymentMachine $machine
-     * @param ModelPayment $model
+     * @param \FKSDB\ORM\Models\ModelPayment $model
      */
     public function __construct(ITranslator $translator, PaymentMachine $machine, ModelPayment $model) {
         parent::__construct();

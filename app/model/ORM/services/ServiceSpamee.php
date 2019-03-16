@@ -2,6 +2,7 @@
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @deprecated
  */
 class ServiceSpamee extends AbstractServiceSingle {
 

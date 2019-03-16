@@ -8,8 +8,8 @@ use Authentication\RecoveryException;
 use Authentication\TokenAuthenticator;
 use FKSDB\Authentication\SSO\IGlobalSession;
 use FKSDB\Authentication\SSO\ServiceSide\Authentication;
-use FKSDB\ORM\ModelAuthToken;
-use FKSDB\ORM\ModelLogin;
+use FKSDB\ORM\Models\ModelAuthToken;
+use FKSDB\ORM\Models\ModelLogin;
 use Mail\MailTemplateFactory;
 use Mail\SendFailedException;
 use Nette\Application\UI\Form;
@@ -204,7 +204,7 @@ final class AuthenticationPresenter extends BasePresenter {
     public function actionLogin() {
         if ($this->isLoggedIn()) {
             /**
-             * @var ModelLogin $login
+             * @var \FKSDB\ORM\Models\ModelLogin $login
              */
             $login = $this->getUser()->getIdentity();
             $this->loginBackLinkRedirect($login);

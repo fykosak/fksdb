@@ -1,6 +1,6 @@
 <?php
 
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\Models\ModelPerson;
 
 /**
  * Class DuplicateOrgException

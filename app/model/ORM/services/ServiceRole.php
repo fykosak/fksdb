@@ -6,7 +6,7 @@
 class ServiceRole extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_ROLE;
-    protected $modelClassName = 'FKSDB\ORM\ModelRole';
+    protected $modelClassName = 'FKSDB\ORM\Models\ModelRole';
 
 }
 

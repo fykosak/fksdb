@@ -80,7 +80,7 @@ class CategoryProcessing extends AbstractProcessing {
                     continue;
                 }
                 /**
-                 * @var \FKSDB\ORM\ModelPerson $person
+                 * @var \FKSDB\ORM\Models\ModelPerson $person
                  */
                 $person = $baseHolder->getModel()->getMainModel()->person;
                 $history = $person->related('person_history')->where('ac_year', $acYear)->fetch();

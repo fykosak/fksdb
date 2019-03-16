@@ -6,5 +6,5 @@
 class ServiceTeacher extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_TEACHER;
-    protected $modelClassName = 'FKSDB\ORM\ModelTeacher';
+    protected $modelClassName = 'FKSDB\ORM\Models\ModelTeacher';
 }

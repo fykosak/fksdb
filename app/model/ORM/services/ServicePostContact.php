@@ -6,7 +6,7 @@
 class ServicePostContact extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_POST_CONTACT;
-    protected $modelClassName = 'FKSDB\ORM\ModelPostContact';
+    protected $modelClassName = 'FKSDB\ORM\Models\ModelPostContact';
 
 }
 

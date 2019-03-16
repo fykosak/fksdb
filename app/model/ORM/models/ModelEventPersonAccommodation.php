@@ -1,12 +1,12 @@
 <?php
 
-namespace FKSDB\ORM;
+namespace FKSDB\ORM\Models;
 
 use FKSDB\Transitions\IStateModel;
 use Nette\Database\Table\ActiveRow;
 
 /**
- * Class FKSDB\ORM\ModelEventPersonAccommodation
+ * Class FKSDB\ORM\Models\ModelEventPersonAccommodation
  * @property integer person_id
  * @property integer event_accommodation_id
  * @property integer event_person_accommodation_id

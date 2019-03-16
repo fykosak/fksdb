@@ -5,7 +5,7 @@ namespace Events\Model\Grid;
 use ArrayIterator;
 use Events\Model\Holder\BaseHolder;
 use Events\Model\Holder\Holder;
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\ModelEvent;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
@@ -24,7 +24,7 @@ use ORM\IModel;
 class SingleEventSource extends Object implements IHolderSource {
 
     /**
-     * @var ModelEvent
+     * @var \FKSDB\ORM\Models\ModelEvent
      */
     private $event;
 
@@ -77,7 +77,7 @@ class SingleEventSource extends Object implements IHolderSource {
     }
 
     /**
-     * @return ModelEvent
+     * @return \FKSDB\ORM\Models\ModelEvent
      */
     public function getEvent() {
         return $this->event;

@@ -9,7 +9,7 @@ use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Config\Expressions\Helpers;
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\Models\ModelPerson;
 use IContestPresenter;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
@@ -63,7 +63,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     public $personId;
 
     /**
-     * @var ModelPerson
+     * @var \FKSDB\ORM\Models\ModelPerson
      */
     private $person;
 
@@ -140,7 +140,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
 
     /**
-     * @return \FKSDB\ORM\ModelContest|\Nette\Database\Table\ActiveRow|null
+     * @return \FKSDB\ORM\Models\ModelContest|\Nette\Database\Table\ActiveRow|null
      */
     public function getSelectedContest() {
         return $this->contestId ? $this->serviceContest->findByPrimary($this->contestId) : null;
@@ -436,7 +436,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      */
     protected function getNavBarVariant(): array {
         /**
-         * @var \FKSDB\ORM\ModelContest $contest
+         * @var \FKSDB\ORM\Models\ModelContest $contest
          */
         $contest = $this->serviceContest->findByPrimary($this->contestId);
         if ($contest) {

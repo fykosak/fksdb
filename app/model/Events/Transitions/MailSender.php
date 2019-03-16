@@ -7,10 +7,10 @@ use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
 use Events\Machine\Transition;
 use Events\Model\Holder\BaseHolder;
-use FKSDB\ORM\ModelAuthToken;
-use FKSDB\ORM\ModelEvent;
-use FKSDB\ORM\ModelLogin;
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\Models\ModelAuthToken;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Models\ModelLogin;
+use FKSDB\ORM\Models\ModelPerson;
 use Mail\MailTemplateFactory;
 use Nette\Mail\IMailer;
 use Nette\Mail\Message;
@@ -174,7 +174,7 @@ class MailSender extends Object {
 
     /**
      * @param ModelLogin $login
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @param IModel $application
      * @return ModelAuthToken
      */

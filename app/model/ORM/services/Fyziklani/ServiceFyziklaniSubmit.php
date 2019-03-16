@@ -4,8 +4,8 @@ namespace FKSDB\ORM\Services\Fyziklani;
 
 use AbstractServiceSingle;
 use DbNames;
-use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
+use FKSDB\ORM\Models\ModelEvent;
 use Nette\Database\Table\Selection;
 
 /**
@@ -34,7 +34,7 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
 
     /**
      * Syntactic sugar.
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @return Selection
      */
     public function findAll(ModelEvent $event): Selection {
@@ -58,7 +58,7 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
     }
 
     /**
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @param null $lastUpdated
      * @return array
      */

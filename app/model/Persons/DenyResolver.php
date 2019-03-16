@@ -2,7 +2,7 @@
 
 namespace Persons;
 
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\Models\ModelPerson;
 use Nette\Object;
 
 
@@ -22,7 +22,7 @@ class DenyResolver extends Object implements IVisibilityResolver, IModifiability
     }
 
     /**
-     * @param ModelPerson $person
+     * @param \FKSDB\ORM\Models\ModelPerson $person
      * @return mixed|string
      */
     public function getResolutionMode(ModelPerson $person) {
@@ -30,7 +30,7 @@ class DenyResolver extends Object implements IVisibilityResolver, IModifiability
     }
 
     /**
-     * @param ModelPerson $person
+     * @param \FKSDB\ORM\Models\ModelPerson $person
      * @return bool|mixed
      */
     public function isModifiable(ModelPerson $person) {

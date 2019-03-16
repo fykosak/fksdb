@@ -1,6 +1,6 @@
 <?php
 
-use FKSDB\ORM\ModelFlag;
+use FKSDB\ORM\Models\ModelFlag;
 
 /**
  * @author Lukáš Timko <lukast@fykos.cz>
@@ -8,13 +8,13 @@ use FKSDB\ORM\ModelFlag;
 class ServiceFlag extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_FLAG;
-    protected $modelClassName = 'FKSDB\ORM\ModelFlag';
+    protected $modelClassName = 'FKSDB\ORM\Models\ModelFlag';
 
     /**
      * Syntactic sugar.
      *
      * @param integer $fid
-     * @return ModelFlag|null
+     * @return \FKSDB\ORM\Models\ModelFlag|null
      */
     public function findByFid($fid) {
         if (!$fid) {

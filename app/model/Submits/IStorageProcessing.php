@@ -2,7 +2,7 @@
 
 namespace Submits;
 
-use FKSDB\ORM\ModelSubmit;
+use FKSDB\ORM\Models\ModelSubmit;
 
 /**
  *
@@ -23,7 +23,7 @@ interface IStorageProcessing {
     public function setOutputFile(string $filename);
 
     /**
-     * @param ModelSubmit $submit
+     * @param \FKSDB\ORM\Models\ModelSubmit $submit
      * @return mixed
      */
     public function process(ModelSubmit $submit);

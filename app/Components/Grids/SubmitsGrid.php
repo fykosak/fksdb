@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\ORM\ModelContestant;
-use FKSDB\ORM\ModelSubmit;
+use FKSDB\ORM\Models\ModelContestant;
+use FKSDB\ORM\Models\ModelSubmit;
 use ModelException;
 use Nette\Application\BadRequestException;
 use Nette\Diagnostics\Debugger;
@@ -146,7 +146,7 @@ class SubmitsGrid extends BaseGrid {
 
     /**
      * @internal
-     * @param ModelSubmit $submit
+     * @param \FKSDB\ORM\Models\ModelSubmit $submit
      * @return boolean
      */
     public function canRevoke(ModelSubmit $submit) {

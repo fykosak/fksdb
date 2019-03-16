@@ -5,7 +5,7 @@ namespace PublicModule;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Grids\SubmitsGrid;
-use FKSDB\ORM\ModelSubmit;
+use FKSDB\ORM\Models\ModelSubmit;
 use ModelException;
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\FileResponse;

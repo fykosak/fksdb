@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Controls\Fyziklani;
 
 use FKSDB\Application\IJavaScriptCollector;
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\UI\Control;

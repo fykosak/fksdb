@@ -1,7 +1,7 @@
 <?php
 
 use FKSDB\Config\GlobalParameters;
-use FKSDB\ORM\ModelContest;
+use FKSDB\ORM\Models\ModelContest;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 use Nette\Object;
@@ -99,7 +99,7 @@ class YearCalculator extends Object {
     }
 
     /**
-     * @param ModelContest $contest
+     * @param \FKSDB\ORM\Models\ModelContest $contest
      * @return mixed
      */
     public function getCurrentYear(ModelContest $contest) {
@@ -107,7 +107,7 @@ class YearCalculator extends Object {
     }
 
     /**
-     * @param ModelContest $contest
+     * @param \FKSDB\ORM\Models\ModelContest $contest
      * @return mixed
      */
     public function getFirstYear(ModelContest $contest) {
@@ -125,7 +125,7 @@ class YearCalculator extends Object {
     }
 
     /**
-     * @param ModelContest $contest
+     * @param \FKSDB\ORM\Models\ModelContest $contest
      * @param $year
      * @return bool
      */
@@ -135,7 +135,7 @@ class YearCalculator extends Object {
 
     /**
      * @see getCurrentAcademicYear
-     * @param ModelContest $contest
+     * @param \FKSDB\ORM\Models\ModelContest $contest
      * @return int
      */
     public function getForwardShift(ModelContest $contest) {

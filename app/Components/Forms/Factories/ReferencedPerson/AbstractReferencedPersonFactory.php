@@ -13,7 +13,7 @@ use FKSDB\Components\Forms\Factories\FlagFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Factories\PersonHistoryFactory;
 use FKSDB\Components\Forms\Factories\PersonInfoFactory;
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\Models\ModelPerson;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\HiddenField;
@@ -436,7 +436,7 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
     }
 
     /**
-     * @param ModelPerson $person
+     * @param \FKSDB\ORM\Models\ModelPerson $person
      * @param $sub
      * @param $field
      * @param $acYear
@@ -448,12 +448,12 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
     }
 
     /**
-     * @param ModelPerson|null $person
+     * @param \FKSDB\ORM\Models\ModelPerson|null $person
      * @param $sub
      * @param $field
      * @param $acYear
      * @param $options
-     * @return bool|\FKSDB\ORM\ModelPostContact|mixed|null
+     * @return bool|\FKSDB\ORM\Models\ModelPostContact|mixed|null
      */
     protected function getPersonValue(ModelPerson $person = null, $sub, $field, $acYear, $options) {
         if (!$person) {

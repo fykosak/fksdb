@@ -2,7 +2,7 @@
 
 namespace Events\Model\Grid;
 
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\ModelEvent;
 use Nette\DI\Container;
 use ORM\Tables\TypedTableSelection;
 

@@ -3,7 +3,7 @@
 namespace FKSDB\model\Fyziklani\Rooms;
 
 use FKSDB\Logging\MemoryLogger;
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Pipeline\Pipeline;
 
