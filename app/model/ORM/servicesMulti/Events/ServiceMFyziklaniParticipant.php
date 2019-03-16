@@ -3,8 +3,8 @@
 namespace ORM\ServicesMulti\Events;
 
 use AbstractServiceMulti;
+use FKSDB\ORM\Services\Events\ServiceFyziklaniParticipant;
 use ORM\IModel;
-use ORM\Services\Events\ServiceFyziklaniParticipant;
 use ServiceEventParticipant;
 
 /**
@@ -18,9 +18,9 @@ class ServiceMFyziklaniParticipant extends AbstractServiceMulti {
     /**
      * ServiceMFyziklaniParticipant constructor.
      * @param ServiceEventParticipant $mainService
-     * @param ServiceFyziklaniParticipant $joinedService
+     * @param \FKSDB\ORM\Services\Events\ServiceFyziklaniParticipant $joinedService
      */
-    public function __construct(ServiceEventParticipant $mainService, ServiceFyziklaniParticipant $joinedService) {
+    public function __construct(ServiceEventParticipant $mainService, \FKSDB\ORM\Services\Events\ServiceFyziklaniParticipant $joinedService) {
         parent::__construct($mainService, $joinedService);
     }
 

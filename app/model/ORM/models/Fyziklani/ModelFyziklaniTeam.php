@@ -1,6 +1,6 @@
 <?php
 
-namespace ORM\Models\Events;
+namespace FKSDB\ORM\Models\Fyziklani;
 
 use AbstractModelSingle;
 use DbNames;
@@ -37,12 +37,12 @@ class ModelFyziklaniTeam extends AbstractModelSingle {
     }
 
     /**
-     * @return null|\FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition
+     * @return null|\ModelFyziklaniTeamPosition
      */
     public function getPosition() {
         $row = $this->related(DbNames::TAB_FYZIKLANI_TEAM_POSITION, 'e_fyziklani_team_id')->fetch();
         if ($row) {
-            return \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition::createFromTableRow($row);
+            return \ModelFyziklaniTeamPosition::createFromTableRow($row);
         }
         return null;
     }

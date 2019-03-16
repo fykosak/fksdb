@@ -8,12 +8,12 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\Fyziklani\CloseTeamsGrid;
 use FKSDB\model\Fyziklani\CloseSubmitStrategy;
 use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 use Nette\Utils\Html;
-use ORM\Services\Events\ServiceFyziklaniTeam;
 
 /**
  * Class CloseControl
@@ -22,7 +22,7 @@ use ORM\Services\Events\ServiceFyziklaniTeam;
  */
 class CloseControl extends Control {
     /**
-     * @var ServiceFyziklaniTeam
+     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam
      */
     private $serviceFyziklaniTeam;
     /**

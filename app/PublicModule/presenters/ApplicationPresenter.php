@@ -17,11 +17,11 @@ use FKSDB\Logging\FlashDumpFactory;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\ModelAuthToken;
 use FKSDB\ORM\ModelEventParticipant;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use ORM\IModel;
-use ORM\Models\Events\ModelFyziklaniTeam;
 use ServiceEvent;
 
 /**
@@ -39,7 +39,7 @@ class ApplicationPresenter extends BasePresenter {
     private $event = false;
 
     /**
-     * @var IModel|ModelFyziklaniTeam|ModelEventParticipant
+     * @var IModel|\FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam|ModelEventParticipant
      */
     private $eventApplication = false;
 
@@ -325,7 +325,7 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @return ModelEventParticipant|mixed|IModel|ModelFyziklaniTeam
+     * @return ModelEventParticipant|mixed|IModel|\FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam
      */
     private function getEventApplication() {
         if ($this->eventApplication === false) {

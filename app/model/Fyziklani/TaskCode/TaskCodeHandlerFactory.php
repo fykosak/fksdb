@@ -3,7 +3,7 @@
 namespace FKSDB\model\Fyziklani;
 
 use FKSDB\ORM\ModelEvent;
-use ORM\Services\Events\ServiceFyziklaniTeam;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 
 /**
  * Class TaskCodeHandlerFactory

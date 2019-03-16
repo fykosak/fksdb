@@ -6,8 +6,8 @@ namespace EventModule;
 
 use FKSDB\Components\React\ReactComponent\Events\TeamApplicationsTimeProgress;
 use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\ForbiddenRequestException;
-use ORM\Services\Events\ServiceFyziklaniTeam;
 
 /**
  * Class ApplicationsTimeProgressPresenter
@@ -15,12 +15,12 @@ use ORM\Services\Events\ServiceFyziklaniTeam;
  */
 class ApplicationsTimeProgressPresenter extends BasePresenter {
     /**
-     * @var ServiceFyziklaniTeam
+     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam
      */
     private $serviceFyziklaniTeam;
 
     /**
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam $serviceFyziklaniTeam
      */
     public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam) {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;

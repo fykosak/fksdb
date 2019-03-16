@@ -20,11 +20,15 @@ use FKSDB\Components\Grids\Fyziklani\TaskGrid;
 use FKSDB\Components\Grids\Fyziklani\TeamSubmitsGrid;
 use FKSDB\model\Fyziklani\TaskCodeHandlerFactory;
 use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use Nette\DI\Container;
 use Nette\Localization\ITranslator;
-use ORM\Models\Events\ModelFyziklaniTeam;
-use ORM\Services\Events\ServiceFyziklaniTeam;
+
 
 /**
  * Class FyziklaniFactory
@@ -33,12 +37,12 @@ use ORM\Services\Events\ServiceFyziklaniTeam;
 class FyziklaniFactory {
 
     /**
-     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom
+     * @var ServiceFyziklaniRoom
      */
     private $serviceFyziklaniRoom;
 
     /**
-     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition
+     * @var ServiceFyziklaniTeamPosition
      */
     private $serviceFyziklaniTeamPosition;
 
@@ -48,7 +52,7 @@ class FyziklaniFactory {
     private $serviceFyziklaniTeam;
 
     /**
-     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask
+     * @var ServiceFyziklaniTask
      */
     private $serviceFyziklaniTask;
     /**
@@ -70,21 +74,21 @@ class FyziklaniFactory {
 
     /**
      * FyziklaniFactory constructor.
-     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom $serviceFyziklaniRoom
-     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
+     * @param ServiceFyziklaniRoom $serviceFyziklaniRoom
+     * @param ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
      * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask $serviceFyziklaniTask
-     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit $serviceFyziklaniSubmit
+     * @param ServiceFyziklaniTask $serviceFyziklaniTask
+     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
      * @param TaskCodeHandlerFactory $taskCodeHandlerFactory
      * @param Container $context
      * @param ITranslator $translator
      */
     public function __construct(
-        \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom $serviceFyziklaniRoom,
-        \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition,
+        ServiceFyziklaniRoom $serviceFyziklaniRoom,
+        ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition,
         ServiceFyziklaniTeam $serviceFyziklaniTeam,
-        \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask $serviceFyziklaniTask,
-        \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit $serviceFyziklaniSubmit,
+        ServiceFyziklaniTask $serviceFyziklaniTask,
+        ServiceFyziklaniSubmit $serviceFyziklaniSubmit,
         TaskCodeHandlerFactory $taskCodeHandlerFactory,
         Container $context,
         ITranslator $translator
@@ -229,7 +233,7 @@ class FyziklaniFactory {
     }
 
     /**
-     * @param ModelFyziklaniTeam $team
+     * @param \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam $team
      * @return TeamSubmitsGrid
      */
     public function createTeamSubmitsGrid(ModelFyziklaniTeam $team): TeamSubmitsGrid {

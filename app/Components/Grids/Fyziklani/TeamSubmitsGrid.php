@@ -2,10 +2,11 @@
 
 namespace FKSDB\Components\Grids\Fyziklani;
 
+
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FyziklaniModule\BasePresenter;
 use NiftyGrid\DataSource\NDataSource;
-use ORM\Models\Events\ModelFyziklaniTeam;
 
 /**
  * Class TeamSubmitsGrid
@@ -14,14 +15,14 @@ use ORM\Models\Events\ModelFyziklaniTeam;
 class TeamSubmitsGrid extends SubmitsGrid {
 
     /**
-     * @var ModelFyziklaniTeam
+     * @var \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam
      */
     private $team;
 
     /**
      * FyziklaniSubmitsGrid constructor.
-     * @param ModelFyziklaniTeam $team
-     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit $serviceFyziklaniSubmit
+     * @param \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam $team
+     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
      */
     public function __construct(ModelFyziklaniTeam $team, ServiceFyziklaniSubmit $serviceFyziklaniSubmit) {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;

@@ -6,9 +6,9 @@ use FKSDB\model\Fyziklani\ClosedSubmittingException;
 use FKSDB\model\Fyziklani\TaskCodeException;
 use FKSDB\model\Fyziklani\TaskCodeHandler;
 use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\DI\Container;
 use Nette\Utils\Json;
-use ORM\Services\Events\ServiceFyziklaniTeam;
 
 /**
  * Class TaskCodeInput

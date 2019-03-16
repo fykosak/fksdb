@@ -6,9 +6,9 @@ namespace FKSDB\Components\Grids\Fyziklani;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FyziklaniModule\BasePresenter;
 use NiftyGrid\DataSource\NDataSource;
-use ORM\Services\Events\ServiceFyziklaniTeam;
 
 /**
  * Class ResultsCategoryGrid
