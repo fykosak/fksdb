@@ -1,6 +1,11 @@
 <?php
 
+namespace FKSDB\ORM\Services\Fyziklani;
+
+use AbstractServiceSingle;
+use DbNames;
 use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use Nette\Database\Table\Selection;
 
 /**
@@ -9,7 +14,7 @@ use Nette\Database\Table\Selection;
 class ServiceFyziklaniSubmit extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_FYZIKLANI_SUBMIT;
-    protected $modelClassName = 'ModelFyziklaniSubmit';
+    protected $modelClassName = 'FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit';
 
     /**
      * @param int $taskId

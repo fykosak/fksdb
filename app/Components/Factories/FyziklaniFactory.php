@@ -20,11 +20,11 @@ use FKSDB\Components\Grids\Fyziklani\TaskGrid;
 use FKSDB\Components\Grids\Fyziklani\TeamSubmitsGrid;
 use FKSDB\model\Fyziklani\TaskCodeHandlerFactory;
 use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use Nette\DI\Container;
 use Nette\Localization\ITranslator;
 use ORM\Models\Events\ModelFyziklaniTeam;
 use ORM\Services\Events\ServiceFyziklaniTeam;
-use ServiceFyziklaniSubmit;
 
 /**
  * Class FyziklaniFactory
@@ -33,12 +33,12 @@ use ServiceFyziklaniSubmit;
 class FyziklaniFactory {
 
     /**
-     * @var \ServiceFyziklaniRoom
+     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom
      */
     private $serviceFyziklaniRoom;
 
     /**
-     * @var \ServiceFyziklaniTeamPosition
+     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition
      */
     private $serviceFyziklaniTeamPosition;
 
@@ -48,7 +48,7 @@ class FyziklaniFactory {
     private $serviceFyziklaniTeam;
 
     /**
-     * @var \ServiceFyziklaniTask
+     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask
      */
     private $serviceFyziklaniTask;
     /**
@@ -70,21 +70,21 @@ class FyziklaniFactory {
 
     /**
      * FyziklaniFactory constructor.
-     * @param \ServiceFyziklaniRoom $serviceFyziklaniRoom
-     * @param \ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
+     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom $serviceFyziklaniRoom
+     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
      * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @param \ServiceFyziklaniTask $serviceFyziklaniTask
-     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
+     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask $serviceFyziklaniTask
+     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit $serviceFyziklaniSubmit
      * @param TaskCodeHandlerFactory $taskCodeHandlerFactory
      * @param Container $context
      * @param ITranslator $translator
      */
     public function __construct(
-        \ServiceFyziklaniRoom $serviceFyziklaniRoom,
-        \ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition,
+        \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom $serviceFyziklaniRoom,
+        \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition,
         ServiceFyziklaniTeam $serviceFyziklaniTeam,
-        \ServiceFyziklaniTask $serviceFyziklaniTask,
-        \ServiceFyziklaniSubmit $serviceFyziklaniSubmit,
+        \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask $serviceFyziklaniTask,
+        \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit $serviceFyziklaniSubmit,
         TaskCodeHandlerFactory $taskCodeHandlerFactory,
         Container $context,
         ITranslator $translator

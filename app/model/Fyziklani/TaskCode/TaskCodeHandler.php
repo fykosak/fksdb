@@ -14,11 +14,11 @@ use ORM\Services\Events\ServiceFyziklaniTeam;
 class TaskCodeHandler {
 
     /**
-     * @var \ServiceFyziklaniSubmit
+     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit
      */
     private $serviceFyziklaniSubmit;
     /**
-     * @var \ServiceFyziklaniTask
+     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask
      */
     private $serviceFyziklaniTask;
     /**
@@ -33,11 +33,11 @@ class TaskCodeHandler {
     /**
      * TaskCodeHandler constructor.
      * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @param \ServiceFyziklaniTask $serviceFyziklaniTask
-     * @param \ServiceFyziklaniSubmit $serviceFyziklaniSubmit
+     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask $serviceFyziklaniTask
+     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit $serviceFyziklaniSubmit
      * @param ModelEvent $event
      */
-    public function __construct(ServiceFyziklaniTeam $serviceFyziklaniTeam, \ServiceFyziklaniTask $serviceFyziklaniTask, \ServiceFyziklaniSubmit $serviceFyziklaniSubmit, ModelEvent $event) {
+    public function __construct(ServiceFyziklaniTeam $serviceFyziklaniTeam, \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask $serviceFyziklaniTask, \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit $serviceFyziklaniSubmit, ModelEvent $event) {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
@@ -151,10 +151,10 @@ class TaskCodeHandler {
 
     /**
      * @param string $code
-     * @return \ModelFyziklaniTask
+     * @return \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask
      * @throws TaskCodeException
      */
-    public function getTaskFromCode(string $code): \ModelFyziklaniTask {
+    public function getTaskFromCode(string $code): \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask {
         $fullCode = TaskCodePreprocessor::createFullCode($code);
         /* správny label */
         $taskLabel = TaskCodePreprocessor::extractTaskLabel($fullCode);

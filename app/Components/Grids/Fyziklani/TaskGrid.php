@@ -4,8 +4,8 @@ namespace FKSDB\Components\Grids\Fyziklani;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use Nette\Database\Table\Selection;
-use ServiceFyziklaniTask;
 use SQL\SearchableDataSource;
 
 /**
@@ -28,7 +28,7 @@ class TaskGrid extends BaseGrid {
     /**
      * FyziklaniTaskGrid constructor.
      * @param ModelEvent $event
-     * @param ServiceFyziklaniTask $serviceFyziklaniTask
+     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask $serviceFyziklaniTask
      */
     public function __construct(ModelEvent $event, ServiceFyziklaniTask $serviceFyziklaniTask) {
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;

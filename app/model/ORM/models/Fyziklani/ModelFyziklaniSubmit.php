@@ -1,5 +1,7 @@
 <?php
 
+namespace FKSDB\ORM\Models\Fyziklani;
+
 use Nette\Database\Table\ActiveRow;
 use Nette\DateTime;
 use ORM\Models\Events\ModelFyziklaniTeam;

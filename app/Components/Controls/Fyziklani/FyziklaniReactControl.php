@@ -14,12 +14,12 @@ use ORM\Services\Events\ServiceFyziklaniTeam;
 abstract class FyziklaniReactControl extends ReactComponent {
 
     /**
-     * @var \ServiceFyziklaniRoom
+     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom
      */
     protected $serviceFyziklaniRoom;
 
     /**
-     * @var \ServiceFyziklaniTeamPosition
+     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition
      */
     protected $serviceFyziklaniTeamPosition;
 
@@ -29,11 +29,11 @@ abstract class FyziklaniReactControl extends ReactComponent {
     protected $serviceFyziklaniTeam;
 
     /**
-     * @var \ServiceFyziklaniTask
+     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask
      */
     protected $serviceFyziklaniTask;
     /**
-     * @var \ServiceFyziklaniSubmit
+     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit
      */
     protected $serviceFyziklaniSubmit;
 
@@ -51,20 +51,20 @@ abstract class FyziklaniReactControl extends ReactComponent {
      * FyziklaniReactControl constructor.
      * @param Container $container
      * @param ModelEvent $event
-     * @param \ServiceFyziklaniRoom $serviceFyziklaniRoom
-     * @param \ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
+     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom $serviceFyziklaniRoom
+     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
      * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @param \ServiceFyziklaniTask $serviceFyziklaniTask
-     * @param \ServiceFyziklaniSubmit $serviceFyziklaniSubmit
+     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask $serviceFyziklaniTask
+     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit $serviceFyziklaniSubmit
      */
     public function __construct(
         Container $container,
         ModelEvent $event,
-        \ServiceFyziklaniRoom $serviceFyziklaniRoom,
-        \ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition,
+        \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom $serviceFyziklaniRoom,
+        \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition,
         ServiceFyziklaniTeam $serviceFyziklaniTeam,
-        \ServiceFyziklaniTask $serviceFyziklaniTask,
-        \ServiceFyziklaniSubmit $serviceFyziklaniSubmit
+        \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask $serviceFyziklaniTask,
+        \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit $serviceFyziklaniSubmit
     ) {
         parent::__construct($container);
         $this->event = $event;
@@ -93,7 +93,7 @@ abstract class FyziklaniReactControl extends ReactComponent {
     }
 
     /**
-     * @return \ModelFyziklaniRoom[]
+     * @return \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniRoom[]
      */
     protected function getRooms() {
         return $this->serviceFyziklaniRoom->getRoomsByIds($this->getEvent()->getParameter('gameSetup')['rooms']);

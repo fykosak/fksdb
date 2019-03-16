@@ -1,12 +1,16 @@
 <?php
 
+namespace FKSDB\ORM\Services\Fyziklani;
+
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniRoom;
+
 /**
- * Class ServiceFyziklaniRoom
+ * Class FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom
  */
 class ServiceFyziklaniRoom extends \AbstractServiceSingle {
 
     protected $tableName = \DbNames::TAB_FYZIKLANI_ROOM;
-    protected $modelClassName = 'ModelFyziklaniRoom';
+    protected $modelClassName = 'FKSDB\ORM\Models\Fyziklani\ModelFyziklaniRoom';
 
     /**
      * @param array $ids
@@ -16,7 +20,7 @@ class ServiceFyziklaniRoom extends \AbstractServiceSingle {
         $rooms = [];
         foreach ($ids as $roomId) {
             /**
-             * @var \ModelFyziklaniRoom $room
+             * @var \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniRoom $room
              */
             $room = ModelFyziklaniRoom::createFromTableRow($this->findByPrimary($roomId));
             if ($room) {

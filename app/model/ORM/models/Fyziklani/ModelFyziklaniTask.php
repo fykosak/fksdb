@@ -1,5 +1,8 @@
 <?php
 
+namespace FKSDB\ORM\Models\Fyziklani;
+use AbstractModelSingle;
+
 /**
  *
  * @author Lukáš Timko <lukast@fykos.cz>

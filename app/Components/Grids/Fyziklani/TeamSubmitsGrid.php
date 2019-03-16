@@ -2,10 +2,10 @@
 
 namespace FKSDB\Components\Grids\Fyziklani;
 
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FyziklaniModule\BasePresenter;
 use NiftyGrid\DataSource\NDataSource;
 use ORM\Models\Events\ModelFyziklaniTeam;
-use ServiceFyziklaniSubmit;
 
 /**
  * Class TeamSubmitsGrid
@@ -21,7 +21,7 @@ class TeamSubmitsGrid extends SubmitsGrid {
     /**
      * FyziklaniSubmitsGrid constructor.
      * @param ModelFyziklaniTeam $team
-     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
+     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit $serviceFyziklaniSubmit
      */
     public function __construct(ModelFyziklaniTeam $team, ServiceFyziklaniSubmit $serviceFyziklaniSubmit) {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
@@ -37,7 +37,7 @@ class TeamSubmitsGrid extends SubmitsGrid {
         parent::configure($presenter);
 
         $this->addColumn('label', _('Úloha'))->setRenderer(function ($row) {
-            $model = \ModelFyziklaniSubmit::createFromTableRow($row);
+            $model = \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit::createFromTableRow($row);
             return $model->getTask()->label;
         });
         $this->addColumn('points', _('Body'));

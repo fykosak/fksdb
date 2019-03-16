@@ -4,8 +4,7 @@
 services:
     ServiceAuthToken:        ServiceAuthToken
     ServiceAddress:          ServiceAddress
-    ServiceFyziklaniRoom:        ServiceFyziklaniRoom
-    ServiceFyziklaniTeamPosition: ServiceFyziklaniTeamPosition
+
     ServiceContestant:       ServiceContestant
     ServiceContest:          ServiceContest
     ServiceContestYear:      ServiceContestYear
@@ -13,8 +12,6 @@ services:
     ServiceEventOrg:         ServiceEventOrg
     ServiceEventType:        ServiceEventType
     ServiceFlag:             ServiceFlag
-    ServiceFyziklaniSubmit:  ServiceFyziklaniSubmit
-    ServiceFyziklaniTask:    ServiceFyziklaniTask
     ServiceGlobalSession:    ServiceGlobalSession
     ServiceLogin:            ServiceLogin
     ServiceMPersonHasFlag:   ServiceMPersonHasFlag
@@ -42,7 +39,12 @@ services:
     ServiceTeacher:          ServiceTeacher
     ServicePayment:          ServicePayment
     ServicePaymentAccommodation: FKSDB\ORM\Services\ServicePaymentAccommodation
+
     fyziklani.ServiceFyziklaniGameSetup: FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniGameSetup
+    fyziklani.ServiceFyziklaniRoom:        FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom
+    fyziklani.ServiceFyziklaniTeamPosition: FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition
+    fyziklani.ServiceFyziklaniSubmit:  FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit
+    fyziklani.ServiceFyziklaniTask:    FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask
 
     event.ServiceEventParticipant:          ServiceEventParticipant
     event.ServiceDsefGroup:                 ORM\Services\Events\ServiceDsefGroup

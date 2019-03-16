@@ -157,7 +157,7 @@ class CloseSubmitStrategy {
         $sum = 0;
         $count = 0;
         foreach ($team->getSubmits() as $row) {
-            $submit = \ModelFyziklaniSubmit::createFromTableRow($row);
+            $submit = \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit::createFromTableRow($row);
             if ($submit->points !== null) {
                 $sum += $submit->points;
                 $count++;
