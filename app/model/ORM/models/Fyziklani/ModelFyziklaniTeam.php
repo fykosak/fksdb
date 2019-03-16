@@ -37,12 +37,12 @@ class ModelFyziklaniTeam extends AbstractModelSingle {
     }
 
     /**
-     * @return null|\ModelFyziklaniTeamPosition
+     * @return null|ModelFyziklaniTeamPosition
      */
     public function getPosition() {
         $row = $this->related(DbNames::TAB_FYZIKLANI_TEAM_POSITION, 'e_fyziklani_team_id')->fetch();
         if ($row) {
-            return \ModelFyziklaniTeamPosition::createFromTableRow($row);
+            return ModelFyziklaniTeamPosition::createFromTableRow($row);
         }
         return null;
     }
