@@ -1,5 +1,8 @@
 <?php
 
+use FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryTag;
+use FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
+
 /**
  * @author Lukáš Timko <lukast@fykos.cz>
  */

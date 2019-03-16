@@ -16,7 +16,9 @@ use FKSDB\Components\Grids\StoredQueriesGrid;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelPostContact;
-use FKSDB\ORM\Models\ModelStoredQuery;
+use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
+use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
+use FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryParameter;
 use FormUtils;
 use IResultsModel;
 use ModelException;
@@ -25,8 +27,6 @@ use Nette\Diagnostics\Debugger;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Strings;
 use ServiceMStoredQueryTag;
-use ServiceStoredQuery;
-use ServiceStoredQueryParameter;
 
 /**
  * Class ExportPresenter
@@ -53,12 +53,12 @@ class ExportPresenter extends SeriesPresenter {
     public $qid;
 
     /**
-     * @var ServiceStoredQuery
+     * @var \FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery
      */
     private $serviceStoredQuery;
 
     /**
-     * @var ServiceStoredQueryParameter
+     * @var \FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryParameter
      */
     private $serviceStoredQueryParameter;
 
@@ -84,12 +84,12 @@ class ExportPresenter extends SeriesPresenter {
     private $storedQuery;
 
     /**
-     * @var \FKSDB\ORM\Models\ModelStoredQuery
+     * @var \FKSDB\ORM\Models\StoredQuery\ModelStoredQuery
      */
     private $patternQuery = false;
 
     /**
-     * @param ServiceStoredQuery $serviceStoredQuery
+     * @param \FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery $serviceStoredQuery
      */
     public function injectServiceStoredQuery(ServiceStoredQuery $serviceStoredQuery) {
         $this->serviceStoredQuery = $serviceStoredQuery;

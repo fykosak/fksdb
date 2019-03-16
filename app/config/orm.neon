@@ -26,10 +26,7 @@ services:
     ServiceRegion:           ServiceRegion
     ServiceSubmit:           ServiceSubmit
     ServiceSchool:           ServiceSchool
-    ServiceStoredQuery:      ServiceStoredQuery
-    ServiceStoredQueryParameter: ServiceStoredQueryParameter
-    ServiceStoredQueryTag:   ServiceStoredQueryTag
-    ServiceStoredQueryTagType: ServiceStoredQueryTagType
+
     ServiceStudyYear:        ServiceStudyYear
     ServiceTask:             ServiceTask
     ServiceTaskContribution: ServiceTaskContribution
@@ -39,6 +36,11 @@ services:
     ServiceTeacher:          ServiceTeacher
     ServicePayment:          ServicePayment
     ServicePaymentAccommodation: FKSDB\ORM\Services\ServicePaymentAccommodation
+
+    ServiceStoredQuery:      FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery
+    ServiceStoredQueryParameter: FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryParameter
+    ServiceStoredQueryTag:   FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryTag
+    ServiceStoredQueryTagType: FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryTagType
 
     fyziklani.ServiceFyziklaniGameSetup: FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniGameSetup
     fyziklani.ServiceFyziklaniRoom:        FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom

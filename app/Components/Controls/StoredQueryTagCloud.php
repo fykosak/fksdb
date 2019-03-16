@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls;
 
-use FKSDB\ORM\Models\ModelStoredQuery;
+use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use Nette\Application\UI\Control;
 use Nette\InvalidArgumentException;
 use ServiceMStoredQueryTag;

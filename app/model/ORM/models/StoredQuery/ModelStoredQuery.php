@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\ORM\Models;
+namespace FKSDB\ORM\Models\StoredQuery;
 
 use AbstractModelSingle;
 use DbNames;
