@@ -3,8 +3,8 @@
 namespace Events\Model\Grid;
 
 use Events\UndeclaredEventException;
-use FKSDB\ORM\ModelEvent;
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Models\ModelPerson;
 use Nette\DI\Container;
 use ORM\Tables\TypedTableSelection;
 
@@ -21,13 +21,13 @@ use ORM\Tables\TypedTableSelection;
 class RelatedPersonSource extends AggregatedPersonSource implements IHolderSource {
 
     /**
-     * @var ModelPerson
+     * @var \FKSDB\ORM\Models\ModelPerson
      */
     private $person;
 
     /**
      * RelatedPersonSource constructor.
-     * @param ModelPerson $person
+     * @param \FKSDB\ORM\Models\ModelPerson $person
      * @param TypedTableSelection $events
      * @param Container $container
      */
@@ -37,7 +37,7 @@ class RelatedPersonSource extends AggregatedPersonSource implements IHolderSourc
     }
 
     /**
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @return SingleEventSource|null
      */
     public function processEvent(ModelEvent $event) {

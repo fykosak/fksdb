@@ -2,7 +2,7 @@
 
 namespace FKSDB\model\Fyziklani;
 
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\Utils\CSVParser;
 use FyziklaniModule\TaskPresenter;
@@ -21,7 +21,7 @@ class FyziklaniTaskImportProcessor {
      */
     private $serviceFyziklaniTask;
     /**
-     * @var ModelEvent
+     * @var \FKSDB\ORM\Models\ModelEvent
      */
     private $event;
 

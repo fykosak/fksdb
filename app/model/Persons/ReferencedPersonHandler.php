@@ -6,8 +6,8 @@ use FKSDB\Components\Forms\Controls\IReferencedHandler;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
 use FKSDB\Components\Forms\Controls\PersonAccommodation\ExistingPaymentException;
 use FKSDB\Components\Forms\Controls\PersonAccommodation\Handler;
-use FKSDB\ORM\ModelPerson;
-use FKSDB\ORM\ModelPostContact;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Models\ModelPostContact;
 use FormUtils;
 use ModelException;
 use Nette\ArrayHash;
@@ -412,7 +412,7 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
     /**
      * @param string $field
      * @param mixed $key
-     * @return ModelPerson|null|IModel
+     * @return \FKSDB\ORM\Models\ModelPerson|null|IModel
      */
     public function findBySecondaryKey($field, $key) {
         if (!$this->isSecondaryKey($field)) {

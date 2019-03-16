@@ -2,7 +2,7 @@
 
 namespace Persons;
 
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\Models\ModelPerson;
 use Nette\Object;
 use Nette\Security\User;
 
@@ -27,7 +27,7 @@ class SelfResolver extends Object implements IVisibilityResolver, IModifiability
     }
 
     /**
-     * @param ModelPerson $person
+     * @param \FKSDB\ORM\Models\ModelPerson $person
      * @return bool
      */
     public function isVisible(ModelPerson $person) {

@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\ORM;
+namespace FKSDB\ORM\Models;
 
 use AbstractModelSingle;
 use FKSDB\Transitions\IEventReferencedModel;
@@ -9,7 +9,7 @@ use Nette\InvalidStateException;
 use Nette\Security\IResource;
 
 /**
- * Class FKSDB\ORM\ModelEventOrg
+ * Class FKSDB\ORM\Models\ModelEventOrg
  * @property ActiveRow person
  * @property ActiveRow event
  * @property string note

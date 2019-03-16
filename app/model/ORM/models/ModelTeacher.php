@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\ORM;
+namespace FKSDB\ORM\Models;
 
 use AbstractModelSingle;
 use DateTime;
@@ -29,7 +29,7 @@ class ModelTeacher extends AbstractModelSingle implements IResource {
      * @return ModelSchool
      */
     public function getSchool(): ModelSchool {
-        return ModelSchool::createFromTableRow( $this->school);
+        return ModelSchool::createFromTableRow($this->school);
     }
 
     /**

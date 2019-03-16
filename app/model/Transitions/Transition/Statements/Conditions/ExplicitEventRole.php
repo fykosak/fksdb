@@ -3,7 +3,7 @@
 namespace FKSDB\Transitions\Statements\Conditions;
 
 use Authorization\EventAuthorizator;
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\Transitions\IStateModel;
 
 /**

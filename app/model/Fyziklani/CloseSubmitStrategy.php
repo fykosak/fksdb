@@ -8,8 +8,9 @@
 
 namespace FKSDB\model\Fyziklani;
 
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FyziklaniModule\BasePresenter;
 use Nette\Application\BadRequestException;
@@ -34,14 +35,14 @@ class CloseSubmitStrategy {
      */
     private $serviceFyziklaniTeam;
     /**
-     * @var ModelEvent
+     * @var \FKSDB\ORM\Models\ModelEvent
      */
     private $event;
 
 
     /**
      * CloseSubmitStrategy constructor.
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam $serviceFyziklaniTeam
      */
     public function __construct(ModelEvent $event, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
@@ -157,7 +158,7 @@ class CloseSubmitStrategy {
         $sum = 0;
         $count = 0;
         foreach ($team->getSubmits() as $row) {
-            $submit = \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit::createFromTableRow($row);
+            $submit = ModelFyziklaniSubmit::createFromTableRow($row);
             if ($submit->points !== null) {
                 $sum += $submit->points;
                 $count++;

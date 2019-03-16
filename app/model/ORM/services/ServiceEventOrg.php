@@ -1,6 +1,6 @@
 <?php
 
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\ModelEvent;
 use ORM\IModel;
 
 /**
@@ -9,7 +9,7 @@ use ORM\IModel;
 class ServiceEventOrg extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_EVENT_ORG;
-    protected $modelClassName = 'FKSDB\ORM\ModelEventOrg';
+    protected $modelClassName = 'FKSDB\ORM\Models\ModelEventOrg';
 
     /**
      * @param IModel $model

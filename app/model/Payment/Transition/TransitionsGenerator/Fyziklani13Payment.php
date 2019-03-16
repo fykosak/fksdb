@@ -3,9 +3,9 @@
 namespace FKSDB\Payment\Transition\Transitions;
 
 use Authorization\EventAuthorizator;
-use FKSDB\ORM\ModelEvent;
-use FKSDB\ORM\ModelEventPersonAccommodation;
-use FKSDB\ORM\ModelPayment;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Models\ModelEventPersonAccommodation;
+use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\Payment\PriceCalculator\PriceCalculatorFactory;
 use FKSDB\Payment\SymbolGenerator\SymbolGeneratorFactory;
 use FKSDB\Payment\Transition\PaymentMachine;
@@ -101,7 +101,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
     }
 
     /**
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @return Machine
      */
     public function createMachine(ModelEvent $event): Machine {

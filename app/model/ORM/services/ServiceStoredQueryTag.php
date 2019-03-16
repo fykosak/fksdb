@@ -6,7 +6,7 @@
 class ServiceStoredQueryTag extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_STORED_QUERY_TAG;
-    protected $modelClassName = 'FKSDB\ORM\ModelStoredQueryTag';
+    protected $modelClassName = 'FKSDB\ORM\Models\ModelStoredQueryTag';
 
     /**
      * @param int|null $tagTypeId

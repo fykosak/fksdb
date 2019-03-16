@@ -3,7 +3,7 @@
 namespace FKSDB\model\Fyziklani\Rooms;
 
 use FKSDB\Logging\ILogger;
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\Utils\CSVParser;
 use Pipeline\PipelineException;
@@ -22,7 +22,7 @@ class RoomsFromCSV extends Stage {
     private $data;
 
     /**
-     * @var ModelEvent
+     * @var \FKSDB\ORM\Models\ModelEvent
      */
     private $event;
 
@@ -33,7 +33,7 @@ class RoomsFromCSV extends Stage {
 
     /**
      * RoomsFromCSV constructor.
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam $serviceTeam
      */
     function __construct(ModelEvent $event, ServiceFyziklaniTeam $serviceTeam) {

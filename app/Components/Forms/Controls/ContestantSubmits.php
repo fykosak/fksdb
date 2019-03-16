@@ -4,8 +4,8 @@ namespace FKSDB\Components\Forms\Controls;
 
 use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Components\ClientDataTrait;
-use FKSDB\ORM\ModelContestant;
-use FKSDB\ORM\ModelSubmit;
+use FKSDB\ORM\Models\ModelContestant;
+use FKSDB\ORM\Models\ModelSubmit;
 use FormUtils;
 use InvalidArgumentException;
 use Nette\DateTime;
@@ -24,7 +24,7 @@ class ContestantSubmits extends BaseControl {
     use ClientDataTrait;
 
     /**
-     * @var Traversable|array of FKSDB\ORM\ModelTask
+     * @var Traversable|array of FKSDB\ORM\Models\ModelTask
      */
     private $tasks;
 
@@ -38,7 +38,7 @@ class ContestantSubmits extends BaseControl {
      */
     private $submitService;
     /**
-     * @var \FKSDB\ORM\ModelContestant
+     * @var \FKSDB\ORM\Models\ModelContestant
      */
     private $contestant;
 
@@ -55,7 +55,7 @@ class ContestantSubmits extends BaseControl {
     /**
      *
      * @param Traversable|array $tasks
-     * @param ModelContestant $contestant
+     * @param \FKSDB\ORM\Models\ModelContestant $contestant
      * @param ServiceSubmit $submitService
      * @param $acYear
      * @param string|null $label
@@ -150,7 +150,7 @@ class ContestantSubmits extends BaseControl {
 
     /**
      *
-     * @param array|Traversable|string $value of FKSDB\ORM\ModelTask
+     * @param array|Traversable|string $value of FKSDB\ORM\Models\ModelTask
      * @return \FKSDB\Components\Forms\Controls\ContestantSubmits
      * @throws InvalidArgumentException
      */
@@ -225,7 +225,7 @@ class ContestantSubmits extends BaseControl {
     }
 
     /**
-     * @param ModelSubmit $submit
+     * @param \FKSDB\ORM\Models\ModelSubmit $submit
      * @return array
      */
     private function serializeSubmit(ModelSubmit $submit) {
@@ -242,7 +242,7 @@ class ContestantSubmits extends BaseControl {
     /**
      * @param $data
      * @param $tasknr
-     * @return \AbstractModelSingle|ModelSubmit|null
+     * @return \AbstractModelSingle|\FKSDB\ORM\Models\ModelSubmit|null
      */
     private function deserializeSubmit($data, $tasknr) {
         unset($data['submit_id']); // security

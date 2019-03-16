@@ -1,7 +1,7 @@
 <?php
 
-use FKSDB\ORM\ModelStoredQueryTag;
-use FKSDB\ORM\ModelStoredQueryTagType;
+use FKSDB\ORM\Models\ModelStoredQueryTag;
+use FKSDB\ORM\Models\ModelStoredQueryTagType;
 
 /**
  *

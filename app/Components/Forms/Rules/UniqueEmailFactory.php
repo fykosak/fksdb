@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Rules;
 
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\Models\ModelPerson;
 use ServicePersonInfo;
 
 /**

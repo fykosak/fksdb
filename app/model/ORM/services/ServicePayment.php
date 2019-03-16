@@ -6,5 +6,5 @@
 class ServicePayment extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_PAYMENT;
-    protected $modelClassName = 'FKSDB\ORM\ModelPayment';
+    protected $modelClassName = 'FKSDB\ORM\Models\ModelPayment';
 }

@@ -2,9 +2,9 @@
 
 namespace FKSDB\Payment\PriceCalculator\PreProcess;
 
+use FKSDB\ORM\Models\ModelEventParticipant;
+use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\Payment\PriceCalculator\Price;
-use FKSDB\ORM\ModelEventParticipant;
-use FKSDB\ORM\ModelPayment;
 use Nette\Application\BadRequestException;
 
 /**

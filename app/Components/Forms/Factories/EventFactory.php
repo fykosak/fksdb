@@ -4,7 +4,7 @@ namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Controls\DateInputs\DateTimeLocalInput;
-use FKSDB\ORM\ModelContest;
+use FKSDB\ORM\Models\ModelContest;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Form;

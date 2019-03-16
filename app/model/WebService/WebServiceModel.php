@@ -3,7 +3,7 @@
 use Authorization\ContestAuthorizator;
 use Exports\StoredQuery;
 use Exports\StoredQueryFactory;
-use FKSDB\ORM\ModelLogin;
+use FKSDB\ORM\Models\ModelLogin;
 use Nette\Diagnostics\Debugger;
 use Nette\Security\AuthenticationException;
 use Nette\Security\IAuthenticator;
@@ -36,7 +36,7 @@ class WebServiceModel {
     private $statsModelFactory;
 
     /**
-     * @var ModelLogin
+     * @var \FKSDB\ORM\Models\ModelLogin
      */
     private $authenticatedLogin;
 

@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Grids\Payment;
 
-use FKSDB\ORM\ModelPayment;
+use FKSDB\ORM\Models\ModelPayment;
 use NiftyGrid\DataSource\NDataSource;
 
 /**

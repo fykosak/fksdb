@@ -27,7 +27,7 @@ class GlobalSession implements IGlobalSession {
     private $gsidHolder;
 
     /**
-     * @var \FKSDB\ORM\ModelGlobalSession|null
+     * @var \FKSDB\ORM\Models\ModelGlobalSession|null
      */
     private $globalSession;
 

@@ -2,7 +2,7 @@
 
 namespace FKSDB\Payment\PriceCalculator\PreProcess;
 
-use FKSDB\ORM\ModelPayment;
+use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\Payment\PriceCalculator\Price;
 
 /**
@@ -18,7 +18,7 @@ abstract class AbstractPreProcess {
     abstract public static function calculate(ModelPayment $modelPayment): Price;
 
     /**
-     * @param ModelPayment $modelPayment
+     * @param \FKSDB\ORM\Models\ModelPayment $modelPayment
      * @return array
      */
     abstract static public function getGridItems(ModelPayment $modelPayment): array;

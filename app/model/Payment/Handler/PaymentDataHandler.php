@@ -2,8 +2,8 @@
 
 namespace FKSDB\Payment\Handler;
 
-use FKSDB\ORM\ModelPayment;
-use FKSDB\ORM\ModelPaymentAccommodation;
+use FKSDB\ORM\Models\ModelPayment;
+use FKSDB\ORM\Models\ModelPaymentAccommodation;
 use Nette\ArrayHash;
 use Submits\StorageException;
 
@@ -35,7 +35,7 @@ class PaymentDataHandler {
 
         $newAccommodationIds = $this->prepareData($data);
         /**
-         * @var ModelPaymentAccommodation $row
+         * @var \FKSDB\ORM\Models\ModelPaymentAccommodation $row
          */
         foreach ($oldRows as $row) {
             if (in_array($row->event_person_accommodation_id, $newAccommodationIds)) {
@@ -49,7 +49,7 @@ class PaymentDataHandler {
         foreach ($newAccommodationIds as $id) {
             try {
                 /**
-                 * @var ModelPaymentAccommodation $model
+                 * @var \FKSDB\ORM\Models\ModelPaymentAccommodation $model
                  */
                 $model = $this->serviceEventPersonAccommodation->createNew(['payment_id' => $payment->payment_id, 'event_person_accommodation_id' => $id]);
                 $this->serviceEventPersonAccommodation->save($model);

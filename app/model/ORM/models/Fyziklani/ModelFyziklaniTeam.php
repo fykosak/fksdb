@@ -30,7 +30,7 @@ class ModelFyziklaniTeam extends AbstractModelSingle {
     }
 
     /**
-     * @return \Nette\Database\Table\Selection
+     * @return Selection
      */
     public function getSubmits(): Selection {
         return $this->related(DbNames::TAB_FYZIKLANI_SUBMIT, 'e_fyziklani_team_id')->where('points IS NOT NULL');

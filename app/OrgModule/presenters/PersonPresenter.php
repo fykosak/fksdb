@@ -9,7 +9,7 @@ use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use FKSDB\Logging\FlashDumpFactory;
 use FKSDB\Logging\MemoryLogger;
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\Models\ModelPerson;
 use FormUtils;
 use Mail\MailTemplateFactory;
 use Nette\Application\BadRequestException;
@@ -91,7 +91,7 @@ class PersonPresenter extends EntityPresenter {
     private $flashDumpFactory;
 
     /**
-     * @var ModelPerson
+     * @var \FKSDB\ORM\Models\ModelPerson
      */
     private $trunkPerson;
 

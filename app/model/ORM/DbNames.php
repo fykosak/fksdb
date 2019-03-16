@@ -32,6 +32,9 @@ class DbNames {
     const TAB_REGION = 'region';
     const TAB_ROLE = 'role';
     const TAB_SCHOOL = 'school';
+    /**
+     * @deprecated
+     */
     const TAB_SPAMEE = 'si_spamee'; // obsolete
     const TAB_STORED_QUERY = 'stored_query';
     const TAB_STORED_QUERY_PARAM = 'stored_query_parameter';

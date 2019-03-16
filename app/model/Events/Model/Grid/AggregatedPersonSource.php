@@ -4,7 +4,7 @@ namespace Events\Model\Grid;
 
 use ArrayIterator;
 use Events\Model\Holder\Holder;
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\ModelEvent;
 use Nette\DI\Container;
 use Nette\Object;
 use ORM\Tables\TypedTableSelection;
@@ -66,7 +66,7 @@ abstract class AggregatedPersonSource extends Object implements IHolderSource {
     }
 
     /**
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @return mixed
      */
     abstract function processEvent(ModelEvent $event);

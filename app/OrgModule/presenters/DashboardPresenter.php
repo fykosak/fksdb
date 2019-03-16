@@ -2,7 +2,7 @@
 
 namespace OrgModule;
 
-use FKSDB\ORM\ModelLogin;
+use FKSDB\ORM\Models\ModelLogin;
 
 /**
  * Homepage presenter.

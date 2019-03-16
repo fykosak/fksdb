@@ -2,8 +2,9 @@
 
 namespace FKSDB\model\Fyziklani;
 
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
@@ -28,7 +29,7 @@ class TaskCodeHandler {
      */
     private $serviceFyziklaniTeam;
     /**
-     * @var ModelEvent
+     * @var \FKSDB\ORM\Models\ModelEvent
      */
     private $event;
 
@@ -154,10 +155,10 @@ class TaskCodeHandler {
 
     /**
      * @param string $code
-     * @return \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask
+     * @return ModelFyziklaniTask
      * @throws TaskCodeException
      */
-    public function getTaskFromCode(string $code): \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask {
+    public function getTaskFromCode(string $code): ModelFyziklaniTask {
         $fullCode = TaskCodePreprocessor::createFullCode($code);
         /* správny label */
         $taskLabel = TaskCodePreprocessor::extractTaskLabel($fullCode);

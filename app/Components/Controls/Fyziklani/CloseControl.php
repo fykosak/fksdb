@@ -7,8 +7,10 @@ namespace FKSDB\Components\Controls\Fyziklani;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\Fyziklani\CloseTeamsGrid;
 use FKSDB\model\Fyziklani\CloseSubmitStrategy;
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
@@ -22,11 +24,11 @@ use Nette\Utils\Html;
  */
 class CloseControl extends Control {
     /**
-     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam
+     * @var ServiceFyziklaniTeam
      */
     private $serviceFyziklaniTeam;
     /**
-     * @var ModelEvent
+     * @var \FKSDB\ORM\Models\ModelEvent
      */
     private $event;
     /**
@@ -36,7 +38,7 @@ class CloseControl extends Control {
 
     /**
      * CloseControl constructor.
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
      * @param ITranslator $translator
      */
@@ -48,8 +50,8 @@ class CloseControl extends Control {
     }
 
     /**
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws AbortException
+     * @throws BadRequestException
      */
     private function closeGlobalFormSucceeded() {
         $closeStrategy = new CloseSubmitStrategy($this->event, $this->serviceFyziklaniTeam);
@@ -116,8 +118,8 @@ class CloseControl extends Control {
 
     /**
      * @param Form $form
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function closeCategoryFormSucceeded(Form $form) {
         $closeStrategy = new CloseSubmitStrategy($this->event, $this->serviceFyziklaniTeam);

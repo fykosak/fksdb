@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Choosers;
 
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\UI\Control;
 use ServiceEvent;
 
@@ -15,7 +15,7 @@ class FyziklaniChooser extends Control {
 
     const EVENT_TYPE_ID = 1;
     /**
-     * @var ModelEvent
+     * @var \FKSDB\ORM\Models\ModelEvent
      */
     private $event;
 

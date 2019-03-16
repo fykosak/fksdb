@@ -5,7 +5,7 @@ namespace EventModule;
 
 
 use FKSDB\Components\React\ReactComponent\Events\TeamApplicationsTimeProgress;
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\ForbiddenRequestException;
 

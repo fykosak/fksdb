@@ -1,6 +1,6 @@
 <?php
 
-use FKSDB\ORM\ModelContest;
+use FKSDB\ORM\Models\ModelContest;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -8,7 +8,7 @@ use FKSDB\ORM\ModelContest;
 class ServiceEvent extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_EVENT;
-    protected $modelClassName = 'FKSDB\ORM\ModelEvent';
+    protected $modelClassName = 'FKSDB\ORM\Models\ModelEvent';
 
     /**
      * @param ModelContest $contest

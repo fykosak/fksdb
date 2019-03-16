@@ -1,8 +1,8 @@
 <?php
 
-use FKSDB\ORM\ModelContest;
-use FKSDB\ORM\ModelLogin;
-use FKSDB\ORM\ModelRole;
+use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Models\ModelLogin;
+use FKSDB\ORM\Models\ModelRole;
 
 /**
  * Class DispatchPresenter
@@ -13,7 +13,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
 
     public function renderDefault() {
         /**
-         * @var ModelLogin $login
+         * @var \FKSDB\ORM\Models\ModelLogin $login
          */
         $login = $this->getUser()->getIdentity();
         $query = $this->serviceContest->getTable();
@@ -31,7 +31,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
     }
 
     /**
-     * @param ModelLogin $login
+     * @param \FKSDB\ORM\Models\ModelLogin $login
      * @param ModelContest $contest
      * @param $role
      * @return array

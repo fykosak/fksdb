@@ -3,7 +3,7 @@
 namespace FKSDB\Transitions;
 
 use Authorization\EventAuthorizator;
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\Transitions\Callbacks\EmailCallback;
 use Mail\MailTemplateFactory;
 use Nette\InvalidStateException;

@@ -6,6 +6,6 @@
 class ServiceStoredQueryParameter extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_STORED_QUERY_PARAM;
-    protected $modelClassName = 'FKSDB\ORM\ModelStoredQueryParameter';
+    protected $modelClassName = 'FKSDB\ORM\Models\ModelStoredQueryParameter';
 
 }

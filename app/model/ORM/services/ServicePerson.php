@@ -1,6 +1,6 @@
 <?php
 
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\Models\ModelPerson;
 use ORM\IModel;
 
 /**
@@ -9,13 +9,13 @@ use ORM\IModel;
 class ServicePerson extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_PERSON;
-    protected $modelClassName = 'FKSDB\ORM\ModelPerson';
+    protected $modelClassName = 'FKSDB\ORM\Models\ModelPerson';
 
     /**
      * Syntactic sugar.
      *
      * @param mixed $email
-     * @return ModelPerson|null
+     * @return \FKSDB\ORM\Models\ModelPerson|null
      */
     public function findByEmail($email) {
         if (!$email) {

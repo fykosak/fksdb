@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Forms\Factories\PersonInfo;
 
 
-use FKSDB\ORM\ModelRegion;
+use FKSDB\ORM\Models\ModelRegion;
 use Nette\Forms\Controls\SelectBox;
 
 

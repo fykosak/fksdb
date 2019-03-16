@@ -2,9 +2,9 @@
 
 namespace Submits;
 
-use FKSDB\ORM\ModelContest;
-use FKSDB\ORM\ModelContestant;
-use FKSDB\ORM\ModelSubmit;
+use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Models\ModelContestant;
+use FKSDB\ORM\Models\ModelSubmit;
 use Nette\Database\Table\Selection;
 use ServiceContestant;
 use ServiceSubmit;
@@ -38,7 +38,7 @@ class SeriesTable {
     private $serviceSubmit;
 
     /**
-     * @var ModelContest
+     * @var \FKSDB\ORM\Models\ModelContest
      */
     private $contest;
 
@@ -78,7 +78,7 @@ class SeriesTable {
     }
 
     /**
-     * @param ModelContest $contest
+     * @param \FKSDB\ORM\Models\ModelContest $contest
      */
     public function setContest(ModelContest $contest) {
         $this->contest = $contest;

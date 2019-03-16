@@ -3,8 +3,8 @@
 namespace Persons;
 
 use Authorization\ContestAuthorizator;
-use FKSDB\ORM\ModelContest;
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Models\ModelPerson;
 use Nette\Object;
 
 /**
@@ -20,7 +20,7 @@ class AclResolver extends Object implements IVisibilityResolver, IModifiabilityR
     private $contestAuthorizator;
 
     /**
-     * @var \FKSDB\ORM\ModelContest
+     * @var \FKSDB\ORM\Models\ModelContest
      */
     private $contest;
 
@@ -28,7 +28,7 @@ class AclResolver extends Object implements IVisibilityResolver, IModifiabilityR
     /**
      * AclResolver constructor.
      * @param ContestAuthorizator $contestAuthorizator
-     * @param ModelContest $contest
+     * @param \FKSDB\ORM\Models\ModelContest $contest
      */
     function __construct(ContestAuthorizator $contestAuthorizator, ModelContest $contest) {
         $this->contestAuthorizator = $contestAuthorizator;
@@ -44,7 +44,7 @@ class AclResolver extends Object implements IVisibilityResolver, IModifiabilityR
     }
 
     /**
-     * @param ModelPerson $person
+     * @param \FKSDB\ORM\Models\ModelPerson $person
      * @return mixed|string
      */
     public function getResolutionMode(ModelPerson $person) {
@@ -52,7 +52,7 @@ class AclResolver extends Object implements IVisibilityResolver, IModifiabilityR
     }
 
     /**
-     * @param ModelPerson $person
+     * @param \FKSDB\ORM\Models\ModelPerson $person
      * @return bool|mixed
      */
     public function isModifiable(ModelPerson $person) {

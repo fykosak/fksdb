@@ -4,7 +4,8 @@ namespace FKSDB\Components\Controls\Fyziklani;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\model\Fyziklani\ClosedSubmittingException;
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
+use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Forms\Controls\RadioList;
@@ -23,11 +24,11 @@ class EditSubmitControl extends Control {
      */
     private $serviceFyziklaniSubmit;
     /**
-     * @var \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit
+     * @var ModelFyziklaniSubmit
      */
     private $submit;
     /**
-     * @var ModelEvent
+     * @var \FKSDB\ORM\Models\ModelEvent
      */
     private $event;
     /**
@@ -37,7 +38,7 @@ class EditSubmitControl extends Control {
 
     /**
      * EditSubmitControl constructor.
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit $serviceFyziklaniSubmit
      * @param ITranslator $translator
      */
@@ -71,7 +72,7 @@ class EditSubmitControl extends Control {
         if (!$this->submit) {
             throw new BadRequestException(_('Neexistující submit.'), 404);
         }
-        $this->submit = \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit::createFromTableRow($row);
+        $this->submit = ModelFyziklaniSubmit::createFromTableRow($row);
 
         $team = $this->submit->getTeam();
         if (!$team->hasOpenSubmitting()) {

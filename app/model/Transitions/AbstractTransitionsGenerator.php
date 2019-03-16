@@ -2,7 +2,7 @@
 
 namespace FKSDB\Transitions;
 
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\ModelEvent;
 
 /**
  * Class AbstractTransitionsGenerator

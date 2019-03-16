@@ -1,6 +1,6 @@
 <?php
 
-use FKSDB\ORM\ModelOrg;
+use FKSDB\ORM\Models\ModelOrg;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -8,7 +8,7 @@ use FKSDB\ORM\ModelOrg;
 class ServiceOrg extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_ORG;
-    protected $modelClassName = 'FKSDB\ORM\ModelOrg';
+    protected $modelClassName = 'FKSDB\ORM\Models\ModelOrg';
 
     /**
      * Syntactic sugar.

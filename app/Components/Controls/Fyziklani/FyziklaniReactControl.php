@@ -3,8 +3,8 @@
 namespace FKSDB\Components\Controls\Fyziklani;
 
 use FKSDB\Components\React\ReactComponent;
-use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniRoom;
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
@@ -43,7 +43,7 @@ abstract class FyziklaniReactControl extends ReactComponent {
     protected $serviceFyziklaniSubmit;
 
     /**
-     * @var ModelEvent
+     * @var \FKSDB\ORM\Models\ModelEvent
      */
     protected $event;
 
@@ -55,7 +55,7 @@ abstract class FyziklaniReactControl extends ReactComponent {
     /**
      * FyziklaniReactControl constructor.
      * @param Container $container
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @param ServiceFyziklaniRoom $serviceFyziklaniRoom
      * @param ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
      * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
@@ -91,7 +91,7 @@ abstract class FyziklaniReactControl extends ReactComponent {
     }
 
     /**
-     * @return ModelEvent
+     * @return \FKSDB\ORM\Models\ModelEvent
      */
     protected final function getEvent() {
         return $this->event;

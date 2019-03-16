@@ -1,6 +1,6 @@
 <?php
 
-use FKSDB\ORM\ModelSubmit;
+use FKSDB\ORM\Models\ModelSubmit;
 use Nette\Database\Table\Selection;
 
 /**
@@ -9,7 +9,7 @@ use Nette\Database\Table\Selection;
 class ServiceSubmit extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_SUBMIT;
-    protected $modelClassName = 'FKSDB\ORM\ModelSubmit';
+    protected $modelClassName = 'FKSDB\ORM\Models\ModelSubmit';
     private $submit_cache = [];
 
     /**
@@ -17,7 +17,7 @@ class ServiceSubmit extends AbstractServiceSingle {
      *
      * @param int $ctId
      * @param int $taskId
-     * @return ModelSubmit|null
+     * @return \FKSDB\ORM\Models\ModelSubmit|null
      */
     public function findByContestant($ctId, $taskId) {
         $key = $ctId . ':' . $taskId;

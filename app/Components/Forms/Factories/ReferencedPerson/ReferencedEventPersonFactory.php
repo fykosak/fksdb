@@ -9,8 +9,8 @@ use FKSDB\Components\Forms\Factories\PersonAccommodationFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Factories\PersonHistoryFactory;
 use FKSDB\Components\Forms\Factories\PersonInfoFactory;
-use FKSDB\ORM\ModelEvent;
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Models\ModelPerson;
 use Nette\Forms\Controls\HiddenField;
 use Persons\IModifiabilityResolver;
 use Persons\IVisibilityResolver;
@@ -30,7 +30,7 @@ class ReferencedEventPersonFactory extends AbstractReferencedPersonFactory {
      */
     private $personAccommodationFactory;
     /**
-     * @var ModelEvent
+     * @var \FKSDB\ORM\Models\ModelEvent
      */
     private $event;
 
@@ -72,7 +72,7 @@ class ReferencedEventPersonFactory extends AbstractReferencedPersonFactory {
     }
 
     /**
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      */
     public function setEvent(ModelEvent $event) {
         $this->event = $event;
@@ -118,7 +118,7 @@ class ReferencedEventPersonFactory extends AbstractReferencedPersonFactory {
      * @param $field
      * @param $acYear
      * @param $options
-     * @return bool|\FKSDB\ORM\ModelPostContact|mixed|null|string
+     * @return bool|\FKSDB\ORM\Models\ModelPostContact|mixed|null|string
      * @throws \Nette\Utils\JsonException
      */
     protected function getPersonValue(ModelPerson $person = null, $sub, $field, $acYear, $options) {

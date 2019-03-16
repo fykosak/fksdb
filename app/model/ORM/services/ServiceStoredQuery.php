@@ -1,6 +1,6 @@
 <?php
 
-use FKSDB\ORM\ModelStoredQuery;
+use FKSDB\ORM\Models\ModelStoredQuery;
 use Nette\Database\Connection;
 
 /**
@@ -9,7 +9,7 @@ use Nette\Database\Connection;
 class ServiceStoredQuery extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_STORED_QUERY;
-    protected $modelClassName = 'FKSDB\ORM\ModelStoredQuery';
+    protected $modelClassName = 'FKSDB\ORM\Models\ModelStoredQuery';
 
     /**
      *
@@ -31,7 +31,7 @@ class ServiceStoredQuery extends AbstractServiceSingle {
      * Syntactic sugar.
      *
      * @param string|null $qid
-     * @return ModelStoredQuery|null
+     * @return \FKSDB\ORM\Models\ModelStoredQuery|null
      */
     public function findByQid($qid) {
         if (!$qid) {

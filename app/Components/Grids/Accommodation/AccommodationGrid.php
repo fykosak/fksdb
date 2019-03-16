@@ -4,8 +4,8 @@ namespace FKSDB\Components\Grids\Accommodation;
 
 use EventModule\AccommodationPresenter;
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\ORM\ModelEvent;
-use FKSDB\ORM\ModelEventAccommodation;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Models\ModelEventAccommodation;
 use SQL\SearchableDataSource;
 
 
@@ -26,7 +26,7 @@ class AccommodationGrid extends BaseGrid {
 
     /**
      * AccommodationGrid constructor.
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @param \ServiceEventAccommodation $serviceEventAccommodation
      */
     function __construct(ModelEvent $event, \ServiceEventAccommodation $serviceEventAccommodation) {

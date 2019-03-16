@@ -5,8 +5,8 @@ namespace FKSDB\Components\Grids\Events;
 
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\ORM\ModelEvent;
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Models\ModelPerson;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;
 

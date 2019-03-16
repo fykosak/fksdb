@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Grids\Fyziklani;
 
 
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FyziklaniModule\BasePresenter;
@@ -38,7 +39,7 @@ class TeamSubmitsGrid extends SubmitsGrid {
         parent::configure($presenter);
 
         $this->addColumn('label', _('Úloha'))->setRenderer(function ($row) {
-            $model = \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit::createFromTableRow($row);
+            $model = ModelFyziklaniSubmit::createFromTableRow($row);
             return $model->getTask()->label;
         });
         $this->addColumn('points', _('Body'));

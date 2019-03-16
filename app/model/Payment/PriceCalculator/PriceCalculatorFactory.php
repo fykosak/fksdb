@@ -2,7 +2,7 @@
 
 namespace FKSDB\Payment\PriceCalculator;
 
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\Payment\PriceCalculator\PreProcess\EventAccommodationPrice;
 
 /**
@@ -30,7 +30,7 @@ class PriceCalculatorFactory {
     }
 
     /**
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @return PriceCalculator
      */
     public function createCalculator(ModelEvent $event): PriceCalculator {

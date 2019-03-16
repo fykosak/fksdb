@@ -2,11 +2,10 @@
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\ORM\ModelOrg;
+use FKSDB\ORM\Models\ModelOrg;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\Selection;
 use Nette\Utils\Html;
-
 use OrgModule\OrgPresenter;
 use ServiceOrg;
 use SQL\SearchableDataSource;

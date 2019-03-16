@@ -7,7 +7,7 @@ use FKSDB\Components\Forms\Controls\PersonAccommodation\MatrixField;
 use FKSDB\Components\Forms\Controls\PersonAccommodation\MultiHotelsField;
 use FKSDB\Components\Forms\Controls\PersonAccommodation\MultiNightsField;
 use FKSDB\Components\Forms\Controls\PersonAccommodation\SingleField;
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\ModelEvent;
 use Nette\NotImplementedException;
 
 /**

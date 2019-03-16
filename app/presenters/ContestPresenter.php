@@ -2,7 +2,7 @@
 
 use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\Components\Controls\LanguageChooser;
-use FKSDB\ORM\ModelContest;
+use FKSDB\ORM\Models\ModelContest;
 use Nette\Application\BadRequestException;
 
 /**
@@ -52,7 +52,7 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
     }
 
     /**
-     * @return \FKSDB\ORM\ModelContest
+     * @return \FKSDB\ORM\Models\ModelContest
      * @throws BadRequestException
      */
     public function getSelectedContest() {

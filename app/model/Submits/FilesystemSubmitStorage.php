@@ -2,7 +2,7 @@
 
 namespace Submits;
 
-use FKSDB\ORM\ModelSubmit;
+use FKSDB\ORM\Models\ModelSubmit;
 use Nette\Diagnostics\Debugger;
 use Nette\InvalidStateException;
 use Nette\Utils\Finder;
@@ -152,7 +152,7 @@ class FilesystemSubmitStorage implements ISubmitStorage {
 
     /**
      * @param string $filename
-     * @param ModelSubmit $submit
+     * @param \FKSDB\ORM\Models\ModelSubmit $submit
      * @return void
      */
     public function storeFile($filename, ModelSubmit $submit) {
@@ -167,7 +167,7 @@ class FilesystemSubmitStorage implements ISubmitStorage {
     }
 
     /**
-     * @param ModelSubmit $submit
+     * @param \FKSDB\ORM\Models\ModelSubmit $submit
      * @param int $type
      * @return null|string
      */
@@ -197,7 +197,7 @@ class FilesystemSubmitStorage implements ISubmitStorage {
     /**
      * Checks whether there exists valid file for the submit.
      *
-     * @param \FKSDB\ORM\ModelSubmit $submit
+     * @param \FKSDB\ORM\Models\ModelSubmit $submit
      * @return bool
      */
     public function existsFile(ModelSubmit $submit) {
@@ -207,7 +207,7 @@ class FilesystemSubmitStorage implements ISubmitStorage {
     }
 
     /**
-     * @param ModelSubmit $submit
+     * @param \FKSDB\ORM\Models\ModelSubmit $submit
      */
     public function deleteFile(ModelSubmit $submit) {
         $fails = [];
@@ -224,7 +224,7 @@ class FilesystemSubmitStorage implements ISubmitStorage {
     }
 
     /**
-     * @param ModelSubmit $submit
+     * @param \FKSDB\ORM\Models\ModelSubmit $submit
      * @return array
      */
     private function retrieveFiles(ModelSubmit $submit) {
@@ -242,7 +242,7 @@ class FilesystemSubmitStorage implements ISubmitStorage {
 
     /**
      *
-     * @param ModelSubmit $submit
+     * @param \FKSDB\ORM\Models\ModelSubmit $submit
      * @return string  directory part of the path relative to root, w/out trailing slash
      */
     private function createDirname(ModelSubmit $submit) {
@@ -257,7 +257,7 @@ class FilesystemSubmitStorage implements ISubmitStorage {
     }
 
     /**
-     * @param \FKSDB\ORM\ModelSubmit $submit
+     * @param \FKSDB\ORM\Models\ModelSubmit $submit
      * @return string
      */
     private function createFilename(ModelSubmit $submit) {

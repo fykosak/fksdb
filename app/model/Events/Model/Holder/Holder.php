@@ -158,7 +158,7 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
 
     /**
      * @deprecated Use getEvent on primary holder explicitly.
-     * @return \FKSDB\ORM\ModelEvent
+     * @return \FKSDB\ORM\Models\ModelEvent
      */
     public function getEvent() {
         return $this->primaryHolder->getEvent();

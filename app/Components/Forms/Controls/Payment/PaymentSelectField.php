@@ -5,8 +5,8 @@ namespace FKSDB\Components\Forms\Controls\Payment;
 
 use FKSDB\Components\React\IReactComponent;
 use FKSDB\Components\React\ReactField;
-use FKSDB\ORM\ModelEvent;
-use FKSDB\ORM\ModelEventPersonAccommodation;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Models\ModelEventPersonAccommodation;
 use Nette\Forms\Controls\TextInput;
 
 /**
@@ -22,7 +22,7 @@ class PaymentSelectField extends TextInput implements IReactComponent {
      */
     private $serviceEventPersonAccommodation;
     /**
-     * @var ModelEvent
+     * @var \FKSDB\ORM\Models\ModelEvent
      */
     private $event;
 
@@ -31,7 +31,7 @@ class PaymentSelectField extends TextInput implements IReactComponent {
     /**
      * PaymentSelectField constructor.
      * @param \ServiceEventPersonAccommodation $serviceEventPersonAccommodation
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @param bool $showAll
      */
     public function __construct(\ServiceEventPersonAccommodation $serviceEventPersonAccommodation, ModelEvent $event, bool $showAll = true) {

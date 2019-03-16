@@ -2,9 +2,9 @@
 
 namespace FKSDB\Components\Forms\Controls\PersonAccommodation;
 
-use FKSDB\ORM\ModelEventAccommodation;
-use FKSDB\ORM\ModelEventPersonAccommodation;
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\Models\ModelEventAccommodation;
+use FKSDB\ORM\Models\ModelEventPersonAccommodation;
+use FKSDB\ORM\Models\ModelPerson;
 use Nette\ArrayHash;
 use Nette\NotImplementedException;
 use ServiceEventPersonAccommodation;
@@ -29,7 +29,7 @@ class Handler {
 
     /**
      * @param ArrayHash $data
-     * @param ModelPerson $person
+     * @param \FKSDB\ORM\Models\ModelPerson $person
      * @param integer $eventId
      * @throws FullAccommodationCapacityException
      * @throws ExistingPaymentException

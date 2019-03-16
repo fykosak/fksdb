@@ -6,6 +6,6 @@
 class ServiceStudyYear extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_STUDY_YEAR;
-    protected $modelClassName = 'FKSDB\ORM\ModelStudyYear';
+    protected $modelClassName = 'FKSDB\ORM\Models\ModelStudyYear';
 
 }

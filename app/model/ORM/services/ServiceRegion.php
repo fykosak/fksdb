@@ -8,7 +8,7 @@ use Nette\Database\Table\Selection;
 class ServiceRegion extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_REGION;
-    protected $modelClassName = 'FKSDB\ORM\ModelRegion';
+    protected $modelClassName = 'FKSDB\ORM\Models\ModelRegion';
 
     /**
      * @return Selection

@@ -2,8 +2,8 @@
 
 namespace FKSDB\Payment\Transition;
 
-use FKSDB\ORM\ModelEvent;
-use FKSDB\ORM\ModelPayment;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\Payment\PriceCalculator\PriceCalculator;
 use FKSDB\Payment\SymbolGenerator\AbstractSymbolGenerator;
 use FKSDB\Transitions\Machine;
@@ -23,13 +23,13 @@ class PaymentMachine extends Machine {
      */
     private $symbolGenerator;
     /**
-     * @var ModelEvent
+     * @var \FKSDB\ORM\Models\ModelEvent
      */
     private $event;
 
     /**
      * PaymentMachine constructor.
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @param PriceCalculator $priceCalculator
      * @param AbstractSymbolGenerator $abstractSymbolGenerator
      * @param Connection $connection
@@ -57,7 +57,7 @@ class PaymentMachine extends Machine {
     }
 
     /**
-     * @return ModelEvent
+     * @return \FKSDB\ORM\Models\ModelEvent
      */
     public function getEvent(): ModelEvent {
         return $this->event;

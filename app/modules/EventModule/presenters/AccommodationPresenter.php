@@ -9,7 +9,7 @@ use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Grids\Accommodation\AccommodationGrid;
 use FKSDB\Components\Grids\Accommodation\BilletedAllGrid;
 use FKSDB\Components\Grids\Accommodation\BilletedSingleGrid;
-use FKSDB\ORM\ModelEventAccommodation;
+use FKSDB\ORM\Models\ModelEventAccommodation;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
@@ -280,7 +280,7 @@ class AccommodationPresenter extends BasePresenter {
     }
 
     /**
-     * @return ModelEventAccommodation
+     * @return \FKSDB\ORM\Models\ModelEventAccommodation
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      * @throws \Nette\Application\AbortException
@@ -323,8 +323,8 @@ class AccommodationPresenter extends BasePresenter {
              */
             $data = $this->getAccommodationFormData($values);
             /**
-             * @var \FKSDB\ORM\ModelEventAccommodation $accommodation
-             * @var \FKSDB\ORM\ModelAddress $address
+             * @var \FKSDB\ORM\Models\ModelEventAccommodation $accommodation
+             * @var \FKSDB\ORM\Models\ModelAddress $address
              */
             $accommodation = $this->serviceEventAccommodation->createNew($data);
             $accommodation->event_id = $this->eventId;
@@ -379,7 +379,7 @@ class AccommodationPresenter extends BasePresenter {
                 throw new \ModelException();
             }
             /**
-             * @var \FKSDB\ORM\ModelEventAccommodation $accommodation
+             * @var \FKSDB\ORM\Models\ModelEventAccommodation $accommodation
              */
             $accommodation = $this->getModel();
 

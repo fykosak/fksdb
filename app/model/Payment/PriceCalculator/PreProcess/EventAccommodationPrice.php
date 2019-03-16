@@ -2,9 +2,9 @@
 
 namespace FKSDB\Payment\PriceCalculator\PreProcess;
 
-use FKSDB\ORM\ModelEventAccommodation;
-use FKSDB\ORM\ModelEventPersonAccommodation;
-use FKSDB\ORM\ModelPayment;
+use FKSDB\ORM\Models\ModelEventAccommodation;
+use FKSDB\ORM\Models\ModelEventPersonAccommodation;
+use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\Payment\PriceCalculator\Price;
 use FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException;
 
@@ -49,7 +49,7 @@ class EventAccommodationPrice extends AbstractPreProcess {
     }
 
     /**
-     * @param ModelEventAccommodation $modelEventAccommodation
+     * @param \FKSDB\ORM\Models\ModelEventAccommodation $modelEventAccommodation
      * @param Price $price
      * @return Price
      * @throws UnsupportedCurrencyException

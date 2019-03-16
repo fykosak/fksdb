@@ -6,9 +6,9 @@ namespace FKSDB\Components\Forms\Controls\Payment;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
-use FKSDB\ORM\ModelEvent;
-use FKSDB\ORM\ModelLogin;
-use FKSDB\ORM\ModelPayment;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Models\ModelLogin;
+use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServicePaymentAccommodation;
 use FKSDB\Payment\Handler\DuplicateAccommodationPaymentException;
 use FKSDB\Payment\Handler\EmptyDataException;
@@ -37,7 +37,7 @@ class SelectForm extends Control {
      */
     private $serviceEventPersonAccommodation;
     /**
-     * @var ModelEvent
+     * @var \FKSDB\ORM\Models\ModelEvent
      */
     private $event;
     /**
@@ -54,7 +54,7 @@ class SelectForm extends Control {
      */
     private $machine;
     /**
-     * @var ModelPayment
+     * @var \FKSDB\ORM\Models\ModelPayment
      */
     private $model;
     /**
@@ -68,7 +68,7 @@ class SelectForm extends Control {
 
     /**
      * SelectForm constructor.
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @param bool $isOrg
      * @param ITranslator $translator
      * @param \ServicePayment $servicePayment
@@ -101,7 +101,7 @@ class SelectForm extends Control {
     }
 
     /**
-     * @param ModelPayment $modelPayment
+     * @param \FKSDB\ORM\Models\ModelPayment $modelPayment
      */
     public function setModel(ModelPayment $modelPayment) {
         $this->model = $modelPayment;
@@ -208,7 +208,7 @@ class SelectForm extends Control {
     }
 
     /**
-     * @param ModelPayment $model
+     * @param \FKSDB\ORM\Models\ModelPayment $model
      */
     public function renderEdit(ModelPayment $model) {
         $this->model = $model;

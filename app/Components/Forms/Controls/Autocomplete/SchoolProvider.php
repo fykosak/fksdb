@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
-use FKSDB\ORM\ModelSchool;
+use FKSDB\ORM\Models\ModelSchool;
 use Nette\InvalidStateException;
 use Nette\NotImplementedException;
 use ServiceSchool;

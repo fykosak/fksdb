@@ -2,7 +2,7 @@
 
 namespace Authentication;
 
-use FKSDB\ORM\ModelLogin;
+use FKSDB\ORM\Models\ModelLogin;
 use Nette\DateTime;
 use ServiceLogin;
 use YearCalculator;
@@ -36,7 +36,7 @@ abstract class AbstractAuthenticator /* implements IAuthenticator */ {
     }
 
     /**
-     * @param ModelLogin $login
+     * @param \FKSDB\ORM\Models\ModelLogin $login
      */
     protected function logAuthentication(ModelLogin $login) {
         $login->last_login = DateTime::from(time());

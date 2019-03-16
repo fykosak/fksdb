@@ -7,8 +7,8 @@ use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\IDataProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\StoredQueryTagTypeProvider;
 use FKSDB\Components\Forms\Controls\SQLConsole;
-use FKSDB\ORM\ModelStoredQuery;
-use FKSDB\ORM\ModelStoredQueryParameter;
+use FKSDB\ORM\Models\ModelStoredQuery;
+use FKSDB\ORM\Models\ModelStoredQueryParameter;
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
@@ -132,7 +132,7 @@ class StoredQueryFactory {
     }
 
     /**
-     * @param ModelStoredQuery $queryPattern
+     * @param \FKSDB\ORM\Models\ModelStoredQuery $queryPattern
      * @param int $options
      * @param ControlGroup|null $group
      * @return ModelContainer

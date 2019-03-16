@@ -2,7 +2,7 @@
 
 namespace Events\Model\Holder;
 
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\ModelEvent;
 use Nette\InvalidArgumentException;
 use ServiceEvent;
 
@@ -31,8 +31,8 @@ class SameYearEvent implements IEventRelation {
     }
 
     /**
-     * @param ModelEvent $event
-     * @return ModelEvent
+     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @return \FKSDB\ORM\Models\ModelEvent
      */
     public function getEvent(ModelEvent $event) {
         $result = $this->serviceEvent->getTable()->where(array(

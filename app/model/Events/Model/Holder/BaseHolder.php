@@ -6,7 +6,7 @@ use Events\Machine\BaseMachine;
 use Events\Model\ExpressionEvaluator;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Config\NeonScheme;
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\ModelEvent;
 use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
@@ -194,7 +194,7 @@ class BaseHolder extends FreezableObject {
     }
 
     /**
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      */
     private function setEvent(ModelEvent $event) {
         $this->updating();
@@ -203,7 +203,7 @@ class BaseHolder extends FreezableObject {
     }
 
     /**
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      */
     public function inferEvent(ModelEvent $event) {
         if ($this->eventRelation instanceof IEventRelation) {

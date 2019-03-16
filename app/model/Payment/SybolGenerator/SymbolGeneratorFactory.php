@@ -2,7 +2,7 @@
 
 namespace FKSDB\Payment\SymbolGenerator;
 
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\Payment\SymbolGenerator\Generators\Fyziklani13Generator;
 use Nette\NotImplementedException;
 
@@ -25,7 +25,7 @@ class SymbolGeneratorFactory {
     }
 
     /**
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @return AbstractSymbolGenerator
      */
     public function createGenerator(ModelEvent $event): AbstractSymbolGenerator {

@@ -4,7 +4,7 @@ namespace FKSDB\Components\Controls\Stalking;
 
 use FKSDB\Components\Controls\Stalking\Helpers\ContestBadge;
 use FKSDB\Components\Controls\Stalking\Helpers\PermissionDenied;
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\Models\ModelPerson;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
@@ -23,7 +23,7 @@ abstract class StalkingComponent extends Control {
      */
     protected $mode;
     /**
-     * @var ModelPerson;
+     * @var \FKSDB\ORM\Models\ModelPerson;
      */
     protected $modelPerson;
     /**
@@ -33,7 +33,7 @@ abstract class StalkingComponent extends Control {
 
     /**
      * StalkingComponent constructor.
-     * @param ModelPerson $modelPerson
+     * @param \FKSDB\ORM\Models\ModelPerson $modelPerson
      * @param ITranslator $translator
      * @param $mode
      */
