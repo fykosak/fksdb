@@ -4,7 +4,7 @@ namespace FKSDB\Payment\SymbolGenerator\Generators;
 
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServicePayment;
-use FKSDB\Payment\PriceCalculator\Price;
+use FKSDB\Payment\Price;
 use FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException;
 use FKSDB\Payment\SymbolGenerator\AbstractSymbolGenerator;
 use FKSDB\Payment\SymbolGenerator\AlreadyGeneratedSymbolsException;
@@ -48,7 +48,7 @@ class Fyziklani13Generator extends AbstractSymbolGenerator {
             throw new OutOfRangeException(_('variable_symbol overflow'));
         }
         switch ($modelPayment->currency) {
-            case Price::CURRENCY_KC:
+            case Price::CURRENCY_CZK:
                 return [
                     'variable_symbol' => $variableNumber,
                     'bank_account' => '38330021/0100',

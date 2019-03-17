@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Controls\Payment;
 
-use FKSDB\Payment\PriceCalculator\Price;
+use FKSDB\Payment\Price;
 use Nette\Forms\Controls\SelectBox;
 
 /**

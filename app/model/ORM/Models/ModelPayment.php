@@ -4,7 +4,7 @@ namespace FKSDB\ORM\Models;
 
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
-use FKSDB\Payment\PriceCalculator\Price;
+use FKSDB\Payment\Price;
 use FKSDB\Payment\PriceCalculator\PriceCalculator;
 use FKSDB\Transitions\IEventReferencedModel;
 use FKSDB\Transitions\IStateModel;
@@ -98,7 +98,7 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
     }
 
     /**
-     * @return Price
+     * @return \FKSDB\Payment\Price
      */
     public function getPrice(): Price {
         return new Price($this->price, $this->currency);

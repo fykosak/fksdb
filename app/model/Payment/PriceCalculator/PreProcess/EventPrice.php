@@ -5,7 +5,7 @@ namespace FKSDB\Payment\PriceCalculator\PreProcess;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServiceEventParticipant;
-use FKSDB\Payment\PriceCalculator\Price;
+use FKSDB\Payment\Price;
 use Nette\NotImplementedException;
 
 /**
@@ -28,7 +28,7 @@ class EventPrice extends AbstractPreProcess {
 
     /**
      * @param \FKSDB\ORM\Models\ModelPayment $modelPayment
-     * @return Price
+     * @return \FKSDB\Payment\Price
      */
     public static function calculate(ModelPayment $modelPayment): Price {
        /* $price = new Price(0, $modelPayment->currency);
@@ -63,12 +63,12 @@ class EventPrice extends AbstractPreProcess {
 
     /**
      * @param \FKSDB\ORM\Models\ModelEventParticipant $modelEventAccommodation
-     * @param Price $price
-     * @return Price
+     * @param \FKSDB\Payment\Price $price
+     * @return \FKSDB\Payment\Price
      */
     private function getPriceFromModel(ModelEventParticipant $modelEventAccommodation, Price $price): Price {
         switch ($price->getCurrency()) {
-            case Price::CURRENCY_KC:
+            case Price::CURRENCY_CZK:
                 $amount = $modelEventAccommodation->price;
                 break;
             default:
