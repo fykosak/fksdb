@@ -80,5 +80,5 @@ class ModelPersonHistoryTest extends TestCase {
 
 }
 
-$testCase = new ModelPersonHistoryTest($container->getService('FKSDB\ORM\Services\ServicePersonHistory'));
+$testCase = new ModelPersonHistoryTest($container->getService('ServicePersonHistory'));
 $testCase->run();

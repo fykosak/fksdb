@@ -51,7 +51,7 @@ class ApplicationHandlerTest extends EventTestCase {
                 . "                          VALUES (1, 1, 1, 1, '2001-01-02', '2001-01-02', 'Testovací Fyziklání')");
 
         $this->serviceTeam = $this->getContainer()->getService('fyziklani.ServiceFyziklaniTeam');
-        $this->serviceEvent = $this->getContainer()->getService('FKSDB\ORM\Services\ServiceEvent');
+        $this->serviceEvent = $this->getContainer()->getService('ServiceEvent');
 
 
         $handlerFactory = $this->getContainer()->getByType('Events\Model\ApplicationHandlerFactory');

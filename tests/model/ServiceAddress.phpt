@@ -42,5 +42,5 @@ class ServiceAddressTest extends TestCase {
 
 }
 
-$testCase = new ServiceAddressTest($container->getService('FKSDB\ORM\Services\ServiceAddress'));
+$testCase = new ServiceAddressTest($container->getService('ServiceAddress'));
 $testCase->run();

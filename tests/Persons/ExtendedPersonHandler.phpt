@@ -41,8 +41,8 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
 
         $handlerFactory = $this->container->getByType('Persons\ExtendedPersonHandlerFactory');
 
-        $service = $this->container->getService('FKSDB\ORM\Services\ServiceContestant');
-        $contest = $this->container->getService('FKSDB\ORM\Services\ServiceContest')->findByPrimary(ModelContest::ID_FYKOS);
+        $service = $this->container->getService('ServiceContestant');
+        $contest = $this->container->getService('ServiceContest')->findByPrimary(ModelContest::ID_FYKOS);
         $year = 1;
         $invitationLang = 'cs';
         $this->fixture = $handlerFactory->create($service, $contest, $year, $invitationLang);
