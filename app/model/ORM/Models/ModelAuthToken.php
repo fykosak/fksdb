@@ -2,6 +2,7 @@
 
 namespace FKSDB\ORM\Models;
 
+use FKSDB\ORM\AbstractModelSingle;
 use Nette\Database\Table\ActiveRow;
 
 /**
@@ -12,7 +13,7 @@ use Nette\Database\Table\ActiveRow;
  * @property string data
  * @property string type
  */
-class ModelAuthToken extends \FKSDB\ORM\AbstractModelSingle {
+class ModelAuthToken extends AbstractModelSingle {
     /** @const The first login for setting up a password. */
     const TYPE_INITIAL_LOGIN = 'initial_login';
 

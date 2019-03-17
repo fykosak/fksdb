@@ -2,6 +2,7 @@
 
 namespace FKSDB\ORM\Models;
 
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\Transitions\IEventReferencedModel;
 use Nette\Database\Table\ActiveRow;
@@ -22,7 +23,7 @@ use Nette\Security\IResource;
  * @property ActiveRow address
  * @property ActiveRow event
  */
-class ModelEventAccommodation extends \FKSDB\ORM\AbstractModelSingle implements IResource, IEventReferencedModel {
+class ModelEventAccommodation extends AbstractModelSingle implements IResource, IEventReferencedModel {
     const ACC_DATE_FORMAT = 'Y-m-d';
 
     /**

@@ -2,6 +2,7 @@
 
 namespace FKSDB\ORM\Models\Fyziklani;
 
+use FKSDB\ORM\AbstractModelSingle;
 use Nette\Database\Table\ActiveRow;
 
 /**
@@ -12,7 +13,7 @@ use Nette\Database\Table\ActiveRow;
  * @property integer col
  * @property ActiveRow room
  */
-class ModelFyziklaniTeamPosition extends \FKSDB\ORM\AbstractModelSingle {
+class ModelFyziklaniTeamPosition extends AbstractModelSingle {
     /**
      * @return ModelFyziklaniRoom
      */

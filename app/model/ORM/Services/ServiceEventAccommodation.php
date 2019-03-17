@@ -2,6 +2,7 @@
 
 namespace FKSDB\ORM\Services;
 
+use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use Nette\Database\Table\Selection;
 
@@ -9,7 +10,7 @@ use Nette\Database\Table\Selection;
  * Class FKSDB\ORM\Services\ServiceEventAccommodation
  * @deprecated
  */
-class ServiceEventAccommodation extends \FKSDB\ORM\AbstractServiceSingle {
+class ServiceEventAccommodation extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_EVENT_ACCOMMODATION;
     protected $modelClassName = 'FKSDB\ORM\Models\ModelEventAccommodation';

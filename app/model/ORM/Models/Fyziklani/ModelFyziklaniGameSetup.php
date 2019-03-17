@@ -2,6 +2,7 @@
 
 namespace FKSDB\ORM\Models\Fyziklani;
 
+use FKSDB\ORM\AbstractModelSingle;
 use Nette\DateTime;
 
 /**
@@ -17,7 +18,7 @@ use Nette\DateTime;
  * @property int tasks_on_board
  * @property string available_points
  */
-class ModelFyziklaniGameSetup extends \FKSDB\ORM\AbstractModelSingle {
+class ModelFyziklaniGameSetup extends AbstractModelSingle {
     /**
      * @return array
      */

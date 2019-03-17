@@ -2,6 +2,7 @@
 
 namespace FKSDB\ORM\Services\Fyziklani;
 
+use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition;
 use Traversable;
@@ -9,7 +10,7 @@ use Traversable;
 /**
  * Class FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition
  */
-class ServiceFyziklaniTeamPosition extends \FKSDB\ORM\AbstractServiceSingle {
+class ServiceFyziklaniTeamPosition extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_FYZIKLANI_TEAM_POSITION;
     protected $modelClassName = 'FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition';

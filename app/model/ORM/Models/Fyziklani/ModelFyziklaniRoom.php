@@ -1,6 +1,8 @@
 <?php
 
 namespace FKSDB\ORM\Models\Fyziklani;
+use FKSDB\ORM\AbstractModelSingle;
+
 /**
  * Class FKSDB\ORM\Models\Fyziklani\ModelFyziklaniRoom
  *
@@ -9,7 +11,7 @@ namespace FKSDB\ORM\Models\Fyziklani;
  * @property integer rows
  * @property integer columns
  */
-class ModelFyziklaniRoom extends \FKSDB\ORM\AbstractModelSingle {
+class ModelFyziklaniRoom extends AbstractModelSingle {
 
     /**
      * @return array

@@ -2,6 +2,7 @@
 
 namespace FKSDB\ORM\Models;
 
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\Transitions\IStateModel;
 use Nette\Database\Table\ActiveRow;
@@ -16,7 +17,7 @@ use Nette\Database\Table\ActiveRow;
  * @property ActiveRow event_accommodation
  *
  */
-class ModelEventPersonAccommodation extends \FKSDB\ORM\AbstractModelSingle implements IStateModel {
+class ModelEventPersonAccommodation extends AbstractModelSingle implements IStateModel {
 
     const STATUS_PAID = 'paid';
     const STATUS_WAITING_FOR_PAYMENT = 'waiting';

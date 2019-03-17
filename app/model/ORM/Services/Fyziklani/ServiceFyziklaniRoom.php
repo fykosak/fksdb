@@ -2,13 +2,14 @@
 
 namespace FKSDB\ORM\Services\Fyziklani;
 
+use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniRoom;
 
 /**
  * Class FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom
  */
-class ServiceFyziklaniRoom extends \FKSDB\ORM\AbstractServiceSingle {
+class ServiceFyziklaniRoom extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_FYZIKLANI_ROOM;
     protected $modelClassName = 'FKSDB\ORM\Models\Fyziklani\ModelFyziklaniRoom';
