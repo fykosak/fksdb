@@ -3,12 +3,12 @@
 namespace Authentication;
 
 use FKSDB\Config\GlobalParameters;
-use FKSDB\ORM\ModelLogin;
+use FKSDB\ORM\Models\ModelLogin;
+use FKSDB\ORM\Services\ServiceLogin;
 use FullHttpRequest;
 use Github\Events\Event;
 use Nette\InvalidArgumentException;
 use Nette\Security\AuthenticationException;
-use ServiceLogin;
 use YearCalculator;
 
 /**
@@ -40,7 +40,7 @@ class GithubAuthenticator extends AbstractAuthenticator {
 
     /**
      * @param FullHttpRequest $request
-     * @return \FKSDB\ORM\ModelLogin
+     * @return \FKSDB\ORM\Models\ModelLogin
      * @throws AuthenticationException
      * @throws InactiveLoginException
      * @throws NoLoginException

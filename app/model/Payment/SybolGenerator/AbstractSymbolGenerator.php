@@ -2,7 +2,8 @@
 
 namespace FKSDB\Payment\SymbolGenerator;
 
-use FKSDB\ORM\ModelPayment;
+use FKSDB\ORM\Models\ModelPayment;
+use FKSDB\ORM\Services\ServicePayment;
 
 /**
  * Class AbstractSymbolGenerator
@@ -10,20 +11,20 @@ use FKSDB\ORM\ModelPayment;
  */
 abstract class AbstractSymbolGenerator {
     /**
-     * @var \ServicePayment;
+     * @var ServicePayment;
      */
     protected $servicePayment;
 
     /**
      * AbstractSymbolGenerator constructor.
-     * @param \ServicePayment $servicePayment
+     * @param ServicePayment $servicePayment
      */
-    public function __construct(\ServicePayment $servicePayment) {
+    public function __construct(ServicePayment $servicePayment) {
         $this->servicePayment = $servicePayment;
     }
 
     /**
-     * @param ModelPayment $modelPayment
+     * @param \FKSDB\ORM\Models\ModelPayment $modelPayment
      * @return mixed
      * @throws AlreadyGeneratedSymbolsException
      */

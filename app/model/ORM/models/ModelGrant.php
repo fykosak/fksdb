@@ -1,6 +1,7 @@
 <?php
 
-namespace FKSDB\ORM;
+namespace FKSDB\ORM\Models;
+
 use AbstractModelSingle;
 
 /**
@@ -9,5 +10,5 @@ use AbstractModelSingle;
  * @property int contest_id
  */
 class ModelGrant extends AbstractModelSingle {
-    //put your code here
+
 }

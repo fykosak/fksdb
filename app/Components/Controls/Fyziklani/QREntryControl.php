@@ -6,7 +6,7 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\model\Fyziklani\ClosedSubmittingException;
 use FKSDB\model\Fyziklani\TaskCodeException;
 use FKSDB\model\Fyziklani\TaskCodeHandler;
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Forms\Controls\Button;

@@ -3,7 +3,7 @@
 namespace OrgModule;
 
 use FKSDB\Components\Controls\ContestChooser;
-use FKSDB\ORM\ModelRole;
+use FKSDB\ORM\Models\ModelRole;
 
 /**
  * Presenter keeps chosen contest, year and language in session.

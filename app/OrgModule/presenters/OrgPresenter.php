@@ -4,10 +4,10 @@ namespace OrgModule;
 
 use FKSDB\Components\Forms\Factories\OrgFactory;
 use FKSDB\Components\Grids\OrgsGrid;
+use FKSDB\ORM\IModel;
+use FKSDB\ORM\Services\ServiceOrg;
 use Nette\Application\UI\Form;
-use ORM\IModel;
 use Persons\ExtendedPersonHandler;
-use ServiceOrg;
 
 /**
  * Class OrgPresenter
@@ -74,7 +74,7 @@ class OrgPresenter extends ExtendedPersonPresenter {
     }
 
     /**
-     * @param IModel|null $model
+     * @param \FKSDB\ORM\IModel|null $model
      * @param Form $form
      * @throws \Nette\Application\BadRequestException
      */

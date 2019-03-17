@@ -6,9 +6,10 @@ use EventModule\BasePresenter as EventBasePresenter;
 use FKSDB\Components\Controls\Choosers\FyziklaniChooser;
 use FKSDB\Components\Factories\FyziklaniFactory;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use Nette\Application\BadRequestException;
-use ORM\Services\Events\ServiceFyziklaniTeam;
-use ServiceFyziklaniTask;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 
 /**
  *
@@ -23,12 +24,12 @@ abstract class BasePresenter extends EventBasePresenter {
     private $serviceFyziklaniTeam;
 
     /**
-     * @var ServiceFyziklaniTask
+     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask
      */
     private $serviceFyziklaniTask;
 
     /**
-     * @var \ServiceFyziklaniTeamPosition
+     * @var ServiceFyziklaniTeamPosition
      */
     private $serviceFyziklaniTeamPosition;
 
@@ -49,21 +50,21 @@ abstract class BasePresenter extends EventBasePresenter {
     }
 
     /**
-     * @param \ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
+     * @param ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
      */
-    public function injectServiceFyziklaniTeamPosition(\ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition) {
+    public function injectServiceFyziklaniTeamPosition(ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition) {
         $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
     }
 
     /**
-     * @return \ServiceFyziklaniTeamPosition
+     * @return ServiceFyziklaniTeamPosition
      */
-    protected function getServiceFyziklaniTeamPosition(): \ServiceFyziklaniTeamPosition {
+    protected function getServiceFyziklaniTeamPosition(): ServiceFyziklaniTeamPosition {
         return $this->serviceFyziklaniTeamPosition;
     }
 
     /**
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam $serviceFyziklaniTeam
      */
     public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam) {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
@@ -77,14 +78,14 @@ abstract class BasePresenter extends EventBasePresenter {
     }
 
     /**
-     * @param ServiceFyziklaniTask $serviceFyziklaniTask
+     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask $serviceFyziklaniTask
      */
     public function injectServiceFyziklaniTask(ServiceFyziklaniTask $serviceFyziklaniTask) {
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
     }
 
     /**
-     * @return ServiceFyziklaniTask
+     * @return \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask
      */
     protected function getServiceFyziklaniTask(): ServiceFyziklaniTask {
         return $this->serviceFyziklaniTask;

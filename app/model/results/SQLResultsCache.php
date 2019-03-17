@@ -1,6 +1,7 @@
 <?php
 
-use FKSDB\ORM\ModelContest;
+use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Services\ServiceTask;
 
 /**
  * Fill caclulated points into database.

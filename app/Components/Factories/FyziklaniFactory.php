@@ -19,12 +19,16 @@ use FKSDB\Components\Grids\Fyziklani\AllSubmitsGrid;
 use FKSDB\Components\Grids\Fyziklani\TaskGrid;
 use FKSDB\Components\Grids\Fyziklani\TeamSubmitsGrid;
 use FKSDB\model\Fyziklani\TaskCodeHandlerFactory;
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use Nette\DI\Container;
 use Nette\Localization\ITranslator;
-use ORM\Models\Events\ModelFyziklaniTeam;
-use ORM\Services\Events\ServiceFyziklaniTeam;
-use ServiceFyziklaniSubmit;
+
 
 /**
  * Class FyziklaniFactory
@@ -33,12 +37,12 @@ use ServiceFyziklaniSubmit;
 class FyziklaniFactory {
 
     /**
-     * @var \ServiceFyziklaniRoom
+     * @var ServiceFyziklaniRoom
      */
     private $serviceFyziklaniRoom;
 
     /**
-     * @var \ServiceFyziklaniTeamPosition
+     * @var ServiceFyziklaniTeamPosition
      */
     private $serviceFyziklaniTeamPosition;
 
@@ -48,7 +52,7 @@ class FyziklaniFactory {
     private $serviceFyziklaniTeam;
 
     /**
-     * @var \ServiceFyziklaniTask
+     * @var ServiceFyziklaniTask
      */
     private $serviceFyziklaniTask;
     /**
@@ -70,21 +74,21 @@ class FyziklaniFactory {
 
     /**
      * FyziklaniFactory constructor.
-     * @param \ServiceFyziklaniRoom $serviceFyziklaniRoom
-     * @param \ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
+     * @param ServiceFyziklaniRoom $serviceFyziklaniRoom
+     * @param ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
      * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @param \ServiceFyziklaniTask $serviceFyziklaniTask
+     * @param ServiceFyziklaniTask $serviceFyziklaniTask
      * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
      * @param TaskCodeHandlerFactory $taskCodeHandlerFactory
      * @param Container $context
      * @param ITranslator $translator
      */
     public function __construct(
-        \ServiceFyziklaniRoom $serviceFyziklaniRoom,
-        \ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition,
+        ServiceFyziklaniRoom $serviceFyziklaniRoom,
+        ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition,
         ServiceFyziklaniTeam $serviceFyziklaniTeam,
-        \ServiceFyziklaniTask $serviceFyziklaniTask,
-        \ServiceFyziklaniSubmit $serviceFyziklaniSubmit,
+        ServiceFyziklaniTask $serviceFyziklaniTask,
+        ServiceFyziklaniSubmit $serviceFyziklaniSubmit,
         TaskCodeHandlerFactory $taskCodeHandlerFactory,
         Container $context,
         ITranslator $translator
@@ -110,7 +114,7 @@ class FyziklaniFactory {
     }
 
     /**
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @return QREntryControl
      */
     public function createQREntryControl(ModelEvent $event): QREntryControl {
@@ -129,7 +133,7 @@ class FyziklaniFactory {
     /* *************** CLOSING ***************/
 
     /**
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @return CloseControl
      */
     public function createCloseControl(ModelEvent $event): CloseControl {
@@ -137,7 +141,7 @@ class FyziklaniFactory {
     }
 
     /**
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @return CloseTeamControl
      */
     public function createCloseTeamControl(ModelEvent $event): CloseTeamControl {
@@ -147,7 +151,7 @@ class FyziklaniFactory {
     /* ************** ROUTING *************/
 
     /**
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @return RoutingEdit
      */
     public function createRoutingEdit(ModelEvent $event): RoutingEdit {
@@ -172,7 +176,7 @@ class FyziklaniFactory {
     }
 
     /**
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @return ResultsPresentation
      */
     public function createResultsPresentation(ModelEvent $event): ResultsPresentation {
@@ -229,7 +233,7 @@ class FyziklaniFactory {
     }
 
     /**
-     * @param ModelFyziklaniTeam $team
+     * @param \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam $team
      * @return TeamSubmitsGrid
      */
     public function createTeamSubmitsGrid(ModelFyziklaniTeam $team): TeamSubmitsGrid {

@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls;
 
-use FKSDB\ORM\ModelStoredQuery;
+use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use Nette\Application\UI\Control;
 use Nette\InvalidArgumentException;
 use ServiceMStoredQueryTag;
@@ -23,7 +23,7 @@ class StoredQueryTagCloud extends Control {
     private $serviceMStoredQueryTag;
 
     /**
-     * @var ModelStoredQuery
+     * @var \FKSDB\ORM\Models\ModelStoredQuery
      */
     private $modelStoredQuery;
 
@@ -48,7 +48,7 @@ class StoredQueryTagCloud extends Control {
     }
 
     /**
-     * @param ModelStoredQuery $modelStoredQuery
+     * @param \FKSDB\ORM\Models\ModelStoredQuery $modelStoredQuery
      */
     public function setModelStoredQuery(ModelStoredQuery $modelStoredQuery) {
         $this->modelStoredQuery = $modelStoredQuery;

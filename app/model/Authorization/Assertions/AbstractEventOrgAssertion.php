@@ -2,8 +2,8 @@
 
 namespace Authorization\Assertions;
 
-use DbNames;
 use Exports\StoredQuery;
+use FKSDB\ORM\DbNames;
 use Nette\Database\Connection;
 use Nette\Object;
 use Nette\Security\Permission;

@@ -1,12 +1,18 @@
 <?php
 
+namespace FKSDB\ORM\Services\Fyziklani;
+
+use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition;
+use Traversable;
+
 /**
- * Class ServiceFyziklaniTeamPosition
+ * Class FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition
  */
 class ServiceFyziklaniTeamPosition extends \AbstractServiceSingle {
 
-    protected $tableName = \DbNames::TAB_FYZIKLANI_TEAM_POSITION;
-    protected $modelClassName = 'ModelFyziklaniTeamPosition';
+    protected $tableName = DbNames::TAB_FYZIKLANI_TEAM_POSITION;
+    protected $modelClassName = 'FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition';
 
     /**
      * @param int $teamId
@@ -30,7 +36,7 @@ class ServiceFyziklaniTeamPosition extends \AbstractServiceSingle {
             $teamData = (object)$teamData;
             try {
                 /**
-                 * @var \ModelFyziklaniTeamPosition $model
+                 * @var \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition $model
                  */
                 $model = $this->findByTeamId($teamData->teamId);
                 if (is_numeric($teamData->x) && is_numeric($teamData->y)) {

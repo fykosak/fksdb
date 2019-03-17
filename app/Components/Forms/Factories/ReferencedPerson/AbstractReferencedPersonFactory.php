@@ -13,7 +13,10 @@ use FKSDB\Components\Forms\Factories\FlagFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Factories\PersonHistoryFactory;
 use FKSDB\Components\Forms\Factories\PersonInfoFactory;
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\IModel;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Services\ServiceFlag;
+use FKSDB\ORM\Services\ServicePerson;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\HiddenField;
@@ -23,13 +26,10 @@ use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use Nette\Object;
 use Nette\Utils\Arrays;
-use ORM\IModel;
 use Persons\IModifiabilityResolver;
 use Persons\IVisibilityResolver;
 use Persons\ReferencedPersonHandler;
 use Persons\ReferencedPersonHandlerFactory;
-use ServiceFlag;
-use ServicePerson;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -47,7 +47,7 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
     const HAS_DELIVERY = 0x8;
 
     /**
-     * @var ServicePerson
+     * @var \FKSDB\ORM\Services\ServicePerson
      */
     protected $servicePerson;
 
@@ -76,7 +76,7 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
     protected $personProvider;
 
     /**
-     * @var ServiceFlag
+     * @var \FKSDB\ORM\Services\ServiceFlag
      */
     protected $serviceFlag;
 
@@ -93,11 +93,11 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
      * AbstractReferencedPersonFactory constructor.
      * @param AddressFactory $addressFactory
      * @param FlagFactory $flagFactory
-     * @param ServicePerson $servicePerson
+     * @param \FKSDB\ORM\Services\ServicePerson $servicePerson
      * @param PersonFactory $personFactory
      * @param ReferencedPersonHandlerFactory $referencedPersonHandlerFactory
      * @param PersonProvider $personProvider
-     * @param ServiceFlag $serviceFlag
+     * @param \FKSDB\ORM\Services\ServiceFlag $serviceFlag
      * @param PersonInfoFactory $personInfoFactory
      * @param PersonHistoryFactory $personHistoryFactory
      */
@@ -436,7 +436,7 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
     }
 
     /**
-     * @param ModelPerson $person
+     * @param \FKSDB\ORM\Models\ModelPerson $person
      * @param $sub
      * @param $field
      * @param $acYear
@@ -448,12 +448,12 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
     }
 
     /**
-     * @param ModelPerson|null $person
+     * @param \FKSDB\ORM\Models\ModelPerson|null $person
      * @param $sub
      * @param $field
      * @param $acYear
      * @param $options
-     * @return bool|\FKSDB\ORM\ModelPostContact|mixed|null
+     * @return bool|\FKSDB\ORM\Models\ModelPostContact|mixed|null
      */
     protected function getPersonValue(ModelPerson $person = null, $sub, $field, $acYear, $options) {
         if (!$person) {

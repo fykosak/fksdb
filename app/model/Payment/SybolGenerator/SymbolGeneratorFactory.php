@@ -2,7 +2,8 @@
 
 namespace FKSDB\Payment\SymbolGenerator;
 
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Services\ServicePayment;
 use FKSDB\Payment\SymbolGenerator\Generators\Fyziklani13Generator;
 use Nette\NotImplementedException;
 
@@ -12,20 +13,20 @@ use Nette\NotImplementedException;
  */
 class SymbolGeneratorFactory {
     /**
-     * @var \ServicePayment;
+     * @var ServicePayment;
      */
     protected $servicePayment;
 
     /**
      * SymbolGeneratorFactory constructor.
-     * @param \ServicePayment $servicePayment
+     * @param ServicePayment $servicePayment
      */
-    public function __construct(\ServicePayment $servicePayment) {
+    public function __construct(ServicePayment $servicePayment) {
         $this->servicePayment = $servicePayment;
     }
 
     /**
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @return AbstractSymbolGenerator
      */
     public function createGenerator(ModelEvent $event): AbstractSymbolGenerator {

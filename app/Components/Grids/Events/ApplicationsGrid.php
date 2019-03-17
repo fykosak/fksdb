@@ -47,7 +47,7 @@ class ApplicationsGrid extends Control {
     private $machines = [];
 
     /**
-     * @var \FKSDB\ORM\ModelEvent[]
+     * @var \FKSDB\ORM\Models\ModelEvent[]
      */
     private $eventApplications = [];
 

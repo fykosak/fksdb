@@ -1,6 +1,10 @@
 <?php
 
-use FKSDB\ORM\ModelAuthToken;
+namespace FKSDB\ORM\Services;
+
+use AbstractServiceSingle;
+use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\ModelAuthToken;
 use Nette\Database\Connection;
 use Nette\DateTime;
 use Nette\Http\Request;
@@ -14,7 +18,7 @@ class ServiceGlobalSession extends AbstractServiceSingle {
     const SESSION_ID_LENGTH = 32;
 
     protected $tableName = DbNames::TAB_GLOBAL_SESSION;
-    protected $modelClassName = 'FKSDB\ORM\ModelGlobalSession';
+    protected $modelClassName = 'FKSDB\ORM\Models\ModelGlobalSession';
 
     /**
      * @var Request
@@ -22,7 +26,7 @@ class ServiceGlobalSession extends AbstractServiceSingle {
     private $request;
 
     /**
-     * ServiceGlobalSession constructor.
+     * FKSDB\ORM\Services\ServiceGlobalSession constructor.
      * @param Request $request
      * @param Connection $connection
      */

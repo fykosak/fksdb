@@ -5,11 +5,11 @@ namespace FKSDB\Components\Forms\Controls;
 use FKSDB\Components\Forms\Containers\Models\IReferencedSetter;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Components\Forms\Controls\PersonAccommodation\ExistingPaymentException;
+use FKSDB\ORM\IModel;
+use FKSDB\ORM\IService;
 use FKSDB\Utils\Promise;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
-use ORM\IModel;
-use ORM\IService;
 
 /**
  * Be careful when calling getValue as it executes SQL queries and thus
@@ -52,7 +52,7 @@ class ReferencedId extends HiddenField {
     private $modelCreated;
 
     /**
-     * @var IModel
+     * @var \FKSDB\ORM\IModel
      */
     private $model;
 

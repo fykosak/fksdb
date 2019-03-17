@@ -1,9 +1,9 @@
 <?php
 
+use FKSDB\ORM\IModel;
+use FKSDB\ORM\IService;
 use Nette\InvalidStateException;
 use Nette\Object;
-use ORM\IModel;
-use ORM\IService;
 use ORM\Tables\MultiTableSelection;
 
 /**

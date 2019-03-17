@@ -9,14 +9,14 @@ use FKSDB\Components\Forms\Factories\PersonAccommodationFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Factories\PersonHistoryFactory;
 use FKSDB\Components\Forms\Factories\PersonInfoFactory;
-use FKSDB\ORM\ModelEvent;
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Services\ServiceFlag;
+use FKSDB\ORM\Services\ServicePerson;
 use Nette\Forms\Controls\HiddenField;
 use Persons\IModifiabilityResolver;
 use Persons\IVisibilityResolver;
 use Persons\ReferencedPersonHandlerFactory;
-use ServiceFlag;
-use ServicePerson;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -30,7 +30,7 @@ class ReferencedEventPersonFactory extends AbstractReferencedPersonFactory {
      */
     private $personAccommodationFactory;
     /**
-     * @var ModelEvent
+     * @var \FKSDB\ORM\Models\ModelEvent
      */
     private $event;
 
@@ -39,7 +39,7 @@ class ReferencedEventPersonFactory extends AbstractReferencedPersonFactory {
      * @param PersonAccommodationFactory $personAccommodationFactory
      * @param AddressFactory $addressFactory
      * @param FlagFactory $flagFactory
-     * @param ServicePerson $servicePerson
+     * @param \FKSDB\ORM\Services\ServicePerson $servicePerson
      * @param PersonFactory $personFactory
      * @param ReferencedPersonHandlerFactory $referencedPersonHandlerFactory
      * @param PersonProvider $personProvider
@@ -72,7 +72,7 @@ class ReferencedEventPersonFactory extends AbstractReferencedPersonFactory {
     }
 
     /**
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      */
     public function setEvent(ModelEvent $event) {
         $this->event = $event;
@@ -118,7 +118,7 @@ class ReferencedEventPersonFactory extends AbstractReferencedPersonFactory {
      * @param $field
      * @param $acYear
      * @param $options
-     * @return bool|\FKSDB\ORM\ModelPostContact|mixed|null|string
+     * @return bool|\FKSDB\ORM\Models\ModelPostContact|mixed|null|string
      * @throws \Nette\Utils\JsonException
      */
     protected function getPersonValue(ModelPerson $person = null, $sub, $field, $acYear, $options) {

@@ -2,9 +2,9 @@
 
 namespace Events\Model\Holder;
 
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Services\ServiceEvent;
 use Nette\InvalidArgumentException;
-use ServiceEvent;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -23,7 +23,7 @@ class SameYearEvent implements IEventRelation {
     /**
      * SameYearEvent constructor.
      * @param $eventTypeId
-     * @param ServiceEvent $serviceEvent
+     * @param \FKSDB\ORM\Services\ServiceEvent $serviceEvent
      */
     function __construct($eventTypeId, ServiceEvent $serviceEvent) {
         $this->eventTypeId = $eventTypeId;
@@ -31,8 +31,8 @@ class SameYearEvent implements IEventRelation {
     }
 
     /**
-     * @param ModelEvent $event
-     * @return ModelEvent
+     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @return \FKSDB\ORM\Models\ModelEvent
      */
     public function getEvent(ModelEvent $event) {
         $result = $this->serviceEvent->getTable()->where(array(

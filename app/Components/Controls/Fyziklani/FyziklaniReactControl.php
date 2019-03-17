@@ -3,9 +3,14 @@
 namespace FKSDB\Components\Controls\Fyziklani;
 
 use FKSDB\Components\React\ReactComponent;
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniRoom;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use Nette\DI\Container;
-use ORM\Services\Events\ServiceFyziklaniTeam;
 
 /**
  * Class FyziklaniReactControl
@@ -14,12 +19,12 @@ use ORM\Services\Events\ServiceFyziklaniTeam;
 abstract class FyziklaniReactControl extends ReactComponent {
 
     /**
-     * @var \ServiceFyziklaniRoom
+     * @var ServiceFyziklaniRoom
      */
     protected $serviceFyziklaniRoom;
 
     /**
-     * @var \ServiceFyziklaniTeamPosition
+     * @var ServiceFyziklaniTeamPosition
      */
     protected $serviceFyziklaniTeamPosition;
 
@@ -29,16 +34,16 @@ abstract class FyziklaniReactControl extends ReactComponent {
     protected $serviceFyziklaniTeam;
 
     /**
-     * @var \ServiceFyziklaniTask
+     * @var ServiceFyziklaniTask
      */
     protected $serviceFyziklaniTask;
     /**
-     * @var \ServiceFyziklaniSubmit
+     * @var ServiceFyziklaniSubmit
      */
     protected $serviceFyziklaniSubmit;
 
     /**
-     * @var ModelEvent
+     * @var \FKSDB\ORM\Models\ModelEvent
      */
     protected $event;
 
@@ -50,21 +55,21 @@ abstract class FyziklaniReactControl extends ReactComponent {
     /**
      * FyziklaniReactControl constructor.
      * @param Container $container
-     * @param ModelEvent $event
-     * @param \ServiceFyziklaniRoom $serviceFyziklaniRoom
-     * @param \ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
+     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @param ServiceFyziklaniRoom $serviceFyziklaniRoom
+     * @param ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
      * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @param \ServiceFyziklaniTask $serviceFyziklaniTask
-     * @param \ServiceFyziklaniSubmit $serviceFyziklaniSubmit
+     * @param ServiceFyziklaniTask $serviceFyziklaniTask
+     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
      */
     public function __construct(
         Container $container,
         ModelEvent $event,
-        \ServiceFyziklaniRoom $serviceFyziklaniRoom,
-        \ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition,
+        ServiceFyziklaniRoom $serviceFyziklaniRoom,
+        ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition,
         ServiceFyziklaniTeam $serviceFyziklaniTeam,
-        \ServiceFyziklaniTask $serviceFyziklaniTask,
-        \ServiceFyziklaniSubmit $serviceFyziklaniSubmit
+        ServiceFyziklaniTask $serviceFyziklaniTask,
+        ServiceFyziklaniSubmit $serviceFyziklaniSubmit
     ) {
         parent::__construct($container);
         $this->event = $event;
@@ -86,14 +91,14 @@ abstract class FyziklaniReactControl extends ReactComponent {
     }
 
     /**
-     * @return ModelEvent
+     * @return \FKSDB\ORM\Models\ModelEvent
      */
     protected final function getEvent() {
         return $this->event;
     }
 
     /**
-     * @return \ModelFyziklaniRoom[]
+     * @return ModelFyziklaniRoom[]
      */
     protected function getRooms() {
         return $this->serviceFyziklaniRoom->getRoomsByIds($this->getEvent()->getParameter('gameSetup')['rooms']);

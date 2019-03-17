@@ -1,11 +1,10 @@
 <?php
 
-namespace FKSDB\ORM;
+namespace FKSDB\ORM\Models;
 
 use AbstractModelSingle;
 use DateTime;
-use DbNames;
-use Nette\Database\Table\ActiveRow;
+use FKSDB\ORM\DbNames;
 use Nette\Security\IResource;
 
 /**
@@ -16,8 +15,6 @@ use Nette\Security\IResource;
  * @property string source
  * @property string note
  * @property integer raw_points
- * @property ActiveRow e_fyziklani_team
- * @property int e_fyziklani_team_id
  * @property int points
  * @property int ct_id
  * @property int task_id

@@ -4,7 +4,8 @@
  * trait content contest, year, series and lang chooser
  */
 
-use \FKSDB\Components\Controls;
+use FKSDB\Components\Controls;
+use FKSDB\ORM\Services\ServiceContest;
 
 /**
  * Trait ContestNav

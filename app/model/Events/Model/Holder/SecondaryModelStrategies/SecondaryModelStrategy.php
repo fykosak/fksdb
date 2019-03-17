@@ -3,9 +3,9 @@
 namespace Events\Model\Holder\SecondaryModelStrategies;
 
 use Events\Model\Holder\BaseHolder;
+use FKSDB\ORM\IModel;
+use FKSDB\ORM\IService;
 use Nette\InvalidStateException;
-use ORM\IModel;
-use ORM\IService;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -36,7 +36,7 @@ abstract class SecondaryModelStrategy {
      * @param $joinOn
      * @param $joinTo
      * @param $holders
-     * @param IModel|null $primaryModel
+     * @param \FKSDB\ORM\IModel|null $primaryModel
      */
     public function loadSecondaryModels(IService $service, $joinOn, $joinTo, $holders, IModel $primaryModel = null) {
         $table = $service->getTable();

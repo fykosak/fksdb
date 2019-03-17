@@ -2,12 +2,13 @@
 
 namespace FKSDB\Components\Forms\Controls\PersonAccommodation;
 
-use FKSDB\ORM\ModelEventAccommodation;
-use FKSDB\ORM\ModelEventPersonAccommodation;
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\Models\ModelEventAccommodation;
+use FKSDB\ORM\Models\ModelEventPersonAccommodation;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Services\ServiceEventAccommodation;
+use FKSDB\ORM\Services\ServiceEventPersonAccommodation;
 use Nette\ArrayHash;
 use Nette\NotImplementedException;
-use ServiceEventPersonAccommodation;
 
 /**
  * Class Handler
@@ -19,17 +20,17 @@ class Handler {
 
     /**
      * Handler constructor.
-     * @param ServiceEventPersonAccommodation $serviceEventPersonAccommodation
-     * @param \ServiceEventAccommodation $serviceEventAccommodation
+     * @param \FKSDB\ORM\Services\ServiceEventPersonAccommodation $serviceEventPersonAccommodation
+     * @param ServiceEventAccommodation $serviceEventAccommodation
      */
-    public function __construct(ServiceEventPersonAccommodation $serviceEventPersonAccommodation, \ServiceEventAccommodation $serviceEventAccommodation) {
+    public function __construct(ServiceEventPersonAccommodation $serviceEventPersonAccommodation, ServiceEventAccommodation $serviceEventAccommodation) {
         $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;
         $this->serviceEventAccommodation = $serviceEventAccommodation;
     }
 
     /**
      * @param ArrayHash $data
-     * @param ModelPerson $person
+     * @param \FKSDB\ORM\Models\ModelPerson $person
      * @param integer $eventId
      * @throws FullAccommodationCapacityException
      * @throws ExistingPaymentException

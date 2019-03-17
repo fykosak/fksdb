@@ -2,7 +2,7 @@
 
 namespace Submits;
 
-use FKSDB\ORM\ModelSubmit;
+use FKSDB\ORM\Models\ModelSubmit;
 
 
 /**
@@ -49,20 +49,20 @@ interface ISubmitStorage {
 
     /**
      *
-     * @param \FKSDB\ORM\ModelSubmit $submit
+     * @param \FKSDB\ORM\Models\ModelSubmit $submit
      * @param int $type
      * @return string filename with absolute path
      */
     public function retrieveFile(ModelSubmit $submit, $type = self::TYPE_PROCESSED);
 
     /**
-     * @param \FKSDB\ORM\ModelSubmit $submit
+     * @param \FKSDB\ORM\Models\ModelSubmit $submit
      * @return bool
      */
     public function existsFile(ModelSubmit $submit);
 
     /**
-     * @param \FKSDB\ORM\ModelSubmit $submit
+     * @param \FKSDB\ORM\Models\ModelSubmit $submit
      */
     public function deleteFile(ModelSubmit $submit);
 }

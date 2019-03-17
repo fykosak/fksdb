@@ -3,15 +3,13 @@
 namespace FKSDB\Components\Grids\Events;
 
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\ORM\Services\ServiceEvent;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
-use Nette\Database\Table\Selection;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
 use OrgModule\OrgPresenter;
-use ServiceEvent;
-use SQL\SearchableDataSource;
 
 /**
  *
@@ -21,13 +19,13 @@ class EventsGrid extends BaseGrid {
 
     /**
      *
-     * @var ServiceEvent
+     * @var \FKSDB\ORM\Services\ServiceEvent
      */
     private $serviceEvent;
 
     /**
      * EventsGrid constructor.
-     * @param ServiceEvent $serviceEvent
+     * @param \FKSDB\ORM\Services\ServiceEvent $serviceEvent
      */
     function __construct(ServiceEvent $serviceEvent) {
         parent::__construct();

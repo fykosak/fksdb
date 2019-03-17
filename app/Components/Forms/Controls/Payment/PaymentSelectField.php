@@ -5,8 +5,10 @@ namespace FKSDB\Components\Forms\Controls\Payment;
 
 use FKSDB\Components\React\IReactComponent;
 use FKSDB\Components\React\ReactField;
-use FKSDB\ORM\ModelEvent;
-use FKSDB\ORM\ModelEventPersonAccommodation;
+use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Models\ModelEventPersonAccommodation;
+use FKSDB\ORM\Services\ServiceEventPersonAccommodation;
 use Nette\Forms\Controls\TextInput;
 
 /**
@@ -18,11 +20,11 @@ class PaymentSelectField extends TextInput implements IReactComponent {
     use ReactField;
 
     /**
-     * @var \ServiceEventPersonAccommodation
+     * @var ServiceEventPersonAccommodation
      */
     private $serviceEventPersonAccommodation;
     /**
-     * @var ModelEvent
+     * @var \FKSDB\ORM\Models\ModelEvent
      */
     private $event;
 
@@ -30,11 +32,11 @@ class PaymentSelectField extends TextInput implements IReactComponent {
 
     /**
      * PaymentSelectField constructor.
-     * @param \ServiceEventPersonAccommodation $serviceEventPersonAccommodation
-     * @param ModelEvent $event
+     * @param ServiceEventPersonAccommodation $serviceEventPersonAccommodation
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @param bool $showAll
      */
-    public function __construct(\ServiceEventPersonAccommodation $serviceEventPersonAccommodation, ModelEvent $event, bool $showAll = true) {
+    public function __construct(ServiceEventPersonAccommodation $serviceEventPersonAccommodation, ModelEvent $event, bool $showAll = true) {
         parent::__construct();
         $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;
         $this->event = $event;
@@ -51,7 +53,7 @@ class PaymentSelectField extends TextInput implements IReactComponent {
         $items = [];
         foreach ($query as $row) {
             $model = ModelEventPersonAccommodation::createFromTableRow($row);
-            if ($this->showAll || !$model->related(\DbNames::TAB_PAYMENT_ACCOMMODATION, 'event_person_accommodation_id')->count()) {
+            if ($this->showAll || !$model->related(DbNames::TAB_PAYMENT_ACCOMMODATION, 'event_person_accommodation_id')->count()) {
                 $items[] = [
                     'hasPayment' => false, /*
                     ->where('payment.state !=? OR payment.state IS NULL', ModelPayment::STATE_CANCELED)->count(),*/

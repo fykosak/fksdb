@@ -1,21 +1,26 @@
 <?php
 
+namespace FKSDB\ORM\Services;
+
+use AbstractServiceSingle;
+use FKSDB\ORM\DbNames;
+use Nette\Database\Table\Selection;
+
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceSchool extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_SCHOOL;
-    protected $modelClassName = 'FKSDB\ORM\ModelSchool';
+    protected $modelClassName = 'FKSDB\ORM\Models\ModelSchool';
 
     /**
      * @return \Nette\Database\Table\Selection
      */
-    public function getSchools() {
-        $schools = $this->getTable()
-                ->select(DbNames::TAB_SCHOOL . '.*')
-                ->select(DbNames::TAB_ADDRESS . '.*');
-        return $schools;
+    public function getSchools(): Selection {
+        return $this->getTable()
+            ->select(DbNames::TAB_SCHOOL . '.*')
+            ->select(DbNames::TAB_ADDRESS . '.*');
     }
 
 }

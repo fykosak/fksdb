@@ -1,13 +1,14 @@
 <?php
 
 use FKSDB\Components\Grids\Payment\MyPaymentGrid;
+use FKSDB\ORM\Services\ServicePayment;
 
 /**
  * Class MyPaymentsPresenter
  */
 class MyPaymentsPresenter extends AuthenticatedPresenter {
     /**
-     * @var \ServicePayment
+     * @var ServicePayment
      */
     private $servicePayment;
 
@@ -17,7 +18,7 @@ class MyPaymentsPresenter extends AuthenticatedPresenter {
     /**
      * @param ServicePayment $servicePayment
      */
-    public function injectServicePayment(\ServicePayment $servicePayment) {
+    public function injectServicePayment(ServicePayment $servicePayment) {
         $this->servicePayment = $servicePayment;
     }
 

@@ -1,7 +1,7 @@
 <?php
 
-use FKSDB\ORM\ModelAddress;
-use FKSDB\ORM\ModelPostContact;
+use FKSDB\ORM\Models\ModelAddress;
+use FKSDB\ORM\Models\ModelPostContact;
 
 /**
  *

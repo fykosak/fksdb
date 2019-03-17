@@ -3,7 +3,7 @@
 namespace Submits;
 
 use fks_pdf_parser_exception;
-use FKSDB\ORM\ModelSubmit;
+use FKSDB\ORM\Models\ModelSubmit;
 use FPDI;
 use Nette\InvalidStateException;
 use Nette\Utils\Strings;
@@ -87,7 +87,7 @@ class PDFStamper implements IStorageProcessing {
     }
 
     /**
-     * @param ModelSubmit $submit
+     * @param \FKSDB\ORM\Models\ModelSubmit $submit
      * @throws ProcessingException
      * @throws InvalidStateException
      */

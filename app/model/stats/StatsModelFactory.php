@@ -1,6 +1,7 @@
 <?php
 
-use FKSDB\ORM\ModelContest;
+use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Services\ServiceTask;
 
 /**
  * Description of ResultsModelFactory

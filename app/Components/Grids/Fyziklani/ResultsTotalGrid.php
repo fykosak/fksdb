@@ -5,10 +5,10 @@ namespace FKSDB\Components\Grids\Fyziklani;
 
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FyziklaniModule\BasePresenter;
 use NiftyGrid\DataSource\NDataSource;
-use ORM\Services\Events\ServiceFyziklaniTeam;
 
 /**
  * Class ResultsTotalGrid
@@ -23,13 +23,13 @@ class ResultsTotalGrid extends BaseGrid {
     private $serviceFyziklaniTeam;
 
     /**
-     * @var ModelEvent
+     * @var \FKSDB\ORM\Models\ModelEvent
      */
     private $event;
 
     /**
      * FyziklaniSubmitsGrid constructor.
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
      */
     public function __construct(ModelEvent $event, ServiceFyziklaniTeam $serviceFyziklaniTeam) {

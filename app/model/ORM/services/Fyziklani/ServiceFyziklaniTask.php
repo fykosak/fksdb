@@ -1,6 +1,11 @@
 <?php
 
-use FKSDB\ORM\ModelEvent;
+namespace FKSDB\ORM\Services\Fyziklani;
+
+use AbstractServiceSingle;
+use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
+use FKSDB\ORM\Models\ModelEvent;
 use Nette\Database\Table\Selection;
 
 /**
@@ -9,12 +14,12 @@ use Nette\Database\Table\Selection;
 class ServiceFyziklaniTask extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_FYZIKLANI_TASK;
-    protected $modelClassName = 'ModelFyziklaniTask';
+    protected $modelClassName = 'FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask';
 
     /**
      * Syntactic sugar.
      * @param string $label
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @return ModelFyziklaniTask|null
      */
     public function findByLabel(string $label, ModelEvent $event) {
@@ -31,7 +36,7 @@ class ServiceFyziklaniTask extends AbstractServiceSingle {
 
     /**
      * Syntactic sugar.
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @return Selection
      */
     public function findAll(ModelEvent $event): Selection {
@@ -39,7 +44,7 @@ class ServiceFyziklaniTask extends AbstractServiceSingle {
     }
 
     /**
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @param bool $hideName
      * @return ModelFyziklaniTask[]
      */

@@ -4,7 +4,9 @@ namespace FKSDB\Components\Controls\Fyziklani;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\model\Fyziklani\ClosedSubmittingException;
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Forms\Controls\RadioList;
@@ -19,15 +21,15 @@ use Nette\Templating\FileTemplate;
  */
 class EditSubmitControl extends Control {
     /**
-     * @var \ServiceFyziklaniSubmit
+     * @var ServiceFyziklaniSubmit
      */
     private $serviceFyziklaniSubmit;
     /**
-     * @var \ModelFyziklaniSubmit
+     * @var ModelFyziklaniSubmit
      */
     private $submit;
     /**
-     * @var ModelEvent
+     * @var \FKSDB\ORM\Models\ModelEvent
      */
     private $event;
     /**
@@ -37,11 +39,11 @@ class EditSubmitControl extends Control {
 
     /**
      * EditSubmitControl constructor.
-     * @param ModelEvent $event
-     * @param \ServiceFyziklaniSubmit $serviceFyziklaniSubmit
+     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
      * @param ITranslator $translator
      */
-    public function __construct(ModelEvent $event, \ServiceFyziklaniSubmit $serviceFyziklaniSubmit, ITranslator $translator) {
+    public function __construct(ModelEvent $event, ServiceFyziklaniSubmit $serviceFyziklaniSubmit, ITranslator $translator) {
         parent::__construct();
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
         $this->translator = $translator;
@@ -71,7 +73,7 @@ class EditSubmitControl extends Control {
         if (!$this->submit) {
             throw new BadRequestException(_('Neexistující submit.'), 404);
         }
-        $this->submit = \ModelFyziklaniSubmit::createFromTableRow($row);
+        $this->submit = ModelFyziklaniSubmit::createFromTableRow($row);
 
         $team = $this->submit->getTeam();
         if (!$team->hasOpenSubmitting()) {

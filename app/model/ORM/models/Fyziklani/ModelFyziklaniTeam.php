@@ -1,9 +1,9 @@
 <?php
 
-namespace ORM\Models\Events;
+namespace FKSDB\ORM\Models\Fyziklani;
 
 use AbstractModelSingle;
-use DbNames;
+use FKSDB\ORM\DbNames;
 use Nette\Database\Table\Selection;
 use Nette\DateTime;
 
@@ -30,19 +30,19 @@ class ModelFyziklaniTeam extends AbstractModelSingle {
     }
 
     /**
-     * @return \Nette\Database\Table\Selection
+     * @return Selection
      */
     public function getSubmits(): Selection {
         return $this->related(DbNames::TAB_FYZIKLANI_SUBMIT, 'e_fyziklani_team_id')->where('points IS NOT NULL');
     }
 
     /**
-     * @return null|\ModelFyziklaniTeamPosition
+     * @return null|ModelFyziklaniTeamPosition
      */
     public function getPosition() {
         $row = $this->related(DbNames::TAB_FYZIKLANI_TEAM_POSITION, 'e_fyziklani_team_id')->fetch();
         if ($row) {
-            return \ModelFyziklaniTeamPosition::createFromTableRow($row);
+            return ModelFyziklaniTeamPosition::createFromTableRow($row);
         }
         return null;
     }

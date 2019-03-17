@@ -2,11 +2,11 @@
 
 namespace FKSDB\model\Fyziklani;
 
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\Utils\CSVParser;
 use FyziklaniModule\TaskPresenter;
-use ServiceFyziklaniTask;
-use \Nette\Diagnostics\Debugger;
+use Nette\Diagnostics\Debugger;
 
 /**
  *
@@ -17,18 +17,18 @@ class FyziklaniTaskImportProcessor {
 
     /**
      *
-     * @var ServiceFyziklaniTask
+     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask
      */
     private $serviceFyziklaniTask;
     /**
-     * @var ModelEvent
+     * @var \FKSDB\ORM\Models\ModelEvent
      */
     private $event;
 
     /**
      * FyziklaniTaskImportProcessor constructor.
      * @param ModelEvent $event
-     * @param ServiceFyziklaniTask $serviceFyziklaniTask
+     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask $serviceFyziklaniTask
      */
     public function __construct(ModelEvent$event, ServiceFyziklaniTask $serviceFyziklaniTask) {
         $this->event = $event;

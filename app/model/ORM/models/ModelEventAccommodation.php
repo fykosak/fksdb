@@ -1,15 +1,15 @@
 <?php
 
-namespace FKSDB\ORM;
+namespace FKSDB\ORM\Models;
 
-use DbNames;
+use FKSDB\ORM\DbNames;
 use FKSDB\Transitions\IEventReferencedModel;
 use Nette\Database\Table\ActiveRow;
 use Nette\DateTime;
 use Nette\Security\IResource;
 
 /**
- * Class FKSDB\ORM\ModelEventAccommodation
+ * Class FKSDB\ORM\Models\ModelEventAccommodation
  * @package ORM\Models\Events
  * @property integer event_accommodation_id
  * @property integer event_id

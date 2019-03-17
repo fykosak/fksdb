@@ -1,7 +1,11 @@
 <?php
 
-use FKSDB\ORM\ModelAuthToken;
-use FKSDB\ORM\ModelLogin;
+namespace FKSDB\ORM\Services;
+
+use AbstractServiceSingle;
+use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\ModelAuthToken;
+use FKSDB\ORM\Models\ModelLogin;
 use Nette\DateTime;
 use Nette\Utils\Strings;
 
@@ -13,11 +17,11 @@ class ServiceAuthToken extends AbstractServiceSingle {
     const TOKEN_LENGTH = 32; // for 62 characters ~ 128 bit
 
     protected $tableName = DbNames::TAB_AUTH_TOKEN;
-    protected $modelClassName = 'FKSDB\ORM\ModelAuthToken';
+    protected $modelClassName = 'FKSDB\ORM\Models\ModelAuthToken';
 
     /**
      *
-     * @param ModelLogin $login
+     * @param \FKSDB\ORM\Models\ModelLogin $login
      * @param string $type
      * @param \Nette\DateTime $until
      * @param null $data
@@ -40,12 +44,12 @@ class ServiceAuthToken extends AbstractServiceSingle {
 
         if ($refresh) {
             $token = $this->getTable()
-                    ->where('login_id', $login->login_id)
-                    ->where('type', $type)
-                    ->where('data', $data)
-                    ->where('since <= NOW()')
-                    ->where('until IS NULL OR until >= NOW()')
-                    ->fetch();
+                ->where('login_id', $login->login_id)
+                ->where('type', $type)
+                ->where('data', $data)
+                ->where('since <= NOW()')
+                ->where('until IS NULL OR until >= NOW()')
+                ->fetch();
         } else {
             $token = null;
         }
@@ -80,10 +84,10 @@ class ServiceAuthToken extends AbstractServiceSingle {
      */
     public function verifyToken($tokenData, $strict = true) {
         $tokens = $this->getTable()
-                ->where('token', $tokenData);
+            ->where('token', $tokenData);
         if ($strict) {
             $tokens->where('since <= NOW()')
-                    ->where('until IS NULL OR until >= NOW()');
+                ->where('until IS NULL OR until >= NOW()');
         }
 
 
@@ -117,9 +121,9 @@ class ServiceAuthToken extends AbstractServiceSingle {
             ->where('type', ModelAuthToken::TYPE_EVENT_NOTIFY)
             ->where('since <= NOW()')
             ->where('until IS NULL OR until >= NOW()')
-            ->where('data LIKE ?', $eventId.':%');
+            ->where('data LIKE ?', $eventId . ':%');
         $tokens = [];
-        foreach($res as $token) {
+        foreach ($res as $token) {
             $tokens[] = ModelAuthToken::createFromTableRow($token);
         }
         return $tokens;

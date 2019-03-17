@@ -3,7 +3,6 @@
 namespace OrgModule;
 
 use AuthenticatedPresenter;
-use DbNames;
 use Exports\ExportFormatFactory;
 use Exports\StoredQuery;
 use Exports\StoredQueryFactory;
@@ -13,10 +12,13 @@ use FKSDB\Components\Controls\StoredQueryComponent;
 use FKSDB\Components\Controls\StoredQueryTagCloud;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory as StoredQueryFormFactory;
 use FKSDB\Components\Grids\StoredQueriesGrid;
-use FKSDB\ORM\ModelContest;
-use FKSDB\ORM\ModelPerson;
-use FKSDB\ORM\ModelPostContact;
-use FKSDB\ORM\ModelStoredQuery;
+use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Models\ModelPostContact;
+use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
+use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
+use FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryParameter;
 use FormUtils;
 use IResultsModel;
 use ModelException;
@@ -25,8 +27,6 @@ use Nette\Diagnostics\Debugger;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Strings;
 use ServiceMStoredQueryTag;
-use ServiceStoredQuery;
-use ServiceStoredQueryParameter;
 
 /**
  * Class ExportPresenter
@@ -53,12 +53,12 @@ class ExportPresenter extends SeriesPresenter {
     public $qid;
 
     /**
-     * @var ServiceStoredQuery
+     * @var \FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery
      */
     private $serviceStoredQuery;
 
     /**
-     * @var ServiceStoredQueryParameter
+     * @var \FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryParameter
      */
     private $serviceStoredQueryParameter;
 
@@ -84,12 +84,12 @@ class ExportPresenter extends SeriesPresenter {
     private $storedQuery;
 
     /**
-     * @var ModelStoredQuery
+     * @var \FKSDB\ORM\Models\StoredQuery\ModelStoredQuery
      */
     private $patternQuery = false;
 
     /**
-     * @param ServiceStoredQuery $serviceStoredQuery
+     * @param \FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery $serviceStoredQuery
      */
     public function injectServiceStoredQuery(ServiceStoredQuery $serviceStoredQuery) {
         $this->serviceStoredQuery = $serviceStoredQuery;
@@ -634,7 +634,7 @@ class ExportPresenter extends SeriesPresenter {
      */
     public function renderOvvp() {
         $modelFactory = $this->getService('resultsModelFactory');
-        $serviceContestant = $this->getService('ServiceContestant');
+        $serviceContestant = $this->getService('FKSDB\ORM\Services\ServiceContestant');
 
 
         $model = $modelFactory->createCumulativeResultsModel($this->getSelectedContest(), $this->getSelectedYear());

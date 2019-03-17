@@ -12,6 +12,7 @@ use Events\Model\Holder\SecondaryModelStrategies\SecondaryModelStrategy;
 use Events\Processings\GenKillProcessing;
 use Events\Processings\IProcessing;
 use FKSDB\Logging\ILogger;
+use FKSDB\ORM\IModel;
 use IteratorAggregate;
 use LogicException;
 use Nette\Application\UI\Form;
@@ -19,7 +20,6 @@ use Nette\ArrayHash;
 use Nette\Database\Connection;
 use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
-use ORM\IModel;
 
 /**
  * A bit bloated class.
@@ -158,7 +158,7 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
 
     /**
      * @deprecated Use getEvent on primary holder explicitly.
-     * @return \FKSDB\ORM\ModelEvent
+     * @return \FKSDB\ORM\Models\ModelEvent
      */
     public function getEvent() {
         return $this->primaryHolder->getEvent();
@@ -197,7 +197,7 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
     }
 
     /**
-     * @param IModel|null $primaryModel
+     * @param \FKSDB\ORM\IModel|null $primaryModel
      * @param array|null $secondaryModels
      */
     public function setModel(IModel $primaryModel = null, array $secondaryModels = null) {

@@ -1,7 +1,12 @@
 <?php
 
-use FKSDB\ORM\ModelEventParticipant;
-use ORM\IModel;
+namespace FKSDB\ORM\Services;
+
+use AbstractServiceSingle;
+use DuplicateApplicationException;
+use FKSDB\ORM\DbNames;
+use FKSDB\ORM\IModel;
+use ModelException;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -9,7 +14,7 @@ use ORM\IModel;
 class ServiceEventParticipant extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_EVENT_PARTICIPANT;
-    protected $modelClassName = 'FKSDB\ORM\ModelEventParticipant';
+    protected $modelClassName = 'FKSDB\ORM\Models\ModelEventParticipant';
 
     /**
      * @param IModel $model
@@ -33,7 +38,7 @@ class ServiceEventParticipant extends AbstractServiceSingle {
      */
     public function updateModel(IModel $model, $data, $alive = true) {
         /**
-         * @var ModelEventParticipant $model
+         * @var \FKSDB\ORM\Models\ModelEventParticipant $model
          */
         parent::updateModel($model, $data, $alive);
         if (!$alive && !$model->isNew()) {

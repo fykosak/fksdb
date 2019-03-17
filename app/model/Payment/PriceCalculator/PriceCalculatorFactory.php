@@ -2,7 +2,9 @@
 
 namespace FKSDB\Payment\PriceCalculator;
 
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Services\ServiceEventParticipant;
+use FKSDB\ORM\Services\ServiceEventPersonAccommodation;
 use FKSDB\Payment\PriceCalculator\PreProcess\EventAccommodationPrice;
 
 /**
@@ -11,26 +13,26 @@ use FKSDB\Payment\PriceCalculator\PreProcess\EventAccommodationPrice;
  */
 class PriceCalculatorFactory {
     /**
-     * @var \ServiceEventParticipant
+     * @var ServiceEventParticipant
      */
     private $serviceEventParticipant;
     /**
-     * @var \ServiceEventPersonAccommodation
+     * @var ServiceEventPersonAccommodation
      */
     private $serviceEventPersonAccommodation;
 
     /**
      * PriceCalculatorFactory constructor.
-     * @param \ServiceEventPersonAccommodation $serviceEventPersonAccommodation
-     * @param \ServiceEventParticipant $serviceEventParticipant
+     * @param ServiceEventPersonAccommodation $serviceEventPersonAccommodation
+     * @param ServiceEventParticipant $serviceEventParticipant
      */
-    public function __construct(\ServiceEventPersonAccommodation $serviceEventPersonAccommodation, \ServiceEventParticipant $serviceEventParticipant) {
+    public function __construct(ServiceEventPersonAccommodation $serviceEventPersonAccommodation, ServiceEventParticipant $serviceEventParticipant) {
         $this->serviceEventParticipant = $serviceEventParticipant;
         $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;
     }
 
     /**
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @return PriceCalculator
      */
     public function createCalculator(ModelEvent $event): PriceCalculator {

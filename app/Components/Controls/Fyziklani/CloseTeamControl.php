@@ -6,14 +6,15 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Factories\FyziklaniFactory;
 use FKSDB\Components\Grids\Fyziklani\TeamSubmitsGrid;
 use FKSDB\model\Fyziklani\ClosedSubmittingException;
-use FKSDB\ORM\ModelEvent;
-use Nette\Application\BadRequestException;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\UI\BadSignalException;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
-use ORM\Models\Events\ModelFyziklaniTeam;
-use ORM\Services\Events\ServiceFyziklaniTeam;
 
 /**
  * Class CloseTeamControl
@@ -22,7 +23,7 @@ use ORM\Services\Events\ServiceFyziklaniTeam;
  */
 class CloseTeamControl extends Control {
     /**
-     * @var ServiceFyziklaniTeam
+     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam
      */
     private $serviceFyziklaniTeam;
     /**
@@ -34,11 +35,11 @@ class CloseTeamControl extends Control {
      */
     private $translator;
     /**
-     * @var ModelFyziklaniTeam
+     * @var \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam
      */
     private $team;
     /**
-     * @var \ServiceFyziklaniTask
+     * @var ServiceFyziklaniTask
      */
     private $serviceFyziklaniTask;
     /**
@@ -51,14 +52,14 @@ class CloseTeamControl extends Control {
      * @param ModelEvent $event
      * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
      * @param ITranslator $translator
-     * @param \ServiceFyziklaniTask $serviceFyziklaniTask
+     * @param ServiceFyziklaniTask $serviceFyziklaniTask
      * @param FyziklaniFactory $fyziklaniFactory
      */
     public function __construct(
         ModelEvent $event,
         ServiceFyziklaniTeam $serviceFyziklaniTeam,
         ITranslator $translator,
-        \ServiceFyziklaniTask $serviceFyziklaniTask,
+        ServiceFyziklaniTask $serviceFyziklaniTask,
         FyziklaniFactory $fyziklaniFactory
     ) {
         parent::__construct();
@@ -129,7 +130,7 @@ class CloseTeamControl extends Control {
         $submits = $this->team->getSubmits();
         $sum = 0;
         foreach ($submits as $row) {
-            $submit = \ModelFyziklaniSubmit::createFromTableRow($row);
+            $submit = ModelFyziklaniSubmit::createFromTableRow($row);
             $sum += $submit->points;
         }
         $this->serviceFyziklaniTeam->updateModel($this->team, ['points' => $sum]);
@@ -155,7 +156,7 @@ class CloseTeamControl extends Control {
 
         $tasksOnBoard = $this->event->getFyziklaniGameSetup()->tasks_on_board;
         /**
-         * @var \ModelFyziklaniTask $nextTask
+         * @var \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask $nextTask
          */
         $nextTask = $this->serviceFyziklaniTask->findAll($this->event)->order('label')->limit(1, $submits + $tasksOnBoard)->fetch();
         return ($nextTask) ? $nextTask->label : '';

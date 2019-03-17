@@ -2,13 +2,13 @@
 
 namespace Submits;
 
-use FKSDB\ORM\ModelContest;
-use FKSDB\ORM\ModelContestant;
-use FKSDB\ORM\ModelSubmit;
+use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Models\ModelContestant;
+use FKSDB\ORM\Models\ModelSubmit;
+use FKSDB\ORM\Services\ServiceContestant;
+use FKSDB\ORM\Services\ServiceSubmit;
+use FKSDB\ORM\Services\ServiceTask;
 use Nette\Database\Table\Selection;
-use ServiceContestant;
-use ServiceSubmit;
-use ServiceTask;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -28,7 +28,7 @@ class SeriesTable {
     private $serviceContestant;
 
     /**
-     * @var ServiceTask
+     * @var \FKSDB\ORM\Services\ServiceTask
      */
     private $serviceTask;
 
@@ -38,7 +38,7 @@ class SeriesTable {
     private $serviceSubmit;
 
     /**
-     * @var ModelContest
+     * @var \FKSDB\ORM\Models\ModelContest
      */
     private $contest;
 
@@ -60,9 +60,9 @@ class SeriesTable {
 
     /**
      * SeriesTable constructor.
-     * @param ServiceContestant $serviceContestant
-     * @param ServiceTask $serviceTask
-     * @param ServiceSubmit $serviceSubmit
+     * @param \FKSDB\ORM\Services\ServiceContestant $serviceContestant
+     * @param \FKSDB\ORM\Services\ServiceTask $serviceTask
+     * @param \FKSDB\ORM\Services\ServiceSubmit $serviceSubmit
      */
     function __construct(ServiceContestant $serviceContestant, ServiceTask $serviceTask, ServiceSubmit $serviceSubmit) {
         $this->serviceContestant = $serviceContestant;
@@ -78,7 +78,7 @@ class SeriesTable {
     }
 
     /**
-     * @param ModelContest $contest
+     * @param \FKSDB\ORM\Models\ModelContest $contest
      */
     public function setContest(ModelContest $contest) {
         $this->contest = $contest;

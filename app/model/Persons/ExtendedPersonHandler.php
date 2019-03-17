@@ -5,8 +5,10 @@ namespace Persons;
 use Authentication\AccountManager;
 use BasePresenter;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
-use FKSDB\ORM\ModelContest;
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\IService;
+use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Services\ServicePerson;
 use FormUtils;
 use Mail\MailTemplateFactory;
 use Mail\SendFailedException;
@@ -17,8 +19,6 @@ use Nette\Forms\Form;
 use Nette\InvalidStateException;
 use Nette\Object;
 use OrgModule\ContestantPresenter;
-use ORM\IService;
-use ServicePerson;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -36,12 +36,12 @@ class ExtendedPersonHandler extends Object {
     const RESULT_ERROR = false;
 
     /**
-     * @var IService
+     * @var \FKSDB\ORM\IService
      */
     protected $service;
 
     /**
-     * @var ServicePerson
+     * @var \FKSDB\ORM\Services\ServicePerson
      */
     protected $servicePerson;
 
@@ -61,7 +61,7 @@ class ExtendedPersonHandler extends Object {
     private $accountManager;
 
     /**
-     * @var ModelContest
+     * @var \FKSDB\ORM\Models\ModelContest
      */
     private $contest;
 
@@ -82,8 +82,8 @@ class ExtendedPersonHandler extends Object {
 
     /**
      * ExtendedPersonHandler constructor.
-     * @param IService $service
-     * @param ServicePerson $servicePerson
+     * @param \FKSDB\ORM\IService $service
+     * @param \FKSDB\ORM\Services\ServicePerson $servicePerson
      * @param Connection $connection
      * @param MailTemplateFactory $mailTemplateFactory
      * @param AccountManager $accountManager
@@ -97,14 +97,14 @@ class ExtendedPersonHandler extends Object {
     }
 
     /**
-     * @return ModelContest
+     * @return \FKSDB\ORM\Models\ModelContest
      */
     public function getContest() {
         return $this->contest;
     }
 
     /**
-     * @param ModelContest $contest
+     * @param \FKSDB\ORM\Models\ModelContest $contest
      */
     public function setContest(ModelContest $contest) {
         $this->contest = $contest;
@@ -139,7 +139,7 @@ class ExtendedPersonHandler extends Object {
     }
 
     /**
-     * @return ModelPerson
+     * @return \FKSDB\ORM\Models\ModelPerson
      */
     public function getPerson() {
         return $this->person;

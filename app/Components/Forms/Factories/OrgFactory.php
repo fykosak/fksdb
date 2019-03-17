@@ -3,10 +3,10 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
-use FKSDB\ORM\ModelContest;
+use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Services\ServicePerson;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Form;
-use ServicePerson;
 use YearCalculator;
 
 /**
@@ -17,7 +17,7 @@ use YearCalculator;
 class OrgFactory {
 
     /**
-     * @var ServicePerson
+     * @var \FKSDB\ORM\Services\ServicePerson
      */
     private $servicePerson;
 

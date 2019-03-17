@@ -7,13 +7,13 @@ use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\IDataProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\StoredQueryTagTypeProvider;
 use FKSDB\Components\Forms\Controls\SQLConsole;
-use FKSDB\ORM\ModelStoredQuery;
-use FKSDB\ORM\ModelStoredQueryParameter;
+use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
+use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryParameter;
+use FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Forms\ControlGroup;
-use ServiceStoredQueryTagType;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -132,7 +132,7 @@ class StoredQueryFactory {
     }
 
     /**
-     * @param ModelStoredQuery $queryPattern
+     * @param \FKSDB\ORM\Models\ModelStoredQuery $queryPattern
      * @param int $options
      * @param ControlGroup|null $group
      * @return ModelContainer

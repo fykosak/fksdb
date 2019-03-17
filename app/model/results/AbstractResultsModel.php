@@ -1,6 +1,7 @@
 <?php
 
-use FKSDB\ORM\ModelContest;
+use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Services\ServiceTask;
 
 /**
  * General results sheet with contestants and their ranks.
@@ -15,7 +16,7 @@ abstract class AbstractResultsModel implements IResultsModel {
     protected $year;
 
     /**
-     * @var ModelContest
+     * @var \FKSDB\ORM\Models\ModelContest
      */
     protected $contest;
 
@@ -36,7 +37,7 @@ abstract class AbstractResultsModel implements IResultsModel {
 
     /**
      * AbstractResultsModel constructor.
-     * @param ModelContest $contest
+     * @param \FKSDB\ORM\Models\ModelContest $contest
      * @param ServiceTask $serviceTask
      * @param \Nette\Database\Connection $connection
      * @param $year

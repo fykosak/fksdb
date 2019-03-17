@@ -2,11 +2,10 @@
 
 namespace PublicModule;
 
-use DbNames;
 use FKSDB\Components\Controls\ContestChooser;
-use FKSDB\ORM\ModelContestant;
-use FKSDB\ORM\ModelPerson;
-use FKSDB\ORM\ModelRole;
+use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\ModelContestant;
+use FKSDB\ORM\Models\ModelRole;
 use Nette\Application\BadRequestException;
 
 /**
@@ -33,13 +32,13 @@ abstract class BasePresenter extends \ContestPresenter {
     }
 
     /**
-     * @return false|ModelContestant|null
+     * @return false|\FKSDB\ORM\Models\ModelContestant|null
      * @throws BadRequestException
      */
     public function getContestant() {
         if ($this->contestant === false) {
             /**
-             * @var ModelPerson $person
+             * @var \FKSDB\ORM\Models\ModelPerson $person
              */
             $person = $this->user->getIdentity()->getPerson();
             $contestant = $person->related(DbNames::TAB_CONTESTANT_BASE, 'person_id')->where(array(

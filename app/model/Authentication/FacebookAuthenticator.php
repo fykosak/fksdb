@@ -2,13 +2,13 @@
 
 namespace Authentication;
 
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Services\ServiceLogin;
+use FKSDB\ORM\Services\ServicePerson;
+use FKSDB\ORM\Services\ServicePersonInfo;
 use Nette\Diagnostics\Debugger;
 use Nette\Security\AuthenticationException;
 use Nette\Security\Identity;
-use ServiceLogin;
-use ServicePerson;
-use ServicePersonInfo;
 use YearCalculator;
 
 /**
@@ -19,12 +19,12 @@ use YearCalculator;
 class FacebookAuthenticator extends AbstractAuthenticator {
 
     /**
-     * @var ServicePerson
+     * @var \FKSDB\ORM\Services\ServicePerson
      */
     private $servicePerson;
 
     /**
-     * @var ServicePersonInfo
+     * @var \FKSDB\ORM\Services\ServicePersonInfo
      */
     private $servicePersonInfo;
 
@@ -36,9 +36,9 @@ class FacebookAuthenticator extends AbstractAuthenticator {
     /**
      * FacebookAuthenticator constructor.
      * @param ServicePerson $servicePerson
-     * @param ServicePersonInfo $servicePersonInfo
+     * @param \FKSDB\ORM\Services\ServicePersonInfo $servicePersonInfo
      * @param AccountManager $accountManager
-     * @param ServiceLogin $serviceLogin
+     * @param \FKSDB\ORM\Services\ServiceLogin $serviceLogin
      * @param YearCalculator $yearCalculator
      */
     function __construct(ServicePerson $servicePerson, ServicePersonInfo $servicePersonInfo, AccountManager $accountManager, ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
@@ -100,7 +100,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
 
     /**
      * @param $fbUser
-     * @return \AbstractModelSingle|\FKSDB\ORM\ModelLogin
+     * @return \AbstractModelSingle|\FKSDB\ORM\Models\ModelLogin
      */
     private function registerFromFB($fbUser) {
         $person = $this->servicePerson->createNew($this->getPersonData($fbUser));

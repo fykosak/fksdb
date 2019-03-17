@@ -4,7 +4,7 @@
 namespace FKSDB\Transitions;
 
 
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\ModelEvent;
 
 /**
  * Interface IEventReferencedModel
@@ -13,7 +13,7 @@ use FKSDB\ORM\ModelEvent;
 interface IEventReferencedModel {
 
     /**
-     * @return ModelEvent
+     * @return \FKSDB\ORM\Models\ModelEvent
      */
     public function getEvent(): ModelEvent;
 }

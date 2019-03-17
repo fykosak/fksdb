@@ -1,6 +1,12 @@
 <?php
 
-use ORM\IModel;
+namespace FKSDB\ORM\Services;
+
+use AbstractModelSingle;
+use AbstractServiceSingle;
+use DateTime;
+use FKSDB\ORM\DbNames;
+use FKSDB\ORM\IModel;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -8,7 +14,7 @@ use ORM\IModel;
 class ServicePersonInfo extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_PERSON_INFO;
-    protected $modelClassName = 'FKSDB\ORM\ModelPersonInfo';
+    protected $modelClassName = 'FKSDB\ORM\Models\ModelPersonInfo';
 
     /**
      * @param null $data
@@ -23,7 +29,7 @@ class ServicePersonInfo extends AbstractServiceSingle {
     }
 
     /**
-     * @param IModel $model
+     * @param \FKSDB\ORM\IModel $model
      * @param array $data
      * @param bool $alive
      * @return mixed|void

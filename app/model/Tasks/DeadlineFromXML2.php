@@ -3,9 +3,9 @@
 namespace Tasks;
 
 use FKSDB\Logging\ILogger;
+use FKSDB\ORM\Services\ServiceTask;
 use Nette\DateTime;
 use Pipeline\Stage;
-use ServiceTask;
 
 
 /**
@@ -21,7 +21,7 @@ class DeadlineFromXML2 extends Stage {
     private $data;
 
     /**
-     * @var ServiceTask
+     * @var \FKSDB\ORM\Services\ServiceTask
      */
     private $taskService;
 

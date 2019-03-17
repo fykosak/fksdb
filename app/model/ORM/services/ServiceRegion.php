@@ -1,5 +1,9 @@
 <?php
 
+namespace FKSDB\ORM\Services;
+
+use AbstractServiceSingle;
+use FKSDB\ORM\DbNames;
 use Nette\Database\Table\Selection;
 
 /**
@@ -8,7 +12,7 @@ use Nette\Database\Table\Selection;
 class ServiceRegion extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_REGION;
-    protected $modelClassName = 'FKSDB\ORM\ModelRegion';
+    protected $modelClassName = 'FKSDB\ORM\Models\ModelRegion';
 
     /**
      * @return Selection

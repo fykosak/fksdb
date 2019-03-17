@@ -3,8 +3,8 @@
 namespace FKSDB\model\Fyziklani\Rooms;
 
 use FKSDB\Logging\MemoryLogger;
-use FKSDB\ORM\ModelEvent;
-use ORM\Services\Events\ServiceFyziklaniTeam;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Pipeline\Pipeline;
 
 /**
@@ -14,7 +14,7 @@ use Pipeline\Pipeline;
 class PipelineFactory {
 
     /**
-     * @var ServiceFyziklaniTeam
+     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam
      */
     private $serviceTeam;
 

@@ -2,7 +2,7 @@
 
 $container = require '../../../../bootstrap.php';
 
-use FKSDB\ORM\ModelPostContact;
+use FKSDB\ORM\Models\ModelPostContact;
 use Nette\Application\Request;
 use Nette\DateTime;
 use Tester\Assert;

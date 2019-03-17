@@ -15,7 +15,7 @@ use FKSDB\Components\Forms\Controls\ModelDataConflictException;
 use FKSDB\Components\Forms\Controls\PersonAccommodation\ExistingPaymentException;
 use FKSDB\Components\Forms\Controls\PersonAccommodation\FullAccommodationCapacityException;
 use FKSDB\Logging\ILogger;
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\ModelEvent;
 use FormUtils;
 use Nette\ArrayHash;
 use Nette\Database\Connection;
@@ -66,7 +66,7 @@ class ApplicationHandler {
 
     /**
      * ApplicationHandler constructor.
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @param ILogger $logger
      * @param Connection $connection
      * @param Container $container

@@ -1,8 +1,9 @@
 <?php
 
-namespace FKSDB\ORM;
+namespace FKSDB\ORM\Models;
 
 use AbstractModelSingle;
+use FKSDB\ORM\DbNames;
 use FKSDB\Payment\PriceCalculator\Price;
 use FKSDB\Payment\PriceCalculator\PriceCalculator;
 use FKSDB\Transitions\IEventReferencedModel;
@@ -58,7 +59,7 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
      * @return ModelEventPersonAccommodation[]
      */
     public function getRelatedPersonAccommodation(): array {
-        $query = $this->related(\DbNames::TAB_PAYMENT_ACCOMMODATION, 'payment_id');
+        $query = $this->related(DbNames::TAB_PAYMENT_ACCOMMODATION, 'payment_id');
         $items = [];
         foreach ($query as $row) {
             $items[] = ModelEventPersonAccommodation::createFromTableRow($row->event_person_accommodation);

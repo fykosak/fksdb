@@ -2,8 +2,8 @@
 
 namespace Tasks\Legacy;
 
+use FKSDB\ORM\Services\ServiceTask;
 use Pipeline\Stage;
-use ServiceTask;
 use SimpleXMLElement;
 use Tasks\SeriesData;
 
@@ -68,7 +68,7 @@ class TasksFromXML extends Stage {
         $series = $this->data->getSeries();
         $tasknr = (int) (string) $XMLTask->number;
 
-        // obtain FKSDB\ORM\ModelTask
+        // obtain FKSDB\ORM\Models\ModelTask
         $task = $this->taskService->findBySeries($contest, $year, $series, $tasknr);
         if ($task == null) {
             $task = $this->taskService->createNew(array(

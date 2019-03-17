@@ -1,8 +1,8 @@
 <?php
 
+use FKSDB\ORM\IModel;
 use Nette\InvalidStateException;
 use Nette\Object;
-use ORM\IModel;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -29,7 +29,7 @@ abstract class AbstractModelMulti extends Object implements IModel {
      *
      * @param AbstractServiceMulti $service
      * @param IModel $mainModel
-     * @param IModel $joinedModel
+     * @param \FKSDB\ORM\IModel $joinedModel
      */
     public function __construct($service, $mainModel, $joinedModel) {
         if ($service == null) {
@@ -80,7 +80,7 @@ abstract class AbstractModelMulti extends Object implements IModel {
     }
 
     /**
-     * @return AbstractModelSingle|IModel
+     * @return AbstractModelSingle|\FKSDB\ORM\IModel
      */
     public function getJoinedModel() {
         return $this->joinedModel;

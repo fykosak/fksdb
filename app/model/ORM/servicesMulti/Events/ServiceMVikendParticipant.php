@@ -3,9 +3,9 @@
 namespace ORM\ServicesMulti\Events;
 
 use AbstractServiceMulti;
-use ORM\IModel;
-use ORM\Services\Events\ServiceVikendParticipant;
-use ServiceEventParticipant;
+use FKSDB\ORM\IModel;
+use FKSDB\ORM\Services\Events\ServiceVikendParticipant;
+use FKSDB\ORM\Services\ServiceEventParticipant;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>

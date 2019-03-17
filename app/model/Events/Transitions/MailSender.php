@@ -7,19 +7,19 @@ use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
 use Events\Machine\Transition;
 use Events\Model\Holder\BaseHolder;
-use FKSDB\ORM\ModelAuthToken;
-use FKSDB\ORM\ModelEvent;
-use FKSDB\ORM\ModelLogin;
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\IModel;
+use FKSDB\ORM\Models\ModelAuthToken;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Models\ModelLogin;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Services\ServiceAuthToken;
+use FKSDB\ORM\Services\ServicePerson;
 use Mail\MailTemplateFactory;
 use Nette\Mail\IMailer;
 use Nette\Mail\Message;
 use Nette\Object;
 use Nette\Utils\Strings;
-use ORM\IModel;
 use PublicModule\ApplicationPresenter;
-use ServiceAuthToken;
-use ServicePerson;
 
 /**
  * Sends email with given template name (in standard template directory)
@@ -72,7 +72,7 @@ class MailSender extends Object {
     private $serviceAuthToken;
 
     /**
-     * @var ServicePerson
+     * @var \FKSDB\ORM\Services\ServicePerson
      */
     private $servicePerson;
 
@@ -174,7 +174,7 @@ class MailSender extends Object {
 
     /**
      * @param ModelLogin $login
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @param IModel $application
      * @return ModelAuthToken
      */

@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\ORM;
+namespace FKSDB\ORM\Models\StoredQuery;
 
 use AbstractModelSingle;
 use Nette\InvalidStateException;

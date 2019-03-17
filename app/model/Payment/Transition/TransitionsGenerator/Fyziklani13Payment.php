@@ -3,9 +3,11 @@
 namespace FKSDB\Payment\Transition\Transitions;
 
 use Authorization\EventAuthorizator;
-use FKSDB\ORM\ModelEvent;
-use FKSDB\ORM\ModelEventPersonAccommodation;
-use FKSDB\ORM\ModelPayment;
+use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Models\ModelEventPersonAccommodation;
+use FKSDB\ORM\Models\ModelPayment;
+use FKSDB\ORM\Services\ServicePayment;
 use FKSDB\Payment\PriceCalculator\PriceCalculatorFactory;
 use FKSDB\Payment\SymbolGenerator\SymbolGeneratorFactory;
 use FKSDB\Payment\Transition\PaymentMachine;
@@ -45,7 +47,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
      */
     private $connection;
     /**
-     * @var \ServicePayment
+     * @var ServicePayment
      */
     private $servicePayment;
     /**
@@ -59,7 +61,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
 
     /**
      * Fyziklani13Payment constructor.
-     * @param \ServicePayment $servicePayment
+     * @param ServicePayment $servicePayment
      * @param Connection $connection
      * @param TransitionsFactory $transitionFactory
      * @param SymbolGeneratorFactory $symbolGeneratorFactory
@@ -68,7 +70,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
      * @param ITranslator $translator
      */
     public function __construct(
-        \ServicePayment $servicePayment,
+        ServicePayment $servicePayment,
         Connection $connection,
         TransitionsFactory $transitionFactory,
         SymbolGeneratorFactory $symbolGeneratorFactory,
@@ -101,7 +103,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
     }
 
     /**
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @return Machine
      */
     public function createMachine(ModelEvent $event): Machine {
@@ -215,7 +217,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
     private function getClosureDeleteRows(): \Closure {
         return function (ModelPayment $modelPayment) {
             Debugger::log('payment-deleted--' . \json_encode($modelPayment->toArray()));
-            foreach ($modelPayment->related(\DbNames::TAB_PAYMENT_ACCOMMODATION, 'payment_id') as $row) {
+            foreach ($modelPayment->related(DbNames::TAB_PAYMENT_ACCOMMODATION, 'payment_id') as $row) {
                 Debugger::log('payment-row-deleted--' . \json_encode($row->toArray()));
                 $row->delete();
             }

@@ -6,12 +6,12 @@ use CSVFormat;
 use Exports\Formats\AESOPFormat;
 use FKSDB\Config\Expressions\Helpers;
 use FKSDB\Config\GlobalParameters;
+use FKSDB\ORM\Services\ServiceContest;
+use FKSDB\ORM\Services\ServiceEvent;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\Object;
 use Nette\Utils\Arrays;
-use ServiceEvent;
-use ServiceContest;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -41,12 +41,12 @@ class ExportFormatFactory extends Object {
     private $storedQueryFactory;
 
     /**
-     * @var ServiceEvent
+     * @var \FKSDB\ORM\Services\ServiceEvent
      */
     private $serviceEvent;
 
     /**
-     * @var ServiceContest
+     * @var \FKSDB\ORM\Services\ServiceContest
      */
     private $serviceContest;
     private $defaultFormats;
@@ -150,7 +150,7 @@ class ExportFormatFactory extends Object {
 
         if ($qid == 'aesop.ct') {
             $format->addParameters(array(
-                'max-points' => $storedQuery->getPostProcessing()->getMaxPoints($this->container->getByType('ServiceTask')),
+                'max-points' => $storedQuery->getPostProcessing()->getMaxPoints($this->container->getByType('FKSDB\ORM\Services\ServiceTask')),
             ));
         }
 

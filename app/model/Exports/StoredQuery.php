@@ -2,7 +2,7 @@
 
 namespace Exports;
 
-use FKSDB\ORM\ModelStoredQuery;
+use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use Nette\Database\Connection;
 use Nette\Database\ISupplementalDriver;
 use Nette\Database\Statement;
@@ -13,7 +13,7 @@ use Nette\Security\IResource;
 use NiftyGrid\DataSource\IDataSource;
 
 /**
- * Represents instantiotion (in term of parameters) of FKSDB\ORM\ModelStoredQuery. *
+ * Represents instantiotion (in term of parameters) of FKSDB\ORM\Models\StoredQuery\ModelStoredQuery. *
  *
  * @author Michal Koutný <michal@fykos.cz>
  */

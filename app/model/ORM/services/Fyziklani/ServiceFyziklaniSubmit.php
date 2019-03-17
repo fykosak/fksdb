@@ -1,6 +1,11 @@
 <?php
 
-use FKSDB\ORM\ModelEvent;
+namespace FKSDB\ORM\Services\Fyziklani;
+
+use AbstractServiceSingle;
+use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
+use FKSDB\ORM\Models\ModelEvent;
 use Nette\Database\Table\Selection;
 
 /**
@@ -9,7 +14,7 @@ use Nette\Database\Table\Selection;
 class ServiceFyziklaniSubmit extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_FYZIKLANI_SUBMIT;
-    protected $modelClassName = 'ModelFyziklaniSubmit';
+    protected $modelClassName = 'FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit';
 
     /**
      * @param int $taskId
@@ -29,7 +34,7 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
 
     /**
      * Syntactic sugar.
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @return Selection
      */
     public function findAll(ModelEvent $event): Selection {
@@ -53,7 +58,7 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
     }
 
     /**
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @param null $lastUpdated
      * @return array
      */

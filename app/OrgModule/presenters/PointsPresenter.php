@@ -5,17 +5,17 @@ namespace OrgModule;
 use Exception;
 use FKSDB\Components\Forms\Controls\ContestantSubmits;
 use FKSDB\Components\Forms\OptimisticForm;
-use FKSDB\ORM\ModelContestant;
-use FKSDB\ORM\ModelLogin;
-use FKSDB\ORM\ModelTaskContribution;
+use FKSDB\ORM\Models\ModelContestant;
+use FKSDB\ORM\Models\ModelLogin;
+use FKSDB\ORM\Models\ModelTaskContribution;
+use FKSDB\ORM\Services\ServiceSubmit;
+use FKSDB\ORM\Services\ServiceTask;
+use FKSDB\ORM\Services\ServiceTaskContribution;
+use FKSDB\ORM\Services\ServiceTaskStudyYear;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Html;
-use ServiceSubmit;
-use ServiceTask;
-use ServiceTaskContribution;
-use ServiceTaskStudyYear;
 use SQLResultsCache;
 use Submits\SeriesTable;
 
@@ -43,22 +43,22 @@ class PointsPresenter extends SeriesPresenter {
     private $seriesTable;
 
     /**
-     * @var ServiceSubmit
+     * @var \FKSDB\ORM\Services\ServiceSubmit
      */
     private $serviceSubmit;
 
     /**
-     * @var ServiceTask
+     * @var \FKSDB\ORM\Services\ServiceTask
      */
     private $serviceTask;
 
     /**
-     * @var ServiceTaskContribution
+     * @var \FKSDB\ORM\Services\ServiceTaskContribution
      */
     private $serviceTaskContribution;
 
     /**
-     * @var ServiceTaskStudyYear
+     * @var \FKSDB\ORM\Services\ServiceTaskStudyYear
      */
     private $serviceTaskStudyYear;
 
@@ -77,14 +77,14 @@ class PointsPresenter extends SeriesPresenter {
     }
 
     /**
-     * @param ServiceSubmit $serviceSubmit
+     * @param \FKSDB\ORM\Services\ServiceSubmit $serviceSubmit
      */
     public function injectServiceSubmit(ServiceSubmit $serviceSubmit) {
         $this->serviceSubmit = $serviceSubmit;
     }
 
     /**
-     * @param ServiceTask $serviceTask
+     * @param \FKSDB\ORM\Services\ServiceTask $serviceTask
      */
     public function injectServiceTask(ServiceTask $serviceTask) {
         $this->serviceTask = $serviceTask;

@@ -3,8 +3,8 @@
 namespace OrgModule;
 
 use FKSDB\Components\Grids\ContestantsGrid;
+use FKSDB\ORM\Services\ServiceContestant;
 use Nette\Application\UI\Form;
-use ServiceContestant;
 
 /**
  * Class ContestantPresenter

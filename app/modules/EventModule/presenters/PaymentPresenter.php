@@ -6,7 +6,8 @@ use FKSDB\Components\Controls\Payment\DetailControl;
 use FKSDB\Components\Factories\PaymentFactory as PaymentComponentFactory;
 use FKSDB\Components\Forms\Controls\Payment\SelectForm;
 use FKSDB\Components\Grids\Payment\OrgPaymentGrid;
-use FKSDB\ORM\ModelPayment;
+use FKSDB\ORM\Models\ModelPayment;
+use FKSDB\ORM\Services\ServicePayment;
 use FKSDB\Payment\Transition\PaymentMachine;
 use FKSDB\Transitions\Machine;
 use FKSDB\Transitions\MachineFactory;
@@ -27,7 +28,7 @@ class PaymentPresenter extends BasePresenter {
     public $id;
 
     /**
-     * @var ModelPayment
+     * @var \FKSDB\ORM\Models\ModelPayment
      */
     private $model;
 
@@ -37,7 +38,7 @@ class PaymentPresenter extends BasePresenter {
     private $machine;
 
     /**
-     * @var \ServicePayment
+     * @var ServicePayment
      */
     private $servicePayment;
 
@@ -52,9 +53,9 @@ class PaymentPresenter extends BasePresenter {
     private $paymentComponentFactory;
 
     /**
-     * @param \ServicePayment $servicePayment
+     * @param ServicePayment $servicePayment
      */
-    public function injectServicePayment(\ServicePayment $servicePayment) {
+    public function injectServicePayment(ServicePayment $servicePayment) {
         $this->servicePayment = $servicePayment;
     }
 
@@ -177,7 +178,7 @@ class PaymentPresenter extends BasePresenter {
     }
 
     /**
-     * @return ModelPayment
+     * @return \FKSDB\ORM\Models\ModelPayment
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      * @throws \Nette\Application\AbortException

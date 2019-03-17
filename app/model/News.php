@@ -1,7 +1,8 @@
 <?php
 
 use FKSDB\Config\GlobalParameters;
-use FKSDB\ORM\ModelContest;
+use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Services\ServiceContest;
 use Nette\Object;
 
 /**

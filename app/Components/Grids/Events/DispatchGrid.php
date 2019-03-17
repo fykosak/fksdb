@@ -5,8 +5,9 @@ namespace FKSDB\Components\Grids\Events;
 
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\ORM\ModelEvent;
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Services\ServiceEvent;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;
 
@@ -17,7 +18,7 @@ use NiftyGrid\DataSource\NDataSource;
 class DispatchGrid extends BaseGrid {
 
     /**
-     * @var \ServiceEvent
+     * @var ServiceEvent
      */
     private $serviceEvent;
     /**
@@ -31,11 +32,11 @@ class DispatchGrid extends BaseGrid {
 
     /**
      * DispatchGrid constructor.
-     * @param \ServiceEvent $serviceEvent
+     * @param ServiceEvent $serviceEvent
      * @param ModelPerson $person
      * @param \YearCalculator $yearCalculator
      */
-    function __construct(\ServiceEvent $serviceEvent, ModelPerson $person, \YearCalculator $yearCalculator) {
+    function __construct(ServiceEvent $serviceEvent, ModelPerson $person, \YearCalculator $yearCalculator) {
         parent::__construct();
         $this->person = $person;
         $this->serviceEvent = $serviceEvent;

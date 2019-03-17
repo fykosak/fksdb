@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Forms\Rules;
 
-use FKSDB\ORM\ModelLogin;
-use ServiceLogin;
+use FKSDB\ORM\Models\ModelLogin;
+use FKSDB\ORM\Services\ServiceLogin;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -26,7 +26,7 @@ class UniqueLoginFactory {
     }
 
     /**
-     * @param ModelLogin|null $login
+     * @param \FKSDB\ORM\Models\ModelLogin|null $login
      * @return UniqueLogin
      */
     public function create(ModelLogin $login = null) {

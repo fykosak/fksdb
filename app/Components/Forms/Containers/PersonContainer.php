@@ -2,18 +2,17 @@
 
 namespace FKSDB\Components\Forms\Containers;
 
-use FKSDB\Components\Forms\Controls\PersonId;
-use FKSDB\Utils\Promise;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
+use FKSDB\Components\Forms\Controls\PersonId;
 use FKSDB\Components\Forms\Factories\PersonFactory;
+use FKSDB\ORM\Services\ServicePerson;
+use FKSDB\Utils\Promise;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
-
 use Nette\Utils\Arrays;
 use Persons\PersonHandler2;
 use Persons\ResolutionException;
-use ServicePerson;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -49,7 +48,7 @@ class PersonContainer extends Container {
     private $personProvider;
 
     /**
-     * @var ServicePerson
+     * @var \FKSDB\ORM\Services\ServicePerson
      */
     private $servicePerson;
 
@@ -71,7 +70,7 @@ class PersonContainer extends Container {
      * @param PersonId $personId
      * @param PersonFactory $personFactory
      * @param PersonProvider $personProvider
-     * @param ServicePerson $servicePerson
+     * @param \FKSDB\ORM\Services\ServicePerson $servicePerson
      * @param PersonHandler2 $handler
      * @param $acYear
      */
@@ -284,7 +283,7 @@ class PersonContainer extends Container {
 
     /**
      * @param $term
-     * @return \FKSDB\ORM\ModelPerson|\Nette\Database\Table\ActiveRow|null
+     * @return \FKSDB\ORM\Models\ModelPerson|\Nette\Database\Table\ActiveRow|null
      */
     private function findPerson($term) {
         switch ($this->searchType) {

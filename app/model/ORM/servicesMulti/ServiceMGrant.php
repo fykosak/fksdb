@@ -1,5 +1,8 @@
 <?php
 
+use FKSDB\ORM\Services\ServiceGrant;
+use FKSDB\ORM\Services\ServiceRole;
+
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */

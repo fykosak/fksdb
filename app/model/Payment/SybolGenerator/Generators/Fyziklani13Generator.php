@@ -2,7 +2,8 @@
 
 namespace FKSDB\Payment\SymbolGenerator\Generators;
 
-use FKSDB\ORM\ModelPayment;
+use FKSDB\ORM\Models\ModelPayment;
+use FKSDB\ORM\Services\ServicePayment;
 use FKSDB\Payment\PriceCalculator\Price;
 use FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException;
 use FKSDB\Payment\SymbolGenerator\AbstractSymbolGenerator;
@@ -20,9 +21,9 @@ class Fyziklani13Generator extends AbstractSymbolGenerator {
 
     /**
      * Fyziklani13Generator constructor.
-     * @param \ServicePayment $servicePayment
+     * @param ServicePayment $servicePayment
      */
-    public function __construct(\ServicePayment $servicePayment) {
+    public function __construct(ServicePayment $servicePayment) {
         parent::__construct($servicePayment);
     }
 

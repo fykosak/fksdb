@@ -1,9 +1,9 @@
 <?php
 
-namespace ORM\Services\Events;
+namespace FKSDB\ORM\Services\Events;
 
 use AbstractServiceSingle;
-use DbNames;
+use FKSDB\ORM\DbNames;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -11,7 +11,7 @@ use DbNames;
 class ServiceTsafParticipant extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_E_TSAF_PARTICIPANT;
-    protected $modelClassName = 'ORM\Models\Events\ModelTsafParticipant';
+    protected $modelClassName = 'FKSDB\ORM\Models\Events\ModelTsafParticipant';
 
 }
 

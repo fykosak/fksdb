@@ -1,9 +1,9 @@
 <?php
 
-namespace ORM\Services\Events;
+namespace FKSDB\ORM\Services\Events;
 
 use AbstractServiceSingle;
-use DbNames;
+use FKSDB\ORM\DbNames;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -11,7 +11,7 @@ use DbNames;
 class ServiceDsefGroup extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_E_DSEF_GROUP;
-    protected $modelClassName = 'ORM\Models\Events\ModelDsefGroup';
+    protected $modelClassName = 'FKSDB\ORM\Models\Events\ModelDsefGroup';
 
 }
 

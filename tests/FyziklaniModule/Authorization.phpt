@@ -4,8 +4,7 @@ namespace FyziklaniModule;
 
 $container = require '../bootstrap.php';
 
-use DbNames;
-use FyziklaniModule\FyziklaniTestCase;
+use FKSDB\ORM\DbNames;
 use MockEnvironment\MockApplicationTrait;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Request;

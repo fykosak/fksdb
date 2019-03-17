@@ -1,9 +1,12 @@
 <?php
 
-namespace FKSDB\ORM;
+namespace FKSDB\ORM\Models;
 
 use AbstractModelSingle;
+use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Transitions\IEventReferencedModel;
+use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
 use Nette\DateTime;
 use Nette\InvalidStateException;
@@ -61,5 +64,17 @@ class ModelEventParticipant extends AbstractModelSingle implements IEventReferen
      */
     public function getEvent(): ModelEvent {
         return ModelEvent::createFromTableRow($this->event);
+    }
+
+    /**
+     * @return ModelFyziklaniTeam
+     * @throws BadRequestException
+     */
+    public function getFyziklaniTeam(): ModelFyziklaniTeam {
+        $row = $this->related(DbNames::TAB_E_FYZIKLANI_PARTICIPANT, 'event_participant_id')->select('e_fyziklani_team.*')->fetch();
+        if (!$row) {
+            throw new BadRequestException('Event is not fyziklani');
+        }
+        return ModelFyziklaniTeam::createFromTableRow($row);
     }
 }

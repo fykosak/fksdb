@@ -1,11 +1,11 @@
 <?php
 
+use FKSDB\ORM\IModel;
+use FKSDB\ORM\IService;
 use Nette\Database\Connection;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection as TableSelection;
 use Nette\InvalidStateException;
-use ORM\IModel;
-use ORM\IService;
 use ORM\Tables\TypedTableSelection;
 
 /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace ORM;
+namespace FKSDB\ORM;
 
 use ArrayAccess;
 

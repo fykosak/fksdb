@@ -3,8 +3,8 @@
 namespace Events\Model\Holder\SecondaryModelStrategies;
 
 use Events\Model\Holder\BaseHolder;
-use ORM\IModel;
-use ORM\IService;
+use FKSDB\ORM\IModel;
+use FKSDB\ORM\IService;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -73,7 +73,7 @@ class CarefulRewrite extends SecondaryModelStrategy {
     }
 
     /**
-     * @param IModel $currentModel
+     * @param \FKSDB\ORM\IModel $currentModel
      * @param IModel $foundModel
      * @param $joinData
      * @param IService $service

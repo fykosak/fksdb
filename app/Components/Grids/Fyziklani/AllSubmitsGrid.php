@@ -3,10 +3,11 @@
 namespace FKSDB\Components\Grids\Fyziklani;
 
 use FKSDB\model\Fyziklani\TaskCodePreprocessor;
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FyziklaniModule\BasePresenter;
 use Nette\Database\Table\Selection;
-use ServiceFyziklaniSubmit;
 use SQL\SearchableDataSource;
 
 /**
@@ -23,8 +24,8 @@ class AllSubmitsGrid extends SubmitsGrid {
 
     /**
      * FyziklaniSubmitsGrid constructor.
-     * @param ModelEvent $event
-     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
+     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit $serviceFyziklaniSubmit
      */
     public function __construct(ModelEvent $event, ServiceFyziklaniSubmit $serviceFyziklaniSubmit) {
         $this->event = $event;
@@ -48,7 +49,7 @@ class AllSubmitsGrid extends SubmitsGrid {
 
         $this->addButton('edit', null)->setClass('btn btn-sm btn-warning')->setLink(function ($row) use ($presenter) {
             return $presenter->link(':Fyziklani:Submit:edit', ['id' => $row->fyziklani_submit_id]);
-        })->setText(_('Upravit'))->setShow(function (\ModelFyziklaniSubmit $row) {
+        })->setText(_('Upravit'))->setShow(function (ModelFyziklaniSubmit $row) {
             return $row->getTeam()->hasOpenSubmitting() && !is_null($row->points);
         });
 
@@ -56,7 +57,7 @@ class AllSubmitsGrid extends SubmitsGrid {
             return $this->link('delete!', $row->fyziklani_submit_id);
         })->setConfirmationDialog(function () {
             return _('Opravdu vzít submit úlohy zpět?');
-        })->setText(_('Smazat'))->setShow(function (\ModelFyziklaniSubmit $row) {
+        })->setText(_('Smazat'))->setShow(function (ModelFyziklaniSubmit $row) {
 
             return $row->getTeam()->hasOpenSubmitting() && !is_null($row->points);
         });
@@ -98,7 +99,7 @@ class AllSubmitsGrid extends SubmitsGrid {
             $this->flashMessage(_('Submit dos not exists.'), \BasePresenter::FLASH_ERROR);
             return;
         }
-        $submit = \ModelFyziklaniSubmit::createFromTableRow($row);
+        $submit = ModelFyziklaniSubmit::createFromTableRow($row);
 
         if (!$submit->getTeam()->hasOpenSubmitting()) {
 

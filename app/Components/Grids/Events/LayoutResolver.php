@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Grids\Events;
 
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\ModelEvent;
 use Nette\Object;
 
 /**
@@ -43,7 +43,7 @@ class LayoutResolver extends Object {
     }
 
     /**
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @return string
      */
     public function getFormLayout(ModelEvent $event) {

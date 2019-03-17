@@ -9,7 +9,11 @@ use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use FKSDB\Logging\FlashDumpFactory;
 use FKSDB\Logging\MemoryLogger;
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Services\ServiceLogin;
+use FKSDB\ORM\Services\ServicePerson;
+use FKSDB\ORM\Services\ServicePersonHistory;
+use FKSDB\ORM\Services\ServicePersonInfo;
 use FormUtils;
 use Mail\MailTemplateFactory;
 use Nette\Application\BadRequestException;
@@ -17,11 +21,7 @@ use Nette\Application\UI\Form;
 use Nette\NotImplementedException;
 use Nette\Utils\Html;
 use Persons\Deduplication\Merger;
-use ServiceLogin;
 use ServiceMPostContact;
-use ServicePerson;
-use ServicePersonHistory;
-use ServicePersonInfo;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -41,7 +41,7 @@ class PersonPresenter extends EntityPresenter {
     protected $modelResourceId = 'person';
 
     /**
-     * @var ServicePerson
+     * @var \FKSDB\ORM\Services\ServicePerson
      */
     private $servicePerson;
 
@@ -51,7 +51,7 @@ class PersonPresenter extends EntityPresenter {
     private $servicePersonInfo;
 
     /**
-     * @var ServicePersonHistory
+     * @var \FKSDB\ORM\Services\ServicePersonHistory
      */
     private $servicePersonHistory;
 
@@ -91,7 +91,7 @@ class PersonPresenter extends EntityPresenter {
     private $flashDumpFactory;
 
     /**
-     * @var ModelPerson
+     * @var \FKSDB\ORM\Models\ModelPerson
      */
     private $trunkPerson;
 
@@ -118,14 +118,14 @@ class PersonPresenter extends EntityPresenter {
     }
 
     /**
-     * @param ServicePersonInfo $servicePersonInfo
+     * @param \FKSDB\ORM\Services\ServicePersonInfo $servicePersonInfo
      */
     public function injectServicePersonInfo(ServicePersonInfo $servicePersonInfo) {
         $this->servicePersonInfo = $servicePersonInfo;
     }
 
     /**
-     * @param ServicePersonHistory $servicePersonHistory
+     * @param \FKSDB\ORM\Services\ServicePersonHistory $servicePersonHistory
      */
     public function injectServicePersonHistory(ServicePersonHistory $servicePersonHistory) {
         $this->servicePersonHistory = $servicePersonHistory;

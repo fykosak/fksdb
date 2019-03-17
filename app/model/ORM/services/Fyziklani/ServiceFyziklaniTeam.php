@@ -1,11 +1,11 @@
 <?php
 
-namespace ORM\Services\Events;
+namespace FKSDB\ORM\Services\Fyziklani;
 
 use AbstractServiceSingle;
-use DbNames;
-use FKSDB\ORM\ModelEvent;
-use ORM\Models\Events\ModelFyziklaniTeam;
+use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\ORM\Models\ModelEvent;
 
 /**
  * @author Michal Červeňák <miso@fykos.cz>
@@ -14,7 +14,7 @@ class ServiceFyziklaniTeam extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_E_FYZIKLANI_TEAM;
 
-    protected $modelClassName = 'ORM\Models\Events\ModelFyziklaniTeam';
+    protected $modelClassName = 'FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam';
 
     /**
      * Syntactic sugar.
@@ -45,7 +45,7 @@ class ServiceFyziklaniTeam extends AbstractServiceSingle {
 
     /**
      * Syntactic sugar.
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @return \Nette\Database\Table\Selection|null
      */
     public function findPossiblyAttending(ModelEvent $event) {
@@ -54,7 +54,7 @@ class ServiceFyziklaniTeam extends AbstractServiceSingle {
     }
 
     /**
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
      * @return array
      */
     public function getTeamsAsArray(ModelEvent $event): array {

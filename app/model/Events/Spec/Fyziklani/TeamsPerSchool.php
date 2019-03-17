@@ -2,15 +2,15 @@
 
 namespace Events\Spec\Fyziklani;
 
-use DbNames;
 use Events\FormAdjustments\IFormAdjustment;
 use Events\Machine\Machine;
 use Events\Model\ExpressionEvaluator;
 use Events\Model\Holder\Holder;
+use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Services\ServicePersonHistory;
 use Nette\Database\Connection;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
-use ServicePersonHistory;
 
 /**
  * More user friendly Due to author's laziness there's no class doc (or it's self explaining).

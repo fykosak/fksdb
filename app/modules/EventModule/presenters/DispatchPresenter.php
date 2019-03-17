@@ -7,9 +7,8 @@ use AuthenticatedPresenter;
 use FKSDB\Components\Controls\LanguageChooser;
 use FKSDB\Components\Controls\Stalking\Helpers\ContestBadge;
 use FKSDB\Components\Grids\Events\DispatchGrid;
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\Services\ServiceEvent;
 use Nette\DI\Container;
-use ServiceEvent;
 
 /**
  * Class DispatchPresenter
@@ -62,7 +61,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
      */
     public function createComponentDispatchGrid(): DispatchGrid {
         /**
-         * @var ModelPerson $person
+         * @var \FKSDB\ORM\Models\ModelPerson $person
          */
         $person = $this->user->getIdentity()->getPerson();
         return new DispatchGrid($this->serviceEvent, $person, $this->yearCalculator);

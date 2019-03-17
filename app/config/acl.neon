@@ -81,13 +81,13 @@ acl:
     - allow(org, org, edit, [@ownerAssertion, 'isOrgSelf'])
     - allow(org, person, edit, [@ownerAssertion, 'isSelf'])
     - allow(org, storedQuery, show)
-    - allow(org, export, execute, and(qid('fyziklani.prez'), isEventOrgByYear(::constant(FKSDB\ORM\ModelEventType::FYZIKLANI))))
+    - allow(org, export, execute, and(qid('fyziklani.prez'), isEventOrgByYear(::constant(FKSDB\ORM\Models\ModelEventType::FYZIKLANI))))
     - allow(org, teacher, ::constant(Nette\Security\Permission::ALL))
     - allow(org, person, stalk.search)
     - allow(org, person, stalk.basic, [@ownerAssertion, 'existsOwnContestant'])
     - allow(org, mail-send, ::constant(Nette\Security\Permission::ALL))
 
-    # TODO - allow(org, export, execute, and(qid('sous.prihlasky'), isEventOrgById(::constant(FKSDB\ORM\ModelEventType::XXX))))
+    # TODO - allow(org, export, execute, and(qid('sous.prihlasky'), isEventOrgById(::constant(FKSDB\ORM\Models\ModelEventType::XXX))))
     # TODO - allow(org, event, application, isEventOrgBy())))
 
     - allow(webmaster, task, insert) # stahování úloh

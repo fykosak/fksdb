@@ -14,4 +14,18 @@ class Flag extends StalkingComponent {
         $this->template->setFile(__DIR__ . '/Flag.latte');
         $this->template->render();
     }
+
+    /**
+     * @return string
+     */
+    protected function getHeadline(): string {
+        return _('Flags');
+    }
+
+    /**
+     * @return string[]
+     */
+    protected function getAllowedPermissions(): array {
+        return [StalkingComponent::PERMISSION_FULL, StalkingComponent::PERMISSION_RESTRICT];
+    }
 }

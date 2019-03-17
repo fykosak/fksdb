@@ -1,14 +1,14 @@
 <?php
 
+namespace FKSDB\ORM\Models\Fyziklani;
 /**
- * Class ModelFyziklaniRoom
+ * Class FKSDB\ORM\Models\Fyziklani\ModelFyziklaniRoom
  *
  * @property integer room_id
  * @property string name
  * @property integer rows
  * @property integer columns
  */
-
 class ModelFyziklaniRoom extends \AbstractModelSingle {
 
     /**

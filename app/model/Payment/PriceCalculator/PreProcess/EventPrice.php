@@ -2,8 +2,9 @@
 
 namespace FKSDB\Payment\PriceCalculator\PreProcess;
 
-use FKSDB\ORM\ModelEventParticipant;
-use FKSDB\ORM\ModelPayment;
+use FKSDB\ORM\Models\ModelEventParticipant;
+use FKSDB\ORM\Models\ModelPayment;
+use FKSDB\ORM\Services\ServiceEventParticipant;
 use FKSDB\Payment\PriceCalculator\Price;
 use Nette\NotImplementedException;
 
@@ -13,20 +14,20 @@ use Nette\NotImplementedException;
  */
 class EventPrice extends AbstractPreProcess {
     /**
-     * @var \ServiceEventParticipant
+     * @var ServiceEventParticipant
      */
     private $serviceEventParticipant;
 
     /**
      * EventPrice constructor.
-     * @param \ServiceEventParticipant $serviceEventParticipant
+     * @param ServiceEventParticipant $serviceEventParticipant
      */
-    public function __construct(\ServiceEventParticipant $serviceEventParticipant) {
+    public function __construct(ServiceEventParticipant $serviceEventParticipant) {
         $this->serviceEventParticipant = $serviceEventParticipant;
     }
 
     /**
-     * @param ModelPayment $modelPayment
+     * @param \FKSDB\ORM\Models\ModelPayment $modelPayment
      * @return Price
      */
     public static function calculate(ModelPayment $modelPayment): Price {
@@ -41,7 +42,7 @@ class EventPrice extends AbstractPreProcess {
     }
 
     /**
-     * @param ModelPayment $modelPayment
+     * @param \FKSDB\ORM\Models\ModelPayment $modelPayment
      * @return array
      */
     public static function getGridItems(ModelPayment $modelPayment): array {
@@ -61,7 +62,7 @@ class EventPrice extends AbstractPreProcess {
     }
 
     /**
-     * @param ModelEventParticipant $modelEventAccommodation
+     * @param \FKSDB\ORM\Models\ModelEventParticipant $modelEventAccommodation
      * @param Price $price
      * @return Price
      */

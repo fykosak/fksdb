@@ -8,17 +8,17 @@ use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\ContestantSubmits;
 use FKSDB\Components\Forms\Factories\PersonFactory;
-use FKSDB\ORM\ModelContestant;
-use FKSDB\ORM\ModelSubmit;
-use FKSDB\ORM\ModelTask;
-use FKSDB\ORM\ModelTaskContribution;
+use FKSDB\ORM\Models\ModelContestant;
+use FKSDB\ORM\Models\ModelSubmit;
+use FKSDB\ORM\Models\ModelTask;
+use FKSDB\ORM\Models\ModelTaskContribution;
+use FKSDB\ORM\Services\ServiceContestant;
+use FKSDB\ORM\Services\ServicePerson;
+use FKSDB\ORM\Services\ServiceSubmit;
+use FKSDB\ORM\Services\ServiceTaskContribution;
 use Nette\Application\UI\Form;
 use Nette\Caching\Cache;
 use Nette\Security\Permission;
-use ServiceContestant;
-use ServicePerson;
-use ServiceSubmit;
-use ServiceTaskContribution;
 use Submits\ISubmitStorage;
 use Submits\SeriesTable;
 
@@ -38,17 +38,17 @@ class InboxPresenter extends SeriesPresenter {
     private $submitStorage;
 
     /**
-     * @var ServiceTaskContribution
+     * @var \FKSDB\ORM\Services\ServiceTaskContribution
      */
     private $serviceTaskContribution;
 
     /**
-     * @var ServicePerson
+     * @var \FKSDB\ORM\Services\ServicePerson
      */
     private $servicePerson;
 
     /**
-     * @var ServiceSubmit
+     * @var \FKSDB\ORM\Services\ServiceSubmit
      */
     private $serviceSubmit;
 
@@ -82,21 +82,21 @@ class InboxPresenter extends SeriesPresenter {
     }
 
     /**
-     * @param ServicePerson $servicePerson
+     * @param \FKSDB\ORM\Services\ServicePerson $servicePerson
      */
     public function injectServicePerson(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
     }
 
     /**
-     * @param ServiceSubmit $serviceSubmit
+     * @param \FKSDB\ORM\Services\ServiceSubmit $serviceSubmit
      */
     public function injectServiceSubmit(ServiceSubmit $serviceSubmit) {
         $this->serviceSubmit = $serviceSubmit;
     }
 
     /**
-     * @param ServiceContestant $serviceContestant
+     * @param \FKSDB\ORM\Services\ServiceContestant $serviceContestant
      */
     public function injectServiceContestant(ServiceContestant $serviceContestant) {
         $this->serviceContestant = $serviceContestant;

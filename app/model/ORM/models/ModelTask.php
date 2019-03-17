@@ -1,8 +1,8 @@
 <?php
 
-namespace FKSDB\ORM;
+namespace FKSDB\ORM\Models;
 use AbstractModelSingle;
-use DbNames;
+use FKSDB\ORM\DbNames;
 use Utils;
 
 /**

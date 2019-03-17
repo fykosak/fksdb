@@ -2,7 +2,7 @@
 
 namespace Tasks;
 
-use FKSDB\ORM\ModelContest;
+use FKSDB\ORM\Models\ModelContest;
 
 /**
  * "POD" to hold series pipeline processing data.
@@ -37,7 +37,7 @@ class SeriesData {
     private $data;
 
     /**
-     * @var array[tasknr] of FKSDB\ORM\ModelTask
+     * @var array[tasknr] of FKSDB\ORM\Models\ModelTask
      */
     private $tasks = [];
 
@@ -58,7 +58,7 @@ class SeriesData {
     }
 
     /**
-     * @return ModelContest
+     * @return \FKSDB\ORM\Models\ModelContest
      */
     public function getContest() {
         return $this->contest;

@@ -1,9 +1,11 @@
 <?php
 
+namespace FKSDB\ORM\Models\Fyziklani;
+
 use Nette\Database\Table\ActiveRow;
 
 /**
- * Class ModelFyziklaniTeamPosition
+ * Class FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition
  * @property integer room_id
  * @property integer e_fyziklani_team_id
  * @property integer row

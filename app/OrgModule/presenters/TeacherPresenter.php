@@ -5,9 +5,9 @@ namespace OrgModule;
 use FKSDB\Components\Forms\Factories\SchoolFactory;
 use FKSDB\Components\Forms\Factories\TeacherFactory;
 use FKSDB\Components\Grids\TeachersGrid;
+use FKSDB\ORM\Services\ServiceTeacher;
 use Nette\Application\UI\Form;
 use Persons\ExtendedPersonHandler;
-use ServiceTeacher;
 
 /**
  * Class TeacherPresenter
@@ -19,7 +19,7 @@ class TeacherPresenter extends ExtendedPersonPresenter {
     protected $fieldsDefinition = 'adminTeacher';
 
     /**
-     * @var ServiceTeacher
+     * @var \FKSDB\ORM\Services\ServiceTeacher
      */
     private $serviceTeacher;
 
@@ -33,7 +33,7 @@ class TeacherPresenter extends ExtendedPersonPresenter {
     private $schoolFactory;
 
     /**
-     * @param ServiceTeacher $serviceTeacher
+     * @param \FKSDB\ORM\Services\ServiceTeacher $serviceTeacher
      */
     public function injectServiceTeacher(ServiceTeacher $serviceTeacher) {
         $this->serviceTeacher = $serviceTeacher;
@@ -55,7 +55,7 @@ class TeacherPresenter extends ExtendedPersonPresenter {
 
     public function titleEdit() {
         /**
-         * @var \FKSDB\ORM\ModelTeacher $model
+         * @var \FKSDB\ORM\Models\ModelTeacher $model
          */
         $model = $this->getModel();
         $this->setTitle(sprintf(_('Edit teacher %s'), $model->getPerson()->getFullName()));
@@ -92,7 +92,7 @@ class TeacherPresenter extends ExtendedPersonPresenter {
     }
 
     /**
-     * @return mixed|ServiceTeacher
+     * @return mixed|\FKSDB\ORM\Services\ServiceTeacher
      */
     protected function getORMService() {
         return $this->serviceTeacher;

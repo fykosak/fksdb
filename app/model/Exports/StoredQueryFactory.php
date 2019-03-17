@@ -5,13 +5,13 @@ namespace Exports;
 use BasePresenter;
 use DOMDocument;
 use DOMNode;
-use FKSDB\ORM\ModelStoredQuery;
+use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
+use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
 use ISeriesPresenter;
 use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
-use ServiceStoredQuery;
 use Utils;
 use WebService\IXMLNodeSerializer;
 
@@ -33,7 +33,7 @@ class StoredQueryFactory implements IXMLNodeSerializer {
     private $connection;
 
     /**
-     * @var ServiceStoredQuery
+     * @var \FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery
      */
     private $serviceStoredQuery;
 
@@ -45,7 +45,7 @@ class StoredQueryFactory implements IXMLNodeSerializer {
     /**
      * StoredQueryFactory constructor.
      * @param Connection $connection
-     * @param ServiceStoredQuery $serviceStoredQuery
+     * @param \FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery $serviceStoredQuery
      */
     function __construct(Connection $connection, ServiceStoredQuery $serviceStoredQuery) {
         $this->connection = $connection;

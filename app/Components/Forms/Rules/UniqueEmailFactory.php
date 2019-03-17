@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Forms\Rules;
 
-use FKSDB\ORM\ModelPerson;
-use ServicePersonInfo;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Services\ServicePersonInfo;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -19,7 +19,7 @@ class UniqueEmailFactory {
 
     /**
      * UniqueEmailFactory constructor.
-     * @param ServicePersonInfo $servicePersonInfo
+     * @param \FKSDB\ORM\Services\ServicePersonInfo $servicePersonInfo
      */
     function __construct(ServicePersonInfo $servicePersonInfo) {
         $this->servicePersonInfo = $servicePersonInfo;
