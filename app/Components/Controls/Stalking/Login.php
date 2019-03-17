@@ -14,4 +14,17 @@ class Login extends StalkingComponent {
         $this->template->setFile(__DIR__ . '/Login.latte');
         $this->template->render();
     }
+    /**
+     * @return string
+     */
+    protected function getHeadline(): string {
+        return _('Login info');
+    }
+
+    /**
+     * @return string[]
+     */
+    protected function getAllowedPermissions(): array {
+        return [ StalkingComponent::PERMISSION_FULL ,StalkingComponent::PERMISSION_RESTRICT];
+    }
 }

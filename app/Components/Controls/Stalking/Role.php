@@ -25,4 +25,18 @@ class Role extends StalkingComponent {
         $template->setFile(__DIR__ . '/Role.latte');
         $template->render();
     }
+
+    /**
+     * @return array
+     */
+    protected function getAllowedPermissions(): array {
+        return [StalkingComponent::PERMISSION_FULL, StalkingComponent::PERMISSION_RESTRICT];
+    }
+
+    /**
+     * @return string
+     */
+    protected function getHeadline(): string {
+        return _('Roles');
+    }
 }

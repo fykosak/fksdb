@@ -1,61 +1,52 @@
-<div class="card mb-3 border-primary">
-    <h4 class="card-header bg-primary text-white">{_('Login info')}</h4>
+{layout './@layout.latte'}
+{block content}
+    {if !is_null($login)}
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <div class="row">
+                    <span class="col-5">{_'Login'}</span>
+                    <div class="col-7">
+                        {$login->login}
+                    </div>
+                </div>
+            </li>
+            <li class="list-group-item">
 
-    {if $mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL || $mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_RESTRICT }
-
-        {if !is_null($login)}
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">
-                    <div class="row">
-                        <span class="col-5">{_('Login')}</span>
-                        <div class="col-7">
-                            {$login->login}
-                        </div>
+                <div class="row">
+                    <span class="col-5"><b>{_'Login Id'}</b></span>
+                    <div class="col-7">
+                        {$login->login_id}
                     </div>
-                </li>
-                <li class="list-group-item">
-
-                    <div class="row">
-                        <span class="col-5">{_('Login_id')}</span>
-                        <div class="col-7">
-                            {$login->login_id}
-                        </div>
+                </div>
+            </li>
+            <li class="list-group-item">
+                <div class="row">
+                    <span class="col-5">{_'Password'}</span>
+                    <div class="col-7">
+                        {if (is_null($login->hash))}
+                            {control notSet}
+                        {else}
+                            <span class="badge badge-success">{_'is set'}</span>
+                        {/if}
                     </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="row">
-                        <span class="col-5">{_('Password')}</span>
-                        <div class="col-7">
-                            {if (is_null($login->hash))}
-                                <span class="badge badge-danger">{_('not set')}</span>
-                            {else}
-                                <span class="badge badge-success">{_('is set')}</span>
-                            {/if}
-                        </div>
+                </div>
+            </li>
+            <li class="list-group-item">
+                <div class="row">
+                    <span class="col-5">{_'Last logged'}</span>
+                    <div class="col-7">
+                        {if is_null($login->last_login)}
+                            <span class="badge badge-danger">never</span>
+                        {else}
+                            {$login->last_login->__toString()}
+                        {/if}
                     </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="row">
-                        <span class="col-5">{_('Last logged')}</span>
-                        <div class="col-7">
-                            {if is_null($login->last_login)}
-                                <span class="badge badge-danger">never</span>
-                            {else}
-                                {$login->last_login->__toString()}
-                            {/if}
-                        </div>
-                    </div>
-                </li>
-            </ul>
-        {else}
-            <div class="card-body">
-                <span class="badge badge-warning">{_('No records')}</span>
-            </div>
-        {/if}
+                </div>
+            </li>
+        </ul>
     {else}
         <div class="card-body">
-            {control permissionDenied}
+            {control noRecords}
         </div>
     {/if}
-
-</div>
+{/block}

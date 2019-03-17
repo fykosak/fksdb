@@ -1,0 +1,26 @@
+{layout './@layout.latte'}
+{block content}
+    {if count($payments)}
+        <ul class="list-group list-group-flush">
+            {foreach $payments as $row}
+                <li class="list-group-item">
+                        <span class="row">
+                            {var $model = \FKSDB\ORM\Models\ModelPayment::createFromTableRow($row)}
+                            <span class="col-6">
+                                <a href="{plink :Event:Payment:Detail eventId=>$model->event_id,id=>$model->payment_id}">#{$model->getPaymentId()}</a>
+                            </span>
+                            <span class="col-6">{control eventLabel $model->getEvent()}</span>
+                        </span>
+                    <span class="row">
+                             <span class="col-6">{$model->getPrice()->__toString()}</span>
+                            <span class="col-6">
+                            <span class="{$model->getUIClass()}">{$model->getStateLabel()}</span>
+                        </span>
+                    </span>
+                </li>
+            {/foreach}
+        </ul>
+    {else}
+        <span class="badge-warning badge">{_'No records'}</span>
+    {/if}
+{/block}

@@ -14,4 +14,18 @@ class Address extends StalkingComponent {
         $this->template->setFile(__DIR__ . '/Address.latte');
         $this->template->render();
     }
+
+    /**
+     * @return string
+     */
+    protected function getHeadline(): string {
+        return _('Address');
+    }
+
+    /**
+     * @return string[]
+     */
+    protected function getAllowedPermissions(): array {
+        return [StalkingComponent::PERMISSION_FULL ,StalkingComponent::PERMISSION_RESTRICT];
+    }
 }

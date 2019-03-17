@@ -1,6 +1,5 @@
-<div class="card mb-3 border-primary">
-    <h4 class="card-header bg-primary text-white">{_('Contestant')}</h4>
-
+{layout './@layout.latte'}
+{block content}
     {if count($contestants)}
         <ul class="list-group list-group-flush">
             {foreach $contestants as $contestant}
@@ -8,7 +7,7 @@
                 <span class="row">
                     <span class="col-4">{$contestant->ct_id}</span>
                     <span class="col-4">
-                {control contestBadge, $contestant->contest_id}
+                    {control contestBadge, $contestant->contest_id}
                         <span class="col-4">{$contestant->year}. year</span>
                 </span>
                 </li>
@@ -16,8 +15,7 @@
         </ul>
     {else}
         <div class="card-body">
-            <span class="badge-warning badge">{_('No records')}</span>
+            {control noRecords}
         </div>
     {/if}
-
-</div>
+{/block}

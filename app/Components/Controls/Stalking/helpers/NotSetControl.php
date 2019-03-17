@@ -7,11 +7,11 @@ use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 
 /**
- * Class ContestBadge
+ *
  * @package FKSDB\Components\Controls\Stalking\Helpers
  * @property FileTemplate $template
  */
-class PermissionDenied extends Control {
+class NotSetControl extends Control {
     /**
      * @var ITranslator
      */
@@ -28,8 +28,7 @@ class PermissionDenied extends Control {
 
     public function render() {
         $this->template->setTranslator($this->translator);
-        $this->template->setFile(__DIR__ . '/PermissionDenied.latte');
+        $this->template->setFile(__DIR__ . '/NotSetControl.latte');
         $this->template->render();
     }
 }
-
