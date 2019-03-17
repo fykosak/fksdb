@@ -7,6 +7,7 @@ use FKSDB\ORM\DbNames;
 use ModelMPersonHasFlag;
 use ModelMPostContact;
 use Nette\Database\Table\GroupedSelection;
+use Nette\Database\Table\Selection;
 use Nette\Security\IResource;
 use YearCalculator;
 
@@ -416,6 +417,19 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         foreach ($query as $row) {
             $row->delete();
         }
+    }
+    /**
+     * @return GroupedSelection
+     */
+    public function getPayments(): GroupedSelection {
+        return $this->related(DbNames::TAB_PAYMENT, 'person_id');
+    }
+    /**
+     * @param ModelEvent $event
+     * @return Selection
+     */
+    public function getPaymentsForEvent(ModelEvent $event): Selection {
+        return $this->getPayments()->where('event_id', $event->event_id);
     }
 
 }

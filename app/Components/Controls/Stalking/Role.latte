@@ -1,24 +1,15 @@
-<div class="card mb-3 border-primary">
-    <h4 class="card-header bg-primary text-white">{_('Roles')}</h4>
-    {if $mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL || $mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_RESTRICT }
-
-        <div class="card-body">
-            {if count($roles)}
-                <ul class="list-group list-group-flush">
-                    {foreach $roles as $grant}
-                        <li class="list-group-item">
-                            {control contestBadge, $grant->getContestId()}
-                            <span class="col-3">{$grant->getRoleId()}</span>
-                        </li>
-                    {/foreach}
-                </ul>
-            {else}
-                <span class="badge-warning badge">{_('No records')}</span>
-            {/if}
-        </div>
+{layout './@layout.latte'}
+{block content}
+    {if count($roles)}
+        <ul class="list-group list-group-flush">
+            {foreach $roles as $grant}
+                <li class="list-group-item">
+                    <span class="col-3">{control contestBadge, $grant->getContestId()}</span>
+                    <span class="col-3">{$grant->getRoleId()}</span>
+                </li>
+            {/foreach}
+        </ul>
     {else}
-        <div class="card-body">
-            {control permissionDenied}
-        </div>
+        {control noRecords}
     {/if}
-</div>
+{/block}

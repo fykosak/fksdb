@@ -3,6 +3,9 @@
 namespace FKSDB\Components\Controls\Stalking;
 
 use FKSDB\Components\Controls\Stalking\Helpers\ContestBadge;
+use FKSDB\Components\Controls\Stalking\Helpers\EventLabelControl;
+use FKSDB\Components\Controls\Stalking\Helpers\NoRecordsControl;
+use FKSDB\Components\Controls\Stalking\Helpers\NotSetControl;
 use FKSDB\Components\Controls\Stalking\Helpers\PermissionDenied;
 use FKSDB\ORM\Models\ModelPerson;
 use Nette\Application\UI\Control;
@@ -23,7 +26,7 @@ abstract class StalkingComponent extends Control {
      */
     protected $mode;
     /**
-     * @var \FKSDB\ORM\Models\ModelPerson;
+     * @var ModelPerson;
      */
     protected $modelPerson;
     /**
@@ -33,7 +36,7 @@ abstract class StalkingComponent extends Control {
 
     /**
      * StalkingComponent constructor.
-     * @param \FKSDB\ORM\Models\ModelPerson $modelPerson
+     * @param ModelPerson $modelPerson
      * @param ITranslator $translator
      * @param $mode
      */
@@ -47,21 +50,52 @@ abstract class StalkingComponent extends Control {
     public function beforeRender() {
         $this->template->setTranslator($this->translator);
         $this->template->mode = $this->mode;
+        $this->template->headline = $this->getHeadline();
+        $this->template->allowedModes = $this->getAllowedPermissions();
     }
 
     /**
      * @return ContestBadge
      */
-    public function createComponentContestBadge() {
-        $control = new ContestBadge();
-        return $control;
+    public function createComponentContestBadge(): ContestBadge {
+        return new ContestBadge();
     }
 
     /**
      * @return PermissionDenied
      */
-    public function createComponentPermissionDenied() {
-        $control = new PermissionDenied();
-        return $control;
+    public function createComponentPermissionDenied(): PermissionDenied {
+        return new PermissionDenied($this->translator);
     }
+
+    /**
+     * @return EventLabelControl
+     */
+    public function createComponentEventLabel(): EventLabelControl {
+        return new EventLabelControl();
+    }
+
+    /**
+     * @return NoRecordsControl
+     */
+    public function createComponentNoRecords(): NoRecordsControl {
+        return new NoRecordsControl($this->translator);
+    }
+
+    /**
+     * @return NotSetControl
+     */
+    public function createComponentNotSet(): NotSetControl {
+        return new NotSetControl($this->translator);
+    }
+
+    /**
+     * @return string
+     */
+    abstract protected function getHeadline(): string;
+
+    /**
+     * @return string[]
+     */
+    abstract protected function getAllowedPermissions(): array;
 }

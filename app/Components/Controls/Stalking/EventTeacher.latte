@@ -1,5 +1,5 @@
-<div class="card mb-3 border-primary">
-    <h4 class="card-header bg-primary text-white">{_('Event teacher')}</h4>
+{layout './@layout.latte'}
+{block content}
     {if count($teachers)}
         <ul class="list-group list-group-flush">
             {foreach $teachers as $teacher}
@@ -8,7 +8,7 @@
                         <span class="col-4">{$teacher->event->event_year}
                             . {$teacher->event->event_type->name}</span>
                         <span class="col-4">{$teacher->name}</span>
-                        <span class="col-2">{$teacher->event->year}. {_('year')}</span>
+                        <span class="col-2">{$teacher->event->year}. {_'year'}</span>
                         <span class="col-2">
                             {if in_array($teacher->status,['participated'])}
                                 <span class="badge badge-success">{$teacher->status}</span>
@@ -24,8 +24,7 @@
         </ul>
     {else}
         <div class="card-body">
-            <span class="badge-warning badge">{_('No records')}</span>
+            {control noRecords}
         </div>
     {/if}
-
-</div>
+{/block}

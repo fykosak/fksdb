@@ -14,4 +14,17 @@ class BaseInfo extends StalkingComponent {
         $this->template->setFile(__DIR__ . '/BaseInfo.latte');
         $this->template->render();
     }
+    /**
+     * @return string
+     */
+    protected function getHeadline(): string {
+        return _('Base info');
+    }
+
+    /**
+     * @return string[]
+     */
+    protected function getAllowedPermissions(): array {
+        return [StalkingComponent::PERMISSION_FULL, StalkingComponent::PERMISSION_RESTRICT];
+    }
 }

@@ -1,0 +1,30 @@
+{layout './@layout.latte'}
+{block content}
+    <ul class="list-group list-group-flush">
+
+        <li class="list-group-item">
+            <div class="row">
+                <span class="col-5"><b>{_'Academic degree prefix'}</b></span>
+                <div class="col-7">
+                    {if (!is_null($info->academic_degree_prefix))}
+                        {$info->academic_degree_prefix}
+                    {else}
+                        {control notSet}
+                    {/if}
+                </div>
+            </div>
+        </li>
+        <li class="list-group-item">
+            <div class="row">
+                <span class="col-5"><b>{_'Academic degree suffix'}</b></span>
+                <div class="col-7">
+                    {if (!is_null($info->academic_degree_suffix))}
+                        {$info->academic_degree_suffix}
+                    {else}
+                        {control notSet}
+                    {/if}
+                </div>
+            </div>
+        </li>
+    </ul>
+{/block}

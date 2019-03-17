@@ -3,23 +3,22 @@
 namespace FKSDB\Components\Controls\Stalking;
 
 /**
- * Class Flag
+ * Class BaseInfo
  * @package FKSDB\Components\Controls\Stalking
  */
-class Flag extends StalkingComponent {
+class AcademicDegree extends StalkingComponent {
 
     public function render() {
         $this->beforeRender();
-        $this->template->flags = $this->modelPerson->getMPersonHasFlags();
-        $this->template->setFile(__DIR__ . '/Flag.latte');
+        $this->template->info = $this->modelPerson->getInfo();
+        $this->template->setFile(__DIR__ . '/AcademicDegree.latte');
         $this->template->render();
     }
-
     /**
      * @return string
      */
     protected function getHeadline(): string {
-        return _('Flags');
+        return _('Academic degree');
     }
 
     /**
