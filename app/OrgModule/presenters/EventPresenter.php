@@ -353,7 +353,7 @@ class EventPresenter extends EntityPresenter {
 
     /**
      * @param $id
-     * @return \AbstractModelSingle|\Nette\Database\Table\ActiveRow|null
+     * @return \FKSDB\ORM\AbstractModelSingle|\Nette\Database\Table\ActiveRow|null
      */
     protected function loadModel($id) {
         return $this->serviceEvent->findByPrimary($id);

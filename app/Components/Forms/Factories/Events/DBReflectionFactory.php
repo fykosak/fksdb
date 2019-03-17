@@ -2,11 +2,11 @@
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
-use AbstractServiceMulti;
-use AbstractServiceSingle;
 use Events\Machine\BaseMachine;
 use Events\Model\Holder\Field;
 use FKSDB\Components\Forms\Controls\TimeBox;
+use FKSDB\ORM\AbstractServiceMulti;
+use FKSDB\ORM\AbstractServiceSingle;
 use Nette\ComponentModel\Component;
 use Nette\Database\Connection;
 use Nette\Forms\Container;

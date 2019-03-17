@@ -1,10 +1,11 @@
 <?php
 
-use FKSDB\ORM\IModel;
-use FKSDB\ORM\IService;
+namespace FKSDB\ORM;
+
+use FKSDB\ORM\Tables\MultiTableSelection;
+use InvalidArgumentException;
 use Nette\InvalidStateException;
 use Nette\Object;
-use ORM\Tables\MultiTableSelection;
 
 /**
  * Service for object representing one side of M:N relation, or entity in is-a relation ship.

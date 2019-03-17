@@ -1,5 +1,6 @@
 <?php
 
+use FKSDB\ORM\AbstractServiceMulti;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Services\ServiceAddress;
 use FKSDB\ORM\Services\ServicePostContact;

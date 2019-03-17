@@ -2,7 +2,7 @@
 
 namespace ORM\ModelsMulti\Events;
 
-use AbstractModelMulti;
+use FKSDB\ORM\AbstractModelMulti;
 
 /**
  *

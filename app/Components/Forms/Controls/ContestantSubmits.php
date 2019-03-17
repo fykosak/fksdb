@@ -242,7 +242,7 @@ class ContestantSubmits extends BaseControl {
     /**
      * @param $data
      * @param $tasknr
-     * @return \AbstractModelSingle|\FKSDB\ORM\Models\ModelSubmit|null
+     * @return \FKSDB\ORM\AbstractModelSingle|\FKSDB\ORM\Models\ModelSubmit|null
      */
     private function deserializeSubmit($data, $tasknr) {
         unset($data['submit_id']); // security

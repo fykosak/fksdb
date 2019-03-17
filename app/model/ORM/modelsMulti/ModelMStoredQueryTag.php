@@ -1,6 +1,6 @@
 <?php
 
-use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryTag;
+use FKSDB\ORM\AbstractModelMulti;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryTagType;
 
 /**

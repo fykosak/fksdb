@@ -163,7 +163,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
 
     /**
      * @param $id
-     * @return \AbstractModelSingle
+     * @return \FKSDB\ORM\AbstractModelSingle
      */
     protected function loadModel($id) {
         return $this->getORMService()->findByPrimary($id);

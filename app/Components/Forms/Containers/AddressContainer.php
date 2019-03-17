@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Containers;
 
-use AbstractModelMulti;
+use FKSDB\ORM\AbstractModelMulti;
 use FKSDB\ORM\Services\ServiceRegion;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;

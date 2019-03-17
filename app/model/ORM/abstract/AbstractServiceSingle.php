@@ -1,12 +1,15 @@
 <?php
 
-use FKSDB\ORM\IModel;
-use FKSDB\ORM\IService;
+namespace FKSDB\ORM;
+
+use FKSDB\ORM\Tables\TypedTableSelection;
+use InvalidArgumentException;
+use ModelException;
 use Nette\Database\Connection;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection as TableSelection;
 use Nette\InvalidStateException;
-use ORM\Tables\TypedTableSelection;
+use PDOException;
 
 /**
  * Service class to high-level manipulation with ORM objects.
@@ -40,7 +43,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     protected static $instances = [];
 
     /**
-     * AbstractServiceSingle constructor.
+     * FKSDB\ORM\AbstractServiceSingle constructor.
      * @param Connection $connection
      */
     public function __construct(Connection $connection) {

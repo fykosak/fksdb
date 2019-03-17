@@ -80,7 +80,7 @@ abstract class EntityPresenter extends BasePresenter {
     }
 
     /**
-     * @return \AbstractModelSingle|null|IModel
+     * @return \FKSDB\ORM\AbstractModelSingle|null|IModel
      */
     public final function getModel() {
         if ($this->model === false) {
@@ -103,7 +103,7 @@ abstract class EntityPresenter extends BasePresenter {
 
     /**
      * @param $id
-     * @return \AbstractModelSingle
+     * @return \FKSDB\ORM\AbstractModelSingle
      */
     abstract protected function loadModel($id);
 

@@ -3,8 +3,8 @@
 namespace Events\Model\Grid;
 
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Tables\TypedTableSelection;
 use Nette\DI\Container;
-use ORM\Tables\TypedTableSelection;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
