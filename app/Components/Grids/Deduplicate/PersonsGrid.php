@@ -4,9 +4,9 @@ namespace FKSDB\Components\Grids\Deduplicate;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Tables\TypedTableSelection;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;
-use ORM\Tables\TypedTableSelection;
 use Persons\Deduplication\DuplicateFinder;
 
 /**

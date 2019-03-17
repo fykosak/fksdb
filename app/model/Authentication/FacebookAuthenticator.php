@@ -100,7 +100,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
 
     /**
      * @param $fbUser
-     * @return \AbstractModelSingle|\FKSDB\ORM\Models\ModelLogin
+     * @return \FKSDB\ORM\AbstractModelSingle|\FKSDB\ORM\Models\ModelLogin
      */
     private function registerFromFB($fbUser) {
         $person = $this->servicePerson->createNew($this->getPersonData($fbUser));

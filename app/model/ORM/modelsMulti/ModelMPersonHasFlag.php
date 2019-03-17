@@ -1,7 +1,6 @@
 <?php
 
-use FKSDB\ORM\Models\ModelFlag;
-use FKSDB\ORM\Models\ModelPersonHasFlag;
+use FKSDB\ORM\AbstractModelMulti;
 
 /**
  *

@@ -2,7 +2,7 @@
 
 namespace ORM\ServicesMulti\Events;
 
-use AbstractServiceMulti;
+use FKSDB\ORM\AbstractServiceMulti;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Services\Events\ServiceSousParticipant;
 use FKSDB\ORM\Services\ServiceEventParticipant;

@@ -184,7 +184,7 @@ class AccountManager {
      * @param ModelPerson $person
      * @param null $login
      * @param null $password
-     * @return \AbstractModelSingle|\FKSDB\ORM\Models\ModelLogin
+     * @return \FKSDB\ORM\AbstractModelSingle|\FKSDB\ORM\Models\ModelLogin
      */
     public final function createLogin(ModelPerson $person, $login = null, $password = null) {
         $login = $this->serviceLogin->createNew(array(

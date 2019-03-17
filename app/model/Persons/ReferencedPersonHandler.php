@@ -131,7 +131,7 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
 
     /**
      * @param ArrayHash $values
-     * @return \AbstractModelSingle|ModelPerson|null
+     * @return \FKSDB\ORM\AbstractModelSingle|ModelPerson|null
      * @throws JsonException
      * @throws ExistingPaymentException
      */
