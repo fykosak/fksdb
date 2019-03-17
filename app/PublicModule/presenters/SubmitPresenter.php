@@ -6,14 +6,14 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Grids\SubmitsGrid;
 use FKSDB\ORM\Models\ModelSubmit;
+use FKSDB\ORM\Services\ServiceSubmit;
+use FKSDB\ORM\Services\ServiceTask;
 use ModelException;
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\FileResponse;
 use Nette\Application\UI\Form;
 use Nette\DateTime;
 use Nette\Diagnostics\Debugger;
-use ServiceSubmit;
-use ServiceTask;
 use Submits\ISubmitStorage;
 use Submits\ProcessingException;
 
@@ -27,7 +27,7 @@ class SubmitPresenter extends BasePresenter {
     /** @var ServiceTask */
     private $taskService;
 
-    /** @var ServiceSubmit */
+    /** @var \FKSDB\ORM\Services\ServiceSubmit */
     private $submitService;
 
     /**
@@ -43,7 +43,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @param ServiceSubmit $submitService
+     * @param \FKSDB\ORM\Services\ServiceSubmit $submitService
      */
     public function injectSubmitService(ServiceSubmit $submitService) {
         $this->submitService = $submitService;

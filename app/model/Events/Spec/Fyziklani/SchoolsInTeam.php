@@ -6,9 +6,9 @@ use Events\FormAdjustments\IFormAdjustment;
 use Events\Machine\Machine;
 use Events\Model\ExpressionEvaluator;
 use Events\Model\Holder\Holder;
+use FKSDB\ORM\Services\ServicePersonHistory;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
-use ServicePersonHistory;
 
 /**
  * More user friendly Due to author's laziness there's no class doc (or it's self explaining).
@@ -53,7 +53,7 @@ class SchoolsInTeam extends SchoolCheck implements IFormAdjustment {
      * SchoolsInTeam constructor.
      * @param $schoolsInTeam
      * @param ExpressionEvaluator $evaluator
-     * @param ServicePersonHistory $servicePersonHistory
+     * @param \FKSDB\ORM\Services\ServicePersonHistory $servicePersonHistory
      */
     function __construct($schoolsInTeam, ExpressionEvaluator $evaluator, ServicePersonHistory $servicePersonHistory) {
         parent::__construct($servicePersonHistory);

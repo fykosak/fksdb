@@ -4,12 +4,12 @@ namespace OrgModule;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Grids\EventOrgsGrid;
+use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Services\ServiceEvent;
+use FKSDB\ORM\Services\ServiceEventOrg;
 use Nette\Application\UI\Form;
-use ORM\IModel;
 use Persons\ExtendedPersonHandler;
-use ServiceEvent;
-use ServiceEventOrg;
 
 /**
  * Class EventOrgPresenter
@@ -26,7 +26,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
     private $serviceEventOrg;
 
     /**
-     * @var ServiceEvent
+     * @var \FKSDB\ORM\Services\ServiceEvent
      */
     private $serviceEvent;
 
@@ -48,7 +48,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
     }
 
     /**
-     * @param ServiceEvent $serviceEvent
+     * @param \FKSDB\ORM\Services\ServiceEvent $serviceEvent
      */
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;
@@ -100,7 +100,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
     }
 
     /**
-     * @param IModel|null $model
+     * @param \FKSDB\ORM\IModel|null $model
      * @param Form $form
      */
     protected function setDefaults(IModel $model = null, Form $form) {

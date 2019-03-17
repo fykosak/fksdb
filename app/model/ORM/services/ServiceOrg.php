@@ -1,5 +1,9 @@
 <?php
 
+namespace FKSDB\ORM\Services;
+
+use AbstractServiceSingle;
+use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelOrg;
 
 /**

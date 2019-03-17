@@ -7,11 +7,11 @@ use Events\Machine\Machine;
 use Events\Model\Holder\Field;
 use Events\Model\Holder\Holder;
 use Events\Processings\AbstractProcessing;
-use FKSDB\Logging\ILogger;
 use FKSDB\Components\Forms\Factories\Events\IOptionsProvider;
+use FKSDB\Logging\ILogger;
+use FKSDB\ORM\Services\ServiceSchool;
 use Nette\ArrayHash;
 use Nette\Forms\Form;
-use ServiceSchool;
 use YearCalculator;
 
 /**
@@ -32,7 +32,7 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
     private $yearCalculator;
 
     /**
-     * @var ServiceSchool
+     * @var \FKSDB\ORM\Services\ServiceSchool
      */
     private $serviceSchool;
     private $categoryNames;
@@ -43,7 +43,7 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
      *
      * @param int $rulesVersion version 1 is up to year 2017, version 2 from 2018
      * @param YearCalculator $yearCalculator
-     * @param ServiceSchool $serviceSchool
+     * @param \FKSDB\ORM\Services\ServiceSchool $serviceSchool
      */
     function __construct($rulesVersion, YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
         $this->yearCalculator = $yearCalculator;

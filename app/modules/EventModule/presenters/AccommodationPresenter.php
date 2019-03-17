@@ -10,11 +10,13 @@ use FKSDB\Components\Grids\Accommodation\AccommodationGrid;
 use FKSDB\Components\Grids\Accommodation\BilletedAllGrid;
 use FKSDB\Components\Grids\Accommodation\BilletedSingleGrid;
 use FKSDB\ORM\Models\ModelEventAccommodation;
+use FKSDB\ORM\Services\ServiceAddress;
+use FKSDB\ORM\Services\ServiceEventAccommodation;
+use FKSDB\ORM\Services\ServiceEventPersonAccommodation;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
-use ServiceEventAccommodation;
 
 /**
  * Class AccommodationPresenter
@@ -28,12 +30,12 @@ class AccommodationPresenter extends BasePresenter {
     protected $modelResourceId = 'event.accommodation';
 
     /**
-     * @var ServiceEventAccommodation
+     * @var \FKSDB\ORM\Services\ServiceEventAccommodation
      */
     private $serviceEventAccommodation;
 
     /**
-     * @var \ServiceEventPersonAccommodation
+     * @var ServiceEventPersonAccommodation
      */
     private $serviceEventPersonAccommodation;
     /**
@@ -42,7 +44,7 @@ class AccommodationPresenter extends BasePresenter {
     private $addressFactory;
 
     /**
-     * @var \ServiceAddress
+     * @var ServiceAddress
      */
     private $serviceAddress;
     /**
@@ -60,23 +62,23 @@ class AccommodationPresenter extends BasePresenter {
     }
 
     /**
-     * @param \ServiceAddress $serviceAddress
+     * @param ServiceAddress $serviceAddress
      */
-    public function injectServiceAddress(\ServiceAddress $serviceAddress) {
+    public function injectServiceAddress(ServiceAddress $serviceAddress) {
         $this->serviceAddress = $serviceAddress;
     }
 
     /**
-     * @param ServiceEventAccommodation $serviceEventAccommodation
+     * @param \FKSDB\ORM\Services\ServiceEventAccommodation $serviceEventAccommodation
      */
     public function injectServiceEventAccommodation(ServiceEventAccommodation $serviceEventAccommodation) {
         $this->serviceEventAccommodation = $serviceEventAccommodation;
     }
 
     /**
-     * @param \ServiceEventPersonAccommodation $serviceEventPersonAccommodation
+     * @param ServiceEventPersonAccommodation $serviceEventPersonAccommodation
      */
-    public function injectServiceEventPersonAccommodation(\ServiceEventPersonAccommodation $serviceEventPersonAccommodation) {
+    public function injectServiceEventPersonAccommodation(ServiceEventPersonAccommodation $serviceEventPersonAccommodation) {
         $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;
     }
 

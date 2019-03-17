@@ -6,12 +6,12 @@ use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Components\ClientDataTrait;
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelSubmit;
+use FKSDB\ORM\Services\ServiceSubmit;
 use FormUtils;
 use InvalidArgumentException;
 use Nette\DateTime;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
-use ServiceSubmit;
 use Traversable;
 
 /**
@@ -34,7 +34,7 @@ class ContestantSubmits extends BaseControl {
     private $rawValue;
 
     /**
-     * @var ServiceSubmit
+     * @var \FKSDB\ORM\Services\ServiceSubmit
      */
     private $submitService;
     /**
@@ -56,7 +56,7 @@ class ContestantSubmits extends BaseControl {
      *
      * @param Traversable|array $tasks
      * @param \FKSDB\ORM\Models\ModelContestant $contestant
-     * @param ServiceSubmit $submitService
+     * @param \FKSDB\ORM\Services\ServiceSubmit $submitService
      * @param $acYear
      * @param string|null $label
      */

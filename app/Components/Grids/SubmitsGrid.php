@@ -4,13 +4,13 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelSubmit;
+use FKSDB\ORM\Services\ServiceSubmit;
 use ModelException;
 use Nette\Application\BadRequestException;
 use Nette\Diagnostics\Debugger;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;
 use PublicModule\BasePresenter;
-use ServiceSubmit;
 use Submits\FilesystemSubmitStorage;
 use Submits\StorageException;
 
@@ -33,7 +33,7 @@ class SubmitsGrid extends BaseGrid {
 
     /**
      * SubmitsGrid constructor.
-     * @param ServiceSubmit $submitService
+     * @param \FKSDB\ORM\Services\ServiceSubmit $submitService
      * @param FilesystemSubmitStorage $submitStorage
      * @param ModelContestant $contestant
      */

@@ -4,11 +4,11 @@ namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Containers\AddressContainer;
 use FKSDB\Components\Forms\Controls\WriteOnlyInput;
+use FKSDB\ORM\Services\ServiceAddress;
+use FKSDB\ORM\Services\ServiceRegion;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\IControl;
-use ServiceAddress;
-use ServiceRegion;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -22,7 +22,7 @@ class AddressFactory {
     const NOT_WRITEONLY = 0x4;
 
     /**
-     * @var ServiceAddress
+     * @var \FKSDB\ORM\Services\ServiceAddress
      */
     private $serviceAddress;
 
@@ -33,7 +33,7 @@ class AddressFactory {
 
     /**
      * AddressFactory constructor.
-     * @param ServiceAddress $serviceAddress
+     * @param \FKSDB\ORM\Services\ServiceAddress $serviceAddress
      * @param ServiceRegion $serviceRegion
      */
     function __construct(ServiceAddress $serviceAddress, ServiceRegion $serviceRegion) {

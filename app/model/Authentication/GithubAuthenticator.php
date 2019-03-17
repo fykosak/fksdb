@@ -4,11 +4,11 @@ namespace Authentication;
 
 use FKSDB\Config\GlobalParameters;
 use FKSDB\ORM\Models\ModelLogin;
+use FKSDB\ORM\Services\ServiceLogin;
 use FullHttpRequest;
 use Github\Events\Event;
 use Nette\InvalidArgumentException;
 use Nette\Security\AuthenticationException;
-use ServiceLogin;
 use YearCalculator;
 
 /**

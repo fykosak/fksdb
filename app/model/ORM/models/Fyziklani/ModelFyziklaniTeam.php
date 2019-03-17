@@ -3,7 +3,7 @@
 namespace FKSDB\ORM\Models\Fyziklani;
 
 use AbstractModelSingle;
-use DbNames;
+use FKSDB\ORM\DbNames;
 use Nette\Database\Table\Selection;
 use Nette\DateTime;
 

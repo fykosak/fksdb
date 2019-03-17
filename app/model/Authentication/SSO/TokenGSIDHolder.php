@@ -5,9 +5,9 @@ namespace Authentication\SSO;
 use Authentication\TokenAuthenticator;
 use FKSDB\Authentication\SSO\IGSIDHolder;
 use FKSDB\ORM\Models\ModelAuthToken;
+use FKSDB\ORM\Services\ServiceAuthToken;
 use Nette\Http\Request;
 use Nette\Http\Session;
-use ServiceAuthToken;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -25,7 +25,7 @@ class TokenGSIDHolder implements IGSIDHolder {
     private $session;
 
     /**
-     * @var ServiceAuthToken
+     * @var \FKSDB\ORM\Services\ServiceAuthToken
      */
     private $serviceAuthToken;
 

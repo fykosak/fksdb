@@ -1,7 +1,11 @@
 <?php
 
+namespace FKSDB\ORM\Services;
+
+use AbstractServiceSingle;
+use FKSDB\ORM\DbNames;
+use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelPerson;
-use ORM\IModel;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>

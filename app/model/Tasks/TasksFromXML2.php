@@ -2,9 +2,9 @@
 
 namespace Tasks;
 
+use FKSDB\ORM\Services\ServiceTask;
 use Pipeline\PipelineException;
 use Pipeline\Stage;
-use ServiceTask;
 use SimpleXMLElement;
 
 /**
@@ -32,13 +32,13 @@ class TasksFromXML2 extends Stage {
     ];
 
     /**
-     * @var ServiceTask
+     * @var \FKSDB\ORM\Services\ServiceTask
      */
     private $taskService;
 
     /**
      * TasksFromXML2 constructor.
-     * @param ServiceTask $taskService
+     * @param \FKSDB\ORM\Services\ServiceTask $taskService
      */
     public function __construct(ServiceTask $taskService) {
         $this->taskService = $taskService;

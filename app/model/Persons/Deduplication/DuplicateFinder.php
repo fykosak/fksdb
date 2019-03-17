@@ -3,10 +3,9 @@
 namespace Persons\Deduplication;
 
 use FKSDB\Config\GlobalParameters;
+use FKSDB\ORM\Services\ServicePerson;
 use Nette\Database\Table\ActiveRow;
-
 use Nette\Utils\Strings;
-use ServicePerson;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -20,7 +19,7 @@ class DuplicateFinder {
     const DIFFERENT_PATTERN = 'not-same';
 
     /**
-     * @var ServicePerson
+     * @var \FKSDB\ORM\Services\ServicePerson
      */
     private $servicePerson;
 
@@ -31,7 +30,7 @@ class DuplicateFinder {
 
     /**
      * DuplicateFinder constructor.
-     * @param ServicePerson $servicePerson
+     * @param \FKSDB\ORM\Services\ServicePerson $servicePerson
      * @param GlobalParameters $parameters
      */
     function __construct(ServicePerson $servicePerson, GlobalParameters $parameters) {

@@ -3,8 +3,8 @@
 namespace FKSDB\Components\Forms\Rules;
 
 use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Services\ServicePersonInfo;
 use Nette\Forms\Controls\BaseControl;
-use ServicePersonInfo;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

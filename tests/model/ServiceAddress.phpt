@@ -2,6 +2,7 @@
 
 $container = require '../bootstrap.php';
 
+use FKSDB\ORM\Services\ServiceAddress;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -41,5 +42,5 @@ class ServiceAddressTest extends TestCase {
 
 }
 
-$testCase = new ServiceAddressTest($container->getService('ServiceAddress'));
+$testCase = new ServiceAddressTest($container->getService('FKSDB\ORM\Services\ServiceAddress'));
 $testCase->run();

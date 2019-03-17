@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Forms\Controls;
 
+use FKSDB\ORM\IModel;
 use Nette\ArrayHash;
-use ORM\IModel;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

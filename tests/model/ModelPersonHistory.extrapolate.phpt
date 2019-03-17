@@ -2,6 +2,7 @@
 
 $container = require '../bootstrap.php';
 
+use FKSDB\ORM\Services\ServicePersonHistory;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -79,5 +80,5 @@ class ModelPersonHistoryTest extends TestCase {
 
 }
 
-$testCase = new ModelPersonHistoryTest($container->getService('ServicePersonHistory'));
+$testCase = new ModelPersonHistoryTest($container->getService('FKSDB\ORM\Services\ServicePersonHistory'));
 $testCase->run();

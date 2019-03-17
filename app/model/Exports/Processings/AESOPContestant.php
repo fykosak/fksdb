@@ -3,10 +3,10 @@
 namespace Exports\Processings;
 
 use Exports\StoredQueryPostProcessing;
+use FKSDB\ORM\Services\ServiceTask;
 use IEvaluationStrategy;
 use ModelCategory;
 use ResultsModelFactory;
-use ServiceTask;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -48,7 +48,7 @@ class AESOPContestant extends StoredQueryPostProcessing {
     /**
      * Processing itself is not injectable so we ask the dependency explicitly per method (the task service).
      *
-     * @param ServiceTask $serviceTask
+     * @param \FKSDB\ORM\Services\ServiceTask $serviceTask
      * @return int|double
      */
     public function getMaxPoints(ServiceTask $serviceTask) {

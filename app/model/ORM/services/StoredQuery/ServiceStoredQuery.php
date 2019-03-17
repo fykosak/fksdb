@@ -3,7 +3,7 @@
 namespace FKSDB\ORM\Services\StoredQuery;
 
 use AbstractServiceSingle;
-use DbNames;
+use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use Nette;
 use Nette\Database\Connection;

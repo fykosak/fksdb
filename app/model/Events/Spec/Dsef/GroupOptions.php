@@ -2,10 +2,10 @@
 
 namespace Events\Spec\Dsef;
 
-use DbNames;
 use Events\Machine\BaseMachine;
 use Events\Model\Holder\Field;
 use FKSDB\Components\Forms\Factories\Events\IOptionsProvider;
+use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Services\Events\ServiceDsefGroup;
 use Nette\Object;
 use ORM\ServicesMulti\Events\ServiceMDsefParticipant;

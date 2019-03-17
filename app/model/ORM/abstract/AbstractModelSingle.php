@@ -1,7 +1,7 @@
 <?php
 
+use FKSDB\ORM\IModel;
 use Nette\Database\Table\ActiveRow;
-use ORM\IModel;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>

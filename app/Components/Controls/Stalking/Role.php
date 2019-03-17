@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Controls\Stalking;
 
 use Authorization\Grant;
+use FKSDB\ORM\DbNames;
 
 /**
  * Class Role
@@ -16,8 +17,8 @@ class Role extends StalkingComponent {
         $login = $this->modelPerson->getLogin();
         $roles = [];
         if ($login) {
-            foreach ($login->related(\DbNames::TAB_GRANT, 'login_id') as $grant) {
-                $roles[] = new Grant($grant->contest_id, $grant->ref(\DbNames::TAB_ROLE, 'role_id')->name);
+            foreach ($login->related(DbNames::TAB_GRANT, 'login_id') as $grant) {
+                $roles[] = new Grant($grant->contest_id, $grant->ref(DbNames::TAB_ROLE, 'role_id')->name);
             }
         }
         $this->template->roles = $roles;

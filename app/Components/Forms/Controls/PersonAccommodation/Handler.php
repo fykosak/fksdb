@@ -5,9 +5,10 @@ namespace FKSDB\Components\Forms\Controls\PersonAccommodation;
 use FKSDB\ORM\Models\ModelEventAccommodation;
 use FKSDB\ORM\Models\ModelEventPersonAccommodation;
 use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Services\ServiceEventAccommodation;
+use FKSDB\ORM\Services\ServiceEventPersonAccommodation;
 use Nette\ArrayHash;
 use Nette\NotImplementedException;
-use ServiceEventPersonAccommodation;
 
 /**
  * Class Handler
@@ -19,10 +20,10 @@ class Handler {
 
     /**
      * Handler constructor.
-     * @param ServiceEventPersonAccommodation $serviceEventPersonAccommodation
-     * @param \ServiceEventAccommodation $serviceEventAccommodation
+     * @param \FKSDB\ORM\Services\ServiceEventPersonAccommodation $serviceEventPersonAccommodation
+     * @param ServiceEventAccommodation $serviceEventAccommodation
      */
-    public function __construct(ServiceEventPersonAccommodation $serviceEventPersonAccommodation, \ServiceEventAccommodation $serviceEventAccommodation) {
+    public function __construct(ServiceEventPersonAccommodation $serviceEventPersonAccommodation, ServiceEventAccommodation $serviceEventAccommodation) {
         $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;
         $this->serviceEventAccommodation = $serviceEventAccommodation;
     }

@@ -7,6 +7,7 @@ use FKSDB\Components\Controls\Choosers\FyziklaniChooser;
 use FKSDB\Components\Factories\FyziklaniFactory;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use Nette\Application\BadRequestException;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 
@@ -28,7 +29,7 @@ abstract class BasePresenter extends EventBasePresenter {
     private $serviceFyziklaniTask;
 
     /**
-     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition
+     * @var ServiceFyziklaniTeamPosition
      */
     private $serviceFyziklaniTeamPosition;
 
@@ -49,16 +50,16 @@ abstract class BasePresenter extends EventBasePresenter {
     }
 
     /**
-     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
+     * @param ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
      */
-    public function injectServiceFyziklaniTeamPosition(\FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition) {
+    public function injectServiceFyziklaniTeamPosition(ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition) {
         $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
     }
 
     /**
-     * @return \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition
+     * @return ServiceFyziklaniTeamPosition
      */
-    protected function getServiceFyziklaniTeamPosition(): \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition {
+    protected function getServiceFyziklaniTeamPosition(): ServiceFyziklaniTeamPosition {
         return $this->serviceFyziklaniTeamPosition;
     }
 

@@ -3,12 +3,13 @@
 namespace Persons;
 
 use FKSDB\Components\Forms\Controls\PersonAccommodation\Handler;
+use FKSDB\ORM\Services\ServiceEventPersonAccommodation;
+use FKSDB\ORM\Services\ServicePerson;
+use FKSDB\ORM\Services\ServicePersonHistory;
+use FKSDB\ORM\Services\ServicePersonInfo;
 use Nette\Object;
 use ServiceMPersonHasFlag;
 use ServiceMPostContact;
-use ServicePerson;
-use ServicePersonHistory;
-use ServicePersonInfo;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -18,17 +19,17 @@ use ServicePersonInfo;
 class ReferencedPersonHandlerFactory extends Object {
 
     /**
-     * @var ServicePerson
+     * @var \FKSDB\ORM\Services\ServicePerson
      */
     private $servicePerson;
 
     /**
-     * @var ServicePersonInfo
+     * @var \FKSDB\ORM\Services\ServicePersonInfo
      */
     private $servicePersonInfo;
 
     /**
-     * @var ServicePersonHistory
+     * @var \FKSDB\ORM\Services\ServicePersonHistory
      */
     private $servicePersonHistory;
 
@@ -42,7 +43,7 @@ class ReferencedPersonHandlerFactory extends Object {
      */
     private $serviceMPersonHasFlag;
     /**
-     * @var \ServiceEventPersonAccommodation
+     * @var ServiceEventPersonAccommodation
      */
     private $serviceEventPersonAccommodation;
     /**
@@ -53,16 +54,16 @@ class ReferencedPersonHandlerFactory extends Object {
     /**
      * ReferencedPersonHandlerFactory constructor.
      * @param Handler $eventAccommodationAdjustment
-     * @param \ServiceEventPersonAccommodation $serviceEventPersonAccommodation
+     * @param ServiceEventPersonAccommodation $serviceEventPersonAccommodation
      * @param ServicePerson $servicePerson
      * @param ServicePersonInfo $servicePersonInfo
-     * @param ServicePersonHistory $servicePersonHistory
+     * @param \FKSDB\ORM\Services\ServicePersonHistory $servicePersonHistory
      * @param ServiceMPostContact $serviceMPostContact
      * @param ServiceMPersonHasFlag $serviceMPersonHasFlag
      */
     function __construct(
         Handler $eventAccommodationAdjustment,
-        \ServiceEventPersonAccommodation $serviceEventPersonAccommodation,
+        ServiceEventPersonAccommodation $serviceEventPersonAccommodation,
         ServicePerson $servicePerson,
         ServicePersonInfo $servicePersonInfo,
         ServicePersonHistory $servicePersonHistory,

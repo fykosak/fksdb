@@ -2,14 +2,14 @@
 
 namespace Events\Spec\Fol;
 
-use Events\FormAdjustments\IFormAdjustment;
 use Events\FormAdjustments\AbstractAdjustment;
+use Events\FormAdjustments\IFormAdjustment;
 use Events\Machine\Machine;
 use Events\Model\Holder\Holder;
+use FKSDB\ORM\Services\ServicePersonHistory;
+use FKSDB\ORM\Services\ServiceSchool;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
-use ServiceSchool;
-use ServicePersonHistory;
 
 /**
  * More user friendly Due to author's laziness there's no class doc (or it's self explaining).
@@ -19,12 +19,12 @@ use ServicePersonHistory;
 class BornCheck extends AbstractAdjustment implements IFormAdjustment {
 
     /**
-     * @var ServiceSchool
+     * @var \FKSDB\ORM\Services\ServiceSchool
      */
     private $serviceSchool;
 
     /**
-     * @var ServicePersonHistory
+     * @var \FKSDB\ORM\Services\ServicePersonHistory
      */
     private $servicePersonHistory;
 
@@ -49,8 +49,8 @@ class BornCheck extends AbstractAdjustment implements IFormAdjustment {
 
     /**
      * BornCheck constructor.
-     * @param ServiceSchool $serviceSchool
-     * @param ServicePersonHistory $servicePersonHistory
+     * @param \FKSDB\ORM\Services\ServiceSchool $serviceSchool
+     * @param \FKSDB\ORM\Services\ServicePersonHistory $servicePersonHistory
      */
     function __construct(ServiceSchool $serviceSchool, ServicePersonHistory $servicePersonHistory) {
         $this->serviceSchool = $serviceSchool;

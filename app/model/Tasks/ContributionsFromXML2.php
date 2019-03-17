@@ -2,9 +2,9 @@
 
 namespace Tasks;
 
+use FKSDB\ORM\Services\ServiceOrg;
+use FKSDB\ORM\Services\ServiceTaskContribution;
 use Pipeline\Stage;
-use ServiceOrg;
-use ServiceTaskContribution;
 use SimpleXMLElement;
 
 
@@ -29,7 +29,7 @@ class ContributionsFromXML2 extends Stage {
     ];
 
     /**
-     * @var ServiceTaskContribution
+     * @var \FKSDB\ORM\Services\ServiceTaskContribution
      */
     private $taskContributionService;
 

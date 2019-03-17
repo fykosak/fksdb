@@ -2,39 +2,39 @@
 # ORM services definitions
 #
 services:
-    ServiceAuthToken:        ServiceAuthToken
-    ServiceAddress:          ServiceAddress
+    ServiceAuthToken:        FKSDB\ORM\Services\ServiceAuthToken
+    ServiceAddress:          FKSDB\ORM\Services\ServiceAddress
 
-    ServiceContestant:       ServiceContestant
-    ServiceContest:          ServiceContest
-    ServiceContestYear:      ServiceContestYear
-    ServiceEvent:            ServiceEvent
-    ServiceEventOrg:         ServiceEventOrg
-    ServiceEventType:        ServiceEventType
-    ServiceFlag:             ServiceFlag
-    ServiceGlobalSession:    ServiceGlobalSession
-    ServiceLogin:            ServiceLogin
+    ServiceContestant:       FKSDB\ORM\Services\ServiceContestant
+    ServiceContest:          FKSDB\ORM\Services\ServiceContest
+    ServiceContestYear:      FKSDB\ORM\Services\ServiceContestYear
+    ServiceEvent:            FKSDB\ORM\Services\ServiceEvent
+    ServiceEventOrg:         FKSDB\ORM\Services\ServiceEventOrg
+    ServiceEventType:        FKSDB\ORM\Services\ServiceEventType
+    ServiceFlag:             FKSDB\ORM\Services\ServiceFlag
+    ServiceGlobalSession:    FKSDB\ORM\Services\ServiceGlobalSession
+    ServiceLogin:            FKSDB\ORM\Services\ServiceLogin
     ServiceMPersonHasFlag:   ServiceMPersonHasFlag
     ServiceMPostContact:     ServiceMPostContact
     ServiceMStoredQueryTag:  ServiceMStoredQueryTag
-    ServiceOrg:              ServiceOrg
-    ServicePerson:           ServicePerson
-    ServicePersonHasFlag:    ServicePersonHasFlag
-    ServicePersonHistory:    ServicePersonHistory
-    ServicePersonInfo:       ServicePersonInfo
-    ServicePostContact:      ServicePostContact
-    ServiceRegion:           ServiceRegion
-    ServiceSubmit:           ServiceSubmit
-    ServiceSchool:           ServiceSchool
+    ServiceOrg:              FKSDB\ORM\Services\ServiceOrg
+    ServicePerson:           FKSDB\ORM\Services\ServicePerson
+    ServicePersonHasFlag:    FKSDB\ORM\Services\ServicePersonHasFlag
+    ServicePersonHistory:    FKSDB\ORM\Services\ServicePersonHistory
+    ServicePersonInfo:       FKSDB\ORM\Services\ServicePersonInfo
+    ServicePostContact:      FKSDB\ORM\Services\ServicePostContact
+    ServiceRegion:           FKSDB\ORM\Services\ServiceRegion
+    ServiceSubmit:           FKSDB\ORM\Services\ServiceSubmit
+    ServiceSchool:           FKSDB\ORM\Services\ServiceSchool
 
-    ServiceStudyYear:        ServiceStudyYear
-    ServiceTask:             ServiceTask
-    ServiceTaskContribution: ServiceTaskContribution
-    ServiceTaskStudyYear:    ServiceTaskStudyYear
-    ServiceEventAccommodation: ServiceEventAccommodation
-    ServiceEventPersonAccommodation: ServiceEventPersonAccommodation
-    ServiceTeacher:          ServiceTeacher
-    ServicePayment:          ServicePayment
+    ServiceStudyYear:        FKSDB\ORM\Services\ServiceStudyYear
+    ServiceTask:             FKSDB\ORM\Services\ServiceTask
+    ServiceTaskContribution: FKSDB\ORM\Services\ServiceTaskContribution
+    ServiceTaskStudyYear:    FKSDB\ORM\Services\ServiceTaskStudyYear
+    ServiceEventAccommodation: FKSDB\ORM\Services\ServiceEventAccommodation
+    ServiceEventPersonAccommodation: FKSDB\ORM\Services\ServiceEventPersonAccommodation
+    ServiceTeacher:          FKSDB\ORM\Services\ServiceTeacher
+    ServicePayment:          FKSDB\ORM\Services\ServicePayment
     ServicePaymentAccommodation: FKSDB\ORM\Services\ServicePaymentAccommodation
 
     ServiceStoredQuery:      FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery
@@ -50,7 +50,7 @@ services:
     fyziklani.ServiceFyziklaniTeam:             FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam
 
 
-    event.ServiceEventParticipant:          ServiceEventParticipant
+    event.ServiceEventParticipant:          FKSDB\ORM\Services\ServiceEventParticipant
     event.ServiceDsefGroup:                 FKSDB\ORM\Services\Events\ServiceDsefGroup
     event.ServiceDsefParticipant:           FKSDB\ORM\Services\Events\ServiceDsefParticipant
     event.ServiceMDsefParticipant:          ORM\ServicesMulti\Events\ServiceMDsefParticipant

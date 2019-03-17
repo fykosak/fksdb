@@ -3,9 +3,9 @@
 namespace ORM\ServicesMulti\Events;
 
 use AbstractServiceMulti;
+use FKSDB\ORM\IModel;
 use FKSDB\ORM\Services\Events\ServiceFyziklaniParticipant;
-use ORM\IModel;
-use ServiceEventParticipant;
+use FKSDB\ORM\Services\ServiceEventParticipant;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -17,16 +17,16 @@ class ServiceMFyziklaniParticipant extends AbstractServiceMulti {
 
     /**
      * ServiceMFyziklaniParticipant constructor.
-     * @param ServiceEventParticipant $mainService
-     * @param \FKSDB\ORM\Services\Events\ServiceFyziklaniParticipant $joinedService
+     * @param \FKSDB\ORM\Services\ServiceEventParticipant $mainService
+     * @param ServiceFyziklaniParticipant $joinedService
      */
-    public function __construct(ServiceEventParticipant $mainService, \FKSDB\ORM\Services\Events\ServiceFyziklaniParticipant $joinedService) {
+    public function __construct(ServiceEventParticipant $mainService, ServiceFyziklaniParticipant $joinedService) {
         parent::__construct($mainService, $joinedService);
     }
 
     /**
      * Delete post contact including the address.
-     * @param IModel $model
+     * @param \FKSDB\ORM\IModel $model
      */
     public function dispose(IModel $model) {
         parent::dispose($model);

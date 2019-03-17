@@ -4,6 +4,7 @@ namespace FKSDB\Payment\PriceCalculator\PreProcess;
 
 use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Models\ModelPayment;
+use FKSDB\ORM\Services\ServiceEventParticipant;
 use FKSDB\Payment\PriceCalculator\Price;
 use Nette\NotImplementedException;
 
@@ -13,15 +14,15 @@ use Nette\NotImplementedException;
  */
 class EventPrice extends AbstractPreProcess {
     /**
-     * @var \ServiceEventParticipant
+     * @var ServiceEventParticipant
      */
     private $serviceEventParticipant;
 
     /**
      * EventPrice constructor.
-     * @param \ServiceEventParticipant $serviceEventParticipant
+     * @param ServiceEventParticipant $serviceEventParticipant
      */
-    public function __construct(\ServiceEventParticipant $serviceEventParticipant) {
+    public function __construct(ServiceEventParticipant $serviceEventParticipant) {
         $this->serviceEventParticipant = $serviceEventParticipant;
     }
 

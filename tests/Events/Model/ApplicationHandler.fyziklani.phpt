@@ -9,10 +9,10 @@ use Events\Model\Holder\Holder;
 use FKSDB\Logging\DevNullLogger;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\ORM\Services\ServiceEvent;
 use MockEnvironment\MockApplicationTrait;
 use Nette\ArrayHash;
 use Nette\DI\Container;
-use ServiceEvent;
 use Tester\Assert;
 
 class ApplicationHandlerTest extends EventTestCase {
@@ -25,7 +25,7 @@ class ApplicationHandlerTest extends EventTestCase {
     private $fixture;
 
     /**
-     * @var ServiceEvent
+     * @var \FKSDB\ORM\Services\ServiceEvent
      */
     private $serviceEvent;
 
@@ -51,7 +51,7 @@ class ApplicationHandlerTest extends EventTestCase {
                 . "                          VALUES (1, 1, 1, 1, '2001-01-02', '2001-01-02', 'Testovací Fyziklání')");
 
         $this->serviceTeam = $this->getContainer()->getService('fyziklani.ServiceFyziklaniTeam');
-        $this->serviceEvent = $this->getContainer()->getService('ServiceEvent');
+        $this->serviceEvent = $this->getContainer()->getService('FKSDB\ORM\Services\ServiceEvent');
 
 
         $handlerFactory = $this->getContainer()->getByType('Events\Model\ApplicationHandlerFactory');

@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Forms\Rules;
 
 use FKSDB\ORM\Models\ModelLogin;
-use ServiceLogin;
+use FKSDB\ORM\Services\ServiceLogin;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

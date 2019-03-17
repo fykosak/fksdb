@@ -18,12 +18,12 @@ use FKSDB\Components\Controls\Stalking\StalkingComponent;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Services\ServicePerson;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Persons\DenyResolver;
 use Persons\ExtendedPersonHandler;
-use ServicePerson;
 
 /**
  * Class StalkingPresenter
@@ -32,7 +32,7 @@ use ServicePerson;
 class StalkingPresenter extends BasePresenter {
 
     /**
-     * @var ServicePerson
+     * @var \FKSDB\ORM\Services\ServicePerson
      */
     private $servicePerson;
 
@@ -51,7 +51,7 @@ class StalkingPresenter extends BasePresenter {
     private $mode;
 
     /**
-     * @param ServicePerson $servicePerson
+     * @param \FKSDB\ORM\Services\ServicePerson $servicePerson
      */
     public function injectServicePerson(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;

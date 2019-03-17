@@ -5,9 +5,9 @@ namespace Events\Transitions;
 use Authentication\AccountManager;
 use Events\Machine\Transition;
 use Events\Model\Holder\BaseHolder;
+use FKSDB\ORM\Services\ServicePerson;
 use Mail\MailTemplateFactory;
 use Nette\Object;
-use ServicePerson;
 
 /**
  * Sends email notification of account creation

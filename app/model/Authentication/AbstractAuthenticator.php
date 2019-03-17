@@ -3,8 +3,8 @@
 namespace Authentication;
 
 use FKSDB\ORM\Models\ModelLogin;
+use FKSDB\ORM\Services\ServiceLogin;
 use Nette\DateTime;
-use ServiceLogin;
 use YearCalculator;
 
 /**
@@ -17,7 +17,7 @@ use YearCalculator;
  */
 abstract class AbstractAuthenticator /* implements IAuthenticator */ {
 
-    /** @var ServiceLogin */
+    /** @var \FKSDB\ORM\Services\ServiceLogin */
     protected $serviceLogin;
 
     /**

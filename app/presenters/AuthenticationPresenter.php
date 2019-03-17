@@ -10,6 +10,8 @@ use FKSDB\Authentication\SSO\IGlobalSession;
 use FKSDB\Authentication\SSO\ServiceSide\Authentication;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelLogin;
+use FKSDB\ORM\Services\ServiceAuthToken;
+use FKSDB\ORM\Services\ServicePerson;
 use Mail\MailTemplateFactory;
 use Mail\SendFailedException;
 use Nette\Application\UI\Form;
@@ -80,7 +82,7 @@ final class AuthenticationPresenter extends BasePresenter {
     private $mailTemplateFactory;
 
     /**
-     * @var \ServicePerson
+     * @var ServicePerson
      */
     protected $servicePerson;
     /**
@@ -155,7 +157,7 @@ final class AuthenticationPresenter extends BasePresenter {
     /**
      * @param ServicePerson $servicePerson
      */
-    public function injectServicePerson(\ServicePerson $servicePerson) {
+    public function injectServicePerson(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
     }
 

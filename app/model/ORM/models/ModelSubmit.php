@@ -4,7 +4,7 @@ namespace FKSDB\ORM\Models;
 
 use AbstractModelSingle;
 use DateTime;
-use DbNames;
+use FKSDB\ORM\DbNames;
 use Nette\Security\IResource;
 
 /**

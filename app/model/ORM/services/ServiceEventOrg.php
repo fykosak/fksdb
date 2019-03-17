@@ -1,10 +1,17 @@
 <?php
 
+namespace FKSDB\ORM\Services;
+
+use AbstractServiceSingle;
+use DuplicateOrgException;
+use FKSDB\ORM\DbNames;
+use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelEvent;
-use ORM\IModel;
+use ModelException;
+use Nette\Database\Table\Selection;
 
 /**
- * Class ServiceEventOrg
+ * Class FKSDB\ORM\Services\ServiceEventOrg
  */
 class ServiceEventOrg extends AbstractServiceSingle {
 
@@ -12,7 +19,7 @@ class ServiceEventOrg extends AbstractServiceSingle {
     protected $modelClassName = 'FKSDB\ORM\Models\ModelEventOrg';
 
     /**
-     * @param IModel $model
+     * @param \FKSDB\ORM\IModel $model
      * @return mixed|void
      */
     public function save(IModel &$model) {
@@ -28,9 +35,9 @@ class ServiceEventOrg extends AbstractServiceSingle {
 
     /**
      * @param ModelEvent $event
-     * @return \Nette\Database\Table\Selection
+     * @return Selection
      */
-    public function findByEventId(ModelEvent $event) {
+    public function findByEventId(ModelEvent $event): Selection {
         return $this->getTable()->where('event_id', $event->event_id);
     }
 }

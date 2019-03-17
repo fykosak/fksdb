@@ -2,7 +2,7 @@
 
 namespace FKSDB\ORM\Services\StoredQuery;
 use AbstractServiceSingle;
-use DbNames;
+use FKSDB\ORM\DbNames;
 
 /**
  * @author Lukáš Timko <lukast@fykos.cz>

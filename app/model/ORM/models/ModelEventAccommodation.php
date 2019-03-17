@@ -2,7 +2,7 @@
 
 namespace FKSDB\ORM\Models;
 
-use DbNames;
+use FKSDB\ORM\DbNames;
 use FKSDB\Transitions\IEventReferencedModel;
 use Nette\Database\Table\ActiveRow;
 use Nette\DateTime;

@@ -10,13 +10,13 @@ use Events\Model\Holder\Field;
 use Events\Model\PersonContainerResolver;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedEventPersonFactory;
 use FKSDB\Config\Expressions\Helpers;
+use FKSDB\ORM\Services\ServicePerson;
 use Nette\ComponentModel\Component;
 use Nette\DI\Container as DIContainer;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Security\User;
 use Persons\SelfResolver;
-use ServicePerson;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

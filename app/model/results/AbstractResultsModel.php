@@ -1,6 +1,7 @@
 <?php
 
 use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Services\ServiceTask;
 
 /**
  * General results sheet with contestants and their ranks.

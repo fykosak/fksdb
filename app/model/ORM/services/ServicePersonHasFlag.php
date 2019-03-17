@@ -1,7 +1,13 @@
 <?php
 
+namespace FKSDB\ORM\Services;
+
+use AbstractModelSingle;
+use AbstractServiceSingle;
+use DateTime;
+use FKSDB\ORM\DbNames;
+use FKSDB\ORM\IModel;
 use Nette\ArrayHash;
-use ORM\IModel;
 
 /**
  * @author Lukáš Timko <lukast@fykos.cz>

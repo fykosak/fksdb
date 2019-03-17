@@ -1,6 +1,9 @@
 <?php
 
-use FKSDB\ORM\Models\ModelSubmit;
+namespace FKSDB\ORM\Services;
+
+use AbstractServiceSingle;
+use FKSDB\ORM\DbNames;
 use Nette\Database\Table\Selection;
 
 /**
@@ -10,7 +13,7 @@ class ServiceSubmit extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_SUBMIT;
     protected $modelClassName = 'FKSDB\ORM\Models\ModelSubmit';
-    private $submit_cache = [];
+    private $submitCache = [];
 
     /**
      * Syntactic sugar.
@@ -22,19 +25,19 @@ class ServiceSubmit extends AbstractServiceSingle {
     public function findByContestant($ctId, $taskId) {
         $key = $ctId . ':' . $taskId;
 
-        if (!array_key_exists($key, $this->submit_cache)) {
+        if (!array_key_exists($key, $this->submitCache)) {
             $result = $this->getTable()->where([
-                        'ct_id' => $ctId,
-                        'task_id' => $taskId,
+                'ct_id' => $ctId,
+                'task_id' => $taskId,
             ])->fetch();
 
             if ($result !== false) {
-                $this->submit_cache[$key] = $result;
+                $this->submitCache[$key] = $result;
             } else {
-                $this->submit_cache[$key] = null;
+                $this->submitCache[$key] = null;
             }
         }
-        return $this->submit_cache[$key];
+        return $this->submitCache[$key];
     }
 
     /**
@@ -43,8 +46,8 @@ class ServiceSubmit extends AbstractServiceSingle {
      */
     public function getSubmits() {
         $submits = $this->getTable()
-                ->select(DbNames::TAB_SUBMIT . '.*')
-                ->select(DbNames::TAB_TASK . '.*');
+            ->select(DbNames::TAB_SUBMIT . '.*')
+            ->select(DbNames::TAB_TASK . '.*');
         return $submits;
     }
 

@@ -4,6 +4,7 @@ namespace FKSDB\Transitions;
 
 use Authorization\EventAuthorizator;
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Services\ServicePayment;
 use FKSDB\Payment\PriceCalculator\PriceCalculatorFactory;
 use FKSDB\Payment\SymbolGenerator\SymbolGeneratorFactory;
 use FKSDB\Payment\Transition\Transitions\Fyziklani13Payment;
@@ -33,7 +34,7 @@ class MachineFactory {
      */
     private $connection;
     /**
-     * @var \ServicePayment
+     * @var ServicePayment
      */
     private $servicePayment;
     /**
@@ -49,13 +50,13 @@ class MachineFactory {
      * MachineFactory constructor.
      * @param ITranslator $translator
      * @param EventAuthorizator $eventAuthorizator
-     * @param \ServicePayment $servicePayment
+     * @param ServicePayment $servicePayment
      * @param Connection $connection
      * @param TransitionsFactory $transitionsFactory
      * @param SymbolGeneratorFactory $symbolGeneratorFactory
      * @param PriceCalculatorFactory $priceCalculatorFactory
      */
-    public function __construct(ITranslator $translator, EventAuthorizator $eventAuthorizator, \ServicePayment $servicePayment, Connection $connection, TransitionsFactory $transitionsFactory, SymbolGeneratorFactory $symbolGeneratorFactory, PriceCalculatorFactory $priceCalculatorFactory) {
+    public function __construct(ITranslator $translator, EventAuthorizator $eventAuthorizator, ServicePayment $servicePayment, Connection $connection, TransitionsFactory $transitionsFactory, SymbolGeneratorFactory $symbolGeneratorFactory, PriceCalculatorFactory $priceCalculatorFactory) {
         $this->transitionsFactory = $transitionsFactory;
         $this->servicePayment = $servicePayment;
         $this->symbolGeneratorFactory = $symbolGeneratorFactory;

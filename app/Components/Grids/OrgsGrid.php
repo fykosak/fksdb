@@ -3,11 +3,11 @@
 namespace FKSDB\Components\Grids;
 
 use FKSDB\ORM\Models\ModelOrg;
+use FKSDB\ORM\Services\ServiceOrg;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\Selection;
 use Nette\Utils\Html;
 use OrgModule\OrgPresenter;
-use ServiceOrg;
 use SQL\SearchableDataSource;
 
 /**
@@ -17,13 +17,13 @@ use SQL\SearchableDataSource;
 class OrgsGrid extends BaseGrid {
 
     /**
-     * @var ServiceOrg
+     * @var \FKSDB\ORM\Services\ServiceOrg
      */
     private $serviceOrg;
 
     /**
      * OrgsGrid constructor.
-     * @param ServiceOrg $serviceOrg
+     * @param \FKSDB\ORM\Services\ServiceOrg $serviceOrg
      */
     function __construct(ServiceOrg $serviceOrg) {
         parent::__construct();

@@ -44,7 +44,7 @@ trait MockApplicationTrait {
     protected function authenticate($login) {
         $container = $this->getContainer();
         if (!$login instanceof ModelLogin) {
-            $login = $container->getService('ServiceLogin')->findByPrimary($login);
+            $login = $container->getService('FKSDB\ORM\Services\ServiceLogin')->findByPrimary($login);
             Assert::type('FKSDB\ORM\Models\ModelLogin', $login);
         }
         $storage = $container->getByType('Authentication\LoginUserStorage');

@@ -6,14 +6,14 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\SchoolFactory;
 use FKSDB\Components\Grids\SchoolsGrid;
+use FKSDB\ORM\IModel;
+use FKSDB\ORM\Services\ServiceAddress;
+use FKSDB\ORM\Services\ServiceSchool;
 use FormUtils;
 use ModelException;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 use Nette\NotImplementedException;
-use ORM\IModel;
-use ServiceAddress;
-use ServiceSchool;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -28,12 +28,12 @@ class SchoolPresenter extends EntityPresenter {
     protected $modelResourceId = 'school';
 
     /**
-     * @var ServiceSchool
+     * @var \FKSDB\ORM\Services\ServiceSchool
      */
     private $serviceSchool;
 
     /**
-     * @var ServiceAddress
+     * @var \FKSDB\ORM\Services\ServiceAddress
      */
     private $serviceAddress;
 
@@ -48,7 +48,7 @@ class SchoolPresenter extends EntityPresenter {
     private $addressFactory;
 
     /**
-     * @param ServiceSchool $serviceSchool
+     * @param \FKSDB\ORM\Services\ServiceSchool $serviceSchool
      */
     public function injectServiceSchool(ServiceSchool $serviceSchool) {
         $this->serviceSchool = $serviceSchool;
@@ -124,7 +124,7 @@ class SchoolPresenter extends EntityPresenter {
     }
 
     /**
-     * @param IModel|null $model
+     * @param \FKSDB\ORM\IModel|null $model
      * @param Form $form
      */
     protected function setDefaults(IModel $model = null, Form $form) {

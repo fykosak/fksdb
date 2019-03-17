@@ -2,11 +2,11 @@
 
 namespace FKSDB\Components\Controls;
 
+use FKSDB\ORM\Services\ServiceContest;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
 use Nette\Localization\ITranslator;
 use SeriesCalculator;
-use ServiceContest;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -29,7 +29,7 @@ class SeriesChooser extends Control {
     private $seriesCalculator;
 
     /**
-     * @var ServiceContest
+     * @var \FKSDB\ORM\Services\ServiceContest
      */
     private $serviceContest;
 
@@ -57,7 +57,7 @@ class SeriesChooser extends Control {
      * SeriesChooser constructor.
      * @param Session $session
      * @param SeriesCalculator $seriesCalculator
-     * @param ServiceContest $serviceContest
+     * @param \FKSDB\ORM\Services\ServiceContest $serviceContest
      * @param ITranslator $translator
      */
     function __construct(Session $session, SeriesCalculator $seriesCalculator, ServiceContest $serviceContest, ITranslator $translator) {

@@ -1,9 +1,14 @@
 <?php
 
+namespace FKSDB\ORM\Services;
+
+use AbstractServiceSingle;
+use FKSDB\ORM\DbNames;
+use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelRegion;
+use InvalidPostalCode;
 use Nette\Diagnostics\Debugger;
 use Nette\InvalidArgumentException;
-use ORM\IModel;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -11,18 +16,26 @@ use ORM\IModel;
 class ServiceAddress extends AbstractServiceSingle {
 
     const PATTERN = '/[0-9]{5}/';
-
+    /**
+     * @var string
+     */
     protected $tableName = DbNames::TAB_ADDRESS;
+    /**
+     * @var string
+     */
     protected $modelClassName = 'FKSDB\ORM\Models\ModelAddress';
 
     /**
-     * @param IModel $model
+     * @param \FKSDB\ORM\IModel $model
      * @return mixed|void
      */
     public function save(IModel &$model) {
         if (!$model instanceof $this->modelClassName) {
             throw new InvalidArgumentException('Service for class ' . $this->modelClassName . ' cannot store ' . get_class($model));
         }
+        /**
+         * @var \FKSDB\ORM\Models\ModelAddress $model
+         */
         if (!isset($model->region_id)) {
             $model->region_id = $this->inferRegion($model->postal_code);
         }
@@ -73,7 +86,7 @@ class ServiceAddress extends AbstractServiceSingle {
         try {
             $this->inferRegion($postalCode);
             return true;
-        } catch (InvalidPostalCode $e) {
+        } catch (InvalidPostalCode $exception) {
             return false;
         }
     }

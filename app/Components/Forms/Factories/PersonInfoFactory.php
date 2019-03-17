@@ -24,6 +24,7 @@ use FKSDB\Components\Forms\Factories\PersonInfo\PhoneField;
 use FKSDB\Components\Forms\Factories\PersonInfo\PhoneParentDField;
 use FKSDB\Components\Forms\Factories\PersonInfo\PhoneParentMField;
 use FKSDB\Components\Forms\Factories\PersonInfo\UkLoginField;
+use FKSDB\ORM\Services\ServiceRegion;
 use Nette\Forms\Controls\BaseControl;
 use Nette\InvalidArgumentException;
 
@@ -34,15 +35,15 @@ use Nette\InvalidArgumentException;
  */
 class PersonInfoFactory {
     /**
-     * @var \ServiceRegion
+     * @var ServiceRegion
      */
     private $serviceRegion;
 
     /**
      * PersonInfoFactory constructor.
-     * @param \ServiceRegion $serviceRegion
+     * @param ServiceRegion $serviceRegion
      */
-    public function __construct(\ServiceRegion $serviceRegion) {
+    public function __construct(ServiceRegion $serviceRegion) {
         $this->serviceRegion = $serviceRegion;
     }
 

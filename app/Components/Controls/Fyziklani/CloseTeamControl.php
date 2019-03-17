@@ -9,6 +9,7 @@ use FKSDB\model\Fyziklani\ClosedSubmittingException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\UI\BadSignalException;
 use Nette\Application\UI\Control;
@@ -38,7 +39,7 @@ class CloseTeamControl extends Control {
      */
     private $team;
     /**
-     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask
+     * @var ServiceFyziklaniTask
      */
     private $serviceFyziklaniTask;
     /**
@@ -51,14 +52,14 @@ class CloseTeamControl extends Control {
      * @param ModelEvent $event
      * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
      * @param ITranslator $translator
-     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask $serviceFyziklaniTask
+     * @param ServiceFyziklaniTask $serviceFyziklaniTask
      * @param FyziklaniFactory $fyziklaniFactory
      */
     public function __construct(
         ModelEvent $event,
         ServiceFyziklaniTeam $serviceFyziklaniTeam,
         ITranslator $translator,
-        \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask $serviceFyziklaniTask,
+        ServiceFyziklaniTask $serviceFyziklaniTask,
         FyziklaniFactory $fyziklaniFactory
     ) {
         parent::__construct();

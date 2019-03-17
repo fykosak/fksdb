@@ -3,9 +3,9 @@
 namespace OrgModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\ORM\IModel;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
-use ORM\IModel;
 
 /**
  * Abstract functionality for basic CRUD.

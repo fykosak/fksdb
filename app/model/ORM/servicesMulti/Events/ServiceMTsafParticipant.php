@@ -3,9 +3,9 @@
 namespace ORM\ServicesMulti\Events;
 
 use AbstractServiceMulti;
+use FKSDB\ORM\IModel;
 use FKSDB\ORM\Services\Events\ServiceTsafParticipant;
-use ORM\IModel;
-use ServiceEventParticipant;
+use FKSDB\ORM\Services\ServiceEventParticipant;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -20,12 +20,12 @@ class ServiceMTsafParticipant extends AbstractServiceMulti {
      * @param ServiceEventParticipant $mainService
      * @param ServiceTsafParticipant $joinedService
      */
-    public function __construct(ServiceEventParticipant $mainService, \FKSDB\ORM\Services\Events\ServiceTsafParticipant $joinedService) {
+    public function __construct(ServiceEventParticipant $mainService, ServiceTsafParticipant $joinedService) {
         parent::__construct($mainService, $joinedService);
     }
 
     /**
-     * @param IModel $model
+     * @param \FKSDB\ORM\IModel $model
      */
     public function dispose(IModel $model) {
         parent::dispose($model);

@@ -3,7 +3,7 @@
 namespace FKSDB\ORM\Models;
 
 use AbstractModelSingle;
-use DbNames;
+use FKSDB\ORM\DbNames;
 use ModelMPersonHasFlag;
 use ModelMPostContact;
 use Nette\Database\Table\GroupedSelection;

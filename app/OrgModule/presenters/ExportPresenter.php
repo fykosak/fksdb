@@ -3,7 +3,6 @@
 namespace OrgModule;
 
 use AuthenticatedPresenter;
-use DbNames;
 use Exports\ExportFormatFactory;
 use Exports\StoredQuery;
 use Exports\StoredQueryFactory;
@@ -13,6 +12,7 @@ use FKSDB\Components\Controls\StoredQueryComponent;
 use FKSDB\Components\Controls\StoredQueryTagCloud;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory as StoredQueryFormFactory;
 use FKSDB\Components\Grids\StoredQueriesGrid;
+use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelPostContact;
@@ -634,7 +634,7 @@ class ExportPresenter extends SeriesPresenter {
      */
     public function renderOvvp() {
         $modelFactory = $this->getService('resultsModelFactory');
-        $serviceContestant = $this->getService('ServiceContestant');
+        $serviceContestant = $this->getService('FKSDB\ORM\Services\ServiceContestant');
 
 
         $model = $modelFactory->createCumulativeResultsModel($this->getSelectedContest(), $this->getSelectedYear());

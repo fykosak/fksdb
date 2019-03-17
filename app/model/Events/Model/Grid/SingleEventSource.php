@@ -5,12 +5,12 @@ namespace Events\Model\Grid;
 use ArrayIterator;
 use Events\Model\Holder\BaseHolder;
 use Events\Model\Holder\Holder;
+use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
 use Nette\Object;
-use ORM\IModel;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

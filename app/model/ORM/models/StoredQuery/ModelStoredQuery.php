@@ -3,8 +3,8 @@
 namespace FKSDB\ORM\Models\StoredQuery;
 
 use AbstractModelSingle;
-use DbNames;
 use Exports\StoredQueryPostProcessing;
+use FKSDB\ORM\DbNames;
 use InvalidArgumentException;
 use ModelMStoredQueryTag;
 use Nette\Security\IResource;

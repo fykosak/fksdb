@@ -3,9 +3,9 @@
 namespace ORM\ServicesMulti\Events;
 
 use AbstractServiceMulti;
+use FKSDB\ORM\IModel;
 use FKSDB\ORM\Services\Events\ServiceSousParticipant;
-use ORM\IModel;
-use ServiceEventParticipant;
+use FKSDB\ORM\Services\ServiceEventParticipant;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -26,7 +26,7 @@ class ServiceMSousParticipant extends AbstractServiceMulti {
 
     /**
      * Delete post contact including the address.
-     * @param IModel $model
+     * @param \FKSDB\ORM\IModel $model
      */
     public function dispose(IModel $model) {
         parent::dispose($model);
