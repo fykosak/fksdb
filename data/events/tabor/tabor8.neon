@@ -142,11 +142,11 @@ events:
                     arrival_ticket:
                         label: "Mám zájem o společnou jízdenku cestou na tábor"
                     departure_destination:
-                        label: "Mám zájem o svozy z táboru"
-                        description: "Místo, na kterého chci cestovat"
+                        label: "Mám zájem o svozy z tábora"
+                        description: "Místo, na které chci cestovat"
                         factory: Chooser("Zvolit místo", Options(%events.tabor8.arrival.destination%))
                     departure_ticket:
-                          label: "Mám zájem o společnou jízdenku z táboru"
+                          label: "Mám zájem o společnou jízdenku z tábora"
                     swimmer:
                          label: "Umím plavat"
                     note:
