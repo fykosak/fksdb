@@ -85,6 +85,7 @@ class ModelScheduleItem extends AbstractModelSingle {
 
     /**
      * @return string
+     * @throws NotImplementedException
      */
     public function getLabel(): string {
         $group = $this->getGroup();

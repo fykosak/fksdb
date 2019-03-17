@@ -63,6 +63,7 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel {
 
     /**
      * @return IStateModel
+     * @throws NotImplementedException
      */
     public function refresh(): IStateModel {
         throw new NotImplementedException();
