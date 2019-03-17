@@ -6,7 +6,7 @@ use AbstractModelSingle;
 use Authentication\PasswordAuthenticator;
 use Authorization\Grant;
 use DateTime;
-use DbNames;
+use FKSDB\ORM\DbNames;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 use Nette\Security\IIdentity;

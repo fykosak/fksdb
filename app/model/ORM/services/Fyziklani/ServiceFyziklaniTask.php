@@ -3,7 +3,7 @@
 namespace FKSDB\ORM\Services\Fyziklani;
 
 use AbstractServiceSingle;
-use DbNames;
+use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Database\Table\Selection;

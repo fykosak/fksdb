@@ -3,7 +3,7 @@
 namespace FKSDB\ORM\Services\Events;
 
 use AbstractServiceSingle;
-use DbNames;
+use FKSDB\ORM\DbNames;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>

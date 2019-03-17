@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Containers\Models;
 
-use ORM\IModel;
+use FKSDB\ORM\IModel;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -17,7 +17,7 @@ interface IReferencedSetter {
 
     /**
      * @param ReferencedContainer $container
-     * @param IModel|null $model
+     * @param \FKSDB\ORM\IModel|null $model
      * @param string $mode
      * @return mixed
      */

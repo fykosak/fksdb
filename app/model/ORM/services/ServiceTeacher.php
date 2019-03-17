@@ -1,5 +1,10 @@
 <?php
 
+namespace FKSDB\ORM\Services;
+
+use AbstractServiceSingle;
+use FKSDB\ORM\DbNames;
+
 /**
  * @author Michal Červeňák <miso@fykos.cz>
  */

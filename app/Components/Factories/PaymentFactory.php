@@ -9,6 +9,8 @@ use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Grids\Payment\OrgPaymentGrid;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPayment;
+use FKSDB\ORM\Services\ServiceEventPersonAccommodation;
+use FKSDB\ORM\Services\ServicePayment;
 use FKSDB\ORM\Services\ServicePaymentAccommodation;
 use FKSDB\Payment\Transition\PaymentMachine;
 use Nette\Localization\ITranslator;
@@ -23,7 +25,7 @@ class PaymentFactory {
      */
     private $translator;
     /**
-     * @var \ServicePayment
+     * @var ServicePayment
      */
     private $servicePayment;
 
@@ -36,7 +38,7 @@ class PaymentFactory {
      */
     private $personProvider;
     /**
-     * @var \ServiceEventPersonAccommodation
+     * @var ServiceEventPersonAccommodation
      */
     private $serviceEventPersonAccommodation;
     /**
@@ -50,11 +52,11 @@ class PaymentFactory {
      * @param ServicePaymentAccommodation $servicePaymentAccommodation
      * @param PersonFactory $personFactory
      * @param PersonProvider $personProvider
-     * @param \ServiceEventPersonAccommodation $serviceEventPersonAccommodation
+     * @param ServiceEventPersonAccommodation $serviceEventPersonAccommodation
      * @param ITranslator $translator
-     * @param \ServicePayment $servicePayment
+     * @param ServicePayment $servicePayment
      */
-    public function __construct(ServicePaymentAccommodation $servicePaymentAccommodation, PersonFactory $personFactory, PersonProvider $personProvider, \ServiceEventPersonAccommodation $serviceEventPersonAccommodation, ITranslator $translator, \ServicePayment $servicePayment) {
+    public function __construct(ServicePaymentAccommodation $servicePaymentAccommodation, PersonFactory $personFactory, PersonProvider $personProvider, ServiceEventPersonAccommodation $serviceEventPersonAccommodation, ITranslator $translator, ServicePayment $servicePayment) {
         $this->translator = $translator;
         $this->servicePayment = $servicePayment;
         $this->personFactory = $personFactory;

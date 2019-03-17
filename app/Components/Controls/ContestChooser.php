@@ -4,10 +4,10 @@ namespace FKSDB\Components\Controls;
 
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelRole;
+use FKSDB\ORM\Services\ServiceContest;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
-use ServiceContest;
 use YearCalculator;
 
 /**

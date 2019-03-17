@@ -3,10 +3,10 @@
 namespace OrgModule;
 
 use FKSDB\Components\Grids\Deduplicate\PersonsGrid;
+use FKSDB\ORM\Services\ServicePerson;
 use Nette\Application\ForbiddenRequestException;
 use Persons\Deduplication\DuplicateFinder;
 use Persons\Deduplication\Merger;
-use ServicePerson;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -16,7 +16,7 @@ use ServicePerson;
 class DeduplicatePresenter extends BasePresenter {
 
     /**
-     * @var ServicePerson
+     * @var \FKSDB\ORM\Services\ServicePerson
      */
     private $servicePerson;
 

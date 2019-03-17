@@ -5,10 +5,10 @@ namespace FKSDB\Components\Forms\Factories;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Controls\DateInputs\DateTimeLocalInput;
 use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Services\ServiceEventType;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Form;
-use ServiceEventType;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -20,7 +20,7 @@ class EventFactory {
     const SHOW_UNKNOWN_SCHOOL_HINT = 0x1;
 
     /**
-     * @var ServiceEventType
+     * @var \FKSDB\ORM\Services\ServiceEventType
      */
     private $serviceEventType;
 

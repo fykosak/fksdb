@@ -4,8 +4,10 @@ namespace FKSDB\Components\Grids\Accommodation;
 
 use EventModule\AccommodationPresenter;
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventAccommodation;
+use FKSDB\ORM\Services\ServiceEventAccommodation;
 use SQL\SearchableDataSource;
 
 
@@ -16,7 +18,7 @@ use SQL\SearchableDataSource;
 class AccommodationGrid extends BaseGrid {
 
     /**
-     * @var \ServiceEventAccommodation
+     * @var ServiceEventAccommodation
      */
     private $serviceEventAccommodation;
     /**
@@ -27,9 +29,9 @@ class AccommodationGrid extends BaseGrid {
     /**
      * AccommodationGrid constructor.
      * @param \FKSDB\ORM\Models\ModelEvent $event
-     * @param \ServiceEventAccommodation $serviceEventAccommodation
+     * @param ServiceEventAccommodation $serviceEventAccommodation
      */
-    function __construct(ModelEvent $event, \ServiceEventAccommodation $serviceEventAccommodation) {
+    function __construct(ModelEvent $event, ServiceEventAccommodation $serviceEventAccommodation) {
         parent::__construct();
         $this->event = $event;
         $this->serviceEventAccommodation = $serviceEventAccommodation;
@@ -44,7 +46,7 @@ class AccommodationGrid extends BaseGrid {
      */
     protected function configure($presenter) {
         parent::configure($presenter);
-        $accommodations = $this->event->related(\DbNames::TAB_EVENT_ACCOMMODATION);
+        $accommodations = $this->event->related(DbNames::TAB_EVENT_ACCOMMODATION);
 
         $dataSource = new SearchableDataSource($accommodations);
 

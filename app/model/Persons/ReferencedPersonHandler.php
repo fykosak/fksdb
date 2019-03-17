@@ -6,20 +6,21 @@ use FKSDB\Components\Forms\Controls\IReferencedHandler;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
 use FKSDB\Components\Forms\Controls\PersonAccommodation\ExistingPaymentException;
 use FKSDB\Components\Forms\Controls\PersonAccommodation\Handler;
+use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelPostContact;
+use FKSDB\ORM\Services\ServiceEventPersonAccommodation;
+use FKSDB\ORM\Services\ServicePerson;
+use FKSDB\ORM\Services\ServicePersonHistory;
+use FKSDB\ORM\Services\ServicePersonInfo;
 use FormUtils;
 use ModelException;
 use Nette\ArrayHash;
 use Nette\InvalidArgumentException;
 use Nette\Object;
 use Nette\Utils\JsonException;
-use ORM\IModel;
 use ServiceMPersonHasFlag;
 use ServiceMPostContact;
-use ServicePerson;
-use ServicePersonHistory;
-use ServicePersonInfo;
 use Submits\StorageException;
 
 /**
@@ -33,12 +34,12 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
     const POST_CONTACT_PERMANENT = 'post_contact_p';
 
     /**
-     * @var ServicePerson
+     * @var \FKSDB\ORM\Services\ServicePerson
      */
     private $servicePerson;
 
     /**
-     * @var ServicePersonInfo
+     * @var \FKSDB\ORM\Services\ServicePersonInfo
      */
     private $servicePersonInfo;
 
@@ -71,7 +72,7 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
      */
     private $resolution;
     /**
-     * @var \ServiceEventPersonAccommodation
+     * @var ServiceEventPersonAccommodation
      */
     private $serviceEventPersonAccommodation;
     /**
@@ -82,10 +83,10 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
     /**
      * ReferencedPersonHandler constructor.
      * @param Handler $eventAccommodation
-     * @param \ServiceEventPersonAccommodation $serviceEventPersonAccommodation
-     * @param ServicePerson $servicePerson
-     * @param ServicePersonInfo $servicePersonInfo
-     * @param ServicePersonHistory $servicePersonHistory
+     * @param ServiceEventPersonAccommodation $serviceEventPersonAccommodation
+     * @param \FKSDB\ORM\Services\ServicePerson $servicePerson
+     * @param \FKSDB\ORM\Services\ServicePersonInfo $servicePersonInfo
+     * @param \FKSDB\ORM\Services\ServicePersonHistory $servicePersonHistory
      * @param ServiceMPostContact $serviceMPostContact
      * @param ServiceMPersonHasFlag $serviceMPersonHasFlag
      * @param $acYear
@@ -93,7 +94,7 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
      */
     function __construct(
         Handler $eventAccommodation,
-        \ServiceEventPersonAccommodation $serviceEventPersonAccommodation,
+        ServiceEventPersonAccommodation $serviceEventPersonAccommodation,
         ServicePerson $servicePerson,
         ServicePersonInfo $servicePersonInfo,
         ServicePersonHistory $servicePersonHistory,
@@ -145,7 +146,7 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
     }
 
     /**
-     * @param IModel $model
+     * @param \FKSDB\ORM\IModel $model
      * @param ArrayHash $values
      * @throws JsonException
      * @throws ExistingPaymentException
@@ -412,7 +413,7 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
     /**
      * @param string $field
      * @param mixed $key
-     * @return \FKSDB\ORM\Models\ModelPerson|null|IModel
+     * @return \FKSDB\ORM\Models\ModelPerson|null|\FKSDB\ORM\IModel
      */
     public function findBySecondaryKey($field, $key) {
         if (!$this->isSecondaryKey($field)) {

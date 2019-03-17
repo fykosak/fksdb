@@ -2,9 +2,9 @@
 
 namespace Tasks;
 
+use FKSDB\ORM\Services\ServiceStudyYear;
+use FKSDB\ORM\Services\ServiceTaskStudyYear;
 use Pipeline\Stage;
-use ServiceStudyYear;
-use ServiceTaskStudyYear;
 use SimpleXMLElement;
 
 /**
@@ -41,7 +41,7 @@ class StudyYearsFromXML2 extends Stage {
     /**
      * StudyYearsFromXML2 constructor.
      * @param $defaultStudyYears
-     * @param ServiceTaskStudyYear $serviceTaskStudyYear
+     * @param \FKSDB\ORM\Services\ServiceTaskStudyYear $serviceTaskStudyYear
      * @param ServiceStudyYear $serviceStudyYear
      */
     function __construct($defaultStudyYears, ServiceTaskStudyYear $serviceTaskStudyYear, ServiceStudyYear $serviceStudyYear) {

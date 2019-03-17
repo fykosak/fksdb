@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
+use FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
 use Nette\Database\Table\Selection;
-use ServiceStoredQueryTagType;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -15,7 +15,7 @@ class StoredQueryTagTypeProvider implements IFilteredDataProvider {
     const DESCRIPTION = 'description';
 
     /**
-     * @var ServiceStoredQueryTagType
+     * @var \FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryTagType
      */
     private $serviceStoredQueryTagType;
 
@@ -26,7 +26,7 @@ class StoredQueryTagTypeProvider implements IFilteredDataProvider {
 
     /**
      * StoredQueryTagTypeProvider constructor.
-     * @param ServiceStoredQueryTagType $serviceStoredQueryTagType
+     * @param \FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryTagType $serviceStoredQueryTagType
      */
     function __construct(ServiceStoredQueryTagType $serviceStoredQueryTagType) {
         $this->serviceStoredQueryTagType = $serviceStoredQueryTagType;

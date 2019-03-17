@@ -3,9 +3,9 @@
 namespace FKSDB\Components\Grids;
 
 
+use FKSDB\ORM\Services\ServiceSchool;
 use Nette\Database\Table\Selection;
 use Nette\Utils\Html;
-use ServiceSchool;
 use SQL\SearchableDataSource;
 
 /**
@@ -15,13 +15,13 @@ use SQL\SearchableDataSource;
 class SchoolsGrid extends BaseGrid {
 
     /**
-     * @var ServiceSchool
+     * @var \FKSDB\ORM\Services\ServiceSchool
      */
     private $serviceSchool;
 
     /**
      * SchoolsGrid constructor.
-     * @param ServiceSchool $serviceSchool
+     * @param \FKSDB\ORM\Services\ServiceSchool $serviceSchool
      */
     public function __construct(ServiceSchool $serviceSchool) {
         parent::__construct();

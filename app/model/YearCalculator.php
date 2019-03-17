@@ -2,6 +2,8 @@
 
 use FKSDB\Config\GlobalParameters;
 use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Services\ServiceContest;
+use FKSDB\ORM\Services\ServiceContestYear;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 use Nette\Object;

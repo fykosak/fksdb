@@ -2,10 +2,9 @@
 
 namespace PublicModule;
 
-use DbNames;
 use FKSDB\Components\Controls\ContestChooser;
+use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelContestant;
-use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelRole;
 use Nette\Application\BadRequestException;
 

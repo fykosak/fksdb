@@ -3,7 +3,7 @@
 namespace FKSDB\Payment\Handler;
 
 use FKSDB\ORM\Models\ModelPayment;
-use FKSDB\ORM\Models\ModelPaymentAccommodation;
+use FKSDB\ORM\Services\ServiceEventPersonAccommodation;
 use Nette\ArrayHash;
 use Submits\StorageException;
 
@@ -13,15 +13,15 @@ use Submits\StorageException;
  */
 class PaymentDataHandler {
     /**
-     * @var \ServiceEventPersonAccommodation
+     * @var ServiceEventPersonAccommodation
      */
     private $serviceEventPersonAccommodation;
 
     /**
      * PaymentDataHandler constructor.
-     * @param \ServiceEventPersonAccommodation $serviceEventPersonAccommodation
+     * @param ServiceEventPersonAccommodation $serviceEventPersonAccommodation
      */
-    public function __construct(\ServiceEventPersonAccommodation $serviceEventPersonAccommodation) {
+    public function __construct(ServiceEventPersonAccommodation $serviceEventPersonAccommodation) {
         $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;
     }
 

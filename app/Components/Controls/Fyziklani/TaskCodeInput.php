@@ -6,7 +6,11 @@ use FKSDB\model\Fyziklani\ClosedSubmittingException;
 use FKSDB\model\Fyziklani\TaskCodeException;
 use FKSDB\model\Fyziklani\TaskCodeHandler;
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use Nette\DI\Container;
 use Nette\Utils\Json;
 
@@ -25,13 +29,13 @@ class TaskCodeInput extends FyziklaniReactControl {
      * @param TaskCodeHandler $handler
      * @param Container $container
      * @param ModelEvent $event
-     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom $serviceFyziklaniRoom
-     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
+     * @param ServiceFyziklaniRoom $serviceFyziklaniRoom
+     * @param ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
      * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask $serviceFyziklaniTask
-     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit $serviceFyziklaniSubmit
+     * @param ServiceFyziklaniTask $serviceFyziklaniTask
+     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
      */
-    public function __construct(TaskCodeHandler $handler, Container $container, ModelEvent $event, \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom $serviceFyziklaniRoom, \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition, ServiceFyziklaniTeam $serviceFyziklaniTeam, \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask $serviceFyziklaniTask, \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit $serviceFyziklaniSubmit) {
+    public function __construct(TaskCodeHandler $handler, Container $container, ModelEvent $event, ServiceFyziklaniRoom $serviceFyziklaniRoom, ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition, ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceFyziklaniTask $serviceFyziklaniTask, ServiceFyziklaniSubmit $serviceFyziklaniSubmit) {
         parent::__construct($container, $event, $serviceFyziklaniRoom, $serviceFyziklaniTeamPosition, $serviceFyziklaniTeam, $serviceFyziklaniTask, $serviceFyziklaniSubmit);
         $this->handler = $handler;
     }

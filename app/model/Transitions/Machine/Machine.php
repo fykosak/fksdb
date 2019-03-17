@@ -2,12 +2,12 @@
 
 namespace FKSDB\Transitions;
 
+use FKSDB\ORM\IModel;
+use FKSDB\ORM\IService;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Database\Connection;
 use Nette\Database\Table\ActiveRow;
-use ORM\IModel;
-use ORM\IService;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -40,7 +40,7 @@ abstract class Machine {
     /**
      * Machine constructor.
      * @param Connection $connection
-     * @param IService $service
+     * @param \FKSDB\ORM\IService $service
      */
     public function __construct(Connection $connection, IService $service) {
         $this->connection = $connection;

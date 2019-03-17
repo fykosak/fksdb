@@ -1,5 +1,6 @@
 <?php
 
+namespace FKSDB\ORM;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>

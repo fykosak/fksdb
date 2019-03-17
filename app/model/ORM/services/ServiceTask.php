@@ -1,5 +1,9 @@
 <?php
 
+namespace FKSDB\ORM\Services;
+
+use AbstractServiceSingle;
+use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelTask;
 
@@ -22,10 +26,10 @@ class ServiceTask extends AbstractServiceSingle {
      */
     public function findBySeries(ModelContest $contest, $year, $series, $tasknr) {
         $result = $this->getTable()->where([
-                    'contest_id' => $contest->contest_id,
-                    'year' => $year,
-                    'series' => $series,
-                    'tasknr' => $tasknr,
+            'contest_id' => $contest->contest_id,
+            'year' => $year,
+            'series' => $series,
+            'tasknr' => $tasknr,
         ])->fetch();
 
         if ($result !== false) {

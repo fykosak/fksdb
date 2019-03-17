@@ -3,9 +3,9 @@
 namespace FKSDB\ORM\Models;
 
 use AbstractModelSingle;
-use DbNames;
 use Events\Model\Holder\Holder;
 use FKSDB\model\Fyziklani\NotSetGameParametersException;
+use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
 use Nette\Database\Table\ActiveRow;
 use Nette\DateTime;

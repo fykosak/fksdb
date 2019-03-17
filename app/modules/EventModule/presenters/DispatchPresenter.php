@@ -7,9 +7,8 @@ use AuthenticatedPresenter;
 use FKSDB\Components\Controls\LanguageChooser;
 use FKSDB\Components\Controls\Stalking\Helpers\ContestBadge;
 use FKSDB\Components\Grids\Events\DispatchGrid;
-use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Services\ServiceEvent;
 use Nette\DI\Container;
-use ServiceEvent;
 
 /**
  * Class DispatchPresenter

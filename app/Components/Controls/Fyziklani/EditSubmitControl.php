@@ -6,6 +6,7 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\model\Fyziklani\ClosedSubmittingException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Forms\Controls\RadioList;
@@ -20,7 +21,7 @@ use Nette\Templating\FileTemplate;
  */
 class EditSubmitControl extends Control {
     /**
-     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit
+     * @var ServiceFyziklaniSubmit
      */
     private $serviceFyziklaniSubmit;
     /**
@@ -39,10 +40,10 @@ class EditSubmitControl extends Control {
     /**
      * EditSubmitControl constructor.
      * @param \FKSDB\ORM\Models\ModelEvent $event
-     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit $serviceFyziklaniSubmit
+     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
      * @param ITranslator $translator
      */
-    public function __construct(ModelEvent $event, \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit $serviceFyziklaniSubmit, ITranslator $translator) {
+    public function __construct(ModelEvent $event, ServiceFyziklaniSubmit $serviceFyziklaniSubmit, ITranslator $translator) {
         parent::__construct();
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
         $this->translator = $translator;

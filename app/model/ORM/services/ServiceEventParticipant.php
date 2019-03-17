@@ -1,7 +1,12 @@
 <?php
 
-use FKSDB\ORM\Models\ModelEventParticipant;
-use ORM\IModel;
+namespace FKSDB\ORM\Services;
+
+use AbstractServiceSingle;
+use DuplicateApplicationException;
+use FKSDB\ORM\DbNames;
+use FKSDB\ORM\IModel;
+use ModelException;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>

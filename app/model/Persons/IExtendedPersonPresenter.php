@@ -2,7 +2,7 @@
 
 namespace Persons;
 
-use ORM\IModel;
+use FKSDB\ORM\IModel;
 
 /**
  *

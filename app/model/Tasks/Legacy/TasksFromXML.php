@@ -2,8 +2,8 @@
 
 namespace Tasks\Legacy;
 
+use FKSDB\ORM\Services\ServiceTask;
 use Pipeline\Stage;
-use ServiceTask;
 use SimpleXMLElement;
 use Tasks\SeriesData;
 

@@ -1,6 +1,7 @@
 <?php
 
 use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Services\ServiceTask;
 use Nette\Database\Connection;
 use Nette\Diagnostics\Debugger;
 use Nette\InvalidArgumentException;

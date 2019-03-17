@@ -15,6 +15,9 @@ use FKSDB\Components\Grids\Events\LayoutResolver;
 use FKSDB\Config\NeonScheme;
 use FKSDB\Logging\FlashDumpFactory;
 use FKSDB\Logging\MemoryLogger;
+use FKSDB\ORM\IModel;
+use FKSDB\ORM\Services\ServiceAuthToken;
+use FKSDB\ORM\Services\ServiceEvent;
 use FormUtils;
 use ModelException;
 use Nette\Application\BadRequestException;
@@ -27,9 +30,6 @@ use Nette\NotImplementedException;
 use Nette\Utils\Html;
 use Nette\Utils\Neon;
 use Nette\Utils\NeonException;
-use ORM\IModel;
-use ServiceAuthToken;
-use ServiceEvent;
 use Utils;
 
 
@@ -45,7 +45,7 @@ class EventPresenter extends EntityPresenter {
     protected $modelResourceId = 'event';
 
     /**
-     * @var ServiceEvent
+     * @var \FKSDB\ORM\Services\ServiceEvent
      */
     private $serviceEvent;
 
@@ -81,7 +81,7 @@ class EventPresenter extends EntityPresenter {
     private $flashDumpFactory;
 
     /**
-     * @var ServiceAuthToken $serviceAuthToken
+     * @var \FKSDB\ORM\Services\ServiceAuthToken $serviceAuthToken
      */
     private $serviceAuthToken;
 
@@ -94,7 +94,7 @@ class EventPresenter extends EntityPresenter {
 
 
     /**
-     * @param ServiceEvent $serviceEvent
+     * @param \FKSDB\ORM\Services\ServiceEvent $serviceEvent
      */
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;

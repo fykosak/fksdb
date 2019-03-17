@@ -1,7 +1,7 @@
 <?php
 
-use FKSDB\ORM\Models\ModelStoredQueryTag;
-use FKSDB\ORM\Models\ModelStoredQueryTagType;
+use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryTag;
+use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryTagType;
 
 /**
  *
@@ -17,7 +17,7 @@ class ModelMStoredQueryTag extends AbstractModelMulti {
     }
 
     /**
-     * @return ModelStoredQueryTag
+     * @return \FKSDB\ORM\Models\StoredQuery\ModelStoredQueryTag
      */
     public function getStoredQueryTag() {
         return $this->getJoinedModel();

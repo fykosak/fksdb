@@ -2,10 +2,10 @@
 
 namespace Events\Payment;
 
+use FKSDB\ORM\Services\ServicePerson;
 use Mail\MailTemplateFactory;
 use Nette\Mail\IMailer;
 use Nette\Mail\Message;
-use ServicePerson;
 
 /**
  * Sends email with given template name (in standard template directory)
@@ -37,7 +37,7 @@ class MailSender {
     private $mailTemplateFactory;
 
     /**
-     * @var ServicePerson
+     * @var \FKSDB\ORM\Services\ServicePerson
      */
     private $servicePerson;
 

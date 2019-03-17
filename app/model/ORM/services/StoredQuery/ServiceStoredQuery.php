@@ -1,6 +1,11 @@
 <?php
 
-use FKSDB\ORM\Models\ModelStoredQuery;
+namespace FKSDB\ORM\Services\StoredQuery;
+
+use AbstractServiceSingle;
+use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
+use Nette;
 use Nette\Database\Connection;
 
 /**
@@ -9,7 +14,7 @@ use Nette\Database\Connection;
 class ServiceStoredQuery extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_STORED_QUERY;
-    protected $modelClassName = 'FKSDB\ORM\Models\ModelStoredQuery';
+    protected $modelClassName = 'FKSDB\ORM\Models\StoredQuery\ModelStoredQuery';
 
     /**
      *
@@ -18,7 +23,7 @@ class ServiceStoredQuery extends AbstractServiceSingle {
     private $serviceStoredQueryTag;
 
     /**
-     * ServiceStoredQuery constructor.
+     * FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery constructor.
      * @param Connection $connection
      * @param ServiceStoredQueryTag $serviceStoredQueryTag
      */
@@ -31,7 +36,7 @@ class ServiceStoredQuery extends AbstractServiceSingle {
      * Syntactic sugar.
      *
      * @param string|null $qid
-     * @return \FKSDB\ORM\Models\ModelStoredQuery|null
+     * @return \FKSDB\ORM\Models\StoredQuery\ModelStoredQuery|null
      */
     public function findByQid($qid) {
         if (!$qid) {

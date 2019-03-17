@@ -5,6 +5,7 @@ namespace FKSDB\Components\Grids\Accommodation;
 use EventModule\AccommodationPresenter;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventPersonAccommodation;
+use FKSDB\ORM\Services\ServiceEventPersonAccommodation;
 use NiftyGrid\DataSource\NDataSource;
 
 /**
@@ -20,9 +21,9 @@ class BilletedAllGrid extends BilletedGrid {
     /**
      * BilletedAllGrid constructor.
      * @param \FKSDB\ORM\Models\ModelEvent $event
-     * @param \ServiceEventPersonAccommodation $serviceEventPersonAccommodation
+     * @param ServiceEventPersonAccommodation $serviceEventPersonAccommodation
      */
-    function __construct(ModelEvent $event, \ServiceEventPersonAccommodation $serviceEventPersonAccommodation) {
+    function __construct(ModelEvent $event, ServiceEventPersonAccommodation $serviceEventPersonAccommodation) {
         parent::__construct($serviceEventPersonAccommodation);
         $this->event = $event;
     }

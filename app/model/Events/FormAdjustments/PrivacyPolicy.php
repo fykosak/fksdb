@@ -8,11 +8,11 @@ use Events\Model\Holder\Holder;
 use Events\Processings\IProcessing;
 use FKSDB\Components\Forms\Factories\PersonInfo\AgreedField;
 use FKSDB\Logging\ILogger;
+use FKSDB\ORM\Services\ServicePersonInfo;
 use FormUtils;
 use Nette\ArrayHash;
 use Nette\Forms\Form;
 use Nette\Object;
-use ServicePersonInfo;
 
 /**
  * Creates required checkbox for whole application and then
@@ -25,7 +25,7 @@ class PrivacyPolicy extends Object implements IProcessing, IFormAdjustment {
     const CONTROL_NAME = 'privacy';
 
     /**
-     * @var ServicePersonInfo
+     * @var \FKSDB\ORM\Services\ServicePersonInfo
      */
     private $servicePersonInfo;
 

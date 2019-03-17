@@ -6,6 +6,7 @@ use AuthenticatedPresenter;
 use Authentication\SSO\GlobalSession;
 use AuthenticationPresenter;
 use FKSDB\ORM\Models\ModelLogin;
+use FKSDB\ORM\Services\ServiceLogin;
 use Nette\Application\Application;
 use Nette\Application\IPresenter;
 use Nette\Http\Request;
@@ -13,7 +14,6 @@ use Nette\Http\Session;
 use Nette\Http\UserStorage;
 use Nette\Security\Identity;
 use Nette\Security\IIdentity;
-use ServiceLogin;
 use YearCalculator;
 
 /**

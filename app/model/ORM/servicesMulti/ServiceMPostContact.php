@@ -1,6 +1,8 @@
 <?php
 
-use ORM\IModel;
+use FKSDB\ORM\IModel;
+use FKSDB\ORM\Services\ServiceAddress;
+use FKSDB\ORM\Services\ServicePostContact;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -21,7 +23,7 @@ class ServiceMPostContact extends AbstractServiceMulti {
 
     /**
      * Delete post contact including the address.
-     * @param IModel $model
+     * @param \FKSDB\ORM\IModel $model
      */
     public function dispose(IModel $model) {
         parent::dispose($model);

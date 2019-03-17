@@ -14,6 +14,7 @@ use FKSDB\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\IFilteredDataProvider;
 use FKSDB\Config\GlobalParameters;
 use FKSDB\Localization\GettextTranslator;
+use FKSDB\ORM\Services\ServiceContest;
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\JsonResponse;
 use Nette\Application\UI\InvalidLinkException;

@@ -4,7 +4,7 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventOrg;
-use ServiceEventOrg;
+use FKSDB\ORM\Services\ServiceEventOrg;
 use SQL\SearchableDataSource;
 
 /**
@@ -25,7 +25,7 @@ class EventOrgsGrid extends BaseGrid {
     /**
      * EventOrgsGrid constructor.
      * @param \FKSDB\ORM\Models\ModelEvent $event
-     * @param ServiceEventOrg $serviceEventOrg
+     * @param \FKSDB\ORM\Services\ServiceEventOrg $serviceEventOrg
      */
     function __construct(ModelEvent $event, ServiceEventOrg $serviceEventOrg) {
         parent::__construct();

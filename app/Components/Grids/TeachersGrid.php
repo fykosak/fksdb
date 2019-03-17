@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\ORM\Services\ServiceTeacher;
 use Nette\Database\Table\Selection;
 use Nette\Utils\Html;
 use OrgModule\TeacherPresenter;
@@ -14,15 +15,15 @@ use SQL\SearchableDataSource;
 class TeachersGrid extends BaseGrid {
 
     /**
-     * @var \ServiceTeacher
+     * @var ServiceTeacher
      */
     private $serviceTeacher;
 
     /**
      * TeachersGrid constructor.
-     * @param \ServiceTeacher $serviceTeacher
+     * @param ServiceTeacher $serviceTeacher
      */
-    function __construct(\ServiceTeacher $serviceTeacher) {
+    function __construct(ServiceTeacher $serviceTeacher) {
         parent::__construct();
         $this->serviceTeacher = $serviceTeacher;
     }

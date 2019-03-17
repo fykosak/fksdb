@@ -1,9 +1,13 @@
 <?php
 
+namespace FKSDB\ORM\Services;
+
+use FKSDB\ORM\DbNames;
 use Nette\Database\Table\Selection;
 
 /**
- * Class ServiceEventAccommodation
+ * Class FKSDB\ORM\Services\ServiceEventAccommodation
+ * @deprecated
  */
 class ServiceEventAccommodation extends \AbstractServiceSingle {
 

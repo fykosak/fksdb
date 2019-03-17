@@ -4,7 +4,7 @@
 namespace Events\Model\Holder\SecondaryModelStrategies;
 
 use Events\Model\Holder\BaseHolder;
-use ORM\IModel;
+use FKSDB\ORM\IModel;
 use RuntimeException;
 
 /**
@@ -19,7 +19,7 @@ class SecondaryModelConflictException extends RuntimeException {
     private $baseHolder;
 
     /**
-     * @var IModel[]
+     * @var \FKSDB\ORM\IModel[]
      */
     private $conflicts;
 
@@ -37,7 +37,7 @@ class SecondaryModelConflictException extends RuntimeException {
     }
 
     /**
-     * @param IModel $model
+     * @param \FKSDB\ORM\IModel $model
      * @param $conflicts
      * @return string
      */

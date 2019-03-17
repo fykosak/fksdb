@@ -6,6 +6,7 @@ use FKSDB\Components\Forms\Factories\LoginFactory;
 use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use FKSDB\Components\Forms\Rules\UniqueLoginFactory;
 use FKSDB\ORM\Models\ModelAuthToken;
+use FKSDB\ORM\Services\ServiceLogin;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\BaseControl;
 

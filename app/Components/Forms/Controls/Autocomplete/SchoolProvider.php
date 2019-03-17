@@ -3,9 +3,9 @@
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
 use FKSDB\ORM\Models\ModelSchool;
+use FKSDB\ORM\Services\ServiceSchool;
 use Nette\InvalidStateException;
 use Nette\NotImplementedException;
-use ServiceSchool;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

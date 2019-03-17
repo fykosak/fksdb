@@ -10,6 +10,8 @@ use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Config\Expressions\Helpers;
 use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Services\ServiceContestant;
+use FKSDB\ORM\Services\ServicePerson;
 use IContestPresenter;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
@@ -19,7 +21,6 @@ use Persons\ExtendedPersonHandler;
 use Persons\ExtendedPersonHandlerFactory;
 use Persons\IExtendedPersonPresenter;
 use Persons\SelfResolver;
-use ServiceContestant;
 
 /**
  * INPUT:
@@ -87,7 +88,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      */
     private $container;
     /**
-     * @var \ServicePerson
+     * @var ServicePerson
      */
     protected $servicePerson;
 
@@ -111,9 +112,9 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
     /**
-     * @param \ServicePerson $servicePerson
+     * @param ServicePerson $servicePerson
      */
-    public function injectServicePerson(\ServicePerson $servicePerson) {
+    public function injectServicePerson(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
     }
 
@@ -390,7 +391,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
     /**
-     * @return null|\ORM\IModel
+     * @return null|\FKSDB\ORM\IModel
      */
     public function getModel() {
         return null; //we always create new contestant

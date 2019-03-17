@@ -2,10 +2,10 @@
 
 namespace Tasks\Legacy;
 
+use FKSDB\ORM\Services\ServiceTask;
 use Nette\DateTime;
 use Pipeline\PipelineException;
 use Pipeline\Stage;
-use ServiceTask;
 use Tasks\SeriesData;
 
 /**
@@ -21,7 +21,7 @@ class DeadlineFromXML extends Stage {
     private $data;
 
     /**
-     * @var ServiceTask
+     * @var \FKSDB\ORM\Services\ServiceTask
      */
     private $taskService;
     private static $months = array(
@@ -41,7 +41,7 @@ class DeadlineFromXML extends Stage {
 
     /**
      * DeadlineFromXML constructor.
-     * @param ServiceTask $taskService
+     * @param \FKSDB\ORM\Services\ServiceTask $taskService
      */
     function __construct(ServiceTask $taskService) {
         $this->taskService = $taskService;

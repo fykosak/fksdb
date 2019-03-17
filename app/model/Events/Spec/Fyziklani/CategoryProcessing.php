@@ -8,6 +8,7 @@ use Events\Model\Holder\Holder;
 use Events\Processings\AbstractProcessing;
 use Events\SubmitProcessingException;
 use FKSDB\Logging\ILogger;
+use FKSDB\ORM\Services\ServiceSchool;
 use Nette\ArrayHash;
 use Nette\Forms\Form;
 use YearCalculator;
@@ -26,16 +27,16 @@ class CategoryProcessing extends AbstractProcessing {
     private $yearCalculator;
 
     /**
-     * @var \ServiceSchool
+     * @var ServiceSchool
      */
     private $serviceSchool;
 
     /**
      * CategoryProcessing constructor.
      * @param YearCalculator $yearCalculator
-     * @param \ServiceSchool $serviceSchool
+     * @param ServiceSchool $serviceSchool
      */
-    function __construct(YearCalculator $yearCalculator, \ServiceSchool $serviceSchool) {
+    function __construct(YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
         $this->yearCalculator = $yearCalculator;
         $this->serviceSchool = $serviceSchool;
     }

@@ -4,6 +4,7 @@ namespace FKSDB\Payment\Transition;
 
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPayment;
+use FKSDB\ORM\Services\ServicePayment;
 use FKSDB\Payment\PriceCalculator\PriceCalculator;
 use FKSDB\Payment\SymbolGenerator\AbstractSymbolGenerator;
 use FKSDB\Transitions\Machine;
@@ -33,9 +34,9 @@ class PaymentMachine extends Machine {
      * @param PriceCalculator $priceCalculator
      * @param AbstractSymbolGenerator $abstractSymbolGenerator
      * @param Connection $connection
-     * @param \ServicePayment $servicePayment
+     * @param ServicePayment $servicePayment
      */
-    public function __construct(ModelEvent $event, PriceCalculator $priceCalculator, AbstractSymbolGenerator $abstractSymbolGenerator, Connection $connection, \ServicePayment $servicePayment) {
+    public function __construct(ModelEvent $event, PriceCalculator $priceCalculator, AbstractSymbolGenerator $abstractSymbolGenerator, Connection $connection, ServicePayment $servicePayment) {
         parent::__construct($connection, $servicePayment);
         $this->priceCalculator = $priceCalculator;
         $this->symbolGenerator = $abstractSymbolGenerator;

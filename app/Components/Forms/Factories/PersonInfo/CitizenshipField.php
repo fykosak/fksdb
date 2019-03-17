@@ -4,6 +4,7 @@ namespace FKSDB\Components\Forms\Factories\PersonInfo;
 
 
 use FKSDB\ORM\Models\ModelRegion;
+use FKSDB\ORM\Services\ServiceRegion;
 use Nette\Forms\Controls\SelectBox;
 
 
@@ -13,15 +14,15 @@ use Nette\Forms\Controls\SelectBox;
  */
 class CitizenshipField extends SelectBox {
     /**
-     * @var \ServiceRegion
+     * @var ServiceRegion
      */
     private $serviceRegion;
 
     /**
      * CitizenshipField constructor.
-     * @param \ServiceRegion $serviceRegion
+     * @param ServiceRegion $serviceRegion
      */
-    public function __construct(\ServiceRegion $serviceRegion) {
+    public function __construct(ServiceRegion $serviceRegion) {
         $this->serviceRegion = $serviceRegion;
         parent::__construct(_('Státní příslušnost'));
         $this->setItems($this->getCountries());

@@ -3,12 +3,11 @@
 namespace Authentication;
 
 use FKSDB\ORM\Models\ModelAuthToken;
-use FKSDB\ORM\Models\ModelLogin;
+use FKSDB\ORM\Services\ServiceAuthToken;
+use FKSDB\ORM\Services\ServiceLogin;
 use Nette\Http\Session;
 use Nette\InvalidStateException;
 use Nette\Security\AuthenticationException;
-use ServiceAuthToken;
-use ServiceLogin;
 use YearCalculator;
 
 /**

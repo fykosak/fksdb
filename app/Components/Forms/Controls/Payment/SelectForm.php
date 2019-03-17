@@ -9,6 +9,8 @@ use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelPayment;
+use FKSDB\ORM\Services\ServiceEventPersonAccommodation;
+use FKSDB\ORM\Services\ServicePayment;
 use FKSDB\ORM\Services\ServicePaymentAccommodation;
 use FKSDB\Payment\Handler\DuplicateAccommodationPaymentException;
 use FKSDB\Payment\Handler\EmptyDataException;
@@ -33,7 +35,7 @@ class SelectForm extends Control {
      */
     private $personProvider;
     /**
-     * @var \ServiceEventPersonAccommodation
+     * @var ServiceEventPersonAccommodation
      */
     private $serviceEventPersonAccommodation;
     /**
@@ -58,7 +60,7 @@ class SelectForm extends Control {
      */
     private $model;
     /**
-     * @var \ServicePayment
+     * @var ServicePayment
      */
     private $servicePayment;
     /**
@@ -71,21 +73,21 @@ class SelectForm extends Control {
      * @param \FKSDB\ORM\Models\ModelEvent $event
      * @param bool $isOrg
      * @param ITranslator $translator
-     * @param \ServicePayment $servicePayment
+     * @param ServicePayment $servicePayment
      * @param PaymentMachine $machine
      * @param PersonFactory $personFactory
      * @param PersonProvider $personProvider
-     * @param \ServiceEventPersonAccommodation $serviceEventPersonAccommodation
+     * @param ServiceEventPersonAccommodation $serviceEventPersonAccommodation
      * @param ServicePaymentAccommodation $servicePaymentAccommodation
      */
     public function __construct(ModelEvent $event,
                                 bool $isOrg,
                                 ITranslator $translator,
-                                \ServicePayment $servicePayment,
+                                ServicePayment $servicePayment,
                                 PaymentMachine $machine,
                                 PersonFactory $personFactory,
                                 PersonProvider $personProvider,
-                                \ServiceEventPersonAccommodation $serviceEventPersonAccommodation,
+                                ServiceEventPersonAccommodation $serviceEventPersonAccommodation,
                                 ServicePaymentAccommodation $servicePaymentAccommodation
     ) {
         parent::__construct();

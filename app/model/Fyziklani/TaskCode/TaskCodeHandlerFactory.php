@@ -3,6 +3,8 @@
 namespace FKSDB\model\Fyziklani;
 
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 
 /**
@@ -11,11 +13,11 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
  */
 class TaskCodeHandlerFactory {
     /**
-     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit
+     * @var ServiceFyziklaniSubmit
      */
     private $serviceFyziklaniSubmit;
     /**
-     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask
+     * @var ServiceFyziklaniTask
      */
     private $serviceFyziklaniTask;
     /**
@@ -27,10 +29,10 @@ class TaskCodeHandlerFactory {
     /**
      * TaskCodeHandlerFactory constructor.
      * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask $serviceFyziklaniTask
-     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit $serviceFyziklaniSubmit
+     * @param ServiceFyziklaniTask $serviceFyziklaniTask
+     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
      */
-    public function __construct(ServiceFyziklaniTeam $serviceFyziklaniTeam, \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask $serviceFyziklaniTask, \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit $serviceFyziklaniSubmit) {
+    public function __construct(ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceFyziklaniTask $serviceFyziklaniTask, ServiceFyziklaniSubmit $serviceFyziklaniSubmit) {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;

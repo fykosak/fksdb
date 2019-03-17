@@ -5,8 +5,8 @@ namespace Events\Spec\Fyziklani;
 use Events\FormAdjustments\AbstractAdjustment;
 use Events\FormAdjustments\IFormAdjustment;
 use Events\Model\Holder\Holder;
+use FKSDB\ORM\Services\ServicePersonHistory;
 use Nette\Forms\Controls\BaseControl;
-use ServicePersonHistory;
 
 /**
  * More user friendly Due to author's laziness there's no class doc (or it's self explaining).

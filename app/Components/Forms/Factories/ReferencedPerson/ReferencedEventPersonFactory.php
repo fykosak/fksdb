@@ -11,12 +11,12 @@ use FKSDB\Components\Forms\Factories\PersonHistoryFactory;
 use FKSDB\Components\Forms\Factories\PersonInfoFactory;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Services\ServiceFlag;
+use FKSDB\ORM\Services\ServicePerson;
 use Nette\Forms\Controls\HiddenField;
 use Persons\IModifiabilityResolver;
 use Persons\IVisibilityResolver;
 use Persons\ReferencedPersonHandlerFactory;
-use ServiceFlag;
-use ServicePerson;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -39,7 +39,7 @@ class ReferencedEventPersonFactory extends AbstractReferencedPersonFactory {
      * @param PersonAccommodationFactory $personAccommodationFactory
      * @param AddressFactory $addressFactory
      * @param FlagFactory $flagFactory
-     * @param ServicePerson $servicePerson
+     * @param \FKSDB\ORM\Services\ServicePerson $servicePerson
      * @param PersonFactory $personFactory
      * @param ReferencedPersonHandlerFactory $referencedPersonHandlerFactory
      * @param PersonProvider $personProvider

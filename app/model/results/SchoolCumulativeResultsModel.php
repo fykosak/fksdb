@@ -1,6 +1,7 @@
 <?php
 
 use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Services\ServiceTask;
 use Nette\Database\Connection;
 
 /**
@@ -35,7 +36,7 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
      * @param Connection $connection
      * @param $year
      */
-    public function __construct(CumulativeResultsModel $cumulativeResultsModel, ModelContest $contest, \ServiceTask $serviceTask, Connection $connection, $year) {
+    public function __construct(CumulativeResultsModel $cumulativeResultsModel, ModelContest $contest, ServiceTask $serviceTask, Connection $connection, $year) {
         parent::__construct($contest, $serviceTask, $connection, $year, new EvaluationNullObject());
         $this->cumulativeResultsModel = $cumulativeResultsModel;
     }

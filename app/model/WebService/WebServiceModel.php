@@ -3,7 +3,7 @@
 use Authorization\ContestAuthorizator;
 use Exports\StoredQuery;
 use Exports\StoredQueryFactory;
-use FKSDB\ORM\Models\ModelLogin;
+use FKSDB\ORM\Services\ServiceContest;
 use Nette\Diagnostics\Debugger;
 use Nette\Security\AuthenticationException;
 use Nette\Security\IAuthenticator;

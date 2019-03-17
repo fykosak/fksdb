@@ -6,9 +6,9 @@ use AuthenticatedPresenter;
 use FKSDB\Components\Controls\LanguageChooser;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Services\ServiceEvent;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
-use ServiceEvent;
 
 /**
  *
@@ -35,7 +35,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     protected $container;
 
     /**
-     * @var ServiceEvent
+     * @var \FKSDB\ORM\Services\ServiceEvent
      */
     protected $serviceEvent;
 

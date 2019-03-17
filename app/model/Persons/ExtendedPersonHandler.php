@@ -5,8 +5,10 @@ namespace Persons;
 use Authentication\AccountManager;
 use BasePresenter;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
+use FKSDB\ORM\IService;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Services\ServicePerson;
 use FormUtils;
 use Mail\MailTemplateFactory;
 use Mail\SendFailedException;
@@ -17,8 +19,6 @@ use Nette\Forms\Form;
 use Nette\InvalidStateException;
 use Nette\Object;
 use OrgModule\ContestantPresenter;
-use ORM\IService;
-use ServicePerson;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -36,12 +36,12 @@ class ExtendedPersonHandler extends Object {
     const RESULT_ERROR = false;
 
     /**
-     * @var IService
+     * @var \FKSDB\ORM\IService
      */
     protected $service;
 
     /**
-     * @var ServicePerson
+     * @var \FKSDB\ORM\Services\ServicePerson
      */
     protected $servicePerson;
 
@@ -82,8 +82,8 @@ class ExtendedPersonHandler extends Object {
 
     /**
      * ExtendedPersonHandler constructor.
-     * @param IService $service
-     * @param ServicePerson $servicePerson
+     * @param \FKSDB\ORM\IService $service
+     * @param \FKSDB\ORM\Services\ServicePerson $servicePerson
      * @param Connection $connection
      * @param MailTemplateFactory $mailTemplateFactory
      * @param AccountManager $accountManager

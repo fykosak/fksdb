@@ -6,13 +6,13 @@ use Events\Machine\BaseMachine;
 use Events\Model\ExpressionEvaluator;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Config\NeonScheme;
+use FKSDB\ORM\IModel;
+use FKSDB\ORM\IService;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use Nette\Utils\Neon;
-use ORM\IModel;
-use ORM\IService;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -85,7 +85,7 @@ class BaseHolder extends FreezableObject {
     private $fields = [];
 
     /**
-     * @var IModel
+     * @var \FKSDB\ORM\IModel
      */
     private $model;
 
@@ -272,7 +272,7 @@ class BaseHolder extends FreezableObject {
     }
 
     /**
-     * @return IModel
+     * @return \FKSDB\ORM\IModel
      */
     public function & getModel() {
         if (!$this->model) {
@@ -345,7 +345,7 @@ class BaseHolder extends FreezableObject {
     }
 
     /**
-     * @param IService $service
+     * @param \FKSDB\ORM\IService $service
      */
     public function setService(IService $service) {
         $this->updating();

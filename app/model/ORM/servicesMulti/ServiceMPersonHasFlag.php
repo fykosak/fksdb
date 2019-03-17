@@ -1,5 +1,8 @@
 <?php
 
+use FKSDB\ORM\Services\ServiceFlag;
+use FKSDB\ORM\Services\ServicePersonHasFlag;
+
 /**
  * @author Lukáš Timko <lukast@fykos.cz>
  */
