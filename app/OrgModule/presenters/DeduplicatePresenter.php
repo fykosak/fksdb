@@ -39,6 +39,9 @@ class DeduplicatePresenter extends BasePresenter {
         $this->merger = $merger;
     }
 
+    /**
+     * @throws \Nette\Application\BadRequestException
+     */
     public function authorizedPerson() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('person', 'list', $this->getSelectedContest()));
     }
@@ -52,6 +55,11 @@ class DeduplicatePresenter extends BasePresenter {
 
     }
 
+    /**
+     * @throws ForbiddenRequestException
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
     public function handleBatchMerge() {
         if (!$this->getContestAuthorizator()->isAllowed('person', 'merge', $this->getSelectedContest())) { //TODO generic authorizator
             throw new ForbiddenRequestException();

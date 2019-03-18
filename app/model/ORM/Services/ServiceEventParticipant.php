@@ -22,11 +22,11 @@ class ServiceEventParticipant extends AbstractServiceSingle {
     public function save(IModel &$model) {
         try {
             parent::save($model);
-        } catch (ModelException $e) {
-            if ($e->getPrevious() && $e->getPrevious()->getCode() == 23000) {
-                throw new DuplicateApplicationException($model->getPerson(), $e);
+        } catch (ModelException $exception) {
+            if ($exception->getPrevious() && $exception->getPrevious()->getCode() == 23000) {
+                throw new DuplicateApplicationException($model->getPerson(), $exception);
             }
-            throw $e;
+            throw $exception;
         }
     }
 

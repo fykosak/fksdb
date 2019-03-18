@@ -179,7 +179,7 @@ class ExtendedPersonHandler extends Object {
                 try {
                     $this->accountManager->createLoginWithInvitation($template, $person, $email);
                     $presenter->flashMessage(_('Zvací e-mail odeslán.'), BasePresenter::FLASH_INFO);
-                } catch (SendFailedException $e) {
+                } catch (SendFailedException $exception) {
                     $presenter->flashMessage(_('Zvací e-mail se nepodařilo odeslat.'), BasePresenter::FLASH_ERROR);
                 }
             }
@@ -205,20 +205,20 @@ class ExtendedPersonHandler extends Object {
             } else {
                 return self::RESULT_OK_EXISTING_LOGIN;
             }
-        } catch (ModelException $e) {
+        } catch (ModelException $exception) {
             $connection->rollBack();
-            if ($e->getPrevious() && $e->getPrevious()->getCode() == 23000) {
+            if ($exception->getPrevious() && $exception->getPrevious()->getCode() == 23000) {
                 $presenter->flashMessage($presenter->messageExists(), ContestantPresenter::FLASH_ERROR);
             } else {
-                Debugger::log($e, Debugger::ERROR);
+                Debugger::log($exception, Debugger::ERROR);
                 $presenter->flashMessage($presenter->messageError(), ContestantPresenter::FLASH_ERROR);
             }
 
             return self::RESULT_ERROR;
-        } catch (ModelDataConflictException $e) {
+        } catch (ModelDataConflictException $exception) {
             $form->addError(_('Zadaná data se neshodují s již uloženými.'));
-            $e->getReferencedId()->getReferencedContainer()->setConflicts($e->getConflicts());
-            $e->getReferencedId()->rollback();
+            $exception->getReferencedId()->getReferencedContainer()->setConflicts($exception->getConflicts());
+            $exception->getReferencedId()->rollback();
             $connection->rollBack();
             return self::RESULT_ERROR;
         }

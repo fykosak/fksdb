@@ -131,6 +131,7 @@ abstract class Machine {
      * @param IStateModel $model
      * @return IStateModel
      * @throws ForbiddenRequestException
+     * @throws \Exception
      */
     public function executeTransition(string $id, IStateModel $model): IStateModel {
         $transition = $this->findTransitionById($id, $model);
@@ -211,6 +212,7 @@ abstract class Machine {
      * @param IService $service
      * @return IStateModel
      * @throws ForbiddenRequestException
+     * @throws \Exception
      */
     public function createNewModel($data, IService $service): IStateModel {
         $transition = $this->getCreatingTransition();

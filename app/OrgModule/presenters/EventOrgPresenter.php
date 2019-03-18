@@ -73,6 +73,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
     /**
      * @param $id
      * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
      */
     public function renderEdit($id) {
         parent::renderEdit($id);

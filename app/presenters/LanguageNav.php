@@ -40,6 +40,7 @@ trait LanguageNav {
 
     /**
      * @return mixed
+     * @throws Exception
      */
     public function getSelectedLanguage() {
         $this->init();
@@ -49,11 +50,15 @@ trait LanguageNav {
     /**
      * rewrite coreBasePresenter getLang
      * @return string
+     * @throws Exception
      */
     public function getLang() {
         return $this->getSelectedLanguage() ?: parent::getLang();
     }
 
+    /**
+     * @throws Exception
+     */
     public function init() {
         if ($this->initialized) {
             return;
@@ -69,6 +74,7 @@ trait LanguageNav {
 
     /**
      * redirect to correct URL
+     * @throws Exception
      */
     protected function startupRedirects() {
         $this->init();

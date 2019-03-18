@@ -22,6 +22,7 @@ class ServicePaymentAccommodation extends AbstractServiceSingle {
      * @param ArrayHash $data
      * @param ModelPayment $payment
      * @throws DuplicateAccommodationPaymentException
+     * @throws \Exception
      */
     public function prepareAndUpdate($data, ModelPayment $payment) {
         $oldRows = $this->getTable()->where('payment_id', $payment->payment_id);

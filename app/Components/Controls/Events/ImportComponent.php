@@ -70,6 +70,7 @@ class ImportComponent extends Control {
     /**
      * @param $name
      * @return FormControl
+     * @throws \Nette\Application\BadRequestException
      */
     protected function createComponentFormImport($name) {
         $control = new FormControl();
@@ -149,9 +150,9 @@ class ImportComponent extends Control {
             }
 
             $this->redirect('this');
-        } catch (ImportHandlerException $e) {
+        } catch (ImportHandlerException $exception) {
             $this->flashDump->dump($this->handler->getLogger(), $this->getPresenter());
-            $this->getPresenter()->flashMessage($e->getMessage(), BasePresenter::FLASH_ERROR);
+            $this->getPresenter()->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
         }
     }
 

@@ -45,6 +45,7 @@ class TaskPresenter extends BasePresenter {
 
     /**
      * @return FormControl
+     * @throws \Nette\Application\BadRequestException
      */
     public function createComponentTaskImportForm(): FormControl {
         $control = new FormControl();

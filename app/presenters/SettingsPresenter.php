@@ -110,6 +110,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
     /**
      * @param $name
      * @return FormControl
+     * @throws \Nette\Application\BadRequestException
      */
     protected function createComponentSettingsForm($name) {
         $control = new FormControl();

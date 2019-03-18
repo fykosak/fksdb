@@ -161,11 +161,18 @@ final class AuthenticationPresenter extends BasePresenter {
         $this->servicePerson = $servicePerson;
     }
 
+    /**
+     * @throws Exception
+     */
     public function startup() {
         parent::startup();
         $this->startupRedirects();
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\UI\InvalidLinkException
+     */
     public function actionLogout() {
         $subDomainAuth = $this->globalParameters['subdomain']['auth'];
         $subDomain = $this->getParameter('subdomain');
@@ -203,6 +210,9 @@ final class AuthenticationPresenter extends BasePresenter {
         $this->redirect('login');
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     */
     public function actionLogin() {
         if ($this->isLoggedIn()) {
             /**
@@ -230,6 +240,9 @@ final class AuthenticationPresenter extends BasePresenter {
         }
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     */
     public function actionRecover() {
         if ($this->isLoggedIn()) {
             $this->initialRedirect();
@@ -308,8 +321,8 @@ final class AuthenticationPresenter extends BasePresenter {
             $login = $this->user->getIdentity();
             $this->loginBackLinkRedirect($login);
             $this->initialRedirect();
-        } catch (AuthenticationException $e) {
-            $this->flashMessage($e->getMessage(), self::FLASH_ERROR);
+        } catch (AuthenticationException $exception) {
+            $this->flashMessage($exception->getMessage(), self::FLASH_ERROR);
         }
     }
 
@@ -320,6 +333,7 @@ final class AuthenticationPresenter extends BasePresenter {
     /**
      * @param Form $form
      * @throws \Nette\Application\AbortException
+     * @throws Exception
      */
     public function recoverFormSubmitted(Form $form) {
         $connection = $this->serviceAuthToken->getConnection();
@@ -337,15 +351,15 @@ final class AuthenticationPresenter extends BasePresenter {
             $this->flashMessage(sprintf(_('Na email %s byly poslány další instrukce k obnovení přístupu.'), $email), self::FLASH_SUCCESS);
             $connection->commit();
             $this->redirect('login');
-        } catch (AuthenticationException $e) {
-            $this->flashMessage($e->getMessage(), self::FLASH_ERROR);
+        } catch (AuthenticationException $exception) {
+            $this->flashMessage($exception->getMessage(), self::FLASH_ERROR);
             $connection->rollBack();
-        } catch (RecoveryException $e) {
-            $this->flashMessage($e->getMessage(), self::FLASH_ERROR);
+        } catch (RecoveryException $exception) {
+            $this->flashMessage($exception->getMessage(), self::FLASH_ERROR);
             $connection->rollBack();
-        } catch (SendFailedException $e) {
+        } catch (SendFailedException $exception) {
             $connection->rollBack();
-            $this->flashMessage($e->getMessage(), self::FLASH_ERROR);
+            $this->flashMessage($exception->getMessage(), self::FLASH_ERROR);
         }
     }
 
@@ -393,6 +407,9 @@ final class AuthenticationPresenter extends BasePresenter {
         }
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     */
     private function initialRedirect() {
         if ($this->backlink) {
             $this->restoreRequest($this->backlink);

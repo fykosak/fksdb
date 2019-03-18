@@ -52,6 +52,7 @@ class QREntryControl extends Control {
 
     /**
      * @return FormControl
+     * @throws BadRequestException
      */
     public function createComponentForm(): FormControl {
         $control = new FormControl();
@@ -75,16 +76,17 @@ class QREntryControl extends Control {
 
     /**
      * @param string $code
+     * @throws BadRequestException
      */
     public function setCode(string $code) {
         $this->code = $code;
         try {
             $this->handler->checkTaskCode($code);
-        } catch (TaskCodeException $e) {
-            $this->getPresenter()->flashMessage($e->getMessage(), \BasePresenter::FLASH_ERROR);
+        } catch (TaskCodeException $exception) {
+            $this->getPresenter()->flashMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR);
             return;
-        } catch (ClosedSubmittingException $e) {
-            $this->getPresenter()->flashMessage($e->getMessage(), \BasePresenter::FLASH_ERROR);
+        } catch (ClosedSubmittingException $exception) {
+            $this->getPresenter()->flashMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR);
         }
         /**
          * @var FormControl $control
@@ -125,7 +127,7 @@ class QREntryControl extends Control {
         try {
             $this->template->task = $this->handler->getTaskFromCode($this->code);
             $this->template->team = $this->handler->getTeamFromCode($this->code);
-        } catch (TaskCodeException$e) {
+        } catch (TaskCodeException $exception) {
         }
 
         $this->template->render();
@@ -148,8 +150,8 @@ class QREntryControl extends Control {
         try {
             $log = $this->handler->preProcess($values->task_code, $points);
             $this->getPresenter()->flashMessage($log, \BasePresenter::FLASH_SUCCESS);
-        } catch (TaskCodeException $e) {
-            $this->getPresenter()->flashMessage($e->getMessage(), \BasePresenter::FLASH_ERROR);
+        } catch (TaskCodeException $exception) {
+            $this->getPresenter()->flashMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR);
         }
     }
 
@@ -159,10 +161,10 @@ class QREntryControl extends Control {
     private function formValidate(Form $form) {
         try {
             $this->handler->checkTaskCode($form->getValues()->task_code);
-        } catch (TaskCodeException $e) {
-            $form->addError($e->getMessage());
-        } catch (ClosedSubmittingException $e) {
-            $form->addError($e->getMessage());
+        } catch (TaskCodeException $exception) {
+            $form->addError($exception->getMessage());
+        } catch (ClosedSubmittingException $exception) {
+            $form->addError($exception->getMessage());
         }
     }
 }

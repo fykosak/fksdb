@@ -99,10 +99,10 @@ class ImportHandler extends Object {
                 } elseif ($transitions == ApplicationHandler::STATE_TRANSITION) {
                     $handler->storeAndExecute($holder, $values);
                 }
-            } catch (ApplicationHandlerException $e) {
+            } catch (ApplicationHandlerException $exception) {
                 $hasError = true;
                 if ($errorMode == ApplicationHandler::ERROR_ROLLBACK) {
-                    throw new ImportHandlerException(_('Import se nepovedl.'), null, $e);
+                    throw new ImportHandlerException(_('Import se nepovedl.'), null, $exception);
                 }
             }
         }

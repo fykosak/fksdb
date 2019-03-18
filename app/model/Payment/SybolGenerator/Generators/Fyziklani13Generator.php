@@ -16,8 +16,8 @@ use Nette\OutOfRangeException;
  */
 class Fyziklani13Generator extends AbstractSymbolGenerator {
 
-    const variable_symbol_start = 7292000;
-    const variable_symbol_end = 7292999;
+    const VARIABLE_SYMBOL_START = 7292000;
+    const VARIABLE_SYMBOL_END = 7292999;
 
     /**
      * Fyziklani13Generator constructor.
@@ -39,12 +39,12 @@ class Fyziklani13Generator extends AbstractSymbolGenerator {
             throw new AlreadyGeneratedSymbolsException(\sprintf(_('Payment #%s has already generated symbols.'), $modelPayment->getPaymentId()));
         }
         $maxVariableSymbol = $this->servicePayment->where('event_id', $modelPayment->event_id)
-            ->where('variable_symbol>=?', self::variable_symbol_start)
-            ->where('variable_symbol<=?', self::variable_symbol_end)
+            ->where('variable_symbol>=?', self::VARIABLE_SYMBOL_START)
+            ->where('variable_symbol<=?', self::VARIABLE_SYMBOL_END)
             ->max('variable_symbol');
 
         $variableNumber = $maxVariableSymbol + 1;
-        if ($variableNumber > self::variable_symbol_end) {
+        if ($variableNumber > self::VARIABLE_SYMBOL_END) {
             throw new OutOfRangeException(_('variable_symbol overflow'));
         }
         switch ($modelPayment->currency) {

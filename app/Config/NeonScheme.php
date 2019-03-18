@@ -34,8 +34,8 @@ class NeonScheme {
             if ($metadata === null || !array_key_exists('default', $metadata)) {
                 try {
                     $result[$key] = Arrays::get($section, $key);
-                } catch (InvalidArgumentException $e) {
-                    throw new NeonSchemaException("Expected key '$key' not found.", null, $e);
+                } catch (InvalidArgumentException $exception) {
+                    throw new NeonSchemaException("Expected key '$key' not found.", null, $exception);
                 }
                 if ($metadata === null) {
                     continue;

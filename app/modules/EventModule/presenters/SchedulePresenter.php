@@ -35,7 +35,7 @@ class SchedulePresenter extends BasePresenter {
     protected function hasEventSchedule() {
         try {
             $this->getEvent()->getParameter('schedule');
-        } catch (InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $exception) {
             return false;
         }
         return true;

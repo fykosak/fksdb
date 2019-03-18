@@ -56,6 +56,9 @@ class SubmitPresenter extends BasePresenter {
         $this->submitStorage = $submitStorage;
     }
 
+    /**
+     * @throws BadRequestException
+     */
     public function authorizedDefault() {
         $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', 'upload', $this->getSelectedContest()));
     }
@@ -85,6 +88,9 @@ class SubmitPresenter extends BasePresenter {
         }
     }
 
+    /**
+     * @throws BadRequestException
+     */
     public function renderDefault() {
         $this->template->hasTasks = count($this->getAvailableTasks()) > 0;
         $this->template->canRegister = false;
@@ -249,17 +255,17 @@ class SubmitPresenter extends BasePresenter {
             $this->submitStorage->commit();
             $this->submitService->getConnection()->commit();
             $this->redirect('this');
-        } catch (ModelException $e) {
+        } catch (ModelException $exception) {
             $this->submitStorage->rollback();
             $this->submitService->getConnection()->rollBack();
 
-            Debugger::log($e);
+            Debugger::log($exception);
             $this->flashMessage(_('Došlo k chybě při ukládání úloh.'), self::FLASH_ERROR);
-        } catch (ProcessingException $e) {
+        } catch (ProcessingException $exception) {
             $this->submitStorage->rollback();
             $this->submitService->getConnection()->rollBack();
 
-            Debugger::log($e);
+            Debugger::log($exception);
             $this->flashMessage(_('Došlo k chybě při ukládání úloh.'), self::FLASH_ERROR);
         }
     }

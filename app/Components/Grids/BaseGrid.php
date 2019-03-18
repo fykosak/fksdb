@@ -53,7 +53,9 @@ abstract class BaseGrid extends Grid {
     /*     * *****************************
      * Extended rendering for the paginator
      * ***************************** */
-
+    /**
+     * @throws \NiftyGrid\GridException
+     */
     public function render() {
         $paginator = $this->getPaginator();
 
@@ -98,6 +100,7 @@ abstract class BaseGrid extends Grid {
 
     /**
      * @return FormControl
+     * @throws \Nette\Application\BadRequestException
      */
     protected function createComponentSearchForm(): FormControl {
         if (!$this->isSearchable()) {

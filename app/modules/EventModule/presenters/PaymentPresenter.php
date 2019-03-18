@@ -221,7 +221,7 @@ class PaymentPresenter extends BasePresenter {
     private function hasApi(): bool {
         try {
             $this->getMachine();
-        } catch (NotImplementedException $e) {
+        } catch (NotImplementedException $exception) {
             return false;
         }
         return true;

@@ -339,8 +339,8 @@ class Transition extends FreezableObject {
         }
         try {
             $this->onExecuted($this);
-        } catch (\Exception $e) {
-            throw new TransitionOnExecutedException($this->getName(), null, $e);
+        } catch (\Exception $exception) {
+            throw new TransitionOnExecutedException($this->getName(), null, $exception);
         }
     }
 

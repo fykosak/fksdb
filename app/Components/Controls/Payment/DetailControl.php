@@ -46,6 +46,7 @@ class DetailControl extends Control {
 
     /**
      * @return FormControl
+     * @throws \Nette\Application\BadRequestException
      */
     public function createComponentForm(): FormControl {
         $formControl = new FormControl();

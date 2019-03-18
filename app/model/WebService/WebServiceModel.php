@@ -95,7 +95,7 @@ class WebServiceModel {
         try {
             $this->authenticatedLogin = $this->authenticator->authenticate($credentials);
             $this->log("Successfully authenticated for web service request.");
-        } catch (AuthenticationException $e) {
+        } catch (AuthenticationException $exception) {
             $this->log('Invalid credentials.');
             throw new SoapFault('Sender', 'Invalid credentials.');
         }
@@ -275,8 +275,8 @@ class WebServiceModel {
 
         try {
             $storedQuery = $this->storedQueryFactory->createQueryFromQid($qid, $parameters);
-        } catch (InvalidArgumentException $e) {
-            throw new SoapFault('Sender', $e->getMessage(), $e);
+        } catch (InvalidArgumentException $exception) {
+            throw new SoapFault('Sender', $exception->getMessage(), $exception);
         }
 
         // authorization

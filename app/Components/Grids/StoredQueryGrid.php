@@ -58,7 +58,7 @@ class StoredQueryGrid extends BaseGrid {
                         });
                 ++$c;
             }
-        } catch (PDOException $e) {
+        } catch (PDOException $exception) {
             // pass, exception should be handled inn parent components
         }
 

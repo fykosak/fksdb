@@ -124,8 +124,8 @@ class AccountManager {
         try {
             $this->mailer->send($message);
             return $login;
-        } catch (InvalidStateException $e) {
-            throw new SendFailedException($e);
+        } catch (InvalidStateException $exception) {
+            throw new SendFailedException($exception);
         }
     }
 
@@ -165,8 +165,8 @@ class AccountManager {
 
         try {
             $this->mailer->send($message);
-        } catch (InvalidStateException $e) {
-            throw new SendFailedException($e);
+        } catch (InvalidStateException $exception) {
+            throw new SendFailedException($exception);
         }
     }
 

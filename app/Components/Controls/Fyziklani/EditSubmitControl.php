@@ -105,6 +105,7 @@ class EditSubmitControl extends Control {
 
     /**
      * @return FormControl
+     * @throws BadRequestException
      */
     protected function createComponentForm(): FormControl {
         $control = new FormControl();

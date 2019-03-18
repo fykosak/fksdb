@@ -45,6 +45,9 @@ class RoutingEdit extends FyziklaniReactControl {
         return $actions;
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     */
     public function handleSave() {
         $data = $this->getHttpRequest()->getPost('requestData');
         $updatedTeams = $this->serviceFyziklaniTeamPosition->updateRouting($data);

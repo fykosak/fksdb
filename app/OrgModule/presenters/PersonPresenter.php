@@ -232,6 +232,7 @@ class PersonPresenter extends EntityPresenter {
      * @param $trunkId
      * @param $mergedId
      * @throws \Nette\Application\AbortException
+     * @throws \ReflectionException
      */
     public function actionDontMerge($trunkId, $mergedId) {
         $mergedPI = $this->servicePersonInfo->findByPrimary($mergedId);
@@ -281,6 +282,7 @@ class PersonPresenter extends EntityPresenter {
     /**
      * @param $name
      * @return FormControl
+     * @throws BadRequestException
      */
     protected function createComponentMergeForm($name) {
         $control = new FormControl();
@@ -361,6 +363,7 @@ class PersonPresenter extends EntityPresenter {
     /**
      * @param Form $form
      * @throws \Nette\Application\AbortException
+     * @throws \ReflectionException
      */
     public function handleMergeFormSuccess(Form $form) {
         if ($form['cancel']->isSubmittedBy()) {
