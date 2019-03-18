@@ -45,7 +45,7 @@ class RelatedPersonSource extends AggregatedPersonSource implements IHolderSourc
 
 	try {
             $eventSource = new SingleEventSource($event, $this->container);
-	} catch (UndeclaredEventException $e) {
+	} catch (UndeclaredEventException $exception) {
 	    return null;
 	}
 

@@ -13,7 +13,6 @@ class DbNames {
     const TAB_CONTEST_YEAR = 'contest_year';
     const TAB_CONTESTANT_BASE = 'contestant_base';
     const TAB_EVENT = 'event';
-    const TAB_EVENT_HAS_ORG = self::TAB_EVENT_ORG;
     const TAB_EVENT_ORG = 'event_org';
     const TAB_EVENT_PARTICIPANT = 'event_participant';
     const TAB_EVENT_ACCOMMODATION = 'event_accommodation';
@@ -33,9 +32,6 @@ class DbNames {
     const TAB_REGION = 'region';
     const TAB_ROLE = 'role';
     const TAB_SCHOOL = 'school';
-    /**
-     * @deprecated
-     */
     const TAB_SPAMEE = 'si_spamee'; // obsolete
     const TAB_STORED_QUERY = 'stored_query';
     const TAB_STORED_QUERY_PARAM = 'stored_query_parameter';
@@ -67,5 +63,10 @@ class DbNames {
 
     const TAB_FYZIKLANI_ROOM = 'brawl_room';
     const TAB_FYZIKLANI_TEAM_POSITION = 'brawl_team_position';
+
+    const TAB_SCHEDULE_GROUP = 'schedule_group';
+    const TAB_SCHEDULE_ITEM = 'schedule_item';
+    const TAB_PERSON_SCHEDULE = 'person_schedule';
+    const TAB_SCHEDULE_PAYMENT = 'schedule_payment';
 
 }

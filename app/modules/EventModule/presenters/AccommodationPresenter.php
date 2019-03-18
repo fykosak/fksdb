@@ -178,6 +178,7 @@ class AccommodationPresenter extends BasePresenter {
 
     /**
      * @return FormControl
+     * @throws BadRequestException
      */
     public function createComponentCreateForm(): FormControl {
         $control = $this->createForm();
@@ -192,6 +193,7 @@ class AccommodationPresenter extends BasePresenter {
 
     /**
      * @return FormControl
+     * @throws BadRequestException
      */
     public function createComponentEditForm(): FormControl {
         $control = $this->createForm();
@@ -250,6 +252,7 @@ class AccommodationPresenter extends BasePresenter {
 
     /**
      * @return FormControl
+     * @throws BadRequestException
      */
     private function createForm(): FormControl {
         $control = new FormControl();
@@ -303,6 +306,7 @@ class AccommodationPresenter extends BasePresenter {
     /**
      * @param Form $form
      * @throws \Nette\Application\AbortException
+     * @throws \ReflectionException
      */
     private function handleCreateFormSuccess(Form $form) {
         $connection = $this->serviceEventAccommodation->getConnection();
@@ -343,9 +347,9 @@ class AccommodationPresenter extends BasePresenter {
             $this->flashMessage(_('Ubytovaní založeno'), self::FLASH_SUCCESS);
             $this->backLinkRedirect();
             $this->redirect('list'); // if there's no backlink
-        } catch (\ModelException $e) {
+        } catch (\ModelException $exception) {
             $connection->rollBack();
-            Debugger::log($e, Debugger::ERROR);
+            Debugger::log($exception, Debugger::ERROR);
             $this->flashMessage(_('Chyba při zakládání ubytovani.'), self::FLASH_ERROR);
         }
     }
@@ -369,7 +373,9 @@ class AccommodationPresenter extends BasePresenter {
     /**
      * @param Form $form
      * @throws BadRequestException
+     * @throws ForbiddenRequestException
      * @throws \Nette\Application\AbortException
+     * @throws \ReflectionException
      */
     private function handleEditFormSuccess(Form $form) {
         $connection = $this->serviceEventAccommodation->getConnection();
@@ -414,9 +420,9 @@ class AccommodationPresenter extends BasePresenter {
             $this->flashMessage(_('Ubytovaní upraveno'), self::FLASH_SUCCESS);
             $this->backLinkRedirect();
             $this->redirect('list'); // if there's no backlink
-        } catch (\ModelException $e) {
+        } catch (\ModelException $exception) {
             $connection->rollBack();
-            Debugger::log($e, Debugger::ERROR);
+            Debugger::log($exception, Debugger::ERROR);
             $this->flashMessage(_('Chyba při ubytovaní.'), self::FLASH_ERROR);
         }
     }

@@ -128,7 +128,7 @@ class TableMerger {
                 $this->logUpdate($this->trunkRow, $values);
                 $this->trunkRow->update($values);
                 return true;
-            } catch (CannotMergeException $e) {
+            } catch (CannotMergeException $exception) {
                 return false;
             }
         }
@@ -313,9 +313,9 @@ class TableMerger {
                     list($table, $refColumn) = $this->connection->getDatabaseReflection()->getHasManyReference($this->table, $otherTable['name'], self::$refreshReferencing);
                     self::$refreshReferencing = false;
                     $this->refTables[$table] = $refColumn;
-                } catch (MissingReferenceException $e) {
+                } catch (MissingReferenceException $exception) {
                     /* empty */
-                } catch (AmbiguousReferenceKeyException $e) {
+                } catch (AmbiguousReferenceKeyException $exception) {
                     /* empty */
                 }
             }
@@ -364,7 +364,7 @@ class TableMerger {
                 list($table, $refColumn) = $this->connection->getDatabaseReflection()->getBelongsToReference($this->table, $column, self::$refreshReferenced);
                 self::$refreshReferenced = false;
                 $this->referencedTables[$column] = $table;
-            } catch (MissingReferenceException $e) {
+            } catch (MissingReferenceException$exception) {
                 $this->referencedTables[$column] = null;
             }
         }

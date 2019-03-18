@@ -2,21 +2,24 @@
 
 namespace FKSDB\Components\Controls\FormControl;
 
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\ComponentModel\IContainer;
+use Nette\Templating\FileTemplate;
 
 /**
  * Bootstrap compatible form control with support for AJAX in terms
  * of form/container groups.
  *
  * @author Michal Koutný <michal@fykos.cz>
+ * @property FileTemplate $template
  */
 class FormControl extends Control {
 
     const SNIPPET_MAIN = 'groupContainer';
 
-    const templatePath = 'FormControl.containers.latte';
+    const TEMPLATE_PATH = 'FormControl.containers.latte';
 
     /**
      * FormControl constructor.
@@ -39,16 +42,21 @@ class FormControl extends Control {
 
     /**
      * @return Form
+     * @throws BadRequestException
      */
-    public final function getForm() {
-        return $this->getComponent('form');
+    public final function getForm(): Form {
+        $component = $this->getComponent('form');
+        if (!$component instanceof Form) {
+            throw new BadRequestException();
+        }
+        return $component;
     }
 
     /**
      * @return string
      */
     private function getTemplateFile() {
-        return __DIR__ . DIRECTORY_SEPARATOR . self::templatePath;
+        return __DIR__ . DIRECTORY_SEPARATOR . self::TEMPLATE_PATH;
     }
 
     public function render() {

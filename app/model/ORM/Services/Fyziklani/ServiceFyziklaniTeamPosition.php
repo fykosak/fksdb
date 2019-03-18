@@ -61,7 +61,7 @@ class ServiceFyziklaniTeamPosition extends AbstractServiceSingle {
                         $updatedTeams[] = $teamData->teamId;
                     }
                 }
-            } catch (\Exception $e) {
+            } catch (\Exception $exception) {
             }
 
         }

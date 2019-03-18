@@ -31,6 +31,9 @@ abstract class ResultsAndStatistics extends FyziklaniReactControl {
 
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     */
     public function handleRefresh() {
         $presenter = $this->getPresenter();
         if (!($presenter instanceof BasePresenter)) {

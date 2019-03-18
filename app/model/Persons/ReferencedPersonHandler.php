@@ -244,15 +244,15 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
             }
 
             $this->commit();
-        } catch (ModelDataConflictException $e) {
+        } catch (ModelDataConflictException $exception) {
             $this->rollback();
-            throw $e;
-        } catch (ModelException $e) {
+            throw $exception;
+        } catch (ModelException $exception) {
             $this->rollback();
-            throw $e;
-        } catch (StorageException $e) {
+            throw $exception;
+        } catch (StorageException $exception) {
             $this->rollback();
-            throw $e;
+            throw $exception;
         }
     }
 

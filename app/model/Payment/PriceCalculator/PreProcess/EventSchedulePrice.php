@@ -5,7 +5,7 @@ namespace FKSDB\Payment\PriceCalculator\PreProcess;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServiceEventParticipant;
-use FKSDB\Payment\PriceCalculator\Price;
+use FKSDB\Payment\Price;
 use Nette\Application\BadRequestException;
 
 /**
@@ -94,7 +94,7 @@ class EventSchedulePrice extends AbstractPreProcess {
                 case Price::CURRENCY_EUR:
                     $price->addAmount($parallel['price']['eur']);
                     break;
-                case Price::CURRENCY_KC:
+                case Price::CURRENCY_CZK:
                     $price->addAmount($parallel['price']['kc']);
                     break;
             }

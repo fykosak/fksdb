@@ -145,6 +145,9 @@ class ApplicationPresenter extends BasePresenter {
         $this->setIcon('fa fa-calendar-check-o');
     }
 
+    /**
+     * @throws BadRequestException
+     */
     public function titleList() {
         $contest = $this->getSelectedContest();
         if ($contest) {
@@ -216,6 +219,9 @@ class ApplicationPresenter extends BasePresenter {
         }
     }
 
+    /**
+     * @throws BadRequestException
+     */
     public function actionList() {
         if (!$this->getSelectedContest()) {
             $this->setView('contestChooser');

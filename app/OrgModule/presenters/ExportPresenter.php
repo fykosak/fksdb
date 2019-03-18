@@ -210,10 +210,16 @@ class ExportPresenter extends SeriesPresenter {
         return $this->patternQuery;
     }
 
+    /**
+     * @throws BadRequestException
+     */
     public function authorizedList() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('storedQuery', 'list', $this->getSelectedContest()));
     }
 
+    /**
+     * @throws BadRequestException
+     */
     public function authorizedCompose() {
         $this->setAuthorized(
             ($this->getContestAuthorizator()->isAllowed('storedQuery', 'create', $this->getSelectedContest()) &&
@@ -463,6 +469,7 @@ class ExportPresenter extends SeriesPresenter {
     /**
      * @param $name
      * @return FormControl
+     * @throws BadRequestException
      */
     protected function createComponentComposeForm($name) {
         $control = $this->createDesignForm();
@@ -474,6 +481,7 @@ class ExportPresenter extends SeriesPresenter {
     /**
      * @param $name
      * @return FormControl
+     * @throws BadRequestException
      */
     protected function createComponentEditForm($name) {
         $control = $this->createDesignForm();
@@ -484,6 +492,7 @@ class ExportPresenter extends SeriesPresenter {
 
     /**
      * @return FormControl
+     * @throws BadRequestException
      */
     private function createDesignForm() {
         $control = new FormControl();
@@ -532,6 +541,7 @@ class ExportPresenter extends SeriesPresenter {
     /**
      * @param SubmitButton $button
      * @throws \Nette\Application\AbortException
+     * @throws \ReflectionException
      */
     public function handleEditSuccess(SubmitButton $button) {
         try {
@@ -547,17 +557,18 @@ class ExportPresenter extends SeriesPresenter {
             $this->flashMessage(_('Dotaz upraven.'), self::FLASH_SUCCESS);
             $this->backLinkRedirect();
             $this->redirect('list'); // if there's no backlink
-        } catch (BadRequestException $e) {
-            $this->flashMessage($e->getMessage(), self::FLASH_ERROR);
-        } catch (ModelException $e) {
+        } catch (BadRequestException $exception) {
+            $this->flashMessage($exception->getMessage(), self::FLASH_ERROR);
+        } catch (ModelException $exception) {
             $this->flashMessage(_('Chyba při ukládání do databáze.'), self::FLASH_ERROR);
-            Debugger::log($e);
+            Debugger::log($exception);
         }
     }
 
     /**
      * @param SubmitButton $button
      * @throws \Nette\Application\AbortException
+     * @throws \ReflectionException
      */
     public function handleComposeSuccess(SubmitButton $button) {
         try {
@@ -574,11 +585,11 @@ class ExportPresenter extends SeriesPresenter {
             $this->flashMessage(_('Dotaz vytvořen.'), self::FLASH_SUCCESS);
             $this->backLinkRedirect();
             $this->redirect('list'); // if there's no backlink
-        } catch (BadRequestException $e) {
-            $this->flashMessage($e->getMessage(), self::FLASH_ERROR);
-        } catch (ModelException $e) {
+        } catch (BadRequestException $exception) {
+            $this->flashMessage($exception->getMessage(), self::FLASH_ERROR);
+        } catch (ModelException $exception) {
             $this->flashMessage(_('Chyba při ukládání do databáze.'), self::FLASH_ERROR);
-            Debugger::log($e);
+            Debugger::log($exception);
         }
     }
 
@@ -631,6 +642,7 @@ class ExportPresenter extends SeriesPresenter {
      * specified format.
      *
      * @deprecated
+     * @throws BadRequestException
      */
     public function renderOvvp() {
         $modelFactory = $this->getService('resultsModelFactory');

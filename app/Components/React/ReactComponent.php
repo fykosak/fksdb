@@ -46,6 +46,9 @@ abstract class ReactComponent extends Control implements IReactComponent {
         }
     }
 
+    /**
+     * @throws \Nette\Utils\JsonException
+     */
     public final function render() {
         $this->template->moduleName = $this->getModuleName();
         $this->template->componentName = $this->getComponentName();

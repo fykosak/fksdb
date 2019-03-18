@@ -54,7 +54,7 @@ class Navigation extends Control {
             $presenter = $this->getPresenter();
             try {
                 $this->createLink($presenter, $node);
-            } catch (\Exception $e) {
+            } catch (\Exception $exception) {
                 /* empty */
             }
             $result = $presenter->getLastCreatedRequestFlag("current");

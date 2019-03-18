@@ -202,7 +202,9 @@ class ReferencedId extends HiddenField {
         $this->referencedContainer->setDisabled($value);
     }
 
-
+    /**
+     * @throws \Nette\Utils\RegexpException
+     */
     private function createPromise() {
         $referencedId = $this->getValue();
         $values = $this->referencedContainer->getValues();
@@ -224,11 +226,11 @@ class ReferencedId extends HiddenField {
                 } else {
                     $this->setValue(null, IReferencedSetter::MODE_FORCE);
                 }
-            } catch (ModelDataConflictException $e) {
-                $e->setReferencedId($this);
-                throw $e;
-            } catch (ExistingPaymentException $e) {
-                $this->addError($e->getMessage());
+            } catch (ModelDataConflictException $exception) {
+                $exception->setReferencedId($this);
+                throw $exception;
+            } catch (ExistingPaymentException $exception) {
+                $this->addError($exception->getMessage());
                 $this->rollback();
             }
         });

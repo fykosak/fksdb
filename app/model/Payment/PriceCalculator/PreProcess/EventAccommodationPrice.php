@@ -5,7 +5,7 @@ namespace FKSDB\Payment\PriceCalculator\PreProcess;
 use FKSDB\ORM\Models\ModelEventAccommodation;
 use FKSDB\ORM\Models\ModelEventPersonAccommodation;
 use FKSDB\ORM\Models\ModelPayment;
-use FKSDB\Payment\PriceCalculator\Price;
+use FKSDB\Payment\Price;
 use FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException;
 
 /**
@@ -15,7 +15,7 @@ use FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException;
 class EventAccommodationPrice extends AbstractPreProcess {
     /**
      * @param ModelPayment $modelPayment
-     * @return Price
+     * @return \FKSDB\Payment\Price
      * @throws UnsupportedCurrencyException
      */
     public static function calculate(ModelPayment $modelPayment): Price {
@@ -32,6 +32,7 @@ class EventAccommodationPrice extends AbstractPreProcess {
      * @param ModelPayment $modelPayment
      * @return array
      * @throws UnsupportedCurrencyException
+     * @throws \Exception
      */
     public static function getGridItems(ModelPayment $modelPayment): array {
         $price = new Price(0, $modelPayment->currency);
@@ -50,13 +51,13 @@ class EventAccommodationPrice extends AbstractPreProcess {
 
     /**
      * @param \FKSDB\ORM\Models\ModelEventAccommodation $modelEventAccommodation
-     * @param Price $price
-     * @return Price
+     * @param \FKSDB\Payment\Price $price
+     * @return \FKSDB\Payment\Price
      * @throws UnsupportedCurrencyException
      */
     private static function getPriceFromModel(ModelEventAccommodation $modelEventAccommodation, Price &$price): Price {
         switch ($price->getCurrency()) {
-            case Price::CURRENCY_KC:
+            case Price::CURRENCY_CZK:
                 $amount = $modelEventAccommodation->price_kc;
                 break;
             case Price::CURRENCY_EUR:

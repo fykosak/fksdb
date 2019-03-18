@@ -399,6 +399,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     /**
      *
+     * @throws ReflectionException
      */
     protected function beforeRender() {
         parent::beforeRender();
@@ -439,6 +440,9 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return $this->subtitle ?: '';
     }
 
+    /**
+     * @throws ReflectionException
+     */
     protected function putIntoBreadcrumbs() {
         /**
          * @var Breadcrumbs $component
@@ -464,6 +468,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     /**
      * @param bool $need
+     * @throws ReflectionException
      * @throws \Nette\Application\AbortException
      */
     public final function backLinkRedirect($need = false) {
@@ -558,7 +563,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
             try {
                 $testedPresenter->checkRequirements($testedPresenter->getReflection());
                 $this->authorizedCache[$key] = $testedPresenter->isAuthorized();
-            } catch (BadRequestException $e) {
+            } catch (BadRequestException $exception) {
                 $this->authorizedCache[$key] = false;
             }
         }

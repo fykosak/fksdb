@@ -17,6 +17,7 @@ use FKSDB\Components\Controls\Stalking\Org;
 use FKSDB\Components\Controls\Stalking\Payment;
 use FKSDB\Components\Controls\Stalking\PersonHistory;
 use FKSDB\Components\Controls\Stalking\Role;
+use FKSDB\Components\Controls\Stalking\Schedule;
 use FKSDB\Components\Controls\Stalking\StalkingComponent;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
@@ -131,7 +132,7 @@ class StalkingPresenter extends BasePresenter {
      * @return EventTeacher
      * @throws BadRequestException
      */
-    public function createComponentEventTeacher() {
+    public function createComponentEventTeacher(): EventTeacher {
         return new EventTeacher($this->getPerson(), $this->getTranslator(), $this->getMode());
     }
 
@@ -198,6 +199,7 @@ class StalkingPresenter extends BasePresenter {
     public function createComponentPayment(): Payment {
         return new Payment($this->getPerson(), $this->getTranslator(), $this->getMode());
     }
+
     /**
      * @return ContactInfo
      * @throws BadRequestException
@@ -205,12 +207,21 @@ class StalkingPresenter extends BasePresenter {
     public function createComponentContactInfo(): ContactInfo {
         return new ContactInfo($this->getPerson(), $this->getTranslator(), $this->getMode());
     }
+
     /**
      * @return AcademicDegree
      * @throws BadRequestException
      */
     public function createComponentAcademicDegree(): AcademicDegree {
         return new AcademicDegree($this->getPerson(), $this->getTranslator(), $this->getMode());
+    }
+
+    /**
+     * @return Schedule
+     * @throws BadRequestException
+     */
+    public function createComponentSchedule(): Schedule {
+        return new Schedule($this->getPerson(), $this->getTranslator(), $this->getMode());
     }
 
     /**

@@ -72,8 +72,9 @@ class CloseTeamControl extends Control {
 
     /**
      * @param ModelFyziklaniTeam $team
-     * @throws ClosedSubmittingException
      * @throws BadSignalException
+     * @throws ClosedSubmittingException
+     * @throws \Nette\Application\BadRequestException
      */
     public function setTeam(ModelFyziklaniTeam $team) {
         $this->team = $team;
@@ -104,6 +105,7 @@ class CloseTeamControl extends Control {
 
     /**
      * @return FormControl
+     * @throws \Nette\Application\BadRequestException
      */
     protected function createComponentForm(): FormControl {
         $control = new FormControl();

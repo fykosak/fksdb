@@ -6,8 +6,6 @@
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 
-use FKSDB\ORM\Models\ModelContest;
-
 /**
  * Interface IContestPresenter
  */

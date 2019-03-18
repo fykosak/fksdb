@@ -89,7 +89,10 @@ class EventsExtension extends CompilerExtension {
     /*
      * Configuration loading
      */
-
+    /**
+     * @throws \FKSDB\Config\NeonSchemaException
+     * @throws \Nette\Utils\RegexpException
+     */
     public function loadConfiguration() {
         parent::loadConfiguration();
 
@@ -313,6 +316,9 @@ class EventsExtension extends CompilerExtension {
         $this->transtionFactory = $factory;
     }
 
+    /**
+     * @throws \Nette\Utils\RegexpException
+     */
     private function createFieldFactory() {
         $factory = $this->getContainerBuilder()->addDefinition($this->getFieldName());
         $factory->setShared(false);

@@ -183,40 +183,40 @@ class ApplicationHandler {
             if ($data && (!isset($transitions[$explicitMachineName]) || !$transitions[$explicitMachineName]->isTerminating())) {
                 $this->logger->log(sprintf(_('Přihláška "%s" uložena.'), (string)$holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS);
             }
-        } catch (ModelDataConflictException $e) {
-            $container = $e->getReferencedId()->getReferencedContainer();
-            $container->setConflicts($e->getConflicts());
+        } catch (ModelDataConflictException $exception) {
+            $container = $exception->getReferencedId()->getReferencedContainer();
+            $container->setConflicts($exception->getConflicts());
 
             $message = sprintf(_('Některá pole skupiny "%s" neodpovídají existujícímu záznamu.'), $container->getOption('label'));
             $this->logger->log($message, ILogger::ERROR);
             $this->formRollback($data);
-            $this->reRaise($e);
-        } catch (SecondaryModelDataConflictException $e) {
-            $message = sprintf(_('Data ve skupině "%s" kolidují s již existující přihláškou.'), $e->getBaseHolder()->getLabel());
+            $this->reRaise($exception);
+        } catch (SecondaryModelDataConflictException $exception) {
+            $message = sprintf(_('Data ve skupině "%s" kolidují s již existující přihláškou.'), $exception->getBaseHolder()->getLabel());
             $this->logger->log($message, ILogger::ERROR);
             $this->formRollback($data);
-            $this->reRaise($e);
-        } catch (DuplicateApplicationException $e) {
-            $message = $e->getMessage();
+            $this->reRaise($exception);
+        } catch (DuplicateApplicationException $exception) {
+            $message = $exception->getMessage();
             $this->logger->log($message, ILogger::ERROR);
             $this->formRollback($data);
-            $this->reRaise($e);
-        } catch (MachineExecutionException $e) {
-            $this->logger->log($e->getMessage(), ILogger::ERROR);
+            $this->reRaise($exception);
+        } catch (MachineExecutionException $exception) {
+            $this->logger->log($exception->getMessage(), ILogger::ERROR);
             $this->formRollback($data);
-            $this->reRaise($e);
-        } catch (SubmitProcessingException $e) {
-            $this->logger->log($e->getMessage(), ILogger::ERROR);
+            $this->reRaise($exception);
+        } catch (SubmitProcessingException $exception) {
+            $this->logger->log($exception->getMessage(), ILogger::ERROR);
             $this->formRollback($data);
-            $this->reRaise($e);
-        } catch (FullAccommodationCapacityException $e) {
-            $this->logger->log($e->getMessage(), ILogger::ERROR);
+            $this->reRaise($exception);
+        } catch (FullAccommodationCapacityException $exception) {
+            $this->logger->log($exception->getMessage(), ILogger::ERROR);
             $this->formRollback($data);
-            $this->reRaise($e);
-        } catch (ExistingPaymentException $e) {
-            $this->logger->log($e->getMessage(), ILogger::ERROR);
+            $this->reRaise($exception);
+        } catch (ExistingPaymentException $exception) {
+            $this->logger->log($exception->getMessage(), ILogger::ERROR);
             $this->formRollback($data);
-            $this->reRaise($e);
+            $this->reRaise($exception);
         }
     }
 

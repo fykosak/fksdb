@@ -26,6 +26,10 @@ class ApplicationsTimeProgressPresenter extends BasePresenter {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
     public function authorizedDefault() {
         if (!\in_array($this->getEvent()->event_type_id, [1, 9])) {
             $this->setAuthorized(false);

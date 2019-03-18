@@ -121,8 +121,8 @@ class FilesystemSubmitStorage implements ISubmitStorage {
                         try {
                             $processing->process($submit);
                             rename($dest, $working);
-                        } catch (ProcessingException $e) {
-                            Debugger::log($e);
+                        } catch (ProcessingException $exception) {
+                            Debugger::log($exception);
                         }
                     }
 
@@ -131,8 +131,8 @@ class FilesystemSubmitStorage implements ISubmitStorage {
                     rename($filename, $dest);
                 }
             }
-        } catch (InvalidStateException $e) {
-            throw new StorageException('Error while storing files.', null, $e);
+        } catch (InvalidStateException $exception) {
+            throw new StorageException('Error while storing files.', null, $exception);
         }
 
         $this->todo = null;
@@ -233,7 +233,7 @@ class FilesystemSubmitStorage implements ISubmitStorage {
         try {
             $it = Finder::findFiles('*' . self::DELIMITER . $submit->submit_id . '*')->in($dir);
             $files = iterator_to_array($it, false);
-        } catch (UnexpectedValueException $e) {
+        } catch (UnexpectedValueException $exception) {
             return [];
         }
 

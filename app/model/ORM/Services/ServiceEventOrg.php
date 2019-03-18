@@ -25,11 +25,11 @@ class ServiceEventOrg extends AbstractServiceSingle {
     public function save(IModel &$model) {
         try {
             parent::save($model);
-        } catch (ModelException $e) {
-            if ($e->getPrevious() && $e->getPrevious()->getCode() == 23000) {
-                throw new DuplicateOrgException($model->getPerson(), $e);
+        } catch (ModelException $exception) {
+            if ($exception->getPrevious() && $exception->getPrevious()->getCode() == 23000) {
+                throw new DuplicateOrgException($model->getPerson(), $exception);
             }
-            throw $e;
+            throw $exception;
         }
     }
 
