@@ -4,6 +4,7 @@ namespace FKSDB\ORM\Models;
 
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use ModelMPersonHasFlag;
 use ModelMPostContact;
 use Nette\Database\Table\GroupedSelection;
@@ -418,18 +419,69 @@ class ModelPerson extends AbstractModelSingle implements IResource {
             $row->delete();
         }
     }
+
     /**
      * @return GroupedSelection
      */
     public function getPayments(): GroupedSelection {
         return $this->related(DbNames::TAB_PAYMENT, 'person_id');
     }
+
     /**
      * @param ModelEvent $event
      * @return Selection
      */
     public function getPaymentsForEvent(ModelEvent $event): Selection {
         return $this->getPayments()->where('event_id', $event->event_id);
+    }
+
+    /**
+     * @param ModelEvent $event
+     * @return Selection
+     */
+    public function getScheduleForEvent(ModelEvent $event): Selection {
+        return $this->getSchedule()->where('group.event_id', $event->event_id);
+    }
+
+    /**
+     * @return GroupedSelection
+     */
+    public function getSchedule(): GroupedSelection {
+        return $this->related(DbNames::TAB_PERSON_SCHEDULE, 'person_id');
+    }
+
+    /**
+     * @param ModelEvent $event
+     * @return array
+     */
+    public function getRolesForEvent(ModelEvent $event): array {
+        $roles = [];
+        $eventId = $event->event_id;
+        $teachers = $this->getEventTeacher()->where('event_id', $eventId);
+        foreach ($teachers as $row) {
+            $team = ModelFyziklaniTeam::createFromTableRow($row);
+            $roles[] = [
+                'type' => 'teacher',
+                'team' => $team,
+            ];
+        }
+        $eventOrgs = $this->getEventOrg()->where('event_id', $eventId);
+        foreach ($eventOrgs as $row) {
+            $org = ModelEventOrg::createFromTableRow($row);
+            $roles[] = [
+                'type' => 'org',
+                'org' => $org,
+            ];
+        }
+        $eventParticipants = $this->getEventParticipant()->where('event_id', $eventId);
+        foreach ($eventParticipants as $row) {
+            $participant = ModelEventParticipant::createFromTableRow($row);
+            $roles[] = [
+                'type' => 'participant',
+                'participant' => $participant,
+            ];
+        }
+        return $roles;
     }
 
 }
