@@ -19,7 +19,6 @@ use FormUtils;
 use Mail\MailTemplateFactory;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
-use Nette\Diagnostics\Debugger;
 use Nette\Utils\Html;
 use Persons\Deduplication\Merger;
 use ServiceMPostContact;
@@ -286,25 +285,19 @@ class PersonPresenter extends BasePresenter {
             $form->addGroup($table);
             $tableContainer = new ContainerWithOptions();
 
-
             $form->addComponent($tableContainer, $table);
-            //$tableContainer = $form->addContainer($table);
-            Debugger::barDump($pairs);
-            Debugger::barDump($table);
+
             foreach ($pairs as $pairId => $data) {
                 if (!isset($data[Merger::IDX_TRUNK])) {
                     continue;
                 }
-
                 $pairSuffix = '';
                 if (count($pairs) > 1) {
                     $pairSuffix = " ($pairId)";
                 }
-
                 $pairContainer = new ContainerWithOptions();
                 $tableContainer->addComponent($pairContainer, $pairId);
                 $pairContainer->setOption('label', \str_replace('_', ' ', $table));
-                // $pairContainer = $tableContainer->addContainer($pairId);
                 foreach ($data[Merger::IDX_TRUNK] as $column => $value) {
                     if (isset($data[Merger::IDX_RESOLUTION]) && array_key_exists($column, $data[Merger::IDX_RESOLUTION])) {
                         $default = $data[Merger::IDX_RESOLUTION][$column];
