@@ -1,0 +1,45 @@
+<h2>{_'Schedule item'}</h2>
+<div>
+    <div class="row">
+        <b class="col-2">{_'Id'}</b>
+        <span class="col-10">#{$model->schedule_item_id}</span>
+    </div>
+    <div class="row">
+        <b class="col-2">{_'Schedule group'}</b>
+        <span class="col-10">
+                <a href="{plink group id=>$model->schedule_group_id}" }>
+                    {sprintf(_('Schedule group #%s'),$model->schedule_group_id)}</a></span>
+    </div>
+    <div class="row">
+        <b class="col-2">{_'Price czk'}</b>
+        <span class="col-10">{$model->getPrice(FKSDB\Payment\PriceCalculator\Price::CURRENCY_CZK)->__toString()}</span>
+    </div>
+    <div class="row">
+        <b class="col-2">{_'Price eur'}</b>
+        <span class="col-10">{$model->getPrice(FKSDB\Payment\PriceCalculator\Price::CURRENCY_EUR)->__toString()}</span>
+    </div>
+    <div class="row">
+        <b class="col-2">{_'CS name'}</b>
+        <span class="col-10">{$model->name_cs}</span>
+    </div>
+    <div class="row">
+        <b class="col-2">{_'EN name'}</b>
+        <span class="col-10">{$model->name_en}</span>
+    </div>
+    <div class="row">
+        <b class="col-2">{_'Total capacity'}</b>
+        <span class="col-10">{$model->getCapacity()}</span>
+    </div>
+    <div class="row">
+        <b class="col-2">{_'Used capacity'}</b>
+        <span class="col-10">{$model->getUsedCapacity()}</span>
+    </div>
+    <div class="row">
+        <b class="col-2">{_'Free capacity'}</b>
+        <span class="col-10">{$model->getFreeCapacity()}</span>
+    </div>
+    <div class="row">
+        <b class="col-2">{_'Require "Id number"'}</b>
+        <span class="col-10">{$model->require_id_number}</span>
+    </div>
+</div>

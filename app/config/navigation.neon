@@ -70,6 +70,7 @@ navigation:
             - event.payment.create
             - fyziklani.dashboard.default
             - event.schedule.default
+            - event.schedule.groups
             - event.accommodation.list
             - event.model.default
             - event.applicationsTimeProgress.default
