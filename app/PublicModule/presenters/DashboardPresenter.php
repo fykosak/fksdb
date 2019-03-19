@@ -23,6 +23,10 @@ class DashboardPresenter extends BasePresenter {
         $this->news = $news;
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\ForbiddenRequestException
+     */
     protected function unauthorizedAccess() {
         if ($this->getParam(AuthenticationPresenter::PARAM_DISPATCH)) {
             parent::unauthorizedAccess();
@@ -42,6 +46,9 @@ class DashboardPresenter extends BasePresenter {
         $this->setIcon('fa fa-dashboard');
     }
 
+    /**
+     * @throws \Nette\Application\BadRequestException
+     */
     public function renderDefault() {
         foreach ($this->news->getNews($this->getSelectedContest(), $this->getSelectedLanguage())
 	  as $new) {

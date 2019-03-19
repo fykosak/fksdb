@@ -123,10 +123,16 @@ class InboxPresenter extends SeriesPresenter {
         $this->seriesTable->setSeries($this->getSelectedSeries());
     }
 
+    /**
+     * @throws \Nette\Application\BadRequestException
+     */
     public function authorizedDefault() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
     }
 
+    /**
+     * @throws \Nette\Application\BadRequestException
+     */
     public function authorizedHandout() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('task', 'edit', $this->getSelectedContest()));
     }
@@ -136,6 +142,9 @@ class InboxPresenter extends SeriesPresenter {
         $this->setIcon('fa fa-envelope-open');
     }
 
+    /**
+     * @throws \Nette\Application\BadRequestException
+     */
     public function renderDefault() {
         /**
          * @var OptimisticFormControl $control
@@ -156,6 +165,9 @@ class InboxPresenter extends SeriesPresenter {
         $connection->getDatabaseReflection()->setConnection($connection);
     }
 
+    /**
+     * @throws \Nette\Application\BadRequestException
+     */
     public function renderHandout() {
         $taskIds = [];
         foreach ($this->seriesTable->getTasks() as $row) {

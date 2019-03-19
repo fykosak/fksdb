@@ -132,7 +132,7 @@ class StoredQueryFactory {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelStoredQuery $queryPattern
+     * @param ModelStoredQuery $queryPattern
      * @param int $options
      * @param ControlGroup|null $group
      * @return ModelContainer

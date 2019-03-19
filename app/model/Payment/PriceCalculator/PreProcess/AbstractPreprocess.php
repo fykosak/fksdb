@@ -3,7 +3,7 @@
 namespace FKSDB\Payment\PriceCalculator\PreProcess;
 
 use FKSDB\ORM\Models\ModelPayment;
-use FKSDB\Payment\PriceCalculator\Price;
+use FKSDB\Payment\Price;
 
 /**
  * Class AbstractPreProcess

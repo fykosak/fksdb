@@ -99,6 +99,7 @@ class SchoolPresenter extends EntityPresenter {
     /**
      * @param $name
      * @return FormControl
+     * @throws \Nette\Application\BadRequestException
      */
     protected function createComponentCreateComponent($name) {
         $control = $this->createForm();
@@ -113,6 +114,7 @@ class SchoolPresenter extends EntityPresenter {
     /**
      * @param $name
      * @return FormControl
+     * @throws \Nette\Application\BadRequestException
      */
     protected function createComponentEditComponent($name) {
         $control = $this->createForm();
@@ -152,6 +154,7 @@ class SchoolPresenter extends EntityPresenter {
 
     /**
      * @return FormControl
+     * @throws \Nette\Application\BadRequestException
      */
     private function createForm() {
         $control = new FormControl();
@@ -167,7 +170,7 @@ class SchoolPresenter extends EntityPresenter {
 
     /**
      * @param $id
-     * @return \AbstractModelSingle|\Nette\Database\Table\ActiveRow|null
+     * @return \FKSDB\ORM\AbstractModelSingle|\Nette\Database\Table\ActiveRow|null
      */
     protected function loadModel($id) {
         return $this->serviceSchool->findByPrimary($id);
@@ -177,6 +180,7 @@ class SchoolPresenter extends EntityPresenter {
      * @internal
      * @param Form $form
      * @throws \Nette\Application\AbortException
+     * @throws \ReflectionException
      */
     public function handleCreateFormSuccess(Form $form) {
         $connection = $this->serviceSchool->getConnection();
@@ -213,9 +217,9 @@ class SchoolPresenter extends EntityPresenter {
             $this->flashMessage(_('Škola založena'), self::FLASH_SUCCESS);
             $this->backLinkRedirect();
             $this->redirect('list'); // if there's no backlink
-        } catch (ModelException $e) {
+        } catch (ModelException $exception) {
             $connection->rollBack();
-            Debugger::log($e, Debugger::ERROR);
+            Debugger::log($exception, Debugger::ERROR);
             $this->flashMessage(_('Chyba při zakládání školy.'), self::FLASH_ERROR);
         }
     }
@@ -224,6 +228,7 @@ class SchoolPresenter extends EntityPresenter {
      * @internal
      * @param Form $form
      * @throws \Nette\Application\AbortException
+     * @throws \ReflectionException
      */
     public function handleEditFormSuccess(Form $form) {
         $connection = $this->serviceSchool->getConnection();
@@ -260,9 +265,9 @@ class SchoolPresenter extends EntityPresenter {
             $this->flashMessage(_('Škola upravena'), self::FLASH_SUCCESS);
             $this->backLinkRedirect();
             $this->redirect('list'); // if there's no backlink
-        } catch (ModelException $e) {
+        } catch (ModelException $exception) {
             $connection->rollBack();
-            Debugger::log($e, Debugger::ERROR);
+            Debugger::log($exception, Debugger::ERROR);
             $this->flashMessage(_('Chyba při úpravě školy.'), self::FLASH_ERROR);
         }
     }

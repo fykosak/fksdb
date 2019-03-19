@@ -141,6 +141,7 @@ class ApplicationComponent extends Control {
 
     /**
      * @return FormControl
+     * @throws \Nette\Application\BadRequestException
      */
     protected function createComponentForm() {
         $result = new FormControl();
@@ -235,6 +236,7 @@ class ApplicationComponent extends Control {
     /**
      * @param Form $form
      * @param null $explicitTransitionName
+     * @throws \Nette\Application\AbortException
      */
     public function handleSubmit(Form $form, $explicitTransitionName = null) {
         $this->execute($form, $explicitTransitionName);
@@ -242,6 +244,7 @@ class ApplicationComponent extends Control {
 
     /**
      * @param $transitionName
+     * @throws \Nette\Application\AbortException
      */
     public function handleTransition($transitionName) {
         $this->execute(null, $transitionName);
@@ -250,13 +253,14 @@ class ApplicationComponent extends Control {
     /**
      * @param Form|null $form
      * @param null $explicitTransitionName
+     * @throws \Nette\Application\AbortException
      */
     private function execute(Form $form = null, $explicitTransitionName = null) {
         try {
             $this->handler->storeAndExecute($this->holder, $form, $explicitTransitionName);
             $this->flashDump->dump($this->handler->getLogger(), $this->getPresenter());
             $this->finalRedirect();
-        } catch (ApplicationHandlerException $e) {
+        } catch (ApplicationHandlerException $exception) {
             /* handled elsewhere, here it's to just prevent redirect */
             $this->flashDump->dump($this->handler->getLogger(), $this->getPresenter());
             if (!$form) { // w/out form we don't want to show anything with the same GET params
@@ -279,6 +283,9 @@ class ApplicationComponent extends Control {
         return $this->getMachine()->getPrimaryMachine()->getState() != BaseMachine::STATE_INIT && $this->holder->getPrimaryHolder()->isModifiable();
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     */
     private function finalRedirect() {
         if ($this->redirectCallback) {
             $id = $this->holder->getPrimaryHolder()->getModel()->getPrimary(false);

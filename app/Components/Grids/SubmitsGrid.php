@@ -65,20 +65,20 @@ class SubmitsGrid extends BaseGrid {
         // columns
         //
         $this->addColumn('task', _('Úloha'))
-                ->setRenderer(function($row) use($presenter) {
-                            $row->task_id; // stupid caching...
-                            $task = $row->getTask();
-                            $FQname = $task->getFQName();
+            ->setRenderer(function ($row) use ($presenter) {
+                $row->task_id; // stupid caching...
+                $task = $row->getTask();
+                $FQname = $task->getFQName();
 
-                            if ($row->source == ModelSubmit::SOURCE_UPLOAD) {
-                                $el = Html::el('a');
-                                $el->href = $presenter->link(':Public:Submit:download', array('id' => $row->submit_id));
-                                $el->setText($FQname);
-                                return $el;
-                            } else {
-                                return $FQname;
-                            }
-                        });
+                if ($row->source == ModelSubmit::SOURCE_UPLOAD) {
+                    $el = Html::el('a');
+                    $el->href = $presenter->link(':Public:Submit:download', array('id' => $row->submit_id));
+                    $el->setText($FQname);
+                    return $el;
+                } else {
+                    return $FQname;
+                }
+            });
         $this->addColumn('submitted_on', _('Čas odevzdání'));
         $this->addColumn('source', _('Způsob odevzdání'));
 
@@ -86,18 +86,17 @@ class SubmitsGrid extends BaseGrid {
         // operations
         //
         $this->addButton('revoke', _('Zrušit'))
-                ->setClass('btn btn-xs btn-warning')
-                ->setText(_('Zrušit'))
-                ->setShow(function($row) {
-                            return $this->canRevoke($row);
-                        })
-                ->setLink(function($row) {
-                            return $this->link('revoke!', $row->submit_id);
-                        })
-                ->setConfirmationDialog(function($row) {
-                            return \sprintf(_('Opravdu vzít řešení úlohy %s zpět?'),$row->getTask()->getFQName());
-                        });
-
+            ->setClass('btn btn-xs btn-warning')
+            ->setText(_('Zrušit'))
+            ->setShow(function ($row) {
+                return $this->canRevoke($row);
+            })
+            ->setLink(function ($row) {
+                return $this->link('revoke!', $row->submit_id);
+            })
+            ->setConfirmationDialog(function ($row) {
+                return \sprintf(_('Opravdu vzít řešení úlohy %s zpět?'), $row->getTask()->getFQName());
+            });
 
 
         //
@@ -113,12 +112,12 @@ class SubmitsGrid extends BaseGrid {
      * @throws \Nette\Application\AbortException
      */
     public function handleRevoke($id) {
-        $submit = $this->submitService->findByPrimary($id);
+        $row = $this->submitService->findByPrimary($id);
 
-        if (!$submit) {
+        if (!$row) {
             throw new BadRequestException('Neexistující submit.', 404);
         }
-
+        $submit = ModelSubmit::createFromTableRow($row);
 
 //        $submit->task_id; // stupid touch
         $contest = $submit->getContestant()->getContest();
@@ -135,12 +134,12 @@ class SubmitsGrid extends BaseGrid {
             $this->submitService->dispose($submit);
             $this->flashMessage(sprintf('Odevzdání úlohy %s zrušeno.', $submit->getTask()->getFQName()), BasePresenter::FLASH_SUCCESS);
             $this->redirect('this');
-        } catch (StorageException $e) {
+        } catch (StorageException $exception) {
             $this->flashMessage(sprintf('Během mazání úlohy %s došlo k chybě.', $submit->getTask()->getFQName()), BasePresenter::FLASH_ERROR);
-            Debugger::log($e);
-        } catch (ModelException $e) {
+            Debugger::log($exception);
+        } catch (ModelException $exception) {
             $this->flashMessage(sprintf('Během mazání úlohy %s došlo k chybě.', $submit->getTask()->getFQName()), BasePresenter::FLASH_ERROR);
-            Debugger::log($e);
+            Debugger::log($exception);
         }
     }
 

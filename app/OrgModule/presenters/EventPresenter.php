@@ -307,8 +307,8 @@ class EventPresenter extends EntityPresenter {
 
                     NeonScheme::readSection($parameters, $scheme);
                     return true;
-                } catch (NeonException $e) {
-                    $control->addError($e->getMessage());
+                } catch (NeonException $exception) {
+                    $control->addError($exception->getMessage());
                     return false;
                 }
             }, _('Parametry nesplňují Neon schéma'));
@@ -353,7 +353,7 @@ class EventPresenter extends EntityPresenter {
 
     /**
      * @param $id
-     * @return \AbstractModelSingle|\Nette\Database\Table\ActiveRow|null
+     * @return \FKSDB\ORM\AbstractModelSingle|\Nette\Database\Table\ActiveRow|null
      */
     protected function loadModel($id) {
         return $this->serviceEvent->findByPrimary($id);
@@ -364,6 +364,7 @@ class EventPresenter extends EntityPresenter {
      * @param $isNew
      * @throws BadRequestException
      * @throws \Nette\Application\AbortException
+     * @throws \ReflectionException
      */
     private function handleFormSuccess(Form $form, $isNew) {
         $connection = $this->serviceEvent->getConnection();
@@ -412,11 +413,11 @@ class EventPresenter extends EntityPresenter {
             $this->flashMessage(sprintf(_('Akce %s uložena.'), $model->name), self::FLASH_SUCCESS);
             $this->backLinkRedirect();
             $this->redirect('list'); // if there's no backlink
-        } catch (ModelException $e) {
+        } catch (ModelException $exception) {
             $connection->rollBack();
-            Debugger::log($e, Debugger::ERROR);
+            Debugger::log($exception, Debugger::ERROR);
             $this->flashMessage(_('Chyba přidání akce.'), self::FLASH_ERROR);
-        } catch (ForbiddenRequestException $e) {
+        } catch (ForbiddenRequestException $exception) {
             $connection->rollBack();
             $this->flashMessage(_('Nedostatečné oprávnění.'), self::FLASH_ERROR);
         }

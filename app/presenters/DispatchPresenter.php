@@ -11,6 +11,9 @@ class DispatchPresenter extends AuthenticatedPresenter {
 
     use \LanguageNav;
 
+    /**
+     * @throws \Nette\Application\UI\InvalidLinkException
+     */
     public function renderDefault() {
         /**
          * @var \FKSDB\ORM\Models\ModelLogin $login

@@ -16,8 +16,8 @@ class TaskCodePreprocessor {
             return false;
         }
         $subCode = str_split(self::getNumLabel($code));
-        $c = 3 * ($subCode[0] + $subCode[3] + $subCode[6]) + 7 * ($subCode[1] + $subCode[4] + $subCode[7]) + ($subCode[2] + $subCode[5] + $subCode[8]);
-        return $c % 10 == 0;
+        $sum = 3 * ($subCode[0] + $subCode[3] + $subCode[6]) + 7 * ($subCode[1] + $subCode[4] + $subCode[7]) + ($subCode[2] + $subCode[5] + $subCode[8]);
+        return $sum % 10 == 0;
     }
 
     /**
@@ -50,11 +50,11 @@ class TaskCodePreprocessor {
      * @throws TaskCodeException
      */
     public static function createFullCode(string $code): string {
-        $l = strlen($code);
-        if ($l > 9) {
+        $length = strlen($code);
+        if ($length > 9) {
             throw new TaskCodeException(_('Code is too long'));
         }
 
-        return str_repeat('0', 9 - $l) . strtoupper($code);
+        return str_repeat('0', 9 - $length) . strtoupper($code);
     }
 }

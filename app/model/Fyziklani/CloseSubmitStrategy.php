@@ -104,13 +104,13 @@ class CloseSubmitStrategy {
         foreach ($teams as $row) {
             $team = ModelFyziklaniTeam::createFromTableRow($row);
             $teamData = [];
-            $team_id = $team->e_fyziklani_team_id;
-            $teamData['e_fyziklani_team_id'] = $team_id;
+            $teamId = $team->e_fyziklani_team_id;
+            $teamData['e_fyziklani_team_id'] = $teamId;
             if ($team->points === null) {
-                throw new BadRequestException('Tým ' . $team->name . '(' . $team_id . ') nemá uzavřené bodování');
+                throw new BadRequestException('Tým ' . $team->name . '(' . $teamId . ') nemá uzavřené bodování');
             }
             $teamData['points'] = $team->points;
-            $teamData['submits'] = $this->getAllSubmits($team_id);
+            $teamData['submits'] = $this->getAllSubmits($teamId);
             $teamsData[] = $teamData;
         }
         return $teamsData;

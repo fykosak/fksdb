@@ -6,7 +6,7 @@ use EventModule\PaymentPresenter;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
 use FKSDB\ORM\Models\ModelPayment;
-use FKSDB\Payment\PriceCalculator\Price;
+use FKSDB\Payment\Price;
 use FKSDB\Payment\Transition\PaymentMachine;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
@@ -46,6 +46,7 @@ class DetailControl extends Control {
 
     /**
      * @return FormControl
+     * @throws \Nette\Application\BadRequestException
      */
     public function createComponentForm(): FormControl {
         $formControl = new FormControl();
@@ -78,7 +79,7 @@ class DetailControl extends Control {
     }
 
     /**
-     * @param Price $price
+     * @param \FKSDB\Payment\Price $price
      * @return PriceControl
      */
     public function createComponentPriceControl(Price $price): PriceControl {

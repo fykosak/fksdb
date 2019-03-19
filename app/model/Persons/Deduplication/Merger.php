@@ -134,7 +134,7 @@ class Merger {
         $this->resetConflicts();
         try {
             $tableMerger->merge();
-        } catch (MemberAccessException $e) { // this is workaround for non-working Nette database cache
+        } catch (MemberAccessException $exception) { // this is workaround for non-working Nette database cache
             $this->connection->rollBack();
             return false;
         }

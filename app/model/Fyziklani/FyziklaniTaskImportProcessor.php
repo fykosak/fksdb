@@ -70,9 +70,9 @@ class FyziklaniTaskImportProcessor {
                         ];
                 }
                 $this->serviceFyziklaniTask->save($task);
-            } catch (\Exception $e) {
+            } catch (\Exception $exception) {
                 $messages[] = [_('Vyskytla se chyba'),\BasePresenter::FLASH_ERROR];
-                Debugger::log($e);
+                Debugger::log($exception);
                 $connection->rollBack();
                 return;
             }

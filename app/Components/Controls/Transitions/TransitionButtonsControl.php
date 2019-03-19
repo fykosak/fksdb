@@ -57,15 +57,15 @@ class TransitionButtonsControl extends Control {
     public function handleTransition($name) {
         try {
             $this->machine->executeTransition($name, $this->model);
-        } catch (ForbiddenRequestException $e) {
-            $this->getPresenter()->flashMessage($e->getMessage(), \BasePresenter::FLASH_ERROR);
+        } catch (ForbiddenRequestException $exception) {
+            $this->getPresenter()->flashMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR);
             return;
-        } catch (UnavailableTransitionException $e) {
-            $this->getPresenter()->flashMessage($e->getMessage(), \BasePresenter::FLASH_ERROR);
+        } catch (UnavailableTransitionException $exception) {
+            $this->getPresenter()->flashMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR);
             return;
-        } catch (\Exception $e) {
-            Debugger::barDump($e);
-            Debugger::log($e);
+        } catch (\Exception $exception) {
+            Debugger::barDump($exception);
+            Debugger::log($exception);
             $this->getPresenter()->flashMessage(_('Nastala chyba'), \BasePresenter::FLASH_ERROR);
         }
         $this->redirect('this');

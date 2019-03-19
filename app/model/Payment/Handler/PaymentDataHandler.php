@@ -53,14 +53,14 @@ class PaymentDataHandler {
                  */
                 $model = $this->serviceEventPersonAccommodation->createNew(['payment_id' => $payment->payment_id, 'event_person_accommodation_id' => $id]);
                 $this->serviceEventPersonAccommodation->save($model);
-            } catch (\ModelException $e) {
-                if ($e->getPrevious() && $e->getPrevious()->getCode() == 23000) {
+            } catch (\ModelException $exception) {
+                if ($exception->getPrevious() && $exception->getPrevious()->getCode() == 23000) {
                     throw new StorageException(sprintf(
                         _('Item "%s" has already generated payment.'),
                         $model->getEventPersonAccommodation()->getLabel()
                     ));
                 }
-                throw $e;
+                throw $exception;
             }
         }
     }

@@ -1,5 +1,7 @@
 <?php
 
+use FKSDB\ORM\AbstractModelMulti;
+use FKSDB\ORM\AbstractServiceMulti;
 use FKSDB\ORM\Services\ServiceFlag;
 use FKSDB\ORM\Services\ServicePersonHasFlag;
 

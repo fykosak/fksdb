@@ -150,6 +150,7 @@ class ContestChooser extends Control {
 
     /**
      * Redirect to corrrect address according to the resolved values.
+     * @throws \Nette\Application\AbortException
      */
     public function syncRedirect() {
         $this->init();

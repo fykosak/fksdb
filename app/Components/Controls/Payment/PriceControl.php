@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Payment;
 
-use FKSDB\Payment\PriceCalculator\Price;
+use FKSDB\Payment\Price;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
@@ -14,7 +14,7 @@ use Nette\Templating\FileTemplate;
  */
 class PriceControl extends Control {
     /**
-     * @var Price
+     * @var \FKSDB\Payment\Price
      */
     private $price;
     /**

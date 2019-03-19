@@ -75,9 +75,9 @@ class LoggingMailer extends Object implements IMailer {
                 $this->mailer->send($mail);
             }
             $this->logMessage($mail);
-        } catch (Exception $e) {
-            $this->logMessage($mail, $e);
-            throw $e;
+        } catch (Exception $exception) {
+            $this->logMessage($mail, $exception);
+            throw $exception;
         }
     }
 

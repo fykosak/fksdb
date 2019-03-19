@@ -59,8 +59,8 @@ class TaskCodeHandler {
         try {
             $this->checkTaskCode($code);
             return $this->savePoints($code, $points);
-        } catch (TaskCodeException $e) {
-            throw  $e;
+        } catch (TaskCodeException $exception) {
+            throw $exception;
         }
     }
 
@@ -105,8 +105,8 @@ class TaskCodeHandler {
         try {
             $this->serviceFyziklaniSubmit->save($submit);
             return sprintf(_('Body byly uloženy. %d bodů, tým: "%s" (%d), úloha: %s "%s"'), $points, $team->name, $teamId, $taskLabel, $taskName);
-        } catch (\Exception $e) {
-            throw $e;
+        } catch (\Exception $exception) {
+            throw $exception;
         }
     }
 

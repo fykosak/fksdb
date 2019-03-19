@@ -81,6 +81,9 @@ class TasksPresenter extends BasePresenter {
         $this->downloader = $downloader;
     }
 
+    /**
+     * @throws \Nette\Application\BadRequestException
+     */
     public function authorizedImport() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('task', 'insert', $this->getSelectedContest()));
     }
@@ -150,7 +153,7 @@ class TasksPresenter extends BasePresenter {
                     try {
                         $file = $this->downloader->downloadSeriesTasks($this->getSelectedContest(), $this->getSelectedYear(), $series, $language);
                         $files[$language] = $file;
-                    } catch (DownloadException $e) {
+                    } catch (DownloadException $exception) {
                         $this->flashMessage(sprintf(_('Úlohy pro jazyk %s se nepodařilo stáhnout.'), $language), self::FLASH_WARNING);
                     }
                 }
@@ -195,12 +198,12 @@ class TasksPresenter extends BasePresenter {
                     $dump->dump($pipeline->getLogger(), $this);
                     $this->flashMessage(_('Úlohy pro úspěšně importovány.'), self::FLASH_SUCCESS);
                 }
-            } catch (PipelineException $e) {
-                $this->flashMessage(sprintf(_('Při ukládání úloh pro jazyk %s došlo k chybě. %s'), $language, $e->getMessage()), self::FLASH_ERROR);
-                Debugger::log($e);
-            } catch (ModelException $e) {
+            } catch (PipelineException $exception) {
+                $this->flashMessage(sprintf(_('Při ukládání úloh pro jazyk %s došlo k chybě. %s'), $language, $exception->getMessage()), self::FLASH_ERROR);
+                Debugger::log($exception);
+            } catch (ModelException $exception) {
                 $this->flashMessage(sprintf(_('Při ukládání úloh pro jazyk %s došlo k chybě.'), $language), self::FLASH_ERROR);
-                Debugger::log($e);
+                Debugger::log($exception);
             } finally {
 
                 unlink($file);

@@ -242,8 +242,8 @@ abstract class AuthenticatedPresenter extends BasePresenter {
 
             $this->getUser()->login($login);
             $this->redirect('this');
-        } catch (AuthenticationException $e) {
-            $this->flashMessage($e->getMessage(), self::FLASH_ERROR);
+        } catch (AuthenticationException $exception) {
+            $this->flashMessage($exception->getMessage(), self::FLASH_ERROR);
         }
     }
 
@@ -268,7 +268,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
 
             $method = $this->formatAuthorizedMethod($this->getAction());
             $this->tryCall($method, $this->getParameter());
-        } catch (AuthenticationException $e) {
+        } catch (AuthenticationException $exception) {
             $this->httpAuthPrompt();
         }
     }
@@ -303,8 +303,8 @@ abstract class AuthenticatedPresenter extends BasePresenter {
 
             $method = $this->formatAuthorizedMethod($this->getAction());
             $this->tryCall($method, $this->getParameter());
-        } catch (AuthenticationException $e) {
-            throw new BadRequestException(_('Chyba autentizace.'), 403, $e);
+        } catch (AuthenticationException $exception) {
+            throw new BadRequestException(_('Chyba autentizace.'), 403, $exception);
         }
     }
 

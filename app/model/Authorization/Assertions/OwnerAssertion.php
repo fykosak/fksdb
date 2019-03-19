@@ -2,7 +2,6 @@
 
 namespace Authorization\Assertions;
 
-use FKSDB\ORM\Models\ModelPerson;
 use Nette\InvalidStateException;
 use Nette\Security\IResource;
 use Nette\Security\Permission;

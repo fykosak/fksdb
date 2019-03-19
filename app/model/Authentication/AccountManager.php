@@ -124,8 +124,8 @@ class AccountManager {
         try {
             $this->mailer->send($message);
             return $login;
-        } catch (InvalidStateException $e) {
-            throw new SendFailedException($e);
+        } catch (InvalidStateException $exception) {
+            throw new SendFailedException($exception);
         }
     }
 
@@ -165,8 +165,8 @@ class AccountManager {
 
         try {
             $this->mailer->send($message);
-        } catch (InvalidStateException $e) {
-            throw new SendFailedException($e);
+        } catch (InvalidStateException $exception) {
+            throw new SendFailedException($exception);
         }
     }
 
@@ -184,7 +184,7 @@ class AccountManager {
      * @param ModelPerson $person
      * @param null $login
      * @param null $password
-     * @return \AbstractModelSingle|\FKSDB\ORM\Models\ModelLogin
+     * @return \FKSDB\ORM\AbstractModelSingle|\FKSDB\ORM\Models\ModelLogin
      */
     public final function createLogin(ModelPerson $person, $login = null, $password = null) {
         $login = $this->serviceLogin->createNew(array(

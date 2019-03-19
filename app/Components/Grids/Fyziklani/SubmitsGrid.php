@@ -28,6 +28,9 @@ abstract class SubmitsGrid extends BaseGrid {
         parent::__construct();
     }
 
+    /**
+     * @throws \NiftyGrid\DuplicateColumnException
+     */
     protected function addColumnTask() {
         $this->addColumn('label', _('Úloha'))->setRenderer(function ($row) {
             $model = ModelFyziklaniSubmit::createFromTableRow($row);

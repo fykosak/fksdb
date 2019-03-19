@@ -1,6 +1,7 @@
 <?php
 
-use FKSDB\ORM\IModel;
+namespace FKSDB\ORM;
+
 use Nette\Database\Table\ActiveRow;
 
 /**

@@ -195,6 +195,7 @@ class BaseHolder extends FreezableObject {
 
     /**
      * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @throws \FKSDB\Config\NeonSchemaException
      */
     private function setEvent(ModelEvent $event) {
         $this->updating();
@@ -204,6 +205,7 @@ class BaseHolder extends FreezableObject {
 
     /**
      * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @throws \FKSDB\Config\NeonSchemaException
      */
     public function inferEvent(ModelEvent $event) {
         if ($this->eventRelation instanceof IEventRelation) {
@@ -530,7 +532,9 @@ class BaseHolder extends FreezableObject {
     /*
      * Parameter handling
      */
-
+    /**
+     * @throws \FKSDB\Config\NeonSchemaException
+     */
     private function cacheParameters() {
         $parameters = isset($this->getEvent()->parameters) ? $this->getEvent()->parameters : '';
         $parameters = $parameters ? Neon::decode($parameters) : [];
@@ -548,8 +552,8 @@ class BaseHolder extends FreezableObject {
         try {
             $result = call_user_func_array('Nette\Utils\Arrays::get', $args);
             return $result;
-        } catch (InvalidArgumentException $e) {
-            throw new InvalidArgumentException("No parameter '$name' for event " . $this->getEvent() . ".", null, $e);
+        } catch (InvalidArgumentException $exception) {
+            throw new InvalidArgumentException("No parameter '$name' for event " . $this->getEvent() . ".", null, $exception);
         }
     }
 

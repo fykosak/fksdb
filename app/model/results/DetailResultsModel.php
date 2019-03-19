@@ -93,7 +93,7 @@ class DetailResultsModel extends AbstractResultsModel {
         $sum = $this->evaluationStrategy->getSumColumn();
         $select[] = "round(SUM($sum)) AS '" . self::ALIAS_SUM . "'";
 
-        $study_years = $this->evaluationStrategy->categoryToStudyYears($category);
+        $studyYears = $this->evaluationStrategy->categoryToStudyYears($category);
 
         $from = " from v_contestant ct
 left join person p using(person_id)
@@ -101,12 +101,12 @@ left join school sch using(school_id)
 left join task t ON t.year = ct.year AND t.contest_id = ct.contest_id
 left join submit s ON s.task_id = t.task_id AND s.ct_id = ct.ct_id";
 
-        $conditions = array(
+        $conditions = [
             'ct.year' => $this->year,
             'ct.contest_id' => $this->contest->contest_id,
             't.series' => $this->series,
-            'ct.study_year' => $study_years,
-        );
+            'ct.study_year' => $studyYears,
+        ];
 
         $query = "select " . implode(', ', $select);
         $query .= $from;

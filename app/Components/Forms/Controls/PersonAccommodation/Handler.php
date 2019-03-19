@@ -34,6 +34,7 @@ class Handler {
      * @param integer $eventId
      * @throws FullAccommodationCapacityException
      * @throws ExistingPaymentException
+     * @throws \Exception
      * @return void
      */
     public function prepareAndUpdate(ArrayHash $data, ModelPerson $person, $eventId) {
@@ -50,13 +51,13 @@ class Handler {
             } else {
                 try {
                     $modelEventPersonAccommodation->delete();
-                } catch (\PDOException $e) {
-                    if (\preg_match('/payment_accommodation/', $e->getMessage())) {
+                } catch (\PDOException $exception) {
+                    if (\preg_match('/payment_accommodation/', $exception->getMessage())) {
                         throw new ExistingPaymentException(\sprintf(
                             _('Položka "%s" má už vygenerovanú platu, teda nejde zmazať.'),
                             $modelEventPersonAccommodation->getLabel()));
                     } else {
-                        throw $e;
+                        throw $exception;
                     }
                 }
             }

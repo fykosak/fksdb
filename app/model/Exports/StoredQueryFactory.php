@@ -127,11 +127,11 @@ class StoredQueryFactory implements IXMLNodeSerializer {
         $series = null;
         try {
             $series = $presenter->getSelectedSeries();
-        } catch (BadRequestException $e) {
-            if ($e->getCode() == 500) {
+        } catch (BadRequestException $exception) {
+            if ($exception->getCode() == 500) {
                 $presenter->flashMessage(_('Kontext série pro dotazy není dostupný'), BasePresenter::FLASH_WARNING);
             } else {
-                throw $e;
+                throw $exception;
             }
         }
         $storedQuery->setImplicitParameters(array(

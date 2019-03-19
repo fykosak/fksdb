@@ -31,12 +31,16 @@ class MailSenderPresenter extends BasePresenter {
         $this->setIcon('fa fa-envelope');
     }
 
+    /**
+     * @throws \Nette\Application\BadRequestException
+     */
     public function authorizedDefault() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('mail-send', 'default', $this->getSelectedContest()));
     }
 
     /**
      * @return FormControl
+     * @throws \Nette\Application\BadRequestException
      */
     protected function createComponentMailForm(): FormControl {
         $control = new FormControl();

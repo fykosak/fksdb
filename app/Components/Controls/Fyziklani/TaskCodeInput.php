@@ -78,6 +78,7 @@ class TaskCodeInput extends FyziklaniReactControl {
 
     /**
      * @throws \Nette\Application\AbortException
+     * @throws \Exception
      */
     public function handleSave() {
         $request = $this->getReactRequest();
@@ -86,10 +87,10 @@ class TaskCodeInput extends FyziklaniReactControl {
         try {
             $log = $this->handler->preProcess($request->requestData['code'], +$request->requestData['points']);
             $response->addMessage(new \ReactMessage($log, \BasePresenter::FLASH_SUCCESS));
-        } catch (TaskCodeException $e) {
-            $response->addMessage(new \ReactMessage($e->getMessage(), \BasePresenter::FLASH_ERROR));
-        } catch (ClosedSubmittingException $e) {
-            $response->addMessage(new \ReactMessage($e->getMessage(), \BasePresenter::FLASH_ERROR));
+        } catch (TaskCodeException $exception) {
+            $response->addMessage(new \ReactMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR));
+        } catch (ClosedSubmittingException $exception) {
+            $response->addMessage(new \ReactMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR));
         }
         $this->getPresenter()->sendResponse($response);
 

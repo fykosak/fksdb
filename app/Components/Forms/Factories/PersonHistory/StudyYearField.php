@@ -41,17 +41,17 @@ class StudyYearField extends SelectBox {
      */
     private function createOptions() {
         $hsYears = [];
-        foreach (range(1, 4) as $study_year) {
-            $hsYears[$study_year] = sprintf(_('%d. ročník (očekávaný rok maturity %d)'),
-                $study_year,
-                $this->yearCalculator->getGraduationYear($study_year, $this->acYear));
+        foreach (range(1, 4) as $studyYear) {
+            $hsYears[$studyYear] = sprintf(_('%d. ročník (očekávaný rok maturity %d)'),
+                $studyYear,
+                $this->yearCalculator->getGraduationYear($studyYear, $this->acYear));
         }
 
         $primaryYears = [];
-        foreach (range(6, 9) as $study_year) {
-            $primaryYears[$study_year] = sprintf(_('%d. ročník (očekávaný rok maturity %d)'),
-                $study_year,
-                $this->yearCalculator->getGraduationYear($study_year, $this->acYear));
+        foreach (range(6, 9) as $studyYear) {
+            $primaryYears[$studyYear] = sprintf(_('%d. ročník (očekávaný rok maturity %d)'),
+                $studyYear,
+                $this->yearCalculator->getGraduationYear($studyYear, $this->acYear));
         }
 
         return [

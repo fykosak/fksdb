@@ -1,6 +1,8 @@
 <?php
 
-use FKSDB\ORM\IModel;
+namespace FKSDB\ORM;
+
+use LogicException;
 use Nette\InvalidStateException;
 use Nette\Object;
 
@@ -25,7 +27,7 @@ abstract class AbstractModelMulti extends Object implements IModel {
     protected $service;
 
     /**
-     * @note DO NOT use directly, use AbstracServiceMulti::composeModel or AbstractModelMulti::createFromExistingModels.
+     * @note DO NOT use directly, use AbstracServiceMulti::composeModel or FKSDB\ORM\AbstractModelMulti::createFromExistingModels.
      *
      * @param AbstractServiceMulti $service
      * @param IModel $mainModel
@@ -159,7 +161,7 @@ abstract class AbstractModelMulti extends Object implements IModel {
      * @return string
      */
     public function getSignature($need = TRUE) {
-        return implode('|', (array) $this->getPrimary($need));
+        return implode('|', (array)$this->getPrimary($need));
     }
 
     /**

@@ -121,6 +121,7 @@ class StoredQueryComponent extends Control {
     /**
      * @param $name
      * @return FormControl
+     * @throws BadRequestException
      */
     protected function createComponentParametrizeForm($name) {
         $control = new FormControl();
@@ -149,8 +150,8 @@ class StoredQueryComponent extends Control {
             $this->error = false;
             try {
                 $this->storedQuery->getColumnNames(); // this may throw PDOException in the main query
-            } catch (PDOException $e) {
-                $this->error = $e->getMessage();
+            } catch (PDOException $exception) {
+                $this->error = $exception->getMessage();
             }
         }
         return $this->error;
@@ -194,8 +195,8 @@ class StoredQueryComponent extends Control {
             $exportFormat = $this->exportFormatFactory->createFormat($format, $this->storedQuery);
             $response = $exportFormat->getResponse();
             $this->presenter->sendResponse($response);
-        } catch (InvalidArgumentException $e) {
-            throw new BadRequestException(sprintf('Neznámý formát \'%s\'.', $format), 404, $e);
+        } catch (InvalidArgumentException $exception) {
+            throw new BadRequestException(sprintf('Neznámý formát \'%s\'.', $format), 404, $exception);
         }
     }
 

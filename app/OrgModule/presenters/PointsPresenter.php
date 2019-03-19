@@ -111,6 +111,9 @@ class PointsPresenter extends SeriesPresenter {
         $this->seriesTable->setSeries($this->getSelectedSeries());
     }
 
+    /**
+     * @throws \Nette\Application\BadRequestException
+     */
     public function authorizedDefault() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'edit', $this->getSelectedContest()));
     }
@@ -210,25 +213,32 @@ class PointsPresenter extends SeriesPresenter {
 
 
             $this->flashMessage(_('Body úloh uloženy.'), self::FLASH_SUCCESS);
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             $this->flashMessage(_('Chyba při ukládání bodů.'), self::FLASH_ERROR);
-            Debugger::log($e);
+            Debugger::log($exception);
         }
         $this->redirect('this');
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     */
     public function handleInvalidate() {
         try {
             $this->SQLResultsCache->invalidate($this->getSelectedContest(), $this->getSelectedYear());
             $this->flashMessage(_('Body invalidovány.'), self::FLASH_INFO);
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             $this->flashMessage(_('Chyba při invalidaci.'), self::FLASH_ERROR);
-            Debugger::log($e);
+            Debugger::log($exception);
         }
 
         $this->redirect('this');
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
     public function handleRecalculateAll() {
         try {
 
@@ -246,9 +256,9 @@ class PointsPresenter extends SeriesPresenter {
 
 
             $this->flashMessage(_('Body přepočítány.'), self::FLASH_INFO);
-        } catch (InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $exception) {
             $this->flashMessage(_('Chyba při přepočtu.'), self::FLASH_ERROR);
-            Debugger::log($e);
+            Debugger::log($exception);
         }
 
         $this->redirect('this');

@@ -61,8 +61,9 @@ class CloseControl extends Control {
     }
 
     /**
-     * @param $category
+     * @param string $category
      * @return FormControl
+     * @throws BadRequestException
      */
     private function createComponentCloseCategoryForm(string $category): FormControl {
         $control = new FormControl();
@@ -77,6 +78,7 @@ class CloseControl extends Control {
 
     /**
      * @return FormControl
+     * @throws BadRequestException
      */
     public function createComponentCloseGlobalForm(): FormControl {
         $control = new FormControl();
@@ -90,6 +92,7 @@ class CloseControl extends Control {
 
     /**
      * @return FormControl
+     * @throws BadRequestException
      */
     public function createComponentCloseCategoryAForm(): FormControl {
         return $this->createComponentCloseCategoryForm('A');
@@ -97,6 +100,7 @@ class CloseControl extends Control {
 
     /**
      * @return FormControl
+     * @throws BadRequestException
      */
     public function createComponentCloseCategoryBForm(): FormControl {
         return $this->createComponentCloseCategoryForm('B');
@@ -104,6 +108,7 @@ class CloseControl extends Control {
 
     /**
      * @return FormControl
+     * @throws BadRequestException
      */
     public function createComponentCloseCategoryCForm(): FormControl {
         return $this->createComponentCloseCategoryForm('C');
@@ -111,6 +116,7 @@ class CloseControl extends Control {
 
     /**
      * @return FormControl
+     * @throws BadRequestException
      */
     public function createComponentCloseCategoryFForm(): FormControl {
         return $this->createComponentCloseCategoryForm('F');

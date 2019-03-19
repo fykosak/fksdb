@@ -48,7 +48,7 @@ class StoredQueryTagCloud extends Control {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelStoredQuery $modelStoredQuery
+     * @param ModelStoredQuery $modelStoredQuery
      */
     public function setModelStoredQuery(ModelStoredQuery $modelStoredQuery) {
         $this->modelStoredQuery = $modelStoredQuery;

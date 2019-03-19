@@ -32,6 +32,9 @@ abstract class EntityPresenter extends BasePresenter {
      */
     protected $modelResourceId;
 
+    /**
+     * @throws BadRequestException
+     */
     public function authorizedCreate() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->modelResourceId, 'create', $this->getSelectedContest()));
     }
@@ -48,6 +51,9 @@ abstract class EntityPresenter extends BasePresenter {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed($model, 'edit', $this->getSelectedContest()));
     }
 
+    /**
+     * @throws BadRequestException
+     */
     public function authorizedList() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->modelResourceId, 'list', $this->getSelectedContest()));
     }
@@ -66,6 +72,7 @@ abstract class EntityPresenter extends BasePresenter {
 
     /**
      * @param $id
+     * @throws BadRequestException
      */
     public function renderEdit($id) {
         $component = $this->getComponent(self::COMP_EDIT_FORM);
@@ -73,6 +80,9 @@ abstract class EntityPresenter extends BasePresenter {
         $this->setDefaults($this->getModel(), $form);
     }
 
+    /**
+     * @throws BadRequestException
+     */
     public function renderCreate() {
         $component = $this->getComponent(self::COMP_CREATE_FORM);
         $form = ($component instanceof FormControl) ? $component->getForm() : $component;
@@ -80,7 +90,7 @@ abstract class EntityPresenter extends BasePresenter {
     }
 
     /**
-     * @return \AbstractModelSingle|null|IModel
+     * @return \FKSDB\ORM\AbstractModelSingle|null|IModel
      */
     public final function getModel() {
         if ($this->model === false) {
@@ -103,7 +113,7 @@ abstract class EntityPresenter extends BasePresenter {
 
     /**
      * @param $id
-     * @return \AbstractModelSingle
+     * @return \FKSDB\ORM\AbstractModelSingle
      */
     abstract protected function loadModel($id);
 

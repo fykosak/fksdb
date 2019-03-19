@@ -111,6 +111,8 @@ class SelectForm extends Control {
 
     /**
      * @return FormControl
+     * @throws \FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException
+     * @throws \Nette\Application\BadRequestException
      */
     public function createComponentFormEdit() {
         return $this->createForm(false);
@@ -118,6 +120,8 @@ class SelectForm extends Control {
 
     /**
      * @return FormControl
+     * @throws \FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException
+     * @throws \Nette\Application\BadRequestException
      */
     public function createComponentFormCreate() {
         return $this->createForm(true);
@@ -126,6 +130,8 @@ class SelectForm extends Control {
     /**
      * @param bool $create
      * @return FormControl
+     * @throws \FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException
+     * @throws \Nette\Application\BadRequestException
      */
     private function createForm(bool $create) {
         $control = new FormControl();
@@ -151,6 +157,7 @@ class SelectForm extends Control {
      * @param bool $create
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\ForbiddenRequestException
+     * @throws \Exception
      */
     private function handleSubmit(Form $form, bool $create) {
         $values = $form->getValues();
@@ -174,12 +181,12 @@ class SelectForm extends Control {
 
         try {
             $this->servicePaymentAccommodation->prepareAndUpdate($values->payment_accommodation, $model);
-        } catch (DuplicateAccommodationPaymentException $e) {
-            $this->flashMessage($e->getMessage(), \BasePresenter::FLASH_ERROR);
+        } catch (DuplicateAccommodationPaymentException $exception) {
+            $this->flashMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR);
             $connection->rollBack();
             return;
-        } catch (EmptyDataException $e) {
-            $this->flashMessage($e->getMessage(), \BasePresenter::FLASH_ERROR);
+        } catch (EmptyDataException $exception) {
+            $this->flashMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR);
             $connection->rollBack();
             return;
         }
@@ -190,7 +197,7 @@ class SelectForm extends Control {
     }
 
     /**
-     *
+     * @throws \Nette\Application\BadRequestException
      */
     public function renderCreate() {
         /**
@@ -211,6 +218,7 @@ class SelectForm extends Control {
 
     /**
      * @param \FKSDB\ORM\Models\ModelPayment $model
+     * @throws \Nette\Application\BadRequestException
      */
     public function renderEdit(ModelPayment $model) {
         $this->model = $model;

@@ -40,28 +40,49 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /* ***** Authorized methods *****/
+    /**
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function authorizedEntry() {
         $this->setAuthorized($this->eventIsAllowed('fyziklani.submit', 'default'));
     }
 
+    /**
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function authorizedQrEntry() {
         $this->authorizedEntry();
     }
 
+    /**
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function authorizedEdit() {
         $this->authorizedEntry();
     }
 
+    /**
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function authorizedList() {
         $this->authorizedEntry();
     }
 
+    /**
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function authorizedAutoClose() {
         $this->authorizedEntry();
     }
     /* ******** ACTION METHODS ********/
     /**
      * @param $id
+     * @throws BadRequestException
      */
     public function actionQrEntry($id) {
         if (!$id) {

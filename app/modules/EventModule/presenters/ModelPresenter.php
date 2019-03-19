@@ -25,6 +25,10 @@ class ModelPresenter extends BasePresenter {
         $this->expressionPrinter = $expressionPrinter;
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
     public function authorizedDefault() {
         $this->setAuthorized($this->eventIsAllowed('event.model', 'default'));
     }

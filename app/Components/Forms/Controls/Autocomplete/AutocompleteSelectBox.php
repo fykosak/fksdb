@@ -167,14 +167,14 @@ class AutocompleteSelectBox extends TextBase {
 
     public function loadHttpData() {
         $path = explode('[', strtr(str_replace(array('[]', ']'), '', $this->getHtmlName()), '.', '_'));
-        $meta_path = $path;
-        $meta_path[count($meta_path) - 1] .= self::META_ELEMENT_SUFFIX;
+        $metaPath = $path;
+        $metaPath[count($metaPath) - 1] .= self::META_ELEMENT_SUFFIX;
         try {
             $wasSent = Arrays::get($this->getForm()->getHttpData(), $path);
-        } catch (InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $exception) {
             $wasSent = false;
         }
-        if ($wasSent && !Arrays::get($this->getForm()->getHttpData(), $meta_path, null)) {
+        if ($wasSent && !Arrays::get($this->getForm()->getHttpData(), $metaPath, null)) {
             $this->addError(sprintf(_('Políčko %s potřebuje povolený Javascript.'), $this->caption));
             $this->setValue(null);
         } else {

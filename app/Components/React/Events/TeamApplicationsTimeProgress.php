@@ -3,7 +3,6 @@
 namespace FKSDB\Components\React\ReactComponent\Events;
 
 use FKSDB\Components\React\ReactComponent;
-use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\DI\Container;
 use Nette\Utils\Json;
@@ -63,15 +62,15 @@ class TeamApplicationsTimeProgress extends ReactComponent {
      */
     function getData(): string {
         $data = [
-            'teams'=>[],
-            'events'=>[],
+            'teams' => [],
+            'events' => [],
         ];
         /**
          * @var \FKSDB\ORM\Models\ModelEvent $event
          */
         foreach ($this->events as $event) {
             $data['teams'][$event->event_id] = $this->serviceFyziklaniTeam->getTeamsAsArray($event);
-            $data['events'][$event->event_id]=$event->__toArray();
+            $data['events'][$event->event_id] = $event->__toArray();
         }
         return Json::encode($data);
     }
