@@ -9,6 +9,7 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
+use Nette\Diagnostics\Debugger;
 use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Form;
 use Nette\Localization\ITranslator;
@@ -29,7 +30,7 @@ class EditSubmitControl extends Control {
      */
     private $submit;
     /**
-     * @var \FKSDB\ORM\Models\ModelEvent
+     * @var ModelEvent
      */
     private $event;
     /**
@@ -39,7 +40,7 @@ class EditSubmitControl extends Control {
 
     /**
      * EditSubmitControl constructor.
-     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @param ModelEvent $event
      * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
      * @param ITranslator $translator
      */
@@ -63,30 +64,21 @@ class EditSubmitControl extends Control {
     }
 
     /**
-     * @param int $id
+     * @param ModelFyziklaniSubmit $submit
      * @throws BadRequestException
-     * @throws ClosedSubmittingException
      */
-    public function setSubmit(int $id) {
-        $row = $this->serviceFyziklaniSubmit->findByPrimary($id);
-
-        if (!$this->submit) {
-            throw new BadRequestException(_('Neexistující submit.'), 404);
+    public function setSubmit(ModelFyziklaniSubmit $submit) {
+        $this->submit = $submit;
+        if ($this->submit->canChange()) {
+            /**
+             * @var FormControl $control
+             */
+            $control = $this->getComponent('form');
+            $control->getForm()->setDefaults([
+                'team_id' => $this->submit->e_fyziklani_team_id,
+                'points' => $this->submit->points,
+            ]);
         }
-        $this->submit = ModelFyziklaniSubmit::createFromTableRow($row);
-
-        $team = $this->submit->getTeam();
-        if (!$team->hasOpenSubmitting()) {
-            throw new ClosedSubmittingException($team);
-        }
-        /**
-         * @var FormControl $control
-         */
-        $control = $this->getComponent('form');
-        $control->getForm()->setDefaults([
-            'team_id' => $this->submit->e_fyziklani_team_id,
-            'points' => $this->submit->points,
-        ]);
     }
 
     /**
@@ -120,22 +112,19 @@ class EditSubmitControl extends Control {
 
     /**
      * @param Form $form
+     * @throws \Nette\Application\AbortException
      */
     private function editFormSucceeded(Form $form) {
         $values = $form->getValues();
-
-        $submit = $this->submit;
-        $this->serviceFyziklaniSubmit->updateModel($submit, [
-            'points' => $values->points,
-            /* ugly, exclude previous value of `modified` from query
-             * so that `modified` is set automatically by DB
-             * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
-             */
-            'modified' => null
-        ]);
-        $this->serviceFyziklaniSubmit->save($submit);
-        $this->getPresenter()->flashMessage(\sprintf(_('Body byly změněny: Tým "%s", body %d.'), $submit->getTeam()->name, $submit->points), \BasePresenter::FLASH_SUCCESS);
-
+        try {
+            $msg = $this->submit->changePoints($values->points);
+            Debugger::log(\sprintf('fyziklani_submit %d edited by %d', $this->submit->fyziklani_submit_id, $this->getPresenter()->getUser()->getIdentity()->getPerson()->person_id));
+            $this->getPresenter()->flashMessage($msg, \BasePresenter::FLASH_SUCCESS);
+            $this->redirect('this');
+        } catch (ClosedSubmittingException $exception) {
+            $this->getPresenter()->flashMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR);
+            $this->redirect('this');
+        }
     }
 
     public function render() {

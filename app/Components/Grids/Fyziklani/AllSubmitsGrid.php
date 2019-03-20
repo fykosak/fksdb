@@ -2,12 +2,19 @@
 
 namespace FKSDB\Components\Grids\Fyziklani;
 
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\model\Fyziklani\TaskCodePreprocessor;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FyziklaniModule\BasePresenter;
 use Nette\Database\Table\Selection;
+use Nette\Forms\Form;
+use Nette\InvalidStateException;
 use SQL\SearchableDataSource;
 
 /**
@@ -21,14 +28,26 @@ class AllSubmitsGrid extends SubmitsGrid {
      * @var ModelEvent
      */
     private $event;
+    /**
+     * @var ServiceFyziklaniTeam
+     */
+    private $serviceFyziklaniTeam;
+    /**
+     * @var ServiceFyziklaniTask
+     */
+    private $serviceFyziklaniTask;
 
     /**
      * FyziklaniSubmitsGrid constructor.
-     * @param \FKSDB\ORM\Models\ModelEvent $event
-     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit $serviceFyziklaniSubmit
+     * @param ModelEvent $event
+     * @param ServiceFyziklaniTask $serviceFyziklaniTask
+     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
      */
-    public function __construct(ModelEvent $event, ServiceFyziklaniSubmit $serviceFyziklaniSubmit) {
+    public function __construct(ModelEvent $event, ServiceFyziklaniTask $serviceFyziklaniTask, ServiceFyziklaniSubmit $serviceFyziklaniSubmit, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
         $this->event = $event;
+        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
+        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
         parent::__construct($serviceFyziklaniSubmit);
     }
 
@@ -40,25 +59,32 @@ class AllSubmitsGrid extends SubmitsGrid {
     protected function configure($presenter) {
         parent::configure($presenter);
 
-        $this->addColumn('name', _('Jméno týmu'));
-        $this->addColumn('e_fyziklani_team_id', _('Id týmu'));
+        $this->addColumn('e_fyziklani_team_id', _('Team'))->setRenderer(function (ModelFyziklaniSubmit $row) {
+            return $row->getTeam()->name . ' (' . $row->getTeam()->e_fyziklani_team_id . ')';
+        });
         $this->addColumnTask();
         $this->addColumn('points', _('Body'));
         $this->addColumn('room', _('Room'));
         $this->addColumn('modified', _('Zadané'));
+        $this->addColumnState();
 
         $this->addButton('edit', null)->setClass('btn btn-sm btn-warning')->setLink(function ($row) use ($presenter) {
             return $presenter->link(':Fyziklani:Submit:edit', ['id' => $row->fyziklani_submit_id]);
-        })->setText(_('Upravit'))->setShow(function (ModelFyziklaniSubmit $row) {
+        })->setText(_('Edit'))->setShow(function (ModelFyziklaniSubmit $row) {
             return $row->getTeam()->hasOpenSubmitting() && !is_null($row->points);
         });
+
+        $this->addButton('detail', null)
+            ->setClass('btn btn-sm btn-primary')
+            ->setLink(function ($row) use ($presenter) {
+                return $presenter->link(':Fyziklani:Submit:detail', ['id' => $row->fyziklani_submit_id]);
+            })->setText(_('Detail'));
 
         $this->addButton('delete', null)->setClass('btn btn-sm btn-danger')->setLink(function ($row) {
             return $this->link('delete!', $row->fyziklani_submit_id);
         })->setConfirmationDialog(function () {
             return _('Opravdu vzít submit úlohy zpět?');
-        })->setText(_('Smazat'))->setShow(function (ModelFyziklaniSubmit $row) {
-
+        })->setText(_('Delete'))->setShow(function (ModelFyziklaniSubmit $row) {
             return $row->getTeam()->hasOpenSubmitting() && !is_null($row->points);
         });
 
@@ -74,19 +100,35 @@ class AllSubmitsGrid extends SubmitsGrid {
      */
     private function getFilterCallBack(): \Closure {
         return function (Selection $table, $value) {
-            $l = strlen($value);
-            $code = str_repeat('0', 9 - $l) . strtoupper($value);
-            if (TaskCodePreprocessor::checkControlNumber($code)) {
-                $taskLabel = TaskCodePreprocessor::extractTaskLabel($code);
-                $teamId = TaskCodePreprocessor::extractTeamId($code);
-                $table->where('e_fyziklani_team_id.e_fyziklani_team_id =? AND fyziklani_task.label =? ', $teamId, $taskLabel);
-
-            } else {
-                $tokens = preg_split('/\s+/', $value);
-                foreach ($tokens as $token) {
-                    $table->where('e_fyziklani_team_id.name LIKE CONCAT(\'%\', ? , \'%\') OR fyziklani_task.label LIKE CONCAT(\'%\', ? , \'%\')', $token, $token);
+            foreach ($value as $key => $condition) {
+                if (!$condition) {
+                    continue;
+                }
+                switch ($key) {
+                    case 'team':
+                        $table->where('fyziklani_submit.e_fyziklani_team_id', $condition);
+                        break;
+                    case 'code':
+                        $fullCode = TaskCodePreprocessor::createFullCode($condition);
+                        if (TaskCodePreprocessor::checkControlNumber($fullCode)) {
+                            $taskLabel = TaskCodePreprocessor::extractTaskLabel($fullCode);
+                            $teamId = TaskCodePreprocessor::extractTeamId($fullCode);
+                            $table->where('e_fyziklani_team_id.e_fyziklani_team_id =? AND fyziklani_task.label =? ', $teamId, $taskLabel);
+                        } else {
+                            $this->flashMessage(_('Zle zadaný kód úlohy'), \BasePresenter::FLASH_WARNING);
+                        }
+                        break;
+                    case 'creator_me':
+                        $personId = $this->getPresenter()->getUser()->getIdentity()->getPerson()->person_id;
+                        $table->where('created_by = ? OR checked_by = ?', $personId, $personId);
+                        break;
+                    case 'task':
+                        $table->where('fyziklani_submit.fyziklani_task_id', $condition);
                 }
             }
+            return;
+
+
         };
     }
 
@@ -117,4 +159,49 @@ class AllSubmitsGrid extends SubmitsGrid {
         $this->serviceFyziklaniSubmit->save($submit);
         $this->flashMessage(_('Submit has been deleted.'), \BasePresenter::FLASH_SUCCESS);
     }
+
+    /**
+     * @return FormControl
+     * @throws \Nette\Application\BadRequestException
+     */
+    protected function createComponentSearchForm(): FormControl {
+        if (!$this->isSearchable()) {
+            throw new InvalidStateException("Cannot create search form without searchable data source.");
+        }
+        $control = new FormControl();
+        $form = $control->getForm();
+        //$form = new Form();
+        $form->setMethod(Form::GET);
+
+        $rows = $this->serviceFyziklaniTeam->findPossiblyAttending($this->event);
+        $teams = [];
+
+        foreach ($rows as $row) {
+            $team = ModelFyziklaniTeam::createFromTableRow($row);
+            $teams[$team->e_fyziklani_team_id] = $team->name;
+        }
+
+        $rows = $this->serviceFyziklaniTask->findAll($this->event);
+        $tasks = [];
+        foreach ($rows as $row) {
+            $task = ModelFyziklaniTask::createFromTableRow($row);
+            $tasks[$task->fyziklani_task_id] = $task->name . '(' . $task->label . ')';
+        }
+
+        $form->addSelect('team', _('Team'), $teams)->setPrompt(_('--Team--'));
+        $form->addSelect('task', _('Task'), $tasks)->setPrompt(_('--task--'));
+        $form->addText('code', _('Code'))->setAttribute('placeholder', _('Task code'));
+        $form->addCheckbox('creator_me', _('Only my submits'));
+        $form->addSubmit('submit', _('Search'));
+        $form->onSuccess[] = function (Form $form) {
+            $values = $form->getValues();
+            $this->searchTerm = $values;
+            $this->dataSource->applyFilter($values);
+            // TODO is this vv needed? vv
+            $count = $this->dataSource->getCount();
+            $this->getPaginator()->itemCount = $count;
+        };
+        return $control;
+    }
+
 }

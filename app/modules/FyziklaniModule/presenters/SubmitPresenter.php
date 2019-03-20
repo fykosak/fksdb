@@ -4,8 +4,11 @@ namespace FyziklaniModule;
 
 use FKSDB\Components\Controls\Fyziklani\EditSubmitControl;
 use FKSDB\Components\Controls\Fyziklani\QREntryControl;
+use FKSDB\Components\Controls\Fyziklani\Submit\DetailControl;
 use FKSDB\Components\Controls\Fyziklani\TaskCodeInput;
 use FKSDB\Components\Grids\Fyziklani\SubmitsGrid;
+use FKSDB\model\Fyziklani\ClosedSubmittingException;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use Nette\Application\BadRequestException;
 
 /**
@@ -13,6 +16,10 @@ use Nette\Application\BadRequestException;
  * @package FyziklaniModule
  */
 class SubmitPresenter extends BasePresenter {
+    /**
+     * @var ModelFyziklaniSubmit
+     */
+    private $submit;
 
     /* ***** Title methods *****/
     public function titleEntry() {
@@ -98,6 +105,7 @@ class SubmitPresenter extends BasePresenter {
 
     /**
      * @param $id
+     * @throws BadRequestException
      * @throws \Nette\Application\AbortException
      */
     public function actionEdit($id) {
@@ -105,12 +113,45 @@ class SubmitPresenter extends BasePresenter {
          * @var EditSubmitControl $control
          */
         $control = $this->getComponent('editControl');
+        $submit = $this->loadModel($id);
         try {
-            $control->setSubmit(+$id);
-        } catch (BadRequestException $exception) {
-            $this->flashMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR);
+            $control->setSubmit($submit);
+        } catch (ClosedSubmittingException $exception) {
+            $this->flashMessage($exception->getMessage(), self::FLASH_ERROR);
             $this->redirect('list');
         }
+
+    }
+
+    /**
+     * @param int $id
+     * @return ModelFyziklaniSubmit
+     * @throws \Nette\Application\AbortException
+     */
+    private function loadModel(int $id): ModelFyziklaniSubmit {
+        if ($this->submit) {
+            return $this->submit;
+        }
+        $row = $this->getServiceFyziklaniSubmit()->findByPrimary($id);
+        if (!$row) {
+            $this->flashMessage(_('Submit neexistuje'), \BasePresenter::FLASH_ERROR);
+            $this->redirect('list');
+        };
+        $this->submit = ModelFyziklaniSubmit::createFromTableRow($row);
+        return $this->submit;
+    }
+
+    /**
+     * @param $id
+     * @throws \Nette\Application\AbortException
+     */
+    public function actionDetail($id) {
+        /**
+         * @var DetailControl $control
+         */
+        $control = $this->getComponent('detailControl');
+        $submit = $this->loadModel($id);
+        $control->setSubmit($submit);
     }
 
     /* ****** COMPONENTS **********/
@@ -156,5 +197,12 @@ class SubmitPresenter extends BasePresenter {
             $this->redirect('list');
         };
         return $control;
+    }
+
+    /**
+     * @return DetailControl
+     */
+    public function createComponentDetailControl(): DetailControl {
+        return $this->fyziklaniComponentsFactory->createSubmitDetailControl();
     }
 }

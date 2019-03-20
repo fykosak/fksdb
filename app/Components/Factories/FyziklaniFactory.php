@@ -14,6 +14,7 @@ use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Statistics\TaskStat
 use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Statistics\TeamStatistics;
 use FKSDB\Components\Controls\Fyziklani\RoutingDownload;
 use FKSDB\Components\Controls\Fyziklani\RoutingEdit;
+use FKSDB\Components\Controls\Fyziklani\Submit\DetailControl;
 use FKSDB\Components\Controls\Fyziklani\TaskCodeInput;
 use FKSDB\Components\Grids\Fyziklani\AllSubmitsGrid;
 use FKSDB\Components\Grids\Fyziklani\TaskGrid;
@@ -114,7 +115,7 @@ class FyziklaniFactory {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @param ModelEvent $event
      * @return QREntryControl
      */
     public function createQREntryControl(ModelEvent $event): QREntryControl {
@@ -133,7 +134,7 @@ class FyziklaniFactory {
     /* *************** CLOSING ***************/
 
     /**
-     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @param ModelEvent $event
      * @return CloseControl
      */
     public function createCloseControl(ModelEvent $event): CloseControl {
@@ -141,7 +142,7 @@ class FyziklaniFactory {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @param ModelEvent $event
      * @return CloseTeamControl
      */
     public function createCloseTeamControl(ModelEvent $event): CloseTeamControl {
@@ -151,7 +152,7 @@ class FyziklaniFactory {
     /* ************** ROUTING *************/
 
     /**
-     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @param ModelEvent $event
      * @return RoutingEdit
      */
     public function createRoutingEdit(ModelEvent $event): RoutingEdit {
@@ -176,7 +177,7 @@ class FyziklaniFactory {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @param ModelEvent $event
      * @return ResultsPresentation
      */
     public function createResultsPresentation(ModelEvent $event): ResultsPresentation {
@@ -213,7 +214,7 @@ class FyziklaniFactory {
      * @return AllSubmitsGrid
      */
     public function createSubmitsGrid(ModelEvent $event): AllSubmitsGrid {
-        return new AllSubmitsGrid($event, $this->serviceFyziklaniSubmit);
+        return new AllSubmitsGrid($event, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit, $this->serviceFyziklaniTeam);
     }
 
     /**
@@ -233,10 +234,17 @@ class FyziklaniFactory {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam $team
+     * @param ModelFyziklaniTeam $team
      * @return TeamSubmitsGrid
      */
     public function createTeamSubmitsGrid(ModelFyziklaniTeam $team): TeamSubmitsGrid {
         return new TeamSubmitsGrid($team, $this->serviceFyziklaniSubmit);
+    }
+
+    /**
+     * @return DetailControl
+     */
+    public function createSubmitDetailControl(): DetailControl {
+        return new DetailControl($this->translator, $this->serviceFyziklaniSubmit);
     }
 }

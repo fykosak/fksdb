@@ -2,7 +2,10 @@
 
 namespace FKSDB\ORM\Models\Fyziklani;
 
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\model\Fyziklani\ClosedSubmittingException;
+use FKSDB\model\Fyziklani\PointsMismatchException;
+use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\ModelPerson;
 use Nette\Database\Table\ActiveRow;
 use Nette\DateTime;
 
@@ -10,17 +13,23 @@ use Nette\DateTime;
  *
  * @author Lukáš Timko <lukast@fykos.cz>
  * @author Michal Červeňák <miso@fykos.cz>
- * @property integer e_fyziklani_team_id
- * @property integer points
- * @property integer fyziklani_task_id
  * @property integer fyziklani_submit_id
- * @property integer task_id
+ * @property integer e_fyziklani_team_id
  * @property ActiveRow e_fyziklani_team
+ * @property integer fyziklani_task_id
  * @property ActiveRow fyziklani_task
+ *
+ * @property integer points
+ * @property string state
+ * @property int checked_by
+ * @property int created_by
+ *
  * @property DateTime created
  * @property DateTime modified
  */
-class ModelFyziklaniSubmit extends AbstractModelSingle {
+class ModelFyziklaniSubmit extends \FKSDB\ORM\AbstractModelSingle {
+    const STATE_NOT_CHECKED = 'not_checked';
+    const STATE_CHECKED = 'checked';
 
     /**
      * @return ModelFyziklaniTask
@@ -37,6 +46,35 @@ class ModelFyziklaniSubmit extends AbstractModelSingle {
     }
 
     /**
+     * @return ModelPerson|null
+     */
+    public function getCreatedBy() {
+        $row = $this->ref(DbNames::TAB_PERSON, 'created_by');
+        if (!$row) {
+            return null;
+        }
+        return ModelPerson::createFromTableRow($row);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isChecked(): bool {
+        return $this->state === self::STATE_CHECKED;
+    }
+
+    /**
+     * @return ModelPerson|null
+     */
+    public function getCheckedBy() {
+        $row = $this->ref(DbNames::TAB_PERSON, 'checked_by');
+        if (!$row) {
+            return null;
+        }
+        return ModelPerson::createFromTableRow($row);
+    }
+
+    /**
      * @return array
      */
     public function __toArray(): array {
@@ -47,4 +85,71 @@ class ModelFyziklaniSubmit extends AbstractModelSingle {
             'created' => $this->created->format('c'),
         ];
     }
+
+    /**
+     * @return bool
+     */
+    public function canChange(): bool {
+        if ($this->getTeam()->hasOpenSubmitting()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @param int $points
+     * @return string
+     * @throws ClosedSubmittingException
+     */
+    public function changePoints(int $points): string {
+        if (!$this->canChange()) {
+            throw new ClosedSubmittingException($this->getTeam());
+        }
+        $this->update([
+            'points' => $points,
+            /* ugly, exclude previous value of `modified` from query
+             * so that `modified` is set automatically by DB
+             * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
+             */
+            'state' => self::STATE_NOT_CHECKED,
+            'modified' => null,
+        ]);
+
+        return \sprintf(_('Body byly upraveny. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
+            $points,
+            $this->getTeam()->name,
+            $this->getTeam()->e_fyziklani_team_id,
+            $this->getTask()->label,
+            $this->getTask()->name);
+    }
+
+    /**
+     * @param int $points
+     * @return string
+     * @throws ClosedSubmittingException
+     * @throws PointsMismatchException
+     */
+    public function check(int $points): string {
+        if (!$this->canChange()) {
+            throw new ClosedSubmittingException($this->getTeam());
+        }
+        if ($this->points != $points) {
+            throw new PointsMismatchException();
+        }
+        $this->update([
+            'state' => self::STATE_CHECKED,
+            /* ugly, exclude previous value of `modified` from query
+             * so that `modified` is set automatically by DB
+             * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
+             */
+            'modified' => null,
+        ]);
+        return \sprintf(_('Bodovanie bolo overené. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
+            $points,
+            $this->getTeam()->name,
+            $this->getTeam()->e_fyziklani_team_id,
+            $this->getTask()->label,
+            $this->getTask()->name);
+    }
+
 }

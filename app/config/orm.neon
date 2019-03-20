@@ -49,6 +49,9 @@ services:
     fyziklani.ServiceFyziklaniTask:    FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask
     fyziklani.ServiceFyziklaniTeam:             FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam
 
+    schedule.ServiceScheduleGroup: FKSDB\ORM\Services\Schedule\ServiceScheduleGroup
+    schedule.ServiceScheduleItem: FKSDB\ORM\Services\Schedule\ServiceScheduleItem
+    schedule.ServicePersonSchedule: FKSDB\ORM\Services\Schedule\ServicePersonSchedule
 
     event.ServiceEventParticipant:          FKSDB\ORM\Services\ServiceEventParticipant
     event.ServiceDsefGroup:                 FKSDB\ORM\Services\Events\ServiceDsefGroup
