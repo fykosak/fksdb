@@ -1,6 +1,19 @@
+parameters:
+    events:
+        setkani8jaro:
+            arrival:
+                destination:
+                    PHA: "Praha"
+                    OVA: "Ostrava"
+                    OWN: "Přímo na místo (Brno-Židenice)"
+
+                time:
+                    start: 17:30
+                    end: 18:00
+
 events:
-    setkani8podzim:
-        event_type_id: [12]
+    setkani8jaro:
+        event_type_id: [11]
         eventYears: [8] # specify for which years this machine is valid, by default all years
         tableLayout: event.grid
         formLayout: setkani.form
@@ -54,34 +67,27 @@ events:
                         label: _('Jakou barvu má Výfuček?')
                         required: true
                         modifiable: %events.setkani.appCond%
-                    arrival_time:
-                       label: _('Předpokládaný příjezd')
-                       description: _('Čas příjezdu')
-                    arrival_destination:
-                       label: _('Na jaké místo přijedeš?')
-                       required: true
-                       factory: Chooser("Zvol místo",Options(%events.setkani.arrival.destination%))
-                    departure_time:
-                       label: _('Předpokládaný odjezd')
-                       description: _('Čas odjezdu')
-                    departure_destination:
-                       label: _('Z jakého místa chceš odjíždět?')
-                       required: true
-                       factory: Chooser("Zvol místo",Options(%events.setkani.arrival.destination%))
-                    tshirt_size:
-                        label: _('Jaké tričko nosíš?')
-                        required: true
-                        factory: Chooser("Zvol velikost", Options(%events.setkani.tshirt.size%))
-                    tshirt_color:
-                        label: _('Jakou barvu trička bys chtěl?')
-                        required: false
-                        factory: Chooser("Zvol barvu", Options(%events.setkani.tshirt.color%))
                     diet:
                         label: _('Jídlo')
                         description: _('Máš nějaké speciální stravovací návyky – vegetariánství, veganství, diety, …? Pokud ano, máš zájem o speciální stravu nebo si (zejména v případě veganů) dovezeš jídlo vlastní?')
                     health_restrictions:
                         label: _('Zdravotní omezení')
                         description: _('Máš nějaká zdravotní omezení, která by tě mohla omezovat v pobytu na soustředění nebo kvůli kterým by ses např. nemohl/a účastnit fyzicky náročných nebo nočních her? Například různé alergie (a jejich projevy), cukrovka, epilepsie, dlouhodobější obtíže, … Bereš nějaké léky, ať už pravidelně, nebo v případě obtíží? Jaké to jsou? Jsou nějaké další informace ohledně tvého zdravotního stavu, co bychom měli vědět?')
+                    used_drugs:
+                        label: _('Užívané léky')
+
+                    arrival_destination:
+                       label: _('Místo, ze kterého chci cestovat')
+                       required: true
+                       factory: Chooser("Zvol místo",Options(%events.setkani8jaro.arrival.destination%))
+                    arrival_ticket:
+                        label: "Mám zájem o společnou jízdenku cestou na setkání"
+                    departure_destination:
+                       label: _('Místo, na které chci cestovat')
+                       required: true
+                       factory: Chooser("Zvol místo",Options(%events.setkani8jaro.arrival.destination%))
+                    departure_ticket:
+                          label: "Mám zájem o společnou jízdenku ze setkání"
                     note:
                        label: _('Další poznámky')
 
