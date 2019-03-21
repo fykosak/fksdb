@@ -125,8 +125,8 @@ class QREntryControl extends Control {
         $this->template->setTranslator($this->translator);
         $this->template->code = $this->code;
         try {
-            $this->template->task = $this->handler->getTaskFromCode($this->code);
-            $this->template->team = $this->handler->getTeamFromCode($this->code);
+            $this->template->task = $this->handler->getTask($this->code);
+            $this->template->team = $this->handler->getTeam($this->code);
         } catch (TaskCodeException $exception) {
         }
 
