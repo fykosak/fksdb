@@ -3,8 +3,8 @@
 namespace FKSDB\Components\Controls\Fyziklani;
 
 use FKSDB\model\Fyziklani\ClosedSubmittingException;
+use FKSDB\model\Fyziklani\SubmitHandler;
 use FKSDB\model\Fyziklani\TaskCodeException;
-use FKSDB\model\Fyziklani\TaskCodeHandler;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
@@ -20,13 +20,13 @@ use Nette\Utils\Json;
  */
 class TaskCodeInput extends FyziklaniReactControl {
     /**
-     * @var TaskCodeHandler
+     * @var SubmitHandler
      */
     private $handler;
 
     /**
      * TaskCodeInput constructor.
-     * @param TaskCodeHandler $handler
+     * @param SubmitHandler $handler
      * @param Container $container
      * @param ModelEvent $event
      * @param ServiceFyziklaniRoom $serviceFyziklaniRoom
@@ -35,7 +35,7 @@ class TaskCodeInput extends FyziklaniReactControl {
      * @param ServiceFyziklaniTask $serviceFyziklaniTask
      * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
      */
-    public function __construct(TaskCodeHandler $handler, Container $container, ModelEvent $event, ServiceFyziklaniRoom $serviceFyziklaniRoom, ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition, ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceFyziklaniTask $serviceFyziklaniTask, ServiceFyziklaniSubmit $serviceFyziklaniSubmit) {
+    public function __construct(SubmitHandler $handler, Container $container, ModelEvent $event, ServiceFyziklaniRoom $serviceFyziklaniRoom, ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition, ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceFyziklaniTask $serviceFyziklaniTask, ServiceFyziklaniSubmit $serviceFyziklaniSubmit) {
         parent::__construct($container, $event, $serviceFyziklaniRoom, $serviceFyziklaniTeamPosition, $serviceFyziklaniTeam, $serviceFyziklaniTask, $serviceFyziklaniSubmit);
         $this->handler = $handler;
     }

@@ -17,6 +17,8 @@ use FKSDB\Components\Controls\Fyziklani\RoutingEdit;
 use FKSDB\Components\Controls\Fyziklani\Submit\DetailControl;
 use FKSDB\Components\Controls\Fyziklani\TaskCodeInput;
 use FKSDB\Components\Grids\Fyziklani\AllSubmitsGrid;
+use FKSDB\Components\Grids\Fyziklani\ResultsCategoryGrid;
+use FKSDB\Components\Grids\Fyziklani\ResultsTotalGrid;
 use FKSDB\Components\Grids\Fyziklani\TaskGrid;
 use FKSDB\Components\Grids\Fyziklani\TeamSubmitsGrid;
 use FKSDB\model\Fyziklani\TaskCodeHandlerFactory;
@@ -207,6 +209,22 @@ class FyziklaniFactory {
     public function createCorrelationStatistics(ModelEvent $event): CorrelationStatistics {
         return new CorrelationStatistics($this->context, $event, $this->serviceFyziklaniRoom, $this->serviceFyziklaniTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
     }
+    /**
+     * @param ModelEvent $event
+     * @param string $category
+     * @return ResultsCategoryGrid
+     */
+    public function createResultsCategoryGrid(ModelEvent $event, string $category): ResultsCategoryGrid {
+        return new ResultsCategoryGrid($event, $this->serviceFyziklaniTeam, $category);
+    }
+    /**
+     * @param ModelEvent $event
+     * @return ResultsTotalGrid
+     */
+    public function createResultsTotalGrid(ModelEvent $event): ResultsTotalGrid {
+        return new ResultsTotalGrid($event, $this->serviceFyziklaniTeam);
+    }
+
 
     /* ********** GRIDS *************/
     /**

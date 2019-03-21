@@ -2,19 +2,19 @@
 
 namespace FKSDB\model\Fyziklani;
 
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use Nette\Diagnostics\Debugger;
 
 /**
  * Class TaskCodeHandler
  * @package FKSDB\model\Fyziklani
  */
-class TaskCodeHandler {
+class SubmitHandler {
 
     /**
      * @var ServiceFyziklaniSubmit
@@ -29,7 +29,7 @@ class TaskCodeHandler {
      */
     private $serviceFyziklaniTeam;
     /**
-     * @var \FKSDB\ORM\Models\ModelEvent
+     * @var ModelEvent
      */
     private $event;
 
@@ -56,57 +56,60 @@ class TaskCodeHandler {
      * @throws \Exception
      */
     public function preProcess(string $code, int $points): string {
-        try {
-            $this->checkTaskCode($code);
-            return $this->savePoints($code, $points);
-        } catch (TaskCodeException $exception) {
-            throw $exception;
-        }
+        $this->checkTaskCode($code);
+        return $this->savePoints($code, $points);
+    }
+
+    /**
+     * @param ModelFyziklaniTask $task
+     * @param ModelFyziklaniTeam $team
+     * @param int $points
+     * @return string
+     */
+    private function createSubmit(ModelFyziklaniTask $task, ModelFyziklaniTeam $team, int $points): string {
+        /**
+         * @var ModelFyziklaniSubmit $submit
+         */
+        $submit = $this->serviceFyziklaniSubmit->createNew([
+            'points' => $points,
+            'fyziklani_task_id' => $task->fyziklani_task_id,
+            'e_fyziklani_team_id' => $team->e_fyziklani_team_id,
+            /* ugly, force current timestamp in database
+             * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
+             */
+            'state' => ModelFyziklaniSubmit::STATE_NOT_CHECKED,
+            'created' => null
+        ]);
+        $this->serviceFyziklaniSubmit->save($submit);
+        return \sprintf(_('Body byly uloženy. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
+            $points,
+            $team->name,
+            $team->e_fyziklani_team_id,
+            $task->label,
+            $task->name);
     }
 
     /**
      * @param string $code
      * @param int $points
      * @return string
-     * @throws \Exception
+     * @throws ClosedSubmittingException
+     * @throws PointsMismatchException
+     * @throws TaskCodeException
      */
     private function savePoints(string $code, int $points): string {
-        $fullCode = TaskCodePreprocessor::createFullCode($code);
-        $teamId = TaskCodePreprocessor::extractTeamId($fullCode);
-        $taskLabel = TaskCodePreprocessor::extractTaskLabel($fullCode);
-        $task = $this->serviceFyziklaniTask->findByLabel($taskLabel, $this->event);
+        $task = $this->getTask($code);
+        $team = $this->getTeam($code);
 
-        if (is_null($submit = $this->serviceFyziklaniSubmit->findByTaskAndTeam($task->fyziklani_task_id, $teamId))) {
-            $submit = $this->serviceFyziklaniSubmit->createNew([
-                'points' => $points,
-                'fyziklani_task_id' => $task->fyziklani_task_id,
-                'e_fyziklani_team_id' => $teamId,
-                /* ugly, force current timestamp in database
-                 * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
-                 */
-                'created' => null
-            ]);
+        $submit = $this->serviceFyziklaniSubmit->findByTaskAndTeam($task, $team);
+        if (is_null($submit)) { // novo zadaný
+            return $this->createSubmit($task, $team, $points);
+        } elseif (!$submit->isChecked()) { // check bodovania
+            return $submit->check($points);
+        } elseif (!$submit->points) { // ak bol zmazaný
+            return $submit->changePoints($points);
         } else {
-            $this->serviceFyziklaniSubmit->updateModel($submit, [
-                'points' => $points,
-                /* ugly, exclude previous value of `modified` from query
-                 * so that `modified` is set automatically by DB
-                 * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
-                 */
-                'modified' => null
-            ]);
-            $this->serviceFyziklaniSubmit->save($submit);
-        }
-        $teamRow = $this->serviceFyziklaniTeam->findByPrimary($teamId);
-        $team = ModelFyziklaniTeam::createFromTableRow($teamRow);
-
-        $taskName = $this->serviceFyziklaniTask->findByLabel($taskLabel, $this->event)->name;
-
-        try {
-            $this->serviceFyziklaniSubmit->save($submit);
-            return sprintf(_('Body byly uloženy. %d bodů, tým: "%s" (%d), úloha: %s "%s"'), $points, $team->name, $teamId, $taskLabel, $taskName);
-        } catch (\Exception $exception) {
-            throw $exception;
+            throw new TaskCodeException(\sprintf(_('Úloha je zadaná a overená.')));
         }
     }
 
@@ -120,28 +123,24 @@ class TaskCodeHandler {
         $fullCode = TaskCodePreprocessor::createFullCode($code);
         /* skontroluje pratnosť kontrolu */
         if (!TaskCodePreprocessor::checkControlNumber($fullCode)) {
-            throw new TaskCodeException(_('Chybně zadaný kód úlohy.'));
+            throw new ControlMismatchException();
         }
-        $team = $this->getTeamFromCode($code);
+        $team = $this->getTeam($code);
         /* otvorenie submitu */
         if (!$team->hasOpenSubmitting()) {
             throw new ClosedSubmittingException($team);
         }
-        $task = $this->getTaskFromCode($code);
-        /* Nezadal sa duplicitne toto nieje editácia */
-        Debugger::barDump($task);
-        if ($this->serviceFyziklaniSubmit->submitExist($task->fyziklani_task_id, $team->e_fyziklani_team_id)) {
-            throw new TaskCodeException(sprintf(_('Úloha %s už byla zadaná.'), $task->label));
-        }
+        // stupid touch to label
+        $this->getTask($code);
         return true;
     }
 
     /**
      * @param string $code
-     * @return \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam
+     * @return ModelFyziklaniTeam
      * @throws TaskCodeException
      */
-    public function getTeamFromCode(string $code): ModelFyziklaniTeam {
+    public function getTeam(string $code): ModelFyziklaniTeam {
         $fullCode = TaskCodePreprocessor::createFullCode($code);
 
         $teamId = TaskCodePreprocessor::extractTeamId($fullCode);
@@ -158,7 +157,7 @@ class TaskCodeHandler {
      * @return ModelFyziklaniTask
      * @throws TaskCodeException
      */
-    public function getTaskFromCode(string $code): ModelFyziklaniTask {
+    public function getTask(string $code): ModelFyziklaniTask {
         $fullCode = TaskCodePreprocessor::createFullCode($code);
         /* správny label */
         $taskLabel = TaskCodePreprocessor::extractTaskLabel($fullCode);

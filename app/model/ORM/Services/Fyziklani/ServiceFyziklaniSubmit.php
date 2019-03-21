@@ -5,6 +5,8 @@ namespace FKSDB\ORM\Services\Fyziklani;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Database\Table\Selection;
 
@@ -17,17 +19,14 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
     protected $modelClassName = 'FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit';
 
     /**
-     * @param int $taskId
-     * @param int $teamId integer
+     * @param ModelFyziklaniTask $task
+     * @param ModelFyziklaniTeam $team
      * @return ModelFyziklaniSubmit|null
      */
-    public function findByTaskAndTeam(int $taskId, int $teamId) {
-        if (!$taskId || !$teamId) {
-            return null;
-        }
+    public function findByTaskAndTeam(ModelFyziklaniTask $task, ModelFyziklaniTeam $team) {
         $row = $this->getTable()->where([
-            'fyziklani_task_id' => $taskId,
-            'e_fyziklani_team_id' => $teamId
+            'fyziklani_task_id' => $task->fyziklani_task_id,
+            'e_fyziklani_team_id' => $team->e_fyziklani_team_id,
         ])->fetch();
         return $row ? ModelFyziklaniSubmit::createFromTableRow($row) : null;
     }
@@ -39,22 +38,6 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
      */
     public function findAll(ModelEvent $event): Selection {
         return $this->getTable()->where('e_fyziklani_team_id.event_id', $event->event_id);
-    }
-
-    /**
-     * @param int $taskId
-     * @param int $teamId
-     * @return bool
-     */
-    public function submitExist(int $taskId, int $teamId): bool {
-        $submit = $this->findByTaskAndTeam($taskId, $teamId);
-        if (is_null($submit)) {
-            return false;
-        }
-        if (is_null($submit->points)) {
-            return false;
-        }
-        return true;
     }
 
     /**

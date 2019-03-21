@@ -23,7 +23,7 @@ class StoredQueryTagCloud extends Control {
     private $serviceMStoredQueryTag;
 
     /**
-     * @var \FKSDB\ORM\Models\ModelStoredQuery
+     * @var \FKSDB\ORM\Models\StoredQuery\ModelStoredQuery
      */
     private $modelStoredQuery;
 

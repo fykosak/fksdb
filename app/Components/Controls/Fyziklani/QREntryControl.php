@@ -4,8 +4,8 @@ namespace FKSDB\Components\Controls\Fyziklani;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\model\Fyziklani\ClosedSubmittingException;
+use FKSDB\model\Fyziklani\SubmitHandler;
 use FKSDB\model\Fyziklani\TaskCodeException;
-use FKSDB\model\Fyziklani\TaskCodeHandler;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
@@ -29,7 +29,7 @@ class QREntryControl extends Control {
      */
     private $translator;
     /**
-     * @var TaskCodeHandler
+     * @var SubmitHandler
      */
     private $handler;
     /**
@@ -40,10 +40,10 @@ class QREntryControl extends Control {
     /**
      * QREntryControl constructor.
      * @param ModelEvent $event
-     * @param TaskCodeHandler $taskCodeHandler
+     * @param SubmitHandler $taskCodeHandler
      * @param ITranslator $translator
      */
-    public function __construct(ModelEvent $event, TaskCodeHandler $taskCodeHandler, ITranslator $translator) {
+    public function __construct(ModelEvent $event, SubmitHandler $taskCodeHandler, ITranslator $translator) {
         parent::__construct();
         $this->event = $event;
         $this->translator = $translator;
