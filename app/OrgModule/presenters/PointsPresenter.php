@@ -16,7 +16,7 @@ use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Html;
-use SQLResultsCache;
+use FKSDB\Results\SQLResultsCache;
 use Submits\SeriesTable;
 
 /**
