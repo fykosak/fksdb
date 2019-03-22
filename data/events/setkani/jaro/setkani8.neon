@@ -5,7 +5,8 @@ parameters:
                 destination:
                     PHA: "Praha"
                     OVA: "Ostrava"
-                    OWN: "Přímo na místo (Brno-Židenice)"
+                    BRN: "Brno-Židenice"
+                    OWN: "Přímo na objekt"
 
                 time:
                     start: 17:30
