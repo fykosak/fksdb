@@ -1,6 +1,6 @@
 <?php
 
-namespace Submits;
+namespace FKSDB\Submits;
 
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelContestant;
@@ -73,7 +73,7 @@ class SeriesTable {
     /**
      * @return ModelContest
      */
-    public function getContest() {
+    public function getContest(): ModelContest {
         return $this->contest;
     }
 
@@ -87,28 +87,28 @@ class SeriesTable {
     /**
      * @return int
      */
-    public function getYear() {
+    public function getYear(): int {
         return $this->year;
     }
 
     /**
      * @param $year
      */
-    public function setYear($year) {
+    public function setYear(int $year) {
         $this->year = $year;
     }
 
     /**
      * @return int
      */
-    public function getSeries() {
+    public function getSeries(): int {
         return $this->series;
     }
 
     /**
      * @param $series
      */
-    public function setSeries($series) {
+    public function setSeries(int $series) {
         $this->series = $series;
     }
 
@@ -176,7 +176,7 @@ class SeriesTable {
     /**
      * @return array
      */
-    public function formatAsFormValues() {
+    public function formatAsFormValues(): array {
         $submitsTable = $this->getSubmitsTable();
         $contestants = $this->getContestants();
         $result = [];
@@ -195,9 +195,9 @@ class SeriesTable {
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public function getFingerprint() {
+    public function getFingerprint(): string {
         $fingerprint = '';
         foreach ($this->getSubmitsTable() as $submits) {
             foreach ($submits as $submit) {

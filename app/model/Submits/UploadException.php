@@ -1,7 +1,8 @@
 <?php
 
-namespace FKSDB\Application;
+namespace FKSDB\Submits;
 use Nette\InvalidStateException;
+
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
