@@ -88,6 +88,15 @@ events:
                        factory: Chooser("Zvol místo",Options(%events.setkani8jaro.arrival.destination%))
                     departure_ticket:
                           label: "Mám zájem o společnou jízdenku ze setkání"
+                    tshirt_size:
+                        label: "Jaké tričko nosíš?"
+                        required: true
+                        factory: Chooser("Zvol velikost", Options(%events.setkani.tshirt.size%))
+                    tshirt_color:
+                        label: "Jakou barvu trička bys chtěl?"
+                        required: false
+                        factory: Chooser("Zvol barvu", Options(%events.setkani.tshirt.color%))
+
                     note:
                        label: _('Další poznámky')
 
