@@ -23,7 +23,7 @@ services:
     yearCalculator: YearCalculator
     news: News
     seriesCalculator: SeriesCalculator
-    - SQLResultsCache
+    SQLResultsCache: FKSDB\Results\SQLResultsCache
     - Submits\SeriesTable
     - Persons\ExtendedPersonHandlerFactory
     - Persons\SelfResolver

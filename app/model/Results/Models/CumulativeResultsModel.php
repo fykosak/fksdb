@@ -1,5 +1,10 @@
 <?php
 
+namespace FKSDB\Results\Models;
+
+use FKSDB\Results\ModelCategory;
+use Nette\InvalidStateException;
+
 /**
  * Cumulative results (sums and precentage) for chosen series.
  *
@@ -26,7 +31,7 @@ class CumulativeResultsModel extends AbstractResultsModel {
      */
     public function getDataColumns($category) {
         if ($this->series === null) {
-            throw new \Nette\InvalidStateException('Series not specified.');
+            throw new InvalidStateException('Series not specified.');
         }
 
         if (!isset($this->dataColumns[$category->id])) {
@@ -39,23 +44,23 @@ class CumulativeResultsModel extends AbstractResultsModel {
                     $points += $this->evaluationStrategy->getTaskPoints($task, $category);
                 }
 
-                $dataColumns[] = array(
+                $dataColumns[] = [
                     self::COL_DEF_LABEL => $series,
                     self::COL_DEF_LIMIT => $points,
                     self::COL_ALIAS => self::DATA_PREFIX . count($dataColumns),
-                );
+                ];
                 $sum += $points;
             }
-            $dataColumns[] = array(
+            $dataColumns[] = [
                 self::COL_DEF_LABEL => self::LABEL_PERCETAGE,
                 self::COL_DEF_LIMIT => 100,
                 self::COL_ALIAS => self::ALIAS_PERCENTAGE,
-            );
-            $dataColumns[] = array(
+            ];
+            $dataColumns[] = [
                 self::COL_DEF_LABEL => self::LABEL_SUM,
                 self::COL_DEF_LIMIT => $sum,
                 self::COL_ALIAS => self::ALIAS_SUM,
-            );
+            ];
             $this->dataColumns[$category->id] = $dataColumns;
         }
         return $this->dataColumns[$category->id];
@@ -88,10 +93,11 @@ class CumulativeResultsModel extends AbstractResultsModel {
     /**
      * @param $category
      * @return mixed|string
+     * @throws InvalidStateException
      */
     protected function composeQuery($category) {
         if (!$this->series) {
-            throw new \Nette\InvalidStateException('Series not set.');
+            throw new InvalidStateException('Series not set.');
         }
 
         $select = [];
@@ -105,11 +111,11 @@ class CumulativeResultsModel extends AbstractResultsModel {
             $i += 1;
         }
 
-        $select[] = "round(100 * SUM($sum) / SUM(".$this->evaluationStrategy->getTaskPointsColumn($category).")) AS '" . self::ALIAS_PERCENTAGE . "'";
+        $select[] = "round(100 * SUM($sum) / SUM(" . $this->evaluationStrategy->getTaskPointsColumn($category) . ")) AS '" . self::ALIAS_PERCENTAGE . "'";
         $select[] = "round(SUM($sum)) AS '" . self::ALIAS_SUM . "'";
         $select[] = "ct.ct_id";
 
-        $studyYears = $this->evaluationStrategy->categoryToStudyYears($category);
+        $study_years = $this->evaluationStrategy->categoryToStudyYears($category);
 
         $from = " from v_contestant ct
 left join person p using(person_id)
@@ -117,12 +123,12 @@ left join school sch using(school_id)
 left join task t ON t.year = ct.year AND t.contest_id = ct.contest_id
 left join submit s ON s.task_id = t.task_id AND s.ct_id = ct.ct_id";
 
-        $conditions = array(
+        $conditions = [
             'ct.year' => $this->year,
             'ct.contest_id' => $this->contest->contest_id,
             't.series' => $this->getSeries(),
-            'ct.study_year' => $studyYears,
-        );
+            'ct.study_year' => $study_years,
+        ];
 
         $query = "select " . implode(', ', $select);
         $query .= $from;

@@ -1,5 +1,9 @@
 <?php
 
+namespace FKSDB\Results\Models;
+
+use FKSDB\Results\ModelCategory;
+
 /**
  * Detailed results of a single series. Number of tasks is dynamic.
  *
@@ -146,10 +150,10 @@ class BrojureResultsModel extends AbstractResultsModel {
             $i += 1;
         }
 
-        $select[] = "round(100 * SUM($sum) / SUM(".$this->evaluationStrategy->getTaskPointsColumn($category).")) AS '" . self::ALIAS_PERCENTAGE . "'";
+        $select[] = "round(100 * SUM($sum) / SUM(" . $this->evaluationStrategy->getTaskPointsColumn($category) . ")) AS '" . self::ALIAS_PERCENTAGE . "'";
         $select[] = "round(SUM($sum)) AS '" . self::ALIAS_SUM . "'";
 
-        $studyYears = $this->evaluationStrategy->categoryToStudyYears($category);
+        $study_years = $this->evaluationStrategy->categoryToStudyYears($category);
 
         $from = " from v_contestant ct
 left join person p using(person_id)
@@ -161,7 +165,7 @@ left join submit s ON s.task_id = t.task_id AND s.ct_id = ct.ct_id";
             'ct.year' => $this->year,
             'ct.contest_id' => $this->contest->contest_id,
             't.series' => $this->getSeries(),
-            'ct.study_year' => $studyYears,
+            'ct.study_year' => $study_years,
         ];
 
         $query = "select " . implode(', ', $select);
