@@ -25,7 +25,7 @@ services:
     seriesCalculator: SeriesCalculator
     - FKSDB\Submits\SeriesTable
     SQLResultsCache: FKSDB\Results\SQLResultsCache
-    seriesTable: Submits\SeriesTable
+    seriesTable: FKSDB\Submits\SeriesTable
     - Persons\ExtendedPersonHandlerFactory
     - Persons\SelfResolver
     merger:
