@@ -6,8 +6,8 @@ use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\Payment\Handler\DuplicateAccommodationPaymentException;
+use FKSDB\Submits\StorageException;
 use Nette\ArrayHash;
-use Submits\StorageException;
 
 /**
  * Class ServicePaymentAccommodation

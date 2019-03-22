@@ -13,6 +13,7 @@ use FKSDB\ORM\Services\ServiceEventPersonAccommodation;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServicePersonHistory;
 use FKSDB\ORM\Services\ServicePersonInfo;
+use FKSDB\Submits\StorageException;
 use FormUtils;
 use ModelException;
 use Nette\ArrayHash;
@@ -21,7 +22,6 @@ use Nette\Object;
 use Nette\Utils\JsonException;
 use ServiceMPersonHasFlag;
 use ServiceMPostContact;
-use Submits\StorageException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -168,7 +168,7 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
     /**
      * @param ModelPerson $person
      * @param ArrayHash $data
-     * @throws StorageException
+     * @throws \FKSDB\Submits\StorageException
      * @throws ModelException
      * @throws ModelDataConflictException
      * @throws JsonException
