@@ -12,12 +12,12 @@ use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\ORM\Services\ServiceTask;
 use FKSDB\ORM\Services\ServiceTaskContribution;
 use FKSDB\ORM\Services\ServiceTaskStudyYear;
+use FKSDB\Results\SQLResultsCache;
 use FKSDB\Submits\SeriesTable;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Html;
-use SQLResultsCache;
 
 /**
  * Class PointsPresenter

@@ -1,14 +1,42 @@
 <?php
 
+namespace FKSDB\Results\Models;
+
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Services\ServiceTask;
+use FKSDB\Results\EvaluationStrategies\EvaluationStrategy;
+use FKSDB\Results\ModelCategory;
+use Nette\Database\Connection;
+use Nette\Database\Table\Selection;
+use Nette\InvalidStateException;
 
 /**
  * General results sheet with contestants and their ranks.
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-abstract class AbstractResultsModel implements IResultsModel {
+abstract class AbstractResultsModel {
+
+    const COL_DEF_LABEL = 'label';
+    const COL_DEF_LIMIT = 'limit';
+    const DATA_NAME = 'name';
+    const DATA_SCHOOL = 'school';
+    const DATA_RANK_FROM = 'from';
+    const DATA_RANK_TO = 'to';
+
+    const LABEL_SUM = 'sum';
+    const ALIAS_SUM = 'sum';
+    const LABEL_PERCETAGE = 'percent';
+    const ALIAS_PERCENTAGE = 'percent';
+
+    /* for use in School Results */
+    const LABEL_UNWEIGHTED_SUM = 'unweighted-sum';
+    const ALIAS_UNWEIGHTED_SUM = 'unweighted-sum';
+    const LABEL_CONTESTANTS_COUNT = 'contestants-count';
+    const ALIAS_CONTESTANTS_COUNT = 'contestants-count';
+
+    const COL_ALIAS = 'alias';
+    const DATA_PREFIX = 'd';
 
     /**
      * @var int
@@ -16,7 +44,7 @@ abstract class AbstractResultsModel implements IResultsModel {
     protected $year;
 
     /**
-     * @var \FKSDB\ORM\Models\ModelContest
+     * @var ModelContest
      */
     protected $contest;
 
@@ -26,24 +54,24 @@ abstract class AbstractResultsModel implements IResultsModel {
     protected $serviceTask;
 
     /**
-     * @var \Nette\Database\Connection
+     * @var Connection
      */
     protected $connection;
 
     /**
-     * @var IEvaluationStrategy
+     * @var EvaluationStrategy
      */
     protected $evaluationStrategy;
 
     /**
-     * AbstractResultsModel constructor.
-     * @param \FKSDB\ORM\Models\ModelContest $contest
+     * FKSDB\Results\Models\AbstractResultsModel constructor.
+     * @param ModelContest $contest
      * @param ServiceTask $serviceTask
-     * @param \Nette\Database\Connection $connection
+     * @param Connection $connection
      * @param $year
-     * @param IEvaluationStrategy $evaluationStrategy
+     * @param EvaluationStrategy $evaluationStrategy
      */
-    function __construct(ModelContest $contest, ServiceTask $serviceTask, \Nette\Database\Connection $connection, $year, IEvaluationStrategy $evaluationStrategy) {
+    function __construct(ModelContest $contest, ServiceTask $serviceTask, Connection $connection, $year, EvaluationStrategy $evaluationStrategy) {
         $this->contest = $contest;
         $this->serviceTask = $serviceTask;
         $this->connection = $connection;
@@ -129,7 +157,7 @@ abstract class AbstractResultsModel implements IResultsModel {
 
     /**
      * @param $series
-     * @return \Nette\Database\Table\Selection
+     * @return Selection
      */
     protected function getTasks($series) {
         return $this->serviceTask->getTable()
@@ -141,6 +169,25 @@ abstract class AbstractResultsModel implements IResultsModel {
             ])
             ->order('tasknr');
     }
+
+    abstract public function getCategories();
+
+    /**
+     * Single series number or array of them.
+     * @param mixed $series
+     */
+    abstract public function setSeries($series);
+
+    /**
+     * @return mixed (see setSeries)
+     */
+    abstract public function getSeries();
+
+    /**
+     * @param ModelCategory $category
+     * @throws InvalidStateException
+     */
+    abstract public function getDataColumns($category);
 
 }
 

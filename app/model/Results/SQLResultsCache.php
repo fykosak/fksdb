@@ -1,7 +1,11 @@
 <?php
 
+namespace FKSDB\Results;
+
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Services\ServiceTask;
+use Nette;
+use Nette\Database\Connection;
 
 /**
  * Fill caclulated points into database.
@@ -11,7 +15,7 @@ use FKSDB\ORM\Services\ServiceTask;
 class SQLResultsCache {
 
     /**
-     * @var \Nette\Database\Connection
+     * @var Connection
      */
     private $connection;
 
@@ -21,11 +25,11 @@ class SQLResultsCache {
     private $serviceTask;
 
     /**
-     * SQLResultsCache constructor.
-     * @param \Nette\Database\Connection $connection
+     * FKSDB\Results\SQLResultsCache constructor.
+     * @param Connection $connection
      * @param ServiceTask $serviceTask
      */
-    function __construct(\Nette\Database\Connection $connection, ServiceTask $serviceTask) {
+    function __construct(Connection $connection, ServiceTask $serviceTask) {
         $this->connection = $connection;
         $this->serviceTask = $serviceTask;
     }
@@ -44,7 +48,7 @@ class SQLResultsCache {
             $conditions[] = 'contest_id = ' . $contest->contest_id;
         }
         if ($year !== null) {
-            $conditions[] = 'year = ' . (int) $year;
+            $conditions[] = 'year = ' . (int)$year;
         }
 
         $sql = '
@@ -60,6 +64,7 @@ class SQLResultsCache {
      *
      * @param ModelContest $contest
      * @param int $year
+     * @throws Nette\Application\BadRequestException
      */
     public function recalculate(ModelContest $contest, $year) {
         $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($contest, $year);
@@ -68,17 +73,17 @@ class SQLResultsCache {
         }
 
         $tasks = $this->serviceTask->getTable()
-                ->where([
-            'contest_id' => $contest->contest_id,
-            'year' => $year,
-                ]);
+            ->where([
+                'contest_id' => $contest->contest_id,
+                'year' => $year,
+            ]);
 
 
         $this->connection->beginTransaction();
         foreach ($tasks as $task) {
             $conditions = [];
             $conditions[] = 't.contest_id = ' . $contest->contest_id;
-            $conditions[] = 't.year = ' . (int) $year;
+            $conditions[] = 't.year = ' . (int)$year;
             $conditions[] = 's.task_id = ' . $task->task_id;
             $sql = '
             UPDATE submit s

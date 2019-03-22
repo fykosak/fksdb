@@ -1,15 +1,33 @@
 <?php
 
+namespace FKSDB\Results;
+
+use DOMDocument;
+use DOMNode;
+use Exception;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Services\ServiceTask;
+use FKSDB\Results\EvaluationStrategies\EvaluationFykos2001;
+use FKSDB\Results\EvaluationStrategies\EvaluationFykos2011;
+use FKSDB\Results\EvaluationStrategies\EvaluationStrategy;
+use FKSDB\Results\EvaluationStrategies\EvaluationVyfuk2011;
+use FKSDB\Results\EvaluationStrategies\EvaluationVyfuk2012;
+use FKSDB\Results\EvaluationStrategies\EvaluationVyfuk2014;
+use FKSDB\Results\Models\AbstractResultsModel;
+use FKSDB\Results\Models\BrojureResultsModel;
+use FKSDB\Results\Models\CumulativeResultsModel;
+use FKSDB\Results\Models\DetailResultsModel;
+use FKSDB\Results\Models\SchoolCumulativeResultsModel;
+use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
 use Nette\Diagnostics\Debugger;
 use Nette\InvalidArgumentException;
 use Nette\Object;
+use SoapFault;
 use WebService\IXMLNodeSerializer;
 
 /**
- * Description of ResultsModelFactory
+ * Description of FKSDB\Results\ResultsModelFactory
  *
  * @author michal
  */
@@ -26,7 +44,7 @@ class ResultsModelFactory extends Object implements IXMLNodeSerializer {
     private $serviceTask;
 
     /**
-     * ResultsModelFactory constructor.
+     * FKSDB\Results\ResultsModelFactory constructor.
      * @param Connection $connection
      * @param ServiceTask $serviceTask
      */
@@ -37,11 +55,12 @@ class ResultsModelFactory extends Object implements IXMLNodeSerializer {
 
     /**
      *
-     * @param \FKSDB\ORM\Models\ModelContest $contest
+     * @param ModelContest $contest
      * @param int $year
-     * @return IResultsModel
+     * @return CumulativeResultsModel
+     * @throws BadRequestException
      */
-    public function createCumulativeResultsModel(ModelContest $contest, $year) {
+    public function createCumulativeResultsModel(ModelContest $contest, int $year): CumulativeResultsModel {
         $evaluationStrategy = self::findEvaluationStrategy($contest, $year);
         if ($evaluationStrategy === null) {
             throw new InvalidArgumentException('Undefined results model for ' . $contest->name . '@' . $year);
@@ -51,11 +70,12 @@ class ResultsModelFactory extends Object implements IXMLNodeSerializer {
 
     /**
      *
-     * @param \FKSDB\ORM\Models\ModelContest $contest
+     * @param ModelContest $contest
      * @param int $year
-     * @return IResultsModel
+     * @return DetailResultsModel
+     * @throws BadRequestException
      */
-    public function createDetailResultsModel(ModelContest $contest, $year) {
+    public function createDetailResultsModel(ModelContest $contest, int $year): DetailResultsModel {
         $evaluationStrategy = self::findEvaluationStrategy($contest, $year);
         if ($evaluationStrategy === null) {
             throw new InvalidArgumentException('Undefined results model for ' . $contest->name . '@' . $year);
@@ -65,11 +85,12 @@ class ResultsModelFactory extends Object implements IXMLNodeSerializer {
 
     /**
      *
-     * @param \FKSDB\ORM\Models\ModelContest $contest
+     * @param ModelContest $contest
      * @param int $year
-     * @return IResultsModel
+     * @return BrojureResultsModel
+     * @throws BadRequestException
      */
-    public function createBrojureResultsModel(ModelContest $contest, $year) {
+    public function createBrojureResultsModel(ModelContest $contest, int $year): BrojureResultsModel {
         $evaluationStrategy = self::findEvaluationStrategy($contest, $year);
         if ($evaluationStrategy === null) {
             throw new InvalidArgumentException('Undefined results model for ' . $contest->name . '@' . $year);
@@ -79,22 +100,24 @@ class ResultsModelFactory extends Object implements IXMLNodeSerializer {
 
     /**
      *
-     * @param \FKSDB\ORM\Models\ModelContest $contest
+     * @param ModelContest $contest
      * @param int $year
-     * @return IResultsModel
+     * @return SchoolCumulativeResultsModel
+     * @throws BadRequestException
      */
-    public function createSchoolCumulativeResultsModel(ModelContest $contest, $year) {
+    public function createSchoolCumulativeResultsModel(ModelContest $contest, int $year): SchoolCumulativeResultsModel {
         $cumulativeResultsModel = $this->createCumulativeResultsModel($contest, $year);
         return new SchoolCumulativeResultsModel($cumulativeResultsModel, $contest, $this->serviceTask, $this->connection, $year);
     }
 
     /**
      *
-     * @param \FKSDB\ORM\Models\ModelContest $contest
+     * @param ModelContest|int $contest
      * @param int $year
-     * @return \IEvaluationStrategy|null
+     * @return EvaluationStrategy
+     * @throws BadRequestException
      */
-    public static function findEvaluationStrategy($contest, $year) {
+    public static function findEvaluationStrategy($contest, int $year): EvaluationStrategy {
         if ($contest instanceof ModelContest) {
             $contestId = $contest->contest_id;
         } else {
@@ -115,7 +138,7 @@ class ResultsModelFactory extends Object implements IXMLNodeSerializer {
                 return new EvaluationVyfuk2011();
             }
         }
-        return null;
+        throw new BadRequestException(\sprintf('No evaluation strategy found for %s. of %s', $year, $contest->name));
     }
 
     /**
@@ -125,14 +148,15 @@ class ResultsModelFactory extends Object implements IXMLNodeSerializer {
      * @param $format
      * @return mixed|void
      * @throws SoapFault
+     * @throws InvalidArgumentException
      */
     public function fillNode($dataSource, DOMNode $node, DOMDocument $doc, $format) {
-        if (!$dataSource instanceof IResultsModel) {
-            throw new InvalidArgumentException('Expected IResultsModel, got ' . get_class($dataSource) . '.');
+        if (!$dataSource instanceof AbstractResultsModel) {
+            throw new InvalidArgumentException('Expected FKSDB\Results\IResultsModel, got ' . get_class($dataSource) . '.');
         }
 
         if ($format !== self::EXPORT_FORMAT_1) {
-            throw new InvalidArgumentException(sprintf('Export format %s not supported.', $format));
+            throw new InvalidArgumentException(\sprintf('Export format %s not supported.', $format));
         }
 
         try {
@@ -150,8 +174,8 @@ class ResultsModelFactory extends Object implements IXMLNodeSerializer {
                     $columnDefNode = $doc->createElement('column-definition');
                     $columnDefsNode->appendChild($columnDefNode);
 
-                    $columnDefNode->setAttribute('label', $column[IResultsModel::COL_DEF_LABEL]);
-                    $columnDefNode->setAttribute('limit', $column[IResultsModel::COL_DEF_LIMIT]);
+                    $columnDefNode->setAttribute('label', $column[AbstractResultsModel::COL_DEF_LABEL]);
+                    $columnDefNode->setAttribute('limit', $column[AbstractResultsModel::COL_DEF_LIMIT]);
                 }
 
                 // data
@@ -163,25 +187,25 @@ class ResultsModelFactory extends Object implements IXMLNodeSerializer {
                     $contestantNode = $doc->createElement('contestant');
                     $dataNode->appendChild($contestantNode);
 
-                    $contestantNode->setAttribute('name', $row[IResultsModel::DATA_NAME]);
-                    $contestantNode->setAttribute('school', $row[IResultsModel::DATA_SCHOOL]);
+                    $contestantNode->setAttribute('name', $row[AbstractResultsModel::DATA_NAME]);
+                    $contestantNode->setAttribute('school', $row[AbstractResultsModel::DATA_SCHOOL]);
                     // rank
                     $rankNode = $doc->createElement('rank');
                     $contestantNode->appendChild($rankNode);
-                    $rankNode->setAttribute('from', $row[IResultsModel::DATA_RANK_FROM]);
-                    if (isset($row[IResultsModel::DATA_RANK_TO]) && $row[IResultsModel::DATA_RANK_FROM] != $row[IResultsModel::DATA_RANK_TO]) {
-                        $rankNode->setAttribute('to', $row[IResultsModel::DATA_RANK_TO]);
+                    $rankNode->setAttribute('from', $row[AbstractResultsModel::DATA_RANK_FROM]);
+                    if (isset($row[AbstractResultsModel::DATA_RANK_TO]) && $row[AbstractResultsModel::DATA_RANK_FROM] != $row[AbstractResultsModel::DATA_RANK_TO]) {
+                        $rankNode->setAttribute('to', $row[AbstractResultsModel::DATA_RANK_TO]);
                     }
 
                     // data columns
                     foreach ($dataSource->getDataColumns($category) as $column) {
-                        $columnNode = $doc->createElement('column', $row[$column[IResultsModel::COL_ALIAS]]);
+                        $columnNode = $doc->createElement('column', $row[$column[AbstractResultsModel::COL_ALIAS]]);
                         $contestantNode->appendChild($columnNode);
                     }
                 }
             }
-        } catch (Exception $exception) {
-            Debugger::log($exception);
+        } catch (Exception $e) {
+            Debugger::log($e);
             throw new SoapFault('Receiver', 'Internal error.');
         }
     }

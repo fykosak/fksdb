@@ -1,20 +1,25 @@
 <?php
 
+namespace FKSDB\Results\EvaluationStrategies;
+
+use FKSDB\Results\ModelCategory;
+use Nette\Database\Row;
+
 /**
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-interface IEvaluationStrategy {
+abstract class EvaluationStrategy {
 
     /**
      * Should return SQL expression with points for given task.
      * There are avilable tables 'contestant' aliased to 'ct' and
      * 'submit' aliaded to 's'.
      *
-     * @param Nette\Database\Row $task
+     * @param Row $task
      * @return string
      */
-    public function getPointsColumn($task);
+    abstract public function getPointsColumn(Row $task);
 
     /**
      * Should return SQL expression with points for given submit.
@@ -24,18 +29,18 @@ interface IEvaluationStrategy {
      *
      * @return string
      */
-    public function getSumColumn();
+    abstract public function getSumColumn();
 
     /**
      * @param ModelCategory $category
      * @return array of int (study years of students with category)
      */
-    public function categoryToStudyYears($category);
+    abstract public function categoryToStudyYears(ModelCategory $category);
 
     /**
-     * @return array of ModelCategory
+     * @return ModelCategory[]
      */
-    public function getCategories();
+    abstract public function getCategories(): array;
 
     /**
      * Should return points for correctly solved task (aka Student Pilný) as part
@@ -43,18 +48,18 @@ interface IEvaluationStrategy {
      * For columns available see getSumColumn.
      *
      * @param ModelCategory $category
-     * @return int
+     * @return string
      */
-    public function getTaskPointsColumn(ModelCategory $category);
+    abstract public function getTaskPointsColumn(ModelCategory $category): string;
 
     /**
      * Should return points for correctly solved task (aka Student Pilný).
      *
-     * @param Nette\Database\Row $task
+     * @param Row $task
      * @param ModelCategory $category
      * @return int
      */
-    public function getTaskPoints($task, ModelCategory $category);
+    abstract public function getTaskPoints(Row $task, ModelCategory $category);
 }
 
 
