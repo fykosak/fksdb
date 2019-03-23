@@ -1,53 +1,61 @@
 <?php
 
+namespace FKSDB\ValidationTest;
+
+use ModelEventParticipant;
+use ModelPerson;
+use Nette\Application\UI\Control;
+use ParticipantsDurationComponent;
+
+/**
+ * Class ParticipantsDurationTest
+ * @package FKSDB\ValidationTest
+ */
 class ParticipantsDurationTest extends ValidationTest {
-    /**
-     * @var ServicePerson
-     */
-    private $servicePerson;
+
     private $log = [];
 
-    public function __construct(\ServicePerson $servicePerson) {
-        $this->servicePerson = $servicePerson;
-    }
-
-    public function run() {
-        $persons = $this->servicePerson->where('person_id<200');
+    /**
+     * @param ModelPerson $person
+     * @return string|void
+     */
+    public function run(ModelPerson $person) {
+        $max = null;
+        $min = null;
         /**
-         * @var $person ModelPerson
+         * @var $eventParticipant ModelEventParticipant
          */
-        foreach ($persons as $row) {
-            $person = ModelPerson::createFromTableRow($row);
-            $max = null;
-            $min = null;
-            /**
-             * @var $eventParticipant ModelEventParticipant
-             */
-            foreach ($person->getEventParticipant() as $eventParticipant) {
+        foreach ($person->getEventParticipant() as $eventParticipant) {
 
-                $year = $eventParticipant->event->year;
-                \Nette\Diagnostics\Debugger::barDump($year);
-                $max = (is_null($max) || $max < $year) ? $year : $max;
-                $min = (is_null($min) || $min > $year) ? $year : $min;
-            };
-            $delta = $max - $min;
+            $year = $eventParticipant->event->year;
 
-            $this->log[] = ['person' => $person, 'delta' => $delta, 'status' => ($delta < 4) ? 'success' : (($delta == 4) ? 'warning' : 'danger')];
+            $max = (is_null($max) || $max < $year) ? $year : $max;
+            $min = (is_null($min) || $min > $year) ? $year : $min;
+        };
+        $delta = $max - $min;
 
-        }
-        \Nette\Diagnostics\Debugger::barDump($this->log);
-        // TODO: Implement run() method.
+        $this->log[] = ['person' => $person, 'delta' => $delta, 'status' => ($delta < 4) ? 'success' : (($delta == 4) ? 'warning' : 'danger')];
+
     }
 
-    public function getAction() {
+    /**
+     * @return string
+     */
+    public function getAction(): string {
         return 'participantsDuration';
     }
 
-    public function getTitle() {
-        return _("účasť na eventoch");
+    /**
+     * @return string
+     */
+    public function getTitle(): string {
+        return _('účasť na akciach');
     }
 
-    public function getComponent() {
+    /**
+     * @return Control
+     */
+    public function getComponent(): Control {
         $component = new ParticipantsDurationComponent();
         $component->setLog($this->log);
         return $component;

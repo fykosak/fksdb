@@ -1,24 +1,32 @@
 <?php
 
+namespace FKSDB\ValidationTest;
+
+use ModelPerson;
+use Nette\Application\UI\Control;
+
+/**
+ * Class ValidationTest
+ */
 abstract class ValidationTest {
     /**
-     * @return void
+     * @return string
      */
-    abstract function run();
+    abstract function run(ModelPerson $person);
 
     /**
      * @return string
      */
-    abstract function getTitle();
+    abstract function getTitle(): string;
 
     /**
      * @return string
      */
-    abstract function getAction();
+    abstract function getAction(): string;
 
     /**
-     * @return \Nette\Forms\IControl
+     * @return Control
      */
-    abstract function getComponent();
+    abstract function getComponent(): Control;
 
 }
