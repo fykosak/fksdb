@@ -2,10 +2,12 @@
 
 namespace FKSDB\Components\Controls\PhoneNumber;
 
+use Closure;
 use FKSDB\Components\Controls\PhoneNumber\Region\AbstractRegion;
 use FKSDB\Components\Controls\PhoneNumber\Region\Czech;
 use FKSDB\Components\Controls\PhoneNumber\Region\Slovakia;
 use FKSDB\Components\Controls\PhoneNumber\Region\Spain;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
 /**
@@ -45,5 +47,21 @@ class PhoneNumberFactory {
             }
         }
         return false;
+    }
+
+    /**
+     * @return Closure
+     */
+    public static function getFormValidationCallback(): Closure {
+        return function (BaseControl $control): bool {
+            $value = $control->getValue();
+            foreach (static::$regions as $region) {
+                if ($region::match($value)) {
+                    return true;
+                }
+            }
+            return false;
+        };
+
     }
 }

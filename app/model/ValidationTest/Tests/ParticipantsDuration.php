@@ -1,17 +1,21 @@
 <?php
 
-namespace FKSDB\ValidationTest;
+namespace FKSDB\ValidationTest\Tests;
 
 
+use FKSDB\Components\Grids\Validation\ValidationGrid;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ValidationTest\ValidationLog;
+use FKSDB\ValidationTest\ValidationTest;
+use Nette\Utils\Html;
 
 /**
  * Class ParticipantsDurationTest
  * @package FKSDB\ValidationTest
  */
-class ParticipantsDurationTest extends ValidationTest {
+class ParticipantsDuration extends ValidationTest {
 
 
     /**
@@ -61,6 +65,22 @@ class ParticipantsDurationTest extends ValidationTest {
      */
     public function getTitle(): string {
         return _('účasť na akciach');
+    }
+
+    /**
+     * @param ValidationGrid $grid
+     * @throws \NiftyGrid\DuplicateColumnException
+     */
+    public static function configureGrid(ValidationGrid $grid) {
+        $grid->addColumn('participant_duration')->setRenderer(function ($row) {
+            $model = ModelPerson::createFromTableRow($row);
+            $logs = self::run($model);
+            $container = Html::el('span');
+            foreach ($logs as $log) {
+                $container->add(self::createHtml($log));
+            }
+            return $container;
+        });
     }
 
 }

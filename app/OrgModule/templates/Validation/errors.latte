@@ -1,0 +1,11 @@
+{block content}
+    {control levelForm}
+    {foreach $logs as $log}
+        <h2>{$log['model']->getFullName()}</h2>
+        {foreach $log['log'] as $simpleLog}
+            <div>
+                <span class="badge badge-{$simpleLog->level}">{$simpleLog->message}</span>
+            </div>
+        {/foreach}
+    {/foreach}
+{/block}

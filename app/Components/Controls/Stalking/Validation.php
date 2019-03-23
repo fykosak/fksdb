@@ -2,14 +2,15 @@
 
 namespace FKSDB\Components\Controls\Stalking;
 
-use FKSDB\ValidationTest\ParticipantsDurationTest;
+use FKSDB\ValidationTest\Tests\ParticipantsDuration;
+use FKSDB\ValidationTest\Tests\PhoneNumber;
 
 /**
  * Class StalkingValidation
  * @package FKSDB\ValidationTest
  */
-class StalkingValidation extends StalkingComponent {
-    private $tests = [ParticipantsDurationTest::class];
+class Validation extends StalkingComponent {
+    private $tests = [ParticipantsDuration::class, PhoneNumber::class];
 
     /**
      * @return string
@@ -29,11 +30,11 @@ class StalkingValidation extends StalkingComponent {
         $this->beforeRender();
         $logs = [];
         foreach ($this->tests as $test) {
-            $logs += $test::run($this->modelPerson);
+            $logs = \array_merge($logs, $test::run($this->modelPerson));
         }
 
         $this->template->logs = $logs;
-        $this->template->setFile(__DIR__ . '/StalkingValidation.latte');
+        $this->template->setFile(__DIR__ . '/Validation.latte');
         $this->template->render();
     }
 }
