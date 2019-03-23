@@ -22,7 +22,7 @@
                         {if (is_null($info->phone))}
                             {control notSet}
                         {else}
-                            {$info->phone}
+                            {\FKSDB\Components\Controls\PhoneNumber\PhoneNumberFactory::format($info->phone)}
                         {/if}
                     {else}
                         {control permissionDenied}
@@ -38,7 +38,7 @@
                         {if (is_null($info->phone_parent_m))}
                             {control notSet}
                         {else}
-                            {$info->phone_parent_m}
+                            {\FKSDB\Components\Controls\PhoneNumber\PhoneNumberFactory::format($info->phone_parent_m)}
                         {/if}
                     {else}
                         {control permissionDenied}
@@ -54,7 +54,7 @@
                         {if (is_null($info->phone_parent_d))}
                             {control notSet}
                         {else}
-                            {$info->phone_parent_d}
+                            {\FKSDB\Components\Controls\PhoneNumber\PhoneNumberFactory::format($info->phone_parent_d)}
                         {/if}
                     {else}
                         {control permissionDenied}
