@@ -1,0 +1,13 @@
+<div class="card mb-3 border-primary">
+    <h4 class="card-header bg-primary text-white">{$headline}</h4>
+    {if \in_array($mode,$allowedModes)}
+
+        {block content}
+        {/block}
+
+    {else}
+        <div class="card-body">
+            {control permissionDenied}
+        </div>
+    {/if}
+</div>

@@ -2,14 +2,13 @@
 
 namespace Authentication;
 
-use FKS\Config\GlobalParameters;
+use FKSDB\Config\GlobalParameters;
+use FKSDB\ORM\Models\ModelLogin;
+use FKSDB\ORM\Services\ServiceLogin;
 use FullHttpRequest;
 use Github\Events\Event;
-use ModelLogin;
-use Nette\Http\Request;
 use Nette\InvalidArgumentException;
 use Nette\Security\AuthenticationException;
-use ServiceLogin;
 use YearCalculator;
 
 /**
@@ -21,22 +20,30 @@ class GithubAuthenticator extends AbstractAuthenticator {
 
     const PARAM_AUTH_TOKEN = 'at';
     const SESSION_NS = 'auth';
-	const HTTP_AUTH_HEADER = 'X-Hub-Signature';
+    const HTTP_AUTH_HEADER = 'X-Hub-Signature';
 
     /**
      * @var GlobalParameters
      */
     private $globalParameters;
 
+    /**
+     * GithubAuthenticator constructor.
+     * @param GlobalParameters $globalParameters
+     * @param ServiceLogin $serviceLogin
+     * @param YearCalculator $yearCalculator
+     */
     function __construct(GlobalParameters $globalParameters, ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
         parent::__construct($serviceLogin, $yearCalculator);
         $this->globalParameters = $globalParameters;
     }
 
     /**
-     * @param Request $request
-     * @return ModelLogin
+     * @param FullHttpRequest $request
+     * @return \FKSDB\ORM\Models\ModelLogin
      * @throws AuthenticationException
+     * @throws InactiveLoginException
+     * @throws NoLoginException
      */
     public function authenticate(FullHttpRequest $request) {
         $loginName = $this->globalParameters['github']['login'];
@@ -57,12 +64,12 @@ class GithubAuthenticator extends AbstractAuthenticator {
             //throw new AuthenticationException(_('Nesprávný hash požadavku.'));
         }
 
-        $login = $this->serviceLogin->getTable()->where('login = ?', $loginName)->fetch();
+        $row = $this->serviceLogin->getTable()->where('login = ?', $loginName)->fetch();
 
-        if (!$login) {
+        if (!$row) {
             throw new NoLoginException();
         }
-
+        $login = ModelLogin::createFromTableRow($row);
         if (!$login->active) {
             throw new InactiveLoginException();
         }

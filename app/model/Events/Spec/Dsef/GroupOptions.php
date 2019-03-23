@@ -2,12 +2,12 @@
 
 namespace Events\Spec\Dsef;
 
-use DbNames;
 use Events\Machine\BaseMachine;
 use Events\Model\Holder\Field;
 use FKSDB\Components\Forms\Factories\Events\IOptionsProvider;
+use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Services\Events\ServiceDsefGroup;
 use Nette\Object;
-use ORM\Services\Events\ServiceDsefGroup;
 use ORM\ServicesMulti\Events\ServiceMDsefParticipant;
 
 /**
@@ -22,43 +22,51 @@ class GroupOptions extends Object implements IOptionsProvider {
     private $serviceMParticipant;
 
     /**
-     * @var ServiceDsefGroup
+     * @var \FKSDB\ORM\Services\Events\ServiceDsefGroup
      */
     private $serviceDsefGroup;
     private $includeStates;
     private $excludeStates;
 
     /**
-     * @var array  eventId => groups cache 
+     * @var array  eventId => groups cache
      */
-    private $groups = array();
+    private $groups = [];
 
     /**
      * @note In NEON instatiate as GroupOptions(..., ['state1'],['state1', 'state2']).
-     * 
+     *
      * @param ServiceMDsefParticipant $serviceMParticipant
-     * @param ServiceDsefGroup $serviceDsefGroup
+     * @param \FKSDB\ORM\Services\Events\ServiceDsefGroup $serviceDsefGroup
      * @param string|array $includeStates any state or array of state
      * @param string|array $excludeStates any state or array of state
      */
-    function __construct(ServiceMDsefParticipant $serviceMParticipant, ServiceDsefGroup $serviceDsefGroup, $includeStates = BaseMachine::STATE_ANY, $excludeStates = array('cancelled')) {
+    function __construct(ServiceMDsefParticipant $serviceMParticipant, ServiceDsefGroup $serviceDsefGroup, $includeStates = BaseMachine::STATE_ANY, $excludeStates = ['cancelled']) {
         $this->includeStates = $includeStates;
         $this->excludeStates = $excludeStates;
         $this->serviceMParticipant = $serviceMParticipant;
         $this->serviceDsefGroup = $serviceDsefGroup;
     }
 
+    /**
+     * @param $groups
+     * @return array
+     */
     private function transformGroups($groups) {
-        $result = array();
+        $result = [];
         foreach ($groups as $name => $capacity) {
-            $result[] = array(
+            $result[] = [
                 'label' => $name,
                 'capacity' => $capacity
-            );
+            ];
         }
         return $result;
     }
 
+    /**
+     * @param $eventId
+     * @return mixed
+     */
     private function getGroups($eventId) {
         if (!isset($this->groups[$eventId])) {
             $this->groups[$eventId] = $this->serviceDsefGroup->getTable()
@@ -69,6 +77,10 @@ class GroupOptions extends Object implements IOptionsProvider {
         return $this->groups[$eventId];
     }
 
+    /**
+     * @param Field $field
+     * @return array
+     */
     public function getOptions(Field $field) {
         $baseHolder = $field->getBaseHolder();
         $event = $baseHolder->getEvent();
@@ -92,7 +104,7 @@ class GroupOptions extends Object implements IOptionsProvider {
         $groupOccupied = $selection->fetchPairs('e_dsef_group_id', 'occupied');
 
         $selfGroup = $application->e_dsef_group_id;
-        $result = array();
+        $result = [];
         foreach ($groups as $key => $group) {
             $occupied = isset($groupOccupied[$key]) ? $groupOccupied[$key] : 0;
             if ($group->capacity > $occupied) {
@@ -109,5 +121,3 @@ class GroupOptions extends Object implements IOptionsProvider {
     }
 
 }
-
-?>

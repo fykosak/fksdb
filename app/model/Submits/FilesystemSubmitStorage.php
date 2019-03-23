@@ -2,9 +2,8 @@
 
 namespace Submits;
 
-use ModelSubmit;
+use FKSDB\ORM\Models\ModelSubmit;
 use Nette\Diagnostics\Debugger;
-use Nette\Http\FileUpload;
 use Nette\InvalidStateException;
 use Nette\Utils\Finder;
 use Nette\Utils\Strings;
@@ -12,7 +11,7 @@ use UnexpectedValueException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class FilesystemSubmitStorage implements ISubmitStorage {
@@ -47,7 +46,7 @@ class FilesystemSubmitStorage implements ISubmitStorage {
     /**
      * Sprintf string for arguments (in order): contestantName, contestName, year, series, label.
      * File extension + metadata will be added to the name.
-     * 
+     *
      * @var string
      */
     private $filenameMask;
@@ -60,8 +59,15 @@ class FilesystemSubmitStorage implements ISubmitStorage {
     /**
      * @var array of IStorageProcessing
      */
-    private $processings = array();
+    private $processings = [];
 
+    /**
+     * FilesystemSubmitStorage constructor.
+     * @param $root
+     * @param $directoryMask
+     * @param $filenameMask
+     * @param $contestMap
+     */
     function __construct($root, $directoryMask, $filenameMask, $contestMap) {
         $this->root = $root;
         $this->directoryMask = $directoryMask;
@@ -69,16 +75,19 @@ class FilesystemSubmitStorage implements ISubmitStorage {
         $this->contestMap = $contestMap;
     }
 
+    /**
+     * @param IStorageProcessing $processing
+     */
     public function addProcessing(IStorageProcessing $processing) {
         $this->processings[] = $processing;
     }
 
     public function beginTransaction() {
-        $this->todo = array();
+        $this->todo = [];
     }
 
     /**
-     * @throws SubmitStorageException for unsuccessful commit
+     * @throws StorageException for unsuccessful commit
      */
     public function commit() {
         if ($this->todo === null) {
@@ -112,8 +121,8 @@ class FilesystemSubmitStorage implements ISubmitStorage {
                         try {
                             $processing->process($submit);
                             rename($dest, $working);
-                        } catch (ProcessingException $e) {
-                            Debugger::log($e);
+                        } catch (ProcessingException $exception) {
+                            Debugger::log($exception);
                         }
                     }
 
@@ -122,15 +131,15 @@ class FilesystemSubmitStorage implements ISubmitStorage {
                     rename($filename, $dest);
                 }
             }
-        } catch (InvalidStateException $e) {
-            throw new StorageException('Error while storing files.', null, $e);
+        } catch (InvalidStateException $exception) {
+            throw new StorageException('Error while storing files.', null, $exception);
         }
 
         $this->todo = null;
     }
 
     /**
-     * 
+     *
      * @throws InvalidStateException
      */
     public function rollback() {
@@ -143,7 +152,7 @@ class FilesystemSubmitStorage implements ISubmitStorage {
 
     /**
      * @param string $filename
-     * @param ModelSubmit $submit
+     * @param \FKSDB\ORM\Models\ModelSubmit $submit
      * @return void
      */
     public function storeFile($filename, ModelSubmit $submit) {
@@ -151,12 +160,17 @@ class FilesystemSubmitStorage implements ISubmitStorage {
             throw new InvalidStateException('Cannot store file out of transaction.');
         }
 
-        $this->todo[] = array(
+        $this->todo[] = [
             'file' => $filename,
             'submit' => $submit,
-        );
+        ];
     }
 
+    /**
+     * @param \FKSDB\ORM\Models\ModelSubmit $submit
+     * @param int $type
+     * @return null|string
+     */
     public function retrieveFile(ModelSubmit $submit, $type = self::TYPE_PROCESSED) {
         $files = $this->retrieveFiles($submit);
         if ($type == self::TYPE_ORIGINAL) {
@@ -182,8 +196,8 @@ class FilesystemSubmitStorage implements ISubmitStorage {
 
     /**
      * Checks whether there exists valid file for the submit.
-     * 
-     * @param ModelSubmit $submit
+     *
+     * @param \FKSDB\ORM\Models\ModelSubmit $submit
      * @return bool
      */
     public function existsFile(ModelSubmit $submit) {
@@ -192,8 +206,11 @@ class FilesystemSubmitStorage implements ISubmitStorage {
         return (bool) $filename;
     }
 
+    /**
+     * @param \FKSDB\ORM\Models\ModelSubmit $submit
+     */
     public function deleteFile(ModelSubmit $submit) {
-        $fails = array();
+        $fails = [];
         $files = $this->retrieveFiles($submit);
         foreach ($files as $file) {
             if (!unlink($file->getRealpath())) {
@@ -206,22 +223,26 @@ class FilesystemSubmitStorage implements ISubmitStorage {
         }
     }
 
+    /**
+     * @param \FKSDB\ORM\Models\ModelSubmit $submit
+     * @return array
+     */
     private function retrieveFiles(ModelSubmit $submit) {
         $dir = $this->root . DIRECTORY_SEPARATOR . $this->createDirname($submit);
 
         try {
             $it = Finder::findFiles('*' . self::DELIMITER . $submit->submit_id . '*')->in($dir);
             $files = iterator_to_array($it, false);
-        } catch (UnexpectedValueException $e) {
-            return array();
+        } catch (UnexpectedValueException $exception) {
+            return [];
         }
 
         return $files;
     }
 
     /**
-     * 
-     * @param ModelSubmit $submit
+     *
+     * @param \FKSDB\ORM\Models\ModelSubmit $submit
      * @return string  directory part of the path relative to root, w/out trailing slash
      */
     private function createDirname(ModelSubmit $submit) {
@@ -236,7 +257,7 @@ class FilesystemSubmitStorage implements ISubmitStorage {
     }
 
     /**
-     * @param ModelSubmit $submit
+     * @param \FKSDB\ORM\Models\ModelSubmit $submit
      * @return string
      */
     private function createFilename(ModelSubmit $submit) {
@@ -247,7 +268,7 @@ class FilesystemSubmitStorage implements ISubmitStorage {
         $label = Strings::webalize($task->label, null, false);
 
         $contestant = $submit->getContestant();
-        $contestantName = $contestant->getPerson()->getFullname();
+        $contestantName = $contestant->getPerson()->getFullName();
         $contestantName = preg_replace('/ +/', '_', $contestantName);
         $contestantName = Strings::webalize($contestantName, '_');
 

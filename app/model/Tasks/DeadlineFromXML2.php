@@ -2,15 +2,15 @@
 
 namespace Tasks;
 
-use FKS\Logging\ILogger;
+use FKSDB\Logging\ILogger;
+use FKSDB\ORM\Services\ServiceTask;
 use Nette\DateTime;
 use Pipeline\Stage;
-use ServiceTask;
-use Tasks\SeriesData;
+
 
 /**
  * @note Assumes TasksFromXML has been run previously.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class DeadlineFromXML2 extends Stage {
@@ -21,29 +21,21 @@ class DeadlineFromXML2 extends Stage {
     private $data;
 
     /**
-     * @var ServiceTask
+     * @var \FKSDB\ORM\Services\ServiceTask
      */
     private $taskService;
 
-    private static $months = array(
-        'ledna' => '1.',
-        'února' => '2.',
-        'března' => '3.',
-        'dubna' => '4.',
-        'května' => '5.',
-        'června' => '6.',
-        'července' => '7.',
-        'srpna' => '8.',
-        'září' => '9.',
-        'října' => '10.',
-        'listopadu' => '11.',
-        'prosince' => '12.',
-    );
-
+    /**
+     * DeadlineFromXML2 constructor.
+     * @param ServiceTask $taskService
+     */
     function __construct(ServiceTask $taskService) {
         $this->taskService = $taskService;
     }
 
+    /**
+     * @return mixed|SeriesData
+     */
     public function getOutput() {
         return $this->data;
     }
@@ -64,6 +56,9 @@ class DeadlineFromXML2 extends Stage {
         }
     }
 
+    /**
+     * @param mixed $data
+     */
     public function setInput($data) {
         $this->data = $data;
     }

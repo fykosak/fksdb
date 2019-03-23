@@ -4,11 +4,12 @@
  * trait content contest, year, series and lang chooser
  */
 
-use \FKSDB\Components\Controls;
+use FKSDB\Components\Controls;
+use FKSDB\ORM\Services\ServiceContest;
 
 /**
  * Trait ContestNav
- * @param $serviceContest ServiceContest
+ * @param ServiceContest $serviceContest
  */
 trait LanguageNav {
 
@@ -29,12 +30,19 @@ trait LanguageNav {
      */
     private $newParams = null;
 
+    /**
+     * @return Controls\Navs\LanguageNav
+     */
     protected function createComponentLanguageNav() {
         $control = new Controls\Navs\LanguageNav($this->session);
         return $control;
     }
 
-      public function getSelectedLanguage() {
+    /**
+     * @return mixed
+     * @throws Exception
+     */
+    public function getSelectedLanguage() {
         $this->init();
         return $this->lang;
     }
@@ -42,19 +50,23 @@ trait LanguageNav {
     /**
      * rewrite coreBasePresenter getLang
      * @return string
+     * @throws Exception
      */
     public function getLang() {
         return $this->getSelectedLanguage() ?: parent::getLang();
     }
 
+    /**
+     * @throws Exception
+     */
     public function init() {
         if ($this->initialized) {
             return;
         }
         /**
-         * @var $languageNav Controls\Navs\LanguageNav
+         * @var Controls\Navs\LanguageNav $languageNav
          */
-        $languageNav = $this['languageNav'];
+        $languageNav =  $this->getComponent('languageNav');
         $this->newParams = $languageNav->init((object)[
             'lang' => $this->lang,
         ]);
@@ -62,6 +74,7 @@ trait LanguageNav {
 
     /**
      * redirect to correct URL
+     * @throws Exception
      */
     protected function startupRedirects() {
         $this->init();

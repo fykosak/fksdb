@@ -8,8 +8,11 @@ use Nette\Diagnostics\Debugger;
  */
 class ErrorPresenter extends BasePresenter {
 
-    public function getNavBarVariant() {
-        return ['error', 'dark'];
+    /**
+     * @return array
+     */
+    public function getNavBarVariant(): array {
+        return ['error', 'bg-error navbar-dark'];
     }
 
     protected function putIntoBreadcrumbs() {
@@ -17,13 +20,13 @@ class ErrorPresenter extends BasePresenter {
     }
 
     public function titleDefault() {
-        $title = _('Chyba');
-        $this->setTitle($title);
+        $this->setTitle(_('Chyba'));
     }
 
     /**
      * @param  Exception
      * @return void
+     * @throws \Nette\Application\AbortException
      */
     public function renderDefault($exception) {
         if ($this->isAjax()) { // AJAX request? Just note this error in payload.
@@ -40,9 +43,4 @@ class ErrorPresenter extends BasePresenter {
             Debugger::log($exception, Debugger::ERROR); // and log exception
         }
     }
-
-    public function getNavRoot() {
-        return null;
-    }
-
 }

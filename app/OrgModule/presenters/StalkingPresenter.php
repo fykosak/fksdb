@@ -2,37 +2,43 @@
 
 namespace OrgModule;
 
-use FKS\Components\Controls\FormControl;
-use FKS\Components\Forms\Containers\ContainerWithOptions;
+use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Controls\Stalking\AcademicDegree;
 use FKSDB\Components\Controls\Stalking\Address;
 use FKSDB\Components\Controls\Stalking\BaseInfo;
+use FKSDB\Components\Controls\Stalking\ContactInfo;
 use FKSDB\Components\Controls\Stalking\Contestant;
 use FKSDB\Components\Controls\Stalking\EventOrg;
 use FKSDB\Components\Controls\Stalking\EventParticipant;
+use FKSDB\Components\Controls\Stalking\EventTeacher;
+use FKSDB\Components\Controls\Stalking\Flag;
 use FKSDB\Components\Controls\Stalking\Login;
 use FKSDB\Components\Controls\Stalking\Org;
+use FKSDB\Components\Controls\Stalking\Payment;
 use FKSDB\Components\Controls\Stalking\PersonHistory;
-use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
-use ModelPerson;
+use FKSDB\Components\Controls\Stalking\Role;
+use FKSDB\Components\Controls\Stalking\Schedule;
+use FKSDB\Components\Controls\Stalking\StalkingComponent;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
+use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Services\ServicePerson;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Persons\DenyResolver;
 use Persons\ExtendedPersonHandler;
-use ServiceEvent;
-use ServicePerson;
 
+/**
+ * Class StalkingPresenter
+ * @package OrgModule
+ */
 class StalkingPresenter extends BasePresenter {
 
     /**
-     * @var ServicePerson
+     * @var \FKSDB\ORM\Services\ServicePerson
      */
     private $servicePerson;
-
-    /**
-     * @var ServiceEvent
-     */
-    private $serviceEvent;
 
     /**
      * @var ReferencedPersonFactory
@@ -40,90 +46,192 @@ class StalkingPresenter extends BasePresenter {
     private $referencedPersonFactory;
 
     /**
-     * @var ModelPerson|null
+     * @var ModelPerson
      */
-    private $person = false;
+    private $person;
+    /**
+     * @var string
+     */
+    private $mode;
 
     /**
-     * @return ModelPerson|null
+     * @param \FKSDB\ORM\Services\ServicePerson $servicePerson
      */
-    private function getPerson() {
-        if ($this->person === false) {
-            $id = $this->getParameter('id');
-            $this->person = $this->servicePerson->findByPrimary($id);
-        }
-
-        return $this->person;
-    }
-
-    public function authorizedDefault() {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('person', 'stalk-search', $this->getSelectedContest()));
-    }
-
-    public function authorizedView($id) {
-        $person = $this->getPerson();
-        if (!$person) {
-            throw new BadRequestException('Neexistující osoba.', 404);
-        }
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($person, 'stalk', $this->getSelectedContest()));
-    }
-
     public function injectServicePerson(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
     }
 
-    public function injectServiceEvent(ServiceEvent $serviceEvent) {
-        $this->serviceEvent = $serviceEvent;
-    }
-
+    /**
+     * @param ReferencedPersonFactory $referencedPersonFactory
+     */
     function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory) {
         $this->referencedPersonFactory = $referencedPersonFactory;
     }
 
-    public function createComponentBaseInfo() {
-        $component = new BaseInfo($this->getPerson());
-        return $component;
+
+    public function titleDefault() {
+        $this->setTitle(_('Stalking'));
+        $this->setIcon('fa fa-search');
     }
 
-    public function createComponentAddress() {
-        $component = new Address($this->getPerson());
-        return $component;
+    /**
+     * @throws BadRequestException
+     */
+    public function titleView() {
+        $this->setTitle(sprintf(_('Stalking %s'), $this->getPerson()->getFullName()));
+        $this->setIcon('fa fa-eye');
     }
 
-    public function createComponentEventParticipant() {
-        $component = new EventParticipant($this->getPerson());
-        return $component;
+    /**
+     * @throws BadRequestException
+     */
+    public function authorizedDefault() {
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('person', 'stalk.search', $this->getSelectedContest()));
     }
 
-    public function createComponentEventOrg() {
-        $component = new EventOrg($this->getPerson());
-        return $component;
+    /**
+     * @throws BadRequestException
+     */
+    public function authorizedView() {
+        $person = $this->getPerson();
+
+        $full = $this->getContestAuthorizator()->isAllowed($person, 'stalk.full', $this->getSelectedContest());
+
+        $restrict = $this->getContestAuthorizator()->isAllowed($person, 'stalk.restrict', $this->getSelectedContest());
+
+        $basic = $this->getContestAuthorizator()->isAllowed($person, 'stalk.basic', $this->getSelectedContest());
+
+        $this->setAuthorized($full || $restrict || $basic);
     }
 
-    public function createComponentLogin() {
-        $component = new Login($this->getPerson());
-        return $component;
+    /**
+     * @return BaseInfo
+     * @throws BadRequestException
+     */
+    public function createComponentBaseInfo(): BaseInfo {
+        return new BaseInfo($this->getPerson(), $this->getTranslator(), $this->getMode());
     }
 
-    public function createComponentOrg() {
-        $component = new Org($this->getPerson());
-        return $component;
+    /**
+     * @return Address
+     * @throws BadRequestException
+     */
+    public function createComponentAddress(): Address {
+        return new Address($this->getPerson(), $this->getTranslator(), $this->getMode());
     }
 
-    public function createComponentContestant() {
-        $component = new Contestant($this->getPerson());
-        return $component;
+    /**
+     * @return EventParticipant
+     * @throws BadRequestException
+     */
+    public function createComponentEventParticipant(): EventParticipant {
+        return new EventParticipant($this->getPerson(), $this->getTranslator(), $this->getMode());
     }
 
-    public function createComponentPersonHistory() {
-        $component = new PersonHistory($this->getPerson());
-        return $component;
+    /**
+     * @return EventTeacher
+     * @throws BadRequestException
+     */
+    public function createComponentEventTeacher(): EventTeacher {
+        return new EventTeacher($this->getPerson(), $this->getTranslator(), $this->getMode());
     }
 
-    public function createComponentFormSearch() {
+    /**
+     * @return EventOrg
+     * @throws BadRequestException
+     */
+    public function createComponentEventOrg(): EventOrg {
+        return new EventOrg($this->getPerson(), $this->getTranslator(), $this->getMode());
+    }
+
+    /**
+     * @return Login
+     * @throws BadRequestException
+     */
+    public function createComponentLogin(): Login {
+        return new Login($this->getPerson(), $this->getTranslator(), $this->getMode());
+    }
+
+    /**
+     * @return Org
+     * @throws BadRequestException
+     */
+    public function createComponentOrg(): Org {
+        return new Org($this->getPerson(), $this->getTranslator(), $this->getMode());
+    }
+
+    /**
+     * @return Contestant
+     * @throws BadRequestException
+     */
+    public function createComponentContestant(): Contestant {
+        return new Contestant($this->getPerson(), $this->getTranslator(), $this->getMode());
+    }
+
+    /**
+     * @return PersonHistory
+     * @throws BadRequestException
+     */
+    public function createComponentPersonHistory(): PersonHistory {
+        return new PersonHistory($this->getPerson(), $this->getTranslator(), $this->getMode());
+    }
+
+    /**
+     * @return Role
+     * @throws BadRequestException
+     */
+    public function createComponentRole(): Role {
+        return new Role($this->getPerson(), $this->getTranslator(), $this->getMode());
+    }
+
+    /**
+     * @return Flag
+     * @throws BadRequestException
+     */
+    public function createComponentFlag(): Flag {
+        return new Flag($this->getPerson(), $this->getTranslator(), $this->getMode());
+    }
+
+    /**
+     * @return Payment
+     * @throws BadRequestException
+     */
+    public function createComponentPayment(): Payment {
+        return new Payment($this->getPerson(), $this->getTranslator(), $this->getMode());
+    }
+
+    /**
+     * @return ContactInfo
+     * @throws BadRequestException
+     */
+    public function createComponentContactInfo(): ContactInfo {
+        return new ContactInfo($this->getPerson(), $this->getTranslator(), $this->getMode());
+    }
+
+    /**
+     * @return AcademicDegree
+     * @throws BadRequestException
+     */
+    public function createComponentAcademicDegree(): AcademicDegree {
+        return new AcademicDegree($this->getPerson(), $this->getTranslator(), $this->getMode());
+    }
+
+    /**
+     * @return Schedule
+     * @throws BadRequestException
+     */
+    public function createComponentSchedule(): Schedule {
+        return new Schedule($this->getPerson(), $this->getTranslator(), $this->getMode());
+    }
+
+    /**
+     * @return FormControl
+     * @throws BadRequestException
+     * @throws \Nette\Utils\RegexpException
+     */
+    public function createComponentFormSearch(): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
-        $control->setGroupMode(FormControl::GROUP_CONTAINER);
 
         $container = new ContainerWithOptions();
         $form->addComponent($container, ExtendedPersonHandler::CONT_AGGR);
@@ -141,8 +249,7 @@ class StalkingPresenter extends BasePresenter {
         $container->addComponent($components[1], ExtendedPersonHandler::CONT_PERSON);
 
         $submit = $form->addSubmit('send', _('Stalkovat'));
-        $that = $this;
-        $submit->onClick[] = function (SubmitButton $button) use ($that) {
+        $submit->onClick[] = function (SubmitButton $button) {
             $form = $button->getForm();
             $values = $form->getValues();
             $id = $values[ExtendedPersonHandler::CONT_AGGR][ExtendedPersonHandler::EL_PERSON];
@@ -152,23 +259,39 @@ class StalkingPresenter extends BasePresenter {
         return $control;
     }
 
-    public function titleDefault() {
-        $this->setTitle(_('Stalking'));
-    }
-
-    public function titleView($id) {
-        $this->setTitle(sprintf(_('Stalking %s'), $this->getPerson()->getFullname()));
-    }
-
-    protected function getNavBarVariant() {
-        /**
-         * @var $contest \ModelContest
-         */
-        $contest = $this->serviceContest->findByPrimary($this->contestId);
-        if ($contest) {
-            return [$contest->getContestSymbol(), 'dark'];
+    /**
+     * @return string
+     * @throws BadRequestException
+     */
+    private function getMode() {
+        if (!$this->mode) {
+            if ($this->getContestAuthorizator()->isAllowed($this->getPerson(), 'stalk.basic', $this->getSelectedContest())) {
+                $this->mode = StalkingComponent::PERMISSION_BASIC;
+            }
+            if ($this->getContestAuthorizator()->isAllowed($this->getPerson(), 'stalk.restrict', $this->getSelectedContest())) {
+                $this->mode = StalkingComponent::PERMISSION_RESTRICT;
+            }
+            if ($this->getContestAuthorizator()->isAllowed($this->getPerson(), 'stalk.full', $this->getSelectedContest())) {
+                $this->mode = StalkingComponent::PERMISSION_FULL;
+            }
         }
-        return [null, null];
+        return $this->mode;
     }
 
+    /**
+     * @return ModelPerson
+     * @throws BadRequestException
+     */
+    private function getPerson(): ModelPerson {
+        if (!$this->person) {
+            $id = $this->getParameter('id');
+            $row = $this->servicePerson->findByPrimary($id);
+            if (!$row) {
+                throw new BadRequestException(_('Osoba neexistuje'), 404);
+            }
+            $this->person = ModelPerson::createFromTableRow($row);
+        }
+
+        return $this->person;
+    }
 }

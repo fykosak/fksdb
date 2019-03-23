@@ -1,24 +1,35 @@
 <?php
 
-use Nette\Database\Table\ActiveRow as TableRow;
-use ORM\IModel;
+namespace FKSDB\ORM;
+
+use Nette\Database\Table\ActiveRow;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-abstract class AbstractModelSingle extends TableRow implements IModel {
+abstract class AbstractModelSingle extends ActiveRow implements IModel {
 
     protected $stored = true;
 
+    /**
+     * @return bool|mixed
+     */
     public function isNew() {
         return !$this->stored;
     }
 
+    /**
+     * @param bool $value
+     */
     public function setNew($value = true) {
         $this->stored = !$value;
     }
 
-    public static function createFromTableRow(TableRow $row) {
+    /**
+     * @param ActiveRow $row
+     * @return static
+     */
+    public static function createFromTableRow(ActiveRow $row) {
         $model = new static($row->toArray(), $row->getTable());
         if ($model->getPrimary(false)) {
             $model->setNew(false);
@@ -27,5 +38,3 @@ abstract class AbstractModelSingle extends TableRow implements IModel {
     }
 
 }
-
-?>

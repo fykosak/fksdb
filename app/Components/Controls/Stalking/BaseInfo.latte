@@ -1,58 +1,127 @@
-<div class="card mb-3 border-primary">
-    <h4 class="card-header bg-primary text-white">Base info</h4>
+{layout './@layout.latte'}
+{block content}
     <ul class="list-group list-group-flush">
         <li class="list-group-item">
             <div class="row">
-                <span class="col-5">person_id</span>
+                <span class="col-5">{_'Person Id'}</span>
                 <div class="col-7">
                     {$info->person_id}
                 </div>
             </div>
         </li>
+
         <li class="list-group-item">
             <div class="row">
-                <span class="col-5">Born</span>
+                <span class="col-5">{_'Born'}</span>
                 <div class="col-7">
-                    {if (!is_null($info->born))}
-                        {$info->born->__toString()}
+                    {if $mode !== \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL}
+                        {control permissionDenied}
+                    {elseif (!is_null($info->born))}
+                        {$info->born->format('d. m. Y')}
                     {else}
-                        <span class="badge badge-danger">not set</span>
+                        {control notSet}
                     {/if}
                 </div>
             </div>
         </li>
+
         <li class="list-group-item">
             <div class="row">
-                <span class="col-5">ID number</span>
+                <span class="col-5">{_'Born Id'}</span>
                 <div class="col-7">
-                    {if (!is_null($info->id_number))}
-                        {$info->id_number}
-                    {else}
-                        <span class="badge badge-danger">not set</span>
-                    {/if}
-                </div>
-            </div>
-        </li>
-        <li class="list-group-item">
-            <div class="row">
-                <span class="col-5">Born ID</span>
-                <div class="col-7">
-                    {if (!is_null($info->born_id))}
+                    {if $mode !== \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL}
+                        {control permissionDenied}
+                    {elseif (!is_null($info->born_id))}
                         {$info->born_id}
                     {else}
-                        <span class="badge badge-danger">not set</span>
+                        {control notSet}
                     {/if}
                 </div>
             </div>
         </li>
         <li class="list-group-item">
             <div class="row">
-                <span class="col-5">UK login</span>
+                <span class="col-5">{_'Birthplace'}</span>
+                <div class="col-7">
+                    {if $mode !== \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL}
+                        {control permissionDenied}
+                    {elseif (!is_null($info->birthplace))}
+                        {$info->birthplace}
+                    {else}
+                        {control notSet}
+                    {/if}
+                </div>
+            </div>
+        </li>
+
+        <li class="list-group-item">
+            <div class="row">
+                <span class="col-5">{_'Id number'}</span>
+                <div class="col-7">
+                    {if $mode !== \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL}
+                        {control permissionDenied}
+                    {elseif (!is_null($info->id_number))}
+                        {$info->id_number}
+                    {else}
+                        {control notSet}
+                    {/if}
+                </div>
+            </div>
+        </li>
+
+        <li class="list-group-item">
+            <div class="row">
+                <span class="col-5">{_'Employer'}</span>
+                <div class="col-7">
+                    {if $mode !== \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL}
+                        {control permissionDenied}
+                    {elseif (!is_null($info->employer))}
+                        {$info->employer}
+                    {else}
+                        {control notSet}
+                    {/if}
+                </div>
+            </div>
+        </li>
+
+        <li class="list-group-item">
+            <div class="row">
+                <span class="col-5">{_'Health insurance'}</span>
+                <div class="col-7">
+                    {if $mode !== \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL}
+                        {control permissionDenied}
+                    {elseif (!is_null($info->health_insurance))}
+                        {$info->health_insurance}
+                    {else}
+                        {control notSet}
+                    {/if}
+                </div>
+            </div>
+        </li>
+
+        <li class="list-group-item">
+            <div class="row">
+                <span class="col-5">{_'Citizenship'}</span>
+                <div class="col-7">
+                    {if $mode !== \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL}
+                        {control permissionDenied}
+                    {elseif (!is_null($info->citizenship))}
+                        {$info->citizenship}
+                    {else}
+                        {control notSet}
+                    {/if}
+                </div>
+            </div>
+        </li>
+
+        <li class="list-group-item">
+            <div class="row">
+                <span class="col-5">{_'UK login'}</span>
                 <div class="col-7">
                     {if (!is_null($info->uk_login))}
                         {$info->uk_login}
                     {else}
-                        <span class="badge badge-danger">not set</span>
+                        {control notSet}
                     {/if}
                 </div>
             </div>
@@ -60,95 +129,93 @@
         <li class="list-group-item">
 
             <div class="row">
-                <span class="col-5">Bank account</span>
+                <span class="col-5">{_'Bank account'}</span>
                 <div class="col-7">
                     {if (!is_null($info->account))}
                         {$info->account}
                     {else}
-                        <span class="badge badge-danger">not set</span>
+                        {control notSet}
                     {/if}
                 </div>
             </div>
         </li>
+
         <li class="list-group-item">
             <div class="row">
-                <span class="col-5">Birthplace</span>
+                <span class="col-5">{_'Career'}</span>
                 <div class="col-7">
-                    {if (!is_null($info->birthplace))}
-                        {$info->birthplace}
+                    {if (!is_null($info->career))}
+                        {$info->career}
                     {else}
-                        <span class="badge badge-danger">not set</span>
+                        {control notSet}
                     {/if}
                 </div>
             </div>
         </li>
+
         <li class="list-group-item">
             <div class="row">
-                <span class="col-5">Origin</span>
+                <span class="col-5">{_'Homepage'}</span>
+                <div class="col-7">
+                    {if (!is_null($info->homepage))}
+                        <a href="{$info->homepage}">{$info->homepage}</a>
+                    {else}
+                        {control notSet}
+                    {/if}
+                </div>
+            </div>
+        </li>
+
+        <li class="list-group-item">
+            <div class="row">
+                <span class="col-5">{_'Im'}</span>
+                <div class="col-7">
+                    {if (!is_null($info->im))}
+                        {$info->im}
+                    {else}
+                        {control notSet}
+                    {/if}
+                </div>
+            </div>
+        </li>
+
+        <li class="list-group-item">
+            <div class="row">
+                <span class="col-5">{_'Linkedin id'}</span>
+                <div class="col-7">
+                    {if (is_null($info->linkedin_id))}
+                        {control notSet}
+                    {else}
+                        {$info->linkedin_id}
+                    {/if}
+                </div>
+            </div>
+        </li>
+
+        <li class="list-group-item">
+            <div class="row">
+                <span class="col-5">{_'Origin'}</span>
                 <div class="col-7">
                     {if (!is_null($info->origin))}
                         {$info->origin}
                     {else}
-                        <span class="badge badge-danger">not set</span>
+                        {control notSet}
+                    {/if}
+                </div>
+            </div>
+        </li>
+
+        <li class="list-group-item">
+            <div class="row">
+                <span class="col-5">{_'Note'}</span>
+                <div class="col-7">
+                    {if (!is_null($info->note))}
+                        {$info->note}
+                    {else}
+                        {control notSet}
                     {/if}
                 </div>
             </div>
         </li>
     </ul>
-</div>
-
-<div class="card mb-3 border-primary">
-    <h4 class="card-header bg-primary text-white">Contact information</h4>
-    <ul class="list-group list-group-flush">
-        <li class="list-group-item">
-            <div class="row">
-                <span class="col-5">Email</span>
-                <div class="col-7">
-                    {if (!is_null($info->email))}
-                        {$info->email}
-                    {else}
-                        <span class="badge badge-danger">not set</span>
-                    {/if}
-                </div>
-            </div>
-        </li>
-        <li class="list-group-item">
-            <div class="row">
-                <span class="col-5">Phone</span>
-                <div class="col-7">
-                    {if (!is_null($info->phone))}
-                        {$info->phone}
-                    {else}
-                        <span class="badge badge-danger">not set</span>
-                    {/if}
-                </div>
-            </div>
-        </li>
-        <li class="list-group-item">
-            <div class="row">
-                <span class="col-5">Phone parent mum</span>
-                <div class="col-7">
-                    {if (!is_null($info->phone_parent_m))}
-                        {$info->phone_parent_m}
-                    {else}
-                        <span class="badge badge-danger">not set</span>
-                    {/if}
-                </div>
-            </div>
-        </li>
-        <li class="list-group-item">
-            <div class="row">
-                <span class="col-5">Phone parent dad</span>
-                <div class="col-7">
-                    {if (!is_null($info->phone_parent_d))}
-                        {$info->phone_parent_d}
-                    {else}
-                        <span class="badge badge-danger">not set</span>
-                    {/if}
-                </div>
-            </div>
-        </li>
-
-    </ul>
-</div>
-
+{/block}

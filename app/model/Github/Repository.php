@@ -4,6 +4,10 @@ namespace Github;
 
 use Nette\Object;
 
+/**
+ * Class Repository
+ * @package Github
+ */
 class Repository extends Object {
 
     /** @var string $name */

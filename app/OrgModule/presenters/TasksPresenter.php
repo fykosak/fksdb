@@ -4,12 +4,12 @@ namespace OrgModule;
 
 use Astrid\Downloader;
 use Astrid\DownloadException;
-use FKS\Application\UploadException;
-use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
-use Logging\FlashDumpFactory;
+use FKSDB\Application\UploadException;
+use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Logging\FlashDumpFactory;
 use ModelException;
+use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
-use Nette\Forms\Form;
 use Pipeline\PipelineException;
 use SeriesCalculator;
 use SimpleXMLElement;
@@ -18,7 +18,7 @@ use Tasks\SeriesData;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class TasksPresenter extends BasePresenter {
@@ -31,7 +31,7 @@ class TasksPresenter extends BasePresenter {
 
     const LANG_ALL = '_all';
 
-    private static $languages = array('cs', 'en');
+    private static $languages = ['cs', 'en'];
 
     /**
      * @var SeriesCalculator
@@ -44,7 +44,7 @@ class TasksPresenter extends BasePresenter {
     private $pipelineFactory;
 
     /**
-     * @var FlashDumpFactory 
+     * @var FlashDumpFactory
      */
     private $flashDumpFactory;
 
@@ -53,35 +53,55 @@ class TasksPresenter extends BasePresenter {
      */
     private $downloader;
 
+    /**
+     * @param SeriesCalculator $seriesCalculator
+     */
     public function injectSeriesCalculator(SeriesCalculator $seriesCalculator) {
         $this->seriesCalculator = $seriesCalculator;
     }
 
+    /**
+     * @param PipelineFactory $pipelineFactory
+     */
     public function injectPipelineFactory(PipelineFactory $pipelineFactory) {
         $this->pipelineFactory = $pipelineFactory;
     }
 
+    /**
+     * @param FlashDumpFactory $flashDumpFactory
+     */
     function injectFlashDumpFactory(FlashDumpFactory $flashDumpFactory) {
         $this->flashDumpFactory = $flashDumpFactory;
     }
 
+    /**
+     * @param Downloader $downloader
+     */
     function injectDownloader(Downloader $downloader) {
         $this->downloader = $downloader;
     }
 
+    /**
+     * @throws \Nette\Application\BadRequestException
+     */
     public function authorizedImport() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('task', 'insert', $this->getSelectedContest()));
     }
 
     public function titleImport() {
         $this->setTitle(_('Import úloh'));
+        $this->setIcon('fa fa-upload');
     }
 
-    protected function createComponentSeriesForm() {
-        $seriesForm = new Form();
-        $seriesForm->setRenderer(new BootstrapRenderer());
+    /**
+     * @return FormControl
+     * @throws \Nette\Application\BadRequestException
+     */
+    protected function createComponentSeriesForm(): FormControl {
+        $control = new FormControl();
+        $form = $control->getForm();
 
-        $source = $seriesForm->addRadioList('source', _('Zdroj úloh'), array(
+        $source = $form->addRadioList('source', _('Zdroj úloh'), array(
             self::SOURCE_ASTRID => _('Astrid'),
             self::SOURCE_ASTRID_2 => _('Astrid (nové XML)'),
             self::SOURCE_FILE => _('XML soubor'),
@@ -90,29 +110,38 @@ class TasksPresenter extends BasePresenter {
 
         // Astrid download
         $seriesItems = range(1, $this->seriesCalculator->getTotalSeries($this->getSelectedContest(), $this->getSelectedYear()));
-        $seriesForm->addSelect('series', _('Série'))
-                ->setItems($seriesItems, false);
+        $form->addSelect('series', _('Série'))
+            ->setItems($seriesItems, false);
 
         // File upload
-        $language = $seriesForm->addSelect('lang', _('Jazyk'));
+        $language = $form->addSelect('lang', _('Jazyk'));
         $language->setItems(self::$languages, false);
         $language->addConditionOn($source, Form::EQUAL, self::SOURCE_FILE)->toggle($language->getHtmlId() . '-pair');
 
-        $upload = $seriesForm->addUpload('file', _('XML soubor úloh'));
+        $upload = $form->addUpload('file', _('XML soubor úloh'));
         $upload->addConditionOn($source, Form::EQUAL, self::SOURCE_FILE)->toggle($upload->getHtmlId() . '-pair');
 
 
-        $seriesForm->addSubmit('submit', _('Importovat'));
+        $form->addSubmit('submit', _('Importovat'));
 
-        $seriesForm->onSuccess[] = callback($this, 'validSubmitSeriesForm');
+        $form->onSuccess[] = callback($this, 'validSubmitSeriesForm');
 
-        return $seriesForm;
+        return $control;
     }
 
+    /**
+     * @param SimpleXMLElement $xml
+     * @return bool
+     */
     private function isLegacyXml(SimpleXMLElement $xml) {
         return $xml->getName() == 'problems';
     }
 
+    /**
+     * @param Form $seriesForm
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
     public function validSubmitSeriesForm(Form $seriesForm) {
         $values = $seriesForm->getValues();
         $series = $values['series'];
@@ -124,7 +153,7 @@ class TasksPresenter extends BasePresenter {
                     try {
                         $file = $this->downloader->downloadSeriesTasks($this->getSelectedContest(), $this->getSelectedYear(), $series, $language);
                         $files[$language] = $file;
-                    } catch (DownloadException $e) {
+                    } catch (DownloadException $exception) {
                         $this->flashMessage(sprintf(_('Úlohy pro jazyk %s se nepodařilo stáhnout.'), $language), self::FLASH_WARNING);
                     }
                 }
@@ -143,7 +172,7 @@ class TasksPresenter extends BasePresenter {
                 break;
         }
 
-        $dump = $this->flashDumpFactory->createDefault();
+        $dump = $this->flashDumpFactory->create('default');
         foreach ($files as $language => $file) {
             try {
                 $xml = simplexml_load_file($file);
@@ -169,12 +198,12 @@ class TasksPresenter extends BasePresenter {
                     $dump->dump($pipeline->getLogger(), $this);
                     $this->flashMessage(_('Úlohy pro úspěšně importovány.'), self::FLASH_SUCCESS);
                 }
-            } catch (PipelineException $e) {
-                $this->flashMessage(sprintf('Při ukládání úloh pro jazyk %s došlo k chybě. %s', $language, $e->getMessage()), self::FLASH_ERROR);
-                Debugger::log($e);
-            } catch (ModelException $e) {
-                $this->flashMessage(sprintf('Při ukládání úloh pro jazyk %s došlo k chybě.', $language), self::FLASH_ERROR);
-                Debugger::log($e);
+            } catch (PipelineException $exception) {
+                $this->flashMessage(sprintf(_('Při ukládání úloh pro jazyk %s došlo k chybě. %s'), $language, $exception->getMessage()), self::FLASH_ERROR);
+                Debugger::log($exception);
+            } catch (ModelException $exception) {
+                $this->flashMessage(sprintf(_('Při ukládání úloh pro jazyk %s došlo k chybě.'), $language), self::FLASH_ERROR);
+                Debugger::log($exception);
             } finally {
 
                 unlink($file);

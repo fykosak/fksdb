@@ -1,5 +1,8 @@
 <?php
 
+use FKSDB\ORM\AbstractModelMulti;
+use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\ModelContest;
 use Nette\Security\IRole;
 
 /**

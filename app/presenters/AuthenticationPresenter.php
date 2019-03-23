@@ -6,8 +6,12 @@ use Authentication\LoginUserStorage;
 use Authentication\PasswordAuthenticator;
 use Authentication\RecoveryException;
 use Authentication\TokenAuthenticator;
-use FKS\Authentication\SSO\IGlobalSession;
-use FKS\Authentication\SSO\ServiceSide\Authentication;
+use FKSDB\Authentication\SSO\IGlobalSession;
+use FKSDB\Authentication\SSO\ServiceSide\Authentication;
+use FKSDB\ORM\Models\ModelAuthToken;
+use FKSDB\ORM\Models\ModelLogin;
+use FKSDB\ORM\Services\ServiceAuthToken;
+use FKSDB\ORM\Services\ServicePerson;
 use Mail\MailTemplateFactory;
 use Mail\SendFailedException;
 use Nette\Application\UI\Form;
@@ -15,6 +19,13 @@ use Nette\DateTime;
 use Nette\Http\Url;
 use Nette\Security\AuthenticationException;
 
+/**
+ * Class AuthenticationPresenter
+ */
+
+/**
+ * Class AuthenticationPresenter
+ */
 final class AuthenticationPresenter extends BasePresenter {
 
     use \LanguageNav;
@@ -70,36 +81,98 @@ final class AuthenticationPresenter extends BasePresenter {
      */
     private $mailTemplateFactory;
 
+    /**
+     * @var ServicePerson
+     */
+    protected $servicePerson;
+    /**
+     * @var string
+     */
+    private $login;
 
+
+    /**
+     * @param FacebookAuthenticator $facebookAuthenticator
+     */
+    /**
+     * @param FacebookAuthenticator $facebookAuthenticator
+     */
     public function injectFacebookAuthenticator(FacebookAuthenticator $facebookAuthenticator) {
         $this->facebookAuthenticator = $facebookAuthenticator;
     }
 
+    /**
+     * @param ServiceAuthToken $serviceAuthToken
+     */
+    /**
+     * @param ServiceAuthToken $serviceAuthToken
+     */
     public function injectServiceAuthToken(ServiceAuthToken $serviceAuthToken) {
         $this->serviceAuthToken = $serviceAuthToken;
     }
 
+    /**
+     * @param IGlobalSession $globalSession
+     */
+    /**
+     * @param IGlobalSession $globalSession
+     */
     public function injectGlobalSession(IGlobalSession $globalSession) {
         $this->globalSession = $globalSession;
     }
 
+    /**
+     * @param PasswordAuthenticator $passwordAuthenticator
+     */
+    /**
+     * @param PasswordAuthenticator $passwordAuthenticator
+     */
     public function injectPasswordAuthenticator(PasswordAuthenticator $passwordAuthenticator) {
         $this->passwordAuthenticator = $passwordAuthenticator;
     }
 
+    /**
+     * @param AccountManager $accountManager
+     */
+    /**
+     * @param AccountManager $accountManager
+     */
     public function injectAccountManager(AccountManager $accountManager) {
         $this->accountManager = $accountManager;
     }
 
+    /**
+     * @param MailTemplateFactory $mailTemplateFactory
+     */
+    /**
+     * @param MailTemplateFactory $mailTemplateFactory
+     */
     public function injectMailTemplateFactory(MailTemplateFactory $mailTemplateFactory) {
         $this->mailTemplateFactory = $mailTemplateFactory;
     }
 
+    /**
+     * @param ServicePerson $servicePerson
+     */
+    /**
+     * @param ServicePerson $servicePerson
+     */
+    public function injectServicePerson(ServicePerson $servicePerson) {
+        $this->servicePerson = $servicePerson;
+    }
+
+    /**
+     * @throws Exception
+     */
     public function startup() {
         parent::startup();
         $this->startupRedirects();
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\UI\InvalidLinkException
+     */
     public function actionLogout() {
         $subDomainAuth = $this->globalParameters['subdomain']['auth'];
         $subDomain = $this->getParameter('subdomain');
@@ -137,14 +210,17 @@ final class AuthenticationPresenter extends BasePresenter {
         $this->redirect('login');
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     */
     public function actionLogin() {
         if ($this->isLoggedIn()) {
             /**
-             * @var $login ModelLogin
+             * @var \FKSDB\ORM\Models\ModelLogin $login
              */
             $login = $this->getUser()->getIdentity();
             $this->loginBackLinkRedirect($login);
-            $this->initialRedirect($login);
+            $this->initialRedirect();
         } else {
             if ($this->flag == self::FLAG_SSO_PROBE) {
                 $this->loginBackLinkRedirect();
@@ -159,16 +235,17 @@ final class AuthenticationPresenter extends BasePresenter {
                         break;
                 }
             }
+            $this->login = $this->getParameter('login');
+
         }
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     */
     public function actionRecover() {
         if ($this->isLoggedIn()) {
-            /**
-             * @var $login ModelLogin
-             */
-            $login = $this->getUser()->getIdentity();
-            $this->initialRedirect($login);
+            $this->initialRedirect();
         }
     }
 
@@ -227,20 +304,37 @@ final class AuthenticationPresenter extends BasePresenter {
         return $form;
     }
 
+    /**
+     * @param $form
+     * @throws \Nette\Application\AbortException
+     */
+    /**
+     * @param $form
+     * @throws \Nette\Application\AbortException
+     */
     public function loginFormSubmitted($form) {
         try {
             $this->user->login($form['id']->value, $form['password']->value);
             /**
-             * @var $login ModelLogin
+             * @var ModelLogin $login
              */
             $login = $this->user->getIdentity();
             $this->loginBackLinkRedirect($login);
-            $this->initialRedirect($login);
-        } catch (AuthenticationException $e) {
-            $this->flashMessage($e->getMessage(), self::FLASH_ERROR);
+            $this->initialRedirect();
+        } catch (AuthenticationException $exception) {
+            $this->flashMessage($exception->getMessage(), self::FLASH_ERROR);
         }
     }
 
+    /**
+     * @param Form $form
+     * @throws \Nette\Application\AbortException
+     */
+    /**
+     * @param Form $form
+     * @throws \Nette\Application\AbortException
+     * @throws Exception
+     */
     public function recoverFormSubmitted(Form $form) {
         $connection = $this->serviceAuthToken->getConnection();
         try {
@@ -248,7 +342,7 @@ final class AuthenticationPresenter extends BasePresenter {
 
             $connection->beginTransaction();
             /**
-             * @var $login ModelLogin
+             * @var ModelLogin $login
              */
             $login = $this->passwordAuthenticator->findLogin($values['id']);
             $template = $this->mailTemplateFactory->createPasswordRecovery($this, $this->getLang());
@@ -257,18 +351,26 @@ final class AuthenticationPresenter extends BasePresenter {
             $this->flashMessage(sprintf(_('Na email %s byly poslány další instrukce k obnovení přístupu.'), $email), self::FLASH_SUCCESS);
             $connection->commit();
             $this->redirect('login');
-        } catch (AuthenticationException $e) {
-            $this->flashMessage($e->getMessage(), self::FLASH_ERROR);
+        } catch (AuthenticationException $exception) {
+            $this->flashMessage($exception->getMessage(), self::FLASH_ERROR);
             $connection->rollBack();
-        } catch (RecoveryException $e) {
-            $this->flashMessage($e->getMessage(), self::FLASH_ERROR);
+        } catch (RecoveryException $exception) {
+            $this->flashMessage($exception->getMessage(), self::FLASH_ERROR);
             $connection->rollBack();
-        } catch (SendFailedException $e) {
+        } catch (SendFailedException $exception) {
             $connection->rollBack();
-            $this->flashMessage($e->getMessage(), self::FLASH_ERROR);
+            $this->flashMessage($exception->getMessage(), self::FLASH_ERROR);
         }
     }
 
+    /**
+     * @param null $login
+     * @throws \Nette\Application\AbortException
+     */
+    /**
+     * @param null $login
+     * @throws \Nette\Application\AbortException
+     */
     private function loginBackLinkRedirect($login = null) {
         if (!$this->backlink) {
             return;
@@ -305,13 +407,17 @@ final class AuthenticationPresenter extends BasePresenter {
         }
     }
 
-    private function initialRedirect(ModelLogin $login) {
-        if (count($login->getActiveOrgs($this->yearCalculator)) > 0) {
-            $this->redirect(':Org:Dashboard:', [self::PARAM_DISPATCH => 1]);
-        } else {
-            $this->redirect(':Public:Dashboard:', [self::PARAM_DISPATCH => 1]);
+    /**
+     * @throws \Nette\Application\AbortException
+     */
+    private function initialRedirect() {
+        if ($this->backlink) {
+            $this->restoreRequest($this->backlink);
         }
-        // or else redirect to page suggesting registration
+        $this->redirect(':Dispatch:');
     }
 
+    public function renderLogin() {
+        $this->template->login = $this->login;
+    }
 }

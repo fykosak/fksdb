@@ -4,19 +4,21 @@ namespace OrgModule;
 
 use Events\Model\ApplicationHandlerFactory;
 use Events\Model\Grid\SingleEventSource;
-use FKS\Config\NeonScheme;
-use FKS\Logging\MemoryLogger;
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Events\ApplicationsGrid;
 use FKSDB\Components\Events\ExpressionPrinter;
 use FKSDB\Components\Events\GraphComponent;
 use FKSDB\Components\Events\ImportComponent;
 use FKSDB\Components\Forms\Factories\EventFactory;
-use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
 use FKSDB\Components\Grids\Events\EventsGrid;
 use FKSDB\Components\Grids\Events\LayoutResolver;
+use FKSDB\Config\NeonScheme;
+use FKSDB\Logging\FlashDumpFactory;
+use FKSDB\Logging\MemoryLogger;
+use FKSDB\ORM\IModel;
+use FKSDB\ORM\Services\ServiceAuthToken;
+use FKSDB\ORM\Services\ServiceEvent;
 use FormUtils;
-use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
-use Logging\FlashDumpFactory;
 use ModelException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -28,10 +30,6 @@ use Nette\NotImplementedException;
 use Nette\Utils\Html;
 use Nette\Utils\Neon;
 use Nette\Utils\NeonException;
-use ORM\IModel;
-use ServiceEvent;
-use ServiceEventOrg;
-use SystemContainer;
 use Utils;
 
 
@@ -47,7 +45,7 @@ class EventPresenter extends EntityPresenter {
     protected $modelResourceId = 'event';
 
     /**
-     * @var ServiceEvent
+     * @var \FKSDB\ORM\Services\ServiceEvent
      */
     private $serviceEvent;
 
@@ -57,18 +55,13 @@ class EventPresenter extends EntityPresenter {
     private $eventFactory;
 
     /**
-     * @var \ServicePerson
-     */
-    private $servicePerson;
-
-    /**
      *
      * @var LayoutResolver
      */
     private $layoutResolver;
 
     /**
-     * @var SystemContainer
+     * @var Container
      */
     private $container;
 
@@ -88,56 +81,71 @@ class EventPresenter extends EntityPresenter {
     private $flashDumpFactory;
 
     /**
-     * @var ReferencedPersonFactory
+     * @var \FKSDB\ORM\Services\ServiceAuthToken $serviceAuthToken
      */
-    private $referencedPersonFactory;
+    private $serviceAuthToken;
+
     /**
-     * @var ServiceEventOrg
+     * @param ServiceAuthToken $serviceAuthToken
      */
-    private $serviceEventOrg;
-
-
-    public function injectServicePerson(\ServicePerson $servicePerson) {
-        $this->servicePerson = $servicePerson;
+    public function injectServiceAuthToken(ServiceAuthToken $serviceAuthToken) {
+        $this->serviceAuthToken = $serviceAuthToken;
     }
 
 
+    /**
+     * @param \FKSDB\ORM\Services\ServiceEvent $serviceEvent
+     */
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;
     }
 
+    /**
+     * @param EventFactory $eventFactory
+     */
     public function injectEventFactory(EventFactory $eventFactory) {
         $this->eventFactory = $eventFactory;
     }
 
+    /**
+     * @param LayoutResolver $layoutResolver
+     */
     public function injectLayoutResolver(LayoutResolver $layoutResolver) {
         $this->layoutResolver = $layoutResolver;
     }
 
-    public function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory) {
-        $this->referencedPersonFactory = $referencedPersonFactory;
-    }
-
+    /**
+     * @param Container $container
+     */
     public function injectContainer(Container $container) {
         $this->container = $container;
     }
 
+    /**
+     * @param ExpressionPrinter $expressionPrinter
+     */
     public function injectExpressionPrinter(ExpressionPrinter $expressionPrinter) {
         $this->expressionPrinter = $expressionPrinter;
     }
 
+    /**
+     * @param ApplicationHandlerFactory $handlerFactory
+     */
     public function injectHandlerFactory(ApplicationHandlerFactory $handlerFactory) {
         $this->handlerFactory = $handlerFactory;
     }
 
+    /**
+     * @param FlashDumpFactory $flashDumpFactory
+     */
     public function injectFlashDumpFactory(FlashDumpFactory $flashDumpFactory) {
         $this->flashDumpFactory = $flashDumpFactory;
     }
 
-    public function injectServiceEventOrg(ServiceEventOrg $serviceEventOrg) {
-        $this->serviceEventOrg = $serviceEventOrg;
-    }
-
+    /**
+     * @param $id
+     * @throws BadRequestException
+     */
     public function authorizedApplications($id) {
         $model = $this->getModel();
         if (!$model) {
@@ -147,80 +155,91 @@ class EventPresenter extends EntityPresenter {
             ->isAllowed($model, 'application', $this->getSelectedContest()));
     }
 
-    public function authorizedModel($id) {
-        $model = $this->getModel();
-        if (!$model) {
-            throw new BadRequestException('Neexistující model.', 404);
-        }
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($model, 'edit', $this->getSelectedContest()));
-    }
-
-    public function actionModel($id) {
-
-    }
-
     public function titleList() {
         $this->setTitle(_('Akce'));
+        $this->setIcon('fa fa-calendar-check-o');
     }
 
     public function titleCreate() {
         $this->setTitle(_('Přidat akci'));
+        $this->setIcon('fa fa-calendar-plus-o');
     }
 
-    public function titleEdit($id) {
+    public function titleEdit() {
         $model = $this->getModel();
         $this->setTitle(sprintf(_('Úprava akce %s'), $model->name));
+        $this->setIcon('fa fa-pencil');
     }
 
-    public function titleApplications($id) {
+    public function titleApplications() {
         $model = $this->getModel();
         $this->setTitle(sprintf(_('Přihlášky akce %s'), $model->name));
+        $this->setIcon('fa fa-calendar-check-o');
     }
 
-    public function titleModel($id) {
+    public function titleModel() {
         $model = $this->getModel();
         $this->setTitle(sprintf(_('Model akce %s'), $model->name));
+        $this->setIcon('fa fa-cubes');
     }
 
-    public function actionDelete($id) {
+    public function actionDelete() {
 // There's no use case for this. (Errors must be deleted manually via SQL.)
-        throw new NotImplementedException();
+        throw new NotImplementedException(null, 501);
     }
 
+    /**
+     * @param $id
+     */
     public function renderApplications($id) {
         $this->template->event = $this->getModel();
     }
 
+    /**
+     * @param $name
+     * @return FormControl|mixed
+     * @throws BadRequestException
+     */
     protected function createComponentCreateComponent($name) {
-        $form = $this->createForm();
+        $control = $this->createForm();
+        $form = $control->getForm();
 
         $form->addSubmit('send', _('Přidat'));
-        $that = $this;
-        $form->onSuccess[] = function (Form $form) use ($that) {
-            $that->handleFormSuccess($form, true);
+        $form->onSuccess[] = function (Form $form) {
+            $this->handleFormSuccess($form, true);
         };
 
-        return $form;
+        return $control;
     }
 
+    /**
+     * @param $name
+     * @return FormControl|mixed
+     * @throws BadRequestException
+     */
     protected function createComponentEditComponent($name) {
-        $form = $this->createForm();
-
+        $control = $this->createForm();
+        $form = $control->getForm();
         $form->addSubmit('send', _('Uložit'));
-        $that = $this;
-        $form->onSuccess[] = function (Form $form) use ($that) {
-            $that->handleFormSuccess($form, false);
+        $form->onSuccess[] = function (Form $form) {
+            $this->handleFormSuccess($form, false);
         };
 
-        return $form;
+        return $control;
     }
 
+    /**
+     * @param $name
+     * @return EventsGrid|mixed
+     */
     protected function createComponentGrid($name) {
-        $grid = new EventsGrid($this->serviceEvent);
-
-        return $grid;
+        return new EventsGrid($this->serviceEvent);
     }
 
+    /**
+     * @param $name
+     * @return ApplicationsGrid
+     */
     protected function createComponentApplicationsGrid($name) {
         $source = new SingleEventSource($this->getModel(), $this->container);
         $source->order('created');
@@ -234,6 +253,10 @@ class EventPresenter extends EntityPresenter {
         return $grid;
     }
 
+    /**
+     * @param $name
+     * @return ImportComponent
+     */
     protected function createComponentApplicationsImport($name) {
         $source = new SingleEventSource($this->getModel(), $this->container);
         $logger = new MemoryLogger(); //TODO log to file?
@@ -245,6 +268,10 @@ class EventPresenter extends EntityPresenter {
         return $component;
     }
 
+    /**
+     * @param $name
+     * @return GraphComponent
+     */
     protected function createComponentGraphComponent($name) {
         $event = $this->getModel();
         $machine = $this->container->createEventMachine($event);
@@ -253,9 +280,13 @@ class EventPresenter extends EntityPresenter {
         return $component;
     }
 
+    /**
+     * @return FormControl
+     * @throws BadRequestException
+     */
     private function createForm() {
-        $form = new Form();
-        $form->setRenderer(new BootstrapRenderer());
+        $control = new FormControl();
+        $form = $control->getForm();
 
         $eventContainer = $this->eventFactory->createEvent($this->getSelectedContest());
         $form->addComponent($eventContainer, self::CONT_EVENT);
@@ -271,21 +302,25 @@ class EventPresenter extends EntityPresenter {
                     if ($parameters) {
                         $parameters = Neon::decode($parameters);
                     } else {
-                        $parameters = array();
+                        $parameters = [];
                     }
 
                     NeonScheme::readSection($parameters, $scheme);
                     return true;
-                } catch (NeonException $e) {
-                    $control->addError($e->getMessage());
+                } catch (NeonException $exception) {
+                    $control->addError($exception->getMessage());
                     return false;
                 }
             }, _('Parametry nesplňují Neon schéma'));
         }
 
-        return $form;
+        return $control;
     }
 
+    /**
+     * @param $scheme
+     * @return Html
+     */
     private function createParamDescription($scheme) {
         $result = Html::el('ul');
         foreach ($scheme as $key => $meta) {
@@ -302,6 +337,10 @@ class EventPresenter extends EntityPresenter {
         return $result;
     }
 
+    /**
+     * @param IModel|null $model
+     * @param Form $form
+     */
     protected function setDefaults(IModel $model = null, Form $form) {
         if (!$model) {
             return;
@@ -312,12 +351,20 @@ class EventPresenter extends EntityPresenter {
         $form->setDefaults($defaults);
     }
 
+    /**
+     * @param $id
+     * @return \FKSDB\ORM\AbstractModelSingle|\Nette\Database\Table\ActiveRow|null
+     */
     protected function loadModel($id) {
         return $this->serviceEvent->findByPrimary($id);
     }
 
     /**
      * @param Form $form
+     * @param $isNew
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     * @throws \ReflectionException
      */
     private function handleFormSuccess(Form $form, $isNew) {
         $connection = $this->serviceEvent->getConnection();
@@ -349,6 +396,13 @@ class EventPresenter extends EntityPresenter {
 
             $this->serviceEvent->save($model);
 
+            // update also 'until' of authTokens in case that registration end has changed
+            $tokenData = ["until" => $model->registration_end ?: $model->end];
+            foreach ($this->serviceAuthToken->findTokensByEventId($model->id) as $token) {
+                $this->serviceAuthToken->updateModel($token, $tokenData);
+                $this->serviceAuthToken->save($token);
+            }
+
             /*
              * Finalize
              */
@@ -357,13 +411,13 @@ class EventPresenter extends EntityPresenter {
             }
 
             $this->flashMessage(sprintf(_('Akce %s uložena.'), $model->name), self::FLASH_SUCCESS);
-            $this->backlinkRedirect();
+            $this->backLinkRedirect();
             $this->redirect('list'); // if there's no backlink
-        } catch (ModelException $e) {
+        } catch (ModelException $exception) {
             $connection->rollBack();
-            Debugger::log($e, Debugger::ERROR);
+            Debugger::log($exception, Debugger::ERROR);
             $this->flashMessage(_('Chyba přidání akce.'), self::FLASH_ERROR);
-        } catch (ForbiddenRequestException $e) {
+        } catch (ForbiddenRequestException $exception) {
             $connection->rollBack();
             $this->flashMessage(_('Nedostatečné oprávnění.'), self::FLASH_ERROR);
         }

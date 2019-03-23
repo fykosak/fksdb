@@ -9,37 +9,68 @@ navigation:
         vyfuk:
             title: Web Výfuku
             link: http://vyfuk.mff.cuni.cz/
+            icon: 'fa fa-external-link'
         fykos:
             title: Web FYKOSu
             link: http://%domain.cz%/
+            icon: 'fa fa-external-link'
+        fyziklani:
+            title: Web Fyziklani
+            link: http://fyziklani.cz/
+            icon: 'fa fa-external-link'
         public.submit.default:
             visible: true
 
     structure:
         org.dashboard.default:
+            - dispatch.default
             - org.inbox.default
             - org.inbox.handout
             - org.points.default
             - org.tasks.import
             - org.contestant.list
             - org.school.list
+            - org.teacher.list
             - org.export.list
             - org.org.list
             - org.event.list
             - org.deduplicate.person
             - org.stalking.default
         public.dashboard.default:
+            - dispatch.default
             - public.submit.default
             - public.application.list
             - fykos
             - vyfuk
+            - fyziklani
         fyziklani.dashboard.default:
             - fyziklani.submit.entry
-            - fyziklani.submit.table
-            - fyziklani.close.table
+            - fyziklani.submit.list
+            - fyziklani.close.list
             - fyziklani.results.default
-            - fyziklani.task.table
+            - fyziklani.task.list
             - fyziklani.task.import
             - fyziklani.rooms.default
+            - fyziklani.gameSetup.default
 
-
+        fyziklani.rooms.default:
+            - fyziklani.rooms.edit
+            - fyziklani.rooms.download
+        fyziklani.results.default:
+            - fyziklani.dashboard.default
+            - fyziklani.results.resultsFinal
+            - fyziklani.results.resultsPresentation
+            - fyziklani.results.resultsView
+            - fyziklani.results.teamStatistics
+            - fyziklani.results.taskStatistics
+            - fyziklani.results.correlationStatistics
+        event.dashboard.default:
+            - event.dispatch.default
+            - event.payment.list
+            - event.payment.create
+            - fyziklani.dashboard.default
+            - event.schedule.default
+            - event.schedule.groups
+            - event.accommodation.list
+            - event.model.default
+            - event.applicationsTimeProgress.default

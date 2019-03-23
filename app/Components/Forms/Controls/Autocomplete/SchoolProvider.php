@@ -2,15 +2,14 @@
 
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
-use FKS\Components\Forms\Controls\Autocomplete\IFilteredDataProvider;
-use ModelSchool;
+use FKSDB\ORM\Models\ModelSchool;
+use FKSDB\ORM\Services\ServiceSchool;
 use Nette\InvalidStateException;
 use Nette\NotImplementedException;
-use ServiceSchool;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class SchoolProvider implements IFilteredDataProvider {
@@ -25,18 +24,22 @@ class SchoolProvider implements IFilteredDataProvider {
     /**
      * School with school_id equal to defaulValue is suggested even when it's not
      * active.
-     * 
+     *
      * @var int
      */
     private $defaultValue;
 
+    /**
+     * SchoolProvider constructor.
+     * @param ServiceSchool $serviceSchool
+     */
     function __construct(ServiceSchool $serviceSchool) {
         $this->serviceSchool = $serviceSchool;
     }
 
     /**
      * Prefix search.
-     * 
+     *
      * @param string $search
      * @return array
      */
@@ -57,16 +60,20 @@ class SchoolProvider implements IFilteredDataProvider {
         $schools->order('name_abbrev');
 
         if (count($schools) > self::LIMIT) {
-            return array();
+            return [];
         }
 
-        $result = array();
+        $result = [];
         foreach ($schools as $school) {
             $result[] = $this->getItem($school);
         }
         return $result;
     }
 
+    /**
+     * @param mixed $id
+     * @return bool|mixed|\Nette\Database\Table\ActiveRow|\Nette\Database\Table\Selection|null
+     */
     public function getItemLabel($id) {
         $school = $this->serviceSchool->findByPrimary($id);
         if (!$school) {
@@ -75,17 +82,27 @@ class SchoolProvider implements IFilteredDataProvider {
         return $school->name_abbrev;
     }
 
+    /**
+     * @return array|void
+     */
     public function getItems() {
         throw new NotImplementedException();
     }
 
+    /**
+     * @param ModelSchool $school
+     * @return array
+     */
     private function getItem(ModelSchool $school) {
-        return array(
+        return [
             self::LABEL => $school->name_abbrev,
             self::VALUE => $school->school_id,
-        );
+        ];
     }
 
+    /**
+     * @param $id
+     */
     public function setDefaultValue($id) {
         $this->defaultValue = $id;
     }

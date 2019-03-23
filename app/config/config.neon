@@ -24,7 +24,7 @@ parameters:
     contestMapping:
         1: fykos
         2: vyfuk
-    
+
     # Map: contest identifier => contest_id
     inverseContestMapping:
         fykos: 1
@@ -50,13 +50,13 @@ parameters:
             - %domain.org%
             - db.%domain.org%
             - vyfuk.%domain.org%
-        
+
         sso:
             # How ling is valid auth token when redirecting from authenticated domain
             # to unauthenticated one.
             tokenExpiration: '+1 minute'
 
-    
+
     # Settings for global session used for SSO (single sign on)
     globalSession:
         # How long inactivity is allowed until globalSession expires.
@@ -91,7 +91,7 @@ parameters:
                 name: name_en
 
         # Mapping of contribution types to comprising XML element (taken from Czech version only.)
-        # Contributions types must be ModelTaskContribution::TYPE_* constants.
+        # Contributions types must be FKSDB\ORM\Models\ModelTaskContribution::TYPE_* constants.
         contributionMapping:
             author: authors
             solution: solution-authors
@@ -103,7 +103,7 @@ parameters:
             1: [8,9,1,2,3,4]
             # Výfuk
             2: [6,7,8,9]
-        
+
         # Paths for search of XML files, including trailing slash.
         # Arguments: contestName, year, series
         paths:
@@ -119,7 +119,7 @@ parameters:
         # Paths to CSV file with team distribution to rooms
         # Arguments: contestName, year
         roomsPath: '/%1$s%2$d/fyziklani/out/teams.csv'
-    
+
     # Various e-mail invitations
     invitation:
         # How long (relatively) is authentication token valid after invitation.
@@ -143,7 +143,7 @@ parameters:
 
         # default language when not set explicitly
         defaultLanguage: cs
-    
+
     # Events
     events:
         # where locale files are stored
@@ -169,10 +169,10 @@ parameters:
 
     # Maintenance
     updater:
-		# absolute path to install script
+        # absolute path to install script
         installScript: %appDir%/../install.sh
 
-		# system user who should run the install script
+        # system user who should run the install script
         installUser: fksdb-updater
 
 

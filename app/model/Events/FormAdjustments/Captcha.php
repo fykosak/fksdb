@@ -5,7 +5,7 @@ namespace Events\FormAdjustments;
 use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
 use Events\Model\Holder\Holder;
-use FKS\Components\Forms\Controls\CaptchaBox;
+use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FormUtils;
 use Nette\Forms\Form;
 use Nette\Object;
@@ -14,7 +14,7 @@ use Nette\Security\User;
 /**
  * Creates required checkbox for whole application and then
  * sets agreed bit in all person_info containers found (even for editations).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class Captcha extends Object implements IFormAdjustment {
@@ -26,11 +26,20 @@ class Captcha extends Object implements IFormAdjustment {
      */
     private $user;
 
+    /**
+     * Captcha constructor.
+     * @param User $user
+     */
     function __construct(User $user) {
         $this->user = $user;
     }
 
-        public function adjust(Form $form, Machine $machine, Holder $holder) {
+    /**
+     * @param Form $form
+     * @param Machine $machine
+     * @param Holder $holder
+     */
+    public function adjust(Form $form, Machine $machine, Holder $holder) {
         if ($machine->getPrimaryMachine()->getState() != BaseMachine::STATE_INIT || $this->user->isLoggedIn()) {
             return;
         }

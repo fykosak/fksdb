@@ -2,24 +2,22 @@
 
 namespace Authentication\SSO;
 
-use FKS\Authentication\SSO\IGlobalSession;
-use FKS\Authentication\SSO\IGSIDHolder;
-use ModelGlobalSession;
+use FKSDB\Authentication\SSO\IGlobalSession;
+use FKSDB\Authentication\SSO\IGSIDHolder;
+use FKSDB\ORM\Services\ServiceGlobalSession;
 use Nette\DateTime;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
-use Nette\NotImplementedException;
-use ServiceGlobalSession;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class GlobalSession implements IGlobalSession {
 
     /**
-     * @var ServiceGlobalSession
+     * @var \FKSDB\ORM\Services\ServiceGlobalSession
      */
     private $serviceGlobalSession;
 
@@ -29,7 +27,7 @@ class GlobalSession implements IGlobalSession {
     private $gsidHolder;
 
     /**
-     * @var ModelGlobalSession|null
+     * @var \FKSDB\ORM\Models\ModelGlobalSession|null
      */
     private $globalSession;
 
@@ -43,14 +41,23 @@ class GlobalSession implements IGlobalSession {
      */
     private $started = false;
 
+    /**
+     * GlobalSession constructor.
+     * @param $expiration
+     * @param \FKSDB\ORM\Services\ServiceGlobalSession $serviceGlobalSession
+     * @param IGSIDHolder $gsidHolder
+     */
     function __construct($expiration, ServiceGlobalSession $serviceGlobalSession, IGSIDHolder $gsidHolder) {
         $this->expiration = $expiration;
         $this->serviceGlobalSession = $serviceGlobalSession;
         $this->gsidHolder = $gsidHolder;
     }
 
+    /**
+     * @param null $sessionId
+     */
     public function start($sessionId = null) {
-        $sessionId = $sessionId ? : $this->gsidHolder->getGSID();
+        $sessionId = $sessionId ?: $this->gsidHolder->getGSID();
         if ($sessionId) {
             $this->globalSession = $this->serviceGlobalSession->findByPrimary($sessionId);
 
@@ -63,6 +70,9 @@ class GlobalSession implements IGlobalSession {
         $this->started = true;
     }
 
+    /**
+     * @return int|null|string
+     */
     public function getId() {
         if (!$this->started) {
             throw new InvalidStateException("Global session not started.");
@@ -77,7 +87,7 @@ class GlobalSession implements IGlobalSession {
              */
             // This must pass silently...
             // throw new NotImplementedException();
-            // user_error("Cannot get session ID of session without data. Return null.", E_USER_NOTICE);            
+            // user_error("Cannot get session ID of session without data. Return null.", E_USER_NOTICE);
             return null;
         }
     }
@@ -94,16 +104,24 @@ class GlobalSession implements IGlobalSession {
         $this->gsidHolder->setGSID(null);
     }
 
+    /**
+     * @param mixed $offset
+     * @return bool
+     */
     public function offsetExists($offset) {
         if (!$this->started) {
             throw new InvalidStateException("Global session not started.");
         }
         if ($offset == self::UID) {
-            return (bool) $this->globalSession;
+            return (bool)$this->globalSession;
         }
         return false;
     }
 
+    /**
+     * @param mixed $offset
+     * @return bool|int|mixed
+     */
     public function offsetGet($offset) {
         if (!$this->started) {
             throw new InvalidStateException("Global session not started.");
@@ -118,6 +136,10 @@ class GlobalSession implements IGlobalSession {
         }
     }
 
+    /**
+     * @param mixed $offset
+     * @param mixed $value
+     */
     public function offsetSet($offset, $value) {
         if (!$this->started) {
             throw new InvalidStateException("Global session not started.");
@@ -139,6 +161,9 @@ class GlobalSession implements IGlobalSession {
         }
     }
 
+    /**
+     * @param $offset
+     */
     public function offsetUnset($offset) {
         if (!$this->started) {
             throw new InvalidStateException("Global session not started.");

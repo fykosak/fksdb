@@ -2,25 +2,29 @@
 
 namespace FKSDB\Components\Controls\Stalking;
 
-use Nette\Application\UI\Control;
-
-class EventParticipant extends Control {
-    private $mode;
-    /**
-     * @var \ModelPerson;
-     */
-    private $modelPerson;
-
-    public function __construct(\ModelPerson $modelPerson, $mode = null) {
-        parent::__construct();
-        $this->mode = $mode;
-        $this->modelPerson = $modelPerson;
-    }
+/**
+ * Class EventParticipant
+ * @package FKSDB\Components\Controls\Stalking
+ */
+class EventParticipant extends StalkingComponent {
 
     public function render() {
-        $template = $this->template;
+        $this->beforeRender();
         $this->template->participants = $this->modelPerson->getEventParticipant();
-        $template->setFile(__DIR__ . '/EventParticipant.latte');
-        $template->render();
+        $this->template->setFile(__DIR__ . '/EventParticipant.latte');
+        $this->template->render();
+    }
+    /**
+     * @return string
+     */
+    protected function getHeadline(): string {
+        return _('Event participant');
+    }
+
+    /**
+     * @return string[]
+     */
+    protected function getAllowedPermissions(): array {
+        return [StalkingComponent::PERMISSION_BASIC, StalkingComponent::PERMISSION_RESTRICT, StalkingComponent::PERMISSION_FULL];
     }
 }

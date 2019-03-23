@@ -6,11 +6,12 @@ use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
 use Events\Model\Holder\BaseHolder;
 use Events\Model\Holder\Holder;
+use Nette\Database\Table\GroupedSelection;
 use Nette\Forms\Form;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ResourceAvailability extends AbstractAdjustment {
@@ -28,6 +29,9 @@ class ResourceAvailability extends AbstractAdjustment {
     private $excludeStates;
     private $message;
 
+    /**
+     * @param $fields
+     */
     private function setFields($fields) {
         if (!is_array($fields)) {
             $fields = array($fields);
@@ -36,7 +40,7 @@ class ResourceAvailability extends AbstractAdjustment {
     }
 
     /**
-     * 
+     *
      * @param array|string $fields Fields that contain amount of the resource
      * @param string $paramCapacity Name of the parameter with overall capacity.
      * @param string $message String '%avail' will be substitued for the actual amount of available resource.
@@ -51,6 +55,11 @@ class ResourceAvailability extends AbstractAdjustment {
         $this->excludeStates = $excludeStates;
     }
 
+    /**
+     * @param Form $form
+     * @param Machine $machine
+     * @param Holder $holder
+     */
     protected function _adjust(Form $form, Machine $machine, Holder $holder) {
         $groups = $holder->getGroupedSecondaryHolders();
         $groups[] = array(
@@ -58,11 +67,15 @@ class ResourceAvailability extends AbstractAdjustment {
             'holders' => array($holder->getPrimaryHolder()),
         );
 
-        $services = array();
-        $controls = array();
+        $services = [];
+        $controls = [];
+
         foreach ($groups as $group) {
-            $holders = array();
+            $holders = [];
             $field = null;
+            /**
+             * @var BaseHolder $baseHolder
+             */
             foreach ($group['holders'] as $baseHolder) {
                 $name = $baseHolder->getName();
                 foreach ($this->fields as $fieldMask) {
@@ -92,8 +105,14 @@ class ResourceAvailability extends AbstractAdjustment {
 
         $usage = 0;
         foreach ($services as $serviceData) {
+            /**
+             * @var BaseHolder $firstHolder
+             */
             $firstHolder = reset($serviceData['holders']);
             $event = $firstHolder->getEvent();
+            /**
+             * @var GroupedSelection $table
+             */
             $table = $serviceData['service']->getTable();
             $table->where($firstHolder->getEventId(), $event->getPrimary());
             if ($this->includeStates !== BaseMachine::STATE_ANY) {

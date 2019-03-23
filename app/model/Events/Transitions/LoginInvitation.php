@@ -5,16 +5,15 @@ namespace Events\Transitions;
 use Authentication\AccountManager;
 use Events\Machine\Transition;
 use Events\Model\Holder\BaseHolder;
+use FKSDB\ORM\Services\ServicePerson;
 use Mail\MailTemplateFactory;
-use Nette\Diagnostics\Debugger;
 use Nette\Object;
-use ServicePerson;
 
 /**
  * Sends email notification of account creation
  * to the person that is found as the primary of the application that is
  * experienced the transition.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class LoginInvitation extends Object {
@@ -34,16 +33,28 @@ class LoginInvitation extends Object {
      */
     private $servicePerson;
 
+    /**
+     * LoginInvitation constructor.
+     * @param MailTemplateFactory $mailTemplateFactory
+     * @param AccountManager $accountManager
+     * @param ServicePerson $servicePerson
+     */
     function __construct(MailTemplateFactory $mailTemplateFactory, AccountManager $accountManager, ServicePerson $servicePerson) {
         $this->mailTemplateFactory = $mailTemplateFactory;
         $this->accountManager = $accountManager;
         $this->servicePerson = $servicePerson;
     }
 
+    /**
+     * @param Transition $transition
+     */
     public function __invoke(Transition $transition) {
         $this->send($transition);
     }
 
+    /**
+     * @param Transition $transition
+     */
     private function send(Transition $transition) {
         $baseHolder = $transition->getBaseHolder();
         $person = $this->getPerson($baseHolder);
@@ -65,6 +76,10 @@ class LoginInvitation extends Object {
         }
     }
 
+    /**
+     * @param BaseHolder $baseHolder
+     * @return \Nette\Database\Table\ActiveRow|null
+     */
     private function getPerson(BaseHolder $baseHolder) {
         return $this->servicePerson->findByPrimary($baseHolder->getPersonId());
     }

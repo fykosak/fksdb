@@ -1,12 +1,10 @@
-<div class="card mb-3 border-primary">
-    <h4 class="card-header bg-primary text-white">Login info</h4>
-
-
+{layout './@layout.latte'}
+{block content}
     {if !is_null($login)}
         <ul class="list-group list-group-flush">
             <li class="list-group-item">
                 <div class="row">
-                    <span class="col-5">Login</span>
+                    <span class="col-5">{_'Login'}</span>
                     <div class="col-7">
                         {$login->login}
                     </div>
@@ -15,7 +13,7 @@
             <li class="list-group-item">
 
                 <div class="row">
-                    <span class="col-5">Login_id</span>
+                    <span class="col-5"><b>{_'Login Id'}</b></span>
                     <div class="col-7">
                         {$login->login_id}
                     </div>
@@ -23,19 +21,19 @@
             </li>
             <li class="list-group-item">
                 <div class="row">
-                    <span class="col-5">Password</span>
+                    <span class="col-5">{_'Password'}</span>
                     <div class="col-7">
                         {if (is_null($login->hash))}
-                            <span class="badge badge-danger">not set</span>
+                            {control notSet}
                         {else}
-                            <span class="badge badge-success">is set</span>
+                            <span class="badge badge-success">{_'is set'}</span>
                         {/if}
                     </div>
                 </div>
             </li>
             <li class="list-group-item">
                 <div class="row">
-                    <span class="col-5">Last logged</span>
+                    <span class="col-5">{_'Last logged'}</span>
                     <div class="col-7">
                         {if is_null($login->last_login)}
                             <span class="badge badge-danger">never</span>
@@ -48,9 +46,7 @@
         </ul>
     {else}
         <div class="card-body">
-            <span class="badge badge-warning">No records</span>
+            {control noRecords}
         </div>
     {/if}
-
-
-</div>
+{/block}

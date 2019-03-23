@@ -1,0 +1,77 @@
+<div id="routingDownload" data-teams="{json_encode($teams)}" data-rooms="{json_encode($rooms)}">
+    <h2>{_'Rooms'}</h2>
+    <table class="table table-hover table-striped">
+        <thead>
+        <tr>
+            <th>{_'room'}</th>
+            <th>{_'actions'}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {foreach $rooms as $room}
+            <tr>
+                <td>{$room['name']}</td>
+                <td>
+                    <button data-act="open"
+                            data-roomId="{$room['roomId']}"
+                            class="btn btn-primary"
+                            disabled="disabled">Open
+                    </button>
+                    <button data-act="download"
+                            data-roomId="{$room['roomId']}"
+                            class="btn btn-secondary"
+                            disabled="disabled">
+                        Download
+                    </button>
+                    <button data-act="print"
+                            data-roomId="{$room['roomId']}"
+                            class="btn btn-secondary"
+                            disabled="disabled">Print
+                    </button>
+                </td>
+            </tr>
+        {/foreach}
+
+        </tbody>
+    </table>
+    <h2>{_'Buildings'}</h2>
+    <table class="table table-hover table-striped">
+        <thead>
+        <tr>
+            <th>{_'building'}</th>
+            <th>{_'actions'}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {foreach $buildings as $building}
+            <tr>
+                <td>{$building}</td>
+                <td>
+                    <button data-act="open"
+                            data-type="building"
+                            data-building="{$building}"
+                            class="btn btn-primary"
+                            disabled="disabled">Open
+                    </button>
+                    <button data-act="download"
+                            data-type="building"
+                            data-building="{$building}"
+                            class="btn btn-secondary"
+                            disabled="disabled">
+                        Download
+                    </button>
+                    <button data-act="print"
+                            data-type="building"
+                            data-building="{$building}"
+                            class="btn btn-secondary"
+                            disabled="disabled">Print
+                    </button>
+                </td>
+            </tr>
+        {/foreach}
+
+        </tbody>
+    </table>
+
+</div>
+

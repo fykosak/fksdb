@@ -2,8 +2,8 @@
 
 namespace ORM\ModelsMulti\Events;
 
-use AbstractModelMulti;
-use Nette\InvalidStateException;
+use FKSDB\ORM\AbstractModelMulti;
+
 
 /**
  *
@@ -11,6 +11,9 @@ use Nette\InvalidStateException;
  */
 class ModelMTsafParticipant extends AbstractModelMulti {
 
+    /**
+     * @return mixed
+     */
     public function __toString() {
         if (!$this->getMainModel()->getPerson()) {
             trigger_error("Missing person in '" . $this->getMainModel() . "'.");

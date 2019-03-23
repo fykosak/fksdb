@@ -6,9 +6,9 @@ addons:
   - auth.fykos.local
 
 php:
-  - 5.6
   - 7.0
-  
+  - 7.1
+
 services:
   - mysql
 

@@ -1,0 +1,6 @@
+src/**/*.js
+src/**/*.jsx
+
+dist/*
+!dist/bundle.min.js
+node_modules
