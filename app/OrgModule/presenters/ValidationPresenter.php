@@ -33,11 +33,40 @@ class ValidationPresenter extends BasePresenter {
     }
 
     public function titleDefault() {
-        $this->setTitle('Validačné testy');
+        $this->setIcon('fa fa-check');
+        $this->setTitle('Validation tests');
+    }
+
+    public function titleList() {
+        $this->setIcon('fa fa-check');
+        $this->setTitle('All test');
     }
 
     public function titlePreview() {
-        $this->setTitle('Validačné testy');
+        $this->setIcon('fa fa-check');
+        $this->setTitle('Select test');
+    }
+
+    /**
+     * @throws \Nette\Application\BadRequestException
+     */
+    public function authorizedDefault() {
+        $this->setAuthorized(
+            $this->getContestAuthorizator()->isAllowed('person', 'validation', $this->getSelectedContest()));
+    }
+
+    /**
+     * @throws \Nette\Application\BadRequestException
+     */
+    public function authorizedList() {
+        return $this->authorizedDefault();
+    }
+
+    /**
+     * @throws \Nette\Application\BadRequestException
+     */
+    public function authorizedPreview() {
+        return $this->authorizedDefault();
     }
 
     /**
