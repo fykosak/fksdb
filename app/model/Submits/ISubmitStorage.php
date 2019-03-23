@@ -1,6 +1,6 @@
 <?php
 
-namespace Submits;
+namespace FKSDB\Submits;
 
 use FKSDB\ORM\Models\ModelSubmit;
 
@@ -22,7 +22,7 @@ interface ISubmitStorage {
     public function beginTransaction();
 
     /**
-     * @throws SubmitStorageException for unsuccessful commit
+     * @throws SubmitStorageExceptio for unsuccessful commit
      * @return void
      */
     public function commit();
@@ -33,7 +33,7 @@ interface ISubmitStorage {
     public function rollback();
 
     /**
-     * @param \Submits\IStorageProcessing $processing
+     * @param \FKSDB\Submits\IStorageProcessing $processing
      * @return void
      */
     public function addProcessing(IStorageProcessing $processing);

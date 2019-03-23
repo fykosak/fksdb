@@ -16,11 +16,11 @@ use FKSDB\ORM\Services\ServiceContestant;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\ORM\Services\ServiceTaskContribution;
+use FKSDB\Submits\ISubmitStorage;
+use FKSDB\Submits\SeriesTable;
 use Nette\Application\UI\Form;
 use Nette\Caching\Cache;
 use Nette\Security\Permission;
-use Submits\ISubmitStorage;
-use Submits\SeriesTable;
 
 /**
  * Class InboxPresenter
@@ -103,7 +103,7 @@ class InboxPresenter extends SeriesPresenter {
     }
 
     /**
-     * @param SeriesTable $seriesTable
+     * @param \FKSDB\Submits\SeriesTable $seriesTable
      */
     public function injectSeriesTable(SeriesTable $seriesTable) {
         $this->seriesTable = $seriesTable;

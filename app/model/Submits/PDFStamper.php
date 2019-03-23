@@ -1,6 +1,6 @@
 <?php
 
-namespace Submits;
+namespace FKSDB\Submits;
 
 use fks_pdf_parser_exception;
 use FKSDB\ORM\Models\ModelSubmit;
