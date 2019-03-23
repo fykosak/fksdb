@@ -2,10 +2,10 @@
 
 namespace FKSDB\ValidationTest;
 
-use ModelEventParticipant;
-use ModelPerson;
-use Nette\Application\UI\Control;
-use ParticipantsDurationComponent;
+
+use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Models\ModelEventParticipant;
+use FKSDB\ORM\Models\ModelPerson;
 
 /**
  * Class ParticipantsDurationTest
@@ -13,29 +13,40 @@ use ParticipantsDurationComponent;
  */
 class ParticipantsDurationTest extends ValidationTest {
 
-    private $log = [];
 
     /**
      * @param ModelPerson $person
-     * @return string|void
+     * @return ValidationLog[]
      */
-    public function run(ModelPerson $person) {
-        $max = null;
-        $min = null;
+    public static function run(ModelPerson $person): array {
+        // $max = null;
+        // $min = null;
+        $data = [];
+        $log = [];
         /**
-         * @var $eventParticipant ModelEventParticipant
+         * @var ModelContest[] $contests
          */
-        foreach ($person->getEventParticipant() as $eventParticipant) {
+        $contests = [];
+        foreach ($person->getEventParticipant() as $row) {
+            $model = ModelEventParticipant::createFromTableRow($row);
+            $event = $model->getEvent();
+            $contestId = $event->getEventType()->contest_id;
+            $year = $event->year;
+            if (!isset($data[$contestId])) {
+                $contests[$contestId] = ModelContest::createFromTableRow($event->getEventType()->contest);
+                $data[$contestId] = ['max' => null, 'min' => null];
+            }
 
-            $year = $eventParticipant->event->year;
-
-            $max = (is_null($max) || $max < $year) ? $year : $max;
-            $min = (is_null($min) || $min > $year) ? $year : $min;
+            $data[$contestId]['max'] = (is_null($data[$contestId]['max']) || $data[$contestId]['max'] < $year) ? $year : $data[$contestId]['max'];
+            $data[$contestId]['min'] = (is_null($data[$contestId]['min']) || $data[$contestId]['min'] > $year) ? $year : $data[$contestId]['min'];
         };
-        $delta = $max - $min;
+        foreach ($data as $key => $value) {
+            $delta = $value['max'] - $value['min'];
+            $log[] = new ValidationLog(\sprintf('Počet rokov zúčastnujucich sa na akciach seminaru %s je %d', $contests[$key]->name, $delta + 1),
+                ($delta < 4) ? 'success' : (($delta == 4) ? 'warning' : 'danger'));
 
-        $this->log[] = ['person' => $person, 'delta' => $delta, 'status' => ($delta < 4) ? 'success' : (($delta == 4) ? 'warning' : 'danger')];
-
+        }
+        return $log;
     }
 
     /**
@@ -52,12 +63,4 @@ class ParticipantsDurationTest extends ValidationTest {
         return _('účasť na akciach');
     }
 
-    /**
-     * @return Control
-     */
-    public function getComponent(): Control {
-        $component = new ParticipantsDurationComponent();
-        $component->setLog($this->log);
-        return $component;
-    }
 }

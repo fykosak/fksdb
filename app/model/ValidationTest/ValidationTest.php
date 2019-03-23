@@ -2,17 +2,18 @@
 
 namespace FKSDB\ValidationTest;
 
-use ModelPerson;
-use Nette\Application\UI\Control;
+
+use FKSDB\ORM\Models\ModelPerson;
 
 /**
  * Class ValidationTest
  */
 abstract class ValidationTest {
     /**
-     * @return string
+     * @param ModelPerson $person
+     * @return ValidationLog[]
      */
-    abstract function run(ModelPerson $person);
+    abstract static function run(ModelPerson $person): array;
 
     /**
      * @return string
@@ -24,9 +25,5 @@ abstract class ValidationTest {
      */
     abstract function getAction(): string;
 
-    /**
-     * @return Control
-     */
-    abstract function getComponent(): Control;
 
 }

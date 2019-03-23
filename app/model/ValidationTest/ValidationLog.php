@@ -22,7 +22,7 @@ class ValidationLog {
      * @param string $level
      * @param string $message
      */
-    public function __construct(string $level, string $message) {
+    public function __construct(string $message, string $level) {
         $this->level = $level;
         $this->message = $message;
     }
