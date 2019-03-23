@@ -2,14 +2,11 @@
 
 namespace FKSDB\ValidationTest\Tests;
 
-
-use FKSDB\Components\Grids\Validation\ValidationGrid;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ValidationTest\ValidationLog;
 use FKSDB\ValidationTest\ValidationTest;
-use Nette\Utils\Html;
 
 /**
  * Class ParticipantsDurationTest
@@ -23,8 +20,6 @@ class ParticipantsDuration extends ValidationTest {
      * @return ValidationLog[]
      */
     public static function run(ModelPerson $person): array {
-        // $max = null;
-        // $min = null;
         $data = [];
         $log = [];
         /**
@@ -45,9 +40,9 @@ class ParticipantsDuration extends ValidationTest {
             $data[$contestId]['min'] = (is_null($data[$contestId]['min']) || $data[$contestId]['min'] > $year) ? $year : $data[$contestId]['min'];
         };
         foreach ($data as $key => $value) {
-            $delta = $value['max'] - $value['min'];
-            $log[] = new ValidationLog(\sprintf('Počet rokov zúčastnujucich sa na akciach seminaru %s je %d', $contests[$key]->name, $delta + 1),
-                ($delta < 4) ? 'success' : (($delta == 4) ? 'warning' : 'danger'));
+            $delta = ($value['max'] - $value['min']) + 1;
+            $log[] = new ValidationLog(\sprintf('Person participate %d years in the events of contest %s', $delta, $contests[$key]->name),
+                ($delta < 5) ? self::LVL_SUCCESS : (($delta < 6) ? self::LVL_WARNING : self::LVL_DANGER));
 
         }
         return $log;
@@ -56,31 +51,14 @@ class ParticipantsDuration extends ValidationTest {
     /**
      * @return string
      */
-    public function getAction(): string {
-        return 'participantsDuration';
+    public static function getAction(): string {
+        return 'participants_duration';
     }
 
     /**
      * @return string
      */
-    public function getTitle(): string {
+    public static function getTitle(): string {
         return _('účasť na akciach');
     }
-
-    /**
-     * @param ValidationGrid $grid
-     * @throws \NiftyGrid\DuplicateColumnException
-     */
-    public static function configureGrid(ValidationGrid $grid) {
-        $grid->addColumn('participant_duration')->setRenderer(function ($row) {
-            $model = ModelPerson::createFromTableRow($row);
-            $logs = self::run($model);
-            $container = Html::el('span');
-            foreach ($logs as $log) {
-                $container->add(self::createHtml($log));
-            }
-            return $container;
-        });
-    }
-
 }

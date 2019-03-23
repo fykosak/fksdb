@@ -2,43 +2,37 @@
 
 namespace FKSDB\ValidationTest;
 
-
-use FKSDB\Components\Grids\Validation\ValidationGrid;
 use FKSDB\ORM\Models\ModelPerson;
-use Nette\Utils\Html;
 
 /**
  * Class ValidationTest
  */
 abstract class ValidationTest {
+    const LVL_DANGER = 'danger';
+    const LVL_SUCCESS = 'success';
+    const LVL_WARNING = 'warning';
+    const LVL_INFO = 'info';
+
+    /**
+     * @return array
+     */
+    public static function getAvailableLevels(): array {
+        return [self::LVL_DANGER, self::LVL_WARNING, self::LVL_SUCCESS, self::LVL_INFO];
+    }
+
     /**
      * @param ModelPerson $person
      * @return ValidationLog[]
      */
-    abstract static function run(ModelPerson $person): array;
+    abstract public static function run(ModelPerson $person): array;
 
     /**
      * @return string
      */
-    abstract function getTitle(): string;
+    abstract public static function getTitle(): string;
 
     /**
      * @return string
      */
-    abstract function getAction(): string;
-
-    /**
-     * @param ValidationGrid $grid
-     * @return void
-     */
-    abstract static function configureGrid(ValidationGrid $grid);
-
-    /**
-     * @param ValidationLog $log
-     * @return Html
-     */
-    protected static function createHtml(ValidationLog $log): Html {
-        return Html::el('span')->addAttributes(['class' => 'badge badge-' . $log->level])->add($log->message);
-
-    }
+    abstract public static function getAction(): string;
 }

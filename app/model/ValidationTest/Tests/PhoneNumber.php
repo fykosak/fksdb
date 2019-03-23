@@ -3,29 +3,29 @@
 namespace FKSDB\ValidationTest\Tests;
 
 use FKSDB\Components\Controls\PhoneNumber\PhoneNumberFactory;
-use FKSDB\Components\Grids\Validation\ValidationGrid;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ValidationTest\ValidationLog;
 use FKSDB\ValidationTest\ValidationTest;
-use Nette\NotImplementedException;
 
 /**
  * Class PhoneNumber
  * @package FKSDB\ValidationTest
  */
 class PhoneNumber extends ValidationTest {
+    private static $accessKeys = ['phone', 'phone_parent_d', 'phone_parent_m'];
+
     /**
      * @return string
      */
-    public function getTitle(): string {
+    public static function getTitle(): string {
         return _('Phone number');
     }
 
     /**
      * @return string
      */
-    public function getAction(): string {
-        throw new NotImplementedException();
+    public static function getAction(): string {
+        return 'phone_number';
     }
 
     /**
@@ -34,39 +34,12 @@ class PhoneNumber extends ValidationTest {
      */
     public static function run(ModelPerson $person): array {
         $log = [];
-        $info = $person->getInfo();
-        if (!$info) {
-            return [];
-        }
-        $keys = ['phone', 'phone_parent_d', 'phone_parent_m'];
-        foreach ($keys as $key) {
-            $value = $info->{$key};
-            if ($value) {
-                if (!PhoneNumberFactory::isValid($value)) {
-                    $log[] = new ValidationLog(\sprintf('%s %s is not valid', $key, $value), 'danger');
-                } else {
-                    $log[] = new ValidationLog(\sprintf('%s is valid', $key), 'success');
-                }
-            }
+        foreach (self::$accessKeys as $key) {
+            $log[] = self::validate($key, $person);
         }
         return $log;
     }
 
-    /**
-     * @param ValidationGrid $grid
-     * @throws \NiftyGrid\DuplicateColumnException
-     */
-    public static function configureGrid(ValidationGrid $grid) {
-        $keys = ['phone', 'phone_parent_d', 'phone_parent_m'];
-        foreach ($keys as $key) {
-            $grid->addColumn('phone_number__' . $key, \sprintf(_('Phone number test :: %s'), $key))->setRenderer(function ($row) use ($key) {
-                $person = ModelPerson::createFromTableRow($row);
-                $log = self::validate($key, $person);
-                return self::createHtml($log);
-            });
-        }
-
-    }
 
     /**
      * @param string $key
@@ -76,16 +49,16 @@ class PhoneNumber extends ValidationTest {
     private static function validate(string $key, ModelPerson $person): ValidationLog {
         $info = $person->getInfo();
         if (!$info) {
-            return new ValidationLog('Person info is not set', 'info');
+            return new ValidationLog('Person info is not set', self::LVL_INFO);
         }
         $value = $info->{$key};
         if (!$value) {
-            return new ValidationLog($key . ' info is not set', 'info');
+            return new ValidationLog(\sprintf('"%s" is not set', $key), self::LVL_INFO);
         }
         if (!PhoneNumberFactory::isValid($value)) {
-            return new ValidationLog(\sprintf('%s is not valid', $key), 'danger');
+            return new ValidationLog(\sprintf('"%s" number (%s) is not valid', $key, $value), self::LVL_DANGER);
         } else {
-            return new ValidationLog(\sprintf('%s is valid', $key), 'success');
+            return new ValidationLog(\sprintf('"%s" is valid', $key), self::LVL_SUCCESS);
         }
     }
 
