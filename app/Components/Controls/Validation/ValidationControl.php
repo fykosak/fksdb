@@ -137,13 +137,13 @@ class ValidationControl extends Control {
         foreach ($query as $row) {
 
             $model = ModelPerson::createFromTableRow($row);
-            $personLog = [];
+            $log = [];
             foreach ($this->tests as $test) {
-                $log = \array_filter($test->run($model), function (ValidationLog $simpleLog) {
-                    return \in_array($simpleLog->level, $this->levels);
-                });
-                $personLog = \array_merge($personLog, $log);
+                $log[] = $test->run($model);
             }
+            $personLog = \array_filter($log, function (ValidationLog $simpleLog) {
+                return \in_array($simpleLog->level, $this->levels);
+            });
             if (\count($personLog)) {
                 $logs[] = ['model' => $model, 'log' => $personLog];
             }
