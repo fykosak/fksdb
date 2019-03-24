@@ -22,34 +22,40 @@ use Nette\Templating\FileTemplate;
 class ValidationControl extends Control {
 
     /**
-     * @var ServicePerson
+     * @var int
+     * @persistent
      */
-    private $servicePerson;
+    public $startId = 0;
+    /**
+     * @var int
+     * @persistent
+     */
+    public $endId = 0;
+
     /**
      * @var ValidationTest[]
      * @persistent
      */
     public $tests = [];
-    /**
-     * @var array
-     */
-    private $availableTests = [];
+
     /**
      * @var array
      * @persistent
      */
     public $levels = [];
 
-    const PERSONS_PER_PAGE = 100;
-    /**
-     * @var int
-     * @persistent
-     */
-    public $page = 1;
     /**
      * @var ITranslator
      */
     private $translator;
+    /**
+     * @var ServicePerson
+     */
+    private $servicePerson;
+    /**
+     * @var array
+     */
+    private $availableTests = [];
 
     /**
      * ValidationControl constructor.
@@ -71,8 +77,15 @@ class ValidationControl extends Control {
     public function createComponentForm() {
         $control = new FormControl();
         $form = $control->getForm();
-
+        $form->addText('start_id', _('From person_id'))
+            ->addRule(Form::INTEGER)
+            ->setDefaultValue($this->startId);
+        $form->addText('end_id', _('To person_id'))
+            ->addRule(Form::INTEGER)
+            ->setDefaultValue($this->endId);
         $levelsContainer = new ContainerWithOptions();
+        $levelsContainer->setOption('label', _('Level'));
+
         foreach (ValidationTest::getAvailableLevels() as $level) {
             $field = $levelsContainer->addCheckbox($level, _($level));
             if (\in_array($level, $this->levels)) {
@@ -82,6 +95,7 @@ class ValidationControl extends Control {
         $form->addComponent($levelsContainer, 'levels');
 
         $testsContainer = new ContainerWithOptions();
+        $testsContainer->setOption('label', _('Tests'));
         foreach ($this->availableTests as $key => $test) {
             $field = $testsContainer->addCheckbox($key, $test::getTitle());
             if (\in_array($test, $this->tests)) {
@@ -106,6 +120,8 @@ class ValidationControl extends Control {
                     $this->tests[] = $this->availableTests[$testId];
                 }
             }
+            $this->startId = $values->start_id;
+            $this->endId = $values->end_id;
 
         };
         return $control;
@@ -115,9 +131,9 @@ class ValidationControl extends Control {
      * @return array
      */
     private function calculateProblems(): array {
+        $query = $this->servicePerson->getTable();
 
-        $query = $this->servicePerson->getTable()->page($this->page, self::PERSONS_PER_PAGE);
-
+        $query->where('person_id BETWEEN ? AND ?', $this->startId, $this->endId);
         $logs = [];
         foreach ($query as $row) {
 
@@ -138,19 +154,9 @@ class ValidationControl extends Control {
         return $logs;
     }
 
-    /**
-     * @return int
-     */
-    private function getTotalPage(): int {
-        return ($this->servicePerson->getTable()->count() / self::PERSONS_PER_PAGE) + 1;
-    }
-
     public function render() {
 
         $this->template->logs = $this->calculateProblems();
-        $this->template->page = $this->page;
-        $this->template->totalPages = $this->getTotalPage();
-        $this->template->perPage = self::PERSONS_PER_PAGE;
         $this->template->setTranslator($this->translator);
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ValidationControl.latte');
         $this->template->render();

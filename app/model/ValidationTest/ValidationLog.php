@@ -22,16 +22,19 @@ class ValidationLog {
      * @var Html
      */
     public $detail;
+    public $testName;
 
     /**
      * ValidationLog constructor.
+     * @param string $testName
      * @param string $message
      * @param string $level
      * @param Html|null $detail
      */
-    public function __construct(string $message, string $level, Html $detail = null) {
+    public function __construct(string $testName, string $message, string $level, Html $detail = null) {
         $this->level = $level;
         $this->message = $message;
         $this->detail = $detail;
+        $this->testName = $testName;
     }
 }

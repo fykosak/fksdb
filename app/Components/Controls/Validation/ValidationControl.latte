@@ -1,30 +1,14 @@
 {control form}
-<h2>{_'Persons'} {(($page-1)*$perPage)+1}-{$page*$perPage}</h2>
+<h2>{_'Persons'} {*(($page-1)*$perPage)+1}-{$page*$perPage*}</h2>
 {foreach $logs as $log}
     <div class="mt-3">
-        <h3><a href="{plink :Org:Stalking:view id=>$log['model']->person_id}">{$log['model']->getFullName()}</a></h3>
+        <h3>
+            <a href="{plink :Org:Stalking:view id=>$log['model']->person_id}">{$log['model']->getFullName()}</a>
+            <span class="badge badge-secondary">#{$log['model']->person_id}</span>
+        </h3>
         {foreach $log['log'] as $simpleLog}
-            <div class="alert alert-{$simpleLog->level}">{$simpleLog->message}
-            </div>
+            <div class="alert alert-{$simpleLog->level}"><b>{$simpleLog->testName}</b>: {$simpleLog->message}</div>
         {/foreach}
         <hr/>
     </div>
 {/foreach}
-<nav>
-    <ul class="pagination">
-        {for $i =1; $i<$totalPages;$i++}
-        {if $i%10==0}
-    </ul>
-    <ul class="pagination">
-        {/if}
-        <li class="page-item{$page==$i ? ' active':''}">
-            <a class="page-link"
-               href="{link changePage! page=>$i}">
-                {(($i-1)*$perPage)+1}-{$i*$perPage}
-            </a>
-        </li>
-
-
-        {/for}
-    </ul>
-</nav>

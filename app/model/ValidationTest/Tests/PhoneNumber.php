@@ -49,16 +49,16 @@ class PhoneNumber extends ValidationTest {
     private static function validate(string $key, ModelPerson $person): ValidationLog {
         $info = $person->getInfo();
         if (!$info) {
-            return new ValidationLog('Person info is not set', self::LVL_INFO);
+            return new ValidationLog(self::getTitle(), 'Person info is not set', self::LVL_INFO);
         }
         $value = $info->{$key};
         if (!$value) {
-            return new ValidationLog(\sprintf('"%s" is not set', $key), self::LVL_INFO);
+            return new ValidationLog(self::getTitle(), \sprintf('"%s" is not set', $key), self::LVL_INFO);
         }
         if (!PhoneNumberFactory::isValid($value)) {
-            return new ValidationLog(\sprintf('"%s" number (%s) is not valid', $key, $value), self::LVL_DANGER);
+            return new ValidationLog(self::getTitle(), \sprintf('"%s" number (%s) is not valid', $key, $value), self::LVL_DANGER);
         } else {
-            return new ValidationLog(\sprintf('"%s" is valid', $key), self::LVL_SUCCESS);
+            return new ValidationLog(self::getTitle(), \sprintf('"%s" is valid', $key), self::LVL_SUCCESS);
         }
     }
 

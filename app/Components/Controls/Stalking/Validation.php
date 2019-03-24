@@ -2,15 +2,14 @@
 
 namespace FKSDB\Components\Controls\Stalking;
 
-use FKSDB\ValidationTest\Tests\ParticipantsDuration;
-use FKSDB\ValidationTest\Tests\PhoneNumber;
+use OrgModule\ValidationPresenter;
 
 /**
  * Class StalkingValidation
  * @package FKSDB\ValidationTest
  */
 class Validation extends StalkingComponent {
-    private $tests = [ParticipantsDuration::class, PhoneNumber::class];
+
 
     /**
      * @return string
@@ -29,7 +28,7 @@ class Validation extends StalkingComponent {
     public function render() {
         $this->beforeRender();
         $logs = [];
-        foreach ($this->tests as $test) {
+        foreach (ValidationPresenter::$availableTests as $test) {
             $logs = \array_merge($logs, $test::run($this->modelPerson));
         }
 

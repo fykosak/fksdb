@@ -5,8 +5,10 @@ namespace OrgModule;
 use FKSDB\Components\Controls\Validation\ValidationControl;
 use FKSDB\Components\Grids\Validation\ValidationGrid;
 use FKSDB\ORM\Services\ServicePerson;
+use FKSDB\ValidationTest\Tests\GenderFromBornNumber;
 use FKSDB\ValidationTest\Tests\ParticipantsDuration;
 use FKSDB\ValidationTest\Tests\PhoneNumber;
+use FKSDB\ValidationTest\ValidationTest;
 
 /**
  * Class ValidationPresenter
@@ -19,9 +21,9 @@ class ValidationPresenter extends BasePresenter {
      */
     private $servicePerson;
     /**
-     * @var array
+     * @var ValidationTest[]
      */
-    private $availableTests = [PhoneNumber::class, ParticipantsDuration::class];
+    public static $availableTests = [PhoneNumber::class, ParticipantsDuration::class, GenderFromBornNumber::class];
 
     /**
      * ValidationPresenter constructor.
@@ -73,14 +75,14 @@ class ValidationPresenter extends BasePresenter {
      * @return ValidationGrid
      */
     public function createComponentGrid(): ValidationGrid {
-        return new ValidationGrid($this->servicePerson, $this->availableTests);
+        return new ValidationGrid($this->servicePerson, self::$availableTests);
     }
 
     /**
      * @return ValidationControl
      */
     public function createComponentValidationControl(): ValidationControl {
-        return new ValidationControl($this->servicePerson, $this->getTranslator(), $this->availableTests);
+        return new ValidationControl($this->servicePerson, $this->getTranslator(), self::$availableTests);
     }
 }
 

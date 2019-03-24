@@ -12,6 +12,7 @@ use FKSDB\ORM\DbNames;
  * @property string phone
  * @property string phone_parent_m
  * @property string phone_parent_d
+ * @property string born_id
  */
 class ModelPersonInfo extends AbstractModelSingle {
     /**

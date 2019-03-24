@@ -41,7 +41,7 @@ class ParticipantsDuration extends ValidationTest {
         };
         foreach ($data as $key => $value) {
             $delta = ($value['max'] - $value['min']) + 1;
-            $log[] = new ValidationLog(\sprintf('Person participate %d years in the events of contest %s', $delta, $contests[$key]->name),
+            $log[] = new ValidationLog(self::getTitle(), \sprintf('Person participate %d years in the events of contest %s', $delta, $contests[$key]->name),
                 ($delta < 5) ? self::LVL_SUCCESS : (($delta < 6) ? self::LVL_WARNING : self::LVL_DANGER));
 
         }
@@ -59,6 +59,6 @@ class ParticipantsDuration extends ValidationTest {
      * @return string
      */
     public static function getTitle(): string {
-        return _('účasť na akciach');
+        return _('Participate on events');
     }
 }
