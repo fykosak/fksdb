@@ -8,6 +8,8 @@ use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\ValidationTest\ValidationLog;
 use FKSDB\ValidationTest\ValidationTest;
+use Nette\Database\Table\GroupedSelection;
+use Nette\Database\Table\Selection;
 
 /**
  * Class ParticipantsDurationTest
@@ -29,12 +31,20 @@ abstract class ParticipantsDuration extends ValidationTest {
 
     /**
      * @param ModelPerson $person
+     * @return GroupedSelection
+     */
+    protected function getEventParticipant(ModelPerson $person): Selection {
+        return $person->getEventParticipant();
+    }
+
+    /**
+     * @param ModelPerson $person
      * @return ValidationLog
      */
     public function run(ModelPerson $person): ValidationLog {
         $max = null;
         $min = null;
-        foreach ($person->getEventParticipant() as $row) {
+        foreach ($this->getEventParticipant($person) as $row) {
             $model = ModelEventParticipant::createFromTableRow($row);
             $event = $model->getEvent();
             $contestId = $event->getEventType()->contest_id;
@@ -42,7 +52,6 @@ abstract class ParticipantsDuration extends ValidationTest {
                 continue;
             }
             $year = $event->year;
-
 
             $max = (is_null($max) || $max < $year) ? $year : $max;
             $min = (is_null($min) || $min > $year) ? $year : $min;

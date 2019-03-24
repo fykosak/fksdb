@@ -29,7 +29,12 @@ class VyfukParticipantDuration extends ParticipantsDuration {
      * @return ModelContest
      */
     protected function getContest(): ModelContest {
+        static $model;
+        if ($model) {
+            return $model;
+        }
         $row = $this->serviceContest->findByPrimary(2);
-        return ModelContest::createFromTableRow($row);
+        $model = ModelContest::createFromTableRow($row);
+        return $model;
     }
 }
