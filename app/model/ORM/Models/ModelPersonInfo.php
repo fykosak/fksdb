@@ -9,6 +9,10 @@ use FKSDB\ORM\DbNames;
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @property string email
+ * @property string phone
+ * @property string phone_parent_m
+ * @property string phone_parent_d
+ * @property string born_id
  */
 class ModelPersonInfo extends AbstractModelSingle {
     /**

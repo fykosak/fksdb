@@ -19,6 +19,7 @@ use FKSDB\Components\Controls\Stalking\PersonHistory;
 use FKSDB\Components\Controls\Stalking\Role;
 use FKSDB\Components\Controls\Stalking\Schedule;
 use FKSDB\Components\Controls\Stalking\StalkingComponent;
+use FKSDB\Components\Controls\Stalking\Validation;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\ORM\Models\ModelPerson;
@@ -223,6 +224,15 @@ class StalkingPresenter extends BasePresenter {
     public function createComponentSchedule(): Schedule {
         return new Schedule($this->getPerson(), $this->getTranslator(), $this->getMode());
     }
+
+    /**
+     * @return Validation
+     * @throws BadRequestException
+     */
+    public function createComponentValidation(): Validation {
+        return new Validation($this->getPerson(), $this->getTranslator(), $this->getMode());
+    }
+
 
     /**
      * @return FormControl
