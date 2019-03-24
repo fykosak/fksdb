@@ -20,7 +20,7 @@ use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryParameter;
 use FormUtils;
-use IResultsModel;
+use FKSDB\Results\Models\AbstractResultsModel;
 use ModelException;
 use Nette\Application\BadRequestException;
 use Nette\Diagnostics\Debugger;
@@ -659,7 +659,7 @@ class ExportPresenter extends SeriesPresenter {
             $header = $model->getDataColumns($category);
             $sumCol = 0;
             foreach ($header as $column) {
-                if ($column[IResultsModel::COL_DEF_LABEL] == IResultsModel::LABEL_SUM) {
+                if ($column[AbstractResultsModel::COL_DEF_LABEL] == AbstractResultsModel::LABEL_SUM) {
                     break;
                 }
                 $sumCol++;
@@ -746,7 +746,7 @@ class ExportPresenter extends SeriesPresenter {
                 $row[] = (($data->from == $data->to) ? $data->from : ($data->from . '-' . $data->to)) . '/' . count($datas);
 
                 // body
-                $row[] = $data->sum . '/' . $header[$sumCol][IResultsModel::COL_DEF_LIMIT];
+                $row[] = $data->sum . '/' . $header[$sumCol][AbstractResultsModel::COL_DEF_LIMIT];
 
 
                 // append

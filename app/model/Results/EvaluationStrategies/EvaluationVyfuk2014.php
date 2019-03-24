@@ -1,5 +1,9 @@
 <?php
 
+namespace FKSDB\Results\EvaluationStrategies;
+
+use FKSDB\Results\ModelCategory;
+use Nette\Database\Row;
 use Nette\InvalidArgumentException;
 
 /**
@@ -7,50 +11,45 @@ use Nette\InvalidArgumentException;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class EvaluationVyfuk2014 implements IEvaluationStrategy {
-
-    private $categories = null;
+class EvaluationVyfuk2014 extends EvaluationStrategy {
 
     /**
      * @return array|null
      */
-    public function getCategories() {
-        if ($this->categories == null) {
-            $this->categories = array(
-                new ModelCategory(ModelCategory::CAT_ES_6),
-                new ModelCategory(ModelCategory::CAT_ES_7),
-                new ModelCategory(ModelCategory::CAT_ES_8),
-                new ModelCategory(ModelCategory::CAT_ES_9),
-            );
-        }
-        return $this->categories;
+    public function getCategories(): array {
+        return [
+            new ModelCategory(ModelCategory::CAT_ES_6),
+            new ModelCategory(ModelCategory::CAT_ES_7),
+            new ModelCategory(ModelCategory::CAT_ES_8),
+            new ModelCategory(ModelCategory::CAT_ES_9),
+        ];
     }
 
     /**
      * @param ModelCategory $category
-     * @return array|int
+     * @return array
      */
-    public function categoryToStudyYears($category) {
+    public function categoryToStudyYears(ModelCategory $category): array {
         switch ($category->id) {
             case ModelCategory::CAT_ES_6:
-                return 6;
+                return [6];
             case ModelCategory::CAT_ES_7:
-                return 7;
+                return [7];
             case ModelCategory::CAT_ES_8:
-                return 8;
+                return [8];
             case ModelCategory::CAT_ES_9:
-                return array(null, 9);
+                return [null, 9];
             default:
-                throw new InvalidArgumentException('Invalid category '.$category->id);
+                throw new InvalidArgumentException('Invalid category ' . $category->id);
                 break;
         }
     }
 
     /**
-     * @param \Nette\Database\Row $task
+     * @param Row $task
      * @return string
      */
-    public function getPointsColumn($task) {
+    public function getPointsColumn(Row $task): string {
         if ($task->label == '1') {
             return "IF (t.series < 7, (IF (ct.study_year NOT IN (6, 7), null, s.raw_points)), s.raw_points)";
         } else {
@@ -61,21 +60,21 @@ class EvaluationVyfuk2014 implements IEvaluationStrategy {
     /**
      * @return string
      */
-    public function getSumColumn() {
+    public function getSumColumn(): string {
         return "IF (t.series < 7, IF (t.label IN ('1'), IF ( ct.study_year NOT IN (6, 7), null, s.raw_points), s.raw_points), s.raw_points)";
     }
 
     /**
-     * @param \Nette\Database\Row $task
+     * @param Row $task
      * @param ModelCategory $category
      * @return int|null
      */
-    public function getTaskPoints($task, \ModelCategory $category) {
+    public function getTaskPoints(Row $task, ModelCategory $category) {
         if ($task->label == '1' && $task->series < 7) {
-            if (in_array($category->id, array(
-                        ModelCategory::CAT_ES_6,
-                        ModelCategory::CAT_ES_7,
-                    ))) {
+            if (in_array($category->id, [
+                ModelCategory::CAT_ES_6,
+                ModelCategory::CAT_ES_7,
+            ])) {
                 return $task->points;
             } else {
                 return null;
@@ -87,9 +86,9 @@ class EvaluationVyfuk2014 implements IEvaluationStrategy {
 
     /**
      * @param ModelCategory $category
-     * @return int|string
+     * @return string
      */
-    public function getTaskPointsColumn(\ModelCategory $category) {
+    public function getTaskPointsColumn(ModelCategory $category): string {
         switch ($category->id) {
             case ModelCategory::CAT_ES_6:
             case ModelCategory::CAT_ES_7:

@@ -37,8 +37,8 @@ class OptimisticForm extends Form {
 
     /**
      *
-     * @param callback $fingerprintCallback returns fingerprint of current version of the data
-     * @param callback $defaultsCallback    returns current version of data, formatted as an array
+     * @param callable $fingerprintCallback returns fingerprint of current version of the data
+     * @param callable $defaultsCallback    returns current version of data, formatted as an array
      */
     public function __construct($fingerprintCallback, $defaultsCallback) {
         parent::__construct();

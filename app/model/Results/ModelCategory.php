@@ -1,5 +1,6 @@
 <?php
 
+namespace FKSDB\Results;
 /**
  * POD, not represented in database
  *
@@ -15,13 +16,13 @@ class ModelCategory {
     const CAT_ES_8 = '8';
     const CAT_ES_7 = '7';
     const CAT_ES_6 = '6';
-    const CAT_UNK  = 'UNK';
-    const CAT_ALL  = 'ALL';
+    const CAT_UNK = 'UNK';
+    const CAT_ALL = 'ALL';
 
     public $id = null;
 
     /**
-     * ModelCategory constructor.
+     * FKSDB\Results\ModelCategory constructor.
      * @param $id
      */
     function __construct($id) {

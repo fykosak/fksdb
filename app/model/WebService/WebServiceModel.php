@@ -4,6 +4,8 @@ use Authorization\ContestAuthorizator;
 use Exports\StoredQuery;
 use Exports\StoredQueryFactory;
 use FKSDB\ORM\Services\ServiceContest;
+use FKSDB\Results\Models\AbstractResultsModel;
+use FKSDB\Results\ResultsModelFactory;
 use Nette\Diagnostics\Debugger;
 use Nette\Security\AuthenticationException;
 use Nette\Security\IAuthenticator;
@@ -340,12 +342,12 @@ class WebServiceModel {
     }
 
     /**
-     * @param IResultsModel $resultsModel
+     * @param AbstractResultsModel $resultsModel
      * @param DOMDocument $doc
      * @return DOMElement
      * @throws SoapFault
      */
-    private function createDetailNode(IResultsModel $resultsModel, DOMDocument $doc) {
+    private function createDetailNode(AbstractResultsModel $resultsModel, DOMDocument $doc) {
         $detailNode = $doc->createElement('detail');
         $detailNode->setAttribute('series', $resultsModel->getSeries());
 
@@ -354,12 +356,12 @@ class WebServiceModel {
     }
 
     /**
-     * @param IResultsModel $resultsModel
+     * @param AbstractResultsModel $resultsModel
      * @param DOMDocument $doc
      * @return DOMElement
      * @throws SoapFault
      */
-    private function createCumulativeNode(IResultsModel $resultsModel, DOMDocument $doc) {
+    private function createCumulativeNode(AbstractResultsModel $resultsModel, DOMDocument $doc) {
         $cumulativeNode = $doc->createElement('cumulative');
         $cumulativeNode->setAttribute('series', implode(' ', $resultsModel->getSeries()));
 
@@ -368,12 +370,12 @@ class WebServiceModel {
     }
 
     /**
-     * @param IResultsModel $resultsModel
+     * @param AbstractResultsModel $resultsModel
      * @param DOMDocument $doc
      * @return DOMElement
      * @throws SoapFault
      */
-    private function createSchoolCumulativeNode(IResultsModel $resultsModel, DOMDocument $doc) {
+    private function createSchoolCumulativeNode(AbstractResultsModel $resultsModel, DOMDocument $doc) {
         $schoolNode = $doc->createElement('school-cumulative');
         $schoolNode->setAttribute('series', implode(' ', $resultsModel->getSeries()));
 
@@ -382,12 +384,12 @@ class WebServiceModel {
     }
 
     /**
-     * @param IResultsModel $resultsModel
+     * @param AbstractResultsModel $resultsModel
      * @param DOMDocument $doc
      * @return DOMElement
      * @throws SoapFault
      */
-    private function createBrojureNode(IResultsModel $resultsModel, DOMDocument $doc) {
+    private function createBrojureNode(AbstractResultsModel $resultsModel, DOMDocument $doc) {
         $brojureNode = $doc->createElement('brojure');
         $brojureNode->setAttribute('series', implode(' ', $resultsModel->getSeries()));
         $brojureNode->setAttribute('listed-series', $resultsModel->getListedSeries());
