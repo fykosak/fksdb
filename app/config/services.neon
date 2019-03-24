@@ -63,6 +63,7 @@ services:
         class: LoggingMailer(Nette\Mail\SendmailMailer())
         setup:
             - setLogPath(%logDir%/mail)
+    - FKSDB\ValidationTest\ValidationFactory
 
 
     #

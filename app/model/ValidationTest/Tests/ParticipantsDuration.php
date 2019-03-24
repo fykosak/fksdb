@@ -19,7 +19,7 @@ class ParticipantsDuration extends ValidationTest {
      * @param ModelPerson $person
      * @return ValidationLog[]
      */
-    public static function run(ModelPerson $person): array {
+    public function run(ModelPerson $person): array {
         $data = [];
         $log = [];
         /**

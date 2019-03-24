@@ -24,7 +24,7 @@ abstract class ValidationTest {
      * @param ModelPerson $person
      * @return ValidationLog[]
      */
-    abstract public static function run(ModelPerson $person): array;
+    abstract public function run(ModelPerson $person): array;
 
     /**
      * @return string

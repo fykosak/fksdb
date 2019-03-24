@@ -29,7 +29,7 @@ class Validation extends StalkingComponent {
         $this->beforeRender();
         $logs = [];
         foreach (ValidationPresenter::$availableTests as $test) {
-            $logs = \array_merge($logs, $test::run($this->modelPerson));
+            $logs = \array_merge($logs, $test->run($this->modelPerson));
         }
 
         $this->template->logs = $logs;

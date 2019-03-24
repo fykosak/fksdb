@@ -9,7 +9,6 @@ use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ValidationTest\ValidationLog;
 use FKSDB\ValidationTest\ValidationTest;
 use Nette\Application\UI\Control;
-use Nette\Diagnostics\Debugger;
 use Nette\Forms\Form;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
@@ -140,8 +139,7 @@ class ValidationControl extends Control {
             $model = ModelPerson::createFromTableRow($row);
             $personLog = [];
             foreach ($this->tests as $test) {
-                Debugger::barDump($test::run($model));
-                $log = \array_filter($test::run($model), function (ValidationLog $simpleLog) {
+                $log = \array_filter($test->run($model), function (ValidationLog $simpleLog) {
                     return \in_array($simpleLog->level, $this->levels);
                 });
                 $personLog = \array_merge($personLog, $log);

@@ -21,6 +21,8 @@
             {/foreach}
         </ul>
     {else}
-        <span class="badge-warning badge">{_'No records'}</span>
+        <div class="card-body">
+            {control noRecords}
+        </div>
     {/if}
 {/block}

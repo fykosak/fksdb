@@ -1,16 +1,12 @@
 {layout './@layout.latte'}
 {block content}
-    {if count($logs)}
-        <ul class="list-group list-group-flush">
-            {foreach $logs as $log}
-                <li class="list-group-item list-group-item-{$log->level}">
-                        <span class="row">
+    <ul class="list-group list-group-flush">
+        {foreach $logs as $log}
+            <li class="list-group-item list-group-item-{$log->level}">
+                <span class="row">
                         <span class="col-12"><b>{$log->testName}</b>: {$log->message}</span>
-                     </span>
-                </li>
-            {/foreach}
-        </ul>
-    {else}
-        {control noRecords}
-    {/if}
+                </span>
+            </li>
+        {/foreach}
+    </ul>
 {/block}

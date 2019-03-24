@@ -55,7 +55,7 @@ class ValidationGrid extends BaseGrid {
         foreach ($this->tests as $test) {
             $this->addColumn($test::getAction(), $test::getTitle())->setRenderer(function ($row) use ($test) {
                 $person = ModelPerson::createFromTableRow($row);
-                $logs = $test::run($person);
+                $logs = $test->run($person);
                 $container = Html::el('span');
                 foreach ($logs as $log) {
                     $container->add(self::createHtmlLog($log));

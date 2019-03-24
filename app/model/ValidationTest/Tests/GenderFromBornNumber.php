@@ -1,8 +1,6 @@
 <?php
 
-
 namespace FKSDB\ValidationTest\Tests;
-
 
 use FKSDB\Components\Forms\Rules\BornNumber;
 use FKSDB\ORM\Models\ModelPerson;
@@ -25,14 +23,14 @@ class GenderFromBornNumber extends ValidationTest {
      * @return string
      */
     public static function getAction(): string {
-        return _('gender_from_born_number');
+        return 'gender_from_born_number';
     }
 
     /**
      * @param ModelPerson $person
-     * @return array
+     * @return ValidationLog[]
      */
-    public static function run(ModelPerson $person): array {
+    public function run(ModelPerson $person): array {
         $info = $person->getInfo();
 
         if (!$info) {

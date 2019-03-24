@@ -30,9 +30,9 @@ class PhoneNumber extends ValidationTest {
 
     /**
      * @param ModelPerson $person
-     * @return array
+     * @return ValidationLog[]
      */
-    public static function run(ModelPerson $person): array {
+    public function run(ModelPerson $person): array {
         $log = [];
         foreach (self::$accessKeys as $key) {
             $log[] = self::validate($key, $person);

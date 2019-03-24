@@ -8,6 +8,7 @@ use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ValidationTest\Tests\GenderFromBornNumber;
 use FKSDB\ValidationTest\Tests\ParticipantsDuration;
 use FKSDB\ValidationTest\Tests\PhoneNumber;
+use FKSDB\ValidationTest\ValidationFactory;
 use FKSDB\ValidationTest\ValidationTest;
 
 /**
@@ -24,6 +25,10 @@ class ValidationPresenter extends BasePresenter {
      * @var ValidationTest[]
      */
     public static $availableTests = [PhoneNumber::class, ParticipantsDuration::class, GenderFromBornNumber::class];
+    /**
+     * @var ValidationFactory
+     */
+    private $validationFactory;
 
     /**
      * ValidationPresenter constructor.
@@ -32,6 +37,13 @@ class ValidationPresenter extends BasePresenter {
     public function __construct(ServicePerson $servicePerson) {
         parent::__construct();
         $this->servicePerson = $servicePerson;
+    }
+
+    /**
+     * @param ValidationFactory $validationFactory
+     */
+    public function injectValidationFactory(ValidationFactory $validationFactory) {
+        $this->validationFactory = $validationFactory;
     }
 
     public function titleDefault() {
@@ -75,14 +87,14 @@ class ValidationPresenter extends BasePresenter {
      * @return ValidationGrid
      */
     public function createComponentGrid(): ValidationGrid {
-        return new ValidationGrid($this->servicePerson, self::$availableTests);
+        return new ValidationGrid($this->servicePerson, $this->validationFactory->getTests());
     }
 
     /**
      * @return ValidationControl
      */
     public function createComponentValidationControl(): ValidationControl {
-        return new ValidationControl($this->servicePerson, $this->getTranslator(), self::$availableTests);
+        return new ValidationControl($this->servicePerson, $this->getTranslator(), $this->validationFactory->getTests());
     }
 }
 
