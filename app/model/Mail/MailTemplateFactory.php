@@ -5,6 +5,7 @@ namespace Mail;
 use BasePresenter;
 use Nette\Application\Application;
 use Nette\Application\UI\Control;
+use Nette\Http\IRequest;
 use Nette\InvalidArgumentException;
 use Nette\Latte\Engine;
 use Nette\Templating\FileTemplate;
@@ -89,7 +90,7 @@ class MailTemplateFactory {
         $template->registerFilter(new Engine());
         $template->control = $template->_control = $control;
         if ($presenter instanceof BasePresenter) {
-            $template->baseUri = $presenter->getContext()->getByType('Nette\Http\IRequest')->getUrl()->getBaseUrl();
+            $template->baseUri = $presenter->getContext()->getByType(IRequest::class)->getUrl()->getBaseUrl();
         }
 
         return $template;

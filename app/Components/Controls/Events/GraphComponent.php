@@ -26,7 +26,7 @@ class GraphComponent extends Control {
      */
     function __construct(BaseMachine $baseMachine, ExpressionPrinter $expressionPrinter) {
         parent::__construct();
-        $this->monitor('FKSDB\Application\IJavaScriptCollector');
+        $this->monitor(IJavaScriptCollector::class);
         $this->baseMachine = $baseMachine;
         $this->expressionPrinter = $expressionPrinter;
     }

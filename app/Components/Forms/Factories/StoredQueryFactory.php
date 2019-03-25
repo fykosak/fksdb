@@ -60,22 +60,22 @@ class StoredQueryFactory {
         $container->setCurrentGroup($group);
 
         $container->addText('name', _('Název'))
-                ->addRule(Form::FILLED, _('Název dotazu je třeba vyplnit.'))
-                ->addRule(Form::MAX_LENGTH, _('Název dotazu je moc dlouhý.'), 32);
+            ->addRule(Form::FILLED, _('Název dotazu je třeba vyplnit.'))
+            ->addRule(Form::MAX_LENGTH, _('Název dotazu je moc dlouhý.'), 32);
 
         $container->addText('qid', _('QID'))
-                ->setOption('description', _('Dotazy s QIDem nelze smazat a QID lze použít pro práva a trvalé odkazování.'))
-                ->addCondition(Form::FILLED)
-                ->addRule(Form::MAX_LENGTH, _('Název dotazu je moc dlouhý.'), 16)
-                ->addRule(Form::REGEXP, _('QID může být jen z písmen anglické abecedy a číslic a tečky.'), '/^[a-z][a-z0-9.]*$/i');
+            ->setOption('description', _('Dotazy s QIDem nelze smazat a QID lze použít pro práva a trvalé odkazování.'))
+            ->addCondition(Form::FILLED)
+            ->addRule(Form::MAX_LENGTH, _('Název dotazu je moc dlouhý.'), 16)
+            ->addRule(Form::REGEXP, _('QID může být jen z písmen anglické abecedy a číslic a tečky.'), '/^[a-z][a-z0-9.]*$/i');
 
         $container->addComponent($this->createTagSelect(false, _('Štítky'), new StoredQueryTagTypeProvider($this->serviceStoredQueryTagType)), 'tags');
 
         $container->addTextArea('description', _('Popis dotazu'));
 
         $container->addText('php_post_proc', _('PHP post processing'))
-                ->setOption('description', _('Název třídy pro zpracování výsledku v PHP. Lze upravit jen v databázi.'))
-                ->setDisabled();
+            ->setOption('description', _('Název třídy pro zpracování výsledku v PHP. Lze upravit jen v databázi.'))
+            ->setDisabled();
 
 
         return $container;
@@ -87,21 +87,21 @@ class StoredQueryFactory {
      * @return Replicator
      */
     public function createParametersMetadata($options = 0, ControlGroup $group = null) {
-        $replicator = new Replicator(function($replContainer) use ($group) {
-                    $this->buildParameterMetadata($replContainer, $group);
+        $replicator = new Replicator(function ($replContainer) use ($group) {
+            $this->buildParameterMetadata($replContainer, $group);
 
-                    $submit = $replContainer->addSubmit('remove', _('Odebrat parametr'));
-                    $submit->getControlPrototype()->addClass('btn-danger');
-                    $submit->getControlPrototype()->addClass('btn-sm'); // TODO doesn't work
-                    $submit->addRemoveOnClick();
-                }, 0, true);
-        $replicator->containerClass = 'FKSDB\Components\Forms\Containers\ModelContainer';
+            $submit = $replContainer->addSubmit('remove', _('Odebrat parametr'));
+            $submit->getControlPrototype()->addClass('btn-danger');
+            $submit->getControlPrototype()->addClass('btn-sm'); // TODO doesn't work
+            $submit->addRemoveOnClick();
+        }, 0, true);
+        $replicator->containerClass = ModelContainer::class;
         $replicator->setCurrentGroup($group);
         $submit = $replicator->addSubmit('addParam', _('Přidat parametr'));
         $submit->getControlPrototype()->addClass('btn-sm btn-success');
 
         $submit->setValidationScope(false)
-                ->addCreateOnClick();
+            ->addCreateOnClick();
 
         return $replicator;
     }
@@ -115,18 +115,18 @@ class StoredQueryFactory {
         $container->setCurrentGroup($group);
 
         $container->addText('name', _('Název'))
-                ->addRule(Form::FILLED, _('Název parametru musí být vyplněn.'))
-                ->addRule(Form::MAX_LENGTH, _('Název parametru je moc dlouhý.'), 16)
-                ->addRule(Form::REGEXP, _('Název parametru může být jen z malých písmen anglické abecedy, číslic nebo podtržítka.'), '/^[a-z][a-z0-9_]*$/');
+            ->addRule(Form::FILLED, _('Název parametru musí být vyplněn.'))
+            ->addRule(Form::MAX_LENGTH, _('Název parametru je moc dlouhý.'), 16)
+            ->addRule(Form::REGEXP, _('Název parametru může být jen z malých písmen anglické abecedy, číslic nebo podtržítka.'), '/^[a-z][a-z0-9_]*$/');
 
         $container->addText('description', _('Popis'));
 
         $container->addSelect('type', _('Datový typ'))
-                ->setItems([
-                    ModelStoredQueryParameter::TYPE_INT => 'integer',
-                    ModelStoredQueryParameter::TYPE_STR => 'string',
-                    ModelStoredQueryParameter::TYPE_BOOL => 'bool',
-                ]);
+            ->setItems([
+                ModelStoredQueryParameter::TYPE_INT => 'integer',
+                ModelStoredQueryParameter::TYPE_STR => 'string',
+                ModelStoredQueryParameter::TYPE_BOOL => 'bool',
+            ]);
 
         $container->addText('default', _('Výchozí hodnota'));
     }
@@ -144,7 +144,7 @@ class StoredQueryFactory {
         foreach ($queryPattern->getParameters() as $parameter) {
             $name = $parameter->name;
             $subcontainer = new ModelContainer();
-            $container->addComponent($subcontainer,$name);
+            $container->addComponent($subcontainer, $name);
             // $subcontainer = $container->addContainer($name);
 
             switch ($parameter->type) {
@@ -161,7 +161,7 @@ class StoredQueryFactory {
                 case ModelStoredQueryParameter::TYPE_BOOL:
                     $valueElement = $subcontainer->addCheckbox('value', $name);
                     $valueElement->setOption('description', $parameter->description);
-                    $valueElement->setDefaultValue((bool) $parameter->getDefaultValue());
+                    $valueElement->setDefaultValue((bool)$parameter->getDefaultValue());
                     break;
             }
         }

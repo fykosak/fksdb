@@ -5,6 +5,7 @@ namespace FKSDB\Components\Forms\Containers\Models;
 use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\ReferencedId;
+use Nette\Application\UI\Presenter;
 use Nette\ArrayHash;
 use Nette\Callback;
 use Nette\ComponentModel\Component;
@@ -68,8 +69,8 @@ class ReferencedContainer extends ContainerWithOptions {
      */
     function __construct(ReferencedId $referencedId) {
         parent::__construct();
-        $this->monitor('FKSDB\Application\IJavaScriptCollector');
-        $this->monitor('Nette\Forms\Form');
+        $this->monitor(IJavaScriptCollector::class);
+        $this->monitor(Form::class);
 
         $this->referencedId = $referencedId;
 
@@ -249,7 +250,7 @@ class ReferencedContainer extends ContainerWithOptions {
 
     private function invalidateFormGroup() {
         $form = $this->getForm();
-        $presenter = $form->lookup('Nette\Application\UI\Presenter');
+        $presenter = $form->lookup(Presenter::class);
         if ($presenter->isAjax()) {
             $control = $form->getParent();
             $control->invalidateControl(FormControl::SNIPPET_MAIN);

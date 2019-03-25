@@ -8,6 +8,7 @@ use FKSDB\Config\Expressions\Helpers;
 use FKSDB\Config\GlobalParameters;
 use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\ORM\Services\ServiceEvent;
+use FKSDB\ORM\Services\ServiceTask;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\Object;
@@ -150,7 +151,8 @@ class ExportFormatFactory extends Object {
 
         if ($qid == 'aesop.ct') {
             $format->addParameters(array(
-                'max-points' => $storedQuery->getPostProcessing()->getMaxPoints($this->container->getByType('FKSDB\ORM\Services\ServiceTask')),
+                'max-points' => $storedQuery->getPostProcessing()
+                    ->getMaxPoints($this->container->getByType(ServiceTask::class)),
             ));
         }
 

@@ -8,7 +8,6 @@ use ModelException;
 use Nette\Database\Connection;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection as TableSelection;
-use Nette\DeprecatedException;
 use Nette\InvalidStateException;
 use PDOException;
 
