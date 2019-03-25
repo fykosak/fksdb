@@ -2,14 +2,31 @@
 
 namespace FKSDB\Components\Controls\Stalking;
 
-use OrgModule\ValidationPresenter;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ValidationTest\ValidationFactory;
+use Nette\Localization\ITranslator;
 
 /**
  * Class StalkingValidation
  * @package FKSDB\ValidationTest
  */
 class Validation extends StalkingComponent {
+    /**
+     * @var ValidationFactory
+     */
+    private $validationFactory;
 
+    /**
+     * Validation constructor.
+     * @param ValidationFactory $validationFactory
+     * @param ModelPerson $modelPerson
+     * @param ITranslator $translator
+     * @param $mode
+     */
+    public function __construct(ValidationFactory $validationFactory, ModelPerson $modelPerson, ITranslator $translator, $mode) {
+        parent::__construct($modelPerson, $translator, $mode);
+        $this->validationFactory = $validationFactory;
+    }
 
     /**
      * @return string
@@ -28,8 +45,8 @@ class Validation extends StalkingComponent {
     public function render() {
         $this->beforeRender();
         $logs = [];
-        foreach (ValidationPresenter::$availableTests as $test) {
-            $logs = \array_merge($logs, $test->run($this->modelPerson));
+        foreach ($this->validationFactory->getTests() as $test) {
+            $logs[] = $test->run($this->modelPerson);
         }
 
         $this->template->logs = $logs;

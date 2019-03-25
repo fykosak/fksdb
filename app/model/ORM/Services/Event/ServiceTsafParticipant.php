@@ -4,14 +4,25 @@ namespace FKSDB\ORM\Services\Events;
 
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\Events\ModelTsafParticipant;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceTsafParticipant extends AbstractServiceSingle {
 
-    protected $tableName = DbNames::TAB_E_TSAF_PARTICIPANT;
-    protected $modelClassName = 'FKSDB\ORM\Models\Events\ModelTsafParticipant';
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        return ModelTsafParticipant::class;
+    }
 
+    /**
+     * @return string
+     */
+    protected function getTableName(): string {
+        return DbNames::TAB_E_TSAF_PARTICIPANT;
+    }
 }
 

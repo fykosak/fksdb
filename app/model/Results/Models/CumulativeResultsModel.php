@@ -115,8 +115,6 @@ class CumulativeResultsModel extends AbstractResultsModel {
         $select[] = "round(SUM($sum)) AS '" . self::ALIAS_SUM . "'";
         $select[] = "ct.ct_id";
 
-        $study_years = $this->evaluationStrategy->categoryToStudyYears($category);
-
         $from = " from v_contestant ct
 left join person p using(person_id)
 left join school sch using(school_id)
@@ -127,7 +125,7 @@ left join submit s ON s.task_id = t.task_id AND s.ct_id = ct.ct_id";
             'ct.year' => $this->year,
             'ct.contest_id' => $this->contest->contest_id,
             't.series' => $this->getSeries(),
-            'ct.study_year' => $study_years,
+            'ct.study_year' => $this->evaluationStrategy->categoryToStudyYears($category),
         ];
 
         $query = "select " . implode(', ', $select);

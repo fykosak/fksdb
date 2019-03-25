@@ -6,15 +6,26 @@ use DateTime;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\IModel;
+use FKSDB\ORM\Models\ModelPersonHasFlag;
 use Nette\ArrayHash;
 
 /**
  * @author Lukáš Timko <lukast@fykos.cz>
  */
 class ServicePersonHasFlag extends AbstractServiceSingle {
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        return ModelPersonHasFlag::class;
+    }
 
-    protected $tableName = DbNames::TAB_PERSON_HAS_FLAG;
-    protected $modelClassName = 'FKSDB\ORM\Models\ModelPersonHasFlag';
+    /**
+     * @return string
+     */
+    protected function getTableName(): string {
+        return DbNames::TAB_PERSON_HAS_FLAG;
+    }
 
     /**
      * @param null $data

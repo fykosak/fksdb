@@ -2,9 +2,10 @@
 
 namespace FKSDB\Results\EvaluationStrategies;
 
+use FKSDB\ORM\Models\ModelTask;
 use FKSDB\Results\ModelCategory;
 use Nette;
-use Nette\Database\Row;
+use Nette\Database\Table\ActiveRow;
 
 /**
  * Introduced in FYKOS 1987?? but data are only from 15 th year (2001).
@@ -46,10 +47,10 @@ class EvaluationFykos2001 extends EvaluationStrategy {
     }
 
     /**
-     * @param Row $task
+     * @param ActiveRow $task
      * @return string
      */
-    public function getPointsColumn(Row $task): string {
+    public function getPointsColumn(ActiveRow $task): string {
         return "s.raw_points";
     }
 
@@ -61,11 +62,11 @@ class EvaluationFykos2001 extends EvaluationStrategy {
     }
 
     /**
-     * @param Row $task
+     * @param ActiveRow|ModelTask $task
      * @param ModelCategory $category
      * @return int
      */
-    public function getTaskPoints(Row $task, ModelCategory $category): int {
+    public function getTaskPoints(ActiveRow $task, ModelCategory $category): int {
         return $task->points;
     }
 

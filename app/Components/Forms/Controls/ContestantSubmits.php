@@ -62,7 +62,7 @@ class ContestantSubmits extends BaseControl {
      */
     function __construct($tasks, ModelContestant $contestant, ServiceSubmit $submitService, $acYear, $label = null) {
         parent::__construct($label);
-        $this->monitor('FKSDB\Application\IJavaScriptCollector');
+        $this->monitor(IJavaScriptCollector::class);
 
         $this->setTasks($tasks);
         $this->submitService = $submitService;

@@ -3,7 +3,7 @@
 namespace FKSDB\Results\EvaluationStrategies;
 
 use FKSDB\Results\ModelCategory;
-use Nette\Database\Row;
+use Nette\Database\Table\ActiveRow;
 use Nette\NotImplementedException;
 
 /**
@@ -31,11 +31,11 @@ class EvaluationNullObject extends EvaluationStrategy {
     }
 
     /**
-     * @param Row $task
+     * @param ActiveRow $task
      * @return string|void
      * @throws NotImplementedException
      */
-    public function getPointsColumn(Row $task) {
+    public function getPointsColumn(ActiveRow $task) {
         throw new NotImplementedException;
     }
 
@@ -48,12 +48,12 @@ class EvaluationNullObject extends EvaluationStrategy {
     }
 
     /**
-     * @param Row $task
+     * @param ActiveRow $task
      * @param ModelCategory $category
      * @return int|void
      * @throws NotImplementedException
      */
-    public function getTaskPoints(Row $task, ModelCategory $category) {
+    public function getTaskPoints(ActiveRow $task, ModelCategory $category) {
         throw new NotImplementedException;
     }
 

@@ -24,8 +24,8 @@ class SQLConsole extends TextArea {
      */
     public function __construct($label = NULL, $cols = NULL, $rows = NULL) {
         parent::__construct($label, $cols, $rows);
-        $this->monitor('FKSDB\Application\IJavaScriptCollector');
-        $this->monitor('FKSDB\Application\IStylesheetCollector');
+        $this->monitor(IJavaScriptCollector::class);
+        $this->monitor(IStylesheetCollector::class);
     }
 
     private $attachedJS = false;

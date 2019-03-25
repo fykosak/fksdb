@@ -12,8 +12,19 @@ use Traversable;
  */
 class ServiceFyziklaniTeamPosition extends AbstractServiceSingle {
 
-    protected $tableName = DbNames::TAB_FYZIKLANI_TEAM_POSITION;
-    protected $modelClassName = 'FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition';
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        return ModelFyziklaniTeamPosition::class;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getTableName(): string {
+        return DbNames::TAB_FYZIKLANI_TEAM_POSITION;
+    }
 
     /**
      * @param int $teamId

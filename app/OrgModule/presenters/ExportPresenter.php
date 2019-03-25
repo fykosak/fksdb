@@ -17,6 +17,7 @@ use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelPostContact;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
+use FKSDB\ORM\Services\ServiceContestant;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryParameter;
 use FormUtils;
@@ -646,7 +647,7 @@ class ExportPresenter extends SeriesPresenter {
      */
     public function renderOvvp() {
         $modelFactory = $this->getService('resultsModelFactory');
-        $serviceContestant = $this->getService('FKSDB\ORM\Services\ServiceContestant');
+        $serviceContestant = $this->getService(ServiceContestant::class);
 
 
         $model = $modelFactory->createCumulativeResultsModel($this->getSelectedContest(), $this->getSelectedYear());

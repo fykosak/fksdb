@@ -11,10 +11,19 @@ use FKSDB\ORM\Models\ModelEvent;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class ServiceFyziklaniTeam extends AbstractServiceSingle {
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        return ModelFyziklaniTeam::class;
+    }
 
-    protected $tableName = DbNames::TAB_E_FYZIKLANI_TEAM;
-
-    protected $modelClassName = 'FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam';
+    /**
+     * @return string
+     */
+    protected function getTableName(): string {
+        return DbNames::TAB_E_FYZIKLANI_TEAM;
+    }
 
     /**
      * Syntactic sugar.

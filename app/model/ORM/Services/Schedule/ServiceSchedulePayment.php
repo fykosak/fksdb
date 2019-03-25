@@ -5,6 +5,7 @@ namespace FKSDB\ORM\Services\Schedule;
 
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\Schedule\ModelSchedulePayment;
 
 /**
  * Class ServiceSchedulePayment
@@ -23,6 +24,6 @@ class ServiceSchedulePayment extends AbstractServiceSingle {
      * @return string
      */
     protected function getModelClassName(): string {
-        return 'FKSDB\ORM\Models\Schedule\ModelSchedulePayment';
+        return ModelSchedulePayment::class;
     }
 }

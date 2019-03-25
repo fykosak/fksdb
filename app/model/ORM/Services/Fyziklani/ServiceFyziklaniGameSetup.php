@@ -4,12 +4,24 @@ namespace FKSDB\ORM\Services\Fyziklani;
 
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
 
 /**
  * Class ServiceFyziklaniGameSetup
  * @package FKSDB\ORM\Services\Fyziklani
  */
 class ServiceFyziklaniGameSetup extends AbstractServiceSingle {
-    protected $tableName = DbNames::TAB_FYZIKLANI_GAME_SETUP;
-    protected $modelClassName = 'FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup';
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        return ModelFyziklaniGameSetup::class;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getTableName(): string {
+        return DbNames::TAB_FYZIKLANI_GAME_SETUP;
+    }
 }

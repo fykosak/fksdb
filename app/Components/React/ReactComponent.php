@@ -71,7 +71,7 @@ abstract class ReactComponent extends Control implements IReactComponent {
      * @return IRequest
      */
     protected function getHttpRequest(): IRequest {
-        return $this->container->getByType('Nette\Http\IRequest');
+        return $this->container->getByType(IRequest::class);
     }
 
     /**

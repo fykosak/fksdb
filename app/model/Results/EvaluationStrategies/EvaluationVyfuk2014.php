@@ -2,8 +2,9 @@
 
 namespace FKSDB\Results\EvaluationStrategies;
 
+use FKSDB\ORM\Models\ModelTask;
 use FKSDB\Results\ModelCategory;
-use Nette\Database\Row;
+use Nette\Database\Table\ActiveRow;
 use Nette\InvalidArgumentException;
 
 /**
@@ -46,10 +47,10 @@ class EvaluationVyfuk2014 extends EvaluationStrategy {
     }
 
     /**
-     * @param Row $task
+     * @param ActiveRow|ModelTask $task
      * @return string
      */
-    public function getPointsColumn(Row $task): string {
+    public function getPointsColumn(ActiveRow $task): string {
         if ($task->label == '1') {
             return "IF (t.series < 7, (IF (ct.study_year NOT IN (6, 7), null, s.raw_points)), s.raw_points)";
         } else {
@@ -65,11 +66,11 @@ class EvaluationVyfuk2014 extends EvaluationStrategy {
     }
 
     /**
-     * @param Row $task
+     * @param ActiveRow|ModelTask $task
      * @param ModelCategory $category
      * @return int|null
      */
-    public function getTaskPoints(Row $task, ModelCategory $category) {
+    public function getTaskPoints(ActiveRow $task, ModelCategory $category) {
         if ($task->label == '1' && $task->series < 7) {
             if (in_array($category->id, [
                 ModelCategory::CAT_ES_6,

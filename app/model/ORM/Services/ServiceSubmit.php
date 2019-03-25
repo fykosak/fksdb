@@ -4,16 +4,31 @@ namespace FKSDB\ORM\Services;
 
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\ModelSubmit;
 use Nette\Database\Table\Selection;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceSubmit extends AbstractServiceSingle {
-
-    protected $tableName = DbNames::TAB_SUBMIT;
-    protected $modelClassName = 'FKSDB\ORM\Models\ModelSubmit';
+    /**
+     * @var array
+     */
     private $submitCache = [];
+
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        return ModelSubmit::class;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getTableName(): string {
+        return DbNames::TAB_SUBMIT;
+    }
 
     /**
      * Syntactic sugar.

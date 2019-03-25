@@ -28,26 +28,26 @@ class GenderFromBornNumber extends ValidationTest {
 
     /**
      * @param ModelPerson $person
-     * @return ValidationLog[]
+     * @return ValidationLog
      */
-    public function run(ModelPerson $person): array {
+    public function run(ModelPerson $person): ValidationLog {
         $info = $person->getInfo();
 
         if (!$info) {
-            return [new ValidationLog(self::getTitle(), 'Person info is not set', self::LVL_INFO)];
+            return new ValidationLog(self::getTitle(), 'Person info is not set', self::LVL_INFO);
         }
 
         if (!$person->gender) {
-            return [new ValidationLog(self::getTitle(), _('Gender is not set'), self::LVL_WARNING)];
+            return new ValidationLog(self::getTitle(), _('Gender is not set'), self::LVL_WARNING);
         }
         if (!$info->born_id) {
-            return [new ValidationLog(self::getTitle(), _('Born number is not set'), self::LVL_INFO)];
+            return new ValidationLog(self::getTitle(), _('Born number is not set'), self::LVL_INFO);
         }
 
         if (BornNumber::getGender($info->born_id) != $person->gender) {
-            return [new ValidationLog(self::getTitle(), 'Gender not match born number', self::LVL_DANGER)];
+            return new ValidationLog(self::getTitle(), 'Gender not match born number', self::LVL_DANGER);
         } else {
-            return [new ValidationLog(self::getTitle(), 'Gender match born number', self::LVL_SUCCESS)];
+            return new ValidationLog(self::getTitle(), 'Gender match born number', self::LVL_SUCCESS);
         }
     }
 

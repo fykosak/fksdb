@@ -15,9 +15,19 @@ use Nette\Utils\Strings;
 class ServiceAuthToken extends AbstractServiceSingle {
 
     const TOKEN_LENGTH = 32; // for 62 characters ~ 128 bit
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        return ModelAuthToken::class;
+    }
 
-    protected $tableName = DbNames::TAB_AUTH_TOKEN;
-    protected $modelClassName = 'FKSDB\ORM\Models\ModelAuthToken';
+    /**
+     * @return string
+     */
+    protected function getTableName(): string {
+        return DbNames::TAB_AUTH_TOKEN;
+    }
 
     /**
      *

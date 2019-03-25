@@ -12,8 +12,19 @@ use FKSDB\ORM\Models\ModelPerson;
  */
 class ServicePerson extends AbstractServiceSingle {
 
-    protected $tableName = DbNames::TAB_PERSON;
-    protected $modelClassName = 'FKSDB\ORM\Models\ModelPerson';
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        return ModelPerson::class;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getTableName(): string {
+        return DbNames::TAB_PERSON;
+    }
 
     /**
      * Syntactic sugar.

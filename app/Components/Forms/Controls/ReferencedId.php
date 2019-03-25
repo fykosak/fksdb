@@ -64,7 +64,7 @@ class ReferencedId extends HiddenField {
      */
     function __construct(IService $service, IReferencedHandler $handler, IReferencedSetter $referencedSetter) {
         parent::__construct();
-        $this->monitor('Nette\Forms\Form');
+        $this->monitor(Form::class);
 
         $this->service = $service;
         $this->handler = $handler;

@@ -4,6 +4,7 @@ namespace FKSDB\ORM\Services;
 
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\ModelContestant;
 use Nette\Database\Table\Selection;
 
 /**
@@ -11,9 +12,21 @@ use Nette\Database\Table\Selection;
  */
 class ServiceContestant extends AbstractServiceSingle {
 
-    protected $tableName = DbNames::TAB_CONTESTANT_BASE;
     protected $viewName = DbNames::VIEW_CONTESTANT;
-    protected $modelClassName = 'FKSDB\ORM\Models\ModelContestant';
+
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        return ModelContestant::class;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getTableName(): string {
+        return DbNames::TAB_CONTESTANT_BASE;
+    }
 
     /**
      * @note Read-only (loads data from view).
