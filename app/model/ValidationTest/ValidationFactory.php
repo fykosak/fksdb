@@ -3,6 +3,8 @@
 
 namespace FKSDB\ValidationTest;
 
+use FKSDB\ORM\Services\ServiceContest;
+
 /**
  * Class ValidationFactory
  * @package FKSDB\ValidationTest
@@ -12,8 +14,13 @@ class ValidationFactory {
      * @var ValidationTest[]
      */
     private $tests = [];
+    /**
+     * @var ServiceContest
+     */
+    private $serviceContest;
 
-    public function __construct() {
+    public function __construct(ServiceContest $serviceContest) {
+        $this->serviceContest = $serviceContest;
         $this->registersTests();
     }
 
@@ -23,8 +30,11 @@ class ValidationFactory {
     private function registersTests() {
         $this->tests = [
             new Tests\GenderFromBornNumber(),
-            new Tests\ParticipantsDuration(),
-            new Tests\PhoneNumber(),
+            new Tests\ParticipantDuration\FykosParticipantDuration($this->serviceContest),
+            new Tests\ParticipantDuration\VyfukParticipantDuration($this->serviceContest),
+            new Tests\Phone\PhoneNumber(),
+            new Tests\Phone\PhoneParentDNumber(),
+            new Tests\Phone\PhoneParentMNumber(),
         ];
     }
 

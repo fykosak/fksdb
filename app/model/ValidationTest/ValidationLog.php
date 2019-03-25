@@ -10,6 +10,10 @@ use Nette\Utils\Html;
  * @package FKSDB\ValidationTest
  */
 class ValidationLog {
+    const LVL_DANGER = 'danger';
+    const LVL_SUCCESS = 'success';
+    const LVL_WARNING = 'warning';
+    const LVL_INFO = 'info';
     /**
      * @var string
      */
