@@ -27,7 +27,7 @@ class GroupedContainer extends Container {
      */
     public function __construct($prefix) {
         parent::__construct();
-        $this->monitor('Nette\Forms\Form');
+        $this->monitor(Form::class);
         $this->prefix = $prefix;
     }
 

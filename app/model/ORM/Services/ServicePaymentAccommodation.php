@@ -5,6 +5,7 @@ namespace FKSDB\ORM\Services;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelPayment;
+use FKSDB\ORM\Models\ModelPaymentAccommodation;
 use FKSDB\Payment\Handler\DuplicateAccommodationPaymentException;
 use FKSDB\Submits\StorageException;
 use Nette\ArrayHash;
@@ -15,8 +16,19 @@ use Nette\ArrayHash;
  * @deprecated
  */
 class ServicePaymentAccommodation extends AbstractServiceSingle {
-    protected $tableName = DbNames::TAB_PAYMENT_ACCOMMODATION;
-    protected $modelClassName = 'FKSDB\ORM\Models\ModelPaymentAccommodation';
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        return ModelPaymentAccommodation::class;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getTableName(): string {
+        return DbNames::TAB_PAYMENT_ACCOMMODATION;
+    }
 
     /**
      * @param ArrayHash $data

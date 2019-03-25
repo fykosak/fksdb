@@ -13,8 +13,19 @@ use Nette\Database\Connection;
  */
 class ServiceStoredQuery extends AbstractServiceSingle {
 
-    protected $tableName = DbNames::TAB_STORED_QUERY;
-    protected $modelClassName = 'FKSDB\ORM\Models\StoredQuery\ModelStoredQuery';
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        return ModelStoredQuery::class;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getTableName(): string {
+        return DbNames::TAB_STORED_QUERY;
+    }
 
     /**
      *

@@ -23,16 +23,6 @@ use PDOException;
 abstract class AbstractServiceSingle extends TableSelection implements IService {
 
     /**
-     * @var string
-     */
-    protected $modelClassName;
-
-    /**
-     * @var string
-     */
-    protected $tableName;
-
-    /**
      * @var Connection
      */
     protected $connection;
@@ -82,20 +72,17 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     /**
      * @return string
      */
-    protected function getModelClassName(): string {
-        return $this->modelClassName;
-    }
+    abstract protected function getModelClassName(): string;
 
     /**
      * @return string
      */
-    protected function getTableName(): string {
-        return $this->tableName;
-    }
+    abstract protected function getTableName(): string;
 
     /**
      * @param ActiveRow $row
      * @return mixed
+     * @deprecated
      */
     public function createFromTableRow(ActiveRow $row) {
         $className = $this->getModelClassName();

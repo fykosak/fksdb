@@ -11,6 +11,7 @@ use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Logging\MemoryLogger;
 use Nette\Application\UI\Control;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
 use Nette\Utils\Strings;
@@ -85,7 +86,7 @@ class ApplicationsGrid extends Control {
      */
     function __construct(Container $container, IHolderSource $source, ApplicationHandlerFactory $handlerFactory, FlashMessageDump $flashDump) {
         parent::__construct();
-        $this->monitor('FKSDB\Application\IJavaScriptCollector');
+        $this->monitor(IJavaScriptCollector::class);
         $this->container = $container;
         $this->source = $source;
         $this->handlerFactory = $handlerFactory;
@@ -177,7 +178,7 @@ class ApplicationsGrid extends Control {
         $this->template->eventApplications = $this->eventApplications;
         $this->template->holders = $this->holders;
         $this->template->machines = $this->machines;
-        $this->template->htmlId = $this->lookupPath('Nette\Application\UI\Presenter');
+        $this->template->htmlId = $this->lookupPath(Presenter::class);
 
         $this->template->setFile($this->templateFile);
         $this->template->render();

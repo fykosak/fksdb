@@ -22,7 +22,7 @@ class AESOPContestant extends StoredQueryPostProcessing {
      * @return mixed|string
      */
     public function getDescription() {
-        return 'Profiltruje jenom na kategorii zadanou v parametru \'category\' a spočítá rank v rámci kategorie.';
+        return 'Profiltruje jenom na kategorii zadanou v parametru "category" a spočítá rank v rámci kategorie.';
     }
 
     /**

@@ -4,6 +4,7 @@ namespace FKSDB\ORM\Services;
 
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\ModelRegion;
 use Nette\Database\Table\Selection;
 
 /**
@@ -11,8 +12,19 @@ use Nette\Database\Table\Selection;
  */
 class ServiceRegion extends AbstractServiceSingle {
 
-    protected $tableName = DbNames::TAB_REGION;
-    protected $modelClassName = 'FKSDB\ORM\Models\ModelRegion';
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        return ModelRegion::class;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getTableName(): string {
+        return DbNames::TAB_REGION;
+    }
 
     /**
      * @return Selection

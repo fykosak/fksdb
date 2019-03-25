@@ -7,6 +7,7 @@ use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Models\ModelEventOrg;
 use ModelException;
 use Nette\Database\Table\Selection;
 
@@ -15,8 +16,19 @@ use Nette\Database\Table\Selection;
  */
 class ServiceEventOrg extends AbstractServiceSingle {
 
-    protected $tableName = DbNames::TAB_EVENT_ORG;
-    protected $modelClassName = 'FKSDB\ORM\Models\ModelEventOrg';
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        return ModelEventOrg::class;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getTableName(): string {
+        return DbNames::TAB_EVENT_ORG;
+    }
 
     /**
      * @param \FKSDB\ORM\IModel $model

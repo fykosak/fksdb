@@ -2,9 +2,10 @@
 
 namespace FKSDB\Results\EvaluationStrategies;
 
+use FKSDB\ORM\Models\ModelTask;
 use FKSDB\Results\ModelCategory;
 use Nette;
-use Nette\Database\Row;
+use Nette\Database\Table\ActiveRow;
 
 /**
  * First two categories have doubled points for the first two problems.
@@ -47,10 +48,10 @@ class EvaluationFykos2011 extends EvaluationStrategy {
     }
 
     /**
-     * @param Row $task
+     * @param ActiveRow|ModelTask $task
      * @return string
      */
-    public function getPointsColumn(Row $task): string {
+    public function getPointsColumn(ActiveRow $task): string {
         if ($task->label == '1' || $task->label == '2') {
             return "IF(ct.study_year IN (6,7,8,9,1,2), 2 * s.raw_points, s.raw_points)";
         } else {
@@ -66,11 +67,11 @@ class EvaluationFykos2011 extends EvaluationStrategy {
     }
 
     /**
-     * @param Row $task
+     * @param ActiveRow|ModelTask $task
      * @param ModelCategory $category
      * @return float|int
      */
-    public function getTaskPoints(Row $task, ModelCategory $category) {
+    public function getTaskPoints(ActiveRow $task, ModelCategory $category) {
         switch ($category->id) {
             case ModelCategory::CAT_ES_6:
             case ModelCategory::CAT_ES_7:

@@ -204,8 +204,8 @@ class ResultsModelFactory extends Object implements IXMLNodeSerializer {
                     }
                 }
             }
-        } catch (Exception $e) {
-            Debugger::log($e);
+        } catch (Exception $exception) {
+            Debugger::log($exception);
             throw new SoapFault('Receiver', 'Internal error.');
         }
     }
