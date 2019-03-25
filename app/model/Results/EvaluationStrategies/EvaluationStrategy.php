@@ -3,7 +3,7 @@
 namespace FKSDB\Results\EvaluationStrategies;
 
 use FKSDB\Results\ModelCategory;
-use Nette\Database\Row;
+use Nette\Database\Table\ActiveRow;
 
 /**
  *
@@ -16,10 +16,10 @@ abstract class EvaluationStrategy {
      * There are avilable tables 'contestant' aliased to 'ct' and
      * 'submit' aliaded to 's'.
      *
-     * @param Row $task
+     * @param ActiveRow $task
      * @return string
      */
-    abstract public function getPointsColumn(Row $task);
+    abstract public function getPointsColumn(ActiveRow $task);
 
     /**
      * Should return SQL expression with points for given submit.
@@ -55,11 +55,11 @@ abstract class EvaluationStrategy {
     /**
      * Should return points for correctly solved task (aka Student Pilný).
      *
-     * @param Row $task
+     * @param ActiveRow $task
      * @param ModelCategory $category
      * @return int
      */
-    abstract public function getTaskPoints(Row $task, ModelCategory $category);
+    abstract public function getTaskPoints(ActiveRow $task, ModelCategory $category);
 }
 
 

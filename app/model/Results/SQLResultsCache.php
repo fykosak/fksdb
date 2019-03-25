@@ -3,6 +3,7 @@
 namespace FKSDB\Results;
 
 use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceTask;
 use Nette;
 use Nette\Database\Connection;
@@ -80,7 +81,8 @@ class SQLResultsCache {
 
 
         $this->connection->beginTransaction();
-        foreach ($tasks as $task) {
+        foreach ($tasks as $row) {
+            $task = ModelTask::createFromTableRow($row);
             $conditions = [];
             $conditions[] = 't.contest_id = ' . $contest->contest_id;
             $conditions[] = 't.year = ' . (int)$year;

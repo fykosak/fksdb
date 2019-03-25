@@ -2,6 +2,7 @@
 
 namespace FKSDB\Results\Models;
 
+use FKSDB\ORM\Models\ModelTask;
 use FKSDB\Results\ModelCategory;
 
 /**
@@ -43,7 +44,8 @@ class BrojureResultsModel extends AbstractResultsModel {
 
         if (!isset($this->dataColumns[$category->id])) {
             $dataColumns = [];
-            foreach ($this->getTasks($this->listedSeries) as $task) {
+            foreach ($this->getTasks($this->listedSeries) as $row) {
+                $task = ModelTask::createFromTableRow($row);
                 $dataColumns[] = [
                     self::COL_DEF_LABEL => $task->label,
                     self::COL_DEF_LIMIT => $this->evaluationStrategy->getTaskPoints($task, $category),
@@ -138,7 +140,8 @@ class BrojureResultsModel extends AbstractResultsModel {
 
         $tasks = $this->getTasks($this->listedSeries);
         $i = 0;
-        foreach ($tasks as $task) {
+        foreach ($tasks as $row) {
+            $task = ModelTask::createFromTableRow($row);
             $points = $this->evaluationStrategy->getPointsColumn($task);
             $select[] = "round(MAX(IF(t.task_id = " . $task->task_id . ", " . $points . ", null))) AS '" . self::DATA_PREFIX . $i . "'";
             $i += 1;
@@ -153,8 +156,6 @@ class BrojureResultsModel extends AbstractResultsModel {
         $select[] = "round(100 * SUM($sum) / SUM(" . $this->evaluationStrategy->getTaskPointsColumn($category) . ")) AS '" . self::ALIAS_PERCENTAGE . "'";
         $select[] = "round(SUM($sum)) AS '" . self::ALIAS_SUM . "'";
 
-        $study_years = $this->evaluationStrategy->categoryToStudyYears($category);
-
         $from = " from v_contestant ct
 left join person p using(person_id)
 left join school sch using(school_id)
@@ -165,7 +166,7 @@ left join submit s ON s.task_id = t.task_id AND s.ct_id = ct.ct_id";
             'ct.year' => $this->year,
             'ct.contest_id' => $this->contest->contest_id,
             't.series' => $this->getSeries(),
-            'ct.study_year' => $study_years,
+            'ct.study_year' => $this->evaluationStrategy->categoryToStudyYears($category),
         ];
 
         $query = "select " . implode(', ', $select);
