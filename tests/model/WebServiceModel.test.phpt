@@ -2,6 +2,7 @@
 
 $container = require '../bootstrap.php';
 
+use FKSDB\WebService\WebServiceModel;
 use Nette\DI\Container;
 use Tester\Assert;
 
@@ -30,7 +31,7 @@ class WebServiceModelTest extends DatabaseTestCase {
     protected function setUp() {
         parent::setUp();
 
-        $this->fixture = $this->container->getService('webServiceModel');
+        $this->fixture = $this->container->getService('WebServiceModel');
         $this->person = $this->createPerson('Homer', 'Simpson', array(), array('login' => 'homer', 'hash' => '123456'));
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
     }
@@ -53,8 +54,8 @@ class WebServiceModelTest extends DatabaseTestCase {
             'brojure' => '1 2 3 4 5 6',
         );
         $result = $this->fixture->GetResults((object) $resultsReq);
-        
-        Assert::type('SoapVar', $result);        
+
+        Assert::type('SoapVar', $result);
     }
 
 }
