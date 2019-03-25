@@ -10,9 +10,19 @@ use FKSDB\ORM\Models\ModelFlag;
  * @author Lukáš Timko <lukast@fykos.cz>
  */
 class ServiceFlag extends AbstractServiceSingle {
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        return ModelFlag::class;
+    }
 
-    protected $tableName = DbNames::TAB_FLAG;
-    protected $modelClassName = 'FKSDB\ORM\Models\ModelFlag';
+    /**
+     * @return string
+     */
+    protected function getTableName(): string {
+        return DbNames::TAB_FLAG;
+    }
 
     /**
      * Syntactic sugar.

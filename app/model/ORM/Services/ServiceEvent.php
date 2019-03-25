@@ -5,6 +5,7 @@ namespace FKSDB\ORM\Services;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Models\ModelEvent;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
 
@@ -12,9 +13,19 @@ use Nette\Database\Table\Selection;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceEvent extends AbstractServiceSingle {
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        return ModelEvent::class;
+    }
 
-    protected $tableName = DbNames::TAB_EVENT;
-    protected $modelClassName = 'FKSDB\ORM\Models\ModelEvent';
+    /**
+     * @return string
+     */
+    protected function getTableName(): string {
+        return DbNames::TAB_EVENT;
+    }
 
     /**
      * @param ModelContest $contest

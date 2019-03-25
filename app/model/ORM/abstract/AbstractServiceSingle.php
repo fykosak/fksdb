@@ -8,6 +8,7 @@ use ModelException;
 use Nette\Database\Connection;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection as TableSelection;
+use Nette\DeprecatedException;
 use Nette\InvalidStateException;
 use PDOException;
 
@@ -21,16 +22,6 @@ use PDOException;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 abstract class AbstractServiceSingle extends TableSelection implements IService {
-
-    /**
-     * @var string
-     */
-    protected $modelClassName;
-
-    /**
-     * @var string
-     */
-    protected $tableName;
 
     /**
      * @var Connection
@@ -82,20 +73,17 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     /**
      * @return string
      */
-    protected function getModelClassName(): string {
-        return $this->modelClassName;
-    }
+    abstract protected function getModelClassName(): string;
 
     /**
      * @return string
      */
-    protected function getTableName(): string {
-        return $this->tableName;
-    }
+    abstract protected function getTableName(): string;
 
     /**
      * @param ActiveRow $row
      * @return mixed
+     * @deprecated
      */
     public function createFromTableRow(ActiveRow $row) {
         $className = $this->getModelClassName();

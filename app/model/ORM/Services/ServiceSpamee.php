@@ -3,7 +3,7 @@
 namespace FKSDB\ORM\Services;
 
 use FKSDB\ORM\AbstractServiceSingle;
-use FKSDB\ORM\DbNames;
+use Nette\DeprecatedException;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -11,8 +11,20 @@ use FKSDB\ORM\DbNames;
  */
 class ServiceSpamee extends AbstractServiceSingle {
 
-    protected $tableName = DbNames::TAB_SPAMEE;
-    protected $modelClassName = 'ModelSpamee';
+    /**
+     * @return string
+     * @deprecated
+     */
+    protected function getModelClassName(): string {
+        throw new DeprecatedException();
+    }
 
+    /**
+     * @return string
+     * @deprecated
+     */
+    protected function getTableName(): string {
+        throw new DeprecatedException();
+    }
 }
 

@@ -12,8 +12,19 @@ use FKSDB\ORM\Models\ModelTask;
  */
 class ServiceTask extends AbstractServiceSingle {
 
-    protected $tableName = DbNames::TAB_TASK;
-    protected $modelClassName = 'FKSDB\ORM\Models\ModelTask';
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        return ModelTask::class;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getTableName(): string {
+        return DbNames::TAB_TASK;
+    }
 
     /**
      * Syntactic sugar.
