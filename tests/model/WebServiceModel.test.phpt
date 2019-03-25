@@ -31,7 +31,7 @@ class WebServiceModelTest extends DatabaseTestCase {
     protected function setUp() {
         parent::setUp();
 
-        $this->fixture = $this->container->getService('WebServiceModel');
+        $this->fixture = $this->container->getService('webServiceModel');
         $this->person = $this->createPerson('Homer', 'Simpson', array(), array('login' => 'homer', 'hash' => '123456'));
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
     }
