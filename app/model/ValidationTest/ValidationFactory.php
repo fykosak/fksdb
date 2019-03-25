@@ -19,6 +19,10 @@ class ValidationFactory {
      */
     private $serviceContest;
 
+    /**
+     * ValidationFactory constructor.
+     * @param ServiceContest $serviceContest
+     */
     public function __construct(ServiceContest $serviceContest) {
         $this->serviceContest = $serviceContest;
         $this->registersTests();

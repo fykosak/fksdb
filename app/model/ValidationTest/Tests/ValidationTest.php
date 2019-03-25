@@ -16,7 +16,7 @@ abstract class ValidationTest {
     /**
      * @return array
      */
-    public static function getAvailableLevels(): array {
+    public static final function getAvailableLevels(): array {
         return [self::LVL_DANGER, self::LVL_WARNING, self::LVL_SUCCESS, self::LVL_INFO];
     }
 
