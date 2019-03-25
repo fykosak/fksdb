@@ -7,6 +7,7 @@ use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ValidationTest\ValidationLog;
 use FKSDB\ValidationTest\ValidationTest;
+use Nette\NotImplementedException;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;
 
@@ -64,9 +65,30 @@ class ValidationGrid extends BaseGrid {
     /**
      * @param ValidationLog $log
      * @return Html
+     * @throws NotImplementedException
      */
     protected static function createHtmlLog(ValidationLog $log): Html {
-        return Html::el('span')->addAttributes(['class' => 'mr-3 badge badge-' . $log->level])->add($log->message);
+        $icon = Html::el('span');
+        switch ($log->level) {
+            case ValidationLog::LVL_DANGER:
+                $icon->addAttributes(['class' => 'fa fa-close']);
+                break;
+            case ValidationLog::LVL_WARNING:
+                $icon->addAttributes(['class' => 'fa fa-warning']);
+                break;
+            case ValidationLog::LVL_INFO:
+                $icon->addAttributes(['class' => 'fa fa-info']);
+                break;
+            case ValidationLog::LVL_SUCCESS:
+                $icon->addAttributes(['class' => 'fa fa-check']);
+                break;
+            default:
+                throw new NotImplementedException(\sprintf('%s is not supported', $log->level));
+        }
+        return Html::el('span')->addAttributes([
+            'class' => 'text-' . $log->level,
+            'title' => $log->message,
+        ])->add($icon);
 
     }
 }
