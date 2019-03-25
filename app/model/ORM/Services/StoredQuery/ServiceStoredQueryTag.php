@@ -1,8 +1,10 @@
 <?php
 
 namespace FKSDB\ORM\Services\StoredQuery;
+
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryTag;
 use Nette;
 
 /**
@@ -10,8 +12,19 @@ use Nette;
  */
 class ServiceStoredQueryTag extends AbstractServiceSingle {
 
-    protected $tableName = DbNames::TAB_STORED_QUERY_TAG;
-    protected $modelClassName = 'FKSDB\ORM\Models\StoredQuery\ModelStoredQueryTag';
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        return ModelStoredQueryTag::class;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getTableName(): string {
+        return DbNames::TAB_STORED_QUERY_TAG;
+    }
 
     /**
      * @param int|null $tagTypeId
