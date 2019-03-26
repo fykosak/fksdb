@@ -115,19 +115,7 @@ class ParticipantsGrid extends BaseGrid {
                 ->add(_($model->status));
         });
         $this->addColumns();
-        $this->addButton('edit')->setShow(function ($row) {
-            $model = ModelEventParticipant::createFromTableRow($row);
-            return !\in_array($model->getEvent()->event_type_id, [1, 9]);
-        })->setText(_('Edit'))
-            ->setLink(function ($row) {
-                $model = ModelEventParticipant::createFromTableRow($row);
-                return $this->getPresenter()->link(':Public:application:default', [
-                    'id' => $model->event_participant_id,
-                    'contestId' => $model->getEvent()->getEventType()->contest_id,
-                    'year' => $model->getEvent()->year,
-                    'eventId' => $model->event_id,
-                ]);
-            });
+        
         $this->addButton('detail')->setShow(function ($row) {
             $model = ModelEventParticipant::createFromTableRow($row);
             return !\in_array($model->getEvent()->event_type_id, [1, 9]);
