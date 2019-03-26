@@ -15,6 +15,7 @@ services:
     PersonAccommodationFactory: FKSDB\Components\Forms\Factories\PersonAccommodationFactory
     FyziklaniComponentsFactory: FKSDB\Components\Factories\FyziklaniFactory
     PaymentComponentFactory: FKSDB\Components\Factories\PaymentFactory
+    ScheduleFactory: FKSDB\Components\Factories\ScheduleFactory
 
     - FKSDB\Components\Forms\Rules\UniqueEmailFactory
     - FKSDB\Components\Forms\Rules\UniqueLoginFactory

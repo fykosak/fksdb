@@ -122,6 +122,13 @@ class ModelEvent extends AbstractModelSingle implements IResource {
     }
 
     /**
+     * @return GroupedSelection
+     */
+    public function getParticipants(): GroupedSelection {
+        return $this->related(DbNames::TAB_EVENT_PARTICIPANT, 'event_id');
+    }
+
+    /**
      * @return array
      */
     public function __toArray(): array {
@@ -137,5 +144,4 @@ class ModelEvent extends AbstractModelSingle implements IResource {
             'event_type_id' => $this->event_type_id,
         ];
     }
-
 }

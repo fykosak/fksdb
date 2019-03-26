@@ -22,7 +22,6 @@ use YearCalculator;
  * @property string gender
  */
 class ModelPerson extends AbstractModelSingle implements IResource {
-
     /**
      * Returns first of the person's logins.
      * (so far, there's not support for multiple login in DB schema)
@@ -49,6 +48,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         if (!isset($this->person_id)) {
             $this->person_id = null;
         }
+
         $infos = $this->related(DbNames::TAB_PERSON_INFO, 'person_id');
         $infos->rewind();
         if (!$infos->valid()) {

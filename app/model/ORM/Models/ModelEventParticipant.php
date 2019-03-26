@@ -5,6 +5,7 @@ namespace FKSDB\ORM\Models;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Payment\Price;
 use FKSDB\Transitions\IEventReferencedModel;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
@@ -64,6 +65,13 @@ class ModelEventParticipant extends AbstractModelSingle implements IEventReferen
      */
     public function getEvent(): ModelEvent {
         return ModelEvent::createFromTableRow($this->event);
+    }
+
+    /**
+     * @return Price|null
+     */
+    public function getPrice() {
+        return new Price($this->price, Price::CURRENCY_CZK);
     }
 
     /**
