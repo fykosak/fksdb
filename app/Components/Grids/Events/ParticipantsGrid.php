@@ -115,9 +115,10 @@ class ParticipantsGrid extends BaseGrid {
                 ->add(_($model->status));
         });
         $this->addColumns();
-        
+
         $this->addButton('detail')->setShow(function ($row) {
             $model = ModelEventParticipant::createFromTableRow($row);
+            // return true;
             return !\in_array($model->getEvent()->event_type_id, [1, 9]);
         })->setText(_('Detail'))
             ->setLink(function ($row) {

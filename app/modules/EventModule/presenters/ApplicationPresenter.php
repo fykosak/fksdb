@@ -83,6 +83,13 @@ class ApplicationPresenter extends BasePresenter {
         $this->setIcon('fa fa-user');
     }
 
+    protected function startup() {
+        parent::startup();
+        if (\in_array($this->getEvent()->event_type_id, [1, 9])) {
+            $this->flashMessage(_('Thi GUI don\'t works for team applications.'), self::FLASH_INFO);
+        }
+    }
+
     /**
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException

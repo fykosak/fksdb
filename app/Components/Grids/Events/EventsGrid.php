@@ -73,10 +73,15 @@ class EventsGrid extends BaseGrid {
             ->setLink(function ($row) {
                 return $this->getPresenter()->link('edit', $row->event_id);
             });
-        $this->addButton('applications')
+        $this->addButton('old_applications')
             ->setText(_('Applications'))
             ->setLink(function ($row) {
                 return $this->getPresenter()->link('applications', $row->event_id);
+            });
+        $this->addButton('applications')
+            ->setText(_('Applications (test GUI)'))
+            ->setLink(function ($row) {
+                return $this->getPresenter()->link(':Event:application:list', ['eventId' => $row->event_id]);
             });
         $this->addButton('org')
             ->setText(_('Organisers'))
