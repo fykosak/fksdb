@@ -2,6 +2,11 @@
 
 namespace FKSDB\Components\Controls\Stalking;
 
+use FKSDB\Components\Controls\DetailHelpers\AbstractValue;
+use FKSDB\Components\Controls\DetailHelpers\BinaryValueControl;
+use FKSDB\Components\Controls\DetailHelpers\IsSetValueControl;
+use FKSDB\Components\Controls\DetailHelpers\PhoneValueControl;
+use FKSDB\Components\Controls\DetailHelpers\StringValueControl;
 use FKSDB\Components\Controls\Stalking\Helpers\ContestBadge;
 use FKSDB\Components\Controls\Stalking\Helpers\EventLabelControl;
 use FKSDB\Components\Controls\Stalking\Helpers\NoRecordsControl;
@@ -87,6 +92,35 @@ abstract class StalkingComponent extends Control {
      */
     public function createComponentNotSet(): NotSetControl {
         return new NotSetControl($this->translator);
+    }
+
+    /************* VALUES *****************/
+    /**
+     * @return PhoneValueControl
+     */
+    public function createComponentPhoneValue(): PhoneValueControl {
+        return new PhoneValueControl($this->translator, AbstractValue::LAYOUT_STALKING);
+    }
+
+    /**
+     * @return IsSetValueControl
+     */
+    public function createComponentIsSetValue(): IsSetValueControl {
+        return new IsSetValueControl($this->translator, AbstractValue::LAYOUT_STALKING);
+    }
+
+    /**
+     * @return BinaryValueControl
+     */
+    public function createComponentBinaryValue(): BinaryValueControl {
+        return new BinaryValueControl($this->translator, AbstractValue::LAYOUT_STALKING);
+    }
+
+    /**
+     * @return StringValueControl
+     */
+    public function createComponentStringValue(): StringValueControl {
+        return new StringValueControl($this->translator, AbstractValue::LAYOUT_STALKING);
     }
 
     /**

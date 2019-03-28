@@ -1,8 +1,6 @@
 {block content}
-    <div class="row">
-        <b class="col-2">{_'event_participant_id'}</b>
-        <span class="col-10">{$model->event_participant_id}</span>
-    </div>
+
+    {control stringValue $model, _('event_participant_id'), event_participant_id}
 
     <div class="row">
         <b class="col-2">{_'Person'}</b>
@@ -15,142 +13,90 @@
         </span>
     </div>
 
-    <div class="row">
-        <b class="col-2">{_'Status'}</b>
-        <span class="col-10">{$model->status}</span>
-    </div>
-    <div class="row">
-        <b class="col-2">{_'Created'}</b>
-        <span class="col-10">{$model->created}</span>
-    </div>
+    {control stringValue $model, _('Status'), status}
+
+    {control stringValue $model, _('Created'), created}
 
     <div class="row">
         <b class="col-2">{_'Price'}</b>
         <span class="col-10">
-            {if \is_null($model->price)}
+            {if !\is_null($model->price)}
                 {$model->getPrice()->__toString()}
+            {else}
+                <span class="badge badge-warning">{_'NA'}</span>
             {/if}
         </span>
     </div>
 
-    <div class="row">
-        <b class="col-2">{_'Swimmer'}</b>
-        <span class="col-10">
-            {if \is_null($model->swimmer)}
-                {control notSet}
-            {elseif $model->swimmer}
-                <span class="fa fa-check text-success"></span>
-            {else}
-                <span class="fa fa-times text-danger"></span>
-            {/if}
-        </span>
-    </div>
+    {control binaryValue $model, _('Swimmer'),swimmer}
+
     <hr/>
     <h3>{_'Health & food'}</h3>
-    <div class="row">
-        <b class="col-2">{_'Health restrictions'}</b>
-        <span class="col-10">{$model->health_restrictions}</span>
-    </div>
 
-    <div class="row">
-        <b class="col-2">{_'Diet'}</b>
-        <span class="col-10">{$model->diet}</span>
-    </div>
+    {control stringValue $model, _('Health restrictions'), health_restrictions}
 
-    <div class="row">
-        <b class="col-2">{_'Used drugs'}</b>
-        <span class="col-10">{$model->used_drugs}</span>
-    </div>
-    <div class="row">
-        <b class="col-2">{_'Note'}</b>
-        <span class="col-10">{$model->note}</span>
-    </div>
+    {control stringValue $model, _('Diet'), diet}
+
+    {control stringValue $model, _('Used drugs'), used_drugs}
+
+    {control stringValue $model, _('Note'), note}
 
     <hr/>
     <h3>{_'T-shirt'}</h3>
     <div class="row">
         <b class="col-2">{_'Size'}</b>
-        <span class="col-10">{$model->tshirt_size}</span>
+        <span class="col-10">
+            {if \is_null($model->tshirt_size)}
+                {control notSet}
+            {else}
+                {$model->tshirt_size}
+            {/if}
+        </span>
     </div>
     <div class="row">
         <b class="col-2">{_'Color'}</b>
         <span class="col-10">
-            <i style="
-                    background-color: {$model->tshirt_color};
-                    height:1rem;
-                    width: 1rem;
-                    border-radius: .5rem;
-                    display: inline-block;
-                    margin-right: .5rem "></i>{$model->tshirt_color}</span>
+             {if \is_null($model->tshirt_color)}
+                 {control notSet}
+             {else}
+             <i style="
+                     background-color: {$model->tshirt_color};
+                     height:1rem;
+                     width: 1rem;
+                     border-radius: .5rem;
+                     display: inline-block;
+                     margin-right: .5rem "></i>{$model->tshirt_color}
+             {/if}
+        </span>
     </div>
     <hr/>
     <h3>{_'Arrival'}</h3>
-    <div class="row">
-        <b class="col-2">{_'Time'}</b>
-        <span class="col-10">
-            {if \is_null($model->arrival_time)}
-                {control notSet}
-            {else}
-                {$model->arrival_time}
-            {/if}
-        </span>
-    </div>
-    <div class="row">
-        <b class="col-2">{_'Destination'}</b>
-        <span class="col-10">
-            {if \is_null($model->arrival_destination)}
-                {control notSet}
-            {else}
-                {$model->arrival_destination}
-            {/if}
-        </span>
-    </div>
-    <div class="row">
-        <b class="col-2">{_'Ticket'}</b>
-        <span class="col-10">
-              {if \is_null($model->arrival_ticket)}
-                  {control notSet}
-              {else}
-                  {$model->arrival_ticket}
-              {/if}
-        </span>
-    </div>
+
+    {control stringValue $model, _('Time'), arrival_time}
+
+    {control stringValue $model, _('Destination'), arrival_destination}
+
+    {control binaryValue $model, _('Ticket'), arrival_ticket}
+
     <hr/>
+
     <h3>{_'Departure'}</h3>
-    <div class="row">
-        <b class="col-2">{_'Time'}</b>
-        <span class="col-10">
-            {if \is_null($model->departure_time)}
-                {control notSet}
-            {else}
-                {$model->departure_time}
-            {/if}
-        </span>
-    </div>
-    <div class="row">
-        <b class="col-2">{_'Destination'}</b>
-        <span class="col-10">
-            {if \is_null($model->departure_destination)}
-                {control notSet}
-            {else}
-                {$model->departure_destination}
-            {/if}
-        </span>
-    </div>
-    <div class="row">
-        <b class="col-2">{_'Ticket'}</b>
-        <span class="col-10">
-            {if \is_null($model->departure_ticket)}
-                {control notSet}
-            {else}
-                {$model->departure_ticket}
-            {/if}
-            </span>
-    </div>
+
+    {control stringValue $model, _('Time'), departure_time}
+
+    {control stringValue $model, _('Destination'), departure_destination}
+
+    {control binaryValue $model, _('Ticket'), departure_ticket}
+
     <hr/>
+
     <h3>{_'Actions'}</h3>
+
     {control applicationComponent:inline edit}
     <hr/>
+
     <h3>{_'Transitions'}</h3>
+
     {control applicationComponent:inline transitions}
+
 {/block}

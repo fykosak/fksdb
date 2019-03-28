@@ -4,6 +4,7 @@ namespace FKSDB\ORM\Models\Fyziklani;
 
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\ModelEvent;
 use Nette\Database\Table\Selection;
 use Nette\DateTime;
 
@@ -27,6 +28,20 @@ class ModelFyziklaniTeam extends AbstractModelSingle {
      */
     public function __toString(): string {
         return $this->name;
+    }
+
+    /**
+     * @return ModelEvent
+     */
+    public function getEvent(): ModelEvent {
+        return ModelEvent::createFromTableRow($this->event);
+    }
+
+    /**
+     * @return Selection
+     */
+    public function getParticipants(): Selection {
+        return $this->related(DbNames::TAB_E_FYZIKLANI_PARTICIPANT, 'e_fyziklani_team_id');
     }
 
     /**

@@ -1,0 +1,15 @@
+{if $mode=='stalking'}
+    <div class="row">
+        <b class="col-5">{$title}</b>
+        <span class="col-7">
+            {include #value}
+        </span>
+    </div>
+{else}
+    <div class="row">
+        <b class="col-2">{$title}</b>
+        <span class="col-10">
+            {include #value}
+        </span>
+    </div>
+{/if}

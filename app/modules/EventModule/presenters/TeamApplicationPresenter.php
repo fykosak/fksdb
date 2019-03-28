@@ -4,42 +4,44 @@ namespace EventModule;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Events\ParticipantsGrid;
-use FKSDB\ORM\Models\ModelEventParticipant;
-use FKSDB\ORM\Services\ServiceEventParticipant;
+use FKSDB\model\Fyziklani\NotSetGameParametersException;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
+use Nette\NotImplementedException;
 
 /**
  * Class ApplicationPresenter
  * @package EventModule
  */
-class ApplicationPresenter extends AbstractApplicationPresenter {
+class TeamApplicationPresenter extends AbstractApplicationPresenter {
     /**
-     * @var ServiceEventParticipant
+     * @var ServiceFyziklaniTeam
      */
-    private $serviceEventParticipant;
+    private $serviceFyziklaniTeam;
 
     /**
-     * @param ServiceEventParticipant $serviceEventParticipant
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
      */
-    public function injectServiceEventParticipant(ServiceEventParticipant $serviceEventParticipant) {
-        $this->serviceEventParticipant = $serviceEventParticipant;
+    public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam) {
+        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 
     public function titleList() {
-        $this->setTitle(_('List of applications'));
+        $this->setTitle(_('List of team applications'));
         $this->setIcon('fa fa-users');
     }
 
     public function titleDetail() {
-        $this->setTitle(_('Application detail'));
+        $this->setTitle(_('Team application detail'));
         $this->setIcon('fa fa-user');
     }
 
     protected function startup() {
         parent::startup();
-        if (\in_array($this->getEvent()->event_type_id, [1, 9])) {
-            $this->flashMessage(_('Thi GUI don\'t works for team applications.'), self::FLASH_INFO);
+        if (!\in_array($this->getEvent()->event_type_id, [1, 9])) {
+            $this->flashMessage(_('Thi GUI don\'t works for single applications.'), self::FLASH_INFO);
         }
     }
 
@@ -48,6 +50,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @throws \Nette\Application\BadRequestException
      */
     public function authorizedDetail() {
+        // TODO teamApplication
         $this->setAuthorized($this->eventIsAllowed('event.application', 'detail'));
     }
 
@@ -66,11 +69,11 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @throws \Nette\Application\AbortException
      */
     protected function loadModel(int $id) {
-        $row = $this->serviceEventParticipant->findByPrimary($id);
+        $row = $this->serviceFyziklaniTeam->findByPrimary($id);
         if (!$row) {
             throw new BadRequestException('Model not found');
         }
-        $model = ModelEventParticipant::createFromTableRow($row);
+        $model = ModelFyziklaniTeam::createFromTableRow($row);
         if ($model->event_id != $this->getEvent()->event_id) {
             throw new ForbiddenRequestException();
         }
@@ -83,17 +86,31 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @throws \Nette\Application\BadRequestException
      */
     public function createComponentGrid(): BaseGrid {
-        return new ParticipantsGrid($this->getEvent());
+        throw new NotImplementedException();
+        // return new TeamGrid($this->getEvent());
     }
 
     /**
-     * @return ModelEventParticipant
+     * @return ModelFyziklaniTeam
      */
-    protected function getModel(): ModelEventParticipant {
+    protected function getModel(): ModelFyziklaniTeam {
         return $this->model;
     }
 
+
+    /**
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function renderDetail() {
+        $this->template->acYear = $this->getAcYear();
+        try {
+            $setup = $this->getEvent()->getFyziklaniGameSetup();
+            $rankVisible = $setup->result_hard_display;
+        } catch (NotSetGameParametersException $exception) {
+            $rankVisible = false;
+        }
+        $this->template->rankVisible = $rankVisible;
         $this->template->model = $this->getModel();
     }
 }
