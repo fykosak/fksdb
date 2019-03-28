@@ -69,7 +69,7 @@ class ValidationGrid extends BaseGrid {
      */
     protected static function createHtmlLog(ValidationLog $log): Html {
         $icon = Html::el('span');
-        switch ($log->level) {
+        switch ($log->getLevel()) {
             case ValidationLog::LVL_DANGER:
                 $icon->addAttributes(['class' => 'fa fa-close']);
                 break;
@@ -83,11 +83,11 @@ class ValidationGrid extends BaseGrid {
                 $icon->addAttributes(['class' => 'fa fa-check']);
                 break;
             default:
-                throw new NotImplementedException(\sprintf('%s is not supported', $log->level));
+                throw new NotImplementedException(\sprintf('%s is not supported', $log->getLevel()));
         }
         return Html::el('span')->addAttributes([
-            'class' => 'text-' . $log->level,
-            'title' => $log->message,
+            'class' => 'text-' . $log->getLevel(),
+            'title' => $log->getMessage(),
         ])->add($icon);
 
     }
