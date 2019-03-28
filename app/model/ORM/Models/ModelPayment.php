@@ -4,6 +4,7 @@ namespace FKSDB\ORM\Models;
 
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\Payment\IPaymentModel;
 use FKSDB\Payment\Price;
 use FKSDB\Payment\PriceCalculator\PriceCalculator;
 use FKSDB\Transitions\IEventReferencedModel;
@@ -33,7 +34,7 @@ use Nette\Security\IResource;
  * @property string iban
  * @property string swift
  */
-class ModelPayment extends AbstractModelSingle implements IResource, IStateModel, IEventReferencedModel {
+class ModelPayment extends AbstractModelSingle implements IResource, IStateModel, IEventReferencedModel, IPaymentModel {
     const STATE_WAITING = 'waiting'; // waiting for confirm payment
     const STATE_RECEIVED = 'received'; // payment received
     const STATE_CANCELED = 'canceled'; // payment canceled
