@@ -4,8 +4,8 @@
 namespace EventModule;
 
 use AuthenticatedPresenter;
+use FKSDB\Components\Controls\Helpers\Badges\ContestBadge;
 use FKSDB\Components\Controls\LanguageChooser;
-use FKSDB\Components\Controls\Stalking\Helpers\ContestBadge;
 use FKSDB\Components\Grids\Events\DispatchGrid;
 use FKSDB\ORM\Services\ServiceEvent;
 use Nette\DI\Container;

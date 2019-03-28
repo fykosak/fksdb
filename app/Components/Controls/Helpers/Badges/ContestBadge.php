@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Controls\Stalking\Helpers;
+namespace FKSDB\Components\Controls\Helpers\Badges;
 
 use Nette\Application\UI\Control;
 use Nette\Templating\FileTemplate;
@@ -17,7 +17,7 @@ class ContestBadge extends Control {
      */
     public function render($contestId) {
         $this->template->contestId = $contestId;
-        $this->template->setFile(__DIR__ . '/ContestBadge.latte');
+        $this->template->setFile(__DIR__ . '/Contest.latte');
         $this->template->render();
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Controls\Stalking\Helpers;
+namespace FKSDB\Components\Controls\Helpers\Badges;
 
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
@@ -11,7 +11,7 @@ use Nette\Templating\FileTemplate;
  * @package FKSDB\Components\Controls\Stalking\Helpers
  * @property FileTemplate $template
  */
-class NotSetControl extends Control {
+class NotSetBadge extends Control {
     /**
      * @var ITranslator
      */
@@ -28,7 +28,7 @@ class NotSetControl extends Control {
 
     public function render() {
         $this->template->setTranslator($this->translator);
-        $this->template->setFile(__DIR__ . '/NotSetControl.latte');
+        $this->template->setFile(__DIR__ . '/NotSet.latte');
         $this->template->render();
     }
 }

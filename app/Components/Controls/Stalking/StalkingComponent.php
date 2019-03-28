@@ -2,16 +2,16 @@
 
 namespace FKSDB\Components\Controls\Stalking;
 
-use FKSDB\Components\Controls\DetailHelpers\AbstractValue;
-use FKSDB\Components\Controls\DetailHelpers\BinaryValueControl;
-use FKSDB\Components\Controls\DetailHelpers\IsSetValueControl;
-use FKSDB\Components\Controls\DetailHelpers\PhoneValueControl;
-use FKSDB\Components\Controls\DetailHelpers\StringValueControl;
-use FKSDB\Components\Controls\Stalking\Helpers\ContestBadge;
+use FKSDB\Components\Controls\Helpers\Badges\ContestBadge;
+use FKSDB\Components\Controls\Helpers\Badges\NoRecordsBadge;
+use FKSDB\Components\Controls\Helpers\Badges\NotSetBadge;
+use FKSDB\Components\Controls\Helpers\Badges\PermissionDeniedBadge;
+use FKSDB\Components\Controls\Helpers\ValuePrinters\AbstractValue;
+use FKSDB\Components\Controls\Helpers\ValuePrinters\BinaryValueControl;
+use FKSDB\Components\Controls\Helpers\ValuePrinters\IsSetValueControl;
+use FKSDB\Components\Controls\Helpers\ValuePrinters\PhoneValueControl;
+use FKSDB\Components\Controls\Helpers\ValuePrinters\StringValueControl;
 use FKSDB\Components\Controls\Stalking\Helpers\EventLabelControl;
-use FKSDB\Components\Controls\Stalking\Helpers\NoRecordsControl;
-use FKSDB\Components\Controls\Stalking\Helpers\NotSetControl;
-use FKSDB\Components\Controls\Stalking\Helpers\PermissionDenied;
 use FKSDB\ORM\Models\ModelPerson;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
@@ -67,10 +67,10 @@ abstract class StalkingComponent extends Control {
     }
 
     /**
-     * @return PermissionDenied
+     * @return PermissionDeniedBadge
      */
-    public function createComponentPermissionDenied(): PermissionDenied {
-        return new PermissionDenied($this->translator);
+    public function createComponentPermissionDenied(): PermissionDeniedBadge {
+        return new PermissionDeniedBadge($this->translator);
     }
 
     /**
@@ -81,22 +81,22 @@ abstract class StalkingComponent extends Control {
     }
 
     /**
-     * @return NoRecordsControl
+     * @return \FKSDB\Components\Controls\Helpers\Badges\NoRecordsBadge
      */
-    public function createComponentNoRecords(): NoRecordsControl {
-        return new NoRecordsControl($this->translator);
+    public function createComponentNoRecords(): NoRecordsBadge {
+        return new NoRecordsBadge($this->translator);
     }
 
     /**
-     * @return NotSetControl
+     * @return NotSetBadge
      */
-    public function createComponentNotSet(): NotSetControl {
-        return new NotSetControl($this->translator);
+    public function createComponentNotSet(): NotSetBadge {
+        return new NotSetBadge($this->translator);
     }
 
     /************* VALUES *****************/
     /**
-     * @return PhoneValueControl
+     * @return \FKSDB\Components\Controls\Helpers\PhoneValueControl
      */
     public function createComponentPhoneValue(): PhoneValueControl {
         return new PhoneValueControl($this->translator, AbstractValue::LAYOUT_STALKING);
@@ -110,14 +110,14 @@ abstract class StalkingComponent extends Control {
     }
 
     /**
-     * @return BinaryValueControl
+     * @return \FKSDB\Components\Controls\Helpers\BinaryValueControl
      */
     public function createComponentBinaryValue(): BinaryValueControl {
         return new BinaryValueControl($this->translator, AbstractValue::LAYOUT_STALKING);
     }
 
     /**
-     * @return StringValueControl
+     * @return \FKSDB\Components\Controls\Helpers\ValuePrinters\StringValueControl
      */
     public function createComponentStringValue(): StringValueControl {
         return new StringValueControl($this->translator, AbstractValue::LAYOUT_STALKING);

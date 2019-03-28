@@ -4,11 +4,14 @@ namespace EventModule;
 
 use Events\Model\ApplicationHandlerFactory;
 use Events\Model\Grid\SingleEventSource;
-use FKSDB\Components\Controls\DetailHelpers\BinaryValueControl;
-use FKSDB\Components\Controls\DetailHelpers\IsSetValueControl;
-use FKSDB\Components\Controls\DetailHelpers\PhoneValueControl;
-use FKSDB\Components\Controls\DetailHelpers\StringValueControl;
-use FKSDB\Components\Controls\Stalking\Helpers\NotSetControl;
+use FKSDB\Components\Controls\Helpers\Badges\NotSetBadge;
+use FKSDB\Components\Controls\Helpers\ValuePrinters\BinaryValueControl;
+use FKSDB\Components\Controls\Helpers\ValuePrinters\IsSetValueControl;
+use FKSDB\Components\Controls\Helpers\ValuePrinters\PersonValueControl;
+use FKSDB\Components\Controls\Helpers\ValuePrinters\PhoneValueControl;
+use FKSDB\Components\Controls\Helpers\ValuePrinters\PriceValueControl;
+use FKSDB\Components\Controls\Helpers\ValuePrinters\StringValueControl;
+use FKSDB\Components\Controls\Stalking\Helpers\PersonLinkControl;
 use FKSDB\Components\Events\ApplicationComponent;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Logging\FlashDumpFactory;
@@ -70,24 +73,38 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @return BinaryValueControl
+     * @return \FKSDB\Components\Controls\Helpers\ValuePrinters\BinaryValueControl
      */
     public function createComponentBinaryValue(): BinaryValueControl {
         return new BinaryValueControl($this->getTranslator());
     }
 
     /**
-     * @return StringValueControl
+     * @return PersonLinkControl
+     */
+    public function createComponentPersonLink(): PersonLinkControl {
+        return new PersonLinkControl();
+    }
+
+    /**
+     * @return PersonValueControl
+     */
+    public function createComponentPersonValue(): PersonValueControl {
+        return new PersonValueControl($this->getTranslator());
+    }
+
+    /**
+     * @return \FKSDB\Components\Controls\Helpers\ValuePrinters\StringValueControl
      */
     public function createComponentStringValue(): StringValueControl {
         return new StringValueControl($this->getTranslator());
     }
 
     /**
-     * @return NotSetControl
+     * @return \FKSDB\Components\Controls\Helpers\Badges\NotSetBadge
      */
-    public function createComponentNotSet(): NotSetControl {
-        return new NotSetControl($this->getTranslator());
+    public function createComponentNotSet(): NotSetBadge {
+        return new NotSetBadge($this->getTranslator());
     }
 
     /**
@@ -98,10 +115,17 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @return IsSetValueControl
+     * @return \FKSDB\Components\Controls\Helpers\ValuePrinters\IsSetValueControl
      */
     public function createComponentIsSetValue(): IsSetValueControl {
         return new IsSetValueControl($this->getTranslator());
+    }
+
+    /**
+     * @return \FKSDB\Components\Controls\Helpers\ValuePrinters\PriceValueControl
+     */
+    public function createComponentPriceValue(): PriceValueControl {
+        return new PriceValueControl($this->getTranslator());
     }
 
     /**

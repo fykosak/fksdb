@@ -45,21 +45,17 @@
     {foreach $model->getParticipants() as $row}
         {var $participant = FKSDB\ORM\Models\ModelEventParticipant::createFromTableRow($row->event_participant)}
         {var $counter ++}
-        <h4>{_'Parcipant'} {$counter}</h4>
         {var $history=$participant->getPerson()->getHistory($acYear)}
-        <div class="row">
-            <b class="col-2">{_'Person'}</b>
-            <span class="col-10">
-            <a href="{plink :Org:Stalking:view
-                    contestId => $participant->getEvent()->getEventType()->contest_id,
-                    year => $participant->getEvent()->year,
-                    id => $participant->person_id,
-}">{$participant->getPerson()->getFullName()}</a>
-            </span>
-        </div>
-        {control stringValue $participant, _('Status'), status}
-        {control stringValue $history, _('Study year'), study_year}
         {var $school = $history->getSchool()}
+
+        <h4>{_'Parcipant'} {$counter}</h4>
+
+        {control personValue $participant->getPerson(),$participant->getEvent()->year, $participant->getEvent()->getEventType()->contest_id }
+
+        {control stringValue $participant, _('Status'), status}
+
+        {control stringValue $history, _('Study year'), study_year}
+
         {control stringValue $school, _('School'), name_full}
     {/foreach}
 

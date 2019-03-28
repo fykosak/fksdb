@@ -1,8 +1,8 @@
 <?php
 
-namespace FKSDB\Components\Controls\DetailHelpers;
+namespace FKSDB\Components\Controls\Helpers\ValuePrinters;
 
-use FKSDB\Components\Controls\Stalking\Helpers\NotSetControl;
+use FKSDB\Components\Controls\Helpers\Badges\NotSetBadge;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
@@ -44,9 +44,9 @@ abstract class AbstractValue extends Control {
     }
 
     /**
-     * @return NotSetControl
+     * @return NotSetBadge
      */
-    public function createComponentNotSet(): NotSetControl {
-        return new NotSetControl($this->translator);
+    public function createComponentNotSet(): NotSetBadge {
+        return new NotSetBadge($this->translator);
     }
 }

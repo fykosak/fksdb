@@ -2,31 +2,13 @@
 
     {control stringValue $model, _('event_participant_id'), event_participant_id}
 
-    <div class="row">
-        <b class="col-2">{_'Person'}</b>
-        <span class="col-10">
-            <a href="{plink :Org:Stalking:view
-                    contestId => $model->getEvent()->getEventType()->contest_id,
-                    year => $model->getEvent()->year,
-                    id => $model->person_id,
-}">{$model->getPerson()->getFullName()}</a>
-        </span>
-    </div>
+    {control personValue $model->getPerson(), $model->getEvent()->year, $model->getEvent()->getEventType()->contest_id}
 
     {control stringValue $model, _('Status'), status}
 
     {control stringValue $model, _('Created'), created}
 
-    <div class="row">
-        <b class="col-2">{_'Price'}</b>
-        <span class="col-10">
-            {if !\is_null($model->price)}
-                {$model->getPrice()->__toString()}
-            {else}
-                <span class="badge badge-warning">{_'NA'}</span>
-            {/if}
-        </span>
-    </div>
+    {control priceValue $model, _('Price'), price}
 
     {control binaryValue $model, _('Swimmer'),swimmer}
 

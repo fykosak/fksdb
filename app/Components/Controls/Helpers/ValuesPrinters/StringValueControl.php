@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Controls\DetailHelpers;
+namespace FKSDB\Components\Controls\Helpers\ValuePrinters;
 
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Templating\FileTemplate;
@@ -9,7 +9,7 @@ use Nette\Templating\FileTemplate;
  * Class BinaryValueControl
  * @property FileTemplate $template
  */
-class IsSetValueControl extends AbstractValue {
+class StringValueControl extends AbstractValue {
     /**
      * @param AbstractModelSingle $model
      * @param string $title
@@ -19,7 +19,7 @@ class IsSetValueControl extends AbstractValue {
         $this->beforeRender($title);
         $this->template->model = $model;
         $this->template->accessKey = $accessKey;
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'IsSetValue.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'StringValue.latte');
         $this->template->render();
     }
 }

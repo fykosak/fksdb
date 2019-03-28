@@ -5,6 +5,7 @@ namespace FKSDB\ORM\Models;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Payment\IPaymentModel;
 use FKSDB\Payment\Price;
 use FKSDB\Transitions\IEventReferencedModel;
 use Nette\Application\BadRequestException;
@@ -39,7 +40,7 @@ use Nette\InvalidStateException;
  * @property string used_drugs užívané léky
  * @property string schedule
  */
-class ModelEventParticipant extends AbstractModelSingle implements IEventReferencedModel {
+class ModelEventParticipant extends AbstractModelSingle implements IEventReferencedModel, IPaymentModel {
     /**
      * @return ModelPerson|null
      */
@@ -68,9 +69,9 @@ class ModelEventParticipant extends AbstractModelSingle implements IEventReferen
     }
 
     /**
-     * @return Price|null
+     * @return Price
      */
-    public function getPrice() {
+    public function getPrice(): Price {
         return new Price($this->price, Price::CURRENCY_CZK);
     }
 
