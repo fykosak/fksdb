@@ -80,7 +80,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
         /**
          * @var LanguageChooser $languageChooser
          */
-        $languageChooser =  $this->getComponent('languageChooser');
+        $languageChooser = $this->getComponent('languageChooser');
         $languageChooser->syncRedirect();
 
         parent::startup();

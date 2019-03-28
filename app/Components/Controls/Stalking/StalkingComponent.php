@@ -96,7 +96,7 @@ abstract class StalkingComponent extends Control {
 
     /************* VALUES *****************/
     /**
-     * @return \FKSDB\Components\Controls\Helpers\PhoneValueControl
+     * @return PhoneValueControl
      */
     public function createComponentPhoneValue(): PhoneValueControl {
         return new PhoneValueControl($this->translator, AbstractValue::LAYOUT_STALKING);
@@ -110,7 +110,7 @@ abstract class StalkingComponent extends Control {
     }
 
     /**
-     * @return \FKSDB\Components\Controls\Helpers\BinaryValueControl
+     * @return BinaryValueControl
      */
     public function createComponentBinaryValue(): BinaryValueControl {
         return new BinaryValueControl($this->translator, AbstractValue::LAYOUT_STALKING);
