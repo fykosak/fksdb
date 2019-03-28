@@ -17,7 +17,7 @@ class PersonValueControl extends AbstractValue {
      * @param int $contestId
      */
     public function render(ModelPerson $person, int $year, int $contestId) {
-        $this->beforeRender(_('Person'));
+        $this->beforeRender(_('Person'), true);
         $this->template->person = $person;
         $this->template->year = $year;
         $this->template->contestId = $contestId;

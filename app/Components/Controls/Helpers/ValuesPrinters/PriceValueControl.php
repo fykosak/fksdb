@@ -14,9 +14,10 @@ class PriceValueControl extends AbstractValue {
      * @param IPaymentModel $model
      * @param string $title
      * @param string $accessKey
+     * @param bool $hasPermissions
      */
-    public function render(IPaymentModel $model, string $title, string $accessKey) {
-        $this->beforeRender($title);;
+    public function render(IPaymentModel $model, string $title, string $accessKey, bool $hasPermissions = true) {
+        $this->beforeRender($title, $hasPermissions);
         $this->template->model = $model;
         $this->template->accessKey = $accessKey;
 
