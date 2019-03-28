@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Controls\Stalking\Helpers;
+namespace FKSDB\Components\Controls\Helpers\Badges;
 
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
@@ -11,7 +11,7 @@ use Nette\Templating\FileTemplate;
  * @package FKSDB\Components\Controls\Stalking\Helpers
  * @property FileTemplate $template
  */
-class PermissionDenied extends Control {
+class PermissionDeniedBadge extends Control {
     /**
      * @var ITranslator
      */
