@@ -67,9 +67,9 @@ class PersonsGrid extends BaseGrid {
                 $model = ModelPersonSchedule::createFromTableRow($row);
                 $modelPayment = $model->getPayment();
                 if (!$modelPayment) {
-                    return Html::el('span')->addAttributes(['class' => 'badge badge-danger'])->add('No payment found');
+                    return Html::el('span')->addAttributes(['class' => 'badge badge-danger'])->addText('No payment found');
                 }
-                return Html::el('span')->addAttributes(['class' => $modelPayment->getUIClass()])->add('#' . $modelPayment->getPaymentId() . '-' . $modelPayment->getStateLabel());
+                return Html::el('span')->addAttributes(['class' => $modelPayment->getUIClass()])->addText('#' . $modelPayment->getPaymentId() . '-' . $modelPayment->getStateLabel());
             })->setSortable(false);
     }
 
@@ -84,22 +84,22 @@ class PersonsGrid extends BaseGrid {
                 $person = $model->getPerson();
                 $roles = $person->getRolesForEvent($model->getScheduleItem()->getGroup()->getEvent());
                 if (!\count($roles)) {
-                    $container->add(Html::el('span')
+                    $container->addHtml(Html::el('span')
                         ->addAttributes(['class' => 'badge badge-danger'])
-                        ->add(_('No role')));
+                        ->addText(_('No role')));
                     return $container;
                 }
                 foreach ($roles as $role) {
                     switch ($role['type']) {
                         case 'teacher':
-                            $container->add(Html::el('span')
+                            $container->addHtml(Html::el('span')
                                 ->addAttributes(['class' => 'badge badge-9'])
-                                ->add(_('Teacher') . ' - ' . $role['team']->name));
+                                ->addText(_('Teacher') . ' - ' . $role['team']->name));
                             break;
                         case'org':
-                            $container->add(Html::el('span')
+                            $container->addHtml(Html::el('span')
                                 ->addAttributes(['class' => 'badge badge-7'])
-                                ->add(_('Org') . ' - ' . $role['org']->note));
+                                ->addText(_('Org') . ' - ' . $role['org']->note));
                             break;
                         case'participant':
                             $team = null;
@@ -111,9 +111,9 @@ class PersonsGrid extends BaseGrid {
                                 $team = $participant->getFyziklaniTeam();
                             } catch (BadRequestException $exception) {
                             }
-                            $container->add(Html::el('span')
+                            $container->addHtml(Html::el('span')
                                 ->addAttributes(['class' => 'badge badge-10'])
-                                ->add(_('Participant') . ' - ' . _($participant->status) .
+                                ->addText(_('Participant') . ' - ' . _($participant->status) .
                                     ($team ? (' - team: ' . $team->name) : '')
                                 ));
                     }

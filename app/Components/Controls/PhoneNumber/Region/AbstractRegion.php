@@ -39,9 +39,9 @@ abstract class AbstractRegion {
     protected static function createHtml(string $number): Html {
         $flag = Html::el('span')
             ->addAttributes(['class' => 'phone-flag mr-3'])
-            ->add(Html::el('img')
+            ->addHtml(Html::el('img')
                 ->addAttributes(['src' => '/images/flags/4x3/' . static::getISO3166() . '.svg']));
-        return Html::el('span')->addAttributes([])->add($flag)->add(static::getPrefix() . ' ' . $number);
+        return Html::el('span')->addAttributes([])->addHtml($flag)->addText(static::getPrefix() . ' ' . $number);
     }
 
     /**

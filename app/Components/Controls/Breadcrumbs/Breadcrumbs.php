@@ -17,6 +17,7 @@ use Nette\Http\SessionSection;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use Nette\Templating\FileTemplate;
+use Nette\Utils\Random;
 use Nette\Utils\Strings;
 use Utils;
 
@@ -335,7 +336,7 @@ class Breadcrumbs extends Control {
         $backLinkMap = $this->getBackLinkMap();
 
         do {
-            $backLinkId = Strings::random(self::BACKID_LEN, self::BACKID_DOMAIN);
+            $backLinkId = Random::generate(self::BACKID_LEN, self::BACKID_DOMAIN);
         } while (isset($backLinkMap[$backLinkId]));
 
         $backLinkMap[$backLinkId] = $requestKey;
