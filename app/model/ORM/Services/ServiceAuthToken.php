@@ -7,6 +7,7 @@ use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelLogin;
 use Nette\DateTime;
+use Nette\Utils\Random;
 use Nette\Utils\Strings;
 
 /**
@@ -65,7 +66,7 @@ class ServiceAuthToken extends AbstractServiceSingle {
         }
         if (!$token) {
             do {
-                $tokenData = Strings::random(self::TOKEN_LENGTH, 'a-zA-Z0-9');
+                $tokenData = Random::generate(self::TOKEN_LENGTH, 'a-zA-Z0-9');
             } while ($this->verifyToken($tokenData));
 
             $token = $this->createNew([

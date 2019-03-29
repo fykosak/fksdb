@@ -68,7 +68,7 @@ class OrgsGrid extends BaseGrid {
         });
         $this->addColumn('since', _('Začal'));
         $this->addColumn('until', _('Skončil'))->setRenderer(function ($row) {
-            return ($row->until === NULL) ? Html::el('span')->addAttributes(['class' => 'badge badge-success'])->add(_('Still organizes')) : $row->until;
+            return ($row->until === NULL) ? Html::el('span')->addAttributes(['class' => 'badge badge-success'])->addText(_('Still organizes')) : $row->until;
         });
         $this->addColumn('role', _('Funkce'));
 

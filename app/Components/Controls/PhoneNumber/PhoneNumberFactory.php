@@ -33,7 +33,7 @@ class PhoneNumberFactory {
             }
         } catch (InvalidPhoneNumberException $exception) {
         }
-        return Html::el('span')->addAttributes(['class' => 'badge badge-danger'])->add($number);
+        return Html::el('span')->addAttributes(['class' => 'badge badge-danger'])->addText($number);
     }
 
     /**

@@ -3,19 +3,10 @@
     <ul class="list-group list-group-flush">
         {if $info}
             <li class="list-group-item">
-                <div class="row">
-                    <span class="col-5"><b>{_'Email'}</b></span>
-                    <div class="col-7">
-                        {if (is_null($info->email))}
-                            {control notSet}
-                        {else}
-                            {$info->email}
-                        {/if}
-
-                    </div>
-                </div>
+                {control stringValue $info,_('Email'),email}
             </li>
             <li class="list-group-item">
+                {*control phoneValue $info,_('Bank account'),account*}
                 <div class="row">
                     <span class="col-5"><b>{_'Phone'}</b></span>
                     <div class="col-7">
@@ -31,6 +22,13 @@
                     </div>
                 </div>
             </li>
+            {*<li class="list-group-item">
+                {if $mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL}
+                    {control phoneValue $info,_('Phone parent mum'),phone_parent_m}
+                {else}
+                    {control isSetValue $info,_('Phone parent mum'),phone_parent_m}
+                {/if}
+            </li>*}
             <li class="list-group-item">
                 <div class="row">
                     <span class="col-5"><b>{_'Phone parent mum'}</b></span>

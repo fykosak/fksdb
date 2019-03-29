@@ -7,10 +7,10 @@ use Authorization\Grant;
 use DateTime;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\YearCalculator;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 use Nette\Security\IIdentity;
-use YearCalculator;
 
 /**
  *
@@ -25,19 +25,19 @@ use YearCalculator;
 class ModelLogin extends AbstractModelSingle implements IIdentity {
 
     /**
-     * @var YearCalculator|null
+     * @var \FKSDB\YearCalculator|null
      */
     private $yearCalculator;
 
     /**
-     * @return null|YearCalculator
+     * @return null|\FKSDB\YearCalculator
      */
     protected function getYearCalculator() {
         return $this->yearCalculator;
     }
 
     /**
-     * @param YearCalculator $yearCalculator
+     * @param \FKSDB\YearCalculator $yearCalculator
      */
     public function injectYearCalculator(YearCalculator $yearCalculator) {
         $this->yearCalculator = $yearCalculator;
@@ -54,7 +54,7 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
     }
 
     /**
-     * @param YearCalculator $yearCalculator
+     * @param \FKSDB\YearCalculator $yearCalculator
      * @return array of FKSDB\ORM\Models\ModelOrg|null indexed by contest_id (i.e. impersonal orgs)
      */
     public function getActiveOrgs(YearCalculator $yearCalculator) {
@@ -148,7 +148,7 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
         if ($this->roles === null) {
 
             if (!$this->yearCalculator) {
-                throw new InvalidStateException('To obtain current roles, you have to inject YearCalculator to this Login instance.');
+                throw new InvalidStateException('To obtain current roles, you have to inject FKSDB\YearCalculator to this Login instance.');
             }
             $this->roles = [];
             $this->roles[] = new Grant(Grant::CONTEST_ALL, ModelRole::REGISTERED);
