@@ -2,9 +2,9 @@
 
 namespace Tasks;
 
+use FKSDB\ORM\Services\ServiceTask;
 use Pipeline\PipelineException;
 use Pipeline\Stage;
-use ServiceTask;
 use SimpleXMLElement;
 
 /**
@@ -32,14 +32,21 @@ class TasksFromXML2 extends Stage {
     ];
 
     /**
-     * @var ServiceTask
+     * @var \FKSDB\ORM\Services\ServiceTask
      */
     private $taskService;
 
+    /**
+     * TasksFromXML2 constructor.
+     * @param \FKSDB\ORM\Services\ServiceTask $taskService
+     */
     public function __construct(ServiceTask $taskService) {
         $this->taskService = $taskService;
     }
 
+    /**
+     * @param mixed $data
+     */
     public function setInput($data) {
         $this->data = $data;
     }
@@ -57,17 +64,23 @@ class TasksFromXML2 extends Stage {
         }
     }
 
+    /**
+     * @return mixed|SeriesData
+     */
     public function getOutput() {
         return $this->data;
     }
 
+    /**
+     * @param SimpleXMLElement $XMLTask
+     */
     private function processTask(SimpleXMLElement $XMLTask) {
         $contest = $this->data->getContest();
         $year = $this->data->getYear();
         $series = $this->data->getSeries();
         $tasknr = (int) (string) $XMLTask->number;
 
-        // obtain FKSDB\ORM\ModelTask
+        // obtain FKSDB\ORM\Models\ModelTask
         $task = $this->taskService->findBySeries($contest, $year, $series, $tasknr);
         if ($task == null) {
             $task = $this->taskService->createNew(array(

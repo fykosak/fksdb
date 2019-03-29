@@ -3,11 +3,14 @@
 namespace FKSDB\Components\React\ReactComponent\Events;
 
 use FKSDB\Components\React\ReactComponent;
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\DI\Container;
 use Nette\Utils\Json;
-use ORM\Services\Events\ServiceFyziklaniTeam;
 
+/**
+ * Class TeamApplicationsTimeProgress
+ * @package FKSDB\Components\React\ReactComponent\Events
+ */
 class TeamApplicationsTimeProgress extends ReactComponent {
     /**
      * @var ServiceFyziklaniTeam
@@ -15,10 +18,16 @@ class TeamApplicationsTimeProgress extends ReactComponent {
     private $serviceFyziklaniTeam;
 
     /**
-     * @var ModelEvent[]
+     * @var \FKSDB\ORM\Models\ModelEvent[]
      */
     private $events;
 
+    /**
+     * TeamApplicationsTimeProgress constructor.
+     * @param Container $context
+     * @param array $events
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     */
     public function __construct(Container $context, array $events, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
         parent::__construct($context);
         $this->events = $events;
@@ -53,15 +62,15 @@ class TeamApplicationsTimeProgress extends ReactComponent {
      */
     function getData(): string {
         $data = [
-            'teams'=>[],
-            'events'=>[],
+            'teams' => [],
+            'events' => [],
         ];
         /**
-         * @var $event ModelEvent
+         * @var \FKSDB\ORM\Models\ModelEvent $event
          */
         foreach ($this->events as $event) {
             $data['teams'][$event->event_id] = $this->serviceFyziklaniTeam->getTeamsAsArray($event);
-            $data['events'][$event->event_id]=$event->__toArray();
+            $data['events'][$event->event_id] = $event->__toArray();
         }
         return Json::encode($data);
     }

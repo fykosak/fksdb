@@ -11,6 +11,12 @@ use Nette\Security\User;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class EventOrgByYearAssertion extends AbstractEventOrgAssertion {
+    /**
+     * EventOrgByYearAssertion constructor.
+     * @param $eventTypeId
+     * @param User $user
+     * @param Connection $connection
+     */
     public function __construct($eventTypeId, User $user, Connection $connection) {
         parent::__construct($eventTypeId, 'year', $user, $connection);
     }

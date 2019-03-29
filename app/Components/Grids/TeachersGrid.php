@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\ORM\Services\ServiceTeacher;
 use Nette\Database\Table\Selection;
 use Nette\Utils\Html;
 use OrgModule\TeacherPresenter;
@@ -14,17 +15,21 @@ use SQL\SearchableDataSource;
 class TeachersGrid extends BaseGrid {
 
     /**
-     * @var \ServiceTeacher
+     * @var ServiceTeacher
      */
     private $serviceTeacher;
 
-    function __construct(\ServiceTeacher $serviceTeacher) {
+    /**
+     * TeachersGrid constructor.
+     * @param ServiceTeacher $serviceTeacher
+     */
+    function __construct(ServiceTeacher $serviceTeacher) {
         parent::__construct();
         $this->serviceTeacher = $serviceTeacher;
     }
 
     /**
-     * @param $presenter TeacherPresenter
+     * @param TeacherPresenter $presenter
      * @throws \Nette\Application\UI\InvalidLinkException
      * @throws \NiftyGrid\DuplicateButtonException
      * @throws \NiftyGrid\DuplicateColumnException

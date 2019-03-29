@@ -5,6 +5,10 @@ namespace FKSDB\Components\Forms\Factories\PersonInfo;
 use FKSDB\Components\Forms\Controls\WriteOnlyInput;
 use Nette\Forms\Form;
 
+/**
+ * Class UkLoginField
+ * @package FKSDB\Components\Forms\Factories\PersonInfo
+ */
 class UkLoginField extends WriteOnlyInput {
 
 

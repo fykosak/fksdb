@@ -54,6 +54,8 @@ parameters:
         forwardRegistration: %fykos.forwardRegistration%
 
 nette:
+    session:
+        cookie_secure: true
     database:
         dsn: 'mysql:host=127.0.0.1;dbname=newfks'
         user: 

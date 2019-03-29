@@ -5,20 +5,24 @@ namespace OrgModule;
 use Exception;
 use FKSDB\Components\Forms\Controls\ContestantSubmits;
 use FKSDB\Components\Forms\OptimisticForm;
-use FKSDB\ORM\ModelContestant;
-use FKSDB\ORM\ModelLogin;
-use FKSDB\ORM\ModelTaskContribution;
+use FKSDB\ORM\Models\ModelContestant;
+use FKSDB\ORM\Models\ModelLogin;
+use FKSDB\ORM\Models\ModelTaskContribution;
+use FKSDB\ORM\Services\ServiceSubmit;
+use FKSDB\ORM\Services\ServiceTask;
+use FKSDB\ORM\Services\ServiceTaskContribution;
+use FKSDB\ORM\Services\ServiceTaskStudyYear;
+use FKSDB\Results\SQLResultsCache;
+use FKSDB\Submits\SeriesTable;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Html;
-use ServiceSubmit;
-use ServiceTask;
-use ServiceTaskContribution;
-use ServiceTaskStudyYear;
-use SQLResultsCache;
-use Submits\SeriesTable;
 
+/**
+ * Class PointsPresenter
+ * @package OrgModule
+ */
 class PointsPresenter extends SeriesPresenter {
 
     /**
@@ -34,50 +38,68 @@ class PointsPresenter extends SeriesPresenter {
     private $SQLResultsCache;
 
     /**
-     * @var SeriesTable
+     * @var \FKSDB\Submits\SeriesTable
      */
     private $seriesTable;
 
     /**
-     * @var ServiceSubmit
+     * @var \FKSDB\ORM\Services\ServiceSubmit
      */
     private $serviceSubmit;
 
     /**
-     * @var ServiceTask
+     * @var \FKSDB\ORM\Services\ServiceTask
      */
     private $serviceTask;
 
     /**
-     * @var ServiceTaskContribution
+     * @var \FKSDB\ORM\Services\ServiceTaskContribution
      */
     private $serviceTaskContribution;
 
     /**
-     * @var ServiceTaskStudyYear
+     * @var \FKSDB\ORM\Services\ServiceTaskStudyYear
      */
     private $serviceTaskStudyYear;
 
+    /**
+     * @param SQLResultsCache $SQLResultsCache
+     */
     public function injectSQLResultsCache(SQLResultsCache $SQLResultsCache) {
         $this->SQLResultsCache = $SQLResultsCache;
     }
 
+    /**
+     * @param \FKSDB\Submits\SeriesTable $seriesTable
+     */
     public function injectSeriesTable(SeriesTable $seriesTable) {
         $this->seriesTable = $seriesTable;
     }
 
+    /**
+     * @param \FKSDB\ORM\Services\ServiceSubmit $serviceSubmit
+     */
     public function injectServiceSubmit(ServiceSubmit $serviceSubmit) {
         $this->serviceSubmit = $serviceSubmit;
     }
 
+    /**
+     * @param \FKSDB\ORM\Services\ServiceTask $serviceTask
+     */
     public function injectServiceTask(ServiceTask $serviceTask) {
         $this->serviceTask = $serviceTask;
     }
 
+    /**
+     * @param ServiceTaskContribution $serviceTaskContribution
+     */
     public function injectServiceTaskContribution(ServiceTaskContribution $serviceTaskContribution) {
         $this->serviceTaskContribution = $serviceTaskContribution;
     }
 
+    /**
+     * @param ServiceTaskStudyYear $serviceTaskStudyYear
+     */
     public function injectServiceTaskStudyYear(ServiceTaskStudyYear $serviceTaskStudyYear) {
         $this->serviceTaskStudyYear = $serviceTaskStudyYear;
     }
@@ -89,6 +111,9 @@ class PointsPresenter extends SeriesPresenter {
         $this->seriesTable->setSeries($this->getSelectedSeries());
     }
 
+    /**
+     * @throws \Nette\Application\BadRequestException
+     */
     public function authorizedDefault() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'edit', $this->getSelectedContest()));
     }
@@ -112,6 +137,11 @@ class PointsPresenter extends SeriesPresenter {
         $this->template->showAll = (bool)$this->all;
     }
 
+    /**
+     * @param $name
+     * @return OptimisticForm
+     * @throws \Nette\Application\BadRequestException
+     */
     protected function createComponentPointsForm($name) {
         //   $controlContainer = new FormControl();
         //   $formToRemove = $controlContainer->getForm();
@@ -131,7 +161,7 @@ class PointsPresenter extends SeriesPresenter {
 
         foreach ($contestants as $row) {
             $contestant = ModelContestant::createFromTableRow($row);
-            $fullname = $contestant->getPerson()->getFullname();
+            $fullname = $contestant->getPerson()->getFullName();
             $schoolAbbrev = $contestant->getPerson()->getHistory($this->getSelectedAcademicYear())->getSchool()->name_abbrev;
             $schoolLabel = Html::el('small');
             $schoolLabel->setText('(' . $schoolAbbrev . ')');
@@ -157,6 +187,10 @@ class PointsPresenter extends SeriesPresenter {
         return $form;
     }
 
+    /**
+     * @param Form $form
+     * @throws \Nette\Application\AbortException
+     */
     public function pointsFormSuccess(Form $form) {
         $values = $form->getValues();
 
@@ -179,25 +213,32 @@ class PointsPresenter extends SeriesPresenter {
 
 
             $this->flashMessage(_('Body úloh uloženy.'), self::FLASH_SUCCESS);
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             $this->flashMessage(_('Chyba při ukládání bodů.'), self::FLASH_ERROR);
-            Debugger::log($e);
+            Debugger::log($exception);
         }
         $this->redirect('this');
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     */
     public function handleInvalidate() {
         try {
             $this->SQLResultsCache->invalidate($this->getSelectedContest(), $this->getSelectedYear());
             $this->flashMessage(_('Body invalidovány.'), self::FLASH_INFO);
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             $this->flashMessage(_('Chyba při invalidaci.'), self::FLASH_ERROR);
-            Debugger::log($e);
+            Debugger::log($exception);
         }
 
         $this->redirect('this');
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
     public function handleRecalculateAll() {
         try {
 
@@ -215,14 +256,17 @@ class PointsPresenter extends SeriesPresenter {
 
 
             $this->flashMessage(_('Body přepočítány.'), self::FLASH_INFO);
-        } catch (InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $exception) {
             $this->flashMessage(_('Chyba při přepočtu.'), self::FLASH_ERROR);
-            Debugger::log($e);
+            Debugger::log($exception);
         }
 
         $this->redirect('this');
     }
 
+    /**
+     * @return array
+     */
     private function getGradedTasks() {
         /**
          * @var ModelLogin $login

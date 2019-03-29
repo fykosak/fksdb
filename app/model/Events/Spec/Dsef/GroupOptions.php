@@ -2,12 +2,12 @@
 
 namespace Events\Spec\Dsef;
 
-use DbNames;
 use Events\Machine\BaseMachine;
 use Events\Model\Holder\Field;
 use FKSDB\Components\Forms\Factories\Events\IOptionsProvider;
+use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Services\Events\ServiceDsefGroup;
 use Nette\Object;
-use ORM\Services\Events\ServiceDsefGroup;
 use ORM\ServicesMulti\Events\ServiceMDsefParticipant;
 
 /**
@@ -22,7 +22,7 @@ class GroupOptions extends Object implements IOptionsProvider {
     private $serviceMParticipant;
 
     /**
-     * @var ServiceDsefGroup
+     * @var \FKSDB\ORM\Services\Events\ServiceDsefGroup
      */
     private $serviceDsefGroup;
     private $includeStates;
@@ -37,7 +37,7 @@ class GroupOptions extends Object implements IOptionsProvider {
      * @note In NEON instatiate as GroupOptions(..., ['state1'],['state1', 'state2']).
      *
      * @param ServiceMDsefParticipant $serviceMParticipant
-     * @param ServiceDsefGroup $serviceDsefGroup
+     * @param \FKSDB\ORM\Services\Events\ServiceDsefGroup $serviceDsefGroup
      * @param string|array $includeStates any state or array of state
      * @param string|array $excludeStates any state or array of state
      */
@@ -48,6 +48,10 @@ class GroupOptions extends Object implements IOptionsProvider {
         $this->serviceDsefGroup = $serviceDsefGroup;
     }
 
+    /**
+     * @param $groups
+     * @return array
+     */
     private function transformGroups($groups) {
         $result = [];
         foreach ($groups as $name => $capacity) {
@@ -59,6 +63,10 @@ class GroupOptions extends Object implements IOptionsProvider {
         return $result;
     }
 
+    /**
+     * @param $eventId
+     * @return mixed
+     */
     private function getGroups($eventId) {
         if (!isset($this->groups[$eventId])) {
             $this->groups[$eventId] = $this->serviceDsefGroup->getTable()
@@ -69,6 +77,10 @@ class GroupOptions extends Object implements IOptionsProvider {
         return $this->groups[$eventId];
     }
 
+    /**
+     * @param Field $field
+     * @return array
+     */
     public function getOptions(Field $field) {
         $baseHolder = $field->getBaseHolder();
         $event = $baseHolder->getEvent();

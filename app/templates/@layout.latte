@@ -1,104 +1,112 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="robots" content="{$robots}" n:ifset="$robots">
-        <title>{block titleHeader}{$title} | FKSDB{/block}</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-        {control cssLoader
-        'css/bootstrap.min.css' => [screen],
-        'css/bootstrap-theme.min.css' => [screen],
-        '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/smoothness/jquery-ui.css' => [screen,projection,tv],
-        'css/bundle.css' => [all],
+<head>
+    <meta charset="UTF-8">
+    <meta name="robots" content="{$robots}" n:ifset="$robots">
+    <title>{block titleHeader}{$title} | FKSDB{/block}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Gloria+Hallelujah" rel="stylesheet">
+    {control cssLoader
+        '//stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' => [all],
+        '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/smoothness/jquery-ui.css' => [all],
+        '//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'=>[all],
+        '//fonts.googleapis.com/css?family=Source+Sans+Pro'=>[all],
+        'css/bundle.css'=>[all]
         }
+    {block head}{/block}
+</head>
+<!-- Random background generator -->
+<body data-bg="{rand(1,3)}" data-contest="{(!is_null($contestSymbol))?$contestSymbol:''}">
+{block body}
+    <nav n:class="'fixed-top navbar navbar-expand-md ',(!is_null($navbarClass))?($navbarClass):('bg-light navbar-light')"
+            role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="navbar-brand" href="{$basePath}/"><i class="fas fa fa-home" aria-hidden="true"></i> FKSDB</a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            {block nav}
+                {foreach $navRoots as $root}
+                    {control navigation:navbar $root}
+                {/foreach}
+            {/block}
+            <ul class="nav navbar-nav ml-auto">
+                {block user-info}
+                    {if $user->isLoggedIn()}
 
-        {block head}{/block}
-    </head>
-
-    <body>
-        <div id="wrap">
-
-            {block body}
-            <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-                <!-- Brand and toggle get grouped for better mobile display -->
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                        <span class="sr-only">Toggle navigation</span>
-                    </button>
-                    <a class="navbar-brand" href="{$basePath}/">FKSDB<small n:if="$beta" class="beta"> beta</small></a>
-                </div>
-
-
-                <!-- Collect the nav links, forms, and other content for toggling -->
-                <div class="collapse navbar-collapse navbar-ex1-collapse">
-                    {control navigation:navbar}
-
-                    {block user-info}
-                    <ul  n:if="$user->isLoggedIn()" class="nav navbar-nav navbar-right">
                         {var $login => $user->getIdentity()}
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <span class="glyphicon glyphicon-user"></span>
-                                {if $login->getPerson()}<b>{$login->getPerson()->getFullname()}</b>
+                        <li class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                                <span class="fa fa-user"></span>
+                                {if $login->getPerson()}
+                                    <b>{$login->getPerson()->getFullname()}</b>
                                 {else}
-                                    {_'Uživatel'} <b>{$login->login}</b>{/if} <b class="caret"></b></a>
-                                <ul class="dropdown-menu">
-                                    <li><a n:href=":Settings:">{_'Nastavení'}</a></li>
-                                    <li class="divider"></li>
-                                    <li><a n:href=":Authentication:logout">{_'Odhlásit'}</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                        {/block}
+                                {_'Uživatel'} <b>{$login->login}</b>
+                                {/if} <b class="caret"></b></a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" n:href=":Settings:">{_'Nastavení'}</a>
+                                <a class="dropdown-item" n:href=":MyPayments:default">{_'My payments'}</a>
+                                <span class="dropdown-divider"></span>
+                                <a class="dropdown-item" n:href=":Authentication:logout">{_'Odhlásit'}</a>
+                            </div>
+                        </li>
 
-                    </div><!-- /.navbar-collapse -->
-                </nav>
+                    {/if}
+                {/block}
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </nav>
+    <main id="wrap" style="min-height:100%">
+        <div class="container py-4 bg-white-container" style="height:100%">
+            {control breadcrumbs}
+            {block titleBody}
+                <h1 class="page-header"><i class="{$icon} mr-2"></i>{$title}
+                <small class="text-secondary small"> {$subtitle}</small></h1>{/block}
+            {block flashes}
+                <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">{$flash->message}</div>
+            {/block}
+            {include #content}
+        </div>
+    </main>
+{/block body}
+{block footer}
+    <footer>
+        <div class="container text-center text-muted py-3">
+        <span class="">
+            <a href="http://fykos.cz/" title="{_'Fyzikální korespondenční seminář MFF UK'}">FYKOS</a>
+            <span>| </span>
+            <a href="http://vyfuk.mff.cuni.cz/"
+               title="{_'Fyzikální korespondenční seminář MFF UK pro ZŠ a nižší ročníky gymnázií'}">Výfuk</a> |
+            <span>{_'Správce systému'}: </span>
+            <a href="m&#97;ilto:webmaster&#64;fykos.cz">webmaster&#64;fykos.cz</a>
+        </span>
+        </div>
+    </footer>
+{/block}
 
-                <div class="container">
-                    {control breadcrumbs}
-                    {block titleBody}<h1 class="page-header">{$title}</h1>{/block}
-
-
-                    {block flashes}
-                    <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">{$flash->message}</div>
-                    {/block}
-
-                    {include #content}
-
-                </div>
-                {/block body}
-            </div> <!-- wrap -->
-            <div id="footer" n:block="footer">
-                <div class="container text-center text-muted">
-                    <ul class="list-piped">
-                        <li><a href="http://fykos.cz/" title="Fyzikální korespondenční seminář MFF UK">FYKOS</a></li>
-                        <li><a href="http://vyfuk.mff.cuni.cz/" title="Fyzikální korespondenční seminář MFF UK pro ZŠ a nižší ročníky gymnázií">Výfuk</a></li>
-                        <li>{_'Správce systému'}: <a href="m&#97;ilto:webmaster&#64;fykos.cz">webmaster&#64;fykos.cz</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div id="spinner"></div>
-            {block scripts}
-            {control jsLoader
+<div id="spinner"></div>
+{block scripts}
+    {*TODO store this library localy*}
+    {control jsLoader
         'js/netteForms.js',
         'https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
         'https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
-        'js/bootstrap.min.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js',
+        'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js',
         'js/nette.ajax.js',
+        'js/datePicker.js',
         'js/jquery.confirm.js',
         'js/main.js',
-          'js/lib/react.min.js',
-           'js/lib/react-dom.min.js',
-            'js/bundle-all.min.js'
+        'js/lib/react.min.js',
+        'js/lib/react-dom.min.js',
+        'js/bundle-all.min.js'
             }
-
-            {* CSS files are only collected at the end of rendering, so we use this
-            invalid workaround and link some CSS files at the end of the page
-            *}
-            {control jsLoader:inline}
-            {/block}
-            {control cssLoader}
-        </body>
-    </html>
+    {control jsLoader:inline}
+{/block}
+{control cssLoader}
+</body>
+</html>

@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Forms\Controls;
 
+use FKSDB\ORM\IModel;
 use Nette\ArrayHash;
-use ORM\IModel;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -18,12 +18,29 @@ interface IReferencedHandler {
 
     public function getResolution();
 
+    /**
+     * @param $resolution
+     * @return mixed
+     */
     public function setResolution($resolution);
 
+    /**
+     * @param IModel $model
+     * @param ArrayHash $values
+     * @return mixed
+     */
     public function update(IModel $model, ArrayHash $values);
 
+    /**
+     * @param ArrayHash $values
+     * @return mixed
+     */
     public function createFromValues(ArrayHash $values);
 
+    /**
+     * @param $field
+     * @return mixed
+     */
     public function isSecondaryKey($field);
 
     /**

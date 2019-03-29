@@ -56,7 +56,7 @@ parameters:
             dep:
                 require:
                     team.teacher_id.person_info.id_number: team.teacher_id.person_accommodation.multiNights
-                    p*.person_id.person_info.id_number: p*.person_accommodation.multiNights
+                    p*.person_id.person_info.id_number: p*.person_id.person_accommodation.multiNights
                 visible:
                     team.teacher_id.person_info.id_number: team.teacher_id.person_accommodation.multiNights
                     p*.person_id.person_info.id_number: p*.person_id.person_accommodation.multiNights
@@ -91,7 +91,7 @@ events:
             #   TEAM
             #
             TEAM:
-                service: @event.ServiceFyziklaniTeam
+                service: @fyziklani.ServiceFyziklaniTeam
                 personIds: [teacher_id]
                 eventId: e_fyziklani_team.event_id
 
@@ -109,7 +109,8 @@ events:
                         condition: %events.fyziklani13.appCond%
                         label: _('Přihlásit tým')
                         onExecuted:
-                            - Events\Transitions\MailSender(team, .*)
+                            - Events\Transitions\MailSender(fyziklani/fyziklani2019/teacher,.primary)
+                            - Events\Transitions\MailSender(fyziklani/fyziklani2019/participant,.secondary)
                     pending->approved:
                         condition: role('admin')
                         label: _('Schválit účast')
@@ -188,8 +189,6 @@ events:
                     __init->applied:
                         condition: %events.fyziklani13.appCond%
                         label: _('Přihlásit člena')
-                        onExecuted:
-                            - Events\Transitions\MailSender(member,self)
                     applied->__terminated:
                         condition: %events.fyziklani13.appCond% # TODO the time period is not specified in rules
                         label: _('Odebrat člena')

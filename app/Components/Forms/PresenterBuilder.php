@@ -18,6 +18,10 @@ class PresenterBuilder {
     private $presenterFactory;
     private $presenterCache = [];
 
+    /**
+     * PresenterBuilder constructor.
+     * @param PresenterFactory $presenterFactory
+     */
     function __construct(PresenterFactory $presenterFactory) {
         $this->presenterFactory = $presenterFactory;
     }

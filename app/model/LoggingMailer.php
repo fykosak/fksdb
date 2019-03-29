@@ -26,44 +26,72 @@ class LoggingMailer extends Object implements IMailer {
     private $logging = true;
     private $sentMessages = 0;
 
+    /**
+     * LoggingMailer constructor.
+     * @param IMailer $mailer
+     * @param GlobalParameters $parameters
+     */
     function __construct(IMailer $mailer, GlobalParameters $parameters) {
         $this->mailer = $mailer;
         $this->parameters = $parameters;
     }
 
+    /**
+     * @return mixed
+     */
     public function getLogPath() {
         return $this->logPath;
     }
 
+    /**
+     * @param $logPath
+     */
     public function setLogPath($logPath) {
         $this->logPath = $logPath;
         @mkdir($this->logPath, 0770, true);
     }
 
+    /**
+     * @return bool
+     */
     public function getLogging() {
         return $this->logging;
     }
 
+    /**
+     * @param $logging
+     */
     public function setLogging($logging) {
         $this->logging = $logging;
     }
 
+    /**
+     * @param Message $mail
+     * @throws Exception
+     */
     public function send(Message $mail) {
         try {
             if (!Arrays::get($this->parameters['email'], 'disabled', false)) {// do not really send emails when debugging
                 $this->mailer->send($mail);
             }
             $this->logMessage($mail);
-        } catch (Exception $e) {
-            $this->logMessage($mail, $e);
-            throw $e;
+        } catch (Exception $exception) {
+            $this->logMessage($mail, $exception);
+            throw $exception;
         }
     }
 
+    /**
+     * @return int
+     */
     public function getSentMessages() {
         return $this->sentMessages;
     }
 
+    /**
+     * @param Message $mail
+     * @param Exception|null $e
+     */
     private function logMessage(Message $mail, Exception $e = null) {
         if (!$this->logging) {
             return;

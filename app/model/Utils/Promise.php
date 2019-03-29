@@ -20,10 +20,17 @@ class Promise extends Object {
     private $called = false;
     private $value;
 
+    /**
+     * Promise constructor.
+     * @param $callback
+     */
     public function __construct($callback) {
         $this->callback = new Callback($callback);
     }
 
+    /**
+     * @return mixed
+     */
     public function getValue() {
         if (!$this->called) {
             $this->value = $this->callback->invoke();

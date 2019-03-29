@@ -2,6 +2,13 @@
 
 namespace FKSDB\Config\Expressions;
 
+use FKSDB\Expressions\Comparison\Le;
+use FKSDB\Expressions\Comparison\Leq;
+use FKSDB\Expressions\Logic\And_;
+use FKSDB\Expressions\Logic\Not;
+use FKSDB\Expressions\Logic\Or_;
+use FKSDB\Expressions\Predicates\After;
+use FKSDB\Expressions\Predicates\Before;
 use Nette\DI\Container;
 use Nette\DI\Helpers as DIHelpers;
 use Nette\DI\Statement;
@@ -18,15 +25,18 @@ use Traversable;
 class Helpers {
 
     private static $semanticMap = [
-        'and' => 'FKSDB\Expressions\Logic\And_',
-        'or' => 'FKSDB\Expressions\Logic\Or_',
-        'neg' => 'FKSDB\Expressions\Logic\Not',
-        'after' => 'FKSDB\Expressions\Predicates\After',
-        'before' => 'FKSDB\Expressions\Predicates\Before',
-        'le' => 'FKSDB\Expressions\Comparison\Le',
-        'leq' => 'FKSDB\Expressions\Comparison\Leq',
+        'and' => And_::class,
+        'or' => Or_::class,
+        'neg' => Not::class,
+        'after' => After::class,
+        'before' => Before::class,
+        'le' => Le::class,
+        'leq' => Leq::class,
     ];
 
+    /**
+     * @param $semanticMap
+     */
     public static function registerSemantic($semanticMap) {
         self::$semanticMap += $semanticMap;
     }
@@ -86,6 +96,11 @@ class Helpers {
         }
     }
 
+    /**
+     * @param $expressionArray
+     * @param Container $container
+     * @return array|mixed
+     */
     public static function evalExpressionArray($expressionArray, Container $container) {
         if ($expressionArray instanceof Traversable || is_array($expressionArray)) {
             $result = [];

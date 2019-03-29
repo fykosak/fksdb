@@ -14,6 +14,11 @@ use Nette\Utils\Arrays;
  */
 class FlagFactory {
 
+    /**
+     * @param HiddenField|null $hiddenField
+     * @param array $metadata
+     * @return BaseControl
+     */
     public function createFlag(HiddenField $hiddenField = null, $metadata = []): BaseControl {
         $control = $this->createSpamMff();
 
@@ -33,6 +38,9 @@ class FlagFactory {
         return $control;
     }
 
+    /**
+     * @return PersonFlag
+     */
     public function createSpamMff(): PersonFlag {
         $control = new PersonFlag(_('Přeji si dostávat informace o dění na MFF a akcích, které pořádáme'));
         return $control;

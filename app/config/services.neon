@@ -20,11 +20,11 @@ services:
     downloader: Astrid\Downloader(%astrid.user%, %astrid.password%, %astrid.host%, %tempDir%, %contestMapping%, ...)
     Facebook: self({appId: %facebook.appId%, secret: %facebook.secret%})
     globalParameters: FKSDB\Config\GlobalParameters
-    yearCalculator: YearCalculator
+    yearCalculator: FKSDB\YearCalculator
     news: News
-    seriesCalculator: SeriesCalculator
-    - SQLResultsCache
-    - Submits\SeriesTable
+    seriesCalculator: FKSDB\SeriesCalculator
+    SQLResultsCache: FKSDB\Results\SQLResultsCache
+    seriesTable: FKSDB\Submits\SeriesTable
     - Persons\ExtendedPersonHandlerFactory
     - Persons\SelfResolver
     merger:
@@ -40,11 +40,11 @@ services:
             - start()
     - Authentication\SSO\TokenGSIDHolder
     submitStorage:
-        class: Submits\FilesystemSubmitStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, %contestMapping%)
+        class: FKSDB\Submits\FilesystemSubmitStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, %contestMapping%)
         setup:
             - addProcessing(@PDFStamper)
     - FKSDB\Components\Forms\Controls\PersonAccommodation\Handler
-    PDFStamper: Submits\PDFStamper(%stamper.fontSize%)
+    PDFStamper: FKSDB\Submits\PDFStamper(%stamper.fontSize%)
     readOnlyConnection:
         class: Nette\Database\Connection(%ro-database.dsn%, %ro-database.user%, %ro-database.password%)
         autowired: false
@@ -56,13 +56,14 @@ services:
         setup:
             - setObject(@webServiceModel)
 
-    webServiceModel: WebServiceModel(%inverseContestMapping%, ...)
+    webServiceModel: FKSDB\WebService\WebServiceModel(%inverseContestMapping%, ...)
 
     nette.userStorage: Authentication\LoginUserStorage
     nette.mailer:
         class: LoggingMailer(Nette\Mail\SendmailMailer())
         setup:
             - setLogPath(%logDir%/mail)
+    - FKSDB\ValidationTest\ValidationFactory
 
 
     #

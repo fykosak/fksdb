@@ -17,5 +17,10 @@ interface ILogger {
     const INFO = 30;
     const DEBUG = 40;
 
+    /**
+     * @param $message
+     * @param int $level
+     * @return mixed
+     */
     public function log($message, $level = self::INFO);
 }

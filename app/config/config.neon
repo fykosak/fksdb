@@ -91,7 +91,7 @@ parameters:
                 name: name_en
 
         # Mapping of contribution types to comprising XML element (taken from Czech version only.)
-        # Contributions types must be FKSDB\ORM\ModelTaskContribution::TYPE_* constants.
+        # Contributions types must be FKSDB\ORM\Models\ModelTaskContribution::TYPE_* constants.
         contributionMapping:
             author: authors
             solution: solution-authors
@@ -169,10 +169,10 @@ parameters:
 
     # Maintenance
     updater:
-		# absolute path to install script
+        # absolute path to install script
         installScript: %appDir%/../install.sh
 
-		# system user who should run the install script
+        # system user who should run the install script
         installUser: fksdb-updater
 
 

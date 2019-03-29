@@ -21,9 +21,13 @@ class GroupedContainer extends Container {
     private $groups = [];
     private $prefix;
 
+    /**
+     * GroupedContainer constructor.
+     * @param $prefix
+     */
     public function __construct($prefix) {
         parent::__construct();
-        $this->monitor('Nette\Forms\Form');
+        $this->monitor(Form::class);
         $this->prefix = $prefix;
     }
 
@@ -64,6 +68,9 @@ class GroupedContainer extends Container {
 //        parent::addComponent($component, $name, $insertBefore);
 //    }
 
+    /**
+     * @param $obj
+     */
     protected function attached($obj) {
         parent::attached($obj);
         if ($obj instanceof Form) {

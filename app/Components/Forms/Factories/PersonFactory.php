@@ -52,6 +52,13 @@ class PersonFactory {
     const EL_CREATE_LOGIN = 'createLogin';
     const EL_CREATE_LOGIN_LANG = 'lang';
 
+    /**
+     * @param $ajax
+     * @param $label
+     * @param IDataProvider $dataProvider
+     * @param null $renderMethod
+     * @return AutocompleteSelectBox
+     */
     public function createPersonSelect($ajax, $label, IDataProvider $dataProvider, $renderMethod = null): AutocompleteSelectBox {
         if ($renderMethod === null) {
             $renderMethod = '$("<li>")

@@ -2,13 +2,12 @@
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\ORM\ModelOrg;
+use FKSDB\ORM\Models\ModelOrg;
+use FKSDB\ORM\Services\ServiceOrg;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\Selection;
 use Nette\Utils\Html;
-
 use OrgModule\OrgPresenter;
-use ServiceOrg;
 use SQL\SearchableDataSource;
 
 /**
@@ -18,10 +17,14 @@ use SQL\SearchableDataSource;
 class OrgsGrid extends BaseGrid {
 
     /**
-     * @var ServiceOrg
+     * @var \FKSDB\ORM\Services\ServiceOrg
      */
     private $serviceOrg;
 
+    /**
+     * OrgsGrid constructor.
+     * @param \FKSDB\ORM\Services\ServiceOrg $serviceOrg
+     */
     function __construct(ServiceOrg $serviceOrg) {
         parent::__construct();
 
@@ -58,10 +61,10 @@ class OrgsGrid extends BaseGrid {
         //
         // columns
         //
-        $this->addColumn('display_name', _('Jméno'))->setRenderer(function ($row) {
+        $this->addColumn('display_name', _('Person'))->setRenderer(function ($row) {
             $model = ModelOrg::createFromTableRow($row);
             $person = $model->getPerson();
-            return $person->getFullname();
+            return $person->getFullName();
         });
         $this->addColumn('since', _('Začal'));
         $this->addColumn('until', _('Skončil'))->setRenderer(function ($row) {
@@ -78,7 +81,7 @@ class OrgsGrid extends BaseGrid {
                 return $this->getPresenter()->link('edit', $row->org_id);
             })
             ->setShow(function ($row) use ($presenter) {
-                return $presenter->authorized('edit', array('id' => $row->org_id));
+                return $presenter->authorized('edit', ['id' => $row->org_id]);
             });
 
         if ($presenter->authorized('create')) {

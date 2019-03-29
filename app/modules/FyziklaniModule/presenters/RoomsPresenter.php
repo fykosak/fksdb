@@ -3,7 +3,7 @@
 namespace FyziklaniModule;
 
 use FKSDB\Components\Controls\Fyziklani\RoutingDownload;
-use FKSDB\Components\React\Fyziklani\RoutingEdit;
+use FKSDB\Components\Controls\Fyziklani\RoutingEdit;
 
 /**
  *
@@ -62,7 +62,7 @@ class RoomsPresenter extends BasePresenter {
             $response = new \ReactResponse();
             $response->setAct('update-teams');
             $response->setData(['updatedTeams' => $updatedTeams]);
-            $response->addMessage(new \ReactMessage(_('Zmeny boli uložené'), 'success'));
+            $response->addMessage(new \ReactMessage(_('Zmeny boli uložené'), \BasePresenter::FLASH_SUCCESS));
             $this->sendResponse($response);
         }
     }
@@ -73,12 +73,7 @@ class RoomsPresenter extends BasePresenter {
      * @throws \Nette\Application\BadRequestException
      */
     public function createComponentDownload(): RoutingDownload {
-        $control = new RoutingDownload($this->getTranslator());
-        $buildings = $this->getEvent()->getParameter('gameSetup')['buildings'];
-        $control->setBuildings($buildings);
-        $control->setRooms($this->getRooms());
-        $control->setTeams($this->getServiceFyziklaniTeam()->getTeamsAsArray($this->getEvent()));
-        return $control;
+        return $this->fyziklaniComponentsFactory->createRoutingDownload($this->getEvent());
     }
 
     /**

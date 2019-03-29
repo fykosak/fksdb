@@ -23,6 +23,15 @@ use Nette\Object;
  */
 class GenKillProcessing extends Object implements IProcessing {
 
+    /**
+     * @param $states
+     * @param ArrayHash $values
+     * @param Machine $machine
+     * @param Holder $holder
+     * @param ILogger $logger
+     * @param Form|null $form
+     * @return array
+     */
     public function process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
         $result = [];
         foreach ($holder as $name => $baseHolder) {
