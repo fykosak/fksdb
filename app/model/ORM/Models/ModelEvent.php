@@ -129,6 +129,13 @@ class ModelEvent extends AbstractModelSingle implements IResource {
     }
 
     /**
+     * @return GroupedSelection
+     */
+    public function getTeams(): GroupedSelection {
+        return $this->related(DbNames::TAB_E_FYZIKLANI_TEAM, 'event_id');
+    }
+
+    /**
      * @return array
      */
     public function __toArray(): array {

@@ -16,6 +16,7 @@ use Nette\DateTime;
  * @property integer points
  * @property string status
  * @property DateTime created
+ * @property string phone
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @author Michal Červeňák <miso@fykos.cz>
