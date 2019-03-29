@@ -26,7 +26,7 @@ class DispatchGrid extends BaseGrid {
      */
     private $person;
     /**
-     * @var \YearCalculator
+     * @var \FKSDB\YearCalculator
      */
     private $yearCalculator;
 
@@ -34,9 +34,9 @@ class DispatchGrid extends BaseGrid {
      * DispatchGrid constructor.
      * @param ServiceEvent $serviceEvent
      * @param ModelPerson $person
-     * @param \YearCalculator $yearCalculator
+     * @param \FKSDB\YearCalculator $yearCalculator
      */
-    function __construct(ServiceEvent $serviceEvent, ModelPerson $person, \YearCalculator $yearCalculator) {
+    function __construct(ServiceEvent $serviceEvent, ModelPerson $person, \FKSDB\YearCalculator $yearCalculator) {
         parent::__construct();
         $this->person = $person;
         $this->serviceEvent = $serviceEvent;
