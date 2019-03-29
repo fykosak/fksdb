@@ -20,16 +20,16 @@ class PersonHistoryFactory {
     private $schoolFactory;
 
     /**
-     * @var \YearCalculator
+     * @var \FKSDB\YearCalculator
      */
     private $yearCalculator;
 
     /**
      * PersonHistoryFactory constructor.
      * @param SchoolFactory $factorySchool
-     * @param \YearCalculator $yearCalculator
+     * @param \FKSDB\YearCalculator $yearCalculator
      */
-    public function __construct(SchoolFactory $factorySchool, \YearCalculator $yearCalculator) {
+    public function __construct(SchoolFactory $factorySchool, \FKSDB\YearCalculator $yearCalculator) {
         $this->schoolFactory = $factorySchool;
         $this->yearCalculator = $yearCalculator;
     }

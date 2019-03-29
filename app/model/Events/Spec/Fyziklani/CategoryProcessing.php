@@ -9,9 +9,9 @@ use Events\Processings\AbstractProcessing;
 use Events\SubmitProcessingException;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Services\ServiceSchool;
+use FKSDB\YearCalculator;
 use Nette\ArrayHash;
 use Nette\Forms\Form;
-use YearCalculator;
 
 /**
  * Na Fyziklani 2013 jsme se rozhodli pocitat tymum automaticky kategorii ve ktere soutezi podle pravidel.
@@ -33,7 +33,7 @@ class CategoryProcessing extends AbstractProcessing {
 
     /**
      * CategoryProcessing constructor.
-     * @param YearCalculator $yearCalculator
+     * @param \FKSDB\YearCalculator $yearCalculator
      * @param ServiceSchool $serviceSchool
      */
     function __construct(YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {

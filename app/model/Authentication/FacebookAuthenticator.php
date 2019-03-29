@@ -6,10 +6,10 @@ use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceLogin;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServicePersonInfo;
+use FKSDB\YearCalculator;
 use Nette\Diagnostics\Debugger;
 use Nette\Security\AuthenticationException;
 use Nette\Security\Identity;
-use YearCalculator;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

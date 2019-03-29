@@ -5,11 +5,11 @@ namespace Authentication;
 use FKSDB\Config\GlobalParameters;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceLogin;
+use FKSDB\YearCalculator;
 use FullHttpRequest;
 use Github\Events\Event;
 use Nette\InvalidArgumentException;
 use Nette\Security\AuthenticationException;
-use YearCalculator;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -31,7 +31,7 @@ class GithubAuthenticator extends AbstractAuthenticator {
      * GithubAuthenticator constructor.
      * @param GlobalParameters $globalParameters
      * @param ServiceLogin $serviceLogin
-     * @param YearCalculator $yearCalculator
+     * @param \FKSDB\YearCalculator $yearCalculator
      */
     function __construct(GlobalParameters $globalParameters, ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
         parent::__construct($serviceLogin, $yearCalculator);

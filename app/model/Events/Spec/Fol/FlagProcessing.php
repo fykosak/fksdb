@@ -7,9 +7,9 @@ use Events\Model\Holder\Holder;
 use Events\Processings\AbstractProcessing;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Services\ServiceSchool;
+use FKSDB\YearCalculator;
 use Nette\ArrayHash;
 use Nette\Forms\Form;
-use YearCalculator;
 
 /**
  * Class FlagProcessing
@@ -18,7 +18,7 @@ use YearCalculator;
 class FlagProcessing extends AbstractProcessing {
 
     /**
-     * @var YearCalculator
+     * @var \FKSDB\YearCalculator
      */
     private $yearCalculator;
 

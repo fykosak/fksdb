@@ -7,6 +7,7 @@ use Authentication\SSO\GlobalSession;
 use AuthenticationPresenter;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceLogin;
+use FKSDB\YearCalculator;
 use Nette\Application\Application;
 use Nette\Application\IPresenter;
 use Nette\Http\Request;
@@ -14,7 +15,6 @@ use Nette\Http\Session;
 use Nette\Http\UserStorage;
 use Nette\Security\Identity;
 use Nette\Security\IIdentity;
-use YearCalculator;
 
 /**
  *
@@ -62,7 +62,7 @@ class LoginUserStorage extends UserStorage {
      * LoginUserStorage constructor.
      * @param Session $sessionHandler
      * @param ServiceLogin $loginService
-     * @param YearCalculator $yearCalculator
+     * @param \FKSDB\YearCalculator $yearCalculator
      * @param GlobalSession $globalSession
      * @param Application $application
      * @param Request $request

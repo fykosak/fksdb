@@ -5,10 +5,10 @@ namespace FKSDB\Components\Controls;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelRole;
 use FKSDB\ORM\Services\ServiceContest;
+use FKSDB\YearCalculator;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
-use YearCalculator;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -48,7 +48,7 @@ class ContestChooser extends Control {
     private $session;
 
     /**
-     * @var YearCalculator
+     * @var \FKSDB\YearCalculator
      */
     private $yearCalculator;
 

@@ -2,6 +2,7 @@
 
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Services\ServiceTask;
+use FKSDB\YearCalculator;
 use Nette\Object;
 
 /**

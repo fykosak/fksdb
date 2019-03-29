@@ -20,7 +20,7 @@ services:
     downloader: Astrid\Downloader(%astrid.user%, %astrid.password%, %astrid.host%, %tempDir%, %contestMapping%, ...)
     Facebook: self({appId: %facebook.appId%, secret: %facebook.secret%})
     globalParameters: FKSDB\Config\GlobalParameters
-    yearCalculator: YearCalculator
+    yearCalculator: FKSDB\YearCalculator
     news: News
     seriesCalculator: SeriesCalculator
     SQLResultsCache: FKSDB\Results\SQLResultsCache

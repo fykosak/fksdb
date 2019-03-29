@@ -5,8 +5,8 @@ namespace FKSDB\Components\Forms\Controls\Autocomplete;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
+use FKSDB\YearCalculator;
 use Nette\Database\Table\Selection;
-use YearCalculator;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -39,7 +39,7 @@ class PersonProvider implements IFilteredDataProvider {
     /**
      * Syntactic sugar, should be solved more generally.
      * @param \FKSDB\ORM\Models\ModelContest $contest
-     * @param YearCalculator $yearCalculator
+     * @param \FKSDB\YearCalculator $yearCalculator
      */
     public function filterOrgs(ModelContest $contest, YearCalculator $yearCalculator) {
         $orgs = $this->servicePerson->getTable()->where([
