@@ -3,7 +3,7 @@
 namespace EventModule;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\Components\Grids\Events\ParticipantsGrid;
+use FKSDB\Components\Grids\Events\ApplicationGrid;
 use FKSDB\Components\Grids\Events\TeamApplicationGrid;
 use FKSDB\model\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
@@ -82,7 +82,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @return ParticipantsGrid
+     * @return ApplicationGrid
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
      */

@@ -147,7 +147,7 @@ class TeamApplicationGrid extends BaseGrid {
      * @throws \Nette\Application\BadRequestException
      */
     protected function createComponentSearchForm(): FormControl {
-        // TODo from DB
+        // TODO from DB
         $states = [
             'participated',
             'applied',

@@ -19,7 +19,7 @@ use SQL\SearchableDataSource;
  * Class ParticipantGrid
  * @package FKSDB\Components\Grids\Events
  */
-class ParticipantsGrid extends BaseGrid {
+class ApplicationGrid extends BaseGrid {
     /**
      * @var ModelEvent
      */

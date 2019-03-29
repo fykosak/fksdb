@@ -3,7 +3,7 @@
 namespace EventModule;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\Components\Grids\Events\ParticipantsGrid;
+use FKSDB\Components\Grids\Events\ApplicationGrid;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Services\ServiceEventParticipant;
 use Nette\Application\BadRequestException;
@@ -78,12 +78,12 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @return ParticipantsGrid
+     * @return ApplicationGrid
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
      */
     public function createComponentGrid(): BaseGrid {
-        return new ParticipantsGrid($this->getEvent());
+        return new ApplicationGrid($this->getEvent());
     }
 
     /**
