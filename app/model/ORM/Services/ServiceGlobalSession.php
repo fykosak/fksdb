@@ -9,6 +9,7 @@ use FKSDB\ORM\Models\ModelGlobalSession;
 use Nette\Database\Connection;
 use Nette\DateTime;
 use Nette\Http\Request;
+use Nette\Utils\Random;
 use Nette\Utils\Strings;
 
 /**
@@ -62,7 +63,7 @@ class ServiceGlobalSession extends AbstractServiceSingle {
         $this->getConnection()->beginTransaction();
 
         do {
-            $sessionId = Strings::random(self::SESSION_ID_LENGTH, 'a-zA-Z0-9');
+            $sessionId = Random::generate(self::SESSION_ID_LENGTH, 'a-zA-Z0-9');
         } while ($this->findByPrimary($sessionId));
 
         $session = $this->createNew([

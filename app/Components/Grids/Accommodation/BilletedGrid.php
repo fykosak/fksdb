@@ -71,9 +71,9 @@ abstract class BilletedGrid extends BaseGrid {
                 $model = ModelEventPersonAccommodation::createFromTableRow($row);
                 $modelPayment = $model->getPayment();
                 if (!$modelPayment) {
-                    return Html::el('span')->addAttributes(['class' => 'badge badge-danger'])->add('No payment found');
+                    return Html::el('span')->addAttributes(['class' => 'badge badge-danger'])->addText('No payment found');
                 }
-                return Html::el('span')->addAttributes(['class' => $modelPayment->getUIClass()])->add('#' . $modelPayment->getPaymentId() . '-' . $modelPayment->getStateLabel());
+                return Html::el('span')->addAttributes(['class' => $modelPayment->getUIClass()])->addText('#' . $modelPayment->getPaymentId() . '-' . $modelPayment->getStateLabel());
             })->setSortable(false);
     }
 
@@ -93,33 +93,33 @@ abstract class BilletedGrid extends BaseGrid {
                 foreach ($teachers as $row) {
                     $hasRole = true;
                     $team = ModelFyziklaniTeam::createFromTableRow($row);
-                    $container->add(Html::el('span')
+                    $container->addHtml(Html::el('span')
                         ->addAttributes(['class' => 'badge badge-9'])
-                        ->add(_('Teacher') . ' - ' . $team->name));
+                        ->addText(_('Teacher') . ' - ' . $team->name));
                 }
 
                 $eventOrgs = $person->getEventOrg()->where('event_id', $eventId);
                 foreach ($eventOrgs as $row) {
                     $hasRole = true;
                     $org = ModelEventOrg::createFromTableRow($row);
-                    $container->add(Html::el('span')
+                    $container->addHtml(Html::el('span')
                         ->addAttributes(['class' => 'badge badge-7'])
-                        ->add(_('Org') . ' - ' . $org->note));
+                        ->addText(_('Org') . ' - ' . $org->note));
                 }
 
                 $eventParticipants = $person->getEventParticipant()->where('event_id', $eventId);
                 foreach ($eventParticipants as $row) {
                     $hasRole = true;
                     $participant = ModelEventParticipant::createFromTableRow($row);
-                    $container->add(Html::el('span')
+                    $container->addHtml(Html::el('span')
                         ->addAttributes(['class' => 'badge badge-10'])
-                        ->add(_('Participant') . ' - ' . _($participant->status)));
+                        ->addText(_('Participant') . ' - ' . _($participant->status)));
                 }
 
                 if (!$hasRole) {
-                    $container->add(Html::el('span')
+                    $container->addHtml(Html::el('span')
                         ->addAttributes(['class' => 'badge badge-danger'])
-                        ->add(_('No role')));
+                        ->addText(_('No role')));
                 }
                 return $container;
             })->setSortable(false);
@@ -134,7 +134,7 @@ abstract class BilletedGrid extends BaseGrid {
             $classNames = ($model->status === ModelEventPersonAccommodation::STATUS_PAID) ? 'badge badge-success' : 'badge badge-danger';
             return Html::el('span')
                 ->addAttributes(['class' => $classNames])
-                ->add((($model->status == ModelEventPersonAccommodation::STATUS_PAID) ? _('Paid') : _('Waiting')));
+                ->addText((($model->status == ModelEventPersonAccommodation::STATUS_PAID) ? _('Paid') : _('Waiting')));
         });
     }
 

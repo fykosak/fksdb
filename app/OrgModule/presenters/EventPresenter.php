@@ -28,7 +28,7 @@ use Nette\Diagnostics\Debugger;
 use Nette\Forms\Controls\BaseControl;
 use Nette\NotImplementedException;
 use Nette\Utils\Html;
-use Nette\Utils\Neon;
+use Nette\Neon\Neon;
 use Nette\Utils\NeonException;
 use Utils;
 
@@ -325,12 +325,12 @@ class EventPresenter extends EntityPresenter {
         $result = Html::el('ul');
         foreach ($scheme as $key => $meta) {
             $item = Html::el('li');
-            $result->add($item);
+            $result->addText($item);
 
-            $item->add(Html::el(null)->setText($key));
+            $item->addHtml(Html::el(null)->setText($key));
             if (isset($meta['default'])) {
-                $item->add(': ');
-                $item->add(Html::el(null)->setText(Utils::getRepr($meta['default'])));
+                $item->addText(': ');
+                $item->addHtml(Html::el(null)->setText(Utils::getRepr($meta['default'])));
             }
         }
 

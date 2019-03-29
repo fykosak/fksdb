@@ -315,10 +315,11 @@ class PersonPresenter extends BasePresenter {
                     $trunk->data['field'] = $textElement->getHtmlId();
                     $elVal = Html::el('span');
                     $elVal->setText($value);
+                    $trunk->addText(_('Trunk') . ': ');
+                    $trunk->addText($elVal);
                     $elVal->addAttributes(['class' => 'value']);
-                    $trunk->add(_('Trunk') . ': ');
-                    $trunk->add($elVal);
-                    $description->add($trunk);
+
+                    $description->addHtml($trunk);
 
                     $merged = Html::el('div');
                     $merged->addAttributes(['class' => 'mergeSource']);
@@ -326,9 +327,9 @@ class PersonPresenter extends BasePresenter {
                     $elVal = Html::el('span');
                     $elVal->setText($data[Merger::IDX_MERGED][$column]);
                     $elVal->addAttributes(['class' => 'value']);
-                    $merged->add(_('Merged') . ': ');
-                    $merged->add($elVal);
-                    $description->add($merged);
+                    $merged->addText(_('Merged') . ': ');
+                    $merged->addText($elVal);
+                    $description->addHtml($merged);
 
                     $textElement->setOption('description', $description);
                 }
