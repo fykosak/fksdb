@@ -6,9 +6,9 @@ use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceLogin;
 use FKSDB\ORM\Services\ServicePerson;
+use FKSDB\YearCalculator;
 use Nette\Security\IAuthenticator;
 use Nette\Security\IIdentity;
-use YearCalculator;
 
 /**
  * Users authenticator.
@@ -23,7 +23,7 @@ class PasswordAuthenticator extends AbstractAuthenticator implements IAuthentica
     /**
      * PasswordAuthenticator constructor.
      * @param \FKSDB\ORM\Services\ServiceLogin $serviceLogin
-     * @param YearCalculator $yearCalculator
+     * @param \FKSDB\YearCalculator $yearCalculator
      * @param ServicePerson $servicePerson
      */
     function __construct(ServiceLogin $serviceLogin, YearCalculator $yearCalculator, ServicePerson $servicePerson) {

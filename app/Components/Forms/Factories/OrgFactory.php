@@ -5,9 +5,9 @@ namespace FKSDB\Components\Forms\Factories;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Services\ServicePerson;
+use FKSDB\YearCalculator;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Form;
-use YearCalculator;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -22,14 +22,14 @@ class OrgFactory {
     private $servicePerson;
 
     /**
-     * @var YearCalculator
+     * @var \FKSDB\YearCalculator
      */
     private $yearCalculator;
 
     /**
      * OrgFactory constructor.
      * @param ServicePerson $servicePerson
-     * @param YearCalculator $yearCalculator
+     * @param \FKSDB\YearCalculator $yearCalculator
      */
     function __construct(ServicePerson $servicePerson, YearCalculator $yearCalculator) {
         $this->servicePerson = $servicePerson;
