@@ -166,7 +166,7 @@ class PointsPresenter extends SeriesPresenter {
             $schoolLabel = Html::el('small');
             $schoolLabel->setText('(' . $schoolAbbrev . ')');
             $schoolLabel->class = 'text-muted';
-            $label = Html::el()
+            $label = Html::el('span')
                 ->setText($fullname)
                 ->addHtml(Html::el('br'))
                 ->addText($schoolLabel);
