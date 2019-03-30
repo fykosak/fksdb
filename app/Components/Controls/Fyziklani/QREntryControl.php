@@ -64,7 +64,7 @@ class QREntryControl extends Control {
             $form->addSubmit('points' . $points, _($points . ' ' . $label))
                 ->setAttribute('class', 'btn-' . $points . '-points')->setDisabled(true);
         }
-        $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
+        //$form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
         $form->onValidate[] = function (Form $form) {
             $this->formValidate($form);
         };
