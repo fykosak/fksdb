@@ -7,6 +7,7 @@ use Authentication\SSO\GlobalSession;
 use AuthenticationPresenter;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceLogin;
+use FKSDB\YearCalculator;
 use Nette\Application\Application;
 use Nette\Application\IPresenter;
 use Nette\Http\Request;
@@ -14,12 +15,12 @@ use Nette\Http\Session;
 use Nette\Http\UserStorage;
 use Nette\Security\Identity;
 use Nette\Security\IIdentity;
-use YearCalculator;
 
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @see http://forum.nette.org/cs/9574-jak-rozsirit-userstorage
+ * @property IIdentity $identity
  */
 class LoginUserStorage extends UserStorage {
     /** @const HTTP GET parameter holding control information for the SSO */

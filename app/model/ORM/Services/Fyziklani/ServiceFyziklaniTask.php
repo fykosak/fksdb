@@ -12,9 +12,19 @@ use Nette\Database\Table\Selection;
  * @author Lukáš Timko <lukast@fykos.cz>
  */
 class ServiceFyziklaniTask extends AbstractServiceSingle {
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        return ModelFyziklaniTask::class;
+    }
 
-    protected $tableName = DbNames::TAB_FYZIKLANI_TASK;
-    protected $modelClassName = 'FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask';
+    /**
+     * @return string
+     */
+    protected function getTableName(): string {
+        return DbNames::TAB_FYZIKLANI_TASK;
+    }
 
     /**
      * Syntactic sugar.

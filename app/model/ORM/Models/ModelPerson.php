@@ -5,12 +5,12 @@ namespace FKSDB\ORM\Models;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\YearCalculator;
 use ModelMPersonHasFlag;
 use ModelMPostContact;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Database\Table\Selection;
 use Nette\Security\IResource;
-use YearCalculator;
 
 /**
  *
@@ -301,7 +301,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
 
     /**
      * @internal To get active orgs call FKSDB\ORM\Models\ModelLogin::getActiveOrgs
-     * @param YearCalculator $yearCalculator
+     * @param \FKSDB\YearCalculator $yearCalculator
      * @return array of FKSDB\ORM\Models\ModelOrg indexed by contest_id
      */
     public function getActiveOrgs(YearCalculator $yearCalculator) {
@@ -319,7 +319,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     /**
      * Active contestant := contestant in the highest year but not older than the current year.
      *
-     * @param YearCalculator $yearCalculator
+     * @param \FKSDB\YearCalculator $yearCalculator
      * @return array of FKSDB\ORM\Models\ModelContestant indexed by contest_id
      */
     public function getActiveContestants(YearCalculator $yearCalculator) {

@@ -14,6 +14,7 @@ use Exception;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
 use FKSDB\Components\Forms\Controls\PersonAccommodation\ExistingPaymentException;
 use FKSDB\Components\Forms\Controls\PersonAccommodation\FullAccommodationCapacityException;
+use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Models\ModelEvent;
 use FormUtils;
@@ -275,7 +276,7 @@ class ApplicationHandler {
      */
     private function formRollback($data) {
         if ($data instanceof Form) {
-            foreach ($data->getComponents(true, 'FKSDB\Components\Forms\Controls\ReferencedId') as $referencedId) {
+            foreach ($data->getComponents(true, ReferencedId::class) as $referencedId) {
                 $referencedId->rollback();
             }
         }

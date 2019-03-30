@@ -11,8 +11,19 @@ use FKSDB\ORM\Models\ModelOrg;
  */
 class ServiceOrg extends AbstractServiceSingle {
 
-    protected $tableName = DbNames::TAB_ORG;
-    protected $modelClassName = 'FKSDB\ORM\Models\ModelOrg';
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        return ModelOrg::class;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getTableName(): string {
+        return DbNames::TAB_ORG;
+    }
 
     /**
      * Syntactic sugar.

@@ -1,5 +1,5 @@
 events:
-    setkani8:
+    setkani8podzim:
         event_type_id: [12]
         eventYears: [8] # specify for which years this machine is valid, by default all years
         tableLayout: event.grid

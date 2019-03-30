@@ -36,6 +36,10 @@ navigation:
             - org.event.list
             - org.deduplicate.person
             - org.stalking.default
+            - org.validation.default
+        org.validation.default:
+            - org.validation.preview
+            - org.validation.list
         public.dashboard.default:
             - dispatch.default
             - public.submit.default

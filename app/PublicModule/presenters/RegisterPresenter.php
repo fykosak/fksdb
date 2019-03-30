@@ -21,7 +21,7 @@ use Persons\ExtendedPersonHandler;
 use Persons\ExtendedPersonHandlerFactory;
 use Persons\IExtendedPersonPresenter;
 use Persons\SelfResolver;
-use SeriesCalculator;
+use FKSDB\SeriesCalculator;
 
 /**
  * INPUT:

@@ -6,6 +6,7 @@ use DuplicateApplicationException;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\IModel;
+use FKSDB\ORM\Models\ModelEventParticipant;
 use ModelException;
 
 /**
@@ -13,11 +14,22 @@ use ModelException;
  */
 class ServiceEventParticipant extends AbstractServiceSingle {
 
-    protected $tableName = DbNames::TAB_EVENT_PARTICIPANT;
-    protected $modelClassName = 'FKSDB\ORM\Models\ModelEventParticipant';
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        return ModelEventParticipant::class;
+    }
 
     /**
-     * @param IModel $model
+     * @return string
+     */
+    protected function getTableName(): string {
+        return DbNames::TAB_EVENT_PARTICIPANT;
+    }
+
+    /**
+     * @param ModelEventParticipant $model
      */
     public function save(IModel &$model) {
         try {

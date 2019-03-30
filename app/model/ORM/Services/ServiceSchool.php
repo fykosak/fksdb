@@ -4,6 +4,7 @@ namespace FKSDB\ORM\Services;
 
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\ModelSchool;
 use Nette\Database\Table\Selection;
 
 /**
@@ -11,8 +12,19 @@ use Nette\Database\Table\Selection;
  */
 class ServiceSchool extends AbstractServiceSingle {
 
-    protected $tableName = DbNames::TAB_SCHOOL;
-    protected $modelClassName = 'FKSDB\ORM\Models\ModelSchool';
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        return ModelSchool::class;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getTableName(): string {
+        return DbNames::TAB_SCHOOL;
+    }
 
     /**
      * @return \Nette\Database\Table\Selection

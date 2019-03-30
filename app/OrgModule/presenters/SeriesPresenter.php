@@ -3,9 +3,9 @@
 namespace OrgModule;
 
 use FKSDB\Components\Controls\SeriesChooser;
+use FKSDB\SeriesCalculator;
 use ISeriesPresenter;
 use Nette\Application\BadRequestException;
-use SeriesCalculator;
 
 /**
  * Presenter providing series context and a way to modify it.

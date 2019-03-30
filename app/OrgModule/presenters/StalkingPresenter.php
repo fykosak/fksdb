@@ -19,10 +19,12 @@ use FKSDB\Components\Controls\Stalking\PersonHistory;
 use FKSDB\Components\Controls\Stalking\Role;
 use FKSDB\Components\Controls\Stalking\Schedule;
 use FKSDB\Components\Controls\Stalking\StalkingComponent;
+use FKSDB\Components\Controls\Stalking\Validation;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
+use FKSDB\ValidationTest\ValidationFactory;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
@@ -53,6 +55,10 @@ class StalkingPresenter extends BasePresenter {
      * @var string
      */
     private $mode;
+    /**
+     * @var ValidationFactory
+     */
+    private $validationFactory;
 
     /**
      * @param \FKSDB\ORM\Services\ServicePerson $servicePerson
@@ -64,10 +70,16 @@ class StalkingPresenter extends BasePresenter {
     /**
      * @param ReferencedPersonFactory $referencedPersonFactory
      */
-    function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory) {
+    public function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory) {
         $this->referencedPersonFactory = $referencedPersonFactory;
     }
 
+    /**
+     * @param ValidationFactory $validationFactory
+     */
+    public function injectValidationFactory(ValidationFactory $validationFactory) {
+        $this->validationFactory = $validationFactory;
+    }
 
     public function titleDefault() {
         $this->setTitle(_('Stalking'));
@@ -223,6 +235,15 @@ class StalkingPresenter extends BasePresenter {
     public function createComponentSchedule(): Schedule {
         return new Schedule($this->getPerson(), $this->getTranslator(), $this->getMode());
     }
+
+    /**
+     * @return Validation
+     * @throws BadRequestException
+     */
+    public function createComponentValidation(): Validation {
+        return new Validation($this->validationFactory, $this->getPerson(), $this->getTranslator(), $this->getMode());
+    }
+
 
     /**
      * @return FormControl

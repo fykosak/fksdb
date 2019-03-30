@@ -9,9 +9,14 @@ use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Config\Configurator;
 use Nette\Forms\Container;
 use Nette\Utils\Finder;
+use Tracy\Debugger;
 
 // Load Nette Framework
+require LIBS_DIR . '/../vendor/autoload.php';
 require LIBS_DIR . '/autoload.php';
+
+
+
 
 define('CONFIG_DIR', dirname(__FILE__) . DIRECTORY_SEPARATOR . 'config');
 
@@ -25,8 +30,12 @@ $configurator->onCompile[] = function ($configurator, $compiler) {
         };
 
 // Enable Nette Debugger for error visualisation & logging
-$configurator->enableDebugger(dirname(__FILE__) . '/../log');
+Debugger::getBar()->addPanel(new Nette\Bridges\HttpTracy\SessionPanel);
+Debugger::enable();
 
+
+$configurator->enableDebugger(dirname(__FILE__) . '/../log');
+error_reporting(~E_USER_DEPRECATED&~E_USER_WARNING);
 
 // Enable RobotLoader - this will load all classes automatically
 $configurator->setTempDirectory(dirname(__FILE__) . '/../temp');

@@ -12,12 +12,12 @@ use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\ORM\Services\ServiceTask;
 use FKSDB\ORM\Services\ServiceTaskContribution;
 use FKSDB\ORM\Services\ServiceTaskStudyYear;
+use FKSDB\Results\SQLResultsCache;
+use FKSDB\Submits\SeriesTable;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Html;
-use SQLResultsCache;
-use Submits\SeriesTable;
 
 /**
  * Class PointsPresenter
@@ -38,7 +38,7 @@ class PointsPresenter extends SeriesPresenter {
     private $SQLResultsCache;
 
     /**
-     * @var SeriesTable
+     * @var \FKSDB\Submits\SeriesTable
      */
     private $seriesTable;
 
@@ -70,7 +70,7 @@ class PointsPresenter extends SeriesPresenter {
     }
 
     /**
-     * @param SeriesTable $seriesTable
+     * @param \FKSDB\Submits\SeriesTable $seriesTable
      */
     public function injectSeriesTable(SeriesTable $seriesTable) {
         $this->seriesTable = $seriesTable;
@@ -168,8 +168,8 @@ class PointsPresenter extends SeriesPresenter {
             $schoolLabel->class = 'text-muted';
             $label = Html::el()
                 ->setText($fullname)
-                ->add(Html::el('br'))
-                ->add($schoolLabel);
+                ->addHtml(Html::el('br'))
+                ->addText($schoolLabel);
             $control = new ContestantSubmits($tasks, $contestant, $this->serviceSubmit, $this->getSelectedAcademicYear(), $label);
             $control->setClassName('points');
             // $namingContainer = new ContainerWithOptions();

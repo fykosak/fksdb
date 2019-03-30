@@ -52,7 +52,7 @@ abstract class PaymentGrid extends BaseGrid {
     protected function addColumnState() {
         $this->addColumn('state', _('Status'))->setRenderer(function ($row) {
             $model = ModelPayment::createFromTableRow($row);
-            return Html::el('span')->addAttributes(['class' => $model->getUIClass()])->add(_($model->getStateLabel()));
+            return Html::el('span')->addAttributes(['class' => $model->getUIClass()])->addText(_($model->getStateLabel()));
         });
     }
 

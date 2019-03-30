@@ -2,7 +2,24 @@
 
 namespace Events;
 
+use Events\Machine\BaseMachine;
+use Events\Machine\Machine;
 use Events\Machine\Transition;
+use Events\Model\Holder\BaseHolder;
+use Events\Model\Holder\Field;
+use Events\Model\Holder\Holder;
+use Events\Model\Holder\SameYearEvent;
+use Events\Semantics\Count;
+use Events\Semantics\EventWas;
+use Events\Semantics\Parameter;
+use Events\Semantics\RegOpen;
+use Events\Semantics\Role;
+use Events\Semantics\State;
+use FKSDB\Components\Forms\Factories\Events\ArrayOptions;
+use FKSDB\Components\Forms\Factories\Events\CheckboxFactory;
+use FKSDB\Components\Forms\Factories\Events\ChooserFactory;
+use FKSDB\Components\Forms\Factories\Events\PersonFactory;
+use FKSDB\Components\Grids\Events\LayoutResolver;
 use FKSDB\Config\Expressions\Helpers;
 use FKSDB\Config\NeonScheme;
 use Nette\Config\CompilerExtension;
@@ -32,13 +49,13 @@ class EventsExtension extends CompilerExtension {
     const HOLDER_PREFIX = 'Holder_';
     const BASE_MACHINE_PREFIX = 'BaseMachine_';
     const BASE_HOLDER_PREFIX = 'BaseHolder_';
-    const CLASS_MACHINE = 'Events\Machine\Machine';
-    const CLASS_BASE_MACHINE = 'Events\Machine\BaseMachine';
-    const CLASS_TRANSITION = 'Events\Machine\Transition';
-    const CLASS_FIELD = 'Events\Model\Holder\Field';
-    const CLASS_BASE_HOLDER = 'Events\Model\Holder\BaseHolder';
-    const CLASS_HOLDER = 'Events\Model\Holder\Holder';
-    const CLASS_RESOLVER = 'FKSDB\Components\Grids\Events\LayoutResolver';
+    const CLASS_MACHINE = Machine::class;
+    const CLASS_BASE_MACHINE = BaseMachine::class;
+    const CLASS_TRANSITION = Transition::class;
+    const CLASS_FIELD = Field::class;
+    const CLASS_BASE_HOLDER = BaseHolder::class;
+    const CLASS_HOLDER = Holder::class;
+    const CLASS_RESOLVER = LayoutResolver::class;
 
     /** @const Maximum length of state identifier. */
     const STATE_SIZE = 20;
@@ -47,17 +64,17 @@ class EventsExtension extends CompilerExtension {
     const NAME_PATTERN = '/[a-z0-9_]/i';
 
     public static $semanticMap = [
-        'RefPerson' => 'FKSDB\Components\Forms\Factories\Events\PersonFactory',
-        'Chooser' => 'FKSDB\Components\Forms\Factories\Events\ChooserFactory',
-        'Checkbox'=> 'FKSDB\Components\Forms\Factories\Events\CheckboxFactory',
-        'Options' => 'FKSDB\Components\Forms\Factories\Events\ArrayOptions',
-        'role' => 'Events\Semantics\Role',
-        'regOpen' => 'Events\Semantics\RegOpen',
-        'eventWas' => 'Events\Semantics\EventWas',
-        'state' => 'Events\Semantics\State',
-        'param' => 'Events\Semantics\Parameter',
-        'parameter' => 'Events\Semantics\Parameter',
-        'count' => 'Events\Semantics\Count',
+        'RefPerson' => PersonFactory::class,
+        'Chooser' => ChooserFactory::class,
+        'Checkbox' => CheckboxFactory::class,
+        'Options' => ArrayOptions::class,
+        'role' => Role::class,
+        'regOpen' => RegOpen::class,
+        'eventWas' => EventWas::class,
+        'state' => State::class,
+        'param' => Parameter::class,
+        'parameter' => Parameter::class,
+        'count' => Count::class,
     ];
     private $scheme;
 
@@ -169,7 +186,7 @@ class EventsExtension extends CompilerExtension {
              */
             $protoConfig = $this->getBaseMachineConfig($protoDefinitionName, $protoBaseName);
             $eventTypeId = $config[$protoDefinitionName]['event_type_id'];
-            $protoConfig['eventRelation'] = new Statement('Events\Model\Holder\SameYearEvent', [$eventTypeId]);
+            $protoConfig['eventRelation'] = new Statement(SameYearEvent::class, [$eventTypeId]);
             $protoConfig['paramScheme'] = $config[$protoDefinitionName]['paramScheme'];
             $this->baseMachineConfig[$key] = ConfigHelpers::merge($baseMachineDef, $protoConfig);
             break;
@@ -500,7 +517,6 @@ class EventsExtension extends CompilerExtension {
         foreach ($machineDef['formAdjustments'] as $formAdjustment) {
             $factory->addSetup('addFormAdjustment', $formAdjustment);
         }
-
 
 
         $factory->addSetup('freeze');

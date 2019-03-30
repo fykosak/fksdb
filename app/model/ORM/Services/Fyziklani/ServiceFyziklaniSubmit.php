@@ -15,8 +15,19 @@ use Nette\Database\Table\Selection;
  */
 class ServiceFyziklaniSubmit extends AbstractServiceSingle {
 
-    protected $tableName = DbNames::TAB_FYZIKLANI_SUBMIT;
-    protected $modelClassName = 'FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit';
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        return ModelFyziklaniSubmit::class;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getTableName(): string {
+        return DbNames::TAB_FYZIKLANI_SUBMIT;
+    }
 
     /**
      * @param ModelFyziklaniTask $task

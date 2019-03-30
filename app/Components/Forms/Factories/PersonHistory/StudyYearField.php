@@ -16,16 +16,16 @@ class StudyYearField extends SelectBox {
      */
     private $acYear;
     /**
-     * @var \YearCalculator
+     * @var \FKSDB\YearCalculator
      */
     private $yearCalculator;
 
     /**
      * StudyYearField constructor.
-     * @param \YearCalculator $yearCalculator
+     * @param \FKSDB\YearCalculator $yearCalculator
      * @param $acYear
      */
-    public function __construct(\YearCalculator $yearCalculator, $acYear) {
+    public function __construct(\FKSDB\YearCalculator $yearCalculator, $acYear) {
 
         parent::__construct(_('Ročník'));
         $this->acYear = $acYear;

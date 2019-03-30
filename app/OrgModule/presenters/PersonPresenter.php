@@ -4,6 +4,7 @@ namespace OrgModule;
 
 use Authentication\AccountManager;
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
@@ -18,7 +19,6 @@ use FormUtils;
 use Mail\MailTemplateFactory;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
-use Nette\NotImplementedException;
 use Nette\Utils\Html;
 use Persons\Deduplication\Merger;
 use ServiceMPostContact;
@@ -31,7 +31,7 @@ use ServiceMPostContact;
  *             inside the particular form.
  * @author Michal Koutný <michal@fykos.cz>
  */
-class PersonPresenter extends EntityPresenter {
+class PersonPresenter extends BasePresenter {
 
     const CONT_PERSON = 'person';
     const CONT_ADDRESSES = 'addresses';
@@ -225,7 +225,7 @@ class PersonPresenter extends EntityPresenter {
      */
     public function actionMerge($trunkId, $mergedId) {
         $this->personMerger->setMergedPair($this->trunkPerson, $this->mergedPerson);
-        $this->updateMergeForm( $this->getComponent('mergeForm')->getForm());
+        $this->updateMergeForm($this->getComponent('mergeForm')->getForm());
     }
 
     /**
@@ -251,32 +251,6 @@ class PersonPresenter extends EntityPresenter {
 
     public function titleMerge() {
         $this->setTitle(sprintf(_('Sloučení osob %s (%d) a %s (%d)'), $this->trunkPerson->getFullName(), $this->trunkPerson->person_id, $this->mergedPerson->getFullName(), $this->mergedPerson->person_id));
-    }
-
-    public function titleList() {
-        $this->setTitle(_('Osoby'));
-    }
-
-    public function titleCreate() {
-        $this->setTitle(_('Založit osobu'));
-    }
-
-    /**
-     * @param $name
-     * @return mixed|void
-     */
-    protected function createComponentCreateComponent($name) {
-        // So far, there's no use case that creates bare person.
-        throw new NotImplementedException();
-    }
-
-    /**
-     * @param $name
-     * @return mixed|void
-     */
-    protected function createComponentEditComponent($name) {
-        // Persons are edited via referenced person containers.
-        throw new NotImplementedException();
     }
 
     /**
@@ -309,18 +283,21 @@ class PersonPresenter extends EntityPresenter {
 
         foreach ($conflicts as $table => $pairs) {
             $form->addGroup($table);
-            $tableContainer = $form->addContainer($table);
+            $tableContainer = new ContainerWithOptions();
+
+            $form->addComponent($tableContainer, $table);
 
             foreach ($pairs as $pairId => $data) {
                 if (!isset($data[Merger::IDX_TRUNK])) {
                     continue;
                 }
-
                 $pairSuffix = '';
                 if (count($pairs) > 1) {
                     $pairSuffix = " ($pairId)";
                 }
-                $pairContainer = $tableContainer->addContainer($pairId);
+                $pairContainer = new ContainerWithOptions();
+                $tableContainer->addComponent($pairContainer, $pairId);
+                $pairContainer->setOption('label', \str_replace('_', ' ', $table));
                 foreach ($data[Merger::IDX_TRUNK] as $column => $value) {
                     if (isset($data[Merger::IDX_RESOLUTION]) && array_key_exists($column, $data[Merger::IDX_RESOLUTION])) {
                         $default = $data[Merger::IDX_RESOLUTION][$column];
@@ -334,24 +311,25 @@ class PersonPresenter extends EntityPresenter {
                     $description = Html::el('div');
 
                     $trunk = Html::el('div');
-                    $trunk->class('mergeSource');
+                    $trunk->addAttributes(['class' => 'mergeSource']);
                     $trunk->data['field'] = $textElement->getHtmlId();
                     $elVal = Html::el('span');
                     $elVal->setText($value);
-                    $elVal->class('value');
-                    $trunk->add(_('Trunk') . ': ');
-                    $trunk->add($elVal);
-                    $description->add($trunk);
+                    $trunk->addText(_('Trunk') . ': ');
+                    $trunk->addText($elVal);
+                    $elVal->addAttributes(['class' => 'value']);
+
+                    $description->addHtml($trunk);
 
                     $merged = Html::el('div');
-                    $merged->class('mergeSource');
+                    $merged->addAttributes(['class' => 'mergeSource']);
                     $merged->data['field'] = $textElement->getHtmlId();
                     $elVal = Html::el('span');
                     $elVal->setText($data[Merger::IDX_MERGED][$column]);
-                    $elVal->class('value');
-                    $merged->add(_('Merged') . ': ');
-                    $merged->add($elVal);
-                    $description->add($merged);
+                    $elVal->addAttributes(['class' => 'value']);
+                    $merged->addText(_('Merged') . ': ');
+                    $merged->addText($elVal);
+                    $description->addHtml($merged);
 
                     $textElement->setOption('description', $description);
                 }
@@ -389,23 +367,6 @@ class PersonPresenter extends EntityPresenter {
             $this->flashMessage(_('Je třeba ručně vyřešit konflikty.'), self::FLASH_INFO);
             $this->redirect('this'); //this is correct
         }
-    }
-
-    /**
-     * @param $name
-     * @return mixed|void
-     */
-    protected function createComponentGrid($name) {
-        // So far, there's no use case that would list all persons.
-        throw new NotImplementedException();
-    }
-
-    /**
-     * @param $id
-     * @return \FKSDB\ORM\AbstractModelSingle|\Nette\Database\Table\ActiveRow|null
-     */
-    protected function loadModel($id) {
-        return $this->servicePerson->findByPrimary($id);
     }
 
     /*     * ******************************

@@ -58,7 +58,7 @@ abstract class AbstractEventOrgAssertion extends Object {
         $storedQuery = $acl->getQueriedResource();
 
         if (!$storedQuery instanceof StoredQuery) {
-            //  throw new InvalidArgumentException('Expected StoredQuery, got \'' . get_class($storedQuery) . '\'.');
+            //  throw new InvalidArgumentException('Expected StoredQuery, got "' . get_class($storedQuery) . '".');
         }
 
         $identity = $this->user->getIdentity();

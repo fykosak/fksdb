@@ -26,7 +26,7 @@ class DispatchGrid extends BaseGrid {
      */
     private $person;
     /**
-     * @var \YearCalculator
+     * @var \FKSDB\YearCalculator
      */
     private $yearCalculator;
 
@@ -34,9 +34,9 @@ class DispatchGrid extends BaseGrid {
      * DispatchGrid constructor.
      * @param ServiceEvent $serviceEvent
      * @param ModelPerson $person
-     * @param \YearCalculator $yearCalculator
+     * @param \FKSDB\YearCalculator $yearCalculator
      */
-    function __construct(ServiceEvent $serviceEvent, ModelPerson $person, \YearCalculator $yearCalculator) {
+    function __construct(ServiceEvent $serviceEvent, ModelPerson $person, \FKSDB\YearCalculator $yearCalculator) {
         parent::__construct();
         $this->person = $person;
         $this->serviceEvent = $serviceEvent;
@@ -77,15 +77,15 @@ class DispatchGrid extends BaseGrid {
             $modelEvent = ModelEvent::createFromTableRow($row);
             $isEventParticipant = $this->person->isEventParticipant($modelEvent->event_id);
             if ($isEventParticipant) {
-                $container->add(Html::el('span')->addAttributes(['class' => 'badge badge-success'])->add(_('Event participant')));
+                $container->addHtml(Html::el('span')->addAttributes(['class' => 'badge badge-success'])->addText(_('Event participant')));
             }
             $isEventOrg = count($this->person->getEventOrg()->where('event_id', $modelEvent->event_id));
             if ($isEventOrg) {
-                $container->add(Html::el('span')->addAttributes(['class' => 'badge badge-info'])->add(_('Event org')));
+                $container->addHtml(Html::el('span')->addAttributes(['class' => 'badge badge-info'])->addText(_('Event org')));
             }
             $isOrg = \array_key_exists($modelEvent->getEventType()->contest_id, $this->person->getActiveOrgs($this->yearCalculator));
             if ($isOrg) {
-                $container->add(Html::el('span')->addAttributes(['class' => 'badge badge-warning'])->add(_('Contest org')));
+                $container->addHtml(Html::el('span')->addAttributes(['class' => 'badge badge-warning'])->addText(_('Contest org')));
             }
             return $container;
         })->setSortable(false);

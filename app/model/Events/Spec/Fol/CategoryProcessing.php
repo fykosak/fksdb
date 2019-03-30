@@ -10,9 +10,9 @@ use Events\Processings\AbstractProcessing;
 use FKSDB\Components\Forms\Factories\Events\IOptionsProvider;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Services\ServiceSchool;
+use FKSDB\YearCalculator;
 use Nette\ArrayHash;
 use Nette\Forms\Form;
-use YearCalculator;
 
 /**
  * Class CategoryProcessing

@@ -5,14 +5,14 @@ namespace FKSDB\Components\Grids;
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Services\ServiceSubmit;
+use FKSDB\Submits\FilesystemSubmitStorage;
+use FKSDB\Submits\StorageException;
 use ModelException;
 use Nette\Application\BadRequestException;
 use Nette\Diagnostics\Debugger;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;
 use PublicModule\BasePresenter;
-use Submits\FilesystemSubmitStorage;
-use Submits\StorageException;
 
 /**
  *

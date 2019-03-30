@@ -5,6 +5,7 @@ namespace FKSDB\ORM\Services;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\IModel;
+use FKSDB\ORM\Models\ModelAddress;
 use FKSDB\ORM\Models\ModelRegion;
 use InvalidPostalCode;
 use Nette\Diagnostics\Debugger;
@@ -16,22 +17,29 @@ use Nette\InvalidArgumentException;
 class ServiceAddress extends AbstractServiceSingle {
 
     const PATTERN = '/[0-9]{5}/';
+
     /**
-     * @var string
+     * @return string
      */
-    protected $tableName = DbNames::TAB_ADDRESS;
+    protected function getModelClassName(): string {
+        return ModelAddress::class;
+    }
+
     /**
-     * @var string
+     * @return string
      */
-    protected $modelClassName = 'FKSDB\ORM\Models\ModelAddress';
+    protected function getTableName(): string {
+        return DbNames::TAB_ADDRESS;
+    }
 
     /**
      * @param \FKSDB\ORM\IModel $model
      * @return mixed|void
      */
     public function save(IModel &$model) {
-        if (!$model instanceof $this->modelClassName) {
-            throw new InvalidArgumentException('Service for class ' . $this->modelClassName . ' cannot store ' . get_class($model));
+        $modelClassName = $this->getModelClassName();
+        if (!$model instanceof $modelClassName) {
+            throw new InvalidArgumentException('Service for class ' . $this->getModelClassName() . ' cannot store ' . get_class($model));
         }
         /**
          * @var \FKSDB\ORM\Models\ModelAddress $model

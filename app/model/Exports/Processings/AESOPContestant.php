@@ -4,9 +4,7 @@ namespace Exports\Processings;
 
 use Exports\StoredQueryPostProcessing;
 use FKSDB\ORM\Services\ServiceTask;
-use IEvaluationStrategy;
-use ModelCategory;
-use ResultsModelFactory;
+use FKSDB\Results\ResultsModelFactory;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -24,7 +22,7 @@ class AESOPContestant extends StoredQueryPostProcessing {
      * @return mixed|string
      */
     public function getDescription() {
-        return 'Profiltruje jenom na kategorii zadanou v parametru \'category\' a spočítá rank v rámci kategorie.';
+        return 'Profiltruje jenom na kategorii zadanou v parametru "category" a spočítá rank v rámci kategorie.';
     }
 
     /**
@@ -156,7 +154,8 @@ class AESOPContestant extends StoredQueryPostProcessing {
     }
 
     /**
-     * @return IEvaluationStrategy
+     * @return \FKSDB\Results\EvaluationStrategies\EvaluationStrategy
+     * @throws \Nette\Application\BadRequestException
      */
     private function getEvaluationStrategy() {
         return ResultsModelFactory::findEvaluationStrategy($this->parameters['contest'], $this->parameters['year']);
@@ -164,7 +163,8 @@ class AESOPContestant extends StoredQueryPostProcessing {
 
     /**
      *
-     * @return ModelCategory|null
+     * @return \FKSDB\Results\ModelCategory|null
+     * @throws \Nette\Application\BadRequestException
      */
     private function getCategory() {
         $evaluationStrategy = $this->getEvaluationStrategy();

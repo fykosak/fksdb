@@ -4,14 +4,24 @@ namespace FKSDB\ORM\Services;
 
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\ModelContest;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceContest extends AbstractServiceSingle {
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        return ModelContest::class;
+    }
 
-    protected $tableName = DbNames::TAB_CONTEST;
-    protected $modelClassName = 'FKSDB\ORM\Models\ModelContest';
-
+    /**
+     * @return string
+     */
+    protected function getTableName(): string {
+        return DbNames::TAB_CONTEST;
+    }
 }
 

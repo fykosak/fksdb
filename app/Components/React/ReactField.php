@@ -19,8 +19,9 @@ trait ReactField {
         $this->setAttribute('data-mode', $this->getMode());
         $this->setAttribute('data-data', $this->getData());
     }
-    protected function registerMonitor(){
-        $this->monitor('FKSDB\Application\IJavaScriptCollector');
+
+    protected function registerMonitor() {
+        $this->monitor(IJavaScriptCollector::class);
     }
 
     /**

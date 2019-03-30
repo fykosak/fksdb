@@ -1,6 +1,6 @@
 <?php
 
-namespace Submits;
+namespace FKSDB\Submits;
 
 use FKSDB\ORM\Models\ModelSubmit;
 
