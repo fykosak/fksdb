@@ -36,7 +36,7 @@ class ContestantSubmits extends BaseControl {
     /**
      * @var \FKSDB\ORM\Services\ServiceSubmit
      */
-    private $submitService;
+    private $serviceSubmit;
     /**
      * @var \FKSDB\ORM\Models\ModelContestant
      */
@@ -56,18 +56,18 @@ class ContestantSubmits extends BaseControl {
      *
      * @param Traversable|array $tasks
      * @param \FKSDB\ORM\Models\ModelContestant $contestant
-     * @param \FKSDB\ORM\Services\ServiceSubmit $submitService
+     * @param \FKSDB\ORM\Services\ServiceSubmit $serviceSubmit
      * @param $acYear
      * @param string|null $label
      */
-    function __construct($tasks, ModelContestant $contestant, ServiceSubmit $submitService, $acYear, $label = null) {
-        parent::__construct($label);
-        $this->monitor(IJavaScriptCollector::class);
-
-        $this->setTasks($tasks);
-        $this->submitService = $submitService;
+    function __construct($tasks, ModelContestant $contestant, ServiceSubmit $serviceSubmit, $acYear, $label = null) {
+        $this->serviceSubmit = $serviceSubmit;
         $this->contestant = $contestant;
         $this->acYear = $acYear;
+        $this->monitor(IJavaScriptCollector::class);
+        $this->setTasks($tasks);
+
+        parent::__construct($label);
     }
 
     /**
@@ -186,10 +186,10 @@ class ContestantSubmits extends BaseControl {
             if (isset($result[$tasknr])) {
                 throw new InvalidArgumentException("Task with no. $tasknr is present multiple times in passed value.");
             }
-            $result[(int) $tasknr] = $this->serializeSubmit($submit);
+            $result[(int)$tasknr] = $this->serializeSubmit($submit);
         }
 
-        $dummySubmit = $this->submitService->createNew();
+        $dummySubmit = $this->serviceSubmit->createNew();
         foreach ($this->tasks as $tasknr => $task) {
             if (isset($result[$tasknr])) {
                 continue;
@@ -254,12 +254,12 @@ class ContestantSubmits extends BaseControl {
         $ctId = $data['ct_id'];
         $taskId = $data['task_id'];
 
-        $submit = $this->submitService->findByContestant($ctId, $taskId);
+        $submit = $this->serviceSubmit->findByContestant($ctId, $taskId);
         if (!$submit) {
-            $submit = $this->submitService->createNew();
+            $submit = $this->serviceSubmit->createNew();
         }
 
-        $this->submitService->updateModel($submit, $data);
+        $this->serviceSubmit->updateModel($submit, $data);
         return $submit;
     }
 
