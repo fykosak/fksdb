@@ -145,7 +145,7 @@ class YearCalculator {
      * @param $year
      * @return bool
      */
-    public function isValidYear(ModelContest $contest, int $year): bool {
+    public function isValidYear(ModelContest $contest, int $year = null): bool {
         return $year !== null && $year >= $this->getFirstYear($contest) && $year <= $this->getLastYear($contest);
     }
 
