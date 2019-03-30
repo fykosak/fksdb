@@ -48,10 +48,10 @@ abstract class SubmitsGrid extends BaseGrid {
             $model = ModelFyziklaniSubmit::createFromTableRow($row);
             switch ($model->state) {
                 case ModelFyziklaniSubmit::STATE_CHECKED:
-                    return Html::el('span')->addAttributes(['class' => 'badge badge-success'])->add(_('checked'));
+                    return Html::el('span')->addAttributes(['class' => 'badge badge-success'])->addText(_('checked'));
                 default:
                 case ModelFyziklaniSubmit::STATE_NOT_CHECKED:
-                    return Html::el('span')->addAttributes(['class' => 'badge badge-danger'])->add(_('not checked'));
+                    return Html::el('span')->addAttributes(['class' => 'badge badge-danger'])->addText(_('not checked'));
             }
         });
     }

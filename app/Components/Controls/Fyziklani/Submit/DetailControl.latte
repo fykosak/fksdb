@@ -1,13 +1,9 @@
 <h2>{sprintf(_('Submit #%s'),$model->fyziklani_submit_id)}</h2>
 <div>
-    <div class="row">
-        <b class="col-2">{_'Id'}</b>
-        <span class="col-10">#{$model->fyziklani_submit_id}</span>
-    </div>
-    <div class="row">
-        <b class="col-2">{_'Team Id'}</b>
-        <span class="col-10">{$model->e_fyziklani_team_id}</span>
-    </div>
+    {control stringValue $model,_('Id'),fyziklani_submit_id}
+
+    {control stringValue $model,_('Team Id'),e_fyziklani_team_id}
+
     <div class="row">
         <b class="col-2">{_'Team'}</b>
         <span class="col-10">{$model->getTeam()->__toString()}
@@ -15,23 +11,17 @@
         </span>
     </div>
     <hr/>
-    <div class="row">
-        <b class="col-2">{_'Task Id'}</b>
-        <span class="col-10">#{$model->fyziklani_task_id}</span>
-    </div>
-    <div class="row">
-        <b class="col-2">{_'Task'}</b>
-        <span class="col-10">{$model->getTask()->name}</span>
-    </div>
-    <div class="row">
-        <b class="col-2">{_'Task label'}</b>
-        <span class="col-10">{$model->getTask()->label}</span>
-    </div>
+    <h3>{_'Task'}</h3>
+    {control stringValue $model,_('Task Id'),fyziklani_task_id}
+
+    {control stringValue $model->getTask(),_('Task'),name}
+
+    {control stringValue $model->getTask(),_('Task label'),label}
+
     <hr/>
-    <div class="row">
-        <b class="col-2">{_'Points'}</b>
-        <span class="col-10">{$model->points}</span>
-    </div>
+
+    {control stringValue $model,_('Points'),points}
+
     <div class="row">
         <b class="col-2">{_'State'}</b>
         <span class="col-10">
@@ -44,6 +34,7 @@
         </span>
     </div>
     <hr/>
+
     <div class="row">
         <b class="col-2">{_'Created'}</b>
         <span class="col-10">{$model->created->format(_('d. m. Y H:i'))}</span>

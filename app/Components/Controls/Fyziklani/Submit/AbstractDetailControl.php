@@ -2,6 +2,11 @@
 
 namespace FKSDB\Components\Controls\Fyziklani\Submit;
 
+use FKSDB\Components\Controls\Helpers\AbstractDetailControl;
+use FKSDB\Components\Controls\Helpers\ValuePrinters\BinaryValueControl;
+use FKSDB\Components\Controls\Helpers\ValuePrinters\IsSetValueControl;
+use FKSDB\Components\Controls\Helpers\ValuePrinters\PhoneValueControl;
+use FKSDB\Components\Controls\Helpers\ValuePrinters\StringValueControl;
 use FKSDB\model\Fyziklani\ClosedSubmittingException;
 use FKSDB\model\Fyziklani\PointsMismatchException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
@@ -15,15 +20,11 @@ use Nette\Templating\FileTemplate;
  * Class DetailControl
  * @property FileTemplate $template
  */
-class DetailControl extends Control {
+class DetailControl extends AbstractDetailControl {
     /**
      * @var ModelFyziklaniSubmit
      */
     private $model;
-    /**
-     * @var ITranslator
-     */
-    private $translator;
     /**
      * @var ServiceFyziklaniSubmit
      */
@@ -35,8 +36,7 @@ class DetailControl extends Control {
      * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
      */
     public function __construct(ITranslator $translator, ServiceFyziklaniSubmit $serviceFyziklaniSubmit) {
-        parent::__construct();
-        $this->translator = $translator;
+        parent::__construct($translator);
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
     }
 
