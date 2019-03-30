@@ -2,28 +2,39 @@
 
 namespace FKSDB\Components\Forms\Controls\PersonAccommodation;
 
-use FKSDB\ORM\ModelEventAccommodation;
-use FKSDB\ORM\ModelEventPersonAccommodation;
-use FKSDB\ORM\ModelPerson;
 use Nette\Utils\ArrayHash;
+use FKSDB\ORM\Models\ModelEventAccommodation;
+use FKSDB\ORM\Models\ModelEventPersonAccommodation;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Services\ServiceEventAccommodation;
+use FKSDB\ORM\Services\ServiceEventPersonAccommodation;
 use Nette\NotImplementedException;
-use ServiceEventPersonAccommodation;
-use Submits\StorageException;
 
+/**
+ * Class Handler
+ * @package FKSDB\Components\Forms\Controls\PersonAccommodation
+ */
 class Handler {
     private $serviceEventPersonAccommodation;
     private $serviceEventAccommodation;
 
-    public function __construct(ServiceEventPersonAccommodation $serviceEventPersonAccommodation, \ServiceEventAccommodation $serviceEventAccommodation) {
+    /**
+     * Handler constructor.
+     * @param \FKSDB\ORM\Services\ServiceEventPersonAccommodation $serviceEventPersonAccommodation
+     * @param ServiceEventAccommodation $serviceEventAccommodation
+     */
+    public function __construct(ServiceEventPersonAccommodation $serviceEventPersonAccommodation, ServiceEventAccommodation $serviceEventAccommodation) {
         $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;
         $this->serviceEventAccommodation = $serviceEventAccommodation;
     }
 
     /**
      * @param ArrayHash $data
-     * @param ModelPerson $person
+     * @param \FKSDB\ORM\Models\ModelPerson $person
      * @param integer $eventId
-     * @throws StorageException
+     * @throws FullAccommodationCapacityException
+     * @throws ExistingPaymentException
+     * @throws \Exception
      * @return void
      */
     public function prepareAndUpdate(ArrayHash $data, ModelPerson $person, $eventId) {
@@ -38,7 +49,17 @@ class Handler {
                 $index = array_search($modelEventPersonAccommodation->event_accommodation_id, $newAccommodationIds);
                 unset($newAccommodationIds[$index]);
             } else {
-                $modelEventPersonAccommodation->delete();
+                try {
+                    $modelEventPersonAccommodation->delete();
+                } catch (\PDOException $exception) {
+                    if (\preg_match('/payment_accommodation/', $exception->getMessage())) {
+                        throw new ExistingPaymentException(\sprintf(
+                            _('Položka "%s" má už vygenerovanú platu, teda nejde zmazať.'),
+                            $modelEventPersonAccommodation->getLabel()));
+                    } else {
+                        throw $exception;
+                    }
+                }
             }
         }
         foreach ($newAccommodationIds as $id) {
@@ -49,7 +70,7 @@ class Handler {
                 $this->serviceEventPersonAccommodation->save($model);
             } else {
                 //$model->delete();
-                throw new StorageException(sprintf(
+                throw new FullAccommodationCapacityException(sprintf(
                     _('Osobu %s sa nepodarilo ubytovať na hotely "%s" v dni %s'),
                     $person->getFullName(),
                     $eventAccommodation->name,
@@ -74,7 +95,7 @@ class Handler {
                     $data = (array)json_decode($datum);
                     break;
                 default:
-                    throw new NotImplementedException(sprintf(_('Type "%s" is not implement.'), $type));
+                    throw new NotImplementedException(sprintf(_('Type "%s" is not implement.'), $type), 501);
             }
         }
 

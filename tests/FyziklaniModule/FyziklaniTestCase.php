@@ -3,7 +3,7 @@
 namespace FyziklaniModule;
 
 use DatabaseTestCase;
-use DbNames;
+use FKSDB\ORM\DbNames;
 use MockEnvironment\MockApplicationTrait;
 use Nette\DateTime;
 

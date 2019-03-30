@@ -4,11 +4,11 @@ namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Controls\DateInputs\DateTimeLocalInput;
-use FKSDB\ORM\ModelContest;
+use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Services\ServiceEventType;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Form;
-use ServiceEventType;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -20,10 +20,14 @@ class EventFactory {
     const SHOW_UNKNOWN_SCHOOL_HINT = 0x1;
 
     /**
-     * @var ServiceEventType
+     * @var \FKSDB\ORM\Services\ServiceEventType
      */
     private $serviceEventType;
 
+    /**
+     * EventFactory constructor.
+     * @param ServiceEventType $serviceEventType
+     */
     function __construct(ServiceEventType $serviceEventType) {
         $this->serviceEventType = $serviceEventType;
     }
@@ -53,14 +57,15 @@ class EventFactory {
             ->addRule(Form::MAX_LENGTH, null, 255)
             ->setOption('description', _('U soustředka místo.'));
 
-        $control = new DateTimeLocalInput(_('Začátek akce'));
-        $control->addRule(Form::FILLED, _('%label je povinný.'));
-        $container->addComponent($control, 'begin');
 
-        $control = new DateTimeLocalInput(_('Konec akce'));
-        $control->addRule(Form::FILLED, _('%label je povinný.'))
+        $beginField = new DateTimeLocalInput(_('Začátek akce'));
+        $beginField->addRule(Form::FILLED, _('%label je povinný.'));
+        $container->addComponent($beginField, 'begin');
+
+        $endField = new DateTimeLocalInput(_('Konec akce'));
+        $endField->addRule(Form::FILLED, _('%label je povinný.'))
             ->setOption('description', _('U jednodenních akcí shodný se začátkem.'));
-        $container->addComponent($control, 'end');;
+        $container->addComponent($endField, 'end');
 
         $control = new DateTimeLocalInput(_('Začátek registrace'));
         $container->addComponent($control, 'registration_begin');
@@ -78,6 +83,10 @@ class EventFactory {
         return $container;
     }
 
+    /**
+     * @param ModelContest $contest
+     * @return SelectBox
+     */
     public function createEventType(ModelContest $contest): SelectBox {
         $element = new SelectBox(_('Typ akce'));
 

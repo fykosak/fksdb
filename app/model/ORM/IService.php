@@ -1,6 +1,6 @@
 <?php
 
-namespace ORM;
+namespace FKSDB\ORM;
 
 use Nette\Database\Table\Selection;
 
@@ -16,12 +16,30 @@ interface IService {
      */
     public function createNew($data = null);
 
+    /**
+     * @param $key
+     * @return mixed
+     */
     public function findByPrimary($key);
 
+    /**
+     * @param IModel $model
+     * @param $data
+     * @param bool $alive
+     * @return mixed
+     */
     public function updateModel(IModel $model, $data, $alive = true);
 
+    /**
+     * @param IModel $model
+     * @return mixed
+     */
     public function save(IModel &$model);
 
+    /**
+     * @param IModel $model
+     * @return mixed
+     */
     public function dispose(IModel $model);
 
     /**

@@ -4,8 +4,7 @@ namespace FyziklaniModule;
 
 $container = require '../bootstrap.php';
 
-use DbNames;
-use FyziklaniModule\FyziklaniTestCase;
+use FKSDB\ORM\DbNames;
 use MockEnvironment\MockApplicationTrait;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Request;
@@ -68,7 +67,7 @@ class AuthorizationTest extends FyziklaniTestCase {
         return [
                 [null, 'Fyziklani:Submit', ['entry', 'edit', 'list'], false],
                 ['perPerson', 'Fyziklani:Submit', ['entry', 'edit', 'list'], false],
-                ['perOrg', 'Fyziklani:Submit', ['entry', 'edit', 'list'], true],
+                ['perOrg', 'Fyziklani:Submit', ['entry', 'list'], true], # TODO 'edit',
                 ['perOrgOther', 'Fyziklani:Submit', ['entry', 'edit', 'list'], false],
                 ['perContestant', 'Fyziklani:Submit', ['entry', 'edit', 'list'], false],
         ];

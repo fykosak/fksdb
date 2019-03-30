@@ -21,7 +21,12 @@ class EventFactory extends Object {
 
 	private $repositoryCache = [];
 
-	public function createEvent($type, $data) {
+    /**
+     * @param $type
+     * @param $data
+     * @return mixed
+     */
+    public function createEvent($type, $data) {
 		if (!array_key_exists($type, self::$typeMap)) {
 			throw new UnsupportedEventException('Unsupported event type.'); // is it XSS safe print the type?
 		}
@@ -29,21 +34,33 @@ class EventFactory extends Object {
 		return $this->$method($data);
 	}
 
-	private function createPing($data) {
+    /**
+     * @param $data
+     * @return Events\PingEvent
+     */
+    private function createPing($data) {
 		$event = new Events\PingEvent();
 		$this->fillBase($event, $data);
 		self::fillHelper(array('zen', 'hook_id'), $event, $data);
 		return $event;
 	}
 
-	private function createPush($data) {
+    /**
+     * @param $data
+     * @return Events\PushEvent
+     */
+    private function createPush($data) {
 		$event = new Events\PushEvent();
 		$this->fillBase($event, $data);
 		self::fillHelper(array('before', 'after', 'ref'), $event, $data);
 		return $event;
 	}
 
-	private function createRepository($data) {
+    /**
+     * @param $data
+     * @return mixed
+     */
+    private function createRepository($data) {
 		if (!array_key_exists('id', $data)) {
 			throw new MissingEventFieldException('id');
 		}
@@ -53,8 +70,8 @@ class EventFactory extends Object {
 			$repository = new Repository();
 			$repository->id = $id;
 			/*
-			 * Store repo in cache so that we can resolve cyclic dependencies 
-			 * between owner/user 
+			 * Store repo in cache so that we can resolve cyclic dependencies
+			 * between owner/user
 			 */
 			$this->repositoryCache[$id] = $repository;
 
@@ -73,7 +90,11 @@ class EventFactory extends Object {
 		return $this->repositoryCache[$id];
 	}
 
-	private function createUser($data) {
+    /**
+     * @param $data
+     * @return User
+     */
+    private function createUser($data) {
 		/* Github API is underspecified mess regarding users/their
 		 * attributes so just create a new User instance every time and fill it with
  		 * whatever we can store.
@@ -84,7 +105,11 @@ class EventFactory extends Object {
 		return $user;
 	}
 
-	private function fillBase($event, $data) {
+    /**
+     * @param $event
+     * @param $data
+     */
+    private function fillBase($event, $data) {
 		if (!array_key_exists('repository', $data)) {
 			throw new MissingEventFieldException('repository');
 		}
@@ -96,7 +121,13 @@ class EventFactory extends Object {
 		$event->sender = $this->createUser($data['sender']);
 	}
 
-	private static function fillHelper($definition, $object, $data, $strict = false) {
+    /**
+     * @param $definition
+     * @param $object
+     * @param $data
+     * @param bool $strict
+     */
+    private static function fillHelper($definition, $object, $data, $strict = false) {
 		foreach ($definition as $key) {
 			if (!array_key_exists($key, $data)) {
 				if ($strict) {
@@ -111,10 +142,18 @@ class EventFactory extends Object {
 
 }
 
+/**
+ * Class UnsupportedEventException
+ * @package Github
+ */
 class UnsupportedEventException extends InvalidArgumentException {
-	
+
 }
 
+/**
+ * Class MissingEventFieldException
+ * @package Github
+ */
 class MissingEventFieldException extends InvalidArgumentException {
-	
+
 }

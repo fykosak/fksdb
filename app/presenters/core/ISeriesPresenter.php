@@ -5,6 +5,10 @@
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
+
+/**
+ * Interface ISeriesPresenter
+ */
 interface ISeriesPresenter extends IContestPresenter {
 
     /** @return int */

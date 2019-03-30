@@ -26,6 +26,11 @@ class MemoryLogger extends StackedLogger {
         $this->messages = [];
     }
 
+    /**
+     * @param $message
+     * @param $level
+     * @return mixed|void
+     */
     protected function doLog($message, $level) {
         $this->messages[] = array(
             self::IDX_MESSAGE => $message,

@@ -1,5 +1,6 @@
 <?php
 
+namespace FKSDB\ORM;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -12,7 +13,6 @@ class DbNames {
     const TAB_CONTEST_YEAR = 'contest_year';
     const TAB_CONTESTANT_BASE = 'contestant_base';
     const TAB_EVENT = 'event';
-    const TAB_EVENT_HAS_ORG = self::TAB_EVENT_ORG;
     const TAB_EVENT_ORG = 'event_org';
     const TAB_EVENT_PARTICIPANT = 'event_participant';
     const TAB_EVENT_ACCOMMODATION = 'event_accommodation';
@@ -23,6 +23,7 @@ class DbNames {
     const TAB_GRANT = 'grant';
     const TAB_LOGIN = 'login';
     const TAB_ORG = 'org';
+
     const TAB_PERSON = 'person';
     const TAB_PERSON_HAS_FLAG = 'person_has_flag';
     const TAB_PERSON_HISTORY = 'person_history';
@@ -43,6 +44,9 @@ class DbNames {
     const TAB_TASK_STUDY_YEAR = 'task_study_year';
     const TAB_TEACHER = 'teacher';
     const VIEW_CONTESTANT = 'v_contestant';
+    /* payment */
+    const TAB_PAYMENT_ACCOMMODATION = 'payment_accommodation';
+    const TAB_PAYMENT = 'payment';
 
     /* Specified tables for events */
     const TAB_E_DSEF_GROUP = 'e_dsef_group';
@@ -59,5 +63,10 @@ class DbNames {
 
     const TAB_FYZIKLANI_ROOM = 'brawl_room';
     const TAB_FYZIKLANI_TEAM_POSITION = 'brawl_team_position';
+
+    const TAB_SCHEDULE_GROUP = 'schedule_group';
+    const TAB_SCHEDULE_ITEM = 'schedule_item';
+    const TAB_PERSON_SCHEDULE = 'person_schedule';
+    const TAB_SCHEDULE_PAYMENT = 'schedule_payment';
 
 }

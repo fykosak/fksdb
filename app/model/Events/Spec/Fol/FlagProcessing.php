@@ -7,14 +7,18 @@ use Events\Model\Holder\Holder;
 use Events\Processings\AbstractProcessing;
 use FKSDB\Logging\ILogger;
 use Nette\Utils\ArrayHash;
+use FKSDB\ORM\Services\ServiceSchool;
+use FKSDB\YearCalculator;
 use Nette\Forms\Form;
-use ServiceSchool;
-use YearCalculator;
 
+/**
+ * Class FlagProcessing
+ * @package Events\Spec\Fol
+ */
 class FlagProcessing extends AbstractProcessing {
 
     /**
-     * @var YearCalculator
+     * @var \FKSDB\YearCalculator
      */
     private $yearCalculator;
 
@@ -23,11 +27,25 @@ class FlagProcessing extends AbstractProcessing {
      */
     private $serviceSchool;
 
+    /**
+     * FlagProcessing constructor.
+     * @param \FKSDB\YearCalculator $yearCalculator
+     * @param \FKSDB\ORM\Services\ServiceSchool $serviceSchool
+     */
     function __construct(YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
         $this->yearCalculator = $yearCalculator;
         $this->serviceSchool = $serviceSchool;
     }
 
+    /**
+     * @param $states
+     * @param ArrayHash $values
+     * @param Machine $machine
+     * @param Holder $holder
+     * @param ILogger $logger
+     * @param Form|null $form
+     * @return mixed|void
+     */
     protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
         if (!isset($values['team'])) {
             return;
@@ -78,6 +96,10 @@ class FlagProcessing extends AbstractProcessing {
         }
     }
 
+    /**
+     * @param $school_id
+     * @return bool
+     */
     private function isCzSkSchool($school_id) {
         $country = $this->serviceSchool->getTable()->select('address.region.country_iso')->where(['school_id' => $school_id])->fetch();
         if (in_array($country->country_iso, ['CZ', 'SK'])) {
@@ -86,6 +108,10 @@ class FlagProcessing extends AbstractProcessing {
         return false;
     }
 
+    /**
+     * @param $study_year
+     * @return bool
+     */
     private function isStudent($study_year) {
         return ($study_year === null) ? false : true;
     }

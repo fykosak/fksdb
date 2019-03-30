@@ -87,7 +87,7 @@ events:
             #   TEAM
             #
             TEAM:
-                service: @event.ServiceFyziklaniTeam
+                service: @fyziklani.ServiceFyziklaniTeam
                 personIds: [teacher_id]
                 eventId: e_fyziklani_team.event_id
 

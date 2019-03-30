@@ -1,8 +1,9 @@
-{layout ../../templates/@layout.latte}
-
-
+{layout '../../templates/@layout.latte'}
+{block nav}
+    {control contestChooser}
+    {include #parent}
+{/block}
 {block user-info}
-{include #parent}
-{control languageChooser,null}
-{control contestChooser}
+    {control languageChooser,null}
+    {include #parent}
 {/block}

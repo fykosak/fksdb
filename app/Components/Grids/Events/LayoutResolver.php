@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Grids\Events;
 
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\ModelEvent;
 use Nette\Object;
 
 /**
@@ -24,19 +24,37 @@ class LayoutResolver extends Object {
      */
     private $templateDir;
 
+    /**
+     * LayoutResolver constructor.
+     * @param $templateDir
+     * @param $definitions
+     */
     function __construct($templateDir, $definitions) {
         $this->templateDir = $templateDir;
         $this->definitions = $definitions;
     }
 
+    /**
+     * @param ModelEvent $event
+     * @return string
+     */
     public function getTableLayout(ModelEvent $event) {
         return $this->getTemplate($event, 'tableLayout');
     }
 
+    /**
+     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @return string
+     */
     public function getFormLayout(ModelEvent $event) {
         return $this->getTemplate($event, 'formLayout');
     }
 
+    /**
+     * @param ModelEvent $event
+     * @param $type
+     * @return string
+     */
     private function getTemplate(ModelEvent $event, $type) {
         $eventTypeId = $event->event_type_id;
         $eventYear = $event->event_year;

@@ -6,12 +6,13 @@ use CSVFormat;
 use Exports\Formats\AESOPFormat;
 use FKSDB\Config\Expressions\Helpers;
 use FKSDB\Config\GlobalParameters;
+use FKSDB\ORM\Services\ServiceContest;
+use FKSDB\ORM\Services\ServiceEvent;
+use FKSDB\ORM\Services\ServiceTask;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\Object;
 use Nette\Utils\Arrays;
-use ServiceEvent;
-use ServiceContest;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -41,16 +42,24 @@ class ExportFormatFactory extends Object {
     private $storedQueryFactory;
 
     /**
-     * @var ServiceEvent
+     * @var \FKSDB\ORM\Services\ServiceEvent
      */
     private $serviceEvent;
 
     /**
-     * @var ServiceContest
+     * @var \FKSDB\ORM\Services\ServiceContest
      */
     private $serviceContest;
     private $defaultFormats;
 
+    /**
+     * ExportFormatFactory constructor.
+     * @param GlobalParameters $globalParameters
+     * @param Container $container
+     * @param StoredQueryFactory $storedQueryFactory
+     * @param ServiceEvent $serviceEvent
+     * @param ServiceContest $serviceContest
+     */
     function __construct(GlobalParameters $globalParameters, Container $container, StoredQueryFactory $storedQueryFactory, ServiceEvent $serviceEvent, ServiceContest $serviceContest) {
         $this->globalParameters = $globalParameters;
         $this->container = $container;
@@ -85,6 +94,10 @@ class ExportFormatFactory extends Object {
         }
     }
 
+    /**
+     * @param StoredQuery $storedQuery
+     * @return array|mixed
+     */
     public function getFormats(StoredQuery $storedQuery) {
         $queryPattern = $storedQuery->getQueryPattern();
         $qid = isset($queryPattern->qid) ? $queryPattern->qid : null;
@@ -96,6 +109,11 @@ class ExportFormatFactory extends Object {
         }
     }
 
+    /**
+     * @param $name
+     * @param StoredQuery $storedQuery
+     * @return AESOPFormat
+     */
     private function createAesop($name, StoredQuery $storedQuery) {
         $parameters = $this->globalParameters['exports']['formats'][$name];
         $queryParameters = $storedQuery->getParameters(true);
@@ -133,13 +151,20 @@ class ExportFormatFactory extends Object {
 
         if ($qid == 'aesop.ct') {
             $format->addParameters(array(
-                'max-points' => $storedQuery->getPostProcessing()->getMaxPoints($this->container->getByType('ServiceTask')),
+                'max-points' => $storedQuery->getPostProcessing()
+                    ->getMaxPoints($this->container->getByType(ServiceTask::class)),
             ));
         }
 
         return $format;
     }
 
+    /**
+     * @param StoredQuery $storedQuery
+     * @param $header
+     * @param bool $quote
+     * @return CSVFormat
+     */
     private function createCSV(StoredQuery $storedQuery, $header, $quote = CSVFormat::DEFAULT_QUOTE) {
         $format = new CSVFormat($storedQuery, $header, CSVFormat::DEFAULT_DELIMITER, $quote);
         return $format;

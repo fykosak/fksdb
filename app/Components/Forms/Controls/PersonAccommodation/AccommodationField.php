@@ -4,10 +4,14 @@ namespace FKSDB\Components\Forms\Controls\PersonAccommodation;
 
 use FKSDB\Components\React\IReactComponent;
 use FKSDB\Components\React\ReactField;
-use FKSDB\ORM\ModelEvent;
-use FKSDB\ORM\ModelEventAccommodation;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Models\ModelEventAccommodation;
 use Nette\Forms\Controls\TextInput;
 
+/**
+ * Class AccommodationField
+ * @package FKSDB\Components\Forms\Controls\PersonAccommodation
+ */
 abstract class AccommodationField extends TextInput implements IReactComponent {
 
     use ReactField;
@@ -16,6 +20,10 @@ abstract class AccommodationField extends TextInput implements IReactComponent {
      */
     private $event;
 
+    /**
+     * AccommodationField constructor.
+     * @param ModelEvent $event
+     */
     public function __construct(ModelEvent $event) {
         parent::__construct(_('Accommodation'));
         $this->event = $event;
@@ -23,19 +31,26 @@ abstract class AccommodationField extends TextInput implements IReactComponent {
         $this->registerMonitor();
     }
 
+    /**
+     * @return string
+     */
     public function getComponentName(): string {
         return 'accommodation';
     }
 
+    /**
+     * @return string
+     */
     public function getModuleName(): string {
         return 'events';
     }
 
     /**
      * @return string
+     * @throws \Exception
      */
     public function getData(): string {
-        $accommodations = $this->event->getEventAccommodations();
+        $accommodations = $this->event->getEventAccommodationsAsArray();
 
         $accommodationDef = [];
         foreach ($accommodations as $accommodation) {
@@ -45,8 +60,18 @@ abstract class AccommodationField extends TextInput implements IReactComponent {
         return json_encode($accommodationDef);
     }
 
+    /**
+     * @param $obj
+     */
     public function attached($obj) {
         parent::attached($obj);
         $this->attachedReact($obj);
+    }
+
+    /**
+     * @return array
+     */
+    public function getActions(): array {
+        return [];
     }
 }

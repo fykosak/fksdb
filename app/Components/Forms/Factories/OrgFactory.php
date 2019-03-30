@@ -3,11 +3,11 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
-use FKSDB\ORM\ModelContest;
+use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Services\ServicePerson;
+use FKSDB\YearCalculator;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Form;
-use ServicePerson;
-use YearCalculator;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -17,20 +17,31 @@ use YearCalculator;
 class OrgFactory {
 
     /**
-     * @var ServicePerson
+     * @var \FKSDB\ORM\Services\ServicePerson
      */
     private $servicePerson;
 
     /**
-     * @var YearCalculator
+     * @var \FKSDB\YearCalculator
      */
     private $yearCalculator;
 
+    /**
+     * OrgFactory constructor.
+     * @param ServicePerson $servicePerson
+     * @param \FKSDB\YearCalculator $yearCalculator
+     */
     function __construct(ServicePerson $servicePerson, YearCalculator $yearCalculator) {
         $this->servicePerson = $servicePerson;
         $this->yearCalculator = $yearCalculator;
     }
 
+    /**
+     * @param int $options
+     * @param ControlGroup|null $group
+     * @param ModelContest $contest
+     * @return ModelContainer
+     */
     public function createOrg($options = 0, ControlGroup $group = null, ModelContest $contest): ModelContainer {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);

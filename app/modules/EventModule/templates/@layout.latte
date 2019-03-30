@@ -1,0 +1,8 @@
+{layout '../../../templates/@layout.latte'}
+
+{block user-info}
+    {if $control['languageChooser']->isValid()}
+        {control languageChooser,null}
+    {/if}
+    {include #parent}
+{/block}

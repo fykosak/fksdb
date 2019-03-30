@@ -12,13 +12,21 @@ use Nette\Forms\Form;
  */
 class URLTextBox extends TextInput {
 
+    /**
+     * URLTextBox constructor.
+     * @param null $label
+     * @param null $maxLength
+     */
     public function __construct($label = NULL, $maxLength = NULL) {
         parent::__construct($label, $maxLength);
-
         $this->addCondition(Form::FILLED)
                 ->addRule(Form::URL, _('%label není platná URL.'));
     }
 
+    /**
+     * @param $value
+     * @return \Nette\Forms\Controls\TextBase|void
+     */
     public function setValue($value) {
         if ($value) {
             if (!preg_match('#^[a-z]+://#i', $value)) {

@@ -1,58 +1,51 @@
-<div class="card mb-3 border-primary">
-    <h4 class="card-header bg-primary text-white">{_('Person history')}</h4>
-    {if $mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL || $mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_RESTRICT }
+{layout './@layout.latte'}
+{block content}
+    {if count($historys)}
+        {foreach $historys as $history}
+            <h3 class="card-header">{$history->ac_year}</h3>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <div class="row">
+                        <span class="col-5"><b>{_'School'}</b></span>
+                        <div class="col-7">
+                            {if (!is_null($history->school_id))}
+                                {$history->school->name_abbrev}
+                            {else}
+                                {control notSet}
+                            {/if}
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <span class="col-5"><b>{_'Class'}</b></span>
+                        <div class="col-7">
+                            {if (!is_null($history->class))}
+                                {$history->class}
+                            {else}
+                                {control notSet}
+                            {/if}
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <span class="col-5"><b>{_'Study year'}</b></span>
+                        <div class="col-7">
+                            {if (!is_null($history->study_year))}
+                                {$history->study_year}
+                            {else}
+                                {control notSet}
+                            {/if}
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        {/foreach}
 
-        {if count($data['history'])}
-            {foreach $data['history'] as $history}
-                <h3 class="card-header">{$history->ac_year}</h3>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
-                        <div class="row">
-                            <span class="col-5">{_('School')}</span>
-                            <div class="col-7">
-                                {if (!is_null($history->school_id))}
-                                    {$history->school->name_abbrev}
-                                {else}
-                                    <span class="badge badge-danger">{_('not set')}</span>
-                                {/if}
-                            </div>
-                        </div>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="row">
-                            <span class="col-5">{_('Class')}</span>
-                            <div class="col-7">
-                                {if (!is_null($history->class))}
-                                    {$history->class}
-                                {else}
-                                    <span class="badge badge-danger">{_('not set')}</span>
-                                {/if}
-                            </div>
-                        </div>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="row">
-                            <span class="col-5">{_('Study_year')}</span>
-                            <div class="col-7">
-                                {if (!is_null($history->study_year))}
-                                    {$history->study_year}
-                                {else}
-                                    <span class="badge badge-danger">{_('not set')}</span>
-                                {/if}
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-            {/foreach}
-
-        {else}
-            <div class="card-body">
-                <span class="badge-warning badge">{_('No records')}</span>
-            </div>
-        {/if}
     {else}
         <div class="card-body">
-            {control permissionDenied}
+            {control noRecords}
         </div>
     {/if}
-</div>
+{/block}

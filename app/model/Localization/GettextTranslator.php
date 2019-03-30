@@ -22,11 +22,19 @@ class GettextTranslator implements ITranslator {
     private $localeDir;
     private $lang;
 
+    /**
+     * GettextTranslator constructor.
+     * @param array $locales
+     * @param $localeDir
+     */
     function __construct(array $locales, $localeDir) {
         $this->locales = $locales;
         $this->localeDir = $localeDir;
     }
 
+    /**
+     * @return mixed
+     */
     public function getLang() {
         return $this->lang;
     }
@@ -49,10 +57,18 @@ class GettextTranslator implements ITranslator {
         textdomain('messages');
     }
 
+    /**
+     * @return array
+     */
     public function getSupportedLanguages() {
         return array_keys($this->locales);
     }
 
+    /**
+     * @param $message
+     * @param null $count
+     * @return string
+     */
     public function translate($message, $count = NULL) {
         if ($message === "" || $message === null) {
             return "";
@@ -64,6 +80,12 @@ class GettextTranslator implements ITranslator {
         }
     }
 
+    /**
+     * @param $object
+     * @param $field
+     * @param $lang
+     * @return mixed
+     */
     public static function i18nHelper($object, $field, $lang) {
         return $object->{$field . '_' . $lang};
     }

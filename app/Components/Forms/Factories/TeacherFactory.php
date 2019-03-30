@@ -12,6 +12,9 @@ use Nette\Forms\Form;
  */
 class TeacherFactory {
 
+    /**
+     * @return ModelContainer
+     */
     public function createTeacher() {
         $container = new ModelContainer();
         $container->addComponent(new DatePicker(_('Since year')), 'since');

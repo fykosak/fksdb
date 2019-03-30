@@ -24,6 +24,12 @@ class CSVParser extends Object implements Iterator {
     private $currentRow;
     private $header;
 
+    /**
+     * CSVParser constructor.
+     * @param $filename
+     * @param int $indexType
+     * @param string $delimiter
+     */
     function __construct($filename, $indexType = self::INDEX_NUMERIC, $delimiter = ';') {
         $this->indexType = $indexType;
         $this->delimiter = $delimiter;
@@ -33,10 +39,16 @@ class CSVParser extends Object implements Iterator {
         }
     }
 
+    /**
+     * @return mixed
+     */
     public function current() {
         return $this->currentRow;
     }
 
+    /**
+     * @return mixed
+     */
     public function key() {
         return $this->rowNumber;
     }
@@ -69,6 +81,9 @@ class CSVParser extends Object implements Iterator {
         }
     }
 
+    /**
+     * @return bool
+     */
     public function valid() {
         $eof = feof($this->file);
         if ($eof) {

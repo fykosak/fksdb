@@ -8,13 +8,14 @@
 
 namespace FKSDB\model\Fyziklani;
 
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FyziklaniModule\BasePresenter;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\Selection;
 use Nette\Utils\Html;
-use ORM\Models\Events\ModelFyziklaniTeam;
-use ORM\Services\Events\ServiceFyziklaniTeam;
 
 /**
  *
@@ -30,20 +31,30 @@ class CloseSubmitStrategy {
 
     /**
      *
-     * @var ServiceFyziklaniTeam
+     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam
      */
     private $serviceFyziklaniTeam;
     /**
-     * @var ModelEvent
+     * @var \FKSDB\ORM\Models\ModelEvent
      */
     private $event;
 
 
+    /**
+     * CloseSubmitStrategy constructor.
+     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam $serviceFyziklaniTeam
+     */
     public function __construct(ModelEvent $event, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
         $this->event = $event;
     }
 
+    /**
+     * @param $category
+     * @param null $msg
+     * @throws BadRequestException
+     */
     public function closeByCategory($category, &$msg = null) {
         $total = is_null($category);
         $connection = $this->serviceFyziklaniTeam->getConnection();
@@ -55,10 +66,19 @@ class CloseSubmitStrategy {
         $connection->commit();
     }
 
+    /**
+     * @param null $msg
+     * @throws BadRequestException
+     */
     public function closeGlobal(&$msg = null) {
         $this->closeByCategory(null, $msg);
     }
 
+    /**
+     * @param $data
+     * @param $total
+     * @param null $msg
+     */
     private function saveResults($data, $total, &$msg = null) {
         $msg = '';
         foreach ($data as $index => &$teamData) {
@@ -84,13 +104,13 @@ class CloseSubmitStrategy {
         foreach ($teams as $row) {
             $team = ModelFyziklaniTeam::createFromTableRow($row);
             $teamData = [];
-            $team_id = $team->e_fyziklani_team_id;
-            $teamData['e_fyziklani_team_id'] = $team_id;
+            $teamId = $team->e_fyziklani_team_id;
+            $teamData['e_fyziklani_team_id'] = $teamId;
             if ($team->points === null) {
-                throw new BadRequestException('Tým ' . $team->name . '(' . $team_id . ') nemá uzavřené bodování');
+                throw new BadRequestException('Tým ' . $team->name . '(' . $teamId . ') nemá uzavřené bodování');
             }
             $teamData['points'] = $team->points;
-            $teamData['submits'] = $this->getAllSubmits($team_id);
+            $teamData['submits'] = $this->getAllSubmits($teamId);
             $teamsData[] = $teamData;
         }
         return $teamsData;
@@ -129,15 +149,16 @@ class CloseSubmitStrategy {
     }
 
     /**
-     * @param integer $team_id
+     * @param integer $teamId
      * @return array
      */
-    protected function getAllSubmits(int $team_id): array {
-        $submits = ModelFyziklaniTeam::createFromTableRow($this->serviceFyziklaniTeam->findByPrimary($team_id))->getSubmits();
+    protected function getAllSubmits(int $teamId): array {
+        $team = ModelFyziklaniTeam::createFromTableRow($this->serviceFyziklaniTeam->findByPrimary($teamId));
         $arraySubmits = [];
         $sum = 0;
         $count = 0;
-        foreach ($submits as $submit) {
+        foreach ($team->getSubmits() as $row) {
+            $submit = ModelFyziklaniSubmit::createFromTableRow($row);
             if ($submit->points !== null) {
                 $sum += $submit->points;
                 $count++;

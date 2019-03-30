@@ -37,6 +37,14 @@ class BreadcrumbsFactory {
      */
     private $expiration;
 
+    /**
+     * BreadcrumbsFactory constructor.
+     * @param $expiration
+     * @param Session $session
+     * @param IRouter $router
+     * @param HttpRequest $httpRequest
+     * @param PresenterFactory $presenterFactory
+     */
     function __construct($expiration, Session $session, IRouter $router, HttpRequest $httpRequest, PresenterFactory $presenterFactory) {
         $this->expiration = $expiration;
         $this->session = $session;

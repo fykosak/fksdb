@@ -2,11 +2,11 @@
 
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
-use FKSDB\ORM\ModelContest;
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Services\ServicePerson;
+use FKSDB\YearCalculator;
 use Nette\Database\Table\Selection;
-use ServicePerson;
-use YearCalculator;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -27,6 +27,10 @@ class PersonProvider implements IFilteredDataProvider {
      */
     private $searchTable;
 
+    /**
+     * PersonProvider constructor.
+     * @param ServicePerson $servicePerson
+     */
     function __construct(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
         $this->searchTable = $this->servicePerson->getTable();
@@ -34,7 +38,7 @@ class PersonProvider implements IFilteredDataProvider {
 
     /**
      * Syntactic sugar, should be solved more generally.
-     * @param ModelContest $contest
+     * @param \FKSDB\ORM\Models\ModelContest $contest
      * @param YearCalculator $yearCalculator
      */
     public function filterOrgs(ModelContest $contest, YearCalculator $yearCalculator) {
@@ -62,11 +66,18 @@ class PersonProvider implements IFilteredDataProvider {
         return $this->getItems();
     }
 
+    /**
+     * @param mixed $id
+     * @return mixed
+     */
     public function getItemLabel($id) {
         $person = $this->servicePerson->findByPrimary($id);
         return $person->getFullName();
     }
 
+    /**
+     * @return array
+     */
     public function getItems() {
         $persons = $this->searchTable
                 ->order('family_name, other_name');
@@ -79,6 +90,10 @@ class PersonProvider implements IFilteredDataProvider {
         return $result;
     }
 
+    /**
+     * @param \FKSDB\ORM\Models\ModelPerson $person
+     * @return array
+     */
     private function getItem(ModelPerson $person) {
         $place = null;
         $address = $person->getDeliveryAddress();
@@ -92,6 +107,9 @@ class PersonProvider implements IFilteredDataProvider {
         ];
     }
 
+    /**
+     * @param $id
+     */
     public function setDefaultValue($id) {
         /* intentionally blank */
     }

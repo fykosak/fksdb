@@ -11,6 +11,11 @@ use Nette\Object;
  */
 abstract class EvaluatedExpression extends Object {
 
+    /**
+     * @param $evaluated
+     * @param $args
+     * @return mixed
+     */
     protected function evalArg($evaluated, $args) {
         if (is_callable($evaluated)) {
             return call_user_func_array($evaluated, $args);

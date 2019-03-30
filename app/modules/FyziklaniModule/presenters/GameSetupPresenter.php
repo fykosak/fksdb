@@ -3,8 +3,14 @@
 
 namespace FyziklaniModule;
 
+/**
+ * Class GameSetupPresenter
+ * @package FyziklaniModule
+ */
 class GameSetupPresenter extends BasePresenter {
-
+    /**
+     * @return void
+     */
     public function titleDefault() {
         $this->setTitle(_('Fyziklani game setup'));
         $this->setIcon('fa fa-cogs');
@@ -17,6 +23,7 @@ class GameSetupPresenter extends BasePresenter {
     public function renderDefault() {
         $this->template->gameSetup = $this->getGameSetup();
     }
+
     /**
      * @throws \Nette\Application\BadRequestException
      * @throws \Nette\Application\AbortException

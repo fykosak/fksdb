@@ -15,11 +15,19 @@ class WriteOnlyInput extends TextInput implements IWriteOnly {
 
     use WriteOnlyTrait;
 
+    /**
+     * WriteOnlyInput constructor.
+     * @param null $label
+     * @param null $maxLength
+     */
     public function __construct($label = NULL, $maxLength = NULL) {
         parent::__construct($label, $maxLength);
         $this->writeOnlyAppendMonitors();
     }
 
+    /**
+     * @return \Nette\Utils\Html
+     */
     public function getControl() {
         $control = parent::getControl();
         $control = $this->writeOnlyAdjustControl($control);
@@ -31,6 +39,9 @@ class WriteOnlyInput extends TextInput implements IWriteOnly {
         $this->writeOnlyLoadHttpData();
     }
 
+    /**
+     * @param $obj
+     */
     protected function attached($obj) {
         parent::attached($obj);
         $this->writeOnlyAttached($obj);

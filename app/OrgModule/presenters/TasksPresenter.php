@@ -4,14 +4,14 @@ namespace OrgModule;
 
 use Astrid\Downloader;
 use Astrid\DownloadException;
-use FKSDB\Application\UploadException;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Logging\FlashDumpFactory;
+use FKSDB\SeriesCalculator;
+use FKSDB\Submits\UploadException;
 use ModelException;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 use Pipeline\PipelineException;
-use SeriesCalculator;
 use SimpleXMLElement;
 use Tasks\PipelineFactory;
 use Tasks\SeriesData;
@@ -34,7 +34,7 @@ class TasksPresenter extends BasePresenter {
     private static $languages = ['cs', 'en'];
 
     /**
-     * @var SeriesCalculator
+     * @var \FKSDB\SeriesCalculator
      */
     private $seriesCalculator;
 
@@ -53,22 +53,37 @@ class TasksPresenter extends BasePresenter {
      */
     private $downloader;
 
+    /**
+     * @param SeriesCalculator $seriesCalculator
+     */
     public function injectSeriesCalculator(SeriesCalculator $seriesCalculator) {
         $this->seriesCalculator = $seriesCalculator;
     }
 
+    /**
+     * @param PipelineFactory $pipelineFactory
+     */
     public function injectPipelineFactory(PipelineFactory $pipelineFactory) {
         $this->pipelineFactory = $pipelineFactory;
     }
 
+    /**
+     * @param FlashDumpFactory $flashDumpFactory
+     */
     function injectFlashDumpFactory(FlashDumpFactory $flashDumpFactory) {
         $this->flashDumpFactory = $flashDumpFactory;
     }
 
+    /**
+     * @param Downloader $downloader
+     */
     function injectDownloader(Downloader $downloader) {
         $this->downloader = $downloader;
     }
 
+    /**
+     * @throws \Nette\Application\BadRequestException
+     */
     public function authorizedImport() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('task', 'insert', $this->getSelectedContest()));
     }
@@ -78,6 +93,10 @@ class TasksPresenter extends BasePresenter {
         $this->setIcon('fa fa-upload');
     }
 
+    /**
+     * @return FormControl
+     * @throws \Nette\Application\BadRequestException
+     */
     protected function createComponentSeriesForm(): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
@@ -110,10 +129,19 @@ class TasksPresenter extends BasePresenter {
         return $control;
     }
 
+    /**
+     * @param SimpleXMLElement $xml
+     * @return bool
+     */
     private function isLegacyXml(SimpleXMLElement $xml) {
         return $xml->getName() == 'problems';
     }
 
+    /**
+     * @param Form $seriesForm
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
     public function validSubmitSeriesForm(Form $seriesForm) {
         $values = $seriesForm->getValues();
         $series = $values['series'];
@@ -125,7 +153,7 @@ class TasksPresenter extends BasePresenter {
                     try {
                         $file = $this->downloader->downloadSeriesTasks($this->getSelectedContest(), $this->getSelectedYear(), $series, $language);
                         $files[$language] = $file;
-                    } catch (DownloadException $e) {
+                    } catch (DownloadException $exception) {
                         $this->flashMessage(sprintf(_('Úlohy pro jazyk %s se nepodařilo stáhnout.'), $language), self::FLASH_WARNING);
                     }
                 }
@@ -170,12 +198,12 @@ class TasksPresenter extends BasePresenter {
                     $dump->dump($pipeline->getLogger(), $this);
                     $this->flashMessage(_('Úlohy pro úspěšně importovány.'), self::FLASH_SUCCESS);
                 }
-            } catch (PipelineException $e) {
-                $this->flashMessage(sprintf(_('Při ukládání úloh pro jazyk %s došlo k chybě. %s'), $language, $e->getMessage()), self::FLASH_ERROR);
-                Debugger::log($e);
-            } catch (ModelException $e) {
+            } catch (PipelineException $exception) {
+                $this->flashMessage(sprintf(_('Při ukládání úloh pro jazyk %s došlo k chybě. %s'), $language, $exception->getMessage()), self::FLASH_ERROR);
+                Debugger::log($exception);
+            } catch (ModelException $exception) {
                 $this->flashMessage(sprintf(_('Při ukládání úloh pro jazyk %s došlo k chybě.'), $language), self::FLASH_ERROR);
-                Debugger::log($e);
+                Debugger::log($exception);
             } finally {
 
                 unlink($file);

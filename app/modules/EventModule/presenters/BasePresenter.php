@@ -4,11 +4,11 @@ namespace EventModule;
 
 use AuthenticatedPresenter;
 use FKSDB\Components\Controls\LanguageChooser;
-use FKSDB\ORM\ModelContest;
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Services\ServiceEvent;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
-use ServiceEvent;
 
 /**
  *
@@ -19,7 +19,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /**
      *
-     * @var ModelEvent
+     * @var \FKSDB\ORM\Models\ModelEvent
      */
     private $event;
 
@@ -35,14 +35,20 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     protected $container;
 
     /**
-     * @var ServiceEvent
+     * @var \FKSDB\ORM\Services\ServiceEvent
      */
     protected $serviceEvent;
 
+    /**
+     * @param Container $container
+     */
     public function injectContainer(Container $container) {
         $this->container = $container;
     }
 
+    /**
+     * @param ServiceEvent $serviceEvent
+     */
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;
     }
@@ -60,9 +66,9 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      */
     protected function startup() {
         /**
-         * @var $languageChooser LanguageChooser
+         * @var LanguageChooser $languageChooser
          */
-        $languageChooser =  $this->getComponent('languageChooser');
+        $languageChooser = $this->getComponent('languageChooser');
         $languageChooser->syncRedirect();
 
         if (!$this->eventExist()) {
@@ -85,7 +91,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @throws BadRequestException
      * @throws \Nette\Application\AbortException
      */
-    public function getSubtitle(): string {
+    public function getSubTitle(): string {
         return $this->getEvent()->__toString();
     }
 
@@ -101,7 +107,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     /**
-     * @return ModelEvent
+     * @return \FKSDB\ORM\Models\ModelEvent
      * @throws BadRequestException
      * @throws \Nette\Application\AbortException
      */
@@ -150,16 +156,24 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         return $this->getContestAuthorizator()->isAllowed($resource, $privilege, $contest);
     }
 
+    /**
+     * @return array
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
     protected function getNavBarVariant(): array {
         return ['event event-type-' . $this->getEvent()->event_type_id, ($this->getEvent()->event_type_id == 1) ? 'bg-fyziklani navbar-dark' : 'bg-light navbar-light'];
     }
 
+    /**
+     * @return array
+     */
     protected function getNavRoots(): array {
         return ['event.dashboard.default'];
     }
 
     /**
-     * @return ModelContest
+     * @return \FKSDB\ORM\Models\ModelContest
      * @throws BadRequestException
      * @throws \Nette\Application\AbortException
      */

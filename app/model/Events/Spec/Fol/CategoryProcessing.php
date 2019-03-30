@@ -7,13 +7,17 @@ use Events\Machine\Machine;
 use Events\Model\Holder\Field;
 use Events\Model\Holder\Holder;
 use Events\Processings\AbstractProcessing;
-use FKSDB\Logging\ILogger;
 use FKSDB\Components\Forms\Factories\Events\IOptionsProvider;
 use Nette\Utils\ArrayHash;
+use FKSDB\Logging\ILogger;
+use FKSDB\ORM\Services\ServiceSchool;
+use FKSDB\YearCalculator;
 use Nette\Forms\Form;
-use ServiceSchool;
-use YearCalculator;
 
+/**
+ * Class CategoryProcessing
+ * @package Events\Spec\Fol
+ */
 class CategoryProcessing extends AbstractProcessing implements IOptionsProvider {
 
     const HIGH_SCHOOL_A = 'A';
@@ -28,7 +32,7 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
     private $yearCalculator;
 
     /**
-     * @var ServiceSchool
+     * @var \FKSDB\ORM\Services\ServiceSchool
      */
     private $serviceSchool;
     private $categoryNames;
@@ -39,7 +43,7 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
      *
      * @param int $rulesVersion version 1 is up to year 2017, version 2 from 2018
      * @param YearCalculator $yearCalculator
-     * @param ServiceSchool $serviceSchool
+     * @param \FKSDB\ORM\Services\ServiceSchool $serviceSchool
      */
     function __construct($rulesVersion, YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
         $this->yearCalculator = $yearCalculator;
@@ -69,6 +73,15 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
         }
     }
 
+    /**
+     * @param $states
+     * @param ArrayHash $values
+     * @param Machine $machine
+     * @param Holder $holder
+     * @param ILogger $logger
+     * @param Form|null $form
+     * @return mixed|void
+     */
     protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
         if (!isset($values['team'])) {
             return;
@@ -176,6 +189,10 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
         }
     }
 
+    /**
+     * @param Field $field
+     * @return array
+     */
     public function getOptions(Field $field) {
         return $this->categoryNames;
     }

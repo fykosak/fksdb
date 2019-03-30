@@ -4,11 +4,11 @@ namespace FKSDB\Components\Grids\Fyziklani;
 
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FyziklaniModule\BasePresenter;
 use NiftyGrid\DataSource\NDataSource;
-use ORM\Models\Events\ModelFyziklaniTeam;
-use ORM\Services\Events\ServiceFyziklaniTeam;
 
 /**
  *
@@ -17,18 +17,18 @@ use ORM\Services\Events\ServiceFyziklaniTeam;
  */
 class CloseTeamsGrid extends BaseGrid {
     /**
-     * @var ServiceFyziklaniTeam
+     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam
      */
     private $serviceFyziklaniTeam;
     /**
-     * @var ModelEvent
+     * @var \FKSDB\ORM\Models\ModelEvent
      */
     private $event;
 
     /**
      * FyziklaniTeamsGrid constructor.
-     * @param ModelEvent $event
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam $serviceFyziklaniTeam
      */
     public function __construct(ModelEvent $event, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
@@ -50,7 +50,7 @@ class CloseTeamsGrid extends BaseGrid {
 
         $this->addColumn('room', _('Místnost'))->setRenderer(function ($row) {
             /**
-             * @var $row ModelFyziklaniTeam
+             * @var \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam $row
              */
             $position = $row->getPosition();
             if (!$position) {
@@ -67,9 +67,9 @@ class CloseTeamsGrid extends BaseGrid {
             ]);
         })->setText(_('Uzavřít bodování'))->setShow(function ($row) {
             /**
-             * @var $row ModelFyziklaniTeam
+             * @var ModelFyziklaniTeam $row
              */
-            return $row->hasOpenSubmit();
+            return $row->hasOpenSubmitting();
         });
         $teams = $this->serviceFyziklaniTeam->findParticipating($this->event);//->where('points',NULL);
         $this->setDataSource(new NDataSource($teams));

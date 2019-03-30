@@ -1,6 +1,10 @@
 <?php
 namespace FKSDB\Messages;
 
+/**
+ * Class Message
+ * @package FKSDB\Messages
+ */
 class Message {
     /**
      * @var string
@@ -12,6 +16,11 @@ class Message {
      */
     private $level;
 
+    /**
+     * Message constructor.
+     * @param $text
+     * @param $level
+     */
     public function __construct($text, $level) {
         $this->text = $text;
         $this->level = $level;
@@ -45,6 +54,9 @@ class Message {
         $this->level = $level;
     }
 
+    /**
+     * @return array
+     */
     public function __toArray() {
         return [
             'text' => $this->text,

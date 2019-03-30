@@ -2,7 +2,7 @@
 
 namespace Exports;
 
-use FKSDB\ORM\ModelStoredQuery;
+use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use Nette\Database\Connection;
 use Nette\Database\ISupplementalDriver;
 use Nette\Database\Statement;
@@ -13,7 +13,7 @@ use Nette\Security\IResource;
 use NiftyGrid\DataSource\IDataSource;
 
 /**
- * Represents instantiotion (in term of parameters) of FKSDB\ORM\ModelStoredQuery. *
+ * Represents instantiotion (in term of parameters) of FKSDB\ORM\Models\StoredQuery\ModelStoredQuery. *
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
@@ -81,16 +81,28 @@ class StoredQuery implements IDataSource, IResource {
      */
     private $postProcessing;
 
+    /**
+     * StoredQuery constructor.
+     * @param ModelStoredQuery $queryPattern
+     * @param Connection $connection
+     */
     function __construct(ModelStoredQuery $queryPattern, Connection $connection) {
         $this->setQueryPattern($queryPattern);
         $this->connection = $connection;
     }
 
+    /**
+     * @param ModelStoredQuery $queryPattern
+     */
     private function setQueryPattern(ModelStoredQuery $queryPattern) {
         $this->queryPattern = $queryPattern;
         $this->postProcessing = $this->queryPattern->getPostProcessing();
     }
 
+    /**
+     * @param $parameters
+     * @param bool $strict
+     */
     public function setImplicitParameters($parameters, $strict = true) {
         $parameterNames = $this->getParameterNames();
         foreach ($parameters as $key => $value) {
@@ -104,14 +116,23 @@ class StoredQuery implements IDataSource, IResource {
         }
     }
 
+    /**
+     * @return StoredQueryPostProcessing
+     */
     public function getPostProcessing() {
         return $this->postProcessing;
     }
 
+    /**
+     * @return array
+     */
     public function getImplicitParameters() {
         return $this->implicitParameterValues;
     }
 
+    /**
+     * @param $parameters
+     */
     public function setParameters($parameters) {
         $parameterNames = $this->getParameterNames();
         foreach ($parameters as $key => $value) {
@@ -125,6 +146,10 @@ class StoredQuery implements IDataSource, IResource {
         }
     }
 
+    /**
+     * @param bool $all
+     * @return array
+     */
     public function getParameters($all = false) {
         if ($all) {
             return array_merge($this->parameterDefaults, $this->parameterValues, $this->implicitParameterValues);
@@ -133,10 +158,16 @@ class StoredQuery implements IDataSource, IResource {
         }
     }
 
+    /**
+     * @return ModelStoredQuery
+     */
     public function getQueryPattern() {
         return $this->queryPattern;
     }
 
+    /**
+     * @return array
+     */
     public function getColumnNames() {
         if (!$this->columnNames) {
             $this->columnNames = [];
@@ -160,6 +191,9 @@ class StoredQuery implements IDataSource, IResource {
         return $this->columnNames;
     }
 
+    /**
+     * @return array
+     */
     public function getParameterNames() {
         if ($this->parameterDefaults === null) {
             $this->parameterDefaults = [];
@@ -224,10 +258,17 @@ class StoredQuery implements IDataSource, IResource {
      * Interface IDataSource
      * ****************************** */
 
+    /**
+     * @param array $filters
+     */
     public function filterData(array $filters) {
         throw new NotImplementedException();
     }
 
+    /**
+     * @param string $column
+     * @return FALSE|int|mixed|null
+     */
     public function getCount($column = "*") {
         if ($this->count === null) {
             $innerSql = $this->getQueryPattern()->sql;
@@ -244,6 +285,9 @@ class StoredQuery implements IDataSource, IResource {
         return $this->count;
     }
 
+    /**
+     * @return mixed|Statement|null
+     */
     public function getData() {
         if ($this->data === null) {
             $innerSql = $this->getQueryPattern()->sql;
@@ -273,11 +317,18 @@ class StoredQuery implements IDataSource, IResource {
         return $this->data; // lazy load during iteration?
     }
 
+    /**
+     * @return null
+     */
     public function getPrimaryKey() {
         return null;
         //throw new NotImplementedException();
     }
 
+    /**
+     * @param int $limit
+     * @param int $offset
+     */
     public function limitData($limit, $offset) {
         $this->limit = $limit;
         $this->offset = $offset;
@@ -298,6 +349,9 @@ class StoredQuery implements IDataSource, IResource {
         $this->invalidateData();
     }
 
+    /**
+     * @return string
+     */
     public function getResourceId(): string {
         return 'export';
     }

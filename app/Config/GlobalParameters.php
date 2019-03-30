@@ -19,22 +19,41 @@ class GlobalParameters extends Object implements ArrayAccess {
      */
     private $parameters;
 
+    /**
+     * GlobalParameters constructor.
+     * @param Container $container
+     */
     function __construct(Container $container) {
         $this->parameters = $container->getParameters();
     }
 
+    /**
+     * @param mixed $offset
+     * @return bool
+     */
     public function offsetExists($offset) {
         return isset($this->parameters[$offset]);
     }
 
+    /**
+     * @param mixed $offset
+     * @return mixed
+     */
     public function offsetGet($offset) {
         return $this->parameters[$offset];
     }
 
+    /**
+     * @param mixed $offset
+     * @param mixed $value
+     */
     public function offsetSet($offset, $value) {
         throw new InvalidStateException('Parameters are readonly.');
     }
 
+    /**
+     * @param mixed $offset
+     */
     public function offsetUnset($offset) {
         throw new InvalidStateException('Parameters are readonly.');
     }

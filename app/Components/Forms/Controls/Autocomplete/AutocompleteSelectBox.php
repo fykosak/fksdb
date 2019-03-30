@@ -52,11 +52,17 @@ class AutocompleteSelectBox extends TextBase {
      */
     private $renderMethod;
 
+    /**
+     * AutocompleteSelectBox constructor.
+     * @param $ajax
+     * @param null $label
+     * @param null $renderMethod
+     */
     function __construct($ajax, $label = null, $renderMethod = null) {
         parent::__construct($label);
 
-        $this->monitor('FKSDB\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider');
-        $this->monitor('FKSDB\Application\IJavaScriptCollector');
+        $this->monitor(IAutocompleteJSONProvider::class);
+        $this->monitor(IJavaScriptCollector::class);
         $this->ajax = $ajax;
         $this->renderMethod = $renderMethod;
     }
@@ -64,11 +70,14 @@ class AutocompleteSelectBox extends TextBase {
     private $attachedJSON = false;
     private $attachedJS = false;
 
+    /**
+     * @param $obj
+     */
     protected function attached($obj) {
         parent::attached($obj);
         if (!$this->attachedJSON && $obj instanceof IAutocompleteJSONProvider) {
             $this->attachedJSON = true;
-            $name = $this->lookupPath('FKSDB\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider');
+            $name = $this->lookupPath(IAutocompleteJSONProvider::class);
 
             $this->ajaxUrl = $obj->link('autocomplete!', array(
                 self::PARAM_NAME => $name,
@@ -87,18 +96,30 @@ class AutocompleteSelectBox extends TextBase {
         return $this->dataProvider;
     }
 
+    /**
+     * @return null|string
+     */
     public function getRenderMethod() {
         return $this->renderMethod;
     }
 
+    /**
+     * @return bool
+     */
     public function isAjax() {
         return $this->ajax;
     }
 
+    /**
+     * @return bool
+     */
     public function isMultiSelect() {
         return $this->multiSelect;
     }
 
+    /**
+     * @param IDataProvider $dataProvider
+     */
     public function setDataProvider(IDataProvider $dataProvider) {
         if ($this->ajax && !($dataProvider instanceof IFilteredDataProvider)) {
             throw new InvalidArgumentException('Data provider for AJAX must be instance of IFilteredDataProvider.');
@@ -107,6 +128,9 @@ class AutocompleteSelectBox extends TextBase {
         $this->dataProvider->setDefaultValue($this->getValue());
     }
 
+    /**
+     * @return \Nette\Utils\Html
+     */
     public function getControl() {
         $control = parent::getControl();
 
@@ -143,14 +167,14 @@ class AutocompleteSelectBox extends TextBase {
 
     public function loadHttpData() {
         $path = explode('[', strtr(str_replace(array('[]', ']'), '', $this->getHtmlName()), '.', '_'));
-        $meta_path = $path;
-        $meta_path[count($meta_path) - 1] .= self::META_ELEMENT_SUFFIX;
+        $metaPath = $path;
+        $metaPath[count($metaPath) - 1] .= self::META_ELEMENT_SUFFIX;
         try {
             $wasSent = Arrays::get($this->getForm()->getHttpData(), $path);
-        } catch (InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $exception) {
             $wasSent = false;
         }
-        if ($wasSent && !Arrays::get($this->getForm()->getHttpData(), $meta_path, null)) {
+        if ($wasSent && !Arrays::get($this->getForm()->getHttpData(), $metaPath, null)) {
             $this->addError(sprintf(_('Políčko %s potřebuje povolený Javascript.'), $this->caption));
             $this->setValue(null);
         } else {
@@ -158,6 +182,10 @@ class AutocompleteSelectBox extends TextBase {
         }
     }
 
+    /**
+     * @param $value
+     * @return TextBase|void
+     */
     public function setValue($value) {
         if ($this->isMultiSelect()) {
             if (is_array($value)) {
@@ -179,6 +207,10 @@ class AutocompleteSelectBox extends TextBase {
         }
     }
 
+    /**
+     * @param $value
+     * @return \Nette\Forms\Controls\BaseControl
+     */
     public function setDefaultValue($value) {
         if ($this->dataProvider) {
             $this->dataProvider->setDefaultValue($value);
@@ -186,10 +218,16 @@ class AutocompleteSelectBox extends TextBase {
         return parent::setDefaultValue($value);
     }
 
+    /**
+     * @return mixed|string
+     */
     public function getValue() {
         return $this->value;
     }
 
+    /**
+     * @param $multiSelect
+     */
     public function setMultiSelect($multiSelect) {
         $this->multiSelect = $multiSelect;
     }

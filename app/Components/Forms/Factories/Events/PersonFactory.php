@@ -10,13 +10,13 @@ use Events\Model\Holder\Field;
 use Events\Model\PersonContainerResolver;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedEventPersonFactory;
 use FKSDB\Config\Expressions\Helpers;
+use FKSDB\ORM\Services\ServicePerson;
 use Nette\ComponentModel\Component;
 use Nette\DI\Container as DIContainer;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Security\User;
 use Persons\SelfResolver;
-use ServicePerson;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -63,6 +63,20 @@ class PersonFactory extends AbstractFactory {
      */
     private $container;
 
+    /**
+     * PersonFactory constructor.
+     * @param $fieldsDefinition
+     * @param $searchType
+     * @param $allowClear
+     * @param $modifiable
+     * @param $visible
+     * @param ReferencedEventPersonFactory $referencedEventPersonFactory
+     * @param SelfResolver $selfResolver
+     * @param ExpressionEvaluator $evaluator
+     * @param User $user
+     * @param ServicePerson $servicePerson
+     * @param DIContainer $container
+     */
     function __construct($fieldsDefinition, $searchType, $allowClear, $modifiable, $visible, ReferencedEventPersonFactory $referencedEventPersonFactory, SelfResolver $selfResolver, ExpressionEvaluator $evaluator, User $user, ServicePerson $servicePerson, DIContainer $container) {
         $this->fieldsDefinition = $fieldsDefinition;
         $this->searchType = $searchType;
@@ -77,6 +91,13 @@ class PersonFactory extends AbstractFactory {
         $this->container = $container;
     }
 
+    /**
+     * @param Field $field
+     * @param BaseMachine $machine
+     * @param Container $container
+     * @return array|mixed
+     * @throws \Nette\Utils\RegexpException
+     */
     protected function createComponent(Field $field, BaseMachine $machine, Container $container) {
         $searchType = $this->evaluator->evaluate($this->searchType, $field);
         $allowClear = $this->evaluator->evaluate($this->allowClear, $field);
@@ -114,15 +135,31 @@ class PersonFactory extends AbstractFactory {
         $hiddenField->setDefaultValue($default);
     }
 
+    /**
+     * @param $component
+     * @param Field $field
+     * @param BaseMachine $machine
+     * @param Container $container
+     * @return mixed|void
+     */
     protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container) {
         $hiddenField = reset($component);
         $hiddenField->setDisabled();
     }
 
+    /**
+     * @param Component $component
+     * @return Component|\Nette\Forms\IControl
+     */
     public function getMainControl(Component $component) {
         return $component;
     }
 
+    /**
+     * @param Field $field
+     * @param DataValidator $validator
+     * @return bool|void
+     */
     public function validate(Field $field, DataValidator $validator) {
         // check person ID itself
         parent::validate($field, $validator);
@@ -149,6 +186,10 @@ class PersonFactory extends AbstractFactory {
         }
     }
 
+    /**
+     * @param Field $field
+     * @return array|mixed
+     */
     private function evaluateFieldsDefinition(Field $field) {
         Helpers::registerSemantic(EventsExtension::$semanticMap);
         $fieldsDefinition = Helpers::evalExpressionArray($this->fieldsDefinition, $this->container);

@@ -1,4 +1,10 @@
 @import "colors";
+@import "fyziklani/presentation";
+
+main.no-bg {
+  padding-top: 0;
+  min-height: 100%;
+}
 
 .fyziklani-results, .fyziklani-statistics {
   h1 {
@@ -6,47 +12,81 @@
     font-weight: bold;
   }
   .inner-headline {
-    margin-top: 15%;
+    background-image: url("/images/fof/prague-layout.svg");
+    background-size: cover;
+    .clock, .image-wp {
+      color: white;
+    }
+    .clock-big {
+      align-items: center;
+      position: fixed;
+      top: 0;
+      height: 100%;
+      width: 100%;
+    }
+    .image-wp {
+      padding-top: 6rem;
+    }
+    .sponsors {
+      img {
+        max-width: 50%;
+      }
+    }
+    .logo {
+      padding-top: 7rem;
+      display: block;
+    }
+  }
+  .logo {
+    display: none;
   }
   .clock {
     justify-content: space-between;
-    color: $fyziklaniDarkColor;
     padding: .25em;
     font-weight: bold;
+    .time-value, .time-label {
+      width: 100%;
+      text-align: center;
+    }
     & > span {
       display: flex;
       flex-wrap: wrap;
 
     }
-    &.small {
+    &.clock-small {
+      & > span {
+        flex-grow: initial;
+      }
       font-size: 200%;
+      display: flex;
+      width: 100%;
+      justify-content: center;
       background: white;
       position: fixed;
       bottom: 0;
       left: 0;
+      z-index: 10000;
       .time-label {
         width: 100%;
         font-size: .75rem;
       }
     }
-    &.big {
+    &.clock-big {
 
       text-align: center;
-      position: initial;
       .time-value {
-        width: 100%;
         font-size: 8rem;
       }
       .time-label {
-        width: 100%;
         font-size: 2rem;
       }
     }
   }
-
-  .image-wp {
+  .image-wp, .clock {
     color: $fyziklaniDarkColor;
-    font-size: 5rem;
+  }
+  .image-wp {
+    font-size: 4rem;
     text-align: center;
   }
   table {

@@ -16,15 +16,22 @@ class SQLConsole extends TextArea {
 
     const CSS_CLASS = 'sqlConsole';
 
+    /**
+     * SQLConsole constructor.
+     * @param null $label
+     */
     public function __construct($label = NULL) {
         parent::__construct($label);
-        $this->monitor('FKSDB\Application\IJavaScriptCollector');
-        $this->monitor('FKSDB\Application\IStylesheetCollector');
+        $this->monitor(IJavaScriptCollector::class);
+        $this->monitor(IStylesheetCollector::class);
     }
 
     private $attachedJS = false;
     private $attachedCSS = false;
 
+    /**
+     * @param $component
+     */
     protected function attached($component) {
         parent::attached($component);
         if (!$this->attachedJS && $component instanceof IJavaScriptCollector) {
@@ -38,6 +45,9 @@ class SQLConsole extends TextArea {
         }
     }
 
+    /**
+     * @return \Nette\Utils\Html
+     */
     public function getControl() {
         $control = parent::getControl();
         $control->class = self::CSS_CLASS;

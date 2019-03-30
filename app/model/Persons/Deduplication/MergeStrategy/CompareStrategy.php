@@ -28,6 +28,11 @@ class CompareStrategy implements IMergeStrategy {
         }
     }
 
+    /**
+     * @param mixed $trunk
+     * @param mixed $merged
+     * @return mixed
+     */
     public function mergeValues($trunk, $merged) {
         if ($merged === null) {
             return $trunk;
@@ -42,6 +47,11 @@ class CompareStrategy implements IMergeStrategy {
         }
     }
 
+    /**
+     * @param $trunk
+     * @param $merged
+     * @return int|string
+     */
     private function compare($trunk, $merged) {
         if ($trunk instanceof DateTime && $merged instanceof DateTime) {
             return $trunk->getTimestamp() - $merged->getTimestamp();

@@ -26,11 +26,20 @@ class Captcha extends Object implements IFormAdjustment {
      */
     private $user;
 
+    /**
+     * Captcha constructor.
+     * @param User $user
+     */
     function __construct(User $user) {
         $this->user = $user;
     }
 
-        public function adjust(Form $form, Machine $machine, Holder $holder) {
+    /**
+     * @param Form $form
+     * @param Machine $machine
+     * @param Holder $holder
+     */
+    public function adjust(Form $form, Machine $machine, Holder $holder) {
         if ($machine->getPrimaryMachine()->getState() != BaseMachine::STATE_INIT || $this->user->isLoggedIn()) {
             return;
         }
