@@ -40,28 +40,6 @@
         <span class="col-10">{$model->created->format(_('d. m. Y H:i'))}</span>
     </div>
     <div class="row">
-        <b class="col-2">{_'Created by'}</b>
-        <span class="col-10">
-            {if $model->created_by}
-                {$model->geCreatedBy()->getFullName()}
-            {else}
-                <span class="badge badge-danger">{_'not set'}</span>
-            {/if}
-        </span>
-    </div>
-    <hr/>
-    <div class="row">
-        <b class="col-2">{_'Checked by'}</b>
-        <span class="col-10">
-            {if $model->checked_by}
-                {$model->getCheckedBy()->getFullName()}
-            {else}
-                <span class="badge badge-danger">{_'not set'}</span>
-            {/if}
-        </span>
-    </div>
-    <hr/>
-    <div class="row">
         <b class="col-2">{_'Modified'}</b>
         <span class="col-10">{$model->modified->format(_('d. m. Y H:i'))}</span>
     </div>

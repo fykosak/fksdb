@@ -3,15 +3,10 @@
 namespace FKSDB\Components\Controls\Fyziklani\Submit;
 
 use FKSDB\Components\Controls\Helpers\AbstractDetailControl;
-use FKSDB\Components\Controls\Helpers\ValuePrinters\BinaryValueControl;
-use FKSDB\Components\Controls\Helpers\ValuePrinters\IsSetValueControl;
-use FKSDB\Components\Controls\Helpers\ValuePrinters\PhoneValueControl;
-use FKSDB\Components\Controls\Helpers\ValuePrinters\StringValueControl;
 use FKSDB\model\Fyziklani\ClosedSubmittingException;
 use FKSDB\model\Fyziklani\PointsMismatchException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
-use Nette\Application\UI\Control;
 use Nette\Diagnostics\Debugger;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;

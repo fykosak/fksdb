@@ -21,8 +21,6 @@ use Nette\DateTime;
  *
  * @property integer points
  * @property string state
- * @property int checked_by
- * @property int created_by
  *
  * @property DateTime created
  * @property DateTime modified
@@ -46,32 +44,10 @@ class ModelFyziklaniSubmit extends \FKSDB\ORM\AbstractModelSingle {
     }
 
     /**
-     * @return ModelPerson|null
-     */
-    public function getCreatedBy() {
-        $row = $this->ref(DbNames::TAB_PERSON, 'created_by');
-        if (!$row) {
-            return null;
-        }
-        return ModelPerson::createFromTableRow($row);
-    }
-
-    /**
      * @return bool
      */
     public function isChecked(): bool {
         return $this->state === self::STATE_CHECKED;
-    }
-
-    /**
-     * @return ModelPerson|null
-     */
-    public function getCheckedBy() {
-        $row = $this->ref(DbNames::TAB_PERSON, 'checked_by');
-        if (!$row) {
-            return null;
-        }
-        return ModelPerson::createFromTableRow($row);
     }
 
     /**
