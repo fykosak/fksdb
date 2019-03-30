@@ -40,7 +40,6 @@ class NetteLoader extends AutoLoader
 		'Nette\Application\ForbiddenRequestException' => '/Application/exceptions',
 		'Nette\Application\InvalidPresenterException' => '/Application/exceptions',
 		'Nette\ArgumentOutOfRangeException' => '/common/exceptions',
-		'Nette\ArrayHash' => '/common/ArrayHash',
 		'Nette\ArrayList' => '/common/ArrayList',
 		'Nette\Callback' => '/common/Callback',
 		'Nette\DI\MissingServiceException' => '/DI/exceptions',

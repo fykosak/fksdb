@@ -1,6 +1,6 @@
 <?php
 
-use Nette\ArrayHash;
+use Nette\Utils\ArrayHash;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
@@ -12,7 +12,7 @@ class FormUtils {
 
     /**
      * Convert empty strings to nulls.
-     * 
+     *
      * @todo Move to general utils.
      * @param string|array|Traversable $values
      * @return array

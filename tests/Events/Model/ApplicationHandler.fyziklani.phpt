@@ -9,9 +9,9 @@ use Events\Model\Holder\Holder;
 use FKSDB\Logging\DevNullLogger;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use FKSDB\ORM\Services\ServiceEvent;
+
 use MockEnvironment\MockApplicationTrait;
-use Nette\ArrayHash;
+use Nette\Utils\ArrayHash;
 use Nette\DI\Container;
 use Tester\Assert;
 
