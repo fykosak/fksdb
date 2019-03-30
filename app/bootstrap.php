@@ -16,18 +16,16 @@ require LIBS_DIR . '/../vendor/autoload.php';
 require LIBS_DIR . '/autoload.php';
 
 
-
-
 define('CONFIG_DIR', dirname(__FILE__) . DIRECTORY_SEPARATOR . 'config');
 
 // Configure application
-$configurator = new Configurator();
-$configurator->onCompile[] = function ($configurator, $compiler) {
-            $compiler->addExtension('fksrouter', new RouterExtension());
-            $compiler->addExtension('acl', new ACLExtension());
-            $compiler->addExtension('navigation', new NavigationExtension());
-            $compiler->addExtension('events', new EventsExtension(CONFIG_DIR . '/events.neon'));
-        };
+$configurator = new \Nette\Configurator();
+$configurator->onCompile[] = function (Configurator $configurator, \Nette\DI\Compiler $compiler) {
+    $compiler->addExtension('fksrouter', new RouterExtension());
+    $compiler->addExtension('acl', new ACLExtension());
+    $compiler->addExtension('navigation', new NavigationExtension());
+    $compiler->addExtension('events', new EventsExtension(CONFIG_DIR . '/events.neon'));
+};
 
 // Enable Nette Debugger for error visualisation & logging
 Debugger::getBar()->addPanel(new Nette\Bridges\HttpTracy\SessionPanel);
@@ -35,14 +33,14 @@ Debugger::enable();
 
 
 $configurator->enableDebugger(dirname(__FILE__) . '/../log');
-error_reporting(~E_USER_DEPRECATED&~E_USER_WARNING);
+error_reporting(~E_USER_DEPRECATED & ~E_USER_WARNING);
 
 // Enable RobotLoader - this will load all classes automatically
 $configurator->setTempDirectory(dirname(__FILE__) . '/../temp');
 $configurator->createRobotLoader()
-        ->addDirectory(APP_DIR)
-        ->addDirectory(LIBS_DIR)
-        ->register();
+    ->addDirectory(APP_DIR)
+    ->addDirectory(LIBS_DIR)
+    ->register();
 
 // Create Dependency Injection container from config.neon file
 $configurator->addConfig(CONFIG_DIR . '/config.neon', Configurator::NONE);
@@ -63,8 +61,8 @@ Replicator::register();
 
 
 Container::extensionMethod('addDatePicker', function (Container $container, $name, $label = NULL) {
-            return $container[$name] = new DatePicker($label);
-        });
+    return $container[$name] = new DatePicker($label);
+});
 
 //
 // Configure and run the application!

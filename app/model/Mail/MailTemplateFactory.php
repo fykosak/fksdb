@@ -7,7 +7,7 @@ use Nette\Application\Application;
 use Nette\Application\UI\Control;
 use Nette\Http\IRequest;
 use Nette\InvalidArgumentException;
-use Nette\Latte\Engine;
+use Latte\Engine;
 use Nette\Templating\FileTemplate;
 
 /**

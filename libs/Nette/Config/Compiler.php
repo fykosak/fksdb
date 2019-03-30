@@ -300,7 +300,7 @@ class Compiler extends Nette\Object
 			}
 		}
 
-		$definition->setShared($shared);
+
 		if (isset($config['parameters'])) {
 			Validators::assertField($config, 'parameters', 'array');
 			$definition->setParameters($config['parameters']);
@@ -313,7 +313,7 @@ class Compiler extends Nette\Object
 
 		if (isset($config['internal'])) {
 			Validators::assertField($config, 'internal', 'bool');
-			$definition->setInternal($config['internal']);
+			/*$definition->setInternal($config['internal'])*/;
 		}
 
 		if (isset($config['run'])) {

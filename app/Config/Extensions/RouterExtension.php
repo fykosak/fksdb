@@ -10,7 +10,7 @@ use Nette\Config\CompilerExtension;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class RouterExtension extends CompilerExtension {
+class RouterExtension extends \Nette\DI\CompilerExtension {
 
     public function loadConfiguration() {
         parent::loadConfiguration();

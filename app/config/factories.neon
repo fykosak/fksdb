@@ -33,10 +33,5 @@ services:
     priceCalculatorFactory: FKSDB\Payment\PriceCalculator\PriceCalculatorFactory
     symbolGeneratorFactory: FKSDB\Payment\SymbolGenerator\SymbolGeneratorFactory
 
-
-
-factories:
-# (so far unused)
-
 includes:
     - logToFlash.neon
