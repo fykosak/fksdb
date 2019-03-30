@@ -3,8 +3,12 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
+use FKSDB\Components\Forms\Controls\Autocomplete\IDataProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\StoredQueryTagTypeProvider;
 use FKSDB\Components\Forms\Controls\SQLConsole;
+use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
+use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryParameter;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Application\UI\Form;
@@ -112,15 +116,10 @@ class StoredQueryFactory {
         $container->setCurrentGroup($group);
 
         $container->addText('name', _('Název'))
-        <<<<<<< HEAD
-                ->addRule(Form::FILLED, _('Název parametru musí být vyplněn.'))
-                ->addRule(Form::MAX_LENGTH, _('Název parametru je moc dlouhý.'), 16)
-                ->addRule(Form::PATTERN, _('Název parametru může být jen z malých písmen anglické abecedy, číslic nebo podtržítka.'), '/^[a-z][a-z0-9_]*$/');
-=======
             ->addRule(Form::FILLED, _('Název parametru musí být vyplněn.'))
             ->addRule(Form::MAX_LENGTH, _('Název parametru je moc dlouhý.'), 16)
-            ->addRule(Form::REGEXP, _('Název parametru může být jen z malých písmen anglické abecedy, číslic nebo podtržítka.'), '/^[a-z][a-z0-9_]*$/');
->>>>>>> fykosak/master
+            ->addRule(Form::PATTERN, _('Název parametru může být jen z malých písmen anglické abecedy, číslic nebo podtržítka.'), '/^[a-z][a-z0-9_]*$/');
+
 
         $container->addText('description', _('Popis'));
 
