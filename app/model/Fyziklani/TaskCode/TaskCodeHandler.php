@@ -8,7 +8,7 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use Nette\Diagnostics\Debugger;
+use Tracy\Debugger;
 
 /**
  * Class TaskCodeHandler

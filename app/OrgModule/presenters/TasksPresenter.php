@@ -10,7 +10,7 @@ use FKSDB\SeriesCalculator;
 use FKSDB\Submits\UploadException;
 use ModelException;
 use Nette\Application\UI\Form;
-use Nette\Diagnostics\Debugger;
+use Tracy\Debugger;
 use Pipeline\PipelineException;
 use SimpleXMLElement;
 use Tasks\PipelineFactory;

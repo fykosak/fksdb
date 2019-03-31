@@ -24,7 +24,7 @@ use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
-use Nette\Diagnostics\Debugger;
+use Tracy\Debugger;
 use Nette\Forms\Controls\BaseControl;
 use Nette\NotImplementedException;
 use Nette\Utils\Html;

@@ -13,7 +13,7 @@ use FKSDB\Results\Models\AbstractResultsModel;
 use FKSDB\Results\Models\BrojureResultsModel;
 use FKSDB\Results\ResultsModelFactory;
 use InvalidArgumentException;
-use Nette\Diagnostics\Debugger;
+use Tracy\Debugger;
 use Nette\Security\AuthenticationException;
 use Nette\Security\IAuthenticator;
 use SoapFault;

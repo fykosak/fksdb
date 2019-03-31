@@ -12,7 +12,7 @@ use FKSDB\ORM\Services\ServiceSchool;
 use FormUtils;
 use ModelException;
 use Nette\Application\UI\Form;
-use Nette\Diagnostics\Debugger;
+use Tracy\Debugger;
 use Nette\NotImplementedException;
 
 /**

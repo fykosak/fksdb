@@ -15,7 +15,7 @@ use Nette\Application\BadRequestException;
 use Nette\Application\Responses\FileResponse;
 use Nette\Application\UI\Form;
 use Nette\DateTime;
-use Nette\Diagnostics\Debugger;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
