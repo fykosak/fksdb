@@ -39,6 +39,10 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
      * @var Connection
      */
     protected $connection;
+    /**
+     * @var IConventions
+     */
+    protected $conventions;
 
     /**
      * @var array of AbstractService  singleton instances of descedants
@@ -51,8 +55,9 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
      * @param IConventions $conventions
      */
     public function __construct(Context $connection, IConventions $conventions) {
-        parent::__construct($connection, $conventions, $this->tableName);
+        parent::__construct($connection, $conventions, $this->getTableName());
         $this->connection = $connection;
+        $this->conventions=$conventions;
     }
 
     /**
@@ -193,7 +198,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
      * @return TableSelection
      */
     public function getTable() {
-        return new TypedTableSelection($this->getModelClassName(), $this->getTableName(), $this->connection);
+        return new TypedTableSelection($this->getModelClassName(), $this->getTableName(), $this->connection,$this->conventions);
     }
 
     protected $defaults = null;

@@ -12,6 +12,7 @@
 namespace Nette\Config\Extensions;
 
 use Nette;
+use Tracy\Debugger;
 
 
 /**
@@ -252,7 +253,7 @@ class NetteExtension extends Nette\Config\CompilerExtension {
                 ->setClass('Nette\Database\Connection', array($info['dsn'], $info['user'], $info['password'], $info['options']))
                 ->setAutowired($info['autowired'])
                 ->addSetup('Nette\Diagnostics\Debugger::$blueScreen->addPanel(?)', array(
-                    'Nette\Database\Diagnostics\ConnectionPanel::renderException'
+                    Nette\Bridges\DatabaseTracy\ConnectionPanel::class . '::renderException'
                 ));
 
             if ($info['reflection']) {
@@ -262,16 +263,16 @@ class NetteExtension extends Nette\Config\CompilerExtension {
                 );*/
             }
 
-            if (!$container->parameters['productionMode'] && $info['debugger']) {
+           /* if (!$container->parameters['productionMode'] && $info['debugger']) {
                 $panel = $container->addDefinition($this->prefix("database.{$name}ConnectionPanel"))
                     ->setClass(Nette\Bridges\DatabaseTracy\ConnectionPanel::class)
                     ->setAutowired(FALSE)
                     ->addSetup('$explain', !empty($info['explain']))
                     ->addSetup('$name', $name)
-                    ->addSetup('Nette\Diagnostics\Debugger::$bar->addPanel(?)', array('@self'));
+                    ->addSetup(Debugger::class . '::$bar->addPanel(?)', array('@self'));
 
                 $connection->addSetup('$service->onQuery[] = ?', array(array($panel, 'logQuery')));
-            }
+            }*/
         }
     }
 

@@ -6,11 +6,11 @@ use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelGlobalSession;
-use Nette\Database\Connection;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 use Nette\DateTime;
 use Nette\Http\Request;
 use Nette\Utils\Random;
-use Nette\Utils\Strings;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -41,10 +41,11 @@ class ServiceGlobalSession extends AbstractServiceSingle {
     /**
      * FKSDB\ORM\Services\ServiceGlobalSession constructor.
      * @param Request $request
-     * @param Connection $connection
+     * @param Context $connection
+     * @param IConventions $conventions
      */
-    function __construct(Request $request, Connection $connection) {
-        parent::__construct($connection);
+    function __construct(Request $request, Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions);
         $this->request = $request;
     }
 
