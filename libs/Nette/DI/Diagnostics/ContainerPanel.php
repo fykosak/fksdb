@@ -12,8 +12,7 @@
 namespace Nette\DI\Diagnostics;
 
 use Nette,
-	Nette\DI\Container,
-	Nette\Diagnostics\Helpers;
+	Nette\DI\Container;
 use Tracy\IBarPanel;
 
 

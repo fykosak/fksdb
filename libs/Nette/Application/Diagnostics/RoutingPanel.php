@@ -44,8 +44,8 @@ class RoutingPanel extends Nette\Object implements IBarPanel
 		Debugger::getBlueScreen()->addPanel(function($e) use ($application) {
 			return $e ? NULL : array(
 				'tab' => 'Nette Application',
-				'panel' => '<h3>Requests</h3>' . Nette\Diagnostics\Helpers::clickableDump($application->getRequests())
-					. '<h3>Presenter</h3>' . Nette\Diagnostics\Helpers::clickableDump($application->getPresenter())
+				'panel' => '<h3>Requests</h3>' . \Tracy\Helpers::clickableDump($application->getRequests())
+					. '<h3>Presenter</h3>' . \Tracy\Helpers::clickableDump($application->getPresenter())
 			);
 		});
 	}

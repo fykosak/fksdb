@@ -72,7 +72,7 @@ class ConnectionPanel extends Nette\Object implements IBarPanel
 		if (isset($e->queryString)) {
 			$sql = $e->queryString;
 
-		} elseif ($item = Nette\Diagnostics\Helpers::findTrace($e->getTrace(), 'PDO::prepare')) {
+		} elseif ($item = \Tracy\Helpers::findTrace($e->getTrace(), 'PDO::prepare')) {
 			$sql = $item['args'][0];
 		}
 		return isset($sql) ? array(
@@ -131,7 +131,7 @@ class ConnectionPanel extends Nette\Object implements IBarPanel
 				$s .= "</table>";
 			}
 			foreach($source as $sline) {
-				$s .= Nette\Diagnostics\Helpers::editorLink($sline[0], $sline[1])->class('nette-DbConnectionPanel-source');
+				$s .= \Tracy\Helpers::editorLink($sline[0], $sline[1])->class('nette-DbConnectionPanel-source');
 			}
 
 			$s .= '</td><td>';
