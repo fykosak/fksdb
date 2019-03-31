@@ -131,7 +131,7 @@ class ConnectionPanel extends Nette\Object implements IBarPanel
 				$s .= "</table>";
 			}
 			foreach($source as $sline) {
-				$s .= \Tracy\Helpers::editorLink($sline[0], $sline[1])->class('nette-DbConnectionPanel-source');
+				$s .= \Tracy\Helpers::editorLink($sline[0], $sline[1]);
 			}
 
 			$s .= '</td><td>';

@@ -139,9 +139,9 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			->setClass('Nette\Security\User');
 
 		if (!$container->parameters['productionMode'] && $config['security']['debugger']) {
-			$user->addSetup('\Tracy\Debugger::getBar()->addPanel(?)', array(
+			/*$user->addSetup('\Tracy\Debugger::getBar()->addPanel(?)', array(
 				new Nette\DI\Statement('Nette\Security\Diagnostics\UserPanel')
-			));
+			));*/
 		}
 
 		if ($config['security']['users']) {
@@ -168,7 +168,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			->addSetup('$errorPresenter', $config['application']['errorPresenter']);
 
 		if ($config['application']['debugger']) {
-			$application->addSetup('Nette\Application\Diagnostics\RoutingPanel::initializePanel');
+		//	$application->addSetup('Nette\Application\Diagnostics\RoutingPanel::initializePanel');
 		}
 
 		$container->addDefinition($this->prefix('presenterFactory'))
@@ -186,9 +186,9 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		}
 
 		if (!$container->parameters['productionMode'] && $config['routing']['debugger']) {
-			$application->addSetup('\Tracy\Debugger::getBar()->addPanel(?)', array(
+		/*	$application->addSetup('\Tracy\Debugger::getBar()->addPanel(?)', array(
 				new Nette\DI\Statement('Nette\Application\Diagnostics\RoutingPanel')
-			));
+			));*/
 		}
 
 
