@@ -113,26 +113,6 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     }
 
     /**
-     * Updates values in model from given data.
-     *
-     * @param IModel $model
-     * @param array $data
-     * @param boolean $alive
-     * @deprecated
-     */
-    public function updateModel(IModel $model, $data, $alive = true) {
-        $modelClassName = $this->getModelClassName();
-        if (!$model instanceof $modelClassName) {
-            throw new InvalidArgumentException('Service for class ' . $this->getModelClassName() . ' cannot store ' . get_class($model));
-        }
-
-        $data = $this->filterData($data);
-        foreach ($data as $key => $value) {
-            $model->{$key} = $value;
-        }
-    }
-
-    /**
      * Use this method to store a model!
      *
      * @param IModel|AbstractModelSingle $model

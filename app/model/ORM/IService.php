@@ -24,14 +24,6 @@ interface IService {
 
     /**
      * @param IModel $model
-     * @param $data
-     * @param bool $alive
-     * @return mixed
-     */
-    public function updateModel(IModel $model, $data, $alive = true);
-
-    /**
-     * @param IModel $model
      * @return mixed
      */
     public function save(IModel &$model);
