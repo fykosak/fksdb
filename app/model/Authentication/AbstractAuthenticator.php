@@ -15,7 +15,8 @@ use Nette\DateTime;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-abstract class AbstractAuthenticator /* implements IAuthenticator */ {
+abstract class AbstractAuthenticator /* implements IAuthenticator */
+{
 
     /** @var \FKSDB\ORM\Services\ServiceLogin */
     protected $serviceLogin;
@@ -39,8 +40,7 @@ abstract class AbstractAuthenticator /* implements IAuthenticator */ {
      * @param \FKSDB\ORM\Models\ModelLogin $login
      */
     protected function logAuthentication(ModelLogin $login) {
-        $login->last_login = DateTime::from(time());
-        $this->serviceLogin->save($login);
+        $login->update(['last_login' => DateTime::from(time())]);
     }
 
 }

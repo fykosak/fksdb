@@ -8,7 +8,6 @@ use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelLogin;
 use Nette\DateTime;
 use Nette\Utils\Random;
-use Nette\Utils\Strings;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -16,6 +15,7 @@ use Nette\Utils\Strings;
 class ServiceAuthToken extends AbstractServiceSingle {
 
     const TOKEN_LENGTH = 32; // for 62 characters ~ 128 bit
+
     /**
      * @return string
      */
@@ -47,12 +47,7 @@ class ServiceAuthToken extends AbstractServiceSingle {
 
         $connection = $this->context->getConnection();
         $outerTransaction = false;
-        if (!$connection->inTransaction()) {
-            $connection->beginTransaction();
-        } else {
-            $outerTransaction = true;
-        }
-
+        $connection->beginTransaction();
         if ($refresh) {
             $token = $this->getTable()
                 ->where('login_id', $login->login_id)
@@ -76,10 +71,11 @@ class ServiceAuthToken extends AbstractServiceSingle {
                 'since' => $since,
                 'type' => $type
             ]);
+
         }
-        $token->until = $until;
 
         $this->save($token);
+          $token->update(['until' => $until]);
         if (!$outerTransaction) {
             $this->context->getConnection()->commit();
         }
