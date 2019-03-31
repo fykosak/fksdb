@@ -6,7 +6,7 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\Utils\CSVParser;
 use FyziklaniModule\TaskPresenter;
-use Nette\Diagnostics\Debugger;
+use Tracy\Debugger;
 
 /**
  *

@@ -15,7 +15,7 @@ use FKSDB\ORM\Services\ServiceTaskStudyYear;
 use FKSDB\Results\SQLResultsCache;
 use FKSDB\Submits\SeriesTable;
 use Nette\Application\UI\Form;
-use Nette\Diagnostics\Debugger;
+use Tracy\Debugger;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Html;
 

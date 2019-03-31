@@ -8,7 +8,7 @@ use Authorization\EventAuthorizator;
 use FKSDB\ORM\Models\ModelAuthToken;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Diagnostics\Debugger;
+use Tracy\Debugger;
 use Nette\Http\UserStorage;
 use Nette\Security\AuthenticationException;
 
