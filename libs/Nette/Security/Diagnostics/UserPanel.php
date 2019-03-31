@@ -20,35 +20,39 @@ use Tracy\IBarPanel;
  *
  * @author     David Grudl
  */
-class UserPanel extends Nette\Object implements IBarPanel {
-    /** @var Nette\Security\User */
-    private $user;
+
+class UserPanel extends Nette\Object implements IBarPanel
+{
+	/** @var Nette\Security\User */
+	private $user;
 
 
-    public function __construct(Nette\Security\User $user) {
-        $this->user = $user;
-    }
+	public function __construct(Nette\Security\User $user)
+	{
+		$this->user = $user;
+	}
 
 
-    /**
-     * Renders tab.
-     * @return string
-     */
-    public function getTab() {
-        ob_start();
-        require __DIR__ . '/templates/UserPanel.tab.phtml';
-        return ob_get_clean();
-    }
+	/**
+	 * Renders tab.
+	 * @return string
+	 */
+	public function getTab()
+	{
+		ob_start();
+		require __DIR__ . '/templates/UserPanel.tab.phtml';
+		return ob_get_clean();
+	}
 
 
-    /**
-     * Renders panel.
-     * @return string
-     */
-    public function getPanel() {
-        ob_start();
-        require __DIR__ . '/templates/UserPanel.panel.phtml';
-        return ob_get_clean();
-    }
-
+	/**
+	 * Renders panel.
+	 * @return string
+	 */
+	public function getPanel()
+	{
+		ob_start();
+		require __DIR__ . '/templates/UserPanel.panel.phtml';
+		return ob_get_clean();
+	}
 }

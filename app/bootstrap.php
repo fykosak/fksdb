@@ -30,10 +30,6 @@ $configurator->onCompile[] = function ($configurator, $compiler) {
         };
 
 // Enable Nette Debugger for error visualisation & logging
-Debugger::getBar()->addPanel(new Nette\Bridges\HttpTracy\SessionPanel);
-
-Debugger::enable();
-
 
 $configurator->enableDebugger(dirname(__FILE__) . '/../log');
 error_reporting(~E_USER_DEPRECATED&~E_USER_WARNING);

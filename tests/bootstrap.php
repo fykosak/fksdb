@@ -8,7 +8,6 @@ use JanTvrdik\Components\DatePicker;
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Application\Responses\TextResponse;
 use Nette\Config\Configurator;
-use Nette\Diagnostics\Debugger;
 use Nette\Forms\Container;
 use Nette\Utils\Finder;
 use Tester\Assert;

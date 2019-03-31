@@ -372,7 +372,7 @@ class EventPresenter extends EntityPresenter {
         $values = $form->getValues();
         if ($isNew) {
             $model = $this->serviceEvent->createNew();
-            $model->update(['year'=> $this->getSelectedYear()]);
+            $model->update(['year' => $this->getSelectedYear()]);
         } else {
             $model = $this->getModel();
         }
