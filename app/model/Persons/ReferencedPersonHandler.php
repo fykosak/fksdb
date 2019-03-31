@@ -380,11 +380,8 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
 
     private function beginTransaction() {
         $connection = $this->servicePerson->getConnection();
-        if (!$connection->inTransaction()) {
-            $connection->beginTransaction();
-        } else {
-            $this->outerTransaction = true;
-        }
+        $connection->beginTransaction();
+
     }
 
     private function commit() {
