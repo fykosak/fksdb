@@ -6,6 +6,7 @@ use FKSDB\Application\IJavaScriptCollector;
 use Nette\Forms\Controls\TextBase;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Arrays;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -84,6 +85,7 @@ class AutocompleteSelectBox extends TextBase {
             ));
         }
         if (!$this->attachedJS && $obj instanceof IJavaScriptCollector) {
+            Debugger::barDump($obj);
             $this->attachedJS = true;
             $obj->registerJSFile('js/autocompleteSelect.js');
         }
@@ -133,12 +135,13 @@ class AutocompleteSelectBox extends TextBase {
      */
     public function getControl() {
         $control = parent::getControl();
-
-        $control->data['ac'] = (int)true;
-        $control->data['ac-ajax'] = (int)$this->isAjax();
-        $control->data['ac-multiselect'] = (int)$this->isMultiSelect();
-        $control->data['ac-ajax-url'] = $this->ajaxUrl;
-        $control->data['ac-render-method'] = $this->renderMethod;
+        $control->addAttributes([
+            'data-ac' => (int)true,
+            'data-ac-ajax' => (int)$this->isAjax(),
+            'data-ac-multiselect' => (int)$this->isMultiSelect(),
+            'data-ac-ajax-url' => $this->ajaxUrl,
+            'data-ac-render-method' => $this->renderMethod,
+        ]);
 
         $control->addClass(self::SELECTOR_CLASS);
 
@@ -150,16 +153,24 @@ class AutocompleteSelectBox extends TextBase {
                     $defaultTextValue[] = $this->getDataProvider()->getItemLabel($id);
                 }
                 $defaultTextValue = json_encode($defaultTextValue);
-                $control->value = implode(self::INTERNAL_DELIMITER, $defaultValue);
+                $control->addAttributes([
+                    'value' => implode(self::INTERNAL_DELIMITER, $defaultValue),
+                ]);
             } else {
                 $defaultTextValue = $this->getDataProvider()->getItemLabel($defaultValue);
-                $control->value = $defaultValue;
+                $control->addAttributes([
+                    'value' => $defaultValue,
+                ]);
             }
-            $control->data['ac-default-value'] = $defaultTextValue;
+            $control->addAttributes([
+                'data-ac-default-value' => $defaultTextValue,
+            ]);
         }
 
         if (!$this->isAjax()) {
-            $control->data['ac-items'] = json_encode($this->getDataProvider()->getItems());
+            $control->addAttributes([
+                'data-ac-items' => json_encode($this->getDataProvider()->getItems()),
+            ]);
         }
 
         return $control;
