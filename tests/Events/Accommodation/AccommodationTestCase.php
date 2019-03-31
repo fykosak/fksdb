@@ -108,7 +108,7 @@ EOT
                             'target' => "jkljhkjh",
                             'city' => "jkhlkjh",
                             'postal_code' => "64546",
-                            'country_iso' => "",
+                            'country_iso' => null,
                         ],
                     ],
                     'person_accommodation' => [

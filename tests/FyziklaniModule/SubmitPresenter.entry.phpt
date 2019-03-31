@@ -5,7 +5,6 @@ namespace FyziklaniModule;
 $container = require '../bootstrap.php';
 
 use Events\Model\ApplicationHandler;
-use FyziklaniModule\FyziklaniTestCase;
 use MockEnvironment\MockApplicationTrait;
 use Nette\Application\Request;
 use Nette\Config\Helpers;
@@ -69,9 +68,11 @@ class SubmitPresenterTest extends FyziklaniTestCase {
             'task_code' => '000001AA9',
             'points5' => '5 bodů',
             '_token_' => self::TOKEN,
+            'lang' => 'cs',
         ], ['action' => 'qrEntry', 'id' => '000001AA9']);
 
         $response = $this->fixture->run($request);
+
         Assert::type('Nette\Application\Responses\RedirectResponse', $response);
 
         $submit = $this->findSubmit($this->taskId, $this->teamId);

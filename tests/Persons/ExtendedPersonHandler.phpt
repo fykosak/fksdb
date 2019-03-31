@@ -124,7 +124,7 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
                             'target' => "Krtkova 12",
                             'city' => "Pohádky",
                             'postal_code' => "43243",
-                            'country_iso' => "",
+                            'country_iso' => null,
                         ],
                     ],
                     'person_info' => [

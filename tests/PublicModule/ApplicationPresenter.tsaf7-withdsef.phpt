@@ -59,7 +59,7 @@ class ApplicationPresenterTest extends ApplicationPresenterTsafTestCase {
                             'target' => "jkljhkjh",
                             'city' => "jkhlkjh",
                             'postal_code' => "64546",
-                            'country_iso' => "",
+                            'country_iso' => null,
                         ),
                     ),
                 ),
@@ -80,7 +80,7 @@ class ApplicationPresenterTest extends ApplicationPresenterTsafTestCase {
         ));
 
         $response = $this->fixture->run($request);
-        
+
         Assert::type('Nette\Application\Responses\RedirectResponse', $response);
 
         $application = $this->assertApplication($this->tsafEventId, 'bila@hrad.cz');

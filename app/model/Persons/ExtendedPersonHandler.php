@@ -19,6 +19,7 @@ use Nette\Forms\Form;
 use Nette\InvalidStateException;
 use Nette\Object;
 use OrgModule\ContestantPresenter;
+use OrgModule\ExtendedPersonPresenter;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -184,7 +185,8 @@ class ExtendedPersonHandler extends Object {
                 }
             }
             // reload the model (this is workaround to avoid caching of empty but newly created referenced/related models)
-            $person = $this->person = $this->servicePerson->findByPrimary($this->getReferencedPerson($form)->getPrimary());
+            $row = $this->servicePerson->findByPrimary($this->getReferencedPerson($form)->getPrimary());
+            $person = $this->person = ModelPerson::createFromTableRow($row);
 
             /*
              * Finalize
@@ -198,7 +200,7 @@ class ExtendedPersonHandler extends Object {
             } else {
                 $msg = $presenter->messageEdit();
             }
-            $presenter->flashMessage(sprintf($msg, $person->getFullname()), ContestantPresenter::FLASH_SUCCESS);
+            $presenter->flashMessage(sprintf($msg, $person->getFullName()), ContestantPresenter::FLASH_SUCCESS);
 
             if (!$hasLogin) {
                 return self::RESULT_OK_NEW_LOGIN;
@@ -227,7 +229,7 @@ class ExtendedPersonHandler extends Object {
     /**
      * @param ModelPerson $person
      * @param $values
-     * @param $presenter
+     * @param ExtendedPersonPresenter $presenter
      */
     protected function storeExtendedModel(ModelPerson $person, $values, $presenter) {
         if ($this->contest === null || $this->year === null) {

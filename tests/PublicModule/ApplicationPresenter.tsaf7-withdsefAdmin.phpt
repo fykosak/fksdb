@@ -16,9 +16,9 @@ class ApplicationPresenterTest extends ApplicationPresenterTsafTestCase {
             'login_id' => $adminId,
             'role_id' => 5,
             'contest_id' => 1,
-        ));        
+        ));
         $this->authenticate($adminId);
-        
+
         $this->dsefAppId = $this->insert('event_participant', array(
             'person_id' => $this->personId,
             'event_id' => $this->dsefEventId,
@@ -53,7 +53,7 @@ class ApplicationPresenterTest extends ApplicationPresenterTsafTestCase {
                             'target' => "jkljhkjh",
                             'city' => "jkhlkjh",
                             'postal_code' => "64546",
-                            'country_iso' => "",
+                            'country_iso' => null,
                         ),
                     ),
                 ),
