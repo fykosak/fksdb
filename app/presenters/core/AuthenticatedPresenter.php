@@ -5,7 +5,7 @@ use Authentication\PasswordAuthenticator;
 use Authentication\TokenAuthenticator;
 use Authorization\ContestAuthorizator;
 use Authorization\EventAuthorizator;
-use FKSDB\ORM\ModelAuthToken;
+use FKSDB\ORM\Models\ModelAuthToken;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Diagnostics\Debugger;
@@ -52,34 +52,58 @@ abstract class AuthenticatedPresenter extends BasePresenter {
      */
     protected $contestAuthorizator;
 
+    /**
+     * @param TokenAuthenticator $tokenAuthenticator
+     */
     public function injectTokenAuthenticator(TokenAuthenticator $tokenAuthenticator) {
         $this->tokenAuthenticator = $tokenAuthenticator;
     }
 
+    /**
+     * @param PasswordAuthenticator $passwordAuthenticator
+     */
     public function injectPasswordAuthenticator(PasswordAuthenticator $passwordAuthenticator) {
         $this->passwordAuthenticator = $passwordAuthenticator;
     }
 
+    /**
+     * @param GithubAuthenticator $githubAuthenticator
+     */
     public function injectGithubAuthenticator(GithubAuthenticator $githubAuthenticator) {
         $this->githubAuthenticator = $githubAuthenticator;
     }
 
+    /**
+     * @param ContestAuthorizator $contestAuthorizator
+     */
     public function injectContestAuthorizator(ContestAuthorizator $contestAuthorizator) {
         $this->contestAuthorizator = $contestAuthorizator;
     }
 
+    /**
+     * @return ContestAuthorizator
+     */
     public function getContestAuthorizator(): ContestAuthorizator {
         return $this->contestAuthorizator;
     }
 
+    /**
+     * @param EventAuthorizator $eventAuthorizator
+     */
     public function injectEventAuthorizator(EventAuthorizator $eventAuthorizator) {
         $this->eventAuthorizator = $eventAuthorizator;
     }
 
+    /**
+     * @return EventAuthorizator
+     */
     public function getEventAuthorizator() {
         return $this->eventAuthorizator;
     }
 
+    /**
+     * @return TokenAuthenticator
+     */
     public function getTokenAuthenticator() {
         return $this->tokenAuthenticator;
     }
@@ -218,8 +242,8 @@ abstract class AuthenticatedPresenter extends BasePresenter {
 
             $this->getUser()->login($login);
             $this->redirect('this');
-        } catch (AuthenticationException $e) {
-            $this->flashMessage($e->getMessage(), self::FLASH_ERROR);
+        } catch (AuthenticationException $exception) {
+            $this->flashMessage($exception->getMessage(), self::FLASH_ERROR);
         }
     }
 
@@ -244,7 +268,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
 
             $method = $this->formatAuthorizedMethod($this->getAction());
             $this->tryCall($method, $this->getParameter());
-        } catch (AuthenticationException $e) {
+        } catch (AuthenticationException $exception) {
             $this->httpAuthPrompt();
         }
     }
@@ -279,8 +303,8 @@ abstract class AuthenticatedPresenter extends BasePresenter {
 
             $method = $this->formatAuthorizedMethod($this->getAction());
             $this->tryCall($method, $this->getParameter());
-        } catch (AuthenticationException $e) {
-            throw new BadRequestException(_('Chyba autentizace.'), 403, $e);
+        } catch (AuthenticationException $exception) {
+            throw new BadRequestException(_('Chyba autentizace.'), 403, $exception);
         }
     }
 

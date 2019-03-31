@@ -6,11 +6,15 @@ use Nette\InvalidArgumentException;
 use Nette\Object;
 
 /**
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ExpressionPrinter extends Object {
 
+    /**
+     * @param $expression
+     * @return string
+     */
     public function printExpression($expression) {
         if (is_scalar($expression)) {
             return (string) $expression;

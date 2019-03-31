@@ -11,6 +11,11 @@ use Nette\Application\IPresenter;
  */
 interface IAutocompleteJSONProvider extends IPresenter {
 
+    /**
+     * @param $acName
+     * @param $acQ
+     * @return mixed
+     */
     public function handleAutocomplete($acName, $acQ);
 }
 

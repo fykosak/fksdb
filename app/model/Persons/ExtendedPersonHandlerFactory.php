@@ -4,11 +4,11 @@ namespace Persons;
 
 use Authentication\AccountManager;
 use FKSDB\Config\GlobalParameters;
-use FKSDB\ORM\ModelContest;
+use FKSDB\ORM\IService;
+use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Services\ServicePerson;
 use Mail\MailTemplateFactory;
 use Nette\Database\Connection;
-use ORM\IService;
-use ServicePerson;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -37,6 +37,14 @@ class ExtendedPersonHandlerFactory {
      */
     private $accountManager;
 
+    /**
+     * ExtendedPersonHandlerFactory constructor.
+     * @param ServicePerson $servicePerson
+     * @param Connection $connection
+     * @param MailTemplateFactory $mailTemplateFactory
+     * @param AccountManager $accountManager
+     * @param GlobalParameters $globalParameters
+     */
     function __construct(ServicePerson $servicePerson, Connection $connection, MailTemplateFactory $mailTemplateFactory, AccountManager $accountManager, GlobalParameters $globalParameters) {
         $this->servicePerson = $servicePerson;
         $this->connection = $connection;
@@ -44,6 +52,13 @@ class ExtendedPersonHandlerFactory {
         $this->accountManager = $accountManager;
     }
 
+    /**
+     * @param IService $service
+     * @param ModelContest $contest
+     * @param $year
+     * @param $invitationLang
+     * @return ExtendedPersonHandler
+     */
     public function create(IService $service, ModelContest $contest, $year, $invitationLang) {
         $handler = new ExtendedPersonHandler($service, $this->servicePerson, $this->connection, $this->mailTemplateFactory, $this->accountManager);
         $handler->setContest($contest);

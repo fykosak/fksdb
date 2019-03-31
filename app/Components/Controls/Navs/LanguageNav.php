@@ -10,12 +10,20 @@ use FKSDB\Components\Controls\Choosers\LanguageChooser;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
 
+/**
+ * Class LanguageNav
+ * @package FKSDB\Components\Controls\Navs
+ */
 class LanguageNav extends Control {
     /**
      * @var Session
      */
     private $session;
 
+    /**
+     * LanguageNav constructor.
+     * @param Session $session
+     */
     public function __construct(Session $session) {
         parent::__construct();
         $this->session = $session;
@@ -35,13 +43,14 @@ class LanguageNav extends Control {
     }
 
     /**
-     * @param $params object
+     * @param object $params
      * @return object
      * redirect to correct URL
+     * @throws \Exception
      */
     public function init($params) {
         /**
-         * @var $languageChooser LanguageChooser
+         * @var LanguageChooser $languageChooser
          */
         $languageChooser =  $this->getComponent('languageChooser');
         $redirect = $languageChooser->syncRedirect($params);

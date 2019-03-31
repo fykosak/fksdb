@@ -1,5 +1,3 @@
-{layout ../@layout.v4.latte }
-
 {block #content}
     <div class="container">
         <div class="row">
@@ -28,20 +26,11 @@
             {/foreach}
             <div class="col-lg-4 col-md-6 col-sm-12 row text-center">
                 <div class="col-12 my-3">
-                    <img class="dispatch-logo" src="/images/fof/logo.svg" alt=""/>
-                </div>
-                <div class="col-12">
-                    <a href="{link :Fyziklani:Dashboard: }"
-                       class="col-12 btn btn-fyziklani btn-lg btn-block">{_('Herní systém Fyziklání')}</a>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 col-sm-12 row text-center">
-                <div class="col-12 my-3">
                     <img class="dispatch-logo" src="/images/contests/event.gif" alt=""/>
                 </div>
                 <div class="col-12">
                     <a href="{link :Event:Dispatch:default }"
-                       class="col-12 btn btn-secondary btn-lg btn-block">{_('Events')}</a>
+                       class="col-12 btn btn-secondary btn-lg btn-block">{_'Events'}</a>
                 </div>
             </div>
         </div>

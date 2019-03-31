@@ -3,58 +3,60 @@
     <ul class="list-group">
         <li class="list-group-item">
             <span class="row">
-                <span class="col-6">{_('Game start')}</span>
+                <span class="col-6">{_'Game start'}</span>
                 <span class="col-6">{$gameSetup->game_start->format('d. m. Y H:i:s')}</span>
             </span>
         </li>
         <li class="list-group-item">
             <span class="row">
-                <span class="col-6">{_('Result display')}</span>
+                <span class="col-6">{_'Result display'}</span>
                 <span class="col-6">{$gameSetup->result_display->format('d. m. Y H:i:s')}</span>
             </span>
         </li>
         <li class="list-group-item">
             <span class="row">
-                <span class="col-6">{_('Result hide')}</span>
+                <span class="col-6">{_'Result hide'}</span>
                 <span class="col-6">{$gameSetup->result_hide->format('d. m. Y H:i:s')}</span>
             </span>
         </li>
         <li class="list-group-item">
             <span class="row">
-                <span class="col-6">{_('Game end')}</span>
+                <span class="col-6">{_'Game end'}</span>
                 <span class="col-6">{$gameSetup->game_end->format('d. m. Y H:i:s')}</span>
             </span>
         </li>
 
         <li class="list-group-item">
             <span class="row">
-                <span class="col-6">{_('Refresh delay')}</span>
+                <span class="col-6">{_'Refresh delay'}</span>
                 <span class="col-6">{number_format($gameSetup->refresh_delay,0, null,' ')} ms</span>
             </span>
         </li>
         <li class="list-group-item">
             <span class="row">
-                <span class="col-6">{_('Tasks on bard')}</span>
+                <span class="col-6">{_'Tasks on bard'}</span>
                 <span class="col-6">{$gameSetup->tasks_on_board}</span>
             </span>
         </li>
         <li class="list-group-item">
             <span class="row">
-                <span class="col-6">{_('Hard display')}</span>
+                <span class="col-6">{_'Hard display'}</span>
                 <span class="col-6">
                 {if $gameSetup->result_hard_display}
-                    <span class="badge badge-warning">1</span>
+                    <span class="badge badge-warning">TRUE</span>
                 {else}
-                    <span class="badge badge-info">0</span>
+                    <span class="badge badge-info">FALSE</span>
                 {/if}
                 </span>
             </span>
         </li>
         <li class="list-group-item">
             <span class="row">
-                <span class="col-6">{_('Available points')}</span>
+                <span class="col-6">{_'Available points'}</span>
                 <span class="col-6">
-                    <span>{$gameSetup->available_points}</span>
+                    {foreach $gameSetup->getAvailablePoints() as $points }
+                        <span class="badge badge-secondary">{$points}</span>
+                    {/foreach}
                 </span>
             </span>
         </li>

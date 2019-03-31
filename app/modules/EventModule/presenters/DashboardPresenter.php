@@ -2,6 +2,10 @@
 
 namespace EventModule;
 
+/**
+ * Class DashboardPresenter
+ * @package EventModule
+ */
 class DashboardPresenter extends BasePresenter {
 
     /**

@@ -1,0 +1,44 @@
+<div>
+    {if $model->constant_symbol}
+        <div>
+            <b>{_'Constant symbol'}:</b>
+            <span>{$model->constant_symbol}</span>
+        </div>
+    {/if}
+    {if $model->variable_symbol}
+        <div>
+            <b>{_'Variable symbol'}:</b>
+            <span>{$model->variable_symbol}</span>
+        </div>
+    {/if}
+    {if $model->specific_symbol}
+        <div>
+            <b>{_'Specific symbol'}:</b>
+            <span>{$model->specific_symbol}</span>
+        </div>
+    {/if}
+    {if $model->bank_account}
+        <div>
+            <b>{_'Bank account'}:</b>
+            <span>{$model->bank_account}</span>
+        </div>
+    {/if}
+    {if $model->iban}
+        <div class="row">
+            <b>{_'IBAN'}:</b>
+            <span>{$model->iban}</span>
+        </div>
+    {/if}
+    {if $model->swift}
+        <div>
+            <b>{_'SWIFT'}:</b>
+            <span>{$model->swift}</span>
+        </div>
+    {/if}
+    {if $model->price}
+        <div>
+            <b>{_'Price'}:</b>
+            <span>{$model->getPrice()->__toString()}</span>
+        </div>
+    {/if}
+</div>

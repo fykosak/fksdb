@@ -3,9 +3,9 @@
 namespace Events\Model\Holder\SecondaryModelStrategies;
 
 use Events\Model\Holder\BaseHolder;
+use FKSDB\ORM\IModel;
+use FKSDB\ORM\IService;
 use Nette\InvalidStateException;
-use ORM\IModel;
-use ORM\IService;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -14,6 +14,10 @@ use ORM\IService;
  */
 abstract class SecondaryModelStrategy {
 
+    /**
+     * @param $holders
+     * @param $models
+     */
     public function setSecondaryModels($holders, $models) {
         $filledHolders = 0;
         foreach ($models as $secondaryModel) {
@@ -27,6 +31,13 @@ abstract class SecondaryModelStrategy {
         }
     }
 
+    /**
+     * @param IService $service
+     * @param $joinOn
+     * @param $joinTo
+     * @param $holders
+     * @param \FKSDB\ORM\IModel|null $primaryModel
+     */
     public function loadSecondaryModels(IService $service, $joinOn, $joinTo, $holders, IModel $primaryModel = null) {
         $table = $service->getTable();
         if ($primaryModel) {
@@ -42,6 +53,13 @@ abstract class SecondaryModelStrategy {
         $this->setSecondaryModels($holders, $secondary);
     }
 
+    /**
+     * @param IService $service
+     * @param $joinOn
+     * @param $joinTo
+     * @param $holders
+     * @param IModel $primaryModel
+     */
     public function updateSecondaryModels(IService $service, $joinOn, $joinTo, $holders, IModel $primaryModel) {
         $joinValue = $joinTo ? $primaryModel[$joinTo] : $primaryModel->getPrimary();
         foreach ($holders as $baseHolder) {
@@ -63,5 +81,11 @@ abstract class SecondaryModelStrategy {
         }
     }
 
+    /**
+     * @param BaseHolder $holder
+     * @param $secondaries
+     * @param $joinData
+     * @return mixed
+     */
     abstract protected function resolveMultipleSecondaries(BaseHolder $holder, $secondaries, $joinData);
 }

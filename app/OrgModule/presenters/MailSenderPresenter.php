@@ -9,12 +9,19 @@ use Nette\Forms\Form;
 use Nette\Mail\IMailer;
 use Nette\Mail\Message;
 
+/**
+ * Class MailSenderPresenter
+ * @package OrgModule
+ */
 class MailSenderPresenter extends BasePresenter {
     /**
      * @var IMailer
      */
     private $mailer;
 
+    /**
+     * @param IMailer $mailer
+     */
     public function injectMailer(IMailer $mailer) {
         $this->mailer = $mailer;
     }
@@ -24,10 +31,17 @@ class MailSenderPresenter extends BasePresenter {
         $this->setIcon('fa fa-envelope');
     }
 
+    /**
+     * @throws \Nette\Application\BadRequestException
+     */
     public function authorizedDefault() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('mail-send', 'default', $this->getSelectedContest()));
     }
 
+    /**
+     * @return FormControl
+     * @throws \Nette\Application\BadRequestException
+     */
     protected function createComponentMailForm(): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
@@ -47,16 +61,19 @@ class MailSenderPresenter extends BasePresenter {
         return $control;
     }
 
+    /**
+     * @param Form $form
+     */
     private function handleForm(Form $form) {
         $values = $form->getValues();
         $toAddress = \explode(',', $values->to);
         if (\count($toAddress) > 40) {
-            $this->flashMessage(_('Max 40 to address (safety limit)'), 'warning');
+            $this->flashMessage(_('Max 40 to address (safety limit)'), \BasePresenter::FLASH_WARNING);
             return;
         }
         foreach (\explode(',', $values->to) as $to) {
             if (!$to) {
-                $this->flashMessage(_('Address is empty'), 'warning');
+                $this->flashMessage(_('Address is empty'), \BasePresenter::FLASH_WARNING);
                 continue;
             }
             $message = new Message();
@@ -73,7 +90,7 @@ class MailSenderPresenter extends BasePresenter {
             $message->setHtmlBody($values->text);
             $message->addTo($to);
             $this->mailer->send($message);
-            $this->flashMessage(\sprintf(_('%s: Message "%s" send to %s'), \date('c'), $values->subject, $to), 'success');
+            $this->flashMessage(\sprintf(_('%s: Message "%s" send to %s'), \date('c'), $values->subject, $to), \BasePresenter::FLASH_SUCCESS);
             \sleep(\rand(0, 2));
         }
     }

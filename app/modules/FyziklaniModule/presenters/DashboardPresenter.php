@@ -2,8 +2,14 @@
 
 namespace FyziklaniModule;
 
+/**
+ * Class DashboardPresenter
+ * @package FyziklaniModule
+ */
 class DashboardPresenter extends BasePresenter {
-
+    /**
+     * @return void
+     */
     public function titleDefault() {
         $this->setTitle(_('Herní systém Fyziklání'));
         $this->setIcon('fa fa-dashboard');

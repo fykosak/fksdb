@@ -5,6 +5,10 @@ namespace FKSDB\Components\Forms\Factories\PersonInfo;
 use FKSDB\Components\Forms\Controls\WriteOnlyInput;
 use Nette\Forms\Form;
 
+/**
+ * Class IdNumberField
+ * @package FKSDB\Components\Forms\Factories\PersonInfo
+ */
 class IdNumberField extends WriteOnlyInput {
 
     public function __construct() {

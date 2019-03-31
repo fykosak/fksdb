@@ -1,10 +1,11 @@
 <?php
 
+namespace FKSDB\ORM;
+
+use FKSDB\ORM\Tables\MultiTableSelection;
+use InvalidArgumentException;
 use Nette\InvalidStateException;
 use Nette\Object;
-use ORM\IModel;
-use ORM\IService;
-use ORM\Tables\MultiTableSelection;
 
 /**
  * Service for object representing one side of M:N relation, or entity in is-a relation ship.
@@ -75,6 +76,12 @@ abstract class AbstractServiceMulti extends Object implements IService {
         return $result;
     }
 
+    /**
+     * @param IModel $model
+     * @param $data
+     * @param bool $alive
+     * @return mixed|void
+     */
     public function updateModel(IModel $model, $data, $alive = true) {
         if (!$model instanceof $this->modelClassName) {
             throw new InvalidArgumentException('Service for class ' . $this->modelClassName . ' cannot store ' . get_class($model));
@@ -118,22 +125,37 @@ abstract class AbstractServiceMulti extends Object implements IService {
         //TODO here should be deletion of mainModel as well, consider parametrizing this
     }
 
+    /**
+     * @return AbstractServiceSingle
+     */
     public function getMainService() {
         return $this->mainService;
     }
 
+    /**
+     * @param AbstractServiceSingle $mainService
+     */
     protected function setMainService(AbstractServiceSingle $mainService) {
         $this->mainService = $mainService;
     }
 
+    /**
+     * @return AbstractServiceSingle
+     */
     public function getJoinedService() {
         return $this->joinedService;
     }
 
+    /**
+     * @param AbstractServiceSingle $joinedService
+     */
     protected function setJoinedService(AbstractServiceSingle $joinedService) {
         $this->joinedService = $joinedService;
     }
 
+    /**
+     * @return string
+     */
     public function getJoiningColumn() {
         return $this->joiningColumn;
     }
@@ -156,6 +178,9 @@ abstract class AbstractServiceMulti extends Object implements IService {
         return $this->composeModel($mainModel, $joinedModel);
     }
 
+    /**
+     * @return \Nette\Database\Table\Selection|MultiTableSelection
+     */
     public function getTable() {
         $joinedTable = $this->getJoinedService()->getTable()->getName();
         $mainTable = $this->getMainService()->getTable()->getName();

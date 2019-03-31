@@ -2,7 +2,7 @@
 
 namespace MockEnvironment;
 
-use FKSDB\ORM\ModelLogin;
+use FKSDB\ORM\Models\ModelLogin;
 use Nette\DI\Container;
 use Tester\Assert;
 
@@ -45,7 +45,7 @@ trait MockApplicationTrait {
         $container = $this->getContainer();
         if (!$login instanceof ModelLogin) {
             $login = $container->getService('ServiceLogin')->findByPrimary($login);
-            Assert::type('FKSDB\ORM\ModelLogin', $login);
+            Assert::type('FKSDB\ORM\Models\ModelLogin', $login);
         }
         $storage = $container->getByType('Authentication\LoginUserStorage');
         $storage->setIdentity($login);

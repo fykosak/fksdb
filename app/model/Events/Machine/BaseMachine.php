@@ -44,6 +44,10 @@ class BaseMachine extends FreezableObject {
      */
     private $machine;
 
+    /**
+     * BaseMachine constructor.
+     * @param $name
+     */
     public function __construct($name) {
         $this->name = $name;
     }

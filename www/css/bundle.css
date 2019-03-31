@@ -1,46 +1,117 @@
+.results-presentation {
+  color: black;
+}
+.results-presentation .head-row, .results-presentation .team-row {
+  text-align: center;
+  padding: 0.3rem 0;
+}
+.results-presentation .head-row {
+  padding: 0 0.5rem;
+  color: #f44336;
+  font-weight: bold;
+  border-bottom: solid #f44336 1px;
+}
+.results-presentation .team-row {
+  border-bottom: solid #ccc 1px;
+}
+.results-presentation .team-row:nth-child(even) {
+  background-color: #eee;
+}
+.results-presentation .team-row > div {
+  align-items: center;
+  display: flex;
+}
+.results-presentation .team-row .progress {
+  width: 100%;
+}
+.results-presentation .team-row .team-name-col {
+  text-align: justify;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+main.no-bg {
+  padding-top: 0;
+  min-height: 100%;
+}
+
 .fyziklani-results h1, .fyziklani-statistics h1 {
   color: #f44336;
   font-weight: bold;
 }
 .fyziklani-results .inner-headline, .fyziklani-statistics .inner-headline {
-  margin-top: 15%;
+  background-image: url("/images/fof/prague-layout.svg");
+  background-size: cover;
+}
+.fyziklani-results .inner-headline .clock, .fyziklani-results .inner-headline .image-wp, .fyziklani-statistics .inner-headline .clock, .fyziklani-statistics .inner-headline .image-wp {
+  color: white;
+}
+.fyziklani-results .inner-headline .clock-big, .fyziklani-statistics .inner-headline .clock-big {
+  align-items: center;
+  position: fixed;
+  top: 0;
+  height: 100%;
+  width: 100%;
+}
+.fyziklani-results .inner-headline .image-wp, .fyziklani-statistics .inner-headline .image-wp {
+  padding-top: 6rem;
+}
+.fyziklani-results .inner-headline .sponsors img, .fyziklani-statistics .inner-headline .sponsors img {
+  max-width: 50%;
+}
+.fyziklani-results .inner-headline .logo, .fyziklani-statistics .inner-headline .logo {
+  padding-top: 7rem;
+  display: block;
+}
+.fyziklani-results .logo, .fyziklani-statistics .logo {
+  display: none;
 }
 .fyziklani-results .clock, .fyziklani-statistics .clock {
   justify-content: space-between;
-  color: #d7392e;
   padding: 0.25em;
   font-weight: bold;
+}
+.fyziklani-results .clock .time-value, .fyziklani-results .clock .time-label, .fyziklani-statistics .clock .time-value, .fyziklani-statistics .clock .time-label {
+  width: 100%;
+  text-align: center;
 }
 .fyziklani-results .clock > span, .fyziklani-statistics .clock > span {
   display: flex;
   flex-wrap: wrap;
 }
-.fyziklani-results .clock.small, .fyziklani-statistics .clock.small {
+.fyziklani-results .clock.clock-small, .fyziklani-statistics .clock.clock-small {
   font-size: 200%;
+  display: flex;
+  width: 100%;
+  justify-content: center;
   background: white;
   position: fixed;
   bottom: 0;
   left: 0;
+  z-index: 10000;
 }
-.fyziklani-results .clock.small .time-label, .fyziklani-statistics .clock.small .time-label {
+.fyziklani-results .clock.clock-small > span, .fyziklani-statistics .clock.clock-small > span {
+  flex-grow: initial;
+}
+.fyziklani-results .clock.clock-small .time-label, .fyziklani-statistics .clock.clock-small .time-label {
   width: 100%;
   font-size: 0.75rem;
 }
-.fyziklani-results .clock.big, .fyziklani-statistics .clock.big {
+.fyziklani-results .clock.clock-big, .fyziklani-statistics .clock.clock-big {
   text-align: center;
-  position: initial;
 }
-.fyziklani-results .clock.big .time-value, .fyziklani-statistics .clock.big .time-value {
-  width: 100%;
+.fyziklani-results .clock.clock-big .time-value, .fyziklani-statistics .clock.clock-big .time-value {
   font-size: 8rem;
 }
-.fyziklani-results .clock.big .time-label, .fyziklani-statistics .clock.big .time-label {
-  width: 100%;
+.fyziklani-results .clock.clock-big .time-label, .fyziklani-statistics .clock.clock-big .time-label {
   font-size: 2rem;
 }
-.fyziklani-results .image-wp, .fyziklani-statistics .image-wp {
+.fyziklani-results .image-wp, .fyziklani-results .clock, .fyziklani-statistics .image-wp, .fyziklani-statistics .clock {
   color: #d7392e;
-  font-size: 5rem;
+}
+.fyziklani-results .image-wp, .fyziklani-statistics .image-wp {
+  font-size: 4rem;
   text-align: center;
 }
 .fyziklani-results table tbody, .fyziklani-statistics table tbody {
@@ -133,9 +204,6 @@
   cursor: pointer;
 }
 
-[data-contest~=event-type-1] main:not(.no-bg) {
-  background: url("/images/fof/prague-layout.svg") no-repeat;
-}
 [data-contest~=event-type-1] main:not(.no-bg) h1, [data-contest~=event-type-1] main:not(.no-bg) h2, [data-contest~=event-type-1] main:not(.no-bg) h3 {
   font-weight: bold;
 }
@@ -239,19 +307,19 @@ ul.inbox-swappable {
   cursor: move;
 }
 
-#wrap.login {
+main.login {
   background: url(/images/bg/1.jpg) 50%;
   background-size: cover;
 }
-#wrap.login[data-bg="1"] {
+main.login[data-bg="1"] {
   background: url(/images/bg/1.jpg) 50%;
   background-size: cover;
 }
-#wrap.login[data-bg="2"] {
+main.login[data-bg="2"] {
   background: url(/images/bg/2.jpg) 0 10%;
   background-size: cover;
 }
-#wrap.login[data-bg="3"] {
+main.login[data-bg="3"] {
   background: url(/images/bg/3.jpg) 0 10%;
   background-size: cover;
 }
@@ -293,6 +361,7 @@ ul.inbox-swappable {
   right: 0;
   bottom: 0;
   padding: 0.5em;
+  z-index: 10000;
 }
 
 .legend-item .icon {
@@ -725,6 +794,65 @@ body[data-contest=vyfuk] h1, body[data-contest=vyfuk] h2, body[data-contest=vyfu
   color: #d9534f;
 }
 
+.badge-1 {
+  color: white;
+  background-color: #1f77b4;
+}
+
+/* style 2 */
+.badge-2 {
+  color: black;
+  background-color: #ff7f0e;
+}
+
+/* style 3 */
+.badge-3 {
+  color: white;
+  background-color: #2ca02c;
+}
+
+/* style 4 */
+.badge-4 {
+  color: white;
+  background-color: #d62728;
+}
+
+/* style 5 */
+.badge-5 {
+  color: white;
+  background-color: #9467bd;
+}
+
+/* style 6 */
+.badge-6 {
+  color: white;
+  background-color: #8c564b;
+}
+
+/* style 7 */
+.badge-7 {
+  color: black;
+  background-color: #e377c2;
+}
+
+/* style 8 */
+.badge-8 {
+  color: black;
+  background-color: #cccccc;
+}
+
+/* style 9 */
+.badge-9 {
+  color: black;
+  background-color: #bcbd22;
+}
+
+/* style 10 */
+.badge-10 {
+  color: black;
+  background-color: #17becf;
+}
+
 .bg-white-container {
   background-color: rgba(255, 255, 255, 0.85);
 }
@@ -751,7 +879,7 @@ html, body {
 }
 
 /* Wrapper for page content to push down footer */
-#wrap {
+main {
   /* Negative indent footer by its height */
   margin: 0 auto -55px;
   /* Pad bottom by footer height */
@@ -848,6 +976,10 @@ html, body {
 .state-timeline .line {
   height: 1px;
   border: solid 2px;
+}
+
+.phone-flag img {
+  height: 1em;
 }
 
 /*# sourceMappingURL=bundle.css.map */
