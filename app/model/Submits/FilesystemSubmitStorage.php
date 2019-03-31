@@ -3,7 +3,7 @@
 namespace FKSDB\Submits;
 
 use FKSDB\ORM\Models\ModelSubmit;
-use Nette\Diagnostics\Debugger;
+use Tracy\Debugger;
 use Nette\InvalidStateException;
 use Nette\Utils\Finder;
 use Nette\Utils\Strings;

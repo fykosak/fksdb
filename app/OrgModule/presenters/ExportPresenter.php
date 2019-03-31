@@ -24,7 +24,7 @@ use FormUtils;
 use FKSDB\Results\Models\AbstractResultsModel;
 use ModelException;
 use Nette\Application\BadRequestException;
-use Nette\Diagnostics\Debugger;
+use Tracy\Debugger;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Strings;
 use ServiceMStoredQueryTag;

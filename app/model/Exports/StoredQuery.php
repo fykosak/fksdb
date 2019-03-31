@@ -6,7 +6,7 @@ use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use Nette\Database\Connection;
 use Nette\Database\ISupplementalDriver;
 use Nette\Database\Statement;
-use Nette\Diagnostics\Debugger;
+use Tracy\Debugger;
 use Nette\InvalidArgumentException;
 use Nette\NotImplementedException;
 use Nette\Security\IResource;

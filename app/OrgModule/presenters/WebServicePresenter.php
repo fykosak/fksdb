@@ -4,7 +4,7 @@ namespace OrgModule;
 
 use BasePresenter;
 use Nette\Application\AbortException;
-use Nette\Diagnostics\Debugger;
+use Tracy\Debugger;
 use SoapResponse;
 
 /**

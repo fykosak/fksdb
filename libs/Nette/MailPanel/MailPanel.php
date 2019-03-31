@@ -16,7 +16,7 @@ use Nette\Templating\FileTemplate;
  * @author Jan Marek
  * @copyright New BSD
  */
-class MailPanel extends Object implements IBarPanel
+class MailPanel extends Object implements \Tracy\IBarPanel
 {
 	/** @const int */
 	const DEFAULT_COUNT = 5;

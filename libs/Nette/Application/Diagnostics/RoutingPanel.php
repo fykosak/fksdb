@@ -14,7 +14,8 @@ namespace Nette\Application\Diagnostics;
 use Nette,
 	Nette\Application\Routers,
 	Nette\Application\UI\Presenter, // templates
-	Nette\Diagnostics\Debugger;
+    Tracy\Debugger;
+use Tracy\IBarPanel;
 
 
 /**
@@ -22,7 +23,7 @@ use Nette,
  *
  * @author     David Grudl
  */
-class RoutingPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
+class RoutingPanel extends Nette\Object implements IBarPanel
 {
 	/** @var Nette\Application\IRouter */
 	private $router;
@@ -40,7 +41,7 @@ class RoutingPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 	public static function initializePanel(Nette\Application\Application $application)
 	{
 
-		Debugger::$blueScreen->addPanel(function($e) use ($application) {
+		Debugger::getBlueScreen()->addPanel(function($e) use ($application) {
 			return $e ? NULL : array(
 				'tab' => 'Nette Application',
 				'panel' => '<h3>Requests</h3>' . Nette\Diagnostics\Helpers::clickableDump($application->getRequests())
