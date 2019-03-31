@@ -290,7 +290,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		// debugger
 		foreach (array('email', 'editor', 'browser', 'strictMode', 'maxLen', 'maxDepth') as $key) {
 			if (isset($config['debugger'][$key])) {
-				$initialize->addBody('Nette\Diagnostics\Debugger::$? = ?;', array($key, $config['debugger'][$key]));
+				$initialize->addBody('Tracy\Debugger::$? = ?;', array($key, $config['debugger'][$key]));
 			}
 		}
 
@@ -301,7 +301,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 
 			foreach ((array) $config['debugger']['bar'] as $item) {
 				$initialize->addBody($container->formatPhp(
-					'Nette\Diagnostics\Debugger::getBar()->addPanel(?);',
+					'Tracy\Debugger::getBar()->addPanel(?);',
 					Nette\Config\Compiler::filterArguments(array(is_string($item) ? new Nette\DI\Statement($item) : $item))
 				));
 			}
