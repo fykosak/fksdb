@@ -45,10 +45,10 @@ class ServiceAuthToken extends AbstractServiceSingle {
             $since = new DateTime();
         }
 
-        $connection = $this->getConnection();
+        $connection = $this->context->getConnection();
         $outerTransaction = false;
         if (!$connection->inTransaction()) {
-            $this->getConnection()->beginTransaction();
+            $connection->beginTransaction();
         } else {
             $outerTransaction = true;
         }
@@ -81,7 +81,7 @@ class ServiceAuthToken extends AbstractServiceSingle {
 
         $this->save($token);
         if (!$outerTransaction) {
-            $this->getConnection()->commit();
+            $this->context->getConnection()->commit();
         }
 
         return $token;

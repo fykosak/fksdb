@@ -7,7 +7,7 @@ use FKSDB\Transitions\Machine;
 use FKSDB\Transitions\UnavailableTransitionException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
-use Nette\Diagnostics\Debugger;
+use Tracy\Debugger;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 

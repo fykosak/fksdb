@@ -15,11 +15,11 @@ use Nette\Security\IResource;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property integer person_id
- * @property string other_name
- * @property string family_name
- * @property string display_name
- * @property string gender
+ * @property-read integer person_id
+ * @property-read string other_name
+ * @property-read string family_name
+ * @property-read string display_name
+ * @property-read string gender
  */
 class ModelPerson extends AbstractModelSingle implements IResource {
 
@@ -30,9 +30,6 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      *
      */
     public function getLogin() {
-        if (!isset($this->person_id)) {
-            $this->person_id = null;
-        }
         $logins = $this->related(DbNames::TAB_LOGIN, 'person_id');
         $logins->rewind();
         if (!$logins->valid()) {
@@ -46,9 +43,6 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * @return ModelPersonInfo|null
      */
     public function getInfo() {
-        if (!isset($this->person_id)) {
-            $this->person_id = null;
-        }
         $infos = $this->related(DbNames::TAB_PERSON_INFO, 'person_id');
         $infos->rewind();
         if (!$infos->valid()) {
@@ -64,9 +58,6 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * @return ModelPersonHistory|null
      */
     public function getHistory($acYear, $extrapolated = false) {
-        if (!isset($this->person_id)) {
-            $this->person_id = null;
-        }
         $histories = $this->related(DbNames::TAB_PERSON_HISTORY, 'person_id')
             ->where('ac_year', $acYear);
         $history = $histories->fetch();
@@ -90,9 +81,6 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * @return \Nette\Database\Table\GroupedSelection
      */
     public function getContestants($contestId = null): GroupedSelection {
-        if (!isset($this->person_id)) {
-            $this->person_id = null;
-        }
         $related = $this->related(DbNames::TAB_CONTESTANT_BASE, 'person_id');
         if ($contestId) {
             $related->where('contest_id', $contestId);
@@ -105,9 +93,6 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * @return \Nette\Database\Table\GroupedSelection
      */
     public function getOrgs($contestId = null): GroupedSelection {
-        if (!isset($this->person_id)) {
-            $this->person_id = null;
-        }
         $related = $this->related(DbNames::TAB_ORG, 'person_id');
         if ($contestId) {
             $related->where('contest_id', $contestId);
@@ -119,9 +104,6 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * @return GroupedSelection
      */
     public function getFlags(): GroupedSelection {
-        if (!isset($this->person_id)) {
-            $this->person_id = null;
-        }
         return $this->related(DbNames::TAB_PERSON_HAS_FLAG, 'person_id');
     }
 
@@ -168,9 +150,6 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * @return GroupedSelection
      */
     public function getPostContacts() {
-        if (!isset($this->person_id)) {
-            $this->person_id = null;
-        }
         return $this->related(DbNames::TAB_POST_CONTACT, 'person_id');
     }
 
@@ -263,9 +242,6 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * @return GroupedSelection
      */
     public function getEventOrg() {
-        if (!isset($this->person_id)) {
-            $this->person_id = null;
-        }
         return $this->related(DbNames::TAB_EVENT_ORG, 'person_id');
     }
 
@@ -273,9 +249,6 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * @return null|ModelPersonHistory the most recent person's history record (if any)
      */
     private function getLastHistory() {
-        if (!isset($this->person_id)) {
-            $this->person_id = null;
-        }
         $history = $this->related(DbNames::TAB_PERSON_HISTORY, 'person_id')->order(('ac_year DESC'))->fetch();
 
         if ($history) {

@@ -179,7 +179,7 @@ class Application extends Nette\Object
 						$code = $e->getCode();
 					} else {
 						$code = 500;
-						Nette\Diagnostics\Debugger::log($e, Nette\Diagnostics\Debugger::ERROR);
+                        \Tracy\Debugger::log($e, \Tracy\Debugger::ERROR);
 					}
 					require __DIR__ . '/templates/error.phtml';
 					break;

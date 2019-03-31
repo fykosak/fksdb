@@ -41,11 +41,11 @@ class ServiceGlobalSession extends AbstractServiceSingle {
     /**
      * FKSDB\ORM\Services\ServiceGlobalSession constructor.
      * @param Request $request
-     * @param Context $connection
+     * @param Context $context
      * @param IConventions $conventions
      */
-    function __construct(Request $request, Context $connection, IConventions $conventions) {
-        parent::__construct($connection, $conventions);
+    function __construct(Request $request, Context $context, IConventions $conventions) {
+        parent::__construct($context, $conventions);
         $this->request = $request;
     }
 
@@ -61,7 +61,7 @@ class ServiceGlobalSession extends AbstractServiceSingle {
             $since = new DateTime();
         }
 
-        $this->getConnection()->beginTransaction();
+        $this->context->getConnection()->beginTransaction();
 
         do {
             $sessionId = Random::generate(self::SESSION_ID_LENGTH, 'a-zA-Z0-9');
@@ -75,7 +75,7 @@ class ServiceGlobalSession extends AbstractServiceSingle {
             'remote_ip' => $this->request->getRemoteAddress(),
         ]);
         $this->save($session);
-        $this->getConnection()->commit();
+        $this->context->getConnection()->commit();
 
         return $session;
     }

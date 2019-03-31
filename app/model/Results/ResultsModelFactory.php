@@ -20,7 +20,7 @@ use FKSDB\Results\Models\DetailResultsModel;
 use FKSDB\Results\Models\SchoolCumulativeResultsModel;
 use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
-use Nette\Diagnostics\Debugger;
+use Tracy\Debugger;
 use Nette\InvalidArgumentException;
 use Nette\Object;
 use SoapFault;

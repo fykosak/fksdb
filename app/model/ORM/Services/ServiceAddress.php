@@ -8,7 +8,7 @@ use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelAddress;
 use FKSDB\ORM\Models\ModelRegion;
 use InvalidPostalCode;
-use Nette\Diagnostics\Debugger;
+use Tracy\Debugger;
 use Nette\InvalidArgumentException;
 
 /**
@@ -65,7 +65,7 @@ class ServiceAddress extends AbstractServiceSingle {
             throw new InvalidPostalCode($postalCode);
         }
 
-        $row = $this->getTable()->getConnection()->table('psc_region')->where('psc = ?', $postalCode)->fetch();
+        $row = $this->getContext()->table('psc_region')->where('psc = ?', $postalCode)->fetch();
         if ($row) {
             return $row->region_id;
         } else {

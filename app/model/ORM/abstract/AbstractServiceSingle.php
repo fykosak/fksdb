@@ -2,12 +2,12 @@
 
 namespace FKSDB\ORM;
 
-use Nette\Database\Context;
-use Nette\Database\IConventions;
 use FKSDB\ORM\Tables\TypedTableSelection;
 use InvalidArgumentException;
 use ModelException;
 use Nette\Database\Connection;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection as TableSelection;
 use Nette\InvalidStateException;
@@ -34,15 +34,6 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
      */
     protected $tableName;
 
-    /**
-     * @var Context
-     * @var Connection
-     */
-    protected $connection;
-    /**
-     * @var IConventions
-     */
-    protected $conventions;
 
     /**
      * @var array of AbstractService  singleton instances of descedants
@@ -56,8 +47,6 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
      */
     public function __construct(Context $connection, IConventions $conventions) {
         parent::__construct($connection, $conventions, $this->getTableName());
-        $this->connection = $connection;
-        $this->conventions=$conventions;
     }
 
     /**
@@ -145,7 +134,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     /**
      * Use this method to store a model!
      *
-     * @param IModel $model
+     * @param IModel|AbstractModelSingle $model
      * @throws InvalidArgumentException
      * @throws ModelException
      */
@@ -170,7 +159,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
             throw new ModelException('Error when storing model.', null, $exception);
         }
         if (!$result) {
-            $code = $this->getConnection()->errorCode();
+            $code = $this->context->getConnection()->errorCode();
             throw new ModelException("$code: Error when storing a model.");
         }
     }
@@ -179,7 +168,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
      * Use this method to delete a model!
      * (Name chosen not to collide with parent.)
      *
-     * @param IModel $model
+     * @param IModel|AbstractModelSingle $model
      * @throws InvalidArgumentException
      * @throws InvalidStateException
      */
@@ -189,7 +178,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
             throw new InvalidArgumentException('Service for class ' . $this->getModelClassName() . ' cannot store ' . get_class($model));
         }
         if (!$model->isNew() && $model->delete() === false) {
-            $code = $this->getConnection()->errorCode();
+            $code = $this->context->getConnection()->errorCode();
             throw new ModelException("$code: Error when deleting a model.");
         }
     }
@@ -198,7 +187,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
      * @return TableSelection
      */
     public function getTable() {
-        return new TypedTableSelection($this->getModelClassName(), $this->getTableName(), $this->connection,$this->conventions);
+        return new TypedTableSelection($this->getModelClassName(), $this->getTableName(), $this->context, $this->conventions);
     }
 
     protected $defaults = null;
@@ -248,9 +237,30 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
      */
     private function getColumnMetadata() {
         if ($this->columns === null) {
-            $this->columns = $this->getConnection()->getSupplementalDriver()->getColumns($this->getTableName());
+            $this->columns = $this->context->getConnection()->getSupplementalDriver()->getColumns($this->getTableName());
         }
         return $this->columns;
+    }
+
+    /**
+     * @return Connection
+     */
+    public function getConnection(): Connection {
+        return $this->context->getConnection();
+    }
+
+    /**
+     * @return Context
+     */
+    public function getContext(): Context {
+        return $this->context;
+    }
+
+    /**
+     * @return IConventions
+     */
+    public function getConventions(): IConventions {
+        return $this->conventions;
     }
 
 }

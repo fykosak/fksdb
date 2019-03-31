@@ -29,7 +29,7 @@ class ServiceEventParticipant extends AbstractServiceSingle {
     }
 
     /**
-     * @param ModelEventParticipant $model
+     * @param IModel|ModelEventParticipant $model
      */
     public function save(IModel &$model) {
         try {

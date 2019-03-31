@@ -3,7 +3,7 @@
 namespace Maintenance;
 
 use FKSDB\Config\GlobalParameters;
-use Nette\Diagnostics\Debugger;
+use Tracy\Debugger;
 use Nette\Object;
 
 /**

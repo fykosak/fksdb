@@ -284,9 +284,7 @@ class ApplicationHandler {
     }
 
     public function beginTransaction() {
-        if (!$this->connection->inTransaction()) {
             $this->connection->beginTransaction();
-        }
     }
 
     private function rollback() {
@@ -299,7 +297,7 @@ class ApplicationHandler {
      * @param bool $final
      */
     public function commit($final = false) {
-        if ($this->connection->inTransaction() && ($this->errorMode == self::ERROR_ROLLBACK || $final)) {
+        if ($this->errorMode == self::ERROR_ROLLBACK || $final) {
             $this->connection->commit();
         }
     }

@@ -14,11 +14,11 @@ use Mail\MailTemplateFactory;
 use Mail\SendFailedException;
 use ModelException;
 use Nette\Database\Connection;
-use Nette\Diagnostics\Debugger;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
 use Nette\Object;
 use OrgModule\ContestantPresenter;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

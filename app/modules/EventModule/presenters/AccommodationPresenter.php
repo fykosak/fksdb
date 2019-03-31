@@ -16,7 +16,7 @@ use FKSDB\ORM\Services\ServiceEventPersonAccommodation;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
-use Nette\Diagnostics\Debugger;
+use Tracy\Debugger;
 
 /**
  * Class AccommodationPresenter

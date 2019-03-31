@@ -1,7 +1,6 @@
 <?php
 
 use Authentication\PasswordAuthenticator;
-use Nette\Database\Connection;
 use Nette\DI\Container;
 use Tester\Assert;
 use Tester\Environment;
@@ -10,16 +9,19 @@ use Tester\TestCase;
 abstract class DatabaseTestCase extends TestCase {
 
     /**
-     * @var Connection
+     * @var \Nette\Database\Connection
      */
     protected $connection;
+    /**
+     * @var int
+     */
     private $instanceNo;
 
     function __construct(Container $container) {
         $this->connection = $container->getService('nette.database.default');
         $max = $container->parameters['tester']['dbInstances'];
         $this->instanceNo = (getmypid() % $max) + 1;
-        $this->connection->exec('USE fksdb_test' . $this->instanceNo);
+        $this->connection->query('USE fksdb_test' . $this->instanceNo);
     }
 
     protected function setUp() {
@@ -51,7 +53,7 @@ abstract class DatabaseTestCase extends TestCase {
      */
     protected function createPerson($name, $surname, $info = array(), $loginData = false) {
         $this->connection->query("INSERT INTO person (other_name, family_name) VALUES(?, ?)", $name, $surname);
-        $personId = $this->connection->lastInsertId();
+        $personId = $this->connection->getInsertId();
 
         if ($info) {
             $info['person_id'] = $personId;
@@ -74,7 +76,7 @@ abstract class DatabaseTestCase extends TestCase {
             $this->connection->query("INSERT INTO login", $loginData);
 
             if (isset($loginData['hash'])) {
-                $pseudoLogin = (object) $loginData;
+                $pseudoLogin = (object)$loginData;
                 $hash = PasswordAuthenticator::calculateHash($loginData['hash'], $pseudoLogin);
                 $this->connection->query("UPDATE login SET `hash` = ? WHERE person_id = ?", $hash, $personId);
             }
@@ -91,7 +93,7 @@ abstract class DatabaseTestCase extends TestCase {
 
     protected function createPersonHistory($personId, $acYear, $school = null, $studyYear = null, $class = null) {
         $this->connection->query("INSERT INTO person_history (person_id, ac_year, school_id, class, study_year) VALUES(?, ?, ?, ?, ?)", $personId, $acYear, $school, $class, $studyYear);
-        $personHistoryId = $this->connection->lastInsertId();
+        $personHistoryId = $this->connection->getInsertId();
 
 
         return $personHistoryId;
@@ -99,7 +101,7 @@ abstract class DatabaseTestCase extends TestCase {
 
     protected function insert($table, $data) {
         $this->connection->query("INSERT INTO `$table`", $data);
-        return $this->connection->lastInsertId();
+        return $this->connection->getInsertId();
     }
 
 }

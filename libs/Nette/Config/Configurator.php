@@ -125,8 +125,8 @@ class Configurator extends Nette\Object
 	 */
 	public function enableDebugger($logDirectory = NULL, $email = NULL)
 	{
-		Nette\Diagnostics\Debugger::$strictMode = TRUE;
-		Nette\Diagnostics\Debugger::enable($this->parameters['productionMode'], $logDirectory, $email);
+		\Tracy\Debugger::$strictMode = TRUE;
+		\Tracy\Debugger::enable($this->parameters['productionMode'], $logDirectory, $email);
 	}
 
 

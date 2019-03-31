@@ -21,7 +21,7 @@ use FKSDB\Transitions\TransitionsFactory;
 use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
 use Nette\DateTime;
-use Nette\Diagnostics\Debugger;
+use Tracy\Debugger;
 use Nette\Localization\ITranslator;
 use Nette\Mail\Message;
 

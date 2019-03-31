@@ -47,7 +47,7 @@ $configurator->onCompile[] = function ($configurator, $compiler) {
 };
 
 $configurator->setDebugMode(false);
-Debugger::$logDirectory = LOG_DIR;
+\Tracy\Debugger::$logDirectory = LOG_DIR;
 
 
 // Enable RobotLoader - this will load all classes automatically

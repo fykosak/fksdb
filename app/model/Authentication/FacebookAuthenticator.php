@@ -7,7 +7,7 @@ use FKSDB\ORM\Services\ServiceLogin;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServicePersonInfo;
 use FKSDB\YearCalculator;
-use Nette\Diagnostics\Debugger;
+use Tracy\Debugger;
 use Nette\Security\AuthenticationException;
 use Nette\Security\Identity;
 
@@ -87,7 +87,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
         }
 
         // try both e-mail and FB ID
-        $result = $this->servicePerson->getTable()->where('person_info:email = ? OR person_info:fb_id = ?', $fbUser['email'], $fbUser['id']);
+        $result = $this->servicePerson->getTable()->where('person_info.email = ? OR person_info.fb_id = ?', $fbUser['email'], $fbUser['id']);
         if (count($result) > 1) {
             throw new AuthenticationException(_('Facebook účtu odpovídá více osob.'));
         } else if (count($result) == 0) {

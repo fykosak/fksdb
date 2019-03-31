@@ -55,7 +55,7 @@ abstract class EventTestCase extends DatabaseTestCase {
             $data['end'] = '2016-01-01';
         }
         $this->connection->query('INSERT INTO event', $data);
-        return $this->connection->lastInsertId();
+        return $this->connection->getInsertId();
     }
 
     protected function createPostRequest($postData, $post = array()) {

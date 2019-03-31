@@ -36,11 +36,12 @@ class ServiceStoredQuery extends AbstractServiceSingle {
 
     /**
      * FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery constructor.
-     * @param Context $connection
+     * @param Context $context
      * @param ServiceStoredQueryTag $serviceStoredQueryTag
+     * @param IConventions $conventions
      */
-    public function __construct(Context $connection, ServiceStoredQueryTag $serviceStoredQueryTag, IConventions $conventions) {
-        parent::__construct($connection, $conventions);
+    public function __construct(Context $context, ServiceStoredQueryTag $serviceStoredQueryTag, IConventions $conventions) {
+        parent::__construct($context, $conventions);
         $this->serviceStoredQueryTag = $serviceStoredQueryTag;
     }
 

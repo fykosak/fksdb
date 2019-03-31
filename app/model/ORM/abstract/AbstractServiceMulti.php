@@ -185,7 +185,7 @@ abstract class AbstractServiceMulti extends Object implements IService {
         $joinedTable = $this->getJoinedService()->getTable()->getName();
         $mainTable = $this->getMainService()->getTable()->getName();
 
-        $selection = new MultiTableSelection($this, $joinedTable, $this->getJoinedService()->getConnection());
+        $selection = new MultiTableSelection($this, $joinedTable, $this->getJoinedService()->getContext(), $this->getJoinedService()->getConventions());
         $selection->select("$joinedTable.*");
         $selection->select("$mainTable.*");
 
