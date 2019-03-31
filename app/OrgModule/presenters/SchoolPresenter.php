@@ -12,8 +12,8 @@ use FKSDB\ORM\Services\ServiceSchool;
 use FormUtils;
 use ModelException;
 use Nette\Application\UI\Form;
-use Tracy\Debugger;
 use Nette\NotImplementedException;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -237,30 +237,26 @@ class SchoolPresenter extends EntityPresenter {
         $address = $school->getAddress();
 
         try {
-            if (!$connection->beginTransaction()) {
-                throw new ModelException();
-            }
+            $connection->beginTransaction();
 
             /*
              * Address
              */
             $data = FormUtils::emptyStrToNull($values[self::CONT_ADDRESS]);
-            $this->serviceAddress->updateModel($address, $data);
+            $address->update($data);
             $this->serviceAddress->save($address);
 
             /*
              * School
              */
             $data = FormUtils::emptyStrToNull($values[self::CONT_SCHOOL]);
-            $this->serviceSchool->updateModel($school, $data);
+            $school->update($data);
             $this->serviceSchool->save($school);
 
             /*
              * Finalize
              */
-            if (!$connection->commit()) {
-                throw new ModelException();
-            }
+            $connection->commit();
 
             $this->flashMessage(_('Škola upravena'), self::FLASH_SUCCESS);
             $this->backLinkRedirect();

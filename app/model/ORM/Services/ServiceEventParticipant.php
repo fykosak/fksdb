@@ -47,6 +47,7 @@ class ServiceEventParticipant extends AbstractServiceSingle {
      * @param array $data
      * @param bool $alive
      * @return mixed|void
+     * @deprecated
      */
     public function updateModel(IModel $model, $data, $alive = true) {
         /**

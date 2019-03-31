@@ -604,10 +604,10 @@ class ExportPresenter extends SeriesPresenter {
 
         $metadata = $values[self::CONT_META];
         $metadata = FormUtils::emptyStrToNull($metadata);
-        $this->serviceStoredQuery->updateModel($storedQuery, $metadata);
+        $storedQuery->update($metadata);
 
         $sqlData = $values[self::CONT_CONSOLE];
-        $this->serviceStoredQuery->updateModel($storedQuery, $sqlData);
+        $storedQuery->update($sqlData);
 
         $this->serviceStoredQuery->save($storedQuery);
 

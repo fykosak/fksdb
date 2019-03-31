@@ -399,7 +399,7 @@ class AccommodationPresenter extends BasePresenter {
             if (!$address) {
                 $address = $this->serviceAddress->createNew($data);
             } else {
-                $this->serviceAddress->updateModel($address, $data);
+                $address->update($data);
             }
             $this->serviceAddress->save($address);
 
@@ -407,7 +407,7 @@ class AccommodationPresenter extends BasePresenter {
              * Accommodation
              */
             $data = $this->getAccommodationFormData($values);
-            $this->serviceEventAccommodation->updateModel($accommodation, $data);
+            $accommodation->update($data);
             $this->serviceEventAccommodation->save($accommodation);
 
             /*

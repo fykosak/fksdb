@@ -118,6 +118,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
      * @param IModel $model
      * @param array $data
      * @param boolean $alive
+     * @deprecated
      */
     public function updateModel(IModel $model, $data, $alive = true) {
         $modelClassName = $this->getModelClassName();

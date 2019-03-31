@@ -130,7 +130,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
         unset($personData['family_name']);
         unset($personData['other_name']);
         unset($personData['display_name']);
-        $this->servicePerson->updateModel($person, $personData);
+        $person->update($personData);
 
         $personInfo = $person->getInfo();
         $personInfoData = $this->getPersonInfoData($fbUser);

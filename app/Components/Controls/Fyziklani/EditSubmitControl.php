@@ -125,7 +125,7 @@ class EditSubmitControl extends Control {
         $values = $form->getValues();
 
         $submit = $this->submit;
-        $this->serviceFyziklaniSubmit->updateModel($submit, [
+        $submit->update([
             'points' => $values->points,
             /* ugly, exclude previous value of `modified` from query
              * so that `modified` is set automatically by DB

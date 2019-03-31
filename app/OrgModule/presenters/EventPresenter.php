@@ -16,6 +16,7 @@ use FKSDB\Config\NeonScheme;
 use FKSDB\Logging\FlashDumpFactory;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\IModel;
+use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Services\ServiceAuthToken;
 use FKSDB\ORM\Services\ServiceEvent;
 use FormUtils;
@@ -24,12 +25,12 @@ use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
-use Tracy\Debugger;
 use Nette\Forms\Controls\BaseControl;
+use Nette\Neon\Neon;
 use Nette\NotImplementedException;
 use Nette\Utils\Html;
-use Nette\Neon\Neon;
 use Nette\Utils\NeonException;
+use Tracy\Debugger;
 use Utils;
 
 
@@ -371,22 +372,18 @@ class EventPresenter extends EntityPresenter {
         $values = $form->getValues();
         if ($isNew) {
             $model = $this->serviceEvent->createNew();
-            $model->year = $this->getSelectedYear();
+            $model->update(['year'=> $this->getSelectedYear()]);
         } else {
             $model = $this->getModel();
         }
 
-
         try {
-            if (!$connection->beginTransaction()) {
-                throw new ModelException();
-            }
-
+            $connection->beginTransaction();
             /*
              * Event
              */
             $data = FormUtils::emptyStrToNull($values[self::CONT_EVENT]);
-            $this->serviceEvent->updateModel($model, $data);
+            $model->update($data);
 
             if (!$this->getContestAuthorizator()
                 ->isAllowed($model, $isNew ? 'create' : 'edit', $this->getSelectedContest())
@@ -398,17 +395,16 @@ class EventPresenter extends EntityPresenter {
 
             // update also 'until' of authTokens in case that registration end has changed
             $tokenData = ["until" => $model->registration_end ?: $model->end];
-            foreach ($this->serviceAuthToken->findTokensByEventId($model->id) as $token) {
-                $this->serviceAuthToken->updateModel($token, $tokenData);
+            foreach ($this->serviceAuthToken->findTokensByEventId($model->id) as $row) {
+                $token = ModelAuthToken::createFromTableRow($row);
+                $token->update($tokenData);
                 $this->serviceAuthToken->save($token);
             }
 
             /*
              * Finalize
              */
-            if (!$connection->commit()) {
-                throw new ModelException();
-            }
+            $connection->commit();
 
             $this->flashMessage(sprintf(_('Akce %s uložena.'), $model->name), self::FLASH_SUCCESS);
             $this->backLinkRedirect();

@@ -106,7 +106,7 @@ class AllSubmitsGrid extends SubmitsGrid {
             $this->flashMessage('Tento tým má už uzavřené bodování', \BasePresenter::FLASH_WARNING);
             return;
         }
-        $this->serviceFyziklaniSubmit->updateModel($submit, [
+        $submit->update([
             'points' => null,
             /* ugly, exclude previous value of `modified` from query
              * so that `modified` is set automatically by DB
