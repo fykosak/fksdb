@@ -186,7 +186,7 @@ class ContestantSubmits extends BaseControl {
             if (isset($result[$tasknr])) {
                 throw new InvalidArgumentException("Task with no. $tasknr is present multiple times in passed value.");
             }
-            $result[(int) $tasknr] = $this->serializeSubmit($submit);
+            $result[(int)$tasknr] = $this->serializeSubmit($submit);
         }
 
         $dummySubmit = $this->submitService->createNew();
@@ -256,10 +256,10 @@ class ContestantSubmits extends BaseControl {
 
         $submit = $this->submitService->findByContestant($ctId, $taskId);
         if (!$submit) {
-            $submit = $this->submitService->createNew();
+            $submit = $this->submitService->createNew($data);
+        } else {
+            $submit->update($data);
         }
-
-        $this->submitService->updateModel($submit, $data);
         return $submit;
     }
 

@@ -10,6 +10,7 @@ use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection as TableSelection;
 use Nette\InvalidStateException;
 use PDOException;
+use Traversable;
 
 /**
  * Service class to high-level manipulation with ORM objects.
@@ -44,16 +45,30 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     /**
      * Use this method to create new models!
      *
-     * @param array $data
+     * @param Traversable $data
      * @return AbstractModelSingle
+     * @throws ModelException
      */
     public function createNew($data = null) {
-        if ($data === null) {
+        $modelClassName = $this->getModelClassName();
+        if (!$data) {
             $data = $this->getDefaultData();
         }
-        $result = $this->createFromArray((array)$data);
-        $result->setNew();
-        return $result;
+        try {
+            $result = $this->getTable()->insert($data);
+            if ($result !== false) {
+                /**
+                 * @var AbstractModelSingle $model
+                 */
+                $model = ($modelClassName)::createFromTableRow($result);
+                $model->setNew(false);
+                return $model;
+            }
+        } catch (PDOException $exception) {
+            throw new ModelException('Error when storing model.', null, $exception);
+        }
+        $code = $this->getConnection()->errorCode();
+        throw new ModelException("$code: Error when storing a model.");
     }
 
     /**
