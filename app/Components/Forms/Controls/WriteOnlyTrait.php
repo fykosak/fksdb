@@ -49,15 +49,19 @@ trait WriteOnlyTrait {
      */
     private function writeOnlyAdjustControl(Html $control) {
 // rendered control may not disabled
-        $control->disabled = $this->actuallyDisabled;
+        $control->addAttributes([
+            'disabled' => $this->actuallyDisabled,
+        ]);
 
 // don't show the value (only if it's form displayed after submit)
 // for JS
         if ($this->writeOnly && $this->getValue() && !$this->hasManualValue) {
-            $control->data['writeOnly'] = (int)true;
-            $control->data['writeOnly-value'] = self::VALUE_ORIGINAL;
-            $control->data['writeOnly-label'] = _('skrytá hodnota');
-            $control->value = self::VALUE_ORIGINAL;
+            $control->addAttributes([
+                'data-writeOnly' => (int)true,
+                'data-writeOnly-value' => self::VALUE_ORIGINAL,
+                'data-writeOnly-label' => _('Hidden value'),
+                'value' => self::VALUE_ORIGINAL,
+            ]);
         }
         return $control;
     }
