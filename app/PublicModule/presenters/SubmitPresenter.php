@@ -14,7 +14,7 @@ use ModelException;
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\FileResponse;
 use Nette\Application\UI\Form;
-use Nette\DateTime;
+use Nette\Utils\DateTime;
 use Tracy\Debugger;
 
 /**

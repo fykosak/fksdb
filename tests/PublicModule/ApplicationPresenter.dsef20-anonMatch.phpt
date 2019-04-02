@@ -3,7 +3,7 @@
 $container = require '../bootstrap.php';
 
 use FKSDB\Components\Forms\Controls\ReferencedId;
-use Nette\DateTime;
+use Nette\Utils\Utils\DateTime;
 use Tester\Assert;
 
 class ApplicationPresenterTest extends ApplicationPresenterDsefTestCase {

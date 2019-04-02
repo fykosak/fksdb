@@ -5,7 +5,7 @@ namespace FKSDB\ORM\Models\Fyziklani;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use Nette\Database\Table\Selection;
-use Nette\DateTime;
+use Nette\Utils\DateTime;
 
 /**
  * @property string category
