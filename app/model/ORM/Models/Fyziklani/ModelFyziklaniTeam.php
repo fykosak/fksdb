@@ -8,13 +8,13 @@ use Nette\Database\Table\Selection;
 use Nette\DateTime;
 
 /**
- * @property string category
- * @property string name
- * @property integer e_fyziklani_team_id
- * @property integer event_id
- * @property integer points
- * @property string status
- * @property DateTime created
+ * @property-read string category
+ * @property-read string name
+ * @property-read integer e_fyziklani_team_id
+ * @property-read integer event_id
+ * @property-read integer points
+ * @property-read string status
+ * @property-read DateTime created
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @author Michal Červeňák <miso@fykos.cz>
