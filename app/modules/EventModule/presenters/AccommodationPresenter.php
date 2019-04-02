@@ -335,8 +335,7 @@ class AccommodationPresenter extends BasePresenter {
 
             $data['event_id'] = $this->eventId;
             $data['address_id'] = $address->address_id;
-            $accommodation = $this->serviceEventAccommodation->createNew($data);
-            $this->serviceEventAccommodation->save($accommodation);
+            $accommodation = $this->serviceEventAccommodation->createNewModel($data);
 
             /*
              * Finalize
