@@ -3,7 +3,7 @@
 namespace Tasks\Legacy;
 
 use FKSDB\ORM\Services\ServiceTask;
-use Nette\DateTime;
+use Nette\Utils\DateTime;
 use Pipeline\PipelineException;
 use Pipeline\Stage;
 use Tasks\SeriesData;
