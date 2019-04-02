@@ -63,11 +63,10 @@ class Handler {
             }
         }
         foreach ($newAccommodationIds as $id) {
-            $model = $this->serviceEventPersonAccommodation->createNew(['person_id' => $person->person_id, 'event_accommodation_id' => $id]);
             $query = $this->serviceEventAccommodation->findByPrimary($id);
             $eventAccommodation = ModelEventAccommodation::createFromTableRow($query);
             if ($eventAccommodation->getAvailableCapacity() > 0) {
-                $this->serviceEventPersonAccommodation->save($model);
+                $this->serviceEventPersonAccommodation->createNewModel(['person_id' => $person->person_id, 'event_accommodation_id' => $id]);
             } else {
                 //$model->delete();
                 throw new FullAccommodationCapacityException(sprintf(

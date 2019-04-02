@@ -187,11 +187,11 @@ class AccountManager {
      * @return \FKSDB\ORM\AbstractModelSingle|\FKSDB\ORM\Models\ModelLogin
      */
     public final function createLogin(ModelPerson $person, $login = null, $password = null) {
-        $login = $this->serviceLogin->createNew(array(
+        $login = $this->serviceLogin->createNew([
             'person_id' => $person->person_id,
             'login' => $login,
             'active' => 1,
-        ));
+        ]);
 
         $this->serviceLogin->save($login);
 

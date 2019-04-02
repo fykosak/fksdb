@@ -16,6 +16,8 @@ use FKSDB\Config\NeonScheme;
 use FKSDB\Logging\FlashDumpFactory;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\IModel;
+use FKSDB\ORM\Models\ModelAuthToken;
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceAuthToken;
 use FKSDB\ORM\Services\ServiceEvent;
 use FormUtils;
@@ -24,12 +26,12 @@ use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
-use Tracy\Debugger;
 use Nette\Forms\Controls\BaseControl;
+use Nette\Neon\Neon;
 use Nette\NotImplementedException;
 use Nette\Utils\Html;
-use Nette\Neon\Neon;
 use Nette\Utils\NeonException;
+use Tracy\Debugger;
 use Utils;
 
 
@@ -369,9 +371,11 @@ class EventPresenter extends EntityPresenter {
     private function handleFormSuccess(Form $form, $isNew) {
         $connection = $this->serviceEvent->getConnection();
         $values = $form->getValues();
+        /**
+         * @var ModelEvent $model
+         */
         if ($isNew) {
-            $model = $this->serviceEvent->createNew();
-            $model->year = $this->getSelectedYear();
+            $model = $this->serviceEvent->createNew(['year' => $this->getSelectedYear()]);
         } else {
             $model = $this->getModel();
         }
@@ -386,7 +390,7 @@ class EventPresenter extends EntityPresenter {
              * Event
              */
             $data = FormUtils::emptyStrToNull($values[self::CONT_EVENT]);
-            $this->serviceEvent->updateModel($model, $data);
+            $model->update($data);
 
             if (!$this->getContestAuthorizator()
                 ->isAllowed($model, $isNew ? 'create' : 'edit', $this->getSelectedContest())
@@ -394,14 +398,8 @@ class EventPresenter extends EntityPresenter {
                 throw new ForbiddenRequestException();
             }
 
-            $this->serviceEvent->save($model);
-
             // update also 'until' of authTokens in case that registration end has changed
-            $tokenData = ["until" => $model->registration_end ?: $model->end];
-            foreach ($this->serviceAuthToken->findTokensByEventId($model->id) as $token) {
-                $this->serviceAuthToken->updateModel($token, $tokenData);
-                $this->serviceAuthToken->save($token);
-            }
+            $this->updateTokens($model);
 
             /*
              * Finalize
@@ -420,6 +418,17 @@ class EventPresenter extends EntityPresenter {
         } catch (ForbiddenRequestException $exception) {
             $connection->rollBack();
             $this->flashMessage(_('Nedostatečné oprávnění.'), self::FLASH_ERROR);
+        }
+    }
+
+    /**
+     * @param ModelEvent $event
+     */
+    private function updateTokens(ModelEvent $event) {
+        $tokenData = ["until" => $event->registration_end ?: $event->end];
+        foreach ($this->serviceAuthToken->findTokensByEventId($event->event_id) as $row) {
+            $token = ModelAuthToken::createFromActiveRow($row);
+            $token->update($tokenData);
         }
     }
 

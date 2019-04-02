@@ -51,8 +51,10 @@ class PaymentDataHandler {
                 /**
                  * @var \FKSDB\ORM\Models\ModelPaymentAccommodation $model
                  */
-                $model = $this->serviceEventPersonAccommodation->createNew(['payment_id' => $payment->payment_id, 'event_person_accommodation_id' => $id]);
-                $this->serviceEventPersonAccommodation->save($model);
+                $model = $this->serviceEventPersonAccommodation->createNewModel([
+                    'payment_id' => $payment->payment_id,
+                    'event_person_accommodation_id' => $id,
+                ]);
             } catch (\ModelException $exception) {
                 if ($exception->getPrevious() && $exception->getPrevious()->getCode() == 23000) {
                     throw new StorageException(sprintf(

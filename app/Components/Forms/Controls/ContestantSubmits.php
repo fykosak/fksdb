@@ -256,7 +256,7 @@ class ContestantSubmits extends BaseControl {
 
         $submit = $this->submitService->findByContestant($ctId, $taskId);
         if (!$submit) {
-            $submit = $this->submitService->createNew($data);
+            $submit = $this->submitService->createNewModel($data);
         } else {
             $submit->update($data);
         }

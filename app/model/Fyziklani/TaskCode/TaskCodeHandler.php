@@ -77,7 +77,7 @@ class TaskCodeHandler {
         $task = $this->serviceFyziklaniTask->findByLabel($taskLabel, $this->event);
 
         if (is_null($submit = $this->serviceFyziklaniSubmit->findByTaskAndTeam($task->fyziklani_task_id, $teamId))) {
-            $submit = $this->serviceFyziklaniSubmit->createNew([
+            $submit = $this->serviceFyziklaniSubmit->createNewModel([
                 'points' => $points,
                 'fyziklani_task_id' => $task->fyziklani_task_id,
                 'e_fyziklani_team_id' => $teamId,
@@ -87,7 +87,7 @@ class TaskCodeHandler {
                 'created' => null
             ]);
         } else {
-            $submit->update( [
+            $submit->update([
                 'points' => $points,
                 /* ugly, exclude previous value of `modified` from query
                  * so that `modified` is set automatically by DB
@@ -95,10 +95,9 @@ class TaskCodeHandler {
                  */
                 'modified' => null
             ]);
-            $this->serviceFyziklaniSubmit->save($submit);
         }
-        $teamRow = $this->serviceFyziklaniTeam->findByPrimary($teamId);
-        $team = ModelFyziklaniTeam::createFromTableRow($teamRow);
+
+        $team = $submit->getTeam();
 
         $taskName = $this->serviceFyziklaniTask->findByLabel($taskLabel, $this->event)->name;
 
