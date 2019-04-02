@@ -332,9 +332,10 @@ class AccommodationPresenter extends BasePresenter {
              * @var \FKSDB\ORM\Models\ModelEventAccommodation $accommodation
              * @var \FKSDB\ORM\Models\ModelAddress $address
              */
+
+            $data['event_id'] = $this->eventId;
+            $data['address_id'] = $address->address_id;
             $accommodation = $this->serviceEventAccommodation->createNew($data);
-            $accommodation->event_id = $this->eventId;
-            $accommodation->address_id = $address->address_id;
             $this->serviceEventAccommodation->save($accommodation);
 
             /*
