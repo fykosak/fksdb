@@ -84,9 +84,9 @@ class CloseSubmitStrategy {
         foreach ($data as $index => &$teamData) {
             $team = ModelFyziklaniTeam::createFromTableRow($this->serviceFyziklaniTeam->findByPrimary($teamData['e_fyziklani_team_id']));
             if ($total) {
-                $this->serviceFyziklaniTeam->updateModel($team, ['rank_total' => $index + 1]);
+                $team->update(['rank_total' => $index + 1]);
             } else {
-                $this->serviceFyziklaniTeam->updateModel($team, ['rank_category' => $index + 1]);
+                $team->update(['rank_category' => $index + 1]);
             }
             $this->serviceFyziklaniTeam->save($team);
             $msg .= Html::el('li')

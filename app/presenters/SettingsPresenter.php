@@ -164,6 +164,9 @@ class SettingsPresenter extends AuthenticatedPresenter {
         $tokenAuthentication =
             $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN) ||
             $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_RECOVERY);
+        /**
+         * @var \FKSDB\ORM\Models\ModelLogin $login
+         */
         $login = $this->getUser()->getIdentity();
 
         $loginData = FormUtils::emptyStrToNull($values[self::CONT_LOGIN]);
@@ -171,7 +174,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
             $login->setHash($loginData['password']);
         }
 
-        $this->loginService->updateModel($login, $loginData);
+        $login->update($loginData);
         $this->loginService->save($login);
         $this->flashMessage(_('Uživatelské informace upraveny.'), self::FLASH_SUCCESS);
         if ($tokenAuthentication) {
