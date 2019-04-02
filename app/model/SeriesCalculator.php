@@ -5,6 +5,7 @@ namespace FKSDB;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Services\ServiceTask;
 use Nette;
+use Nette\Utils\DateTime;
 
 /**
  * Class FKSDB\SeriesCalculator
@@ -42,7 +43,7 @@ class SeriesCalculator {
         $currentSeries = $this->serviceTask->getTable()->where([
             'contest_id' => $contest->contest_id,
             'year' => $year,
-            '(submit_deadline < ? OR submit_deadline IS NULL)' => new Nette\DateTime()
+            '(submit_deadline < ? OR submit_deadline IS NULL)' => new DateTime()
         ])->max('series');
         return ($currentSeries === null) ? 1 : $currentSeries;
     }

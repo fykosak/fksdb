@@ -4,7 +4,7 @@ namespace Tasks;
 
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Services\ServiceTask;
-use Nette\DateTime;
+use Nette\Utils\DateTime;
 use Pipeline\Stage;
 
 
@@ -42,7 +42,7 @@ class DeadlineFromXML2 extends Stage {
 
     public function process() {
         $xml = $this->data->getData();
-        $deadline = (string) $xml->deadline[0];
+        $deadline = (string)$xml->deadline[0];
         if (!$deadline) {
             $this->log(_('Chybí deadline série.'), ILogger::WARNING);
             return;

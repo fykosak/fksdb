@@ -9,7 +9,7 @@ use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FormUtils;
 use InvalidArgumentException;
-use Nette\DateTime;
+use Nette\Utils\DateTime;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 use Traversable;

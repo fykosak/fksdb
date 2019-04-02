@@ -15,9 +15,9 @@ use FKSDB\ORM\Services\ServicePerson;
 use Mail\MailTemplateFactory;
 use Mail\SendFailedException;
 use Nette\Application\UI\Form;
-use Nette\DateTime;
 use Nette\Http\Url;
 use Nette\Security\AuthenticationException;
+use Nette\Utils\DateTime;
 
 /**
  * Class AuthenticationPresenter

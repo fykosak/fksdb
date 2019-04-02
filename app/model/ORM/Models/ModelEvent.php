@@ -9,7 +9,7 @@ use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
-use Nette\DateTime;
+use Nette\Utils\DateTime;
 use Nette\InvalidStateException;
 use Nette\Security\IResource;
 

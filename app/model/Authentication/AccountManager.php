@@ -8,7 +8,7 @@ use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceAuthToken;
 use FKSDB\ORM\Services\ServiceLogin;
 use Mail\SendFailedException;
-use Nette\DateTime;
+use Nette\Utils\DateTime;
 use Nette\InvalidStateException;
 use Nette\Mail\IMailer;
 use Nette\Mail\Message;

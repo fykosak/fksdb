@@ -7,10 +7,9 @@ use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelGlobalSession;
 use Nette\Database\Connection;
-use Nette\DateTime;
 use Nette\Http\Request;
+use Nette\Utils\DateTime;
 use Nette\Utils\Random;
-use Nette\Utils\Strings;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>

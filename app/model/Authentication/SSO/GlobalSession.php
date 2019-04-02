@@ -5,7 +5,7 @@ namespace Authentication\SSO;
 use FKSDB\Authentication\SSO\IGlobalSession;
 use FKSDB\Authentication\SSO\IGSIDHolder;
 use FKSDB\ORM\Services\ServiceGlobalSession;
-use Nette\DateTime;
+use Nette\Utils\DateTime;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 
