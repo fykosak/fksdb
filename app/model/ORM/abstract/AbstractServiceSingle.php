@@ -43,10 +43,10 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     }
 
     /**
-     * @param array|null $data
+     * @param Traversable|null $data
      * @return AbstractModelSingle
      */
-    public function createNewModel(array $data = null): AbstractModelSingle {
+    public function createNewModel(Traversable $data = null): AbstractModelSingle {
         $modelClassName = $this->getModelClassName();
         if (!$data) {
             $data = $this->getDefaultData();
