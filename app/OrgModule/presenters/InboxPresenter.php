@@ -318,8 +318,7 @@ class InboxPresenter extends SeriesPresenter {
                     'person_id' => $personId,
                     'type' => ModelTaskContribution::TYPE_GRADE,
                 );
-                $contribution = $service->createNew($data);
-                $service->save($contribution);
+                $service->createNewModel($data);
             }
         }
 

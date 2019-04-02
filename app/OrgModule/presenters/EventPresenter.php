@@ -371,26 +371,24 @@ class EventPresenter extends EntityPresenter {
     private function handleFormSuccess(Form $form, $isNew) {
         $connection = $this->serviceEvent->getConnection();
         $values = $form->getValues();
-        /**
-         * @var ModelEvent $model
-         */
-        if ($isNew) {
-            $model = $this->serviceEvent->createNew(['year' => $this->getSelectedYear()]);
-        } else {
-            $model = $this->getModel();
-        }
 
 
         try {
             if (!$connection->beginTransaction()) {
                 throw new ModelException();
             }
-
-            /*
-             * Event
-             */
             $data = FormUtils::emptyStrToNull($values[self::CONT_EVENT]);
-            $model->update($data);
+            /**
+             * @var ModelEvent $model
+             */
+            if ($isNew) {
+                $data['year'] = $this->getSelectedYear();
+                $model = $this->serviceEvent->createNew($data);
+            } else {
+                $model = $this->getModel();
+                $model->update($data);
+            }
+
 
             if (!$this->getContestAuthorizator()
                 ->isAllowed($model, $isNew ? 'create' : 'edit', $this->getSelectedContest())
