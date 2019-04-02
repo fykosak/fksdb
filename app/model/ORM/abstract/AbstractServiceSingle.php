@@ -51,6 +51,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
         if (!$data) {
             $data = $this->getDefaultData();
         }
+        $data = $this->filterData($data);
         try {
             $result = $this->getTable()->insert($data);
             if ($result !== false) {
@@ -151,6 +152,16 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
         foreach ($data as $key => $value) {
             $model->{$key} = $value;
         }
+    }
+
+    /**
+     * @param AbstractModelSingle $model
+     * @param $data
+     * @return int
+     */
+    public function updateModel2(AbstractModelSingle $model, $data = null) {
+        $data = $this->filterData($data);
+        return $model->update($data);
     }
 
     /**

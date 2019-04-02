@@ -73,7 +73,7 @@ class EditSubmitControl extends Control {
         if (!$this->submit) {
             throw new BadRequestException(_('Neexistující submit.'), 404);
         }
-        $this->submit = ModelFyziklaniSubmit::createFromTableRow($row);
+        $this->submit = ModelFyziklaniSubmit::createFromActiveRow($row);
 
         $team = $this->submit->getTeam();
         if (!$team->hasOpenSubmitting()) {
@@ -125,7 +125,7 @@ class EditSubmitControl extends Control {
         $values = $form->getValues();
 
         $submit = $this->submit;
-        $submit->update([
+        $this->serviceFyziklaniSubmit->updateModel2($submit, [
             'points' => $values->points,
             /* ugly, exclude previous value of `modified` from query
              * so that `modified` is set automatically by DB

@@ -132,11 +132,10 @@ class CloseTeamControl extends Control {
         $submits = $this->team->getSubmits();
         $sum = 0;
         foreach ($submits as $row) {
-            $submit = ModelFyziklaniSubmit::createFromTableRow($row);
+            $submit = ModelFyziklaniSubmit::createFromActiveRow($row);
             $sum += $submit->points;
         }
-        $this->team->update(['points' => $sum]);
-        $this->serviceFyziklaniTeam->save($this->team);
+        $this->serviceFyziklaniTeam->updateModel2($this->team, ['points' => $sum]);
         $connection->commit();
         $this->getPresenter()->flashMessage(\sprintf(_('Team %s has successfully closed submitting, with total %d points.'), $this->team->name, $sum), \BasePresenter::FLASH_SUCCESS);
     }

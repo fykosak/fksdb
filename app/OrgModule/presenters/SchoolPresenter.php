@@ -7,13 +7,14 @@ use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\SchoolFactory;
 use FKSDB\Components\Grids\SchoolsGrid;
 use FKSDB\ORM\IModel;
+use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServiceAddress;
 use FKSDB\ORM\Services\ServiceSchool;
 use FormUtils;
 use ModelException;
 use Nette\Application\UI\Form;
-use Tracy\Debugger;
 use Nette\NotImplementedException;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -203,7 +204,8 @@ class SchoolPresenter extends EntityPresenter {
              */
             $data = FormUtils::emptyStrToNull($values[self::CONT_SCHOOL]);
             $data['address_id'] = $address->address_id;
-            $school = $this->serviceSchool->createNewModel($data);
+
+            $this->serviceSchool->createNewModel($data);
 
             /*
              * Finalize
@@ -216,6 +218,7 @@ class SchoolPresenter extends EntityPresenter {
             $this->backLinkRedirect();
             $this->redirect('list'); // if there's no backlink
         } catch (ModelException $exception) {
+            Debugger::barDump($exception);
             $connection->rollBack();
             Debugger::log($exception, Debugger::ERROR);
             $this->flashMessage(_('Chyba při zakládání školy.'), self::FLASH_ERROR);
@@ -231,6 +234,9 @@ class SchoolPresenter extends EntityPresenter {
     public function handleEditFormSuccess(Form $form) {
         $connection = $this->serviceSchool->getConnection();
         $values = $form->getValues();
+        /**
+         * @var ModelSchool $school
+         */
         $school = $this->getModel();
         $address = $school->getAddress();
 
@@ -242,16 +248,14 @@ class SchoolPresenter extends EntityPresenter {
             /*
              * Address
              */
-            $data = FormUtils::emptyStrToNull($values[self::CONT_ADDRESS]);
-            $this->serviceAddress->updateModel($address, $data);
-            $this->serviceAddress->save($address);
+            $addressData = FormUtils::emptyStrToNull($values[self::CONT_ADDRESS]);
+            $this->serviceAddress->updateModel2($address, $addressData);
 
             /*
              * School
              */
-            $data = FormUtils::emptyStrToNull($values[self::CONT_SCHOOL]);
-            $this->serviceSchool->updateModel($school, $data);
-            $this->serviceSchool->save($school);
+            $schoolData = FormUtils::emptyStrToNull($values[self::CONT_SCHOOL]);
+            $school->update($schoolData);
 
             /*
              * Finalize

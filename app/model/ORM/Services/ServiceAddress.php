@@ -2,14 +2,15 @@
 
 namespace FKSDB\ORM\Services;
 
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelAddress;
 use FKSDB\ORM\Models\ModelRegion;
 use InvalidPostalCode;
-use Tracy\Debugger;
 use Nette\InvalidArgumentException;
+use Tracy\Debugger;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -49,6 +50,30 @@ class ServiceAddress extends AbstractServiceSingle {
         }
         parent::save($model);
     }
+
+    /**
+     * @param null $data
+     * @return ModelAddress
+     */
+    public function createNewModel($data = null): AbstractModelSingle {
+        if (!isset($data['region_id'])) {
+            $data['region_id'] = $this->inferRegion($data['postal_code']);
+        }
+        return parent::createNewModel($data);
+    }
+
+    /**
+     * @param ModelAddress|AbstractModelSingle $model
+     * @param $data
+     * @return int
+     */
+    public function updateModel2(AbstractModelSingle $model, $data = null) {
+        if (!isset($data['region_id'])) {
+            $data['region_id'] = $this->inferRegion($data['postal_code']);
+        }
+        return parent::updateModel2($model, $data);
+    }
+
 
     /**
      *
