@@ -21,7 +21,7 @@ class ModelContestant extends AbstractModelSingle implements IResource {
      */
     public function getPerson(): ModelPerson {
         $data = $this->person;
-        return ModelPerson::createFromTableRow($data);
+        return ModelPerson::createFromActiveRow($data);
     }
 
     /**
@@ -29,7 +29,7 @@ class ModelContestant extends AbstractModelSingle implements IResource {
      */
     public function getContest(): ModelContest {
         $data = $this->contest;
-        return ModelContest::createFromTableRow($data);
+        return ModelContest::createFromActiveRow($data);
     }
 
     /**

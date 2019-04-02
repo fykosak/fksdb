@@ -47,7 +47,7 @@ class ModelEvent extends AbstractModelSingle implements IResource {
      * @return ModelEventType
      */
     public function getEventType(): ModelEventType {
-        return ModelEventType::createFromTableRow($this->event_type);
+        return ModelEventType::createFromActiveRow($this->event_type);
     }
 
     /**
@@ -56,7 +56,7 @@ class ModelEvent extends AbstractModelSingle implements IResource {
     public function getEventAccommodationsAsArray(): array {
         $data = [];
         foreach ($this->related(DbNames::TAB_EVENT_ACCOMMODATION) as $item) {
-            $data[] = ModelEventAccommodation::createFromTableRow($item);
+            $data[] = ModelEventAccommodation::createFromActiveRow($item);
         }
         return $data;
     }
@@ -65,7 +65,7 @@ class ModelEvent extends AbstractModelSingle implements IResource {
      * @return ModelContest
      */
     public function getContest(): ModelContest {
-        return ModelContest::createFromTableRow($this->getEventType()->ref(DbNames::TAB_CONTEST, 'contest_id'));
+        return ModelContest::createFromActiveRow($this->getEventType()->ref(DbNames::TAB_CONTEST, 'contest_id'));
     }
 
     /**
@@ -111,7 +111,7 @@ class ModelEvent extends AbstractModelSingle implements IResource {
         if (!$gameSetup) {
             throw new NotSetGameParametersException(_('Herné parametre niesu nastavené'), 404);
         }
-        return ModelFyziklaniGameSetup::createFromTableRow($gameSetup);
+        return ModelFyziklaniGameSetup::createFromActiveRow($gameSetup);
     }
 
     /**
