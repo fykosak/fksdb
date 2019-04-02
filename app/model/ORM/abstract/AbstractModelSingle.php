@@ -10,11 +10,13 @@ use Nette\Database\Table\ActiveRow;
 abstract class AbstractModelSingle extends ActiveRow implements IModel {
     /**
      * @var bool
+     * @deprecated
      */
     protected $stored = true;
 
     /**
      * @return bool
+     * @deprecated
      */
     public function isNew(): bool {
         return !$this->stored;
@@ -22,6 +24,7 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
 
     /**
      * @param bool $value
+     * @deprecated
      */
     public function setNew(bool $value = true) {
         $this->stored = !$value;

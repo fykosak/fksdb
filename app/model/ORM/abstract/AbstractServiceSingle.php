@@ -43,13 +43,10 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     }
 
     /**
-     * Use this method to create new models!
-     *
-     * @param Traversable $data
+     * @param array|null $data
      * @return AbstractModelSingle
-     * @throws ModelException
      */
-    public function createNew($data = null) {
+    public function createNewModel(array $data = null): AbstractModelSingle {
         $modelClassName = $this->getModelClassName();
         if (!$data) {
             $data = $this->getDefaultData();
@@ -69,6 +66,23 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
         }
         $code = $this->getConnection()->errorCode();
         throw new ModelException("$code: Error when storing a model.");
+    }
+
+    /**
+     * Use this method to create new models!
+     *
+     * @param Traversable $data
+     * @return AbstractModelSingle
+     * @throws ModelException
+     * @deprecated use createNewModel
+     */
+    public function createNew($data = null) {
+        if ($data === null) {
+            $data = $this->getDefaultData();
+        }
+        $result = $this->createFromArray((array)$data);
+        $result->setNew();
+        return $result;
     }
 
     /**
