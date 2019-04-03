@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Forms\Factories\ReferencedPerson;
 
+use Closure;
 use FKSDB\Components\Forms\Containers\IWriteOnly;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Containers\Models\IReferencedSetter;
@@ -394,9 +395,9 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
 
     /**
      * @param $searchType
-     * @return \Closure
+     * @return Closure
      */
-    protected function createSearchCallback($searchType) {
+    protected function createSearchCallback($searchType): Closure {
         $service = $this->servicePerson;
         switch ($searchType) {
             case self::SEARCH_EMAIL:

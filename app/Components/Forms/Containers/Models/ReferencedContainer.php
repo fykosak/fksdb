@@ -98,11 +98,11 @@ class ReferencedContainer extends ContainerWithOptions {
 
     /**
      * @param IControl|null $control
-     * @param null $searchCallback
-     * @param null $termToValuesCallback
+     * @param callable|null $searchCallback
+     * @param callable|null $termToValuesCallback
      * @throws \Nette\Utils\RegexpException
      */
-    public function setSearch(IControl $control = null, $searchCallback = null, $termToValuesCallback = null) {
+    public function setSearch(IControl $control = null, callable $searchCallback = null, callable $termToValuesCallback = null) {
         if ($control == null) {
             $this->referencedId->setValue(null); //is it needed?
             $this->hasSearch = false;

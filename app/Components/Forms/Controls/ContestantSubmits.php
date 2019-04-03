@@ -9,8 +9,8 @@ use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FormUtils;
 use InvalidArgumentException;
-use Nette\Utils\DateTime;
 use Nette\Forms\Controls\BaseControl;
+use Nette\Utils\DateTime;
 use Nette\Utils\Html;
 use Traversable;
 
@@ -258,7 +258,8 @@ class ContestantSubmits extends BaseControl {
         if (!$submit) {
             $submit = $this->submitService->createNewModel($data);
         } else {
-            $submit->update($data);
+            $this->submitService->updateModel2($submit, $data);
+            $submit = $this->submitService->refresh($submit);
         }
         return $submit;
     }
