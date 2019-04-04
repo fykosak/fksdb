@@ -9,9 +9,9 @@ use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
-use Nette\Utils\DateTime;
 use Nette\InvalidStateException;
 use Nette\Security\IResource;
+use Nette\Utils\DateTime;
 
 /**
  *
@@ -39,8 +39,15 @@ class ModelEvent extends AbstractModelSingle implements IResource {
     /**
      * @param Holder $holder
      */
-    function setHolder(Holder $holder) {
+    public function setHolder(Holder $holder) {
         $this->holder = $holder;
+    }
+
+    /**
+     * @return Holder
+     */
+    public function getHolder(): Holder {
+        return $this->holder;
     }
 
     /**

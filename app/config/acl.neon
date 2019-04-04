@@ -62,6 +62,7 @@ acl:
 #event module
 
     - addResource(event.application) #list, detail
+    - addResource(event.teamApplication) #list, detail
     - addResource(event.dashboard) # default
     - addResource(event.schedule) # default
     - addResource(event.accommodation) # list, create, edit, billeted
@@ -151,10 +152,11 @@ acl:
     - allow(org, event.dashboard, ::constant(Nette\Security\Permission::ALL))
     - allow(registered, event.dashboard, ::constant(Nette\Security\Permission::ALL))
 
-    - allow(eventManager, event.schedule, ::constant(Nette\Security\Permission::ALL))
-    - allow(eventManager, event.model, ::constant(Nette\Security\Permission::ALL))
-    - allow(eventManager, event.application, ::constant(Nette\Security\Permission::ALL))
-    - allow(eventManager, event.accommodation, ::constant(Nette\Security\Permission::ALL)) # in eventModule
+    - allow(eventManager, event.schedule, ::constant(Nette\Security\Permission::ALL)) #môže všetko s programom
+    - allow(eventManager, event.model, ::constant(Nette\Security\Permission::ALL)) #može vidieť model
+    - allow(eventManager, event.application, ::constant(Nette\Security\Permission::ALL)) #môže zobraziť prihlášky
+    - allow(eventManager, event.teamApplication, ::constant(Nette\Security\Permission::ALL)) # môže zobraziť prihlášky tímov
+    - allow(eventManager, event.accommodation, ::constant(Nette\Security\Permission::ALL)) #môže spravovať ubytovanie (old systém)
 
     - allow(boss, event.applicationsTimeProgress, ::constant(Nette\Security\Permission::ALL))
 

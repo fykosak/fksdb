@@ -77,6 +77,6 @@ navigation:
             - event.schedule.groups
             - event.accommodation.list
             - event.application.list
-            - event.teamApplication.list
+            #- event.teamApplication.list
             - event.model.default
             - event.applicationsTimeProgress.default

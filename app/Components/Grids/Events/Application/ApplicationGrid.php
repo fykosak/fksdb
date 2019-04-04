@@ -4,11 +4,13 @@ namespace FKSDB\Components\Grids\Events;
 
 use Closure;
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Controls\Helpers\ValuePrinters\BinaryValueControl;
+use FKSDB\Components\Controls\Helpers\ValuePrinters\PersonValueControl;
+use FKSDB\Components\Controls\Helpers\ValuePrinters\PriceValueControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventParticipant;
-use FKSDB\Payment\Price;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
 use Nette\Forms\Form;
@@ -24,10 +26,6 @@ class ApplicationGrid extends BaseGrid {
      * @var ModelEvent
      */
     protected $event;
-    /**
-     * @var string[]
-     */
-    private $columns = [];
 
     /**
      * ParticipantGrid constructor.
@@ -55,14 +53,7 @@ class ApplicationGrid extends BaseGrid {
 
         $this->addColumn('person_id', _('Person'))->setRenderer(function ($row) use ($presenter) {
             $model = ModelEventParticipant::createFromTableRow($row);
-
-            return Html::el('a')
-                ->addAttributes(['href' => $presenter->link(':Org:Stalking:view', [
-                    'contestId' => $model->getEvent()->getEventType()->contest_id,
-                    'year' => $model->getEvent()->year,
-                    'id' => $model->person_id,
-                ])])
-                ->add($model->getPerson()->getFullName());
+            return PersonValueControl::getGridValue($this, $model->getPerson(), $model->getEvent()->year, $model->getEvent()->getEventType()->contest_id);
         });
 
         $this->addColumn('status', _('Status'))->setRenderer(function ($row) use ($presenter) {
@@ -112,7 +103,7 @@ class ApplicationGrid extends BaseGrid {
             }
             return Html::el('span')
                 ->addAttributes(['class' => $className])
-                ->add(_($model->status));
+                ->addText(_($model->status));
         });
         $this->addColumns();
 
@@ -204,8 +195,9 @@ class ApplicationGrid extends BaseGrid {
      * @throws \NiftyGrid\DuplicateColumnException
      */
     private function addColumns() {
-        $this->columns = [];
-        foreach ($this->columns as $name) {
+        $fields = $this->event->getHolder()->getPrimaryHolder()->getFields();
+
+        foreach ($fields as $name => $def) {
             switch ($name) {
                 case 'note':
                     $this->addColumn('note', _('Note'));
@@ -219,11 +211,7 @@ class ApplicationGrid extends BaseGrid {
                 case 'price':
                     $this->addColumn('price', _('Price'))->setRenderer(function ($row) {
                         $model = ModelEventParticipant::createFromTableRow($row);
-                        if (\is_null($model->price)) {
-                            return 'NA';
-                        }
-                        $price = new Price($model->price, Price::CURRENCY_CZK);
-                        return $price->__toString();
+                        return PriceValueControl::getGridValue($model);
                     });
                     break;
                 case 'used_drugs':
@@ -232,45 +220,37 @@ class ApplicationGrid extends BaseGrid {
                 case 'swimmer':
                     $this->addColumn('swimmer', _('Swimmer'))->setRenderer(function ($row) {
                         $model = ModelEventParticipant::createFromTableRow($row);
-                        if (\is_null($model->swimmer)) {
-                            return Html::el('span')->addAttributes(['class' => 'badge badge-warning'])->add(_('not set'));
-                        } elseif ($model->swimmer) {
-                            return Html::el('span')->addAttributes(['class' => 'fa fa-check text-success']);
-                        } else {
-                            return Html::el('span')->addAttributes(['class' => 'fa fa-times text-danger']);
-                        }
+                        return BinaryValueControl::getGridValue($model, 'swimmer');
                     });
                     break;
-                case 'tshirt':
+                case 'tshirt_color':
                     $this->addColumn('tshirt_size', _('T-shirt size'));
+                    break;
+                case 'tshirt_size':
                     $this->addColumn('tshirt_color', _('T-shirt color'));
                     break;
-                case 'arrival':
+                case 'arrival_destination':
                     $this->addColumn('arrival_destination', _('Arrival destination'));
+                    break;
+                case 'arrival_time':
                     $this->addColumn('arrival_time', _('Arrival time'));
+                    break;
+                case 'arrival_ticket':
                     $this->addColumn('arrival_ticket', _('Arrival ticket'))->setRenderer(function ($row) {
                         $model = ModelEventParticipant::createFromTableRow($row);
-                        if (\is_null($model->arrival_ticket)) {
-                            return Html::el('span')->addAttributes(['class' => 'badge badge-warning'])->add(_('not set'));
-                        } elseif ($model->arrival_ticket) {
-                            return Html::el('span')->addAttributes(['class' => 'fa fa-check text-success']);
-                        } else {
-                            return Html::el('span')->addAttributes(['class' => 'fa fa-times text-danger']);
-                        }
+                        return BinaryValueControl::getGridValue($model, 'arrival_ticket');
                     });
                     break;
-                case 'departure':
+                case 'departure_destination':
                     $this->addColumn('departure_destination', _('Departure destination'));
+                    break;
+                case 'departure_time':
                     $this->addColumn('departure_time', _('Departure time'));
+                    break;
+                case 'departure_ticket':
                     $this->addColumn('departure_ticket', _('Departure ticket'))->setRenderer(function ($row) {
                         $model = ModelEventParticipant::createFromTableRow($row);
-                        if (\is_null($model->departure_ticket)) {
-                            return Html::el('span')->addAttributes(['class' => 'badge badge-warning'])->add(_('not set'));
-                        } elseif ($model->departure_ticket) {
-                            return Html::el('span')->addAttributes(['class' => 'fa fa-check text-success']);
-                        } else {
-                            return Html::el('span')->addAttributes(['class' => 'fa fa-times text-danger']);
-                        }
+                        return BinaryValueControl::getGridValue($model, 'departure_ticket');
                     });
             }
         }

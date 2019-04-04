@@ -10,34 +10,38 @@
 
     {control priceValue $model, _('Price'), price}
 
-    {control binaryValue $model, _('Swimmer'),swimmer}
-
     <hr/>
     <h3>{_'Health & food'}</h3>
+    {if \array_key_exists('health_restrictions',$fields)}
+        {control stringValue $model, _('Health restrictions'), health_restrictions}
+    {/if}
 
-    {control stringValue $model, _('Health restrictions'), health_restrictions}
+    {if \array_key_exists('diet',$fields)}
+        {control stringValue $model, _('Diet'), diet}
+    {/if}
 
-    {control stringValue $model, _('Diet'), diet}
+    {if \array_key_exists('used_drugs',$fields)}
+        {control stringValue $model, _('Used drugs'), used_drugs}
+    {/if}
 
-    {control stringValue $model, _('Used drugs'), used_drugs}
+    {if \array_key_exists('note',$fields)}
+        {control stringValue $model, _('Note'), note}
+    {/if}
 
-    {control stringValue $model, _('Note'), note}
+    {if \array_key_exists('swimmer',$fields)}
+        {control binaryValue $model, _('Swimmer'),swimmer}
+    {/if}
 
     <hr/>
     <h3>{_'T-shirt'}</h3>
-    <div class="row">
-        <b class="col-2">{_'Size'}</b>
-        <span class="col-10">
-            {if \is_null($model->tshirt_size)}
-                {control notSet}
-            {else}
-                {$model->tshirt_size}
-            {/if}
-        </span>
-    </div>
-    <div class="row">
-        <b class="col-2">{_'Color'}</b>
-        <span class="col-10">
+    {if \array_key_exists('tshirt_size',$fields)}
+        {control stringValue $model, _('Size'), tshirt_size}
+    {/if}
+
+    {if \array_key_exists('tshirt_color',$fields)}
+        <div class="row">
+            <b class="col-2">{_'Color'}</b>
+            <span class="col-10">
              {if \is_null($model->tshirt_color)}
                  {control notSet}
              {else}
@@ -49,27 +53,33 @@
                      display: inline-block;
                      margin-right: .5rem "></i>{$model->tshirt_color}
              {/if}
-        </span>
-    </div>
+            </span>
+        </div>
+    {/if}
+
     <hr/>
     <h3>{_'Arrival'}</h3>
-
-    {control stringValue $model, _('Time'), arrival_time}
-
-    {control stringValue $model, _('Destination'), arrival_destination}
-
-    {control binaryValue $model, _('Ticket'), arrival_ticket}
-
+    {if \array_key_exists('arrival_time',$fields)}
+        {control stringValue $model, _('Time'), arrival_time}
+    {/if}
+    {if \array_key_exists('arrival_destination',$fields)}
+        {control stringValue $model, _('Destination'), arrival_destination}
+    {/if}
+    {if \array_key_exists('arrival_ticket',$fields)}
+        {control binaryValue $model, _('Ticket'), arrival_ticket}
+    {/if}
     <hr/>
 
     <h3>{_'Departure'}</h3>
-
-    {control stringValue $model, _('Time'), departure_time}
-
-    {control stringValue $model, _('Destination'), departure_destination}
-
-    {control binaryValue $model, _('Ticket'), departure_ticket}
-
+    {if \array_key_exists('departure_time',$fields)}
+        {control stringValue $model, _('Time'), departure_time}
+    {/if}
+    {if \array_key_exists('departure_destination',$fields)}
+        {control stringValue $model, _('Destination'), departure_destination}
+    {/if}
+    {if \array_key_exists('departure_ticket',$fields)}
+        {control binaryValue $model, _('Ticket'), departure_ticket}
+    {/if}
     <hr/>
 
     <h3>{_'Actions'}</h3>

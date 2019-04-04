@@ -4,6 +4,7 @@ namespace FKSDB\Components\Controls\Helpers\ValuePrinters;
 
 use FKSDB\Payment\IPaymentModel;
 use Nette\Templating\FileTemplate;
+use Nette\Utils\Html;
 
 /**
  * Class BinaryValueControl
@@ -23,5 +24,15 @@ class PriceValueControl extends AbstractValue {
 
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'PriceValue.latte');
         $this->template->render();
+    }
+
+    /**
+     * @param IPaymentModel $model
+     * @return Html
+     * @throws \FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException
+     */
+    public static function getGridValue(IPaymentModel $model): Html {
+        $price = $model->getPrice();
+        return Html::el('span')->addText($price->__toString());
     }
 }

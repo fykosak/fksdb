@@ -7,6 +7,7 @@ use FKSDB\Components\Controls\Helpers\Badges\PermissionDeniedBadge;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
+use Nette\Utils\Html;
 
 /**
  * Class AbstractValue

@@ -20,6 +20,7 @@ use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
+use Tracy\Debugger;
 
 /**
  * Class ApplicationPresenter

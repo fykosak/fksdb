@@ -36,18 +36,15 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
         $this->setIcon('fa fa-user');
     }
 
-    protected function startup() {
-        parent::startup();
-        if (\in_array($this->getEvent()->event_type_id, [1, 9])) {
-            $this->flashMessage(_('Thi GUI don\'t works for team applications.'), self::FLASH_INFO);
-        }
-    }
-
     /**
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
      */
     public function authorizedDetail() {
+        if (\in_array($this->getEvent()->event_type_id, [1, 9])) {
+            $this->setAuthorized(false);
+            return;
+        }
         $this->setAuthorized($this->eventIsAllowed('event.application', 'detail'));
     }
 
@@ -56,6 +53,10 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @throws \Nette\Application\BadRequestException
      */
     public function authorizedList() {
+        if (\in_array($this->getEvent()->event_type_id, [1, 9])) {
+            $this->setAuthorized(false);
+            return;
+        }
         $this->setAuthorized($this->eventIsAllowed('event.application', 'list'));
     }
 
@@ -93,7 +94,12 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
         return $this->model;
     }
 
+    /**
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function renderDetail() {
+        $this->template->fields = $this->getEvent()->getHolder()->getPrimaryHolder()->getFields();
         $this->template->model = $this->getModel();
     }
 }
