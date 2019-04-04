@@ -5,7 +5,7 @@ namespace Authentication;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceLogin;
 use FKSDB\YearCalculator;
-use Nette\DateTime;
+use Nette\Utils\DateTime;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -15,13 +15,14 @@ use Nette\DateTime;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-abstract class AbstractAuthenticator /* implements IAuthenticator */ {
+abstract class AbstractAuthenticator /* implements IAuthenticator */
+{
 
     /** @var \FKSDB\ORM\Services\ServiceLogin */
     protected $serviceLogin;
 
     /**
-     * @var YearCalculator
+     * @var \FKSDB\YearCalculator
      */
     protected $yearCalculator;
 

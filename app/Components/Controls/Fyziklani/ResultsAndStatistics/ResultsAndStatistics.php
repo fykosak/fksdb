@@ -5,7 +5,7 @@ namespace FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics;
 use FKSDB\Components\Controls\Fyziklani\FyziklaniReactControl;
 use FyziklaniModule\BasePresenter;
 use Nette\ArgumentOutOfRangeException;
-use Nette\DateTime;
+use Nette\Utils\DateTime;
 
 /**
  * Class ResultsAndStatistics

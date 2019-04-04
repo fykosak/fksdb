@@ -6,7 +6,7 @@ use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Database\Table\Selection;
-use Nette\DateTime;
+use Nette\Utils\DateTime;
 
 /**
  * @property string category

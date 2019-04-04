@@ -3,10 +3,10 @@
 namespace FKSDB\Components\Controls;
 
 use FKSDB\ORM\Services\ServiceContest;
+use FKSDB\SeriesCalculator;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
 use Nette\Localization\ITranslator;
-use SeriesCalculator;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

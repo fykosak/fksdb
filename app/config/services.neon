@@ -22,7 +22,7 @@ services:
     globalParameters: FKSDB\Config\GlobalParameters
     yearCalculator: FKSDB\YearCalculator
     news: News
-    seriesCalculator: SeriesCalculator
+    seriesCalculator: FKSDB\SeriesCalculator
     SQLResultsCache: FKSDB\Results\SQLResultsCache
     seriesTable: FKSDB\Submits\SeriesTable
     - Persons\ExtendedPersonHandlerFactory
@@ -56,7 +56,7 @@ services:
         setup:
             - setObject(@webServiceModel)
 
-    webServiceModel: WebServiceModel(%inverseContestMapping%, ...)
+    webServiceModel: FKSDB\WebService\WebServiceModel(%inverseContestMapping%, ...)
 
     nette.userStorage: Authentication\LoginUserStorage
     nette.mailer:

@@ -5,7 +5,7 @@ namespace FKSDB\Payment\Handler;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServiceEventPersonAccommodation;
 use FKSDB\Submits\StorageException;
-use Nette\ArrayHash;
+use Nette\Utils\ArrayHash;
 
 /**
  * Class PaymentDataHandler

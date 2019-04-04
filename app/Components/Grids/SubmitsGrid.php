@@ -9,7 +9,7 @@ use FKSDB\Submits\FilesystemSubmitStorage;
 use FKSDB\Submits\StorageException;
 use ModelException;
 use Nette\Application\BadRequestException;
-use Nette\Diagnostics\Debugger;
+use Tracy\Debugger;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;
 use PublicModule\BasePresenter;

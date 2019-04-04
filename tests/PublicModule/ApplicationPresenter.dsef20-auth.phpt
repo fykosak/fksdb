@@ -3,7 +3,7 @@
 $container = require '../bootstrap.php';
 
 use Nette\Application\Request;
-use Nette\DateTime;
+use Nette\Utils\DateTime;
 use Tester\Assert;
 
 class ApplicationPresenterTest extends ApplicationPresenterDsefTestCase {

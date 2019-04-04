@@ -25,7 +25,7 @@ use Nette\Security\IIdentity;
 class ModelLogin extends AbstractModelSingle implements IIdentity {
 
     /**
-     * @var YearCalculator|null
+     * @var \FKSDB\YearCalculator|null
      */
     private $yearCalculator;
 
@@ -37,7 +37,7 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
     }
 
     /**
-     * @param YearCalculator $yearCalculator
+     * @param \FKSDB\YearCalculator $yearCalculator
      */
     public function injectYearCalculator(YearCalculator $yearCalculator) {
         $this->yearCalculator = $yearCalculator;
@@ -54,7 +54,7 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
     }
 
     /**
-     * @param YearCalculator $yearCalculator
+     * @param \FKSDB\YearCalculator $yearCalculator
      * @return array of FKSDB\ORM\Models\ModelOrg|null indexed by contest_id (i.e. impersonal orgs)
      */
     public function getActiveOrgs(YearCalculator $yearCalculator) {

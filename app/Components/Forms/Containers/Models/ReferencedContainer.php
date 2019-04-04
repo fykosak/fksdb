@@ -6,8 +6,6 @@ use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use Nette\Application\UI\Presenter;
-use Nette\ArrayHash;
-use Nette\Callback;
 use Nette\ComponentModel\Component;
 use Nette\ComponentModel\IComponent;
 use Nette\Forms\Container;
@@ -15,6 +13,7 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 use Nette\InvalidStateException;
+use Nette\Utils\ArrayHash;
 use Nette\Utils\Arrays;
 
 
@@ -54,12 +53,12 @@ class ReferencedContainer extends ContainerWithOptions {
     private $allowClear = true;
 
     /**
-     * @var Callback
+     * @var callable
      */
     private $searchCallback;
 
     /**
-     * @var Callback
+     * @var callable
      */
     private $termToValuesCallback;
 
@@ -98,17 +97,17 @@ class ReferencedContainer extends ContainerWithOptions {
 
     /**
      * @param IControl|null $control
-     * @param null $searchCallback
-     * @param null $termToValuesCallback
+     * @param callable|null $searchCallback
+     * @param callable|null $termToValuesCallback
      * @throws \Nette\Utils\RegexpException
      */
-    public function setSearch(IControl $control = null, $searchCallback = null, $termToValuesCallback = null) {
+    public function setSearch(IControl $control = null, callable $searchCallback = null, callable $termToValuesCallback = null) {
         if ($control == null) {
             $this->referencedId->setValue(null); //is it needed?
             $this->hasSearch = false;
         } else {
-            $this->searchCallback = new Callback($searchCallback);
-            $this->termToValuesCallback = new Callback($termToValuesCallback);
+            $this->searchCallback = $searchCallback;
+            $this->termToValuesCallback = $termToValuesCallback;
             $this->addComponent($control, self::CONTROL_SEARCH);
             $this->hasSearch = true;
         }
@@ -231,12 +230,12 @@ class ReferencedContainer extends ContainerWithOptions {
         $submit->onClick[] = function () {
 
             $term = $this->getComponent(self::CONTROL_SEARCH)->getValue();
-            $model = $this->searchCallback->invoke($term);
+            $model = ($this->searchCallback)($term);
 
             $values = new ArrayHash();
             if (!$model) {
                 $model = ReferencedId::VALUE_PROMISE;
-                $values = $this->termToValuesCallback->invoke($term);
+                $values = ($this->termToValuesCallback)($term);
             }
             $this->referencedId->setValue($model);
             $this->setValues($values);
@@ -308,7 +307,7 @@ class ReferencedContainer extends ContainerWithOptions {
 
     /**
      * @param $name
-     * @param $component
+     * @param ContainerWithOptions $component
      */
     private function hideComponent($name, $component) {
         $component->setOption('visible', false);
@@ -327,7 +326,7 @@ class ReferencedContainer extends ContainerWithOptions {
 
     /**
      * @param $name
-     * @param $component
+     * @param ContainerWithOptions $component
      */
     private function showComponent($name, $component) {
         $component->setOption('visible', true);

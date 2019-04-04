@@ -11,7 +11,7 @@ use FKSDB\Transitions\IEventReferencedModel;
 use FKSDB\Transitions\IStateModel;
 use FKSDB\Transitions\Machine;
 use Nette\Database\Table\ActiveRow;
-use Nette\DateTime;
+use Nette\Utils\DateTime;
 use Nette\Security\IResource;
 
 /**

@@ -4,7 +4,7 @@ namespace FKSDB\ORM\Models\Fyziklani;
 
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Database\Table\ActiveRow;
-use Nette\DateTime;
+use Nette\Utils\DateTime;
 
 /**
  *

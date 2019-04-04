@@ -6,12 +6,12 @@ use Astrid\Downloader;
 use Astrid\DownloadException;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Logging\FlashDumpFactory;
+use FKSDB\SeriesCalculator;
 use FKSDB\Submits\UploadException;
 use ModelException;
 use Nette\Application\UI\Form;
-use Nette\Diagnostics\Debugger;
+use Tracy\Debugger;
 use Pipeline\PipelineException;
-use SeriesCalculator;
 use SimpleXMLElement;
 use Tasks\PipelineFactory;
 use Tasks\SeriesData;
@@ -34,7 +34,7 @@ class TasksPresenter extends BasePresenter {
     private static $languages = ['cs', 'en'];
 
     /**
-     * @var SeriesCalculator
+     * @var \FKSDB\SeriesCalculator
      */
     private $seriesCalculator;
 

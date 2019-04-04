@@ -10,13 +10,14 @@ use Nette\Application\Request as AppRequest;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Presenter;
 use Nette\Application\UI\PresenterComponentReflection;
-use Nette\Diagnostics\Debugger;
+use Tracy\Debugger;
 use Nette\Http\Request as HttpRequest;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use Nette\Templating\FileTemplate;
+use Nette\Utils\Random;
 use Nette\Utils\Strings;
 use Utils;
 
@@ -335,7 +336,7 @@ class Breadcrumbs extends Control {
         $backLinkMap = $this->getBackLinkMap();
 
         do {
-            $backLinkId = Strings::random(self::BACKID_LEN, self::BACKID_DOMAIN);
+            $backLinkId = Random::generate(self::BACKID_LEN, self::BACKID_DOMAIN);
         } while (isset($backLinkMap[$backLinkId]));
 
         $backLinkMap[$backLinkId] = $requestKey;

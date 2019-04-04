@@ -14,7 +14,7 @@ use FKSDB\Utils\CSVParser;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
-use Nette\Diagnostics\Debugger;
+use Tracy\Debugger;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\SubmitButton;
 

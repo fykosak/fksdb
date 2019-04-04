@@ -10,13 +10,12 @@ use FKSDB\ORM\Services\ServiceContestYear;
 use InvalidArgumentException;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
-use Nette\Object;
 use Nette\Utils\Arrays;
 
 /**
  * Class FKSDB\YearCalculator
  */
-class YearCalculator extends Object {
+class YearCalculator {
 
     /**
      * @const No. of years of shift for forward registration.
@@ -71,10 +70,11 @@ class YearCalculator extends Object {
 
     /**
      * @param ActiveRow|ModelContest $contest
-     * @param int $year
+     * @param $year
      * @return int
+     * @throws InvalidArgumentException
      */
-    public function getAcademicYear(ActiveRow $contest, int $year): int {
+    public function getAcademicYear(ActiveRow $contest, $year): int {
         if (!isset($this->cache[$contest->contest_id]) || !isset($this->cache[$contest->contest_id][$year])) {
             throw new InvalidArgumentException("No academic year defined for {$contest->contest_id}:$year.");
         }
@@ -99,7 +99,7 @@ class YearCalculator extends Object {
 
     /**
      * @param int $studyYear
-     * @param int $acYear
+     * @param int|null $acYear
      * @return int
      */
     public function getGraduationYear(int $studyYear, int $acYear = null): int {
@@ -116,6 +116,7 @@ class YearCalculator extends Object {
 
     /**
      * @param ModelContest $contest
+
      * @return int
      */
     public function getCurrentYear(ModelContest $contest): int {
@@ -145,13 +146,13 @@ class YearCalculator extends Object {
      * @param int $year
      * @return bool
      */
-    public function isValidYear(ModelContest $contest, int $year): bool {
+    public function isValidYear(ModelContest $contest, int $year = null): bool {
         return $year !== null && $year >= $this->getFirstYear($contest) && $year <= $this->getLastYear($contest);
     }
 
     /**
      * @see getCurrentAcademicYear
-     * @param \FKSDB\ORM\Models\ModelContest $contest
+     * @param ModelContest $contest
      * @return int
      */
     public function getForwardShift(ModelContest $contest): int {

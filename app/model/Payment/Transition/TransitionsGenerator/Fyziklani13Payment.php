@@ -20,10 +20,10 @@ use FKSDB\Transitions\Transition;
 use FKSDB\Transitions\TransitionsFactory;
 use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
-use Nette\DateTime;
-use Nette\Diagnostics\Debugger;
 use Nette\Localization\ITranslator;
 use Nette\Mail\Message;
+use Nette\Utils\DateTime;
+use Tracy\Debugger;
 
 
 /**

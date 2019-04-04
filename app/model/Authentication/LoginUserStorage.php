@@ -20,6 +20,7 @@ use Nette\Security\IIdentity;
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @see http://forum.nette.org/cs/9574-jak-rozsirit-userstorage
+ * @property IIdentity $identity
  */
 class LoginUserStorage extends UserStorage {
     /** @const HTTP GET parameter holding control information for the SSO */

@@ -301,7 +301,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
 
     /**
      * @internal To get active orgs call FKSDB\ORM\Models\ModelLogin::getActiveOrgs
-     * @param YearCalculator $yearCalculator
+     * @param \FKSDB\YearCalculator $yearCalculator
      * @return array of FKSDB\ORM\Models\ModelOrg indexed by contest_id
      */
     public function getActiveOrgs(YearCalculator $yearCalculator) {

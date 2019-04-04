@@ -1,7 +1,7 @@
 <?php
 
 use Events\EventTestCase;
-use Nette\DateTime;
+use Nette\Utils\DateTime;
 use Nette\DI\Container;
 use PublicModule\ApplicationPresenter;
 
@@ -27,13 +27,13 @@ abstract class ApplicationPresenterDsefTestCase extends EventTestCase {
             'parameters' => <<<EOT
 EOT
         ));
-        
+
         $this->insert('e_dsef_group', array(
             'e_dsef_group_id' => 1,
             'event_id' => $this->eventId,
             'name' => 'Alpha',
             'capacity' => 4
-        ));        
+        ));
 
         $this->fixture = $this->createPresenter('Public:Application');
         $this->mockApplication();

@@ -8,7 +8,7 @@ use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelAddress;
 use FKSDB\ORM\Models\ModelRegion;
 use InvalidPostalCode;
-use Nette\Diagnostics\Debugger;
+use Tracy\Debugger;
 use Nette\InvalidArgumentException;
 
 /**

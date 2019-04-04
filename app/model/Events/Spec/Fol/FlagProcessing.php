@@ -8,8 +8,8 @@ use Events\Processings\AbstractProcessing;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Services\ServiceSchool;
 use FKSDB\YearCalculator;
-use Nette\ArrayHash;
 use Nette\Forms\Form;
+use Nette\Utils\ArrayHash;
 
 /**
  * Class FlagProcessing
@@ -29,7 +29,7 @@ class FlagProcessing extends AbstractProcessing {
 
     /**
      * FlagProcessing constructor.
-     * @param YearCalculator $yearCalculator
+     * @param \FKSDB\YearCalculator $yearCalculator
      * @param \FKSDB\ORM\Services\ServiceSchool $serviceSchool
      */
     function __construct(YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {

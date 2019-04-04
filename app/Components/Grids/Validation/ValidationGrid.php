@@ -51,7 +51,7 @@ class ValidationGrid extends BaseGrid {
             $person = ModelPerson::createFromTableRow($row);
             return Html::el('a')->addAttributes([
                 'href' => $this->getPresenter()->link(':Org:Stalking:view', ['id' => $person->person_id]),
-            ])->add($person->getFullName());
+            ])->addText($person->getFullName());
         });
         foreach ($this->tests as $test) {
             $this->addColumn($test::getAction(), $test::getTitle())->setRenderer(function ($row) use ($test) {
@@ -88,7 +88,6 @@ class ValidationGrid extends BaseGrid {
         return Html::el('span')->addAttributes([
             'class' => 'text-' . $log->getLevel(),
             'title' => $log->getMessage(),
-        ])->add($icon);
-
+        ])->addHtml($icon);
     }
 }
