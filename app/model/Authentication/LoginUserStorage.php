@@ -63,7 +63,7 @@ class LoginUserStorage extends UserStorage {
      * LoginUserStorage constructor.
      * @param Session $sessionHandler
      * @param ServiceLogin $loginService
-     * @param YearCalculator $yearCalculator
+     * @param \FKSDB\YearCalculator $yearCalculator
      * @param GlobalSession $globalSession
      * @param Application $application
      * @param Request $request

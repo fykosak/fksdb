@@ -4,8 +4,8 @@ namespace FKSDB;
 
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Services\ServiceTask;
-use Nette;
 use Nette\Utils\DateTime;
+
 
 /**
  * Class FKSDB\SeriesCalculator

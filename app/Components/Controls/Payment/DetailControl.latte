@@ -5,41 +5,29 @@
     <h2>{_('Informacie o platbe')}</h2>
 
     {if $model->constant_symbol}
-        <div class="row">
-            <b class="col-2">{_('Constant symbol')}:</b>
-            <span class="col-10">{$model->constant_symbol}</span>
-        </div>
+        {control stringValue $model, _('Constant symbol'),constant_symbol}
     {/if}
+
     {if $model->variable_symbol}
-        <div class="row">
-            <b class="col-2">{_('Variable symbol')}:</b>
-            <span class="col-10">{$model->variable_symbol}</span>
-        </div>
+        {control stringValue $model, _('Variable symbol'),variable_symbol}
     {/if}
+
     {if $model->specific_symbol}
-        <div class="row">
-            <b class="col-2">{_('Specific symbol')}:</b>
-            <span class="col-10">{$model->specific_symbol}</span>
-        </div>
+        {control stringValue $model, _('Specific symbol'),specific_symbol}
     {/if}
+
     {if $model->bank_account}
-        <div class="row">
-            <b class="col-2">{_('Bank account')}:</b>
-            <span class="col-10">{$model->bank_account}</span>
-        </div>
+        {control stringValue $model, _('Bank account'),bank_account}
     {/if}
+
     {if $model->iban}
-        <div class="row">
-            <b class="col-2">{_('IBAN')}:</b>
-            <span class="col-10">{$model->iban}</span>
-        </div>
+        {control stringValue $model, _('IBAN'),iban}
     {/if}
+
     {if $model->swift}
-        <div class="row">
-            <b class="col-2">{_('SWIFT')}:</b>
-            <span class="col-10">{$model->swift}</span>
-        </div>
+        {control stringValue $model, _('SWIFT'),swift}
     {/if}
+
     {if $model->price}
         <div class="row">
             <b class="col-2">{_('Price')}:</b>
@@ -51,14 +39,12 @@
 
 <h2>{_('Informace o platcovi')}</h2>
 <div>
+    {* TODO preklik do stalkingu*}
     <div class="row">
         <b class="col-2">{_('Person')}:</b>
         <span class="col-10">{$model->getPerson()->__toString()}</span>
     </div>
-    <div class="row">
-        <b class="col-2">{_('Email')}:</b>
-        <span class="col-10">{$model->getPerson()->getInfo()->email}</span>
-    </div>
+    {control stringValue $model->getPerson()->getInfo(), _('Email'),email}
 </div>
 <hr/>
 <h2>{_'Items'}</h2>
@@ -89,4 +75,3 @@
 <hr/>
 
 {control transitionButtons}
-

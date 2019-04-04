@@ -111,11 +111,12 @@ class YearCalculator {
         if ($studyYear >= 1 && $studyYear <= 4) {
             return $acYear + (5 - $studyYear);
         }
-        throw new \Nette\InvalidArgumentException();
+        throw new \Nette\InvalidArgumentException('Graduation year not match');
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelContest $contest
+     * @param ModelContest $contest
+
      * @return int
      */
     public function getCurrentYear(ModelContest $contest): int {
@@ -142,7 +143,7 @@ class YearCalculator {
 
     /**
      * @param \FKSDB\ORM\Models\ModelContest $contest
-     * @param $year
+     * @param int $year
      * @return bool
      */
     public function isValidYear(ModelContest $contest, int $year = null): bool {

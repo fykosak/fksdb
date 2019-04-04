@@ -15,7 +15,8 @@ use Nette\Utils\DateTime;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-abstract class AbstractAuthenticator /* implements IAuthenticator */ {
+abstract class AbstractAuthenticator /* implements IAuthenticator */
+{
 
     /** @var \FKSDB\ORM\Services\ServiceLogin */
     protected $serviceLogin;
