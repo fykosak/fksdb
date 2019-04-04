@@ -6,11 +6,11 @@ use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
 use Events\Model\Holder\Holder;
 use FKSDB\Logging\ILogger;
-use Nette\ArrayHash;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 use Nette\Object;
+use Nette\Utils\ArrayHash;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

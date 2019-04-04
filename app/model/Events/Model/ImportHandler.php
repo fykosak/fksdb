@@ -5,9 +5,9 @@ namespace Events\Model;
 use Events\Model\Grid\SingleEventSource;
 use Events\Model\Holder\BaseHolder;
 use FKSDB\Utils\CSVParser;
-use Nette\ArrayHash;
 use Nette\DI\Container;
 use Nette\Object;
+use Nette\Utils\ArrayHash;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
