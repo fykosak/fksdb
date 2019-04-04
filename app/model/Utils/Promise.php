@@ -38,7 +38,7 @@ class Promise extends Object {
      */
     public function getValue() {
         if (!$this->called) {
-            $this->value = $this->callback->invoke();
+            $this->value = ($this->callback)();
             $this->called = true;
         }
         return $this->value;
