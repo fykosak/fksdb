@@ -18,10 +18,10 @@ use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Models\ModelEvent;
 use FormUtils;
-use Nette\ArrayHash;
 use Nette\Database\Connection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
+use Nette\Utils\ArrayHash;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

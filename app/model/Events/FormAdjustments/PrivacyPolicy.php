@@ -10,9 +10,9 @@ use FKSDB\Components\Forms\Factories\PersonInfo\AgreedField;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Services\ServicePersonInfo;
 use FormUtils;
-use Nette\ArrayHash;
 use Nette\Forms\Form;
 use Nette\Object;
+use Nette\Utils\ArrayHash;
 
 /**
  * Creates required checkbox for whole application and then

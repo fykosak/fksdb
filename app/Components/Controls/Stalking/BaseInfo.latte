@@ -7,114 +7,31 @@
             </li>
 
             <li class="list-group-item">
-                {*control stringValue $info,_('Academic degree prefix'),academic_degree_prefix*}
-                <div class="row">
-                    <span class="col-5">{_'Born'}</span>
-                    <div class="col-7">
-                        {if $mode !== \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL}
-                            {control permissionDenied}
-                        {elseif (!is_null($info->born))}
-                            {$info->born->format('d. m. Y')}
-                        {else}
-                            {control notSet}
-                        {/if}
-                    </div>
-                </div>
+                {control stringValue $info,_('Born'),born,($mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL)}
             </li>
 
             <li class="list-group-item">
-                {*control stringValue $info,_('Academic degree prefix'),academic_degree_prefix*}
-                <div class="row">
-                    <span class="col-5">{_'Born Id'}</span>
-                    <div class="col-7">
-                        {if $mode !== \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL}
-                            {control permissionDenied}
-                        {elseif (!is_null($info->born_id))}
-                            {$info->born_id}
-                        {else}
-                            {control notSet}
-                        {/if}
-                    </div>
-                </div>
-            </li>
-            <li class="list-group-item">
-                {*control stringValue $info,_('Academic degree prefix'),academic_degree_prefix*}
-                <div class="row">
-                    <span class="col-5">{_'Birthplace'}</span>
-                    <div class="col-7">
-                        {if $mode !== \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL}
-                            {control permissionDenied}
-                        {elseif (!is_null($info->birthplace))}
-                            {$info->birthplace}
-                        {else}
-                            {control notSet}
-                        {/if}
-                    </div>
-                </div>
+                {control stringValue $info,_('Born Id'),born_id,($mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL)}
             </li>
 
             <li class="list-group-item">
-                {*control stringValue $info,_('Academic degree prefix'),academic_degree_prefix*}
-                <div class="row">
-                    <span class="col-5">{_'Id number'}</span>
-                    <div class="col-7">
-                        {if $mode !== \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL}
-                            {control permissionDenied}
-                        {elseif (!is_null($info->id_number))}
-                            {$info->id_number}
-                        {else}
-                            {control notSet}
-                        {/if}
-                    </div>
-                </div>
+                {control stringValue $info,_('Birthplace'),birthplace,($mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL)}
             </li>
 
             <li class="list-group-item">
-                {*control stringValue $info,_('Academic degree prefix'),academic_degree_prefix*}
-                <div class="row">
-                    <span class="col-5">{_'Employer'}</span>
-                    <div class="col-7">
-                        {if $mode !== \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL}
-                            {control permissionDenied}
-                        {elseif (!is_null($info->employer))}
-                            {$info->employer}
-                        {else}
-                            {control notSet}
-                        {/if}
-                    </div>
-                </div>
+                {control stringValue $info,_('Id number'),id_number,($mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL)}
             </li>
 
             <li class="list-group-item">
-                {*control stringValue $info,_('Academic degree prefix'),academic_degree_prefix*}
-                <div class="row">
-                    <span class="col-5">{_'Health insurance'}</span>
-                    <div class="col-7">
-                        {if $mode !== \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL}
-                            {control permissionDenied}
-                        {elseif (!is_null($info->health_insurance))}
-                            {$info->health_insurance}
-                        {else}
-                            {control notSet}
-                        {/if}
-                    </div>
-                </div>
+                {control stringValue $info,_('Employer'),employer,($mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL)}
             </li>
 
             <li class="list-group-item">
-                {*control stringValue $info,_('Academic degree prefix'),academic_degree_prefix*}
-                <div class="row">
-                    <span class="col-5">{_'Citizenship'}</span>
-                    <div class="col-7">
-                        {if $mode !== \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL}
-                            {control permissionDenied}
-                        {elseif (!is_null($info->citizenship))}
-                            {$info->citizenship}
-                        {else}
-                            {control notSet}
-                        {/if}
-                    </div>
-                </div>
+                {control stringValue $info,_('Health insurance'),health_insurance,($mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL)}
+            </li>
+
+            <li class="list-group-item">
+                {control stringValue $info,_('Citizenship'),citizenship,($mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL)}
             </li>
 
             <li class="list-group-item">

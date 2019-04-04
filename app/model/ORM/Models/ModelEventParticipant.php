@@ -10,7 +10,7 @@ use FKSDB\Payment\Price;
 use FKSDB\Transitions\IEventReferencedModel;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
-use Nette\DateTime;
+use Nette\Utils\DateTime;
 use Nette\InvalidStateException;
 
 /**

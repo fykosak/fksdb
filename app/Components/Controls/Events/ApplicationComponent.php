@@ -12,7 +12,6 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Logging\FlashMessageDump;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Callback;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
 use Nette\Templating\FileTemplate;
@@ -40,7 +39,7 @@ class ApplicationComponent extends Control {
     private $flashDump;
 
     /**
-     * @var Callback($primaryModelId, $eventId)
+     * @var callable ($primaryModelId, $eventId)
      */
     private $redirectCallback;
 
@@ -74,7 +73,7 @@ class ApplicationComponent extends Control {
     }
 
     /**
-     * @return Callback
+     * @return callable
      */
     public function getRedirectCallback() {
         return $this->redirectCallback;
@@ -83,8 +82,8 @@ class ApplicationComponent extends Control {
     /**
      * @param $redirectCallback
      */
-    public function setRedirectCallback($redirectCallback) {
-        $this->redirectCallback = new Callback($redirectCallback);
+    public function setRedirectCallback(callable $redirectCallback) {
+        $this->redirectCallback = $redirectCallback;
     }
 
     /**
@@ -289,7 +288,7 @@ class ApplicationComponent extends Control {
     private function finalRedirect() {
         if ($this->redirectCallback) {
             $id = $this->holder->getPrimaryHolder()->getModel()->getPrimary(false);
-            $this->redirectCallback->invoke($id, $this->holder->getEvent()->getPrimary());
+            ($this->redirectCallback)($id, $this->holder->getEvent()->getPrimary());
         } else {
             $this->redirect('this');
         }

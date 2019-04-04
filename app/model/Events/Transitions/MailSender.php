@@ -198,7 +198,7 @@ class MailSender extends Object {
 
     /**
      * @param ModelEvent $event
-     * @return \Nette\DateTime
+     * @return \Nette\Utils\DateTime
      */
     private function getUntil(ModelEvent $event) {
         return $event->registration_end ?: $event->end; //TODO extension point

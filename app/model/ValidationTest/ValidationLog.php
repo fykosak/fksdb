@@ -3,29 +3,21 @@
 
 namespace FKSDB\ValidationTest;
 
+use FKSDB\Messages\Message;
 use Nette\Utils\Html;
 
 /**
  * Class ValidationLog
  * @package FKSDB\ValidationTest
  */
-class ValidationLog {
-    const LVL_DANGER = 'danger';
-    const LVL_SUCCESS = 'success';
-    const LVL_WARNING = 'warning';
-    const LVL_INFO = 'info';
-    /**
-     * @var string
-     */
-    public $level;
-    /**
-     * @var string
-     */
-    public $message;
+class ValidationLog extends Message {
     /**
      * @var Html
      */
     public $detail;
+    /**
+     * @var string
+     */
     public $testName;
 
     /**
@@ -36,8 +28,7 @@ class ValidationLog {
      * @param Html|null $detail
      */
     public function __construct(string $testName, string $message, string $level, Html $detail = null) {
-        $this->level = $level;
-        $this->message = $message;
+        parent::__construct($message, $level);
         $this->detail = $detail;
         $this->testName = $testName;
     }

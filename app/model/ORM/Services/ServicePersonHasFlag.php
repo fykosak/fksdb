@@ -7,7 +7,7 @@ use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelPersonHasFlag;
-use Nette\ArrayHash;
+use Nette\Utils\ArrayHash;
 
 /**
  * @author Lukáš Timko <lukast@fykos.cz>

@@ -3,7 +3,7 @@
 namespace Events\Model;
 
 use Nette\Application\Request;
-use Nette\DateTime;
+use Nette\Utils\DateTime;
 use Tester\Assert;
 use Tester\DomQuery;
 
@@ -46,10 +46,10 @@ class ResourceAvailabilityTest extends ResourceAvailabilityTestCase {
         $source = $response->getSource();
         Assert::type('Nette\Templating\ITemplate', $source);
 
-        $html = (string) $source;
+        $html = (string)$source;
         $dom = DomQuery::fromHtml($html);
-        Assert::true((bool) $dom->xpath('//input[@name="participant[accomodation]"]'));
-        Assert::false((bool) $dom->xpath('//input[@name="participant[accomodation]"][@disabled="disabled"]'));
+        Assert::true((bool)$dom->xpath('//input[@name="participant[accomodation]"]'));
+        Assert::false((bool)$dom->xpath('//input[@name="participant[accomodation]"][@disabled="disabled"]'));
     }
 
     public function getCapacity() {

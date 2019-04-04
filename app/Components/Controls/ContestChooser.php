@@ -48,7 +48,7 @@ class ContestChooser extends Control {
     private $session;
 
     /**
-     * @var YearCalculator
+     * @var \FKSDB\YearCalculator
      */
     private $yearCalculator;
 

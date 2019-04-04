@@ -4,6 +4,7 @@ namespace FKSDB\Components\Controls\Payment;
 
 use EventModule\PaymentPresenter;
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Controls\Helpers\ValuePrinters\StringValueControl;
 use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\Payment\Price;
@@ -91,6 +92,13 @@ class DetailControl extends Control {
      */
     public function createComponentTransitionButtons() {
         return new TransitionButtonsControl($this->machine, $this->translator, $this->model);
+    }
+
+    /**
+     * @return StringValueControl
+     */
+    public function createComponentStringValue(): StringValueControl {
+        return new StringValueControl($this->translator);
     }
 
     /**

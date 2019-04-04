@@ -7,8 +7,8 @@ use FKSDB\ORM\Models\ModelEventPersonAccommodation;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceEventAccommodation;
 use FKSDB\ORM\Services\ServiceEventPersonAccommodation;
-use Nette\ArrayHash;
 use Nette\NotImplementedException;
+use Nette\Utils\ArrayHash;
 
 /**
  * Class Handler

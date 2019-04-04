@@ -13,6 +13,7 @@ use FKSDB\Logging\MemoryLogger;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
+use Nette\Diagnostics\Debugger;
 use Nette\InvalidStateException;
 use Nette\Utils\Strings;
 
@@ -147,6 +148,7 @@ class ApplicationsGrid extends Control {
      * @return ApplicationComponent|\Nette\ComponentModel\IComponent
      */
     protected function createComponent($name) {
+
         $key = null;
         if (Strings::startsWith($name, self::NAME_PREFIX)) {
             $key = substr($name, strlen(self::NAME_PREFIX));
@@ -154,8 +156,6 @@ class ApplicationsGrid extends Control {
         if (!$key) {
             parent::createComponent($name);
         }
-
-
         $component = new ApplicationComponent($this->handlers[$key], $this->holders[$key], $this->flashDump);
         return $component;
     }

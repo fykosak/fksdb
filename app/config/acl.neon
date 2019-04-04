@@ -23,7 +23,6 @@ acl:
     - addRole(taskManager, org)         # úlohář
     - addRole(dispatcher, org)          # koordinátor obálkování
     - addRole(exportDesigner, org)      # tvůrce exportů (!! má RO přístup ke všem datům)
-    - addRole(fyziklaniOrg, registered)
     - addRole(dataManager, [org, exportDesigner]) # správce dat DB
     - addRole(eventManager, org)        # správce přihlášek
     - addRole(inboxManager, org)        # příjemce řešení
@@ -62,12 +61,15 @@ acl:
 
 #event module
 
+    - addResource(event.application) #list, detail
+    - addResource(event.teamApplication) #list, detail
     - addResource(event.dashboard) # default
     - addResource(event.schedule) # default
     - addResource(event.accommodation) # list, create, edit, billeted
     - addResource(event.model) #default
     - addResource(event.applicationsTimeProgress) # default
     - addResource(event.payment) # create, edit, list
+
     # ACL
     - allow(contestant, submit, upload)
     - allow(contestant, submit, download, [@ownerAssertion, 'isSubmitUploader'])
@@ -76,7 +78,7 @@ acl:
     - allow(org, submit, edit)      # zadávání bodů
     - allow(org, contestant, list)
     - allow(org, school, list)
-    - allow(org, storedQuery, list) # aby měli přehled
+    # - allow(org, storedQuery, list) # aby měli přehled // TODO vedie k milnému dojmu, že to môžu spustiť
     - allow(org, org, list)
     - allow(org, org, edit, [@ownerAssertion, 'isOrgSelf'])
     - allow(org, person, edit, [@ownerAssertion, 'isSelf'])
@@ -86,9 +88,6 @@ acl:
     - allow(org, person, stalk.search)
     - allow(org, person, stalk.basic, [@ownerAssertion, 'existsOwnContestant'])
     - allow(org, mail-send, ::constant(Nette\Security\Permission::ALL))
-
-    # TODO - allow(org, export, execute, and(qid('sous.prihlasky'), isEventOrgById(::constant(FKSDB\ORM\Models\ModelEventType::XXX))))
-    # TODO - allow(org, event, application, isEventOrgBy())))
 
     - allow(webmaster, task, insert) # stahování úloh
 
@@ -130,7 +129,7 @@ acl:
     - allow(aesop, export, execute, qid(['aesop.ct', 'aesop.fol', 'aesop.dsef', 'aesop.dsef2', 'aesop.tsaf', 'aesop.vaf', 'aesop.sous.j', 'aesop.sous.p', 'aesop.klani.ct', 'aesop.klani.uc', 'aesop.tabor', 'aesop.setkani.j', 'aesop.setkani.p']))
     - allow(web, export, execute, queryTag(['web-safe']))
     - allow(wiki, export, execute, queryTag(['wiki-safe']))
-
+    - allow(schoolManager, school, ::constant(Nette\Security\Permission::ALL))
 
 # fyziklani
     - allow(guest,fyziklani.dashboard, default)
@@ -147,27 +146,26 @@ acl:
     - allow(boss, fyziklani.results, ::constant(Nette\Security\Permission::ALL)) # všetko s výsledkovkami
     - allow(boss, fyziklani.gameSetup, ::constant(Nette\Security\Permission::ALL)) # pozerať nastavnie
 
+
     # eventModule
-    - allow(org, event.dashboard)
-    - allow(registered, event.dashboard)
 
-    - allow(eventManager, event.schedule)
-    - allow(eventManager, event.model)
-    - allow(boss, event.applicationsTimeProgress)
-    - allow(eventManager, event.accommodation, ::constant(Nette\Security\Permission::ALL)) # in eventModule
+    - allow(org, event.dashboard, ::constant(Nette\Security\Permission::ALL))
+    - allow(registered, event.dashboard, ::constant(Nette\Security\Permission::ALL))
 
+    - allow(eventManager, event.schedule, ::constant(Nette\Security\Permission::ALL)) #môže všetko s programom
+    - allow(eventManager, event.model, ::constant(Nette\Security\Permission::ALL)) #može vidieť model
+    - allow(eventManager, event.application, ::constant(Nette\Security\Permission::ALL)) #môže zobraziť prihlášky
+    - allow(eventManager, event.teamApplication, ::constant(Nette\Security\Permission::ALL)) # môže zobraziť prihlášky tímov
+    - allow(eventManager, event.accommodation, ::constant(Nette\Security\Permission::ALL)) #môže spravovať ubytovanie (old systém)
 
-    - allow(schoolManager, school, ::constant(Nette\Security\Permission::ALL))
+    - allow(boss, event.applicationsTimeProgress, ::constant(Nette\Security\Permission::ALL))
+
     # payment
     - allow(registered, event.payment, detail, [@ownerAssertion, 'isOwnPayment'])
     - allow(registered, event.payment, edit, [@ownerAssertion, 'isOwnPayment'])
     - allow(registered, event.payment, create)
     #paymnet org
-    - allow(org, event.payment, edit)
-    - allow(org, event.payment, create)
-    - allow(org, event.payment, detail)
-    - allow(org, event.payment, org)
-    - allow(org, event.payment, list)
+    - allow(org, event.payment, ::constant(Nette\Security\Permission::ALL))
 
     - allow(cartesian, ::constant(Nette\Security\Permission::ALL), ::constant(Nette\Security\Permission::ALL))
 
