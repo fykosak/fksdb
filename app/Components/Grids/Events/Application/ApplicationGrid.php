@@ -223,10 +223,10 @@ class ApplicationGrid extends BaseGrid {
                         return BinaryValueControl::getGridValue($model, 'swimmer');
                     });
                     break;
-                case 'tshirt_color':
+                case 'tshirt_size':
                     $this->addColumn('tshirt_size', _('T-shirt size'));
                     break;
-                case 'tshirt_size':
+                case 'tshirt_color':
                     $this->addColumn('tshirt_color', _('T-shirt color'));
                     break;
                 case 'arrival_destination':
