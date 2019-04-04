@@ -58,10 +58,6 @@ services:
     event.ServiceDsefParticipant:           FKSDB\ORM\Services\Events\ServiceDsefParticipant
     event.ServiceMDsefParticipant:          ORM\ServicesMulti\Events\ServiceMDsefParticipant
 
-    schedule.ServiceScheduleGroup: FKSDB\ORM\Services\Schedule\ServiceScheduleGroup
-    schedule.ServiceScheduleItem: FKSDB\ORM\Services\Schedule\ServiceScheduleItem
-    schedule.ServicePersonSchedule: FKSDB\ORM\Services\Schedule\ServicePersonSchedule
-
     event.ServiceFyziklaniParticipant:      FKSDB\ORM\Services\Events\ServiceFyziklaniParticipant
     event.ServiceMFyziklaniParticipant:     ORM\ServicesMulti\Events\ServiceMFyziklaniParticipant
 
