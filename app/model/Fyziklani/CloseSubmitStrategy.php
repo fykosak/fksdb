@@ -16,6 +16,7 @@ use FyziklaniModule\BasePresenter;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\Selection;
 use Nette\Utils\Html;
+use Traversable;
 
 /**
  *
@@ -51,36 +52,35 @@ class CloseSubmitStrategy {
     }
 
     /**
-     * @param $category
-     * @param null $msg
+     * @param string|null $category
+     * @return Html
      * @throws BadRequestException
      */
-    public function closeByCategory($category, &$msg = null) {
-        $total = is_null($category);
+    public function closeByCategory(string $category = null): Html {
         $connection = $this->serviceFyziklaniTeam->getConnection();
         $connection->beginTransaction();
         $teams = $this->getAllTeams($category);
         $teamsData = $this->getTeamsStats($teams);
         usort($teamsData, self::getSortFunction());
-        $this->saveResults($teamsData, $total, $msg);
+        $log = $this->saveResults($teamsData, is_null($category));
         $connection->commit();
+        return $log;
     }
 
     /**
-     * @param null $msg
      * @throws BadRequestException
      */
-    public function closeGlobal(&$msg = null) {
-        $this->closeByCategory(null, $msg);
+    public function closeGlobal(): Html {
+        return $this->closeByCategory(null);
     }
 
     /**
-     * @param $data
+     * @param Traversable|array $data
      * @param $total
-     * @param null $msg
+     * @return Html
      */
-    private function saveResults($data, $total, &$msg = null) {
-        $msg = '';
+    private function saveResults($data, bool $total): Html {
+        $log = Html::el('ul');
         foreach ($data as $index => &$teamData) {
             $team = ModelFyziklaniTeam::createFromTableRow($this->serviceFyziklaniTeam->findByPrimary($teamData['e_fyziklani_team_id']));
             if ($total) {
@@ -89,9 +89,10 @@ class CloseSubmitStrategy {
                 $this->serviceFyziklaniTeam->updateModel($team, ['rank_category' => $index + 1]);
             }
             $this->serviceFyziklaniTeam->save($team);
-            $msg .= Html::el('li')
-                ->addText(_('TeamID') . ':' . $teamData['e_fyziklani_team_id'] . _('Pořadí') . ': ' . ($index + 1));
+            $log->addHtml(Html::el('li')
+                ->addText(_('TeamID') . ':' . $teamData['e_fyziklani_team_id'] . _('Pořadí') . ': ' . ($index + 1)));
         }
+        return $log;
     }
 
     /**

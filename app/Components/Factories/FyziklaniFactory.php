@@ -16,7 +16,9 @@ use FKSDB\Components\Controls\Fyziklani\RoutingDownload;
 use FKSDB\Components\Controls\Fyziklani\RoutingEdit;
 use FKSDB\Components\Controls\Fyziklani\Submit\DetailControl;
 use FKSDB\Components\Controls\Fyziklani\TaskCodeInput;
+use FKSDB\Components\Forms\Factories\Fyziklani\CloseFormsFactory;
 use FKSDB\Components\Grids\Fyziklani\AllSubmitsGrid;
+use FKSDB\Components\Grids\Fyziklani\CloseTeamsGrid;
 use FKSDB\Components\Grids\Fyziklani\ResultsCategoryGrid;
 use FKSDB\Components\Grids\Fyziklani\ResultsTotalGrid;
 use FKSDB\Components\Grids\Fyziklani\TaskGrid;
@@ -74,6 +76,10 @@ class FyziklaniFactory {
      * @var ITranslator
      */
     private $translator;
+    /**
+     * @var CloseFormsFactory
+     */
+    private $closeFormsFactory;
 
     /**
      * FyziklaniFactory constructor.
@@ -104,6 +110,14 @@ class FyziklaniFactory {
         $this->taskCodeHandlerFactory = $taskCodeHandlerFactory;
         $this->context = $context;
         $this->translator = $translator;
+        $this->closeFormsFactory = new CloseFormsFactory($serviceFyziklaniTeam);
+    }
+
+    /**
+     * @return CloseFormsFactory
+     */
+    public function getCloseFormsFactory(): CloseFormsFactory {
+        return $this->closeFormsFactory;
     }
 
     /* ********** ENTRY FORMS + EDIT **********/
@@ -137,18 +151,18 @@ class FyziklaniFactory {
 
     /**
      * @param ModelEvent $event
-     * @return CloseControl
-     */
-    public function createCloseControl(ModelEvent $event): CloseControl {
-        return new CloseControl($event, $this->serviceFyziklaniTeam, $this->translator);
-    }
-
-    /**
-     * @param ModelEvent $event
      * @return CloseTeamControl
      */
     public function createCloseTeamControl(ModelEvent $event): CloseTeamControl {
         return new CloseTeamControl($event, $this->serviceFyziklaniTeam, $this->translator, $this->serviceFyziklaniTask, $this);
+    }
+
+    /**
+     * @param ModelEvent $event
+     * @return CloseTeamsGrid
+     */
+    public function createCloseTeamsGrid(ModelEvent $event): CloseTeamsGrid {
+        return new CloseTeamsGrid($event, $this->serviceFyziklaniTeam);
     }
 
     /* ************** ROUTING *************/
@@ -209,6 +223,7 @@ class FyziklaniFactory {
     public function createCorrelationStatistics(ModelEvent $event): CorrelationStatistics {
         return new CorrelationStatistics($this->context, $event, $this->serviceFyziklaniRoom, $this->serviceFyziklaniTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
     }
+
     /**
      * @param ModelEvent $event
      * @param string $category
@@ -217,6 +232,7 @@ class FyziklaniFactory {
     public function createResultsCategoryGrid(ModelEvent $event, string $category): ResultsCategoryGrid {
         return new ResultsCategoryGrid($event, $this->serviceFyziklaniTeam, $category);
     }
+
     /**
      * @param ModelEvent $event
      * @return ResultsTotalGrid

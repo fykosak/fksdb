@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics;
 
 use FKSDB\Components\Controls\Fyziklani\FyziklaniReactControl;
+use FKSDB\React\ReactResponse;
 use FyziklaniModule\BasePresenter;
 use Nette\ArgumentOutOfRangeException;
 use Nette\Utils\DateTime;
@@ -46,7 +47,7 @@ abstract class ResultsAndStatistics extends FyziklaniReactControl {
         $request = $this->getReactRequest();
         $requestData = $request->requestData;
         $lastUpdated = $requestData ? $requestData : null;
-        $response = new \ReactResponse();
+        $response = new ReactResponse();
         $response->setAct('results-update');
         $gameSetup = $this->getEvent()->getFyziklaniGameSetup();
         $result = [

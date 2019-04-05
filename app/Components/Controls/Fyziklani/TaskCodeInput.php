@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Controls\Fyziklani;
 
+use FKSDB\Messages\Message;
 use FKSDB\model\Fyziklani\ClosedSubmittingException;
 use FKSDB\model\Fyziklani\SubmitHandler;
 use FKSDB\model\Fyziklani\TaskCodeException;
@@ -11,6 +12,7 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
+use FKSDB\React\ReactResponse;
 use Nette\DI\Container;
 use Nette\Utils\Json;
 
@@ -82,15 +84,15 @@ class TaskCodeInput extends FyziklaniReactControl {
      */
     public function handleSave() {
         $request = $this->getReactRequest();
-        $response = new \ReactResponse();
+        $response = new ReactResponse();
         $response->setAct($request->act);
         try {
             $log = $this->handler->preProcess($request->requestData['code'], +$request->requestData['points']);
-            $response->addMessage(new \ReactMessage($log, \BasePresenter::FLASH_SUCCESS));
+            $response->addMessage($log);
         } catch (TaskCodeException $exception) {
-            $response->addMessage(new \ReactMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR));
+            $response->addMessage(new Message($exception->getMessage(), \BasePresenter::FLASH_ERROR));
         } catch (ClosedSubmittingException $exception) {
-            $response->addMessage(new \ReactMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR));
+            $response->addMessage(new Message($exception->getMessage(), \BasePresenter::FLASH_ERROR));
         }
         $this->getPresenter()->sendResponse($response);
 

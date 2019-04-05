@@ -5,6 +5,8 @@ namespace FyziklaniModule;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Fyziklani\CloseControl;
 use FKSDB\Components\Controls\Fyziklani\CloseTeamControl;
+use FKSDB\Components\Grids\Fyziklani\CloseTeamsGrid;
+use FKSDB\Components\Grids\Fyziklani\TeamSubmitsGrid;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Application\BadRequestException;
 
@@ -77,16 +79,15 @@ class ClosePresenter extends BasePresenter {
             $this->flashMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR);
             $this->redirect('list');
         }
-
     }
 
+
+    /* ********* COMPONENTS ************* */
     /**
-     * @return CloseControl
-     * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @return TeamSubmitsGrid
      */
-    protected function createComponentCloseControl(): CloseControl {
-        return $this->fyziklaniComponentsFactory->createCloseControl($this->getEvent());
+    protected function createComponentTeamSubmitsGrid(): TeamSubmitsGrid {
+        return $this->fyziklaniComponentsFactory->createTeamSubmitsGrid($this->team);
     }
 
     /**
@@ -98,6 +99,80 @@ class ClosePresenter extends BasePresenter {
         $control = $this->fyziklaniComponentsFactory->createCloseTeamControl($this->getEvent());
         $control->getFormControl()->getForm()->onSuccess[] = function () {
             $this->getPresenter()->redirect('list');
+        };
+        return $control;
+    }
+
+    /**
+     * @return CloseTeamsGrid
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
+    protected function createComponentCloseGrid(): CloseTeamsGrid {
+        return $this->fyziklaniComponentsFactory->createCloseTeamsGrid($this->getEvent());
+    }
+
+    /**
+     * @return FormControl
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
+    public function createComponentCloseAForm(): FormControl {
+        $control = $this->fyziklaniComponentsFactory->getCloseFormsFactory()->createCloseCategoryForm('A', $this->getEvent());
+        $control->getForm()->onSuccess[] = function () {
+            $this->redirect('this');
+        };
+        return $control;
+    }
+
+    /**
+     * @return FormControl
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
+    public function createComponentCloseBForm(): FormControl {
+        $control = $this->fyziklaniComponentsFactory->getCloseFormsFactory()->createCloseCategoryForm('B', $this->getEvent());
+        $control->getForm()->onSuccess[] = function () {
+            $this->redirect('this');
+        };
+        return $control;
+    }
+
+    /**
+     * @return FormControl
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
+    public function createComponentCloseCForm(): FormControl {
+        $control = $this->fyziklaniComponentsFactory->getCloseFormsFactory()->createCloseCategoryForm('C', $this->getEvent());
+        $control->getForm()->onSuccess[] = function () {
+            $this->redirect('this');
+        };
+        return $control;
+    }
+
+    /**
+     * @return FormControl
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
+    public function createComponentCloseFForm(): FormControl {
+        $control = $this->fyziklaniComponentsFactory->getCloseFormsFactory()->createCloseCategoryForm('F', $this->getEvent());
+        $control->getForm()->onSuccess[] = function () {
+            $this->redirect('this');
+        };
+        return $control;
+    }
+
+    /**
+     * @return FormControl
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
+    public function createComponentCloseTotalForm(): FormControl {
+        $control = $this->fyziklaniComponentsFactory->getCloseFormsFactory()->createCloseTotalForm($this->getEvent());
+        $control->getForm()->onSuccess[] = function () {
+            $this->redirect('this');
         };
         return $control;
     }

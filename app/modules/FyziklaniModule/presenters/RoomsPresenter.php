@@ -4,6 +4,7 @@ namespace FyziklaniModule;
 
 use FKSDB\Components\Controls\Fyziklani\RoutingDownload;
 use FKSDB\Components\Controls\Fyziklani\RoutingEdit;
+use FKSDB\React\ReactResponse;
 
 /**
  *
@@ -59,7 +60,7 @@ class RoomsPresenter extends BasePresenter {
         if ($this->isAjax()) {
             $data = $this->getHttpRequest()->getPost('requestData');
             $updatedTeams = $this->getServiceFyziklaniTeamPosition()->updateRouting($data);
-            $response = new \ReactResponse();
+            $response = new ReactResponse();
             $response->setAct('update-teams');
             $response->setData(['updatedTeams' => $updatedTeams]);
             $response->addMessage(new \ReactMessage(_('Zmeny boli uložené'), \BasePresenter::FLASH_SUCCESS));

@@ -2,10 +2,9 @@
 
 namespace FKSDB\ORM\Models\Fyziklani;
 
+use FKSDB\Messages\Message;
 use FKSDB\model\Fyziklani\ClosedSubmittingException;
 use FKSDB\model\Fyziklani\PointsMismatchException;
-use FKSDB\ORM\DbNames;
-use FKSDB\ORM\Models\ModelPerson;
 use Nette\Database\Table\ActiveRow;
 use Nette\Utils\DateTime;
 
@@ -74,10 +73,10 @@ class ModelFyziklaniSubmit extends \FKSDB\ORM\AbstractModelSingle {
 
     /**
      * @param int $points
-     * @return string
+     * @return Message
      * @throws ClosedSubmittingException
      */
-    public function changePoints(int $points): string {
+    public function changePoints(int $points): Message {
         if (!$this->canChange()) {
             throw new ClosedSubmittingException($this->getTeam());
         }
@@ -91,21 +90,21 @@ class ModelFyziklaniSubmit extends \FKSDB\ORM\AbstractModelSingle {
             'modified' => null,
         ]);
 
-        return \sprintf(_('Body byly upraveny. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
+        return new Message(\sprintf(_('Body byly upraveny. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
             $points,
             $this->getTeam()->name,
             $this->getTeam()->e_fyziklani_team_id,
             $this->getTask()->label,
-            $this->getTask()->name);
+            $this->getTask()->name), Message::LVL_SUCCESS);
     }
 
     /**
      * @param int $points
-     * @return string
+     * @return Message
      * @throws ClosedSubmittingException
      * @throws PointsMismatchException
      */
-    public function check(int $points): string {
+    public function check(int $points): Message {
         if (!$this->canChange()) {
             throw new ClosedSubmittingException($this->getTeam());
         }
@@ -120,12 +119,12 @@ class ModelFyziklaniSubmit extends \FKSDB\ORM\AbstractModelSingle {
              */
             'modified' => null,
         ]);
-        return \sprintf(_('Bodovanie bolo overené. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
+        return new Message(\sprintf(_('Bodovanie bolo overené. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
             $points,
             $this->getTeam()->name,
             $this->getTeam()->e_fyziklani_team_id,
             $this->getTask()->label,
-            $this->getTask()->name);
+            $this->getTask()->name), Message::LVL_SUCCESS);
     }
 
 }

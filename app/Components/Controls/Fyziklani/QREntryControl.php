@@ -149,7 +149,7 @@ class QREntryControl extends Control {
         }
         try {
             $log = $this->handler->preProcess($values->task_code, $points);
-            $this->getPresenter()->flashMessage($log, \BasePresenter::FLASH_SUCCESS);
+            $this->getPresenter()->flashMessage($log->getMessage(), $log->getLevel());
         } catch (TaskCodeException $exception) {
             $this->getPresenter()->flashMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR);
         }

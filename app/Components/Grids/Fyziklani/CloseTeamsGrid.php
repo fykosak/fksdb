@@ -59,7 +59,7 @@ class CloseTeamsGrid extends BaseGrid {
             $room = $position->getRoom();
             return $room->name;
         });
-        $this->addColumn('category', _('Kategorie'));
+        $this->addColumn('category', _('Category'));
         $this->addButton('edit', null)->setClass('btn btn-sm btn-success')->setLink(function ($row) use ($presenter) {
             return $presenter->link(':Fyziklani:Close:team', [
                 'id' => $row->e_fyziklani_team_id,

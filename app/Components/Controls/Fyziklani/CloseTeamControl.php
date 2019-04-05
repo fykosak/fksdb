@@ -96,12 +96,6 @@ class CloseTeamControl extends Control {
         throw new BadSignalException('Expected FormControl got ' . \get_class($control));
     }
 
-    /**
-     * @return TeamSubmitsGrid
-     */
-    protected function createComponentGrid(): TeamSubmitsGrid {
-        return $this->fyziklaniFactory->createTeamSubmitsGrid($this->team);
-    }
 
     /**
      * @return FormControl
@@ -110,12 +104,8 @@ class CloseTeamControl extends Control {
     protected function createComponentForm(): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
-        $form->addCheckbox('submit_task_correct', _('Úkoly a počty bodů jsou správně.'))
-            ->setRequired(_('Zkontrolujte správnost zadání bodů!'));
         $form->addText('next_task', _('Úloha u vydavačů'))
             ->setDisabled();
-        $form->addCheckbox('next_task_correct', _('Úloha u vydavačů se shoduje.'))
-            ->setRequired(_('Zkontrolujte prosím shodnost úlohy u vydavačů'));
         $form->addSubmit('send', 'Potvrdit správnost');
         $form->onSuccess[] = function () {
             $this->formSucceeded();

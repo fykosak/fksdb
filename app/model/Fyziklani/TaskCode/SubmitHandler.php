@@ -2,6 +2,7 @@
 
 namespace FKSDB\model\Fyziklani;
 
+use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
@@ -9,7 +10,6 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use Tracy\Debugger;
 
 /**
  * Class TaskCodeHandler
@@ -51,12 +51,12 @@ class SubmitHandler {
     /**
      * @param string $code
      * @param int $points
-     * @return string
+     * @return Message
      * @throws ClosedSubmittingException
      * @throws TaskCodeException
      * @throws \Exception
      */
-    public function preProcess(string $code, int $points): string {
+    public function preProcess(string $code, int $points): Message {
         $this->checkTaskCode($code);
         return $this->savePoints($code, $points);
     }
@@ -65,9 +65,9 @@ class SubmitHandler {
      * @param ModelFyziklaniTask $task
      * @param ModelFyziklaniTeam $team
      * @param int $points
-     * @return string
+     * @return Message
      */
-    private function createSubmit(ModelFyziklaniTask $task, ModelFyziklaniTeam $team, int $points): string {
+    private function createSubmit(ModelFyziklaniTask $task, ModelFyziklaniTeam $team, int $points): Message {
         /**
          * @var ModelFyziklaniSubmit $submit
          */
@@ -82,23 +82,24 @@ class SubmitHandler {
             'created' => null
         ]);
         $this->serviceFyziklaniSubmit->save($submit);
-        return \sprintf(_('Body byly uloženy. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
+
+        return new Message(\sprintf(_('Body byly uloženy. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
             $points,
             $team->name,
             $team->e_fyziklani_team_id,
             $task->label,
-            $task->name);
+            $task->name), Message::LVL_SUCCESS);
     }
 
     /**
      * @param string $code
      * @param int $points
-     * @return string
+     * @return Message
      * @throws ClosedSubmittingException
      * @throws PointsMismatchException
      * @throws TaskCodeException
      */
-    private function savePoints(string $code, int $points): string {
+    private function savePoints(string $code, int $points): Message {
         $task = $this->getTask($code);
         $team = $this->getTeam($code);
 

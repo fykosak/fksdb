@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Controls\Fyziklani;
 
+use FKSDB\React\ReactResponse;
 use Nette\Utils\Json;
 
 /**
@@ -51,7 +52,7 @@ class RoutingEdit extends FyziklaniReactControl {
     public function handleSave() {
         $data = $this->getHttpRequest()->getPost('requestData');
         $updatedTeams = $this->serviceFyziklaniTeamPosition->updateRouting($data);
-        $response = new \ReactResponse();
+        $response = new ReactResponse();
         $response->setAct('update-teams');
         $response->setData(['updatedTeams' => $updatedTeams]);
         $response->addMessage(new \ReactMessage(_('Zmeny boli uložené'), \BasePresenter::FLASH_SUCCESS));
