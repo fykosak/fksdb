@@ -4,6 +4,7 @@ namespace FKSDB\Components\Controls\Payment;
 
 use EventModule\PaymentPresenter;
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Controls\Helpers\AbstractDetailControl;
 use FKSDB\Components\Controls\Helpers\ValuePrinters\StringValueControl;
 use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
 use FKSDB\ORM\Models\ModelPayment;
@@ -18,15 +19,11 @@ use Nette\Templating\FileTemplate;
  * @package FKSDB\Components\Forms\Controls\Payment
  * @property FileTemplate $template
  */
-class DetailControl extends Control {
+class DetailControl extends AbstractDetailControl {
     /**
      * @var ModelPayment
      */
     private $model;
-    /**
-     * @var ITranslator
-     */
-    private $translator;
     /**
      * @var PaymentMachine
      */
@@ -39,10 +36,9 @@ class DetailControl extends Control {
      * @param \FKSDB\ORM\Models\ModelPayment $model
      */
     public function __construct(ITranslator $translator, PaymentMachine $machine, ModelPayment $model) {
-        parent::__construct();
+        parent::__construct($translator);
         $this->model = $model;
         $this->machine = $machine;
-        $this->translator = $translator;
     }
 
     /**
@@ -92,13 +88,6 @@ class DetailControl extends Control {
      */
     public function createComponentTransitionButtons() {
         return new TransitionButtonsControl($this->machine, $this->translator, $this->model);
-    }
-
-    /**
-     * @return StringValueControl
-     */
-    public function createComponentStringValue(): StringValueControl {
-        return new StringValueControl($this->translator);
     }
 
     /**
