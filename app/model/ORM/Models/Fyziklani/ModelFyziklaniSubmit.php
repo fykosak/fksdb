@@ -5,6 +5,7 @@ namespace FKSDB\ORM\Models\Fyziklani;
 use FKSDB\Messages\Message;
 use FKSDB\model\Fyziklani\ClosedSubmittingException;
 use FKSDB\model\Fyziklani\PointsMismatchException;
+use FKSDB\ORM\AbstractModelSingle;
 use Nette\Database\Table\ActiveRow;
 use Nette\Utils\DateTime;
 
@@ -24,7 +25,7 @@ use Nette\Utils\DateTime;
  * @property DateTime created
  * @property DateTime modified
  */
-class ModelFyziklaniSubmit extends \FKSDB\ORM\AbstractModelSingle {
+class ModelFyziklaniSubmit extends AbstractModelSingle {
     const STATE_NOT_CHECKED = 'not_checked';
     const STATE_CHECKED = 'checked';
 
