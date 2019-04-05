@@ -5,12 +5,13 @@ namespace Events\Model\Grid;
 use ArrayIterator;
 use Events\Model\Holder\BaseHolder;
 use Events\Model\Holder\Holder;
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\IModel;
+use FKSDB\ORM\Models\ModelEvent;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
 use Nette\Object;
-use ORM\IModel;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -24,7 +25,7 @@ use ORM\IModel;
 class SingleEventSource extends Object implements IHolderSource {
 
     /**
-     * @var ModelEvent
+     * @var \FKSDB\ORM\Models\ModelEvent
      */
     private $event;
 
@@ -60,21 +61,31 @@ class SingleEventSource extends Object implements IHolderSource {
      */
     private $holders = [];
 
+    /**
+     * SingleEventSource constructor.
+     * @param ModelEvent $event
+     * @param Container $container
+     */
     function __construct(ModelEvent $event, Container $container) {
         $this->event = $event;
         $this->container = $container;
 
         $this->dummyHolder = $this->container->createEventHolder($this->event);
-
         $primaryHolder = $this->dummyHolder->getPrimaryHolder();
         $eventIdColumn = $primaryHolder->getEventId();
         $this->primarySelection = $primaryHolder->getService()->getTable()->where($eventIdColumn, $this->event->getPrimary());
     }
 
+    /**
+     * @return \FKSDB\ORM\Models\ModelEvent
+     */
     public function getEvent() {
         return $this->event;
     }
 
+    /**
+     * @return Holder
+     */
     public function getDummyHolder() {
         return $this->dummyHolder;
     }
@@ -89,7 +100,7 @@ class SingleEventSource extends Object implements IHolderSource {
             }
         }
         // load primaries
-        $joinTo = $joinToCheck ? : $this->primarySelection->getPrimary();
+        $joinTo = $joinToCheck ?: $this->primarySelection->getPrimary();
         $this->primaryModels = $this->primarySelection->fetchPairs($joinTo);
 
         $joinValues = array_keys($this->primaryModels);
@@ -162,6 +173,9 @@ class SingleEventSource extends Object implements IHolderSource {
         }
     }
 
+    /**
+     * @return ArrayIterator|\Traversable
+     */
     public function getIterator() {
         if ($this->primaryModels === null) {
             $this->loadData();

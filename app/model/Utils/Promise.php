@@ -2,7 +2,6 @@
 
 namespace FKSDB\Utils;
 
-use Nette\Callback;
 use Nette\Object;
 
 /**
@@ -14,19 +13,32 @@ use Nette\Object;
 class Promise extends Object {
 
     /**
-     * @var Callback
+     * @var callable
      */
     private $callback;
+    /**
+     * @var bool
+     */
     private $called = false;
+    /**
+     * @var
+     */
     private $value;
 
-    public function __construct($callback) {
-        $this->callback = new Callback($callback);
+    /**
+     * Promise constructor.
+     * @param $callback
+     */
+    public function __construct(callable $callback) {
+        $this->callback = $callback;
     }
 
+    /**
+     * @return mixed
+     */
     public function getValue() {
         if (!$this->called) {
-            $this->value = $this->callback->invoke();
+            $this->value = ($this->callback)();
             $this->called = true;
         }
         return $this->value;

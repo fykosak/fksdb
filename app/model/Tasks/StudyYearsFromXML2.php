@@ -2,9 +2,9 @@
 
 namespace Tasks;
 
+use FKSDB\ORM\Services\ServiceStudyYear;
+use FKSDB\ORM\Services\ServiceTaskStudyYear;
 use Pipeline\Stage;
-use ServiceStudyYear;
-use ServiceTaskStudyYear;
 use SimpleXMLElement;
 
 /**
@@ -38,12 +38,21 @@ class StudyYearsFromXML2 extends Stage {
      */
     private $serviceStudyYear;
 
+    /**
+     * StudyYearsFromXML2 constructor.
+     * @param $defaultStudyYears
+     * @param \FKSDB\ORM\Services\ServiceTaskStudyYear $serviceTaskStudyYear
+     * @param ServiceStudyYear $serviceStudyYear
+     */
     function __construct($defaultStudyYears, ServiceTaskStudyYear $serviceTaskStudyYear, ServiceStudyYear $serviceStudyYear) {
         $this->defaultStudyYears = $defaultStudyYears;
         $this->serviceTaskStudyYear = $serviceTaskStudyYear;
         $this->serviceStudyYear = $serviceStudyYear;
     }
 
+    /**
+     * @param mixed $data
+     */
     public function setInput($data) {
         $this->data = $data;
     }
@@ -55,10 +64,16 @@ class StudyYearsFromXML2 extends Stage {
         }
     }
 
+    /**
+     * @return mixed|SeriesData
+     */
     public function getOutput() {
         return $this->data;
     }
 
+    /**
+     * @param SimpleXMLElement $XMLTask
+     */
     private function processTask(SimpleXMLElement $XMLTask) {
         $tasks = $this->data->getTasks();
         $tasknr = (int)(string)$XMLTask->number;

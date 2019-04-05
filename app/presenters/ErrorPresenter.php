@@ -1,13 +1,16 @@
 <?php
 
 use Nette\Application\BadRequestException;
-use Nette\Diagnostics\Debugger;
+use Tracy\Debugger;
 
 /**
  * Error presenter.
  */
 class ErrorPresenter extends BasePresenter {
 
+    /**
+     * @return array
+     */
     public function getNavBarVariant(): array {
         return ['error', 'bg-error navbar-dark'];
     }

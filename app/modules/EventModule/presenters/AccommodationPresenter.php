@@ -6,15 +6,22 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Controls\DateInput;
 use FKSDB\Components\Forms\Factories\AddressFactory;
-use FKSDB\Components\Grids\EventAccommodationGrid;
-use FKSDB\Components\Grids\EventBilletedPerson;
-use FKSDB\ORM\ModelEventAccommodation;
+use FKSDB\Components\Grids\Accommodation\AccommodationGrid;
+use FKSDB\Components\Grids\Accommodation\BilletedAllGrid;
+use FKSDB\Components\Grids\Accommodation\BilletedSingleGrid;
+use FKSDB\ORM\Models\ModelEventAccommodation;
+use FKSDB\ORM\Services\ServiceAddress;
+use FKSDB\ORM\Services\ServiceEventAccommodation;
+use FKSDB\ORM\Services\ServiceEventPersonAccommodation;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
-use Nette\Diagnostics\Debugger;
-use ServiceEventAccommodation;
+use Tracy\Debugger;
 
+/**
+ * Class AccommodationPresenter
+ * @package EventModule
+ */
 class AccommodationPresenter extends BasePresenter {
 
     const CONT_ACCOMMODATION = 'CONT_ACCOMMODATION';
@@ -23,12 +30,12 @@ class AccommodationPresenter extends BasePresenter {
     protected $modelResourceId = 'event.accommodation';
 
     /**
-     * @var ServiceEventAccommodation
+     * @var \FKSDB\ORM\Services\ServiceEventAccommodation
      */
     private $serviceEventAccommodation;
 
     /**
-     * @var \ServiceEventPersonAccommodation
+     * @var ServiceEventPersonAccommodation
      */
     private $serviceEventPersonAccommodation;
     /**
@@ -37,7 +44,7 @@ class AccommodationPresenter extends BasePresenter {
     private $addressFactory;
 
     /**
-     * @var \ServiceAddress
+     * @var ServiceAddress
      */
     private $serviceAddress;
     /**
@@ -47,19 +54,31 @@ class AccommodationPresenter extends BasePresenter {
     public $id;
 
 
+    /**
+     * @param AddressFactory $addressFactory
+     */
     public function injectAddressFactory(AddressFactory $addressFactory) {
         $this->addressFactory = $addressFactory;
     }
 
-    public function injectServiceAddress(\ServiceAddress $serviceAddress) {
+    /**
+     * @param ServiceAddress $serviceAddress
+     */
+    public function injectServiceAddress(ServiceAddress $serviceAddress) {
         $this->serviceAddress = $serviceAddress;
     }
 
+    /**
+     * @param \FKSDB\ORM\Services\ServiceEventAccommodation $serviceEventAccommodation
+     */
     public function injectServiceEventAccommodation(ServiceEventAccommodation $serviceEventAccommodation) {
         $this->serviceEventAccommodation = $serviceEventAccommodation;
     }
 
-    public function injectServiceEventPersonAccommodation(\ServiceEventPersonAccommodation $serviceEventPersonAccommodation) {
+    /**
+     * @param ServiceEventPersonAccommodation $serviceEventPersonAccommodation
+     */
+    public function injectServiceEventPersonAccommodation(ServiceEventPersonAccommodation $serviceEventPersonAccommodation) {
         $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;
     }
 
@@ -93,6 +112,14 @@ class AccommodationPresenter extends BasePresenter {
      */
     public function authorizedBilleted() {
         return $this->setAuthorized($this->isContestsOrgAllowed('event.accommodation', 'billeted'));
+    }
+
+    /**
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
+    public function authorizedBilletedAll() {
+        return $this->authorizedBilleted();
     }
 
     /**
@@ -135,6 +162,11 @@ class AccommodationPresenter extends BasePresenter {
         $this->setIcon('fa fa-users');
     }
 
+    public function titleBilletedAll() {
+        $this->setTitle(_('List of accommodated people'));
+        $this->setIcon('fa fa-users');
+    }
+
     /**
      * @throws BadRequestException
      * @throws ForbiddenRequestException
@@ -146,6 +178,7 @@ class AccommodationPresenter extends BasePresenter {
 
     /**
      * @return FormControl
+     * @throws BadRequestException
      */
     public function createComponentCreateForm(): FormControl {
         $control = $this->createForm();
@@ -160,6 +193,7 @@ class AccommodationPresenter extends BasePresenter {
 
     /**
      * @return FormControl
+     * @throws BadRequestException
      */
     public function createComponentEditForm(): FormControl {
         $control = $this->createForm();
@@ -173,22 +207,31 @@ class AccommodationPresenter extends BasePresenter {
     }
 
     /**
-     * @return EventAccommodationGrid
+     * @return AccommodationGrid
      * @throws BadRequestException
      * @throws \Nette\Application\AbortException
      */
-    public function createComponentGrid(): EventAccommodationGrid {
-        return new EventAccommodationGrid($this->getEvent(), $this->serviceEventAccommodation);
+    public function createComponentGrid(): AccommodationGrid {
+        return new AccommodationGrid($this->getEvent(), $this->serviceEventAccommodation);
     }
 
     /**
-     * @return EventBilletedPerson
+     * @return BilletedSingleGrid
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      * @throws \Nette\Application\AbortException
      */
-    public function createComponentBilletedGrid(): EventBilletedPerson {
-        return new EventBilletedPerson($this->getModel(), $this->serviceEventPersonAccommodation);
+    public function createComponentBilletedGrid(): BilletedSingleGrid {
+        return new BilletedSingleGrid($this->getModel(), $this->serviceEventPersonAccommodation);
+    }
+
+    /**
+     * @return BilletedAllGrid
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
+    public function createComponentBilletedAllGrid(): BilletedAllGrid {
+        return new BilletedAllGrid($this->getEvent(), $this->serviceEventPersonAccommodation);
     }
 
     /**
@@ -209,6 +252,7 @@ class AccommodationPresenter extends BasePresenter {
 
     /**
      * @return FormControl
+     * @throws BadRequestException
      */
     private function createForm(): FormControl {
         $control = new FormControl();
@@ -241,7 +285,7 @@ class AccommodationPresenter extends BasePresenter {
     }
 
     /**
-     * @return ModelEventAccommodation
+     * @return \FKSDB\ORM\Models\ModelEventAccommodation
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      * @throws \Nette\Application\AbortException
@@ -262,6 +306,7 @@ class AccommodationPresenter extends BasePresenter {
     /**
      * @param Form $form
      * @throws \Nette\Application\AbortException
+     * @throws \ReflectionException
      */
     private function handleCreateFormSuccess(Form $form) {
         $connection = $this->serviceEventAccommodation->getConnection();
@@ -284,8 +329,8 @@ class AccommodationPresenter extends BasePresenter {
              */
             $data = $this->getAccommodationFormData($values);
             /**
-             * @var $accommodation \FKSDB\ORM\ModelEventAccommodation
-             * @var $address \FKSDB\ORM\ModelAddress
+             * @var \FKSDB\ORM\Models\ModelEventAccommodation $accommodation
+             * @var \FKSDB\ORM\Models\ModelAddress $address
              */
             $accommodation = $this->serviceEventAccommodation->createNew($data);
             $accommodation->event_id = $this->eventId;
@@ -300,11 +345,11 @@ class AccommodationPresenter extends BasePresenter {
             }
 
             $this->flashMessage(_('Ubytovaní založeno'), self::FLASH_SUCCESS);
-            $this->backlinkRedirect();
+            $this->backLinkRedirect();
             $this->redirect('list'); // if there's no backlink
-        } catch (\ModelException $e) {
+        } catch (\ModelException $exception) {
             $connection->rollBack();
-            Debugger::log($e, Debugger::ERROR);
+            Debugger::log($exception, Debugger::ERROR);
             $this->flashMessage(_('Chyba při zakládání ubytovani.'), self::FLASH_ERROR);
         }
     }
@@ -328,7 +373,9 @@ class AccommodationPresenter extends BasePresenter {
     /**
      * @param Form $form
      * @throws BadRequestException
+     * @throws ForbiddenRequestException
      * @throws \Nette\Application\AbortException
+     * @throws \ReflectionException
      */
     private function handleEditFormSuccess(Form $form) {
         $connection = $this->serviceEventAccommodation->getConnection();
@@ -340,7 +387,7 @@ class AccommodationPresenter extends BasePresenter {
                 throw new \ModelException();
             }
             /**
-             * @var $accommodation \FKSDB\ORM\ModelEventAccommodation
+             * @var \FKSDB\ORM\Models\ModelEventAccommodation $accommodation
              */
             $accommodation = $this->getModel();
 
@@ -371,11 +418,11 @@ class AccommodationPresenter extends BasePresenter {
             }
 
             $this->flashMessage(_('Ubytovaní upraveno'), self::FLASH_SUCCESS);
-            $this->backlinkRedirect();
+            $this->backLinkRedirect();
             $this->redirect('list'); // if there's no backlink
-        } catch (\ModelException $e) {
+        } catch (\ModelException $exception) {
             $connection->rollBack();
-            Debugger::log($e, Debugger::ERROR);
+            Debugger::log($exception, Debugger::ERROR);
             $this->flashMessage(_('Chyba při ubytovaní.'), self::FLASH_ERROR);
         }
     }

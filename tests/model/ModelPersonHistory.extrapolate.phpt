@@ -2,6 +2,7 @@
 
 $container = require '../bootstrap.php';
 
+use FKSDB\ORM\Services\ServicePersonHistory;
 use Tester\Assert;
 use Tester\TestCase;
 

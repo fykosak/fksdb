@@ -2,7 +2,7 @@
 
 namespace Persons;
 
-use ORM\IModel;
+use FKSDB\ORM\IModel;
 
 /**
  *
@@ -26,9 +26,14 @@ interface IExtendedPersonPresenter {
     public function messageEdit();
 
     public function messageError();
-    
+
     public function messageExists();
-    
+
+    /**
+     * @param $message
+     * @param string $type
+     * @return mixed
+     */
     public function flashMessage($message, $type = 'info');
 }
 

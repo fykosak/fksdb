@@ -16,6 +16,12 @@ use Nette\Forms\IControl;
  */
 abstract class AbstractFactory implements IFieldFactory {
 
+    /**
+     * @param Field $field
+     * @param BaseMachine $machine
+     * @param Container $container
+     * @return array|mixed
+     */
     public function create(Field $field, BaseMachine $machine, Container $container) {
         $component = $this->createComponent($field, $machine, $container);
 
@@ -30,6 +36,12 @@ abstract class AbstractFactory implements IFieldFactory {
         return $component;
     }
 
+    /**
+     * @param IControl $element
+     * @param Field $field
+     * @param BaseMachine $machine
+     * @param Container $container
+     */
     protected final function appendRequiredRule(IControl $element, Field $field, BaseMachine $machine, Container $container) {
         if ($field->isRequired()) {
             $conditioned = $element;
@@ -50,15 +62,40 @@ abstract class AbstractFactory implements IFieldFactory {
         }
     }
 
+    /**
+     * @param Field $field
+     * @param DataValidator $validator
+     * @return bool|void
+     */
     public function validate(Field $field, DataValidator $validator) {
         if ($field->isRequired() && ($field->getValue() === '' || $field->getValue() === null)) {
             $validator->addError(sprintf(_('%s je povinná položka.'), $field->getLabel()));
         }
     }
 
+    /**
+     * @param $component
+     * @param Field $field
+     * @param BaseMachine $machine
+     * @param Container $container
+     * @return mixed
+     */
     abstract protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container);
 
+    /**
+     * @param $component
+     * @param Field $field
+     * @param BaseMachine $machine
+     * @param Container $container
+     * @return mixed
+     */
     abstract protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container);
 
+    /**
+     * @param Field $field
+     * @param BaseMachine $machine
+     * @param Container $container
+     * @return mixed
+     */
     abstract protected function createComponent(Field $field, BaseMachine $machine, Container $container);
 }

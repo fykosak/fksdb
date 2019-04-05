@@ -4,6 +4,10 @@ namespace FKSDB\Components\React;
 
 use FKSDB\Application\IJavaScriptCollector;
 
+/**
+ * Trait ReactField
+ * @package FKSDB\Components\React
+ */
 trait ReactField {
 
     static private $attachedJS = false;
@@ -15,10 +19,14 @@ trait ReactField {
         $this->setAttribute('data-mode', $this->getMode());
         $this->setAttribute('data-data', $this->getData());
     }
-    protected function registerMonitor(){
-        $this->monitor('FKSDB\Application\IJavaScriptCollector');
+
+    protected function registerMonitor() {
+        $this->monitor(IJavaScriptCollector::class);
     }
 
+    /**
+     * @param $obj
+     */
     protected function attachedReact($obj) {
         if (!self::$attachedJS && $obj instanceof IJavaScriptCollector) {
             self::$attachedJS = true;

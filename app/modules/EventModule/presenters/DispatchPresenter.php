@@ -4,13 +4,16 @@
 namespace EventModule;
 
 use AuthenticatedPresenter;
+use FKSDB\Components\Controls\Helpers\Badges\ContestBadge;
 use FKSDB\Components\Controls\LanguageChooser;
-use FKSDB\Components\Controls\Stalking\Helpers\ContestBadge;
 use FKSDB\Components\Grids\Events\DispatchGrid;
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\Services\ServiceEvent;
 use Nette\DI\Container;
-use ServiceEvent;
 
+/**
+ * Class DispatchPresenter
+ * @package EventModule
+ */
 class DispatchPresenter extends AuthenticatedPresenter {
 
     /**
@@ -58,7 +61,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
      */
     public function createComponentDispatchGrid(): DispatchGrid {
         /**
-         * @var $person ModelPerson
+         * @var \FKSDB\ORM\Models\ModelPerson $person
          */
         $person = $this->user->getIdentity()->getPerson();
         return new DispatchGrid($this->serviceEvent, $person, $this->yearCalculator);
@@ -75,9 +78,9 @@ class DispatchPresenter extends AuthenticatedPresenter {
      */
     public function startup() {
         /**
-         * @var $languageChooser LanguageChooser
+         * @var LanguageChooser $languageChooser
          */
-        $languageChooser =  $this->getComponent('languageChooser');
+        $languageChooser = $this->getComponent('languageChooser');
         $languageChooser->syncRedirect();
 
         parent::startup();

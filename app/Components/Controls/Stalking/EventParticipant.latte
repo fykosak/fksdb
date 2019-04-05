@@ -1,15 +1,18 @@
-<div class="card mb-3 border-primary">
-    <h4 class="card-header bg-primary text-white">{_('Event participant')}</h4>
+{layout './@layout.latte'}
+{block content}
     {if count($participants)}
         <ul class="list-group list-group-flush">
-            {foreach $participants as $participant}
+            {foreach $participants as $row}
+                {var $participant =\FKSDB\ORM\Models\ModelEventParticipant::createFromTableRow($row) }
                 <li class="list-group-item">
                     <span class="row">
-                        <span class="col-4">{$participant->event->event_year}
+                        <span class="col-5">{$participant->event->event_year}
                             . {$participant->event->event_type->name}</span>
-                        <span class="col-4">{$participant->event->name}</span>
-                        <span class="col-2">{$participant->event->year}. {_('year')}</span>
-                        <span class="col-2">
+                        <span class="col-7">{control eventLabel $participant->getEvent()}</span>
+
+                    </span>
+                    <span class="row">
+                        <span class="col-5">
                             {if in_array($participant->status,['participated'])}
                                 <span class="badge badge-success">{$participant->status}</span>
                             {elseif in_array($participant->status,['rejected','missed']) }
@@ -18,8 +21,9 @@
                                 <span class="badge badge-warning">{$participant->status}</span>
                             {/if}
                         </span>
+
                         {if ($participant->event->event_type_id ==1 || $participant->event->event_type_id==9 )}
-                            {* TODO FYZIKLANI tymy + ...*}
+                            <span class="col-7"><b>{_'Team'}:</b> {$participant->getFyziklaniTeam()->name}</span>
                         {/if}
                     </span>
                 </li>
@@ -27,8 +31,7 @@
         </ul>
     {else}
         <div class="card-body">
-            <span class="badge-warning badge">{_('No records')}</span>
+            {control noRecords}
         </div>
     {/if}
-
-</div>
+{/block}

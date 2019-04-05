@@ -3,9 +3,9 @@
 namespace Tasks;
 
 use FKSDB\Logging\ILogger;
-use Nette\DateTime;
+use FKSDB\ORM\Services\ServiceTask;
+use Nette\Utils\DateTime;
 use Pipeline\Stage;
-use ServiceTask;
 
 
 /**
@@ -21,21 +21,28 @@ class DeadlineFromXML2 extends Stage {
     private $data;
 
     /**
-     * @var ServiceTask
+     * @var \FKSDB\ORM\Services\ServiceTask
      */
     private $taskService;
 
+    /**
+     * DeadlineFromXML2 constructor.
+     * @param ServiceTask $taskService
+     */
     function __construct(ServiceTask $taskService) {
         $this->taskService = $taskService;
     }
 
+    /**
+     * @return mixed|SeriesData
+     */
     public function getOutput() {
         return $this->data;
     }
 
     public function process() {
         $xml = $this->data->getData();
-        $deadline = (string) $xml->deadline[0];
+        $deadline = (string)$xml->deadline[0];
         if (!$deadline) {
             $this->log(_('Chybí deadline série.'), ILogger::WARNING);
             return;
@@ -49,6 +56,9 @@ class DeadlineFromXML2 extends Stage {
         }
     }
 
+    /**
+     * @param mixed $data
+     */
     public function setInput($data) {
         $this->data = $data;
     }

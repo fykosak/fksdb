@@ -2,14 +2,14 @@
 
 namespace Authentication;
 
-use FKSDB\ORM\ModelPerson;
-use Nette\Diagnostics\Debugger;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Services\ServiceLogin;
+use FKSDB\ORM\Services\ServicePerson;
+use FKSDB\ORM\Services\ServicePersonInfo;
+use FKSDB\YearCalculator;
 use Nette\Security\AuthenticationException;
 use Nette\Security\Identity;
-use ServiceLogin;
-use ServicePerson;
-use ServicePersonInfo;
-use YearCalculator;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -19,12 +19,12 @@ use YearCalculator;
 class FacebookAuthenticator extends AbstractAuthenticator {
 
     /**
-     * @var ServicePerson
+     * @var \FKSDB\ORM\Services\ServicePerson
      */
     private $servicePerson;
 
     /**
-     * @var ServicePersonInfo
+     * @var \FKSDB\ORM\Services\ServicePersonInfo
      */
     private $servicePersonInfo;
 
@@ -33,6 +33,14 @@ class FacebookAuthenticator extends AbstractAuthenticator {
      */
     private $accountManager;
 
+    /**
+     * FacebookAuthenticator constructor.
+     * @param ServicePerson $servicePerson
+     * @param \FKSDB\ORM\Services\ServicePersonInfo $servicePersonInfo
+     * @param AccountManager $accountManager
+     * @param \FKSDB\ORM\Services\ServiceLogin $serviceLogin
+     * @param \FKSDB\YearCalculator $yearCalculator
+     */
     function __construct(ServicePerson $servicePerson, ServicePersonInfo $servicePersonInfo, AccountManager $accountManager, ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
         parent::__construct($serviceLogin, $yearCalculator);
         $this->servicePerson = $servicePerson;
@@ -68,6 +76,11 @@ class FacebookAuthenticator extends AbstractAuthenticator {
         return $login;
     }
 
+    /**
+     * @param array $fbUser
+     * @return \Nette\Database\Table\ActiveRow|null
+     * @throws AuthenticationException
+     */
     private function findPerson(array $fbUser) {
         if (!$fbUser['email']) {
             throw new AuthenticationException(_('V profilu Facebooku nebyl nalezen e-mail.'));
@@ -85,6 +98,10 @@ class FacebookAuthenticator extends AbstractAuthenticator {
         }
     }
 
+    /**
+     * @param $fbUser
+     * @return \FKSDB\ORM\AbstractModelSingle|\FKSDB\ORM\Models\ModelLogin
+     */
     private function registerFromFB($fbUser) {
         $person = $this->servicePerson->createNew($this->getPersonData($fbUser));
         $personInfo = $this->servicePersonInfo->createNew($this->getPersonInfoData($fbUser));
@@ -103,6 +120,10 @@ class FacebookAuthenticator extends AbstractAuthenticator {
         return $login;
     }
 
+    /**
+     * @param ModelPerson $person
+     * @param $fbUser
+     */
     private function updateFromFB(ModelPerson $person, $fbUser) {
         $personData = $this->getPersonData($fbUser);
         // there can be bullshit in this fields, so don't use it for update
@@ -131,6 +152,10 @@ class FacebookAuthenticator extends AbstractAuthenticator {
         $this->servicePerson->getConnection()->commit();
     }
 
+    /**
+     * @param $fbUser
+     * @return array
+     */
     private function getPersonData($fbUser) {
         return array(
             'family_name' => $fbUser['last_name'],
@@ -140,6 +165,10 @@ class FacebookAuthenticator extends AbstractAuthenticator {
         );
     }
 
+    /**
+     * @param $fbUser
+     * @return array
+     */
     private function getPersonInfoData($fbUser) {
         return array(
             'email' => $fbUser['email'],

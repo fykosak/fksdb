@@ -3,7 +3,7 @@
 namespace Maintenance;
 
 use FKSDB\Config\GlobalParameters;
-use Nette\Diagnostics\Debugger;
+use Tracy\Debugger;
 use Nette\Object;
 
 /**
@@ -16,11 +16,18 @@ class Updater extends Object {
 	/** @var GlobalParameters */
 	private $globalParameters;
 
-	function __construct(GlobalParameters $globalParameters) {
+    /**
+     * Updater constructor.
+     * @param GlobalParameters $globalParameters
+     */
+    function __construct(GlobalParameters $globalParameters) {
 		$this->globalParameters = $globalParameters;
 	}
 
-	public function installBranch($requestedBranch) {
+    /**
+     * @param $requestedBranch
+     */
+    public function installBranch($requestedBranch) {
 		$deployment = $this->globalParameters['updater']['deployment'];
 		foreach ($deployment as $path => $branch) {
 			if ($branch != $requestedBranch) {
@@ -30,7 +37,11 @@ class Updater extends Object {
 		}
 	}
 
-	private function install($path, $branch) {
+    /**
+     * @param $path
+     * @param $branch
+     */
+    private function install($path, $branch) {
 		$user = $this->globalParameters['updater']['installUser'];
 		$script = $this->globalParameters['updater']['installScript'];
 		$cmd = "sudo -u {$user} {$script} $path $branch >/dev/null 2>/dev/null &";

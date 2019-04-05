@@ -15,21 +15,21 @@ use FKSDB\Components\Grids\Events\LayoutResolver;
 use FKSDB\Config\NeonScheme;
 use FKSDB\Logging\FlashDumpFactory;
 use FKSDB\Logging\MemoryLogger;
+use FKSDB\ORM\IModel;
+use FKSDB\ORM\Services\ServiceAuthToken;
+use FKSDB\ORM\Services\ServiceEvent;
 use FormUtils;
 use ModelException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
-use Nette\Diagnostics\Debugger;
+use Tracy\Debugger;
 use Nette\Forms\Controls\BaseControl;
 use Nette\NotImplementedException;
 use Nette\Utils\Html;
-use Nette\Utils\Neon;
+use Nette\Neon\Neon;
 use Nette\Utils\NeonException;
-use ORM\IModel;
-use ServiceAuthToken;
-use ServiceEvent;
 use Utils;
 
 
@@ -45,7 +45,7 @@ class EventPresenter extends EntityPresenter {
     protected $modelResourceId = 'event';
 
     /**
-     * @var ServiceEvent
+     * @var \FKSDB\ORM\Services\ServiceEvent
      */
     private $serviceEvent;
 
@@ -81,43 +81,71 @@ class EventPresenter extends EntityPresenter {
     private $flashDumpFactory;
 
     /**
-     * @var ServiceAuthToken $serviceAuthToken
+     * @var \FKSDB\ORM\Services\ServiceAuthToken $serviceAuthToken
      */
     private $serviceAuthToken;
 
+    /**
+     * @param ServiceAuthToken $serviceAuthToken
+     */
     public function injectServiceAuthToken(ServiceAuthToken $serviceAuthToken) {
         $this->serviceAuthToken = $serviceAuthToken;
     }
 
 
+    /**
+     * @param \FKSDB\ORM\Services\ServiceEvent $serviceEvent
+     */
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;
     }
 
+    /**
+     * @param EventFactory $eventFactory
+     */
     public function injectEventFactory(EventFactory $eventFactory) {
         $this->eventFactory = $eventFactory;
     }
 
+    /**
+     * @param LayoutResolver $layoutResolver
+     */
     public function injectLayoutResolver(LayoutResolver $layoutResolver) {
         $this->layoutResolver = $layoutResolver;
     }
 
+    /**
+     * @param Container $container
+     */
     public function injectContainer(Container $container) {
         $this->container = $container;
     }
 
+    /**
+     * @param ExpressionPrinter $expressionPrinter
+     */
     public function injectExpressionPrinter(ExpressionPrinter $expressionPrinter) {
         $this->expressionPrinter = $expressionPrinter;
     }
 
+    /**
+     * @param ApplicationHandlerFactory $handlerFactory
+     */
     public function injectHandlerFactory(ApplicationHandlerFactory $handlerFactory) {
         $this->handlerFactory = $handlerFactory;
     }
 
+    /**
+     * @param FlashDumpFactory $flashDumpFactory
+     */
     public function injectFlashDumpFactory(FlashDumpFactory $flashDumpFactory) {
         $this->flashDumpFactory = $flashDumpFactory;
     }
 
+    /**
+     * @param $id
+     * @throws BadRequestException
+     */
     public function authorizedApplications($id) {
         $model = $this->getModel();
         if (!$model) {
@@ -160,10 +188,18 @@ class EventPresenter extends EntityPresenter {
         throw new NotImplementedException(null, 501);
     }
 
+    /**
+     * @param $id
+     */
     public function renderApplications($id) {
         $this->template->event = $this->getModel();
     }
 
+    /**
+     * @param $name
+     * @return FormControl|mixed
+     * @throws BadRequestException
+     */
     protected function createComponentCreateComponent($name) {
         $control = $this->createForm();
         $form = $control->getForm();
@@ -176,6 +212,11 @@ class EventPresenter extends EntityPresenter {
         return $control;
     }
 
+    /**
+     * @param $name
+     * @return FormControl|mixed
+     * @throws BadRequestException
+     */
     protected function createComponentEditComponent($name) {
         $control = $this->createForm();
         $form = $control->getForm();
@@ -187,10 +228,18 @@ class EventPresenter extends EntityPresenter {
         return $control;
     }
 
+    /**
+     * @param $name
+     * @return EventsGrid|mixed
+     */
     protected function createComponentGrid($name) {
         return new EventsGrid($this->serviceEvent);
     }
 
+    /**
+     * @param $name
+     * @return ApplicationsGrid
+     */
     protected function createComponentApplicationsGrid($name) {
         $source = new SingleEventSource($this->getModel(), $this->container);
         $source->order('created');
@@ -204,6 +253,10 @@ class EventPresenter extends EntityPresenter {
         return $grid;
     }
 
+    /**
+     * @param $name
+     * @return ImportComponent
+     */
     protected function createComponentApplicationsImport($name) {
         $source = new SingleEventSource($this->getModel(), $this->container);
         $logger = new MemoryLogger(); //TODO log to file?
@@ -215,6 +268,10 @@ class EventPresenter extends EntityPresenter {
         return $component;
     }
 
+    /**
+     * @param $name
+     * @return GraphComponent
+     */
     protected function createComponentGraphComponent($name) {
         $event = $this->getModel();
         $machine = $this->container->createEventMachine($event);
@@ -223,6 +280,10 @@ class EventPresenter extends EntityPresenter {
         return $component;
     }
 
+    /**
+     * @return FormControl
+     * @throws BadRequestException
+     */
     private function createForm() {
         $control = new FormControl();
         $form = $control->getForm();
@@ -246,8 +307,8 @@ class EventPresenter extends EntityPresenter {
 
                     NeonScheme::readSection($parameters, $scheme);
                     return true;
-                } catch (NeonException $e) {
-                    $control->addError($e->getMessage());
+                } catch (NeonException $exception) {
+                    $control->addError($exception->getMessage());
                     return false;
                 }
             }, _('Parametry nesplňují Neon schéma'));
@@ -256,6 +317,10 @@ class EventPresenter extends EntityPresenter {
         return $control;
     }
 
+    /**
+     * @param $scheme
+     * @return Html
+     */
     private function createParamDescription($scheme) {
         $result = Html::el('ul');
         foreach ($scheme as $key => $meta) {
@@ -272,6 +337,10 @@ class EventPresenter extends EntityPresenter {
         return $result;
     }
 
+    /**
+     * @param IModel|null $model
+     * @param Form $form
+     */
     protected function setDefaults(IModel $model = null, Form $form) {
         if (!$model) {
             return;
@@ -282,6 +351,10 @@ class EventPresenter extends EntityPresenter {
         $form->setDefaults($defaults);
     }
 
+    /**
+     * @param $id
+     * @return \FKSDB\ORM\AbstractModelSingle|\Nette\Database\Table\ActiveRow|null
+     */
     protected function loadModel($id) {
         return $this->serviceEvent->findByPrimary($id);
     }
@@ -291,6 +364,7 @@ class EventPresenter extends EntityPresenter {
      * @param $isNew
      * @throws BadRequestException
      * @throws \Nette\Application\AbortException
+     * @throws \ReflectionException
      */
     private function handleFormSuccess(Form $form, $isNew) {
         $connection = $this->serviceEvent->getConnection();
@@ -337,13 +411,13 @@ class EventPresenter extends EntityPresenter {
             }
 
             $this->flashMessage(sprintf(_('Akce %s uložena.'), $model->name), self::FLASH_SUCCESS);
-            $this->backlinkRedirect();
+            $this->backLinkRedirect();
             $this->redirect('list'); // if there's no backlink
-        } catch (ModelException $e) {
+        } catch (ModelException $exception) {
             $connection->rollBack();
-            Debugger::log($e, Debugger::ERROR);
+            Debugger::log($exception, Debugger::ERROR);
             $this->flashMessage(_('Chyba přidání akce.'), self::FLASH_ERROR);
-        } catch (ForbiddenRequestException $e) {
+        } catch (ForbiddenRequestException $exception) {
             $connection->rollBack();
             $this->flashMessage(_('Nedostatečné oprávnění.'), self::FLASH_ERROR);
         }

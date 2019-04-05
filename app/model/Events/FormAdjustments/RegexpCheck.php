@@ -19,12 +19,24 @@ class RegexpCheck extends AbstractAdjustment implements IFormAdjustment {
     private $message;
     private $pattern;
 
+    /**
+     * RegexpCheck constructor.
+     * @param $field
+     * @param $message
+     * @param $pattern
+     */
     function __construct($field, $message, $pattern) {
         $this->field = $field;
         $this->message = $message;
         $this->pattern = $pattern;
     }
 
+    /**
+     * @param Form $form
+     * @param Machine $machine
+     * @param Holder $holder
+     * @return mixed|void
+     */
     protected function _adjust(Form $form, Machine $machine, Holder $holder) {
         $controls = $this->getControl($this->field);
         if (!$controls) {

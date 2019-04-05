@@ -2,18 +2,18 @@
 
 namespace Authentication;
 
-use FKSDB\ORM\ModelAuthToken;
-use FKSDB\ORM\ModelLogin;
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\Models\ModelAuthToken;
+use FKSDB\ORM\Models\ModelLogin;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Services\ServiceAuthToken;
+use FKSDB\ORM\Services\ServiceLogin;
 use Mail\SendFailedException;
-use Nette\DateTime;
+use Nette\Utils\DateTime;
 use Nette\InvalidStateException;
 use Nette\Mail\IMailer;
 use Nette\Mail\Message;
 use Nette\Templating\ITemplate;
 use RuntimeException;
-use ServiceAuthToken;
-use ServiceLogin;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -40,24 +40,42 @@ class AccountManager {
     private $recoveryExpiration = '+1 day';
     private $emailFrom;
 
+    /**
+     * AccountManager constructor.
+     * @param ServiceLogin $serviceLogin
+     * @param ServiceAuthToken $serviceAuthToken
+     * @param IMailer $mailer
+     */
     function __construct(ServiceLogin $serviceLogin, ServiceAuthToken $serviceAuthToken, IMailer $mailer) {
         $this->serviceLogin = $serviceLogin;
         $this->serviceAuthToken = $serviceAuthToken;
         $this->mailer = $mailer;
     }
 
+    /**
+     * @return string
+     */
     public function getInvitationExpiration() {
         return $this->invitationExpiration;
     }
 
+    /**
+     * @param $invitationExpiration
+     */
     public function setInvitationExpiration($invitationExpiration) {
         $this->invitationExpiration = $invitationExpiration;
     }
 
+    /**
+     * @return string
+     */
     public function getRecoveryExpiration() {
         return $this->recoveryExpiration;
     }
 
+    /**
+     * @param $recoveryExpiration
+     */
     public function setRecoveryExpiration($recoveryExpiration) {
         $this->recoveryExpiration = $recoveryExpiration;
     }
@@ -66,6 +84,9 @@ class AccountManager {
         return $this->emailFrom;
     }
 
+    /**
+     * @param $emailFrom
+     */
     public function setEmailFrom($emailFrom) {
         $this->emailFrom = $emailFrom;
     }
@@ -74,9 +95,9 @@ class AccountManager {
      * Creates login and invites user to set up the account.
      *
      * @param ITemplate $template template of the mail
-     * @param ModelPerson $person
+     * @param \FKSDB\ORM\Models\ModelPerson $person
      * @param string $email
-     * @return \FKSDB\ORM\ModelLogin
+     * @return \FKSDB\ORM\Models\ModelLogin
      * @throws SendFailedException
      */
     public function createLoginWithInvitation(ITemplate $template, ModelPerson $person, $email) {
@@ -98,19 +119,19 @@ class AccountManager {
         $message->setHtmlBody($template);
         $message->setSubject(_('Založení účtu'));
         $message->setFrom($this->getEmailFrom());
-        $message->addTo($email, $person->getFullname());
+        $message->addTo($email, $person->getFullName());
 
         try {
             $this->mailer->send($message);
             return $login;
-        } catch (InvalidStateException $e) {
-            throw new SendFailedException($e);
+        } catch (InvalidStateException $exception) {
+            throw new SendFailedException($exception);
         }
     }
 
     /**
      * @param ITemplate $template
-     * @param ModelLogin $login
+     * @param \FKSDB\ORM\Models\ModelLogin $login
      */
     public function sendRecovery(ITemplate $template, ModelLogin $login) {
         $person = $login->getPerson();
@@ -144,11 +165,14 @@ class AccountManager {
 
         try {
             $this->mailer->send($message);
-        } catch (InvalidStateException $e) {
-            throw new SendFailedException($e);
+        } catch (InvalidStateException $exception) {
+            throw new SendFailedException($exception);
         }
     }
 
+    /**
+     * @param \FKSDB\ORM\Models\ModelLogin $login
+     */
     public function cancelRecovery(ModelLogin $login) {
         $this->serviceAuthToken->getTable()->where(array(
             'login_id' => $login->login_id,
@@ -160,7 +184,7 @@ class AccountManager {
      * @param ModelPerson $person
      * @param null $login
      * @param null $password
-     * @return \AbstractModelSingle|ModelLogin
+     * @return \FKSDB\ORM\AbstractModelSingle|\FKSDB\ORM\Models\ModelLogin
      */
     public final function createLogin(ModelPerson $person, $login = null, $password = null) {
         $login = $this->serviceLogin->createNew(array(
@@ -181,12 +205,24 @@ class AccountManager {
 
 }
 
+/**
+ * Class RecoveryException
+ * @package Authentication
+ */
 abstract class RecoveryException extends RuntimeException {
 
 }
 
+/**
+ * Class RecoveryExistsException
+ * @package Authentication
+ */
 class RecoveryExistsException extends RecoveryException {
 
+    /**
+     * RecoveryExistsException constructor.
+     * @param null $previous
+     */
     public function __construct($previous = null) {
         $message = _('Obnova účtu již probíhá.');
         $code = null;
@@ -195,8 +231,16 @@ class RecoveryExistsException extends RecoveryException {
 
 }
 
+/**
+ * Class RecoveryNotImplementedException
+ * @package Authentication
+ */
 class RecoveryNotImplementedException extends RecoveryException {
 
+    /**
+     * RecoveryNotImplementedException constructor.
+     * @param null $previous
+     */
     public function __construct($previous = null) {
         $message = _('Přístup k účtu nelze obnovit.');
         $code = null;

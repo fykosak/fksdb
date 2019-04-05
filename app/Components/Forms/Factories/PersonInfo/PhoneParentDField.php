@@ -2,7 +2,11 @@
 
 namespace FKSDB\Components\Forms\Factories\PersonInfo;
 
-class PhoneParentDField extends IPhoneField {
+/**
+ * Class PhoneParentDField
+ * @package FKSDB\Components\Forms\Factories\PersonInfo
+ */
+class PhoneParentDField extends AbstractPhoneField {
     public function __construct() {
         parent::__construct(_('Telefonní číslo (otec)'));
     }

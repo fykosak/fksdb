@@ -16,7 +16,7 @@ trait WithEventTrait {
 
     /**
      * @param mixed $obj
-     * @return \FKSDB\ORM\ModelEvent
+     * @return \FKSDB\ORM\Models\ModelEvent
      */
     protected function getEvent($obj) {
         return ($holder = $this->getHolder($obj)) ? $holder->getEvent() : null;

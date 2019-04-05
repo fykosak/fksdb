@@ -1,109 +1,58 @@
-<div class="card mb-3 border-primary">
-    <h4 class="card-header bg-primary text-white">{_('Org')}</h4>
-
+{layout './@layout.latte'}
+{block content}
     {if count($orgs)}
-        {foreach $orgs as $org}
+        {foreach $orgs as $row}
+            {var $org = \FKSDB\ORM\Models\ModelOrg::createFromTableRow($row)}
             <h3 class="card-header">{control contestBadge, $org->contest_id}</h3>
             <ul class="list-group list-group-flush">
+
                 <li class="list-group-item">
-                    <div class="row">
-                        <span class="col-5">{_('org_id')}</span>
-                        <span class="col-7">{$org->org_id}</span>
-                    </div>
+                    {control stringValue $org,_('Org Id'),org_id}
                 </li>
 
                 <li class="list-group-item">
-                    <div class="row">
-                        <span class="col-5">{_('Since')}</span>
-                        <span class="col-7">
-                                {if (!is_null($org->since))}
-                                    {$org->since}
-                                {else}
-                                    <span class="badge badge-danger">{_('not set')}</span>
-                                {/if}
-                            </span>
-                    </div>
+                    {control stringValue $org,_('Since'),since}
                 </li>
+
                 <li class="list-group-item">
+                    {*control stringValue $org,_('Login'),login*}
                     <div class="row">
-                        <span class="col-5">{_('Until')}</span>
+                        <span class="col-5"><b>{_'Until'}</b></span>
                         <div class="col-7">
                             {if (!is_null($org->until))}
                                 {$org->until}
                             {else}
-                                <span class="badge badge-success">{_('still organizing')}</span>
+                                <span class="badge badge-success">{_'Still organizing'}</span>
+                            {/if}
+                        </div>
+                    </div>
+                </li>
 
-                            {/if}
-                        </div>
-                    </div>
-                </li>
                 <li class="list-group-item">
-                    <div class="row">
-                        <span class="col-5">{_('Role')}</span>
-                        <div class="col-7">
-                            {if (is_null($org->role))}
-                                <span class="badge badge-danger">{_('not set')}</span>
-                            {else}
-                                {$org->role}
-                            {/if}
-                        </div>
-                    </div>
+                    {control stringValue $org,_('Role'),role}
                 </li>
+
                 <li class="list-group-item">
-                    <div class="row">
-                        <span class="col-5">{_('Order')}</span>
-                        <div class="col-7">
-                            {if (is_null($org->order))}
-                                <span class="badge badge-danger">{_('not set')}</span>
-                            {else}
-                                {$org->order}
-                            {/if}
-                        </div>
-                    </div>
+                    {control stringValue $org,_('Order'),order}
                 </li>
+
                 <li class="list-group-item">
-                    <div class="row">
-                        <span class="col-5">{_('Contribution')}</span>
-                        <div class="col-7">
-                            {if (is_null($org->contribution))}
-                                <span class="badge badge-danger">{_('not set')}</span>
-                            {else}
-                                {$org->contribution}
-                            {/if}
-                        </div>
-                    </div>
+                    {control stringValue $org,_('Contribution'),contribution}
                 </li>
+
                 <li class="list-group-item">
-                    <div class="row">
-                        <span class="col-5">{_('Tex Signature')}</span>
-                        <div class="col-7">
-                            {if (is_null($org->tex_signature))}
-                                <span class="badge badge-danger">{_('not set')}</span>
-                            {else}
-                                {$org->tex_signature}
-                            {/if}
-                        </div>
-                    </div>
+                    {control stringValue $org,_('Tex Signature'),tex_signature}
                 </li>
+
                 <li class="list-group-item">
-                    <div class="row">
-                        <span class="col-5">{_('Domain_alias')}</span>
-                        <div class="col-7">
-                            {if (is_null($org->domain_alias))}
-                                <span class="badge badge-danger">{_('not set')}</span>
-                            {else}
-                                {$org->domain_alias}
-                            {/if}
-                        </div>
-                    </div>
+                    {control stringValue $org,_('Domain alias'),domain_alias}
                 </li>
             </ul>
         {/foreach}
 
     {else}
         <div class="card-body">
-            <span class="badge-warning badge">{_('No records')}</span>
+            {control noRecords}
         </div>
     {/if}
-
-</div>
+{/block}

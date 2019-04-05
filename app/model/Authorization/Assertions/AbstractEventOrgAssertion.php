@@ -2,8 +2,8 @@
 
 namespace Authorization\Assertions;
 
-use DbNames;
 use Exports\StoredQuery;
+use FKSDB\ORM\DbNames;
 use Nette\Database\Connection;
 use Nette\Object;
 use Nette\Security\Permission;
@@ -29,6 +29,13 @@ abstract class AbstractEventOrgAssertion extends Object {
      */
     private $connection;
 
+    /**
+     * AbstractEventOrgAssertion constructor.
+     * @param $eventTypeId
+     * @param $parameterName
+     * @param User $user
+     * @param Connection $connection
+     */
     function __construct($eventTypeId, $parameterName, User $user, Connection $connection) {
         if (!is_array($eventTypeId)) {
             $eventTypeId = [$eventTypeId];
@@ -39,11 +46,19 @@ abstract class AbstractEventOrgAssertion extends Object {
         $this->connection = $connection;
     }
 
+    /**
+     * @param Permission $acl
+     * @param $role
+     * @param $resourceId
+     * @param $privilege
+     * @param null $parameterValue
+     * @return bool
+     */
     public function __invoke(Permission $acl, $role, $resourceId, $privilege, $parameterValue = null) {
         $storedQuery = $acl->getQueriedResource();
 
         if (!$storedQuery instanceof StoredQuery) {
-            //  throw new InvalidArgumentException('Expected StoredQuery, got \'' . get_class($storedQuery) . '\'.');
+            //  throw new InvalidArgumentException('Expected StoredQuery, got "' . get_class($storedQuery) . '".');
         }
 
         $identity = $this->user->getIdentity();

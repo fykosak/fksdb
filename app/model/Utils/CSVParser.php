@@ -16,14 +16,37 @@ class CSVParser extends Object implements Iterator {
     const INDEX_NUMERIC = 0;
     const INDEX_FROM_HEADER = 1;
     const BOM = '\xEF\xBB\xBF';
-
+    /**
+     * @var resource
+     */
     private $file;
+    /**
+     * @var string
+     */
     private $delimiter;
+    /**
+     * @var int
+     */
     private $indexType;
+    /**
+     * @var int
+     */
     private $rowNumber;
+    /**
+     * @var int
+     */
     private $currentRow;
+    /**
+     * @var
+     */
     private $header;
 
+    /**
+     * CSVParser constructor.
+     * @param $filename
+     * @param int $indexType
+     * @param string $delimiter
+     */
     function __construct($filename, $indexType = self::INDEX_NUMERIC, $delimiter = ';') {
         $this->indexType = $indexType;
         $this->delimiter = $delimiter;
@@ -33,10 +56,16 @@ class CSVParser extends Object implements Iterator {
         }
     }
 
+    /**
+     * @return mixed
+     */
     public function current() {
         return $this->currentRow;
     }
 
+    /**
+     * @return mixed
+     */
     public function key() {
         return $this->rowNumber;
     }
@@ -69,6 +98,9 @@ class CSVParser extends Object implements Iterator {
         }
     }
 
+    /**
+     * @return bool
+     */
     public function valid() {
         $eof = feof($this->file);
         if ($eof) {

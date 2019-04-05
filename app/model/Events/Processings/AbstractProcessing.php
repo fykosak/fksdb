@@ -6,11 +6,11 @@ use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
 use Events\Model\Holder\Holder;
 use FKSDB\Logging\ILogger;
-use Nette\ArrayHash;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 use Nette\Object;
+use Nette\Utils\ArrayHash;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -28,6 +28,14 @@ abstract class AbstractProcessing extends Object implements IProcessing {
     private $holder;
     private $values;
 
+    /**
+     * @param $states
+     * @param ArrayHash $values
+     * @param Machine $machine
+     * @param Holder $holder
+     * @param ILogger $logger
+     * @param Form|null $form
+     */
     public final function process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
         $this->states = $states;
         $this->holder = $holder;
@@ -36,8 +44,21 @@ abstract class AbstractProcessing extends Object implements IProcessing {
         $this->_process($states, $values, $machine, $holder, $logger, $form);
     }
 
+    /**
+     * @param $states
+     * @param ArrayHash $values
+     * @param Machine $machine
+     * @param Holder $holder
+     * @param ILogger $logger
+     * @param Form|null $form
+     * @return mixed
+     */
     abstract protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null);
 
+    /**
+     * @param $mask
+     * @return bool
+     */
     protected final function hasWildcart($mask) {
         return strpos($mask, self::WILDCART) !== false;
     }
@@ -102,6 +123,10 @@ abstract class AbstractProcessing extends Object implements IProcessing {
         return false;
     }
 
+    /**
+     * @param ArrayHash $values
+     * @param string $prefix
+     */
     private function setValues(ArrayHash $values, $prefix = '') {
         if (!$prefix) {
             $this->values = $values;
@@ -126,8 +151,8 @@ abstract class AbstractProcessing extends Object implements IProcessing {
         if (!$form) {
             return;
         }
-        foreach ($form->getComponents(true, 'Nette\Forms\IControl') as $control) {
-            $path = $control->lookupPath('Nette\Forms\Form');
+        foreach ($form->getComponents(true, IControl::class) as $control) {
+            $path = $control->lookupPath(Form::class);
             $path = str_replace('_1', '', $path);
             $path = str_replace(Component::NAME_SEPARATOR, self::DELIMITER, $path);
             $this->formPathCache[$path] = $control;

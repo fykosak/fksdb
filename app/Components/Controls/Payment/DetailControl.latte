@@ -1,0 +1,77 @@
+<div class="h2">{control stateLabel}</div>
+{control stateDisplay}
+<hr/>
+{if $model->hasGeneratedSymbols()}
+    <h2>{_('Informacie o platbe')}</h2>
+
+    {if $model->constant_symbol}
+        {control stringValue $model, _('Constant symbol'),constant_symbol}
+    {/if}
+
+    {if $model->variable_symbol}
+        {control stringValue $model, _('Variable symbol'),variable_symbol}
+    {/if}
+
+    {if $model->specific_symbol}
+        {control stringValue $model, _('Specific symbol'),specific_symbol}
+    {/if}
+
+    {if $model->bank_account}
+        {control stringValue $model, _('Bank account'),bank_account}
+    {/if}
+
+    {if $model->iban}
+        {control stringValue $model, _('IBAN'),iban}
+    {/if}
+
+    {if $model->swift}
+        {control stringValue $model, _('SWIFT'),swift}
+    {/if}
+
+    {if $model->price}
+        <div class="row">
+            <b class="col-2">{_('Price')}:</b>
+            <span class="col-10">{$model->getPrice()->__toString()}</span>
+        </div>
+    {/if}
+    <hr/>
+{/if}
+
+<h2>{_('Informace o platcovi')}</h2>
+<div>
+    {* TODO preklik do stalkingu*}
+    <div class="row">
+        <b class="col-2">{_('Person')}:</b>
+        <span class="col-10">{$model->getPerson()->__toString()}</span>
+    </div>
+    {control stringValue $model->getPerson()->getInfo(), _('Email'),email}
+</div>
+<hr/>
+<h2>{_'Items'}</h2>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>{_'Item'}</th>
+        <th>{_'Price'}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {foreach $items as $item}
+        <tr>
+            <td>{$item['label']}</td>
+            <td>{$item['price']->__toString()}</td>
+        </tr>
+    {/foreach}
+    {if !is_null($model->price)}
+        <tr class="table-primary">
+            <td>{_('Spolu')}</td>
+            <td>{$model->getPrice()->__toString()}</td>
+        </tr>
+    {/if}
+    </tbody>
+
+</table>
+{control form}
+<hr/>
+
+{control transitionButtons}

@@ -14,15 +14,25 @@ class After extends EvaluatedExpression {
     /** @var mixed */
     private $datetime;
 
+    /**
+     * After constructor.
+     * @param $datetime
+     */
     function __construct($datetime) {
         $this->datetime = $datetime;
     }
 
+    /**
+     * @return bool
+     */
     public function __invoke() {
         $datetime = $this->evalArg($this->datetime, func_get_args());
         return $datetime->getTimestamp() <= time();
     }
 
+    /**
+     * @return string
+     */
     public function __toString() {
         return "now >= {$this->datetime}";
     }

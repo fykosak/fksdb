@@ -10,6 +10,7 @@
 @import "storedquery-tag";
 @import "contests";
 @import "callout";
+@import "badge";
 
 .bg-white-container {
   background-color: rgba(255, 255, 255, .85);
@@ -37,7 +38,7 @@ html, body {
 }
 
 /* Wrapper for page content to push down footer */
-#wrap {
+main {
   /* Negative indent footer by its height */
   margin: 0 auto -55px;
   /* Pad bottom by footer height */
@@ -136,4 +137,10 @@ html, body {
 .state-timeline .line {
   height: 1px;
   border: solid 2px;
+}
+
+.phone-flag {
+  img {
+    height: 1em;
+  }
 }

@@ -5,20 +5,20 @@ namespace Persons;
 use Authentication\AccountManager;
 use BasePresenter;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
-use FKSDB\ORM\ModelContest;
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\IService;
+use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Services\ServicePerson;
 use FormUtils;
 use Mail\MailTemplateFactory;
 use Mail\SendFailedException;
 use ModelException;
 use Nette\Database\Connection;
-use Nette\Diagnostics\Debugger;
+use Tracy\Debugger;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
 use Nette\Object;
 use OrgModule\ContestantPresenter;
-use ORM\IService;
-use ServicePerson;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -36,12 +36,12 @@ class ExtendedPersonHandler extends Object {
     const RESULT_ERROR = false;
 
     /**
-     * @var IService
+     * @var \FKSDB\ORM\IService
      */
     protected $service;
 
     /**
-     * @var ServicePerson
+     * @var \FKSDB\ORM\Services\ServicePerson
      */
     protected $servicePerson;
 
@@ -61,7 +61,7 @@ class ExtendedPersonHandler extends Object {
     private $accountManager;
 
     /**
-     * @var ModelContest
+     * @var \FKSDB\ORM\Models\ModelContest
      */
     private $contest;
 
@@ -80,6 +80,14 @@ class ExtendedPersonHandler extends Object {
      */
     private $person;
 
+    /**
+     * ExtendedPersonHandler constructor.
+     * @param \FKSDB\ORM\IService $service
+     * @param \FKSDB\ORM\Services\ServicePerson $servicePerson
+     * @param Connection $connection
+     * @param MailTemplateFactory $mailTemplateFactory
+     * @param AccountManager $accountManager
+     */
     function __construct(IService $service, ServicePerson $servicePerson, Connection $connection, MailTemplateFactory $mailTemplateFactory, AccountManager $accountManager) {
         $this->service = $service;
         $this->servicePerson = $servicePerson;
@@ -88,38 +96,68 @@ class ExtendedPersonHandler extends Object {
         $this->accountManager = $accountManager;
     }
 
+    /**
+     * @return \FKSDB\ORM\Models\ModelContest
+     */
     public function getContest() {
         return $this->contest;
     }
 
+    /**
+     * @param \FKSDB\ORM\Models\ModelContest $contest
+     */
     public function setContest(ModelContest $contest) {
         $this->contest = $contest;
     }
 
+    /**
+     * @return int
+     */
     public function getYear() {
         return $this->year;
     }
 
+    /**
+     * @param $year
+     */
     public function setYear($year) {
         $this->year = $year;
     }
 
+    /**
+     * @return string
+     */
     public function getInvitationLang() {
         return $this->invitationLang;
     }
 
+    /**
+     * @param $invitationLang
+     */
     public function setInvitationLang($invitationLang) {
         $this->invitationLang = $invitationLang;
     }
 
+    /**
+     * @return \FKSDB\ORM\Models\ModelPerson
+     */
     public function getPerson() {
         return $this->person;
     }
 
+    /**
+     * @param Form $form
+     * @return mixed
+     */
     protected final function getReferencedPerson(Form $form) {
         return $form[self::CONT_AGGR][self::EL_PERSON]->getModel();
     }
 
+    /**
+     * @param Form $form
+     * @param IExtendedPersonPresenter $presenter
+     * @return bool
+     */
     public final function handleForm(Form $form, IExtendedPersonPresenter $presenter) {
         $connection = $this->connection;
         try {
@@ -135,13 +173,13 @@ class ExtendedPersonHandler extends Object {
             // create login
             $email = $person->getInfo() ? $person->getInfo()->email : null;
             $login = $person->getLogin();
-            $hasLogin = (bool) $login;
+            $hasLogin = (bool)$login;
             if ($email && !$login) {
                 $template = $this->mailTemplateFactory->createLoginInvitation($presenter, $this->getInvitationLang());
                 try {
                     $this->accountManager->createLoginWithInvitation($template, $person, $email);
                     $presenter->flashMessage(_('Zvací e-mail odeslán.'), BasePresenter::FLASH_INFO);
-                } catch (SendFailedException $e) {
+                } catch (SendFailedException $exception) {
                     $presenter->flashMessage(_('Zvací e-mail se nepodařilo odeslat.'), BasePresenter::FLASH_ERROR);
                 }
             }
@@ -167,25 +205,30 @@ class ExtendedPersonHandler extends Object {
             } else {
                 return self::RESULT_OK_EXISTING_LOGIN;
             }
-        } catch (ModelException $e) {
+        } catch (ModelException $exception) {
             $connection->rollBack();
-            if ($e->getPrevious() && $e->getPrevious()->getCode() == 23000) {
+            if ($exception->getPrevious() && $exception->getPrevious()->getCode() == 23000) {
                 $presenter->flashMessage($presenter->messageExists(), ContestantPresenter::FLASH_ERROR);
             } else {
-                Debugger::log($e, Debugger::ERROR);
+                Debugger::log($exception, Debugger::ERROR);
                 $presenter->flashMessage($presenter->messageError(), ContestantPresenter::FLASH_ERROR);
             }
 
             return self::RESULT_ERROR;
-        } catch (ModelDataConflictException $e) {
+        } catch (ModelDataConflictException $exception) {
             $form->addError(_('Zadaná data se neshodují s již uloženými.'));
-            $e->getReferencedId()->getReferencedContainer()->setConflicts($e->getConflicts());
-            $e->getReferencedId()->rollback();
+            $exception->getReferencedId()->getReferencedContainer()->setConflicts($exception->getConflicts());
+            $exception->getReferencedId()->rollback();
             $connection->rollBack();
             return self::RESULT_ERROR;
         }
     }
 
+    /**
+     * @param ModelPerson $person
+     * @param $values
+     * @param $presenter
+     */
     protected function storeExtendedModel(ModelPerson $person, $values, $presenter) {
         if ($this->contest === null || $this->year === null) {
             throw new InvalidStateException('Must set contest and year before storing contestant.');

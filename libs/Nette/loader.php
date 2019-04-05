@@ -39,10 +39,10 @@ require_once __DIR__ . '/Loaders/NetteLoader.php';
 
 Nette\Loaders\NetteLoader::getInstance()->register();
 
-require_once __DIR__ . '/Diagnostics/Helpers.php';
-require_once __DIR__ . '/Diagnostics/shortcuts.php';
+//require_once __DIR__ . '/Diagnostics/Helpers.php';
+//require_once __DIR__ . '/Diagnostics/shortcuts.php';
 // require_once __DIR__ . '/Utils/Html.php';
-Nette\Diagnostics\Debugger::_init();
+//Nette\Diagnostics\Debugger::_init();
 
 Nette\Utils\SafeStream::register();
 

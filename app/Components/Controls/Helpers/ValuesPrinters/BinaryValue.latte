@@ -1,0 +1,10 @@
+{layout './@layout.latte'}
+{block value}
+    {if \is_null($model->{$accessKey})}
+        {control notSet}
+    {elseif $model->{$accessKey}}
+        <span class="fa fa-check text-success"></span>
+    {else}
+        <span class="fa fa-times text-danger"></span>
+    {/if}
+{/block}

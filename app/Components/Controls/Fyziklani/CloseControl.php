@@ -7,13 +7,15 @@ namespace FKSDB\Components\Controls\Fyziklani;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\Fyziklani\CloseTeamsGrid;
 use FKSDB\model\Fyziklani\CloseSubmitStrategy;
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 use Nette\Utils\Html;
-use ORM\Services\Events\ServiceFyziklaniTeam;
 
 /**
  * Class CloseControl
@@ -26,7 +28,7 @@ class CloseControl extends Control {
      */
     private $serviceFyziklaniTeam;
     /**
-     * @var ModelEvent
+     * @var \FKSDB\ORM\Models\ModelEvent
      */
     private $event;
     /**
@@ -34,6 +36,12 @@ class CloseControl extends Control {
      */
     private $translator;
 
+    /**
+     * CloseControl constructor.
+     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @param ITranslator $translator
+     */
     public function __construct(ModelEvent $event, ServiceFyziklaniTeam $serviceFyziklaniTeam, ITranslator $translator) {
         parent::__construct();
         $this->event = $event;
@@ -42,18 +50,20 @@ class CloseControl extends Control {
     }
 
     /**
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
+     * @throws BadRequestException
      */
     private function closeGlobalFormSucceeded() {
         $closeStrategy = new CloseSubmitStrategy($this->event, $this->serviceFyziklaniTeam);
         $closeStrategy->closeGlobal($msg);
-        $this->getPresenter()->flashMessage(Html::el()->addHtml(Html::el('h3')->addText('pořadí bylo uložené'))->addHtml(Html::el('ul')->addHtml($msg)), 'success');
+        $this->getPresenter()->flashMessage(Html::el()->addHtml(Html::el('h3')->addText('pořadí bylo uložené'))->addHtml(Html::el('ul')->addHtml($msg)), \BasePresenter::FLASH_SUCCESS);
         $this->getPresenter()->redirect('this');
     }
 
     /**
-     * @param $category
+     * @param string $category
      * @return FormControl
+     * @throws BadRequestException
      */
     private function createComponentCloseCategoryForm(string $category): FormControl {
         $control = new FormControl();
@@ -68,6 +78,7 @@ class CloseControl extends Control {
 
     /**
      * @return FormControl
+     * @throws BadRequestException
      */
     public function createComponentCloseGlobalForm(): FormControl {
         $control = new FormControl();
@@ -81,6 +92,7 @@ class CloseControl extends Control {
 
     /**
      * @return FormControl
+     * @throws BadRequestException
      */
     public function createComponentCloseCategoryAForm(): FormControl {
         return $this->createComponentCloseCategoryForm('A');
@@ -88,6 +100,7 @@ class CloseControl extends Control {
 
     /**
      * @return FormControl
+     * @throws BadRequestException
      */
     public function createComponentCloseCategoryBForm(): FormControl {
         return $this->createComponentCloseCategoryForm('B');
@@ -95,6 +108,7 @@ class CloseControl extends Control {
 
     /**
      * @return FormControl
+     * @throws BadRequestException
      */
     public function createComponentCloseCategoryCForm(): FormControl {
         return $this->createComponentCloseCategoryForm('C');
@@ -102,6 +116,7 @@ class CloseControl extends Control {
 
     /**
      * @return FormControl
+     * @throws BadRequestException
      */
     public function createComponentCloseCategoryFForm(): FormControl {
         return $this->createComponentCloseCategoryForm('F');
@@ -109,12 +124,13 @@ class CloseControl extends Control {
 
     /**
      * @param Form $form
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function closeCategoryFormSucceeded(Form $form) {
         $closeStrategy = new CloseSubmitStrategy($this->event, $this->serviceFyziklaniTeam);
         $closeStrategy->closeByCategory($form->getValues()->category, $msg);
-        $this->getPresenter()->flashMessage(Html::el()->addHtml(Html::el('h3')->addHtml('pořadí bylo uložené'))->addHtml(Html::el('ul')->addHtml($msg)), 'success');
+        $this->getPresenter()->flashMessage(Html::el()->addHtml(Html::el('h3')->addHtml('pořadí bylo uložené'))->addHtml(Html::el('ul')->addHtml($msg)), \BasePresenter::FLASH_SUCCESS);
         $this->getPresenter()->redirect('this');
     }
 

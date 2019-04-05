@@ -3,10 +3,10 @@
 namespace OrgModule;
 
 use FKSDB\Components\Grids\Deduplicate\PersonsGrid;
+use FKSDB\ORM\Services\ServicePerson;
 use Nette\Application\ForbiddenRequestException;
 use Persons\Deduplication\DuplicateFinder;
 use Persons\Deduplication\Merger;
-use ServicePerson;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -16,7 +16,7 @@ use ServicePerson;
 class DeduplicatePresenter extends BasePresenter {
 
     /**
-     * @var ServicePerson
+     * @var \FKSDB\ORM\Services\ServicePerson
      */
     private $servicePerson;
 
@@ -25,14 +25,23 @@ class DeduplicatePresenter extends BasePresenter {
      */
     private $merger;
 
+    /**
+     * @param ServicePerson $servicePerson
+     */
     public function injectServicePerson(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
     }
 
+    /**
+     * @param Merger $merger
+     */
     public function injectMerger(Merger $merger) {
         $this->merger = $merger;
     }
 
+    /**
+     * @throws \Nette\Application\BadRequestException
+     */
     public function authorizedPerson() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('person', 'list', $this->getSelectedContest()));
     }
@@ -46,6 +55,11 @@ class DeduplicatePresenter extends BasePresenter {
 
     }
 
+    /**
+     * @throws ForbiddenRequestException
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
     public function handleBatchMerge() {
         if (!$this->getContestAuthorizator()->isAllowed('person', 'merge', $this->getSelectedContest())) { //TODO generic authorizator
             throw new ForbiddenRequestException();
@@ -74,6 +88,10 @@ class DeduplicatePresenter extends BasePresenter {
         $this->redirect('this');
     }
 
+    /**
+     * @param $name
+     * @return PersonsGrid
+     */
     protected function createComponentPersonsGrid($name) {
         $duplicateFinder = $this->createPersonDuplicateFinder();
         $pairs = $duplicateFinder->getPairs();
@@ -85,6 +103,9 @@ class DeduplicatePresenter extends BasePresenter {
     }
 
 
+    /**
+     * @return DuplicateFinder
+     */
     protected function createPersonDuplicateFinder() {
         return new DuplicateFinder($this->servicePerson, $this->globalParameters);
     }

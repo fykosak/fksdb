@@ -2,11 +2,11 @@
 
 namespace FKSDB\model\Fyziklani;
 
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\Utils\CSVParser;
 use FyziklaniModule\TaskPresenter;
-use ServiceFyziklaniTask;
-use \Nette\Diagnostics\Debugger;
+use Tracy\Debugger;
 
 /**
  *
@@ -17,19 +17,28 @@ class FyziklaniTaskImportProcessor {
 
     /**
      *
-     * @var ServiceFyziklaniTask
+     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask
      */
     private $serviceFyziklaniTask;
     /**
-     * @var ModelEvent
+     * @var \FKSDB\ORM\Models\ModelEvent
      */
     private $event;
 
+    /**
+     * FyziklaniTaskImportProcessor constructor.
+     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask $serviceFyziklaniTask
+     */
     public function __construct(ModelEvent$event, ServiceFyziklaniTask $serviceFyziklaniTask) {
         $this->event = $event;
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
     }
 
+    /**
+     * @param $values
+     * @param $messages
+     */
     public function __invoke($values, &$messages) {
         $filename = $values->csvfile->getTemporaryFile();
         $connection = $this->serviceFyziklaniTask->getConnection();
@@ -47,13 +56,13 @@ class FyziklaniTaskImportProcessor {
                         'name' => $row['name'],
                         'event_id' => $this->event->event_id,
                     ]);
-                    $messages[] = [sprintf(_('Úloha %s "%s" bola vložena'), $row['label'], $row['name']), 'success'];
+                    $messages[] = [sprintf(_('Úloha %s "%s" bola vložena'), $row['label'], $row['name']), \BasePresenter::FLASH_SUCCESS];
                 } elseif ($values->state == TaskPresenter::IMPORT_STATE_UPDATE_N_INSERT) {
                         $this->serviceFyziklaniTask->updateModel($task, [
                             'label' => $row['label'],
                             'name' => $row['name']
                         ]);
-                        $messages[] = [sprintf(_('Úloha %s "%s" byla aktualizována'), $row['label'], $row['name']), 'info'];
+                        $messages[] = [sprintf(_('Úloha %s "%s" byla aktualizována'), $row['label'], $row['name']),\BasePresenter::FLASH_INFO];
                 } else {
                         $messages[] = [
                             sprintf(_('Úloha %s "%s" nebyla aktualizována'), $row['label'], $row['name']),
@@ -61,9 +70,9 @@ class FyziklaniTaskImportProcessor {
                         ];
                 }
                 $this->serviceFyziklaniTask->save($task);
-            } catch (\Exception $e) {
-                $messages[] = [_('Vyskytla se chyba'), 'danger'];
-                Debugger::log($e);
+            } catch (\Exception $exception) {
+                $messages[] = [_('Vyskytla se chyba'),\BasePresenter::FLASH_ERROR];
+                Debugger::log($exception);
                 $connection->rollBack();
                 return;
             }

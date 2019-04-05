@@ -9,7 +9,7 @@ use Nette\Security\User;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @obsolete Needs refactoring due to ConditionEvaluator (for only contestans events)
  * @author Michal Koutný <michal@fykos.cz>
  */
@@ -43,6 +43,13 @@ class Role extends Object {
      */
     private $relatedAuthorizator;
 
+    /**
+     * Role constructor.
+     * @param $role
+     * @param User $user
+     * @param ContestAuthorizator $contestAuthorizator
+     * @param RelatedPersonAuthorizator $relatedAuthorizator
+     */
     function __construct($role, User $user, ContestAuthorizator $contestAuthorizator, RelatedPersonAuthorizator $relatedAuthorizator) {
         $this->role = $role;
         $this->user = $user;
@@ -50,6 +57,10 @@ class Role extends Object {
         $this->relatedAuthorizator = $relatedAuthorizator;
     }
 
+    /**
+     * @param $obj
+     * @return bool
+     */
     public function __invoke($obj) {
         switch ($this->role) {
             case self::ADMIN:
@@ -67,6 +78,9 @@ class Role extends Object {
         }
     }
 
+    /**
+     * @return string
+     */
     public function __toString() {
         return "role({$this->role})";
     }

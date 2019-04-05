@@ -11,6 +11,10 @@ use FKSDB\Expressions\VariadicExpression;
  */
 class Or_ extends VariadicExpression {
 
+    /**
+     * @param $args
+     * @return bool|mixed
+     */
     protected function evaluate($args) {
         for ($i = 0; $i < $this->getArity(); ++$i) {
             if ($this->evalArgAt($i, $args)) {
@@ -20,6 +24,9 @@ class Or_ extends VariadicExpression {
         return false;
     }
 
+    /**
+     * @return mixed|string
+     */
     protected function getInfix() {
         return '||';
     }

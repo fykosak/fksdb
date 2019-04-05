@@ -12,9 +12,9 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Logging\FlashMessageDump;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Callback;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
+use Nette\Templating\FileTemplate;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -39,7 +39,7 @@ class ApplicationComponent extends Control {
     private $flashDump;
 
     /**
-     * @var Callback($primaryModelId, $eventId)
+     * @var callable ($primaryModelId, $eventId)
      */
     private $redirectCallback;
 
@@ -48,6 +48,12 @@ class ApplicationComponent extends Control {
      */
     private $templateFile;
 
+    /**
+     * ApplicationComponent constructor.
+     * @param ApplicationHandler $handler
+     * @param Holder $holder
+     * @param FlashMessageDump $flashDump
+     */
     function __construct(ApplicationHandler $handler, Holder $holder, FlashMessageDump $flashDump) {
         parent::__construct();
         $this->handler = $handler;
@@ -66,12 +72,18 @@ class ApplicationComponent extends Control {
         }
     }
 
+    /**
+     * @return callable
+     */
     public function getRedirectCallback() {
         return $this->redirectCallback;
     }
 
-    public function setRedirectCallback($redirectCallback) {
-        $this->redirectCallback = new Callback($redirectCallback);
+    /**
+     * @param $redirectCallback
+     */
+    public function setRedirectCallback(callable $redirectCallback) {
+        $this->redirectCallback = $redirectCallback;
     }
 
     /**
@@ -82,7 +94,14 @@ class ApplicationComponent extends Control {
         return $this->getPresenter()->getContestAuthorizator()->isAllowed($event, 'application', $event->getContest());
     }
 
+    /**
+     * @param null $class
+     * @return FileTemplate|\Nette\Templating\ITemplate
+     */
     protected function createTemplate($class = NULL) {
+        /**
+         * @var FileTemplate $template
+         */
         $template = parent::createTemplate($class);
         $template->setTranslator($this->presenter->getTranslator());
         return $template;
@@ -105,6 +124,9 @@ class ApplicationComponent extends Control {
         $this->template->render();
     }
 
+    /**
+     * @param $mode
+     */
     public function renderInline($mode) {
         $this->template->mode = $mode;
         $this->template->holder = $this->holder;
@@ -116,7 +138,11 @@ class ApplicationComponent extends Control {
         $this->template->render();
     }
 
-    protected function createComponentForm($name) {
+    /**
+     * @return FormControl
+     * @throws \Nette\Application\BadRequestException
+     */
+    protected function createComponentForm() {
         $result = new FormControl();
         $form = $result->getForm();
 
@@ -150,7 +176,7 @@ class ApplicationComponent extends Control {
         $primaryMachine = $this->getMachine()->getPrimaryMachine();
         $transitionSubmit = null;
         /**
-         * @var $transition Transition
+         * @var Transition $transition
          */
         foreach ($primaryMachine->getAvailableTransitions(BaseMachine::EXECUTABLE | BaseMachine::VISIBLE) as $transition) {
             $transitionName = $transition->getName();
@@ -206,20 +232,34 @@ class ApplicationComponent extends Control {
         return $result;
     }
 
+    /**
+     * @param Form $form
+     * @param null $explicitTransitionName
+     * @throws \Nette\Application\AbortException
+     */
     public function handleSubmit(Form $form, $explicitTransitionName = null) {
         $this->execute($form, $explicitTransitionName);
     }
 
+    /**
+     * @param $transitionName
+     * @throws \Nette\Application\AbortException
+     */
     public function handleTransition($transitionName) {
         $this->execute(null, $transitionName);
     }
 
+    /**
+     * @param Form|null $form
+     * @param null $explicitTransitionName
+     * @throws \Nette\Application\AbortException
+     */
     private function execute(Form $form = null, $explicitTransitionName = null) {
         try {
             $this->handler->storeAndExecute($this->holder, $form, $explicitTransitionName);
             $this->flashDump->dump($this->handler->getLogger(), $this->getPresenter());
             $this->finalRedirect();
-        } catch (ApplicationHandlerException $e) {
+        } catch (ApplicationHandlerException $exception) {
             /* handled elsewhere, here it's to just prevent redirect */
             $this->flashDump->dump($this->handler->getLogger(), $this->getPresenter());
             if (!$form) { // w/out form we don't want to show anything with the same GET params
@@ -235,14 +275,20 @@ class ApplicationComponent extends Control {
         return $this->handler->getMachine($this->holder);
     }
 
+    /**
+     * @return bool
+     */
     private function canEdit() {
         return $this->getMachine()->getPrimaryMachine()->getState() != BaseMachine::STATE_INIT && $this->holder->getPrimaryHolder()->isModifiable();
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     */
     private function finalRedirect() {
         if ($this->redirectCallback) {
             $id = $this->holder->getPrimaryHolder()->getModel()->getPrimary(false);
-            $this->redirectCallback->invoke($id, $this->holder->getEvent()->getPrimary());
+            ($this->redirectCallback)($id, $this->holder->getEvent()->getPrimary());
         } else {
             $this->redirect('this');
         }

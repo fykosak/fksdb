@@ -1,16 +1,22 @@
 <?php
 
-use FKSDB\ORM\ModelContest;
-use FKSDB\ORM\ModelLogin;
-use FKSDB\ORM\ModelRole;
+use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Models\ModelLogin;
+use FKSDB\ORM\Models\ModelRole;
 
+/**
+ * Class DispatchPresenter
+ */
 class DispatchPresenter extends AuthenticatedPresenter {
 
     use \LanguageNav;
 
+    /**
+     * @throws \Nette\Application\UI\InvalidLinkException
+     */
     public function renderDefault() {
         /**
-         * @var $login ModelLogin
+         * @var \FKSDB\ORM\Models\ModelLogin $login
          */
         $login = $this->getUser()->getIdentity();
         $query = $this->serviceContest->getTable();
@@ -27,6 +33,13 @@ class DispatchPresenter extends AuthenticatedPresenter {
         $this->template->contests = $result;
     }
 
+    /**
+     * @param \FKSDB\ORM\Models\ModelLogin $login
+     * @param ModelContest $contest
+     * @param $role
+     * @return array
+     * @throws \Nette\Application\UI\InvalidLinkException
+     */
     private function check(ModelLogin $login, ModelContest $contest, $role) {
         switch ($role) {
             case ModelRole::ORG:
@@ -72,6 +85,11 @@ class DispatchPresenter extends AuthenticatedPresenter {
         }
     }
 
+    /**
+     * @param ModelContest $contest
+     * @param $role
+     * @return string
+     */
     private function getLabel(ModelContest $contest, $role) {
         return $contest->name . ' - ' . _($role);
     }
@@ -81,6 +99,9 @@ class DispatchPresenter extends AuthenticatedPresenter {
         $this->setIcon('fa fa-home');
     }
 
+    /**
+     * @return array
+     */
     public function getNavBarVariant(): array {
         return [null, 'bg-dark navbar-dark'];
     }
