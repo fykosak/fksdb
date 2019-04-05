@@ -13,14 +13,13 @@ use FKSDB\Components\Controls\Helpers\ValuePrinters\PriceValueControl;
 use FKSDB\Components\Controls\Helpers\ValuePrinters\StringValueControl;
 use FKSDB\Components\Controls\Stalking\Helpers\PersonLinkControl;
 use FKSDB\Components\Events\ApplicationComponent;
-use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
 use FKSDB\Logging\FlashDumpFactory;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Tracy\Debugger;
 
 /**
  * Class ApplicationPresenter
@@ -177,9 +176,9 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     abstract protected function getModel();
 
     /**
-     * @return BaseGrid
+     * @return AbstractApplicationGrid
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
      */
-    abstract function createComponentGrid(): BaseGrid;
+    abstract function createComponentGrid(): AbstractApplicationGrid;
 }

@@ -6,7 +6,7 @@ use Closure;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\PhoneNumber\PhoneNumberFactory;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
-use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\UI\Presenter;
@@ -18,7 +18,7 @@ use SQL\SearchableDataSource;
  * Class TeamApplicationGrid
  * @package FKSDB\Components\Grids\Events
  */
-class TeamApplicationGrid extends BaseGrid {
+class TeamApplicationGrid extends AbstractApplicationGrid {
     /**
      * @var ModelEvent
      */
@@ -50,7 +50,6 @@ class TeamApplicationGrid extends BaseGrid {
         $source = new SearchableDataSource($participants);
         $source->setFilterCallback($this->getFilterCallBack());
         $this->setDataSource($source);
-
 
         $this->addColumn('e_fyziklani_team_id');
         $this->addColumn('name', _('Team name'));

@@ -8,7 +8,7 @@ use FKSDB\Components\Controls\Helpers\ValuePrinters\BinaryValueControl;
 use FKSDB\Components\Controls\Helpers\ValuePrinters\PersonValueControl;
 use FKSDB\Components\Controls\Helpers\ValuePrinters\PriceValueControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
-use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use Nette\Application\UI\Presenter;
@@ -21,7 +21,7 @@ use SQL\SearchableDataSource;
  * Class ParticipantGrid
  * @package FKSDB\Components\Grids\Events
  */
-class ApplicationGrid extends BaseGrid {
+class ApplicationGrid extends AbstractApplicationGrid {
     /**
      * @var ModelEvent
      */
