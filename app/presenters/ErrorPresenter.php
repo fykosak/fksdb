@@ -1,7 +1,7 @@
 <?php
 
 use Nette\Application\BadRequestException;
-use Nette\Diagnostics\Debugger;
+use Tracy\Debugger;
 
 /**
  * Error presenter.

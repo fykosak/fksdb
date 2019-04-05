@@ -11,6 +11,7 @@ use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
 use Nette\Object;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -70,7 +71,6 @@ class SingleEventSource extends Object implements IHolderSource {
         $this->container = $container;
 
         $this->dummyHolder = $this->container->createEventHolder($this->event);
-
         $primaryHolder = $this->dummyHolder->getPrimaryHolder();
         $eventIdColumn = $primaryHolder->getEventId();
         $this->primarySelection = $primaryHolder->getService()->getTable()->where($eventIdColumn, $this->event->getPrimary());
@@ -100,7 +100,7 @@ class SingleEventSource extends Object implements IHolderSource {
             }
         }
         // load primaries
-        $joinTo = $joinToCheck ? : $this->primarySelection->getPrimary();
+        $joinTo = $joinToCheck ?: $this->primarySelection->getPrimary();
         $this->primaryModels = $this->primarySelection->fetchPairs($joinTo);
 
         $joinValues = array_keys($this->primaryModels);

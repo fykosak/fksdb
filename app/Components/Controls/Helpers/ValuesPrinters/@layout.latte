@@ -2,14 +2,22 @@
     <div class="row">
         <b class="col-5">{$title}</b>
         <span class="col-7">
-            {include #value}
+            {if $hasPermissions}
+                {include #value}
+            {else}
+                {control permissionDenied}
+            {/if}
         </span>
     </div>
 {else}
     <div class="row">
         <b class="col-xl-2 col-lg-4 col-md-5 col-sm-6">{$title}</b>
         <span class="col-xl-10 col-lg-8 col-md-7 col-sm-6">
-            {include #value}
+              {if $hasPermissions}
+                  {include #value}
+              {else}
+                  {control permissionDenied}
+              {/if}
         </span>
     </div>
 {/if}

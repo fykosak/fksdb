@@ -4,7 +4,7 @@ namespace Events\Accommodation;
 
 use Nette\Application\Request;
 use Nette\Config\Helpers;
-use Nette\DateTime;
+use Nette\Utils\DateTime;
 use Tester\Assert;
 
 $container = require '../../bootstrap.php';

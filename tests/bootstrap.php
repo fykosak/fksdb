@@ -8,7 +8,6 @@ use JanTvrdik\Components\DatePicker;
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Application\Responses\TextResponse;
 use Nette\Config\Configurator;
-use Nette\Diagnostics\Debugger;
 use Nette\Forms\Container;
 use Nette\Utils\Finder;
 use Tester\Assert;
@@ -47,7 +46,7 @@ $configurator->onCompile[] = function ($configurator, $compiler) {
 };
 
 $configurator->setDebugMode(false);
-Debugger::$logDirectory = LOG_DIR;
+\Tracy\Debugger::$logDirectory = LOG_DIR;
 
 
 // Enable RobotLoader - this will load all classes automatically

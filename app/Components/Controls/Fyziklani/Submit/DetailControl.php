@@ -7,7 +7,7 @@ use FKSDB\model\Fyziklani\ClosedSubmittingException;
 use FKSDB\model\Fyziklani\PointsMismatchException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
-use Nette\Diagnostics\Debugger;
+use Tracy\Debugger;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 

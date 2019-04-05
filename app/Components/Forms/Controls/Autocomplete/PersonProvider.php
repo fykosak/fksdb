@@ -39,7 +39,7 @@ class PersonProvider implements IFilteredDataProvider {
     /**
      * Syntactic sugar, should be solved more generally.
      * @param \FKSDB\ORM\Models\ModelContest $contest
-     * @param YearCalculator $yearCalculator
+     * @param \FKSDB\YearCalculator $yearCalculator
      */
     public function filterOrgs(ModelContest $contest, YearCalculator $yearCalculator) {
         $orgs = $this->servicePerson->getTable()->where([

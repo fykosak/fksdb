@@ -9,9 +9,9 @@ use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
-use Nette\DateTime;
 use Nette\InvalidStateException;
 use Nette\Security\IResource;
+use Nette\Utils\DateTime;
 
 /**
  *
@@ -39,8 +39,15 @@ class ModelEvent extends AbstractModelSingle implements IResource {
     /**
      * @param Holder $holder
      */
-    function setHolder(Holder $holder) {
+    public function setHolder(Holder $holder) {
         $this->holder = $holder;
+    }
+
+    /**
+     * @return Holder
+     */
+    public function getHolder(): Holder {
+        return $this->holder;
     }
 
     /**
@@ -122,6 +129,20 @@ class ModelEvent extends AbstractModelSingle implements IResource {
     }
 
     /**
+     * @return GroupedSelection
+     */
+    public function getParticipants(): GroupedSelection {
+        return $this->related(DbNames::TAB_EVENT_PARTICIPANT, 'event_id');
+    }
+
+    /**
+     * @return GroupedSelection
+     */
+    public function getTeams(): GroupedSelection {
+        return $this->related(DbNames::TAB_E_FYZIKLANI_TEAM, 'event_id');
+    }
+
+    /**
      * @return array
      */
     public function __toArray(): array {
@@ -137,5 +158,4 @@ class ModelEvent extends AbstractModelSingle implements IResource {
             'event_type_id' => $this->event_type_id,
         ];
     }
-
 }

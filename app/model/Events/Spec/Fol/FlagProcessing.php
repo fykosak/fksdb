@@ -8,8 +8,8 @@ use Events\Processings\AbstractProcessing;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Services\ServiceSchool;
 use FKSDB\YearCalculator;
-use Nette\ArrayHash;
 use Nette\Forms\Form;
+use Nette\Utils\ArrayHash;
 
 /**
  * Class FlagProcessing

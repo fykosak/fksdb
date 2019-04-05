@@ -58,7 +58,6 @@ services:
     event.ServiceDsefParticipant:           FKSDB\ORM\Services\Events\ServiceDsefParticipant
     event.ServiceMDsefParticipant:          ORM\ServicesMulti\Events\ServiceMDsefParticipant
 
-
     event.ServiceFyziklaniParticipant:      FKSDB\ORM\Services\Events\ServiceFyziklaniParticipant
     event.ServiceMFyziklaniParticipant:     ORM\ServicesMulti\Events\ServiceMFyziklaniParticipant
 

@@ -15,7 +15,7 @@ use FKSDB\ORM\Services\ServiceTaskStudyYear;
 use FKSDB\Results\SQLResultsCache;
 use FKSDB\Submits\SeriesTable;
 use Nette\Application\UI\Form;
-use Nette\Diagnostics\Debugger;
+use Tracy\Debugger;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Html;
 
@@ -166,7 +166,7 @@ class PointsPresenter extends SeriesPresenter {
             $schoolLabel = Html::el('small');
             $schoolLabel->setText('(' . $schoolAbbrev . ')');
             $schoolLabel->class = 'text-muted';
-            $label = Html::el()
+            $label = Html::el('span')
                 ->setText($fullname)
                 ->addHtml(Html::el('br'))
                 ->addText($schoolLabel);

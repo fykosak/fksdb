@@ -14,7 +14,7 @@ use Mail\MailTemplateFactory;
 use Mail\SendFailedException;
 use ModelException;
 use Nette\Database\Connection;
-use Nette\Diagnostics\Debugger;
+use Tracy\Debugger;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
 use Nette\Object;

@@ -19,7 +19,7 @@ class SoapResponse implements Nette\Application\IResponse {
         try {
             $this->soapServer->handle();
         } catch (Exception $e) {
-            Nette\Diagnostics\Debugger::log($e);
+            \Tracy\Debugger::log($e);
         }
     }
 

@@ -16,12 +16,29 @@ class CSVParser extends Object implements Iterator {
     const INDEX_NUMERIC = 0;
     const INDEX_FROM_HEADER = 1;
     const BOM = '\xEF\xBB\xBF';
-
+    /**
+     * @var resource
+     */
     private $file;
+    /**
+     * @var string
+     */
     private $delimiter;
+    /**
+     * @var int
+     */
     private $indexType;
+    /**
+     * @var int
+     */
     private $rowNumber;
+    /**
+     * @var int
+     */
     private $currentRow;
+    /**
+     * @var
+     */
     private $header;
 
     /**

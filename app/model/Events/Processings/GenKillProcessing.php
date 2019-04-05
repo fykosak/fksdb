@@ -8,9 +8,9 @@ use Events\Model\Holder\BaseHolder;
 use Events\Model\Holder\Holder;
 use Events\SubmitProcessingException;
 use FKSDB\Logging\ILogger;
-use Nette\ArrayHash;
 use Nette\Forms\Form;
 use Nette\Object;
+use Nette\Utils\ArrayHash;
 
 /**
  * Checks determining fields in sent data and either terminates the application

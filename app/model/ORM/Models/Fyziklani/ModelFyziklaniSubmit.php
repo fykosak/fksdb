@@ -7,7 +7,7 @@ use FKSDB\model\Fyziklani\PointsMismatchException;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelPerson;
 use Nette\Database\Table\ActiveRow;
-use Nette\DateTime;
+use Nette\Utils\DateTime;
 
 /**
  *

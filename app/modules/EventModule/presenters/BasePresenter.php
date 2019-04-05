@@ -6,7 +6,9 @@ use AuthenticatedPresenter;
 use FKSDB\Components\Controls\LanguageChooser;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Services\ServiceContestYear;
 use FKSDB\ORM\Services\ServiceEvent;
+use FKSDB\YearCalculator;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 
@@ -38,6 +40,30 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @var \FKSDB\ORM\Services\ServiceEvent
      */
     protected $serviceEvent;
+
+    /**
+     * @var ServiceContestYear
+     */
+    protected $serviceContestYear;
+
+    /**
+     * @param ServiceContestYear $serviceContestYear
+     */
+    public function injectServiceContestYear(ServiceContestYear $serviceContestYear) {
+        $this->serviceContestYear = $serviceContestYear;
+    }
+
+    /**
+     * @var YearCalculator
+     */
+    protected $yearCalculator;
+
+    /**
+     * @param \FKSDB\YearCalculator $yearCalculator
+     */
+    public function injectYearCalculator(YearCalculator $yearCalculator) {
+        $this->yearCalculator = $yearCalculator;
+    }
 
     /**
      * @param Container $container
@@ -84,6 +110,15 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      */
     protected function eventExist(): bool {
         return !!$this->getEvent();
+    }
+
+    /**
+     * @return int
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
+    protected function getAcYear(): int {
+        return $this->yearCalculator->getAcademicYear($this->getEvent()->getContest(), $this->getEvent()->year);
     }
 
     /**
