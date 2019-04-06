@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Forms\Factories\Fyziklani;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\model\Fyziklani\CloseSubmitStrategy;
+use FKSDB\model\Fyziklani\CloseStrategy;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
@@ -104,7 +104,7 @@ class CloseFormsFactory {
      * @throws AbortException
      */
     private function handleTotalFormSucceeded(FormControl $control, ModelEvent $event) {
-        $closeStrategy = new CloseSubmitStrategy($event, $this->serviceFyziklaniTeam);
+        $closeStrategy = new CloseStrategy($event, $this->serviceFyziklaniTeam);
         $log = $closeStrategy->closeGlobal();
         $control->getPresenter()->flashMessage(Html::el()->addHtml(Html::el('h3')->addText('Rankin has been saved.'))->addHtml(Html::el('ul')->addHtml($log)), \BasePresenter::FLASH_SUCCESS);
         $control->getPresenter()->redirect('this');
@@ -118,8 +118,8 @@ class CloseFormsFactory {
      * @throws BadRequestException
      */
     private function handleCategoryFormSucceeded(Form $form, FormControl $control, ModelEvent $event) {
-        $closeStrategy = new CloseSubmitStrategy($event, $this->serviceFyziklaniTeam);
-        $log = $closeStrategy->closeByCategory($form->getValues()->category);
+        $closeStrategy = new CloseStrategy($event, $this->serviceFyziklaniTeam);
+        $log = $closeStrategy->close($form->getValues()->category);
         $control->getPresenter()->flashMessage(Html::el()->addHtml(Html::el('h3')->addHtml('Rankin has been saved.'))->addHtml(Html::el('ul')->addHtml($log)), \BasePresenter::FLASH_SUCCESS);
         $control->getPresenter()->redirect('this');
     }

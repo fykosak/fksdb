@@ -1,11 +1,5 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace FKSDB\model\Fyziklani;
 
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
@@ -23,7 +17,7 @@ use Traversable;
  * @author Michal Červeňák
  * @author Lukáš Timko
  */
-class CloseSubmitStrategy {
+class CloseStrategy {
     /**
      * @var BasePresenter
      * @deprecated
@@ -55,8 +49,9 @@ class CloseSubmitStrategy {
      * @param string|null $category
      * @return Html
      * @throws BadRequestException
+     * @internal
      */
-    public function closeByCategory(string $category = null): Html {
+    public function close(string $category = null): Html {
         $connection = $this->serviceFyziklaniTeam->getConnection();
         $connection->beginTransaction();
         $teams = $this->getAllTeams($category);
@@ -68,10 +63,20 @@ class CloseSubmitStrategy {
     }
 
     /**
+     * @param string|null $category
+     * @return Html
      * @throws BadRequestException
      */
+    public function __invoke(string $category = null): Html {
+        return $this->close();
+    }
+
+    /**
+     * @throws BadRequestException
+     * @internal
+     */
     public function closeGlobal(): Html {
-        return $this->closeByCategory(null);
+        return $this->close(null);
     }
 
     /**
@@ -79,10 +84,10 @@ class CloseSubmitStrategy {
      * @param $total
      * @return Html
      */
-    private function saveResults($data, bool $total): Html {
+    private function saveResults(array $data, bool $total): Html {
         $log = Html::el('ul');
-        foreach ($data as $index => &$teamData) {
-            $team = ModelFyziklaniTeam::createFromTableRow($this->serviceFyziklaniTeam->findByPrimary($teamData['e_fyziklani_team_id']));
+        foreach ($data as $index => $teamData) {
+            $team = $teamData['team'];
             if ($total) {
                 $this->serviceFyziklaniTeam->updateModel($team, ['rank_total' => $index + 1]);
             } else {
@@ -90,28 +95,30 @@ class CloseSubmitStrategy {
             }
             $this->serviceFyziklaniTeam->save($team);
             $log->addHtml(Html::el('li')
-                ->addText(_('TeamID') . ':' . $teamData['e_fyziklani_team_id'] . _('Pořadí') . ': ' . ($index + 1)));
+                ->addText(_('Team') . $team->name . ':(' . $team->e_fyziklani_team_id . ')' . _('Pořadí') . ': ' . ($index + 1)));
         }
         return $log;
     }
 
     /**
-     * @param $teams
-     * @return array
+     * @param Selection $teams
+     * @return array[]
      * @throws BadRequestException
      */
-    private function getTeamsStats($teams): array {
+    private function getTeamsStats(Selection $teams): array {
         $teamsData = [];
         foreach ($teams as $row) {
             $team = ModelFyziklaniTeam::createFromTableRow($row);
-            $teamData = [];
-            $teamId = $team->e_fyziklani_team_id;
-            $teamData['e_fyziklani_team_id'] = $teamId;
-            if ($team->points === null) {
-                throw new BadRequestException('Tým ' . $team->name . '(' . $teamId . ') nemá uzavřené bodování');
+
+            if ($team->hasOpenSubmitting()) {
+                throw new BadRequestException('Tým ' . $team->name . '(' . $team->e_fyziklani_team_id . ') nemá uzavřené bodování');
             }
-            $teamData['points'] = $team->points;
-            $teamData['submits'] = $this->getAllSubmits($teamId);
+            $teamData = [
+                'points' => $team->points,
+                'submits' => $this->getAllSubmits($team),
+                'team' => $team,
+            ];
+
             $teamsData[] = $teamData;
         }
         return $teamsData;
@@ -121,7 +128,7 @@ class CloseSubmitStrategy {
      * @return \Closure
      */
     private static function getSortFunction(): \Closure {
-        return function ($b, $a) {
+        return function (array $b, array $a): int {
             if ($a['points'] > $b['points']) {
                 return 1;
             } elseif ($a['points'] < $b['points']) {
@@ -138,10 +145,10 @@ class CloseSubmitStrategy {
     }
 
     /**
-     * @param null $category
+     * @param string|null $category
      * @return Selection
      */
-    private function getAllTeams($category = null): Selection {
+    private function getAllTeams(string $category = null): Selection {
         $query = $this->serviceFyziklaniTeam->findParticipating($this->event);
         if ($category) {
             $query->where('category', $category);
@@ -150,11 +157,10 @@ class CloseSubmitStrategy {
     }
 
     /**
-     * @param integer $teamId
+     * @param ModelFyziklaniTeam $team
      * @return array
      */
-    protected function getAllSubmits(int $teamId): array {
-        $team = ModelFyziklaniTeam::createFromTableRow($this->serviceFyziklaniTeam->findByPrimary($teamId));
+    protected function getAllSubmits(ModelFyziklaniTeam $team): array {
         $arraySubmits = [];
         $sum = 0;
         $count = 0;

@@ -3,17 +3,18 @@
 namespace FKSDB\Components\Controls\Fyziklani;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Controls\Stalking\Helpers\ValuePrintersTrait;
 use FKSDB\model\Fyziklani\ClosedSubmittingException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
-use Nette\Diagnostics\Debugger;
 use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Form;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
+use Tracy\Debugger;
 
 /**
  * Class EditSubmitControl
@@ -21,6 +22,7 @@ use Nette\Templating\FileTemplate;
  * @property FileTemplate $template
  */
 class EditSubmitControl extends Control {
+    use ValuePrintersTrait;
     /**
      * @var ServiceFyziklaniSubmit
      */
@@ -36,7 +38,7 @@ class EditSubmitControl extends Control {
     /**
      * @var ITranslator
      */
-    private $translator;
+    protected $translator;
 
     /**
      * EditSubmitControl constructor.
@@ -119,7 +121,7 @@ class EditSubmitControl extends Control {
         try {
             $msg = $this->submit->changePoints($values->points);
             Debugger::log(\sprintf('fyziklani_submit %d edited by %d', $this->submit->fyziklani_submit_id, $this->getPresenter()->getUser()->getIdentity()->getPerson()->person_id));
-            $this->getPresenter()->flashMessage($msg, \BasePresenter::FLASH_SUCCESS);
+            $this->getPresenter()->flashMessage($msg->getMessage(), $msg->getLevel());
             $this->redirect('this');
         } catch (ClosedSubmittingException $exception) {
             $this->getPresenter()->flashMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR);

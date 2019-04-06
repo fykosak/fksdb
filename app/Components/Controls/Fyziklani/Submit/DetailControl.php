@@ -7,9 +7,9 @@ use FKSDB\model\Fyziklani\ClosedSubmittingException;
 use FKSDB\model\Fyziklani\PointsMismatchException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
-use Tracy\Debugger;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
+use Tracy\Debugger;
 
 /**
  * Class DetailControl
@@ -55,10 +55,10 @@ class DetailControl extends AbstractDetailControl {
     public function handleCheck() {
         try {
             if ($this->model->canChange()) {
-                $msg = $this->model->check($this->model->points);
+                $log = $this->model->check($this->model->points);
                 Debugger::log(\sprintf('fyziklani_submit %d checked by %d', $this->model->fyziklani_submit_id, $this->getPresenter()->getUser()->getIdentity()->getPerson()->person_id));
 
-                $this->getPresenter()->flashMessage($msg, \BasePresenter::FLASH_SUCCESS);
+                $this->getPresenter()->flashMessage($log->getMessage(), $log->getLevel());
                 $this->redirect('this');
             }
         } catch (ClosedSubmittingException $exception) {
