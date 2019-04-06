@@ -22,10 +22,6 @@ class ValidationPresenter extends BasePresenter {
      */
     private $servicePerson;
     /**
-     * @var ValidationTest[]
-     */
-    public static $availableTests = [PhoneNumber::class, ParticipantsDuration::class, GenderFromBornNumber::class];
-    /**
      * @var ValidationFactory
      */
     private $validationFactory;

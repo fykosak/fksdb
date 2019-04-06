@@ -21,17 +21,16 @@ acl:
     - addRole(org)                      # org (automatická role)
     - addRole(webmaster, org)           # webař
     - addRole(taskManager, org)         # úlohář
-    - addRole(dispatcher, org)          # koordinátor obálkování
+    - addRole(inboxManager, org)          # koordinátor obálkování, příjemce řešení
     - addRole(exportDesigner, org)      # tvůrce exportů (!! má RO přístup ke všem datům)
     - addRole(dataManager, [org, exportDesigner]) # správce dat DB
     - addRole(eventManager, org)        # správce přihlášek
-    - addRole(inboxManager, org)        # příjemce řešení
     - addRole(boss, org)                # šéf
     - addRole(aesop)                    # AESOPový stahovač dat
     - addRole(web)                      # webový stahovač dat (např. fksdbexport)
     - addRole(wiki)                     # neveřejný webový stahovač dat (např. fksdbexport na org wiki)
     - addRole(schoolManager)            # správce dat škol
-    - addRole(superuser, [org, webmaster, taskManager, dispatcher, dataManager, exportDesigner, eventManager, inboxManager, boss])
+    - addRole(superuser, [org, webmaster, taskManager, inboxManager, dataManager, exportDesigner, eventManager, boss])
     - addRole(cartesian)
 
     # Resources
@@ -91,12 +90,9 @@ acl:
 
     - allow(webmaster, task, insert) # stahování úloh
 
-    - allow(dispatcher, storedQuery, list)
-    - allow(dispatcher, storedQuery, show)
-    - allow(dispatcher, export, execute)
-
-    - allow(taskManager, task, ::constant(Nette\Security\Permission::ALL))
-
+    - allow(inboxManager, storedQuery, list)
+    - allow(inboxManager, storedQuery, show)
+    - allow(inboxManager, export, execute)
     - allow(inboxManager, submit, ::constant(Nette\Security\Permission::ALL))
     - allow(inboxManager, task, edit)  # zadání opravovačů
     - allow(inboxManager, person, edit, [@ownerAssertion, 'existsOwnContestant'])
@@ -106,30 +102,31 @@ acl:
     - allow(inboxManager, school, ::constant(Nette\Security\Permission::ALL))
     - allow(inboxManager, person, stalk.restrict, [@ownerAssertion, 'existsOwnContestant'])
 
-    # list privileges explicitly, so that we exclude stalk and stalk-search
-    - allow(dataManager, person, [create, edit, list, delete, merge])
-    - allow(dataManager, school, ::constant(Nette\Security\Permission::ALL))
-    - allow(dataManager, person, stalk.full)
+    - allow(taskManager, task, ::constant(Nette\Security\Permission::ALL))
 
     - allow(exportDesigner, storedQuery, ::constant(Nette\Security\Permission::ALL))
     - allow(exportDesigner, export, ::constant(Nette\Security\Permission::ALL))
     - allow(exportDesigner, export.adhoc, ::constant(Nette\Security\Permission::ALL))
 
+    - allow(dataManager, person, ::constant(Nette\Security\Permission::ALL))
+    - allow(dataManager, school, ::constant(Nette\Security\Permission::ALL))
+
     - allow(eventManager, event, ::constant(Nette\Security\Permission::ALL)) # TODO add certain privilegies to organizers too
     - allow(eventManager, eventOrg, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, school, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, export, execute) # TODO (needs better distinction -- assertion at event org)
-
     - allow(eventManager, person, stalk.full)
 
     - allow(boss, org, ::constant(Nette\Security\Permission::ALL))
     - allow(boss, person, edit, [@ownerAssertion, 'existsOwnContestant'])
     - allow(boss, person, stalk.full)
 
+    - allow(schoolManager, school, ::constant(Nette\Security\Permission::ALL))
+    # robot role
     - allow(aesop, export, execute, qid(['aesop.ct', 'aesop.fol', 'aesop.dsef', 'aesop.dsef2', 'aesop.tsaf', 'aesop.vaf', 'aesop.sous.j', 'aesop.sous.p', 'aesop.klani.ct', 'aesop.klani.uc', 'aesop.tabor', 'aesop.setkani.j', 'aesop.setkani.p']))
     - allow(web, export, execute, queryTag(['web-safe']))
     - allow(wiki, export, execute, queryTag(['wiki-safe']))
-    - allow(schoolManager, school, ::constant(Nette\Security\Permission::ALL))
+
 
 # fyziklani
     - allow(guest,fyziklani.dashboard, default)
