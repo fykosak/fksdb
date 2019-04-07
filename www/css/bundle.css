@@ -708,6 +708,39 @@ main.login[data-bg="3"] {
   color: white;
 }
 
+[data-contest~=theme-dark] {
+  color: #fff;
+}
+[data-contest~=theme-dark] .navigation-item .card {
+  height: 12rem;
+  width: 12rem;
+  border-color: #2ed739;
+  border-radius: 0;
+  background-color: black;
+  transition-duration: 200ms;
+  color: #2ed739;
+}
+[data-contest~=theme-dark] .navigation-item .card a {
+  color: #2ed739;
+}
+[data-contest~=theme-dark] .navigation-item .card:hover, [data-contest~=theme-dark] .navigation-item .card:focus {
+  transition-duration: 200ms;
+  background-color: #2ed739;
+  color: black;
+}
+[data-contest~=theme-dark] .navigation-item .card:hover a, [data-contest~=theme-dark] .navigation-item .card:focus a {
+  color: black;
+}
+[data-contest~=theme-dark] main {
+  background-color: black;
+}
+[data-contest~=theme-dark] .bg-white-container {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+[data-contest~=theme-dark] .card, [data-contest~=theme-dark] .list-group-item {
+  background-color: transparent;
+}
+
 body[data-contest=vyfuk] h1, body[data-contest=vyfuk] h2, body[data-contest=vyfuk] h3, body[data-contest=vyfuk] h4, body[data-contest=vyfuk] h5, body[data-contest=vyfuk] h6 {
   font-family: "Gloria Hallelujah", cursive;
 }

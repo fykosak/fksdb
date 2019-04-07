@@ -2,7 +2,7 @@
 
     {control stringValue $model, _('event_participant_id'), event_participant_id}
 
-    {control personValue $model->getPerson(), $model->getEvent()->year, $model->getEvent()->getEventType()->contest_id}
+    {control personValue $model->getPerson()}
 
     {control stringValue $model, _('Status'), status}
 

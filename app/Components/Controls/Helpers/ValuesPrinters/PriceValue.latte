@@ -1,8 +1,8 @@
 {layout './@layout.latte'}
 {block value}
-    {if \is_null($model->{$accessKey})}
+    {if \is_null($price)}
         {control notSet}
     {else}
-        {$model->getPrice()->__toString()}
+        {$price->__toString()}
     {/if}
 {/block}

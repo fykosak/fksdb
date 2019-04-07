@@ -50,7 +50,7 @@
 
         <h4>{_'Parcipant'} {$counter}</h4>
 
-        {control personValue $participant->getPerson(),$participant->getEvent()->year, $participant->getEvent()->getEventType()->contest_id }
+        {control personValue $participant->getPerson()}
 
         {control stringValue $participant, _('Status'), status}
 

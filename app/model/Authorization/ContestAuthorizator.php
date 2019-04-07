@@ -59,7 +59,7 @@ class ContestAuthorizator extends Object {
      * @param int|\FKSDB\ORM\Models\ModelContest $contest queried contest
      * @return boolean
      */
-    public function isAllowed($resource, $privilege, $contest) {
+    public function isAllowed($resource, $privilege, $contest): bool {
         if (!$this->getUser()->isLoggedIn()) {
             $role = new Grant(Grant::CONTEST_ALL, ModelRole::GUEST);
             return $this->acl->isAllowed($role, $resource, $privilege);
@@ -72,13 +72,39 @@ class ContestAuthorizator extends Object {
     }
 
     /**
+     * @param $resource
+     * @param $privilege
+     * @return bool
+     */
+    public final function isAllowedForAnyContest($resource, $privilege): bool {
+        if (!$this->getUser()->isLoggedIn()) {
+            $role = new Grant(Grant::CONTEST_ALL, ModelRole::GUEST);
+            return $this->acl->isAllowed($role, $resource, $privilege);
+        }
+        /**
+         * @var \FKSDB\ORM\Models\ModelLogin $login
+         */
+        $login = $this->getUser()->getIdentity();
+
+        $roles = $login->getRoles();
+
+        foreach ($roles as $role) {
+            if ($this->acl->isAllowed($role, $resource, $privilege)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * @param ModelLogin $login
      * @param $resource
      * @param $privilege
      * @param $contest
      * @return bool
      */
-    public final function isAllowedForLogin(ModelLogin $login, $resource, $privilege, $contest) {
+    public final function isAllowedForLogin(ModelLogin $login, $resource, $privilege, $contest): bool {
         $contestId = ($contest instanceof ActiveRow) ? $contest->contest_id : $contest;
         $roles = $login->getRoles();
 
