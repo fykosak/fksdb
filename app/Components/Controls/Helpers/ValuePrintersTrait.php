@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Controls\Stalking\Helpers;
+namespace FKSDB\Components\Controls\Helpers;
 
 use BasePresenter;
 use FKSDB\Components\Controls\Helpers;

@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Controls\Fyziklani;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Controls\Stalking\Helpers\ValuePrintersTrait;
 use FKSDB\model\Fyziklani\ClosedSubmittingException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\ModelEvent;
@@ -22,7 +21,7 @@ use Tracy\Debugger;
  * @property FileTemplate $template
  */
 class EditSubmitControl extends Control {
-    use ValuePrintersTrait;
+    use FKSDB\Components\Controls\Helpers\ValuePrintersTrait;
     /**
      * @var ServiceFyziklaniSubmit
      */
@@ -68,6 +67,7 @@ class EditSubmitControl extends Control {
     /**
      * @param ModelFyziklaniSubmit $submit
      * @throws BadRequestException
+     * @throws ClosedSubmittingException
      */
     public function setSubmit(ModelFyziklaniSubmit $submit) {
         $this->submit = $submit;
@@ -80,6 +80,8 @@ class EditSubmitControl extends Control {
                 'team_id' => $this->submit->e_fyziklani_team_id,
                 'points' => $this->submit->points,
             ]);
+        } else {
+            throw new ClosedSubmittingException($submit->getTeam());
         }
     }
 

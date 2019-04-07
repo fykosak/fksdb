@@ -5,6 +5,7 @@ namespace FKSDB\ORM\Models\Fyziklani;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelEvent;
+use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
 use Nette\Utils\DateTime;
 
@@ -17,6 +18,7 @@ use Nette\Utils\DateTime;
  * @property string status
  * @property DateTime created
  * @property string phone
+ * @property ActiveRow event
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @author Michal Červeňák <miso@fykos.cz>

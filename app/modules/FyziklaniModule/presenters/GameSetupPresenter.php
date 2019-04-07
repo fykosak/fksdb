@@ -3,7 +3,7 @@
 
 namespace FyziklaniModule;
 
-use FKSDB\Components\Controls\Stalking\Helpers\ValuePrintersTrait;
+use FKSDB\Components\Controls\Helpers\ValuePrintersTrait;
 
 /**
  * Class GameSetupPresenter

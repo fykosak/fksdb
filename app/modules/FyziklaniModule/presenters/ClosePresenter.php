@@ -3,7 +3,6 @@
 namespace FyziklaniModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Controls\Fyziklani\CloseControl;
 use FKSDB\Components\Controls\Fyziklani\CloseTeamControl;
 use FKSDB\Components\Grids\Fyziklani\CloseTeamsGrid;
 use FKSDB\Components\Grids\Fyziklani\TeamSubmitsGrid;

@@ -10,7 +10,6 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\Forms\Form;
 use Nette\Utils\Html;
 
 /**
@@ -42,10 +41,9 @@ class CloseFormsFactory {
     public function createCloseCategoryForm(string $category, ModelEvent $event): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
-        $form->addHidden('category', $category);
         $form->addSubmit('send', sprintf(_('Close %s category'), $category))->setDisabled(!$this->isReadyToClose($event, $category));
-        $form->onSuccess[] = function (Form $form) use ($control, $event) {
-            $this->handleCategoryFormSucceeded($form, $control, $event);
+        $form->onSuccess[] = function () use ($control, $event, $category) {
+            $this->handleFormSucceeded($control, $event, $category);
         };
         return $control;
     }
@@ -60,7 +58,7 @@ class CloseFormsFactory {
         $form = $control->getForm();
         $form->addSubmit('send', _('Close global results'))->setDisabled(!$this->isReadyToClose($event));
         $form->onSuccess[] = function () use ($control, $event) {
-            $this->handleTotalFormSucceeded($control, $event);
+            $this->handleFormSucceeded($control, $event);
         };
         return $control;
     }
@@ -100,26 +98,13 @@ class CloseFormsFactory {
     /**
      * @param FormControl $control
      * @param ModelEvent $event
-     * @throws BadRequestException
-     * @throws AbortException
-     */
-    private function handleTotalFormSucceeded(FormControl $control, ModelEvent $event) {
-        $closeStrategy = new CloseStrategy($event, $this->serviceFyziklaniTeam);
-        $log = $closeStrategy->closeGlobal();
-        $control->getPresenter()->flashMessage(Html::el()->addHtml(Html::el('h3')->addText('Rankin has been saved.'))->addHtml(Html::el('ul')->addHtml($log)), \BasePresenter::FLASH_SUCCESS);
-        $control->getPresenter()->redirect('this');
-    }
-
-    /**
-     * @param Form $form
-     * @param FormControl $control
-     * @param ModelEvent $event
+     * @param string $category
      * @throws AbortException
      * @throws BadRequestException
      */
-    private function handleCategoryFormSucceeded(Form $form, FormControl $control, ModelEvent $event) {
+    private function handleFormSucceeded(FormControl $control, ModelEvent $event, string $category = null) {
         $closeStrategy = new CloseStrategy($event, $this->serviceFyziklaniTeam);
-        $log = $closeStrategy->close($form->getValues()->category);
+        $log = $closeStrategy($category);
         $control->getPresenter()->flashMessage(Html::el()->addHtml(Html::el('h3')->addHtml('Rankin has been saved.'))->addHtml(Html::el('ul')->addHtml($log)), \BasePresenter::FLASH_SUCCESS);
         $control->getPresenter()->redirect('this');
     }
