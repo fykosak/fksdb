@@ -709,7 +709,7 @@ main.login[data-bg="3"] {
 }
 
 [data-contest~=common-black] {
-  color: #2ed739;
+  color: #fff;
 }
 [data-contest~=common-black] .navigation-item .card {
   height: 12rem;
@@ -736,6 +736,9 @@ main.login[data-bg="3"] {
 }
 [data-contest~=common-black] .bg-white-container {
   background-color: rgba(255, 255, 255, 0.1);
+}
+[data-contest~=common-black] .card, [data-contest~=common-black] .list-group-item {
+  background-color: transparent;
 }
 
 body[data-contest=vyfuk] h1, body[data-contest=vyfuk] h2, body[data-contest=vyfuk] h3, body[data-contest=vyfuk] h4, body[data-contest=vyfuk] h5, body[data-contest=vyfuk] h6 {

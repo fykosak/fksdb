@@ -53,12 +53,16 @@
   .navigation-item .card {
     @include navigation-item(#2ed739, black);
   }
-  color: #2ed739;
+  //color: #2ed739;
+  color: #fff;
   main {
     background-color: black;
   }
   .bg-white-container {
     background-color: rgba(255, 255, 255, 0.1);
+  }
+  .card, .list-group-item {
+    background-color: transparent;
   }
 }
 

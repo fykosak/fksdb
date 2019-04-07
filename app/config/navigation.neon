@@ -39,6 +39,7 @@ navigation:
             - common.validation.default
         common.dashboard.default:
             - common.validation.default
+            - common.stalking.default
         common.validation.default:
             - common.validation.preview
             - common.validation.list
