@@ -49,14 +49,14 @@
   @include navigation-item($vyfukMainColor, white);
 }
 
-[data-contest~="common-black"] {
+[data-contest~="theme-dark"] {
   .navigation-item .card {
     @include navigation-item(#2ed739, black);
   }
-  //color: #2ed739;
   color: #fff;
   main {
     background-color: black;
+    //background-image: linear-gradient(to bottom, darken(#2ed739, 42%), black);
   }
   .bg-white-container {
     background-color: rgba(255, 255, 255, 0.1);

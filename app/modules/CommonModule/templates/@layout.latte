@@ -1,9 +1,5 @@
-{layout '../../../templates/@layout.latte'}
+{layout '../../templates/@layout.latte'}
 {block user-info}
-    <li class="nav-item">
-        <a href="{plink this darkMode=>!$darkMode}" class="nav-link">
-            <b>{$darkMode?_('Light mode'):_('Dark mode')}</b>
-        </a>
-    </li>
+    {control themeSwitcher}
     {include #parent}
 {/block}

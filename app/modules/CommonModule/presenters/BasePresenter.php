@@ -3,6 +3,7 @@
 namespace CommonModule;
 
 use AuthenticatedPresenter;
+use FKSDB\Components\Controls\Choosers\ThemeSwitcher;
 
 /**
  * Class BasePresenter
@@ -13,18 +14,25 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @var bool
      * @persistent
      */
-    public $darkMode = false;
+    public $theme = 'light';
 
     /**
      * @return array
      */
     protected function getNavBarVariant(): array {
-        return ['common' . ($this->darkMode ? ' common-black' : ''), 'bg-dark navbar-dark'];
+        return [('theme-' . $this->getComponent('themeSwitcher')->getSelectedTheme()) . ' common', 'bg-dark navbar-dark'];
     }
 
     protected function beforeRender() {
-        $this->template->darkMode = $this->darkMode;
+        $this->template->theme = $this->theme;
         parent::beforeRender();
+    }
+
+    /**
+     * @return ThemeSwitcher
+     */
+    public function createComponentThemeSwitcher(): ThemeSwitcher {
+        return new ThemeSwitcher($this->session, $this->getTranslator());
     }
 
     /**

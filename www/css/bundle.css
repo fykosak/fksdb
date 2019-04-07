@@ -708,10 +708,10 @@ main.login[data-bg="3"] {
   color: white;
 }
 
-[data-contest~=common-black] {
+[data-contest~=theme-dark] {
   color: #fff;
 }
-[data-contest~=common-black] .navigation-item .card {
+[data-contest~=theme-dark] .navigation-item .card {
   height: 12rem;
   width: 12rem;
   border-color: #2ed739;
@@ -720,24 +720,24 @@ main.login[data-bg="3"] {
   transition-duration: 200ms;
   color: #2ed739;
 }
-[data-contest~=common-black] .navigation-item .card a {
+[data-contest~=theme-dark] .navigation-item .card a {
   color: #2ed739;
 }
-[data-contest~=common-black] .navigation-item .card:hover, [data-contest~=common-black] .navigation-item .card:focus {
+[data-contest~=theme-dark] .navigation-item .card:hover, [data-contest~=theme-dark] .navigation-item .card:focus {
   transition-duration: 200ms;
   background-color: #2ed739;
   color: black;
 }
-[data-contest~=common-black] .navigation-item .card:hover a, [data-contest~=common-black] .navigation-item .card:focus a {
+[data-contest~=theme-dark] .navigation-item .card:hover a, [data-contest~=theme-dark] .navigation-item .card:focus a {
   color: black;
 }
-[data-contest~=common-black] main {
+[data-contest~=theme-dark] main {
   background-color: black;
 }
-[data-contest~=common-black] .bg-white-container {
+[data-contest~=theme-dark] .bg-white-container {
   background-color: rgba(255, 255, 255, 0.1);
 }
-[data-contest~=common-black] .card, [data-contest~=common-black] .list-group-item {
+[data-contest~=theme-dark] .card, [data-contest~=theme-dark] .list-group-item {
   background-color: transparent;
 }
 
