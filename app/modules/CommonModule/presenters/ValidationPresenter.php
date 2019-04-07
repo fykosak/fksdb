@@ -17,7 +17,6 @@ class ValidationPresenter extends BasePresenter {
      * @var ServicePerson
      */
     private $servicePerson;
-
     /**
      * @var ValidationFactory
      */
