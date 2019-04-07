@@ -137,7 +137,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
         }
         try {
             if ($model->isNew()) {
-                $result = $this->getTable()->insert($model->toArray());
+                $result = $this->getTable()->insert(\array_merge($model->toArray(),$model->getTmpData()));
                 if ($result !== false) {
                     $model = $result;
                     $model->setNew(false);

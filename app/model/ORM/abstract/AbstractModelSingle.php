@@ -8,6 +8,7 @@ use Nette\Database\Table\ActiveRow;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 abstract class AbstractModelSingle extends ActiveRow implements IModel {
+    private $tmpData = [];
 
     protected $stored = true;
 
@@ -35,6 +36,32 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
             $model->setNew(false);
         }
         return $model;
+    }
+
+    /**
+     * @param $key
+     * @param $value
+     */
+    public function __set($key, $value) {
+        $this->tmpData[$key] = $value;
+    }
+
+    /**
+     * @param $key
+     * @return bool|mixed|ActiveRow|\Nette\Database\Table\Selection|null
+     */
+    public function &__get($key) {
+        if (isset($this->tmpData[$key])) {
+            return $this->tmpData[$key];
+        }
+        return parent::__get($key);
+    }
+
+    /**
+     * @return array
+     */
+    public function getTmpData() {
+        return $this->tmpData;
     }
 
 }
