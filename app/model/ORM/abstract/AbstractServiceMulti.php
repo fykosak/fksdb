@@ -77,7 +77,7 @@ abstract class AbstractServiceMulti extends Object implements IService {
     }
 
     /**
-     * @param IModel $model
+     * @param IModel|AbstractModelMulti $model
      * @param $data
      * @param bool $alive
      * @return mixed|void
@@ -93,7 +93,7 @@ abstract class AbstractServiceMulti extends Object implements IService {
     /**
      * Use this method to store a model!
      *
-     * @param IModel $model
+     * @param IModel|AbstractModelMulti $model
      */
     public function save(IModel &$model) {
         if (!$model instanceof $this->modelClassName) {

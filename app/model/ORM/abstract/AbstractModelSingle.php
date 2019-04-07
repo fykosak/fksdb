@@ -58,6 +58,17 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
     }
 
     /**
+     * @param $key
+     * @return bool
+     */
+    public function __isset($key): bool {
+        if (isset($this->tmpData[$key])) {
+            return true;
+        }
+        return parent::__isset($key);
+    }
+
+    /**
      * @return array
      */
     public function getTmpData() {
