@@ -57,6 +57,7 @@ abstract class StalkingComponent extends Control {
         $this->template->mode = $this->mode;
         $this->template->headline = $this->getHeadline();
         $this->template->allowedModes = $this->getAllowedPermissions();
+        $this->template->gender = $this->modelPerson->gender;
     }
 
     /**
