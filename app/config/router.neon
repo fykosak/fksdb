@@ -105,7 +105,6 @@ fksrouter:
             module: Common
             subdomain: %subdomain.db%
             tld: %domain.tld%
-            contestId: [filterTable: %inverseContestMapping%]
             flags: SECURED
 
         '//[!<subdomain>].%domain.host%.[!<tld>]%path%fyziklani[<eventId [0-9]+>]/<presenter>/<action=default>[/<id>]':
