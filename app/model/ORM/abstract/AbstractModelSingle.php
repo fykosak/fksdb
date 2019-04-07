@@ -75,4 +75,12 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
         return $this->tmpData;
     }
 
+    /**
+     * @param $key
+     */
+    public function __unset($key) {
+        unset($this->tmpData[$key]);
+        return parent::__unset($key);
+    }
+
 }
