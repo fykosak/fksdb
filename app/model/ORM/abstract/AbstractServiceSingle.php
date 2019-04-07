@@ -132,12 +132,15 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
      */
     public function save(IModel & $model) {
         $modelClassName = $this->getModelClassName();
+        /**
+         * @var AbstractModelSingle $model
+         */
         if (!$model instanceof $modelClassName) {
             throw new InvalidArgumentException('Service for class ' . $this->getModelClassName() . ' cannot store ' . get_class($model));
         }
         try {
             if ($model->isNew()) {
-                $result = $this->getTable()->insert(\array_merge($model->toArray(),$model->getTmpData()));
+                $result = $this->getTable()->insert(\array_merge($model->toArray(), $model->getTmpData()));
                 if ($result !== false) {
                     $model = $result;
                     $model->setNew(false);
@@ -145,7 +148,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
                     $result = false;
                 }
             } else {
-                $result = $model->update() !== false;
+                $result = $model->update($model->getTmpData()) !== false;
             }
         } catch (PDOException $exception) {
             throw new ModelException('Error when storing model.', null, $exception);
