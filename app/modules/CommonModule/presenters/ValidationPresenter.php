@@ -1,15 +1,11 @@
 <?php
 
-namespace OrgModule;
+namespace CommonModule;
 
 use FKSDB\Components\Controls\Validation\ValidationControl;
 use FKSDB\Components\Grids\Validation\ValidationGrid;
 use FKSDB\ORM\Services\ServicePerson;
-use FKSDB\ValidationTest\Tests\GenderFromBornNumber;
-use FKSDB\ValidationTest\Tests\ParticipantsDuration;
-use FKSDB\ValidationTest\Tests\PhoneNumber;
 use FKSDB\ValidationTest\ValidationFactory;
-use FKSDB\ValidationTest\ValidationTest;
 
 /**
  * Class ValidationPresenter
@@ -57,24 +53,15 @@ class ValidationPresenter extends BasePresenter {
         $this->setTitle('Select test');
     }
 
-    /**
-     * @throws \Nette\Application\BadRequestException
-     */
     public function authorizedDefault() {
         $this->setAuthorized(
-            $this->getContestAuthorizator()->isAllowed('person', 'validation', $this->getSelectedContest()));
+            $this->getContestAuthorizator()->isAllowedForAnyContest('person', 'validation'));
     }
 
-    /**
-     * @throws \Nette\Application\BadRequestException
-     */
     public function authorizedList() {
         return $this->authorizedDefault();
     }
 
-    /**
-     * @throws \Nette\Application\BadRequestException
-     */
     public function authorizedPreview() {
         return $this->authorizedDefault();
     }

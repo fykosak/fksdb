@@ -17,10 +17,8 @@ class PersonLinkControl extends Control {
      * @param int $year
      * @param int $contestId
      */
-    public function render(ModelPerson $person, int $year, int $contestId) {
+    public function render(ModelPerson $person) {
         $this->template->person = $person;
-        $this->template->year = $year;
-        $this->template->contestId = $contestId;
         $this->template->setFile(__DIR__ . '/PersonLinkControl.latte');
         $this->template->render();
     }

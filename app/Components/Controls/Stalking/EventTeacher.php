@@ -28,6 +28,6 @@ class EventTeacher extends StalkingComponent {
      * @return array
      */
     protected function getAllowedPermissions(): array {
-        return [StalkingComponent::PERMISSION_BASIC, StalkingComponent::PERMISSION_RESTRICT, StalkingComponent::PERMISSION_FULL];
+        return [self::PERMISSION_BASIC, self::PERMISSION_RESTRICT, self::PERMISSION_FULL];
     }
 }

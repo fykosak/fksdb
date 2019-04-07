@@ -1,25 +1,9 @@
 <?php
 
-namespace OrgModule;
+namespace CommonModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Controls\Stalking\AcademicDegree;
-use FKSDB\Components\Controls\Stalking\Address;
-use FKSDB\Components\Controls\Stalking\BaseInfo;
-use FKSDB\Components\Controls\Stalking\ContactInfo;
-use FKSDB\Components\Controls\Stalking\Contestant;
-use FKSDB\Components\Controls\Stalking\EventOrg;
-use FKSDB\Components\Controls\Stalking\EventParticipant;
-use FKSDB\Components\Controls\Stalking\EventTeacher;
-use FKSDB\Components\Controls\Stalking\Flag;
-use FKSDB\Components\Controls\Stalking\Login;
-use FKSDB\Components\Controls\Stalking\Org;
-use FKSDB\Components\Controls\Stalking\Payment;
-use FKSDB\Components\Controls\Stalking\PersonHistory;
-use FKSDB\Components\Controls\Stalking\Role;
-use FKSDB\Components\Controls\Stalking\Schedule;
-use FKSDB\Components\Controls\Stalking\StalkingComponent;
-use FKSDB\Components\Controls\Stalking\Validation;
+use FKSDB\Components\Controls\Stalking;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\ORM\Models\ModelPerson;
@@ -98,7 +82,7 @@ class StalkingPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function authorizedDefault() {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('person', 'stalk.search', $this->getSelectedContest()));
+        $this->setAuthorized($this->isAllowed('person', 'stalk.search'));
     }
 
     /**
@@ -107,141 +91,141 @@ class StalkingPresenter extends BasePresenter {
     public function authorizedView() {
         $person = $this->getPerson();
 
-        $full = $this->getContestAuthorizator()->isAllowed($person, 'stalk.full', $this->getSelectedContest());
+        $full = $this->isAllowed($person, 'stalk.full');
 
-        $restrict = $this->getContestAuthorizator()->isAllowed($person, 'stalk.restrict', $this->getSelectedContest());
+        $restrict = $this->isAllowed($person, 'stalk.restrict');
 
-        $basic = $this->getContestAuthorizator()->isAllowed($person, 'stalk.basic', $this->getSelectedContest());
+        $basic = $this->isAllowed($person, 'stalk.basic');
 
         $this->setAuthorized($full || $restrict || $basic);
     }
 
     /**
-     * @return BaseInfo
+     * @return Stalking\BaseInfo
      * @throws BadRequestException
      */
-    public function createComponentBaseInfo(): BaseInfo {
-        return new BaseInfo($this->getPerson(), $this->getTranslator(), $this->getMode());
+    public function createComponentBaseInfo(): Stalking\BaseInfo {
+        return new Stalking\BaseInfo($this->getPerson(), $this->getTranslator(), $this->getMode());
     }
 
     /**
-     * @return Address
+     * @return Stalking\Address
      * @throws BadRequestException
      */
-    public function createComponentAddress(): Address {
-        return new Address($this->getPerson(), $this->getTranslator(), $this->getMode());
+    public function createComponentAddress(): Stalking\Address {
+        return new Stalking\Address($this->getPerson(), $this->getTranslator(), $this->getMode());
     }
 
     /**
-     * @return EventParticipant
+     * @return Stalking\EventParticipant
      * @throws BadRequestException
      */
-    public function createComponentEventParticipant(): EventParticipant {
-        return new EventParticipant($this->getPerson(), $this->getTranslator(), $this->getMode());
+    public function createComponentEventParticipant(): Stalking\EventParticipant {
+        return new Stalking\EventParticipant($this->getPerson(), $this->getTranslator(), $this->getMode());
     }
 
     /**
-     * @return EventTeacher
+     * @return Stalking\EventTeacher
      * @throws BadRequestException
      */
-    public function createComponentEventTeacher(): EventTeacher {
-        return new EventTeacher($this->getPerson(), $this->getTranslator(), $this->getMode());
+    public function createComponentEventTeacher(): Stalking\EventTeacher {
+        return new Stalking\EventTeacher($this->getPerson(), $this->getTranslator(), $this->getMode());
     }
 
     /**
-     * @return EventOrg
+     * @return Stalking\EventOrg
      * @throws BadRequestException
      */
-    public function createComponentEventOrg(): EventOrg {
-        return new EventOrg($this->getPerson(), $this->getTranslator(), $this->getMode());
+    public function createComponentEventOrg(): Stalking\EventOrg {
+        return new Stalking\EventOrg($this->getPerson(), $this->getTranslator(), $this->getMode());
     }
 
     /**
-     * @return Login
+     * @return Stalking\Login
      * @throws BadRequestException
      */
-    public function createComponentLogin(): Login {
-        return new Login($this->getPerson(), $this->getTranslator(), $this->getMode());
+    public function createComponentLogin(): Stalking\Login {
+        return new Stalking\Login($this->getPerson(), $this->getTranslator(), $this->getMode());
     }
 
     /**
-     * @return Org
+     * @return Stalking\Org
      * @throws BadRequestException
      */
-    public function createComponentOrg(): Org {
-        return new Org($this->getPerson(), $this->getTranslator(), $this->getMode());
+    public function createComponentOrg(): Stalking\Org {
+        return new Stalking\Org($this->getPerson(), $this->getTranslator(), $this->getMode());
     }
 
     /**
-     * @return Contestant
+     * @return Stalking\Contestant
      * @throws BadRequestException
      */
-    public function createComponentContestant(): Contestant {
-        return new Contestant($this->getPerson(), $this->getTranslator(), $this->getMode());
+    public function createComponentContestant(): Stalking\Contestant {
+        return new Stalking\Contestant($this->getPerson(), $this->getTranslator(), $this->getMode());
     }
 
     /**
-     * @return PersonHistory
+     * @return Stalking\PersonHistory
      * @throws BadRequestException
      */
-    public function createComponentPersonHistory(): PersonHistory {
-        return new PersonHistory($this->getPerson(), $this->getTranslator(), $this->getMode());
+    public function createComponentPersonHistory(): Stalking\PersonHistory {
+        return new Stalking\PersonHistory($this->getPerson(), $this->getTranslator(), $this->getMode());
     }
 
     /**
-     * @return Role
+     * @return Stalking\Role
      * @throws BadRequestException
      */
-    public function createComponentRole(): Role {
-        return new Role($this->getPerson(), $this->getTranslator(), $this->getMode());
+    public function createComponentRole(): Stalking\Role {
+        return new Stalking\Role($this->getPerson(), $this->getTranslator(), $this->getMode());
     }
 
     /**
-     * @return Flag
+     * @return Stalking\Flag
      * @throws BadRequestException
      */
-    public function createComponentFlag(): Flag {
-        return new Flag($this->getPerson(), $this->getTranslator(), $this->getMode());
+    public function createComponentFlag(): Stalking\Flag {
+        return new Stalking\Flag($this->getPerson(), $this->getTranslator(), $this->getMode());
     }
 
     /**
-     * @return Payment
+     * @return Stalking\Payment
      * @throws BadRequestException
      */
-    public function createComponentPayment(): Payment {
-        return new Payment($this->getPerson(), $this->getTranslator(), $this->getMode());
+    public function createComponentPayment(): Stalking\Payment {
+        return new Stalking\Payment($this->getPerson(), $this->getTranslator(), $this->getMode());
     }
 
     /**
-     * @return ContactInfo
+     * @return Stalking\ContactInfo
      * @throws BadRequestException
      */
-    public function createComponentContactInfo(): ContactInfo {
-        return new ContactInfo($this->getPerson(), $this->getTranslator(), $this->getMode());
+    public function createComponentContactInfo(): Stalking\ContactInfo {
+        return new Stalking\ContactInfo($this->getPerson(), $this->getTranslator(), $this->getMode());
     }
 
     /**
-     * @return AcademicDegree
+     * @return Stalking\AcademicDegree
      * @throws BadRequestException
      */
-    public function createComponentAcademicDegree(): AcademicDegree {
-        return new AcademicDegree($this->getPerson(), $this->getTranslator(), $this->getMode());
+    public function createComponentAcademicDegree(): Stalking\AcademicDegree {
+        return new Stalking\AcademicDegree($this->getPerson(), $this->getTranslator(), $this->getMode());
     }
 
     /**
-     * @return Schedule
+     * @return Stalking\Schedule
      * @throws BadRequestException
      */
-    public function createComponentSchedule(): Schedule {
-        return new Schedule($this->getPerson(), $this->getTranslator(), $this->getMode());
+    public function createComponentSchedule(): Stalking\Schedule {
+        return new Stalking\Schedule($this->getPerson(), $this->getTranslator(), $this->getMode());
     }
 
     /**
-     * @return Validation
+     * @return Stalking\Validation
      * @throws BadRequestException
      */
-    public function createComponentValidation(): Validation {
-        return new Validation($this->validationFactory, $this->getPerson(), $this->getTranslator(), $this->getMode());
+    public function createComponentValidation(): Stalking\Validation {
+        return new Stalking\Validation($this->validationFactory, $this->getPerson(), $this->getTranslator(), $this->getMode());
     }
 
 
@@ -258,11 +242,11 @@ class StalkingPresenter extends BasePresenter {
         $form->addComponent($container, ExtendedPersonHandler::CONT_AGGR);
 
         $fieldsDefinition = [];
-        $acYear = $this->getSelectedAcademicYear();
+        //$acYear = $this->getSelectedAcademicYear();
         $searchType = ReferencedPersonFactory::SEARCH_ID;
         $allowClear = true;
         $modifiabilityResolver = $visibilityResolver = new DenyResolver();
-        $components = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $modifiabilityResolver, $visibilityResolver);
+        $components = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, null, $searchType, $allowClear, $modifiabilityResolver, $visibilityResolver);
         $components[0]->addRule(Form::FILLED, _('Osobu je třeba zadat.'));
         $components[1]->setOption('label', _('Osoba'));
 
@@ -286,14 +270,14 @@ class StalkingPresenter extends BasePresenter {
      */
     private function getMode() {
         if (!$this->mode) {
-            if ($this->getContestAuthorizator()->isAllowed($this->getPerson(), 'stalk.basic', $this->getSelectedContest())) {
-                $this->mode = StalkingComponent::PERMISSION_BASIC;
+            if ($this->isAllowed($this->getPerson(), 'stalk.basic')) {
+                $this->mode = Stalking\StalkingComponent::PERMISSION_BASIC;
             }
-            if ($this->getContestAuthorizator()->isAllowed($this->getPerson(), 'stalk.restrict', $this->getSelectedContest())) {
-                $this->mode = StalkingComponent::PERMISSION_RESTRICT;
+            if ($this->isAllowed($this->getPerson(), 'stalk.restrict')) {
+                $this->mode = Stalking\StalkingComponent::PERMISSION_RESTRICT;
             }
-            if ($this->getContestAuthorizator()->isAllowed($this->getPerson(), 'stalk.full', $this->getSelectedContest())) {
-                $this->mode = StalkingComponent::PERMISSION_FULL;
+            if ($this->isAllowed($this->getPerson(), 'stalk.full')) {
+                $this->mode = Stalking\StalkingComponent::PERMISSION_FULL;
             }
         }
         return $this->mode;
