@@ -49,6 +49,19 @@
   @include navigation-item($vyfukMainColor, white);
 }
 
+[data-contest~="common-black"] {
+  .navigation-item .card {
+    @include navigation-item(#2ed739, black);
+  }
+  color: #2ed739;
+  main {
+    background-color: black;
+  }
+  .bg-white-container {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
 body[data-contest="vyfuk"] {
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Gloria Hallelujah', cursive;
