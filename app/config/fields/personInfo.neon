@@ -20,5 +20,6 @@ services:
     field.person_info.career: FKSDB\Components\Forms\Factories\PersonInfo\CareerRow
     field.person_info.im: FKSDB\Components\Forms\Factories\PersonInfo\ImRow
     field.person_info.agreed: FKSDB\Components\Forms\Factories\PersonInfo\AgreedRow
+    field.perosn_info.origin: FKSDB\Components\Forms\Factories\PersonInfo\OriginRow
 
 
