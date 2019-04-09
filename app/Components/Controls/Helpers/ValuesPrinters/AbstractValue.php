@@ -4,10 +4,12 @@ namespace FKSDB\Components\Controls\Helpers\ValuePrinters;
 
 use FKSDB\Components\Controls\Helpers\Badges\NotSetBadge;
 use FKSDB\Components\Controls\Helpers\Badges\PermissionDeniedBadge;
+use FKSDB\ORM\AbstractModelSingle;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 use Nette\Utils\Html;
+use Tracy\Debugger;
 
 /**
  * Class AbstractValue
@@ -16,6 +18,7 @@ use Nette\Utils\Html;
  */
 abstract class AbstractValue extends Control {
     const LAYOUT_STALKING = 'stalking';
+    const LAYOUT_NONE = 'none';
     /**
      * @var ITranslator
      */
@@ -24,27 +27,39 @@ abstract class AbstractValue extends Control {
      * @var string|"stalking"|"normal"
      */
     private $mode;
+    /**
+     * @var string
+     */
+    protected $title;
+    /**
+     * @var bool
+     */
+    private $hasPermissions;
 
     /**
      * AbstractValue constructor.
      * @param ITranslator $translator
      * @param string $mode
+     * @param string|null $title
+     * @param bool $hasPermissions
      */
-    public function __construct(ITranslator $translator, string $mode = 'normal') {
+    public function __construct(ITranslator $translator, string $mode = 'normal', string $title = null, bool $hasPermissions = null) {
         parent::__construct();
         $this->translator = $translator;
         $this->mode = $mode;
+        $this->title = $title;
+        $this->hasPermissions = $hasPermissions;
     }
 
     /**
      * @param string $title
      * @param bool $hasPermissions
      */
-    protected function beforeRender(string $title, bool $hasPermissions) {
+    protected function beforeRender(string $title = null, bool $hasPermissions = true) {
         $this->template->setTranslator($this->translator);
-        $this->template->title = $title;
+        $this->template->title = $title ?: $this->title;
         $this->template->mode = $this->mode;
-        $this->template->hasPermissions = $hasPermissions;
+        $this->template->hasPermissions = isset($this->hasPermissions) ? $this->hasPermissions : $hasPermissions;
     }
 
     /**
@@ -60,4 +75,11 @@ abstract class AbstractValue extends Control {
     public function createComponentPermissionDenied(): PermissionDeniedBadge {
         return new PermissionDeniedBadge($this->translator);
     }
+
+    /**
+     * @param AbstractModelSingle $model
+     * @param string $accessKey
+     * @return Html
+     */
+    abstract public function createGridItem(AbstractModelSingle $model, string $accessKey): Html;
 }

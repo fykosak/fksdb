@@ -12,6 +12,7 @@ use FKSDB\Components\Controls\Helpers\ValuePrinters\IsSetValueControl;
 use FKSDB\Components\Controls\Helpers\ValuePrinters\PhoneValueControl;
 use FKSDB\Components\Controls\Helpers\ValuePrinters\StringValueControl;
 use FKSDB\Components\Controls\Stalking\Helpers\EventLabelControl;
+use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\Models\ModelPerson;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
@@ -23,11 +24,14 @@ use Nette\Templating\FileTemplate;
  * @property FileTemplate $template
  */
 abstract class StalkingComponent extends Control {
-    const PERMISSION_FULL = 'full';
-    const PERMISSION_RESTRICT = 'restrict';
-    const PERMISSION_BASIC = 'basic';
+    const PERMISSION_FULL = 1024;
+    const PERMISSION_RESTRICT = 128;
+    const PERMISSION_BASIC = 16;
+
+    const LAYOUT_COUNTABLE = 'countable';
+    const LAYOUT_NONE = 'none';
     /**
-     * @var string
+     * @var int
      */
     protected $mode;
     /**
@@ -38,18 +42,31 @@ abstract class StalkingComponent extends Control {
      * @var ITranslator
      */
     protected $translator;
+    /**
+     * @var string
+     */
+    private $layout;
+
+    /**
+     * @var TableReflectionFactory
+     */
+    protected $tableReflectionFactory;
 
     /**
      * StalkingComponent constructor.
      * @param ModelPerson $modelPerson
+     * @param TableReflectionFactory $tableReflectionFactory
      * @param ITranslator $translator
-     * @param $mode
+     * @param int $mode
+     * @param string $layout
      */
-    public function __construct(ModelPerson $modelPerson, ITranslator $translator, $mode) {
+    public function __construct(ModelPerson $modelPerson, TableReflectionFactory $tableReflectionFactory, ITranslator $translator, int $mode, string $layout = self::LAYOUT_NONE) {
         parent::__construct();
         $this->mode = $mode;
         $this->modelPerson = $modelPerson;
         $this->translator = $translator;
+        $this->layout = $layout;
+        $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
     public function beforeRender() {
@@ -58,6 +75,7 @@ abstract class StalkingComponent extends Control {
         $this->template->headline = $this->getHeadline();
         $this->template->allowedModes = $this->getAllowedPermissions();
         $this->template->gender = $this->modelPerson->gender;
+        $this->template->layout = $this->layout;
     }
 
     /**
@@ -133,4 +151,21 @@ abstract class StalkingComponent extends Control {
      * @return string[]
      */
     abstract protected function getAllowedPermissions(): array;
+
+    /**
+     * @param string $name
+     * @return \Nette\ComponentModel\IComponent|null
+     * @throws \Exception
+     */
+    public function createComponent($name) {
+        $parts = \explode('__', $name);
+        if (\count($parts) === 3) {
+            list($prefix, $tableName, $fieldName) = $parts;
+            if ($prefix === 'valuePrinter') {
+                return $this->tableReflectionFactory->createStalkingRow($tableName, $fieldName, $this->mode);
+            }
+        }
+
+        return parent::createComponent($name);
+    }
 }

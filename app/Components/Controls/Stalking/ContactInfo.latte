@@ -2,21 +2,15 @@
 {block content}
     <ul class="list-group list-group-flush">
         {if $info}
-            <li class="list-group-item">
-                {control stringValue $info,_('Email'),email}
-            </li>
 
-            <li class="list-group-item">
-                {control phoneValue $info,_('Phone'),phone,($mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL)}
-            </li>
+            {control valuePrinter__person_info__email $info,null,email}
 
-            <li class="list-group-item">
-                {control phoneValue $info,_('Phone parent mum'),phone_parent_m,($mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL)}
-            </li>
+            {control valuePrinter__person_info__phone $info,null,phone}
 
-            <li class="list-group-item">
-                {control phoneValue $info,_('Phone parent dad'),phone_parent_d,($mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL)}
-            </li>
+            {control valuePrinter__person_info__phone_parent_m $info,null,phone_parent_m}
+
+            {control valuePrinter__person_info__phone_parent_d $info,null,phone_parent_d}
+
         {/if}
     </ul>
 {/block}

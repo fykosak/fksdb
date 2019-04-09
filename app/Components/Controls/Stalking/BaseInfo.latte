@@ -2,69 +2,15 @@
 {block content}
     <ul class="list-group list-group-flush">
         {if $info}
-            <li class="list-group-item">
-                {control stringValue $info,_('Person Id'),person_id}
-            </li>
 
-            <li class="list-group-item">
-                {control stringValue $info,_('Born'),born,($mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL)}
-            </li>
+            {control stringValue $info,_('Person Id'),person_id}
 
-            <li class="list-group-item">
-                {control stringValue $info,_('Born Id'),born_id,($mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL)}
-            </li>
+            {foreach $fields as $fieldName}
+                {control valuePrinter__person_info__$fieldName $info,null,$fieldName}
+            {/foreach}
 
-            <li class="list-group-item">
-                {control stringValue $info,_('Birthplace'),birthplace,($mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL)}
-            </li>
+            {control stringValue $info,_('Origin'),origin}
 
-            <li class="list-group-item">
-                {control stringValue $info,_('Id number'),id_number,($mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL)}
-            </li>
-
-            <li class="list-group-item">
-                {control stringValue $info,_('Employer'),employer,($mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL)}
-            </li>
-
-            <li class="list-group-item">
-                {control stringValue $info,_('Health insurance'),health_insurance,($mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL)}
-            </li>
-
-            <li class="list-group-item">
-                {control stringValue $info,_('Citizenship'),citizenship,($mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL)}
-            </li>
-
-            <li class="list-group-item">
-                {control stringValue $info,_('UK login'),uk_login}
-            </li>
-
-            <li class="list-group-item">
-                {control stringValue $info,_('Bank account'),account}
-            </li>
-
-            <li class="list-group-item">
-                {control stringValue $info,_('Career'),career}
-            </li>
-
-            <li class="list-group-item">
-                {control stringValue $info,_('Homepage'),homepage}
-            </li>
-
-            <li class="list-group-item">
-                {control stringValue $info,_('Im'),im}
-            </li>
-
-            <li class="list-group-item">
-                {control stringValue $info,_('Linkedin id'),linkedin_id}
-            </li>
-
-            <li class="list-group-item">
-                {control stringValue $info,_('Origin'),origin}
-            </li>
-
-            <li class="list-group-item">
-                {control stringValue $info,_('Note'),note}
-            </li>
         {/if}
     </ul>
 {/block}

@@ -1,14 +1,16 @@
 {if $mode=='stalking'}
-    <div class="row">
-        <b class="col-5">{$title}</b>
-        <span class="col-7">
+    <li class="list-group-item">
+        <div class="row">
+            <b class="col-5">{$title}</b>
+            <span class="col-7">
             {if $hasPermissions}
                 {include #value}
             {else}
                 {control permissionDenied}
             {/if}
         </span>
-    </div>
+        </div>
+    </li>
 {else}
     <div class="row">
         <b class="col-xl-2 col-lg-4 col-md-5 col-sm-6">{$title}</b>

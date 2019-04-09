@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Controls\Helpers\ValuePrinters;
 
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\Payment\IPaymentModel;
 use FKSDB\Payment\Price;
 use Nette\Templating\FileTemplate;
@@ -46,5 +47,15 @@ class PriceValueControl extends AbstractValue {
             $price = $model->getPrice();
         }
         return Html::el('span')->addText($price->__toString());
+    }
+
+    /**
+     * @param AbstractModelSingle $model
+     * @param string $accessKey
+     * @return Html
+     * @throws \FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException
+     */
+    public function createGridItem(AbstractModelSingle $model, string $accessKey): Html {
+        return self::getGridValue($model);
     }
 }

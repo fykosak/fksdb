@@ -21,7 +21,7 @@ abstract class PrimitiveValue extends AbstractValue {
      * @param string $accessKey
      * @param bool $hasPermissions
      */
-    public function render(AbstractModelSingle $model, string $title, string $accessKey, bool $hasPermissions = true) {
+    public function render(AbstractModelSingle $model, string $title = null, string $accessKey = null, bool $hasPermissions = true) {
         $this->beforeRender($title, $hasPermissions);
         $this->template->model = $model;
         $this->template->accessKey = $accessKey;

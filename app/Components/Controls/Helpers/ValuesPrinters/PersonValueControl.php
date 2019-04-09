@@ -4,6 +4,7 @@
 namespace FKSDB\Components\Controls\Helpers\ValuePrinters;
 
 use FKSDB\Components\Controls\Stalking\Helpers\PersonLinkControl;
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelPerson;
 use Nette\Application\UI\PresenterComponent;
 use Nette\Utils\Html;
@@ -42,5 +43,14 @@ class PersonValueControl extends AbstractValue {
                 'id' => $person->person_id,
             ])])
             ->addText($person->getFullName());
+    }
+
+    /**
+     * @param AbstractModelSingle $model
+     * @param string $accessKey
+     * @return Html
+     */
+    public function createGridItem(AbstractModelSingle $model, string $accessKey): Html {
+        return self::getGridValue($this, $model);
     }
 }

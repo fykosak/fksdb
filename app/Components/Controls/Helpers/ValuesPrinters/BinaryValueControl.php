@@ -33,4 +33,13 @@ class BinaryValueControl extends PrimitiveValue {
             return Html::el('span')->addAttributes(['class' => 'fa fa-times text-danger']);
         }
     }
+
+    /**
+     * @param AbstractModelSingle $model
+     * @param string $accessKey
+     * @return Html
+     */
+    public function createGridItem(AbstractModelSingle $model, string $accessKey): Html {
+        return self::getGridValue($model, $accessKey);
+    }
 }

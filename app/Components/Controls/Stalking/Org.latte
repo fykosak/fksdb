@@ -6,13 +6,9 @@
             <h3 class="card-header">{control contestBadge, $org->contest_id}</h3>
             <ul class="list-group list-group-flush">
 
-                <li class="list-group-item">
-                    {control stringValue $org,_('Org Id'),org_id}
-                </li>
+                {control stringValue $org,_('Org Id'),org_id}
 
-                <li class="list-group-item">
-                    {control stringValue $org,_('Since'),since}
-                </li>
+                {control stringValue $org,_('Since'),since}
 
                 <li class="list-group-item">
                     {*control stringValue $org,_('Login'),login*}
@@ -28,25 +24,16 @@
                     </div>
                 </li>
 
-                <li class="list-group-item">
-                    {control stringValue $org,_('Role'),role}
-                </li>
+                {control stringValue $org,_('Role'),role}
 
-                <li class="list-group-item">
-                    {control stringValue $org,_('Order'),order}
-                </li>
+                {control stringValue $org,_('Order'),order}
 
-                <li class="list-group-item">
-                    {control stringValue $org,_('Contribution'),contribution}
-                </li>
+                {control stringValue $org,_('Contribution'),contribution}
 
-                <li class="list-group-item">
-                    {control stringValue $org,_('Tex Signature'),tex_signature}
-                </li>
+                {control stringValue $org,_('Tex Signature'),tex_signature}
 
-                <li class="list-group-item">
-                    {control stringValue $org,_('Domain alias'),domain_alias}
-                </li>
+                {control stringValue $org,_('Domain alias'),domain_alias}
+
             </ul>
         {/foreach}
 

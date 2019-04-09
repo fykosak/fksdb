@@ -2,21 +2,13 @@
 {block content}
     {if !is_null($login)}
         <ul class="list-group list-group-flush">
-            <li class="list-group-item">
-                {control stringValue $login,_('Login'),login}
-            </li>
+            {control stringValue $login,_('Login'),login}
 
-            <li class="list-group-item">
-                {control stringValue $login,_('Login Id'),login_id}
-            </li>
+            {control stringValue $login,_('Login Id'),login_id}
 
-            <li class="list-group-item">
-                {control isSetValue $login,_('Password'),hash}
-            </li>
+            {control isSetValue $login,_('Password'),hash}
 
-            <li class="list-group-item">
-                {control stringValue $login,_('Last logged'),last_login}
-            </li>
+            {control stringValue $login,_('Last logged'),last_login}
         </ul>
     {else}
         <div class="card-body">

@@ -1,0 +1,23 @@
+services:
+    field.person_info.academic_degree_prefix: FKSDB\Components\Forms\Factories\PersonInfo\AcademicDegreePrefixRow
+    field.person_info.academic_degree_suffix: FKSDB\Components\Forms\Factories\PersonInfo\AcademicDegreeSuffixRow
+    field.person_info.employer: FKSDB\Components\Forms\Factories\PersonInfo\EmployerRow
+    field.person_info.email: FKSDB\Components\Forms\Factories\PersonInfo\EmailRow
+    field.person_info.note: FKSDB\Components\Forms\Factories\PersonInfo\NoteRow
+    field.person_info.health_insurance: FKSDB\Components\Forms\Factories\PersonInfo\HealthInsuranceRow
+    field.person_info.linkedin_id: FKSDB\Components\Forms\Factories\PersonInfo\LinkedinIdRow
+    field.person_info.citizenship: FKSDB\Components\Forms\Factories\PersonInfo\CitizenshipRow
+    field.person_info.uk_login: FKSDB\Components\Forms\Factories\PersonInfo\UkLoginRow
+    field.person_info.account: FKSDB\Components\Forms\Factories\PersonInfo\AccountRow
+    field.person_info.homepage: FKSDB\Components\Forms\Factories\PersonInfo\HomepageRow
+    field.person_info.phone: FKSDB\Components\Forms\Factories\PersonInfo\PhoneRow
+    field.person_info.phone_parent_m: FKSDB\Components\Forms\Factories\PersonInfo\PhoneParentMRow
+    field.person_info.phone_parent_d: FKSDB\Components\Forms\Factories\PersonInfo\PhoneParentDRow
+    field.person_info.id_number: FKSDB\Components\Forms\Factories\PersonInfo\IdNumberRow
+    field.person_info.born: FKSDB\Components\Forms\Factories\PersonInfo\BornRow
+    field.person_info.born_id: FKSDB\Components\Forms\Factories\PersonInfo\BornIdRow
+    field.person_info.birthplace: FKSDB\Components\Forms\Factories\PersonInfo\BirthplaceRow
+    field.person_info.career: FKSDB\Components\Forms\Factories\PersonInfo\CareerRow
+    field.person_info.im: FKSDB\Components\Forms\Factories\PersonInfo\ImRow
+
+
