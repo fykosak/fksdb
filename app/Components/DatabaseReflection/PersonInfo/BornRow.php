@@ -1,9 +1,9 @@
 <?php
 
-namespace FKSDB\Components\Forms\Factories\PersonInfo;
+namespace FKSDB\Components\DatabaseReflection\PersonInfo;
 
+use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\Forms\Controls\WriteOnlyDatePicker;
-use FKSDB\Components\Forms\Factories\AbstractRow;
 use Nette\Forms\IControl;
 
 /**
@@ -30,6 +30,6 @@ class BornRow extends AbstractRow {
      * @return int
      */
     public function getPermissionsValue(): int {
-        return 1024;
+        return self::PERMISSION_ALLOW_FULL;
     }
 }

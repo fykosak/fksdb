@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Controls\Helpers\ValuePrinters\AbstractValue;
+use FKSDB\Components\DatabaseReflection\AbstractRow;
 use Nette\DI\Container;
 use Nette\Forms\IControl;
 use Nette\InvalidArgumentException;

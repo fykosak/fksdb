@@ -1,8 +1,8 @@
 <?php
 
-namespace FKSDB\Components\Forms\Factories\PersonInfo;
+namespace FKSDB\Components\DatabaseReflection\PersonInfo;
 
-use FKSDB\Components\Forms\Factories\AbstractRow;
+use FKSDB\Components\DatabaseReflection\AbstractRow;
 
 /**
  * Class AcademicDegreeSuffixField
@@ -19,6 +19,6 @@ class AcademicDegreeSuffixRow extends AbstractRow {
      * @return int
      */
     public function getPermissionsValue(): int {
-        return 512;
+        return self::PERMISSION_ALLOW_RESTRICT;
     }
 }

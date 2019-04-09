@@ -261,6 +261,7 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
      * @param HiddenField $hiddenField
      * @param array $metadata
      * @return \FKSDB\Components\Forms\Containers\AddressContainer|BaseControl|null
+     * @throws \Exception
      */
     public function createField($sub, $fieldName, $acYear, HiddenField $hiddenField, array $metadata) {
         if (in_array($sub, [

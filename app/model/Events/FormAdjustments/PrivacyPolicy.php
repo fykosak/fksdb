@@ -6,7 +6,6 @@ use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
 use Events\Model\Holder\Holder;
 use Events\Processings\IProcessing;
-use FKSDB\Components\Forms\Factories\PersonInfo\AgreedRow;
 use FKSDB\Components\Forms\Factories\PersonInfoFactory;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Services\ServicePersonInfo;

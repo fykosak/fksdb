@@ -1,8 +1,8 @@
 <?php
 
-namespace FKSDB\Components\Forms\Factories\PersonInfo;
+namespace FKSDB\Components\DatabaseReflection\PersonInfo;
 
-use FKSDB\Components\Forms\Factories\AbstractRow;
+use FKSDB\Components\DatabaseReflection\AbstractRow;
 use Nette\Forms\Controls\Checkbox;
 use Nette\Forms\IControl;
 use Nette\Utils\Html;
@@ -35,7 +35,7 @@ class AgreedRow extends AbstractRow {
      * @return int
      */
     public function getPermissionsValue(): int {
-        return 128;
+        return self::PERMISSION_ALLOW_BASIC;
     }
 
 }

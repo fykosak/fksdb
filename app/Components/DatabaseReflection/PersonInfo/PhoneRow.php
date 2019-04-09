@@ -1,22 +1,22 @@
 <?php
 
-namespace FKSDB\Components\Forms\Factories\PersonInfo;
+namespace FKSDB\Components\DatabaseReflection\PersonInfo;
 
 /**
- * Class PhoneParentDField
+ * Class PhoneField
  * @package FKSDB\Components\Forms\Factories\PersonInfo
  */
-class PhoneParentDRow extends AbstractPhoneRow {
+class PhoneRow extends AbstractPhoneRow {
     /**
      * @return string
      */
     public static function getTitle(): string {
-        return _('Telefonní číslo (otec)');
+        return _('Telefonní číslo');
     }
     /**
      * @return int
      */
     public function getPermissionsValue(): int {
-        return 128;
+        return self::PERMISSION_ALLOW_RESTRICT;
     }
 }

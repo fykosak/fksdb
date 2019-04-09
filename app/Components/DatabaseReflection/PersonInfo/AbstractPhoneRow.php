@@ -1,12 +1,12 @@
 <?php
 
-namespace FKSDB\Components\Forms\Factories\PersonInfo;
+namespace FKSDB\Components\DatabaseReflection\PersonInfo;
 
 use FKSDB\Components\Controls\Helpers\ValuePrinters\AbstractValue;
 use FKSDB\Components\Controls\Helpers\ValuePrinters\PhoneValueControl;
 use FKSDB\Components\Controls\PhoneNumber\PhoneNumberFactory;
+use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\Forms\Controls\WriteOnlyInput;
-use FKSDB\Components\Forms\Factories\AbstractRow;
 use FKSDB\ORM\Services\ServiceRegion;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;

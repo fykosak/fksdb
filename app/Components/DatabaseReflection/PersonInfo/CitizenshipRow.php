@@ -1,9 +1,9 @@
 <?php
 
-namespace FKSDB\Components\Forms\Factories\PersonInfo;
+namespace FKSDB\Components\DatabaseReflection\PersonInfo;
 
 
-use FKSDB\Components\Forms\Factories\AbstractRow;
+use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\ORM\Models\ModelRegion;
 use FKSDB\ORM\Services\ServiceRegion;
 use Nette\Forms\Controls\SelectBox;
@@ -64,6 +64,6 @@ class CitizenshipRow extends AbstractRow {
      * @return int
      */
     public function getPermissionsValue(): int {
-        return 512;
+        return self::PERMISSION_ALLOW_FULL;
     }
 }

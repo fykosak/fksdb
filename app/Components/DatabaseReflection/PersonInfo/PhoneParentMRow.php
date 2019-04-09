@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Forms\Factories\PersonInfo;
+namespace FKSDB\Components\DatabaseReflection\PersonInfo;
 
 /**
  * Class PhoneParentMField
@@ -17,6 +17,6 @@ class PhoneParentMRow extends AbstractPhoneRow {
      * @return int
      */
     public function getPermissionsValue(): int {
-        return 128;
+        return self::PERMISSION_ALLOW_RESTRICT;
     }
 }

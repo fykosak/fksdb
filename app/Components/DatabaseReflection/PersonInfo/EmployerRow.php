@@ -1,26 +1,26 @@
 <?php
 
-namespace FKSDB\Components\Forms\Factories\PersonInfo;
+namespace FKSDB\Components\DatabaseReflection\PersonInfo;
 
-
-use FKSDB\Components\Forms\Factories\AbstractRow;
+use FKSDB\Components\DatabaseReflection\AbstractRow;
 
 /**
- * Class LinkedinIdField
+ * Class EmployerField
  * @package FKSDB\Components\Forms\Factories\PersonInfo
  */
-class LinkedinIdRow extends AbstractRow {
+class EmployerRow extends AbstractRow {
+
     /**
      * @return string
      */
     public static function getTitle(): string {
-        return _('Linkedin Id');
+        return _('Zaměstnavatel');
     }
     /**
      * @return int
      */
     public function getPermissionsValue(): int {
-        return 1;
+        return self::PERMISSION_ALLOW_FULL;
     }
 
 }

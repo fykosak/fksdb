@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Forms\Factories;
+namespace FKSDB\Components\DatabaseReflection;
 
 use FKSDB\Components\Controls\Helpers\ValuePrinters\AbstractValue;
 use FKSDB\Components\Controls\Helpers\ValuePrinters\StringValueControl;
@@ -15,6 +15,9 @@ use Nette\Utils\Html;
  * @package FKSDB\Components\Forms\Factories
  */
 abstract class AbstractRow {
+    const PERMISSION_ALLOW_BASIC = 16;
+    const PERMISSION_ALLOW_RESTRICT = 128;
+    CONST PERMISSION_ALLOW_FULL = 1024;
     /**
      * @var ITranslator
      */

@@ -1,23 +1,22 @@
 <?php
 
-namespace FKSDB\Components\Forms\Factories\PersonInfo;
+namespace FKSDB\Components\DatabaseReflection\PersonInfo;
 
+use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\Forms\Controls\WriteOnlyInput;
-use FKSDB\Components\Forms\Factories\AbstractRow;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 
 /**
- * Class IdNumberField
+ * Class BirthplaceField
  * @package FKSDB\Components\Forms\Factories\PersonInfo
  */
-class IdNumberRow extends AbstractRow {
-
+class BirthplaceRow extends AbstractRow {
     /**
      * @return string
      */
     public static function getTitle(): string {
-        return _('Číslo OP');
+        return _('Místo narození');
     }
 
     /**
@@ -25,15 +24,14 @@ class IdNumberRow extends AbstractRow {
      */
     public function createField(): IControl {
         $control = new WriteOnlyInput($this->getTitle());
-        $control->setOption('description', _('U cizinců číslo pasu.'));
-        $control->addRule(Form::MAX_LENGTH, null, 32);
+        $control->setOption('description', _('Město a okres (kvůli diplomům).'));
+        $control->addRule(Form::MAX_LENGTH, null, 255);
         return $control;
     }
     /**
      * @return int
      */
     public function getPermissionsValue(): int {
-        return 1024;
+        return self::PERMISSION_ALLOW_FULL;
     }
-
 }
