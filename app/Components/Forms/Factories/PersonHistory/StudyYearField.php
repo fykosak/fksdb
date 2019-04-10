@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Forms\Factories\PersonHistory;
 
 
+use FKSDB\YearCalculator;
 use Nette\Forms\Controls\SelectBox;
 
 /**
@@ -16,16 +17,16 @@ class StudyYearField extends SelectBox {
      */
     private $acYear;
     /**
-     * @var \FKSDB\YearCalculator
+     * @var YearCalculator
      */
     private $yearCalculator;
 
     /**
      * StudyYearField constructor.
-     * @param \FKSDB\YearCalculator $yearCalculator
+     * @param YearCalculator $yearCalculator
      * @param $acYear
      */
-    public function __construct(\FKSDB\YearCalculator $yearCalculator, $acYear) {
+    public function __construct(YearCalculator $yearCalculator, $acYear) {
 
         parent::__construct(_('Ročník'));
         $this->acYear = $acYear;

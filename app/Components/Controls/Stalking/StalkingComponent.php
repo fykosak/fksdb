@@ -27,6 +27,7 @@ abstract class StalkingComponent extends Control {
     const PERMISSION_FULL = 1024;
     const PERMISSION_RESTRICT = 128;
     const PERMISSION_BASIC = 16;
+    const PERMISSION_USE_FIELD_LEVEL = 2048;
 
     const LAYOUT_COUNTABLE = 'countable';
     const LAYOUT_NONE = 'none';

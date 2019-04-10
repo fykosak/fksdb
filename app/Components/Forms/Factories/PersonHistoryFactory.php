@@ -2,10 +2,9 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
-use FKSDB\Components\Forms\Factories\PersonHistory\ClassField;
 use FKSDB\Components\Forms\Factories\PersonHistory\StudyYearField;
-use Nette\Forms\Controls\BaseControl;
-use Nette\NotImplementedException;
+use FKSDB\ORM\DbNames;
+use Nette\Forms\IControl;
 
 /**
  * Class PersonHistoryFactory
@@ -23,32 +22,37 @@ class PersonHistoryFactory {
      * @var \FKSDB\YearCalculator
      */
     private $yearCalculator;
+    /**
+     * @var TableReflectionFactory
+     */
+    private $tableReflectionFactory;
 
     /**
      * PersonHistoryFactory constructor.
+     * @param TableReflectionFactory $tableReflectionFactory
      * @param SchoolFactory $factorySchool
      * @param \FKSDB\YearCalculator $yearCalculator
      */
-    public function __construct(SchoolFactory $factorySchool, \FKSDB\YearCalculator $yearCalculator) {
+    public function __construct(TableReflectionFactory $tableReflectionFactory, SchoolFactory $factorySchool, \FKSDB\YearCalculator $yearCalculator) {
         $this->schoolFactory = $factorySchool;
         $this->yearCalculator = $yearCalculator;
+        $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
     /**
      * @param string $fieldName
      * @param integer $acYear
-     * @return BaseControl
+     * @return IControl
+     * @throws \Exception
      */
-    public function createField($fieldName, $acYear): BaseControl {
+    public function createField($fieldName, $acYear): IControl {
         switch ($fieldName) {
-            case 'class':
-                return new ClassField();
             case 'school_id':
                 return $this->schoolFactory->createSchoolSelect();
             case 'study_year':
                 return new StudyYearField($this->yearCalculator, $acYear);
             default:
-                throw new NotImplementedException(\sprintf(_('Field %s is not implemented.'), $fieldName), 501);
+                return $this->tableReflectionFactory->createField(DbNames::TAB_PERSON_HISTORY, 'class');
         }
     }
 }
