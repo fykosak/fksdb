@@ -61,7 +61,7 @@ class ModelPersonHistory extends AbstractModelSingle {
      * @param $diff
      * @return null|string|string[]
      */
-    private function extrapolateClass($class, $diff) {
+    private function extrapolateClass(string $class = null, int $diff = 0) {
         if (!$class) {
             return null;
         }
@@ -85,7 +85,7 @@ class ModelPersonHistory extends AbstractModelSingle {
      * @param $diff
      * @return int|null
      */
-    private function extrapolateStudyYear($studyYear, $diff) {
+    private function extrapolateStudyYear(int $studyYear = null, int $diff = 0) {
         if (!$studyYear) {
             return null;
         }

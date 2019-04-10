@@ -2,11 +2,13 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
-use FKSDB\Components\Controls\Helpers\ValuePrinters\AbstractValue;
+use FKSDB\Components\Controls\Helpers\ValuePrinters\AbstractValueControl;
 use FKSDB\Components\DatabaseReflection\AbstractRow;
+use FKSDB\ORM\AbstractModelSingle;
 use Nette\DI\Container;
 use Nette\Forms\IControl;
 use Nette\InvalidArgumentException;
+use Nette\Utils\Html;
 
 /**
  * Class TableReflectionFactory
@@ -55,11 +57,11 @@ class TableReflectionFactory {
      * @param string $tableName
      * @param string $fieldName
      * @param int $userPermission
-     * @return AbstractValue
+     * @return AbstractValueControl
      * @throws \Exception
      */
-    public function createStalkingRow(string $tableName, string $fieldName, int $userPermission): AbstractValue {
-        return $this->loadService($tableName, $fieldName)->createStalkingRow($userPermission);
+    public function createStalkingRow(string $tableName, string $fieldName, int $userPermission): AbstractValueControl {
+        return $this->loadService($tableName, $fieldName)->createStalkingRowControl($userPermission);
     }
 
     /**
@@ -70,5 +72,17 @@ class TableReflectionFactory {
      */
     public function createField(string $tableName, string $fieldName): IControl {
         return $this->loadService($tableName, $fieldName)->createField();
+    }
+
+    /**
+     * @param string $tableName
+     * @param string $fieldName
+     * @param AbstractModelSingle $modelSingle
+     * @param int $userPermissionLevel
+     * @return \Nette\Utils\Html
+     * @throws \Exception
+     */
+    public function createGridItem(string $tableName, string $fieldName, AbstractModelSingle $modelSingle, int $userPermissionLevel): Html {
+        return $this->loadService($tableName, $fieldName)->createHtmlValue($modelSingle, $fieldName, $userPermissionLevel);
     }
 }

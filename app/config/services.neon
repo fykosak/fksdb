@@ -84,3 +84,4 @@ services:
 includes:
     - merger.neon
     - fields/personInfo.neon
+    - fields/eventParticipant.neon

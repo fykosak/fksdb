@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Controls\Helpers\ValuePrinters;
 
+use FKSDB\Components\Controls\Helpers\Badges\NotSetBadge;
 use FKSDB\Components\Controls\PhoneNumber\PhoneNumberFactory;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Templating\FileTemplate;
@@ -11,12 +12,19 @@ use Nette\Utils\Html;
  * Class BinaryValueControl
  * @property FileTemplate $template
  */
-class PhoneValueControl extends PrimitiveValue {
+class PhoneValueControl extends PrimitiveValueControl {
     /**
-     * @return string
+     * @param AbstractModelSingle $model
+     * @param string $accessKey
+     * @return Html
      */
-    protected function getTemplatePath(): string {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'PhoneNumber.latte';
+    public function getHtml(AbstractModelSingle $model, string $accessKey): Html {
+        $value = $model->{$accessKey};
+        if (\is_null($value)) {
+            return NotSetBadge::getHtml();
+        } else {
+            return PhoneNumberFactory::format($model->{$accessKey});
+        }
     }
 
     /**
@@ -24,16 +32,12 @@ class PhoneValueControl extends PrimitiveValue {
      * @param string $accessKey
      * @return Html
      */
-    public static function getGridValue(AbstractModelSingle $model, string $accessKey): Html {
-        return PhoneNumberFactory::format($model->{$accessKey});
-    }
-
-    /**
-     * @param AbstractModelSingle $model
-     * @param string $accessKey
-     * @return Html
-     */
-    public function createGridItem(AbstractModelSingle $model, string $accessKey): Html {
-        return self::getGridValue($model, $accessKey);
+    public static function getHtmlStatic(AbstractModelSingle $model, string $accessKey): Html {
+        $value = $model->{$accessKey};
+        if (\is_null($value)) {
+            return NotSetBadge::getHtml();
+        } else {
+            return PhoneNumberFactory::format($model->{$accessKey});
+        }
     }
 }

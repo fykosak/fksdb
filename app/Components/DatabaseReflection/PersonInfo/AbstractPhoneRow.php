@@ -2,15 +2,16 @@
 
 namespace FKSDB\Components\DatabaseReflection\PersonInfo;
 
-use FKSDB\Components\Controls\Helpers\ValuePrinters\AbstractValue;
 use FKSDB\Components\Controls\Helpers\ValuePrinters\PhoneValueControl;
 use FKSDB\Components\Controls\PhoneNumber\PhoneNumberFactory;
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\Forms\Controls\WriteOnlyInput;
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Services\ServiceRegion;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 use Nette\Localization\ITranslator;
+use Nette\Utils\Html;
 
 /**
  * Class IPhoneField
@@ -45,12 +46,13 @@ abstract class AbstractPhoneRow extends AbstractRow {
     }
 
     /**
-     * @param string $mode
+     * @param AbstractModelSingle $model
+     * @param string $accessKey
      * @param int $userPermissionsLevel
-     * @return AbstractValue
+     * @return Html
      */
-    protected function createValuePrinter(string $mode, int $userPermissionsLevel): AbstractValue {
-        return new PhoneValueControl($this->translator, $mode, $this->getTitle(), $this->hasPermissions($userPermissionsLevel));
+    public function createHtmlValue(AbstractModelSingle $model, string $accessKey, int $userPermissionsLevel): Html {
+        return PhoneValueControl::renderStatic($model, $accessKey, $this->hasPermissions($userPermissionsLevel));
     }
 
 }

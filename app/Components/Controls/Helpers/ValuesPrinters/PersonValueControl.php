@@ -1,48 +1,54 @@
 <?php
 
-
 namespace FKSDB\Components\Controls\Helpers\ValuePrinters;
 
-use FKSDB\Components\Controls\Stalking\Helpers\PersonLinkControl;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelPerson;
-use Nette\Application\UI\PresenterComponent;
+use Nette\Application\UI\BadSignalException;
+use Nette\NotImplementedException;
 use Nette\Utils\Html;
 
 /**
  * Class PersonValueControl
  * @package FKSDB\Components\Controls\Helpers\ValuePrinters
  */
-class PersonValueControl extends AbstractValue {
+class PersonValueControl extends AbstractValueControl {
     /**
-     * @param ModelPerson $person
+     * @return string
      */
-    public function render(ModelPerson $person) {
-        $this->beforeRender(_('Person'), true);
-        $this->template->person = $person;
-        $this->template->setFile(__DIR__ . '/PersonValue.latte');
+    protected function getTemplatePath(): string {
+        return __DIR__ . DIRECTORY_SEPARATOR . 'PrimitiveValue.latte';
+    }
+
+    /**
+     * @param AbstractModelSingle $model
+     * @param string|null $title
+     * @param string|null $accessKey
+     * @param bool $hasPermissions
+     */
+    public function render(AbstractModelSingle $model, string $title = null, string $accessKey = null, bool $hasPermissions = true) {
+        $this->beforeRender($title, $hasPermissions);
+        $this->template->html = $this->getSafeHtml($model, $accessKey, $hasPermissions);
+        $this->template->setFile($this->getTemplatePath());
         $this->template->render();
     }
 
     /**
-     * @return PersonLinkControl
-     */
-    protected function createComponentPersonLink(): PersonLinkControl {
-        return new PersonLinkControl();
-    }
-
-    /**
-     * @param PresenterComponent $component
-     * @param ModelPerson $person
+     * @param AbstractModelSingle $model
+     * @param string $accessKey
      * @return Html
+     * @throws BadSignalException
      * @throws \Nette\Application\UI\InvalidLinkException
      */
-    public static function getGridValue(PresenterComponent $component, ModelPerson $person): Html {
+    protected function getHtml(AbstractModelSingle $model, string $accessKey): Html {
+        if (!$model instanceof ModelPerson) {
+            throw new BadSignalException();
+        }
         return Html::el('a')
-            ->addAttributes(['href' => $component->getPresenter()->link(':Common:Stalking:view', [
-                'id' => $person->person_id,
+            ->addAttributes(['href' => $this->getPresenter()->link(':Common:Stalking:view', [
+                'id' => $model->person_id,
             ])])
-            ->addText($person->getFullName());
+            ->addText($model->getFullName());
     }
 
     /**
@@ -50,7 +56,7 @@ class PersonValueControl extends AbstractValue {
      * @param string $accessKey
      * @return Html
      */
-    public function createGridItem(AbstractModelSingle $model, string $accessKey): Html {
-        return self::getGridValue($this, $model);
+    protected static function getHtmlStatic(AbstractModelSingle $model, string $accessKey): Html {
+        throw new NotImplementedException();
     }
 }

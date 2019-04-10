@@ -6,11 +6,8 @@ use FKSDB\Components\Controls\Helpers\Badges\ContestBadge;
 use FKSDB\Components\Controls\Helpers\Badges\NoRecordsBadge;
 use FKSDB\Components\Controls\Helpers\Badges\NotSetBadge;
 use FKSDB\Components\Controls\Helpers\Badges\PermissionDeniedBadge;
-use FKSDB\Components\Controls\Helpers\ValuePrinters\AbstractValue;
-use FKSDB\Components\Controls\Helpers\ValuePrinters\BinaryValueControl;
-use FKSDB\Components\Controls\Helpers\ValuePrinters\IsSetValueControl;
-use FKSDB\Components\Controls\Helpers\ValuePrinters\PhoneValueControl;
-use FKSDB\Components\Controls\Helpers\ValuePrinters\StringValueControl;
+use FKSDB\Components\Controls\Helpers\ValuePrinters\AbstractValueControl;
+use FKSDB\Components\Controls\Helpers\ValuePrintersTrait;
 use FKSDB\Components\Controls\Stalking\Helpers\EventLabelControl;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\Models\ModelPerson;
@@ -24,6 +21,9 @@ use Nette\Templating\FileTemplate;
  * @property FileTemplate $template
  */
 abstract class StalkingComponent extends Control {
+
+    use ValuePrintersTrait;
+
     const PERMISSION_FULL = 1024;
     const PERMISSION_RESTRICT = 128;
     const PERMISSION_BASIC = 16;
@@ -68,6 +68,7 @@ abstract class StalkingComponent extends Control {
         $this->translator = $translator;
         $this->layout = $layout;
         $this->tableReflectionFactory = $tableReflectionFactory;
+        $this->registerTrait($translator, AbstractValueControl::LAYOUT_STALKING);
     }
 
     public function beforeRender() {
@@ -112,35 +113,6 @@ abstract class StalkingComponent extends Control {
      */
     public function createComponentNotSet(): NotSetBadge {
         return new NotSetBadge($this->translator);
-    }
-
-    /************* VALUES *****************/
-    /**
-     * @return PhoneValueControl
-     */
-    public function createComponentPhoneValue(): PhoneValueControl {
-        return new PhoneValueControl($this->translator, AbstractValue::LAYOUT_STALKING);
-    }
-
-    /**
-     * @return IsSetValueControl
-     */
-    public function createComponentIsSetValue(): IsSetValueControl {
-        return new IsSetValueControl($this->translator, AbstractValue::LAYOUT_STALKING);
-    }
-
-    /**
-     * @return BinaryValueControl
-     */
-    public function createComponentBinaryValue(): BinaryValueControl {
-        return new BinaryValueControl($this->translator, AbstractValue::LAYOUT_STALKING);
-    }
-
-    /**
-     * @return \FKSDB\Components\Controls\Helpers\ValuePrinters\StringValueControl
-     */
-    public function createComponentStringValue(): StringValueControl {
-        return new StringValueControl($this->translator, AbstractValue::LAYOUT_STALKING);
     }
 
     /**

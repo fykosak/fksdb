@@ -4,11 +4,11 @@ namespace FKSDB\Components\Grids\Events;
 
 use Closure;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Controls\Helpers\ValuePrinters\BinaryValueControl;
-use FKSDB\Components\Controls\Helpers\ValuePrinters\PersonValueControl;
 use FKSDB\Components\Controls\Helpers\ValuePrinters\PriceValueControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
+use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
+use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use Nette\Application\UI\Presenter;
@@ -26,14 +26,20 @@ class ApplicationGrid extends AbstractApplicationGrid {
      * @var ModelEvent
      */
     protected $event;
+    /**
+     * @var TableReflectionFactory
+     */
+    private $tableReflectionFactory;
 
     /**
      * ParticipantGrid constructor.
      * @param ModelEvent $event
+     * @param TableReflectionFactory $tableReflectionFactory
      */
-    public function __construct(ModelEvent $event) {
+    public function __construct(ModelEvent $event, TableReflectionFactory $tableReflectionFactory) {
         parent::__construct();
         $this->event = $event;
+        $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
     /**
@@ -53,7 +59,13 @@ class ApplicationGrid extends AbstractApplicationGrid {
 
         $this->addColumn('person_id', _('Person'))->setRenderer(function ($row) use ($presenter) {
             $model = ModelEventParticipant::createFromTableRow($row);
-            return PersonValueControl::getGridValue($this, $model->getPerson(), $model->getEvent()->year, $model->getEvent()->getEventType()->contest_id);
+            // $factory = new PersonValueControlControl($presenter->getTranslator());
+            // $factory->createGridItem($model->getPerson(), 'person_id');
+            return Html::el('a')
+                ->addAttributes(['href' => $this->getPresenter()->link(':Common:Stalking:view', [
+                    'id' => $model->person_id,
+                ])])
+                ->addText($model->getPerson()->getFullName());
         });
 
         $this->addColumn('status', _('Status'))->setRenderer(function ($row) use ($presenter) {
@@ -193,6 +205,7 @@ class ApplicationGrid extends AbstractApplicationGrid {
 
     /**
      * @throws \NiftyGrid\DuplicateColumnException
+     * @throws \Exception
      */
     private function addColumns() {
         $fields = $this->event->getHolder()->getPrimaryHolder()->getFields();
@@ -200,7 +213,14 @@ class ApplicationGrid extends AbstractApplicationGrid {
         foreach ($fields as $name => $def) {
             switch ($name) {
                 case 'note':
-                    $this->addColumn('note', _('Note'));
+                case 'swimmer':
+                case 'arrival_ticket':
+                    $factory = $this->tableReflectionFactory->loadService(DbNames::TAB_EVENT_PARTICIPANT, $name);
+                    $this->addColumn($name, $factory::getTitle())->setRenderer(function ($row) use ($factory, $name) {
+                        $model = ModelEventParticipant::createFromTableRow($row);
+                        return $factory->createHtmlValue($model, $name, 1);
+                    });
+
                     break;
                 case 'diet':
                     $this->addColumn('diet', _('Diet'));
@@ -211,17 +231,11 @@ class ApplicationGrid extends AbstractApplicationGrid {
                 case 'price':
                     $this->addColumn('price', _('Price'))->setRenderer(function ($row) {
                         $model = ModelEventParticipant::createFromTableRow($row);
-                        return PriceValueControl::getGridValue($model);
+                        return (new PriceValueControl($this->getTranslator()))->createGridItem($model, 'price');
                     });
                     break;
                 case 'used_drugs':
                     $this->addColumn('used_drugs', _('Used drugs'));
-                    break;
-                case 'swimmer':
-                    $this->addColumn('swimmer', _('Swimmer'))->setRenderer(function ($row) {
-                        $model = ModelEventParticipant::createFromTableRow($row);
-                        return BinaryValueControl::getGridValue($model, 'swimmer');
-                    });
                     break;
                 case 'tshirt_size':
                     $this->addColumn('tshirt_size', _('T-shirt size'));
@@ -235,12 +249,7 @@ class ApplicationGrid extends AbstractApplicationGrid {
                 case 'arrival_time':
                     $this->addColumn('arrival_time', _('Arrival time'));
                     break;
-                case 'arrival_ticket':
-                    $this->addColumn('arrival_ticket', _('Arrival ticket'))->setRenderer(function ($row) {
-                        $model = ModelEventParticipant::createFromTableRow($row);
-                        return BinaryValueControl::getGridValue($model, 'arrival_ticket');
-                    });
-                    break;
+
                 case 'departure_destination':
                     $this->addColumn('departure_destination', _('Departure destination'));
                     break;
@@ -250,7 +259,7 @@ class ApplicationGrid extends AbstractApplicationGrid {
                 case 'departure_ticket':
                     $this->addColumn('departure_ticket', _('Departure ticket'))->setRenderer(function ($row) {
                         $model = ModelEventParticipant::createFromTableRow($row);
-                        return BinaryValueControl::getGridValue($model, 'departure_ticket');
+                        //   return (new BinaryValueControl($this->getTranslator()))->createGridItem($model, 'departure_ticket');
                     });
             }
         }

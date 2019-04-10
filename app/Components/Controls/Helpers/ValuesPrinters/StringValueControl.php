@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Controls\Helpers\ValuePrinters;
 
+use FKSDB\Components\Controls\Helpers\Badges\NotSetBadge;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Templating\FileTemplate;
 use Nette\Utils\Html;
@@ -10,34 +11,32 @@ use Nette\Utils\Html;
  * Class BinaryValueControl
  * @property FileTemplate $template
  */
-class StringValueControl extends PrimitiveValue {
-    /**
-     * @return string
-     */
-    protected function getTemplatePath(): string {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'StringValue.latte';
-    }
+class StringValueControl extends PrimitiveValueControl {
 
     /**
-     * @param AbstractModelSingle $model
-     * @param string $accessKey
-     * @return Html
-     */
-    public static function getGridValue(AbstractModelSingle $model, string $accessKey): Html {
+ * @param AbstractModelSingle $model
+ * @param string $accessKey
+ * @return Html
+ */
+    public function getHtml(AbstractModelSingle $model, string $accessKey): Html {
         $value = $model->{$accessKey};
         if (\is_null($value)) {
-            return Html::el('span')->addAttributes(['class' => 'badge badge-warning'])->addText(_('not set'));
+            return NotSetBadge::getHtml();
         } else {
-            return Html::el('span')->addAttributes(['class' => 'fa fa-check text-success'])->addText($value);
+            return Html::el('span')->addText($value);
         }
     }
-
     /**
      * @param AbstractModelSingle $model
      * @param string $accessKey
      * @return Html
      */
-    public function createGridItem(AbstractModelSingle $model, string $accessKey): Html {
-        return self::getGridValue($model, $accessKey);
+    public static function getHtmlStatic(AbstractModelSingle $model, string $accessKey): Html {
+        $value = $model->{$accessKey};
+        if (\is_null($value)) {
+            return NotSetBadge::getHtml();
+        } else {
+            return Html::el('span')->addText($value);
+        }
     }
 }

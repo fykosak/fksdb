@@ -12,7 +12,7 @@ use Nette\Utils\Html;
  * Class BinaryValueControl
  * @property FileTemplate $template
  */
-class PriceValueControl extends AbstractValue {
+class PriceValueControl extends AbstractValueControl {
     /**
      * @param IPaymentModel|Price $model
      * @param string $title
@@ -36,11 +36,12 @@ class PriceValueControl extends AbstractValue {
     }
 
     /**
-     * @param IPaymentModel|Price $model
+     * @param IPaymentModel|Price|AbstractModelSingle $model
+     * @param string $accessKey
      * @return Html
      * @throws \FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException
      */
-    public static function getGridValue($model): Html {
+    public function getHtml(AbstractModelSingle $model, string $accessKey): Html {
         if ($model instanceof Price) {
             $price = $model;
         } else {
@@ -48,14 +49,18 @@ class PriceValueControl extends AbstractValue {
         }
         return Html::el('span')->addText($price->__toString());
     }
-
     /**
-     * @param AbstractModelSingle $model
+     * @param IPaymentModel|Price|AbstractModelSingle $model
      * @param string $accessKey
      * @return Html
      * @throws \FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException
      */
-    public function createGridItem(AbstractModelSingle $model, string $accessKey): Html {
-        return self::getGridValue($model);
+    protected static function getHtmlStatic(AbstractModelSingle $model, string $accessKey): Html {
+        if ($model instanceof Price) {
+            $price = $model;
+        } else {
+            $price = $model->getPrice();
+        }
+        return Html::el('span')->addText($price->__toString());
     }
 }

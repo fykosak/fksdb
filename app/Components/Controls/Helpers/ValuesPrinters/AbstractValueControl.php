@@ -7,16 +7,16 @@ use FKSDB\Components\Controls\Helpers\Badges\PermissionDeniedBadge;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
+use Nette\NotImplementedException;
 use Nette\Templating\FileTemplate;
 use Nette\Utils\Html;
-use Tracy\Debugger;
 
 /**
  * Class AbstractValue
  * @package FKSDB\Components\Controls\DetailHelpers
  * @property FileTemplate $template
  */
-abstract class AbstractValue extends Control {
+abstract class AbstractValueControl extends Control {
     const LAYOUT_STALKING = 'stalking';
     const LAYOUT_NONE = 'none';
     /**
@@ -26,7 +26,7 @@ abstract class AbstractValue extends Control {
     /**
      * @var string|"stalking"|"normal"
      */
-    private $mode;
+    private $layout;
     /**
      * @var string
      */
@@ -39,16 +39,25 @@ abstract class AbstractValue extends Control {
     /**
      * AbstractValue constructor.
      * @param ITranslator $translator
-     * @param string $mode
+     * @param string $layout
      * @param string|null $title
      * @param bool $hasPermissions
      */
-    public function __construct(ITranslator $translator, string $mode = 'normal', string $title = null, bool $hasPermissions = null) {
+    public function __construct(ITranslator $translator, string $layout = self::LAYOUT_NONE, string $title = null, bool $hasPermissions = null) {
         parent::__construct();
         $this->translator = $translator;
-        $this->mode = $mode;
+        $this->layout = $layout;
         $this->title = $title;
         $this->hasPermissions = $hasPermissions;
+    }
+
+    /**
+     * @param AbstractModelSingle $model
+     * @param string $accessKey
+     * @return Html
+     */
+    public final function createGridItem(AbstractModelSingle $model, string $accessKey): Html {
+        return $this->getSafeHtml($model, $accessKey, true);
     }
 
     /**
@@ -58,9 +67,31 @@ abstract class AbstractValue extends Control {
     protected function beforeRender(string $title = null, bool $hasPermissions = true) {
         $this->template->setTranslator($this->translator);
         $this->template->title = $title ?: $this->title;
-        $this->template->mode = $this->mode;
+        $this->template->layout = $this->layout;
         $this->template->hasPermissions = isset($this->hasPermissions) ? $this->hasPermissions : $hasPermissions;
     }
+
+    /**
+     * @param AbstractModelSingle $model
+     * @param string $accessKey
+     * @param bool $hasPermission
+     * @return Html
+     */
+    protected function getSafeHtml(AbstractModelSingle $model, string $accessKey, bool $hasPermission = false): Html {
+        if (!$hasPermission) {
+            return PermissionDeniedBadge::getHtml();
+        }
+        return $this->getHtml($model, $accessKey);
+    }
+
+    /**
+     * @param AbstractModelSingle $model
+     * @param string $accessKey
+     */
+    protected function getHtml(AbstractModelSingle $model, string $accessKey) {
+        throw new NotImplementedException();
+    }
+
 
     /**
      * @return NotSetBadge
@@ -81,5 +112,20 @@ abstract class AbstractValue extends Control {
      * @param string $accessKey
      * @return Html
      */
-    abstract public function createGridItem(AbstractModelSingle $model, string $accessKey): Html;
+    protected abstract static function getHtmlStatic(AbstractModelSingle $model, string $accessKey): Html;
+
+    /**
+     * @param AbstractModelSingle $model
+     * @param string $accessKey
+     * @param bool $hasPermission
+     * @return Html
+     */
+    public static final function renderStatic(AbstractModelSingle $model, string $accessKey, bool $hasPermission): Html {
+        if (!$hasPermission) {
+            return PermissionDeniedBadge::getHtml();
+        }
+        return static::getHtmlStatic($model, $accessKey);
+    }
+
+
 }
