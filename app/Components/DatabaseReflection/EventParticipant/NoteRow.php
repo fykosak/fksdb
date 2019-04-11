@@ -13,6 +13,4 @@ class NoteRow extends AbstractParticipantRow {
     public static function getTitle(): string {
         return _('Note');
     }
-
-
 }

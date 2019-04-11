@@ -135,7 +135,7 @@ abstract class StalkingComponent extends Control {
         if (\count($parts) === 3) {
             list($prefix, $tableName, $fieldName) = $parts;
             if ($prefix === 'valuePrinter') {
-                return $this->tableReflectionFactory->createStalkingRow($tableName, $fieldName, $this->mode);
+                return $this->tableReflectionFactory->createStalkingComponent($tableName, $fieldName, max($this->getAllowedPermissions()));
             }
         }
 

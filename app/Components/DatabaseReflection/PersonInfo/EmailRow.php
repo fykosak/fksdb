@@ -3,6 +3,7 @@
 namespace FKSDB\Components\DatabaseReflection\PersonInfo;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 
@@ -20,9 +21,9 @@ class EmailRow extends AbstractRow {
     }
 
     /**
-     * @return IControl
+     * @return BaseControl
      */
-    public function createField(): IControl {
+    public function createField(): BaseControl {
         $control = parent::createField();
         $control->addCondition(Form::FILLED)
             ->addRule(Form::EMAIL, _('Neplatný tvar e-mailu.'));

@@ -3,6 +3,7 @@
 namespace FKSDB\Components\DatabaseReflection\PersonInfo;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextArea;
 use Nette\Forms\IControl;
 
@@ -20,9 +21,9 @@ class CareerRow extends AbstractRow {
     }
 
     /**
-     * @return IControl
+     * @return BaseControl
      */
-    public function createField(): IControl {
+    public function createField(): BaseControl {
         $control = new TextArea($this->getTitle());
         $control->setOption('description', _('Zobrazeno v seznamu organizátorů'));
         return $control;

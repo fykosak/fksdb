@@ -3,8 +3,8 @@
 namespace FKSDB\Components\DatabaseReflection\PersonInfo;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\Checkbox;
-use Nette\Forms\IControl;
 use Nette\Utils\Html;
 
 /**
@@ -21,9 +21,9 @@ class AgreedRow extends AbstractRow {
     }
 
     /**
-     * @return IControl
+     * @return BaseControl
      */
-    public function createField(): IControl {
+    public function createField(): BaseControl {
         $control = new Checkbox($this->getTitle());
         $link = Html::el('a');
         $link->setText(_('Text souhlasu'));
@@ -31,6 +31,7 @@ class AgreedRow extends AbstractRow {
         $control->setOption('description', $link);
         return $control;
     }
+
     /**
      * @return int
      */

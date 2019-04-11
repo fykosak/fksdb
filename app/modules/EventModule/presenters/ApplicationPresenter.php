@@ -19,23 +19,12 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @var ServiceEventParticipant
      */
     private $serviceEventParticipant;
-    /**
-     * @var TableReflectionFactory
-     */
-    private $tableReflectionFactory;
 
     /**
      * @param ServiceEventParticipant $serviceEventParticipant
      */
     public function injectServiceEventParticipant(ServiceEventParticipant $serviceEventParticipant) {
         $this->serviceEventParticipant = $serviceEventParticipant;
-    }
-
-    /**
-     * @param TableReflectionFactory $tableReflectionFactory
-     */
-    public function injectTableReflectionFactory(TableReflectionFactory $tableReflectionFactory) {
-        $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
     public function titleList() {

@@ -2,10 +2,9 @@
 
 namespace FKSDB\Components\Controls\Helpers\ValuePrinters;
 
-use FKSDB\Components\Controls\Helpers\Badges\NotSetBadge;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\Components\DatabaseReflection\ValuePrinters\AbstractValuePrinter;
+use FKSDB\Components\DatabaseReflection\ValuePrinters\BinaryPrinter;
 use Nette\Templating\FileTemplate;
-use Nette\Utils\Html;
 
 /**
  * Class BinaryValueControl
@@ -14,36 +13,9 @@ use Nette\Utils\Html;
 class BinaryValueControl extends PrimitiveValueControl {
 
     /**
-     * @param AbstractModelSingle $model
-     * @param string $accessKey
-     * @return Html
+     * @return AbstractValuePrinter
      */
-    protected function getHtml(AbstractModelSingle $model, string $accessKey): Html {
-        $value = $model->{$accessKey};
-        if (\is_null($value)) {
-            return NotSetBadge::getHtml();
-        } elseif ($value) {
-            return Html::el('span')->addAttributes(['class' => 'fa fa-check text-success']);
-        } else {
-            return Html::el('span')->addAttributes(['class' => 'fa fa-times text-danger']);
-        }
+    protected static function getPrinter(): AbstractValuePrinter {
+        return new BinaryPrinter;
     }
-
-    /**
-     * @param AbstractModelSingle $model
-     * @param string $accessKey
-     * @return Html
-     */
-    protected static function getHtmlStatic(AbstractModelSingle $model, string $accessKey): Html {
-        $value = $model->{$accessKey};
-        if (\is_null($value)) {
-            return NotSetBadge::getHtml();
-        } elseif ($value) {
-            return Html::el('span')->addAttributes(['class' => 'fa fa-check text-success']);
-        } else {
-            return Html::el('span')->addAttributes(['class' => 'fa fa-times text-danger']);
-        }
-    }
-
-
 }

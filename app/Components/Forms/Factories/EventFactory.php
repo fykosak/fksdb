@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
-use FKSDB\Components\Forms\Controls\DateInputs\DateTimeLocalInput;
+use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Services\ServiceEventType;
 use Nette\Forms\ControlGroup;
@@ -23,63 +23,38 @@ class EventFactory {
      * @var \FKSDB\ORM\Services\ServiceEventType
      */
     private $serviceEventType;
+    /**
+     * @var TableReflectionFactory
+     */
+    private $tableReflectionFactory;
 
     /**
      * EventFactory constructor.
      * @param ServiceEventType $serviceEventType
+     * @param TableReflectionFactory $tableReflectionFactory
      */
-    function __construct(ServiceEventType $serviceEventType) {
+    function __construct(ServiceEventType $serviceEventType, TableReflectionFactory $tableReflectionFactory) {
         $this->serviceEventType = $serviceEventType;
+        $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
     /**
      * @param ModelContest $contest
-     * @param int $options
-     * @param ControlGroup|null $group
      * @return ModelContainer
+     * @throws \Exception
      */
-    public function createEvent(ModelContest $contest, $options = 0, ControlGroup $group = null): ModelContainer {
+    public function createEvent(ModelContest $contest): ModelContainer {
         $container = new ModelContainer();
-        $container->setCurrentGroup($group);
 
         $type = $this->createEventType($contest);
         $type->addRule(Form::FILLED, _('%label je povinný.'));
 
         $container->addComponent($type, 'event_type_id');
 
-        $container->addText('event_year', _('Ročník akce'))
-            ->addRule(Form::INTEGER, _('%label musí být číslo.'))
-            ->addRule(Form::FILLED, _('%label je povinný.'))
-            ->setOption('description', _('Ročník akce musí být unikátní pro daný typ akce.'));
-
-        $container->addText('name', _('Název'))
-            ->addRule(Form::FILLED, _('%label je povinný.'))
-            ->addRule(Form::MAX_LENGTH, null, 255)
-            ->setOption('description', _('U soustředka místo.'));
-
-        $beginField = new DateTimeLocalInput(_('Začátek akce'));
-        $beginField->addRule(Form::FILLED, _('%label je povinný.'));
-        $container->addComponent($beginField, 'begin');
-
-        $endField = new DateTimeLocalInput(_('Konec akce'));
-        $endField->addRule(Form::FILLED, _('%label je povinný.'))
-            ->setOption('description', _('U jednodenních akcí shodný se začátkem.'));
-        $container->addComponent($endField, 'end');
-
-
-        $control = new DateTimeLocalInput(_('Začátek registrace'));
-        $container->addComponent($control, 'registration_begin');
-
-        $control = new DateTimeLocalInput(_('Konec registrace'));
-        $container->addComponent($control, 'registration_end');
-
-
-        $container->addTextArea('report', _('Text'))
-            ->setOption('description', _('Shrnující text k akci.'));
-
-        $container->addTextArea('parameters', _('Parametry'))
-            ->setOption('description', _('V Neon syntaxi, schéma je specifické pro definici akce.'));
-
+        foreach (['event_year', 'name', 'begin', 'end', 'registration_begin', 'registration_end', 'report', 'parameters'] as $field) {
+            $control = $this->tableReflectionFactory->createField(DbNames::TAB_EVENT, $field);
+            $container->addComponent($control, $field);
+        }
         return $container;
     }
 

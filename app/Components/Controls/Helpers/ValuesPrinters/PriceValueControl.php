@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Controls\Helpers\ValuePrinters;
 
+use FKSDB\Components\DatabaseReflection\ValuePrinters\PricePrinter;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\Payment\IPaymentModel;
 use FKSDB\Payment\Price;
@@ -29,7 +30,7 @@ class PriceValueControl extends AbstractValueControl {
                 $price = $model->getPrice();
             }
         }
-        $this->template->price = $price;
+        $this->template->html = (new PricePrinter)($price);
 
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'PriceValue.latte');
         $this->template->render();
@@ -39,28 +40,13 @@ class PriceValueControl extends AbstractValueControl {
      * @param IPaymentModel|Price|AbstractModelSingle $model
      * @param string $accessKey
      * @return Html
-     * @throws \FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException
      */
-    public function getHtml(AbstractModelSingle $model, string $accessKey): Html {
+    protected function getHtml(AbstractModelSingle $model, string $accessKey): Html {
         if ($model instanceof Price) {
             $price = $model;
         } else {
             $price = $model->getPrice();
         }
-        return Html::el('span')->addText($price->__toString());
-    }
-    /**
-     * @param IPaymentModel|Price|AbstractModelSingle $model
-     * @param string $accessKey
-     * @return Html
-     * @throws \FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException
-     */
-    protected static function getHtmlStatic(AbstractModelSingle $model, string $accessKey): Html {
-        if ($model instanceof Price) {
-            $price = $model;
-        } else {
-            $price = $model->getPrice();
-        }
-        return Html::el('span')->addText($price->__toString());
+        return (new PricePrinter)($price);
     }
 }

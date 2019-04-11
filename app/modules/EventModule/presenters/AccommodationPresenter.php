@@ -4,7 +4,7 @@ namespace EventModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\ModelContainer;
-use FKSDB\Components\Forms\Controls\DateInput;
+use FKSDB\Components\Forms\Controls\DateInputs\DateInput;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Grids\Accommodation\AccommodationGrid;
 use FKSDB\Components\Grids\Accommodation\BilletedAllGrid;

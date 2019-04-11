@@ -2,11 +2,14 @@
 
 namespace EventModule;
 
+use FKSDB\Components\Forms\Factories\TableReflectionFactory;
+
 /**
  * Class DashboardPresenter
  * @package EventModule
  */
 class DashboardPresenter extends BasePresenter {
+
 
     /**
      * @throws \Nette\Application\AbortException
@@ -32,6 +35,7 @@ class DashboardPresenter extends BasePresenter {
     public function renderDefault() {
         $this->template->event = $this->getEvent();
         $this->template->webUrl = $this->getWebUrl();
+        $this->template->fields = ['event_type', 'year', 'event_year', 'name', 'begin', 'end', 'report'];
     }
 
     /**

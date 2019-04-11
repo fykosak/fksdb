@@ -6,6 +6,7 @@ namespace FKSDB\Components\DatabaseReflection\PersonInfo;
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\ORM\Models\ModelRegion;
 use FKSDB\ORM\Services\ServiceRegion;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\IControl;
 use Nette\Localization\ITranslator;
@@ -39,9 +40,9 @@ class CitizenshipRow extends AbstractRow {
     }
 
     /**
-     * @return IControl
+     * @return BaseControl
      */
-    public function createField(): IControl {
+    public function createField(): BaseControl {
         $control = new SelectBox($this->getTitle());
         $control->setItems($this->getCountries());
         $control->setPrompt(_('Vyberte státní příslušnost'));

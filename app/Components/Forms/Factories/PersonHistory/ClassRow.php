@@ -22,7 +22,7 @@ class ClassRow extends AbstractRow {
     /**
      * @return IControl
      */
-    public function createField(): IControl {
+    public function createField(): BaseControl {
         $control = new TextInput($this->getTitle());
         $control->addRule(Form::MAX_LENGTH, null, 16);
         return $control;

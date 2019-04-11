@@ -2,12 +2,14 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
-use FKSDB\Components\Controls\Helpers\ValuePrinters\AbstractValueControl;
 use FKSDB\Components\DatabaseReflection\AbstractRow;
+use FKSDB\Components\DatabaseReflection\DetailRowComponent;
+use FKSDB\Components\DatabaseReflection\StalkingRowComponent;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\DI\Container;
-use Nette\Forms\IControl;
+use Nette\Forms\Controls\BaseControl;
 use Nette\InvalidArgumentException;
+use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
 
 /**
@@ -24,15 +26,19 @@ class TableReflectionFactory {
      * @var Container
      */
     private $container;
+    /**
+     * @var ITranslator
+     */
+    private $translator;
 
     /**
      * PersonInfoFactory constructor.
      * @param Container $container
-     * @throws \Exception
+     * @param ITranslator $translator
      */
-    public function __construct(Container $container) {
+    public function __construct(Container $container, ITranslator $translator) {
         $this->container = $container;
-
+        $this->translator = $translator;
     }
 
     /**
@@ -57,20 +63,39 @@ class TableReflectionFactory {
      * @param string $tableName
      * @param string $fieldName
      * @param int $userPermission
-     * @return AbstractValueControl
+     * @return StalkingRowComponent
      * @throws \Exception
      */
-    public function createStalkingRow(string $tableName, string $fieldName, int $userPermission): AbstractValueControl {
-        return $this->loadService($tableName, $fieldName)->createStalkingRowControl($userPermission);
+    public function createStalkingComponent(string $tableName, string $fieldName, int $userPermission): StalkingRowComponent {
+        $factory = $this->loadService($tableName, $fieldName);
+        $callBack = function (AbstractModelSingle $model) use ($factory, $fieldName, $userPermission) {
+            return $factory->renderValue($model, $fieldName, $userPermission);
+        };
+        return new StalkingRowComponent($this->translator, $callBack, $factory::getTitle());
     }
 
     /**
      * @param string $tableName
      * @param string $fieldName
-     * @return IControl
+     * @param int $userPermission
+     * @return DetailRowComponent
      * @throws \Exception
      */
-    public function createField(string $tableName, string $fieldName): IControl {
+    public function createDetailComponent(string $tableName, string $fieldName, int $userPermission): DetailRowComponent {
+        $factory = $this->loadService($tableName, $fieldName);
+        $callBack = function (AbstractModelSingle $model) use ($factory, $fieldName, $userPermission) {
+            return $factory->renderValue($model, $fieldName, $userPermission);
+        };
+        return new DetailRowComponent($this->translator, $callBack, $factory::getTitle());
+    }
+
+    /**
+     * @param string $tableName
+     * @param string $fieldName
+     * @return BaseControl
+     * @throws \Exception
+     */
+    public function createField(string $tableName, string $fieldName): BaseControl {
         return $this->loadService($tableName, $fieldName)->createField();
     }
 
@@ -82,7 +107,7 @@ class TableReflectionFactory {
      * @return \Nette\Utils\Html
      * @throws \Exception
      */
-    public function createGridItem(string $tableName, string $fieldName, AbstractModelSingle $modelSingle, int $userPermissionLevel): Html {
-        return $this->loadService($tableName, $fieldName)->createHtmlValue($modelSingle, $fieldName, $userPermissionLevel);
+    public function createGridValue(string $tableName, string $fieldName, AbstractModelSingle $modelSingle, int $userPermissionLevel): Html {
+        return $this->loadService($tableName, $fieldName)->renderValue($modelSingle, $fieldName, $userPermissionLevel);
     }
 }

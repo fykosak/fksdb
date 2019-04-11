@@ -85,3 +85,4 @@ includes:
     - merger.neon
     - fields/personInfo.neon
     - fields/eventParticipant.neon
+    - fields/event.neon

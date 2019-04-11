@@ -215,10 +215,11 @@ class ApplicationGrid extends AbstractApplicationGrid {
                 case 'note':
                 case 'swimmer':
                 case 'arrival_ticket':
+                case 'tshirt_color':
                     $factory = $this->tableReflectionFactory->loadService(DbNames::TAB_EVENT_PARTICIPANT, $name);
                     $this->addColumn($name, $factory::getTitle())->setRenderer(function ($row) use ($factory, $name) {
                         $model = ModelEventParticipant::createFromTableRow($row);
-                        return $factory->createHtmlValue($model, $name, 1);
+                        return $factory->renderValue($model, $name, 1);
                     });
 
                     break;
@@ -239,9 +240,6 @@ class ApplicationGrid extends AbstractApplicationGrid {
                     break;
                 case 'tshirt_size':
                     $this->addColumn('tshirt_size', _('T-shirt size'));
-                    break;
-                case 'tshirt_color':
-                    $this->addColumn('tshirt_color', _('T-shirt color'));
                     break;
                 case 'arrival_destination':
                     $this->addColumn('arrival_destination', _('Arrival destination'));

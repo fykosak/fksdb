@@ -4,6 +4,7 @@ namespace FKSDB\Components\DatabaseReflection\PersonInfo;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\Forms\Controls\URLTextBox;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\IControl;
 
 /**
@@ -19,9 +20,9 @@ class HomepageRow extends AbstractRow {
     }
 
     /**
-     * @return IControl
+     * @return BaseControl
      */
-    public function createField(): IControl {
+    public function createField(): BaseControl {
         return new URLTextBox();
     }
     /**

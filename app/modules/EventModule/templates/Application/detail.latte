@@ -10,6 +10,8 @@
 
     {control priceValue $model, _('Price'), price}
 
+
+
     <hr/>
     <h3>{_'Health & food'}</h3>
     {if \array_key_exists('health_restrictions',$fields)}
@@ -25,7 +27,7 @@
     {/if}
 
     {if \array_key_exists('note',$fields)}
-        {control stringValue $model, _('Note'), note}
+        {control valuePrinter__event_participant__note $model}
     {/if}
 
     {if \array_key_exists('swimmer',$fields)}
@@ -39,22 +41,7 @@
     {/if}
 
     {if \array_key_exists('tshirt_color',$fields)}
-        <div class="row">
-            <b class="col-2">{_'Color'}</b>
-            <span class="col-10">
-             {if \is_null($model->tshirt_color)}
-                 {control notSet}
-             {else}
-             <i style="
-                     background-color: {$model->tshirt_color};
-                     height:1rem;
-                     width: 1rem;
-                     border-radius: .5rem;
-                     display: inline-block;
-                     margin-right: .5rem "></i>{$model->tshirt_color}
-             {/if}
-            </span>
-        </div>
+        {control valuePrinter__event_participant__tshirt_color $model}
     {/if}
 
     <hr/>
@@ -65,8 +52,9 @@
     {if \array_key_exists('arrival_destination',$fields)}
         {control stringValue $model, _('Destination'), arrival_destination}
     {/if}
+
     {if \array_key_exists('arrival_ticket',$fields)}
-        {control binaryValue $model, _('Ticket'), arrival_ticket}
+        {control valuePrinter__event_participant__arrival_ticket $model}
     {/if}
     <hr/>
 

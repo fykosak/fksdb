@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\DatabaseReflection\EventParticipant;
 
-use FKSDB\Components\Controls\Helpers\ValuePrinters\BinaryValueControl;
+use FKSDB\Components\DatabaseReflection\ValuePrinters\BinaryPrinter;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Utils\Html;
 
@@ -21,10 +21,11 @@ class ArrivalTicketRow extends AbstractParticipantRow {
     /**
      * @param AbstractModelSingle $model
      * @param string $fieldName
-     * @param int $userPermissionsLevel
      * @return Html
      */
-    public function createHtmlValue(AbstractModelSingle $model, string $fieldName, int $userPermissionsLevel): Html {
-        return BinaryValueControl::renderStatic($model, $fieldName, $this->hasPermissions($userPermissionsLevel));
+    public function createHtmlValue(AbstractModelSingle $model, string $fieldName): Html {
+        return (new BinaryPrinter)($model->{$fieldName});
     }
+
+
 }

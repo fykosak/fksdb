@@ -2,12 +2,10 @@
 
 namespace FKSDB\Components\Controls\Helpers\ValuePrinters;
 
-use FKSDB\Components\Controls\Helpers\Badges\NotSetBadge;
 use FKSDB\Components\Controls\Helpers\Badges\PermissionDeniedBadge;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
-use Nette\NotImplementedException;
 use Nette\Templating\FileTemplate;
 use Nette\Utils\Html;
 
@@ -84,21 +82,6 @@ abstract class AbstractValueControl extends Control {
         return $this->getHtml($model, $accessKey);
     }
 
-    /**
-     * @param AbstractModelSingle $model
-     * @param string $accessKey
-     */
-    protected function getHtml(AbstractModelSingle $model, string $accessKey) {
-        throw new NotImplementedException();
-    }
-
-
-    /**
-     * @return NotSetBadge
-     */
-    public function createComponentNotSet(): NotSetBadge {
-        return new NotSetBadge($this->translator);
-    }
 
     /**
      * @return PermissionDeniedBadge
@@ -112,20 +95,6 @@ abstract class AbstractValueControl extends Control {
      * @param string $accessKey
      * @return Html
      */
-    protected abstract static function getHtmlStatic(AbstractModelSingle $model, string $accessKey): Html;
-
-    /**
-     * @param AbstractModelSingle $model
-     * @param string $accessKey
-     * @param bool $hasPermission
-     * @return Html
-     */
-    public static final function renderStatic(AbstractModelSingle $model, string $accessKey, bool $hasPermission): Html {
-        if (!$hasPermission) {
-            return PermissionDeniedBadge::getHtml();
-        }
-        return static::getHtmlStatic($model, $accessKey);
-    }
-
+    protected abstract function getHtml(AbstractModelSingle $model, string $accessKey): Html;
 
 }

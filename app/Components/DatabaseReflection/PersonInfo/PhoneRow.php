@@ -11,7 +11,7 @@ class PhoneRow extends AbstractPhoneRow {
      * @return string
      */
     public static function getTitle(): string {
-        return _('Telefonní číslo');
+        return _('Phone number');
     }
     /**
      * @return int

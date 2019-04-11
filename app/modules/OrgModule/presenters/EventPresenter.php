@@ -283,6 +283,7 @@ class EventPresenter extends EntityPresenter {
     /**
      * @return FormControl
      * @throws BadRequestException
+     * @throws \Exception
      */
     private function createForm() {
         $control = new FormControl();

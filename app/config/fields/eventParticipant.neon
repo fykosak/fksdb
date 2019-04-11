@@ -2,3 +2,4 @@ services:
     field.event_participant.note: FKSDB\Components\DatabaseReflection\EventParticipant\NoteRow
     field.event_participant.swimmer: FKSDB\Components\DatabaseReflection\EventParticipant\SwimmerRow
     field.event_participant.arrival_ticket: FKSDB\Components\DatabaseReflection\EventParticipant\ArrivalTicketRow
+    field.event_participant.tshirt_color: FKSDB\Components\DatabaseReflection\EventParticipant\TShirtColorRow

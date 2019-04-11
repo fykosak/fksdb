@@ -2,10 +2,11 @@
 
 namespace FKSDB\Components\DatabaseReflection;
 
-use FKSDB\Components\Controls\Helpers\ValuePrinters\StringValueControl;
+use FKSDB\Components\Controls\Helpers\Badges\PermissionDeniedBadge;
+use FKSDB\Components\DatabaseReflection\ValuePrinters\StringPrinter;
 use FKSDB\ORM\AbstractModelSingle;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
-use Nette\Forms\IControl;
 use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
 
@@ -34,7 +35,7 @@ abstract class AbstractRow {
     /**
      * @return TextInput
      */
-    public function createField(): IControl {
+    public function createField(): BaseControl {
         return new TextInput($this->getTitle());
     }
 
@@ -42,10 +43,22 @@ abstract class AbstractRow {
      * @param AbstractModelSingle $model
      * @param string $fieldName
      * @param int $userPermissionsLevel
+     * @return Html
+     */
+    public function renderValue(AbstractModelSingle $model, string $fieldName, int $userPermissionsLevel): Html {
+        if (!$this->hasPermissions($userPermissionsLevel)) {
+            return PermissionDeniedBadge::getHtml();
+        }
+        return $this->createHtmlValue($model, $fieldName);
+    }
+
+    /**
+     * @param AbstractModelSingle $model
+     * @param string $fieldName
      * @return \Nette\Utils\Html
      */
-    public function createHtmlValue(AbstractModelSingle $model, string $fieldName, int $userPermissionsLevel): Html {
-        return StringValueControl::renderStatic($model, $fieldName, $this->hasPermissions($userPermissionsLevel));
+    protected function createHtmlValue(AbstractModelSingle $model, string $fieldName): Html {
+        return (new StringPrinter)($model->{$fieldName});
     }
 
     /**

@@ -50,13 +50,4 @@ class PersonValueControl extends AbstractValueControl {
             ])])
             ->addText($model->getFullName());
     }
-
-    /**
-     * @param AbstractModelSingle $model
-     * @param string $accessKey
-     * @return Html
-     */
-    protected static function getHtmlStatic(AbstractModelSingle $model, string $accessKey): Html {
-        throw new NotImplementedException();
-    }
 }

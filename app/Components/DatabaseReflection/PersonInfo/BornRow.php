@@ -3,8 +3,11 @@
 namespace FKSDB\Components\DatabaseReflection\PersonInfo;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
+use FKSDB\Components\DatabaseReflection\ValuePrinters\DatePrinter;
 use FKSDB\Components\Forms\Controls\WriteOnlyDatePicker;
-use Nette\Forms\IControl;
+use FKSDB\ORM\AbstractModelSingle;
+use Nette\Forms\Controls\BaseControl;
+use Nette\Utils\Html;
 
 /**
  * Class BornField
@@ -19,17 +22,27 @@ class BornRow extends AbstractRow {
     }
 
     /**
-     * @return IControl
+     * @return BaseControl
      */
-    public function createField(): IControl {
+    public function createField(): BaseControl {
         $control = new WriteOnlyDatePicker($this->getTitle());
         $control->setDefaultDate((new \DateTime())->modify('-16 years'));
         return $control;
     }
+
     /**
      * @return int
      */
     public function getPermissionsValue(): int {
         return self::PERMISSION_ALLOW_FULL;
+    }
+
+    /**
+     * @param AbstractModelSingle $model
+     * @param string $fieldName
+     * @return Html
+     */
+    public function createHtmlValue(AbstractModelSingle $model, string $fieldName): Html {
+        return (new DatePrinter)($model->{$fieldName}, 'd.m.Y');
     }
 }
