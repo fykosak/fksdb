@@ -17,6 +17,7 @@ use Nette\Utils\Html;
 abstract class AbstractValueControl extends Control {
     const LAYOUT_STALKING = 'stalking';
     const LAYOUT_NONE = 'none';
+    const LAYOUT_DETAIL = 'detail';
     /**
      * @var ITranslator
      */
