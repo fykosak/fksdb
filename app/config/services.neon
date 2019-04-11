@@ -79,6 +79,6 @@ services:
     #
     - FKSDB\model\Fyziklani\TaskCodePreprocessor
     - FKSDB\model\Fyziklani\TaskCodeHandlerFactory
-
+    - FKSDB\Components\Forms\Factories\TableReflectionFactory
 includes:
     - merger.neon
