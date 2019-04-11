@@ -2,18 +2,17 @@
 
 namespace FKSDB\Components\DatabaseReflection;
 
-use FKSDB\Components\Controls\Helpers\ValuePrinters\AbstractValue;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 
 /**
- * Class StalkingRowComponent
- * @package FKSDB\Components\Controls\Stalking
+ * Class AbstractRowComponent
+ * @package FKSDB\Components\DatabaseReflection
  * @property FileTemplate $template
  */
-class StalkingRowComponent extends Control {
+abstract class AbstractRowComponent extends Control {
     /**
      * @var callable
      */
@@ -43,9 +42,7 @@ class StalkingRowComponent extends Control {
     /**
      * @return string
      */
-    protected function getLayout(): string {
-        return AbstractValue::LAYOUT_STALKING;
-    }
+    abstract protected function getLayout(): string;
 
     /**
      * @param AbstractModelSingle $model
@@ -58,5 +55,4 @@ class StalkingRowComponent extends Control {
         $this->template->setFile(__DIR__ . '/layout.latte');
         $this->template->render();
     }
-
 }
