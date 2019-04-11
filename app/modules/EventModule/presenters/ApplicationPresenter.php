@@ -2,7 +2,7 @@
 
 namespace EventModule;
 
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
+use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
 use FKSDB\Components\Grids\Events\ApplicationGrid;
 use FKSDB\ORM\Models\ModelEventParticipant;
@@ -85,7 +85,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @throws \Nette\Application\BadRequestException
      */
     public function createComponentGrid(): AbstractApplicationGrid {
-        return new ApplicationGrid($this->getEvent(), $this->tableReflectionFactory);
+        return new ApplicationGrid($this->getEvent());
     }
 
     /**
