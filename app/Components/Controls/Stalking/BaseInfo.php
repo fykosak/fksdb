@@ -18,6 +18,7 @@ class BaseInfo extends StalkingComponent {
             'linkedin_id', 'note',
         ];
         $this->template->info = $this->modelPerson->getInfo();
+        $this->template->person = $this->modelPerson;
         $this->template->setFile(__DIR__ . '/BaseInfo.latte');
         $this->template->render();
     }

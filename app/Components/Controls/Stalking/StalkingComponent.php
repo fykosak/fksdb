@@ -4,7 +4,6 @@ namespace FKSDB\Components\Controls\Stalking;
 
 use FKSDB\Components\Controls\Helpers\Badges\ContestBadge;
 use FKSDB\Components\Controls\Helpers\Badges\NoRecordsBadge;
-use FKSDB\Components\Controls\Helpers\Badges\NotSetBadge;
 use FKSDB\Components\Controls\Helpers\Badges\PermissionDeniedBadge;
 use FKSDB\Components\Controls\Helpers\ValuePrinters\AbstractValueControl;
 use FKSDB\Components\Controls\Helpers\ValuePrintersTrait;
@@ -106,13 +105,6 @@ abstract class StalkingComponent extends Control {
      */
     public function createComponentNoRecords(): NoRecordsBadge {
         return new NoRecordsBadge($this->translator);
-    }
-
-    /**
-     * @return NotSetBadge
-     */
-    public function createComponentNotSet(): NotSetBadge {
-        return new NotSetBadge($this->translator);
     }
 
     /**

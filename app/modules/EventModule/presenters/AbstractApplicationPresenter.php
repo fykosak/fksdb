@@ -4,7 +4,6 @@ namespace EventModule;
 
 use Events\Model\ApplicationHandlerFactory;
 use Events\Model\Grid\SingleEventSource;
-use FKSDB\Components\Controls\Helpers\Badges\NotSetBadge;
 use FKSDB\Components\Controls\Helpers\ValuePrinters\BinaryValueControl;
 use FKSDB\Components\Controls\Helpers\ValuePrinters\IsSetValueControl;
 use FKSDB\Components\Controls\Helpers\ValuePrinters\PersonValueControl;
@@ -98,13 +97,6 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      */
     public function createComponentStringValue(): StringValueControl {
         return new StringValueControl($this->getTranslator());
-    }
-
-    /**
-     * @return \FKSDB\Components\Controls\Helpers\Badges\NotSetBadge
-     */
-    public function createComponentNotSet(): NotSetBadge {
-        return new NotSetBadge($this->getTranslator());
     }
 
     /**
