@@ -16,6 +16,6 @@ class DetailRowComponent extends AbstractRowComponent {
      * @return string
      */
     protected function getLayout(): string {
-        return AbstractValue::LAYOUT_STALKING;
+        return AbstractValue::LAYOUT_DETAIL;
     }
 }
