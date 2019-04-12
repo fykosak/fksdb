@@ -1,0 +1,25 @@
+services:
+    field.person_info.academic_degree_prefix: FKSDB\Components\DatabaseReflection\PersonInfo\AcademicDegreePrefixRow
+    field.person_info.academic_degree_suffix: FKSDB\Components\DatabaseReflection\PersonInfo\AcademicDegreeSuffixRow
+    field.person_info.employer: FKSDB\Components\DatabaseReflection\PersonInfo\EmployerRow
+    field.person_info.email: FKSDB\Components\DatabaseReflection\PersonInfo\EmailRow
+    field.person_info.note: FKSDB\Components\DatabaseReflection\PersonInfo\NoteRow
+    field.person_info.health_insurance: FKSDB\Components\DatabaseReflection\PersonInfo\HealthInsuranceRow
+    field.person_info.linkedin_id: FKSDB\Components\DatabaseReflection\PersonInfo\LinkedinIdRow
+    field.person_info.citizenship: FKSDB\Components\DatabaseReflection\PersonInfo\CitizenshipRow
+    field.person_info.uk_login: FKSDB\Components\DatabaseReflection\PersonInfo\UkLoginRow
+    field.person_info.account: FKSDB\Components\DatabaseReflection\PersonInfo\AccountRow
+    field.person_info.homepage: FKSDB\Components\DatabaseReflection\PersonInfo\HomepageRow
+    field.person_info.phone: FKSDB\Components\DatabaseReflection\PersonInfo\PhoneRow
+    field.person_info.phone_parent_m: FKSDB\Components\DatabaseReflection\PersonInfo\PhoneParentMRow
+    field.person_info.phone_parent_d: FKSDB\Components\DatabaseReflection\PersonInfo\PhoneParentDRow
+    field.person_info.id_number: FKSDB\Components\DatabaseReflection\PersonInfo\IdNumberRow
+    field.person_info.born: FKSDB\Components\DatabaseReflection\PersonInfo\BornRow
+    field.person_info.born_id: FKSDB\Components\DatabaseReflection\PersonInfo\BornIdRow
+    field.person_info.birthplace: FKSDB\Components\DatabaseReflection\PersonInfo\BirthplaceRow
+    field.person_info.career: FKSDB\Components\DatabaseReflection\PersonInfo\CareerRow
+    field.person_info.im: FKSDB\Components\DatabaseReflection\PersonInfo\ImRow
+    field.person_info.agreed: FKSDB\Components\DatabaseReflection\PersonInfo\AgreedRow
+    field.person_info.origin: FKSDB\Components\DatabaseReflection\PersonInfo\OriginRow
+
+
