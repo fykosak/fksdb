@@ -4,71 +4,23 @@
 
     {control personValue $model->getPerson(), _('Person'), person_id}
 
-    {control stringValue $model, _('Status'), status}
+    {control valuePrinter__event_participant__status $model}
+
+    {control valuePrinter__event_participant__price $model}
 
     {control stringValue $model, _('Created'), created}
 
-    {control priceValue $model, _('Price'), price}
-
-
-
-    <hr/>
-    <h3>{_'Health & food'}</h3>
-    {if \array_key_exists('health_restrictions',$fields)}
-        {control stringValue $model, _('Health restrictions'), health_restrictions}
-    {/if}
-
-    {if \array_key_exists('diet',$fields)}
-        {control stringValue $model, _('Diet'), diet}
-    {/if}
-
-    {if \array_key_exists('used_drugs',$fields)}
-        {control stringValue $model, _('Used drugs'), used_drugs}
-    {/if}
-
-    {if \array_key_exists('note',$fields)}
-        {control valuePrinter__event_participant__note $model}
-    {/if}
-
-    {if \array_key_exists('swimmer',$fields)}
-        {control binaryValue $model, _('Swimmer'),swimmer}
-    {/if}
-
-    <hr/>
-    <h3>{_'T-shirt'}</h3>
-    {if \array_key_exists('tshirt_size',$fields)}
-        {control stringValue $model, _('Size'), tshirt_size}
-    {/if}
-
-    {if \array_key_exists('tshirt_color',$fields)}
-        {control valuePrinter__event_participant__tshirt_color $model}
-    {/if}
-
-    <hr/>
-    <h3>{_'Arrival'}</h3>
-    {if \array_key_exists('arrival_time',$fields)}
-        {control stringValue $model, _('Time'), arrival_time}
-    {/if}
-    {if \array_key_exists('arrival_destination',$fields)}
-        {control stringValue $model, _('Destination'), arrival_destination}
-    {/if}
-
-    {if \array_key_exists('arrival_ticket',$fields)}
-        {control valuePrinter__event_participant__arrival_ticket $model}
-    {/if}
     <hr/>
 
-    <h3>{_'Departure'}</h3>
-    {if \array_key_exists('departure_time',$fields)}
-        {control stringValue $model, _('Time'), departure_time}
-    {/if}
-    {if \array_key_exists('departure_destination',$fields)}
-        {control stringValue $model, _('Destination'), departure_destination}
-    {/if}
-    {if \array_key_exists('departure_ticket',$fields)}
-        {control binaryValue $model, _('Ticket'), departure_ticket}
-    {/if}
-    <hr/>
+    {foreach $groups as $groupName=>$fieldDef}
+        <h3>{$groupName}</h3>
+        {foreach $fieldDef as $field}
+            {if \array_key_exists($field,$fields)}
+                {control valuePrinter__event_participant__$field $model}
+            {/if}
+        {/foreach}
+        <hr/>
+    {/foreach}
 
     <h3>{_'Actions'}</h3>
 

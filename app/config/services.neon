@@ -83,6 +83,7 @@ services:
 
 includes:
     - merger.neon
-    - fields/personInfo.neon
-    - fields/eventParticipant.neon
-    - fields/event.neon
+    - rows/personInfo.neon
+    - rows/eventParticipant.neon
+    - rows/event.neon
+    - rows/payment.neon

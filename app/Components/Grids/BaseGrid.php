@@ -3,6 +3,8 @@
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Forms\Factories\TableReflectionFactory;
+use FKSDB\ORM\AbstractModelSingle;
 use Nette\Application\UI\Form;
 use Nette\InvalidStateException;
 use Nette\Templating\FileTemplate;
@@ -21,6 +23,19 @@ abstract class BaseGrid extends Grid {
 
     /** @persistent string */
     public $searchTerm;
+    /**
+     * @var TableReflectionFactory
+     */
+    protected $tableReflectionFactory;
+
+    /**
+     * BaseGrid constructor.
+     * @param TableReflectionFactory|null $tableReflectionFactory
+     */
+    public function __construct(TableReflectionFactory $tableReflectionFactory = null) {
+        parent::__construct();
+        $this->tableReflectionFactory = $tableReflectionFactory;
+    }
 
     /**
      * @param $presenter
@@ -33,6 +48,7 @@ abstract class BaseGrid extends Grid {
         $paginator = $this->getComponent('paginator');
         $paginator->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.paginator.latte');
     }
+
 
     /**
      * @param null $class
@@ -150,6 +166,23 @@ abstract class BaseGrid extends Grid {
         $button = parent::addGlobalButton($name, $label);
         $button->setClass('btn btn-sm btn-primary');
         return $button;
+    }
+
+    /**
+     * @param string $tableName
+     * @param string $fieldName
+     * @param string|AbstractModelSingle $modelClassName
+     * @throws \NiftyGrid\DuplicateColumnException
+     * @throws \Exception
+     */
+    protected function addReflectionColumns(string $tableName, string $fieldName, string $modelClassName) {
+        $factory = $this->tableReflectionFactory->loadService($tableName, $fieldName);
+        $this->addColumn($fieldName, $factory::getTitle())->setRenderer(function ($row) use ($factory, $fieldName, $modelClassName) {
+            $model = $modelClassName::createFromTableRow($row);
+            return $factory->renderValue($model, $fieldName, 1);
+        });
+
+
     }
 
 }

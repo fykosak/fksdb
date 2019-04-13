@@ -1,5 +1,6 @@
 <?php
 
+
 namespace FKSDB\Components\DatabaseReflection\EventParticipant;
 
 use FKSDB\Components\DatabaseReflection\ValuePrinters\BinaryPrinter;
@@ -8,15 +9,15 @@ use FKSDB\ORM\Models\ModelEventParticipant;
 use Nette\Utils\Html;
 
 /**
- * Class ArrivalTicketRow
+ * Class DepartureTicketRow
  * @package FKSDB\Components\DatabaseReflection\EventParticipant
  */
-class ArrivalTicketRow extends AbstractParticipantRow {
+class DepartureTicketRow extends AbstractParticipantRow {
     /**
      * @return string
      */
     public static function getTitle(): string {
-        return _('Arrival ticket');
+        return _('Departure ticket');
     }
 
     /**
@@ -25,6 +26,6 @@ class ArrivalTicketRow extends AbstractParticipantRow {
      * @return Html
      */
     public function createHtmlValue(AbstractModelSingle $model, string $fieldName): Html {
-        return (new BinaryPrinter)($model->arrival_ticket);
+        return (new BinaryPrinter)($model->departure_ticket);
     }
 }

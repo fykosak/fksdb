@@ -2,7 +2,6 @@
 
 namespace EventModule;
 
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
 use FKSDB\Components\Grids\Events\ApplicationGrid;
 use FKSDB\ORM\Models\ModelEventParticipant;
@@ -102,5 +101,11 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
     public function renderDetail() {
         $this->template->fields = $this->getEvent()->getHolder()->getPrimaryHolder()->getFields();
         $this->template->model = $this->getModel();
+        $this->template->groups = [
+            _('Health & food') => ['health_restrictions', 'diet', 'used_drugs', 'note', 'swimmer'],
+            _('T-shirt') => ['tshirt_size', 'tshirt_color'],
+            _('Arrival') => ['arrival_time', 'arrival_destination', 'arrival_ticket'],
+            _('Departure') => ['departure_time', 'departure_destination', 'departure_ticket'],
+        ];
     }
 }

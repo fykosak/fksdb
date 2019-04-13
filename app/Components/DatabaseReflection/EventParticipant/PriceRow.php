@@ -2,21 +2,22 @@
 
 namespace FKSDB\Components\DatabaseReflection\EventParticipant;
 
-use FKSDB\Components\DatabaseReflection\ValuePrinters\BinaryPrinter;
+use FKSDB\Components\Controls\Helpers\Badges\NotSetBadge;
+use FKSDB\Components\DatabaseReflection\ValuePrinters\PricePrinter;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use Nette\Utils\Html;
 
 /**
- * Class ArrivalTicketRow
+ * Class PriceRow
  * @package FKSDB\Components\DatabaseReflection\EventParticipant
  */
-class ArrivalTicketRow extends AbstractParticipantRow {
+class PriceRow extends AbstractParticipantRow {
     /**
      * @return string
      */
     public static function getTitle(): string {
-        return _('Arrival ticket');
+        return _('Price');
     }
 
     /**
@@ -24,7 +25,10 @@ class ArrivalTicketRow extends AbstractParticipantRow {
      * @param string $fieldName
      * @return Html
      */
-    public function createHtmlValue(AbstractModelSingle $model, string $fieldName): Html {
-        return (new BinaryPrinter)($model->arrival_ticket);
+    protected function createHtmlValue(AbstractModelSingle $model, string $fieldName): Html {
+        if (\is_null($model->price)) {
+            return NotSetBadge::getHtml();
+        }
+        return (new PricePrinter)($model->getPrice());
     }
 }

@@ -1,39 +1,14 @@
-<div class="h2">{control stateLabel}</div>
+<div class="h2">{control valuePrinterOnlyValue__payment__state $model}</div>
 {control stateDisplay}
 <hr/>
 {if $model->hasGeneratedSymbols()}
     <h2>{_('Informacie o platbe')}</h2>
-
-    {if $model->constant_symbol}
-        {control stringValue $model, _('Constant symbol'),constant_symbol}
-    {/if}
-
-    {if $model->variable_symbol}
-        {control stringValue $model, _('Variable symbol'),variable_symbol}
-    {/if}
-
-    {if $model->specific_symbol}
-        {control stringValue $model, _('Specific symbol'),specific_symbol}
-    {/if}
-
-    {if $model->bank_account}
-        {control stringValue $model, _('Bank account'),bank_account}
-    {/if}
-
-    {if $model->iban}
-        {control stringValue $model, _('IBAN'),iban}
-    {/if}
-
-    {if $model->swift}
-        {control stringValue $model, _('SWIFT'),swift}
-    {/if}
-
-    {if $model->price}
-        <div class="row">
-            <b class="col-2">{_('Price')}:</b>
-            <span class="col-10">{$model->getPrice()->__toString()}</span>
-        </div>
-    {/if}
+{*'bank_name'*}
+    {foreach ['constant_symbol','variable_symbol','specific_symbol','bank_account','iban','swift','price'] as $field}
+        {if $model->{$field}}
+            {control valuePrinterDetail__payment__$field $model}
+        {/if}
+    {/foreach}
     <hr/>
 {/if}
 
@@ -44,7 +19,7 @@
         <b class="col-2">{_('Person')}:</b>
         <span class="col-10">{$model->getPerson()->__toString()}</span>
     </div>
-    {control stringValue $model->getPerson()->getInfo(), _('Email'),email}
+    {control valuePrinterDetail__person_info__email $model->getPerson()->getInfo()}
 </div>
 <hr/>
 <h2>{_'Items'}</h2>

@@ -20,6 +20,6 @@ class YearRow extends AbstractRow {
      * @return string
      */
     public static function getTitle(): string {
-        return _('Contest year');
+        return _('Contests year');
     }
 }

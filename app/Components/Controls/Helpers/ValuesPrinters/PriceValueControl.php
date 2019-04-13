@@ -32,7 +32,7 @@ class PriceValueControl extends AbstractValueControl {
         }
         $this->template->html = (new PricePrinter)($price);
 
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'PriceValue.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'PrimitiveValue.latte');
         $this->template->render();
     }
 

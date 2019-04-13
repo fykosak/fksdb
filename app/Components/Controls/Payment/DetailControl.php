@@ -5,12 +5,10 @@ namespace FKSDB\Components\Controls\Payment;
 use EventModule\PaymentPresenter;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Helpers\AbstractDetailControl;
-use FKSDB\Components\Controls\Helpers\ValuePrinters\StringValueControl;
 use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
+use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\Models\ModelPayment;
-use FKSDB\Payment\Price;
 use FKSDB\Payment\Transition\PaymentMachine;
-use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 
@@ -20,6 +18,7 @@ use Nette\Templating\FileTemplate;
  * @property FileTemplate $template
  */
 class DetailControl extends AbstractDetailControl {
+
     /**
      * @var ModelPayment
      */
@@ -34,9 +33,10 @@ class DetailControl extends AbstractDetailControl {
      * @param ITranslator $translator
      * @param PaymentMachine $machine
      * @param \FKSDB\ORM\Models\ModelPayment $model
+     * @param TableReflectionFactory $tableReflectionFactory
      */
-    public function __construct(ITranslator $translator, PaymentMachine $machine, ModelPayment $model) {
-        parent::__construct($translator);
+    public function __construct(ITranslator $translator, PaymentMachine $machine, ModelPayment $model, TableReflectionFactory $tableReflectionFactory) {
+        parent::__construct($translator, $tableReflectionFactory);
         $this->model = $model;
         $this->machine = $machine;
     }
@@ -69,21 +69,6 @@ class DetailControl extends AbstractDetailControl {
     }
 
     /**
-     * @return PaymentStateLabel
-     */
-    public function createComponentStateLabel(): PaymentStateLabel {
-        return new PaymentStateLabel($this->model, $this->translator);
-    }
-
-    /**
-     * @param \FKSDB\Payment\Price $price
-     * @return PriceControl
-     */
-    public function createComponentPriceControl(Price $price): PriceControl {
-        return new PriceControl($this->translator, $price);
-    }
-
-    /**
      * @return TransitionButtonsControl
      */
     public function createComponentTransitionButtons() {
@@ -110,4 +95,5 @@ class DetailControl extends AbstractDetailControl {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'DetailControl.latte');
         $this->template->render();
     }
+
 }

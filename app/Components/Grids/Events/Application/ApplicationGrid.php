@@ -4,7 +4,6 @@ namespace FKSDB\Components\Grids\Events;
 
 use Closure;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Controls\Helpers\ValuePrinters\PriceValueControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
@@ -26,10 +25,6 @@ class ApplicationGrid extends AbstractApplicationGrid {
      * @var ModelEvent
      */
     protected $event;
-    /**
-     * @var TableReflectionFactory
-     */
-    private $tableReflectionFactory;
 
     /**
      * ParticipantGrid constructor.
@@ -37,9 +32,8 @@ class ApplicationGrid extends AbstractApplicationGrid {
      * @param TableReflectionFactory $tableReflectionFactory
      */
     public function __construct(ModelEvent $event, TableReflectionFactory $tableReflectionFactory) {
-        parent::__construct();
+        parent::__construct($tableReflectionFactory);
         $this->event = $event;
-        $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
     /**
@@ -68,54 +62,10 @@ class ApplicationGrid extends AbstractApplicationGrid {
                 ->addText($model->getPerson()->getFullName());
         });
 
-        $this->addColumn('status', _('Status'))->setRenderer(function ($row) use ($presenter) {
+        $factory = $this->tableReflectionFactory->loadService(DbNames::TAB_EVENT_PARTICIPANT, 'status');
+        $this->addColumn('statue', $factory::getTitle())->setRenderer(function ($row) use ($factory) {
             $model = ModelEventParticipant::createFromTableRow($row);
-            switch ($model->status) {
-                case'participated':
-                    $className = 'badge badge-success';
-                    break;
-                case 'applied':
-                case 'applied.nodsef':
-                case 'applied.notsaf':
-                case 'applied.tsaf':
-                case 'approved':
-                case 'paid':
-                    $className = 'badge badge-primary';
-                    break;
-                case 'interested':
-                    $className = 'badge badge-info';
-                    break;
-                case 'rejected':
-                case 'missed':
-                case 'cancelled':
-                    $className = 'badge badge-danger';
-                    break;
-                case 'out_of_db':
-                    $className = 'badge badge-light';
-                    break;
-                case 'auto.invited':
-                case 'invited':
-                case 'invited1':
-                case 'invited2':
-                case 'invited3':
-                case 'auto.spare':
-                case 'spare':
-                case 'spare1':
-                case 'spare2':
-                case 'spare3':
-                case 'spare.tsaf':
-                case 'pending':
-                    $className = 'badge badge-warning';
-                    break;
-                case 'disqualified':
-                    $className = 'badge badge-dark';
-                    break;
-                default:
-                    $className = 'badge badge-secondary';
-            }
-            return Html::el('span')
-                ->addAttributes(['class' => $className])
-                ->addText(_($model->status));
+            return $factory->renderValue($model, 'status', 1);
         });
         $this->addColumns();
 
@@ -202,7 +152,6 @@ class ApplicationGrid extends AbstractApplicationGrid {
         };
     }
 
-
     /**
      * @throws \NiftyGrid\DuplicateColumnException
      * @throws \Exception
@@ -216,51 +165,18 @@ class ApplicationGrid extends AbstractApplicationGrid {
                 case 'swimmer':
                 case 'arrival_ticket':
                 case 'tshirt_color':
-                    $factory = $this->tableReflectionFactory->loadService(DbNames::TAB_EVENT_PARTICIPANT, $name);
-                    $this->addColumn($name, $factory::getTitle())->setRenderer(function ($row) use ($factory, $name) {
-                        $model = ModelEventParticipant::createFromTableRow($row);
-                        return $factory->renderValue($model, $name, 1);
-                    });
-
-                    break;
-                case 'diet':
-                    $this->addColumn('diet', _('Diet'));
-                    break;
-                case 'health_restrictions':
-                    $this->addColumn('health_restrictions', _('Health restrictions'));
-                    break;
-                case 'price':
-                    $this->addColumn('price', _('Price'))->setRenderer(function ($row) {
-                        $model = ModelEventParticipant::createFromTableRow($row);
-                        return (new PriceValueControl($this->getTranslator()))->createGridItem($model, 'price');
-                    });
-                    break;
-                case 'used_drugs':
-                    $this->addColumn('used_drugs', _('Used drugs'));
-                    break;
-                case 'tshirt_size':
-                    $this->addColumn('tshirt_size', _('T-shirt size'));
-                    break;
-                case 'arrival_destination':
-                    $this->addColumn('arrival_destination', _('Arrival destination'));
-                    break;
-                case 'arrival_time':
-                    $this->addColumn('arrival_time', _('Arrival time'));
-                    break;
-
-                case 'departure_destination':
-                    $this->addColumn('departure_destination', _('Departure destination'));
-                    break;
                 case 'departure_time':
-                    $this->addColumn('departure_time', _('Departure time'));
-                    break;
                 case 'departure_ticket':
-                    $this->addColumn('departure_ticket', _('Departure ticket'))->setRenderer(function ($row) {
-                        $model = ModelEventParticipant::createFromTableRow($row);
-                        //   return (new BinaryValueControl($this->getTranslator()))->createGridItem($model, 'departure_ticket');
-                    });
+                case 'departure_destination':
+                case 'arrival_time':
+                case 'arrival_destination':
+                case 'health_restrictions':
+                case 'diet':
+                case 'used_drugs':
+                case 'tshirt_size':
+                case 'price':
+                    $this->addReflectionColumns(DbNames::TAB_EVENT_PARTICIPANT, $name, ModelEventParticipant::class);
             }
         }
-
     }
 }
