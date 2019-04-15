@@ -2,9 +2,12 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
+use Closure;
 use FKSDB\Components\DatabaseReflection\AbstractRow;
-use FKSDB\Components\DatabaseReflection\DetailRowComponent;
-use FKSDB\Components\DatabaseReflection\StalkingRowComponent;
+use FKSDB\Components\DatabaseReflection\AbstractRowComponent;
+use FKSDB\Components\DatabaseReflection\ListComponent;
+use FKSDB\Components\DatabaseReflection\OnlyValueComponent;
+use FKSDB\Components\DatabaseReflection\RowComponent;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
@@ -16,7 +19,7 @@ use Nette\Utils\Html;
  * Class TableReflectionFactory
  * @package FKSDB\Components\Forms\Factories\PersonInfo
  */
-class TableReflectionFactory {
+final class TableReflectionFactory {
 
     /**
      * @var AbstractRow[]
@@ -51,7 +54,7 @@ class TableReflectionFactory {
         if (isset($this->fieldFactories[$fieldName])) {
             return $this->fieldFactories[$fieldName];
         }
-        $service = $this->container->getService('field.' . $tableName . '.' . $fieldName);
+        $service = $this->container->getService('row.' . $tableName . '.' . $fieldName);
         if (!$service instanceof AbstractRow) {
             throw new InvalidArgumentException('Field ' . $tableName . '.' . $fieldName . ' not exists');
         }
@@ -63,30 +66,85 @@ class TableReflectionFactory {
      * @param string $tableName
      * @param string $fieldName
      * @param int $userPermission
-     * @return StalkingRowComponent
+     * @return ListComponent
      * @throws \Exception
      */
-    public function createStalkingComponent(string $tableName, string $fieldName, int $userPermission): StalkingRowComponent {
+    private function createListComponent(string $tableName, string $fieldName, int $userPermission): ListComponent {
         $factory = $this->loadService($tableName, $fieldName);
-        $callBack = function (AbstractModelSingle $model) use ($factory, $fieldName, $userPermission) {
-            return $factory->renderValue($model, $fieldName, $userPermission);
-        };
-        return new StalkingRowComponent($this->translator, $callBack, $factory::getTitle());
+        $callBack = $this->getComponentCallback($factory, $fieldName, $userPermission);
+        return new ListComponent($this->translator, $callBack, $factory->getTitle());
     }
 
     /**
      * @param string $tableName
      * @param string $fieldName
      * @param int $userPermission
-     * @return DetailRowComponent
+     * @return RowComponent
      * @throws \Exception
      */
-    public function createDetailComponent(string $tableName, string $fieldName, int $userPermission): DetailRowComponent {
+    private function createRowComponent(string $tableName, string $fieldName, int $userPermission): RowComponent {
         $factory = $this->loadService($tableName, $fieldName);
-        $callBack = function (AbstractModelSingle $model) use ($factory, $fieldName, $userPermission) {
+        $callBack = $this->getComponentCallback($factory, $fieldName, $userPermission);
+        return new RowComponent($this->translator, $callBack, $factory->getTitle());
+    }
+
+    /**
+     * @param string $tableName
+     * @param string $fieldName
+     * @param int $userPermission
+     * @return OnlyValueComponent
+     * @throws \Exception
+     */
+    private function createOnlyValueComponent(string $tableName, string $fieldName, int $userPermission): OnlyValueComponent {
+        $factory = $this->loadService($tableName, $fieldName);
+        $callBack = $this->getComponentCallback($factory, $fieldName, $userPermission);
+        return new OnlyValueComponent($this->translator, $callBack, $factory->getTitle());
+    }
+
+    /**
+     * @param string $name
+     * @param int $permissionLevel
+     * @return AbstractRowComponent|null
+     * @throws \Exception
+     */
+    public function createComponent(string $name, int $permissionLevel) {
+        $parts = \explode('__', $name);
+        if (\count($parts) === 3) {
+            list($prefix, $tableName, $fieldName) = $parts;
+            if ($prefix === 'valuePrinter' || $prefix === 'valuePrinterDetail' || $prefix === 'valuePrinterRow') {
+                return $this->createRowComponent($tableName, $fieldName, $permissionLevel);
+            }
+            if ($prefix === 'valuePrinterStalking' || $prefix === 'valuePrinterList') {
+                return $this->createListComponent($tableName, $fieldName, $permissionLevel);
+            }
+            if ($prefix === 'valuePrinterOnlyValue') {
+                return $this->createOnlyValueComponent($tableName, $fieldName, $permissionLevel);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param AbstractRow $factory
+     * @param string $fieldName
+     * @param int $userPermission
+     * @return \Closure
+     */
+    private function getComponentCallback(AbstractRow $factory, string $fieldName, int $userPermission): Closure {
+        return function (AbstractModelSingle $model) use ($factory, $fieldName, $userPermission): Html {
             return $factory->renderValue($model, $fieldName, $userPermission);
         };
-        return new DetailRowComponent($this->translator, $callBack, $factory::getTitle());
+    }
+
+    /**
+     * @param string $tableName
+     * @param string $fieldName
+     * @return Closure
+     * @throws \Exception
+     */
+    public function createFieldCallback(string $tableName, string $fieldName): Closure {
+        $factory = $this->loadService($tableName, $fieldName);
+        return $factory->createFieldCallback();
     }
 
     /**
@@ -94,9 +152,10 @@ class TableReflectionFactory {
      * @param string $fieldName
      * @return BaseControl
      * @throws \Exception
+     * @deprecated
      */
     public function createField(string $tableName, string $fieldName): BaseControl {
-        return $this->loadService($tableName, $fieldName)->createField();
+        return $this->createFieldCallback($tableName, $fieldName)();
     }
 
     /**

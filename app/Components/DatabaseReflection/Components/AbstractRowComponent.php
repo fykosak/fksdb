@@ -13,6 +13,10 @@ use Nette\Templating\FileTemplate;
  * @property FileTemplate $template
  */
 abstract class AbstractRowComponent extends Control {
+    const LAYOUT_LIST_GROUP = 'list-group';
+    const LAYOUT_ROW = 'row';
+    const LAYOUT_ONLY_VALUE = 'only-value';
+
     /**
      * @var callable
      */
@@ -40,7 +44,7 @@ abstract class AbstractRowComponent extends Control {
     }
 
     /**
-     * @return string
+     * @return string|"list-group"|"row"|"only-value"
      */
     abstract protected function getLayout(): string;
 

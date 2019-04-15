@@ -5,18 +5,22 @@ namespace FKSDB\ORM\Models\Fyziklani;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelEvent;
+use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
 use Nette\Utils\DateTime;
 
 /**
- * @property string category
- * @property string name
- * @property integer e_fyziklani_team_id
- * @property integer event_id
- * @property integer points
- * @property string status
- * @property DateTime created
- * @property string phone
+ * @property-read string category
+ * @property-read string name
+ * @property-read integer e_fyziklani_team_id
+ * @property-read integer event_id
+ * @property-read integer points
+ * @property-read string status
+ * @property-read DateTime created
+ * @property-read string phone
+ * @property-read bool force_a
+ * @property-read string password
+ * @property-read ActiveRow event
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @author Michal Červeňák <miso@fykos.cz>
