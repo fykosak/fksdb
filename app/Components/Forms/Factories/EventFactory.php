@@ -62,7 +62,7 @@ class EventFactory extends SingleReflectionFactory {
     public function createField(string $fieldName, ModelContest $contest = null): BaseControl {
         switch ($fieldName) {
             case 'event_type_id':
-                return $this->getFieldCallback($fieldName)($contest);
+                return $this->loadFactory($fieldName)->createField($contest);
             default:
                 return parent::createField($fieldName);
         }

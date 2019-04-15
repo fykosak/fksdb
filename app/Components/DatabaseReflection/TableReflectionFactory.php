@@ -10,7 +10,6 @@ use FKSDB\Components\DatabaseReflection\OnlyValueComponent;
 use FKSDB\Components\DatabaseReflection\RowComponent;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\DI\Container;
-use Nette\Forms\Controls\BaseControl;
 use Nette\InvalidArgumentException;
 use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
@@ -106,6 +105,7 @@ final class TableReflectionFactory {
      * @param int $permissionLevel
      * @return AbstractRowComponent|null
      * @throws \Exception
+     * @deprecated
      */
     public function createComponent(string $name, int $permissionLevel) {
         $parts = \explode('__', $name);
@@ -134,28 +134,6 @@ final class TableReflectionFactory {
         return function (AbstractModelSingle $model) use ($factory, $fieldName, $userPermission): Html {
             return $factory->renderValue($model, $fieldName, $userPermission);
         };
-    }
-
-    /**
-     * @param string $tableName
-     * @param string $fieldName
-     * @return Closure
-     * @throws \Exception
-     */
-    public function createFieldCallback(string $tableName, string $fieldName): Closure {
-        $factory = $this->loadService($tableName, $fieldName);
-        return $factory->createFieldCallback();
-    }
-
-    /**
-     * @param string $tableName
-     * @param string $fieldName
-     * @return BaseControl
-     * @throws \Exception
-     * @deprecated
-     */
-    public function createField(string $tableName, string $fieldName): BaseControl {
-        return $this->createFieldCallback($tableName, $fieldName)();
     }
 
     /**

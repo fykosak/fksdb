@@ -46,7 +46,7 @@ class PersonHistoryFactory extends SingleReflectionFactory {
             case 'school_id':
                 return $this->schoolFactory->createSchoolSelect();
             case 'study_year':
-                return $this->getFieldCallback($fieldName)($acYear);
+                return $this->loadFactory($fieldName)->createField($acYear);
             default:
                 return parent::createField($fieldName);
         }

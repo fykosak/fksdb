@@ -114,12 +114,11 @@ class OrgFactory extends SingleReflectionFactory {
      * @throws \Exception
      */
     public function createField(string $fieldName, ModelContest $contest = null): BaseControl {
-        $callBack = $this->getFieldCallback($fieldName);
         switch ($fieldName) {
             case 'since':
                 $min = $this->yearCalculator->getFirstYear($contest);
                 $max = $this->yearCalculator->getLastYear($contest);
-                return $callBack($min, $max);
+                return $this->loadFactory($fieldName)->createField($min, $max);
                 break;
             default:
                 return parent::createField($fieldName);

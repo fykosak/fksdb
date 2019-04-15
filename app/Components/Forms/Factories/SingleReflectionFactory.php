@@ -2,7 +2,9 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
-use Closure;
+use FKSDB\Components\DatabaseReflection\AbstractRow;
+use FKSDB\Components\DatabaseReflection\Org\SinceRow;
+use FKSDB\Components\DatabaseReflection\PersonHistory\StudyYearRow;
 use Nette\Forms\Controls\BaseControl;
 
 /**
@@ -29,12 +31,12 @@ abstract class SingleReflectionFactory {
     abstract protected function getTableName(): string;
 
     /**
-     * @param string $field
-     * @return Closure
+     * @param string $fieldName
+     * @return AbstractRow|SinceRow|StudyYearRow
      * @throws \Exception
      */
-    protected function getFieldCallback(string $field): Closure {
-        return $this->tableReflectionFactory->createFieldCallback($this->getTableName(), $field);
+    protected function loadFactory(string $fieldName): AbstractRow {
+        return $this->tableReflectionFactory->loadService($this->getTableName(), $fieldName);
     }
 
     /**
@@ -43,6 +45,6 @@ abstract class SingleReflectionFactory {
      * @throws \Exception
      */
     public function createField(string $fieldName): BaseControl {
-        return $this->getFieldCallback($fieldName)();
+        return $this->loadFactory($fieldName)->createField();
     }
 }
