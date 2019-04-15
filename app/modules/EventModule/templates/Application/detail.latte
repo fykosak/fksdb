@@ -1,14 +1,8 @@
 {block content}
-
-    {control stringValue $model, _('event_participant_id'), event_participant_id}
-
-    {control personValue $model->getPerson(), _('Person'), person_id}
-
-    {control valuePrinter__event_participant__status $model}
-
-    {control valuePrinter__event_participant__price $model}
-
-    {control stringValue $model, _('Created'), created}
+    <h3>{_'Base info'}</h3>
+    {foreach ['event_participant_id', 'person_id', 'status', 'price', 'created'] as $field}
+        {control valuePrinter__event_participant__$field $model}
+    {/foreach}
 
     <hr/>
 

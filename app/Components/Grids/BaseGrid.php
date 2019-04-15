@@ -7,6 +7,7 @@ use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Application\UI\Form;
 use Nette\InvalidStateException;
+use Nette\NotImplementedException;
 use Nette\Templating\FileTemplate;
 use Nette\Templating\ITemplate;
 use NiftyGrid\Components\Button;
@@ -175,14 +176,37 @@ abstract class BaseGrid extends Grid {
      * @throws \NiftyGrid\DuplicateColumnException
      * @throws \Exception
      */
-    protected function addReflectionColumns(string $tableName, string $fieldName, string $modelClassName) {
+    protected function addReflectionColumn(string $tableName, string $fieldName, string $modelClassName) {
         $factory = $this->tableReflectionFactory->loadService($tableName, $fieldName);
-        $this->addColumn($fieldName, $factory::getTitle())->setRenderer(function ($row) use ($factory, $fieldName, $modelClassName) {
+        $this->addColumn($fieldName, $factory->getTitle())->setRenderer(function ($row) use ($factory, $fieldName, $modelClassName) {
             $model = $modelClassName::createFromTableRow($row);
             return $factory->renderValue($model, $fieldName, 1);
         });
+    }
 
+    /**
+     * @return string
+     */
+    protected function getTableName(): string {
+        throw new NotImplementedException();
+    }
 
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @param array $fields
+     * @throws \NiftyGrid\DuplicateColumnException
+     */
+    protected function addColumns(array $fields) {
+
+        foreach ($fields as $name) {
+            $this->addReflectionColumn($this->getTableName(), $name, $this->getModelClassName());
+        }
     }
 
 }

@@ -3,13 +3,13 @@
     <ul class="list-group list-group-flush">
         {if $info}
 
-            {control valuePrinter__person_info__email $info,null,email}
+            {control valuePrinterList__person_info__email $info}
 
-            {control valuePrinter__person_info__phone $info,null,phone}
+            {control valuePrinterList__person_info__phone $info}
 
-            {control valuePrinter__person_info__phone_parent_m $info,null,phone_parent_m}
+            {control valuePrinterList__person_info__phone_parent_m $info}
 
-            {control valuePrinter__person_info__phone_parent_d $info,null,phone_parent_d}
+            {control valuePrinterList__person_info__phone_parent_d $info}
 
         {/if}
     </ul>

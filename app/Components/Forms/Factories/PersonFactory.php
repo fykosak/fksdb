@@ -4,13 +4,8 @@ namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\IDataProvider;
-use FKSDB\Components\Forms\Factories\Person\BornFamilyNameField;
-use FKSDB\Components\Forms\Factories\Person\DisplayNameField;
-use FKSDB\Components\Forms\Factories\Person\FamilyNameField;
-use FKSDB\Components\Forms\Factories\Person\GenderField;
-use FKSDB\Components\Forms\Factories\Person\OtherNameField;
+use FKSDB\ORM\DbNames;
 use Nette\Forms\Controls\BaseControl;
-use Nette\InvalidArgumentException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -51,6 +46,18 @@ class PersonFactory {
     /* Element names */
     const EL_CREATE_LOGIN = 'createLogin';
     const EL_CREATE_LOGIN_LANG = 'lang';
+    /**
+     * @var TableReflectionFactory
+     */
+    private $tableReflectionFactory;
+
+    /**
+     * PersonFactory constructor.
+     * @param TableReflectionFactory $tableReflectionFactory
+     */
+    public function __construct(TableReflectionFactory $tableReflectionFactory) {
+        $this->tableReflectionFactory = $tableReflectionFactory;
+    }
 
     /**
      * @param $ajax
@@ -71,24 +78,12 @@ class PersonFactory {
     }
 
     /**
-     * @param $fieldName
+     * @param string $fieldName
      * @return BaseControl
+     * @throws \Exception
      */
-    public function createField($fieldName): BaseControl {
-        switch ($fieldName) {
-            case 'other_name':
-                return new OtherNameField();
-            case 'family_name':
-                return new FamilyNameField();
-            case 'display_name':
-                return new DisplayNameField();
-            case 'gender':
-                return new GenderField();
-            case 'born_family_name':
-                return new BornFamilyNameField();
-            default:
-                throw new InvalidArgumentException('Field ' . $fieldName . ' not exists');
-        }
+    public function createField(string $fieldName): BaseControl {
+        return $this->tableReflectionFactory->loadService(DbNames::TAB_PERSON, $fieldName)->createField();
     }
 }
 

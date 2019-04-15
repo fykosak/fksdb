@@ -4,9 +4,10 @@ namespace FKSDB\Components\Forms\Factories;
 
 use Closure;
 use FKSDB\Components\DatabaseReflection\AbstractRow;
-use FKSDB\Components\DatabaseReflection\RowComponent;
-use FKSDB\Components\DatabaseReflection\OnlyValueComponent;
+use FKSDB\Components\DatabaseReflection\AbstractRowComponent;
 use FKSDB\Components\DatabaseReflection\ListComponent;
+use FKSDB\Components\DatabaseReflection\OnlyValueComponent;
+use FKSDB\Components\DatabaseReflection\RowComponent;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
@@ -18,7 +19,7 @@ use Nette\Utils\Html;
  * Class TableReflectionFactory
  * @package FKSDB\Components\Forms\Factories\PersonInfo
  */
-class TableReflectionFactory {
+final class TableReflectionFactory {
 
     /**
      * @var AbstractRow[]
@@ -68,10 +69,10 @@ class TableReflectionFactory {
      * @return ListComponent
      * @throws \Exception
      */
-    public function createListComponent(string $tableName, string $fieldName, int $userPermission): ListComponent {
+    private function createListComponent(string $tableName, string $fieldName, int $userPermission): ListComponent {
         $factory = $this->loadService($tableName, $fieldName);
         $callBack = $this->getComponentCallback($factory, $fieldName, $userPermission);
-        return new ListComponent($this->translator, $callBack, $factory::getTitle());
+        return new ListComponent($this->translator, $callBack, $factory->getTitle());
     }
 
     /**
@@ -81,10 +82,10 @@ class TableReflectionFactory {
      * @return RowComponent
      * @throws \Exception
      */
-    public function createRowComponent(string $tableName, string $fieldName, int $userPermission): RowComponent {
+    private function createRowComponent(string $tableName, string $fieldName, int $userPermission): RowComponent {
         $factory = $this->loadService($tableName, $fieldName);
         $callBack = $this->getComponentCallback($factory, $fieldName, $userPermission);
-        return new RowComponent($this->translator, $callBack, $factory::getTitle());
+        return new RowComponent($this->translator, $callBack, $factory->getTitle());
     }
 
     /**
@@ -94,10 +95,33 @@ class TableReflectionFactory {
      * @return OnlyValueComponent
      * @throws \Exception
      */
-    public function createOnlyValueComponent(string $tableName, string $fieldName, int $userPermission): OnlyValueComponent {
+    private function createOnlyValueComponent(string $tableName, string $fieldName, int $userPermission): OnlyValueComponent {
         $factory = $this->loadService($tableName, $fieldName);
         $callBack = $this->getComponentCallback($factory, $fieldName, $userPermission);
-        return new OnlyValueComponent($this->translator, $callBack, $factory::getTitle());
+        return new OnlyValueComponent($this->translator, $callBack, $factory->getTitle());
+    }
+
+    /**
+     * @param string $name
+     * @param int $permissionLevel
+     * @return AbstractRowComponent|null
+     * @throws \Exception
+     */
+    public function createComponent(string $name, int $permissionLevel) {
+        $parts = \explode('__', $name);
+        if (\count($parts) === 3) {
+            list($prefix, $tableName, $fieldName) = $parts;
+            if ($prefix === 'valuePrinter' || $prefix === 'valuePrinterDetail' || $prefix === 'valuePrinterRow') {
+                return $this->createRowComponent($tableName, $fieldName, $permissionLevel);
+            }
+            if ($prefix === 'valuePrinterStalking' || $prefix === 'valuePrinterList') {
+                return $this->createListComponent($tableName, $fieldName, $permissionLevel);
+            }
+            if ($prefix === 'valuePrinterOnlyValue') {
+                return $this->createOnlyValueComponent($tableName, $fieldName, $permissionLevel);
+            }
+        }
+        return null;
     }
 
     /**

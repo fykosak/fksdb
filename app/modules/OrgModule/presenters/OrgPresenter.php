@@ -3,6 +3,7 @@
 namespace OrgModule;
 
 use FKSDB\Components\Forms\Factories\OrgFactory;
+use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\OrgsGrid;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Services\ServiceOrg;
@@ -27,12 +28,23 @@ class OrgPresenter extends ExtendedPersonPresenter {
      * @var OrgFactory
      */
     private $orgFactory;
+    /**
+     * @var TableReflectionFactory
+     */
+    private $tableReflectionFactory;
 
     /**
      * @param ServiceOrg $serviceOrg
      */
     public function injectServiceOrg(ServiceOrg $serviceOrg) {
         $this->serviceOrg = $serviceOrg;
+    }
+
+    /**
+     * @param TableReflectionFactory $tableReflectionFactory
+     */
+    public function injectTableReflectionFactory(TableReflectionFactory $tableReflectionFactory) {
+        $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
     /**
@@ -47,6 +59,22 @@ class OrgPresenter extends ExtendedPersonPresenter {
      */
     public function titleEdit($id) {
         $this->setTitle(sprintf(_('Úprava organizátora %s'), $this->getModel()->getPerson()->getFullname()));
+        $this->setIcon('fa fa-pencil');
+    }
+
+    /**
+     * @param $id
+     */
+    public function titleDetail($id) {
+        $this->setTitle(sprintf(_('Org %s'), $this->getModel()->getPerson()->getFullname()));
+        $this->setIcon('fa fa-user');
+    }
+
+    /**3
+     * @param $id
+     */
+    public function renderDetail($id) {
+        $this->template->model = $this->getModel();
     }
 
     /**
@@ -93,7 +121,7 @@ class OrgPresenter extends ExtendedPersonPresenter {
      * @return OrgsGrid|mixed
      */
     protected function createComponentGrid($name) {
-        $grid = new OrgsGrid($this->serviceOrg);
+        $grid = new OrgsGrid($this->serviceOrg, $this->tableReflectionFactory);
 
         return $grid;
     }
@@ -143,5 +171,17 @@ class OrgPresenter extends ExtendedPersonPresenter {
         return _('Organizátor již existuje.');
     }
 
+    /**
+     * @param string $name
+     * @return \Nette\ComponentModel\IComponent|null
+     * @throws \Exception
+     */
+    public function createComponent($name) {
+        $printerComponent = $this->tableReflectionFactory->createComponent($name, 2048);
+        if ($printerComponent) {
+            return $printerComponent;
+        }
+        return parent::createComponent($name);
+    }
 }
 

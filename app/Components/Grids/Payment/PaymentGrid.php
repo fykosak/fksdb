@@ -42,14 +42,14 @@ abstract class PaymentGrid extends BaseGrid {
      * @throws \NiftyGrid\DuplicateColumnException
      */
     protected function addColumnPrice() {
-        $this->addReflectionColumns(DbNames::TAB_PAYMENT, 'price', ModelPayment::class);
+        $this->addReflectionColumn(DbNames::TAB_PAYMENT, 'price', ModelPayment::class);
     }
 
     /**
      * @throws \NiftyGrid\DuplicateColumnException
      */
     protected function addColumnState() {
-        $this->addReflectionColumns(DbNames::TAB_PAYMENT, 'state', ModelPayment::class);
+        $this->addReflectionColumn(DbNames::TAB_PAYMENT, 'state', ModelPayment::class);
     }
 
     /**
@@ -71,7 +71,7 @@ abstract class PaymentGrid extends BaseGrid {
      */
     protected function addColumnsSymbols() {
         //$this->addColumn('constant_symbol', _('CS'));
-        $this->addReflectionColumns(DbNames::TAB_PAYMENT, 'variable_symbol', ModelPayment::class);
+        $this->addReflectionColumn(DbNames::TAB_PAYMENT, 'variable_symbol', ModelPayment::class);
         // $this->addColumn('specific_symbol', _('SS'));
         // $this->addColumn('bank_account', _('Bank acc.'));
     }

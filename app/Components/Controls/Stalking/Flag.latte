@@ -32,8 +32,14 @@
                 {if $flag->type == 'ac_year' || $flag->type == 'contest_year'}
                     {control $flag->getJoinedModel(),_('Year'),ac_year}
                 {/if}
-
-                {control stringValue $flag->getJoinedModel(),_('Modified'),modified}
+                <li class="list-group-item">
+                    <div class="row">
+                        <span class="col-5">{_'Modified'}</span>
+                        <div class="col-7">
+                            {$flag->getJoinedModel()->modified}
+                        </div>
+                    </div>
+                </li>
 
             </ul>
         {/foreach}

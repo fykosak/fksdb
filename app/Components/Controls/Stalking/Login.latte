@@ -2,13 +2,9 @@
 {block content}
     {if !is_null($login)}
         <ul class="list-group list-group-flush">
-            {control stringValue $login,_('Login'),login}
-
-            {control stringValue $login,_('Login Id'),login_id}
-
-            {control isSetValue $login,_('Password'),hash}
-
-            {control stringValue $login,_('Last logged'),last_login}
+            {foreach ['login','login_id','hash','last_login'] as $field}
+                {control valuePrinterList__login__$field $login}
+            {/foreach}
         </ul>
     {else}
         <div class="card-body">

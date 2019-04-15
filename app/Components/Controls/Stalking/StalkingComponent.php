@@ -123,14 +123,10 @@ abstract class StalkingComponent extends Control {
      * @throws \Exception
      */
     public function createComponent($name) {
-        $parts = \explode('__', $name);
-        if (\count($parts) === 3) {
-            list($prefix, $tableName, $fieldName) = $parts;
-            if ($prefix === 'valuePrinter') {
-                return $this->tableReflectionFactory->createStalkingComponent($tableName, $fieldName, max($this->getAllowedPermissions()));
-            }
+        $printerComponent = $this->tableReflectionFactory->createComponent($name, max($this->getAllowedPermissions()));
+        if ($printerComponent) {
+            return $printerComponent;
         }
-
         return parent::createComponent($name);
     }
 }

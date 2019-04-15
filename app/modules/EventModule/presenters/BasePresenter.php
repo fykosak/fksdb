@@ -233,17 +233,10 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @throws \Exception
      */
     public function createComponent($name) {
-        $parts = \explode('__', $name);
-        if (\count($parts) === 3) {
-            list($prefix, $tableName, $fieldName) = $parts;
-            if ($prefix === 'valuePrinter' || $prefix === 'valuePrinterDetail') {
-                return $this->tableReflectionFactory->createRowComponent($tableName, $fieldName, 2048);
-            }
-            if ($prefix === 'valuePrinterStalking') {
-                return $this->tableReflectionFactory->createListComponent($tableName, $fieldName, 2048);
-            }
+        $printerComponent = $this->tableReflectionFactory->createComponent($name, 2048);
+        if ($printerComponent) {
+            return $printerComponent;
         }
-
         return parent::createComponent($name);
     }
 

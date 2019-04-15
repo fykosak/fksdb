@@ -2,16 +2,14 @@
 
 namespace EventModule;
 
-use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
-use FKSDB\Components\Grids\Events\ApplicationGrid;
-use FKSDB\Components\Grids\Events\TeamApplicationGrid;
+use FKSDB\Components\Grids\Events\Application\ApplicationGrid;
+use FKSDB\Components\Grids\Events\Application\TeamApplicationGrid;
 use FKSDB\model\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\NotImplementedException;
 
 /**
  * Class ApplicationPresenter
@@ -83,12 +81,12 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @return ApplicationGrid
+     * @return \FKSDB\Components\Grids\Events\Application\ApplicationGrid
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
      */
     public function createComponentGrid(): AbstractApplicationGrid {
-        return new TeamApplicationGrid($this->getEvent());
+        return new TeamApplicationGrid($this->getEvent(), $this->tableReflectionFactory);
     }
 
     /**

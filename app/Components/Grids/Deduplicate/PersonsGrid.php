@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Grids\Deduplicate;
 
-use FKSDB\Components\Controls\Helpers\ValuePrinters\PersonValueControl;
+use FKSDB\Components\DatabaseReflection\ValuePrinters\PersonLink;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Tables\TypedTableSelection;
@@ -52,7 +52,7 @@ class PersonsGrid extends BaseGrid {
 
         /***** columns ****/
 
-         $this->addColumn('display_name_a', _('Osoba A'))->setRenderer(function ($row) {
+        $this->addColumn('display_name_a', _('Osoba A'))->setRenderer(function ($row) {
 
             return $this->renderPerson($row);
         })
@@ -121,6 +121,6 @@ class PersonsGrid extends BaseGrid {
      * @throws \Nette\Application\UI\InvalidLinkException
      */
     private function renderPerson(ModelPerson $person) {
-        return PersonValueControl::getGridValue($this,$person);
+        return (new PersonLink($this->getPresenter()))($person);
     }
 }

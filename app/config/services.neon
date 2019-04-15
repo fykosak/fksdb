@@ -83,7 +83,12 @@ services:
 
 includes:
     - merger.neon
-    - rows/personInfo.neon
-    - rows/eventParticipant.neon
+    - rows/person.neon
+    - rows/person_info.neon
+    - rows/event_participant.neon
     - rows/event.neon
     - rows/payment.neon
+    - rows/login.neon
+    - rows/e_fyziklani_team.neon
+    - rows/org.neon
+    - rows/person_history.neon

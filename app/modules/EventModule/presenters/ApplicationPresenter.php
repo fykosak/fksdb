@@ -3,7 +3,7 @@
 namespace EventModule;
 
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
-use FKSDB\Components\Grids\Events\ApplicationGrid;
+use FKSDB\Components\Grids\Events\Application\ApplicationGrid;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Services\ServiceEventParticipant;
 use Nette\Application\BadRequestException;

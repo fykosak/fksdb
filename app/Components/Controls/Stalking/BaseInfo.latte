@@ -2,21 +2,15 @@
 {block content}
     <ul class="list-group list-group-flush">
         {if $person}
-            {*control valuePrinter__person__gender $info*}
-            {*control valuePrinter__person__family_name $info*}
-            {*control valuePrinter__person__other_name $info*}
-            {*control valuePrinter__person__born_family_name $info*}
+            {foreach ['other_name','family_name','display_name','born_family_name','gender','person_id','created'] as $fieldName}
+                {control valuePrinterList__person__$fieldName $person}
+            {/foreach}
         {/if}
         {if $info}
-
-            {control stringValue $info,_('Person Id'),person_id}
-
             {foreach $fields as $fieldName}
-                {control valuePrinter__person_info__$fieldName $info}
+                {control valuePrinterList__person_info__$fieldName $info}
             {/foreach}
-
             {control stringValue $info,_('Origin'),origin}
-
         {/if}
     </ul>
 {/block}

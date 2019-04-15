@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
-use FKSDB\Components\Forms\Factories\PersonHistory\ClassField;
 use FKSDB\Components\Forms\Factories\PersonHistory\StudyYearField;
 use FKSDB\ORM\DbNames;
 use Nette\Forms\IControl;
@@ -48,14 +47,12 @@ class PersonHistoryFactory {
      */
     public function createField($fieldName, $acYear): IControl {
         switch ($fieldName) {
-            case 'class':
-                return new ClassField();
             case 'school_id':
                 return $this->schoolFactory->createSchoolSelect();
             case 'study_year':
                 return new StudyYearField($this->yearCalculator, $acYear);
             default:
-                return $this->tableReflectionFactory->createField(DbNames::TAB_PERSON_HISTORY, 'class');
+                return $this->tableReflectionFactory->createField(DbNames::TAB_PERSON_HISTORY, $fieldName);
         }
     }
 }
