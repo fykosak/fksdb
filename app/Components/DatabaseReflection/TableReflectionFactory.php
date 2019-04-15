@@ -10,7 +10,6 @@ use FKSDB\Components\DatabaseReflection\OnlyValueComponent;
 use FKSDB\Components\DatabaseReflection\RowComponent;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\DI\Container;
-use Nette\Forms\Controls\BaseControl;
 use Nette\InvalidArgumentException;
 use Nette\Localization\ITranslator;
 use Nette\Utils\Html;

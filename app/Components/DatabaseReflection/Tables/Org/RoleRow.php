@@ -28,7 +28,7 @@ class RoleRow extends AbstractRow {
     /**
      * @return BaseControl
      */
-    protected function createField(): BaseControl {
+    public function createField(): BaseControl {
         $control = parent::createField();
         $control->addRule(Form::MAX_LENGTH, null, 255);
         return $control;
