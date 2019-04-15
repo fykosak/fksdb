@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\DatabaseReflection\PersonHistory;
 
-use Closure;
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\YearCalculator;
 use Nette\Application\BadRequestException;
@@ -45,24 +44,19 @@ class StudyYearRow extends AbstractRow {
     }
 
     /**
+     * @param int|null $acYear
      * @return BaseControl
      * @throws BadRequestException
      */
-    public function createField(): BaseControl {
-        throw new BadRequestException();
-    }
-
-    /**
-     * @return Closure
-     */
-    public function createFieldCallback(): Closure {
-        return function (int $acYear): BaseControl {
-            $control = new SelectBox($this->getTitle());
-            $control->setItems($this->createOptions($acYear));
-            $control->setOption('description', _('Kvůli zařazení do kategorie.'));
-            $control->setPrompt(_('Zvolit ročník'));
-            return $control;
-        };
+    public function createField(int $acYear = null): BaseControl {
+        if (\is_null($acYear)) {
+            throw new BadRequestException();
+        }
+        $control = new SelectBox($this->getTitle());
+        $control->setItems($this->createOptions($acYear));
+        $control->setOption('description', _('Kvůli zařazení do kategorie.'));
+        $control->setPrompt(_('Zvolit ročník'));
+        return $control;
     }
 
     /**

@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\DatabaseReflection;
 
-use Closure;
 use FKSDB\Components\Controls\Helpers\Badges\PermissionDeniedBadge;
 use FKSDB\Components\DatabaseReflection\ValuePrinters\StringPrinter;
 use FKSDB\ORM\AbstractModelSingle;
@@ -36,17 +35,8 @@ abstract class AbstractRow {
     /**
      * @return BaseControl
      */
-    protected function createField(): BaseControl {
+    public function createField(): BaseControl {
         return new TextInput($this->getTitle());
-    }
-
-    /**
-     * @return \Closure(): BaseControl
-     */
-    public function createFieldCallback(): Closure {
-        return function (): BaseControl {
-            return $this->createField();
-        };
     }
 
     /**

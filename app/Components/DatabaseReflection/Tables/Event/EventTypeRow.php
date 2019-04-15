@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\DatabaseReflection\Event;
 
-use Closure;
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelContest;
@@ -49,30 +48,22 @@ class EventTypeRow extends AbstractRow {
     }
 
     /**
-     * @return Closure
-     */
-    public function createFieldCallback(): Closure {
-        /**
-         * @param ModelContest $contest
-         * @return SelectBox
-         */
-        return function (ModelContest $contest): SelectBox {
-            $element = new SelectBox(_('Typ akce'));
-
-            $types = $this->serviceEventType->getTable()->where('contest_id', $contest->contest_id)->fetchPairs('event_type_id', 'name');
-            $element->setItems($types);
-            $element->setPrompt(_('Zvolit typ'));
-
-            return $element;
-        };
-    }
-
-    /**
+     * @param ModelContest|null $contest
      * @return BaseControl
      * @throws BadRequestException
      */
-    protected function createField(): BaseControl {
-        throw new BadRequestException();
+    public function createField(ModelContest $contest = null): BaseControl {
+        if (\is_null($contest)) {
+            throw new BadRequestException();
+        }
+
+        $element = new SelectBox($this->getTitle());
+
+        $types = $this->serviceEventType->getTable()->where('contest_id', $contest->contest_id)->fetchPairs('event_type_id', 'name');
+        $element->setItems($types);
+        $element->setPrompt(_('Zvolit typ'));
+
+        return $element;
     }
 
     /**
