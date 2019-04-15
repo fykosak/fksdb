@@ -63,7 +63,7 @@ class OrgFactory extends SingleReflectionFactory {
              }, _('Konec nesmí být dříve než začátek'), $container['since'])*/
             ->addRule(Form::RANGE, _('Koncový ročník není v intervalu [%d, %d].'), [$min, $max]);
 
-        $roleControl = $this->tableReflectionFactory->createFieldCallback(DbNames::TAB_ORG, 'role')();
+        $roleControl = $this->loadFactory('role')->createField();
         $container->addComponent($roleControl, 'role');
 
         $container->addText('tex_signature', _('TeX identifikátor'))

@@ -5,7 +5,6 @@ namespace FKSDB\Components\Forms\Factories;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\IDataProvider;
 use FKSDB\ORM\DbNames;
-use Nette\Forms\Controls\BaseControl;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

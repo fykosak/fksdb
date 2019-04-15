@@ -3,14 +3,19 @@
 namespace FKSDB\Components\Grids;
 
 use EventModule\AccommodationPresenter;
-use FKSDB\ORM\ModelEventAccommodation;
-use FKSDB\ORM\ModelEventPersonAccommodation;
+use FKSDB\ORM\Models\ModelEventAccommodation;
+use FKSDB\ORM\Models\ModelEventPersonAccommodation;
+use FKSDB\ORM\Services\ServiceEventPersonAccommodation;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;
 
+/**
+ * Class EventBilletedPerson
+ * @package FKSDB\Components\Grids
+ */
 class EventBilletedPerson extends BaseGrid {
     /**
-     * @var \ServiceEventPersonAccommodation
+     * @var ServiceEventPersonAccommodation
      */
     private $serviceEventPersonAccommodation;
     /**
@@ -18,7 +23,12 @@ class EventBilletedPerson extends BaseGrid {
      */
     private $eventAccommodation;
 
-    function __construct(ModelEventAccommodation $eventAccommodation, \ServiceEventPersonAccommodation $serviceEventPersonAccommodation) {
+    /**
+     * EventBilletedPerson constructor.
+     * @param ModelEventAccommodation $eventAccommodation
+     * @param ServiceEventPersonAccommodation $serviceEventPersonAccommodation
+     */
+    function __construct(ModelEventAccommodation $eventAccommodation, ServiceEventPersonAccommodation $serviceEventPersonAccommodation) {
         parent::__construct();
         $this->eventAccommodation = $eventAccommodation;
         $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;

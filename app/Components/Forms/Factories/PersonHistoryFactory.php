@@ -4,7 +4,6 @@ namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\ORM\DbNames;
 use Nette\Forms\Controls\BaseControl;
-use Nette\Forms\IControl;
 
 /**
  * Class PersonHistoryFactory
