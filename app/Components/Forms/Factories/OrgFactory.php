@@ -3,18 +3,20 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\YearCalculator;
-use Nette\Forms\ControlGroup;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class OrgFactory {
+class OrgFactory extends SingleReflectionFactory {
 
     /**
      * @var \FKSDB\ORM\Services\ServicePerson
@@ -30,43 +32,39 @@ class OrgFactory {
      * OrgFactory constructor.
      * @param ServicePerson $servicePerson
      * @param \FKSDB\YearCalculator $yearCalculator
+     * @param TableReflectionFactory $tableReflectionFactory
      */
-    function __construct(ServicePerson $servicePerson, YearCalculator $yearCalculator) {
+    function __construct(ServicePerson $servicePerson, YearCalculator $yearCalculator, TableReflectionFactory $tableReflectionFactory) {
+        parent::__construct($tableReflectionFactory);
         $this->servicePerson = $servicePerson;
         $this->yearCalculator = $yearCalculator;
     }
 
     /**
-     * @param int $options
-     * @param ControlGroup|null $group
      * @param ModelContest $contest
      * @return ModelContainer
+     * @throws \Exception
      */
-    public function createOrg($options = 0, ControlGroup $group = null, ModelContest $contest): ModelContainer {
+    public function createOrg(ModelContest $contest): ModelContainer {
         $container = new ModelContainer();
-        $container->setCurrentGroup($group);
-
 
         $min = $this->yearCalculator->getFirstYear($contest);
         $max = $this->yearCalculator->getLastYear($contest);
-
-        $container->addText('since', _('Od ročníku'))
-            ->addRule(Form::NUMERIC)
-            ->addRule(Form::FILLED)
-            ->addRule(Form::RANGE, _('Počáteční ročník není v intervalu [%d, %d].'), [$min, $max]);
+        foreach (['since'] as $field) {
+            $control = $this->createField($field, $contest);
+            $container->addComponent($control, 'since');
+        }
 
         $container->addText('until', _('Do ročníku'))
             ->addCondition(Form::FILLED)
             ->addRule(Form::NUMERIC)
-            ->addRule(function ($until, $since) {
-                return $since->value <= $until->value;
-            }, _('Konec nesmí být dříve než začátek'), $container['since'])
+            /* ->addRule(function ($until, $since) {
+                 return $since->value <= $until->value;
+             }, _('Konec nesmí být dříve než začátek'), $container['since'])*/
             ->addRule(Form::RANGE, _('Koncový ročník není v intervalu [%d, %d].'), [$min, $max]);
 
-
-        $container->addText('role', _('Funkce'))
-            ->addRule(Form::MAX_LENGTH, null, 255);
-
+        $roleControl = $this->tableReflectionFactory->createFieldCallback(DbNames::TAB_ORG, 'role')();
+        $container->addComponent($roleControl, 'role');
 
         $container->addText('tex_signature', _('TeX identifikátor'))
             ->addRule(Form::MAX_LENGTH, null, 32)
@@ -92,10 +90,41 @@ class OrgFactory {
             ->setPrompt(_('Zvolit hodnost'))
             ->addRule(Form::FILLED, _('Vyberte hodnost.'));
 
+        $container->onValidate[] = function ($container) {
+            Debugger::barDump($container);
+            die();
+        };
         $container->addTextArea('contribution', _('Co udělal'))
             ->setOption('description', _('Zobrazeno v síni slávy'));
 
         return $container;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getTableName(): string {
+        return DbNames::TAB_ORG;
+    }
+
+    /**
+     * @param string $fieldName
+     * @param ModelContest $contest
+     * @return mixed
+     * @throws \Exception
+     */
+    public function createField(string $fieldName, ModelContest $contest = null): BaseControl {
+        $callBack = $this->getFieldCallback($fieldName);
+        switch ($fieldName) {
+            case 'since':
+                $min = $this->yearCalculator->getFirstYear($contest);
+                $max = $this->yearCalculator->getLastYear($contest);
+                return $callBack($min, $max);
+                break;
+            default:
+                return parent::createField($fieldName);
+
+        }
     }
 
 }

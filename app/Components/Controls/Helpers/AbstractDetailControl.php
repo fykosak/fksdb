@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Controls\Helpers;
 
-use FKSDB\Components\Controls\Helpers;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
@@ -35,13 +34,6 @@ abstract class AbstractDetailControl extends Control {
     }
 
     /**
-     * @return Helpers\ValuePrinters\StringValueControl
-     */
-    public function createComponentStringValue(): Helpers\ValuePrinters\StringValueControl {
-        return new Helpers\ValuePrinters\StringValueControl($this->translator);
-    }
-
-    /**
      * @param string $name
      * @return \FKSDB\Components\DatabaseReflection\AbstractRowComponent|\Nette\ComponentModel\IComponent|null
      * @throws \Exception
@@ -53,6 +45,4 @@ abstract class AbstractDetailControl extends Control {
         }
         return parent::createComponent($name);
     }
-
-
 }

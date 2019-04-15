@@ -15,7 +15,7 @@ class BaseInfo extends StalkingComponent {
             'id_number', 'employer', 'uk_login',
             'health_insurance', 'citizenship', 'account'
             , 'career', 'homepage', 'im',
-            'linkedin_id', 'note',
+            'linkedin_id', 'note','origin',
         ];
         $this->template->info = $this->modelPerson->getInfo();
         $this->template->person = $this->modelPerson;

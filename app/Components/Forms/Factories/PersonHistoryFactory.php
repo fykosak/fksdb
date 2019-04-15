@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
-use FKSDB\Components\Forms\Factories\PersonHistory\StudyYearField;
 use FKSDB\ORM\DbNames;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\IControl;
 
 /**
@@ -11,7 +11,7 @@ use Nette\Forms\IControl;
  * @package FKSDB\Components\Forms\Factories
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class PersonHistoryFactory {
+class PersonHistoryFactory extends SingleReflectionFactory {
 
     /**
      * @var SchoolFactory
@@ -19,40 +19,36 @@ class PersonHistoryFactory {
     private $schoolFactory;
 
     /**
-     * @var \FKSDB\YearCalculator
-     */
-    private $yearCalculator;
-    /**
-     * @var TableReflectionFactory
-     */
-    private $tableReflectionFactory;
-
-    /**
      * PersonHistoryFactory constructor.
      * @param TableReflectionFactory $tableReflectionFactory
      * @param SchoolFactory $factorySchool
-     * @param \FKSDB\YearCalculator $yearCalculator
      */
-    public function __construct(TableReflectionFactory $tableReflectionFactory, SchoolFactory $factorySchool, \FKSDB\YearCalculator $yearCalculator) {
+    public function __construct(TableReflectionFactory $tableReflectionFactory, SchoolFactory $factorySchool) {
+        parent::__construct($tableReflectionFactory);
         $this->schoolFactory = $factorySchool;
-        $this->yearCalculator = $yearCalculator;
-        $this->tableReflectionFactory = $tableReflectionFactory;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getTableName(): string {
+        return DbNames::TAB_PERSON_HISTORY;
     }
 
     /**
      * @param string $fieldName
-     * @param integer $acYear
-     * @return IControl
+     * @param int $acYear
+     * @return BaseControl
      * @throws \Exception
      */
-    public function createField($fieldName, $acYear): IControl {
+    public function createField(string $fieldName, int $acYear = null): BaseControl {
         switch ($fieldName) {
             case 'school_id':
                 return $this->schoolFactory->createSchoolSelect();
             case 'study_year':
-                return new StudyYearField($this->yearCalculator, $acYear);
+                return $this->getFieldCallback($fieldName)($acYear);
             default:
-                return $this->tableReflectionFactory->createField(DbNames::TAB_PERSON_HISTORY, $fieldName);
+                return parent::createField($fieldName);
         }
     }
 }

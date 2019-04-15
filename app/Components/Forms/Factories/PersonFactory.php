@@ -12,51 +12,12 @@ use Nette\Forms\Controls\BaseControl;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class PersonFactory {
-    // For person
-
-    const SHOW_DISPLAY_NAME = 0x1;
-    const SHOW_GENDER = 0x2;
-    const DISABLED = 0x4;
-
-    // For person_info
-    /** @const Show iformation important for organizers. */
-    const SHOW_ORG_INFO = 0x8;
-    const SHOW_EMAIL = 0x10;
-    const REQUIRE_AGREEMENT = 0x20;
-    const SHOW_LOGIN_CREATION = 0x40;
-    /** @const Display origin and agreement only (supplement to other form containers). */
-    const SHOW_LIKE_SUPPLEMENT = 0x100;
-    const REQUIRE_EMAIL = 0x200;
-
-    // For person_history
-    const REQUIRE_SCHOOL = 0x400;
-    const REQUIRE_STUDY_YEAR = 0x800;
-    /** @const Display school, study year and class only (supplement to other form containers). */
-    const SHOW_LIKE_CONTESTANT = 0x1000;
-
-    /* Encapsulation condition argument (workaround) */
-    const IDX_CONTROL = 'control';
-    const IDX_OPERATION = 'op';
-    const IDX_VALUE = 'val';
-
-    /* Subcontainers names */
-    const CONT_LOGIN = 'logincr';
-
-    /* Element names */
-    const EL_CREATE_LOGIN = 'createLogin';
-    const EL_CREATE_LOGIN_LANG = 'lang';
+class PersonFactory extends SingleReflectionFactory {
     /**
-     * @var TableReflectionFactory
+     * @return string
      */
-    private $tableReflectionFactory;
-
-    /**
-     * PersonFactory constructor.
-     * @param TableReflectionFactory $tableReflectionFactory
-     */
-    public function __construct(TableReflectionFactory $tableReflectionFactory) {
-        $this->tableReflectionFactory = $tableReflectionFactory;
+    protected function getTableName(): string {
+        return DbNames::TAB_PERSON;
     }
 
     /**
@@ -75,15 +36,6 @@ class PersonFactory {
         $select = new AutocompleteSelectBox($ajax, $label, $renderMethod);
         $select->setDataProvider($dataProvider);
         return $select;
-    }
-
-    /**
-     * @param string $fieldName
-     * @return BaseControl
-     * @throws \Exception
-     */
-    public function createField(string $fieldName): BaseControl {
-        return $this->tableReflectionFactory->loadService(DbNames::TAB_PERSON, $fieldName)->createField();
     }
 }
 

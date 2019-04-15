@@ -8,7 +8,6 @@ use FKSDB\ORM\Models\ModelRegion;
 use FKSDB\ORM\Services\ServiceRegion;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
-use Nette\Forms\IControl;
 use Nette\Localization\ITranslator;
 
 

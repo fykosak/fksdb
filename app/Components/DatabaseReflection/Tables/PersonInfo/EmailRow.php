@@ -5,7 +5,6 @@ namespace FKSDB\Components\DatabaseReflection\PersonInfo;
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
-use Nette\Forms\IControl;
 
 /**
  * Class EmailField

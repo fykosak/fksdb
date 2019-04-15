@@ -5,7 +5,6 @@ namespace FKSDB\Components\DatabaseReflection\PersonInfo;
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\Forms\Controls\URLTextBox;
 use Nette\Forms\Controls\BaseControl;
-use Nette\Forms\IControl;
 
 /**
  * Class HomepageField

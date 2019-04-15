@@ -3,6 +3,8 @@
 namespace FKSDB\Components\DatabaseReflection\Org;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
+use Nette\Forms\Controls\BaseControl;
+use Nette\Forms\Form;
 
 /**
  * Class RoleRow
@@ -21,5 +23,14 @@ class RoleRow extends AbstractRow {
      */
     public function getPermissionsValue(): int {
         return self::PERMISSION_USE_GLOBAL_ACL;
+    }
+
+    /**
+     * @return BaseControl
+     */
+    protected function createField(): BaseControl {
+        $control = parent::createField();
+        $control->addRule(Form::MAX_LENGTH, null, 255);
+        return $control;
     }
 }

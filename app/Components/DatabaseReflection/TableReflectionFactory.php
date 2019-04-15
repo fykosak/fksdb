@@ -136,15 +136,26 @@ final class TableReflectionFactory {
         };
     }
 
+    /**
+     * @param string $tableName
+     * @param string $fieldName
+     * @return Closure
+     * @throws \Exception
+     */
+    public function createFieldCallback(string $tableName, string $fieldName): Closure {
+        $factory = $this->loadService($tableName, $fieldName);
+        return $factory->createFieldCallback();
+    }
 
     /**
      * @param string $tableName
      * @param string $fieldName
      * @return BaseControl
      * @throws \Exception
+     * @deprecated
      */
     public function createField(string $tableName, string $fieldName): BaseControl {
-        return $this->loadService($tableName, $fieldName)->createField();
+        return $this->createFieldCallback($tableName, $fieldName)();
     }
 
     /**

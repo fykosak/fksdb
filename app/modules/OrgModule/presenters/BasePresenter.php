@@ -3,7 +3,6 @@
 namespace OrgModule;
 
 use FKSDB\Components\Controls\ContestChooser;
-use FKSDB\Components\Controls\Helpers\ValuePrintersTrait;
 use FKSDB\ORM\Models\ModelRole;
 
 /**

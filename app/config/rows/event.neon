@@ -9,3 +9,4 @@ services:
     row.event.parameters: FKSDB\Components\DatabaseReflection\Event\ParametersRow
     row.event.year: FKSDB\Components\DatabaseReflection\Event\YearRow
     row.event.event_type: FKSDB\Components\DatabaseReflection\Event\EventTypeRow
+    row.event.event_type_id: FKSDB\Components\DatabaseReflection\Event\EventTypeRow

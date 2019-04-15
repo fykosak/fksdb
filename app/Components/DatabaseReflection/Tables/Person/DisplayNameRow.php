@@ -20,7 +20,7 @@ class DisplayNameRow extends AbstractRow {
     /**
      * @return BaseControl
      */
-    public function createField(): BaseControl {
+    protected function createField(): BaseControl {
         $control = parent::createField();
         $control->setOption('description', _('Pouze pokud je odlišné od "jméno příjmení".'));
         return $control;

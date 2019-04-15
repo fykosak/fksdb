@@ -4,7 +4,6 @@ namespace EventModule;
 
 use Events\Model\ApplicationHandlerFactory;
 use Events\Model\Grid\SingleEventSource;
-use FKSDB\Components\Controls\Helpers\ValuePrinters\StringValueControl;
 use FKSDB\Components\Events\ApplicationComponent;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
 use FKSDB\Logging\FlashDumpFactory;
@@ -63,13 +62,6 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
 
         $component = new ApplicationComponent($handlers[$this->model->getPrimary()], $holders[$this->model->getPrimary()], $flashDump);
         return $component;
-    }
-
-    /**
-     * @return \FKSDB\Components\Controls\Helpers\ValuePrinters\StringValueControl
-     */
-    public function createComponentStringValue(): StringValueControl {
-        return new StringValueControl($this->getTranslator());
     }
 
     /**

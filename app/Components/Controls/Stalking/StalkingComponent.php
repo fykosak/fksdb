@@ -5,8 +5,6 @@ namespace FKSDB\Components\Controls\Stalking;
 use FKSDB\Components\Controls\Helpers\Badges\ContestBadge;
 use FKSDB\Components\Controls\Helpers\Badges\NoRecordsBadge;
 use FKSDB\Components\Controls\Helpers\Badges\PermissionDeniedBadge;
-use FKSDB\Components\Controls\Helpers\ValuePrinters\AbstractValueControl;
-use FKSDB\Components\Controls\Helpers\ValuePrintersTrait;
 use FKSDB\Components\Controls\Stalking\Helpers\EventLabelControl;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\Models\ModelPerson;
@@ -20,8 +18,6 @@ use Nette\Templating\FileTemplate;
  * @property FileTemplate $template
  */
 abstract class StalkingComponent extends Control {
-
-    use ValuePrintersTrait;
 
     const PERMISSION_FULL = 1024;
     const PERMISSION_RESTRICT = 128;
@@ -67,7 +63,6 @@ abstract class StalkingComponent extends Control {
         $this->translator = $translator;
         $this->layout = $layout;
         $this->tableReflectionFactory = $tableReflectionFactory;
-        $this->registerTrait($translator, AbstractValueControl::LAYOUT_STALKING);
     }
 
     public function beforeRender() {

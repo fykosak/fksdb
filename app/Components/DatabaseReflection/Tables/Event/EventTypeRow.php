@@ -2,13 +2,16 @@
 
 namespace FKSDB\Components\DatabaseReflection\Event;
 
+use Closure;
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEventType;
+use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\BaseControl;
+use Nette\Forms\Controls\SelectBox;
 use Nette\Localization\ITranslator;
-use Nette\NotImplementedException;
 use Nette\Utils\Html;
 
 /**
@@ -46,17 +49,30 @@ class EventTypeRow extends AbstractRow {
     }
 
     /**
-     * @return BaseControl
+     * @return Closure
      */
-    public function createField(): BaseControl {
-        throw new NotImplementedException();
-        /* $element = new SelectBox(self::getTitle());
+    public function createFieldCallback(): Closure {
+        /**
+         * @param ModelContest $contest
+         * @return SelectBox
+         */
+        return function (ModelContest $contest): SelectBox {
+            $element = new SelectBox(_('Typ akce'));
 
-         $types = $this->serviceEventType->getTable()->where('contest_id', $contest->contest_id)->fetchPairs('event_type_id', 'name');
-         $element->setItems($types);
-         $element->setPrompt(_('Zvolit typ'));
+            $types = $this->serviceEventType->getTable()->where('contest_id', $contest->contest_id)->fetchPairs('event_type_id', 'name');
+            $element->setItems($types);
+            $element->setPrompt(_('Zvolit typ'));
 
-         return $element;*/
+            return $element;
+        };
+    }
+
+    /**
+     * @return BaseControl
+     * @throws BadRequestException
+     */
+    protected function createField(): BaseControl {
+        throw new BadRequestException();
     }
 
     /**

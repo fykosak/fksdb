@@ -6,7 +6,6 @@ use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\Forms\Controls\WriteOnlyInput;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
-use Nette\Forms\IControl;
 
 /**
  * Class BirthplaceField
