@@ -41,5 +41,6 @@ class SinceRow extends AbstractRow {
         $control->addRule(Form::FILLED);
         $control->addRule(Form::RANGE, _('Počáteční ročník není v intervalu [%d, %d].'), [$min, $max]);
         return $control;
+
     }
 }

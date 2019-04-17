@@ -1,34 +1,16 @@
 {block content}
     {dump $model}
 
-    {control stringValue $model, _('e_fyziklani_team_id'), e_fyziklani_team_id}
-
-    {control stringValue $model, _('Name'), name}
-
-    {control stringValue $model, _('Status'), status}
-
-    {control stringValue $model, _('Note'), note}
-
-    {control phoneValue $model,_('Phone'), phone}
-
-    {control isSetValue $model,_('Password'),password}
-
-    {control stringValue $model, _('Category'), category}
-
-    {control stringValue $model, _('Created'), created}
-
-    {control stringValue $model, _('Game language'), game_lang}
-
+    {foreach ['e_fyziklani_team_id','name','status','phone','note','password','category','created','game_lang','force_a'] as $field}
+        {control valuePrinterRow__e_fyziklani_team__$field $model}
+    {/foreach}
     <hr/>
 
     <h3>{_'Rank & points'}</h3>
     {if $rankVisible}
-
-        {control stringValue $model, _('Rank in category'), rank_category}
-
-        {control stringValue $model, _('Total rank'), rank_total}
-
-        {control stringValue $model, _('Points'), points}
+        {foreach ['rank_category','rank_total','points'] as $field}
+            {control valuePrinterRow__e_fyziklani_team__$field $model}
+        {/foreach}
     {else}
         <span class="badge badge-info">{_'Results is not accessible.'}</span>
     {/if}
@@ -50,24 +32,24 @@
 
         <h4>{_'Parcipant'} {$counter}</h4>
 
-        {control personValue $participant->getPerson()}
+        {control valuePrinterRow__event_participant__person_id $participant}
 
-        {control stringValue $participant, _('Status'), status}
+        {control valuePrinterRow__event_participant__status $participant}
 
-        {control stringValue $history, _('Study year'), study_year}
+        {control valuePrinterRow__person_history__study_year $history}
 
-        {control stringValue $school, _('School'), name_full}
+        {control valuePrinterRow__person_history__school_id $history}
     {/foreach}
 
     <hr/>
 
     <h3>{_'Actions'}</h3>
 
-    {control applicationComponent:inline edit}
+    {*control applicationComponent:inline edit*}
     <hr/>
 
     <h3>{_'Transitions'}</h3>
 
-    {control applicationComponent:inline transitions}
+    {*control applicationComponent:inline transitions*}
 
 {/block}

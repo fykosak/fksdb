@@ -105,6 +105,7 @@ final class TableReflectionFactory {
      * @param int $permissionLevel
      * @return AbstractRowComponent|null
      * @throws \Exception
+     * @deprecated
      */
     public function createComponent(string $name, int $permissionLevel) {
         $parts = \explode('__', $name);
