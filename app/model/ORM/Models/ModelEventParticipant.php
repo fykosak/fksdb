@@ -7,11 +7,10 @@ use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Payment\IPaymentModel;
 use FKSDB\Payment\Price;
-use FKSDB\Transitions\IEventReferencedModel;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
-use Nette\Utils\DateTime;
 use Nette\InvalidStateException;
+use Nette\Utils\DateTime;
 
 /**
  *

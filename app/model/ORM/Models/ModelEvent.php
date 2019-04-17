@@ -27,7 +27,7 @@ use Nette\Utils\DateTime;
  * @property DateTime registration_begin
  * @property DateTime registration_end
  */
-class ModelEvent extends AbstractModelSingle implements IResource {
+class ModelEvent extends AbstractModelSingle implements IResource, IContestReferencedModel {
 
     /**
      * Event can have a holder assigned for purposes of parameter parsing.

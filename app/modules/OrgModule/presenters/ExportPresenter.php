@@ -17,17 +17,19 @@ use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelPostContact;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
+use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryParameter;
 use FKSDB\ORM\Services\ServiceContestant;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryParameter;
-use FormUtils;
 use FKSDB\Results\Models\AbstractResultsModel;
+use FKSDB\Results\ResultsModelFactory;
+use FormUtils;
 use ModelException;
 use Nette\Application\BadRequestException;
-use Tracy\Debugger;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Strings;
 use ServiceMStoredQueryTag;
+use Tracy\Debugger;
 
 /**
  * Class ExportPresenter
@@ -189,6 +191,9 @@ class ExportPresenter extends SeriesPresenter {
         $sql = $data[self::CONT_CONSOLE]['sql'];
         $parameters = [];
         foreach ($data[self::CONT_PARAMS_META] as $paramMetaData) {
+            /**
+             * @var ModelStoredQueryParameter $parameter
+             */
             $parameter = $this->serviceStoredQueryParameter->createNew($paramMetaData);
             $parameter->setDefaultValue($paramMetaData['default']);
             $parameters[] = $parameter;
@@ -331,6 +336,7 @@ class ExportPresenter extends SeriesPresenter {
             $values[self::CONT_META] = $this->getPatternQuery()->toArray();
             $values[self::CONT_META]['tags'] = $this->getPatternQuery()->getTags()->fetchPairs('tag_type_id', 'tag_type_id');
             $values[self::CONT_PARAMS_META] = [];
+
             foreach ($query->getParameters() as $parameter) {
                 $paramData = $parameter->toArray();
                 $paramData['default'] = $parameter->getDefaultValue();
@@ -366,7 +372,8 @@ class ExportPresenter extends SeriesPresenter {
      */
     public function titleShow($id) {
         $title = sprintf(_('Detail dotazu %s'), $this->getPatternQuery()->name);
-        if ($qid = $this->getPatternQuery()->qid) { // intentionally =
+        $qid = $this->getPatternQuery()->qid;
+        if ($qid) { // intentionally =
             $title .= " ($qid)";
         }
 
@@ -627,6 +634,9 @@ class ExportPresenter extends SeriesPresenter {
             ->where(array('query_id' => $storedQuery->query_id))->delete();
 
         foreach ($values[self::CONT_PARAMS_META] as $paramMetaData) {
+            /**
+             * @var ModelStoredQueryParameter $parameter
+             */
             $parameter = $this->serviceStoredQueryParameter->createNew($paramMetaData);
             $parameter->setDefaultValue($paramMetaData['default']);
 
@@ -646,6 +656,9 @@ class ExportPresenter extends SeriesPresenter {
      * @throws BadRequestException
      */
     public function renderOvvp() {
+        /**
+         * @var ResultsModelFactory $modelFactory
+         */
         $modelFactory = $this->getService('resultsModelFactory');
         $serviceContestant = $this->getService(ServiceContestant::class);
 

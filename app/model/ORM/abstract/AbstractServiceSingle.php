@@ -176,7 +176,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     }
 
     /**
-     * @return TableSelection
+     * @return TypedTableSelection
      */
     public function getTable() {
         return new TypedTableSelection($this->getModelClassName(), $this->getTableName(), $this->connection);

@@ -12,6 +12,7 @@ use Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\Components\Events\ApplicationComponent;
 use FKSDB\Components\Events\ApplicationsGrid;
+use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\Events\LayoutResolver;
 use FKSDB\Logging\FlashDumpFactory;
 use FKSDB\Logging\MemoryLogger;
@@ -81,6 +82,10 @@ class ApplicationPresenter extends BasePresenter {
      * @var FlashDumpFactory
      */
     private $flashDumpFactory;
+    /**
+     * @var TableReflectionFactory
+     */
+    private $tableReflectionFactory;
 
     /**
      * @param \FKSDB\ORM\Services\ServiceEvent $serviceEvent
@@ -122,6 +127,13 @@ class ApplicationPresenter extends BasePresenter {
      */
     public function injectFlashDumpFactory(FlashDumpFactory $flashDumpFactory) {
         $this->flashDumpFactory = $flashDumpFactory;
+    }
+
+    /**
+     * @param TableReflectionFactory $tableReflectionFactory
+     */
+    public function injectTableReflectionFactory(TableReflectionFactory $tableReflectionFactory) {
+        $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
     /**

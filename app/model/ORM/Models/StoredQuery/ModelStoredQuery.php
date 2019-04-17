@@ -26,7 +26,7 @@ class ModelStoredQuery extends AbstractModelSingle implements IResource {
 
     /**
      * @param bool $outer
-     * @return array
+     * @return ModelStoredQueryParameter[]
      */
     public function getParameters($outer = true) {
         if ($this->outerParameters && $outer) {

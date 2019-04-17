@@ -2,8 +2,11 @@
 
 namespace EventModule;
 
+use Events\Model\Grid\SingleEventSource;
+use FKSDB\Components\Events\ImportComponent;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
 use FKSDB\Components\Grids\Events\Application\ApplicationGrid;
+use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Services\ServiceEventParticipant;
 use Nette\Application\BadRequestException;
@@ -36,16 +39,33 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
         $this->setIcon('fa fa-user');
     }
 
+    public function titleImport() {
+        $this->setTitle(_('Application import'));
+        $this->setIcon('fa fa-upload');
+    }
+
     /**
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
      */
     public function authorizedDetail() {
-        if (\in_array($this->getEvent()->event_type_id, [1, 9])) {
+        if ($this->isTeamEvent()) {
             $this->setAuthorized(false);
-            return;
+        } else {
+            $this->setAuthorized($this->eventIsAllowed('event.application', 'detail'));
         }
-        $this->setAuthorized($this->eventIsAllowed('event.application', 'detail'));
+    }
+
+    /**
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
+    public function authorizedImport() {
+        if ($this->isTeamEvent()) {
+            $this->setAuthorized(false);
+        } else {
+            $this->setAuthorized($this->eventIsAllowed('event.application', 'import'));
+        }
     }
 
     /**
@@ -53,11 +73,11 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @throws \Nette\Application\BadRequestException
      */
     public function authorizedList() {
-        if (\in_array($this->getEvent()->event_type_id, [1, 9])) {
+        if ($this->isTeamEvent()) {
             $this->setAuthorized(false);
-            return;
+        } else {
+            $this->setAuthorized($this->eventIsAllowed('event.application', 'list'));
         }
-        $this->setAuthorized($this->eventIsAllowed('event.application', 'list'));
     }
 
     /**
@@ -79,6 +99,13 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
+     * @return ModelEventParticipant
+     */
+    protected function getModel(): ModelEventParticipant {
+        return $this->model;
+    }
+
+    /**
      * @return ApplicationGrid
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
@@ -88,11 +115,20 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @return ModelEventParticipant
+     * @return ImportComponent
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
      */
-    protected function getModel(): ModelEventParticipant {
-        return $this->model;
+    public function createComponentImport(): ImportComponent {
+        $source = new SingleEventSource($this->getEvent(), $this->container);
+        $logger = new MemoryLogger();
+        $machine = $this->container->createEventMachine($this->getEvent());
+        $handler = $this->applicationHandlerFactory->create($this->getEvent(), $logger);
+
+        $flashDump = $this->dumpFactory->create('application');
+        return new ImportComponent($machine, $source, $handler, $flashDump, $this->container);
     }
+
 
     /**
      * @throws BadRequestException

@@ -3,7 +3,6 @@
 namespace FKSDB\ORM\Models;
 
 use FKSDB\ORM\AbstractModelSingle;
-use FKSDB\Transitions\IEventReferencedModel;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 use Nette\Security\IResource;

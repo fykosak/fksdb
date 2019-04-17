@@ -2,7 +2,10 @@
 
 namespace FKSDB\Components\Grids\Events;
 
+use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEvent;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
@@ -26,9 +29,10 @@ class EventsGrid extends BaseGrid {
     /**
      * EventsGrid constructor.
      * @param \FKSDB\ORM\Services\ServiceEvent $serviceEvent
+     * @param TableReflectionFactory $tableReflectionFactory
      */
-    function __construct(ServiceEvent $serviceEvent) {
-        parent::__construct();
+    function __construct(ServiceEvent $serviceEvent, TableReflectionFactory $tableReflectionFactory) {
+        parent::__construct($tableReflectionFactory);
         $this->serviceEvent = $serviceEvent;
     }
 
@@ -52,37 +56,46 @@ class EventsGrid extends BaseGrid {
         $this->setDefaultOrder('event.begin ASC');
         $this->setDataSource($dataSource);
 
-        //
-        // columns
-        //
         $this->addColumn('event_id', _('Id akce'));
-        $this->addColumn('type_name', _('Typ akce'));
-        $this->addColumn('name', _('Name'));
-        $this->addColumn('year', _('Ročník semináře'));
-        $this->addColumn('event_year', _('Ročník akce'));
+
+        foreach (['event_type', 'name','year','event_year'] as $field) {
+            $this->addReflectionColumn(DbNames::TAB_EVENT, $field, ModelEvent::class);
+        }
         //
         // operations
         //
         $this->addButton('detail')
             ->setText(_('Detail'))
             ->setLink(function ($row) {
-                return $this->getPresenter()->link(':Event:Detail:', ['eventId' => $row->event_id]);
+                return $this->getPresenter()->link(':Event:dashboard:', ['eventId' => $row->event_id]);
             });
         $this->addButton('edit', _('Edit'))
             ->setText(_('Edit'))
             ->setLink(function ($row) {
                 return $this->getPresenter()->link('edit', $row->event_id);
             });
-        $this->addButton('old_applications')
+        $this->addButton('applications')
             ->setText(_('Applications'))
             ->setLink(function ($row) {
-                return $this->getPresenter()->link('applications', $row->event_id);
-            });
-        $this->addButton('applications')
-            ->setText(_('Applications (test GUI)'))
-            ->setLink(function ($row) {
                 return $this->getPresenter()->link(':Event:application:list', ['eventId' => $row->event_id]);
+            })->setShow(function ($row) {
+                if ($this->getPresenter()->authorized(':Event:application:list', ['eventId' => $row->event_id])) {
+                    return true;
+                }
+                return false;
             });
+
+        $this->addButton('teamApplications')
+            ->setText(_('Team applications'))
+            ->setLink(function ($row) {
+                return $this->getPresenter()->link(':Event:teamApplication:list', ['eventId' => $row->event_id]);
+            })->setShow(function ($row) {
+                if ($this->getPresenter()->authorized(':Event:teamApplication:list', ['eventId' => $row->event_id])) {
+                    return true;
+                }
+                return false;
+            });
+
         $this->addButton('org')
             ->setText(_('Organisers'))
             ->setLink(function ($row) {

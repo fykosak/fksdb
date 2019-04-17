@@ -18,6 +18,7 @@ use Nette\Application\ForbiddenRequestException;
  * @package EventModule
  */
 abstract class AbstractApplicationPresenter extends BasePresenter {
+    const TEAM_EVENTS = [1, 9];
     /**
      * @var ModelEventParticipant|ModelFyziklaniTeam
      */
@@ -25,11 +26,11 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     /**
      * @var ApplicationHandlerFactory
      */
-    private $applicationHandlerFactory;
+    protected $applicationHandlerFactory;
     /**
      * @var FlashDumpFactory
      */
-    private $dumpFactory;
+    protected $dumpFactory;
 
     /**
      * @param ApplicationHandlerFactory $applicationHandlerFactory
@@ -53,7 +54,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     public function createComponentApplicationComponent() {
         $holders = [];
         $handlers = [];
-        $flashDump = $this->dumpFactory->createApplication();
+        $flashDump = $this->dumpFactory->create('application');
         $source = new SingleEventSource($this->getEvent(), $this->container);
         foreach ($source as $key => $holder) {
             $holders[$key] = $holder;
@@ -65,6 +66,19 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     }
 
     /**
+     * @return bool
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
+    protected function isTeamEvent(): bool {
+        if (\in_array($this->getEvent()->event_type_id, self::TEAM_EVENTS)) {
+            $this->setAuthorized(false);
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * @param $id
      * @throws BadRequestException
      * @throws ForbiddenRequestException
@@ -72,6 +86,14 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      */
     public function actionDetail($id) {
         $this->loadModel($id);
+    }
+
+    /**
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
+    public function renderList() {
+        $this->template->event = $this->getEvent();
     }
 
     /**

@@ -4,10 +4,9 @@ namespace FKSDB\ORM\Models;
 
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
-use FKSDB\Transitions\IEventReferencedModel;
 use Nette\Database\Table\ActiveRow;
-use Nette\Utils\DateTime;
 use Nette\Security\IResource;
+use Nette\Utils\DateTime;
 
 /**
  * Class FKSDB\ORM\Models\ModelEventAccommodation

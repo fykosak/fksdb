@@ -17,7 +17,7 @@ use Nette\Security\IResource;
  * @property ActiveRow person
  * @property ActiveRow school
  */
-class ModelTeacher extends AbstractModelSingle implements IResource {
+class ModelTeacher extends AbstractModelSingle implements IResource, IPersonReferencedModel {
     /**
      * @return ModelPerson
      */

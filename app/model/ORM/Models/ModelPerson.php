@@ -302,7 +302,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     /**
      * @internal To get active orgs call FKSDB\ORM\Models\ModelLogin::getActiveOrgs
      * @param \FKSDB\YearCalculator $yearCalculator
-     * @return array of FKSDB\ORM\Models\ModelOrg indexed by contest_id
+     * @return ModelOrg[] indexed by contest_id
      */
     public function getActiveOrgs(YearCalculator $yearCalculator) {
         $result = [];
@@ -320,7 +320,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * Active contestant := contestant in the highest year but not older than the current year.
      *
      * @param \FKSDB\YearCalculator $yearCalculator
-     * @return array of FKSDB\ORM\Models\ModelContestant indexed by contest_id
+     * @return ModelContestant[] indexed by contest_id
      */
     public function getActiveContestants(YearCalculator $yearCalculator) {
         $result = [];
