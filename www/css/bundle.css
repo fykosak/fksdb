@@ -609,6 +609,16 @@ main.login[data-bg="3"] {
   opacity: 1;
 }
 
+.badge-fykos {
+  background-color: #1175da;
+  color: white;
+}
+
+.badge-vyfuk {
+  background-color: #ff4800;
+  color: white;
+}
+
 .btn-fykos {
   color: #fff;
   background-color: #1175da;
