@@ -2,20 +2,13 @@
 
 namespace OrgModule;
 
-use Events\Model\ApplicationHandlerFactory;
-use Events\Model\Grid\SingleEventSource;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Events\ApplicationsGrid;
-use FKSDB\Components\Events\ExpressionPrinter;
-use FKSDB\Components\Events\GraphComponent;
-use FKSDB\Components\Events\ImportComponent;
 use FKSDB\Components\Forms\Factories\EventFactory;
+use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\Events\EventsGrid;
-use FKSDB\Components\Grids\Events\LayoutResolver;
 use FKSDB\Config\NeonScheme;
-use FKSDB\Logging\FlashDumpFactory;
-use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\IModel;
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceAuthToken;
 use FKSDB\ORM\Services\ServiceEvent;
 use FormUtils;
@@ -24,18 +17,17 @@ use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
-use Tracy\Debugger;
 use Nette\Forms\Controls\BaseControl;
+use Nette\Neon\Neon;
 use Nette\NotImplementedException;
 use Nette\Utils\Html;
-use Nette\Neon\Neon;
 use Nette\Utils\NeonException;
+use Tracy\Debugger;
 use Utils;
 
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class EventPresenter extends EntityPresenter {
@@ -55,35 +47,18 @@ class EventPresenter extends EntityPresenter {
     private $eventFactory;
 
     /**
-     *
-     * @var LayoutResolver
-     */
-    private $layoutResolver;
-
-    /**
      * @var Container
      */
     private $container;
 
     /**
-     * @var ExpressionPrinter
-     */
-    private $expressionPrinter;
-
-    /**
-     * @var ApplicationHandlerFactory
-     */
-    private $handlerFactory;
-
-    /**
-     * @var FlashDumpFactory
-     */
-    private $flashDumpFactory;
-
-    /**
      * @var \FKSDB\ORM\Services\ServiceAuthToken $serviceAuthToken
      */
     private $serviceAuthToken;
+    /**
+     * @var TableReflectionFactory
+     */
+    private $tableReflectionFactory;
 
     /**
      * @param ServiceAuthToken $serviceAuthToken
@@ -91,7 +66,6 @@ class EventPresenter extends EntityPresenter {
     public function injectServiceAuthToken(ServiceAuthToken $serviceAuthToken) {
         $this->serviceAuthToken = $serviceAuthToken;
     }
-
 
     /**
      * @param \FKSDB\ORM\Services\ServiceEvent $serviceEvent
@@ -108,13 +82,6 @@ class EventPresenter extends EntityPresenter {
     }
 
     /**
-     * @param LayoutResolver $layoutResolver
-     */
-    public function injectLayoutResolver(LayoutResolver $layoutResolver) {
-        $this->layoutResolver = $layoutResolver;
-    }
-
-    /**
      * @param Container $container
      */
     public function injectContainer(Container $container) {
@@ -122,24 +89,10 @@ class EventPresenter extends EntityPresenter {
     }
 
     /**
-     * @param ExpressionPrinter $expressionPrinter
+     * @param TableReflectionFactory $tableReflectionFactory
      */
-    public function injectExpressionPrinter(ExpressionPrinter $expressionPrinter) {
-        $this->expressionPrinter = $expressionPrinter;
-    }
-
-    /**
-     * @param ApplicationHandlerFactory $handlerFactory
-     */
-    public function injectHandlerFactory(ApplicationHandlerFactory $handlerFactory) {
-        $this->handlerFactory = $handlerFactory;
-    }
-
-    /**
-     * @param FlashDumpFactory $flashDumpFactory
-     */
-    public function injectFlashDumpFactory(FlashDumpFactory $flashDumpFactory) {
-        $this->flashDumpFactory = $flashDumpFactory;
+    public function injectTableReflectionFactory(TableReflectionFactory $tableReflectionFactory) {
+        $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
     /**
@@ -171,28 +124,9 @@ class EventPresenter extends EntityPresenter {
         $this->setIcon('fa fa-pencil');
     }
 
-    public function titleApplications() {
-        $model = $this->getModel();
-        $this->setTitle(sprintf(_('Přihlášky akce %s'), $model->name));
-        $this->setIcon('fa fa-calendar-check-o');
-    }
-
-    public function titleModel() {
-        $model = $this->getModel();
-        $this->setTitle(sprintf(_('Model akce %s'), $model->name));
-        $this->setIcon('fa fa-cubes');
-    }
-
     public function actionDelete() {
 // There's no use case for this. (Errors must be deleted manually via SQL.)
         throw new NotImplementedException(null, 501);
-    }
-
-    /**
-     * @param $id
-     */
-    public function renderApplications($id) {
-        $this->template->event = $this->getModel();
     }
 
     /**
@@ -230,59 +164,16 @@ class EventPresenter extends EntityPresenter {
 
     /**
      * @param $name
-     * @return EventsGrid|mixed
+     * @return EventsGrid
      */
-    protected function createComponentGrid($name) {
-        return new EventsGrid($this->serviceEvent);
-    }
-
-    /**
-     * @param $name
-     * @return ApplicationsGrid
-     */
-    protected function createComponentApplicationsGrid($name) {
-        $source = new SingleEventSource($this->getModel(), $this->container);
-        $source->order('created');
-
-        $flashDump = $this->flashDumpFactory->createApplication();
-        $grid = new ApplicationsGrid($this->container, $source, $this->handlerFactory, $flashDump);
-        $template = $this->layoutResolver->getTableLayout($this->getModel());
-        $grid->setTemplate($template);
-        $grid->setSearchable(true);
-
-        return $grid;
-    }
-
-    /**
-     * @param $name
-     * @return ImportComponent
-     */
-    protected function createComponentApplicationsImport($name) {
-        $source = new SingleEventSource($this->getModel(), $this->container);
-        $logger = new MemoryLogger(); //TODO log to file?
-        $machine = $this->container->createEventMachine($this->getModel());
-        $handler = $this->handlerFactory->create($this->getModel(), $logger);
-
-        $flashDump = $this->flashDumpFactory->createApplication();
-        $component = new ImportComponent($machine, $source, $handler, $flashDump, $this->container);
-        return $component;
-    }
-
-    /**
-     * @param $name
-     * @return GraphComponent
-     */
-    protected function createComponentGraphComponent($name) {
-        $event = $this->getModel();
-        $machine = $this->container->createEventMachine($event);
-
-        $component = new GraphComponent($machine->getPrimaryMachine(), $this->expressionPrinter);
-        return $component;
+    protected function createComponentGrid($name): EventsGrid {
+        return new EventsGrid($this->serviceEvent, $this->tableReflectionFactory);
     }
 
     /**
      * @return FormControl
      * @throws BadRequestException
+     * @throws \Exception
      */
     private function createForm() {
         $control = new FormControl();
@@ -345,18 +236,22 @@ class EventPresenter extends EntityPresenter {
         if (!$model) {
             return;
         }
-        $defaults = array(
+        $defaults = [
             self::CONT_EVENT => $model->toArray(),
-        );
+        ];
         $form->setDefaults($defaults);
     }
 
     /**
-     * @param $id
-     * @return \FKSDB\ORM\AbstractModelSingle|\Nette\Database\Table\ActiveRow|null
+     * @param int $id
+     * @return \FKSDB\ORM\AbstractModelSingle|ModelEvent|null
      */
     protected function loadModel($id) {
-        return $this->serviceEvent->findByPrimary($id);
+        $row = $this->serviceEvent->findByPrimary($id);
+        if (!$row) {
+            return null;
+        }
+        return ModelEvent::createFromTableRow($row);
     }
 
     /**

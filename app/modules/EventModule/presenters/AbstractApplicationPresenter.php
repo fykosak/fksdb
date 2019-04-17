@@ -4,14 +4,6 @@ namespace EventModule;
 
 use Events\Model\ApplicationHandlerFactory;
 use Events\Model\Grid\SingleEventSource;
-use FKSDB\Components\Controls\Helpers\Badges\NotSetBadge;
-use FKSDB\Components\Controls\Helpers\ValuePrinters\BinaryValueControl;
-use FKSDB\Components\Controls\Helpers\ValuePrinters\IsSetValueControl;
-use FKSDB\Components\Controls\Helpers\ValuePrinters\PersonValueControl;
-use FKSDB\Components\Controls\Helpers\ValuePrinters\PhoneValueControl;
-use FKSDB\Components\Controls\Helpers\ValuePrinters\PriceValueControl;
-use FKSDB\Components\Controls\Helpers\ValuePrinters\StringValueControl;
-use FKSDB\Components\Controls\Stalking\Helpers\PersonLinkControl;
 use FKSDB\Components\Events\ApplicationComponent;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
 use FKSDB\Logging\FlashDumpFactory;
@@ -26,6 +18,7 @@ use Nette\Application\ForbiddenRequestException;
  * @package EventModule
  */
 abstract class AbstractApplicationPresenter extends BasePresenter {
+    const TEAM_EVENTS = [1, 9];
     /**
      * @var ModelEventParticipant|ModelFyziklaniTeam
      */
@@ -33,11 +26,11 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     /**
      * @var ApplicationHandlerFactory
      */
-    private $applicationHandlerFactory;
+    protected $applicationHandlerFactory;
     /**
      * @var FlashDumpFactory
      */
-    private $dumpFactory;
+    protected $dumpFactory;
 
     /**
      * @param ApplicationHandlerFactory $applicationHandlerFactory
@@ -61,7 +54,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     public function createComponentApplicationComponent() {
         $holders = [];
         $handlers = [];
-        $flashDump = $this->dumpFactory->createApplication();
+        $flashDump = $this->dumpFactory->create('application');
         $source = new SingleEventSource($this->getEvent(), $this->container);
         foreach ($source as $key => $holder) {
             $holders[$key] = $holder;
@@ -73,59 +66,16 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @return \FKSDB\Components\Controls\Helpers\ValuePrinters\BinaryValueControl
+     * @return bool
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
      */
-    public function createComponentBinaryValue(): BinaryValueControl {
-        return new BinaryValueControl($this->getTranslator());
-    }
-
-    /**
-     * @return PersonLinkControl
-     */
-    public function createComponentPersonLink(): PersonLinkControl {
-        return new PersonLinkControl();
-    }
-
-    /**
-     * @return PersonValueControl
-     */
-    public function createComponentPersonValue(): PersonValueControl {
-        return new PersonValueControl($this->getTranslator());
-    }
-
-    /**
-     * @return \FKSDB\Components\Controls\Helpers\ValuePrinters\StringValueControl
-     */
-    public function createComponentStringValue(): StringValueControl {
-        return new StringValueControl($this->getTranslator());
-    }
-
-    /**
-     * @return \FKSDB\Components\Controls\Helpers\Badges\NotSetBadge
-     */
-    public function createComponentNotSet(): NotSetBadge {
-        return new NotSetBadge($this->getTranslator());
-    }
-
-    /**
-     * @return PhoneValueControl
-     */
-    public function createComponentPhoneValue(): PhoneValueControl {
-        return new PhoneValueControl($this->getTranslator());
-    }
-
-    /**
-     * @return \FKSDB\Components\Controls\Helpers\ValuePrinters\IsSetValueControl
-     */
-    public function createComponentIsSetValue(): IsSetValueControl {
-        return new IsSetValueControl($this->getTranslator());
-    }
-
-    /**
-     * @return \FKSDB\Components\Controls\Helpers\ValuePrinters\PriceValueControl
-     */
-    public function createComponentPriceValue(): PriceValueControl {
-        return new PriceValueControl($this->getTranslator());
+    protected function isTeamEvent(): bool {
+        if (\in_array($this->getEvent()->event_type_id, self::TEAM_EVENTS)) {
+            $this->setAuthorized(false);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -136,6 +86,14 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      */
     public function actionDetail($id) {
         $this->loadModel($id);
+    }
+
+    /**
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
+    public function renderList() {
+        $this->template->event = $this->getEvent();
     }
 
     /**

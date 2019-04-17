@@ -2,16 +2,13 @@
 
 namespace EventModule;
 
-use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
-use FKSDB\Components\Grids\Events\ApplicationGrid;
-use FKSDB\Components\Grids\Events\TeamApplicationGrid;
+use FKSDB\Components\Grids\Events\Application\TeamApplicationGrid;
 use FKSDB\model\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\NotImplementedException;
 
 /**
  * Class ApplicationPresenter
@@ -40,10 +37,15 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
         $this->setIcon('fa fa-user');
     }
 
-    protected function startup() {
-        parent::startup();
-        if (!\in_array($this->getEvent()->event_type_id, [1, 9])) {
-            $this->flashMessage(_('Thi GUI don\'t works for single applications.'), self::FLASH_INFO);
+    /**
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
+    public function authorizedDetail() {
+        if ($this->isTeamEvent()) {
+            $this->setAuthorized($this->eventIsAllowed('event.application', 'detail'));
+        } else {
+            $this->setAuthorized(false);
         }
     }
 
@@ -51,17 +53,12 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
      */
-    public function authorizedDetail() {
-        // TODO teamApplication
-        $this->setAuthorized($this->eventIsAllowed('event.application', 'detail'));
-    }
-
-    /**
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
-     */
     public function authorizedList() {
-        $this->setAuthorized($this->eventIsAllowed('event.application', 'list'));
+        if ($this->isTeamEvent()) {
+            $this->setAuthorized($this->eventIsAllowed('event.application', 'list'));
+        } else {
+            $this->setAuthorized(false);
+        }
     }
 
     /**
@@ -83,12 +80,12 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @return ApplicationGrid
+     * @return \FKSDB\Components\Grids\Events\Application\ApplicationGrid
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
      */
     public function createComponentGrid(): AbstractApplicationGrid {
-        return new TeamApplicationGrid($this->getEvent());
+        return new TeamApplicationGrid($this->getEvent(), $this->tableReflectionFactory);
     }
 
     /**
