@@ -12,6 +12,7 @@ use FKSDB\Components\Controls\PresenterBuilder;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\IFilteredDataProvider;
+use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Config\GlobalParameters;
 use FKSDB\Localization\GettextTranslator;
 use FKSDB\ORM\Services\ServiceContest;
@@ -106,6 +107,10 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @var string
      */
     private $subtitle;
+    /**
+     * @var TableReflectionFactory
+     */
+    protected $tableReflectionFactory;
 
     /**
      * @return YearCalculator
@@ -119,6 +124,13 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      */
     public function injectYearCalculator(YearCalculator $yearCalculator) {
         $this->yearCalculator = $yearCalculator;
+    }
+
+    /**
+     * @param TableReflectionFactory $tableReflectionFactory
+     */
+    public function injectTableReflectionFactory(TableReflectionFactory $tableReflectionFactory) {
+        $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
     /**

@@ -20,10 +20,6 @@ use Nette\DI\Container;
  */
 abstract class BasePresenter extends AuthenticatedPresenter {
     /**
-     * @var TableReflectionFactory
-     */
-    protected $tableReflectionFactory;
-    /**
      *
      * @var \FKSDB\ORM\Models\ModelEvent
      */

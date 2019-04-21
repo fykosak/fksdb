@@ -46,9 +46,9 @@ class LoginFactory {
 
             if ($options & self::VERIFY_OLD_PASSWORD) {
                 $newPwd->addConditionOn($container['old_password'], Form::FILLED)
-                    ->addRule(Form::FILLED, _("Je třeba nastavit nové heslo."));
+                    ->addRule(Form::FILLED, _('Je třeba nastavit nové heslo.'));
             } else if ($options & self::REQUIRE_PASSWORD) {
-                $newPwd->addRule(Form::FILLED, _("Heslo nemůže být prázdné."));
+                $newPwd->addRule(Form::FILLED, _('Heslo nemůže být prázdné.'));
             }
 
 

@@ -45,22 +45,10 @@ class StalkingPresenter extends BasePresenter {
      */
     private $validationFactory;
     /**
-     * @var TableReflectionFactory
-     */
-    private $tableReflectionFactory;
-
-    /**
      * @param \FKSDB\ORM\Services\ServicePerson $servicePerson
      */
     public function injectServicePerson(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
-    }
-
-    /**
-     * @param TableReflectionFactory $tableReflectionFactory
-     */
-    public function injectTableReflectionFactory(TableReflectionFactory $tableReflectionFactory) {
-        $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
     /**
@@ -90,9 +78,6 @@ class StalkingPresenter extends BasePresenter {
         $this->setIcon('fa fa-eye');
     }
 
-    /**
-     * @throws BadRequestException
-     */
     public function authorizedDefault() {
         $this->setAuthorized($this->isAllowed('person', 'stalk.search'));
     }

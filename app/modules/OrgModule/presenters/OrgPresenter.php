@@ -28,23 +28,12 @@ class OrgPresenter extends ExtendedPersonPresenter {
      * @var OrgFactory
      */
     private $orgFactory;
-    /**
-     * @var TableReflectionFactory
-     */
-    private $tableReflectionFactory;
 
     /**
      * @param ServiceOrg $serviceOrg
      */
     public function injectServiceOrg(ServiceOrg $serviceOrg) {
         $this->serviceOrg = $serviceOrg;
-    }
-
-    /**
-     * @param TableReflectionFactory $tableReflectionFactory
-     */
-    public function injectTableReflectionFactory(TableReflectionFactory $tableReflectionFactory) {
-        $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
     /**

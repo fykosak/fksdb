@@ -8,8 +8,6 @@ use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\YearCalculator;
 use Nette\Forms\Controls\BaseControl;
-use Nette\Forms\Form;
-use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -48,55 +46,10 @@ class OrgFactory extends SingleReflectionFactory {
     public function createOrg(ModelContest $contest): ModelContainer {
         $container = new ModelContainer();
 
-        $min = $this->yearCalculator->getFirstYear($contest);
-        $max = $this->yearCalculator->getLastYear($contest);
-        foreach (['since'] as $field) {
+        foreach (['since', 'until', 'role', 'tex_signature', 'domain_alias', 'order', 'contribution'] as $field) {
             $control = $this->createField($field, $contest);
-            $container->addComponent($control, 'since');
+            $container->addComponent($control, $field);
         }
-
-        $container->addText('until', _('Do ročníku'))
-            ->addCondition(Form::FILLED)
-            ->addRule(Form::NUMERIC)
-            /* ->addRule(function ($until, $since) {
-                 return $since->value <= $until->value;
-             }, _('Konec nesmí být dříve než začátek'), $container['since'])*/
-            ->addRule(Form::RANGE, _('Koncový ročník není v intervalu [%d, %d].'), [$min, $max]);
-
-        $roleControl = $this->loadFactory('role')->createField();
-        $container->addComponent($roleControl, 'role');
-
-        $container->addText('tex_signature', _('TeX identifikátor'))
-            ->addRule(Form::MAX_LENGTH, null, 32)
-            ->addCondition(Form::FILLED)
-            ->addRule(Form::REGEXP, _('%label obsahuje nepovolené znaky.'), '/^[a-z][a-z0-9._\-]*$/i');
-
-
-        $container->addText('domain_alias', _('Jméno v doméně fykos.cz'))
-            ->addRule(Form::MAX_LENGTH, null, 32)
-            ->addCondition(Form::FILLED)
-            ->addRule(Form::REGEXP, _('%l obsahuje nepovolené znaky.'), '/^[a-z][a-z0-9._\-]*$/i');
-
-        $container->addSelect('order', _('Hodnost'))
-            ->setOption('description', _('Pro řazení v seznamu organizátorů'))
-            ->setItems([
-                0 => '0 - org',
-                1 => '1',
-                2 => '2',
-                3 => '3',
-                4 => '4 - hlavní organizátor',
-                9 => '9 - vedoucí semináře',
-            ])
-            ->setPrompt(_('Zvolit hodnost'))
-            ->addRule(Form::FILLED, _('Vyberte hodnost.'));
-
-        $container->onValidate[] = function ($container) {
-            Debugger::barDump($container);
-            die();
-        };
-        $container->addTextArea('contribution', _('Co udělal'))
-            ->setOption('description', _('Zobrazeno v síni slávy'));
-
         return $container;
     }
 
@@ -116,10 +69,10 @@ class OrgFactory extends SingleReflectionFactory {
     public function createField(string $fieldName, ModelContest $contest = null): BaseControl {
         switch ($fieldName) {
             case 'since':
+            case 'until':
                 $min = $this->yearCalculator->getFirstYear($contest);
                 $max = $this->yearCalculator->getLastYear($contest);
                 return $this->loadFactory($fieldName)->createField($min, $max);
-                break;
             default:
                 return parent::createField($fieldName);
 

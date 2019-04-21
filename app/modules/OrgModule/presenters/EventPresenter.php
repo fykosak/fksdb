@@ -55,10 +55,6 @@ class EventPresenter extends EntityPresenter {
      * @var \FKSDB\ORM\Services\ServiceAuthToken $serviceAuthToken
      */
     private $serviceAuthToken;
-    /**
-     * @var TableReflectionFactory
-     */
-    private $tableReflectionFactory;
 
     /**
      * @param ServiceAuthToken $serviceAuthToken
@@ -86,13 +82,6 @@ class EventPresenter extends EntityPresenter {
      */
     public function injectContainer(Container $container) {
         $this->container = $container;
-    }
-
-    /**
-     * @param TableReflectionFactory $tableReflectionFactory
-     */
-    public function injectTableReflectionFactory(TableReflectionFactory $tableReflectionFactory) {
-        $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
     /**

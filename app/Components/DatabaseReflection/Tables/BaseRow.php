@@ -19,7 +19,7 @@ class BaseRow extends AbstractRow {
      * @return string
      */
     public function getTitle(): string {
-        return $this->title;
+        return _($this->title);
     }
 
     /**

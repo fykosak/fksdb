@@ -1,9 +1,8 @@
 <?php
 
-namespace FKSDB\Components\DatabaseReflection\PersonInfo;
+namespace FKSDB\Components\DatabaseReflection;
 
 use FKSDB\Components\Controls\PhoneNumber\PhoneNumberFactory;
-use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\DatabaseReflection\ValuePrinters\PhonePrinter;
 use FKSDB\Components\Forms\Controls\WriteOnlyInput;
 use FKSDB\ORM\AbstractModelSingle;

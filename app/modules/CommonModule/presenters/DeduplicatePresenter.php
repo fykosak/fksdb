@@ -1,6 +1,6 @@
 <?php
 
-namespace OrgModule;
+namespace CommonModule;
 
 use FKSDB\Components\Grids\Deduplicate\PersonsGrid;
 use FKSDB\ORM\Services\ServicePerson;
@@ -43,16 +43,12 @@ class DeduplicatePresenter extends BasePresenter {
      * @throws \Nette\Application\BadRequestException
      */
     public function authorizedPerson() {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('person', 'list', $this->getSelectedContest()));
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowedForAnyContest('person', 'list'));
     }
 
     public function titlePerson() {
         $this->setTitle(_('Duplicitní osoby'));
         $this->setIcon('fa fa-exchange');
-    }
-
-    public function actionPerson() {
-
     }
 
     /**
@@ -61,7 +57,7 @@ class DeduplicatePresenter extends BasePresenter {
      * @throws \Nette\Application\BadRequestException
      */
     public function handleBatchMerge() {
-        if (!$this->getContestAuthorizator()->isAllowed('person', 'merge', $this->getSelectedContest())) { //TODO generic authorizator
+        if (!$this->getContestAuthorizator()->isAllowedForAnyContest('person', 'merge')) { //TODO generic authorizator
             throw new ForbiddenRequestException();
         }
         //TODO later specialize for each entinty type

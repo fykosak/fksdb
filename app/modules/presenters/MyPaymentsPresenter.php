@@ -13,22 +13,10 @@ class MyPaymentsPresenter extends AuthenticatedPresenter {
      */
     private $servicePayment;
     /**
-     * @var TableReflectionFactory
-     */
-    private $tableReflectionFactory;
-
-    /**
      * @param ServicePayment $servicePayment
      */
     public function injectServicePayment(ServicePayment $servicePayment) {
         $this->servicePayment = $servicePayment;
-    }
-
-    /**
-     * @param TableReflectionFactory $tableReflectionFactory
-     */
-    public function injectTableReflectionFactory(TableReflectionFactory $tableReflectionFactory) {
-        $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
 

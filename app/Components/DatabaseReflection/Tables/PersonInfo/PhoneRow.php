@@ -2,6 +2,8 @@
 
 namespace FKSDB\Components\DatabaseReflection\PersonInfo;
 
+use FKSDB\Components\DatabaseReflection\AbstractPhoneRow;
+
 /**
  * Class PhoneField
  * @package FKSDB\Components\Forms\Factories\PersonInfo

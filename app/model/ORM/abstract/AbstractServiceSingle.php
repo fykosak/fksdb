@@ -70,9 +70,9 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     }
 
     /**
-     * @return string
+     * @return string|AbstractModelSingle|AbstractModelMulti
      */
-    abstract protected function getModelClassName(): string;
+    abstract public function getModelClassName(): string;
 
     /**
      * @return string

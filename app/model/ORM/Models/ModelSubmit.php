@@ -25,9 +25,9 @@ class ModelSubmit extends AbstractModelSingle implements IResource {
     const SOURCE_POST = 'post';
 
     /**
-     * @return boolean
+     * @return bool
      */
-    public function isEmpty() {
+    public function isEmpty(): bool {
         return !($this->submitted_on || $this->note);
     }
 
@@ -56,7 +56,7 @@ class ModelSubmit extends AbstractModelSingle implements IResource {
     /**
      * @return string
      */
-    public function getFingerprint() {
+    public function getFingerprint(): string {
         return md5(implode(':', [
             $this->submit_id,
             $this->submitted_on,

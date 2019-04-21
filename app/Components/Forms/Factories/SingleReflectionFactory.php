@@ -5,6 +5,7 @@ namespace FKSDB\Components\Forms\Factories;
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\DatabaseReflection\Org\SinceRow;
 use FKSDB\Components\DatabaseReflection\PersonHistory\StudyYearRow;
+use FKSDB\Components\Forms\Containers\ModelContainer;
 use Nette\Forms\Controls\BaseControl;
 
 /**
@@ -46,5 +47,20 @@ abstract class SingleReflectionFactory {
      */
     public function createField(string $fieldName): BaseControl {
         return $this->loadFactory($fieldName)->createField();
+    }
+
+    /**
+     * @param array $fields
+     * @return ModelContainer
+     * @throws \Exception
+     */
+    public function createContainer(array $fields): ModelContainer {
+        $container = new ModelContainer();
+
+        foreach ($fields as $field) {
+            $control = $this->createField($field);
+            $container->addComponent($control, $field);
+        }
+        return $container;
     }
 }
