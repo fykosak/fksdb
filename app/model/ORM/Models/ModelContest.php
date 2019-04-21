@@ -8,8 +8,8 @@ use Nette\Utils\Strings;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property int $contest_id
- * @property string $name
+ * @property-read int $contest_id
+ * @property-read string $name
  */
 class ModelContest extends AbstractModelSingle {
     const ID_FYKOS = 1;

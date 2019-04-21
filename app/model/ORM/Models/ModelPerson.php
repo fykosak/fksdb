@@ -15,11 +15,11 @@ use Nette\Security\IResource;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property-read integer person_id
- * @property-read string other_name
- * @property-read string family_name
- * @property-read string display_name
- * @property-read string gender
+ * @property-read-read integer person_id
+ * @property-read-read string other_name
+ * @property-read-read string family_name
+ * @property-read-read string display_name
+ * @property-read-read string gender
  */
 class ModelPerson extends AbstractModelSingle implements IResource {
 

@@ -9,12 +9,12 @@ use Nette\Database\Table\ActiveRow;
 
 /**
  * Class FKSDB\ORM\Models\ModelEventPersonAccommodation
- * @property integer person_id
- * @property integer event_accommodation_id
- * @property integer event_person_accommodation_id
- * @property string status
- * @property ActiveRow person
- * @property ActiveRow event_accommodation
+ * @property-read integer person_id
+ * @property-read integer event_accommodation_id
+ * @property-read integer event_person_accommodation_id
+ * @property-read string status
+ * @property-read ActiveRow person
+ * @property-read ActiveRow event_accommodation
  *
  */
 class ModelEventPersonAccommodation extends AbstractModelSingle implements IStateModel {

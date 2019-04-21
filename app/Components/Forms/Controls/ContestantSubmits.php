@@ -186,17 +186,17 @@ class ContestantSubmits extends BaseControl {
             if (isset($result[$tasknr])) {
                 throw new InvalidArgumentException("Task with no. $tasknr is present multiple times in passed value.");
             }
-            $result[(int) $tasknr] = $this->serializeSubmit($submit);
+            $result[(int)$tasknr] = $this->serializeSubmit($submit);
         }
 
-        $dummySubmit = $this->submitService->createNew();
+        $row = $this->submitService->createNew();
+        $dummySubmit = ModelSubmit::createFromTableRow($row);
+        $data = $dummySubmit->toArray();
         foreach ($this->tasks as $tasknr => $task) {
             if (isset($result[$tasknr])) {
                 continue;
             }
-
-            $dummySubmit->task_id = $task->task_id;
-            $result[$tasknr] = $this->serializeSubmit($dummySubmit);
+            $result[$tasknr] = $this->serializeDummySubmit($data, $task->task_id);
         }
 
         ksort($result);
@@ -222,6 +222,21 @@ class ContestantSubmits extends BaseControl {
         }
 
         return $result;
+    }
+
+    /**
+     * @param $data
+     * @param int $taskId
+     * @return array
+     */
+    private function serializeDummySubmit($data, int $taskId) {
+        $data['submitted_on'] = null;
+
+        $data['task'] = [
+            'label' => $this->getTask($taskId)->label,
+            'disabled' => $this->isTaskDisabled(),
+        ]; // ORM workaround
+        return $data;
     }
 
     /**
@@ -256,10 +271,13 @@ class ContestantSubmits extends BaseControl {
 
         $submit = $this->submitService->findByContestant($ctId, $taskId);
         if (!$submit) {
-            $submit = $this->submitService->createNew();
+            $submit = $this->submitService->createNew($data);
+            //$this->submitService->save($submit);
+        } else {
+            $submit->update($data);
         }
 
-        $submit->update($data);
+
         return $submit;
     }
 

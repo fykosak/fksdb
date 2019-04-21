@@ -16,16 +16,16 @@ use Nette\Security\IResource;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property integer event_year
- * @property integer year
- * @property string name
- * @property integer event_id
- * @property ActiveRow event_type
- * @property integer event_type_id
- * @property DateTime begin
- * @property DateTime end
- * @property DateTime registration_begin
- * @property DateTime registration_end
+ * @property-read integer event_year
+ * @property-read integer year
+ * @property-read string name
+ * @property-read integer event_id
+ * @property-read ActiveRow event_type
+ * @property-read integer event_type_id
+ * @property-read DateTime begin
+ * @property-read DateTime end
+ * @property-read DateTime registration_begin
+ * @property-read DateTime registration_end
  */
 class ModelEvent extends AbstractModelSingle implements IResource {
 
