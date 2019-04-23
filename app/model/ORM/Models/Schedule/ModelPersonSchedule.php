@@ -14,11 +14,11 @@ use Nette\NotImplementedException;
 /**
  * Class ModelPersonSchedule
  * @package FKSDB\ORM\Models\Schedule
- * @property-readActiveRow person
- * @property-readActiveRow schedule_item
- * @property-readint person_id
- * @property-readint schedule_item_id
- * @property-readstring state
+ * @property-read ActiveRow person
+ * @property-read ActiveRow schedule_item
+ * @property-read int person_id
+ * @property-read int schedule_item_id
+ * @property-read string state
  */
 class ModelPersonSchedule extends AbstractModelSingle implements IStateModel {
     /**

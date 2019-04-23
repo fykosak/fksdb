@@ -12,12 +12,12 @@ use Nette\Database\Table\GroupedSelection;
 /**
  * Class ModelScheduleGroup
  * @package FKSDB\ORM\Models\Schedule
- * @property-readint schedule_group_id
- * @property-readstring schedule_group_type
- * @property-readint event_id
- * @property-readActiveRow event
- * @property-readDateTime start
- * @property-readDateTime end
+ * @property-read int schedule_group_id
+ * @property-read string schedule_group_type
+ * @property-read int event_id
+ * @property-read ActiveRow event
+ * @property-read DateTime start
+ * @property-read DateTime end
  */
 class ModelScheduleGroup extends \FKSDB\ORM\AbstractModelSingle {
     const TYPE_ACCOMMODATION = 'accommodation';

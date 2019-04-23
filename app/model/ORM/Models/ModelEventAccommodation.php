@@ -12,16 +12,16 @@ use Nette\Security\IResource;
 /**
  * Class FKSDB\ORM\Models\ModelEventAccommodation
  * @package ORM\Models\Events
- * @property-readinteger event_accommodation_id
- * @property-readinteger event_id
- * @property-readinteger capacity
- * @property-readstring name
- * @property-readinteger address_id
- * @property-readinteger price_kc
- * @property-readinteger price_eur
- * @property-readDateTime date
- * @property-readActiveRow address
- * @property-readActiveRow event
+ * @property-read integer event_accommodation_id
+ * @property-read integer event_id
+ * @property-read integer capacity
+ * @property-read string name
+ * @property-read integer address_id
+ * @property-read integer price_kc
+ * @property-read integer price_eur
+ * @property-read DateTime date
+ * @property-read ActiveRow address
+ * @property-read ActiveRow event
  */
 class ModelEventAccommodation extends AbstractModelSingle implements IResource, IEventReferencedModel {
     const ACC_DATE_FORMAT = 'Y-m-d';

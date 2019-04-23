@@ -16,29 +16,29 @@ use Nette\InvalidStateException;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property-readActiveRow person
- * @property-readinteger event_participant_id
- * @property-readinteger event_id
- * @property-readActiveRow event
- * @property-readinteger person_id
- * @property-readstring note poznámka
- * @property-readstring status
- * @property-readDateTime created čas vytvoření přihlášky
- * @property-readinteger accomodation
- * @property-readstring diet speciální stravování
- * @property-readstring health_restrictions alergie, léky, úrazy
- * @property-readstring tshirt_size
- * @property-readstring tshirt_color
- * @property-readfloat price DECIMAL(6,2) vypočtená cena
- * @property-readstring arrival_time Čas příjezdu
- * @property-readstring arrival_destination Místo prijezdu
- * @property-readboolean arrival_ticket společný lístek na cestu tam
- * @property-readstring departure_time Čas odjezdu
- * @property-readstring departure_destination Místo odjezdu
- * @property-readboolean departure_ticket společný lístek na cestu zpět
- * @property-readboolean swimmer plavec?
- * @property-readstring used_drugs užívané léky
- * @property-readstring schedule
+ * @property-read ActiveRow person
+ * @property-read integer event_participant_id
+ * @property-read integer event_id
+ * @property-read ActiveRow event
+ * @property-read integer person_id
+ * @property-read string note poznámka
+ * @property-read string status
+ * @property-read DateTime created čas vytvoření přihlášky
+ * @property-read integer accomodation
+ * @property-read string diet speciální stravování
+ * @property-read string health_restrictions alergie, léky, úrazy
+ * @property-read string tshirt_size
+ * @property-read string tshirt_color
+ * @property-read float price DECIMAL(6,2) vypočtená cena
+ * @property-read string arrival_time Čas příjezdu
+ * @property-read string arrival_destination Místo prijezdu
+ * @property-read boolean arrival_ticket společný lístek na cestu tam
+ * @property-read string departure_time Čas odjezdu
+ * @property-read string departure_destination Místo odjezdu
+ * @property-read boolean departure_ticket společný lístek na cestu zpět
+ * @property-read boolean swimmer plavec?
+ * @property-read string used_drugs užívané léky
+ * @property-read string schedule
  */
 class ModelEventParticipant extends AbstractModelSingle implements IEventReferencedModel, IPaymentModel {
     /**

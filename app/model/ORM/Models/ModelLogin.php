@@ -15,12 +15,12 @@ use Nette\Security\IIdentity;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property-readboolean active
- * @property-readinteger login_id
- * @property-readDateTime last_login
- * @property-readstring hash
- * @property-readActiveRow person
- * @property-readstring login
+ * @property-read boolean active
+ * @property-read integer login_id
+ * @property-read DateTime last_login
+ * @property-read string hash
+ * @property-read ActiveRow person
+ * @property-read string login
  */
 class ModelLogin extends AbstractModelSingle implements IIdentity {
 

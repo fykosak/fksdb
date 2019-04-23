@@ -9,11 +9,11 @@ use Nette\Database\Table\ActiveRow;
 /**
  * Class ModelPaymentAccommodation
  * @package FKSDB\ORM
- * @property-readActiveRow payment
- * @property-readint payment_id
- * @property-readActiveRow event_person_accommodation
- * @property-readint event_person_accommodation_id
- * @property-readint payment_accommodation_id
+ * @property-read ActiveRow payment
+ * @property-read int payment_id
+ * @property-read ActiveRow event_person_accommodation
+ * @property-read int event_person_accommodation_id
+ * @property-read int payment_accommodation_id
  */
 class ModelPaymentAccommodation extends AbstractModelSingle {
     /**

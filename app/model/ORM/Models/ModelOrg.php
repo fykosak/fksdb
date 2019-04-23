@@ -9,11 +9,11 @@ use Nette\Security\IResource;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property-readActiveRow contest
- * @property-readActiveRow person
- * @property-readint since
- * @property-readint contest_id
- * @property-readint|null until
+ * @property-read ActiveRow contest
+ * @property-read ActiveRow person
+ * @property-read int since
+ * @property-read int contest_id
+ * @property-read int|null until
  */
 class ModelOrg extends AbstractModelSingle implements IResource {
 

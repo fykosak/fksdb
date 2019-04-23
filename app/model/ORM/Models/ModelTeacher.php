@@ -10,12 +10,12 @@ use Nette\Security\IResource;
 /**
  *
  * @author Michal Červeňák <miso@fykos.cz>
- * @property-readDateTime until
- * @property-readDateTime since
- * @property-readinteger school_id
- * @property-readinteger person_id
- * @property-readActiveRow person
- * @property-readActiveRow school
+ * @property-read DateTime until
+ * @property-read DateTime since
+ * @property-read integer school_id
+ * @property-read integer person_id
+ * @property-read ActiveRow person
+ * @property-read ActiveRow school
  */
 class ModelTeacher extends AbstractModelSingle implements IResource {
     /**

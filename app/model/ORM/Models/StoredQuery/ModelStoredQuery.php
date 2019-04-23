@@ -13,7 +13,7 @@ use Nette\Security\IResource;
  * @todo Better (general) support for related collection setter.
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property-readstring php_post_proc
+ * @property-read string php_post_proc
  */
 class ModelStoredQuery extends AbstractModelSingle implements IResource {
 

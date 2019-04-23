@@ -10,15 +10,15 @@ use Nette\Utils\DateTime;
  *
  * @author Lukáš Timko <lukast@fykos.cz>
  * @author Michal Červeňák <miso@fykos.cz>
- * @property-readinteger e_fyziklani_team_id
- * @property-readinteger points
- * @property-readinteger fyziklani_task_id
- * @property-readinteger fyziklani_submit_id
- * @property-readinteger task_id
- * @property-readActiveRow e_fyziklani_team
- * @property-readActiveRow fyziklani_task
- * @property-readDateTime created
- * @property-readDateTime modified
+ * @property-read integer e_fyziklani_team_id
+ * @property-read integer points
+ * @property-read integer fyziklani_task_id
+ * @property-read integer fyziklani_submit_id
+ * @property-read integer task_id
+ * @property-read ActiveRow e_fyziklani_team
+ * @property-read ActiveRow fyziklani_task
+ * @property-read DateTime created
+ * @property-read DateTime modified
  */
 class ModelFyziklaniSubmit extends AbstractModelSingle {
 

@@ -7,11 +7,11 @@ use Nette\Database\Table\ActiveRow;
 
 /**
  * Class FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition
- * @property-readinteger room_id
- * @property-readinteger e_fyziklani_team_id
- * @property-readinteger row
- * @property-readinteger col
- * @property-readActiveRow room
+ * @property-read integer room_id
+ * @property-read integer e_fyziklani_team_id
+ * @property-read integer row
+ * @property-read integer col
+ * @property-read ActiveRow room
  */
 class ModelFyziklaniTeamPosition extends AbstractModelSingle {
     /**

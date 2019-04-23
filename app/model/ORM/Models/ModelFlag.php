@@ -6,7 +6,7 @@ use FKSDB\ORM\AbstractModelSingle;
 /**
  *
  * @author Lukáš Timko <lukast@fykos.cz>
- * @property-readint fid
+ * @property-read int fid
  */
 class ModelFlag extends AbstractModelSingle {
 
