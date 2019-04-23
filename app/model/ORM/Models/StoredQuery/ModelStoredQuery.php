@@ -13,7 +13,7 @@ use Nette\Security\IResource;
  * @todo Better (general) support for related collection setter.
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property string php_post_proc
+ * @property-read string php_post_proc
  */
 class ModelStoredQuery extends AbstractModelSingle implements IResource {
 
@@ -37,7 +37,7 @@ class ModelStoredQuery extends AbstractModelSingle implements IResource {
             }
             $result = [];
             foreach ($this->related(DbNames::TAB_STORED_QUERY_PARAM, 'query_id') as $row) {
-                $result[] = ModelStoredQueryParameter::createFromTableRow($row);
+                $result[] = ModelStoredQueryParameter::createFromActiveRow($row);
             }
             return $result;
         }
@@ -88,7 +88,7 @@ class ModelStoredQuery extends AbstractModelSingle implements IResource {
             $tag->tag_type_id; // stupid touch
             $tagType = $tag->ref(DbNames::TAB_STORED_QUERY_TAG_TYPE, 'tag_type_id');
             $result[] = ModelMStoredQueryTag::createFromExistingModels(
-                ModelStoredQueryTagType::createFromTableRow($tagType), ModelStoredQueryTag::createFromTableRow($tag)
+                ModelStoredQueryTagType::createFromActiveRow($tagType), ModelStoredQueryTag::createFromActiveRow($tag)
             );
         }
         return $result;

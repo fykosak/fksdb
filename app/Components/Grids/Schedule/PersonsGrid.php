@@ -44,7 +44,7 @@ class PersonsGrid extends BaseGrid {
         $this->addColumn('person_schedule_id', _('#'));
 
         $this->addColumn('person', _('Person'))->setRenderer(function ($row) {
-            $model = ModelPersonSchedule::createFromTableRow($row);
+            $model = ModelPersonSchedule::createFromActiveRow($row);
             return $model->getPerson()->getFullName();
         })->setSortable(false);
 
@@ -53,7 +53,7 @@ class PersonsGrid extends BaseGrid {
         $this->addColumnPayment();
 
         $this->addColumn('state', _('State'))->setRenderer(function ($row) {
-            $model = ModelPersonSchedule::createFromTableRow($row);
+            $model = ModelPersonSchedule::createFromActiveRow($row);
             return $model->state;
         });
     }
@@ -64,7 +64,7 @@ class PersonsGrid extends BaseGrid {
     protected function addColumnPayment() {
         $this->addColumn('payment', _('Payment'))
             ->setRenderer(function ($row) {
-                $model = ModelPersonSchedule::createFromTableRow($row);
+                $model = ModelPersonSchedule::createFromActiveRow($row);
                 $modelPayment = $model->getPayment();
                 if (!$modelPayment) {
                     return Html::el('span')->addAttributes(['class' => 'badge badge-danger'])->addText('No payment found');
@@ -80,7 +80,7 @@ class PersonsGrid extends BaseGrid {
         $this->addColumn('role', _('Role'))
             ->setRenderer(function ($row) {
                 $container = Html::el('span');
-                $model = ModelPersonSchedule::createFromTableRow($row);
+                $model = ModelPersonSchedule::createFromActiveRow($row);
                 $person = $model->getPerson();
                 $roles = $person->getRolesForEvent($model->getScheduleItem()->getGroup()->getEvent());
                 if (!\count($roles)) {

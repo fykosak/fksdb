@@ -179,7 +179,7 @@ abstract class BaseGrid extends Grid {
     protected function addReflectionColumn(string $tableName, string $fieldName, string $modelClassName) {
         $factory = $this->tableReflectionFactory->loadService($tableName, $fieldName);
         $this->addColumn($fieldName, $factory->getTitle())->setRenderer(function ($row) use ($factory, $fieldName, $modelClassName) {
-            $model = $modelClassName::createFromTableRow($row);
+            $model = $modelClassName::createFromActiveRow($row);
             return $factory->renderValue($model, $fieldName, 1);
         });
     }

@@ -8,18 +8,18 @@ use FKSDB\ORM\DbNames;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property string email
- * @property string phone
- * @property string phone_parent_m
- * @property string phone_parent_d
- * @property string born_id
+ * @property-read string email
+ * @property-read string phone
+ * @property-read string phone_parent_m
+ * @property-read string phone_parent_d
+ * @property-read string born_id
  */
 class ModelPersonInfo extends AbstractModelSingle {
     /**
      * @return ModelPerson
      */
     public function getPerson(): ModelPerson {
-        return ModelPerson::createFromTableRow($this->ref(DbNames::TAB_PERSON, 'person_id'));
+        return ModelPerson::createFromActiveRow($this->ref(DbNames::TAB_PERSON, 'person_id'));
     }
 
 }

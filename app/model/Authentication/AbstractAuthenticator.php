@@ -40,8 +40,7 @@ abstract class AbstractAuthenticator /* implements IAuthenticator */
      * @param \FKSDB\ORM\Models\ModelLogin $login
      */
     protected function logAuthentication(ModelLogin $login) {
-        $login->last_login = DateTime::from(time());
-        $this->serviceLogin->save($login);
+        $this->serviceLogin->updateModel2($login, ['last_login' => DateTime::from(time())]);
     }
 
 }

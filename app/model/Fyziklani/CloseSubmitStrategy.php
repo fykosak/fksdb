@@ -82,7 +82,7 @@ class CloseSubmitStrategy {
     private function saveResults($data, $total, &$msg = null) {
         $msg = '';
         foreach ($data as $index => &$teamData) {
-            $team = ModelFyziklaniTeam::createFromTableRow($this->serviceFyziklaniTeam->findByPrimary($teamData['e_fyziklani_team_id']));
+            $team = ModelFyziklaniTeam::createFromActiveRow($this->serviceFyziklaniTeam->findByPrimary($teamData['e_fyziklani_team_id']));
             if ($total) {
                 $this->serviceFyziklaniTeam->updateModel($team, ['rank_total' => $index + 1]);
             } else {
@@ -102,7 +102,7 @@ class CloseSubmitStrategy {
     private function getTeamsStats($teams): array {
         $teamsData = [];
         foreach ($teams as $row) {
-            $team = ModelFyziklaniTeam::createFromTableRow($row);
+            $team = ModelFyziklaniTeam::createFromActiveRow($row);
             $teamData = [];
             $teamId = $team->e_fyziklani_team_id;
             $teamData['e_fyziklani_team_id'] = $teamId;
@@ -153,12 +153,12 @@ class CloseSubmitStrategy {
      * @return array
      */
     protected function getAllSubmits(int $teamId): array {
-        $team = ModelFyziklaniTeam::createFromTableRow($this->serviceFyziklaniTeam->findByPrimary($teamId));
+        $team = ModelFyziklaniTeam::createFromActiveRow($this->serviceFyziklaniTeam->findByPrimary($teamId));
         $arraySubmits = [];
         $sum = 0;
         $count = 0;
         foreach ($team->getSubmits() as $row) {
-            $submit = ModelFyziklaniSubmit::createFromTableRow($row);
+            $submit = ModelFyziklaniSubmit::createFromActiveRow($row);
             if ($submit->points !== null) {
                 $sum += $submit->points;
                 $count++;

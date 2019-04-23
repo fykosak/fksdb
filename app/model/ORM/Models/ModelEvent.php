@@ -16,16 +16,16 @@ use Nette\Utils\DateTime;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property integer event_year
- * @property integer year
- * @property string name
- * @property integer event_id
- * @property ActiveRow event_type
- * @property integer event_type_id
- * @property DateTime begin
- * @property DateTime end
- * @property DateTime registration_begin
- * @property DateTime registration_end
+ * @property-read integer event_year
+ * @property-read integer year
+ * @property-read string name
+ * @property-read integer event_id
+ * @property-read ActiveRow event_type
+ * @property-read integer event_type_id
+ * @property-read DateTime begin
+ * @property-read DateTime end
+ * @property-read DateTime registration_begin
+ * @property-read DateTime registration_end
  */
 class ModelEvent extends AbstractModelSingle implements IResource {
 
@@ -54,7 +54,7 @@ class ModelEvent extends AbstractModelSingle implements IResource {
      * @return ModelEventType
      */
     public function getEventType(): ModelEventType {
-        return ModelEventType::createFromTableRow($this->event_type);
+        return ModelEventType::createFromActiveRow($this->event_type);
     }
 
     /**
@@ -63,7 +63,7 @@ class ModelEvent extends AbstractModelSingle implements IResource {
     public function getEventAccommodationsAsArray(): array {
         $data = [];
         foreach ($this->related(DbNames::TAB_EVENT_ACCOMMODATION) as $item) {
-            $data[] = ModelEventAccommodation::createFromTableRow($item);
+            $data[] = ModelEventAccommodation::createFromActiveRow($item);
         }
         return $data;
     }
@@ -72,7 +72,7 @@ class ModelEvent extends AbstractModelSingle implements IResource {
      * @return ModelContest
      */
     public function getContest(): ModelContest {
-        return ModelContest::createFromTableRow($this->getEventType()->ref(DbNames::TAB_CONTEST, 'contest_id'));
+        return ModelContest::createFromActiveRow($this->getEventType()->ref(DbNames::TAB_CONTEST, 'contest_id'));
     }
 
     /**
@@ -118,7 +118,7 @@ class ModelEvent extends AbstractModelSingle implements IResource {
         if (!$gameSetup) {
             throw new NotSetGameParametersException(_('Herné parametre niesu nastavené'), 404);
         }
-        return ModelFyziklaniGameSetup::createFromTableRow($gameSetup);
+        return ModelFyziklaniGameSetup::createFromActiveRow($gameSetup);
     }
 
     /**

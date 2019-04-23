@@ -294,7 +294,7 @@ class StalkingPresenter extends BasePresenter {
             if (!$row) {
                 throw new BadRequestException(_('Osoba neexistuje'), 404);
             }
-            $this->person = ModelPerson::createFromTableRow($row);
+            $this->person = ModelPerson::createFromActiveRow($row);
         }
 
         return $this->person;

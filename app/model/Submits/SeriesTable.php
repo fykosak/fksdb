@@ -164,7 +164,7 @@ class SeriesTable {
         // store submits in 2D hash for better access
         $submitsTable = [];
         foreach ($submits as $row) {
-            $submit = ModelSubmit::createFromTableRow($row);
+            $submit = ModelSubmit::createFromActiveRow($row);
             if (!isset($submitsTable[$submit->ct_id])) {
                 $submitsTable[$submit->ct_id] = [];
             }
@@ -181,7 +181,7 @@ class SeriesTable {
         $contestants = $this->getContestants();
         $result = [];
         foreach ($contestants as $contestantRow) {
-            $contestant = ModelContestant::createFromTableRow($contestantRow);
+            $contestant = ModelContestant::createFromActiveRow($contestantRow);
             $ctId = $contestant->ct_id;
             if (isset($submitsTable[$ctId])) {
                 $result[$ctId] = [self::FORM_SUBMIT => $submitsTable[$ctId]];

@@ -54,7 +54,7 @@ class GroupsGrid extends BaseGrid {
             return $row->end->format('d. m. Y H:i');
         });
         $this->addColumn('items_count', _('Items count'))->setRenderer(function ($row) {
-            $model = ModelScheduleGroup::createFromTableRow($row);
+            $model = ModelScheduleGroup::createFromActiveRow($row);
             return $model->getItems()->count();
         });
 

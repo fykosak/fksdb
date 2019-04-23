@@ -73,7 +73,7 @@ class EditSubmitControl extends Control {
         if (!$this->submit) {
             throw new BadRequestException(_('Neexistující submit.'), 404);
         }
-        $this->submit = ModelFyziklaniSubmit::createFromTableRow($row);
+        $this->submit = ModelFyziklaniSubmit::createFromActiveRow($row);
 
         $team = $this->submit->getTeam();
         if (!$team->hasOpenSubmitting()) {

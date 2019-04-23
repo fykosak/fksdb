@@ -7,9 +7,9 @@ use FKSDB\ORM\AbstractModelSingle;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property int contest_id`
- * @property int year
- * @property int ac_year
+ * @property-read int contest_id`
+ * @property-read int year
+ * @property-read int ac_year
  */
 class ModelContestYear extends AbstractModelSingle {
 

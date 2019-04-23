@@ -10,17 +10,17 @@ use Nette\Database\Table\Selection;
 use Nette\Utils\DateTime;
 
 /**
- * @property-read string category
- * @property-read string name
- * @property-read integer e_fyziklani_team_id
- * @property-read integer event_id
- * @property-read integer points
- * @property-read string status
- * @property-read DateTime created
- * @property-read string phone
- * @property-read bool force_a
- * @property-read string password
- * @property-read ActiveRow event
+ * @property-read  string category
+ * @property-read  string name
+ * @property-read  integer e_fyziklani_team_id
+ * @property-read  integer event_id
+ * @property-read  integer points
+ * @property-read  string status
+ * @property-read  DateTime created
+ * @property-read  string phone
+ * @property-read  bool force_a
+ * @property-read  string password
+ * @property-read  ActiveRow event
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @author Michal Červeňák <miso@fykos.cz>
@@ -39,7 +39,7 @@ class ModelFyziklaniTeam extends AbstractModelSingle {
      * @return ModelEvent
      */
     public function getEvent(): ModelEvent {
-        return ModelEvent::createFromTableRow($this->event);
+        return ModelEvent::createFromActiveRow($this->event);
     }
 
     /**
@@ -62,7 +62,7 @@ class ModelFyziklaniTeam extends AbstractModelSingle {
     public function getPosition() {
         $row = $this->related(DbNames::TAB_FYZIKLANI_TEAM_POSITION, 'e_fyziklani_team_id')->fetch();
         if ($row) {
-            return ModelFyziklaniTeamPosition::createFromTableRow($row);
+            return ModelFyziklaniTeamPosition::createFromActiveRow($row);
         }
         return null;
     }

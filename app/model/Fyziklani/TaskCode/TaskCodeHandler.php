@@ -98,7 +98,7 @@ class TaskCodeHandler {
             $this->serviceFyziklaniSubmit->save($submit);
         }
         $teamRow = $this->serviceFyziklaniTeam->findByPrimary($teamId);
-        $team = ModelFyziklaniTeam::createFromTableRow($teamRow);
+        $team = ModelFyziklaniTeam::createFromActiveRow($teamRow);
 
         $taskName = $this->serviceFyziklaniTask->findByLabel($taskLabel, $this->event)->name;
 
@@ -150,7 +150,7 @@ class TaskCodeHandler {
             throw new TaskCodeException(\sprintf(_('Tým %s neexistuje.'), $teamId));
         }
         $teamRow = $this->serviceFyziklaniTeam->findByPrimary($teamId);
-        return ModelFyziklaniTeam::createFromTableRow($teamRow);
+        return ModelFyziklaniTeam::createFromActiveRow($teamRow);
     }
 
     /**

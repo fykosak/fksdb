@@ -50,7 +50,7 @@ abstract class AggregatedPersonSource extends Object implements IHolderSource {
     private function loadData() {
         $this->holders = [];
         foreach ($this->events as $eventKey => $row) {
-            $event = ModelEvent::createFromTableRow($row);
+            $event = ModelEvent::createFromActiveRow($row);
             $result = $this->processEvent($event);
 
             if ($result instanceof SingleEventSource) {
