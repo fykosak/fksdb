@@ -8,15 +8,15 @@ use Nette\Utils\DateTime;
 /**
  * Class ModelFyziklaniGameSetup
  * @package FKSDB\ORM\Models\Fyziklani
- * @property int event_id
- * @property DateTime game_start
- * @property DateTime game_end
- * @property DateTime result_display
- * @property DateTime result_hide
- * @property int refresh_delay
- * @property bool result_hard_display
- * @property int tasks_on_board
- * @property string available_points
+ * @property-readint event_id
+ * @property-readDateTime game_start
+ * @property-readDateTime game_end
+ * @property-readDateTime result_display
+ * @property-readDateTime result_hide
+ * @property-readint refresh_delay
+ * @property-readbool result_hard_display
+ * @property-readint tasks_on_board
+ * @property-readstring available_points
  */
 class ModelFyziklaniGameSetup extends AbstractModelSingle {
     /**

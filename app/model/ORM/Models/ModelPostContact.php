@@ -7,7 +7,7 @@ use FKSDB\ORM\AbstractModelSingle;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property \Nette\Database\Table\ActiveRow address
+ * @property-read\Nette\Database\Table\ActiveRow address
  */
 class ModelPostContact extends AbstractModelSingle {
     const TYPE_DELIVERY = 'D';

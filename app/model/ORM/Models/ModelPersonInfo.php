@@ -8,11 +8,11 @@ use FKSDB\ORM\DbNames;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property string email
- * @property string phone
- * @property string phone_parent_m
- * @property string phone_parent_d
- * @property string born_id
+ * @property-readstring email
+ * @property-readstring phone
+ * @property-readstring phone_parent_m
+ * @property-readstring phone_parent_d
+ * @property-readstring born_id
  */
 class ModelPersonInfo extends AbstractModelSingle {
     /**

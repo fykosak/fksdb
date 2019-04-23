@@ -6,10 +6,10 @@ use FKSDB\ORM\AbstractModelSingle;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property integer region_id
- * @property string country_iso
- * @property string nuts
- * @property string name
+ * @property-readinteger region_id
+ * @property-readstring country_iso
+ * @property-readstring nuts
+ * @property-readstring name
  */
 class ModelRegion extends AbstractModelSingle {
 

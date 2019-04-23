@@ -17,22 +17,22 @@ use Nette\Security\IResource;
 /**
  *
  * @author Michal Červeňák <miso@fykos.cz>
- * @property integer person_id
- * @property ActiveRow person
- * @property integer payment_id
- * @property ActiveRow event
- * @property integer event_id
- * @property string state
- * @property float price
- * @property string currency
- * @property DateTime created
- * @property DateTime received
- * @property string constant_symbol
- * @property string variable_symbol
- * @property string specific_symbol
- * @property string bank_account
- * @property string iban
- * @property string swift
+ * @property-readinteger person_id
+ * @property-readActiveRow person
+ * @property-readinteger payment_id
+ * @property-readActiveRow event
+ * @property-readinteger event_id
+ * @property-readstring state
+ * @property-readfloat price
+ * @property-readstring currency
+ * @property-readDateTime created
+ * @property-readDateTime received
+ * @property-readstring constant_symbol
+ * @property-readstring variable_symbol
+ * @property-readstring specific_symbol
+ * @property-readstring bank_account
+ * @property-readstring iban
+ * @property-readstring swift
  */
 class ModelPayment extends AbstractModelSingle implements IResource, IStateModel, IEventReferencedModel, IPaymentModel {
     const STATE_WAITING = 'waiting'; // waiting for confirm payment

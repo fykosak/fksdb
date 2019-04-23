@@ -8,8 +8,8 @@ use Nette\Database\Table\ActiveRow;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property ActiveRow contest
- * @property integer contest_id
+ * @property-readActiveRow contest
+ * @property-readinteger contest_id
  */
 class ModelEventType extends AbstractModelSingle {
 

@@ -8,11 +8,11 @@ use Utils;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property integer series
- * @property string label
- * @property string name_cs
- * @property int task_id
- * @property int points
+ * @property-readinteger series
+ * @property-readstring label
+ * @property-readstring name_cs
+ * @property-readint task_id
+ * @property-readint points
  */
 class ModelTask extends AbstractModelSingle {
 

@@ -9,11 +9,11 @@ use Nette\Security\IResource;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property ActiveRow person
- * @property ActiveRow contest
- * @property int ct_id
- * @property int contest_id
- * @property int year
+ * @property-readActiveRow person
+ * @property-readActiveRow contest
+ * @property-readint ct_id
+ * @property-readint contest_id
+ * @property-readint year
  */
 class ModelContestant extends AbstractModelSingle implements IResource {
     /**

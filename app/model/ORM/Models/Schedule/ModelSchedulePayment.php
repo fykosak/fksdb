@@ -9,8 +9,8 @@ use Nette\Database\Table\ActiveRow;
 /**
  * Class ModelSchedulePayment
  * @package FKSDB\ORM\Models\Schedule
- * @property ActiveRow payment
- * @property ActiveRow person_schedule
+ * @property-readActiveRow payment
+ * @property-readActiveRow person_schedule
  */
 class ModelSchedulePayment extends AbstractModelSingle {
     /**

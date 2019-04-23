@@ -6,8 +6,8 @@ use FKSDB\ORM\AbstractModelSingle;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property integer address_id
- * @property string postal_code
+ * @property-readinteger address_id
+ * @property-readstring postal_code
  */
 class ModelAddress extends AbstractModelSingle {
 

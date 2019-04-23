@@ -9,8 +9,8 @@ use Nette\Security\IResource;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property ActiveRow address
- * @property string name_abbrev
+ * @property-readActiveRow address
+ * @property-readstring name_abbrev
  */
 class ModelSchool extends AbstractModelSingle implements IResource {
     /**

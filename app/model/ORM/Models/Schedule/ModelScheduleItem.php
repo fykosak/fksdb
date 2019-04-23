@@ -14,15 +14,15 @@ use Nette\NotImplementedException;
 /**
  * Class ModelScheduleItem
  * @package FKSDB\ORM\Models\Schedule
- * @property ActiveRow schedule_group
- * @property float price_eur
- * @property float price_czk
- * @property int capacity
- * @property int schedule_item_id
- * @property int schedule_group_id
- * @property string name_cs
- * @property string name_en
- * @property int require_id_number
+ * @property-readActiveRow schedule_group
+ * @property-readfloat price_eur
+ * @property-readfloat price_czk
+ * @property-readint capacity
+ * @property-readint schedule_item_id
+ * @property-readint schedule_group_id
+ * @property-readstring name_cs
+ * @property-readstring name_en
+ * @property-readint require_id_number
  */
 class ModelScheduleItem extends AbstractModelSingle {
     /**

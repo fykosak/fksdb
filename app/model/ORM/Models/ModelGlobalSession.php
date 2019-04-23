@@ -7,10 +7,10 @@ use FKSDB\ORM\AbstractModelSingle;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property DateTime until
- * @property DateTime since
- * @property integer login_id
- * @property integer session_id
+ * @property-readDateTime until
+ * @property-readDateTime since
+ * @property-readinteger login_id
+ * @property-readinteger session_id
  *
  */
 class ModelGlobalSession extends AbstractModelSingle {

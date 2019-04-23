@@ -6,9 +6,9 @@ use FKSDB\ORM\AbstractModelSingle;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property integer contribution_id
- * @property int task_id
- * @property int person_id
+ * @property-readinteger contribution_id
+ * @property-readint task_id
+ * @property-readint person_id
  */
 class ModelTaskContribution extends AbstractModelSingle {
 

@@ -6,9 +6,9 @@ use FKSDB\ORM\AbstractModelSingle;
 /**
  *
  * @author Lukáš Timko <lukast@fykos.cz>
- * @property string name
- * @property string label
- * @property integer fyziklani_task_id
+ * @property-readstring name
+ * @property-readstring label
+ * @property-readinteger fyziklani_task_id
  */
 class ModelFyziklaniTask extends AbstractModelSingle {
 

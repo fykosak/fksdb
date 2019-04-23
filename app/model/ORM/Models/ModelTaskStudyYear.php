@@ -6,7 +6,7 @@ use FKSDB\ORM\AbstractModelSingle;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property integer study_year
+ * @property-readinteger study_year
  */
 class ModelTaskStudyYear extends AbstractModelSingle {
 

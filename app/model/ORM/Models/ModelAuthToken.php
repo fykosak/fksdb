@@ -8,10 +8,10 @@ use Nette\Database\Table\ActiveRow;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property string token
- * @property ActiveRow login
- * @property string data
- * @property string type
+ * @property-readstring token
+ * @property-readActiveRow login
+ * @property-readstring data
+ * @property-readstring type
  */
 class ModelAuthToken extends AbstractModelSingle {
     /** @const The first login for setting up a password. */

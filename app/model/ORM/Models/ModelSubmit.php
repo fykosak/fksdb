@@ -10,14 +10,14 @@ use Nette\Security\IResource;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property DateTime submitted_on
- * @property integer submit_id
- * @property string source
- * @property string note
- * @property integer raw_points
- * @property int points
- * @property int ct_id
- * @property int task_id
+ * @property-readDateTime submitted_on
+ * @property-readinteger submit_id
+ * @property-readstring source
+ * @property-readstring note
+ * @property-readinteger raw_points
+ * @property-readint points
+ * @property-readint ct_id
+ * @property-readint task_id
  */
 class ModelSubmit extends AbstractModelSingle implements IResource {
 

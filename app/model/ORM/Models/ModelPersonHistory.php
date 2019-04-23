@@ -8,10 +8,10 @@ use FKSDB\ORM\DbNames;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property integer ac_year
- * @property integer school_id
- * @property string class
- * @property integer study_year
+ * @property-readinteger ac_year
+ * @property-readinteger school_id
+ * @property-readstring class
+ * @property-readinteger study_year
  */
 class ModelPersonHistory extends AbstractModelSingle {
     /**

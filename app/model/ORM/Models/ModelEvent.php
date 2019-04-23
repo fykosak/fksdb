@@ -16,16 +16,16 @@ use Nette\Utils\DateTime;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property integer event_year
- * @property integer year
- * @property string name
- * @property integer event_id
- * @property ActiveRow event_type
- * @property integer event_type_id
- * @property DateTime begin
- * @property DateTime end
- * @property DateTime registration_begin
- * @property DateTime registration_end
+ * @property-readinteger event_year
+ * @property-readinteger year
+ * @property-readstring name
+ * @property-readinteger event_id
+ * @property-readActiveRow event_type
+ * @property-readinteger event_type_id
+ * @property-readDateTime begin
+ * @property-readDateTime end
+ * @property-readDateTime registration_begin
+ * @property-readDateTime registration_end
  */
 class ModelEvent extends AbstractModelSingle implements IResource {
 
