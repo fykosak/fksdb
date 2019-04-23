@@ -2,6 +2,7 @@
 
 namespace Nextras\MailPanel;
 
+use Nette\Diagnostics\IBarPanel;
 use Nette\Http\Request;
 use Nette\Latte\Engine;
 use Nette\Object;
@@ -15,7 +16,6 @@ use Nette\Templating\FileTemplate;
  * @author Jan Marek
  * @copyright New BSD
  */
-
 class MailPanel extends Object implements \Tracy\IBarPanel
 {
 	/** @const int */

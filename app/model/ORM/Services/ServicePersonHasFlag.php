@@ -7,7 +7,7 @@ use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelPersonHasFlag;
-use Nette\ArrayHash;
+use Nette\Utils\ArrayHash;
 
 /**
  * @author Lukáš Timko <lukast@fykos.cz>
@@ -38,4 +38,19 @@ class ServicePersonHasFlag extends AbstractServiceSingle {
         $data['modified'] = new DateTime();
         return parent::createNew($data);
     }
+
+    /**
+     * @param IModel $model
+     * @param array $data
+     * @param bool $alive
+     * @return mixed|void
+     */
+    public function updateModel(IModel $model, $data, $alive = true) {
+        if ($data === null) {
+            $data = new ArrayHash();
+        }
+        $data['modified'] = new DateTime();
+        return parent::updateModel($model, $data);
+    }
+
 }

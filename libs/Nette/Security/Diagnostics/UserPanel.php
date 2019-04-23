@@ -20,7 +20,6 @@ use Tracy\IBarPanel;
  *
  * @author     David Grudl
  */
-
 class UserPanel extends Nette\Object implements IBarPanel
 {
 	/** @var Nette\Security\User */
@@ -55,4 +54,5 @@ class UserPanel extends Nette\Object implements IBarPanel
 		require __DIR__ . '/templates/UserPanel.panel.phtml';
 		return ob_get_clean();
 	}
+
 }

@@ -7,7 +7,8 @@ use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Models\ModelPaymentAccommodation;
 use FKSDB\Payment\Handler\DuplicateAccommodationPaymentException;
-use Nette\ArrayHash;
+use FKSDB\Submits\StorageException;
+use Nette\Utils\ArrayHash;
 
 /**
  * Class ServicePaymentAccommodation
@@ -54,6 +55,9 @@ class ServicePaymentAccommodation extends AbstractServiceSingle {
             } else {
                 $row->delete();
             }
+        }
+        if (!$this->connection->inTransaction()) {
+            throw new StorageException(_('Not in transaction!'));
         }
         foreach ($newAccommodationIds as $id) {
 

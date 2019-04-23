@@ -16,9 +16,9 @@ use FKSDB\ORM\Services\ServicePersonInfo;
 use FKSDB\Submits\StorageException;
 use FormUtils;
 use ModelException;
-use Nette\ArrayHash;
 use Nette\InvalidArgumentException;
 use Nette\Object;
+use Nette\Utils\ArrayHash;
 use Nette\Utils\JsonException;
 use ServiceMPersonHasFlag;
 use ServiceMPostContact;
@@ -380,8 +380,11 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
 
     private function beginTransaction() {
         $connection = $this->servicePerson->getConnection();
-        $connection->beginTransaction();
-
+        if (!$connection->inTransaction()) {
+            $connection->beginTransaction();
+        } else {
+            $this->outerTransaction = true;
+        }
     }
 
     private function commit() {

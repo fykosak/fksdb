@@ -148,9 +148,9 @@ abstract class Machine {
      * @throws \Exception
      */
     private function execute(Transition $transition, IStateModel $model = null): IStateModel {
-
-        $this->connection->beginTransaction();
-
+        if (!$this->connection->inTransaction()) {
+            $this->connection->beginTransaction();
+        }
         try {
             $transition->beforeExecute($model);
         } catch (\Exception $exception) {
