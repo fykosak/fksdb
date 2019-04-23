@@ -3,7 +3,6 @@
 namespace FKSDB\model\Fyziklani\Rooms;
 
 use FKSDB\Logging\ILogger;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\Utils\CSVParser;
@@ -55,9 +54,9 @@ class RoomsFromCSV extends Stage {
         }
 
         $teams = $this->serviceTeam->getTable()
-            ->where('event_id', $this->event->event_id)
-            ->where('status!=?', 'cancelled')
-            ->fetchPairs('e_fyziklani_team_id');
+                ->where('event_id', $this->event->event_id)
+                ->where('status!=?', 'cancelled')
+                ->fetchPairs('e_fyziklani_team_id');
         $updatedTeams = [];
 
         $this->serviceTeam->getConnection()->beginTransaction();
@@ -70,8 +69,8 @@ class RoomsFromCSV extends Stage {
                 $this->getPipeline()->log(sprintf(_('Přeskočeno neexistující ID týmu %d.'), $teamId), ILogger::WARNING);
                 continue;
             }
-            $team = ModelFyziklaniTeam::createFromTableRow($teams[$teamId]);
-            $team->update([
+            $team = $teams[$teamId];
+            $this->serviceTeam->updateModel($team, [
                 'room' => $room,
             ]);
             $this->serviceTeam->save($team);

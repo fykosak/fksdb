@@ -170,7 +170,7 @@ class SelectForm extends Control {
         } else {
             $model = $this->model;
         }
-        $model->update($model, [
+        $this->servicePayment->updateModel($model, [
             'currency' => $values->currency,
             'person_id' => $values->offsetExists('person_id') ? $values->person_id : $model->person_id,
         ]);

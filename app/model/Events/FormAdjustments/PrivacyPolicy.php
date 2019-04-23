@@ -10,9 +10,9 @@ use FKSDB\Components\Forms\Factories\PersonInfo\AgreedField;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Services\ServicePersonInfo;
 use FormUtils;
-use Nette\ArrayHash;
 use Nette\Forms\Form;
 use Nette\Object;
+use Nette\Utils\ArrayHash;
 
 /**
  * Creates required checkbox for whole application and then
@@ -78,7 +78,7 @@ class PrivacyPolicy extends Object implements IProcessing, IFormAdjustment {
                     $personId = $value;
                     $personInfo = $this->servicePersonInfo->findByPrimary($personId);
                     if ($personInfo) {
-                        $personInfo->update(['agreed' => 1]);
+                        $this->servicePersonInfo->updateModel($personInfo, array('agreed' => 1));
                         // This is done in ApplicationHandler transaction, still can be rolled back.
                         $this->servicePersonInfo->save($personInfo);
                         $values[$key . '_1']['person_info']['agreed'] = 1;

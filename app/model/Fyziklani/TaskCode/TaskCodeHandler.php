@@ -87,7 +87,7 @@ class TaskCodeHandler {
                 'created' => null
             ]);
         } else {
-            $submit->update( [
+            $this->serviceFyziklaniSubmit->updateModel($submit, [
                 'points' => $points,
                 /* ugly, exclude previous value of `modified` from query
                  * so that `modified` is set automatically by DB

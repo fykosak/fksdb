@@ -18,10 +18,10 @@ use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Models\ModelEvent;
 use FormUtils;
-use Nette\ArrayHash;
 use Nette\Database\Connection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
+use Nette\Utils\ArrayHash;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -284,7 +284,9 @@ class ApplicationHandler {
     }
 
     public function beginTransaction() {
+        if (!$this->connection->inTransaction()) {
             $this->connection->beginTransaction();
+        }
     }
 
     private function rollback() {
@@ -297,7 +299,7 @@ class ApplicationHandler {
      * @param bool $final
      */
     public function commit($final = false) {
-        if ($this->errorMode == self::ERROR_ROLLBACK || $final) {
+        if ($this->connection->inTransaction() && ($this->errorMode == self::ERROR_ROLLBACK || $final)) {
             $this->connection->commit();
         }
     }

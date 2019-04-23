@@ -58,7 +58,7 @@ class FyziklaniTaskImportProcessor {
                     ]);
                     $messages[] = [sprintf(_('Úloha %s "%s" bola vložena'), $row['label'], $row['name']), \BasePresenter::FLASH_SUCCESS];
                 } elseif ($values->state == TaskPresenter::IMPORT_STATE_UPDATE_N_INSERT) {
-                        $task->update([
+                        $this->serviceFyziklaniTask->updateModel($task, [
                             'label' => $row['label'],
                             'name' => $row['name']
                         ]);

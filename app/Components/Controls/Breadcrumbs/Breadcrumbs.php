@@ -10,6 +10,7 @@ use Nette\Application\Request as AppRequest;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Presenter;
 use Nette\Application\UI\PresenterComponentReflection;
+use Tracy\Debugger;
 use Nette\Http\Request as HttpRequest;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
@@ -17,7 +18,7 @@ use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use Nette\Templating\FileTemplate;
 use Nette\Utils\Random;
-use Tracy\Debugger;
+use Nette\Utils\Strings;
 use Utils;
 
 /**
@@ -110,11 +111,11 @@ class Breadcrumbs extends Control {
 
     public function reset() {
         foreach (array(
-                     self::SECTION_BACKIDS,
-                     self::SECTION_REQUESTS,
-                     self::SECTION_REVERSE,
-                     self::SECTION_PATH_REVERSE,
-                 ) as $sectionName) {
+    self::SECTION_BACKIDS,
+    self::SECTION_REQUESTS,
+    self::SECTION_REVERSE,
+    self::SECTION_PATH_REVERSE,
+        ) as $sectionName) {
             $this->session->getSection($sectionName)->remove();
         }
     }
@@ -129,9 +130,9 @@ class Breadcrumbs extends Control {
         $path = [];
         foreach ($this->getTraversePath($request) as $naviRequest) {
             $url = $this->router->constructUrl($naviRequest->request, $this->httpRequest->getUrl());
-            $path[] = (object)array(
-                'url' => $url,
-                'title' => $naviRequest->title,
+            $path[] = (object) array(
+                        'url' => $url,
+                        'title' => $naviRequest->title,
             );
         }
         /**
