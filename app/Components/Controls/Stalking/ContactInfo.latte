@@ -5,61 +5,17 @@
             <li class="list-group-item">
                 {control stringValue $info,_('Email'),email}
             </li>
+
             <li class="list-group-item">
-                {*control phoneValue $info,_('Bank account'),account*}
-                <div class="row">
-                    <span class="col-5"><b>{_'Phone'}</b></span>
-                    <div class="col-7">
-                        {if $mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL}
-                            {if (is_null($info->phone))}
-                                {control notSet}
-                            {else}
-                                {\FKSDB\Components\Controls\PhoneNumber\PhoneNumberFactory::format($info->phone)}
-                            {/if}
-                        {else}
-                            {control permissionDenied}
-                        {/if}
-                    </div>
-                </div>
+                {control phoneValue $info,_('Phone'),phone,($mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL)}
             </li>
-            {*<li class="list-group-item">
-                {if $mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL}
-                    {control phoneValue $info,_('Phone parent mum'),phone_parent_m}
-                {else}
-                    {control isSetValue $info,_('Phone parent mum'),phone_parent_m}
-                {/if}
-            </li>*}
+
             <li class="list-group-item">
-                <div class="row">
-                    <span class="col-5"><b>{_'Phone parent mum'}</b></span>
-                    <div class="col-7">
-                        {if $mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL}
-                            {if (is_null($info->phone_parent_m))}
-                                {control notSet}
-                            {else}
-                                {\FKSDB\Components\Controls\PhoneNumber\PhoneNumberFactory::format($info->phone_parent_m)}
-                            {/if}
-                        {else}
-                            {control permissionDenied}
-                        {/if}
-                    </div>
-                </div>
+                {control phoneValue $info,_('Phone parent mum'),phone_parent_m,($mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL)}
             </li>
+
             <li class="list-group-item">
-                <div class="row">
-                    <span class="col-5"><b>{_'Phone parent dad'}</b></span>
-                    <div class="col-7">
-                        {if $mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL}
-                            {if (is_null($info->phone_parent_d))}
-                                {control notSet}
-                            {else}
-                                {\FKSDB\Components\Controls\PhoneNumber\PhoneNumberFactory::format($info->phone_parent_d)}
-                            {/if}
-                        {else}
-                            {control permissionDenied}
-                        {/if}
-                    </div>
-                </div>
+                {control phoneValue $info,_('Phone parent dad'),phone_parent_d,($mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL)}
             </li>
         {/if}
     </ul>

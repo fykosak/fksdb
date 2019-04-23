@@ -2,25 +2,17 @@
 
 namespace FKSDB\Components\Controls\Helpers\ValuePrinters;
 
-use FKSDB\ORM\AbstractModelSingle;
 use Nette\Templating\FileTemplate;
 
 /**
  * Class BinaryValueControl
  * @property FileTemplate $template
  */
-class PhoneValueControl extends AbstractValue {
+class PhoneValueControl extends PrimitiveValue {
     /**
-     * @param AbstractModelSingle $model
-     * @param string $title
-     * @param string $accessKey
+     * @return string
      */
-    public function render(AbstractModelSingle $model, string $title, string $accessKey) {
-        $this->beforeRender($title);;
-        $this->template->model = $model;
-        $this->template->accessKey = $accessKey;
-
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'PhoneNumber.latte');
-        $this->template->render();
+    protected function getTemplatePath(): string {
+        return __DIR__ . DIRECTORY_SEPARATOR . 'PhoneNumber.latte';
     }
 }

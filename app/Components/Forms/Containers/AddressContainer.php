@@ -68,7 +68,7 @@ class AddressContainer extends ModelContainer {
 
     /**
      * @param bool $asArray
-     * @return array|\Nette\ArrayHash
+     * @return array|\Nette\Utils\ArrayHash
      */
     public function getValues($asArray = FALSE) {
         $values = parent::getValues($asArray);

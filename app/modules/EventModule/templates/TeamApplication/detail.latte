@@ -1,0 +1,55 @@
+{block content}
+    {dump $model}
+
+    {foreach ['e_fyziklani_team_id','name','status','phone','note','password','category','created','game_lang','force_a'] as $field}
+        {control valuePrinterRow__e_fyziklani_team__$field $model}
+    {/foreach}
+    <hr/>
+
+    <h3>{_'Rank & points'}</h3>
+    {if $rankVisible}
+        {foreach ['rank_category','rank_total','points'] as $field}
+            {control valuePrinterRow__e_fyziklani_team__$field $model}
+        {/foreach}
+    {else}
+        <span class="badge badge-info">{_'Results is not accessible.'}</span>
+    {/if}
+
+    <hr/>
+
+    <h3>{_'Teacher'}</h3>
+
+    <hr/>
+
+    <h3>{_'Participants'}</h3>
+
+    {var $counter = 0;}
+    {foreach $model->getParticipants() as $row}
+        {var $participant = FKSDB\ORM\Models\ModelEventParticipant::createFromTableRow($row->event_participant)}
+        {var $counter ++}
+        {var $history=$participant->getPerson()->getHistory($acYear)}
+        {var $school = $history->getSchool()}
+
+        <h4>{_'Parcipant'} {$counter}</h4>
+
+        {control valuePrinterRow__event_participant__person_id $participant}
+
+        {control valuePrinterRow__event_participant__status $participant}
+
+        {control valuePrinterRow__person_history__study_year $history}
+
+        {control valuePrinterRow__person_history__school_id $history}
+    {/foreach}
+
+    <hr/>
+
+    <h3>{_'Actions'}</h3>
+
+    {*control applicationComponent:inline edit*}
+    <hr/>
+
+    <h3>{_'Transitions'}</h3>
+
+    {*control applicationComponent:inline transitions*}
+
+{/block}

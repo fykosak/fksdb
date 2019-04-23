@@ -4,9 +4,12 @@ namespace EventModule;
 
 use AuthenticatedPresenter;
 use FKSDB\Components\Controls\LanguageChooser;
+use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Services\ServiceContestYear;
 use FKSDB\ORM\Services\ServiceEvent;
+use FKSDB\YearCalculator;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 
@@ -16,7 +19,10 @@ use Nette\DI\Container;
  * @author Lukáš Timko
  */
 abstract class BasePresenter extends AuthenticatedPresenter {
-
+    /**
+     * @var TableReflectionFactory
+     */
+    protected $tableReflectionFactory;
     /**
      *
      * @var \FKSDB\ORM\Models\ModelEvent
@@ -40,10 +46,41 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     protected $serviceEvent;
 
     /**
+     * @var ServiceContestYear
+     */
+    protected $serviceContestYear;
+
+    /**
+     * @param ServiceContestYear $serviceContestYear
+     */
+    public function injectServiceContestYear(ServiceContestYear $serviceContestYear) {
+        $this->serviceContestYear = $serviceContestYear;
+    }
+
+    /**
+     * @var YearCalculator
+     */
+    protected $yearCalculator;
+
+    /**
+     * @param \FKSDB\YearCalculator $yearCalculator
+     */
+    public function injectYearCalculator(YearCalculator $yearCalculator) {
+        $this->yearCalculator = $yearCalculator;
+    }
+
+    /**
      * @param Container $container
      */
     public function injectContainer(Container $container) {
         $this->container = $container;
+    }
+
+    /**
+     * @param TableReflectionFactory $tableReflectionFactory
+     */
+    public function injectTableReflectionFactory(TableReflectionFactory $tableReflectionFactory) {
+        $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
     /**
@@ -84,6 +121,15 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      */
     protected function eventExist(): bool {
         return !!$this->getEvent();
+    }
+
+    /**
+     * @return int
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
+    protected function getAcYear(): int {
+        return $this->yearCalculator->getAcademicYear($this->getEvent()->getContest(), $this->getEvent()->year);
     }
 
     /**
@@ -179,6 +225,19 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      */
     protected final function getContest(): ModelContest {
         return $this->getEvent()->getContest();
+    }
+
+    /**
+     * @param string $name
+     * @return \Nette\ComponentModel\IComponent|null
+     * @throws \Exception
+     */
+    public function createComponent($name) {
+        $printerComponent = $this->tableReflectionFactory->createComponent($name, 2048);
+        if ($printerComponent) {
+            return $printerComponent;
+        }
+        return parent::createComponent($name);
     }
 
 }

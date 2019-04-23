@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Controls\DateInputs;
 
-use Nette\DateTime;
+use Nette\Utils\DateTime;
 use Nette\Forms\Controls\TextInput;
 
 /**

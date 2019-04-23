@@ -6,7 +6,7 @@ use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelLogin;
-use Nette\DateTime;
+use Nette\Utils\DateTime;
 use Nette\Utils\Random;
 
 /**
@@ -34,10 +34,10 @@ class ServiceAuthToken extends AbstractServiceSingle {
      *
      * @param \FKSDB\ORM\Models\ModelLogin $login
      * @param string $type
-     * @param \Nette\DateTime $until
+     * @param \Nette\Utils\DateTime $until
      * @param null $data
      * @param bool $refresh
-     * @param \Nette\DateTime $since
+     * @param \Nette\Utils\DateTime $since
      * @return ModelAuthToken
      */
     public function createToken(ModelLogin $login, $type, DateTime $until = null, $data = null, $refresh = false, DateTime $since = null) {

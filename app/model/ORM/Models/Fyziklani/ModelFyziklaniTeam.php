@@ -4,8 +4,10 @@ namespace FKSDB\ORM\Models\Fyziklani;
 
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\ModelEvent;
+use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
-use Nette\DateTime;
+use Nette\Utils\DateTime;
 
 /**
  * @property-read string category
@@ -15,6 +17,10 @@ use Nette\DateTime;
  * @property-read integer points
  * @property-read string status
  * @property-read DateTime created
+ * @property-read string phone
+ * @property-read bool force_a
+ * @property-read string password
+ * @property-read ActiveRow event
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @author Michal Červeňák <miso@fykos.cz>
@@ -27,6 +33,20 @@ class ModelFyziklaniTeam extends AbstractModelSingle {
      */
     public function __toString(): string {
         return $this->name;
+    }
+
+    /**
+     * @return ModelEvent
+     */
+    public function getEvent(): ModelEvent {
+        return ModelEvent::createFromTableRow($this->event);
+    }
+
+    /**
+     * @return Selection
+     */
+    public function getParticipants(): Selection {
+        return $this->related(DbNames::TAB_E_FYZIKLANI_PARTICIPANT, 'e_fyziklani_team_id');
     }
 
     /**

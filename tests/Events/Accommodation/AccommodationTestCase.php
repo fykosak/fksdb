@@ -4,8 +4,8 @@ namespace Events\Accommodation;
 
 
 use Events\EventTestCase;
-use Nette\DateTime;
 use Nette\DI\Container;
+use Nette\Utils\DateTime;
 
 abstract class AccommodationTestCase extends EventTestCase {
     protected $accId;

@@ -8,8 +8,8 @@ use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelGlobalSession;
 use Nette\Database\Context;
 use Nette\Database\IConventions;
-use Nette\DateTime;
 use Nette\Http\Request;
+use Nette\Utils\DateTime;
 use Nette\Utils\Random;
 
 /**

@@ -9,14 +9,14 @@ use FKSDB\ORM\AbstractModelMulti;
 class ModelMPersonHasFlag extends AbstractModelMulti {
 
     /**
-     * @return \FKSDB\ORM\Models\ModelFlag
+     * @return \FKSDB\ORM\IModel|\FKSDB\ORM\Models\ModelFlag
      */
     public function getFlag() {
         return $this->getMainModel();
     }
 
     /**
-     * @return \FKSDB\ORM\Models\ModelPersonHasFlag
+     * @return \FKSDB\ORM\IModel|\FKSDB\ORM\Models\ModelPersonHasFlag
      */
     public function getPersonHasFlag() {
         return $this->getJoinedModel();

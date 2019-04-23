@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Controls\Helpers\ValuePrinters;
 
 use FKSDB\Components\Controls\Helpers\Badges\NotSetBadge;
+use FKSDB\Components\Controls\Helpers\Badges\PermissionDeniedBadge;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
@@ -14,6 +15,7 @@ use Nette\Templating\FileTemplate;
  */
 abstract class AbstractValue extends Control {
     const LAYOUT_STALKING = 'stalking';
+    const LAYOUT_DETAIL = 'detail';
     /**
      * @var ITranslator
      */
@@ -36,11 +38,13 @@ abstract class AbstractValue extends Control {
 
     /**
      * @param string $title
+     * @param bool $hasPermissions
      */
-    protected function beforeRender(string $title) {
+    protected function beforeRender(string $title, bool $hasPermissions) {
         $this->template->setTranslator($this->translator);
         $this->template->title = $title;
         $this->template->mode = $this->mode;
+        $this->template->hasPermissions = $hasPermissions;
     }
 
     /**
@@ -48,5 +52,12 @@ abstract class AbstractValue extends Control {
      */
     public function createComponentNotSet(): NotSetBadge {
         return new NotSetBadge($this->translator);
+    }
+
+    /**
+     * @return PermissionDeniedBadge
+     */
+    public function createComponentPermissionDenied(): PermissionDeniedBadge {
+        return new PermissionDeniedBadge($this->translator);
     }
 }

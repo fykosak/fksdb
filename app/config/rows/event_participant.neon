@@ -1,0 +1,26 @@
+services:
+    row.event_participant.event_participant_id: FKSDB\Components\DatabaseReflection\EventParticipant\EvenParticipantIdRow
+    row.event_participant.created: FKSDB\Components\DatabaseReflection\EventParticipant\CreatedRow
+    row.event_participant.person_id: FKSDB\Components\DatabaseReflection\EventParticipant\PersonIdRow
+    row.event_participant.swimmer: FKSDB\Components\DatabaseReflection\EventParticipant\SwimmerRow
+    row.event_participant.status: FKSDB\Components\DatabaseReflection\EventParticipant\StatusRow
+    row.event_participant.price: FKSDB\Components\DatabaseReflection\EventParticipant\PriceRow
+
+    row.event_participant.diet: FKSDB\Components\DatabaseReflection\EventParticipant\DietRow
+    row.event_participant.health_restrictions: FKSDB\Components\DatabaseReflection\EventParticipant\HealthRestrictionsRow
+    row.event_participant.used_drugs: FKSDB\Components\DatabaseReflection\EventParticipant\UsedDrugsRow
+    row.event_participant.note: FKSDB\Components\DatabaseReflection\EventParticipant\NoteRow
+
+    row.event_participant.tshirt_color: FKSDB\Components\DatabaseReflection\EventParticipant\TShirtColorRow
+    row.event_participant.tshirt_size: FKSDB\Components\DatabaseReflection\EventParticipant\TShirtSizeRow
+
+    row.event_participant.arrival_ticket: FKSDB\Components\DatabaseReflection\EventParticipant\ArrivalTicketRow
+    row.event_participant.arrival_time: FKSDB\Components\DatabaseReflection\EventParticipant\ArrivalTimeRow
+    row.event_participant.arrival_destination: FKSDB\Components\DatabaseReflection\EventParticipant\ArrivalDestinationRow
+
+    row.event_participant.departure_time: FKSDB\Components\DatabaseReflection\EventParticipant\DepartureTimeRow
+    row.event_participant.departure_destination: FKSDB\Components\DatabaseReflection\EventParticipant\DepartureDestinationRow
+    row.event_participant.departure_ticket: FKSDB\Components\DatabaseReflection\EventParticipant\DepartureTicketRow
+
+
+

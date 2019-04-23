@@ -16,10 +16,10 @@ use FKSDB\ORM\IModel;
 use IteratorAggregate;
 use LogicException;
 use Nette\Application\UI\Form;
-use Nette\ArrayHash;
 use Nette\Database\Connection;
 use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
+use Nette\Utils\ArrayHash;
 
 /**
  * A bit bloated class.

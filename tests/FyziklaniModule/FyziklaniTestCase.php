@@ -5,7 +5,7 @@ namespace FyziklaniModule;
 use DatabaseTestCase;
 use FKSDB\ORM\DbNames;
 use MockEnvironment\MockApplicationTrait;
-use Nette\DateTime;
+use Nette\Utils\DateTime;
 
 abstract class FyziklaniTestCase extends DatabaseTestCase {
 

@@ -2,10 +2,10 @@
 {block content}
     <ul class="list-group list-group-flush">
         {foreach $logs as $log}
-            <li class="list-group-item list-group-item-{$log->level}">
+            <li class="list-group-item list-group-item-{$log->getLevel()}">
                 <span class="row">
                         <b class="col-5">{$log->testName}:</b>
-                    <span class="col-7">{$log->message}</span>
+                    <span class="col-7">{$log->getMessage()}</span>
                 </span>
             </li>
         {/foreach}

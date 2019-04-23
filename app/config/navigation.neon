@@ -35,11 +35,14 @@ navigation:
             - org.org.list
             - org.event.list
             - org.deduplicate.person
-            - org.stalking.default
-            - org.validation.default
-        org.validation.default:
-            - org.validation.preview
-            - org.validation.list
+            - common.stalking.default
+            - common.validation.default
+        common.dashboard.default:
+            - common.validation.default
+            - common.stalking.default
+        common.validation.default:
+            - common.validation.preview
+            - common.validation.list
         public.dashboard.default:
             - dispatch.default
             - public.submit.default
@@ -76,5 +79,7 @@ navigation:
             - event.schedule.default
             - event.schedule.groups
             - event.accommodation.list
+            - event.application.list
+            #- event.teamApplication.list
             - event.model.default
             - event.applicationsTimeProgress.default

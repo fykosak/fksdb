@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Grids\Validation;
 
+use FKSDB\Components\Controls\Helpers\ValuePrinters\PersonValueControl;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
@@ -49,9 +50,7 @@ class ValidationGrid extends BaseGrid {
 
         $this->addColumn('display_name', _('Person'))->setRenderer(function ($row) {
             $person = ModelPerson::createFromTableRow($row);
-            return Html::el('a')->addAttributes([
-                'href' => $this->getPresenter()->link(':Org:Stalking:view', ['id' => $person->person_id]),
-            ])->addText($person->getFullName());
+            return PersonValueControl::getGridValue($this,$person);
         });
         foreach ($this->tests as $test) {
             $this->addColumn($test::getAction(), $test::getTitle())->setRenderer(function ($row) use ($test) {
@@ -69,7 +68,7 @@ class ValidationGrid extends BaseGrid {
      */
     protected static function createHtmlLog(ValidationLog $log): Html {
         $icon = Html::el('span');
-        switch ($log->level) {
+        switch ($log->getLevel()) {
             case ValidationLog::LVL_DANGER:
                 $icon->addAttributes(['class' => 'fa fa-close']);
                 break;
@@ -83,12 +82,11 @@ class ValidationGrid extends BaseGrid {
                 $icon->addAttributes(['class' => 'fa fa-check']);
                 break;
             default:
-                throw new NotImplementedException(\sprintf('%s is not supported', $log->level));
+                throw new NotImplementedException(\sprintf('%s is not supported', $log->getLevel()));
         }
         return Html::el('span')->addAttributes([
-            'class' => 'text-' . $log->level,
-            'title' => $log->message,
+            'class' => 'text-' . $log->getLevel(),
+            'title' => $log->getMessage(),
         ])->addHtml($icon);
-
     }
 }
