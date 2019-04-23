@@ -37,7 +37,7 @@ class ModelEventAccommodation extends AbstractModelSingle implements IResource, 
      * @return ModelEvent
      */
     public function getEvent(): ModelEvent {
-        return ModelEvent::createFromTableRow($this->event);
+        return ModelEvent::createFromActiveRow($this->event);
     }
 
     /**
@@ -45,7 +45,7 @@ class ModelEventAccommodation extends AbstractModelSingle implements IResource, 
      */
     public function getAddress() {
         if ($this->address) {
-            return ModelAddress::createFromTableRow($this->address);
+            return ModelAddress::createFromActiveRow($this->address);
         }
         return null;
     }

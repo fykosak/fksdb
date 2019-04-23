@@ -136,7 +136,7 @@ class ValidationControl extends Control {
         $logs = [];
         foreach ($query as $row) {
 
-            $model = ModelPerson::createFromTableRow($row);
+            $model = ModelPerson::createFromActiveRow($row);
             $log = [];
             foreach ($this->tests as $test) {
                 $log[] = $test->run($model);

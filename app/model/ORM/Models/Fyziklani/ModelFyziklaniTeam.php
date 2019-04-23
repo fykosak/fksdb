@@ -39,7 +39,7 @@ class ModelFyziklaniTeam extends AbstractModelSingle {
      * @return ModelEvent
      */
     public function getEvent(): ModelEvent {
-        return ModelEvent::createFromTableRow($this->event);
+        return ModelEvent::createFromActiveRow($this->event);
     }
 
     /**
@@ -62,7 +62,7 @@ class ModelFyziklaniTeam extends AbstractModelSingle {
     public function getPosition() {
         $row = $this->related(DbNames::TAB_FYZIKLANI_TEAM_POSITION, 'e_fyziklani_team_id')->fetch();
         if ($row) {
-            return ModelFyziklaniTeamPosition::createFromTableRow($row);
+            return ModelFyziklaniTeamPosition::createFromActiveRow($row);
         }
         return null;
     }

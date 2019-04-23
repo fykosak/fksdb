@@ -38,7 +38,7 @@ class ServiceOrg extends AbstractServiceSingle {
         }
         $result = $this->getTable()->where('tex_signature', $signature)
             ->where('contest_id', $contest_id)->fetch();
-        return $result ? ModelOrg::createFromTableRow($result) : null;
+        return $result ? ModelOrg::createFromActiveRow($result) : null;
     }
 
 }

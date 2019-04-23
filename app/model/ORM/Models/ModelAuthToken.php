@@ -31,7 +31,7 @@ class ModelAuthToken extends AbstractModelSingle {
      */
     public function getLogin(): ModelLogin {
         $data = $this->login;
-        return ModelLogin::createFromTableRow($data);
+        return ModelLogin::createFromActiveRow($data);
     }
 
 }

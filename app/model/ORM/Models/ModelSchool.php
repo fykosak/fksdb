@@ -17,7 +17,7 @@ class ModelSchool extends AbstractModelSingle implements IResource {
      * @return ModelAddress
      */
     public function getAddress(): ModelAddress {
-        return ModelAddress::createFromTableRow($this->address);
+        return ModelAddress::createFromActiveRow($this->address);
     }
 
     /**

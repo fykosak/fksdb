@@ -72,7 +72,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
         if (!$row) {
             throw new BadRequestException('Model not found');
         }
-        $model = ModelFyziklaniTeam::createFromTableRow($row);
+        $model = ModelFyziklaniTeam::createFromActiveRow($row);
         if ($model->event_id != $this->getEvent()->event_id) {
             throw new ForbiddenRequestException();
         }

@@ -171,7 +171,7 @@ class InboxPresenter extends SeriesPresenter {
     public function renderHandout() {
         $taskIds = [];
         foreach ($this->seriesTable->getTasks() as $row) {
-            $task = ModelTask::createFromTableRow($row);
+            $task = ModelTask::createFromActiveRow($row);
             $taskIds[] = $task->task_id;
         }
         $contributions = $this->serviceTaskContribution->getTable()->where(array(
@@ -181,7 +181,7 @@ class InboxPresenter extends SeriesPresenter {
 
         $values = [];
         foreach ($contributions as $row) {
-            $contribution = ModelTaskContribution::createFromTableRow($row);
+            $contribution = ModelTaskContribution::createFromActiveRow($row);
             $taskId = $contribution->task_id;
             $personId = $contribution->person_id;
             $key = self::TASK_PREFIX . $taskId;
@@ -220,7 +220,7 @@ class InboxPresenter extends SeriesPresenter {
         // $container = $form->addContainer(SeriesTable::FORM_CONTESTANT);
 
         foreach ($contestants as $row) {
-            $contestant = ModelContestant::createFromTableRow($row);
+            $contestant = ModelContestant::createFromActiveRow($row);
             $control = new ContestantSubmits($tasks, $contestant, $this->serviceSubmit, $this->getSelectedAcademicYear(), $contestant->getPerson()->getFullName());
             $control->setClassName('inbox');
             $namingContainer = new ModelContainer();
@@ -251,7 +251,7 @@ class InboxPresenter extends SeriesPresenter {
         $form = $formControl->getForm();
 
         foreach ($this->seriesTable->getTasks() as $row) {
-            $task = ModelTask::createFromTableRow($row);
+            $task = ModelTask::createFromActiveRow($row);
             $control = $this->personFactory->createPersonSelect(false, $task->getFQName(), $this->getOrgProvider());
             $control->setMultiSelect(true);
             $form->addComponent($control, self::TASK_PREFIX . $task->task_id);
@@ -306,7 +306,7 @@ class InboxPresenter extends SeriesPresenter {
         $connection->beginTransaction();
 
         foreach ($this->seriesTable->getTasks() as $row) {
-            $task = ModelTask::createFromTableRow($row);
+            $task = ModelTask::createFromActiveRow($row);
             $service->getTable()->where(array(
                 'task_id' => $task->task_id,
                 'type' => ModelTaskContribution::TYPE_GRADE

@@ -17,13 +17,13 @@ class ModelSchedulePayment extends AbstractModelSingle {
      * @return ModelPayment
      */
     public function getPayment(): ModelPayment {
-        return ModelPayment::createFromTableRow($this->payment);
+        return ModelPayment::createFromActiveRow($this->payment);
     }
 
     /**
      * @return ModelPersonSchedule
      */
     public function getPersonSchedule(): ModelPersonSchedule {
-        return ModelPersonSchedule::createFromTableRow($this->person_schedule);
+        return ModelPersonSchedule::createFromActiveRow($this->person_schedule);
     }
 }

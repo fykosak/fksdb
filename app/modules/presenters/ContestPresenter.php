@@ -110,7 +110,7 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
     protected function getNavBarVariant(): array {
         $row = $this->serviceContest->findByPrimary($this->contestId);
         if ($row) {
-            $contest = ModelContest::createFromTableRow($row);
+            $contest = ModelContest::createFromActiveRow($row);
             return [$contest->getContestSymbol(), 'navbar-dark bg-' . $contest->getContestSymbol()];
         }
         return parent::getNavBarVariant();

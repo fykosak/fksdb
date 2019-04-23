@@ -21,14 +21,14 @@ class ModelOrg extends AbstractModelSingle implements IResource {
      * @return ModelContest
      */
     public function getContest(): ModelContest {
-        return ModelContest::createFromTableRow($this->contest);
+        return ModelContest::createFromActiveRow($this->contest);
     }
 
     /**
      * @return ModelPerson
      */
     public function getPerson(): ModelPerson {
-        return ModelPerson::createFromTableRow($this->person);
+        return ModelPerson::createFromActiveRow($this->person);
     }
 
     /**

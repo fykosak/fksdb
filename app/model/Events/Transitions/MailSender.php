@@ -115,7 +115,7 @@ class MailSender extends Object {
 
         $logins = [];
         foreach ($persons as $row) {
-            $person = ModelPerson::createFromTableRow($row);
+            $person = ModelPerson::createFromActiveRow($row);
             $login = $person->getLogin();
             if (!$login) {
                 $login = $this->accountManager->createLogin($person);

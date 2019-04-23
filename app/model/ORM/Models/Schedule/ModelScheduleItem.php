@@ -29,7 +29,7 @@ class ModelScheduleItem extends AbstractModelSingle {
      * @return ModelScheduleGroup
      */
     public function getGroup(): ModelScheduleGroup {
-        return ModelScheduleGroup::createFromTableRow($this->schedule_group);
+        return ModelScheduleGroup::createFromActiveRow($this->schedule_group);
     }
 
     /**

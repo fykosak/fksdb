@@ -48,7 +48,7 @@ class ModelEventParticipant extends AbstractModelSingle implements IEventReferen
         if (!$this->person) {
             return null;
         }
-        return ModelPerson::createFromTableRow($this->person);
+        return ModelPerson::createFromActiveRow($this->person);
     }
 
     /**
@@ -65,7 +65,7 @@ class ModelEventParticipant extends AbstractModelSingle implements IEventReferen
      * @return ModelEvent
      */
     public function getEvent(): ModelEvent {
-        return ModelEvent::createFromTableRow($this->event);
+        return ModelEvent::createFromActiveRow($this->event);
     }
 
     /**
@@ -84,6 +84,6 @@ class ModelEventParticipant extends AbstractModelSingle implements IEventReferen
         if (!$row) {
             throw new BadRequestException('Event is not fyziklani');
         }
-        return ModelFyziklaniTeam::createFromTableRow($row);
+        return ModelFyziklaniTeam::createFromActiveRow($row);
     }
 }

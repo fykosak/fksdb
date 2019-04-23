@@ -36,7 +36,7 @@ class CitizenshipField extends SelectBox {
         $countries = $this->serviceRegion->getCountries();
         $results = [];
         foreach ($countries as $row) {
-            $country = ModelRegion::createFromTableRow($row);
+            $country = ModelRegion::createFromActiveRow($row);
             $results[$country->country_iso] = $country->name;
         }
         return $results;

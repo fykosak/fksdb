@@ -117,7 +117,7 @@ class SubmitsGrid extends BaseGrid {
         if (!$row) {
             throw new BadRequestException('Neexistující submit.', 404);
         }
-        $submit = ModelSubmit::createFromTableRow($row);
+        $submit = ModelSubmit::createFromActiveRow($row);
 
 //        $submit->task_id; // stupid touch
         $contest = $submit->getContestant()->getContest();

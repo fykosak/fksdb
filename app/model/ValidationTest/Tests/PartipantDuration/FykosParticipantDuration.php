@@ -37,7 +37,7 @@ class FykosParticipantDuration extends ParticipantsDuration {
             return $model;
         }
         $row = $this->serviceContest->findByPrimary(1);
-        $model = ModelContest::createFromTableRow($row);
+        $model = ModelContest::createFromActiveRow($row);
         return $model;
     }
 
