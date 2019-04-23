@@ -11,14 +11,14 @@ use FKSDB\ORM\Models\ModelPostContact;
 class ModelMPostContact extends AbstractModelMulti {
 
     /**
-     * @return ModelAddress
+     * @return \FKSDB\ORM\IModel|ModelAddress
      */
     public function getAddress() {
         return $this->getMainModel();
     }
 
     /**
-     * @return ModelPostContact
+     * @return \FKSDB\ORM\IModel|ModelPostContact
      */
     public function getPostContact() {
         return $this->getJoinedModel();
