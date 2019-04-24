@@ -17,7 +17,7 @@ use FKSDB\ORM\Services\ServicePerson;
 use Mail\MailTemplateFactory;
 use Nette\Mail\IMailer;
 use Nette\Mail\Message;
-use Nette\Object;
+use Nette\SmartObject;
 use Nette\Utils\Strings;
 use PublicModule\ApplicationPresenter;
 
@@ -28,8 +28,8 @@ use PublicModule\ApplicationPresenter;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class MailSender extends Object {
-
+class MailSender {
+    use SmartObject;
     const BCC_PARAM = 'notifyBcc';
     const FROM_PARAM = 'notifyFrom';
 

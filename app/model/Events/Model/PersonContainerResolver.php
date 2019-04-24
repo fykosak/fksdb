@@ -4,7 +4,7 @@ namespace Events\Model;
 
 use Events\Model\Holder\Field;
 use FKSDB\ORM\Models\ModelPerson;
-use Nette\Object;
+use Nette\SmartObject;
 use Persons\IModifiabilityResolver;
 use Persons\IVisibilityResolver;
 use Persons\ReferencedPersonHandler;
@@ -15,7 +15,9 @@ use Persons\SelfResolver;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class PersonContainerResolver extends Object implements IVisibilityResolver, IModifiabilityResolver {
+class PersonContainerResolver implements IVisibilityResolver, IModifiabilityResolver {
+
+    use SmartObject;
 
     /**
      * @var Field

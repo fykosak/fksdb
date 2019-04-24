@@ -3,15 +3,15 @@
 namespace Exports\Formats;
 
 use Nette\Application\IResponse;
-use Nette\Object;
+use Nette\SmartObject;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class PlainTextResponse extends Object implements IResponse {
-
+class PlainTextResponse implements IResponse {
+    use SmartObject;
     private $content;
     private $name;
 

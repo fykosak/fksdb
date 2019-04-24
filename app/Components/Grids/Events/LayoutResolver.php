@@ -3,14 +3,16 @@
 namespace FKSDB\Components\Grids\Events;
 
 use FKSDB\ORM\Models\ModelEvent;
-use Nette\Object;
+use Nette\SmartObject;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class LayoutResolver extends Object {
+class LayoutResolver {
+
+    use SmartObject;
 
     const TEMPLATE_EXT = '.latte';
 

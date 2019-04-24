@@ -19,8 +19,9 @@ use Nette;
  *
  * @author     David Grudl
  */
-class MacroNode extends Nette\Object
+class MacroNode
 {
+    use Nette\SmartObject;
 	const PREFIX_INNER = 'inner',
 		PREFIX_TAG = 'tag';
 

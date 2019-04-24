@@ -20,8 +20,9 @@ use Tracy\IBarPanel;
  *
  * @author     David Grudl
  */
-class UserPanel extends Nette\Object implements IBarPanel
+class UserPanel implements IBarPanel
 {
+    use Nette\SmartObject;
 	/** @var Nette\Security\User */
 	private $user;
 
