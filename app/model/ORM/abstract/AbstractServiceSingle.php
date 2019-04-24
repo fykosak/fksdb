@@ -65,7 +65,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
         } catch (PDOException $exception) {
             throw new ModelException('Error when storing model.', null, $exception);
         }
-        $code = $this->getConnection()->errorCode();
+        $code = $this->getConnection()->getPdo()->errorCode();
         throw new ModelException("$code: Error when storing a model.");
     }
 
@@ -92,32 +92,13 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
      *
      * @param array $data
      * @return AbstractModelSingle
+     * @deprecated
      */
     public function createFromArray(array $data) {
         $className = $this->getModelClassName();
         $data = $this->filterData($data);
         $result = new $className($data, $this);
         return $result;
-    }
-
-    /**
-     * @return string|AbstractModelSingle
-     */
-    abstract protected function getModelClassName(): string;
-
-    /**
-     * @return string
-     */
-    abstract protected function getTableName(): string;
-
-    /**
-     * @param ActiveRow $row
-     * @return mixed
-     * @deprecated
-     */
-    public function createFromTableRow(ActiveRow $row) {
-        $className = $this->getModelClassName();
-        return new $className($row->toArray(), $row->getTable());
     }
 
     /**
@@ -136,8 +117,6 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     }
 
     /**
-<<<<<<< HEAD
-=======
      * @param int $key
      * @return AbstractModelSingle|null
      */
@@ -172,14 +151,6 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
 
     /**
      * @param AbstractModelSingle $model
-     * @return AbstractModelSingle|null
-     */
-    public function refresh(AbstractModelSingle $model) {
-        return $this->findByPrimary2($model->getPrimary(true));
-    }
-
-    /**
-     * @param AbstractModelSingle $model
      * @param Traversable|array $data
      * @return int
      * @throws InvalidArgumentException
@@ -191,7 +162,14 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     }
 
     /**
->>>>>>> fykosak/master
+     * @param AbstractModelSingle $model
+     * @return AbstractModelSingle|null
+     */
+    public function refresh(AbstractModelSingle $model) {
+        return $this->findByPrimary2($model->getPrimary(true));
+    }
+
+    /**
      * Use this method to store a model!
      *
      * @param IModel|AbstractModelSingle $model
@@ -220,19 +198,8 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
             throw new ModelException('Error when storing model.', null, $exception);
         }
         if (!$result) {
-            $code = $this->context->getConnection()->errorCode();
+            $code = $this->context->getConnection()->getPdo()->errorCode();
             throw new ModelException("$code: Error when storing a model.");
-        }
-    }
-
-    /**
-     * @param AbstractModelSingle|IModel $model
-     * @throws InvalidArgumentException
-     */
-    private function checkType(AbstractModelSingle $model) {
-        $modelClassName = $this->getModelClassName();
-        if (!$model instanceof $modelClassName) {
-            throw new InvalidArgumentException('Service for class ' . $this->getModelClassName() . ' cannot store ' . get_class($model));
         }
     }
 
@@ -247,7 +214,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     public function dispose(IModel $model) {
         $this->checkType($model);
         if (!$model->isNew() && $model->delete() === false) {
-            $code = $this->context->getConnection()->errorCode();
+            $code = $this->context->getConnection()->getPdo()->errorCode();
             throw new ModelException("$code: Error when deleting a model.");
         }
     }
@@ -257,6 +224,38 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
      */
     public function getTable() {
         return new TypedTableSelection($this->getModelClassName(), $this->getTableName(), $this->context, $this->conventions);
+    }
+
+    /**
+     * @return Connection
+     */
+    public function getConnection(): Connection {
+        return $this->context->getConnection();
+    }
+
+    /**
+     * @return Context
+     */
+    public function getContext(): Context {
+        return $this->context;
+    }
+
+    /**
+     * @return IConventions
+     */
+    public function getConventions(): IConventions {
+        return $this->conventions;
+    }
+
+    /**
+     * @param AbstractModelSingle|IModel $model
+     * @throws InvalidArgumentException
+     */
+    private function checkType(AbstractModelSingle $model) {
+        $modelClassName = $this->getModelClassName();
+        if (!$model instanceof $modelClassName) {
+            throw new InvalidArgumentException('Service for class ' . $this->getModelClassName() . ' cannot store ' . get_class($model));
+        }
     }
 
     protected $defaults = null;
@@ -312,25 +311,14 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     }
 
     /**
-     * @return Connection
+     * @return string|AbstractModelSingle
      */
-    public function getConnection(): Connection {
-        return $this->context->getConnection();
-    }
+    abstract protected function getModelClassName(): string;
 
     /**
-     * @return Context
+     * @return string
      */
-    public function getContext(): Context {
-        return $this->context;
-    }
-
-    /**
-     * @return IConventions
-     */
-    public function getConventions(): IConventions {
-        return $this->conventions;
-    }
+    abstract protected function getTableName(): string;
 
 }
 
