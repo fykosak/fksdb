@@ -19,6 +19,7 @@ use FKSDB\ORM\Services\ServicePersonInfo;
 use FKSDB\Submits\StorageException;
 use FormUtils;
 use ModelException;
+use ModelMPostContact;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
@@ -194,10 +195,10 @@ class ReferencedPersonHandler implements IReferencedHandler {
             $models = [
                 'person' => &$person,
                 'person_info' => ($info = $person->getInfo()) ?: $this->servicePersonInfo->createNew(),
-                'person_history' => ($history = $person->getHistory($this->acYear)) ?: $this->servicePersonHistory->createNew(['ac_year' => $this->acYear]),
+                'person_history' => ($history = $person->getHistory($this->acYear)) ?: $this->servicePersonHistory->createNewModel(['ac_year' => $this->acYear]),
                 'person_accommodation' => ($personAccommodation = ($this->eventId && $person->getSerializedAccommodationByEventId($this->eventId)) ?: null),
-                self::POST_CONTACT_DELIVERY => ($dataPostContact = $person->getDeliveryAddress()) ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_DELIVERY]),
-                self::POST_CONTACT_PERMANENT => ($dataPostContact = $person->getPermanentAddress(true)) ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_PERMANENT])
+                self::POST_CONTACT_DELIVERY => ($dataPostContact = $person->getDeliveryAddress()) ?: $this->serviceMPostContact->createNewModel(['type' => ModelPostContact::TYPE_DELIVERY]),
+                self::POST_CONTACT_PERMANENT => ($dataPostContact = $person->getPermanentAddress(true)) ?: $this->serviceMPostContact->createNewModel(['type' => ModelPostContact::TYPE_PERMANENT])
             ];
             /**
              * @var AbstractServiceSingle[] $services
@@ -318,7 +319,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
     }
 
     /**
-     * @param $models
+     * @param ModelMPostContact[] $models
      */
     private function preparePostContactModels(&$models) {
         if ($models[self::POST_CONTACT_PERMANENT]->isNew()) {
