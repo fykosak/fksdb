@@ -87,8 +87,7 @@ class GroupOptions implements IOptionsProvider {
         $application = $baseHolder->getModel();
         $groups = $this->getGroups($event->getPrimary());
 
-        $selection = $this->serviceMParticipant->getTable()
-            ->getConnection()->table(DbNames::TAB_E_DSEF_PARTICIPANT)
+        $selection = $this->serviceMParticipant->getMainService()->getContext()->table(DbNames::TAB_E_DSEF_PARTICIPANT)
             ->select('e_dsef_group_id, count(event_participant.event_participant_id) AS occupied')
             ->group('e_dsef_group_id')
             ->where('event_id', $event->event_id)
