@@ -20,9 +20,8 @@ use Nette,
  *
  * @author     David Grudl
  */
-class Template implements ITemplate
+class Template extends Nette\Object implements ITemplate
 {
-    use Nette\SmartObject;
 	/** @var array of function(Template $sender); Occurs before a template is compiled - implement to customize the filters */
 	public $onPrepareFilters = array();
 
@@ -241,7 +240,7 @@ class Template implements ITemplate
 					return $this->helpers[$lname]->invokeArgs($args);
 				}
 			}
-
+			return parent::__call($name, $args);
 		}
 
 		return $this->helpers[$lname]->invokeArgs($args);
