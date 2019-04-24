@@ -4,7 +4,7 @@ namespace Authorization;
 
 use Events\Machine\BaseMachine;
 use Events\Model\Holder\Holder;
-use Nette\Security\User;
+use Nette\Security\IUserStorage;
 use Nette\SmartObject;
 
 /**
@@ -16,22 +16,22 @@ class RelatedPersonAuthorizator {
 
     use SmartObject;
     /**
-     * @var User
+     * @var IUserStorage
      */
     private $user;
 
     /**
      * RelatedPersonAuthorizator constructor.
-     * @param User $user
+     * @param IUserStorage $user
      */
-    function __construct(User $user) {
+    function __construct(IUserStorage $user) {
         $this->user = $user;
     }
 
     /**
-     * @return User
+     * @return IUserStorage
      */
-    public function getUser() {
+    public function getUser(): IUserStorage {
         return $this->user;
     }
 
@@ -49,7 +49,7 @@ class RelatedPersonAuthorizator {
         }
 
         // further on only logged users can be related person
-        if (!$this->getUser()->isLoggedIn()) {
+        if (!$this->getUser()->isAuthenticated()) {
             return false;
         }
 
