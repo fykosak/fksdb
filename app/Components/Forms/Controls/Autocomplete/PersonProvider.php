@@ -38,17 +38,17 @@ class PersonProvider implements IFilteredDataProvider {
 
     /**
      * Syntactic sugar, should be solved more generally.
-     * @param \FKSDB\ORM\Models\ModelContest $contest
-     * @param \FKSDB\YearCalculator $yearCalculator
+     * @param ModelContest $contest
+     * @param YearCalculator $yearCalculator
      */
     public function filterOrgs(ModelContest $contest, YearCalculator $yearCalculator) {
         $orgs = $this->servicePerson->getTable()->where([
-            'org:contest_id' => $contest->contest_id
+            ':org.contest_id' => $contest->contest_id
         ]);
 
         $currentYear = $yearCalculator->getCurrentYear($contest);
-        $orgs->where('org:since <= ?', $currentYear);
-        $orgs->where('org:until IS NULL OR org:until <= ?', $currentYear);
+        $orgs->where(':org.since <= ?', $currentYear);
+        $orgs->where(':org.until IS NULL OR :org.until <= ?', $currentYear);
         $this->searchTable = $orgs;
     }
 
@@ -62,7 +62,7 @@ class PersonProvider implements IFilteredDataProvider {
         $search = trim($search);
         $search = str_replace(' ', '', $search);
         $this->searchTable
-                ->where('family_name LIKE concat(?, \'%\') OR other_name LIKE concat(?, \'%\') OR concat(other_name, family_name) LIKE concat(?,  \'%\')', $search, $search, $search);
+            ->where('family_name LIKE concat(?, \'%\') OR other_name LIKE concat(?, \'%\') OR concat(other_name, family_name) LIKE concat(?,  \'%\')', $search, $search, $search);
         return $this->getItems();
     }
 
@@ -80,7 +80,7 @@ class PersonProvider implements IFilteredDataProvider {
      */
     public function getItems() {
         $persons = $this->searchTable
-                ->order('family_name, other_name');
+            ->order('family_name, other_name');
 
 
         $result = [];

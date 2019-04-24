@@ -38,17 +38,17 @@ class InboxPresenter extends SeriesPresenter {
     private $submitStorage;
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceTaskContribution
+     * @var ServiceTaskContribution
      */
     private $serviceTaskContribution;
 
     /**
-     * @var \FKSDB\ORM\Services\ServicePerson
+     * @var ServicePerson
      */
     private $servicePerson;
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceSubmit
+     * @var ServiceSubmit
      */
     private $serviceSubmit;
 
@@ -82,28 +82,28 @@ class InboxPresenter extends SeriesPresenter {
     }
 
     /**
-     * @param \FKSDB\ORM\Services\ServicePerson $servicePerson
+     * @param ServicePerson $servicePerson
      */
     public function injectServicePerson(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
     }
 
     /**
-     * @param \FKSDB\ORM\Services\ServiceSubmit $serviceSubmit
+     * @param ServiceSubmit $serviceSubmit
      */
     public function injectServiceSubmit(ServiceSubmit $serviceSubmit) {
         $this->serviceSubmit = $serviceSubmit;
     }
 
     /**
-     * @param \FKSDB\ORM\Services\ServiceContestant $serviceContestant
+     * @param ServiceContestant $serviceContestant
      */
     public function injectServiceContestant(ServiceContestant $serviceContestant) {
         $this->serviceContestant = $serviceContestant;
     }
 
     /**
-     * @param \FKSDB\Submits\SeriesTable $seriesTable
+     * @param SeriesTable $seriesTable
      */
     public function injectSeriesTable(SeriesTable $seriesTable) {
         $this->seriesTable = $seriesTable;
@@ -160,9 +160,9 @@ class InboxPresenter extends SeriesPresenter {
 
     public function actionHandout() {
         // This workaround fixes inproper caching of referenced tables.
-        $connection = $this->servicePerson->getConnection();
-        $connection->getCache()->clean(array(Cache::ALL => true));
-        $connection->getDatabaseReflection()->setConnection($connection);
+       // $connection = $this->servicePerson->getConnection();
+       // $connection->getCache()->clean(array(Cache::ALL => true));
+       // $connection->getDatabaseReflection()->setConnection($connection);
     }
 
     /**
@@ -313,13 +313,11 @@ class InboxPresenter extends SeriesPresenter {
             ))->delete();
             $key = self::TASK_PREFIX . $task->task_id;
             foreach ($values[$key] as $personId) {
-                $data = array(
+                $service->createNewModel([
                     'task_id' => $task->task_id,
                     'person_id' => $personId,
                     'type' => ModelTaskContribution::TYPE_GRADE,
-                );
-                $contribution = $service->createNew($data);
-                $service->save($contribution);
+                ]);
             }
         }
 
