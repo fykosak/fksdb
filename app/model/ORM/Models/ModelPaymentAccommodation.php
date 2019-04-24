@@ -20,14 +20,14 @@ class ModelPaymentAccommodation extends AbstractModelSingle {
      * @return ModelPayment
      */
     public function getPayment(): ModelPayment {
-        return ModelPayment::createFromTableRow($this->payment);
+        return ModelPayment::createFromActiveRow($this->payment);
     }
 
     /**
      * @return ModelEventPersonAccommodation
      */
     public function getEventPersonAccommodation(): ModelEventPersonAccommodation {
-        return ModelEventPersonAccommodation::createFromTableRow($this->event_person_accommodation);
+        return ModelEventPersonAccommodation::createFromActiveRow($this->event_person_accommodation);
     }
 
 }

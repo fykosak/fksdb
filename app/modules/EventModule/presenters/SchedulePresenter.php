@@ -198,7 +198,7 @@ GROUP BY p.person_id,type,schedule', $this->getEvent()->event_id)->fetchAll();
             if (!$row) {
                 throw new BadRequestException();
             }
-            $this->group = ModelScheduleGroup::createFromTableRow($row);
+            $this->group = ModelScheduleGroup::createFromActiveRow($row);
         }
         if ($this->group->getEvent()->event_id !== $this->getEvent()->event_id) {
             throw new ForbiddenRequestException('Schedule group does not belong to this event');
@@ -227,7 +227,7 @@ GROUP BY p.person_id,type,schedule', $this->getEvent()->event_id)->fetchAll();
             if (!$row) {
                 throw new BadRequestException();
             }
-            $this->item = ModelScheduleItem::createFromTableRow($row);
+            $this->item = ModelScheduleItem::createFromActiveRow($row);
         }
         if ($this->item->getGroup()->getEvent()->event_id !== $this->getEvent()->event_id) {
             throw new ForbiddenRequestException('Schedule item does not belong to this event');

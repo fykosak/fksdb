@@ -25,14 +25,14 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel {
      * @return ModelPerson
      */
     public function getPerson(): ModelPerson {
-        return ModelPerson::createFromTableRow($this->person);
+        return ModelPerson::createFromActiveRow($this->person);
     }
 
     /**
      * @return ModelScheduleItem
      */
     public function getScheduleItem(): ModelScheduleItem {
-        return ModelScheduleItem::createFromTableRow($this->schedule_item);
+        return ModelScheduleItem::createFromActiveRow($this->schedule_item);
     }
 
     /**
@@ -43,7 +43,7 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel {
         if (!$data) {
             return null;
         }
-        return ModelPayment::createFromTableRow($data);
+        return ModelPayment::createFromActiveRow($data);
     }
 
     /**

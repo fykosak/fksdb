@@ -43,7 +43,7 @@ class Handler {
         $newAccommodationIds = $this->prepareData($data);
 
         foreach ($oldRows as $row) {
-            $modelEventPersonAccommodation = ModelEventPersonAccommodation::createFromTableRow($row);
+            $modelEventPersonAccommodation = ModelEventPersonAccommodation::createFromActiveRow($row);
             if (in_array($modelEventPersonAccommodation->event_accommodation_id, $newAccommodationIds)) {
                 // do nothing
                 $index = array_search($modelEventPersonAccommodation->event_accommodation_id, $newAccommodationIds);
@@ -65,7 +65,7 @@ class Handler {
         foreach ($newAccommodationIds as $id) {
             $model = $this->serviceEventPersonAccommodation->createNew(['person_id' => $person->person_id, 'event_accommodation_id' => $id]);
             $query = $this->serviceEventAccommodation->findByPrimary($id);
-            $eventAccommodation = ModelEventAccommodation::createFromTableRow($query);
+            $eventAccommodation = ModelEventAccommodation::createFromActiveRow($query);
             if ($eventAccommodation->getAvailableCapacity() > 0) {
                 $this->serviceEventPersonAccommodation->save($model);
             } else {

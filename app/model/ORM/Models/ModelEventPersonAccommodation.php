@@ -26,14 +26,14 @@ class ModelEventPersonAccommodation extends AbstractModelSingle implements IStat
      * @return ModelEventAccommodation
      */
     public function getEventAccommodation(): ModelEventAccommodation {
-        return ModelEventAccommodation::createFromTableRow($this->event_accommodation);
+        return ModelEventAccommodation::createFromActiveRow($this->event_accommodation);
     }
 
     /**
      * @return ModelPerson
      */
     public function getPerson(): ModelPerson {
-        return ModelPerson::createFromTableRow($this->person);
+        return ModelPerson::createFromActiveRow($this->person);
     }
 
     /**
@@ -44,7 +44,7 @@ class ModelEventPersonAccommodation extends AbstractModelSingle implements IStat
         if (!$data) {
             return null;
         }
-        return ModelPayment::createFromTableRow($data);
+        return ModelPayment::createFromActiveRow($data);
     }
 
     /**
@@ -85,6 +85,6 @@ class ModelEventPersonAccommodation extends AbstractModelSingle implements IStat
      * @return ModelPayment
      */
     public function refresh(): IStateModel {
-        return self::createFromTableRow($this->getTable()->wherePrimary($this->event_person_accommodation_id)->fetch());
+        return self::createFromActiveRow($this->getTable()->wherePrimary($this->event_person_accommodation_id)->fetch());
     }
 }

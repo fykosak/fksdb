@@ -32,7 +32,7 @@ class ModelScheduleGroup extends \FKSDB\ORM\AbstractModelSingle {
      * @return ModelEvent
      */
     public function getEvent(): ModelEvent {
-        return ModelEvent::createFromTableRow($this->event);
+        return ModelEvent::createFromActiveRow($this->event);
     }
 
 }

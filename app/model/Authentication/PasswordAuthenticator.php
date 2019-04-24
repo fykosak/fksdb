@@ -69,7 +69,7 @@ class PasswordAuthenticator extends AbstractAuthenticator implements IAuthentica
         $login = null;
 
         if ($row) {
-            $person = ModelPerson::createFromTableRow($row);
+            $person = ModelPerson::createFromActiveRow($row);
             $login = $person->getLogin();
             if (!$login) {
                 throw new NoLoginException();

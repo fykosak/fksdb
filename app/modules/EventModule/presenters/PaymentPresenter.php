@@ -189,7 +189,7 @@ class PaymentPresenter extends BasePresenter {
             if (!$row) {
                 throw new BadRequestException(_('Payment does not exists'), 404);
             }
-            $this->model = ModelPayment::createFromTableRow($row);
+            $this->model = ModelPayment::createFromActiveRow($row);
             $this->model->getRelatedPersonAccommodation();
             if ($this->model->event_id !== $this->getEvent()->event_id) {
                 throw new ForbiddenRequestException(_('Payment does not belong to this event'), 403);

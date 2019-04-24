@@ -35,7 +35,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
             return null;
         }
 
-        return ModelLogin::createFromTableRow($logins->current());
+        return ModelLogin::createFromActiveRow($logins->current());
     }
 
     /**
@@ -48,7 +48,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
             return null;
         }
 
-        return ModelPersonInfo::createFromTableRow($infos->current());
+        return ModelPersonInfo::createFromActiveRow($infos->current());
     }
 
     /**
@@ -61,7 +61,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
             ->where('ac_year', $acYear);
         $history = $histories->fetch();
         if ($history) {
-            return ModelPersonHistory::createFromTableRow($history);
+            return ModelPersonHistory::createFromActiveRow($history);
         }
         if ($extrapolated) {
             $lastHistory = $this->getLastHistory();
@@ -120,7 +120,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         foreach ($personFlags as $row) {
             $flag = $row->ref(DbNames::TAB_FLAG, 'flag_id');
             $result[] = ModelMPersonHasFlag::createFromExistingModels(
-                ModelFlag::createFromTableRow($flag), ModelPersonHasFlag::createFromTableRow($row)
+                ModelFlag::createFromActiveRow($flag), ModelPersonHasFlag::createFromActiveRow($row)
             );
         }
         return $result;
@@ -171,7 +171,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
             $postContact->address_id; // stupid touch
             $address = $postContact->ref(DbNames::TAB_ADDRESS, 'address_id');
             $result[] = ModelMPostContact::createFromExistingModels(
-                ModelAddress::createFromTableRow($address), ModelPostContact::createFromTableRow($postContact)
+                ModelAddress::createFromActiveRow($address), ModelPostContact::createFromActiveRow($postContact)
             );
         }
         return $result;
@@ -251,7 +251,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         $history = $this->related(DbNames::TAB_PERSON_HISTORY, 'person_id')->order(('ac_year DESC'))->fetch();
 
         if ($history) {
-            return ModelPersonHistory::createFromTableRow($history);
+            return ModelPersonHistory::createFromActiveRow($history);
         } else {
             return null;
         }
@@ -279,7 +279,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     public function getActiveOrgs(YearCalculator $yearCalculator) {
         $result = [];
         foreach ($this->related(DbNames::TAB_ORG, 'person_id') as $org) {
-            $org = ModelOrg::createFromTableRow($org);
+            $org = ModelOrg::createFromActiveRow($org);
             $year = $yearCalculator->getCurrentYear($org->getContest());
             if ($org->since <= $year && ($org->until === null || $org->until >= $year)) {
                 $result[$org->contest_id] = $org;
@@ -297,7 +297,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     public function getActiveContestants(YearCalculator $yearCalculator) {
         $result = [];
         foreach ($this->related(DbNames::TAB_CONTESTANT_BASE, 'person_id') as $contestant) {
-            $contestant = ModelContestant::createFromTableRow($contestant);
+            $contestant = ModelContestant::createFromActiveRow($contestant);
             $currentYear = $yearCalculator->getCurrentYear($contestant->getContest());
             if ($contestant->year >= $currentYear) { // forward contestant
                 if (isset($result[$contestant->contest_id])) {
@@ -367,7 +367,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         $query = $this->related(DbNames::TAB_EVENT_PERSON_ACCOMMODATION, 'person_id')->where('event_accommodation.event_id=?', $eventId);
         $accommodations = [];
         foreach ($query as $row) {
-            $model = ModelEventPersonAccommodation::createFromTableRow($row);
+            $model = ModelEventPersonAccommodation::createFromActiveRow($row);
             $eventAcc = $model->getEventAccommodation();
             $key = $eventAcc->date->format(ModelEventAccommodation::ACC_DATE_FORMAT);
             $accommodations[$key] = $eventAcc->event_accommodation_id;
@@ -431,7 +431,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         $eventId = $event->event_id;
         $teachers = $this->getEventTeacher()->where('event_id', $eventId);
         foreach ($teachers as $row) {
-            $team = ModelFyziklaniTeam::createFromTableRow($row);
+            $team = ModelFyziklaniTeam::createFromActiveRow($row);
             $roles[] = [
                 'type' => 'teacher',
                 'team' => $team,
@@ -439,7 +439,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         }
         $eventOrgs = $this->getEventOrg()->where('event_id', $eventId);
         foreach ($eventOrgs as $row) {
-            $org = ModelEventOrg::createFromTableRow($row);
+            $org = ModelEventOrg::createFromActiveRow($row);
             $roles[] = [
                 'type' => 'org',
                 'org' => $org,
@@ -447,7 +447,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         }
         $eventParticipants = $this->getEventParticipant()->where('event_id', $eventId);
         foreach ($eventParticipants as $row) {
-            $participant = ModelEventParticipant::createFromTableRow($row);
+            $participant = ModelEventParticipant::createFromActiveRow($row);
             $roles[] = [
                 'type' => 'participant',
                 'participant' => $participant,

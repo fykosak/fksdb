@@ -131,7 +131,7 @@ class ServiceAuthToken extends AbstractServiceSingle {
             ->where('data LIKE ?', $eventId . ':%');
         $tokens = [];
         foreach ($res as $token) {
-            $tokens[] = ModelAuthToken::createFromTableRow($token);
+            $tokens[] = ModelAuthToken::createFromActiveRow($token);
         }
         return $tokens;
     }

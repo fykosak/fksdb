@@ -18,6 +18,6 @@ class ModelFyziklaniTeamPosition extends AbstractModelSingle {
      * @return ModelFyziklaniRoom
      */
     public function getRoom(): ModelFyziklaniRoom {
-        return ModelFyziklaniRoom::createFromTableRow($this->room);
+        return ModelFyziklaniRoom::createFromActiveRow($this->room);
     }
 }

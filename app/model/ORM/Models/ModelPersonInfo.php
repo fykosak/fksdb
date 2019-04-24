@@ -20,7 +20,7 @@ class ModelPersonInfo extends AbstractModelSingle {
      * @return ModelPerson
      */
     public function getPerson(): ModelPerson {
-        return ModelPerson::createFromTableRow($this->ref(DbNames::TAB_PERSON, 'person_id'));
+        return ModelPerson::createFromActiveRow($this->ref(DbNames::TAB_PERSON, 'person_id'));
     }
 
     public function update($data) {

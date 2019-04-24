@@ -36,14 +36,14 @@ class ModelSubmit extends AbstractModelSingle implements IResource {
      */
     public function getTask(): ModelTask {
         $data = $this->ref(DbNames::TAB_TASK, 'task_id');
-        return ModelTask::createFromTableRow($data);
+        return ModelTask::createFromActiveRow($data);
     }
 
     /**
      * @return ModelContestant
      */
     public function getContestant(): ModelContestant {
-        return ModelContestant::createFromTableRow($this->ref(DbNames::TAB_CONTESTANT_BASE, 'ct_id'));
+        return ModelContestant::createFromActiveRow($this->ref(DbNames::TAB_CONTESTANT_BASE, 'ct_id'));
     }
 
     /**

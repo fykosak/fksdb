@@ -18,14 +18,14 @@ class ModelPersonHistory extends AbstractModelSingle {
      * @return ModelPerson
      */
     public function getPerson(): ModelPerson {
-        return ModelPerson::createFromTableRow($this->ref(DbNames::TAB_PERSON, 'person_id'));
+        return ModelPerson::createFromActiveRow($this->ref(DbNames::TAB_PERSON, 'person_id'));
     }
 
     /**
      * @return ModelSchool
      */
     public function getSchool(): ModelSchool {
-        return ModelSchool::createFromTableRow($this->ref(DbNames::TAB_SCHOOL, 'school_id'));
+        return ModelSchool::createFromActiveRow($this->ref(DbNames::TAB_SCHOOL, 'school_id'));
     }
 
     /**

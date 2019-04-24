@@ -22,14 +22,14 @@ class ModelTeacher extends AbstractModelSingle implements IResource {
      * @return ModelPerson
      */
     public function getPerson(): ModelPerson {
-        return ModelPerson::createFromTableRow($this->person);
+        return ModelPerson::createFromActiveRow($this->person);
     }
 
     /**
      * @return ModelSchool
      */
     public function getSchool(): ModelSchool {
-        return ModelSchool::createFromTableRow($this->school);
+        return ModelSchool::createFromActiveRow($this->school);
     }
 
     /**

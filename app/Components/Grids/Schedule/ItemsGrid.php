@@ -40,15 +40,15 @@ class ItemsGrid extends BaseGrid {
         $this->addColumn('name_en', _('EN Name'));
 
         $this->addColumn('price_czk', _('Price CZK'))->setRenderer(function ($row) {
-            $model = ModelScheduleItem::createFromTableRow($row);
+            $model = ModelScheduleItem::createFromActiveRow($row);
             return $model->getPrice(Price::CURRENCY_CZK);
         });
         $this->addColumn('price_eur', _('Price EUR'))->setRenderer(function ($row) {
-            $model = ModelScheduleItem::createFromTableRow($row);
+            $model = ModelScheduleItem::createFromActiveRow($row);
             return $model->getPrice(Price::CURRENCY_EUR);
         });
         $this->addColumn('capacity', _('Capacity'))->setRenderer(function ($row) {
-            $model = ModelScheduleItem::createFromTableRow($row);
+            $model = ModelScheduleItem::createFromActiveRow($row);
             return $model->getUsedCapacity() . '/' . $model->getCapacity();
         });
         $this->addColumn('require_id_number', _('Require "Id Number"'))->setRenderer(function ($row) {

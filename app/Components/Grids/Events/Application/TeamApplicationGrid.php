@@ -30,11 +30,11 @@ class TeamApplicationGrid extends AbstractApplicationGrid {
         $this->addColumns(['e_fyziklani_team_id', 'name', 'status']);
 
         $this->addButton('detail')->setShow(function ($row) {
-            $model = ModelFyziklaniTeam::createFromTableRow($row);
+            $model = ModelFyziklaniTeam::createFromActiveRow($row);
             return \in_array($model->getEvent()->event_type_id, [1, 9]);
         })->setText(_('Detail'))
             ->setLink(function ($row) {
-                $model = ModelFyziklaniTeam::createFromTableRow($row);
+                $model = ModelFyziklaniTeam::createFromActiveRow($row);
                 return $this->getPresenter()->link('detail', [
                     'id' => $model->e_fyziklani_team_id,
                 ]);

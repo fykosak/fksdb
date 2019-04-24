@@ -74,7 +74,7 @@ class DispatchGrid extends BaseGrid {
         $this->addColumn('year', _('Year'));
         $this->addColumn('roles', _('Roles'))->setRenderer(function ($row) {
             $container = Html::el('span');
-            $modelEvent = ModelEvent::createFromTableRow($row);
+            $modelEvent = ModelEvent::createFromActiveRow($row);
             $isEventParticipant = $this->person->isEventParticipant($modelEvent->event_id);
             if ($isEventParticipant) {
                 $container->addHtml(Html::el('span')->addAttributes(['class' => 'badge badge-success'])->addText(_('Event participant')));

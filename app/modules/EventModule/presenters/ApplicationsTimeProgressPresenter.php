@@ -53,7 +53,7 @@ class ApplicationsTimeProgressPresenter extends BasePresenter {
         $events = [];
         foreach ($this->getEventIdsByType() as $id) {
             $row = $this->serviceEvent->findByPrimary($id);
-            $events[$id] = ModelEvent::createFromTableRow($row);
+            $events[$id] = ModelEvent::createFromActiveRow($row);
         }
 
         return new TeamApplicationsTimeProgress($this->context, $events, $this->serviceFyziklaniTeam);

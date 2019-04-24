@@ -46,14 +46,14 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
      * @return ModelPerson
      */
     public function getPerson(): ModelPerson {
-        return ModelPerson::createFromTableRow($this->person);
+        return ModelPerson::createFromActiveRow($this->person);
     }
 
     /**
      * @return ModelEvent
      */
     public function getEvent(): ModelEvent {
-        return ModelEvent::createFromTableRow($this->event);
+        return ModelEvent::createFromActiveRow($this->event);
     }
 
     /**
@@ -63,7 +63,7 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
         $query = $this->related(DbNames::TAB_PAYMENT_ACCOMMODATION, 'payment_id');
         $items = [];
         foreach ($query as $row) {
-            $items[] = ModelEventPersonAccommodation::createFromTableRow($row->event_person_accommodation);
+            $items[] = ModelEventPersonAccommodation::createFromActiveRow($row->event_person_accommodation);
         }
         return $items;
     }
@@ -188,6 +188,6 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
      * @return ModelPayment
      */
     public function refresh(): IStateModel {
-        return self::createFromTableRow($this->getTable()->wherePrimary($this->payment_id)->fetch());
+        return self::createFromActiveRow($this->getTable()->wherePrimary($this->payment_id)->fetch());
     }
 }

@@ -26,14 +26,14 @@ class ModelFyziklaniSubmit extends AbstractModelSingle {
      * @return ModelFyziklaniTask
      */
     public function getTask(): ModelFyziklaniTask {
-        return ModelFyziklaniTask::createFromTableRow($this->fyziklani_task);
+        return ModelFyziklaniTask::createFromActiveRow($this->fyziklani_task);
     }
 
     /**
      * @return ModelFyziklaniTeam
      */
     public function getTeam(): ModelFyziklaniTeam {
-        return ModelFyziklaniTeam::createFromTableRow($this->e_fyziklani_team);
+        return ModelFyziklaniTeam::createFromActiveRow($this->e_fyziklani_team);
     }
 
     /**

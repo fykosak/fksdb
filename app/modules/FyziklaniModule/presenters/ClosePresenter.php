@@ -65,7 +65,7 @@ class ClosePresenter extends BasePresenter {
         if (!$row) {
             throw new BadRequestException(_('Team does not exists'), 404);
         }
-        $this->team = ModelFyziklaniTeam::createFromTableRow($row);
+        $this->team = ModelFyziklaniTeam::createFromActiveRow($row);
 
         try {
             /**
