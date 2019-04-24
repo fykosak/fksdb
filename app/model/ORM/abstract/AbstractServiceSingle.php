@@ -12,6 +12,7 @@ use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection as TableSelection;
 use Nette\InvalidStateException;
 use PDOException;
+use Tracy\Debugger;
 use Traversable;
 
 /**

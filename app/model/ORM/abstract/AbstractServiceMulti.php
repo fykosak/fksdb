@@ -86,8 +86,10 @@ abstract class AbstractServiceMulti extends Object implements IService {
         if (!$model instanceof $this->modelClassName) {
             throw new InvalidArgumentException('Service for class ' . $this->modelClassName . ' cannot store ' . get_class($model));
         }
-        $model->getMainModel()->update($data);
-        $model->getJoinedModel()->update($data);
+        $this->getMainService()->updateModel2($model->getMainModel(), $data);
+        $this->getJoinedService()->updateModel2($model->getJoinedModel(), $data);
+        //  $model->getMainModel()->update($data);
+        // $model->getJoinedModel()->update($data);
     }
 
     /**

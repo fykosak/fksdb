@@ -6,6 +6,9 @@ use FKSDB\Components\Forms\Controls\IReferencedHandler;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
 use FKSDB\Components\Forms\Controls\PersonAccommodation\ExistingPaymentException;
 use FKSDB\Components\Forms\Controls\PersonAccommodation\Handler;
+use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\AbstractServiceMulti;
+use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelPostContact;
@@ -185,6 +188,9 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
             /*
              * Person & its extensions
              */
+            /**
+             * @var AbstractModelSingle[]|AbstractServiceMulti[] $models
+             */
             $models = [
                 'person' => &$person,
                 'person_info' => ($info = $person->getInfo()) ?: $this->servicePersonInfo->createNew(),
@@ -193,6 +199,9 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
                 self::POST_CONTACT_DELIVERY => ($dataPostContact = $person->getDeliveryAddress()) ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_DELIVERY]),
                 self::POST_CONTACT_PERMANENT => ($dataPostContact = $person->getPermanentAddress(true)) ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_PERMANENT])
             ];
+            /**
+             * @var AbstractServiceSingle[] $services
+             */
             $services = [
                 'person' => $this->servicePerson,
                 'person_info' => $this->servicePersonInfo,
@@ -238,9 +247,14 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
                     continue;
                 }
                 $data[$t]['person_id'] = $models['person']->person_id; // this works even for person itself
+                if ($services[$t] instanceof AbstractServiceSingle) {
+                    $services[$t]->updateModel2($model, $data[$t]);
+                } else {
+                    $services[$t]->updateModel($model, $data[$t]);
+                 //   $services[$t]->save($model);
+                }
 
-                $services[$t]->updateModel($model, $data[$t]);
-                $services[$t]->save($model);
+
             }
 
             $this->commit();
@@ -380,7 +394,7 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
 
     private function beginTransaction() {
         $connection = $this->servicePerson->getConnection();
-        if (!$connection->inTransaction()) {
+        if (!$connection->getPdo()->inTransaction()) {
             $connection->beginTransaction();
         } else {
             $this->outerTransaction = true;
