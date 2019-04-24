@@ -22,94 +22,100 @@ use Tracy\IBarPanel;
  *
  * @author     David Grudl
  */
-class RoutingPanel extends Nette\Object implements IBarPanel {
-    /** @var Nette\Application\IRouter */
-    private $router;
 
-    /** @var Nette\Http\IRequest */
-    private $httpRequest;
+class RoutingPanel implements IBarPanel
+{
+    use Nette\SmartObject;
+	/** @var Nette\Application\IRouter */
+	private $router;
 
-    /** @var array */
-    private $routers = array();
+	/** @var Nette\Http\IRequest */
+	private $httpRequest;
 
-    /** @var Nette\Application\Request */
-    private $request;
+	/** @var array */
+	private $routers = array();
 
-
-    public static function initializePanel(Nette\Application\Application $application) {
-
-        Debugger::getBlueScreen()->addPanel(function ($e) use ($application) {
-            return $e ? NULL : array(
-                'tab' => 'Nette Application',
-                'panel' => '<h3>Requests</h3>' . \Tracy\Helpers::clickableDump($application->getRequests())
-                    . '<h3>Presenter</h3>' . \Tracy\Helpers::clickableDump($application->getPresenter())
-
-            );
-        });
-    }
+	/** @var Nette\Application\Request */
+	private $request;
 
 
-    public function __construct(Nette\Application\IRouter $router, Nette\Http\IRequest $httpRequest) {
-        $this->router = $router;
-        $this->httpRequest = $httpRequest;
-    }
+	public static function initializePanel(Nette\Application\Application $application)
+	{
+
+		Debugger::getBlueScreen()->addPanel(function($e) use ($application) {
+			return $e ? NULL : array(
+				'tab' => 'Nette Application',
+				'panel' => '<h3>Requests</h3>' . \Tracy\Helpers::clickableDump($application->getRequests())
+					. '<h3>Presenter</h3>' . \Tracy\Helpers::clickableDump($application->getPresenter())
+			);
+		});
+	}
 
 
-    /**
-     * Renders tab.
-     * @return string
-     */
-    public function getTab() {
-        $this->analyse($this->router);
-        ob_start();
-        require __DIR__ . '/templates/RoutingPanel.tab.phtml';
-        return ob_get_clean();
-    }
+	public function __construct(Nette\Application\IRouter $router, Nette\Http\IRequest $httpRequest)
+	{
+		$this->router = $router;
+		$this->httpRequest = $httpRequest;
+	}
 
 
-    /**
-     * Renders panel.
-     * @return string
-     */
-    public function getPanel() {
-        ob_start();
-        require __DIR__ . '/templates/RoutingPanel.panel.phtml';
-        return ob_get_clean();
-    }
+	/**
+	 * Renders tab.
+	 * @return string
+	 */
+	public function getTab()
+	{
+		$this->analyse($this->router);
+		ob_start();
+		require __DIR__ . '/templates/RoutingPanel.tab.phtml';
+		return ob_get_clean();
+	}
 
 
-    /**
-     * Analyses simple route.
-     * @param  Nette\Application\IRouter
-     * @return void
-     */
-    private function analyse($router, $module = '') {
-        if ($router instanceof Routers\RouteList) {
-            foreach ($router as $subRouter) {
-                $this->analyse($subRouter, $module . $router->getModule());
-            }
-            return;
-        }
+	/**
+	 * Renders panel.
+	 * @return string
+	 */
+	public function getPanel()
+	{
+		ob_start();
+		require __DIR__ . '/templates/RoutingPanel.panel.phtml';
+		return ob_get_clean();
+	}
 
-        $matched = 'no';
-        $request = $router->match($this->httpRequest);
-        if ($request) {
-            $request->setPresenterName($module . $request->getPresenterName());
-            $matched = 'may';
-            if (empty($this->request)) {
-                $this->request = $request;
-                $matched = 'yes';
-            }
-        }
 
-        $this->routers[] = array(
-            'matched' => $matched,
-            'class' => get_class($router),
-            'defaults' => $router instanceof Routers\Route || $router instanceof Routers\SimpleRouter ? $router->getDefaults() : array(),
-            'mask' => $router instanceof Routers\Route ? $router->getMask() : NULL,
-            'request' => $request,
-            'module' => rtrim($module, ':')
-        );
-    }
+	/**
+	 * Analyses simple route.
+	 * @param  Nette\Application\IRouter
+	 * @return void
+	 */
+	private function analyse($router, $module = '')
+	{
+		if ($router instanceof Routers\RouteList) {
+			foreach ($router as $subRouter) {
+				$this->analyse($subRouter, $module . $router->getModule());
+			}
+			return;
+		}
 
+		$matched = 'no';
+		$request = $router->match($this->httpRequest);
+		if ($request) {
+			$request->setPresenterName($module . $request->getPresenterName());
+			$matched = 'may';
+			if (empty($this->request)) {
+				$this->request = $request;
+				$matched = 'yes';
+			}
+		}
+
+		$this->routers[] = array(
+			'matched' => $matched,
+			'class' => get_class($router),
+			'defaults' => $router instanceof Routers\Route || $router instanceof Routers\SimpleRouter ? $router->getDefaults() : array(),
+			'mask' => $router instanceof Routers\Route ? $router->getMask() : NULL,
+			'request' => $request,
+			'module' => rtrim($module, ':')
+		);
+	}
 }

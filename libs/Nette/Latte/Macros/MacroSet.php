@@ -21,8 +21,9 @@ use Nette,
  *
  * @author     David Grudl
  */
-class MacroSet extends Nette\Object implements Latte\IMacro
+class MacroSet implements Latte\IMacro
 {
+    use Nette\SmartObject;
 	/** @var Latte\Compiler */
 	private $compiler;
 

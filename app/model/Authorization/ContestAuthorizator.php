@@ -5,17 +5,18 @@ namespace Authorization;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelRole;
 use Nette\Database\Table\ActiveRow;
-use Nette\Object;
 use Nette\Security\Permission;
 use Nette\Security\User;
+use Nette\SmartObject;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class ContestAuthorizator extends Object {
+class ContestAuthorizator {
 
+    use SmartObject;
     /**
      * @var User
      */

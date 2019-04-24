@@ -20,8 +20,9 @@ use Nette,
  *
  * @author     David Grudl
  */
-class IniAdapter extends Nette\Object implements Nette\Config\IAdapter
+class IniAdapter implements Nette\Config\IAdapter
 {
+    use Nette\SmartObject;
 	/** @internal */
 	const INHERITING_SEPARATOR = '<', // child < parent
 		KEY_SEPARATOR = '.', // key nesting key1.key2.key3

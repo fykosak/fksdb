@@ -5,16 +5,18 @@ namespace Authorization\Assertions;
 use Exports\StoredQuery;
 use FKSDB\ORM\DbNames;
 use Nette\Database\Connection;
-use Nette\Object;
 use Nette\Security\Permission;
 use Nette\Security\User;
+use Nette\SmartObject;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-abstract class AbstractEventOrgAssertion extends Object {
+abstract class AbstractEventOrgAssertion {
+
+    use SmartObject;
 
     private $eventTypeId;
     private $parameterName;

@@ -4,15 +4,16 @@ namespace Authorization;
 
 use Authorization\Assertions\EventOrgByIdAssertion;
 use Nette\Database\Connection;
-use Nette\Object;
 use Nette\Security\Permission;
 use Nette\Security\User;
+use Nette\SmartObject;
 
 /**
  * Class EventAuthorizator
  * @package Authorization
  */
-class EventAuthorizator extends Object {
+class EventAuthorizator {
+    use SmartObject;
     /**
      * @var User
      */
