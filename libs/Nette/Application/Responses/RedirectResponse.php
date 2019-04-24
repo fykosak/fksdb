@@ -23,8 +23,9 @@ use Nette,
  * @property-read string $url
  * @property-read int $code
  */
-class RedirectResponse extends Nette\Object implements Nette\Application\IResponse
+class RedirectResponse implements Nette\Application\IResponse
 {
+    use Nette\SmartObject;
 	/** @var string */
 	private $url;
 

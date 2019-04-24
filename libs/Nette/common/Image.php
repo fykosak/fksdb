@@ -99,8 +99,9 @@ use Nette;
  * @property-read int $height
  * @property-read resource $imageResource
  */
-class Image extends Object
+class Image
 {
+    use Nette\SmartObject;
 	/** {@link resize()} only shrinks images */
 	const SHRINK_ONLY = 1;
 
@@ -621,8 +622,6 @@ class Image extends Object
 			$res = call_user_func_array($function, $args);
 			return is_resource($res) && get_resource_type($res) === 'gd' ? $this->setImageResource($res) : $res;
 		}
-
-		return parent::__call($name, $args);
 	}
 
 }

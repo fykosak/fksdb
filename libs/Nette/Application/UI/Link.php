@@ -24,8 +24,9 @@ use Nette;
  * @property-read string $destination
  * @property-read array $parameters
  */
-class Link extends Nette\Object
+class Link
 {
+    use Nette\SmartObject;
 	/** @var PresenterComponent */
 	private $component;
 

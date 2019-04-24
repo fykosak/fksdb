@@ -24,7 +24,7 @@ use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
-use Nette\Object;
+use Nette\SmartObject;
 use Nette\Utils\Arrays;
 use Persons\IModifiabilityResolver;
 use Persons\IVisibilityResolver;
@@ -36,7 +36,9 @@ use Persons\ReferencedPersonHandlerFactory;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-abstract class AbstractReferencedPersonFactory extends Object implements IReferencedSetter {
+abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
+
+    use SmartObject;
 
     const SEARCH_EMAIL = 'email';
     const SEARCH_ID = 'id';

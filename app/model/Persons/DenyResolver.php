@@ -3,7 +3,7 @@
 namespace Persons;
 
 use FKSDB\ORM\Models\ModelPerson;
-use Nette\Object;
+use Nette\SmartObject;
 
 
 /**
@@ -11,7 +11,8 @@ use Nette\Object;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class DenyResolver extends Object implements IVisibilityResolver, IModifiabilityResolver {
+class DenyResolver implements IVisibilityResolver, IModifiabilityResolver {
+    use SmartObject;
 
     /**
      * @param ModelPerson $person

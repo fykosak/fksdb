@@ -31,7 +31,7 @@ define('NETTE_PACKAGE', '5.3');
 
 
 require_once __DIR__ . '/common/exceptions.php';
-require_once __DIR__ . '/common/Object.php';
+//require_once __DIR__ . '/common/Object.php';
 require_once __DIR__ . '/Utils/LimitedScope.php';
 require_once __DIR__ . '/Loaders/AutoLoader.php';
 require_once __DIR__ . '/Loaders/NetteLoader.php';

@@ -27,8 +27,9 @@ use Nette;
  * @property-read mixed $queriedRole
  * @property-read mixed $queriedResource
  */
-class Permission extends Nette\Object implements IAuthorizator
+class Permission implements IAuthorizator
 {
+    use Nette\SmartObject;
 	/** @var array  Role storage */
 	private $roles = array();
 

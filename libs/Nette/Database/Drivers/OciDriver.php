@@ -19,8 +19,9 @@ use Nette;
  *
  * @author     David Grudl
  */
-class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriver
+class OciDriver implements Nette\Database\ISupplementalDriver
 {
+    use Nette\SmartObject;
 	/** @var Nette\Database\Connection */
 	private $connection;
 

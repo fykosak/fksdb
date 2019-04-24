@@ -11,7 +11,7 @@ use FKSDB\ORM\Services\ServiceEvent;
 use FKSDB\ORM\Services\ServiceTask;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
-use Nette\Object;
+use Nette\SmartObject;
 use Nette\Utils\Arrays;
 
 /**
@@ -19,8 +19,8 @@ use Nette\Utils\Arrays;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class ExportFormatFactory extends Object {
-
+class ExportFormatFactory {
+    use SmartObject;
     const AESOP = 'aesop';
     const CSV_HEADLESS = 'csv';
     const CSV_HEAD = 'csvh';
@@ -133,7 +133,7 @@ class ExportFormatFactory extends Object {
             'year' => $queryParameters['ac_year'],
         ));
 
-        if(array_key_exists('eventTypeId', $parameters[$qid])) {
+        if (array_key_exists('eventTypeId', $parameters[$qid])) {
             $contest = $this->serviceContest->findByPrimary($queryParameters['contest']);
             $event = $this->serviceEvent->getByEventTypeId($contest, $queryParameters['year'], $parameters[$qid]['eventTypeId']);
             $format->addParameters(array(

@@ -2,14 +2,15 @@
 
 namespace Github;
 
-use Nette\Object;
+use Nette\SmartObject;
 
 /**
  * Class Repository
  * @package Github
  */
-class Repository extends Object {
+class Repository {
 
+    use SmartObject;
     /** @var string $name */
     public $id;
 

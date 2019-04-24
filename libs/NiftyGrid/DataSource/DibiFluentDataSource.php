@@ -4,7 +4,7 @@ namespace NiftyGrid;
 
 use Nette,
 	DibiFluent;
-
+use NiftyGrid\DataSource\IDataSource;
 
 
 /**
@@ -25,8 +25,9 @@ use Nette,
  * @licence LGPL
  * @see     https://github.com/Niftyx/NiftyGrid
  */
-class DibiFluentDataSource extends Nette\Object implements IDataSource
+class DibiFluentDataSource implements IDataSource
 {
+    use Nette\SmartObject;
 	/** @var DibiFluent */
 	private $fluent;
 

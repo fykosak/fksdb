@@ -19,8 +19,9 @@ use Nette;
  *
  * @author     Jakub Vrana
  */
-class SqlLiteral extends Nette\Object
+class SqlLiteral
 {
+    use Nette\SmartObject;
 	/** @var string */
 	private $value = '';
 
