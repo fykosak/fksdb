@@ -9,6 +9,7 @@ use FKSDB\ORM\Services\ServiceEventParticipant;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @deprecated
  */
 class ServiceMDsefParticipant extends AbstractServiceMulti {
 

@@ -7,6 +7,7 @@ use FKSDB\ORM\Services\ServicePostContact;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @deprecated
  */
 class ServiceMPostContact extends AbstractServiceMulti {
 

@@ -33,6 +33,7 @@ class ServiceEventOrg extends AbstractServiceSingle {
     /**
      * @param \FKSDB\ORM\IModel $model
      * @return mixed|void
+     * @deprecated
      */
     public function save(IModel &$model) {
         try {

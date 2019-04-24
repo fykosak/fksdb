@@ -7,6 +7,7 @@ use FKSDB\ORM\Services\ServicePersonHasFlag;
 
 /**
  * @author Lukáš Timko <lukast@fykos.cz>
+ * @deprecated
  */
 class ServiceMPersonHasFlag extends AbstractServiceMulti {
 

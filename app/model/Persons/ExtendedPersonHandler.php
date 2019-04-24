@@ -248,26 +248,12 @@ class ExtendedPersonHandler extends Object {
         // update data
         if (isset($values[self::CONT_MODEL])) {
             $data = FormUtils::emptyStrToNull($values[self::CONT_MODEL]);
-            if ($this->service instanceof AbstractServiceSingle) {
-                if (!$model) {
-                    $this->service->createNewModel(\array_merge((array)$data, $newData));
-                } else {
-                    $this->service->updateModel2($model, $data);
-                }
-
+            if (!$model) {
+                $this->service->createNewModel(\array_merge((array)$data, $newData));
             } else {
-                if (!$model) {
-                    $model = $this->service->createNew(\array_merge((array)$data, $newData));
-                } else {
-                    $this->service->updateModel($model, $data);
-                }
-                $this->service->save($model);
+                $this->service->updateModel2($model, $data);
             }
-
         }
-
-        // store model
-        //   $this->service->save($model);
     }
 
 }

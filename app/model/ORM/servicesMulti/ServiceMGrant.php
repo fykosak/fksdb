@@ -6,6 +6,7 @@ use FKSDB\ORM\Services\ServiceRole;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @deprecated
  */
 class ServiceMGrant extends AbstractServiceMulti {
 

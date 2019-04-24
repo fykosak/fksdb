@@ -54,6 +54,7 @@ abstract class AbstractServiceMulti extends Object implements IService {
      *
      * @param array $data
      * @return AbstractModelMulti
+     * @deprecated
      */
     public function createNew($data = null) {
         $mainModel = $this->getMainService()->createNew($data);
@@ -62,6 +63,20 @@ abstract class AbstractServiceMulti extends Object implements IService {
         $className = $this->modelClassName;
         $result = new $className($this, $mainModel, $joinedModel);
         return $result;
+    }
+
+    /**
+     * Use this method to create new models!
+     *
+     * @param array $data
+     * @return AbstractModelMulti
+     */
+    public function createNewModel($data) {
+        $mainModel = $this->getMainService()->createNewModel($data);
+        $joinedModel = $this->getJoinedService()->createNewModel($data);
+
+        $className = $this->modelClassName;
+        return new $className($this, $mainModel, $joinedModel);
     }
 
     /**
@@ -79,17 +94,22 @@ abstract class AbstractServiceMulti extends Object implements IService {
     /**
      * @param IModel|AbstractModelMulti $model
      * @param $data
-     * @param bool $alive
      * @return mixed|void
      */
-    public function updateModel(IModel $model, $data, $alive = true) {
+    public function updateModel(IModel $model, $data) {
+        $this->updateModel2($model, $data);
+    }
+
+    /**
+     * @param IModel $model
+     * @param $data
+     */
+    public function updateModel2(IModel $model, $data) {
         if (!$model instanceof $this->modelClassName) {
             throw new InvalidArgumentException('Service for class ' . $this->modelClassName . ' cannot store ' . get_class($model));
         }
         $this->getMainService()->updateModel2($model->getMainModel(), $data);
         $this->getJoinedService()->updateModel2($model->getJoinedModel(), $data);
-        //  $model->getMainModel()->update($data);
-        // $model->getJoinedModel()->update($data);
     }
 
     /**
@@ -169,6 +189,24 @@ abstract class AbstractServiceMulti extends Object implements IService {
      */
     public function findByPrimary($key) {
         $joinedModel = $this->getJoinedService()->findByPrimary($key);
+        if (!$joinedModel) {
+            return null;
+        }
+        $this->modelClassName;
+        $mainModel = $this->getMainService()
+            ->getTable()
+            ->where($this->joiningColumn, $joinedModel->{$this->joiningColumn})
+            ->fetch(); //?? is this always unique??
+        return $this->composeModel($mainModel, $joinedModel);
+    }
+
+    /**
+     *
+     * @param int $key ID of the joined models
+     * @return AbstractModelMulti|null
+     */
+    public function findByPrimary2(int $key) {
+        $joinedModel = $this->getJoinedService()->findByPrimary2($key);
         if (!$joinedModel) {
             return null;
         }

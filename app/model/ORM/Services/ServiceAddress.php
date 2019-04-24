@@ -8,8 +8,8 @@ use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelAddress;
 use FKSDB\ORM\Models\ModelRegion;
 use InvalidPostalCode;
-use Tracy\Debugger;
 use Nette\InvalidArgumentException;
+use Tracy\Debugger;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -35,6 +35,7 @@ class ServiceAddress extends AbstractServiceSingle {
     /**
      * @param \FKSDB\ORM\IModel $model
      * @return mixed|void
+     * @deprecated
      */
     public function save(IModel &$model) {
         $modelClassName = $this->getModelClassName();

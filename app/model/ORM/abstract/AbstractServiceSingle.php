@@ -12,7 +12,6 @@ use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection as TableSelection;
 use Nette\InvalidStateException;
 use PDOException;
-use Tracy\Debugger;
 use Traversable;
 
 /**
@@ -151,12 +150,12 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     }
 
     /**
-     * @param AbstractModelSingle $model
+     * @param AbstractModelSingle|IModel $model
      * @param Traversable|array $data
      * @return int
      * @throws InvalidArgumentException
      */
-    public function updateModel2(AbstractModelSingle $model, $data = null) {
+    public function updateModel2(IModel $model, $data) {
         $this->checkType($model);
         $data = $this->filterData($data);
         return $model->update($data);
