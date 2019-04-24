@@ -5,8 +5,8 @@ namespace Events\Spec\Fyziklani;
 use Events\FormAdjustments\AbstractAdjustment;
 use Events\FormAdjustments\IFormAdjustment;
 use Events\Model\Holder\Holder;
+use FKSDB\ORM\Services\ServicePersonHistory;
 use Nette\Forms\Controls\BaseControl;
-use ServicePersonHistory;
 
 /**
  * More user friendly Due to author's laziness there's no class doc (or it's self explaining).
@@ -25,18 +25,33 @@ abstract class SchoolCheck extends AbstractAdjustment implements IFormAdjustment
      */
     private $holder;
 
+    /**
+     * SchoolCheck constructor.
+     * @param ServicePersonHistory $servicePersonHistory
+     */
     function __construct(ServicePersonHistory $servicePersonHistory) {
         $this->servicePersonHistory = $servicePersonHistory;
     }
 
+    /**
+     * @return Holder
+     */
     public function getHolder() {
         return $this->holder;
     }
 
+    /**
+     * @param Holder $holder
+     */
     public function setHolder(Holder $holder) {
         $this->holder = $holder;
     }
 
+    /**
+     * @param $schoolControls
+     * @param $personControls
+     * @return array
+     */
     protected final function getSchools($schoolControls, $personControls) {
         $personIds = array_filter(array_map(function(BaseControl $control) {
                             return $control->getValue();

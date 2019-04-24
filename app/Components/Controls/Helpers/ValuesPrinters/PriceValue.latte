@@ -1,0 +1,8 @@
+{layout './@layout.latte'}
+{block value}
+    {if \is_null($price)}
+        {control notSet}
+    {else}
+        {$price->__toString()}
+    {/if}
+{/block}

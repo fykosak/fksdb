@@ -3,8 +3,8 @@
 namespace FKSDB\Components\Grids;
 
 
+use FKSDB\ORM\Services\ServiceContestant;
 use OrgModule\BasePresenter;
-use ServiceContestant;
 use SQL\ViewDataSource;
 
 /**
@@ -14,10 +14,14 @@ use SQL\ViewDataSource;
 class ContestantsGrid extends BaseGrid {
 
     /**
-     * @var ServiceContestant
+     * @var \FKSDB\ORM\Services\ServiceContestant
      */
     private $serviceContestant;
 
+    /**
+     * ContestantsGrid constructor.
+     * @param ServiceContestant $serviceContestant
+     */
     function __construct(ServiceContestant $serviceContestant) {
         parent::__construct();
 

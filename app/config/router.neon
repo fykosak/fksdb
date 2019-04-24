@@ -24,7 +24,7 @@ parameters:
         db: db
 
     # Pipe-separated list of presenters w/out module
-    rootPresenters: settings|github|my-payment
+    rootPresenters: settings|github|my-payments
 
     # Pipe-separated list of modules
     modules: org|public
@@ -98,6 +98,13 @@ fksrouter:
             subdomain: %subdomain.db%
             tld: %domain.tld%
             contestId: [filterTable: %inverseContestMapping%]
+            flags: SECURED
+
+        # Application itself (note the presenters w/out module are handled specially)
+        '//[!<subdomain>].%domain.host%.[!<tld>]%path%common/<presenter>/<action=default>[/<id>]':
+            module: Common
+            subdomain: %subdomain.db%
+            tld: %domain.tld%
             flags: SECURED
 
         '//[!<subdomain>].%domain.host%.[!<tld>]%path%fyziklani[<eventId [0-9]+>]/<presenter>/<action=default>[/<id>]':

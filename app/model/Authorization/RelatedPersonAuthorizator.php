@@ -4,25 +4,33 @@ namespace Authorization;
 
 use Events\Machine\BaseMachine;
 use Events\Model\Holder\Holder;
-use Nette\Object;
 use Nette\Security\User;
+use Nette\SmartObject;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class RelatedPersonAuthorizator extends Object {
+class RelatedPersonAuthorizator {
 
+    use SmartObject;
     /**
      * @var User
      */
     private $user;
 
+    /**
+     * RelatedPersonAuthorizator constructor.
+     * @param User $user
+     */
     function __construct(User $user) {
         $this->user = $user;
     }
 
+    /**
+     * @return User
+     */
     public function getUser() {
         return $this->user;
     }

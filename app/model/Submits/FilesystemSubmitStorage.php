@@ -1,9 +1,9 @@
 <?php
 
-namespace Submits;
+namespace FKSDB\Submits;
 
-use FKSDB\ORM\ModelSubmit;
-use Nette\Diagnostics\Debugger;
+use FKSDB\ORM\Models\ModelSubmit;
+use Tracy\Debugger;
 use Nette\InvalidStateException;
 use Nette\Utils\Finder;
 use Nette\Utils\Strings;
@@ -61,6 +61,13 @@ class FilesystemSubmitStorage implements ISubmitStorage {
      */
     private $processings = [];
 
+    /**
+     * FilesystemSubmitStorage constructor.
+     * @param $root
+     * @param $directoryMask
+     * @param $filenameMask
+     * @param $contestMap
+     */
     function __construct($root, $directoryMask, $filenameMask, $contestMap) {
         $this->root = $root;
         $this->directoryMask = $directoryMask;
@@ -68,6 +75,9 @@ class FilesystemSubmitStorage implements ISubmitStorage {
         $this->contestMap = $contestMap;
     }
 
+    /**
+     * @param IStorageProcessing $processing
+     */
     public function addProcessing(IStorageProcessing $processing) {
         $this->processings[] = $processing;
     }
@@ -111,8 +121,8 @@ class FilesystemSubmitStorage implements ISubmitStorage {
                         try {
                             $processing->process($submit);
                             rename($dest, $working);
-                        } catch (ProcessingException $e) {
-                            Debugger::log($e);
+                        } catch (ProcessingException $exception) {
+                            Debugger::log($exception);
                         }
                     }
 
@@ -121,8 +131,8 @@ class FilesystemSubmitStorage implements ISubmitStorage {
                     rename($filename, $dest);
                 }
             }
-        } catch (InvalidStateException $e) {
-            throw new StorageException('Error while storing files.', null, $e);
+        } catch (InvalidStateException $exception) {
+            throw new StorageException('Error while storing files.', null, $exception);
         }
 
         $this->todo = null;
@@ -142,7 +152,7 @@ class FilesystemSubmitStorage implements ISubmitStorage {
 
     /**
      * @param string $filename
-     * @param ModelSubmit $submit
+     * @param \FKSDB\ORM\Models\ModelSubmit $submit
      * @return void
      */
     public function storeFile($filename, ModelSubmit $submit) {
@@ -156,6 +166,11 @@ class FilesystemSubmitStorage implements ISubmitStorage {
         ];
     }
 
+    /**
+     * @param \FKSDB\ORM\Models\ModelSubmit $submit
+     * @param int $type
+     * @return null|string
+     */
     public function retrieveFile(ModelSubmit $submit, $type = self::TYPE_PROCESSED) {
         $files = $this->retrieveFiles($submit);
         if ($type == self::TYPE_ORIGINAL) {
@@ -182,7 +197,7 @@ class FilesystemSubmitStorage implements ISubmitStorage {
     /**
      * Checks whether there exists valid file for the submit.
      *
-     * @param \FKSDB\ORM\ModelSubmit $submit
+     * @param \FKSDB\ORM\Models\ModelSubmit $submit
      * @return bool
      */
     public function existsFile(ModelSubmit $submit) {
@@ -191,6 +206,9 @@ class FilesystemSubmitStorage implements ISubmitStorage {
         return (bool) $filename;
     }
 
+    /**
+     * @param \FKSDB\ORM\Models\ModelSubmit $submit
+     */
     public function deleteFile(ModelSubmit $submit) {
         $fails = [];
         $files = $this->retrieveFiles($submit);
@@ -205,13 +223,17 @@ class FilesystemSubmitStorage implements ISubmitStorage {
         }
     }
 
+    /**
+     * @param \FKSDB\ORM\Models\ModelSubmit $submit
+     * @return array
+     */
     private function retrieveFiles(ModelSubmit $submit) {
         $dir = $this->root . DIRECTORY_SEPARATOR . $this->createDirname($submit);
 
         try {
             $it = Finder::findFiles('*' . self::DELIMITER . $submit->submit_id . '*')->in($dir);
             $files = iterator_to_array($it, false);
-        } catch (UnexpectedValueException $e) {
+        } catch (UnexpectedValueException $exception) {
             return [];
         }
 
@@ -220,7 +242,7 @@ class FilesystemSubmitStorage implements ISubmitStorage {
 
     /**
      *
-     * @param ModelSubmit $submit
+     * @param \FKSDB\ORM\Models\ModelSubmit $submit
      * @return string  directory part of the path relative to root, w/out trailing slash
      */
     private function createDirname(ModelSubmit $submit) {
@@ -235,7 +257,7 @@ class FilesystemSubmitStorage implements ISubmitStorage {
     }
 
     /**
-     * @param \FKSDB\ORM\ModelSubmit $submit
+     * @param \FKSDB\ORM\Models\ModelSubmit $submit
      * @return string
      */
     private function createFilename(ModelSubmit $submit) {
@@ -246,7 +268,7 @@ class FilesystemSubmitStorage implements ISubmitStorage {
         $label = Strings::webalize($task->label, null, false);
 
         $contestant = $submit->getContestant();
-        $contestantName = $contestant->getPerson()->getFullname();
+        $contestantName = $contestant->getPerson()->getFullName();
         $contestantName = preg_replace('/ +/', '_', $contestantName);
         $contestantName = Strings::webalize($contestantName, '_');
 

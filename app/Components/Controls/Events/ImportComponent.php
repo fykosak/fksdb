@@ -14,7 +14,7 @@ use FKSDB\Utils\CSVParser;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
-use Nette\Diagnostics\Debugger;
+use Tracy\Debugger;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\SubmitButton;
 
@@ -50,6 +50,14 @@ class ImportComponent extends Control {
      */
     private $container;
 
+    /**
+     * ImportComponent constructor.
+     * @param Machine $machine
+     * @param SingleEventSource $source
+     * @param ApplicationHandler $handler
+     * @param FlashMessageDump $flashDump
+     * @param Container $container
+     */
     function __construct(Machine $machine, SingleEventSource $source, ApplicationHandler $handler, FlashMessageDump $flashDump, Container $container) {
         parent::__construct();
         $this->machine = $machine;
@@ -59,6 +67,11 @@ class ImportComponent extends Control {
         $this->container = $container;
     }
 
+    /**
+     * @param $name
+     * @return FormControl
+     * @throws \Nette\Application\BadRequestException
+     */
     protected function createComponentFormImport($name) {
         $control = new FormControl();
         $form = $control->getForm();
@@ -103,6 +116,10 @@ class ImportComponent extends Control {
         $this->template->render();
     }
 
+    /**
+     * @param Form $form
+     * @throws \Nette\Application\AbortException
+     */
     private function handleFormImport(Form $form) {
         $values = $form->getValues();
         try {
@@ -133,12 +150,15 @@ class ImportComponent extends Control {
             }
 
             $this->redirect('this');
-        } catch (ImportHandlerException $e) {
+        } catch (ImportHandlerException $exception) {
             $this->flashDump->dump($this->handler->getLogger(), $this->getPresenter());
-            $this->getPresenter()->flashMessage($e->getMessage(), BasePresenter::FLASH_ERROR);
+            $this->getPresenter()->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
         }
     }
 
+    /**
+     * @return SelectBox
+     */
     private function createKeyElement() {
         $baseHolder = $this->source->getDummyHolder()->getPrimaryHolder();
         $options = [];

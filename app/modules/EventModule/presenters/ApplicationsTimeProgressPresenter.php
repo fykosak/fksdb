@@ -5,22 +5,37 @@ namespace EventModule;
 
 
 use FKSDB\Components\React\ReactComponent\Events\TeamApplicationsTimeProgress;
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\ForbiddenRequestException;
-use ORM\Services\Events\ServiceFyziklaniTeam;
 
+/**
+ * Class ApplicationsTimeProgressPresenter
+ * @package EventModule
+ */
 class ApplicationsTimeProgressPresenter extends BasePresenter {
     /**
-     * @var ServiceFyziklaniTeam
+     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam
      */
     private $serviceFyziklaniTeam;
 
+    /**
+     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam $serviceFyziklaniTeam
+     */
     public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam) {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
     public function authorizedDefault() {
-       $this->setAuthorized($this->eventIsAllowed('event.applicationsTimeProgress', 'default'));
+        if (!\in_array($this->getEvent()->event_type_id, [1, 9])) {
+            $this->setAuthorized(false);
+            return;
+        }
+        $this->setAuthorized($this->eventIsAllowed('event.applicationsTimeProgress', 'default'));
     }
 
     public function titleDefault() {
@@ -28,11 +43,17 @@ class ApplicationsTimeProgressPresenter extends BasePresenter {
         $this->setIcon('fa fa-line-chart');
     }
 
+    /**
+     * @return TeamApplicationsTimeProgress
+     * @throws ForbiddenRequestException
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
     protected function createComponentTeamApplicationsTimeProgress() {
         $events = [];
         foreach ($this->getEventIdsByType() as $id) {
             $row = $this->serviceEvent->findByPrimary($id);
-            $events[$id] = ModelEvent::createFromTableRow($row);
+            $events[$id] = ModelEvent::createFromActiveRow($row);
         }
 
         return new TeamApplicationsTimeProgress($this->context, $events, $this->serviceFyziklaniTeam);

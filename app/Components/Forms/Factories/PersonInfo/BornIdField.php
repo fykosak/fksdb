@@ -6,6 +6,10 @@ use FKSDB\Components\Forms\Controls\WriteOnlyInput;
 use FKSDB\Components\Forms\Rules\BornNumber;
 use Nette\Forms\Form;
 
+/**
+ * Class BornIdField
+ * @package FKSDB\Components\Forms\Factories\PersonInfo
+ */
 class BornIdField extends WriteOnlyInput {
 
     public function __construct() {

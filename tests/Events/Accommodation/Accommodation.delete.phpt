@@ -4,7 +4,7 @@ namespace Events\Accommodation;
 
 use Nette\Application\Request;
 use Nette\Config\Helpers;
-use Nette\DateTime;
+use Nette\Utils\DateTime;
 use Tester\Assert;
 
 $container = require '../../bootstrap.php';
@@ -25,7 +25,7 @@ class AccommodationTest extends AccommodationTestCase {
             'event_id' => $this->eventId,
             'status' => 'cancelled',
         ]);
-        $this->insert(\DbNames::TAB_E_DSEF_PARTICIPANT,
+        $this->insert(\FKSDB\ORM\DbNames::TAB_E_DSEF_PARTICIPANT,
             [
                 'event_participant_id' => $this->dsefAppId,
                 'e_dsef_group_id' => 2,
@@ -35,7 +35,7 @@ class AccommodationTest extends AccommodationTestCase {
             'event_accommodation_id' => $this->accId,
         ]);
         $loginId = $this->insert('login', ['person_id' => $this->lastPersonId, 'active' => 1]);
-        $this->insert(\DbNames::TAB_GRANT, ['login_id' => $loginId, 'role_id' => 5, 'contest_id' => 1]);
+        $this->insert(\FKSDB\ORM\DbNames::TAB_GRANT, ['login_id' => $loginId, 'role_id' => 5, 'contest_id' => 1]);
         $this->authenticate($loginId);
 
     }

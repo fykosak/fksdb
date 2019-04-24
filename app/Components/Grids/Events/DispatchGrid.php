@@ -5,15 +5,20 @@ namespace FKSDB\Components\Grids\Events;
 
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\ORM\ModelEvent;
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Services\ServiceEvent;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;
 
+/**
+ * Class DispatchGrid
+ * @package FKSDB\Components\Grids\Events
+ */
 class DispatchGrid extends BaseGrid {
 
     /**
-     * @var \ServiceEvent
+     * @var ServiceEvent
      */
     private $serviceEvent;
     /**
@@ -21,11 +26,17 @@ class DispatchGrid extends BaseGrid {
      */
     private $person;
     /**
-     * @var \YearCalculator
+     * @var \FKSDB\YearCalculator
      */
     private $yearCalculator;
 
-    function __construct(\ServiceEvent $serviceEvent, ModelPerson $person, \YearCalculator $yearCalculator) {
+    /**
+     * DispatchGrid constructor.
+     * @param ServiceEvent $serviceEvent
+     * @param ModelPerson $person
+     * @param \FKSDB\YearCalculator $yearCalculator
+     */
+    function __construct(ServiceEvent $serviceEvent, ModelPerson $person, \FKSDB\YearCalculator $yearCalculator) {
         parent::__construct();
         $this->person = $person;
         $this->serviceEvent = $serviceEvent;
@@ -63,7 +74,7 @@ class DispatchGrid extends BaseGrid {
         $this->addColumn('year', _('Year'));
         $this->addColumn('roles', _('Roles'))->setRenderer(function ($row) {
             $container = Html::el('span');
-            $modelEvent = ModelEvent::createFromTableRow($row);
+            $modelEvent = ModelEvent::createFromActiveRow($row);
             $isEventParticipant = $this->person->isEventParticipant($modelEvent->event_id);
             if ($isEventParticipant) {
                 $container->addHtml(Html::el('span')->addAttributes(['class' => 'badge badge-success'])->addText(_('Event participant')));

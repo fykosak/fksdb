@@ -2,10 +2,10 @@
 
 namespace FKSDB\Components\Forms\Containers;
 
-use AbstractModelMulti;
+use FKSDB\ORM\AbstractModelMulti;
+use FKSDB\ORM\Services\ServiceRegion;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
-use ServiceRegion;
 
 /**
  *
@@ -14,10 +14,13 @@ use ServiceRegion;
 class AddressContainer extends ModelContainer {
 
     /**
-     * @var ServiceRegion
+     * @var \FKSDB\ORM\Services\ServiceRegion
      */
     private $serviceRegion;
 
+    /**
+     * @param \FKSDB\ORM\Services\ServiceRegion $serviceRegion
+     */
     public function setServiceRegion(ServiceRegion $serviceRegion) {
         $this->serviceRegion = $serviceRegion;
     }
@@ -40,6 +43,11 @@ class AddressContainer extends ModelContainer {
         $this->setDefaults($value === null ? [] : $value);
     }
 
+    /**
+     * @param $values
+     * @param bool $erase
+     * @return \Nette\Forms\Container|void
+     */
     public function setValues($values, $erase = FALSE) {
         if ($values instanceof ActiveRow || $values instanceof AbstractModelMulti) { //assert its from address table
             if ($values instanceof AbstractModelMulti) {
@@ -58,11 +66,15 @@ class AddressContainer extends ModelContainer {
         parent::setValues($values, $erase);
     }
 
+    /**
+     * @param bool $asArray
+     * @return array|\Nette\Utils\ArrayHash
+     */
     public function getValues($asArray = FALSE) {
         $values = parent::getValues($asArray);
         if (count($values) && !isset($values['region_id'])) {
             if (!$this->serviceRegion) {
-                throw new InvalidStateException("You must set ServiceRegion before getting values from the address container.");
+                throw new InvalidStateException("You must set FKSDB\ORM\Services\ServiceRegion before getting values from the address container.");
             }
             $region = $this->serviceRegion->getCountries()->where('country_iso', $values['country_iso'])->fetch();
             $values['region_id'] = $region ? $region->region_id : null;

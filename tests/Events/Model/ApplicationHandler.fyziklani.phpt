@@ -7,12 +7,11 @@ $container = require '../../bootstrap.php';
 use Events\EventTestCase;
 use Events\Model\Holder\Holder;
 use FKSDB\Logging\DevNullLogger;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use MockEnvironment\MockApplicationTrait;
-use Nette\ArrayHash;
 use Nette\DI\Container;
-use ORM\Models\Events\ModelFyziklaniTeam;
-use ORM\Services\Events\ServiceFyziklaniTeam;
-use ServiceEvent;
+use Nette\Utils\ArrayHash;
 use Tester\Assert;
 
 class ApplicationHandlerTest extends EventTestCase {
@@ -25,7 +24,7 @@ class ApplicationHandlerTest extends EventTestCase {
     private $fixture;
 
     /**
-     * @var ServiceEvent
+     * @var \FKSDB\ORM\Services\ServiceEvent
      */
     private $serviceEvent;
 
@@ -48,9 +47,9 @@ class ApplicationHandlerTest extends EventTestCase {
         parent::setUp();
 
         $this->connection->query("INSERT INTO event (event_id, event_type_id, year, event_year, begin, end, name)"
-                . "                          VALUES (1, 1, 1, 1, '2001-01-02', '2001-01-02', 'Testovací Fyziklání')");
+            . "                          VALUES (1, 1, 1, 1, '2001-01-02', '2001-01-02', 'Testovací Fyziklání')");
 
-        $this->serviceTeam = $this->getContainer()->getService('event.ServiceFyziklaniTeam');
+        $this->serviceTeam = $this->getContainer()->getService('fyziklani.ServiceFyziklaniTeam');
         $this->serviceEvent = $this->getContainer()->getService('ServiceEvent');
 
 
@@ -85,119 +84,119 @@ class ApplicationHandlerTest extends EventTestCase {
 
         $data = array(
             'team' =>
-            array(
-                'name' => $teamName,
-                'phone' => '',
-                'force_a' => false,
-                'teacher_id' => $id1,
-                'teacher_id_1' =>
                 array(
-                    '_c_compact' => 'Karel Kolář',
-                    'person' =>
-                    array(
-                        'other_name' => 'Karel',
-                        'family_name' => 'Kolář',
-                    ),
-                    'person_info' =>
-                    array(
-                        'email' => 'k.kolar@email.cz',
-                    ),
+                    'name' => $teamName,
+                    'phone' => '',
+                    'force_a' => false,
+                    'teacher_id' => $id1,
+                    'teacher_id_1' =>
+                        array(
+                            '_c_compact' => 'Karel Kolář',
+                            'person' =>
+                                array(
+                                    'other_name' => 'Karel',
+                                    'family_name' => 'Kolář',
+                                ),
+                            'person_info' =>
+                                array(
+                                    'email' => 'k.kolar@email.cz',
+                                ),
+                        ),
+                    'teacher_present' => true,
+                    'teacher_accomodation' => false,
                 ),
-                'teacher_present' => true,
-                'teacher_accomodation' => false,
-            ),
             'p1' =>
-            array(
-                'person_id' => $id2,
-                'person_id_1' =>
                 array(
-                    '_c_compact' => 'Michal Koutný',
-                    'person' =>
-                    array(
-                        'other_name' => 'Michal',
-                        'family_name' => 'Koutný',
-                    ),
-                    'person_info' =>
-                    array(
-                        'email' => 'michal@fykos.cz',
-                        'id_number' => '12345',
-                    ),
-                    'person_history' =>
-                    array(
-                        'school_id' => 1,
-                        'study_year' => 2,
-                    ),
+                    'person_id' => $id2,
+                    'person_id_1' =>
+                        array(
+                            '_c_compact' => 'Michal Koutný',
+                            'person' =>
+                                array(
+                                    'other_name' => 'Michal',
+                                    'family_name' => 'Koutný',
+                                ),
+                            'person_info' =>
+                                array(
+                                    'email' => 'michal@fykos.cz',
+                                    'id_number' => '12345',
+                                ),
+                            'person_history' =>
+                                array(
+                                    'school_id' => 1,
+                                    'study_year' => 2,
+                                ),
+                        ),
+                    'accomodation' => false,
                 ),
-                'accomodation' => false,
-            ),
             'p2' =>
-            array(
-                'person_id' => $id3,
-                'person_id_1' =>
                 array(
-                    '_c_compact' => 'Kristína Nešporová',
-                    'person' =>
-                    array(
-                        'other_name' => 'Kristína',
-                        'family_name' => 'Nešporová',
-                    ),
-                    'person_info' =>
-                    array(
-                        'email' => 'kiki@fykos.cz',
-                    ),
-                    'person_history' =>
-                    array(
-                        'school_id' => 1,
-                        'study_year' => 3,
-                    ),
+                    'person_id' => $id3,
+                    'person_id_1' =>
+                        array(
+                            '_c_compact' => 'Kristína Nešporová',
+                            'person' =>
+                                array(
+                                    'other_name' => 'Kristína',
+                                    'family_name' => 'Nešporová',
+                                ),
+                            'person_info' =>
+                                array(
+                                    'email' => 'kiki@fykos.cz',
+                                ),
+                            'person_history' =>
+                                array(
+                                    'school_id' => 1,
+                                    'study_year' => 3,
+                                ),
+                        ),
+                    'accomodation' => false,
                 ),
-                'accomodation' => false,
-            ),
             'p3' =>
-            array(
-                'person_id' => NULL,
-                'person_id_1' =>
                 array(
-                    '_c_search' => '',
-                    'person' =>
-                    array(),
-                    'person_info' =>
-                    array(),
-                    'person_history' =>
-                    array(),
+                    'person_id' => NULL,
+                    'person_id_1' =>
+                        array(
+                            '_c_search' => '',
+                            'person' =>
+                                array(),
+                            'person_info' =>
+                                array(),
+                            'person_history' =>
+                                array(),
+                        ),
+                    'accomodation' => false,
                 ),
-                'accomodation' => false,
-            ),
             'p4' =>
-            array(
-                'person_id' => NULL,
-                'person_id_1' =>
                 array(
-                    '_c_search' => '',
-                    'person' =>
-                    array(),
-                    'person_info' =>
-                    array(),
-                    'person_history' =>
-                    array(),
+                    'person_id' => NULL,
+                    'person_id_1' =>
+                        array(
+                            '_c_search' => '',
+                            'person' =>
+                                array(),
+                            'person_info' =>
+                                array(),
+                            'person_history' =>
+                                array(),
+                        ),
+                    'accomodation' => false,
                 ),
-                'accomodation' => false,
-            ),
             'p5' =>
-            array(
-                'person_id' => NULL,
-                'person_id_1' =>
                 array(
-                    '_c_search' => '',
-                    'person' =>
-                    array(),
-                    'person_info' =>
-                    array(),
-                    'person_history' =>
-                    array(),
+                    'person_id' => NULL,
+                    'person_id_1' =>
+                        array(
+                            '_c_search' => '',
+                            'person' =>
+                                array(),
+                            'person_info' =>
+                                array(),
+                            'person_history' =>
+                                array(),
+                        ),
+                    'accomodation' => false,
                 ),
-                'accomodation' => false,
-            ),
             'privacy' => true,
         );
         $data = ArrayHash::from($data);
@@ -207,7 +206,7 @@ class ApplicationHandlerTest extends EventTestCase {
         $result = $this->serviceTeam->getTable()->where('name', $teamName)->fetch();
         Assert::notEqual(false, $result);
 
-        $team = ModelFyziklaniTeam::createFromTableRow($result);
+        $team = ModelFyziklaniTeam::createFromActiveRow($result);
         Assert::equal($teamName, $team->name);
 
         $count = $this->connection->fetchField('SELECT COUNT(1) FROM e_fyziklani_participant WHERE e_fyziklani_team_id = ?', $this->holder->getPrimaryHolder()->getModel()->getPrimary());

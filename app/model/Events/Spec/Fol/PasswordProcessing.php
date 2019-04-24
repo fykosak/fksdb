@@ -7,11 +7,24 @@ use Events\Machine\Machine;
 use Events\Model\Holder\Holder;
 use Events\Processings\AbstractProcessing;
 use FKSDB\Logging\ILogger;
-use Nette\ArrayHash;
 use Nette\Forms\Form;
+use Nette\Utils\ArrayHash;
 
+/**
+ * Class PasswordProcessing
+ * @package Events\Spec\Fol
+ */
 class PasswordProcessing extends AbstractProcessing {
 
+    /**
+     * @param $states
+     * @param ArrayHash $values
+     * @param Machine $machine
+     * @param Holder $holder
+     * @param ILogger $logger
+     * @param Form|null $form
+     * @return mixed|void
+     */
     protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
         if (!isset($values['team'])) {
             return;
@@ -30,6 +43,10 @@ class PasswordProcessing extends AbstractProcessing {
         }
     }
 
+    /**
+     * @param $string
+     * @return string
+     */
     private function hash($string) {
         return sha1($string);
     }

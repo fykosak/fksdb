@@ -1,10 +1,16 @@
 <?php
 
-class ReactResponse extends Nette\Object implements Nette\Application\IResponse {
+use Nette\SmartObject;
+
+/**
+ * Class ReactResponse
+ */
+final class ReactResponse implements Nette\Application\IResponse {
+    use SmartObject;
     /**
      * @var ReactMessage[]
      */
-    private $messages;
+    private $messages = [];
 
     /**
      * @var mixed
@@ -14,23 +20,13 @@ class ReactResponse extends Nette\Object implements Nette\Application\IResponse 
     /**
      * @var string
      */
-    private $contentType;
-    /**
-     * @var string
-     */
     private $act;
-
-
-    public function __construct($contentType = null) {
-        $this->contentType = $contentType ? $contentType : 'application/json';
-        $this->messages = [];
-    }
 
     /**
      * @return string
      */
-    final public function getContentType() {
-        return $this->contentType;
+    final public function getContentType(): string {
+        return 'application/json';
     }
 
     /**
@@ -54,7 +50,10 @@ class ReactResponse extends Nette\Object implements Nette\Application\IResponse 
         $this->messages[] = $message;
     }
 
-    public function setAct($act) {
+    /**
+     * @param string $act
+     */
+    public function setAct(string $act) {
         $this->act = $act;
     }
 
@@ -64,7 +63,7 @@ class ReactResponse extends Nette\Object implements Nette\Application\IResponse 
      * @throws \Nette\Utils\JsonException
      */
     public function send(Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse) {
-        $httpResponse->setContentType($this->contentType);
+        $httpResponse->setContentType($this->getContentType());
         $httpResponse->setExpiration(FALSE);
         $response = [
             'messages' => array_map(function (ReactMessage $value) {

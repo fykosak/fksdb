@@ -19,7 +19,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class Row extends Nette\ArrayHash
+class Row extends Nette\Utils\ArrayHash
 {
 
 	public function __construct(Statement $statement)

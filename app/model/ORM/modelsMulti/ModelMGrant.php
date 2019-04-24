@@ -1,6 +1,8 @@
 <?php
 
-use FKSDB\ORM\ModelContest;
+use FKSDB\ORM\AbstractModelMulti;
+use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\ModelContest;
 use Nette\Security\IRole;
 
 /**
@@ -20,7 +22,7 @@ class ModelMGrant extends AbstractModelMulti implements IRole {
      * @return ModelContest
      */
     public function getContest() {
-        return ModelContest::createFromTableRow($this->getJoinedModel()->ref(DbNames::TAB_CONTEST, 'contest_id'));
+        return ModelContest::createFromActiveRow($this->getJoinedModel()->ref(DbNames::TAB_CONTEST, 'contest_id'));
     }
 
 }

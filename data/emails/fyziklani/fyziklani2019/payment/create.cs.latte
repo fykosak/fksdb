@@ -1,0 +1,33 @@
+{layout '../layout.latte'}
+{block body}
+<div>
+    <p>
+        Dobrý den,<br/>
+        byla Vám vytvořena platba #{$model->getPaymentId()} za Fyziklání 2019 s částkou <b>{$model->getPrice()->__toString()}</b>.
+    </p>
+
+    <p>
+        Platba zahrnuje následující:
+    </p>
+
+    {include './items.latte'}
+
+    <p>
+        Prosíme o její uhrazení převodem na účet. Jakmile platbu zaregistrujeme, bude vám zasláno potvrzení.
+    </p>
+
+    <p>
+        Pro snadné zpracování platby z naší strany, prosím, uveďte v platbě variabilní, konstantní a specifický symbol,
+        které charakterizují konkrétní platbu.
+    </p>
+
+    {include './parameters.latte'}
+
+    <p>
+        Doba vyřízení transakce je přibližně týden. V případě potíží nás neváhejte kontaktovat na
+        <a href="mailto:fyziklani@fykos.cz">fyziklani@fykos.cz</a>.
+    </p>
+
+    {include './signature.cs.latte'}
+</div>
+{/block}

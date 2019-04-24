@@ -3,11 +3,11 @@
 namespace FKSDB\Components\Grids;
 
 use Authorization\ContestAuthorizator;
-use FKSDB\ORM\ModelStoredQuery;
+use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
+use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;
 use OrgModule\ExportPresenter;
-use ServiceStoredQuery;
 
 /**
  *
@@ -19,7 +19,7 @@ class StoredQueriesGrid extends BaseGrid {
     const DESCRIPTION_TRUNC = 80;
 
     /**
-     * @var ServiceStoredQuery
+     * @var \FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery
      */
     private $serviceStoredQuery;
 
@@ -30,6 +30,11 @@ class StoredQueriesGrid extends BaseGrid {
 
     private $isFilteredByTag = false;
 
+    /**
+     * StoredQueriesGrid constructor.
+     * @param \FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery $serviceStoredQuery
+     * @param ContestAuthorizator $contestAuthorizator
+     */
     function __construct(ServiceStoredQuery $serviceStoredQuery, ContestAuthorizator $contestAuthorizator) {
         parent::__construct();
         $this->serviceStoredQuery = $serviceStoredQuery;

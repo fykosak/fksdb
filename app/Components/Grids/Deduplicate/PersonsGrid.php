@@ -2,11 +2,12 @@
 
 namespace FKSDB\Components\Grids\Deduplicate;
 
+use FKSDB\Components\Controls\Helpers\ValuePrinters\PersonValueControl;
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Tables\TypedTableSelection;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;
-use ORM\Tables\TypedTableSelection;
 use Persons\Deduplication\DuplicateFinder;
 
 /**
@@ -25,6 +26,11 @@ class PersonsGrid extends BaseGrid {
      */
     private $pairs;
 
+    /**
+     * PersonsGrid constructor.
+     * @param TypedTableSelection $trunkPersons
+     * @param $pairs
+     */
     function __construct(TypedTableSelection $trunkPersons, $pairs) {
         parent::__construct();
         $this->trunkPersons = $trunkPersons;
@@ -32,7 +38,7 @@ class PersonsGrid extends BaseGrid {
     }
 
     /**
-     * @param $presenter \AuthenticatedPresenter
+     * @param \AuthenticatedPresenter $presenter
      * @throws \NiftyGrid\DuplicateButtonException
      * @throws \NiftyGrid\DuplicateColumnException
      */
@@ -110,15 +116,11 @@ class PersonsGrid extends BaseGrid {
     }
 
     /**
-     * @param ModelPerson $person
+     * @param \FKSDB\ORM\Models\ModelPerson $person
      * @return Html
      * @throws \Nette\Application\UI\InvalidLinkException
      */
     private function renderPerson(ModelPerson $person) {
-        $el = Html::el('a');
-        $el->addAttributes(['href' => $this->presenter->link(':Org:Stalking:view', ['id' => $person->person_id,])]);
-        $el->title('person.created ' . $person->created);
-        $el->setText($person->getFullname() . ' (' . $person->person_id . ')');
-        return $el;
+        return PersonValueControl::getGridValue($this,$person);
     }
 }

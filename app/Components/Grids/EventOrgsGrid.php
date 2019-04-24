@@ -2,11 +2,15 @@
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\ORM\ModelEvent;
-use FKSDB\ORM\ModelEventOrg;
-use ServiceEventOrg;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Models\ModelEventOrg;
+use FKSDB\ORM\Services\ServiceEventOrg;
 use SQL\SearchableDataSource;
 
+/**
+ * Class EventOrgsGrid
+ * @package FKSDB\Components\Grids
+ */
 class EventOrgsGrid extends BaseGrid {
 
     /**
@@ -14,10 +18,15 @@ class EventOrgsGrid extends BaseGrid {
      */
     private $serviceEventOrg;
     /**
-     * @var ModelEvent
+     * @var \FKSDB\ORM\Models\ModelEvent
      */
     private $event;
 
+    /**
+     * EventOrgsGrid constructor.
+     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @param \FKSDB\ORM\Services\ServiceEventOrg $serviceEventOrg
+     */
     function __construct(ModelEvent $event, ServiceEventOrg $serviceEventOrg) {
         parent::__construct();
         $this->event = $event;
@@ -40,8 +49,8 @@ class EventOrgsGrid extends BaseGrid {
         $dataSource = new SearchableDataSource($orgs);
         $this->setDataSource($dataSource);
         $this->addColumn('display_name', _('Jméno'))->setRenderer(function ($row) {
-            $eventOrg = ModelEventOrg::createFromTableRow($row);
-            return $eventOrg->getPerson()->getFullname();
+            $eventOrg = ModelEventOrg::createFromActiveRow($row);
+            return $eventOrg->getPerson()->getFullName();
         });
         $this->addColumn('note', _('Note'));
         $this->addButton('edit', _('Edit'))->setText(_('Edit'))

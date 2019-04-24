@@ -5,6 +5,10 @@ namespace FKSDB\Components\Forms\Factories\PersonHistory;
 
 use Nette\Forms\Controls\SelectBox;
 
+/**
+ * Class StudyYearField
+ * @package FKSDB\Components\Forms\Factories\PersonHistory
+ */
 class StudyYearField extends SelectBox {
 
     /**
@@ -12,11 +16,16 @@ class StudyYearField extends SelectBox {
      */
     private $acYear;
     /**
-     * @var \YearCalculator
+     * @var \FKSDB\YearCalculator
      */
     private $yearCalculator;
 
-    public function __construct(\YearCalculator $yearCalculator, $acYear) {
+    /**
+     * StudyYearField constructor.
+     * @param \FKSDB\YearCalculator $yearCalculator
+     * @param $acYear
+     */
+    public function __construct(\FKSDB\YearCalculator $yearCalculator, $acYear) {
 
         parent::__construct(_('Ročník'));
         $this->acYear = $acYear;
@@ -27,19 +36,22 @@ class StudyYearField extends SelectBox {
 
     }
 
+    /**
+     * @return array
+     */
     private function createOptions() {
         $hsYears = [];
-        foreach (range(1, 4) as $study_year) {
-            $hsYears[$study_year] = sprintf(_('%d. ročník (očekávaný rok maturity %d)'),
-                $study_year,
-                $this->yearCalculator->getGraduationYear($study_year, $this->acYear));
+        foreach (range(1, 4) as $studyYear) {
+            $hsYears[$studyYear] = sprintf(_('%d. ročník (očekávaný rok maturity %d)'),
+                $studyYear,
+                $this->yearCalculator->getGraduationYear($studyYear, $this->acYear));
         }
 
         $primaryYears = [];
-        foreach (range(6, 9) as $study_year) {
-            $primaryYears[$study_year] = sprintf(_('%d. ročník (očekávaný rok maturity %d)'),
-                $study_year,
-                $this->yearCalculator->getGraduationYear($study_year, $this->acYear));
+        foreach (range(6, 9) as $studyYear) {
+            $primaryYears[$studyYear] = sprintf(_('%d. ročník (očekávaný rok maturity %d)'),
+                $studyYear,
+                $this->yearCalculator->getGraduationYear($studyYear, $this->acYear));
         }
 
         return [

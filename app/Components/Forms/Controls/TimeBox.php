@@ -15,6 +15,12 @@ class TimeBox extends TextInput {
 
     const TIME_FORMAT = 'H:i:s';
 
+    /**
+     * TimeBox constructor.
+     * @param null $label
+     * @param null $cols
+     * @param null $maxLength
+     */
     public function __construct($label = NULL, $cols = NULL, $maxLength = NULL) {
         parent::__construct($label, $cols, $maxLength);
 
@@ -22,6 +28,10 @@ class TimeBox extends TextInput {
                 ->addRule(Form::REGEXP, _('%label očekává hh:mm[:ss].'), '/^[0-2]?\d:[0-5]\d(:[0-5]\d)?$/');
     }
 
+    /**
+     * @param $value
+     * @return \Nette\Forms\Controls\TextBase|void
+     */
     public function setValue($value) {
         if ($value instanceof DateTime) {
             $value = $value->format(self::TIME_FORMAT);

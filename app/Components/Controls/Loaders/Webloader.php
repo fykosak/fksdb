@@ -18,6 +18,10 @@ abstract class Webloader extends Control {
     private $files = [];
     private $inlines = [];
 
+    /**
+     * @param $file
+     * @param array $attributes
+     */
     public function addFile($file, $attributes = []) {
         $hash = $file . implode(':', $attributes);
         $this->files[$hash] = array(
@@ -27,17 +31,28 @@ abstract class Webloader extends Control {
         $this->invalidateControl();
     }
 
+    /**
+     * @param $file
+     * @param array $attributes
+     */
     public function removeFile($file, $attributes = []) {
         $hash = $file . implode(':', $attributes);
         unset($this->files[$hash]);
         $this->invalidateControl();
     }
 
+    /**
+     * @param $inline
+     * @param string $tag
+     */
     public function addInline($inline, $tag = self::UNTAGGED) {
         $this->inlines[$tag] = $inline;
         $this->invalidateControl();
     }
 
+    /**
+     * @param $tag
+     */
     public function removeInline($tag) {
         if ($tag != self::UNTAGGED) {
             unset($this->inlines[$tag]);
@@ -78,16 +93,29 @@ abstract class Webloader extends Control {
         $template->render();
     }
 
+    /**
+     * @param $file
+     * @return bool
+     */
     public static function isRelative($file) {
         return !preg_match('@https?://|/@Ai', $file);
     }
 
+    /**
+     * @return mixed
+     */
     abstract protected function getTemplateFilePrefix();
 
+    /**
+     * @return array
+     */
     protected function getFiles() {
         return $this->files;
     }
 
+    /**
+     * @return array
+     */
     protected function getInlines() {
         return $this->inlines;
     }
