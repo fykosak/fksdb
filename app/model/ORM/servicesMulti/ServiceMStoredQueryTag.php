@@ -7,7 +7,6 @@ use FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
 
 /**
  * @author Lukáš Timko <lukast@fykos.cz>
- * @deprecated
  */
 class ServiceMStoredQueryTag extends AbstractServiceMulti {
 

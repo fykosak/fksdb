@@ -62,7 +62,7 @@ class ServiceFyziklaniTeamPosition extends AbstractServiceSingle {
                     if (!$model) {
                         $model = $this->createNew($data);
                     } else {
-                        $model->update($data);
+                        $this->updateModel($model, $data);
                     }
                     $this->save($model);
                     $updatedTeams[] = $teamData->teamId;
