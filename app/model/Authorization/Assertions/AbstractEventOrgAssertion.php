@@ -5,8 +5,8 @@ namespace Authorization\Assertions;
 use Exports\StoredQuery;
 use FKSDB\ORM\DbNames;
 use Nette\Database\Connection;
+use Nette\Security\IUserStorage;
 use Nette\Security\Permission;
-use Nette\Security\User;
 use Nette\SmartObject;
 
 /**
@@ -22,7 +22,7 @@ abstract class AbstractEventOrgAssertion {
     private $parameterName;
 
     /**
-     * @var User
+     * @var IUserStorage
      */
     private $user;
 
@@ -35,10 +35,10 @@ abstract class AbstractEventOrgAssertion {
      * AbstractEventOrgAssertion constructor.
      * @param $eventTypeId
      * @param $parameterName
-     * @param User $user
+     * @param IUserStorage $user
      * @param Connection $connection
      */
-    function __construct($eventTypeId, $parameterName, User $user, Connection $connection) {
+    function __construct($eventTypeId, $parameterName, IUserStorage $user, Connection $connection) {
         if (!is_array($eventTypeId)) {
             $eventTypeId = [$eventTypeId];
         }
