@@ -148,7 +148,7 @@ abstract class Machine {
      * @throws \Exception
      */
     private function execute(Transition $transition, IStateModel $model = null): IStateModel {
-        if (!$this->connection->inTransaction()) {
+        if (!$this->connection->getPdo()->inTransaction()) {
             $this->connection->beginTransaction();
         }
         try {
