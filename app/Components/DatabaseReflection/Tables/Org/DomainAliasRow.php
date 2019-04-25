@@ -3,7 +3,7 @@
 namespace FKSDB\Components\DatabaseReflection\Org;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
-use FKSDB\Components\DatabaseReflection\ValuePrinters\StringPrinter;
+use FKSDB\Components\DatabaseReflection\ValuePrinters\EmailPrinter;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelOrg;
 use Nette\Forms\Controls\BaseControl;
@@ -38,9 +38,9 @@ class DomainAliasRow extends AbstractRow {
     protected function createHtmlValue(AbstractModelSingle $model, string $fieldName): Html {
         switch ($model->contest_id) {
             case 1:
-                return (new StringPrinter)($model->domain_alias . '@fykos.cz');
+                return (new EmailPrinter)($model->domain_alias . '@fykos.cz');
             case 2:
-                return (new StringPrinter)($model->domain_alias . '@vyfuk.mff.cuni.cz');
+                return (new EmailPrinter)($model->domain_alias . '@vyfuk.mff.cuni.cz');
             default:
                 return parent::createHtmlValue($model, $fieldName);
         }

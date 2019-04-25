@@ -39,6 +39,12 @@ abstract class AbstractRow {
         return new TextInput($this->getTitle());
     }
 
+    /**
+     * @return null|string
+     */
+    public function getDescription() {
+        return null;
+    }
 
     /**
      * @param AbstractModelSingle $model
