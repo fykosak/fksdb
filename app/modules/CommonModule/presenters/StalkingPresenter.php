@@ -6,6 +6,7 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Stalking;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
+use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ValidationTest\ValidationFactory;
@@ -43,12 +44,23 @@ class StalkingPresenter extends BasePresenter {
      * @var ValidationFactory
      */
     private $validationFactory;
+    /**
+     * @var TableReflectionFactory
+     */
+    protected $tableReflectionFactory;
 
     /**
      * @param \FKSDB\ORM\Services\ServicePerson $servicePerson
      */
     public function injectServicePerson(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
+    }
+
+    /**
+     * @param TableReflectionFactory $tableReflectionFactory
+     */
+    public function injectTableReflectionFactory(TableReflectionFactory $tableReflectionFactory) {
+        $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
     /**
@@ -78,9 +90,6 @@ class StalkingPresenter extends BasePresenter {
         $this->setIcon('fa fa-eye');
     }
 
-    /**
-     * @throws BadRequestException
-     */
     public function authorizedDefault() {
         $this->setAuthorized($this->isAllowed('person', 'stalk.search'));
     }
@@ -105,7 +114,7 @@ class StalkingPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentBaseInfo(): Stalking\BaseInfo {
-        return new Stalking\BaseInfo($this->getPerson(), $this->getTranslator(), $this->getMode());
+        return new Stalking\BaseInfo($this->getPerson(), $this->tableReflectionFactory, $this->getTranslator(), $this->getMode());
     }
 
     /**
@@ -113,7 +122,7 @@ class StalkingPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentAddress(): Stalking\Address {
-        return new Stalking\Address($this->getPerson(), $this->getTranslator(), $this->getMode());
+        return new Stalking\Address($this->getPerson(), $this->tableReflectionFactory, $this->getTranslator(), $this->getMode());
     }
 
     /**
@@ -121,7 +130,7 @@ class StalkingPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentEventParticipant(): Stalking\EventParticipant {
-        return new Stalking\EventParticipant($this->getPerson(), $this->getTranslator(), $this->getMode());
+        return new Stalking\EventParticipant($this->getPerson(), $this->tableReflectionFactory, $this->getTranslator(), $this->getMode());
     }
 
     /**
@@ -129,7 +138,7 @@ class StalkingPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentEventTeacher(): Stalking\EventTeacher {
-        return new Stalking\EventTeacher($this->getPerson(), $this->getTranslator(), $this->getMode());
+        return new Stalking\EventTeacher($this->getPerson(), $this->tableReflectionFactory, $this->getTranslator(), $this->getMode());
     }
 
     /**
@@ -137,7 +146,7 @@ class StalkingPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentEventOrg(): Stalking\EventOrg {
-        return new Stalking\EventOrg($this->getPerson(), $this->getTranslator(), $this->getMode());
+        return new Stalking\EventOrg($this->getPerson(), $this->tableReflectionFactory, $this->getTranslator(), $this->getMode());
     }
 
     /**
@@ -145,7 +154,7 @@ class StalkingPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentLogin(): Stalking\Login {
-        return new Stalking\Login($this->getPerson(), $this->getTranslator(), $this->getMode());
+        return new Stalking\Login($this->getPerson(), $this->tableReflectionFactory, $this->getTranslator(), $this->getMode());
     }
 
     /**
@@ -153,7 +162,7 @@ class StalkingPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentOrg(): Stalking\Org {
-        return new Stalking\Org($this->getPerson(), $this->getTranslator(), $this->getMode());
+        return new Stalking\Org($this->getPerson(), $this->tableReflectionFactory, $this->getTranslator(), $this->getMode());
     }
 
     /**
@@ -161,7 +170,7 @@ class StalkingPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentContestant(): Stalking\Contestant {
-        return new Stalking\Contestant($this->getPerson(), $this->getTranslator(), $this->getMode());
+        return new Stalking\Contestant($this->getPerson(), $this->tableReflectionFactory, $this->getTranslator(), $this->getMode());
     }
 
     /**
@@ -169,7 +178,7 @@ class StalkingPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentPersonHistory(): Stalking\PersonHistory {
-        return new Stalking\PersonHistory($this->getPerson(), $this->getTranslator(), $this->getMode());
+        return new Stalking\PersonHistory($this->getPerson(), $this->tableReflectionFactory, $this->getTranslator(), $this->getMode());
     }
 
     /**
@@ -177,7 +186,7 @@ class StalkingPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentRole(): Stalking\Role {
-        return new Stalking\Role($this->getPerson(), $this->getTranslator(), $this->getMode());
+        return new Stalking\Role($this->getPerson(), $this->tableReflectionFactory, $this->getTranslator(), $this->getMode());
     }
 
     /**
@@ -185,7 +194,7 @@ class StalkingPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentFlag(): Stalking\Flag {
-        return new Stalking\Flag($this->getPerson(), $this->getTranslator(), $this->getMode());
+        return new Stalking\Flag($this->getPerson(), $this->tableReflectionFactory, $this->getTranslator(), $this->getMode());
     }
 
     /**
@@ -193,7 +202,7 @@ class StalkingPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentPayment(): Stalking\Payment {
-        return new Stalking\Payment($this->getPerson(), $this->getTranslator(), $this->getMode());
+        return new Stalking\Payment($this->getPerson(), $this->tableReflectionFactory, $this->getTranslator(), $this->getMode());
     }
 
     /**
@@ -201,7 +210,7 @@ class StalkingPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentContactInfo(): Stalking\ContactInfo {
-        return new Stalking\ContactInfo($this->getPerson(), $this->getTranslator(), $this->getMode());
+        return new Stalking\ContactInfo($this->getPerson(), $this->tableReflectionFactory, $this->getTranslator(), $this->getMode());
     }
 
     /**
@@ -209,7 +218,7 @@ class StalkingPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentAcademicDegree(): Stalking\AcademicDegree {
-        return new Stalking\AcademicDegree($this->getPerson(), $this->getTranslator(), $this->getMode());
+        return new Stalking\AcademicDegree($this->getPerson(), $this->tableReflectionFactory, $this->getTranslator(), $this->getMode());
     }
 
     /**
@@ -217,7 +226,7 @@ class StalkingPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentSchedule(): Stalking\Schedule {
-        return new Stalking\Schedule($this->getPerson(), $this->getTranslator(), $this->getMode());
+        return new Stalking\Schedule($this->getPerson(), $this->tableReflectionFactory, $this->getTranslator(), $this->getMode());
     }
 
     /**
@@ -225,7 +234,7 @@ class StalkingPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentValidation(): Stalking\Validation {
-        return new Stalking\Validation($this->validationFactory, $this->getPerson(), $this->getTranslator(), $this->getMode());
+        return new Stalking\Validation($this->validationFactory, $this->tableReflectionFactory, $this->getPerson(), $this->getTranslator(), $this->getMode());
     }
 
 
@@ -294,7 +303,7 @@ class StalkingPresenter extends BasePresenter {
             if (!$row) {
                 throw new BadRequestException(_('Osoba neexistuje'), 404);
             }
-            $this->person = ModelPerson::createFromActiveRow($row);
+            $this->person = ModelPerson::createFromTableRow($row);
         }
 
         return $this->person;

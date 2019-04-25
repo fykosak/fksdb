@@ -5,48 +5,9 @@
             {var $org = \FKSDB\ORM\Models\ModelOrg::createFromTableRow($row)}
             <h3 class="card-header">{control contestBadge, $org->contest_id}</h3>
             <ul class="list-group list-group-flush">
-
-                <li class="list-group-item">
-                    {control stringValue $org,_('Org Id'),org_id}
-                </li>
-
-                <li class="list-group-item">
-                    {control stringValue $org,_('Since'),since}
-                </li>
-
-                <li class="list-group-item">
-                    {*control stringValue $org,_('Login'),login*}
-                    <div class="row">
-                        <span class="col-5"><b>{_'Until'}</b></span>
-                        <div class="col-7">
-                            {if (!is_null($org->until))}
-                                {$org->until}
-                            {else}
-                                <span class="badge badge-success">{_'Still organizing'}</span>
-                            {/if}
-                        </div>
-                    </div>
-                </li>
-
-                <li class="list-group-item">
-                    {control stringValue $org,_('Role'),role}
-                </li>
-
-                <li class="list-group-item">
-                    {control stringValue $org,_('Order'),order}
-                </li>
-
-                <li class="list-group-item">
-                    {control stringValue $org,_('Contribution'),contribution}
-                </li>
-
-                <li class="list-group-item">
-                    {control stringValue $org,_('Tex Signature'),tex_signature}
-                </li>
-
-                <li class="list-group-item">
-                    {control stringValue $org,_('Domain alias'),domain_alias}
-                </li>
+                {foreach ['org_id','since','until','role','order','contribution','tex_signature','domain_alias'] as $field}
+                    {control valuePrinterList__org__$field $org}
+                {/foreach}
             </ul>
         {/foreach}
 

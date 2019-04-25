@@ -2,12 +2,9 @@
 {block content}
     <ul class="list-group list-group-flush">
         {if $info}
-            <li class="list-group-item">
-                {control stringValue $info,_('Academic degree prefix'),academic_degree_prefix}
-            </li>
-            <li class="list-group-item">
-                {control stringValue $info,_('Academic degree suffix'),academic_degree_suffix}
-            </li>
+            {control valuePrinterList__person_info__academic_degree_prefix $info}
+
+            {control valuePrinterList__person_info__academic_degree_suffix $info}
         {/if}
     </ul>
 {/block}
