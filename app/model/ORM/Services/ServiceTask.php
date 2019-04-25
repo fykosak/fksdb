@@ -44,7 +44,7 @@ class ServiceTask extends AbstractServiceSingle {
         ])->fetch();
 
         if ($result !== false) {
-            return ModelTask::createFromTableRow($result);
+            return ModelTask::createFromActiveRow($result);
         } else {
             return null;
         }

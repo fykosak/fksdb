@@ -27,7 +27,7 @@ class MyPaymentGrid extends PaymentGrid {
         $this->addColumnPaymentId();
 
         $this->addColumn('event', _('Event'))->setRenderer(function ($row) {
-            return ModelPayment::createFromTableRow($row)->getEvent()->name;
+            return ModelPayment::createFromActiveRow($row)->getEvent()->name;
         });
 
         // $this->addColumnsSymbols();

@@ -21,7 +21,7 @@ class EventAccommodationPrice extends AbstractPreProcess {
     public static function calculate(ModelPayment $modelPayment): Price {
         $price = new Price(0, $modelPayment->currency);
         foreach ($modelPayment->getRelatedPersonAccommodation() as $row) {
-            $eventAcc = ModelEventPersonAccommodation::createFromTableRow($row)->getEventAccommodation();
+            $eventAcc = ModelEventPersonAccommodation::createFromActiveRow($row)->getEventAccommodation();
             $modelPrice = self::getPriceFromModel($eventAcc, $price);
             $price->add($modelPrice);
         }
@@ -39,7 +39,7 @@ class EventAccommodationPrice extends AbstractPreProcess {
         $items = [];
 
         foreach ($modelPayment->getRelatedPersonAccommodation() as $row) {
-            $model = ModelEventPersonAccommodation::createFromTableRow($row);
+            $model = ModelEventPersonAccommodation::createFromActiveRow($row);
             $eventAcc = $model->getEventAccommodation();
             $items[] = [
                 'label' => $model->getLabel(),

@@ -7,7 +7,7 @@ use Events\Model\Holder\Holder;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Tables\TypedTableSelection;
 use Nette\DI\Container;
-use Nette\Object;
+use Nette\SmartObject;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -19,8 +19,8 @@ use Nette\Object;
  * @method SingleEventSource limit()
  * @method SingleEventSource count()
  */
-abstract class AggregatedPersonSource extends Object implements IHolderSource {
-
+abstract class AggregatedPersonSource implements IHolderSource {
+    use SmartObject;
     /**
      * @var \FKSDB\ORM\Tables\TypedTableSelection
      */
@@ -50,7 +50,7 @@ abstract class AggregatedPersonSource extends Object implements IHolderSource {
     private function loadData() {
         $this->holders = [];
         foreach ($this->events as $eventKey => $row) {
-            $event = ModelEvent::createFromTableRow($row);
+            $event = ModelEvent::createFromActiveRow($row);
             $result = $this->processEvent($event);
 
             if ($result instanceof SingleEventSource) {
@@ -86,9 +86,6 @@ abstract class AggregatedPersonSource extends Object implements IHolderSource {
             'limit' => false,
             'count' => true,
         ];
-        if (!isset($delegated[$name])) {
-            return parent::__call($name, $args);
-        }
         $result = call_user_func_array([$this->events, $name], $args);
         $this->holders = null;
 

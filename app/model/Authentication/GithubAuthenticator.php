@@ -69,7 +69,7 @@ class GithubAuthenticator extends AbstractAuthenticator {
         if (!$row) {
             throw new NoLoginException();
         }
-        $login = ModelLogin::createFromTableRow($row);
+        $login = ModelLogin::createFromActiveRow($row);
         if (!$login->active) {
             throw new InactiveLoginException();
         }

@@ -16,7 +16,7 @@ use ModelException;
 use Nette\Database\Connection;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
-use Nette\Object;
+use Nette\SmartObject;
 use OrgModule\ContestantPresenter;
 use Tracy\Debugger;
 
@@ -25,8 +25,8 @@ use Tracy\Debugger;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class ExtendedPersonHandler extends Object {
-
+class ExtendedPersonHandler {
+    use SmartObject;
     const CONT_AGGR = 'aggr';
     const CONT_PERSON = 'person';
     const CONT_MODEL = 'model';

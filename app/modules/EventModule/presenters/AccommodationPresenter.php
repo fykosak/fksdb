@@ -295,7 +295,7 @@ class AccommodationPresenter extends BasePresenter {
         if (!$row) {
             throw new BadRequestException(_('Accommodation does not exists'));
         }
-        $model = ModelEventAccommodation::createFromTableRow($row);
+        $model = ModelEventAccommodation::createFromActiveRow($row);
         if ($this->getEventId() !== $model->event_id) {
             throw new ForbiddenRequestException(_('Ubytovanie nepatrí k tomuto eventu'));
         }

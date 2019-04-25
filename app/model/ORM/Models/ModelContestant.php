@@ -9,11 +9,11 @@ use Nette\Security\IResource;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property ActiveRow person
- * @property ActiveRow contest
- * @property int ct_id
- * @property int contest_id
- * @property int year
+ * @property-read ActiveRow person
+ * @property-read ActiveRow contest
+ * @property-read int ct_id
+ * @property-read int contest_id
+ * @property-read int year
  */
 class ModelContestant extends AbstractModelSingle implements IResource, IPersonReferencedModel, IContestReferencedModel {
     /**
@@ -21,7 +21,7 @@ class ModelContestant extends AbstractModelSingle implements IResource, IPersonR
      */
     public function getPerson(): ModelPerson {
         $data = $this->person;
-        return ModelPerson::createFromTableRow($data);
+        return ModelPerson::createFromActiveRow($data);
     }
 
     /**
@@ -29,7 +29,7 @@ class ModelContestant extends AbstractModelSingle implements IResource, IPersonR
      */
     public function getContest(): ModelContest {
         $data = $this->contest;
-        return ModelContest::createFromTableRow($data);
+        return ModelContest::createFromActiveRow($data);
     }
 
     /**

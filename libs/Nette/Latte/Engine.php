@@ -19,8 +19,9 @@ use Nette;
  *
  * @author     David Grudl
  */
-class Engine extends Nette\Object
+class Engine
 {
+    use Nette\SmartObject;
 	/** @var Parser */
 	private $parser;
 

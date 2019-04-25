@@ -687,7 +687,7 @@ class ExportPresenter extends SeriesPresenter {
                 $row = [];
                 //TODO unechecked
                 $contestant = $serviceContestant->getTable()->getConnection()->table(DbNames::VIEW_CONTESTANT)->where('ct_id', $ctid);
-                $person = ModelPerson::createFromTableRow($contestant->person);
+                $person = ModelPerson::createFromActiveRow($contestant->person);
 
                 // jména
                 $row[] = $person->other_name;
@@ -705,7 +705,7 @@ class ExportPresenter extends SeriesPresenter {
                     }
                 }
                 if ($bestMatch) {
-                    $bestMatch = ModelPostContact::createFromTableRow($bestMatch);
+                    $bestMatch = ModelPostContact::createFromActiveRow($bestMatch);
                     $address = $bestMatch->getAddress();
                     $parts = explode(' ', $address->target);
 

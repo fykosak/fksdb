@@ -91,7 +91,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
         if (!$row) {
             throw new BadRequestException('Model not found');
         }
-        $model = ModelEventParticipant::createFromTableRow($row);
+        $model = ModelEventParticipant::createFromActiveRow($row);
         if ($model->event_id != $this->getEvent()->event_id) {
             throw new ForbiddenRequestException();
         }

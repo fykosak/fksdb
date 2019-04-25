@@ -45,7 +45,7 @@ abstract class ParticipantsDuration extends ValidationTest {
         $max = null;
         $min = null;
         foreach ($this->getEventParticipant($person) as $row) {
-            $model = ModelEventParticipant::createFromTableRow($row);
+            $model = ModelEventParticipant::createFromActiveRow($row);
             $event = $model->getEvent();
             $contestId = $event->getEventType()->contest_id;
             if ($contestId !== $this->getContest()->contest_id) {

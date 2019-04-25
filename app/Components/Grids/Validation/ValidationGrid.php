@@ -49,13 +49,12 @@ class ValidationGrid extends BaseGrid {
         $this->setDataSource($dataSource);
 
         $this->addColumn('display_name', _('Person'))->setRenderer(function ($row) {
-            $person = ModelPerson::createFromTableRow($row);
+            $person = ModelPerson::createFromActiveRow($row);
             return (new PersonLink($this->getPresenter()))($person);
-
         });
         foreach ($this->tests as $test) {
             $this->addColumn($test::getAction(), $test::getTitle())->setRenderer(function ($row) use ($test) {
-                $person = ModelPerson::createFromTableRow($row);
+                $person = ModelPerson::createFromActiveRow($row);
                 $log = $test->run($person);
                 return self::createHtmlLog($log);
             });

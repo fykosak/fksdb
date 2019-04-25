@@ -45,10 +45,21 @@ class StalkingPresenter extends BasePresenter {
      */
     private $validationFactory;
     /**
+     * @var TableReflectionFactory
+     */
+    protected $tableReflectionFactory;
+    /**
      * @param \FKSDB\ORM\Services\ServicePerson $servicePerson
      */
     public function injectServicePerson(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
+    }
+
+    /**
+     * @param TableReflectionFactory $tableReflectionFactory
+     */
+    public function injectTableReflectionFactory(TableReflectionFactory $tableReflectionFactory) {
+        $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
     /**

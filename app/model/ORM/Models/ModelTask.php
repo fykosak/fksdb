@@ -4,16 +4,18 @@ namespace FKSDB\ORM\Models;
 
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
+use Nette\Utils\DateTime;
 use Utils;
 
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property integer series
- * @property string label
- * @property string name_cs
- * @property int task_id
- * @property int points
+ * @property-read integer series
+ * @property-read string label
+ * @property-read string name_cs
+ * @property-read int task_id
+ * @property-read int points
+ * @property-read DateTime submit_deadline
  */
 class ModelTask extends AbstractModelSingle {
 
@@ -38,7 +40,7 @@ class ModelTask extends AbstractModelSingle {
 
         $result = [];
         foreach ($contributions as $contribution) {
-            $contributionModel = ModelTaskContribution::createFromTableRow($contribution);
+            $contributionModel = ModelTaskContribution::createFromActiveRow($contribution);
             $result[$contributionModel->contribution_id] = $contributionModel;
         }
         return $result;
@@ -52,7 +54,7 @@ class ModelTask extends AbstractModelSingle {
 
         $result = [];
         foreach ($studyYears as $studyYear) {
-            $studyYearModel = ModelTaskStudyYear::createFromTableRow($studyYear);
+            $studyYearModel = ModelTaskStudyYear::createFromActiveRow($studyYear);
             $result[$studyYearModel->study_year] = $studyYearModel;
         }
         return $result;

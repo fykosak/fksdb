@@ -10,6 +10,7 @@ use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection as TableSelection;
 use Nette\InvalidStateException;
 use PDOException;
+use Traversable;
 
 /**
  * Service class to high-level manipulation with ORM objects.
@@ -28,11 +29,6 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     protected $connection;
 
     /**
-     * @var array of AbstractService  singleton instances of descedants
-     */
-    protected static $instances = [];
-
-    /**
      * FKSDB\ORM\AbstractServiceSingle constructor.
      * @param Connection $connection
      */
@@ -42,10 +38,37 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     }
 
     /**
+     * @param Traversable|array|null $data
+     * @return AbstractModelSingle
+     */
+    public function createNewModel($data = null): AbstractModelSingle {
+        $modelClassName = $this->getModelClassName();
+        $data = $this->filterData($data);
+        try {
+            $result = $this->getTable()->insert($data);
+            if ($result !== false) {
+                /**
+                 * @var AbstractModelSingle $model
+                 */
+                $model = ($modelClassName)::createFromActiveRow($result);
+                $model->setNew(false); // only for old compatibility
+                return $model;
+            }
+        } catch (PDOException $exception) {
+            throw new ModelException('Error when storing model.', null, $exception);
+        }
+        $code = $this->getConnection()->errorCode();
+        throw new ModelException("$code: Error when storing a model.");
+    }
+
+
+    /**
      * Use this method to create new models!
      *
-     * @param array $data
+     * @param Traversable $data
      * @return AbstractModelSingle
+     * @throws ModelException
+     * @deprecated use createNewModel
      */
     public function createNew($data = null) {
         if ($data === null) {
@@ -105,11 +128,25 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     }
 
     /**
+     * @param int $key
+     * @return AbstractModelSingle|null
+     */
+    public function findByPrimary2(int $key) {
+        $result = $this->getTable()->get($key);
+        if ($result !== false) {
+            return $this->getModelClassName()::createFromActiveRow($result);
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * Updates values in model from given data.
      *
      * @param IModel $model
      * @param array $data
      * @param boolean $alive
+     * @deprecated
      */
     public function updateModel(IModel $model, $data, $alive = true) {
         $modelClassName = $this->getModelClassName();
@@ -124,11 +161,32 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     }
 
     /**
+     * @param AbstractModelSingle $model
+     * @return AbstractModelSingle|null
+     */
+    public function refresh(AbstractModelSingle $model) {
+        return $this->findByPrimary2($model->getPrimary(true));
+    }
+
+    /**
+     * @param AbstractModelSingle $model
+     * @param Traversable|array $data
+     * @return int
+     * @throws InvalidArgumentException
+     */
+    public function updateModel2(AbstractModelSingle $model, $data = null) {
+        $this->checkType($model);
+        $data = $this->filterData($data);
+        return $model->update($data);
+    }
+
+    /**
      * Use this method to store a model!
      *
      * @param IModel $model
      * @throws InvalidArgumentException
      * @throws ModelException
+     * @deprecated
      */
     public function save(IModel & $model) {
         $modelClassName = $this->getModelClassName();
@@ -157,18 +215,26 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     }
 
     /**
-     * Use this method to delete a model!
-     * (Name chosen not to collide with parent.)
-     *
-     * @param IModel $model
+     * @param AbstractModelSingle|IModel $model
      * @throws InvalidArgumentException
-     * @throws InvalidStateException
      */
-    public function dispose(IModel $model) {
+    private function checkType(AbstractModelSingle $model) {
         $modelClassName = $this->getModelClassName();
         if (!$model instanceof $modelClassName) {
             throw new InvalidArgumentException('Service for class ' . $this->getModelClassName() . ' cannot store ' . get_class($model));
         }
+    }
+
+    /**
+     * Use this method to delete a model!
+     * (Name chosen not to collide with parent.)
+     *
+     * @param IModel|AbstractModelSingle $model
+     * @throws InvalidArgumentException
+     * @throws InvalidStateException
+     */
+    public function dispose(IModel $model) {
+        $this->checkType($model);
         if (!$model->isNew() && $model->delete() === false) {
             $code = $this->getConnection()->errorCode();
             throw new ModelException("$code: Error when deleting a model.");
@@ -186,7 +252,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
 
     /**
      * Default data for the new model.
-     *
+     * TODO is this really needed?
      * @return array
      */
     protected function getDefaultData() {
@@ -205,7 +271,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     /**
      * Omits array elements whose keys aren't columns in the table.
      *
-     * @param array|null $data
+     * @param array|Traversable|null $data
      * @return array|null
      */
     protected function filterData($data) {

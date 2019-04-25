@@ -10,14 +10,14 @@ use Nette\Security\IResource;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property DateTime submitted_on
- * @property integer submit_id
- * @property string source
- * @property string note
- * @property integer raw_points
- * @property int points
- * @property int ct_id
- * @property int task_id
+ * @property-read DateTime submitted_on
+ * @property-read integer submit_id
+ * @property-read string source
+ * @property-read string note
+ * @property-read integer raw_points
+ * @property-read int points
+ * @property-read int ct_id
+ * @property-read int task_id
  */
 class ModelSubmit extends AbstractModelSingle implements IResource {
 
@@ -36,14 +36,14 @@ class ModelSubmit extends AbstractModelSingle implements IResource {
      */
     public function getTask(): ModelTask {
         $data = $this->ref(DbNames::TAB_TASK, 'task_id');
-        return ModelTask::createFromTableRow($data);
+        return ModelTask::createFromActiveRow($data);
     }
 
     /**
      * @return ModelContestant
      */
     public function getContestant(): ModelContestant {
-        return ModelContestant::createFromTableRow($this->ref(DbNames::TAB_CONTESTANT_BASE, 'ct_id'));
+        return ModelContestant::createFromActiveRow($this->ref(DbNames::TAB_CONTESTANT_BASE, 'ct_id'));
     }
 
     /**

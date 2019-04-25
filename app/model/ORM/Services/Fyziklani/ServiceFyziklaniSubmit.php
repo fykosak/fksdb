@@ -40,7 +40,7 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
             'fyziklani_task_id' => $taskId,
             'e_fyziklani_team_id' => $teamId
         ])->fetch();
-        return $row ? ModelFyziklaniSubmit::createFromTableRow($row) : null;
+        return $row ? ModelFyziklaniSubmit::createFromActiveRow($row) : null;
     }
 
     /**
@@ -80,7 +80,7 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
             $query->where('modified >= ?', $lastUpdated);
         }
         foreach ($query as $row) {
-            $submit = ModelFyziklaniSubmit::createFromTableRow($row);
+            $submit = ModelFyziklaniSubmit::createFromActiveRow($row);
             $submits[$submit->fyziklani_submit_id] = $submit->__toArray();
         }
         return $submits;

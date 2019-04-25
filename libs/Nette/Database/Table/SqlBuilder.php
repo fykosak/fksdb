@@ -25,8 +25,9 @@ use Nette,
  * @author     Jakub Vrana
  * @author     Jan Skrasek
  */
-class SqlBuilder extends Nette\Object
+class SqlBuilder
 {
+    use Nette\SmartObject;
 	/** @var Nette\Database\ISupplementalDriver */
 	private $driver;
 

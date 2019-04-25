@@ -8,24 +8,24 @@ use FKSDB\ORM\DbNames;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property integer ac_year
- * @property integer school_id
- * @property string class
- * @property integer study_year
+ * @property-read integer ac_year
+ * @property-read integer school_id
+ * @property-read string class
+ * @property-read integer study_year
  */
 class ModelPersonHistory extends AbstractModelSingle {
     /**
      * @return ModelPerson
      */
     public function getPerson(): ModelPerson {
-        return ModelPerson::createFromTableRow($this->ref(DbNames::TAB_PERSON, 'person_id'));
+        return ModelPerson::createFromActiveRow($this->ref(DbNames::TAB_PERSON, 'person_id'));
     }
 
     /**
      * @return ModelSchool
      */
     public function getSchool(): ModelSchool {
-        return ModelSchool::createFromTableRow($this->ref(DbNames::TAB_SCHOOL, 'school_id'));
+        return ModelSchool::createFromActiveRow($this->ref(DbNames::TAB_SCHOOL, 'school_id'));
     }
 
     /**

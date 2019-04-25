@@ -7,7 +7,7 @@ use Events\Machine\Transition;
 use Events\Model\Holder\BaseHolder;
 use FKSDB\ORM\Services\ServicePerson;
 use Mail\MailTemplateFactory;
-use Nette\Object;
+use Nette\SmartObject;
 
 /**
  * Sends email notification of account creation
@@ -16,8 +16,8 @@ use Nette\Object;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class LoginInvitation extends Object {
-
+class LoginInvitation {
+    use SmartObject;
     /**
      * @var MailTemplateFactory
      */

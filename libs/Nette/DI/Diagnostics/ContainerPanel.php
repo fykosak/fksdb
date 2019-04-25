@@ -21,8 +21,9 @@ use Tracy\IBarPanel;
  *
  * @author     Patrik Votoček
  */
-class ContainerPanel extends Nette\Object implements IBarPanel
+class ContainerPanel implements IBarPanel
 {
+    use Nette\SmartObject;
 	/** @var Nette\DI\Container */
 	private $container;
 

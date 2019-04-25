@@ -20,8 +20,9 @@ use Nette;
  * @author     Jan Skrasek
  * @property-write Nette\Database\Connection $connection
  */
-class DiscoveredReflection extends Nette\Object implements Nette\Database\IReflection
+class DiscoveredReflection implements Nette\Database\IReflection
 {
+    use Nette\SmartObject;
 	/** @var Nette\Caching\Cache */
 	protected $cache;
 

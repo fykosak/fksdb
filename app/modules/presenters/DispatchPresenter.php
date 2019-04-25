@@ -22,7 +22,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
         $query = $this->serviceContest->getTable();
         $result = [];
         foreach ($query as $row) {
-            $contest = ModelContest::createFromTableRow($row);
+            $contest = ModelContest::createFromActiveRow($row);
             $symbol = $contest->getContestSymbol();
             $allowed = [];
             foreach ([ModelRole::ORG, ModelRole::CONTESTANT] as $role) {

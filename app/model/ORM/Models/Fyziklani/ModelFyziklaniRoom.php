@@ -6,10 +6,10 @@ use FKSDB\ORM\AbstractModelSingle;
 /**
  * Class FKSDB\ORM\Models\Fyziklani\ModelFyziklaniRoom
  *
- * @property integer room_id
- * @property string name
- * @property integer rows
- * @property integer columns
+ * @property-read integer room_id
+ * @property-read string name
+ * @property-read integer rows
+ * @property-read integer columns
  */
 class ModelFyziklaniRoom extends AbstractModelSingle {
 

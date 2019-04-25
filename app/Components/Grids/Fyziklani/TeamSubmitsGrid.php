@@ -39,7 +39,7 @@ class TeamSubmitsGrid extends SubmitsGrid {
         parent::configure($presenter);
 
         $this->addColumn('label', _('Úloha'))->setRenderer(function ($row) {
-            $model = ModelFyziklaniSubmit::createFromTableRow($row);
+            $model = ModelFyziklaniSubmit::createFromActiveRow($row);
             return $model->getTask()->label;
         });
         $this->addColumn('points', _('Body'));

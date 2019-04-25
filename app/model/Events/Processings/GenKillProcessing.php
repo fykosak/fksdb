@@ -9,7 +9,7 @@ use Events\Model\Holder\Holder;
 use Events\SubmitProcessingException;
 use FKSDB\Logging\ILogger;
 use Nette\Forms\Form;
-use Nette\Object;
+use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
 
 /**
@@ -21,7 +21,8 @@ use Nette\Utils\ArrayHash;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class GenKillProcessing extends Object implements IProcessing {
+class GenKillProcessing implements IProcessing {
+    use SmartObject;
 
     /**
      * @param $states

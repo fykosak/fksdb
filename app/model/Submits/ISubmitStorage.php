@@ -22,7 +22,7 @@ interface ISubmitStorage {
     public function beginTransaction();
 
     /**
-     * @throws SubmitStorageExceptio for unsuccessful commit
+     * @throws StorageException for unsuccessful commit
      * @return void
      */
     public function commit();

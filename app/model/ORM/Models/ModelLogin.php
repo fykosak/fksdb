@@ -15,12 +15,12 @@ use Nette\Security\IIdentity;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property boolean active
- * @property integer login_id
- * @property DateTime last_login
- * @property string hash
- * @property ActiveRow person
- * @property string login
+ * @property-read boolean active
+ * @property-read integer login_id
+ * @property-read DateTime last_login
+ * @property-read string hash
+ * @property-read ActiveRow person
+ * @property-read string login
  */
 class ModelLogin extends AbstractModelSingle implements IIdentity, IPersonReferencedModel {
 
@@ -48,7 +48,7 @@ class ModelLogin extends AbstractModelSingle implements IIdentity, IPersonRefere
      */
     public function getPerson() {
         if ($this->person) {
-            return ModelPerson::createFromTableRow($this->person);
+            return ModelPerson::createFromActiveRow($this->person);
         }
         return null;
     }
@@ -155,7 +155,7 @@ class ModelLogin extends AbstractModelSingle implements IIdentity, IPersonRefere
 
             // explicitly assigned roles
             foreach ($this->related(DbNames::TAB_GRANT, 'login_id') as $row) {
-                $grant = ModelGrant::createFromTableRow($row);
+                $grant = ModelGrant::createFromActiveRow($row);
                 $this->roles[] = new Grant($grant->contest_id, $grant->ref(DbNames::TAB_ROLE, 'role_id')->name);
             }
             // roles from other tables

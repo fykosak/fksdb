@@ -34,7 +34,7 @@ abstract class PaymentGrid extends BaseGrid {
      */
     protected function addColumnPaymentId() {
         $this->addColumn('id', _('#'))->setRenderer(function ($row) {
-            return '#' . ModelPayment::createFromTableRow($row)->getPaymentId();
+            return '#' . ModelPayment::createFromActiveRow($row)->getPaymentId();
         });
     }
 

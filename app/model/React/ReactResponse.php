@@ -1,9 +1,12 @@
 <?php
 
+use Nette\SmartObject;
+
 /**
  * Class ReactResponse
  */
-final class ReactResponse extends Nette\Object implements Nette\Application\IResponse {
+final class ReactResponse implements Nette\Application\IResponse {
+    use SmartObject;
     /**
      * @var ReactMessage[]
      */

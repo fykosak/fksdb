@@ -4,13 +4,13 @@ namespace FKSDB\ORM;
 
 use LogicException;
 use Nette\InvalidStateException;
-use Nette\Object;
+use Nette\SmartObject;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-abstract class AbstractModelMulti extends Object implements IModel {
-
+abstract class AbstractModelMulti implements IModel {
+    use SmartObject;
     /**
      * @var AbstractModelSingle
      */

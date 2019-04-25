@@ -240,7 +240,7 @@ class EventPresenter extends EntityPresenter {
         if (!$row) {
             return null;
         }
-        return ModelEvent::createFromTableRow($row);
+        return ModelEvent::createFromActiveRow($row);
     }
 
     /**

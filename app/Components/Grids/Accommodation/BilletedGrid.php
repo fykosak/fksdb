@@ -68,7 +68,7 @@ abstract class BilletedGrid extends BaseGrid {
     protected function addColumnPayment() {
         $this->addColumn('payment', _('Payment'))
             ->setRenderer(function ($row) {
-                $model = ModelEventPersonAccommodation::createFromTableRow($row);
+                $model = ModelEventPersonAccommodation::createFromActiveRow($row);
                 $modelPayment = $model->getPayment();
                 if (!$modelPayment) {
                     return Html::el('span')->addAttributes(['class' => 'badge badge-danger'])->addText('No payment found');
@@ -84,7 +84,7 @@ abstract class BilletedGrid extends BaseGrid {
         $this->addColumn('role', _('Role'))
             ->setRenderer(function ($row) {
                 $container = Html::el('span');
-                $model = ModelEventPersonAccommodation::createFromTableRow($row);
+                $model = ModelEventPersonAccommodation::createFromActiveRow($row);
                 $hasRole = false;
                 $person = $model->getPerson();
                 $eventId = $model->getEventAccommodation()->event_id;
@@ -92,7 +92,7 @@ abstract class BilletedGrid extends BaseGrid {
                 $teachers = $person->getEventTeacher()->where('event_id', $eventId);
                 foreach ($teachers as $row) {
                     $hasRole = true;
-                    $team = ModelFyziklaniTeam::createFromTableRow($row);
+                    $team = ModelFyziklaniTeam::createFromActiveRow($row);
                     $container->addHtml(Html::el('span')
                         ->addAttributes(['class' => 'badge badge-9'])
                         ->addText(_('Teacher') . ' - ' . $team->name));
@@ -101,7 +101,7 @@ abstract class BilletedGrid extends BaseGrid {
                 $eventOrgs = $person->getEventOrg()->where('event_id', $eventId);
                 foreach ($eventOrgs as $row) {
                     $hasRole = true;
-                    $org = ModelEventOrg::createFromTableRow($row);
+                    $org = ModelEventOrg::createFromActiveRow($row);
                     $container->addHtml(Html::el('span')
                         ->addAttributes(['class' => 'badge badge-7'])
                         ->addText(_('Org') . ' - ' . $org->note));
@@ -110,7 +110,7 @@ abstract class BilletedGrid extends BaseGrid {
                 $eventParticipants = $person->getEventParticipant()->where('event_id', $eventId);
                 foreach ($eventParticipants as $row) {
                     $hasRole = true;
-                    $participant = ModelEventParticipant::createFromTableRow($row);
+                    $participant = ModelEventParticipant::createFromActiveRow($row);
                     $container->addHtml(Html::el('span')
                         ->addAttributes(['class' => 'badge badge-10'])
                         ->addText(_('Participant') . ' - ' . _($participant->status)));
@@ -130,7 +130,7 @@ abstract class BilletedGrid extends BaseGrid {
      */
     protected function addColumnState() {
         $this->addColumn('status', _('State'))->setRenderer(function ($row) {
-            $model = ModelEventPersonAccommodation::createFromTableRow($row);
+            $model = ModelEventPersonAccommodation::createFromActiveRow($row);
             $classNames = ($model->status === ModelEventPersonAccommodation::STATUS_PAID) ? 'badge badge-success' : 'badge badge-danger';
             return Html::el('span')
                 ->addAttributes(['class' => $classNames])
@@ -143,7 +143,7 @@ abstract class BilletedGrid extends BaseGrid {
      */
     protected function addColumnPerson() {
         $this->addColumn('person_id', _('Person'))->setRenderer(function ($row) {
-            $model = ModelEventPersonAccommodation::createFromTableRow($row);
+            $model = ModelEventPersonAccommodation::createFromActiveRow($row);
             return $model->getPerson()->getFullName();
         });
     }
@@ -155,7 +155,7 @@ abstract class BilletedGrid extends BaseGrid {
      */
     public function handleConfirmPayment($id) {
         $row = $this->serviceEventPersonAccommodation->findByPrimary($id);
-        $model = ModelEventPersonAccommodation::createFromTableRow($row);
+        $model = ModelEventPersonAccommodation::createFromActiveRow($row);
         if (!$model) {
             $this->flashMessage(_('some bullshit....'));
             $this->redirect('this');
@@ -172,7 +172,7 @@ abstract class BilletedGrid extends BaseGrid {
      */
     public function handleDeletePayment($id) {
         $row = $this->serviceEventPersonAccommodation->findByPrimary($id);
-        $model = ModelEventPersonAccommodation::createFromTableRow($row);
+        $model = ModelEventPersonAccommodation::createFromActiveRow($row);
         if (!$model) {
             $this->flashMessage(_('some bullshit....'));
             $this->redirect('this');

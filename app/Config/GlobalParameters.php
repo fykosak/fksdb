@@ -5,14 +5,16 @@ namespace FKSDB\Config;
 use ArrayAccess;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
-use Nette\Object;
+use Nette\SmartObject;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class GlobalParameters extends Object implements ArrayAccess {
+class GlobalParameters implements ArrayAccess {
+
+    use SmartObject;
 
     /**
      * @var array

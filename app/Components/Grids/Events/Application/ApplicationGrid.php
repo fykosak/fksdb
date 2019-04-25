@@ -32,11 +32,11 @@ class ApplicationGrid extends AbstractApplicationGrid {
         $this->addColumns(['person_id', 'status']);
 
         $this->addButton('detail')->setShow(function ($row) {
-            $model = ModelEventParticipant::createFromTableRow($row);
+            $model = ModelEventParticipant::createFromActiveRow($row);
             return !\in_array($model->getEvent()->event_type_id, [1, 9]);
         })->setText(_('Detail'))
             ->setLink(function ($row) {
-                $model = ModelEventParticipant::createFromTableRow($row);
+                $model = ModelEventParticipant::createFromActiveRow($row);
                 return $this->getPresenter()->link('detail', [
                     'id' => $model->event_participant_id,
                 ]);

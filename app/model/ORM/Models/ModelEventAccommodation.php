@@ -11,16 +11,16 @@ use Nette\Utils\DateTime;
 /**
  * Class FKSDB\ORM\Models\ModelEventAccommodation
  * @package ORM\Models\Events
- * @property integer event_accommodation_id
- * @property integer event_id
- * @property integer capacity
- * @property string name
- * @property integer address_id
- * @property integer price_kc
- * @property integer price_eur
- * @property DateTime date
- * @property ActiveRow address
- * @property ActiveRow event
+ * @property-read integer event_accommodation_id
+ * @property-read integer event_id
+ * @property-read integer capacity
+ * @property-read string name
+ * @property-read integer address_id
+ * @property-read integer price_kc
+ * @property-read integer price_eur
+ * @property-read DateTime date
+ * @property-read ActiveRow address
+ * @property-read ActiveRow event
  */
 class ModelEventAccommodation extends AbstractModelSingle implements IResource, IEventReferencedModel {
     const ACC_DATE_FORMAT = 'Y-m-d';
@@ -36,7 +36,7 @@ class ModelEventAccommodation extends AbstractModelSingle implements IResource, 
      * @return ModelEvent
      */
     public function getEvent(): ModelEvent {
-        return ModelEvent::createFromTableRow($this->event);
+        return ModelEvent::createFromActiveRow($this->event);
     }
 
     /**
@@ -44,7 +44,7 @@ class ModelEventAccommodation extends AbstractModelSingle implements IResource, 
      */
     public function getAddress() {
         if ($this->address) {
-            return ModelAddress::createFromTableRow($this->address);
+            return ModelAddress::createFromActiveRow($this->address);
         }
         return null;
     }
