@@ -33,7 +33,7 @@ abstract class SubmitsGrid extends BaseGrid {
      */
     protected function addColumnTask() {
         $this->addColumn('label', _('Úloha'))->setRenderer(function ($row) {
-            $model = ModelFyziklaniSubmit::createFromTableRow($row);
+            $model = ModelFyziklaniSubmit::createFromActiveRow($row);
             return $model->getTask()->label;
         });
     }

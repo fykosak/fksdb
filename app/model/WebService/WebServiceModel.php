@@ -127,7 +127,7 @@ class WebServiceModel {
         }
 
         $row = $this->serviceContest->findByPrimary($this->inverseContestMap[$args->contest]);
-        $contest = ModelContest::createFromTableRow($row);
+        $contest = ModelContest::createFromActiveRow($row);
         $doc = new DOMDocument();
         $resultsNode = $doc->createElement('results');
         $doc->appendChild($resultsNode);
@@ -215,7 +215,7 @@ class WebServiceModel {
         }
 
         $row = $this->serviceContest->findByPrimary($this->inverseContestMap[$args->contest]);
-        $contest = ModelContest::createFromTableRow($row);
+        $contest = ModelContest::createFromActiveRow($row);
         $year = (string)$args->year;
 
         $doc = new DOMDocument();

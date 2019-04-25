@@ -3,13 +3,15 @@
 namespace Events\Model;
 
 use Nette\InvalidArgumentException;
-use Nette\Object;
+use Nette\SmartObject;
 
 /**
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class ExpressionEvaluator extends Object {
+class ExpressionEvaluator {
+
+    use SmartObject;
 
     /**
      * @param $condition

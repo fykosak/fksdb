@@ -9,26 +9,33 @@ use Nette\Security\IResource;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property ActiveRow contest
- * @property ActiveRow person
- * @property int since
- * @property int contest_id
- * @property int|null until
+ * @property-read ActiveRow contest
+ * @property-read ActiveRow person
+ * @property-read int since
+ * @property-read int contest_id
+ * @property-read int|null until
+ * @property-read int org_id
+ * @property-read int person_id
+ * @property-read string role
+ * @property-read int order
+ * @property-read string contribution
+ * @property-read string tex_signature
+ * @property-read string domain_alias
  */
-class ModelOrg extends AbstractModelSingle implements IResource {
+class ModelOrg extends AbstractModelSingle implements IResource, IPersonReferencedModel, IContestReferencedModel {
 
     /**
      * @return ModelContest
      */
     public function getContest(): ModelContest {
-        return ModelContest::createFromTableRow($this->contest);
+        return ModelContest::createFromActiveRow($this->contest);
     }
 
     /**
      * @return ModelPerson
      */
     public function getPerson(): ModelPerson {
-        return ModelPerson::createFromTableRow($this->person);
+        return ModelPerson::createFromActiveRow($this->person);
     }
 
     /**

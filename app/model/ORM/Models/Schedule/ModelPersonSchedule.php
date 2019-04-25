@@ -14,25 +14,25 @@ use Nette\NotImplementedException;
 /**
  * Class ModelPersonSchedule
  * @package FKSDB\ORM\Models\Schedule
- * @property ActiveRow person
- * @property ActiveRow schedule_item
- * @property int person_id
- * @property int schedule_item_id
- * @property string state
+ * @property-read ActiveRow person
+ * @property-read ActiveRow schedule_item
+ * @property-read int person_id
+ * @property-read int schedule_item_id
+ * @property-read string state
  */
 class ModelPersonSchedule extends AbstractModelSingle implements IStateModel {
     /**
      * @return ModelPerson
      */
     public function getPerson(): ModelPerson {
-        return ModelPerson::createFromTableRow($this->person);
+        return ModelPerson::createFromActiveRow($this->person);
     }
 
     /**
      * @return ModelScheduleItem
      */
     public function getScheduleItem(): ModelScheduleItem {
-        return ModelScheduleItem::createFromTableRow($this->schedule_item);
+        return ModelScheduleItem::createFromActiveRow($this->schedule_item);
     }
 
     /**
@@ -43,7 +43,7 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel {
         if (!$data) {
             return null;
         }
-        return ModelPayment::createFromTableRow($data);
+        return ModelPayment::createFromActiveRow($data);
     }
 
     /**

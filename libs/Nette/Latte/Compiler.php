@@ -20,8 +20,9 @@ use Nette,
  *
  * @author     David Grudl
  */
-class Compiler extends Nette\Object
+class Compiler
 {
+    use Nette\SmartObject;
 	/** @var string default content type */
 	public $defaultContentType = self::CONTENT_XHTML;
 

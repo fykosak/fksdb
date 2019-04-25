@@ -52,7 +52,7 @@ class BilletedAllGrid extends BilletedGrid {
         $this->addColumnRole();
 
         $this->addColumn('event_accommodation_id', _('Accommodation'))->setRenderer(function ($row) {
-            $model = ModelEventPersonAccommodation::createFromTableRow($row);
+            $model = ModelEventPersonAccommodation::createFromActiveRow($row);
             return $model->getEventAccommodation()->getLabel();
         });
 

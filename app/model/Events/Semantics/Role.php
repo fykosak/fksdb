@@ -4,8 +4,8 @@ namespace Events\Semantics;
 
 use Authorization\ContestAuthorizator;
 use Authorization\RelatedPersonAuthorizator;
-use Nette\Object;
 use Nette\Security\User;
+use Nette\SmartObject;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -13,8 +13,9 @@ use Nette\Security\User;
  * @obsolete Needs refactoring due to ConditionEvaluator (for only contestans events)
  * @author Michal Koutný <michal@fykos.cz>
  */
-class Role extends Object {
+class Role {
 
+    use SmartObject;
     use WithEventTrait;
 
     const GUEST = 'guest';

@@ -52,7 +52,7 @@ class PaymentSelectField extends TextInput implements IReactComponent {
         $query = $this->serviceEventPersonAccommodation->where('event_accommodation.event_id', $this->event->event_id);
         $items = [];
         foreach ($query as $row) {
-            $model = ModelEventPersonAccommodation::createFromTableRow($row);
+            $model = ModelEventPersonAccommodation::createFromActiveRow($row);
             if ($this->showAll || !$model->related(DbNames::TAB_PAYMENT_ACCOMMODATION, 'event_person_accommodation_id')->count()) {
                 $items[] = [
                     'hasPayment' => false, /*

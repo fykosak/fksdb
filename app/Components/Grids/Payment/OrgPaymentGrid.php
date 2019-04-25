@@ -43,11 +43,11 @@ class OrgPaymentGrid extends PaymentGrid {
         $this->addColumnPaymentId();
 
         $this->addColumn('person_name', _('Person'))->setRenderer(function ($row) {
-            return ModelPerson::createFromTableRow($row->person)->getFullName();
+            return ModelPerson::createFromActiveRow($row->person)->getFullName();
         });
 
         $this->addColumn('person_email', _('e-mail'))->setRenderer(function ($row) {
-            return ModelPerson::createFromTableRow($row->person)->getInfo()->email;
+            return ModelPerson::createFromActiveRow($row->person)->getInfo()->email;
         });
 
         $this->addColumnPrice();

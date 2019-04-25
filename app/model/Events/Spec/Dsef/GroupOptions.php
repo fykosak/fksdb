@@ -7,15 +7,15 @@ use Events\Model\Holder\Field;
 use FKSDB\Components\Forms\Factories\Events\IOptionsProvider;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Services\Events\ServiceDsefGroup;
-use Nette\Object;
+use Nette\SmartObject;
 use ORM\ServicesMulti\Events\ServiceMDsefParticipant;
 
 /**
  *
  * @author michal
  */
-class GroupOptions extends Object implements IOptionsProvider {
-
+class GroupOptions implements IOptionsProvider {
+    use SmartObject;
     /**
      * @var ServiceMDsefParticipant
      */
@@ -70,9 +70,9 @@ class GroupOptions extends Object implements IOptionsProvider {
     private function getGroups($eventId) {
         if (!isset($this->groups[$eventId])) {
             $this->groups[$eventId] = $this->serviceDsefGroup->getTable()
-                    ->select('*')
-                    ->where('event_id', $eventId)
-                    ->fetchPairs('e_dsef_group_id');
+                ->select('*')
+                ->where('event_id', $eventId)
+                ->fetchPairs('e_dsef_group_id');
         }
         return $this->groups[$eventId];
     }
@@ -88,11 +88,11 @@ class GroupOptions extends Object implements IOptionsProvider {
         $groups = $this->getGroups($event->getPrimary());
 
         $selection = $this->serviceMParticipant->getTable()
-                ->getConnection()->table(DbNames::TAB_E_DSEF_PARTICIPANT)
-                ->select('e_dsef_group_id, count(event_participant.event_participant_id) AS occupied')
-                ->group('e_dsef_group_id')
-                ->where('event_id', $event->event_id)
-                ->where('NOT event_participant.event_participant_id', $application->getPrimary(false));
+            ->getConnection()->table(DbNames::TAB_E_DSEF_PARTICIPANT)
+            ->select('e_dsef_group_id, count(event_participant.event_participant_id) AS occupied')
+            ->group('e_dsef_group_id')
+            ->where('event_id', $event->event_id)
+            ->where('NOT event_participant.event_participant_id', $application->getPrimary(false));
         if ($this->includeStates !== BaseMachine::STATE_ANY) {
             $selection->where('event_participant.status', $this->includeStates);
         }

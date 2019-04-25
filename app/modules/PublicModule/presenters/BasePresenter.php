@@ -46,7 +46,7 @@ abstract class BasePresenter extends \ContestPresenter {
                 'year' => $this->getSelectedYear()
             ))->fetch();
 
-            $this->contestant = $contestant ? ModelContestant::createFromTableRow($contestant) : null;
+            $this->contestant = $contestant ? ModelContestant::createFromActiveRow($contestant) : null;
         }
 
         return $this->contestant;

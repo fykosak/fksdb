@@ -10,8 +10,7 @@ use FKSDB\ORM\Models\ModelEvent;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
-use Nette\Object;
-use Tracy\Debugger;
+use Nette\SmartObject;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -22,7 +21,8 @@ use Tracy\Debugger;
  * @method SingleEventSource limit()
  * @method SingleEventSource count()
  */
-class SingleEventSource extends Object implements IHolderSource {
+class SingleEventSource implements IHolderSource {
+    use SmartObject;
 
     /**
      * @var \FKSDB\ORM\Models\ModelEvent
@@ -160,9 +160,6 @@ class SingleEventSource extends Object implements IHolderSource {
             'limit' => false,
             'count' => true,
         );
-        if (!isset($delegated[$name])) {
-            return parent::__call($name, $args);
-        }
         $result = call_user_func_array(array($this->primarySelection, $name), $args);
         $this->primaryModels = null;
 

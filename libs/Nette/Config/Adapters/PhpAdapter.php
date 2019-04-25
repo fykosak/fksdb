@@ -19,8 +19,9 @@ use Nette;
  *
  * @author     David Grudl
  */
-class PhpAdapter extends Nette\Object implements Nette\Config\IAdapter
+class PhpAdapter implements Nette\Config\IAdapter
 {
+    use Nette\SmartObject;
 
 	/**
 	 * Reads configuration from PHP file.

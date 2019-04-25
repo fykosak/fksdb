@@ -27,8 +27,9 @@ use Nette,
  * @property-read int $flags
  * @property-read string|FALSE $targetPresenter
  */
-class Route extends Nette\Object implements Application\IRouter
+class Route implements Application\IRouter
 {
+    use Nette\SmartObject;
 	const PRESENTER_KEY = 'presenter';
 	const MODULE_KEY = 'module';
 

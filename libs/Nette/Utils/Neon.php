@@ -19,8 +19,9 @@ use Nette;
  *
  * @author     David Grudl
  */
-class Neon extends Nette\Object
+class Neon
 {
+    use Nette\SmartObject;
 	const BLOCK = 1;
 
 	/** @var array */

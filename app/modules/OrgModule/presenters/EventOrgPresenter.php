@@ -169,7 +169,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
      */
     private function getEvent(): ModelEvent {
         if (!$this->modelEvent) {
-            $this->modelEvent = ModelEvent::createFromTableRow($this->serviceEvent->findByPrimary($this->eventId));
+            $this->modelEvent = ModelEvent::createFromActiveRow($this->serviceEvent->findByPrimary($this->eventId));
         }
         return $this->modelEvent;
     }

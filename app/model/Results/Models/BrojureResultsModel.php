@@ -45,7 +45,7 @@ class BrojureResultsModel extends AbstractResultsModel {
         if (!isset($this->dataColumns[$category->id])) {
             $dataColumns = [];
             foreach ($this->getTasks($this->listedSeries) as $row) {
-                $task = ModelTask::createFromTableRow($row);
+                $task = ModelTask::createFromActiveRow($row);
                 $dataColumns[] = [
                     self::COL_DEF_LABEL => $task->label,
                     self::COL_DEF_LIMIT => $this->evaluationStrategy->getTaskPoints($task, $category),
@@ -141,7 +141,7 @@ class BrojureResultsModel extends AbstractResultsModel {
         $tasks = $this->getTasks($this->listedSeries);
         $i = 0;
         foreach ($tasks as $row) {
-            $task = ModelTask::createFromTableRow($row);
+            $task = ModelTask::createFromActiveRow($row);
             $points = $this->evaluationStrategy->getPointsColumn($task);
             $select[] = "round(MAX(IF(t.task_id = " . $task->task_id . ", " . $points . ", null))) AS '" . self::DATA_PREFIX . $i . "'";
             $i += 1;

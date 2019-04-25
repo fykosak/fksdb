@@ -22,8 +22,9 @@ use Nette;
  * @property-read array $controls
  * @property-read array $options
  */
-class ControlGroup extends Nette\Object
+class ControlGroup
 {
+    use Nette\SmartObject;
 	/** @var \SplObjectStorage */
 	protected $controls;
 

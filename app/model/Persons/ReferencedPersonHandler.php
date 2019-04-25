@@ -17,7 +17,7 @@ use FKSDB\Submits\StorageException;
 use FormUtils;
 use ModelException;
 use Nette\InvalidArgumentException;
-use Nette\Object;
+use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\JsonException;
 use ServiceMPersonHasFlag;
@@ -28,8 +28,8 @@ use ServiceMPostContact;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class ReferencedPersonHandler extends Object implements IReferencedHandler {
-
+class ReferencedPersonHandler implements IReferencedHandler {
+    use SmartObject;
     const POST_CONTACT_DELIVERY = 'post_contact_d';
     const POST_CONTACT_PERMANENT = 'post_contact_p';
 
