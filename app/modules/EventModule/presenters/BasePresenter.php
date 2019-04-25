@@ -20,10 +20,6 @@ use Nette\DI\Container;
  */
 abstract class BasePresenter extends AuthenticatedPresenter {
     /**
-     * @var TableReflectionFactory
-     */
-    protected $tableReflectionFactory;
-    /**
      *
      * @var \FKSDB\ORM\Models\ModelEvent
      */
@@ -226,18 +222,4 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     protected final function getContest(): ModelContest {
         return $this->getEvent()->getContest();
     }
-
-    /**
-     * @param string $name
-     * @return \Nette\ComponentModel\IComponent|null
-     * @throws \Exception
-     */
-    public function createComponent($name) {
-        $printerComponent = $this->tableReflectionFactory->createComponent($name, 2048);
-        if ($printerComponent) {
-            return $printerComponent;
-        }
-        return parent::createComponent($name);
-    }
-
 }
