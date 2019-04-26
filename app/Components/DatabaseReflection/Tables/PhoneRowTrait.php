@@ -9,27 +9,24 @@ use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Services\ServiceRegion;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
-use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
 
 /**
  * Class IPhoneField
  * @package FKSDB\Components\Forms\Factories\PersonInfo
  */
-abstract class AbstractPhoneRow extends AbstractRow {
+trait PhoneRowTrait {
     /**
      * @var ServiceRegion
      */
-    private $serviceRegion;
+    private $traitServiceRegion;
 
     /**
      * IPhoneField constructor.
      * @param ServiceRegion $serviceRegion
-     * @param ITranslator $translator
      */
-    public function __construct(ServiceRegion $serviceRegion, ITranslator $translator) {
-        parent::__construct($translator);
-        $this->serviceRegion = $serviceRegion;
+    public function registerPhoneRowTrait(ServiceRegion $serviceRegion) {
+        $this->traitServiceRegion = $serviceRegion;
     }
 
     /**
