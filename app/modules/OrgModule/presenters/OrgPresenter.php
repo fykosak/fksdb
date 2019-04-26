@@ -20,7 +20,11 @@ class OrgPresenter extends ExtendedPersonPresenter {
 
     protected $modelResourceId = 'org';
     protected $fieldsDefinition = 'adminOrg';
-
+    /**
+     * @var int
+     * @persistent
+     */
+    public $id;
     /**
      * @var ServiceOrg
      */
@@ -66,6 +70,7 @@ class OrgPresenter extends ExtendedPersonPresenter {
     }
 
     /**
+     * @throws ForbiddenRequestException
      * @throws \Nette\Application\BadRequestException
      */
     public function actionEdit() {

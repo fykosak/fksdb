@@ -56,12 +56,9 @@ class UntilRow extends AbstractRow {
         }
         $control = new TextInput($this->getTitle());
 
-        $control->addCondition(Form::FILLED);
-        $control->addRule(Form::NUMERIC);
-        /* ->addRule(function ($until, $since) {
-             return $since->value <= $until->value;
-         }, _('Konec nesmí být dříve než začátek'), $container['since'])*/
-        $control->addRule(Form::RANGE, _('Koncový ročník není v intervalu [%d, %d].'), [$min, $max]);
+        $control->addCondition(Form::FILLED)
+            ->addRule(Form::NUMERIC)
+            ->addRule(Form::RANGE, _('Koncový ročník není v intervalu [%d, %d].'), [$min, $max]);
         return $control;
     }
 }
