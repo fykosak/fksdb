@@ -43,6 +43,7 @@ class StalkingPresenter extends BasePresenter {
      * @var ValidationFactory
      */
     private $validationFactory;
+
     /**
      * @param \FKSDB\ORM\Services\ServicePerson $servicePerson
      */

@@ -1,6 +1,5 @@
 <?php
 
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\Payment\MyPaymentGrid;
 use FKSDB\ORM\Services\ServicePayment;
 
@@ -12,6 +11,7 @@ class MyPaymentsPresenter extends AuthenticatedPresenter {
      * @var ServicePayment
      */
     private $servicePayment;
+
     /**
      * @param ServicePayment $servicePayment
      */
@@ -32,7 +32,7 @@ class MyPaymentsPresenter extends AuthenticatedPresenter {
      * @return MyPaymentGrid
      */
     public function createComponentMyPaymentGrid(): MyPaymentGrid {
-        return new MyPaymentGrid($this->servicePayment, $this->tableReflectionFactory);
+        return new MyPaymentGrid($this->servicePayment, $this->getTableReflectionFactory());
     }
 
 }

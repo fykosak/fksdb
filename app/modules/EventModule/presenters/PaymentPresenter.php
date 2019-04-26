@@ -2,7 +2,9 @@
 
 namespace EventModule;
 
-use FKSDB\Components\Controls\Payment\DetailControl;
+use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Controls\Payment\StateDisplayControl;
+use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
 use FKSDB\Components\Factories\PaymentFactory as PaymentComponentFactory;
 use FKSDB\Components\Forms\Controls\Payment\SelectForm;
 use FKSDB\Components\Grids\Payment\OrgPaymentGrid;
@@ -156,6 +158,122 @@ class PaymentPresenter extends BasePresenter {
         }
         $this->setAuthorized($this->isContestsOrgAllowed('event.payment', 'list'));
     }
+    /* ********* actions *****************/
+    /**
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
+    public function actionEdit() {
+        if (!$this->canEdit()) {
+            $this->flashMessage(\sprintf(_('Payment #%s can not be edited'), $this->getModel()->getPaymentId()), \BasePresenter::FLASH_ERROR);
+            $this->redirect(':MyPayments:');
+        }
+        /**
+         * @var SelectForm $component
+         */
+        $component = $this->getComponent('form');
+        $component->setModel($this->getModel());
+    }
+
+    /**
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
+    public function actionCreate() {
+        if ((\count($this->getMachine()->getAvailableTransitions(null)) === 0)) {
+            $this->flashMessage(_('Payment is not allowed in this time!'));
+            if (!$this->isOrg()) {
+                $this->redirect('Dashboard:default');
+            }
+        };
+    }
+
+    /* ********* render *****************/
+    /**
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws \Nette\Application\AbortException
+     */
+    public function renderEdit() {
+        $this->template->model = $this->getModel();
+    }
+
+    /**
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
+    public function renderDetail() {
+        $this->getMachine()->getPriceCalculator()->setCurrency($this->model->currency);
+
+        $this->template->items = $this->getMachine()->getPriceCalculator()->getGridItems($this->model);
+        $this->template->model = $this->model;
+    }
+    /* ********* startup *****************/
+    /**
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
+    protected function startup() {
+        parent::startup();
+        // protection not implements eventPayment
+        if (!$this->hasApi()) {
+            $this->flashMessage(_('Event has not payment API'));
+            $this->redirect(':Event:Dashboard:default');
+        };
+    }
+    /* ********* Components *****************/
+    /**
+     * @return OrgPaymentGrid
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
+    protected function createComponentOrgGrid(): OrgPaymentGrid {
+        return $this->paymentComponentFactory->createOrgGrid($this->getEvent());
+    }
+
+    /**
+     * @return SelectForm
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
+    protected function createComponentForm(): SelectForm {
+        return $this->paymentComponentFactory->creteForm($this->getEvent(), $this->isOrg(), $this->getMachine());
+    }
+
+    /**
+     * @return FormControl
+     * @throws \Nette\Application\BadRequestException
+     */
+    protected function createComponentEditButtonForm(): FormControl {
+        $formControl = new FormControl();
+        $form = $formControl->getForm();
+        /**
+         * @var PaymentPresenter $presenter
+         */
+        $presenter = $this->getPresenter();
+        if ($this->model->canEdit() || $presenter->getContestAuthorizator()->isAllowed($this->model, 'org', $this->model->getEvent()->getContest())) {
+            $submit = $form->addSubmit('edit', _('Edit items'));
+            $submit->onClick[] = function () {
+                $this->getPresenter()->redirect('edit');
+            };
+        }
+        return $formControl;
+    }
+
+    /**
+     * @return StateDisplayControl
+     */
+    protected function createComponentStateDisplay(): StateDisplayControl {
+        return new StateDisplayControl($this->translator, $this->model);
+    }
+
+    /**
+     * @return TransitionButtonsControl
+     */
+    protected function createComponentTransitionButtons() {
+        return new TransitionButtonsControl($this->machine, $this->translator, $this->model);
+    }
+
 
     /**
      * Is org or (is own payment and can edit)
@@ -225,84 +343,5 @@ class PaymentPresenter extends BasePresenter {
             return false;
         }
         return true;
-    }
-    /* ********* startup *****************/
-    /**
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
-     */
-    protected function startup() {
-        parent::startup();
-        // protection not implements eventPayment
-        if (!$this->hasApi()) {
-            $this->flashMessage(_('Event has not payment API'));
-            $this->redirect(':Event:Dashboard:default');
-        };
-    }
-    /* ********* actions *****************/
-    /**
-     * @param $id
-     * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
-     */
-    public function actionEdit($id) {
-        if (!$this->canEdit()) {
-            $this->flashMessage(\sprintf(_('Payment #%s can not be edited'), $this->getModel()->getPaymentId()), \BasePresenter::FLASH_ERROR);
-            $this->redirect(':MyPayments:');
-        }
-        /**
-         * @var SelectForm $component
-         */
-        $component = $this->getComponent('form');
-        $component->setModel($this->getModel());
-    }
-
-    /**
-     * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
-     */
-    public function actionCreate() {
-        if ((\count($this->getMachine()->getAvailableTransitions(null)) === 0)) {
-            $this->flashMessage(_('Payment is not allowed in this time!'));
-            if (!$this->isOrg()) {
-                $this->redirect('Dashboard:default');
-            }
-        };
-    }
-    /* ********* render *****************/
-    /**
-     * @throws BadRequestException
-     * @throws ForbiddenRequestException
-     * @throws \Nette\Application\AbortException
-     */
-    public function renderEdit() {
-        $this->template->model = $this->getModel();
-    }
-    /* ********* Components *****************/
-    /**
-     * @return DetailControl
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
-     */
-    protected function createComponentDetailControl(): DetailControl {
-        return $this->paymentComponentFactory->createDetailControl($this->getModel(), $this->getMachine());
-    }
-
-    /**
-     * @return OrgPaymentGrid
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
-     */
-    protected function createComponentOrgGrid(): OrgPaymentGrid {
-        return $this->paymentComponentFactory->createOrgGrid($this->getEvent());
-    }
-
-    /**
-     * @return SelectForm
-     * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
-     */
-    protected function createComponentForm(): SelectForm {
-        return $this->paymentComponentFactory->creteForm($this->getEvent(), $this->isOrg(), $this->getMachine());
     }
 }

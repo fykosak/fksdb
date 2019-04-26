@@ -30,7 +30,6 @@ class BaseInfo extends StalkingComponent {
         return _('Base info');
     }
 
-
     /**
      * @return string[]
      */

@@ -101,7 +101,6 @@ class OrgPresenter extends ExtendedPersonPresenter {
      */
     protected function createComponentGrid($name): OrgsGrid {
         return new OrgsGrid($this->serviceOrg, $this->getTableReflectionFactory());
-
     }
 
     /**
@@ -149,5 +148,5 @@ class OrgPresenter extends ExtendedPersonPresenter {
     public function messageExists(): string {
         return _('Organizátor již existuje.');
     }
-
 }
+
