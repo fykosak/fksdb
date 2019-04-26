@@ -70,7 +70,7 @@ class OrgsGrid extends BaseGrid {
         $this->addButton('edit', _('Edit'))
             ->setText(_('Edit'))
             ->setLink(function ($row) {
-                return $this->getPresenter()->link('edit', $row->org_id);
+                return $this->getPresenter()->link('edit', ['id' => $row->org_id]);
             })
             ->setShow(function ($row) use ($presenter) {
                 return $presenter->authorized('edit', ['id' => $row->org_id]);
@@ -79,7 +79,7 @@ class OrgsGrid extends BaseGrid {
         $this->addButton('detail', _('Detail'))
             ->setText(_('Detail'))
             ->setLink(function ($row) {
-                return $this->getPresenter()->link('detail', $row->org_id);
+                return $this->getPresenter()->link('detail', ['id' => $row->org_id]);
             })
             ->setShow(function ($row) use ($presenter) {
                 return $presenter->authorized('detail', ['id' => $row->org_id]);

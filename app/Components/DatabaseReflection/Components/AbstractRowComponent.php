@@ -16,31 +16,36 @@ abstract class AbstractRowComponent extends Control {
     const LAYOUT_LIST_GROUP = 'list-group';
     const LAYOUT_ROW = 'row';
     const LAYOUT_ONLY_VALUE = 'only-value';
-
-    /**
-     * @var callable
-     */
-    private $callback;
     /**
      * @var ITranslator
      */
     private $translator;
     /**
+     * @var AbstractRow
+     */
+    private $factory;
+    /**
      * @var string
      */
-    private $title;
+    private $fieldName;
+    /**
+     * @var int
+     */
+    private $userPermission;
 
     /**
      * StalkingRowComponent constructor.
      * @param ITranslator $translator
-     * @param callable $callback
-     * @param string $title
+     * @param AbstractRow $factory
+     * @param string $fieldName
+     * @param int $userPermission
      */
-    public function __construct(ITranslator $translator, callable $callback, string $title) {
+    public function __construct(ITranslator $translator, AbstractRow $factory, string $fieldName, int $userPermission) {
         parent::__construct();
-        $this->callback = $callback;
         $this->translator = $translator;
-        $this->title = $title;
+        $this->factory = $factory;
+        $this->fieldName = $fieldName;
+        $this->userPermission = $userPermission;
     }
 
     /**
@@ -53,9 +58,10 @@ abstract class AbstractRowComponent extends Control {
      */
     public function render(AbstractModelSingle $model) {
         $this->template->setTranslator($this->translator);
-        $this->template->title = $this->title;
+        $this->template->title = $this->factory->getTitle();
+        $this->template->description = $this->factory->getDescription();
         $this->template->layout = $this->getLayout();
-        $this->template->html = ($this->callback)($model);
+        $this->template->html = $this->factory->renderValue($model, $this->fieldName, $this->userPermission);
         $this->template->setFile(__DIR__ . '/layout.latte');
         $this->template->render();
     }

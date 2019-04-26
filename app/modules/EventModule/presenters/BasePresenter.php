@@ -4,7 +4,6 @@ namespace EventModule;
 
 use AuthenticatedPresenter;
 use FKSDB\Components\Controls\LanguageChooser;
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceContestYear;
@@ -70,13 +69,6 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      */
     public function injectContainer(Container $container) {
         $this->container = $container;
-    }
-
-    /**
-     * @param TableReflectionFactory $tableReflectionFactory
-     */
-    public function injectTableReflectionFactory(TableReflectionFactory $tableReflectionFactory) {
-        $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
     /**
@@ -222,18 +214,4 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     protected final function getContest(): ModelContest {
         return $this->getEvent()->getContest();
     }
-
-    /**
-     * @param string $name
-     * @return \Nette\ComponentModel\IComponent|null
-     * @throws \Exception
-     */
-    public function createComponent($name) {
-        $printerComponent = $this->tableReflectionFactory->createComponent($name, 2048);
-        if ($printerComponent) {
-            return $printerComponent;
-        }
-        return parent::createComponent($name);
-    }
-
 }

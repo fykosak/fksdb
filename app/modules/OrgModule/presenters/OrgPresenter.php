@@ -3,16 +3,18 @@
 namespace OrgModule;
 
 use FKSDB\Components\Forms\Factories\OrgFactory;
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\OrgsGrid;
 use FKSDB\ORM\IModel;
+use FKSDB\ORM\Models\ModelOrg;
 use FKSDB\ORM\Services\ServiceOrg;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Persons\ExtendedPersonHandler;
 
 /**
  * Class OrgPresenter
  * @package OrgModule
+ * @method ModelOrg getModel
  */
 class OrgPresenter extends ExtendedPersonPresenter {
 
@@ -43,41 +45,14 @@ class OrgPresenter extends ExtendedPersonPresenter {
         $this->orgFactory = $orgFactory;
     }
 
-    /**
-     * @param $id
-     */
-    public function titleEdit($id) {
-        $this->setTitle(sprintf(_('Úprava organizátora %s'), $this->getModel()->getPerson()->getFullname()));
+    public function titleEdit() {
+        $this->setTitle(sprintf(_('Úprava organizátora %s'), $this->getModel()->getPerson()->getFullName()));
         $this->setIcon('fa fa-pencil');
     }
 
-    /**
-     * @param $id
-     */
-    public function titleDetail($id) {
-        $this->setTitle(sprintf(_('Org %s'), $this->getModel()->getPerson()->getFullname()));
+    public function titleDetail() {
+        $this->setTitle(sprintf(_('Org %s'), $this->getModel()->getPerson()->getFullName()));
         $this->setIcon('fa fa-user');
-    }
-
-    /**3
-     * @param $id
-     */
-    public function renderDetail($id) {
-        $this->template->model = $this->getModel();
-    }
-
-    /**
-     * @param $id
-     * @throws \Nette\Application\BadRequestException
-     */
-    public function renderEdit($id) {
-        parent::renderEdit($id);
-
-        $org = $this->getModel();
-
-        if ($org->contest_id != $this->getSelectedContest()->contest_id) {
-            $this->flashMessage(_('Editace organizátora mimo zvolený seminář.'), self::FLASH_WARNING);
-        }
     }
 
     public function titleCreate() {
@@ -88,6 +63,21 @@ class OrgPresenter extends ExtendedPersonPresenter {
     public function titleList() {
         $this->setTitle(_('Organizátoři'));
         $this->setIcon('fa fa-address-book');
+    }
+
+    /**
+     * @throws \Nette\Application\BadRequestException
+     */
+    public function actionEdit() {
+        $org = $this->getModel();
+
+        if ($org->contest_id != $this->getSelectedContest()->contest_id) {
+            throw new ForbiddenRequestException(_('Editace organizátora mimo zvolený seminář.'));
+        }
+    }
+
+    public function renderDetail() {
+        $this->template->model = $this->getModel();
     }
 
     /**
@@ -107,17 +97,16 @@ class OrgPresenter extends ExtendedPersonPresenter {
 
     /**
      * @param $name
-     * @return OrgsGrid|mixed
+     * @return OrgsGrid
      */
-    protected function createComponentGrid($name) {
-        $grid = new OrgsGrid($this->serviceOrg, $this->tableReflectionFactory);
+    protected function createComponentGrid($name): OrgsGrid {
+        return new OrgsGrid($this->serviceOrg, $this->getTableReflectionFactory());
 
-        return $grid;
     }
 
     /**
      * @param Form $form
-     * @return mixed|void
+     * @return void
      * @throws \Nette\Application\BadRequestException
      * @throws \Exception
      */
@@ -127,51 +116,38 @@ class OrgPresenter extends ExtendedPersonPresenter {
     }
 
     /**
-     * @return mixed|ServiceOrg
+     * @return ServiceOrg
      */
-    protected function getORMService() {
+    protected function getORMService(): ServiceOrg {
         return $this->serviceOrg;
     }
 
     /**
      * @return string
      */
-    public function messageCreate() {
+    public function messageCreate(): string {
         return _('Organizátor %s založen.');
     }
 
     /**
      * @return string
      */
-    public function messageEdit() {
+    public function messageEdit(): string {
         return _('Organizátor %s upraven.');
     }
 
     /**
      * @return string
      */
-    public function messageError() {
+    public function messageError(): string {
         return _('Chyba při zakládání organizátora.');
     }
 
     /**
      * @return string
      */
-    public function messageExists() {
+    public function messageExists(): string {
         return _('Organizátor již existuje.');
     }
 
-    /**
-     * @param string $name
-     * @return \Nette\ComponentModel\IComponent|null
-     * @throws \Exception
-     */
-    public function createComponent($name) {
-        $printerComponent = $this->tableReflectionFactory->createComponent($name, 2048);
-        if ($printerComponent) {
-            return $printerComponent;
-        }
-        return parent::createComponent($name);
-    }
 }
-

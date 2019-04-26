@@ -3,9 +3,17 @@
     {if count($orgs)}
         {foreach $orgs as $row}
             {var $org = \FKSDB\ORM\Models\ModelOrg::createFromTableRow($row)}
-            <h3 class="card-header">{control contestBadge, $org->contest_id}</h3>
+            <div class="card-header">
+                <nav class="nav">
+                    <span class="h3">{control contestBadge, $org->contest_id}</span>
+                    <a class="nav-link"
+                       href="{plink :Org:org:detail contestId=>$org->contest_id,id=>$org->org_id,year=>$org->since}">{_'Detail'}</a>
+                    <a class="nav-link"
+                       href="{plink :Org:org:edit contestId=>$org->contest_id,id=>$org->org_id,year=>$org->since}">{_'Edit'}</a>
+                </nav>
+            </div>
             <ul class="list-group list-group-flush">
-                {foreach ['org_id','since','until','role','order','contribution','tex_signature','domain_alias'] as $field}
+                {foreach ['since','until','role','order','contribution','tex_signature','domain_alias'] as $field}
                     {control valuePrinterList__org__$field $org}
                 {/foreach}
             </ul>

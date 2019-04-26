@@ -156,7 +156,7 @@ class EventPresenter extends EntityPresenter {
      * @return EventsGrid
      */
     protected function createComponentGrid($name): EventsGrid {
-        return new EventsGrid($this->serviceEvent, $this->tableReflectionFactory);
+        return new EventsGrid($this->serviceEvent, $this->getTableReflectionFactory());
     }
 
     /**

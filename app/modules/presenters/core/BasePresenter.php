@@ -110,7 +110,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     /**
      * @var TableReflectionFactory
      */
-    protected $tableReflectionFactory;
+    private $tableReflectionFactory;
 
     /**
      * @return YearCalculator
@@ -129,8 +129,15 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     /**
      * @param TableReflectionFactory $tableReflectionFactory
      */
-    public function injectTableReflectionFactory(TableReflectionFactory $tableReflectionFactory) {
+    public final function injectTableReflectionFactory(TableReflectionFactory $tableReflectionFactory) {
         $this->tableReflectionFactory = $tableReflectionFactory;
+    }
+
+    /**
+     * @return TableReflectionFactory
+     */
+    public final function getTableReflectionFactory(): TableReflectionFactory {
+        return $this->tableReflectionFactory;
     }
 
     /**
@@ -627,5 +634,16 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return $this->fullRequest;
     }
 
-
+    /**
+     * @param string $name
+     * @return \Nette\ComponentModel\IComponent|null
+     * @throws \Exception
+     */
+    public function createComponent($name) {
+        $printerComponent = $this->getTableReflectionFactory()->createComponent($name, 2048);
+        if ($printerComponent) {
+            return $printerComponent;
+        }
+        return parent::createComponent($name);
+    }
 }

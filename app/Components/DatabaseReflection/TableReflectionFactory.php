@@ -70,8 +70,7 @@ final class TableReflectionFactory {
      */
     private function createListComponent(string $tableName, string $fieldName, int $userPermission): ListComponent {
         $factory = $this->loadService($tableName, $fieldName);
-        $callBack = $this->getComponentCallback($factory, $fieldName, $userPermission);
-        return new ListComponent($this->translator, $callBack, $factory->getTitle());
+        return new ListComponent($this->translator, $factory, $fieldName, $userPermission);
     }
 
     /**
@@ -83,8 +82,7 @@ final class TableReflectionFactory {
      */
     private function createRowComponent(string $tableName, string $fieldName, int $userPermission): RowComponent {
         $factory = $this->loadService($tableName, $fieldName);
-        $callBack = $this->getComponentCallback($factory, $fieldName, $userPermission);
-        return new RowComponent($this->translator, $callBack, $factory->getTitle());
+        return new RowComponent($this->translator, $factory, $fieldName, $userPermission);
     }
 
     /**
@@ -96,8 +94,7 @@ final class TableReflectionFactory {
      */
     private function createOnlyValueComponent(string $tableName, string $fieldName, int $userPermission): OnlyValueComponent {
         $factory = $this->loadService($tableName, $fieldName);
-        $callBack = $this->getComponentCallback($factory, $fieldName, $userPermission);
-        return new OnlyValueComponent($this->translator, $callBack, $factory->getTitle());
+        return new OnlyValueComponent($this->translator, $factory, $fieldName, $userPermission);
     }
 
     /**
@@ -122,18 +119,6 @@ final class TableReflectionFactory {
             }
         }
         return null;
-    }
-
-    /**
-     * @param AbstractRow $factory
-     * @param string $fieldName
-     * @param int $userPermission
-     * @return \Closure
-     */
-    private function getComponentCallback(AbstractRow $factory, string $fieldName, int $userPermission): Closure {
-        return function (AbstractModelSingle $model) use ($factory, $fieldName, $userPermission): Html {
-            return $factory->renderValue($model, $fieldName, $userPermission);
-        };
     }
 
     /**

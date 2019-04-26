@@ -14,6 +14,13 @@ use Nette\Security\IResource;
  * @property-read int since
  * @property-read int contest_id
  * @property-read int|null until
+ * @property-read int org_id
+ * @property-read int person_id
+ * @property-read string role
+ * @property-read int order
+ * @property-read string contribution
+ * @property-read string tex_signature
+ * @property-read string domain_alias
  */
 class ModelOrg extends AbstractModelSingle implements IResource, IPersonReferencedModel, IContestReferencedModel {
 

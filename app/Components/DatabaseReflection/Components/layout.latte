@@ -1,7 +1,15 @@
 {if $layout =='list-group'}
     <li class="list-group-item">
         <div class="row">
-            <b class="col-5">{$title}</b>
+            <b class="col-5">{$title}
+                {if $description}
+                    <a href="#" class="text-info" data-toggle="popover"
+                       title="{$title}"
+                       data-content="{$description}">
+                        <i class="fa fa fa-question-circle-o"></i>
+                    </a>
+                {/if}
+            </b>
             <span class="col-7">
            {$html}
         </span>
@@ -9,7 +17,15 @@
     </li>
 {elseif $layout =='row'}
     <div class="row mt-1">
-        <b class="col-xl-2 col-lg-4 col-md-5 col-sm-6">{$title}</b>
+        <b class="col-xl-2 col-lg-4 col-md-5 col-sm-6">{$title}
+            {if $description}
+                <a href="#" class="text-info" data-toggle="popover"
+                   title="{$title}"
+                   data-content="{$description}">
+                    <i class="fa fa fa-question-circle-o"></i>
+                </a>
+            {/if}
+        </b>
         <span class="col-xl-10 col-lg-8 col-md-7 col-sm-6">
         {$html}
     </span>
