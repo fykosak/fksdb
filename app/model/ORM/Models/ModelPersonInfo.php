@@ -13,6 +13,7 @@ use FKSDB\ORM\DbNames;
  * @property-read string phone_parent_m
  * @property-read string phone_parent_d
  * @property-read string born_id
+ * @property-read int health_insurance
  */
 class ModelPersonInfo extends AbstractModelSingle {
     /**
