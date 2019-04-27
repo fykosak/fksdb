@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\DatabaseReflection;
 
-use FKSDB\Components\Controls\Helpers\ValuePrinters\AbstractValue;
+use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 
 /**
@@ -10,12 +10,16 @@ use Nette\Templating\FileTemplate;
  * @package FKSDB\Components\Controls\Stalking
  * @property FileTemplate $template
  */
-class DetailRowComponent extends AbstractRowComponent {
-
+class DetailRowComponent extends RowComponent {
     /**
-     * @return string
+     * DetailRowComponent constructor.
+     * @param ITranslator $translator
+     * @param AbstractRow $factory
+     * @param string $fieldName
+     * @param int $userPermission
      */
-    protected function getLayout(): string {
-        return AbstractValue::LAYOUT_DETAIL;
+    public function __construct(ITranslator $translator, AbstractRow $factory, string $fieldName, int $userPermission) {
+        parent::__construct($translator, $factory, $fieldName, $userPermission);
+        $this->includeTest = true;
     }
 }

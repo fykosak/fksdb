@@ -4,6 +4,7 @@ namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\DatabaseReflection\AbstractRowComponent;
+use FKSDB\Components\DatabaseReflection\DetailRowComponent;
 use FKSDB\Components\DatabaseReflection\ListComponent;
 use FKSDB\Components\DatabaseReflection\OnlyValueComponent;
 use FKSDB\Components\DatabaseReflection\RowComponent;
@@ -110,6 +111,18 @@ final class TableReflectionFactory {
     }
 
     /**
+     * @param string $tableName
+     * @param string $fieldName
+     * @param int $userPermission
+     * @return DetailRowComponent
+     * @throws \Exception
+     */
+    private function createDetailComponent(string $tableName, string $fieldName, int $userPermission): DetailRowComponent {
+        $factory = $this->loadService($tableName, $fieldName);
+        return new DetailRowComponent($this->translator, $factory, $fieldName, $userPermission);
+    }
+
+    /**
      * @param string $name
      * @param int $permissionLevel
      * @return AbstractRowComponent|null
@@ -119,8 +132,11 @@ final class TableReflectionFactory {
         $parts = \explode('__', $name);
         if (\count($parts) === 3) {
             list($prefix, $tableName, $fieldName) = $parts;
-            if ($prefix === 'valuePrinter' || $prefix === 'valuePrinterDetail' || $prefix === 'valuePrinterRow') {
+            if ($prefix === 'valuePrinter' || $prefix === 'valuePrinterRow') {
                 return $this->createRowComponent($tableName, $fieldName, $permissionLevel);
+            }
+            if($prefix === 'valuePrinterDetail'){
+                return $this->createDetailComponent($tableName, $fieldName, $permissionLevel);
             }
             if ($prefix === 'valuePrinterList') {
                 return $this->createListComponent($tableName, $fieldName, $permissionLevel);
