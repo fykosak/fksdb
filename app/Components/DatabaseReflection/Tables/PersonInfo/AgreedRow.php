@@ -27,7 +27,7 @@ class AgreedRow extends AbstractRow {
         $control = new Checkbox($this->getTitle());
         $link = Html::el('a');
         $link->setText(_('Text souhlasu'));
-        $link->addAttributes(['href' => _("http://fykos.cz/doc/souhlas.pdf")]);
+        $link->addAttributes(['href' => _('http://fykos.cz/doc/souhlas.pdf')]);
         $control->setOption('description', $link);
         return $control;
     }
