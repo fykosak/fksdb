@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\DatabaseReflection\PersonInfo;
 
+use FKSDB\Components\Controls\Helpers\Badges\NotSetBadge;
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelPersonInfo;
@@ -15,20 +16,16 @@ use Nette\Utils\Html;
  */
 class HealthInsuranceRow extends AbstractRow {
     const ID_MAPPING = [
-        'CZE' => [
-            111 => '(111) Všeobecná zdravotní pojišťovna ČR',
-            201 => '(201) Vojenská zdravotní pojišťovna ČR',
-            205 => '(205) Česká průmyslová zdravotní pojišťovna',
-            207 => '(207) Oborová zdravotní poj. zam. bank, poj. a stav.',
-            209 => '(209) Zaměstnanecká pojišťovna Škoda',
-            211 => '(211) Zdravotní pojišťovna ministerstva vnitra ČR',
-            213 => '(213) Revírní bratrská pokladna, zdrav. pojišťovna',
-        ],
-        'SVK' => [
-            24 => '(24) DÔVERA zdravotná poisťovňa, a. s.',
-            25 => '(25) VŠEOBECNÁ zdravotná poisťovňa, a. s.',
-            27 => '(27) UNION zdravotná poisťovňa, a. s.',
-        ],
+        111 => '(111) Všeobecná zdravotní pojišťovna ČR',
+        201 => '(201) Vojenská zdravotní pojišťovna ČR',
+        205 => '(205) Česká průmyslová zdravotní pojišťovna',
+        207 => '(207) Oborová zdravotní poj. zam. bank, poj. a stav.',
+        209 => '(209) Zaměstnanecká pojišťovna Škoda',
+        211 => '(211) Zdravotní pojišťovna ministerstva vnitra ČR',
+        213 => '(213) Revírní bratrská pokladna, zdrav. pojišťovna',
+        24 => '(24) DÔVERA zdravotná poisťovňa, a. s.',
+        25 => '(25) VŠEOBECNÁ zdravotná poisťovňa, a. s.',
+        27 => '(27) UNION zdravotná poisťovňa, a. s.',
     ];
 
     /**
@@ -54,7 +51,10 @@ class HealthInsuranceRow extends AbstractRow {
         if (\array_key_exists($model->health_insurance, self::ID_MAPPING)) {
             return Html::el('span')->addText(self::ID_MAPPING[$model->health_insurance]);
         }
-        return parent::createHtmlValue($model, $fieldName);
+        if (\is_null($model->health_insurance)) {
+            return NotSetBadge::getHtml();
+        }
+        return Html::el('span')->addAttributes(['class' => 'text-danger'])->addHtml($model->health_insurance);
     }
 
     /**
