@@ -20,11 +20,15 @@ abstract class EntityPresenter extends BasePresenter {
     const COMP_EDIT_FORM = 'editComponent';
     const COMP_CREATE_FORM = 'createComponent';
     const COMP_GRID = 'grid';
-
+    /**
+     * @var int
+     * @persistent
+     */
+    public $id;
     /**
      * @var IModel
      */
-    private $model = false;
+    private $model;
 
     /**
      * Name of the resource that is tested in operations.
@@ -44,11 +48,7 @@ abstract class EntityPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function authorizedEdit($id) {
-        $model = $this->getModel();
-        if (!$model) {
-            throw new BadRequestException('Neexistující model.', 404);
-        }
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($model, 'edit', $this->getSelectedContest()));
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->getModel(), 'edit', $this->getSelectedContest()));
     }
 
     /**
@@ -63,11 +63,7 @@ abstract class EntityPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function authorizedDelete($id) {
-        $model = $this->getModel();
-        if (!$model) {
-            throw new BadRequestException('Neexistující model.', 404);
-        }
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($model, 'delete', $this->getSelectedContest()));
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->getModel(), 'delete', $this->getSelectedContest()));
     }
 
     /**
@@ -91,12 +87,28 @@ abstract class EntityPresenter extends BasePresenter {
 
     /**
      * @return \FKSDB\ORM\AbstractModelSingle|null|IModel
+     * @deprecated
      */
     public final function getModel() {
-        if ($this->model === false) {
-            $this->model = $this->getParam('id') ? $this->loadModel($this->getParam('id')) : null;
+        if (!$this->model) {
+            $this->model = $this->getParameter('id') ? $this->loadModel($this->getParameter('id')) : null;
         }
+        return $this->model;
+    }
 
+    /**
+     * @param int $id
+     * @return \FKSDB\ORM\AbstractModelSingle|IModel
+     * @throws BadRequestException
+     */
+    public function getModel2(int $id = null) {
+        if (!$this->model) {
+            $model = $this->loadModel($id ?: $this->id);
+            if (!$model) {
+                throw new BadRequestException('Neexistující model.', 404);
+            }
+            $this->model = $model;
+        }
         return $this->model;
     }
 
