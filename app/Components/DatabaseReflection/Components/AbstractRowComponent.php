@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\DatabaseReflection;
 
+use FKSDB\Components\Forms\Factories\ITestedRowFactory;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
@@ -32,6 +33,10 @@ abstract class AbstractRowComponent extends Control {
      * @var int
      */
     private $userPermission;
+    /**
+     * @var bool
+     */
+    protected $includeTest = false;
 
     /**
      * StalkingRowComponent constructor.
@@ -61,6 +66,10 @@ abstract class AbstractRowComponent extends Control {
         $this->template->title = $this->factory->getTitle();
         $this->template->description = $this->factory->getDescription();
         $this->template->layout = $this->getLayout();
+        $this->template->testLog = null;
+        if ($this->factory instanceof ITestedRowFactory && $this->includeTest) {
+            $this->template->testLog = $this->factory->runTest($model);
+        }
         $this->template->html = $this->factory->renderValue($model, $this->fieldName, $this->userPermission);
         $this->template->setFile(__DIR__ . '/layout.latte');
         $this->template->render();
