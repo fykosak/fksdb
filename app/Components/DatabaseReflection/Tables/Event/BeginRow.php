@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\DatabaseReflection\Event;
 
-use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\DatabaseReflection\ValuePrinters\DatePrinter;
 use FKSDB\Components\Forms\Controls\DateInputs\DateTimeLocalInput;
 use FKSDB\ORM\AbstractModelSingle;
@@ -14,14 +13,7 @@ use Nette\Utils\Html;
  * Class BeginRow
  * @package FKSDB\Components\DatabaseReflection\Event
  */
-class BeginRow extends AbstractRow {
-    /**
-     * @return int
-     */
-    public function getPermissionsValue(): int {
-        return self::PERMISSION_USE_GLOBAL_ACL;
-    }
-
+class BeginRow extends AbstractEventRowFactory {
     /**
      * @return string
      */

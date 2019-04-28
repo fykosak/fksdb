@@ -2,13 +2,15 @@
 
 namespace FKSDB\Components\DatabaseReflection\Org;
 
-use FKSDB\Components\DatabaseReflection\AbstractRow;
+use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 
 /**
  * Class TexSignatureRow
  * @package FKSDB\Components\DatabaseReflection\Org
  */
-class TexSignatureRow extends AbstractRow {
+class TexSignatureRow extends AbstractOrgRowFactory {
+    use DefaultPrinterTrait;
+
     /**
      * @return string
      */
@@ -17,10 +19,9 @@ class TexSignatureRow extends AbstractRow {
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getPermissionsValue(): int {
-        return self::PERMISSION_USE_GLOBAL_ACL;
+    protected function getModelAccessKey(): string {
+        return 'tex_signature';
     }
-
 }

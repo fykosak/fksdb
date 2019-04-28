@@ -9,3 +9,4 @@ services:
     row.org.domain_alias: FKSDB\Components\DatabaseReflection\Org\DomainAliasRow
     row.org.contest_id: FKSDB\Components\DatabaseReflection\Org\ContestRow
     row.org.person_id: FKSDB\Components\DatabaseReflection\Org\PersonIdRow
+    row.org.person_name: FKSDB\Components\DatabaseReflection\Org\PersonNameRowFactory

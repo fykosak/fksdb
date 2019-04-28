@@ -21,11 +21,18 @@ class BornIdRow extends AbstractRow {
     }
 
     /**
+     * @return null|string
+     */
+    public function getDescription() {
+        return _('U cizinců prázdné.');
+    }
+
+    /**
      * @return BaseControl
      */
     public function createField(): BaseControl {
         $control = new WriteOnlyInput($this->getTitle());
-        $control->setOption('description', _('U cizinců prázdné.'));
+        $control->setOption('description', $this->getDescription());
         $control->addCondition(Form::FILLED)
             ->addRule(new BornNumber(), _('Rodné číslo nemá platný formát.'));
         return $control;

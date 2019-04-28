@@ -1,27 +1,27 @@
 <?php
 
-namespace FKSDB\Components\DatabaseReflection\EventParticipant;
+namespace FKSDB\Components\DatabaseReflection\Org;
 
 use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 
 /**
- * Class NoteRow
- * @package FKSDB\Components\DatabaseReflection\EventParticipant
+ * Class PersonIdRowFactory
+ * @package FKSDB\Components\DatabaseReflection\Org
  */
-class NoteRow extends AbstractParticipantRow {
+class PersonIdRowFactory extends AbstractOrgRowFactory {
     use DefaultPrinterTrait;
 
     /**
      * @return string
      */
     public function getTitle(): string {
-        return _('Note');
+        return _('Person id');
     }
 
     /**
      * @return string
      */
     protected function getModelAccessKey(): string {
-        return 'note';
+        return 'person_id';
     }
 }

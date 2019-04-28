@@ -18,11 +18,18 @@ class BornFamilyNameRow extends AbstractRow {
     }
 
     /**
+     * @return null|string
+     */
+    public function getDescription() {
+        return _('Pouze pokud je odlišné od příjmení.');
+    }
+
+    /**
      * @return BaseControl
      */
     public function createField(): BaseControl {
         $control = parent::createField();
-        $control->setOption('description', _('Pouze pokud je odlišné od příjmení.'));
+        $control->setOption('description', $this->getDescription());
         return $control;
     }
 

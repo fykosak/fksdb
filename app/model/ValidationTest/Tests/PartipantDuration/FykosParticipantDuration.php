@@ -17,14 +17,14 @@ class FykosParticipantDuration extends ParticipantsDuration {
     /**
      * @return string
      */
-    public static function getAction(): string {
+    public function getAction(): string {
         return 'participants_duration_fykos';
     }
 
     /**
      * @return string
      */
-    public static function getTitle(): string {
+    public function getTitle(): string {
         return _('Participate on FYKOS events');
     }
 

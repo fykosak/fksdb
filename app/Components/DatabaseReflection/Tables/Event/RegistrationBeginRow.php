@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\DatabaseReflection\Event;
 
-use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\Forms\Controls\DateInputs\DateTimeLocalInput;
 use Nette\Forms\Controls\BaseControl;
 
@@ -10,13 +9,7 @@ use Nette\Forms\Controls\BaseControl;
  * Class RegistrationBeginRow
  * @package FKSDB\Components\DatabaseReflection\Event
  */
-class RegistrationBeginRow extends AbstractRow {
-    /**
-     * @return int
-     */
-    public function getPermissionsValue(): int {
-        return self::PERMISSION_USE_GLOBAL_ACL;
-    }
+class RegistrationBeginRow extends AbstractEventRowFactory {
 
     /**
      * @return string

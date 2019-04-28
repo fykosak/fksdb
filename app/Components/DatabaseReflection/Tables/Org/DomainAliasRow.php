@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\DatabaseReflection\Org;
 
-use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\DatabaseReflection\ValuePrinters\EmailPrinter;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelOrg;
@@ -15,7 +14,7 @@ use Nette\Utils\Html;
  * Class DomainAliasRow
  * @package FKSDB\Components\DatabaseReflection\Org
  */
-class DomainAliasRow extends AbstractRow {
+class DomainAliasRow extends AbstractOrgRowFactory {
     /**
      * @return string
      */
@@ -24,10 +23,10 @@ class DomainAliasRow extends AbstractRow {
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getPermissionsValue(): int {
-        return self::PERMISSION_USE_GLOBAL_ACL;
+    public function getModelAccessKey(): string {
+        return 'damain_alias';
     }
 
     /**

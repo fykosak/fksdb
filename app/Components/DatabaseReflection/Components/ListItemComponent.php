@@ -9,13 +9,11 @@ use Nette\Templating\FileTemplate;
  * @package FKSDB\Components\Controls\Stalking
  * @property FileTemplate $template
  */
-class ListComponent extends AbstractRowComponent {
+class ListItemComponent extends AbstractRowComponent {
     /**
      * @return string
      */
     protected function getLayout(): string {
         return self::LAYOUT_LIST_GROUP;
     }
-
-
 }

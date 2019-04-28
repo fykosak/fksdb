@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\DatabaseReflection\Event;
 
-use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\DatabaseReflection\ValuePrinters\DatePrinter;
 use FKSDB\Components\Forms\Controls\DateInputs\DateTimeLocalInput;
 use FKSDB\ORM\AbstractModelSingle;
@@ -14,13 +13,7 @@ use Nette\Utils\Html;
  * Class EndRow
  * @package FKSDB\Components\DatabaseReflection\Event
  */
-class EndRow extends AbstractRow {
-    /**
-     * @return int
-     */
-    public function getPermissionsValue(): int {
-        return self::PERMISSION_USE_GLOBAL_ACL;
-    }
+class EndRow extends AbstractEventRowFactory {
 
     /**
      * @return string
@@ -30,12 +23,19 @@ class EndRow extends AbstractRow {
     }
 
     /**
+     * @return null|string
+     */
+    public function getDescription() {
+        return _('U jednodenních akcí shodný se začátkem.');
+    }
+
+    /**
      * @return BaseControl
      */
     public function createField(): BaseControl {
         $control = new DateTimeLocalInput(self::getTitle());
         $control->addRule(Form::FILLED, _('%label je povinný.'))
-            ->setOption('description', _('U jednodenních akcí shodný se začátkem.'));
+            ->setOption('description', $this->getDescription());
         return $control;
     }
 

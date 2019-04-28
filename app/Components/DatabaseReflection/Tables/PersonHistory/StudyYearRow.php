@@ -44,6 +44,13 @@ class StudyYearRow extends AbstractRow {
     }
 
     /**
+     * @return null|string
+     */
+    public function getDescription() {
+        return _('Kvůli zařazení do kategorie.');
+    }
+
+    /**
      * @param int|null $acYear
      * @return BaseControl
      * @throws BadRequestException
@@ -54,7 +61,7 @@ class StudyYearRow extends AbstractRow {
         }
         $control = new SelectBox($this->getTitle());
         $control->setItems($this->createOptions($acYear));
-        $control->setOption('description', _('Kvůli zařazení do kategorie.'));
+        $control->setOption('description', $this->getDescription());
         $control->setPrompt(_('Zvolit ročník'));
         return $control;
     }

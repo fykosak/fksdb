@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\DatabaseReflection;
 
-use FKSDB\Components\Controls\Helpers\ValuePrinters\AbstractValue;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 
@@ -11,9 +10,9 @@ use Nette\Templating\FileTemplate;
  * @package FKSDB\Components\Controls\Stalking
  * @property FileTemplate $template
  */
-class StalkingRowComponent extends ListComponent {
+class TestedRowComponent extends RowComponent {
     /**
-     * StalkingRowComponent constructor.
+     * DetailRowComponent constructor.
      * @param ITranslator $translator
      * @param AbstractRow $factory
      * @param string $fieldName

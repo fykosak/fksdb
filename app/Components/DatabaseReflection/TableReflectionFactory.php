@@ -4,11 +4,11 @@ namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\DatabaseReflection\AbstractRowComponent;
-use FKSDB\Components\DatabaseReflection\DetailRowComponent;
-use FKSDB\Components\DatabaseReflection\ListComponent;
+use FKSDB\Components\DatabaseReflection\TestedRowComponent;
+use FKSDB\Components\DatabaseReflection\ListItemComponent;
 use FKSDB\Components\DatabaseReflection\OnlyValueComponent;
 use FKSDB\Components\DatabaseReflection\RowComponent;
-use FKSDB\Components\DatabaseReflection\StalkingRowComponent;
+use FKSDB\Components\DatabaseReflection\TestedListItemItemComponent;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
@@ -66,24 +66,24 @@ final class TableReflectionFactory {
      * @param string $tableName
      * @param string $fieldName
      * @param int $userPermission
-     * @return ListComponent
+     * @return ListItemComponent
      * @throws \Exception
      */
-    private function createListComponent(string $tableName, string $fieldName, int $userPermission): ListComponent {
+    private function createListComponent(string $tableName, string $fieldName, int $userPermission): ListItemComponent {
         $factory = $this->loadService($tableName, $fieldName);
-        return new ListComponent($this->translator, $factory, $fieldName, $userPermission);
+        return new ListItemComponent($this->translator, $factory, $fieldName, $userPermission);
     }
 
     /**
      * @param string $tableName
      * @param string $fieldName
      * @param int $userPermission
-     * @return StalkingRowComponent
+     * @return TestedListItemItemComponent
      * @throws \Exception
      */
-    private function createStalkingComponent(string $tableName, string $fieldName, int $userPermission): StalkingRowComponent {
+    private function createStalkingComponent(string $tableName, string $fieldName, int $userPermission): TestedListItemItemComponent {
         $factory = $this->loadService($tableName, $fieldName);
-        return new StalkingRowComponent($this->translator, $factory, $fieldName, $userPermission);
+        return new TestedListItemItemComponent($this->translator, $factory, $fieldName, $userPermission);
     }
 
     /**
@@ -114,12 +114,12 @@ final class TableReflectionFactory {
      * @param string $tableName
      * @param string $fieldName
      * @param int $userPermission
-     * @return DetailRowComponent
+     * @return TestedRowComponent
      * @throws \Exception
      */
-    private function createDetailComponent(string $tableName, string $fieldName, int $userPermission): DetailRowComponent {
+    private function createDetailComponent(string $tableName, string $fieldName, int $userPermission): TestedRowComponent {
         $factory = $this->loadService($tableName, $fieldName);
-        return new DetailRowComponent($this->translator, $factory, $fieldName, $userPermission);
+        return new TestedRowComponent($this->translator, $factory, $fieldName, $userPermission);
     }
 
     /**
