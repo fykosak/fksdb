@@ -30,7 +30,7 @@ class PersonInfoFieldTest extends AbstractFieldLevelTest {
     public final function run(ModelPerson $person): ValidationLog {
         $info = $person->getInfo();
         if (!$info) {
-            return new ValidationLog($this->getTitle(), 'Person info is not set', self::LVL_INFO);
+            return new ValidationLog($this->getTitle(), 'Person info is not set', ValidationLog::LVL_INFO);
         }
         return $this->getRowFactory()->runTest($info);
     }
