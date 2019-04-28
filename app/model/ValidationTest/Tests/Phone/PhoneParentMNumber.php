@@ -11,14 +11,14 @@ class PhoneParentMNumber extends AbstractPhoneNumber {
     /**
      * @return string
      */
-    public static function getTitle(): string {
+    public function getTitle(): string {
         return _('Phone parent mom number');
     }
 
     /**
      * @return string
      */
-    public static function getAction(): string {
+    public function getAction(): string {
         return 'phone_parent_m_number';
     }
 

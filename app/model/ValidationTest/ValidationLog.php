@@ -48,7 +48,7 @@ class ValidationLog extends Message {
             case ValidationLog::LVL_SUCCESS:
                 return 'fa fa-check';
             default:
-                throw new NotImplementedException(\sprintf('%s is not supported', $log->getLevel()));
+                throw new NotImplementedException(\sprintf('%s is not supported', $this->getLevel()));
         }
     }
 

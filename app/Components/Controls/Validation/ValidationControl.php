@@ -96,7 +96,7 @@ class ValidationControl extends Control {
         $testsContainer = new ContainerWithOptions();
         $testsContainer->setOption('label', _('Tests'));
         foreach ($this->availableTests as $key => $test) {
-            $field = $testsContainer->addCheckbox($key, $test::getTitle());
+            $field = $testsContainer->addCheckbox($key, $test->getTitle());
             if (\in_array($test, $this->tests)) {
                 $field->setDefaultValue(true);
             }

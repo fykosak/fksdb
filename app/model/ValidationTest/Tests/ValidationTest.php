@@ -29,10 +29,10 @@ abstract class ValidationTest {
     /**
      * @return string
      */
-    abstract public static function getTitle(): string;
+    abstract public function getTitle(): string;
 
     /**
      * @return string
      */
-    abstract public static function getAction(): string;
+    abstract public function getAction(): string;
 }
