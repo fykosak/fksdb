@@ -43,6 +43,6 @@ class BornRow extends AbstractRow {
      * @return Html
      */
     public function createHtmlValue(AbstractModelSingle $model, string $fieldName): Html {
-        return (new DatePrinter)($model->{$fieldName}, 'd.m.Y');
+        return (new DatePrinter('d.m.Y'))($model->{$fieldName});
     }
 }
