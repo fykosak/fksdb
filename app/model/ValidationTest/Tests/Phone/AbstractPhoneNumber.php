@@ -19,16 +19,16 @@ abstract class AbstractPhoneNumber extends ValidationTest {
     public final function run(ModelPerson $person): ValidationLog {
         $info = $person->getInfo();
         if (!$info) {
-            return new ValidationLog($this->getTitle(), 'Person info is not set', self::LVL_INFO);
+            return new ValidationLog($this->getTitle(), 'Person info is not set', ValidationLog::LVL_INFO);
         }
         $value = $info->{$this->getAccessKey()};
         if (!$value) {
-            return new ValidationLog($this->getTitle(), \sprintf('"%s" is not set', $this->getAccessKey()), self::LVL_INFO);
+            return new ValidationLog($this->getTitle(), \sprintf('"%s" is not set', $this->getAccessKey()), ValidationLog::LVL_INFO);
         }
         if (!PhoneNumberFactory::isValid($value)) {
-            return new ValidationLog($this->getTitle(), \sprintf('"%s" number (%s) is not valid', $this->getAccessKey(), $value), self::LVL_DANGER);
+            return new ValidationLog($this->getTitle(), \sprintf('"%s" number (%s) is not valid', $this->getAccessKey(), $value), ValidationLog::LVL_DANGER);
         } else {
-            return new ValidationLog($this->getTitle(), \sprintf('"%s" is valid', $this->getAccessKey()), self::LVL_SUCCESS);
+            return new ValidationLog($this->getTitle(), \sprintf('"%s" is valid', $this->getAccessKey()), ValidationLog::LVL_SUCCESS);
         }
     }
 

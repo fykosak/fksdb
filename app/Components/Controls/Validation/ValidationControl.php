@@ -85,7 +85,7 @@ class ValidationControl extends Control {
         $levelsContainer = new ContainerWithOptions();
         $levelsContainer->setOption('label', _('Level'));
 
-        foreach (ValidationTest::getAvailableLevels() as $level) {
+        foreach (ValidationLog::getAvailableLevels() as $level) {
             $field = $levelsContainer->addCheckbox($level, _($level));
             if (\in_array($level, $this->levels)) {
                 $field->setDefaultValue(true);

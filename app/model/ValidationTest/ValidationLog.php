@@ -35,17 +35,26 @@ class ValidationLog extends Message {
     }
 
     /**
-     * @return string
+     * @return array
      */
-    public function mapLevelToIcon() {
+    public static function getAvailableLevels(): array {
+        return [self::LVL_DANGER, self::LVL_WARNING, self::LVL_SUCCESS, self::LVL_INFO];
+    }
+
+
+    /**
+     * @return string
+     * @throws NotImplementedException
+     */
+    public function mapLevelToIcon(): string {
         switch ($this->getLevel()) {
-            case ValidationLog::LVL_DANGER:
+            case self::LVL_DANGER:
                 return 'fa fa-close';
-            case ValidationLog::LVL_WARNING:
+            case self::LVL_WARNING:
                 return 'fa fa-warning';
-            case ValidationLog::LVL_INFO:
+            case self::LVL_INFO:
                 return 'fa fa-info';
-            case ValidationLog::LVL_SUCCESS:
+            case self::LVL_SUCCESS:
                 return 'fa fa-check';
             default:
                 throw new NotImplementedException(\sprintf('%s is not supported', $this->getLevel()));
@@ -54,6 +63,7 @@ class ValidationLog extends Message {
 
     /**
      * @return Html
+     * @throws NotImplementedException
      */
     public function createHtmlIcon(): Html {
         $icon = Html::el('span');
