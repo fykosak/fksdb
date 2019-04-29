@@ -3,7 +3,7 @@
     {if !is_null($login)}
         <ul class="list-group list-group-flush">
             {foreach ['login','login_id','hash','last_login'] as $field}
-                {control valuePrinterList__login__$field $login}
+                {control valuePrinter__login__$field:listItem $login}
             {/foreach}
         </ul>
     {else}
