@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\DatabaseReflection\Event;
 
-use FKSDB\Components\DatabaseReflection\AbstractRow;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 
@@ -10,13 +9,7 @@ use Nette\Forms\Form;
  * Class EventYearRow
  * @package FKSDB\Components\DatabaseReflection\Event
  */
-class EventYearRow extends AbstractRow {
-    /**
-     * @return int
-     */
-    public function getPermissionsValue(): int {
-        return self::PERMISSION_USE_GLOBAL_ACL;
-    }
+class EventYearRow extends AbstractEventRowFactory {
 
     /**
      * @return string

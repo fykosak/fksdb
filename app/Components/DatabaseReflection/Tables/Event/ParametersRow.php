@@ -10,13 +10,7 @@ use Nette\Forms\Controls\TextArea;
  * Class ParametersRow
  * @package FKSDB\Components\DatabaseReflection\Event
  */
-class ParametersRow extends AbstractRow {
-    /**
-     * @return int
-     */
-    public function getPermissionsValue(): int {
-        return self::PERMISSION_USE_GLOBAL_ACL;
-    }
+class ParametersRow extends AbstractEventRowFactory {
 
     /**
      * @return string
