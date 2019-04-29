@@ -29,7 +29,7 @@ class ReportRow extends AbstractEventRowFactory {
      * @return BaseControl
      */
     public function createField(): BaseControl {
-        $control = new TextArea(self::getTitle());
+        $control = new TextArea($this->getTitle());
         $control->setOption('description', $this->getDescription());
         return $control;
     }

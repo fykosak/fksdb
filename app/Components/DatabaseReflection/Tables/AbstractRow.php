@@ -65,15 +65,6 @@ abstract class AbstractRow {
      * @return \Nette\Utils\Html
      */
     protected function createHtmlValue(AbstractModelSingle $model, string $fieldName): Html {
-        return $this->createDefaultHtmlValue($model, $fieldName);
-    }
-
-    /**
-     * @param AbstractModelSingle $model
-     * @param string $fieldName
-     * @return Html
-     */
-    protected function createDefaultHtmlValue(AbstractModelSingle $model, string $fieldName): Html {
         return (new StringPrinter)($model->{$fieldName});
     }
 

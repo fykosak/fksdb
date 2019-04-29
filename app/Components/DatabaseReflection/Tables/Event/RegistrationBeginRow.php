@@ -26,7 +26,7 @@ class RegistrationBeginRow extends AbstractEventRowFactory {
      * @return BaseControl
      */
     public function createField(): BaseControl {
-        return new DateTimeLocalInput(self::getTitle());
+        return new DateTimeLocalInput($this->getTitle());
     }
 
     /**
