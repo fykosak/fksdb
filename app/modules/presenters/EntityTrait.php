@@ -2,11 +2,9 @@
 
 namespace FKSDB;
 
-use FKSDB\ORM\AbstractModelMulti;
-use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
+use FKSDB\ORM\IService;
 use Nette\Application\BadRequestException;
-use Nette\Database\Table\ActiveRow;
 
 /**
  * Trait EntityTrait
@@ -23,26 +21,46 @@ trait EntityTrait {
     private $model;
 
     /**
-     * @param int $id
+     * @throws BadRequestException
+     */
+    public function authorizedDetail() {
+        $this->setAuthorized($this->isAllowed($this->getModel(), 'detail'));
+    }
+
+    public function authorizedList() {
+        $this->setAuthorized($this->isAllowed($this->getModelResource(), 'list'));
+    }
+
+    /**
+     * @throws BadRequestException
+     */
+    public function authorizedEdit() {
+        $this->setAuthorized($this->isAllowed($this->getModel(), 'edit'));
+    }
+
+    public function authorizedCreate() {
+        $this->setAuthorized($this->isAllowed($this->getModelResource(), 'create'));
+    }
+
+    /**
      * @return \FKSDB\ORM\AbstractModelSingle|IModel
      * @throws BadRequestException
      */
-    public function getModel(int $id = null) {
+    public function getModel() {
         if (!$this->model) {
-            $row = $this->loadModel($id ?: $this->id);
-            if (!$row) {
-                throw new BadRequestException('Neexistující model.', 404);
+            $model = $this->getORMService()->findByPrimary($this->id);
+            if (!$model) {
+                throw new BadRequestException('Model neexistuje');
             }
-            $this->model = ($this->getModelClassName())::createFromActiveRow($row);
+            $this->model = $model;
         }
         return $this->model;
     }
 
     /**
-     * @param $id
-     * @return \FKSDB\ORM\AbstractModelSingle
+     * @return IService
      */
-    abstract protected function loadModel($id): ActiveRow;
+    abstract protected function getORMService();
 
     /**
      * @return string
@@ -50,7 +68,9 @@ trait EntityTrait {
     abstract protected function getModelResource(): string;
 
     /**
-     * @return string|AbstractModelMulti|AbstractModelSingle
+     * @param $resource
+     * @param $privilege
+     * @return bool
      */
-    abstract protected function getModelClassName(): string;
+    abstract protected function isAllowed($resource, $privilege): bool;
 }

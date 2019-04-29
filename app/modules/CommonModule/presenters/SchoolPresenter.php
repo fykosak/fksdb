@@ -2,28 +2,37 @@
 
 namespace CommonModule;
 
+use FKSDB\EntityTrait;
+use FKSDB\ORM\IService;
 use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServiceSchool;
+use Nette\Application\BadRequestException;
 
 /**
  * Class SchoolPresenter
  * @package CommonModule
+ * @method ModelSchool getModel
  */
 class SchoolPresenter extends BasePresenter {
+
+    use EntityTrait;
+
     /**
-     * @var ModelSchool
+     * @return string
      */
-    private $model;
+    protected function getModelResource(): string {
+        return 'school';
+    }
 
     protected $modelResourceId = 'school';
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceSchool
+     * @var ServiceSchool
      */
     private $serviceSchool;
 
     /**
-     * @param \FKSDB\ORM\Services\ServiceSchool $serviceSchool
+     * @param ServiceSchool $serviceSchool
      */
     public function injectServiceSchool(ServiceSchool $serviceSchool) {
         $this->serviceSchool = $serviceSchool;
@@ -34,31 +43,26 @@ class SchoolPresenter extends BasePresenter {
         $this->setIcon('fa fa-university');
     }
 
+    /**
+     * @throws BadRequestException
+     */
     public function titleDetail() {
         $school = $this->getModel();
         $this->setTitle(sprintf(_('Detail školy %s'), $school->name_abbrev));
         $this->setIcon('fa fa-university');
     }
 
+    /**
+     * @throws BadRequestException
+     */
     public function renderDetail() {
-        $this->template->school = $this->getModel();
+        $this->template->model = $this->getModel();
     }
 
     /**
-     * @param $id
-     * @return ModelSchool
+     * @return IService
      */
-    protected function loadModel($id): ModelSchool {
-        return $this->serviceSchool->findByPrimary($id);
-    }
-
-    /**
-     * @return ModelSchool
-     */
-    public final function getModel(): ModelSchool {
-        if (!$this->model) {
-            $this->model = $this->getParameter('id') ? $this->loadModel($this->getParameter('id')) : null;
-        }
-        return $this->model;
+    protected function getORMService() {
+        return $this->serviceSchool;
     }
 }
