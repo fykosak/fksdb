@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\DatabaseReflection\Event;
 
-use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;
@@ -17,7 +16,7 @@ use Nette\Utils\Html;
  * Class EventTypeRow
  * @package FKSDB\Components\DatabaseReflection\Event
  */
-class EventTypeRow extends AbstractRow {
+class EventTypeRow extends AbstractEventRowFactory {
     /**
      * @var ServiceEventType
      */
@@ -31,13 +30,6 @@ class EventTypeRow extends AbstractRow {
     public function __construct(ITranslator $translator, ServiceEventType $serviceEventType) {
         parent::__construct($translator);
         $this->serviceEventType = $serviceEventType;
-    }
-
-    /**
-     * @return int
-     */
-    public function getPermissionsValue(): int {
-        return self::PERMISSION_USE_GLOBAL_ACL;
     }
 
     /**

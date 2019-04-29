@@ -13,7 +13,6 @@ use FKSDB\Components\Forms\Factories\PersonInfo\CareerField;
 use FKSDB\Components\Forms\Factories\PersonInfo\CitizenshipField;
 use FKSDB\Components\Forms\Factories\PersonInfo\EmailField;
 use FKSDB\Components\Forms\Factories\PersonInfo\EmployerField;
-use FKSDB\Components\Forms\Factories\PersonInfo\HealthInsuranceField;
 use FKSDB\Components\Forms\Factories\PersonInfo\HomepageField;
 use FKSDB\Components\Forms\Factories\PersonInfo\IdNumberField;
 use FKSDB\Components\Forms\Factories\PersonInfo\ImField;
@@ -24,6 +23,7 @@ use FKSDB\Components\Forms\Factories\PersonInfo\PhoneField;
 use FKSDB\Components\Forms\Factories\PersonInfo\PhoneParentDField;
 use FKSDB\Components\Forms\Factories\PersonInfo\PhoneParentMField;
 use FKSDB\Components\Forms\Factories\PersonInfo\UkLoginField;
+use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Services\ServiceRegion;
 use Nette\Forms\Controls\BaseControl;
 use Nette\InvalidArgumentException;
@@ -33,7 +33,7 @@ use Nette\InvalidArgumentException;
  * @package FKSDB\Components\Forms\Factories
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class PersonInfoFactory {
+class PersonInfoFactory extends SingleReflectionFactory {
     /**
      * @var ServiceRegion
      */
@@ -42,16 +42,26 @@ class PersonInfoFactory {
     /**
      * PersonInfoFactory constructor.
      * @param ServiceRegion $serviceRegion
+     * @param TableReflectionFactory $tableReflectionFactory
      */
-    public function __construct(ServiceRegion $serviceRegion) {
+    public function __construct(ServiceRegion $serviceRegion, TableReflectionFactory $tableReflectionFactory) {
+        parent::__construct($tableReflectionFactory);
         $this->serviceRegion = $serviceRegion;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getTableName(): string {
+        return DbNames::TAB_PERSON_INFO;
     }
 
     /**
      * @param $fieldName
      * @return BaseControl
+     * @throws \Exception
      */
-    public function createField($fieldName): BaseControl {
+    public function createField(string $fieldName): BaseControl {
         switch ($fieldName) {
             case   'born':
                 return new BornField();
@@ -92,7 +102,7 @@ class PersonInfoFactory {
             case'employer':
                 return new EmployerField();
             case 'health_insurance':
-                return new HealthInsuranceField();
+                return parent::createField($fieldName);
             case 'citizenship':
                 return new CitizenshipField($this->serviceRegion);
             case 'linkedin_id':

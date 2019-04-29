@@ -53,7 +53,7 @@ class ValidationGrid extends BaseGrid {
             return PersonValueControl::getGridValue($this,$person);
         });
         foreach ($this->tests as $test) {
-            $this->addColumn($test::getAction(), $test::getTitle())->setRenderer(function ($row) use ($test) {
+            $this->addColumn($test->getAction(), $test->getTitle())->setRenderer(function ($row) use ($test) {
                 $person = ModelPerson::createFromActiveRow($row);
                 $log = $test->run($person);
                 return self::createHtmlLog($log);

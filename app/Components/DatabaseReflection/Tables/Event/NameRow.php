@@ -10,13 +10,7 @@ use Nette\Forms\Form;
  * Class NameRow
  * @package FKSDB\Components\DatabaseReflection\Event
  */
-class NameRow extends AbstractRow {
-    /**
-     * @return int
-     */
-    public function getPermissionsValue(): int {
-        return self::PERMISSION_USE_GLOBAL_ACL;
-    }
+class NameRow extends AbstractEventRowFactory {
 
     /**
      * @return string
@@ -26,13 +20,20 @@ class NameRow extends AbstractRow {
     }
 
     /**
+     * @return null|string
+     */
+    public function getDescription() {
+        return _('U soustředka místo.');
+    }
+
+    /**
      * @return BaseControl
      */
     public function createField(): BaseControl {
         $control = parent::createField();
         $control->addRule(Form::FILLED, _('%label je povinný.'))
             ->addRule(Form::MAX_LENGTH, null, 255)
-            ->setOption('description', _('U soustředka místo.'));
+            ->setOption('description', $this->getDescription());
         return $control;
     }
 }

@@ -11,14 +11,14 @@ class PhoneNumber extends AbstractPhoneNumber {
     /**
      * @return string
      */
-    public static function getTitle(): string {
+    public function getTitle(): string {
         return _('Phone number');
     }
 
     /**
      * @return string
      */
-    public static function getAction(): string {
+    public function getAction(): string {
         return 'phone_number';
     }
 

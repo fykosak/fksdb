@@ -2,12 +2,12 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
-use Closure;
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\DatabaseReflection\AbstractRowComponent;
 use FKSDB\Components\DatabaseReflection\ListComponent;
 use FKSDB\Components\DatabaseReflection\OnlyValueComponent;
 use FKSDB\Components\DatabaseReflection\RowComponent;
+use FKSDB\Components\DatabaseReflection\StalkingRowComponent;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
@@ -77,6 +77,18 @@ final class TableReflectionFactory {
      * @param string $tableName
      * @param string $fieldName
      * @param int $userPermission
+     * @return StalkingRowComponent
+     * @throws \Exception
+     */
+    private function createStalkingComponent(string $tableName, string $fieldName, int $userPermission): StalkingRowComponent {
+        $factory = $this->loadService($tableName, $fieldName);
+        return new StalkingRowComponent($this->translator, $factory, $fieldName, $userPermission);
+    }
+
+    /**
+     * @param string $tableName
+     * @param string $fieldName
+     * @param int $userPermission
      * @return RowComponent
      * @throws \Exception
      */
@@ -110,9 +122,13 @@ final class TableReflectionFactory {
             if ($prefix === 'valuePrinter' || $prefix === 'valuePrinterDetail' || $prefix === 'valuePrinterRow') {
                 return $this->createRowComponent($tableName, $fieldName, $permissionLevel);
             }
-            if ($prefix === 'valuePrinterStalking' || $prefix === 'valuePrinterList') {
+            if ($prefix === 'valuePrinterList') {
                 return $this->createListComponent($tableName, $fieldName, $permissionLevel);
             }
+            if ($prefix === 'valuePrinterStalking') {
+                return $this->createStalkingComponent($tableName, $fieldName, $permissionLevel);
+            }
+
             if ($prefix === 'valuePrinterOnlyValue') {
                 return $this->createOnlyValueComponent($tableName, $fieldName, $permissionLevel);
             }

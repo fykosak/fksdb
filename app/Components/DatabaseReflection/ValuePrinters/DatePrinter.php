@@ -14,6 +14,14 @@ class DatePrinter extends AbstractValuePrinter {
     protected $format = 'c';
 
     /**
+     * DatePrinter constructor.
+     * @param string|null $format
+     */
+    public function __construct(string $format = 'c') {
+        $this->format = $format;
+    }
+
+    /**
      * @param DateTime|null $value
      * @return Html
      */
@@ -23,15 +31,5 @@ class DatePrinter extends AbstractValuePrinter {
         } else {
             return Html::el('span')->addText($value->format($this->format));
         }
-    }
-
-    /**
-     * @param $value
-     * @param string $format
-     * @return Html
-     */
-    public function __invoke($value, $format = 'c'): Html {
-        $this->format = $format;
-        return parent::__invoke($value);
     }
 }
