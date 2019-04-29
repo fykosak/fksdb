@@ -14,7 +14,7 @@ class ServiceEventPersonAccommodation extends AbstractServiceSingle {
     /**
      * @return string
      */
-    protected function getModelClassName(): string {
+    public function getModelClassName(): string {
         return ModelEventPersonAccommodation::class;
     }
 
