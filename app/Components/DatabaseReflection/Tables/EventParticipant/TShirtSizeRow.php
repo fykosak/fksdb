@@ -7,10 +7,18 @@ namespace FKSDB\Components\DatabaseReflection\EventParticipant;
  * @package FKSDB\Components\DatabaseReflection\EventParticipant
  */
 class TShirtSizeRow extends AbstractParticipantRow {
+    const SIZE_MAP = [
+        'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'
+    ];
+    const GENDER_MAP = [
+        'M' => 'male',
+        'F' => 'female',
+    ];
+
     /**
      * @return string
      */
     public function getTitle(): string {
-       return _('T-shirt size');
+        return _('T-shirt size');
     }
 }

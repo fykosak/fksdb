@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\DatabaseReflection\Org;
 
-use FKSDB\Components\DatabaseReflection\AbstractRow;
+use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextArea;
 
@@ -10,7 +10,9 @@ use Nette\Forms\Controls\TextArea;
  * Class ContributionRow
  * @package FKSDB\Components\DatabaseReflection\Org
  */
-class ContributionRow extends AbstractRow {
+class ContributionRow extends AbstractOrgRowFactory {
+    use DefaultPrinterTrait;
+
     /**
      * @return string
      */
@@ -19,10 +21,10 @@ class ContributionRow extends AbstractRow {
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getPermissionsValue(): int {
-        return self::PERMISSION_USE_GLOBAL_ACL;
+    public function getModelAccessKey(): string {
+        return 'contribution';
     }
 
     /**

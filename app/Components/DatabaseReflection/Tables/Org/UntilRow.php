@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\DatabaseReflection\Org;
 
-use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\DatabaseReflection\ValuePrinters\StringPrinter;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelOrg;
@@ -16,19 +15,12 @@ use Nette\Utils\Html;
  * Class UntilRow
  * @package FKSDB\Components\DatabaseReflection\Org
  */
-class UntilRow extends AbstractRow {
+class UntilRow extends AbstractOrgRowFactory {
     /**
      * @return string
      */
     public function getTitle(): string {
         return _('Until');
-    }
-
-    /**
-     * @return int
-     */
-    public function getPermissionsValue(): int {
-        return self::PERMISSION_USE_GLOBAL_ACL;
     }
 
     /**

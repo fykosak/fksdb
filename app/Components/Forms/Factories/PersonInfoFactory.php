@@ -10,7 +10,6 @@ use FKSDB\ORM\DbNames;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class PersonInfoFactory extends SingleReflectionFactory {
-
     /**
      * @return string
      */

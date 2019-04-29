@@ -2,6 +2,7 @@ services:
     row.event_participant.event_participant_id: FKSDB\Components\DatabaseReflection\EventParticipant\EvenParticipantIdRow
     row.event_participant.created: FKSDB\Components\DatabaseReflection\EventParticipant\CreatedRow
     row.event_participant.person_id: FKSDB\Components\DatabaseReflection\EventParticipant\PersonIdRow
+    row.event_participant.person_name: FKSDB\Components\DatabaseReflection\EventParticipant\PersonNameRowFactory
     row.event_participant.swimmer: FKSDB\Components\DatabaseReflection\EventParticipant\SwimmerRow
     row.event_participant.status: FKSDB\Components\DatabaseReflection\EventParticipant\StatusRow
     row.event_participant.price: FKSDB\Components\DatabaseReflection\EventParticipant\PriceRow

@@ -3,12 +3,12 @@
     <ul class="list-group list-group-flush">
         {if $person}
             {foreach ['other_name','family_name','display_name','born_family_name','gender','person_id','created'] as $fieldName}
-                {control valuePrinterList__person__$fieldName $person}
+                {control valuePrinter__person__$fieldName:listItem $person,true}
             {/foreach}
         {/if}
         {if $info}
             {foreach $fields as $fieldName}
-                {control valuePrinterList__person_info__$fieldName $info}
+                {control valuePrinter__person_info__$fieldName:listItem $info,true}
             {/foreach}
         {/if}
     </ul>

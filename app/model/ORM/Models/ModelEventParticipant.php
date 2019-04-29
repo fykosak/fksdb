@@ -39,7 +39,7 @@ use Nette\Utils\DateTime;
  * @property-read string used_drugs užívané léky
  * @property-read string schedule
  */
-class ModelEventParticipant extends AbstractModelSingle implements IEventReferencedModel, IPaymentModel {
+class ModelEventParticipant extends AbstractModelSingle implements IEventReferencedModel, IPaymentModel, IPersonReferencedModel {
     /**
      * @return ModelPerson|null
      */

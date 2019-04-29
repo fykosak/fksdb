@@ -21,11 +21,18 @@ class IdNumberRow extends AbstractRow {
     }
 
     /**
+     * @return null|string
+     */
+    public function getDescription() {
+        return _('U cizinců číslo pasu.');
+    }
+
+    /**
      * @return BaseControl
      */
     public function createField(): BaseControl {
         $control = new WriteOnlyInput($this->getTitle());
-        $control->setOption('description', _('U cizinců číslo pasu.'));
+        $control->setOption('description', $this->getDescription());
         $control->addRule(Form::MAX_LENGTH, null, 32);
         return $control;
     }

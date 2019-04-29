@@ -14,7 +14,7 @@ use Persons\ExtendedPersonHandler;
 /**
  * Class OrgPresenter
  * @package OrgModule
- * @method ModelOrg getModel
+ * @method ModelOrg getModel2(int $id = null)
  */
 class OrgPresenter extends ExtendedPersonPresenter {
 
@@ -49,13 +49,21 @@ class OrgPresenter extends ExtendedPersonPresenter {
         $this->orgFactory = $orgFactory;
     }
 
-    public function titleEdit() {
-        $this->setTitle(sprintf(_('Úprava organizátora %s'), $this->getModel()->getPerson()->getFullName()));
+    /**
+     * @param int $id
+     * @throws \Nette\Application\BadRequestException
+     */
+    public function titleEdit(int $id) {
+        $this->setTitle(sprintf(_('Úprava organizátora %s'), $this->getModel2($id)->getPerson()->getFullName()));
         $this->setIcon('fa fa-pencil');
     }
 
-    public function titleDetail() {
-        $this->setTitle(sprintf(_('Org %s'), $this->getModel()->getPerson()->getFullName()));
+    /**
+     * @param int $id
+     * @throws \Nette\Application\BadRequestException
+     */
+    public function titleDetail(int $id) {
+        $this->setTitle(sprintf(_('Org %s'), $this->getModel2($id)->getPerson()->getFullName()));
         $this->setIcon('fa fa-user');
     }
 
@@ -70,19 +78,24 @@ class OrgPresenter extends ExtendedPersonPresenter {
     }
 
     /**
+     * @param int $id
      * @throws ForbiddenRequestException
      * @throws \Nette\Application\BadRequestException
      */
-    public function actionEdit() {
-        $org = $this->getModel();
+    public function actionEdit(int $id) {
+        $org = $this->getModel2($id);
 
         if ($org->contest_id != $this->getSelectedContest()->contest_id) {
             throw new ForbiddenRequestException(_('Editace organizátora mimo zvolený seminář.'));
         }
     }
 
-    public function renderDetail() {
-        $this->template->model = $this->getModel();
+    /**
+     * @param int $id
+     * @throws \Nette\Application\BadRequestException
+     */
+    public function renderDetail(int $id) {
+        $this->template->model = $this->getModel2($id);
     }
 
     /**

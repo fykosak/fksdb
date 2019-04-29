@@ -2,13 +2,15 @@
 
 namespace FKSDB\Components\DatabaseReflection\Org;
 
-use FKSDB\Components\DatabaseReflection\AbstractRow;
+use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 
 /**
  * Class OrgIdRow
  * @package FKSDB\Components\DatabaseReflection\Org
  */
-class OrgIdRow extends AbstractRow {
+class OrgIdRow extends AbstractOrgRowFactory {
+    use DefaultPrinterTrait;
+
     /**
      * @return string
      */
@@ -17,9 +19,9 @@ class OrgIdRow extends AbstractRow {
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getPermissionsValue(): int {
-        return self::PERMISSION_USE_GLOBAL_ACL;
+    protected function getModelAccessKey(): string {
+        return 'org_id';
     }
 }

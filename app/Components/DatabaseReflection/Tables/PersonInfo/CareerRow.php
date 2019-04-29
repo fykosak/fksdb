@@ -20,13 +20,21 @@ class CareerRow extends AbstractRow {
     }
 
     /**
+     * @return null|string
+     */
+    public function getDescription() {
+        return _('Zobrazeno v seznamu organizátorů');
+    }
+
+    /**
      * @return BaseControl
      */
     public function createField(): BaseControl {
         $control = new TextArea($this->getTitle());
-        $control->setOption('description', _('Zobrazeno v seznamu organizátorů'));
+        $control->setOption('description', $this->getDescription());
         return $control;
     }
+
     /**
      * @return int
      */

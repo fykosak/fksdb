@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\DatabaseReflection\Org;
 
-use FKSDB\Components\DatabaseReflection\AbstractRow;
+use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
@@ -11,7 +11,9 @@ use Nette\Forms\Form;
  * Class TexSignatureRow
  * @package FKSDB\Components\DatabaseReflection\Org
  */
-class TexSignatureRow extends AbstractRow {
+class TexSignatureRow extends AbstractOrgRowFactory {
+    use DefaultPrinterTrait;
+
     /**
      * @return string
      */
@@ -20,10 +22,10 @@ class TexSignatureRow extends AbstractRow {
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getPermissionsValue(): int {
-        return self::PERMISSION_USE_GLOBAL_ACL;
+    protected function getModelAccessKey(): string {
+        return 'tex_signature';
     }
 
     /**
@@ -37,5 +39,4 @@ class TexSignatureRow extends AbstractRow {
         $control->addRule(Form::REGEXP, _('%label obsahuje nepovolené znaky.'), '/^[a-z][a-z0-9._\-]*$/i');
         return $control;
     }
-
 }

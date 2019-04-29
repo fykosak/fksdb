@@ -41,7 +41,7 @@ class GenderRow extends AbstractRow {
      * @return array
      */
     private function createOptions(): array {
-        return ['M' => 'muž', 'F' => 'žena'];
+        return ['M' => _('Male'), 'F' => _('Female')];
     }
 
     /**

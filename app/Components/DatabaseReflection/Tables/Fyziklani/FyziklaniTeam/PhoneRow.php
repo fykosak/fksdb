@@ -3,26 +3,14 @@
 namespace FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam;
 
 use FKSDB\Components\DatabaseReflection\PhoneRowTrait;
-use FKSDB\Components\DatabaseReflection\AbstractRow;
-use FKSDB\ORM\Services\ServiceRegion;
-use Nette\Localization\ITranslator;
+use FKSDB\Components\Forms\Factories\ITestedRowFactory;
 
 /**
  * Class PhoneRow
  * @package FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam
  */
-class PhoneRow extends AbstractRow {
+class PhoneRow extends AbstractFyziklaniTeamRow implements ITestedRowFactory {
     use PhoneRowTrait;
-
-    /**
-     * PhoneRow constructor.
-     * @param ServiceRegion $serviceRegion
-     * @param ITranslator $translator
-     */
-    public function __construct(ServiceRegion $serviceRegion, ITranslator $translator) {
-        parent::__construct($translator);
-        $this->registerPhoneRowTrait($serviceRegion);
-    }
 
     /**
      * @return string
@@ -32,9 +20,9 @@ class PhoneRow extends AbstractRow {
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getPermissionsValue(): int {
-        return self::PERMISSION_USE_GLOBAL_ACL;
+    public function getModelAccessKey(): string {
+        return 'phone';
     }
 }

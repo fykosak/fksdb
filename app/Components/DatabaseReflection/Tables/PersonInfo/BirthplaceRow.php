@@ -20,11 +20,18 @@ class BirthplaceRow extends AbstractRow {
     }
 
     /**
+     * @return null|string
+     */
+    public function getDescription() {
+        return _('Město a okres (kvůli diplomům).');
+    }
+
+    /**
      * @return BaseControl
      */
     public function createField(): BaseControl {
         $control = new WriteOnlyInput($this->getTitle());
-        $control->setOption('description', _('Město a okres (kvůli diplomům).'));
+        $control->setOption('description', $this->getDescription());
         $control->addRule(Form::MAX_LENGTH, null, 255);
         return $control;
     }

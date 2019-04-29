@@ -2,10 +2,10 @@
 
 namespace FKSDB\Components\DatabaseReflection\Event;
 
-use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\DatabaseReflection\ValuePrinters\DatePrinter;
 use FKSDB\Components\Forms\Controls\DateInputs\DateTimeLocalInput;
 use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\ModelEvent;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
@@ -14,14 +14,7 @@ use Nette\Utils\Html;
  * Class BeginRow
  * @package FKSDB\Components\DatabaseReflection\Event
  */
-class BeginRow extends AbstractRow {
-    /**
-     * @return int
-     */
-    public function getPermissionsValue(): int {
-        return self::PERMISSION_USE_GLOBAL_ACL;
-    }
-
+class BeginRow extends AbstractEventRowFactory {
     /**
      * @return string
      */
@@ -33,17 +26,17 @@ class BeginRow extends AbstractRow {
      * @return BaseControl
      */
     public function createField(): BaseControl {
-        $control = new DateTimeLocalInput(self::getTitle());
+        $control = new DateTimeLocalInput($this->getTitle());
         $control->addRule(Form::FILLED, _('%label je povinný.'));
         return $control;
     }
 
     /**
-     * @param AbstractModelSingle $model
+     * @param AbstractModelSingle|ModelEvent $model
      * @param string $fieldName
      * @return Html
      */
     public function createHtmlValue(AbstractModelSingle $model, string $fieldName): Html {
-        return (new DatePrinter)($model->{$fieldName}, 'd.m.Y');
+        return (new DatePrinter('d.m.Y'))($model->begin);
     }
 }

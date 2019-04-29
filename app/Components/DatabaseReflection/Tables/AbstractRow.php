@@ -85,4 +85,5 @@ abstract class AbstractRow {
      * @return string
      */
     abstract public function getTitle(): string;
+
 }

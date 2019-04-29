@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\DatabaseReflection\Event;
 
-use FKSDB\Components\DatabaseReflection\AbstractRow;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextArea;
 
@@ -10,13 +9,7 @@ use Nette\Forms\Controls\TextArea;
  * Class ReportRow
  * @package FKSDB\Components\DatabaseReflection\Event
  */
-class ReportRow extends AbstractRow {
-    /**
-     * @return int
-     */
-    public function getPermissionsValue(): int {
-        return self::PERMISSION_USE_GLOBAL_ACL;
-    }
+class ReportRow extends AbstractEventRowFactory {
 
     /**
      * @return string
@@ -26,11 +19,18 @@ class ReportRow extends AbstractRow {
     }
 
     /**
+     * @return null|string
+     */
+    public function getDescription() {
+        return _('Shrnující text k akci.');
+    }
+
+    /**
      * @return BaseControl
      */
     public function createField(): BaseControl {
-        $control = new TextArea(self::getTitle());
-        $control->setOption('description', _('Shrnující text k akci.'));
+        $control = new TextArea($this->getTitle());
+        $control->setOption('description', $this->getDescription());
         return $control;
     }
 }
