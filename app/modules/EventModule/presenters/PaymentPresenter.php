@@ -207,6 +207,7 @@ class PaymentPresenter extends BasePresenter {
 
         $this->template->items = $this->getMachine()->getPriceCalculator()->getGridItems($this->model);
         $this->template->model = $this->model;
+        $this->template->isOrg = $this->isOrg();
     }
     /* ********* startup *****************/
     /**
