@@ -2,14 +2,14 @@
     {dump $model}
 
     {foreach ['e_fyziklani_team_id','name','status','phone','note','password','category','created','game_lang','force_a'] as $field}
-        {control valuePrinterDetail__e_fyziklani_team__$field $model}
+        {control valuePrinter__e_fyziklani_team__$field:row $model,true}
     {/foreach}
     <hr/>
 
     <h3>{_'Rank & points'}</h3>
     {if $rankVisible}
         {foreach ['rank_category','rank_total','points'] as $field}
-            {control valuePrinterRow__e_fyziklani_team__$field $model}
+            {control valuePrinter__e_fyziklani_team__$field:row $model,true}
         {/foreach}
     {else}
         <span class="badge badge-info">{_'Results is not accessible.'}</span>
@@ -32,13 +32,13 @@
 
         <h4>{_'Parcipant'} {$counter}</h4>
 
-        {control valuePrinterRow__event_participant__person_id $participant}
+        {control valuePrinter__event_participant__person_id:row $participant,true}
 
-        {control valuePrinterRow__event_participant__status $participant}
+        {control valuePrinter__event_participant__status:row $participant,true}
 
-        {control valuePrinterRow__person_history__study_year $history}
+        {control valuePrinter__person_history__study_year:row $history,true}
 
-        {control valuePrinterRow__person_history__school_id $history}
+        {control valuePrinter__person_history__school_id:row $history,true}
     {/foreach}
 
     <hr/>

@@ -3,12 +3,7 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
-use FKSDB\Components\DatabaseReflection\AbstractRowComponent;
-use FKSDB\Components\DatabaseReflection\TestedRowComponent;
-use FKSDB\Components\DatabaseReflection\ListItemComponent;
-use FKSDB\Components\DatabaseReflection\OnlyValueComponent;
-use FKSDB\Components\DatabaseReflection\RowComponent;
-use FKSDB\Components\DatabaseReflection\TestedListItemItemComponent;
+use FKSDB\Components\DatabaseReflection\RowFactoryComponent;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
@@ -63,90 +58,18 @@ final class TableReflectionFactory {
     }
 
     /**
-     * @param string $tableName
-     * @param string $fieldName
-     * @param int $userPermission
-     * @return ListItemComponent
-     * @throws \Exception
-     */
-    private function createListComponent(string $tableName, string $fieldName, int $userPermission): ListItemComponent {
-        $factory = $this->loadService($tableName, $fieldName);
-        return new ListItemComponent($this->translator, $factory, $fieldName, $userPermission);
-    }
-
-    /**
-     * @param string $tableName
-     * @param string $fieldName
-     * @param int $userPermission
-     * @return TestedListItemItemComponent
-     * @throws \Exception
-     */
-    private function createStalkingComponent(string $tableName, string $fieldName, int $userPermission): TestedListItemItemComponent {
-        $factory = $this->loadService($tableName, $fieldName);
-        return new TestedListItemItemComponent($this->translator, $factory, $fieldName, $userPermission);
-    }
-
-    /**
-     * @param string $tableName
-     * @param string $fieldName
-     * @param int $userPermission
-     * @return RowComponent
-     * @throws \Exception
-     */
-    private function createRowComponent(string $tableName, string $fieldName, int $userPermission): RowComponent {
-        $factory = $this->loadService($tableName, $fieldName);
-        return new RowComponent($this->translator, $factory, $fieldName, $userPermission);
-    }
-
-    /**
-     * @param string $tableName
-     * @param string $fieldName
-     * @param int $userPermission
-     * @return OnlyValueComponent
-     * @throws \Exception
-     */
-    private function createOnlyValueComponent(string $tableName, string $fieldName, int $userPermission): OnlyValueComponent {
-        $factory = $this->loadService($tableName, $fieldName);
-        return new OnlyValueComponent($this->translator, $factory, $fieldName, $userPermission);
-    }
-
-    /**
-     * @param string $tableName
-     * @param string $fieldName
-     * @param int $userPermission
-     * @return TestedRowComponent
-     * @throws \Exception
-     */
-    private function createDetailComponent(string $tableName, string $fieldName, int $userPermission): TestedRowComponent {
-        $factory = $this->loadService($tableName, $fieldName);
-        return new TestedRowComponent($this->translator, $factory, $fieldName, $userPermission);
-    }
-
-    /**
      * @param string $name
      * @param int $permissionLevel
-     * @return AbstractRowComponent|null
+     * @return RowFactoryComponent|null
      * @throws \Exception
      */
     public function createComponent(string $name, int $permissionLevel) {
         $parts = \explode('__', $name);
         if (\count($parts) === 3) {
             list($prefix, $tableName, $fieldName) = $parts;
-            if ($prefix === 'valuePrinter' || $prefix === 'valuePrinterRow') {
-                return $this->createRowComponent($tableName, $fieldName, $permissionLevel);
-            }
-            if($prefix === 'valuePrinterDetail'){
-                return $this->createDetailComponent($tableName, $fieldName, $permissionLevel);
-            }
-            if ($prefix === 'valuePrinterList') {
-                return $this->createListComponent($tableName, $fieldName, $permissionLevel);
-            }
-            if ($prefix === 'valuePrinterStalking') {
-                return $this->createStalkingComponent($tableName, $fieldName, $permissionLevel);
-            }
-
-            if ($prefix === 'valuePrinterOnlyValue') {
-                return $this->createOnlyValueComponent($tableName, $fieldName, $permissionLevel);
+            if ($prefix === 'valuePrinter') {
+                $factory = $this->loadService($tableName, $fieldName);
+                return new RowFactoryComponent($this->translator, $factory, $fieldName, $permissionLevel);
             }
         }
         return null;
