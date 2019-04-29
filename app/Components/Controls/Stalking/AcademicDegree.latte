@@ -2,9 +2,9 @@
 {block content}
     <ul class="list-group list-group-flush">
         {if $info}
-            {control valuePrinterList__person_info__academic_degree_prefix $info}
+            {control valuePrinter__person_info__academic_degree_prefix:listItem $info}
 
-            {control valuePrinterList__person_info__academic_degree_suffix $info}
+            {control valuePrinter__person_info__academic_degree_suffix:listItem $info}
         {/if}
     </ul>
 {/block}
