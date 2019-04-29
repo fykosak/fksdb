@@ -5,6 +5,7 @@ namespace FKSDB\Components\DatabaseReflection\Event;
 use FKSDB\Components\DatabaseReflection\ValuePrinters\DatePrinter;
 use FKSDB\Components\Forms\Controls\DateInputs\DateTimeLocalInput;
 use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\ModelEvent;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
@@ -40,11 +41,11 @@ class EndRow extends AbstractEventRowFactory {
     }
 
     /**
-     * @param AbstractModelSingle $model
+     * @param AbstractModelSingle|ModelEvent $model
      * @param string $fieldName
      * @return Html
      */
     public function createHtmlValue(AbstractModelSingle $model, string $fieldName): Html {
-        return (new DatePrinter('d.m.Y'))($model->{$fieldName});
+        return (new DatePrinter('d.m.Y'))($model->end);
     }
 }
