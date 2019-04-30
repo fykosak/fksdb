@@ -28,9 +28,6 @@ class MyPaymentsPresenter extends AuthenticatedPresenter {
     /**
      * @return MyPaymentGrid
      */
-    /**
-     * @return MyPaymentGrid
-     */
     public function createComponentMyPaymentGrid(): MyPaymentGrid {
         return new MyPaymentGrid($this->servicePayment, $this->getTableReflectionFactory());
     }

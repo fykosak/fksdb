@@ -78,5 +78,5 @@ trait ApplicationStateTrait {
     /**
      * @return string
      */
-    abstract public function getModelAccessKey(): string;
+    abstract protected function getModelAccessKey(): string;
 }
