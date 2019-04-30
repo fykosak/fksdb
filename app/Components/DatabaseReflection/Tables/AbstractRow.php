@@ -78,13 +78,6 @@ abstract class AbstractRow {
     }
 
     /**
-     * @return string
-     */
-    public function getModelAccessKey(): string {
-        throw new NotImplementedException();
-    }
-
-    /**
      * @param int $userValue
      * @return bool
      */

@@ -15,12 +15,10 @@ class MyPaymentsPresenter extends AuthenticatedPresenter {
     /**
      * @param ServicePayment $servicePayment
      */
-    /**
-     * @param ServicePayment $servicePayment
-     */
     public function injectServicePayment(ServicePayment $servicePayment) {
         $this->servicePayment = $servicePayment;
     }
+
 
     public function titleDefault() {
         $this->setTitle(_('My payments'));
@@ -34,7 +32,7 @@ class MyPaymentsPresenter extends AuthenticatedPresenter {
      * @return MyPaymentGrid
      */
     public function createComponentMyPaymentGrid(): MyPaymentGrid {
-        return new MyPaymentGrid($this->servicePayment);
+        return new MyPaymentGrid($this->servicePayment, $this->getTableReflectionFactory());
     }
 
 }

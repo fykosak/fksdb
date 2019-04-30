@@ -11,8 +11,8 @@ use FKSDB\Transitions\IEventReferencedModel;
 use FKSDB\Transitions\IStateModel;
 use FKSDB\Transitions\Machine;
 use Nette\Database\Table\ActiveRow;
-use Nette\Utils\DateTime;
 use Nette\Security\IResource;
+use Nette\Utils\DateTime;
 
 /**
  *
@@ -34,7 +34,7 @@ use Nette\Security\IResource;
  * @property-read string iban
  * @property-read string swift
  */
-class ModelPayment extends AbstractModelSingle implements IResource, IStateModel, IEventReferencedModel, IPaymentModel {
+class ModelPayment extends AbstractModelSingle implements IResource, IStateModel, IEventReferencedModel, IPaymentModel, IPersonReferencedModel {
     const STATE_WAITING = 'waiting'; // waiting for confirm payment
     const STATE_RECEIVED = 'received'; // payment received
     const STATE_CANCELED = 'canceled'; // payment canceled
@@ -114,6 +114,7 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
 
     /**
      * @return string
+     * @deprecated
      */
     public function getUIClass(): string {
         $class = 'badge ';
@@ -138,6 +139,7 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
 
     /**
      * @return string
+     * @deprecated
      */
     public function getStateLabel() {
         switch ($this->state) {
