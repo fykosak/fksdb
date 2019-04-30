@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Grids\Payment;
 
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePayment;
@@ -22,10 +21,9 @@ class OrgPaymentGrid extends PaymentGrid {
      * OrgPaymentGrid constructor.
      * @param ServicePayment $servicePayment
      * @param \FKSDB\ORM\Models\ModelEvent $event
-     * @param TableReflectionFactory $tableReflectionFactory
      */
-    public function __construct(ServicePayment $servicePayment, ModelEvent $event,TableReflectionFactory $tableReflectionFactory) {
-        parent::__construct($servicePayment,$tableReflectionFactory);
+    public function __construct(ServicePayment $servicePayment, ModelEvent $event) {
+        parent::__construct($servicePayment);
         $this->event = $event;
     }
 
