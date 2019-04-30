@@ -3,6 +3,7 @@
 namespace FKSDB\Components\DatabaseReflection\Person;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
+use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 use Nette\Forms\Controls\BaseControl;
 
 /**
@@ -10,6 +11,8 @@ use Nette\Forms\Controls\BaseControl;
  * @package FKSDB\Components\DatabaseReflection\Person
  */
 class BornFamilyNameRow extends AbstractRow {
+    use DefaultPrinterTrait;
+
     /**
      * @return string
      */
@@ -39,4 +42,12 @@ class BornFamilyNameRow extends AbstractRow {
     public function getPermissionsValue(): int {
         return self::PERMISSION_ALLOW_FULL;
     }
+
+    /**
+     * @return string
+     */
+    protected function getModelAccessKey(): string {
+        return 'born_family_name';
+    }
+
 }

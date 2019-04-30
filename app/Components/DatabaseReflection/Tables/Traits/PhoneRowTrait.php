@@ -66,10 +66,9 @@ trait PhoneRowTrait {
 
     /**
      * @param AbstractModelSingle $model
-     * @param string $accessKey
      * @return Html
      */
-    public function createHtmlValue(AbstractModelSingle $model, string $accessKey): Html {
+    public function createHtmlValue(AbstractModelSingle $model): Html {
         return (new PhonePrinter)($model->{$this->getModelAccessKey()});
     }
 

@@ -2,6 +2,7 @@
 
 namespace FKSDB\ORM\Models;
 
+use DateTime;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
@@ -20,8 +21,9 @@ use Nette\Security\IResource;
  * @property-read string family_name
  * @property-read string display_name
  * @property-read string gender
+ * @property-read DateTime created
  */
-class ModelPerson extends AbstractModelSingle implements IResource {
+class ModelPerson extends AbstractModelSingle implements IResource, IPersonReferencedModel {
     /**
      * Returns first of the person's logins.
      * (so far, there's not support for multiple login in DB schema)
@@ -39,6 +41,13 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         }
 
         return ModelLogin::createFromActiveRow($logins->current());
+    }
+
+    /**
+     * @return ModelPerson
+     */
+    public function getPerson(): ModelPerson {
+        return $this;
     }
 
     /**

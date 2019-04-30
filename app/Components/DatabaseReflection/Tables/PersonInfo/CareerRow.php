@@ -3,6 +3,7 @@
 namespace FKSDB\Components\DatabaseReflection\PersonInfo;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
+use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextArea;
 
@@ -11,6 +12,7 @@ use Nette\Forms\Controls\TextArea;
  * @package FKSDB\Components\Forms\Factories\PersonInfo
  */
 class CareerRow extends AbstractRow {
+    use DefaultPrinterTrait;
 
     /**
      * @return string
@@ -40,5 +42,12 @@ class CareerRow extends AbstractRow {
      */
     public function getPermissionsValue(): int {
         return self::PERMISSION_ALLOW_BASIC;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getModelAccessKey(): string {
+        return 'career';
     }
 }

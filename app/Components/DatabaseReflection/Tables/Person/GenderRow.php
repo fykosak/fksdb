@@ -46,10 +46,9 @@ class GenderRow extends AbstractRow {
 
     /**
      * @param AbstractModelSingle|ModelPerson $model
-     * @param string $fieldName
      * @return Html
      */
-    protected function createHtmlValue(AbstractModelSingle $model, string $fieldName): Html {
+    protected function createHtmlValue(AbstractModelSingle $model): Html {
         if ($model->gender == 'F') {
             return Html::el('span')->addAttributes(['class' => 'fa fa-venus']);
         } elseif ($model->gender == 'M') {

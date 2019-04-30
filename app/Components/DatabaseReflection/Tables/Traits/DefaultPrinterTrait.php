@@ -13,10 +13,9 @@ use Nette\Utils\Html;
 trait DefaultPrinterTrait {
     /**
      * @param AbstractModelSingle $model
-     * @param string $fieldName
      * @return \Nette\Utils\Html
      */
-    protected function createHtmlValue(AbstractModelSingle $model, string $fieldName): Html {
+    protected function createHtmlValue(AbstractModelSingle $model): Html {
         return (new StringPrinter)($model->{$this->getModelAccessKey()});
     }
 

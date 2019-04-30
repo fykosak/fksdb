@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\DatabaseReflection\Event;
 
-use FKSDB\Components\DatabaseReflection\AbstractRow;
+use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 
@@ -11,6 +11,7 @@ use Nette\Forms\Form;
  * @package FKSDB\Components\DatabaseReflection\Event
  */
 class NameRow extends AbstractEventRowFactory {
+    use DefaultPrinterTrait;
 
     /**
      * @return string
@@ -35,5 +36,12 @@ class NameRow extends AbstractEventRowFactory {
             ->addRule(Form::MAX_LENGTH, null, 255)
             ->setOption('description', $this->getDescription());
         return $control;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getModelAccessKey(): string {
+        return 'name';
     }
 }

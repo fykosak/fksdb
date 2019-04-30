@@ -28,11 +28,10 @@ trait PersonLinkTrait {
 
     /**
      * @param AbstractModelSingle $model
-     * @param string $fieldName
      * @return Html
      * @throws BadRequestException
      */
-    protected function createHtmlValue(AbstractModelSingle $model, string $fieldName): Html {
+    protected function createHtmlValue(AbstractModelSingle $model): Html {
         if (!$model instanceof IPersonReferencedModel) {
             throw new BadRequestException();
         }

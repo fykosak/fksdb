@@ -28,11 +28,18 @@ class ContributionRow extends AbstractOrgRowFactory {
     }
 
     /**
+     * @return null|string
+     */
+    public function getDescription() {
+        return _('Zobrazeno v síni slávy');
+    }
+
+    /**
      * @return BaseControl
      */
     public function createField(): BaseControl {
         $control = new TextArea($this->getTitle());
-        $control->setOption('description', _('Zobrazeno v síni slávy'));
+        $control->setOption('description', $this->getDescription());
         return $control;
     }
 }

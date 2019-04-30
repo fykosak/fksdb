@@ -3,6 +3,7 @@
 namespace FKSDB\Components\DatabaseReflection\PersonHistory;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
+use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 use FKSDB\YearCalculator;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\BaseControl;
@@ -14,6 +15,7 @@ use Nette\Localization\ITranslator;
  * @package FKSDB\Components\DatabaseReflection\PersonHistory
  */
 class StudyYearRow extends AbstractRow {
+    use DefaultPrinterTrait;
     /**
      * @var YearCalculator
      */
@@ -89,5 +91,12 @@ class StudyYearRow extends AbstractRow {
             _('střední škola') => $hsYears,
             _('základní škola nebo víceleté gymnázium') => $primaryYears,
         ];
+    }
+
+    /**
+     * @return string
+     */
+    protected function getModelAccessKey(): string {
+        return 'study_year';
     }
 }

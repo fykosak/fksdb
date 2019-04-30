@@ -30,18 +30,17 @@ class TagsRow extends AbstractRow {
 
     /**
      * @param AbstractModelSingle $model
-     * @param string $fieldName
      * @return Html
      * @throws BadRequestException
      */
-    protected function createHtmlValue(AbstractModelSingle $model, string $fieldName): Html {
+    protected function createHtmlValue(AbstractModelSingle $model): Html {
         if (!$model instanceof ModelStoredQuery) {
             throw new BadRequestException();
         }
         $baseEl = Html::el('div')->addAttributes(['class' => 'stored-query-tags']);
         foreach ($model->getTags() as $tagRow) {
             // TODO why ->stored_query_tag_type
-            $tag = ModelStoredQueryTagType::createFromTableRow($tagRow->tag_type);
+            $tag = ModelStoredQueryTagType::createFromActiveRow($tagRow->tag_type);
             $baseEl->addHtml(Html::el('span')
                 ->addAttributes([
                     'class' => 'badge stored-query-tag stored-query-tag-' . $tag->color,

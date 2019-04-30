@@ -5,7 +5,8 @@ namespace FKSDB\Components\DatabaseReflection;
  * Class BaseRow
  * @package FKSDB\Components\DatabaseReflection
  */
-class BaseRow extends AbstractRow {
+abstract class BaseRow extends AbstractRow {
+    use DefaultPrinterTrait;
     private $title;
 
     /**
