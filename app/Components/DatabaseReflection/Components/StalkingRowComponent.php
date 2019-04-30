@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\DatabaseReflection;
 
-use FKSDB\Components\Controls\Helpers\ValuePrinters\AbstractValue;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 
