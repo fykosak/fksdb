@@ -26,7 +26,7 @@ class BeginRow extends AbstractEventRowFactory {
      * @return BaseControl
      */
     public function createField(): BaseControl {
-        $control = new DateTimeLocalInput(self::getTitle());
+        $control = new DateTimeLocalInput($this->getTitle());
         $control->addRule(Form::FILLED, _('%label je povinný.'));
         return $control;
     }

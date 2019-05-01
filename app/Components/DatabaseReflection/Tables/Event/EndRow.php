@@ -34,7 +34,7 @@ class EndRow extends AbstractEventRowFactory {
      * @return BaseControl
      */
     public function createField(): BaseControl {
-        $control = new DateTimeLocalInput(self::getTitle());
+        $control = new DateTimeLocalInput($this->getTitle());
         $control->addRule(Form::FILLED, _('%label je povinný.'))
             ->setOption('description', $this->getDescription());
         return $control;

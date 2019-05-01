@@ -41,7 +41,7 @@ abstract class AbstractPhoneRow extends AbstractRow {
         $control->setAttribute('placeholder', _('ve tvaru +420123456789'));
         $control->addRule(Form::MAX_LENGTH, null, 32);
         $control->addCondition(Form::FILLED)
-            ->addRule(PhoneNumberFactory::getFormValidationCallback(), _('Phone number is not valid. Please use internation format, starting with "+"'));
+            ->addRule(PhoneNumberFactory::getFormValidationCallback(), _('Phone number is not valid. Please use international format, starting with "+"'));
         return $control;
     }
 
