@@ -21,10 +21,11 @@ class ContestRow extends AbstractOrgRowFactory {
 
     /**
      * @param AbstractModelSingle|ModelOrg $model
+     * @param string $fieldName
      * @return Html
      * @throws \Nette\Application\BadRequestException
      */
-    protected function createHtmlValue(AbstractModelSingle $model): Html {
+    protected function createHtmlValue(AbstractModelSingle $model, string $fieldName): Html {
         return ContestBadge::getHtml($model->contest_id);
     }
 }
