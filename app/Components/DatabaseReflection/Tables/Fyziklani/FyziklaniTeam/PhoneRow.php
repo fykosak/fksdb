@@ -2,15 +2,16 @@
 
 namespace FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam;
 
-use FKSDB\Components\DatabaseReflection\ValuePrinters\PhonePrinter;
-use FKSDB\ORM\AbstractModelSingle;
-use Nette\Utils\Html;
+use FKSDB\Components\DatabaseReflection\PhoneRowTrait;
+use FKSDB\Components\Forms\Factories\ITestedRowFactory;
 
 /**
  * Class PhoneRow
  * @package FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam
  */
-class PhoneRow extends AbstractFyziklaniTeamRow {
+class PhoneRow extends AbstractFyziklaniTeamRow implements ITestedRowFactory {
+    use PhoneRowTrait;
+
     /**
      * @return string
      */
@@ -19,11 +20,9 @@ class PhoneRow extends AbstractFyziklaniTeamRow {
     }
 
     /**
-     * @param AbstractModelSingle $model
-     * @param string $accessKey
-     * @return Html
+     * @return string
      */
-    public function createHtmlValue(AbstractModelSingle $model, string $accessKey): Html {
-        return (new PhonePrinter)($model->{$accessKey});
+    public function getModelAccessKey(): string {
+        return 'phone';
     }
 }

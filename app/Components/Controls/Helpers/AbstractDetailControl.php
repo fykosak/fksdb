@@ -25,28 +25,7 @@ abstract class AbstractDetailControl extends Control {
         $this->translator = $translator;
     }
 
-    /**
-     * @return Helpers\ValuePrinters\PhoneValueControl
-     */
-    public function createComponentPhoneValue(): Helpers\ValuePrinters\PhoneValueControl {
-        return new Helpers\ValuePrinters\PhoneValueControl($this->translator);
-    }
-
-    /**
-     * @return Helpers\ValuePrinters\IsSetValueControl
-     */
-    public function createComponentIsSetValue(): Helpers\ValuePrinters\IsSetValueControl {
-        return new Helpers\ValuePrinters\IsSetValueControl($this->translator);
-    }
-
-    /**
-     * @return Helpers\ValuePrinters\BinaryValueControl
-     */
-    public function createComponentBinaryValue(): Helpers\ValuePrinters\BinaryValueControl {
-        return new Helpers\ValuePrinters\BinaryValueControl($this->translator);
-    }
-
-    /**
+       /**
      * @return Helpers\ValuePrinters\StringValueControl
      */
     public function createComponentStringValue(): Helpers\ValuePrinters\StringValueControl {

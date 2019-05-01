@@ -8,7 +8,6 @@ use FKSDB\ORM\AbstractModelSingle;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Nette\Localization\ITranslator;
-use Nette\NotImplementedException;
 use Nette\Utils\Html;
 
 /**
@@ -67,21 +66,6 @@ abstract class AbstractRow {
      */
     protected function createHtmlValue(AbstractModelSingle $model, string $fieldName): Html {
         return (new StringPrinter)($model->{$fieldName});
-    }
-
-    /**
-     * @param AbstractModelSingle $model
-     * @return Html
-     */
-    protected function createDefaultHtmlValue(AbstractModelSingle $model): Html {
-        return (new StringPrinter)($model->{$this->getModelAccessKey()});
-    }
-
-    /**
-     * @return string
-     */
-    public function getModelAccessKey(): string {
-        throw new NotImplementedException();
     }
 
     /**

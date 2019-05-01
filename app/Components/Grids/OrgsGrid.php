@@ -60,7 +60,7 @@ class OrgsGrid extends BaseGrid {
         $this->setDataSource($dataSource);
         $this->setDefaultOrder('since DESC');
 
-        foreach (['person_id', 'since', 'until', 'role'] as $field) {
+        foreach (['person_name', 'since', 'until', 'role'] as $field) {
             $this->addReflectionColumn(DbNames::TAB_ORG, $field, ModelOrg::class);
         }
 

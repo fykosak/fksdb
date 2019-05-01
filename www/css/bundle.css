@@ -1033,4 +1033,12 @@ main {
   border-color: deeppink;
 }
 
+.t-shirt-color {
+  height: 1rem;
+  width: 1rem;
+  border-radius: 0.5rem;
+  display: inline-block;
+  margin-right: 0.5rem;
+}
+
 /*# sourceMappingURL=bundle.css.map */
