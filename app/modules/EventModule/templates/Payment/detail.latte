@@ -16,9 +16,9 @@
     <div>
         {if $isOrg}
             {* TODO *}
-            {control valuePrinter__payment__person_name:row $model}
+            {*control valuePrinter__payment__person_name:row $model*}
         {else}
-            {control valuePrinter__payment__person_name:row $model}
+            {*control valuePrinter__payment__person_name:row $model*}
         {/if}
         {control valuePrinter__person_info__email:row $model->getPerson()->getInfo()}
     </div>
