@@ -29,8 +29,9 @@ class TShirtColorRow extends AbstractParticipantRow {
             return NotSetBadge::getHtml();
         }
         $container = Html::el('span');
-        $container->addHtml(Html::el('i')->addAttributes(['style' =>
-            'background-color: ' . $value,
+        $container->addHtml(Html::el('i')->addAttributes([
+            'style' => 'background-color: ' . $value,
+
             'class' => 't-shirt-color'
         ]));
         $container->addText($value);
