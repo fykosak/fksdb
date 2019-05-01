@@ -12,6 +12,7 @@ use ModelMPostContact;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Database\Table\Selection;
 use Nette\Security\IResource;
+use Nette\Utils\DateTime;
 
 /**
  *
