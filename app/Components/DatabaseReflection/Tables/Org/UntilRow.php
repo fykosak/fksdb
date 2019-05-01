@@ -25,10 +25,9 @@ class UntilRow extends AbstractOrgRowFactory {
 
     /**
      * @param AbstractModelSingle|ModelOrg $model
-     * @param string $fieldName
      * @return Html
      */
-    protected function createHtmlValue(AbstractModelSingle $model, string $fieldName): Html {
+    protected function createHtmlValue(AbstractModelSingle $model): Html {
         if (\is_null($model->until)) {
             return Html::el('span')->addAttributes(['class' => 'badge badge-success'])->addText(_('Still organizes'));
         } else {

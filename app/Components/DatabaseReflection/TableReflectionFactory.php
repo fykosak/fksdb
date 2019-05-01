@@ -8,6 +8,7 @@ use FKSDB\ORM\AbstractModelSingle;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\Localization\ITranslator;
+use Nette\SmartObject;
 use Nette\Utils\Html;
 
 /**
@@ -15,6 +16,7 @@ use Nette\Utils\Html;
  * @package FKSDB\Components\Forms\Factories\PersonInfo
  */
 final class TableReflectionFactory {
+    use SmartObject;
 
     /**
      * @var AbstractRow[]
@@ -70,7 +72,7 @@ final class TableReflectionFactory {
             list($prefix, $tableName, $fieldName) = $parts;
             if ($prefix === 'valuePrinter') {
                 $factory = $this->loadService($tableName, $fieldName);
-                return new RowFactoryComponent($this->translator, $factory, $fieldName, $permissionLevel);
+                return new RowFactoryComponent($this->translator, $factory, $permissionLevel);
             }
         }
         return null;
@@ -85,6 +87,6 @@ final class TableReflectionFactory {
      * @throws \Exception
      */
     public function createGridValue(string $tableName, string $fieldName, AbstractModelSingle $modelSingle, int $userPermissionLevel): Html {
-        return $this->loadService($tableName, $fieldName)->renderValue($modelSingle, $fieldName, $userPermissionLevel);
+        return $this->loadService($tableName, $fieldName)->renderValue($modelSingle, $userPermissionLevel);
     }
 }

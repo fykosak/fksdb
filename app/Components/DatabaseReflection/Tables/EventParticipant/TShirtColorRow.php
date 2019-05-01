@@ -21,10 +21,9 @@ class TShirtColorRow extends AbstractParticipantRow {
 
     /**
      * @param AbstractModelSingle|ModelEventParticipant $model
-     * @param string $fieldName
      * @return Html
      */
-    protected function createHtmlValue(AbstractModelSingle $model, string $fieldName): Html {
+    protected function createHtmlValue(AbstractModelSingle $model): Html {
         $value = $model->tshirt_color;
         if (\is_null($value)) {
             return NotSetBadge::getHtml();
@@ -32,6 +31,7 @@ class TShirtColorRow extends AbstractParticipantRow {
         $container = Html::el('span');
         $container->addHtml(Html::el('i')->addAttributes([
             'style' => 'background-color: ' . $value,
+
             'class' => 't-shirt-color'
         ]));
         $container->addText($value);

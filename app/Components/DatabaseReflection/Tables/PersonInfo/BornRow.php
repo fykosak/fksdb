@@ -40,10 +40,9 @@ class BornRow extends AbstractRow {
 
     /**
      * @param AbstractModelSingle|ModelPersonInfo $model
-     * @param string $fieldName
      * @return Html
      */
-    public function createHtmlValue(AbstractModelSingle $model, string $fieldName): Html {
+    public function createHtmlValue(AbstractModelSingle $model): Html {
         return (new DatePrinter('d.m.Y'))($model->born);
     }
 }

@@ -25,11 +25,10 @@ class DomainAliasRow extends AbstractOrgRowFactory {
 
     /**
      * @param AbstractModelSingle|ModelOrg $model
-     * @param string $fieldName
      * @return Html
      * @throws BadRequestException
      */
-    protected function createHtmlValue(AbstractModelSingle $model, string $fieldName): Html {
+    protected function createHtmlValue(AbstractModelSingle $model): Html {
         switch ($model->contest_id) {
             case 1:
                 return (new EmailPrinter)($model->domain_alias . '@fykos.cz');

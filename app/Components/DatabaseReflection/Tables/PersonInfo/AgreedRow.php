@@ -44,10 +44,9 @@ class AgreedRow extends AbstractRow {
 
     /**
      * @param AbstractModelSingle|ModelPersonInfo $model
-     * @param string $fieldName
      * @return Html
      */
-    protected function createHtmlValue(AbstractModelSingle $model,string $fieldName): Html {
+    protected function createHtmlValue(AbstractModelSingle $model): Html {
         return (new DatePrinter)($model->agreed);
     }
 

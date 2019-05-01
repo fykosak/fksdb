@@ -41,10 +41,9 @@ class EmailRow extends AbstractRow {
 
     /**
      * @param AbstractModelSingle|ModelPersonInfo $model
-     * @param string $fieldNam
      * @return Html
      */
-    protected function createHtmlValue(AbstractModelSingle $model, string $fieldNam): Html {
+    protected function createHtmlValue(AbstractModelSingle $model): Html {
         return (new EmailPrinter)($model->email);
     }
 }

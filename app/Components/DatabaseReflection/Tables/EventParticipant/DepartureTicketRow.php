@@ -22,10 +22,9 @@ class DepartureTicketRow extends AbstractParticipantRow {
 
     /**
      * @param AbstractModelSingle|ModelEventParticipant $model
-     * @param string $fieldNam
      * @return Html
      */
-    public function createHtmlValue(AbstractModelSingle $model, string $fieldNam): Html {
+    public function createHtmlValue(AbstractModelSingle $model): Html {
         return (new BinaryPrinter)($model->departure_ticket);
     }
 }

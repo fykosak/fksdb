@@ -5,7 +5,8 @@ namespace FKSDB\Components\DatabaseReflection;
  * Class BaseRow
  * @package FKSDB\Components\DatabaseReflection
  */
-class BaseRow extends AbstractRow {
+abstract class BaseRow extends AbstractRow {
+    use DefaultPrinterTrait;
     private $title;
 
     /**
@@ -19,7 +20,7 @@ class BaseRow extends AbstractRow {
      * @return string
      */
     public function getTitle(): string {
-        return $this->title;
+        return _($this->title);
     }
 
     /**
