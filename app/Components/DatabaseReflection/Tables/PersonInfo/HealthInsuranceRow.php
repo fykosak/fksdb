@@ -59,7 +59,7 @@ class HealthInsuranceRow extends AbstractRow implements ITestedRowFactory {
         if (\array_key_exists($model->health_insurance, self::ID_MAPPING)) {
             return Html::el('span')->addText(self::ID_MAPPING[$model->health_insurance]);
         }
-        return (new StringPrinter)($model->health_insurance);
+        return Html::el('span')->addText($model->health_insurance);
     }
 
     /**
