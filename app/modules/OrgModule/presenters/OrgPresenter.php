@@ -20,7 +20,11 @@ class OrgPresenter extends ExtendedPersonPresenter {
 
     protected $modelResourceId = 'org';
     protected $fieldsDefinition = 'adminOrg';
-
+    /**
+     * @var int
+     * @persistent
+     */
+    public $id;
     /**
      * @var ServiceOrg
      */
