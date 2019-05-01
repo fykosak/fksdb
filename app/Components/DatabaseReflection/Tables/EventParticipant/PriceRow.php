@@ -22,10 +22,10 @@ class PriceRow extends AbstractParticipantRow {
 
     /**
      * @param AbstractModelSingle|ModelEventParticipant $model
-     * @param string $fieldName
+     * @param string $fieldNam
      * @return Html
      */
-    protected function createHtmlValue(AbstractModelSingle $model, string $fieldName): Html {
+    protected function createHtmlValue(AbstractModelSingle $model, string $fieldNam): Html {
         if (\is_null($model->price)) {
             return NotSetBadge::getHtml();
         }

@@ -6,6 +6,7 @@ use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\DatabaseReflection\ValuePrinters\DatePrinter;
 use FKSDB\Components\Forms\Controls\WriteOnlyDatePicker;
 use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\ModelPersonInfo;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
@@ -38,11 +39,11 @@ class BornRow extends AbstractRow {
     }
 
     /**
-     * @param AbstractModelSingle $model
+     * @param AbstractModelSingle|ModelPersonInfo $model
      * @param string $fieldName
      * @return Html
      */
     public function createHtmlValue(AbstractModelSingle $model, string $fieldName): Html {
-        return (new DatePrinter('d.m.Y'))($model->{$fieldName});
+        return (new DatePrinter('d.m.Y'))($model->born);
     }
 }

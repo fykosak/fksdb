@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\DatabaseReflection\Event;
 
+use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 
@@ -10,6 +11,7 @@ use Nette\Forms\Form;
  * @package FKSDB\Components\DatabaseReflection\Event
  */
 class EventYearRow extends AbstractEventRowFactory {
+    use DefaultPrinterTrait;
 
     /**
      * @return string
@@ -27,5 +29,12 @@ class EventYearRow extends AbstractEventRowFactory {
             ->addRule(Form::FILLED, _('%label je povinný.'))
             ->setOption('description', _('Ročník akce musí být unikátní pro daný typ akce.'));
         return $control;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getModelAccessKey(): string {
+        return 'event_year';
     }
 }
