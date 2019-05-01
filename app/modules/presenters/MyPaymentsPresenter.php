@@ -15,21 +15,16 @@ class MyPaymentsPresenter extends AuthenticatedPresenter {
     /**
      * @param ServicePayment $servicePayment
      */
-    /**
-     * @param ServicePayment $servicePayment
-     */
     public function injectServicePayment(ServicePayment $servicePayment) {
         $this->servicePayment = $servicePayment;
     }
+
 
     public function titleDefault() {
         $this->setTitle(_('My payments'));
         $this->setIcon('fa fa-credit-card');
     }
 
-    /**
-     * @return MyPaymentGrid
-     */
     /**
      * @return MyPaymentGrid
      */
