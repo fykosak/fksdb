@@ -10,5 +10,5 @@ services:
     row.org.contest_id: FKSDB\Components\DatabaseReflection\Org\ContestRow
 
     row.org.person_id: FKSDB\Components\DatabaseReflection\Org\PersonIdRowFactory
-    row.org.person_link: FKSDB\Components\DatabaseReflection\Org\PersonLinkRowFactory
+    #row.org.person_link: FKSDB\Components\DatabaseReflection\Org\PersonLinkRowFactory
     row.org.person_name: FKSDB\Components\DatabaseReflection\Org\PersonNameRowFactory
