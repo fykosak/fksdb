@@ -15,7 +15,8 @@
     <h2>{_('Informace o platcovi')}</h2>
     <div>
         {if $isOrg}
-            {control valuePrinter__payment__person_link:row $model}
+            {* TODO *}
+            {control valuePrinter__payment__person_name:row $model}
         {else}
             {control valuePrinter__payment__person_name:row $model}
         {/if}

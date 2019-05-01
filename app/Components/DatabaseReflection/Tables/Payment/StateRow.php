@@ -20,11 +20,10 @@ class StateRow extends AbstractPaymentRow {
 
     /**
      * @param AbstractModelSingle $model
-     * @param string $fieldName
      * @return Html
      */
-    protected function createHtmlValue(AbstractModelSingle $model, string $fieldName): Html {
-        return Html::el('span')->addAttributes(['class' => $this->getUIClass($model)])->addText($this->getStateLabel($model));
+    protected function createHtmlValue(AbstractModelSingle $model): Html {
+        return Html::el('span')->addAttributes(['class' => self::getUIClass($model)])->addText(self::getStateLabel($model));
     }
 
     /**
@@ -32,7 +31,7 @@ class StateRow extends AbstractPaymentRow {
      * @param AbstractModelSingle|ModelPayment $model
      * @return string
      */
-    private function getUIClass(AbstractModelSingle $model): string {
+    public static function getUIClass(AbstractModelSingle $model): string {
         $class = 'badge ';
         switch ($model->state) {
             case ModelPayment::STATE_WAITING:
@@ -57,7 +56,7 @@ class StateRow extends AbstractPaymentRow {
      * @param ModelPayment|AbstractModelSingle $model
      * @return string
      */
-    private function getStateLabel(AbstractModelSingle $model) {
+    public static function getStateLabel(AbstractModelSingle $model) {
         switch ($model->state) {
             case ModelPayment::STATE_NEW:
                 return _('New payment');
