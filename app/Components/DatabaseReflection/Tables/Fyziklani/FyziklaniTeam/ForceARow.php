@@ -21,10 +21,10 @@ class ForceARow extends AbstractFyziklaniTeamRow {
 
     /**
      * @param AbstractModelSingle|ModelFyziklaniTeam $model
-     * @param string $fieldName
+     * @param string $fieldNam
      * @return Html
      */
-    protected function createHtmlValue(AbstractModelSingle $model, string $fieldName): Html {
+    protected function createHtmlValue(AbstractModelSingle $model, string $fieldNam): Html {
         return (new BinaryPrinter)($model->force_a);
     }
 }

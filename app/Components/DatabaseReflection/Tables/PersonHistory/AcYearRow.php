@@ -3,6 +3,7 @@
 namespace FKSDB\Components\DatabaseReflection\PersonHistory;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
+use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\BaseControl;
 
@@ -11,6 +12,7 @@ use Nette\Forms\Controls\BaseControl;
  * @package FKSDB\Components\DatabaseReflection\PersonHistory
  */
 class AcYearRow extends AbstractRow {
+    use DefaultPrinterTrait;
     /**
      * @return string
      */
@@ -31,5 +33,12 @@ class AcYearRow extends AbstractRow {
      */
     public function createField(): BaseControl {
         throw new BadRequestException();
+    }
+
+    /**
+     * @return string
+     */
+    protected function getModelAccessKey(): string {
+        return 'ac_year';
     }
 }

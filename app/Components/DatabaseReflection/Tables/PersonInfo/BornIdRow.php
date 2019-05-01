@@ -3,6 +3,7 @@
 namespace FKSDB\Components\DatabaseReflection\PersonInfo;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
+use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 use FKSDB\Components\Forms\Controls\WriteOnlyInput;
 use FKSDB\Components\Forms\Rules\BornNumber;
 use Nette\Forms\Controls\BaseControl;
@@ -13,6 +14,8 @@ use Nette\Forms\Form;
  * @package FKSDB\Components\Forms\Factories\PersonInfo
  */
 class BornIdRow extends AbstractRow {
+    use DefaultPrinterTrait;
+
     /**
      * @return string
      */
@@ -21,11 +24,18 @@ class BornIdRow extends AbstractRow {
     }
 
     /**
+     * @return null|string
+     */
+    public function getDescription() {
+        return _('U cizinců prázdné.');
+    }
+
+    /**
      * @return BaseControl
      */
     public function createField(): BaseControl {
         $control = new WriteOnlyInput($this->getTitle());
-        $control->setOption('description', _('U cizinců prázdné.'));
+        $control->setOption('description', $this->getDescription());
         $control->addCondition(Form::FILLED)
             ->addRule(new BornNumber(), _('Rodné číslo nemá platný formát.'));
         return $control;
@@ -36,5 +46,12 @@ class BornIdRow extends AbstractRow {
      */
     public function getPermissionsValue(): int {
         return self::PERMISSION_ALLOW_FULL;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getModelAccessKey(): string {
+        return 'born_id';
     }
 }

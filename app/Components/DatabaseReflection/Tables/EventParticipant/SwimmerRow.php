@@ -4,6 +4,7 @@ namespace FKSDB\Components\DatabaseReflection\EventParticipant;
 
 use FKSDB\Components\DatabaseReflection\ValuePrinters\BinaryPrinter;
 use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\ModelEventParticipant;
 use Nette\Utils\Html;
 
 /**
@@ -19,11 +20,11 @@ class SwimmerRow extends AbstractParticipantRow {
     }
 
     /**
-     * @param AbstractModelSingle $model
-     * @param string $fieldName
+     * @param AbstractModelSingle|ModelEventParticipant $model
+     * @param string $fieldNam
      * @return Html
      */
-    public function createHtmlValue(AbstractModelSingle $model, string $fieldName): Html {
-        return (new BinaryPrinter)($model->{$fieldName});
+    public function createHtmlValue(AbstractModelSingle $model, string $fieldNam): Html {
+        return (new BinaryPrinter)($model->swimmer);
     }
 }
