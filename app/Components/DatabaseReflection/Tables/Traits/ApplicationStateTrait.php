@@ -58,10 +58,9 @@ trait ApplicationStateTrait {
 
     /**
      * @param AbstractModelSingle $model
-     * @param string $fieldName
      * @return Html
      */
-    protected function createHtmlValue(AbstractModelSingle $model, string $fieldName): Html {
+    protected function createHtmlValue(AbstractModelSingle $model): Html {
         $state = $model->{$this->getModelAccessKey()};
         if (\is_null($state)) {
             return NotSetBadge::getHtml();

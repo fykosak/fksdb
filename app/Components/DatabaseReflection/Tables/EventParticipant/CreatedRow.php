@@ -21,10 +21,9 @@ class CreatedRow extends AbstractParticipantRow {
 
     /**
      * @param AbstractModelSingle|ModelEventParticipant $model
-     * @param string $fieldNam
      * @return Html
      */
-    protected function createHtmlValue(AbstractModelSingle $model, string $fieldNam): Html {
+    protected function createHtmlValue(AbstractModelSingle $model): Html {
         return (new DatePrinter('c'))($model->created);
     }
 }

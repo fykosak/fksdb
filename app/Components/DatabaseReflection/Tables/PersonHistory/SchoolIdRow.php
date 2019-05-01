@@ -31,10 +31,9 @@ class SchoolIdRow extends AbstractRow {
 
     /**
      * @param AbstractModelSingle|ModelPersonHistory $model
-     * @param string $fieldName
      * @return Html
      */
-    protected function createHtmlValue(AbstractModelSingle $model, string $fieldName): Html {
+    protected function createHtmlValue(AbstractModelSingle $model): Html {
         if (is_null($model->school_id)) {
             return NotSetBadge::getHtml();
         }

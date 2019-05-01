@@ -11,6 +11,7 @@ use ModelMPostContact;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Database\Table\Selection;
 use Nette\Security\IResource;
+use Nette\Utils\DateTime;
 
 /**
  *
@@ -20,6 +21,7 @@ use Nette\Security\IResource;
  * @property-read string family_name
  * @property-read string display_name
  * @property-read string gender
+ * @property-read DateTime created
  */
 class ModelPerson extends AbstractModelSingle implements IResource {
     /**

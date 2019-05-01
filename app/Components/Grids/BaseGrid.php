@@ -180,7 +180,7 @@ abstract class BaseGrid extends Grid {
         $factory = $this->tableReflectionFactory->loadService($tableName, $fieldName);
         $this->addColumn($fieldName, $factory->getTitle())->setRenderer(function ($row) use ($factory, $fieldName, $modelClassName) {
             $model = $modelClassName::createFromActiveRow($row);
-            return $factory->renderValue($model, $fieldName, 1);
+            return $factory->renderValue($model, 1);
         });
     }
 
@@ -195,7 +195,7 @@ abstract class BaseGrid extends Grid {
         $factory = $this->tableReflectionFactory->loadService($tableName, $fieldName);
         $this->addColumn($fieldName, $factory->getTitle())->setRenderer(function ($row) use ($factory, $fieldName, $accessCallback) {
             $model = $accessCallback($row);
-            return $factory->renderValue($model, $fieldName, 1);
+            return $factory->renderValue($model, 1);
         });
     }
 

@@ -27,6 +27,7 @@ class RowFactoryComponent extends Control {
     private $factory;
     /**
      * @var string
+     * @deprecated
      */
     private $fieldName;
     /**
@@ -38,14 +39,12 @@ class RowFactoryComponent extends Control {
      * StalkingRowComponent constructor.
      * @param ITranslator $translator
      * @param AbstractRow $factory
-     * @param string $fieldName
      * @param int $userPermission
      */
-    public function __construct(ITranslator $translator, AbstractRow $factory, string $fieldName, int $userPermission) {
+    public function __construct(ITranslator $translator, AbstractRow $factory, int $userPermission) {
         parent::__construct();
         $this->translator = $translator;
         $this->factory = $factory;
-        $this->fieldName = $fieldName;
         $this->userPermission = $userPermission;
     }
 
@@ -61,7 +60,7 @@ class RowFactoryComponent extends Control {
         if ($this->factory instanceof ITestedRowFactory && $tested) {
             $this->template->testLog = $this->factory->runTest($model);
         }
-        $this->template->html = $this->factory->renderValue($model, $this->fieldName, $this->userPermission);
+        $this->template->html = $this->factory->renderValue($model, $this->userPermission);
         $this->template->setFile(__DIR__ . '/layout.latte');
         $this->template->render();
     }

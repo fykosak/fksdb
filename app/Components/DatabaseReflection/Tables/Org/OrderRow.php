@@ -40,10 +40,9 @@ class OrderRow extends AbstractOrgRowFactory {
 
     /**
      * @param AbstractModelSingle|ModelOrg $model
-     * @param string $fieldName
      * @return Html
      */
-    protected function createHtmlValue(AbstractModelSingle $model, string $fieldName): Html {
+    protected function createHtmlValue(AbstractModelSingle $model): Html {
         if (\array_key_exists($model->order, self::ORDER_MAPPING)) {
             return (new StringPrinter)(self::ORDER_MAPPING[$model->order]);
         }
