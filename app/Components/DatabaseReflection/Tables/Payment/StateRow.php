@@ -20,9 +20,10 @@ class StateRow extends AbstractPaymentRow {
 
     /**
      * @param AbstractModelSingle $model
+     * @param string $fieldName
      * @return Html
      */
-    protected function createHtmlValue(AbstractModelSingle $model): Html {
+    protected function createHtmlValue(AbstractModelSingle $model, string $fieldName): Html {
         return Html::el('span')->addAttributes(['class' => self::getUIClass($model)])->addText(self::getStateLabel($model));
     }
 
