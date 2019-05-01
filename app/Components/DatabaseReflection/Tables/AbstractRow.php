@@ -70,14 +70,6 @@ abstract class AbstractRow {
     }
 
     /**
-     * @param AbstractModelSingle $model
-     * @return Html
-     */
-    protected function createDefaultHtmlValue(AbstractModelSingle $model): Html {
-        return (new StringPrinter)($model->{$this->getModelAccessKey()});
-    }
-
-    /**
      * @return string
      */
     public function getModelAccessKey(): string {
