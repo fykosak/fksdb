@@ -26,11 +26,6 @@ class RowFactoryComponent extends Control {
      */
     private $factory;
     /**
-     * @var string
-     * @deprecated
-     */
-    private $fieldName;
-    /**
      * @var int
      */
     private $userPermission;
