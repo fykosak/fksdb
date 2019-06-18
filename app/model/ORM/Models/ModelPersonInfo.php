@@ -13,6 +13,8 @@ use Nette\Utils\DateTime;
  * @property-read string phone
  * @property-read string phone_parent_m
  * @property-read string phone_parent_d
+ * @property-read string email_parent_m
+ * @property-read string email_parent_d
  * @property-read string born_id
  * @property-read int health_insurance
  * @property-read DateTime agreed

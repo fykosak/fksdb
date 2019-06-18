@@ -505,6 +505,10 @@ CREATE TABLE IF NOT EXISTS `person_info` (
   COMMENT 'tel. číslo rodič mama',
   `duplicates`             TEXT         NULL DEFAULT NULL
   COMMENT 'Označení neduplicitních osob.',
+  `email_parent_d`         VARCHAR(255)  NULL DEFAULT NULL
+  COMMENT 'email rodič otec',
+  `email_parent_m`         VARCHAR(255)  NULL DEFAULT NULL
+  COMMENT 'email rodič mama',
   PRIMARY KEY (`person_id`),
   UNIQUE INDEX `email_UNIQUE` (`email` ASC),
   UNIQUE INDEX `uk_login_UNIQUE` (`uk_login` ASC),

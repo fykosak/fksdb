@@ -25,6 +25,10 @@ parameters:
                         required: false
                     phone_parent_d:
                         required: false
+                    email_parent_m:
+                        required: false
+                    email_parent_d:
+                        required: false
                 post_contact_p:
                     address: %events.tabor.requiredCond%
                 person_history:

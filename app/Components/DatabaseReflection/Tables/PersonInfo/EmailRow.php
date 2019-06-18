@@ -3,33 +3,20 @@
 namespace FKSDB\Components\DatabaseReflection\PersonInfo;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
-use FKSDB\Components\DatabaseReflection\ValuePrinters\EmailPrinter;
-use FKSDB\ORM\AbstractModelSingle;
-use FKSDB\ORM\Models\ModelPersonInfo;
-use Nette\Forms\Controls\BaseControl;
-use Nette\Forms\Form;
-use Nette\Utils\Html;
+use FKSDB\Components\DatabaseReflection\EmailRowTrait;
 
 /**
  * Class EmailField
  * @package FKSDB\Components\Forms\Factories\PersonInfo
  */
 class EmailRow extends AbstractRow {
+    use EmailRowTrait;
+
     /**
      * @return string
      */
     public function getTitle(): string {
         return _('E-mail');
-    }
-
-    /**
-     * @return BaseControl
-     */
-    public function createField(): BaseControl {
-        $control = parent::createField();
-        $control->addCondition(Form::FILLED)
-            ->addRule(Form::EMAIL, _('Neplatný tvar e-mailu.'));
-        return $control;
     }
 
     /**
@@ -40,10 +27,9 @@ class EmailRow extends AbstractRow {
     }
 
     /**
-     * @param AbstractModelSingle|ModelPersonInfo $model
-     * @return Html
+     * @return string
      */
-    protected function createHtmlValue(AbstractModelSingle $model): Html {
-        return (new EmailPrinter)($model->email);
+    public function getModelAccessKey(): string {
+        return 'email';
     }
 }
