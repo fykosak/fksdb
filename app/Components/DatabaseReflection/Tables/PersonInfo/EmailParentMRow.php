@@ -23,7 +23,7 @@ class EmailParentMRow extends AbstractRow {
      * @return string
      */
     public function getTitle(): string {
-        return _('E-mail (mama)');
+        return _('E-mail (matka)');
     }
 
     /**
