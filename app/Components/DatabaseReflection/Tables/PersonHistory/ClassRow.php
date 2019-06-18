@@ -3,6 +3,7 @@
 namespace FKSDB\Components\DatabaseReflection\PersonHistory;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
+use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
@@ -12,6 +13,8 @@ use Nette\Forms\Form;
  * @package FKSDB\Components\Forms\Factories\PersonHistory
  */
 class ClassRow extends AbstractRow {
+    use DefaultPrinterTrait;
+
     /**
      * @return string
      */
@@ -33,5 +36,12 @@ class ClassRow extends AbstractRow {
      */
     public function getPermissionsValue(): int {
         return self::PERMISSION_ALLOW_RESTRICT;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getModelAccessKey(): string {
+        return 'class';
     }
 }

@@ -37,7 +37,6 @@ class ValidationFactory {
     }
 
     /**
-     *
      * @throws \Nette\Application\BadRequestException
      */
     private function registersTests() {
@@ -45,11 +44,10 @@ class ValidationFactory {
             new Tests\GenderFromBornNumber(),
             new Tests\ParticipantDuration\FykosParticipantDuration($this->serviceContest),
             new Tests\ParticipantDuration\VyfukParticipantDuration($this->serviceContest),
-            new Tests\Phone\PhoneNumber(),
-            new Tests\Phone\PhoneParentDNumber(),
-            new Tests\Phone\PhoneParentMNumber(),
-            new PersonInfoFieldTest($this->tableReflectionFactory, 'health_insurance'),
         ];
+        foreach (['phone', 'phone_parent_d', 'phone_parent_m', 'health_insurance'] as $fieldName) {
+            $this->tests[] = new PersonInfoFieldTest($this->tableReflectionFactory, $fieldName);
+        }
     }
 
     /**

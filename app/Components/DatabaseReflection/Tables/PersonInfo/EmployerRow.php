@@ -3,12 +3,14 @@
 namespace FKSDB\Components\DatabaseReflection\PersonInfo;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
+use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 
 /**
  * Class EmployerField
  * @package FKSDB\Components\Forms\Factories\PersonInfo
  */
 class EmployerRow extends AbstractRow {
+    use DefaultPrinterTrait;
 
     /**
      * @return string
@@ -16,6 +18,7 @@ class EmployerRow extends AbstractRow {
     public function getTitle(): string {
         return _('Zaměstnavatel');
     }
+
     /**
      * @return int
      */
@@ -23,4 +26,10 @@ class EmployerRow extends AbstractRow {
         return self::PERMISSION_ALLOW_FULL;
     }
 
+    /**
+     * @return string
+     */
+    protected function getModelAccessKey(): string {
+        return 'employer';
+    }
 }

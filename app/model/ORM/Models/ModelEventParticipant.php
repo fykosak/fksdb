@@ -10,8 +10,8 @@ use FKSDB\Payment\Price;
 use FKSDB\Transitions\IEventReferencedModel;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
-use Nette\Utils\DateTime;
 use Nette\InvalidStateException;
+use Nette\Utils\DateTime;
 
 /**
  *
@@ -40,7 +40,7 @@ use Nette\InvalidStateException;
  * @property-read string used_drugs užívané léky
  * @property-read string schedule
  */
-class ModelEventParticipant extends AbstractModelSingle implements IEventReferencedModel, IPaymentModel {
+class ModelEventParticipant extends AbstractModelSingle implements IEventReferencedModel, IPaymentModel, IPersonReferencedModel {
     /**
      * @return ModelPerson|null
      */

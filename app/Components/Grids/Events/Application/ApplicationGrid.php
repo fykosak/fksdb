@@ -29,7 +29,7 @@ class ApplicationGrid extends AbstractApplicationGrid {
         $source->setFilterCallback($this->getFilterCallBack());
         $this->setDataSource($source);
 
-        $this->addColumns(['person_id', 'status']);
+        $this->addColumns(['person_name', 'status']);
 
         $this->addButton('detail')->setShow(function ($row) {
             $model = ModelEventParticipant::createFromActiveRow($row);

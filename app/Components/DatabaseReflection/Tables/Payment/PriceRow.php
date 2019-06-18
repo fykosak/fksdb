@@ -22,10 +22,9 @@ class PriceRow extends AbstractPaymentRow {
 
     /**
      * @param AbstractModelSingle|ModelPayment $model
-     * @param string $fieldName
      * @return Html
      */
-    protected function createHtmlValue(AbstractModelSingle $model, string $fieldName): Html {
+    protected function createHtmlValue(AbstractModelSingle $model): Html {
         if ($model->price) {
             return (new PricePrinter)($model->getPrice());
         }

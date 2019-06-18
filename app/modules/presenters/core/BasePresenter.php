@@ -129,14 +129,14 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     /**
      * @param TableReflectionFactory $tableReflectionFactory
      */
-    public function injectTableReflectionFactory(TableReflectionFactory $tableReflectionFactory) {
+    public final function injectTableReflectionFactory(TableReflectionFactory $tableReflectionFactory) {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
     /**
      * @return TableReflectionFactory
      */
-    public function getTableReflectionFactory(): TableReflectionFactory {
+    public final function getTableReflectionFactory(): TableReflectionFactory {
         return $this->tableReflectionFactory;
     }
 

@@ -3,6 +3,7 @@
 namespace FKSDB\Components\DatabaseReflection\PersonHistory;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
+use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 use FKSDB\YearCalculator;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\BaseControl;
@@ -14,6 +15,7 @@ use Nette\Localization\ITranslator;
  * @package FKSDB\Components\DatabaseReflection\PersonHistory
  */
 class StudyYearRow extends AbstractRow {
+    use DefaultPrinterTrait;
     /**
      * @var YearCalculator
      */
@@ -44,6 +46,13 @@ class StudyYearRow extends AbstractRow {
     }
 
     /**
+     * @return null|string
+     */
+    public function getDescription() {
+        return _('Kvůli zařazení do kategorie.');
+    }
+
+    /**
      * @param int|null $acYear
      * @return BaseControl
      * @throws BadRequestException
@@ -54,7 +63,7 @@ class StudyYearRow extends AbstractRow {
         }
         $control = new SelectBox($this->getTitle());
         $control->setItems($this->createOptions($acYear));
-        $control->setOption('description', _('Kvůli zařazení do kategorie.'));
+        $control->setOption('description', $this->getDescription());
         $control->setPrompt(_('Zvolit ročník'));
         return $control;
     }
@@ -82,5 +91,12 @@ class StudyYearRow extends AbstractRow {
             _('střední škola') => $hsYears,
             _('základní škola nebo víceleté gymnázium') => $primaryYears,
         ];
+    }
+
+    /**
+     * @return string
+     */
+    protected function getModelAccessKey(): string {
+        return 'study_year';
     }
 }

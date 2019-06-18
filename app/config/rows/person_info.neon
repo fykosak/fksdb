@@ -13,6 +13,8 @@ services:
     row.person_info.phone: FKSDB\Components\DatabaseReflection\PersonInfo\PhoneRow
     row.person_info.phone_parent_m: FKSDB\Components\DatabaseReflection\PersonInfo\PhoneParentMRow
     row.person_info.phone_parent_d: FKSDB\Components\DatabaseReflection\PersonInfo\PhoneParentDRow
+    row.person_info.email_parent_m: FKSDB\Components\DatabaseReflection\PersonInfo\EmailParentMRow
+    row.person_info.email_parent_d: FKSDB\Components\DatabaseReflection\PersonInfo\EmailParentDRow
     row.person_info.id_number: FKSDB\Components\DatabaseReflection\PersonInfo\IdNumberRow
     row.person_info.born: FKSDB\Components\DatabaseReflection\PersonInfo\BornRow
     row.person_info.born_id: FKSDB\Components\DatabaseReflection\PersonInfo\BornIdRow

@@ -4,6 +4,7 @@ namespace FKSDB\Components\DatabaseReflection\EventParticipant;
 
 use FKSDB\Components\Controls\Helpers\Badges\NotSetBadge;
 use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\ModelEventParticipant;
 use Nette\Utils\Html;
 
 /**
@@ -19,23 +20,19 @@ class TShirtColorRow extends AbstractParticipantRow {
     }
 
     /**
-     * @param AbstractModelSingle $model
-     * @param string $fieldName
+     * @param AbstractModelSingle|ModelEventParticipant $model
      * @return Html
      */
-    protected function createHtmlValue(AbstractModelSingle $model, string $fieldName): Html {
-        $value = $model->{$fieldName};
+    protected function createHtmlValue(AbstractModelSingle $model): Html {
+        $value = $model->tshirt_color;
         if (\is_null($value)) {
             return NotSetBadge::getHtml();
         }
         $container = Html::el('span');
-        $container->addHtml(Html::el('i')->addAttributes(['style' =>
-            'background-color: ' . $value . ';
-                     height:1rem;
-                     width: 1rem;
-                     border-radius: .5rem;
-                     display: inline-block;
-                     margin-right: .5rem'
+        $container->addHtml(Html::el('i')->addAttributes([
+            'style' => 'background-color: ' . $value,
+
+            'class' => 't-shirt-color'
         ]));
         $container->addText($value);
         return $container;

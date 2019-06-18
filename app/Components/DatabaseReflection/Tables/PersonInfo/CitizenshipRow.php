@@ -4,6 +4,7 @@ namespace FKSDB\Components\DatabaseReflection\PersonInfo;
 
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
+use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 use FKSDB\ORM\Models\ModelRegion;
 use FKSDB\ORM\Services\ServiceRegion;
 use Nette\Forms\Controls\BaseControl;
@@ -16,6 +17,7 @@ use Nette\Localization\ITranslator;
  * @package FKSDB\Components\Forms\Factories\PersonInfo
  */
 class CitizenshipRow extends AbstractRow {
+    use DefaultPrinterTrait;
     /**
      * @var ServiceRegion
      */
@@ -60,10 +62,18 @@ class CitizenshipRow extends AbstractRow {
         }
         return $results;
     }
+
     /**
      * @return int
      */
     public function getPermissionsValue(): int {
         return self::PERMISSION_ALLOW_FULL;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getModelAccessKey(): string {
+        return 'citizenship';
     }
 }

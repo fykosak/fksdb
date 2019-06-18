@@ -26,15 +26,14 @@ class RegistrationBeginRow extends AbstractEventRowFactory {
      * @return BaseControl
      */
     public function createField(): BaseControl {
-        return new DateTimeLocalInput(self::getTitle());
+        return new DateTimeLocalInput($this->getTitle());
     }
 
     /**
      * @param AbstractModelSingle|ModelEvent $model
-     * @param string $fieldName
      * @return Html
      */
-    public function createHtmlValue(AbstractModelSingle $model, string $fieldName): Html {
+    public function createHtmlValue(AbstractModelSingle $model): Html {
         return (new DatePrinter('d.m.Y H:i:s'))($model->registration_begin);
     }
 

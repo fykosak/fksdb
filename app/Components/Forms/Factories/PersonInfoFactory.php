@@ -102,6 +102,8 @@ class PersonInfoFactory extends SingleReflectionFactory {
             case'employer':
                 return new EmployerField();
             case 'health_insurance':
+            case 'email_parent_d':
+            case 'email_parent_m':
                 return parent::createField($fieldName);
             case 'citizenship':
                 return new CitizenshipField($this->serviceRegion);

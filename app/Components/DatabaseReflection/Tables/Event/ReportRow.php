@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\DatabaseReflection\Event;
 
+use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextArea;
 
@@ -10,6 +11,7 @@ use Nette\Forms\Controls\TextArea;
  * @package FKSDB\Components\DatabaseReflection\Event
  */
 class ReportRow extends AbstractEventRowFactory {
+    use DefaultPrinterTrait;
 
     /**
      * @return string
@@ -29,8 +31,15 @@ class ReportRow extends AbstractEventRowFactory {
      * @return BaseControl
      */
     public function createField(): BaseControl {
-        $control = new TextArea(self::getTitle());
+        $control = new TextArea($this->getTitle());
         $control->setOption('description', $this->getDescription());
         return $control;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getModelAccessKey(): string {
+        return 'report';
     }
 }
