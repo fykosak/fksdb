@@ -2,7 +2,6 @@
 
 namespace FKSDB\ORM\Models;
 
-use DateTime;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;

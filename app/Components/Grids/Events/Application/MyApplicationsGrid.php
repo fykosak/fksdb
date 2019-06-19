@@ -41,8 +41,6 @@ class MyApplicationsGrid extends BaseGrid {
     /**
      * @param Presenter $presenter
      * @throws \NiftyGrid\DuplicateColumnException
-     * @throws \NiftyGrid\DuplicateButtonException
-     * @throws \Exception
      */
     protected function configure($presenter) {
         parent::configure($presenter);

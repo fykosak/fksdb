@@ -111,7 +111,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @throws \Nette\Application\BadRequestException
      */
     public function createComponentGrid(): AbstractApplicationGrid {
-        return new ApplicationGrid($this->getEvent(), $this->tableReflectionFactory);
+        return new ApplicationGrid($this->getEvent(), $this->getTableReflectionFactory());
     }
 
     /**

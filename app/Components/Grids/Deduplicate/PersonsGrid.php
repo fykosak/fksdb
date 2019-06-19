@@ -118,7 +118,6 @@ class PersonsGrid extends BaseGrid {
     /**
      * @param \FKSDB\ORM\Models\ModelPerson $person
      * @return Html
-     * @throws \Nette\Application\UI\InvalidLinkException
      */
     private function renderPerson(ModelPerson $person) {
         return (new PersonLink($this->getPresenter()))($person);

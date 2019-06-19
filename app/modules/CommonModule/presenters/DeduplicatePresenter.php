@@ -40,7 +40,6 @@ class DeduplicatePresenter extends BasePresenter {
     }
 
     /**
-     * @throws \Nette\Application\BadRequestException
      */
     public function authorizedPerson() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowedForAnyContest('person', 'list'));

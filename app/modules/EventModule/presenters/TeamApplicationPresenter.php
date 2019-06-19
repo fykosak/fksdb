@@ -85,7 +85,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
      * @throws \Nette\Application\BadRequestException
      */
     public function createComponentGrid(): AbstractApplicationGrid {
-        return new TeamApplicationGrid($this->getEvent(), $this->tableReflectionFactory);
+        return new TeamApplicationGrid($this->getEvent(), $this->getTableReflectionFactory());
     }
 
     /**
