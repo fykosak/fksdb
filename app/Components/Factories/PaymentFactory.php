@@ -6,6 +6,7 @@ use FKSDB\Components\Controls\Payment\DetailControl;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\Payment\SelectForm;
 use FKSDB\Components\Forms\Factories\PersonFactory;
+use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\Payment\OrgPaymentGrid;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPayment;
@@ -45,10 +46,14 @@ class PaymentFactory {
      * @var ServicePaymentAccommodation
      */
     private $servicePaymentAccommodation;
-
+    /**
+     * @var TableReflectionFactory
+     */
+    private $tableReflectionFactory;
 
     /**
      * PaymentFactory constructor.
+     * @param TableReflectionFactory $tableReflectionFactory
      * @param ServicePaymentAccommodation $servicePaymentAccommodation
      * @param PersonFactory $personFactory
      * @param PersonProvider $personProvider
@@ -56,7 +61,8 @@ class PaymentFactory {
      * @param ITranslator $translator
      * @param ServicePayment $servicePayment
      */
-    public function __construct(ServicePaymentAccommodation $servicePaymentAccommodation, PersonFactory $personFactory, PersonProvider $personProvider, ServiceEventPersonAccommodation $serviceEventPersonAccommodation, ITranslator $translator, ServicePayment $servicePayment) {
+    public function __construct(TableReflectionFactory $tableReflectionFactory, ServicePaymentAccommodation $servicePaymentAccommodation, PersonFactory $personFactory, PersonProvider $personProvider, ServiceEventPersonAccommodation $serviceEventPersonAccommodation, ITranslator $translator, ServicePayment $servicePayment) {
+        $this->tableReflectionFactory = $tableReflectionFactory;
         $this->translator = $translator;
         $this->servicePayment = $servicePayment;
         $this->personFactory = $personFactory;
@@ -70,7 +76,7 @@ class PaymentFactory {
      * @return OrgPaymentGrid
      */
     public function createOrgGrid(ModelEvent $event): OrgPaymentGrid {
-        return new OrgPaymentGrid($this->servicePayment, $event);
+        return new OrgPaymentGrid($this->servicePayment, $event, $this->tableReflectionFactory);
     }
 
     /**
@@ -79,7 +85,7 @@ class PaymentFactory {
      * @return DetailControl
      */
     public function createDetailControl(ModelPayment $modelPayment, PaymentMachine $machine): DetailControl {
-        return new DetailControl($this->translator, $machine, $modelPayment);
+        return new DetailControl($this->translator, $machine, $modelPayment, $this->tableReflectionFactory);
     }
 
     /**
