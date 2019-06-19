@@ -8,7 +8,7 @@ use FKSDB\ORM\DbNames;
  * Class EventTeacher
  * @package FKSDB\Components\Controls\Stalking
  */
-class EventTeacher extends StalkingComponent {
+class EventTeacher extends AbstractStalkingComponent {
 
     public function render() {
         $this->beforeRender();

@@ -6,7 +6,7 @@ namespace FKSDB\Components\Controls\Stalking;
  * Class Address
  * @package FKSDB\Components\Controls\Stalking
  */
-class Address extends StalkingComponent {
+class Address extends AbstractStalkingComponent {
 
     public function render() {
         $this->beforeRender();
@@ -26,6 +26,6 @@ class Address extends StalkingComponent {
      * @return string[]
      */
     protected function getAllowedPermissions(): array {
-        return [StalkingComponent::PERMISSION_FULL ,StalkingComponent::PERMISSION_RESTRICT];
+        return [AbstractStalkingComponent::PERMISSION_FULL ,AbstractStalkingComponent::PERMISSION_RESTRICT];
     }
 }

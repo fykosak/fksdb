@@ -8,7 +8,7 @@ use FKSDB\ORM\DbNames;
  * Class PersonHistory
  * @package FKSDB\Components\Controls\Stalking
  */
-class PersonHistory extends StalkingComponent {
+class PersonHistory extends AbstractStalkingComponent {
 
     public function render() {
         $this->beforeRender();

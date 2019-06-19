@@ -6,7 +6,7 @@ namespace FKSDB\Components\Controls\Stalking;
  * Class Org
  * @package FKSDB\Components\Controls\Stalking
  */
-class Org extends StalkingComponent {
+class Org extends AbstractStalkingComponent {
 
     public function render() {
         $this->beforeRender();

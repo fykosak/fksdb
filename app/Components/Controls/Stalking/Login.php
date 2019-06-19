@@ -6,7 +6,7 @@ namespace FKSDB\Components\Controls\Stalking;
  * Class Login
  * @package FKSDB\Components\Controls\Stalking
  */
-class Login extends StalkingComponent {
+class Login extends AbstractStalkingComponent {
 
     public function render() {
         $this->beforeRender();
@@ -25,6 +25,6 @@ class Login extends StalkingComponent {
      * @return string[]
      */
     protected function getAllowedPermissions(): array {
-        return [ StalkingComponent::PERMISSION_FULL ,StalkingComponent::PERMISSION_RESTRICT];
+        return [ AbstractStalkingComponent::PERMISSION_FULL ,AbstractStalkingComponent::PERMISSION_RESTRICT];
     }
 }

@@ -7,7 +7,7 @@ namespace FKSDB\Components\Controls\Stalking;
  * Class Schedule
  * @package FKSDB\Components\Controls\Stalking
  */
-class Schedule extends StalkingComponent {
+class Schedule extends AbstractStalkingComponent {
     public function render() {
         $this->beforeRender();
         $this->template->schedule = $this->modelPerson->getSchedule();
@@ -19,7 +19,7 @@ class Schedule extends StalkingComponent {
      * @return array
      */
     protected function getAllowedPermissions(): array {
-        return [StalkingComponent::PERMISSION_FULL, StalkingComponent::PERMISSION_RESTRICT];
+        return [AbstractStalkingComponent::PERMISSION_FULL, AbstractStalkingComponent::PERMISSION_RESTRICT];
     }
 
     /**

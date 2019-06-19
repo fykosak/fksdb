@@ -1,0 +1,6 @@
+{layout './@layout.latte'}
+{block content}
+    {foreach $rows as $row}
+        {control valuePrinter__$row[0]__$row[1]:listItem $row[2],true}
+    {/foreach}
+{/block}

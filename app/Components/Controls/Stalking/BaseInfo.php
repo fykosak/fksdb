@@ -6,7 +6,7 @@ namespace FKSDB\Components\Controls\Stalking;
  * Class BaseInfo
  * @package FKSDB\Components\Controls\Stalking
  */
-class BaseInfo extends StalkingComponent {
+class BaseInfo extends AbstractStalkingComponent {
 
     public function render() {
         $this->beforeRender();
@@ -34,6 +34,6 @@ class BaseInfo extends StalkingComponent {
      * @return string[]
      */
     protected function getAllowedPermissions(): array {
-        return [StalkingComponent::PERMISSION_FULL, StalkingComponent::PERMISSION_RESTRICT, self::PERMISSION_BASIC];
+        return [AbstractStalkingComponent::PERMISSION_FULL, AbstractStalkingComponent::PERMISSION_RESTRICT, self::PERMISSION_BASIC];
     }
 }

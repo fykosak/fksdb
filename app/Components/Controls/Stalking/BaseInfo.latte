@@ -2,7 +2,7 @@
 {block content}
     <ul class="list-group list-group-flush">
         {if $person}
-            {foreach ['other_name','family_name','display_name','born_family_name','gender','person_id','created'] as $fieldName}
+            {foreach ['person_id','created'] as $fieldName}
                 {control valuePrinter__person__$fieldName:listItem $person,true}
             {/foreach}
         {/if}

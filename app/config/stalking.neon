@@ -1,0 +1,31 @@
+stalking:
+    components:
+        base_info:
+            label: Base info
+            minimalPermission: 1
+            rows:
+                - row.person.family_name
+                - row.person.other_name
+                - row.person.born_family_name
+                - row.person.display_name
+                - row.person.gender
+        contact_info:
+            label: Contact info
+            minimalPermission: 1
+            rows:
+                - row.person_info.email
+                - row.person_info.phone
+        contact_parents:
+            label: Contact to prents
+            minimalPermission: 128
+            rows:
+                - row.person_info.phone_parent_m
+                - row.person_info.phone_parent_d
+                - row.person_info.email_parent_m
+                - row.person_info.email_parent_d
+        academic_degree:
+            label: Academic degree
+            minimalPermission: 128
+            rows:
+                - row.person_info.academic_degree_prefix
+                - row.person_info.academic_degree_suffix

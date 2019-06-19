@@ -9,7 +9,7 @@ use FKSDB\ORM\DbNames;
  * Class Role
  * @package FKSDB\Components\Controls\Stalking
  */
-class Role extends StalkingComponent {
+class Role extends AbstractStalkingComponent {
 
     public function render() {
         $this->beforeRender();
@@ -30,7 +30,7 @@ class Role extends StalkingComponent {
      * @return array
      */
     protected function getAllowedPermissions(): array {
-        return [StalkingComponent::PERMISSION_FULL, StalkingComponent::PERMISSION_RESTRICT];
+        return [AbstractStalkingComponent::PERMISSION_FULL, AbstractStalkingComponent::PERMISSION_RESTRICT];
     }
 
     /**

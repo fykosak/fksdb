@@ -43,6 +43,10 @@ class StalkingPresenter extends BasePresenter {
      * @var ValidationFactory
      */
     private $validationFactory;
+    /**
+     * @var Stalking\StalkingService
+     */
+    private $stalkingService;
 
     /**
      * @param \FKSDB\ORM\Services\ServicePerson $servicePerson
@@ -63,6 +67,13 @@ class StalkingPresenter extends BasePresenter {
      */
     public function injectValidationFactory(ValidationFactory $validationFactory) {
         $this->validationFactory = $validationFactory;
+    }
+
+    /**
+     * @param Stalking\StalkingService $stalkingService
+     */
+    public function injectStalkingService(Stalking\StalkingService $stalkingService) {
+        $this->stalkingService = $stalkingService;
     }
 
     public function titleDefault() {
@@ -95,6 +106,14 @@ class StalkingPresenter extends BasePresenter {
         $basic = $this->isAllowed($person, 'stalk.basic');
 
         $this->setAuthorized($full || $restrict || $basic);
+    }
+
+    /**
+     * @return Stalking\StalkingComponent
+     * @throws BadRequestException
+     */
+    public function createComponentStalkingComponent(): Stalking\StalkingComponent {
+        return new Stalking\StalkingComponent($this->stalkingService, $this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
     }
 
     /**
@@ -194,22 +213,6 @@ class StalkingPresenter extends BasePresenter {
     }
 
     /**
-     * @return Stalking\ContactInfo
-     * @throws BadRequestException
-     */
-    public function createComponentContactInfo(): Stalking\ContactInfo {
-        return new Stalking\ContactInfo($this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
-    }
-
-    /**
-     * @return Stalking\AcademicDegree
-     * @throws BadRequestException
-     */
-    public function createComponentAcademicDegree(): Stalking\AcademicDegree {
-        return new Stalking\AcademicDegree($this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
-    }
-
-    /**
      * @return Stalking\Schedule
      * @throws BadRequestException
      */
@@ -268,13 +271,13 @@ class StalkingPresenter extends BasePresenter {
     private function getMode() {
         if (!$this->mode) {
             if ($this->isAllowed($this->getPerson(), 'stalk.basic')) {
-                $this->mode = Stalking\StalkingComponent::PERMISSION_BASIC;
+                $this->mode = Stalking\AbstractStalkingComponent::PERMISSION_BASIC;
             }
             if ($this->isAllowed($this->getPerson(), 'stalk.restrict')) {
-                $this->mode = Stalking\StalkingComponent::PERMISSION_RESTRICT;
+                $this->mode = Stalking\AbstractStalkingComponent::PERMISSION_RESTRICT;
             }
             if ($this->isAllowed($this->getPerson(), 'stalk.full')) {
-                $this->mode = Stalking\StalkingComponent::PERMISSION_FULL;
+                $this->mode = Stalking\AbstractStalkingComponent::PERMISSION_FULL;
             }
         }
         return $this->mode;
