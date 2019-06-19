@@ -17,7 +17,7 @@ use Nette\Database\Table\ActiveRow;
  * @property-read ActiveRow event_accommodation
  *
  */
-class ModelEventPersonAccommodation extends AbstractModelSingle implements IStateModel {
+class ModelEventPersonAccommodation extends AbstractModelSingle implements IStateModel, IPersonReferencedModel {
 
     const STATUS_PAID = 'paid';
     const STATUS_WAITING_FOR_PAYMENT = 'waiting';
