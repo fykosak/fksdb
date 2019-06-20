@@ -24,12 +24,10 @@ abstract class StalkingControl extends Control {
     const PERMISSION_BASIC = 16;
     const PERMISSION_USE_FIELD_LEVEL = 2048;
 
-    const LAYOUT_COUNTABLE = 'countable';
-    const LAYOUT_NONE = 'none';
     /**
      * @var int
      */
-    protected $mode;
+    protected $userPermissions;
     /**
      * @var ModelPerson;
      */
@@ -38,10 +36,6 @@ abstract class StalkingControl extends Control {
      * @var ITranslator
      */
     protected $translator;
-    /**
-     * @var string
-     */
-    protected $layout;
 
     /**
      * @var TableReflectionFactory
@@ -53,23 +47,20 @@ abstract class StalkingControl extends Control {
      * @param ModelPerson $modelPerson
      * @param TableReflectionFactory $tableReflectionFactory
      * @param ITranslator $translator
-     * @param int $mode
-     * @param string $layout
+     * @param int $userPermissions
      */
-    public function __construct(ModelPerson $modelPerson, TableReflectionFactory $tableReflectionFactory, ITranslator $translator, int $mode, string $layout = self::LAYOUT_NONE) {
+    public function __construct(ModelPerson $modelPerson, TableReflectionFactory $tableReflectionFactory, ITranslator $translator, int $userPermissions) {
         parent::__construct();
-        $this->mode = $mode;
+        $this->userPermissions = $userPermissions;
         $this->modelPerson = $modelPerson;
         $this->translator = $translator;
-        $this->layout = $layout;
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
     public function beforeRender() {
         $this->template->setTranslator($this->translator);
-        $this->template->userPermisions = $this->mode;
+        $this->template->userPermissions = $this->userPermissions;
         $this->template->gender = $this->modelPerson->gender;
-        $this->template->layout = $this->layout;
     }
 
     /**
@@ -106,7 +97,7 @@ abstract class StalkingControl extends Control {
      * @throws \Exception
      */
     public function createComponent($name) {
-        $printerComponent = $this->tableReflectionFactory->createComponent($name, $this->mode);
+        $printerComponent = $this->tableReflectionFactory->createComponent($name, $this->userPermissions);
         if ($printerComponent) {
             return $printerComponent;
         }

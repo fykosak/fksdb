@@ -27,7 +27,7 @@ class StalkingService {
      * @return array
      * @throws BadRequestException
      */
-    public function getSection(string $name) {
+    public function getSection(string $name): array {
         if (!$this->definition[$name]) {
             throw new BadRequestException('Section' . $name . 'does not exist');
         }

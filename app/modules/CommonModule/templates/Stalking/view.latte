@@ -1,41 +1,85 @@
-{block content}
+{define person_info}
+    <h2>{_'Person info'}</h2>
     <div class="card-columns mt-3">
-
-        {control baseInfo}
 
         {control stalkingComponent "base_info"}
 
         {control stalkingComponent "contact_info"}
 
+        {control stalkingComponent "extended_info"}
+
         {control stalkingComponent "contact_parents"}
 
         {control stalkingComponent "academic_degree"}
 
-        {control login}
+        {control stalkingComponent "login"}
+
+        {control stalkingComponent "person_history"}
 
         {control flag}
 
-        {control role}
-
         {control address}
 
-        {control personHistory}
+    </div>
+{/define}
 
+{define contests_info}
+    <h2>{_'Contests info'}</h2>
+    <div class="card-columns mt-3">
         {control contestant}
 
-        {control org}
+        {control stalkingComponent "org"}
 
+        {control role}
+    </div>
+{/define}
+
+{define events}
+    <h2>{_'Events'}</h2>
+    <div class="card-columns mt-3">
         {control eventParticipant}
 
         {control eventTeacher}
 
         {control eventOrg}
 
-        {*control schedule*}
-
         {control payment}
 
-        {control validation}
+        {*control schedule*}
+    </div>
+{/define}
 
+{define validation}
+    <h2>{_'Validation'}</h2>
+    <div class="card-columns mt-3">
+        {control validation}
+    </div>
+{/define}
+
+{block content}
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <a class="nav-item nav-link active" data-toggle="tab" href="#nav-person-info"
+           role="tab">{_'Person info'}</a>
+        <a class="nav-item nav-link" data-toggle="tab" href="#nav-contests-info"
+           role="tab">{_'Contests info'}</a>
+        <a class="nav-item nav-link" data-toggle="tab" href="#nav-events"
+           role="tab">{_'Events'}</a>
+        <a class="nav-item nav-link" data-toggle="tab" href="#nav-validation"
+           role="tab">{_'Validation'}</a>
+    </div>
+
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-person-info" role="tabpanel" aria-labelledby="nav-home-tab">
+            {include #person_info}
+        </div>
+        <div class="tab-pane fade show" id="nav-contests-info" role="tabpanel" aria-labelledby="nav-home-tab">
+            {include #contests_info}
+        </div>
+        <div class="tab-pane fade show" id="nav-events" role="tabpanel" aria-labelledby="nav-home-tab">
+            {include #events}
+        </div>
+        <div class="tab-pane fade show" id="nav-validation" role="tabpanel" aria-labelledby="nav-home-tab">
+            {include #validation}
+        </div>
     </div>
 {/block}

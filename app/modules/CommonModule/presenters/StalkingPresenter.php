@@ -109,19 +109,11 @@ class StalkingPresenter extends BasePresenter {
     }
 
     /**
-     * @return Stalking\StalkingComponent
+     * @return \FKSDB\Components\Controls\Stalking\StalkingComponent\StalkingComponent
      * @throws BadRequestException
      */
-    public function createComponentStalkingComponent(): Stalking\StalkingComponent {
-        return new Stalking\StalkingComponent($this->stalkingService, $this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
-    }
-
-    /**
-     * @return Stalking\BaseInfo
-     * @throws BadRequestException
-     */
-    public function createComponentBaseInfo(): Stalking\BaseInfo {
-        return new Stalking\BaseInfo($this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
+    public function createComponentStalkingComponent(): Stalking\StalkingComponent\StalkingComponent {
+        return new Stalking\StalkingComponent\StalkingComponent($this->stalkingService, $this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
     }
 
     /**
@@ -157,35 +149,11 @@ class StalkingPresenter extends BasePresenter {
     }
 
     /**
-     * @return Stalking\Login
-     * @throws BadRequestException
-     */
-    public function createComponentLogin(): Stalking\Login {
-        return new Stalking\Login($this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
-    }
-
-    /**
-     * @return Stalking\Org
-     * @throws BadRequestException
-     */
-    public function createComponentOrg(): Stalking\Org {
-        return new Stalking\Org($this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
-    }
-
-    /**
      * @return Stalking\Contestant
      * @throws BadRequestException
      */
     public function createComponentContestant(): Stalking\Contestant {
         return new Stalking\Contestant($this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
-    }
-
-    /**
-     * @return Stalking\PersonHistory
-     * @throws BadRequestException
-     */
-    public function createComponentPersonHistory(): Stalking\PersonHistory {
-        return new Stalking\PersonHistory($this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
     }
 
     /**
