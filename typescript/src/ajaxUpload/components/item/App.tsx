@@ -1,16 +1,18 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
+import { NetteActions } from '../../../app-collector';
 import { newDataArrived } from '../../actions/uploadData';
-import UploadContainer from './Container';
 import { UploadDataItem } from '../../middleware/UploadDataItem';
+import UploadContainer from './Container';
 
 interface Props {
     data: UploadDataItem;
+    actions: NetteActions;
 }
 
 interface State {
-    onAddSubmits?: (data: UploadDataItem) => void;
+    onAddSubmits?(data: UploadDataItem): void;
 }
 
 class App extends React.Component<Props & State, {}> {
@@ -22,7 +24,7 @@ class App extends React.Component<Props & State, {}> {
 
     public render() {
         const accessKey = '@@submit-api/' + this.props.data.taskId;
-        return <UploadContainer accessKey={accessKey}/>;
+        return <UploadContainer actions={this.props.actions} accessKey={accessKey}/>;
     }
 }
 

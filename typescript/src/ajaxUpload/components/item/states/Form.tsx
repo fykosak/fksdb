@@ -8,23 +8,35 @@ import {
     dropItem,
 } from '../../../actions/';
 
+import {
+    Action,
+    Dispatch,
+} from 'redux';
+import { NetteActions } from '../../../../app-collector';
 import { handleFileUpload } from '../../../middleware/upload';
-import { Store } from '../../../reducers';
 import { UploadDataItem } from '../../../middleware/UploadDataItem';
+import { Store } from '../../../reducers';
 
 interface Props {
+    actions: NetteActions;
     data: UploadDataItem;
     accessKey: string;
 }
 
 interface State {
-    onDropItem?: (item: any) => void;
     isSubmitting?: boolean;
-    onFileUpload?: (data) => void;
-    onDragStart?: () => void;
-    onDragEnd?: () => void;
+
     dragged?: boolean;
-    onAddError?: (error) => void;
+
+    onDropItem?(item: any): void;
+
+    onFileUpload?(data): void;
+
+    onDragStart?(): void;
+
+    onDragEnd?(): void;
+
+    onAddError?(error): void;
 }
 
 class Form extends React.Component<Props & State, {}> {
@@ -87,13 +99,13 @@ const mapStateToProps = (state: Store): State => {
         dragged: state.dragNDrop.dragged,
     };
 };
-const mapDispatchToProps = (dispatch, ownProps: Props): State => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>, ownProps: Props): State => {
     return {
         onAddError: (error) => dispatch(addError(error)),
         onDragEnd: () => dispatch(dragEnd()),
         onDragStart: () => dispatch(dragStart()),
         onDropItem: (item) => dispatch(dropItem<any>(item)),
-        onFileUpload: (values) => dispatchUploadFile(ownProps.accessKey, dispatch, values, () => null, () => null),
+        onFileUpload: (values) => dispatchUploadFile(ownProps.accessKey, dispatch, values, () => null, () => null, ownProps.actions.upload),
     };
 };
 

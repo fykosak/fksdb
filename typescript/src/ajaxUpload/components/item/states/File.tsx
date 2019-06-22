@@ -2,23 +2,29 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { deleteUploadedFile } from '../../../actions/uploadData';
 import { lang } from '../../../../i18n/i18n';
+import { NetteActions } from '../../../../app-collector';
+import {
+    Action,
+    Dispatch,
+} from 'redux';
 
-interface IProps {
+interface Props {
+    actions: NetteActions;
     name: string;
     href: string;
     submitId: number;
     accessKey: string;
 }
 
-interface IState {
+interface State {
     onDeleteFile?: (accessKey: string, submitId: number) => void;
 }
 
-class File extends React.Component<IProps & IState, {}> {
+class File extends React.Component<Props & State, {}> {
 
     public render() {
         return <div className="uploaded-file">
-            <button aria-hidden="true" className="pull-right btn btn-danger" onClick={() => {
+            <button aria-hidden="true" className="pull-right btn btn-warinig" onClick={() => {
                 if (window.confirm(lang.getText('Remove submit'))) {
                     this.props.onDeleteFile(this.props.accessKey, this.props.submitId);
                 }
@@ -34,12 +40,12 @@ class File extends React.Component<IProps & IState, {}> {
     }
 }
 
-const mapStateToProps = (): IState => {
+const mapStateToProps = (): State => {
     return {};
 };
-const mapDispatchToProps = (dispatch): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>, ownProps: Props): State => {
     return {
-        onDeleteFile: (accessKey, submitId) => deleteUploadedFile(dispatch, accessKey, submitId),
+        onDeleteFile: (accessKey, submitId) => deleteUploadedFile(dispatch, accessKey, submitId, ownProps.actions.revoke),
     };
 };
 

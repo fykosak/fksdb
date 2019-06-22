@@ -2,23 +2,23 @@
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Components\Control\AjaxUpload\SubmitRevokeTrait;
+use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\Submits\FilesystemSubmitStorage;
-use FKSDB\Submits\StorageException;
-use ModelException;
+use FKSDB\Submits\ISubmitStorage;
 use Nette\Application\BadRequestException;
-use Tracy\Debugger;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;
-use PublicModule\BasePresenter;
 
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class SubmitsGrid extends BaseGrid {
+    use SubmitRevokeTrait;
 
     /** @var ServiceSubmit */
     private $submitService;
@@ -43,6 +43,20 @@ class SubmitsGrid extends BaseGrid {
         $this->submitService = $submitService;
         $this->submitStorage = $submitStorage;
         $this->contestant = $contestant;
+    }
+
+    /**
+     * @return ServiceSubmit
+     */
+    protected function getServiceSubmit(): ServiceSubmit {
+        return $this->submitService;
+    }
+
+    /**
+     * @return ISubmitStorage
+     */
+    protected function getSubmitStorage(): ISubmitStorage {
+        return $this->submitStorage;
     }
 
     /**
@@ -112,7 +126,14 @@ class SubmitsGrid extends BaseGrid {
      * @throws \Nette\Application\AbortException
      */
     public function handleRevoke($id) {
-        $row = $this->submitService->findByPrimary($id);
+        /**
+         * @var Message $message
+         */
+
+        list($message,) = $this->traitHandleRevoke($id);
+        $this->flashMessage($message->getMessage(), $message->getLevel());
+
+        /*$row = $this->submitService->findByPrimary($id);
 
         if (!$row) {
             throw new BadRequestException('Neexistující submit.', 404);
@@ -140,7 +161,7 @@ class SubmitsGrid extends BaseGrid {
         } catch (ModelException $exception) {
             $this->flashMessage(sprintf('Během mazání úlohy %s došlo k chybě.', $submit->getTask()->getFQName()), BasePresenter::FLASH_ERROR);
             Debugger::log($exception);
-        }
+        }*/
     }
 
     /**

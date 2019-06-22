@@ -5,12 +5,14 @@ import { Store } from '../../reducers';
 import MessageBox from '../MessageBox';
 import File from './states/File';
 import Form from './states/Form';
+import { NetteActions } from '../../../app-collector';
 
-interface IProps {
+interface Props {
     accessKey: string;
+    actions: NetteActions;
 }
 
-interface IState {
+interface State {
     deadline?: string;
     href?: string;
     name?: string;
@@ -19,11 +21,11 @@ interface IState {
     submitting?: boolean;
 }
 
-class UploadContainer extends React.Component<IState & IProps, {}> {
+class UploadContainer extends React.Component<State & Props, {}> {
 
     public render() {
 
-        const {deadline, href, name, submitId, taskId, submitting} = this.props;
+        const {deadline, href, name, submitId, taskId, submitting, actions} = this.props;
         const headline = (<>
             <h4>{name}</h4>
             <small className="text-muted">{deadline}</small>
@@ -37,8 +39,8 @@ class UploadContainer extends React.Component<IState & IProps, {}> {
                         <span className="display-1 d-block"><i className="fa fa-spinner fa-spin "/></span>
                     </div>) :
                     (submitId ?
-                            (<File accessKey={accessKey} name={name} href={href} submitId={submitId}/>) :
-                            (<Form accessKey={accessKey} data={{deadline, href, name, submitId, taskId}}/>)
+                            (<File actions={actions} accessKey={accessKey} name={name} href={href} submitId={submitId}/>) :
+                            (<Form actions={actions} accessKey={accessKey} data={{deadline, href, name, submitId, taskId}}/>)
                     )
                 }
             </Card>
@@ -46,7 +48,7 @@ class UploadContainer extends React.Component<IState & IProps, {}> {
     }
 }
 
-const mapStateToProps = (state: Store): IState => {
+const mapStateToProps = (state: Store): State => {
     const values = {
         submitting: false,
     };
@@ -63,7 +65,7 @@ const mapStateToProps = (state: Store): IState => {
         ...values,
     };
 };
-const mapDispatchToProps = (): IState => {
+const mapDispatchToProps = (): State => {
     return {};
 };
 

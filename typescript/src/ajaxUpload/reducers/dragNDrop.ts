@@ -4,19 +4,19 @@ import {
     ACTION_DROP_ITEM,
 } from '../actions/';
 
-const dragStart = (): IState => {
+const dragStart = (): State => {
     return {
         dragged: true,
     };
 };
 
-const dragEnd = (): IState => {
+const dragEnd = (): State => {
     return {
         dragged: false,
     };
 };
 
-export const dragNDrop = (state: IState = {dragged: false}, action): IState => {
+export const dragNDrop = (state: State = {dragged: false}, action): State => {
     switch (action.type) {
         case ACTION_DRAG_START:
             return dragStart();
@@ -28,6 +28,6 @@ export const dragNDrop = (state: IState = {dragged: false}, action): IState => {
     }
 };
 
-export interface IState {
+export interface State {
     dragged: boolean;
 }

@@ -75,11 +75,12 @@ class SubmitPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function authorizedDownload($id) {
-        $submit = $this->submitService->findByPrimary($id);
+        $row = $this->submitService->findByPrimary($id);
 
-        if (!$submit) {
+        if (!$row) {
             throw new BadRequestException('Neexistující submit.', 404);
         }
+        $submit = ModelSubmit::createFromActiveRow($row);
 
         $submit->task_id; // stupid touch
         $contest = $submit->getContestant()->getContest();
@@ -106,36 +107,6 @@ class SubmitPresenter extends BasePresenter {
 
             $this->template->hasForward = ($this->getSelectedYear() == $this->getYearCalculator()->getCurrentYear($this->getSelectedContest())) && ($this->getYearCalculator()->getForwardShift($this->getSelectedContest()) > 0);
         }
-    }
-
-    /**
-     * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\UI\InvalidLinkException
-     */
-    public function renderAjax() {
-        if ($this->isAjax()) {
-            $response = new \ReactResponse();
-            switch ($this->getHttpRequest()->getPost('act')) {
-                case 'upload':
-                    $this->handleAjaxUpload($response);
-                    break;
-                case 'revoke':
-                    $this->handleAjaxRevoke($response);
-                    break;
-            }
-            die();
-        }
-        $this->renderDefault();
-        $data = [];
-        /**
-         * @var ModelTask $task
-         */
-        foreach ($this->getAvailableTasks() as $task) {
-            $submit = $this->submitService->findByContestant($this->getContestant()->ct_id, $task->task_id);
-            $data[$task->task_id] = $this->serializeData($submit, $task);
-        };
-        $this->template->uploadData = json_encode($data);
     }
 
 
@@ -221,19 +192,16 @@ class SubmitPresenter extends BasePresenter {
     /**
      * @return AjaxUpload
      */
-    public function createComponentAjaxUpload() {
-        return new AjaxUpload($this->context, $this->submitService);
+    public function createComponentAjaxUpload(): AjaxUpload {
+        return new AjaxUpload($this->context, $this->submitService, $this->submitStorage);
     }
 
     /**
-     * @param $name
      * @return SubmitsGrid
      * @throws BadRequestException
      */
-    public function createComponentSubmitsGrid($name) {
-        $grid = new SubmitsGrid($this->submitService, $this->submitStorage, $this->getContestant());
-
-        return $grid;
+    public function createComponentSubmitsGrid(): SubmitsGrid {
+        return new SubmitsGrid($this->submitService, $this->submitStorage, $this->getContestant());
     }
 
     /**
@@ -325,55 +293,11 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @param \ReactResponse $response
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\UI\InvalidLinkException
-     */
-    private function handleAjaxUpload(\ReactResponse $response) {
-        $contestant = $this->getContestant();
-        $files = $this->getHttpRequest()->getFiles();
-        foreach ($files as $name => $fileContainer) {
-            $this->submitService->getConnection()->beginTransaction();
-            $this->submitStorage->beginTransaction();
-            if (!preg_match('/task([0-9]+)/', $name, $matches)) {
-                $response->addMessage(new \ReactMessage('task not found', 'warning'));
-                continue;
-            }
-            $task = $this->isAvailableSubmit($matches[1]);
-            if (!$task) {
-                $this->getHttpResponse()->setCode('403');
-                $response->addMessage(new \ReactMessage('upload not allowed', 'danger'));
-                $this->sendResponse($response);
-            };
-            /**
-             * @var $file FileUpload
-             */
-            $file = $fileContainer;
-            if (!$file->isOk()) {
-                $this->getHttpResponse()->setCode('500');
-                $response->addMessage(new \ReactMessage('file is not Ok', 'danger'));
-                $this->sendResponse($response);
-                return;
-            }
-            // store submit
-            $submit = $this->saveSubmit($file, $task, $contestant);
-            $this->submitStorage->commit();
-            $this->submitService->getConnection()->commit();
-            $response->addMessage(new \ReactMessage('Upload úspešný', 'success'));
-            $response->setAct('upload');
-            $response->setData($this->serializeData($submit, $task));
-            $this->sendResponse($response);
-        }
-        die();
-    }
-
-
-    /**
      * @param integer $taskId
      * @return ModelTask
      *
      */
-    private function isAvailableSubmit($taskId) {
+    public function isAvailableSubmit($taskId) {
         /**
          * @var ModelTask $task
          */
@@ -388,21 +312,4 @@ class SubmitPresenter extends BasePresenter {
     public function titleAjax() {
         return $this->titleDefault();
     }
-
-    /**
-     * @param ModelSubmit $submit
-     * @param ModelTask $task
-     * @return array
-     * @throws \Nette\Application\UI\InvalidLinkException
-     */
-    private function serializeData($submit, ModelTask $task) {
-        return [
-            'submitId' => $submit ? $submit->submit_id : null,
-            'name' => $task->getFQName(),
-            'href' => $submit ? $this->link('download', ['id' => $submit->submit_id]) : null,
-            'taskId' => $task->task_id,
-            'deadline' => sprintf(_('Termín %s'), $task->submit_deadline),
-        ];
-    }
-
 }

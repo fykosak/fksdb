@@ -1,7 +1,8 @@
 import { ACTION_SUBMIT_SUCCESS } from '../../fetch-api/actions/submit';
 import { NEW_DATA_ARRIVED } from '../actions/uploadData';
+import { ActionSubmitSuccess } from '../../fetch-api/middleware/interfaces';
 
-export interface IState {
+export interface State {
     submitting: false;
     deadline?: string;
     href?: string;
@@ -10,21 +11,21 @@ export interface IState {
     taskId?: number;
 }
 
-const newDataArrived = (state: IState, action): IState => {
+const newDataArrived = (state: State, action): State => {
     return {
         ...state,
         ...action.data,
     };
 };
-const submitSuccess = (state: IState, action): IState => {
+const submitSuccess = (state: State, action: ActionSubmitSuccess<any>): State => {
     return {
         ...state,
-        ...action.data.data,
+        ...action.data.responseData,
     };
 };
-const defaultState: IState = {submitting: false};
+const defaultState: State = {submitting: false};
 
-export const uploadData = (state: IState = defaultState, action): IState => {
+export const uploadData = (state: State = defaultState, action): State => {
     switch (action.type) {
         case ACTION_SUBMIT_SUCCESS:
             return submitSuccess(state, action);

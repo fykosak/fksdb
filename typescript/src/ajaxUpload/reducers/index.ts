@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux';
 import {
     dragNDrop,
-    IState as DragNDropState,
+    State as DragNDropState,
 } from './dragNDrop';
 import {
-    IState as UploadDataStore,
+    State as UploadDataStore,
     uploadData,
 } from './uploadData';
 

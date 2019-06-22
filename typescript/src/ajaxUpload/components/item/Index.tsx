@@ -5,19 +5,22 @@ import {
     createStore,
 } from 'redux';
 import logger from 'redux-logger';
-import { config } from '../../../config';
 import { app } from '../../reducers';
 import App from './App';
 import { UploadDataItem } from '../../middleware/UploadDataItem';
+import { NetteActions } from '../../../app-collector';
 
 interface IProps {
     data: UploadDataItem;
+    actions: NetteActions;
 }
 
 export default class Index extends React.Component<IProps, {}> {
 
     public render() {
-        const store = config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
-        return <Provider store={store}><App data={this.props.data}/></Provider>;
+        const store = /*config.dev ? */createStore(app, applyMiddleware(logger))/* : createStore(app)*/;
+        return <Provider store={store}>
+            <App data={this.props.data} actions={this.props.actions}/>
+        </Provider>;
     }
 }

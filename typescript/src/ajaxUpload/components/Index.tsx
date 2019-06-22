@@ -18,7 +18,7 @@ export default class Index extends React.Component<Props, {}> {
         for (const taskId in this.props.data) {
             if (this.props.data.hasOwnProperty(taskId)) {
                 const data: UploadDataItem = this.props.data[taskId];
-                boxes.push(<ItemIndex key={taskId} data={data}/>);
+                boxes.push(<ItemIndex actions={this.props.actions} key={taskId} data={data}/>);
             }
         }
         return <div className="row">{boxes}</div>;
