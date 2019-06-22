@@ -1,14 +1,19 @@
 <?php
 
+
 namespace FKSDB\React;
 
 use FKSDB\Messages\Message;
 use Nette;
+use Nette\SmartObject;
+
 
 /**
  * Class FKSDB\React\ReactResponse
  */
 final class ReactResponse implements Nette\Application\IResponse {
+
+    use SmartObject;
     /**
      * @var Message[]
      */

@@ -25,6 +25,6 @@ class AcademicDegree extends StalkingComponent {
      * @return string[]
      */
     protected function getAllowedPermissions(): array {
-        return [StalkingComponent::PERMISSION_FULL, StalkingComponent::PERMISSION_RESTRICT];
+        return [self::PERMISSION_FULL, self::PERMISSION_RESTRICT];
     }
 }

@@ -2,15 +2,15 @@
 
 namespace Events\Semantics;
 
-use Nette\Object;
+use Nette\SmartObject;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class State extends Object {
-
+class State {
+    use SmartObject;
     use WithEventTrait;
 
     private $state;

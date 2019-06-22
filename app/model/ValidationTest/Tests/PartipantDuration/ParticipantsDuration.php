@@ -45,7 +45,7 @@ abstract class ParticipantsDuration extends ValidationTest {
         $max = null;
         $min = null;
         foreach ($this->getEventParticipant($person) as $row) {
-            $model = ModelEventParticipant::createFromTableRow($row);
+            $model = ModelEventParticipant::createFromActiveRow($row);
             $event = $model->getEvent();
             $contestId = $event->getEventType()->contest_id;
             if ($contestId !== $this->getContest()->contest_id) {
@@ -59,9 +59,10 @@ abstract class ParticipantsDuration extends ValidationTest {
 
         $delta = ($max - $min) + 1;
         return new ValidationLog(
-            static::getTitle(),
+            $this->getTitle(),
             \sprintf('Person participate %d years in the events of contest %s', $delta, $this->getContest()->name),
-            ($delta < 5) ? self::LVL_SUCCESS : (($delta < 6) ? self::LVL_WARNING : self::LVL_DANGER));
+            ($delta < 5) ? ValidationLog::LVL_SUCCESS : (($delta < 6) ? ValidationLog::LVL_WARNING : ValidationLog::LVL_DANGER)
+        );
     }
 
     /**

@@ -3,8 +3,11 @@
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Forms\Factories\TableReflectionFactory;
+use FKSDB\ORM\AbstractModelSingle;
 use Nette\Application\UI\Form;
 use Nette\InvalidStateException;
+use Nette\NotImplementedException;
 use Nette\Templating\FileTemplate;
 use Nette\Templating\ITemplate;
 use NiftyGrid\Components\Button;
@@ -21,6 +24,19 @@ abstract class BaseGrid extends Grid {
 
     /** @persistent string */
     public $searchTerm;
+    /**
+     * @var TableReflectionFactory
+     */
+    protected $tableReflectionFactory;
+
+    /**
+     * BaseGrid constructor.
+     * @param TableReflectionFactory|null $tableReflectionFactory
+     */
+    public function __construct(TableReflectionFactory $tableReflectionFactory = null) {
+        parent::__construct();
+        $this->tableReflectionFactory = $tableReflectionFactory;
+    }
 
     /**
      * @param $presenter
@@ -33,6 +49,7 @@ abstract class BaseGrid extends Grid {
         $paginator = $this->getComponent('paginator');
         $paginator->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.paginator.latte');
     }
+
 
     /**
      * @param null $class
@@ -150,6 +167,61 @@ abstract class BaseGrid extends Grid {
         $button = parent::addGlobalButton($name, $label);
         $button->setClass('btn btn-sm btn-primary');
         return $button;
+    }
+
+    /**
+     * @param string $tableName
+     * @param string $fieldName
+     * @param string|AbstractModelSingle $modelClassName
+     * @throws \NiftyGrid\DuplicateColumnException
+     * @throws \Exception
+     */
+    protected function addReflectionColumn(string $tableName, string $fieldName, string $modelClassName) {
+        $factory = $this->tableReflectionFactory->loadService($tableName, $fieldName);
+        $this->addColumn($fieldName, $factory->getTitle())->setRenderer(function ($row) use ($factory, $fieldName, $modelClassName) {
+            $model = $modelClassName::createFromActiveRow($row);
+            return $factory->renderValue($model, 1);
+        });
+    }
+
+    /**
+     * @param string $tableName
+     * @param string $fieldName
+     * @param callable $accessCallback ActiveRow=>AbstractModelSingle
+     * @throws \NiftyGrid\DuplicateColumnException
+     * @throws \Exception
+     */
+    protected function addJoinedColumn(string $tableName, string $fieldName, callable $accessCallback) {
+        $factory = $this->tableReflectionFactory->loadService($tableName, $fieldName);
+        $this->addColumn($fieldName, $factory->getTitle())->setRenderer(function ($row) use ($factory, $fieldName, $accessCallback) {
+            $model = $accessCallback($row);
+            return $factory->renderValue($model, 1);
+        });
+    }
+
+    /**
+     * @return string
+     */
+    protected function getTableName(): string {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @param array $fields
+     * @throws \NiftyGrid\DuplicateColumnException
+     */
+    protected function addColumns(array $fields) {
+
+        foreach ($fields as $name) {
+            $this->addReflectionColumn($this->getTableName(), $name, $this->getModelClassName());
+        }
     }
 
 }

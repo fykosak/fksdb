@@ -6,7 +6,7 @@ use FKSDB\ORM\AbstractModelSingle;
 /**
  *
  * @author Lukáš Timko <lukast@fykos.cz>
- * @property int flag_id
+ * @property-read int flag_id
  */
 class ModelPersonHasFlag extends AbstractModelSingle {
 

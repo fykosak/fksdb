@@ -14,19 +14,19 @@ use Mail\MailTemplateFactory;
 use Mail\SendFailedException;
 use ModelException;
 use Nette\Database\Connection;
-use Tracy\Debugger;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
-use Nette\Object;
+use Nette\SmartObject;
 use OrgModule\ContestantPresenter;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class ExtendedPersonHandler extends Object {
-
+class ExtendedPersonHandler {
+    use SmartObject;
     const CONT_AGGR = 'aggr';
     const CONT_PERSON = 'person';
     const CONT_MODEL = 'model';

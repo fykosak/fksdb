@@ -2,7 +2,7 @@
 
 namespace FKSDB\Utils;
 
-use Nette\Object;
+use Nette\SmartObject;
 
 /**
  * Pseudopromise where we want to evaluate a value (provided as callback)
@@ -10,8 +10,8 @@ use Nette\Object;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class Promise extends Object {
-
+class Promise {
+    use SmartObject;
     /**
      * @var callable
      */

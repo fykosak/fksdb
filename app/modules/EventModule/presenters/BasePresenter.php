@@ -18,7 +18,6 @@ use Nette\DI\Container;
  * @author Lukáš Timko
  */
 abstract class BasePresenter extends AuthenticatedPresenter {
-
     /**
      *
      * @var \FKSDB\ORM\Models\ModelEvent
@@ -152,7 +151,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
             if (!$row) {
                 throw new BadRequestException('Event not found');
             }
-            $this->event = ModelEvent::createFromTableRow($row);
+            $this->event = ModelEvent::createFromActiveRow($row);
             if ($this->event) {
                 $holder = $this->container->createEventHolder($this->getEvent());
                 $this->event->setHolder($holder);
@@ -215,5 +214,4 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     protected final function getContest(): ModelContest {
         return $this->getEvent()->getContest();
     }
-
 }

@@ -21,8 +21,9 @@ use Nette,
  *
  * @author     David Grudl
  */
-class NeonAdapter extends Nette\Object implements Nette\Config\IAdapter
+class NeonAdapter implements Nette\Config\IAdapter
 {
+    use Nette\SmartObject;
 	/** @internal */
 	const INHERITING_SEPARATOR = '<', // child < parent
 		PREVENT_MERGING = '!';

@@ -10,23 +10,23 @@ use Nette\Security\IResource;
 
 /**
  * Class FKSDB\ORM\Models\ModelEventOrg
- * @property ActiveRow person
- * @property ActiveRow event
- * @property string note
+ * @property-read ActiveRow person
+ * @property-read ActiveRow event
+ * @property-read string note
  */
 class ModelEventOrg extends AbstractModelSingle implements IResource, IEventReferencedModel {
     /**
      * @return ModelPerson
      */
     public function getPerson(): ModelPerson {
-        return ModelPerson::createFromTableRow($this->person);
+        return ModelPerson::createFromActiveRow($this->person);
     }
 
     /**
      * @return ModelEvent
      */
     public function getEvent(): ModelEvent {
-        return ModelEvent::createFromTableRow($this->event);
+        return ModelEvent::createFromActiveRow($this->event);
     }
 
     /**

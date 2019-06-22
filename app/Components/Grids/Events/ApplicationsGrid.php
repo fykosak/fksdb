@@ -13,7 +13,6 @@ use FKSDB\Logging\MemoryLogger;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
-use Nette\Diagnostics\Debugger;
 use Nette\InvalidStateException;
 use Nette\Utils\Strings;
 

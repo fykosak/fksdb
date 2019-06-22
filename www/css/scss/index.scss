@@ -144,3 +144,19 @@ main {
     height: 1em;
   }
 }
+
+.bg-pink {
+  background-color: deeppink;
+}
+
+.border-pink {
+  border-color: deeppink;
+}
+
+.t-shirt-color {
+  height: 1rem;
+  width: 1rem;
+  border-radius: .5rem;
+  display: inline-block;
+  margin-right: .5rem
+}

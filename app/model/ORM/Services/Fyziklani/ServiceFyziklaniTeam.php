@@ -14,7 +14,7 @@ class ServiceFyziklaniTeam extends AbstractServiceSingle {
     /**
      * @return string
      */
-    protected function getModelClassName(): string {
+    public function getModelClassName(): string {
         return ModelFyziklaniTeam::class;
     }
 
@@ -48,7 +48,7 @@ class ServiceFyziklaniTeam extends AbstractServiceSingle {
         if (!$row) {
             return false;
         }
-        $team = ModelFyziklaniTeam::createFromTableRow($row);
+        $team = ModelFyziklaniTeam::createFromActiveRow($row);
         return $team && $team->event_id == $event->event_id;
     }
 
@@ -70,7 +70,7 @@ class ServiceFyziklaniTeam extends AbstractServiceSingle {
         $teams = [];
 
         foreach ($this->findPossiblyAttending($event) as $row) {
-            $team = ModelFyziklaniTeam::createFromTableRow($row);
+            $team = ModelFyziklaniTeam::createFromActiveRow($row);
             $teams[] = $team->__toArray(true);
         }
         return $teams;

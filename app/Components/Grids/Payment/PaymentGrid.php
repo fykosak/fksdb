@@ -32,7 +32,7 @@ abstract class PaymentGrid extends BaseGrid {
      */
     protected function addColumnPaymentId() {
         $this->addColumn('id', _('#'))->setRenderer(function ($row) {
-            return '#' . ModelPayment::createFromTableRow($row)->getPaymentId();
+            return '#' . ModelPayment::createFromActiveRow($row)->getPaymentId();
         });
     }
 
@@ -41,7 +41,7 @@ abstract class PaymentGrid extends BaseGrid {
      */
     protected function addColumnPrice() {
         $this->addColumn('price', _('Price'))->setRenderer(function ($row) {
-            $model = ModelPayment::createFromTableRow($row);
+            $model = ModelPayment::createFromActiveRow($row);
             return $model->getPrice()->__toString();
         });
     }
@@ -51,7 +51,7 @@ abstract class PaymentGrid extends BaseGrid {
      */
     protected function addColumnState() {
         $this->addColumn('state', _('Status'))->setRenderer(function ($row) {
-            $model = ModelPayment::createFromTableRow($row);
+            $model = ModelPayment::createFromActiveRow($row);
             return Html::el('span')->addAttributes(['class' => $model->getUIClass()])->addText(_($model->getStateLabel()));
         });
     }

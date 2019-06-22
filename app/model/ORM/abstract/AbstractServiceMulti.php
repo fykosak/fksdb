@@ -5,7 +5,7 @@ namespace FKSDB\ORM;
 use FKSDB\ORM\Tables\MultiTableSelection;
 use InvalidArgumentException;
 use Nette\InvalidStateException;
-use Nette\Object;
+use Nette\SmartObject;
 
 /**
  * Service for object representing one side of M:N relation, or entity in is-a relation ship.
@@ -13,8 +13,8 @@ use Nette\Object;
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-abstract class AbstractServiceMulti extends Object implements IService {
-
+abstract class AbstractServiceMulti implements IService {
+    use SmartObject;
     /**
      * @var string
      */

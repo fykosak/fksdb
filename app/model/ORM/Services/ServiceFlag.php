@@ -13,7 +13,7 @@ class ServiceFlag extends AbstractServiceSingle {
     /**
      * @return string
      */
-    protected function getModelClassName(): string {
+    public function getModelClassName(): string {
         return ModelFlag::class;
     }
 
@@ -35,6 +35,6 @@ class ServiceFlag extends AbstractServiceSingle {
             return null;
         }
         $result = $this->getTable()->where('fid', $fid)->fetch();
-        return $result ? ModelFlag::createFromTableRow($result) : null;
+        return $result ? ModelFlag::createFromActiveRow($result) : null;
     }
 }

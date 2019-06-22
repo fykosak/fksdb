@@ -11,7 +11,7 @@ use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Services\ServicePersonInfo;
 use FormUtils;
 use Nette\Forms\Form;
-use Nette\Object;
+use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
 
 /**
@@ -20,7 +20,9 @@ use Nette\Utils\ArrayHash;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class PrivacyPolicy extends Object implements IProcessing, IFormAdjustment {
+class PrivacyPolicy implements IProcessing, IFormAdjustment {
+
+    use SmartObject;
 
     const CONTROL_NAME = 'privacy';
 

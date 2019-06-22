@@ -1,34 +1,16 @@
 {block content}
     {dump $model}
 
-    {control stringValue $model, _('e_fyziklani_team_id'), e_fyziklani_team_id}
-
-    {control stringValue $model, _('Name'), name}
-
-    {control stringValue $model, _('Status'), status}
-
-    {control stringValue $model, _('Note'), note}
-
-    {control phoneValue $model,_('Phone'), phone}
-
-    {control isSetValue $model,_('Password'),password}
-
-    {control stringValue $model, _('Category'), category}
-
-    {control stringValue $model, _('Created'), created}
-
-    {control stringValue $model, _('Game language'), game_lang}
-
+    {foreach ['e_fyziklani_team_id','name','status','phone','note','password','category','created','game_lang','force_a'] as $field}
+        {control valuePrinter__e_fyziklani_team__$field:row $model,true}
+    {/foreach}
     <hr/>
 
     <h3>{_'Rank & points'}</h3>
     {if $rankVisible}
-
-        {control stringValue $model, _('Rank in category'), rank_category}
-
-        {control stringValue $model, _('Total rank'), rank_total}
-
-        {control stringValue $model, _('Points'), points}
+        {foreach ['rank_category','rank_total','points'] as $field}
+            {control valuePrinter__e_fyziklani_team__$field:row $model,true}
+        {/foreach}
     {else}
         <span class="badge badge-info">{_'Results is not accessible.'}</span>
     {/if}
@@ -50,24 +32,24 @@
 
         <h4>{_'Parcipant'} {$counter}</h4>
 
-        {control personValue $participant->getPerson(),$participant->getEvent()->year, $participant->getEvent()->getEventType()->contest_id }
+        {control valuePrinter__event_participant__person_id:row $participant,true}
 
-        {control stringValue $participant, _('Status'), status}
+        {control valuePrinter__event_participant__status:row $participant,true}
 
-        {control stringValue $history, _('Study year'), study_year}
+        {control valuePrinter__person_history__study_year:row $history,true}
 
-        {control stringValue $school, _('School'), name_full}
+        {control valuePrinter__person_history__school_id:row $history,true}
     {/foreach}
 
     <hr/>
 
     <h3>{_'Actions'}</h3>
 
-    {control applicationComponent:inline edit}
+    {*control applicationComponent:inline edit*}
     <hr/>
 
     <h3>{_'Transitions'}</h3>
 
-    {control applicationComponent:inline transitions}
+    {*control applicationComponent:inline transitions*}
 
 {/block}

@@ -1,0 +1,16 @@
+<li class="nav-item dropdown">
+    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+        {_'Theme'}
+    </a>
+    <div class="dropdown-menu">
+        {foreach $availableThemes as $availableTheme}
+            {if $availableTheme == $theme}
+                <span class="dropdown-item active">{$availableTheme}</span>
+            {else}
+                <a class="dropdown-item" href="{link changeTheme! theme=>$availableTheme}">{$availableTheme}</a>
+            {/if}
+        {/foreach}
+    </div>
+</li>
+
+

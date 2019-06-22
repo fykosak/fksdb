@@ -122,7 +122,7 @@ class CloseTeamControl extends Control {
         $submits = $this->team->getSubmits();
         $sum = 0;
         foreach ($submits as $row) {
-            $submit = ModelFyziklaniSubmit::createFromTableRow($row);
+            $submit = ModelFyziklaniSubmit::createFromActiveRow($row);
             $sum += $submit->points;
         }
         $this->serviceFyziklaniTeam->updateModel($this->team, ['points' => $sum]);

@@ -19,8 +19,9 @@ use Nette;
  *
  * @author     David Grudl
  */
-class ServiceDefinition extends Nette\Object
+class ServiceDefinition
 {
+    use Nette\SmartObject;
 	/** @var string  class or interface name */
 	public $class;
 

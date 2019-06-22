@@ -3,50 +3,19 @@
     {if count($orgs)}
         {foreach $orgs as $row}
             {var $org = \FKSDB\ORM\Models\ModelOrg::createFromTableRow($row)}
-            <h3 class="card-header">{control contestBadge, $org->contest_id}</h3>
+            <div class="card-header">
+                <nav class="nav">
+                    <span class="h3">{control contestBadge, $org->contest_id}</span>
+                    <a class="nav-link"
+                       href="{plink :Org:org:detail contestId=>$org->contest_id,id=>$org->org_id,year=>$org->since}">{_'Detail'}</a>
+                    <a class="nav-link"
+                       href="{plink :Org:org:edit contestId=>$org->contest_id,id=>$org->org_id,year=>$org->since}">{_'Edit'}</a>
+                </nav>
+            </div>
             <ul class="list-group list-group-flush">
-
-                <li class="list-group-item">
-                    {control stringValue $org,_('Org Id'),org_id}
-                </li>
-
-                <li class="list-group-item">
-                    {control stringValue $org,_('Since'),since}
-                </li>
-
-                <li class="list-group-item">
-                    {*control stringValue $org,_('Login'),login*}
-                    <div class="row">
-                        <span class="col-5"><b>{_'Until'}</b></span>
-                        <div class="col-7">
-                            {if (!is_null($org->until))}
-                                {$org->until}
-                            {else}
-                                <span class="badge badge-success">{_'Still organizing'}</span>
-                            {/if}
-                        </div>
-                    </div>
-                </li>
-
-                <li class="list-group-item">
-                    {control stringValue $org,_('Role'),role}
-                </li>
-
-                <li class="list-group-item">
-                    {control stringValue $org,_('Order'),order}
-                </li>
-
-                <li class="list-group-item">
-                    {control stringValue $org,_('Contribution'),contribution}
-                </li>
-
-                <li class="list-group-item">
-                    {control stringValue $org,_('Tex Signature'),tex_signature}
-                </li>
-
-                <li class="list-group-item">
-                    {control stringValue $org,_('Domain alias'),domain_alias}
-                </li>
+                {foreach ['since','until','role','order','contribution','tex_signature','domain_alias'] as $field}
+                    {control valuePrinter__org__$field:listItem $org}
+                {/foreach}
             </ul>
         {/foreach}
 

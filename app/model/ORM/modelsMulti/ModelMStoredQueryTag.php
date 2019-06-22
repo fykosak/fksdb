@@ -10,14 +10,14 @@ use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryTagType;
 class ModelMStoredQueryTag extends AbstractModelMulti {
 
     /**
-     * @return ModelStoredQueryTagType
+     * @return \FKSDB\ORM\IModel|ModelStoredQueryTagType
      */
     public function getStoredQueryTagType() {
         return $this->getMainModel();
     }
 
     /**
-     * @return \FKSDB\ORM\Models\StoredQuery\ModelStoredQueryTag
+     * @return \FKSDB\ORM\IModel|\FKSDB\ORM\Models\StoredQuery\ModelStoredQueryTag
      */
     public function getStoredQueryTag() {
         return $this->getJoinedModel();

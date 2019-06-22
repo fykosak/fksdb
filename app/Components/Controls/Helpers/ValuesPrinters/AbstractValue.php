@@ -7,7 +7,6 @@ use FKSDB\Components\Controls\Helpers\Badges\PermissionDeniedBadge;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
-use Nette\Utils\Html;
 
 /**
  * Class AbstractValue
@@ -16,6 +15,7 @@ use Nette\Utils\Html;
  */
 abstract class AbstractValue extends Control {
     const LAYOUT_STALKING = 'stalking';
+    const LAYOUT_DETAIL = 'detail';
     /**
      * @var ITranslator
      */

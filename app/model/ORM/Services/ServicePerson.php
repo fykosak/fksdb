@@ -15,7 +15,7 @@ class ServicePerson extends AbstractServiceSingle {
     /**
      * @return string
      */
-    protected function getModelClassName(): string {
+    public function getModelClassName(): string {
         return ModelPerson::class;
     }
 
@@ -37,7 +37,7 @@ class ServicePerson extends AbstractServiceSingle {
             return null;
         }
         $result = $this->getTable()->where('person_info:email', $email)->fetch();
-        return $result ? ModelPerson::createFromTableRow($result) : null;
+        return $result ? ModelPerson::createFromActiveRow($result) : null;
     }
 
     /**

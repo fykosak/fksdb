@@ -22,8 +22,9 @@ use Tracy\IBarPanel;
  *
  * @author     David Grudl
  */
-class ConnectionPanel extends Nette\Object implements IBarPanel
+class ConnectionPanel implements IBarPanel
 {
+    use Nette\SmartObject;
 	/** @var int maximum SQL length */
 	static public $maxLength = 1000;
 

@@ -50,7 +50,7 @@ class EventSchedulePrice extends AbstractPreProcess {
      */
     private function getParticipantSchedule($id) {
         $row = $this->serviceEventParticipant->findByPrimary($id);
-        $model = ModelEventParticipant::createFromTableRow($row);
+        $model = ModelEventParticipant::createFromActiveRow($row);
         return $model->schedule;
     }
 

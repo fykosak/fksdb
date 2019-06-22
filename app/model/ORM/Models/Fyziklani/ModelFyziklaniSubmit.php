@@ -13,17 +13,18 @@ use Nette\Utils\DateTime;
  *
  * @author Lukáš Timko <lukast@fykos.cz>
  * @author Michal Červeňák <miso@fykos.cz>
- * @property integer fyziklani_submit_id
- * @property integer e_fyziklani_team_id
- * @property ActiveRow e_fyziklani_team
- * @property integer fyziklani_task_id
- * @property ActiveRow fyziklani_task
  *
- * @property integer points
- * @property string state
- *
- * @property DateTime created
- * @property DateTime modified
+ * @property-read string state
+ * @property-read integer e_fyziklani_team_id
+ * @property-read integer points
+ * @property-read integer fyziklani_task_id
+ * @property-read integer fyziklani_submit_id
+ * @property-read integer task_id
+ * @property-read ActiveRow e_fyziklani_team
+ * @property-read ActiveRow fyziklani_task
+ * @property-read DateTime created
+ * @property-read DateTime modified
+>>>>>>> fykosak/master
  */
 class ModelFyziklaniSubmit extends AbstractModelSingle {
     const STATE_NOT_CHECKED = 'not_checked';
@@ -33,14 +34,14 @@ class ModelFyziklaniSubmit extends AbstractModelSingle {
      * @return ModelFyziklaniTask
      */
     public function getTask(): ModelFyziklaniTask {
-        return ModelFyziklaniTask::createFromTableRow($this->fyziklani_task);
+        return ModelFyziklaniTask::createFromActiveRow($this->fyziklani_task);
     }
 
     /**
      * @return ModelFyziklaniTeam
      */
     public function getTeam(): ModelFyziklaniTeam {
-        return ModelFyziklaniTeam::createFromTableRow($this->e_fyziklani_team);
+        return ModelFyziklaniTeam::createFromActiveRow($this->e_fyziklani_team);
     }
 
     /**

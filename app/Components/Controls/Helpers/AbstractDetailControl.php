@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Controls\Helpers;
 
+use FKSDB\Components\Controls\Helpers\ValuePrinters\StringValueControl;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
 
@@ -23,5 +24,12 @@ abstract class AbstractDetailControl extends Control {
     public function __construct(ITranslator $translator) {
         parent::__construct();
         $this->translator = $translator;
+    }
+
+       /**
+     * @return StringValueControl
+     */
+    public function createComponentStringValue(): StringValueControl {
+        return new StringValueControl($this->translator);
     }
 }

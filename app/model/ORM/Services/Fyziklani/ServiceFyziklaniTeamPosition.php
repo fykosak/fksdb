@@ -15,7 +15,7 @@ class ServiceFyziklaniTeamPosition extends AbstractServiceSingle {
     /**
      * @return string
      */
-    protected function getModelClassName(): string {
+    public function getModelClassName(): string {
         return ModelFyziklaniTeamPosition::class;
     }
 
@@ -33,7 +33,7 @@ class ServiceFyziklaniTeamPosition extends AbstractServiceSingle {
     public function findByTeamId(int $teamId) {
         $row = $this->getTable()->where('e_fyziklani_team_id', $teamId)->fetch();
         if ($row) {
-            return ModelFyziklaniTeamPosition::createFromTableRow($row);
+            return ModelFyziklaniTeamPosition::createFromActiveRow($row);
         }
         return null;
     }

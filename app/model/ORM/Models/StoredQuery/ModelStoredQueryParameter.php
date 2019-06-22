@@ -9,9 +9,9 @@ use PDO;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property string type
- * @property integer default_integer
- * @property string default_string
+ * @property-read string type
+ * @property-read integer default_integer
+ * @property-read string default_string
  */
 class ModelStoredQueryParameter extends AbstractModelSingle {
 

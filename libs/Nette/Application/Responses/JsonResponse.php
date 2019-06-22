@@ -22,8 +22,9 @@ use Nette;
  * @property-read array|\stdClass $payload
  * @property-read string $contentType
  */
-class JsonResponse extends Nette\Object implements Nette\Application\IResponse
+class JsonResponse implements Nette\Application\IResponse
 {
+    use Nette\SmartObject;
 	/** @var array|\stdClass */
 	private $payload;
 

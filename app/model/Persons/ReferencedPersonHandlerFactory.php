@@ -7,7 +7,7 @@ use FKSDB\ORM\Services\ServiceEventPersonAccommodation;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServicePersonHistory;
 use FKSDB\ORM\Services\ServicePersonInfo;
-use Nette\Object;
+use Nette\SmartObject;
 use ServiceMPersonHasFlag;
 use ServiceMPostContact;
 
@@ -16,8 +16,8 @@ use ServiceMPostContact;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class ReferencedPersonHandlerFactory extends Object {
-
+class ReferencedPersonHandlerFactory {
+    use SmartObject;
     /**
      * @var \FKSDB\ORM\Services\ServicePerson
      */

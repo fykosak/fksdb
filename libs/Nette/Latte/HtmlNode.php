@@ -19,8 +19,9 @@ use Nette;
  *
  * @author     David Grudl
  */
-class HtmlNode extends Nette\Object
+class HtmlNode
 {
+    use Nette\SmartObject;
 	/** @var string */
 	public $name;
 

@@ -20,10 +20,10 @@ use FKSDB\Results\Models\DetailResultsModel;
 use FKSDB\Results\Models\SchoolCumulativeResultsModel;
 use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
-use Tracy\Debugger;
 use Nette\InvalidArgumentException;
-use Nette\Object;
+use Nette\SmartObject;
 use SoapFault;
+use Tracy\Debugger;
 use WebService\IXMLNodeSerializer;
 
 /**
@@ -31,8 +31,8 @@ use WebService\IXMLNodeSerializer;
  *
  * @author michal
  */
-class ResultsModelFactory extends Object implements IXMLNodeSerializer {
-
+class ResultsModelFactory implements IXMLNodeSerializer {
+    use SmartObject;
     /**
      * @var Connection
      */

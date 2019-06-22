@@ -15,7 +15,7 @@ class ServiceFyziklaniTask extends AbstractServiceSingle {
     /**
      * @return string
      */
-    protected function getModelClassName(): string {
+    public function getModelClassName(): string {
         return ModelFyziklaniTask::class;
     }
 
@@ -41,7 +41,7 @@ class ServiceFyziklaniTask extends AbstractServiceSingle {
             'event_id' => $event->event_id,
         ])->fetch();
 
-        return $result ? ModelFyziklaniTask::createFromTableRow($result) : null;
+        return $result ? ModelFyziklaniTask::createFromActiveRow($result) : null;
     }
 
     /**
@@ -62,7 +62,7 @@ class ServiceFyziklaniTask extends AbstractServiceSingle {
         $tasks = [];
 
         foreach ($this->findAll($event)->order('label') as $row) {
-            $model = ModelFyziklaniTask::createFromTableRow($row);
+            $model = ModelFyziklaniTask::createFromActiveRow($row);
             $tasks[] = $model->__toArray($hideName);
         }
         return $tasks;

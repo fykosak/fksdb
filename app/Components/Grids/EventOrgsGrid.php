@@ -49,7 +49,7 @@ class EventOrgsGrid extends BaseGrid {
         $dataSource = new SearchableDataSource($orgs);
         $this->setDataSource($dataSource);
         $this->addColumn('display_name', _('Jméno'))->setRenderer(function ($row) {
-            $eventOrg = ModelEventOrg::createFromTableRow($row);
+            $eventOrg = ModelEventOrg::createFromActiveRow($row);
             return $eventOrg->getPerson()->getFullName();
         });
         $this->addColumn('note', _('Note'));

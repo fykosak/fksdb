@@ -30,7 +30,7 @@ class SymbolGeneratorFactory {
      * @return AbstractSymbolGenerator
      */
     public function createGenerator(ModelEvent $event): AbstractSymbolGenerator {
-        if ($event->event_type_id === 1 && $event->event_year = 13) {
+        if ($event->event_type_id === 1 && $event->event_year === 13) {
             return new Fyziklani13Generator($this->servicePayment);
         }
         throw new NotImplementedException(\sprintf(_('Event %s nemá nastavený generátor platieb'), $event->name), 501);

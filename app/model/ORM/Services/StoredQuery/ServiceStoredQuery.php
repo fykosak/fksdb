@@ -16,7 +16,7 @@ class ServiceStoredQuery extends AbstractServiceSingle {
     /**
      * @return string
      */
-    protected function getModelClassName(): string {
+    public function getModelClassName(): string {
         return ModelStoredQuery::class;
     }
 
@@ -54,11 +54,11 @@ class ServiceStoredQuery extends AbstractServiceSingle {
             return null;
         }
         $result = $this->getTable()->where('qid', $qid)->fetch();
-        return $result ? ModelStoredQuery::createFromTableRow($result) : null;
+        return $result ? ModelStoredQuery::createFromActiveRow($result) : null;
     }
 
     /**
-     * @param int|null $tagTypeId
+     * @param int|array|null $tagTypeId
      * @return Nette\Database\Table\Selection|null
      */
     public function findByTagType($tagTypeId) {

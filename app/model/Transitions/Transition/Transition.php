@@ -2,7 +2,7 @@
 
 namespace FKSDB\Transitions;
 
-use Nette\Database\Statement;
+use FKSDB\Transitions\Statements\Statement;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

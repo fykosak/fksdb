@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Grids\Validation;
 
+use FKSDB\Components\Controls\Helpers\ValuePrinters\PersonValueControl;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
@@ -48,14 +49,12 @@ class ValidationGrid extends BaseGrid {
         $this->setDataSource($dataSource);
 
         $this->addColumn('display_name', _('Person'))->setRenderer(function ($row) {
-            $person = ModelPerson::createFromTableRow($row);
-            return Html::el('a')->addAttributes([
-                'href' => $this->getPresenter()->link(':Org:Stalking:view', ['id' => $person->person_id]),
-            ])->addText($person->getFullName());
+            $person = ModelPerson::createFromActiveRow($row);
+            return PersonValueControl::getGridValue($this,$person);
         });
         foreach ($this->tests as $test) {
-            $this->addColumn($test::getAction(), $test::getTitle())->setRenderer(function ($row) use ($test) {
-                $person = ModelPerson::createFromTableRow($row);
+            $this->addColumn($test->getAction(), $test->getTitle())->setRenderer(function ($row) use ($test) {
+                $person = ModelPerson::createFromActiveRow($row);
                 $log = $test->run($person);
                 return self::createHtmlLog($log);
             });

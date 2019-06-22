@@ -11,30 +11,30 @@ use FKSDB\Transitions\IEventReferencedModel;
 use FKSDB\Transitions\IStateModel;
 use FKSDB\Transitions\Machine;
 use Nette\Database\Table\ActiveRow;
-use Nette\Utils\DateTime;
 use Nette\Security\IResource;
+use Nette\Utils\DateTime;
 
 /**
  *
  * @author Michal Červeňák <miso@fykos.cz>
- * @property integer person_id
- * @property ActiveRow person
- * @property integer payment_id
- * @property ActiveRow event
- * @property integer event_id
- * @property string state
- * @property float price
- * @property string currency
- * @property DateTime created
- * @property DateTime received
- * @property string constant_symbol
- * @property string variable_symbol
- * @property string specific_symbol
- * @property string bank_account
- * @property string iban
- * @property string swift
+ * @property-read integer person_id
+ * @property-read ActiveRow person
+ * @property-read integer payment_id
+ * @property-read ActiveRow event
+ * @property-read integer event_id
+ * @property-read string state
+ * @property-read float price
+ * @property-read string currency
+ * @property-read DateTime created
+ * @property-read DateTime received
+ * @property-read string constant_symbol
+ * @property-read string variable_symbol
+ * @property-read string specific_symbol
+ * @property-read string bank_account
+ * @property-read string iban
+ * @property-read string swift
  */
-class ModelPayment extends AbstractModelSingle implements IResource, IStateModel, IEventReferencedModel, IPaymentModel {
+class ModelPayment extends AbstractModelSingle implements IResource, IStateModel, IEventReferencedModel, IPaymentModel, IPersonReferencedModel {
     const STATE_WAITING = 'waiting'; // waiting for confirm payment
     const STATE_RECEIVED = 'received'; // payment received
     const STATE_CANCELED = 'canceled'; // payment canceled
@@ -46,14 +46,14 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
      * @return ModelPerson
      */
     public function getPerson(): ModelPerson {
-        return ModelPerson::createFromTableRow($this->person);
+        return ModelPerson::createFromActiveRow($this->person);
     }
 
     /**
      * @return ModelEvent
      */
     public function getEvent(): ModelEvent {
-        return ModelEvent::createFromTableRow($this->event);
+        return ModelEvent::createFromActiveRow($this->event);
     }
 
     /**
@@ -63,7 +63,7 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
         $query = $this->related(DbNames::TAB_PAYMENT_ACCOMMODATION, 'payment_id');
         $items = [];
         foreach ($query as $row) {
-            $items[] = ModelEventPersonAccommodation::createFromTableRow($row->event_person_accommodation);
+            $items[] = ModelEventPersonAccommodation::createFromActiveRow($row->event_person_accommodation);
         }
         return $items;
     }
@@ -114,6 +114,7 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
 
     /**
      * @return string
+     * @deprecated
      */
     public function getUIClass(): string {
         $class = 'badge ';
@@ -138,6 +139,7 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
 
     /**
      * @return string
+     * @deprecated
      */
     public function getStateLabel() {
         switch ($this->state) {
@@ -188,6 +190,6 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
      * @return ModelPayment
      */
     public function refresh(): IStateModel {
-        return self::createFromTableRow($this->getTable()->wherePrimary($this->payment_id)->fetch());
+        return self::createFromActiveRow($this->getTable()->wherePrimary($this->payment_id)->fetch());
     }
 }

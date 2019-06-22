@@ -9,15 +9,15 @@ use Nette\Security\IResource;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property ActiveRow address
- * @property string name_abbrev
+ * @property-read ActiveRow address
+ * @property-read string name_abbrev
  */
 class ModelSchool extends AbstractModelSingle implements IResource {
     /**
      * @return ModelAddress
      */
     public function getAddress(): ModelAddress {
-        return ModelAddress::createFromTableRow($this->address);
+        return ModelAddress::createFromActiveRow($this->address);
     }
 
     /**

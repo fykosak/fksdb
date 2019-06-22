@@ -59,7 +59,7 @@ class AccommodationGrid extends BaseGrid {
             return $row->date->format('Y-m-d');
         });
         $this->addColumn('capacity', _('Capacity'))->setRenderer(function ($row) {
-            $model = ModelEventAccommodation::createFromTableRow($row);
+            $model = ModelEventAccommodation::createFromActiveRow($row);
             return $model->getUsedCapacity() . '/' . $row->capacity;
         });
         $this->addButton('edit', _('Edit'))->setText(_('Edit'))

@@ -28,8 +28,9 @@ use Nette;
  * @method ClassType addTrait(string $trait)
  * @method ClassType addDocument(string $doc)
  */
-class ClassType extends Nette\Object
+class ClassType
 {
+    use Nette\SmartObject;
 	/** @var string */
 	public $name;
 

@@ -35,7 +35,7 @@ abstract class SubmitsGrid extends BaseGrid {
      */
     protected function addColumnTask() {
         $this->addColumn('label', _('Task'))->setRenderer(function ($row) {
-            $model = ModelFyziklaniSubmit::createFromTableRow($row);
+            $model = ModelFyziklaniSubmit::createFromActiveRow($row);
             return $model->getTask()->label;
         });
     }
@@ -45,7 +45,7 @@ abstract class SubmitsGrid extends BaseGrid {
      */
     protected function addColumnState() {
         $this->addColumn('state', _('State'))->setRenderer(function ($row) {
-            $model = ModelFyziklaniSubmit::createFromTableRow($row);
+            $model = ModelFyziklaniSubmit::createFromActiveRow($row);
             switch ($model->state) {
                 case ModelFyziklaniSubmit::STATE_CHECKED:
                     return Html::el('span')->addAttributes(['class' => 'badge badge-success'])->addText(_('checked'));

@@ -141,7 +141,7 @@ class AllSubmitsGrid extends SubmitsGrid {
             $this->flashMessage(_('Submit dos not exists.'), \BasePresenter::FLASH_ERROR);
             return;
         }
-        $submit = ModelFyziklaniSubmit::createFromTableRow($row);
+        $submit = ModelFyziklaniSubmit::createFromActiveRow($row);
 
         if (!$submit->getTeam()->hasOpenSubmitting()) {
 
