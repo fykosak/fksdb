@@ -2,7 +2,7 @@ import * as React from 'react';
 
 export interface Props {
     children?: any;
-    headline: string;
+    headline: string | JSX.Element;
     level: string;
 }
 
