@@ -53,7 +53,7 @@ class DetailControl extends AbstractDetailControl {
      * @throws \Nette\Application\AbortException
      */
     public function handleCheck() {
-        try {
+         try {
             if ($this->model->canChange()) {
                 $log = $this->model->check($this->model->points);
                 Debugger::log(\sprintf('fyziklani_submit %d checked by %d', $this->model->fyziklani_submit_id, $this->getPresenter()->getUser()->getIdentity()->getPerson()->person_id));

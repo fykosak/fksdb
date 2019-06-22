@@ -21,7 +21,6 @@ use Tracy\Debugger;
  * @property FileTemplate $template
  */
 class EditSubmitControl extends Control {
-    use FKSDB\Components\Controls\Helpers\ValuePrintersTrait;
     /**
      * @var ServiceFyziklaniSubmit
      */

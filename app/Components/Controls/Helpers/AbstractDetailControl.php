@@ -9,9 +9,9 @@ use Nette\Localization\ITranslator;
 /**
  * Class DetailControl
  * @package FKSDB\Components\Controls\Stalking\Helpers
+ * @deprecated
  */
 abstract class AbstractDetailControl extends Control {
-    use ValuePrintersTrait;
     /**
      * @var ITranslator
      */

@@ -21,7 +21,6 @@ use Persons\ExtendedPersonHandler;
 use Persons\ExtendedPersonHandlerFactory;
 use Persons\IExtendedPersonPresenter;
 use Persons\SelfResolver;
-use FKSDB\SeriesCalculator;
 
 /**
  * INPUT:
@@ -94,14 +93,14 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     protected $servicePerson;
 
     /**
-     * @var SeriesCalculator
+     * @var \FKSDB\SeriesCalculator
      */
     protected $seriesCalculator;
 
     /**
-     * @param SeriesCalculator $seriesCalculator
+     * @param \FKSDB\SeriesCalculator $seriesCalculator
      */
-    public function injectSeriesCalculator(SeriesCalculator $seriesCalculator) {
+    public function injectSeriesCalculator(\FKSDB\SeriesCalculator $seriesCalculator) {
         $this->seriesCalculator = $seriesCalculator;
     }
 
