@@ -1,0 +1,57 @@
+{block content}
+    <div class="row">
+        <b class="col-xl-2 col-lg-4 col-md-5 col-sm-6">{_'Plný název'}</b>
+        <span class="col-xl-10 col-lg-8 col-md-7 col-sm-6">
+        {$model->name_full}
+    </span>
+    </div>
+
+    <div class="row">
+        <b class="col-xl-2 col-lg-4 col-md-5 col-sm-6">{_'Název'}</b>
+        <span class="col-xl-10 col-lg-8 col-md-7 col-sm-6">
+        {$model->name}
+    </span>
+    </div>
+
+    <div class="row">
+        <b class="col-xl-2 col-lg-4 col-md-5 col-sm-6">{_'Zkrácený název'}</b>
+        <span class="col-xl-10 col-lg-8 col-md-7 col-sm-6">
+        {$model->name_abbrev}
+    </span>
+    </div>
+    <div class="row">
+        <b class="col-xl-2 col-lg-4 col-md-5 col-sm-6">{_'Kontaktní e-mail'}</b>
+        <span class="col-xl-10 col-lg-8 col-md-7 col-sm-6">
+        {$model->email}
+    </span>
+    </div>
+
+    <div class="row">
+        <b class="col-xl-2 col-lg-4 col-md-5 col-sm-6">{_'IČ'}</b>
+        <span class="col-xl-10 col-lg-8 col-md-7 col-sm-6">
+        {$model->ic}
+    </span>
+    </div>
+
+    <div class="row">
+        <b class="col-xl-2 col-lg-4 col-md-5 col-sm-6">{_'IZO'}</b>
+        <span class="col-xl-10 col-lg-8 col-md-7 col-sm-6">
+        {$model->izo}
+    </span>
+    </div>
+
+    <div class="row">
+        <b class="col-xl-2 col-lg-4 col-md-5 col-sm-6">{_'Aktivní záznam'}</b>
+        <span class="col-xl-10 col-lg-8 col-md-7 col-sm-6">
+        {$model->active}
+    </span>
+    </div>
+
+    <div class="row">
+        <b class="col-xl-2 col-lg-4 col-md-5 col-sm-6">{_'Poznámka'}</b>
+        <span class="col-xl-10 col-lg-8 col-md-7 col-sm-6">
+        {$model->note}
+    </span>
+    </div>
+    <h2>{_'Contestants'}</h2>
+{/block}

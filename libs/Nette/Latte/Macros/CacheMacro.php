@@ -20,8 +20,9 @@ use Nette,
  *
  * @author     David Grudl
  */
-class CacheMacro extends Nette\Object implements Latte\IMacro
+class CacheMacro  implements Latte\IMacro
 {
+    use Nette\SmartObject;
 	/** @var bool */
 	private $used;
 
@@ -58,7 +59,7 @@ class CacheMacro extends Nette\Object implements Latte\IMacro
 		$node->isEmpty = FALSE;
 		$node->openingCode = Latte\PhpWriter::using($node)
 			->write('<?php if (Nette\Latte\Macros\CacheMacro::createCache($netteCacheStorage, %var, $_g->caches, %node.array?)) { ?>',
-				Nette\Utils\Strings::random()
+				Nette\Utils\Random::generate()
 			);
 	}
 

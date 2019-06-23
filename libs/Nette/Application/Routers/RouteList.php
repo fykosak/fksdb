@@ -20,7 +20,7 @@ use Nette;
  * @author     David Grudl
  * @property-read string $module
  */
-class RouteList extends Nette\ArrayList implements Nette\Application\IRouter
+class RouteList extends Nette\Utils\ArrayList implements Nette\Application\IRouter
 {
 	/** @var array */
 	private $cachedRoutes;

@@ -1,33 +1,45 @@
 <?php
 
 use Nette\Http\Request;
-use Nette\Object;
 
 /**
  * Unfortunately Nette Http\Request doesn't make raw HTTP data accessible.
  * Thus we have this wrapper class.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class FullHttpRequest extends Object {
+class FullHttpRequest {
 
-	/** @var Request  */
-	private $request;
+    use \Nette\SmartObject;
 
-	/** @var string  */
-	private $payload;
+    /** @var Request */
+    private $request;
 
-	function __construct(Request $request, $payload) {
-		$this->request = $request;
-		$this->payload = $payload;
-	}
+    /** @var string */
+    private $payload;
 
-	function getRequest() {
-		return $this->request;
-	}
+    /**
+     * FullHttpRequest constructor.
+     * @param Request $request
+     * @param $payload
+     */
+    function __construct(Request $request, $payload) {
+        $this->request = $request;
+        $this->payload = $payload;
+    }
 
-	function getPayload() {
-		return $this->payload;
-	}
+    /**
+     * @return Request
+     */
+    function getRequest() {
+        return $this->request;
+    }
+
+    /**
+     * @return string
+     */
+    function getPayload() {
+        return $this->payload;
+    }
 
 }

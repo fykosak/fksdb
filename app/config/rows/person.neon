@@ -1,0 +1,8 @@
+services:
+    row.person.gender: FKSDB\Components\DatabaseReflection\Person\GenderRow
+    row.person.family_name: FKSDB\Components\DatabaseReflection\Person\FamilyNameRow
+    row.person.other_name: FKSDB\Components\DatabaseReflection\Person\OtherNameRow
+    row.person.born_family_name: FKSDB\Components\DatabaseReflection\Person\BornFamilyNameRow
+    row.person.person_id: FKSDB\Components\DatabaseReflection\Person\PersonIdRow
+    row.person.created: FKSDB\Components\DatabaseReflection\Person\CreatedRow
+    row.person.display_name: FKSDB\Components\DatabaseReflection\Person\DisplayNameRow

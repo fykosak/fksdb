@@ -1,0 +1,137 @@
+{block content}
+    <h2 class="fyziklani-headline-red fyziklani-headline">{_('Zoznamy po častiach')}</h2>
+
+    <ul class="nav nav-tabs nav-justified" role="tablist">
+        {foreach $schedule as $key => $item}
+            {continueIf $item['type']!=='chooser'}
+            <li class="nav-item">
+                <a n:class="'nav-link '.($iterator->isFirst()?'active':'')" id="home-tab" data-toggle="tab"
+                                                                            href="#{$key}"
+                                                                            role="tab" aria-controls="{$key}"
+                                                                            aria-selected="true">{$key}</a>
+            </li>
+        {/foreach}
+    </ul>
+    <div class="tab-content">
+        {foreach $schedule as $key => $item}
+            {continueIf $item['type']!=='chooser'}
+            <div n:class="'tab-pane fade mt-3 '. ($iterator->isFirst()?'active show':'')" id="{$key}" role="tabpanel">
+                <h3>{$key}</h3>
+                <div class="card-columns">
+
+                    {foreach $item['parallels'] as $parallel}
+                        <div class="card">
+                            <h4 class="card-header bg-primary text-white">
+                                {$parallel['cs']['name']}/{$parallel['en']['name']}</h4>
+                            <table class="table table-sm table-striped">
+                                <thead>
+                                <tr>
+                                    <th>{_('Person Id')}</th>
+                                    <th>{_('Name')}</th>
+                                    <th>{_('Team')}</th>
+                                    <th>{_('Type')}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {foreach $participants as $participant}
+                                    {if array_key_exists($key,$participant['schedule']) && $parallel['id']==$participant['schedule']->{$key}}
+                                        <tr>
+                                            <td>{$participant['person_id']}</td>
+                                            <td>{$participant['name']}</td>
+                                            <td>{$participant['team']}</td>
+                                            <td>{$participant['type']}</td>
+                                        </tr>
+                                    {/if}
+                                {/foreach}
+                                </tbody>
+                            </table>
+                        </div>
+
+                    {/foreach}
+                </div>
+            </div>
+        {/foreach}
+    </div>
+    <hr class="fyziklani-hr-red"/>
+    <h2 class="fyziklani-headline-red fyziklani-headline">{_('Celkové zoznamy')}</h2>
+    <table class="table table-striped table-hover table-sm">
+        <thead>
+        <tr>
+            <th>{_('Person Id')}</th>
+            <th>{_('Name')}</th>
+            <th>{_('Team')}</th>
+            <th>{_('Type')}</th>
+            {foreach $schedule as $key => $item}
+                {continueIf $item['type']!=='chooser'}
+                <th>{$key}</th>
+            {/foreach}
+        </tr>
+        </thead>
+        <tbody>
+        {foreach $participants as $participant}
+            <tr>
+                <td>{$participant['person_id']}</td>
+                <td>{$participant['name']}</td>
+                <td>{$participant['team']}</td>
+                <td>{$participant['type']}</td>
+                {foreach $schedule as $key => $item}
+                    {continueIf $item['type']!=='chooser'}
+                    {if array_key_exists($key,$participant['schedule'])}
+                        {var $match = false}
+                        {foreach $item['parallels'] as $parallel}
+                            {if $parallel['id']==$participant['schedule']->{$key}}
+                                <td>
+                                    <span class="badge badge-success">
+                                        {$parallel['cs']['name']}
+                                    </span>
+                                </td>
+                                {var $match=true}
+                                {breakIf true}
+                            {/if}
+                        {/foreach}
+                        {if !$match}
+                            <td>
+                                <span class="badge badge-danger">
+                                    {_('Kretén')}
+                                </span>
+                            </td>
+                        {/if}
+
+                    {else}
+                        <td><span class="badge badge-secondary">-</span></td>
+                    {/if}
+
+                {/foreach}
+            </tr>
+        {/foreach}
+        </tbody>
+    </table>
+    <hr class="fyziklani-hr-red"/>
+    <h2 class="fyziklani-headline fyziklani-headline-red">{_('Kumulačné počty')}</h2>
+
+    <table class="table-striped table table-sm">
+        <thead>
+        <tr>
+            <th>{_('Block')}</th>
+            <th>{_('Pararell')}</th>
+            <th>{_('Count')}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {foreach $schedule as $key => $item}
+            {continueIf $item['type']!=='chooser'}
+
+
+            {foreach $item['parallels'] as $parallel}
+                <tr>
+                    <td>{$key}</td>
+                    <td>{$parallel['cs']['name']}</td>
+                    <td>{(isset($stats[$key]) && isset($stats[$key][$parallel['id']]))?$stats[$key][$parallel['id']]:0}</td>
+                </tr>
+            {/foreach}
+
+        {/foreach}
+        </tbody>
+    </table>
+
+{/block}

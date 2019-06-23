@@ -13,6 +13,5 @@ class MockPresenter extends BasePresenter {
     public function getLang() {
         return 'cs';
     }
-
 }
 

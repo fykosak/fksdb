@@ -19,8 +19,9 @@ use Nette;
  *
  * @author     David Grudl
  */
-class Token extends Nette\Object
+class Token
 {
+    use Nette\SmartObject;
 	const TEXT = 'text',
 		MACRO_TAG = 'macroTag', // latte macro tag
 		HTML_TAG_BEGIN = 'htmlTagBegin', // begin of HTML tag or comment

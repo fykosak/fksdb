@@ -17,15 +17,15 @@ parameters:
 
     astrid:
         host: astrid.fykos.cz
-        user: 
-        password: 
+        user:
+        password:
     facebook:
         appId:
         secret:
     ro-database:
         dsn: 'mysql:host=127.0.0.1;dbname=newfks'
-        user: 
-        password: 
+        user:
+        password:
     github:
         # login name in fksdb of Github webhook user
         login: github
@@ -54,11 +54,19 @@ parameters:
         forwardRegistration: %fykos.forwardRegistration%
 
 nette:
+    session:
+        cookie_secure: true
     database:
         dsn: 'mysql:host=127.0.0.1;dbname=newfks'
-        user: 
-        password: 
+        user:
+        password:
 
+    debugger:
+        bar:
+             - Nette\Bridges\HttpTracy\SessionPanel
+             - Nette\Bridges\SecurityTracy\UserPanel
+             #- Nette\Bridges\DatabaseTracy\ConnectionPanel
+    #        - Nextras\MailPanel\MailPanel()
 
 # DO NOT UNCOMMENT ON PRODUCTION ENVIRONMENT -- SECURITY RISK!
 #fksrouter:

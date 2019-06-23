@@ -2,10 +2,17 @@
 
 namespace FKSDB\Components\Grids\Events;
 
+use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\BaseGrid;
-use Nette\Database\Table\Selection;
-use ServiceEvent;
-use SQL\SearchableDataSource;
+use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Services\ServiceEvent;
+use Nette\Application\BadRequestException;
+use Nette\Application\UI\InvalidLinkException;
+use NiftyGrid\DataSource\NDataSource;
+use NiftyGrid\DuplicateColumnException;
+use NiftyGrid\DuplicateGlobalButtonException;
+use OrgModule\OrgPresenter;
 
 /**
  *
@@ -15,76 +22,90 @@ class EventsGrid extends BaseGrid {
 
     /**
      *
-     * @var ServiceEvent
+     * @var \FKSDB\ORM\Services\ServiceEvent
      */
     private $serviceEvent;
 
-    function __construct(ServiceEvent $serviceEvent) {
+    /**
+     * EventsGrid constructor.
+     * @param \FKSDB\ORM\Services\ServiceEvent $serviceEvent
+     * @param TableReflectionFactory $tableReflectionFactory
+     */
+    function __construct(ServiceEvent $serviceEvent, TableReflectionFactory $tableReflectionFactory) {
+        parent::__construct($tableReflectionFactory);
         $this->serviceEvent = $serviceEvent;
     }
 
+    /**
+     * @param OrgPresenter $presenter
+     * @throws BadRequestException
+     * @throws DuplicateColumnException
+     * @throws DuplicateGlobalButtonException
+     * @throws InvalidLinkException
+     * @throws \NiftyGrid\DuplicateButtonException
+     */
     protected function configure($presenter) {
         parent::configure($presenter);
-
         //
         // data
         //
-
         $events = $this->serviceEvent->getEvents($presenter->getSelectedContest(), $presenter->getSelectedYear());
 
-        $dataSource = new SearchableDataSource($events);
-        $dataSource->setFilterCallback(function(Selection $table, $value) {
-                    $tokens = preg_split('/\s+/', $value);
-                    foreach ($tokens as $token) {
-                        $table->where('event.name LIKE CONCAT(\'%\', ? , \'%\') OR event_type.name LIKE CONCAT(\'%\', ? , \'%\')', $token, $token);
-                    }
-                });
+        $dataSource = new NDataSource($events);
+
         $this->setDefaultOrder('event.begin ASC');
         $this->setDataSource($dataSource);
 
-        //
-        // columns
-        //
-        $this->addColumn('event_id', _('ID akce'));
-        $this->addColumn('type_name', _('Typ akce'));
-        $this->addColumn('name', _('Název'));
-        $this->addColumn('year', _('Ročník semináře'));
+        $this->addColumn('event_id', _('Id akce'));
 
+        foreach (['event_type', 'name','year','event_year'] as $field) {
+            $this->addReflectionColumn(DbNames::TAB_EVENT, $field, ModelEvent::class);
+        }
         //
         // operations
         //
-        $that = $this;
-        $this->addButton('model', _('Model'))
-                ->setText('Model') //todo i18n
-                ->setLink(function($row) use ($that) {
-                            return $that->getPresenter()->link("model", $row->event_id);
-                        });
-        $this->addButton('edit', _('Upravit'))
-                ->setText('Upravit') //todo i18n
-                ->setLink(function($row) use ($that) {
-                            return $that->getPresenter()->link("edit", $row->event_id);
-                        });
+        $this->addButton('detail')
+            ->setText(_('Detail'))
+            ->setLink(function ($row) {
+                return $this->getPresenter()->link(':Event:dashboard:', ['eventId' => $row->event_id]);
+            });
+        $this->addButton('edit', _('Edit'))
+            ->setText(_('Edit'))
+            ->setLink(function ($row) {
+                return $this->getPresenter()->link('edit', $row->event_id);
+            });
         $this->addButton('applications')
-                ->setText('Přihlášky') //todo i18n
-                ->setLink(function($row) use ($that) {
-                            return $that->getPresenter()->link('applications', $row->event_id);
-                        });
+            ->setText(_('Applications'))
+            ->setLink(function ($row) {
+                return $this->getPresenter()->link(':Event:application:list', ['eventId' => $row->event_id]);
+            })->setShow(function ($row) {
+                if ($this->getPresenter()->authorized(':Event:application:list', ['eventId' => $row->event_id])) {
+                    return true;
+                }
+                return false;
+            });
+
+        $this->addButton('teamApplications')
+            ->setText(_('Team applications'))
+            ->setLink(function ($row) {
+                return $this->getPresenter()->link(':Event:teamApplication:list', ['eventId' => $row->event_id]);
+            })->setShow(function ($row) {
+                if ($this->getPresenter()->authorized(':Event:teamApplication:list', ['eventId' => $row->event_id])) {
+                    return true;
+                }
+                return false;
+            });
+
         $this->addButton('org')
-            ->setText(_('Organizátoři'))
-            ->setLink(function($row) use ($that) {
-                return $that->getPresenter()->link('EventOrg:list', ['eventId' => $row->event_id]);
+            ->setText(_('Organisers'))
+            ->setLink(function ($row) {
+                return $this->getPresenter()->link('EventOrg:list', ['eventId' => $row->event_id]);
             });
 
         $this->addGlobalButton('add')
-                ->setLink($this->getPresenter()->link('create'))
-                ->setLabel('Přidat akci')
-                ->setClass('btn btn-sm btn-primary');
-
-
-        //
-        // appeareance
-    //
-
+            ->setLink($this->getPresenter()->link('create'))
+            ->setLabel('Add event')
+            ->setClass('btn btn-sm btn-primary');
     }
 
 }

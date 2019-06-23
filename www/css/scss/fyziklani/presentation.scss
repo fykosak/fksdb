@@ -1,0 +1,35 @@
+@import "../colors";
+
+.results-presentation {
+  color: black;
+  .head-row, .team-row {
+    text-align: center;
+    padding: 0.3rem 0;
+  }
+  .head-row {
+    padding: 0 .5rem;
+    color: $fyziklaniMainColor;
+    font-weight: bold;
+    border-bottom: solid $fyziklaniMainColor 1px;
+  }
+  .team-row {
+    border-bottom: solid #ccc 1px;
+    &:nth-child(even) {
+      background-color: #eee;
+    }
+    & > div {
+      align-items: center;
+      display: flex;
+    }
+    .progress {
+      width: 100%;
+    }
+    .team-name-col {
+      text-align: justify;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+}

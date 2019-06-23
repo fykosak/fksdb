@@ -2,14 +2,14 @@
 
 namespace Tasks;
 
-use Nette\Diagnostics\Debugger;
+use FKSDB\ORM\Services\ServiceTask;
+use Pipeline\PipelineException;
 use Pipeline\Stage;
-use ServiceTask;
 use SimpleXMLElement;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class TasksFromXML2 extends Stage {
@@ -32,14 +32,21 @@ class TasksFromXML2 extends Stage {
     ];
 
     /**
-     * @var ServiceTask
+     * @var \FKSDB\ORM\Services\ServiceTask
      */
     private $taskService;
 
+    /**
+     * TasksFromXML2 constructor.
+     * @param \FKSDB\ORM\Services\ServiceTask $taskService
+     */
     public function __construct(ServiceTask $taskService) {
         $this->taskService = $taskService;
     }
 
+    /**
+     * @param mixed $data
+     */
     public function setInput($data) {
         $this->data = $data;
     }
@@ -49,7 +56,7 @@ class TasksFromXML2 extends Stage {
         $sImported = (string) $xml->number;
         $sSet = $this->data->getSeries();
         if ($sImported != $sSet) {
-            throw new \Pipeline\PipelineException(sprintf(_('Nesouhlasí importovaná (%i) a nastavená (%i) série.'), $sImported, $sSet));
+            throw new PipelineException(sprintf(_('Nesouhlasí importovaná (%s) a nastavená (%s) série.'), $sImported, $sSet));
         }
         $problems = $xml->problems[0]->problem;
         foreach ($problems as $task) {
@@ -57,17 +64,23 @@ class TasksFromXML2 extends Stage {
         }
     }
 
+    /**
+     * @return mixed|SeriesData
+     */
     public function getOutput() {
         return $this->data;
     }
 
+    /**
+     * @param SimpleXMLElement $XMLTask
+     */
     private function processTask(SimpleXMLElement $XMLTask) {
         $contest = $this->data->getContest();
         $year = $this->data->getYear();
         $series = $this->data->getSeries();
         $tasknr = (int) (string) $XMLTask->number;
 
-        // obtain ModelTask
+        // obtain FKSDB\ORM\Models\ModelTask
         $task = $this->taskService->findBySeries($contest, $year, $series, $tasknr);
         if ($task == null) {
             $task = $this->taskService->createNew(array(
@@ -83,7 +96,7 @@ class TasksFromXML2 extends Stage {
             $value = NULL;
 
             // Argh, I was not able not make ->xpath() working so emulate it.
-            $matches = array();
+            $matches = [];
             if (preg_match('/([a-z]*)\[@xml:lang="([a-z]*)"\]/', $xmlElement, $matches)) {
                 $name = $matches[1];
                 $lang = $matches[2];

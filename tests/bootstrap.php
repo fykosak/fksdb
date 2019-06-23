@@ -2,13 +2,12 @@
 
 use Authorization\ACLExtension;
 use Events\EventsExtension;
-use FKS\Config\Extensions\NavigationExtension;
-use FKS\Config\Extensions\RouterExtension;
+use FKSDB\Config\Extensions\NavigationExtension;
+use FKSDB\Config\Extensions\RouterExtension;
 use JanTvrdik\Components\DatePicker;
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Application\Responses\TextResponse;
 use Nette\Config\Configurator;
-use Nette\Diagnostics\Debugger;
 use Nette\Forms\Container;
 use Nette\Utils\Finder;
 use Tester\Assert;
@@ -29,7 +28,10 @@ define('LOG_DIR', TESTS_DIR . '/../temp/tester/log');
 @mkdir(LOG_DIR);
 
 // Load Nette Framework
+require LIBS_DIR . '/../vendor/autoload.php';
 require LIBS_DIR . '/autoload.php';
+error_reporting(~E_USER_DEPRECATED&~E_USER_WARNING);
+
 require __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'tester/Tester/bootstrap.php';
 
 define('CONFIG_DIR', APP_DIR . DIRECTORY_SEPARATOR . 'config');
@@ -44,11 +46,12 @@ $configurator->onCompile[] = function ($configurator, $compiler) {
 };
 
 $configurator->setDebugMode(false);
-Debugger::$logDirectory = LOG_DIR;
+\Tracy\Debugger::$logDirectory = LOG_DIR;
 
 
 // Enable RobotLoader - this will load all classes automatically
 $configurator->setTempDirectory(TEMP_DIR);
+error_reporting(~E_USER_DEPRECATED&~E_USER_WARNING);
 $configurator->createRobotLoader()
         ->addDirectory(APP_DIR)
         ->addDirectory(LIBS_DIR)
@@ -76,6 +79,7 @@ $container = $configurator->createContainer();
 //
 // Register addons
 //
+error_reporting(~E_USER_DEPRECATED&~E_USER_WARNING);
 Replicator::register();
 
 function dumpResponse(TextResponse $response) {

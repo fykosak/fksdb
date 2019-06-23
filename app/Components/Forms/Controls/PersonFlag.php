@@ -6,31 +6,38 @@ use Nette\Forms\Controls\SelectBox;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
- * 
+ *
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class PersonFlag extends SelectBox {
-    
+
     const FLAG_YES = 'flag-yes';
     // It's necessary that value for FLAG_NO cannot coerce to false/null.
     const FLAG_NO = 'flag-no';
 
     /**
      * Should be self::FLAG_* values on output?
-     * @var bool 
+     * @var bool
      */
     private $useExplicitValues = false;
-    
+
+    /**
+     * PersonFlag constructor.
+     * @param null $label
+     */
     public function __construct($label = NULL) {
-	$items = array(
+	$items = [
 	    self::FLAG_YES => _('Ano'),
 	    self::FLAG_NO => _('Ne'),
-	);
+    ];
         parent::__construct($label, $items);
-	$this->setPrompt('–');	
+	$this->setPrompt('–');
     }
 
+    /**
+     * @return bool|mixed|null
+     */
     public function getValue() {
 	if ($this->useExplicitValues) {
 	    return parent::getValue();
@@ -46,6 +53,10 @@ class PersonFlag extends SelectBox {
 	}
     }
 
+    /**
+     * @param $value
+     * @return \Nette\Forms\Controls\BaseControl|void
+     */
     public function setValue($value) {
 	if ($value === true || $value === '1' || $value === 1) {
 	    parent::setValue(self::FLAG_YES);
@@ -56,6 +67,9 @@ class PersonFlag extends SelectBox {
 	}
     }
 
+    /**
+     * @return \Nette\Utils\Html
+     */
     public function getControl() {
 	$oldMapped = $this->useExplicitValues;
 	$this->useExplicitValues = true;

@@ -1,0 +1,20 @@
+{layout './@layout.latte'}
+{block content}
+    <ul class="list-group list-group-flush">
+        {if $info}
+
+            {control valuePrinter__person_info__email:listItem $info,true}
+
+            {control valuePrinter__person_info__email_parent_d:listItem $info,true}
+
+            {control valuePrinter__person_info__email_parent_m:listItem $info,true}
+
+            {control valuePrinter__person_info__phone:listItem $info,true}
+
+            {control valuePrinter__person_info__phone_parent_m:listItem $info,true}
+
+            {control valuePrinter__person_info__phone_parent_d:listItem $info,true}
+
+        {/if}
+    </ul>
+{/block}

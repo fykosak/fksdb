@@ -5,7 +5,6 @@ namespace FyziklaniModule;
 $container = require '../bootstrap.php';
 
 use Events\Model\ApplicationHandler;
-use FyziklaniModule\FyziklaniTestCase;
 use MockEnvironment\MockApplicationTrait;
 use Nette\Application\Request;
 use Nette\Config\Helpers;
@@ -103,10 +102,10 @@ class ClosePresenterTest extends FyziklaniTestCase {
 
     private function createPostRequest($postData, $post = array()) {
         $post = Helpers::merge($post, array(
-                    'lang' => 'cs',
-                    'contestId' => 1,
-                    'year' => 1,
-                    'eventId' => $this->eventId,
+            'lang' => 'cs',
+            'contestId' => 1,
+            'year' => 1,
+            'eventId' => $this->eventId,
         ));
 
         $request = new Request('Fyziklani:Close', 'POST', $post, $postData);
@@ -117,12 +116,12 @@ class ClosePresenterTest extends FyziklaniTestCase {
         /* team ID, sum of points, rank_category, rank */
         $a = [
             'A' => [
-                    [1, 15, 1, 1],
-                    [2, 3, 2, 3],
-                    [3, 3, 3, 4],
+                [1, 15, 1, 1],
+                [2, 3, 2, 3],
+                [3, 3, 3, 4],
             ],
             'B' => [
-                    [4, 6, 1, 2],
+                [4, 6, 1, 2],
             ],
         ];
         return $a[$category];
@@ -130,8 +129,8 @@ class ClosePresenterTest extends FyziklaniTestCase {
 
     public function getCategories() {
         return [
-                ['A'],
-                ['B'],
+            ['A'],
+            ['B'],
         ];
     }
 
@@ -144,15 +143,14 @@ class ClosePresenterTest extends FyziklaniTestCase {
             'submit_task_correct' => 'on',
             'next_task_correct' => 'on',
             'send' => 'Potvrdit správnost',
-                ), array(
+        ), array(
             'id' => $teamId,
             'action' => 'team',
-            'do' => 'closeForm-submit',
+            'do' => 'closeTeamControl-form-form-submit',
         ));
 
         $response = $this->fixture->run($request);
         Assert::type('Nette\Application\Responses\RedirectResponse', $response);
-
         $team = $this->findTeam($teamId);
         Assert::notEqual(false, $team);
         Assert::equal($pointsSum, $team->points);
@@ -170,9 +168,9 @@ class ClosePresenterTest extends FyziklaniTestCase {
         $request = $this->createPostRequest(array(
             'category' => $category,
             'send' => 'Uzavřít kategorii ' . $category . '.',
-                ), array(
+        ), array(
             'action' => 'table',
-            'do' => 'closeCategory' . $category . 'Form-submit',
+            'do' => 'closeControl-closeCategory' . $category . 'Form-form-submit',
         ));
 
         $response = $this->fixture->run($request);
@@ -197,9 +195,9 @@ class ClosePresenterTest extends FyziklaniTestCase {
 
         $request = $this->createPostRequest(array(
             'send' => 'Uzavřít celé Fyziklání',
-                ), array(
+        ), array(
             'action' => 'table',
-            'do' => 'closeGlobalForm-submit',
+            'do' => 'closeControl-closeGlobalForm-form-submit',
         ));
 
         $response = $this->fixture->run($request);

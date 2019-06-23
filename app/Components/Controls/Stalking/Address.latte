@@ -1,13 +1,12 @@
-<div class="card mb-3 border-primary">
-    <h4 class="card-header bg-primary text-white">Address</h4>
+{layout './@layout.latte'}
+{block content}
     <div class="card-body">
-
         {if count($MAddress)}
             {foreach $MAddress as $address}
                 {if $address->type == 'P'}
-                    <h3>Permanent addres</h3>
+                    <h3>{_'Permanent address'}</h3>
                 {else}
-                    <h3>Delivery addres</h3>
+                    <h3>{_'Delivery address'}</h3>
                 {/if}
                 <div>
                     {if !is_null($address->first_row)}
@@ -35,9 +34,9 @@
 
             {/foreach}
         {else}
-            <span class="label-warning label">No records</span>
+            {control noRecords}
         {/if}
     </div>
-</div>
+{/block}
 
 

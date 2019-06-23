@@ -19,8 +19,9 @@ use Nette;
  *
  * @author     David Grudl
  */
-class Statement extends Nette\Object
+class Statement
 {
+    use Nette\SmartObject;
 	/** @var string  class|method|$property */
 	public $entity;
 

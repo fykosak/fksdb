@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="robots" content="{$robots}" n:ifset="$robots">
+    <title>{block titleHeader}{$title} | FKSDB{/block}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {control cssLoader
+        'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' => [all],
+        'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'=>[all],
+        'https://fonts.googleapis.com/css?family=Source+Sans+Pro'=>[all],
+        'css/bundle.css'=>[all]
+        }
+    {block head}{/block}
+</head>
+<!-- Random background generator -->
+<body data-bg="{rand(1,3)}" data-contest="{(!is_null($contestSymbol))?$contestSymbol:''}">
+{block body}
+    <main class="no-bg">
+        <div style="height:100%">
+            {include #content}
+        </div>
+    </main> <!-- wrap -->
+{/block body}
+{block footer/}
+
+<div id="spinner"></div>
+{block scripts}
+    {*TODO store this library localy*}
+    {control jsLoader
+        'js/netteForms.js',
+        'https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
+        'https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js',
+        'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js',
+        'js/nette.ajax.js',
+        'js/datePicker.js',
+        'js/jquery.confirm.js',
+        'js/main.js',
+        'js/lib/react.min.js',
+        'js/lib/react-dom.min.js',
+        'js/bundle-all.min.js'
+            }
+    {control jsLoader:inline}
+{/block}
+{control cssLoader}
+</body>
+</html>

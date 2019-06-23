@@ -1,56 +1,14 @@
-<div class="card mb-3 border-primary">
-    <h4 class="card-header bg-primary text-white">Login info</h4>
-
-
+{layout './@layout.latte'}
+{block content}
     {if !is_null($login)}
         <ul class="list-group list-group-flush">
-            <li class="list-group-item">
-                <div class="row">
-                    <span class="col-5">Login</span>
-                    <div class="col-7">
-                        {$login->login}
-                    </div>
-                </div>
-            </li>
-            <li class="list-group-item">
-
-                <div class="row">
-                    <span class="col-5">Login_id</span>
-                    <div class="col-7">
-                        {$login->login_id}
-                    </div>
-                </div>
-            </li>
-            <li class="list-group-item">
-                <div class="row">
-                    <span class="col-5">Password</span>
-                    <div class="col-7">
-                        {if (is_null($login->hash))}
-                            <span class="badge badge-danger">not set</span>
-                        {else}
-                            <span class="badge badge-success">is set</span>
-                        {/if}
-                    </div>
-                </div>
-            </li>
-            <li class="list-group-item">
-                <div class="row">
-                    <span class="col-5">Last logged</span>
-                    <div class="col-7">
-                        {if is_null($login->last_login)}
-                            <span class="badge badge-danger">never</span>
-                        {else}
-                            {$login->last_login->__toString()}
-                        {/if}
-                    </div>
-                </div>
-            </li>
+            {foreach ['login','login_id','hash','last_login'] as $field}
+                {control valuePrinter__login__$field:listItem $login}
+            {/foreach}
         </ul>
     {else}
         <div class="card-body">
-            <span class="badge badge-warning">No records</span>
+            {control noRecords}
         </div>
     {/if}
-
-
-</div>
+{/block}

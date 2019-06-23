@@ -10,6 +10,11 @@ use Nette\Database\Table\ActiveRow;
  */
 class PersonInfoContainer extends ModelContainer {
 
+    /**
+     * @param $values
+     * @param bool $erase
+     * @return \Nette\Forms\Container|void
+     */
     public function setValues($values, $erase = FALSE) {
         if ($values instanceof ActiveRow) { //assert its from person info table
             $values['agreed'] = (bool) $values['agreed'];

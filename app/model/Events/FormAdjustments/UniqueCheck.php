@@ -5,7 +5,7 @@ namespace Events\FormAdjustments;
 use Events\Machine\Machine;
 use Events\Model\Holder\BaseHolder;
 use Events\Model\Holder\Holder;
-use FKS\Components\Forms\Controls\ReferencedId;
+use FKSDB\Components\Forms\Controls\ReferencedId;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 
@@ -13,7 +13,7 @@ use Nette\Forms\IControl;
  * Due to author's laziness there's no class doc (or it's self explaining).
  * @note Assumes the first part of the field name is the holder name or
  * the dynamic (wildcart) part represents the holder name.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class UniqueCheck extends AbstractAdjustment {
@@ -21,11 +21,22 @@ class UniqueCheck extends AbstractAdjustment {
     private $field;
     private $message;
 
+    /**
+     * UniqueCheck constructor.
+     * @param $field
+     * @param $message
+     */
     function __construct($field, $message) {
         $this->field = $field;
         $this->message = $message;
     }
 
+    /**
+     * @param Form $form
+     * @param Machine $machine
+     * @param Holder $holder
+     * @return mixed|void
+     */
     protected function _adjust(Form $form, Machine $machine, Holder $holder) {
         $controls = $this->getControl($this->field);
         if (!$controls) {

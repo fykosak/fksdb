@@ -10,6 +10,28 @@
         {/if}
     </p>
 </div>
+{if $presenter->getLang() == 'cs'}
+    <div class="alert alert-danger"><p>
+            Kategorie B a C jsou naplněné, a proto zastavujeme přihlašování týmů do kategorií B a C. Stále je možné
+            přihlásit svůj tým do kategorie A, kde jsou ale už jen 4 volná místa. Pokud spadáte do jiné kategorie
+            než A, ale chcete se soutěže zúčastnit i tak, můžete v přihlášce zaškrtnout možnost „Soutěžit v kategorii A“ a
+            přihlásit se do této kategorie.
+        </p>
+    </div>
+{/if}
+{*<div class="alert alert-info"><p>
+        Kapacita hotelu Elf je naplněna, proto přidáme možnost ubytování v dalším hotelu.
+            Dokončujeme detaily a nový hotel zveřejníme v průběhu nejbližších dní.
+            Přihlašování na soutěž pokračuje beze změny, ubytování si budete moci v přihlášce později doplnit.
+            O přidání nových ubytovacích kapacit Vás budeme informovat.
+            V případě nejasností nás kontaktujte přes e-mail <a href="mailto:fyziklani@fykos.cz">fyziklani@fykos.cz</a>.
+            <i> Děkujeme za pochopení.</i>
+    {else}
+        <strong>We are working to increase accommodation capacity.</strong>
+        Additional accommodation will be available to book soon.
+        We will inform you about new capacities or changes via e-mail.
+        If you have any questions, please contact us at <a href="mailto:fyziklani@fykos.cz">fyziklani@fykos.cz</a>.
+    {/if}</p></div>*}
 <ul>
     {if $presenter->getLang() == 'cs'}
         <li><b>Systém přihlašování</b> &ndash; po vyplnění formuláře
@@ -21,8 +43,10 @@
             na přijatý. Až pokud by se tak nestalo během tří dnů, pak je vhodné se ozvat.
         </li>
         <li>
-            Podrobné informace naleznene na stránce <a href="http://fykos.cz/rocnik31/fyziklani/start">FYKOSího Fyziklání</a>
-            kde jsou i informace o ubytování.Odesláním přihlášky se zájmem o ubytování, souhlasíte i s těmito podmínkami.
+            Podrobné informace naleznene na stránce <a href="http://fykos.cz/rocnik31/fyziklani/start">FYKOSího
+                Fyziklání</a>
+            kde jsou i informace o ubytování. Odesláním přihlášky se zájmem o ubytování, souhlasíte i s těmito
+            podmínkami.
         </li>
         <li>
             Registrace končí <strong>{$event->registration_end|date:'j. n. Y H:i:s'}</strong>.
@@ -44,14 +68,17 @@
             Unless it happened within three days, then it is recommended to ask the organizers.
         </li>
         <li>
-            Detailed information can be found on page of <a href="http://fykos.cz/year31/physicsbrawl/start">Physics Brawl</a>
-            where is also information about accommodation. By submitting your application for accommodation you also agree to these terms and conditions.
+            Detailed information can be found on page of <a href="http://fykos.cz/year31/physicsbrawl/start">Physics
+                Brawl</a>
+            where information about accommodation also is. By submitting your application for accommodation you also
+            agree to these terms and conditions.
         </li>
         <li>
             The registration ends with <strong>{$event->registration_end|date:'F j, Y, g:i a e'}</strong>.
         </li>
         <li>
-            To replace a member of the team, delete the old one, save the application and then place a new member in the blank space.
+            To replace a member of the team, delete the old one, save the application and then place a new member in the
+            blank space.
         </li>
         <li>
             You can find the rules on the <a href="http://fykos.cz/year31/physicsbrawl/rules">rule page</a>.

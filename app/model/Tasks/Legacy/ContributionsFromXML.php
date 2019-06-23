@@ -2,16 +2,15 @@
 
 namespace Tasks\Legacy;
 
-use Pipeline\Pipeline;
+use FKSDB\ORM\Services\ServiceOrg;
+use FKSDB\ORM\Services\ServiceTaskContribution;
 use Pipeline\Stage;
-use ServiceOrg;
-use ServiceTaskContribution;
 use SimpleXMLElement;
 use Tasks\SeriesData;
 
 /**
  * @note Assumes TasksFromXML has been run previously.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ContributionsFromXML extends Stage {
@@ -24,7 +23,7 @@ class ContributionsFromXML extends Stage {
     private $data;
 
     /**
-     * @var array   contribution type => xml element 
+     * @var array   contribution type => xml element
      */
     private $contributionFromXML;
 
@@ -38,12 +37,21 @@ class ContributionsFromXML extends Stage {
      */
     private $serviceOrg;
 
+    /**
+     * ContributionsFromXML constructor.
+     * @param $contributionFromXML
+     * @param ServiceTaskContribution $taskContributionService
+     * @param ServiceOrg $serviceOrg
+     */
     public function __construct($contributionFromXML, ServiceTaskContribution $taskContributionService, ServiceOrg $serviceOrg) {
         $this->contributionFromXML = $contributionFromXML;
         $this->taskContributionService = $taskContributionService;
         $this->serviceOrg = $serviceOrg;
     }
 
+    /**
+     * @param mixed $data
+     */
     public function setInput($data) {
         $this->data = $data;
     }
@@ -54,10 +62,16 @@ class ContributionsFromXML extends Stage {
         }
     }
 
+    /**
+     * @return mixed|SeriesData
+     */
     public function getOutput() {
         return $this->data;
     }
 
+    /**
+     * @param SimpleXMLElement $XMLTask
+     */
     private function processTask(SimpleXMLElement $XMLTask) {
         $tasks = $this->data->getTasks();
         $tasknr = (int) (string) $XMLTask->number;
@@ -66,8 +80,8 @@ class ContributionsFromXML extends Stage {
         $this->taskContributionService->getConnection()->beginTransaction();
 
         foreach ($this->contributionFromXML as $type => $XMLElement) {
-            // parse contributors            
-            $contributors = array();
+            // parse contributors
+            $contributors = [];
             foreach (explode(self::DELIMITER, (string) $XMLTask->{$XMLElement}) as $signature) {
                 $signature = trim($signature);
                 if (!$signature) {

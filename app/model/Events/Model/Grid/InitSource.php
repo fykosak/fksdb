@@ -2,27 +2,36 @@
 
 namespace Events\Model\Grid;
 
-use ModelEvent;
-use ORM\Tables\TypedTableSelection;
-use SystemContainer;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Tables\TypedTableSelection;
+use Nette\DI\Container;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
- * 
+ *
  * @method SingleEventSource where()
  * @method SingleEventSource order()
  * @method SingleEventSource limit()
- * @method SingleEventSource count() 
+ * @method SingleEventSource count()
  */
 class InitSource extends AggregatedPersonSource implements IHolderSource {
 
 
-    function __construct(TypedTableSelection $events, SystemContainer $container) {
+    /**
+     * InitSource constructor.
+     * @param TypedTableSelection $events
+     * @param Container $container
+     */
+    function __construct(TypedTableSelection $events, Container $container) {
         parent::__construct($events, $container);
     }
 
+    /**
+     * @param ModelEvent $event
+     * @return mixed
+     */
     public function processEvent(ModelEvent $event) {
 
         $holder = $this->container->createEventHolder($event);

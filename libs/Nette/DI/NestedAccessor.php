@@ -20,8 +20,9 @@ use Nette;
  * @author     David Grudl
  * @internal
  */
-class NestedAccessor extends Nette\Object
+class NestedAccessor
 {
+    use Nette\SmartObject;
 	/** @var array */
 	public $parameters;
 

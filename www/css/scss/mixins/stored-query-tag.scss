@@ -1,0 +1,12 @@
+@mixin stored-query-tag($color,$background) {
+  color: $color;
+  background-color: $background;
+  &.active, &:hover, &:focus {
+    opacity: .5;
+  }
+  &.active {
+    &:hover, &:focus {
+      opacity: 1;
+    }
+  }
+}

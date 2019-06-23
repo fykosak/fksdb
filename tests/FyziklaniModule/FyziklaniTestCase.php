@@ -3,11 +3,9 @@
 namespace FyziklaniModule;
 
 use DatabaseTestCase;
-use DbNames;
+use FKSDB\ORM\DbNames;
 use MockEnvironment\MockApplicationTrait;
-use Nette\Database\Row;
-use Nette\DateTime;
-use Tester\Assert;
+use Nette\Utils\DateTime;
 
 abstract class FyziklaniTestCase extends DatabaseTestCase {
 
@@ -41,6 +39,7 @@ abstract class FyziklaniTestCase extends DatabaseTestCase {
         $this->connection->query("DELETE FROM fyziklani_task");
         $this->connection->query("DELETE FROM e_fyziklani_team");
         $this->connection->query("DELETE FROM event_status");
+        $this->connection->query("DELETE FROM fyziklani_game_setup");
         $this->connection->query("DELETE FROM event");
         $this->connection->query("DELETE FROM event_type");
 
@@ -67,7 +66,19 @@ abstract class FyziklaniTestCase extends DatabaseTestCase {
             $data['end'] = '2016-01-01';
         }
         $this->connection->query('INSERT INTO event', $data);
-        return $this->connection->lastInsertId();
+        $eventId = $this->connection->lastInsertId();
+        $this->connection->query('INSERT INTO fyziklani_game_setup', [
+            'event_id' => $eventId,
+            'game_start' => new DateTime('2016-01-01T10:00:00'),
+            'game_end' => new DateTime('2016-01-01T10:00:00'),
+            'result_display' => new DateTime('2016-01-01T10:00:00'),
+            'result_hide' => new DateTime('2016-01-01T10:00:00'),
+            'refresh_delay' => 30000,
+            'result_hard_display' => 1,
+            'tasks_on_board' => 7,
+            'available_points' => '5,3,2,1',
+        ]);
+        return $eventId;
     }
 
     protected function createTeam($data) {
@@ -108,13 +119,13 @@ abstract class FyziklaniTestCase extends DatabaseTestCase {
 
     protected function findSubmit($taskId, $teamId) {
         $submit = $this->connection->fetch(
-                'SELECT * FROM fyziklani_submit WHERE fyziklani_task_id = ? AND e_fyziklani_team_id = ?', $taskId, $teamId);
+            'SELECT * FROM fyziklani_submit WHERE fyziklani_task_id = ? AND e_fyziklani_team_id = ?', $taskId, $teamId);
         return $submit;
     }
 
     protected function findTeam($teamId) {
         $submit = $this->connection->fetch(
-                'SELECT * FROM e_fyziklani_team WHERE e_fyziklani_team_id = ?', $teamId);
+            'SELECT * FROM e_fyziklani_team WHERE e_fyziklani_team_id = ?', $teamId);
         return $submit;
     }
 }

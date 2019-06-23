@@ -19,8 +19,9 @@ use Nette;
  *
  * @author     David Grudl
  */
-abstract class AutoLoader extends Nette\Object
+abstract class AutoLoader
 {
+    use Nette\SmartObject;
 	/** @var array  list of registered loaders */
 	static private $loaders = array();
 

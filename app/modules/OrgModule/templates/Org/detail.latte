@@ -1,0 +1,5 @@
+{block content}
+    {foreach ['person_link','org_id','contest_id','since','until','role','order','contribution','tex_signature','domain_alias'] as $field}
+        {control valuePrinter__org__$field:row $model,true}
+    {/foreach}
+{/block}

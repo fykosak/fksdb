@@ -20,8 +20,9 @@ use Nette,
  *
  * @author     David Grudl
  */
-class Parser extends Nette\Object
+class Parser
 {
+    use Nette\SmartObject;
 	/** @internal regular expression for single & double quoted PHP string */
 	const RE_STRING = '\'(?:\\\\.|[^\'\\\\])*\'|"(?:\\\\.|[^"\\\\])*"';
 

@@ -2,7 +2,7 @@
 
 namespace Github\Events;
 
-use Github\Events\Event;
+
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

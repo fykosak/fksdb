@@ -1,0 +1,19 @@
+{block user-info}
+    {include #parent}
+    {control seriesChooser}
+{/block}
+
+{block content}
+    <div class="btn-group mb-3">
+        {if !$showAll}
+            <a n:href="this, all => true" class="btn btn-sm btn-warning">Zobrazit všechny úlohy</a>
+
+        {else}
+            <a n:href="this, all => false" class="btn btn-sm btn-success">Zobrazit jenom moje úlohy</a>
+
+        {/if}
+        <a n:href="invalidate!" class="btn btn-sm btn-danger">Invalidovat cache bodů</a>
+        <a n:href="recalculateAll!" class="btn btn-sm btn-secondary">Přepočítat všechny body</a>
+    </div>
+    {control pointsForm}
+{/block}

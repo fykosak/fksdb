@@ -1,11 +1,25 @@
 <?php
 
+namespace FKSDB\WebService;
+
 use Authorization\ContestAuthorizator;
+use DOMDocument;
+use DOMElement;
 use Exports\StoredQuery;
 use Exports\StoredQueryFactory;
-use Nette\Diagnostics\Debugger;
+use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Services\ServiceContest;
+use FKSDB\Results\Models\AbstractResultsModel;
+use FKSDB\Results\Models\BrojureResultsModel;
+use FKSDB\Results\ResultsModelFactory;
+use InvalidArgumentException;
+use Tracy\Debugger;
 use Nette\Security\AuthenticationException;
 use Nette\Security\IAuthenticator;
+use SoapFault;
+use SoapVar;
+use StatsModelFactory;
+use stdClass;
 use WebService\IXMLNodeSerializer;
 
 /**
@@ -35,7 +49,7 @@ class WebServiceModel {
     private $statsModelFactory;
 
     /**
-     * @var ModelLogin
+     * @var \FKSDB\ORM\Models\ModelLogin
      */
     private $authenticatedLogin;
 
@@ -54,6 +68,16 @@ class WebServiceModel {
      */
     private $contestAuthorizator;
 
+    /**
+     * FKSDB\WebService\WebServiceModel constructor.
+     * @param array $inverseContestMap
+     * @param ServiceContest $serviceContest
+     * @param ResultsModelFactory $resultsModelFactory
+     * @param StatsModelFactory $statsModelFactory
+     * @param IAuthenticator $authenticator
+     * @param StoredQueryFactory $storedQueryFactory
+     * @param ContestAuthorizator $contestAuthorizator
+     */
     function __construct(array $inverseContestMap, ServiceContest $serviceContest, ResultsModelFactory $resultsModelFactory, StatsModelFactory $statsModelFactory, IAuthenticator $authenticator, StoredQueryFactory $storedQueryFactory, ContestAuthorizator $contestAuthorizator) {
         $this->inverseContestMap = $inverseContestMap;
         $this->serviceContest = $serviceContest;
@@ -70,7 +94,7 @@ class WebServiceModel {
      * @param stdClass $args
      * @throws SoapFault
      */
-    public function AuthenticationCredentials($args) {
+    public function authenticationCredentials($args) {
         if (!is_object($args) || !isset($args->username) || !isset($args->password)) {
             $this->log('Missing credentials.');
             throw new SoapFault('Sender', 'Missing credentials.');
@@ -84,32 +108,41 @@ class WebServiceModel {
         try {
             $this->authenticatedLogin = $this->authenticator->authenticate($credentials);
             $this->log("Successfully authenticated for web service request.");
-        } catch (AuthenticationException $e) {
+        } catch (AuthenticationException $exception) {
             $this->log('Invalid credentials.');
             throw new SoapFault('Sender', 'Invalid credentials.');
         }
     }
 
-    public function GetBrawl($args) {
+    /**
+     * @param $args
+     * @return SoapVar
+     */
+    public function getFyziklani($args) {
 
         $this->checkAuthentication(__FUNCTION__);
         $doc = new DOMDocument();
-        $brawlNode = $doc->createElement('brawl');
+        $brawlNode = $doc->createElement('fyziklani');
         $doc->appendChild($brawlNode);
         //    $teams = $doc->createElement('team');
         //    $brawlNode->appendChild($teams);
         $doc->formatOutput = true;
         return new SoapVar($doc->saveXML($brawlNode), XSD_ANYXML);
     }
-
-    public function GetResults($args) {
+    /**
+     * @param $args
+     * @return SoapVar
+     * @throws SoapFault
+     * @throws \Nette\Application\BadRequestException
+     */
+    public function getResults($args): SoapVar {
         $this->checkAuthentication(__FUNCTION__);
         if (!isset($this->inverseContestMap[$args->contest])) {
             throw new SoapFault('Sender', 'Unknown contest.');
         }
 
-        $contest = $this->serviceContest->findByPrimary($this->inverseContestMap[$args->contest]);
-
+        $row = $this->serviceContest->findByPrimary($this->inverseContestMap[$args->contest]);
+        $contest = ModelContest::createFromActiveRow($row);
         $doc = new DOMDocument();
         $resultsNode = $doc->createElement('results');
         $doc->appendChild($resultsNode);
@@ -185,13 +218,23 @@ class WebServiceModel {
         return new SoapVar($doc->saveXML($resultsNode), XSD_ANYXML);
     }
 
-    public function GetStats($args) {
+    /**
+     * @param $args
+     * @return SoapVar
+     * @throws SoapFault
+     */
+    public function getStats($args): SoapVar {
         $this->checkAuthentication(__FUNCTION__);
         if (!isset($this->inverseContestMap[$args->contest])) {
             throw new SoapFault('Sender', 'Unknown contest.');
         }
 
+<<<<<<< HEAD
         $contest = $this->serviceContest->findByPrimary($this->inverseContestMap[$args->contest]);
+=======
+        $row = $this->serviceContest->findByPrimary($this->inverseContestMap[$args->contest]);
+        $contest = ModelContest::createFromActiveRow($row);
+>>>>>>> fykosak/master
         $year = (string)$args->year;
 
         $doc = new DOMDocument();
@@ -234,11 +277,21 @@ class WebServiceModel {
         return new SoapVar($doc->saveXML($statsNode), XSD_ANYXML);
     }
 
-    public function GetExport($args) {
+    /**
+     * @param $args
+     * @return SoapVar
+     * @throws SoapFault
+     * @throws \Nette\Application\BadRequestException
+     */
+    public function getExport($args): SoapVar {
         // parse arguments
         $qid = $args->qid;
         $format = isset($args->{'format-version'}) ? ((int)$args->{'format-version'}) : IXMLNodeSerializer::EXPORT_FORMAT_1;
+<<<<<<< HEAD
         $parameters = array();
+=======
+        $parameters = [];
+>>>>>>> fykosak/master
 
         $this->checkAuthentication(__FUNCTION__, $qid);
 
@@ -260,8 +313,8 @@ class WebServiceModel {
 
         try {
             $storedQuery = $this->storedQueryFactory->createQueryFromQid($qid, $parameters);
-        } catch (InvalidArgumentException $e) {
-            throw new SoapFault('Sender', $e->getMessage(), $e);
+        } catch (InvalidArgumentException $exception) {
+            throw new SoapFault('Sender', $exception->getMessage(), $exception);
         }
 
         // authorization
@@ -283,6 +336,11 @@ class WebServiceModel {
         return new SoapVar($doc->saveXML($exportNode), XSD_ANYXML);
     }
 
+    /**
+     * @param $serviceName
+     * @param null $arg
+     * @throws SoapFault
+     */
     private function checkAuthentication($serviceName, $arg = null) {
         if (!$this->authenticatedLogin) {
             $this->log("Unauthenticated access to $serviceName.");
@@ -294,7 +352,11 @@ class WebServiceModel {
         }
     }
 
-    private function isAuthorizedExport(StoredQuery $query) {
+    /**
+     * @param StoredQuery $query
+     * @return bool
+     */
+    private function isAuthorizedExport(StoredQuery $query): bool {
         $implicitParameters = $query->getImplicitParameters();
         if (!isset($implicitParameters[StoredQueryFactory::PARAM_CONTEST])) {
             return false;
@@ -302,6 +364,9 @@ class WebServiceModel {
         return $this->contestAuthorizator->isAllowedForLogin($this->authenticatedLogin, $query, 'execute', $implicitParameters[StoredQueryFactory::PARAM_CONTEST]);
     }
 
+    /**
+     * @param $msg
+     */
     private function log($msg) {
         if (!$this->authenticatedLogin) {
             $message = "unauthenticated@";
@@ -312,7 +377,13 @@ class WebServiceModel {
         Debugger::log($message);
     }
 
-    private function createDetailNode(IResultsModel $resultsModel, DOMDocument $doc) {
+    /**
+     * @param AbstractResultsModel $resultsModel
+     * @param DOMDocument $doc
+     * @return DOMElement
+     * @throws SoapFault
+     */
+    private function createDetailNode(AbstractResultsModel $resultsModel, DOMDocument $doc): DOMElement {
         $detailNode = $doc->createElement('detail');
         $detailNode->setAttribute('series', $resultsModel->getSeries());
 
@@ -320,7 +391,13 @@ class WebServiceModel {
         return $detailNode;
     }
 
-    private function createCumulativeNode(IResultsModel $resultsModel, DOMDocument $doc) {
+    /**
+     * @param AbstractResultsModel $resultsModel
+     * @param DOMDocument $doc
+     * @return DOMElement
+     * @throws SoapFault
+     */
+    private function createCumulativeNode(AbstractResultsModel $resultsModel, DOMDocument $doc): DOMElement {
         $cumulativeNode = $doc->createElement('cumulative');
         $cumulativeNode->setAttribute('series', implode(' ', $resultsModel->getSeries()));
 
@@ -328,7 +405,17 @@ class WebServiceModel {
         return $cumulativeNode;
     }
 
+<<<<<<< HEAD
     private function createSchoolCumulativeNode(IResultsModel $resultsModel, DOMDocument $doc) {
+=======
+    /**
+     * @param AbstractResultsModel $resultsModel
+     * @param DOMDocument $doc
+     * @return DOMElement
+     * @throws SoapFault
+     */
+    private function createSchoolCumulativeNode(AbstractResultsModel $resultsModel, DOMDocument $doc): DOMElement {
+>>>>>>> fykosak/master
         $schoolNode = $doc->createElement('school-cumulative');
         $schoolNode->setAttribute('series', implode(' ', $resultsModel->getSeries()));
 
@@ -336,7 +423,13 @@ class WebServiceModel {
         return $schoolNode;
     }
 
-    private function createBrojureNode(IResultsModel $resultsModel, DOMDocument $doc) {
+    /**
+     * @param AbstractResultsModel|BrojureResultsModel $resultsModel
+     * @param DOMDocument $doc
+     * @return DOMElement
+     * @throws SoapFault
+     */
+    private function createBrojureNode(AbstractResultsModel $resultsModel, DOMDocument $doc): DOMElement {
         $brojureNode = $doc->createElement('brojure');
         $brojureNode->setAttribute('series', implode(' ', $resultsModel->getSeries()));
         $brojureNode->setAttribute('listed-series', $resultsModel->getListedSeries());

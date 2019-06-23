@@ -1,16 +1,15 @@
 <?php
 
-namespace Tasks\Legacy;
+namespace Tasks;
 
+use FKSDB\ORM\Services\ServiceStudyYear;
+use FKSDB\ORM\Services\ServiceTaskStudyYear;
 use Pipeline\Stage;
-use ServiceStudyYear;
-use ServiceTaskStudyYear;
 use SimpleXMLElement;
-use Tasks\SeriesData;
 
 /**
  * @note Assumes TasksFromXML has been run previously.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class StudyYearsFromXML2 extends Stage {
@@ -25,7 +24,7 @@ class StudyYearsFromXML2 extends Stage {
     private $data;
 
     /**
-     * @var array   contribution type => xml element 
+     * @var array   contribution type => xml element
      */
     private $defaultStudyYears;
 
@@ -39,12 +38,21 @@ class StudyYearsFromXML2 extends Stage {
      */
     private $serviceStudyYear;
 
+    /**
+     * StudyYearsFromXML2 constructor.
+     * @param $defaultStudyYears
+     * @param \FKSDB\ORM\Services\ServiceTaskStudyYear $serviceTaskStudyYear
+     * @param ServiceStudyYear $serviceStudyYear
+     */
     function __construct($defaultStudyYears, ServiceTaskStudyYear $serviceTaskStudyYear, ServiceStudyYear $serviceStudyYear) {
         $this->defaultStudyYears = $defaultStudyYears;
         $this->serviceTaskStudyYear = $serviceTaskStudyYear;
         $this->serviceStudyYear = $serviceStudyYear;
     }
 
+    /**
+     * @param mixed $data
+     */
     public function setInput($data) {
         $this->data = $data;
     }
@@ -56,27 +64,33 @@ class StudyYearsFromXML2 extends Stage {
         }
     }
 
+    /**
+     * @return mixed|SeriesData
+     */
     public function getOutput() {
         return $this->data;
     }
 
+    /**
+     * @param SimpleXMLElement $XMLTask
+     */
     private function processTask(SimpleXMLElement $XMLTask) {
         $tasks = $this->data->getTasks();
-        $tasknr = (int) (string) $XMLTask->number;
+        $tasknr = (int)(string)$XMLTask->number;
 
         $task = $tasks[$tasknr];
         $this->serviceTaskStudyYear->getConnection()->beginTransaction();
 
-        // parse contributors            
-        $studyYears = array();
+        // parse contributors
+        $studyYears = [];
         $hasYears = false;
 
         $parentEl = $XMLTask->{self::XML_ELEMENT_PARENT};
-        // parse contributors            
-        $contributors = array();
+        // parse contributors
+        $contributors = [];
         if ($parentEl && isset($parentEl->{self::XML_ELEMENT_CHILD})) {
             foreach ($parentEl->{self::XML_ELEMENT_CHILD} as $element) {
-                $studyYear = (string) $element;
+                $studyYear = (string)$element;
                 $studyYear = trim($studyYear);
                 if (!$studyYear) {
                     continue;
@@ -107,10 +121,10 @@ class StudyYearsFromXML2 extends Stage {
 
         // store new contributions
         foreach ($studyYears as $studyYear) {
-            $studyYearModel = $this->serviceTaskStudyYear->createNew(array(
+            $studyYearModel = $this->serviceTaskStudyYear->createNew([
                 'task_id' => $task->task_id,
                 'study_year' => $studyYear,
-            ));
+            ]);
 
             $this->serviceTaskStudyYear->save($studyYearModel);
         }

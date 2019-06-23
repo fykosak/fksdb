@@ -1,0 +1,51 @@
+{layout './@layout.latte'}
+{block content}
+    {if count($flags)}
+        {foreach $flags as $flag}
+            <h3 class="card-header">{$flag->name}</h3>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <div class="row">
+                        <span class="col-5">{_'Value'}</span>
+                        <div class="col-7">
+                            {if $flag->value == 1}
+                                <span class="badge badge-success">1</span>
+                            {elseif $flag->value == 0}
+                                <span class="badge badge-danger">0</span>
+                            {else}
+                                <span class="badge badge-warning">{$flag->value}</span>
+                            {/if}
+                        </div>
+                    </div>
+                </li>
+                {if $flag->type == 'contest' || $flag->type == 'contest_year'}
+                    <li class="list-group-item">
+                        <div class="row">
+                            <span class="col-5">{_'Contest'}</span>
+                            <div class="col-7">
+                                {control contestBadge, $flag->contest_id}
+                            </div>
+                        </div>
+                    </li>
+                {/if}
+
+                {if $flag->type == 'ac_year' || $flag->type == 'contest_year'}
+                    {control $flag->getJoinedModel(),_('Year'),ac_year}
+                {/if}
+                <li class="list-group-item">
+                    <div class="row">
+                        <span class="col-5">{_'Modified'}</span>
+                        <div class="col-7">
+                            {$flag->getJoinedModel()->modified}
+                        </div>
+                    </div>
+                </li>
+
+            </ul>
+        {/foreach}
+    {else}
+        <div class="card-body">
+            {control noRecords}
+        </div>
+    {/if}
+{/block}

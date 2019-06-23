@@ -2,8 +2,9 @@
 
 $container = require '../../../../bootstrap.php';
 
+use FKSDB\ORM\Models\ModelPostContact;
 use Nette\Application\Request;
-use Nette\DateTime;
+use Nette\Utils\DateTime;
 use Tester\Assert;
 
 class WriteonlyTraitTest extends ApplicationPresenterDsefTestCase {
@@ -67,7 +68,7 @@ class WriteonlyTraitTest extends ApplicationPresenterDsefTestCase {
         $source = $response->getSource();
         Assert::type('Nette\Templating\ITemplate', $source);
 
-        $html = (string) $source;
+        $html = (string)$source;
         Assert::contains('Účastník', $html);
 
         Assert::contains('Paní Bílá', $html);
@@ -81,39 +82,39 @@ class WriteonlyTraitTest extends ApplicationPresenterDsefTestCase {
 
         $request = $this->createPostRequest(array(
             'participant' =>
-            array(
-                'person_id' => $this->personId,
-                'person_id_1' =>
                 array(
-                    '_c_compact' => 'Paní Bílá',
-                    'person' =>
-                    array(
-                        'other_name' => 'Paní',
-                        'family_name' => 'Bílá',
-                    ),
-                    'person_info' =>
-                    array(
-                        'email' => 'bila@hrad.cz',
-                        'id_number' => '__original',
-                        'born' => '__original',
-                    ),
-                    'post_contact_p' =>
-                    array(
-                        'address' =>
+                    'person_id' => $this->personId,
+                    'person_id_1' =>
                         array(
-                            'target' => '__original',
-                            'city' => '__original',
-                            'postal_code' => '67401',
-                            'country_iso' => 'CZ',
+                            '_c_compact' => 'Paní Bílá',
+                            'person' =>
+                                array(
+                                    'other_name' => 'Paní',
+                                    'family_name' => 'Bílá',
+                                ),
+                            'person_info' =>
+                                array(
+                                    'email' => 'bila@hrad.cz',
+                                    'id_number' => '__original',
+                                    'born' => '__original',
+                                ),
+                            'post_contact_p' =>
+                                array(
+                                    'address' =>
+                                        array(
+                                            'target' => '__original',
+                                            'city' => '__original',
+                                            'postal_code' => '67401',
+                                            'country_iso' => 'CZ',
+                                        ),
+                                ),
                         ),
-                    ),
+                    'e_dsef_group_id' => '1',
+                    'lunch_count' => '3',
+                    'message' => '',
                 ),
-                'e_dsef_group_id' => '1',
-                'lunch_count' => '3',
-                'message' => '',
-            ),
             'save' => 'Uložit',
-                ), array(
+        ), array(
             'id' => $this->dsefAppId,
         ));
 
@@ -125,7 +126,7 @@ class WriteonlyTraitTest extends ApplicationPresenterDsefTestCase {
 
         $application = $this->assertApplication($this->eventId, 'bila@hrad.cz');
         Assert::equal('applied', $application->status);
-        Assert::equal((int) $this->personId, $application->person_id);
+        Assert::equal((int)$this->personId, $application->person_id);
 
         $info = $this->assertPersonInfo($this->personId);
         Assert::equal(null, $info->id_number);

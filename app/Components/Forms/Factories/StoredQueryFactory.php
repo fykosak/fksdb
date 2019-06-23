@@ -3,34 +3,43 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
+use FKSDB\Components\Forms\Controls\Autocomplete\IDataProvider;
+use FKSDB\Components\Forms\Controls\Autocomplete\StoredQueryTagTypeProvider;
 use FKSDB\Components\Forms\Controls\SQLConsole;
+use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
+use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryParameter;
+use FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
 use Kdyby\Extension\Forms\Replicator\Replicator;
-use ModelStoredQuery;
-use ModelStoredQueryParameter;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Forms\ControlGroup;
-use ServiceStoredQueryTagType;
-use FKSDB\Components\Forms\Controls\Autocomplete\StoredQueryTagTypeProvider;
-use FKS\Components\Forms\Controls\Autocomplete\IDataProvider;
-use FKS\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class StoredQueryFactory {
-    
+
     /**
      * @var ServiceStoredQueryTagType
      */
     private $serviceStoredQueryTagType;
-    
+
+    /**
+     * StoredQueryFactory constructor.
+     * @param ServiceStoredQueryTagType $serviceStoredQueryTagType
+     */
     function __construct(ServiceStoredQueryTagType $serviceStoredQueryTagType) {
         $this->serviceStoredQueryTagType = $serviceStoredQueryTagType;
     }
 
+    /**
+     * @param int $options
+     * @param ControlGroup|null $group
+     * @return ModelContainer
+     */
     public function createConsole($options = 0, ControlGroup $group = null) {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
@@ -41,50 +50,58 @@ class StoredQueryFactory {
         return $container;
     }
 
+    /**
+     * @param int $options
+     * @param ControlGroup|null $group
+     * @return ModelContainer
+     */
     public function createMetadata($options = 0, ControlGroup $group = null) {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
 
         $container->addText('name', _('Název'))
-                ->addRule(Form::FILLED, _('Název dotazu je třeba vyplnit.'))
-                ->addRule(Form::MAX_LENGTH, _('Název dotazu je moc dlouhý.'), 32);
+            ->addRule(Form::FILLED, _('Název dotazu je třeba vyplnit.'))
+            ->addRule(Form::MAX_LENGTH, _('Název dotazu je moc dlouhý.'), 32);
 
         $container->addText('qid', _('QID'))
-                ->setOption('description', _('Dotazy s QIDem nelze smazat a QID lze použít pro práva a trvalé odkazování.'))
-                ->addCondition(Form::FILLED)
-                ->addRule(Form::MAX_LENGTH, _('Název dotazu je moc dlouhý.'), 16)
-                ->addRule(Form::REGEXP, _('QID může být jen z písmen anglické abecedy a číslic a tečky.'), '/^[a-z][a-z0-9.]*$/i');
-        
+            ->setOption('description', _('Dotazy s QIDem nelze smazat a QID lze použít pro práva a trvalé odkazování.'))
+            ->addCondition(Form::FILLED)
+            ->addRule(Form::MAX_LENGTH, _('Název dotazu je moc dlouhý.'), 16)
+            ->addRule(Form::REGEXP, _('QID může být jen z písmen anglické abecedy a číslic a tečky.'), '/^[a-z][a-z0-9.]*$/i');
+
         $container->addComponent($this->createTagSelect(false, _('Štítky'), new StoredQueryTagTypeProvider($this->serviceStoredQueryTagType)), 'tags');
 
         $container->addTextArea('description', _('Popis dotazu'));
 
         $container->addText('php_post_proc', _('PHP post processing'))
-                ->setOption('description', _('Název třídy pro zpracování výsledku v PHP. Lze upravit jen v databázi.'))
-                ->setDisabled();
+            ->setOption('description', _('Název třídy pro zpracování výsledku v PHP. Lze upravit jen v databázi.'))
+            ->setDisabled();
 
 
         return $container;
     }
 
+    /**
+     * @param int $options
+     * @param ControlGroup|null $group
+     * @return Replicator
+     */
     public function createParametersMetadata($options = 0, ControlGroup $group = null) {
-        $that = $this;
-        $replicator = new Replicator(function($replContainer) use($that, $group) {
-                    $that->buildParameterMetadata($replContainer, $group);
+        $replicator = new Replicator(function ($replContainer) use ($group) {
+            $this->buildParameterMetadata($replContainer, $group);
 
-                    $submit = $replContainer->addSubmit('remove', _('Odebrat parametr'));
-                    $submit->getControlPrototype()->addClass('btn-danger');
-                    $submit->getControlPrototype()->addClass('btn-sm'); // TODO doesn't work
-                    $submit->addRemoveOnClick();
-                }, 0, true);
-        $replicator->containerClass = 'FKSDB\Components\Forms\Containers\ModelContainer';
+            $submit = $replContainer->addSubmit('remove', _('Odebrat parametr'));
+            $submit->getControlPrototype()->addClass('btn-danger');
+            $submit->getControlPrototype()->addClass('btn-sm'); // TODO doesn't work
+            $submit->addRemoveOnClick();
+        }, 0, true);
+        $replicator->containerClass = ModelContainer::class;
         $replicator->setCurrentGroup($group);
         $submit = $replicator->addSubmit('addParam', _('Přidat parametr'));
-        //$submit->getControlPrototype()->addClass('btn-default'); //TODO doesn't work
-        $submit->getControlPrototype()->addClass('btn-sm'); // TODO doesn't work
+        $submit->getControlPrototype()->addClass('btn-sm btn-success');
 
         $submit->setValidationScope(false)
-                ->addCreateOnClick();
+            ->addCreateOnClick();
 
         return $replicator;
     }
@@ -92,35 +109,43 @@ class StoredQueryFactory {
     /**
      * @internal
      * @param Container $container
-     * @param type $group
+     * @param mixed $group
      */
     public function buildParameterMetadata(Container $container, $group) {
         $container->setCurrentGroup($group);
 
         $container->addText('name', _('Název'))
-                ->addRule(Form::FILLED, _('Název parametru musí být vyplněn.'))
-                ->addRule(Form::MAX_LENGTH, _('Název parametru je moc dlouhý.'), 16)
-                ->addRule(Form::REGEXP, _('Název parametru může být jen z malých písmen anglické abecedy, číslic nebo podtržítka.'), '/^[a-z][a-z0-9_]*$/');
+            ->addRule(Form::FILLED, _('Název parametru musí být vyplněn.'))
+            ->addRule(Form::MAX_LENGTH, _('Název parametru je moc dlouhý.'), 16)
+            ->addRule(Form::REGEXP, _('Název parametru může být jen z malých písmen anglické abecedy, číslic nebo podtržítka.'), '/^[a-z][a-z0-9_]*$/');
 
         $container->addText('description', _('Popis'));
 
         $container->addSelect('type', _('Datový typ'))
-                ->setItems(array(
-                    ModelStoredQueryParameter::TYPE_INT => 'integer',
-                    ModelStoredQueryParameter::TYPE_STR => 'string',
-                    ModelStoredQueryParameter::TYPE_BOOL => 'bool',
-        ));
+            ->setItems([
+                ModelStoredQueryParameter::TYPE_INT => 'integer',
+                ModelStoredQueryParameter::TYPE_STR => 'string',
+                ModelStoredQueryParameter::TYPE_BOOL => 'bool',
+            ]);
 
         $container->addText('default', _('Výchozí hodnota'));
     }
 
+    /**
+     * @param ModelStoredQuery $queryPattern
+     * @param int $options
+     * @param ControlGroup|null $group
+     * @return ModelContainer
+     */
     public function createParametersValues(ModelStoredQuery $queryPattern, $options = 0, ControlGroup $group = null) {
-        $container = new Container();
+        $container = new ModelContainer();
         $container->setCurrentGroup($group);
 
         foreach ($queryPattern->getParameters() as $parameter) {
             $name = $parameter->name;
-            $subcontainer = $container->addContainer($name);
+            $subcontainer = new ModelContainer();
+            $container->addComponent($subcontainer, $name);
+            // $subcontainer = $container->addContainer($name);
 
             switch ($parameter->type) {
                 case ModelStoredQueryParameter::TYPE_INT:
@@ -136,14 +161,21 @@ class StoredQueryFactory {
                 case ModelStoredQueryParameter::TYPE_BOOL:
                     $valueElement = $subcontainer->addCheckbox('value', $name);
                     $valueElement->setOption('description', $parameter->description);
-                    $valueElement->setDefaultValue((bool) $parameter->getDefaultValue());
+                    $valueElement->setDefaultValue((bool)$parameter->getDefaultValue());
                     break;
             }
         }
 
         return $container;
     }
-    
+
+    /**
+     * @param $ajax
+     * @param $label
+     * @param IDataProvider $dataProvider
+     * @param null $renderMethod
+     * @return AutocompleteSelectBox
+     */
     private function createTagSelect($ajax, $label, IDataProvider $dataProvider, $renderMethod = null) {
         if ($renderMethod === null) {
             $renderMethod = '$("<li>")
@@ -152,7 +184,7 @@ class StoredQueryFactory {
         }
         $select = new AutocompleteSelectBox($ajax, $label, $renderMethod);
         $select->setDataProvider($dataProvider);
-        $select->setMultiselect(true);
+        $select->setMultiSelect(true);
         return $select;
     }
 

@@ -1,0 +1,28 @@
+{block content}
+    <h3>{_'Base info'}</h3>
+    {foreach ['event_participant_id', 'person_id', 'status', 'price', 'created'] as $field}
+        {control valuePrinter__event_participant__$field:row $model}
+    {/foreach}
+
+    <hr/>
+
+    {foreach $groups as $groupName=>$fieldDef}
+        <h3>{$groupName}</h3>
+        {foreach $fieldDef as $field}
+            {if \array_key_exists($field,$fields)}
+                {control valuePrinter__event_participant__$field:row $model}
+            {/if}
+        {/foreach}
+        <hr/>
+    {/foreach}
+
+    <h3>{_'Actions'}</h3>
+
+    {control applicationComponent:inline edit}
+    <hr/>
+
+    <h3>{_'Transitions'}</h3>
+
+    {control applicationComponent:inline transitions}
+
+{/block}

@@ -4,13 +4,12 @@ namespace FyziklaniModule;
 
 $container = require '../bootstrap.php';
 
-use DbNames;
-use FyziklaniModule\FyziklaniTestCase;
+use FKSDB\ORM\DbNames;
 use MockEnvironment\MockApplicationTrait;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Request;
-use Nette\DateTime;
 use Nette\DI\Container;
+use Nette\Utils\DateTime;
 use Tester\Assert;
 
 class AuthorizationTest extends FyziklaniTestCase {
@@ -35,21 +34,21 @@ class AuthorizationTest extends FyziklaniTestCase {
 
         $this->perPerson = $this->createPerson('Karkulka', 'Červená', array(
             'email' => 'karkulka@les.cz', 'born' => DateTime::from('2000-01-01')
-                ), true);
+        ), true);
 
         $this->perOrg = $this->createPerson('Karkulka', 'Červená', array(
             'email' => 'karkulka2@les.cz', 'born' => DateTime::from('2000-01-01')
-                ), true);
+        ), true);
         $this->insert(DbNames::TAB_ORG, array('person_id' => $this->perOrg, 'contest_id' => 1, 'since' => 0, 'order' => 0));
 
         $this->perOrgOther = $this->createPerson('Karkulka', 'Červená', array(
             'email' => 'karkulka3@les.cz', 'born' => DateTime::from('2000-01-01')
-                ), true);
+        ), true);
         $this->insert(DbNames::TAB_ORG, array('person_id' => $this->perOrgOther, 'contest_id' => 2, 'since' => 0, 'order' => 0));
 
         $this->perContestant = $this->createPerson('Karkulka', 'Červená', array(
             'email' => 'karkulka4@les.cz', 'born' => DateTime::from('2000-01-01')
-                ), true);
+        ), true);
         $this->insert(DbNames::TAB_CONTESTANT_BASE, array('person_id' => $this->perContestant, 'contest_id' => 1, 'year' => 1));
 
         $this->eventId = $this->createEvent(array());
@@ -66,11 +65,11 @@ class AuthorizationTest extends FyziklaniTestCase {
 
     public function getTestData() {
         return [
-                [null, 'Fyziklani:Submit', ['entry', 'edit', 'table'], false],
-                ['perPerson', 'Fyziklani:Submit', ['entry', 'edit', 'table'], false],
-                ['perOrg', 'Fyziklani:Submit', ['entry', 'edit', 'table'], true],
-                ['perOrgOther', 'Fyziklani:Submit', ['entry', 'edit', 'table'], false],
-                ['perContestant', 'Fyziklani:Submit', ['entry', 'edit', 'table'], false],
+            [null, 'Fyziklani:Submit', ['entry', 'edit', 'list'], false],
+            ['perPerson', 'Fyziklani:Submit', ['entry', 'edit', 'list'], false],
+            ['perOrg', 'Fyziklani:Submit', ['entry', 'list'], true], # TODO 'edit',
+            ['perOrgOther', 'Fyziklani:Submit', ['entry', 'edit', 'list'], false],
+            ['perContestant', 'Fyziklani:Submit', ['entry', 'edit', 'list'], false],
         ];
     }
 

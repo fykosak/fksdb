@@ -2,8 +2,9 @@
 
 namespace FKSDB\Components\Grids;
 
-use ModelPerson;
-use ServiceContestant;
+
+use FKSDB\ORM\Services\ServiceContestant;
+use OrgModule\BasePresenter;
 use SQL\ViewDataSource;
 
 /**
@@ -13,19 +14,30 @@ use SQL\ViewDataSource;
 class ContestantsGrid extends BaseGrid {
 
     /**
-     * @var ServiceContestant
+     * @var \FKSDB\ORM\Services\ServiceContestant
      */
     private $serviceContestant;
 
+    /**
+     * ContestantsGrid constructor.
+     * @param ServiceContestant $serviceContestant
+     */
     function __construct(ServiceContestant $serviceContestant) {
         parent::__construct();
 
         $this->serviceContestant = $serviceContestant;
     }
 
+    /**
+     * @param BasePresenter $presenter
+     * @throws \Nette\Application\BadRequestException
+     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws \NiftyGrid\DuplicateButtonException
+     * @throws \NiftyGrid\DuplicateColumnException
+     * @throws \NiftyGrid\DuplicateGlobalButtonException
+     */
     protected function configure($presenter) {
         parent::configure($presenter);
-
         //
         // data
         //
@@ -38,24 +50,24 @@ class ContestantsGrid extends BaseGrid {
         //
         // columns
         //
-        $this->addColumn('name', _('Jméno'));
+        $this->addColumn('name', _('Name'));
         $this->addColumn('study_year', _('Ročník'));
         $this->addColumn('school_name', _('Škola'));
 
         //
         // operations
         //
-        $this->addButton("editPerson", _("Upravit"))
-                ->setText(_('Upravit'))
-                ->setLink(function($row) use ($presenter) {
-                            return $presenter->link("Contestant:edit", array(
-                                        'id' => $row->ct_id,
-                            ));
-                        });
+        $this->addButton('editPerson', _('Edit'))
+            ->setText(_('Edit'))
+            ->setLink(function ($row) use ($presenter) {
+                return $presenter->link('Contestant:edit', array(
+                    'id' => $row->ct_id,
+                ));
+            });
 
         $this->addGlobalButton('add')
-                ->setLabel('Založit řešitele')
-                ->setLink($this->getPresenter()->link('create'));
+            ->setLabel(_('Založit řešitele'))
+            ->setLink($this->getPresenter()->link('create'));
 
 
         //

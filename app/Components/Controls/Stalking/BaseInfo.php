@@ -2,25 +2,38 @@
 
 namespace FKSDB\Components\Controls\Stalking;
 
-use Nette\Application\UI\Control;
-
-class BaseInfo extends Control {
-    private $mode;
-    /**
-     * @var \ModelPerson;
-     */
-    private $modelPerson;
-
-    public function __construct(\ModelPerson $modelPerson, $mode = null) {
-        parent::__construct();
-        $this->mode = $mode;
-        $this->modelPerson = $modelPerson;
-    }
+/**
+ * Class BaseInfo
+ * @package FKSDB\Components\Controls\Stalking
+ */
+class BaseInfo extends StalkingComponent {
 
     public function render() {
-        $template = $this->template;
+        $this->beforeRender();
+        $this->template->fields = [
+            'born', 'born_id', 'birthplace',
+            'id_number', 'employer', 'uk_login',
+            'health_insurance', 'citizenship', 'account'
+            , 'career', 'homepage', 'im',
+            'linkedin_id', 'note','origin',
+        ];
         $this->template->info = $this->modelPerson->getInfo();
-        $template->setFile(__DIR__ . '/BaseInfo.latte');
-        $template->render();
+        $this->template->person = $this->modelPerson;
+        $this->template->setFile(__DIR__ . '/BaseInfo.latte');
+        $this->template->render();
+    }
+
+    /**
+     * @return string
+     */
+    protected function getHeadline(): string {
+        return _('Base info');
+    }
+
+    /**
+     * @return string[]
+     */
+    protected function getAllowedPermissions(): array {
+        return [StalkingComponent::PERMISSION_FULL, StalkingComponent::PERMISSION_RESTRICT, self::PERMISSION_BASIC];
     }
 }

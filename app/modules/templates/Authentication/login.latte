@@ -1,0 +1,18 @@
+{layout ./@layout.latte}
+{block #form}
+    {form loginForm class => 'form-signin'}
+        <div n:foreach="$form->errors as $error" class="alert alert-danger">{$error}</div>
+
+        {input id
+            class => 'top form-control',
+            autofocus => true,
+            placeholder => $_input->translate($_input->caption),
+            readonly => $login?true:false,
+            value => $login?:''
+}
+        {input password class => 'bottom mb-3 form-control', placeholder => $_input->translate($_input->caption)}
+        {input send class => 'btn btn-lg btn-primary btn-block'}
+        <a n:href=":Public:Register:default" class="btn btn btn-secondary btn-block">{_'Registrace'}</a>
+        <a class="btn btn-link btn-sm btn-block" n:href="recover, backlink => null, bc => null, flag => null">{_'Zapomenuté heslo'}</a>
+    {/form loginForm}
+{/block}

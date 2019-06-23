@@ -1,0 +1,54 @@
+{block content}
+    <div class="h2">{control valuePrinter__payment__state:onlyValue $model}</div>
+    {control stateDisplay}
+    <hr/>
+    {if $model->hasGeneratedSymbols()}
+        <h2>{_('Informacie o platbe')}</h2>
+        {foreach ['constant_symbol','variable_symbol','specific_symbol','bank_account','iban','swift','price'] as $field}
+            {if $model->{$field}}
+                {control valuePrinter__payment__$field:row $model}
+            {/if}
+        {/foreach}
+        <hr/>
+    {/if}
+
+    <h2>{_('Informace o platcovi')}</h2>
+    <div>
+        {if $isOrg}
+            {control valuePrinter__payment__person_link:row $model}
+        {else}
+            {control valuePrinter__payment__person_name:row $model}
+        {/if}
+        {control valuePrinter__person_info__email:row $model->getPerson()->getInfo()}
+    </div>
+    <hr/>
+    <h2>{_'Items'}</h2>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>{_'Item'}</th>
+            <th>{_'Price'}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {foreach $items as $item}
+            <tr>
+                <td>{$item['label']}</td>
+                <td>{$item['price']->__toString()}</td>
+            </tr>
+        {/foreach}
+        {if !is_null($model->price)}
+            <tr class="table-primary">
+                <td>{_('Spolu')}</td>
+                <td>{$model->getPrice()->__toString()}</td>
+            </tr>
+        {/if}
+        </tbody>
+
+    </table>
+    {control editButtonForm}
+    <hr/>
+
+    {control transitionButtons}
+
+{/block}

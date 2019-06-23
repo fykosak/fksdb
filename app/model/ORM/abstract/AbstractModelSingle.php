@@ -1,24 +1,49 @@
 <?php
 
-use Nette\Database\Table\ActiveRow as TableRow;
-use ORM\IModel;
+namespace FKSDB\ORM;
+
+use Nette\Database\Table\ActiveRow;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-abstract class AbstractModelSingle extends TableRow implements IModel {
-
+abstract class AbstractModelSingle extends ActiveRow implements IModel {
+    /**
+     * @var bool
+     * @deprecated
+     */
     protected $stored = true;
 
-    public function isNew() {
+    /**
+     * @return bool
+     * @deprecated
+     */
+    public function isNew(): bool {
         return !$this->stored;
     }
 
-    public function setNew($value = true) {
+    /**
+     * @param bool $value
+     * @deprecated
+     */
+    public function setNew(bool $value = true) {
         $this->stored = !$value;
     }
 
-    public static function createFromTableRow(TableRow $row) {
+    /**
+     * @param ActiveRow $row
+     * @return static
+     * @deprecated use createFromActiveRow
+     */
+    public static function createFromTableRow(ActiveRow $row): self {
+        return static::createFromActiveRow($row);
+    }
+
+    /**
+     * @param ActiveRow $row
+     * @return static
+     */
+    public static function createFromActiveRow(ActiveRow $row): self {
         $model = new static($row->toArray(), $row->getTable());
         if ($model->getPrimary(false)) {
             $model->setNew(false);
@@ -26,6 +51,14 @@ abstract class AbstractModelSingle extends TableRow implements IModel {
         return $model;
     }
 
-}
 
-?>
+    /**
+     * @param $key
+     * @param $value
+     */
+    public function __set($key, $value) {
+        //Debugger::log(\sprintf('Call ActiveRow __set() with parameters %s %s.',$key, $value));
+        return parent::__set($key, $value);
+    }
+
+}
