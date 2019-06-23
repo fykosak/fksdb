@@ -5,10 +5,12 @@ namespace FKSDB\Components\Controls\Payment;
 use EventModule\PaymentPresenter;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Helpers\AbstractDetailControl;
+use FKSDB\Components\Controls\Helpers\ValuePrinters\StringValueControl;
 use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\Payment\Price;
 use FKSDB\Payment\Transition\PaymentMachine;
+use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 

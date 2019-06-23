@@ -3,8 +3,9 @@
 namespace FKSDB\Components\Controls\Schedule;
 
 
-use FKSDB\Components\Controls\Helpers\AbstractDetailControl;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
+use Nette\Application\UI\Control;
+use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 
 /**
@@ -12,11 +13,24 @@ use Nette\Templating\FileTemplate;
  * @package FKSDB\Components\Forms\Controls\Payment
  * @property FileTemplate $template
  */
-class ItemControl extends AbstractDetailControl {
+class ItemControl extends Control {
     /**
      * @var ModelScheduleItem
      */
     private $model;
+    /**
+     * @var ITranslator
+     */
+    private $translator;
+
+    /**
+     * DetailControl constructor.
+     * @param ITranslator $translator
+     */
+    public function __construct(ITranslator $translator) {
+        parent::__construct();
+        $this->translator = $translator;
+    }
 
     /**
      * @param ModelScheduleItem $group

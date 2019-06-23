@@ -24,7 +24,6 @@ class StoredQueryTagCloud extends Control {
 
     /**
      * @var ModelStoredQuery
-
      */
     private $modelStoredQuery;
 

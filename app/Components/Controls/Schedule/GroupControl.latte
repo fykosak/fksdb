@@ -1,22 +1,28 @@
 <h2>{_'Schedule group'}</h2>
 <div>
-    {control stringValue $model,_('Id'),schedule_group_id}
-
-    {control stringValue $model,_('Group type'),schedule_group_type}
-
+    <div class="row">
+        <b class="col-2">{_'Id'}</b>
+        <span class="col-10">#{$model->schedule_group_id}</span>
+    </div>
+    <div class="row">
+        <b class="col-2">{_'Group type'}</b>
+        <span class="col-10">{$model->schedule_group_type}</span>
+    </div>
     <div class="row">
         <b class="col-2">{_'Event'}</b>
         <span class="col-10">{$model->getEvent()->__toString()}
-
+            <a class="btn btn-sm btn-secondary" href="{plink groups}" }>
+                    {_'All groups'}</a>
+                <a class="btn btn-sm btn-secondary" href="{plink :Event:Dashboard:}" }>
+                    {_'Event detail'}</a>
+            </span>
     </div>
-
-    {control dateValue $model,_('Start'),start,true,'d. m. Y H:i'}
-
-    {control dateValue $model,_('End'),end,true,'d. m. Y H:i'}
-    <a class="btn btn-sm btn-secondary" href="{plink groups}" }>
-        {_'All groups'}</a>
-    <a class="btn btn-sm btn-secondary" href="{plink :Event:Dashboard:}" }>
-        {_'Event detail'}</a>
-    </span>
-    <hr/>
+    <div class="row">
+        <b class="col-2">{_'Start'}</b>
+        <span class="col-10">{$model->start->format(_('d. m. Y H:i'))}</span>
+    </div>
+    <div class="row">
+        <b class="col-2">{_'End'}</b>
+        <span class="col-10">{$model->end->format(_('d. m. Y H:i'))}</span>
+    </div>
 </div>

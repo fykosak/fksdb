@@ -1,5 +1,4 @@
 {block content}
-
     <h3>{_'Base info'}</h3>
     {foreach ['event_participant_id', 'person_id', 'status', 'price', 'created'] as $field}
         {control valuePrinter__event_participant__$field:row $model}
