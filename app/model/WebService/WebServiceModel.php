@@ -13,13 +13,14 @@ use FKSDB\Results\Models\AbstractResultsModel;
 use FKSDB\Results\Models\BrojureResultsModel;
 use FKSDB\Results\ResultsModelFactory;
 use InvalidArgumentException;
-use Tracy\Debugger;
+use Nette\Application\BadRequestException;
 use Nette\Security\AuthenticationException;
 use Nette\Security\IAuthenticator;
 use SoapFault;
 use SoapVar;
 use StatsModelFactory;
 use stdClass;
+use Tracy\Debugger;
 use WebService\IXMLNodeSerializer;
 
 /**
@@ -117,18 +118,26 @@ class WebServiceModel {
     /**
      * @param $args
      * @return SoapVar
+     * @throws BadRequestException
      */
-    public function getFyziklani($args) {
-
-        $this->checkAuthentication(__FUNCTION__);
+    public function getFyziklani($args): SoapVar {
+        Debugger::log((array)$args);
+        //   $this->checkAuthentication(__FUNCTION__);
         $doc = new DOMDocument();
-        $brawlNode = $doc->createElement('fyziklani');
-        $doc->appendChild($brawlNode);
+        $fyziklaniNode = $doc->createElement('fyziklani');
+        if (!isset($args->eventId)) {
+            throw new BadRequestException();
+        }
+        if (isset($args->teams)) {
+            $fyziklaniNode->appendChild($doc->createElement('teams'));
+        }
+        $doc->appendChild($fyziklaniNode);
         //    $teams = $doc->createElement('team');
         //    $brawlNode->appendChild($teams);
         $doc->formatOutput = true;
-        return new SoapVar($doc->saveXML($brawlNode), XSD_ANYXML);
+        return new SoapVar($doc->saveXML($fyziklaniNode), XSD_ANYXML);
     }
+
     /**
      * @param $args
      * @return SoapVar
