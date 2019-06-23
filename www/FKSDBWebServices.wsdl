@@ -2,199 +2,208 @@
 
 <!-- root element wsdl:definitions defines set of related services -->
 <wsdl:definitions
-	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
-	xmlns:xsd1="http://fykos.cz/xml/ws/schema"
-	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
-	xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
-	xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
-	xmlns:fksres="http://fykos.cz/xml/results/schema"
-	xmlns:fksbrawl="http://fykos.cz/xml/brawl/schema"
-	xmlns:fksst="http://fykos.cz/xml/stats/schema"
-	xmlns:fksex="http://fykos.cz/xml/export/schema"
-	xmlns:tns="http://fykos.cz/xml/ws/service"
-	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-	name="FKSDBWebServices" targetNamespace="http://fykos.cz/xml/ws/service">
+        xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+        xmlns:xsd1="http://fykos.cz/xml/ws/schema"
+        xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+        xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+        xmlns:fksres="http://fykos.cz/xml/results/schema"
+        xmlns:fksfyziklani="http://fykos.cz/xml/fyziklani/schema"
+        xmlns:fksst="http://fykos.cz/xml/stats/schema"
+        xmlns:fksex="http://fykos.cz/xml/export/schema"
+        xmlns:tns="http://fykos.cz/xml/ws/service"
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        name="FKSDBWebServices" targetNamespace="http://fykos.cz/xml/ws/service">
 
-	<!-- wsdl:types encapsulates schema definitions of communication types -->
-	<wsdl:types>
-		<xsd:schema targetNamespace="http://fykos.cz/xml/ws/schema">
-			<xsd:import namespace="http://fykos.cz/xml/results/schema" schemaLocation="https://db.fykos.cz/xml/results/schema.xsd"/>
-			<xsd:import namespace="http://fykos.cz/xml/stats/schema" schemaLocation="https://db.fykos.cz/xml/stats/schema.xsd"/>
-			<xsd:import namespace="http://fykos.cz/xml/export/schema" schemaLocation="https://db.fykos.cz/xml/export/schema.xsd"/>
-			<xsd:import namespace="http://fykos.cz/xml/brawl/schema" schemaLocation="http://db.fykos.local/xml/brawl/schema.xsd"/>
-			<!-- types for web service only -->
-			<xsd:complexType name="GetResultsRequestType">
-				<xsd:sequence>
-					<xsd:element name="contest" type="fksres:contest-type" minOccurs="1" maxOccurs="1"/>
-					<xsd:element name="year" type="xsd:nonNegativeInteger" minOccurs="1" maxOccurs="1"/>
-					<xsd:element name="detail" type="fksres:series-list-type" minOccurs="0" maxOccurs="1"/>
-					<xsd:element name="cumulatives" minOccurs="0" maxOccurs="1">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="cumulative" type="fksres:series-list-type" minOccurs="1" maxOccurs="unbounded"/>
-							</xsd:sequence>
-						</xsd:complexType>
-					</xsd:element>
-                                        <xsd:element name="school-cumulatives" minOccurs="0" maxOccurs="1">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="school-cumulative" type="fksres:series-list-type" minOccurs="1" maxOccurs="unbounded"/>
-							</xsd:sequence>
-						</xsd:complexType>
-					</xsd:element>
+    <!-- wsdl:types encapsulates schema definitions of communication types -->
+    <wsdl:types>
+        <xsd:schema targetNamespace="http://fykos.cz/xml/ws/schema">
+            <xsd:import namespace="http://fykos.cz/xml/results/schema"
+                        schemaLocation="https://db.fykos.cz/xml/results/schema.xsd"/>
+            <xsd:import namespace="http://fykos.cz/xml/stats/schema"
+                        schemaLocation="https://db.fykos.cz/xml/stats/schema.xsd"/>
+            <xsd:import namespace="http://fykos.cz/xml/export/schema"
+                        schemaLocation="https://db.fykos.cz/xml/export/schema.xsd"/>
+            <xsd:import namespace="http://fykos.cz/xml/fyziklani/schema"
+                        schemaLocation="http://db.fykos.local/xml/fyziklani/schema.xsd"/>
+            <!-- types for web service only -->
+            <xsd:complexType name="GetResultsRequestType">
+                <xsd:sequence>
+                    <xsd:element name="contest" type="fksres:contest-type" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="year" type="xsd:nonNegativeInteger" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="detail" type="fksres:series-list-type" minOccurs="0" maxOccurs="1"/>
+                    <xsd:element name="cumulatives" minOccurs="0" maxOccurs="1">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="cumulative" type="fksres:series-list-type" minOccurs="1"
+                                             maxOccurs="unbounded"/>
+                            </xsd:sequence>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="school-cumulatives" minOccurs="0" maxOccurs="1">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="school-cumulative" type="fksres:series-list-type" minOccurs="1"
+                                             maxOccurs="unbounded"/>
+                            </xsd:sequence>
+                        </xsd:complexType>
+                    </xsd:element>
                     <!-- calls via brojure are deprecated, use nesting within brojures -->
-					<xsd:element name="brojure" type="fksres:series-list-type" minOccurs="0" maxOccurs="1"/>
-					<xsd:element name="brojures" minOccurs="0" maxOccurs="1">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="brojure" type="fksres:series-list-type" minOccurs="1" maxOccurs="unbounded"/>
-							</xsd:sequence>
-						</xsd:complexType>
-					</xsd:element>
-				</xsd:sequence>
-			</xsd:complexType>
-			<xsd:complexType name="GetStatsRequestType">
-				<xsd:sequence>
-					<xsd:element name="contest" type="fksres:contest-type" minOccurs="1" maxOccurs="1"/>
-					<xsd:element name="year" type="xsd:nonNegativeInteger" minOccurs="1" maxOccurs="1"/>
-					<xsd:element name="series" minOccurs="0" maxOccurs="unbounded">
-						<xsd:complexType>
-						  <xsd:complexContent>
-						    <xsd:extension base="fksres:label-list-type">
-								<xsd:attribute name="series" type="fksres:series-number-type" use="required"/>
-						    </xsd:extension>
-						  </xsd:complexContent>
-						</xsd:complexType>
-					</xsd:element>
-				</xsd:sequence>
-			</xsd:complexType>
-			<xsd:complexType name="GetExportRequestType">
-				<xsd:sequence>
-					<xsd:element name="qid" minOccurs="1" maxOccurs="1" type="fksex:qid-type"/>
-                                        <xsd:element name="format-version" minOccurs="0" maxOccurs="1" type="fksex:format-version-type"/>
-					<xsd:element name="parameter" minOccurs="0" maxOccurs="unbounded" type="fksex:parameter-type"/>
-				</xsd:sequence>
-			</xsd:complexType>
-			<xsd:complexType name="AuthenticationCredentialsType">
-				<xsd:sequence>
-					<xsd:element name="username" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-					<xsd:element name="password" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-				</xsd:sequence>
-			</xsd:complexType>
-			<xsd:complexType name="GetBrawlRequestType">
-				<xsd:sequence>
-					<xsd:element name="event-id" type="xsd:nonNegativeInteger" minOccurs="1" maxOccurs="1"/>
-					<xsd:element name="act" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-				</xsd:sequence>
-			</xsd:complexType>
-		</xsd:schema>
-	</wsdl:types>
+                    <xsd:element name="brojure" type="fksres:series-list-type" minOccurs="0" maxOccurs="1"/>
+                    <xsd:element name="brojures" minOccurs="0" maxOccurs="1">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="brojure" type="fksres:series-list-type" minOccurs="1"
+                                             maxOccurs="unbounded"/>
+                            </xsd:sequence>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="GetStatsRequestType">
+                <xsd:sequence>
+                    <xsd:element name="contest" type="fksres:contest-type" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="year" type="xsd:nonNegativeInteger" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="series" minOccurs="0" maxOccurs="unbounded">
+                        <xsd:complexType>
+                            <xsd:complexContent>
+                                <xsd:extension base="fksres:label-list-type">
+                                    <xsd:attribute name="series" type="fksres:series-number-type" use="required"/>
+                                </xsd:extension>
+                            </xsd:complexContent>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="GetExportRequestType">
+                <xsd:sequence>
+                    <xsd:element name="qid" minOccurs="1" maxOccurs="1" type="fksex:qid-type"/>
+                    <xsd:element name="format-version" minOccurs="0" maxOccurs="1" type="fksex:format-version-type"/>
+                    <xsd:element name="parameter" minOccurs="0" maxOccurs="unbounded" type="fksex:parameter-type"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="AuthenticationCredentialsType">
+                <xsd:sequence>
+                    <xsd:element name="username" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="password" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="GetFyziklaniRequestType">
+                <xsd:sequence>
+                    <xsd:element name="event-id" type="xsd:nonNegativeInteger"/>
+                    <xsd:element name="teams" type="xsd:string"/>
+                    <!--<xsd:element name="tasks" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="submits" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="teamDetail" type="xsd:string" minOccurs="1" maxOccurs="1"/>-->
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:schema>
+    </wsdl:types>
 
-	<!-- messages -->
-	<wsdl:message name="AuthenticationCredentials">
-		<wsdl:part name="AuthenticationCredentials" type="xsd1:AuthenticationCredentialsType"/>
-	</wsdl:message>
+    <!-- messages -->
+    <wsdl:message name="AuthenticationCredentials">
+        <wsdl:part name="AuthenticationCredentials" type="xsd1:AuthenticationCredentialsType"/>
+    </wsdl:message>
 
-	<wsdl:message name="GetResultsRequest">
-		<wsdl:part name="GetResultsRequest" type="xsd1:GetResultsRequestType"/>
-	</wsdl:message>
+    <wsdl:message name="GetResultsRequest">
+        <wsdl:part name="GetResultsRequest" type="xsd1:GetResultsRequestType"/>
+    </wsdl:message>
 
-	<wsdl:message name="GetResultsResponse">
-		<wsdl:part name="GetResultsResponse" element="fksres:results"/>
-	</wsdl:message>
+    <wsdl:message name="GetResultsResponse">
+        <wsdl:part name="GetResultsResponse" element="fksres:results"/>
+    </wsdl:message>
 
-	<wsdl:message name="GetBrawlRequest">
-		<wsdl:part name="GetBrawlRequest" type="xsd1:GetBrawlRequestType"/>
-	</wsdl:message>
+    <wsdl:message name="GetFyziklaniRequest">
+        <wsdl:part name="GetFyziklaniRequest" type="xsd1:GetFyziklaniRequestType"/>
+    </wsdl:message>
 
-	<wsdl:message name="GetBrawlResponse">
-		<wsdl:part name="GetBrawlResponse" element="fksbrawl:brawl"/>
-	</wsdl:message>
+    <wsdl:message name="GetFyziklaniResponse">
+        <wsdl:part name="GetFyziklaniResponse" element="fksfyziklani:fyziklani"/>
+    </wsdl:message>
 
-	<wsdl:message name="GetStatsRequest">
-		<wsdl:part name="GetStatsRequest" type="xsd1:GetStatsRequestType"/>
-	</wsdl:message>
+    <wsdl:message name="GetStatsRequest">
+        <wsdl:part name="GetStatsRequest" type="xsd1:GetStatsRequestType"/>
+    </wsdl:message>
 
-	<wsdl:message name="GetStatsResponse">
-		<wsdl:part name="GetResultsResponse" element="fksst:stats"/>
-	</wsdl:message>
+    <wsdl:message name="GetStatsResponse">
+        <wsdl:part name="GetResultsResponse" element="fksst:stats"/>
+    </wsdl:message>
 
-	<wsdl:message name="GetExportRequest">
-		<wsdl:part name="GetExportRequest" type="xsd1:GetExportRequestType"/>
-	</wsdl:message>
+    <wsdl:message name="GetExportRequest">
+        <wsdl:part name="GetExportRequest" type="xsd1:GetExportRequestType"/>
+    </wsdl:message>
 
-	<wsdl:message name="GetExportResponse">
-		<wsdl:part name="GetExportResponse" element="fksex:export"/>
-	</wsdl:message>
-
-
-	<wsdl:portType name="FKSDBPortType">
-		<wsdl:operation name="GetResults">
-			<wsdl:input message="tns:GetResultsRequest"/>
-			<wsdl:output message="tns:GetResultsResponse"/>
-		</wsdl:operation>
-		<wsdl:operation name="GetBrawl">
-			<wsdl:input message="tns:GetBrawlRequest"/>
-			<wsdl:output message="tns:GetBrawlResponse"/>
-		</wsdl:operation>
-		<wsdl:operation name="GetStats">
-			<wsdl:input message="tns:GetStatsRequest"/>
-			<wsdl:output message="tns:GetStatsResponse"/>
-		</wsdl:operation>
-		<wsdl:operation name="GetExport">
-			<wsdl:input message="tns:GetExportRequest"/>
-			<wsdl:output message="tns:GetExportResponse"/>
-		</wsdl:operation>
-	</wsdl:portType>
+    <wsdl:message name="GetExportResponse">
+        <wsdl:part name="GetExportResponse" element="fksex:export"/>
+    </wsdl:message>
 
 
-	<wsdl:binding name="FKSDBBinding" type="tns:FKSDBPortType">
-		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
-		<wsdl:operation name="GetResults">
-			<soap:operation soapAction="GetResults"/>
-			<wsdl:input>
-				<soap:header message="tns:AuthenticationCredentials" part="AuthenticationCredentials" use="literal"/>
-				<soap:body use="literal"/>
-			</wsdl:input>
-			<wsdl:output>
-				<soap:body use="literal"/>
-			</wsdl:output>
-		</wsdl:operation>
-		<wsdl:operation name="GetBrawl">
-			<soap:operation soapAction="GetBrawl"/>
-			<wsdl:input>
-				<soap:header message="tns:AuthenticationCredentials" part="AuthenticationCredentials" use="literal"/>
-				<soap:body use="literal"/>
-			</wsdl:input>
-			<wsdl:output>
-				<soap:body use="literal"/>
-			</wsdl:output>
-		</wsdl:operation>
-		<wsdl:operation name="GetStats">
-			<soap:operation soapAction="GetStats"/>
-			<wsdl:input>
-				<soap:header message="tns:AuthenticationCredentials" part="AuthenticationCredentials" use="literal"/>
-				<soap:body use="literal"/>
-			</wsdl:input>
-			<wsdl:output>
-				<soap:body use="literal"/>
-			</wsdl:output>
-		</wsdl:operation>
-		<wsdl:operation name="GetExport">
-			<soap:operation soapAction="GetExport"/>
-			<wsdl:input>
-				<soap:header message="tns:AuthenticationCredentials" part="AuthenticationCredentials" use="literal"/>
-				<soap:body use="literal"/>
-			</wsdl:input>
-			<wsdl:output>
-				<soap:body use="literal"/>
-			</wsdl:output>
-		</wsdl:operation>
-	</wsdl:binding>
+    <wsdl:portType name="FKSDBPortType">
+        <wsdl:operation name="GetResults">
+            <wsdl:input message="tns:GetResultsRequest"/>
+            <wsdl:output message="tns:GetResultsResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetFyziklani">
+            <wsdl:input message="tns:GetFyziklaniRequest"/>
+            <wsdl:output message="tns:GetFyziklaniResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetStats">
+            <wsdl:input message="tns:GetStatsRequest"/>
+            <wsdl:output message="tns:GetStatsResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetExport">
+            <wsdl:input message="tns:GetExportRequest"/>
+            <wsdl:output message="tns:GetExportResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
 
-	<wsdl:service name="FKSDBService">
-		<wsdl:port name="FKSDBPort" binding="tns:FKSDBBinding">
-			<soap:address location="https://db.fykos.cz/web-service/default"/>
-		</wsdl:port>
-	</wsdl:service>
+
+    <wsdl:binding name="FKSDBBinding" type="tns:FKSDBPortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="GetResults">
+            <soap:operation soapAction="GetResults"/>
+            <wsdl:input>
+                <soap:header message="tns:AuthenticationCredentials" part="AuthenticationCredentials" use="literal"/>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetFyziklani">
+            <soap:operation soapAction="GetFyziklani"/>
+            <wsdl:input>
+                <soap:header message="tns:AuthenticationCredentials" part="AuthenticationCredentials" use="literal"/>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetStats">
+            <soap:operation soapAction="GetStats"/>
+            <wsdl:input>
+                <soap:header message="tns:AuthenticationCredentials" part="AuthenticationCredentials" use="literal"/>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetExport">
+            <soap:operation soapAction="GetExport"/>
+            <wsdl:input>
+                <soap:header message="tns:AuthenticationCredentials" part="AuthenticationCredentials" use="literal"/>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:service name="FKSDBService">
+        <wsdl:port name="FKSDBPort" binding="tns:FKSDBBinding">
+            <soap:address location="https://db.fykos.cz/web-service/default"/>
+        </wsdl:port>
+    </wsdl:service>
 </wsdl:definitions>
