@@ -229,12 +229,9 @@ class WebServiceModel {
             throw new SoapFault('Sender', 'Unknown contest.');
         }
 
-<<<<<<< HEAD
-        $contest = $this->serviceContest->findByPrimary($this->inverseContestMap[$args->contest]);
-=======
         $row = $this->serviceContest->findByPrimary($this->inverseContestMap[$args->contest]);
         $contest = ModelContest::createFromActiveRow($row);
->>>>>>> fykosak/master
+
         $year = (string)$args->year;
 
         $doc = new DOMDocument();
@@ -287,11 +284,7 @@ class WebServiceModel {
         // parse arguments
         $qid = $args->qid;
         $format = isset($args->{'format-version'}) ? ((int)$args->{'format-version'}) : IXMLNodeSerializer::EXPORT_FORMAT_1;
-<<<<<<< HEAD
-        $parameters = array();
-=======
         $parameters = [];
->>>>>>> fykosak/master
 
         $this->checkAuthentication(__FUNCTION__, $qid);
 
@@ -405,9 +398,6 @@ class WebServiceModel {
         return $cumulativeNode;
     }
 
-<<<<<<< HEAD
-    private function createSchoolCumulativeNode(IResultsModel $resultsModel, DOMDocument $doc) {
-=======
     /**
      * @param AbstractResultsModel $resultsModel
      * @param DOMDocument $doc
@@ -415,7 +405,6 @@ class WebServiceModel {
      * @throws SoapFault
      */
     private function createSchoolCumulativeNode(AbstractResultsModel $resultsModel, DOMDocument $doc): DOMElement {
->>>>>>> fykosak/master
         $schoolNode = $doc->createElement('school-cumulative');
         $schoolNode->setAttribute('series', implode(' ', $resultsModel->getSeries()));
 
