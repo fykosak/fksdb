@@ -47,6 +47,11 @@ fksrouter:
             presenter: WebService
             action: default
             flags: [ONE_WAY, SECURED]
+        'rest-api/':
+            presenter: RestApiService
+            action: default
+            flags: [ONE_WAY, SECURED]
+
 
         # Cool URL
         '%path%<contestId %contests%><year [0-9]+>[.<series [0-9]+>]/q/<qid>':
