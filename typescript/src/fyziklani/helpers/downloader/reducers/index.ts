@@ -1,8 +1,8 @@
 import {
     ACTION_SUBMIT_FAIL,
     ACTION_SUBMIT_SUCCESS,
-} from '../../../../fetch-api/actions/submit';
-import { ActionSubmitSuccess } from '../../../../fetch-api/middleware/interfaces';
+} from '@fetchApi/actions/submit';
+import { ActionSubmitSuccess } from '@fetchApi/middleware/interfaces';
 import { ResponseData } from '../actions/';
 
 export interface State {

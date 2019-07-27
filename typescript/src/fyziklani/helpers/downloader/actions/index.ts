@@ -1,12 +1,12 @@
+import { dispatchNetteFetch } from '@fetchApi/middleware/fetch';
+import {
+    Request,
+    Response,
+} from '@fetchApi/middleware/interfaces';
 import {
     Action,
     Dispatch,
 } from 'redux';
-import { dispatchNetteFetch } from '../../../../fetch-api/middleware/fetch';
-import {
-    Request,
-    Response,
-} from '../../../../fetch-api/middleware/interfaces';
 import { State as FetchApiState } from '../../../../fetch-api/reducers/submit';
 import {
     Room,

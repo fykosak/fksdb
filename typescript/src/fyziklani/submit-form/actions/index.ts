@@ -1,11 +1,11 @@
+import { dispatchNetteFetch } from '@fetchApi/middleware/fetch';
+import { Response } from '@fetchApi/middleware/interfaces';
 import {
     Action,
     Dispatch,
 } from 'redux';
 import { reset } from 'redux-form';
-import { dispatchNetteFetch } from '../../../fetch-api/middleware/fetch';
-import { Response } from '../../../fetch-api/middleware/interfaces';
-import { FORM_NAME } from '../components/form-container';
+import { FORM_NAME } from '../components/FormContainer';
 import { getFullCode } from '../middleware/form';
 import { Store as SubmitStore } from '../reducers';
 

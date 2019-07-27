@@ -6,7 +6,7 @@ import {
 } from 'redux';
 import logger from 'redux-logger';
 import { config } from '../../../config';
-import InputConnector from '../../../input-connector/compoenents/index';
+import InputConnector from '../../../input-connector/compoenents/Index';
 import { PaymentAccommodationItem } from '../interfaces';
 import { app } from '../reducer/';
 import Container from './Container';

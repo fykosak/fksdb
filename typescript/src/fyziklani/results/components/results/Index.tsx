@@ -1,10 +1,10 @@
 import * as React from 'react';
-import ResultsShower from '../../../helpers/components/results-shower';
+import ResultsShower from '../../../helpers/components/results-shower/Index';
 import ResultsPresentation from './presentation/Index';
 import PositionSwitcher from './presentation/PositionSwitcher';
 import Settings from './presentation/settings/Index';
-import FilterSelect from './table/filters/select';
-import ResultsTable from './table/index';
+import FilterSelect from './table/filters/select/Index';
+import ResultsTable from './table/Index';
 
 interface Props {
     mode: string;

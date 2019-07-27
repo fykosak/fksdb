@@ -26,7 +26,7 @@ import {
 import {
     fyziklaniTableFilter,
     State as TableFilterState,
-} from './table-filter';
+} from './tableFilter';
 
 export const app = combineReducers({
     data: fyziklaniData,

@@ -1,18 +1,17 @@
 var path = require('path');
+const {TsConfigPathsPlugin} = require('awesome-typescript-loader');
 
 module.exports = {
-    devtool: 'inline-source-map',
-    entry: {
-        all: './src/index.ts'
-    },
+    devtool: "source-map",
+    entry: './src/index.ts',
     output: {
-        path: path.resolve(__dirname, '../www/js/'),
-        filename: 'bundle-[name].min.js',
-        publicPath: '/js/',
+        path: __dirname + '/../www/js/',
+        filename: 'bundle.min.js',
+        publicPath: 'js',
     },
     module: {
         rules: [
-            {
+            /*{
                 enforce: 'pre',
                 test: /\.tsx?$/,
                 loader: 'tslint-loader',
@@ -21,16 +20,20 @@ module.exports = {
                     failOnHint: false,
                     configuration: require('./tslint.json'),
                 },
-            },
+            },*/
             {
                 test: /\.tsx?$/,
-                use: 'ts-loader',
+                use: 'awesome-typescript-loader',
+                //use: 'ts-loader',
                 exclude: /node_modules/,
             },
         ],
     },
     resolve: {
         extensions: ['.tsx', '.ts', '.js'],
+        plugins: [
+            new TsConfigPathsPlugin(/* { configFileName, compiler } */)
+        ]
     },
     externals: {
         jquery: 'jQuery',
@@ -38,3 +41,15 @@ module.exports = {
         ReactDOM: 'react-dom'
     },
 };
+
+
+/*
+ //  ,
+ //
+ //   ,
+ //   ,
+ //    "ts-loader": "latest",
+ //    ,
+ //    ,
+ //    ,
+ //    */

@@ -1,9 +1,9 @@
+import { dispatchNetteFetch } from '@fetchApi/middleware/fetch';
+import { Response } from '@fetchApi/middleware/interfaces';
 import {
     Action,
     Dispatch,
 } from 'redux';
-import { dispatchNetteFetch } from '../../../fetch-api/middleware/fetch';
-import { Response } from '../../../fetch-api/middleware/interfaces';
 import { Team } from '../../helpers/interfaces';
 import { ResponseData } from '../middleware/interfaces';
 import { Store as RoutingStore } from '../reducers/';

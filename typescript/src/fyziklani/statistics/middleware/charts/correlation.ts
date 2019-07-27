@@ -1,5 +1,5 @@
 import { Submit } from '../../../helpers/interfaces';
-import { getAverageNStandardDeviation } from './std-dev';
+import { getAverageNStandardDeviation } from './stdDev';
 
 export interface PreprocessedSubmit extends Submit {
     timestamp: number;
@@ -29,15 +29,15 @@ export const calculateCorrelation = (
     return {avgNStdDev: getAverageNStandardDeviation(deltas), countTotal, countFiltered};
 };
 
-export const getTimeLabel = (average: number, standardDeviation: number): string => {
-    if (isNaN(average) || isNaN(standardDeviation)) {
+export const getTimeLabel = (averageTime: number, standardDeviation: number): string => {
+    if (isNaN(averageTime) || isNaN(standardDeviation)) {
         return 'NaN';
     }
-    const h = Math.floor(average / (3600 * 1000));
-    average %= (3600 * 1000);
-    const m = Math.floor(average / (60 * 1000));
-    average %= (60 * 1000);
-    const s = Math.floor(average / 10) / 100;
+    const h = Math.floor(averageTime / (3600 * 1000));
+    averageTime %= (3600 * 1000);
+    const m = Math.floor(averageTime / (60 * 1000));
+    averageTime %= (60 * 1000);
+    const s = Math.floor(averageTime / 10) / 100;
     return (h ? (h + 'h ') : '') +
         (m ? (m + 'm ') : '') +
         s + 's' +

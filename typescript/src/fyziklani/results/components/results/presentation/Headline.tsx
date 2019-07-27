@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { lang } from '../../../../../i18n/i18n';
-import Ordinal from '../../../../../i18n/ordinal';
+import { lang } from '@i18n/i18n';
+import Ordinal from '../../../../../i18n/Ordinal';
 
 interface Props {
     startPosition: number;

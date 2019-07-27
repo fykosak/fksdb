@@ -1,8 +1,8 @@
 import { app } from './app-collector';
-import { eventAccommodation } from './events/accommodation';
-import { eventApplicationsTimeProgress } from './events/applications-time-progress';
-import { fyziklani } from './fyziklani';
-import { payment } from './payment/selectField';
+import { eventAccommodation } from './events/accommodation/Index';
+import { eventApplicationsTimeProgress } from './events/applications-time-progress/Index';
+import { fyziklani } from './fyziklani/Index';
+import { payment } from './payment/selectField/Index';
 
 app.register(fyziklani);
 app.register(eventAccommodation);

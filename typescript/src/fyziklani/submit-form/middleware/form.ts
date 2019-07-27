@@ -1,5 +1,5 @@
 import { FormErrors } from 'redux-form';
-import { Props } from '../components/form-section';
+import { Props } from '../components/FormSection';
 
 export const getFullCode = (code): string => {
     const length = code.length;

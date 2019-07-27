@@ -7,7 +7,7 @@ import {
 import logger from 'redux-logger';
 import { NetteActions } from '../../../app-collector/';
 import { config } from '../../../config/';
-import Downloader from '../../helpers/downloader/components/index';
+import Downloader from '../../helpers/downloader/components/Index';
 import { app } from '../reducers';
 import App from './App';
 

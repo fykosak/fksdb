@@ -8,7 +8,7 @@ import {
     curveLinear,
     line,
 } from 'd3-shape';
-import { ExtendedSubmit } from '../../components/charts/team/line-chart/chart';
+import { ExtendedSubmit } from '../../components/charts/team/line-chart/Chart';
 
 interface Scales {
     xScale: ScaleTime<number, number>;

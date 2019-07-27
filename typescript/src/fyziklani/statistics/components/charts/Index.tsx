@@ -1,8 +1,8 @@
 import * as React from 'react';
 import Timer from '../../../helpers/components/timer/Index';
-import CorrelationStats from './correlation/index';
-import TasksStats from './task/index';
-import TeamStats from './team/index';
+import CorrelationStats from './correlation/Index';
+import TasksStats from './task/Index';
+import TeamStats from './team/Index';
 
 interface Props {
     mode: string;

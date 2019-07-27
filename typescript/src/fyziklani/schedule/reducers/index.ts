@@ -7,7 +7,7 @@ import {
 import {
     compactValue,
     State as CompactValueState,
-} from './compact-value';
+} from './compactValue';
 
 export const app = combineReducers({
     compactValue,
