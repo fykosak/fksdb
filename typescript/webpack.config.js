@@ -11,7 +11,7 @@ module.exports = {
     },
     module: {
         rules: [
-            /*{
+            {
                 enforce: 'pre',
                 test: /\.tsx?$/,
                 loader: 'tslint-loader',
@@ -20,7 +20,7 @@ module.exports = {
                     failOnHint: false,
                     configuration: require('./tslint.json'),
                 },
-            },*/
+            },
             {
                 test: /\.tsx?$/,
                 use: 'awesome-typescript-loader',
@@ -41,15 +41,3 @@ module.exports = {
         ReactDOM: 'react-dom'
     },
 };
-
-
-/*
- //  ,
- //
- //   ,
- //   ,
- //    "ts-loader": "latest",
- //    ,
- //    ,
- //    ,
- //    */

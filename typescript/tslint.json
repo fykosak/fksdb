@@ -13,9 +13,7 @@
     "file-name-casing": [
       true,
       {
-        ".*.tsx": "pascal-case",
-        ".*.ts": "camel-case",
-        "^[a-z]*": "kebab-case"
+        ".*.tsx?": "camel-case"
       }
     ],
     "cyclomatic-complexity": false,
@@ -50,7 +48,10 @@
       [
         "@fetchApi",
         "@shared",
-        "@i18n"
+        "@i18n",
+        "@appsCollector",
+        "@inputConnector",
+        "@config"
       ]
     ],
     "member-access": true,

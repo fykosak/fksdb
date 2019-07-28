@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "outDir": "./dist",
     "sourceMap": true,
     "noImplicitAny": false,
     "module": "es2015",
@@ -10,13 +11,22 @@
     "baseUrl": ".",
     "paths": {
       "@fetchApi/*": [
-        "./src/fetch-api/*"
+        "./src/fetchApi/*"
       ],
       "@shared/*": [
         "./src/shared/*"
       ],
       "@i18n/*": [
         "./src/i18n/*"
+      ],
+      "@appsCollector": [
+        "./src/appsCollector/"
+      ],
+      "@inputConnector/*": [
+        "./src/inputConnector/*"
+      ],
+      "@config": [
+        "./src/config"
       ]
     }
   },
