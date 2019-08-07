@@ -28,6 +28,9 @@ use WebService\IXMLNodeSerializer;
  */
 class WebServiceModel {
 
+    /* Special token that is replaced with current year of seminar */
+    const YEAR_CURRENT = 'current';
+
     /**
      * @var array  contest name => contest_id
      */
@@ -69,6 +72,11 @@ class WebServiceModel {
     private $contestAuthorizator;
 
     /**
+     * @var YearCalculator
+     */
+    private $yearCalculator;
+
+    /**
      * FKSDB\WebService\WebServiceModel constructor.
      * @param array $inverseContestMap
      * @param ServiceContest $serviceContest
@@ -77,8 +85,9 @@ class WebServiceModel {
      * @param IAuthenticator $authenticator
      * @param StoredQueryFactory $storedQueryFactory
      * @param ContestAuthorizator $contestAuthorizator
+     * @param YearCalculator $yearCalculator
      */
-    function __construct(array $inverseContestMap, ServiceContest $serviceContest, ResultsModelFactory $resultsModelFactory, StatsModelFactory $statsModelFactory, IAuthenticator $authenticator, StoredQueryFactory $storedQueryFactory, ContestAuthorizator $contestAuthorizator) {
+    function __construct(array $inverseContestMap, ServiceContest $serviceContest, ResultsModelFactory $resultsModelFactory, StatsModelFactory $statsModelFactory, IAuthenticator $authenticator, StoredQueryFactory $storedQueryFactory, ContestAuthorizator $contestAuthorizator, YearCalculator $yearCalculator) {
         $this->inverseContestMap = $inverseContestMap;
         $this->serviceContest = $serviceContest;
         $this->resultsModelFactory = $resultsModelFactory;
@@ -86,6 +95,7 @@ class WebServiceModel {
         $this->authenticator = $authenticator;
         $this->storedQueryFactory = $storedQueryFactory;
         $this->contestAuthorizator = $contestAuthorizator;
+        $this->yearCalculator = $yearCalculator;
     }
 
     /**
@@ -268,25 +278,10 @@ class WebServiceModel {
         // parse arguments
         $qid = $args->qid;
         $format = isset($args->{'format-version'}) ? ((int)$args->{'format-version'}) : IXMLNodeSerializer::EXPORT_FORMAT_1;
-        $parameters = [];
-
+        
         $this->checkAuthentication(__FUNCTION__, $qid);
 
-        // stupid PHP deserialization
-        if (!is_array($args->parameter)) {
-            $args->parameter = array($args->parameter);
-        }
-        foreach ($args->parameter as $parameter) {
-            $parameters[$parameter->name] = $parameter->{'_'};
-            if ($parameter->name == StoredQueryFactory::PARAM_CONTEST) {
-                if (!isset($this->inverseContestMap[$parameters[$parameter->name]])) {
-                    $msg = "Unknown contest '{$parameters[$parameter->name]}'.";
-                    $this->log($msg);
-                    throw new SoapFault('Sender', $msg);
-                }
-                $parameters[$parameter->name] = $this->inverseContestMap[$parameters[$parameter->name]];
-            }
-        }
+        $parameters = $this->transformParameters($args->parameter);
 
         try {
             $storedQuery = $this->storedQueryFactory->createQueryFromQid($qid, $parameters);
@@ -311,6 +306,40 @@ class WebServiceModel {
         $doc->formatOutput = true;
 
         return new SoapVar($doc->saveXML($exportNode), XSD_ANYXML);
+    }
+
+    private function transformParameters($parameters) {
+        $result = [];
+
+        // stupid PHP deserialization
+        if (!is_array($parameters)) {
+            $parameters = array($parameters);
+        }
+
+        foreach ($parameters as $parameter) {
+            $value = $parameter->{'_'};
+            if ($parameter->name == StoredQueryFactory::PARAM_CONTEST) {
+                if (!isset($this->inverseContestMap[$value])) {
+                    $msg = "Unknown contest '{$value}'.";
+                    $this->log($msg);
+                    throw new SoapFault('Sender', $msg);
+                }
+                $result[$parameter->name] = $this->inverseContestMap[$value];
+            } else {
+                $result[$parameter->name] = $value;
+            }
+        }
+
+        if (isset($result[StoredQueryFactory::PARAM_YEAR]) && $result[StoredQueryFactory::PARAM_YEAR] == self::YEAR_CURRENT) {
+            if (!isset($result[StoredQueryFactory::PARAM_CONTEST])) {
+                $msg = "Contest not set, cannot infer current year."
+                $this->log($msg);
+                throw new SoapFault('Sender', $msg);
+            }
+            $result[StoredQueryFactory::PARAM_YEAR] = $this->yearCalculator->getCurrentYear($results[StoredQueryFactory::PARAM_CONTEST]);
+        }
+
+
     }
 
     /**
