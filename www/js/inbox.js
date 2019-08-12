@@ -1,20 +1,32 @@
 $(document).ready(function () {
-    var linkFormat = '/submit/download/%d';
+    const linkFormat = '/fykos32/public/submit/download/%d';
 
+    /**
+     *
+     * @param {{submit_id:string task:{label:string}}} taskData
+     * @returns {jQuery.fn.init|jQuery|HTMLElement}
+     */
     function createDownloadLink(taskData) {
-        var el = $('<a>');
+        const el = $('<a>');
         el.attr('class', 'btn btn-sm btn-secondary');
         el.attr('href', linkFormat.replace('%d', taskData.submit_id));
         el.text('Download ' + taskData.task.label);
         return el;
     }
 
+    /**
+     *
+     * @param {{submit_id:string task:{label:string} submitted_on?: string}} taskData
+     * @param dataEl
+     * @param data
+     * @returns {[jQuery.fn.init|jQuery|HTMLElement, jQuery.fn.init|jQuery|HTMLElement]}
+     */
     function createDatetime(taskData, dataEl, data) {
-        var el = $('<input type="text" class="form-control form-control-sm">');
+        const el = $('<input type="text" class="form-control form-control-sm">');
         el.attr('placeholder', 'Úloha ' + taskData.task.label);
 
         //el.attr('class', 'inboxField');
-        var alt = $('<input>');
+        const alt = $('<input>');
         alt.attr('type', 'hidden');
         if (taskData) {
             alt.val(taskData.submitted_on);
@@ -28,13 +40,13 @@ $(document).ready(function () {
 
             dataEl.val(JSON.stringify(data));
         });
-        var internalFormat = 'yy-mm-dd'; //TODO parametrize this time, now it works because it's only for post submits
+        const internalFormat = 'yy-mm-dd'; //TODO parametrize this time, now it works because it's only for post submits
         el.datepicker({
             altField: alt,
             altFormat: internalFormat
         });
         if (taskData.submitted_on) {
-            var submitted_on = $.datepicker.parseDate(internalFormat, taskData.submitted_on);
+            const submitted_on = $.datepicker.parseDate(internalFormat, taskData.submitted_on);
             el.datepicker('setDate', submitted_on);
         }
 
@@ -54,9 +66,9 @@ $(document).ready(function () {
 
     $("input.inbox").submitFields({
         createElements: function (taskData, allData, dataEl, containerEl) {
-            var substEl = createElement(taskData, dataEl, allData);
+            const substEl = createElement(taskData, dataEl, allData);
 
-            var li = $('<li>');
+            const li = $('<li>');
             li.addClass('inbox-field col');
             if (!taskData || !taskData.submit_id || taskData.source === 'upload') {
                 li.addClass('swappable');
@@ -68,7 +80,7 @@ $(document).ready(function () {
 
         },
         initContainer: function (containerEl, ctId) {
-            var list = $('<ul>');
+            const list = $('<ul>');
             list.attr('class', 'inbox-swappable row');
             list.data('contestant', ctId);
             containerEl.append(list);
