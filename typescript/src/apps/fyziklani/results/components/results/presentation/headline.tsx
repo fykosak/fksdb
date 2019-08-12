@@ -2,13 +2,13 @@ import { lang } from '@i18n/i18n';
 import Ordinal from '@i18n/ordinal';
 import * as React from 'react';
 
-interface Props {
+interface OwnProps {
     startPosition: number;
     endPosition: number;
     category: string;
 }
 
-export default class Headline extends React.Component<Props, {}> {
+export default class Headline extends React.Component<OwnProps, {}> {
 
     public render() {
         const {category, startPosition, endPosition} = this.props;

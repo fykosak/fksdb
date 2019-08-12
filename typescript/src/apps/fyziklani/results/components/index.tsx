@@ -11,12 +11,12 @@ import Downloader from '../../helpers/downloader/components/';
 import { app } from '../reducers';
 import App from './app';
 
-interface Props {
+interface OwnProps {
     mode: string;
     actions: NetteActions;
 }
 
-export default class Index extends React.Component<Props, {}> {
+export default class Index extends React.Component<OwnProps, {}> {
     public render() {
         const store = config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
         const accessKey = '@@fyziklani-results';

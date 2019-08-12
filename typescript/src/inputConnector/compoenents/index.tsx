@@ -9,27 +9,25 @@ import {
     InputConnectorItems,
     Store,
 } from '../reducers';
-import CoreConnector, { CoreProps } from './coreConnector';
+import CoreConnector, {
+    OwnProps,
+    DispatchProps,
+    StateProps,
+} from './coreConnector';
 
-interface State {
-    data?: InputConnectorItems;
-
-    onSetInitialData?(value: InputConnectorItems): void;
-}
-
-export class InputConnector extends React.Component<CoreProps, {}> {
+export class InputConnector extends React.Component<OwnProps, {}> {
     public render() {
         const ConnectedComponent = connect(this.mapStateToProps, this.mapDispatchToProps)(CoreConnector);
         return <ConnectedComponent input={this.props.input}/>;
     }
 
-    private mapDispatchToProps(dispatch: Dispatch<Action<string>>): State {
+    private mapDispatchToProps(dispatch: Dispatch<Action<string>>): DispatchProps {
         return {
             onSetInitialData: (data: InputConnectorItems) => dispatch(setInitialData(data)),
         };
     }
 
-    private mapStateToProps(state: Store): State {
+    private mapStateToProps(state: Store): StateProps {
         return {
             data: state.inputConnector.data,
         };

@@ -8,19 +8,21 @@ import { Team } from '../../../../helpers/interfaces';
 import { setPosition } from '../../../actions/presentation/setPosition';
 import { FyziklaniResultsStore } from '../../../reducers';
 
-interface State {
-    categories?: string[];
-    category?: string;
-    cols?: number;
-    teams?: Team[];
-    rows?: number;
-    delay?: number;
-    position?: number;
-
-    onSetNewPosition?(position: number, category?: string): void;
+interface StateProps {
+    categories: string[];
+    category: string;
+    cols: number;
+    teams: Team[];
+    rows: number;
+    delay: number;
+    position: number;
 }
 
-class PositionSwitcher extends React.Component<State, {}> {
+interface DispatchProps {
+    onSetNewPosition(position: number, category?: string): void;
+}
+
+class PositionSwitcher extends React.Component<StateProps & DispatchProps, {}> {
     private abortRun = false;
 
     public componentDidMount() {
@@ -78,12 +80,12 @@ class PositionSwitcher extends React.Component<State, {}> {
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): State => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
     return {
         onSetNewPosition: (position: number, category?: string) => dispatch(setPosition(position, category)),
     };
 };
-const mapStateToPros = (state: FyziklaniResultsStore): State => {
+const mapStateToPros = (state: FyziklaniResultsStore): StateProps => {
     return {
         categories: state.data.categories,
         category: state.presentation.category,

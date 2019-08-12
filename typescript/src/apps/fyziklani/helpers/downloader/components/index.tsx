@@ -13,31 +13,33 @@ import {
 } from '../actions/';
 import jqXHR = JQuery.jqXHR;
 
-interface State {
-    error?: jqXHR<any>;
-    isSubmitting?: boolean;
-    lastUpdated?: string;
-    refreshDelay?: number;
-    isRefreshing?: boolean;
-
-    onWaitForFetch?(lastUpdated: string, delay: number): void;
-
-    onFetch?(): void;
+interface StateProps {
+    error: jqXHR<any>;
+    isSubmitting: boolean;
+    lastUpdated: string;
+    refreshDelay: number;
+    isRefreshing: boolean;
 }
 
-interface Props {
+interface DispatchProps {
+    onWaitForFetch(lastUpdated: string, delay: number): void;
+
+    onFetch(): void;
+}
+
+interface OwnProps {
     accessKey: string;
     actions: NetteActions;
 }
 
-class Downloader extends React.Component<State & Props, {}> {
+class Downloader extends React.Component<DispatchProps & StateProps & OwnProps, {}> {
 
     public componentDidMount() {
         const {onFetch} = this.props;
         onFetch();
     }
 
-    public componentWillReceiveProps(nextProps: State & Props) {
+    public componentWillReceiveProps(nextProps: DispatchProps & StateProps & OwnProps) {
         const {lastUpdated: oldLastUpdated} = this.props;
         if (oldLastUpdated !== nextProps.lastUpdated) {
 
@@ -66,7 +68,7 @@ class Downloader extends React.Component<State & Props, {}> {
     }
 }
 
-const mapStateToProps = (state: FyziklaniResultsStore, ownProps: Props): State => {
+const mapStateToProps = (state: FyziklaniResultsStore, ownProps: OwnProps): StateProps => {
     const {accessKey} = ownProps;
     return {
         error: state.fetchApi.hasOwnProperty(accessKey) ? state.fetchApi[accessKey].error : null,
@@ -79,7 +81,7 @@ const mapStateToProps = (state: FyziklaniResultsStore, ownProps: Props): State =
 /**
  * @throws Error
  */
-const mapDispatchToProps = (dispatch: Dispatch<Action<string>>, ownProps: Props): State => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>, ownProps: OwnProps): DispatchProps => {
     const {accessKey, actions} = ownProps;
     if (!actions.hasOwnProperty('refresh')) {
         throw new Error('You need refresh URL');

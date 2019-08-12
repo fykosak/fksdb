@@ -8,13 +8,15 @@ import {
 import { setRows } from '../../../../actions/presentation/setRows';
 import { FyziklaniResultsStore } from '../../../../reducers';
 
-interface State {
-    rows?: number;
-
-    onSetRows?(rows: number): void;
+interface StateProps {
+    rows: number;
 }
 
-class RowsField extends React.Component<State, {}> {
+interface DispatchProps {
+    onSetRows(rows: number): void;
+}
+
+class RowsField extends React.Component<StateProps & DispatchProps, {}> {
 
     public render() {
         const {rows, onSetRows} = this.props;
@@ -29,12 +31,12 @@ class RowsField extends React.Component<State, {}> {
     }
 }
 
-const mapStateToPros = (state: FyziklaniResultsStore): State => {
+const mapStateToPros = (state: FyziklaniResultsStore): StateProps => {
     return {
         rows: state.presentation.rows,
     };
 };
-const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): State => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
     return {
         onSetRows: (rows: number) => dispatch(setRows(rows)),
     };

@@ -4,15 +4,15 @@ import Loading from '../../helpers/components/loading/';
 import { FyziklaniResultsStore } from '../reducers';
 import Results from './results/';
 
-interface State {
-    isReady?: boolean;
+interface StateProps {
+    isReady: boolean;
 }
 
-interface Props {
+interface OwnProps {
     mode: string;
 }
 
-class App extends React.Component<State & Props, {}> {
+class App extends React.Component<StateProps & OwnProps, {}> {
     public render() {
 
         const {isReady, mode} = this.props;
@@ -23,7 +23,7 @@ class App extends React.Component<State & Props, {}> {
     }
 }
 
-const mapStateToProps = (state: FyziklaniResultsStore): State => {
+const mapStateToProps = (state: FyziklaniResultsStore): StateProps => {
     return {
         isReady: state.options.isReady,
     };

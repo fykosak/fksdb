@@ -8,20 +8,15 @@ import {
 import { setCols } from '../../../../actions/presentation/setCols';
 import { FyziklaniResultsStore } from '../../../../reducers';
 
-interface State {
-    delay?: number;
-    cols?: number;
-    rows?: number;
-    isOrg?: boolean;
-
-    onSetDelay?(position: number): void;
-
-    onSetCols?(cols: number): void;
-
-    onSetRows?(rows: number): void;
+interface StateProps {
+    cols: number;
 }
 
-class ColsField extends React.Component<State, {}> {
+interface DispatchProps {
+    onSetCols(cols: number): void;
+}
+
+class ColsField extends React.Component<StateProps & DispatchProps, {}> {
 
     public render() {
         const {cols, onSetCols} = this.props;
@@ -36,13 +31,12 @@ class ColsField extends React.Component<State, {}> {
     }
 }
 
-const mapStateToPros = (state: FyziklaniResultsStore): State => {
+const mapStateToPros = (state: FyziklaniResultsStore): StateProps => {
     return {
         cols: state.presentation.cols,
-
     };
 };
-const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): State => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
     return {
         onSetCols: (cols: number) => dispatch(setCols(cols)),
 

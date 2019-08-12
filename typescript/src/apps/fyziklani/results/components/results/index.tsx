@@ -6,11 +6,11 @@ import Settings from './presentation/settings/';
 import ResultsTable from './table/';
 import FilterSelect from './table/filters/select/';
 
-interface Props {
+interface OwnProps {
     mode: string;
 }
 
-export default class Results extends React.Component<Props, {}> {
+export default class Results extends React.Component<OwnProps, {}> {
 
     public render() {
         const {mode} = this.props;

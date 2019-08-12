@@ -5,20 +5,19 @@ import { State as TimerState } from '../../reducers/timer';
 import Timer from '../timer/';
 import Images from '../timer/images';
 
-interface State {
+interface StateProps {
     visible?: boolean;
     hardVisible?: boolean;
 }
 
-interface Props {
+interface OwnProps {
     className?: string;
 }
 
-class ResultsShower extends React.Component<State & Props, {}> {
+class ResultsShower extends React.Component<StateProps & OwnProps, {}> {
 
     public render() {
         const {visible, hardVisible} = this.props;
-        // <Sponsors/>
         return (
             <>
                 {(visible || hardVisible) ?
@@ -43,7 +42,7 @@ interface Store {
     options: OptionsState;
 }
 
-const mapStateToProps = (state: Store): State => {
+const mapStateToProps = (state: Store): StateProps => {
     return {
         hardVisible: state.options.hardVisible,
         visible: state.timer.visible,

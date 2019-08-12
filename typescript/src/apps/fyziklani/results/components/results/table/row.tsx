@@ -5,14 +5,14 @@ import {
     Team,
 } from '../../../../helpers/interfaces';
 
-interface Props {
+interface OwnProps {
     submits: Submits;
     team: Team;
     tasks: Task[];
     visible: boolean;
 }
 
-export default class Row extends React.Component<Props, {}> {
+export default class Row extends React.Component<OwnProps, {}> {
 
     public render() {
         const {submits, team, tasks, visible} = this.props;

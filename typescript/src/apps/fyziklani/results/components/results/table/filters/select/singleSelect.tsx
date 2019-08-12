@@ -11,15 +11,17 @@ import FilterComponent from '../../../../../middleware/results/filters/filterCom
 import { createFilters } from '../../../../../middleware/results/filters/filters';
 import { FyziklaniResultsStore } from '../../../../../reducers';
 
-interface State {
-    filters?: Filter[];
-    categories?: string[];
-    isOrg?: boolean;
-
-    onSetFilter?(filter: Filter): void;
+interface StateProps {
+    filters: Filter[];
+    categories: string[];
+    isOrg: boolean;
 }
 
-class SingleSelect extends React.Component<State, {}> {
+interface DispatchProps {
+    onSetFilter(filter: Filter): void;
+}
+
+class SingleSelect extends React.Component<StateProps & DispatchProps, {}> {
 
     public render() {
         const {categories, filters, onSetFilter, isOrg} = this.props;
@@ -38,12 +40,12 @@ class SingleSelect extends React.Component<State, {}> {
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): State => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
     return {
         onSetFilter: (filter: Filter) => dispatch(setFilter(filter)),
     };
 };
-const mapStateToPros = (state: FyziklaniResultsStore): State => {
+const mapStateToPros = (state: FyziklaniResultsStore): StateProps => {
     return {
         categories: state.data.categories,
         filters: state.tableFilter.filters,

@@ -11,14 +11,14 @@ import { Filter } from '../../../middleware/results/filters/filter';
 import { FyziklaniResultsStore } from '../../../reducers';
 import Row from './row';
 
-interface State {
-    filter?: Filter;
-    submits?: Submits;
-    teams?: Team[];
-    tasks?: Task[];
+interface StateProps {
+    filter: Filter;
+    submits: Submits;
+    teams: Team[];
+    tasks: Task[];
 }
 
-class Index extends React.Component<State, {}> {
+class Index extends React.Component<StateProps, {}> {
     private table;
 
     public constructor(props) {
@@ -92,7 +92,7 @@ class Index extends React.Component<State, {}> {
     }
 }
 
-const mapStateToProps = (state: FyziklaniResultsStore): State => {
+const mapStateToProps = (state: FyziklaniResultsStore): StateProps => {
     const {index, filters} = state.tableFilter;
     return {
         filter: (filters.hasOwnProperty(index)) ? filters[index] : null,

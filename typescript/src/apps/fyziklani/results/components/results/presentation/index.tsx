@@ -13,18 +13,18 @@ import { FyziklaniResultsStore } from '../../../reducers';
 import Headline from './headline';
 import Row from './row';
 
-interface State {
-    availablePoints?: number[];
-    category?: string;
-    submits?: Submits;
-    teams?: Team[];
-    tasks?: Task[];
-    cols?: number;
-    rows?: number;
-    position?: number;
+interface StateProps {
+    availablePoints: number[];
+    category: string;
+    submits: Submits;
+    teams: Team[];
+    tasks: Task[];
+    cols: number;
+    rows: number;
+    position: number;
 }
 
-class Index extends React.Component<State, {}> {
+class Index extends React.Component<StateProps, {}> {
 
     public render() {
         const {submits, teams, rows, cols, category, position: statePosition, availablePoints} = this.props;
@@ -93,7 +93,7 @@ class Index extends React.Component<State, {}> {
     }
 }
 
-const mapStateToProps = (state: FyziklaniResultsStore): State => {
+const mapStateToProps = (state: FyziklaniResultsStore): StateProps => {
     return {
         availablePoints: state.data.availablePoints,
         category: state.presentation.category,

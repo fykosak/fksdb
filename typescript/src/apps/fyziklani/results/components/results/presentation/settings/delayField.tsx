@@ -7,13 +7,15 @@ import {
 import { setDelay } from '../../../../actions/presentation/setDelay';
 import { FyziklaniResultsStore } from '../../../../reducers';
 
-interface State {
-    delay?: number;
-
-    onSetDelay?(position: number): void;
+interface StateProps {
+    delay: number;
 }
 
-class DelayField extends React.Component<State, {}> {
+interface DispatchProps {
+    onSetDelay(position: number): void;
+}
+
+class DelayField extends React.Component<StateProps & DispatchProps, {}> {
 
     public render() {
         const {delay, onSetDelay} = this.props;
@@ -30,12 +32,12 @@ class DelayField extends React.Component<State, {}> {
     }
 }
 
-const mapStateToPros = (state: FyziklaniResultsStore): State => {
+const mapStateToPros = (state: FyziklaniResultsStore): StateProps => {
     return {
         delay: state.presentation.delay,
     };
 };
-const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): State => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
     return {
         onSetDelay: (position: number) => dispatch(setDelay(position)),
     };

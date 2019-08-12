@@ -2,13 +2,13 @@ import * as React from 'react';
 import { getColorByPoints } from '../../../../statistics/middleware/charts/colors';
 import { Item } from '../../../middleware/results/calculateData';
 
-interface Props {
+interface OwnProps {
     item: Item;
     position: number;
     availablePoints: number[];
 }
 
-export default class Row extends React.Component<Props, {}> {
+export default class Row extends React.Component<OwnProps, {}> {
     public render() {
         const {item, position, availablePoints} = this.props;
 

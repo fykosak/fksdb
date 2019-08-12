@@ -7,11 +7,11 @@ import ColsField from './colsField';
 import DelayField from './delayField';
 import RowsField from './rowsField';
 
-interface State {
-    isOrg?: boolean;
+interface StateProps {
+    isOrg: boolean;
 }
 
-class Index extends React.Component<State, {}> {
+class Index extends React.Component<StateProps, {}> {
 
     public render() {
         const {isOrg} = this.props;
@@ -39,7 +39,7 @@ class Index extends React.Component<State, {}> {
     }
 }
 
-const mapStateToPros = (state: FyziklaniResultsStore): State => {
+const mapStateToPros = (state: FyziklaniResultsStore): StateProps => {
     return {
         isOrg: state.options.isOrg,
     };

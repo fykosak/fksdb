@@ -15,18 +15,20 @@ import FilterComponent from '../../../../../middleware/results/filters/filterCom
 import { createFilters } from '../../../../../middleware/results/filters/filters';
 import { FyziklaniResultsStore } from '../../../../../reducers';
 
-interface State {
-    filters?: Filter[];
-    index?: number;
-    categories?: string[];
-    rooms?: Room[];
-
-    onAddFilter?(filter: Filter): void;
-
-    onRemoveFilter?(filter: Filter): void;
+interface StateProps {
+    filters: Filter[];
+    index: number;
+    categories: string[];
+    rooms: Room[];
 }
 
-class MultiSelect extends React.Component<State, {}> {
+interface DispatchProps {
+    onAddFilter(filter: Filter): void;
+
+    onRemoveFilter(filter: Filter): void;
+}
+
+class MultiSelect extends React.Component<StateProps & DispatchProps, {}> {
 
     public render() {
         const {categories, filters, index, rooms, onRemoveFilter, onAddFilter} = this.props;
@@ -66,13 +68,13 @@ class MultiSelect extends React.Component<State, {}> {
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): State => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
     return {
         onAddFilter: (filter: Filter) => dispatch(addFilter(filter)),
         onRemoveFilter: (filter: Filter) => dispatch(removeFilter(filter)),
     };
 };
-const mapStateToPros = (state: FyziklaniResultsStore): State => {
+const mapStateToPros = (state: FyziklaniResultsStore): StateProps => {
     return {
         categories: state.data.categories,
         filters: state.tableFilter.filters,
