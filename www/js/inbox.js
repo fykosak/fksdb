@@ -1,6 +1,6 @@
 $(document).ready(function () {
-    const linkFormat = '/fykos32/public/submit/download/%d';
-
+    // const linkFormat = '/fykos32/public/submit/download/%d';
+    const linkFormat = '/submit/download/%d'; //TODO
     /**
      *
      * @param {{submit_id:string task:{label:string}}} taskData
@@ -16,7 +16,7 @@ $(document).ready(function () {
 
     /**
      *
-     * @param {{submit_id:string task:{label:string} submitted_on?: string}} taskData
+     * @param {{submit_id:string task:{label:string} submitted_on: string|null}} taskData
      * @param dataEl
      * @param data
      * @returns {[jQuery.fn.init|jQuery|HTMLElement, jQuery.fn.init|jQuery|HTMLElement]}
