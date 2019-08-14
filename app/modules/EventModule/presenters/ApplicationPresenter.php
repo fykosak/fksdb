@@ -9,6 +9,7 @@ use FKSDB\Components\Grids\Events\Application\ApplicationGrid;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Services\ServiceEventParticipant;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 
@@ -45,7 +46,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      * @throws \Nette\Application\BadRequestException
      */
     public function authorizedDetail() {
@@ -57,7 +58,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      * @throws \Nette\Application\BadRequestException
      */
     public function authorizedImport() {
@@ -69,7 +70,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      * @throws \Nette\Application\BadRequestException
      */
     public function authorizedList() {
@@ -84,7 +85,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @param int $id
      * @throws BadRequestException
      * @throws ForbiddenRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     protected function loadModel(int $id) {
         $row = $this->serviceEventParticipant->findByPrimary($id);
@@ -107,7 +108,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
 
     /**
      * @return ApplicationGrid
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      * @throws \Nette\Application\BadRequestException
      */
     public function createComponentGrid(): AbstractApplicationGrid {
@@ -117,7 +118,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
     /**
      * @return ImportComponent
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function createComponentImport(): ImportComponent {
         $source = new SingleEventSource($this->getEvent(), $this->container);
@@ -132,7 +133,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
 
     /**
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function renderDetail() {
         $this->template->fields = $this->getEvent()->getHolder()->getPrimaryHolder()->getFields();

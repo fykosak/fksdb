@@ -6,6 +6,7 @@
 
 namespace FKSDB\Components\Controls\Navs;
 
+use Exception;
 use FKSDB\Components\Controls\Choosers\LanguageChooser;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
@@ -46,7 +47,7 @@ class LanguageNav extends Control {
      * @param object $params
      * @return object
      * redirect to correct URL
-     * @throws \Exception
+     * @throws Exception
      */
     public function init($params) {
         /**

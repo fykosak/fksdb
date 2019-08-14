@@ -5,7 +5,10 @@ namespace FKSDB\Components\Forms\Containers;
 use FKSDB\ORM\AbstractModelMulti;
 use FKSDB\ORM\Services\ServiceRegion;
 use Nette\Database\Table\ActiveRow;
+use Nette\Forms\Container;
 use Nette\InvalidStateException;
+use Nette\Utils\ArrayHash;
+use Traversable;
 
 /**
  *
@@ -28,7 +31,7 @@ class AddressContainer extends ModelContainer {
     /**
      * Used for substituing form's IControl (via duck-typing).
      *
-     * @param \Traversable $value
+     * @param Traversable $value
      */
     public function setValue($value) {
         $this->setValues($value === null ? [] : $value);
@@ -37,7 +40,7 @@ class AddressContainer extends ModelContainer {
     /**
      * Used for substituing form's IControl (via duck-typing).
      *
-     * @param \Traversable $value
+     * @param Traversable $value
      */
     public function setDefaultValue($value) {
         $this->setDefaults($value === null ? [] : $value);
@@ -46,7 +49,7 @@ class AddressContainer extends ModelContainer {
     /**
      * @param $values
      * @param bool $erase
-     * @return \Nette\Forms\Container|void
+     * @return Container|void
      */
     public function setValues($values, $erase = FALSE) {
         if ($values instanceof ActiveRow || $values instanceof AbstractModelMulti) { //assert its from address table
@@ -68,7 +71,7 @@ class AddressContainer extends ModelContainer {
 
     /**
      * @param bool $asArray
-     * @return array|\Nette\Utils\ArrayHash
+     * @return array|ArrayHash
      */
     public function getValues($asArray = FALSE) {
         $values = parent::getValues($asArray);

@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
+use Exception;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelContest;
@@ -35,7 +36,7 @@ class EventFactory extends SingleReflectionFactory {
     /**
      * @param ModelContest $contest
      * @return ModelContainer
-     * @throws \Exception
+     * @throws Exception
      */
     public function createEvent(ModelContest $contest): ModelContainer {
         $container = new ModelContainer();
@@ -57,7 +58,7 @@ class EventFactory extends SingleReflectionFactory {
      * @param string $fieldName
      * @param ModelContest $contest
      * @return BaseControl
-     * @throws \Exception
+     * @throws Exception
      */
     public function createField(string $fieldName, ModelContest $contest = null): BaseControl {
         switch ($fieldName) {

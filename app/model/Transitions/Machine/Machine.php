@@ -2,12 +2,17 @@
 
 namespace FKSDB\Transitions;
 
+use Exception;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Database\Connection;
 use Nette\Database\Table\ActiveRow;
+use function array_filter;
+use function array_values;
+use function count;
+use function is_null;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -67,7 +72,7 @@ abstract class Machine {
      */
     public function getAvailableTransitions(IStateModel $model = null): array {
         $state = $model ? $model->getState() : NULL;
-        if (\is_null($state)) {
+        if (is_null($state)) {
             $state = self::STATE_INIT;
         }
         return array_filter($this->getTransitions(), function (Transition $transition) use ($model, $state) {
@@ -79,10 +84,10 @@ abstract class Machine {
      * @param string $id
      * @param IStateModel $model
      * @return Transition
-     * @throws \Exception
+     * @throws Exception
      */
     protected function findTransitionById(string $id, IStateModel $model): Transition {
-        $transitions = \array_filter($this->getAvailableTransitions($model), function (Transition $transition) use ($id) {
+        $transitions = array_filter($this->getAvailableTransitions($model), function (Transition $transition) use ($id) {
             return $transition->getId() === $id;
         });
 
@@ -92,17 +97,17 @@ abstract class Machine {
     /**
      * @param array $transitions
      * @return Transition
-     * @throws \Exception
+     * @throws Exception
      */
     private function selectTransition(array $transitions): Transition {
-        $length = \count($transitions);
+        $length = count($transitions);
         if ($length > 1) {
-            throw new \Exception();
+            throw new Exception();
         }
         if (!$length) {
-            throw new \Exception();
+            throw new Exception();
         }
-        return \array_values($transitions)[0];
+        return array_values($transitions)[0];
     }
 
     /* ********** CONDITION ******** */
@@ -131,7 +136,7 @@ abstract class Machine {
      * @param IStateModel $model
      * @return IStateModel
      * @throws ForbiddenRequestException
-     * @throws \Exception
+     * @throws Exception
      */
     public function executeTransition(string $id, IStateModel $model): IStateModel {
         $transition = $this->findTransitionById($id, $model);
@@ -145,7 +150,7 @@ abstract class Machine {
      * @param Transition $transition
      * @param IStateModel|null $model
      * @return IStateModel
-     * @throws \Exception
+     * @throws Exception
      */
     private function execute(Transition $transition, IStateModel $model = null): IStateModel {
         if (!$this->connection->inTransaction()) {
@@ -153,7 +158,7 @@ abstract class Machine {
         }
         try {
             $transition->beforeExecute($model);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $this->connection->rollBack();
             throw $exception;
         }
@@ -190,7 +195,7 @@ abstract class Machine {
 
     /**
      * @return Transition
-     * @throws \Exception
+     * @throws Exception
      */
     private function getCreatingTransition(): Transition {
         $transitions = array_filter($this->getTransitions(), function (Transition $transition) {
@@ -201,7 +206,7 @@ abstract class Machine {
 
     /**
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     public function canCreate(): bool {
         return $this->canExecute($this->getCreatingTransition(), null);
@@ -212,7 +217,7 @@ abstract class Machine {
      * @param IService $service
      * @return IStateModel
      * @throws ForbiddenRequestException
-     * @throws \Exception
+     * @throws Exception
      */
     public function createNewModel($data, IService $service): IStateModel {
         $transition = $this->getCreatingTransition();

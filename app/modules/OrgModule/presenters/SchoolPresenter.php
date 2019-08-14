@@ -6,12 +6,18 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\SchoolFactory;
 use FKSDB\Components\Grids\SchoolsGrid;
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
+use FKSDB\ORM\Models\ModelEventAccommodation;
 use FKSDB\ORM\Services\ServiceAddress;
 use FKSDB\ORM\Services\ServiceSchool;
 use FormUtils;
 use ModelException;
+use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
+use Nette\Database\Table\ActiveRow;
+use ReflectionException;
 use Tracy\Debugger;
 use Nette\NotImplementedException;
 
@@ -99,7 +105,7 @@ class SchoolPresenter extends EntityPresenter {
     /**
      * @param $name
      * @return FormControl
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     protected function createComponentCreateComponent($name) {
         $control = $this->createForm();
@@ -114,7 +120,7 @@ class SchoolPresenter extends EntityPresenter {
     /**
      * @param $name
      * @return FormControl
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     protected function createComponentEditComponent($name) {
         $control = $this->createForm();
@@ -134,7 +140,7 @@ class SchoolPresenter extends EntityPresenter {
             return;
         }
         /**
-         * @var \FKSDB\ORM\Models\ModelEventAccommodation $model
+         * @var ModelEventAccommodation $model
          */
         $defaults = [
             self::CONT_SCHOOL => $model->toArray(),
@@ -154,7 +160,7 @@ class SchoolPresenter extends EntityPresenter {
 
     /**
      * @return FormControl
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     private function createForm() {
         $control = new FormControl();
@@ -170,7 +176,7 @@ class SchoolPresenter extends EntityPresenter {
 
     /**
      * @param $id
-     * @return \FKSDB\ORM\AbstractModelSingle|\Nette\Database\Table\ActiveRow|null
+     * @return AbstractModelSingle|ActiveRow|null
      */
     protected function loadModel($id) {
         return $this->serviceSchool->findByPrimary($id);
@@ -179,8 +185,8 @@ class SchoolPresenter extends EntityPresenter {
     /**
      * @internal
      * @param Form $form
-     * @throws \Nette\Application\AbortException
-     * @throws \ReflectionException
+     * @throws AbortException
+     * @throws ReflectionException
      */
     public function handleCreateFormSuccess(Form $form) {
         $connection = $this->serviceSchool->getConnection();
@@ -227,8 +233,8 @@ class SchoolPresenter extends EntityPresenter {
     /**
      * @internal
      * @param Form $form
-     * @throws \Nette\Application\AbortException
-     * @throws \ReflectionException
+     * @throws AbortException
+     * @throws ReflectionException
      */
     public function handleEditFormSuccess(Form $form) {
         $connection = $this->serviceSchool->getConnection();

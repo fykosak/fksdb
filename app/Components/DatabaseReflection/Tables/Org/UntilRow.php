@@ -10,6 +10,7 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
+use function is_null;
 
 /**
  * Class UntilRow
@@ -28,7 +29,7 @@ class UntilRow extends AbstractOrgRowFactory {
      * @return Html
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        if (\is_null($model->until)) {
+        if (is_null($model->until)) {
             return Html::el('span')->addAttributes(['class' => 'badge badge-success'])->addText(_('Still organizes'));
         } else {
             return (new StringPrinter)($model->until);
@@ -42,7 +43,7 @@ class UntilRow extends AbstractOrgRowFactory {
      * @throws BadRequestException
      */
     public function createField(int $min = null, int $max = null): BaseControl {
-        if (\is_null($max) || \is_null($min)) {
+        if (is_null($max) || is_null($min)) {
             throw new BadRequestException();
         }
         $control = new TextInput($this->getTitle());

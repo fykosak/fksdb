@@ -17,11 +17,14 @@ use FKSDB\ORM\Services\ServicePersonHistory;
 use FKSDB\ORM\Services\ServicePersonInfo;
 use FormUtils;
 use Mail\MailTemplateFactory;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Utils\Html;
 use Persons\Deduplication\Merger;
+use ReflectionException;
 use ServiceMPostContact;
+use function str_replace;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -231,8 +234,8 @@ class PersonPresenter extends BasePresenter {
     /**
      * @param $trunkId
      * @param $mergedId
-     * @throws \Nette\Application\AbortException
-     * @throws \ReflectionException
+     * @throws AbortException
+     * @throws ReflectionException
      */
     public function actionDontMerge($trunkId, $mergedId) {
         $mergedPI = $this->servicePersonInfo->findByPrimary($mergedId);
@@ -297,7 +300,7 @@ class PersonPresenter extends BasePresenter {
                 }
                 $pairContainer = new ContainerWithOptions();
                 $tableContainer->addComponent($pairContainer, $pairId);
-                $pairContainer->setOption('label', \str_replace('_', ' ', $table));
+                $pairContainer->setOption('label', str_replace('_', ' ', $table));
                 foreach ($data[Merger::IDX_TRUNK] as $column => $value) {
                     if (isset($data[Merger::IDX_RESOLUTION]) && array_key_exists($column, $data[Merger::IDX_RESOLUTION])) {
                         $default = $data[Merger::IDX_RESOLUTION][$column];
@@ -340,8 +343,8 @@ class PersonPresenter extends BasePresenter {
 
     /**
      * @param Form $form
-     * @throws \Nette\Application\AbortException
-     * @throws \ReflectionException
+     * @throws AbortException
+     * @throws ReflectionException
      */
     public function handleMergeFormSuccess(Form $form) {
         if ($form['cancel']->isSubmittedBy()) {

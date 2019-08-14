@@ -17,12 +17,16 @@ use FKSDB\Config\GlobalParameters;
 use FKSDB\Localization\GettextTranslator;
 use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\YearCalculator;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Responses\JsonResponse;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
+use Nette\ComponentModel\IComponent;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
+use Nette\Templating\ITemplate;
 
 /**
  * Base presenter for all application presenters.
@@ -191,7 +195,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     /**
      * @param null $class
-     * @return FileTemplate|\Nette\Templating\ITemplate
+     * @return FileTemplate|ITemplate
      */
     protected function createTemplate($class = NULL) {
         /**
@@ -309,7 +313,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @param $acName
      * @param $acQ
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function handleAutocomplete($acName, $acQ) {
         if (!$this->isAjax()) {
@@ -489,7 +493,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     /**
      * @param bool $need
      * @throws ReflectionException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public final function backLinkRedirect($need = false) {
         $this->putIntoBreadcrumbs();
@@ -525,7 +529,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     /**
      * @param $element
-     * @throws \Nette\Application\ForbiddenRequestException
+     * @throws ForbiddenRequestException
      */
     public function checkRequirements($element) {
         parent::checkRequirements($element);
@@ -636,7 +640,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     /**
      * @param string $name
-     * @return \Nette\ComponentModel\IComponent|null
+     * @return IComponent|null
      * @throws \Exception
      */
     public function createComponent($name) {

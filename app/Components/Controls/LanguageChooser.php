@@ -2,9 +2,11 @@
 
 namespace FKSDB\Components\Controls;
 
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
+use Nette\Templating\ITemplate;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -107,7 +109,7 @@ class LanguageChooser extends Control {
 
     /**
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      *  Redirect to correct address accorging to the resolved values.
      */
     public function syncRedirect() {
@@ -170,7 +172,7 @@ class LanguageChooser extends Control {
 
     /**
      * @param null $class
-     * @return \Nette\Templating\ITemplate
+     * @return ITemplate
      */
     protected function createTemplate($class = NULL) {
         $template = parent::createTemplate($class);
@@ -197,7 +199,7 @@ class LanguageChooser extends Control {
 
     /**
      * @param $language
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function handleChangeLang($language) {
         $presenter = $this->getPresenter();

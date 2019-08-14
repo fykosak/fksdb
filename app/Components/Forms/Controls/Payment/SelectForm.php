@@ -3,6 +3,8 @@
 
 namespace FKSDB\Components\Forms\Controls\Payment;
 
+use BasePresenter;
+use Exception;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
@@ -14,11 +16,16 @@ use FKSDB\ORM\Services\ServicePayment;
 use FKSDB\ORM\Services\ServicePaymentAccommodation;
 use FKSDB\Payment\Handler\DuplicateAccommodationPaymentException;
 use FKSDB\Payment\Handler\EmptyDataException;
+use FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException;
 use FKSDB\Payment\Transition\PaymentMachine;
+use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
+use function json_encode;
 
 /**
  * Class SelectForm
@@ -111,8 +118,8 @@ class SelectForm extends Control {
 
     /**
      * @return FormControl
-     * @throws \FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException
-     * @throws \Nette\Application\BadRequestException
+     * @throws UnsupportedCurrencyException
+     * @throws BadRequestException
      */
     public function createComponentFormEdit() {
         return $this->createForm(false);
@@ -120,8 +127,8 @@ class SelectForm extends Control {
 
     /**
      * @return FormControl
-     * @throws \FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException
-     * @throws \Nette\Application\BadRequestException
+     * @throws UnsupportedCurrencyException
+     * @throws BadRequestException
      */
     public function createComponentFormCreate() {
         return $this->createForm(true);
@@ -130,8 +137,8 @@ class SelectForm extends Control {
     /**
      * @param bool $create
      * @return FormControl
-     * @throws \FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException
-     * @throws \Nette\Application\BadRequestException
+     * @throws UnsupportedCurrencyException
+     * @throws BadRequestException
      */
     private function createForm(bool $create) {
         $control = new FormControl();
@@ -155,9 +162,9 @@ class SelectForm extends Control {
     /**
      * @param Form $form
      * @param bool $create
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\ForbiddenRequestException
-     * @throws \Exception
+     * @throws AbortException
+     * @throws ForbiddenRequestException
+     * @throws Exception
      */
     private function handleSubmit(Form $form, bool $create) {
         $values = $form->getValues();
@@ -182,11 +189,11 @@ class SelectForm extends Control {
         try {
             $this->servicePaymentAccommodation->prepareAndUpdate($values->payment_accommodation, $model);
         } catch (DuplicateAccommodationPaymentException $exception) {
-            $this->flashMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR);
+            $this->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
             $connection->rollBack();
             return;
         } catch (EmptyDataException $exception) {
-            $this->flashMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR);
+            $this->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
             $connection->rollBack();
             return;
         }
@@ -197,7 +204,7 @@ class SelectForm extends Control {
     }
 
     /**
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     public function renderCreate() {
         /**
@@ -218,7 +225,7 @@ class SelectForm extends Control {
 
     /**
      * @param \FKSDB\ORM\Models\ModelPayment $model
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     public function renderEdit(ModelPayment $model) {
         $this->model = $model;
@@ -243,7 +250,7 @@ class SelectForm extends Control {
         foreach ($query as $row) {
             $items[$row->event_person_accommodation_id] = true;
         }
-        return \json_encode($items);
+        return json_encode($items);
     }
 
 }

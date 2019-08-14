@@ -3,6 +3,9 @@
 namespace PublicModule;
 
 use AuthenticationPresenter;
+use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use News;
 
 /**
@@ -24,8 +27,8 @@ class DashboardPresenter extends BasePresenter {
     }
 
     /**
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\ForbiddenRequestException
+     * @throws AbortException
+     * @throws ForbiddenRequestException
      */
     protected function unauthorizedAccess() {
         if ($this->getParam(AuthenticationPresenter::PARAM_DISPATCH)) {
@@ -47,7 +50,7 @@ class DashboardPresenter extends BasePresenter {
     }
 
     /**
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     public function renderDefault() {
         foreach ($this->news->getNews($this->getSelectedContest(), $this->getSelectedLanguage())

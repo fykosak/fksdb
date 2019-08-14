@@ -10,6 +10,7 @@ use FKSDB\ValidationTest\ValidationLog;
 use FKSDB\ValidationTest\ValidationTest;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Database\Table\Selection;
+use function sprintf;
 
 /**
  * Class ParticipantsDurationTest
@@ -60,7 +61,7 @@ abstract class ParticipantsDuration extends ValidationTest {
         $delta = ($max - $min) + 1;
         return new ValidationLog(
             $this->getTitle(),
-            \sprintf('Person participate %d years in the events of contest %s', $delta, $this->getContest()->name),
+            sprintf('Person participate %d years in the events of contest %s', $delta, $this->getContest()->name),
             ($delta < 5) ? ValidationLog::LVL_SUCCESS : (($delta < 6) ? ValidationLog::LVL_WARNING : ValidationLog::LVL_DANGER)
         );
     }

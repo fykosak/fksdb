@@ -10,6 +10,7 @@ use FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
 use Nette\NotImplementedException;
+use function sprintf;
 
 /**
  * Class ModelScheduleItem
@@ -91,7 +92,7 @@ class ModelScheduleItem extends AbstractModelSingle {
         $group = $this->getGroup();
         switch ($group->schedule_group_type) {
             case ModelScheduleGroup::TYPE_ACCOMMODATION:
-                return \sprintf(_('Accommodation in "%s" from %s to %s'),
+                return sprintf(_('Accommodation in "%s" from %s to %s'),
                     $this->name_cs,
                     $group->start->format('d. m. Y'),
                     $group->end->format('d. m. Y')

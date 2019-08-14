@@ -4,12 +4,12 @@ namespace FKSDB\Components\Controls\Payment;
 
 use EventModule\PaymentPresenter;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Controls\Helpers\AbstractDetailControl;
 use FKSDB\Components\Controls\Helpers\ValuePrinters\StringValueControl;
 use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\Payment\Price;
 use FKSDB\Payment\Transition\PaymentMachine;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
@@ -19,7 +19,11 @@ use Nette\Templating\FileTemplate;
  * @package FKSDB\Components\Forms\Controls\Payment
  * @property FileTemplate $template
  */
-class DetailControl extends AbstractDetailControl {
+class DetailControl extends Control {
+    /**
+     * @var ITranslator
+     */
+    protected $translator;
     /**
      * @var ModelPayment
      */
@@ -36,14 +40,15 @@ class DetailControl extends AbstractDetailControl {
      * @param \FKSDB\ORM\Models\ModelPayment $model
      */
     public function __construct(ITranslator $translator, PaymentMachine $machine, ModelPayment $model) {
-        parent::__construct($translator);
+        parent::__construct();
         $this->model = $model;
         $this->machine = $machine;
+        $this->translator = $translator;
     }
 
     /**
      * @return FormControl
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     public function createComponentForm(): FormControl {
         $formControl = new FormControl();
@@ -109,5 +114,12 @@ class DetailControl extends AbstractDetailControl {
         $this->template->setTranslator($this->translator);
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'DetailControl.latte');
         $this->template->render();
+    }
+
+    /**
+     * @return StringValueControl
+     */
+    public function createComponentStringValue(): StringValueControl {
+        return new StringValueControl($this->translator);
     }
 }

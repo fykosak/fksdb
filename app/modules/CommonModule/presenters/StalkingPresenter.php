@@ -12,6 +12,7 @@ use FKSDB\ValidationTest\ValidationFactory;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Utils\RegexpException;
 use Persons\DenyResolver;
 use Persons\ExtendedPersonHandler;
 
@@ -229,7 +230,7 @@ class StalkingPresenter extends BasePresenter {
     /**
      * @return FormControl
      * @throws BadRequestException
-     * @throws \Nette\Utils\RegexpException
+     * @throws RegexpException
      */
     public function createComponentFormSearch(): FormControl {
         $control = new FormControl();

@@ -5,6 +5,8 @@ namespace FyziklaniModule;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\Fyziklani\TaskGrid;
 use FKSDB\model\Fyziklani\FyziklaniTaskImportProcessor;
+use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 
 /**
@@ -28,16 +30,16 @@ class TaskPresenter extends BasePresenter {
     }
 
     /**
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function authorizedList() {
         $this->setAuthorized(($this->eventIsAllowed('fyziklani.task', 'list')));
     }
 
     /**
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function authorizedImport() {
         $this->setAuthorized(($this->eventIsAllowed('fyziklani.task', 'import')));
@@ -45,7 +47,7 @@ class TaskPresenter extends BasePresenter {
 
     /**
      * @return FormControl
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     public function createComponentTaskImportForm(): FormControl {
         $control = new FormControl();
@@ -66,8 +68,8 @@ class TaskPresenter extends BasePresenter {
 
     /**
      * @param Form $form
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function taskImportFormSucceeded(Form $form) {
         $values = $form->getValues();
@@ -82,8 +84,8 @@ class TaskPresenter extends BasePresenter {
 
     /**
      * @return TaskGrid
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function createComponentGrid(): TaskGrid {
         return $this->fyziklaniComponentsFactory->createTasksGrid($this->getEvent());

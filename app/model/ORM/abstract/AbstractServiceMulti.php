@@ -4,6 +4,7 @@ namespace FKSDB\ORM;
 
 use FKSDB\ORM\Tables\MultiTableSelection;
 use InvalidArgumentException;
+use Nette\Database\Table\Selection;
 use Nette\InvalidStateException;
 use Nette\SmartObject;
 
@@ -179,7 +180,7 @@ abstract class AbstractServiceMulti implements IService {
     }
 
     /**
-     * @return \Nette\Database\Table\Selection|MultiTableSelection
+     * @return Selection|MultiTableSelection
      */
     public function getTable() {
         $joinedTable = $this->getJoinedService()->getTable()->getName();

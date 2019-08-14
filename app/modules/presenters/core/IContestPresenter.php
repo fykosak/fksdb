@@ -6,12 +6,14 @@
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 
+use FKSDB\ORM\Models\ModelContest;
+
 /**
  * Interface IContestPresenter
  */
 interface IContestPresenter {
 
-    /** @return \FKSDB\ORM\Models\ModelContest */
+    /** @return ModelContest */
     public function getSelectedContest();
 
     /** @return int */

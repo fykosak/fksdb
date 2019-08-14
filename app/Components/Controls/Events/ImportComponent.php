@@ -11,6 +11,8 @@ use Events\Model\ImportHandlerException;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Utils\CSVParser;
+use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
@@ -70,7 +72,7 @@ class ImportComponent extends Control {
     /**
      * @param $name
      * @return FormControl
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     protected function createComponentFormImport($name) {
         $control = new FormControl();
@@ -118,7 +120,7 @@ class ImportComponent extends Control {
 
     /**
      * @param Form $form
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     private function handleFormImport(Form $form) {
         $values = $form->getValues();

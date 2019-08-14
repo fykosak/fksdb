@@ -2,6 +2,7 @@
 
 namespace Authentication;
 
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelPerson;
@@ -184,7 +185,7 @@ class AccountManager {
      * @param ModelPerson $person
      * @param null $login
      * @param null $password
-     * @return \FKSDB\ORM\AbstractModelSingle|\FKSDB\ORM\Models\ModelLogin
+     * @return AbstractModelSingle|\FKSDB\ORM\Models\ModelLogin
      */
     public final function createLogin(ModelPerson $person, $login = null, $password = null) {
         $login = $this->serviceLogin->createNew(array(

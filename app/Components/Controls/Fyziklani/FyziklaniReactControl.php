@@ -43,7 +43,7 @@ abstract class FyziklaniReactControl extends ReactComponent {
     protected $serviceFyziklaniSubmit;
 
     /**
-     * @var \FKSDB\ORM\Models\ModelEvent
+     * @var ModelEvent
      */
     protected $event;
 
@@ -55,7 +55,7 @@ abstract class FyziklaniReactControl extends ReactComponent {
     /**
      * FyziklaniReactControl constructor.
      * @param Container $container
-     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @param ModelEvent $event
      * @param ServiceFyziklaniRoom $serviceFyziklaniRoom
      * @param ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
      * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
@@ -82,7 +82,6 @@ abstract class FyziklaniReactControl extends ReactComponent {
 
     }
 
-
     /**
      * @return string
      */
@@ -91,7 +90,7 @@ abstract class FyziklaniReactControl extends ReactComponent {
     }
 
     /**
-     * @return \FKSDB\ORM\Models\ModelEvent
+     * @return ModelEvent
      */
     protected final function getEvent() {
         return $this->event;

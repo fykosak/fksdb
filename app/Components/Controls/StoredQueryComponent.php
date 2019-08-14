@@ -9,6 +9,7 @@ use Exports\StoredQueryFactory as StoredQueryFactorySQL;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory;
 use FKSDB\Components\Grids\StoredQueryGrid;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
@@ -182,7 +183,7 @@ class StoredQueryComponent extends Control {
      * @param $format
      * @throws BadRequestException
      * @throws ForbiddenRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function handleFormat($format) {
         if ($this->parameters) {

@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Forms\Controls\PersonAccommodation;
 
+use Exception;
 use FKSDB\ORM\Models\ModelEventAccommodation;
 use FKSDB\ORM\Models\ModelEventPersonAccommodation;
 use FKSDB\ORM\Models\ModelPerson;
@@ -9,6 +10,9 @@ use FKSDB\ORM\Services\ServiceEventAccommodation;
 use FKSDB\ORM\Services\ServiceEventPersonAccommodation;
 use Nette\NotImplementedException;
 use Nette\Utils\ArrayHash;
+use PDOException;
+use function preg_match;
+use function sprintf;
 
 /**
  * Class Handler
@@ -34,7 +38,7 @@ class Handler {
      * @param integer $eventId
      * @throws FullAccommodationCapacityException
      * @throws ExistingPaymentException
-     * @throws \Exception
+     * @throws Exception
      * @return void
      */
     public function prepareAndUpdate(ArrayHash $data, ModelPerson $person, $eventId) {
@@ -51,9 +55,9 @@ class Handler {
             } else {
                 try {
                     $modelEventPersonAccommodation->delete();
-                } catch (\PDOException $exception) {
-                    if (\preg_match('/payment_accommodation/', $exception->getMessage())) {
-                        throw new ExistingPaymentException(\sprintf(
+                } catch (PDOException $exception) {
+                    if (preg_match('/payment_accommodation/', $exception->getMessage())) {
+                        throw new ExistingPaymentException(sprintf(
                             _('Položka "%s" má už vygenerovanú platu, teda nejde zmazať.'),
                             $modelEventPersonAccommodation->getLabel()));
                     } else {

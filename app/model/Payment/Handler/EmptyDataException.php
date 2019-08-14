@@ -2,10 +2,12 @@
 
 namespace FKSDB\Payment\Handler;
 
+use Exception;
+
 /**
  * Class EmptyDataException
  * @package FKSDB\Payment\Handler
  */
-class EmptyDataException extends \Exception {
+class EmptyDataException extends Exception {
 
 }

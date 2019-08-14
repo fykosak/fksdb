@@ -25,6 +25,7 @@ use Nette\SmartObject;
 use SoapFault;
 use Tracy\Debugger;
 use WebService\IXMLNodeSerializer;
+use function sprintf;
 
 /**
  * Description of FKSDB\Results\ResultsModelFactory
@@ -138,7 +139,7 @@ class ResultsModelFactory implements IXMLNodeSerializer {
                 return new EvaluationVyfuk2011();
             }
         }
-        throw new BadRequestException(\sprintf('No evaluation strategy found for %s. of %s', $year, $contest->name));
+        throw new BadRequestException(sprintf('No evaluation strategy found for %s. of %s', $year, $contest->name));
     }
 
     /**
@@ -156,7 +157,7 @@ class ResultsModelFactory implements IXMLNodeSerializer {
         }
 
         if ($format !== self::EXPORT_FORMAT_1) {
-            throw new InvalidArgumentException(\sprintf('Export format %s not supported.', $format));
+            throw new InvalidArgumentException(sprintf('Export format %s not supported.', $format));
         }
 
         try {

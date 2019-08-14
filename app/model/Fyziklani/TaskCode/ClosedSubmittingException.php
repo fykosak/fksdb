@@ -2,6 +2,7 @@
 
 namespace FKSDB\model\Fyziklani;
 
+use Exception;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Application\BadRequestException;
 
@@ -14,9 +15,9 @@ class ClosedSubmittingException extends BadRequestException {
      * ClosedSubmittingException constructor.
      * @param \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam $team
      * @param int $code
-     * @param \Exception|NULL $previous
+     * @param Exception|NULL $previous
      */
-    public function __construct(ModelFyziklaniTeam $team, int $code = 0, \Exception $previous = NULL) {
+    public function __construct(ModelFyziklaniTeam $team, int $code = 0, Exception $previous = NULL) {
         parent::__construct(sprintf(_('Team %s has already closed submitting.'), $team->name), $code, $previous);
     }
 }

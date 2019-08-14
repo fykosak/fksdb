@@ -4,6 +4,7 @@ namespace FKSDB\Components\Forms\Controls;
 
 use FKSDB\Components\Forms\Containers\IWriteOnly;
 use JanTvrdik\Components\DatePicker;
+use Nette\Utils\Html;
 
 /**
  * When user doesn't fill it (i.e. desires original value), it behaves like disabled.
@@ -25,7 +26,7 @@ class WriteOnlyDatePicker extends DatePicker implements IWriteOnly {
     }
 
     /**
-     * @return \Nette\Utils\Html
+     * @return Html
      */
     public function getControl() {
         $control = parent::getControl();

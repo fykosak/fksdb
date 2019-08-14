@@ -2,10 +2,12 @@
 
 namespace Pipeline;
 
+use RuntimeException;
+
 /**
  * Class PipelineException
  * @package Pipeline
  */
-class PipelineException extends \RuntimeException {
+class PipelineException extends RuntimeException {
 
 }

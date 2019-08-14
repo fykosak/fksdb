@@ -5,6 +5,7 @@ namespace FKSDB\Components\DatabaseReflection\Org;
 use FKSDB\Components\Controls\Helpers\Badges\ContestBadge;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelOrg;
+use Nette\Application\BadRequestException;
 use Nette\Utils\Html;
 
 /**
@@ -22,7 +23,7 @@ class ContestRow extends AbstractOrgRowFactory {
     /**
      * @param AbstractModelSingle|ModelOrg $model
      * @return Html
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         return ContestBadge::getHtml($model->contest_id);

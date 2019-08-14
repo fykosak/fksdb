@@ -15,6 +15,7 @@ use Nette\Forms\IControl;
 use Nette\InvalidStateException;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Arrays;
+use Nette\Utils\RegexpException;
 
 
 /**
@@ -99,7 +100,7 @@ class ReferencedContainer extends ContainerWithOptions {
      * @param IControl|null $control
      * @param callable|null $searchCallback
      * @param callable|null $termToValuesCallback
-     * @throws \Nette\Utils\RegexpException
+     * @throws RegexpException
      */
     public function setSearch(IControl $control = null, callable $searchCallback = null, callable $termToValuesCallback = null) {
         if ($control == null) {
@@ -165,7 +166,7 @@ class ReferencedContainer extends ContainerWithOptions {
      *
      * @staticvar array $searchComponents
      * @param boolean $value
-     * @throws \Nette\Utils\RegexpException
+     * @throws RegexpException
      */
     public function setSearchButton($value) {
         static $searchComponents = array(

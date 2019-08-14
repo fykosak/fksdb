@@ -6,9 +6,11 @@ use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelRole;
 use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\YearCalculator;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
+use Nette\Security\IIdentity;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -150,7 +152,7 @@ class ContestChooser extends Control {
 
     /**
      * Redirect to corrrect address according to the resolved values.
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function syncRedirect() {
         $this->init();
@@ -182,6 +184,9 @@ class ContestChooser extends Control {
         return $this->year;
     }
 
+    /**
+     * @return void|null
+     */
     private function init() {
         if ($this->initialized) {
             return;
@@ -317,7 +322,7 @@ class ContestChooser extends Control {
     }
 
     /**
-     * @return \Nette\Security\IIdentity|NULL
+     * @return IIdentity|NULL
      */
     private function getLogin() {
         return $this->getPresenter()->getUser()->getIdentity();
@@ -342,7 +347,7 @@ class ContestChooser extends Control {
 
     /**
      * @param $contestId
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function handleChange($contestId) {
         $presenter = $this->getPresenter();
@@ -368,7 +373,7 @@ class ContestChooser extends Control {
     /**
      * @param $contest
      * @param $year
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function handleChangeYear($contest, $year) {
         $presenter = $this->getPresenter();

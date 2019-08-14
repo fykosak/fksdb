@@ -10,6 +10,7 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 
 /**
@@ -120,7 +121,7 @@ abstract class BasePresenter extends EventBasePresenter {
     /**
      * @return bool
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     protected function isEventFyziklani(): bool {
         return $this->getEvent()->event_type_id === 1;
@@ -128,7 +129,7 @@ abstract class BasePresenter extends EventBasePresenter {
 
     /**
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     protected function startup() {
         parent::startup();
@@ -163,7 +164,7 @@ abstract class BasePresenter extends EventBasePresenter {
     /**
      * @return ModelFyziklaniGameSetup
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     protected function getGameSetup(): ModelFyziklaniGameSetup {
         if (!$this->gameSetup) {

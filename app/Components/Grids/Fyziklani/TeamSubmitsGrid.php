@@ -8,6 +8,7 @@ use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FyziklaniModule\BasePresenter;
 use NiftyGrid\DataSource\NDataSource;
+use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class TeamSubmitsGrid
@@ -33,7 +34,7 @@ class TeamSubmitsGrid extends SubmitsGrid {
 
     /**
      * @param BasePresenter $presenter
-     * @throws \NiftyGrid\DuplicateColumnException
+     * @throws DuplicateColumnException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

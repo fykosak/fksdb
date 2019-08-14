@@ -6,10 +6,13 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Config\Expressions\Helpers;
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Utils\RegexpException;
 use Persons\AclResolver;
 use Persons\ExtendedPersonHandler;
 use Persons\ExtendedPersonHandlerFactory;
@@ -73,7 +76,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
 
     /**
      * @return array|mixed
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     private function getFieldsDefinition() {
         $contestId = $this->getSelectedContest()->contest_id;
@@ -102,8 +105,8 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     /**
      * @param $create
      * @return FormControl
-     * @throws \Nette\Application\BadRequestException
-     * @throws \Nette\Utils\RegexpException
+     * @throws BadRequestException
+     * @throws RegexpException
      */
     private function createComponentFormControl($create) {
         $control = new FormControl();
@@ -142,8 +145,8 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     /**
      * @param $name
      * @return FormControl
-     * @throws \Nette\Application\BadRequestException
-     * @throws \Nette\Utils\RegexpException
+     * @throws BadRequestException
+     * @throws RegexpException
      */
     protected final function createComponentCreateComponent($name) {
         $control = $this->createComponentFormControl(true);
@@ -153,8 +156,8 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     /**
      * @param $name
      * @return FormControl
-     * @throws \Nette\Application\BadRequestException
-     * @throws \Nette\Utils\RegexpException
+     * @throws BadRequestException
+     * @throws RegexpException
      */
     protected final function createComponentEditComponent($name) {
         $control = $this->createComponentFormControl(false);
@@ -163,7 +166,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
 
     /**
      * @param $id
-     * @return \FKSDB\ORM\AbstractModelSingle
+     * @return AbstractModelSingle
      */
     protected function loadModel($id) {
         return $this->getORMService()->findByPrimary($id);

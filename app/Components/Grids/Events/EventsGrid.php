@@ -10,6 +10,7 @@ use FKSDB\ORM\Services\ServiceEvent;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use NiftyGrid\DataSource\NDataSource;
+use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
 use OrgModule\OrgPresenter;
@@ -42,7 +43,7 @@ class EventsGrid extends BaseGrid {
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
-     * @throws \NiftyGrid\DuplicateButtonException
+     * @throws DuplicateButtonException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

@@ -8,6 +8,7 @@ use FKSDB\model\Fyziklani\PointsMismatchException;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Database\Table\ActiveRow;
 use Nette\Utils\DateTime;
+use function sprintf;
 
 /**
  *
@@ -24,7 +25,6 @@ use Nette\Utils\DateTime;
  * @property-read ActiveRow fyziklani_task
  * @property-read DateTime created
  * @property-read DateTime modified
->>>>>>> fykosak/master
  */
 class ModelFyziklaniSubmit extends AbstractModelSingle {
     const STATE_NOT_CHECKED = 'not_checked';
@@ -92,7 +92,7 @@ class ModelFyziklaniSubmit extends AbstractModelSingle {
             'modified' => null,
         ]);
 
-        return new Message(\sprintf(_('Body byly upraveny. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
+        return new Message(sprintf(_('Body byly upraveny. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
             $points,
             $this->getTeam()->name,
             $this->getTeam()->e_fyziklani_team_id,
@@ -121,7 +121,7 @@ class ModelFyziklaniSubmit extends AbstractModelSingle {
              */
             'modified' => null,
         ]);
-        return new Message(\sprintf(_('Bodovanie bolo overené. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
+        return new Message(sprintf(_('Bodovanie bolo overené. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
             $points,
             $this->getTeam()->name,
             $this->getTeam()->e_fyziklani_team_id,

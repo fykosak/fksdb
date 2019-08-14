@@ -4,6 +4,7 @@ namespace FKSDB\Components\Forms\Controls;
 
 use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Components\ClientDataTrait;
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Services\ServiceSubmit;
@@ -242,7 +243,7 @@ class ContestantSubmits extends BaseControl {
     /**
      * @param $data
      * @param $tasknr
-     * @return \FKSDB\ORM\AbstractModelSingle|\FKSDB\ORM\Models\ModelSubmit|null
+     * @return AbstractModelSingle|\FKSDB\ORM\Models\ModelSubmit|null
      */
     private function deserializeSubmit($data, $tasknr) {
         unset($data['submit_id']); // security

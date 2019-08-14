@@ -11,6 +11,8 @@ use FKSDB\ValidationTest\ValidationLog;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
+use function array_key_exists;
+use function is_null;
 
 /**
  * Class HealthInsuranceField
@@ -56,7 +58,7 @@ class HealthInsuranceRow extends AbstractRow implements ITestedRowFactory {
      * @return Html
      */
     public function createHtmlValue(AbstractModelSingle $model): Html {
-        if (\array_key_exists($model->health_insurance, self::ID_MAPPING)) {
+        if (array_key_exists($model->health_insurance, self::ID_MAPPING)) {
             return Html::el('span')->addText(self::ID_MAPPING[$model->health_insurance]);
         }
         return Html::el('span')->addText($model->health_insurance);
@@ -78,10 +80,10 @@ class HealthInsuranceRow extends AbstractRow implements ITestedRowFactory {
      */
     public function runTest(AbstractModelSingle $model): ValidationLog {
         $testName = 'person_info__health_insurance';
-        if (\is_null($model->health_insurance)) {
+        if (is_null($model->health_insurance)) {
             return new ValidationLog($testName, _('Health insurance is not set'), ValidationLog::LVL_INFO);
         }
-        if (\array_key_exists($model->health_insurance, self::ID_MAPPING)) {
+        if (array_key_exists($model->health_insurance, self::ID_MAPPING)) {
             return new ValidationLog($testName, _('Health insurance is valid'), ValidationLog::LVL_SUCCESS);
         }
         return new ValidationLog($testName, _('Undefined Health insurance'), ValidationLog::LVL_DANGER);

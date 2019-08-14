@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\DatabaseReflection\PersonInfo;
 
+use DateTime;
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\DatabaseReflection\ValuePrinters\DatePrinter;
 use FKSDB\Components\Forms\Controls\WriteOnlyDatePicker;
@@ -27,7 +28,7 @@ class BornRow extends AbstractRow {
      */
     public function createField(): BaseControl {
         $control = new WriteOnlyDatePicker($this->getTitle());
-        $control->setDefaultDate((new \DateTime())->modify('-16 years'));
+        $control->setDefaultDate((new DateTime())->modify('-16 years'));
         return $control;
     }
 

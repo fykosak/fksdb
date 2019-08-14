@@ -14,6 +14,8 @@ use FKSDB\ORM\Services\ServiceTaskContribution;
 use FKSDB\ORM\Services\ServiceTaskStudyYear;
 use FKSDB\Results\SQLResultsCache;
 use FKSDB\Submits\SeriesTable;
+use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Tracy\Debugger;
 use Nette\InvalidArgumentException;
@@ -112,7 +114,7 @@ class PointsPresenter extends SeriesPresenter {
     }
 
     /**
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     public function authorizedDefault() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'edit', $this->getSelectedContest()));
@@ -140,7 +142,7 @@ class PointsPresenter extends SeriesPresenter {
     /**
      * @param $name
      * @return OptimisticForm
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     protected function createComponentPointsForm($name) {
         //   $controlContainer = new FormControl();
@@ -189,7 +191,7 @@ class PointsPresenter extends SeriesPresenter {
 
     /**
      * @param Form $form
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function pointsFormSuccess(Form $form) {
         $values = $form->getValues();
@@ -221,7 +223,7 @@ class PointsPresenter extends SeriesPresenter {
     }
 
     /**
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function handleInvalidate() {
         try {
@@ -236,8 +238,8 @@ class PointsPresenter extends SeriesPresenter {
     }
 
     /**
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function handleRecalculateAll() {
         try {

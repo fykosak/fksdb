@@ -2,6 +2,7 @@
 
 namespace FKSDB\model\Fyziklani;
 
+use Closure;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
@@ -108,7 +109,7 @@ class CloseStrategy {
     private function getTeamsStats(Selection $teams): array {
         $teamsData = [];
         foreach ($teams as $row) {
-            $team = ModelFyziklaniTeam::createFromTableRow($row);
+            $team = ModelFyziklaniTeam::createFromActiveRow($row);
 
             if ($team->hasOpenSubmitting()) {
                 throw new BadRequestException('Tým ' . $team->name . '(' . $team->e_fyziklani_team_id . ') nemá uzavřené bodování');
@@ -125,9 +126,9 @@ class CloseStrategy {
     }
 
     /**
-     * @return \Closure
+     * @return Closure
      */
-    private static function getSortFunction(): \Closure {
+    private static function getSortFunction(): Closure {
         return function (array $b, array $a): int {
             if ($a['points'] > $b['points']) {
                 return 1;
@@ -165,7 +166,7 @@ class CloseStrategy {
         $sum = 0;
         $count = 0;
         foreach ($team->getSubmits() as $row) {
-            $submit = ModelFyziklaniSubmit::createFromTableRow($row);
+            $submit = ModelFyziklaniSubmit::createFromActiveRow($row);
             if ($submit->points !== null) {
                 $sum += $submit->points;
                 $count++;

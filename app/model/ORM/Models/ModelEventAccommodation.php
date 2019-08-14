@@ -2,12 +2,16 @@
 
 namespace FKSDB\ORM\Models;
 
+use DateInterval;
+use Exception;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\Transitions\IEventReferencedModel;
 use Nette\Database\Table\ActiveRow;
+use Nette\Database\Table\GroupedSelection;
 use Nette\Utils\DateTime;
 use Nette\Security\IResource;
+use function sprintf;
 
 /**
  * Class FKSDB\ORM\Models\ModelEventAccommodation
@@ -65,7 +69,7 @@ class ModelEventAccommodation extends AbstractModelSingle implements IResource, 
     }
 
     /**
-     * @return \Nette\Database\Table\GroupedSelection
+     * @return GroupedSelection
      */
     public function getAccommodated() {
         return $this->related(DbNames::TAB_EVENT_PERSON_ACCOMMODATION);
@@ -80,7 +84,7 @@ class ModelEventAccommodation extends AbstractModelSingle implements IResource, 
 
     /**
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function __toArray(): array {
         return [
@@ -101,18 +105,18 @@ class ModelEventAccommodation extends AbstractModelSingle implements IResource, 
 
     /**
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     public function getLabel(): string {
         $date = clone $this->date;
         $fromDate = $date->format('d. m.');
-        $toDate = $date->add(new \DateInterval('P1D'))->format('d. m. Y');
-        return \sprintf(_('Ubytovaní od %s do %s v hoteli %s.'), $fromDate, $toDate, $this->name);
+        $toDate = $date->add(new DateInterval('P1D'))->format('d. m. Y');
+        return sprintf(_('Ubytovaní od %s do %s v hoteli %s.'), $fromDate, $toDate, $this->name);
     }
 
     /**
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     public function __toString(): string {
         return $this->getLabel();

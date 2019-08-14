@@ -3,6 +3,7 @@
 namespace FKSDB\Payment\Transition\Transitions;
 
 use Authorization\EventAuthorizator;
+use Closure;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventPersonAccommodation;
@@ -24,6 +25,9 @@ use Nette\Localization\ITranslator;
 use Nette\Mail\Message;
 use Nette\Utils\DateTime;
 use Tracy\Debugger;
+use function get_class;
+use function json_encode;
+use function sprintf;
 
 
 /**
@@ -93,7 +97,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
      */
     public function createTransitions(Machine &$machine) {
         if (!$machine instanceof PaymentMachine) {
-            throw new BadRequestException(\sprintf(_('Expected class %s, got %s'), 'PaymentMachine', \get_class($machine)));
+            throw new BadRequestException(sprintf(_('Expected class %s, got %s'), 'PaymentMachine', get_class($machine)));
         }
         $machine->setExplicitCondition(new ExplicitEventRole($this->eventAuthorizator, 'org', $machine->getEvent(), ModelPayment::RESOURCE_ID));
         $this->addTransitionInitToNew($machine);
@@ -157,13 +161,13 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
 
     /**
      * @param string $subject
-     * @return \Closure
+     * @return Closure
      */
-    private function getMailSetupCallback(string $subject): \Closure {
+    private function getMailSetupCallback(string $subject): Closure {
         return function (IStateModel $model) use ($subject): Message {
             $message = new Message();
             if ($model instanceof ModelPayment) {
-                $message->setSubject(\sprintf(_($subject), $model->getPaymentId()));
+                $message->setSubject(sprintf(_($subject), $model->getPaymentId()));
                 $message->addTo($model->getPerson()->getInfo()->email);
             }
             $message->setFrom(self::EMAIL_FROM);
@@ -212,13 +216,13 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
     }
 
     /**
-     * @return \Closure
+     * @return Closure
      */
-    private function getClosureDeleteRows(): \Closure {
+    private function getClosureDeleteRows(): Closure {
         return function (ModelPayment $modelPayment) {
-            Debugger::log('payment-deleted--' . \json_encode($modelPayment->toArray()));
+            Debugger::log('payment-deleted--' . json_encode($modelPayment->toArray()));
             foreach ($modelPayment->related(DbNames::TAB_PAYMENT_ACCOMMODATION, 'payment_id') as $row) {
-                Debugger::log('payment-row-deleted--' . \json_encode($row->toArray()));
+                Debugger::log('payment-row-deleted--' . json_encode($row->toArray()));
                 $row->delete();
             }
         };

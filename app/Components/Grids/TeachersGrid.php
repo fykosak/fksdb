@@ -3,8 +3,13 @@
 namespace FKSDB\Components\Grids;
 
 use FKSDB\ORM\Services\ServiceTeacher;
+use Nette\Application\BadRequestException;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Database\Table\Selection;
 use Nette\Utils\Html;
+use NiftyGrid\DuplicateButtonException;
+use NiftyGrid\DuplicateColumnException;
+use NiftyGrid\DuplicateGlobalButtonException;
 use OrgModule\TeacherPresenter;
 use SQL\SearchableDataSource;
 
@@ -30,11 +35,11 @@ class TeachersGrid extends BaseGrid {
 
     /**
      * @param TeacherPresenter $presenter
-     * @throws \Nette\Application\UI\InvalidLinkException
-     * @throws \NiftyGrid\DuplicateButtonException
-     * @throws \NiftyGrid\DuplicateColumnException
-     * @throws \NiftyGrid\DuplicateGlobalButtonException
-     * @throws \Nette\Application\BadRequestException
+     * @throws InvalidLinkException
+     * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
+     * @throws DuplicateGlobalButtonException
+     * @throws BadRequestException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

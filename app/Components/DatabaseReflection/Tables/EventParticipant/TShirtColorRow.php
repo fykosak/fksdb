@@ -6,6 +6,7 @@ use FKSDB\Components\Controls\Helpers\Badges\NotSetBadge;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use Nette\Utils\Html;
+use function is_null;
 
 /**
  * Class TShirtColor
@@ -25,7 +26,7 @@ class TShirtColorRow extends AbstractParticipantRow {
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         $value = $model->tshirt_color;
-        if (\is_null($value)) {
+        if (is_null($value)) {
             return NotSetBadge::getHtml();
         }
         $container = Html::el('span');

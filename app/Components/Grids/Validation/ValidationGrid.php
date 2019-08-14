@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Grids\Validation;
 
+use AuthenticatedPresenter;
 use FKSDB\Components\Controls\Helpers\ValuePrinters\PersonValueControl;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\Models\ModelPerson;
@@ -11,6 +12,8 @@ use FKSDB\ValidationTest\ValidationTest;
 use Nette\NotImplementedException;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;
+use NiftyGrid\DuplicateColumnException;
+use function sprintf;
 
 /**
  * Class ValidationGrid
@@ -38,8 +41,8 @@ class ValidationGrid extends BaseGrid {
     }
 
     /**
-     * @param \AuthenticatedPresenter $presenter
-     * @throws \NiftyGrid\DuplicateColumnException
+     * @param AuthenticatedPresenter $presenter
+     * @throws DuplicateColumnException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -82,7 +85,7 @@ class ValidationGrid extends BaseGrid {
                 $icon->addAttributes(['class' => 'fa fa-check']);
                 break;
             default:
-                throw new NotImplementedException(\sprintf('%s is not supported', $log->getLevel()));
+                throw new NotImplementedException(sprintf('%s is not supported', $log->getLevel()));
         }
         return Html::el('span')->addAttributes([
             'class' => 'text-' . $log->getLevel(),

@@ -8,8 +8,12 @@ use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceEvent;
+use FKSDB\YearCalculator;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;
+use NiftyGrid\DuplicateButtonException;
+use NiftyGrid\DuplicateColumnException;
+use function array_key_exists;
 
 /**
  * Class DispatchGrid
@@ -26,7 +30,7 @@ class DispatchGrid extends BaseGrid {
      */
     private $person;
     /**
-     * @var \FKSDB\YearCalculator
+     * @var YearCalculator
      */
     private $yearCalculator;
 
@@ -34,9 +38,9 @@ class DispatchGrid extends BaseGrid {
      * DispatchGrid constructor.
      * @param ServiceEvent $serviceEvent
      * @param ModelPerson $person
-     * @param \FKSDB\YearCalculator $yearCalculator
+     * @param YearCalculator $yearCalculator
      */
-    function __construct(ServiceEvent $serviceEvent, ModelPerson $person, \FKSDB\YearCalculator $yearCalculator) {
+    function __construct(ServiceEvent $serviceEvent, ModelPerson $person, YearCalculator $yearCalculator) {
         parent::__construct();
         $this->person = $person;
         $this->serviceEvent = $serviceEvent;
@@ -45,8 +49,8 @@ class DispatchGrid extends BaseGrid {
 
     /**
      * @param $presenter
-     * @throws \NiftyGrid\DuplicateButtonException
-     * @throws \NiftyGrid\DuplicateColumnException
+     * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -83,7 +87,7 @@ class DispatchGrid extends BaseGrid {
             if ($isEventOrg) {
                 $container->addHtml(Html::el('span')->addAttributes(['class' => 'badge badge-info'])->addText(_('Event org')));
             }
-            $isOrg = \array_key_exists($modelEvent->getEventType()->contest_id, $this->person->getActiveOrgs($this->yearCalculator));
+            $isOrg = array_key_exists($modelEvent->getEventType()->contest_id, $this->person->getActiveOrgs($this->yearCalculator));
             if ($isOrg) {
                 $container->addHtml(Html::el('span')->addAttributes(['class' => 'badge badge-warning'])->addText(_('Contest org')));
             }

@@ -11,6 +11,7 @@ use FKSDB\ORM\Services\ServicePersonHistory;
 use Nette\Database\Connection;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
+use function sprintf;
 
 /**
  * More user friendly Due to author's laziness there's no class doc (or it's self explaining).
@@ -141,7 +142,7 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
         if ($control) {
             $school = $control->getValue();
             if (isset($this->cache[$school])) {
-                $control->addError(\sprintf(_('Přihlásené týmy z rovnaké školy %s.'), $this->cache[$school]));
+                $control->addError(sprintf(_('Přihlásené týmy z rovnaké školy %s.'), $this->cache[$school]));
             }
         }
         return count($this->cache) == 0;

@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Forms\Controls\PersonAccommodation;
 
+use Exception;
 use FKSDB\Components\React\IReactComponent;
 use FKSDB\Components\React\ReactField;
 use FKSDB\ORM\Models\ModelEvent;
@@ -47,7 +48,7 @@ abstract class AccommodationField extends TextInput implements IReactComponent {
 
     /**
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     public function getData(): string {
         $accommodations = $this->event->getEventAccommodationsAsArray();

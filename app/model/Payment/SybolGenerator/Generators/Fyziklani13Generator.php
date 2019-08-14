@@ -9,6 +9,7 @@ use FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException;
 use FKSDB\Payment\SymbolGenerator\AbstractSymbolGenerator;
 use FKSDB\Payment\SymbolGenerator\AlreadyGeneratedSymbolsException;
 use Nette\OutOfRangeException;
+use function sprintf;
 
 /**
  * Class Fyziklani13Generator
@@ -36,7 +37,7 @@ class Fyziklani13Generator extends AbstractSymbolGenerator {
     public function create(ModelPayment $modelPayment) {
 
         if ($modelPayment->hasGeneratedSymbols()) {
-            throw new AlreadyGeneratedSymbolsException(\sprintf(_('Payment #%s has already generated symbols.'), $modelPayment->getPaymentId()));
+            throw new AlreadyGeneratedSymbolsException(sprintf(_('Payment #%s has already generated symbols.'), $modelPayment->getPaymentId()));
         }
         $maxVariableSymbol = $this->servicePayment->where('event_id', $modelPayment->event_id)
             ->where('variable_symbol>=?', self::VARIABLE_SYMBOL_START)

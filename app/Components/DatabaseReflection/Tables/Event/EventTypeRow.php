@@ -11,6 +11,7 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
+use function is_null;
 
 /**
  * Class EventTypeRow
@@ -45,7 +46,7 @@ class EventTypeRow extends AbstractEventRowFactory {
      * @throws BadRequestException
      */
     public function createField(ModelContest $contest = null): BaseControl {
-        if (\is_null($contest)) {
+        if (is_null($contest)) {
             throw new BadRequestException();
         }
 

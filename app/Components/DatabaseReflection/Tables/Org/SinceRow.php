@@ -6,6 +6,7 @@ use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
+use function is_null;
 
 /**
  * Class SinceRow
@@ -28,7 +29,7 @@ class SinceRow extends AbstractOrgRowFactory {
      * @throws BadRequestException
      */
     public function createField(int $min = null, int $max = null): BaseControl {
-        if (\is_null($max) || \is_null($min)) {
+        if (is_null($max) || is_null($min)) {
             throw new BadRequestException();
         }
         $control = parent::createField();

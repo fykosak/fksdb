@@ -13,6 +13,7 @@ use Events\Processings\GenKillProcessing;
 use Events\Processings\IProcessing;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\IModel;
+use FKSDB\ORM\Models\ModelEvent;
 use IteratorAggregate;
 use LogicException;
 use Nette\Application\UI\Form;
@@ -20,6 +21,7 @@ use Nette\Database\Connection;
 use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
 use Nette\Utils\ArrayHash;
+use Traversable;
 
 /**
  * A bit bloated class.
@@ -158,7 +160,7 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
 
     /**
      * @deprecated Use getEvent on primary holder explicitly.
-     * @return \FKSDB\ORM\Models\ModelEvent
+     * @return ModelEvent
      */
     public function getEvent() {
         return $this->primaryHolder->getEvent();
@@ -343,7 +345,7 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
      */
 
     /**
-     * @return ArrayIterator|\Traversable
+     * @return ArrayIterator|Traversable
      */
     public function getIterator() {
         return new ArrayIterator($this->baseHolders);

@@ -3,9 +3,11 @@
 namespace Events\Machine;
 
 use Events\Model\ExpressionEvaluator;
+use Events\Model\Holder\BaseHolder;
 use Events\TransitionConditionFailedException;
 use Events\TransitionOnExecutedException;
 use Events\TransitionUnsatisfiedTargetException;
+use Exception;
 use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
 
@@ -339,7 +341,7 @@ class Transition extends FreezableObject {
         }
         try {
             $this->onExecuted($this);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             throw new TransitionOnExecutedException($this->getName(), null, $exception);
         }
     }
@@ -353,7 +355,7 @@ class Transition extends FreezableObject {
     }
 
     /**
-     * @return \Events\Model\Holder\BaseHolder
+     * @return BaseHolder
      */
     public function getBaseHolder() {
         return $this->getBaseMachine()->getMachine()->getHolder()->getBaseHolder($this->getBaseMachine()->getName());

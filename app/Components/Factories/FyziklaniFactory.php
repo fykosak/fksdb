@@ -2,11 +2,9 @@
 
 namespace FKSDB\Components\Factories;
 
-use FKSDB\Components\Controls\Fyziklani\CloseControl;
 use FKSDB\Components\Controls\Fyziklani\CloseTeamControl;
-use FKSDB\Components\Controls\Fyziklani\EditSubmitControl;
+use FKSDB\Components\Controls\Fyziklani\EditControl;
 use FKSDB\Components\Controls\Fyziklani\FinalResults;
-use FKSDB\Components\Controls\Fyziklani\QREntryControl;
 use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Results\ResultsPresentation;
 use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Results\ResultsView;
 use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Statistics\CorrelationStatistics;
@@ -15,7 +13,8 @@ use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Statistics\TeamStat
 use FKSDB\Components\Controls\Fyziklani\RoutingDownload;
 use FKSDB\Components\Controls\Fyziklani\RoutingEdit;
 use FKSDB\Components\Controls\Fyziklani\Submit\DetailControl;
-use FKSDB\Components\Controls\Fyziklani\TaskCodeInput;
+use FKSDB\Components\Controls\Fyziklani\Submit\QREntryControl;
+use FKSDB\Components\Controls\Fyziklani\Submit\TaskCodeInput;
 use FKSDB\Components\Forms\Factories\Fyziklani\CloseFormsFactory;
 use FKSDB\Components\Grids\Fyziklani\AllSubmitsGrid;
 use FKSDB\Components\Grids\Fyziklani\CloseTeamsGrid;
@@ -141,10 +140,10 @@ class FyziklaniFactory {
 
     /**
      * @param ModelEvent $event
-     * @return EditSubmitControl
+     * @return EditControl
      */
-    public function createEditSubmitControl(ModelEvent $event): EditSubmitControl {
-        return new EditSubmitControl($event, $this->serviceFyziklaniSubmit, $this->translator);
+    public function createEditSubmitControl(ModelEvent $event): EditControl {
+        return new EditControl($event, $this->serviceFyziklaniSubmit, $this->translator);
     }
 
     /* *************** CLOSING ***************/

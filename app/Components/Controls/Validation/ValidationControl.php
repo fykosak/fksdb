@@ -8,10 +8,14 @@ use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ValidationTest\ValidationLog;
 use FKSDB\ValidationTest\ValidationTest;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Forms\Form;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
+use function array_filter;
+use function count;
+use function in_array;
 
 /**
  * Class ValidationControl
@@ -71,7 +75,7 @@ class ValidationControl extends Control {
 
     /**
      * @return FormControl
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     public function createComponentForm() {
         $control = new FormControl();
@@ -87,7 +91,7 @@ class ValidationControl extends Control {
 
         foreach (ValidationLog::getAvailableLevels() as $level) {
             $field = $levelsContainer->addCheckbox($level, _($level));
-            if (\in_array($level, $this->levels)) {
+            if (in_array($level, $this->levels)) {
                 $field->setDefaultValue(true);
             }
         }
@@ -97,7 +101,7 @@ class ValidationControl extends Control {
         $testsContainer->setOption('label', _('Tests'));
         foreach ($this->availableTests as $key => $test) {
             $field = $testsContainer->addCheckbox($key, $test->getTitle());
-            if (\in_array($test, $this->tests)) {
+            if (in_array($test, $this->tests)) {
                 $field->setDefaultValue(true);
             }
         }
@@ -141,10 +145,10 @@ class ValidationControl extends Control {
             foreach ($this->tests as $test) {
                 $log[] = $test->run($model);
             }
-            $personLog = \array_filter($log, function (ValidationLog $simpleLog) {
-                return \in_array($simpleLog->getLevel(), $this->levels);
+            $personLog = array_filter($log, function (ValidationLog $simpleLog) {
+                return in_array($simpleLog->getLevel(), $this->levels);
             });
-            if (\count($personLog)) {
+            if (count($personLog)) {
                 $logs[] = ['model' => $model, 'log' => $personLog];
             }
         }

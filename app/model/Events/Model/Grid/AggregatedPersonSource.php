@@ -8,6 +8,7 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Tables\TypedTableSelection;
 use Nette\DI\Container;
 use Nette\SmartObject;
+use Traversable;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -97,7 +98,7 @@ abstract class AggregatedPersonSource implements IHolderSource {
     }
 
     /**
-     * @return ArrayIterator|\Traversable
+     * @return ArrayIterator|Traversable
      */
     public final function getIterator() {
         if ($this->holders === null) {

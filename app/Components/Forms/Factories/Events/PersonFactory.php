@@ -15,7 +15,9 @@ use Nette\ComponentModel\Component;
 use Nette\DI\Container as DIContainer;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\HiddenField;
+use Nette\Forms\IControl;
 use Nette\Security\User;
+use Nette\Utils\RegexpException;
 use Persons\SelfResolver;
 
 /**
@@ -96,7 +98,7 @@ class PersonFactory extends AbstractFactory {
      * @param BaseMachine $machine
      * @param Container $container
      * @return array|mixed
-     * @throws \Nette\Utils\RegexpException
+     * @throws RegexpException
      */
     protected function createComponent(Field $field, BaseMachine $machine, Container $container) {
         $searchType = $this->evaluator->evaluate($this->searchType, $field);
@@ -149,7 +151,7 @@ class PersonFactory extends AbstractFactory {
 
     /**
      * @param Component $component
-     * @return Component|\Nette\Forms\IControl
+     * @return Component|IControl
      */
     public function getMainControl(Component $component) {
         return $component;

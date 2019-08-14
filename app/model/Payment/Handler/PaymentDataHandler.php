@@ -2,10 +2,15 @@
 
 namespace FKSDB\Payment\Handler;
 
+use Exception;
 use FKSDB\ORM\Models\ModelPayment;
+use FKSDB\ORM\Models\ModelPaymentAccommodation;
 use FKSDB\ORM\Services\ServiceEventPersonAccommodation;
 use FKSDB\Submits\StorageException;
+use ModelException;
 use Nette\Utils\ArrayHash;
+use function array_filter;
+use function array_keys;
 
 /**
  * Class PaymentDataHandler
@@ -28,14 +33,14 @@ class PaymentDataHandler {
     /**
      * @param ArrayHash $data
      * @param ModelPayment $payment
-     * @throws \Exception
+     * @throws Exception
      */
     public function prepareAndUpdate(ArrayHash $data, ModelPayment $payment) {
         $oldRows = $payment->getRelatedPersonAccommodation();
 
         $newAccommodationIds = $this->prepareData($data);
         /**
-         * @var \FKSDB\ORM\Models\ModelPaymentAccommodation $row
+         * @var ModelPaymentAccommodation $row
          */
         foreach ($oldRows as $row) {
             if (in_array($row->event_person_accommodation_id, $newAccommodationIds)) {
@@ -49,11 +54,11 @@ class PaymentDataHandler {
         foreach ($newAccommodationIds as $id) {
             try {
                 /**
-                 * @var \FKSDB\ORM\Models\ModelPaymentAccommodation $model
+                 * @var ModelPaymentAccommodation $model
                  */
                 $model = $this->serviceEventPersonAccommodation->createNew(['payment_id' => $payment->payment_id, 'event_person_accommodation_id' => $id]);
                 $this->serviceEventPersonAccommodation->save($model);
-            } catch (\ModelException $exception) {
+            } catch (ModelException $exception) {
                 if ($exception->getPrevious() && $exception->getPrevious()->getCode() == 23000) {
                     throw new StorageException(sprintf(
                         _('Item "%s" has already generated payment.'),
@@ -71,7 +76,7 @@ class PaymentDataHandler {
      */
     private function prepareData(ArrayHash $data): array {
         $data = (array)json_decode($data);
-        return \array_keys(\array_filter($data, function ($value) {
+        return array_keys(array_filter($data, function ($value) {
             return $value;
         }));
     }

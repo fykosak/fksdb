@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Grids\Fyziklani;
 
+use Closure;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\model\Fyziklani\TaskCodePreprocessor;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
@@ -12,9 +13,12 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FyziklaniModule\BasePresenter;
+use Nette\Application\BadRequestException;
 use Nette\Database\Table\Selection;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
+use NiftyGrid\DuplicateButtonException;
+use NiftyGrid\DuplicateColumnException;
 use SQL\SearchableDataSource;
 
 /**
@@ -53,8 +57,8 @@ class AllSubmitsGrid extends SubmitsGrid {
 
     /**
      * @param BasePresenter $presenter
-     * @throws \NiftyGrid\DuplicateButtonException
-     * @throws \NiftyGrid\DuplicateColumnException
+     * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -96,9 +100,9 @@ class AllSubmitsGrid extends SubmitsGrid {
     }
 
     /**
-     * @return \Closure
+     * @return Closure
      */
-    private function getFilterCallBack(): \Closure {
+    private function getFilterCallBack(): Closure {
         return function (Selection $table, $value) {
             foreach ($value as $key => $condition) {
                 if (!$condition) {
@@ -162,7 +166,7 @@ class AllSubmitsGrid extends SubmitsGrid {
 
     /**
      * @return FormControl
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     protected function createComponentSearchForm(): FormControl {
         if (!$this->isSearchable()) {
@@ -177,14 +181,14 @@ class AllSubmitsGrid extends SubmitsGrid {
         $teams = [];
 
         foreach ($rows as $row) {
-            $team = ModelFyziklaniTeam::createFromTableRow($row);
+            $team = ModelFyziklaniTeam::createFromActiveRow($row);
             $teams[$team->e_fyziklani_team_id] = $team->name;
         }
 
         $rows = $this->serviceFyziklaniTask->findAll($this->event);
         $tasks = [];
         foreach ($rows as $row) {
-            $task = ModelFyziklaniTask::createFromTableRow($row);
+            $task = ModelFyziklaniTask::createFromActiveRow($row);
             $tasks[$task->fyziklani_task_id] = $task->name . '(' . $task->label . ')';
         }
 

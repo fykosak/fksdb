@@ -6,7 +6,10 @@ use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
+use NiftyGrid\DuplicateButtonException;
+use NiftyGrid\DuplicateColumnException;
 use SQL\SearchableDataSource;
+use function in_array;
 
 /**
  * Class TeamApplicationGrid
@@ -15,8 +18,8 @@ use SQL\SearchableDataSource;
 class TeamApplicationGrid extends AbstractApplicationGrid {
     /**
      * @param Presenter $presenter
-     * @throws \NiftyGrid\DuplicateColumnException
-     * @throws \NiftyGrid\DuplicateButtonException
+     * @throws DuplicateColumnException
+     * @throws DuplicateButtonException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -31,7 +34,7 @@ class TeamApplicationGrid extends AbstractApplicationGrid {
 
         $this->addButton('detail')->setShow(function ($row) {
             $model = ModelFyziklaniTeam::createFromActiveRow($row);
-            return \in_array($model->getEvent()->event_type_id, [1, 9]);
+            return in_array($model->getEvent()->event_type_id, [1, 9]);
         })->setText(_('Detail'))
             ->setLink(function ($row) {
                 $model = ModelFyziklaniTeam::createFromActiveRow($row);

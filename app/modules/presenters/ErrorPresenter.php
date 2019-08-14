@@ -1,5 +1,6 @@
 <?php
 
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Tracy\Debugger;
 
@@ -26,7 +27,7 @@ class ErrorPresenter extends BasePresenter {
     /**
      * @param  Exception
      * @return void
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function renderDefault($exception) {
         if ($this->isAjax()) { // AJAX request? Just note this error in payload.

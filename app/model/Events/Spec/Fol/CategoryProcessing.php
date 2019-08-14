@@ -12,6 +12,7 @@ use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Services\ServiceSchool;
 use FKSDB\YearCalculator;
 use Nette\Forms\Form;
+use Nette\InvalidArgumentException;
 use Nette\Utils\ArrayHash;
 
 /**
@@ -50,7 +51,7 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
         $this->serviceSchool = $serviceSchool;
 
         if (!in_array($rulesVersion, [1, 2])) {
-            throw new \Nette\InvalidArgumentException(_("Neplatná hodnota \$rulesVersion."));
+            throw new InvalidArgumentException(_("Neplatná hodnota \$rulesVersion."));
         }
         $this->rulesVersion = $rulesVersion;
 

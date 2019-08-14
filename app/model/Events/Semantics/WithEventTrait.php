@@ -6,6 +6,7 @@ use Events\Machine\Transition;
 use Events\Model\Holder\BaseHolder;
 use Events\Model\Holder\Field;
 use Events\Model\Holder\Holder;
+use FKSDB\ORM\Models\ModelEvent;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -16,7 +17,7 @@ trait WithEventTrait {
 
     /**
      * @param mixed $obj
-     * @return \FKSDB\ORM\Models\ModelEvent
+     * @return ModelEvent
      */
     protected function getEvent($obj) {
         return ($holder = $this->getHolder($obj)) ? $holder->getEvent() : null;

@@ -3,6 +3,9 @@
 
 namespace FyziklaniModule;
 
+use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
+
 /**
  * Class GameSetupPresenter
  * @package FyziklaniModule
@@ -18,16 +21,16 @@ class GameSetupPresenter extends BasePresenter {
     }
 
     /**
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function renderDefault() {
         $this->template->gameSetup = $this->getGameSetup();
     }
 
     /**
-     * @throws \Nette\Application\BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws BadRequestException
+     * @throws AbortException
      */
     public function authorizedDefault() {
         if (!$this->isEventFyziklani()) {

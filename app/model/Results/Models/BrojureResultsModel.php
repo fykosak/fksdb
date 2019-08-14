@@ -4,6 +4,7 @@ namespace FKSDB\Results\Models;
 
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\Results\ModelCategory;
+use Nette\InvalidStateException;
 
 /**
  * Detailed results of a single series. Number of tasks is dynamic.
@@ -39,7 +40,7 @@ class BrojureResultsModel extends AbstractResultsModel {
      */
     public function getDataColumns($category) {
         if ($this->series === null) {
-            throw new \Nette\InvalidStateException('Series not specified.');
+            throw new InvalidStateException('Series not specified.');
         }
 
         if (!isset($this->dataColumns[$category->id])) {
@@ -128,10 +129,10 @@ class BrojureResultsModel extends AbstractResultsModel {
      */
     protected function composeQuery($category) {
         if (!$this->series) {
-            throw new \Nette\InvalidStateException('Series not set.');
+            throw new InvalidStateException('Series not set.');
         }
         if (array_search($this->listedSeries, $this->series) === false) {
-            throw new \Nette\InvalidStateException('Listed series is not among series.');
+            throw new InvalidStateException('Listed series is not among series.');
         }
 
         $select = [];

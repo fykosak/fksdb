@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
+use Exception;
 use FKSDB\Components\Forms\Factories\PersonInfo\AcademicDegreePrefixField;
 use FKSDB\Components\Forms\Factories\PersonInfo\AcademicDegreeSuffixField;
 use FKSDB\Components\Forms\Factories\PersonInfo\AccountField;
@@ -59,7 +60,7 @@ class PersonInfoFactory extends SingleReflectionFactory {
     /**
      * @param $fieldName
      * @return BaseControl
-     * @throws \Exception
+     * @throws Exception
      */
     public function createField(string $fieldName): BaseControl {
         switch ($fieldName) {

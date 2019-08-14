@@ -18,6 +18,7 @@ use Mail\MailTemplateFactory;
 use Nette\Mail\IMailer;
 use Nette\Mail\Message;
 use Nette\SmartObject;
+use Nette\Utils\DateTime;
 use Nette\Utils\Strings;
 use PublicModule\ApplicationPresenter;
 
@@ -198,7 +199,7 @@ class MailSender {
 
     /**
      * @param ModelEvent $event
-     * @return \Nette\Utils\DateTime
+     * @return DateTime
      */
     private function getUntil(ModelEvent $event) {
         return $event->registration_end ?: $event->end; //TODO extension point

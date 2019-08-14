@@ -9,6 +9,7 @@ use FKSDB\Components\Forms\Controls\PersonAccommodation\MultiNightsField;
 use FKSDB\Components\Forms\Controls\PersonAccommodation\SingleField;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\NotImplementedException;
+use function sprintf;
 
 /**
  * Class PersonAccommodationFactory
@@ -69,7 +70,7 @@ class PersonAccommodationFactory {
                 return $this->createBooleanSelect($event);
             case self::RESOLUTION_AUTO:
             default:
-                throw new NotImplementedException(\sprintf(_('Mode %s is not implement'), $fieldName), 501);
+                throw new NotImplementedException(sprintf(_('Mode %s is not implement'), $fieldName), 501);
         }
     }
 

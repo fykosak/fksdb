@@ -5,9 +5,16 @@ namespace OrgModule;
 
 
 use FKSDB\Components\Controls\FormControl\FormControl;
+use Nette\Application\BadRequestException;
 use Nette\Forms\Form;
 use Nette\Mail\IMailer;
 use Nette\Mail\Message;
+use function count;
+use function date;
+use function explode;
+use function rand;
+use function sleep;
+use function sprintf;
 
 /**
  * Class MailSenderPresenter
@@ -32,7 +39,7 @@ class MailSenderPresenter extends BasePresenter {
     }
 
     /**
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     public function authorizedDefault() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('mail-send', 'default', $this->getSelectedContest()));
@@ -40,7 +47,7 @@ class MailSenderPresenter extends BasePresenter {
 
     /**
      * @return FormControl
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     protected function createComponentMailForm(): FormControl {
         $control = new FormControl();
@@ -66,12 +73,12 @@ class MailSenderPresenter extends BasePresenter {
      */
     private function handleForm(Form $form) {
         $values = $form->getValues();
-        $toAddress = \explode(',', $values->to);
-        if (\count($toAddress) > 40) {
+        $toAddress = explode(',', $values->to);
+        if (count($toAddress) > 40) {
             $this->flashMessage(_('Max 40 to address (safety limit)'), \BasePresenter::FLASH_WARNING);
             return;
         }
-        foreach (\explode(',', $values->to) as $to) {
+        foreach (explode(',', $values->to) as $to) {
             if (!$to) {
                 $this->flashMessage(_('Address is empty'), \BasePresenter::FLASH_WARNING);
                 continue;
@@ -90,8 +97,8 @@ class MailSenderPresenter extends BasePresenter {
             $message->setHtmlBody($values->text);
             $message->addTo($to);
             $this->mailer->send($message);
-            $this->flashMessage(\sprintf(_('%s: Message "%s" send to %s'), \date('c'), $values->subject, $to), \BasePresenter::FLASH_SUCCESS);
-            \sleep(\rand(0, 2));
+            $this->flashMessage(sprintf(_('%s: Message "%s" send to %s'), date('c'), $values->subject, $to), \BasePresenter::FLASH_SUCCESS);
+            sleep(rand(0, 2));
         }
     }
 }

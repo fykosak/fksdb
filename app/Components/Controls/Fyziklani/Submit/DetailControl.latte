@@ -45,6 +45,8 @@
     </div>
 </div>
 <div class="mt-3">
-    <a class="btn btn-success" href="{link check!}">{_'Check'}</a>
+    <a class="btn btn-success"
+       data-confirm="{sprintf(_('Chcete označiť submit ako správny? úloha: %s, body: %s'),$model->getTask()->label,$model->points)}"
+       href="{link check!}">{_'Check'}</a>
     <a class="btn btn-secondary" href="{plink edit id=>$model->fyziklani_submit_id}">{_'Edit'}</a>
 </div>

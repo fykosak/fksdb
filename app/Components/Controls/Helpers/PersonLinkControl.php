@@ -14,8 +14,6 @@ use Nette\Templating\FileTemplate;
 class PersonLinkControl extends Control {
     /**
      * @param ModelPerson $person
-     * @param int $year
-     * @param int $contestId
      */
     public function render(ModelPerson $person) {
         $this->template->person = $person;

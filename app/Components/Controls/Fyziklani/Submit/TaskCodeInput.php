@@ -1,7 +1,10 @@
 <?php
 
-namespace FKSDB\Components\Controls\Fyziklani;
+namespace FKSDB\Components\Controls\Fyziklani\Submit;
 
+use BasePresenter;
+use Exception;
+use FKSDB\Components\Controls\Fyziklani\FyziklaniReactControl;
 use FKSDB\Messages\Message;
 use FKSDB\model\Fyziklani\ClosedSubmittingException;
 use FKSDB\model\Fyziklani\SubmitHandler;
@@ -13,8 +16,11 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use FKSDB\React\ReactResponse;
+use Nette\Application\AbortException;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use Nette\Utils\Json;
+use Nette\Utils\JsonException;
 
 /**
  * Class TaskCodeInput
@@ -44,7 +50,7 @@ class TaskCodeInput extends FyziklaniReactControl {
 
     /**
      * @return string
-     * @throws \Nette\Utils\JsonException
+     * @throws JsonException
      */
     public function getData(): string {
         return Json::encode([
@@ -70,7 +76,7 @@ class TaskCodeInput extends FyziklaniReactControl {
 
     /**
      * @return array
-     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws InvalidLinkException
      */
     public function getActions(): array {
         $actions = parent::getActions();
@@ -79,8 +85,8 @@ class TaskCodeInput extends FyziklaniReactControl {
     }
 
     /**
-     * @throws \Nette\Application\AbortException
-     * @throws \Exception
+     * @throws AbortException
+     * @throws Exception
      */
     public function handleSave() {
         $request = $this->getReactRequest();
@@ -90,9 +96,9 @@ class TaskCodeInput extends FyziklaniReactControl {
             $log = $this->handler->preProcess($request->requestData['code'], +$request->requestData['points']);
             $response->addMessage($log);
         } catch (TaskCodeException $exception) {
-            $response->addMessage(new Message($exception->getMessage(), \BasePresenter::FLASH_ERROR));
+            $response->addMessage(new Message($exception->getMessage(), BasePresenter::FLASH_ERROR));
         } catch (ClosedSubmittingException $exception) {
-            $response->addMessage(new Message($exception->getMessage(), \BasePresenter::FLASH_ERROR));
+            $response->addMessage(new Message($exception->getMessage(), BasePresenter::FLASH_ERROR));
         }
         $this->getPresenter()->sendResponse($response);
 

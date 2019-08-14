@@ -4,6 +4,11 @@ namespace FKSDB\Components\Grids;
 
 
 use FKSDB\ORM\Services\ServiceContestant;
+use Nette\Application\BadRequestException;
+use Nette\Application\UI\InvalidLinkException;
+use NiftyGrid\DuplicateButtonException;
+use NiftyGrid\DuplicateColumnException;
+use NiftyGrid\DuplicateGlobalButtonException;
 use OrgModule\BasePresenter;
 use SQL\ViewDataSource;
 
@@ -30,11 +35,11 @@ class ContestantsGrid extends BaseGrid {
 
     /**
      * @param BasePresenter $presenter
-     * @throws \Nette\Application\BadRequestException
-     * @throws \Nette\Application\UI\InvalidLinkException
-     * @throws \NiftyGrid\DuplicateButtonException
-     * @throws \NiftyGrid\DuplicateColumnException
-     * @throws \NiftyGrid\DuplicateGlobalButtonException
+     * @throws BadRequestException
+     * @throws InvalidLinkException
+     * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
+     * @throws DuplicateGlobalButtonException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

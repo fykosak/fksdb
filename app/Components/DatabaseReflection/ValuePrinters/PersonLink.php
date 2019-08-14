@@ -5,6 +5,7 @@ namespace FKSDB\Components\DatabaseReflection\ValuePrinters;
 use FKSDB\ORM\Models\IPersonReferencedModel;
 use FKSDB\ORM\Models\ModelPerson;
 use Nette\Application\BadRequestException;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\PresenterComponent;
 use Nette\MemberAccessException;
 use Nette\Utils\Html;
@@ -30,7 +31,7 @@ class PersonLink extends AbstractValuePrinter {
     /**
      * @param ModelPerson|IPersonReferencedModel $model
      * @return Html
-     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws InvalidLinkException
      * @throws BadRequestException
      */
     public function getHtml($model): Html {

@@ -12,6 +12,8 @@ use Nette\Database\Table\GroupedSelection;
 use Nette\Database\Table\Selection;
 use Nette\Security\IResource;
 use Nette\Utils\DateTime;
+use Nette\Utils\Json;
+use Nette\Utils\JsonException;
 
 /**
  *
@@ -387,7 +389,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     /**
      * @param integer eventId
      * @return string
-     * @throws \Nette\Utils\JsonException
+     * @throws JsonException
      */
     public function getSerializedAccommodationByEventId($eventId) {
         if (!$eventId) {
@@ -405,7 +407,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         if (!count($accommodations)) {
             return null;
         }
-        return \Nette\Utils\Json::encode($accommodations);
+        return Json::encode($accommodations);
     }
 
     /**

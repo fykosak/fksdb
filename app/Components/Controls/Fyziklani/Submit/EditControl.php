@@ -2,11 +2,14 @@
 
 namespace FKSDB\Components\Controls\Fyziklani;
 
+use BasePresenter;
+use Exception;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\model\Fyziklani\ClosedSubmittingException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Forms\Controls\RadioList;
@@ -14,13 +17,15 @@ use Nette\Forms\Form;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 use Tracy\Debugger;
+use function get_class;
+use function sprintf;
 
 /**
  * Class EditSubmitControl
  * @package FKSDB\Components\Controls\Fyziklani
  * @property FileTemplate $template
  */
-class EditSubmitControl extends Control {
+class EditControl extends Control {
     /**
      * @var ServiceFyziklaniSubmit
      */
@@ -60,7 +65,7 @@ class EditSubmitControl extends Control {
         if ($control instanceof FormControl) {
             return $control->getForm();
         }
-        throw new BadRequestException('Expected FormControl got ' . \get_class($control));
+        throw new BadRequestException('Expected FormControl got ' . get_class($control));
     }
 
     /**
@@ -115,23 +120,27 @@ class EditSubmitControl extends Control {
 
     /**
      * @param Form $form
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     private function editFormSucceeded(Form $form) {
         $values = $form->getValues();
         try {
             $msg = $this->submit->changePoints($values->points);
-            Debugger::log(\sprintf('fyziklani_submit %d edited by %d', $this->submit->fyziklani_submit_id, $this->getPresenter()->getUser()->getIdentity()->getPerson()->person_id));
+            Debugger::log(sprintf('fyziklani_submit %d edited by %d', $this->submit->fyziklani_submit_id, $this->getPresenter()->getUser()->getIdentity()->getPerson()->person_id));
             $this->getPresenter()->flashMessage($msg->getMessage(), $msg->getLevel());
             $this->redirect('this');
         } catch (ClosedSubmittingException $exception) {
-            $this->getPresenter()->flashMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR);
+            $this->getPresenter()->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
+            $this->redirect('this');
+        } catch (Exception $exception) {
+            Debugger::log($exception);
+            $this->getPresenter()->flashMessage('Error!', BasePresenter::FLASH_ERROR);
             $this->redirect('this');
         }
     }
 
     public function render() {
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'EditSubmitControl.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'EditControl.latte');
         $this->template->submit = $this->submit;
         $this->template->setTranslator($this->translator);
         $this->template->render();

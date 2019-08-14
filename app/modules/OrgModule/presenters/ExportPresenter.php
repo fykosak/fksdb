@@ -23,7 +23,11 @@ use FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryParameter;
 use FormUtils;
 use FKSDB\Results\Models\AbstractResultsModel;
 use ModelException;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\UI\InvalidLinkException;
+use Nette\Database\Table\ActiveRow;
+use ReflectionException;
 use Tracy\Debugger;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Strings;
@@ -198,7 +202,7 @@ class ExportPresenter extends SeriesPresenter {
     }
 
     /**
-     * @return ModelStoredQuery|\Nette\Database\Table\ActiveRow|null
+     * @return ModelStoredQuery|ActiveRow|null
      */
     public function getPatternQuery() {
         if ($this->patternQuery === false) {
@@ -285,8 +289,8 @@ class ExportPresenter extends SeriesPresenter {
     /**
      * @param $id
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws AbortException
+     * @throws InvalidLinkException
      */
     public function actionExecute($id) {
         $query = $this->getPatternQuery();
@@ -525,7 +529,7 @@ class ExportPresenter extends SeriesPresenter {
 
     /**
      * @param SubmitButton $button
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function handleComposeExecute(SubmitButton $button) {
         $form = $button->getForm();
@@ -541,8 +545,8 @@ class ExportPresenter extends SeriesPresenter {
 
     /**
      * @param SubmitButton $button
-     * @throws \Nette\Application\AbortException
-     * @throws \ReflectionException
+     * @throws AbortException
+     * @throws ReflectionException
      */
     public function handleEditSuccess(SubmitButton $button) {
         try {
@@ -568,8 +572,8 @@ class ExportPresenter extends SeriesPresenter {
 
     /**
      * @param SubmitButton $button
-     * @throws \Nette\Application\AbortException
-     * @throws \ReflectionException
+     * @throws AbortException
+     * @throws ReflectionException
      */
     public function handleComposeSuccess(SubmitButton $button) {
         try {

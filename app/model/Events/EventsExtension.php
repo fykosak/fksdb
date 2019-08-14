@@ -21,17 +21,20 @@ use FKSDB\Components\Forms\Factories\Events\ChooserFactory;
 use FKSDB\Components\Forms\Factories\Events\PersonFactory;
 use FKSDB\Components\Grids\Events\LayoutResolver;
 use FKSDB\Config\Expressions\Helpers;
+use FKSDB\Config\NeonSchemaException;
 use FKSDB\Config\NeonScheme;
 use Nette\Config\CompilerExtension;
 use Nette\Config\Helpers as ConfigHelpers;
 use Nette\Config\Loader;
 use Nette\DI\Container;
+use Nette\DI\ServiceDefinition;
 use Nette\DI\Statement;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use Nette\Utils\Arrays;
 use Nette\Utils\PhpGenerator\ClassType;
 use Nette\Utils\PhpGenerator\Method;
+use Nette\Utils\RegexpException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -107,8 +110,8 @@ class EventsExtension extends CompilerExtension {
      * Configuration loading
      */
     /**
-     * @throws \FKSDB\Config\NeonSchemaException
-     * @throws \Nette\Utils\RegexpException
+     * @throws NeonSchemaException
+     * @throws RegexpException
      */
     public function loadConfiguration() {
         parent::loadConfiguration();
@@ -334,7 +337,7 @@ class EventsExtension extends CompilerExtension {
     }
 
     /**
-     * @throws \Nette\Utils\RegexpException
+     * @throws RegexpException
      */
     private function createFieldFactory() {
         $factory = $this->getContainerBuilder()->addDefinition($this->getFieldName());
@@ -362,7 +365,7 @@ class EventsExtension extends CompilerExtension {
     /**
      * @param $name
      * @param $definition
-     * @throws \FKSDB\Config\NeonSchemaException
+     * @throws NeonSchemaException
      */
     private function createMachineFactory($name, $definition) {
         $machineDef = NeonScheme::readSection($definition['machine'], $this->scheme['machine']);
@@ -420,8 +423,8 @@ class EventsExtension extends CompilerExtension {
      * @param $name
      * @param $baseName
      * @param $definition
-     * @return \Nette\DI\ServiceDefinition
-     * @throws \FKSDB\Config\NeonSchemaException
+     * @return ServiceDefinition
+     * @throws NeonSchemaException
      */
     private function createBaseMachineFactory($name, $baseName, $definition) {
         $factoryName = $this->getBaseMachineName($name, $baseName);
@@ -468,7 +471,7 @@ class EventsExtension extends CompilerExtension {
     /**
      * @param $name
      * @param $definition
-     * @throws \FKSDB\Config\NeonSchemaException
+     * @throws NeonSchemaException
      */
     private function createHolderFactory($name, $definition) {
         $machineDef = NeonScheme::readSection($definition['machine'], $this->scheme['machine']);
@@ -526,9 +529,9 @@ class EventsExtension extends CompilerExtension {
      * @param $definitionName
      * @param $baseName
      * @param $definition
-     * @return \Nette\DI\ServiceDefinition
-     * @throws \FKSDB\Config\NeonSchemaException
-     * @throws \Nette\Utils\RegexpException
+     * @return ServiceDefinition
+     * @throws NeonSchemaException
+     * @throws RegexpException
      */
     private function createBaseHolderFactory($definitionName, $baseName, $definition) {
         $factoryName = $this->getBaseHolderName($definitionName, $baseName);

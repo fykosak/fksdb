@@ -3,6 +3,7 @@
 
 namespace FKSDB\Components\Forms\Controls\Payment;
 
+use Exception;
 use FKSDB\Components\React\IReactComponent;
 use FKSDB\Components\React\ReactField;
 use FKSDB\ORM\DbNames;
@@ -10,6 +11,7 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventPersonAccommodation;
 use FKSDB\ORM\Services\ServiceEventPersonAccommodation;
 use Nette\Forms\Controls\TextInput;
+use function json_encode;
 
 /**
  * Class PaymentSelectField
@@ -46,7 +48,7 @@ class PaymentSelectField extends TextInput implements IReactComponent {
 
     /**
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     public function getData(): string {
         $query = $this->serviceEventPersonAccommodation->where('event_accommodation.event_id', $this->event->event_id);
@@ -66,7 +68,7 @@ class PaymentSelectField extends TextInput implements IReactComponent {
                 ];
             }
         }
-        return \json_encode($items);
+        return json_encode($items);
     }
 
     /**

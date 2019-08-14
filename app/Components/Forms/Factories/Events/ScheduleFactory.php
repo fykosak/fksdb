@@ -7,6 +7,7 @@ use Events\Machine\BaseMachine;
 use Events\Model\Holder\Field;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Container;
+use Nette\Forms\IControl;
 
 /**
  * Class ScheduleFactory
@@ -64,7 +65,7 @@ class ScheduleFactory extends AbstractFactory {
 
     /**
      * @param Component $component
-     * @return Component|\Nette\Forms\IControl
+     * @return Component|IControl
      */
     public function getMainControl(Component $component) {
         return $component;

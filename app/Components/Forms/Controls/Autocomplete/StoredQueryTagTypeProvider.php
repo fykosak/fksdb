@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
+use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
 
 /**
@@ -49,7 +50,7 @@ class StoredQueryTagTypeProvider implements IFilteredDataProvider {
 
     /**
      * @param mixed $id
-     * @return bool|mixed|\Nette\Database\Table\ActiveRow|Selection|null
+     * @return bool|mixed|ActiveRow|Selection|null
      */
     public function getItemLabel($id) {
         $tagType = $this->serviceStoredQueryTagType->findByPrimary($id);

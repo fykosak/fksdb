@@ -2,9 +2,11 @@
 
 namespace FKSDB\Components\Forms\Controls;
 
+use Nette\Forms\Controls\TextBase;
 use Nette\Utils\DateTime;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
+use Nette\Utils\Html;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -29,7 +31,7 @@ class DateTimeBox extends TextInput {
     }
 
     /**
-     * @return \Nette\Utils\Html
+     * @return Html
      */
     public function getControl() {
         $control = parent::getControl();
@@ -42,7 +44,7 @@ class DateTimeBox extends TextInput {
 
     /**
      * @param $value
-     * @return \Nette\Forms\Controls\TextBase|void
+     * @return TextBase|void
      */
     public function setValue($value) {
         if ($value) {

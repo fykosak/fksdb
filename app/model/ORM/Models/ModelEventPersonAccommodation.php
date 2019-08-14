@@ -2,10 +2,13 @@
 
 namespace FKSDB\ORM\Models;
 
+use DateInterval;
+use Exception;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\Transitions\IStateModel;
 use Nette\Database\Table\ActiveRow;
+use function sprintf;
 
 /**
  * Class FKSDB\ORM\Models\ModelEventPersonAccommodation
@@ -49,19 +52,19 @@ class ModelEventPersonAccommodation extends AbstractModelSingle implements IStat
 
     /**
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     public function getLabel(): string {
         $eventAcc = $this->getEventAccommodation();
         $date = clone $eventAcc->date;
         $fromDate = $date->format('d. m.');
-        $toDate = $date->add(new \DateInterval('P1D'))->format('d. m. Y');
-        return \sprintf(_('Ubytovaní pre osobu %s od %s do %s v hoteli %s'), $this->getPerson()->getFullName(), $fromDate, $toDate, $eventAcc->name);
+        $toDate = $date->add(new DateInterval('P1D'))->format('d. m. Y');
+        return sprintf(_('Ubytovaní pre osobu %s od %s do %s v hoteli %s'), $this->getPerson()->getFullName(), $fromDate, $toDate, $eventAcc->name);
     }
 
     /**
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     public function __toString(): string {
         return $this->getLabel();
