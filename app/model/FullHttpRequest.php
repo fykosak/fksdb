@@ -1,7 +1,6 @@
 <?php
 
 use Nette\Http\Request;
-use Nette\SmartObject;
 
 /**
  * Unfortunately Nette Http\Request doesn't make raw HTTP data accessible.
@@ -11,7 +10,7 @@ use Nette\SmartObject;
  */
 class FullHttpRequest {
 
-    use SmartObject;
+    use \Nette\SmartObject;
 
     /** @var Request */
     private $request;

@@ -3,7 +3,6 @@
 namespace Exports\Formats;
 
 use Exports\StoredQuery;
-use Nette\Application\IResponse;
 use WebService\IXMLNodeSerializer;
 
 /**
@@ -32,7 +31,7 @@ class AESOPFormat extends XSLFormat {
     }
 
     /**
-     * @return PlainTextResponse|IResponse
+     * @return PlainTextResponse|\Nette\Application\IResponse
      */
     public function getResponse() {
         $response = parent::getResponse();

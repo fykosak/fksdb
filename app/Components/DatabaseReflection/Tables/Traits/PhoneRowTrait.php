@@ -11,8 +11,6 @@ use FKSDB\ValidationTest\ValidationLog;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
-use function is_null;
-use function sprintf;
 
 /**
  * Class IPhoneField
@@ -43,13 +41,13 @@ trait PhoneRowTrait {
     public final function runTest(AbstractModelSingle $model): ValidationLog {
 
         $value = $model->{$this->getModelAccessKey()};
-        if (is_null($value)) {
-            return new ValidationLog($this->getTitle(), sprintf('%s is not set', $this->getTitle()), ValidationLog::LVL_INFO);
+        if (\is_null($value)) {
+            return new ValidationLog($this->getTitle(), \sprintf('%s is not set', $this->getTitle()), ValidationLog::LVL_INFO);
         }
         if (!PhoneNumberFactory::isValid($value)) {
-            return new ValidationLog($this->getTitle(), sprintf('%s number (%s) is not valid', $this->getTitle(), $value), ValidationLog::LVL_DANGER);
+            return new ValidationLog($this->getTitle(), \sprintf('%s number (%s) is not valid', $this->getTitle(), $value), ValidationLog::LVL_DANGER);
         } else {
-            return new ValidationLog($this->getTitle(), sprintf('%s is valid', $this->getTitle()), ValidationLog::LVL_SUCCESS);
+            return new ValidationLog($this->getTitle(), \sprintf('%s is valid', $this->getTitle()), ValidationLog::LVL_SUCCESS);
         }
     }
 

@@ -2,11 +2,8 @@
 
 namespace FKSDB\Components\Grids\Payment;
 
-use BasePresenter;
 use FKSDB\ORM\Models\ModelPayment;
 use NiftyGrid\DataSource\NDataSource;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class MyPaymentGrid
@@ -15,9 +12,9 @@ use NiftyGrid\DuplicateColumnException;
 class MyPaymentGrid extends PaymentGrid {
 
     /**
-     * @param BasePresenter $presenter
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
+     * @param \BasePresenter $presenter
+     * @throws \NiftyGrid\DuplicateButtonException
+     * @throws \NiftyGrid\DuplicateColumnException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

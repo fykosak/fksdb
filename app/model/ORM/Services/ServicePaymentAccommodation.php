@@ -2,7 +2,6 @@
 
 namespace FKSDB\ORM\Services;
 
-use Exception;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelPayment;
@@ -10,8 +9,6 @@ use FKSDB\ORM\Models\ModelPaymentAccommodation;
 use FKSDB\Payment\Handler\DuplicateAccommodationPaymentException;
 use FKSDB\Submits\StorageException;
 use Nette\Utils\ArrayHash;
-use function array_filter;
-use function array_keys;
 
 /**
  * Class ServicePaymentAccommodation
@@ -37,7 +34,7 @@ class ServicePaymentAccommodation extends AbstractServiceSingle {
      * @param ArrayHash $data
      * @param ModelPayment $payment
      * @throws DuplicateAccommodationPaymentException
-     * @throws Exception
+     * @throws \Exception
      */
     public function prepareAndUpdate($data, ModelPayment $payment) {
         $oldRows = $this->getTable()->where('payment_id', $payment->payment_id);
@@ -86,7 +83,7 @@ class ServicePaymentAccommodation extends AbstractServiceSingle {
      */
     private function prepareData($data): array {
         $data = (array)json_decode($data);
-        return array_keys(array_filter($data, function ($value) {
+        return \array_keys(\array_filter($data, function ($value) {
             return $value;
         }));
     }

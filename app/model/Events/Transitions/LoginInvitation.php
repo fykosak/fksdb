@@ -7,7 +7,6 @@ use Events\Machine\Transition;
 use Events\Model\Holder\BaseHolder;
 use FKSDB\ORM\Services\ServicePerson;
 use Mail\MailTemplateFactory;
-use Nette\Database\Table\ActiveRow;
 use Nette\SmartObject;
 
 /**
@@ -79,7 +78,7 @@ class LoginInvitation {
 
     /**
      * @param BaseHolder $baseHolder
-     * @return ActiveRow|null
+     * @return \Nette\Database\Table\ActiveRow|null
      */
     private function getPerson(BaseHolder $baseHolder) {
         return $this->servicePerson->findByPrimary($baseHolder->getPersonId());

@@ -4,10 +4,7 @@ namespace Exports\Processings;
 
 use Exports\StoredQueryPostProcessing;
 use FKSDB\ORM\Services\ServiceTask;
-use FKSDB\Results\EvaluationStrategies\EvaluationStrategy;
-use FKSDB\Results\ModelCategory;
 use FKSDB\Results\ResultsModelFactory;
-use Nette\Application\BadRequestException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -51,7 +48,7 @@ class AESOPContestant extends StoredQueryPostProcessing {
      *
      * @param \FKSDB\ORM\Services\ServiceTask $serviceTask
      * @return int|double
-     * @throws BadRequestException
+     * @throws \Nette\Application\BadRequestException
      */
     public function getMaxPoints(ServiceTask $serviceTask) {
         $evalutationStrategy = $this->getEvaluationStrategy();
@@ -73,7 +70,7 @@ class AESOPContestant extends StoredQueryPostProcessing {
     /**
      * @param $data
      * @return array
-     * @throws BadRequestException
+     * @throws \Nette\Application\BadRequestException
      */
     private function filterCategory($data) {
         $evaluationStrategy = $this->getEvaluationStrategy();
@@ -159,8 +156,8 @@ class AESOPContestant extends StoredQueryPostProcessing {
     }
 
     /**
-     * @return EvaluationStrategy
-     * @throws BadRequestException
+     * @return \FKSDB\Results\EvaluationStrategies\EvaluationStrategy
+     * @throws \Nette\Application\BadRequestException
      */
     private function getEvaluationStrategy() {
         return ResultsModelFactory::findEvaluationStrategy($this->parameters['contest'], $this->parameters['year']);
@@ -168,8 +165,8 @@ class AESOPContestant extends StoredQueryPostProcessing {
 
     /**
      *
-     * @return ModelCategory|null
-     * @throws BadRequestException
+     * @return \FKSDB\Results\ModelCategory|null
+     * @throws \Nette\Application\BadRequestException
      */
     private function getCategory() {
         $evaluationStrategy = $this->getEvaluationStrategy();

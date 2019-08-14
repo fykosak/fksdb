@@ -9,8 +9,6 @@ use FKSDB\Logging\FlashDumpFactory;
 use FKSDB\SeriesCalculator;
 use FKSDB\Submits\UploadException;
 use ModelException;
-use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Tracy\Debugger;
 use Pipeline\PipelineException;
@@ -84,7 +82,7 @@ class TasksPresenter extends BasePresenter {
     }
 
     /**
-     * @throws BadRequestException
+     * @throws \Nette\Application\BadRequestException
      */
     public function authorizedImport() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('task', 'insert', $this->getSelectedContest()));
@@ -97,7 +95,7 @@ class TasksPresenter extends BasePresenter {
 
     /**
      * @return FormControl
-     * @throws BadRequestException
+     * @throws \Nette\Application\BadRequestException
      */
     protected function createComponentSeriesForm(): FormControl {
         $control = new FormControl();
@@ -141,8 +139,8 @@ class TasksPresenter extends BasePresenter {
 
     /**
      * @param Form $seriesForm
-     * @throws AbortException
-     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
      */
     public function validSubmitSeriesForm(Form $seriesForm) {
         $values = $seriesForm->getValues();

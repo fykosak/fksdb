@@ -4,11 +4,9 @@ namespace FKSDB\Components\Controls;
 
 use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\SeriesCalculator;
-use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
 use Nette\Localization\ITranslator;
-use Nette\Templating\ITemplate;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -142,7 +140,7 @@ class SeriesChooser extends Control {
 
     /**
      * @param $contestId
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function handleChange($contestId) {
         $presenter = $this->getPresenter();
@@ -191,7 +189,7 @@ class SeriesChooser extends Control {
 
     /**
      * @param null $class
-     * @return ITemplate
+     * @return \Nette\Templating\ITemplate
      */
     protected function createTemplate($class = NULL) {
         $template = parent::createTemplate($class);

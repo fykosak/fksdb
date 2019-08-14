@@ -2,15 +2,13 @@
 
 namespace FKSDB\Payment\PriceCalculator;
 
-use Exception;
 use Throwable;
-use function sprintf;
 
 /**
  * Class UnsupportedCurrencyException
  * @package FKSDB\Payment\PriceCalculator
  */
-class UnsupportedCurrencyException extends Exception {
+class UnsupportedCurrencyException extends \Exception {
     /**
      * UnsupportedCurrencyException constructor.
      * @param string $currency
@@ -18,6 +16,6 @@ class UnsupportedCurrencyException extends Exception {
      * @param Throwable|null $previous
      */
     public function __construct(string $currency, int $code = 0, Throwable $previous = null) {
-        parent::__construct(sprintf(_('Currency %s in not supported'), $currency), $code, $previous);
+        parent::__construct(\sprintf(_('Currency %s in not supported'), $currency), $code, $previous);
     }
 }

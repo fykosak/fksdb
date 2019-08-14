@@ -8,15 +8,11 @@ use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\Submits\FilesystemSubmitStorage;
 use FKSDB\Submits\StorageException;
 use ModelException;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
 use Tracy\Debugger;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;
 use PublicModule\BasePresenter;
-use function sprintf;
 
 /**
  *
@@ -51,8 +47,8 @@ class SubmitsGrid extends BaseGrid {
 
     /**
      * @param $presenter
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
+     * @throws \NiftyGrid\DuplicateButtonException
+     * @throws \NiftyGrid\DuplicateColumnException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -99,7 +95,7 @@ class SubmitsGrid extends BaseGrid {
                 return $this->link('revoke!', $row->submit_id);
             })
             ->setConfirmationDialog(function ($row) {
-                return sprintf(_('Opravdu vzít řešení úlohy %s zpět?'), $row->getTask()->getFQName());
+                return \sprintf(_('Opravdu vzít řešení úlohy %s zpět?'), $row->getTask()->getFQName());
             });
 
 
@@ -113,7 +109,7 @@ class SubmitsGrid extends BaseGrid {
     /**
      * @param $id
      * @throws BadRequestException
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function handleRevoke($id) {
         $row = $this->submitService->findByPrimary($id);

@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Forms\Controls;
 
 use DateTime;
-use Nette\Forms\Controls\TextBase;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 
@@ -31,7 +30,7 @@ class TimeBox extends TextInput {
 
     /**
      * @param $value
-     * @return TextBase|void
+     * @return \Nette\Forms\Controls\TextBase|void
      */
     public function setValue($value) {
         if ($value instanceof DateTime) {

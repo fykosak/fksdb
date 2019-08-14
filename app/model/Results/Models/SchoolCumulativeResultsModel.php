@@ -8,7 +8,6 @@ use FKSDB\Results\EvaluationStrategies\EvaluationNullObject;
 use FKSDB\Results\ModelCategory;
 use Nette\Database\Connection;
 use Nette\InvalidStateException;
-use Nette\NotSupportedException;
 
 /**
  * Cumulative results of schools' contest.
@@ -123,7 +122,7 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
      * @return mixed|void
      */
     protected function composeQuery($category) {
-        throw new NotSupportedException;
+        throw new \Nette\NotSupportedException;
     }
 
     /**

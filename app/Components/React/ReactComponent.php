@@ -9,7 +9,6 @@ use Nette\DI\Container;
 use Nette\Http\IRequest;
 use Nette\Templating\FileTemplate;
 use Nette\Utils\Json;
-use Nette\Utils\JsonException;
 
 /**
  * Class ReactComponent
@@ -48,7 +47,7 @@ abstract class ReactComponent extends Control implements IReactComponent {
     }
 
     /**
-     * @throws JsonException
+     * @throws \Nette\Utils\JsonException
      */
     public final function render() {
         $this->template->moduleName = $this->getModuleName();

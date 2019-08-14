@@ -9,21 +9,14 @@ use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Config\Expressions\Helpers;
-use FKSDB\ORM\IModel;
-use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceContestant;
 use FKSDB\ORM\Services\ServicePerson;
-use FKSDB\SeriesCalculator;
 use IContestPresenter;
-use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
-use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
-use Nette\Utils\RegexpException;
 use Persons\ExtendedPersonHandler;
 use Persons\ExtendedPersonHandlerFactory;
 use Persons\IExtendedPersonPresenter;
@@ -100,14 +93,14 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     protected $servicePerson;
 
     /**
-     * @var SeriesCalculator
+     * @var \FKSDB\SeriesCalculator
      */
     protected $seriesCalculator;
 
     /**
-     * @param SeriesCalculator $seriesCalculator
+     * @param \FKSDB\SeriesCalculator $seriesCalculator
      */
-    public function injectSeriesCalculator(SeriesCalculator $seriesCalculator) {
+    public function injectSeriesCalculator(\FKSDB\SeriesCalculator $seriesCalculator) {
         $this->seriesCalculator = $seriesCalculator;
     }
 
@@ -148,7 +141,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
 
     /**
-     * @return ModelContest|ActiveRow|null
+     * @return \FKSDB\ORM\Models\ModelContest|\Nette\Database\Table\ActiveRow|null
      */
     public function getSelectedContest() {
         return $this->contestId ? $this->serviceContest->findByPrimary($this->contestId) : null;
@@ -187,14 +180,14 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
     /**
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function actionDefault() {
         $this->redirect('contest');
     }
 
     /**
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function actionContestant() {
 
@@ -282,7 +275,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     /**
      * @param $contestId
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function handleChangeContest($contestId) {
         $this->redirect('this', ['contestId' => $contestId,]);
@@ -290,7 +283,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     /**
      * @param $year
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function handleChangeYear($year) {
         $this->redirect('this', ['year' => $year,]);
@@ -299,7 +292,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     /**
      * @return FormControl
-     * @throws BadRequestException
+     * @throws \Nette\Application\BadRequestException
      */
     public function createComponentEmailForm() {
         $control = new FormControl();
@@ -314,7 +307,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     /**
      * @param Form $form
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function emailFormSucceeded(Form $form) {
         $values = $form->getValues();
@@ -348,8 +341,8 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     /**
      * @return FormControl
-     * @throws BadRequestException
-     * @throws RegexpException
+     * @throws \Nette\Application\BadRequestException
+     * @throws \Nette\Utils\RegexpException
      */
     public function createComponentContestantForm() {
         $control = new FormControl();
@@ -400,7 +393,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
     /**
-     * @return null|IModel
+     * @return null|\FKSDB\ORM\IModel
      */
     public function getModel() {
         return null; //we always create new contestant
@@ -446,7 +439,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      */
     protected function getNavBarVariant(): array {
         /**
-         * @var ModelContest $contest
+         * @var \FKSDB\ORM\Models\ModelContest $contest
          */
         $contest = $this->serviceContest->findByPrimary($this->contestId);
         if ($contest) {

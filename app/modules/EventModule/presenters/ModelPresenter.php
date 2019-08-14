@@ -5,8 +5,6 @@ namespace EventModule;
 use Events\Machine\Machine;
 use FKSDB\Components\Events\ExpressionPrinter;
 use FKSDB\Components\Events\GraphComponent;
-use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 
 /**
  * Class ModelPresenter
@@ -27,8 +25,8 @@ class ModelPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
-     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
      */
     public function authorizedDefault() {
         $this->setAuthorized($this->eventIsAllowed('event.model', 'default'));
@@ -41,8 +39,8 @@ class ModelPresenter extends BasePresenter {
 
     /**
      * @return GraphComponent
-     * @throws AbortException
-     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
      */
     protected function createComponentGraphComponent(): GraphComponent {
         $event = $this->getEvent();

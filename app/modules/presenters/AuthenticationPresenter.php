@@ -5,7 +5,6 @@ use Authentication\FacebookAuthenticator;
 use Authentication\LoginUserStorage;
 use Authentication\PasswordAuthenticator;
 use Authentication\RecoveryException;
-use Authentication\SSO\GlobalSession;
 use Authentication\TokenAuthenticator;
 use FKSDB\Authentication\SSO\IGlobalSession;
 use FKSDB\Authentication\SSO\ServiceSide\Authentication;
@@ -15,9 +14,7 @@ use FKSDB\ORM\Services\ServiceAuthToken;
 use FKSDB\ORM\Services\ServicePerson;
 use Mail\MailTemplateFactory;
 use Mail\SendFailedException;
-use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
-use Nette\Application\UI\InvalidLinkException;
 use Nette\Http\Url;
 use Nette\Security\AuthenticationException;
 use Nette\Utils\DateTime;
@@ -65,7 +62,7 @@ final class AuthenticationPresenter extends BasePresenter {
 
     /**
      * todo check if type is persistent
-     * @var GlobalSession
+     * @var \Authentication\SSO\GlobalSession
      */
     private $globalSession;
 
@@ -173,8 +170,8 @@ final class AuthenticationPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
-     * @throws InvalidLinkException
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\UI\InvalidLinkException
      */
     public function actionLogout() {
         $subDomainAuth = $this->globalParameters['subdomain']['auth'];
@@ -214,7 +211,7 @@ final class AuthenticationPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function actionLogin() {
         if ($this->isLoggedIn()) {
@@ -244,7 +241,7 @@ final class AuthenticationPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function actionRecover() {
         if ($this->isLoggedIn()) {
@@ -309,11 +306,11 @@ final class AuthenticationPresenter extends BasePresenter {
 
     /**
      * @param $form
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     /**
      * @param $form
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function loginFormSubmitted($form) {
         try {
@@ -331,11 +328,11 @@ final class AuthenticationPresenter extends BasePresenter {
 
     /**
      * @param Form $form
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     /**
      * @param Form $form
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      * @throws Exception
      */
     public function recoverFormSubmitted(Form $form) {
@@ -368,11 +365,11 @@ final class AuthenticationPresenter extends BasePresenter {
 
     /**
      * @param null $login
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     /**
      * @param null $login
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     private function loginBackLinkRedirect($login = null) {
         if (!$this->backlink) {
@@ -411,7 +408,7 @@ final class AuthenticationPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     private function initialRedirect() {
         if ($this->backlink) {

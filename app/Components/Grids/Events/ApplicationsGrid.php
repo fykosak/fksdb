@@ -10,13 +10,10 @@ use Events\Model\Holder\Holder;
 use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Logging\MemoryLogger;
-use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Presenter;
-use Nette\ComponentModel\IComponent;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
-use Nette\Templating\ITemplate;
 use Nette\Utils\Strings;
 
 
@@ -51,7 +48,7 @@ class ApplicationsGrid extends Control {
     private $machines = [];
 
     /**
-     * @var ModelEvent[]
+     * @var \FKSDB\ORM\Models\ModelEvent[]
      */
     private $eventApplications = [];
 
@@ -147,7 +144,7 @@ class ApplicationsGrid extends Control {
 
     /**
      * @param $name
-     * @return ApplicationComponent|IComponent
+     * @return ApplicationComponent|\Nette\ComponentModel\IComponent
      */
     protected function createComponent($name) {
 
@@ -164,7 +161,7 @@ class ApplicationsGrid extends Control {
 
     /**
      * @param null $class
-     * @return ITemplate
+     * @return \Nette\Templating\ITemplate
      */
     protected function createTemplate($class = NULL) {
         $template = parent::createTemplate($class);

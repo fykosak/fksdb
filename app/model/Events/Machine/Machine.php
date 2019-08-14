@@ -9,7 +9,6 @@ use IteratorAggregate;
 use LogicException;
 use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
-use Traversable;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -102,7 +101,7 @@ class Machine extends FreezableObject implements ArrayAccess, IteratorAggregate 
      */
 
     /**
-     * @return ArrayIterator|Traversable
+     * @return ArrayIterator|\Traversable
      */
     public function getIterator() {
         return new ArrayIterator($this->baseMachines);

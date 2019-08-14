@@ -4,10 +4,8 @@ namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Factories\PersonHistory\ClassField;
 use FKSDB\Components\Forms\Factories\PersonHistory\StudyYearField;
-use FKSDB\YearCalculator;
 use Nette\Forms\Controls\BaseControl;
 use Nette\NotImplementedException;
-use function sprintf;
 
 /**
  * Class PersonHistoryFactory
@@ -22,16 +20,16 @@ class PersonHistoryFactory {
     private $schoolFactory;
 
     /**
-     * @var YearCalculator
+     * @var \FKSDB\YearCalculator
      */
     private $yearCalculator;
 
     /**
      * PersonHistoryFactory constructor.
      * @param SchoolFactory $factorySchool
-     * @param YearCalculator $yearCalculator
+     * @param \FKSDB\YearCalculator $yearCalculator
      */
-    public function __construct(SchoolFactory $factorySchool, YearCalculator $yearCalculator) {
+    public function __construct(SchoolFactory $factorySchool, \FKSDB\YearCalculator $yearCalculator) {
         $this->schoolFactory = $factorySchool;
         $this->yearCalculator = $yearCalculator;
     }
@@ -50,7 +48,7 @@ class PersonHistoryFactory {
             case 'study_year':
                 return new StudyYearField($this->yearCalculator, $acYear);
             default:
-                throw new NotImplementedException(sprintf(_('Field %s is not implemented.'), $fieldName), 501);
+                throw new NotImplementedException(\sprintf(_('Field %s is not implemented.'), $fieldName), 501);
         }
     }
 }

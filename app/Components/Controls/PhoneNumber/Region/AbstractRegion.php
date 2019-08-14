@@ -4,7 +4,6 @@ namespace FKSDB\Components\Controls\PhoneNumber\Region;
 
 use FKSDB\Components\Controls\PhoneNumber\InvalidPhoneNumberException;
 use Nette\Utils\Html;
-use function preg_match;
 
 /**
  * Class AbstractRegion
@@ -50,6 +49,6 @@ abstract class AbstractRegion {
      * @return false
      */
     public static function match(string $number): bool {
-        return !!preg_match('/^\\' . static::getPrefix() . '\d{' . static::getNSN() . '}/', $number);
+        return !!\preg_match('/^\\' . static::getPrefix() . '\d{' . static::getNSN() . '}/', $number);
     }
 }

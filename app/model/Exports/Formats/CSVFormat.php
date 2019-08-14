@@ -2,7 +2,6 @@
 
 use Exports\IExportFormat;
 use Exports\StoredQuery;
-use Nette\Application\IResponse;
 use Nette\SmartObject;
 use PePa\CSVResponse;
 
@@ -39,7 +38,7 @@ class CSVFormat implements IExportFormat {
     }
 
     /**
-     * @return IResponse|CSVResponse
+     * @return \Nette\Application\IResponse|CSVResponse
      */
     public function getResponse() {
         $data = $this->storedQuery->getData();

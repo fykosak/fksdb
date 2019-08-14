@@ -9,7 +9,6 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceContestYear;
 use FKSDB\ORM\Services\ServiceEvent;
 use FKSDB\YearCalculator;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 
@@ -88,7 +87,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /**
      * @throws BadRequestException
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     protected function startup() {
         /**
@@ -106,7 +105,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     /**
      * @return bool
      * @throws BadRequestException
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     protected function eventExist(): bool {
         return !!$this->getEvent();
@@ -115,7 +114,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     /**
      * @return int
      * @throws BadRequestException
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     protected function getAcYear(): int {
         return $this->yearCalculator->getAcademicYear($this->getEvent()->getContest(), $this->getEvent()->year);
@@ -124,7 +123,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     /**
      * @return string
      * @throws BadRequestException
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function getSubTitle(): string {
         return $this->getEvent()->__toString();
@@ -132,7 +131,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /**
      * @return int
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     protected function getEventId(): int {
         if (!$this->eventId) {
@@ -144,7 +143,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     /**
      * @return \FKSDB\ORM\Models\ModelEvent
      * @throws BadRequestException
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     protected function getEvent(): ModelEvent {
         if (!$this->event) {
@@ -166,7 +165,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @param $privilege
      * @return bool
      * @throws BadRequestException
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     protected function eventIsAllowed($resource, $privilege): bool {
         $event = $this->getEvent();
@@ -181,7 +180,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @param $privilege
      * @return bool
      * @throws BadRequestException
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     protected function isContestsOrgAllowed($resource, $privilege): bool {
         $contest = $this->getContest();
@@ -194,7 +193,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     /**
      * @return array
      * @throws BadRequestException
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     protected function getNavBarVariant(): array {
         return ['event event-type-' . $this->getEvent()->event_type_id, ($this->getEvent()->event_type_id == 1) ? 'bg-fyziklani navbar-dark' : 'bg-light navbar-light'];
@@ -210,7 +209,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     /**
      * @return \FKSDB\ORM\Models\ModelContest
      * @throws BadRequestException
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     protected final function getContest(): ModelContest {
         return $this->getEvent()->getContest();

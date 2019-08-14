@@ -5,8 +5,6 @@ namespace FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics;
 use FKSDB\Components\Controls\Fyziklani\FyziklaniReactControl;
 use FKSDB\React\ReactResponse;
 use FyziklaniModule\BasePresenter;
-use Nette\Application\AbortException;
-use Nette\Application\UI\InvalidLinkException;
 use Nette\ArgumentOutOfRangeException;
 use Nette\Utils\DateTime;
 
@@ -25,7 +23,7 @@ abstract class ResultsAndStatistics extends FyziklaniReactControl {
 
     /**
      * @return array
-     * @throws InvalidLinkException
+     * @throws \Nette\Application\UI\InvalidLinkException
      */
     public function getActions(): array {
         $actions = parent::getActions();
@@ -35,7 +33,7 @@ abstract class ResultsAndStatistics extends FyziklaniReactControl {
     }
 
     /**
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function handleRefresh() {
         $presenter = $this->getPresenter();

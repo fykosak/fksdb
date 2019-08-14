@@ -2,7 +2,6 @@
 
 namespace FKSDB;
 
-use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
 use Nette\Application\BadRequestException;
@@ -44,7 +43,7 @@ trait EntityTrait {
     }
 
     /**
-     * @return AbstractModelSingle|IModel
+     * @return \FKSDB\ORM\AbstractModelSingle|IModel
      * @throws BadRequestException
      */
     public function getModel() {

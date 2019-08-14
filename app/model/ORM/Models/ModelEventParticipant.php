@@ -12,7 +12,6 @@ use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 use Nette\Utils\DateTime;
-use function sprintf;
 
 /**
  *
@@ -57,7 +56,7 @@ class ModelEventParticipant extends AbstractModelSingle implements IEventReferen
      */
     public function __toString(): string {
         if (!$this->getPerson()) {
-            throw new InvalidStateException(sprintf(_('Missing person in application Id %s.'), $this->getPrimary(false)));
+            throw new InvalidStateException(\sprintf(_('Missing person in application Id %s.'), $this->getPrimary(false)));
         }
         return $this->getPerson()->__toString();
     }

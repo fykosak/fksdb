@@ -3,12 +3,10 @@
 namespace EventModule;
 
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
-use FKSDB\Components\Grids\Events\Application\ApplicationGrid;
 use FKSDB\Components\Grids\Events\Application\TeamApplicationGrid;
 use FKSDB\model\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 
@@ -40,7 +38,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
      */
     public function authorizedDetail() {
@@ -52,7 +50,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
      */
     public function authorizedList() {
@@ -67,7 +65,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
      * @param int $id
      * @throws BadRequestException
      * @throws ForbiddenRequestException
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     protected function loadModel(int $id) {
         $row = $this->serviceFyziklaniTeam->findByPrimary($id);
@@ -82,8 +80,8 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @return ApplicationGrid
-     * @throws AbortException
+     * @return \FKSDB\Components\Grids\Events\Application\ApplicationGrid
+     * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
      */
     public function createComponentGrid(): AbstractApplicationGrid {
@@ -99,7 +97,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
 
     /**
      * @throws BadRequestException
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function renderDetail() {
         $this->template->acYear = $this->getAcYear();

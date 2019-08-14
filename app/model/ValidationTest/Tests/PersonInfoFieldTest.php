@@ -7,7 +7,6 @@ namespace FKSDB\ValidationTest;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelPerson;
-use Nette\Application\BadRequestException;
 
 /**
  * Class AbstractPersonInfoFieldTest
@@ -18,7 +17,7 @@ class PersonInfoFieldTest extends AbstractFieldLevelTest {
      * AbstractPersonInfoFieldTest constructor.
      * @param TableReflectionFactory $tableReflectionFactory
      * @param string $factoryFieldName
-     * @throws BadRequestException
+     * @throws \Nette\Application\BadRequestException
      */
     public function __construct(TableReflectionFactory $tableReflectionFactory, string $factoryFieldName) {
         parent::__construct($tableReflectionFactory, DbNames::TAB_PERSON_INFO, $factoryFieldName);

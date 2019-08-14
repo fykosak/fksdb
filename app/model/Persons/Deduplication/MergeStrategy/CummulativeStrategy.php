@@ -4,8 +4,6 @@ namespace Persons\Deduplication\MergeStrategy;
 
 
 
-use DateTime;
-
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
@@ -54,7 +52,7 @@ class CummulativeStrategy implements IMergeStrategy {
      * @return bool
      */
     private function equals($trunk, $merged) {
-        if ($trunk instanceof DateTime && $merged instanceof DateTime) {
+        if ($trunk instanceof \DateTime && $merged instanceof \DateTime) {
             return $trunk->getTimestamp() == $merged->getTimestamp();
         } else {
             return $trunk == $merged;

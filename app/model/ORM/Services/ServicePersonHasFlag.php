@@ -3,7 +3,6 @@
 namespace FKSDB\ORM\Services;
 
 use DateTime;
-use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\IModel;
@@ -30,7 +29,7 @@ class ServicePersonHasFlag extends AbstractServiceSingle {
 
     /**
      * @param null $data
-     * @return AbstractModelSingle
+     * @return \FKSDB\ORM\AbstractModelSingle
      */
     public function createNew($data = null) {
         if ($data === null) {

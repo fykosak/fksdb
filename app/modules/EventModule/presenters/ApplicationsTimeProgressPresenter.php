@@ -7,10 +7,7 @@ namespace EventModule;
 use FKSDB\Components\React\ReactComponent\Events\TeamApplicationsTimeProgress;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use function in_array;
 
 /**
  * Class ApplicationsTimeProgressPresenter
@@ -30,11 +27,11 @@ class ApplicationsTimeProgressPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
-     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
      */
     public function authorizedDefault() {
-        if (!in_array($this->getEvent()->event_type_id, [1, 9])) {
+        if (!\in_array($this->getEvent()->event_type_id, [1, 9])) {
             $this->setAuthorized(false);
             return;
         }
@@ -49,8 +46,8 @@ class ApplicationsTimeProgressPresenter extends BasePresenter {
     /**
      * @return TeamApplicationsTimeProgress
      * @throws ForbiddenRequestException
-     * @throws AbortException
-     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
      */
     protected function createComponentTeamApplicationsTimeProgress() {
         $events = [];
@@ -65,8 +62,8 @@ class ApplicationsTimeProgressPresenter extends BasePresenter {
     /**
      * @return int[]
      * @throws ForbiddenRequestException
-     * @throws AbortException
-     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
      * @TODO hardcore eventIds
      */
     private function getEventIdsByType(): array {

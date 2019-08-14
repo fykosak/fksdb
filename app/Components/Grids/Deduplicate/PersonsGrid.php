@@ -2,16 +2,12 @@
 
 namespace FKSDB\Components\Grids\Deduplicate;
 
-use AuthenticatedPresenter;
 use FKSDB\Components\Controls\Helpers\ValuePrinters\PersonValueControl;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Tables\TypedTableSelection;
-use Nette\Application\UI\InvalidLinkException;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
 use Persons\Deduplication\DuplicateFinder;
 
 /**
@@ -42,9 +38,9 @@ class PersonsGrid extends BaseGrid {
     }
 
     /**
-     * @param AuthenticatedPresenter $presenter
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
+     * @param \AuthenticatedPresenter $presenter
+     * @throws \NiftyGrid\DuplicateButtonException
+     * @throws \NiftyGrid\DuplicateColumnException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -122,7 +118,7 @@ class PersonsGrid extends BaseGrid {
     /**
      * @param \FKSDB\ORM\Models\ModelPerson $person
      * @return Html
-     * @throws InvalidLinkException
+     * @throws \Nette\Application\UI\InvalidLinkException
      */
     private function renderPerson(ModelPerson $person) {
         return PersonValueControl::getGridValue($this,$person);

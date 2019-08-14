@@ -2,7 +2,6 @@
 
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Services\ServiceTask;
-use Nette\Database\Connection;
 
 /**
  * Description of ResultsModelFactory
@@ -12,7 +11,7 @@ use Nette\Database\Connection;
 class StatsModelFactory {
 
     /**
-     * @var Connection
+     * @var \Nette\Database\Connection
      */
     private $connection;
 
@@ -23,10 +22,10 @@ class StatsModelFactory {
 
     /**
      * StatsModelFactory constructor.
-     * @param Connection $connection
+     * @param \Nette\Database\Connection $connection
      * @param ServiceTask $serviceTask
      */
-    public function __construct(Connection $connection, ServiceTask $serviceTask) {
+    public function __construct(\Nette\Database\Connection $connection, ServiceTask $serviceTask) {
         $this->connection = $connection;
         $this->serviceTask = $serviceTask;
     }

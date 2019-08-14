@@ -5,7 +5,6 @@ namespace FKSDB\Components\Forms\Containers;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\ORM\AbstractModelMulti;
 use Nette\Database\Table\ActiveRow;
-use Nette\Forms\Container;
 
 /**
  * Formulářový kontejder reprezentující záznam z DB tabulky.
@@ -17,7 +16,7 @@ class ModelContainer extends ContainerWithOptions {
     /**
      * @param $values
      * @param bool $erase
-     * @return Container|void
+     * @return \Nette\Forms\Container|void
      */
     public function setValues($values, $erase = FALSE) {
         if ($values instanceof ActiveRow || $values instanceof AbstractModelMulti) {

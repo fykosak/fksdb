@@ -5,10 +5,7 @@ namespace FKSDB\React;
 
 use FKSDB\Messages\Message;
 use Nette;
-use Nette\Http\IRequest;
-use Nette\Http\IResponse;
 use Nette\SmartObject;
-use Nette\Utils\JsonException;
 
 
 /**
@@ -68,11 +65,11 @@ final class ReactResponse implements Nette\Application\IResponse {
     }
 
     /**
-     * @param IRequest $httpRequest
-     * @param IResponse $httpResponse
-     * @throws JsonException
+     * @param \Nette\Http\IRequest $httpRequest
+     * @param \Nette\Http\IResponse $httpResponse
+     * @throws \Nette\Utils\JsonException
      */
-    public function send(IRequest $httpRequest, IResponse $httpResponse) {
+    public function send(Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse) {
         $httpResponse->setContentType($this->getContentType());
         $httpResponse->setExpiration(FALSE);
         $response = [

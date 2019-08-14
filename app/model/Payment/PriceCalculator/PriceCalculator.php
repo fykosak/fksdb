@@ -6,8 +6,6 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\Payment\Price;
 use FKSDB\Payment\PriceCalculator\PreProcess\AbstractPreProcess;
-use InvalidArgumentException;
-use function array_merge;
 
 /**
  * Class PriceCalculator
@@ -69,7 +67,7 @@ class PriceCalculator {
     public function getGridItems(ModelPayment $modelPayment): array {
         $items = [];
         foreach ($this->preProcess as $preProcess) {
-            $items = array_merge($items, $preProcess->getGridItems($modelPayment));
+            $items = \array_merge($items, $preProcess->getGridItems($modelPayment));
         }
         return $items;
     }
@@ -79,7 +77,7 @@ class PriceCalculator {
      */
     private function getCurrency(): string {
         if ($this->currency == null) {
-            throw new InvalidArgumentException('Currency is not set');
+            throw new \InvalidArgumentException('Currency is not set');
         }
         return $this->currency;
     }

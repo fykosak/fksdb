@@ -2,7 +2,6 @@
 
 namespace OrgModule;
 
-use ContestPresenter;
 use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\ORM\Models\ModelRole;
 
@@ -11,7 +10,7 @@ use FKSDB\ORM\Models\ModelRole;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-abstract class BasePresenter extends ContestPresenter {
+abstract class BasePresenter extends \ContestPresenter {
 
 
     /**

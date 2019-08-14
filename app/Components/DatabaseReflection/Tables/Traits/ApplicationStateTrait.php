@@ -5,8 +5,6 @@ namespace FKSDB\Components\DatabaseReflection;
 use FKSDB\Components\Controls\Helpers\Badges\NotSetBadge;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Utils\Html;
-use function in_array;
-use function is_null;
 
 /**
  * Trait ApplicationStateTrait
@@ -64,12 +62,12 @@ trait ApplicationStateTrait {
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         $state = $model->{$this->getModelAccessKey()};
-        if (is_null($state)) {
+        if (\is_null($state)) {
             return NotSetBadge::getHtml();
         }
         $elementClassName = '';
         foreach ($this->classNameMapping as $className => $states) {
-            if (in_array($state, $states)) {
+            if (\in_array($state, $states)) {
                 $elementClassName = $className;
             }
         }

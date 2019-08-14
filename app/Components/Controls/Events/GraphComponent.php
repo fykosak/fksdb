@@ -5,7 +5,6 @@ namespace FKSDB\Components\Events;
 use Events\Machine\BaseMachine;
 use FKSDB\Application\IJavaScriptCollector;
 use Nette\Application\UI\Control;
-use Nette\Templating\ITemplate;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -49,7 +48,7 @@ class GraphComponent extends Control {
 
     /**
      * @param null $class
-     * @return ITemplate
+     * @return \Nette\Templating\ITemplate
      */
     protected function createTemplate($class = NULL) {
         $template = parent::createTemplate($class);

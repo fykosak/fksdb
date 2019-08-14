@@ -5,7 +5,6 @@ namespace Events\Model\Holder;
 use Events\Machine\BaseMachine;
 use Events\Model\ExpressionEvaluator;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
-use FKSDB\Config\NeonSchemaException;
 use FKSDB\Config\NeonScheme;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
@@ -196,7 +195,7 @@ class BaseHolder extends FreezableObject {
 
     /**
      * @param \FKSDB\ORM\Models\ModelEvent $event
-     * @throws NeonSchemaException
+     * @throws \FKSDB\Config\NeonSchemaException
      */
     private function setEvent(ModelEvent $event) {
         $this->updating();
@@ -206,7 +205,7 @@ class BaseHolder extends FreezableObject {
 
     /**
      * @param \FKSDB\ORM\Models\ModelEvent $event
-     * @throws NeonSchemaException
+     * @throws \FKSDB\Config\NeonSchemaException
      */
     public function inferEvent(ModelEvent $event) {
         if ($this->eventRelation instanceof IEventRelation) {
@@ -534,7 +533,7 @@ class BaseHolder extends FreezableObject {
      * Parameter handling
      */
     /**
-     * @throws NeonSchemaException
+     * @throws \FKSDB\Config\NeonSchemaException
      */
     private function cacheParameters() {
         $parameters = isset($this->getEvent()->parameters) ? $this->getEvent()->parameters : '';

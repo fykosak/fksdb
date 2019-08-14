@@ -6,7 +6,6 @@ use FKSDB\Components\Forms\Controls\IReferencedHandler;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
 use FKSDB\Components\Forms\Controls\PersonAccommodation\ExistingPaymentException;
 use FKSDB\Components\Forms\Controls\PersonAccommodation\Handler;
-use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelPostContact;
@@ -132,7 +131,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
 
     /**
      * @param ArrayHash $values
-     * @return AbstractModelSingle|ModelPerson|null
+     * @return \FKSDB\ORM\AbstractModelSingle|ModelPerson|null
      * @throws JsonException
      * @throws ExistingPaymentException
      */

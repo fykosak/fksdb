@@ -6,7 +6,6 @@ use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
-use Nette\Database\Table\Selection;
 
 /**
  * @author Michal Červeňák <miso@fykos.cz>
@@ -29,7 +28,7 @@ class ServiceFyziklaniTeam extends AbstractServiceSingle {
     /**
      * Syntactic sugar.
      * @param ModelEvent $event
-     * @return Selection|null
+     * @return \Nette\Database\Table\Selection|null
      */
     public function findParticipating(ModelEvent $event) {
         $result = $this->getTable()->where('status', 'participated')->where('event_id', $event->event_id);;
@@ -56,7 +55,7 @@ class ServiceFyziklaniTeam extends AbstractServiceSingle {
     /**
      * Syntactic sugar.
      * @param \FKSDB\ORM\Models\ModelEvent $event
-     * @return Selection|null
+     * @return \Nette\Database\Table\Selection|null
      */
     public function findPossiblyAttending(ModelEvent $event) {
         $result = $this->getTable()->where('status', ['participated', 'approved', 'spare'])->where('event_id', $event->event_id);

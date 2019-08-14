@@ -8,10 +8,8 @@ use FKSDB\Components\Forms\Controls\PersonAccommodation\ExistingPaymentException
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
 use FKSDB\Utils\Promise;
-use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
-use Nette\Utils\RegexpException;
 
 /**
  * Be careful when calling getValue as it executes SQL queries and thus
@@ -140,7 +138,7 @@ class ReferencedId extends HiddenField {
      * @param $pvalue
      * @param bool $force
      * @return HiddenField|void
-     * @throws RegexpException
+     * @throws \Nette\Utils\RegexpException
      */
     public function setValue($pvalue, $force = false) {
         $isPromise = ($pvalue === self::VALUE_PROMISE);
@@ -198,14 +196,14 @@ class ReferencedId extends HiddenField {
 
     /**
      * @param bool $value
-     * @return BaseControl|void
+     * @return \Nette\Forms\Controls\BaseControl|void
      */
     public function setDisabled($value = TRUE) {
         $this->referencedContainer->setDisabled($value);
     }
 
     /**
-     * @throws RegexpException
+     * @throws \Nette\Utils\RegexpException
      */
     private function createPromise() {
         $referencedId = $this->getValue();

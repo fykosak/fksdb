@@ -8,7 +8,6 @@ use AuthenticationPresenter;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceLogin;
 use FKSDB\YearCalculator;
-use Nette\Application\AbortException;
 use Nette\Application\Application;
 use Nette\Application\IPresenter;
 use Nette\Http\Request;
@@ -114,7 +113,7 @@ class LoginUserStorage extends UserStorage {
 
     /**
      * @return bool
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function isAuthenticated() {
         $local = parent::isAuthenticated();

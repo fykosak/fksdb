@@ -7,7 +7,6 @@ use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServiceEventParticipant;
 use FKSDB\Payment\Price;
 use Nette\Application\BadRequestException;
-use function json_decode;
 
 /**
  * Class EventSchedulePrice
@@ -86,7 +85,7 @@ class EventSchedulePrice extends AbstractPreProcess {
      * @throws BadRequestException
      */
     private function calculateSchedule($participantSchedule, $schedule, $currency): Price {
-        $data = json_decode($participantSchedule);
+        $data = \json_decode($participantSchedule);
 
         $price = new Price(0, $currency);
         foreach ($data as $key => $selectedId) {

@@ -2,7 +2,6 @@
 
 namespace FKSDB\ValidationTest;
 
-use Exception;
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\Forms\Factories\ITestedRowFactory;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
@@ -43,7 +42,7 @@ abstract class AbstractFieldLevelTest extends ValidationTest {
      * @param string $factoryTableName
      * @param string $factoryFieldName
      * @throws BadRequestException
-     * @throws Exception
+     * @throws \Exception
      */
     private final function loadFactory(string $factoryTableName, string $factoryFieldName) {
         $rowFactory = $this->tableReflectionFactory->loadService($factoryTableName, $factoryFieldName);

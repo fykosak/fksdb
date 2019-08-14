@@ -3,7 +3,6 @@
 namespace OrgModule;
 
 use BasePresenter;
-use Exception;
 use Nette\Application\AbortException;
 use Tracy\Debugger;
 use SoapResponse;
@@ -24,7 +23,7 @@ class WebServicePresenter extends BasePresenter {
             $this->sendResponse($response);
         } catch (AbortException $exception) {
             throw $exception;
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             Debugger::log($exception);
             $this->redirect('Dashboard:');
         }

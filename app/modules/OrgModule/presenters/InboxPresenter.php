@@ -18,8 +18,6 @@ use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\ORM\Services\ServiceTaskContribution;
 use FKSDB\Submits\ISubmitStorage;
 use FKSDB\Submits\SeriesTable;
-use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Caching\Cache;
 use Nette\Security\Permission;
@@ -126,14 +124,14 @@ class InboxPresenter extends SeriesPresenter {
     }
 
     /**
-     * @throws BadRequestException
+     * @throws \Nette\Application\BadRequestException
      */
     public function authorizedDefault() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
     }
 
     /**
-     * @throws BadRequestException
+     * @throws \Nette\Application\BadRequestException
      */
     public function authorizedHandout() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('task', 'edit', $this->getSelectedContest()));
@@ -145,7 +143,7 @@ class InboxPresenter extends SeriesPresenter {
     }
 
     /**
-     * @throws BadRequestException
+     * @throws \Nette\Application\BadRequestException
      */
     public function renderDefault() {
         /**
@@ -168,7 +166,7 @@ class InboxPresenter extends SeriesPresenter {
     }
 
     /**
-     * @throws BadRequestException
+     * @throws \Nette\Application\BadRequestException
      */
     public function renderHandout() {
         $taskIds = [];
@@ -202,7 +200,7 @@ class InboxPresenter extends SeriesPresenter {
 
     /**
      * @return OptimisticFormControl
-     * @throws BadRequestException
+     * @throws \Nette\Application\BadRequestException
      */
     protected function createComponentInboxForm() {
         $controlForm = new OptimisticFormControl([$this->seriesTable, 'getFingerprint'], [$this->seriesTable, 'formatAsFormValues']);
@@ -246,7 +244,7 @@ class InboxPresenter extends SeriesPresenter {
 
     /**
      * @return FormControl
-     * @throws BadRequestException
+     * @throws \Nette\Application\BadRequestException
      */
     protected function createComponentHandoutForm() {
         $formControl = new FormControl();
@@ -267,7 +265,7 @@ class InboxPresenter extends SeriesPresenter {
 
     /**
      * @param Form $form
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function inboxFormSuccess(Form $form) {
         $values = $form->getValues();
@@ -297,7 +295,7 @@ class InboxPresenter extends SeriesPresenter {
 
     /**
      * @param Form $form
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function handoutFormSuccess(Form $form) {
         $values = $form->getValues();
@@ -335,7 +333,7 @@ class InboxPresenter extends SeriesPresenter {
 
     /**
      * @return PersonProvider
-     * @throws BadRequestException
+     * @throws \Nette\Application\BadRequestException
      */
     private function getOrgProvider() {
         if (!$this->orgProvider) {

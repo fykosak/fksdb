@@ -2,19 +2,12 @@
 
 namespace FKSDB\Components\Controls\Navigation;
 
-use BasePresenter;
-use Exception;
 use FKSDB\Components\Controls\PresenterBuilder;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
-use Nette\Application\UI\InvalidLinkException;
-use Nette\Application\UI\Presenter;
 use Nette\InvalidArgumentException;
 use Nette\Templating\FileTemplate;
 use ReflectionClass;
-use ReflectionException;
 use ReflectionMethod;
-use stdClass;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -56,12 +49,12 @@ class Navigation extends Control {
     public function isActive($node) {
         if (isset($node->linkPresenter)) {
             /**
-             * @var BasePresenter $presenter
+             * @var \BasePresenter $presenter
              */
             $presenter = $this->getPresenter();
             try {
                 $this->createLink($presenter, $node);
-            } catch (Exception $exception) {
+            } catch (\Exception $exception) {
                 /* empty */
             }
             $result = $presenter->getLastCreatedRequestFlag("current");
@@ -85,20 +78,20 @@ class Navigation extends Control {
     }
 
     /**
-     * @param stdClass $node
+     * @param \stdClass $node
      * @return bool|mixed
-     * @throws BadRequestException
-     * @throws InvalidLinkException
-     * @throws ReflectionException
+     * @throws \Nette\Application\BadRequestException
+     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws \ReflectionException
      */
-    public function isVisible(stdClass $node) {
+    public function isVisible(\stdClass $node) {
         if (isset($node->visible)) {
             return $node->visible;
         }
 
         if (isset($node->linkPresenter)) {
             /**
-             * @var BasePresenter $presenter
+             * @var \BasePresenter $presenter
              */
             $presenter = $this->getPresenter();
             return $this->isAllowed($presenter, $node);
@@ -110,7 +103,7 @@ class Navigation extends Control {
     /**
      * @param $node
      * @return null|string
-     * @throws BadRequestException
+     * @throws \Nette\Application\BadRequestException
      */
     public function getTitle($node) {
         if (isset($node->title)) {
@@ -118,7 +111,7 @@ class Navigation extends Control {
         }
         if (isset($node->linkPresenter)) {
             /**
-             * @var BasePresenter $presenter
+             * @var \BasePresenter $presenter
              */
             $presenter = $this->preparePresenter($node->linkPresenter, $node->linkAction, $node->linkParams);
             $presenter->setView($presenter->getView()); // to force update the title
@@ -131,7 +124,7 @@ class Navigation extends Control {
     /**
      * @param $node
      * @return null|string
-     * @throws BadRequestException
+     * @throws \Nette\Application\BadRequestException
      */
     public function getSubTitle($node) {
         if (isset($node->title)) {
@@ -139,7 +132,7 @@ class Navigation extends Control {
         }
         if (isset($node->linkPresenter)) {
             /**
-             * @var BasePresenter $presenter
+             * @var \BasePresenter $presenter
              */
             $presenter = $this->preparePresenter($node->linkPresenter, $node->linkAction, $node->linkParams);
             $presenter->setView($presenter->getView()); // to force update the title
@@ -152,7 +145,7 @@ class Navigation extends Control {
     /**
      * @param $node
      * @return null|string
-     * @throws BadRequestException
+     * @throws \Nette\Application\BadRequestException
      */
     public function getIcon($node) {
         if (isset($node->icon)) {
@@ -160,7 +153,7 @@ class Navigation extends Control {
         }
         if (isset($node->linkPresenter)) {
             /**
-             * @var BasePresenter $presenter
+             * @var \BasePresenter $presenter
              */
             $presenter = $this->preparePresenter($node->linkPresenter, $node->linkAction, $node->linkParams);
             $presenter->setView($presenter->getView()); // to force update the title
@@ -172,19 +165,19 @@ class Navigation extends Control {
 
 
     /**
-     * @param stdClass $node
+     * @param \stdClass $node
      * @return null|string
-     * @throws BadRequestException
-     * @throws InvalidLinkException
-     * @throws ReflectionException
+     * @throws \Nette\Application\BadRequestException
+     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws \ReflectionException
      */
-    public function getLink(stdClass $node) {
+    public function getLink(\stdClass $node) {
         if (isset($node->link)) {
             return $node->link;
         }
         if (isset($node->linkPresenter)) {
             /**
-             * @var BasePresenter $presenter
+             * @var \BasePresenter $presenter
              */
             $presenter = $this->getPresenter();
             return $this->createLink($presenter, $node);
@@ -262,16 +255,16 @@ class Navigation extends Control {
     }
 
     /**
-     * @param BasePresenter $presenter
-     * @param stdClass $node
+     * @param \BasePresenter $presenter
+     * @param \stdClass $node
      * @return string
-     * @throws BadRequestException
-     * @throws InvalidLinkException
-     * @throws ReflectionException
+     * @throws \Nette\Application\BadRequestException
+     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws \ReflectionException
      */
-    private function createLink(BasePresenter $presenter, stdClass $node) {
+    private function createLink(\BasePresenter $presenter, \stdClass $node) {
         /**
-         * @var BasePresenter $linkedPresenter
+         * @var \BasePresenter $linkedPresenter
          */
         $linkedPresenter = $this->preparePresenter($node->linkPresenter, $node->linkAction, $node->linkParams);
         $linkParams = $this->actionParams($linkedPresenter, $node->linkAction, $node->linkParams);
@@ -280,16 +273,16 @@ class Navigation extends Control {
     }
 
     /**
-     * @param BasePresenter $presenter
-     * @param stdClass $node
+     * @param \BasePresenter $presenter
+     * @param \stdClass $node
      * @return mixed
-     * @throws BadRequestException
-     * @throws InvalidLinkException
-     * @throws ReflectionException
+     * @throws \Nette\Application\BadRequestException
+     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws \ReflectionException
      */
-    private function isAllowed(BasePresenter $presenter, stdClass $node) {
+    private function isAllowed(\BasePresenter $presenter, \stdClass $node) {
         /**
-         * @var BasePresenter $allowedPresenter
+         * @var \BasePresenter $allowedPresenter
          */
         $allowedPresenter = $this->preparePresenter($node->linkPresenter, $node->linkAction, $node->linkParams);
         $allowedParams = $this->actionParams($allowedPresenter, $node->linkAction, $node->linkParams);
@@ -297,13 +290,13 @@ class Navigation extends Control {
     }
 
     /**
-     * @param BasePresenter $presenter
+     * @param \BasePresenter $presenter
      * @param $actionParams
      * @param $params
      * @return array
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
-    private function actionParams(BasePresenter $presenter, $actionParams, $params) {
+    private function actionParams(\BasePresenter $presenter, $actionParams, $params) {
         $method = $presenter->publicFormatActionMethod($actionParams);
 
         $actionParams = [];
@@ -322,8 +315,8 @@ class Navigation extends Control {
      * @param $presenterName
      * @param $action
      * @param $providedParams
-     * @return Presenter
-     * @throws BadRequestException
+     * @return \Nette\Application\UI\Presenter
+     * @throws \Nette\Application\BadRequestException
      */
     public function preparePresenter($presenterName, $action, $providedParams) {
         $ownPresenter = $this->getPresenter();

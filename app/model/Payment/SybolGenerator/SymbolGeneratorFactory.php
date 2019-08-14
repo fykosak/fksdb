@@ -6,7 +6,6 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServicePayment;
 use FKSDB\Payment\SymbolGenerator\Generators\Fyziklani13Generator;
 use Nette\NotImplementedException;
-use function sprintf;
 
 /**
  * Class SymbolGeneratorFactory
@@ -34,6 +33,6 @@ class SymbolGeneratorFactory {
         if ($event->event_type_id === 1 && $event->event_year === 13) {
             return new Fyziklani13Generator($this->servicePayment);
         }
-        throw new NotImplementedException(sprintf(_('Event %s nemá nastavený generátor platieb'), $event->name), 501);
+        throw new NotImplementedException(\sprintf(_('Event %s nemá nastavený generátor platieb'), $event->name), 501);
     }
 }

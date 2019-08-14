@@ -5,7 +5,6 @@ namespace OrgModule;
 use FKSDB\Components\Forms\Factories\SchoolFactory;
 use FKSDB\Components\Forms\Factories\TeacherFactory;
 use FKSDB\Components\Grids\TeachersGrid;
-use FKSDB\ORM\Models\ModelTeacher;
 use FKSDB\ORM\Services\ServiceTeacher;
 use Nette\Application\UI\Form;
 use Persons\ExtendedPersonHandler;
@@ -56,7 +55,7 @@ class TeacherPresenter extends ExtendedPersonPresenter {
 
     public function titleEdit() {
         /**
-         * @var ModelTeacher $model
+         * @var \FKSDB\ORM\Models\ModelTeacher $model
          */
         $model = $this->getModel();
         $this->setTitle(sprintf(_('Edit teacher %s'), $model->getPerson()->getFullName()));

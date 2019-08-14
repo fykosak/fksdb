@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Controls\Fyziklani;
 
-use BasePresenter;
 use Exception;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\model\Fyziklani\ClosedSubmittingException;
@@ -17,8 +16,6 @@ use Nette\Forms\Form;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 use Tracy\Debugger;
-use function get_class;
-use function sprintf;
 
 /**
  * Class EditSubmitControl
@@ -65,7 +62,7 @@ class EditControl extends Control {
         if ($control instanceof FormControl) {
             return $control->getForm();
         }
-        throw new BadRequestException('Expected FormControl got ' . get_class($control));
+        throw new BadRequestException('Expected FormControl got ' . \get_class($control));
     }
 
     /**
@@ -126,15 +123,15 @@ class EditControl extends Control {
         $values = $form->getValues();
         try {
             $msg = $this->submit->changePoints($values->points);
-            Debugger::log(sprintf('fyziklani_submit %d edited by %d', $this->submit->fyziklani_submit_id, $this->getPresenter()->getUser()->getIdentity()->getPerson()->person_id));
+            Debugger::log(\sprintf('fyziklani_submit %d edited by %d', $this->submit->fyziklani_submit_id, $this->getPresenter()->getUser()->getIdentity()->getPerson()->person_id));
             $this->getPresenter()->flashMessage($msg->getMessage(), $msg->getLevel());
             $this->redirect('this');
         } catch (ClosedSubmittingException $exception) {
-            $this->getPresenter()->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
+            $this->getPresenter()->flashMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR);
             $this->redirect('this');
         } catch (Exception $exception) {
             Debugger::log($exception);
-            $this->getPresenter()->flashMessage('Error!', BasePresenter::FLASH_ERROR);
+            $this->getPresenter()->flashMessage('Error!', \BasePresenter::FLASH_ERROR);
             $this->redirect('this');
         }
     }

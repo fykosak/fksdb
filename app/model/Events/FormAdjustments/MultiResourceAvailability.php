@@ -6,9 +6,7 @@ use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
 use Events\Model\Holder\BaseHolder;
 use Events\Model\Holder\Holder;
-use Nette\Database\Connection;
 use Nette\Forms\Form;
-use Nette\Utils\Html;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -46,11 +44,11 @@ class MultiResourceAvailability extends AbstractAdjustment {
      * @param array|string $fields Fields that contain amount of the resource
      * @param string $paramCapacity Name of the parameter with overall capacity.
      * @param string $message String '%avail' will be substitued for the actual amount of available resource.
-     * @param Connection $database
+     * @param \Nette\Database\Connection $database
      * @param string|array $includeStates any state or array of state
      * @param string|array $excludeStates any state or array of state
      */
-    function __construct($fields, $paramCapacity, $message, Connection $database, $includeStates = BaseMachine::STATE_ANY, $excludeStates = array('cancelled')) {
+    function __construct($fields,$paramCapacity,$message,\Nette\Database\Connection $database,$includeStates = BaseMachine::STATE_ANY,$excludeStates = array('cancelled')) {
         $this->setFields($fields);
         $this->database = $database;
         $this->paramCapacity = $paramCapacity;
@@ -160,9 +158,9 @@ class MultiResourceAvailability extends AbstractAdjustment {
             foreach ($items as $key => $item) {
                 $delta = $capacities[$key] - (array_key_exists($key,$usage) ? $usage[$key] : 0);
                 if($delta > 0){
-                    $newItems[$key] = Html::el('option')->setText($item.'('.$delta.')');
+                    $newItems[$key] = \Nette\Utils\Html::el('option')->setText($item.'('.$delta.')');
                 }else{
-                    $newItems[$key] = Html::el('option')->setText($item)->addAttributes(['disabled' => true]);
+                    $newItems[$key] = \Nette\Utils\Html::el('option')->setText($item)->addAttributes(['disabled' => true]);
                 }
             }
             $control->setItems($newItems);

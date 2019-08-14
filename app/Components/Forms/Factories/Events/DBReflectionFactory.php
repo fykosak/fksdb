@@ -14,7 +14,6 @@ use Nette\Forms\Controls\Checkbox;
 use Nette\Forms\Controls\TextArea;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
-use Nette\Forms\IControl;
 use Nette\InvalidArgumentException;
 
 /**
@@ -105,7 +104,7 @@ class DBReflectionFactory extends AbstractFactory {
 
     /**
      * @param Component $component
-     * @return Component|IControl
+     * @return Component|\Nette\Forms\IControl
      */
     public function getMainControl(Component $component) {
         return $component;

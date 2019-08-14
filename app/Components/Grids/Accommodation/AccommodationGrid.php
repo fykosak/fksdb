@@ -2,19 +2,12 @@
 
 namespace FKSDB\Components\Grids\Accommodation;
 
-use BasePresenter;
 use EventModule\AccommodationPresenter;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventAccommodation;
 use FKSDB\ORM\Services\ServiceEventAccommodation;
-use Nette\Application\AbortException;
-use Nette\Application\UI\InvalidLinkException;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
-use NiftyGrid\DuplicateGlobalButtonException;
-use PDOException;
 use SQL\SearchableDataSource;
 
 
@@ -46,10 +39,10 @@ class AccommodationGrid extends BaseGrid {
 
     /**
      * @param AccommodationPresenter $presenter
-     * @throws InvalidLinkException
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
-     * @throws DuplicateGlobalButtonException
+     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws \NiftyGrid\DuplicateButtonException
+     * @throws \NiftyGrid\DuplicateColumnException
+     * @throws \NiftyGrid\DuplicateGlobalButtonException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -97,7 +90,7 @@ class AccommodationGrid extends BaseGrid {
 
     /**
      * @param $id
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function handleDelete($id) {
         $model = $this->serviceEventAccommodation->findByPrimary($id);
@@ -107,9 +100,9 @@ class AccommodationGrid extends BaseGrid {
         }
         try {
             $model->delete();
-        } catch (PDOException $exception) {
+        } catch (\PDOException $exception) {
             if ($exception->getCode() == 23000) {
-                $this->flashMessage(_('Nelze zmazat ubytovaní, když je nekto ubytovaný'), BasePresenter::FLASH_ERROR);
+                $this->flashMessage(_('Nelze zmazat ubytovaní, když je nekto ubytovaný'), \BasePresenter::FLASH_ERROR);
                 $this->redirect('this');
             };
         };

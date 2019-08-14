@@ -7,11 +7,7 @@ use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelOrg;
 use FKSDB\ORM\Services\ServiceOrg;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\InvalidLinkException;
 use Nette\Database\Table\Selection;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
-use NiftyGrid\DuplicateGlobalButtonException;
 use OrgModule\OrgPresenter;
 use SQL\SearchableDataSource;
 
@@ -40,10 +36,10 @@ class OrgsGrid extends BaseGrid {
     /**
      * @param OrgPresenter $presenter
      * @throws BadRequestException
-     * @throws InvalidLinkException
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
-     * @throws DuplicateGlobalButtonException
+     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws \NiftyGrid\DuplicateButtonException
+     * @throws \NiftyGrid\DuplicateColumnException
+     * @throws \NiftyGrid\DuplicateGlobalButtonException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

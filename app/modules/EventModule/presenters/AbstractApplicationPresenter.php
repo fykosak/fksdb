@@ -10,10 +10,8 @@ use FKSDB\Logging\FlashDumpFactory;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEventParticipant;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use function in_array;
 
 /**
  * Class ApplicationPresenter
@@ -51,7 +49,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     /**
      * @return ApplicationComponent
      * @throws BadRequestException
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function createComponentApplicationComponent() {
         $holders = [];
@@ -70,10 +68,10 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     /**
      * @return bool
      * @throws BadRequestException
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     protected function isTeamEvent(): bool {
-        if (in_array($this->getEvent()->event_type_id, self::TEAM_EVENTS)) {
+        if (\in_array($this->getEvent()->event_type_id, self::TEAM_EVENTS)) {
             $this->setAuthorized(false);
             return true;
         }
@@ -84,7 +82,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @param $id
      * @throws BadRequestException
      * @throws ForbiddenRequestException
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function actionDetail($id) {
         $this->loadModel($id);
@@ -92,7 +90,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
 
     /**
      * @throws BadRequestException
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function renderList() {
         $this->template->event = $this->getEvent();
@@ -109,14 +107,14 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     abstract public function titleDetail();
 
     /**
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
      * @return void;
      */
     abstract public function authorizedDetail();
 
     /**
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
      * @return void;
      */
@@ -126,7 +124,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @param int $id
      * @throws BadRequestException
      * @throws ForbiddenRequestException
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     abstract protected function loadModel(int $id);
 
@@ -137,7 +135,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
 
     /**
      * @return AbstractApplicationGrid
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
      */
     abstract function createComponentGrid(): AbstractApplicationGrid;

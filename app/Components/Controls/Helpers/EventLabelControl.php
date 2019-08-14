@@ -4,7 +4,6 @@ namespace FKSDB\Components\Controls\Stalking\Helpers;
 
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\UI\Control;
-use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\PresenterComponent;
 use Nette\Templating\FileTemplate;
 use Nette\Utils\Html;
@@ -17,7 +16,7 @@ use Nette\Utils\Html;
 class EventLabelControl extends Control {
     /**
      * @param ModelEvent $event
-     * @throws InvalidLinkException
+     * @throws \Nette\Application\UI\InvalidLinkException
      */
     public function render(ModelEvent $event) {
         $this->template->html = self::getHtml($this, $event);
@@ -29,7 +28,7 @@ class EventLabelControl extends Control {
      * @param PresenterComponent $component
      * @param ModelEvent $event
      * @return Html
-     * @throws InvalidLinkException
+     * @throws \Nette\Application\UI\InvalidLinkException
      */
     public static function getHtml(PresenterComponent $component, ModelEvent $event) {
         return Html::el('a')->addAttributes([

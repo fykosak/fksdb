@@ -4,7 +4,6 @@ use Github\EventFactory;
 use Github\Events\Event;
 use Github\Events\PushEvent;
 use Maintenance\Updater;
-use Nette\Application\AbortException;
 use Nette\Application\Responses\TextResponse;
 
 /**
@@ -62,7 +61,7 @@ class GithubPresenter extends AuthenticatedPresenter {
 	}
 
     /**
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
 	public function renderApi() {
 		$response = new TextResponse("Thank you, Github.");

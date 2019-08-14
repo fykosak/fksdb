@@ -4,8 +4,6 @@ namespace FKSDB\ORM\Models\Fyziklani;
 
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Utils\DateTime;
-use function array_map;
-use function explode;
 
 /**
  * Class ModelFyziklaniGameSetup
@@ -25,8 +23,8 @@ class ModelFyziklaniGameSetup extends AbstractModelSingle {
      * @return array
      */
     public function getAvailablePoints(): array {
-        return array_map(function ($value) {
+        return \array_map(function ($value) {
             return trim($value);
-        }, explode(',', $this->available_points));
+        }, \explode(',', $this->available_points));
     }
 }

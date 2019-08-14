@@ -9,7 +9,6 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
-use function array_key_exists;
 
 /**
  * Class OrderRow
@@ -44,7 +43,7 @@ class OrderRow extends AbstractOrgRowFactory {
      * @return Html
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        if (array_key_exists($model->order, self::ORDER_MAPPING)) {
+        if (\array_key_exists($model->order, self::ORDER_MAPPING)) {
             return (new StringPrinter)(self::ORDER_MAPPING[$model->order]);
         }
         return (new StringPrinter)($model->order);

@@ -13,13 +13,9 @@ use FKSDB\ORM\Services\ServicePayment;
 use FKSDB\Payment\Transition\PaymentMachine;
 use FKSDB\Transitions\Machine;
 use FKSDB\Transitions\MachineFactory;
-use InvalidArgumentException;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\NotImplementedException;
-use function count;
-use function sprintf;
 
 /**
  * Class PaymentPresenter
@@ -90,20 +86,20 @@ class PaymentPresenter extends BasePresenter {
     /**
      * @throws BadRequestException
      * @throws ForbiddenRequestException
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function titleEdit() {
-        $this->setTitle(sprintf(_('Edit payment #%s'), $this->getModel()->getPaymentId()));
+        $this->setTitle(\sprintf(_('Edit payment #%s'), $this->getModel()->getPaymentId()));
         $this->setIcon('fa fa-credit-card');
     }
 
     /**
      * @throws BadRequestException
      * @throws ForbiddenRequestException
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function titleDetail() {
-        $this->setTitle(sprintf(_('Payment detail #%s'), $this->getModel()->getPaymentId()));
+        $this->setTitle(\sprintf(_('Payment detail #%s'), $this->getModel()->getPaymentId()));
         $this->setIcon('fa fa-credit-card');
     }
 
@@ -116,7 +112,7 @@ class PaymentPresenter extends BasePresenter {
     }
     /* ********* Authorization *****************/
     /**
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
      */
     public function authorizedDetail() {
@@ -128,7 +124,7 @@ class PaymentPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
      */
     public function authorizedEdit() {
@@ -140,7 +136,7 @@ class PaymentPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
      */
     public function authorizedCreate() {
@@ -152,7 +148,7 @@ class PaymentPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
      */
     public function authorizedList() {
@@ -165,11 +161,11 @@ class PaymentPresenter extends BasePresenter {
     /* ********* actions *****************/
     /**
      * @throws BadRequestException
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function actionEdit() {
         if (!$this->canEdit()) {
-            $this->flashMessage(sprintf(_('Payment #%s can not be edited'), $this->getModel()->getPaymentId()), \BasePresenter::FLASH_ERROR);
+            $this->flashMessage(\sprintf(_('Payment #%s can not be edited'), $this->getModel()->getPaymentId()), \BasePresenter::FLASH_ERROR);
             $this->redirect(':MyPayments:');
         }
         /**
@@ -181,10 +177,10 @@ class PaymentPresenter extends BasePresenter {
 
     /**
      * @throws BadRequestException
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function actionCreate() {
-        if ((count($this->getMachine()->getAvailableTransitions(null)) === 0)) {
+        if ((\count($this->getMachine()->getAvailableTransitions(null)) === 0)) {
             $this->flashMessage(_('Payment is not allowed in this time!'));
             if (!$this->isOrg()) {
                 $this->redirect('Dashboard:default');
@@ -196,7 +192,7 @@ class PaymentPresenter extends BasePresenter {
     /**
      * @throws BadRequestException
      * @throws ForbiddenRequestException
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function renderEdit() {
         $this->template->model = $this->getModel();
@@ -204,7 +200,7 @@ class PaymentPresenter extends BasePresenter {
 
     /**
      * @throws BadRequestException
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function renderDetail() {
         $this->getMachine()->getPriceCalculator()->setCurrency($this->model->currency);
@@ -215,7 +211,7 @@ class PaymentPresenter extends BasePresenter {
     }
     /* ********* startup *****************/
     /**
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
      */
     protected function startup() {
@@ -229,7 +225,7 @@ class PaymentPresenter extends BasePresenter {
     /* ********* Components *****************/
     /**
      * @return OrgPaymentGrid
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
      */
     protected function createComponentOrgGrid(): OrgPaymentGrid {
@@ -239,7 +235,7 @@ class PaymentPresenter extends BasePresenter {
     /**
      * @return SelectForm
      * @throws BadRequestException
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     protected function createComponentForm(): SelectForm {
         return $this->paymentComponentFactory->creteForm($this->getEvent(), $this->isOrg(), $this->getMachine());
@@ -283,7 +279,7 @@ class PaymentPresenter extends BasePresenter {
     /**
      * Is org or (is own payment and can edit)
      * @return bool
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
      */
     private function canEdit(): bool {
@@ -294,7 +290,7 @@ class PaymentPresenter extends BasePresenter {
     /**
      * @return bool
      * @throws BadRequestException
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     private function isOrg(): bool {
         return $this->isContestsOrgAllowed('event.payment', 'org');
@@ -304,7 +300,7 @@ class PaymentPresenter extends BasePresenter {
      * @return \FKSDB\ORM\Models\ModelPayment
      * @throws BadRequestException
      * @throws ForbiddenRequestException
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     private function getModel(): ModelPayment {
         if (!$this->model) {
@@ -323,7 +319,7 @@ class PaymentPresenter extends BasePresenter {
 
     /**
      * @return PaymentMachine
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
      */
     private function getMachine(): PaymentMachine {
@@ -331,14 +327,14 @@ class PaymentPresenter extends BasePresenter {
             $this->machine = $this->machineFactory->setUpMachine($this->getEvent());
         }
         if (!$this->machine instanceof PaymentMachine) {
-            throw new InvalidArgumentException(_('Expected class PaymentMachine'), 500);
+            throw new \InvalidArgumentException(_('Expected class PaymentMachine'), 500);
         }
         return $this->machine;
     }
 
     /**
      * @return bool
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
      */
     private function hasApi(): bool {

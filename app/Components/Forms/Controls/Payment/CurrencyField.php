@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Forms\Controls\Payment;
 
 use FKSDB\Payment\Price;
-use FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException;
 use Nette\Forms\Controls\SelectBox;
 
 /**
@@ -13,7 +12,7 @@ use Nette\Forms\Controls\SelectBox;
 class CurrencyField extends SelectBox {
     /**
      * CurrencyField constructor.
-     * @throws UnsupportedCurrencyException
+     * @throws \FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException
      */
     public function __construct() {
         parent::__construct(_('Currency'));

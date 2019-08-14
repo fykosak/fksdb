@@ -6,10 +6,7 @@ use FKSDB\Components\Forms\Factories\LoginFactory;
 use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use FKSDB\Components\Forms\Rules\UniqueLoginFactory;
 use FKSDB\ORM\Models\ModelAuthToken;
-use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceLogin;
-use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\BaseControl;
 
@@ -88,7 +85,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
 
     public function renderDefault() {
         /**
-         * @var ModelLogin $login
+         * @var \FKSDB\ORM\Models\ModelLogin $login
          */
         $login = $this->getUser()->getIdentity();
 
@@ -113,13 +110,13 @@ class SettingsPresenter extends AuthenticatedPresenter {
     /**
      * @param $name
      * @return FormControl
-     * @throws BadRequestException
+     * @throws \Nette\Application\BadRequestException
      */
     protected function createComponentSettingsForm($name) {
         $control = new FormControl();
         $form = $control->getForm();
         /**
-         * @var ModelLogin $login
+         * @var \FKSDB\ORM\Models\ModelLogin $login
          */
         $login = $this->getUser()->getIdentity();
         $tokenAuthentication =
@@ -160,7 +157,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
     /**
      * @internal
      * @param Form $form
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function handleSettingsFormSuccess(Form $form) {
         $values = $form->getValues();

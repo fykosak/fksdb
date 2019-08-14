@@ -6,7 +6,6 @@ use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use Nette\Utils\Html;
-use NiftyGrid\DuplicateColumnException;
 
 
 /**
@@ -32,7 +31,7 @@ abstract class SubmitsGrid extends BaseGrid {
     }
 
     /**
-     * @throws DuplicateColumnException
+     * @throws \NiftyGrid\DuplicateColumnException
      */
     protected function addColumnTask() {
         $this->addColumn('label', _('Task'))->setRenderer(function ($row) {
@@ -42,7 +41,7 @@ abstract class SubmitsGrid extends BaseGrid {
     }
 
     /**
-     * @throws DuplicateColumnException
+     * @throws \NiftyGrid\DuplicateColumnException
      */
     protected function addColumnState() {
         $this->addColumn('state', _('State'))->setRenderer(function ($row) {

@@ -7,7 +7,6 @@ use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use InvalidArgumentException;
 use ModelMStoredQueryTag;
-use Nette\Database\Table\GroupedSelection;
 use Nette\Security\IResource;
 
 /**
@@ -66,7 +65,7 @@ class ModelStoredQuery extends AbstractModelSingle implements IResource {
     }
 
     /**
-     * @return GroupedSelection
+     * @return \Nette\Database\Table\GroupedSelection
      */
     public function getTags() {
         if (!isset($this->query_id)) {

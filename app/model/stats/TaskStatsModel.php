@@ -1,7 +1,6 @@
 <?php
 
 use FKSDB\ORM\Models\ModelContest;
-use Nette\Database\Connection;
 
 /**
  * General results sheet with contestants and their ranks.
@@ -21,7 +20,7 @@ class TaskStatsModel {
     protected $contest;
 
     /**
-     * @var Connection
+     * @var \Nette\Database\Connection
      */
     protected $connection;
 
@@ -34,9 +33,9 @@ class TaskStatsModel {
      * TaskStatsModel constructor.
      * @param ModelContest $contest
      * @param $year
-     * @param Connection $connection
+     * @param \Nette\Database\Connection $connection
      */
-    function __construct(ModelContest $contest, $year, Connection $connection) {
+    function __construct(ModelContest $contest, $year, \Nette\Database\Connection $connection) {
         $this->contest = $contest;
         $this->connection = $connection;
         $this->year = $year;

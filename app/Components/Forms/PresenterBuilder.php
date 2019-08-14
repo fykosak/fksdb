@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Controls;
 
-use Nette\Application\BadRequestException;
 use Nette\Application\PresenterFactory;
 use Nette\Application\UI\Presenter;
 
@@ -36,7 +35,7 @@ class PresenterBuilder {
      * @param array $baseParams
      * @param boolean $newInstance when false all instances of the same class will be the same and only initilization methods are called
      * @return Presenter
-     * @throws BadRequestException
+     * @throws \Nette\Application\BadRequestException
      */
     public function preparePresenter($presenterName, $action, $params, $baseParams = [], $newInstance = false) {
         if ($newInstance) {

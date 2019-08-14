@@ -5,8 +5,6 @@ namespace FKSDB\Payment;
 
 
 use FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException;
-use LogicException;
-use function sprintf;
 
 /**
  * Class Price
@@ -37,11 +35,11 @@ class Price {
 
     /**
      * @param Price $price
-     * @throws LogicException
+     * @throws \LogicException
      */
     public function add(Price $price) {
         if ($this->currency !== $price->getCurrency()) {
-            throw new LogicException('Currencies are not a same');
+            throw new \LogicException('Currencies are not a same');
         }
         $this->amount += $price->getAmount();
     }
@@ -102,6 +100,6 @@ class Price {
      * @throws UnsupportedCurrencyException
      */
     public function __toString(): string {
-        return sprintf('%1.2f %s', $this->amount, self::getLabel($this->currency));
+        return \sprintf('%1.2f %s', $this->amount, self::getLabel($this->currency));
     }
 }

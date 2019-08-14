@@ -2,7 +2,6 @@
 
 namespace FKSDB\ORM\Services\Fyziklani;
 
-use Exception;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition;
@@ -73,7 +72,7 @@ class ServiceFyziklaniTeamPosition extends AbstractServiceSingle {
                         $updatedTeams[] = $teamData->teamId;
                     }
                 }
-            } catch (Exception $exception) {
+            } catch (\Exception $exception) {
             }
 
         }

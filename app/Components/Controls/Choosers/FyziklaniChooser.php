@@ -4,7 +4,6 @@ namespace FKSDB\Components\Controls\Choosers;
 
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEvent;
-use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 
 /**
@@ -62,7 +61,7 @@ class FyziklaniChooser extends Control {
 
     /**
      * @param $eventId
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function handleChange($eventId) {
         $presenter = $this->getPresenter();

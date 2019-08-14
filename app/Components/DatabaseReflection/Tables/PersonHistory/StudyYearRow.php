@@ -9,7 +9,6 @@ use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Localization\ITranslator;
-use function is_null;
 
 /**
  * Class StudyYearRow
@@ -59,7 +58,7 @@ class StudyYearRow extends AbstractRow {
      * @throws BadRequestException
      */
     public function createField(int $acYear = null): BaseControl {
-        if (is_null($acYear)) {
+        if (\is_null($acYear)) {
             throw new BadRequestException();
         }
         $control = new SelectBox($this->getTitle());

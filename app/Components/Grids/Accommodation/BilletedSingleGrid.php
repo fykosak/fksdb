@@ -5,11 +5,7 @@ namespace FKSDB\Components\Grids\Accommodation;
 use EventModule\AccommodationPresenter;
 use FKSDB\ORM\Models\ModelEventAccommodation;
 use FKSDB\ORM\Services\ServiceEventPersonAccommodation;
-use Nette\Application\UI\InvalidLinkException;
 use NiftyGrid\DataSource\NDataSource;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
-use NiftyGrid\DuplicateGlobalButtonException;
 
 /**
  * Class BilletedSingleGrid
@@ -33,10 +29,10 @@ class BilletedSingleGrid extends BilletedGrid {
 
     /**
      * @param AccommodationPresenter $presenter
-     * @throws InvalidLinkException
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
-     * @throws DuplicateGlobalButtonException
+     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws \NiftyGrid\DuplicateButtonException
+     * @throws \NiftyGrid\DuplicateColumnException
+     * @throws \NiftyGrid\DuplicateGlobalButtonException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

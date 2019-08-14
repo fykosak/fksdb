@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Controls\Fyziklani\Submit;
 
-use BasePresenter;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\model\Fyziklani\ClosedSubmittingException;
 use FKSDB\model\Fyziklani\SubmitHandler;
@@ -14,7 +13,6 @@ use Nette\Forms\Controls\Button;
 use Nette\Forms\Form;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
-use function get_class;
 
 /**
  * Class QREntryControl
@@ -85,14 +83,14 @@ class QREntryControl extends Control {
         try {
             $this->handler->checkTaskCode($code);
         } catch (TaskCodeException $exception) {
-            $this->getPresenter()->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
+            $this->getPresenter()->flashMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR);
             return;
         } catch (ClosedSubmittingException $exception) {
-            $this->getPresenter()->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
+            $this->getPresenter()->flashMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR);
         }
         $control = $this->getComponent('form');
         if (!$control instanceof FormControl) {
-            throw new BadRequestException('Expected FormControl got ' . get_class($control));
+            throw new BadRequestException('Expected FormControl got ' . \get_class($control));
         }
         $form = $control->getForm();
         $form->setDefaults(['task_code' => $code]);
@@ -115,7 +113,7 @@ class QREntryControl extends Control {
         if ($control instanceof FormControl) {
             return $control->getForm();
         }
-        throw new BadRequestException('Expected FormControl got ' . get_class($control));
+        throw new BadRequestException('Expected FormControl got ' . \get_class($control));
     }
 
     public function render() {
@@ -150,7 +148,7 @@ class QREntryControl extends Control {
             $log = $this->handler->preProcess($values->task_code, $points);
             $this->getPresenter()->flashMessage($log->getMessage(), $log->getLevel());
         } catch (TaskCodeException $exception) {
-            $this->getPresenter()->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
+            $this->getPresenter()->flashMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR);
         }
     }
 

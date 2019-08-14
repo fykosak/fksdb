@@ -5,9 +5,6 @@ namespace FKSDB\Components\Grids;
 use Exports\ExportFormatFactory;
 use Exports\StoredQuery;
 use FKSDB\Components\Controls\StoredQueryComponent;
-use Nette\Application\UI\InvalidLinkException;
-use NiftyGrid\DuplicateColumnException;
-use NiftyGrid\DuplicateGlobalButtonException;
 use PDOException;
 
 /**
@@ -39,9 +36,9 @@ class StoredQueryGrid extends BaseGrid {
 
     /**
      * @param $presenter
-     * @throws InvalidLinkException
-     * @throws DuplicateColumnException
-     * @throws DuplicateGlobalButtonException
+     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws \NiftyGrid\DuplicateColumnException
+     * @throws \NiftyGrid\DuplicateGlobalButtonException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

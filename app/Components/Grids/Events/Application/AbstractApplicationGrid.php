@@ -8,14 +8,9 @@ use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\Models\ModelEvent;
-use Nette\Application\BadRequestException;
 use Nette\Database\Table\Selection;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
-use NiftyGrid\DuplicateColumnException;
-use function count;
-use function in_array;
-use function str_replace;
 
 /**
  * Class AbstractApplicationGrid
@@ -44,7 +39,7 @@ abstract class AbstractApplicationGrid extends BaseGrid {
 
     /**
      * @return FormControl
-     * @throws BadRequestException
+     * @throws \Nette\Application\BadRequestException
      */
     protected function createComponentSearchForm(): FormControl {
         $query = $this->getSource()->select('count(*) AS count,status.*')->group('status');
@@ -68,7 +63,7 @@ abstract class AbstractApplicationGrid extends BaseGrid {
                 ->addText(': ')
                 ->addHtml(Html::el('i')->addText(_($state['description'])))
                 ->addText(' (' . $state['count'] . ')');
-            $stateContainer->addCheckbox(str_replace('.', '__', $state['state']), $label);
+            $stateContainer->addCheckbox(\str_replace('.', '__', $state['state']), $label);
         }
         $form->addComponent($stateContainer, 'status');
         $form->addSubmit('submit', _('Apply'));
@@ -90,10 +85,10 @@ abstract class AbstractApplicationGrid extends BaseGrid {
             $states = [];
             foreach ($value->status as $state => $value) {
                 if ($value) {
-                    $states[] = str_replace('__', '.', $state);
+                    $states[] = \str_replace('__', '.', $state);
                 }
             }
-            if (count($states)) {
+            if (\count($states)) {
                 $table->where('status IN ?', $states);
             }
         };
@@ -106,7 +101,7 @@ abstract class AbstractApplicationGrid extends BaseGrid {
 
     /**
      * @param array $fields
-     * @throws DuplicateColumnException
+     * @throws \NiftyGrid\DuplicateColumnException
      */
     protected function addColumns(array $fields) {
         parent::addColumns($fields);
@@ -114,7 +109,7 @@ abstract class AbstractApplicationGrid extends BaseGrid {
         $holderFields = $this->event->getHolder()->getPrimaryHolder()->getFields();
 
         foreach ($holderFields as $name => $def) {
-            if (in_array($name, $this->getHoldersColumns())) {
+            if (\in_array($name, $this->getHoldersColumns())) {
                 $this->addReflectionColumn($this->getTableName(), $name, $this->getModelClassName());
             }
         }

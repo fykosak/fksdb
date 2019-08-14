@@ -2,7 +2,6 @@
 
 namespace FKSDB\model\Fyziklani;
 
-use Exception;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
@@ -11,7 +10,6 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use function sprintf;
 
 /**
  * Class TaskCodeHandler
@@ -56,7 +54,7 @@ class SubmitHandler {
      * @return Message
      * @throws ClosedSubmittingException
      * @throws TaskCodeException
-     * @throws Exception
+     * @throws \Exception
      */
     public function preProcess(string $code, int $points): Message {
         $this->checkTaskCode($code);
@@ -85,7 +83,7 @@ class SubmitHandler {
         ]);
         $this->serviceFyziklaniSubmit->save($submit);
 
-        return new Message(sprintf(_('Body byly uloženy. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
+        return new Message(\sprintf(_('Body byly uloženy. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
             $points,
             $team->name,
             $team->e_fyziklani_team_id,
@@ -113,7 +111,7 @@ class SubmitHandler {
         } elseif (!$submit->points) { // ak bol zmazaný
             return $submit->changePoints($points);
         } else {
-            throw new TaskCodeException(sprintf(_('Úloha je zadaná a overená.')));
+            throw new TaskCodeException(\sprintf(_('Úloha je zadaná a overená.')));
         }
     }
 
@@ -150,7 +148,7 @@ class SubmitHandler {
         $teamId = TaskCodePreprocessor::extractTeamId($fullCode);
 
         if (!$this->serviceFyziklaniTeam->teamExist($teamId, $this->event)) {
-            throw new TaskCodeException(sprintf(_('Tým %s neexistuje.'), $teamId));
+            throw new TaskCodeException(\sprintf(_('Tým %s neexistuje.'), $teamId));
         }
         $teamRow = $this->serviceFyziklaniTeam->findByPrimary($teamId);
         return ModelFyziklaniTeam::createFromActiveRow($teamRow);

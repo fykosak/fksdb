@@ -5,7 +5,6 @@ namespace FKSDB\Components\Controls\Helpers\ValuePrinters;
 
 use FKSDB\Components\Controls\Stalking\Helpers\PersonLinkControl;
 use FKSDB\ORM\Models\ModelPerson;
-use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\PresenterComponent;
 use Nette\Utils\Html;
 
@@ -35,7 +34,7 @@ class PersonValueControl extends AbstractValue {
      * @param PresenterComponent $component
      * @param ModelPerson $person
      * @return Html
-     * @throws InvalidLinkException
+     * @throws \Nette\Application\UI\InvalidLinkException
      */
     public static function getGridValue(PresenterComponent $component, ModelPerson $person): Html {
         return Html::el('a')

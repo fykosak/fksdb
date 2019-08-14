@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Forms\Factories\Fyziklani;
 
-use BasePresenter;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\model\Fyziklani\CloseStrategy;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
@@ -12,7 +11,6 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Utils\Html;
-use function sprintf;
 
 /**
  * Class CloseFormsFactory
@@ -107,7 +105,7 @@ class CloseFormsFactory {
     private function handleFormSucceeded(FormControl $control, ModelEvent $event, string $category = null) {
         $closeStrategy = new CloseStrategy($event, $this->serviceFyziklaniTeam);
         $log = $closeStrategy($category);
-        $control->getPresenter()->flashMessage(Html::el()->addHtml(Html::el('h3')->addHtml('Rankin has been saved.'))->addHtml(Html::el('ul')->addHtml($log)), BasePresenter::FLASH_SUCCESS);
+        $control->getPresenter()->flashMessage(Html::el()->addHtml(Html::el('h3')->addHtml('Rankin has been saved.'))->addHtml(Html::el('ul')->addHtml($log)), \BasePresenter::FLASH_SUCCESS);
         $control->getPresenter()->redirect('this');
     }
 
@@ -127,6 +125,6 @@ class CloseFormsFactory {
         $this->serviceFyziklaniTeam->updateModel($team, ['points' => $sum]);
         $this->serviceFyziklaniTeam->save($team);
         $connection->commit();
-        $control->getPresenter()->flashMessage(sprintf(_('Team %s has successfully closed submitting, with total %d points.'), $team->name, $sum), BasePresenter::FLASH_SUCCESS);
+        $control->getPresenter()->flashMessage(\sprintf(_('Team %s has successfully closed submitting, with total %d points.'), $team->name, $sum), \BasePresenter::FLASH_SUCCESS);
     }
 }

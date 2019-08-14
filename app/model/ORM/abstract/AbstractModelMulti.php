@@ -3,8 +3,6 @@
 namespace FKSDB\ORM;
 
 use LogicException;
-use Nette\Database\Table\ActiveRow;
-use Nette\Database\Table\Selection;
 use Nette\InvalidStateException;
 use Nette\SmartObject;
 
@@ -113,7 +111,7 @@ abstract class AbstractModelMulti implements IModel {
 
     /**
      * @param $name
-     * @return bool|mixed|ActiveRow|Selection|null
+     * @return bool|mixed|\Nette\Database\Table\ActiveRow|\Nette\Database\Table\Selection|null
      */
     public function &__get($name) {
         if ($this->getMainModel()->__isset($name)) {
@@ -183,7 +181,7 @@ abstract class AbstractModelMulti implements IModel {
 
     /**
      * @param mixed $offset
-     * @return bool|mixed|ActiveRow|Selection|null
+     * @return bool|mixed|\Nette\Database\Table\ActiveRow|\Nette\Database\Table\Selection|null
      */
     public function &offsetGet($offset) {
         return $this->__get($offset);

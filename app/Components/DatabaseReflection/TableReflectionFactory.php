@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
-use Exception;
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\DatabaseReflection\RowFactoryComponent;
 use FKSDB\ORM\AbstractModelSingle;
@@ -11,8 +10,6 @@ use Nette\InvalidArgumentException;
 use Nette\Localization\ITranslator;
 use Nette\SmartObject;
 use Nette\Utils\Html;
-use function count;
-use function explode;
 
 /**
  * Class TableReflectionFactory
@@ -48,7 +45,7 @@ final class TableReflectionFactory {
      * @param string $tableName
      * @param string $fieldName
      * @return AbstractRow
-     * @throws Exception
+     * @throws \Exception
      */
     public function loadService(string $tableName, string $fieldName): AbstractRow {
         if (isset($this->fieldFactories[$fieldName])) {
@@ -66,12 +63,12 @@ final class TableReflectionFactory {
      * @param string $name
      * @param int $permissionLevel
      * @return RowFactoryComponent|null
-     * @throws Exception
+     * @throws \Exception
      * @deprecated
      */
     public function createComponent(string $name, int $permissionLevel) {
-        $parts = explode('__', $name);
-        if (count($parts) === 3) {
+        $parts = \explode('__', $name);
+        if (\count($parts) === 3) {
             list($prefix, $tableName, $fieldName) = $parts;
             if ($prefix === 'valuePrinter') {
                 $factory = $this->loadService($tableName, $fieldName);
@@ -87,7 +84,7 @@ final class TableReflectionFactory {
      * @param AbstractModelSingle $modelSingle
      * @param int $userPermissionLevel
      * @return \Nette\Utils\Html
-     * @throws Exception
+     * @throws \Exception
      */
     public function createGridValue(string $tableName, string $fieldName, AbstractModelSingle $modelSingle, int $userPermissionLevel): Html {
         return $this->loadService($tableName, $fieldName)->renderValue($modelSingle, $userPermissionLevel);

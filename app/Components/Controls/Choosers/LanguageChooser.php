@@ -3,13 +3,9 @@
 namespace FKSDB\Components\Controls\Choosers;
 
 
-use BasePresenter;
-use Exception;
-use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
 use Nette\Templating\FileTemplate;
-use Nette\Templating\ITemplate;
 use Nette\Templating\Template;
 
 
@@ -98,7 +94,7 @@ class LanguageChooser extends Control {
      * @param object $params
      * @return boolean
      * Redirect to correct address accorging to the resolved values.
-     * @throws Exception
+     * @throws \Exception
      */
     public function syncRedirect(&$params) {
         $this->init($params);
@@ -120,7 +116,7 @@ class LanguageChooser extends Control {
 
     /**
      * @param $params
-     * @throws Exception
+     * @throws \Exception
      */
     private function init($params) {
         if ($this->initialized) {
@@ -150,12 +146,12 @@ class LanguageChooser extends Control {
 
     /**
      * @return array of existing languages
-     * @throws Exception
+     * @throws \Exception
      */
     private function getSupportedLanguages() {
         $presenter = $this->getPresenter();
-        if (!($presenter instanceof BasePresenter)) {
-            throw new Exception('Wrong presenter');
+        if (!($presenter instanceof \BasePresenter)) {
+            throw new \Exception('Wrong presenter');
         }
         return $presenter->getTranslator()->getSupportedLanguages();
 
@@ -163,7 +159,7 @@ class LanguageChooser extends Control {
 
     /**
      * @param null $class
-     * @return ITemplate|Template
+     * @return \Nette\Templating\ITemplate|Template
      */
     protected function createTemplate($class = NULL) {
         /**
@@ -172,7 +168,7 @@ class LanguageChooser extends Control {
         $presenter = $this->getPresenter();
 
         $template = parent::createTemplate($class);
-        if ($presenter instanceof BasePresenter) {
+        if ($presenter instanceof \BasePresenter) {
             $template->setTranslator($presenter->getTranslator());
         }
         return $template;
@@ -190,11 +186,11 @@ class LanguageChooser extends Control {
 
     /**
      * @param $language
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function handleChangeLang($language) {
         /**
-         * @var BasePresenter $presenter
+         * @var \BasePresenter $presenter
          */
         $presenter = $this->getPresenter();
         $translator = $presenter->getTranslator();

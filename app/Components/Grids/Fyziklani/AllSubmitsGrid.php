@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Grids\Fyziklani;
 
-use Closure;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\model\Fyziklani\TaskCodePreprocessor;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
@@ -13,12 +12,9 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FyziklaniModule\BasePresenter;
-use Nette\Application\BadRequestException;
 use Nette\Database\Table\Selection;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
 use SQL\SearchableDataSource;
 
 /**
@@ -57,8 +53,8 @@ class AllSubmitsGrid extends SubmitsGrid {
 
     /**
      * @param BasePresenter $presenter
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
+     * @throws \NiftyGrid\DuplicateButtonException
+     * @throws \NiftyGrid\DuplicateColumnException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -100,9 +96,9 @@ class AllSubmitsGrid extends SubmitsGrid {
     }
 
     /**
-     * @return Closure
+     * @return \Closure
      */
-    private function getFilterCallBack(): Closure {
+    private function getFilterCallBack(): \Closure {
         return function (Selection $table, $value) {
             foreach ($value as $key => $condition) {
                 if (!$condition) {
@@ -166,7 +162,7 @@ class AllSubmitsGrid extends SubmitsGrid {
 
     /**
      * @return FormControl
-     * @throws BadRequestException
+     * @throws \Nette\Application\BadRequestException
      */
     protected function createComponentSearchForm(): FormControl {
         if (!$this->isSearchable()) {

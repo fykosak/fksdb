@@ -7,7 +7,6 @@ use FKSDB\Components\Controls\Fyziklani\CloseTeamControl;
 use FKSDB\Components\Grids\Fyziklani\CloseTeamsGrid;
 use FKSDB\Components\Grids\Fyziklani\TeamSubmitsGrid;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 
 /**
@@ -42,7 +41,7 @@ class ClosePresenter extends BasePresenter {
     /* ******* authorized methods ***********/
     /**
      * @throws BadRequestException
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function authorizedList() {
         $this->setAuthorized($this->eventIsAllowed('fyziklani.close', 'list'));
@@ -50,7 +49,7 @@ class ClosePresenter extends BasePresenter {
 
     /**
      * @throws BadRequestException
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function authorizedTeam() {
         $this->setAuthorized($this->eventIsAllowed('fyziklani.close', 'team'));
@@ -60,7 +59,7 @@ class ClosePresenter extends BasePresenter {
     /**
      * @param int $id
      * @throws BadRequestException
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function actionTeam(int $id) {
         $row = $this->getServiceFyziklaniTeam()->findByPrimary($id);
@@ -93,7 +92,7 @@ class ClosePresenter extends BasePresenter {
     /**
      * @return CloseTeamControl
      * @throws BadRequestException
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     protected function createComponentCloseTeamControl(): CloseTeamControl {
         $control = $this->fyziklaniComponentsFactory->createCloseTeamControl($this->getEvent());
@@ -106,7 +105,7 @@ class ClosePresenter extends BasePresenter {
     /**
      * @return CloseTeamsGrid
      * @throws BadRequestException
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     protected function createComponentCloseGrid(): CloseTeamsGrid {
         return $this->fyziklaniComponentsFactory->createCloseTeamsGrid($this->getEvent());
@@ -115,7 +114,7 @@ class ClosePresenter extends BasePresenter {
     /**
      * @return FormControl
      * @throws BadRequestException
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function createComponentCloseAForm(): FormControl {
         $control = $this->fyziklaniComponentsFactory->getCloseFormsFactory()->createCloseCategoryForm('A', $this->getEvent());
@@ -128,7 +127,7 @@ class ClosePresenter extends BasePresenter {
     /**
      * @return FormControl
      * @throws BadRequestException
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function createComponentCloseBForm(): FormControl {
         $control = $this->fyziklaniComponentsFactory->getCloseFormsFactory()->createCloseCategoryForm('B', $this->getEvent());
@@ -141,7 +140,7 @@ class ClosePresenter extends BasePresenter {
     /**
      * @return FormControl
      * @throws BadRequestException
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function createComponentCloseCForm(): FormControl {
         $control = $this->fyziklaniComponentsFactory->getCloseFormsFactory()->createCloseCategoryForm('C', $this->getEvent());
@@ -154,7 +153,7 @@ class ClosePresenter extends BasePresenter {
     /**
      * @return FormControl
      * @throws BadRequestException
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function createComponentCloseFForm(): FormControl {
         $control = $this->fyziklaniComponentsFactory->getCloseFormsFactory()->createCloseCategoryForm('F', $this->getEvent());
@@ -167,7 +166,7 @@ class ClosePresenter extends BasePresenter {
     /**
      * @return FormControl
      * @throws BadRequestException
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function createComponentCloseTotalForm(): FormControl {
         $control = $this->fyziklaniComponentsFactory->getCloseFormsFactory()->createCloseTotalForm($this->getEvent());

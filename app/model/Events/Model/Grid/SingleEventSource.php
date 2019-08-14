@@ -11,7 +11,6 @@ use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
 use Nette\SmartObject;
-use Traversable;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -172,7 +171,7 @@ class SingleEventSource implements IHolderSource {
     }
 
     /**
-     * @return ArrayIterator|Traversable
+     * @return ArrayIterator|\Traversable
      */
     public function getIterator() {
         if ($this->primaryModels === null) {

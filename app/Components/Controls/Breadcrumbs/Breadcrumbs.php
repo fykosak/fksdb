@@ -10,7 +10,6 @@ use Nette\Application\Request as AppRequest;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Presenter;
 use Nette\Application\UI\PresenterComponentReflection;
-use ReflectionException;
 use Tracy\Debugger;
 use Nette\Http\Request as HttpRequest;
 use Nette\Http\Session;
@@ -95,7 +94,7 @@ class Breadcrumbs extends Control {
 
     /**
      * @param AppRequest $request
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function setBackLink(AppRequest $request) {
         $presenter = $this->getPresenter();
@@ -220,7 +219,7 @@ class Breadcrumbs extends Control {
      *
      * @param AppRequest|string $request
      * @return string
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     private function getPathKey($request) {
         if ($request instanceof AppRequest) {
@@ -276,7 +275,7 @@ class Breadcrumbs extends Control {
 
     /**
      * @param $backLink
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     private function storeRequest($backLink) {
         if ($this->storedRequest) {
@@ -304,7 +303,7 @@ class Breadcrumbs extends Control {
      * @param AppRequest $request
      * @param $backLink
      * @return Request
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     protected function createNaviRequest(INavigablePresenter $presenter, AppRequest $request, $backLink) {
         $pathKey = $this->getPathKey($request);

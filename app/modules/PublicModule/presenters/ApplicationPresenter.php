@@ -16,17 +16,12 @@ use FKSDB\Components\Grids\Events\LayoutResolver;
 use FKSDB\Logging\FlashDumpFactory;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\IModel;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelAuthToken;
-use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Services\ServiceEvent;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
-use function sprintf;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -38,12 +33,12 @@ class ApplicationPresenter extends BasePresenter {
     const PARAM_AFTER = 'a';
 
     /**
-     * @var ModelEvent
+     * @var \FKSDB\ORM\Models\ModelEvent
      */
     private $event = false;
 
     /**
-     * @var IModel|ModelFyziklaniTeam|ModelEventParticipant
+     * @var IModel|\FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam|ModelEventParticipant
      */
     private $eventApplication = false;
 
@@ -143,7 +138,7 @@ class ApplicationPresenter extends BasePresenter {
 
     public function titleDefault() {
         if ($this->getEventApplication()) {
-            $this->setTitle(sprintf(_('Application for %s: %s'), $this->getEvent()->name, $this->getEventApplication()->__toString()));
+            $this->setTitle(\sprintf(_('Application for %s: %s'), $this->getEvent()->name, $this->getEventApplication()->__toString()));
         } else {
             $this->setTitle("{$this->getEvent()}");
         }
@@ -185,7 +180,7 @@ class ApplicationPresenter extends BasePresenter {
      * @param $eventId
      * @param $id
      * @throws BadRequestException
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function actionDefault($eventId, $id) {
         if (!$this->getEvent()) {
@@ -315,7 +310,7 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @return ModelEvent|ActiveRow|null
+     * @return \FKSDB\ORM\Models\ModelEvent|\Nette\Database\Table\ActiveRow|null
      */
     private function getEvent() {
         if ($this->event === false) {
@@ -335,7 +330,7 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @return ModelEventParticipant|mixed|IModel|ModelFyziklaniTeam
+     * @return ModelEventParticipant|mixed|IModel|\FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam
      */
     private function getEventApplication() {
         if ($this->eventApplication === false) {

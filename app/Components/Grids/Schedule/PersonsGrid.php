@@ -12,7 +12,6 @@ use Nette\NotImplementedException;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
-use function count;
 
 /**
  * Class PersonsGrid
@@ -84,7 +83,7 @@ class PersonsGrid extends BaseGrid {
                 $model = ModelPersonSchedule::createFromActiveRow($row);
                 $person = $model->getPerson();
                 $roles = $person->getRolesForEvent($model->getScheduleItem()->getGroup()->getEvent());
-                if (!count($roles)) {
+                if (!\count($roles)) {
                     $container->addHtml(Html::el('span')
                         ->addAttributes(['class' => 'badge badge-danger'])
                         ->addText(_('No role')));

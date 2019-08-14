@@ -3,7 +3,6 @@
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelRole;
-use Nette\Application\UI\InvalidLinkException;
 
 /**
  * Class DispatchPresenter
@@ -13,7 +12,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
     use \LanguageNav;
 
     /**
-     * @throws InvalidLinkException
+     * @throws \Nette\Application\UI\InvalidLinkException
      */
     public function renderDefault() {
         /**
@@ -39,7 +38,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
      * @param ModelContest $contest
      * @param $role
      * @return array
-     * @throws InvalidLinkException
+     * @throws \Nette\Application\UI\InvalidLinkException
      */
     private function check(ModelLogin $login, ModelContest $contest, $role) {
         switch ($role) {

@@ -17,7 +17,6 @@ use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Database\Connection;
 use Nette\InvalidArgumentException;
-use function sprintf;
 
 /**
  * Class SchedulePresenter
@@ -86,22 +85,22 @@ class SchedulePresenter extends BasePresenter {
      * @deprecated
      */
     public function titleDefault() {
-        $this->setTitle(sprintf(_('Schedule')));
+        $this->setTitle(\sprintf(_('Schedule')));
         $this->setIcon('fa fa-calendar-check-o');
     }
 
     public function titleGroups() {
-        $this->setTitle(sprintf(_('Schedule groups')));
+        $this->setTitle(\sprintf(_('Schedule groups')));
         $this->setIcon('fa fa-calendar-check-o');
     }
 
     public function titleItem() {
-        $this->setTitle(sprintf(_('Schedule item #%d'), $this->item->schedule_item_id));
+        $this->setTitle(\sprintf(_('Schedule item #%d'), $this->item->schedule_item_id));
         $this->setIcon('fa fa-calendar-check-o');
     }
 
     public function titleGroup() {
-        $this->setTitle(sprintf(_('Schedule group #%d'), $this->group->schedule_group_id));
+        $this->setTitle(\sprintf(_('Schedule group #%d'), $this->group->schedule_group_id));
         $this->setIcon('fa fa-calendar-check-o');
     }
 

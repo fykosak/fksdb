@@ -5,7 +5,6 @@ namespace FKSDB\ValidationTest;
 
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\Services\ServiceContest;
-use Nette\Application\BadRequestException;
 
 /**
  * Class ValidationFactory
@@ -29,7 +28,7 @@ class ValidationFactory {
      * ValidationFactory constructor.
      * @param ServiceContest $serviceContest
      * @param TableReflectionFactory $tableReflectionFactory
-     * @throws BadRequestException
+     * @throws \Nette\Application\BadRequestException
      */
     public function __construct(ServiceContest $serviceContest, TableReflectionFactory $tableReflectionFactory) {
         $this->serviceContest = $serviceContest;
@@ -38,7 +37,7 @@ class ValidationFactory {
     }
 
     /**
-     * @throws BadRequestException
+     * @throws \Nette\Application\BadRequestException
      */
     private function registersTests() {
         $this->tests = [

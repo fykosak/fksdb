@@ -6,7 +6,6 @@ namespace FKSDB\ValidationTest;
 use FKSDB\Messages\Message;
 use Nette\NotImplementedException;
 use Nette\Utils\Html;
-use function sprintf;
 
 /**
  * Class ValidationLog
@@ -58,7 +57,7 @@ class ValidationLog extends Message {
             case self::LVL_SUCCESS:
                 return 'fa fa-check';
             default:
-                throw new NotImplementedException(sprintf('%s is not supported', $this->getLevel()));
+                throw new NotImplementedException(\sprintf('%s is not supported', $this->getLevel()));
         }
     }
 

@@ -4,8 +4,6 @@ namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
 use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServiceSchool;
-use Nette\Database\Table\ActiveRow;
-use Nette\Database\Table\Selection;
 use Nette\InvalidStateException;
 use Nette\NotImplementedException;
 
@@ -74,7 +72,7 @@ class SchoolProvider implements IFilteredDataProvider {
 
     /**
      * @param mixed $id
-     * @return bool|mixed|ActiveRow|Selection|null
+     * @return bool|mixed|\Nette\Database\Table\ActiveRow|\Nette\Database\Table\Selection|null
      */
     public function getItemLabel($id) {
         $school = $this->serviceSchool->findByPrimary($id);

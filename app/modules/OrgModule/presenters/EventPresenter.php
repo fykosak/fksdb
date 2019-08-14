@@ -2,20 +2,17 @@
 
 namespace OrgModule;
 
-use Exception;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\EventFactory;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\Events\EventsGrid;
 use FKSDB\Config\NeonScheme;
-use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceAuthToken;
 use FKSDB\ORM\Services\ServiceEvent;
 use FormUtils;
 use ModelException;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
@@ -25,7 +22,6 @@ use Nette\Neon\Neon;
 use Nette\NotImplementedException;
 use Nette\Utils\Html;
 use Nette\Utils\NeonException;
-use ReflectionException;
 use Tracy\Debugger;
 use Utils;
 
@@ -166,7 +162,7 @@ class EventPresenter extends EntityPresenter {
     /**
      * @return FormControl
      * @throws BadRequestException
-     * @throws Exception
+     * @throws \Exception
      */
     private function createForm() {
         $control = new FormControl();
@@ -237,7 +233,7 @@ class EventPresenter extends EntityPresenter {
 
     /**
      * @param int $id
-     * @return AbstractModelSingle|ModelEvent|null
+     * @return \FKSDB\ORM\AbstractModelSingle|ModelEvent|null
      */
     protected function loadModel($id) {
         $row = $this->serviceEvent->findByPrimary($id);
@@ -251,8 +247,8 @@ class EventPresenter extends EntityPresenter {
      * @param Form $form
      * @param $isNew
      * @throws BadRequestException
-     * @throws AbortException
-     * @throws ReflectionException
+     * @throws \Nette\Application\AbortException
+     * @throws \ReflectionException
      */
     private function handleFormSuccess(Form $form, $isNew) {
         $connection = $this->serviceEvent->getConnection();

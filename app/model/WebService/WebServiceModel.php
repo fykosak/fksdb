@@ -8,13 +8,11 @@ use DOMElement;
 use Exports\StoredQuery;
 use Exports\StoredQueryFactory;
 use FKSDB\ORM\Models\ModelContest;
-use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\Results\Models\AbstractResultsModel;
 use FKSDB\Results\Models\BrojureResultsModel;
 use FKSDB\Results\ResultsModelFactory;
 use InvalidArgumentException;
-use Nette\Application\BadRequestException;
 use Tracy\Debugger;
 use Nette\Security\AuthenticationException;
 use Nette\Security\IAuthenticator;
@@ -51,7 +49,7 @@ class WebServiceModel {
     private $statsModelFactory;
 
     /**
-     * @var ModelLogin
+     * @var \FKSDB\ORM\Models\ModelLogin
      */
     private $authenticatedLogin;
 
@@ -120,7 +118,7 @@ class WebServiceModel {
      * @param $args
      * @return SoapVar
      * @throws SoapFault
-     * @throws BadRequestException
+     * @throws \Nette\Application\BadRequestException
      */
     public function getResults($args): SoapVar {
         $this->checkAuthentication(__FUNCTION__);
@@ -264,7 +262,7 @@ class WebServiceModel {
      * @param $args
      * @return SoapVar
      * @throws SoapFault
-     * @throws BadRequestException
+     * @throws \Nette\Application\BadRequestException
      */
     public function getExport($args): SoapVar {
         // parse arguments

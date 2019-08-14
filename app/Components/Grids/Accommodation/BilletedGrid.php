@@ -8,12 +8,7 @@ use FKSDB\ORM\Models\ModelEventOrg;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Models\ModelEventPersonAccommodation;
 use FKSDB\ORM\Services\ServiceEventPersonAccommodation;
-use Nette\Application\AbortException;
-use Nette\Application\UI\InvalidLinkException;
 use Nette\Utils\Html;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
-use NiftyGrid\DuplicateGlobalButtonException;
 
 /**
  * Class BilletedGrid
@@ -36,9 +31,9 @@ abstract class BilletedGrid extends BaseGrid {
 
     /**
      * @param $presenter
-     * @throws InvalidLinkException
-     * @throws DuplicateButtonException
-     * @throws DuplicateGlobalButtonException
+     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws \NiftyGrid\DuplicateButtonException
+     * @throws \NiftyGrid\DuplicateGlobalButtonException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -68,7 +63,7 @@ abstract class BilletedGrid extends BaseGrid {
     }
 
     /**
-     * @throws DuplicateColumnException
+     * @throws \NiftyGrid\DuplicateColumnException
      */
     protected function addColumnPayment() {
         $this->addColumn('payment', _('Payment'))
@@ -83,7 +78,7 @@ abstract class BilletedGrid extends BaseGrid {
     }
 
     /**
-     * @throws DuplicateColumnException
+     * @throws \NiftyGrid\DuplicateColumnException
      */
     protected function addColumnRole() {
         $this->addColumn('role', _('Role'))
@@ -131,7 +126,7 @@ abstract class BilletedGrid extends BaseGrid {
     }
 
     /**
-     * @throws DuplicateColumnException
+     * @throws \NiftyGrid\DuplicateColumnException
      */
     protected function addColumnState() {
         $this->addColumn('status', _('State'))->setRenderer(function ($row) {
@@ -144,7 +139,7 @@ abstract class BilletedGrid extends BaseGrid {
     }
 
     /**
-     * @throws DuplicateColumnException
+     * @throws \NiftyGrid\DuplicateColumnException
      */
     protected function addColumnPerson() {
         $this->addColumn('person_id', _('Person'))->setRenderer(function ($row) {
@@ -156,7 +151,7 @@ abstract class BilletedGrid extends BaseGrid {
 
     /**
      * @param $id
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function handleConfirmPayment($id) {
         $row = $this->serviceEventPersonAccommodation->findByPrimary($id);
@@ -173,7 +168,7 @@ abstract class BilletedGrid extends BaseGrid {
 
     /**
      * @param $id
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function handleDeletePayment($id) {
         $row = $this->serviceEventPersonAccommodation->findByPrimary($id);

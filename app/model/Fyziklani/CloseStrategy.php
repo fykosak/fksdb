@@ -2,7 +2,6 @@
 
 namespace FKSDB\model\Fyziklani;
 
-use Closure;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
@@ -126,9 +125,9 @@ class CloseStrategy {
     }
 
     /**
-     * @return Closure
+     * @return \Closure
      */
-    private static function getSortFunction(): Closure {
+    private static function getSortFunction(): \Closure {
         return function (array $b, array $a): int {
             if ($a['points'] > $b['points']) {
                 return 1;

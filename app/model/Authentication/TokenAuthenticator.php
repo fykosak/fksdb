@@ -3,7 +3,6 @@
 namespace Authentication;
 
 use FKSDB\ORM\Models\ModelAuthToken;
-use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceAuthToken;
 use FKSDB\ORM\Services\ServiceLogin;
 use FKSDB\YearCalculator;
@@ -44,7 +43,7 @@ class TokenAuthenticator extends AbstractAuthenticator {
 
     /**
      * @param string $tokenData
-     * @return ModelLogin
+     * @return \FKSDB\ORM\Models\ModelLogin
      * @throws AuthenticationException
      */
     public function authenticate($tokenData) {

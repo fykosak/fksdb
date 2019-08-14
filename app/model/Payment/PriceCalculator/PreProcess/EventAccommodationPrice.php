@@ -2,7 +2,6 @@
 
 namespace FKSDB\Payment\PriceCalculator\PreProcess;
 
-use Exception;
 use FKSDB\ORM\Models\ModelEventAccommodation;
 use FKSDB\ORM\Models\ModelEventPersonAccommodation;
 use FKSDB\ORM\Models\ModelPayment;
@@ -33,7 +32,7 @@ class EventAccommodationPrice extends AbstractPreProcess {
      * @param ModelPayment $modelPayment
      * @return array
      * @throws UnsupportedCurrencyException
-     * @throws Exception
+     * @throws \Exception
      */
     public static function getGridItems(ModelPayment $modelPayment): array {
         $price = new Price(0, $modelPayment->currency);

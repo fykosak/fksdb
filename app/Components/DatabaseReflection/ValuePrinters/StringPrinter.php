@@ -4,7 +4,6 @@ namespace FKSDB\Components\DatabaseReflection\ValuePrinters;
 
 use FKSDB\Components\Controls\Helpers\Badges\NotSetBadge;
 use Nette\Utils\Html;
-use function is_null;
 
 /**
  * Class StringPrinter
@@ -16,7 +15,7 @@ class StringPrinter extends AbstractValuePrinter {
      * @return Html
      */
     protected function getHtml($value): Html {
-        if (is_null($value)) {
+        if (\is_null($value)) {
             return NotSetBadge::getHtml();
         } else {
             return Html::el('span')->addText($value);

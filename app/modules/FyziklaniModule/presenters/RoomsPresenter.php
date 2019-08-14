@@ -5,9 +5,6 @@ namespace FyziklaniModule;
 use FKSDB\Components\Controls\Fyziklani\RoutingDownload;
 use FKSDB\Components\Controls\Fyziklani\RoutingEdit;
 use FKSDB\React\ReactResponse;
-use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
-use ReactMessage;
 
 /**
  *
@@ -31,24 +28,24 @@ class RoomsPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
-     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
      */
     public function authorizedEdit() {
         $this->setAuthorized(($this->eventIsAllowed('fyziklani.rooms', 'edit')));
     }
 
     /**
-     * @throws AbortException
-     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
      */
     public function authorizedDownload() {
         $this->setAuthorized(($this->eventIsAllowed('fyziklani.rooms', 'download')));
     }
 
     /**
-     * @throws AbortException
-     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
      */
     public function authorizedDefault() {
         $download = $this->eventIsAllowed('fyziklani.rooms', 'download');
@@ -57,7 +54,7 @@ class RoomsPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function renderEdit() {
         if ($this->isAjax()) {
@@ -66,15 +63,15 @@ class RoomsPresenter extends BasePresenter {
             $response = new ReactResponse();
             $response->setAct('update-teams');
             $response->setData(['updatedTeams' => $updatedTeams]);
-            $response->addMessage(new ReactMessage(_('Zmeny boli uložené'), \BasePresenter::FLASH_SUCCESS));
+            $response->addMessage(new \ReactMessage(_('Zmeny boli uložené'), \BasePresenter::FLASH_SUCCESS));
             $this->sendResponse($response);
         }
     }
 
     /**
      * @return RoutingDownload
-     * @throws AbortException
-     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
      */
     public function createComponentDownload(): RoutingDownload {
         return $this->fyziklaniComponentsFactory->createRoutingDownload($this->getEvent());
@@ -82,8 +79,8 @@ class RoomsPresenter extends BasePresenter {
 
     /**
      * @return RoutingEdit
-     * @throws AbortException
-     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
      */
     public function createComponentRouting(): RoutingEdit {
         return $this->fyziklaniComponentsFactory->createRoutingEdit($this->getEvent());

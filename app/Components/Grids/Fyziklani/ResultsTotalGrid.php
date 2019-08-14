@@ -9,7 +9,6 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FyziklaniModule\BasePresenter;
 use NiftyGrid\DataSource\NDataSource;
-use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class ResultsTotalGrid
@@ -41,7 +40,7 @@ class ResultsTotalGrid extends BaseGrid {
 
     /**
      * @param BasePresenter $presenter
-     * @throws DuplicateColumnException
+     * @throws \NiftyGrid\DuplicateColumnException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

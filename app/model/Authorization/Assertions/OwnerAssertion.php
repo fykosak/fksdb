@@ -2,7 +2,6 @@
 
 namespace Authorization\Assertions;
 
-use FKSDB\ORM\Models\ModelPerson;
 use Nette\InvalidStateException;
 use Nette\Security\IResource;
 use Nette\Security\IUserStorage;
@@ -107,7 +106,7 @@ class OwnerAssertion {
             throw new InvalidStateException('Expecting logged user.');
         }
         /**
-         * @var ModelPerson $loggedPerson
+         * @var \FKSDB\ORM\Models\ModelPerson $loggedPerson
          * $payment
          */
         $loggedPerson = $this->user->getIdentity()->getPerson();

@@ -8,8 +8,6 @@ use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEvent;
 use FKSDB\ORM\Services\ServiceEventOrg;
-use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Persons\ExtendedPersonHandler;
 
@@ -74,8 +72,8 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
 
     /**
      * @param $id
-     * @throws AbortException
-     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
      */
     public function renderEdit($id) {
         parent::renderEdit($id);
@@ -90,7 +88,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
 
     /**
      * @param $id
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function actionDelete($id) {
         $success = $this->serviceEventOrg->getTable()->where('e_org_id', $id)->delete();
