@@ -12,9 +12,9 @@ php:
 env:
   - DB=mariadb
 
-services:
+# services:
 #  - mysql
-  - mariadb
+# - mariadb
 
 before_install:
 #  - composer self-update
