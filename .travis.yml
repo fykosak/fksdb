@@ -10,7 +10,7 @@ php:
   - 7.0
   - 7.1
 env:
-  DB=mariadb
+  - DB=mariadb
 
 services:
 #  - mysql
