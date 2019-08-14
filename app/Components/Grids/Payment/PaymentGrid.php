@@ -3,10 +3,11 @@
 
 namespace FKSDB\Components\Grids\Payment;
 
+use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServicePayment;
-use Nette\Utils\Html;
 
 /**
  * Class PaymentGrid
@@ -21,9 +22,10 @@ abstract class PaymentGrid extends BaseGrid {
     /**
      * PaymentGrid constructor.
      * @param ServicePayment $servicePayment
+     * @param TableReflectionFactory $tableReflectionFactory
      */
-    function __construct(ServicePayment $servicePayment) {
-        parent::__construct();
+    function __construct(ServicePayment $servicePayment, TableReflectionFactory $tableReflectionFactory) {
+        parent::__construct($tableReflectionFactory);
         $this->servicePayment = $servicePayment;
     }
 
@@ -40,20 +42,14 @@ abstract class PaymentGrid extends BaseGrid {
      * @throws \NiftyGrid\DuplicateColumnException
      */
     protected function addColumnPrice() {
-        $this->addColumn('price', _('Price'))->setRenderer(function ($row) {
-            $model = ModelPayment::createFromActiveRow($row);
-            return $model->getPrice()->__toString();
-        });
+        $this->addReflectionColumn(DbNames::TAB_PAYMENT, 'price', ModelPayment::class);
     }
 
     /**
      * @throws \NiftyGrid\DuplicateColumnException
      */
     protected function addColumnState() {
-        $this->addColumn('state', _('Status'))->setRenderer(function ($row) {
-            $model = ModelPayment::createFromActiveRow($row);
-            return Html::el('span')->addAttributes(['class' => $model->getUIClass()])->addText(_($model->getStateLabel()));
-        });
+        $this->addReflectionColumn(DbNames::TAB_PAYMENT, 'state', ModelPayment::class);
     }
 
     /**
@@ -75,7 +71,7 @@ abstract class PaymentGrid extends BaseGrid {
      */
     protected function addColumnsSymbols() {
         //$this->addColumn('constant_symbol', _('CS'));
-        $this->addColumn('variable_symbol', _('VS'));
+        $this->addReflectionColumn(DbNames::TAB_PAYMENT, 'variable_symbol', ModelPayment::class);
         // $this->addColumn('specific_symbol', _('SS'));
         // $this->addColumn('bank_account', _('Bank acc.'));
     }
