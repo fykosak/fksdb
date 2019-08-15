@@ -47,7 +47,8 @@ class OwnerAssertion {
         if (!$submit instanceof IResource) {
             return false;
         }
-        return $submit->getContestant()->getPerson()->getLogin()->login_id === $this->user->getId();
+        return $submit->getContestant()->getPerson()->getLogin()->login_id === $this->user->getIdentity()->getId();
+
     }
 
     /**
