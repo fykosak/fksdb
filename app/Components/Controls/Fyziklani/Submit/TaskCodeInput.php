@@ -93,7 +93,7 @@ class TaskCodeInput extends FyziklaniReactControl {
         $response = new ReactResponse();
         $response->setAct($request->act);
         try {
-            $log = $this->handler->preProcess($request->requestData['code'], +$request->requestData['points']);
+            $log = $this->handler->preProcess($request->requestData['code'], +$request->requestData['points'], $this->getPresenter()->getUser());
             $response->addMessage($log);
         } catch (TaskCodeException $exception) {
             $response->addMessage(new Message($exception->getMessage(), BasePresenter::FLASH_ERROR));

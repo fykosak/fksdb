@@ -8,7 +8,6 @@ namespace FyziklaniModule;
  * @package FyziklaniModule
  */
 class GameSetupPresenter extends BasePresenter {
-
     /**
      * @return void
      */

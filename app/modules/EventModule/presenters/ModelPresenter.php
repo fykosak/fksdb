@@ -1,5 +1,6 @@
 <?php
 
+
 namespace EventModule;
 
 use Events\Machine\Machine;

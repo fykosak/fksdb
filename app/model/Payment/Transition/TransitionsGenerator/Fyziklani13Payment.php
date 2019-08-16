@@ -216,9 +216,9 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
      */
     private function getClosureDeleteRows(): \Closure {
         return function (ModelPayment $modelPayment) {
-            Debugger::log('payment-deleted--' . \json_encode($modelPayment->toArray()));
+            Debugger::log('payment-deleted--' . \json_encode($modelPayment->toArray()), 'payment-update');
             foreach ($modelPayment->related(DbNames::TAB_PAYMENT_ACCOMMODATION, 'payment_id') as $row) {
-                Debugger::log('payment-row-deleted--' . \json_encode($row->toArray()));
+                Debugger::log('payment-row-deleted--' . \json_encode($row->toArray()), 'payment-update');
                 $row->delete();
             }
         };

@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Grids\Fyziklani;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\model\Fyziklani\TaskCodePreprocessor;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
@@ -12,9 +13,11 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FyziklaniModule\BasePresenter;
+use Nette\Application\AbortException;
 use Nette\Database\Table\Selection;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
+use Nette\Utils\Html;
 use SQL\SearchableDataSource;
 
 /**
@@ -43,12 +46,19 @@ class AllSubmitsGrid extends SubmitsGrid {
      * @param ServiceFyziklaniTask $serviceFyziklaniTask
      * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
      * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @param TableReflectionFactory $tableReflectionFactory
      */
-    public function __construct(ModelEvent $event, ServiceFyziklaniTask $serviceFyziklaniTask, ServiceFyziklaniSubmit $serviceFyziklaniSubmit, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
+    public function __construct(
+        ModelEvent $event,
+        ServiceFyziklaniTask $serviceFyziklaniTask,
+        ServiceFyziklaniSubmit $serviceFyziklaniSubmit,
+        ServiceFyziklaniTeam $serviceFyziklaniTeam,
+        TableReflectionFactory $tableReflectionFactory
+    ) {
         $this->event = $event;
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
-        parent::__construct($serviceFyziklaniSubmit);
+        parent::__construct($serviceFyziklaniSubmit, $tableReflectionFactory);
     }
 
     /**
@@ -59,37 +69,33 @@ class AllSubmitsGrid extends SubmitsGrid {
     protected function configure($presenter) {
         parent::configure($presenter);
 
-        $this->addColumn('e_fyziklani_team_id', _('Team'))->setRenderer(function (ModelFyziklaniSubmit $row) {
-            return $row->getTeam()->name . ' (' . $row->getTeam()->e_fyziklani_team_id . ')';
-        });
+        $this->addColumnTeam();
+
         $this->addColumnTask();
-        $this->addColumn('points', _('Body'));
-        $this->addColumn('room', _('Room'));
+
+        $this->addColumn('points', _('Body'))->setRenderer(function ($row) {
+            if (!\is_null($row->points)) {
+                return $row->points;
+            }
+            return Html::el('span')->addAttributes(['class' => 'badge badge-warning'])->addText(_('revoked'));
+        });
         $this->addColumn('modified', _('Zadané'));
         $this->addColumnState();
 
-        $this->addButton('edit', null)->setClass('btn btn-sm btn-warning')->setLink(function ($row) use ($presenter) {
-            return $presenter->link(':Fyziklani:Submit:edit', ['id' => $row->fyziklani_submit_id]);
-        })->setText(_('Edit'))->setShow(function (ModelFyziklaniSubmit $row) {
-            return $row->getTeam()->hasOpenSubmitting() && !is_null($row->points);
-        });
+        $this->addEditButton($presenter);
 
-        $this->addButton('detail', null)
-            ->setClass('btn btn-sm btn-primary')
-            ->setLink(function ($row) use ($presenter) {
-                return $presenter->link(':Fyziklani:Submit:detail', ['id' => $row->fyziklani_submit_id]);
-            })->setText(_('Detail'));
+        $this->addDetailButton($presenter);
 
         $this->addButton('delete', null)->setClass('btn btn-sm btn-danger')->setLink(function ($row) {
             return $this->link('delete!', $row->fyziklani_submit_id);
         })->setConfirmationDialog(function () {
             return _('Opravdu vzít submit úlohy zpět?');
         })->setText(_('Delete'))->setShow(function (ModelFyziklaniSubmit $row) {
-            return $row->getTeam()->hasOpenSubmitting() && !is_null($row->points);
+            return $row->canChange() && !is_null($row->points);
         });
 
-        $submits = $this->serviceFyziklaniSubmit->findAll($this->event)->where('fyziklani_submit.points IS NOT NULL')
-            ->select('fyziklani_submit.*,fyziklani_task.label,e_fyziklani_team_id.name,e_fyziklani_team_id.room');
+        $submits = $this->serviceFyziklaniSubmit->findAll($this->event)/*->where('fyziklani_submit.points IS NOT NULL')*/
+        ->select('fyziklani_submit.*,fyziklani_task.label,e_fyziklani_team_id.name');
         $dataSource = new SearchableDataSource($submits);
         $dataSource->setFilterCallback($this->getFilterCallBack());
         $this->setDataSource($dataSource);
@@ -115,25 +121,23 @@ class AllSubmitsGrid extends SubmitsGrid {
                             $teamId = TaskCodePreprocessor::extractTeamId($fullCode);
                             $table->where('e_fyziklani_team_id.e_fyziklani_team_id =? AND fyziklani_task.label =? ', $teamId, $taskLabel);
                         } else {
-                            $this->flashMessage(_('Zle zadaný kód úlohy'), \BasePresenter::FLASH_WARNING);
+                            $this->flashMessage(_('Wrong task code'), \BasePresenter::FLASH_WARNING);
                         }
                         break;
-                    case 'creator_me':
-                        $personId = $this->getPresenter()->getUser()->getIdentity()->getPerson()->person_id;
-                        $table->where('created_by = ? OR checked_by = ?', $personId, $personId);
+                    case 'not_null':
+                        $table->where('fyziklani_submit.points IS NOT NULL');
                         break;
                     case 'task':
                         $table->where('fyziklani_submit.fyziklani_task_id', $condition);
                 }
             }
             return;
-
-
         };
     }
 
     /**
      * @param $id
+     * @throws AbortException
      */
     public function handleDelete($id) {
         $row = $this->serviceFyziklaniSubmit->findByPrimary($id);
@@ -144,20 +148,12 @@ class AllSubmitsGrid extends SubmitsGrid {
         $submit = ModelFyziklaniSubmit::createFromActiveRow($row);
 
         if (!$submit->getTeam()->hasOpenSubmitting()) {
-
             $this->flashMessage('Tento tým má už uzavřené bodování', \BasePresenter::FLASH_WARNING);
             return;
         }
-        $this->serviceFyziklaniSubmit->updateModel($submit, [
-            'points' => null,
-            /* ugly, exclude previous value of `modified` from query
-             * so that `modified` is set automatically by DB
-             * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
-             */
-            'modified' => null
-        ]);
-        $this->serviceFyziklaniSubmit->save($submit);
-        $this->flashMessage(_('Submit has been deleted.'), \BasePresenter::FLASH_SUCCESS);
+        $log = $submit->revoke($this->getPresenter()->getUser());
+        $this->flashMessage($log->getMessage(), \BasePresenter::FLASH_SUCCESS);
+        $this->redirect('this');
     }
 
     /**
@@ -191,7 +187,7 @@ class AllSubmitsGrid extends SubmitsGrid {
         $form->addSelect('team', _('Team'), $teams)->setPrompt(_('--Team--'));
         $form->addSelect('task', _('Task'), $tasks)->setPrompt(_('--task--'));
         $form->addText('code', _('Code'))->setAttribute('placeholder', _('Task code'));
-        $form->addCheckbox('creator_me', _('Only my submits'));
+        $form->addCheckbox('not_null', _('Only not revoked submits'));
         $form->addSubmit('submit', _('Search'));
         $form->onSuccess[] = function (Form $form) {
             $values = $form->getValues();

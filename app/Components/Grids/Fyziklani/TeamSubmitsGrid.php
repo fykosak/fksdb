@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Grids\Fyziklani;
 
 
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FyziklaniModule\BasePresenter;
@@ -34,18 +33,22 @@ class TeamSubmitsGrid extends SubmitsGrid {
     /**
      * @param BasePresenter $presenter
      * @throws \NiftyGrid\DuplicateColumnException
+     * @throws \NiftyGrid\DuplicateButtonException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
 
-        $this->addColumn('label', _('Úloha'))->setRenderer(function ($row) {
-            $model = ModelFyziklaniSubmit::createFromActiveRow($row);
-            return $model->getTask()->label;
-        });
+        $this->addColumnTask();
+
         $this->addColumn('points', _('Body'));
         $this->addColumn('modified', _('Zadané'));
+
+        $this->addColumnState();
         $submits = $this->team->getSubmits()
             ->order('fyziklani_submit.created');
+
+        $this->addEditButton($presenter);
+        $this->addDetailButton($presenter);
 
         $dataSource = new NDataSource($submits);
 

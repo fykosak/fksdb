@@ -7,7 +7,6 @@ use FKSDB\Components\Controls\Fyziklani\Submit\DetailControl;
 use FKSDB\Components\Controls\Fyziklani\Submit\QREntryControl;
 use FKSDB\Components\Controls\Fyziklani\Submit\TaskCodeInput;
 use FKSDB\Components\Grids\Fyziklani\SubmitsGrid;
-use FKSDB\model\Fyziklani\ClosedSubmittingException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -65,6 +64,14 @@ class SubmitPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws AbortException
      */
+    public function authorizedDetail() {
+        $this->authorizedEntry();
+    }
+
+    /**
+     * @throws BadRequestException
+     * @throws AbortException
+     */
     public function authorizedQrEntry() {
         $this->authorizedEntry();
     }
@@ -115,18 +122,12 @@ class SubmitPresenter extends BasePresenter {
      * @throws AbortException
      */
     public function actionEdit($id) {
-        /**
-         * @var EditControl $control
-         */
         $control = $this->getComponent('editControl');
-        $submit = $this->loadModel($id);
-        try {
-            $control->setSubmit($submit);
-        } catch (ClosedSubmittingException $exception) {
-            $this->flashMessage($exception->getMessage(), self::FLASH_ERROR);
-            $this->redirect('list');
+        if (!$control instanceof EditControl) {
+            throw new BadRequestException();
         }
-
+        $submit = $this->loadModel($id);
+        $control->setSubmit($submit);
     }
 
     /**

@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Controls\Fyziklani\Submit;
 
 use BasePresenter;
-use Exception;
 use FKSDB\Components\Controls\Helpers\ValuePrinters\StringValueControl;
 use FKSDB\model\Fyziklani\ClosedSubmittingException;
 use FKSDB\model\Fyziklani\PointsMismatchException;
@@ -13,8 +12,6 @@ use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
-use Tracy\Debugger;
-use function sprintf;
 
 /**
  * Class DetailControl
@@ -65,8 +62,7 @@ class DetailControl extends Control {
      */
     public function handleCheck() {
         try {
-            $log = $this->model->check($this->model->points);
-            Debugger::log(sprintf('fyziklani_submit %d checked by %d', $this->model->fyziklani_submit_id, $this->getPresenter()->getUser()->getIdentity()->getPerson()->person_id));
+            $log = $this->model->check($this->model->points, $this->getPresenter()->getUser());
             $this->getPresenter()->flashMessage($log->getMessage(), $log->getLevel());
             $this->redirect('this');
         } catch (ClosedSubmittingException $exception) {
@@ -74,10 +70,6 @@ class DetailControl extends Control {
             $this->redirect('this');
         } catch (PointsMismatchException $exception) {
             $this->getPresenter()->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
-            $this->redirect('this');
-        } catch (Exception $exception) {
-            Debugger::log($exception);
-            $this->getPresenter()->flashMessage('Error!', BasePresenter::FLASH_ERROR);
             $this->redirect('this');
         }
     }

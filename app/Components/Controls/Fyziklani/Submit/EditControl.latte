@@ -22,4 +22,8 @@
 </div>
 
 <hr/>
-{control form}
+{if $submit->canChange()}
+    {control form}
+{else}
+    <div class="alert alert-danger"><p>Team has already closes submitting</p></div>
+{/if}

@@ -80,14 +80,6 @@ class QREntryControl extends Control {
      */
     public function setCode(string $code) {
         $this->code = $code;
-        try {
-            $this->handler->checkTaskCode($code);
-        } catch (TaskCodeException $exception) {
-            $this->getPresenter()->flashMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR);
-            return;
-        } catch (ClosedSubmittingException $exception) {
-            $this->getPresenter()->flashMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR);
-        }
         $control = $this->getComponent('form');
         if (!$control instanceof FormControl) {
             throw new BadRequestException('Expected FormControl got ' . \get_class($control));
@@ -145,7 +137,7 @@ class QREntryControl extends Control {
             }
         }
         try {
-            $log = $this->handler->preProcess($values->task_code, $points);
+            $log = $this->handler->preProcess($values->task_code, $points, $this->getPresenter()->getUser());
             $this->getPresenter()->flashMessage($log->getMessage(), $log->getLevel());
         } catch (TaskCodeException $exception) {
             $this->getPresenter()->flashMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR);

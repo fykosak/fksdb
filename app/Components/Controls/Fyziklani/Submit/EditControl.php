@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Controls\Fyziklani;
 
-use Exception;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\model\Fyziklani\ClosedSubmittingException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
@@ -15,7 +14,6 @@ use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Form;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
-use Tracy\Debugger;
 
 /**
  * Class EditSubmitControl
@@ -68,26 +66,23 @@ class EditControl extends Control {
     /**
      * @param ModelFyziklaniSubmit $submit
      * @throws BadRequestException
-     * @throws ClosedSubmittingException
      */
     public function setSubmit(ModelFyziklaniSubmit $submit) {
         $this->submit = $submit;
-        if ($this->submit->canChange()) {
-            /**
-             * @var FormControl $control
-             */
-            $control = $this->getComponent('form');
-            $control->getForm()->setDefaults([
-                'team_id' => $this->submit->e_fyziklani_team_id,
-                'points' => $this->submit->points,
-            ]);
-        } else {
-            throw new ClosedSubmittingException($submit->getTeam());
+        $control = $this->getComponent('form');
+        if (!$control instanceof FormControl) {
+            throw new BadRequestException('Expected FormControl got ' . \get_class($control));
         }
+        $control->getForm()->setDefaults([
+            'team_id' => $this->submit->e_fyziklani_team_id,
+            'points' => $this->submit->points,
+        ]);
+
     }
 
     /**
      * @return RadioList
+     * TODO to table-reflection factory
      */
     private function createPointsField(): RadioList {
         $field = new RadioList(_('Počet bodů'));
@@ -122,16 +117,11 @@ class EditControl extends Control {
     private function editFormSucceeded(Form $form) {
         $values = $form->getValues();
         try {
-            $msg = $this->submit->changePoints($values->points);
-            Debugger::log(\sprintf('fyziklani_submit %d edited by %d', $this->submit->fyziklani_submit_id, $this->getPresenter()->getUser()->getIdentity()->getPerson()->person_id));
+            $msg = $this->submit->changePoints($values->points, $this->getPresenter()->getUser());
             $this->getPresenter()->flashMessage($msg->getMessage(), $msg->getLevel());
             $this->redirect('this');
         } catch (ClosedSubmittingException $exception) {
             $this->getPresenter()->flashMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR);
-            $this->redirect('this');
-        } catch (Exception $exception) {
-            Debugger::log($exception);
-            $this->getPresenter()->flashMessage('Error!', \BasePresenter::FLASH_ERROR);
             $this->redirect('this');
         }
     }

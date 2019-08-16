@@ -16,6 +16,7 @@ use FKSDB\Components\Controls\Fyziklani\Submit\DetailControl;
 use FKSDB\Components\Controls\Fyziklani\Submit\QREntryControl;
 use FKSDB\Components\Controls\Fyziklani\Submit\TaskCodeInput;
 use FKSDB\Components\Forms\Factories\Fyziklani\CloseFormsFactory;
+use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\Fyziklani\AllSubmitsGrid;
 use FKSDB\Components\Grids\Fyziklani\CloseTeamsGrid;
 use FKSDB\Components\Grids\Fyziklani\ResultsCategoryGrid;
@@ -79,6 +80,10 @@ class FyziklaniFactory {
      * @var CloseFormsFactory
      */
     private $closeFormsFactory;
+    /**
+     * @var TableReflectionFactory
+     */
+    private $tableReflectionFactory;
 
     /**
      * FyziklaniFactory constructor.
@@ -90,6 +95,7 @@ class FyziklaniFactory {
      * @param TaskCodeHandlerFactory $taskCodeHandlerFactory
      * @param Container $context
      * @param ITranslator $translator
+     * @param TableReflectionFactory $tableReflectionFactory
      */
     public function __construct(
         ServiceFyziklaniRoom $serviceFyziklaniRoom,
@@ -99,7 +105,8 @@ class FyziklaniFactory {
         ServiceFyziklaniSubmit $serviceFyziklaniSubmit,
         TaskCodeHandlerFactory $taskCodeHandlerFactory,
         Container $context,
-        ITranslator $translator
+        ITranslator $translator,
+        TableReflectionFactory $tableReflectionFactory
     ) {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
@@ -107,6 +114,7 @@ class FyziklaniFactory {
         $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
         $this->serviceFyziklaniRoom = $serviceFyziklaniRoom;
         $this->taskCodeHandlerFactory = $taskCodeHandlerFactory;
+        $this->tableReflectionFactory = $tableReflectionFactory;
         $this->context = $context;
         $this->translator = $translator;
         $this->closeFormsFactory = new CloseFormsFactory($serviceFyziklaniTeam);
@@ -247,7 +255,13 @@ class FyziklaniFactory {
      * @return AllSubmitsGrid
      */
     public function createSubmitsGrid(ModelEvent $event): AllSubmitsGrid {
-        return new AllSubmitsGrid($event, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit, $this->serviceFyziklaniTeam);
+        return new AllSubmitsGrid(
+            $event,
+            $this->serviceFyziklaniTask,
+            $this->serviceFyziklaniSubmit,
+            $this->serviceFyziklaniTeam,
+            $this->tableReflectionFactory
+        );
     }
 
     /**

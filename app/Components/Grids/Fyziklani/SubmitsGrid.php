@@ -2,6 +2,8 @@
 
 namespace FKSDB\Components\Grids\Fyziklani;
 
+use BasePresenter;
+use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
@@ -24,10 +26,11 @@ abstract class SubmitsGrid extends BaseGrid {
     /**
      * FyziklaniSubmitsGrid constructor.
      * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
+     * @param TableReflectionFactory|null $tableReflectionFactory
      */
-    public function __construct(ServiceFyziklaniSubmit $serviceFyziklaniSubmit) {
+    public function __construct(ServiceFyziklaniSubmit $serviceFyziklaniSubmit, TableReflectionFactory $tableReflectionFactory = null) {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
-        parent::__construct();
+        parent::__construct($tableReflectionFactory);
     }
 
     /**
@@ -43,7 +46,47 @@ abstract class SubmitsGrid extends BaseGrid {
     /**
      * @throws \NiftyGrid\DuplicateColumnException
      */
+    protected function addColumnTeam() {
+        $this->addJoinedColumn('e_fyziklani_team', 'name_n_id', function ($row) {
+            if (!$row instanceof ModelFyziklaniSubmit) {
+                $row = ModelFyziklaniSubmit::createFromActiveRow($row);
+            }
+            return $row->getTeam();
+        });
+    }
+
+    /**
+     * @param BasePresenter $presenter
+     * @throws \NiftyGrid\DuplicateButtonException
+     */
+    protected function addEditButton($presenter) {
+        $this->addButton('edit', null)->setClass('btn btn-sm btn-warning')->setLink(function ($row) use ($presenter) {
+            return $presenter->link(':Fyziklani:Submit:edit', ['id' => $row->fyziklani_submit_id]);
+        })->setText(_('Edit'))->setShow(function ($row) {
+            if (!$row instanceof ModelFyziklaniSubmit) {
+                $row = ModelFyziklaniSubmit::createFromActiveRow($row);
+            }
+            return $row->getTeam()->hasOpenSubmitting() && !is_null($row->points);
+        });
+    }
+
+    /**
+     * @param BasePresenter $presenter
+     * @throws \NiftyGrid\DuplicateButtonException
+     */
+    protected function addDetailButton($presenter) {
+        $this->addButton('detail', null)
+            ->setClass('btn btn-sm btn-primary')
+            ->setLink(function ($row) use ($presenter) {
+                return $presenter->link(':Fyziklani:Submit:detail', ['id' => $row->fyziklani_submit_id]);
+            })->setText(_('Detail'));
+    }
+
+    /**
+     * @throws \NiftyGrid\DuplicateColumnException
+     */
     protected function addColumnState() {
+        // $this->addReflectionColumn('fyziklani_submit','state',ModelFyziklaniSubmit::class);
         $this->addColumn('state', _('State'))->setRenderer(function ($row) {
             $model = ModelFyziklaniSubmit::createFromActiveRow($row);
             switch ($model->state) {
@@ -54,5 +97,12 @@ abstract class SubmitsGrid extends BaseGrid {
                     return Html::el('span')->addAttributes(['class' => 'badge badge-danger'])->addText(_('not checked'));
             }
         });
+    }
+
+    /**
+     * @throws \NiftyGrid\DuplicateColumnException
+     */
+    protected function addColumnPoints() {
+        // $this->addReflectionColumn('fyziklani_submit', 'points', ModelFyziklaniSubmit::class);
     }
 }

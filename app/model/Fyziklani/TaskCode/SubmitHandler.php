@@ -10,6 +10,8 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use Nette\Security\User;
+use Tracy\Debugger;
 
 /**
  * Class TaskCodeHandler
@@ -51,23 +53,25 @@ class SubmitHandler {
     /**
      * @param string $code
      * @param int $points
+     * @param User $user
      * @return Message
      * @throws ClosedSubmittingException
+     * @throws PointsMismatchException
      * @throws TaskCodeException
-     * @throws \Exception
      */
-    public function preProcess(string $code, int $points): Message {
+    public function preProcess(string $code, int $points, User $user): Message {
         $this->checkTaskCode($code);
-        return $this->savePoints($code, $points);
+        return $this->savePoints($code, $points, $user);
     }
 
     /**
      * @param ModelFyziklaniTask $task
      * @param ModelFyziklaniTeam $team
      * @param int $points
+     * @param User $user
      * @return Message
      */
-    private function createSubmit(ModelFyziklaniTask $task, ModelFyziklaniTeam $team, int $points): Message {
+    private function createSubmit(ModelFyziklaniTask $task, ModelFyziklaniTeam $team, int $points, User $user): Message {
         /**
          * @var ModelFyziklaniSubmit $submit
          */
@@ -82,7 +86,7 @@ class SubmitHandler {
             'created' => null
         ]);
         $this->serviceFyziklaniSubmit->save($submit);
-
+        Debugger::log(\sprintf('Submit created using for team %d and task %s by %s', $team->e_fyziklani_team_id, $task->fyziklani_task_id, $user->getIdentity()->getId()), ModelFyziklaniSubmit::DEBUGGER_LOG_PRIORITY);
         return new Message(\sprintf(_('Body byly uloženy. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
             $points,
             $team->name,
@@ -94,22 +98,23 @@ class SubmitHandler {
     /**
      * @param string $code
      * @param int $points
+     * @param User $user
      * @return Message
      * @throws ClosedSubmittingException
      * @throws PointsMismatchException
      * @throws TaskCodeException
      */
-    private function savePoints(string $code, int $points): Message {
+    private function savePoints(string $code, int $points, User $user): Message {
         $task = $this->getTask($code);
         $team = $this->getTeam($code);
 
         $submit = $this->serviceFyziklaniSubmit->findByTaskAndTeam($task, $team);
         if (is_null($submit)) { // novo zadaný
-            return $this->createSubmit($task, $team, $points);
+            return $this->createSubmit($task, $team, $points, $user);
         } elseif (!$submit->isChecked()) { // check bodovania
-            return $submit->check($points);
+            return $submit->check($points, $user);
         } elseif (!$submit->points) { // ak bol zmazaný
-            return $submit->changePoints($points);
+            return $submit->changePoints($points, $user);
         } else {
             throw new TaskCodeException(\sprintf(_('Úloha je zadaná a overená.')));
         }

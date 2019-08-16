@@ -11,11 +11,9 @@ use FKSDB\ORM\Services\ServiceTask;
 use FKSDB\Submits\ISubmitStorage;
 use FKSDB\Submits\ProcessingException;
 use ModelException;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\FileResponse;
 use Nette\Application\UI\Form;
-use Nette\Database\Table\Selection;
 use Nette\Utils\DateTime;
 use Tracy\Debugger;
 
@@ -29,7 +27,7 @@ class SubmitPresenter extends BasePresenter {
     /** @var ServiceTask */
     private $taskService;
 
-    /** @var ServiceSubmit */
+    /** @var \FKSDB\ORM\Services\ServiceSubmit */
     private $submitService;
 
     /**
@@ -45,7 +43,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @param ServiceSubmit $submitService
+     * @param \FKSDB\ORM\Services\ServiceSubmit $submitService
      */
     public function injectSubmitService(ServiceSubmit $submitService) {
         $this->submitService = $submitService;
@@ -111,7 +109,7 @@ class SubmitPresenter extends BasePresenter {
     /**
      * @param $id
      * @throws BadRequestException
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function actionDownload($id) {
         $submit = $this->submitService->findByPrimary($id);
@@ -202,7 +200,7 @@ class SubmitPresenter extends BasePresenter {
      * @internal
      * @param mixed $form
      * @throws BadRequestException
-     * @throws AbortException
+     * @throws \Nette\Application\AbortException
      */
     public function handleUploadFormSuccess($form) {
         $values = $form->getValues();
@@ -273,7 +271,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @return Selection
+     * @return \Nette\Database\Table\Selection
      * @throws BadRequestException
      */
     private function getAvailableTasks() {
