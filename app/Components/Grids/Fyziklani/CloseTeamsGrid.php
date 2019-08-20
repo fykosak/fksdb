@@ -4,6 +4,7 @@ namespace FKSDB\Components\Grids\Fyziklani;
 
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
@@ -49,10 +50,10 @@ class CloseTeamsGrid extends BaseGrid {
 
         $this->paginate = false;
 
-        $this->addReflectionColumn('e_fyziklani_team', 'name', ModelFyziklaniTeam::class);
-        $this->addReflectionColumn('e_fyziklani_team', 'e_fyziklani_team_id', ModelFyziklaniTeam::class);
-        $this->addReflectionColumn('e_fyziklani_team', 'points', ModelFyziklaniTeam::class);
-        $this->addReflectionColumn('e_fyziklani_team', 'category', ModelFyziklaniTeam::class);
+        $this->addReflectionColumn(DbNames::TAB_E_FYZIKLANI_TEAM, 'name', ModelFyziklaniTeam::class);
+        $this->addReflectionColumn(DbNames::TAB_E_FYZIKLANI_TEAM, 'e_fyziklani_team_id', ModelFyziklaniTeam::class);
+        $this->addReflectionColumn(DbNames::TAB_E_FYZIKLANI_TEAM, 'points', ModelFyziklaniTeam::class);
+        $this->addReflectionColumn(DbNames::TAB_E_FYZIKLANI_TEAM, 'category', ModelFyziklaniTeam::class);
 
         $this->addButton('edit', null)->setClass('btn btn-sm btn-success')->setLink(function ($row) use ($presenter) {
             return $presenter->link(':Fyziklani:Close:team', [

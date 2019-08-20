@@ -5,11 +5,11 @@ namespace FKSDB\Components\Grids\Fyziklani;
 use BasePresenter;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
-
 
 /**
  *
@@ -48,7 +48,7 @@ abstract class SubmitsGrid extends BaseGrid {
      * @throws DuplicateColumnException
      */
     protected function addColumnTeam() {
-        $this->addJoinedColumn('e_fyziklani_team', 'name_n_id', function ($row) {
+        $this->addJoinedColumn(DbNames::TAB_E_FYZIKLANI_TEAM, 'name_n_id', function ($row) {
             if (!$row instanceof ModelFyziklaniSubmit) {
                 $row = ModelFyziklaniSubmit::createFromActiveRow($row);
             }
@@ -87,13 +87,13 @@ abstract class SubmitsGrid extends BaseGrid {
      * @throws DuplicateColumnException
      */
     protected function addColumnState() {
-        $this->addReflectionColumn('fyziklani_submit', 'state', ModelFyziklaniSubmit::class);
+        $this->addReflectionColumn(DbNames::TAB_FYZIKLANI_SUBMIT, 'state', ModelFyziklaniSubmit::class);
     }
 
     /**
      * @throws DuplicateColumnException
      */
     protected function addColumnPoints() {
-        $this->addReflectionColumn('fyziklani_submit', 'points', ModelFyziklaniSubmit::class);
+        $this->addReflectionColumn(DbNames::TAB_FYZIKLANI_SUBMIT, 'points', ModelFyziklaniSubmit::class);
     }
 }

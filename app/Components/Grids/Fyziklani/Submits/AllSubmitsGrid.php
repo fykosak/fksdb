@@ -6,6 +6,7 @@ use Closure;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\model\Fyziklani\TaskCodePreprocessor;
+use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
@@ -77,7 +78,7 @@ class AllSubmitsGrid extends SubmitsGrid {
         $this->addColumnPoints();
         $this->addColumnState();
 
-        $this->addReflectionColumn('fyziklani_submit', 'created', ModelFyziklaniSubmit::class);
+        $this->addReflectionColumn(DbNames::TAB_FYZIKLANI_SUBMIT, 'created', ModelFyziklaniSubmit::class);
 
         $this->addEditButton($presenter);
         $this->addDetailButton($presenter);

@@ -4,6 +4,7 @@ namespace FKSDB\Components\Grids\Fyziklani;
 
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
@@ -53,9 +54,9 @@ class ResultsCategoryGrid extends BaseGrid {
 
         $this->paginate = false;
 
-        $this->addReflectionColumn('e_fyziklani_team', 'rank_category', ModelFyziklaniTeam::class);
-        $this->addReflectionColumn('e_fyziklani_team', 'name', ModelFyziklaniTeam::class);
-        $this->addReflectionColumn('e_fyziklani_team', 'e_fyziklani_team_id', ModelFyziklaniTeam::class);
+        $this->addReflectionColumn(DbNames::TAB_E_FYZIKLANI_TEAM, 'rank_category', ModelFyziklaniTeam::class);
+        $this->addReflectionColumn(DbNames::TAB_E_FYZIKLANI_TEAM, 'name', ModelFyziklaniTeam::class);
+        $this->addReflectionColumn(DbNames::TAB_E_FYZIKLANI_TEAM, 'e_fyziklani_team_id', ModelFyziklaniTeam::class);
 
         $teams = $this->serviceFyziklaniTeam->findParticipating($this->event)
             ->where('category', $this->category)

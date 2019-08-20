@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Grids\Fyziklani;
 
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
+use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
@@ -45,7 +46,7 @@ class TeamSubmitsGrid extends SubmitsGrid {
         $this->addColumnTask();
 
         $this->addColumnPoints();
-        $this->addReflectionColumn('fyziklani_submit', 'created', ModelFyziklaniSubmit::class);
+        $this->addReflectionColumn(DbNames::TAB_FYZIKLANI_SUBMIT, 'created', ModelFyziklaniSubmit::class);
 
         $this->addColumnState();
 
