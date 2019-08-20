@@ -20,6 +20,6 @@ class CreatedRow extends AbstractFyziklaniSubmitRow {
      * @return Html
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        return (new DatePrinter('c'))($model->created);
+        return (new DatePrinter('H:m:s d-M-Y'))($model->created);
     }
 }

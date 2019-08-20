@@ -44,7 +44,7 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
 
     /**
      * Syntactic sugar.
-     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @param ModelEvent $event
      * @return Selection
      */
     public function findAll(ModelEvent $event): Selection {
@@ -52,7 +52,7 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @param ModelEvent $event
      * @param null $lastUpdated
      * @return array
      */

@@ -6,6 +6,7 @@ use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use Nette\Database\Table\Selection;
+use NiftyGrid\DuplicateColumnException;
 use SQL\SearchableDataSource;
 
 /**
@@ -16,7 +17,6 @@ use SQL\SearchableDataSource;
 class TaskGrid extends BaseGrid {
 
     /**
-     *
      * @var ServiceFyziklaniTask
      */
     private $serviceFyziklaniTask;
@@ -27,8 +27,8 @@ class TaskGrid extends BaseGrid {
 
     /**
      * FyziklaniTaskGrid constructor.
-     * @param \FKSDB\ORM\Models\ModelEvent $event
-     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask $serviceFyziklaniTask
+     * @param ModelEvent $event
+     * @param ServiceFyziklaniTask $serviceFyziklaniTask
      */
     public function __construct(ModelEvent $event, ServiceFyziklaniTask $serviceFyziklaniTask) {
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
@@ -38,13 +38,13 @@ class TaskGrid extends BaseGrid {
 
     /**
      * @param $presenter
-     * @throws \NiftyGrid\DuplicateColumnException
+     * @throws DuplicateColumnException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
-        $this->addColumn('fyziklani_task_id', _('Id úlohy'));
+        $this->addColumn('fyziklani_task_id', _('Task Id'));
         $this->addColumn('label', _('#'));
-        $this->addColumn('name', _('Název úlohy'));
+        $this->addColumn('name', _('Task name'));
 
         $submits = $this->serviceFyziklaniTask->findAll($this->event);
         $dataSource = new SearchableDataSource($submits);

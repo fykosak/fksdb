@@ -169,7 +169,7 @@ class FyziklaniFactory {
      * @return CloseTeamsGrid
      */
     public function createCloseTeamsGrid(ModelEvent $event): CloseTeamsGrid {
-        return new CloseTeamsGrid($event, $this->serviceFyziklaniTeam);
+        return new CloseTeamsGrid($event, $this->serviceFyziklaniTeam, $this->tableReflectionFactory);
     }
 
     /* ************** ROUTING *************/
@@ -188,7 +188,7 @@ class FyziklaniFactory {
      * @return FinalResults
      */
     public function createFinalResults(ModelEvent $event): FinalResults {
-        return new FinalResults($event, $this->serviceFyziklaniTeam, $this->translator);
+        return new FinalResults($event, $this->serviceFyziklaniTeam, $this->translator, $this->tableReflectionFactory);
     }
 
     /**
@@ -237,7 +237,7 @@ class FyziklaniFactory {
      * @return ResultsCategoryGrid
      */
     public function createResultsCategoryGrid(ModelEvent $event, string $category): ResultsCategoryGrid {
-        return new ResultsCategoryGrid($event, $this->serviceFyziklaniTeam, $category);
+        return new ResultsCategoryGrid($event, $this->serviceFyziklaniTeam, $category, $this->tableReflectionFactory);
     }
 
     /**
@@ -245,7 +245,7 @@ class FyziklaniFactory {
      * @return ResultsTotalGrid
      */
     public function createResultsTotalGrid(ModelEvent $event): ResultsTotalGrid {
-        return new ResultsTotalGrid($event, $this->serviceFyziklaniTeam);
+        return new ResultsTotalGrid($event, $this->serviceFyziklaniTeam, $this->tableReflectionFactory);
     }
 
 
@@ -285,7 +285,7 @@ class FyziklaniFactory {
      * @return TeamSubmitsGrid
      */
     public function createTeamSubmitsGrid(ModelFyziklaniTeam $team): TeamSubmitsGrid {
-        return new TeamSubmitsGrid($team, $this->serviceFyziklaniSubmit);
+        return new TeamSubmitsGrid($team, $this->serviceFyziklaniSubmit, $this->tableReflectionFactory);
     }
 
     /**

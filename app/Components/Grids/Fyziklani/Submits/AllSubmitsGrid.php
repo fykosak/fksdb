@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Grids\Fyziklani;
 
+use Closure;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\model\Fyziklani\TaskCodePreprocessor;
@@ -14,10 +15,12 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FyziklaniModule\BasePresenter;
 use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Database\Table\Selection;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
-use Nette\Utils\Html;
+use NiftyGrid\DuplicateButtonException;
+use NiftyGrid\DuplicateColumnException;
 use SQL\SearchableDataSource;
 
 /**
@@ -63,27 +66,20 @@ class AllSubmitsGrid extends SubmitsGrid {
 
     /**
      * @param BasePresenter $presenter
-     * @throws \NiftyGrid\DuplicateButtonException
-     * @throws \NiftyGrid\DuplicateColumnException
+     * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
 
         $this->addColumnTeam();
-
         $this->addColumnTask();
-
-        $this->addColumn('points', _('Body'))->setRenderer(function ($row) {
-            if (!\is_null($row->points)) {
-                return $row->points;
-            }
-            return Html::el('span')->addAttributes(['class' => 'badge badge-warning'])->addText(_('revoked'));
-        });
-        $this->addColumn('modified', _('Zadané'));
+        $this->addColumnPoints();
         $this->addColumnState();
 
-        $this->addEditButton($presenter);
+        $this->addReflectionColumn('fyziklani_submit', 'created', ModelFyziklaniSubmit::class);
 
+        $this->addEditButton($presenter);
         $this->addDetailButton($presenter);
 
         $this->addButton('delete', null)->setClass('btn btn-sm btn-danger')->setLink(function ($row) {
@@ -93,7 +89,6 @@ class AllSubmitsGrid extends SubmitsGrid {
         })->setText(_('Delete'))->setShow(function (ModelFyziklaniSubmit $row) {
             return $row->canChange() && !is_null($row->points);
         });
-
         $submits = $this->serviceFyziklaniSubmit->findAll($this->event)/*->where('fyziklani_submit.points IS NOT NULL')*/
         ->select('fyziklani_submit.*,fyziklani_task.label,e_fyziklani_team_id.name');
         $dataSource = new SearchableDataSource($submits);
@@ -102,9 +97,9 @@ class AllSubmitsGrid extends SubmitsGrid {
     }
 
     /**
-     * @return \Closure
+     * @return Closure
      */
-    private function getFilterCallBack(): \Closure {
+    private function getFilterCallBack(): callable {
         return function (Selection $table, $value) {
             foreach ($value as $key => $condition) {
                 if (!$condition) {
@@ -129,6 +124,7 @@ class AllSubmitsGrid extends SubmitsGrid {
                         break;
                     case 'task':
                         $table->where('fyziklani_submit.fyziklani_task_id', $condition);
+                        break;
                 }
             }
             return;
@@ -158,7 +154,7 @@ class AllSubmitsGrid extends SubmitsGrid {
 
     /**
      * @return FormControl
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     protected function createComponentSearchForm(): FormControl {
         if (!$this->isSearchable()) {
@@ -184,8 +180,8 @@ class AllSubmitsGrid extends SubmitsGrid {
             $tasks[$task->fyziklani_task_id] = $task->name . '(' . $task->label . ')';
         }
 
-        $form->addSelect('team', _('Team'), $teams)->setPrompt(_('--Team--'));
-        $form->addSelect('task', _('Task'), $tasks)->setPrompt(_('--task--'));
+        $form->addSelect('team', _('Team'), $teams)->setPrompt(_('--Select team--'));
+        $form->addSelect('task', _('Task'), $tasks)->setPrompt(_('--Select task--'));
         $form->addText('code', _('Code'))->setAttribute('placeholder', _('Task code'));
         $form->addCheckbox('not_null', _('Only not revoked submits'));
         $form->addSubmit('submit', _('Search'));

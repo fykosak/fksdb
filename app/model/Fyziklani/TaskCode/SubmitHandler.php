@@ -65,37 +65,6 @@ class SubmitHandler {
     }
 
     /**
-     * @param ModelFyziklaniTask $task
-     * @param ModelFyziklaniTeam $team
-     * @param int $points
-     * @param User $user
-     * @return Message
-     */
-    private function createSubmit(ModelFyziklaniTask $task, ModelFyziklaniTeam $team, int $points, User $user): Message {
-        /**
-         * @var ModelFyziklaniSubmit $submit
-         */
-        $submit = $this->serviceFyziklaniSubmit->createNew([
-            'points' => $points,
-            'fyziklani_task_id' => $task->fyziklani_task_id,
-            'e_fyziklani_team_id' => $team->e_fyziklani_team_id,
-            /* ugly, force current timestamp in database
-             * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
-             */
-            'state' => ModelFyziklaniSubmit::STATE_NOT_CHECKED,
-            'created' => null
-        ]);
-        $this->serviceFyziklaniSubmit->save($submit);
-        Debugger::log(\sprintf('Submit created using for team %d and task %s by %s', $team->e_fyziklani_team_id, $task->fyziklani_task_id, $user->getIdentity()->getId()), ModelFyziklaniSubmit::DEBUGGER_LOG_PRIORITY);
-        return new Message(\sprintf(_('Body byly uloženy. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
-            $points,
-            $team->name,
-            $team->e_fyziklani_team_id,
-            $task->label,
-            $task->name), Message::LVL_SUCCESS);
-    }
-
-    /**
      * @param string $code
      * @param int $points
      * @param User $user
@@ -174,5 +143,33 @@ class SubmitHandler {
         }
 
         return $task;
+    }
+
+    /**
+     * @param ModelFyziklaniTask $task
+     * @param ModelFyziklaniTeam $team
+     * @param int $points
+     * @param User $user
+     * @return Message
+     */
+    private function createSubmit(ModelFyziklaniTask $task, ModelFyziklaniTeam $team, int $points, User $user): Message {
+        $this->serviceFyziklaniSubmit->createNewModel([
+            'points' => $points,
+            'fyziklani_task_id' => $task->fyziklani_task_id,
+            'e_fyziklani_team_id' => $team->e_fyziklani_team_id,
+            'state' => ModelFyziklaniSubmit::STATE_NOT_CHECKED,
+            /* ugly, force current timestamp in database
+             * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
+             */
+            'created' => null
+        ]);
+
+        Debugger::log(\sprintf('Submit created for team %d and task %s by %s', $team->e_fyziklani_team_id, $task->fyziklani_task_id, $user->getIdentity()->getId()), ModelFyziklaniSubmit::DEBUGGER_LOG_PRIORITY);
+        return new Message(\sprintf(_('Body byly uloženy. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
+            $points,
+            $team->name,
+            $team->e_fyziklani_team_id,
+            $task->label,
+            $task->name), Message::LVL_SUCCESS);
     }
 }

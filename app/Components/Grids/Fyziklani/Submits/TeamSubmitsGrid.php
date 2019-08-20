@@ -2,11 +2,14 @@
 
 namespace FKSDB\Components\Grids\Fyziklani;
 
-
+use FKSDB\Components\Forms\Factories\TableReflectionFactory;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FyziklaniModule\BasePresenter;
 use NiftyGrid\DataSource\NDataSource;
+use NiftyGrid\DuplicateButtonException;
+use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class TeamSubmitsGrid
@@ -15,40 +18,42 @@ use NiftyGrid\DataSource\NDataSource;
 class TeamSubmitsGrid extends SubmitsGrid {
 
     /**
-     * @var \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam
+     * @var ModelFyziklaniTeam
      */
     private $team;
 
     /**
      * FyziklaniSubmitsGrid constructor.
-     * @param \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam $team
+     * @param ModelFyziklaniTeam $team
      * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
+     * @param TableReflectionFactory $tableReflectionFactory
      */
-    public function __construct(ModelFyziklaniTeam $team, ServiceFyziklaniSubmit $serviceFyziklaniSubmit) {
+    public function __construct(ModelFyziklaniTeam $team, ServiceFyziklaniSubmit $serviceFyziklaniSubmit, TableReflectionFactory $tableReflectionFactory) {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
         $this->team = $team;
-        parent::__construct($serviceFyziklaniSubmit);
+        parent::__construct($serviceFyziklaniSubmit, $tableReflectionFactory);
     }
 
     /**
      * @param BasePresenter $presenter
-     * @throws \NiftyGrid\DuplicateColumnException
-     * @throws \NiftyGrid\DuplicateButtonException
+     * @throws DuplicateColumnException
+     * @throws DuplicateButtonException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
-
+        $this->paginate = false;
         $this->addColumnTask();
 
-        $this->addColumn('points', _('Body'));
-        $this->addColumn('modified', _('Zadané'));
+        $this->addColumnPoints();
+        $this->addReflectionColumn('fyziklani_submit', 'created', ModelFyziklaniSubmit::class);
 
         $this->addColumnState();
-        $submits = $this->team->getSubmits()
-            ->order('fyziklani_submit.created');
 
         $this->addEditButton($presenter);
         $this->addDetailButton($presenter);
+
+        $submits = $this->team->getNonCheckedSubmits()
+            ->order('fyziklani_submit.created');
 
         $dataSource = new NDataSource($submits);
 

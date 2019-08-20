@@ -51,9 +51,32 @@ class ModelFyziklaniTeam extends AbstractModelSingle {
 
     /**
      * @return Selection
+     * @deprecated use getNonRevokedSubmits
+     * @use getNonRevokedSubmits
      */
     public function getSubmits(): Selection {
-        return $this->related(DbNames::TAB_FYZIKLANI_SUBMIT, 'e_fyziklani_team_id')->where('points IS NOT NULL');
+        return $this->getNonRevokedSubmits();
+    }
+
+    /**
+     * @return Selection
+     */
+    public function getAllSubmits(): Selection {
+        return $this->related(DbNames::TAB_FYZIKLANI_SUBMIT, 'e_fyziklani_team_id');
+    }
+
+    /**
+     * @return Selection
+     */
+    public function getNonRevokedSubmits(): Selection {
+        return $this->getAllSubmits()->where('points IS NOT NULL');
+    }
+
+    /**
+     * @return Selection
+     */
+    public function getNonCheckedSubmits(): Selection {
+        return $this->getNonRevokedSubmits()->where('state IS NULL OR state != ?', ModelFyziklaniSubmit::STATE_CHECKED);
     }
 
     /**

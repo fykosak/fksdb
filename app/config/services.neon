@@ -92,3 +92,4 @@ includes:
     - rows/e_fyziklani_team.neon
     - rows/org.neon
     - rows/person_history.neon
+    - rows/fyziklani_submit.neon

@@ -5,6 +5,7 @@ namespace FKSDB\Components\Controls\Fyziklani;
 use BasePresenter;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Factories\FyziklaniFactory;
+use FKSDB\Components\Grids\Fyziklani\TeamSubmitsGrid;
 use FKSDB\model\Fyziklani\ClosedSubmittingException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
@@ -65,6 +66,7 @@ class CloseTeamControl extends Control {
         ITranslator $translator,
         ServiceFyziklaniTask $serviceFyziklaniTask,
         FyziklaniFactory $fyziklaniFactory
+
     ) {
         parent::__construct();
         $this->event = $event;
@@ -100,6 +102,12 @@ class CloseTeamControl extends Control {
         throw new BadSignalException('Expected FormControl got ' . get_class($control));
     }
 
+    /**
+     * @return TeamSubmitsGrid
+     */
+    protected function createComponentTeamSubmitsGrid(): TeamSubmitsGrid {
+        return $this->fyziklaniFactory->createTeamSubmitsGrid($this->team);
+    }
 
     /**
      * @return FormControl
@@ -110,7 +118,7 @@ class CloseTeamControl extends Control {
         $form = $control->getForm();
         $form->addText('next_task', _('Úloha u vydavačů'))
             ->setDisabled();
-        $form->addSubmit('send', 'Potvrdit správnost');
+        $form->addSubmit('send', 'Confirm and close submitting.');
         $form->onSuccess[] = function () {
             $this->formSucceeded();
         };
@@ -120,16 +128,15 @@ class CloseTeamControl extends Control {
     private function formSucceeded() {
         $connection = $this->serviceFyziklaniTeam->getConnection();
         $connection->beginTransaction();
-        $submits = $this->team->getSubmits();
+        $submits = $this->team->getNonCheckedSubmits();
         $sum = 0;
         foreach ($submits as $row) {
             $submit = ModelFyziklaniSubmit::createFromActiveRow($row);
             $sum += $submit->points;
         }
-        $this->serviceFyziklaniTeam->updateModel($this->team, ['points' => $sum]);
-        $this->serviceFyziklaniTeam->save($this->team);
+        $this->team->update(['points' => $sum]);
         $connection->commit();
-        $this->getPresenter()->flashMessage(sprintf(_('Team %s has successfully closed submitting, with total %d points.'), $this->team->name, $sum), BasePresenter::FLASH_SUCCESS);
+        $this->getPresenter()->flashMessage(sprintf(_('Team "%s" has successfully closed submitting, with total %d points.'), $this->team->name, $sum), BasePresenter::FLASH_SUCCESS);
     }
 
     public function render() {
@@ -142,7 +149,7 @@ class CloseTeamControl extends Control {
      * @return string
      */
     private function getNextTask(): string {
-        $submits = count($this->team->getSubmits());
+        $submits = count($this->team->getNonRevokedSubmits());
 
         $tasksOnBoard = $this->event->getFyziklaniGameSetup()->tasks_on_board;
         /**

@@ -109,10 +109,10 @@ class SubmitPresenter extends BasePresenter {
             $this->flashMessage('Code is required', \BasePresenter::FLASH_ERROR);
             return;
         }
-        /**
-         * @var \FKSDB\Components\Controls\Fyziklani\Submit\QREntryControl $control
-         */
         $control = $this->getComponent('entryQRControl');
+        if (!$control instanceof QREntryControl) {
+            throw new BadRequestException();
+        }
         $control->setCode($id);
     }
 
@@ -148,6 +148,7 @@ class SubmitPresenter extends BasePresenter {
      * @param int $id
      * @return ModelFyziklaniSubmit
      * @throws AbortException
+     * @throws \ReflectionException
      */
     private function loadModel(int $id): ModelFyziklaniSubmit {
         if ($this->submit) {
@@ -156,6 +157,7 @@ class SubmitPresenter extends BasePresenter {
         $row = $this->getServiceFyziklaniSubmit()->findByPrimary($id);
         if (!$row) {
             $this->flashMessage(_('Submit neexistuje'), \BasePresenter::FLASH_ERROR);
+            $this->backLinkRedirect();
             $this->redirect('list');
         };
         $this->submit = ModelFyziklaniSubmit::createFromActiveRow($row);
