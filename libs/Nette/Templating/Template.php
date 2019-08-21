@@ -20,7 +20,7 @@ use Nette,
  *
  * @author     David Grudl
  */
-class Template extends Nette\Object implements ITemplate
+class Template extends Nette\NetteObject implements ITemplate
 {
 	/** @var array of function(Template $sender); Occurs before a template is compiled - implement to customize the filters */
 	public $onPrepareFilters = array();

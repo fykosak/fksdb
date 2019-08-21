@@ -65,7 +65,7 @@ class NetteLoader extends AutoLoader
 		'Nette\MemberAccessException' => '/common/exceptions',
 		'Nette\NotImplementedException' => '/common/exceptions',
 		'Nette\NotSupportedException' => '/common/exceptions',
-		'Nette\Object' => '/common/Object',
+		'Nette\NetteObject' => '/common/Object',
 		'Nette\ObjectMixin' => '/common/ObjectMixin',
 		'Nette\OutOfRangeException' => '/common/exceptions',
 		'Nette\StaticClassException' => '/common/exceptions',
