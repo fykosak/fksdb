@@ -29,6 +29,7 @@ before_script:
   - ./tests/init-database.sh
   - ./tests/clear-database.sh
   - rm -rf temp/* tmp
+  - mysql -e "SELECT @@SQL_MODE, @@GLOBAL.SQL_MODE;"
 
 script:
   - ./tests/run.sh -j 1
