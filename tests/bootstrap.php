@@ -42,6 +42,7 @@ $configurator->onCompile[] = function ($configurator, $compiler) {
     $compiler->addExtension('fksrouter', new RouterExtension());
     $compiler->addExtension('acl', new ACLExtension());
     $compiler->addExtension('navigation', new NavigationExtension());
+    $compiler->addExtension('stalking', new \FKSDB\Config\Extensions\StalkingExtension());
     $compiler->addExtension('events', new EventsExtension(CONFIG_DIR . '/events.neon'));
 };
 

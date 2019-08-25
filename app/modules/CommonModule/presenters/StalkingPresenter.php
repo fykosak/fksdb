@@ -43,6 +43,10 @@ class StalkingPresenter extends BasePresenter {
      * @var ValidationFactory
      */
     private $validationFactory;
+    /**
+     * @var Stalking\StalkingService
+     */
+    private $stalkingService;
 
     /**
      * @param \FKSDB\ORM\Services\ServicePerson $servicePerson
@@ -63,6 +67,13 @@ class StalkingPresenter extends BasePresenter {
      */
     public function injectValidationFactory(ValidationFactory $validationFactory) {
         $this->validationFactory = $validationFactory;
+    }
+
+    /**
+     * @param Stalking\StalkingService $stalkingService
+     */
+    public function injectStalkingService(Stalking\StalkingService $stalkingService) {
+        $this->stalkingService = $stalkingService;
     }
 
     public function titleDefault() {
@@ -98,11 +109,11 @@ class StalkingPresenter extends BasePresenter {
     }
 
     /**
-     * @return Stalking\BaseInfo
+     * @return \FKSDB\Components\Controls\Stalking\StalkingComponent\StalkingComponent
      * @throws BadRequestException
      */
-    public function createComponentBaseInfo(): Stalking\BaseInfo {
-        return new Stalking\BaseInfo($this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
+    public function createComponentStalkingComponent(): Stalking\StalkingComponent\StalkingComponent {
+        return new Stalking\StalkingComponent\StalkingComponent($this->stalkingService, $this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
     }
 
     /**
@@ -138,35 +149,11 @@ class StalkingPresenter extends BasePresenter {
     }
 
     /**
-     * @return Stalking\Login
-     * @throws BadRequestException
-     */
-    public function createComponentLogin(): Stalking\Login {
-        return new Stalking\Login($this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
-    }
-
-    /**
-     * @return Stalking\Org
-     * @throws BadRequestException
-     */
-    public function createComponentOrg(): Stalking\Org {
-        return new Stalking\Org($this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
-    }
-
-    /**
      * @return Stalking\Contestant
      * @throws BadRequestException
      */
     public function createComponentContestant(): Stalking\Contestant {
         return new Stalking\Contestant($this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
-    }
-
-    /**
-     * @return Stalking\PersonHistory
-     * @throws BadRequestException
-     */
-    public function createComponentPersonHistory(): Stalking\PersonHistory {
-        return new Stalking\PersonHistory($this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
     }
 
     /**
@@ -191,22 +178,6 @@ class StalkingPresenter extends BasePresenter {
      */
     public function createComponentPayment(): Stalking\Payment {
         return new Stalking\Payment($this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
-    }
-
-    /**
-     * @return Stalking\ContactInfo
-     * @throws BadRequestException
-     */
-    public function createComponentContactInfo(): Stalking\ContactInfo {
-        return new Stalking\ContactInfo($this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
-    }
-
-    /**
-     * @return Stalking\AcademicDegree
-     * @throws BadRequestException
-     */
-    public function createComponentAcademicDegree(): Stalking\AcademicDegree {
-        return new Stalking\AcademicDegree($this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
     }
 
     /**
@@ -268,13 +239,13 @@ class StalkingPresenter extends BasePresenter {
     private function getMode() {
         if (!$this->mode) {
             if ($this->isAllowed($this->getPerson(), 'stalk.basic')) {
-                $this->mode = Stalking\StalkingComponent::PERMISSION_BASIC;
+                $this->mode = Stalking\AbstractStalkingComponent::PERMISSION_BASIC;
             }
             if ($this->isAllowed($this->getPerson(), 'stalk.restrict')) {
-                $this->mode = Stalking\StalkingComponent::PERMISSION_RESTRICT;
+                $this->mode = Stalking\AbstractStalkingComponent::PERMISSION_RESTRICT;
             }
             if ($this->isAllowed($this->getPerson(), 'stalk.full')) {
-                $this->mode = Stalking\StalkingComponent::PERMISSION_FULL;
+                $this->mode = Stalking\AbstractStalkingComponent::PERMISSION_FULL;
             }
         }
         return $this->mode;

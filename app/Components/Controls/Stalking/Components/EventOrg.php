@@ -6,7 +6,7 @@ namespace FKSDB\Components\Controls\Stalking;
  * Class EventOrg
  * @package FKSDB\Components\Controls\Stalking
  */
-class EventOrg extends StalkingComponent {
+class EventOrg extends AbstractStalkingComponent {
 
     public function render() {
         $this->beforeRender();
@@ -25,6 +25,6 @@ class EventOrg extends StalkingComponent {
      * @return string[]
      */
     protected function getAllowedPermissions(): array {
-        return [StalkingComponent::PERMISSION_BASIC, StalkingComponent::PERMISSION_RESTRICT, StalkingComponent::PERMISSION_FULL];
+        return [AbstractStalkingComponent::PERMISSION_BASIC, AbstractStalkingComponent::PERMISSION_RESTRICT, AbstractStalkingComponent::PERMISSION_FULL];
     }
 }

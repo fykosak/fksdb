@@ -20,7 +20,7 @@ class ThemeSwitcher extends Control {
     /**
      * @var array
      */
-    private $availableThemes = ['dark', 'light'];
+    private $availableThemes = ['light', 'dark'];
     /**
      * @var Session
      */
