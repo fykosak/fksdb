@@ -7,7 +7,7 @@ namespace FKSDB\Components\Controls\Stalking;
  * Class Payment
  * @package FKSDB\Components\Controls\Stalking
  */
-class Payment extends StalkingComponent {
+class Payment extends AbstractStalkingComponent {
     public function render() {
         $this->beforeRender();
         $this->template->payments = $this->modelPerson->getPayments();
@@ -18,7 +18,7 @@ class Payment extends StalkingComponent {
      * @return array
      */
     protected function getAllowedPermissions(): array {
-        return [StalkingComponent::PERMISSION_FULL, StalkingComponent::PERMISSION_RESTRICT];
+        return [AbstractStalkingComponent::PERMISSION_FULL, AbstractStalkingComponent::PERMISSION_RESTRICT];
     }
 
     /**

@@ -3,28 +3,29 @@
 namespace FKSDB\Components\Controls\Stalking;
 
 /**
- * Class Login
+ * Class Address
  * @package FKSDB\Components\Controls\Stalking
  */
-class Login extends StalkingComponent {
+class Address extends AbstractStalkingComponent {
 
     public function render() {
         $this->beforeRender();
-        $this->template->login = $this->modelPerson->getLogin();
-        $this->template->setFile(__DIR__ . '/Login.latte');
+        $this->template->MAddress = $this->modelPerson->getMPostContacts();
+        $this->template->setFile(__DIR__ . '/Address.latte');
         $this->template->render();
     }
+
     /**
      * @return string
      */
     protected function getHeadline(): string {
-        return _('Login info');
+        return _('Address');
     }
 
     /**
      * @return string[]
      */
     protected function getAllowedPermissions(): array {
-        return [ StalkingComponent::PERMISSION_FULL ,StalkingComponent::PERMISSION_RESTRICT];
+        return [AbstractStalkingComponent::PERMISSION_FULL ,AbstractStalkingComponent::PERMISSION_RESTRICT];
     }
 }

@@ -11,7 +11,7 @@ use Nette\Localization\ITranslator;
  * Class StalkingValidation
  * @package FKSDB\ValidationTest
  */
-class Validation extends StalkingComponent {
+class Validation extends AbstractStalkingComponent {
     /**
      * @var ValidationFactory
      */
