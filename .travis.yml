@@ -1,7 +1,7 @@
 language: php
 
 addons:
-  mariadb: '10.0'
+  mariadb: '10.3'
   hosts:
   - db.fykos.local
   - auth.fykos.local

@@ -13,7 +13,7 @@ fi
 
 for i in `seq 1 $COUNT` ; do
 
-mariadb $DB_NAME$i <<EOD
+mysql $DB_NAME$i <<EOD
 DELETE FROM submit;
 DELETE FROM task;
 
