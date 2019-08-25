@@ -49,6 +49,7 @@ class StateRow extends AbstractTeacherRow {
             'proposal' => _('Proposal'),
             'cooperate' => _('Cooperate'),
             'ended' => _('Ended'),
+            'undefined' => _('Undefined')
         ];
     }
 }

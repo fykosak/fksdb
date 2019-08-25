@@ -1327,6 +1327,8 @@ CREATE TABLE IF NOT EXISTS `teacher` (
   `since`      DATE,
   `until`      DATE,
   `note`       TEXT,
+  `state`      ENUM('proposal','cooperate','ended','undefined') NOT NULL DEFAULT 'undefined',
+  `number_brochures` INT(11) NOT NULL DEFAULT 0,
   CONSTRAINT `fk_teacher_person_id1`
   FOREIGN KEY (`person_id`)
   REFERENCES `person` (`person_id`)
