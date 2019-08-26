@@ -79,6 +79,10 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @var Handler
      */
     private $eventAccommodationHandler;
+    /**
+     * @var \FKSDB\Components\Forms\Controls\Schedule\Handler
+     */
+    private $eventScheduleHandler;
 
     /**
      * ReferencedPersonHandler constructor.
@@ -89,6 +93,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @param \FKSDB\ORM\Services\ServicePersonHistory $servicePersonHistory
      * @param ServiceMPostContact $serviceMPostContact
      * @param ServiceMPersonHasFlag $serviceMPersonHasFlag
+     * @param \FKSDB\Components\Forms\Controls\Schedule\Handler $eventScheduleHandler
      * @param $acYear
      * @param $resolution
      */
@@ -100,6 +105,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
         ServicePersonHistory $servicePersonHistory,
         ServiceMPostContact $serviceMPostContact,
         ServiceMPersonHasFlag $serviceMPersonHasFlag,
+        \FKSDB\Components\Forms\Controls\Schedule\Handler $eventScheduleHandler,
         $acYear,
         $resolution
     ) {
@@ -112,6 +118,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
         $this->resolution = $resolution;
         $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;
         $this->eventAccommodationHandler = $eventAccommodation;
+        $this->eventScheduleHandler = $eventScheduleHandler;
     }
 
     /**
@@ -168,12 +175,12 @@ class ReferencedPersonHandler implements IReferencedHandler {
     /**
      * @param ModelPerson $person
      * @param ArrayHash $data
-     * @throws \FKSDB\Submits\StorageException
+     * @return void
      * @throws ModelException
      * @throws ModelDataConflictException
      * @throws JsonException
      * @throws ExistingPaymentException
-     * @return void
+     * @throws \FKSDB\Submits\StorageException
      */
     private function store(ModelPerson &$person, ArrayHash $data) {
         /*
@@ -190,6 +197,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
                 'person_info' => ($info = $person->getInfo()) ?: $this->servicePersonInfo->createNew(),
                 'person_history' => ($history = $person->getHistory($this->acYear)) ?: $this->servicePersonHistory->createNew(['ac_year' => $this->acYear]),
                 'person_accommodation' => ($personAccommodation = ($this->eventId && $person->getSerializedAccommodationByEventId($this->eventId)) ?: null),
+                'person_schedule' => null,
                 self::POST_CONTACT_DELIVERY => ($dataPostContact = $person->getDeliveryAddress()) ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_DELIVERY]),
                 self::POST_CONTACT_PERMANENT => ($dataPostContact = $person->getPermanentAddress(true)) ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_PERMANENT])
             ];
@@ -198,6 +206,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
                 'person_info' => $this->servicePersonInfo,
                 'person_history' => $this->servicePersonHistory,
                 'person_accommodation' => $this->serviceEventPersonAccommodation,
+                'person_schedule' => null,
                 self::POST_CONTACT_DELIVERY => $this->serviceMPostContact,
                 self::POST_CONTACT_PERMANENT => $this->serviceMPostContact,
             ];
@@ -234,7 +243,11 @@ class ReferencedPersonHandler implements IReferencedHandler {
                 }
                 if ($t == 'person_accommodation' && isset($data[$t])) {
                     $this->eventAccommodationHandler->prepareAndUpdate($data[$t], $models['person'], $this->eventId);
+                    continue;
+                }
 
+                if ($t == 'person_schedule' && isset($data[$t])) {
+                    $this->eventScheduleHandler->prepareAndUpdate($data[$t], $models['person'], $this->eventId);
                     continue;
                 }
                 $data[$t]['person_id'] = $models['person']->person_id; // this works even for person itself

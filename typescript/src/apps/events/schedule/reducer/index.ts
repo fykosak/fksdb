@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import {
     inputConnector,
     State as InputConnectorState,
-} from '../../../input-connector/reducers';
+} from '../../../../inputConnector/reducers';
 
 export const app = combineReducers({
     inputConnector,

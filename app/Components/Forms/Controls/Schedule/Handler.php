@@ -8,8 +8,8 @@ use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\Schedule\ServicePersonSchedule;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleGroup;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleItem;
-use Nette\NotImplementedException;
 use Nette\Utils\ArrayHash;
+use Tracy\Debugger;
 
 /**
  * Class Handler
@@ -44,15 +44,17 @@ class Handler {
         $this->servicePersonSchedule = $servicePersonSchedule;
         $this->serviceScheduleItem = $serviceScheduleItem;
     }
-/*
-    public function prepareAndUpdate(ArrayHash $data, ModelPerson $person, $groupId) {
+
+    public function prepareAndUpdate(ArrayHash $data, ModelPerson $person, $eventId) {
 
         $oldRows = $this->servicePersonSchedule->getTable()
             ->where('person_id', $person->person_id)
             ->where('event_accommodation.event_id', $eventId);
 
-        $newAccommodationIds = $this->prepareData($data);
-
+        $newScheduleData = $this->prepareData($data);
+        Debugger::barDump($newScheduleData);
+        die();
+        return;
         foreach ($oldRows as $row) {
             $modelEventPersonAccommodation = ModelEventPersonAccommodation::createFromActiveRow($row);
             if (in_array($modelEventPersonAccommodation->event_accommodation_id, $newAccommodationIds)) {
@@ -90,7 +92,7 @@ class Handler {
 
             }
         }
-    }*/
+    }
 
     /**
      * @param ArrayHash $data
@@ -98,19 +100,9 @@ class Handler {
      */
     private function prepareData(ArrayHash $data): array {
         foreach ($data as $type => $datum) {
-            switch ($type) {
-                case MatrixField::RESOLUTION_ID:
-                case SingleField::RESOLUTION_ID:
-                case MultiHotelsField::RESOLUTION_ID:
-                case MultiNightsField::RESOLUTION_ID:
-                    $data = (array)json_decode($datum);
-                    break;
-                default:
-                    throw new NotImplementedException(sprintf(_('Type "%s" is not implement.'), $type), 501);
-            }
+            return (array)json_decode($datum);
         }
-
-        return array_values($data);
+        return [];
     }
 }
 

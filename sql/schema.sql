@@ -1443,6 +1443,7 @@ CREATE TABLE IF NOT EXISTS `schedule_item` (
   `name_en`           VARCHAR(256)   NULL     DEFAULT NULL,
   `capacity`          INT(11)        NULL     DEFAULT NULL,
   `require_id_number` INT(1)         NOT NULL DEFAULT 0,
+  `description`       VARCHAR(256)   NULL DEFAULT NULL,
   CONSTRAINT `fk_schedule_group`
   FOREIGN KEY (`schedule_group_id`)
   REFERENCES `schedule_group` (`schedule_group_id`)

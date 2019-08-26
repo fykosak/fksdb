@@ -1,10 +1,10 @@
+import { App } from '@appsCollector';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { App } from '../../app-collector/';
 import Index from './components';
 
 export const eventSchedule: App = (element, module, component, mode, rawData) => {
-    if (module !== 'events') {
+    if (module !== 'event') {
         return false;
     }
     if (component !== 'schedule') {
@@ -17,7 +17,7 @@ export const eventSchedule: App = (element, module, component, mode, rawData) =>
     if (!(element instanceof HTMLInputElement)) {
         return false;
     }
-    element.style.display = 'none';
+  //  element.style.display = 'none';
 
     ReactDOM.render(<Index scheduleDef={scheduleDef} input={element} mode={mode}/>, container);
 

@@ -1,3 +1,4 @@
+import { config } from '@config';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import {
@@ -5,11 +6,10 @@ import {
     createStore,
 } from 'redux';
 import logger from 'redux-logger';
-import { config } from '../../../config/';
-import InputConnector from '../../../input-connector/compoenents/index';
+import InputConnector from '../../../../inputConnector/compoenents/index';
 import { ScheduleGroupDef } from '../middleware/interfaces';
 import { app } from '../reducer/';
-import Accommodation from './accommodation';
+import Container from './container';
 
 interface Props {
     scheduleDef: ScheduleGroupDef[];
@@ -35,7 +35,7 @@ export default class Index extends React.Component<Props, {}> {
     private getComponentByMode(): JSX.Element {
         switch (this.props.mode) {
             case 'accommodation':
-                return <Accommodation scheduleDef={this.props.scheduleDef}/>;
+                return <Container groups={this.props.scheduleDef}/>;
             default:
                 throw new Error('no match');
         }

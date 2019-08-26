@@ -44,6 +44,7 @@ services:
         setup:
             - addProcessing(@PDFStamper)
     - FKSDB\Components\Forms\Controls\PersonAccommodation\Handler
+    - FKSDB\Components\Forms\Controls\Schedule\Handler
     PDFStamper: FKSDB\Submits\PDFStamper(%stamper.fontSize%)
     readOnlyConnection:
         class: Nette\Database\Connection(%ro-database.dsn%, %ro-database.user%, %ro-database.password%)

@@ -1,4 +1,4 @@
-import { Price } from '../../../shared/components/displays/price/interfaces';
+import { Price } from '@shared/components/displays/price/interfaces';
 
 export interface ScheduleItemDef {
     scheduleGroupId: number;
@@ -6,15 +6,15 @@ export interface ScheduleItemDef {
     totalCapacity: number;
     usedCapacity: number;
     scheduleItemId: number;
-    nameCs: string;
-    nameEn: string;
+    label: string;
     requireIdNumber: boolean;
+    description: string;
 }
 
 export interface ScheduleGroupDef {
     items: ScheduleItemDef[];
     scheduleGroupId: number;
-    scheduleGroupType: string;
+    scheduleGroupType: ScheduleGroupType;
     eventId: number;
     start: string;
     end: string;
@@ -23,3 +23,5 @@ export interface ScheduleGroupDef {
 export interface PersonAccommodation {
     [groupId: string]: number;
 }
+
+export type ScheduleGroupType = 'accommodation' | 'dsef-group';

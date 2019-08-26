@@ -23,6 +23,7 @@ use Nette\NotImplementedException;
  * @property-read string name_cs
  * @property-read string name_en
  * @property-read int require_id_number
+ * @property-read string description
  */
 class ModelScheduleItem extends AbstractModelSingle {
     /**
@@ -91,10 +92,8 @@ class ModelScheduleItem extends AbstractModelSingle {
         $group = $this->getGroup();
         switch ($group->schedule_group_type) {
             case ModelScheduleGroup::TYPE_ACCOMMODATION:
-                return \sprintf(_('Accommodation in "%s" from %s to %s'),
-                    $this->name_cs,
-                    $group->start->format('d. m. Y'),
-                    $group->end->format('d. m. Y')
+                return \sprintf(_('Accommodation in "%s".'),
+                    $this->name_cs
                 );
         }
         throw new NotImplementedException();
@@ -119,9 +118,9 @@ class ModelScheduleItem extends AbstractModelSingle {
             'totalCapacity' => $this->capacity,
             'usedCapacity' => $this->getUsedCapacity(),
             'scheduleItemId' => $this->schedule_item_id,
-            'nameCs' => $this->name_en,
-            'nameEn' => $this->name_cs,
+            'label' => $this->getLabel(),
             'requireIdNumber' => $this->require_id_number,
+            'description' => $this->description,
         ];
     }
 }

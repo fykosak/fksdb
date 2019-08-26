@@ -50,25 +50,31 @@ class ReferencedPersonHandlerFactory {
      * @var Handler
      */
     private $eventAccommodationHandler;
+    /**
+     * @var \FKSDB\Components\Forms\Controls\Schedule\Handler
+     */
+    private $eventScheduleHandler;
 
     /**
      * ReferencedPersonHandlerFactory constructor.
-     * @param Handler $eventAccommodationAdjustment
+     * @param Handler $eventAccommodationHandler
      * @param ServiceEventPersonAccommodation $serviceEventPersonAccommodation
      * @param ServicePerson $servicePerson
      * @param ServicePersonInfo $servicePersonInfo
      * @param \FKSDB\ORM\Services\ServicePersonHistory $servicePersonHistory
      * @param ServiceMPostContact $serviceMPostContact
      * @param ServiceMPersonHasFlag $serviceMPersonHasFlag
+     * @param \FKSDB\Components\Forms\Controls\Schedule\Handler $eventScheduleHandler
      */
     function __construct(
-        Handler $eventAccommodationAdjustment,
+        Handler $eventAccommodationHandler,
         ServiceEventPersonAccommodation $serviceEventPersonAccommodation,
         ServicePerson $servicePerson,
         ServicePersonInfo $servicePersonInfo,
         ServicePersonHistory $servicePersonHistory,
         ServiceMPostContact $serviceMPostContact,
-        ServiceMPersonHasFlag $serviceMPersonHasFlag
+        ServiceMPersonHasFlag $serviceMPersonHasFlag,
+        \FKSDB\Components\Forms\Controls\Schedule\Handler $eventScheduleHandler
     ) {
         $this->servicePerson = $servicePerson;
         $this->servicePersonInfo = $servicePersonInfo;
@@ -76,7 +82,8 @@ class ReferencedPersonHandlerFactory {
         $this->serviceMPostContact = $serviceMPostContact;
         $this->serviceMPersonHasFlag = $serviceMPersonHasFlag;
         $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;
-        $this->eventAccommodationHandler = $eventAccommodationAdjustment;
+        $this->eventAccommodationHandler = $eventAccommodationHandler;
+        $this->eventScheduleHandler = $eventScheduleHandler;
     }
 
     /**
@@ -94,6 +101,7 @@ class ReferencedPersonHandlerFactory {
             $this->servicePersonHistory,
             $this->serviceMPostContact,
             $this->serviceMPersonHasFlag,
+            $this->eventScheduleHandler,
             $acYear,
             $resolution
         );
