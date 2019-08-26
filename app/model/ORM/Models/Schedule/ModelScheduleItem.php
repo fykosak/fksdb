@@ -106,4 +106,22 @@ class ModelScheduleItem extends AbstractModelSingle {
     public function __toString(): string {
         return $this->getLabel();
     }
+
+    /**
+     * @return array
+     */
+    public function __toArray(): array {
+        return [
+            'scheduleGroupId' => $this->schedule_group_id,
+            'price' => [
+                'eur' => $this->price_eur,
+                'czk' => $this->price_czk],
+            'totalCapacity' => $this->capacity,
+            'usedCapacity' => $this->getUsedCapacity(),
+            'scheduleItemId' => $this->schedule_item_id,
+            'nameCs' => $this->name_en,
+            'nameEn' => $this->name_cs,
+            'requireIdNumber' => $this->require_id_number,
+        ];
+    }
 }

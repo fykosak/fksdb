@@ -7,11 +7,12 @@ import {
 import logger from 'redux-logger';
 import { config } from '../../../config/';
 import InputConnector from '../../../input-connector/compoenents/index';
-import { ScheduleGroup } from '../middleware/interfaces';
+import { ScheduleGroupDef } from '../middleware/interfaces';
 import { app } from '../reducer/';
+import Accommodation from './accommodation';
 
 interface Props {
-    scheduleDef: ScheduleGroup[];
+    scheduleDef: ScheduleGroupDef[];
     input: HTMLInputElement;
     mode: string;
 }

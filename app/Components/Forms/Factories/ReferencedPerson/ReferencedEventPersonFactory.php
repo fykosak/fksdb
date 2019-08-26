@@ -146,9 +146,13 @@ class ReferencedEventPersonFactory extends AbstractReferencedPersonFactory {
         if (!$person) {
             return null;
         }
-        if ($sub === 'person_accommodation') {
-            return $person->getSerializedAccommodationByEventId($this->event->event_id);
+        switch ($sub) {
+            case 'person_accommodation':
+                return $person->getSerializedAccommodationByEventId($this->event->event_id);
+            case 'person_schedule':
+                return null;
+            default:
+                return parent::getPersonValue($person, $sub, $field, $acYear, $options);
         }
-        return parent::getPersonValue($person, $sub, $field, $acYear, $options);
     }
 }

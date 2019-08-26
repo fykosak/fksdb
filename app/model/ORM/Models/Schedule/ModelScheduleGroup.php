@@ -21,6 +21,7 @@ use Nette\Database\Table\GroupedSelection;
  */
 class ModelScheduleGroup extends \FKSDB\ORM\AbstractModelSingle {
     const TYPE_ACCOMMODATION = 'accommodation';
+
     /**
      * @return GroupedSelection
      */
@@ -35,4 +36,16 @@ class ModelScheduleGroup extends \FKSDB\ORM\AbstractModelSingle {
         return ModelEvent::createFromActiveRow($this->event);
     }
 
+    /**
+     * @return array
+     */
+    public function __toArray(): array {
+        return [
+            'scheduleGroupId' => $this->schedule_group_id,
+            'scheduleGroupType' => $this->schedule_group_type,
+            'eventId' => $this->event_id,
+            'start' => $this->start->format('c'),
+            'end' => $this->end->format('c'),
+        ];
+    }
 }
