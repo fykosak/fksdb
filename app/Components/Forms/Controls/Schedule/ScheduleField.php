@@ -8,6 +8,7 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 use Nette\Forms\Controls\TextInput;
+use Tracy\Debugger;
 
 /**
  * Class AccommodationField
@@ -28,6 +29,7 @@ class ScheduleField extends TextInput implements IReactComponent {
     /**
      * AccommodationField constructor.
      * @param ModelEvent $event
+     * @param string $type
      */
     public function __construct(ModelEvent $event, string $type) {
         parent::__construct(_('Accommodation'));
@@ -65,16 +67,21 @@ class ScheduleField extends TextInput implements IReactComponent {
     public function getData(): string {
         $groups = $this->event->getScheduleGroups()->where('schedule_group_type', $this->type);
         $groupList = [];
+
         foreach ($groups as $row) {
+
             $group = ModelScheduleGroup::createFromActiveRow($row);
-            $groupArray = $group->__toArray();
             $itemList = [];
+            Debugger::barDump($group->getPrimary());
+            Debugger::barDump(\count($group->getItems()));
             foreach ($group->getItems() as $itemRow) {
                 $item = ModelScheduleItem::createFromActiveRow($itemRow);
                 $itemList[] = $item->__toArray();
             }
+            $groupArray = $group->__toArray();
             $groupArray['items'] = $itemList;
             $groupList[] = $groupArray;
+
         }
         return json_encode($groupList);
     }

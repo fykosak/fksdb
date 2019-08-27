@@ -150,7 +150,7 @@ class ReferencedEventPersonFactory extends AbstractReferencedPersonFactory {
             case 'person_accommodation':
                 return $person->getSerializedAccommodationByEventId($this->event->event_id);
             case 'person_schedule':
-                return null;
+                return $person->getSerializedSchedule($this->event->event_id, $field);
             default:
                 return parent::getPersonValue($person, $sub, $field, $acYear, $options);
         }

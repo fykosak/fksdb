@@ -6,6 +6,7 @@ use FKSDB\Components\Forms\Controls\IReferencedHandler;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
 use FKSDB\Components\Forms\Controls\PersonAccommodation\ExistingPaymentException;
 use FKSDB\Components\Forms\Controls\PersonAccommodation\Handler;
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelPostContact;
@@ -22,6 +23,8 @@ use Nette\Utils\ArrayHash;
 use Nette\Utils\JsonException;
 use ServiceMPersonHasFlag;
 use ServiceMPostContact;
+use Tracy\Debugger;
+use function array_keys;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -34,12 +37,12 @@ class ReferencedPersonHandler implements IReferencedHandler {
     const POST_CONTACT_PERMANENT = 'post_contact_p';
 
     /**
-     * @var \FKSDB\ORM\Services\ServicePerson
+     * @var ServicePerson
      */
     private $servicePerson;
 
     /**
-     * @var \FKSDB\ORM\Services\ServicePersonInfo
+     * @var ServicePersonInfo
      */
     private $servicePersonInfo;
 
@@ -88,9 +91,9 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * ReferencedPersonHandler constructor.
      * @param Handler $eventAccommodation
      * @param ServiceEventPersonAccommodation $serviceEventPersonAccommodation
-     * @param \FKSDB\ORM\Services\ServicePerson $servicePerson
-     * @param \FKSDB\ORM\Services\ServicePersonInfo $servicePersonInfo
-     * @param \FKSDB\ORM\Services\ServicePersonHistory $servicePersonHistory
+     * @param ServicePerson $servicePerson
+     * @param ServicePersonInfo $servicePersonInfo
+     * @param ServicePersonHistory $servicePersonHistory
      * @param ServiceMPostContact $serviceMPostContact
      * @param ServiceMPersonHasFlag $serviceMPersonHasFlag
      * @param \FKSDB\Components\Forms\Controls\Schedule\Handler $eventScheduleHandler
@@ -138,7 +141,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
 
     /**
      * @param ArrayHash $values
-     * @return \FKSDB\ORM\AbstractModelSingle|ModelPerson|null
+     * @return AbstractModelSingle|ModelPerson|null
      * @throws JsonException
      * @throws ExistingPaymentException
      */
@@ -153,7 +156,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
     }
 
     /**
-     * @param \FKSDB\ORM\IModel $model
+     * @param IModel $model
      * @param ArrayHash $values
      * @throws JsonException
      * @throws ExistingPaymentException
@@ -180,7 +183,8 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @throws ModelDataConflictException
      * @throws JsonException
      * @throws ExistingPaymentException
-     * @throws \FKSDB\Submits\StorageException
+     * @throws StorageException
+     * @throws \Exception
      */
     private function store(ModelPerson &$person, ArrayHash $data) {
         /*
@@ -188,16 +192,17 @@ class ReferencedPersonHandler implements IReferencedHandler {
          */
         try {
             $this->beginTransaction();
-
+            Debugger::barDump($data);
             /*
              * Person & its extensions
              */
+
             $models = [
                 'person' => &$person,
                 'person_info' => ($info = $person->getInfo()) ?: $this->servicePersonInfo->createNew(),
                 'person_history' => ($history = $person->getHistory($this->acYear)) ?: $this->servicePersonHistory->createNew(['ac_year' => $this->acYear]),
                 'person_accommodation' => ($personAccommodation = ($this->eventId && $person->getSerializedAccommodationByEventId($this->eventId)) ?: null),
-                'person_schedule' => null,
+                'person_schedule' => (($this->eventId && isset($data['person_schedule']) && $person->getSerializedSchedule($this->eventId, array_keys((array)$data['person_schedule'])[0])) ?: null),
                 self::POST_CONTACT_DELIVERY => ($dataPostContact = $person->getDeliveryAddress()) ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_DELIVERY]),
                 self::POST_CONTACT_PERMANENT => ($dataPostContact = $person->getPermanentAddress(true)) ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_PERMANENT])
             ];
@@ -205,7 +210,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
                 'person' => $this->servicePerson,
                 'person_info' => $this->servicePersonInfo,
                 'person_history' => $this->servicePersonHistory,
-                'person_accommodation' => $this->serviceEventPersonAccommodation,
+                'person_accommodation' => null,
                 'person_schedule' => null,
                 self::POST_CONTACT_DELIVERY => $this->serviceMPostContact,
                 self::POST_CONTACT_PERMANENT => $this->serviceMPostContact,
@@ -234,6 +239,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
             //    $data = $conflicts;
 
             foreach ($models as $t => & $model) {
+
                 if (!isset($data[$t])) {
                     if (in_array($t, $originalModels) && in_array($t, array(self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT))) {
                         // delete only post contacts, other "children" could be left all-nulls
@@ -426,7 +432,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
     /**
      * @param string $field
      * @param mixed $key
-     * @return \FKSDB\ORM\Models\ModelPerson|null|\FKSDB\ORM\IModel
+     * @return ModelPerson|null|IModel
      */
     public function findBySecondaryKey($field, $key) {
         if (!$this->isSecondaryKey($field)) {

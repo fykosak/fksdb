@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Forms\Controls\PersonAccommodation;
+namespace FKSDB\Components\Forms\Controls\Schedule;
 
 /**
  * Class ExistingPaymentException

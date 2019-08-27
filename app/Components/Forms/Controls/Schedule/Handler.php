@@ -2,9 +2,9 @@
 
 namespace FKSDB\Components\Forms\Controls\Schedule;
 
-use FKSDB\ORM\Models\ModelEventAccommodation;
-use FKSDB\ORM\Models\ModelEventPersonAccommodation;
 use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
+use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\ORM\Services\Schedule\ServicePersonSchedule;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleGroup;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleItem;
@@ -45,51 +45,52 @@ class Handler {
         $this->serviceScheduleItem = $serviceScheduleItem;
     }
 
-    public function prepareAndUpdate(ArrayHash $data, ModelPerson $person, $eventId) {
-
+    /**
+     * @param ArrayHash $data
+     * @param ModelPerson $person
+     * @param $eventId
+     * @throws \Exception
+     */
+    public function prepareAndUpdate(ArrayHash $data, ModelPerson $person, int $eventId) {
+        list($newScheduleData, $type) = $this->prepareData($data);
         $oldRows = $this->servicePersonSchedule->getTable()
             ->where('person_id', $person->person_id)
-            ->where('event_accommodation.event_id', $eventId);
+            ->where('schedule_item.schedule_group.event_id', $eventId)->where('schedule_item.schedule_group.schedule_group_type', $type);
 
-        $newScheduleData = $this->prepareData($data);
-        Debugger::barDump($newScheduleData);
-        die();
-        return;
         foreach ($oldRows as $row) {
-            $modelEventPersonAccommodation = ModelEventPersonAccommodation::createFromActiveRow($row);
-            if (in_array($modelEventPersonAccommodation->event_accommodation_id, $newAccommodationIds)) {
+            $modelPersonSchedule = ModelPersonSchedule::createFromActiveRow($row);
+            if (in_array($modelPersonSchedule->schedule_item_id, $newScheduleData)) {
                 // do nothing
-                $index = array_search($modelEventPersonAccommodation->event_accommodation_id, $newAccommodationIds);
-                unset($newAccommodationIds[$index]);
+                $index = array_search($modelPersonSchedule->schedule_item_id, $newScheduleData);
+                unset($newScheduleData[$index]);
+                Debugger::barDump('do nothing');
             } else {
                 try {
-                    $modelEventPersonAccommodation->delete();
+                    $modelPersonSchedule->delete();
                 } catch (\PDOException $exception) {
-                    if (\preg_match('/payment_accommodation/', $exception->getMessage())) {
+                    if (\preg_match('/payment/', $exception->getMessage())) {
                         throw new ExistingPaymentException(\sprintf(
                             _('Položka "%s" má už vygenerovanú platu, teda nejde zmazať.'),
-                            $modelEventPersonAccommodation->getLabel()));
+                            $modelPersonSchedule->getScheduleItem()->getLabel()));
                     } else {
                         throw $exception;
                     }
                 }
             }
         }
-        foreach ($newAccommodationIds as $id) {
-            $model = $this->serviceEventPersonAccommodation->createNew(['person_id' => $person->person_id, 'event_accommodation_id' => $id]);
-            $query = $this->serviceEventAccommodation->findByPrimary($id);
-            $eventAccommodation = ModelEventAccommodation::createFromActiveRow($query);
-            if ($eventAccommodation->getAvailableCapacity() > 0) {
-                $this->serviceEventPersonAccommodation->save($model);
+
+        foreach ($newScheduleData as $id) {
+            $query = $this->serviceScheduleItem->findByPrimary($id);
+            $modelScheduleItem = ModelScheduleItem::createFromActiveRow($query);
+            if ($modelScheduleItem->getAvailableCapacity() > 0) {
+                $this->servicePersonSchedule->createNewModel(['person_id' => $person->person_id, 'schedule_item_id' => $id]);
             } else {
                 //$model->delete();
-                throw new FullAccommodationCapacityException(sprintf(
-                    _('Osobu %s sa nepodarilo ubytovať na hotely "%s" v dni %s'),
+                throw new FullCapacityException(sprintf(
+                    _('Osobu %s sa nepodarilo ubytovať na hotely "%s".'),
                     $person->getFullName(),
-                    $eventAccommodation->name,
-                    $eventAccommodation->date->format(ModelEventAccommodation::ACC_DATE_FORMAT)
+                    $modelScheduleItem->getLabel()
                 ));
-
             }
         }
     }
@@ -100,7 +101,7 @@ class Handler {
      */
     private function prepareData(ArrayHash $data): array {
         foreach ($data as $type => $datum) {
-            return (array)json_decode($datum);
+            return [(array)json_decode($datum), $type];
         }
         return [];
     }

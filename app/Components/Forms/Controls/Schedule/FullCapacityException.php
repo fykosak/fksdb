@@ -2,6 +2,12 @@
 
 namespace FKSDB\Components\Forms\Controls\Schedule;
 
-class FullCapacityException {
+use Exception;
+
+/**
+ * Class FullCapacityException
+ * @package FKSDB\Components\Forms\Controls\Schedule
+ */
+class FullCapacityException extends Exception {
 
 }
