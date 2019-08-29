@@ -1,6 +1,5 @@
 <?php
 
-
 namespace FKSDB\ORM\Models\Schedule;
 
 use DateTime;
@@ -22,6 +21,7 @@ use Nette\Database\Table\GroupedSelection;
  */
 class ModelScheduleGroup extends AbstractModelSingle {
     const TYPE_ACCOMMODATION = 'accommodation';
+    const TYPE_DSEF_GROUP = 'dsef-group';
 
     /**
      * @return GroupedSelection

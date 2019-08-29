@@ -4,6 +4,7 @@ namespace FKSDB\ORM\Models;
 
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\Payment\IPaymentModel;
 use FKSDB\Payment\Price;
 use FKSDB\Payment\PriceCalculator\PriceCalculator;
@@ -58,12 +59,24 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
 
     /**
      * @return ModelEventPersonAccommodation[]
+     * @deprecated
      */
     public function getRelatedPersonAccommodation(): array {
         $query = $this->related(DbNames::TAB_PAYMENT_ACCOMMODATION, 'payment_id');
         $items = [];
         foreach ($query as $row) {
             $items[] = ModelEventPersonAccommodation::createFromActiveRow($row->event_person_accommodation);
+        }
+        return $items;
+    }
+    /**
+     * @return ModelPersonSchedule[]
+     */
+    public function getRelatedPersonSchedule(): array {
+        $query = $this->related(DbNames::TAB_SCHEDULE_PAYMENT, 'payment_id');
+        $items = [];
+        foreach ($query as $row) {
+            $items[] = ModelPersonSchedule::createFromActiveRow($row->person_schedule);
         }
         return $items;
     }

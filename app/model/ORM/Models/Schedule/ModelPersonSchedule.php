@@ -1,6 +1,5 @@
 <?php
 
-
 namespace FKSDB\ORM\Models\Schedule;
 
 use FKSDB\ORM\AbstractModelSingle;
@@ -19,6 +18,7 @@ use Nette\NotImplementedException;
  * @property-read int person_id
  * @property-read int schedule_item_id
  * @property-read string state
+ * @property-read int person_schedule_id
  */
 class ModelPersonSchedule extends AbstractModelSingle implements IStateModel {
     /**
@@ -38,7 +38,7 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel {
     /**
      * @return ModelPayment|null
      */
-    public function getPayment(){
+    public function getPayment() {
         $data = $this->related(DbNames::TAB_SCHEDULE_PAYMENT, 'person_schedule_id')->select('payment.*')->fetch();
         if (!$data) {
             return null;
@@ -47,8 +47,15 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel {
     }
 
     /**
+     * @return string
+     */
+    public function getLabel(): string {
+        return $this->getScheduleItem()->getFullLabel();
+    }
+
+    /**
      * @param $newState
-     * @return mixed|void
+     * @return void
      */
     public function updateState($newState) {
         $this->update(['state' => $newState]);
@@ -68,5 +75,4 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel {
     public function refresh(): IStateModel {
         throw new NotImplementedException();
     }
-
 }

@@ -31,13 +31,13 @@ class EventPrice extends AbstractPreProcess {
      * @return \FKSDB\Payment\Price
      */
     public static function calculate(ModelPayment $modelPayment): Price {
-       /* $price = new Price(0, $modelPayment->currency);
-        $ids = $this->getData($modelPayment);
-        foreach ($ids as $id) {
-            $row = $this->serviceEventParticipant->findByPrimary($id);
-            $model = ModelEventParticipant::createFromTableRow($row);
-            $price->add($this->getPriceFromModel($model, $price));
-        }*/
+        /* $price = new Price(0, $modelPayment->currency);
+         $ids = $this->getData($modelPayment);
+         foreach ($ids as $id) {
+             $row = $this->serviceEventParticipant->findByPrimary($id);
+             $model = ModelEventParticipant::createFromTableRow($row);
+             $price->add($this->getPriceFromModel($model, $price));
+         }*/
         return new Price(0, $modelPayment->currency);
     }
 
@@ -67,13 +67,6 @@ class EventPrice extends AbstractPreProcess {
      * @return \FKSDB\Payment\Price
      */
     private function getPriceFromModel(ModelEventParticipant $modelEventAccommodation, Price $price): Price {
-        switch ($price->getCurrency()) {
-            case Price::CURRENCY_CZK:
-                $amount = $modelEventAccommodation->price;
-                break;
-            default:
-                throw new NotImplementedException(\sprintf(_('Mena %s nieje implentovaná'), $price->getCurrency()), 501);
-        }
-        return new Price($amount, $price->getCurrency());
+        throw new NotImplementedException();
     }
 }

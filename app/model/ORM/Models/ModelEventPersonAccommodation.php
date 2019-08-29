@@ -15,6 +15,7 @@ use Nette\Database\Table\ActiveRow;
  * @property-read string status
  * @property-read ActiveRow person
  * @property-read ActiveRow event_accommodation
+ * @deprecated
  *
  */
 class ModelEventPersonAccommodation extends AbstractModelSingle implements IStateModel, IPersonReferencedModel {

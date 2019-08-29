@@ -1,15 +1,16 @@
 <?php
 
-
 namespace FKSDB\Components\Forms\Controls\Payment;
 
+use Exception;
 use FKSDB\Components\React\IReactComponent;
 use FKSDB\Components\React\ReactField;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Models\ModelEventPersonAccommodation;
-use FKSDB\ORM\Services\ServiceEventPersonAccommodation;
+use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
+use FKSDB\ORM\Services\Schedule\ServicePersonSchedule;
 use Nette\Forms\Controls\TextInput;
+use function json_encode;
 
 /**
  * Class PaymentSelectField
@@ -20,53 +21,64 @@ class PaymentSelectField extends TextInput implements IReactComponent {
     use ReactField;
 
     /**
-     * @var ServiceEventPersonAccommodation
+     * @var ServicePersonSchedule
      */
-    private $serviceEventPersonAccommodation;
+    private $servicePersonSchedule;
     /**
-     * @var \FKSDB\ORM\Models\ModelEvent
+     * @var ModelEvent
      */
     private $event;
-
+    /**
+     * @var string
+     */
+    private $groupType;
+    /**
+     * @var bool
+     */
     private $showAll = true;
 
     /**
      * PaymentSelectField constructor.
-     * @param ServiceEventPersonAccommodation $serviceEventPersonAccommodation
-     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @param ServicePersonSchedule $servicePersonSchedule
+     * @param ModelEvent $event
+     * @param string $groupType
      * @param bool $showAll
      */
-    public function __construct(ServiceEventPersonAccommodation $serviceEventPersonAccommodation, ModelEvent $event, bool $showAll = true) {
+    public function __construct(ServicePersonSchedule $servicePersonSchedule, ModelEvent $event, string $groupType, bool $showAll = true) {
         parent::__construct();
-        $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;
+        $this->servicePersonSchedule = $servicePersonSchedule;
         $this->event = $event;
+        $this->groupType = $groupType;
         $this->showAll = $showAll;
         $this->appendProperty();
     }
 
     /**
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     public function getData(): string {
-        $query = $this->serviceEventPersonAccommodation->where('event_accommodation.event_id', $this->event->event_id);
+        $query = $this->servicePersonSchedule->where('schedule_item.schedule_group.event_id', $this->event->event_id);
+        if ($this->groupType) {
+            $query->where('schedule_item.schedule_group.schedule_group_type', $this->groupType);
+        }
         $items = [];
         foreach ($query as $row) {
-            $model = ModelEventPersonAccommodation::createFromActiveRow($row);
-            if ($this->showAll || !$model->related(DbNames::TAB_PAYMENT_ACCOMMODATION, 'event_person_accommodation_id')->count()) {
+            $model = ModelPersonSchedule::createFromActiveRow($row);
+            if ($this->showAll || !$model->related(DbNames::TAB_PAYMENT_ACCOMMODATION, 'person_schedule_id')->count()) {
                 $items[] = [
                     'hasPayment' => false, /*
                     ->where('payment.state !=? OR payment.state IS NULL', ModelPayment::STATE_CANCELED)->count(),*/
                     'label' => $model->getLabel(),
-                    'id' => $model->event_person_accommodation_id,
-                    'accommodation' => $model->getEventAccommodation()->__toArray(),
+                    'id' => $model->person_schedule_id,
+                    'scheduleItem' => $model->getScheduleItem()->__toArray(),
                     'personId' => $model->person_id,
                     'personName' => $model->getPerson()->getFullName(),
                     'personFamilyName' => $model->getPerson()->family_name,
                 ];
             }
         }
-        return \json_encode($items);
+        return json_encode($items);
     }
 
     /**

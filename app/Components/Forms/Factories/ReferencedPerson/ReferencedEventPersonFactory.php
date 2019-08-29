@@ -4,10 +4,8 @@ namespace FKSDB\Components\Forms\Factories\ReferencedPerson;
 
 use FKSDB\Components\Forms\Containers\AddressContainer;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
-use FKSDB\Components\Forms\Controls\PersonAccommodation\AccommodationField;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\FlagFactory;
-use FKSDB\Components\Forms\Factories\PersonAccommodationFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Factories\PersonHistoryFactory;
 use FKSDB\Components\Forms\Factories\PersonInfoFactory;
@@ -17,6 +15,7 @@ use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelPostContact;
 use FKSDB\ORM\Services\ServiceFlag;
 use FKSDB\ORM\Services\ServicePerson;
+use Nette\DeprecatedException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Utils\JsonException;
@@ -33,10 +32,6 @@ use Persons\ReferencedPersonHandlerFactory;
 class ReferencedEventPersonFactory extends AbstractReferencedPersonFactory {
 
     /**
-     * @var PersonAccommodationFactory
-     */
-    private $personAccommodationFactory;
-    /**
      * @var PersonScheduleFactory
      */
     private $personScheduleFactory;
@@ -47,7 +42,6 @@ class ReferencedEventPersonFactory extends AbstractReferencedPersonFactory {
 
     /**
      * ReferencedEventPersonFactory constructor.
-     * @param PersonAccommodationFactory $personAccommodationFactory
      * @param AddressFactory $addressFactory
      * @param FlagFactory $flagFactory
      * @param ServicePerson $servicePerson
@@ -60,7 +54,6 @@ class ReferencedEventPersonFactory extends AbstractReferencedPersonFactory {
      * @param PersonScheduleFactory $personScheduleFactory
      */
     public function __construct(
-        PersonAccommodationFactory $personAccommodationFactory,
         AddressFactory $addressFactory,
         FlagFactory $flagFactory,
         ServicePerson $servicePerson,
@@ -81,7 +74,6 @@ class ReferencedEventPersonFactory extends AbstractReferencedPersonFactory {
             $serviceFlag,
             $personInfoFactory,
             $personHistoryFactory);
-        $this->personAccommodationFactory = $personAccommodationFactory;
         $this->personScheduleFactory = $personScheduleFactory;
     }
 
@@ -114,14 +106,12 @@ class ReferencedEventPersonFactory extends AbstractReferencedPersonFactory {
      * @param $acYear
      * @param HiddenField|null $hiddenField
      * @param array $metadata
-     * @return AddressContainer|AccommodationField|BaseControl|null
+     * @return AddressContainer|BaseControl|null
      */
     public function createField($sub, $fieldName, $acYear, HiddenField $hiddenField = null, array $metadata = []) {
         switch ($sub) {
             case 'person_accommodation':
-                $control = $this->personAccommodationFactory->createField($fieldName, $this->event);
-                $this->appendMetadata($control, $hiddenField, $fieldName, $metadata);
-                return $control;
+                throw new DeprecatedException();
             case 'person_schedule':
                 $control = $this->personScheduleFactory->createField($fieldName, $this->event);
                 $this->appendMetadata($control, $hiddenField, $fieldName, $metadata);

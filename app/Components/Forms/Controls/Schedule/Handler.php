@@ -9,7 +9,6 @@ use FKSDB\ORM\Services\Schedule\ServicePersonSchedule;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleGroup;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleItem;
 use Nette\Utils\ArrayHash;
-use Tracy\Debugger;
 
 /**
  * Class Handler
@@ -49,7 +48,9 @@ class Handler {
      * @param ArrayHash $data
      * @param ModelPerson $person
      * @param $eventId
-     * @throws \Exception
+     *
+     * @throws ExistingPaymentException
+     * @throws FullCapacityException
      */
     public function prepareAndUpdate(ArrayHash $data, ModelPerson $person, int $eventId) {
         list($newScheduleData, $type) = $this->prepareData($data);
@@ -63,7 +64,6 @@ class Handler {
                 // do nothing
                 $index = array_search($modelPersonSchedule->schedule_item_id, $newScheduleData);
                 unset($newScheduleData[$index]);
-                Debugger::barDump('do nothing');
             } else {
                 try {
                     $modelPersonSchedule->delete();
@@ -71,7 +71,7 @@ class Handler {
                     if (\preg_match('/payment/', $exception->getMessage())) {
                         throw new ExistingPaymentException(\sprintf(
                             _('Položka "%s" má už vygenerovanú platu, teda nejde zmazať.'),
-                            $modelPersonSchedule->getScheduleItem()->getLabel()));
+                            $modelPersonSchedule->getScheduleItem()->getFullLabel()));
                     } else {
                         throw $exception;
                     }
@@ -85,11 +85,10 @@ class Handler {
             if ($modelScheduleItem->getAvailableCapacity() > 0) {
                 $this->servicePersonSchedule->createNewModel(['person_id' => $person->person_id, 'schedule_item_id' => $id]);
             } else {
-                //$model->delete();
                 throw new FullCapacityException(sprintf(
-                    _('Osobu %s sa nepodarilo ubytovať na hotely "%s".'),
+                    _('Osobu %s nepodarilo ptihlásiť na program %s, z dôvodu plnej kapacity.'),
                     $person->getFullName(),
-                    $modelScheduleItem->getLabel()
+                    $modelScheduleItem->getFullLabel()
                 ));
             }
         }

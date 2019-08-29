@@ -10,6 +10,7 @@ use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\Payment\OrgPaymentGrid;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPayment;
+use FKSDB\ORM\Services\Schedule\ServicePersonSchedule;
 use FKSDB\ORM\Services\ServiceEventPersonAccommodation;
 use FKSDB\ORM\Services\ServicePayment;
 use FKSDB\ORM\Services\ServicePaymentAccommodation;
@@ -41,7 +42,7 @@ class PaymentFactory {
     /**
      * @var ServiceEventPersonAccommodation
      */
-    private $serviceEventPersonAccommodation;
+    private $servicePersonSchedule;
     /**
      * @var ServicePaymentAccommodation
      */
@@ -57,17 +58,22 @@ class PaymentFactory {
      * @param ServicePaymentAccommodation $servicePaymentAccommodation
      * @param PersonFactory $personFactory
      * @param PersonProvider $personProvider
-     * @param ServiceEventPersonAccommodation $serviceEventPersonAccommodation
+     * @param ServicePersonSchedule $servicePersonSchedule
      * @param ITranslator $translator
      * @param ServicePayment $servicePayment
      */
-    public function __construct(TableReflectionFactory $tableReflectionFactory, ServicePaymentAccommodation $servicePaymentAccommodation, PersonFactory $personFactory, PersonProvider $personProvider, ServiceEventPersonAccommodation $serviceEventPersonAccommodation, ITranslator $translator, ServicePayment $servicePayment) {
+    public function __construct(TableReflectionFactory $tableReflectionFactory,
+                                ServicePaymentAccommodation $servicePaymentAccommodation,
+                                PersonFactory $personFactory,
+                                PersonProvider $personProvider,
+                                ServicePersonSchedule $servicePersonSchedule,
+                                ITranslator $translator, ServicePayment $servicePayment) {
         $this->tableReflectionFactory = $tableReflectionFactory;
         $this->translator = $translator;
         $this->servicePayment = $servicePayment;
         $this->personFactory = $personFactory;
         $this->personProvider = $personProvider;
-        $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;
+        $this->servicePersonSchedule = $servicePersonSchedule;
         $this->servicePaymentAccommodation = $servicePaymentAccommodation;
     }
 
@@ -98,12 +104,13 @@ class PaymentFactory {
         return new SelectForm(
             $event,
             $isOrg,
+            'accommodation',
             $this->translator,
             $this->servicePayment,
             $machine,
             $this->personFactory,
             $this->personProvider,
-            $this->serviceEventPersonAccommodation,
+            $this->servicePersonSchedule,
             $this->servicePaymentAccommodation
         );
     }

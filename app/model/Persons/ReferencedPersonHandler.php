@@ -4,8 +4,7 @@ namespace Persons;
 
 use FKSDB\Components\Forms\Controls\IReferencedHandler;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
-use FKSDB\Components\Forms\Controls\PersonAccommodation\ExistingPaymentException;
-use FKSDB\Components\Forms\Controls\PersonAccommodation\Handler;
+use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelPerson;
@@ -17,6 +16,7 @@ use FKSDB\ORM\Services\ServicePersonInfo;
 use FKSDB\Submits\StorageException;
 use FormUtils;
 use ModelException;
+use Nette\DeprecatedException;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
@@ -79,17 +79,12 @@ class ReferencedPersonHandler implements IReferencedHandler {
      */
     private $serviceEventPersonAccommodation;
     /**
-     * @var Handler
-     */
-    private $eventAccommodationHandler;
-    /**
      * @var \FKSDB\Components\Forms\Controls\Schedule\Handler
      */
     private $eventScheduleHandler;
 
     /**
      * ReferencedPersonHandler constructor.
-     * @param Handler $eventAccommodation
      * @param ServiceEventPersonAccommodation $serviceEventPersonAccommodation
      * @param ServicePerson $servicePerson
      * @param ServicePersonInfo $servicePersonInfo
@@ -101,7 +96,6 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @param $resolution
      */
     function __construct(
-        Handler $eventAccommodation,
         ServiceEventPersonAccommodation $serviceEventPersonAccommodation,
         ServicePerson $servicePerson,
         ServicePersonInfo $servicePersonInfo,
@@ -120,7 +114,6 @@ class ReferencedPersonHandler implements IReferencedHandler {
         $this->acYear = $acYear;
         $this->resolution = $resolution;
         $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;
-        $this->eventAccommodationHandler = $eventAccommodation;
         $this->eventScheduleHandler = $eventScheduleHandler;
     }
 
@@ -248,8 +241,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
                     continue;
                 }
                 if ($t == 'person_accommodation' && isset($data[$t])) {
-                    $this->eventAccommodationHandler->prepareAndUpdate($data[$t], $models['person'], $this->eventId);
-                    continue;
+                    throw new DeprecatedException();
                 }
 
                 if ($t == 'person_schedule' && isset($data[$t])) {

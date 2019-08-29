@@ -7,8 +7,11 @@ use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Models\ModelPaymentAccommodation;
 use FKSDB\Payment\Handler\DuplicateAccommodationPaymentException;
+use FKSDB\Payment\Handler\DuplicatePaymentException;
 use FKSDB\Submits\StorageException;
 use Nette\Utils\ArrayHash;
+use function array_filter;
+use function array_keys;
 
 /**
  * Class ServicePaymentAccommodation
@@ -33,8 +36,7 @@ class ServicePaymentAccommodation extends AbstractServiceSingle {
     /**
      * @param ArrayHash $data
      * @param ModelPayment $payment
-     * @throws DuplicateAccommodationPaymentException
-     * @throws \Exception
+     * @throws DuplicatePaymentException
      */
     public function prepareAndUpdate($data, ModelPayment $payment) {
         $oldRows = $this->getTable()->where('payment_id', $payment->payment_id);
@@ -45,7 +47,7 @@ class ServicePaymentAccommodation extends AbstractServiceSingle {
              throw new EmptyDataException(_('Nebola vybraná žiadá položka'));
          };*/
         /**
-         * @var \FKSDB\ORM\Models\ModelPaymentAccommodation $row
+         * @var ModelPaymentAccommodation $row
          */
         foreach ($oldRows as $row) {
             if (in_array($row->event_person_accommodation_id, $newAccommodationIds)) {
@@ -62,12 +64,12 @@ class ServicePaymentAccommodation extends AbstractServiceSingle {
         foreach ($newAccommodationIds as $id) {
 
             /**
-             * @var \FKSDB\ORM\Models\ModelPaymentAccommodation $model
+             * @var ModelPaymentAccommodation $model
              */
             $model = $this->createNew(['payment_id' => $payment->payment_id, 'event_person_accommodation_id' => $id]);
             $count = $this->getTable()->where('event_person_accommodation_id', $id)->where('payment.state !=? OR payment.state IS NULL', ModelPayment::STATE_CANCELED)->count();
             if ($count > 0) {
-                throw new DuplicateAccommodationPaymentException(sprintf(
+                throw new DuplicatePaymentException(sprintf(
                     _('Ubytovanie "%s" má už vygenrovanú inú platbu.'),
                     $model->getEventPersonAccommodation()->getLabel()
                 ));
@@ -83,7 +85,7 @@ class ServicePaymentAccommodation extends AbstractServiceSingle {
      */
     private function prepareData($data): array {
         $data = (array)json_decode($data);
-        return \array_keys(\array_filter($data, function ($value) {
+        return array_keys(array_filter($data, function ($value) {
             return $value;
         }));
     }

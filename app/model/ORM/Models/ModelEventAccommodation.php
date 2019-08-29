@@ -22,6 +22,7 @@ use Nette\Security\IResource;
  * @property-read DateTime date
  * @property-read ActiveRow address
  * @property-read ActiveRow event
+ * @deprecated
  */
 class ModelEventAccommodation extends AbstractModelSingle implements IResource, IEventReferencedModel {
     const ACC_DATE_FORMAT = 'Y-m-d';

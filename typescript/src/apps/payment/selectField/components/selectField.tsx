@@ -7,12 +7,12 @@ import {
     createStore,
 } from 'redux';
 import logger from 'redux-logger';
-import { PaymentAccommodationItem } from '../interfaces';
+import { PaymentScheduleItem } from '../interfaces';
 import { app } from '../reducer/';
 import Container from './container';
 
 interface Props {
-    items: PaymentAccommodationItem[];
+    items: PaymentScheduleItem[];
     input: HTMLInputElement;
 }
 

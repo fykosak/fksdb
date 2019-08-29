@@ -17,7 +17,7 @@ export const payment: App = (element, module, component, mode, rawData) => {
     if (!(element instanceof HTMLInputElement)) {
         return false;
     }
-    element.style.display = 'none';
+   // element.style.display = 'none';
 
     ReactDOM.render(<SelectField items={items} input={element}/>, container);
 

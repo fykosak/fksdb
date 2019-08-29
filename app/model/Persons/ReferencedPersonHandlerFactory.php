@@ -2,7 +2,6 @@
 
 namespace Persons;
 
-use FKSDB\Components\Forms\Controls\PersonAccommodation\Handler;
 use FKSDB\ORM\Services\ServiceEventPersonAccommodation;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServicePersonHistory;
@@ -47,17 +46,12 @@ class ReferencedPersonHandlerFactory {
      */
     private $serviceEventPersonAccommodation;
     /**
-     * @var Handler
-     */
-    private $eventAccommodationHandler;
-    /**
      * @var \FKSDB\Components\Forms\Controls\Schedule\Handler
      */
     private $eventScheduleHandler;
 
     /**
      * ReferencedPersonHandlerFactory constructor.
-     * @param Handler $eventAccommodationHandler
      * @param ServiceEventPersonAccommodation $serviceEventPersonAccommodation
      * @param ServicePerson $servicePerson
      * @param ServicePersonInfo $servicePersonInfo
@@ -67,7 +61,6 @@ class ReferencedPersonHandlerFactory {
      * @param \FKSDB\Components\Forms\Controls\Schedule\Handler $eventScheduleHandler
      */
     function __construct(
-        Handler $eventAccommodationHandler,
         ServiceEventPersonAccommodation $serviceEventPersonAccommodation,
         ServicePerson $servicePerson,
         ServicePersonInfo $servicePersonInfo,
@@ -82,7 +75,6 @@ class ReferencedPersonHandlerFactory {
         $this->serviceMPostContact = $serviceMPostContact;
         $this->serviceMPersonHasFlag = $serviceMPersonHasFlag;
         $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;
-        $this->eventAccommodationHandler = $eventAccommodationHandler;
         $this->eventScheduleHandler = $eventScheduleHandler;
     }
 
@@ -94,7 +86,6 @@ class ReferencedPersonHandlerFactory {
      */
     public function create($acYear, $resolution = ReferencedPersonHandler::RESOLUTION_EXCEPTION, $eventId) {
         $handler = new ReferencedPersonHandler(
-            $this->eventAccommodationHandler,
             $this->serviceEventPersonAccommodation,
             $this->servicePerson,
             $this->servicePersonInfo,

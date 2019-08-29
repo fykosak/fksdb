@@ -12,7 +12,6 @@ services:
     PersonFactory:      FKSDB\Components\Forms\Factories\PersonFactory
     SchoolFactory:      FKSDB\Components\Forms\Factories\SchoolFactory
     TeacherFactory: FKSDB\Components\Forms\Factories\TeacherFactory
-    PersonAccommodationFactory: FKSDB\Components\Forms\Factories\PersonAccommodationFactory
     PersonScheduleFactory: FKSDB\Components\Forms\Factories\PersonScheduleFactory
     FyziklaniComponentsFactory: FKSDB\Components\Factories\FyziklaniFactory
     PaymentComponentFactory: FKSDB\Components\Factories\PaymentFactory

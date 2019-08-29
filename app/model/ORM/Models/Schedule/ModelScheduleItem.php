@@ -101,6 +101,23 @@ class ModelScheduleItem extends AbstractModelSingle {
 
     /**
      * @return string
+     * Label include datetime from schedule group
+     */
+    public function getFullLabel(): string {
+        $group = $this->getGroup();
+        switch ($group->schedule_group_type) {
+            case ModelScheduleGroup::TYPE_ACCOMMODATION:
+                return \sprintf(_('Accommodation in "%s" from %s to %s.'),
+                    $this->name_cs,
+                    $group->start->format('d. m. Y'),
+                    $group->end->format('d. m. Y')
+                );
+        }
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @return string
      */
     public function __toString(): string {
         return $this->getLabel();

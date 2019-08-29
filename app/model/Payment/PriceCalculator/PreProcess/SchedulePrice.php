@@ -1,0 +1,47 @@
+<?php
+
+namespace FKSDB\Payment\PriceCalculator\PreProcess;
+
+use FKSDB\ORM\Models\ModelPayment;
+use FKSDB\Payment\Price;
+use FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException;
+
+/**
+ * Class EventAccommodationPrice
+ * @package FKSDB\Payment\PriceCalculator\PreProcess
+ */
+class SchedulePrice extends AbstractPreProcess {
+    /**
+     * @param ModelPayment $modelPayment
+     * @return \FKSDB\Payment\Price
+     * @throws UnsupportedCurrencyException
+     */
+    public static function calculate(ModelPayment $modelPayment): Price {
+        $price = new Price(0, $modelPayment->currency);
+        foreach ($modelPayment->getRelatedPersonSchedule() as $model) {
+            $modelPrice = $model->getScheduleItem()->getPrice($modelPayment->currency);
+            $price->add($modelPrice);
+        }
+        return $price;
+    }
+
+    /**
+     * @param ModelPayment $modelPayment
+     * @return array
+     * @throws UnsupportedCurrencyException
+     * @throws \Exception
+     */
+    public static function getGridItems(ModelPayment $modelPayment): array {
+        $price = new Price(0, $modelPayment->currency);
+        $items = [];
+
+        foreach ($modelPayment->getRelatedPersonSchedule() as $model) {
+            $scheduleItem = $model->getScheduleItem();
+            $items[] = [
+                'label' => $scheduleItem->getFullLabel(),
+                'price' => $scheduleItem->getPrice($modelPayment->currency),
+            ];
+        }
+        return $items;
+    }
+}

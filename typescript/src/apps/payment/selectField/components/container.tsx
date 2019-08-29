@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { PaymentAccommodationItem } from '../interfaces';
+import { PaymentScheduleItem } from '../interfaces';
 import Row from './row';
 
 interface Props {
-    items: PaymentAccommodationItem[];
+    items: PaymentScheduleItem[];
 }
 
 export default class Container extends React.Component<Props, {}> {
