@@ -31,7 +31,6 @@ services:
     ServiceTask:             FKSDB\ORM\Services\ServiceTask
     ServiceTaskContribution: FKSDB\ORM\Services\ServiceTaskContribution
     ServiceTaskStudyYear:    FKSDB\ORM\Services\ServiceTaskStudyYear
-    ServiceEventAccommodation: FKSDB\ORM\Services\ServiceEventAccommodation
     ServiceEventPersonAccommodation: FKSDB\ORM\Services\ServiceEventPersonAccommodation
     ServiceTeacher:          FKSDB\ORM\Services\ServiceTeacher
     ServicePayment:          FKSDB\ORM\Services\ServicePayment

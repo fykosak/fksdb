@@ -2,7 +2,7 @@
 
 namespace Persons;
 
-use FKSDB\ORM\Services\ServiceEventPersonAccommodation;
+use FKSDB\Components\Forms\Controls\Schedule\Handler;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServicePersonHistory;
 use FKSDB\ORM\Services\ServicePersonInfo;
@@ -18,17 +18,17 @@ use ServiceMPostContact;
 class ReferencedPersonHandlerFactory {
     use SmartObject;
     /**
-     * @var \FKSDB\ORM\Services\ServicePerson
+     * @var ServicePerson
      */
     private $servicePerson;
 
     /**
-     * @var \FKSDB\ORM\Services\ServicePersonInfo
+     * @var ServicePersonInfo
      */
     private $servicePersonInfo;
 
     /**
-     * @var \FKSDB\ORM\Services\ServicePersonHistory
+     * @var ServicePersonHistory
      */
     private $servicePersonHistory;
 
@@ -42,39 +42,32 @@ class ReferencedPersonHandlerFactory {
      */
     private $serviceMPersonHasFlag;
     /**
-     * @var ServiceEventPersonAccommodation
-     */
-    private $serviceEventPersonAccommodation;
-    /**
-     * @var \FKSDB\Components\Forms\Controls\Schedule\Handler
+     * @var Handler
      */
     private $eventScheduleHandler;
 
     /**
      * ReferencedPersonHandlerFactory constructor.
-     * @param ServiceEventPersonAccommodation $serviceEventPersonAccommodation
      * @param ServicePerson $servicePerson
      * @param ServicePersonInfo $servicePersonInfo
-     * @param \FKSDB\ORM\Services\ServicePersonHistory $servicePersonHistory
+     * @param ServicePersonHistory $servicePersonHistory
      * @param ServiceMPostContact $serviceMPostContact
      * @param ServiceMPersonHasFlag $serviceMPersonHasFlag
-     * @param \FKSDB\Components\Forms\Controls\Schedule\Handler $eventScheduleHandler
+     * @param Handler $eventScheduleHandler
      */
     function __construct(
-        ServiceEventPersonAccommodation $serviceEventPersonAccommodation,
         ServicePerson $servicePerson,
         ServicePersonInfo $servicePersonInfo,
         ServicePersonHistory $servicePersonHistory,
         ServiceMPostContact $serviceMPostContact,
         ServiceMPersonHasFlag $serviceMPersonHasFlag,
-        \FKSDB\Components\Forms\Controls\Schedule\Handler $eventScheduleHandler
+        Handler $eventScheduleHandler
     ) {
         $this->servicePerson = $servicePerson;
         $this->servicePersonInfo = $servicePersonInfo;
         $this->servicePersonHistory = $servicePersonHistory;
         $this->serviceMPostContact = $serviceMPostContact;
         $this->serviceMPersonHasFlag = $serviceMPersonHasFlag;
-        $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;
         $this->eventScheduleHandler = $eventScheduleHandler;
     }
 
@@ -86,7 +79,6 @@ class ReferencedPersonHandlerFactory {
      */
     public function create($acYear, $resolution = ReferencedPersonHandler::RESOLUTION_EXCEPTION, $eventId) {
         $handler = new ReferencedPersonHandler(
-            $this->serviceEventPersonAccommodation,
             $this->servicePerson,
             $this->servicePersonInfo,
             $this->servicePersonHistory,

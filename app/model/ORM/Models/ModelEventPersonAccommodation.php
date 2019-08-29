@@ -19,10 +19,6 @@ use Nette\Database\Table\ActiveRow;
  *
  */
 class ModelEventPersonAccommodation extends AbstractModelSingle implements IStateModel, IPersonReferencedModel {
-
-    const STATUS_PAID = 'paid';
-    const STATUS_WAITING_FOR_PAYMENT = 'waiting';
-
     /**
      * @return ModelEventAccommodation
      */
@@ -35,17 +31,6 @@ class ModelEventPersonAccommodation extends AbstractModelSingle implements IStat
      */
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromActiveRow($this->person);
-    }
-
-    /**
-     * @return ModelPayment|null
-     */
-    public function getPayment() {
-        $data = $this->related(DbNames::TAB_PAYMENT_ACCOMMODATION, 'event_person_accommodation_id')->select('payment.*')->fetch();
-        if (!$data) {
-            return null;
-        }
-        return ModelPayment::createFromActiveRow($data);
     }
 
     /**

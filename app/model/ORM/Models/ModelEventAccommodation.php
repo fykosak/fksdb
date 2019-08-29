@@ -42,37 +42,6 @@ class ModelEventAccommodation extends AbstractModelSingle implements IResource, 
     }
 
     /**
-     * @return ModelAddress|null
-     */
-    public function getAddress() {
-        if ($this->address) {
-            return ModelAddress::createFromActiveRow($this->address);
-        }
-        return null;
-    }
-
-    /**
-     * @return integer
-     */
-    public function getAvailableCapacity(): int {
-        return ($this->getCapacity() - $this->getUsedCapacity());
-    }
-
-    /**
-     * @return integer
-     */
-    public function getCapacity(): int {
-        return $this->capacity;
-    }
-
-    /**
-     * @return \Nette\Database\Table\GroupedSelection
-     */
-    public function getAccommodated() {
-        return $this->related(DbNames::TAB_EVENT_PERSON_ACCOMMODATION);
-    }
-
-    /**
      * @return int
      */
     public function getUsedCapacity(): int {

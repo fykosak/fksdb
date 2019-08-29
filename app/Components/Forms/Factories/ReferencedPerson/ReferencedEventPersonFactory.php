@@ -138,7 +138,7 @@ class ReferencedEventPersonFactory extends AbstractReferencedPersonFactory {
         }
         switch ($sub) {
             case 'person_accommodation':
-                return $person->getSerializedAccommodationByEventId($this->event->event_id);
+                throw new DeprecatedException();
             case 'person_schedule':
                 return $person->getSerializedSchedule($this->event->event_id, $field);
             default:

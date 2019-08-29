@@ -5,6 +5,7 @@ namespace Persons;
 use FKSDB\Components\Forms\Controls\IReferencedHandler;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
 use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
+use FKSDB\Components\Forms\Controls\Schedule\Handler;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelPerson;
@@ -75,34 +76,28 @@ class ReferencedPersonHandler implements IReferencedHandler {
      */
     private $resolution;
     /**
-     * @var ServiceEventPersonAccommodation
-     */
-    private $serviceEventPersonAccommodation;
-    /**
-     * @var \FKSDB\Components\Forms\Controls\Schedule\Handler
+     * @var Handler
      */
     private $eventScheduleHandler;
 
     /**
      * ReferencedPersonHandler constructor.
-     * @param ServiceEventPersonAccommodation $serviceEventPersonAccommodation
      * @param ServicePerson $servicePerson
      * @param ServicePersonInfo $servicePersonInfo
      * @param ServicePersonHistory $servicePersonHistory
      * @param ServiceMPostContact $serviceMPostContact
      * @param ServiceMPersonHasFlag $serviceMPersonHasFlag
-     * @param \FKSDB\Components\Forms\Controls\Schedule\Handler $eventScheduleHandler
+     * @param Handler $eventScheduleHandler
      * @param $acYear
      * @param $resolution
      */
     function __construct(
-        ServiceEventPersonAccommodation $serviceEventPersonAccommodation,
         ServicePerson $servicePerson,
         ServicePersonInfo $servicePersonInfo,
         ServicePersonHistory $servicePersonHistory,
         ServiceMPostContact $serviceMPostContact,
         ServiceMPersonHasFlag $serviceMPersonHasFlag,
-        \FKSDB\Components\Forms\Controls\Schedule\Handler $eventScheduleHandler,
+        Handler $eventScheduleHandler,
         $acYear,
         $resolution
     ) {
@@ -113,7 +108,6 @@ class ReferencedPersonHandler implements IReferencedHandler {
         $this->serviceMPersonHasFlag = $serviceMPersonHasFlag;
         $this->acYear = $acYear;
         $this->resolution = $resolution;
-        $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;
         $this->eventScheduleHandler = $eventScheduleHandler;
     }
 
@@ -194,7 +188,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
                 'person' => &$person,
                 'person_info' => ($info = $person->getInfo()) ?: $this->servicePersonInfo->createNew(),
                 'person_history' => ($history = $person->getHistory($this->acYear)) ?: $this->servicePersonHistory->createNew(['ac_year' => $this->acYear]),
-                'person_accommodation' => ($personAccommodation = ($this->eventId && $person->getSerializedAccommodationByEventId($this->eventId)) ?: null),
+                'person_accommodation' => null,
                 'person_schedule' => (($this->eventId && isset($data['person_schedule']) && $person->getSerializedSchedule($this->eventId, array_keys((array)$data['person_schedule'])[0])) ?: null),
                 self::POST_CONTACT_DELIVERY => ($dataPostContact = $person->getDeliveryAddress()) ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_DELIVERY]),
                 self::POST_CONTACT_PERMANENT => ($dataPostContact = $person->getPermanentAddress(true)) ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_PERMANENT])

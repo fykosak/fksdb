@@ -1,6 +1,5 @@
 <?php
 
-
 namespace FKSDB\ORM\Models;
 
 use FKSDB\ORM\AbstractModelSingle;

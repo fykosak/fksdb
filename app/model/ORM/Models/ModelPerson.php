@@ -385,30 +385,6 @@ class ModelPerson extends AbstractModelSingle implements IResource {
 
     /**
      * @param integer eventId
-     * @return string
-     * @throws \Nette\Utils\JsonException
-     */
-    public function getSerializedAccommodationByEventId($eventId) {
-        if (!$eventId) {
-            return null;
-        }
-
-        $query = $this->related(DbNames::TAB_EVENT_PERSON_ACCOMMODATION, 'person_id')->where('event_accommodation.event_id=?', $eventId);
-        $accommodations = [];
-        foreach ($query as $row) {
-            $model = ModelEventPersonAccommodation::createFromActiveRow($row);
-            $eventAcc = $model->getEventAccommodation();
-            $key = $eventAcc->date->format(ModelEventAccommodation::ACC_DATE_FORMAT);
-            $accommodations[$key] = $eventAcc->event_accommodation_id;
-        }
-        if (!count($accommodations)) {
-            return null;
-        }
-        return Json::encode($accommodations);
-    }
-
-    /**
-     * @param integer eventId
      * @param string $type
      * @return string
      * @throws \Nette\Utils\JsonException
