@@ -1,4 +1,4 @@
-{layout './@layout.latte'}
+{layout '../@layout.latte'}
 {block content}
     {if count($participants)}
         <ul class="list-group list-group-flush">
@@ -13,13 +13,7 @@
                     </span>
                     <span class="row">
                         <span class="col-5">
-                            {if in_array($participant->status,['participated'])}
-                                <span class="badge badge-success">{$participant->status}</span>
-                            {elseif in_array($participant->status,['rejected','missed']) }
-                                <span class="badge badge-danger">{$participant->status}</span>
-                            {else}
-                                <span class="badge badge-warning">{$participant->status}</span>
-                            {/if}
+                            {control valuePrinter__event_participant__status:onlyValue $participant}
                         </span>
 
                         {if ($participant->event->event_type_id ==1 || $participant->event->event_type_id==9 )}

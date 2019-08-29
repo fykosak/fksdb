@@ -1,6 +1,6 @@
 <div class="{($gender=='F'?'border-pink':'border-primary').' card mb-3'}">
     <h4 class="{($gender=='F'?'bg-pink':'bg-primary').' card-header text-white'}">{$headline}</h4>
-    {if \in_array($mode,$allowedModes)}
+    {if $userPermissions >= $minimalPermissions}
         {block content}
         {/block}
     {else}

@@ -3,31 +3,28 @@
 namespace FKSDB\Components\Controls\Stalking;
 
 /**
- * Class ContactInfo
+ * Class EventParticipant
  * @package FKSDB\Components\Controls\Stalking
  */
-class ContactInfo extends StalkingComponent {
-
+class EventParticipant extends AbstractStalkingComponent {
 
     public function render() {
         $this->beforeRender();
-        $this->template->info = $this->modelPerson->getInfo();
-        $this->template->setFile(__DIR__ . '/ContactInfo.latte');
+        $this->template->participants = $this->modelPerson->getEventParticipant();
+        $this->template->setFile(__DIR__ . '/EventParticipant.latte');
         $this->template->render();
     }
-
     /**
      * @return string
      */
     protected function getHeadline(): string {
-        return _('Contact info');
+        return _('Event participant');
     }
-
 
     /**
      * @return string[]
      */
     protected function getAllowedPermissions(): array {
-        return [self::PERMISSION_FULL, self::PERMISSION_RESTRICT, self::PERMISSION_BASIC];
+        return [self::PERMISSION_BASIC, self::PERMISSION_RESTRICT, self::PERMISSION_FULL];
     }
 }

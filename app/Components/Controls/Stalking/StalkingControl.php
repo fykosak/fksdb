@@ -13,23 +13,21 @@ use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 
 /**
- * Class StalkingComponent
+ * Class StalkingControl
  * @package FKSDB\Components\Controls\Stalking
  * @property FileTemplate $template
  */
-abstract class StalkingComponent extends Control {
+abstract class StalkingControl extends Control {
 
     const PERMISSION_FULL = 1024;
     const PERMISSION_RESTRICT = 128;
     const PERMISSION_BASIC = 16;
     const PERMISSION_USE_FIELD_LEVEL = 2048;
 
-    const LAYOUT_COUNTABLE = 'countable';
-    const LAYOUT_NONE = 'none';
     /**
      * @var int
      */
-    protected $mode;
+    protected $userPermissions;
     /**
      * @var ModelPerson;
      */
@@ -38,10 +36,6 @@ abstract class StalkingComponent extends Control {
      * @var ITranslator
      */
     protected $translator;
-    /**
-     * @var string
-     */
-    private $layout;
 
     /**
      * @var TableReflectionFactory
@@ -53,25 +47,20 @@ abstract class StalkingComponent extends Control {
      * @param ModelPerson $modelPerson
      * @param TableReflectionFactory $tableReflectionFactory
      * @param ITranslator $translator
-     * @param int $mode
-     * @param string $layout
+     * @param int $userPermissions
      */
-    public function __construct(ModelPerson $modelPerson, TableReflectionFactory $tableReflectionFactory, ITranslator $translator, int $mode, string $layout = self::LAYOUT_NONE) {
+    public function __construct(ModelPerson $modelPerson, TableReflectionFactory $tableReflectionFactory, ITranslator $translator, int $userPermissions) {
         parent::__construct();
-        $this->mode = $mode;
+        $this->userPermissions = $userPermissions;
         $this->modelPerson = $modelPerson;
         $this->translator = $translator;
-        $this->layout = $layout;
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
     public function beforeRender() {
         $this->template->setTranslator($this->translator);
-        $this->template->mode = $this->mode;
-        $this->template->headline = $this->getHeadline();
-        $this->template->allowedModes = $this->getAllowedPermissions();
+        $this->template->userPermissions = $this->userPermissions;
         $this->template->gender = $this->modelPerson->gender;
-        $this->template->layout = $this->layout;
     }
 
     /**
@@ -103,22 +92,12 @@ abstract class StalkingComponent extends Control {
     }
 
     /**
-     * @return string
-     */
-    abstract protected function getHeadline(): string;
-
-    /**
-     * @return string[]
-     */
-    abstract protected function getAllowedPermissions(): array;
-
-    /**
      * @param string $name
      * @return \Nette\ComponentModel\IComponent|null
      * @throws \Exception
      */
     public function createComponent($name) {
-        $printerComponent = $this->tableReflectionFactory->createComponent($name, max($this->getAllowedPermissions()));
+        $printerComponent = $this->tableReflectionFactory->createComponent($name, $this->userPermissions);
         if ($printerComponent) {
             return $printerComponent;
         }
