@@ -185,6 +185,7 @@ php:
 nette:
     database:
         reflection: discovered
+        sqlmode: MAXDB
     application:
         errorPresenter: Error
 
