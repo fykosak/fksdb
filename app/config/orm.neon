@@ -31,10 +31,8 @@ services:
     ServiceTask:             FKSDB\ORM\Services\ServiceTask
     ServiceTaskContribution: FKSDB\ORM\Services\ServiceTaskContribution
     ServiceTaskStudyYear:    FKSDB\ORM\Services\ServiceTaskStudyYear
-    ServiceEventPersonAccommodation: FKSDB\ORM\Services\ServiceEventPersonAccommodation
     ServiceTeacher:          FKSDB\ORM\Services\ServiceTeacher
     ServicePayment:          FKSDB\ORM\Services\ServicePayment
-    ServicePaymentAccommodation: FKSDB\ORM\Services\ServicePaymentAccommodation
 
     ServiceStoredQuery:      FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery
     ServiceStoredQueryParameter: FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryParameter
@@ -51,6 +49,7 @@ services:
     schedule.ServiceScheduleGroup: FKSDB\ORM\Services\Schedule\ServiceScheduleGroup
     schedule.ServiceScheduleItem: FKSDB\ORM\Services\Schedule\ServiceScheduleItem
     schedule.ServicePersonSchedule: FKSDB\ORM\Services\Schedule\ServicePersonSchedule
+    schedule.ServiceSchedulePayment: FKSDB\ORM\Services\Schedule\ServiceSchedulePayment
 
     event.ServiceEventParticipant:          FKSDB\ORM\Services\ServiceEventParticipant
     event.ServiceDsefGroup:                 FKSDB\ORM\Services\Events\ServiceDsefGroup
