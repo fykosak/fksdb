@@ -2,16 +2,15 @@
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
-
-use FKSDB\Components\React\IReactComponent;
 use FKSDB\Components\React\ReactField;
 use Nette\Forms\Controls\TextInput;
+use Nette\Utils\JsonException;
 
 /**
  * Class ScheduleField
  * @package FKSDB\Components\Forms\Factories\Events
  */
-class ScheduleField extends TextInput implements IReactComponent {
+class ScheduleField extends TextInput {
 
     use ReactField;
     /**
@@ -22,6 +21,7 @@ class ScheduleField extends TextInput implements IReactComponent {
     /**
      * ScheduleField constructor.
      * @param $data
+     * @throws JsonException
      */
     public function __construct($data) {
         parent::__construct(_('Schedule'));

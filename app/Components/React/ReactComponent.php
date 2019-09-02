@@ -9,12 +9,13 @@ use Nette\DI\Container;
 use Nette\Http\IRequest;
 use Nette\Templating\FileTemplate;
 use Nette\Utils\Json;
+use Nette\Utils\JsonException;
 
 /**
  * Class ReactComponent
  * @property FileTemplate template
  */
-abstract class ReactComponent extends Control implements IReactComponent {
+abstract class ReactComponent extends Control {
     /**
      * @var bool
      */
@@ -37,6 +38,7 @@ abstract class ReactComponent extends Control implements IReactComponent {
      * @param IComponent $obj
      */
     protected function attached($obj) {
+        parent::attached($obj);
         if (!static::$reactJSAttached && $obj instanceof IJavaScriptCollector) {
             static::$reactJSAttached = true;
             $obj->registerJSFile('js/tablesorter.min.js');
@@ -47,7 +49,7 @@ abstract class ReactComponent extends Control implements IReactComponent {
     }
 
     /**
-     * @throws \Nette\Utils\JsonException
+     * @throws JsonException
      */
     public final function render() {
         $this->template->moduleName = $this->getModuleName();
@@ -83,4 +85,24 @@ abstract class ReactComponent extends Control implements IReactComponent {
         $act = $this->getHttpRequest()->getPost('act');
         return (object)['requestData' => $requestData, 'act' => $act];
     }
+
+    /**
+     * @return string
+     */
+    abstract function getComponentName(): string;
+
+    /**
+     * @return string
+     */
+    abstract function getModuleName(): string;
+
+    /**
+     * @return string
+     */
+    abstract function getMode(): string;
+
+    /**
+     * @return string
+     */
+    abstract function getData(): string;
 }

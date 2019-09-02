@@ -3,9 +3,7 @@
 namespace FKSDB\Components\Forms\Controls\Payment;
 
 use Exception;
-use FKSDB\Components\React\IReactComponent;
 use FKSDB\Components\React\ReactField;
-use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\ORM\Services\Schedule\ServicePersonSchedule;
@@ -16,10 +14,9 @@ use function json_encode;
  * Class PaymentSelectField
  * @package FKSDB\Components\Forms\Controls\Payment
  */
-class PaymentSelectField extends TextInput implements IReactComponent {
+class PaymentSelectField extends TextInput {
 
     use ReactField;
-
     /**
      * @var ServicePersonSchedule
      */
@@ -65,10 +62,10 @@ class PaymentSelectField extends TextInput implements IReactComponent {
         $items = [];
         foreach ($query as $row) {
             $model = ModelPersonSchedule::createFromActiveRow($row);
-            if ($this->showAll || !$model->related(DbNames::TAB_PAYMENT_ACCOMMODATION, 'person_schedule_id')->count()) {
+            $model->getPayment();
+            if ($this->showAll || !$model->hasActivePayment()) {
                 $items[] = [
-                    'hasPayment' => false, /*
-                    ->where('payment.state !=? OR payment.state IS NULL', ModelPayment::STATE_CANCELED)->count(),*/
+                    'hasPayment' => $model->hasActivePayment(),
                     'label' => $model->getLabel(),
                     'id' => $model->person_schedule_id,
                     'scheduleItem' => $model->getScheduleItem()->__toArray(),

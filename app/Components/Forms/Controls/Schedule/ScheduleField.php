@@ -2,18 +2,19 @@
 
 namespace FKSDB\Components\Forms\Controls\Schedule;
 
-use FKSDB\Components\React\IReactComponent;
+use Exception;
 use FKSDB\Components\React\ReactField;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 use Nette\Forms\Controls\TextInput;
+use Nette\Utils\JsonException;
 
 /**
- * Class AccommodationField
- * @package FKSDB\Components\Forms\Controls\PersonAccommodation
+ * Class ScheduleField
+ * @package FKSDB\Components\Forms\Controls\Schedule
  */
-class ScheduleField extends TextInput implements IReactComponent {
+class ScheduleField extends TextInput {
 
     use ReactField;
     /**
@@ -26,9 +27,10 @@ class ScheduleField extends TextInput implements IReactComponent {
     private $type;
 
     /**
-     * AccommodationField constructor.
+     * ScheduleField constructor.
      * @param ModelEvent $event
      * @param string $type
+     * @throws JsonException
      */
     public function __construct(ModelEvent $event, string $type) {
         parent::__construct(_('Accommodation'));
@@ -61,7 +63,7 @@ class ScheduleField extends TextInput implements IReactComponent {
 
     /**
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     public function getData(): string {
         $groups = $this->event->getScheduleGroups()->where('schedule_group_type', $this->type);
