@@ -58,18 +58,6 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
     }
 
     /**
-     * @return ModelEventPersonAccommodation[]
-     * @deprecated
-     */
-    public function getRelatedPersonAccommodation(): array {
-        $query = $this->related(DbNames::TAB_PAYMENT_ACCOMMODATION, 'payment_id');
-        $items = [];
-        foreach ($query as $row) {
-            $items[] = ModelEventPersonAccommodation::createFromActiveRow($row->event_person_accommodation);
-        }
-        return $items;
-    }
-    /**
      * @return ModelPersonSchedule[]
      */
     public function getRelatedPersonSchedule(): array {

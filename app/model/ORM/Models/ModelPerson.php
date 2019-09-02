@@ -413,10 +413,10 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * @param $eventId
      * Definitely ugly but, there is only this way... Mišo
      */
-    public function removeAccommodationForEvent($eventId) {
-        $query = $this->related(DbNames::TAB_EVENT_PERSON_ACCOMMODATION, 'person_id')->where('event_accommodation.event_id=?', $eventId);
+    public function removeScheduleForEvent($eventId) {
+        $query = $this->related(DbNames::TAB_PERSON_SCHEDULE, 'person_id')->where('schedule_item.schedule_group.event_id=?', $eventId);
         /**
-         * @var ModelEventPersonAccommodation $row
+         * @var ModelPersonSchedule $row
          */
         foreach ($query as $row) {
             $row->delete();

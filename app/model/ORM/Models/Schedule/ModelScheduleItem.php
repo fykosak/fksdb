@@ -88,7 +88,7 @@ class ModelScheduleItem extends AbstractModelSingle {
      * @return string
      * @throws NotImplementedException
      */
-    public function getLabel(): string {
+    public function getShortLabel(): string {
         $group = $this->getGroup();
         switch ($group->schedule_group_type) {
             case ModelScheduleGroup::TYPE_ACCOMMODATION:
@@ -103,7 +103,7 @@ class ModelScheduleItem extends AbstractModelSingle {
      * @return string
      * Label include datetime from schedule group
      */
-    public function getFullLabel(): string {
+    public function getLabel(): string {
         $group = $this->getGroup();
         switch ($group->schedule_group_type) {
             case ModelScheduleGroup::TYPE_ACCOMMODATION:
@@ -114,6 +114,14 @@ class ModelScheduleItem extends AbstractModelSingle {
                 );
         }
         throw new NotImplementedException();
+    }
+
+    /**
+     * @return string
+     * @deprecated
+     */
+    public function getFullLabel(): string {
+        return $this->getLabel();
     }
 
     /**
@@ -131,11 +139,12 @@ class ModelScheduleItem extends AbstractModelSingle {
             'scheduleGroupId' => $this->schedule_group_id,
             'price' => [
                 'eur' => $this->price_eur,
-                'czk' => $this->price_czk],
+                'czk' => $this->price_czk
+            ],
             'totalCapacity' => $this->capacity,
             'usedCapacity' => $this->getUsedCapacity(),
             'scheduleItemId' => $this->schedule_item_id,
-            'label' => $this->getLabel(),
+            'label' => $this->getShortLabel(),
             'requireIdNumber' => $this->require_id_number,
             'description' => $this->description,
         ];

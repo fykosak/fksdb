@@ -47,10 +47,34 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel {
     }
 
     /**
+     * @return bool
+     */
+    public function hasActivePayment(): bool {
+        $payment = $this->getPayment();
+        if (!$payment) {
+            return false;
+        }
+        if ($payment->getState() == ModelPayment::STATE_CANCELED) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * @return string
      */
     public function getLabel(): string {
-        return $this->getScheduleItem()->getFullLabel();
+        $item = $this->getScheduleItem();
+        $group = $item->getGroup();
+        $itemLabel = $item->getLabel();
+        switch ($group->schedule_group_type) {
+            case ModelScheduleGroup::TYPE_ACCOMMODATION:
+                return \sprintf(_('%s: '),
+                        $this->getPerson()->getFullName()
+                    ) . $itemLabel;
+            default:
+                throw new NotImplementedException();
+        }
     }
 
     /**
