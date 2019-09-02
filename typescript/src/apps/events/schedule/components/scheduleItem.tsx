@@ -4,12 +4,12 @@ import PriceDisplay from '@shared/components/displays/price';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import CapacityLabel from '../../accommodation/components/capacityLabel';
-import { Store } from '../../accommodation/reducer';
 import {
     ScheduleGroupType,
     ScheduleItemDef,
 } from '../middleware/interfaces';
+import { Store } from '../reducer';
+import CapacityLabel from './capacityLabel';
 
 interface OwnProps {
     item: ScheduleItemDef;

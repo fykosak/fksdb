@@ -1,4 +1,5 @@
 import { config } from '@config';
+import InputConnector from '@inputConnector/compoenents/index';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import {
@@ -6,7 +7,6 @@ import {
     createStore,
 } from 'redux';
 import logger from 'redux-logger';
-import InputConnector from '../../../../inputConnector/compoenents/index';
 import { ScheduleGroupDef } from '../middleware/interfaces';
 import { app } from '../reducer/';
 import Container from './container';

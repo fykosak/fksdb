@@ -32,17 +32,12 @@ class Row extends React.Component<OwnProps & StateProps & DispatchProps, {}> {
                 <span className={'mr-3 ' + (value ? 'fa fa-check-square-o' : 'fa fa-square-o')}/>
                     {item.hasPayment && (
                         <i className={'mr-2 fa fa-exclamation-circle text-danger'}
-                           title={lang.getText('Item has already another payment')}/>)}
+                           title={lang.getText('Item has already another payment.')}/>)}
                     <span>{item.label}</span>
               </span>
         </div>;
     }
 }
-
-// const {accommodation: {price}} = item;
-// <span className={'text-muted'}>
-// <small className={'ml-3'}>{lang.getText('Price')}: <PriceDisplay price={price}/></small>
-// </span>
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => {
     return {
