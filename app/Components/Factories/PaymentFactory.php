@@ -11,9 +11,8 @@ use FKSDB\Components\Grids\Payment\OrgPaymentGrid;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\Schedule\ServicePersonSchedule;
-use FKSDB\ORM\Services\ServiceEventPersonAccommodation;
+use FKSDB\ORM\Services\Schedule\ServiceSchedulePayment;
 use FKSDB\ORM\Services\ServicePayment;
-use FKSDB\ORM\Services\ServicePaymentAccommodation;
 use FKSDB\Payment\Transition\PaymentMachine;
 use Nette\Localization\ITranslator;
 
@@ -40,13 +39,13 @@ class PaymentFactory {
      */
     private $personProvider;
     /**
-     * @var ServiceEventPersonAccommodation
+     * @var ServicePersonSchedule
      */
     private $servicePersonSchedule;
     /**
-     * @var ServicePaymentAccommodation
+     * @var ServiceSchedulePayment
      */
-    private $servicePaymentAccommodation;
+    private $serviceSchedulePayment;
     /**
      * @var TableReflectionFactory
      */
@@ -55,7 +54,7 @@ class PaymentFactory {
     /**
      * PaymentFactory constructor.
      * @param TableReflectionFactory $tableReflectionFactory
-     * @param ServicePaymentAccommodation $servicePaymentAccommodation
+     * @param ServiceSchedulePayment $serviceSchedulePayment
      * @param PersonFactory $personFactory
      * @param PersonProvider $personProvider
      * @param ServicePersonSchedule $servicePersonSchedule
@@ -63,7 +62,7 @@ class PaymentFactory {
      * @param ServicePayment $servicePayment
      */
     public function __construct(TableReflectionFactory $tableReflectionFactory,
-                                ServicePaymentAccommodation $servicePaymentAccommodation,
+                                ServiceSchedulePayment $serviceSchedulePayment,
                                 PersonFactory $personFactory,
                                 PersonProvider $personProvider,
                                 ServicePersonSchedule $servicePersonSchedule,
@@ -74,7 +73,7 @@ class PaymentFactory {
         $this->personFactory = $personFactory;
         $this->personProvider = $personProvider;
         $this->servicePersonSchedule = $servicePersonSchedule;
-        $this->servicePaymentAccommodation = $servicePaymentAccommodation;
+        $this->serviceSchedulePayment = $serviceSchedulePayment;
     }
 
     /**
@@ -111,7 +110,7 @@ class PaymentFactory {
             $this->personFactory,
             $this->personProvider,
             $this->servicePersonSchedule,
-            $this->servicePaymentAccommodation
+            $this->serviceSchedulePayment
         );
     }
 }

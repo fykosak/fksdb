@@ -10,7 +10,6 @@ use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelPostContact;
-use FKSDB\ORM\Services\ServiceEventPersonAccommodation;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServicePersonHistory;
 use FKSDB\ORM\Services\ServicePersonInfo;
@@ -24,7 +23,6 @@ use Nette\Utils\ArrayHash;
 use Nette\Utils\JsonException;
 use ServiceMPersonHasFlag;
 use ServiceMPostContact;
-use Tracy\Debugger;
 use function array_keys;
 
 /**
@@ -179,7 +177,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
          */
         try {
             $this->beginTransaction();
-            Debugger::barDump($data);
+            // Debugger::barDump($data);
             /*
              * Person & its extensions
              */
@@ -188,7 +186,6 @@ class ReferencedPersonHandler implements IReferencedHandler {
                 'person' => &$person,
                 'person_info' => ($info = $person->getInfo()) ?: $this->servicePersonInfo->createNew(),
                 'person_history' => ($history = $person->getHistory($this->acYear)) ?: $this->servicePersonHistory->createNew(['ac_year' => $this->acYear]),
-                'person_accommodation' => null,
                 'person_schedule' => (($this->eventId && isset($data['person_schedule']) && $person->getSerializedSchedule($this->eventId, array_keys((array)$data['person_schedule'])[0])) ?: null),
                 self::POST_CONTACT_DELIVERY => ($dataPostContact = $person->getDeliveryAddress()) ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_DELIVERY]),
                 self::POST_CONTACT_PERMANENT => ($dataPostContact = $person->getPermanentAddress(true)) ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_PERMANENT])
@@ -197,7 +194,6 @@ class ReferencedPersonHandler implements IReferencedHandler {
                 'person' => $this->servicePerson,
                 'person_info' => $this->servicePersonInfo,
                 'person_history' => $this->servicePersonHistory,
-                'person_accommodation' => null,
                 'person_schedule' => null,
                 self::POST_CONTACT_DELIVERY => $this->serviceMPostContact,
                 self::POST_CONTACT_PERMANENT => $this->serviceMPostContact,
@@ -233,9 +229,6 @@ class ReferencedPersonHandler implements IReferencedHandler {
                         $services[$t]->dispose($model);
                     }
                     continue;
-                }
-                if ($t == 'person_accommodation' && isset($data[$t])) {
-                    throw new DeprecatedException();
                 }
 
                 if ($t == 'person_schedule' && isset($data[$t])) {

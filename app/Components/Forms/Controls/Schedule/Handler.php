@@ -12,7 +12,7 @@ use Nette\Utils\ArrayHash;
 
 /**
  * Class Handler
- * @package FKSDB\Components\Forms\Controls\PersonAccommodation
+ * @package FKSDB\Components\Forms\Controls\Schedule
  */
 class Handler {
     /**
@@ -54,11 +54,13 @@ class Handler {
      */
     public function prepareAndUpdate(ArrayHash $data, ModelPerson $person, int $eventId) {
         list($newScheduleData, $type) = $this->prepareData($data);
+        // Debugger::barDump($newScheduleData);
         $oldRows = $this->servicePersonSchedule->getTable()
             ->where('person_id', $person->person_id)
             ->where('schedule_item.schedule_group.event_id', $eventId)->where('schedule_item.schedule_group.schedule_group_type', $type);
 
         foreach ($oldRows as $row) {
+
             $modelPersonSchedule = ModelPersonSchedule::createFromActiveRow($row);
             if (in_array($modelPersonSchedule->schedule_item_id, $newScheduleData)) {
                 // do nothing
@@ -71,7 +73,7 @@ class Handler {
                     if (\preg_match('/payment/', $exception->getMessage())) {
                         throw new ExistingPaymentException(\sprintf(
                             _('Položka "%s" má už vygenerovanú platu, teda nejde zmazať.'),
-                            $modelPersonSchedule->getScheduleItem()->getFullLabel()));
+                            $modelPersonSchedule->getLabel()));
                     } else {
                         throw $exception;
                     }
@@ -86,9 +88,9 @@ class Handler {
                 $this->servicePersonSchedule->createNewModel(['person_id' => $person->person_id, 'schedule_item_id' => $id]);
             } else {
                 throw new FullCapacityException(sprintf(
-                    _('Osobu %s nepodarilo ptihlásiť na program %s, z dôvodu plnej kapacity.'),
+                    _('Osobu %s nepodarilo ptihlásiť na "%s", z dôvodu plnej kapacity.'),
                     $person->getFullName(),
-                    $modelScheduleItem->getFullLabel()
+                    $modelScheduleItem->getLabel()
                 ));
             }
         }
@@ -100,7 +102,7 @@ class Handler {
      */
     private function prepareData(ArrayHash $data): array {
         foreach ($data as $type => $datum) {
-            return [(array)json_decode($datum), $type];
+            return [\array_values((array)json_decode($datum)), $type];
         }
         return [];
     }

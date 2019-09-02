@@ -89,7 +89,8 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
     protected function loadModel(int $id) {
         $row = $this->serviceEventParticipant->findByPrimary($id);
         if (!$row) {
-            throw new BadRequestException('Model not found');
+            $this->flashMessage(_('Application not found'));
+            $this->redirect('list');
         }
         $model = ModelEventParticipant::createFromActiveRow($row);
         if ($model->event_id != $this->getEvent()->event_id) {

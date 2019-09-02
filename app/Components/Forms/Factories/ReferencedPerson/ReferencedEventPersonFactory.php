@@ -110,8 +110,6 @@ class ReferencedEventPersonFactory extends AbstractReferencedPersonFactory {
      */
     public function createField($sub, $fieldName, $acYear, HiddenField $hiddenField = null, array $metadata = []) {
         switch ($sub) {
-            case 'person_accommodation':
-                throw new DeprecatedException();
             case 'person_schedule':
                 $control = $this->personScheduleFactory->createField($fieldName, $this->event);
                 $this->appendMetadata($control, $hiddenField, $fieldName, $metadata);
@@ -137,8 +135,6 @@ class ReferencedEventPersonFactory extends AbstractReferencedPersonFactory {
             return null;
         }
         switch ($sub) {
-            case 'person_accommodation':
-                throw new DeprecatedException();
             case 'person_schedule':
                 return $person->getSerializedSchedule($this->event->event_id, $field);
             default:

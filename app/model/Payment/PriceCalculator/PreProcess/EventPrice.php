@@ -62,11 +62,11 @@ class EventPrice extends AbstractPreProcess {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelEventParticipant $modelEventAccommodation
+     * @param \FKSDB\ORM\Models\ModelEventParticipant $modelEventParticipant
      * @param \FKSDB\Payment\Price $price
      * @return \FKSDB\Payment\Price
      */
-    private function getPriceFromModel(ModelEventParticipant $modelEventAccommodation, Price $price): Price {
+    private function getPriceFromModel(ModelEventParticipant $modelEventParticipant, Price $price): Price {
         throw new NotImplementedException();
     }
 }

@@ -45,6 +45,7 @@ final class TableReflectionFactory {
      * @param string $tableName
      * @param string $fieldName
      * @return AbstractRow
+     * @throws InvalidArgumentException
      * @throws \Exception
      */
     public function loadService(string $tableName, string $fieldName): AbstractRow {

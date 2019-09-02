@@ -11,8 +11,8 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\Schedule\ServicePersonSchedule;
+use FKSDB\ORM\Services\Schedule\ServiceSchedulePayment;
 use FKSDB\ORM\Services\ServicePayment;
-use FKSDB\ORM\Services\ServicePaymentAccommodation;
 use FKSDB\Payment\Handler\DuplicatePaymentException;
 use FKSDB\Payment\Handler\EmptyDataException;
 use FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException;
@@ -74,9 +74,9 @@ class SelectForm extends Control {
      */
     private $servicePayment;
     /**
-     * @var ServicePaymentAccommodation
+     * @var ServiceSchedulePayment
      */
-    private $servicePaymentAccommodation;
+    private $serviceSchedulePayment;
 
     /**
      * SelectForm constructor.
@@ -89,7 +89,7 @@ class SelectForm extends Control {
      * @param PersonFactory $personFactory
      * @param PersonProvider $personProvider
      * @param ServicePersonSchedule $servicePersonSchedule
-     * @param ServicePaymentAccommodation $servicePaymentAccommodation
+     * @param ServiceSchedulePayment $serviceSchedulePayment
      */
     public function __construct(ModelEvent $event,
                                 bool $isOrg,
@@ -100,7 +100,7 @@ class SelectForm extends Control {
                                 PersonFactory $personFactory,
                                 PersonProvider $personProvider,
                                 ServicePersonSchedule $servicePersonSchedule,
-                                ServicePaymentAccommodation $servicePaymentAccommodation
+                                ServiceSchedulePayment $serviceSchedulePayment
     ) {
         parent::__construct();
         $this->translator = $translator;
@@ -112,7 +112,7 @@ class SelectForm extends Control {
         $this->personFactory = $personFactory;
         $this->personProvider = $personProvider;
         $this->servicePersonSchedule = $servicePersonSchedule;
-        $this->servicePaymentAccommodation = $servicePaymentAccommodation;
+        $this->serviceSchedulePayment = $serviceSchedulePayment;
     }
 
     /**
@@ -193,7 +193,7 @@ class SelectForm extends Control {
         $connection->beginTransaction();
 
         try {
-            $this->servicePaymentAccommodation->prepareAndUpdate($values->payment_accommodation, $model);
+            $this->serviceSchedulePayment->prepareAndUpdate($values->payment_accommodation, $model);
         } catch (DuplicatePaymentException $exception) {
             $this->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
             $connection->rollBack();
