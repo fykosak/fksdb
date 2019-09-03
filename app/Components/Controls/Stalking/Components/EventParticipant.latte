@@ -1,0 +1,31 @@
+{layout '../@layout.latte'}
+{block content}
+    {if count($participants)}
+        <ul class="list-group list-group-flush">
+            {foreach $participants as $row}
+                {var $participant =\FKSDB\ORM\Models\ModelEventParticipant::createFromTableRow($row) }
+                <li class="list-group-item">
+                    <span class="row">
+                        <span class="col-5">{$participant->event->event_year}
+                            . {$participant->event->event_type->name}</span>
+                        <span class="col-7">{control eventLabel $participant->getEvent()}</span>
+
+                    </span>
+                    <span class="row">
+                        <span class="col-5">
+                            {control valuePrinter__event_participant__status:onlyValue $participant}
+                        </span>
+
+                        {if ($participant->event->event_type_id ==1 || $participant->event->event_type_id==9 )}
+                            <span class="col-7"><b>{_'Team'}:</b> {$participant->getFyziklaniTeam()->name}</span>
+                        {/if}
+                    </span>
+                </li>
+            {/foreach}
+        </ul>
+    {else}
+        <div class="card-body">
+            {control noRecords}
+        </div>
+    {/if}
+{/block}

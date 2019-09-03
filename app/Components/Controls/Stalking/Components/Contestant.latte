@@ -1,0 +1,22 @@
+{layout '../@layout.latte'}
+{block content}
+    {if count($contestants)}
+        <ul class="list-group list-group-flush">
+            {foreach $contestants as $contestant}
+                <li class="list-group-item">
+                <span class="row">
+                    <span class="col-4">{$contestant->ct_id}</span>
+                    <span class="col-4">
+                    {control contestBadge, $contestant->contest_id}
+                    </span>
+                    <span class="col-4">{$contestant->year}. year</span>
+                </span>
+                </li>
+            {/foreach}
+        </ul>
+    {else}
+        <div class="card-body">
+            {control noRecords}
+        </div>
+    {/if}
+{/block}

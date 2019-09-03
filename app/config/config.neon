@@ -203,3 +203,4 @@ includes:
     - navigation.neon
     - contests.neon
     - exports.neon
+    - stalking.neon
