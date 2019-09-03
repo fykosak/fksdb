@@ -13,13 +13,6 @@ export default class Container extends React.Component<Props, {}> {
         const rows = [];
         items.sort((a, b) => {
             return a.personFamilyName.localeCompare(b.personFamilyName);
-            /*if (b.personFamilyName > a.personFamilyName) {
-                return -1;
-            }
-            if (b.personFamilyName < a.personFamilyName) {
-                return 1;
-            }
-            return 0;*/
         });
         let lastPerson = null;
         items.forEach((value, index) => {
