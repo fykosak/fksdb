@@ -17,7 +17,7 @@ export const eventSchedule: App = (element, module, component, mode, rawData) =>
     if (!(element instanceof HTMLInputElement)) {
         return false;
     }
-  //  element.style.display = 'none';
+    element.style.display = 'none';
 
     ReactDOM.render(<Index scheduleDef={scheduleDef} input={element} mode={mode}/>, container);
 

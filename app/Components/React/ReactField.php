@@ -12,8 +12,6 @@ use Nette\Utils\JsonException;
  */
 trait ReactField {
 
-    static private $attachedJS = false;
-
     /**
      * @throws JsonException
      */
@@ -28,16 +26,6 @@ trait ReactField {
 
     protected function registerMonitor() {
         $this->monitor(IJavaScriptCollector::class);
-    }
-
-    /**
-     * @param object $obj
-     */
-    protected function attachedReact($obj) {
-        if (!self::$attachedJS && $obj instanceof IJavaScriptCollector) {
-            self::$attachedJS = true;
-            $obj->registerJSFile('js/bundle-all.min.js');
-        }
     }
 
     /**

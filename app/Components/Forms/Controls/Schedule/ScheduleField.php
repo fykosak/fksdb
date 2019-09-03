@@ -8,6 +8,7 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 use Nette\Forms\Controls\TextInput;
+use Nette\NotImplementedException;
 use Nette\Utils\JsonException;
 
 /**
@@ -33,11 +34,24 @@ class ScheduleField extends TextInput {
      * @throws JsonException
      */
     public function __construct(ModelEvent $event, string $type) {
-        parent::__construct(_('Accommodation'));
+        parent::__construct($this->getLabelByType($type));
         $this->event = $event;
         $this->type = $type;
         $this->appendProperty();
         $this->registerMonitor();
+    }
+
+    /**
+     * @param string $type
+     * @return string
+     */
+    private function getLabelByType(string $type): string {
+        switch ($type) {
+            case 'accommodation':
+                return _('Accommodation');
+            default:
+                throw new NotImplementedException();
+        }
     }
 
     /**
@@ -81,14 +95,6 @@ class ScheduleField extends TextInput {
 
         }
         return json_encode($groupList);
-    }
-
-    /**
-     * @param $obj
-     */
-    public function attached($obj) {
-        parent::attached($obj);
-        $this->attachedReact($obj);
     }
 
     /**

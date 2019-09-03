@@ -8,6 +8,7 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\ORM\Services\Schedule\ServicePersonSchedule;
 use Nette\Forms\Controls\TextInput;
+use Nette\Utils\JsonException;
 use function json_encode;
 
 /**
@@ -40,6 +41,7 @@ class PaymentSelectField extends TextInput {
      * @param ModelEvent $event
      * @param string $groupType
      * @param bool $showAll
+     * @throws JsonException
      */
     public function __construct(ServicePersonSchedule $servicePersonSchedule, ModelEvent $event, string $groupType, bool $showAll = true) {
         parent::__construct();

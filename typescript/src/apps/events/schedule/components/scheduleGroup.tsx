@@ -19,7 +19,7 @@ export default class ScheduleGroup extends React.Component<Props, {}> {
         </div>;
     }
 
-    private getLabel() {
+    private getLabel(): string {
         const {group} = this.props;
         switch (group.scheduleGroupType) {
             case 'accommodation':
