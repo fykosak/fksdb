@@ -64,7 +64,6 @@ class TransitionButtonsControl extends Control {
             $this->getPresenter()->flashMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR);
             return;
         } catch (\Exception $exception) {
-            Debugger::barDump($exception);
             Debugger::log($exception);
             $this->getPresenter()->flashMessage(_('Nastala chyba'), \BasePresenter::FLASH_ERROR);
         }

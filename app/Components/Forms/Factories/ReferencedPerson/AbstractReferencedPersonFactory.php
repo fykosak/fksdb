@@ -2,10 +2,13 @@
 
 namespace FKSDB\Components\Forms\Factories\ReferencedPerson;
 
+use Closure;
+use FKSDB\Components\Forms\Containers\AddressContainer;
 use FKSDB\Components\Forms\Containers\IWriteOnly;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Containers\Models\IReferencedSetter;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
+use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\AddressFactory;
@@ -15,6 +18,7 @@ use FKSDB\Components\Forms\Factories\PersonHistoryFactory;
 use FKSDB\Components\Forms\Factories\PersonInfoFactory;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Models\ModelPostContact;
 use FKSDB\ORM\Services\ServiceFlag;
 use FKSDB\ORM\Services\ServicePerson;
 use Nette\Forms\Container;
@@ -26,6 +30,7 @@ use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use Nette\SmartObject;
 use Nette\Utils\Arrays;
+use Nette\Utils\RegexpException;
 use Persons\IModifiabilityResolver;
 use Persons\IVisibilityResolver;
 use Persons\ReferencedPersonHandler;
@@ -49,7 +54,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
     const HAS_DELIVERY = 0x8;
 
     /**
-     * @var \FKSDB\ORM\Services\ServicePerson
+     * @var ServicePerson
      */
     protected $servicePerson;
 
@@ -78,7 +83,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
     protected $personProvider;
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceFlag
+     * @var ServiceFlag
      */
     protected $serviceFlag;
 
@@ -95,11 +100,11 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
      * AbstractReferencedPersonFactory constructor.
      * @param AddressFactory $addressFactory
      * @param FlagFactory $flagFactory
-     * @param \FKSDB\ORM\Services\ServicePerson $servicePerson
+     * @param ServicePerson $servicePerson
      * @param PersonFactory $personFactory
      * @param ReferencedPersonHandlerFactory $referencedPersonHandlerFactory
      * @param PersonProvider $personProvider
-     * @param \FKSDB\ORM\Services\ServiceFlag $serviceFlag
+     * @param ServiceFlag $serviceFlag
      * @param PersonInfoFactory $personInfoFactory
      * @param PersonHistoryFactory $personHistoryFactory
      */
@@ -124,7 +129,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
      * @param IVisibilityResolver $visibilityResolver is person's writeOnly field visible? (i.e. not writeOnly then)
      * @param int $evenId
      * @return array
-     * @throws \Nette\Utils\RegexpException
+     * @throws RegexpException
      */
     public function createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, IModifiabilityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver, $evenId = 0) {
 
@@ -262,7 +267,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
      * @param $acYear
      * @param HiddenField $hiddenField
      * @param array $metadata
-     * @return \FKSDB\Components\Forms\Containers\AddressContainer|BaseControl|null
+     * @return AddressContainer|BaseControl|null
      * @throws \Exception
      */
     public function createField($sub, $fieldName, $acYear, HiddenField $hiddenField, array $metadata) {
@@ -375,7 +380,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
 
     /**
      * @param $searchType
-     * @return \FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox|TextInput
+     * @return AutocompleteSelectBox|TextInput
      */
     protected function createSearchControl($searchType) {
 
@@ -397,7 +402,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
 
     /**
      * @param $searchType
-     * @return \Closure
+     * @return Closure
      */
     protected function createSearchCallback($searchType) {
         $service = $this->servicePerson;
@@ -420,7 +425,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
 
     /**
      * @param $searchType
-     * @return \Closure
+     * @return Closure
      */
     protected function createTermToValuesCallback($searchType) {
         switch ($searchType) {
@@ -439,7 +444,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelPerson $person
+     * @param ModelPerson $person
      * @param $sub
      * @param $field
      * @param $acYear
@@ -451,12 +456,12 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelPerson|null $person
+     * @param ModelPerson|null $person
      * @param $sub
      * @param $field
      * @param $acYear
      * @param $options
-     * @return bool|\FKSDB\ORM\Models\ModelPostContact|mixed|null
+     * @return bool|ModelPostContact|mixed|null
      */
     protected function getPersonValue(ModelPerson $person = null, $sub, $field, $acYear, $options) {
         if (!$person) {

@@ -1,24 +1,30 @@
 <?php
 
-
 namespace FKSDB\Components\Forms\Controls\Payment;
 
+use BasePresenter;
+use Exception;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelPayment;
-use FKSDB\ORM\Services\ServiceEventPersonAccommodation;
+use FKSDB\ORM\Services\Schedule\ServicePersonSchedule;
+use FKSDB\ORM\Services\Schedule\ServiceSchedulePayment;
 use FKSDB\ORM\Services\ServicePayment;
-use FKSDB\ORM\Services\ServicePaymentAccommodation;
-use FKSDB\Payment\Handler\DuplicateAccommodationPaymentException;
+use FKSDB\Payment\Handler\DuplicatePaymentException;
 use FKSDB\Payment\Handler\EmptyDataException;
+use FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException;
 use FKSDB\Payment\Transition\PaymentMachine;
+use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
+use function json_encode;
 
 /**
  * Class SelectForm
@@ -26,6 +32,10 @@ use Nette\Templating\FileTemplate;
  * @property FileTemplate $template
  */
 class SelectForm extends Control {
+    /**
+     * @var string
+     */
+    private $type;
     /**
      * @var PersonFactory
      */
@@ -35,11 +45,11 @@ class SelectForm extends Control {
      */
     private $personProvider;
     /**
-     * @var ServiceEventPersonAccommodation
+     * @var ServicePersonSchedule
      */
-    private $serviceEventPersonAccommodation;
+    private $servicePersonSchedule;
     /**
-     * @var \FKSDB\ORM\Models\ModelEvent
+     * @var ModelEvent
      */
     private $event;
     /**
@@ -56,7 +66,7 @@ class SelectForm extends Control {
      */
     private $machine;
     /**
-     * @var \FKSDB\ORM\Models\ModelPayment
+     * @var ModelPayment
      */
     private $model;
     /**
@@ -64,31 +74,33 @@ class SelectForm extends Control {
      */
     private $servicePayment;
     /**
-     * @var ServicePaymentAccommodation
+     * @var ServiceSchedulePayment
      */
-    private $servicePaymentAccommodation;
+    private $serviceSchedulePayment;
 
     /**
      * SelectForm constructor.
-     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @param ModelEvent $event
      * @param bool $isOrg
+     * @param string $type
      * @param ITranslator $translator
      * @param ServicePayment $servicePayment
      * @param PaymentMachine $machine
      * @param PersonFactory $personFactory
      * @param PersonProvider $personProvider
-     * @param ServiceEventPersonAccommodation $serviceEventPersonAccommodation
-     * @param ServicePaymentAccommodation $servicePaymentAccommodation
+     * @param ServicePersonSchedule $servicePersonSchedule
+     * @param ServiceSchedulePayment $serviceSchedulePayment
      */
     public function __construct(ModelEvent $event,
                                 bool $isOrg,
+                                string $type,
                                 ITranslator $translator,
                                 ServicePayment $servicePayment,
                                 PaymentMachine $machine,
                                 PersonFactory $personFactory,
                                 PersonProvider $personProvider,
-                                ServiceEventPersonAccommodation $serviceEventPersonAccommodation,
-                                ServicePaymentAccommodation $servicePaymentAccommodation
+                                ServicePersonSchedule $servicePersonSchedule,
+                                ServiceSchedulePayment $serviceSchedulePayment
     ) {
         parent::__construct();
         $this->translator = $translator;
@@ -96,14 +108,15 @@ class SelectForm extends Control {
         $this->machine = $machine;
         $this->servicePayment = $servicePayment;
         $this->isOrg = $isOrg;
+        $this->type = $type;
         $this->personFactory = $personFactory;
         $this->personProvider = $personProvider;
-        $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;
-        $this->servicePaymentAccommodation = $servicePaymentAccommodation;
+        $this->servicePersonSchedule = $servicePersonSchedule;
+        $this->serviceSchedulePayment = $serviceSchedulePayment;
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelPayment $modelPayment
+     * @param ModelPayment $modelPayment
      */
     public function setModel(ModelPayment $modelPayment) {
         $this->model = $modelPayment;
@@ -111,8 +124,8 @@ class SelectForm extends Control {
 
     /**
      * @return FormControl
-     * @throws \FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException
-     * @throws \Nette\Application\BadRequestException
+     * @throws UnsupportedCurrencyException
+     * @throws BadRequestException
      */
     public function createComponentFormEdit() {
         return $this->createForm(false);
@@ -120,8 +133,8 @@ class SelectForm extends Control {
 
     /**
      * @return FormControl
-     * @throws \FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException
-     * @throws \Nette\Application\BadRequestException
+     * @throws UnsupportedCurrencyException
+     * @throws BadRequestException
      */
     public function createComponentFormCreate() {
         return $this->createForm(true);
@@ -130,8 +143,8 @@ class SelectForm extends Control {
     /**
      * @param bool $create
      * @return FormControl
-     * @throws \FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException
-     * @throws \Nette\Application\BadRequestException
+     * @throws UnsupportedCurrencyException
+     * @throws BadRequestException
      */
     private function createForm(bool $create) {
         $control = new FormControl();
@@ -144,7 +157,7 @@ class SelectForm extends Control {
         $currencyField = new CurrencyField();
         $currencyField->setRequired(_('Please select currency'));
         $form->addComponent($currencyField, 'currency');
-        $form->addComponent(new PaymentSelectField($this->serviceEventPersonAccommodation, $this->event, !$create), 'payment_accommodation');
+        $form->addComponent(new PaymentSelectField($this->servicePersonSchedule, $this->event, $this->type, !$create), 'payment_accommodation');
         $form->addSubmit('submit', $create ? _('Proceed to summary') : _('Save payment'));
         $form->onSuccess[] = function (Form $form) use ($create) {
             $this->handleSubmit($form, $create);
@@ -155,9 +168,9 @@ class SelectForm extends Control {
     /**
      * @param Form $form
      * @param bool $create
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\ForbiddenRequestException
-     * @throws \Exception
+     * @throws AbortException
+     * @throws ForbiddenRequestException
+     * @throws Exception
      */
     private function handleSubmit(Form $form, bool $create) {
         $values = $form->getValues();
@@ -170,23 +183,23 @@ class SelectForm extends Control {
         } else {
             $model = $this->model;
         }
-        $this->servicePayment->updateModel($model, [
-            'currency' => $values->currency,
-            'person_id' => $values->offsetExists('person_id') ? $values->person_id : $model->person_id,
-        ]);
-        $this->servicePayment->save($model);
+        $model->update([
+                'currency' => $values->currency,
+                'person_id' => $values->offsetExists('person_id') ? $values->person_id : $model->person_id,
+            ]
+        );
 
         $connection = $this->servicePayment->getConnection();
         $connection->beginTransaction();
 
         try {
-            $this->servicePaymentAccommodation->prepareAndUpdate($values->payment_accommodation, $model);
-        } catch (DuplicateAccommodationPaymentException $exception) {
-            $this->flashMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR);
+            $this->serviceSchedulePayment->prepareAndUpdate($values->payment_accommodation, $model);
+        } catch (DuplicatePaymentException $exception) {
+            $this->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
             $connection->rollBack();
             return;
         } catch (EmptyDataException $exception) {
-            $this->flashMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR);
+            $this->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
             $connection->rollBack();
             return;
         }
@@ -197,7 +210,7 @@ class SelectForm extends Control {
     }
 
     /**
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     public function renderCreate() {
         /**
@@ -217,13 +230,13 @@ class SelectForm extends Control {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelPayment $model
-     * @throws \Nette\Application\BadRequestException
+     * @param ModelPayment $model
+     * @throws BadRequestException
      */
     public function renderEdit(ModelPayment $model) {
         $this->model = $model;
         $values = $model->toArray();
-        $values['payment_accommodation'] = $this->serializePaymentAccommodation();
+        $values['payment_accommodation'] = $this->serializeScheduleValue();
         /**
          * @var FormControl $control
          */
@@ -235,15 +248,14 @@ class SelectForm extends Control {
     }
 
     /**
-     * @return false|string
+     * @return string
      */
-    private function serializePaymentAccommodation() {
-        $query = $this->model->getRelatedPersonAccommodation();
+    private function serializeScheduleValue() {
+        $query = $this->model->getRelatedPersonSchedule();
         $items = [];
         foreach ($query as $row) {
-            $items[$row->event_person_accommodation_id] = true;
+            $items[$row->person_schedule_id] = true;
         }
-        return \json_encode($items);
+        return json_encode($items);
     }
-
 }

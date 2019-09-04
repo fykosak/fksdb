@@ -1,0 +1,103 @@
+parameters:
+    events:
+        dsef25:
+            appCond: or(regOpen(), role('admin'))
+            person:
+                person:
+                    other_name:
+                        required: true
+                    family_name:
+                        required: true
+                person_info:
+                    email:
+                        required: true
+                    id_number:
+                        required: true
+                    born:
+                        required: true
+                person_schedule:
+                    accommodation:
+                        required: false
+                post_contact_p:
+                    address:
+                        required: true
+
+events:
+    dsef25:
+        event_type_id: 2
+        eventYears: [25]
+        tableLayout: event.grid
+        formLayout: dsef.form
+        paramScheme:
+            notifyBcc:
+                default: dsef@fykos.cz
+            notifyFrom:
+                default: Den s experimentální fyzikou <dsef@fykos.cz>
+
+        baseMachines:
+            PARTICIPANT_DSEF:
+                service: @event.ServiceMDsefParticipant
+
+                states:
+                    applied: _('Přihlášen')
+                    participated: _('Účastnil se')
+                    missed: _('Nepřijel')
+                    cancelled: _('Zrušen')
+
+                transitions:
+                    __init->applied:
+                        condition: %events.dsef25.appCond%
+                        label: _('Přihlásit účastníka')
+                        onExecuted:
+                            - Events\Transitions\MailSender(confirmation, .self)
+                    applied->participated:
+                        condition: and(role('admin'),eventWas())
+                        label: _('Prezentovat')
+                    applied->missed:
+                        condition: and(role('admin'),eventWas())
+                        label: _('Nepřijel')
+                        dangerous: true
+                    applied->cancelled:
+                        condition: role('admin')
+                        label: _('Zrušit přihlášku')
+                        dangerous: true
+                    cancelled->__terminated:
+                        condition: role('admin')
+                        label: _('Smazat přihlášku')
+
+                fields:
+                    person_id:
+                        label: _('Osoba')
+                        required: true
+                        modifiable: %events.dsef25.appCond%
+                        default: fromLogin
+                        factory: RefPerson(%events.dsef25.person%, email, or(state('__init'),role('admin')), role('admin'), false)
+                    e_dsef_group_id:
+                        label: _('Preferovaná skupina')
+                        required: true
+                        modifiable: %events.dsef25.appCond%
+                        factory: Chooser(_('Zvolit skupinu'), Events\Spec\Dsef\GroupOptions())
+                    lunch_count:
+                        label:  _('Počet baget k obědu')
+                        modifiable: %events.dsef25.appCond%
+                        description:  _('à 30 Kč')
+
+
+        #
+        #   MACHINE
+        #   explanation: machine consists of several instances of base machines
+        #
+        machine:
+            baseMachines:
+                participant:
+                    bmName: PARTICIPANT_DSEF
+                    label: _('Účastník')
+                    required: true # default false, it's conjuction with fields requirement
+                    primary: true # base machine states are propagated to the machine
+            formAdjustments:
+                - Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
+                - @events.privacyPolicy
+                - @events.captcha
+
+            processings:
+                - @events.privacyPolicy

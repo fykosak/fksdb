@@ -3,24 +3,29 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\ORM\DbNames;
 use JanTvrdik\Components\DatePicker;
+use Nette\Forms\Controls\SelectBox;
+use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 
 /**
  *
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class TeacherFactory {
+class TeacherFactory extends SingleReflectionFactory {
+    /**
+     * @return string
+     */
+    protected function getTableName(): string {
+        return DbNames::TAB_TEACHER;
+    }
 
     /**
      * @return ModelContainer
+     * @throws \Exception
      */
-    public function createTeacher() {
-        $container = new ModelContainer();
-        $container->addComponent(new DatePicker(_('Since year')), 'since');
-        $container->addComponent(new DatePicker(_('Until year')), 'until');
-        $container->addText('note', _('Note'))
-            ->addRule(Form::MAX_LENGTH, null, 255);
-        return $container;
+    public function createTeacher(): ModelContainer {
+        return $this->createContainer(['state', 'since', 'until', 'number_brochures', 'note']);
     }
 }

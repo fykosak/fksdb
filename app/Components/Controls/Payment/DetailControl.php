@@ -4,8 +4,10 @@ namespace FKSDB\Components\Controls\Payment;
 
 use EventModule\PaymentPresenter;
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Controls\Helpers\AbstractDetailControl;
 use FKSDB\Components\Controls\Helpers\ValuePrinters\StringValueControl;
 use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
+use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\Payment\Price;
 use FKSDB\Payment\Transition\PaymentMachine;
@@ -38,9 +40,10 @@ class DetailControl extends Control {
      * @param ITranslator $translator
      * @param PaymentMachine $machine
      * @param \FKSDB\ORM\Models\ModelPayment $model
+     * @param TableReflectionFactory $tableReflectionFactory
      */
-    public function __construct(ITranslator $translator, PaymentMachine $machine, ModelPayment $model) {
-        parent::__construct();
+    public function __construct(ITranslator $translator, PaymentMachine $machine, ModelPayment $model, TableReflectionFactory $tableReflectionFactory) {
+        parent::__construct($translator, $tableReflectionFactory);
         $this->model = $model;
         $this->machine = $machine;
         $this->translator = $translator;

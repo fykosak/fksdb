@@ -24,13 +24,13 @@ class PaymentMachine extends Machine {
      */
     private $symbolGenerator;
     /**
-     * @var \FKSDB\ORM\Models\ModelEvent
+     * @var ModelEvent
      */
     private $event;
 
     /**
      * PaymentMachine constructor.
-     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @param ModelEvent $event
      * @param PriceCalculator $priceCalculator
      * @param AbstractSymbolGenerator $abstractSymbolGenerator
      * @param Connection $connection
@@ -58,7 +58,7 @@ class PaymentMachine extends Machine {
     }
 
     /**
-     * @return \FKSDB\ORM\Models\ModelEvent
+     * @return ModelEvent
      */
     public function getEvent(): ModelEvent {
         return $this->event;

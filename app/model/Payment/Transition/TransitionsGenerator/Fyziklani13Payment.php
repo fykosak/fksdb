@@ -5,7 +5,6 @@ namespace FKSDB\Payment\Transition\Transitions;
 use Authorization\EventAuthorizator;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Models\ModelEventPersonAccommodation;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServicePayment;
 use FKSDB\Payment\PriceCalculator\PriceCalculatorFactory;
@@ -93,7 +92,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
      */
     public function createTransitions(Machine &$machine) {
         if (!$machine instanceof PaymentMachine) {
-            throw new BadRequestException(\sprintf(_('Expected class %s, got %s'), 'PaymentMachine', \get_class($machine)));
+            throw new BadRequestException(\sprintf(_('Expected class %s, got %s'), PaymentMachine::class, \get_class($machine)));
         }
         $machine->setExplicitCondition(new ExplicitEventRole($this->eventAuthorizator, 'org', $machine->getEvent(), ModelPayment::RESOURCE_ID));
         $this->addTransitionInitToNew($machine);
@@ -197,8 +196,8 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
     private function addTransitionWaitingToReceived(PaymentMachine &$machine) {
         $transition = new Transition(ModelPayment::STATE_WAITING, ModelPayment::STATE_RECEIVED, _('Paid'));
         $transition->beforeExecuteCallbacks[] = function (ModelPayment $modelPayment) {
-            foreach ($modelPayment->getRelatedPersonAccommodation() as $personAccommodation) {
-                $personAccommodation->updateState(ModelEventPersonAccommodation::STATUS_PAID);
+            foreach ($modelPayment->getRelatedPersonSchedule() as $personSchedule) {
+                $personSchedule->updateState('received');
             }
         };
         $transition->afterExecuteCallbacks[] = $this->transitionFactory->createMailCallback('fyziklani/fyziklani2019/payment/receive',
@@ -216,9 +215,9 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
      */
     private function getClosureDeleteRows(): \Closure {
         return function (ModelPayment $modelPayment) {
-            Debugger::log('payment-deleted--' . \json_encode($modelPayment->toArray()), 'payment-update');
-            foreach ($modelPayment->related(DbNames::TAB_PAYMENT_ACCOMMODATION, 'payment_id') as $row) {
-                Debugger::log('payment-row-deleted--' . \json_encode($row->toArray()), 'payment-update');
+            Debugger::log('payment-deleted--' . \json_encode($modelPayment->toArray()), 'payment-info');
+            foreach ($modelPayment->related(DbNames::TAB_SCHEDULE_PAYMENT, 'payment_id') as $row) {
+                Debugger::log('payment-row-deleted--' . \json_encode($row->toArray()), 'payment-info');
                 $row->delete();
             }
         };

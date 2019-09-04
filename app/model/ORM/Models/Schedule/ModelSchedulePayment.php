@@ -11,6 +11,7 @@ use Nette\Database\Table\ActiveRow;
  * @package FKSDB\ORM\Models\Schedule
  * @property-read ActiveRow payment
  * @property-read ActiveRow person_schedule
+ * @property-read int person_schedule_id
  */
 class ModelSchedulePayment extends AbstractModelSingle {
     /**

@@ -106,8 +106,12 @@ class SubmitHandler {
         if (!$team->hasOpenSubmitting()) {
             throw new ClosedSubmittingException($team);
         }
-        // stupid touch to label
-        $this->getTask($code);
+        $task = $this->getTaskFromCode($code);
+        /* Nezadal sa duplicitne toto nieje editácia */
+        // Debugger::barDump($task);
+        if ($this->serviceFyziklaniSubmit->submitExist($task->fyziklani_task_id, $team->e_fyziklani_team_id)) {
+            throw new TaskCodeException(sprintf(_('Úloha %s už byla zadaná.'), $task->label));
+        }
         return true;
     }
 
