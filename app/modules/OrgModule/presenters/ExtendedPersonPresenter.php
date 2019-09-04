@@ -170,4 +170,3 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     }
 
 }
-
