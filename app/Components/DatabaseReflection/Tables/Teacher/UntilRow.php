@@ -20,14 +20,17 @@ class UntilRow extends AbstractTeacherRow {
      * @return Html
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        return (new DatePrinter('Y. m. d.'))($model->until);
+        if ($model->until === null) {
+            return Html::el('span')->addAttributes(['class' => 'badge badge-success'])->addText(_('Still teaches'));
+        }
+        return (new DatePrinter(_('d. m. Y')))($model->until);
     }
 
     /**
      * @return string
      */
     public function getTitle(): string {
-        return _('Teach until');
+        return _('Teaches until');
     }
 
     /**

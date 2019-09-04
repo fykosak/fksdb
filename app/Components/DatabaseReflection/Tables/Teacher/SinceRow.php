@@ -20,14 +20,17 @@ class SinceRow extends AbstractTeacherRow {
      * @return Html
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        return (new DatePrinter('Y. m. d.'))($model->since);
+        if ($model->since === null) {
+            return Html::el('span')->addAttributes(['class' => 'badge badge-secondary'])->addText(_('undefined'));
+        }
+        return (new DatePrinter(_('d. m. Y')))($model->since);
     }
 
     /**
      * @return string
      */
     public function getTitle(): string {
-        return _('Teach since');
+        return _('Teaches since');
     }
 
     /**

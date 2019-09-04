@@ -24,14 +24,30 @@ class StateRow extends AbstractTeacherRow {
         if (!array_key_exists($model->state, $items)) {
             return NotSetBadge::getHtml();
         }
-        return Html::el('span')->addAttributes(['class' => 'badge badge-default'])->addText($this->getItems()[$model->state]);
+        $el = Html::el('span');
+        switch ($model->state) {
+            case 'proposal':
+                $el->addAttributes(['class' => 'badge badge-info']);
+                break;
+            case 'cooperate':
+                $el->addAttributes(['class' => 'badge badge-success']);
+                break;
+            case 'ended':
+                $el->addAttributes(['class' => 'badge badge-dark']);
+                break;
+            case 'undefined':
+                $el->addAttributes(['class' => 'badge badge-secondary']);
+                break;
+        }
+        $el->addText($this->getItems()[$model->state]);
+        return $el;
     }
 
     /**
      * @return string
      */
     public function getTitle(): string {
-        return _('State');
+        return _('Cooperation status');
     }
 
     /**

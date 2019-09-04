@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\DatabaseReflection\EventParticipant;
 
-use FKSDB\Components\DatabaseReflection\Tables\Traits\PersonLinkTrait;
+use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 use Nette\Application\UI\PresenterComponent;
 use Nette\Localization\ITranslator;
 
@@ -11,7 +11,7 @@ use Nette\Localization\ITranslator;
  * @package FKSDB\Components\DatabaseReflection\EventParticipant
  */
 class PersonIdRow extends AbstractParticipantRow {
-    use PersonLinkTrait;
+    use DefaultPrinterTrait;
 
     /**
      * PersonIdRow constructor.
@@ -21,5 +21,19 @@ class PersonIdRow extends AbstractParticipantRow {
     public function __construct(ITranslator $translator, PresenterComponent $presenterComponent) {
         parent::__construct($translator);
         $this->presenterComponent = $presenterComponent;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle(): string {
+        return _('Person info');
+    }
+
+    /**
+     * @return string
+     */
+    protected function getModelAccessKey(): string {
+        return 'person_info';
     }
 }
