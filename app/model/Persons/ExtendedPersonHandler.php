@@ -33,7 +33,7 @@ class ExtendedPersonHandler {
     const EL_PERSON = 'person_id';
     const RESULT_OK_EXISTING_LOGIN = 1;
     const RESULT_OK_NEW_LOGIN = 2;
-    const RESULT_ERROR = false;
+    const RESULT_ERROR = 0;
 
     /**
      * @var \FKSDB\ORM\IService
@@ -156,12 +156,13 @@ class ExtendedPersonHandler {
     /**
      * @param Form $form
      * @param IExtendedPersonPresenter $presenter
-     * @return bool
+     * @param bool $sendEmail
+     * @return int
      */
-    public final function handleForm(Form $form, IExtendedPersonPresenter $presenter) {
-        $connection = $this->connection;
+    public final function handleForm(Form $form, IExtendedPersonPresenter $presenter, bool $sendEmail) {
+
         try {
-            if (!$connection->beginTransaction()) {
+            if (!$this->connection->beginTransaction()) {
                 throw new ModelException();
             }
             $values = $form->getValues();
@@ -174,7 +175,7 @@ class ExtendedPersonHandler {
             $email = $person->getInfo() ? $person->getInfo()->email : null;
             $login = $person->getLogin();
             $hasLogin = (bool)$login;
-            if ($email && !$login) {
+            if ($sendEmail && ($email && !$login)) {
                 $template = $this->mailTemplateFactory->createLoginInvitation($presenter, $this->getInvitationLang());
                 try {
                     $this->accountManager->createLoginWithInvitation($template, $person, $email);
@@ -189,7 +190,7 @@ class ExtendedPersonHandler {
             /*
              * Finalize
              */
-            if (!$connection->commit()) {
+            if (!$this->connection->commit()) {
                 throw new ModelException();
             }
 
@@ -206,7 +207,7 @@ class ExtendedPersonHandler {
                 return self::RESULT_OK_EXISTING_LOGIN;
             }
         } catch (ModelException $exception) {
-            $connection->rollBack();
+            $this->connection->rollBack();
             if ($exception->getPrevious() && $exception->getPrevious()->getCode() == 23000) {
                 $presenter->flashMessage($presenter->messageExists(), ContestantPresenter::FLASH_ERROR);
             } else {
@@ -219,7 +220,7 @@ class ExtendedPersonHandler {
             $form->addError(_('Zadaná data se neshodují s již uloženými.'));
             $exception->getReferencedId()->getReferencedContainer()->setConflicts($exception->getConflicts());
             $exception->getReferencedId()->rollback();
-            $connection->rollBack();
+            $this->connection->rollBack();
             return self::RESULT_ERROR;
         }
     }

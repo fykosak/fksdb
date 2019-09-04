@@ -130,7 +130,7 @@ parameters:
                     required: false
                 # place to others onfo
                 note:
-                  required: false                         
+                  required: false
         adminEventOrg:
             person:
                 other_name:
@@ -245,4 +245,8 @@ parameters:
                   required: false
         adminOrg:
             %fykos.adminOrg%
+        adminTeacher:
+            %fykos.adminTeacher%
+        adminEventOrg:
+            %fykos.adminEventOrg%
 

@@ -27,7 +27,7 @@ class UntilRow extends AbstractTeacherRow {
      * @return string
      */
     public function getTitle(): string {
-        return _('Until');
+        return _('Teach until');
     }
 
     /**
