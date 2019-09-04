@@ -11,6 +11,7 @@ export interface InputConnectorItems {
 
 export interface State {
     data: InputConnectorItems;
+    initialData: InputConnectorItems;
 }
 
 export interface Store {
@@ -32,12 +33,13 @@ const setInitialData = (state: State, action: ActionSetInitialData): State => {
         return {
             ...state,
             data: action.data,
+            initialData: action.data,
         };
     }
     return state;
 };
 
-export const inputConnector = (state: State = {data: {}}, action): State => {
+export const inputConnector = (state: State = {data: {}, initialData: {}}, action): State => {
     switch (action.type) {
         case ACTION_CHANGE_DATA:
             return setData(state, action);

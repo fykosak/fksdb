@@ -10,9 +10,9 @@ use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\Payment\OrgPaymentGrid;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPayment;
-use FKSDB\ORM\Services\ServiceEventPersonAccommodation;
+use FKSDB\ORM\Services\Schedule\ServicePersonSchedule;
+use FKSDB\ORM\Services\Schedule\ServiceSchedulePayment;
 use FKSDB\ORM\Services\ServicePayment;
-use FKSDB\ORM\Services\ServicePaymentAccommodation;
 use FKSDB\Payment\Transition\PaymentMachine;
 use Nette\Localization\ITranslator;
 
@@ -39,13 +39,13 @@ class PaymentFactory {
      */
     private $personProvider;
     /**
-     * @var ServiceEventPersonAccommodation
+     * @var ServicePersonSchedule
      */
-    private $serviceEventPersonAccommodation;
+    private $servicePersonSchedule;
     /**
-     * @var ServicePaymentAccommodation
+     * @var ServiceSchedulePayment
      */
-    private $servicePaymentAccommodation;
+    private $serviceSchedulePayment;
     /**
      * @var TableReflectionFactory
      */
@@ -54,21 +54,26 @@ class PaymentFactory {
     /**
      * PaymentFactory constructor.
      * @param TableReflectionFactory $tableReflectionFactory
-     * @param ServicePaymentAccommodation $servicePaymentAccommodation
+     * @param ServiceSchedulePayment $serviceSchedulePayment
      * @param PersonFactory $personFactory
      * @param PersonProvider $personProvider
-     * @param ServiceEventPersonAccommodation $serviceEventPersonAccommodation
+     * @param ServicePersonSchedule $servicePersonSchedule
      * @param ITranslator $translator
      * @param ServicePayment $servicePayment
      */
-    public function __construct(TableReflectionFactory $tableReflectionFactory, ServicePaymentAccommodation $servicePaymentAccommodation, PersonFactory $personFactory, PersonProvider $personProvider, ServiceEventPersonAccommodation $serviceEventPersonAccommodation, ITranslator $translator, ServicePayment $servicePayment) {
+    public function __construct(TableReflectionFactory $tableReflectionFactory,
+                                ServiceSchedulePayment $serviceSchedulePayment,
+                                PersonFactory $personFactory,
+                                PersonProvider $personProvider,
+                                ServicePersonSchedule $servicePersonSchedule,
+                                ITranslator $translator, ServicePayment $servicePayment) {
         $this->tableReflectionFactory = $tableReflectionFactory;
         $this->translator = $translator;
         $this->servicePayment = $servicePayment;
         $this->personFactory = $personFactory;
         $this->personProvider = $personProvider;
-        $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;
-        $this->servicePaymentAccommodation = $servicePaymentAccommodation;
+        $this->servicePersonSchedule = $servicePersonSchedule;
+        $this->serviceSchedulePayment = $serviceSchedulePayment;
     }
 
     /**
@@ -98,13 +103,14 @@ class PaymentFactory {
         return new SelectForm(
             $event,
             $isOrg,
+            'accommodation',
             $this->translator,
             $this->servicePayment,
             $machine,
             $this->personFactory,
             $this->personProvider,
-            $this->serviceEventPersonAccommodation,
-            $this->servicePaymentAccommodation
+            $this->servicePersonSchedule,
+            $this->serviceSchedulePayment
         );
     }
 }

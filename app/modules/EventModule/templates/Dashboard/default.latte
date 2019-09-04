@@ -16,7 +16,5 @@
     <a class="btn btn-secondary"
        href="{plink :Org:EventOrg:list eventId=>$event->event_id ,contestId => $event->getEventType()->contest_id, year=>$event->year}">{_'Organizers'}</a>
     <a class="btn btn-secondary"
-       href="{plink :Org:Event:applications id=>$event->event_id ,contestId => $event->getEventType()->contest_id, year=>$event->year}">{_'Applications'}</a>
-    <a class="btn btn-secondary"
        href="{plink :Org:Event:edit id=>$event->event_id ,contestId => $event->getEventType()->contest_id, year=>$event->year}">{_'Edit'}</a>
 {/block}

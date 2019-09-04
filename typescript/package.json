@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "build": "webpack --color -mode=\"production\"",
-    "dev": "webpack --color --watch -mode=\"development\" --display-error-details"
+    "build": "webpack --color --mode=\"production\"",
+    "dev": "webpack --color --watch --mode=\"development\" --display-error-details"
   },
   "author": "",
   "license": "ISC",
