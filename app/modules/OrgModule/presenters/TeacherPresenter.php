@@ -8,6 +8,7 @@ use FKSDB\Components\Forms\Factories\TeacherFactory;
 use FKSDB\Components\Grids\TeachersGrid;
 use FKSDB\ORM\Models\ModelTeacher;
 use FKSDB\ORM\Services\ServiceTeacher;
+use Nette;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Persons\ExtendedPersonHandler;
@@ -17,6 +18,14 @@ use Persons\ExtendedPersonHandler;
  * @package OrgModule
  */
 class TeacherPresenter extends ExtendedPersonPresenter {
+    /**
+     * TeacherPresenter constructor.
+     * @param Nette\DI\Container|NULL $context
+     */
+    public function __construct(Nette\DI\Container $context = NULL) {
+        $this->sendEmail = false;
+        parent::__construct($context);
+    }
 
     protected $modelResourceId = 'teacher';
     protected $fieldsDefinition = 'adminTeacher';

@@ -27,7 +27,7 @@ class SinceRow extends AbstractTeacherRow {
      * @return string
      */
     public function getTitle(): string {
-        return _('Since');
+        return _('Teach since');
     }
 
     /**
