@@ -43,7 +43,7 @@ services:
         class: FKSDB\Submits\FilesystemSubmitStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, %contestMapping%)
         setup:
             - addProcessing(@PDFStamper)
-    - FKSDB\Components\Forms\Controls\PersonAccommodation\Handler
+    - FKSDB\Components\Forms\Controls\Schedule\Handler
     PDFStamper: FKSDB\Submits\PDFStamper(%stamper.fontSize%)
     readOnlyConnection:
         class: Nette\Database\Connection(%ro-database.dsn%, %ro-database.user%, %ro-database.password%)
@@ -98,4 +98,4 @@ includes:
     - rows/e_fyziklani_team.neon
     - rows/org.neon
     - rows/person_history.neon
-
+    - rows/schedule/schedule_group.neon

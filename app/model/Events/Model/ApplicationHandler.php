@@ -12,9 +12,9 @@ use Events\Model\Holder\SecondaryModelStrategies\SecondaryModelDataConflictExcep
 use Events\SubmitProcessingException;
 use Exception;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
-use FKSDB\Components\Forms\Controls\PersonAccommodation\ExistingPaymentException;
-use FKSDB\Components\Forms\Controls\PersonAccommodation\FullAccommodationCapacityException;
 use FKSDB\Components\Forms\Controls\ReferencedId;
+use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
+use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Models\ModelEvent;
 use FormUtils;
@@ -210,7 +210,7 @@ class ApplicationHandler {
             $this->logger->log($exception->getMessage(), ILogger::ERROR);
             $this->formRollback($data);
             $this->reRaise($exception);
-        } catch (FullAccommodationCapacityException $exception) {
+        } catch (FullCapacityException $exception) {
             $this->logger->log($exception->getMessage(), ILogger::ERROR);
             $this->formRollback($data);
             $this->reRaise($exception);

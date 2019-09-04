@@ -3,10 +3,12 @@
 namespace EventModule;
 
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
+use FKSDB\Components\Grids\Events\Application\ApplicationGrid;
 use FKSDB\Components\Grids\Events\Application\TeamApplicationGrid;
 use FKSDB\model\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 
@@ -38,8 +40,8 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function authorizedDetail() {
         if ($this->isTeamEvent()) {
@@ -50,8 +52,8 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function authorizedList() {
         if ($this->isTeamEvent()) {
@@ -65,7 +67,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
      * @param int $id
      * @throws BadRequestException
      * @throws ForbiddenRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     protected function loadModel(int $id) {
         $row = $this->serviceFyziklaniTeam->findByPrimary($id);
@@ -80,12 +82,12 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @return \FKSDB\Components\Grids\Events\Application\ApplicationGrid
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @return ApplicationGrid
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function createComponentGrid(): AbstractApplicationGrid {
-        return new TeamApplicationGrid($this->getEvent(), $this->tableReflectionFactory);
+        return new TeamApplicationGrid($this->getEvent(), $this->getTableReflectionFactory());
     }
 
     /**
@@ -97,7 +99,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
 
     /**
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function renderDetail() {
         $this->template->acYear = $this->getAcYear();

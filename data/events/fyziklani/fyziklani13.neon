@@ -28,8 +28,8 @@ parameters:
                 person_has_flag:
                     spam_mff:
                         required: true
-                person_accommodation:
-                    multiNights:
+                person_schedule:
+                    accommodation:
                         required: false
             participant:
                 person:
@@ -50,8 +50,8 @@ parameters:
                 person_has_flag:
                     spam_mff:
                         required: true
-                person_accommodation:
-                    multiNights:
+                person_schedule:
+                    accommodation:
                         required: false
             dep:
                 require:

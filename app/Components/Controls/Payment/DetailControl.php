@@ -5,12 +5,11 @@ namespace FKSDB\Components\Controls\Payment;
 use EventModule\PaymentPresenter;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Helpers\AbstractDetailControl;
-use FKSDB\Components\Controls\Helpers\ValuePrinters\StringValueControl;
 use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
+use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\Payment\Price;
 use FKSDB\Payment\Transition\PaymentMachine;
-use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 
@@ -34,8 +33,9 @@ class DetailControl extends AbstractDetailControl {
      * @param ITranslator $translator
      * @param PaymentMachine $machine
      * @param \FKSDB\ORM\Models\ModelPayment $model
+     * @param TableReflectionFactory $tableReflectionFactory
      */
-    public function __construct(ITranslator $translator, PaymentMachine $machine, ModelPayment $model) {
+    public function __construct(ITranslator $translator, PaymentMachine $machine, ModelPayment $model, TableReflectionFactory $tableReflectionFactory) {
         parent::__construct($translator);
         $this->model = $model;
         $this->machine = $machine;
