@@ -2,6 +2,9 @@
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Components\Forms\Factories\TableReflectionFactory;
+use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\ModelTeacher;
 use FKSDB\ORM\Services\ServiceTeacher;
 use Nette\Database\Table\Selection;
 use Nette\Utils\Html;
@@ -22,9 +25,10 @@ class TeachersGrid extends BaseGrid {
     /**
      * TeachersGrid constructor.
      * @param ServiceTeacher $serviceTeacher
+     * @param TableReflectionFactory $tableReflectionFactory
      */
-    function __construct(ServiceTeacher $serviceTeacher) {
-        parent::__construct();
+    function __construct(ServiceTeacher $serviceTeacher, TableReflectionFactory $tableReflectionFactory) {
+        parent::__construct($tableReflectionFactory);
         $this->serviceTeacher = $serviceTeacher;
     }
 
@@ -58,22 +62,26 @@ class TeachersGrid extends BaseGrid {
             $person = $row->getPerson();
             return $person->getFullname();
         });
-        $this->addColumn('since', _('Since'))->setRenderer(function ($row) {
+    /*    $this->addColumn('since', _('Since'))->setRenderer(function ($row) {
             if ($row->since === null) {
                 return Html::el('span')->addAttributes(['class' => 'badge badge-secondary'])->addText(_('undefined'));
             }
             return $row->since->format('Y-m-d');
-        });
-        $this->addColumn('until', _('Until'))->setRenderer(function ($row) {
+        });*/
+      /*  $this->addColumn('until', _('Until'))->setRenderer(function ($row) {
             if ($row->until === null) {
                 return Html::el('span')->addAttributes(['class' => 'badge badge-success'])->addText(_('Still teaches'));
             }
             return $row->until->format('Y-m-d');
-        });
+        });*/
         $this->addColumn('school_id', _('School'))->setRenderer(function ($row) {
             return $row->getSchool()->name_abbrev;
         });
-
+        $this->addReflectionColumn(DbNames::TAB_TEACHER, 'note', ModelTeacher::class);
+        $this->addReflectionColumn(DbNames::TAB_TEACHER, 'state', ModelTeacher::class);
+        $this->addReflectionColumn(DbNames::TAB_TEACHER, 'since', ModelTeacher::class);
+        $this->addReflectionColumn(DbNames::TAB_TEACHER, 'until', ModelTeacher::class);
+        $this->addReflectionColumn(DbNames::TAB_TEACHER, 'number_brochures', ModelTeacher::class);
         //
         // operations
         //
