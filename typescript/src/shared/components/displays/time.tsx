@@ -1,5 +1,5 @@
+import { lang } from '@i18n/i18n';
 import * as React from 'react';
-import { lang } from '../../../i18n/i18n';
 import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
 
 interface Props {
