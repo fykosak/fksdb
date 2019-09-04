@@ -3,9 +3,11 @@
 namespace FKSDB\Components\React\ReactComponent\Events;
 
 use FKSDB\Components\React\ReactComponent;
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\DI\Container;
 use Nette\Utils\Json;
+use Nette\Utils\JsonException;
 
 /**
  * Class TeamApplicationsTimeProgress
@@ -18,7 +20,7 @@ class TeamApplicationsTimeProgress extends ReactComponent {
     private $serviceFyziklaniTeam;
 
     /**
-     * @var \FKSDB\ORM\Models\ModelEvent[]
+     * @var ModelEvent[]
      */
     private $events;
 
@@ -58,16 +60,13 @@ class TeamApplicationsTimeProgress extends ReactComponent {
 
     /**
      * @return string
-     * @throws \Nette\Utils\JsonException
+     * @throws JsonException
      */
     function getData(): string {
         $data = [
             'teams' => [],
             'events' => [],
         ];
-        /**
-         * @var \FKSDB\ORM\Models\ModelEvent $event
-         */
         foreach ($this->events as $event) {
             $data['teams'][$event->event_id] = $this->serviceFyziklaniTeam->getTeamsAsArray($event);
             $data['events'][$event->event_id] = $event->__toArray();

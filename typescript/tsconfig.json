@@ -1,13 +1,34 @@
 {
   "compilerOptions": {
-    "outDir": "./dist/",
+    "outDir": "./dist",
     "sourceMap": true,
     "noImplicitAny": false,
     "module": "es2015",
     "moduleResolution": "node",
     "target": "es6",
     "jsx": "react",
-    "allowJs": true
+    "allowJs": true,
+    "baseUrl": ".",
+    "paths": {
+      "@fetchApi/*": [
+        "./src/fetchApi/*"
+      ],
+      "@shared/*": [
+        "./src/shared/*"
+      ],
+      "@i18n/*": [
+        "./src/i18n/*"
+      ],
+      "@appsCollector": [
+        "./src/appsCollector/"
+      ],
+      "@inputConnector/*": [
+        "./src/inputConnector/*"
+      ],
+      "@config": [
+        "./src/config"
+      ]
+    }
   },
   "include": [
     "./src/**/*"

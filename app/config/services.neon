@@ -43,7 +43,7 @@ services:
         class: FKSDB\Submits\FilesystemSubmitStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, %contestMapping%)
         setup:
             - addProcessing(@PDFStamper)
-    - FKSDB\Components\Forms\Controls\PersonAccommodation\Handler
+    - FKSDB\Components\Forms\Controls\Schedule\Handler
     PDFStamper: FKSDB\Submits\PDFStamper(%stamper.fontSize%)
     readOnlyConnection:
         class: Nette\Database\Connection(%ro-database.dsn%, %ro-database.user%, %ro-database.password%)
@@ -81,6 +81,12 @@ services:
     - FKSDB\model\Fyziklani\TaskCodeHandlerFactory
     - FKSDB\Components\Forms\Factories\TableReflectionFactory
 
+    row.teacher.state: FKSDB\Components\DatabaseReflection\Tables\Teacher\StateRow
+    row.teacher.since: FKSDB\Components\DatabaseReflection\Tables\Teacher\SinceRow
+    row.teacher.until: FKSDB\Components\DatabaseReflection\Tables\Teacher\UntilRow
+    row.teacher.number_brochures: FKSDB\Components\DatabaseReflection\Tables\Teacher\NumberBrochuresRow
+    row.teacher.note: FKSDB\Components\DatabaseReflection\Tables\Teacher\NoteRow
+
 includes:
     - merger.neon
     - rows/person.neon
@@ -93,3 +99,5 @@ includes:
     - rows/org.neon
     - rows/person_history.neon
     - rows/fyziklani_game_setup.neon
+    - rows/schedule/schedule_group.neon
+

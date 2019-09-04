@@ -131,7 +131,7 @@ abstract class Machine {
      * @param IStateModel $model
      * @return IStateModel
      * @throws ForbiddenRequestException
-     * @throws \Exception
+     * @throws UnavailableTransitionException
      */
     public function executeTransition(string $id, IStateModel $model): IStateModel {
         $transition = $this->findTransitionById($id, $model);
@@ -145,6 +145,7 @@ abstract class Machine {
      * @param Transition $transition
      * @param IStateModel|null $model
      * @return IStateModel
+     * @throws BadRequestException
      * @throws \Exception
      */
     private function execute(Transition $transition, IStateModel $model = null): IStateModel {

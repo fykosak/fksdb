@@ -1,6 +1,5 @@
 <?php
 
-
 namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\Grids\BaseGrid;
