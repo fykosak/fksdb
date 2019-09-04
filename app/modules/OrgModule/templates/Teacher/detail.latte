@@ -1,5 +1,5 @@
 {block content}
-    {control valuePrinter__virtual__person_link:row $model,true}
+    {control valuePrinter__referenced__person_link:row $model,true}
     {foreach ['since','until','note','number_brochures','state'] as $field}
         {control valuePrinter__teacher__$field:row $model,true}
     {/foreach}

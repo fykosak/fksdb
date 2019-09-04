@@ -4,6 +4,7 @@ namespace FKSDB\Components\Grids\Payment;
 
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePayment;
 use NiftyGrid\DataSource\NDataSource;
@@ -24,8 +25,8 @@ class OrgPaymentGrid extends PaymentGrid {
      * @param \FKSDB\ORM\Models\ModelEvent $event
      * @param TableReflectionFactory $tableReflectionFactory
      */
-    public function __construct(ServicePayment $servicePayment, ModelEvent $event,TableReflectionFactory $tableReflectionFactory) {
-        parent::__construct($servicePayment,$tableReflectionFactory);
+    public function __construct(ServicePayment $servicePayment, ModelEvent $event, TableReflectionFactory $tableReflectionFactory) {
+        parent::__construct($servicePayment, $tableReflectionFactory);
         $this->event = $event;
     }
 
@@ -44,9 +45,7 @@ class OrgPaymentGrid extends PaymentGrid {
 
         $this->addColumnPaymentId();
 
-        $this->addColumn('person_name', _('Person'))->setRenderer(function ($row) {
-            return ModelPerson::createFromActiveRow($row->person)->getFullName();
-        });
+        $this->addReflectionColumn('referenced', 'person_name', ModelPayment::class);
 
         $this->addColumn('person_email', _('e-mail'))->setRenderer(function ($row) {
             return ModelPerson::createFromActiveRow($row->person)->getInfo()->email;

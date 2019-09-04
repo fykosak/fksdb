@@ -62,10 +62,7 @@ class TeachersGrid extends BaseGrid {
         //
         // columns
         //
-        $this->addColumn('display_name', _('Name'))->setRenderer(function ($row) {
-            $person = $row->getPerson();
-            return $person->getFullname();
-        });
+        $this->addReflectionColumn('referenced', 'person_name', ModelTeacher::class);
 
         $this->addColumn('school_id', _('School'))->setRenderer(function ($row) {
             return $row->getSchool()->name_abbrev;

@@ -15,9 +15,9 @@
     <h2>{_('Informace o platcovi')}</h2>
     <div>
         {if $isOrg}
-            {control valuePrinter__virtual__person_link:row $model}
+            {control valuePrinter__referenced__person_link:row $model}
         {else}
-            {control valuePrinter__payment__person_name:row $model}
+            {control valuePrinter__referenced__person_name:row $model}
         {/if}
         {control valuePrinter__person_info__email:row $model->getPerson()->getInfo()}
     </div>

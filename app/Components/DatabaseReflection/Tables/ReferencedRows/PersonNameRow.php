@@ -1,7 +1,8 @@
 <?php
 
-namespace FKSDB\Components\DatabaseReflection\Tables\Traits;
+namespace FKSDB\Components\DatabaseReflection\ReferencedRows;
 
+use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\DatabaseReflection\ValuePrinters\StringPrinter;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\IPersonReferencedModel;
@@ -9,10 +10,18 @@ use Nette\Application\BadRequestException;
 use Nette\Utils\Html;
 
 /**
- * Trait PersonNameTrait
- * @package FKSDB\Components\DatabaseReflection
+ * Class PersonNameRowFactory
+ * @package FKSDB\Components\DatabaseReflection\ReferencedRows
  */
-trait PersonNameTrait {
+class PersonNameRow extends AbstractRow {
+
+    /**
+     * @return int
+     */
+    public function getPermissionsValue(): int {
+        return self::PERMISSION_USE_GLOBAL_ACL;
+    }
+
     /**
      * @return string
      */
