@@ -299,10 +299,8 @@ class ReferencedContainer extends ContainerWithOptions {
     private function updateHtmlData() {
         $this->setOption('id', sprintf(self::ID_MASK, $this->getForm()->getName(), $this->lookupPath('Nette\Forms\Form')));
         $referencedId = $this->referencedId->getHtmlId();
-        $this->setOption('data', [
-            'referenced-id' => $referencedId,
-            'referenced' => 1,
-        ]);
+        $this->setOption('data-referenced-id', $referencedId);
+        $this->setOption('data-referenced', 1);
     }
 
     /**
