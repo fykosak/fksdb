@@ -87,6 +87,11 @@ class TeacherPresenter extends ExtendedPersonPresenter {
         $this->setIcon('fa fa-graduation-cap');
     }
 
+    public function titleDetail() {
+        $this->setTitle(_('Teacher detail'));
+        $this->setIcon('fa fa-graduation-cap');
+    }
+
     /**
      * @param $name
      * @return TeachersGrid
@@ -105,6 +110,13 @@ class TeacherPresenter extends ExtendedPersonPresenter {
         $schoolContainer = $this->schoolFactory->createSchoolSelect();
         $container->addComponent($schoolContainer, 'school_id');
         $form->addComponent($container, ExtendedPersonHandler::CONT_MODEL);
+    }
+
+    /**
+     * @throws BadRequestException
+     */
+    public function renderDetail() {
+        $this->template->model = $this->getModel2();
     }
 
     /**

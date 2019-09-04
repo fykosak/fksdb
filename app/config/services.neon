@@ -86,6 +86,7 @@ services:
     row.teacher.until: FKSDB\Components\DatabaseReflection\Tables\Teacher\UntilRow
     row.teacher.number_brochures: FKSDB\Components\DatabaseReflection\Tables\Teacher\NumberBrochuresRow
     row.teacher.note: FKSDB\Components\DatabaseReflection\Tables\Teacher\NoteRow
+    row.virtual.person_link: FKSDB\Components\DatabaseReflection\VirtualRows\PersonLinkRow
 
 includes:
     - merger.neon
