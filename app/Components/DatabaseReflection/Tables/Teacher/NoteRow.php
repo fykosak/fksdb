@@ -30,6 +30,9 @@ class NoteRow extends AbstractTeacherRow {
         return _('Note');
     }
 
+    /**
+     * @return BaseControl
+     */
     public function createField(): BaseControl {
         return (new TextInput(_('Note')))->addRule(Form::MAX_LENGTH, null, 255);
     }
