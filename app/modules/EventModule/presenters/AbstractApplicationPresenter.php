@@ -5,7 +5,7 @@ namespace EventModule;
 use Events\Model\ApplicationHandlerFactory;
 use Events\Model\Grid\SingleEventSource;
 use FKSDB\Components\Events\ApplicationComponent;
-use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
+use FKSDB\Components\Grids\Events\Application\AbstractOrgApplicationsGrid;
 use FKSDB\Logging\FlashDumpFactory;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
@@ -136,9 +136,9 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     abstract protected function getModel();
 
     /**
-     * @return AbstractApplicationGrid
+     * @return AbstractOrgApplicationsGrid
      * @throws AbortException
      * @throws BadRequestException
      */
-    abstract function createComponentGrid(): AbstractApplicationGrid;
+    abstract function createComponentGrid(): AbstractOrgApplicationsGrid;
 }

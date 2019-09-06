@@ -2,9 +2,9 @@
 
 namespace EventModule;
 
-use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
-use FKSDB\Components\Grids\Events\Application\ApplicationGrid;
-use FKSDB\Components\Grids\Events\Application\TeamApplicationGrid;
+use FKSDB\Components\Grids\Events\Application\AbstractOrgApplicationsGrid;
+use FKSDB\Components\Grids\Events\Application\OrgApplicationsGrid;
+use FKSDB\Components\Grids\Events\Application\TeamOrgApplicationsGrid;
 use FKSDB\model\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
@@ -82,12 +82,12 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @return ApplicationGrid
+     * @return OrgApplicationsGrid
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function createComponentGrid(): AbstractApplicationGrid {
-        return new TeamApplicationGrid($this->getEvent(), $this->getTableReflectionFactory());
+    public function createComponentGrid(): AbstractOrgApplicationsGrid {
+        return new TeamOrgApplicationsGrid($this->getEvent(), $this->getTableReflectionFactory());
     }
 
     /**

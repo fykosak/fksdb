@@ -88,6 +88,8 @@ services:
     row.teacher.note: FKSDB\Components\DatabaseReflection\Tables\Teacher\NoteRow
     row.referenced.person_link: FKSDB\Components\DatabaseReflection\ReferencedRows\PersonLinkRow
     row.referenced.person_name: FKSDB\Components\DatabaseReflection\ReferencedRows\PersonNameRow
+    row.referenced.event_link: FKSDB\Components\DatabaseReflection\ReferencedRows\EventLinkRow
+    row.referenced.event_name: FKSDB\Components\DatabaseReflection\ReferencedRows\EventNameRow
 
 includes:
     - merger.neon

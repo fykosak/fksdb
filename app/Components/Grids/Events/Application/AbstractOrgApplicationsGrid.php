@@ -16,7 +16,7 @@ use Nette\Utils\Html;
  * Class AbstractApplicationGrid
  * @package FKSDB\Components\Grids\Events\Application
  */
-abstract class AbstractApplicationGrid extends BaseGrid {
+abstract class AbstractOrgApplicationsGrid extends BaseGrid {
     /**
      * @var ModelEvent
      */

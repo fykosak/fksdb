@@ -53,6 +53,7 @@ class AllSubmitsGrid extends SubmitsGrid {
             return $row->getTeam()->hasOpenSubmitting() && !is_null($row->points);
         });
 
+
         $this->addButton('delete', null)->setClass('btn btn-sm btn-danger')->setLink(function ($row) {
             return $this->link('delete!', $row->fyziklani_submit_id);
         })->setConfirmationDialog(function () {

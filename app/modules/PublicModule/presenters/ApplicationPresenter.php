@@ -12,6 +12,7 @@ use Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\Components\Events\ApplicationComponent;
 use FKSDB\Components\Events\ApplicationsGrid;
+use FKSDB\Components\Grids\Events\Application\MyApplicationsGrid;
 use FKSDB\Components\Grids\Events\LayoutResolver;
 use FKSDB\Logging\FlashDumpFactory;
 use FKSDB\Logging\MemoryLogger;
@@ -289,6 +290,10 @@ class ApplicationPresenter extends BasePresenter {
         $grid->setTemplate('myApplications');
 
         return $grid;
+    }
+
+    protected function createComponentMyApplicationsGrid() {
+        return new MyApplicationsGrid($this->getUser()->getIdentity()->getPerson(), $this->getTableReflectionFactory());
     }
 
     /**

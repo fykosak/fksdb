@@ -3,20 +3,22 @@
 namespace FKSDB\Components\Grids\Events\Application;
 
 use FKSDB\ORM\DbNames;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\ORM\Models\ModelEventParticipant;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
 use SQL\SearchableDataSource;
 
 /**
- * Class TeamApplicationGrid
+ * Class ParticipantGrid
  * @package FKSDB\Components\Grids\Events
  */
-class TeamApplicationGrid extends AbstractApplicationGrid {
+class OrgApplicationsGrid extends AbstractOrgApplicationsGrid {
+
     /**
      * @param Presenter $presenter
      * @throws \NiftyGrid\DuplicateColumnException
      * @throws \NiftyGrid\DuplicateButtonException
+     * @throws \Exception
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -27,16 +29,17 @@ class TeamApplicationGrid extends AbstractApplicationGrid {
         $source->setFilterCallback($this->getFilterCallBack());
         $this->setDataSource($source);
 
-        $this->addColumns(['e_fyziklani_team_id', 'name', 'status']);
+        $this->addReflectionColumn('referenced','person_name',ModelEventParticipant::class);
+        $this->addColumns(['status']);
 
         $this->addButton('detail')->setShow(function ($row) {
-            $model = ModelFyziklaniTeam::createFromActiveRow($row);
-            return \in_array($model->getEvent()->event_type_id, [1, 9]);
+            $model = ModelEventParticipant::createFromActiveRow($row);
+            return !\in_array($model->getEvent()->event_type_id, [1, 9]);
         })->setText(_('Detail'))
             ->setLink(function ($row) {
-                $model = ModelFyziklaniTeam::createFromActiveRow($row);
+                $model = ModelEventParticipant::createFromActiveRow($row);
                 return $this->getPresenter()->link('detail', [
-                    'id' => $model->e_fyziklani_team_id,
+                    'id' => $model->event_participant_id,
                 ]);
             });
     }
@@ -45,19 +48,28 @@ class TeamApplicationGrid extends AbstractApplicationGrid {
      * @return Selection
      */
     protected function getSource(): Selection {
-        return $this->event->getTeams();
+        return $this->event->getParticipants();
     }
 
     /**
      * @return array
      */
     protected function getHoldersColumns(): array {
-        return ['note',
-            'game_lang',
-            'category',
-            'force_a',
-            'phone',
-            'password',
+        return [
+            'note',
+            'swimmer',
+            'arrival_ticket',
+            'tshirt_color',
+            'departure_time',
+            'departure_ticket',
+            'departure_destination',
+            'arrival_time',
+            'arrival_destination',
+            'health_restrictions',
+            'diet',
+            'used_drugs',
+            'tshirt_size',
+            'price',
         ];
     }
 
@@ -65,13 +77,13 @@ class TeamApplicationGrid extends AbstractApplicationGrid {
      * @return string
      */
     protected function getModelClassName(): string {
-        return ModelFyziklaniTeam::class;
+        return ModelEventParticipant::class;
     }
 
     /**
      * @return string
      */
     protected function getTableName(): string {
-        return DbNames::TAB_E_FYZIKLANI_TEAM;
+        return DbNames::TAB_EVENT_PARTICIPANT;
     }
 }

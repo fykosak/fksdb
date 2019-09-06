@@ -11,9 +11,13 @@ use FKSDB\Payment\PriceCalculator\PriceCalculator;
 use FKSDB\Transitions\IEventReferencedModel;
 use FKSDB\Transitions\IStateModel;
 use FKSDB\Transitions\Machine;
+use FKSDB\Transitions\UnavailableTransitionException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\IResource;
 use Nette\Utils\DateTime;
+use function in_array;
+use function sprintf;
 
 /**
  *
@@ -79,7 +83,8 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
     /**
      * @param Machine $machine
      * @param $id
-     * @throws \Nette\Application\ForbiddenRequestException
+     * @throws ForbiddenRequestException
+     * @throws UnavailableTransitionException
      */
     public function executeTransition(Machine $machine, $id) {
         $machine->executeTransition($id, $this);
@@ -89,18 +94,18 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
      * @return string
      */
     public function getPaymentId(): string {
-        return \sprintf('%d%04d', $this->event_id, $this->payment_id);
+        return sprintf('%d%04d', $this->event_id, $this->payment_id);
     }
 
     /**
      * @return bool
      */
     public function canEdit(): bool {
-        return \in_array($this->getState(), [Machine::STATE_INIT, self::STATE_NEW]);
+        return in_array($this->getState(), [Machine::STATE_INIT, self::STATE_NEW]);
     }
 
     /**
-     * @return \FKSDB\Payment\Price
+     * @return Price
      */
     public function getPrice(): Price {
         return new Price($this->price, $this->currency);
