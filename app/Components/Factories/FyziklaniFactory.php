@@ -15,6 +15,7 @@ use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Statistics\TeamStat
 use FKSDB\Components\Controls\Fyziklani\RoutingDownload;
 use FKSDB\Components\Controls\Fyziklani\RoutingEdit;
 use FKSDB\Components\Controls\Fyziklani\TaskCodeInput;
+use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\Fyziklani\AllSubmitsGrid;
 use FKSDB\Components\Grids\Fyziklani\TaskGrid;
 use FKSDB\Components\Grids\Fyziklani\TeamSubmitsGrid;
@@ -71,6 +72,10 @@ class FyziklaniFactory {
      * @var ITranslator
      */
     private $translator;
+    /**
+     * @var TableReflectionFactory
+     */
+    private $tableReflectionFactory;
 
     /**
      * FyziklaniFactory constructor.
@@ -82,6 +87,7 @@ class FyziklaniFactory {
      * @param TaskCodeHandlerFactory $taskCodeHandlerFactory
      * @param Container $context
      * @param ITranslator $translator
+     * @param TableReflectionFactory $tableReflectionFactory
      */
     public function __construct(
         ServiceFyziklaniRoom $serviceFyziklaniRoom,
@@ -91,7 +97,8 @@ class FyziklaniFactory {
         ServiceFyziklaniSubmit $serviceFyziklaniSubmit,
         TaskCodeHandlerFactory $taskCodeHandlerFactory,
         Container $context,
-        ITranslator $translator
+        ITranslator $translator,
+        TableReflectionFactory $tableReflectionFactory
     ) {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
@@ -99,6 +106,7 @@ class FyziklaniFactory {
         $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
         $this->serviceFyziklaniRoom = $serviceFyziklaniRoom;
         $this->taskCodeHandlerFactory = $taskCodeHandlerFactory;
+        $this->tableReflectionFactory = $tableReflectionFactory;
         $this->context = $context;
         $this->translator = $translator;
     }
@@ -237,6 +245,6 @@ class FyziklaniFactory {
      * @return TeamSubmitsGrid
      */
     public function createTeamSubmitsGrid(ModelFyziklaniTeam $team): TeamSubmitsGrid {
-        return new TeamSubmitsGrid($team, $this->serviceFyziklaniSubmit);
+        return new TeamSubmitsGrid($team, $this->serviceFyziklaniSubmit, $this->tableReflectionFactory);
     }
 }

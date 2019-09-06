@@ -8,7 +8,7 @@ use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
  * Class FyziklaniTeamIdTeamRow
  * @package FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam
  */
-class FyziklaniTeamIdTeamRow extends AbstractFyziklaniTeamRow {
+class FyziklaniTeamIdRow extends AbstractFyziklaniTeamRow {
     use DefaultPrinterTrait;
 
     /**
