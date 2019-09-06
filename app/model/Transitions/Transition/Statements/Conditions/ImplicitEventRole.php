@@ -2,7 +2,7 @@
 
 namespace FKSDB\Transitions\Statements\Conditions;
 
-use FKSDB\Transitions\IEventReferencedModel;
+use FKSDB\ORM\Models\IEventReferencedModel;
 use FKSDB\Transitions\IStateModel;
 use Nette\Application\BadRequestException;
 use Nette\Security\IResource;

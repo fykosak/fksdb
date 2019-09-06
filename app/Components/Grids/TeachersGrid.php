@@ -2,9 +2,16 @@
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Components\Forms\Factories\TableReflectionFactory;
+use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\ModelTeacher;
 use FKSDB\ORM\Services\ServiceTeacher;
+use Nette\Application\BadRequestException;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Database\Table\Selection;
-use Nette\Utils\Html;
+use NiftyGrid\DuplicateButtonException;
+use NiftyGrid\DuplicateColumnException;
+use NiftyGrid\DuplicateGlobalButtonException;
 use OrgModule\TeacherPresenter;
 use SQL\SearchableDataSource;
 
@@ -22,19 +29,20 @@ class TeachersGrid extends BaseGrid {
     /**
      * TeachersGrid constructor.
      * @param ServiceTeacher $serviceTeacher
+     * @param TableReflectionFactory $tableReflectionFactory
      */
-    function __construct(ServiceTeacher $serviceTeacher) {
-        parent::__construct();
+    function __construct(ServiceTeacher $serviceTeacher, TableReflectionFactory $tableReflectionFactory) {
+        parent::__construct($tableReflectionFactory);
         $this->serviceTeacher = $serviceTeacher;
     }
 
     /**
      * @param TeacherPresenter $presenter
-     * @throws \Nette\Application\UI\InvalidLinkException
-     * @throws \NiftyGrid\DuplicateButtonException
-     * @throws \NiftyGrid\DuplicateColumnException
-     * @throws \NiftyGrid\DuplicateGlobalButtonException
-     * @throws \Nette\Application\BadRequestException
+     * @throws InvalidLinkException
+     * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
+     * @throws DuplicateGlobalButtonException
+     * @throws BadRequestException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -54,26 +62,17 @@ class TeachersGrid extends BaseGrid {
         //
         // columns
         //
-        $this->addColumn('display_name', _('Name'))->setRenderer(function ($row) {
-            $person = $row->getPerson();
-            return $person->getFullname();
-        });
-        $this->addColumn('since', _('Since'))->setRenderer(function ($row) {
-            if ($row->since === null) {
-                return Html::el('span')->addAttributes(['class' => 'badge badge-secondary'])->addText(_('undefined'));
-            }
-            return $row->since->format('Y-m-d');
-        });
-        $this->addColumn('until', _('Until'))->setRenderer(function ($row) {
-            if ($row->until === null) {
-                return Html::el('span')->addAttributes(['class' => 'badge badge-success'])->addText(_('Still teaches'));
-            }
-            return $row->until->format('Y-m-d');
-        });
+        $this->addReflectionColumn('referenced', 'person_name', ModelTeacher::class);
+
         $this->addColumn('school_id', _('School'))->setRenderer(function ($row) {
             return $row->getSchool()->name_abbrev;
         });
 
+        $this->addReflectionColumn(DbNames::TAB_TEACHER, 'note', ModelTeacher::class);
+        $this->addReflectionColumn(DbNames::TAB_TEACHER, 'state', ModelTeacher::class);
+        $this->addReflectionColumn(DbNames::TAB_TEACHER, 'since', ModelTeacher::class);
+        $this->addReflectionColumn(DbNames::TAB_TEACHER, 'until', ModelTeacher::class);
+        $this->addReflectionColumn(DbNames::TAB_TEACHER, 'number_brochures', ModelTeacher::class);
         //
         // operations
         //
@@ -81,9 +80,11 @@ class TeachersGrid extends BaseGrid {
             ->setText(_('Edit'))
             ->setLink(function ($row) {
                 return $this->getPresenter()->link('edit', $row->teacher_id);
-            })
-            ->setShow(function ($row) use ($presenter) {
-                return $presenter->authorized('edit', ['id' => $row->teacher_id]);
+            });
+        $this->addButton('detail', _('Detail'))
+            ->setText(_('Detail'))
+            ->setLink(function ($row) {
+                return $this->getPresenter()->link('detail', ['id' => $row->teacher_id]);
             });
 
         if ($presenter->authorized('create')) {

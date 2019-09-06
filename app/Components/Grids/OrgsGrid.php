@@ -7,7 +7,11 @@ use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelOrg;
 use FKSDB\ORM\Services\ServiceOrg;
 use Nette\Application\BadRequestException;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Database\Table\Selection;
+use NiftyGrid\DuplicateButtonException;
+use NiftyGrid\DuplicateColumnException;
+use NiftyGrid\DuplicateGlobalButtonException;
 use OrgModule\OrgPresenter;
 use SQL\SearchableDataSource;
 
@@ -18,13 +22,13 @@ use SQL\SearchableDataSource;
 class OrgsGrid extends BaseGrid {
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceOrg
+     * @var ServiceOrg
      */
     private $serviceOrg;
 
     /**
      * OrgsGrid constructor.
-     * @param \FKSDB\ORM\Services\ServiceOrg $serviceOrg
+     * @param ServiceOrg $serviceOrg
      * @param TableReflectionFactory $tableReflectionFactory
      */
     function __construct(ServiceOrg $serviceOrg, TableReflectionFactory $tableReflectionFactory) {
@@ -36,10 +40,10 @@ class OrgsGrid extends BaseGrid {
     /**
      * @param OrgPresenter $presenter
      * @throws BadRequestException
-     * @throws \Nette\Application\UI\InvalidLinkException
-     * @throws \NiftyGrid\DuplicateButtonException
-     * @throws \NiftyGrid\DuplicateColumnException
-     * @throws \NiftyGrid\DuplicateGlobalButtonException
+     * @throws InvalidLinkException
+     * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
+     * @throws DuplicateGlobalButtonException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -60,7 +64,9 @@ class OrgsGrid extends BaseGrid {
         $this->setDataSource($dataSource);
         $this->setDefaultOrder('since DESC');
 
-        foreach (['person_name', 'since', 'until', 'role'] as $field) {
+        $this->addReflectionColumn('referenced', 'person_name', ModelOrg::class);
+        
+        foreach (['since', 'until', 'role'] as $field) {
             $this->addReflectionColumn(DbNames::TAB_ORG, $field, ModelOrg::class);
         }
 

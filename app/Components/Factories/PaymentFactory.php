@@ -85,15 +85,6 @@ class PaymentFactory {
     }
 
     /**
-     * @param ModelPayment $modelPayment
-     * @param PaymentMachine $machine
-     * @return DetailControl
-     */
-    public function createDetailControl(ModelPayment $modelPayment, PaymentMachine $machine): DetailControl {
-        return new DetailControl($this->translator, $machine, $modelPayment, $this->tableReflectionFactory);
-    }
-
-    /**
      * @param \FKSDB\ORM\Models\ModelEvent $event
      * @param bool $isOrg
      * @param PaymentMachine $machine

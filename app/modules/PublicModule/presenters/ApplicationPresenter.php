@@ -17,6 +17,7 @@ use FKSDB\Logging\FlashDumpFactory;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelAuthToken;
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Services\ServiceEvent;
 use Nette\Application\BadRequestException;
@@ -33,9 +34,9 @@ class ApplicationPresenter extends BasePresenter {
     const PARAM_AFTER = 'a';
 
     /**
-     * @var \FKSDB\ORM\Models\ModelEvent
+     * @var \FKSDB\ORM\Models\ModelEvent|null
      */
-    private $event = false;
+    private $event;
 
     /**
      * @var IModel|\FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam|ModelEventParticipant
@@ -310,10 +311,10 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @return \FKSDB\ORM\Models\ModelEvent|\Nette\Database\Table\ActiveRow|null
+     * @return \FKSDB\ORM\Models\ModelEvent|null
      */
     private function getEvent() {
-        if ($this->event === false) {
+        if (!$this->event) {
             $eventId = null;
             if ($this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_EVENT_NOTIFY)) {
                 $data = $this->getTokenAuthenticator()->getTokenData();
@@ -323,7 +324,10 @@ class ApplicationPresenter extends BasePresenter {
                 }
             }
             $eventId = $eventId ?: $this->getParameter('eventId');
-            $this->event = $this->serviceEvent->findByPrimary($eventId);
+            $row = $this->serviceEvent->findByPrimary($eventId);
+            if ($row) {
+                $this->event = ModelEvent::createFromTableRow($row);
+            }
         }
 
         return $this->event;
@@ -333,7 +337,7 @@ class ApplicationPresenter extends BasePresenter {
      * @return ModelEventParticipant|mixed|IModel|\FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam
      */
     private function getEventApplication() {
-        if ($this->eventApplication === false) {
+        if (!$this->eventApplication) {
             $id = null;
             if ($this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_EVENT_NOTIFY)) {
                 $data = $this->getTokenAuthenticator()->getTokenData();
@@ -344,7 +348,11 @@ class ApplicationPresenter extends BasePresenter {
             }
             $id = $id ?: $this->getParameter('id');
             $service = $this->getHolder()->getPrimaryHolder()->getService();
+
             $this->eventApplication = $service->findByPrimary($id);
+            /* if ($row) {
+                 $this->eventApplication = ($service->getModelClassName())::createFromTableRow($row);
+             }*/
         }
 
         return $this->eventApplication;

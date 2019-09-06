@@ -6,6 +6,8 @@ use Events\Machine\BaseMachine;
 use Events\Model\ExpressionEvaluator;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Config\NeonScheme;
+use FKSDB\ORM\AbstractServiceMulti;
+use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
 use FKSDB\ORM\Models\ModelEvent;
@@ -340,7 +342,7 @@ class BaseHolder extends FreezableObject {
     }
 
     /**
-     * @return IService
+     * @return IService|AbstractServiceSingle|AbstractServiceMulti
      */
     public function getService() {
         return $this->service;

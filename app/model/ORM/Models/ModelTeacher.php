@@ -20,7 +20,7 @@ use Nette\Security\IResource;
  * @property-read int number_brochures
  * @property-read string note
  */
-class ModelTeacher extends AbstractModelSingle implements IResource {
+class ModelTeacher extends AbstractModelSingle implements IResource, IPersonReferencedModel {
     /**
      * @return ModelPerson
      */

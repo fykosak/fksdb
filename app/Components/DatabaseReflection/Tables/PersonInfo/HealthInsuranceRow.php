@@ -3,7 +3,6 @@
 namespace FKSDB\Components\DatabaseReflection\PersonInfo;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
-use FKSDB\Components\DatabaseReflection\ValuePrinters\StringPrinter;
 use FKSDB\Components\Forms\Factories\ITestedRowFactory;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelPersonInfo;
