@@ -128,7 +128,7 @@ class CloseTeamControl extends Control {
     private function formSucceeded() {
         $connection = $this->serviceFyziklaniTeam->getConnection();
         $connection->beginTransaction();
-        $submits = $this->team->getNonCheckedSubmits();
+        $submits = $this->team->getNonRevokedSubmits();
         $sum = 0;
         foreach ($submits as $row) {
             $submit = ModelFyziklaniSubmit::createFromActiveRow($row);
