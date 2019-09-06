@@ -34,7 +34,6 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use Nette\DI\Container;
 use Nette\Localization\ITranslator;
 
-
 /**
  * Class FyziklaniFactory
  * @package FKSDB\Components\Factories
