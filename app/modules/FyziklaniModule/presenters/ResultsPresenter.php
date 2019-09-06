@@ -8,6 +8,7 @@ use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Results\ResultsView
 use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Statistics\CorrelationStatistics;
 use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Statistics\TaskStatistics;
 use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Statistics\TeamStatistics;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 
 /**
@@ -18,7 +19,7 @@ class ResultsPresenter extends BasePresenter {
     /**
      * @return bool
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function requiresLogin(): bool {
         switch ($this->getAction()) {
@@ -87,7 +88,7 @@ class ResultsPresenter extends BasePresenter {
 
     /**
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function authorizedResultsFinal() {
         if ($this->getGameSetup()->result_hard_display) {
@@ -98,16 +99,16 @@ class ResultsPresenter extends BasePresenter {
     }
 
     /**
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function authorizedCorrelationStatistics() {
         $this->setAuthorized($this->isContestsOrgAllowed('fyziklani.results', 'correlation'));
     }
 
     /**
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function authorizedResultsPresentation() {
         $this->setAuthorized($this->eventIsAllowed('fyziklani.results', 'presentation'));
@@ -115,8 +116,8 @@ class ResultsPresenter extends BasePresenter {
 
     /**
      * @return ResultsView
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function createComponentResultsView(): ResultsView {
         return $this->fyziklaniComponentsFactory->createResultsView($this->getEvent());
@@ -124,8 +125,8 @@ class ResultsPresenter extends BasePresenter {
 
     /**
      * @return ResultsPresentation
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function createComponentResultsPresentation(): ResultsPresentation {
         return $this->fyziklaniComponentsFactory->createResultsPresentation($this->getEvent());
@@ -133,8 +134,8 @@ class ResultsPresenter extends BasePresenter {
 
     /**
      * @return TeamStatistics
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function createComponentTeamStatistics(): TeamStatistics {
         return $this->fyziklaniComponentsFactory->createTeamStatistics($this->getEvent());
@@ -142,8 +143,8 @@ class ResultsPresenter extends BasePresenter {
 
     /**
      * @return TaskStatistics
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function createComponentTaskStatistics(): TaskStatistics {
         return $this->fyziklaniComponentsFactory->createTaskStatistics($this->getEvent());
@@ -151,8 +152,8 @@ class ResultsPresenter extends BasePresenter {
 
     /**
      * @return CorrelationStatistics
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function createComponentCorrelationStatistics(): CorrelationStatistics {
         return $this->fyziklaniComponentsFactory->createCorrelationStatistics($this->getEvent());
@@ -161,7 +162,7 @@ class ResultsPresenter extends BasePresenter {
     /**
      * @return FinalResults
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function createComponentOrgResults(): FinalResults {
         return $this->fyziklaniComponentsFactory->createFinalResults($this->getEvent());
