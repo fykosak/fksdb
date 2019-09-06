@@ -4,10 +4,8 @@
         <b class="col-2">{_'Id'}</b>
         <span class="col-10">#{$model->schedule_group_id}</span>
     </div>
-    <div class="row">
-        <b class="col-2">{_'Group type'}</b>
-        <span class="col-10">{$model->schedule_group_type}</span>
-    </div>
+    {control valuePrinter__schedule_group__schedule_group_type:row $model}
+
     <div class="row">
         <b class="col-2">{_'Event'}</b>
         <span class="col-10">{$model->getEvent()->__toString()}
@@ -17,12 +15,7 @@
                     {_'Event detail'}</a>
             </span>
     </div>
-    <div class="row">
-        <b class="col-2">{_'Start'}</b>
-        <span class="col-10">{$model->start->format(_('d. m. Y H:i'))}</span>
-    </div>
-    <div class="row">
-        <b class="col-2">{_'End'}</b>
-        <span class="col-10">{$model->end->format(_('d. m. Y H:i'))}</span>
-    </div>
+    {control valuePrinter__schedule_group__start:row $model}
+
+    {control valuePrinter__schedule_group__end:row $model}
 </div>

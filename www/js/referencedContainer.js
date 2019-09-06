@@ -26,7 +26,7 @@ $(function () {
             }
 
             const searchifyContainer = function () {
-                return;
+
                 // create search button
                 var searchButton = $('<button class="input-group-append btn btn-secondary" type="button"><span class="fa fa-search"></span></button>');
                 searchButton.click(function () {
@@ -82,7 +82,7 @@ $(function () {
                     }
                 });
 
-            }
+            };
 
             function decompactifyContainer() {
                 if (compacted !== null) {
@@ -123,6 +123,7 @@ $(function () {
 
 
             function compactifyContainer() {
+
                 if (compacted === null) {
                     const label = elContainer.find('> fieldset > h4').text();
                     const value = $compactValueInput.val();
@@ -151,7 +152,6 @@ $(function () {
             });
 
             var hasErrors = elContainer.find(".has-error");
-
 
             if ($searchInput.length) {
                 searchifyContainer();

@@ -23,6 +23,7 @@ use Nette\NotImplementedException;
  * @property-read string name_cs
  * @property-read string name_en
  * @property-read int require_id_number
+ * @property-read string description
  */
 class ModelScheduleItem extends AbstractModelSingle {
     /**
@@ -87,11 +88,26 @@ class ModelScheduleItem extends AbstractModelSingle {
      * @return string
      * @throws NotImplementedException
      */
+    public function getShortLabel(): string {
+        $group = $this->getGroup();
+        switch ($group->schedule_group_type) {
+            case ModelScheduleGroup::TYPE_ACCOMMODATION:
+                return \sprintf(_('Accommodation in "%s".'),
+                    $this->name_cs
+                );
+        }
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @return string
+     * Label include datetime from schedule group
+     */
     public function getLabel(): string {
         $group = $this->getGroup();
         switch ($group->schedule_group_type) {
             case ModelScheduleGroup::TYPE_ACCOMMODATION:
-                return \sprintf(_('Accommodation in "%s" from %s to %s'),
+                return \sprintf(_('Accommodation in "%s" from %s to %s.'),
                     $this->name_cs,
                     $group->start->format('d. m. Y'),
                     $group->end->format('d. m. Y')
@@ -102,8 +118,35 @@ class ModelScheduleItem extends AbstractModelSingle {
 
     /**
      * @return string
+     * @deprecated
+     */
+    public function getFullLabel(): string {
+        return $this->getLabel();
+    }
+
+    /**
+     * @return string
      */
     public function __toString(): string {
         return $this->getLabel();
+    }
+
+    /**
+     * @return array
+     */
+    public function __toArray(): array {
+        return [
+            'scheduleGroupId' => $this->schedule_group_id,
+            'price' => [
+                'eur' => $this->price_eur,
+                'czk' => $this->price_czk
+            ],
+            'totalCapacity' => $this->capacity,
+            'usedCapacity' => $this->getUsedCapacity(),
+            'scheduleItemId' => $this->schedule_item_id,
+            'label' => $this->getShortLabel(),
+            'requireIdNumber' => $this->require_id_number,
+            'description' => $this->description,
+        ];
     }
 }

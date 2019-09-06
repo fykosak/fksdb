@@ -2,7 +2,9 @@
 
 namespace FKSDB\Components\Grids\Schedule;
 
+use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
 use Nette\Application\AbortException;
@@ -23,10 +25,25 @@ class GroupsGrid extends BaseGrid {
     /**
      * GroupsGrid constructor.
      * @param ModelEvent $event
+     * @param TableReflectionFactory $tableReflectionFactory
      */
-    public function __construct(ModelEvent $event) {
-        parent::__construct();
+    public function __construct(ModelEvent $event, TableReflectionFactory $tableReflectionFactory) {
+        parent::__construct($tableReflectionFactory);
         $this->event = $event;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTableName(): string {
+        return DbNames::TAB_SCHEDULE_GROUP;
+    }
+
+    /**
+     * @return string
+     */
+    public function getModelClassName(): string {
+        return ModelScheduleGroup::class;
     }
 
     /**
@@ -42,17 +59,8 @@ class GroupsGrid extends BaseGrid {
         $dataSource = new NDataSource($groups);
         $this->setDataSource($dataSource);
         $this->addColumn('schedule_group_id', _('#'));
+        $this->addColumns(['schedule_group_type', 'start', 'end']);
 
-        $this->addColumn('schedule_group_type', _('Type'))->setRenderer(function ($row) {
-            // TODO
-            return $row->schedule_group_type;
-        });
-        $this->addColumn('start', _('Start'))->setRenderer(function ($row) {
-            return $row->start->format('d. m. Y H:i');
-        });
-        $this->addColumn('end', _('End'))->setRenderer(function ($row) {
-            return $row->end->format('d. m. Y H:i');
-        });
         $this->addColumn('items_count', _('Items count'))->setRenderer(function ($row) {
             $model = ModelScheduleGroup::createFromActiveRow($row);
             return $model->getItems()->count();

@@ -5,6 +5,7 @@ namespace FKSDB\ORM\Models;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\YearCalculator;
 use ModelMPersonHasFlag;
 use ModelMPostContact;
@@ -12,6 +13,7 @@ use Nette\Database\Table\GroupedSelection;
 use Nette\Database\Table\Selection;
 use Nette\Security\IResource;
 use Nette\Utils\DateTime;
+use Nette\Utils\Json;
 
 /**
  *
@@ -309,9 +311,9 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
     }
 
     /**
-     * @internal To get active orgs call FKSDB\ORM\Models\ModelLogin::getActiveOrgs
      * @param \FKSDB\YearCalculator $yearCalculator
      * @return ModelOrg[] indexed by contest_id
+     * @internal To get active orgs call FKSDB\ORM\Models\ModelLogin::getActiveOrgs
      */
     public function getActiveOrgs(YearCalculator $yearCalculator) {
         $result = [];
@@ -381,9 +383,6 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
         }
     }
 
-    /*
-     * IResource
-     */
     /**
      * @return string
      */
@@ -393,36 +392,38 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
 
     /**
      * @param integer eventId
+     * @param string $type
      * @return string
      * @throws \Nette\Utils\JsonException
      */
-    public function getSerializedAccommodationByEventId($eventId) {
+    public function getSerializedSchedule(int $eventId, string $type) {
         if (!$eventId) {
             return null;
         }
-
-        $query = $this->related(DbNames::TAB_EVENT_PERSON_ACCOMMODATION, 'person_id')->where('event_accommodation.event_id=?', $eventId);
-        $accommodations = [];
+        $query = $this->getSchedule()
+            ->where('schedule_item.schedule_group.event_id', $eventId)
+            ->where('schedule_item.schedule_group.schedule_group_type', $type);
+        $items = [];
         foreach ($query as $row) {
-            $model = ModelEventPersonAccommodation::createFromActiveRow($row);
-            $eventAcc = $model->getEventAccommodation();
-            $key = $eventAcc->date->format(ModelEventAccommodation::ACC_DATE_FORMAT);
-            $accommodations[$key] = $eventAcc->event_accommodation_id;
+            $model = ModelPersonSchedule::createFromActiveRow($row);
+            $scheduleItem = $model->getScheduleItem();
+            $items[$scheduleItem->schedule_group_id] = $scheduleItem->schedule_item_id;
         }
-        if (!count($accommodations)) {
+        if (!count($items)) {
             return null;
         }
-        return \Nette\Utils\Json::encode($accommodations);
+
+        return Json::encode($items);
     }
 
     /**
      * @param $eventId
      * Definitely ugly but, there is only this way... Mišo
      */
-    public function removeAccommodationForEvent($eventId) {
-        $query = $this->related(DbNames::TAB_EVENT_PERSON_ACCOMMODATION, 'person_id')->where('event_accommodation.event_id=?', $eventId);
+    public function removeScheduleForEvent($eventId) {
+        $query = $this->related(DbNames::TAB_PERSON_SCHEDULE, 'person_id')->where('schedule_item.schedule_group.event_id=?', $eventId);
         /**
-         * @var ModelEventPersonAccommodation $row
+         * @var ModelPersonSchedule $row
          */
         foreach ($query as $row) {
             $row->delete();

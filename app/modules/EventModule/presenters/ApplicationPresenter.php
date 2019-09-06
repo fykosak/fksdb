@@ -9,6 +9,7 @@ use FKSDB\Components\Grids\Events\Application\ApplicationGrid;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Services\ServiceEventParticipant;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 
@@ -45,8 +46,8 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function authorizedDetail() {
         if ($this->isTeamEvent()) {
@@ -57,8 +58,8 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function authorizedImport() {
         if ($this->isTeamEvent()) {
@@ -69,8 +70,8 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function authorizedList() {
         if ($this->isTeamEvent()) {
@@ -84,12 +85,13 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @param int $id
      * @throws BadRequestException
      * @throws ForbiddenRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     protected function loadModel(int $id) {
         $row = $this->serviceEventParticipant->findByPrimary($id);
         if (!$row) {
-            throw new BadRequestException('Model not found');
+            $this->flashMessage(_('Application not found'));
+            $this->redirect('list');
         }
         $model = ModelEventParticipant::createFromActiveRow($row);
         if ($model->event_id != $this->getEvent()->event_id) {
@@ -107,8 +109,8 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
 
     /**
      * @return ApplicationGrid
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function createComponentGrid(): AbstractApplicationGrid {
         return new ApplicationGrid($this->getEvent(), $this->getTableReflectionFactory());
@@ -117,7 +119,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
     /**
      * @return ImportComponent
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function createComponentImport(): ImportComponent {
         $source = new SingleEventSource($this->getEvent(), $this->container);
@@ -132,7 +134,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
 
     /**
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function renderDetail() {
         $this->template->fields = $this->getEvent()->getHolder()->getPrimaryHolder()->getFields();

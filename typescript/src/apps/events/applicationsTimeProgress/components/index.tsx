@@ -30,7 +30,6 @@ export default class Timeline extends React.Component<Props, {}> {
                     <div className="col-12">
                         <Chart data={data}/>
                     </div>
-
                 </div>
             </div>
         );
