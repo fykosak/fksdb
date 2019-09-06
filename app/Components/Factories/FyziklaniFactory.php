@@ -221,7 +221,11 @@ class FyziklaniFactory {
      * @return AllSubmitsGrid
      */
     public function createSubmitsGrid(ModelEvent $event): AllSubmitsGrid {
-        return new AllSubmitsGrid($event, $this->serviceFyziklaniSubmit);
+        return new AllSubmitsGrid($event,
+            $this->serviceFyziklaniTask,
+            $this->serviceFyziklaniSubmit,
+            $this->serviceFyziklaniTeam,
+            $this->tableReflectionFactory);
     }
 
     /**
