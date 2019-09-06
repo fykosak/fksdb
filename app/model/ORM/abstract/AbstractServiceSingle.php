@@ -93,9 +93,9 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     }
 
     /**
-     * @return string|AbstractModelSingle
+     * @return string|AbstractModelSingle|AbstractModelMulti
      */
-    abstract protected function getModelClassName(): string;
+    abstract public function getModelClassName(): string;
 
     /**
      * @return string
@@ -242,7 +242,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     }
 
     /**
-     * @return TableSelection
+     * @return TypedTableSelection
      */
     public function getTable() {
         return new TypedTableSelection($this->getModelClassName(), $this->getTableName(), $this->connection);

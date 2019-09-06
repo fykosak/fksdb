@@ -8,7 +8,6 @@ use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\Payment\IPaymentModel;
 use FKSDB\Payment\Price;
 use FKSDB\Payment\PriceCalculator\PriceCalculator;
-use FKSDB\Transitions\IEventReferencedModel;
 use FKSDB\Transitions\IStateModel;
 use FKSDB\Transitions\Machine;
 use Nette\Database\Table\ActiveRow;

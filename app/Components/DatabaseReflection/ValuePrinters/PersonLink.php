@@ -56,6 +56,5 @@ class PersonLink extends AbstractValuePrinter {
         }
         return Html::el('span')
             ->addText($person->getFullName());
-
     }
 }

@@ -3,9 +3,11 @@
 namespace FKSDB\Components\Grids;
 
 use Authorization\ContestAuthorizator;
+use Closure;
+use FKSDB\Components\Forms\Factories\TableReflectionFactory;
+use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
-use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;
 use OrgModule\ExportPresenter;
 
@@ -34,17 +36,18 @@ class StoredQueriesGrid extends BaseGrid {
      * StoredQueriesGrid constructor.
      * @param \FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery $serviceStoredQuery
      * @param ContestAuthorizator $contestAuthorizator
+     * @param TableReflectionFactory $tableReflectionFactory
      */
-    function __construct(ServiceStoredQuery $serviceStoredQuery, ContestAuthorizator $contestAuthorizator) {
-        parent::__construct();
+    function __construct(ServiceStoredQuery $serviceStoredQuery, ContestAuthorizator $contestAuthorizator, TableReflectionFactory $tableReflectionFactory) {
+        parent::__construct($tableReflectionFactory);
         $this->serviceStoredQuery = $serviceStoredQuery;
         $this->contestAuthorizator = $contestAuthorizator;
     }
 
     /**
-     * @return \Closure
+     * @return Closure
      */
-    public function getFilterByTagCallback() {
+    public function getFilterByTagCallback(): Closure {
         return function (array $tagTypeId) {
             if (empty($tagTypeId)) {
                 $this->isFilteredByTag = false;
@@ -77,21 +80,10 @@ class StoredQueriesGrid extends BaseGrid {
         //
         // columns
         //
-        $this->addColumn('name', _('Název'));
-        $this->addColumn('description', _('Popis'))->setTruncate(self::DESCRIPTION_TRUNC);
-        $this->addColumn('tags', _('Štítky'))->setRenderer(function (ModelStoredQuery $row) {
-            $baseEl = Html::el('div')->addAttributes(['class' => 'stored-query-tags']);
-            foreach ($row->getMStoredQueryTags() as $tag) {
-                $baseEl->addHtml(Html::el('span')
-                    ->addAttributes([
-                        'class' => 'badge stored-query-tag stored-query-tag-' . $tag->color,
-                        'title' => $tag->description
-                    ])
-                    ->addText($tag->name));
-            }
-            return $baseEl;
-        })->setSortable(false);
-
+        $this->addColumn('name', _('Export name'));
+        $this->addReflectionColumn(DbNames::TAB_STORED_QUERY, 'qid', ModelStoredQuery::class);
+        $this->addColumn('description', _('Description'))->setTruncate(self::DESCRIPTION_TRUNC);
+        $this->addReflectionColumn(DbNames::TAB_STORED_QUERY, 'tags', ModelStoredQuery::class);
         //
         // operations
         //
@@ -113,14 +105,14 @@ class StoredQueriesGrid extends BaseGrid {
                 return $this->contestAuthorizator->isAllowed($row, 'show', $contest);
             });
 
-        $this->addButton('execute', _('Spustit'))
+        $this->addButton('execute', _('Execute'))
             ->setClass('btn btn-sm btn-primary')
             ->setText(_('Spustit'))
             ->setLink(function ($row) {
                 return $this->getPresenter()->link('execute', $row->query_id);
             })
             ->setShow(function ($row) use ($contest) {
-                return $this->contestAuthorizator->isAllowed($row, 'show', $contest);
+                return $this->contestAuthorizator->isAllowed($row, 'execute', $contest);
             });
 
         if ($presenter->authorized('compose')) {

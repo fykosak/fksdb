@@ -1,6 +1,6 @@
 <?php
 
-namespace OrgModule;
+namespace CommonModule;
 
 use Authentication\AccountManager;
 use FKSDB\Components\Controls\FormControl\FormControl;
@@ -205,8 +205,8 @@ class PersonPresenter extends BasePresenter {
         if (!$this->trunkPerson || !$this->mergedPerson) {
             throw new BadRequestException('Neexistující osoba.', 404);
         }
-        $authorized = $this->getContestAuthorizator()->isAllowed($this->trunkPerson, 'merge', $this->getSelectedContest()) &&
-            $this->getContestAuthorizator()->isAllowed($this->mergedPerson, 'merge', $this->getSelectedContest());
+        $authorized = $this->getContestAuthorizator()->isAllowedForAnyContest($this->trunkPerson, 'merge') &&
+            $this->getContestAuthorizator()->isAllowedForAnyContest($this->mergedPerson, 'merge');
         $this->setAuthorized($authorized);
     }
 
