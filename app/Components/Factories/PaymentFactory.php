@@ -2,14 +2,12 @@
 
 namespace FKSDB\Components\Factories;
 
-use FKSDB\Components\Controls\Payment\DetailControl;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\Payment\SelectForm;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\Payment\OrgPaymentGrid;
 use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\Schedule\ServicePersonSchedule;
 use FKSDB\ORM\Services\Schedule\ServiceSchedulePayment;
 use FKSDB\ORM\Services\ServicePayment;
@@ -82,15 +80,6 @@ class PaymentFactory {
      */
     public function createOrgGrid(ModelEvent $event): OrgPaymentGrid {
         return new OrgPaymentGrid($this->servicePayment, $event, $this->tableReflectionFactory);
-    }
-
-    /**
-     * @param ModelPayment $modelPayment
-     * @param PaymentMachine $machine
-     * @return DetailControl
-     */
-    public function createDetailControl(ModelPayment $modelPayment, PaymentMachine $machine): DetailControl {
-        return new DetailControl($this->translator, $machine, $modelPayment, $this->tableReflectionFactory);
     }
 
     /**

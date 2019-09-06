@@ -31,7 +31,7 @@ class ServiceEventOrg extends AbstractServiceSingle {
     }
 
     /**
-     * @param \FKSDB\ORM\IModel $model
+     * @param \FKSDB\ORM\IModel|ModelEventOrg $model
      * @return mixed|void
      */
     public function save(IModel &$model) {
