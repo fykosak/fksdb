@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Controls\Fyziklani\Submit;
 
 use BasePresenter;
-use FKSDB\Components\Controls\Helpers\ValuePrinters\StringValueControl;
 use FKSDB\model\Fyziklani\ClosedSubmittingException;
 use FKSDB\model\Fyziklani\PointsMismatchException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
@@ -74,10 +73,4 @@ class DetailControl extends Control {
         }
     }
 
-    /**
-     * @return StringValueControl
-     */
-    public function createComponentStringValue(): StringValueControl {
-        return new StringValueControl($this->translator);
-    }
 }

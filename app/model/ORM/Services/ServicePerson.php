@@ -41,7 +41,7 @@ class ServicePerson extends AbstractServiceSingle {
     }
 
     /**
-     * @param IModel $model
+     * @param IModel|ModelPerson $model
      * @return mixed|void
      */
     public function save(IModel &$model) {

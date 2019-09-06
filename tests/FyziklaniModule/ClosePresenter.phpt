@@ -138,10 +138,9 @@ class ClosePresenterTest extends FyziklaniTestCase {
      * Not a real test method.
      */
     private function innertestCloseTeam($teamId, $pointsSum) {
+
         $request = $this->createPostRequest(array(
             'id' => $teamId,
-            'submit_task_correct' => 'on',
-            'next_task_correct' => 'on',
             'send' => 'Potvrdit správnost',
         ), array(
             'id' => $teamId,

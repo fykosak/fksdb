@@ -1,8 +1,8 @@
 <h2>{sprintf(_('Submit #%s'),$model->fyziklani_submit_id)}</h2>
 <div>
-    {control stringValue $model,_('Id'),fyziklani_submit_id}
+    {*control stringValue $model,_('Id'),fyziklani_submit_id*}
 
-    {control stringValue $model,_('Team Id'),e_fyziklani_team_id}
+    {*control stringValue $model,_('Team Id'),e_fyziklani_team_id*}
 
     <div class="row">
         <b class="col-2">{_'Team'}</b>
@@ -12,11 +12,11 @@
     </div>
     <hr/>
     <h3>{_'Task'}</h3>
-    {control stringValue $model,_('Task Id'),fyziklani_task_id}
+    {*control stringValue $model,_('Task Id'),fyziklani_task_id*}
 
-    {control stringValue $model->getTask(),_('Task'),name}
+    {*control stringValue $model->getTask(),_('Task'),name*}
 
-    {control stringValue $model->getTask(),_('Task label'),label}
+    {*control stringValue $model->getTask(),_('Task label'),label*}
 
     <hr/>
 
