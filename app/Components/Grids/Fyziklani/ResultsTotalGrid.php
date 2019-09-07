@@ -1,14 +1,16 @@
 <?php
 
-
 namespace FKSDB\Components\Grids\Fyziklani;
 
-
+use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FyziklaniModule\BasePresenter;
 use NiftyGrid\DataSource\NDataSource;
+use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class ResultsTotalGrid
@@ -17,36 +19,38 @@ use NiftyGrid\DataSource\NDataSource;
 class ResultsTotalGrid extends BaseGrid {
 
     /**
-     *
      * @var ServiceFyziklaniTeam
      */
     private $serviceFyziklaniTeam;
 
     /**
-     * @var \FKSDB\ORM\Models\ModelEvent
+     * @var ModelEvent
      */
     private $event;
 
     /**
      * FyziklaniSubmitsGrid constructor.
-     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @param ModelEvent $event
      * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @param TableReflectionFactory $tableReflectionFactory
      */
-    public function __construct(ModelEvent $event, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
+    public function __construct(ModelEvent $event, ServiceFyziklaniTeam $serviceFyziklaniTeam, TableReflectionFactory $tableReflectionFactory) {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
         $this->event = $event;
-        parent::__construct();
+        parent::__construct($tableReflectionFactory);
     }
 
     /**
      * @param BasePresenter $presenter
-     * @throws \NiftyGrid\DuplicateColumnException
+     * @throws DuplicateColumnException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
-        $this->addColumn('rank_category', _('Pořadí celkové'));
-        $this->addColumn('name', _('Jméno týmu'));
-        $this->addColumn('e_fyziklani_team_id', _('Id týmu'));
+        $this->paginate = false;
+
+        $this->addReflectionColumn(DbNames::TAB_E_FYZIKLANI_TEAM, 'rank_total', ModelFyziklaniTeam::class);
+        $this->addReflectionColumn(DbNames::TAB_E_FYZIKLANI_TEAM, 'name', ModelFyziklaniTeam::class);
+        $this->addReflectionColumn(DbNames::TAB_E_FYZIKLANI_TEAM, 'e_fyziklani_team_id', ModelFyziklaniTeam::class);
 
         $teams = $this->serviceFyziklaniTeam->findParticipating($this->event)
             ->order('rank_total');

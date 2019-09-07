@@ -1,14 +1,21 @@
 <?php
 
+
+namespace FKSDB\React;
+
+use FKSDB\Messages\Message;
+use Nette;
 use Nette\SmartObject;
 
+
 /**
- * Class ReactResponse
+ * Class FKSDB\React\ReactResponse
  */
 final class ReactResponse implements Nette\Application\IResponse {
+
     use SmartObject;
     /**
-     * @var ReactMessage[]
+     * @var Message[]
      */
     private $messages = [];
 
@@ -37,16 +44,16 @@ final class ReactResponse implements Nette\Application\IResponse {
     }
 
     /**
-     * @param ReactMessage[] $messages
+     * @param Message[] $messages
      */
     public function setMessages(array $messages) {
         $this->messages = $messages;
     }
 
     /**
-     * @param ReactMessage $message
+     * @param Message $message
      */
-    public function addMessage(\ReactMessage $message) {
+    public function addMessage(Message $message) {
         $this->messages[] = $message;
     }
 
@@ -66,7 +73,7 @@ final class ReactResponse implements Nette\Application\IResponse {
         $httpResponse->setContentType($this->getContentType());
         $httpResponse->setExpiration(FALSE);
         $response = [
-            'messages' => array_map(function (ReactMessage $value) {
+            'messages' => array_map(function (Message $value) {
                 return $value->__toArray();
             }, $this->messages),
             'act' => $this->act,
