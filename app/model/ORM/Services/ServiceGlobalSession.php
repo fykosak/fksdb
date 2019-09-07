@@ -52,7 +52,7 @@ class ServiceGlobalSession extends AbstractServiceSingle {
      * @param string $loginId
      * @param DateTime $until
      * @param DateTime $since
-     * @return ModelAuthToken
+     * @return ModelGlobalSession
      */
     public function createSession($loginId, DateTime $until = null, DateTime $since = null) {
         if ($since === null) {
@@ -64,20 +64,19 @@ class ServiceGlobalSession extends AbstractServiceSingle {
         do {
             $sessionId = Random::generate(self::SESSION_ID_LENGTH, 'a-zA-Z0-9');
         } while ($this->findByPrimary($sessionId));
-
-        $session = $this->createNew([
+        /**
+         * @var $session ModelGlobalSession
+         */
+        $session = $this->createNewModel([
             'session_id' => $sessionId,
             'login_id' => $loginId,
             'since' => $since,
             'until' => $until,
             'remote_ip' => $this->request->getRemoteAddress(),
         ]);
-        $this->save($session);
         $this->getConnection()->commit();
 
         return $session;
     }
-
-    //TODO garbage collection
 }
 

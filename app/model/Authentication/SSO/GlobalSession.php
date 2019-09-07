@@ -5,9 +5,9 @@ namespace Authentication\SSO;
 use FKSDB\Authentication\SSO\IGlobalSession;
 use FKSDB\Authentication\SSO\IGSIDHolder;
 use FKSDB\ORM\Services\ServiceGlobalSession;
-use Nette\Utils\DateTime;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
+use Nette\Utils\DateTime;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -63,8 +63,7 @@ class GlobalSession implements IGlobalSession {
 
             // touch the session for another expiration period
             if ($this->globalSession && !$this->globalSession->isValid()) {
-                $this->globalSession->until = DateTime::from($this->expiration);
-                $this->serviceGlobalSession->save($this->globalSession);
+                $this->globalSession->update(['until' => DateTime::from($this->expiration)]);
             }
         }
         $this->started = true;
@@ -156,8 +155,7 @@ class GlobalSession implements IGlobalSession {
         }
 
         if ($value != $this->globalSession->login_id) {
-            $this->globalSession->login_id = $value;
-            $this->serviceGlobalSession->save($this->globalSession);
+            $this->globalSession->update(['login_id' => $value]);
         }
     }
 

@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\React;
 
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\DI\Container;
 use Nette\Http\IRequest;
@@ -51,9 +52,14 @@ abstract class ReactComponent extends Control {
 
     /**
      * @return IRequest
+     * @throws BadRequestException
      */
     protected function getHttpRequest(): IRequest {
-        return $this->container->getByType(IRequest::class);
+        $service = $this->container->getByType(IRequest::class);
+        if (!$service instanceof IRequest) {
+            throw new BadRequestException();
+        }
+        return $service;
     }
 
     /**
