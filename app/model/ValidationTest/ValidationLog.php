@@ -1,6 +1,5 @@
 <?php
 
-
 namespace FKSDB\ValidationTest;
 
 use FKSDB\Messages\Message;
