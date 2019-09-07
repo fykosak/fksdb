@@ -12,7 +12,6 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Security\User;
 use Tracy\Debugger;
-use function sprintf;
 
 /**
  * Class TaskCodeHandler
@@ -86,7 +85,7 @@ class SubmitHandler {
         } elseif (!$submit->points) { // ak bol zmazaný
             return $submit->changePoints($points, $user);
         } else {
-            throw new TaskCodeException(sprintf(_('Úloha je zadaná a overená.')));
+            throw new TaskCodeException(\sprintf(_('Úloha je zadaná a overená.')));
         }
     }
 
@@ -122,7 +121,7 @@ class SubmitHandler {
         $teamId = TaskCodePreprocessor::extractTeamId($fullCode);
 
         if (!$this->serviceFyziklaniTeam->teamExist($teamId, $this->event)) {
-            throw new TaskCodeException(sprintf(_('Tým %s neexistuje.'), $teamId));
+            throw new TaskCodeException(\sprintf(_('Tým %s neexistuje.'), $teamId));
         }
         $teamRow = $this->serviceFyziklaniTeam->findByPrimary($teamId);
         return ModelFyziklaniTeam::createFromActiveRow($teamRow);
@@ -164,8 +163,8 @@ class SubmitHandler {
             'created' => null
         ]);
 
-        Debugger::log(sprintf('Submit created for team %d and task %s by %s', $team->e_fyziklani_team_id, $task->fyziklani_task_id, $user->getIdentity()->getId()), ModelFyziklaniSubmit::DEBUGGER_LOG_PRIORITY);
-        return new Message(sprintf(_('Body byly uloženy. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
+        Debugger::log(\sprintf('Submit created for team %d and task %s by %s', $team->e_fyziklani_team_id, $task->fyziklani_task_id, $user->getIdentity()->getId()), ModelFyziklaniSubmit::DEBUGGER_LOG_PRIORITY);
+        return new Message(\sprintf(_('Body byly uloženy. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
             $points,
             $team->name,
             $team->e_fyziklani_team_id,
