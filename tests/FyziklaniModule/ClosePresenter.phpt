@@ -168,7 +168,7 @@ class ClosePresenterTest extends FyziklaniTestCase {
             'category' => $category,
             'send' => 'Uzavřít kategorii ' . $category . '.',
         ), array(
-            'action' => 'table',
+            'action' => 'list',
             'do' => 'close' . $category . 'Form-form-submit',
         ));
 
@@ -195,7 +195,7 @@ class ClosePresenterTest extends FyziklaniTestCase {
         $request = $this->createPostRequest(array(
             'send' => 'Uzavřít celé Fyziklání',
         ), array(
-            'action' => 'table',
+            'action' => 'list',
             'do' => 'closeTotalForm-form-submit',
         ));
 
