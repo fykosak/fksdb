@@ -4,9 +4,8 @@ namespace FKSDB\Components\Factories;
 
 use FKSDB\Components\Controls\Fyziklani\CloseControl;
 use FKSDB\Components\Controls\Fyziklani\CloseTeamControl;
-use FKSDB\Components\Controls\Fyziklani\EditSubmitControl;
+use FKSDB\Components\Controls\Fyziklani\EditControl;
 use FKSDB\Components\Controls\Fyziklani\FinalResults;
-use FKSDB\Components\Controls\Fyziklani\QREntryControl;
 use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Results\ResultsPresentation;
 use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Results\ResultsView;
 use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Statistics\CorrelationStatistics;
@@ -14,7 +13,9 @@ use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Statistics\TaskStat
 use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Statistics\TeamStatistics;
 use FKSDB\Components\Controls\Fyziklani\RoutingDownload;
 use FKSDB\Components\Controls\Fyziklani\RoutingEdit;
-use FKSDB\Components\Controls\Fyziklani\TaskCodeInput;
+use FKSDB\Components\Controls\Fyziklani\Submit\DetailControl;
+use FKSDB\Components\Controls\Fyziklani\Submit\QREntryControl;
+use FKSDB\Components\Controls\Fyziklani\Submit\TaskCodeInput;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\Fyziklani\AllSubmitsGrid;
 use FKSDB\Components\Grids\Fyziklani\ResultsCategoryGrid;
@@ -134,10 +135,10 @@ class FyziklaniFactory {
 
     /**
      * @param ModelEvent $event
-     * @return EditSubmitControl
+     * @return EditControl
      */
-    public function createEditSubmitControl(ModelEvent $event): EditSubmitControl {
-        return new EditSubmitControl($event, $this->serviceFyziklaniSubmit, $this->translator);
+    public function createEditSubmitControl(ModelEvent $event): EditControl {
+        return new EditControl($event, $this->serviceFyziklaniSubmit, $this->translator);
     }
 
     /* *************** CLOSING ***************/
@@ -269,5 +270,12 @@ class FyziklaniFactory {
      */
     public function createTeamSubmitsGrid(ModelFyziklaniTeam $team): TeamSubmitsGrid {
         return new TeamSubmitsGrid($team, $this->serviceFyziklaniSubmit, $this->tableReflectionFactory);
+    }
+
+    /**
+     * @return DetailControl
+     */
+    public function createSubmitDetailControl(): DetailControl {
+        return new DetailControl($this->translator, $this->serviceFyziklaniSubmit);
     }
 }
