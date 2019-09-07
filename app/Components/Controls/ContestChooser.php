@@ -182,6 +182,9 @@ class ContestChooser extends Control {
         return $this->year;
     }
 
+    /**
+     * @return void|null
+     */
     private function init() {
         if ($this->initialized) {
             return;

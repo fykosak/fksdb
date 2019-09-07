@@ -6,10 +6,12 @@ use EventModule\BasePresenter as EventBasePresenter;
 use FKSDB\Components\Controls\Choosers\FyziklaniChooser;
 use FKSDB\Components\Factories\FyziklaniFactory;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
-use Nette\Application\BadRequestException;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
+use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 
 /**
  *
@@ -24,7 +26,7 @@ abstract class BasePresenter extends EventBasePresenter {
     private $serviceFyziklaniTeam;
 
     /**
-     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask
+     * @var ServiceFyziklaniTask
      */
     private $serviceFyziklaniTask;
 
@@ -32,6 +34,10 @@ abstract class BasePresenter extends EventBasePresenter {
      * @var ServiceFyziklaniTeamPosition
      */
     private $serviceFyziklaniTeamPosition;
+    /**
+     * @var ServiceFyziklaniSubmit
+     */
+    private $serviceFyziklaniSubmit;
 
     /**
      * @var FyziklaniFactory
@@ -50,6 +56,13 @@ abstract class BasePresenter extends EventBasePresenter {
     }
 
     /**
+     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
+     */
+    public function injectServiceFyziklaniSubmit(ServiceFyziklaniSubmit $serviceFyziklaniSubmit) {
+        $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
+    }
+
+    /**
      * @param ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
      */
     public function injectServiceFyziklaniTeamPosition(ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition) {
@@ -64,7 +77,14 @@ abstract class BasePresenter extends EventBasePresenter {
     }
 
     /**
-     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @return ServiceFyziklaniSubmit
+     */
+    protected function getServiceFyziklaniSubmit(): ServiceFyziklaniSubmit {
+        return $this->serviceFyziklaniSubmit;
+    }
+
+    /**
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
      */
     public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam) {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
@@ -78,14 +98,14 @@ abstract class BasePresenter extends EventBasePresenter {
     }
 
     /**
-     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask $serviceFyziklaniTask
+     * @param ServiceFyziklaniTask $serviceFyziklaniTask
      */
     public function injectServiceFyziklaniTask(ServiceFyziklaniTask $serviceFyziklaniTask) {
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
     }
 
     /**
-     * @return \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask
+     * @return ServiceFyziklaniTask
      */
     protected function getServiceFyziklaniTask(): ServiceFyziklaniTask {
         return $this->serviceFyziklaniTask;
@@ -101,7 +121,7 @@ abstract class BasePresenter extends EventBasePresenter {
     /**
      * @return bool
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     protected function isEventFyziklani(): bool {
         return $this->getEvent()->event_type_id === 1;
@@ -109,7 +129,7 @@ abstract class BasePresenter extends EventBasePresenter {
 
     /**
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     protected function startup() {
         parent::startup();
@@ -125,6 +145,7 @@ abstract class BasePresenter extends EventBasePresenter {
     }
 
     /**
+     * @noinspection PhpMissingParentCallCommonInspection
      * @return string[]
      */
     protected function getNavRoots(): array {
@@ -132,6 +153,7 @@ abstract class BasePresenter extends EventBasePresenter {
     }
 
     /**
+     * @noinspection PhpMissingParentCallCommonInspection
      * @return int
      */
     protected function getEventId(): int {
@@ -144,7 +166,7 @@ abstract class BasePresenter extends EventBasePresenter {
     /**
      * @return ModelFyziklaniGameSetup
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     protected function getGameSetup(): ModelFyziklaniGameSetup {
         if (!$this->gameSetup) {

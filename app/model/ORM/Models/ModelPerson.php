@@ -25,7 +25,7 @@ use Nette\Utils\Json;
  * @property-read string gender
  * @property-read DateTime created
  */
-class ModelPerson extends AbstractModelSingle implements IResource {
+class ModelPerson extends AbstractModelSingle implements IResource, IPersonReferencedModel {
     /**
      * Returns first of the person's logins.
      * (so far, there's not support for multiple login in DB schema)
@@ -43,6 +43,13 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         }
 
         return ModelLogin::createFromActiveRow($logins->current());
+    }
+
+    /**
+     * @return ModelPerson
+     */
+    public function getPerson(): ModelPerson {
+        return $this;
     }
 
     /**
@@ -305,7 +312,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
 
     /**
      * @param \FKSDB\YearCalculator $yearCalculator
-     * @return array of FKSDB\ORM\Models\ModelOrg indexed by contest_id
+     * @return ModelOrg[] indexed by contest_id
      * @internal To get active orgs call FKSDB\ORM\Models\ModelLogin::getActiveOrgs
      */
     public function getActiveOrgs(YearCalculator $yearCalculator) {
@@ -324,7 +331,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * Active contestant := contestant in the highest year but not older than the current year.
      *
      * @param \FKSDB\YearCalculator $yearCalculator
-     * @return array of FKSDB\ORM\Models\ModelContestant indexed by contest_id
+     * @return ModelContestant[] indexed by contest_id
      */
     public function getActiveContestants(YearCalculator $yearCalculator) {
         $result = [];

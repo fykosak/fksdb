@@ -4,6 +4,7 @@ namespace FKSDB\ORM\Models\Fyziklani;
 
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\IEventReferencedModel;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
@@ -26,7 +27,7 @@ use Nette\Utils\DateTime;
  * @author Michal Červeňák <miso@fykos.cz>
  *
  */
-class ModelFyziklaniTeam extends AbstractModelSingle {
+class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferencedModel {
 
     /**
      * @return string
@@ -51,9 +52,32 @@ class ModelFyziklaniTeam extends AbstractModelSingle {
 
     /**
      * @return Selection
+     * @deprecated use getNonRevokedSubmits
+     * @use getNonRevokedSubmits
      */
     public function getSubmits(): Selection {
-        return $this->related(DbNames::TAB_FYZIKLANI_SUBMIT, 'e_fyziklani_team_id')->where('points IS NOT NULL');
+        return $this->getNonRevokedSubmits();
+    }
+
+    /**
+     * @return Selection
+     */
+    public function getAllSubmits(): Selection {
+        return $this->related(DbNames::TAB_FYZIKLANI_SUBMIT, 'e_fyziklani_team_id');
+    }
+
+    /**
+     * @return Selection
+     */
+    public function getNonRevokedSubmits(): Selection {
+        return $this->getAllSubmits()->where('points IS NOT NULL');
+    }
+
+    /**
+     * @return Selection
+     */
+    public function getNonCheckedSubmits(): Selection {
+        return $this->getNonRevokedSubmits()->where('state IS NULL OR state != ?', ModelFyziklaniSubmit::STATE_CHECKED);
     }
 
     /**

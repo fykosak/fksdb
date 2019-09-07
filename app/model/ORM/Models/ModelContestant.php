@@ -15,7 +15,7 @@ use Nette\Security\IResource;
  * @property-read int contest_id
  * @property-read int year
  */
-class ModelContestant extends AbstractModelSingle implements IResource {
+class ModelContestant extends AbstractModelSingle implements IResource, IPersonReferencedModel, IContestReferencedModel {
     /**
      * @return ModelPerson
      */

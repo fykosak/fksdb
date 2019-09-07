@@ -1,45 +1,59 @@
-main.login {
-  background: url(/images/bg/1.jpg) 50%;
-  background-size: cover;
-  &[data-bg="1"] {
+body {
+  main.login {
     background: url(/images/bg/1.jpg) 50%;
     background-size: cover;
   }
 
-  &[data-bg="2"] {
+  &[data-bg="1"] main.login {
+    background: url(/images/bg/1.jpg) 50%;
+    background-size: cover;
+  }
+
+  &[data-bg="2"] main.login {
     background: url(/images/bg/2.jpg) 0 10%;
     background-size: cover;
   }
 
-  &[data-bg="3"] {
+  &[data-bg="3"] main.login {
     background: url(/images/bg/3.jpg) 0 10%;
     background-size: cover;
   }
+
+  /*  &[data-bg="4"] main.login {
+      background: url(/images/bg/4.jpg) 0 10%;
+      background-size: cover;
+    }*/
 }
+
 
 .form-signin {
   background-color: white;
   max-width: 330px;
   margin: 0 auto;
+
   .form-control {
     position: relative;
     font-size: 16px;
     height: auto;
     padding: 10px;
     box-sizing: border-box;
+
     &:focus {
       z-index: 2;
     }
   }
+
   input.top {
     margin-bottom: -1px;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
   }
+
   input.bottom {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
   }
+
   input.last {
     margin-bottom: 10px;
   }

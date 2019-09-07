@@ -1,6 +1,7 @@
 <?php
 
 namespace FKSDB\ORM\Models;
+
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use Nette\Utils\DateTime;
@@ -23,7 +24,7 @@ class ModelTask extends AbstractModelSingle {
      *
      * @return string
      */
-    public function getFQName() {
+    public function getFQName(): string {
         return sprintf('%s.%s %s', Utils::toRoman($this->series), $this->label, $this->name_cs); //TODO i18n
     }
 
@@ -31,7 +32,7 @@ class ModelTask extends AbstractModelSingle {
      * @param string $type ModelTaskContribution::TYPE_*
      * @return ModelTaskContribution[] indexed by contribution_id
      */
-    public function getContributions($type = null) {
+    public function getContributions($type = null): array {
         $contributions = $this->related(DbNames::TAB_TASK_CONTRIBUTION, 'task_id');
         if ($type !== null) {
             $contributions->where(['type' => $type]);
@@ -48,7 +49,7 @@ class ModelTask extends AbstractModelSingle {
     /**
      * @return ModelTaskStudyYear[] indexed by study_year
      */
-    public function getStudyYears() {
+    public function getStudyYears(): array {
         $studyYears = $this->related(DbNames::TAB_TASK_STUDY_YEAR, 'task_id');
 
         $result = [];

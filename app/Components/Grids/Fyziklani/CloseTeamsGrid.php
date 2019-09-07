@@ -2,13 +2,16 @@
 
 namespace FKSDB\Components\Grids\Fyziklani;
 
-
+use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FyziklaniModule\BasePresenter;
 use NiftyGrid\DataSource\NDataSource;
+use NiftyGrid\DuplicateButtonException;
+use NiftyGrid\DuplicateColumnException;
 
 /**
  *
@@ -17,55 +20,47 @@ use NiftyGrid\DataSource\NDataSource;
  */
 class CloseTeamsGrid extends BaseGrid {
     /**
-     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam
+     * @var ServiceFyziklaniTeam
      */
     private $serviceFyziklaniTeam;
     /**
-     * @var \FKSDB\ORM\Models\ModelEvent
+     * @var ModelEvent
      */
     private $event;
 
     /**
      * FyziklaniTeamsGrid constructor.
-     * @param \FKSDB\ORM\Models\ModelEvent $event
-     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @param ModelEvent $event
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @param TableReflectionFactory $tableReflectionFactory
      */
-    public function __construct(ModelEvent $event, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
+    public function __construct(ModelEvent $event, ServiceFyziklaniTeam $serviceFyziklaniTeam, TableReflectionFactory $tableReflectionFactory) {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
         $this->event = $event;
-        parent::__construct();
+        parent::__construct($tableReflectionFactory);
     }
+
     /**
-     * @param  BasePresenter $presenter
-     * @throws \NiftyGrid\DuplicateButtonException
-     * @throws \NiftyGrid\DuplicateColumnException
+     * @param BasePresenter $presenter
+     * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
 
         $this->paginate = false;
-        $this->addColumn('name', _('Název týmu'));
-        $this->addColumn('e_fyziklani_team_id', _('ID týmu'));
-        $this->addColumn('points', _('Počet bodů'));
 
-        $this->addColumn('room', _('Místnost'))->setRenderer(function ($row) {
-            /**
-             * @var \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam $row
-             */
-            $position = $row->getPosition();
-            if (!$position) {
-                return '-';
-            }
-            $room = $position->getRoom();
-            return $room->name;
-        });
-        $this->addColumn('category', _('Kategorie'));
+        $this->addReflectionColumn(DbNames::TAB_E_FYZIKLANI_TEAM, 'name', ModelFyziklaniTeam::class);
+        $this->addReflectionColumn(DbNames::TAB_E_FYZIKLANI_TEAM, 'e_fyziklani_team_id', ModelFyziklaniTeam::class);
+        $this->addReflectionColumn(DbNames::TAB_E_FYZIKLANI_TEAM, 'points', ModelFyziklaniTeam::class);
+        $this->addReflectionColumn(DbNames::TAB_E_FYZIKLANI_TEAM, 'category', ModelFyziklaniTeam::class);
+
         $this->addButton('edit', null)->setClass('btn btn-sm btn-success')->setLink(function ($row) use ($presenter) {
             return $presenter->link(':Fyziklani:Close:team', [
                 'id' => $row->e_fyziklani_team_id,
                 'eventId' => $this->event->event_id
             ]);
-        })->setText(_('Uzavřít bodování'))->setShow(function ($row) {
+        })->setText(_('Close submitting'))->setShow(function ($row) {
             /**
              * @var ModelFyziklaniTeam $row
              */

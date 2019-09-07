@@ -100,6 +100,7 @@ includes:
     - rows/e_fyziklani_team.neon
     - rows/org.neon
     - rows/person_history.neon
+    - rows/fyziklani_submit.neon
+    - rows/stored_query.neon
     - rows/fyziklani_game_setup.neon
     - rows/schedule/schedule_group.neon
-

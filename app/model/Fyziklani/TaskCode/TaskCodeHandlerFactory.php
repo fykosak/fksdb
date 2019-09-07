@@ -40,10 +40,10 @@ class TaskCodeHandlerFactory {
 
     /**
      * @param ModelEvent $event
-     * @return TaskCodeHandler
+     * @return SubmitHandler
      */
-    public function createHandler(ModelEvent $event): TaskCodeHandler {
-        return new TaskCodeHandler(
+    public function createHandler(ModelEvent $event): SubmitHandler {
+        return new SubmitHandler(
             $this->serviceFyziklaniTeam,
             $this->serviceFyziklaniTask,
             $this->serviceFyziklaniSubmit, $event

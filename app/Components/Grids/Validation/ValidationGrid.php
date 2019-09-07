@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Grids\Validation;
 
-use FKSDB\Components\Controls\Helpers\ValuePrinters\PersonValueControl;
+use FKSDB\Components\DatabaseReflection\ValuePrinters\PersonLink;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
@@ -50,7 +50,7 @@ class ValidationGrid extends BaseGrid {
 
         $this->addColumn('display_name', _('Person'))->setRenderer(function ($row) {
             $person = ModelPerson::createFromActiveRow($row);
-            return PersonValueControl::getGridValue($this,$person);
+            return (new PersonLink($this->getPresenter()))($person);
         });
         foreach ($this->tests as $test) {
             $this->addColumn($test->getAction(), $test->getTitle())->setRenderer(function ($row) use ($test) {

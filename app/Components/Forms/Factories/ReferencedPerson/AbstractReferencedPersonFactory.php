@@ -267,7 +267,9 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
      * @param $acYear
      * @param HiddenField $hiddenField
      * @param array $metadata
+     * @throws \Exception
      * @return AddressContainer|BaseControl|null
+     * @throws \Exception
      */
     public function createField($sub, $fieldName, $acYear, HiddenField $hiddenField, array $metadata) {
         if (in_array($sub, [

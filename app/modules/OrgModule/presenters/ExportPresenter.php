@@ -17,17 +17,20 @@ use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelPostContact;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
+use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryParameter;
 use FKSDB\ORM\Services\ServiceContestant;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryParameter;
-use FormUtils;
 use FKSDB\Results\Models\AbstractResultsModel;
+use FKSDB\Results\ResultsModelFactory;
+use FormUtils;
 use ModelException;
 use Nette\Application\BadRequestException;
-use Tracy\Debugger;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Strings;
 use ServiceMStoredQueryTag;
+use Tracy\Debugger;
+use Traversable;
 
 /**
  * Class ExportPresenter
@@ -82,6 +85,9 @@ class ExportPresenter extends SeriesPresenter {
      * @var ExportFormatFactory
      */
     private $exportFormatFactory;
+    /**
+     * @var
+     */
     private $storedQuery;
 
     /**
@@ -189,6 +195,9 @@ class ExportPresenter extends SeriesPresenter {
         $sql = $data[self::CONT_CONSOLE]['sql'];
         $parameters = [];
         foreach ($data[self::CONT_PARAMS_META] as $paramMetaData) {
+            /**
+             * @var ModelStoredQueryParameter $parameter
+             */
             $parameter = $this->serviceStoredQueryParameter->createNew($paramMetaData);
             $parameter->setDefaultValue($paramMetaData['default']);
             $parameters[] = $parameter;
@@ -331,6 +340,7 @@ class ExportPresenter extends SeriesPresenter {
             $values[self::CONT_META] = $this->getPatternQuery()->toArray();
             $values[self::CONT_META]['tags'] = $this->getPatternQuery()->getTags()->fetchPairs('tag_type_id', 'tag_type_id');
             $values[self::CONT_PARAMS_META] = [];
+
             foreach ($query->getParameters() as $parameter) {
                 $paramData = $parameter->toArray();
                 $paramData['default'] = $parameter->getDefaultValue();
@@ -366,7 +376,8 @@ class ExportPresenter extends SeriesPresenter {
      */
     public function titleShow($id) {
         $title = sprintf(_('Detail dotazu %s'), $this->getPatternQuery()->name);
-        if ($qid = $this->getPatternQuery()->qid) { // intentionally =
+        $qid = $this->getPatternQuery()->qid;
+        if ($qid) { // intentionally =
             $title .= " ($qid)";
         }
 
@@ -410,20 +421,17 @@ class ExportPresenter extends SeriesPresenter {
     }
 
     /**
-     * @param $name
      * @return StoredQueriesGrid
      */
-    protected function createComponentGrid($name) {
-        $grid = new StoredQueriesGrid($this->serviceStoredQuery, $this->getContestAuthorizator());
-        return $grid;
+    protected function createComponentGrid(): StoredQueriesGrid {
+        return new StoredQueriesGrid($this->serviceStoredQuery, $this->getContestAuthorizator(), $this->tableReflectionFactory);
     }
 
     /**
-     * @param $name
      * @return StoredQueryComponent|null
      * @throws BadRequestException
      */
-    protected function createComponentAdhocResultsComponent($name) {
+    protected function createComponentAdhocResultsComponent() {
         $storedQuery = $this->getStoredQuery();
         if ($storedQuery === null) { // workaround when session expires and persistent parameters from component are to be stored (because of redirect)
             return null;
@@ -434,45 +442,40 @@ class ExportPresenter extends SeriesPresenter {
     }
 
     /**
-     * @param $name
      * @return StoredQueryComponent|null
      * @throws BadRequestException
      */
-    protected function createComponentResultsComponent($name) {
+    protected function createComponentResultsComponent() {
         $storedQuery = $this->getStoredQuery();
         if ($storedQuery === null) { // workaround when session expires and persistent parameters from component are to be stored (because of redirect)
             return null;
         }
-        $grid = new StoredQueryComponent($storedQuery, $this->getContestAuthorizator(), $this->storedQueryFormFactory, $this->exportFormatFactory);
-        return $grid;
+        return new StoredQueryComponent($storedQuery, $this->getContestAuthorizator(), $this->storedQueryFormFactory, $this->exportFormatFactory);
     }
 
     /**
-     * @param $name
      * @return StoredQueryTagCloud
      */
-    protected function createComponentTagCloudList($name) {
+    protected function createComponentTagCloudList(): StoredQueryTagCloud {
         $tagCloud = new StoredQueryTagCloud(StoredQueryTagCloud::MODE_LIST, $this->serviceMStoredQueryTag);
         $tagCloud->registerOnClick($this->getComponent('grid')->getFilterByTagCallback());
         return $tagCloud;
     }
 
     /**
-     * @param $name
      * @return StoredQueryTagCloud
      */
-    protected function createComponentTagCloudDetail($name) {
+    protected function createComponentTagCloudDetail(): StoredQueryTagCloud {
         $tagCloud = new StoredQueryTagCloud(StoredQueryTagCloud::MODE_DETAIL, $this->serviceMStoredQueryTag);
         $tagCloud->setModelStoredQuery($this->getPatternQuery());
         return $tagCloud;
     }
 
     /**
-     * @param $name
      * @return FormControl
      * @throws BadRequestException
      */
-    protected function createComponentComposeForm($name) {
+    protected function createComponentComposeForm(): FormControl {
         $control = $this->createDesignForm();
         $control->getForm()->addSubmit('save', _('Uložit'))
             ->onClick[] = [$this, 'handleComposeSuccess'];
@@ -480,11 +483,10 @@ class ExportPresenter extends SeriesPresenter {
     }
 
     /**
-     * @param $name
      * @return FormControl
      * @throws BadRequestException
      */
-    protected function createComponentEditForm($name) {
+    protected function createComponentEditForm(): FormControl {
         $control = $this->createDesignForm();
         $control->getForm()->addSubmit('save', _('Uložit'))
             ->onClick[] = [$this, 'handleEditSuccess'];
@@ -495,22 +497,22 @@ class ExportPresenter extends SeriesPresenter {
      * @return FormControl
      * @throws BadRequestException
      */
-    private function createDesignForm() {
+    private function createDesignForm(): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
 
         $group = $form->addGroup(_('SQL'));
 
-        $console = $this->storedQueryFormFactory->createConsole(0, $group);
+        $console = $this->storedQueryFormFactory->createConsole($group);
         $form->addComponent($console, self::CONT_CONSOLE);
 
-        $params = $this->storedQueryFormFactory->createParametersMetadata(0, $group);
+        $params = $this->storedQueryFormFactory->createParametersMetadata($group);
         $form->addComponent($params, self::CONT_PARAMS_META);
 
 
         $group = $form->addGroup(_('Metadata'));
 
-        $metadata = $this->storedQueryFormFactory->createMetadata(0, $group);
+        $metadata = $this->storedQueryFormFactory->createMetadata($group);
         $form->addComponent($metadata, self::CONT_META);
 
         $form->setCurrentGroup();
@@ -595,8 +597,8 @@ class ExportPresenter extends SeriesPresenter {
     }
 
     /**
-     * @param $values
-     * @param $storedQuery
+     * @param array|Traversable $values
+     * @param ModelStoredQuery $storedQuery
      */
     private function handleSave($values, $storedQuery) {
         $connection = $this->serviceStoredQuery->getConnection();
@@ -627,6 +629,9 @@ class ExportPresenter extends SeriesPresenter {
             ->where(array('query_id' => $storedQuery->query_id))->delete();
 
         foreach ($values[self::CONT_PARAMS_META] as $paramMetaData) {
+            /**
+             * @var ModelStoredQueryParameter $parameter
+             */
             $parameter = $this->serviceStoredQueryParameter->createNew($paramMetaData);
             $parameter->setDefaultValue($paramMetaData['default']);
 
@@ -646,6 +651,9 @@ class ExportPresenter extends SeriesPresenter {
      * @throws BadRequestException
      */
     public function renderOvvp() {
+        /**
+         * @var ResultsModelFactory $modelFactory
+         */
         $modelFactory = $this->getService('resultsModelFactory');
         $serviceContestant = $this->getService(ServiceContestant::class);
 
