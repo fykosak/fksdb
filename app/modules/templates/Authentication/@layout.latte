@@ -5,7 +5,7 @@
 {block body}
     <main class="h-100 login" id="wrap">
         <div class="form-signin card">
-            <div class="row mx-3" style="height:6rem">
+            <div class="row mx-3" style="height:7rem">
                 <img class="col-6" src="/images/contests/fykos-gray.svg" alt="fykos"/>
                 <img class="col-6" src="/images/contests/vyfuk-gray.svg" alt="fykos"/>
             </div>
@@ -15,7 +15,7 @@
                     <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">{$flash->message}</div>
                 {/block}
                 {include #form}
-                {control languageNav}
+               <div class="text-center">{control languageNav}</div>
             </div>
         </div>
     </main>
