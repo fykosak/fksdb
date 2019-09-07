@@ -192,6 +192,23 @@ class FyziklaniFactory {
 
     /**
      * @param ModelEvent $event
+     * @param string $category
+     * @return ResultsCategoryGrid
+     */
+    public function createResultsCategoryGrid(ModelEvent $event, string $category): ResultsCategoryGrid {
+        return new ResultsCategoryGrid($event, $this->serviceFyziklaniTeam, $category, $this->tableReflectionFactory);
+    }
+
+    /**
+     * @param ModelEvent $event
+     * @return ResultsTotalGrid
+     */
+    public function createResultsTotalGrid(ModelEvent $event): ResultsTotalGrid {
+        return new ResultsTotalGrid($event, $this->serviceFyziklaniTeam, $this->tableReflectionFactory);
+    }
+
+    /**
+     * @param ModelEvent $event
      * @return ResultsView
      */
     public function createResultsView(ModelEvent $event): ResultsView {
@@ -229,24 +246,6 @@ class FyziklaniFactory {
     public function createCorrelationStatistics(ModelEvent $event): CorrelationStatistics {
         return new CorrelationStatistics($this->context, $event, $this->serviceFyziklaniRoom, $this->serviceFyziklaniTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
     }
-
-    /**
-     * @param ModelEvent $event
-     * @param string $category
-     * @return ResultsCategoryGrid
-     */
-    public function createResultsCategoryGrid(ModelEvent $event, string $category): ResultsCategoryGrid {
-        return new ResultsCategoryGrid($event, $this->serviceFyziklaniTeam, $category, $this->tableReflectionFactory);
-    }
-
-    /**
-     * @param ModelEvent $event
-     * @return ResultsTotalGrid
-     */
-    public function createResultsTotalGrid(ModelEvent $event): ResultsTotalGrid {
-        return new ResultsTotalGrid($event, $this->serviceFyziklaniTeam, $this->tableReflectionFactory);
-    }
-
 
     /* ********** GRIDS *************/
     /**
