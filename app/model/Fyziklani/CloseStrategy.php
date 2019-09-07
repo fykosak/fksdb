@@ -68,7 +68,7 @@ class CloseStrategy {
      * @throws BadRequestException
      */
     public function __invoke(string $category = null): Html {
-        return $this->close();
+        return $this->close($category);
     }
 
     /**
