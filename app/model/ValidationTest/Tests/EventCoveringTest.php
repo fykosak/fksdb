@@ -46,7 +46,7 @@ class EventCoveringTest extends ValidationTest {
         if ($log) {
             return new ValidationLog($this->getTitle(), $log, ValidationLog::LVL_DANGER);
         }
-        return new ValidationLog($this->getTitle(), 'No simultaneous organization', ValidationLog::LVL_SUCCESS);
+        return new ValidationLog($this->getTitle(), 'Test pass', ValidationLog::LVL_SUCCESS);
     }
 
     /**
@@ -113,13 +113,13 @@ class EventCoveringTest extends ValidationTest {
      * @return string
      */
     public function getTitle(): string {
-        return _('Simultaneous organization and participation');
+        return _('Organization and participation at same year');
     }
 
     /**
      * @return string
      */
     public function getAction(): string {
-        return 'simultaneous_organization_participation';
+        return 'organization_participation_same_year';
     }
 }
