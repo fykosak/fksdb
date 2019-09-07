@@ -5,6 +5,8 @@ namespace FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics;
 use FKSDB\Components\Controls\Fyziklani\FyziklaniReactControl;
 use FKSDB\React\ReactResponse;
 use FyziklaniModule\BasePresenter;
+use Nette\Application\AbortException;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\ArgumentOutOfRangeException;
 use Nette\Utils\DateTime;
 
@@ -23,7 +25,7 @@ abstract class ResultsAndStatistics extends FyziklaniReactControl {
 
     /**
      * @return array
-     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws InvalidLinkException
      */
     public function getActions(): array {
         $actions = parent::getActions();
@@ -33,7 +35,7 @@ abstract class ResultsAndStatistics extends FyziklaniReactControl {
     }
 
     /**
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function handleRefresh() {
         $presenter = $this->getPresenter();
@@ -82,9 +84,9 @@ abstract class ResultsAndStatistics extends FyziklaniReactControl {
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
-    private function isResultsVisible() {
+    private function isResultsVisible(): bool {
         $gameSetup = $this->getEvent()->getFyziklaniGameSetup();
         $hardDisplay = $gameSetup->result_hard_display;
         $before = (time() < strtotime($gameSetup->result_hide));
