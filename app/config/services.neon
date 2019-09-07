@@ -80,6 +80,7 @@ services:
     - FKSDB\model\Fyziklani\TaskCodePreprocessor
     - FKSDB\model\Fyziklani\TaskCodeHandlerFactory
     - FKSDB\Components\Forms\Factories\TableReflectionFactory
+    - FKSDB\Components\Controls\PhoneNumber\PhoneNumberFactory
 
     row.teacher.state: FKSDB\Components\DatabaseReflection\Tables\Teacher\StateRow
     row.teacher.since: FKSDB\Components\DatabaseReflection\Tables\Teacher\SinceRow

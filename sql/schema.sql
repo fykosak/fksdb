@@ -182,6 +182,8 @@ CREATE TABLE IF NOT EXISTS `region` (
   COMMENT 'NUTS of the EU region\nor ISO 3166-1 for other countries',
   `name`        VARCHAR(255) NOT NULL
   COMMENT 'name of the region in the language intelligible in that region',
+  `phone_nsn` INT(11) NULL DEFAULT NULL,
+  `phone_prefix` VARCHAR(16) NULL DEFAULT NULL,
   PRIMARY KEY (`region_id`),
   UNIQUE INDEX `nuts` (`nuts` ASC)
 )
