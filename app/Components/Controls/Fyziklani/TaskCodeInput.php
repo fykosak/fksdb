@@ -11,6 +11,7 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
+use FKSDB\React\ReactResponse;
 use Nette\DI\Container;
 use Nette\Utils\Json;
 
@@ -82,7 +83,7 @@ class TaskCodeInput extends FyziklaniReactControl {
      */
     public function handleSave() {
         $request = $this->getReactRequest();
-        $response = new \ReactResponse();
+        $response = new ReactResponse();
         $response->setAct($request->act);
         try {
             $log = $this->handler->preProcess($request->requestData['code'], +$request->requestData['points']);
