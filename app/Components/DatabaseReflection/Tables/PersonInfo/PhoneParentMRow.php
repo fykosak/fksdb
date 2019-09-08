@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\DatabaseReflection\PersonInfo;
 
+use FKSDB\Components\Controls\PhoneNumber\PhoneNumberFactory;
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\DatabaseReflection\PhoneRowTrait;
 use FKSDB\Components\Forms\Factories\ITestedRowFactory;
@@ -17,12 +18,12 @@ class PhoneParentMRow extends AbstractRow implements ITestedRowFactory {
 
     /**
      * PhoneRow constructor.
-     * @param ServiceRegion $serviceRegion
      * @param ITranslator $translator
+     * @param PhoneNumberFactory $phoneNumberFactory
      */
-    public function __construct(ServiceRegion $serviceRegion, ITranslator $translator) {
+    public function __construct(ITranslator $translator,PhoneNumberFactory $phoneNumberFactory) {
         parent::__construct($translator);
-        $this->serviceRegion = $serviceRegion;
+        $this->phoneNumberFactory=$phoneNumberFactory;
     }
 
     /**
