@@ -56,7 +56,7 @@ class ModelStoredQuery extends AbstractModelSingle implements IResource {
     /**
      * @return StoredQueryPostProcessing
      */
-    public function getPostProcessing(): StoredQueryPostProcessing {
+    public function getPostProcessing() {
         if ($this->postProcessing == null && $this->php_post_proc) {
             $className = $this->php_post_proc;
             if (!class_exists($className)) {
