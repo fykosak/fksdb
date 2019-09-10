@@ -107,21 +107,11 @@ class ModelScheduleItem extends AbstractModelSingle {
         $group = $this->getGroup();
         switch ($group->schedule_group_type) {
             case ModelScheduleGroup::TYPE_ACCOMMODATION:
-                return \sprintf(_('Accommodation in "%s" from %s to %s.'),
-                    $this->name_cs,
-                    $group->start->format('d. m. Y'),
-                    $group->end->format('d. m. Y')
+                return $group->getLabel() . ' ' . \sprintf(_('in "%s"'),
+                        $this->name_cs
                 );
         }
         throw new NotImplementedException();
-    }
-
-    /**
-     * @return string
-     * @deprecated
-     */
-    public function getFullLabel(): string {
-        return $this->getLabel();
     }
 
     /**

@@ -4,6 +4,7 @@ namespace FKSDB\ORM\Models\Schedule;
 
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\IPersonReferencedModel;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\Transitions\IStateModel;
@@ -20,7 +21,7 @@ use Nette\NotImplementedException;
  * @property-read string state
  * @property-read int person_schedule_id
  */
-class ModelPersonSchedule extends AbstractModelSingle implements IStateModel {
+class ModelPersonSchedule extends AbstractModelSingle implements IStateModel, IPersonReferencedModel {
     /**
      * @return ModelPerson
      */
