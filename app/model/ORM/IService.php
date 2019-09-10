@@ -46,4 +46,9 @@ interface IService {
      * @return Selection
      */
     public function getTable();
+
+    /**
+     * @return string
+     */
+    public function getModelClassName(): string;
 }

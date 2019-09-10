@@ -7,6 +7,7 @@ use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use InvalidArgumentException;
 use ModelMStoredQueryTag;
+use Nette\Database\Table\GroupedSelection;
 use Nette\Security\IResource;
 
 /**
@@ -16,7 +17,9 @@ use Nette\Security\IResource;
  * @property-read string php_post_proc
  */
 class ModelStoredQuery extends AbstractModelSingle implements IResource {
-
+    /**
+     * @var array
+     */
     private $outerParameters;
 
     /**
@@ -26,9 +29,9 @@ class ModelStoredQuery extends AbstractModelSingle implements IResource {
 
     /**
      * @param bool $outer
-     * @return array
+     * @return ModelStoredQueryParameter[]
      */
-    public function getParameters($outer = true) {
+    public function getParameters($outer = true): array {
         if ($this->outerParameters && $outer) {
             return $this->outerParameters;
         } else {
@@ -67,17 +70,14 @@ class ModelStoredQuery extends AbstractModelSingle implements IResource {
     /**
      * @return \Nette\Database\Table\GroupedSelection
      */
-    public function getTags() {
-        if (!isset($this->query_id)) {
-            $this->query_id = null;
-        }
+    public function getTags(): GroupedSelection {
         return $this->related(DbNames::TAB_STORED_QUERY_TAG, 'query_id');
     }
 
     /**
      * @return ModelMStoredQueryTag[]
      */
-    public function getMStoredQueryTags() {
+    public function getMStoredQueryTags(): array {
         $tags = $this->getTags();
 
         if (!$tags || count($tags) == 0) {

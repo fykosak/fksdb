@@ -80,7 +80,8 @@ class SettingsPresenter extends AuthenticatedPresenter {
     }
 
     public function titleDefault() {
-        $this->setTitle(_('Nastavení'));
+        $this->setTitle(_('Settings'));
+        $this->setIcon('fa fa-cogs');
     }
 
     public function renderDefault() {
@@ -103,10 +104,6 @@ class SettingsPresenter extends AuthenticatedPresenter {
         }
     }
 
-    /**
-     * @param $name
-     * @return FormControl
-     */
     /**
      * @param $name
      * @return FormControl

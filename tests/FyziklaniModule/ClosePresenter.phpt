@@ -138,10 +138,9 @@ class ClosePresenterTest extends FyziklaniTestCase {
      * Not a real test method.
      */
     private function innertestCloseTeam($teamId, $pointsSum) {
+
         $request = $this->createPostRequest(array(
             'id' => $teamId,
-            'submit_task_correct' => 'on',
-            'next_task_correct' => 'on',
             'send' => 'Potvrdit správnost',
         ), array(
             'id' => $teamId,
@@ -169,8 +168,8 @@ class ClosePresenterTest extends FyziklaniTestCase {
             'category' => $category,
             'send' => 'Uzavřít kategorii ' . $category . '.',
         ), array(
-            'action' => 'table',
-            'do' => 'closeControl-closeCategory' . $category . 'Form-form-submit',
+            'action' => 'list',
+            'do' => 'close' . $category . 'Form-form-submit',
         ));
 
         $response = $this->fixture->run($request);
@@ -196,8 +195,8 @@ class ClosePresenterTest extends FyziklaniTestCase {
         $request = $this->createPostRequest(array(
             'send' => 'Uzavřít celé Fyziklání',
         ), array(
-            'action' => 'table',
-            'do' => 'closeControl-closeGlobalForm-form-submit',
+            'action' => 'list',
+            'do' => 'closeTotalForm-form-submit',
         ));
 
         $response = $this->fixture->run($request);

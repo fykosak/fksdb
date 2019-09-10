@@ -86,7 +86,7 @@ class SubmitsGrid extends BaseGrid {
 
                 if ($row->source == ModelSubmit::SOURCE_UPLOAD) {
                     $el = Html::el('a');
-                    $el->href = $presenter->link(':Public:Submit:download', array('id' => $row->submit_id));
+                    $el->href = $presenter->link(':Public:Submit:download', ['id' => $row->submit_id]);
                     $el->setText($FQname);
                     return $el;
                 } else {

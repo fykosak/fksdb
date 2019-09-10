@@ -1,0 +1,4 @@
+services:
+    row.fyziklani_submit.state: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniSubmit\StateRow
+    row.fyziklani_submit.points: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniSubmit\PointsRow
+    row.fyziklani_submit.created: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniSubmit\CreatedRow

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace EventModule;
 
 use AuthenticatedPresenter;

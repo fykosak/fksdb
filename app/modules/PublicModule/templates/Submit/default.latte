@@ -8,7 +8,7 @@
 
         {if $canRegister}
             <p>
-                <a class="btn btn-primary" n:href=":Public:Register:contestant">{_'Registrovat se do dalšího ročníku'}</a>
+                <a class="btn btn-primary" n:href=":Public:Register:contestant, year => $presenter->year + 1,contestId=>$presenter->contestId">{_'Registrovat se do dalšího ročníku'}</a>
             </p>
         {elseif $hasForward}
             <p>

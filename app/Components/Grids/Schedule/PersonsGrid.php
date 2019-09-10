@@ -1,6 +1,5 @@
 <?php
 
-
 namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\Grids\BaseGrid;
@@ -8,7 +7,6 @@ use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 use Nette\Application\BadRequestException;
-use Nette\NotImplementedException;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;

@@ -18,7 +18,6 @@ use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use Nette\Templating\FileTemplate;
 use Nette\Utils\Random;
-use Nette\Utils\Strings;
 use Utils;
 
 /**

@@ -45,6 +45,7 @@ final class TableReflectionFactory {
      * @param string $tableName
      * @param string $fieldName
      * @return AbstractRow
+     * @throws InvalidArgumentException
      * @throws \Exception
      */
     public function loadService(string $tableName, string $fieldName): AbstractRow {
@@ -64,7 +65,6 @@ final class TableReflectionFactory {
      * @param int $permissionLevel
      * @return RowFactoryComponent|null
      * @throws \Exception
-     * @deprecated
      */
     public function createComponent(string $name, int $permissionLevel) {
         $parts = \explode('__', $name);

@@ -321,7 +321,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         /**
          * @var Form $contestantForm
          */
-        $contestantForm =  $this->getComponent('contestantForm');
+        $contestantForm = $this->getComponent('contestantForm');
         $referencedId = $contestantForm->getForm()->getComponent(ExtendedPersonHandler::CONT_AGGR)->getComponent(ExtendedPersonHandler::EL_PERSON);
         if ($person) {
             $referencedId->setDefaultValue($person);
@@ -374,7 +374,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         $submit = $form->addSubmit('register', _('Registrovat'));
         $submit->onClick[] = function (SubmitButton $button) use ($handler) {
             $form = $button->getForm();
-            if ($result = $handler->handleForm($form, $this)) { // intentionally =
+            if ($result = $handler->handleForm($form, $this, true)) { // intentionally =
                 /*
                  * Do not automatically log in user with existing logins for security reasons.
                  * (If someone was able to fill the form without conflicts, he might gain escalated privileges.)

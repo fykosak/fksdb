@@ -29,7 +29,7 @@ class ServiceEventParticipant extends AbstractServiceSingle {
     }
 
     /**
-     * @param ModelEventParticipant $model
+     * @param ModelEventParticipant|IModel $model
      */
     public function save(IModel &$model) {
         try {
@@ -56,7 +56,7 @@ class ServiceEventParticipant extends AbstractServiceSingle {
         if (!$alive && !$model->isNew()) {
             $person = $model->getPerson();
             if ($person) {
-                $person->removeAccommodationForEvent($model->event_id);
+                $person->removeScheduleForEvent($model->event_id);
             }
 
         }

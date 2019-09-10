@@ -58,17 +58,6 @@ class ModelEvent extends AbstractModelSingle implements IResource, IContestRefer
     }
 
     /**
-     * @return ModelEventAccommodation[]
-     */
-    public function getEventAccommodationsAsArray(): array {
-        $data = [];
-        foreach ($this->related(DbNames::TAB_EVENT_ACCOMMODATION) as $item) {
-            $data[] = ModelEventAccommodation::createFromActiveRow($item);
-        }
-        return $data;
-    }
-
-    /**
      * @return ModelContest
      */
     public function getContest(): ModelContest {

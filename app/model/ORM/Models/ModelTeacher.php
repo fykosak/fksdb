@@ -16,8 +16,11 @@ use Nette\Security\IResource;
  * @property-read integer person_id
  * @property-read ActiveRow person
  * @property-read ActiveRow school
+ * @property-read string state
+ * @property-read int number_brochures
+ * @property-read string note
  */
-class ModelTeacher extends AbstractModelSingle implements IResource {
+class ModelTeacher extends AbstractModelSingle implements IResource, IPersonReferencedModel {
     /**
      * @return ModelPerson
      */

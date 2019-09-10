@@ -1,6 +1,7 @@
 services:
-    row.e_fyziklani_team.e_fyziklani_team_id: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\FyziklaniTeamIdTeamRow
+    row.e_fyziklani_team.e_fyziklani_team_id: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\FyziklaniTeamIdRow
     row.e_fyziklani_team.name: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\NameRow
+    row.e_fyziklani_team.name_n_id: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\NameNIdRow
     row.e_fyziklani_team.status: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\StatusRow
     row.e_fyziklani_team.phone: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\PhoneRow
     row.e_fyziklani_team.note: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\NoteRow
