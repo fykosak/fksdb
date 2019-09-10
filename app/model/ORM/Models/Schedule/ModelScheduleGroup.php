@@ -5,9 +5,11 @@ namespace FKSDB\ORM\Models\Schedule;
 use DateTime;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\IEventReferencedModel;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
+use Nette\NotImplementedException;
 
 /**
  * Class ModelScheduleGroup
@@ -19,7 +21,7 @@ use Nette\Database\Table\GroupedSelection;
  * @property-read DateTime start
  * @property-read DateTime end
  */
-class ModelScheduleGroup extends AbstractModelSingle {
+class ModelScheduleGroup extends AbstractModelSingle implements IEventReferencedModel {
     const TYPE_ACCOMMODATION = 'accommodation';
     const TYPE_DSEF_GROUP = 'dsef-group';
 
@@ -38,12 +40,28 @@ class ModelScheduleGroup extends AbstractModelSingle {
     }
 
     /**
+     * @return string
+     * Label include datetime from schedule group
+     */
+    public function getLabel(): string {
+        switch ($this->schedule_group_type) {
+            case ModelScheduleGroup::TYPE_ACCOMMODATION:
+                return \sprintf(_('Accommodation from %s to %s'),
+                    $this->start->format('d. m. Y'),
+                    $this->end->format('d. m. Y')
+                );
+        }
+        throw new NotImplementedException();
+    }
+
+    /**
      * @return array
      */
     public function __toArray(): array {
         return [
             'scheduleGroupId' => $this->schedule_group_id,
             'scheduleGroupType' => $this->schedule_group_type,
+            'label' => $this->getLabel(),
             'eventId' => $this->event_id,
             'start' => $this->start->format('c'),
             'end' => $this->end->format('c'),

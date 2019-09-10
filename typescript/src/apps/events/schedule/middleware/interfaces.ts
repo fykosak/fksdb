@@ -15,6 +15,7 @@ export interface ScheduleGroupDef {
     items: ScheduleItemDef[];
     scheduleGroupId: number;
     scheduleGroupType: ScheduleGroupType;
+    label: string;
     eventId: number;
     start: string;
     end: string;
