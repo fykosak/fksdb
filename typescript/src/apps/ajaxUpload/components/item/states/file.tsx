@@ -42,7 +42,7 @@ class File extends React.Component<OwnProps & DispatchProps, {}> {
 
 const mapDispatchToProps = (dispatch: Dispatch<Action<string>>, ownProps: OwnProps): DispatchProps => {
     return {
-        onDeleteFile: (accessKey, submitId) => deleteUploadedFile(dispatch, accessKey, submitId, ownProps.actions.revoke),
+        onDeleteFile: (accessKey, submitId) => deleteUploadedFile(dispatch, accessKey, submitId, ownProps.actions.getAction('revoke')),
     };
 };
 

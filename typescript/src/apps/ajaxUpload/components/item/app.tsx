@@ -12,7 +12,7 @@ interface OwnProps {
 }
 
 interface DispatchProps {
-    onAddSubmits(data: UploadDataItem): void;
+    onAddSubmits?(data: UploadDataItem): void;
 }
 
 class App extends React.Component<DispatchProps & OwnProps, {}> {

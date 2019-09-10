@@ -37,7 +37,7 @@ interface DispatchProps {
 }
 
 interface StateProps {
-   // isSubmitting: boolean;
+    // isSubmitting: boolean;
 
     dragged: boolean;
 }
@@ -108,7 +108,8 @@ const mapDispatchToProps = (dispatch: Dispatch<Action<string>>, ownProps: OwnPro
         onDragEnd: () => dispatch(dragEnd()),
         onDragStart: () => dispatch(dragStart()),
         onDropItem: (item) => dispatch(dropItem<any>(item)),
-        onFileUpload: (values) => dispatchUploadFile(ownProps.accessKey, dispatch, values, () => null, () => null, ownProps.actions.upload),
+        onFileUpload: (values) => dispatchUploadFile(ownProps.accessKey, dispatch, values, () => null, () => null,
+            ownProps.actions.getAction('upload')),
     };
 };
 
