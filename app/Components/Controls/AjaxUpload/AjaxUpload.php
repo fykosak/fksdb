@@ -4,18 +4,17 @@ namespace FKSDB\Components\Control\AjaxUpload;
 
 use FKSDB\Components\React\ReactComponent;
 use FKSDB\Messages\Message;
-use FKSDB\ORM\AbstractModelSingle;
-use FKSDB\ORM\Models\ModelContestant;
-use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\React\ReactResponse;
 use FKSDB\Submits\ISubmitStorage;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use Nette\Http\FileUpload;
-use Nette\Utils\DateTime;
 use PublicModule\SubmitPresenter;
+use ReactMessage;
 
 /**
  * Class AjaxUpload
@@ -24,6 +23,7 @@ use PublicModule\SubmitPresenter;
  */
 class AjaxUpload extends ReactComponent {
     use SubmitRevokeTrait;
+    use SubmitSaveTrait;
     /**
      * @var ServiceSubmit
      */
@@ -75,7 +75,7 @@ class AjaxUpload extends ReactComponent {
 
     /**
      * @return array
-     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws InvalidLinkException
      */
     public function getActions(): array {
         $actions = parent::getActions();
@@ -87,7 +87,7 @@ class AjaxUpload extends ReactComponent {
     /**
      * @return string
      * @throws BadRequestException
-     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws InvalidLinkException
      */
     public function getData(): string {
         $data = [];
@@ -122,25 +122,25 @@ class AjaxUpload extends ReactComponent {
     }
 
     /**
-     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws InvalidLinkException
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function handleUpload() {
-        $response = new \FKSDB\React\ReactResponse();
+        $response = new ReactResponse();
         $contestant = $this->getPresenter()->getContestant();
         $files = $this->getHttpRequest()->getFiles();
         foreach ($files as $name => $fileContainer) {
             $this->serviceSubmit->getConnection()->beginTransaction();
             $this->submitStorage->beginTransaction();
             if (!preg_match('/task([0-9]+)/', $name, $matches)) {
-                $response->addMessage(new \ReactMessage('task not found', 'warning'));
+                $response->addMessage(new ReactMessage('task not found', 'warning'));
                 continue;
             }
             $task = $this->getPresenter()->isAvailableSubmit($matches[1]);
             if (!$task) {
                 $this->getPresenter()->getHttpResponse()->setCode('403');
-                $response->addMessage(new \ReactMessage('upload not allowed', 'danger'));
+                $response->addMessage(new ReactMessage('upload not allowed', 'danger'));
                 $this->getPresenter()->sendResponse($response);
             };
             /**
@@ -149,17 +149,17 @@ class AjaxUpload extends ReactComponent {
             $file = $fileContainer;
             if (!$file->isOk()) {
                 $this->getPresenter()->getHttpResponse()->setCode('500');
-                $response->addMessage(new \ReactMessage('file is not Ok', 'danger'));
+                $response->addMessage(new ReactMessage('file is not Ok', 'danger'));
                 $this->getPresenter()->sendResponse($response);
                 return;
             }
             // store submit
-            $submit = $this->saveSubmit($file, $task, $contestant);
+            $submit = $this->saveSubmitTrait($file, $task, $contestant);
             $this->submitStorage->commit();
             $this->serviceSubmit->getConnection()->commit();
-            $response->addMessage(new \ReactMessage('Upload úspešný', 'success'));
+            $response->addMessage(new ReactMessage('Upload úspešný', 'success'));
             $response->setAct('upload');
-            $response->setData( $this->serviceSubmit->serializeSubmit($submit, $task, $this->getPresenter()));
+            $response->setData($this->serviceSubmit->serializeSubmit($submit, $task, $this->getPresenter()));
             $this->getPresenter()->sendResponse($response);
         }
 
@@ -167,12 +167,12 @@ class AjaxUpload extends ReactComponent {
     }
 
     /**
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws AbortException
+     * @throws InvalidLinkException
      * @throws BadRequestException
      */
     public function handleRevoke() {
-        $submitId = $this->getHttpRequest()->getPost('data')['submitId'];
+        $submitId = $this->getReactRequest()->requestData['submitId'];
         /**
          * @var Message $message
          */
@@ -181,36 +181,8 @@ class AjaxUpload extends ReactComponent {
         if ($data) {
             $response->setData($data);
         }
-        $response->addMessage(new \ReactMessage($message->getMessage(), $message->getLevel()));
+        $response->addMessage(new ReactMessage($message->getMessage(), $message->getLevel()));
         $this->getPresenter()->sendResponse($response);
         die();
     }
-
-    /**
-     * @param FileUpload $file
-     * @param ModelContestant $contestant
-     * @param ModelTask $task
-     * @return AbstractModelSingle|ModelSubmit
-     */
-    private function saveSubmit(FileUpload $file, ModelTask $task, ModelContestant $contestant) {
-        $submit = $this->serviceSubmit->findByContestant($contestant->ct_id, $task->task_id);
-        if (!$submit) {
-            $submit = $this->serviceSubmit->createNewModel([
-                'task_id' => $task->task_id,
-                'ct_id' => $contestant->ct_id,
-                'submitted_on' => new DateTime(),
-                'source' => ModelSubmit::SOURCE_UPLOAD,
-            ]);
-        } else {
-            $submit->update([
-                'submitted_on' => new DateTime(),
-                'source' => ModelSubmit::SOURCE_UPLOAD,
-            ]);
-        }
-        // store file
-        $this->submitStorage->storeFile($file->getTemporaryFile(), $submit);
-        return $submit;
-    }
-
-
 }

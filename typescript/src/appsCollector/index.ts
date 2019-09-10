@@ -49,6 +49,7 @@ class AppsCollector {
                     }
                 }
             }
+            debugger;
             throw new Error('no match type');
         });
     }

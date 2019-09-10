@@ -8,8 +8,10 @@ use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\Submits\ISubmitStorage;
 use FKSDB\Submits\StorageException;
 use ModelException;
+use Nette\Application\UI\InvalidLinkException;
 use PublicModule\SubmitPresenter;
 use Tracy\Debugger;
+use function sprintf;
 
 /**
  * Trait SubmitRevokeTrait
@@ -22,6 +24,7 @@ trait SubmitRevokeTrait {
     abstract protected function getServiceSubmit(): ServiceSubmit;
 
     /**
+     * @param bool $need
      * @return SubmitPresenter
      */
     abstract protected function getPresenter($need = true);
@@ -34,7 +37,7 @@ trait SubmitRevokeTrait {
     /**
      * @param int $submitId
      * @return array
-     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws InvalidLinkException
      */
     public function traitHandleRevoke(int $submitId): array {
 
@@ -57,7 +60,7 @@ trait SubmitRevokeTrait {
             $this->getServiceSubmit()->dispose($submit);
             $data = $this->getServiceSubmit()->serializeSubmit(null, $submit->getTask(), $this->getPresenter());
 
-            return [new Message(\sprintf('Odevzdání úlohy %s zrušeno.', $submit->getTask()->getFQName()), 'warning'), $data];
+            return [new Message(sprintf('Odevzdání úlohy %s zrušeno.', $submit->getTask()->getFQName()), 'warning'), $data];
 
         } catch (StorageException $exception) {
             Debugger::log($exception);
@@ -72,7 +75,7 @@ trait SubmitRevokeTrait {
 
     /**
      * @internal
-     * @param \FKSDB\ORM\Models\ModelSubmit $submit
+     * @param ModelSubmit $submit
      * @return boolean
      */
     public function canRevoke(ModelSubmit $submit) {

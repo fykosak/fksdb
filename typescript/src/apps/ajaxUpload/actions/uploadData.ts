@@ -16,7 +16,7 @@ export const newDataArrived = (data) => {
 export const deleteUploadedFile = (dispatch: Dispatch<Action<string>>, accessKey: string, submitId: number, link: string) => {
     return dispatchNetteFetch<{ submitId: number }, any, Store>(accessKey, dispatch, {
         act: 'revoke',
-        data: {
+        requestData: {
             submitId,
         },
     }, () => null, () => null, link);

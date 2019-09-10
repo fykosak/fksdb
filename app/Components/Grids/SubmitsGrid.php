@@ -9,9 +9,14 @@ use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\Submits\FilesystemSubmitStorage;
 use FKSDB\Submits\ISubmitStorage;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;
+use NiftyGrid\DuplicateButtonException;
+use NiftyGrid\DuplicateColumnException;
+use function sprintf;
 
 /**
  *
@@ -33,7 +38,7 @@ class SubmitsGrid extends BaseGrid {
 
     /**
      * SubmitsGrid constructor.
-     * @param \FKSDB\ORM\Services\ServiceSubmit $submitService
+     * @param ServiceSubmit $submitService
      * @param FilesystemSubmitStorage $submitStorage
      * @param ModelContestant $contestant
      */
@@ -61,8 +66,8 @@ class SubmitsGrid extends BaseGrid {
 
     /**
      * @param $presenter
-     * @throws \NiftyGrid\DuplicateButtonException
-     * @throws \NiftyGrid\DuplicateColumnException
+     * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -109,77 +114,21 @@ class SubmitsGrid extends BaseGrid {
                 return $this->link('revoke!', $row->submit_id);
             })
             ->setConfirmationDialog(function ($row) {
-                return \sprintf(_('Opravdu vzít řešení úlohy %s zpět?'), $row->getTask()->getFQName());
+                return sprintf(_('Opravdu vzít řešení úlohy %s zpět?'), $row->getTask()->getFQName());
             });
-
-
-        //
-        // appeareance
-        //
         $this->paginate = false;
         $this->enableSorting = false;
     }
 
     /**
      * @param $id
-     * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws InvalidLinkException
      */
     public function handleRevoke($id) {
         /**
          * @var Message $message
          */
-
         list($message,) = $this->traitHandleRevoke($id);
         $this->flashMessage($message->getMessage(), $message->getLevel());
-
-        /*$row = $this->submitService->findByPrimary($id);
-
-        if (!$row) {
-            throw new BadRequestException('Neexistující submit.', 404);
-        }
-        $submit = ModelSubmit::createFromActiveRow($row);
-
-//        $submit->task_id; // stupid touch
-        $contest = $submit->getContestant()->getContest();
-        if (!$this->presenter->getContestAuthorizator()->isAllowed($submit, 'revoke', $contest)) {
-            throw new BadRequestException('Nedostatečné oprávnění.', 403);
-        }
-
-        if (!$this->canRevoke($submit)) {
-            throw new BadRequestException('Nelze zrušit submit.', 403);
-        }
-
-        try {
-            $this->submitStorage->deleteFile($submit);
-            $this->submitService->dispose($submit);
-            $this->flashMessage(sprintf('Odevzdání úlohy %s zrušeno.', $submit->getTask()->getFQName()), BasePresenter::FLASH_SUCCESS);
-            $this->redirect('this');
-        } catch (StorageException $exception) {
-            $this->flashMessage(sprintf('Během mazání úlohy %s došlo k chybě.', $submit->getTask()->getFQName()), BasePresenter::FLASH_ERROR);
-            Debugger::log($exception);
-        } catch (ModelException $exception) {
-            $this->flashMessage(sprintf('Během mazání úlohy %s došlo k chybě.', $submit->getTask()->getFQName()), BasePresenter::FLASH_ERROR);
-            Debugger::log($exception);
-        }*/
     }
-
-    /**
-     * @internal
-     * @param \FKSDB\ORM\Models\ModelSubmit $submit
-     * @return boolean
-     */
-    public function canRevoke(ModelSubmit $submit) {
-        if ($submit->source != ModelSubmit::SOURCE_UPLOAD) {
-            return false;
-        }
-
-        $now = time();
-        $start = $submit->getTask()->submit_start ? $submit->getTask()->submit_start->getTimestamp() : 0;
-        $deadline = $submit->getTask()->submit_deadline ? $submit->getTask()->submit_deadline->getTimestamp() : ($now + 1);
-
-
-        return ($now <= $deadline) && ($now >= $start);
-    }
-
 }
