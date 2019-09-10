@@ -1,3 +1,4 @@
+import { NetteActions } from '@appsCollector';
 import * as React from "react";
 import { Provider } from 'react-redux';
 import {
@@ -5,10 +6,9 @@ import {
     createStore,
 } from 'redux';
 import logger from 'redux-logger';
+import { UploadDataItem } from '../../middleware/uploadDataItem';
 import { app } from '../../reducers';
-import App from './App';
-import { UploadDataItem } from '../../middleware/UploadDataItem';
-import { NetteActions } from '../../../app-collector';
+import App from './app';
 
 interface IProps {
     data: UploadDataItem;

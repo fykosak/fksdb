@@ -1,12 +1,12 @@
 import {
-    Message,
-    Response,
-} from '../../fetch-api/middleware/interfaces';
-import {
     ACTION_SUBMIT_FAIL,
     ACTION_SUBMIT_START,
     ACTION_SUBMIT_SUCCESS,
-} from '../../fetch-api/actions/submit';
+} from '@fetchApi/actions/submit';
+import {
+    Message,
+    Response,
+} from '@fetchApi/middleware/interfaces';
 
 export interface IState {
     submitting?: boolean;

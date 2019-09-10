@@ -1,10 +1,10 @@
+import { NetteActions } from '@appsCollector';
 import * as React from 'react';
 import {
     UploadData,
     UploadDataItem,
-} from '../middleware/UploadDataItem';
-import ItemIndex from './item/Index';
-import { NetteActions } from '../../app-collector';
+} from '../middleware/uploadDataItem';
+import ItemIndex from './item';
 
 interface Props {
     data: UploadData;

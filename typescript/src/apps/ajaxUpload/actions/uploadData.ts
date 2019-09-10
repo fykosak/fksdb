@@ -1,8 +1,8 @@
+import { dispatchNetteFetch } from '@fetchApi/middleware/fetch';
 import {
     Action,
     Dispatch,
 } from 'redux';
-import { dispatchNetteFetch } from '../../fetch-api/middleware/fetch';
 import { Store } from '../reducers';
 
 export const NEW_DATA_ARRIVED = 'NEW_DATA_ARRIVED';

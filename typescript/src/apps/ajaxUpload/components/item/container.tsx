@@ -1,27 +1,27 @@
+import { NetteActions } from '@appsCollector';
+import Card from '@shared/components/card';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import Card from '../../../shared/components/card';
 import { Store } from '../../reducers';
-import MessageBox from '../MessageBox';
-import File from './states/File';
-import Form from './states/Form';
-import { NetteActions } from '../../../app-collector';
+import MessageBox from '../messageBox';
+import File from './states/file';
+import Form from './states/form';
 
-interface Props {
+interface OwnProps {
     accessKey: string;
     actions: NetteActions;
 }
 
-interface State {
-    deadline?: string;
-    href?: string;
-    name?: string;
-    submitId?: number;
-    taskId?: number;
-    submitting?: boolean;
+interface StateProps {
+    deadline: string;
+    href: string;
+    name: string;
+    submitId: number;
+    taskId: number;
+    submitting: boolean;
 }
 
-class UploadContainer extends React.Component<State & Props, {}> {
+class UploadContainer extends React.Component<OwnProps & StateProps, {}> {
 
     public render() {
 
@@ -48,7 +48,7 @@ class UploadContainer extends React.Component<State & Props, {}> {
     }
 }
 
-const mapStateToProps = (state: Store): State => {
+const mapStateToProps = (state: Store): StateProps => {
     const values = {
         submitting: false,
     };
@@ -65,8 +65,5 @@ const mapStateToProps = (state: Store): State => {
         ...values,
     };
 };
-const mapDispatchToProps = (): State => {
-    return {};
-};
 
-export default connect(mapStateToProps, mapDispatchToProps)(UploadContainer);
+export default connect(mapStateToProps, null)(UploadContainer);

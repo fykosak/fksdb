@@ -1,10 +1,10 @@
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 import {
     App,
     NetteActions,
-} from '../app-collector';
-import Index from './components/Index';
+} from '@appsCollector';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+import Index from './components';
 
 export const ajaxUpload: App = (element, module, component, mode, rawData, actions: NetteActions) => {
     if (module !== 'public') {

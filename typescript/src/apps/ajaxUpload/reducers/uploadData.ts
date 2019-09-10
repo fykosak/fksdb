@@ -1,6 +1,6 @@
-import { ACTION_SUBMIT_SUCCESS } from '../../fetch-api/actions/submit';
+import { ACTION_SUBMIT_SUCCESS } from '@fetchApi/actions/submit';
+import { ActionSubmitSuccess } from '@fetchApi/middleware/interfaces';
 import { NEW_DATA_ARRIVED } from '../actions/uploadData';
-import { ActionSubmitSuccess } from '../../fetch-api/middleware/interfaces';
 
 export interface State {
     submitting: false;

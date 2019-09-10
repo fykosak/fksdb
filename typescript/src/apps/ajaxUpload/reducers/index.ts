@@ -11,7 +11,7 @@ import {
 import {
     State as FetchApiState,
     submit,
-} from '../../fetch-api/reducers/submit';
+} from '@fetchApi/reducers/submit';
 import {
     errorLogger,
     State as ErrorLoggerState,

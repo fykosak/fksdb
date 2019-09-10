@@ -1,18 +1,18 @@
+import { Message } from '@fetchApi/middleware/interfaces';
+import { State as SubmitState } from '@fetchApi/reducers/submit';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Message } from '../../fetch-api/middleware/interfaces';
-import { State as SubmitState } from '../../fetch-api/reducers/submit';
 import { State as ErrorLoggerState } from '../reducers/errorLogger';
 
-interface State {
-    messages?: Message[];
+interface StateProps {
+    messages: Message[];
 }
 
-interface Props {
+interface OwnProps {
     accessKey: string;
 }
 
-class MessageBox extends React.Component<State & Props, {}> {
+class MessageBox extends React.Component<StateProps & OwnProps, {}> {
     public render() {
         const {messages} = this.props;
         return <>{messages.map((message, index) => {
@@ -26,7 +26,7 @@ interface Store {
     errorLogger: ErrorLoggerState;
 }
 
-const mapStateToProps = (state: Store, ownProps: Props): State => {
+const mapStateToProps = (state: Store, ownProps: OwnProps): StateProps => {
     const messages = state.fetchApi.hasOwnProperty(ownProps.accessKey) ? state.fetchApi[ownProps.accessKey].messages : [];
     return {
         messages: [
@@ -34,7 +34,7 @@ const mapStateToProps = (state: Store, ownProps: Props): State => {
             ...state.errorLogger.errors],
     };
 };
-const mapDispatchToProps = (): State => {
+const mapDispatchToProps = (): {} => {
     return {};
 };
 

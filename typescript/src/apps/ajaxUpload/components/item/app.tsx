@@ -1,21 +1,21 @@
+import { NetteActions } from '@appsCollector';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import { NetteActions } from '../../../app-collector';
 import { newDataArrived } from '../../actions/uploadData';
-import { UploadDataItem } from '../../middleware/UploadDataItem';
-import UploadContainer from './Container';
+import { UploadDataItem } from '../../middleware/uploadDataItem';
+import UploadContainer from './container';
 
-interface Props {
+interface OwnProps {
     data: UploadDataItem;
     actions: NetteActions;
 }
 
-interface State {
-    onAddSubmits?(data: UploadDataItem): void;
+interface DispatchProps {
+    onAddSubmits(data: UploadDataItem): void;
 }
 
-class App extends React.Component<Props & State, {}> {
+class App extends React.Component<DispatchProps & OwnProps, {}> {
 
     public componentDidMount() {
         const {data, onAddSubmits} = this.props;
@@ -28,13 +28,14 @@ class App extends React.Component<Props & State, {}> {
     }
 }
 
-const mapStateToProps = (): State => {
-    return {};
-};
-const mapDispatchToProps = (dispatch: Dispatch<any>): State => {
+const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchProps => {
     return {
         onAddSubmits: (data: UploadDataItem) => dispatch(newDataArrived(data)),
     };
+};
+
+const mapStateToProps = (): {} => {
+    return {};
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

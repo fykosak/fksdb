@@ -1,45 +1,48 @@
+import { dispatchUploadFile } from '@fetchApi/middleware/fetch';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { dispatchUploadFile } from '../../../../fetch-api/middleware/fetch';
 import {
     addError,
     dragEnd,
     dragStart,
     dropItem,
-} from '../../../actions/';
+} from '../../../actions';
 
+import { NetteActions } from '@appsCollector';
 import {
     Action,
     Dispatch,
 } from 'redux';
-import { NetteActions } from '../../../../app-collector';
 import { handleFileUpload } from '../../../middleware/upload';
-import { UploadDataItem } from '../../../middleware/UploadDataItem';
+import { UploadDataItem } from '../../../middleware/uploadDataItem';
 import { Store } from '../../../reducers';
 
-interface Props {
+interface OwnProps {
     actions: NetteActions;
     data: UploadDataItem;
     accessKey: string;
 }
 
-interface State {
-    isSubmitting?: boolean;
+interface DispatchProps {
 
-    dragged?: boolean;
+    onDropItem(item: any): void;
 
-    onDropItem?(item: any): void;
+    onFileUpload(data): void;
 
-    onFileUpload?(data): void;
+    onDragStart(): void;
 
-    onDragStart?(): void;
+    onDragEnd(): void;
 
-    onDragEnd?(): void;
-
-    onAddError?(error): void;
+    onAddError(error): void;
 }
 
-class Form extends React.Component<Props & State, {}> {
+interface StateProps {
+   // isSubmitting: boolean;
+
+    dragged: boolean;
+}
+
+class Form extends React.Component<OwnProps & StateProps & DispatchProps, {}> {
 
     public render() {
         const {onDropItem, onDragEnd, onDragStart, onFileUpload, onAddError} = this.props;
@@ -94,12 +97,12 @@ class Form extends React.Component<Props & State, {}> {
 
 }
 
-const mapStateToProps = (state: Store): State => {
+const mapStateToProps = (state: Store): StateProps => {
     return {
         dragged: state.dragNDrop.dragged,
     };
 };
-const mapDispatchToProps = (dispatch: Dispatch<Action<string>>, ownProps: Props): State => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>, ownProps: OwnProps): DispatchProps => {
     return {
         onAddError: (error) => dispatch(addError(error)),
         onDragEnd: () => dispatch(dragEnd()),

@@ -1,14 +1,14 @@
+import { NetteActions } from '@appsCollector';
+import { lang } from '@i18n/i18n';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { deleteUploadedFile } from '../../../actions/uploadData';
-import { lang } from '../../../../i18n/i18n';
-import { NetteActions } from '../../../../app-collector';
 import {
     Action,
     Dispatch,
 } from 'redux';
+import { deleteUploadedFile } from '../../../actions/uploadData';
 
-interface Props {
+interface OwnProps {
     actions: NetteActions;
     name: string;
     href: string;
@@ -16,11 +16,11 @@ interface Props {
     accessKey: string;
 }
 
-interface State {
-    onDeleteFile?: (accessKey: string, submitId: number) => void;
+interface DispatchProps {
+    onDeleteFile(accessKey: string, submitId: number): void;
 }
 
-class File extends React.Component<Props & State, {}> {
+class File extends React.Component<OwnProps & DispatchProps, {}> {
 
     public render() {
         return <div className="uploaded-file">
@@ -40,13 +40,10 @@ class File extends React.Component<Props & State, {}> {
     }
 }
 
-const mapStateToProps = (): State => {
-    return {};
-};
-const mapDispatchToProps = (dispatch: Dispatch<Action<string>>, ownProps: Props): State => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>, ownProps: OwnProps): DispatchProps => {
     return {
         onDeleteFile: (accessKey, submitId) => deleteUploadedFile(dispatch, accessKey, submitId, ownProps.actions.revoke),
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(File);
+export default connect(null, mapDispatchToProps)(File);

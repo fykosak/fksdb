@@ -2,7 +2,7 @@ import {
     ACTION_DRAG_END,
     ACTION_DRAG_START,
     ACTION_DROP_ITEM,
-} from '../actions/';
+} from '../actions';
 
 const dragStart = (): State => {
     return {

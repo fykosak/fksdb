@@ -1,5 +1,5 @@
-import { Message } from '../../fetch-api/middleware/interfaces';
-import { ACTION_ADD_ERROR } from '../actions/';
+import { Message } from '@fetchApi/middleware/interfaces';
+import { ACTION_ADD_ERROR } from '../actions';
 
 export interface State {
     errors: Message[];

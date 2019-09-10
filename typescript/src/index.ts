@@ -3,7 +3,7 @@ import { eventApplicationsTimeProgress } from './apps/events/applicationsTimePro
 import { eventSchedule } from './apps/events/schedule';
 import { fyziklani } from './apps/fyziklani/';
 import { payment } from './apps/payment/selectField/';
-import { ajaxUpload } from "./ajaxUpload";
+import { ajaxUpload } from "./apps/ajaxUpload";
 
 appsCollector.register(fyziklani);
 appsCollector.register(payment);

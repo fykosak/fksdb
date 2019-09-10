@@ -9,13 +9,13 @@ use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceSubmit;
+use FKSDB\React\ReactResponse;
 use FKSDB\Submits\ISubmitStorage;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use Nette\Http\FileUpload;
 use Nette\Utils\DateTime;
 use PublicModule\SubmitPresenter;
-use ReactResponse;
 
 /**
  * Class AjaxUpload
@@ -114,19 +114,6 @@ class AjaxUpload extends ReactComponent {
         return $presenter;
     }
 
-
-    /**
-     * @param ModelSubmit $submit
-     * @param ModelTask $task
-     * @return array
-     * @throws \Nette\Application\UI\InvalidLinkException
-     * @throws BadRequestException
-     * @deprecated
-     */
-    private function serializeData($submit, ModelTask $task) {
-        return $this->serviceSubmit->serializeSubmit($submit, $task, $this->getPresenter());
-    }
-
     /**
      * @return string
      */
@@ -140,7 +127,7 @@ class AjaxUpload extends ReactComponent {
      * @throws \Nette\Application\AbortException
      */
     public function handleUpload() {
-        $response = new ReactResponse();
+        $response = new \FKSDB\React\ReactResponse();
         $contestant = $this->getPresenter()->getContestant();
         $files = $this->getHttpRequest()->getFiles();
         foreach ($files as $name => $fileContainer) {
@@ -172,7 +159,7 @@ class AjaxUpload extends ReactComponent {
             $this->serviceSubmit->getConnection()->commit();
             $response->addMessage(new \ReactMessage('Upload úspešný', 'success'));
             $response->setAct('upload');
-            $response->setData($this->serializeData($submit, $task));
+            $response->setData( $this->serviceSubmit->serializeSubmit($submit, $task, $this->getPresenter()));
             $this->getPresenter()->sendResponse($response);
         }
 
@@ -208,16 +195,18 @@ class AjaxUpload extends ReactComponent {
     private function saveSubmit(FileUpload $file, ModelTask $task, ModelContestant $contestant) {
         $submit = $this->serviceSubmit->findByContestant($contestant->ct_id, $task->task_id);
         if (!$submit) {
-            $submit = $this->serviceSubmit->createNew([
+            $submit = $this->serviceSubmit->createNewModel([
                 'task_id' => $task->task_id,
                 'ct_id' => $contestant->ct_id,
+                'submitted_on' => new DateTime(),
+                'source' => ModelSubmit::SOURCE_UPLOAD,
+            ]);
+        } else {
+            $submit->update([
+                'submitted_on' => new DateTime(),
+                'source' => ModelSubmit::SOURCE_UPLOAD,
             ]);
         }
-        //TODO handle cases when user modifies already graded submit (i.e. with bad timings)
-        $submit->submitted_on = new DateTime();
-        $submit->source = ModelSubmit::SOURCE_UPLOAD;
-        $submit->ct_id; // stupid... touch the field in order to have it loaded via ActiveRow
-        $this->serviceSubmit->save($submit);
         // store file
         $this->submitStorage->storeFile($file->getTemporaryFile(), $submit);
         return $submit;
