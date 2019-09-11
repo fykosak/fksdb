@@ -1,3 +1,5 @@
+import { lang } from '@i18n/i18n';
+
 const allowedTypes = [
     'application/pdf',
 ];
@@ -18,7 +20,7 @@ export const handleFileUpload = (data: FileList, taskId: number, setError: (erro
                 formData.set('act', 'upload');
                 return formData;
             } else {
-                setError({text: 'Nepodporovaný formát', level: 'danger'});
+                setError({text: lang.getText('Nepodporovaný formát'), level: 'danger'});
             }
 
         }

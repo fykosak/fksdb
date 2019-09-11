@@ -24,7 +24,7 @@ class File extends React.Component<OwnProps & DispatchProps, {}> {
 
     public render() {
         return <div className="uploaded-file">
-            <button aria-hidden="true" className="pull-right btn btn-warinig" onClick={() => {
+            <button aria-hidden="true" className="pull-right btn btn-warning" title={lang.getText('Revoke')} onClick={() => {
                 if (window.confirm(lang.getText('Remove submit'))) {
                     this.props.onDeleteFile(this.props.accessKey, this.props.submitId);
                 }

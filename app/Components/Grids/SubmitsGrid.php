@@ -9,8 +9,6 @@ use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\Submits\FilesystemSubmitStorage;
 use FKSDB\Submits\ISubmitStorage;
-use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;

@@ -87,7 +87,6 @@ trait SubmitRevokeTrait {
         $start = $submit->getTask()->submit_start ? $submit->getTask()->submit_start->getTimestamp() : 0;
         $deadline = $submit->getTask()->submit_deadline ? $submit->getTask()->submit_deadline->getTimestamp() : ($now + 1);
 
-
         return ($now <= $deadline) && ($now >= $start);
     }
 }

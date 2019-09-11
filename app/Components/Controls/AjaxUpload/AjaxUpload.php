@@ -134,13 +134,13 @@ class AjaxUpload extends ReactComponent {
             $this->serviceSubmit->getConnection()->beginTransaction();
             $this->submitStorage->beginTransaction();
             if (!preg_match('/task([0-9]+)/', $name, $matches)) {
-                $response->addMessage(new ReactMessage('task not found', 'warning'));
+                $response->addMessage(new ReactMessage(_('Task not found'), 'warning'));
                 continue;
             }
             $task = $this->getPresenter()->isAvailableSubmit($matches[1]);
             if (!$task) {
                 $this->getPresenter()->getHttpResponse()->setCode('403');
-                $response->addMessage(new ReactMessage('upload not allowed', 'danger'));
+                $response->addMessage(new ReactMessage(_('Upload not allowed'), 'danger'));
                 $this->getPresenter()->sendResponse($response);
             };
             /**
@@ -149,7 +149,7 @@ class AjaxUpload extends ReactComponent {
             $file = $fileContainer;
             if (!$file->isOk()) {
                 $this->getPresenter()->getHttpResponse()->setCode('500');
-                $response->addMessage(new ReactMessage('file is not Ok', 'danger'));
+                $response->addMessage(new ReactMessage(_('File is not Ok'), 'danger'));
                 $this->getPresenter()->sendResponse($response);
                 return;
             }
@@ -157,7 +157,7 @@ class AjaxUpload extends ReactComponent {
             $submit = $this->saveSubmitTrait($file, $task, $contestant);
             $this->submitStorage->commit();
             $this->serviceSubmit->getConnection()->commit();
-            $response->addMessage(new ReactMessage('Upload úspešný', 'success'));
+            $response->addMessage(new ReactMessage(_('Upload successful'), 'success'));
             $response->setAct('upload');
             $response->setData($this->serviceSubmit->serializeSubmit($submit, $task, $this->getPresenter()));
             $this->getPresenter()->sendResponse($response);

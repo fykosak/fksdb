@@ -48,11 +48,11 @@ class UploadContainer extends React.Component<OwnProps & StateProps, {}> {
     }
 }
 
-const mapStateToProps = (state: Store): StateProps => {
+const mapStateToProps = (state: Store, ownProps: OwnProps): StateProps => {
     const values = {
         submitting: false,
     };
-    const accessKey = '@@submit-api/' + state.uploadData.taskId;
+    const {accessKey} = ownProps;
     if (state.fetchApi.hasOwnProperty(accessKey)) {
         values.submitting = state.fetchApi[accessKey].submitting;
     }
