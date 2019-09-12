@@ -7,10 +7,12 @@ use FKSDB\Components\Control\AjaxUpload\SubmitSaveTrait;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Grids\SubmitsGrid;
+use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\ORM\Services\ServiceTask;
+use FKSDB\Submits\FilesystemSubmitStorage;
 use FKSDB\Submits\ISubmitStorage;
 use FKSDB\Submits\ProcessingException;
 use ModelException;
@@ -36,7 +38,7 @@ class SubmitPresenter extends BasePresenter {
     private $submitService;
 
     /**
-     * @var ISubmitStorage
+     * @var FilesystemSubmitStorage
      */
     private $submitStorage;
 
@@ -102,6 +104,9 @@ class SubmitPresenter extends BasePresenter {
         $this->template->canRegister = false;
         $this->template->hasForward = false;
         if (!$this->template->hasTasks) {
+            /**
+             * @var $person ModelPerson
+             */
             $person = $this->getUser()->getIdentity()->getPerson();
             $contestants = $person->getActiveContestants($this->yearCalculator);
             $contestant = $contestants[$this->getSelectedContest()->contest_id];
@@ -119,7 +124,10 @@ class SubmitPresenter extends BasePresenter {
      * @throws AbortException
      */
     public function actionDownload($id) {
-        $submit = $this->submitService->findByPrimary($id);
+        /**
+         * @var $submit ModelSubmit
+         */
+        $submit = $this->submitService->findByPrimary2($id);
 
         $filename = $this->submitStorage->retrieveFile($submit);
         if (!$filename) {
@@ -132,11 +140,10 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @param $name
      * @return FormControl
      * @throws BadRequestException
      */
-    public function createComponentUploadForm($name) {
+    public function createComponentUploadForm() {
         $control = new FormControl();
         $form = $control->getForm();
 
@@ -147,7 +154,9 @@ class SubmitPresenter extends BasePresenter {
         if ($studyYear === null) {
             $this->flashMessage(_('Řešitel nemá vyplněn ročník, nebudou dostupné všechny úlohy.'));
         }
-
+        /**
+         * @var $task ModelTask
+         */
         foreach ($this->getAvailableTasks() as $task) {
             if ($task->submit_deadline != $prevDeadline) {
                 $form->addGroup(sprintf(_('Termín %s'), $task->submit_deadline));
@@ -184,7 +193,9 @@ class SubmitPresenter extends BasePresenter {
 
             $form->setCurrentGroup();
             $form->addSubmit('upload', _('Odeslat'));
-            $form->onSuccess[] = array($this, 'handleUploadFormSuccess');
+            $form->onSuccess[] = function (Form $form) {
+                $this->handleUploadFormSuccess($form);
+            };
 
             $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
         }
@@ -211,12 +222,12 @@ class SubmitPresenter extends BasePresenter {
      * @param mixed $form
      * @throws BadRequestException
      * @throws AbortException
+     * @throws \Exception
      * @internal
      */
     public function handleUploadFormSuccess($form) {
         $values = $form->getValues();
 
-        $ctId = $this->getContestant()->ct_id;
         $taskIds = explode(',', $values['tasks']);
         $validIds = $this->getAvailableTasks()->fetchPairs('task_id', 'task_id');
 
@@ -282,7 +293,7 @@ class SubmitPresenter extends BasePresenter {
 
     /**
      * @param integer $taskId
-     * @return ModelTask
+     * @return ModelTask|null
      *
      * @throws BadRequestException
      */
