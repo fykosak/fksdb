@@ -65,8 +65,6 @@ trait SubmitRevokeTrait {
         } catch (StorageException $exception) {
             Debugger::log($exception);
             return [new Message(_('Během mazání úlohy %s došlo k chybě.'), 'danger'), null];
-
-
         } catch (ModelException $exception) {
             Debugger::log($exception);
             return [new Message(_('Během mazání úlohy %s došlo k chybě.'), 'danger'), null];
@@ -74,11 +72,11 @@ trait SubmitRevokeTrait {
     }
 
     /**
-     * @internal
      * @param ModelSubmit $submit
-     * @return boolean
+     * @return bool
+     * @internal
      */
-    public function canRevoke(ModelSubmit $submit) {
+    public function canRevoke(ModelSubmit $submit): bool {
         if ($submit->source != ModelSubmit::SOURCE_UPLOAD) {
             return false;
         }

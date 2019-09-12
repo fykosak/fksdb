@@ -128,6 +128,7 @@ class AjaxUpload extends ReactComponent {
      */
     public function handleUpload() {
         $response = new ReactResponse();
+
         $contestant = $this->getPresenter()->getContestant();
         $files = $this->getHttpRequest()->getFiles();
         foreach ($files as $name => $fileContainer) {
@@ -139,7 +140,8 @@ class AjaxUpload extends ReactComponent {
             }
             $task = $this->getPresenter()->isAvailableSubmit($matches[1]);
             if (!$task) {
-                $this->getPresenter()->getHttpResponse()->setCode('403');
+
+                $response->setCode(403);
                 $response->addMessage(new ReactMessage(_('Upload not allowed'), 'danger'));
                 $this->getPresenter()->sendResponse($response);
             };
@@ -148,7 +150,7 @@ class AjaxUpload extends ReactComponent {
              */
             $file = $fileContainer;
             if (!$file->isOk()) {
-                $this->getPresenter()->getHttpResponse()->setCode('500');
+                $response->setCode(500);
                 $response->addMessage(new ReactMessage(_('File is not Ok'), 'danger'));
                 $this->getPresenter()->sendResponse($response);
                 return;
@@ -162,8 +164,6 @@ class AjaxUpload extends ReactComponent {
             $response->setData($this->serviceSubmit->serializeSubmit($submit, $task, $this->getPresenter()));
             $this->getPresenter()->sendResponse($response);
         }
-
-        die();
     }
 
     /**

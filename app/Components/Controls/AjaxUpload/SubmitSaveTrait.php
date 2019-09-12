@@ -19,9 +19,10 @@ use Nette\Utils\DateTime;
 trait SubmitSaveTrait {
     /**
      * @param FileUpload $file
-     * @param ModelContestant $contestant
      * @param ModelTask $task
+     * @param ModelContestant $contestant
      * @return AbstractModelSingle|ModelSubmit
+     * @throws \Exception
      */
     private function saveSubmitTrait(FileUpload $file, ModelTask $task, ModelContestant $contestant) {
         $submit = $this->getServiceSubmit()->findByContestant($contestant->ct_id, $task->task_id);
