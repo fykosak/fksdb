@@ -13,7 +13,7 @@ use FKSDB\ORM\DbNames;
  * @property-read string class
  * @property-read integer study_year
  */
-class ModelPersonHistory extends AbstractModelSingle {
+class ModelPersonHistory extends AbstractModelSingle implements IPersonReferencedModel {
     /**
      * @return ModelPerson
      */

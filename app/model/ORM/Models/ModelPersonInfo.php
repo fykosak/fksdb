@@ -37,7 +37,7 @@ use Nette\Utils\DateTime;
  * @property-read string academic_degree_prefix
  * @property-read string academic_degree_suffix
  */
-class ModelPersonInfo extends AbstractModelSingle {
+class ModelPersonInfo extends AbstractModelSingle implements IPersonReferencedModel {
     /**
      * @return ModelPerson
      */
