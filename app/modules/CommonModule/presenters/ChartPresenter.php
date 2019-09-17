@@ -2,9 +2,10 @@
 
 namespace CommonModule;
 
-use FKSDB\Components\Controls\Chart\AbstractChartControl;
+use FKSDB\Components\Controls\Chart\IChart;
 use FKSDB\Components\Controls\Chart\ParticipantAcquaintanceChartControl;
 use FKSDB\ORM\Services\ServiceEvent;
+use Nette\Application\UI\Control;
 use Tracy\Debugger;
 
 /**
@@ -18,11 +19,7 @@ class ChartPresenter extends BasePresenter {
      */
     public $id;
     /**
-     * @var AbstractChartControl[]
-     */
-    private $chartComponents;
-    /**
-     * @var AbstractChartControl
+     * @var IChart
      */
     private $selectedChart;
 
@@ -39,45 +36,41 @@ class ChartPresenter extends BasePresenter {
     }
 
     /**
-     * @return array|AbstractChartControl[]
+     * @return IChart[]
      */
-    private function getChartsControls() {
-        if (!$this->chartComponents) {
-            $this->chartComponents = [
+    private function getCharts() {
+        static $chartComponents;
+        if (!$chartComponents) {
+            $chartComponents = [
                 new ParticipantAcquaintanceChartControl($this->context, +$this->id, $this->serviceEvent),
             ];
         }
-        return $this->chartComponents;
+        return $chartComponents;
     }
 
     public function titleChart() {
-
+        $this->setTitle($this->selectedChart->getTitle());
+        $this->setIcon('fa fa-pie-chart');
     }
 
     public function startup() {
         parent::startup();
         Debugger::barDump($this->getAction());
-        foreach ($this->getChartsControls() as $chart) {
+        foreach ($this->getCharts() as $chart) {
             if ($chart->getAction() === $this->getAction()) {
-
                 $this->selectedChart = $chart;
-
+                $this->setView('chart');
             }
         }
     }
-
-    public function beforeRender() {
-        parent::beforeRender();
-        if ($this->selectedChart) {
-            $this->setView('chart');
-        }
-
+    public function renderList(){
+        $this->template->charts = $this->getCharts();
     }
 
     /**
-     * @return AbstractChartControl
+     * @return Control
      */
     public function createComponentChart() {
-        return $this->selectedChart;
+        return $this->selectedChart->getControl();
     }
 }

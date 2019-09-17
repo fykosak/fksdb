@@ -1,0 +1,31 @@
+.chart {
+  &.chart-participant-acquaintance {
+    text, path {
+      transition-duration: .7s;
+    }
+
+    path.arc {
+      &.active {
+        opacity: 1;
+      }
+
+      &.inactive {
+        opacity: .2;
+      }
+    }
+
+    path.ribbon {
+      &.default {
+        opacity: 0.2;
+      }
+
+      &.active {
+        opacity: 1;
+      }
+
+      &.inactive {
+        opacity: 0;
+      }
+    }
+  }
+}

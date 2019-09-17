@@ -2,9 +2,11 @@
 
 namespace FKSDB\Components\Controls\Chart;
 
+use FKSDB\Components\React\ReactComponent;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Services\ServiceEvent;
+use Nette\Application\UI\Control;
 use Nette\DI\Container;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
@@ -13,7 +15,7 @@ use Nette\Utils\JsonException;
  * Class ParticipantAcquaintanceChartControl
  * @package FKSDB\Components\Controls\Chart
  */
-class ParticipantAcquaintanceChartControl extends AbstractChartControl {
+class ParticipantAcquaintanceChartControl extends ReactComponent implements IChart {
     /**
      * @var int
      */
@@ -54,8 +56,12 @@ class ParticipantAcquaintanceChartControl extends AbstractChartControl {
      * @throws JsonException
      */
     function getData(): string {
+        if (!$this->eventId) {
+            $this->getPresenter()->flashMessage(_('no eventId selected'), 'danger');
+            return '';
+        }
         /**
-         * @var $event ModelEvent
+         * @var ModelEvent $event
          */
         $event = $this->serviceEvent->findByPrimary2($this->eventId);
         $event->getParticipants();
@@ -87,5 +93,26 @@ class ParticipantAcquaintanceChartControl extends AbstractChartControl {
      */
     function getComponentName(): string {
         return 'participant-acquaintance';
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle(): string {
+        return _('Participant acquaintance');
+    }
+
+    /**
+     * @return string
+     */
+    function getModuleName(): string {
+        return 'chart';
+    }
+
+    /**
+     * @return Control
+     */
+    public function getControl(): Control {
+        return $this;
     }
 }
