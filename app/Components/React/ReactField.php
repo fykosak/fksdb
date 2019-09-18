@@ -11,6 +11,7 @@ use Nette\Utils\JsonException;
  * @package FKSDB\Components\React
  */
 trait ReactField {
+    static private $attachedJS = false;
 
     /**
      * @throws JsonException
@@ -22,6 +23,16 @@ trait ReactField {
         $this->setAttribute('data-mode', $this->getMode());
         $this->setAttribute('data-data', $this->getData());
         $this->setAttribute('data-actions', Json::encode($this->getActions()));
+    }
+
+    /**
+     * @param object $obj
+     */
+    protected function attachedReact($obj) {
+        if (!self::$attachedJS && $obj instanceof IJavaScriptCollector) {
+            self::$attachedJS = true;
+            $obj->registerJSFile('js/bundle-all.min.js');
+        }
     }
 
     protected function registerMonitor() {

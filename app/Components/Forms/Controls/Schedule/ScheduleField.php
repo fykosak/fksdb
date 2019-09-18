@@ -42,6 +42,14 @@ class ScheduleField extends TextInput {
     }
 
     /**
+     * @param $obj
+     */
+    public function attached($obj) {
+        parent::attached($obj);
+        $this->attachedReact($obj);
+    }
+
+    /**
      * @param string $type
      * @return string
      */
