@@ -31,7 +31,7 @@ trait ReactField {
     protected function attachedReact($obj) {
         if (!self::$attachedJS && $obj instanceof IJavaScriptCollector) {
             self::$attachedJS = true;
-            $obj->registerJSFile('js/bundle-all.min.js');
+            $obj->registerJSFile('js/bundle.min.js');
         }
     }
 
