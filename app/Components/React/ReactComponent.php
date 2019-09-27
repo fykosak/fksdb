@@ -2,7 +2,9 @@
 
 namespace FKSDB\Components\React;
 
+use FKSDB\Application\IJavaScriptCollector;
 use Nette\Application\UI\Control;
+use Nette\ComponentModel\IComponent;
 use Nette\DI\Container;
 use Nette\Http\IRequest;
 use Nette\Templating\FileTemplate;
@@ -12,6 +14,7 @@ use Nette\Utils\JsonException;
 /**
  * Class ReactComponent
  * @property FileTemplate template
+ *
  */
 abstract class ReactComponent extends Control {
     /**
@@ -26,6 +29,21 @@ abstract class ReactComponent extends Control {
     public function __construct(Container $context) {
         parent::__construct();
         $this->container = $context;
+    }
+
+    /**
+     * @var bool
+     */
+    protected static $reactJSAttached = false;
+
+    /**
+     * @param $obj IComponent
+     */
+    protected function attached($obj) {
+        if (!static::$reactJSAttached && $obj instanceof IJavaScriptCollector) {
+            static::$reactJSAttached = true;
+            $obj->registerJSFile('js/bundle.min.js');
+        }
     }
 
     /**
