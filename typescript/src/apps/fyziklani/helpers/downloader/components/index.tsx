@@ -83,7 +83,7 @@ const mapStateToProps = (state: FyziklaniResultsStore, ownProps: OwnProps): Stat
  */
 const mapDispatchToProps = (dispatch: Dispatch<Action<string>>, ownProps: OwnProps): DispatchProps => {
     const {accessKey, actions} = ownProps;
-    if (!actions.hasOwnProperty('refresh')) {
+    if (!actions.getAction('refresh')) {
         throw new Error('You need refresh URL');
     }
     const url = actions.getAction('refresh');
