@@ -196,15 +196,16 @@ class ApplicationPresenter extends BasePresenter {
             throw new BadRequestException(_('Neexistující akce.'), 404);
         }
         $eventApplication = $this->getEventApplication();
-        if ($id && !$eventApplication) {
-            throw new BadRequestException(_('Neexistující přihláška.'), 404);
-        }
-
-        if (!$eventApplication instanceof IEventReferencedModel) {
-            throw new BadRequestException();
-        }
-        if ($this->getEvent()->event_id !== $eventApplication->getEvent()->event_id) {
-            throw new ForbiddenRequestException();
+        if ($id) { // test if there is a new application, case is set there are a edit od application, empty => new application
+            if (!$eventApplication) {
+                throw new BadRequestException(_('Neexistující přihláška.'), 404);
+            }
+            if (!$eventApplication instanceof IEventReferencedModel) {
+                throw new BadRequestException();
+            }
+            if ($this->getEvent()->event_id !== $eventApplication->getEvent()->event_id) {
+                throw new ForbiddenRequestException();
+            }
         }
 
         $this->initializeMachine();
@@ -355,18 +356,17 @@ class ApplicationPresenter extends BasePresenter {
     private function getEventApplication() {
         if (!$this->eventApplication) {
             $id = null;
-            if ($this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_EVENT_NOTIFY)) {
-                $data = $this->getTokenAuthenticator()->getTokenData();
-                if ($data) {
-                    $data = self::decodeParameters($this->getTokenAuthenticator()->getTokenData());
-                    $eventId = $data['id']; // TODO $id?
-                }
-            }
+            //if ($this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_EVENT_NOTIFY)) {
+            //   $data = $this->getTokenAuthenticator()->getTokenData();
+            //   if ($data) {
+            //    $data = self::decodeParameters($this->getTokenAuthenticator()->getTokenData());
+            //$eventId = $data['id']; // TODO $id?
+            //  }
+            // }
             $id = $id ?: $this->getParameter('id');
             $service = $this->getHolder()->getPrimaryHolder()->getService();
 
             $this->eventApplication = $service->findByPrimary($id);
-
             /* if ($row) {
                  $this->eventApplication = ($service->getModelClassName())::createFromTableRow($row);
              }*/
