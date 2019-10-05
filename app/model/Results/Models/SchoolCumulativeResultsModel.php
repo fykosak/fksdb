@@ -52,7 +52,7 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
      * @param ModelCategory $category
      * @return array
      */
-    public function getDataColumns($category) {
+    public function getDataColumns(ModelCategory $category) {
         if ($this->series === null) {
             throw new InvalidStateException('Series not specified.');
         }
@@ -118,10 +118,10 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
     }
 
     /**
-     * @param $category
+     * @param ModelCategory $category
      * @return mixed|void
      */
-    protected function composeQuery($category) {
+    protected function composeQuery(ModelCategory $category) {
         throw new \Nette\NotSupportedException;
     }
 
@@ -129,7 +129,7 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
      * @param ModelCategory $category
      * @return array of Nette\Database\Row
      */
-    public function getData($category) {
+    public function getData(ModelCategory $category) {
         $categories = [];
         if ($category->id == ModelCategory::CAT_ALL) {
             $categories = $this->cumulativeResultsModel->getCategories();
@@ -199,10 +199,10 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
 
     /**
      * @param $schoolContestants
-     * @param $category
+     * @param ModelCategory $category
      * @return array
      */
-    private function createResultRow($schoolContestants, $category) {
+    private function createResultRow($schoolContestants, ModelCategory $category) {
         $resultRow = [];
         foreach ($this->getDataColumns($category) as $column) {
             $resultRow[$column[self::COL_ALIAS]] = 0;
