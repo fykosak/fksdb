@@ -21,6 +21,7 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Services\ServiceEvent;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 
@@ -189,6 +190,9 @@ class ApplicationPresenter extends BasePresenter {
         }
         if ($id && !$this->getEventApplication()) {
             throw new BadRequestException(_('Neexistující přihláška.'), 404);
+        }
+        if ($this->getEvent()->event_id !== $this->getEventApplication()->getEvent()->event_id) {
+            throw new ForbiddenRequestException();
         }
 
         $this->initializeMachine();

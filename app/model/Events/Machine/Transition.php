@@ -8,6 +8,7 @@ use Events\TransitionOnExecutedException;
 use Events\TransitionUnsatisfiedTargetException;
 use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -303,8 +304,8 @@ class Transition extends FreezableObject {
     /**
      * Launch induced transitions and sets new state.
      *
-     * @todo Induction work only for one level.     *
      * @throws TransitionConditionFailedException
+     * @todo Induction work only for one level.     *
      */
     public final function execute() {
         if ($blockingTransition = $this->getBlockingTransition()) { // intentionally =

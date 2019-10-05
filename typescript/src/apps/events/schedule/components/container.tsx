@@ -12,7 +12,7 @@ export default class Container extends React.Component<Props, {}> {
 
     public render() {
         const {groups, params} = this.props;
-        return <div className="schedule-container schedule-container-accommodation">
+        return <div className="schedule-container schedule-container-accommodation ml-3">
             {groups.map((group, index) => {
                 return <ScheduleGroup key={index} group={group} params={params}/>;
             })}

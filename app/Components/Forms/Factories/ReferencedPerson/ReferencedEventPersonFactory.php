@@ -107,6 +107,8 @@ class ReferencedEventPersonFactory extends AbstractReferencedPersonFactory {
      * @param HiddenField|null $hiddenField
      * @param array $metadata
      * @return AddressContainer|BaseControl|null
+     * @throws JsonException
+     * @throws \Exception
      */
     public function createField($sub, $fieldName, $acYear, HiddenField $hiddenField = null, array $metadata = []) {
         switch ($sub) {

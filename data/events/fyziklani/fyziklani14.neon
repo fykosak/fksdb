@@ -25,12 +25,15 @@ parameters:
                     spam_mff:
                         required: true
                 person_schedule:
+
                     accommodation:
                         required: false
                     accommodation_teacher_separated:
                         required: false
                     visa_requirement:
                         required: false
+
+
 
             participant:
                 person:
@@ -58,12 +61,12 @@ parameters:
                         required: false
             dep:
                 require:
-                    team.teacher_id.person_info.id_number: team.teacher_id.person_accommodation.multiNights
-                    p*.person_id.person_info.id_number: p*.person_id.person_accommodation.multiNights
+                    team.teacher_id.person_info.id_number: team.teacher_id.person_schedule.accommodation
+                    p*.person_id.person_info.id_number: p*.person_id.person_schedule.accommodation
                 visible:
-                    team.teacher_id.person_info.id_number: team.teacher_id.person_accommodation.multiNights
-                    p*.person_id.person_info.id_number: p*.person_id.person_accommodation.multiNights
-                    team.teacher_present: team.teacher_id
+                    team.teacher_id.person_schedule.accommodation_teacher_separated: team.teacher_id.person_schedule.accommodation
+                    team.teacher_id.person_info.id_number: team.teacher_id.person_schedule.accommodation
+                    p*.person_id.person_info.id_number: p*.person_id.person_schedule.accommodation
 
 
 events:
@@ -109,8 +112,8 @@ events:
                         condition: %events.fyziklani14.appCond%
                         label: _('Přihlásit tým')
                         onExecuted:
-                            - Events\Transitions\MailSender(fyziklani/fyziklani2019/teacher,.primary)
-                            - Events\Transitions\MailSender(fyziklani/fyziklani2019/participant,.secondary)
+                            - Events\Transitions\MailSender(fyziklani/fyziklani2020/teacher,.primary)
+                            - Events\Transitions\MailSender(fyziklani/fyziklani2020/participant,.secondary)
                     pending->approved:
                         condition: role('admin')
                         label: _('Schválit účast')
@@ -167,10 +170,6 @@ events:
                         visible: true
                         modifiable: %events.fyziklani14.appCond%
                         factory: RefPerson(%events.fyziklani14.teacher%, email, true, role('admin'), false)
-                    teacher_present:
-                        label: _('Učitel má zájem o program během soutěže.') # FIXME
-                        visible: true
-                        modifiable: %events.fyziklani14.appCond%
             #   PARTICIPANT
             #
             PARTICIPANT:

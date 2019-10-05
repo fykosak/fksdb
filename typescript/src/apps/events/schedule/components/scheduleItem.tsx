@@ -31,7 +31,6 @@ class ScheduleItem extends React.Component<OwnProps & DispatchProps & StateProps
     public render() {
         const {item, value, onChange, params} = this.props;
         const {scheduleItemId, price, label, totalCapacity, usedCapacity, description} = item;
-
         const isChecked = (value === scheduleItemId);
 
         return <div className={'mb-3'}>
@@ -42,8 +41,10 @@ class ScheduleItem extends React.Component<OwnProps & DispatchProps & StateProps
                         isChecked ? onChange(null) : onChange(scheduleItemId);
                     }}
                 />
-                    <span className={'ml-3'}>{label} {params.displayDescription && description &&
-                    <small>{description}</small>}</span>
+                    <span
+                        className={'ml-3'}>{label[lang.getCurrentLocale()]} {
+                        params.displayDescription && description[lang.getCurrentLocale()] &&
+                        <small>{description}</small>}</span>
             </span>
             <span className={'text-muted'}>
                 {params.displayPrice &&

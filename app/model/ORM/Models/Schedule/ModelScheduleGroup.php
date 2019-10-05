@@ -10,6 +10,7 @@ use FKSDB\ORM\Models\ModelEvent;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
 use Nette\NotImplementedException;
+use Tracy\Debugger;
 
 /**
  * Class ModelScheduleGroup
@@ -54,11 +55,11 @@ class ModelScheduleGroup extends AbstractModelSingle implements IEventReferenced
                     $this->end->format('d. m. Y')
                 );
             case self::TYPE_ACCOMMODATION_SAME_GENDER_REQUIRED:
-                return _('Neželám si byť ubytovaný s opačným pohlavím');
+                return _('Accommodation with another gender');
             case self::TYPE_VISA_REQUIREMENT:
-                return _('Potrebujeme visa...');
+                return _('Visa to Czech Republic');
             case self::TYPE_ACCOMMODATION_TEACHER_SEPARATED:
-                return _('Učiteľ si neželá byť ubytovaný so študentámi');
+                return _('Teacher require specific accommodation');
         }
         throw new NotImplementedException();
     }

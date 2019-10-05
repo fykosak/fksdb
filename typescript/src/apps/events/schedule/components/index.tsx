@@ -49,8 +49,7 @@ export default class Index extends React.Component<Props, {}> {
             displayDescription: true,
             displayGroupLabel: true,
             displayPrice: true,
-    }
-        ;
+        };
         switch (this.props.mode) {
             case 'accommodation':
                 break;
