@@ -29,7 +29,7 @@ class DetailResultsModel extends AbstractResultsModel {
      * @param ModelCategory $category
      * @return array
      */
-    public function getDataColumns($category) {
+    public function getDataColumns(ModelCategory $category) {
         if (!isset($this->dataColumns[$category->id])) {
             $dataColumns = [];
             $sum = 0;
@@ -77,10 +77,10 @@ class DetailResultsModel extends AbstractResultsModel {
     }
 
     /**
-     * @param $category
+     * @param ModelCategory $category
      * @return mixed|string
      */
-    protected function composeQuery($category) {
+    protected function composeQuery(ModelCategory $category) {
         if (!$this->series) {
             throw new \Nette\InvalidStateException('Series not set.');
         }
