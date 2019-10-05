@@ -201,7 +201,7 @@ class ApplicationPresenter extends BasePresenter {
         }
 
         if (!$eventApplication instanceof IEventReferencedModel) {
-            throw new BadSignalException();
+            throw new BadRequestException();
         }
         if ($this->getEvent()->event_id !== $eventApplication->getEvent()->event_id) {
             throw new ForbiddenRequestException();
