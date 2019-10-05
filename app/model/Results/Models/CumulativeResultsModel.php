@@ -29,16 +29,14 @@ class CumulativeResultsModel extends AbstractResultsModel {
      * @param ModelCategory $category
      * @return array
      */
-    public function getDataColumns($category) {
+    public function getDataColumns(ModelCategory $category) {
         if ($this->series === null) {
             throw new InvalidStateException('Series not specified.');
         }
 
         if (!isset($this->dataColumns[$category->id])) {
             $dataColumns = [];
-            $sum = 0;
             foreach ($this->getSeries() as $series) {
-                // sum points as sum of tasks
                 $points = null;
                 foreach ($this->getTasks($series) as $task) {
                     $points += $this->evaluationStrategy->getTaskPoints($task, $category);
@@ -49,7 +47,6 @@ class CumulativeResultsModel extends AbstractResultsModel {
                     self::COL_DEF_LIMIT => $points,
                     self::COL_ALIAS => self::DATA_PREFIX . count($dataColumns),
                 ];
-                $sum += $points;
             }
             $dataColumns[] = [
                 self::COL_DEF_LABEL => self::LABEL_PERCETAGE,
@@ -57,8 +54,13 @@ class CumulativeResultsModel extends AbstractResultsModel {
                 self::COL_ALIAS => self::ALIAS_PERCENTAGE,
             ];
             $dataColumns[] = [
+                self::COL_DEF_LABEL => self::LABEL_TOTAL_PERCENTAGE,
+                self::COL_DEF_LIMIT => 100,
+                self::COL_ALIAS => self::ALIAS_TOTAL_PERCENTAGE,
+            ];
+            $dataColumns[] = [
                 self::COL_DEF_LABEL => self::LABEL_SUM,
-                self::COL_DEF_LIMIT => $sum,
+                self::COL_DEF_LIMIT => $this->getSumLimit(),
                 self::COL_ALIAS => self::ALIAS_SUM,
             ];
             $this->dataColumns[$category->id] = $dataColumns;
@@ -91,11 +93,11 @@ class CumulativeResultsModel extends AbstractResultsModel {
     }
 
     /**
-     * @param $category
+     * @param ModelCategory $category
      * @return mixed|string
      * @throws InvalidStateException
      */
-    protected function composeQuery($category) {
+    protected function composeQuery(ModelCategory $category) {
         if (!$this->series) {
             throw new InvalidStateException('Series not set.');
         }
@@ -112,6 +114,7 @@ class CumulativeResultsModel extends AbstractResultsModel {
         }
 
         $select[] = "round(100 * SUM($sum) / SUM(" . $this->evaluationStrategy->getTaskPointsColumn($category) . ")) AS '" . self::ALIAS_PERCENTAGE . "'";
+        $select[] = "round(100 * SUM($sum) / " . $this->getSumLimit() . ") AS '" . self::ALIAS_TOTAL_PERCENTAGE . "'";
         $select[] = "round(SUM($sum)) AS '" . self::ALIAS_SUM . "'";
         $select[] = "ct.ct_id";
 
@@ -142,7 +145,23 @@ left join submit s ON s.task_id = t.task_id AND s.ct_id = ct.ct_id";
         from ($query) data, (select @rownum := 0, @rank := 0, @prevSum := -1) init";
         return $wrappedQuery;
     }
-
+    
+    /**
+     * Returns total points of Student Pilny for given series
+     * 
+     * @return int sum of Student Pilny points
+     */
+    private function getSumLimit() : int {
+        $sum = 0;
+        foreach ($this->getSeries() as $series) {
+            // sum points as sum of tasks
+            $points = null;
+            foreach ($this->getTasks($series) as $task) {
+                $points += $this->evaluationStrategy->getTaskPoints($task, ModelCategory::CAT_HS_4);
+            }
+            $sum += $points;
+        }        
+        return $sum;
+    }
 }
-
 
