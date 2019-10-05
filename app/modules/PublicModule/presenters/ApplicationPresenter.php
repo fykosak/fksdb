@@ -15,15 +15,22 @@ use FKSDB\Components\Events\ApplicationsGrid;
 use FKSDB\Components\Grids\Events\LayoutResolver;
 use FKSDB\Logging\FlashDumpFactory;
 use FKSDB\Logging\MemoryLogger;
+use FKSDB\ORM\AbstractModelMulti;
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\ORM\Models\IEventReferencedModel;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Services\ServiceEvent;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
+use Nette\Application\UI\BadSignalException;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
+use function sprintf;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -35,12 +42,12 @@ class ApplicationPresenter extends BasePresenter {
     const PARAM_AFTER = 'a';
 
     /**
-     * @var \FKSDB\ORM\Models\ModelEvent|null
+     * @var ModelEvent|null
      */
     private $event;
 
     /**
-     * @var IModel|\FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam|ModelEventParticipant
+     * @var IModel|ModelFyziklaniTeam|ModelEventParticipant
      */
     private $eventApplication = false;
 
@@ -55,7 +62,7 @@ class ApplicationPresenter extends BasePresenter {
     private $machine;
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceEvent
+     * @var ServiceEvent
      */
     private $serviceEvent;
 
@@ -85,7 +92,7 @@ class ApplicationPresenter extends BasePresenter {
     private $flashDumpFactory;
 
     /**
-     * @param \FKSDB\ORM\Services\ServiceEvent $serviceEvent
+     * @param ServiceEvent $serviceEvent
      */
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;
@@ -140,7 +147,7 @@ class ApplicationPresenter extends BasePresenter {
 
     public function titleDefault() {
         if ($this->getEventApplication()) {
-            $this->setTitle(\sprintf(_('Application for %s: %s'), $this->getEvent()->name, $this->getEventApplication()->__toString()));
+            $this->setTitle(sprintf(_('Application for %s: %s'), $this->getEvent()->name, $this->getEventApplication()->__toString()));
         } else {
             $this->setTitle("{$this->getEvent()}");
         }
@@ -182,16 +189,21 @@ class ApplicationPresenter extends BasePresenter {
      * @param $eventId
      * @param $id
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function actionDefault($eventId, $id) {
         if (!$this->getEvent()) {
             throw new BadRequestException(_('Neexistující akce.'), 404);
         }
-        if ($id && !$this->getEventApplication()) {
+        $eventApplication = $this->getEventApplication();
+        if ($id && !$eventApplication) {
             throw new BadRequestException(_('Neexistující přihláška.'), 404);
         }
-        if ($this->getEvent()->event_id !== $this->getEventApplication()->getEvent()->event_id) {
+
+        if (!$eventApplication instanceof IEventReferencedModel) {
+            throw new BadSignalException();
+        }
+        if ($this->getEvent()->event_id !== $eventApplication->getEvent()->event_id) {
             throw new ForbiddenRequestException();
         }
 
@@ -315,7 +327,7 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @return \FKSDB\ORM\Models\ModelEvent|null
+     * @return ModelEvent|null
      */
     private function getEvent() {
         if (!$this->event) {
@@ -338,7 +350,7 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @return ModelEventParticipant|mixed|IModel|\FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam
+     * @return AbstractModelMulti|AbstractModelSingle|IModel|ModelFyziklaniTeam|ModelEventParticipant|IEventReferencedModel
      */
     private function getEventApplication() {
         if (!$this->eventApplication) {
@@ -354,6 +366,7 @@ class ApplicationPresenter extends BasePresenter {
             $service = $this->getHolder()->getPrimaryHolder()->getService();
 
             $this->eventApplication = $service->findByPrimary($id);
+
             /* if ($row) {
                  $this->eventApplication = ($service->getModelClassName())::createFromTableRow($row);
              }*/
