@@ -18,6 +18,13 @@ interface Props {
     mode: string;
 }
 
+export interface Params {
+    displayGroupLabel: boolean;
+    displayCapacity: boolean;
+    displayDescription: boolean;
+    displayPrice: boolean;
+}
+
 export default class Index extends React.Component<Props, {}> {
 
     public render() {
@@ -37,12 +44,24 @@ export default class Index extends React.Component<Props, {}> {
         if (this.props.scheduleDef.length === 0) {
             return <span className="text text-muted">{lang.getText('No items found.')}</span>;
         }
+        const params: Params = {
+            displayCapacity: true,
+            displayDescription: true,
+            displayGroupLabel: true,
+            displayPrice: true,
+    }
+        ;
         switch (this.props.mode) {
             case 'accommodation':
-                return <Container groups={this.props.scheduleDef}/>;
-            default:
-                throw new Error('no match');
+                break;
+            case 'accommodation_teacher_separated':
+            case 'accommodation_same_gender_required':
+            case 'visa_requirement':
+                params.displayCapacity = false;
+                params.displayGroupLabel = true;
+                params.displayPrice = false;
         }
+        return <Container groups={this.props.scheduleDef} params={params}/>;
 
     }
 }

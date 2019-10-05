@@ -10,10 +10,12 @@ import {
 } from '../middleware/interfaces';
 import { Store } from '../reducer';
 import CapacityLabel from './capacityLabel';
+import { Params } from './index';
 
 interface OwnProps {
     item: ScheduleItemDef;
     type: ScheduleGroupType;
+    params: Params;
 }
 
 interface DispatchProps {
@@ -27,7 +29,7 @@ interface StateProps {
 class ScheduleItem extends React.Component<OwnProps & DispatchProps & StateProps, {}> {
 
     public render() {
-        const {item, value, onChange} = this.props;
+        const {item, value, onChange, params} = this.props;
         const {scheduleItemId, price, label, totalCapacity, usedCapacity, description} = item;
 
         const isChecked = (value === scheduleItemId);
@@ -40,11 +42,13 @@ class ScheduleItem extends React.Component<OwnProps & DispatchProps & StateProps
                         isChecked ? onChange(null) : onChange(scheduleItemId);
                     }}
                 />
-                    <span className={'ml-3'}>{label} {description && <small>{description}</small>}</span>
+                    <span className={'ml-3'}>{label} {params.displayDescription && description &&
+                    <small>{description}</small>}</span>
             </span>
             <span className={'text-muted'}>
-                <small className={'ml-3'}>{lang.getText('Price')}: <PriceDisplay price={price}/></small>
-                <CapacityLabel capacity={totalCapacity} usedCapacity={usedCapacity}/>
+                {params.displayPrice &&
+                <small className={'ml-3'}>{lang.getText('Price')}: <PriceDisplay price={price}/></small>}
+                {params.displayCapacity && <CapacityLabel capacity={totalCapacity} usedCapacity={usedCapacity}/>}
             </span>
         </div>;
     }

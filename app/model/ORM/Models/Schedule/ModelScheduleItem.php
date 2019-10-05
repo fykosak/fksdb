@@ -96,7 +96,7 @@ class ModelScheduleItem extends AbstractModelSingle {
                     $this->name_cs
                 );
         }
-        throw new NotImplementedException();
+        return $this->getLabel();
     }
 
     /**
@@ -109,7 +109,11 @@ class ModelScheduleItem extends AbstractModelSingle {
             case ModelScheduleGroup::TYPE_ACCOMMODATION:
                 return $group->getLabel() . ' ' . \sprintf(_('in "%s"'),
                         $this->name_cs
-                );
+                    );
+            case ModelScheduleGroup::TYPE_ACCOMMODATION_TEACHER_SEPARATED:
+            case ModelScheduleGroup::TYPE_VISA_REQUIREMENT:
+            case ModelScheduleGroup::TYPE_ACCOMMODATION_SAME_GENDER_REQUIRED:
+                return $group->getLabel();
         }
         throw new NotImplementedException();
     }

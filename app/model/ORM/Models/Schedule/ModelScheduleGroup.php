@@ -23,7 +23,10 @@ use Nette\NotImplementedException;
  */
 class ModelScheduleGroup extends AbstractModelSingle implements IEventReferencedModel {
     const TYPE_ACCOMMODATION = 'accommodation';
-    const TYPE_DSEF_GROUP = 'dsef-group';
+    const TYPE_DSEF_GROUP = 'dsef_group';
+    const TYPE_VISA_REQUIREMENT = 'visa_requirement';
+    const TYPE_ACCOMMODATION_SAME_GENDER_REQUIRED = 'accommodation_same_gender_required';
+    const TYPE_ACCOMMODATION_TEACHER_SEPARATED = 'accommodation_teacher_separated';
 
     /**
      * @return GroupedSelection
@@ -45,11 +48,17 @@ class ModelScheduleGroup extends AbstractModelSingle implements IEventReferenced
      */
     public function getLabel(): string {
         switch ($this->schedule_group_type) {
-            case ModelScheduleGroup::TYPE_ACCOMMODATION:
+            case self::TYPE_ACCOMMODATION:
                 return \sprintf(_('Accommodation from %s to %s'),
                     $this->start->format('d. m. Y'),
                     $this->end->format('d. m. Y')
                 );
+            case self::TYPE_ACCOMMODATION_SAME_GENDER_REQUIRED:
+                return _('Neželám si byť ubytovaný s opačným pohlavím');
+            case self::TYPE_VISA_REQUIREMENT:
+                return _('Potrebujeme visa...');
+            case self::TYPE_ACCOMMODATION_TEACHER_SEPARATED:
+                return _('Učiteľ si neželá byť ubytovaný so študentámi');
         }
         throw new NotImplementedException();
     }

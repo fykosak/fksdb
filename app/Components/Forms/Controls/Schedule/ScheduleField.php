@@ -55,8 +55,14 @@ class ScheduleField extends TextInput {
      */
     private function getLabelByType(string $type): string {
         switch ($type) {
-            case 'accommodation':
+            case ModelScheduleGroup::TYPE_ACCOMMODATION:
                 return _('Accommodation');
+            case ModelScheduleGroup::TYPE_ACCOMMODATION_SAME_GENDER_REQUIRED:
+                return _('Accommodation with same gender');
+            case ModelScheduleGroup::TYPE_VISA_REQUIREMENT:
+                return _('Visa');
+            case ModelScheduleGroup::TYPE_ACCOMMODATION_TEACHER_SEPARATED:
+                return _('Teacher separate accommodation');
             default:
                 throw new NotImplementedException();
         }
