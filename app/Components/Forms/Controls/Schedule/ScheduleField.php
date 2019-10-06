@@ -66,12 +66,14 @@ class ScheduleField extends TextInput {
         switch ($type) {
             case ModelScheduleGroup::TYPE_ACCOMMODATION:
                 return _('Accommodation');
-            case ModelScheduleGroup::TYPE_ACCOMMODATION_SAME_GENDER_REQUIRED:
+            case ModelScheduleGroup::TYPE_ACCOMMODATION_SAME_GENDER:
                 return _('Accommodation with same gender');
             case ModelScheduleGroup::TYPE_VISA_REQUIREMENT:
                 return _('Visa');
             case ModelScheduleGroup::TYPE_ACCOMMODATION_TEACHER_SEPARATED:
                 return _('Teacher separate accommodation');
+            case ModelScheduleGroup::TYPE_WEEKEND_SCHEDULE:
+                return _('Weekend schedule');
             default:
                 throw new NotImplementedException();
         }
@@ -122,7 +124,7 @@ class ScheduleField extends TextInput {
         $items = $this->serviceScheduleItem->getTable()->where('schedule_group_id', $group->schedule_group_id);
         foreach ($items as $itemRow) {
             $item = ModelScheduleItem::createFromActiveRow($itemRow);
-            $itemList[] = $item->__toArray($this->translator);
+            $itemList[] = $item->__toArray();
         }
 
         $groupArray['items'] = $itemList;

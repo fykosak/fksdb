@@ -25,12 +25,13 @@ parameters:
                     spam_mff:
                         required: true
                 person_schedule:
-
                     accommodation:
                         required: false
                     accommodation_teacher_separated:
                         required: false
                     visa_requirement:
+                        required: false
+                    weekend_schedule:
                         required: false
 
 
@@ -57,7 +58,9 @@ parameters:
                 person_schedule:
                     accommodation:
                         required: false
-                    accommodation_same_gender_required:
+                    accommodation_same_gender:
+                        required: false
+                    weekend_schedule:
                         required: false
             dep:
                 require:

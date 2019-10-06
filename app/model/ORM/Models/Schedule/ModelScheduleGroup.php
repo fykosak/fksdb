@@ -26,8 +26,9 @@ class ModelScheduleGroup extends AbstractModelSingle implements IEventReferenced
     const TYPE_ACCOMMODATION = 'accommodation';
     const TYPE_DSEF_GROUP = 'dsef_group';
     const TYPE_VISA_REQUIREMENT = 'visa_requirement';
-    const TYPE_ACCOMMODATION_SAME_GENDER_REQUIRED = 'accommodation_same_gender_required';
+    const TYPE_ACCOMMODATION_SAME_GENDER = 'accommodation_same_gender';
     const TYPE_ACCOMMODATION_TEACHER_SEPARATED = 'accommodation_teacher_separated';
+    const TYPE_WEEKEND_SCHEDULE = 'weekend_schedule';
 
     /**
      * @return GroupedSelection
@@ -54,12 +55,14 @@ class ModelScheduleGroup extends AbstractModelSingle implements IEventReferenced
                     $this->start->format('d. m. Y'),
                     $this->end->format('d. m. Y')
                 );
-            case self::TYPE_ACCOMMODATION_SAME_GENDER_REQUIRED:
+            case self::TYPE_ACCOMMODATION_SAME_GENDER:
                 return _('Accommodation with another gender');
             case self::TYPE_VISA_REQUIREMENT:
                 return _('Visa to Czech Republic');
             case self::TYPE_ACCOMMODATION_TEACHER_SEPARATED:
                 return _('Teacher require specific accommodation');
+            case self::TYPE_WEEKEND_SCHEDULE:
+                return _('Weekend schedule');
         }
         throw new NotImplementedException();
     }
