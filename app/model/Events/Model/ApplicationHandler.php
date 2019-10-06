@@ -22,6 +22,7 @@ use Nette\Database\Connection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

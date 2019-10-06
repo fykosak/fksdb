@@ -114,7 +114,7 @@ class ModelEvent extends AbstractModelSingle implements IResource, IContestRefer
      * @return GroupedSelection
      */
     public function getScheduleGroups(): GroupedSelection {
-        return $this->related(DbNames::TAB_SCHEDULE_GROUP);
+        return $this->related(DbNames::TAB_SCHEDULE_GROUP,'event_id');
     }
 
     /**

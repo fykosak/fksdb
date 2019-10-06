@@ -21,6 +21,7 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Services\ServiceEvent;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 
