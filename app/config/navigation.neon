@@ -76,7 +76,6 @@ navigation:
             - event.payment.list
             - event.payment.create
             - fyziklani.dashboard.default
-            - event.schedule.default
             - event.schedule.groups
             - event.application.list
             - event.teamApplication.list

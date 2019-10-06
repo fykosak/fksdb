@@ -3,12 +3,15 @@
 
 namespace FKSDB\ORM\Models\Schedule;
 
+use FKSDB\Localization\GettextTranslator;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\Payment\Price;
 use FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException;
+use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
+use Nette\Localization\ITranslator;
 use Nette\NotImplementedException;
 
 /**
@@ -50,7 +53,7 @@ class ModelScheduleItem extends AbstractModelSingle {
     }
 
     /**
-     * @return integer
+     * @return integer|null
      */
     public function getCapacity(): int {
         return $this->capacity;
@@ -86,7 +89,7 @@ class ModelScheduleItem extends AbstractModelSingle {
 
     /**
      * @return string
-     * @throws NotImplementedException
+     * @deprecated
      */
     public function getShortLabel(): string {
         $group = $this->getGroup();
@@ -96,7 +99,7 @@ class ModelScheduleItem extends AbstractModelSingle {
                     $this->name_cs
                 );
         }
-        throw new NotImplementedException();
+        return $this->getLabel();
     }
 
     /**
@@ -109,7 +112,11 @@ class ModelScheduleItem extends AbstractModelSingle {
             case ModelScheduleGroup::TYPE_ACCOMMODATION:
                 return $group->getLabel() . ' ' . \sprintf(_('in "%s"'),
                         $this->name_cs
-                );
+                    );
+            case ModelScheduleGroup::TYPE_ACCOMMODATION_TEACHER_SEPARATED:
+            case ModelScheduleGroup::TYPE_VISA_REQUIREMENT:
+            case ModelScheduleGroup::TYPE_ACCOMMODATION_SAME_GENDER_REQUIRED:
+                return $group->getLabel();
         }
         throw new NotImplementedException();
     }
@@ -134,9 +141,15 @@ class ModelScheduleItem extends AbstractModelSingle {
             'totalCapacity' => $this->capacity,
             'usedCapacity' => $this->getUsedCapacity(),
             'scheduleItemId' => $this->schedule_item_id,
-            'label' => $this->getShortLabel(),
+            'label' => [
+                'cs' => $this->name_cs,
+                'en' => $this->name_en,
+            ],
             'requireIdNumber' => $this->require_id_number,
-            'description' => $this->description,
+            'description' => [
+                'cs' => $this->description,
+                'en' => $this->description,
+            ],
         ];
     }
 }

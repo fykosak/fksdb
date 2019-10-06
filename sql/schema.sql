@@ -1375,7 +1375,7 @@ CREATE TABLE IF NOT EXISTS `schedule_item` (
   `price_eur`         DECIMAL(11, 2) NULL     DEFAULT NULL,
   `name_cs`           VARCHAR(256)   NULL     DEFAULT NULL,
   `name_en`           VARCHAR(256)   NULL     DEFAULT NULL,
-  `capacity`          INT(11)        NULL     DEFAULT NULL,
+  `capacity`          INT(11)        NOT NULL,
   `require_id_number` INT(1)         NOT NULL DEFAULT 0,
   `description`       VARCHAR(256)   NULL DEFAULT NULL,
   CONSTRAINT `fk_schedule_group`

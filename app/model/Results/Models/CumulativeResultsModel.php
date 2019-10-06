@@ -35,7 +35,10 @@ class CumulativeResultsModel extends AbstractResultsModel {
         }
 
         if (!isset($this->dataColumns[$category->id])) {
-            $dataColumns = [];
+            $dataColumns = [];            
+            $sumLimit = $this->getSumLimit($category);
+            $studentPilnySumLimit = $this->getSumLimitForStudentPilny();
+            
             foreach ($this->getSeries() as $series) {
                 $points = null;
                 foreach ($this->getTasks($series) as $task) {
@@ -55,12 +58,12 @@ class CumulativeResultsModel extends AbstractResultsModel {
             ];
             $dataColumns[] = [
                 self::COL_DEF_LABEL => self::LABEL_TOTAL_PERCENTAGE,
-                self::COL_DEF_LIMIT => 100,
+                self::COL_DEF_LIMIT => $studentPilnySumLimit != 0 ? round(100 * $sumLimit / $studentPilnySumLimit) : 0,
                 self::COL_ALIAS => self::ALIAS_TOTAL_PERCENTAGE,
             ];
             $dataColumns[] = [
                 self::COL_DEF_LABEL => self::LABEL_SUM,
-                self::COL_DEF_LIMIT => $this->getSumLimit(),
+                self::COL_DEF_LIMIT => $sumLimit,
                 self::COL_ALIAS => self::ALIAS_SUM,
             ];
             $this->dataColumns[$category->id] = $dataColumns;
@@ -113,8 +116,11 @@ class CumulativeResultsModel extends AbstractResultsModel {
             $i += 1;
         }
 
+        $studentPilnySumLimit = $this->getSumLimitForStudentPilny();
+        $studentPilnySumLimitInversed = $studentPilnySumLimit != 0 ? 1.0 / $studentPilnySumLimit : 0;
+        
         $select[] = "round(100 * SUM($sum) / SUM(" . $this->evaluationStrategy->getTaskPointsColumn($category) . ")) AS '" . self::ALIAS_PERCENTAGE . "'";
-        $select[] = "round(100 * SUM($sum) / " . $this->getSumLimit() . ") AS '" . self::ALIAS_TOTAL_PERCENTAGE . "'";
+        $select[] = "round(100 * SUM($sum) * " . $studentPilnySumLimitInversed . ") AS '" . self::ALIAS_TOTAL_PERCENTAGE . "'";
         $select[] = "round(SUM($sum)) AS '" . self::ALIAS_SUM . "'";
         $select[] = "ct.ct_id";
 
@@ -147,17 +153,27 @@ left join submit s ON s.task_id = t.task_id AND s.ct_id = ct.ct_id";
     }
     
     /**
-     * Returns total points of Student Pilny for given series
+     * Returns total points of Student Pilny (without multiplication for first two tasks) for given series
      * 
      * @return int sum of Student Pilny points
      */
-    private function getSumLimit() : int {
+    private function getSumLimitForStudentPilny() : int {
+        return $this->getSumLimit(new ModelCategory(ModelCategory::CAT_HS_4));
+    }
+    
+    /**
+     * Returns total points for given category and series
+     * 
+     * @param ModelCategory $category
+     * @return int sum of points
+     */
+    private function getSumLimit(ModelCategory $category) : int {
         $sum = 0;
         foreach ($this->getSeries() as $series) {
             // sum points as sum of tasks
             $points = null;
             foreach ($this->getTasks($series) as $task) {
-                $points += $this->evaluationStrategy->getTaskPoints($task, ModelCategory::CAT_HS_4);
+                $points += $this->evaluationStrategy->getTaskPoints($task, $category);
             }
             $sum += $points;
         }        
