@@ -424,7 +424,7 @@ class ExportPresenter extends SeriesPresenter {
      * @return StoredQueriesGrid
      */
     protected function createComponentGrid(): StoredQueriesGrid {
-        return new StoredQueriesGrid($this->serviceStoredQuery, $this->getContestAuthorizator(), $this->tableReflectionFactory);
+        return new StoredQueriesGrid($this->serviceStoredQuery, $this->getContestAuthorizator(), $this->tableReflectionFactory, $this->getComponent('tagCloudList'));
     }
 
     /**
@@ -457,9 +457,7 @@ class ExportPresenter extends SeriesPresenter {
      * @return StoredQueryTagCloud
      */
     protected function createComponentTagCloudList(): StoredQueryTagCloud {
-        $tagCloud = new StoredQueryTagCloud(StoredQueryTagCloud::MODE_LIST, $this->serviceMStoredQueryTag);
-        $tagCloud->registerOnClick($this->getComponent('grid')->getFilterByTagCallback());
-        return $tagCloud;
+        return new StoredQueryTagCloud(StoredQueryTagCloud::MODE_LIST, $this->serviceMStoredQueryTag);
     }
 
     /**

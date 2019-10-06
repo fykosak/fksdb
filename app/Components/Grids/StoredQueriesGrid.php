@@ -8,6 +8,7 @@ use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
+use FKSDB\Components\Controls\StoredQueryTagCloud;
 use NiftyGrid\DataSource\NDataSource;
 use OrgModule\ExportPresenter;
 
@@ -29,8 +30,11 @@ class StoredQueriesGrid extends BaseGrid {
      * @var ContestAuthorizator
      */
     private $contestAuthorizator;
-
-    private $isFilteredByTag = false;
+    
+    /**
+     * @var StoredQueryTagCloud
+     */
+    private $storedQueryTagCloud;
 
     /**
      * StoredQueriesGrid constructor.
@@ -38,25 +42,11 @@ class StoredQueriesGrid extends BaseGrid {
      * @param ContestAuthorizator $contestAuthorizator
      * @param TableReflectionFactory $tableReflectionFactory
      */
-    function __construct(ServiceStoredQuery $serviceStoredQuery, ContestAuthorizator $contestAuthorizator, TableReflectionFactory $tableReflectionFactory) {
+    function __construct(ServiceStoredQuery $serviceStoredQuery, ContestAuthorizator $contestAuthorizator, TableReflectionFactory $tableReflectionFactory, StoredQueryTagCloud $storedQueryTagCloud) {
         parent::__construct($tableReflectionFactory);
         $this->serviceStoredQuery = $serviceStoredQuery;
         $this->contestAuthorizator = $contestAuthorizator;
-    }
-
-    /**
-     * @return Closure
-     */
-    public function getFilterByTagCallback(): Closure {
-        return function (array $tagTypeId) {
-            if (empty($tagTypeId)) {
-                $this->isFilteredByTag = false;
-                return;
-            }
-            $queries = $this->serviceStoredQuery->findByTagType($tagTypeId)->order('name');
-            $this->setDataSource(new NDataSource($queries));
-            $this->isFilteredByTag = true;
-        };
+        $this->storedQueryTagCloud = $storedQueryTagCloud;
     }
 
     /**
@@ -72,7 +62,10 @@ class StoredQueriesGrid extends BaseGrid {
         //
         // data
         //
-        if (!$this->isFilteredByTag) {
+        if (!empty($this->storedQueryTagCloud->activeTagIds)) {
+            $queries = $this->serviceStoredQuery->findByTagType($this->storedQueryTagCloud->activeTagIds)->order('name');
+            $this->setDataSource(new NDataSource($queries));
+        } else {
             $queries = $this->serviceStoredQuery->getTable()->order('name');
             $this->setDataSource(new NDataSource($queries));
         }

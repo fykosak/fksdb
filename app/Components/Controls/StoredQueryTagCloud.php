@@ -27,14 +27,10 @@ class StoredQueryTagCloud extends Control {
      */
     private $modelStoredQuery;
 
-    /**
-     * @var callable[]
-     */
-    private $onClick;
-
     private $mode;
 
-    private $activeTagIds = [];
+    /** @persistent */
+    public $activeTagIds = [];
 
     /**
      * StoredQueryTagCloud constructor.
@@ -55,22 +51,10 @@ class StoredQueryTagCloud extends Control {
     }
 
     /**
-     * @param callable $callback
-     * @return $this
-     */
-    public function registerOnClick(callable $callback){
-        $this->onClick[] = $callback;
-        return $this;
-    }
-
-    /**
      * @param array $activeTagIds
      */
     public function handleOnClick(array $activeTagIds){
         $this->activeTagIds = $activeTagIds;
-        foreach($this->onClick as $callback){
-            call_user_func($callback, $activeTagIds);
-        }
     }
 
     public function render() {
