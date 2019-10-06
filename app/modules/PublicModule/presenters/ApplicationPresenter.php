@@ -191,9 +191,6 @@ class ApplicationPresenter extends BasePresenter {
         if ($id && !$this->getEventApplication()) {
             throw new BadRequestException(_('Neexistující přihláška.'), 404);
         }
-        if ($this->getEvent()->event_id !== $this->getEventApplication()->getEvent()->event_id) {
-            throw new ForbiddenRequestException();
-        }
 
         $this->initializeMachine();
 
