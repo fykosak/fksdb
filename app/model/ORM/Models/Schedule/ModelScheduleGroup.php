@@ -10,6 +10,7 @@ use FKSDB\ORM\Models\ModelEvent;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
 use Nette\NotImplementedException;
+use Tracy\Debugger;
 
 /**
  * Class ModelScheduleGroup
@@ -23,7 +24,11 @@ use Nette\NotImplementedException;
  */
 class ModelScheduleGroup extends AbstractModelSingle implements IEventReferencedModel {
     const TYPE_ACCOMMODATION = 'accommodation';
-    const TYPE_DSEF_GROUP = 'dsef-group';
+    const TYPE_DSEF_GROUP = 'dsef_group';
+    const TYPE_VISA_REQUIREMENT = 'visa_requirement';
+    const TYPE_ACCOMMODATION_SAME_GENDER = 'accommodation_same_gender';
+    const TYPE_ACCOMMODATION_TEACHER_SEPARATED = 'accommodation_teacher_separated';
+    const TYPE_WEEKEND_SCHEDULE = 'weekend_schedule';
 
     /**
      * @return GroupedSelection
@@ -45,11 +50,19 @@ class ModelScheduleGroup extends AbstractModelSingle implements IEventReferenced
      */
     public function getLabel(): string {
         switch ($this->schedule_group_type) {
-            case ModelScheduleGroup::TYPE_ACCOMMODATION:
+            case self::TYPE_ACCOMMODATION:
                 return \sprintf(_('Accommodation from %s to %s'),
                     $this->start->format('d. m. Y'),
                     $this->end->format('d. m. Y')
                 );
+            case self::TYPE_ACCOMMODATION_SAME_GENDER:
+                return _('Accommodation with another gender');
+            case self::TYPE_VISA_REQUIREMENT:
+                return _('Visa to Czech Republic');
+            case self::TYPE_ACCOMMODATION_TEACHER_SEPARATED:
+                return _('Teacher require specific accommodation');
+            case self::TYPE_WEEKEND_SCHEDULE:
+                return _('Weekend schedule');
         }
         throw new NotImplementedException();
     }

@@ -63,3 +63,7 @@ class Lang {
 }
 
 export const lang = new Lang(data);
+
+export type LocalizedString = {
+    [key in availableLanguages]: string;
+};

@@ -27,7 +27,6 @@ use FKSDB\ORM\Services\ServiceEvent;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\UI\BadSignalException;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use function sprintf;
