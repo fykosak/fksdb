@@ -25,9 +25,13 @@ use FKSDB\Results\Models\AbstractResultsModel;
 use FKSDB\Results\ResultsModelFactory;
 use FormUtils;
 use ModelException;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\UI\InvalidLinkException;
+use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Strings;
+use ReflectionException;
 use ServiceMStoredQueryTag;
 use Tracy\Debugger;
 use Traversable;
@@ -57,12 +61,12 @@ class ExportPresenter extends SeriesPresenter {
     public $qid;
 
     /**
-     * @var \FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery
+     * @var ServiceStoredQuery
      */
     private $serviceStoredQuery;
 
     /**
-     * @var \FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryParameter
+     * @var ServiceStoredQueryParameter
      */
     private $serviceStoredQueryParameter;
 
@@ -91,12 +95,12 @@ class ExportPresenter extends SeriesPresenter {
     private $storedQuery;
 
     /**
-     * @var \FKSDB\ORM\Models\StoredQuery\ModelStoredQuery
+     * @var ModelStoredQuery
      */
     private $patternQuery = false;
 
     /**
-     * @param \FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery $serviceStoredQuery
+     * @param ServiceStoredQuery $serviceStoredQuery
      */
     public function injectServiceStoredQuery(ServiceStoredQuery $serviceStoredQuery) {
         $this->serviceStoredQuery = $serviceStoredQuery;
@@ -207,7 +211,7 @@ class ExportPresenter extends SeriesPresenter {
     }
 
     /**
-     * @return ModelStoredQuery|\Nette\Database\Table\ActiveRow|null
+     * @return ModelStoredQuery|ActiveRow|null
      */
     public function getPatternQuery() {
         if ($this->patternQuery === false) {
@@ -294,8 +298,8 @@ class ExportPresenter extends SeriesPresenter {
     /**
      * @param $id
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws AbortException
+     * @throws InvalidLinkException
      */
     public function actionExecute($id) {
         $query = $this->getPatternQuery();
@@ -527,7 +531,7 @@ class ExportPresenter extends SeriesPresenter {
 
     /**
      * @param SubmitButton $button
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function handleComposeExecute(SubmitButton $button) {
         $form = $button->getForm();
@@ -543,8 +547,8 @@ class ExportPresenter extends SeriesPresenter {
 
     /**
      * @param SubmitButton $button
-     * @throws \Nette\Application\AbortException
-     * @throws \ReflectionException
+     * @throws AbortException
+     * @throws ReflectionException
      */
     public function handleEditSuccess(SubmitButton $button) {
         try {
@@ -570,8 +574,8 @@ class ExportPresenter extends SeriesPresenter {
 
     /**
      * @param SubmitButton $button
-     * @throws \Nette\Application\AbortException
-     * @throws \ReflectionException
+     * @throws AbortException
+     * @throws ReflectionException
      */
     public function handleComposeSuccess(SubmitButton $button) {
         try {
