@@ -78,7 +78,7 @@ stalking:
 
         person_history:
             layout: multi
-            label: Peron history
+            label: Person history
             minimalPermission: 128
             table: person_history
             item_headline: ac_year
