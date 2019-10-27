@@ -902,6 +902,25 @@ body[data-contest=vyfuk] h1, body[data-contest=vyfuk] h2, body[data-contest=vyfu
   background-color: #17becf;
 }
 
+.chart.chart-participant-acquaintance text, .chart.chart-participant-acquaintance path {
+  transition-duration: 0.7s;
+}
+.chart.chart-participant-acquaintance path.arc.active {
+  opacity: 1;
+}
+.chart.chart-participant-acquaintance path.arc.inactive {
+  opacity: 0.2;
+}
+.chart.chart-participant-acquaintance path.ribbon.default {
+  opacity: 0.2;
+}
+.chart.chart-participant-acquaintance path.ribbon.active {
+  opacity: 1;
+}
+.chart.chart-participant-acquaintance path.ribbon.inactive {
+  opacity: 0;
+}
+
 .bg-white-container {
   background-color: rgba(255, 255, 255, 0.85);
 }

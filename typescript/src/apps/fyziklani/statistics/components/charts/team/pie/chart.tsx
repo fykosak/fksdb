@@ -33,7 +33,7 @@ class Chart extends React.Component<State & Props, {}> {
         const pointsCategories: { [key: number]: Item } = {
             1: {points: 1, count: 0},
             2: {points: 2, count: 0},
-            4: {points: 4, count: 0},
+            3: {points: 3, count: 0},
             5: {points: 5, count: 0},
         };
 
