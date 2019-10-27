@@ -18,7 +18,15 @@ interface Data {
     participation: number[];
 }
 
-export default class Index extends React.Component<{ data: Data[] }, { activeId: number }> {
+interface State {
+    activeId: number;
+}
+
+interface OwnProps {
+    data: Data[];
+}
+
+export default class Index extends React.Component<OwnProps, State> {
     private innerRadius = 320;
     private outerRadius = 340;
     private textRadius = 360;

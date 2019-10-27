@@ -55,7 +55,6 @@ class ChartPresenter extends BasePresenter {
 
     public function startup() {
         parent::startup();
-        Debugger::barDump($this->getAction());
         foreach ($this->getCharts() as $chart) {
             if ($chart->getAction() === $this->getAction()) {
                 $this->selectedChart = $chart;
