@@ -281,7 +281,7 @@ final class AuthenticationPresenter extends BasePresenter {
         $form->addPassword('password', _('Heslo'))
             ->addRule(Form::FILLED, _('Zadejte heslo.'));
         $form->addSubmit('send', _('Přihlásit'));
-        $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
+      //  $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
         $form->onSuccess[] = callback($this, 'loginFormSubmitted');
         return $form;
     }
