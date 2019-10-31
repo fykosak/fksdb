@@ -4,7 +4,6 @@ use Authorization\ACLExtension;
 use Events\EventsExtension;
 use FKSDB\Config\Extensions\NavigationExtension;
 use FKSDB\Config\Extensions\RouterExtension;
-use JanTvrdik\Components\DatePicker;
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Application\Responses\TextResponse;
 use Nette\Config\Configurator;
@@ -90,10 +89,10 @@ function dumpResponse(TextResponse $response) {
     /* Use assert so that expected is dumped as a string to file. */
     Assert::equal('', $html);
 }
-
+/*
 Container::extensionMethod('addDatePicker', function (Container $container, $name, $label = NULL) {
     return $container[$name] = new DatePicker($label);
-});
+});*/
 
 /* Always acquire locks in the order as below! */
 define('LOCK_DB', __DIR__ . '/tmp/database.lock');

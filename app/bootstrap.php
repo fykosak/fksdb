@@ -4,7 +4,7 @@ use Authorization\ACLExtension;
 use Events\EventsExtension;
 use FKSDB\Config\Extensions\NavigationExtension;
 use FKSDB\Config\Extensions\RouterExtension;
-use JanTvrdik\Components\DatePicker;
+//use JanTvrdik\Components\DatePicker;
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Config\Configurator;
 use Nette\Forms\Container;
@@ -60,11 +60,11 @@ $container = $configurator->createContainer();
 //
 Replicator::register();
 
-
+/*
 Container::extensionMethod('addDatePicker', function (Container $container, $name, $label = NULL) {
             return $container[$name] = new DatePicker($label);
         });
-
+*/
 //
 // Configure and run the application!
 $container->application->run();

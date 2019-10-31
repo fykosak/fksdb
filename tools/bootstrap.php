@@ -4,10 +4,7 @@ use Authorization\ACLExtension;
 use Events\EventsExtension;
 use FKSDB\Config\Extensions\NavigationExtension;
 use FKSDB\Config\Extensions\RouterExtension;
-use JanTvrdik\Components\DatePicker;
-use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Config\Configurator;
-use Nette\Forms\Container;
 use Nette\Utils\Finder;
 
 
