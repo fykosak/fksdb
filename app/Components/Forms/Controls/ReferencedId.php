@@ -12,6 +12,7 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
 use Nette\Utils\RegexpException;
+use Tracy\Debugger;
 
 /**
  * Be careful when calling getValue as it executes SQL queries and thus
@@ -67,7 +68,6 @@ class ReferencedId extends HiddenField {
     function __construct(IService $service, IReferencedHandler $handler, IReferencedSetter $referencedSetter) {
         parent::__construct();
         $this->monitor(Form::class);
-
         $this->service = $service;
         $this->handler = $handler;
         $this->referencedSetter = $referencedSetter;
@@ -144,23 +144,24 @@ class ReferencedId extends HiddenField {
      */
     public function setValue($pvalue, $force = false) {
         $isPromise = ($pvalue === self::VALUE_PROMISE);
-        if (!($pvalue instanceof IModel) && !$isPromise) {
-            $pvalue = $this->service->findByPrimary($pvalue);
-        } else if ($isPromise) {
-            $pvalue = $this->service->createNew();
-        } else if ($pvalue instanceof IModel) {
-            $this->model = $pvalue;
+        if ($this->service && $this->referencedContainer) {
+            if (!($pvalue instanceof IModel) && !$isPromise) {
+                $pvalue = $this->service->findByPrimary($pvalue);
+            } else if ($isPromise) {
+                $pvalue = $this->service->createNew();
+            } else if ($pvalue instanceof IModel) {
+                $this->model = $pvalue;
+            }
+            $container = $this->referencedContainer;
+            if (!$pvalue) {
+                $container->setSearchButton(true);
+                $container->setClearButton(false);
+            } else {
+                $container->setSearchButton(false);
+                $container->setClearButton(true);
+            }
+            $this->referencedSetter->setModel($container, $pvalue, $force);
         }
-        $container = $this->referencedContainer;
-        if (!$pvalue) {
-            $container->setSearchButton(true);
-            $container->setClearButton(false);
-        } else {
-            $container->setSearchButton(false);
-            $container->setClearButton(true);
-        }
-        $this->referencedSetter->setModel($container, $pvalue, $force);
-
         if ($isPromise) {
             $value = self::VALUE_PROMISE;
         } else if ($pvalue instanceof IModel) {
