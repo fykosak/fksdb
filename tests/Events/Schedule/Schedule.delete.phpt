@@ -54,7 +54,7 @@ class ScheduleTest extends ScheduleTestCase {
                     'person_info' => [
                         'email' => 'bila3-acc@hrad.cz',
                         'id_number' => '1231354',
-                        'born' => '15. 09. 2014',
+                        'born' => '2014-09-15',
                     ],
                     'post_contact_p' => [
                         'address' => [

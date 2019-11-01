@@ -139,7 +139,6 @@ class ReferencedId extends HiddenField {
      * @param $pvalue
      * @param bool $force
      * @return HiddenField|void
-     * @throws RegexpException
      */
     public function setValue($pvalue, $force = false) {
         $isPromise = ($pvalue === self::VALUE_PROMISE);

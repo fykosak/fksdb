@@ -28,7 +28,7 @@ class ApplicationPresenterTest extends ApplicationPresenterDsefTestCase {
                     'person_info' => array(
                         'email' => "bila@hrad.cz",
                         'id_number' => "1231354",
-                        'born' => "1. 1. 2000",
+                        'born' => "2000-01-01",
                     ),
                     'post_contact_p' => array(
                         'address' => array(
