@@ -10,11 +10,15 @@ use Events\Model\ApplicationHandlerException;
 use Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Logging\FlashMessageDump;
+use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
 use Nette\Templating\FileTemplate;
+use Nette\Templating\ITemplate;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -62,7 +66,7 @@ class ApplicationComponent extends Control {
     }
 
     /**
-     * @param string $template name of the standard template or whole path
+     * @param "form"|"inline" $template name of the standard template or whole path
      */
     public function setTemplate($template) {
         if (stripos($template, '.latte') !== false) {
@@ -90,13 +94,13 @@ class ApplicationComponent extends Control {
      * Syntactic sugar for the template.
      */
     public function isEventAdmin() {
-        $event = $this->holder->getEvent();
+        $event = $this->holder->getPrimaryHolder()->getEvent();
         return $this->getPresenter()->getContestAuthorizator()->isAllowed($event, 'application', $event->getContest());
     }
 
     /**
      * @param null $class
-     * @return FileTemplate|\Nette\Templating\ITemplate
+     * @return FileTemplate|ITemplate
      */
     protected function createTemplate($class = NULL) {
         /**
@@ -140,7 +144,7 @@ class ApplicationComponent extends Control {
 
     /**
      * @return FormControl
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     protected function createComponentForm() {
         $result = new FormControl();
@@ -164,11 +168,6 @@ class ApplicationComponent extends Control {
         $saveSubmit = null;
         if ($this->canEdit()) {
             $saveSubmit = $form->addSubmit('save', _('Uložit'));
-            $saveSubmit->setOption('row', 1);
-            $saveSubmit->onClick[] = function (SubmitButton $button) {
-                $buttonForm = $button->getForm();
-                $this->handleSubmit($buttonForm);
-            };
         }
         /*
          * Create transition buttons
@@ -182,14 +181,8 @@ class ApplicationComponent extends Control {
             $transitionName = $transition->getName();
             $submit = $form->addSubmit($transitionName, $transition->getLabel());
 
-            $submit->onClick[] = function (SubmitButton $button) use ($transitionName) {
-                $form = $button->getForm();
-                $this->handleSubmit($form, $transitionName);
-            };
-
             if ($transition->isCreating()) {
                 $submit->getControlPrototype()->addClass('btn-sm btn-success');
-                $submit->setOption('row', 1);
                 if ($transitionSubmit !== false) {
                     $transitionSubmit = $submit;
                 } else if ($transitionSubmit) {
@@ -197,21 +190,17 @@ class ApplicationComponent extends Control {
                 }
             } else if ($transition->isTerminating()) {
                 $submit->getControlPrototype()->addClass('btn-sm btn-danger');
-                $submit->setOption('row', 3);
             } else if ($transition->isDangerous()) {
                 $submit->getControlPrototype()->addClass('btn-sm btn-danger');
-                $submit->setOption('row', 2);
             } else {
                 $submit->getControlPrototype()->addClass('btn-sm btn-secondary');
-                $submit->setOption('row', 2);
             }
         }
 
         /*
          * Create cancel button
          */
-        $submit = $form->addSubmit('cancel', _('Storno'));
-        $submit->setOption('row', 1);
+        $submit = $form->addSubmit('cancel', _('Cancel'));
         $submit->setValidationScope(false);
         $submit->getControlPrototype()->addClass('btn-warning');
         $submit->onClick[] = function (SubmitButton $button) {
@@ -228,31 +217,36 @@ class ApplicationComponent extends Control {
         } else if ($transitionSubmit) {
             $transitionSubmit->getControlPrototype()->data['submit-on'] = 'this';
         }
+        $form->onSuccess[] = function () use ($form) {
+            $this->handleSuccess($form);
+        };
 
         return $result;
     }
 
     /**
      * @param Form $form
-     * @param null $explicitTransitionName
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
-    public function handleSubmit(Form $form, $explicitTransitionName = null) {
-        $this->execute($form, $explicitTransitionName);
-    }
-
-    /**
-     * @param $transitionName
-     * @throws \Nette\Application\AbortException
-     */
-    public function handleTransition($transitionName) {
-        $this->execute(null, $transitionName);
+    private function handleSuccess(Form $form) {
+        foreach ($form->getControls() as $control) {
+            if ($control instanceof SubmitButton) {
+                if ($control->isSubmittedBy()) {
+                    if (preg_match('/.*__.*/', $control->getName())) {
+                        Debugger::barDump($control->getName());
+                        $this->execute($form, $control->getName());
+                    } else {
+                        $this->execute($form, null);
+                    }
+                }
+            }
+        }
     }
 
     /**
      * @param Form|null $form
      * @param null $explicitTransitionName
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     private function execute(Form $form = null, $explicitTransitionName = null) {
         try {
@@ -283,12 +277,12 @@ class ApplicationComponent extends Control {
     }
 
     /**
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     private function finalRedirect() {
         if ($this->redirectCallback) {
             $id = $this->holder->getPrimaryHolder()->getModel()->getPrimary(false);
-            ($this->redirectCallback)($id, $this->holder->getEvent()->getPrimary());
+            ($this->redirectCallback)($id, $this->holder->getPrimaryHolder()->getEvent()->getPrimary());
         } else {
             $this->redirect('this');
         }
