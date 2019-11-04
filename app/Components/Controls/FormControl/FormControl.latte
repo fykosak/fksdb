@@ -25,7 +25,8 @@
 {/define}
 
 {define plain}
-    <div n:class="form-group, $field->hasErrors() ? has-error, $field->isRequired() ? required" id="{$field->getHtmlId()}-pair">
+    <div n:class="form-group, $field->hasErrors() ? has-error, $field->isRequired() ? required"
+            id="{$field->getHtmlId()}-pair">
         {label $field/}
         <div>
             {? $field->getControlPrototype()->addClass($field->getControlPrototype()->type!='file'?'form-control':'form-control-file')}
@@ -37,28 +38,32 @@
 
 {define checkbox}
     <div n:class="form-group, $field->hasErrors() ? has-error" id="{$field->getHtmlId()}-pair">
-        <div>
-            <div class="checkbox">
-                {label $field}
-                    {input $field} {*$field->getLabel()->setName(null)*}
-                {/label}
-            </div>
-            {include #metadata field => $field}
+
+        <div class="form-check">
+            <div class="form-check-input">{$field->getControlPart()}</div>
+            <label class="form-check-label">
+                {$field->getLabelPart()}
+            </label>
         </div>
+        {include #metadata field => $field}
+
     </div>
 {/define}
 
 {define radiolist}
     <div n:class="form-group, $field->hasErrors() ? has-error" id="{$field->getHtmlId()}-pair">
         {label $field /}
-        <div>
-            {foreach $field->getItems() as $key => $item}
-                <div class="form-check">
-                    <label>{$field->getControl($key)}</label>
-                </div>
-            {/foreach}
-            {include #metadata field => $field}
-        </div>
+
+        {foreach $field->getItems() as $key => $item}
+            <div class="form-check">
+                <div class="form-check-input">{$field->getControlPart($key)}</div>
+                <label class="form-check-label">
+                    {$field->getLabelPart($key)}
+                </label>
+            </div>
+        {/foreach}
+        {include #metadata field => $field}
+
     </div>
 {/define}
 
