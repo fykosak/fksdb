@@ -6,7 +6,10 @@ use AuthenticatedPresenter;
 use FKSDB\Components\Controls\Helpers\Badges\ContestBadge;
 use FKSDB\Components\Controls\LanguageChooser;
 use FKSDB\Components\Grids\Events\DispatchGrid;
+use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceEvent;
+use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 
 /**
@@ -60,7 +63,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
      */
     public function createComponentDispatchGrid(): DispatchGrid {
         /**
-         * @var \FKSDB\ORM\Models\ModelPerson $person
+         * @var ModelPerson $person
          */
         $person = $this->user->getIdentity()->getPerson();
         return new DispatchGrid($this->serviceEvent, $person, $this->yearCalculator);
@@ -72,8 +75,8 @@ class DispatchPresenter extends AuthenticatedPresenter {
     }
 
     /**
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function startup() {
         /**
