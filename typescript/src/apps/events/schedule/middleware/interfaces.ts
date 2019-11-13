@@ -1,5 +1,5 @@
-import { Price } from '@shared/components/displays/price/interfaces';
 import { LocalizedString } from '@i18n/i18n';
+import { Price } from '@shared/components/displays/price/interfaces';
 
 export interface ScheduleItemDef {
     scheduleGroupId: number;

@@ -40,16 +40,6 @@
 
         {control valuePrinter__person_history__school_id:row $history,true}
     {/foreach}
-
     <hr/>
-
-    <h3>{_'Actions'}</h3>
-
-    {control applicationComponent:inline edit}
-    <hr/>
-
-    <h3>{_'Transitions'}</h3>
-
-    {control applicationComponent:inline transitions}
-
+    {include ../AbstractApplication/applicationControl.latte}
 {/block}

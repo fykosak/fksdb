@@ -1,6 +1,5 @@
 import { lang } from '@i18n/i18n';
 import { changeData } from '@inputConnector/actions';
-import PriceDisplay from '@shared/components/displays/price';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
@@ -9,8 +8,10 @@ import {
     ScheduleItemDef,
 } from '../middleware/interfaces';
 import { Store } from '../reducer';
-import CapacityLabel from './capacityLabel';
 import { Params } from './index';
+import CapacityLabel from './parts/capacityLabel';
+import DescriptionLabel from './parts/descriptionLabel';
+import PriceLabel from './parts/priceLabel';
 
 interface OwnProps {
     item: ScheduleItemDef;
@@ -33,7 +34,7 @@ class ScheduleItem extends React.Component<OwnProps & DispatchProps & StateProps
         const {scheduleItemId, price, label, totalCapacity, usedCapacity, description} = item;
         const isChecked = (value === scheduleItemId);
 
-        return <div className={'mb-3'}>
+        return <div className="mb-3">
                 <span className={'form-check ' + (isChecked ? 'text-success border-success' : '')}>
                 <span
                     className={isChecked ? 'fa fa-check-square-o' : 'fa fa-square-o'}
@@ -41,15 +42,14 @@ class ScheduleItem extends React.Component<OwnProps & DispatchProps & StateProps
                         isChecked ? onChange(null) : onChange(scheduleItemId);
                     }}
                 />
-                    <span
-                        className={'ml-3'}>{label[lang.getCurrentLocale()]} {
-                        params.displayDescription && description[lang.getCurrentLocale()] &&
-                        <small>{description}</small>}</span>
+                    <span className="ml-3">
+                        {label[lang.getCurrentLocale()]} {
+                        params.display.description && <DescriptionLabel description={description}/>
+                    }</span>
             </span>
-            <span className={'text-muted'}>
-                {params.displayPrice &&
-                <small className={'ml-3'}>{lang.getText('Price')}: <PriceDisplay price={price}/></small>}
-                {params.displayCapacity && <CapacityLabel capacity={totalCapacity} usedCapacity={usedCapacity}/>}
+            <span className="text-muted">
+                {params.display.price && <PriceLabel price={price}/>}
+                {params.display.capacity && <CapacityLabel capacity={totalCapacity} usedCapacity={usedCapacity}/>}
             </span>
         </div>;
     }
