@@ -2,6 +2,7 @@ import * as React from 'react';
 import { ScheduleGroupDef } from '../middleware/interfaces';
 import { Params } from './index';
 import ScheduleItem from './scheduleItem';
+import { lang } from '@i18n/i18n';
 
 interface OwnProps {
     group: ScheduleGroupDef;
@@ -13,7 +14,7 @@ export default class ScheduleGroup extends React.Component<OwnProps, {}> {
     public render() {
         const {group, params} = this.props;
         return <div className="schedule-container schedule-container-accommodation">
-            {params.display.groupLabel && (<label>{group.label}</label>)}
+            {params.display.groupLabel && (<label>{group.label[lang.getCurrentLocale()]}</label>)}
             {group.items.map((item, index) => {
                 return <ScheduleItem
                     params={params}

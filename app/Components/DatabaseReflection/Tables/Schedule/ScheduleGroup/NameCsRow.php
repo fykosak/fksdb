@@ -1,27 +1,27 @@
 <?php
 
-namespace FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem;
+namespace FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleGroup;
 
 use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 
 /**
- * Class NameENRow
- * @package FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem
+ * Class NameCsRow
+ * @package FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleGroup
  */
-class NameENRow extends AbstractScheduleItemRow {
+class NameCsRow extends AbstractScheduleGroupRow {
     use DefaultPrinterTrait;
 
     /**
      * @return string
      */
     public function getTitle(): string {
-        return _('Name en');
+        return _('Name cs');
     }
 
     /**
      * @return string
      */
     protected function getModelAccessKey(): string {
-        return 'name_en';
+        return 'name_cs';
     }
 }

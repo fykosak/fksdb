@@ -1352,18 +1352,20 @@ CREATE TABLE IF NOT EXISTS `fyziklani_game_setup` (
 -- Table `schedule_group`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `schedule_group` (
-  `schedule_group_id`   INT(11)     NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `schedule_group_type` VARCHAR(64) NOT NULL,
-  `event_id`            INT(11)     NOT NULL,
-  `start`               DATETIME    NOT NULL,
-  `end`                 DATETIME    NOT NULL,
-  CONSTRAINT `fk_schedule_group_event`
-  FOREIGN KEY (`event_id`)
-  REFERENCES `event` (`event_id`)
-    ON DELETE RESTRICT
-    ON UPDATE RESTRICT
+    `schedule_group_id`   INT(11)      NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `schedule_group_type` VARCHAR(64)  NOT NULL,
+    `name_cs`             VARCHAR(256) NULL DEFAULT NULL,
+    `name_en`             VARCHAR(256) NULL DEFAULT NULL,
+    `event_id`            INT(11)      NOT NULL,
+    `start`               DATETIME     NOT NULL,
+    `end`                 DATETIME     NOT NULL,
+    CONSTRAINT `fk_schedule_group_event`
+        FOREIGN KEY (`event_id`)
+            REFERENCES `event` (`event_id`)
+            ON DELETE RESTRICT
+            ON UPDATE RESTRICT
 )
-  ENGINE = 'InnoDB';
+    ENGINE = 'InnoDB';
 
 -- -----------------------------------------------------
 -- Table `schedule_item`
@@ -1377,7 +1379,8 @@ CREATE TABLE IF NOT EXISTS `schedule_item` (
   `name_en`           VARCHAR(256)   NULL     DEFAULT NULL,
   `capacity`          INT(11)        NOT NULL,
   `require_id_number` INT(1)         NOT NULL DEFAULT 0,
-  `description`       VARCHAR(256)   NULL DEFAULT NULL,
+  `description_cs`       VARCHAR(256)   NULL DEFAULT NULL,
+  `description_en`       VARCHAR(256)   NULL DEFAULT NULL,
   CONSTRAINT `fk_schedule_group`
   FOREIGN KEY (`schedule_group_id`)
   REFERENCES `schedule_group` (`schedule_group_id`)

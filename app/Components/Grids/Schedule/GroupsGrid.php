@@ -59,7 +59,7 @@ class GroupsGrid extends BaseGrid {
         $dataSource = new NDataSource($groups);
         $this->setDataSource($dataSource);
         $this->addColumn('schedule_group_id', _('#'));
-        $this->addColumns(['schedule_group_type', 'start', 'end']);
+        $this->addColumns(['name_cs', 'name_en', 'schedule_group_type', 'start', 'end']);
 
         $this->addColumn('items_count', _('Items count'))->setRenderer(function ($row) {
             $model = ModelScheduleGroup::createFromActiveRow($row);

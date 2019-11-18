@@ -1,14 +1,14 @@
 <?php
 
-namespace FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem;
+namespace FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleGroup;
 
 use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 
 /**
- * Class NameENRow
- * @package FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem
+ * Class NameEnRow
+ * @package FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleGroup
  */
-class NameENRow extends AbstractScheduleItemRow {
+class NameEnRow extends AbstractScheduleGroupRow {
     use DefaultPrinterTrait;
 
     /**

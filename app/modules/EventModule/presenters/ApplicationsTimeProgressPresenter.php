@@ -65,14 +65,14 @@ class ApplicationsTimeProgressPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      * @throws AbortException
      * @throws BadRequestException
-     * @TODO hardcore eventIds
+     * TODO hardcore eventIds
      */
     private function getEventIdsByType(): array {
         switch ($this->getEvent()->event_type_id) {
             case 1:
                 return [1, 27, 95, 116, 125, 137];
             case 9:
-                return [8, 94, 114, 122, 134];
+                return [8, 94, 114, 122, 134, 141];
             default:
                 throw new ForbiddenRequestException();
 

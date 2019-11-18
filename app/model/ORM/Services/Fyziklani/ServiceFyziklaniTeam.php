@@ -57,7 +57,7 @@ class ServiceFyziklaniTeam extends AbstractServiceSingle {
      * @return Selection|null
      */
     public function findPossiblyAttending(ModelEvent $event) {
-        $result = $this->getTable()->where('status', ['participated', 'approved', 'spare'])->where('event_id', $event->event_id);
+        $result = $this->getTable()->where('status', ['participated', 'approved', 'spare', 'applied'])->where('event_id', $event->event_id);
         return $result ?: null;
     }
 
