@@ -21,6 +21,8 @@ use Tracy\Debugger;
  * @property-read ActiveRow event
  * @property-read DateTime start
  * @property-read DateTime end
+ * @property-read string name_cs
+ * @property-read string name_en
  */
 class ModelScheduleGroup extends AbstractModelSingle implements IEventReferencedModel {
     const TYPE_ACCOMMODATION = 'accommodation';
@@ -49,22 +51,7 @@ class ModelScheduleGroup extends AbstractModelSingle implements IEventReferenced
      * Label include datetime from schedule group
      */
     public function getLabel(): string {
-        switch ($this->schedule_group_type) {
-            case self::TYPE_ACCOMMODATION:
-                return \sprintf(_('Accommodation from %s to %s'),
-                    $this->start->format('d. m. Y'),
-                    $this->end->format('d. m. Y')
-                );
-            case self::TYPE_ACCOMMODATION_SAME_GENDER:
-                return _('Accommodation with another gender');
-            case self::TYPE_VISA_REQUIREMENT:
-                return _('Visa to Czech Republic');
-            case self::TYPE_ACCOMMODATION_TEACHER_SEPARATED:
-                return _('Teacher require specific accommodation');
-            case self::TYPE_WEEKEND_SCHEDULE:
-                return _('Weekend schedule');
-        }
-        throw new NotImplementedException();
+        return $this->name_cs . '/' . $this->name_en;
     }
 
     /**
@@ -74,7 +61,10 @@ class ModelScheduleGroup extends AbstractModelSingle implements IEventReferenced
         return [
             'scheduleGroupId' => $this->schedule_group_id,
             'scheduleGroupType' => $this->schedule_group_type,
-            'label' => $this->getLabel(),
+            'label' => [
+                'cs' => $this->name_cs,
+                'en' => $this->name_en,
+            ],
             'eventId' => $this->event_id,
             'start' => $this->start->format('c'),
             'end' => $this->end->format('c'),

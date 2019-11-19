@@ -26,7 +26,8 @@ use Nette\NotImplementedException;
  * @property-read string name_cs
  * @property-read string name_en
  * @property-read int require_id_number
- * @property-read string description
+ * @property-read string description_cs
+ * @property-read string description_en
  */
 class ModelScheduleItem extends AbstractModelSingle {
     /**
@@ -115,7 +116,7 @@ class ModelScheduleItem extends AbstractModelSingle {
                     );
             case ModelScheduleGroup::TYPE_ACCOMMODATION_TEACHER_SEPARATED:
             case ModelScheduleGroup::TYPE_VISA_REQUIREMENT:
-            case ModelScheduleGroup::TYPE_ACCOMMODATION_SAME_GENDER_REQUIRED:
+            case ModelScheduleGroup::TYPE_ACCOMMODATION_SAME_GENDER:
                 return $group->getLabel();
         }
         throw new NotImplementedException();
@@ -147,8 +148,8 @@ class ModelScheduleItem extends AbstractModelSingle {
             ],
             'requireIdNumber' => $this->require_id_number,
             'description' => [
-                'cs' => $this->description,
-                'en' => $this->description,
+                'cs' => $this->description_cs,
+                'en' => $this->description_en,
             ],
         ];
     }

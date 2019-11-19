@@ -53,7 +53,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws AbortException
      */
-    public function createComponentApplicationComponent() {
+    public function createComponentApplicationComponent(): ApplicationComponent {
         $holders = [];
         $handlers = [];
         $flashDump = $this->dumpFactory->create('application');
@@ -63,8 +63,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
             $handlers[$key] = $this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger()); //TODO it's a bit weird to create new logger for each handler
         }
 
-        $component = new ApplicationComponent($handlers[$this->model->getPrimary()], $holders[$this->model->getPrimary()], $flashDump);
-        return $component;
+        return new ApplicationComponent($handlers[$this->model->getPrimary()], $holders[$this->model->getPrimary()], $flashDump);
     }
 
     /**
@@ -110,14 +109,14 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
 
     /**
      * @return void;
-     *@throws BadRequestException
+     * @throws BadRequestException
      * @throws AbortException
      */
     abstract public function authorizedDetail();
 
     /**
      * @return void;
-     *@throws BadRequestException
+     * @throws BadRequestException
      * @throws AbortException
      */
     abstract public function authorizedList();
