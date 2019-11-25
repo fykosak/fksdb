@@ -115,7 +115,7 @@ class SchedulePresenter extends BasePresenter {
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      * @throws AbortException

@@ -16,11 +16,11 @@ import {
 import * as React from 'react';
 import { Data } from './index';
 
-interface Props {
+interface OwnProps {
     data: Data;
 }
 
-export default class Chart extends React.Component<Props, {}> {
+export default class Chart extends React.Component<OwnProps, {}> {
 
     private xAxis: SVGGElement;
     private yAxis: SVGGElement;
@@ -50,7 +50,8 @@ export default class Chart extends React.Component<Props, {}> {
                 const event = data.events[eventId];
                 const begin = new Date(event.begin);
                 let sum = 0;
-                legends.push(<div key={eventId} className={'list-group-item'} style={{color: colorScale(eventId)}}>{event.name}</div>);
+                legends.push(<div key={eventId} className={'list-group-item'}
+                                  style={{color: colorScale(eventId)}}>{event.name}</div>);
                 const eventData = data.teams[eventId].sort((a, b) => {
                     return ((new Date(a.created)).getTime() - (new Date(b.created)).getTime());
                 }).map((team) => {
@@ -82,7 +83,7 @@ export default class Chart extends React.Component<Props, {}> {
 
                 const lineEl = line<Item>()
                     .x((element: Item) => {
-                        return this.xScale(new Date(element.x));
+                        return this.xScale(element.x);
                     })
                     .y((element: Item) => {
                         return this.yScale(element.y);
