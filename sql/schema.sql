@@ -813,7 +813,7 @@ CREATE TABLE IF NOT EXISTS `e_fyziklani_participant_with_team` (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `stored_query` (
   `query_id`      INT          NOT NULL AUTO_INCREMENT,
-  `qid`           VARCHAR(16)  NULL     DEFAULT NULL
+  `qid`           VARCHAR(64)  NULL     DEFAULT NULL
   COMMENT 'identifikátor pro URL, práva apod.\ndotazy s QIDem nelze mazat',
   `name`          VARCHAR(32)  NOT NULL
   COMMENT 'název dotazu, identifikace pro člověka',
