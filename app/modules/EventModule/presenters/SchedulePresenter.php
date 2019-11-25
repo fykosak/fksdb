@@ -2,6 +2,7 @@
 
 namespace EventModule;
 
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Schedule\GroupControl;
 use FKSDB\Components\Controls\Schedule\ItemControl;
 use FKSDB\Components\Factories\ScheduleFactory;
@@ -114,7 +115,7 @@ class SchedulePresenter extends BasePresenter {
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      * @throws AbortException
@@ -197,5 +198,15 @@ class SchedulePresenter extends BasePresenter {
      */
     public function createComponentItemControl(): ItemControl {
         return $this->scheduleFactory->createItemControl();
+    }
+
+    /**
+     * @return FormControl
+     * @throws BadRequestException
+     */
+    public function createComponentItemEditForm(): FormControl {
+        $control = new FormControl();
+        $form = $control->getForm();
+        return $control;
     }
 }

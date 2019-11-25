@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { ScheduleGroupDef } from '../middleware/interfaces';
-import ScheduleGroup from './scheduleGroup';
 import { Params } from './index';
+import ScheduleGroup from './scheduleGroup';
 
-interface Props {
+interface OwnProps {
     groups: ScheduleGroupDef[];
     params: Params;
 }
 
-export default class Container extends React.Component<Props, {}> {
+export default class Container extends React.Component<OwnProps, {}> {
 
     public render() {
         const {groups, params} = this.props;

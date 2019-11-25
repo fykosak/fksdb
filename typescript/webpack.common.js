@@ -2,7 +2,6 @@ var path = require('path');
 const {TsConfigPathsPlugin} = require('awesome-typescript-loader');
 
 module.exports = {
-    devtool: "source-map",
     entry: './src/index.ts',
     output: {
         path: __dirname + '/../www/js/',

@@ -12,6 +12,7 @@ use Nette\Utils\Html;
  * Class EventLabelControl
  * @package FKSDB\Components\Controls\Stalking\Helpers
  * @property FileTemplate $template
+ * @deprecated
  */
 class EventLabelControl extends Control {
     /**

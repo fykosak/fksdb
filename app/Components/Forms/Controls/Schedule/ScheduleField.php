@@ -111,7 +111,32 @@ class ScheduleField extends TextInput {
             $group = ModelScheduleGroup::createFromActiveRow($row);
             $groupList[] = $this->serializeGroup($group);
         }
-        return json_encode($groupList);
+        $options = $this->getRenderOptions();
+        return json_encode(['groups' => $groupList, 'options' => $options]);
+    }
+
+    /**
+     * @return array
+     */
+    private function getRenderOptions(): array {
+        $params = [
+            'display' => [
+                'capacity' => true,
+                'description' => true,
+                'groupLabel' => true,
+                'price' => true,
+            ],
+        ];
+        switch ($this->type) {
+            case ModelScheduleGroup::TYPE_ACCOMMODATION:
+                break;
+            case ModelScheduleGroup::TYPE_ACCOMMODATION_TEACHER_SEPARATED:
+            case ModelScheduleGroup::TYPE_ACCOMMODATION_SAME_GENDER:
+            case ModelScheduleGroup::TYPE_VISA_REQUIREMENT:
+                $params['display']['capacity'] = false;
+                $params['display']['price'] = false;
+        }
+        return $params;
     }
 
     /**

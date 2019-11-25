@@ -124,9 +124,11 @@ export default class Index extends React.Component<OwnProps, State> {
                 if (datum.source.index === this.state.activeId || datum.target.index === this.state.activeId) {
                     className = 'active';
                 }
+                // @ts-ignore: Type 'void' is not assignable to type 'string'.
+                const dAttr: string = ribbonCreator(datum);
                 return <path
                     className={'ribbon ' + className}
-                    d={ribbonCreator(datum)}
+                    d={dAttr}
                     fill={colorScale(datum.source.index + '-' + datum.source.subindex)}
                 />;
             })}

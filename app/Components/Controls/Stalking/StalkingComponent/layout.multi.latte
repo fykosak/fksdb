@@ -1,6 +1,5 @@
 {layout '../@layout.latte'}
 {block content}
-    {dump $models}
     {if count($models)}
         {foreach $models as $model}
             <h3 class="card-header">{control 'valuePrinter__'.$table.'__'.$itemHeadline:onlyValue $model}</h3>

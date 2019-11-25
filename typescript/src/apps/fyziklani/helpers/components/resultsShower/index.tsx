@@ -12,6 +12,7 @@ interface StateProps {
 
 interface OwnProps {
     className?: string;
+    children: React.ReactNode;
 }
 
 class ResultsShower extends React.Component<StateProps & OwnProps, {}> {

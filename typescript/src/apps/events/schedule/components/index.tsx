@@ -12,20 +12,25 @@ import { ScheduleGroupDef } from '../middleware/interfaces';
 import { app } from '../reducer/';
 import Container from './container';
 
-interface Props {
-    scheduleDef: ScheduleGroupDef[];
+interface OwnProps {
+    scheduleDef: {
+        groups: ScheduleGroupDef[];
+        options: Params;
+    };
     input: HTMLInputElement;
     mode: string;
 }
 
 export interface Params {
-    displayGroupLabel: boolean;
-    displayCapacity: boolean;
-    displayDescription: boolean;
-    displayPrice: boolean;
+    display: {
+        groupLabel: boolean;
+        capacity: boolean;
+        description: boolean;
+        price: boolean;
+    };
 }
 
-export default class Index extends React.Component<Props, {}> {
+export default class Index extends React.Component<OwnProps, {}> {
 
     public render() {
         const store = config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
@@ -41,26 +46,9 @@ export default class Index extends React.Component<Props, {}> {
     }
 
     private getComponentByMode(): JSX.Element {
-        if (this.props.scheduleDef.length === 0) {
+        if (this.props.scheduleDef.groups.length === 0) {
             return <span className="text text-muted">{lang.getText('No items found.')}</span>;
         }
-        const params: Params = {
-            displayCapacity: true,
-            displayDescription: true,
-            displayGroupLabel: true,
-            displayPrice: true,
-        };
-        switch (this.props.mode) {
-            case 'accommodation':
-                break;
-            case 'accommodation_teacher_separated':
-            case 'accommodation_same_gender_required':
-            case 'visa_requirement':
-                params.displayCapacity = false;
-                params.displayGroupLabel = true;
-                params.displayPrice = false;
-        }
-        return <Container groups={this.props.scheduleDef} params={params}/>;
-
+        return <Container groups={this.props.scheduleDef.groups} params={this.props.scheduleDef.options}/>;
     }
 }
