@@ -99,6 +99,7 @@ class AccountManager {
      * @param string $email
      * @return \FKSDB\ORM\Models\ModelLogin
      * @throws SendFailedException
+     * @throws \Exception
      */
     public function createLoginWithInvitation(ITemplate $template, ModelPerson $person, $email) {
         $login = $this->createLogin($person);
@@ -132,6 +133,7 @@ class AccountManager {
     /**
      * @param ITemplate $template
      * @param \FKSDB\ORM\Models\ModelLogin $login
+     * @throws \Exception
      */
     public function sendRecovery(ITemplate $template, ModelLogin $login) {
         $person = $login->getPerson();

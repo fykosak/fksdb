@@ -26,11 +26,11 @@ use Tracy\Debugger;
  */
 class ModelScheduleGroup extends AbstractModelSingle implements IEventReferencedModel {
     const TYPE_ACCOMMODATION = 'accommodation';
-    const TYPE_DSEF_GROUP = 'dsef_group';
-    const TYPE_VISA_REQUIREMENT = 'visa_requirement';
-    const TYPE_ACCOMMODATION_SAME_GENDER = 'accommodation_same_gender';
-    const TYPE_ACCOMMODATION_TEACHER_SEPARATED = 'accommodation_teacher_separated';
-    const TYPE_WEEKEND_SCHEDULE = 'weekend_schedule';
+    const TYPE_VISA = 'visa';
+    const TYPE_ACCOMMODATION_GENDER = 'accommodation_gender';
+    const TYPE_ACCOMMODATION_TEACHER = 'accommodation_teacher';
+    const TYPE_TEACHER_PRESENT = 'teacher_present';
+    const TYPE_WEEKEND = 'weekend';
 
     /**
      * @return GroupedSelection

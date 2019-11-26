@@ -108,7 +108,6 @@ class EventsExtension extends CompilerExtension {
      */
     /**
      * @throws \FKSDB\Config\NeonSchemaException
-     * @throws \Nette\Utils\RegexpException
      */
     public function loadConfiguration() {
         parent::loadConfiguration();

@@ -2,8 +2,10 @@
 
 namespace FyziklaniModule;
 
+use EventModule\EventEntityTrait;
 use FKSDB\Components\Controls\Fyziklani\RoutingDownload;
 use FKSDB\Components\Controls\Fyziklani\RoutingEdit;
+use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\React\ReactResponse;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -14,6 +16,7 @@ use ReactMessage;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class RoomsPresenter extends BasePresenter {
+    use EventEntityTrait;
 
     public function titleDefault() {
         $this->setTitle(_('Rozdělení do místností'));
@@ -35,7 +38,7 @@ class RoomsPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function authorizedEdit() {
-        $this->setAuthorized(($this->eventIsAllowed('fyziklani.rooms', 'edit')));
+        $this->setAuthorized(($this->eventIsAllowed($this->getEntity(), 'route')));
     }
 
     /**
@@ -88,4 +91,19 @@ class RoomsPresenter extends BasePresenter {
     public function createComponentRouting(): RoutingEdit {
         return $this->fyziklaniComponentsFactory->createRoutingEdit($this->getEvent());
     }
+
+    /**
+     * @return AbstractServiceSingle
+     */
+    function getORMService() {
+        return $this->getServiceFyziklaniTeam();
+    }
+
+    /**
+     * @return string
+     */
+    protected function getModelResource(): string {
+        return 'fyziklani.rooms';
+    }
+
 }

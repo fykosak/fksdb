@@ -450,7 +450,7 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
      * @return Selection
      */
     public function getScheduleForEvent(ModelEvent $event): Selection {
-        return $this->getSchedule()->where('group.event_id', $event->event_id);
+        return $this->getSchedule()->where('schedule_item.schedule_group.event_id', $event->event_id);
     }
 
     /**

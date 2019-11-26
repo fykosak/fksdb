@@ -24,6 +24,7 @@ class BornRow extends AbstractRow {
 
     /**
      * @return BaseControl
+     * @throws \Exception
      */
     public function createField(): BaseControl {
         $control = new WriteOnlyDatePicker($this->getTitle());

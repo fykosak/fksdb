@@ -145,6 +145,7 @@ class SelectForm extends Control {
      * @return FormControl
      * @throws UnsupportedCurrencyException
      * @throws BadRequestException
+     * @throws \Nette\Utils\JsonException
      */
     private function createForm(bool $create) {
         $control = new FormControl();
