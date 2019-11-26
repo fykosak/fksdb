@@ -47,7 +47,7 @@ class PaymentDataHandler {
         foreach ($newScheduleIds as $id) {
             try {
                 /**
-                 * @var $model ModelSchedulePayment
+                 * @var ModelSchedulePayment $model
                  */
                 $model = $this->serviceSchedulePayment->createNewModel(['payment_id' => $payment->payment_id, 'person_schedule_id' => $id]);
             } catch (\ModelException $exception) {

@@ -6,9 +6,12 @@ use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\IEventReferencedModel;
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Models\ModelPerson;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
+use Nette\Security\IResource;
 use Nette\Utils\DateTime;
+use Tracy\Debugger;
 
 /**
  * @property-read  string category
@@ -27,13 +30,24 @@ use Nette\Utils\DateTime;
  * @author Michal Červeňák <miso@fykos.cz>
  *
  */
-class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferencedModel {
+class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferencedModel, IResource {
 
     /**
      * @return string
      */
     public function __toString(): string {
         return $this->name;
+    }
+
+    /**
+     * @return ModelPerson|NULL
+     */
+    public function getTeacher() {
+        $row = $this->ref(DbNames::TAB_PERSON, 'teacher_id');
+        if ($row) {
+            return ModelPerson::createFromActiveRow($row);
+        }
+        return null;
     }
 
     /**
@@ -120,4 +134,11 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
         return $data;
     }
 
+    /**
+     * Returns a string identifier of the Resource.
+     * @return string
+     */
+    public function getResourceId() {
+        return 'fyziklani.team';
+    }
 }

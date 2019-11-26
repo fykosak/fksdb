@@ -37,7 +37,7 @@ abstract class ReactComponent extends Control {
     protected static $reactJSAttached = false;
 
     /**
-     * @param $obj IComponent
+     * @param IComponent $obj
      */
     protected function attached($obj) {
         if (!static::$reactJSAttached && $obj instanceof IJavaScriptCollector) {

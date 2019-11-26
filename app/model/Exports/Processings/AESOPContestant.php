@@ -35,6 +35,7 @@ class AESOPContestant extends StoredQueryPostProcessing {
     /**
      * @param $data
      * @return mixed
+     * @throws \Nette\Application\BadRequestException
      */
     public function processData($data) {
         $filtered = $this->filterCategory($data);
