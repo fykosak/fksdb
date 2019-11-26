@@ -4,7 +4,6 @@ namespace FKSDB\Components\Forms\Controls\Schedule;
 
 use Exception;
 use FKSDB\Components\React\ReactField;
-use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
@@ -12,7 +11,6 @@ use FKSDB\ORM\Services\Schedule\ServiceScheduleItem;
 use Nette\Forms\Controls\TextInput;
 use Nette\NotImplementedException;
 use Nette\Utils\JsonException;
-use Tracy\Debugger;
 
 /**
  * Class ScheduleField
@@ -66,14 +64,16 @@ class ScheduleField extends TextInput {
         switch ($type) {
             case ModelScheduleGroup::TYPE_ACCOMMODATION:
                 return _('Accommodation');
-            case ModelScheduleGroup::TYPE_ACCOMMODATION_SAME_GENDER:
+            case ModelScheduleGroup::TYPE_ACCOMMODATION_GENDER:
                 return _('Accommodation with same gender');
-            case ModelScheduleGroup::TYPE_VISA_REQUIREMENT:
+            case ModelScheduleGroup::TYPE_VISA:
                 return _('Visa');
-            case ModelScheduleGroup::TYPE_ACCOMMODATION_TEACHER_SEPARATED:
-                return _('Teacher separate accommodation');
-            case ModelScheduleGroup::TYPE_WEEKEND_SCHEDULE:
-                return _('Weekend schedule');
+            case ModelScheduleGroup::TYPE_ACCOMMODATION_TEACHER:
+                return _('Teacher accommodation');
+            case ModelScheduleGroup::TYPE_WEEKEND:
+                return _('Weekend after competition');
+            case ModelScheduleGroup::TYPE_TEACHER_PRESENT:
+                return _('Program during competition');
             default:
                 throw new NotImplementedException();
         }
@@ -125,16 +125,22 @@ class ScheduleField extends TextInput {
                 'description' => true,
                 'groupLabel' => true,
                 'price' => true,
+                'groupTime' => false,
             ],
         ];
         switch ($this->type) {
             case ModelScheduleGroup::TYPE_ACCOMMODATION:
                 break;
-            case ModelScheduleGroup::TYPE_ACCOMMODATION_TEACHER_SEPARATED:
-            case ModelScheduleGroup::TYPE_ACCOMMODATION_SAME_GENDER:
-            case ModelScheduleGroup::TYPE_VISA_REQUIREMENT:
+            case ModelScheduleGroup::TYPE_ACCOMMODATION_TEACHER:
+            case ModelScheduleGroup::TYPE_ACCOMMODATION_GENDER:
+            case ModelScheduleGroup::TYPE_VISA:
+            case ModelScheduleGroup::TYPE_TEACHER_PRESENT:
                 $params['display']['capacity'] = false;
                 $params['display']['price'] = false;
+                $params['display']['groupLabel'] = false;
+                break;
+            case ModelScheduleGroup::TYPE_WEEKEND:
+                $params['display']['groupTime'] = true;
         }
         return $params;
     }

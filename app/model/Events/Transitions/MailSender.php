@@ -177,6 +177,7 @@ class MailSender {
      * @param \FKSDB\ORM\Models\ModelEvent $event
      * @param IModel $application
      * @return ModelAuthToken
+     * @throws \Exception
      */
     private function createToken(ModelLogin $login, ModelEvent $event, IModel $application) {
         $until = $this->getUntil($event);

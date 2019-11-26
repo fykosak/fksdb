@@ -57,6 +57,7 @@ acl:
     - addResource(fyziklani.results) # final, correlation, presentation,
     - addResource(fyziklani.submit) # deafult
     - addResource(fyziklani.gameSetup) # deafult
+    - addResource(fyziklani.team) #route
 
 #event module
 

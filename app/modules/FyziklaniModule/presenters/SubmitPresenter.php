@@ -120,6 +120,7 @@ class SubmitPresenter extends BasePresenter {
      * @param $id
      * @throws BadRequestException
      * @throws AbortException
+     * @throws \ReflectionException
      */
     public function actionEdit($id) {
         $control = $this->getComponent('editControl');
@@ -134,6 +135,7 @@ class SubmitPresenter extends BasePresenter {
      * @param $id
      * @throws AbortException
      * @throws BadRequestException
+     * @throws \ReflectionException
      */
     public function actionDetail($id) {
         $control = $this->getComponent('detailControl');

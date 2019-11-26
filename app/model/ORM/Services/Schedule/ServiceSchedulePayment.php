@@ -53,9 +53,7 @@ class ServiceSchedulePayment extends AbstractServiceSingle {
                 // do nothing
                 $index = array_search($row->person_schedule_id, $newScheduleIds);
                 unset($newScheduleIds[$index]);
-                // Debugger::barDump('do nothing');
             } else {
-                // Debugger::barDump('delete');
                 $row->delete();
             }
         }
@@ -66,6 +64,7 @@ class ServiceSchedulePayment extends AbstractServiceSingle {
 
             /**
              * @var ModelSchedulePayment $model
+             * TODO maybe failed
              */
 
             $count = $this->getTable()->where('person_schedule_id', $id)->where('payment.state !=? OR payment.state IS NULL', ModelPayment::STATE_CANCELED)->count();

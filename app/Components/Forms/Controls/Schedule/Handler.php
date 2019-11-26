@@ -84,7 +84,7 @@ class Handler {
         foreach ($newScheduleData as $id) {
             $query = $this->serviceScheduleItem->findByPrimary($id);
             $modelScheduleItem = ModelScheduleItem::createFromActiveRow($query);
-            if ($modelScheduleItem->getAvailableCapacity() > 0) {
+            if ($modelScheduleItem->hasFreeCapacity()) {
                 $this->servicePersonSchedule->createNewModel(['person_id' => $person->person_id, 'schedule_item_id' => $id]);
             } else {
                 throw new FullCapacityException(sprintf(
