@@ -628,7 +628,7 @@ msgstr "Invalid e-mail."
 
 #: i18n/../app/Components/Forms/Factories/ReferencedPerson/AbstractReferencedPersonFactory.php:393
 msgid "Nejprve zkuste najít osobu v naší databázi podle e-mailu."
-msgstr "First try to find the person in our database using e-mail address."
+msgstr "First of all try to find the person in our database using e-mail address."
 
 #: i18n/../app/Components/Forms/Factories/ReferencedPerson/AbstractReferencedPersonFactory.php:396
 #: i18n/../app/Components/Grids/EventOrgsGrid.php:51
@@ -3904,7 +3904,7 @@ msgstr "Category"
 #: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:137
 #: i18n/../data/events/fyziklani/fyziklani14.neon.neon2php:161
 msgid "Chceme se účastnit v kategorii A"
-msgstr "We want to take part in category A"
+msgstr "We want to take a part in category A"
 
 #: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:157
 #: i18n/../data/events/fyziklani/fyziklani14.neon.neon2php:163
@@ -3913,11 +3913,7 @@ msgid ""
 "Po zaškrtnutí této možnosti budete zařazeni do nejvyšší kategorie (s "
 "nejstaršími účastníky) bez ohledu na ročníky členů vašeho týmu. Tato "
 "kategorie je také jediná, která je součástí programu MŠMT Excelence SŠ."
-msgstr ""
-"You will be ranked in the highest category (with the oldest participants) "
-"regardless of the age of your team members. Category A competes in a "
-"different building than other categories. This category is also the only one "
-"that is part of the Ministry of education Excellence High School program."
+msgstr "If you choose this option, you will compete in  the  highest category ( with the oldest participants) without consideration of  school grade of participants in your team.  ( This category is the only one which is a part of czech program MŠMT Excelence SŠ.)"
 
 #: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:160
 #: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:142
