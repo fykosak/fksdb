@@ -27,15 +27,14 @@ parameters:
                 person_schedule:
                     accommodation:
                         required: false
-                    accommodation_teacher_separated:
+                    accommodation_teacher:
                         required: false
-                    visa_requirement:
+                    visa:
                         required: false
-                    weekend_schedule:
+                    teacher_present:
                         required: false
-
-
-
+                    weekend:
+                        required: false
             participant:
                 person:
                     other_name:
@@ -58,18 +57,21 @@ parameters:
                 person_schedule:
                     accommodation:
                         required: false
-                    accommodation_same_gender:
+                    accommodation_gender:
                         required: false
-                    weekend_schedule:
+                    visa:
+                        required: false
+                    weekend:
                         required: false
             dep:
                 require:
                     team.teacher_id.person_info.id_number: team.teacher_id.person_schedule.accommodation
                     p*.person_id.person_info.id_number: p*.person_id.person_schedule.accommodation
                 visible:
-                    team.teacher_id.person_schedule.accommodation_teacher_separated: team.teacher_id.person_schedule.accommodation
                     team.teacher_id.person_info.id_number: team.teacher_id.person_schedule.accommodation
                     p*.person_id.person_info.id_number: p*.person_id.person_schedule.accommodation
+                    team.teacher_id.person_schedule.accommodation_teacher: team.teacher_id.person_schedule.accommodation
+                    p*.person_id.person_schedule.accommodation_gender: p*.person_id.person_schedule.accommodation
 
 
 events:
@@ -164,7 +166,7 @@ events:
 
                     phone:
                         label: _('Kontaktní telefon')
-                        required: false
+                        required: true
                         visible: true
                         modifiable: %events.fyziklani14.appCond%
                     teacher_id:
@@ -173,6 +175,10 @@ events:
                         visible: true
                         modifiable: %events.fyziklani14.appCond%
                         factory: RefPerson(%events.fyziklani14.teacher%, email, true, role('admin'), false)
+                    note:
+                        label: _('Note')
+                        required: false
+                        visible: true
             #   PARTICIPANT
             #
             PARTICIPANT:
