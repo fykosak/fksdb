@@ -153,14 +153,14 @@ events:
                         required: true
                         visible: true
                         modifiable: %events.fyziklani14.appCond%
-                        factory: Chooser('Select lang/Vyberte jazyk',Options(%events.fyziklani14.gameLangs%))
+                        factory: Chooser('Select language/Vyberte jazyk',Options(%events.fyziklani14.gameLangs%))
                     category:
                         label: _('Kategorie')
                         required: true
                         visible: neg(state('__init'))
                         modifiable: false
                     force_a:
-                        label: _('Chceme se účastnit v kategorii A')
+                        label: _('Chceme soutěžit v kategorii A')
                         visible: true
                         description: _('Po zaškrtnutí této možnosti budete zařazeni do nejvyšší kategorie (s nejstaršími účastníky) bez ohledu na ročníky členů vašeho týmu. Tato kategorie je také jediná, která je součástí programu MŠMT Excelence SŠ.')
 

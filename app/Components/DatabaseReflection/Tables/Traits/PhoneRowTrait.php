@@ -33,10 +33,9 @@ trait PhoneRowTrait {
         $control = new WriteOnlyInput($this->getTitle());
         $control->setAttribute('placeholder', _('+XXXXXXXXXXXX'));
         $control->addRule(Form::MAX_LENGTH, null, 32);
-
-        $control->setOption('description', _('Write in international format, starting with "+"'));
+        $control->setOption('description', _('Use an international format, starting with "+"'));
         $control->addCondition(Form::FILLED)
-            ->addRule($this->phoneNumberFactory->getFormValidationCallback(), _('Phone number is not valid. Please insert valid number.'));
+            ->addRule($this->phoneNumberFactory->getFormValidationCallback(), _('Phone number is not valid. Please insert a valid number.'));
         return $control;
     }
 
