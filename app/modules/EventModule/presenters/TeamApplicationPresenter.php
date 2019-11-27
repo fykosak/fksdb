@@ -6,11 +6,10 @@ use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
 use FKSDB\Components\Grids\Events\Application\ApplicationGrid;
 use FKSDB\Components\Grids\Events\Application\TeamApplicationGrid;
 use FKSDB\model\Fyziklani\NotSetGameParametersException;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\Application\ForbiddenRequestException;
 
 /**
  * Class ApplicationPresenter
@@ -45,7 +44,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
      */
     public function authorizedDetail() {
         if ($this->isTeamEvent()) {
-            $this->setAuthorized($this->eventIsAllowed('event.application', 'detail'));
+            parent::authorizedDetail();
         } else {
             $this->setAuthorized(false);
         }
@@ -57,28 +56,10 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
      */
     public function authorizedList() {
         if ($this->isTeamEvent()) {
-            $this->setAuthorized($this->eventIsAllowed('event.application', 'list'));
+            parent::authorizedList();
         } else {
             $this->setAuthorized(false);
         }
-    }
-
-    /**
-     * @param int $id
-     * @throws BadRequestException
-     * @throws ForbiddenRequestException
-     * @throws AbortException
-     */
-    protected function loadModel(int $id) {
-        $row = $this->serviceFyziklaniTeam->findByPrimary($id);
-        if (!$row) {
-            throw new BadRequestException('Model not found');
-        }
-        $model = ModelFyziklaniTeam::createFromActiveRow($row);
-        if ($model->event_id != $this->getEvent()->event_id) {
-            throw new ForbiddenRequestException();
-        }
-        $this->model = $model;
     }
 
     /**
@@ -90,18 +71,13 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
         return new TeamApplicationGrid($this->getEvent(), $this->getTableReflectionFactory());
     }
 
-    /**
-     * @return ModelFyziklaniTeam
-     */
-    protected function getModel(): ModelFyziklaniTeam {
-        return $this->model;
-    }
 
     /**
      * @throws BadRequestException
      * @throws AbortException
      */
     public function renderDetail() {
+        parent::renderDetail();
         $this->template->acYear = $this->getAcYear();
         try {
             $setup = $this->getEvent()->getFyziklaniGameSetup();
@@ -110,6 +86,20 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
             $rankVisible = false;
         }
         $this->template->rankVisible = $rankVisible;
-        $this->template->model = $this->getModel();
+        $this->template->model = $this->getEntity();
+    }
+
+    /**
+     * @return AbstractServiceSingle
+     */
+    function getORMService() {
+        return $this->serviceFyziklaniTeam;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getModelResource(): string {
+        return 'fyziklani.team';
     }
 }

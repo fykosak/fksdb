@@ -6,13 +6,11 @@ use Events\Model\ApplicationHandlerFactory;
 use Events\Model\Grid\SingleEventSource;
 use FKSDB\Components\Events\ApplicationComponent;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
+use FKSDB\Components\Grids\Schedule\PersonGrid;
 use FKSDB\Logging\FlashDumpFactory;
 use FKSDB\Logging\MemoryLogger;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\ORM\Models\ModelEventParticipant;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\Application\ForbiddenRequestException;
 use function in_array;
 
 /**
@@ -20,11 +18,10 @@ use function in_array;
  * @package EventModule
  */
 abstract class AbstractApplicationPresenter extends BasePresenter {
+    use EventEntityTrait;
+
     const TEAM_EVENTS = [1, 9];
-    /**
-     * @var ModelEventParticipant|ModelFyziklaniTeam
-     */
-    protected $model;
+
     /**
      * @var ApplicationHandlerFactory
      */
@@ -63,7 +60,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
             $handlers[$key] = $this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger()); //TODO it's a bit weird to create new logger for each handler
         }
 
-        return new ApplicationComponent($handlers[$this->model->getPrimary()], $holders[$this->model->getPrimary()], $flashDump);
+        return new ApplicationComponent($handlers[$this->getEntity()->getPrimary()], $holders[$this->getEntity()->getPrimary()], $flashDump);
     }
 
     /**
@@ -80,13 +77,18 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @param $id
-     * @throws BadRequestException
-     * @throws ForbiddenRequestException
-     * @throws AbortException
+     * @return PersonGrid
      */
-    public function actionDetail($id) {
-        $this->loadModel($id);
+    protected function createComponentPersonScheduleGrid(): PersonGrid {
+        return new PersonGrid($this->getTableReflectionFactory());
+    }
+
+    /**
+     * @throws AbortException
+     * @throws BadRequestException
+     */
+    protected function renderDetail() {
+        $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
     }
 
     /**
@@ -106,33 +108,6 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @return void
      */
     abstract public function titleDetail();
-
-    /**
-     * @return void;
-     * @throws BadRequestException
-     * @throws AbortException
-     */
-    abstract public function authorizedDetail();
-
-    /**
-     * @return void;
-     * @throws BadRequestException
-     * @throws AbortException
-     */
-    abstract public function authorizedList();
-
-    /**
-     * @param int $id
-     * @throws BadRequestException
-     * @throws ForbiddenRequestException
-     * @throws AbortException
-     */
-    abstract protected function loadModel(int $id);
-
-    /**
-     * @return ModelEventParticipant|ModelFyziklaniTeam
-     */
-    abstract protected function getModel();
 
     /**
      * @return AbstractApplicationGrid

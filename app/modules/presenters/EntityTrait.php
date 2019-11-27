@@ -2,6 +2,7 @@
 
 namespace FKSDB;
 
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
 use Nette\Application\BadRequestException;
@@ -24,7 +25,7 @@ trait EntityTrait {
      * @throws BadRequestException
      */
     public function authorizedDetail() {
-        $this->setAuthorized($this->isAllowed($this->getModel(), 'detail'));
+        $this->setAuthorized($this->isAllowed($this->getEntity(), 'detail'));
     }
 
     public function authorizedList() {
@@ -35,7 +36,7 @@ trait EntityTrait {
      * @throws BadRequestException
      */
     public function authorizedEdit() {
-        $this->setAuthorized($this->isAllowed($this->getModel(), 'edit'));
+        $this->setAuthorized($this->isAllowed($this->getEntity(), 'edit'));
     }
 
     public function authorizedCreate() {
@@ -43,10 +44,19 @@ trait EntityTrait {
     }
 
     /**
-     * @return \FKSDB\ORM\AbstractModelSingle|IModel
+     * @return AbstractModelSingle|IModel
      * @throws BadRequestException
+     * @deprecated
      */
     public function getModel() {
+        return $this->getEntity();
+    }
+
+    /**
+     * @return AbstractModelSingle|IModel
+     * @throws BadRequestException
+     */
+    public function getEntity() {
         if (!$this->model) {
             $model = $this->getORMService()->findByPrimary($this->id);
             if (!$model) {
