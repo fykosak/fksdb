@@ -1,12 +1,10 @@
 {block content}
-    {dump $model}
-
     {foreach ['e_fyziklani_team_id','name','status','phone','note','password','category','created','game_lang','force_a'] as $field}
         {control valuePrinter__e_fyziklani_team__$field:row $model,true}
     {/foreach}
     <hr/>
 
-    <h3>{_'Rank & points'}</h3>
+    <h2>{_'Rank & points'}</h2>
     {if $rankVisible}
         {foreach ['rank_category','rank_total','points'] as $field}
             {control valuePrinter__e_fyziklani_team__$field:row $model,true}
@@ -17,11 +15,18 @@
 
     <hr/>
 
-    <h3>{_'Teacher'}</h3>
-
+    <h2>{_'Teacher'}</h2>
+    {var $teacher = $model->getTeacher() }
+    {if $teacher}
+        {control valuePrinter__referenced__person_link:row $teacher,true}
+        {if $hasSchedule}
+            <h4>{_'Schedule'}</h4>
+            {control personScheduleGrid $teacher, $model->getEvent()}
+        {/if}
+    {/if}
     <hr/>
 
-    <h3>{_'Participants'}</h3>
+    <h2>{_'Participants'}</h2>
 
     {var $counter = 0;}
     {foreach $model->getParticipants() as $row}
@@ -30,7 +35,7 @@
         {var $history=$participant->getPerson()->getHistory($acYear)}
         {var $school = $history->getSchool()}
 
-        <h4>{_'Parcipant'} {$counter}</h4>
+        <h3>{_'Parcipant'} {$counter}</h3>
 
         {control valuePrinter__referenced__person_link:row $participant,true}
 
@@ -39,7 +44,11 @@
         {control valuePrinter__person_history__study_year:row $history,true}
 
         {control valuePrinter__person_history__school_id:row $history,true}
+        {if $hasSchedule}
+            <h4>{_'Schedule'}</h4>
+            {control personScheduleGrid $participant->getPerson(),$participant->getEvent()}
+        {/if}
+        <hr/>
     {/foreach}
-    <hr/>
     {include ../AbstractApplication/applicationControl.latte}
 {/block}
