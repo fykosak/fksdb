@@ -149,7 +149,7 @@ events:
                         visible: true # or condition
                         modifiable: %events.fyziklani14.appCond%
                     game_lang:
-                        label: _('Jazyk ve kterém chcete soutěžit.')
+                        label: _('Jazyk, ve kterém chcete soutěžit.')
                         required: true
                         visible: true
                         modifiable: %events.fyziklani14.appCond%

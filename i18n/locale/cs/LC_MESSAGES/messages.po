@@ -316,26 +316,24 @@ msgid "Accommodation"
 msgstr "Ubytování"
 
 #: i18n/../app/Components/Forms/Controls/Schedule/ScheduleField.php:68
-#, fuzzy
 msgid "Accommodation with same gender"
-msgstr "Ubytovaní v \"%s\"."
+msgstr "Ubytování s osobami stejného pohlaví"
 
 #: i18n/../app/Components/Forms/Controls/Schedule/ScheduleField.php:70
 msgid "Visa"
-msgstr ""
+msgstr "Víza"
 
 #: i18n/../app/Components/Forms/Controls/Schedule/ScheduleField.php:72
-#, fuzzy
 msgid "Teacher accommodation"
-msgstr "Přidat ubytování"
+msgstr "Ubytování pro učitele"
 
 #: i18n/../app/Components/Forms/Controls/Schedule/ScheduleField.php:74
 msgid "Weekend after competition"
-msgstr ""
+msgstr "Víkend po soutěži"
 
 #: i18n/../app/Components/Forms/Controls/Schedule/ScheduleField.php:76
 msgid "Program during competition"
-msgstr ""
+msgstr "Doprovodný program pro učitele v průběhu soutěže"
 
 #: i18n/../app/Components/Forms/Controls/URLTextBox.php:25
 msgid "%label není platná URL."
@@ -1667,11 +1665,8 @@ msgid "+XXXXXXXXXXXX"
 msgstr ""
 
 #: i18n/../app/Components/DatabaseReflection/Tables/Traits/PhoneRowTrait.php:37
-#, fuzzy
 msgid "In international format, starting with \"+\""
-msgstr ""
-"Telefonní číslo není v požadovaném formátu. Prosíme, použij mezinárodní "
-"formát začínající na \"+\""
+msgstr "Pište v mezinárodním formátu začínajícím \"+\"."
 
 #: i18n/../app/Components/DatabaseReflection/Tables/Traits/PhoneRowTrait.php:39
 #, fuzzy
@@ -1822,7 +1817,7 @@ msgstr ""
 
 #: i18n/../app/Components/DatabaseReflection/Tables/Person/OtherNameRow.php:18
 msgid "Other name"
-msgstr "Další jméno"
+msgstr "Křestní jméno"
 
 #: i18n/../app/Components/DatabaseReflection/Tables/Person/GenderRow.php:21
 msgid "Gender"
