@@ -12,14 +12,16 @@ import PointsInTime from './lineChart/';
 import PointsPie from './pie/';
 import TimeLine from './timeline/';
 
-interface State {
-    teams?: Team[];
-    teamId?: number;
-
-    onChangeFirstTeam?(id: number): void;
+interface StateProps {
+    teams: Team[];
+    teamId: number;
 }
 
-class TeamStats extends React.Component<State, {}> {
+interface DispatchProps {
+    onChangeFirstTeam(id: number): void;
+}
+
+class TeamStats extends React.Component<StateProps & DispatchProps, {}> {
 
     public render() {
         const {teams, onChangeFirstTeam, teamId} = this.props;
@@ -59,14 +61,14 @@ class TeamStats extends React.Component<State, {}> {
     }
 }
 
-const mapStateToProps = (state: StatisticsStore): State => {
+const mapStateToProps = (state: StatisticsStore): StateProps => {
     return {
         teamId: state.statistics.firstTeamId,
         teams: state.data.teams,
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): State => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
     return {
         onChangeFirstTeam: (teamId) => dispatch(setFirstTeamId(+teamId)),
     };

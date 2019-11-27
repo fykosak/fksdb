@@ -132,6 +132,7 @@
       true,
       "allow-boolean-or-undefined"
     ],
+    "ban-ts-ignore": false,
     "switch-default": false,
     "variable-name": [
       true,

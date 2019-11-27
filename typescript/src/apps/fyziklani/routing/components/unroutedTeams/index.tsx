@@ -4,11 +4,11 @@ import { Team } from '../../../helpers/interfaces/';
 import { Store as RoutingStore } from '../../reducers/';
 import TeamComponent from '../team/';
 
-interface State {
-    stateTeams?: Team[];
+interface StateProps {
+    stateTeams: Team[];
 }
 
-class UnRoutedTeams extends React.Component<State, {}> {
+class UnRoutedTeams extends React.Component<StateProps, {}> {
 
     public render() {
         const {stateTeams} = this.props;
@@ -28,7 +28,7 @@ class UnRoutedTeams extends React.Component<State, {}> {
     }
 }
 
-const mapStateToProps = (state: RoutingStore): State => {
+const mapStateToProps = (state: RoutingStore): StateProps => {
     return {
         stateTeams: state.teams.availableTeams,
     };

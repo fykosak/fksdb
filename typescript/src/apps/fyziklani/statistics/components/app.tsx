@@ -6,16 +6,16 @@ import HardVisibleSwitch from '../../helpers/options/compoents/hardVisibleSwitch
 import { Store as StatisticsStore } from '../reducers';
 import ChartsContainer from './charts/';
 
-interface State {
-    isReady?: boolean;
-    isOrg?: boolean;
+interface StateProps {
+    isReady: boolean;
+    isOrg: boolean;
 }
 
-interface Props {
+interface OwnProps {
     mode: string;
 }
 
-class App extends React.Component<State & Props, {}> {
+class App extends React.Component<StateProps & OwnProps, {}> {
     public render() {
         const {isReady, mode, isOrg} = this.props;
         if (!isReady) {
@@ -29,7 +29,7 @@ class App extends React.Component<State & Props, {}> {
     }
 }
 
-const mapStateToProps = (state: StatisticsStore): State => {
+const mapStateToProps = (state: StatisticsStore): StateProps => {
     return {
         isOrg: state.options.isOrg,
         isReady: state.options.isReady,

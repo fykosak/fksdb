@@ -6,7 +6,7 @@ export interface ActionSetPosition extends Action<string> {
 }
 
 export const ACTION_SET_POSITION = '@@fyziklani/presentation/SET_POSITION';
-export const setPosition = (position: number, category?: string): ActionSetPosition => {
+export const setPosition = (position: number, category: string): ActionSetPosition => {
     return {
         category,
         position,

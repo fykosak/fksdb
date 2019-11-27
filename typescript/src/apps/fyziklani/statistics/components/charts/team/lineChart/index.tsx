@@ -3,11 +3,11 @@ import * as React from 'react';
 import Legend from '../legend';
 import Chart from './chart';
 
-interface Props {
+interface OwnProps {
     teamId: number;
 }
 
-export default class PointsInTime extends React.Component<Props, {}> {
+export default class PointsInTime extends React.Component<OwnProps, {}> {
 
     public render() {
         const {teamId} = this.props;

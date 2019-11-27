@@ -15,25 +15,27 @@ import {
 } from '../../../../actions';
 import { Store as StatisticsStore } from '../../../../reducers';
 
-interface State {
-    aggregationTime?: number;
-    tasks?: Task[];
-    taskId?: number;
-    fromDate?: Date;
-    toDate?: Date;
-    gameStart?: Date;
-    gameEnd?: Date;
-
-    onChangeAggregationTime?(time: number): void;
-
-    onChangeTask?(id: number): void;
-
-    onSetFromDate?(date: Date): void;
-
-    onSetToDate?(date: Date): void;
+interface StateProps {
+    aggregationTime: number;
+    tasks: Task[];
+    taskId: number;
+    fromDate: Date;
+    toDate: Date;
+    gameStart: Date;
+    gameEnd: Date;
 }
 
-class Options extends React.Component<State, {}> {
+interface DispatchProps {
+    onChangeAggregationTime(time: number): void;
+
+    onChangeTask(id: number): void;
+
+    onSetFromDate(date: Date): void;
+
+    onSetToDate(date: Date): void;
+}
+
+class Options extends React.Component<StateProps & DispatchProps, {}> {
 
     public componentDidMount() {
         const {onSetFromDate, onSetToDate, gameEnd, gameStart} = this.props;
@@ -128,7 +130,7 @@ class Options extends React.Component<State, {}> {
     }
 }
 
-const mapStateToProps = (state: StatisticsStore): State => {
+const mapStateToProps = (state: StatisticsStore): StateProps => {
     return {
         aggregationTime: state.statistics.aggregationTime,
         fromDate: state.statistics.fromDate,
@@ -140,7 +142,7 @@ const mapStateToProps = (state: StatisticsStore): State => {
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): State => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
     return {
         onChangeAggregationTime: (time: number) => dispatch(setAggregationTime(time)),
         onChangeTask: (teamId) => dispatch(setTaskId(+teamId)),

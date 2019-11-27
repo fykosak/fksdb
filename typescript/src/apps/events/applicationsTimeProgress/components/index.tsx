@@ -15,11 +15,11 @@ export interface Data {
     };
 }
 
-interface Props {
+interface OwnProps {
     data: Data;
 }
 
-export default class Timeline extends React.Component<Props, {}> {
+export default class Timeline extends React.Component<OwnProps, {}> {
 
     public render() {
         const {data} = this.props;

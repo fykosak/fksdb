@@ -4,11 +4,11 @@ import CorrelationStats from './correlation/';
 import TasksStats from './task/';
 import TeamStats from './team/';
 
-interface Props {
+interface OwnProps {
     mode: string;
 }
 
-export default class Statistics extends React.Component<Props, {}> {
+export default class Statistics extends React.Component<OwnProps, {}> {
 
     public render() {
         let content = null;

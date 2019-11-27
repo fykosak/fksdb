@@ -9,9 +9,9 @@ export default class DescriptionLabel extends React.Component<OwnProps, {}> {
 
     public render() {
         const {description} = this.props;
-        return <span className="description-label">
+        return <span className="description-label ml-3">
             {description[lang.getCurrentLocale()] &&
-            <small>{description}</small>}
+            <small>{description[lang.getCurrentLocale()]}</small>}
         </span>;
     }
 }

@@ -23,22 +23,22 @@ import {
 } from '../../../../middleware/charts/lines';
 import { Store as StatisticsStore } from '../../../../reducers';
 
-interface State {
-    submits?: Submits;
-    fromDate?: Date;
-    gameStart?: Date;
-    gameEnd?: Date;
-    toDate?: Date;
-    activePoints?: number;
-    aggregationTime?: number;
+interface StateProps {
+    submits: Submits;
+    fromDate: Date;
+    gameStart: Date;
+    gameEnd: Date;
+    toDate: Date;
+    activePoints: number;
+    aggregationTime: number;
 }
 
-interface Props {
+interface OwnProps {
     taskId: number;
     availablePoints: number[];
 }
 
-class TimeHistogramLines extends React.Component<State & Props, {}> {
+class TimeHistogramLines extends React.Component<StateProps & OwnProps, {}> {
 
     private xAxis: SVGGElement;
     private yAxis: SVGGElement;
@@ -94,7 +94,6 @@ class TimeHistogramLines extends React.Component<State & Props, {}> {
             safeCount++;
             if (safeCount > 200) {
                 throw Error('Safe counter!!!');
-                break;
             }
         }
         let maxPoints = 0;
@@ -179,7 +178,7 @@ class TimeHistogramLines extends React.Component<State & Props, {}> {
     }
 }
 
-const mapStateToProps = (state: StatisticsStore): State => {
+const mapStateToProps = (state: StatisticsStore): StateProps => {
     return {
         activePoints: state.statistics.activePoints,
         aggregationTime: state.statistics.aggregationTime,

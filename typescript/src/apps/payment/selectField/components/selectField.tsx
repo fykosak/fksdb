@@ -11,12 +11,12 @@ import { PaymentScheduleItem } from '../interfaces';
 import { app } from '../reducer/';
 import Container from './container';
 
-interface Props {
+interface OwnProps {
     items: PaymentScheduleItem[];
     input: HTMLInputElement;
 }
 
-export default class SelectField extends React.Component<Props, {}> {
+export default class SelectField extends React.Component<OwnProps, {}> {
 
     public render() {
         const store = config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);

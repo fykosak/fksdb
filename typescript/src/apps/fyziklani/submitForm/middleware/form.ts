@@ -1,5 +1,5 @@
 import { FormErrors } from 'redux-form';
-import { Props } from '../components/formSection';
+import { OwnProps } from '../components/formSection';
 
 export const getFullCode = (code): string => {
     const length = code.length;
@@ -28,7 +28,7 @@ const getControl = (subCode: Array<string | number>): number => {
         (+subCode[2] + +subCode[5] + +subCode[8]);
 };
 
-export const validate = (values, props: Props): FormErrors<any> => {
+export const validate = (values, props: OwnProps): FormErrors<any> => {
     const errors: { code?: string } = {};
 
     if (!values.code) {

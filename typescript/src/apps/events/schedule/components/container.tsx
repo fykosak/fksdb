@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ScheduleGroupDef } from '../middleware/interfaces';
 import { Params } from './index';
-import ScheduleGroup from './scheduleGroup';
+import Group from './group';
 
 interface OwnProps {
     groups: ScheduleGroupDef[];
@@ -14,7 +14,7 @@ export default class Container extends React.Component<OwnProps, {}> {
         const {groups, params} = this.props;
         return <div className="schedule-container schedule-container-accommodation ml-3">
             {groups.map((group, index) => {
-                return <ScheduleGroup key={index} group={group} params={params}/>;
+                return <Group key={index} group={group} params={params}/>;
             })}
         </div>;
     }

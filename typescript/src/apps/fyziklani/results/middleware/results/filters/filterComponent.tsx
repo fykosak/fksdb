@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Filter } from './filter';
 
-interface Props {
+interface OwnProps {
     active: boolean;
     filter: Filter;
     type?: 'primary' | 'danger' | 'warning';
@@ -12,7 +12,7 @@ interface Props {
 
 }
 
-export default class FilterComponent extends React.Component<Props, {}> {
+export default class FilterComponent extends React.Component<OwnProps, {}> {
 
     public render() {
         const {active, onClick, onCloseClick, filter, type} = this.props;
