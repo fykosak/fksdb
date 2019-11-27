@@ -18,20 +18,20 @@ import {
 import { getColorByPoints } from '../../../../middleware/charts/colors';
 import { Store as StatisticsStore } from '../../../../reducers';
 
-interface State {
-    submits?: Submits;
-    fromDate?: Date;
-    toDate?: Date;
-    activePoints?: number;
-    aggregationTime?: number;
+interface StateProps {
+    submits: Submits;
+    fromDate: Date;
+    toDate: Date;
+    activePoints: number;
+    aggregationTime: number;
 }
 
-interface Props {
+interface OwnProps {
     taskId: number;
     availablePoints: number[];
 }
 
-class TimeHistogram extends React.Component<State & Props, {}> {
+class TimeHistogram extends React.Component<StateProps & OwnProps, {}> {
 
     private xAxis: SVGGElement;
     private yAxis: SVGGElement;
@@ -133,7 +133,7 @@ class TimeHistogram extends React.Component<State & Props, {}> {
     }
 }
 
-const mapStateToProps = (state: StatisticsStore): State => {
+const mapStateToProps = (state: StatisticsStore): StateProps => {
     return {
         activePoints: state.statistics.activePoints,
         aggregationTime: state.statistics.aggregationTime,

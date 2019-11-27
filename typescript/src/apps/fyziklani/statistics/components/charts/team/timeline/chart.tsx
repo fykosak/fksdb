@@ -17,25 +17,25 @@ import {
 import { getColorByPoints } from '../../../../middleware/charts/colors';
 import { Store } from '../../../../reducers';
 
-interface State {
-    activePoints?: number;
-    submits?: Submits;
-    tasks?: Task[];
-    gameStart?: Date;
-    gameEnd?: Date;
+interface StateProps {
+    activePoints: number;
+    submits: Submits;
+    tasks: Task[];
+    gameStart: Date;
+    gameEnd: Date;
 }
 
 interface ExtendedTask extends Task {
     from: Date;
 }
 
-interface Props {
+interface OwnProps {
     teamId: number;
 }
 
-class TimeLine extends React.Component<State & Props, {}> {
+class TimeLine extends React.Component<StateProps & OwnProps, {}> {
 
-    private xAxis: any;
+    private xAxis: SVGElement;
     private ySize: number;
 
     private xScale: ScaleTime<number, number>;
@@ -100,8 +100,8 @@ class TimeLine extends React.Component<State & Props, {}> {
 
         return (
             <div className="col-lg-12">
-                <svg viewBox={`0 0 600 ${this.ySize}`} className="chart time-line">
-                    <g transform={`translate(0,${this.ySize - 30})`} className="x axis"
+                <svg viewBox={'0 0 600 ' + this.ySize} className="chart time-line">
+                    <g transform={'translate(0,' + (this.ySize - 30) + ')'} className="x axis"
                        ref={(xAxis) => this.xAxis = xAxis}/>
                     {dots}
                 </svg>
@@ -115,7 +115,7 @@ class TimeLine extends React.Component<State & Props, {}> {
     }
 }
 
-const mapStateToProps = (state: Store): State => {
+const mapStateToProps = (state: Store): StateProps => {
     return {
         activePoints: state.statistics.activePoints,
         gameEnd: new Date(state.timer.gameEnd),

@@ -14,17 +14,20 @@ import { Store as StatisticsStore } from '../../../reducers';
 import GlobalCorrelation from './globalCorrelation/chart';
 import Table from './table/chart';
 
-interface State {
-    teams?: Team[];
-    firstTeamId?: number;
-    secondTeamId?: number;
-
-    onChangeFirstTeam?(id: number): void;
-
-    onChangeSecondTeam?(id: number): void;
+interface StateProps {
+    teams: Team[];
+    firstTeamId: number;
+    secondTeamId: number;
 }
 
-class CorrelationStats extends React.Component<State, {}> {
+interface DispatchProps {
+
+    onChangeFirstTeam(id: number): void;
+
+    onChangeSecondTeam(id: number): void;
+}
+
+class CorrelationStats extends React.Component<StateProps & DispatchProps, {}> {
 
     public render() {
         const {teams, onChangeFirstTeam, onChangeSecondTeam, firstTeamId, secondTeamId} = this.props;
@@ -73,13 +76,13 @@ class CorrelationStats extends React.Component<State, {}> {
             <div>
                 {headline}
                 {teamSelect}
-                {(firstTeamId && secondTeamId) ? <Table/> : <GlobalCorrelation/>}
+                {(firstTeamId && secondTeamId) ? /*<Table/>*/null : <GlobalCorrelation/>}
             </div>
         );
     }
 }
 
-const mapStateToProps = (state: StatisticsStore): State => {
+const mapStateToProps = (state: StatisticsStore): StateProps => {
     return {
         firstTeamId: state.statistics.firstTeamId,
         secondTeamId: state.statistics.secondTeamId,
@@ -87,8 +90,7 @@ const mapStateToProps = (state: StatisticsStore): State => {
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<Action<string>>):
-    State => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
     return {
         onChangeFirstTeam: (teamId) => dispatch(setFirstTeamId(+teamId)),
         onChangeSecondTeam: (teamId) => dispatch(setSecondTeamId(+teamId)),

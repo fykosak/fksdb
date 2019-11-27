@@ -3,11 +3,10 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import Results from './results/components/';
 import Routing from './routing/components/';
-import Schedule from './schedule/components/';
 import Statistics from './statistics/components/';
 import TaskCodeApp from './submitForm/components/';
 
-const registerRouting: App = (element, module, component, mode, rawData, actions) => {
+const registerRouting: App = (element, module, component, mode, rawData) => {
     const wrap = document.querySelector('#wrap > .container');
     if (wrap) {
         wrap.className = wrap.className.split(' ').reduce((className, name) => {
@@ -54,44 +53,6 @@ const registerResults: App = (element, module, component, mode, rawData, actions
     }
 };
 
-const registerSchedule: App = (element, module, component, mode, rawData, actions) => {
-    if (!(element instanceof HTMLInputElement)) {
-        return false;
-    }
-    const data = JSON.parse(rawData);
-
-    const container = document.createElement('div');
-    element.parentElement.appendChild(container);
-    const descriptionElement = element.parentElement.querySelector('span');
-    let description = null;
-    if (descriptionElement) {
-        description = descriptionElement.innerText;
-        descriptionElement.style.display = 'none';
-    }
-    const labelElement = element.parentElement.parentElement.querySelector('label');
-    let label = null;
-    if (labelElement) {
-        label = labelElement.innerHTML;
-        labelElement.style.display = 'none';
-    }
-
-    if (!(element instanceof HTMLInputElement)) {
-        return false;
-    }
-
-    element.style.display = 'none';
-
-    ReactDOM.render(<Schedule
-        mode={mode}
-        actions={actions}
-        input={element}
-        data={data}
-        description={description}
-        label={label}
-    />, container);
-    return true;
-};
-
 const registerStatistics: App = (element, module, component, mode, rawData, actions) => {
 
     switch (mode) {
@@ -118,8 +79,6 @@ export const fyziklani: App = (element, module, component, mode, rawData, action
             return registerSubmitForm(element, module, component, mode, rawData, actions);
         case 'statistics':
             return registerStatistics(element, module, component, mode, rawData, actions);
-        case 'schedule':
-            return registerSchedule(element, module, component, mode, rawData, actions);
         default:
             throw new Error('not implement');
     }

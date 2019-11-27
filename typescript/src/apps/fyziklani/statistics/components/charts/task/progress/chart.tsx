@@ -13,11 +13,14 @@ import { setTaskId } from '../../../../actions';
 import { getColorByPoints } from '../../../../middleware/charts/colors';
 import { Store as StatisticsStore } from '../../../../reducers';
 
-interface State {
-    tasks?: Task[];
-    submits?: Submits;
+interface StateProps {
+    tasks: Task[];
+    submits: Submits;
 
-    onChangeTask?(taskId: number): void;
+}
+
+interface DispatchProps {
+    onChangeTask(taskId: number): void;
 }
 
 interface StatItem extends Task {
@@ -32,11 +35,11 @@ interface Stats {
     [taskId: number]: StatItem;
 }
 
-interface Props {
+interface OwnProps {
     availablePoints: number[];
 }
 
-class TaskStats extends React.Component<State & Props, {}> {
+class TaskStats extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
     public render() {
         const {submits, tasks, onChangeTask, availablePoints} = this.props;
         const tasksSubmits: Stats = {};
@@ -105,13 +108,13 @@ class TaskStats extends React.Component<State & Props, {}> {
     }
 }
 
-const mapStateToProps = (state: StatisticsStore): State => {
+const mapStateToProps = (state: StatisticsStore): StateProps => {
     return {
         submits: state.data.submits,
         tasks: state.data.tasks,
     };
 };
-const mapDispatchToProps = (dispatch: Dispatch<Action<any>>): State => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
     return {
         onChangeTask: (teamId) => dispatch(setTaskId(+teamId)),
     };

@@ -3,14 +3,14 @@ import { connect } from 'react-redux';
 import { FyziklaniResultsStore } from '../../../results/reducers';
 import { getCurrentDelta } from './timer';
 
-interface State {
-    toStart?: number;
-    toEnd?: number;
-    inserted?: Date;
-    visible?: boolean;
+interface StateProps {
+    toStart: number;
+    toEnd: number;
+    inserted: Date;
+    visible: boolean;
 }
 
-class Images extends React.Component<State, {}> {
+class Images extends React.Component<StateProps, {}> {
     private timerId: number;
 
     public componentDidMount() {
@@ -56,7 +56,7 @@ class Images extends React.Component<State, {}> {
     }
 }
 
-const mapStateToProps = (state: FyziklaniResultsStore): State => {
+const mapStateToProps = (state: FyziklaniResultsStore): StateProps => {
     return {
         inserted: state.timer.inserted,
         toEnd: state.timer.toEnd,

@@ -2,11 +2,11 @@ import * as React from 'react';
 import { Room } from '../../../helpers/interfaces/';
 import Place from './place';
 
-interface Props {
+interface OwnProps {
     info: Room;
 }
 
-export default class RoomComponent extends React.Component<Props, {}> {
+export default class RoomComponent extends React.Component<OwnProps, {}> {
 
     public render() {
         const {info} = this.props;

@@ -1,12 +1,9 @@
-import {
-    App,
-    NetteActions,
-} from '@appsCollector';
+import { App } from '@appsCollector';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import ParticipantAcquaintance from './participantAcquaintance';
 
-export const charts: App = (element: Element, module: string, component: string, mode: string, rawData: string, actions: NetteActions) => {
+export const charts: App = (element: Element, module: string, component: string, mode: string, rawData: string) => {
     const container = document.querySelector('.container');
     container.classList.remove('container');
     container.classList.add('container-fluid');

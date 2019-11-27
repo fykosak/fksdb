@@ -8,11 +8,11 @@ import TimeHistogram from './timeHistogram/';
 import TimeHistogramLines from './timeHistogramLines/';
 import Timeline from './timeline/';
 
-interface State {
-    taskId?: number;
+interface StateProps {
+    taskId: number;
 }
 
-class TaskStats extends React.Component<State, {}> {
+class TaskStats extends React.Component<StateProps, {}> {
     public render() {
         const {taskId} = this.props;
         const availablePoints = [5, 3, 2, 1];
@@ -36,7 +36,7 @@ class TaskStats extends React.Component<State, {}> {
     }
 }
 
-const mapStateToProps = (state: StatisticsStore): State => {
+const mapStateToProps = (state: StatisticsStore): StateProps => {
     return {
         taskId: state.statistics.taskId,
     };

@@ -2,11 +2,11 @@ import * as React from 'react';
 import { PaymentScheduleItem } from '../interfaces';
 import Row from './row';
 
-interface Props {
+interface OwnProps {
     items: PaymentScheduleItem[];
 }
 
-export default class Container extends React.Component<Props, {}> {
+export default class Container extends React.Component<OwnProps, {}> {
 
     public render() {
         const {items} = this.props;

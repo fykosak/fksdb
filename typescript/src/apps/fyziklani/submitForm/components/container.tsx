@@ -17,18 +17,18 @@ import {
 } from '../actions/';
 import FormContainer from './formContainer';
 
-interface Props {
+interface OwnProps {
     tasks: Task[];
     teams: Team[];
     actions: NetteActions;
     availablePoints: number[];
 }
 
-interface State {
-    onSubmit?(values: SubmitFormRequest): Promise<Response<void>>;
+interface DispatchProps {
+    onSubmit(values: SubmitFormRequest): Promise<Response<void>>;
 }
 
-class TaskCode extends React.Component<Props & State, {}> {
+class TaskCode extends React.Component<OwnProps & DispatchProps, {}> {
     public render() {
         const {tasks, teams, onSubmit, availablePoints} = this.props;
         return (
@@ -42,12 +42,12 @@ class TaskCode extends React.Component<Props & State, {}> {
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<Action>, ownProps: Props): State => {
+const mapDispatchToProps = (dispatch: Dispatch<Action>, ownProps: OwnProps): DispatchProps => {
     return {
         onSubmit: (values: SubmitFormRequest) => submitStart(dispatch, values, ownProps.actions.getAction('save')),
     };
 };
 
-export default connect((): State => {
+export default connect((): {} => {
     return {};
 }, mapDispatchToProps)(TaskCode);

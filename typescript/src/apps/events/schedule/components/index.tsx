@@ -23,6 +23,7 @@ interface OwnProps {
 
 export interface Params {
     display: {
+        groupTime: boolean;
         groupLabel: boolean;
         capacity: boolean;
         description: boolean;

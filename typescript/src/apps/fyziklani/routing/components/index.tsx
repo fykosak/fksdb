@@ -13,12 +13,12 @@ import {
 import { app } from '../reducers/';
 import App from './app';
 
-interface Props {
+interface OwnProps {
     teams: Team[];
     rooms: Room[];
 }
 
-export default class extends React.Component<Props, {}> {
+export default class extends React.Component<OwnProps, {}> {
 
     public render() {
         const store = config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);

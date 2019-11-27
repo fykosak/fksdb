@@ -28,10 +28,10 @@
   "devDependencies": {
     "@types/d3": "5.7.2",
     "@types/jquery": "latest",
-    "@types/promise-polyfill": "latest",
     "@types/react": "16.9.11",
     "@types/react-dom": "16.9.4",
     "@types/react-redux": "7.1.5",
+    "@types/promise-polyfill": "latest",
     "@types/redux-form": "8.2.0",
     "awesome-typescript-loader": "~5.2.1",
     "source-map-loader": "latest",

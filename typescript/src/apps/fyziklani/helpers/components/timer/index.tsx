@@ -4,17 +4,17 @@ import { State as OptionsState } from '../../options/reducers/';
 import { State as TimerState } from '../../reducers/timer';
 import { getCurrentDelta } from './timer';
 
-interface Props {
+interface OwnProps {
     mode: "big" | "small";
 }
 
-interface State {
-    toStart?: number;
-    toEnd?: number;
-    inserted?: Date;
+interface StateProps {
+    toStart: number;
+    toEnd: number;
+    inserted: Date;
 }
 
-class Timer extends React.Component<State & Props, {}> {
+class Timer extends React.Component<StateProps & OwnProps, {}> {
     private timerId;
 
     public componentDidMount() {
@@ -64,7 +64,7 @@ interface Store {
     options: OptionsState;
 }
 
-const mapStateToProps = (state: Store): State => {
+const mapStateToProps = (state: Store): StateProps => {
     return {
         inserted: state.timer.inserted,
         toEnd: state.timer.toEnd,

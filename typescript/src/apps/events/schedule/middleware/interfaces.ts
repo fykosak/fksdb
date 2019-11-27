@@ -4,7 +4,7 @@ import { Price } from '@shared/components/displays/price/interfaces';
 export interface ScheduleItemDef {
     scheduleGroupId: number;
     price: Price;
-    totalCapacity: number;
+    totalCapacity?: number;
     usedCapacity: number;
     scheduleItemId: number;
     label: LocalizedString;
