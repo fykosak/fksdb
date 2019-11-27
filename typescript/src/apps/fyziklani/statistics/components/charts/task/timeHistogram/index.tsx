@@ -3,12 +3,12 @@ import * as React from 'react';
 import Legend from '../../team/legend';
 import Chart from './chart';
 
-interface Props {
+interface OwnProps {
     taskId: number;
     availablePoints: number[];
 }
 
-export default class Timeline extends React.Component<Props, {}> {
+export default class Timeline extends React.Component<OwnProps, {}> {
 
     public render() {
         const {taskId, availablePoints} = this.props;

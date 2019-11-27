@@ -6,8 +6,8 @@ import Timer from '../timer/';
 import Images from '../timer/images';
 
 interface StateProps {
-    visible?: boolean;
-    hardVisible?: boolean;
+    visible: boolean;
+    hardVisible: boolean;
 }
 
 interface OwnProps {

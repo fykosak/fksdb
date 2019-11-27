@@ -1,12 +1,12 @@
 import TimeDisplay from '@shared/components/displays/time';
 import * as React from 'react';
 
-interface Props {
+interface OwnProps {
     start: string;
     end: string;
 }
 
-export default class TimeLabel extends React.Component<Props, {}> {
+export default class TimeLabel extends React.Component<OwnProps, {}> {
 
     public render() {
         const {start, end} = this.props;
@@ -15,10 +15,8 @@ export default class TimeLabel extends React.Component<Props, {}> {
                 <div className={'w-100'}>
                     <TimeDisplay
                         date={start}
-                        options={{hour: 'numeric', minute: 'numeric'}}
                     /> - <TimeDisplay
                     date={end}
-                    options={{hour: 'numeric', minute: 'numeric'}}
                 />
                 </div>
             </div>

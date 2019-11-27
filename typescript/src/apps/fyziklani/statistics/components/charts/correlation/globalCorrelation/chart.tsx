@@ -19,46 +19,37 @@ import {
 import {
     calculateCorrelation,
     getTimeLabel,
-    PreprocessedSubmit,
 } from '../../../../middleware/charts/correlation';
+import { calculateSubmitsForTeams } from '../../../../middleware/charts/submitsForTeams';
 import { Store as StatisticsStore } from '../../../../reducers';
 
-interface State {
-    submits?: Submits;
-    tasks?: Task[];
-    teams?: Team[];
-    firstTeamId?: number;
-    secondTeamId?: number;
-
-    onChangeFirstTeam?(id: number): void;
-
-    onChangeSecondTeam?(id: number): void;
+interface StateProps {
+    submits: Submits;
+    tasks: Task[];
+    teams: Team[];
+    firstTeamId: number;
+    secondTeamId: number;
 }
 
-class GlobalCorrelation extends React.Component<State, {}> {
+interface DispatchProps {
+    onChangeFirstTeam(id: number): void;
+
+    onChangeSecondTeam(id: number): void;
+}
+
+class GlobalCorrelation extends React.Component<StateProps & DispatchProps, {}> {
     private table;
 
     public componentDidMount() {
         const table: any = $(findDOMNode(this.table));
-        table.tablesorter();
+      //  table.tablesorter();
     }
 
     public render() {
 
         const color = scaleLinear<string, string>().domain([0, 1000 * 1000]).range(['#ff0000', '#ffffff']);
         const {submits, teams} = this.props;
-        const submitsForTeams: { [teamId: number]: { [taskId: number]: PreprocessedSubmit } } = {};
-        for (const index in submits) {
-            if (submits.hasOwnProperty(index)) {
-                const submit = submits[index];
-                const {teamId, taskId: taskId} = submit;
-                submitsForTeams[teamId] = submitsForTeams[teamId] || {};
-                submitsForTeams[teamId][taskId] = {
-                    ...submit,
-                    timestamp: (new Date(submit.created)).getTime(),
-                };
-            }
-        }
+        const submitsForTeams = calculateSubmitsForTeams(submits);
         const rows = [];
         teams.forEach((firstTeam) => {
             teams.forEach((secondTeam) => {
@@ -106,7 +97,7 @@ class GlobalCorrelation extends React.Component<State, {}> {
     }
 }
 
-const mapStateToProps = (state: StatisticsStore): State => {
+const mapStateToProps = (state: StatisticsStore): StateProps => {
     return {
         firstTeamId: state.statistics.firstTeamId,
         secondTeamId: state.statistics.secondTeamId,
@@ -116,7 +107,7 @@ const mapStateToProps = (state: StatisticsStore): State => {
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): State => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
     return {
         onChangeFirstTeam: (teamId) => dispatch(setFirstTeamId(+teamId)),
         onChangeSecondTeam: (teamId) => dispatch(setSecondTeamId(+teamId)),

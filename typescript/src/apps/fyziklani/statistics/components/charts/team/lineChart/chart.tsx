@@ -23,15 +23,15 @@ import {
 } from '../../../../middleware/charts/lines';
 import { Store as StatisticsStore } from '../../../../reducers';
 
-interface State {
-    submits?: Submits;
-    tasks?: Task[];
-    gameStart?: Date;
-    gameEnd?: Date;
-    activePoints?: number;
+interface StateProps {
+    submits: Submits;
+    tasks: Task[];
+    gameStart: Date;
+    gameEnd: Date;
+    activePoints: number;
 }
 
-interface Props {
+interface OwnProps {
     teamId: number;
 }
 
@@ -40,10 +40,10 @@ export interface ExtendedSubmit extends Submit {
     currentTask: Task;
 }
 
-class PointsInTime extends React.Component<State & Props, {}> {
+class PointsInTime extends React.Component<StateProps & OwnProps, {}> {
 
-    private xAxis: any;
-    private yAxis: any;
+    private xAxis: SVGElement;
+    private yAxis: SVGElement;
 
     private xScale: ScaleTime<number, number>;
     private yScale: ScaleLinear<number, number>;
@@ -103,7 +103,7 @@ class PointsInTime extends React.Component<State & Props, {}> {
                     cx={this.xScale(new Date(submit.created))}
                 >
                     <title>
-                        {`${submit.currentTask.label} - ${(new Date(submit.created)).toLocaleTimeString()}`}
+                        {submit.currentTask.label} - {(new Date(submit.created)).toLocaleTimeString()}
                     </title>
                 </circle>
             );
@@ -144,7 +144,7 @@ class PointsInTime extends React.Component<State & Props, {}> {
     }
 }
 
-const mapStateToProps = (state: StatisticsStore): State => {
+const mapStateToProps = (state: StatisticsStore): StateProps => {
     return {
         activePoints: state.statistics.activePoints,
         gameEnd: new Date(state.timer.gameEnd),

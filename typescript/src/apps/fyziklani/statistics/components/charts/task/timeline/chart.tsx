@@ -14,22 +14,22 @@ import {
 import { getColorByPoints } from '../../../../middleware/charts/colors';
 import { Store as StatisticsStore } from '../../../../reducers';
 
-interface State {
-    submits?: Submits;
-    teams?: Team[];
-    fromDate?: Date;
-    toDate?: Date;
+interface StateProps {
+    submits: Submits;
+    teams: Team[];
+    fromDate: Date;
+    toDate: Date;
 }
 
 interface ExtendedSubmit extends Submit {
     currentTeam: Team;
 }
 
-interface Props {
+interface OwnProps {
     taskId: number;
 }
 
-class Timeline extends React.Component<State & Props, {}> {
+class Timeline extends React.Component<StateProps & OwnProps, {}> {
 
     private xAxis: SVGGElement;
 
@@ -116,7 +116,7 @@ class Timeline extends React.Component<State & Props, {}> {
     }
 }
 
-const mapStateToProps = (state: StatisticsStore): State => {
+const mapStateToProps = (state: StatisticsStore): StateProps => {
     return {
         fromDate: state.statistics.fromDate,
         submits: state.data.submits,

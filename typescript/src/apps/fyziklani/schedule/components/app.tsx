@@ -14,7 +14,7 @@ import { Store as ScheduleStore } from '../reducers';
 import { Data } from './index';
 import Row from './row';
 
-interface Props {
+interface OwnProps {
     data: {
         data: Data;
         visible: boolean;
@@ -23,15 +23,18 @@ interface Props {
     label: string;
 }
 
-interface State {
-    showChooser?: boolean;
-
-    onToggleChooser?(): void;
-
-    onSetVisibility?(state: boolean): void;
+// TODO
+interface StateProps {
+    showChooser: boolean;
 }
 
-class Schedule extends React.Component<Props & State, {}> {
+interface DispatchProps {
+    onToggleChooser(): void;
+
+    onSetVisibility(state: boolean): void;
+}
+
+class Schedule extends React.Component<OwnProps & StateProps & DispatchProps, {}> {
     public componentDidMount() {
         this.props.onSetVisibility(this.props.data.visible);
     }
@@ -78,13 +81,13 @@ class Schedule extends React.Component<Props & State, {}> {
     }
 }
 
-const mapStateToProps = (store: ScheduleStore): State => {
+const mapStateToProps = (store: ScheduleStore): StateProps => {
     return {
         showChooser: store.compactValue.showChooser,
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): State => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
     return {
         onSetVisibility: (state) => dispatch(setVisibility(state)),
         onToggleChooser: () => dispatch(toggleChooser()),

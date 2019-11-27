@@ -14,19 +14,21 @@ import {
     ScheduleChooserItem,
 } from './index';
 
-interface State {
-    values?: {
+interface StateProps {
+    values: {
         [key: string]: number;
     };
-
-    onToggleChooser?(): void;
 }
 
-interface Props {
+interface DispatchProps {
+    onToggleChooser(): void;
+}
+
+interface OwnProps {
     data: Data;
 }
 
-class CompactValue extends React.Component<State & Props, {}> {
+class CompactValue extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
 
     public render() {
         const {data, values, onToggleChooser} = this.props;
@@ -70,13 +72,13 @@ class CompactValue extends React.Component<State & Props, {}> {
     }
 }
 
-const mapStateToProps = (store: ScheduleStore): State => {
+const mapStateToProps = (store: ScheduleStore): StateProps => {
     return {
         values: store.inputConnector.data,
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): State => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
     return {
         onToggleChooser: () => dispatch(toggleChooser()),
     };

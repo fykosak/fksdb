@@ -15,22 +15,23 @@ export default class Results extends React.Component<OwnProps, {}> {
     public render() {
         const {mode} = this.props;
         return <>{
-                     (mode === 'presentation') ?
-                         (<>
-                             <Settings/>
-                             <div className={'fixed-top h-100 w-100'} data-toggle="modal" data-target="#fyziklaniResultsOptionModal">
-                                 <ResultsShower className={'inner-headline h-100 w-100'}>
-                                     <ResultsPresentation/>
-                                     <PositionSwitcher/>
-                                 </ResultsShower>
-                             </div>
-                         </>) : (<div>
-                             <FilterSelect mode={mode}/>
-                             <ResultsShower className={null}>
-                                 <ResultsTable/>
-                             </ResultsShower>
-                         </div>)
-                 }</>;
+            (mode === 'presentation') ?
+                (<>
+                    <Settings/>
+                    <div className={'fixed-top h-100 w-100'} data-toggle="modal"
+                         data-target="#fyziklaniResultsOptionModal">
+                        <ResultsShower className={'inner-headline h-100 w-100'}>
+                            <ResultsPresentation/>
+                            <PositionSwitcher/>
+                        </ResultsShower>
+                    </div>
+                </>) : (<div>
+                    <FilterSelect mode={mode}/>
+                    <ResultsShower className={null}>
+                        <ResultsTable/>
+                    </ResultsShower>
+                </div>)
+        }</>;
 
     }
 }

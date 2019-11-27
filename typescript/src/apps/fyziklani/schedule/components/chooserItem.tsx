@@ -11,18 +11,20 @@ import { Store as ScheduleStore } from '../reducers/';
 import { ChooserParallel } from './index';
 import Item from './item';
 
-interface Props {
+interface OwnProps {
     item: ChooserParallel;
     blockName: string;
 }
 
-interface State {
-    value?: number;
-
-    setSchedule?(id: number): void;
+interface StateProps {
+    value: number;
 }
 
-class ChooserItem extends React.Component<Props & State, {}> {
+interface DispatchProps {
+    setSchedule(id: number): void;
+}
+
+class ChooserItem extends React.Component<OwnProps & StateProps & DispatchProps, {}> {
 
     public render() {
         const {item, value} = this.props;
@@ -51,14 +53,14 @@ class ChooserItem extends React.Component<Props & State, {}> {
     }
 }
 
-const mapStateToProps = (store: ScheduleStore, ownProps: Props): State => {
+const mapStateToProps = (store: ScheduleStore, ownProps: OwnProps): StateProps => {
     const {blockName} = ownProps;
     return {
         value: store.inputConnector.data.hasOwnProperty(blockName) ? store.inputConnector.data[blockName] : null,
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<Action<string>>, ownProps: Props): State => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>, ownProps: OwnProps): DispatchProps => {
     return {
         setSchedule: (id: number) => dispatch(changeData(ownProps.blockName, id)),
     };

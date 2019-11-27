@@ -19,7 +19,7 @@ interface StateProps {
 }
 
 interface DispatchProps {
-    onSetNewPosition(position: number, category?: string): void;
+    onSetNewPosition(position: number, category: string): void;
 }
 
 class PositionSwitcher extends React.Component<StateProps & DispatchProps, {}> {
@@ -37,7 +37,7 @@ class PositionSwitcher extends React.Component<StateProps & DispatchProps, {}> {
         this.abortRun = true;
     }
 
-    private async run(): Promise<void> {
+    private async run(): Promise<void> | never {
 
         const {cols, rows, position, delay, onSetNewPosition, category, teams} = this.props;
         let activeTeams;
@@ -64,7 +64,7 @@ class PositionSwitcher extends React.Component<StateProps & DispatchProps, {}> {
         if (this.abortRun) {
             return;
         }
-        return this.run();
+        this.run();
     }
 
     private getCategory(): string {
@@ -82,7 +82,7 @@ class PositionSwitcher extends React.Component<StateProps & DispatchProps, {}> {
 
 const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
     return {
-        onSetNewPosition: (position: number, category?: string) => dispatch(setPosition(position, category)),
+        onSetNewPosition: (position: number, category: string) => dispatch(setPosition(position, category)),
     };
 };
 const mapStateToPros = (state: FyziklaniResultsStore): StateProps => {

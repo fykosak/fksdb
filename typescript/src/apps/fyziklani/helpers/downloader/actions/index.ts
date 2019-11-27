@@ -39,7 +39,7 @@ export const fetchResults = (
 
 export const waitForFetch = (
     accessKey: string,
-    dispatch: Dispatch<Action>,
+    dispatch: Dispatch<Action<string>>,
     delay: number,
     lastUpdated: string = null,
     url: string,

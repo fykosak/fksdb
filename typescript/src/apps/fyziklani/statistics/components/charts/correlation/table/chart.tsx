@@ -9,20 +9,20 @@ import {
 } from '../../../../../helpers/interfaces';
 import {
     getTimeLabel,
-    PreprocessedSubmit,
 } from '../../../../middleware/charts/correlation';
 import { getAverageNStandardDeviation } from '../../../../middleware/charts/stdDev';
+import { calculateSubmitsForTeams } from '../../../../middleware/charts/submitsForTeams';
 import { Store as StatisticsStore } from '../../../../reducers';
 
-interface State {
-    submits?: Submits;
-    tasks?: Task[];
-    teams?: Team[];
-    firstTeamId?: number;
-    secondTeamId?: number;
+interface StateProps {
+    submits: Submits;
+    tasks: Task[];
+    teams: Team[];
+    firstTeamId: number;
+    secondTeamId: number;
 }
 
-class Table extends React.Component<State, {}> {
+class Table extends React.Component<StateProps, {}> {
 
     public render() {
 
@@ -39,18 +39,7 @@ class Table extends React.Component<State, {}> {
                 }
             }
         }
-        const submitsForTeams: { [teamId: number]: { [taskId: number]: PreprocessedSubmit } } = {};
-        for (const index in submits) {
-            if (submits.hasOwnProperty(index)) {
-                const submit = submits[index];
-                const {teamId, taskId: taskId} = submit;
-                submitsForTeams[teamId] = submitsForTeams[teamId] || {};
-                submitsForTeams[teamId][taskId] = {
-                    ...submit,
-                    timestamp: (new Date(submit.created)).getTime(),
-                };
-            }
-        }
+        const submitsForTeams = calculateSubmitsForTeams(submits);
 
         const rows = [];
         const deltas = [];
@@ -99,7 +88,7 @@ class Table extends React.Component<State, {}> {
     }
 }
 
-const mapStateToProps = (state: StatisticsStore): State => {
+const mapStateToProps = (state: StatisticsStore): StateProps => {
     return {
         firstTeamId: state.statistics.firstTeamId,
         secondTeamId: state.statistics.secondTeamId,

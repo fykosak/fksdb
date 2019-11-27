@@ -13,7 +13,7 @@ import logger from 'redux-logger';
 import { app } from '../reducers';
 import App from './app';
 
-interface Props {
+interface OwnProps {
     data: {
         data: Data;
         visible: boolean;
@@ -67,7 +67,7 @@ export interface Data {
     [key: string]: ScheduleItem;
 }
 
-export default class Index extends React.Component<Props, {}> {
+export default class Index extends React.Component<OwnProps, {}> {
 
     public render() {
         const store = config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);

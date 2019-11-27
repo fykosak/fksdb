@@ -14,16 +14,16 @@ import Form from './form/';
 import Rooms from './rooms/';
 import UnRoutedTeams from './unroutedTeams/';
 
-interface State {
-    onAddTeams?: (teams: Team[]) => void;
+interface DispatchProps {
+    onAddTeams(teams: Team[]): void;
 }
 
-interface Props {
+interface OwnProps {
     teams: Team[];
     rooms: Room[];
 }
 
-class RoutingApp extends React.Component<State & Props, {}> {
+class RoutingApp extends React.Component<DispatchProps & OwnProps, {}> {
 
     public componentDidMount() {
         const {onAddTeams, teams} = this.props;
@@ -52,11 +52,11 @@ class RoutingApp extends React.Component<State & Props, {}> {
     }
 }
 
-const mapStateToProps = (): State => {
+const mapStateToProps = (): {} => {
     return {};
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<Action>): State => {
+const mapDispatchToProps = (dispatch: Dispatch<Action>): DispatchProps => {
     return {
         onAddTeams: (teams) => dispatch(addTeams(teams)),
     };

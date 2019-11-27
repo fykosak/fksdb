@@ -4,13 +4,13 @@ import {
     Team,
 } from '../../helpers/interfaces/';
 
-interface Props {
+interface OwnProps {
     code: string;
     tasks: Task[];
     teams: Team[];
 }
 
-export default class TaskInput extends React.Component<Props, {}> {
+export default class TaskInput extends React.Component<OwnProps, {}> {
 
     public render() {
         const {code: value, tasks, teams} = this.props;

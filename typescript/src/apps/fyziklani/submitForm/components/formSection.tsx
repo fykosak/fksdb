@@ -21,7 +21,7 @@ import CodeInput from './input';
 import SubmitButtons from './submitButtons';
 import ValueDisplay from './valueDisplay';
 
-export interface Props {
+export interface OwnProps {
     accessKey: string;
     tasks: Task[];
     teams: Team[];
@@ -30,15 +30,15 @@ export interface Props {
     availablePoints: number[];
     handleSubmit: SubmitHandler<{ code: string }, any, string>;
 
-    onSubmit?(values: SubmitFormRequest): Promise<Response<void>>;
+    onSubmit(values: SubmitFormRequest): Promise<Response<void>>;
 }
 
-interface State {
-    code?: string;
-    messages?: Message[];
+interface StateProps {
+    code: string;
+    messages: Message[];
 }
 
-class FormSection extends React.Component<Props & State, {}> {
+class FormSection extends React.Component<OwnProps & StateProps, {}> {
 
     public render() {
         const {valid, submitting, handleSubmit, onSubmit, code, tasks, teams, messages, availablePoints} = this.props;
@@ -74,7 +74,7 @@ class FormSection extends React.Component<Props & State, {}> {
     }
 }
 
-const mapStateToProps = (state: SubmitStore, ownProps: Props): State => {
+const mapStateToProps = (state: SubmitStore, ownProps: OwnProps): StateProps => {
     const selector = formValueSelector(FORM_NAME);
     const {accessKey} = ownProps;
     return {

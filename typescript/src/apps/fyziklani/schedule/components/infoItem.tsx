@@ -3,12 +3,12 @@ import * as React from 'react';
 import { LocalizedInfo } from './index';
 import Item from './item';
 
-interface Props {
+interface OwnProps {
     item: LocalizedInfo;
     blockName: string;
 }
 
-export default class InfoItem extends React.Component<Props, {}> {
+export default class InfoItem extends React.Component<OwnProps, {}> {
 
     public render() {
         const {item} = this.props;

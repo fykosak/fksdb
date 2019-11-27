@@ -7,7 +7,7 @@ import Schedule from './schedule/components/';
 import Statistics from './statistics/components/';
 import TaskCodeApp from './submitForm/components/';
 
-const registerRouting: App = (element, module, component, mode, rawData, actions) => {
+const registerRouting: App = (element, module, component, mode, rawData) => {
     const wrap = document.querySelector('#wrap > .container');
     if (wrap) {
         wrap.className = wrap.className.split(' ').reduce((className, name) => {

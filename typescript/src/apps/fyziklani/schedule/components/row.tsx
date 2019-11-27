@@ -4,12 +4,12 @@ import { ScheduleItem } from './index';
 import InfoItem from './infoItem';
 import TimeLabel from './timeLabel';
 
-interface Props {
+interface OwnProps {
     blockData: ScheduleItem;
     blockName: string;
 }
 
-export default class Row extends React.Component<Props, {}> {
+export default class Row extends React.Component<OwnProps, {}> {
 
     public render() {
         const {blockData, blockName} = this.props;

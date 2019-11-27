@@ -13,19 +13,24 @@ import { removeTeamPlace } from '../../actions/teams';
 import { DragNDropData } from '../../middleware/interfaces';
 import { Store as RoutingStore } from '../../reducers/';
 
-interface State {
-    isUpdated?: boolean;
-    isDragged?: boolean;
-    onDragStart?: (teamId: number) => void;
-    onDragEnd?: () => void;
-    onRemovePlace?: (teamId: number) => void;
+interface StateProps {
+    isUpdated: boolean;
+    isDragged: boolean;
 }
 
-interface Props {
+interface DispatchProps {
+    onDragStart(teamId: number): void;
+
+    onDragEnd(): void;
+
+    onRemovePlace(teamId: number): void;
+}
+
+interface OwnProps {
     team: Team;
 }
 
-class TeamComponent extends React.Component<Props & State, {}> {
+class TeamComponent extends React.Component<OwnProps & StateProps & DispatchProps, {}> {
     public render() {
 
         const {onDragStart, onDragEnd, team, onRemovePlace, isUpdated, isDragged} = this.props;
@@ -36,8 +41,8 @@ class TeamComponent extends React.Component<Props & State, {}> {
             <div className={'mb-3 ' + (hasPlace ? 'col-12' : 'col-6')}
                  draggable={true}
                  onDragStart={(event) => {
-                     event.dataTransfer.setData("text/plain", '');
-                     event.dataTransfer.dropEffect = "copy";
+                     event.dataTransfer.setData('text/plain', '');
+                     event.dataTransfer.dropEffect = 'copy';
                      onDragStart(team.teamId);
                  }}
                  onClick={() => isDragged ? onDragEnd() : onDragStart(team.teamId)}
@@ -64,14 +69,14 @@ class TeamComponent extends React.Component<Props & State, {}> {
     }
 }
 
-const mapStateToProps = (state: RoutingStore, ownProps: Props): State => {
+const mapStateToProps = (state: RoutingStore, ownProps: OwnProps): StateProps => {
     return {
         isDragged: state.dragNDrop.data && (state.dragNDrop.data.teamId === ownProps.team.teamId),
         isUpdated: (state.teams.updatedTeams.indexOf(ownProps.team.teamId) !== -1),
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): State => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
     return {
         onDragEnd: () => dispatch(dragEnd()),
         onDragStart: (teamId) => dispatch(dragStart<DragNDropData>({teamId})),
