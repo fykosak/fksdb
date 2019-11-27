@@ -21,7 +21,7 @@ acl:
     - addRole(org)                      # org (automatická role)
     - addRole(webmaster, org)           # webař
     - addRole(taskManager, org)         # úlohář
-    - addRole(inboxManager, org)          # koordinátor obálkování, příjemce řešení
+    - addRole(inboxManager, org)        # koordinátor obálkování, příjemce řešení
     - addRole(exportDesigner, org)      # tvůrce exportů (!! má RO přístup ke všem datům)
     - addRole(dataManager, [org, exportDesigner]) # správce dat DB
     - addRole(eventManager, org)        # správce přihlášek
@@ -46,8 +46,11 @@ acl:
     - addResource(eventOrg)      # create, edit, list, delete
     - addResource(event)         # create, edit, list, application
     - addResource(teacher)        # create, edit, list
-    - addResource(eventAccommodation) # create, edit, list
     - addResource(mail-send) #default
+
+    #applications
+    - addResource(event.participant) #list, detail
+    - addResource(fyziklani.team) #route, list, detail
 
     #fyziklani
     - addResource(fyziklani.dashboard) # default
@@ -57,15 +60,11 @@ acl:
     - addResource(fyziklani.results) # final, correlation, presentation,
     - addResource(fyziklani.submit) # deafult
     - addResource(fyziklani.gameSetup) # deafult
-    - addResource(fyziklani.team) #route
 
-#event module
-
-    - addResource(event.application) #list, detail
-    - addResource(event.teamApplication) #list, detail
+    #event module
+    - addResource(event.application) #import
     - addResource(event.dashboard) # default
     - addResource(event.schedule) # default
-    - addResource(event.accommodation) # list, create, edit, billeted
     - addResource(event.model) #default
     - addResource(event.applicationsTimeProgress) # default
     - addResource(event.payment) # create, edit, list
@@ -117,6 +116,8 @@ acl:
     - allow(eventManager, school, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, export, execute) # TODO (needs better distinction -- assertion at event org)
     - allow(eventManager, person, stalk.full)
+    - allow(eventManager, fyziklani.team, ::constant(Nette\Security\Permission::ALL))
+    - allow(eventManager, event.participant, ::constant(Nette\Security\Permission::ALL))
 
     - allow(boss, org, ::constant(Nette\Security\Permission::ALL))
     - allow(boss, person, edit, [@ownerAssertion, 'existsOwnContestant'])
@@ -153,9 +154,6 @@ acl:
     - allow(eventManager, event.schedule, ::constant(Nette\Security\Permission::ALL)) #môže všetko s programom
     - allow(eventManager, event.model, ::constant(Nette\Security\Permission::ALL)) #može vidieť model
     - allow(eventManager, event.application, ::constant(Nette\Security\Permission::ALL)) #môže zobraziť prihlášky
-    - allow(eventManager, event.teamApplication, ::constant(Nette\Security\Permission::ALL)) # môže zobraziť prihlášky tímov
-    - allow(eventManager, event.accommodation, ::constant(Nette\Security\Permission::ALL)) #môže spravovať ubytovanie (old systém)
-
     - allow(boss, event.applicationsTimeProgress, ::constant(Nette\Security\Permission::ALL))
 
     # payment
