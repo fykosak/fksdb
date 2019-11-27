@@ -60,7 +60,7 @@ acl:
     - addResource(fyziklani.team) #route
 
 #event module
-
+    - addResource(event.participant) #list, detail
     - addResource(event.application) #list, detail
     - addResource(event.teamApplication) #list, detail
     - addResource(event.dashboard) # default
@@ -117,6 +117,8 @@ acl:
     - allow(eventManager, school, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, export, execute) # TODO (needs better distinction -- assertion at event org)
     - allow(eventManager, person, stalk.full)
+    - allow(eventManager, fyziklani.team, ::constant(Nette\Security\Permission::ALL))
+    - allow(eventManager, event.participant, ::constant(Nette\Security\Permission::ALL))
 
     - allow(boss, org, ::constant(Nette\Security\Permission::ALL))
     - allow(boss, person, edit, [@ownerAssertion, 'existsOwnContestant'])
