@@ -18,7 +18,7 @@ class EmailPrinter extends AbstractValuePrinter {
     protected function getHtml($value): Html {
         if (\is_null($value)) {
             return NotSetBadge::getHtml();
-        }else{
+        } else {
             return Html::el('a')->addAttributes(['href' => 'mailto:' . $value])->addText($value);
         }
     }
