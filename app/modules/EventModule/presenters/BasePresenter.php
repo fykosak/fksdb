@@ -19,6 +19,9 @@ use Nette\DI\Container;
  * @author Lukáš Timko
  */
 abstract class BasePresenter extends AuthenticatedPresenter {
+
+    const TEAM_EVENTS = [1, 9];
+
     /**
      *
      * @var ModelEvent

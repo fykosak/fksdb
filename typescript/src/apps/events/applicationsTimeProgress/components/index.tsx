@@ -11,7 +11,9 @@ export interface Data {
         [eventId: number]: Event;
     };
     teams: {
-        [eventId: number]: Team[];
+        [eventId: number]: Array<{
+            created: string;
+        }>;
     };
 }
 

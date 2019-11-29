@@ -7,7 +7,7 @@ import {
     createStore,
 } from 'redux';
 import logger from 'redux-logger';
-import Downloader from '../../helpers/downloader/components/';
+import Downloader from '../../downloader/components/';
 import { app } from '../reducers';
 import App from './app';
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Timer from '../../../helpers/components/timer/';
+import Timer from '../../../timer/components';
 import CorrelationStats from './correlation/';
 import TasksStats from './task/';
 import TeamStats from './team/';

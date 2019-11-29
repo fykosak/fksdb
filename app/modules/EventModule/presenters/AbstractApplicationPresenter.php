@@ -20,7 +20,6 @@ use function in_array;
 abstract class AbstractApplicationPresenter extends BasePresenter {
     use EventEntityTrait;
 
-    const TEAM_EVENTS = [1, 9];
 
     /**
      * @var ApplicationHandlerFactory

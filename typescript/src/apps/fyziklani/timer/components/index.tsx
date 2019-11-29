@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { State as OptionsState } from '../../options/reducers/';
-import { State as TimerState } from '../../reducers/timer';
-import { getCurrentDelta } from './timer';
+import { State as OptionsState } from '../../options/reducers';
+import { getCurrentDelta } from '../middleware/timer';
+import { State as TimerState } from '../reducers/timer';
 
 interface OwnProps {
     mode: "big" | "small";

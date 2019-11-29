@@ -1,5 +1,5 @@
 import * as React from 'react';
-import ResultsShower from '../../../helpers/components/resultsShower/index';
+import ResultsShower from '../../../helpers/components/resultsShower';
 import ResultsPresentation from './presentation/';
 import PositionSwitcher from './presentation/positionSwitcher';
 import Settings from './presentation/settings/';

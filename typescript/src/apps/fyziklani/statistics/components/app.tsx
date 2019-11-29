@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import Loading from '../../helpers/components/loading/';
-import ResultsShower from '../../helpers/components/resultsShower/index';
-import HardVisibleSwitch from '../../helpers/options/compoents/hardVisibleSwitch';
+import Loading from '../../helpers/components/loading';
+import ResultsShower from '../../helpers/components/resultsShower';
+import HardVisibleSwitch from '../../options/compoents/hardVisibleSwitch';
 import { Store as StatisticsStore } from '../reducers';
 import ChartsContainer from './charts/';
 

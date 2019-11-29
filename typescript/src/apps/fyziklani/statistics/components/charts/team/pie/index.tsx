@@ -1,6 +1,6 @@
 import { lang } from '@i18n/i18n';
+import ChartContainer from '@shared/components/chartContainer';
 import * as React from 'react';
-import Legend from '../legend';
 import Chart from './chart';
 
 interface OwnProps {
@@ -11,12 +11,11 @@ export default class PointsPie extends React.Component<OwnProps, {}> {
 
     public render() {
         const {teamId} = this.props;
-        return (
-            <div className={'fyziklani-chart-container'}>
-                <h3>{lang.getText('Success of submitting')}</h3>
-                <Chart teamId={teamId}/>
-                <Legend inline={false}/>
-            </div>
-        );
+        return <ChartContainer
+            chart={Chart}
+            chartProps={{teamId}}
+            includeLegend={false}
+            headline={lang.getText('Success of submitting')}
+        />;
     }
 }

@@ -1,4 +1,5 @@
 import { lang } from '@i18n/i18n';
+import ChartContainer from '@shared/components/chartContainer';
 import * as React from 'react';
 import Chart from './chart';
 
@@ -15,11 +16,12 @@ export default class Timeline extends React.Component<OwnProps, {}> {
 
     public render() {
         const {taskId} = this.props;
-        return (
-            <div className={'fyziklani-chart-container'}>
-                <h3>{lang.getText('Timeline')}</h3>
-                <Chart taskId={taskId}/>
-            </div>
-        );
+        return <ChartContainer
+            chart={Chart}
+            chartProps={{taskId}}
+            includeLegend={true}
+            headline={lang.getText('Timeline')}
+        />;
+
     }
 }

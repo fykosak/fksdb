@@ -16,7 +16,6 @@ import { Store as StatisticsStore } from '../../../../reducers';
 interface StateProps {
     tasks: Task[];
     submits: Submits;
-
 }
 
 interface DispatchProps {

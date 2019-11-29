@@ -6,11 +6,11 @@ import {
     Action,
     Dispatch,
 } from 'redux';
-import { FyziklaniResultsStore } from '../../../results/reducers/';
+import { FyziklaniResultsStore } from '../../results/reducers';
 import {
     fetchResults,
     waitForFetch,
-} from '../actions/';
+} from '../actions';
 import jqXHR = JQuery.jqXHR;
 
 interface StateProps {

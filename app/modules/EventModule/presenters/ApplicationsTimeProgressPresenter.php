@@ -15,6 +15,10 @@ use Nette\Application\ForbiddenRequestException;
  * @package EventModule
  */
 class ApplicationsTimeProgressPresenter extends BasePresenter {
+    private $eventIds = [
+        1 => [1, 27, 95, 116, 125, 137, 145],
+        9 => [8, 94, 114, 122, 134, 141],
+    ];
     /**
      * @var ServiceFyziklaniTeam
      */
@@ -56,7 +60,6 @@ class ApplicationsTimeProgressPresenter extends BasePresenter {
             $row = $this->serviceEvent->findByPrimary($id);
             $events[$id] = ModelEvent::createFromActiveRow($row);
         }
-
         return new TeamApplicationsTimeProgress($this->context, $events, $this->serviceFyziklaniTeam);
     }
 
@@ -68,15 +71,11 @@ class ApplicationsTimeProgressPresenter extends BasePresenter {
      * TODO hardcore eventIds
      */
     private function getEventIdsByType(): array {
-        switch ($this->getEvent()->event_type_id) {
-            case 1:
-                return [1, 27, 95, 116, 125, 137];
-            case 9:
-                return [8, 94, 114, 122, 134, 141];
-            default:
-                throw new ForbiddenRequestException();
-
+        $typeId = $this->getEvent()->event_type_id;
+        if (isset($this->eventIds[$typeId])) {
+            return $this->eventIds[$typeId];
         }
+        throw new ForbiddenRequestException();
     }
 
 }

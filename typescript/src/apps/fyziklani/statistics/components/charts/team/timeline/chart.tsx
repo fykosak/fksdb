@@ -1,3 +1,4 @@
+import AbstractChart from '@shared/components/chart';
 import { axisBottom } from 'd3-axis';
 import {
     ScaleLinear,
@@ -33,7 +34,7 @@ interface OwnProps {
     teamId: number;
 }
 
-class TimeLine extends React.Component<StateProps & OwnProps, {}> {
+class TimeLine extends AbstractChart<StateProps & OwnProps, {}> {
 
     private xAxis: SVGElement;
     private ySize: number;
@@ -56,7 +57,7 @@ class TimeLine extends React.Component<StateProps & OwnProps, {}> {
 
         this.ySize = (activeTasks.length * 12) + 20;
 
-        this.xScale = scaleTime<number, number>().domain([gameStart, gameEnd]).range([30, 580]);
+        this.xScale = scaleTime<number, number>().domain([gameStart, gameEnd]).range(this.getInnerXSize());
         this.yScale = scaleLinear<number, number>().domain([0, activeTasks.length]).range([20, this.ySize - 30]);
 
         const dots = activeTasks.map((task, index: number) => {
@@ -100,8 +101,8 @@ class TimeLine extends React.Component<StateProps & OwnProps, {}> {
 
         return (
             <div className="col-lg-12">
-                <svg viewBox={'0 0 600 ' + this.ySize} className="chart time-line">
-                    <g transform={'translate(0,' + (this.ySize - 30) + ')'} className="x axis"
+                <svg viewBox={'0 0 ' + this.size.width + ' ' + this.ySize} className="chart time-line">
+                    <g transform={'translate(0,' + (this.ySize - this.margin.bottom) + ')'} className="x axis"
                        ref={(xAxis) => this.xAxis = xAxis}/>
                     {dots}
                 </svg>

@@ -1,3 +1,4 @@
+import AbstractChart from '@shared/components/chart';
 import {
     axisBottom,
     axisLeft,
@@ -20,7 +21,7 @@ interface OwnProps {
     data: Data;
 }
 
-export default class Chart extends React.Component<OwnProps, {}> {
+export default class Chart extends AbstractChart<OwnProps, {}> {
 
     private xAxis: SVGGElement;
     private yAxis: SVGGElement;
@@ -39,7 +40,7 @@ export default class Chart extends React.Component<OwnProps, {}> {
     public render() {
         const {data} = this.props;
 
-        let min = 0;
+        let minTime = 0;
         let max = 0;
         const eventsData = {};
         const legends = [];
@@ -48,16 +49,19 @@ export default class Chart extends React.Component<OwnProps, {}> {
         for (const eventId in data.teams) {
             if (data.teams.hasOwnProperty(eventId) && data.events.hasOwnProperty(eventId)) {
                 const event = data.events[eventId];
+                const teams = data.teams[eventId];
+
                 const begin = new Date(event.begin);
                 let sum = 0;
-                legends.push(<div key={eventId} className={'list-group-item'}
+                legends.push(<div key={eventId}
+                                  className={'list-group-item'}
                                   style={{color: colorScale(eventId)}}>{event.name}</div>);
-                const eventData = data.teams[eventId].sort((a, b) => {
+                const eventData = teams.sort((a, b) => {
                     return ((new Date(a.created)).getTime() - (new Date(b.created)).getTime());
                 }).map((team) => {
                     sum++;
                     const x = ((new Date(team.created)).getTime() - begin.getTime()) / (1000 * 60 * 60 * 24);
-                    min = min < x ? min : x;
+                    minTime = minTime < x ? minTime : x;
                     return {
                         x,
                         y: sum,
@@ -68,8 +72,8 @@ export default class Chart extends React.Component<OwnProps, {}> {
             }
         }
 
-        this.yScale = scaleLinear<number, number>().domain([0, max]).range([370, 20]);
-        this.xScale = scaleLinear<number, number>().domain([min, 0]).range([30, 580]);
+        this.yScale = scaleLinear<number, number>().domain([0, max]).range(this.getInnerYSize());
+        this.xScale = scaleLinear<number, number>().domain([minTime, 0]).range(this.getInnerXSize());
 
         interface Item {
             x: number;
@@ -96,12 +100,15 @@ export default class Chart extends React.Component<OwnProps, {}> {
         return (
             <div className={'row'}>
                 <div className={'col-8'}>
-                    <svg viewBox="0 0 600 400" className="chart time-line-histogram">
+                    <svg viewBox={this.getViewBox()} className="chart time-line-histogram">
                         <g>
                             {lines}
                             {dots}
-                            <g transform="translate(0,370)" className="x axis" ref={(xAxis) => this.xAxis = xAxis}/>
-                            <g transform="translate(30,0)" className="x axis" ref={(yAxis) => this.yAxis = yAxis}/>
+                            <g transform={this.transformXAxis()}
+                               className="x-axis"
+                               ref={(xAxis) => this.xAxis = xAxis}/>
+                            <g transform={this.transformYAxis()} className="y-axis"
+                               ref={(yAxis) => this.yAxis = yAxis}/>
                         </g>
                     </svg>
                 </div>
@@ -121,5 +128,6 @@ export default class Chart extends React.Component<OwnProps, {}> {
         const yAxis = axisLeft<number>(this.yScale);
         select(this.yAxis).call(yAxis);
     }
+
 
 }

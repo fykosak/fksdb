@@ -1,3 +1,4 @@
+import AbstractChart from '@shared/components/chart';
 import {
     axisBottom,
     axisLeft,
@@ -22,6 +23,7 @@ import {
     getLinePath,
 } from '../../../../middleware/charts/lines';
 import { Store as StatisticsStore } from '../../../../reducers';
+import { submitsByTask } from '../../../../middleware/charts/submitsByTask';
 
 interface StateProps {
     submits: Submits;
@@ -38,7 +40,7 @@ interface OwnProps {
     availablePoints: number[];
 }
 
-class TimeHistogramLines extends React.Component<StateProps & OwnProps, {}> {
+class TimeHistogramLines extends AbstractChart<StateProps & OwnProps, {}> {
 
     private xAxis: SVGGElement;
     private yAxis: SVGGElement;
@@ -55,11 +57,6 @@ class TimeHistogramLines extends React.Component<StateProps & OwnProps, {}> {
     }
 
     public render() {
-        const taskTimeSubmits: {
-            [time: number]: {
-                [points: number]: number;
-            };
-        } = {};
         const {
             fromDate,
             toDate,
@@ -71,20 +68,7 @@ class TimeHistogramLines extends React.Component<StateProps & OwnProps, {}> {
             activePoints,
             availablePoints,
         } = this.props;
-
-        for (const index in submits) {
-            if (submits.hasOwnProperty(index)) {
-                const submit: Submit = submits[index];
-                if (submit.taskId === taskId) {
-                    if (submit.points > 0) {
-                        const ms = (new Date(submit.created)).getTime();
-                        const c = Math.floor(ms / aggregationTime);
-                        taskTimeSubmits[c] = taskTimeSubmits[c] || {1: 0, 2: 0, 3: 0, 5: 0};
-                        taskTimeSubmits[c][submit.points]++;
-                    }
-                }
-            }
-        }
+        const taskTimeSubmits = submitsByTask(submits, taskId, aggregationTime);
 
         let i = Math.floor(gameStart.getTime() / aggregationTime);
         let safeCount = 0;
@@ -107,8 +91,8 @@ class TimeHistogramLines extends React.Component<StateProps & OwnProps, {}> {
                 });
             }
         }
-        this.yScale = scaleLinear<number, number>().domain([0, maxPoints]).range([370, 20]);
-        this.xScale = scaleTime().domain([fromDate, toDate]).range([30, 580]);
+        this.yScale = scaleLinear<number, number>().domain([0, maxPoints]).range(this.getInnerYSize());
+        this.xScale = scaleTime().domain([fromDate, toDate]).range(this.getInnerXSize());
         const scales = {
             xScale: this.xScale,
             yScale: this.yScale,
@@ -137,7 +121,7 @@ class TimeHistogramLines extends React.Component<StateProps & OwnProps, {}> {
         }
 
         return (
-            <svg viewBox="0 0 600 400" className="chart time-line-histogram">
+            <svg viewBox={this.getViewBox()} className="chart time-line-histogram">
                 <g>
                     {availablePoints.map((points, index) => {
                         if (!activePoints || activePoints === points) {
@@ -162,8 +146,8 @@ class TimeHistogramLines extends React.Component<StateProps & OwnProps, {}> {
                         return null;
 
                     })}
-                    <g transform="translate(0,370)" className="x axis" ref={(xAxis) => this.xAxis = xAxis}/>
-                    <g transform="translate(30,0)" className="x axis" ref={(yAxis) => this.yAxis = yAxis}/>
+                    <g transform={this.transformXAxis()} className="x axis" ref={(xAxis) => this.xAxis = xAxis}/>
+                    <g transform={this.transformYAxis()} className="y-axis" ref={(yAxis) => this.yAxis = yAxis}/>
                 </g>
             </svg>
         );

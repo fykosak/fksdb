@@ -1,3 +1,4 @@
+import AbstractChart from '@shared/components/chart';
 import {
     axisBottom,
     axisLeft,
@@ -40,7 +41,7 @@ export interface ExtendedSubmit extends Submit {
     currentTask: Task;
 }
 
-class PointsInTime extends React.Component<StateProps & OwnProps, {}> {
+class PointsInTime extends AbstractChart<StateProps & OwnProps, {}> {
 
     private xAxis: SVGElement;
     private yAxis: SVGElement;
@@ -90,8 +91,8 @@ class PointsInTime extends React.Component<StateProps & OwnProps, {}> {
             }
         }
 
-        this.xScale = scaleTime<number, number>().domain([gameStart, gameEnd]).range([30, 580]);
-        this.yScale = scaleLinear<number, number>().domain([0, maxPoints]).range([370, 20]);
+        this.xScale = this.createTimeXScale(gameStart, gameEnd);
+        this.yScale = scaleLinear<number, number>().domain([0, maxPoints]).range(this.getInnerYSize());
         const dots = teamSubmits.map((submit, index) => {
             return (
                 <circle
@@ -122,16 +123,14 @@ class PointsInTime extends React.Component<StateProps & OwnProps, {}> {
         const linePath = getLinePath({xScale: this.xScale, yScale: this.yScale}, pointsData);
 
         return (
-            <div className="col-lg-8">
-                <svg viewBox="0 0 600 400" className="chart points-in-time">
-                    <g>
-                        <g transform="translate(0,370)" className="x axis" ref={(xAxis) => this.xAxis = xAxis}/>
-                        <g transform="translate(30,0)" className="x axis" ref={(yAxis) => this.yAxis = yAxis}/>
-                        <path d={linePath} className="line"/>
-                        {dots}
-                    </g>
-                </svg>
-            </div>
+            <svg viewBox={this.getViewBox()} className="chart points-in-time">
+                <g>
+                    <g transform={this.transformXAxis()} className="x-axis" ref={(xAxis) => this.xAxis = xAxis}/>
+                    <g transform={this.transformYAxis()} className="y-axis" ref={(yAxis) => this.yAxis = yAxis}/>
+                    <path d={linePath} className="line"/>
+                    {dots}
+                </g>
+            </svg>
         );
     }
 

@@ -1,4 +1,5 @@
 import { lang } from '@i18n/i18n';
+import ChartContainer from '@shared/components/chartContainer';
 import * as React from 'react';
 import Chart from './chart';
 
@@ -9,10 +10,11 @@ interface OwnProps {
 export default class TaskStats extends React.Component<OwnProps, {}> {
     public render() {
         const {availablePoints} = this.props;
-        return (<div className={'fyziklani-chart-container'}>
-                <h3>{lang.getText('Total solved problem')}</h3>
-                <Chart availablePoints={availablePoints}/>
-            </div>
-        );
+        return <ChartContainer
+            chart={Chart}
+            chartProps={{availablePoints}}
+            includeLegend={true}
+            headline={lang.getText('Total solved problem')}
+        />;
     }
 }

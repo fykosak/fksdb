@@ -1,3 +1,4 @@
+import AbstractChart from '@shared/components/chart';
 import {
     axisBottom,
     axisLeft,
@@ -17,6 +18,7 @@ import {
 } from '../../../../../helpers/interfaces';
 import { getColorByPoints } from '../../../../middleware/charts/colors';
 import { Store as StatisticsStore } from '../../../../reducers';
+import { submitsByTask } from '../../../../middleware/charts/submitsByTask';
 
 interface StateProps {
     submits: Submits;
@@ -31,7 +33,7 @@ interface OwnProps {
     availablePoints: number[];
 }
 
-class TimeHistogram extends React.Component<StateProps & OwnProps, {}> {
+class TimeHistogram extends AbstractChart<StateProps & OwnProps, {}> {
 
     private xAxis: SVGGElement;
     private yAxis: SVGGElement;
@@ -48,11 +50,6 @@ class TimeHistogram extends React.Component<StateProps & OwnProps, {}> {
     }
 
     public render() {
-        const taskTimeSubmits: {
-            [time: number]: {
-                [points: number]: number;
-            };
-        } = {};
         const {
             toDate,
             fromDate,
@@ -62,32 +59,20 @@ class TimeHistogram extends React.Component<StateProps & OwnProps, {}> {
             activePoints,
             availablePoints,
         } = this.props;
+        const taskTimeSubmits = submitsByTask(submits, taskId, aggregationTime, activePoints);
 
-        for (const index in submits) {
-            if (submits.hasOwnProperty(index)) {
-                const submit: Submit = submits[index];
-                if (submit.taskId === taskId) {
-                    if (submit.points > 0) {
-                        if (!activePoints || activePoints === submit.points) {
-                            const ms = (new Date(submit.created)).getTime();
-                            const c = Math.floor(ms / aggregationTime);
-                            taskTimeSubmits[c] = taskTimeSubmits[c] || {1: 0, 2: 0, 3: 0, 5: 0};
-                            taskTimeSubmits[c][submit.points]++;
-                        }
-                    }
-                }
-            }
-        }
         let maxPoints = 0;
         for (const key in taskTimeSubmits) {
             if (taskTimeSubmits.hasOwnProperty(key)) {
                 const item = taskTimeSubmits[key];
-                const sum = item[1] + item[2] + item[3] + item[5];
+                const sum = availablePoints.reduce<number>((prev, current) => {
+                    return prev + item[current];
+                }, 0);
                 maxPoints = maxPoints < sum ? sum : maxPoints;
             }
         }
-        this.yScale = scaleLinear<number, number>().domain([0, maxPoints]).range([370, 20]);
-        this.xScale = scaleTime().domain([fromDate, toDate]).range([30, 580]);
+        this.yScale = scaleLinear<number, number>().domain([0, maxPoints]).range(this.getInnerYSize());
+        this.xScale = scaleTime().domain([fromDate, toDate]).range(this.getInnerXSize());
 
         const bars = [];
         for (const key in taskTimeSubmits) {
@@ -104,7 +89,8 @@ class TimeHistogram extends React.Component<StateProps & OwnProps, {}> {
                     sum += item[points];
                     const y2 = this.yScale(sum);
                     polygons.push(<polygon
-                        key={index} points={[[x1, y1], [x1, y2], [x2, y2], [x2, y1]].join(' ')}
+                        key={index}
+                        points={[[x1, y1], [x1, y2], [x2, y2], [x2, y1]].join(' ')}
                         fill={getColorByPoints(points)}/>);
                 });
 
@@ -114,11 +100,11 @@ class TimeHistogram extends React.Component<StateProps & OwnProps, {}> {
             }
         }
         return (
-            <svg viewBox="0 0 600 400" className="chart time-histogram">
+            <svg viewBox={this.getViewBox()} className="chart time-histogram">
                 <g>
                     {bars}
-                    <g transform="translate(0,370)" className="x axis" ref={(xAxis) => this.xAxis = xAxis}/>
-                    <g transform="translate(30,0)" className="x axis" ref={(yAxis) => this.yAxis = yAxis}/>
+                    <g transform={this.transformXAxis()} className="x-axis" ref={(xAxis) => this.xAxis = xAxis}/>
+                    <g transform={this.transformYAxis()} className="y-axis" ref={(yAxis) => this.yAxis = yAxis}/>
                 </g>
             </svg>
         );
