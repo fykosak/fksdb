@@ -15,7 +15,7 @@ export const eventApplicationsTimeProgress: App = (element, module, component, m
     const container = document.createElement('div');
     element.appendChild(container);
 
-    ReactDOM.render(<Index data={data}/>, container);
+    ReactDOM.render(<Index data={data} accessKey={mode}/>, container);
 
     return true;
 };

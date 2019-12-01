@@ -3,7 +3,7 @@ import {
     ACTION_SUBMIT_SUCCESS,
 } from '@fetchApi/actions/submit';
 import { ActionSubmitSuccess } from '@fetchApi/middleware/interfaces';
-import { ResponseData } from '../actions/';
+import { ResponseData } from '../interfaces';
 
 export interface State {
     lastUpdated?: string;

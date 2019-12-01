@@ -6,19 +6,19 @@ import { combineReducers } from 'redux';
 import {
     fyziklaniDownloader,
     State as DownloaderState,
-} from '../../helpers/downloader/reducers/';
-import {
-    fyziklaniOptions,
-    State as OptionsState,
-} from '../../helpers/options/reducers/';
+} from '../../downloader/reducers/';
 import {
     fyziklaniData,
     State as DataState,
 } from '../../helpers/reducers/data';
 import {
+    fyziklaniOptions,
+    State as OptionsState,
+} from '../../options/reducers/';
+import {
     fyziklaniTimer,
     State as TimerState,
-} from '../../helpers/reducers/timer';
+} from '../../timer/reducers/timer';
 import {
     presentation,
     State as PresentationState,

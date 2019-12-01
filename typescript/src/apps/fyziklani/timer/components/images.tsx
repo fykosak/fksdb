@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { FyziklaniResultsStore } from '../../../results/reducers';
-import { getCurrentDelta } from './timer';
+import { FyziklaniResultsStore } from '../../results/reducers';
+import { getCurrentDelta } from '../middleware/timer';
 
 interface StateProps {
     toStart: number;
@@ -36,7 +36,7 @@ class Images extends React.Component<StateProps, {}> {
         );
     }
 
-    private getLabel(toStart: number, toEnd: number): string | JSX.Element {
+    private getLabel(toStart: number, toEnd: number): string {
         if (toStart > 300 * 1000) {
             return 'Have not begun yet/Ješte nezačalo';
         }

@@ -65,6 +65,7 @@ abstract class ResultsAndStatistics extends FyziklaniReactControl {
             'lastUpdated' => (new DateTime())->format('c'),
             'isOrg' => $isOrg,
             'refreshDelay' => $gameSetup->refresh_delay,
+            'tasksOnBoard' => $gameSetup->tasks_on_board,
             'submits' => [],
         ];
 

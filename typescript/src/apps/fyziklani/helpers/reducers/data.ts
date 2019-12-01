@@ -1,6 +1,6 @@
 import { ACTION_SUBMIT_SUCCESS } from '@fetchApi/actions/submit';
 import { ActionSubmitSuccess } from '@fetchApi/middleware/interfaces';
-import { ResponseData } from '../downloader/actions/';
+import { ResponseData } from '../../downloader/interfaces/';
 import {
     Room,
     Submits,
@@ -15,6 +15,7 @@ export interface State {
     rooms?: Room[];
     categories?: string[];
     availablePoints?: number[];
+    tasksOnBoard?: number;
 }
 
 const addData = (state: State, action: ActionSubmitSuccess<ResponseData>): State => {
