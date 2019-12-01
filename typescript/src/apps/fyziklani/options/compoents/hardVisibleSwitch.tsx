@@ -5,7 +5,7 @@ import {
     Action,
     Dispatch,
 } from 'redux';
-import { setHardVisible } from '../actions/';
+import { setHardVisible } from '../actions';
 import { State as OptionsState } from '../reducers';
 
 interface StateProps {
@@ -32,7 +32,7 @@ class HardVisibleSwitch extends React.Component<StateProps & DispatchProps, {}> 
                 {hardVisible ? lang.getText('Turn off') : lang.getText('Turn on')}
             </button>
             <span
-                className="form-text text-danger">{lang.getText('This function don\'t turn on id results are projected!')}</span>
+                className="form-text text-danger">{lang.getText('This function don\'t turn on if results are public!')}</span>
         </div>;
     }
 }

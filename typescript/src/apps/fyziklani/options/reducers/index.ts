@@ -1,10 +1,10 @@
 import { ACTION_SUBMIT_SUCCESS } from '@fetchApi/actions/submit';
 import { ActionSubmitSuccess } from '@fetchApi/middleware/interfaces';
-import { ResponseData } from '../../downloader/actions/';
+import { ResponseData } from '../../downloader/interfaces';
 import {
     ACTION_SET_HARD_VISIBLE,
     ActionSetHardVisible,
-} from '../actions/';
+} from '../actions';
 
 export interface State {
     isReady?: boolean;

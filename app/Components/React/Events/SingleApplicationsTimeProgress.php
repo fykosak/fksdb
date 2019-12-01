@@ -4,7 +4,8 @@ namespace FKSDB\Components\React\ReactComponent\Events;
 
 use FKSDB\Components\React\ReactComponent;
 use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\ORM\Models\ModelEventParticipant;
+use FKSDB\ORM\Services\ServiceEventParticipant;
 use Nette\DI\Container;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
@@ -13,11 +14,11 @@ use Nette\Utils\JsonException;
  * Class TeamApplicationsTimeProgress
  * @package FKSDB\Components\React\ReactComponent\Events
  */
-class TeamApplicationsTimeProgress extends ReactComponent {
+class SingleApplicationsTimeProgress extends ReactComponent {
     /**
-     * @var ServiceFyziklaniTeam
+     * @var ServiceEventParticipant
      */
-    private $serviceFyziklaniTeam;
+    private $serviceEventParticipant;
 
     /**
      * @var ModelEvent[]
@@ -28,12 +29,12 @@ class TeamApplicationsTimeProgress extends ReactComponent {
      * TeamApplicationsTimeProgress constructor.
      * @param Container $context
      * @param array $events
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @param ServiceEventParticipant $serviceEventParticipant
      */
-    public function __construct(Container $context, array $events, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
+    public function __construct(Container $context, array $events, ServiceEventParticipant $serviceEventParticipant) {
         parent::__construct($context);
         $this->events = $events;
-        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+        $this->serviceEventParticipant = $serviceEventParticipant;
 
     }
 
@@ -55,7 +56,7 @@ class TeamApplicationsTimeProgress extends ReactComponent {
      * @return string
      */
     function getMode(): string {
-        return 'teams';
+        return 'participants';
     }
 
     /**
@@ -64,11 +65,19 @@ class TeamApplicationsTimeProgress extends ReactComponent {
      */
     function getData(): string {
         $data = [
-            'teams' => [],
+            'participants' => [],
             'events' => [],
         ];
         foreach ($this->events as $event) {
-            $data['teams'][$event->event_id] = $this->serviceFyziklaniTeam->getTeamsAsArray($event);
+            $participants = [];
+            $query = $this->serviceEventParticipant->findPossiblyAttending($event);
+            foreach ($query as $row) {
+                $participants[] = [
+                    'created' => ModelEventParticipant::createFromActiveRow($row)->created->format('c'),
+                ];
+            }
+
+            $data['participants'][$event->event_id] = $participants;
             $data['events'][$event->event_id] = $event->__toArray();
         }
         return Json::encode($data);

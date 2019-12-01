@@ -11,6 +11,8 @@ import { Store as StatisticsStore } from '../../../reducers';
 import PointsInTime from './lineChart/';
 import PointsPie from './pie/';
 import TimeLine from './timeline/';
+import ChartContainer from '@shared/components/chartContainer';
+import Legend from './legend';
 
 interface StateProps {
     teams: Team[];
@@ -51,11 +53,26 @@ class TeamStats extends React.Component<StateProps & DispatchProps, {}> {
             {teamSelect}
             {teamId && (<>
                 {headline}
-                <PointsPie teamId={teamId}/>
+                <ChartContainer
+                    chart={PointsPie}
+                    chartProps={{teamId}}
+                    legendComponent={Legend}
+                    headline={lang.getText('Success of submitting')}
+                />
                 <hr/>
-                <PointsInTime teamId={teamId}/>
+                <ChartContainer
+                    chart={PointsInTime}
+                    chartProps={{teamId}}
+                    legendComponent={Legend}
+                    headline={lang.getText('Time progress')}
+                />
                 <hr/>
-                <TimeLine teamId={teamId}/>
+                <ChartContainer
+                    chart={TimeLine}
+                    chartProps={{teamId}}
+                    legendComponent={Legend}
+                    headline={lang.getText('Timeline')}
+                />
             </>)}
         </div>);
     }

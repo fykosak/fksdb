@@ -12,15 +12,11 @@ interface StateProps {
     onActivePoints: (points: number) => void;
 }
 
-interface OwnProps {
-    inline: boolean;
-}
-
-class Legend extends React.Component<OwnProps & StateProps, {}> {
+class Legend extends React.Component<StateProps, {}> {
 
     public render() {
         const availablePoints = [1, 2, 3, 5];
-        const {onActivePoints, inline} = this.props;
+        const {onActivePoints} = this.props;
         const legend = availablePoints.map((points: number) => {
             let pointsLabel = '';
             switch (points) {
@@ -35,7 +31,7 @@ class Legend extends React.Component<OwnProps & StateProps, {}> {
                     pointsLabel = lang.getText('bodů');
             }
             return (<div key={points}
-                         className={inline ? 'legend-item col-3' : 'w-100 legend-item'}
+                         className="col-12 legend-item"
                          onMouseEnter={() => {
                              onActivePoints(points);
                          }}
@@ -48,7 +44,7 @@ class Legend extends React.Component<OwnProps & StateProps, {}> {
         });
 
         return (
-            <div className={inline ? 'row col-12' : 'align-content-center col-lg-4 d-flex flex-wrap'}>
+            <div className={'align-content-center col-lg-4 d-flex flex-wrap'}>
                 {legend}
             </div>
         );
