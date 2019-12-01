@@ -5,7 +5,7 @@ import { getCurrentDelta } from '../middleware/timer';
 import { State as TimerState } from '../reducers/timer';
 
 interface OwnProps {
-    mode: "big" | "small";
+    mode: 'big' | 'small';
 }
 
 interface StateProps {

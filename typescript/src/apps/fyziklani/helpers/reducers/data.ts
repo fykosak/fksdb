@@ -15,6 +15,7 @@ export interface State {
     rooms?: Room[];
     categories?: string[];
     availablePoints?: number[];
+    tasksOnBoard?: number;
 }
 
 const addData = (state: State, action: ActionSubmitSuccess<ResponseData>): State => {

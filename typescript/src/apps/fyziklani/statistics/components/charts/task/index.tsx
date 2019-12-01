@@ -1,4 +1,5 @@
 import { lang } from '@i18n/i18n';
+import ChartContainer from '@shared/components/chartContainer';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Store as StatisticsStore } from '../../../reducers';
@@ -19,17 +20,33 @@ class TaskStats extends React.Component<StateProps, {}> {
         return (
             <>
                 <h2>{lang.getText('Global statistics')}</h2>
-                <Progress availablePoints={availablePoints}/>
+                <ChartContainer
+                    chart={Progress}
+                    chartProps={{availablePoints}}
+                    headline={lang.getText('Total solved problem')}
+                />
 
                 <h2>{lang.getText('Statistics from single problem')}</h2>
                 <Options/>
                 <hr/>
                 {taskId && <>
-                    <Timeline taskId={taskId} availablePoints={availablePoints}/>
+                    <ChartContainer
+                        chart={Timeline}
+                        chartProps={{taskId}}
+                        headline={lang.getText('Timeline')}
+                    />
                     <hr/>
-                    <TimeHistogram taskId={taskId} availablePoints={availablePoints}/>
+                    <ChartContainer
+                        chart={TimeHistogram}
+                        chartProps={{taskId, availablePoints}}
+                        headline={lang.getText('Time histogram')}
+                    />
                     <hr/>
-                    <TimeHistogramLines taskId={taskId} availablePoints={availablePoints}/>
+                    <ChartContainer
+                        chart={TimeHistogramLines}
+                        chartProps={{taskId, availablePoints}}
+                        headline={lang.getText('Time histogram')}
+                    />
                 </>}
             </>
         );
