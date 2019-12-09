@@ -1,5 +1,5 @@
 <p>{if $person->gender == 'F'}Milá kamarádko{else}Milý kamaráde{/if},<br/>
-    jelikož jsi byl{if $person->gender == 'F'}a{/if} v posledním půlroce při řešení našeho semináře velmi úspěšn{if $person->gender == 'F'}á{else}ý{/if},
+    jelikož jsi byl{if $person->gender == 'F'}a{/if} při řešení našeho semináře velmi úspěšn{if $person->gender == 'F'}á{else}ý{/if},
     je nám ctí Tě pozvat jako <b>{if $person->gender == 'F'}náhradnici{else}náhradníka{/if}</b>
     na Letní tábor Výfuku, který se tentokrát koná
 {$event->begin|date:'j.n. Y'}–{$event->end|date:'j.n. Y'} {$holder->getParameter('letterWhere')}.
