@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Grids\Schedule;
 
+use FKSDB\Components\Controls\Payment\PaymentRow;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelEvent;
@@ -87,10 +88,7 @@ class PersonGrid extends BaseGrid {
             ->setRenderer(function ($row) {
                 $model = ModelPersonSchedule::createFromActiveRow($row);
                 $modelPayment = $model->getPayment();
-                if (!$modelPayment) {
-                    return Html::el('span')->addAttributes(['class' => 'badge badge-danger'])->addText('No payment found');
-                }
-                return Html::el('span')->addAttributes(['class' => $modelPayment->getUIClass()])->addText('#' . $modelPayment->getPaymentId() . '-' . $modelPayment->getStateLabel());
+                return PaymentRow::getHtml($modelPayment);
             })->setSortable(false);
     }
 

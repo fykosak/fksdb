@@ -1,6 +1,5 @@
 <?php
 
-
 namespace FKSDB\Components\DatabaseReflection;
 
 use FKSDB\Components\DatabaseReflection\ValuePrinters\EmailPrinter;

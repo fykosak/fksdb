@@ -1,6 +1,6 @@
 import AbstractChart from '@shared/components/chart';
+import { LineChartData } from '@shared/components/lineChart/interfaces';
 import {
-    Axis,
     axisBottom,
     axisLeft,
 } from 'd3-axis';
@@ -10,30 +10,10 @@ import {
 } from 'd3-scale';
 import { select } from 'd3-selection';
 import {
-    curveBasis, CurveFactory, curveMonotoneX,
-    line,
+    curveBasis, curveMonotoneX,
 } from 'd3-shape';
 import * as React from 'react';
-import { getAreaPath, getLinePath, PointData } from '../../apps/fyziklani/statistics/middleware/charts/lines';
-import { timeMinute } from 'd3-time';
-
-export type LineChartData = Array<{
-    name: string;
-    color: string;
-    display: {
-        points?: boolean;
-        lines?: boolean;
-        area?: boolean;
-    };
-    curveFactory?: CurveFactory;
-    points: Array<ExtendedPointData<Date | number>>;
-}>;
-
-export interface ExtendedPointData<T> extends PointData<T> {
-    active?: boolean;
-    color?: string;
-    label?: string;
-}
+import { getAreaPath, getLinePath } from '../../../apps/fyziklani/statistics/middleware/charts/lines';
 
 interface OwnProps<> {
     data: LineChartData;
@@ -117,7 +97,7 @@ export default class LineChart extends AbstractChart<OwnProps, {}> {
     private getAxis(): void {
         const {xScale, yScale, display} = this.props;
         const xAxis = axisBottom(xScale);
-        const yAxis = axisLeft<number>(yScale)
+        const yAxis = axisLeft<number>(yScale);
         if (display && display.xGrid) {
             xAxis.tickSizeInner(-this.size.height + (this.margin.top + this.margin.bottom));
         }

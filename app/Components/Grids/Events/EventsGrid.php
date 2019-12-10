@@ -58,7 +58,7 @@ class EventsGrid extends BaseGrid {
 
         $this->addColumn('event_id', _('Id akce'));
 
-        foreach (['event_type', 'name','year','event_year'] as $field) {
+        foreach (['event_type', 'name', 'event_year'] as $field) {
             $this->addReflectionColumn(DbNames::TAB_EVENT, $field, ModelEvent::class);
         }
         //
@@ -79,10 +79,7 @@ class EventsGrid extends BaseGrid {
             ->setLink(function ($row) {
                 return $this->getPresenter()->link(':Event:application:list', ['eventId' => $row->event_id]);
             })->setShow(function ($row) {
-                if ($this->getPresenter()->authorized(':Event:application:list', ['eventId' => $row->event_id])) {
-                    return true;
-                }
-                return false;
+                return $this->getPresenter()->authorized(':Event:application:list', ['eventId' => $row->event_id]);
             });
 
         $this->addButton('teamApplications')
@@ -90,10 +87,7 @@ class EventsGrid extends BaseGrid {
             ->setLink(function ($row) {
                 return $this->getPresenter()->link(':Event:teamApplication:list', ['eventId' => $row->event_id]);
             })->setShow(function ($row) {
-                if ($this->getPresenter()->authorized(':Event:teamApplication:list', ['eventId' => $row->event_id])) {
-                    return true;
-                }
-                return false;
+                return $this->getPresenter()->authorized(':Event:teamApplication:list', ['eventId' => $row->event_id]);
             });
 
         $this->addButton('org')
@@ -107,5 +101,4 @@ class EventsGrid extends BaseGrid {
             ->setLabel('Add event')
             ->setClass('btn btn-sm btn-primary');
     }
-
 }

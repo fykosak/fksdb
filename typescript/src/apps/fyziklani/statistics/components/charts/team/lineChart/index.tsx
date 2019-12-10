@@ -1,4 +1,5 @@
-import LineChart, { LineChartData } from '@shared/components/lineChart';
+import { LineChartData } from '@shared/components/lineChart/interfaces';
+import LineChart from '@shared/components/lineChart/lineChart';
 import {
     scaleLinear, scaleTime,
 } from 'd3-scale';
@@ -8,7 +9,8 @@ import { connect } from 'react-redux';
 import {
     Submit,
     Submits,
-    Task, Team,
+    Task,
+    Team,
 } from '../../../../../helpers/interfaces';
 import { getColorByPoints } from '../../../../middleware/charts/colors';
 import { Store as StatisticsStore } from '../../../../reducers';

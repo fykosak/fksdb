@@ -40,6 +40,7 @@ navigation:
         common.dashboard.default:
             - common.validation.default
             - common.stalking.default
+            - common.chart.default
         common.validation.default:
             - common.validation.preview
             - common.validation.list

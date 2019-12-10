@@ -479,8 +479,8 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
         foreach ($eventOrgs as $row) {
             $org = ModelEventOrg::createFromActiveRow($row);
             $roles[] = [
-                'type' => 'org',
-                'org' => $org,
+                'type' => 'eventOrg',
+                'eventOrg' => $org,
             ];
         }
         $eventParticipants = $this->getEventParticipant()->where('event_id', $eventId);
@@ -489,6 +489,14 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
             $roles[] = [
                 'type' => 'participant',
                 'participant' => $participant,
+            ];
+        }
+        $contestOrgs = $this->getOrgs($event->getEventType()->contest_id);
+        foreach ($contestOrgs as $row) {
+            $org = ModelOrg::createFromActiveRow($row);
+            $roles[] = [
+                'type' => 'contestOrg',
+                'contestOrg' => $org,
             ];
         }
         return $roles;

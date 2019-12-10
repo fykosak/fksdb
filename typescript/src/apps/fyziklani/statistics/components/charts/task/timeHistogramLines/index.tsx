@@ -1,4 +1,4 @@
-import LineChart, { LineChartData } from '@shared/components/lineChart';
+import LineChart from '@shared/components/lineChart/lineChart';
 import {
     scaleLinear,
     scaleTime,
@@ -10,6 +10,7 @@ import { Submits } from '../../../../../helpers/interfaces';
 import { getColorByPoints } from '../../../../middleware/charts/colors';
 import { submitsByTask } from '../../../../middleware/charts/submitsByTask';
 import { Store as StatisticsStore } from '../../../../reducers';
+import { LineChartData } from '@shared/components/lineChart/interfaces';
 
 interface StateProps {
     submits: Submits;

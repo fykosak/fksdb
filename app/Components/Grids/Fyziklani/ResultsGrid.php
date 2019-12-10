@@ -9,28 +9,28 @@ use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FyziklaniModule\BasePresenter;
+use Nette\Database\Table\Selection;
 use NiftyGrid\DataSource\NDataSource;
-use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
-use Tracy\Debugger;
 
 /**
- *
- * @author Michal Červeňák
- * @author Lukáš Timko
+ * Class ResultsTotalGrid
+ * @package FKSDB\Components\Grids\Fyziklani
  */
-class CloseTeamsGrid extends BaseGrid {
+abstract class ResultsGrid extends BaseGrid {
+
     /**
      * @var ServiceFyziklaniTeam
      */
-    private $serviceFyziklaniTeam;
+    protected $serviceFyziklaniTeam;
+
     /**
      * @var ModelEvent
      */
-    private $event;
+    protected $event;
 
     /**
-     * FyziklaniTeamsGrid constructor.
+     * FyziklaniSubmitsGrid constructor.
      * @param ModelEvent $event
      * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
      * @param TableReflectionFactory $tableReflectionFactory
@@ -43,28 +43,27 @@ class CloseTeamsGrid extends BaseGrid {
 
     /**
      * @param BasePresenter $presenter
-     * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
-
         $this->paginate = false;
-        $this->addColumns(['name', 'e_fyziklani_team_id', 'points', 'category']);
+        $this->addColumns(['rank_category', 'name', 'e_fyziklani_team_id']);
 
-        $this->addButton('edit', null)->setClass('btn btn-sm btn-success')->setLink(function ($row) use ($presenter) {
-            return $presenter->link(':Fyziklani:Close:team', [
-                'id' => $row->e_fyziklani_team_id,
-                'eventId' => $this->event->event_id // TODO is needed?
-            ]);
-        })->setText(_('Close submitting'))->setShow(function ($row) {
-            /**
-             * @var ModelFyziklaniTeam $row
-             */
-            return $row->hasOpenSubmitting();
-        });
-        $teams = $this->serviceFyziklaniTeam->findParticipating($this->event);
-        $this->setDataSource(new NDataSource($teams));
+        $dataSource = new NDataSource($this->getTeams());
+        $this->setDataSource($dataSource);
+    }
+
+    /**
+     * @return Selection
+     */
+    protected abstract function getTeams(): Selection;
+
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        return ModelFyziklaniTeam::class;
     }
 
     /**
@@ -72,12 +71,5 @@ class CloseTeamsGrid extends BaseGrid {
      */
     protected function getTableName(): string {
         return DbNames::TAB_E_FYZIKLANI_TEAM;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getModelClassName(): string {
-        return ModelFyziklaniTeam::class;
     }
 }

@@ -11,7 +11,6 @@ use Nette\Application\BadRequestException;
 /**
  * Class SchoolPresenter
  * @package CommonModule
- * @method ModelSchool getModel
  */
 class SchoolPresenter extends BasePresenter {
 
@@ -23,8 +22,6 @@ class SchoolPresenter extends BasePresenter {
     protected function getModelResource(): string {
         return 'school';
     }
-
-    protected $modelResourceId = 'school';
 
     /**
      * @var ServiceSchool
@@ -39,7 +36,7 @@ class SchoolPresenter extends BasePresenter {
     }
 
     public function titleList() {
-        $this->setTitle(_('Školy'));
+        $this->setTitle(_('Schools'));
         $this->setIcon('fa fa-university');
     }
 
@@ -47,8 +44,8 @@ class SchoolPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function titleDetail() {
-        $school = $this->getModel();
-        $this->setTitle(sprintf(_('Detail školy %s'), $school->name_abbrev));
+        $school = $this->getEntity();
+        $this->setTitle(sprintf(_('Detail of school %s'), $school->name_abbrev));
         $this->setIcon('fa fa-university');
     }
 
@@ -56,7 +53,7 @@ class SchoolPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function renderDetail() {
-        $this->template->model = $this->getModel();
+        $this->template->model = $this->getEntity();
     }
 
     /**

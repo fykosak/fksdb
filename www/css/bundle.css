@@ -159,12 +159,26 @@ main.no-bg {
   color: black; }
 [data-contest~="event-type-1"] main:not(.no-bg) hr {
   border-color: #f44336; }
-
-[data-contest~="event-type-1"] .bd-callout {
+[data-contest~="event-type-1"] main:not(.no-bg) .bd-callout {
   border-left-color: #f44336; }
-
-[data-contest~="event-type-1"] .bd-callout h4 {
+  [data-contest~="event-type-1"] main:not(.no-bg) .bd-callout h4 {
+    color: #f44336; }
+[data-contest~="event-type-1"] main:not(.no-bg) .navigation-item .card {
+  height: 12rem;
+  width: 12rem;
+  border-color: #f44336;
+  border-radius: 0;
+  background-color: transparent;
+  transition-duration: 200ms;
   color: #f44336; }
+  [data-contest~="event-type-1"] main:not(.no-bg) .navigation-item .card a {
+    color: #f44336; }
+  [data-contest~="event-type-1"] main:not(.no-bg) .navigation-item .card:hover, [data-contest~="event-type-1"] main:not(.no-bg) .navigation-item .card:focus {
+    transition-duration: 200ms;
+    background-color: #f44336;
+    color: white; }
+    [data-contest~="event-type-1"] main:not(.no-bg) .navigation-item .card:hover a, [data-contest~="event-type-1"] main:not(.no-bg) .navigation-item .card:focus a {
+      color: white; }
 
 .event-type-1 {
   background-color: #f44336; }
@@ -177,22 +191,8 @@ main.no-bg {
 .bg-fyziklani {
   background-color: #f44336; }
 
-[data-contest~="event-type-1"] .navigation-item .card {
-  height: 12rem;
-  width: 12rem;
-  border-color: #f44336;
-  border-radius: 0;
-  background-color: white;
-  transition-duration: 200ms;
-  color: #f44336; }
-  [data-contest~="event-type-1"] .navigation-item .card a {
-    color: #f44336; }
-  [data-contest~="event-type-1"] .navigation-item .card:hover, [data-contest~="event-type-1"] .navigation-item .card:focus {
-    transition-duration: 200ms;
-    background-color: #f44336;
-    color: white; }
-    [data-contest~="event-type-1"] .navigation-item .card:hover a, [data-contest~="event-type-1"] .navigation-item .card:focus a {
-      color: white; }
+.bg-fol {
+  background-color: #18f3bd; }
 
 .btn-fyziklani:hover {
   color: #fff;
@@ -218,6 +218,23 @@ hr.fyziklani-hr-red {
 .badge-fyziklani {
   background-color: #f44336;
   color: white; }
+
+[data-contest~="event-type-9"] .navigation-item .card {
+  height: 12rem;
+  width: 12rem;
+  border-color: #18f3bd;
+  border-radius: 0;
+  background-color: transparent;
+  transition-duration: 200ms;
+  color: #18f3bd; }
+  [data-contest~="event-type-9"] .navigation-item .card a {
+    color: #18f3bd; }
+  [data-contest~="event-type-9"] .navigation-item .card:hover, [data-contest~="event-type-9"] .navigation-item .card:focus {
+    transition-duration: 200ms;
+    background-color: #18f3bd;
+    color: black; }
+    [data-contest~="event-type-9"] .navigation-item .card:hover a, [data-contest~="event-type-9"] .navigation-item .card:focus a {
+      color: black; }
 
 .inbox-field {
   display: block;
@@ -520,7 +537,7 @@ body {
   width: 12rem;
   border-color: black;
   border-radius: 0;
-  background-color: white;
+  background-color: transparent;
   transition-duration: 200ms;
   color: black; }
   .navigation-item .card a {
@@ -537,7 +554,7 @@ body {
   width: 12rem;
   border-color: #1175da;
   border-radius: 0;
-  background-color: white;
+  background-color: transparent;
   transition-duration: 200ms;
   color: #1175da; }
   [data-contest~="fykos"] .navigation-item .card a {
@@ -554,7 +571,7 @@ body {
   width: 12rem;
   border-color: #ff4800;
   border-radius: 0;
-  background-color: white;
+  background-color: transparent;
   transition-duration: 200ms;
   color: #ff4800; }
   [data-contest~="vyfuk"] .navigation-item .card a {
@@ -573,7 +590,7 @@ body {
     width: 12rem;
     border-color: #2ed739;
     border-radius: 0;
-    background-color: black;
+    background-color: transparent;
     transition-duration: 200ms;
     color: #2ed739; }
     [data-contest~="theme-dark"] .navigation-item .card a {
@@ -838,5 +855,18 @@ main {
 
 footer {
   background-color: rgba(255, 255, 255, 0.7); }
+
+.legend.line-chart-legend .legend-item {
+  margin-bottom: 1rem; }
+  .legend.line-chart-legend .legend-item .legend-item-icon {
+    display: flex;
+    align-items: center; }
+    .legend.line-chart-legend .legend-item .legend-item-icon .line {
+      border-width: 1rem;
+      border-radius: 1rem;
+      width: 100%;
+      height: 2px; }
+  .legend.line-chart-legend .legend-item .legend-item-name {
+    font-weight: bold; }
 
 /*# sourceMappingURL=bundle.css.map */

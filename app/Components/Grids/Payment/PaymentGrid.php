@@ -1,6 +1,5 @@
 <?php
 
-
 namespace FKSDB\Components\Grids\Payment;
 
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
@@ -8,6 +7,8 @@ use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServicePayment;
+use NiftyGrid\DuplicateButtonException;
+use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class PaymentGrid
@@ -30,7 +31,7 @@ abstract class PaymentGrid extends BaseGrid {
     }
 
     /**
-     * @throws \NiftyGrid\DuplicateColumnException
+     * @throws DuplicateColumnException
      */
     protected function addColumnPaymentId() {
         $this->addColumn('id', _('#'))->setRenderer(function ($row) {
@@ -39,21 +40,21 @@ abstract class PaymentGrid extends BaseGrid {
     }
 
     /**
-     * @throws \NiftyGrid\DuplicateColumnException
+     * @throws DuplicateColumnException
      */
     protected function addColumnPrice() {
         $this->addReflectionColumn(DbNames::TAB_PAYMENT, 'price', ModelPayment::class);
     }
 
     /**
-     * @throws \NiftyGrid\DuplicateColumnException
+     * @throws DuplicateColumnException
      */
     protected function addColumnState() {
         $this->addReflectionColumn(DbNames::TAB_PAYMENT, 'state', ModelPayment::class);
     }
 
     /**
-     * @throws \NiftyGrid\DuplicateButtonException
+     * @throws DuplicateButtonException
      */
     protected function addButtonDetail() {
         $this->addButton('detail', _('Detail'))
@@ -67,7 +68,7 @@ abstract class PaymentGrid extends BaseGrid {
     }
 
     /**
-     * @throws \NiftyGrid\DuplicateColumnException
+     * @throws DuplicateColumnException
      */
     protected function addColumnsSymbols() {
         //$this->addColumn('constant_symbol', _('CS'));

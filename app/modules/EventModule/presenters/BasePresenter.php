@@ -200,7 +200,18 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @throws AbortException
      */
     protected function getNavBarVariant(): array {
-        return ['event event-type-' . $this->getEvent()->event_type_id, ($this->getEvent()->event_type_id == 1) ? 'bg-fyziklani navbar-dark' : 'bg-light navbar-light'];
+        $classNames = ['event event-type-' . $this->getEvent()->event_type_id, null];
+        switch ($this->getEvent()->event_type_id) {
+            case 1:
+                $classNames[1] = 'bg-fyziklani navbar-dark';
+                break;
+            case 9:
+                $classNames[1] = 'bg-fol navbar-light';
+                break;
+            default:
+                $classNames[1] = 'bg-light navbar-light';
+        }
+        return $classNames;
     }
 
     /**

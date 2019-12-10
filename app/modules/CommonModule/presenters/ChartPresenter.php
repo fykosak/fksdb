@@ -4,9 +4,10 @@ namespace CommonModule;
 
 use FKSDB\Components\Controls\Chart\IChart;
 use FKSDB\Components\Controls\Chart\ParticipantAcquaintanceChartControl;
+use FKSDB\Components\Controls\Chart\TotalPersonsChartControl;
 use FKSDB\ORM\Services\ServiceEvent;
+use FKSDB\ORM\Services\ServicePerson;
 use Nette\Application\UI\Control;
-use Tracy\Debugger;
 
 /**
  * Class ChartPresenter
@@ -36,13 +37,26 @@ class ChartPresenter extends BasePresenter {
     }
 
     /**
+     * @var ServicePerson
+     */
+    private $servicePerson;
+
+    /**
+     * @param ServicePerson $servicePerson
+     */
+    public function injectServicePerson(ServicePerson $servicePerson) {
+        $this->servicePerson = $servicePerson;
+    }
+
+    /**
      * @return IChart[]
      */
-    private function getCharts() {
+    private function getCharts(): array {
         static $chartComponents;
         if (!$chartComponents) {
             $chartComponents = [
                 new ParticipantAcquaintanceChartControl($this->context, +$this->id, $this->serviceEvent),
+                new TotalPersonsChartControl($this->context, $this->servicePerson),
             ];
         }
         return $chartComponents;
@@ -50,6 +64,11 @@ class ChartPresenter extends BasePresenter {
 
     public function titleChart() {
         $this->setTitle($this->selectedChart->getTitle());
+        $this->setIcon('fa fa-pie-chart');
+    }
+
+    public function titleDefault() {
+        $this->setTitle(_('List of charts'));
         $this->setIcon('fa fa-pie-chart');
     }
 
@@ -62,7 +81,8 @@ class ChartPresenter extends BasePresenter {
             }
         }
     }
-    public function renderList(){
+
+    public function renderDefault() {
         $this->template->charts = $this->getCharts();
     }
 

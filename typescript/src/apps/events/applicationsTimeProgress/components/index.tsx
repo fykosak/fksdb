@@ -1,6 +1,7 @@
 import { lang } from '@i18n/i18n';
 import ChartContainer from '@shared/components/chartContainer';
-import LineChart, { LineChartData } from '@shared/components/lineChart';
+import { LineChartData } from '@shared/components/lineChart/interfaces';
+import LineChart from '@shared/components/lineChart/lineChart';
 import { scaleLinear, scaleOrdinal } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
 import * as React from 'react';

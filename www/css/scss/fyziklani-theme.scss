@@ -11,20 +11,26 @@
   h2 {
     color: $fyziklaniMainColor;
   }
+
   h1, h3 {
     color: black;
   }
+
   hr {
     border-color: $fyziklaniMainColor;
   }
-}
 
-[data-contest~="event-type-1"] .bd-callout {
-  border-left-color: $fyziklaniMainColor;
-}
+  .bd-callout {
+    border-left-color: $fyziklaniMainColor;
 
-[data-contest~="event-type-1"] .bd-callout h4 {
-  color: $fyziklaniMainColor;
+    h4 {
+      color: $fyziklaniMainColor;
+    }
+  }
+
+  .navigation-item .card {
+    @include navigation-item($fyziklaniMainColor, white);
+  }
 }
 
 .event-type-1 {
@@ -39,8 +45,8 @@
   background-color: $fyziklaniMainColor;
 }
 
-[data-contest~="event-type-1"] .navigation-item .card {
-  @include navigation-item($fyziklaniMainColor, white);
+.bg-fol {
+  background-color: $folMainColor;
 }
 
 .btn-fyziklani:hover {
@@ -72,4 +78,10 @@ hr.fyziklani-hr-red {
 .badge-fyziklani {
   background-color: $fyziklaniMainColor;
   color: white;
+}
+
+[data-contest~="event-type-9"] {
+  .navigation-item .card {
+    @include navigation-item($folMainColor, black);
+  }
 }

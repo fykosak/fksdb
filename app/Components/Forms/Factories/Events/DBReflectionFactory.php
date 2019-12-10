@@ -78,7 +78,7 @@ class DBReflectionFactory extends AbstractFactory {
         $column = $this->resolveColumn($field);
         $type = $column['nativetype'];
         $size = $column['size'];
-
+        Debugger::barDump($element, $field->getName());
         /*
          * Create element
          */
