@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Grids;
 
 
+use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServiceSchool;
 use Nette\Database\Table\Selection;
 use Nette\Utils\Html;
@@ -15,13 +16,13 @@ use SQL\SearchableDataSource;
 class SchoolsGrid extends BaseGrid {
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceSchool
+     * @var ServiceSchool
      */
     private $serviceSchool;
 
     /**
      * SchoolsGrid constructor.
-     * @param \FKSDB\ORM\Services\ServiceSchool $serviceSchool
+     * @param ServiceSchool $serviceSchool
      */
     public function __construct(ServiceSchool $serviceSchool) {
         parent::__construct();
@@ -63,20 +64,20 @@ class SchoolsGrid extends BaseGrid {
         //
         // operations
         //
-        $this->addButton('edit', _('Edit'))
-            ->setText(_('Edit'))
-            ->setLink(function ($row) {
-                return $this->getPresenter()->link('edit', $row->school_id);
-            });
+        $this->addLinkButton($presenter, ':Org:School:edit', 'edit', _('Edit'), false);
+        $this->addLinkButton($presenter, 'detail', 'detail', _('Detail'), false);
+
         $this->addGlobalButton('add')
-            ->setLink($this->getPresenter()->link('create'))
+            ->setLink($this->getPresenter()->link(':Org:School:create'))
             ->setLabel(_('CreateSchool'))
             ->setClass('btn btn-sm btn-primary');
+    }
 
-        //
-        // appeareance
-        //
-
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        return ModelSchool::class;
     }
 
 }

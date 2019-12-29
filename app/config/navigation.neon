@@ -29,7 +29,7 @@ navigation:
             - org.points.default
             - org.tasks.import
             - org.contestant.list
-            - org.school.list
+            - common.school.list
             - org.teacher.list
             - org.export.list
             - org.org.list
