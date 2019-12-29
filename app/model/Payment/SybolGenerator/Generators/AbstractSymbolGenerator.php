@@ -1,9 +1,11 @@
 <?php
 
-namespace FKSDB\Payment\SymbolGenerator;
+namespace FKSDB\Payment\SymbolGenerator\Generators;
 
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServicePayment;
+use FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException;
+use FKSDB\Payment\SymbolGenerator\AlreadyGeneratedSymbolsException;
 
 /**
  * Class AbstractSymbolGenerator
@@ -24,9 +26,10 @@ abstract class AbstractSymbolGenerator {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelPayment $modelPayment
-     * @return mixed
+     * @param ModelPayment $modelPayment
+     * @return array
      * @throws AlreadyGeneratedSymbolsException
+     * @throws UnsupportedCurrencyException
      */
-    abstract public function create(ModelPayment $modelPayment);
+    public abstract function create(ModelPayment $modelPayment);
 }

@@ -1,0 +1,15 @@
+DBReflection:
+    factories:
+        # list table=> {field=>service}
+        teacher:
+            state: FKSDB\Components\DatabaseReflection\Tables\Teacher\StateRow
+            since: FKSDB\Components\DatabaseReflection\Tables\Teacher\SinceRow
+            until: FKSDB\Components\DatabaseReflection\Tables\Teacher\UntilRow
+            number_brochures: FKSDB\Components\DatabaseReflection\Tables\Teacher\NumberBrochuresRow
+            note: FKSDB\Components\DatabaseReflection\Tables\Teacher\NoteRow
+        referenced:
+            person_link: FKSDB\Components\DatabaseReflection\ReferencedRows\PersonLinkRow
+            person_name: FKSDB\Components\DatabaseReflection\ReferencedRows\PersonNameRow
+            event_link: FKSDB\Components\DatabaseReflection\ReferencedRows\EventLinkRow
+            contest: FKSDB\Components\DatabaseReflection\ReferencedRows\ContestRow
+            school_name: FKSDB\Components\DatabaseReflection\ReferencedRows\SchoolNameRow

@@ -33,7 +33,7 @@ use function sprintf;
  * Class Fyziklani13Payment
  * @package FKSDB\Payment\Transition\Transitions
  */
-class Fyziklani13Payment extends AbstractTransitionsGenerator {
+class Fyziklani14Payment extends AbstractTransitionsGenerator {
     const EMAIL_BCC = 'fyziklani@fykos.cz';
     const EMAIL_FROM = 'Fyziklání <fyziklani@fykos.cz>';
     /**
@@ -146,7 +146,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
             $modelPayment->updatePrice($machine->getPriceCalculator());
         };
 
-        $transition->afterExecuteCallbacks[] = $this->transitionFactory->createMailCallback('fyziklani/fyziklani2019/payment/create',
+        $transition->afterExecuteCallbacks[] = $this->transitionFactory->createMailCallback('fyziklani/fyziklani2020/payment/create',
             $this->getMailSetupCallback(_('Payment #%s was created'))
         );
 
@@ -158,14 +158,14 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
      * @throws Exception
      */
     private function getDatesCondition(): callable {
-        return new DateBetween(new DateTime('2019-01-21'), new DateTime('2019-02-15'));
+        return new DateBetween(new DateTime('2020-01-01'), new DateTime('2020-02-10'));
     }
 
     /**
      * @param string $subject
      * @return Closure
      */
-    private static function getMailSetupCallback(string $subject): Closure {
+    private function getMailSetupCallback(string $subject): Closure {
         return function (IStateModel $model) use ($subject): Message {
             $message = new Message();
             if ($model instanceof ModelPayment) {
@@ -207,7 +207,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
                 $personSchedule->updateState('received');
             }
         };
-        $transition->afterExecuteCallbacks[] = $this->transitionFactory->createMailCallback('fyziklani/fyziklani2019/payment/receive',
+        $transition->afterExecuteCallbacks[] = $this->transitionFactory->createMailCallback('fyziklani/fyziklani2020/payment/receive',
             $this->getMailSetupCallback(_('We are receive payment #%s')));
 
         $transition->setCondition(function () {
