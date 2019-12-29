@@ -24,10 +24,4 @@ abstract class AbstractTransitionsGenerator {
      * @return mixed
      */
     abstract public function createTransitions(Machine &$machine);
-
-    /**
-     * @param ModelEvent $event
-     * @return Machine
-     */
-    abstract public function createMachine(ModelEvent $event): Machine;
 }

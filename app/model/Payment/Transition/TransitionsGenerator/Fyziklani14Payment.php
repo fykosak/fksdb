@@ -6,11 +6,8 @@ use Authorization\EventAuthorizator;
 use Closure;
 use Exception;
 use FKSDB\ORM\DbNames;
-use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServicePayment;
-use FKSDB\Payment\PriceCalculator\PriceCalculatorFactory;
-use FKSDB\Payment\SymbolGenerator\SymbolGeneratorFactory;
 use FKSDB\Payment\Transition\PaymentMachine;
 use FKSDB\Transitions\AbstractTransitionsGenerator;
 use FKSDB\Transitions\IStateModel;
@@ -36,15 +33,7 @@ use function sprintf;
 class Fyziklani14Payment extends AbstractTransitionsGenerator {
     const EMAIL_BCC = 'fyziklani@fykos.cz';
     const EMAIL_FROM = 'Fyziklání <fyziklani@fykos.cz>';
-    /**
-     * @var SymbolGeneratorFactory
-     */
-    private $symbolGeneratorFactory;
 
-    /**
-     * @var PriceCalculatorFactory
-     */
-    private $priceCalculatorFactory;
     /**
      * @var Connection
      */
@@ -67,8 +56,6 @@ class Fyziklani14Payment extends AbstractTransitionsGenerator {
      * @param ServicePayment $servicePayment
      * @param Connection $connection
      * @param TransitionsFactory $transitionFactory
-     * @param SymbolGeneratorFactory $symbolGeneratorFactory
-     * @param PriceCalculatorFactory $priceCalculatorFactory
      * @param EventAuthorizator $eventAuthorizator
      * @param ITranslator $translator
      */
@@ -76,16 +63,12 @@ class Fyziklani14Payment extends AbstractTransitionsGenerator {
         ServicePayment $servicePayment,
         Connection $connection,
         TransitionsFactory $transitionFactory,
-        SymbolGeneratorFactory $symbolGeneratorFactory,
-        PriceCalculatorFactory $priceCalculatorFactory,
         EventAuthorizator $eventAuthorizator,
         ITranslator $translator
     ) {
         parent::__construct($transitionFactory);
         $this->connection = $connection;
         $this->servicePayment = $servicePayment;
-        $this->symbolGeneratorFactory = $symbolGeneratorFactory;
-        $this->priceCalculatorFactory = $priceCalculatorFactory;
         $this->eventAuthorizator = $eventAuthorizator;
         $this->translator = $translator;
     }
@@ -104,20 +87,6 @@ class Fyziklani14Payment extends AbstractTransitionsGenerator {
         $this->addTransitionNewToWaiting($machine);
         $this->addTransitionAllToCanceled($machine);
         $this->addTransitionWaitingToReceived($machine);
-    }
-
-    /**
-     * @param ModelEvent $event
-     * @return Machine
-     */
-    public function createMachine(ModelEvent $event): Machine {
-        return new PaymentMachine(
-            $event,
-            $this->priceCalculatorFactory->createCalculator($event),
-            $this->symbolGeneratorFactory->createGenerator($event),
-            $this->connection,
-            $this->servicePayment
-        );
     }
 
     /**
