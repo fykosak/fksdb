@@ -11,8 +11,11 @@ use Nette\Security\IResource;
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @property-read ActiveRow address
  * @property-read string name_abbrev
+ * @property-read int school_id
  */
 class ModelSchool extends AbstractModelSingle implements IResource {
+    const RESOURCE_ID = 'school';
+
     /**
      * @return ModelAddress
      */
@@ -24,7 +27,7 @@ class ModelSchool extends AbstractModelSingle implements IResource {
      * @return string
      */
     public function getResourceId(): string {
-        return 'school';
+        return self::RESOURCE_ID;
     }
 
 }

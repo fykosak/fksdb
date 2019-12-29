@@ -2,6 +2,8 @@
 
 namespace CommonModule;
 
+use FKSDB\Components\Grids\ContestantsFromSchoolGrid;
+use FKSDB\Components\Grids\SchoolsGrid;
 use FKSDB\EntityTrait;
 use FKSDB\ORM\IService;
 use FKSDB\ORM\Models\ModelSchool;
@@ -11,7 +13,7 @@ use Nette\Application\BadRequestException;
 /**
  * Class SchoolPresenter
  * @package CommonModule
- * @method ModelSchool getModel
+ * @method ModelSchool getEntity()
  */
 class SchoolPresenter extends BasePresenter {
 
@@ -21,10 +23,8 @@ class SchoolPresenter extends BasePresenter {
      * @return string
      */
     protected function getModelResource(): string {
-        return 'school';
+        return ModelSchool::RESOURCE_ID;
     }
-
-    protected $modelResourceId = 'school';
 
     /**
      * @var ServiceSchool
@@ -39,7 +39,7 @@ class SchoolPresenter extends BasePresenter {
     }
 
     public function titleList() {
-        $this->setTitle(_('Školy'));
+        $this->setTitle(_('Schools'));
         $this->setIcon('fa fa-university');
     }
 
@@ -47,8 +47,8 @@ class SchoolPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function titleDetail() {
-        $school = $this->getModel();
-        $this->setTitle(sprintf(_('Detail školy %s'), $school->name_abbrev));
+        $school = $this->getEntity();
+        $this->setTitle(sprintf(_('Detail of school %s'), $school->name_abbrev));
         $this->setIcon('fa fa-university');
     }
 
@@ -56,7 +56,7 @@ class SchoolPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function renderDetail() {
-        $this->template->model = $this->getModel();
+        $this->template->model = $this->getEntity();
     }
 
     /**
@@ -64,5 +64,22 @@ class SchoolPresenter extends BasePresenter {
      */
     protected function getORMService() {
         return $this->serviceSchool;
+    }
+
+
+    /**
+     * @return SchoolsGrid
+     */
+    protected function createComponentGrid(): SchoolsGrid {
+        return new SchoolsGrid($this->serviceSchool);
+    }
+
+
+    /**
+     * @return ContestantsFromSchoolGrid
+     * @throws BadRequestException
+     */
+    protected function createComponentContestantsFromSchoolGrid(): ContestantsFromSchoolGrid {
+        return new ContestantsFromSchoolGrid($this->getEntity(), $this->getORMService());
     }
 }
