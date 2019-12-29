@@ -4,6 +4,7 @@ namespace FKSDB\ORM\Models;
 
 use DateTime;
 use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\StoredQuery\ISchoolReferencedModel;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\IResource;
 
@@ -20,7 +21,9 @@ use Nette\Security\IResource;
  * @property-read int number_brochures
  * @property-read string note
  */
-class ModelTeacher extends AbstractModelSingle implements IResource, IPersonReferencedModel {
+class ModelTeacher extends AbstractModelSingle implements IResource, IPersonReferencedModel, ISchoolReferencedModel {
+    const RESOURCE_ID = 'teacher';
+
     /**
      * @return ModelPerson
      */
@@ -39,7 +42,7 @@ class ModelTeacher extends AbstractModelSingle implements IResource, IPersonRefe
      * @return string
      */
     public function getResourceId(): string {
-        return 'teacher';
+        return self::RESOURCE_ID;
     }
 
 }
