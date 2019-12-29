@@ -12,7 +12,6 @@ use function sprintf;
  */
 class DashboardPresenter extends BasePresenter {
 
-
     /**
      * @throws AbortException
      * @throws BadRequestException

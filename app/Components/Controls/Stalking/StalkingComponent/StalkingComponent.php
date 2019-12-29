@@ -2,11 +2,13 @@
 
 namespace FKSDB\Components\Controls\Stalking\StalkingComponent;
 
+use Exception;
 use FKSDB\Components\Controls\Stalking\StalkingControl;
 use FKSDB\Components\Controls\Stalking\StalkingService;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelOrg;
+use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelPersonHistory;
 use Nette\Application\BadRequestException;
@@ -40,8 +42,8 @@ class StalkingComponent extends StalkingControl {
 
     /**
      * @param string $section
-     * @throws \Nette\Application\BadRequestException
-     * @throws \Exception
+     * @throws BadRequestException
+     * @throws Exception
      */
     public function render(string $section) {
         $definition = $this->stalkingService->getSection($section);
@@ -49,7 +51,6 @@ class StalkingComponent extends StalkingControl {
         $this->template->headline = _($definition['label']);
         $this->template->minimalPermissions = $definition['minimalPermission'];
 
-        $this->template->table = $definition['table'];
         switch ($definition['layout']) {
             case 'single':
                 return $this->renderSingle($definition);
@@ -81,7 +82,7 @@ class StalkingComponent extends StalkingControl {
         }
 
         $this->template->model = $model;
-        $this->template->rows = $definition['rows'];
+        $this->template->rows = $this->parseRows($definition['rows']);
         $this->template->setFile(__DIR__ . '/layout.single.latte');
         $this->template->render();
     }
@@ -104,13 +105,40 @@ class StalkingComponent extends StalkingControl {
                     $models[] = ModelOrg::createFromActiveRow($org);
                 }
                 break;
+            case 'payment':
+                $payments = $this->modelPerson->getPayments();
+                foreach ($payments as $payment) {
+                    $models[] = ModelPayment::createFromActiveRow($payment);
+                }
+                break;
             default:
                 throw new NotImplementedException();
         }
-        $this->template->rows = $definition['rows'];
+        $this->template->rows = $this->parseRows($definition['rows']);
         $this->template->models = $models;
-        $this->template->itemHeadline = $definition['item_headline'];
+        $this->template->itemHeadline = $this->parseRow($definition['item_headline']);
         $this->template->setFile(__DIR__ . '/layout.multi.latte');
         $this->template->render();
     }
+
+    /**
+     * @param array $rows
+     * @return array
+     */
+    private function parseRows(array $rows): array {
+        $items = [];
+        foreach ($rows as $item) {
+            $items[] = $this->parseRow($item);
+        }
+        return $items;
+    }
+
+    /**
+     * @param string $row
+     * @return array
+     */
+    private function parseRow(string $row): array {
+        return explode('.', $row);
+    }
+
 }

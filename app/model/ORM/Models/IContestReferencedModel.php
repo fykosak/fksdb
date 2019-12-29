@@ -8,7 +8,7 @@ namespace FKSDB\ORM\Models;
  */
 interface IContestReferencedModel {
     /**
-     * @return mixed
+     * @return ModelContest
      */
-    public function getContest();
+    public function getContest(): ModelContest;
 }

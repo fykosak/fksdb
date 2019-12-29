@@ -7,7 +7,9 @@
                 <li class="list-group-item">
                 <span class="row">
                     <span class="col-6">{$model->event->event_year}. {$model->event->event_type->name}</span>
-                    <span class="col-6">{control eventLabel $model->getEvent()}</span>
+                    <span class="col-6">
+                        {control valuePrinter__referenced__event_link:onlyValue $model}
+                    </span>
                 </span>
                     <span class="row">
                     <span class="col-12"><b>{_'Role'}:</b> {$model->note}</span>

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace FKSDB\Components\DatabaseReflection\EventParticipant;
 
 use FKSDB\Components\DatabaseReflection\ValuePrinters\BinaryPrinter;

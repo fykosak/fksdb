@@ -1,5 +1,5 @@
 DBReflection:
-    factories:
+    tables:
         # list table=> {field=>service}
         teacher:
             state: FKSDB\Components\DatabaseReflection\Tables\Teacher\StateRow
@@ -13,3 +13,56 @@ DBReflection:
             event_link: FKSDB\Components\DatabaseReflection\ReferencedRows\EventLinkRow
             contest: FKSDB\Components\DatabaseReflection\ReferencedRows\ContestRow
             school_name: FKSDB\Components\DatabaseReflection\ReferencedRows\SchoolNameRow
+        e_fyziklani_team:
+            e_fyziklani_team_id: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\FyziklaniTeamIdRow
+            name: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\NameRow
+            name_n_id: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\NameNIdRow
+            status: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\StatusRow
+            phone: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\PhoneRow
+            note: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\NoteRow
+            password: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\PasswordRow
+            category: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\CategoryRow
+            created: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\CreatedRow
+            game_lang: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\GameLangRow
+            force_a: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\ForceARow
+            rank_category: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\RankInCategoryRow
+            rank_total: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\RankTotalRow
+            points: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\PointsRow
+        event:
+            event_year: FKSDB\Components\DatabaseReflection\Event\EventYearRow
+            name: FKSDB\Components\DatabaseReflection\Event\NameRow
+            begin: FKSDB\Components\DatabaseReflection\Event\BeginRow
+            end: FKSDB\Components\DatabaseReflection\Event\EndRow
+            registration_begin: FKSDB\Components\DatabaseReflection\Event\RegistrationBeginRow
+            registration_end: FKSDB\Components\DatabaseReflection\Event\RegistrationEndRow
+            report: FKSDB\Components\DatabaseReflection\Event\ReportRow
+            parameters: FKSDB\Components\DatabaseReflection\Event\ParametersRow
+            year: FKSDB\Components\DatabaseReflection\Event\YearRow
+            event_type: FKSDB\Components\DatabaseReflection\Event\EventTypeRow
+            event_type_id: FKSDB\Components\DatabaseReflection\Event\EventTypeRow
+        event_participant:
+            event_participant_id: FKSDB\Components\DatabaseReflection\EventParticipant\EvenParticipantIdRow
+            created: FKSDB\Components\DatabaseReflection\EventParticipant\CreatedRow
+            person_id: FKSDB\Components\DatabaseReflection\EventParticipant\PersonIdRow
+            swimmer: FKSDB\Components\DatabaseReflection\EventParticipant\SwimmerRow
+            status: FKSDB\Components\DatabaseReflection\EventParticipant\StatusRow
+            price: FKSDB\Components\DatabaseReflection\EventParticipant\PriceRow
+
+            diet: FKSDB\Components\DatabaseReflection\EventParticipant\DietRow
+            health_restrictions: FKSDB\Components\DatabaseReflection\EventParticipant\HealthRestrictionsRow
+            used_drugs: FKSDB\Components\DatabaseReflection\EventParticipant\UsedDrugsRow
+            note: FKSDB\Components\DatabaseReflection\EventParticipant\NoteRow
+
+            tshirt_color: FKSDB\Components\DatabaseReflection\EventParticipant\TShirtColorRow
+            tshirt_size: FKSDB\Components\DatabaseReflection\EventParticipant\TShirtSizeRow
+
+            arrival_ticket: FKSDB\Components\DatabaseReflection\EventParticipant\ArrivalTicketRow
+            arrival_time: FKSDB\Components\DatabaseReflection\EventParticipant\ArrivalTimeRow
+            arrival_destination: FKSDB\Components\DatabaseReflection\EventParticipant\ArrivalDestinationRow
+
+            departure_time: FKSDB\Components\DatabaseReflection\EventParticipant\DepartureTimeRow
+            departure_destination: FKSDB\Components\DatabaseReflection\EventParticipant\DepartureDestinationRow
+            departure_ticket: FKSDB\Components\DatabaseReflection\EventParticipant\DepartureTicketRow
+
+
+

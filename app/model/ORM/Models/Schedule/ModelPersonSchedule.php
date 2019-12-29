@@ -67,12 +67,13 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel, IP
     public function getLabel(): string {
         $item = $this->getScheduleItem();
         $group = $item->getGroup();
-        $itemLabel = $item->getLabel();
         switch ($group->schedule_group_type) {
             case ModelScheduleGroup::TYPE_ACCOMMODATION:
-                return \sprintf(_('%s: '),
-                        $this->getPerson()->getFullName()
-                    ) . $itemLabel;
+                return sprintf(_('Accommodation for %s from %s to %s in %s'),
+                    $this->getPerson()->getFullName(),
+                    $group->start->format(_('__date_format')),
+                    $group->start->format(_('__date_format')),
+                    $item->name_cs);
             default:
                 throw new NotImplementedException();
         }

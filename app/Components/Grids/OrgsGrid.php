@@ -65,37 +65,25 @@ class OrgsGrid extends BaseGrid {
         $this->setDefaultOrder('since DESC');
 
         $this->addReflectionColumn('referenced', 'person_name', ModelOrg::class);
-        
+
         foreach (['since', 'until', 'role'] as $field) {
             $this->addReflectionColumn(DbNames::TAB_ORG, $field, ModelOrg::class);
         }
 
-        //
-        // operations
-        //
-        $this->addButton('edit', _('Edit'))
-            ->setText(_('Edit'))
-            ->setLink(function ($row) {
-                return $this->getPresenter()->link('edit', ['id' => $row->org_id]);
-            })
-            ->setShow(function ($row) use ($presenter) {
-                return $presenter->authorized('edit', ['id' => $row->org_id]);
-            });
-
-        $this->addButton('detail', _('Detail'))
-            ->setText(_('Detail'))
-            ->setLink(function ($row) {
-                return $this->getPresenter()->link('detail', ['id' => $row->org_id]);
-            })
-            ->setShow(function ($row) use ($presenter) {
-                return $presenter->authorized('detail', ['id' => $row->org_id]);
-            });
-
+        $this->addLinkButton($presenter, 'edit', 'edit', _('Edit'), true);
+        $this->addLinkButton($presenter, 'detail', 'detail', _('Detail'), true);
 
         if ($presenter->authorized('create')) {
             $this->addGlobalButton('add')
                 ->setLabel(_('Založit organizátora'))
                 ->setLink($this->getPresenter()->link('create'));
         }
+    }
+
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        return ModelOrg::class;
     }
 }

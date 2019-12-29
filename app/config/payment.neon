@@ -1,0 +1,36 @@
+payment:
+    -
+        eventId: 137
+        scheduleGroupType:
+            - accommodation
+        eventPrice: false
+        priceCalculator:
+            preProcess:
+                - FKSDB\Payment\PriceCalculator\PreProcess\SchedulePrice
+        symbolGenerator:
+            variableSymbolStart: 7292000
+            variableSymbolEnd: 7292999
+            info:
+                czk:
+                    bank_account: 38330021/0100
+                    iban: CZ91 0100 0000 0000 3833 0021
+                eur:
+                    iban: CZ93 0100 0000 4373 0978 0297
+                    swift: KOMBCZPPXXX
+    -
+        eventId: 145
+        scheduleGroupType:
+            - accommodation
+        priceCalculator:
+            preProcess:
+                - FKSDB\Payment\PriceCalculator\PreProcess\SchedulePrice
+        symbolGenerator:
+            variableSymbolStart: 0
+            variableSymbolEnd: 10
+            info:
+                czk:
+                    bank_account: 38330021/0100
+                    iban: CZ91 0100 0000 0000 3833 0021
+                eur:
+                    iban: CZ93 0100 0000 4373 0978 0297
+                    swift: KOMBCZPPXXX

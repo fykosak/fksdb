@@ -2,7 +2,8 @@
 
 namespace FKSDB\Config\Extensions;
 
-use FKSDB\Payment\SymbolGenerator\Generators\DefaultGenerator;
+use FKSDB\Payment\PriceCalculator\PriceCalculator;
+use FKSDB\Payment\SymbolGenerator\Generators\Generators\DefaultGenerator;
 use Nette\Config\CompilerExtension;
 use Tracy\Debugger;
 
@@ -22,6 +23,13 @@ class PaymentExtension extends CompilerExtension {
                     $item['symbolGenerator']['variableSymbolEnd'],
                     $item['symbolGenerator']['info'],
                 ]);
+            $priceCalculator = $builder->addDefinition($this->prefix('priceCalculator.' . $item['eventId']))
+                ->setFactory(PriceCalculator::class);
+            foreach ($item['priceCalculator']['preProcess'] as $preProcess) {
+                $priceCalculator->addSetup('addPreprocess', [
+                    new $preProcess(),
+                ]);
+            }
         }
     }
 }

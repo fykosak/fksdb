@@ -83,7 +83,7 @@ class PaymentFactory {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @param ModelEvent $event
      * @param bool $isOrg
      * @param PaymentMachine $machine
      * @return SelectForm

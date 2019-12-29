@@ -49,12 +49,8 @@ class PersonLinkRow extends AbstractRow {
     /**
      * @param AbstractModelSingle $model
      * @return Html
-     * @throws BadRequestException
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        if (!$model instanceof IPersonReferencedModel) {
-            throw new BadRequestException();
-        }
         return (new PersonLink($this->presenterComponent))($model->getPerson());
     }
 }

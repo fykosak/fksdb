@@ -7,3 +7,5 @@ services:
     row.payment.swift: FKSDB\Components\DatabaseReflection\Payment\SWIFTCodeRow
     row.payment.price: FKSDB\Components\DatabaseReflection\Payment\PriceRow
     row.payment.state: FKSDB\Components\DatabaseReflection\Payment\StateRow
+    row.payment.id: FKSDB\Components\DatabaseReflection\Payment\IdRow
+    row.payment.link: FKSDB\Components\DatabaseReflection\Payment\LinkRow

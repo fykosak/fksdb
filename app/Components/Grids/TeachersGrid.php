@@ -59,38 +59,41 @@ class TeachersGrid extends BaseGrid {
             }
         });
         $this->setDataSource($dataSource);
-        //
-        // columns
-        //
-        $this->addReflectionColumn('referenced', 'person_name', ModelTeacher::class);
+
+        $this->addColumns([
+            'referenced.person_name',
+            'referenced.school_name',
+            DbNames::TAB_TEACHER . '.note',
+            DbNames::TAB_TEACHER . '.state',
+            DbNames::TAB_TEACHER . '.since',
+            DbNames::TAB_TEACHER . '.until',
+            DbNames::TAB_TEACHER . '.number_brochures',
+        ]);
 
         $this->addColumn('school_id', _('School'))->setRenderer(function ($row) {
             return $row->getSchool()->name_abbrev;
         });
-
-        $this->addReflectionColumn(DbNames::TAB_TEACHER, 'note', ModelTeacher::class);
-        $this->addReflectionColumn(DbNames::TAB_TEACHER, 'state', ModelTeacher::class);
-        $this->addReflectionColumn(DbNames::TAB_TEACHER, 'since', ModelTeacher::class);
-        $this->addReflectionColumn(DbNames::TAB_TEACHER, 'until', ModelTeacher::class);
-        $this->addReflectionColumn(DbNames::TAB_TEACHER, 'number_brochures', ModelTeacher::class);
-        //
-        // operations
-        //
-        $this->addButton('edit', _('Edit'))
-            ->setText(_('Edit'))
-            ->setLink(function ($row) {
-                return $this->getPresenter()->link('edit', $row->teacher_id);
-            });
-        $this->addButton('detail', _('Detail'))
-            ->setText(_('Detail'))
-            ->setLink(function ($row) {
-                return $this->getPresenter()->link('detail', ['id' => $row->teacher_id]);
-            });
+        $this->addLinkButton($presenter, 'edit', 'edit', _('Edit'), false);
+        $this->addLinkButton($presenter, 'detail', 'detail', _('Detail'), false);
 
         if ($presenter->authorized('create')) {
             $this->addGlobalButton('add')
                 ->setLabel(_('Create new teacher'))
                 ->setLink($this->getPresenter()->link('create'));
         }
+    }
+
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        return ModelTeacher::class;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getTableName(): string {
+        return DbNames::TAB_TEACHER;
     }
 }

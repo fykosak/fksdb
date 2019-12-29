@@ -82,15 +82,14 @@ services:
     - FKSDB\Components\Forms\Factories\TableReflectionFactory
     - FKSDB\Components\Controls\PhoneNumber\PhoneNumberFactory
 
-    row.teacher.state: FKSDB\Components\DatabaseReflection\Tables\Teacher\StateRow
-    row.teacher.since: FKSDB\Components\DatabaseReflection\Tables\Teacher\SinceRow
-    row.teacher.until: FKSDB\Components\DatabaseReflection\Tables\Teacher\UntilRow
-    row.teacher.number_brochures: FKSDB\Components\DatabaseReflection\Tables\Teacher\NumberBrochuresRow
-    row.teacher.note: FKSDB\Components\DatabaseReflection\Tables\Teacher\NoteRow
     row.referenced.person_link: FKSDB\Components\DatabaseReflection\ReferencedRows\PersonLinkRow
     row.referenced.person_name: FKSDB\Components\DatabaseReflection\ReferencedRows\PersonNameRow
+    row.referenced.event_link: FKSDB\Components\DatabaseReflection\ReferencedRows\EventLinkRow
+    row.referenced.contest: FKSDB\Components\DatabaseReflection\ReferencedRows\ContestRow
+    row.referenced.school_name: FKSDB\Components\DatabaseReflection\ReferencedRows\SchoolNameRow
 
 includes:
+    - payment.neon
     - merger.neon
     - rows/person.neon
     - rows/person_info.neon
@@ -105,3 +104,4 @@ includes:
     - rows/stored_query.neon
     - rows/fyziklani_game_setup.neon
     - rows/schedule/schedule_group.neon
+    - DBReflection.neon

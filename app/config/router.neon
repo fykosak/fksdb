@@ -64,6 +64,7 @@ fksrouter:
             subdomain: %subdomain.db%
             tld: %domain.tld%
             flags: SECURED
+
         '//%subdomain.auth%.%domain.cz%%path%<action login|logout|fb-login|recover>':
             presenter: Authentication
             subdomain: %subdomain.auth%
@@ -119,6 +120,7 @@ fksrouter:
             module: Event
             presenter: Dashboard
             flags: SECURED
+
         '//[!<subdomain>].%domain.host%.[!<tld>]%path%f[<eventId [0-9]+>]/s/q[/<id>]':
             subdomain: %subdomain.db%
             presenter: Submit
@@ -133,7 +135,3 @@ fksrouter:
             tld: %domain.tld%
             contestId: [filterTable: %inverseContestMapping%]
             flags: SECURED
-
-
-
-

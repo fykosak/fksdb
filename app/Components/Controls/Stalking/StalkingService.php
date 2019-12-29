@@ -1,6 +1,5 @@
 <?php
 
-
 namespace FKSDB\Components\Controls\Stalking;
 
 use Nette\Application\BadRequestException;
