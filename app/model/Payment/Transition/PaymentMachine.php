@@ -6,7 +6,7 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServicePayment;
 use FKSDB\Payment\PriceCalculator\PriceCalculator;
-use FKSDB\Payment\SymbolGenerator\AbstractSymbolGenerator;
+use FKSDB\Payment\SymbolGenerator\Generators\AbstractSymbolGenerator;
 use FKSDB\Transitions\Machine;
 use Nette\Database\Connection;
 

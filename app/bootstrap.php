@@ -2,7 +2,9 @@
 
 use Authorization\ACLExtension;
 use Events\EventsExtension;
+use FKSDB\Config\Extensions\DBReflectionExtension;
 use FKSDB\Config\Extensions\NavigationExtension;
+use FKSDB\Config\Extensions\PaymentExtension;
 use FKSDB\Config\Extensions\RouterExtension;
 use FKSDB\Config\Extensions\StalkingExtension;
 use JanTvrdik\Components\DatePicker;
@@ -26,6 +28,7 @@ $configurator->onCompile[] = function ($configurator, $compiler) {
     $compiler->addExtension('navigation', new NavigationExtension());
     $compiler->addExtension('stalking', new StalkingExtension());
     $compiler->addExtension('events', new EventsExtension(CONFIG_DIR . '/events.neon'));
+    $compiler->addExtension('payment', new PaymentExtension());
 };
 
 // Enable Nette Debugger for error visualisation & logging

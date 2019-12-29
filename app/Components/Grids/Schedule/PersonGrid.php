@@ -90,7 +90,8 @@ class PersonGrid extends BaseGrid {
                 if (!$modelPayment) {
                     return Html::el('span')->addAttributes(['class' => 'badge badge-danger'])->addText('No payment found');
                 }
-                return Html::el('span')->addAttributes(['class' => $modelPayment->getUIClass()])->addText('#' . $modelPayment->getPaymentId() . '-' . $modelPayment->getStateLabel());
+                // TODO
+                return Html::el('span')->addAttributes(['class' => ''])->addText('#' . $modelPayment->getPaymentId() . '-');
             })->setSortable(false);
     }
 

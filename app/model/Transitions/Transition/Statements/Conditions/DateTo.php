@@ -1,9 +1,8 @@
 <?php
 
-
 namespace FKSDB\Transitions\Statements\Conditions;
 
-
+use DateTime;
 use FKSDB\Transitions\IStateModel;
 use FKSDB\Transitions\Statements\Statement;
 
@@ -13,15 +12,15 @@ use FKSDB\Transitions\Statements\Statement;
  */
 class DateTo extends Statement {
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     private $to;
 
     /**
      * DateBetween constructor.
-     * @param \DateTime $to
+     * @param DateTime $to
      */
-    public function __construct(\DateTime $to) {
+    public function __construct(DateTime $to) {
         $this->to = $to;
     }
 

@@ -274,7 +274,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    protected function createComponentTransitionButtons() {
+    protected function createComponentTransitionButtons(): TransitionButtonsControl {
         return new TransitionButtonsControl($this->machine, $this->translator, $this->getEntity());
     }
 
@@ -339,6 +339,6 @@ class PaymentPresenter extends BasePresenter {
      * @return string
      */
     protected function getModelResource(): string {
-        return 'event.payment';
+        return ModelPayment::RESOURCE_ID;
     }
 }
