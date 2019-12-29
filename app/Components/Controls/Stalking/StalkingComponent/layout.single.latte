@@ -5,8 +5,8 @@
             {control noRecords}
         </div>
     {else}
-        {foreach $rows as $row}
-            {control 'valuePrinter__'.$table.'__'.$row:listItem $model,true}
+        {foreach $rows as $field}
+            {control 'valuePrinter__'.$field[0].'__'.$field[1]:listItem $model}
         {/foreach}
     {/if}
 {/block}

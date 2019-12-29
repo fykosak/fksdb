@@ -173,14 +173,6 @@ class StalkingPresenter extends BasePresenter {
     }
 
     /**
-     * @return Stalking\Payment
-     * @throws BadRequestException
-     */
-    public function createComponentPayment(): Stalking\Payment {
-        return new Stalking\Payment($this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
-    }
-
-    /**
      * @return Stalking\Schedule
      * @throws BadRequestException
      */

@@ -6,13 +6,13 @@ stalking:
             minimalPermission: 1
             table: person
             rows:
-                - family_name
-                - other_name
-                - born_family_name
-                - display_name
-                - gender
-                - person_id
-                - created
+                - person.family_name
+                - person.other_name
+                - person.born_family_name
+                - person.display_name
+                - person.gender
+                - person.person_id
+                - person.created
 
         contact_info:
             layout: single
@@ -20,8 +20,8 @@ stalking:
             minimalPermission: 1
             table: person_info
             rows:
-                - email
-                - phone
+                - person_info.email
+                - person_info.phone
 
         contact_parents:
             layout: single
@@ -29,10 +29,10 @@ stalking:
             minimalPermission: 128
             table: person_info
             rows:
-                - phone_parent_m
-                - phone_parent_d
-                - email_parent_m
-                - email_parent_d
+                - person_info.phone_parent_m
+                - person_info.phone_parent_d
+                - person_info.email_parent_m
+                - person_info.email_parent_d
 
         academic_degree:
             layout: single
@@ -40,8 +40,8 @@ stalking:
             minimalPermission: 128
             table: person_info
             rows:
-                - academic_degree_prefix
-                - academic_degree_suffix
+                - person_info.academic_degree_prefix
+                - person_info.academic_degree_suffix
 
         extended_info:
              layout: single
@@ -49,21 +49,21 @@ stalking:
              minimalPermission: 128
              table: person_info
              rows:
-                 - born
-                 - born_id
-                 - birthplace
-                 - id_number
-                 - employer
-                 - uk_login
-                 - health_insurance
-                 - citizenship
-                 - account
-                 - career
-                 - homepage
-                 - im
-                 - linkedin_id
-                 - note
-                 - origin
+                 - person_info.born
+                 - person_info.born_id
+                 - person_info.birthplace
+                 - person_info.id_number
+                 - person_info.employer
+                 - person_info.uk_login
+                 - person_info.health_insurance
+                 - person_info.citizenship
+                 - person_info.account
+                 - person_info.career
+                 - person_info.homepage
+                 - person_info.im
+                 - person_info.linkedin_id
+                 - person_info.note
+                 - person_info.origin
 
         login:
              layout: single
@@ -71,33 +71,43 @@ stalking:
              minimalPermission: 128
              table: login
              rows:
-                 - login
-                 - login_id
-                 - hash
-                 - last_login
+                 - login.login
+                 - login.login_id
+                 - login.hash
+                 - login.last_login
 
         person_history:
             layout: multi
             label: Person history
             minimalPermission: 128
             table: person_history
-            item_headline: ac_year
+            item_headline: person_history.ac_year
             rows:
-                - school_id
-                - study_year
-                - class
+                - person_history.school_id
+                - person_history.study_year
+                - person_history.class
 
         org:
             layout: multi
             label: Org
             minimalPermission: 128
             table: org
-            item_headline: contest_id
+            item_headline: org.contest_id
             rows:
-                - since
-                - until
-                - role
-                - order
-                - contribution
-                - tex_signature
-                - domain_alias
+                - org.since
+                - org.until
+                - org.role
+                - org.order
+                - org.contribution
+                - org.tex_signature
+                - org.domain_alias
+        payment:
+            layout: multi
+            label: Payment
+            minimalPermission: 128
+            table: payment
+            item_headline: payment.link
+            rows:
+                - payment.price
+                - payment.state
+                #- referenced.event_link
