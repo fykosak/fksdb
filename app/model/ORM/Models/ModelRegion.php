@@ -46,7 +46,7 @@ class ModelRegion extends AbstractModelSingle {
             default:
                 $regExp = '(\d{' . $this->phone_nsn . '})';
         }
-        Debugger::barDump('/^' . $this->phone_prefix . $regExp . '$/');
+      //  Debugger::barDump('/^' . $this->phone_prefix . $regExp . '$/');
         if (preg_match('/^\\' . $this->phone_prefix . $regExp . '$/', $number, $matches)) {
             unset($matches[0]);
             return $this->phone_prefix . ' ' . \implode(' ', $matches);

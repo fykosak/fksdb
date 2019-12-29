@@ -102,7 +102,7 @@ class DBReflectionFactory extends AbstractFactory {
             }
         }
         $element->caption = $field->getLabel();
-        Debugger::barDump($field);
+       // Debugger::barDump($field);
         if ($field->getDescription()) {
 
             $element->setOption('description', $field->getDescription());
