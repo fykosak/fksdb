@@ -3,6 +3,7 @@
 use Authorization\ACLExtension;
 use Events\EventsExtension;
 use FKSDB\Config\Extensions\NavigationExtension;
+use FKSDB\Config\Extensions\PaymentExtension;
 use FKSDB\Config\Extensions\RouterExtension;
 use FKSDB\Config\Extensions\StalkingExtension;
 use JanTvrdik\Components\DatePicker;
