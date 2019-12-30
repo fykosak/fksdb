@@ -135,19 +135,6 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
     }
 
     /**
-     * @param PriceCalculator $priceCalculator
-     */
-    public function updatePrice(PriceCalculator $priceCalculator) {
-        $priceCalculator->setCurrency($this->currency);
-        $price = $priceCalculator->execute($this);
-
-        $this->update([
-            'price' => $price->getAmount(),
-            'currency' => $price->getCurrency(),
-        ]);
-    }
-
-    /**
      * @return ModelPayment
      */
     public function refresh(): IStateModel {

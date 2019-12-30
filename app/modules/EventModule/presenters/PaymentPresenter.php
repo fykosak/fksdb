@@ -186,8 +186,6 @@ class PaymentPresenter extends BasePresenter {
      * @throws AbortException
      */
     public function renderDetail() {
-        $this->getMachine()->getPriceCalculator()->setCurrency($this->getEntity()->currency);
-
         $this->template->items = $this->getMachine()->getPriceCalculator()->getGridItems($this->getEntity());
         $this->template->model = $this->getEntity();
         $this->template->isOrg = $this->isOrg();

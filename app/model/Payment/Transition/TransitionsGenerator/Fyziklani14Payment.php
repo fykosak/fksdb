@@ -110,10 +110,8 @@ class Fyziklani14Payment extends AbstractTransitionsGenerator {
         $transition->setType(Transition::TYPE_SUCCESS);
         $transition->setCondition($this->getDatesCondition());
 
-        $transition->beforeExecuteCallbacks[] = function (ModelPayment &$modelPayment) use ($machine) {
-            $modelPayment->update($machine->getSymbolGenerator()->create($modelPayment));
-            $modelPayment->updatePrice($machine->getPriceCalculator());
-        };
+        $transition->beforeExecuteCallbacks[] = $machine->getSymbolGenerator();
+        $transition->beforeExecuteCallbacks[] = $machine->getPriceCalculator();
 
         $transition->afterExecuteCallbacks[] = $this->transitionFactory->createMailCallback('fyziklani/fyziklani2020/payment/create',
             $this->getMailSetupCallback(_('Payment #%s was created'))
