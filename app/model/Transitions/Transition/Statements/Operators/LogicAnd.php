@@ -1,8 +1,6 @@
 <?php
 
-
 namespace FKSDB\Transitions\Statements\Operators;
-
 
 use FKSDB\Transitions\IStateModel;
 use FKSDB\Transitions\Statements\Statement;
@@ -19,7 +17,7 @@ class LogicAnd extends Statement {
 
     /**
      * LogicOr constructor.
-     * @param array ...$args
+     * @param callable[] ...$args
      */
     public function __construct(...$args) {
         $this->args = $args;

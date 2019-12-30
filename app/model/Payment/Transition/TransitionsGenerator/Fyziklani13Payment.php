@@ -126,7 +126,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
      * @throws Exception
      */
     private function getDatesCondition(): callable {
-        return new DateBetween(new DateTime('2019-01-21'), new DateTime('2019-02-15'));
+        return new DateBetween('2019-01-21','2019-02-15');
     }
 
     /**

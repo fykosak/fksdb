@@ -18,10 +18,11 @@ class DateFrom extends Statement {
 
     /**
      * DateBetween constructor.
-     * @param DateTime $from
+     * @param string $from
+     * @throws \Exception
      */
-    public function __construct(DateTime $from) {
-        $this->from = $from;
+    public function __construct(string $from) {
+        $this->from = new DateTime($from);
     }
 
     /**
