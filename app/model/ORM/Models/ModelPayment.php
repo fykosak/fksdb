@@ -7,12 +7,8 @@ use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\Payment\IPaymentModel;
 use FKSDB\Payment\Price;
-use FKSDB\Payment\PriceCalculator\PriceCalculator;
 use FKSDB\Transitions\IStateModel;
 use FKSDB\Transitions\Machine;
-use FKSDB\Transitions\UnavailableTransitionException;
-use Nette\Application\BadRequestException;
-use Nette\Application\ForbiddenRequestException;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\IResource;
 use Nette\Utils\DateTime;
@@ -81,18 +77,6 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
     }
 
     /**
-     * @param Machine $machine
-     * @param $id
-     * @throws ForbiddenRequestException
-     * @throws UnavailableTransitionException
-     * @throws BadRequestException
-     * @deprecated
-     */
-    public function executeTransition(Machine $machine, $id) {
-        $machine->executeTransition($id, $this);
-    }
-
-    /**
      * @return string
      */
     public function getPaymentId(): string {
@@ -132,19 +116,6 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
      */
     public function getState() {
         return $this->state;
-    }
-
-    /**
-     * @param PriceCalculator $priceCalculator
-     */
-    public function updatePrice(PriceCalculator $priceCalculator) {
-        $priceCalculator->setCurrency($this->currency);
-        $price = $priceCalculator->execute($this);
-
-        $this->update([
-            'price' => $price->getAmount(),
-            'currency' => $price->getCurrency(),
-        ]);
     }
 
     /**

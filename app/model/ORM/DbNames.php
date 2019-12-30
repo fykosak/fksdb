@@ -27,6 +27,7 @@ class DbNames {
     const TAB_PERSON_HISTORY = 'person_history';
     const TAB_PERSON_INFO = 'person_info';
     const TAB_POST_CONTACT = 'post_contact';
+    const TAB_PSC_REGION = 'psc_region';
     const TAB_REGION = 'region';
     const TAB_ROLE = 'role';
     const TAB_SCHOOL = 'school';

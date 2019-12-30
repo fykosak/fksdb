@@ -6,11 +6,8 @@ use Authorization\EventAuthorizator;
 use Closure;
 use Exception;
 use FKSDB\ORM\DbNames;
-use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServicePayment;
-use FKSDB\Payment\PriceCalculator\PriceCalculatorFactory;
-use FKSDB\Payment\SymbolGenerator\SymbolGeneratorFactory;
 use FKSDB\Payment\Transition\PaymentMachine;
 use FKSDB\Transitions\AbstractTransitionsGenerator;
 use FKSDB\Transitions\IStateModel;
@@ -37,15 +34,6 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
     const EMAIL_BCC = 'fyziklani@fykos.cz';
     const EMAIL_FROM = 'Fyziklání <fyziklani@fykos.cz>';
     /**
-     * @var SymbolGeneratorFactory
-     */
-    private $symbolGeneratorFactory;
-
-    /**
-     * @var PriceCalculatorFactory
-     */
-    private $priceCalculatorFactory;
-    /**
      * @var Connection
      */
     private $connection;
@@ -67,8 +55,6 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
      * @param ServicePayment $servicePayment
      * @param Connection $connection
      * @param TransitionsFactory $transitionFactory
-     * @param SymbolGeneratorFactory $symbolGeneratorFactory
-     * @param PriceCalculatorFactory $priceCalculatorFactory
      * @param EventAuthorizator $eventAuthorizator
      * @param ITranslator $translator
      */
@@ -76,16 +62,12 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
         ServicePayment $servicePayment,
         Connection $connection,
         TransitionsFactory $transitionFactory,
-        SymbolGeneratorFactory $symbolGeneratorFactory,
-        PriceCalculatorFactory $priceCalculatorFactory,
         EventAuthorizator $eventAuthorizator,
         ITranslator $translator
     ) {
         parent::__construct($transitionFactory);
         $this->connection = $connection;
         $this->servicePayment = $servicePayment;
-        $this->symbolGeneratorFactory = $symbolGeneratorFactory;
-        $this->priceCalculatorFactory = $priceCalculatorFactory;
         $this->eventAuthorizator = $eventAuthorizator;
         $this->translator = $translator;
     }
@@ -104,20 +86,6 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
         $this->addTransitionNewToWaiting($machine);
         $this->addTransitionAllToCanceled($machine);
         $this->addTransitionWaitingToReceived($machine);
-    }
-
-    /**
-     * @param ModelEvent $event
-     * @return Machine
-     */
-    public function createMachine(ModelEvent $event): Machine {
-        return new PaymentMachine(
-            $event,
-            $this->priceCalculatorFactory->createCalculator($event),
-            $this->symbolGeneratorFactory->createGenerator($event),
-            $this->connection,
-            $this->servicePayment
-        );
     }
 
     /**
@@ -141,10 +109,8 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
         $transition->setType(Transition::TYPE_SUCCESS);
         $transition->setCondition($this->getDatesCondition());
 
-        $transition->beforeExecuteCallbacks[] = function (ModelPayment &$modelPayment) use ($machine) {
-            $modelPayment->update($machine->getSymbolGenerator()->create($modelPayment));
-            $modelPayment->updatePrice($machine->getPriceCalculator());
-        };
+        $transition->beforeExecuteCallbacks[] = $machine->getSymbolGenerator();
+        $transition->beforeExecuteCallbacks[] = $machine->getPriceCalculator();
 
         $transition->afterExecuteCallbacks[] = $this->transitionFactory->createMailCallback('fyziklani/fyziklani2019/payment/create',
             $this->getMailSetupCallback(_('Payment #%s was created'))
@@ -158,7 +124,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
      * @throws Exception
      */
     private function getDatesCondition(): callable {
-        return new DateBetween(new DateTime('2019-01-21'), new DateTime('2019-02-15'));
+        return new DateBetween('2019-01-21', '2019-02-15');
     }
 
     /**

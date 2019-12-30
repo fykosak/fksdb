@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-28 15:37+0100\n"
+"POT-Creation-Date: 2019-12-30 21:54+0100\n"
 "PO-Revision-Date: 2019-01-10 12:34+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -23,14 +23,10 @@ msgid "Not set"
 msgstr ""
 
 #: i18n/../app/Components/Controls/Helpers/Badges/ContestBadge.php:36
-#: i18n/../app/Components/DatabaseReflection/Tables/Org/ContestRow.php:42
-#: i18n/../app/Components/DatabaseReflection/Tables/ReferencedRows/ContestRow.php:43
 msgid "FYKOS"
 msgstr ""
 
 #: i18n/../app/Components/Controls/Helpers/Badges/ContestBadge.php:38
-#: i18n/../app/Components/DatabaseReflection/Tables/Org/ContestRow.php:44
-#: i18n/../app/Components/DatabaseReflection/Tables/ReferencedRows/ContestRow.php:45
 msgid "Výfuk"
 msgstr ""
 
@@ -69,6 +65,10 @@ msgstr "Event ID"
 #: i18n/../app/Components/Controls/Stalking/Components/Role.php:40
 #: i18n/../app/Components/Grids/Events/DispatchGrid.php:75
 msgid "Roles"
+msgstr ""
+
+#: i18n/../app/Components/Controls/Stalking/Components/Payment.php:28
+msgid "Payments"
 msgstr ""
 
 #: i18n/../app/Components/Controls/Stalking/Components/Validation.php:37
@@ -140,7 +140,7 @@ msgstr "Number of points"
 #: i18n/../app/modules/OrgModule/presenters/InboxPresenter.php:232
 #: i18n/../app/modules/OrgModule/presenters/InboxPresenter.php:260
 #: i18n/../app/modules/OrgModule/presenters/PointsPresenter.php:181
-#: i18n/../app/modules/OrgModule/presenters/SchoolPresenter.php:124
+#: i18n/../app/modules/OrgModule/presenters/SchoolPresenter.php:123
 #: i18n/../app/modules/OrgModule/presenters/ExportPresenter.php:480
 #: i18n/../app/modules/OrgModule/presenters/ExportPresenter.php:491
 #: i18n/../app/modules/OrgModule/presenters/EventPresenter.php:145
@@ -355,7 +355,7 @@ msgstr "No"
 msgid "Hidden value"
 msgstr ""
 
-#: i18n/../app/Components/Forms/Controls/Autocomplete/AutocompleteSelectBox.php:189
+#: i18n/../app/Components/Forms/Controls/Autocomplete/AutocompleteSelectBox.php:188
 #, php-format
 msgid "Políčko %s potřebuje povolený Javascript."
 msgstr "Field %s requires Javacript enabled."
@@ -364,7 +364,7 @@ msgstr "Field %s requires Javacript enabled."
 msgid "%label očekává YYYY-MM-DD hh:mm[:ss]."
 msgstr "%label expects YYYY-MM-DD hh:mm[:ss]."
 
-#: i18n/../app/Components/Forms/Containers/Models/ReferencedContainer.php:224
+#: i18n/../app/Components/Forms/Containers/Models/ReferencedContainer.php:222
 msgid "Najít"
 msgstr "Find"
 
@@ -661,7 +661,7 @@ msgstr ""
 msgid "%s je povinná položka."
 msgstr "%s is reqiured field."
 
-#: i18n/../app/Components/Forms/Factories/Events/DBReflectionFactory.php:91
+#: i18n/../app/Components/Forms/Factories/Events/DBReflectionFactory.php:90
 msgid "%label musí být celé číslo."
 msgstr "%label must be an integer."
 
@@ -766,7 +766,8 @@ msgstr ""
 
 #: i18n/../app/Components/Grids/Fyziklani/Submits/SubmitsGrid.php:66
 #: i18n/../app/Components/Grids/EventOrgsGrid.php:56
-#: i18n/../app/Components/Grids/OrgsGrid.php:73
+#: i18n/../app/Components/Grids/OrgsGrid.php:76
+#: i18n/../app/Components/Grids/OrgsGrid.php:77
 #: i18n/../app/Components/Grids/ContestantsGrid.php:60
 #: i18n/../app/Components/Grids/ContestantsGrid.php:61
 #: i18n/../app/Components/Grids/StoredQueriesGrid.php:91
@@ -776,14 +777,16 @@ msgstr ""
 #: i18n/../app/Components/Grids/SchoolsGrid.php:67
 #: i18n/../app/Components/Grids/Events/EventsGrid.php:72
 #: i18n/../app/Components/Grids/Events/EventsGrid.php:73
-#: i18n/../app/Components/Grids/TeachersGrid.php:76
+#: i18n/../app/Components/Grids/TeachersGrid.php:79
+#: i18n/../app/Components/Grids/TeachersGrid.php:80
 #: i18n/../app/Components/Controls/Fyziklani/Submit/DetailControl.latte.latte2php:51
 #: i18n/../app/modules/EventModule/templates/Dashboard/default.latte.latte2php:19
 msgid "Edit"
 msgstr ""
 
 #: i18n/../app/Components/Grids/Fyziklani/Submits/SubmitsGrid.php:83
-#: i18n/../app/Components/Grids/OrgsGrid.php:74
+#: i18n/../app/Components/Grids/OrgsGrid.php:85
+#: i18n/../app/Components/Grids/OrgsGrid.php:86
 #: i18n/../app/Components/Grids/Payment/PaymentGrid.php:59
 #: i18n/../app/Components/Grids/Payment/PaymentGrid.php:60
 #: i18n/../app/Components/Grids/Schedule/GroupsGrid.php:69
@@ -794,8 +797,8 @@ msgstr ""
 #: i18n/../app/Components/Grids/Events/DispatchGrid.php:98
 #: i18n/../app/Components/Grids/Events/Application/ApplicationGrid.php:38
 #: i18n/../app/Components/Grids/Events/Application/TeamApplicationGrid.php:35
-#: i18n/../app/Components/Grids/TeachersGrid.php:77
-#: i18n/../app/Components/DatabaseReflection/Links/PaymentDetailLink.php:33
+#: i18n/../app/Components/Grids/TeachersGrid.php:84
+#: i18n/../app/Components/Grids/TeachersGrid.php:85
 msgid "Detail"
 msgstr ""
 
@@ -856,7 +859,7 @@ msgstr ""
 #: i18n/../app/Components/Grids/Fyziklani/TaskGrid.php:45
 #: i18n/../app/Components/Grids/Payment/PaymentGrid.php:36
 #: i18n/../app/Components/Grids/Schedule/PersonsGrid.php:42
-#: i18n/../app/Components/Grids/Schedule/PersonGrid.php:56
+#: i18n/../app/Components/Grids/Schedule/PersonGrid.php:54
 #: i18n/../app/Components/Grids/Schedule/GroupsGrid.php:61
 #: i18n/../app/Components/Grids/Schedule/ItemsGrid.php:51
 msgid "#"
@@ -889,7 +892,7 @@ msgstr "Do you really want to delete the organiser?"
 msgid "Přidat organizátora"
 msgstr "Add organiser"
 
-#: i18n/../app/Components/Grids/OrgsGrid.php:78
+#: i18n/../app/Components/Grids/OrgsGrid.php:97
 #: i18n/../app/modules/OrgModule/presenters/OrgPresenter.php:71
 msgid "Založit organizátora"
 msgstr "Create an organiser"
@@ -917,8 +920,6 @@ msgid "Opravdu vzít řešení úlohy %s zpět?"
 msgstr "Do you really want to tak solution of task %s back?"
 
 #: i18n/../app/Components/Grids/Payment/MyPaymentGrid.php:29
-#: i18n/../app/Components/DatabaseReflection/Tables/ReferencedRows/EventNameRow.php:33
-#: i18n/../app/Components/DatabaseReflection/Tables/ReferencedRows/EventLinkRow.php:48
 #: i18n/../app/Components/Controls/Schedule/GroupControl.latte.latte2php:12
 msgid "Event"
 msgstr ""
@@ -929,7 +930,7 @@ msgid "e-mail"
 msgstr "e-mail"
 
 #: i18n/../app/Components/Grids/Schedule/PersonsGrid.php:53
-#: i18n/../app/Components/Grids/Schedule/PersonGrid.php:76
+#: i18n/../app/Components/Grids/Schedule/PersonGrid.php:74
 #: i18n/../app/Components/DatabaseReflection/Tables/Fyziklani/FyziklaniSubmit/StateRow.php:18
 #: i18n/../app/Components/DatabaseReflection/Tables/Payment/StateRow.php:18
 #: i18n/../app/Components/Controls/Fyziklani/Submit/DetailControl.latte.latte2php:26
@@ -937,13 +938,13 @@ msgid "State"
 msgstr ""
 
 #: i18n/../app/Components/Grids/Schedule/PersonsGrid.php:63
-#: i18n/../app/Components/Grids/Schedule/PersonGrid.php:86
+#: i18n/../app/Components/Grids/Schedule/PersonGrid.php:84
 msgid "Payment"
 msgstr ""
 
 #: i18n/../app/Components/Grids/Schedule/PersonsGrid.php:79
 #: i18n/../app/Components/DatabaseReflection/Tables/Org/RoleRow.php:20
-#: i18n/../app/Components/Controls/Stalking/Components/EventOrg.latte.latte2php:15
+#: i18n/../app/Components/Controls/Stalking/Components/EventOrg.latte.latte2php:13
 msgid "Role"
 msgstr ""
 
@@ -965,11 +966,11 @@ msgstr ""
 msgid "Participant"
 msgstr ""
 
-#: i18n/../app/Components/Grids/Schedule/PersonGrid.php:57
+#: i18n/../app/Components/Grids/Schedule/PersonGrid.php:55
 msgid "Group"
 msgstr ""
 
-#: i18n/../app/Components/Grids/Schedule/PersonGrid.php:61
+#: i18n/../app/Components/Grids/Schedule/PersonGrid.php:59
 #: i18n/../app/modules/EventModule/templates/Payment/detail.latte.latte2php:29
 msgid "Item"
 msgstr ""
@@ -1032,8 +1033,7 @@ msgstr "Event ID"
 
 #: i18n/../app/Components/Grids/ContestantsFromSchoolGrid.php:61
 #: i18n/../app/Components/Grids/Events/DispatchGrid.php:71
-#: i18n/../app/Components/DatabaseReflection/Tables/Org/ContestRow.php:22
-#: i18n/../app/Components/DatabaseReflection/Tables/ReferencedRows/ContestRow.php:23
+#: i18n/../app/Components/DatabaseReflection/Tables/Org/ContestRow.php:19
 #: i18n/../app/Components/Controls/Stalking/Components/Flag.latte.latte2php:24
 msgid "Contest"
 msgstr ""
@@ -1093,13 +1093,13 @@ msgstr ""
 msgid "Apply filter"
 msgstr ""
 
-#: i18n/../app/Components/Grids/TeachersGrid.php:73
-#: i18n/../app/Components/DatabaseReflection/Tables/ReferencedRows/SchoolNameRow.php:33
+#: i18n/../app/Components/Grids/TeachersGrid.php:67
+#: i18n/../app/Components/DatabaseReflection/Tables/ReferencedRows/SchoolNameRow.php:27
 #: i18n/../app/Components/DatabaseReflection/Tables/PersonHistory/SchoolIdRow.php:22
 msgid "School"
 msgstr ""
 
-#: i18n/../app/Components/Grids/TeachersGrid.php:81
+#: i18n/../app/Components/Grids/TeachersGrid.php:92
 #: i18n/../app/modules/OrgModule/presenters/TeacherPresenter.php:81
 msgid "Create new teacher"
 msgstr ""
@@ -1187,7 +1187,7 @@ msgstr ""
 msgid "T-shirt color"
 msgstr ""
 
-#: i18n/../app/Components/DatabaseReflection/Tables/EventParticipant/DepartureTicketRow.php:19
+#: i18n/../app/Components/DatabaseReflection/Tables/EventParticipant/DepartureTicketRow.php:20
 msgid "Departure ticket"
 msgstr ""
 
@@ -1428,13 +1428,13 @@ msgstr ""
 msgid "Specific symbol"
 msgstr ""
 
-#: i18n/../app/Components/DatabaseReflection/Tables/Payment/LinkRow.php:35
+#: i18n/../app/Components/DatabaseReflection/Tables/Payment/LinkRow.php:36
 #: i18n/../app/Components/DatabaseReflection/Tables/Payment/IdRow.php:19
 msgid "Payment id"
 msgstr ""
 
 #: i18n/../app/Components/DatabaseReflection/Tables/Payment/StateRow.php:62
-#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:77
+#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:65
 msgid "New payment"
 msgstr ""
 
@@ -1734,7 +1734,7 @@ msgstr "ID number"
 msgid "U cizinců číslo pasu."
 msgstr "Passport no. for non-Czech, non-Slovak."
 
-#: i18n/../app/Components/DatabaseReflection/Tables/PersonInfo/PhoneRow.php:41
+#: i18n/../app/Components/DatabaseReflection/Tables/PersonInfo/PhoneRow.php:40
 msgid "Phone number"
 msgstr ""
 
@@ -1807,7 +1807,7 @@ msgstr "Empty for non-Czech, non-Slovak."
 msgid "Rodné číslo nemá platný formát."
 msgstr "Health insurance no. is not valid."
 
-#: i18n/../app/Components/DatabaseReflection/Tables/PersonInfo/PhoneParentMRow.php:40
+#: i18n/../app/Components/DatabaseReflection/Tables/PersonInfo/PhoneParentMRow.php:39
 msgid "Telefonní číslo (matka)"
 msgstr "Phone number"
 
@@ -1883,22 +1883,18 @@ msgstr "Only if it differs from surname."
 msgid "Nepodařilo se odeslat e-mail."
 msgstr "Failed to send the e-mail."
 
-#: i18n/../app/model/Transitions/Machine/Machine.php:145
+#: i18n/../app/model/Transitions/Machine/Machine.php:150
 msgid "Prechod sa nedá vykonať"
 msgstr "Transition cannot be done"
 
-#: i18n/../app/model/Transitions/Machine/Machine.php:168
+#: i18n/../app/model/Transitions/Machine/Machine.php:173
 msgid "Expected instance of IModel"
 msgstr ""
 
-#: i18n/../app/model/Transitions/Machine/Machine.php:227
+#: i18n/../app/model/Transitions/Machine/Machine.php:232
 #, fuzzy
 msgid "Model sa nedá vytvoriť"
 msgstr "Transition cannot be done"
-
-#: i18n/../app/model/Transitions/Machine/MachineFactory.php:97
-msgid "Not implemented"
-msgstr ""
 
 #: i18n/../app/model/Fyziklani/Rooms/RoomsFromCSV.php:69
 #, php-format
@@ -2001,56 +1997,51 @@ msgstr "Imported (%s) and set (%s) series does not match."
 msgid "Currency %s in not supported"
 msgstr "Currency %s doesn't exist"
 
-#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani14Payment.php:100
-#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:100
+#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani14Payment.php:83
+#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:82
 #, php-format
 msgid "Expected class %s, got %s"
 msgstr ""
 
-#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani14Payment.php:129
-#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:129
+#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani14Payment.php:98
+#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:97
 msgid "Create"
 msgstr ""
 
-#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani14Payment.php:139
-#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:139
+#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani14Payment.php:108
+#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:107
 #: i18n/../app/Components/Controls/Payment/StateDisplayControl.latte.latte2php:11
 msgid "Confirm payment"
 msgstr ""
 
-#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani14Payment.php:150
-#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:150
+#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani14Payment.php:117
+#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:116
 #, php-format
 msgid "Payment #%s was created"
 msgstr ""
 
-#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani14Payment.php:187
-#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:187
+#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani14Payment.php:154
+#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:153
 msgid "Cancel payment"
 msgstr ""
 
-#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani14Payment.php:204
-#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:204
+#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani14Payment.php:171
+#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:170
 msgid "Paid"
 msgstr ""
 
-#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani14Payment.php:211
-#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:211
+#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani14Payment.php:178
+#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:177
 #, php-format
 msgid "We are receive payment #%s"
 msgstr ""
 
-#: i18n/../app/model/Payment/SybolGenerator/SymbolGeneratorFactory.php:41
-#, php-format
-msgid "Event %s nemá nastavený generátor platieb"
-msgstr "Evend %s haven't had set payment generator"
-
-#: i18n/../app/model/Payment/SybolGenerator/AbstractSymbolGenerator.php:38
+#: i18n/../app/model/Payment/SybolGenerator/Generators/DefaultGenerator.php:78
 #, php-format
 msgid "Payment #%s has already generated symbols."
 msgstr ""
 
-#: i18n/../app/model/Payment/SybolGenerator/AbstractSymbolGenerator.php:47
+#: i18n/../app/model/Payment/SybolGenerator/Generators/DefaultGenerator.php:87
 msgid "variable_symbol overflow"
 msgstr ""
 
@@ -2078,7 +2069,7 @@ msgstr "Points have been stored. %d points, team: \"%s\" (%d), task: %s \"%s\""
 msgid "Herné parametre niesu nastavené"
 msgstr "Game parameters not set"
 
-#: i18n/../app/model/ORM/Models/Schedule/ModelScheduleItem.php:108
+#: i18n/../app/model/ORM/Models/Schedule/ModelScheduleItem.php:103
 msgid "Unlimited capacity"
 msgstr ""
 
@@ -2132,15 +2123,15 @@ msgstr "Save CSV (without head)"
 msgid "Uložit CSV s uvozovkami"
 msgstr "Save CSV with quotes"
 
-#: i18n/../app/model/Persons/ExtendedPersonHandler.php:182
+#: i18n/../app/model/Persons/ExtendedPersonHandler.php:183
 msgid "Zvací e-mail odeslán."
 msgstr "E-mail invitation sent."
 
-#: i18n/../app/model/Persons/ExtendedPersonHandler.php:184
+#: i18n/../app/model/Persons/ExtendedPersonHandler.php:185
 msgid "Zvací e-mail se nepodařilo odeslat."
 msgstr "E-mail invitation failed to sent."
 
-#: i18n/../app/model/Persons/ExtendedPersonHandler.php:220
+#: i18n/../app/model/Persons/ExtendedPersonHandler.php:221
 msgid "Zadaná data se neshodují s již uloženými."
 msgstr "Data don't match already stored data."
 
@@ -2251,43 +2242,43 @@ msgstr "initial"
 msgid "zaniklý"
 msgstr "terminated"
 
-#: i18n/../app/model/Events/Model/ApplicationHandler.php:178
+#: i18n/../app/model/Events/Model/ApplicationHandler.php:177
 #, php-format
 msgid "Přihláška \"%s\" vytvořena."
 msgstr "Application \"%s\" created."
 
-#: i18n/../app/model/Events/Model/ApplicationHandler.php:181
+#: i18n/../app/model/Events/Model/ApplicationHandler.php:180
 msgid "Přihláška smazána."
 msgstr "Application deleted."
 
-#: i18n/../app/model/Events/Model/ApplicationHandler.php:183
+#: i18n/../app/model/Events/Model/ApplicationHandler.php:182
 #, php-format
 msgid "Stav přihlášky \"%s\" změněn."
 msgstr "State of application \"%s\" changed."
 
-#: i18n/../app/model/Events/Model/ApplicationHandler.php:186
+#: i18n/../app/model/Events/Model/ApplicationHandler.php:185
 #, php-format
 msgid "Přihláška \"%s\" uložena."
 msgstr "Application \"%s\" saved."
 
-#: i18n/../app/model/Events/Model/ApplicationHandler.php:192
+#: i18n/../app/model/Events/Model/ApplicationHandler.php:191
 #, php-format
 msgid "Některá pole skupiny \"%s\" neodpovídají existujícímu záznamu."
 msgstr "Some fields of group \"%s\" don't match an existing record."
 
-#: i18n/../app/model/Events/Model/ApplicationHandler.php:197
+#: i18n/../app/model/Events/Model/ApplicationHandler.php:196
 #, php-format
 msgid "Data ve skupině \"%s\" kolidují s již existující přihláškou."
 msgstr "Data in group \"%s\" collide with an existing application."
 
-#: i18n/../app/model/Events/Model/ApplicationHandler.php:255
+#: i18n/../app/model/Events/Model/ApplicationHandler.php:254
 #, php-format
 msgid "Ze stavu \"%s\" automatu \"%s\" neexistuje přechod do stavu \"%s\"."
 msgstr ""
 "There is not a transition from state \"%s\" of machine \"%s\" to state \"%s"
 "\"."
 
-#: i18n/../app/model/Events/Model/ApplicationHandler.php:312
+#: i18n/../app/model/Events/Model/ApplicationHandler.php:311
 msgid "Chyba při ukládání přihlášky."
 msgstr "Error while saving the application."
 
@@ -2392,16 +2383,16 @@ msgstr "You have to agree with the privacy policy before submitting."
 msgid "Game is not set up!"
 msgstr ""
 
-#: i18n/../app/modules/FyziklaniModule/presenters/ClosePresenter.php:32
+#: i18n/../app/modules/FyziklaniModule/presenters/ClosePresenter.php:31
 msgid "Uzavírání bodování"
 msgstr "Sealing of the scoring"
 
-#: i18n/../app/modules/FyziklaniModule/presenters/ClosePresenter.php:37
+#: i18n/../app/modules/FyziklaniModule/presenters/ClosePresenter.php:36
 #, php-format
 msgid "Uzavírání bodování týmu \"%s\""
 msgstr "Sealing of the scoring for the team \"%s\""
 
-#: i18n/../app/modules/FyziklaniModule/presenters/ClosePresenter.php:67
+#: i18n/../app/modules/FyziklaniModule/presenters/ClosePresenter.php:66
 msgid "Team does not exists"
 msgstr ""
 
@@ -2742,47 +2733,47 @@ msgstr ""
 msgid "Model akce"
 msgstr "Event model"
 
-#: i18n/../app/modules/EventModule/presenters/ApplicationsTimeProgressPresenter.php:68
+#: i18n/../app/modules/EventModule/presenters/ApplicationsTimeProgressPresenter.php:67
 msgid "Applications time progress"
 msgstr ""
 
-#: i18n/../app/modules/EventModule/presenters/DashboardPresenter.php:20
+#: i18n/../app/modules/EventModule/presenters/DashboardPresenter.php:21
 #, php-format
 msgid "Event %s"
 msgstr ""
 
-#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:87
+#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:75
 #, php-format
 msgid "Edit payment #%s"
 msgstr ""
 
-#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:97
+#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:85
 #, php-format
 msgid "Payment detail #%s"
 msgstr ""
 
-#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:105
+#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:93
 msgid "List of payments"
 msgstr ""
 
-#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:163
+#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:151
 #, php-format
 msgid "Payment #%s can not be edited"
 msgstr ""
 
-#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:179
+#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:167
 msgid "Payment is not allowed in this time!"
 msgstr ""
 
-#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:216
+#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:202
 msgid "Event has not payment API"
 msgstr ""
 
-#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:253
+#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:239
 msgid "Edit items"
 msgstr ""
 
-#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:312
+#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:302
 msgid "Expected class PaymentMachine"
 msgstr ""
 
@@ -3150,32 +3141,32 @@ msgstr "Error while creating organiser."
 msgid "Organizátor již existuje."
 msgstr "Organiser already exists."
 
-#: i18n/../app/modules/OrgModule/presenters/SchoolPresenter.php:86
+#: i18n/../app/modules/OrgModule/presenters/SchoolPresenter.php:85
 msgid "Založit školu"
 msgstr "Create a school"
 
-#: i18n/../app/modules/OrgModule/presenters/SchoolPresenter.php:92
+#: i18n/../app/modules/OrgModule/presenters/SchoolPresenter.php:91
 #, php-format
 msgid "Úprava školy %s"
 msgstr "Edit school %s"
 
-#: i18n/../app/modules/OrgModule/presenters/SchoolPresenter.php:110
+#: i18n/../app/modules/OrgModule/presenters/SchoolPresenter.php:109
 msgid "Vložit"
 msgstr "Insert"
 
-#: i18n/../app/modules/OrgModule/presenters/SchoolPresenter.php:211
+#: i18n/../app/modules/OrgModule/presenters/SchoolPresenter.php:210
 msgid "Škola založena"
 msgstr "School created"
 
-#: i18n/../app/modules/OrgModule/presenters/SchoolPresenter.php:217
+#: i18n/../app/modules/OrgModule/presenters/SchoolPresenter.php:216
 msgid "Chyba při zakládání školy."
 msgstr "Error while creating school."
 
-#: i18n/../app/modules/OrgModule/presenters/SchoolPresenter.php:259
+#: i18n/../app/modules/OrgModule/presenters/SchoolPresenter.php:258
 msgid "Škola upravena"
 msgstr "School edited"
 
-#: i18n/../app/modules/OrgModule/presenters/SchoolPresenter.php:265
+#: i18n/../app/modules/OrgModule/presenters/SchoolPresenter.php:264
 msgid "Chyba při úpravě školy."
 msgstr "Error while editing school."
 
@@ -4448,6 +4439,9 @@ msgstr ""
 #: i18n/../typescript/src/apps/fyziklani/results/middleware/results/filters/filters.ts.ts2php:15
 msgid "All"
 msgstr ""
+
+#~ msgid "Event %s nemá nastavený generátor platieb"
+#~ msgstr "Evend %s haven't had set payment generator"
 
 #~ msgid "Školy"
 #~ msgstr "Schools"

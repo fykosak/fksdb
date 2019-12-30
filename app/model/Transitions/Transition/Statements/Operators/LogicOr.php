@@ -17,7 +17,7 @@ class LogicOr extends Statement {
 
     /**
      * LogicOr constructor.
-     * @param mixed ...$args
+     * @param callable[] ...$args
      */
     public function __construct(...$args) {
         $this->args = $args;

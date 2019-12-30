@@ -3,6 +3,7 @@ payment:
         eventId: 137
         scheduleGroupType:
             - accommodation
+        transitionsGenerator: FKSDB\Payment\Transition\Transitions\Fyziklani13Payment
         eventPrice: false
         priceCalculator:
             preProcess:
@@ -21,6 +22,7 @@ payment:
         eventId: 145
         scheduleGroupType:
             - accommodation
+        transitionsGenerator: FKSDB\Payment\Transition\Transitions\Fyziklani14Payment
         priceCalculator:
             preProcess:
                 - FKSDB\Payment\PriceCalculator\PreProcess\SchedulePrice

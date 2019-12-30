@@ -161,7 +161,7 @@ class SubmitPresenter extends BasePresenter {
             $this->flashMessage(_('Submit neexistuje'), \BasePresenter::FLASH_ERROR);
             $this->backLinkRedirect();
             $this->redirect('list');
-        };
+        }
         $this->submit = ModelFyziklaniSubmit::createFromActiveRow($row);
         return $this->submit;
     }

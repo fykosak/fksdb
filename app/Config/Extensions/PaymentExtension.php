@@ -4,20 +4,20 @@ namespace FKSDB\Config\Extensions;
 
 use FKSDB\Payment\PriceCalculator\PriceCalculator;
 use FKSDB\Payment\SymbolGenerator\Generators\Generators\DefaultGenerator;
+use FKSDB\Payment\Transition\PaymentMachine;
 use Nette\Config\CompilerExtension;
-use Tracy\Debugger;
 
 /**
  * Class PaymentExtension
  * @package FKSDB\Config\Extensions
  */
 class PaymentExtension extends CompilerExtension {
+    const MACHINE_PREFIX = 'machine.';
 
     public function loadConfiguration() {
         $builder = $this->getContainerBuilder();
-        Debugger::barDump($this->config);
         foreach ($this->config as $item) {
-            $builder->addDefinition($this->prefix('symbolGenerator.' . $item['eventId']))
+            $symbolGenerator = $builder->addDefinition($this->prefix('symbolGenerator.' . $item['eventId']))
                 ->setFactory(DefaultGenerator::class)->addSetup('setUp', [
                     $item['symbolGenerator']['variableSymbolStart'],
                     $item['symbolGenerator']['variableSymbolEnd'],
@@ -30,6 +30,16 @@ class PaymentExtension extends CompilerExtension {
                     new $preProcess(),
                 ]);
             }
+            $transitionsGenerator = $builder->addDefinition($this->prefix('transitionsGenerator.' . $item['eventId']))
+                ->setFactory($item['transitionsGenerator']);
+
+            $builder->addDefinition($this->prefix(self::MACHINE_PREFIX . $item['eventId']))
+                ->setFactory(PaymentMachine::class)
+                ->addSetup('setEventId', [$item['eventId']])
+                ->addSetup('setPriceCalculator', [$priceCalculator])
+                ->addSetup('setSymbolGenerator', [$symbolGenerator])
+                ->addSetup('setTransitions', [$transitionsGenerator]);
+
         }
     }
 }

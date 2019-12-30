@@ -55,7 +55,7 @@ abstract class ParticipantsDuration extends ValidationTest {
 
             $max = (is_null($max) || $max < $year) ? $year : $max;
             $min = (is_null($min) || $min > $year) ? $year : $min;
-        };
+        }
 
         $delta = ($max - $min) + 1;
         return new ValidationLog(

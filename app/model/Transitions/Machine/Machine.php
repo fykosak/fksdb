@@ -10,7 +10,6 @@ use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Database\Connection;
 use Nette\Database\Table\ActiveRow;
-use Tracy\Debugger;
 use function array_filter;
 use function array_values;
 use function count;
@@ -86,6 +85,7 @@ abstract class Machine {
      * @param string $id
      * @param IStateModel $model
      * @return Transition
+     * @throws UnavailableTransitionException
      * @throws Exception
      */
     protected function findTransitionById(string $id, IStateModel $model): Transition {
@@ -139,6 +139,7 @@ abstract class Machine {
      * @param string $id
      * @param IStateModel $model
      * @return IStateModel
+     * @throws UnavailableTransitionException
      * @throws ForbiddenRequestException
      * @throws BadRequestException
      * @throws Exception

@@ -8,12 +8,12 @@ use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
 use FKSDB\Components\Factories\PaymentFactory as PaymentComponentFactory;
 use FKSDB\Components\Forms\Controls\Payment\SelectForm;
 use FKSDB\Components\Grids\Payment\OrgPaymentGrid;
+use FKSDB\Config\Extensions\PaymentExtension;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServicePayment;
 use FKSDB\Payment\Transition\PaymentMachine;
 use FKSDB\Transitions\Machine;
-use FKSDB\Transitions\MachineFactory;
 use InvalidArgumentException;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -40,11 +40,6 @@ class PaymentPresenter extends BasePresenter {
     private $servicePayment;
 
     /**
-     * @var MachineFactory
-     */
-    private $machineFactory;
-
-    /**
      * @var PaymentComponentFactory
      */
     private $paymentComponentFactory;
@@ -54,13 +49,6 @@ class PaymentPresenter extends BasePresenter {
      */
     public function injectServicePayment(ServicePayment $servicePayment) {
         $this->servicePayment = $servicePayment;
-    }
-
-    /**
-     * @param MachineFactory $machineFactory
-     */
-    public function injectMachineFactory(MachineFactory $machineFactory) {
-        $this->machineFactory = $machineFactory;
     }
 
     /**
@@ -180,7 +168,7 @@ class PaymentPresenter extends BasePresenter {
             if (!$this->isOrg()) {
                 $this->redirect('Dashboard:default');
             }
-        };
+        }
     }
 
     /* ********* render *****************/
@@ -198,8 +186,6 @@ class PaymentPresenter extends BasePresenter {
      * @throws AbortException
      */
     public function renderDetail() {
-        $this->getMachine()->getPriceCalculator()->setCurrency($this->getEntity()->currency);
-
         $this->template->items = $this->getMachine()->getPriceCalculator()->getGridItems($this->getEntity());
         $this->template->model = $this->getEntity();
         $this->template->isOrg = $this->isOrg();
@@ -215,7 +201,7 @@ class PaymentPresenter extends BasePresenter {
         if (!$this->hasApi()) {
             $this->flashMessage(_('Event has not payment API'));
             $this->redirect(':Event:Dashboard:default');
-        };
+        }
     }
     /* ********* Components *****************/
     /**
@@ -303,10 +289,14 @@ class PaymentPresenter extends BasePresenter {
      * @return PaymentMachine
      * @throws AbortException
      * @throws BadRequestException
+     * @throws \Exception
      */
     private function getMachine(): PaymentMachine {
         if (!$this->machine) {
-            $this->machine = $this->machineFactory->setUpMachine($this->getEvent());
+            $this->machine = $this->context->getService('payment.' . PaymentExtension::MACHINE_PREFIX . $this->getEvent()->event_id);
+            if (!$this->machine instanceof PaymentMachine) {
+                throw new BadRequestException();
+            }
         }
         if (!$this->machine instanceof PaymentMachine) {
             throw new InvalidArgumentException(_('Expected class PaymentMachine'), 500);
