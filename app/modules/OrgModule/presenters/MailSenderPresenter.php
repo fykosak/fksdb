@@ -52,7 +52,7 @@ class MailSenderPresenter extends BasePresenter {
         $form->addText('bcc', _('BCC'))->addCondition(Form::FILLED)->addRule(Form::EMAIL);
         $form->addText('cc', _('CC'))->addCondition(Form::FILLED)->addRule(Form::EMAIL);
         $form->addText('from', _('From'))->setRequired(_('"From" is required'))->addRule(Form::EMAIL);
-        $form->addText('replay', _('Replay to'))->setRequired(_('"Replay to" is required'))->addRule(Form::EMAIL);;
+        $form->addText('replay', _('Replay to'))->setRequired(_('"Replay to" is required'))->addRule(Form::EMAIL);
         $form->addTextArea('text', _('Text'));
         $form->addSubmit('submit', _('Send'));
         $form->onSuccess[] = function (Form $form) {

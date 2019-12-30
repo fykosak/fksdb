@@ -9,7 +9,6 @@ use FKSDB\Payment\IPaymentModel;
 use FKSDB\Payment\Price;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
-use Nette\InvalidStateException;
 use Nette\Security\IResource;
 use Nette\Utils\DateTime;
 

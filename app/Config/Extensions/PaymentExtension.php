@@ -6,13 +6,13 @@ use FKSDB\Payment\PriceCalculator\PriceCalculator;
 use FKSDB\Payment\SymbolGenerator\Generators\Generators\DefaultGenerator;
 use FKSDB\Payment\Transition\PaymentMachine;
 use Nette\Config\CompilerExtension;
-use Tracy\Debugger;
 
 /**
  * Class PaymentExtension
  * @package FKSDB\Config\Extensions
  */
 class PaymentExtension extends CompilerExtension {
+    const MACHINE_PREFIX = 'machine.';
 
     public function loadConfiguration() {
         $builder = $this->getContainerBuilder();
@@ -33,7 +33,7 @@ class PaymentExtension extends CompilerExtension {
             $transitionsGenerator = $builder->addDefinition($this->prefix('transitionsGenerator.' . $item['eventId']))
                 ->setFactory($item['transitionsGenerator']);
 
-            $builder->addDefinition($this->prefix('machine.' . $item['eventId']))
+            $builder->addDefinition($this->prefix(self::MACHINE_PREFIX . $item['eventId']))
                 ->setFactory(PaymentMachine::class)
                 ->addSetup('setEventId', [$item['eventId']])
                 ->addSetup('setPriceCalculator', [$priceCalculator])

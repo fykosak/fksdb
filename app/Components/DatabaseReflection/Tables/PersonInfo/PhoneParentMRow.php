@@ -6,7 +6,6 @@ use FKSDB\Components\Controls\PhoneNumber\PhoneNumberFactory;
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\DatabaseReflection\PhoneRowTrait;
 use FKSDB\Components\Forms\Factories\ITestedRowFactory;
-use FKSDB\ORM\Services\ServiceRegion;
 use Nette\Localization\ITranslator;
 
 /**

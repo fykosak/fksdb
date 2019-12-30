@@ -2,8 +2,6 @@
 
 namespace FKSDB\Transitions;
 
-use FKSDB\ORM\Models\ModelEvent;
-
 /**
  * Class AbstractTransitionsGenerator
  * @package FKSDB\Transitions

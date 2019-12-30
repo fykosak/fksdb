@@ -8,6 +8,7 @@ use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
 use FKSDB\Components\Factories\PaymentFactory as PaymentComponentFactory;
 use FKSDB\Components\Forms\Controls\Payment\SelectForm;
 use FKSDB\Components\Grids\Payment\OrgPaymentGrid;
+use FKSDB\Config\Extensions\PaymentExtension;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServicePayment;
@@ -167,7 +168,7 @@ class PaymentPresenter extends BasePresenter {
             if (!$this->isOrg()) {
                 $this->redirect('Dashboard:default');
             }
-        };
+        }
     }
 
     /* ********* render *****************/
@@ -202,7 +203,7 @@ class PaymentPresenter extends BasePresenter {
         if (!$this->hasApi()) {
             $this->flashMessage(_('Event has not payment API'));
             $this->redirect(':Event:Dashboard:default');
-        };
+        }
     }
     /* ********* Components *****************/
     /**
@@ -294,7 +295,7 @@ class PaymentPresenter extends BasePresenter {
      */
     private function getMachine(): PaymentMachine {
         if (!$this->machine) {
-            $this->machine = $this->context->getService('payment.machine.' . $this->getEvent()->event_id);
+            $this->machine = $this->context->getService('payment.' . PaymentExtension::MACHINE_PREFIX . $this->getEvent()->event_id);
             if (!$this->machine instanceof PaymentMachine) {
                 throw new BadRequestException();
             }

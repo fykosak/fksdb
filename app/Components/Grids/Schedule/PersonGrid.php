@@ -5,10 +5,8 @@ namespace FKSDB\Components\Grids\Schedule;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
-use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 use Nette\Application\BadRequestException;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;
@@ -38,7 +36,7 @@ class PersonGrid extends BaseGrid {
      * @throws GridException
      */
     public function render(ModelPerson $person = null, ModelEvent $event = null) {
-        if (!$event || !$event) {
+        if (!$event || !$person) {
             throw new BadRequestException();
         }
         $this->setData($event, $person);
