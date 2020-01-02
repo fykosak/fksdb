@@ -207,13 +207,6 @@ abstract class BaseGrid extends Grid {
     }
 
     /**
-     * @return string
-     */
-    protected function getTableName(): string {
-        throw new NotImplementedException();
-    }
-
-    /**
      * @return string|AbstractModelSingle
      */
     protected function getModelClassName(): string {

@@ -2,11 +2,12 @@
 
 namespace FKSDB\Components\Grids\Schedule;
 
+use FKSDB\Components\DatabaseReflection\ValuePrinters\EventRole;
+use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
-use Nette\Application\BadRequestException;
+use FKSDB\YearCalculator;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
@@ -16,6 +17,21 @@ use NiftyGrid\DuplicateColumnException;
  * @package FKSDB\Components\Grids\Schedule
  */
 class PersonsGrid extends BaseGrid {
+    /**
+     * @var YearCalculator
+     */
+    private $yearCalculator;
+
+    /**
+     * PersonsGrid constructor.
+     * @param TableReflectionFactory $tableReflectionFactory
+     * @param YearCalculator $yearCalculator
+     */
+    public function __construct(TableReflectionFactory $tableReflectionFactory, YearCalculator $yearCalculator) {
+        $this->yearCalculator = $yearCalculator;
+        parent::__construct($tableReflectionFactory);
+    }
+
     /**
      * @var ModelScheduleItem
      */
@@ -81,43 +97,14 @@ class PersonsGrid extends BaseGrid {
                 $container = Html::el('span');
                 $model = ModelPersonSchedule::createFromActiveRow($row);
                 $person = $model->getPerson();
-                $roles = $person->getRolesForEvent($model->getScheduleItem()->getGroup()->getEvent());
+                $roles = $person->getRolesForEvent($model->getScheduleItem()->getGroup()->getEvent(), $this->yearCalculator);
                 if (!\count($roles)) {
                     $container->addHtml(Html::el('span')
                         ->addAttributes(['class' => 'badge badge-danger'])
                         ->addText(_('No role')));
                     return $container;
                 }
-                foreach ($roles as $role) {
-                    switch ($role['type']) {
-                        case 'teacher':
-                            $container->addHtml(Html::el('span')
-                                ->addAttributes(['class' => 'badge badge-9'])
-                                ->addText(_('Teacher') . ' - ' . $role['team']->name));
-                            break;
-                        case'org':
-                            $container->addHtml(Html::el('span')
-                                ->addAttributes(['class' => 'badge badge-7'])
-                                ->addText(_('Org') . ' - ' . $role['org']->note));
-                            break;
-                        case'participant':
-                            $team = null;
-                            /**
-                             * @var ModelEventParticipant $participant
-                             */
-                            $participant = $role['participant'];
-                            try {
-                                $team = $participant->getFyziklaniTeam();
-                            } catch (BadRequestException $exception) {
-                            }
-                            $container->addHtml(Html::el('span')
-                                ->addAttributes(['class' => 'badge badge-10'])
-                                ->addText(_('Participant') . ' - ' . _($participant->status) .
-                                    ($team ? (' - team: ' . $team->name) : '')
-                                ));
-                    }
-                }
-                return $container;
+                return EventRole::getHtml($roles);
             })->setSortable(false);
     }
 }

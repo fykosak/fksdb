@@ -35,13 +35,6 @@ class GroupsGrid extends BaseGrid {
     /**
      * @return string
      */
-    public function getTableName(): string {
-        return DbNames::TAB_SCHEDULE_GROUP;
-    }
-
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelScheduleGroup::class;
     }
@@ -59,7 +52,13 @@ class GroupsGrid extends BaseGrid {
         $dataSource = new NDataSource($groups);
         $this->setDataSource($dataSource);
         $this->addColumn('schedule_group_id', _('#'));
-        $this->addColumns(['name_cs', 'name_en', 'schedule_group_type', 'start', 'end']);
+        $this->addColumns([
+            DbNames::TAB_SCHEDULE_GROUP . '.name_cs',
+            DbNames::TAB_SCHEDULE_GROUP . '.name_en',
+            DbNames::TAB_SCHEDULE_GROUP . '.schedule_group_type',
+            DbNames::TAB_SCHEDULE_GROUP . '.start',
+            DbNames::TAB_SCHEDULE_GROUP . '.end'
+        ]);
 
         $this->addColumn('items_count', _('Items count'))->setRenderer(function ($row) {
             $model = ModelScheduleGroup::createFromActiveRow($row);

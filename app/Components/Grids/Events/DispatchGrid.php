@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Grids\Events;
 
+use FKSDB\Components\DatabaseReflection\ValuePrinters\EventRole;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
@@ -75,21 +76,9 @@ class DispatchGrid extends BaseGrid {
         })->setSortable(false);
         $this->addColumn('year', _('Year'));
         $this->addColumn('roles', _('Roles'))->setRenderer(function ($row) {
-            $container = Html::el('span');
             $modelEvent = ModelEvent::createFromActiveRow($row);
-            $isEventParticipant = $this->person->isEventParticipant($modelEvent->event_id);
-            if ($isEventParticipant) {
-                $container->addHtml(Html::el('span')->addAttributes(['class' => 'badge badge-success'])->addText(_('Event participant')));
-            }
-            $isEventOrg = count($this->person->getEventOrg()->where('event_id', $modelEvent->event_id));
-            if ($isEventOrg) {
-                $container->addHtml(Html::el('span')->addAttributes(['class' => 'badge badge-info'])->addText(_('Event org')));
-            }
-            $isOrg = array_key_exists($modelEvent->getEventType()->contest_id, $this->person->getActiveOrgs($this->yearCalculator));
-            if ($isOrg) {
-                $container->addHtml(Html::el('span')->addAttributes(['class' => 'badge badge-warning'])->addText(_('Contest org')));
-            }
-            return $container;
+            $roles = $this->person->getRolesForEvent($modelEvent, $this->yearCalculator);
+            return EventRole::getHtml($roles);
         })->setSortable(false);
 
         //
