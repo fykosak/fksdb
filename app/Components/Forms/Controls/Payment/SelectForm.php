@@ -25,6 +25,7 @@ use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 use Nette\Utils\JsonException;
+use Tracy\Debugger;
 use function json_encode;
 
 /**
@@ -234,12 +235,10 @@ class SelectForm extends Control {
     }
 
     /**
-     * @param ModelPayment $model
      * @throws BadRequestException
      */
-    public function renderEdit(ModelPayment $model) {
-        $this->model = $model;
-        $values = $model->toArray();
+    public function renderEdit() {
+        $values = $this->model->toArray();
         $values['payment_accommodation'] = $this->serializeScheduleValue();
         /**
          * @var FormControl $control

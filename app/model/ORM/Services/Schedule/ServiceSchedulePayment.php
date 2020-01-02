@@ -9,7 +9,9 @@ use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Models\Schedule\ModelSchedulePayment;
 use FKSDB\Payment\Handler\DuplicatePaymentException;
 use FKSDB\Submits\StorageException;
+use http\Exception;
 use Nette\Utils\ArrayHash;
+use Tracy\Debugger;
 
 /**
  * Class ServiceSchedulePayment
@@ -62,13 +64,10 @@ class ServiceSchedulePayment extends AbstractServiceSingle {
         }
         foreach ($newScheduleIds as $id) {
 
-            /**
-             * @var ModelSchedulePayment $model
-             * TODO maybe failed
-             */
-
             $count = $this->getTable()->where('person_schedule_id', $id)->where('payment.state !=? OR payment.state IS NULL', ModelPayment::STATE_CANCELED)->count();
             if ($count > 0) {
+                $row = $this->getTable()->where('person_schedule_id', $id)->where('payment.state !=? OR payment.state IS NULL', ModelPayment::STATE_CANCELED)->fetch();
+                $model = ModelSchedulePayment::createFromActiveRow($row);
                 throw new DuplicatePaymentException(sprintf(
                     _('Item "%s" has already another payment.'),
                     $model->getPersonSchedule()->getLabel()

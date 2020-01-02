@@ -3,6 +3,7 @@
 namespace FKSDB\Transitions;
 
 use Exception;
+use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
 use LogicException;
@@ -10,6 +11,7 @@ use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Database\Connection;
 use Nette\Database\Table\ActiveRow;
+use Nette\Localization\ITranslator;
 use function array_filter;
 use function array_values;
 use function count;
@@ -42,15 +44,21 @@ abstract class Machine {
      * if callback return true, transition is allowed explicit, independently of transition's condition
      */
     private $explicitCondition;
+    /**
+     * @var ITranslator
+     */
+    private $translator;
 
     /**
      * Machine constructor.
      * @param Connection $connection
      * @param IService $service
+     * @param ITranslator $translator
      */
-    public function __construct(Connection $connection, IService $service) {
+    public function __construct(Connection $connection, IService $service, ITranslator $translator) {
         $this->connection = $connection;
         $this->service = $service;
+        $this->translator = $translator;
     }
 
     /**
@@ -79,6 +87,14 @@ abstract class Machine {
         return array_filter($this->getTransitions(), function (Transition $transition) use ($model, $state) {
             return ($transition->getFromState() === $state) && $this->canExecute($transition, $model);
         });
+    }
+
+    /**
+     * @param IStateModel $model
+     * @return TransitionButtonsControl
+     */
+    public function createComponentTransitionButtons(IStateModel $model): TransitionButtonsControl {
+        return new TransitionButtonsControl($this, $this->translator, $model);
     }
 
     /**
