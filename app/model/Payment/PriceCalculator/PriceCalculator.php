@@ -49,12 +49,4 @@ class PriceCalculator {
         }
         return $items;
     }
-
-    /**
-     * @return array
-     */
-    public function getCurrencies(): array {
-        return Price::getAllCurrencies();
-    }
-
 }

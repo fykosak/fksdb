@@ -124,33 +124,13 @@ class SelectForm extends Control {
     }
 
     /**
-     * @return FormControl
-     * @throws BadRequestException
-     * @throws UnsupportedCurrencyException
-     * @throws JsonException
-     */
-    public function createComponentFormEdit() {
-        return $this->createForm(false);
-    }
-
-    /**
-     * @return FormControl
-     * @throws BadRequestException
-     * @throws UnsupportedCurrencyException
-     * @throws JsonException
-     */
-    public function createComponentFormCreate() {
-        return $this->createForm(true);
-    }
-
-    /**
      * @param bool $create
      * @return FormControl
      * @throws UnsupportedCurrencyException
      * @throws BadRequestException
      * @throws JsonException
      */
-    private function createForm(bool $create) {
+    private function createComponentForm(bool $create) {
         $control = new FormControl();
         $form = $control->getForm();
         if ($this->isOrg) {
@@ -220,7 +200,7 @@ class SelectForm extends Control {
         /**
          * @var FormControl $control
          */
-        $control = $this->getComponent('formCreate');
+        $control = $this->getComponent('form');
         /**
          * @var ModelLogin $login
          */
@@ -234,17 +214,15 @@ class SelectForm extends Control {
     }
 
     /**
-     * @param ModelPayment $model
      * @throws BadRequestException
      */
-    public function renderEdit(ModelPayment $model) {
-        $this->model = $model;
-        $values = $model->toArray();
+    public function renderEdit() {
+        $values = $this->model->toArray();
         $values['payment_accommodation'] = $this->serializeScheduleValue();
         /**
          * @var FormControl $control
          */
-        $control = $this->getComponent('formEdit');
+        $control = $this->getComponent('form');
         $control->getForm()->setDefaults($values);
         $this->template->setTranslator($this->translator);
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'SelectForm.edit.latte');

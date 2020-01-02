@@ -3,7 +3,6 @@
 namespace EventModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Controls\Payment\StateDisplayControl;
 use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
 use FKSDB\Components\Factories\PaymentFactory as PaymentComponentFactory;
 use FKSDB\Components\Forms\Controls\Payment\SelectForm;
@@ -18,7 +17,6 @@ use InvalidArgumentException;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\NotImplementedException;
 use function count;
 use function sprintf;
 
@@ -86,9 +84,6 @@ class PaymentPresenter extends BasePresenter {
         $this->setIcon('fa fa-credit-card');
     }
 
-    /**
-     *
-     */
     public function titleList() {
         $this->setTitle(_('List of payments'));
         $this->setIcon('fa fa-credit-card');
@@ -226,16 +221,11 @@ class PaymentPresenter extends BasePresenter {
      * @return FormControl
      * @throws AbortException
      * @throws BadRequestException
-     * @throws ForbiddenRequestException
      */
     protected function createComponentEditButtonForm(): FormControl {
         $formControl = new FormControl();
         $form = $formControl->getForm();
-        /**
-         * @var PaymentPresenter $presenter
-         */
-        $presenter = $this->getPresenter();
-        if ($this->getEntity()->canEdit() || $presenter->getContestAuthorizator()->isAllowed($this->getEntity(), 'org', $this->getEntity()->getEvent()->getContest())) {
+        if ($this->canEdit()) {
             $submit = $form->addSubmit('edit', _('Edit items'));
             $submit->onClick[] = function () {
                 $this->getPresenter()->redirect('edit');
@@ -245,23 +235,13 @@ class PaymentPresenter extends BasePresenter {
     }
 
     /**
-     * @return StateDisplayControl
-     * @throws AbortException
-     * @throws BadRequestException
-     * @throws ForbiddenRequestException
-     */
-    protected function createComponentStateDisplay(): StateDisplayControl {
-        return new StateDisplayControl($this->translator, $this->getEntity());
-    }
-
-    /**
      * @return TransitionButtonsControl
      * @throws AbortException
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
     protected function createComponentTransitionButtons(): TransitionButtonsControl {
-        return new TransitionButtonsControl($this->machine, $this->translator, $this->getEntity());
+        return $this->machine->createComponentTransitionButtons($this->getEntity());
     }
 
 
@@ -282,7 +262,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws AbortException
      */
     private function isOrg(): bool {
-        return $this->isContestsOrgAllowed('event.payment', 'org');
+        return $this->isContestsOrgAllowed($this->getModelResource(), 'org');
     }
 
     /**
@@ -306,13 +286,11 @@ class PaymentPresenter extends BasePresenter {
 
     /**
      * @return bool
-     * @throws AbortException
-     * @throws BadRequestException
      */
     private function hasApi(): bool {
         try {
             $this->getMachine();
-        } catch (NotImplementedException $exception) {
+        } catch (\Exception $exception) {
             return false;
         }
         return true;
