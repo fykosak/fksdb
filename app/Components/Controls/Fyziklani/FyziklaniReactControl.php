@@ -11,6 +11,7 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use Nette\DI\Container;
+use Nette\NotImplementedException;
 
 /**
  * Class FyziklaniReactControl
@@ -82,13 +83,22 @@ abstract class FyziklaniReactControl extends ReactComponent {
 
     }
 
+    /**
+     * @return string
+     */
+    protected function getReactId(): string {
+        return 'fyziklani.' . $this->getComponentName() . '.' . $this->getMode();
+    }
 
     /**
      * @return string
      */
-    public final function getModuleName(): string {
-        return 'fyziklani';
-    }
+    abstract protected function getComponentName(): string;
+
+    /**
+     * @return string
+     */
+    abstract protected function getMode(): string;
 
     /**
      * @return \FKSDB\ORM\Models\ModelEvent

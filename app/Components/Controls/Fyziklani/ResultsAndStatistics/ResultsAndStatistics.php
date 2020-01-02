@@ -24,14 +24,11 @@ abstract class ResultsAndStatistics extends FyziklaniReactControl {
     }
 
     /**
-     * @return array
      * @throws InvalidLinkException
      */
-    public function getActions(): array {
-        $actions = parent::getActions();
-        $actions['refresh'] = $this->link('refresh!');
-        return $actions;
-
+    protected function configure() {
+        $this->addAction('refresh', $this->link('refresh!'));
+        parent::configure();
     }
 
     /**

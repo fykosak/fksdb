@@ -7,6 +7,7 @@ use Nette\Application\UI\Control;
 use Nette\ComponentModel\IComponent;
 use Nette\DI\Container;
 use Nette\Http\IRequest;
+use Nette\NotImplementedException;
 use Nette\Templating\FileTemplate;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
@@ -17,6 +18,10 @@ use Nette\Utils\JsonException;
  *
  */
 abstract class ReactComponent extends Control {
+    /**
+     * @var string[]
+     */
+    private $actions = [];
     /**
      * @var Container
      */
@@ -50,21 +55,27 @@ abstract class ReactComponent extends Control {
      * @throws JsonException
      */
     public final function render() {
-        $this->template->moduleName = $this->getModuleName();
-        $this->template->componentName = $this->getComponentName();
-        $this->template->mode = $this->getMode();
-        $this->template->actions = Json::encode($this->getActions());
-
+        $this->configure();
+        $this->template->reactId = $this->getReactId();
+        $this->template->actions = Json::encode($this->actions);
         $this->template->data = $this->getData();
+
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ReactComponent.latte');
         $this->template->render();
     }
 
     /**
-     * @return array
+     * @return void
      */
-    public function getActions(): array {
-        return [];
+    protected function configure() {
+    }
+
+    /**
+     * @param string $key
+     * @param string $destination
+     */
+    public function addAction(string $key, string $destination) {
+        $this->actions[$key] = $destination;
     }
 
     /**
@@ -87,17 +98,7 @@ abstract class ReactComponent extends Control {
     /**
      * @return string
      */
-    abstract function getComponentName(): string;
-
-    /**
-     * @return string
-     */
-    abstract function getModuleName(): string;
-
-    /**
-     * @return string
-     */
-    abstract function getMode(): string;
+    abstract protected function getReactId(): string;
 
     /**
      * @return string

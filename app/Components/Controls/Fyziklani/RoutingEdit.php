@@ -40,14 +40,9 @@ class RoutingEdit extends FyziklaniReactControl {
         return 'routing';
     }
 
-    /**
-     * @return array
-     * @throws InvalidLinkException
-     */
-    public function getActions(): array {
-        $actions = parent::getActions();
-        $actions['save'] = $this->link('save!');
-        return $actions;
+    protected function configure() {
+        $this->addAction('save', $this->link('save!'));
+        parent::configure();
     }
 
     /**
