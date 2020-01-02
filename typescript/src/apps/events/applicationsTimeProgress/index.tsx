@@ -3,7 +3,8 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import Index from './components/index';
 
-export const eventApplicationsTimeProgress: App = (element, module, component, mode, rawData) => {
+export const eventApplicationsTimeProgress: App = (element, reactId, rawData) => {
+    const [module, component, mode] = reactId.split('.');
     if (module !== 'events') {
         return false;
     }

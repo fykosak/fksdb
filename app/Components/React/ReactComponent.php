@@ -3,6 +3,7 @@
 namespace FKSDB\Components\React;
 
 use FKSDB\Application\IJavaScriptCollector;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\ComponentModel\IComponent;
 use Nette\DI\Container;
@@ -18,10 +19,8 @@ use Nette\Utils\JsonException;
  *
  */
 abstract class ReactComponent extends Control {
-    /**
-     * @var string[]
-     */
-    private $actions = [];
+
+    use ReactField;
     /**
      * @var Container
      */
@@ -37,18 +36,11 @@ abstract class ReactComponent extends Control {
     }
 
     /**
-     * @var bool
-     */
-    protected static $reactJSAttached = false;
-
-    /**
      * @param IComponent $obj
      */
     protected function attached($obj) {
-        if (!static::$reactJSAttached && $obj instanceof IJavaScriptCollector) {
-            static::$reactJSAttached = true;
-            $obj->registerJSFile('js/bundle.min.js');
-        }
+        $this->attachedReact($obj);
+        parent::attached($obj);
     }
 
     /**
@@ -65,28 +57,20 @@ abstract class ReactComponent extends Control {
     }
 
     /**
-     * @return void
-     */
-    protected function configure() {
-    }
-
-    /**
-     * @param string $key
-     * @param string $destination
-     */
-    public function addAction(string $key, string $destination) {
-        $this->actions[$key] = $destination;
-    }
-
-    /**
      * @return IRequest
+     * @throws BadRequestException
      */
     protected function getHttpRequest(): IRequest {
-        return $this->container->getByType(IRequest::class);
+        $service = $this->container->getByType(IRequest::class);
+        if ($service instanceof IRequest) {
+            return $service;
+        }
+        throw new BadRequestException();
     }
 
     /**
      * @return object
+     * @throws BadRequestException
      */
     protected function getReactRequest() {
 
@@ -94,14 +78,4 @@ abstract class ReactComponent extends Control {
         $act = $this->getHttpRequest()->getPost('act');
         return (object)['requestData' => $requestData, 'act' => $act];
     }
-
-    /**
-     * @return string
-     */
-    abstract protected function getReactId(): string;
-
-    /**
-     * @return string
-     */
-    abstract function getData(): string;
 }

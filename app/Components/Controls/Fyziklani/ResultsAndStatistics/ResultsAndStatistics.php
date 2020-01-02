@@ -3,18 +3,65 @@
 namespace FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics;
 
 use FKSDB\Components\Controls\Fyziklani\FyziklaniReactControl;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\React\ReactResponse;
 use FyziklaniModule\BasePresenter;
 use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\ArgumentOutOfRangeException;
+use Nette\DI\Container;
 use Nette\Utils\DateTime;
 
 /**
  * Class ResultsAndStatistics
  * @package FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics
  */
-abstract class ResultsAndStatistics extends FyziklaniReactControl {
+class ResultsAndStatistics extends FyziklaniReactControl {
+    /**
+     * @var ServiceFyziklaniTeam
+     */
+    private $serviceFyziklaniTeam;
+
+    /**
+     * @var ServiceFyziklaniTask
+     */
+    private $serviceFyziklaniTask;
+    /**
+     * @var ServiceFyziklaniSubmit
+     */
+    private $serviceFyziklaniSubmit;
+    /**
+     * @var string
+     */
+    private $reactId;
+
+    /**
+     * ResultsAndStatistics constructor.
+     * @param string $reactId
+     * @param Container $container
+     * @param ModelEvent $event
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @param ServiceFyziklaniTask $serviceFyziklaniTask
+     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
+     */
+    public function __construct(string $reactId, Container $container, ModelEvent $event, ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceFyziklaniTask $serviceFyziklaniTask, ServiceFyziklaniSubmit $serviceFyziklaniSubmit) {
+        $this->reactId = $reactId;
+        $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
+        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
+        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+        parent::__construct($container, $event);
+    }
+
+    /**
+     * @return string
+     */
+    protected function getReactId(): string {
+        return $this->reactId;
+    }
 
     /**
      * @return string
@@ -33,6 +80,7 @@ abstract class ResultsAndStatistics extends FyziklaniReactControl {
 
     /**
      * @throws AbortException
+     * @throws BadRequestException
      */
     public function handleRefresh() {
         $presenter = $this->getPresenter();
@@ -70,7 +118,6 @@ abstract class ResultsAndStatistics extends FyziklaniReactControl {
             $result['submits'] = $this->serviceFyziklaniSubmit->getSubmitsAsArray($this->getEvent(), $lastUpdated);
         }
         //if (!$lastUpdated) {
-        $result['rooms'] = $this->getRooms();
         $result['teams'] = $this->serviceFyziklaniTeam->getTeamsAsArray($this->getEvent());
         $result['tasks'] = $this->serviceFyziklaniTask->getTasksAsArray($this->getEvent());
         $result['categories'] = ['A', 'B', 'C'];
@@ -92,6 +139,4 @@ abstract class ResultsAndStatistics extends FyziklaniReactControl {
 
         return $hardDisplay || ($before && $after);
     }
-
-
 }

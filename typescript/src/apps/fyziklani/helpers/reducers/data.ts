@@ -24,7 +24,6 @@ const addData = (state: State, action: ActionSubmitSuccess<ResponseData>): State
         ...state,
         availablePoints: availablePoints.map((value) => +value),
         categories,
-        rooms,
         submits: {
             ...state.submits,
             ...submits,

@@ -9,7 +9,7 @@ interface StateProps {
 }
 
 interface OwnProps {
-    mode: string;
+    mode: 'presentation' | 'view';
 }
 
 class App extends React.Component<StateProps & OwnProps, {}> {
