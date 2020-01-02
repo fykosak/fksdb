@@ -242,23 +242,31 @@ abstract class BaseGrid extends Grid {
      * @param string $id
      * @param string $label
      * @param bool $checkACL
+     * @param array $params
      * @return Button
      * @throws DuplicateButtonException
      */
-    protected function addLinkButton(IPresenter $presenter, string $destination, string $id, string $label, bool $checkACL = true): Button {
+    protected function addLinkButton(IPresenter $presenter, string $destination, string $id, string $label, bool $checkACL = true, array $params = []): Button {
         $modelClassName = $this->getModelClassName();
+        $paramMapCallback = function ($model) use ($params): array {
+            $URLParams = [];
+            foreach ($params as $key => $value) {
+                $URLParams[$key] = $model->{$value};
+            }
+            return $URLParams;
+        };
         return $this->addButton($id, $label)
             ->setText($label)
-            ->setShow(function ($row) use ($presenter, $modelClassName, $destination, $checkACL) {
+            ->setShow(function ($row) use ($presenter, $modelClassName, $destination, $checkACL, $paramMapCallback) {
                 if (!$checkACL) {
                     return true;
                 }
                 $model = $modelClassName::createFromActiveRow($row);
-                return $presenter->authorized($destination, ['id' => $model->getPrimary()]);
+                return $presenter->authorized($destination, $paramMapCallback($model));
             })
-            ->setLink(function ($row) use ($modelClassName, $destination) {
+            ->setLink(function ($row) use ($modelClassName, $destination, $paramMapCallback) {
                 $model = $modelClassName::createFromActiveRow($row);
-                return $this->getPresenter()->link($destination, ['id' => $model->getPrimary()]);
+                return $this->getPresenter()->link($destination, $paramMapCallback($model));
             });
     }
 

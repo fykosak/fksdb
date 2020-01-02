@@ -25,7 +25,6 @@ use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 use Nette\Utils\JsonException;
-use Tracy\Debugger;
 use function json_encode;
 
 /**
