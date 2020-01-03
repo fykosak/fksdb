@@ -99,7 +99,6 @@ class ReferencedContainer extends ContainerWithOptions {
      * @param IControl|null $control
      * @param callable|null $searchCallback
      * @param callable|null $termToValuesCallback
-     * @throws \Nette\Utils\RegexpException
      */
     public function setSearch(IControl $control = null, callable $searchCallback = null, callable $termToValuesCallback = null) {
         if ($control == null) {

@@ -38,7 +38,7 @@ class PersonGrid extends BaseGrid {
      * @throws GridException
      */
     public function render(ModelPerson $person = null, ModelEvent $event = null) {
-        if (!$event || !$event) {
+        if (!$event || !$person) {
             throw new BadRequestException();
         }
         $this->setData($event, $person);

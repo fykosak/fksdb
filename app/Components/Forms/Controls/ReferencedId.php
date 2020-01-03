@@ -203,9 +203,6 @@ class ReferencedId extends HiddenField {
         $this->referencedContainer->setDisabled($value);
     }
 
-    /**
-     * @throws RegexpException
-     */
     private function createPromise() {
         $referencedId = $this->getValue();
         $values = $this->referencedContainer->getValues();

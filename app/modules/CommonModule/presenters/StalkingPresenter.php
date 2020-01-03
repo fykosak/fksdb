@@ -192,7 +192,6 @@ class StalkingPresenter extends BasePresenter {
     /**
      * @return FormControl
      * @throws BadRequestException
-     * @throws \Nette\Utils\RegexpException
      */
     public function createComponentFormSearch(): FormControl {
         $control = new FormControl();

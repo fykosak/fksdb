@@ -24,6 +24,7 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
+use Nette\Utils\JsonException;
 use function json_encode;
 
 /**
@@ -124,8 +125,9 @@ class SelectForm extends Control {
 
     /**
      * @return FormControl
-     * @throws UnsupportedCurrencyException
      * @throws BadRequestException
+     * @throws UnsupportedCurrencyException
+     * @throws JsonException
      */
     public function createComponentFormEdit() {
         return $this->createForm(false);
@@ -133,8 +135,9 @@ class SelectForm extends Control {
 
     /**
      * @return FormControl
-     * @throws UnsupportedCurrencyException
      * @throws BadRequestException
+     * @throws UnsupportedCurrencyException
+     * @throws JsonException
      */
     public function createComponentFormCreate() {
         return $this->createForm(true);
@@ -145,7 +148,7 @@ class SelectForm extends Control {
      * @return FormControl
      * @throws UnsupportedCurrencyException
      * @throws BadRequestException
-     * @throws \Nette\Utils\JsonException
+     * @throws JsonException
      */
     private function createForm(bool $create) {
         $control = new FormControl();

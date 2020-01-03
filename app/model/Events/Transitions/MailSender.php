@@ -98,6 +98,7 @@ class MailSender {
 
     /**
      * @param Transition $transition
+     * @throws \Exception
      */
     public function __invoke(Transition $transition) {
         $this->send($transition);
@@ -105,6 +106,7 @@ class MailSender {
 
     /**
      * @param Transition $transition
+     * @throws \Exception
      */
     private function send(Transition $transition) {
         $personIds = $this->resolveAdressees($transition);
@@ -134,6 +136,7 @@ class MailSender {
      * @param ModelLogin $login
      * @param BaseMachine $baseMachine
      * @return Message
+     * @throws \Exception
      */
     private function composeMessage($filename, ModelLogin $login, BaseMachine $baseMachine) {
         $machine = $baseMachine->getMachine();

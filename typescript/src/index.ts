@@ -5,8 +5,8 @@ import { eventSchedule } from './apps/events/schedule';
 import { fyziklani } from './apps/fyziklani/';
 import { payment } from './apps/payment/selectField/';
 
-appsCollector.register(eventApplicationsTimeProgress);
 appsCollector.register(eventSchedule);
+eventApplicationsTimeProgress();
 charts();
 payment();
 fyziklani();
