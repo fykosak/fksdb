@@ -188,14 +188,6 @@ abstract class Machine {
     abstract public function getCreatingState(): string;
 
     /**
-     * @return string
-     * @deprecated
-     */
-    public function getInitState(): string {
-        return $this->getCreatingState();
-    }
-
-    /**
      * @return Transition
      * @throws Exception
      */
