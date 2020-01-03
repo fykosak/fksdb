@@ -49,3 +49,8 @@ DBReflection:
                  type: string
                  title: Other name
                  permission: PERMISSION_ALLOW_BASIC
+         login:
+             login:
+                 type: string
+                 title: Login
+                 permission: PERMISSION_ALLOW_RESTRICT
