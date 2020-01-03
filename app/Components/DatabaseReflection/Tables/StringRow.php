@@ -108,7 +108,7 @@ class StringRow extends AbstractRow {
             $control->addRule(Form::COUNT, $this->metaData['size']);
         }
 
-        if ($this->metaData['nullable']) {
+        if (!$this->metaData['nullable']) {
             $control->setRequired();
         }
         $description = $this->getDescription();
