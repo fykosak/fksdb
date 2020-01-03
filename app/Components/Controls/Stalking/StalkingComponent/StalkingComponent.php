@@ -15,6 +15,7 @@ use Nette\Application\BadRequestException;
 use Nette\Localization\ITranslator;
 use Nette\NotImplementedException;
 use Nette\Templating\FileTemplate;
+use Tracy\Debugger;
 
 /**
  * Class StalkingComponent
@@ -114,6 +115,9 @@ class StalkingComponent extends StalkingControl {
             default:
                 throw new NotImplementedException();
         }
+
+        $this->template->detailLink = isset($definition['detailLink']) ? $definition['detailLink'] : null;
+        $this->template->editLink = isset($definition['editLink']) ? $definition['editLink'] : null;
         $this->template->rows = $this->parseRows($definition['rows']);
         $this->template->models = $models;
         $this->template->itemHeadline = $this->parseRow($definition['item_headline']);

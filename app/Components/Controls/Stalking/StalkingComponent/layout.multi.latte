@@ -2,7 +2,11 @@
 {block content}
     {if count($models)}
         {foreach $models as $model}
-            <h3 class="card-header">{control 'valuePrinter__'.$itemHeadline[0].'__'.$itemHeadline[1]:onlyValue $model}</h3>
+            <h3 class="card-header">
+                {control 'valuePrinter__'.$itemHeadline[0].'__'.$itemHeadline[1]:onlyValue $model}
+                <span class="float-right">{$detailLink?($detailLink)($model):null}</span>
+                <span class="float-right">{$editLink?($editLink)($model):null}</span>
+            </h3>
             <ul class="list-group list-group-flush">
                 {foreach $rows as $field}
                     {control 'valuePrinter__'.$field[0].'__'.$field[1]:listItem $model}
