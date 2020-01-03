@@ -52,7 +52,15 @@ final class TableReflectionFactory {
         if (isset($this->fieldFactories[$fieldName])) {
             return $this->fieldFactories[$fieldName];
         }
-        $service = $this->container->getService('row.' . $tableName . '.' . $fieldName);
+        $service = null;
+        try {
+            $service = $this->container->getService('DBReflection.' . $tableName . '.' . $fieldName);
+        } catch (\Exception $exception) {
+
+        }
+        if (!$service) {
+            $service = $this->container->getService('row.' . $tableName . '.' . $fieldName);
+        }
         if (!$service instanceof AbstractRow) {
             throw new InvalidArgumentException('Field ' . $tableName . '.' . $fieldName . ' not exists');
         }
@@ -88,5 +96,26 @@ final class TableReflectionFactory {
      */
     public function createGridValue(string $tableName, string $fieldName, AbstractModelSingle $modelSingle, int $userPermissionLevel): Html {
         return $this->loadService($tableName, $fieldName)->renderValue($modelSingle, $userPermissionLevel);
+    }
+
+
+    /**
+     * @param array $rows
+     * @return array
+     */
+    public static function parseRows(array $rows): array {
+        $items = [];
+        foreach ($rows as $item) {
+            $items[] = self::parseRow($item);
+        }
+        return $items;
+    }
+
+    /**
+     * @param string $row
+     * @return array
+     */
+    public static function parseRow(string $row): array {
+        return explode('.', $row);
     }
 }

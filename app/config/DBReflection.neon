@@ -1,0 +1,24 @@
+DBReflection:
+    tables:
+         payment:
+             bank_account:
+                 type: string
+                 title: Bank Account
+             bank_name:
+                 type: string
+                 title: Bank Name
+             constant_symbol:
+                 type: string
+                 title: Constant symbol
+             iban:
+                 type: string
+                 title: IBAN
+             specific_symbol:
+                 type: string
+                 title: specific_symbol
+             swift:
+                 type: string
+                 title: SWIFT
+             variable_symbol:
+                 type: string
+                 title: Variable symbol
