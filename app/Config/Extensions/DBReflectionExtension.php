@@ -47,7 +47,7 @@ class DBReflectionExtension extends CompilerExtension {
      * @param array $field
      */
     private function registerStringRow(ContainerBuilder $builder, string $tableName, string $fieldName, array $field) {
-        $builder->addDefinition($this->prefix($tableName . '.' . $fieldName))
+        $factory = $builder->addDefinition($this->prefix($tableName . '.' . $fieldName))
             ->setFactory(StringRow::class)
             ->addSetup('setUp', [
                 $tableName,
@@ -55,5 +55,8 @@ class DBReflectionExtension extends CompilerExtension {
                 isset($field['accessKey']) ? $field['accessKey'] : $fieldName,
                 isset($field['description']) ? $field['description'] : null
             ]);
+        if (isset($field['permission'])) {
+            $factory->addSetup('setPermissionValue', $field['permission']);
+        }
     }
 }

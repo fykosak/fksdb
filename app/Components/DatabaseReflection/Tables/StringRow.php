@@ -4,9 +4,11 @@ namespace FKSDB\Components\DatabaseReflection;
 
 use FKSDB\Components\DatabaseReflection\ValuePrinters\StringPrinter;
 use FKSDB\ORM\AbstractModelSingle;
+use Nette\Forms\Controls\BaseControl;
+use Nette\Forms\Controls\TextInput;
+use Nette\Forms\Form;
 use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
-use Tracy\Debugger;
 
 /**
  * Class StringRow
@@ -33,6 +35,10 @@ class StringRow extends AbstractRow {
      * @var MetaDataFactory
      */
     private $metaDataFactory;
+    /**
+     * @var int
+     */
+    private $permissionValue = self::PERMISSION_USE_GLOBAL_ACL;
 
     /**
      * StringRow constructor.
@@ -58,10 +64,17 @@ class StringRow extends AbstractRow {
     }
 
     /**
+     * @param $value
+     */
+    public function setPermissionValue(string $value) {
+        $this->permissionValue = constant(self::class . '::' . $value);
+    }
+
+    /**
      * @inheritDoc
      */
     public function getPermissionsValue(): int {
-        return self::PERMISSION_USE_GLOBAL_ACL;
+        return $this->permissionValue;
     }
 
     /**
@@ -84,5 +97,24 @@ class StringRow extends AbstractRow {
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         return (new StringPrinter)($model->{$this->modelAccessKey});
+    }
+
+    /**
+     * @return BaseControl
+     */
+    public function createField(): BaseControl {
+        $control = new TextInput(_($this->title));
+        if ($this->metaData['size']) {
+            $control->addRule(Form::COUNT, $this->metaData['size']);
+        }
+
+        if ($this->metaData['nullable']) {
+            $control->setRequired();
+        }
+        $description = $this->getDescription();
+        if ($description) {
+            $control->setOption('description', $this->getDescription());
+        }
+        return $control;
     }
 }
