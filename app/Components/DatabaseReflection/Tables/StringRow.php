@@ -4,7 +4,9 @@ namespace FKSDB\Components\DatabaseReflection;
 
 use FKSDB\Components\DatabaseReflection\ValuePrinters\StringPrinter;
 use FKSDB\ORM\AbstractModelSingle;
+use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
+use Tracy\Debugger;
 
 /**
  * Class StringRow
@@ -23,6 +25,24 @@ class StringRow extends AbstractRow {
      * @var string
      */
     private $description;
+    /**
+     * @var array
+     */
+    private $metaData;
+    /**
+     * @var MetaDataFactory
+     */
+    private $metaDataFactory;
+
+    /**
+     * StringRow constructor.
+     * @param ITranslator $translator
+     * @param MetaDataFactory $metaDataFactory
+     */
+    public function __construct(ITranslator $translator, MetaDataFactory $metaDataFactory) {
+        parent::__construct($translator);
+        $this->metaDataFactory = $metaDataFactory;
+    }
 
     /**
      * @param string $tableName
@@ -34,6 +54,7 @@ class StringRow extends AbstractRow {
         $this->title = $title;
         $this->modelAccessKey = $modelAccessKey;
         $this->description = $description;
+        $this->metaData = $this->metaDataFactory->getMetaData($tableName, $modelAccessKey);
     }
 
     /**
