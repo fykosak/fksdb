@@ -1,5 +1,4 @@
 import { lang } from '@i18n/i18n';
-import { Room } from '../../../../helpers/interfaces';
 import { Filter } from './filter';
 
 export const createFilters = (categories: string[] = [], includeAll: boolean = true): Filter[] => {
