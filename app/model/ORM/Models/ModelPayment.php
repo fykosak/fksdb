@@ -32,6 +32,8 @@ use function sprintf;
  * @property-read string variable_symbol
  * @property-read string specific_symbol
  * @property-read string bank_account
+ * @property-read string bank_name
+ * @property-read string recipient
  * @property-read string iban
  * @property-read string swift
  */
@@ -101,7 +103,7 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
      * @return bool
      */
     public function hasGeneratedSymbols(): bool {
-        return $this->constant_symbol || $this->variable_symbol || $this->specific_symbol || $this->bank_account;
+        return $this->constant_symbol || $this->variable_symbol || $this->specific_symbol || $this->bank_account || $this->bank_name || $this->recipient;
     }
 
     /**
