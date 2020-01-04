@@ -105,12 +105,12 @@ class StringRow extends AbstractRow {
     public function createField(): BaseControl {
         $control = new TextInput(_($this->title));
         if ($this->metaData['size']) {
-            $control->addRule(Form::COUNT, $this->metaData['size']);
+            $control->addRule(Form::MAX_LENGTH, null, $this->metaData['size']);
         }
 
-        if (!$this->metaData['nullable']) {
-            $control->setRequired();
-        }
+        // if (!$this->metaData['nullable']) {
+        // $control->setRequired();
+        //  }
         $description = $this->getDescription();
         if ($description) {
             $control->setOption('description', $this->getDescription());
