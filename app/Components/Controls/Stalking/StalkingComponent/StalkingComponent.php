@@ -15,7 +15,6 @@ use Nette\Application\BadRequestException;
 use Nette\Localization\ITranslator;
 use Nette\NotImplementedException;
 use Nette\Templating\FileTemplate;
-use Tracy\Debugger;
 
 /**
  * Class StalkingComponent

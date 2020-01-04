@@ -8,7 +8,6 @@ use Nette\Application\BadRequestException;
 use Nette\Config\CompilerExtension;
 use Nette\DI\ContainerBuilder;
 use Nette\DI\ServiceDefinition;
-use Tracy\Debugger;
 
 /**
  * Class StalkingExtension
@@ -46,12 +45,12 @@ class StalkingExtension extends CompilerExtension {
     private function prepareLinkFactory(ContainerBuilder $builder, $tableName, $linkAccessKey, $def): ServiceDefinition {
 
         if (is_array($def)) {
-            return $builder->addDefinition($this->prefix('stalking.' . $linkAccessKey . '.' . $tableName))
+            return $builder->addDefinition($this->prefix( $linkAccessKey . '.' . $tableName))
                 ->setFactory(Link::class)
                 ->addSetup('setParams', [$def['destination'], $def['params'], $def['title']]);
         }
         if (is_string($def)) {
-            return $builder->addDefinition($this->prefix('stalking.' . $linkAccessKey . '.' . $tableName))
+            return $builder->addDefinition($this->prefix( $linkAccessKey . '.' . $tableName))
                 ->setFactory($def);
         }
         throw new BadRequestException();
