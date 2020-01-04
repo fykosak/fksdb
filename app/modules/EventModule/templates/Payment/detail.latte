@@ -22,7 +22,7 @@
     <hr/>
     {if $model->hasGeneratedSymbols()}
         <h2>{_('Informacie o platbe')}</h2>
-        {foreach ['constant_symbol','variable_symbol','specific_symbol','bank_account','bank_name','to','iban','swift','price'] as $field}
+        {foreach ['constant_symbol','variable_symbol','specific_symbol','bank_account','bank_name','recipient','iban','swift','price'] as $field}
             {if $model->{$field}}
                 {control valuePrinter__payment__$field:row $model}
             {/if}

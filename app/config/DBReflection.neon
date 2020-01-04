@@ -22,6 +22,9 @@ DBReflection:
              variable_symbol:
                  type: string
                  title: Variable symbol
+             recipient:
+                 type: string
+                 title: Recipient
          org:
              contribution:
                  type: string
