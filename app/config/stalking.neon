@@ -92,8 +92,18 @@ stalking:
             label: Org
             minimalPermission: 128
             table: org
-            detailLink: FKSDB\Components\DatabaseReflection\Links\OrgDetailLink
-            editLink: FKSDB\Components\DatabaseReflection\Links\OrgEditLink
+            detailLink:
+                destination: ':Org:Org:detail'
+                params:
+                    contestId: contest_id
+                    id: org_id
+                title: Detail
+            editLink:
+                destination: ':Org:Org:edit'
+                params:
+                    contestId: contest_id
+                    id: org_id
+                title: Edit
             item_headline: org.contest_id
             rows:
                 - org.since
@@ -108,7 +118,12 @@ stalking:
             label: Payment
             minimalPermission: 128
             table: payment
-            detailLink: FKSDB\Components\DatabaseReflection\Links\PaymentDetailLink
+            detailLink:
+                destination: ':Event:Payment:detail'
+                params:
+                    eventId: event_id
+                    id: payment_id
+                title: Detail
             item_headline: payment.link
             rows:
                 - payment.price
