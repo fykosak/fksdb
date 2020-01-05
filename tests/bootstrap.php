@@ -44,6 +44,7 @@ $configurator->onCompile[] = function ($configurator, $compiler) {
     $compiler->addExtension('navigation', new NavigationExtension());
     $compiler->addExtension('stalking', new \FKSDB\Config\Extensions\StalkingExtension());
     $compiler->addExtension('events', new EventsExtension(CONFIG_DIR . '/events.neon'));
+    $compiler->addExtension('DBReflection', new \FKSDB\Config\Extensions\DBReflectionExtension());
 };
 
 $configurator->setDebugMode(false);
