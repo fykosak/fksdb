@@ -8,7 +8,6 @@ use Events\Model\Holder\Holder;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
 use FKSDB\ORM\Services\ServicePersonHistory;
 use Nette\Forms\Controls\BaseControl;
-use Tracy\Debugger;
 
 /**
  * More user friendly Due to author's laziness there's no class doc (or it's self explaining).
@@ -80,6 +79,4 @@ abstract class SchoolCheck extends AbstractAdjustment implements IFormAdjustment
         }
         return $result;
     }
-
 }
-

@@ -97,7 +97,7 @@ class StalkingComponent extends StalkingControl {
         }, $definition['links']);
         $this->template->rows = $this->parseRows($definition['rows']);
         $this->template->models = $models;
-        $this->template->itemHeadline = $this->parseRow($definition['item_headline']);
+        $this->template->itemHeadline = $this->parseRow($definition['itemHeadline']);
         $this->template->setFile(__DIR__ . '/layout.multi.latte');
         $this->template->render();
     }

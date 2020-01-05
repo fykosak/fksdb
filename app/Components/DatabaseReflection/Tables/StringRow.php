@@ -18,27 +18,27 @@ class StringRow extends AbstractRow {
     /**
      * @var string
      */
-    private $title;
+    protected $title;
     /**
      * @var string
      */
-    private $modelAccessKey;
+    protected $modelAccessKey;
     /**
      * @var string
      */
-    private $description;
+    protected $description;
     /**
      * @var array
      */
-    private $metaData;
+    protected $metaData;
     /**
      * @var MetaDataFactory
      */
-    private $metaDataFactory;
+    protected $metaDataFactory;
     /**
      * @var int
      */
-    private $permissionValue = self::PERMISSION_USE_GLOBAL_ACL;
+    protected $permissionValue = self::PERMISSION_USE_GLOBAL_ACL;
 
     /**
      * StringRow constructor.

@@ -277,7 +277,7 @@ abstract class BaseGrid extends Grid {
             ->setText($factory->getText())
             ->setLink(function ($row) use ($modelClassName, $factory) {
                 $model = $modelClassName::createFromActiveRow($row);
-                return $this->getPresenter()->link($factory->getDestination(), $factory->prepareParams($model));
+                return $this->getPresenter()->link($factory->getDestination($model), $factory->prepareParams($model));
             });
         if ($checkACL) {
             $button->setShow(function ($row) use ($modelClassName, $checkACL, $factory) {
@@ -285,7 +285,7 @@ abstract class BaseGrid extends Grid {
                     return true;
                 }
                 $model = $modelClassName::createFromActiveRow($row);
-                return $this->getPresenter()->authorized($factory->getDestination(), $factory->prepareParams($model));
+                return $this->getPresenter()->authorized($factory->getDestination($model), $factory->prepareParams($model));
             });
         }
         return $button;
