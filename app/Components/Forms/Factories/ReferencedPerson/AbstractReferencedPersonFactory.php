@@ -267,8 +267,8 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
      * @param $acYear
      * @param HiddenField $hiddenField
      * @param array $metadata
-     * @throws \Exception
      * @return AddressContainer|BaseControl|null
+     * @throws \Exception
      * @throws \Exception
      */
     public function createField($sub, $fieldName, $acYear, HiddenField $hiddenField, array $metadata) {
@@ -391,6 +391,8 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
                 $control->addCondition(Form::FILLED)
                     ->addRule(Form::EMAIL, _('Neplatný tvar e-mailu.'));
                 $control->setOption('description', _('Nejprve zkuste najít osobu v naší databázi podle e-mailu.'));
+                $control->setAttribute('placeholder', 'your-email@exmaple.com');
+                $control->setAttribute('autocomplete', 'email');
                 break;
             case self::SEARCH_ID:
                 $control = $this->personFactory->createPersonSelect(true, _('Jméno'), $this->personProvider);
