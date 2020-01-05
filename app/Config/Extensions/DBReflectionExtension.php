@@ -2,16 +2,11 @@
 
 namespace FKSDB\Config\Extensions;
 
-use FKSDB\Components\Controls\Stalking\StalkingService;
-use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\DatabaseReflection\Links\Link;
 use FKSDB\Components\DatabaseReflection\StringRow;
-use Nette\Application\BadRequestException;
 use Nette\Config\CompilerExtension;
 use Nette\DI\ContainerBuilder;
-use Nette\DI\ServiceDefinition;
 use Nette\NotImplementedException;
-use Tracy\Debugger;
 
 /**
  * Class StalkingExtension

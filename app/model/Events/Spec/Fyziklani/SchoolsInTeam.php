@@ -6,9 +6,11 @@ use Events\FormAdjustments\IFormAdjustment;
 use Events\Machine\Machine;
 use Events\Model\ExpressionEvaluator;
 use Events\Model\Holder\Holder;
+use FKSDB\Components\Forms\Controls\ModelDataConflictException;
 use FKSDB\ORM\Services\ServicePersonHistory;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
+use Tracy\Debugger;
 
 /**
  * More user friendly Due to author's laziness there's no class doc (or it's self explaining).
@@ -68,29 +70,30 @@ class SchoolsInTeam extends SchoolCheck implements IFormAdjustment {
      * @return mixed|void
      */
     protected function _adjust(Form $form, Machine $machine, Holder $holder) {
+
         $this->setHolder($holder);
         $schoolControls = $this->getControl('p*.person_id.person_history.school_id');
         $personControls = $this->getControl('p*.person_id');
 
         $msgMixture = sprintf(_('V týmu můžou být soutežící nejvýše z %d škol.'), $this->getSchoolsInTeam());
         foreach ($schoolControls as $control) {
-            $control->addRule(function(IControl $control) use ($schoolControls, $personControls, $form, $msgMixture) {
-                        $schools = $this->getSchools($schoolControls, $personControls);
-                        if (!$this->checkMixture($schools)) {
-                            $form->addError($msgMixture);
-                            return false;
-                        }
-                        return true;
-                    }, $msgMixture);
+            $control->addRule(function (IControl $control) use ($schoolControls, $personControls, $form, $msgMixture) {
+                $schools = $this->getSchools($schoolControls, $personControls);
+                if (!$this->checkMixture($schools)) {
+                    $form->addError($msgMixture);
+                    return false;
+                }
+                return true;
+            }, $msgMixture);
         }
-        $form->onValidate[] = function(Form $form) use($schoolControls, $personControls, $msgMixture) {
-                    if ($form->isValid()) { // it means that all schools may have been disabled
-                        $schools = $this->getSchools($schoolControls, $personControls);
-                        if (!$this->checkMixture($schools)) {
-                            $form->addError($msgMixture);
-                        }
+        $form->onValidate[] = function (Form $form) use ($schoolControls, $personControls, $msgMixture) {
+                if ($form->isValid()) { // it means that all schools may have been disabled
+                    $schools = $this->getSchools($schoolControls, $personControls);
+                    if (!$this->checkMixture($schools)) {
+                        $form->addError($msgMixture);
                     }
-                };
+                }
+        };
     }
 
     /**

@@ -41,7 +41,7 @@ abstract class AbstractLink {
     /**
      * @return string
      */
-    protected abstract function getText(): string;
+    public abstract function getText(): string;
 
     /**
      * @param $model
@@ -49,5 +49,5 @@ abstract class AbstractLink {
      * @throws InvalidLinkException
      * @throws BadRequestException
      */
-    protected abstract function createLink($model): string;
+    public abstract function createLink($model): string;
 }

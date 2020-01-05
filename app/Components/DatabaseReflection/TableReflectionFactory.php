@@ -4,6 +4,7 @@ namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\DatabaseReflection\Links\AbstractLink;
+use FKSDB\Components\DatabaseReflection\Links\Link;
 use FKSDB\Components\DatabaseReflection\RowFactoryComponent;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\DI\Container;
@@ -71,12 +72,12 @@ final class TableReflectionFactory {
 
     /**
      * @param $linkId
-     * @return AbstractLink
+     * @return Link
      * @throws \Exception
      */
-    public function loadLinkFactory($linkId): AbstractLink {
+    public function loadLinkFactory($linkId): Link {
         $service = $this->container->getService('DBReflection.link.' . $linkId);
-        if (!$service instanceof AbstractLink) {
+        if (!$service instanceof Link) {
             throw new InvalidArgumentException('LinkFactory ' . $linkId . ' not exists');
         }
         return $service;
