@@ -229,7 +229,7 @@ class InboxPresenter extends SeriesPresenter {
             $namingContainer->addComponent($control, SeriesTable::FORM_SUBMIT);
         }
 
-        $form->addSubmit('save', _('Uložit'));
+        $form->addSubmit('save', _('Save'));
         $form->onSuccess[] = function (Form $form) {
             $this->inboxFormSuccess($form);
         };
@@ -257,7 +257,7 @@ class InboxPresenter extends SeriesPresenter {
             $form->addComponent($control, self::TASK_PREFIX . $task->task_id);
         }
 
-        $form->addSubmit('save', _('Uložit'));
+        $form->addSubmit('save', _('Save'));
         $form->onSuccess[] = callback($this, 'handoutFormSuccess');
 
         return $formControl;

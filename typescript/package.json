@@ -28,18 +28,18 @@
   "devDependencies": {
     "@types/d3": "5.7.2",
     "@types/jquery": "latest",
+    "@types/promise-polyfill": "latest",
     "@types/react": "16.9.11",
     "@types/react-dom": "16.9.4",
     "@types/react-redux": "7.1.5",
-    "@types/promise-polyfill": "latest",
     "@types/redux-form": "8.2.0",
     "awesome-typescript-loader": "~5.2.1",
     "source-map-loader": "latest",
     "tslint": "~5.12.1",
     "tslint-loader": "latest",
-    "typescript": "3.7.2",
+    "typescript": "3.7.4",
     "webpack": "4.37.0",
-    "webpack-cli": "3.3.6",
+    "webpack-cli": "^3.3.10",
     "webpack-merge": "^4.2.2"
   }
 }
