@@ -5,6 +5,7 @@ stalking:
             label: Base info
             minimalPermission: 1
             table: person
+            model: FKSDB\ORM\Models\ModelPerson
             rows:
                 - person.family_name
                 - person.other_name
@@ -19,6 +20,7 @@ stalking:
             label: Contact info
             minimalPermission: 1
             table: person_info
+            model: FKSDB\ORM\Models\ModelPersonInfo
             rows:
                 - person_info.email
                 - person_info.phone
@@ -28,6 +30,7 @@ stalking:
             label: Contact to parents
             minimalPermission: 128
             table: person_info
+            model: FKSDB\ORM\Models\ModelPersonInfo
             rows:
                 - person_info.phone_parent_m
                 - person_info.phone_parent_d
@@ -39,6 +42,7 @@ stalking:
             label: Academic degree
             minimalPermission: 128
             table: person_info
+            model: FKSDB\ORM\Models\ModelPersonInfo
             rows:
                 - person_info.academic_degree_prefix
                 - person_info.academic_degree_suffix
@@ -48,6 +52,7 @@ stalking:
              label: Extended info
              minimalPermission: 128
              table: person_info
+             model: FKSDB\ORM\Models\ModelPersonInfo
              rows:
                  - person_info.born
                  - person_info.born_id
@@ -70,6 +75,7 @@ stalking:
              label: Login
              minimalPermission: 128
              table: login
+             model: FKSDB\ORM\Models\ModelLogin
              rows:
                  - login.login
                  - login.login_id
@@ -81,6 +87,7 @@ stalking:
             label: Person history
             minimalPermission: 128
             table: person_history
+            model: FKSDB\ORM\Models\ModelPersonHistory
             item_headline: person_history.ac_year
             rows:
                 - person_history.school_id
@@ -92,18 +99,20 @@ stalking:
             label: Org
             minimalPermission: 128
             table: org
-            detailLink:
-                destination: ':Org:Org:detail'
-                params:
-                    contestId: contest_id
-                    id: org_id
-                title: Detail
-            editLink:
-                destination: ':Org:Org:edit'
-                params:
-                    contestId: contest_id
-                    id: org_id
-                title: Edit
+            model: FKSDB\ORM\Models\ModelOrg
+            links:
+                -
+                    destination: ':Org:Org:detail'
+                    params:
+                        contestId: contest_id
+                        id: org_id
+                    title: Detail
+                -
+                    destination: ':Org:Org:edit'
+                    params:
+                       contestId: contest_id
+                       id: org_id
+                    title: Edit
             item_headline: org.contest_id
             rows:
                 - org.since
@@ -118,14 +127,34 @@ stalking:
             label: Payment
             minimalPermission: 128
             table: payment
-            detailLink:
-                destination: ':Event:Payment:detail'
-                params:
-                    eventId: event_id
-                    id: payment_id
-                title: Detail
+            model: FKSDB\ORM\Models\ModelPayment
+            links:
+                -
+                    destination: ':Event:Payment:detail'
+                    params:
+                        eventId: event_id
+                        id: payment_id
+                    title: Detail
             item_headline: payment.link
             rows:
                 - payment.price
                 - payment.state
                 #- referenced.event_link
+        contestant_base:
+            layout: multi
+            label: Contestant
+            minimalPermission: 128
+            table: contestant_base
+            model: FKSDB\ORM\Models\ModelContestant
+            links:
+                -
+                    destination: ':Org:Contestant:edit'
+                    params:
+                        contestId: contest_id
+                        id: ct_id
+                    title: Edit
+            item_headline: contestant_base.ct_id
+            rows:
+                - contestant_base.year
+                - contestant_base.contest_id
+

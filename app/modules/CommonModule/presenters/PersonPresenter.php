@@ -271,14 +271,6 @@ class PersonPresenter extends BasePresenter {
     }
 
     /**
-     * @return Stalking\Contestant
-     * @throws BadRequestException
-     */
-    public function createComponentContestant(): Stalking\Contestant {
-        return new Stalking\Contestant($this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
-    }
-
-    /**
      * @return Stalking\Role
      * @throws BadRequestException
      */

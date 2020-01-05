@@ -89,6 +89,9 @@ services:
     row.teacher.note: FKSDB\Components\DatabaseReflection\Tables\Teacher\NoteRow
     row.referenced.person_link: FKSDB\Components\DatabaseReflection\ReferencedRows\PersonLinkRow
     row.referenced.person_name: FKSDB\Components\DatabaseReflection\ReferencedRows\PersonNameRow
+    row.contestant_base.ct_id: FKSDB\Components\DatabaseReflection\Tables\ContestantBase\ContestantId
+    row.contestant_base.year: FKSDB\Components\DatabaseReflection\Tables\ContestantBase\YearRow
+    row.contestant_base.contest_id: FKSDB\Components\DatabaseReflection\Tables\ContestantBase\ContestId
 
 includes:
     - merger.neon

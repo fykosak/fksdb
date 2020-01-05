@@ -4,8 +4,11 @@
         {foreach $models as $model}
             <h3 class="card-header">
                 {control 'valuePrinter__'.$itemHeadline[0].'__'.$itemHeadline[1]:onlyValue $model}
-                <span class="float-right">{$detailLink?($detailLink)($model):null}</span>
-                <span class="float-right">{$editLink?($editLink)($model):null}</span>
+                <div class="btn-group float-right" role="group" aria-label="Basic example" class="">
+                    {foreach $links as $linkFactory}
+                        {($linkFactory)($model)}
+                    {/foreach}
+                </div>
             </h3>
             <ul class="list-group list-group-flush">
                 {foreach $rows as $field}
