@@ -1,0 +1,56 @@
+DBReflection:
+    tables:
+         payment:
+             bank_account:
+                 type: string
+                 title: Bank Account
+             bank_name:
+                 type: string
+                 title: Bank Name
+             constant_symbol:
+                 type: string
+                 title: Constant symbol
+             iban:
+                 type: string
+                 title: IBAN
+             specific_symbol:
+                 type: string
+                 title: specific_symbol
+             swift:
+                 type: string
+                 title: SWIFT
+             variable_symbol:
+                 type: string
+                 title: Variable symbol
+         org:
+             contribution:
+                 type: string
+                 title: Contribution
+                 description: Zobrazeno v síni slávy
+             role:
+                 type: string
+                 title: Role
+         person:
+             born_family_name:
+                 type: string
+                 title: Born family name
+                 description: Pouze pokud je odlišné od příjmení.
+                 permission: PERMISSION_ALLOW_FULL
+             display_name:
+                 type: string
+                 title: Display name
+                 description: 'Pouze pokud je odlišné od "jméno příjmení".'
+                 permission: PERMISSION_ALLOW_BASIC
+             family_name:
+                 type: string
+                 title: Family name
+                 permission: PERMISSION_ALLOW_BASIC
+             other_name:
+                 type: string
+                 title: Other name
+                 permission: PERMISSION_ALLOW_BASIC
+         login:
+             login:
+                 type: string
+                 title: Login
+                 permission: PERMISSION_ALLOW_RESTRICT

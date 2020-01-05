@@ -2,9 +2,12 @@
 
 namespace FKSDB\Components\Grids;
 
+use Exception;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\AbstractModelSingle;
+use Nette\Application\BadRequestException;
+use Nette\Application\IPresenter;
 use Nette\Application\UI\Form;
 use Nette\InvalidStateException;
 use Nette\NotImplementedException;
@@ -12,7 +15,11 @@ use Nette\Templating\FileTemplate;
 use Nette\Templating\ITemplate;
 use NiftyGrid\Components\Button;
 use NiftyGrid\Components\GlobalButton;
+use NiftyGrid\DuplicateButtonException;
+use NiftyGrid\DuplicateColumnException;
+use NiftyGrid\DuplicateGlobalButtonException;
 use NiftyGrid\Grid;
+use NiftyGrid\GridException;
 use NiftyGrid\GridPaginator;
 use SQL\SearchableDataSource;
 
@@ -53,7 +60,7 @@ abstract class BaseGrid extends Grid {
 
     /**
      * @param null $class
-     * @return \Nette\Templating\ITemplate
+     * @return ITemplate
      */
     protected function createTemplate($class = NULL): ITemplate {
         /**
@@ -71,7 +78,7 @@ abstract class BaseGrid extends Grid {
      * Extended rendering for the paginator
      * ***************************** */
     /**
-     * @throws \NiftyGrid\GridException
+     * @throws GridException
      */
     public function render() {
         $paginator = $this->getPaginator();
@@ -117,7 +124,7 @@ abstract class BaseGrid extends Grid {
 
     /**
      * @return FormControl
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     protected function createComponentSearchForm(): FormControl {
         if (!$this->isSearchable()) {
@@ -149,7 +156,7 @@ abstract class BaseGrid extends Grid {
      * @param string $name
      * @param string $label
      * @return Button
-     * @throws \NiftyGrid\DuplicateButtonException
+     * @throws DuplicateButtonException
      */
     protected function addButton($name, $label = NULL): Button {
         $button = parent::addButton($name, $label);
@@ -161,7 +168,7 @@ abstract class BaseGrid extends Grid {
      * @param $name
      * @param null $label
      * @return GlobalButton
-     * @throws \NiftyGrid\DuplicateGlobalButtonException
+     * @throws DuplicateGlobalButtonException
      */
     public function addGlobalButton($name, $label = NULL): GlobalButton {
         $button = parent::addGlobalButton($name, $label);
@@ -173,8 +180,8 @@ abstract class BaseGrid extends Grid {
      * @param string $tableName
      * @param string $fieldName
      * @param string|AbstractModelSingle $modelClassName
-     * @throws \NiftyGrid\DuplicateColumnException
-     * @throws \Exception
+     * @throws DuplicateColumnException
+     * @throws Exception
      */
     protected function addReflectionColumn(string $tableName, string $fieldName, string $modelClassName) {
         $factory = $this->tableReflectionFactory->loadService($tableName, $fieldName);
@@ -188,8 +195,8 @@ abstract class BaseGrid extends Grid {
      * @param string $tableName
      * @param string $fieldName
      * @param callable $accessCallback ActiveRow=>AbstractModelSingle
-     * @throws \NiftyGrid\DuplicateColumnException
-     * @throws \Exception
+     * @throws DuplicateColumnException
+     * @throws Exception
      */
     protected function addJoinedColumn(string $tableName, string $fieldName, callable $accessCallback) {
         $factory = $this->tableReflectionFactory->loadService($tableName, $fieldName);
@@ -207,7 +214,7 @@ abstract class BaseGrid extends Grid {
     }
 
     /**
-     * @return string
+     * @return string|AbstractModelSingle
      */
     protected function getModelClassName(): string {
         throw new NotImplementedException();
@@ -215,13 +222,44 @@ abstract class BaseGrid extends Grid {
 
     /**
      * @param array $fields
-     * @throws \NiftyGrid\DuplicateColumnException
+     * @throws DuplicateColumnException
      */
     protected function addColumns(array $fields) {
 
         foreach ($fields as $name) {
-            $this->addReflectionColumn($this->getTableName(), $name, $this->getModelClassName());
+            if (preg_match('/.*\..*/', $name)) {
+                list($table, $field) = TableReflectionFactory::parseRow($name);
+                $this->addReflectionColumn($table, $field, $this->getModelClassName());
+            } else {
+                $this->addReflectionColumn($this->getTableName(), $name, $this->getModelClassName());
+            }
         }
+    }
+
+    /**
+     * @param IPresenter $presenter
+     * @param string $destination
+     * @param string $id
+     * @param string $label
+     * @param bool $checkACL
+     * @return Button
+     * @throws DuplicateButtonException
+     */
+    protected function addLinkButton(IPresenter $presenter, string $destination, string $id, string $label, bool $checkACL = true): Button {
+        $modelClassName = $this->getModelClassName();
+        return $this->addButton($id, $label)
+            ->setText($label)
+            ->setShow(function ($row) use ($presenter, $modelClassName, $destination, $checkACL) {
+                if (!$checkACL) {
+                    return true;
+                }
+                $model = $modelClassName::createFromActiveRow($row);
+                return $presenter->authorized($destination, ['id' => $model->getPrimary()]);
+            })
+            ->setLink(function ($row) use ($modelClassName, $destination) {
+                $model = $modelClassName::createFromActiveRow($row);
+                return $this->getPresenter()->link($destination, ['id' => $model->getPrimary()]);
+            });
     }
 
 }
