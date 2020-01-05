@@ -247,14 +247,6 @@ class PersonPresenter extends BasePresenter {
     }
 
     /**
-     * @return Stalking\EventTeacher
-     * @throws BadRequestException
-     */
-    public function createComponentEventTeacher(): Stalking\EventTeacher {
-        return new Stalking\EventTeacher($this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
-    }
-
-    /**
      * @return Stalking\Role
      * @throws BadRequestException
      */

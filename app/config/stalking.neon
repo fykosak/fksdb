@@ -162,3 +162,15 @@ stalking:
             rows:
                 - referenced.event_link
                 - event_org.note
+        event_teacher:
+            layout: multi
+            label: Event teacher
+            minimalPermission: 16
+            table: e_fyziklani_team
+            model: FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam
+            links:
+                - fyziklani_team.detail
+            itemHeadline: e_fyziklani_team.name
+            rows:
+                - referenced.event_link
+                - e_fyziklani_team.status

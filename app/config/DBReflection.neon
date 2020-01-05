@@ -97,4 +97,11 @@ DBReflection:
             title: Edit
             model: FKSDB\ORM\Models\ModelContestant
         event_participant.detail: FKSDB\Components\DatabaseReflection\Links\ParticipantDetailLink
+        fyziklani_team.detail:
+            destination: ':Event:TeamApplication:detail'
+            params:
+                eventId: event_id
+                id: e_fyziklani_team_id
+            title: Detail
+            model: FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam
 
