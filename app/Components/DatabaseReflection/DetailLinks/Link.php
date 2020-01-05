@@ -3,7 +3,6 @@
 namespace FKSDB\Components\DatabaseReflection\Links;
 
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\InvalidLinkException;
 
 /**
  * Class Link
@@ -22,16 +21,22 @@ class Link extends AbstractLink {
      * @var string
      */
     private $title;
+    /**
+     * @var string
+     */
+    private $modelClassName;
 
     /**
      * @param string $destination
      * @param array $params
      * @param string $title
+     * @param string $modelClassName
      */
-    public function setParams(string $destination, array $params, string $title) {
+    public function setParams(string $destination, array $params, string $title, string $modelClassName) {
         $this->destination = $destination;
         $this->params = $params;
         $this->title = $title;
+        $this->modelClassName = $modelClassName;
     }
 
     /**
@@ -45,6 +50,9 @@ class Link extends AbstractLink {
      * @inheritDoc
      */
     protected function createLink($model): string {
+        if (!$model instanceof $this->modelClassName) {
+            throw new BadRequestException();
+        }
         $urlParams = [];
         foreach ($this->params as $key => $accessKey) {
             $urlParams[$key] = $model->{$accessKey};

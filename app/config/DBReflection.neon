@@ -54,3 +54,33 @@ DBReflection:
                  type: string
                  title: Login
                  permission: PERMISSION_ALLOW_RESTRICT
+    links:
+        payment.detail:
+            destination: ':Event:Payment:detail'
+            params:
+                eventId: event_id
+                id: payment_id
+            title: Detail
+            model: FKSDB\ORM\Models\ModelPayment
+        org.detail:
+            destination: ':Org:Org:detail'
+            params:
+                contestId: contest_id
+                id: org_id
+            title: Detail
+            model: FKSDB\ORM\Models\ModelOrg
+        org.edit:
+            destination: ':Org:Org:edit'
+            params:
+                contestId: contest_id
+                id: org_id
+            title: Edit
+            model: FKSDB\ORM\Models\ModelOrg
+        contestatnt_base.edit:
+            destination: ':Org:Contestant:edit'
+            params:
+                contestId: contest_id
+                id: ct_id
+            title: Edit
+            model: FKSDB\ORM\Models\ModelContestant
+

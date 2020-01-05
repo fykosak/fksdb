@@ -87,6 +87,7 @@ stalking:
             label: Person history
             minimalPermission: 128
             table: person_history
+            links: []
             model: FKSDB\ORM\Models\ModelPersonHistory
             item_headline: person_history.ac_year
             rows:
@@ -101,18 +102,8 @@ stalking:
             table: org
             model: FKSDB\ORM\Models\ModelOrg
             links:
-                -
-                    destination: ':Org:Org:detail'
-                    params:
-                        contestId: contest_id
-                        id: org_id
-                    title: Detail
-                -
-                    destination: ':Org:Org:edit'
-                    params:
-                       contestId: contest_id
-                       id: org_id
-                    title: Edit
+                - org.detail
+                - org.edit
             item_headline: org.contest_id
             rows:
                 - org.since
@@ -129,12 +120,7 @@ stalking:
             table: payment
             model: FKSDB\ORM\Models\ModelPayment
             links:
-                -
-                    destination: ':Event:Payment:detail'
-                    params:
-                        eventId: event_id
-                        id: payment_id
-                    title: Detail
+                - payment.detail
             item_headline: payment.link
             rows:
                 - payment.price
@@ -147,12 +133,7 @@ stalking:
             table: contestant_base
             model: FKSDB\ORM\Models\ModelContestant
             links:
-                -
-                    destination: ':Org:Contestant:edit'
-                    params:
-                        contestId: contest_id
-                        id: ct_id
-                    title: Edit
+                - contestatnt_base.edit
             item_headline: contestant_base.ct_id
             rows:
                 - contestant_base.year

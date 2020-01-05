@@ -4,9 +4,12 @@ namespace FKSDB\Config\Extensions;
 
 use FKSDB\Components\Controls\Stalking\StalkingService;
 use FKSDB\Components\DatabaseReflection\AbstractRow;
+use FKSDB\Components\DatabaseReflection\Links\Link;
 use FKSDB\Components\DatabaseReflection\StringRow;
+use Nette\Application\BadRequestException;
 use Nette\Config\CompilerExtension;
 use Nette\DI\ContainerBuilder;
+use Nette\DI\ServiceDefinition;
 use Nette\NotImplementedException;
 use Tracy\Debugger;
 
@@ -20,7 +23,7 @@ class DBReflectionExtension extends CompilerExtension {
         $builder = $this->getContainerBuilder();
         foreach ($this->config['tables'] as $tableName => $fields) {
             foreach ($fields as $fieldName => $field) {
-                Debugger::barDump($field);
+
                 $factory = null;
                 if (is_array($field)) {
                     switch ($field['type']) {
@@ -37,6 +40,11 @@ class DBReflectionExtension extends CompilerExtension {
                     continue;
                 }
             }
+        }
+        foreach ($this->config['links'] as $linkId => $def) {
+            $builder->addDefinition($this->prefix('link.' . $linkId))
+                ->setFactory(Link::class)
+                ->addSetup('setParams', [$def['destination'], $def['params'], $def['title'], $def['model']]);
         }
     }
 
