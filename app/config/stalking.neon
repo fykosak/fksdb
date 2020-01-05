@@ -89,7 +89,7 @@ stalking:
             table: person_history
             links: []
             model: FKSDB\ORM\Models\ModelPersonHistory
-            item_headline: person_history.ac_year
+            itemHeadline: person_history.ac_year
             rows:
                 - person_history.school_id
                 - person_history.study_year
@@ -104,7 +104,7 @@ stalking:
             links:
                 - org.detail
                 - org.edit
-            item_headline: org.contest_id
+            itemHeadline: org.contest_id
             rows:
                 - org.since
                 - org.until
@@ -121,11 +121,11 @@ stalking:
             model: FKSDB\ORM\Models\ModelPayment
             links:
                 - payment.detail
-            item_headline: payment.link
+            itemHeadline: payment.id
             rows:
                 - payment.price
                 - payment.state
-                #- referenced.event_link
+                - referenced.event_link
         contestant_base:
             layout: multi
             label: Contestant
@@ -134,8 +134,31 @@ stalking:
             model: FKSDB\ORM\Models\ModelContestant
             links:
                 - contestatnt_base.edit
-            item_headline: contestant_base.ct_id
+            itemHeadline: contestant_base.ct_id
             rows:
                 - contestant_base.year
                 - contestant_base.contest_id
-
+        event_participant:
+            layout: multi
+            label: Event Participant
+            minimalPermission: 128
+            table: event_participant
+            model: FKSDB\ORM\Models\ModelEventParticipant
+            links:
+                - event_participant.detail
+            itemHeadline: event_participant.event_participant_id
+            rows:
+                - event_participant.status
+                - event_participant.team
+                - referenced.event_link
+        event_org:
+            layout: multi
+            label: Event org
+            minimalPermission: 128
+            table: event_org
+            model: FKSDB\ORM\Models\ModelEventOrg
+            links: []
+            itemHeadline: event_org.event_org_id
+            rows:
+                - referenced.event_link
+                - event_org.note

@@ -47,9 +47,16 @@ class Link extends AbstractLink {
     }
 
     /**
-     * @return string
+     * @inheritDoc
      */
-    public function getDestination(): string {
+    public function getModelClassName(): string {
+        return $this->modelClassName;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getDestination($model): string {
         return $this->destination;
     }
 
@@ -61,14 +68,5 @@ class Link extends AbstractLink {
         return $urlParams;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function createLink($model): string {
-        if (!$model instanceof $this->modelClassName) {
-            throw new BadRequestException();
-        }
-        $urlParams = $this->prepareParams($model);
-        return $this->presenterComponent->getPresenter()->link($this->destination, $urlParams);
-    }
+
 }

@@ -63,7 +63,7 @@ class Button extends \Nette\Application\UI\PresenterComponent
 
 	/**
 	 * @param callback|string $link
-	 * @return Button
+	 * @return static
 	 */
 	public function setLink($link)
 	{
@@ -86,7 +86,7 @@ class Button extends \Nette\Application\UI\PresenterComponent
 
 	/**
 	 * @param $text
-	 * @return mixed
+	 * @return static
 	 */
 	public function setText($text)
 	{
@@ -197,7 +197,7 @@ class Button extends \Nette\Application\UI\PresenterComponent
 
 	/**
 	 * @param callback|string $show
-	 * @return Button
+	 * @return static
 	 */
 	public function setShow($show)
 	{

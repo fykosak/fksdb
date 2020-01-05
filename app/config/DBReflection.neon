@@ -49,11 +49,24 @@ DBReflection:
                  type: string
                  title: Other name
                  permission: PERMISSION_ALLOW_BASIC
+         person_history:
+             class:
+                 type: string
+                 title: 'Class'
+                 permissions: PERMISSION_ALLOW_RESTRICT
          login:
              login:
                  type: string
                  title: Login
                  permission: PERMISSION_ALLOW_RESTRICT
+         event_org:
+             event_org_id:
+                 accessKey: e_org_id
+                 type: primaryKey
+                 title: Event org Id
+             note:
+                 type: string
+                 title: Note
     links:
         payment.detail:
             destination: ':Event:Payment:detail'
@@ -83,4 +96,5 @@ DBReflection:
                 id: ct_id
             title: Edit
             model: FKSDB\ORM\Models\ModelContestant
+        event_participant.detail: FKSDB\Components\DatabaseReflection\Links\ParticipantDetailLink
 
