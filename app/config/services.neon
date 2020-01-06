@@ -81,6 +81,7 @@ services:
     - FKSDB\model\Fyziklani\TaskCodeHandlerFactory
     - FKSDB\Components\Forms\Factories\TableReflectionFactory
     - FKSDB\Components\Controls\PhoneNumber\PhoneNumberFactory
+    - FKSDB\Components\DatabaseReflection\MetaDataFactory
 
     row.referenced.person_link: FKSDB\Components\DatabaseReflection\ReferencedRows\PersonLinkRow
     row.referenced.person_name: FKSDB\Components\DatabaseReflection\ReferencedRows\PersonNameRow
