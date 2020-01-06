@@ -49,6 +49,36 @@ DBReflection:
                  type: string
                  title: Other name
                  permission: PERMISSION_ALLOW_BASIC
+         person_info:
+             uk_login:
+                 type: string
+                 title: Login UK
+                 permission: PERMISSION_ALLOW_RESTRICT
+             linkedin_id:
+                 type: string
+                 title: Linkedin Id
+                 permission: PERMISSION_ALLOW_BASIC
+             employer:
+                 type: string
+                 title: Zaměstnavatel
+                 permission: PERMISSION_ALLOW_FULL
+             origin:
+                 type: string
+                 title: 'Jak jsi se o nás dozvěděl(a)?'
+                 permission: PERMISSION_ALLOW_BASIC
+             note:
+                 type: string
+                 title: Poznámka
+                 permission: PERMISSION_ALLOW_BASIC
+             academic_degree_prefix:
+                  type: string
+                  title: Titul před jménem
+                  permission: PERMISSION_ALLOW_RESTRICT
+             academic_degree_suffix:
+                 type: string
+                 title: Titul za jménem
+                 permission: PERMISSION_ALLOW_RESTRICT
+
          person_history:
              class:
                  type: string
@@ -67,6 +97,10 @@ DBReflection:
              note:
                  type: string
                  title: Note
+         fyziklani_game_setup:
+             tasks_on_board:
+                 type: string
+                 title: Tasks on board
     links:
         payment.detail:
             destination: ':Event:Payment:detail'
