@@ -3,57 +3,57 @@ DBReflection:
          payment:
              bank_account:
                  type: string
-                 title: Bank Account
+                 title: _(Bank account)
              bank_name:
                  type: string
-                 title: Bank Name
+                 title: _(Bank name)
              constant_symbol:
                  type: string
                  title: Constant symbol
              iban:
                  type: string
-                 title: IBAN
+                 title: _(IBAN)
              specific_symbol:
                  type: string
                  title: specific_symbol
              swift:
                  type: string
-                 title: SWIFT
+                 title: _(SWIFT)
              variable_symbol:
                  type: string
                  title: Variable symbol
              recipient:
                  type: string
-                 title: Recipient
+                 title: _(Recipient)
          org:
              contribution:
                  type: string
-                 title: Contribution
-                 description: Zobrazeno v síni slávy
+                 title: _(Contribution)
+                 description: _('Zobrazeno v síni slávy')
              role:
                  type: string
                  title: Role
          person:
              born_family_name:
                  type: string
-                 title: Born family name
-                 description: Pouze pokud je odlišné od příjmení.
+                 title: _(Born family name)
+                 description: _('Pouze pokud je odlišné od příjmení.')
                  permission: PERMISSION_ALLOW_FULL
              display_name:
                  type: string
-                 title: Display name
-                 description: 'Pouze pokud je odlišné od "jméno příjmení".'
+                 title: _(Display name)
+                 description: _('Pouze pokud je odlišné od "jméno příjmení".')
                  permission: PERMISSION_ALLOW_BASIC
              family_name:
                  type: string
-                 title: Family name
+                 title: _(Family name)
                  permission: PERMISSION_ALLOW_BASIC
              other_name:
                  type: string
-                 title: Other name
+                 title: _(Other name)
                  permission: PERMISSION_ALLOW_BASIC
          login:
              login:
                  type: string
-                 title: Login
+                 title: _(Login)
                  permission: PERMISSION_ALLOW_RESTRICT

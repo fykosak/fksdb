@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-04 18:57+0100\n"
+"POT-Creation-Date: 2020-01-06 01:59+0100\n"
 "PO-Revision-Date: 2019-09-06 11:06+0200\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: \n"
@@ -1555,8 +1555,10 @@ msgstr "Stále učí"
 
 #: i18n/../app/Components/DatabaseReflection/Tables/Teacher/UntilRow.php:26
 #: i18n/../app/Components/DatabaseReflection/Tables/Teacher/SinceRow.php:26
-msgid "d. m. Y"
-msgstr ""
+#: i18n/../app/model/ORM/Models/Schedule/ModelPersonSchedule.php:74
+#: i18n/../app/model/ORM/Models/Schedule/ModelPersonSchedule.php:75
+msgid "__date_format"
+msgstr "d. M Y"
 
 #: i18n/../app/Components/DatabaseReflection/Tables/Teacher/UntilRow.php:33
 #, fuzzy
@@ -1608,7 +1610,6 @@ msgid "+XXXXXXXXXXXX"
 msgstr ""
 
 #: i18n/../app/Components/DatabaseReflection/Tables/Traits/PhoneRowTrait.php:36
-#, fuzzy
 msgid "Use an international format, starting with \"+\""
 msgstr "Pište v mezinárodním formátu začínajícím \"+\"."
 
@@ -1678,6 +1679,7 @@ msgstr ""
 #: i18n/../app/Components/DatabaseReflection/Tables/PersonInfo/AccountRow.php:22
 #: i18n/../data/emails/fyziklani/fyziklani2020/payment/parameters.latte.latte2php:22
 #: i18n/../data/emails/fyziklani/fyziklani2019/payment/parameters.latte.latte2php:22
+#: i18n/../app/config/DBReflection.neon.neon2php:6
 msgid "Bank account"
 msgstr "Bankovní účet"
 
@@ -1980,11 +1982,6 @@ msgstr "Již zabraná kapacita"
 msgid "Accommodation for %s from %s to %s in %s"
 msgstr "Ubytování pro %s od %s do %s"
 
-#: i18n/../app/model/ORM/Models/Schedule/ModelPersonSchedule.php:74
-#: i18n/../app/model/ORM/Models/Schedule/ModelPersonSchedule.php:75
-msgid "__date_format"
-msgstr "d. M. Y"
-
 #: i18n/../app/model/ORM/Services/Schedule/ServiceSchedulePayment.php:61
 msgid "Not in transaction!"
 msgstr "Není v transakci!"
@@ -2013,15 +2010,15 @@ msgstr ""
 msgid "Unsupported format"
 msgstr "Nepodporovaný formát"
 
-#: i18n/../app/model/Exports/ExportFormatFactory.php:70
+#: i18n/../app/model/Exports/ExportFormatFactory.php:71
 msgid "Save CSV"
 msgstr "Uložit CSV"
 
-#: i18n/../app/model/Exports/ExportFormatFactory.php:71
+#: i18n/../app/model/Exports/ExportFormatFactory.php:72
 msgid "Uložit CSV (bez hlavičky)"
 msgstr ""
 
-#: i18n/../app/model/Exports/ExportFormatFactory.php:72
+#: i18n/../app/model/Exports/ExportFormatFactory.php:73
 msgid "Uložit CSV s uvozovkami"
 msgstr ""
 
@@ -2135,11 +2132,11 @@ msgstr ""
 msgid "Organization and participation at same year"
 msgstr ""
 
-#: i18n/../app/model/Events/Machine/BaseMachine.php:143
+#: i18n/../app/model/Events/Machine/BaseMachine.php:144
 msgid "vznikající"
 msgstr ""
 
-#: i18n/../app/model/Events/Machine/BaseMachine.php:145
+#: i18n/../app/model/Events/Machine/BaseMachine.php:146
 msgid "zaniklý"
 msgstr ""
 
@@ -2434,6 +2431,7 @@ msgid "Stránka požaduje přihlášení."
 msgstr ""
 
 #: i18n/../app/modules/presenters/AuthenticationPresenter.php:253
+#: i18n/../app/config/DBReflection.neon.neon2php:58
 msgid "Login"
 msgstr ""
 
@@ -3587,20 +3585,24 @@ msgid "Specific symbol"
 msgstr "Specifický symbol"
 
 #: i18n/../data/emails/fyziklani/fyziklani2020/payment/parameters.latte.latte2php:28
+#: i18n/../app/config/DBReflection.neon.neon2php:9
 msgid "Bank name"
 msgstr "Jméno banky"
 
 #: i18n/../data/emails/fyziklani/fyziklani2020/payment/parameters.latte.latte2php:34
+#: i18n/../app/config/DBReflection.neon.neon2php:27
 msgid "Recipient"
-msgstr ""
+msgstr "Příjemce"
 
 #: i18n/../data/emails/fyziklani/fyziklani2020/payment/parameters.latte.latte2php:40
 #: i18n/../data/emails/fyziklani/fyziklani2019/payment/parameters.latte.latte2php:28
+#: i18n/../app/config/DBReflection.neon.neon2php:15
 msgid "IBAN"
 msgstr "IBAN"
 
 #: i18n/../data/emails/fyziklani/fyziklani2020/payment/parameters.latte.latte2php:46
 #: i18n/../data/emails/fyziklani/fyziklani2019/payment/parameters.latte.latte2php:34
+#: i18n/../app/config/DBReflection.neon.neon2php:21
 msgid "SWIFT"
 msgstr "SWIFT"
 
@@ -3619,6 +3621,38 @@ msgstr "SWIFT"
 #: i18n/../app/config/exports.neon.neon2php:36
 msgid "Uložit AESOP"
 msgstr ""
+
+#: i18n/../app/config/DBReflection.neon.neon2php:31
+msgid "Contribution"
+msgstr "Příspěvek"
+
+#: i18n/../app/config/DBReflection.neon.neon2php:32
+msgid "Zobrazeno v síni slávy"
+msgstr ""
+
+#: i18n/../app/config/DBReflection.neon.neon2php:39
+msgid "Born family name"
+msgstr "Rodné příjmení"
+
+#: i18n/../app/config/DBReflection.neon.neon2php:40
+msgid "Pouze pokud je odlišné od příjmení."
+msgstr ""
+
+#: i18n/../app/config/DBReflection.neon.neon2php:44
+msgid "Display name"
+msgstr "Zobrazované jménoo"
+
+#: i18n/../app/config/DBReflection.neon.neon2php:45
+msgid "Pouze pokud je odlišné od \"jméno příjmení\"."
+msgstr ""
+
+#: i18n/../app/config/DBReflection.neon.neon2php:49
+msgid "Family name"
+msgstr "Příjmení"
+
+#: i18n/../app/config/DBReflection.neon.neon2php:53
+msgid "Other name"
+msgstr "Křestní jméno"
 
 #: i18n/../data/events/dsef/dsef25.neon.neon2php:42
 #: i18n/../data/events/dsef/dsef24.neon.neon2php:42
@@ -4345,21 +4379,6 @@ msgstr "Vše"
 
 #~ msgid "Org"
 #~ msgstr "Organizátor"
-
-#~ msgid "Contribution"
-#~ msgstr "Příspěvek"
-
-#~ msgid "Other name"
-#~ msgstr "Křestní jméno"
-
-#~ msgid "Display name"
-#~ msgstr "Zobrazované jménoo"
-
-#~ msgid "Family name"
-#~ msgstr "Příjmení"
-
-#~ msgid "Born family name"
-#~ msgstr "Rodné příjmení"
 
 #~ msgid "Apply"
 #~ msgstr "Podat přihlášku"

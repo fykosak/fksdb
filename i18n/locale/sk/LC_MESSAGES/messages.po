@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-04 18:57+0100\n"
+"POT-Creation-Date: 2020-01-06 01:59+0100\n"
 "PO-Revision-Date: 2016-10-05 01:55+0200\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: \n"
@@ -1563,7 +1563,9 @@ msgstr ""
 
 #: i18n/../app/Components/DatabaseReflection/Tables/Teacher/UntilRow.php:26
 #: i18n/../app/Components/DatabaseReflection/Tables/Teacher/SinceRow.php:26
-msgid "d. m. Y"
+#: i18n/../app/model/ORM/Models/Schedule/ModelPersonSchedule.php:74
+#: i18n/../app/model/ORM/Models/Schedule/ModelPersonSchedule.php:75
+msgid "__date_format"
 msgstr ""
 
 #: i18n/../app/Components/DatabaseReflection/Tables/Teacher/UntilRow.php:33
@@ -1679,6 +1681,7 @@ msgstr ""
 #: i18n/../app/Components/DatabaseReflection/Tables/PersonInfo/AccountRow.php:22
 #: i18n/../data/emails/fyziklani/fyziklani2020/payment/parameters.latte.latte2php:22
 #: i18n/../data/emails/fyziklani/fyziklani2019/payment/parameters.latte.latte2php:22
+#: i18n/../app/config/DBReflection.neon.neon2php:6
 msgid "Bank account"
 msgstr ""
 
@@ -1982,11 +1985,6 @@ msgstr "Kapacita"
 msgid "Accommodation for %s from %s to %s in %s"
 msgstr "Ubytnovanie neexistuje"
 
-#: i18n/../app/model/ORM/Models/Schedule/ModelPersonSchedule.php:74
-#: i18n/../app/model/ORM/Models/Schedule/ModelPersonSchedule.php:75
-msgid "__date_format"
-msgstr ""
-
 #: i18n/../app/model/ORM/Services/Schedule/ServiceSchedulePayment.php:61
 msgid "Not in transaction!"
 msgstr ""
@@ -2015,15 +2013,15 @@ msgstr ""
 msgid "Unsupported format"
 msgstr ""
 
-#: i18n/../app/model/Exports/ExportFormatFactory.php:70
+#: i18n/../app/model/Exports/ExportFormatFactory.php:71
 msgid "Save CSV"
 msgstr ""
 
-#: i18n/../app/model/Exports/ExportFormatFactory.php:71
+#: i18n/../app/model/Exports/ExportFormatFactory.php:72
 msgid "Uložit CSV (bez hlavičky)"
 msgstr ""
 
-#: i18n/../app/model/Exports/ExportFormatFactory.php:72
+#: i18n/../app/model/Exports/ExportFormatFactory.php:73
 msgid "Uložit CSV s uvozovkami"
 msgstr ""
 
@@ -2137,11 +2135,11 @@ msgstr ""
 msgid "Organization and participation at same year"
 msgstr ""
 
-#: i18n/../app/model/Events/Machine/BaseMachine.php:143
+#: i18n/../app/model/Events/Machine/BaseMachine.php:144
 msgid "vznikající"
 msgstr ""
 
-#: i18n/../app/model/Events/Machine/BaseMachine.php:145
+#: i18n/../app/model/Events/Machine/BaseMachine.php:146
 msgid "zaniklý"
 msgstr ""
 
@@ -2435,6 +2433,7 @@ msgid "Stránka požaduje přihlášení."
 msgstr "Stránka požaduje prihlásenie."
 
 #: i18n/../app/modules/presenters/AuthenticationPresenter.php:253
+#: i18n/../app/config/DBReflection.neon.neon2php:58
 msgid "Login"
 msgstr ""
 
@@ -3594,20 +3593,24 @@ msgid "Specific symbol"
 msgstr ""
 
 #: i18n/../data/emails/fyziklani/fyziklani2020/payment/parameters.latte.latte2php:28
+#: i18n/../app/config/DBReflection.neon.neon2php:9
 msgid "Bank name"
 msgstr ""
 
 #: i18n/../data/emails/fyziklani/fyziklani2020/payment/parameters.latte.latte2php:34
+#: i18n/../app/config/DBReflection.neon.neon2php:27
 msgid "Recipient"
 msgstr ""
 
 #: i18n/../data/emails/fyziklani/fyziklani2020/payment/parameters.latte.latte2php:40
 #: i18n/../data/emails/fyziklani/fyziklani2019/payment/parameters.latte.latte2php:28
+#: i18n/../app/config/DBReflection.neon.neon2php:15
 msgid "IBAN"
 msgstr ""
 
 #: i18n/../data/emails/fyziklani/fyziklani2020/payment/parameters.latte.latte2php:46
 #: i18n/../data/emails/fyziklani/fyziklani2019/payment/parameters.latte.latte2php:34
+#: i18n/../app/config/DBReflection.neon.neon2php:21
 msgid "SWIFT"
 msgstr ""
 
@@ -3625,6 +3628,38 @@ msgstr ""
 #: i18n/../app/config/exports.neon.neon2php:34
 #: i18n/../app/config/exports.neon.neon2php:36
 msgid "Uložit AESOP"
+msgstr ""
+
+#: i18n/../app/config/DBReflection.neon.neon2php:31
+msgid "Contribution"
+msgstr ""
+
+#: i18n/../app/config/DBReflection.neon.neon2php:32
+msgid "Zobrazeno v síni slávy"
+msgstr ""
+
+#: i18n/../app/config/DBReflection.neon.neon2php:39
+msgid "Born family name"
+msgstr ""
+
+#: i18n/../app/config/DBReflection.neon.neon2php:40
+msgid "Pouze pokud je odlišné od příjmení."
+msgstr ""
+
+#: i18n/../app/config/DBReflection.neon.neon2php:44
+msgid "Display name"
+msgstr ""
+
+#: i18n/../app/config/DBReflection.neon.neon2php:45
+msgid "Pouze pokud je odlišné od \"jméno příjmení\"."
+msgstr ""
+
+#: i18n/../app/config/DBReflection.neon.neon2php:49
+msgid "Family name"
+msgstr ""
+
+#: i18n/../app/config/DBReflection.neon.neon2php:53
+msgid "Other name"
 msgstr ""
 
 #: i18n/../data/events/dsef/dsef25.neon.neon2php:42
