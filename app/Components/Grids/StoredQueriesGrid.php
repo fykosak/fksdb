@@ -8,7 +8,12 @@ use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
+use Nette\Application\BadRequestException;
+use Nette\Application\UI\InvalidLinkException;
 use NiftyGrid\DataSource\NDataSource;
+use NiftyGrid\DuplicateButtonException;
+use NiftyGrid\DuplicateColumnException;
+use NiftyGrid\DuplicateGlobalButtonException;
 use OrgModule\ExportPresenter;
 
 /**
@@ -21,7 +26,7 @@ class StoredQueriesGrid extends BaseGrid {
     const DESCRIPTION_TRUNC = 80;
 
     /**
-     * @var \FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery
+     * @var ServiceStoredQuery
      */
     private $serviceStoredQuery;
 
@@ -34,7 +39,7 @@ class StoredQueriesGrid extends BaseGrid {
 
     /**
      * StoredQueriesGrid constructor.
-     * @param \FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery $serviceStoredQuery
+     * @param ServiceStoredQuery $serviceStoredQuery
      * @param ContestAuthorizator $contestAuthorizator
      * @param TableReflectionFactory $tableReflectionFactory
      */
@@ -61,11 +66,11 @@ class StoredQueriesGrid extends BaseGrid {
 
     /**
      * @param ExportPresenter $presenter
-     * @throws \Nette\Application\BadRequestException
-     * @throws \Nette\Application\UI\InvalidLinkException
-     * @throws \NiftyGrid\DuplicateButtonException
-     * @throws \NiftyGrid\DuplicateColumnException
-     * @throws \NiftyGrid\DuplicateGlobalButtonException
+     * @throws BadRequestException
+     * @throws InvalidLinkException
+     * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
+     * @throws DuplicateGlobalButtonException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

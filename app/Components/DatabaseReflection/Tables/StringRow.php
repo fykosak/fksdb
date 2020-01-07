@@ -81,14 +81,14 @@ class StringRow extends AbstractRow {
      * @inheritDoc
      */
     public function getTitle(): string {
-        return $this->title;
+        return _($this->title);
     }
 
     /**
      * @return string|null
      */
     public function getDescription() {
-        return $this->description;
+        return _($this->description);
     }
 
     /**

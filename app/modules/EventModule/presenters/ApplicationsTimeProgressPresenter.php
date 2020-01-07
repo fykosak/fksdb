@@ -7,7 +7,6 @@ use FKSDB\Components\React\ReactComponent\Events\TeamApplicationsTimeProgress;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\ORM\Services\ServiceEventParticipant;
-use function in_array;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;

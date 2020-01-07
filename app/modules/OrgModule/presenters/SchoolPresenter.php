@@ -5,7 +5,6 @@ namespace OrgModule;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\SchoolFactory;
-use FKSDB\Components\Grids\SchoolsGrid;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelSchool;
@@ -121,7 +120,7 @@ class SchoolPresenter extends EntityPresenter {
     protected function createComponentEditComponent($name) {
         $control = $this->createForm();
         $form = $control->getForm();
-        $form->addSubmit('send', _('Uložit'));
+        $form->addSubmit('send', _('Save'));
         $form->onSuccess[] = [$this, 'handleEditFormSuccess'];
 
         return $control;

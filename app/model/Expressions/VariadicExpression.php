@@ -65,7 +65,7 @@ abstract class VariadicExpression extends EvaluatedExpression {
         $terms = [];
         foreach ($this->arguments as $arg) {
             $terms[] = (string) $arg;
-        };
+        }
         $result = implode(' ' . $this->getInfix() . ' ', $terms);
         if (count($terms) > 1) {
             $result = "($result)";

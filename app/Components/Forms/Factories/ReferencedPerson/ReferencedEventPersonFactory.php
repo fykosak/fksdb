@@ -15,7 +15,6 @@ use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelPostContact;
 use FKSDB\ORM\Services\ServiceFlag;
 use FKSDB\ORM\Services\ServicePerson;
-use Nette\DeprecatedException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Utils\JsonException;

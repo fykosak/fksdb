@@ -54,17 +54,24 @@ class ResultsCategoryGrid extends BaseGrid {
 
         $this->paginate = false;
 
-        $this->addReflectionColumn(DbNames::TAB_E_FYZIKLANI_TEAM, 'rank_category', ModelFyziklaniTeam::class);
-        $this->addReflectionColumn(DbNames::TAB_E_FYZIKLANI_TEAM, 'name', ModelFyziklaniTeam::class);
-        $this->addReflectionColumn(DbNames::TAB_E_FYZIKLANI_TEAM, 'e_fyziklani_team_id', ModelFyziklaniTeam::class);
+        $this->addColumns([
+            DbNames::TAB_E_FYZIKLANI_TEAM . '.e_fyziklani_team_id',
+            DbNames::TAB_E_FYZIKLANI_TEAM . '.name',
+            DbNames::TAB_E_FYZIKLANI_TEAM . '.rank_category',
+        ]);
 
         $teams = $this->serviceFyziklaniTeam->findParticipating($this->event)
             ->where('category', $this->category)
-            ->order('rank_category');
+            ->order('e_fyziklani_team_id');
         $dataSource = new NDataSource($teams);
         $this->setDataSource($dataSource);
 
     }
 
-
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        return ModelFyziklaniTeam::class;
+    }
 }

@@ -6,7 +6,6 @@ use FKSDB\Components\Controls\Chart\IChart;
 use FKSDB\Components\Controls\Chart\ParticipantAcquaintanceChartControl;
 use FKSDB\ORM\Services\ServiceEvent;
 use Nette\Application\UI\Control;
-use Tracy\Debugger;
 
 /**
  * Class ChartPresenter

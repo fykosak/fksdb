@@ -16,7 +16,6 @@ use Nette\InvalidStateException;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Arrays;
 
-
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
@@ -99,7 +98,6 @@ class ReferencedContainer extends ContainerWithOptions {
      * @param IControl|null $control
      * @param callable|null $searchCallback
      * @param callable|null $termToValuesCallback
-     * @throws \Nette\Utils\RegexpException
      */
     public function setSearch(IControl $control = null, callable $searchCallback = null, callable $termToValuesCallback = null) {
         if ($control == null) {

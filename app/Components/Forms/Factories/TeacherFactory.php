@@ -4,10 +4,6 @@ namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\ORM\DbNames;
-use JanTvrdik\Components\DatePicker;
-use Nette\Forms\Controls\SelectBox;
-use Nette\Forms\Controls\TextInput;
-use Nette\Forms\Form;
 
 /**
  *
