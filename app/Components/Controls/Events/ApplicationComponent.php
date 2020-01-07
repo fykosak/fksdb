@@ -18,6 +18,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
 use Nette\Templating\FileTemplate;
 use Nette\Templating\ITemplate;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -241,6 +242,7 @@ class ApplicationComponent extends Control {
      * @throws AbortException
      */
     public function handleSubmit(Form $form, $explicitTransitionName = null) {
+        Debugger::log($form->getValues(), 'app-form');
         $this->execute($form, $explicitTransitionName);
     }
 
