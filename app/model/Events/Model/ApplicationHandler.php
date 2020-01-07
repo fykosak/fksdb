@@ -22,6 +22,7 @@ use Nette\Database\Connection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -237,7 +238,7 @@ class ApplicationHandler {
             $values = $data;
             $form = null;
         }
-
+        Debugger::log($values, 'app-form');
         $primaryName = $holder->getPrimaryHolder()->getName();
         $newStates = [];
         if (isset($values[$primaryName][BaseHolder::STATE_COLUMN])) {
