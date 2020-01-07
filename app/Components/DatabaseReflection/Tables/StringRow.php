@@ -88,7 +88,7 @@ class StringRow extends AbstractRow {
      * @return string|null
      */
     public function getDescription() {
-        return _($this->description);
+        return $this->description ? _($this->description) : '';
     }
 
     /**
