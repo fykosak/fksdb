@@ -50,17 +50,17 @@ class CloseTeamsGrid extends BaseGrid {
 
         $this->paginate = false;
 
-        $this->addReflectionColumn(DbNames::TAB_E_FYZIKLANI_TEAM, 'name', ModelFyziklaniTeam::class);
-        $this->addReflectionColumn(DbNames::TAB_E_FYZIKLANI_TEAM, 'e_fyziklani_team_id', ModelFyziklaniTeam::class);
-        $this->addReflectionColumn(DbNames::TAB_E_FYZIKLANI_TEAM, 'points', ModelFyziklaniTeam::class);
-        $this->addReflectionColumn(DbNames::TAB_E_FYZIKLANI_TEAM, 'category', ModelFyziklaniTeam::class);
+        $this->addColumns([
+            DbNames::TAB_E_FYZIKLANI_TEAM . '.name',
+            DbNames::TAB_E_FYZIKLANI_TEAM . '.e_fyziklani_team_id',
+            DbNames::TAB_E_FYZIKLANI_TEAM . '.points',
+            DbNames::TAB_E_FYZIKLANI_TEAM . '.category'
+        ]);
 
-        $this->addButton('edit', null)->setClass('btn btn-sm btn-success')->setLink(function ($row) use ($presenter) {
-            return $presenter->link(':Fyziklani:Close:team', [
-                'id' => $row->e_fyziklani_team_id,
-                'eventId' => $this->event->event_id
-            ]);
-        })->setText(_('Close submitting'))->setShow(function ($row) {
+        $this->addLinkButton($presenter, ':Fyziklani:Close:team', 'close', _('Close submitting'), false, [
+            'id' => 'e_fyziklani_team_id',
+            'eventId' => 'event_id',
+        ])->setShow(function ($row) {
             /**
              * @var ModelFyziklaniTeam $row
              */
@@ -68,5 +68,12 @@ class CloseTeamsGrid extends BaseGrid {
         });
         $teams = $this->serviceFyziklaniTeam->findParticipating($this->event);//->where('points',NULL);
         $this->setDataSource(new NDataSource($teams));
+    }
+
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        return ModelFyziklaniTeam::class;
     }
 }

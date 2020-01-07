@@ -1307,6 +1307,8 @@ CREATE TABLE IF NOT EXISTS `payment` (
   `variable_symbol` VARCHAR(256)   NULL     DEFAULT NULL,
   `specific_symbol` VARCHAR(256)   NULL     DEFAULT NULL,
   `bank_account`    VARCHAR(32)    NULL     DEFAULT NULL,
+  `bank_name`       VARCHAR(256)   NULL     DEFAULT NULL,
+  `recipient`       VARCHAR(256)   NULL     DEFAULT NULL,
   `iban`            VARCHAR(256)   NULL     DEFAULT NULL,
   `swift`           VARCHAR(256)   NULL     DEFAULT NULL,
   INDEX `fk_payment_1_idx` (`event_id` ASC),

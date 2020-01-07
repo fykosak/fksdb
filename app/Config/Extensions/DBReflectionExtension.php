@@ -2,8 +2,8 @@
 
 namespace FKSDB\Config\Extensions;
 
-use Nette\Config\CompilerExtension;
 use FKSDB\Components\DatabaseReflection\StringRow;
+use Nette\Config\CompilerExtension;
 use Nette\DI\ContainerBuilder;
 use Nette\NotImplementedException;
 
@@ -47,12 +47,26 @@ class DBReflectionExtension extends CompilerExtension {
             ->setFactory(StringRow::class)
             ->addSetup('setUp', [
                 $tableName,
-                $field['title'],
+                $this->translate($field['title']),
                 isset($field['accessKey']) ? $field['accessKey'] : $fieldName,
-                isset($field['description']) ? $field['description'] : null
+                isset($field['description']) ? $this->translate($field['description']) : null
             ]);
         if (isset($field['permission'])) {
             $factory->addSetup('setPermissionValue', $field['permission']);
         }
+    }
+
+    /**
+     * @param $value
+     * @return mixed
+     */
+    private function translate($value): string {
+        if (is_string($value)) {
+            return $value;
+        }
+        if ($value instanceof \stdClass) {
+            return ($value->value)(...$value->attributes);
+        }
+        throw new NotImplementedException();
     }
 }

@@ -145,7 +145,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
 
         $form->setCurrentGroup();
 
-        $form->addSubmit('send', _('Uložit'));
+        $form->addSubmit('send', _('Save'));
 
         $form->onSuccess[] = array($this, 'handleSettingsFormSuccess');
         return $control;

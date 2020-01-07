@@ -9,6 +9,7 @@ use FKSDB\Components\Grids\Schedule\GroupsGrid;
 use FKSDB\Components\Grids\Schedule\ItemsGrid;
 use FKSDB\Components\Grids\Schedule\PersonsGrid;
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\YearCalculator;
 use Nette\Localization\ITranslator;
 
 /**
@@ -24,15 +25,21 @@ class ScheduleFactory {
      * @var TableReflectionFactory
      */
     private $tableReflectionFactory;
+    /**
+     * @var YearCalculator
+     */
+    private $yearCalculator;
 
     /**
      * ScheduleFactory constructor.
      * @param ITranslator $translator
      * @param TableReflectionFactory $tableReflectionFactory
+     * @param YearCalculator $yearCalculator
      */
-    public function __construct(ITranslator $translator, TableReflectionFactory $tableReflectionFactory) {
+    public function __construct(ITranslator $translator, TableReflectionFactory $tableReflectionFactory, YearCalculator $yearCalculator) {
         $this->translator = $translator;
         $this->tableReflectionFactory = $tableReflectionFactory;
+        $this->yearCalculator = $yearCalculator;
     }
 
     /**
@@ -54,7 +61,7 @@ class ScheduleFactory {
      * @return PersonsGrid
      */
     public function createPersonsGrid(): PersonsGrid {
-        return new PersonsGrid($this->tableReflectionFactory);
+        return new PersonsGrid($this->tableReflectionFactory, $this->yearCalculator);
     }
 
     /**

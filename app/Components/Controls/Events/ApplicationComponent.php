@@ -166,7 +166,7 @@ class ApplicationComponent extends Control {
          */
         $saveSubmit = null;
         if ($this->canEdit()) {
-            $saveSubmit = $form->addSubmit('save', _('Uložit'));
+            $saveSubmit = $form->addSubmit('save', _('Save'));
             $saveSubmit->setOption('row', 1);
             $saveSubmit->onClick[] = function (SubmitButton $button) {
                 $buttonForm = $button->getForm();

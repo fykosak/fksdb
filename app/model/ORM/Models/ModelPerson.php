@@ -13,6 +13,7 @@ use Nette\Database\Table\GroupedSelection;
 use Nette\Database\Table\Selection;
 use Nette\Security\IResource;
 use Nette\Utils\DateTime;
+use Nette\Utils\Html;
 use Nette\Utils\Json;
 
 /**
@@ -462,9 +463,10 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
 
     /**
      * @param ModelEvent $event
+     * @param $yearCalculator
      * @return array
      */
-    public function getRolesForEvent(ModelEvent $event): array {
+    public function getRolesForEvent(ModelEvent $event, $yearCalculator): array {
         $roles = [];
         $eventId = $event->event_id;
         $teachers = $this->getEventTeacher()->where('event_id', $eventId);
@@ -489,6 +491,11 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
             $roles[] = [
                 'type' => 'participant',
                 'participant' => $participant,
+            ];
+        }
+        if (array_key_exists($event->getEventType()->contest_id, $this->getActiveOrgs($yearCalculator))) {
+            $roles[] = [
+                'type' => 'contest_org',
             ];
         }
         return $roles;

@@ -82,7 +82,7 @@ class DefaultGenerator extends AbstractSymbolGenerator {
             ->where('variable_symbol<=?', $this->getVariableSymbolEnd())
             ->max('variable_symbol');
 
-        $variableNumber = $maxVariableSymbol + 1;
+        $variableNumber = ($maxVariableSymbol == 0) ? $this->getVariableSymbolStart() : ($maxVariableSymbol + 1);
         if ($variableNumber > $this->getVariableSymbolEnd()) {
             throw new OutOfRangeException(_('variable_symbol overflow'));
         }
