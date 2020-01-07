@@ -242,7 +242,6 @@ class ApplicationComponent extends Control {
      * @throws AbortException
      */
     public function handleSubmit(Form $form, $explicitTransitionName = null) {
-        Debugger::log($form->getValues(), 'app-form');
         $this->execute($form, $explicitTransitionName);
     }
 
