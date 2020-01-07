@@ -33,10 +33,10 @@ payment:
                 czk:
                     bank_account: 38330021/0100
                     bank_name: "Komerční banka, a.s."
-                    recipient: "Univerzita Karlova, Matematicko-fyzikální fakulta"
+                    recipient: "Univerzita Karlova"
                     iban: CZ91 0100 0000 0000 3833 0021
                 eur:
                     bank_name: "Komerční banka, a.s."
-                    recipient: "Univerzita Karlova, Matematicko-fyzikální fakulta"
+                    recipient: "Charles University"
                     iban: CZ93 0100 0000 4373 0978 0297
                     swift: KOMBCZPPXXX
