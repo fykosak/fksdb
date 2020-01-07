@@ -2,11 +2,14 @@
 
 namespace FKSDB\Components\Grids;
 
-
 use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServiceSchool;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Database\Table\Selection;
 use Nette\Utils\Html;
+use NiftyGrid\DuplicateButtonException;
+use NiftyGrid\DuplicateColumnException;
+use NiftyGrid\DuplicateGlobalButtonException;
 use SQL\SearchableDataSource;
 
 /**
@@ -31,10 +34,10 @@ class SchoolsGrid extends BaseGrid {
 
     /**
      * @param $presenter
-     * @throws \Nette\Application\UI\InvalidLinkException
-     * @throws \NiftyGrid\DuplicateButtonException
-     * @throws \NiftyGrid\DuplicateColumnException
-     * @throws \NiftyGrid\DuplicateGlobalButtonException
+     * @throws InvalidLinkException
+     * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
+     * @throws DuplicateGlobalButtonException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -61,11 +64,8 @@ class SchoolsGrid extends BaseGrid {
             return Html::el('span')->addAttributes(['class' => ('badge ' . ($row->active ? 'badge-success' : 'badge-danger'))])->addText(($row->active));
         });
 
-        //
-        // operations
-        //
-        $this->addLinkButton($presenter, ':Org:School:edit', 'edit', _('Edit'), false);
-        $this->addLinkButton($presenter, 'detail', 'detail', _('Detail'), false);
+        $this->addLinkButton($presenter, ':Org:School:edit', 'edit', _('Edit'), false, ['id' => 'school_id']);
+        $this->addLinkButton($presenter, 'detail', 'detail', _('Detail'), false, ['id' => 'school_id']);
 
         $this->addGlobalButton('add')
             ->setLink($this->getPresenter()->link(':Org:School:create'))

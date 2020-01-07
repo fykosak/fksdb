@@ -30,7 +30,6 @@ class TeamSubmitsGrid extends SubmitsGrid {
      * @param TableReflectionFactory $tableReflectionFactory
      */
     public function __construct(ModelFyziklaniTeam $team, ServiceFyziklaniSubmit $serviceFyziklaniSubmit, TableReflectionFactory $tableReflectionFactory) {
-        $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
         $this->team = $team;
         parent::__construct($serviceFyziklaniSubmit, $tableReflectionFactory);
     }
@@ -45,13 +44,13 @@ class TeamSubmitsGrid extends SubmitsGrid {
         $this->paginate = false;
         $this->addColumnTask();
 
-        $this->addColumnPoints();
-        $this->addReflectionColumn(DbNames::TAB_FYZIKLANI_SUBMIT, 'created', ModelFyziklaniSubmit::class);
-
-        $this->addColumnState();
-
-        $this->addEditButton($presenter);
-        $this->addDetailButton($presenter);
+        $this->addColumns([
+            DbNames::TAB_FYZIKLANI_SUBMIT . '.points',
+            DbNames::TAB_FYZIKLANI_SUBMIT . '.created',
+            DbNames::TAB_FYZIKLANI_SUBMIT . '.state',
+        ]);
+        $this->addLinkButton($presenter, ':Fyziklani:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);
+        $this->addLinkButton($presenter, ':Fyziklani:Submit:detail', 'detail', _('Detail'), false, ['id' => 'fyziklani_submit_id']);
 
         $submits = $this->team->getNonCheckedSubmits()
             ->order('fyziklani_submit.created');

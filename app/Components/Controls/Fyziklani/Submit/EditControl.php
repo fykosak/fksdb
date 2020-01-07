@@ -103,7 +103,7 @@ class EditControl extends Control {
         $control = new FormControl();
         $form = $control->getForm();
         $form->addComponent($this->createPointsField(), 'points');
-        $form->addSubmit('send', _('Uložit'));
+        $form->addSubmit('send', _('Save'));
         $form->onSuccess[] = function (Form $form) {
             $this->editFormSucceeded($form);
         };

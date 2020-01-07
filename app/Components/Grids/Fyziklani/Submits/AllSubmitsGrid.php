@@ -75,13 +75,14 @@ class AllSubmitsGrid extends SubmitsGrid {
 
         $this->addColumnTeam();
         $this->addColumnTask();
-        $this->addColumnPoints();
-        $this->addColumnState();
 
-        $this->addReflectionColumn(DbNames::TAB_FYZIKLANI_SUBMIT, 'created', ModelFyziklaniSubmit::class);
-
-        $this->addEditButton($presenter);
-        $this->addDetailButton($presenter);
+        $this->addColumns([
+            DbNames::TAB_FYZIKLANI_SUBMIT . '.state',
+            DbNames::TAB_FYZIKLANI_SUBMIT . '.points',
+            DbNames::TAB_FYZIKLANI_SUBMIT . '.created',
+        ]);
+        $this->addLinkButton($presenter, ':Fyziklani:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);
+        $this->addLinkButton($presenter, ':Fyziklani:Submit:detail', 'detail', _('Detail'), false, ['id' => 'fyziklani_submit_id']);
 
         $this->addButton('delete', null)->setClass('btn btn-sm btn-danger')->setLink(function ($row) {
             return $this->link('delete!', $row->fyziklani_submit_id);
@@ -163,7 +164,6 @@ class AllSubmitsGrid extends SubmitsGrid {
         }
         $control = new FormControl();
         $form = $control->getForm();
-        //$form = new Form();
         $form->setMethod(Form::GET);
 
         $rows = $this->serviceFyziklaniTeam->findPossiblyAttending($this->event);

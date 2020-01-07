@@ -33,7 +33,7 @@ class ServiceFyziklaniTeam extends AbstractServiceSingle {
      * @return TypedTableSelection|Selection
      */
     public function findParticipating(ModelEvent $event) {
-        $result = $this->getTable()->where('status', 'participated')->where('event_id', $event->event_id);;
+        $result = $this->getTable()->where('status', 'participated')->where('event_id', $event->event_id);
         return $result ?: null;
     }
 

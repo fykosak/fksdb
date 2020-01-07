@@ -23,7 +23,7 @@ class SinceRow extends AbstractTeacherRow {
         if ($model->since === null) {
             return Html::el('span')->addAttributes(['class' => 'badge badge-secondary'])->addText(_('undefined'));
         }
-        return (new DatePrinter(_('d. m. Y')))($model->since);
+        return (new DatePrinter(_('__date_format')))($model->since);
     }
 
     /**
