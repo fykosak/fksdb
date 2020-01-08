@@ -29,7 +29,7 @@ class ModelRegion extends AbstractModelSingle {
         if (\is_null($this->phone_nsn) || \is_null($this->phone_prefix)) {
             return false;
         }
-        return !!\preg_match('/^\\' . $this->phone_prefix . '\d{' . $this->phone_nsn . '}/', $number);
+        return !!\preg_match('/^\\' . $this->phone_prefix . '\d{' . $this->phone_nsn . '}$/', $number);
     }
 
     /**
@@ -46,7 +46,7 @@ class ModelRegion extends AbstractModelSingle {
             default:
                 $regExp = '(\d{' . $this->phone_nsn . '})';
         }
-        Debugger::barDump('/^' . $this->phone_prefix . $regExp . '$/');
+
         if (preg_match('/^\\' . $this->phone_prefix . $regExp . '$/', $number, $matches)) {
             unset($matches[0]);
             return $this->phone_prefix . ' ' . \implode(' ', $matches);
