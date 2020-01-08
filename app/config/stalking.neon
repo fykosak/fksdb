@@ -5,6 +5,7 @@ stalking:
             label: Base info
             minimalPermission: 1
             table: person
+            model: FKSDB\ORM\Models\ModelPerson
             rows:
                 - person.family_name
                 - person.other_name
@@ -19,6 +20,7 @@ stalking:
             label: Contact info
             minimalPermission: 1
             table: person_info
+            model: FKSDB\ORM\Models\ModelPersonInfo
             rows:
                 - person_info.email
                 - person_info.phone
@@ -28,6 +30,7 @@ stalking:
             label: Contact to parents
             minimalPermission: 128
             table: person_info
+            model: FKSDB\ORM\Models\ModelPersonInfo
             rows:
                 - person_info.phone_parent_m
                 - person_info.phone_parent_d
@@ -39,6 +42,7 @@ stalking:
             label: Academic degree
             minimalPermission: 128
             table: person_info
+            model: FKSDB\ORM\Models\ModelPersonInfo
             rows:
                 - person_info.academic_degree_prefix
                 - person_info.academic_degree_suffix
@@ -48,6 +52,7 @@ stalking:
              label: Extended info
              minimalPermission: 128
              table: person_info
+             model: FKSDB\ORM\Models\ModelPersonInfo
              rows:
                  - person_info.born
                  - person_info.born_id
@@ -70,6 +75,7 @@ stalking:
              label: Login
              minimalPermission: 128
              table: login
+             model: FKSDB\ORM\Models\ModelLogin
              rows:
                  - login.login
                  - login.login_id
@@ -81,7 +87,9 @@ stalking:
             label: Person history
             minimalPermission: 128
             table: person_history
-            item_headline: person_history.ac_year
+            links: []
+            model: FKSDB\ORM\Models\ModelPersonHistory
+            itemHeadline: person_history.ac_year
             rows:
                 - person_history.school_id
                 - person_history.study_year
@@ -92,7 +100,11 @@ stalking:
             label: Org
             minimalPermission: 128
             table: org
-            item_headline: org.contest_id
+            model: FKSDB\ORM\Models\ModelOrg
+            links:
+                - org.detail
+                - org.edit
+            itemHeadline: org.contest_id
             rows:
                 - org.since
                 - org.until
@@ -106,8 +118,59 @@ stalking:
             label: Payment
             minimalPermission: 128
             table: payment
-            item_headline: payment.link
+            model: FKSDB\ORM\Models\ModelPayment
+            links:
+                - payment.detail
+            itemHeadline: payment.id
             rows:
                 - payment.price
                 - payment.state
+               # - referenced.event_link
+       # contestant_base:
+       #     layout: multi
+         #   label: Contestant
+         #   minimalPermission: 128
+         #   table: contestant_base
+         #   model: FKSDB\ORM\Models\ModelContestant
+         #   links: []
+                #- contestatnt_base.edit
+         #   itemHeadline: contestant_base.ct_id
+         #   rows: []
+                #- contestant_base.year
+                #- contestant_base.contest_id
+        event_participant:
+            layout: multi
+            label: Event Participant
+            minimalPermission: 128
+            table: event_participant
+            model: FKSDB\ORM\Models\ModelEventParticipant
+            links:
+                - event_participant.detail
+            itemHeadline: event_participant.event_participant_id
+            rows:
+                - event_participant.status
+                #- event_participant.team
                 #- referenced.event_link
+      #  event_org:
+      #      layout: multi
+      #      label: Event org
+      #      minimalPermission: 128
+      #       table: event_org
+       #      model: FKSDB\ORM\Models\ModelEventOrg
+       #      links: []
+      #       itemHeadline: event_org.event_org_id
+      #       rows: []
+                #- referenced.event_link
+                #- event_org.note
+        event_teacher:
+            layout: multi
+            label: Event teacher
+            minimalPermission: 16
+            table: e_fyziklani_team
+            model: FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam
+            links:
+                - fyziklani_team.detail
+            itemHeadline: e_fyziklani_team.name
+            rows: 
+                #- referenced.event_link
+                - e_fyziklani_team.status
