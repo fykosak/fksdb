@@ -9,8 +9,6 @@ use FKSDB\ORM\Models\IEventReferencedModel;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
-use Nette\NotImplementedException;
-use Tracy\Debugger;
 
 /**
  * Class ModelScheduleGroup

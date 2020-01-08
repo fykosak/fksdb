@@ -3,15 +3,9 @@
 namespace FKSDB\Components\DatabaseReflection\ReferencedRows;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
-use FKSDB\Components\DatabaseReflection\ValuePrinters\EventLink;
-use FKSDB\Components\DatabaseReflection\ValuePrinters\PersonLink;
 use FKSDB\ORM\AbstractModelSingle;
-use FKSDB\ORM\Models\IEventReferencedModel;
-use FKSDB\ORM\Models\IPersonReferencedModel;
 use FKSDB\ORM\Models\StoredQuery\ISchoolReferencedModel;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\PresenterComponent;
-use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
 
 /**

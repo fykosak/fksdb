@@ -18,7 +18,7 @@ use Nette\Templating\FileTemplate;
  */
 class FinalResults extends Control {
     /**
-     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam
+     * @var ServiceFyziklaniTeam
      */
     private $serviceFyziklaniTeam;
     /**

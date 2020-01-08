@@ -10,6 +10,7 @@ use FKSDB\ORM\Services\ServiceEvent;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use NiftyGrid\DataSource\NDataSource;
+use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
 use OrgModule\OrgPresenter;
@@ -22,13 +23,13 @@ class EventsGrid extends BaseGrid {
 
     /**
      *
-     * @var \FKSDB\ORM\Services\ServiceEvent
+     * @var ServiceEvent
      */
     private $serviceEvent;
 
     /**
      * EventsGrid constructor.
-     * @param \FKSDB\ORM\Services\ServiceEvent $serviceEvent
+     * @param ServiceEvent $serviceEvent
      * @param TableReflectionFactory $tableReflectionFactory
      */
     function __construct(ServiceEvent $serviceEvent, TableReflectionFactory $tableReflectionFactory) {
@@ -42,13 +43,10 @@ class EventsGrid extends BaseGrid {
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
-     * @throws \NiftyGrid\DuplicateButtonException
+     * @throws DuplicateButtonException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
-        //
-        // data
-        //
         $events = $this->serviceEvent->getEvents($presenter->getSelectedContest(), $presenter->getSelectedYear());
 
         $dataSource = new NDataSource($events);
@@ -58,54 +56,30 @@ class EventsGrid extends BaseGrid {
 
         $this->addColumn('event_id', _('Id akce'));
 
-        foreach (['event_type', 'name','year','event_year'] as $field) {
-            $this->addReflectionColumn(DbNames::TAB_EVENT, $field, ModelEvent::class);
-        }
-        //
-        // operations
-        //
-        $this->addButton('detail')
-            ->setText(_('Detail'))
-            ->setLink(function ($row) {
-                return $this->getPresenter()->link(':Event:dashboard:', ['eventId' => $row->event_id]);
-            });
-        $this->addButton('edit', _('Edit'))
-            ->setText(_('Edit'))
-            ->setLink(function ($row) {
-                return $this->getPresenter()->link('edit', $row->event_id);
-            });
-        $this->addButton('applications')
-            ->setText(_('Applications'))
-            ->setLink(function ($row) {
-                return $this->getPresenter()->link(':Event:application:list', ['eventId' => $row->event_id]);
-            })->setShow(function ($row) {
-                if ($this->getPresenter()->authorized(':Event:application:list', ['eventId' => $row->event_id])) {
-                    return true;
-                }
-                return false;
-            });
+        $this->addColumns([
+            DbNames::TAB_EVENT . '.event_type',
+            DbNames::TAB_EVENT . '.name',
+            DbNames::TAB_EVENT . '.year',
+            DbNames::TAB_EVENT . '.event_year',
+        ]);
 
-        $this->addButton('teamApplications')
-            ->setText(_('Team applications'))
-            ->setLink(function ($row) {
-                return $this->getPresenter()->link(':Event:teamApplication:list', ['eventId' => $row->event_id]);
-            })->setShow(function ($row) {
-                if ($this->getPresenter()->authorized(':Event:teamApplication:list', ['eventId' => $row->event_id])) {
-                    return true;
-                }
-                return false;
-            });
-
-        $this->addButton('org')
-            ->setText(_('Organisers'))
-            ->setLink(function ($row) {
-                return $this->getPresenter()->link('EventOrg:list', ['eventId' => $row->event_id]);
-            });
+        $this->addLinkButton($this->getPresenter(), ':Event:dashboard:default', 'detail', _('Detail'), true, ['eventId' => 'event_id']);
+        $this->addLinkButton($this->getPresenter(), 'edit', 'edit', _('Edit'), true, ['id' => 'event_id']);
+        $this->addLinkButton($this->getPresenter(), ':Event:application:list', 'applications', _('Applications'), true, ['eventId' => 'event_id']);
+        $this->addLinkButton($this->getPresenter(), ':Event:teamApplication:list', 'teamApplications', _('Team applications'), true, ['eventId' => 'event_id']);
+        $this->addLinkButton($this->getPresenter(), 'EventOrg:list', 'org', _('Organisers'), true, ['eventId' => 'event_id']);
 
         $this->addGlobalButton('add')
             ->setLink($this->getPresenter()->link('create'))
             ->setLabel('Add event')
             ->setClass('btn btn-sm btn-primary');
+    }
+
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        return ModelEvent::class;
     }
 
 }

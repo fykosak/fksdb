@@ -11,6 +11,7 @@ use FKSDB\ORM\Models\ModelPerson;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\ActiveRow;
 use NiftyGrid\DataSource\NDataSource;
+use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class MyApplicationsGrid
@@ -40,7 +41,7 @@ class MyApplicationsGrid extends BaseGrid {
 
     /**
      * @param Presenter $presenter
-     * @throws \NiftyGrid\DuplicateColumnException
+     * @throws DuplicateColumnException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -52,7 +53,7 @@ class MyApplicationsGrid extends BaseGrid {
         $source = new NDataSource($source);
         $this->setDataSource($source);
         $eventCallBack = function (ActiveRow $row) {
-            return ModelEventParticipant::createFromTableRow($row)->getEvent();
+            return ModelEventParticipant::createFromActiveRow($row)->getEvent();
         };
         $this->addJoinedColumn(DbNames::TAB_EVENT, 'name', $eventCallBack);
         $this->addJoinedColumn(DbNames::TAB_EVENT, 'year', $eventCallBack);
