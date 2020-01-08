@@ -104,6 +104,7 @@ DBReflection:
              tasks_on_board:
                  type: string
                  title: Tasks on board
+
     links:
         payment.detail:
             destination: ':Event:Payment:detail'
