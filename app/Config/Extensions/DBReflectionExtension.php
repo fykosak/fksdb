@@ -2,6 +2,8 @@
 
 namespace FKSDB\Config\Extensions;
 
+use FKSDB\Components\DatabaseReflection\Links\Link;
+use FKSDB\Components\DatabaseReflection\PrimaryKeyRow;
 use FKSDB\Components\DatabaseReflection\StringRow;
 use Nette\Config\CompilerExtension;
 use Nette\DI\ContainerBuilder;
@@ -23,6 +25,9 @@ class DBReflectionExtension extends CompilerExtension {
                         case 'string':
                             $this->registerStringRow($builder, $tableName, $fieldName, $field);
                             continue;
+                        case 'primaryKey':
+                            $this->registerPrimaryKeyRow($builder, $tableName, $fieldName, $field);
+                            continue;
                         default:
                             throw new NotImplementedException();
                     }
@@ -32,6 +37,16 @@ class DBReflectionExtension extends CompilerExtension {
                         ->setFactory($field);
                     continue;
                 }
+            }
+        }
+        foreach ($this->config['links'] as $linkId => $def) {
+            if (is_array($def)) {
+                $builder->addDefinition($this->prefix('link.' . $linkId))
+                    ->setFactory(Link::class)
+                    ->addSetup('setParams', [$def['destination'], $def['params'], $def['title'], $def['model']]);
+            } else if (is_string($def)) {
+                $builder->addDefinition($this->prefix('link.' . $linkId))
+                    ->setFactory($def);
             }
         }
     }
@@ -50,6 +65,26 @@ class DBReflectionExtension extends CompilerExtension {
                 $this->translate($field['title']),
                 isset($field['accessKey']) ? $field['accessKey'] : $fieldName,
                 isset($field['description']) ? $this->translate($field['description']) : null
+            ]);
+        if (isset($field['permission'])) {
+            $factory->addSetup('setPermissionValue', $field['permission']);
+        }
+    }
+
+    /**
+     * @param ContainerBuilder $builder
+     * @param string $tableName
+     * @param string $fieldName
+     * @param array $field
+     */
+    private function registerPrimaryKeyRow(ContainerBuilder $builder, string $tableName, string $fieldName, array $field) {
+        $factory = $builder->addDefinition($this->prefix($tableName . '.' . $fieldName))
+            ->setFactory(PrimaryKeyRow::class)
+            ->addSetup('setUp', [
+                $tableName,
+                $field['title'],
+                isset($field['accessKey']) ? $field['accessKey'] : $fieldName,
+                isset($field['description']) ? $field['description'] : null
             ]);
         if (isset($field['permission'])) {
             $factory->addSetup('setPermissionValue', $field['permission']);

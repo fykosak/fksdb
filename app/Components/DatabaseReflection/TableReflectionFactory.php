@@ -3,6 +3,8 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
+use FKSDB\Components\DatabaseReflection\Links\AbstractLink;
+use FKSDB\Components\DatabaseReflection\Links\Link;
 use FKSDB\Components\DatabaseReflection\RowFactoryComponent;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\DI\Container;
@@ -10,6 +12,7 @@ use Nette\InvalidArgumentException;
 use Nette\Localization\ITranslator;
 use Nette\SmartObject;
 use Nette\Utils\Html;
+use Tracy\Debugger;
 
 /**
  * Class TableReflectionFactory
@@ -17,11 +20,6 @@ use Nette\Utils\Html;
  */
 final class TableReflectionFactory {
     use SmartObject;
-
-    /**
-     * @var AbstractRow[]
-     */
-    private $fieldFactories = [];
     /**
      * @var Container
      */
@@ -49,9 +47,6 @@ final class TableReflectionFactory {
      * @throws \Exception
      */
     public function loadService(string $tableName, string $fieldName): AbstractRow {
-        if (isset($this->fieldFactories[$fieldName])) {
-            return $this->fieldFactories[$fieldName];
-        }
         $service = null;
         try {
             $service = $this->container->getService('DBReflection.' . $tableName . '.' . $fieldName);
@@ -64,7 +59,19 @@ final class TableReflectionFactory {
         if (!$service instanceof AbstractRow) {
             throw new InvalidArgumentException('Field ' . $tableName . '.' . $fieldName . ' not exists');
         }
-        $this->fieldFactories[$fieldName] = $service;
+        return $service;
+    }
+
+    /**
+     * @param $linkId
+     * @return AbstractLink
+     * @throws \Exception
+     */
+    public function loadLinkFactory($linkId): AbstractLink {
+        $service = $this->container->getService('DBReflection.link.' . $linkId);
+        if (!$service instanceof AbstractLink) {
+            throw new InvalidArgumentException('LinkFactory ' . $linkId . ' not exists');
+        }
         return $service;
     }
 
