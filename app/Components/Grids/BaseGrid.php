@@ -263,4 +263,32 @@ abstract class BaseGrid extends Grid {
             });
     }
 
+    /**
+     * @param $linkId
+     * @param bool $checkACL
+     * @return mixed
+     * @throws DuplicateButtonException
+     * @throws Exception
+     */
+    protected function addLink($linkId, bool $checkACL = false) {
+        $modelClassName = $this->getModelClassName();
+        $factory = $this->tableReflectionFactory->loadLinkFactory($linkId);
+        $button = $this->addButton(str_replace('.', '_', $linkId), $factory->getText())
+            ->setText($factory->getText())
+            ->setLink(function ($row) use ($modelClassName, $factory) {
+                $model = $modelClassName::createFromActiveRow($row);
+                return $this->getPresenter()->link($factory->getDestination($model), $factory->prepareParams($model));
+            });
+        if ($checkACL) {
+            $button->setShow(function ($row) use ($modelClassName, $checkACL, $factory) {
+                if (!$checkACL) {
+                    return true;
+                }
+                $model = $modelClassName::createFromActiveRow($row);
+                return $this->getPresenter()->authorized($factory->getDestination($model), $factory->prepareParams($model));
+            });
+        }
+        return $button;
+    }
+
 }
