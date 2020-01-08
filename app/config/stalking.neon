@@ -125,17 +125,17 @@ stalking:
             rows:
                 - payment.price
                 - payment.state
-                - referenced.event_link
-        contestant_base:
-            layout: multi
-            label: Contestant
-            minimalPermission: 128
-            table: contestant_base
-            model: FKSDB\ORM\Models\ModelContestant
-            links:
-                - contestatnt_base.edit
-            itemHeadline: contestant_base.ct_id
-            rows:
+               # - referenced.event_link
+       # contestant_base:
+       #     layout: multi
+         #   label: Contestant
+         #   minimalPermission: 128
+         #   table: contestant_base
+         #   model: FKSDB\ORM\Models\ModelContestant
+         #   links: []
+                #- contestatnt_base.edit
+         #   itemHeadline: contestant_base.ct_id
+         #   rows: []
                 #- contestant_base.year
                 #- contestant_base.contest_id
         event_participant:
@@ -148,18 +148,18 @@ stalking:
                 - event_participant.detail
             itemHeadline: event_participant.event_participant_id
             rows:
-                #- event_participant.status
+                - event_participant.status
                 #- event_participant.team
                 #- referenced.event_link
-        event_org:
-            layout: multi
-            label: Event org
-            minimalPermission: 128
-            table: event_org
-            model: FKSDB\ORM\Models\ModelEventOrg
-            links: []
-            itemHeadline: event_org.event_org_id
-            rows:
+      #  event_org:
+      #      layout: multi
+      #      label: Event org
+      #      minimalPermission: 128
+      #       table: event_org
+       #      model: FKSDB\ORM\Models\ModelEventOrg
+       #      links: []
+      #       itemHeadline: event_org.event_org_id
+      #       rows: []
                 #- referenced.event_link
                 #- event_org.note
         event_teacher:
@@ -169,8 +169,8 @@ stalking:
             table: e_fyziklani_team
             model: FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam
             links:
-                #- fyziklani_team.detail
+                - fyziklani_team.detail
             itemHeadline: e_fyziklani_team.name
-            rows:
+            rows: 
                 #- referenced.event_link
-                #- e_fyziklani_team.status
+                - e_fyziklani_team.status
