@@ -1,19 +1,14 @@
 <?php
 
-
 namespace FKSDB\ORM\Models\Schedule;
 
-use FKSDB\Localization\GettextTranslator;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\Payment\Price;
 use FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException;
 use LogicException;
-use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
-use Nette\Localization\ITranslator;
-use Nette\NotImplementedException;
 
 /**
  * Class ModelScheduleItem

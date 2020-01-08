@@ -1,15 +1,59 @@
 DBReflection:
-    factories:
-        # list table=> {field=>service}
-        teacher:
-            state: FKSDB\Components\DatabaseReflection\Tables\Teacher\StateRow
-            since: FKSDB\Components\DatabaseReflection\Tables\Teacher\SinceRow
-            until: FKSDB\Components\DatabaseReflection\Tables\Teacher\UntilRow
-            number_brochures: FKSDB\Components\DatabaseReflection\Tables\Teacher\NumberBrochuresRow
-            note: FKSDB\Components\DatabaseReflection\Tables\Teacher\NoteRow
-        referenced:
-            person_link: FKSDB\Components\DatabaseReflection\ReferencedRows\PersonLinkRow
-            person_name: FKSDB\Components\DatabaseReflection\ReferencedRows\PersonNameRow
-            event_link: FKSDB\Components\DatabaseReflection\ReferencedRows\EventLinkRow
-            contest: FKSDB\Components\DatabaseReflection\ReferencedRows\ContestRow
-            school_name: FKSDB\Components\DatabaseReflection\ReferencedRows\SchoolNameRow
+    tables:
+         payment:
+             bank_account:
+                 type: string
+                 title: _(Bank account)
+             bank_name:
+                 type: string
+                 title: _(Bank name)
+             constant_symbol:
+                 type: string
+                 title: Constant symbol
+             iban:
+                 type: string
+                 title: _(IBAN)
+             specific_symbol:
+                 type: string
+                 title: specific_symbol
+             swift:
+                 type: string
+                 title: _(SWIFT)
+             variable_symbol:
+                 type: string
+                 title: Variable symbol
+             recipient:
+                 type: string
+                 title: _(Recipient)
+         org:
+             contribution:
+                 type: string
+                 title: _(Contribution)
+                 description: _('Zobrazeno v síni slávy')
+             role:
+                 type: string
+                 title: Role
+         person:
+             born_family_name:
+                 type: string
+                 title: _(Born family name)
+                 description: _('Pouze pokud je odlišné od příjmení.')
+                 permission: PERMISSION_ALLOW_FULL
+             display_name:
+                 type: string
+                 title: _(Display name)
+                 description: _('Pouze pokud je odlišné od "jméno příjmení".')
+                 permission: PERMISSION_ALLOW_BASIC
+             family_name:
+                 type: string
+                 title: _(Family name)
+                 permission: PERMISSION_ALLOW_BASIC
+             other_name:
+                 type: string
+                 title: _(Other name)
+                 permission: PERMISSION_ALLOW_BASIC
+         login:
+             login:
+                 type: string
+                 title: _(Login)
+                 permission: PERMISSION_ALLOW_RESTRICT

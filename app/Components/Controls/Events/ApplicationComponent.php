@@ -18,6 +18,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
 use Nette\Templating\FileTemplate;
 use Nette\Templating\ITemplate;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -166,7 +167,7 @@ class ApplicationComponent extends Control {
          */
         $saveSubmit = null;
         if ($this->canEdit()) {
-            $saveSubmit = $form->addSubmit('save', _('Uložit'));
+            $saveSubmit = $form->addSubmit('save', _('Save'));
             $saveSubmit->setOption('row', 1);
             $saveSubmit->onClick[] = function (SubmitButton $button) {
                 $buttonForm = $button->getForm();

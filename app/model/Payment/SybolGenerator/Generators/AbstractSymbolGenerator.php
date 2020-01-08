@@ -31,5 +31,15 @@ abstract class AbstractSymbolGenerator {
      * @throws AlreadyGeneratedSymbolsException
      * @throws UnsupportedCurrencyException
      */
-    public abstract function create(ModelPayment $modelPayment);
+    protected abstract function create(ModelPayment $modelPayment);
+
+    /**
+     * @param ModelPayment $modelPayment
+     * @throws AlreadyGeneratedSymbolsException
+     * @throws UnsupportedCurrencyException
+     */
+    public final function __invoke(ModelPayment $modelPayment) {
+        $info = $this->create($modelPayment);
+        $modelPayment->update($info);
+    }
 }

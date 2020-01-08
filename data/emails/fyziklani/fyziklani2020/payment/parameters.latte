@@ -23,6 +23,18 @@
             <span>{$model->bank_account}</span>
         </div>
     {/if}
+    {if $model->bank_name}
+        <div>
+            <b>{_'Bank name'}:</b>
+            <span>{$model->bank_name}</span>
+        </div>
+    {/if}
+    {if $model->recipient}
+        <div>
+            <b>{_'Recipient'}:</b>
+            <span>{$model->recipient}</span>
+        </div>
+    {/if}
     {if $model->iban}
         <div class="row">
             <b>{_'IBAN'}:</b>

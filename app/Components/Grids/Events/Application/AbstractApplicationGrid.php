@@ -119,4 +119,9 @@ abstract class AbstractApplicationGrid extends BaseGrid {
             }
         }
     }
+
+    /**
+     * @return string
+     */
+    abstract protected function getTableName(): string;
 }

@@ -3,22 +3,20 @@
 namespace EventModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Controls\Payment\StateDisplayControl;
 use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
 use FKSDB\Components\Factories\PaymentFactory as PaymentComponentFactory;
 use FKSDB\Components\Forms\Controls\Payment\SelectForm;
 use FKSDB\Components\Grids\Payment\OrgPaymentGrid;
+use FKSDB\Config\Extensions\PaymentExtension;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServicePayment;
 use FKSDB\Payment\Transition\PaymentMachine;
 use FKSDB\Transitions\Machine;
-use FKSDB\Transitions\MachineFactory;
 use InvalidArgumentException;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\NotImplementedException;
 use function count;
 use function sprintf;
 
@@ -40,11 +38,6 @@ class PaymentPresenter extends BasePresenter {
     private $servicePayment;
 
     /**
-     * @var MachineFactory
-     */
-    private $machineFactory;
-
-    /**
      * @var PaymentComponentFactory
      */
     private $paymentComponentFactory;
@@ -54,13 +47,6 @@ class PaymentPresenter extends BasePresenter {
      */
     public function injectServicePayment(ServicePayment $servicePayment) {
         $this->servicePayment = $servicePayment;
-    }
-
-    /**
-     * @param MachineFactory $machineFactory
-     */
-    public function injectMachineFactory(MachineFactory $machineFactory) {
-        $this->machineFactory = $machineFactory;
     }
 
     /**
@@ -98,9 +84,6 @@ class PaymentPresenter extends BasePresenter {
         $this->setIcon('fa fa-credit-card');
     }
 
-    /**
-     *
-     */
     public function titleList() {
         $this->setTitle(_('List of payments'));
         $this->setIcon('fa fa-credit-card');
@@ -180,7 +163,7 @@ class PaymentPresenter extends BasePresenter {
             if (!$this->isOrg()) {
                 $this->redirect('Dashboard:default');
             }
-        };
+        }
     }
 
     /* ********* render *****************/
@@ -198,8 +181,6 @@ class PaymentPresenter extends BasePresenter {
      * @throws AbortException
      */
     public function renderDetail() {
-        $this->getMachine()->getPriceCalculator()->setCurrency($this->getEntity()->currency);
-
         $this->template->items = $this->getMachine()->getPriceCalculator()->getGridItems($this->getEntity());
         $this->template->model = $this->getEntity();
         $this->template->isOrg = $this->isOrg();
@@ -215,7 +196,7 @@ class PaymentPresenter extends BasePresenter {
         if (!$this->hasApi()) {
             $this->flashMessage(_('Event has not payment API'));
             $this->redirect(':Event:Dashboard:default');
-        };
+        }
     }
     /* ********* Components *****************/
     /**
@@ -240,16 +221,11 @@ class PaymentPresenter extends BasePresenter {
      * @return FormControl
      * @throws AbortException
      * @throws BadRequestException
-     * @throws ForbiddenRequestException
      */
     protected function createComponentEditButtonForm(): FormControl {
         $formControl = new FormControl();
         $form = $formControl->getForm();
-        /**
-         * @var PaymentPresenter $presenter
-         */
-        $presenter = $this->getPresenter();
-        if ($this->getEntity()->canEdit() || $presenter->getContestAuthorizator()->isAllowed($this->getEntity(), 'org', $this->getEntity()->getEvent()->getContest())) {
+        if ($this->canEdit()) {
             $submit = $form->addSubmit('edit', _('Edit items'));
             $submit->onClick[] = function () {
                 $this->getPresenter()->redirect('edit');
@@ -259,23 +235,13 @@ class PaymentPresenter extends BasePresenter {
     }
 
     /**
-     * @return StateDisplayControl
-     * @throws AbortException
-     * @throws BadRequestException
-     * @throws ForbiddenRequestException
-     */
-    protected function createComponentStateDisplay(): StateDisplayControl {
-        return new StateDisplayControl($this->translator, $this->getEntity());
-    }
-
-    /**
      * @return TransitionButtonsControl
      * @throws AbortException
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    protected function createComponentTransitionButtons() {
-        return new TransitionButtonsControl($this->machine, $this->translator, $this->getEntity());
+    protected function createComponentTransitionButtons(): TransitionButtonsControl {
+        return $this->machine->createComponentTransitionButtons($this->getEntity());
     }
 
 
@@ -296,17 +262,21 @@ class PaymentPresenter extends BasePresenter {
      * @throws AbortException
      */
     private function isOrg(): bool {
-        return $this->isContestsOrgAllowed('event.payment', 'org');
+        return $this->isContestsOrgAllowed($this->getModelResource(), 'org');
     }
 
     /**
      * @return PaymentMachine
      * @throws AbortException
      * @throws BadRequestException
+     * @throws \Exception
      */
     private function getMachine(): PaymentMachine {
         if (!$this->machine) {
-            $this->machine = $this->machineFactory->setUpMachine($this->getEvent());
+            $this->machine = $this->context->getService('payment.' . PaymentExtension::MACHINE_PREFIX . $this->getEvent()->event_id);
+            if (!$this->machine instanceof PaymentMachine) {
+                throw new BadRequestException();
+            }
         }
         if (!$this->machine instanceof PaymentMachine) {
             throw new InvalidArgumentException(_('Expected class PaymentMachine'), 500);
@@ -316,13 +286,11 @@ class PaymentPresenter extends BasePresenter {
 
     /**
      * @return bool
-     * @throws AbortException
-     * @throws BadRequestException
      */
     private function hasApi(): bool {
         try {
             $this->getMachine();
-        } catch (NotImplementedException $exception) {
+        } catch (\Exception $exception) {
             return false;
         }
         return true;
@@ -339,6 +307,6 @@ class PaymentPresenter extends BasePresenter {
      * @return string
      */
     protected function getModelResource(): string {
-        return 'event.payment';
+        return ModelPayment::RESOURCE_ID;
     }
 }

@@ -4,6 +4,7 @@ namespace FKSDB\Components\DatabaseReflection\Payment;
 
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelPayment;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\PresenterComponent;
 use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
@@ -38,7 +39,7 @@ class LinkRow extends AbstractPaymentRow {
     /**
      * @param ModelPayment|AbstractModelSingle $model
      * @return Html
-     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws InvalidLinkException
      * @inheritDoc
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {

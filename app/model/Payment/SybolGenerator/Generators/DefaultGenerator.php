@@ -72,7 +72,7 @@ class DefaultGenerator extends AbstractSymbolGenerator {
      * @throws AlreadyGeneratedSymbolsException
      * @throws UnsupportedCurrencyException
      */
-    public function create(ModelPayment $modelPayment) {
+    protected function create(ModelPayment $modelPayment) {
 
         if ($modelPayment->hasGeneratedSymbols()) {
             throw new AlreadyGeneratedSymbolsException(\sprintf(_('Payment #%s has already generated symbols.'), $modelPayment->getPaymentId()));
@@ -82,7 +82,7 @@ class DefaultGenerator extends AbstractSymbolGenerator {
             ->where('variable_symbol<=?', $this->getVariableSymbolEnd())
             ->max('variable_symbol');
 
-        $variableNumber = $maxVariableSymbol + 1;
+        $variableNumber = ($maxVariableSymbol == 0) ? $this->getVariableSymbolStart() : ($maxVariableSymbol + 1);
         if ($variableNumber > $this->getVariableSymbolEnd()) {
             throw new OutOfRangeException(_('variable_symbol overflow'));
         }

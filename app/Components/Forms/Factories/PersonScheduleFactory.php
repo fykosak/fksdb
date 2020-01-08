@@ -4,12 +4,9 @@ namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Controls\Schedule\ScheduleField;
 use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleItem;
 use Nette\Forms\Controls\BaseControl;
-use Nette\Forms\Controls\RadioList;
 use Nette\Utils\JsonException;
-use Tracy\Debugger;
 
 /**
  * Class PersonScheduleFactory

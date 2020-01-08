@@ -158,6 +158,7 @@ class ExtendedPersonHandler {
      * @param IExtendedPersonPresenter $presenter
      * @param bool $sendEmail
      * @return int
+     * @throws \Exception
      */
     public final function handleForm(Form $form, IExtendedPersonPresenter $presenter, bool $sendEmail) {
 

@@ -27,9 +27,9 @@ $configurator->onCompile[] = function ($configurator, $compiler) {
     $compiler->addExtension('acl', new ACLExtension());
     $compiler->addExtension('navigation', new NavigationExtension());
     $compiler->addExtension('stalking', new StalkingExtension());
-    $compiler->addExtension('DBReflection', new DBReflectionExtension());
     $compiler->addExtension('events', new EventsExtension(CONFIG_DIR . '/events.neon'));
     $compiler->addExtension('payment', new PaymentExtension());
+    $compiler->addExtension('DBReflection', new DBReflectionExtension());
 };
 
 // Enable Nette Debugger for error visualisation & logging
