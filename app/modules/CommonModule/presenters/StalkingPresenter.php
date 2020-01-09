@@ -4,6 +4,7 @@ namespace CommonModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Stalking;
+use FKSDB\Components\Controls\Stalking\StalkingComponent\StalkingComponent;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\ORM\Models\ModelPerson;
@@ -12,6 +13,7 @@ use FKSDB\ValidationTest\ValidationFactory;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Utils\RegexpException;
 use Persons\DenyResolver;
 use Persons\ExtendedPersonHandler;
 
@@ -22,7 +24,7 @@ use Persons\ExtendedPersonHandler;
 class StalkingPresenter extends BasePresenter {
 
     /**
-     * @var \FKSDB\ORM\Services\ServicePerson
+     * @var ServicePerson
      */
     private $servicePerson;
 
@@ -49,7 +51,7 @@ class StalkingPresenter extends BasePresenter {
     private $stalkingService;
 
     /**
-     * @param \FKSDB\ORM\Services\ServicePerson $servicePerson
+     * @param ServicePerson $servicePerson
      */
     public function injectServicePerson(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
@@ -109,11 +111,11 @@ class StalkingPresenter extends BasePresenter {
     }
 
     /**
-     * @return \FKSDB\Components\Controls\Stalking\StalkingComponent\StalkingComponent
+     * @return StalkingComponent
      * @throws BadRequestException
      */
-    public function createComponentStalkingComponent(): Stalking\StalkingComponent\StalkingComponent {
-        return new Stalking\StalkingComponent\StalkingComponent($this->stalkingService, $this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
+    public function createComponentStalkingComponent(): StalkingComponent {
+        return new StalkingComponent($this->stalkingService, $this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
     }
 
     /**
@@ -122,38 +124,6 @@ class StalkingPresenter extends BasePresenter {
      */
     public function createComponentAddress(): Stalking\Address {
         return new Stalking\Address($this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
-    }
-
-    /**
-     * @return Stalking\EventParticipant
-     * @throws BadRequestException
-     */
-    public function createComponentEventParticipant(): Stalking\EventParticipant {
-        return new Stalking\EventParticipant($this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
-    }
-
-    /**
-     * @return Stalking\EventTeacher
-     * @throws BadRequestException
-     */
-    public function createComponentEventTeacher(): Stalking\EventTeacher {
-        return new Stalking\EventTeacher($this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
-    }
-
-    /**
-     * @return Stalking\EventOrg
-     * @throws BadRequestException
-     */
-    public function createComponentEventOrg(): Stalking\EventOrg {
-        return new Stalking\EventOrg($this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
-    }
-
-    /**
-     * @return Stalking\Contestant
-     * @throws BadRequestException
-     */
-    public function createComponentContestant(): Stalking\Contestant {
-        return new Stalking\Contestant($this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
     }
 
     /**
@@ -192,7 +162,7 @@ class StalkingPresenter extends BasePresenter {
     /**
      * @return FormControl
      * @throws BadRequestException
-     * @throws \Nette\Utils\RegexpException
+     * @throws RegexpException
      */
     public function createComponentFormSearch(): FormControl {
         $control = new FormControl();

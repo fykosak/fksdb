@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-06 01:59+0100\n"
+"POT-Creation-Date: 2020-01-09 22:01+0100\n"
 "PO-Revision-Date: 2019-01-10 12:34+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -34,15 +34,6 @@ msgstr ""
 msgid "Permissions denied"
 msgstr ""
 
-#: i18n/../app/Components/Controls/Stalking/Components/EventTeacher.php:24
-#, fuzzy
-msgid "Event teacher"
-msgstr "Event ID"
-
-#: i18n/../app/Components/Controls/Stalking/Components/EventParticipant.php:21
-msgid "Event participant"
-msgstr ""
-
 #: i18n/../app/Components/Controls/Stalking/Components/Flag.php:22
 msgid "Flags"
 msgstr ""
@@ -56,29 +47,15 @@ msgstr ""
 msgid "Address"
 msgstr "Addresses"
 
-#: i18n/../app/Components/Controls/Stalking/Components/Contestant.php:21
-#, fuzzy
-msgid "Contestant"
-msgstr "Event ID"
-
 #: i18n/../app/Components/Controls/Stalking/Components/Role.php:40
 #: i18n/../app/Components/Grids/Events/DispatchGrid.php:78
 msgid "Roles"
-msgstr ""
-
-#: i18n/../app/Components/Controls/Stalking/Components/Payment.php:28
-msgid "Payments"
 msgstr ""
 
 #: i18n/../app/Components/Controls/Stalking/Components/Validation.php:37
 #: i18n/../app/modules/CommonModule/templates/Stalking/view.latte.latte2php:53
 #: i18n/../app/modules/CommonModule/templates/Stalking/view.latte.latte2php:68
 msgid "Validation"
-msgstr ""
-
-#: i18n/../app/Components/Controls/Stalking/Components/EventOrg.php:21
-#: i18n/../app/Components/DatabaseReflection/ValuePrinters/EventRole.php:32
-msgid "Event org"
 msgstr ""
 
 #: i18n/../app/Components/Controls/Transitions/TransitionButtonsControl.php:68
@@ -133,7 +110,7 @@ msgid "Počet bodů"
 msgstr "Number of points"
 
 #: i18n/../app/Components/Controls/Fyziklani/Submit/EditControl.php:106
-#: i18n/../app/Components/Controls/Events/ApplicationComponent.php:169
+#: i18n/../app/Components/Controls/Events/ApplicationComponent.php:170
 #: i18n/../app/modules/presenters/SettingsPresenter.php:148
 #: i18n/../app/modules/OrgModule/presenters/ExtendedPersonPresenter.php:137
 #: i18n/../app/modules/OrgModule/presenters/InboxPresenter.php:232
@@ -242,7 +219,7 @@ msgstr ""
 msgid "Klíčový atribut"
 msgstr "Key attribute"
 
-#: i18n/../app/Components/Controls/Events/ApplicationComponent.php:216
+#: i18n/../app/Components/Controls/Events/ApplicationComponent.php:217
 #: i18n/../app/modules/CommonModule/presenters/PersonPresenter.php:267
 msgid "Storno"
 msgstr "Cancel"
@@ -630,14 +607,14 @@ msgid "Nejprve zkuste najít osobu v naší databázi podle e-mailu."
 msgstr ""
 "First of all try to find the person in our database using e-mail address."
 
-#: i18n/../app/Components/Forms/Factories/ReferencedPerson/AbstractReferencedPersonFactory.php:396
+#: i18n/../app/Components/Forms/Factories/ReferencedPerson/AbstractReferencedPersonFactory.php:398
 #: i18n/../app/Components/Grids/EventOrgsGrid.php:51
 msgid "Jméno"
 msgstr "Name"
 
-#: i18n/../app/Components/Forms/Factories/ReferencedPerson/AbstractReferencedPersonFactory.php:399
-#: i18n/../app/Components/Forms/Factories/ReferencedPerson/AbstractReferencedPersonFactory.php:423
-#: i18n/../app/Components/Forms/Factories/ReferencedPerson/AbstractReferencedPersonFactory.php:443
+#: i18n/../app/Components/Forms/Factories/ReferencedPerson/AbstractReferencedPersonFactory.php:401
+#: i18n/../app/Components/Forms/Factories/ReferencedPerson/AbstractReferencedPersonFactory.php:425
+#: i18n/../app/Components/Forms/Factories/ReferencedPerson/AbstractReferencedPersonFactory.php:445
 msgid "Unknown search type"
 msgstr ""
 
@@ -766,8 +743,6 @@ msgstr ""
 #: i18n/../app/Components/Grids/Fyziklani/Submits/TeamSubmitsGrid.php:52
 #: i18n/../app/Components/Grids/Fyziklani/Submits/AllSubmitsGrid.php:84
 #: i18n/../app/Components/Grids/EventOrgsGrid.php:56
-#: i18n/../app/Components/Grids/OrgsGrid.php:76
-#: i18n/../app/Components/Grids/OrgsGrid.php:77
 #: i18n/../app/Components/Grids/ContestantsGrid.php:60
 #: i18n/../app/Components/Grids/ContestantsGrid.php:61
 #: i18n/../app/Components/Grids/StoredQueriesGrid.php:96
@@ -785,8 +760,6 @@ msgstr ""
 
 #: i18n/../app/Components/Grids/Fyziklani/Submits/TeamSubmitsGrid.php:53
 #: i18n/../app/Components/Grids/Fyziklani/Submits/AllSubmitsGrid.php:85
-#: i18n/../app/Components/Grids/OrgsGrid.php:85
-#: i18n/../app/Components/Grids/OrgsGrid.php:86
 #: i18n/../app/Components/Grids/Schedule/GroupsGrid.php:68
 #: i18n/../app/Components/Grids/Schedule/ItemsGrid.php:54
 #: i18n/../app/Components/Grids/SchoolsGrid.php:68
@@ -797,6 +770,7 @@ msgstr ""
 #: i18n/../app/Components/Grids/Events/Application/TeamApplicationGrid.php:35
 #: i18n/../app/Components/Grids/TeachersGrid.php:84
 #: i18n/../app/Components/Grids/TeachersGrid.php:85
+#: i18n/../app/Components/DatabaseReflection/DetailLinks/ParticipantDetailLink.php:14
 msgid "Detail"
 msgstr ""
 
@@ -818,9 +792,9 @@ msgid "Submit dos not exists."
 msgstr "Payment doesn't exist"
 
 #: i18n/../app/Components/Grids/Fyziklani/Submits/AllSubmitsGrid.php:184
+#: i18n/../app/Components/DatabaseReflection/Tables/EventParticipant/TeamRow.php:35
 #: i18n/../app/Components/DatabaseReflection/Tables/Fyziklani/FyziklaniTeam/NameNIdRow.php:18
 #: i18n/../app/model/Fyziklani/CloseStrategy.php:98
-#: i18n/../app/Components/Controls/Stalking/Components/EventParticipant.latte.latte2php:20
 #: i18n/../app/Components/Controls/Fyziklani/Submit/DetailControl.latte.latte2php:8
 msgid "Team"
 msgstr ""
@@ -873,6 +847,7 @@ msgstr ""
 #: i18n/../app/Components/DatabaseReflection/Tables/Fyziklani/FyziklaniTeam/NoteRow.php:18
 #: i18n/../app/Components/DatabaseReflection/Tables/Teacher/NoteRow.php:30
 #: i18n/../app/Components/DatabaseReflection/Tables/Teacher/NoteRow.php:37
+#: i18n/../app/config/DBReflection.neon.neon2php:72
 #: i18n/../data/events/fyziklani/fyziklani14.neon.neon2php:179
 msgid "Note"
 msgstr ""
@@ -889,7 +864,7 @@ msgstr "Do you really want to delete the organiser?"
 msgid "Přidat organizátora"
 msgstr "Add organiser"
 
-#: i18n/../app/Components/Grids/OrgsGrid.php:97
+#: i18n/../app/Components/Grids/OrgsGrid.php:78
 #: i18n/../app/modules/OrgModule/presenters/OrgPresenter.php:71
 msgid "Založit organizátora"
 msgstr "Create an organiser"
@@ -917,6 +892,7 @@ msgid "Opravdu vzít řešení úlohy %s zpět?"
 msgstr "Do you really want to tak solution of task %s back?"
 
 #: i18n/../app/Components/Grids/Payment/MyPaymentGrid.php:38
+#: i18n/../app/Components/DatabaseReflection/Tables/ReferencedRows/EventLink.php:48
 #: i18n/../app/Components/Controls/Schedule/GroupControl.latte.latte2php:12
 msgid "Event"
 msgstr ""
@@ -935,7 +911,6 @@ msgid "Payment"
 msgstr ""
 
 #: i18n/../app/Components/Grids/Schedule/PersonsGrid.php:95
-#: i18n/../app/Components/Controls/Stalking/Components/EventOrg.latte.latte2php:13
 msgid "Role"
 msgstr ""
 
@@ -1011,6 +986,7 @@ msgstr "Event ID"
 #: i18n/../app/Components/Grids/ContestantsFromSchoolGrid.php:61
 #: i18n/../app/Components/Grids/Events/DispatchGrid.php:74
 #: i18n/../app/Components/DatabaseReflection/Tables/Org/ContestRow.php:19
+#: i18n/../app/Components/DatabaseReflection/Tables/Contestant/ContestId.php:38
 #: i18n/../app/Components/Controls/Stalking/Components/Flag.latte.latte2php:24
 msgid "Contest"
 msgstr ""
@@ -1055,6 +1031,8 @@ msgid "Event Id"
 msgstr "Event ID"
 
 #: i18n/../app/Components/Grids/Events/DispatchGrid.php:77
+#: i18n/../app/Components/DatabaseReflection/Tables/Contestant/YearRow.php:17
+#: i18n/../app/Components/DatabaseReflection/Tables/Contestant/YearRow.php:31
 msgid "Year"
 msgstr ""
 
@@ -1116,6 +1094,10 @@ msgstr ""
 #: i18n/../app/modules/OrgModule/presenters/TeacherPresenter.php:86
 #: i18n/../app/modules/EventModule/templates/TeamApplication/detail.latte.latte2php:18
 msgid "Teacher"
+msgstr ""
+
+#: i18n/../app/Components/DatabaseReflection/ValuePrinters/EventRole.php:32
+msgid "Event org"
 msgstr ""
 
 #: i18n/../app/Components/DatabaseReflection/ValuePrinters/EventRole.php:46
@@ -1533,6 +1515,11 @@ msgstr "Price CZK"
 #: i18n/../typescript/src/apps/events/schedule/components/parts/capacityLabel.tsx.tsx2php:22
 msgid "Free capacity"
 msgstr ""
+
+#: i18n/../app/Components/DatabaseReflection/Tables/Contestant/ContestantId.php:31
+#, fuzzy
+msgid "Contestant id"
+msgstr "Event ID"
 
 #: i18n/../app/Components/DatabaseReflection/Tables/PersonHistory/StudyYearRow.php:52
 msgid "Kvůli zařazení do kategorie."
@@ -2023,15 +2010,15 @@ msgstr "Series context for queries is not available"
 msgid "Unsupported format"
 msgstr ""
 
-#: i18n/../app/model/Exports/ExportFormatFactory.php:71
+#: i18n/../app/model/Exports/ExportFormatFactory.php:70
 msgid "Save CSV"
 msgstr ""
 
-#: i18n/../app/model/Exports/ExportFormatFactory.php:72
+#: i18n/../app/model/Exports/ExportFormatFactory.php:71
 msgid "Uložit CSV (bez hlavičky)"
 msgstr "Save CSV (without head)"
 
-#: i18n/../app/model/Exports/ExportFormatFactory.php:73
+#: i18n/../app/model/Exports/ExportFormatFactory.php:72
 msgid "Uložit CSV s uvozovkami"
 msgstr "Save CSV with quotes"
 
@@ -2146,51 +2133,52 @@ msgstr ""
 msgid "Organization and participation at same year"
 msgstr ""
 
-#: i18n/../app/model/Events/Machine/BaseMachine.php:144
+#: i18n/../app/model/Events/Machine/BaseMachine.php:143
 msgid "vznikající"
 msgstr "initial"
 
-#: i18n/../app/model/Events/Machine/BaseMachine.php:146
+#: i18n/../app/model/Events/Machine/BaseMachine.php:145
 msgid "zaniklý"
 msgstr "terminated"
 
-#: i18n/../app/model/Events/Model/ApplicationHandler.php:177
+#: i18n/../app/model/Events/Model/ApplicationHandler.php:183
 #, php-format
 msgid "Přihláška \"%s\" vytvořena."
 msgstr "Application \"%s\" created."
 
-#: i18n/../app/model/Events/Model/ApplicationHandler.php:180
+#: i18n/../app/model/Events/Model/ApplicationHandler.php:186
 msgid "Přihláška smazána."
 msgstr "Application deleted."
 
-#: i18n/../app/model/Events/Model/ApplicationHandler.php:182
+#: i18n/../app/model/Events/Model/ApplicationHandler.php:188
 #, php-format
 msgid "Stav přihlášky \"%s\" změněn."
 msgstr "State of application \"%s\" changed."
 
-#: i18n/../app/model/Events/Model/ApplicationHandler.php:185
+#: i18n/../app/model/Events/Model/ApplicationHandler.php:191
 #, php-format
 msgid "Přihláška \"%s\" uložena."
 msgstr "Application \"%s\" saved."
 
-#: i18n/../app/model/Events/Model/ApplicationHandler.php:191
+#: i18n/../app/model/Events/Model/ApplicationHandler.php:197
+#: i18n/../app/model/Events/Spec/Fyziklani/SchoolCheck.php:61
 #, php-format
 msgid "Některá pole skupiny \"%s\" neodpovídají existujícímu záznamu."
 msgstr "Some fields of group \"%s\" don't match an existing record."
 
-#: i18n/../app/model/Events/Model/ApplicationHandler.php:196
+#: i18n/../app/model/Events/Model/ApplicationHandler.php:202
 #, php-format
 msgid "Data ve skupině \"%s\" kolidují s již existující přihláškou."
 msgstr "Data in group \"%s\" collide with an existing application."
 
-#: i18n/../app/model/Events/Model/ApplicationHandler.php:254
+#: i18n/../app/model/Events/Model/ApplicationHandler.php:261
 #, php-format
 msgid "Ze stavu \"%s\" automatu \"%s\" neexistuje přechod do stavu \"%s\"."
 msgstr ""
 "There is not a transition from state \"%s\" of machine \"%s\" to state \"%s"
 "\"."
 
-#: i18n/../app/model/Events/Model/ApplicationHandler.php:311
+#: i18n/../app/model/Events/Model/ApplicationHandler.php:318
 msgid "Chyba při ukládání přihlášky."
 msgstr "Error while saving the application."
 
@@ -2802,21 +2790,21 @@ msgstr ""
 msgid "Detail of school %s"
 msgstr "Detail of query %s"
 
-#: i18n/../app/modules/CommonModule/presenters/StalkingPresenter.php:80
+#: i18n/../app/modules/CommonModule/presenters/StalkingPresenter.php:82
 msgid "Stalking"
 msgstr ""
 
-#: i18n/../app/modules/CommonModule/presenters/StalkingPresenter.php:88
+#: i18n/../app/modules/CommonModule/presenters/StalkingPresenter.php:90
 #, php-format
 msgid "Stalking %s"
 msgstr ""
 
-#: i18n/../app/modules/CommonModule/presenters/StalkingPresenter.php:210
+#: i18n/../app/modules/CommonModule/presenters/StalkingPresenter.php:180
 #: i18n/../app/modules/OrgModule/presenters/ExtendedPersonPresenter.php:128
 msgid "Osobu je třeba zadat."
 msgstr "Person is required."
 
-#: i18n/../app/modules/CommonModule/presenters/StalkingPresenter.php:211
+#: i18n/../app/modules/CommonModule/presenters/StalkingPresenter.php:181
 #: i18n/../app/modules/OrgModule/presenters/ExtendedPersonPresenter.php:129
 #: i18n/../data/events/dsef/dsef25.neon.neon2php:70
 #: i18n/../data/events/dsef/dsef24.neon.neon2php:70
@@ -2832,11 +2820,11 @@ msgstr "Person is required."
 msgid "Osoba"
 msgstr "Person"
 
-#: i18n/../app/modules/CommonModule/presenters/StalkingPresenter.php:216
+#: i18n/../app/modules/CommonModule/presenters/StalkingPresenter.php:186
 msgid "Stalkovat"
 msgstr "Let's stalk"
 
-#: i18n/../app/modules/CommonModule/presenters/StalkingPresenter.php:255
+#: i18n/../app/modules/CommonModule/presenters/StalkingPresenter.php:225
 msgid "Osoba neexistuje"
 msgstr "Person does not exist"
 
@@ -3289,10 +3277,6 @@ msgstr ""
 msgid "Modified"
 msgstr ""
 
-#: i18n/../app/Components/Controls/Stalking/Components/EventTeacher.latte.latte2php:11
-msgid "year"
-msgstr ""
-
 #: i18n/../app/Components/Controls/Choosers/ThemeSwitcher.latte.latte2php:3
 msgid "Theme"
 msgstr ""
@@ -3680,6 +3664,11 @@ msgstr ""
 msgid "Other name"
 msgstr ""
 
+#: i18n/../app/config/DBReflection.neon.neon2php:69
+#, fuzzy
+msgid "Event org Id"
+msgstr "Event ID"
+
 #: i18n/../data/events/dsef/dsef25.neon.neon2php:42
 #: i18n/../data/events/dsef/dsef24.neon.neon2php:42
 #: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:183
@@ -3903,7 +3892,6 @@ msgstr "We want to take a part in category A"
 
 #: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:157
 #: i18n/../data/events/fyziklani/fyziklani14.neon.neon2php:165
-#, fuzzy
 msgid ""
 "Po zaškrtnutí této možnosti budete zařazeni do nejvyšší kategorie (s "
 "nejstaršími účastníky) bez ohledu na ročníky členů vašeho týmu. Tato "
@@ -4430,6 +4418,10 @@ msgstr ""
 #: i18n/../typescript/src/apps/fyziklani/results/middleware/results/filters/filters.ts.ts2php:15
 msgid "All"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Event teacher"
+#~ msgstr "Event ID"
 
 #~ msgid "Uložit"
 #~ msgstr "Save"
