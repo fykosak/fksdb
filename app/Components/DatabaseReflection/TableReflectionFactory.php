@@ -47,15 +47,7 @@ final class TableReflectionFactory {
      * @throws \Exception
      */
     public function loadService(string $tableName, string $fieldName): AbstractRow {
-        $service = null;
-        try {
-            $service = $this->container->getService('DBReflection.' . $tableName . '.' . $fieldName);
-        } catch (\Exception $exception) {
-
-        }
-        if (!$service) {
-            $service = $this->container->getService('row.' . $tableName . '.' . $fieldName);
-        }
+        $service = $this->container->getService('DBReflection.' . $tableName . '.' . $fieldName);
         if (!$service instanceof AbstractRow) {
             throw new InvalidArgumentException('Field ' . $tableName . '.' . $fieldName . ' not exists');
         }

@@ -1,4 +1,0 @@
-services:
-    row.person_history.ac_year: FKSDB\Components\DatabaseReflection\PersonHistory\AcYearRow
-    row.person_history.school_id: FKSDB\Components\DatabaseReflection\PersonHistory\SchoolIdRow
-    row.person_history.study_year: FKSDB\Components\DatabaseReflection\PersonHistory\StudyYearRow
