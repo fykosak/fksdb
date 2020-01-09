@@ -9,6 +9,7 @@ use FKSDB\ORM\Services\Schedule\ServicePersonSchedule;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleGroup;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleItem;
 use Nette\Utils\ArrayHash;
+use Tracy\Debugger;
 
 /**
  * Class Handler
@@ -53,47 +54,49 @@ class Handler {
      * @throws FullCapacityException
      */
     public function prepareAndUpdate(ArrayHash $data, ModelPerson $person, int $eventId) {
-        list($newScheduleData, $type) = $this->prepareData($data);
-        // Debugger::barDump($newScheduleData);
-        $oldRows = $this->servicePersonSchedule->getTable()
-            ->where('person_id', $person->person_id)
-            ->where('schedule_item.schedule_group.event_id', $eventId)->where('schedule_item.schedule_group.schedule_group_type', $type);
+        foreach ($this->prepareData($data) as $type => $newScheduleData) {
+            $oldRows = $this->servicePersonSchedule->getTable()
+                ->where('person_id', $person->person_id)
+                ->where('schedule_item.schedule_group.event_id', $eventId)->where('schedule_item.schedule_group.schedule_group_type', $type);
 
-        foreach ($oldRows as $row) {
+            foreach ($oldRows as $row) {
 
-            $modelPersonSchedule = ModelPersonSchedule::createFromActiveRow($row);
-            if (in_array($modelPersonSchedule->schedule_item_id, $newScheduleData)) {
-                // do nothing
-                $index = array_search($modelPersonSchedule->schedule_item_id, $newScheduleData);
-                unset($newScheduleData[$index]);
-            } else {
-                try {
-                    $modelPersonSchedule->delete();
-                } catch (\PDOException $exception) {
-                    if (\preg_match('/payment/', $exception->getMessage())) {
-                        throw new ExistingPaymentException(\sprintf(
-                            _('Položka "%s" má už vygenerovanú platu, teda nejde zmazať.'),
-                            $modelPersonSchedule->getLabel()));
-                    } else {
-                        throw $exception;
+                $modelPersonSchedule = ModelPersonSchedule::createFromActiveRow($row);
+                if (in_array($modelPersonSchedule->schedule_item_id, $newScheduleData)) {
+                    // do nothing
+                    $index = array_search($modelPersonSchedule->schedule_item_id, $newScheduleData);
+                    unset($newScheduleData[$index]);
+                } else {
+                    try {
+                        $modelPersonSchedule->delete();
+                    } catch (\PDOException $exception) {
+                        if (\preg_match('/payment/', $exception->getMessage())) {
+                            throw new ExistingPaymentException(\sprintf(
+                                _('Položka "%s" má už vygenerovanú platu, teda nejde zmazať.'),
+                                $modelPersonSchedule->getLabel()));
+                        } else {
+                            throw $exception;
+                        }
                     }
+                }
+            }
+
+            foreach ($newScheduleData as $id) {
+                $query = $this->serviceScheduleItem->findByPrimary($id);
+                $modelScheduleItem = ModelScheduleItem::createFromActiveRow($query);
+                if ($modelScheduleItem->hasFreeCapacity()) {
+                    $this->servicePersonSchedule->createNewModel(['person_id' => $person->person_id, 'schedule_item_id' => $id]);
+                } else {
+                    throw new FullCapacityException(sprintf(
+                        _('Osobu %s nepodarilo ptihlásiť na "%s", z dôvodu plnej kapacity.'),
+                        $person->getFullName(),
+                        $modelScheduleItem->getLabel()
+                    ));
                 }
             }
         }
 
-        foreach ($newScheduleData as $id) {
-            $query = $this->serviceScheduleItem->findByPrimary($id);
-            $modelScheduleItem = ModelScheduleItem::createFromActiveRow($query);
-            if ($modelScheduleItem->hasFreeCapacity()) {
-                $this->servicePersonSchedule->createNewModel(['person_id' => $person->person_id, 'schedule_item_id' => $id]);
-            } else {
-                throw new FullCapacityException(sprintf(
-                    _('Osobu %s nepodarilo ptihlásiť na "%s", z dôvodu plnej kapacity.'),
-                    $person->getFullName(),
-                    $modelScheduleItem->getLabel()
-                ));
-            }
-        }
+
     }
 
     /**
@@ -101,10 +104,11 @@ class Handler {
      * @return integer[]
      */
     private function prepareData(ArrayHash $data): array {
+        $newData = [];
         foreach ($data as $type => $datum) {
-            return [\array_values((array)json_decode($datum)), $type];
+            $newData[$type] = \array_values((array)json_decode($datum));
         }
-        return [];
+        return $newData;
     }
 }
 
