@@ -56,6 +56,20 @@ DBReflection:
              login:
                  type: string
                  title: _(Login)
+         event_participant:
+             team: FKSDB\Components\DatabaseReflection\EventParticipant\TeamRow
+         contestant_base:
+             ct_id: FKSDB\Components\DatabaseReflection\Tables\ContestantBase\ContestantId
+             year: FKSDB\Components\DatabaseReflection\Tables\ContestantBase\YearRow
+             contest_id: FKSDB\Components\DatabaseReflection\Tables\ContestantBase\ContestId
+         event_org:
+             event_org_id:
+                 accessKey: e_org_id
+                 type: primaryKey
+                 title: _(Event org Id)
+             note:
+                 type: string
+                 title: _(Note)
     links:
         payment.detail:
             destination: ':Event:Payment:detail'

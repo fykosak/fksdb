@@ -82,9 +82,9 @@ class DBReflectionExtension extends CompilerExtension {
             ->setFactory(PrimaryKeyRow::class)
             ->addSetup('setUp', [
                 $tableName,
-                $field['title'],
+                $this->translate($field['title']),
                 isset($field['accessKey']) ? $field['accessKey'] : $fieldName,
-                isset($field['description']) ? $field['description'] : null
+                isset($field['description']) ? $this->translate($field['description']) : null
             ]);
         if (isset($field['permission'])) {
             $factory->addSetup('setPermissionValue', $field['permission']);
