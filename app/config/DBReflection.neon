@@ -56,6 +56,8 @@ DBReflection:
              login:
                  type: string
                  title: _(Login)
+         event_participant:
+             team: FKSDB\Components\DatabaseReflection\EventParticipant\TeamRow
     links:
         payment.detail:
             destination: ':Event:Payment:detail'
