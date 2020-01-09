@@ -92,19 +92,24 @@ DBReflection:
                  type: string
                  title: _(Login)
                  permission: PERMISSION_ALLOW_RESTRICT
+         event_participant:
+             team: FKSDB\Components\DatabaseReflection\EventParticipant\TeamRow
+         contestant_base:
+             ct_id: FKSDB\Components\DatabaseReflection\Tables\ContestantBase\ContestantId
+             year: FKSDB\Components\DatabaseReflection\Tables\ContestantBase\YearRow
+             contest_id: FKSDB\Components\DatabaseReflection\Tables\ContestantBase\ContestId
          event_org:
              event_org_id:
                  accessKey: e_org_id
                  type: primaryKey
-                 title: Event org Id
+                 title:  _(Event org Id)
              note:
                  type: string
-                 title: Note
+                 title: _(Note)
          fyziklani_game_setup:
              tasks_on_board:
                  type: string
                  title: Tasks on board
-
     links:
         payment.detail:
             destination: ':Event:Payment:detail'
