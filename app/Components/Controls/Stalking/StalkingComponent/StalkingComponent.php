@@ -6,11 +6,7 @@ use Exception;
 use FKSDB\Components\Controls\Stalking\StalkingControl;
 use FKSDB\Components\Controls\Stalking\StalkingService;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
-use FKSDB\ORM\DbNames;
-use FKSDB\ORM\Models\ModelOrg;
-use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\ORM\Models\ModelPersonHistory;
 use Nette\Application\BadRequestException;
 use Nette\Localization\ITranslator;
 use Nette\NotImplementedException;
@@ -92,31 +88,16 @@ class StalkingComponent extends StalkingControl {
      */
     private function renderMulti(array $definition) {
         $models = [];
-        switch ($definition['table']) {
-            case 'person_history':
-                $histories = $this->modelPerson->related(DbNames::TAB_PERSON_HISTORY, 'person_id');
-                foreach ($histories as $history) {
-                    $models[] = ModelPersonHistory::createFromActiveRow($history);
-                }
-                break;
-            case 'org':
-                $orgs = $this->modelPerson->getOrgs();
-                foreach ($orgs as $org) {
-                    $models[] = ModelOrg::createFromActiveRow($org);
-                }
-                break;
-            case 'payment':
-                $payments = $this->modelPerson->getPayments();
-                foreach ($payments as $payment) {
-                    $models[] = ModelPayment::createFromActiveRow($payment);
-                }
-                break;
-            default:
-                throw new NotImplementedException();
+        $query = $this->modelPerson->related($definition['table']);
+        foreach ($query as $datum) {
+            $models[] = ($definition['model'])::createFromActiveRow($datum);
         }
+        $this->template->links = array_map(function ($link) {
+            return $this->tableReflectionFactory->loadLinkFactory($link);
+        }, $definition['links']);
         $this->template->rows = $this->parseRows($definition['rows']);
         $this->template->models = $models;
-        $this->template->itemHeadline = $this->parseRow($definition['item_headline']);
+        $this->template->itemHeadline = $this->parseRow($definition['itemHeadline']);
         $this->template->setFile(__DIR__ . '/layout.multi.latte');
         $this->template->render();
     }
