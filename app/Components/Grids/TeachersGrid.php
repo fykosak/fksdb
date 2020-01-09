@@ -62,17 +62,17 @@ class TeachersGrid extends BaseGrid {
         //
         // columns
         //
-        $this->addReflectionColumn('referenced', 'person_name', ModelTeacher::class);
-
+        $this->addColumns([
+            'referenced.person_name',
+            DbNames::TAB_TEACHER . '.note',
+            DbNames::TAB_TEACHER . '.state',
+            DbNames::TAB_TEACHER . '.since',
+            DbNames::TAB_TEACHER . '.until',
+            DbNames::TAB_TEACHER . '.number_brochures',
+        ]);
         $this->addColumn('school_id', _('School'))->setRenderer(function ($row) {
             return $row->getSchool()->name_abbrev;
         });
-
-        $this->addReflectionColumn(DbNames::TAB_TEACHER, 'note', ModelTeacher::class);
-        $this->addReflectionColumn(DbNames::TAB_TEACHER, 'state', ModelTeacher::class);
-        $this->addReflectionColumn(DbNames::TAB_TEACHER, 'since', ModelTeacher::class);
-        $this->addReflectionColumn(DbNames::TAB_TEACHER, 'until', ModelTeacher::class);
-        $this->addReflectionColumn(DbNames::TAB_TEACHER, 'number_brochures', ModelTeacher::class);
         //
         // operations
         //
