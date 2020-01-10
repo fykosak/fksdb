@@ -8,7 +8,9 @@ use FKSDB\Components\DatabaseReflection\StringRow;
 use FKSDB\Components\DatabaseReflection\Tables\PhoneRow;
 use Nette\Config\CompilerExtension;
 use Nette\DI\ContainerBuilder;
+use Nette\DI\ServiceDefinition;
 use Nette\NotImplementedException;
+use stdClass;
 
 /**
  * Class StalkingExtension
@@ -102,18 +104,7 @@ class DBReflectionExtension extends CompilerExtension {
      * @param array $field
      */
     private function registerPhoneRow(ContainerBuilder $builder, string $tableName, string $fieldName, array $field) {
-        $factory = $builder->addDefinition($this->prefix($tableName . '.' . $fieldName))
-            ->setFactory(PhoneRow::class)
-            ->addSetup('setUp', [
-                $tableName,
-                isset($field['accessKey']) ? $field['accessKey'] : $fieldName,
-                [],
-                $this->translate($field['title']),
-                isset($field['description']) ? $this->translate($field['description']) : null
-            ]);
-        if (isset($field['permission'])) {
-            $factory->addSetup('setPermissionValue', $field['permission']);
-        }
+        $factory = $this->setUpDefaultFactory($builder, $tableName, $fieldName, PhoneRow::class, $field);
         if (isset($field['writeOnly'])) {
             $factory->addSetup('setWriteOnly', $field['writeOnly']);
         }
@@ -127,9 +118,33 @@ class DBReflectionExtension extends CompilerExtension {
         if (is_string($value)) {
             return $value;
         }
-        if ($value instanceof \stdClass) {
+        if ($value instanceof stdClass) {
             return ($value->value)(...$value->attributes);
         }
         throw new NotImplementedException();
+    }
+
+    /**
+     * @param ContainerBuilder $builder
+     * @param string $tableName
+     * @param string $fieldName
+     * @param string $factoryClassName
+     * @param array $field
+     * @return ServiceDefinition
+     */
+    private function setUpDefaultFactory(ContainerBuilder $builder, string $tableName, string $fieldName, string $factoryClassName, array $field): ServiceDefinition {
+        $factory = $builder->addDefinition($this->prefix($tableName . '.' . $fieldName))
+            ->setFactory($factoryClassName)
+            ->addSetup('setUp', [
+                $tableName,
+                isset($field['accessKey']) ? $field['accessKey'] : $fieldName,
+                [], // TODO load metadata here
+                $this->translate($field['title']),
+                isset($field['description']) ? $this->translate($field['description']) : null
+            ]);
+        if (isset($field['permission'])) {
+            $factory->addSetup('setPermissionValue', $field['permission']);
+        }
+        return $factory;
     }
 }
