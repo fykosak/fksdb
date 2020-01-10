@@ -5,6 +5,7 @@ namespace FKSDB\Config\Extensions;
 use FKSDB\Components\DatabaseReflection\Links\Link;
 use FKSDB\Components\DatabaseReflection\PrimaryKeyRow;
 use FKSDB\Components\DatabaseReflection\StringRow;
+use FKSDB\Components\DatabaseReflection\Tables\PhoneRow;
 use Nette\Config\CompilerExtension;
 use Nette\DI\ContainerBuilder;
 use Nette\NotImplementedException;
@@ -27,6 +28,9 @@ class DBReflectionExtension extends CompilerExtension {
                             continue;
                         case 'primaryKey':
                             $this->registerPrimaryKeyRow($builder, $tableName, $fieldName, $field);
+                            continue;
+                        case 'phone':
+                            $this->registerPhoneRow($builder, $tableName, $fieldName, $fieldName);
                             continue;
                         default:
                             throw new NotImplementedException();
@@ -88,6 +92,30 @@ class DBReflectionExtension extends CompilerExtension {
             ]);
         if (isset($field['permission'])) {
             $factory->addSetup('setPermissionValue', $field['permission']);
+        }
+    }
+
+    /**
+     * @param ContainerBuilder $builder
+     * @param string $tableName
+     * @param string $fieldName
+     * @param array $field
+     */
+    private function registerPhoneRow(ContainerBuilder $builder, string $tableName, string $fieldName, array $field) {
+        $factory = $builder->addDefinition($this->prefix($tableName . '.' . $fieldName))
+            ->setFactory(PhoneRow::class)
+            ->addSetup('setUp', [
+                $tableName,
+                isset($field['accessKey']) ? $field['accessKey'] : $fieldName,
+                [],
+                $this->translate($field['title']),
+                isset($field['description']) ? $this->translate($field['description']) : null
+            ]);
+        if (isset($field['permission'])) {
+            $factory->addSetup('setPermissionValue', $field['permission']);
+        }
+        if (isset($field['writeOnly'])) {
+            $factory->addSetup('setWriteOnly', $field['writeOnly']);
         }
     }
 
