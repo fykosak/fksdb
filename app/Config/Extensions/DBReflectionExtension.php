@@ -84,17 +84,7 @@ class DBReflectionExtension extends CompilerExtension {
      * @param array $field
      */
     private function registerPrimaryKeyRow(ContainerBuilder $builder, string $tableName, string $fieldName, array $field) {
-        $factory = $builder->addDefinition($this->prefix($tableName . '.' . $fieldName))
-            ->setFactory(PrimaryKeyRow::class)
-            ->addSetup('setUp', [
-                $tableName,
-                $this->translate($field['title']),
-                isset($field['accessKey']) ? $field['accessKey'] : $fieldName,
-                isset($field['description']) ? $this->translate($field['description']) : null
-            ]);
-        if (isset($field['permission'])) {
-            $factory->addSetup('setPermissionValue', $field['permission']);
-        }
+        $this->setUpDefaultFactory($builder, $tableName, $fieldName, PrimaryKeyRow::class, $field);
     }
 
     /**
