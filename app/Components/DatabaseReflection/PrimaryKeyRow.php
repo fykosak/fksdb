@@ -12,7 +12,7 @@ use Nette\Utils\Html;
  * Class PrimaryKeyRow
  * @package FKSDB\Components\DatabaseReflection
  */
-class PrimaryKeyRow extends StringRow {
+class PrimaryKeyRow extends DefaultRow {
     /**
      * @param AbstractModelSingle $model
      * @return Html
