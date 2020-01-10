@@ -30,7 +30,7 @@ class DBReflectionExtension extends CompilerExtension {
                             $this->registerPrimaryKeyRow($builder, $tableName, $fieldName, $field);
                             continue;
                         case 'phone':
-                            $this->registerPhoneRow($builder, $tableName, $fieldName, $fieldName);
+                            $this->registerPhoneRow($builder, $tableName, $fieldName, $field);
                             continue;
                         default:
                             throw new NotImplementedException();
