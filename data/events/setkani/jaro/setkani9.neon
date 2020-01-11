@@ -7,10 +7,6 @@ parameters:
                     BRN: "Brno"
                     OWN: "Přímo na objekt"
 
-                time:
-                    start: 17:30
-                    end: 18:00
-
 events:
     setkani9jaro:
         event_type_id: [11]
