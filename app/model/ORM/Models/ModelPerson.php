@@ -243,8 +243,9 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
     /**
      * @return GroupedSelection
      */
-    public function getEventParticipant(): GroupedSelection {
-        return $this->related(DbNames::TAB_EVENT_PARTICIPANT, 'person_id');
+    public function getEventParticipant(): Selection {
+        return (new Selection(DbNames::TAB_EVENT_PARTICIPANT, $this->getTable()->getConnection()))->where('person_id', $this->person_id);
+        // return $this->related(DbNames::TAB_EVENT_PARTICIPANT, 'person_id');
     }
 
     /**

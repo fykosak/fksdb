@@ -70,6 +70,8 @@ DBReflection:
              note:
                  type: string
                  title: _(Note)
+         referenced:
+             payment_id: FKSDB\Components\DatabaseReflection\ReferencedRows\PaymentRow
     links:
         payment.detail:
             destination: ':Event:Payment:detail'

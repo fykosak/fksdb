@@ -4,6 +4,7 @@ namespace FKSDB\ORM\Models\Schedule;
 
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\IScheduleGroupReferencedModel;
 use FKSDB\Payment\Price;
 use FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException;
 use LogicException;
@@ -25,11 +26,19 @@ use Nette\Database\Table\GroupedSelection;
  * @property-read string description_cs
  * @property-read string description_en
  */
-class ModelScheduleItem extends AbstractModelSingle {
+class ModelScheduleItem extends AbstractModelSingle implements IScheduleGroupReferencedModel {
+    /**
+     * @return ModelScheduleGroup
+     * @deprecated
+     */
+    public function getGroup(): ModelScheduleGroup {
+        return $this->getScheduleGroup();
+    }
+
     /**
      * @return ModelScheduleGroup
      */
-    public function getGroup(): ModelScheduleGroup {
+    public function getScheduleGroup(): ModelScheduleGroup {
         return ModelScheduleGroup::createFromActiveRow($this->schedule_group);
     }
 
