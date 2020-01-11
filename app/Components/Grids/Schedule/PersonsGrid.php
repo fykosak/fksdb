@@ -8,6 +8,7 @@ use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\YearCalculator;
+use Github\Events\Event;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
@@ -64,7 +65,7 @@ class PersonsGrid extends BaseGrid {
 
         $this->addColumnRole();
 
-        $this->addColumnPayment();
+        $this->addColumns(['referenced.payment_id']);
 
         $this->addColumn('state', _('State'))->setRenderer(function ($row) {
             $model = ModelPersonSchedule::createFromActiveRow($row);
@@ -73,19 +74,10 @@ class PersonsGrid extends BaseGrid {
     }
 
     /**
-     * @throws DuplicateColumnException
+     * @return string
      */
-    protected function addColumnPayment() {
-        $this->addColumn('payment', _('Payment'))
-            ->setRenderer(function ($row) {
-                $model = ModelPersonSchedule::createFromActiveRow($row);
-                $modelPayment = $model->getPayment();
-                if (!$modelPayment) {
-                    return Html::el('span')->addAttributes(['class' => 'badge badge-danger'])->addText('No payment found');
-                }
-                // TODO
-                return Html::el('span')->addAttributes(['class' => ''])->addText('#' . $modelPayment->getPaymentId() . '-');
-            })->setSortable(false);
+    protected function getModelClassName(): string {
+        return ModelPersonSchedule::class;
     }
 
     /**
@@ -94,17 +86,8 @@ class PersonsGrid extends BaseGrid {
     protected function addColumnRole() {
         $this->addColumn('role', _('Role'))
             ->setRenderer(function ($row) {
-                $container = Html::el('span');
                 $model = ModelPersonSchedule::createFromActiveRow($row);
-                $person = $model->getPerson();
-                $roles = $person->getRolesForEvent($model->getScheduleItem()->getGroup()->getEvent(), $this->yearCalculator);
-                if (!\count($roles)) {
-                    $container->addHtml(Html::el('span')
-                        ->addAttributes(['class' => 'badge badge-danger'])
-                        ->addText(_('No role')));
-                    return $container;
-                }
-                return EventRole::getHtml($roles);
+                return EventRole::calculateRoles($model->getPerson(), $model->getScheduleItem()->getScheduleGroup()->getEvent(), $this->yearCalculator);
             })->setSortable(false);
     }
 }

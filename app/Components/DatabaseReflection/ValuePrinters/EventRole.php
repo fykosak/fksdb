@@ -2,8 +2,10 @@
 
 namespace FKSDB\Components\DatabaseReflection\ValuePrinters;
 
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventParticipant;
-use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\YearCalculator;
 use Nette\Application\BadRequestException;
 use Nette\Utils\Html;
 
@@ -12,6 +14,24 @@ use Nette\Utils\Html;
  * @package FKSDB\Components\DatabaseReflection\ValuePrinters
  */
 class EventRole {
+    /**
+     * @param ModelPerson $person
+     * @param ModelEvent $event
+     * @param YearCalculator $yearCalculator
+     * @return Html
+     */
+    public static function calculateRoles(ModelPerson $person, ModelEvent $event, YearCalculator $yearCalculator): Html {
+        $container = Html::el('span');
+        $roles = $person->getRolesForEvent($event, $yearCalculator);
+        if (!\count($roles)) {
+            $container->addHtml(Html::el('span')
+                ->addAttributes(['class' => 'badge badge-danger'])
+                ->addText(_('No role')));
+            return $container;
+        }
+        return self::getHtml($roles);
+    }
+
     /**
      * @param array $roles
      * @return Html
