@@ -245,6 +245,7 @@ DBReflection:
              person_link: FKSDB\Components\DatabaseReflection\ReferencedRows\PersonLinkRow
              event_link: FKSDB\Components\DatabaseReflection\ReferencedRows\EventLink
              person_name: FKSDB\Components\DatabaseReflection\ReferencedRows\PersonNameRow
+             payment_id: FKSDB\Components\DatabaseReflection\ReferencedRows\PaymentRow
     links:
         payment.detail:
             destination: ':Event:Payment:detail'

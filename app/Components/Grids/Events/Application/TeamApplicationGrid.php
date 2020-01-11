@@ -15,8 +15,10 @@ use SQL\SearchableDataSource;
 class TeamApplicationGrid extends AbstractApplicationGrid {
     /**
      * @param Presenter $presenter
-     * @throws \NiftyGrid\DuplicateColumnException
+     * @throws \Nette\Application\UI\InvalidLinkException
      * @throws \NiftyGrid\DuplicateButtonException
+     * @throws \NiftyGrid\DuplicateColumnException
+     * @throws \NiftyGrid\DuplicateGlobalButtonException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -33,6 +35,7 @@ class TeamApplicationGrid extends AbstractApplicationGrid {
             DbNames::TAB_E_FYZIKLANI_TEAM . '.status'
         ]);
         $this->addLinkButton($presenter, 'detail', 'detail', _('Detail'), false, ['id' => 'e_fyziklani_team_id']);
+        $this->addCSVDownloadButton();
     }
 
     /**

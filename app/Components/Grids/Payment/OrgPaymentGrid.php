@@ -35,6 +35,8 @@ class OrgPaymentGrid extends PaymentGrid {
      * @param $presenter
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
+     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws \NiftyGrid\DuplicateGlobalButtonException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -54,5 +56,6 @@ class OrgPaymentGrid extends PaymentGrid {
         ]);
         $this->addLink('payment.detail', false);
         $this->paginate = false;
+        $this->addCSVDownloadButton();
     }
 }

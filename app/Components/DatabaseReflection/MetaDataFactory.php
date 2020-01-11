@@ -3,6 +3,7 @@
 namespace FKSDB\Components\DatabaseReflection;
 
 use Nette\Database\Connection;
+use Tracy\Debugger;
 
 /**
  * Class MetaDataFactory
@@ -10,7 +11,7 @@ use Nette\Database\Connection;
  */
 class MetaDataFactory {
     /**
-     * @var array[]
+     * @var array[][]
      */
     private $metadata = [];
     /**
@@ -42,6 +43,8 @@ class MetaDataFactory {
      * @param string $tableName
      */
     private function fetchMeta(string $tableName) {
+        Debugger::barDump($this->connection->getSupplementalDriver()->getForeignKeys($tableName), $tableName . '--FK');
+        Debugger::barDump($this->connection->getSupplementalDriver()->getIndexes($tableName), $tableName . '--IDX');
         $this->metadata[$tableName] = [];
         foreach ($this->connection->getSupplementalDriver()->getColumns($tableName) as $columnMeta) {
             $this->metadata[$tableName][$columnMeta['name']] = $columnMeta;

@@ -6,6 +6,7 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Schedule\GroupControl;
 use FKSDB\Components\Controls\Schedule\ItemControl;
 use FKSDB\Components\Factories\ScheduleFactory;
+use FKSDB\Components\Grids\Schedule\AllPersonsGrid;
 use FKSDB\Components\Grids\Schedule\GroupsGrid;
 use FKSDB\Components\Grids\Schedule\ItemsGrid;
 use FKSDB\Components\Grids\Schedule\PersonsGrid;
@@ -149,6 +150,18 @@ class SchedulePresenter extends BasePresenter {
     }
 
     /**
+     * @throws AbortException
+     * @throws BadRequestException
+     */
+    public function actionGroups() {
+        /**
+         * @var AllPersonsGrid $component
+         */
+        $component = $this->getComponent('allPersonsGrid');
+        $component->setEvent($this->getEvent());
+    }
+
+    /**
      * @return ModelScheduleGroup
      */
     private function getGroup(): ModelScheduleGroup {
@@ -184,6 +197,13 @@ class SchedulePresenter extends BasePresenter {
      */
     public function createComponentPersonsGrid(): PersonsGrid {
         return $this->scheduleFactory->createPersonsGrid();
+    }
+
+    /**
+     * @return AllPersonsGrid
+     */
+    public function createComponentAllPersonsGrid(): AllPersonsGrid {
+        return $this->scheduleFactory->createAllPersonsGrid();
     }
 
     /**

@@ -6,6 +6,7 @@ use Exception;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\AbstractModelSingle;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\IPresenter;
 use Nette\Application\UI\Form;
@@ -13,7 +14,9 @@ use Nette\InvalidStateException;
 use Nette\NotImplementedException;
 use Nette\Templating\FileTemplate;
 use Nette\Templating\ITemplate;
+use Nette\Utils\Html;
 use NiftyGrid\Components\Button;
+use NiftyGrid\Components\Column;
 use NiftyGrid\Components\GlobalButton;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
@@ -21,7 +24,9 @@ use NiftyGrid\DuplicateGlobalButtonException;
 use NiftyGrid\Grid;
 use NiftyGrid\GridException;
 use NiftyGrid\GridPaginator;
+use PePa\CSVResponse;
 use SQL\SearchableDataSource;
+use Tracy\Debugger;
 
 /**
  *
@@ -289,6 +294,45 @@ abstract class BaseGrid extends Grid {
             });
         }
         return $button;
+    }
+
+    /**
+     * @return GlobalButton
+     * @throws DuplicateGlobalButtonException
+     * @throws \Nette\Application\UI\InvalidLinkException
+     */
+    protected function addCSVDownloadButton(): GlobalButton {
+        return $this->addGlobalButton('csv')
+            ->setLabel(_('Download as csv'))
+            ->setLink($this->link('csv!'));
+    }
+
+    /**
+     * @throws AbortException
+     */
+    public function handleCsv() {
+        $columns = $this['columns']->components;
+        $rows = $this->dataSource->getData();
+        $data = [];
+        foreach ($rows as $row) {
+            $datum = [];
+            /**
+             * @var Column $column
+             */
+            foreach ($columns as $column) {
+                $item = $column->prepareValue($row);
+                if ($item instanceof Html) {
+                    $item = $item->getText();
+                }
+                $datum[$column->name] = $item;
+            }
+            $data[] = $datum;
+        }
+        $response = new CSVResponse($data, 'test.csv');
+        $response->setAddHeading(true);
+        $response->setQuotes(true);
+        $response->setGlue(',');
+        $this->getPresenter()->sendResponse($response);
     }
 
 }

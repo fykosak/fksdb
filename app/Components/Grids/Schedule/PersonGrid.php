@@ -69,7 +69,7 @@ class PersonGrid extends BaseGrid {
             return $model->getScheduleItem();
         });
 
-        $this->addColumnPayment();
+        $this->addColumns(['referenced.payment_id']);
 
         $this->addColumn('state', _('State'))->setRenderer(function ($row) {
             $model = ModelPersonSchedule::createFromActiveRow($row);
@@ -78,19 +78,9 @@ class PersonGrid extends BaseGrid {
     }
 
     /**
-     * @throws DuplicateColumnException
+     * @return string
      */
-    protected function addColumnPayment() {
-        $this->addColumn('payment', _('Payment'))
-            ->setRenderer(function ($row) {
-                $model = ModelPersonSchedule::createFromActiveRow($row);
-                $modelPayment = $model->getPayment();
-                if (!$modelPayment) {
-                    return Html::el('span')->addAttributes(['class' => 'badge badge-danger'])->addText('No payment found');
-                }
-                // TODO
-                return Html::el('span')->addAttributes(['class' => ''])->addText('#' . $modelPayment->getPaymentId() . '-');
-            })->setSortable(false);
+    protected function getModelClassName(): string {
+        return ModelPersonSchedule::class;
     }
-
 }

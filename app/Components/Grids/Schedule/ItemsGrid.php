@@ -53,5 +53,4 @@ class ItemsGrid extends BaseGrid {
         ]);
         $this->addLinkButton($presenter, 'item', 'detail', _('Detail'), true, ['id' => 'schedule_item_id']);
     }
-
 }
