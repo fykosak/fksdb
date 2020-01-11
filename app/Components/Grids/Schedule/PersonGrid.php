@@ -54,7 +54,7 @@ class PersonGrid extends BaseGrid {
         $this->addColumn('person_schedule_id', _('#'));
         $this->addColumn('group_label', _('Group'))->setRenderer(function ($row) {
             $model = ModelPersonSchedule::createFromActiveRow($row);
-            return $model->getScheduleItem()->getGroup()->getLabel();
+            return $model->getScheduleItem()->getScheduleGroup()->getLabel();
         });
         $this->addColumn('item_label', _('Item'))->setRenderer(function ($row) {
             $model = ModelPersonSchedule::createFromActiveRow($row);
