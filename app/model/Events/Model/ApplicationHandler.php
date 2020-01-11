@@ -244,7 +244,7 @@ class ApplicationHandler {
             $values = $data;
             $form = null;
         }
-        Debugger::log(Json::encode($values), 'app-form');
+        Debugger::log(Json::encode((array)$values), 'app-form');
         $primaryName = $holder->getPrimaryHolder()->getName();
         $newStates = [];
         if (isset($values[$primaryName][BaseHolder::STATE_COLUMN])) {

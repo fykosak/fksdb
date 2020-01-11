@@ -28,8 +28,8 @@ class PaymentRow extends AbstractRow {
             return Html::el('span')->addAttributes(['class' => 'badge badge-danger'])->addText(_('No payment found'));
         }
         return Html::el('span')
-            ->addAttributes(['class' => StateRow::getUIClass($model)])
-            ->addText('#' . $payment->getPaymentId() . ' ' . StateRow::getStateLabel($model));
+            ->addAttributes(['class' => StateRow::getUIClass($payment)])
+            ->addText('#' . $payment->getPaymentId() . ' ' . StateRow::getStateLabel($payment));
 
     }
 
