@@ -81,7 +81,7 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel, IP
                 return sprintf(_('Accommodation for %s from %s to %s in %s'),
                     $this->getPerson()->getFullName(),
                     $group->start->format(_('__date_format')),
-                    $group->start->format(_('__date_format')),
+                    $group->end->format(_('__date_format')),
                     $item->name_cs);
             default:
                 throw new NotImplementedException();
