@@ -228,7 +228,7 @@ class SchoolPresenter extends EntityPresenter {
         $address = $school->getAddress();
 
         try {
-            if (!$connection->beginTransaction()) {
+            if (!$connection->getPdo()->beginTransaction()) {
                 throw new ModelException();
             }
 
@@ -236,6 +236,7 @@ class SchoolPresenter extends EntityPresenter {
              * Address
              */
             $data = FormUtils::emptyStrToNull($values[self::CONT_ADDRESS]);
+           // $address->update($data);
             $this->serviceAddress->updateModel($address, $data);
             $this->serviceAddress->save($address);
 
@@ -249,7 +250,7 @@ class SchoolPresenter extends EntityPresenter {
             /*
              * Finalize
              */
-            if (!$connection->commit()) {
+            if (!$connection->getPdo()->commit()) {
                 throw new ModelException();
             }
 
