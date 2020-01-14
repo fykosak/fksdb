@@ -1,12 +1,14 @@
-import { app } from './app-collector';
-import { eventAccommodation } from './events/accommodation';
-import { eventApplicationsTimeProgress } from './events/applications-time-progress';
-import { fyziklani } from './fyziklani';
-import { payment } from './payment/selectField';
+import { appsCollector } from '@appsCollector';
+import { charts } from './apps/chart';
+import { eventApplicationsTimeProgress } from './apps/events/applicationsTimeProgress/';
+import { eventSchedule } from './apps/events/schedule';
+import { fyziklani } from './apps/fyziklani/';
+import { payment } from './apps/payment/selectField/';
 
-app.register(fyziklani);
-app.register(eventAccommodation);
-app.register(payment);
-app.register(eventApplicationsTimeProgress);
+appsCollector.register(fyziklani);
+appsCollector.register(payment);
+appsCollector.register(eventApplicationsTimeProgress);
+appsCollector.register(eventSchedule);
+appsCollector.register(charts);
 
-app.run();
+appsCollector.run();

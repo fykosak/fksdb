@@ -2,13 +2,20 @@
 
 namespace FKSDB\Components\DatabaseReflection\Org;
 
-use FKSDB\Components\DatabaseReflection\AbstractRow;
+use FKSDB\Components\DatabaseReflection\ValuePrinters\EmailPrinter;
+use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\ModelOrg;
+use Nette\Application\BadRequestException;
+use Nette\Forms\Controls\BaseControl;
+use Nette\Forms\Controls\TextInput;
+use Nette\Forms\Form;
+use Nette\Utils\Html;
 
 /**
  * Class DomainAliasRow
  * @package FKSDB\Components\DatabaseReflection\Org
  */
-class DomainAliasRow extends AbstractRow {
+class DomainAliasRow extends AbstractOrgRowFactory {
     /**
      * @return string
      */
@@ -17,9 +24,29 @@ class DomainAliasRow extends AbstractRow {
     }
 
     /**
-     * @return int
+     * @param AbstractModelSingle|ModelOrg $model
+     * @return Html
+     * @throws BadRequestException
      */
-    public function getPermissionsValue(): int {
-        return self::PERMISSION_USE_GLOBAL_ACL;
+    protected function createHtmlValue(AbstractModelSingle $model): Html {
+        switch ($model->contest_id) {
+            case 1:
+                return (new EmailPrinter)($model->domain_alias . '@fykos.cz');
+            case 2:
+                return (new EmailPrinter)($model->domain_alias . '@vyfuk.mff.cuni.cz');
+            default:
+                throw new BadRequestException();
+        }
+    }
+
+    /**
+     * @return BaseControl
+     */
+    public function createField(): BaseControl {
+        $control = new TextInput($this->getTitle());
+        $control->addRule(Form::MAX_LENGTH, null, 32);
+        $control->addCondition(Form::FILLED);
+        $control->addRule(Form::REGEXP, _('%l obsahuje nepovolené znaky.'), '/^[a-z][a-z0-9._\-]*$/i');
+        return $control;
     }
 }

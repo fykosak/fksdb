@@ -2,10 +2,13 @@
 
 namespace FKSDB\Components\Grids\Events\Application;
 
+use Exception;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
+use NiftyGrid\DuplicateButtonException;
+use NiftyGrid\DuplicateColumnException;
 use SQL\SearchableDataSource;
 
 /**
@@ -16,9 +19,9 @@ class ApplicationGrid extends AbstractApplicationGrid {
 
     /**
      * @param Presenter $presenter
-     * @throws \NiftyGrid\DuplicateColumnException
-     * @throws \NiftyGrid\DuplicateButtonException
-     * @throws \Exception
+     * @throws DuplicateColumnException
+     * @throws DuplicateButtonException
+     * @throws Exception
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -29,18 +32,12 @@ class ApplicationGrid extends AbstractApplicationGrid {
         $source->setFilterCallback($this->getFilterCallBack());
         $this->setDataSource($source);
 
-        $this->addColumns(['person_id', 'status']);
-
-        $this->addButton('detail')->setShow(function ($row) {
-            $model = ModelEventParticipant::createFromActiveRow($row);
-            return !\in_array($model->getEvent()->event_type_id, [1, 9]);
-        })->setText(_('Detail'))
-            ->setLink(function ($row) {
-                $model = ModelEventParticipant::createFromActiveRow($row);
-                return $this->getPresenter()->link('detail', [
-                    'id' => $model->event_participant_id,
-                ]);
-            });
+        $this->addColumns([
+            'referenced.person_name',
+            DbNames::TAB_EVENT_PARTICIPANT . '.status',
+        ]);
+        $this->addLinkButton($presenter, 'detail', 'detail', _('Detail'), false, ['id' => 'event_participant_id']);
+        $this->addCSVDownloadButton();
     }
 
     /**

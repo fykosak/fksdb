@@ -232,6 +232,13 @@ abstract class AbstractServiceMulti implements IService {
         return $selection;
     }
 
+    /**
+     * @return string|AbstractModelMulti
+     */
+    public function getModelClassName(): string {
+        return $this->modelClassName;
+    }
+
 }
 
 

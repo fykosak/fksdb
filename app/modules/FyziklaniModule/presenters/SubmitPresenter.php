@@ -2,10 +2,13 @@
 
 namespace FyziklaniModule;
 
-use FKSDB\Components\Controls\Fyziklani\EditSubmitControl;
-use FKSDB\Components\Controls\Fyziklani\QREntryControl;
-use FKSDB\Components\Controls\Fyziklani\TaskCodeInput;
+use FKSDB\Components\Controls\Fyziklani\EditControl;
+use FKSDB\Components\Controls\Fyziklani\Submit\DetailControl;
+use FKSDB\Components\Controls\Fyziklani\Submit\QREntryControl;
+use FKSDB\Components\Controls\Fyziklani\Submit\TaskCodeInput;
 use FKSDB\Components\Grids\Fyziklani\SubmitsGrid;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 
 /**
@@ -13,6 +16,10 @@ use Nette\Application\BadRequestException;
  * @package FyziklaniModule
  */
 class SubmitPresenter extends BasePresenter {
+    /**
+     * @var ModelFyziklaniSubmit
+     */
+    private $submit;
 
     /* ***** Title methods *****/
     public function titleEntry() {
@@ -39,10 +46,15 @@ class SubmitPresenter extends BasePresenter {
         $this->setIcon('fa fa-pencil');
     }
 
+    public function titleDetail() {
+        $this->setTitle(_('Submit detail'));
+        $this->setIcon('fa fa-pencil');
+    }
+
     /* ***** Authorized methods *****/
     /**
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function authorizedEntry() {
         $this->setAuthorized($this->eventIsAllowed('fyziklani.submit', 'default'));
@@ -50,7 +62,15 @@ class SubmitPresenter extends BasePresenter {
 
     /**
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
+     */
+    public function authorizedDetail() {
+        $this->authorizedEntry();
+    }
+
+    /**
+     * @throws BadRequestException
+     * @throws AbortException
      */
     public function authorizedQrEntry() {
         $this->authorizedEntry();
@@ -58,7 +78,7 @@ class SubmitPresenter extends BasePresenter {
 
     /**
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function authorizedEdit() {
         $this->authorizedEntry();
@@ -66,7 +86,7 @@ class SubmitPresenter extends BasePresenter {
 
     /**
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function authorizedList() {
         $this->authorizedEntry();
@@ -74,7 +94,7 @@ class SubmitPresenter extends BasePresenter {
 
     /**
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function authorizedAutoClose() {
         $this->authorizedEntry();
@@ -89,35 +109,70 @@ class SubmitPresenter extends BasePresenter {
             $this->flashMessage('Code is required', \BasePresenter::FLASH_ERROR);
             return;
         }
-        /**
-         * @var QREntryControl $control
-         */
         $control = $this->getComponent('entryQRControl');
+        if (!$control instanceof QREntryControl) {
+            throw new BadRequestException();
+        }
         $control->setCode($id);
     }
 
     /**
      * @param $id
-     * @throws \Nette\Application\AbortException
+     * @throws BadRequestException
+     * @throws AbortException
+     * @throws \ReflectionException
      */
     public function actionEdit($id) {
-        /**
-         * @var EditSubmitControl $control
-         */
         $control = $this->getComponent('editControl');
-        try {
-            $control->setSubmit(+$id);
-        } catch (BadRequestException $exception) {
-            $this->flashMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR);
+        if (!$control instanceof EditControl) {
+            throw new BadRequestException();
+        }
+        $submit = $this->loadModel($id);
+        $control->setSubmit($submit);
+    }
+
+    /**
+     * @param $id
+     * @throws AbortException
+     * @throws BadRequestException
+     * @throws \ReflectionException
+     */
+    public function actionDetail($id) {
+        $control = $this->getComponent('detailControl');
+        if (!$control instanceof DetailControl) {
+            throw new BadRequestException();
+        }
+        $submit = $this->loadModel($id);
+        $control->setSubmit($submit);
+    }
+
+    /**
+     * @param int $id
+     * @return ModelFyziklaniSubmit
+     * @throws AbortException
+     * @throws \ReflectionException
+     */
+    private function loadModel(int $id): ModelFyziklaniSubmit {
+        if ($this->submit) {
+            return $this->submit;
+        }
+        $row = $this->getServiceFyziklaniSubmit()->findByPrimary($id);
+        if (!$row) {
+            $this->flashMessage(_('Submit neexistuje'), \BasePresenter::FLASH_ERROR);
+            $this->backLinkRedirect();
             $this->redirect('list');
         }
+        $this->submit = ModelFyziklaniSubmit::createFromActiveRow($row);
+        return $this->submit;
     }
+
+
 
     /* ****** COMPONENTS **********/
     /**
      * @return TaskCodeInput
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function createComponentEntryControl(): TaskCodeInput {
         return $this->fyziklaniComponentsFactory->createTaskCodeInput($this->getEvent());
@@ -126,7 +181,7 @@ class SubmitPresenter extends BasePresenter {
     /**
      * @return QREntryControl
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function createComponentEntryQRControl(): QREntryControl {
         $control = $this->fyziklaniComponentsFactory->createQREntryControl($this->getEvent());
@@ -139,22 +194,29 @@ class SubmitPresenter extends BasePresenter {
     /**
      * @return SubmitsGrid
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function createComponentGrid(): SubmitsGrid {
         return $this->fyziklaniComponentsFactory->createSubmitsGrid($this->getEvent());
     }
 
     /**
-     * @return EditSubmitControl
+     * @return EditControl
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
-    public function createComponentEditControl(): EditSubmitControl {
+    public function createComponentEditControl(): EditControl {
         $control = $this->fyziklaniComponentsFactory->createEditSubmitControl($this->getEvent());
         $control->getForm()->onSuccess[] = function () {
             $this->redirect('list');
         };
         return $control;
+    }
+
+    /**
+     * @return DetailControl
+     */
+    public function createComponentDetailControl(): DetailControl {
+        return $this->fyziklaniComponentsFactory->createSubmitDetailControl();
     }
 }

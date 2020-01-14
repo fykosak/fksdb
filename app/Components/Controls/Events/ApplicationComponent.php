@@ -10,11 +10,15 @@ use Events\Model\ApplicationHandlerException;
 use Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Logging\FlashMessageDump;
+use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
 use Nette\Templating\FileTemplate;
+use Nette\Templating\ITemplate;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -96,7 +100,7 @@ class ApplicationComponent extends Control {
 
     /**
      * @param null $class
-     * @return FileTemplate|\Nette\Templating\ITemplate
+     * @return FileTemplate|ITemplate
      */
     protected function createTemplate($class = NULL) {
         /**
@@ -140,7 +144,7 @@ class ApplicationComponent extends Control {
 
     /**
      * @return FormControl
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     protected function createComponentForm() {
         $result = new FormControl();
@@ -163,7 +167,7 @@ class ApplicationComponent extends Control {
          */
         $saveSubmit = null;
         if ($this->canEdit()) {
-            $saveSubmit = $form->addSubmit('save', _('Uložit'));
+            $saveSubmit = $form->addSubmit('save', _('Save'));
             $saveSubmit->setOption('row', 1);
             $saveSubmit->onClick[] = function (SubmitButton $button) {
                 $buttonForm = $button->getForm();
@@ -235,7 +239,7 @@ class ApplicationComponent extends Control {
     /**
      * @param Form $form
      * @param null $explicitTransitionName
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function handleSubmit(Form $form, $explicitTransitionName = null) {
         $this->execute($form, $explicitTransitionName);
@@ -243,7 +247,7 @@ class ApplicationComponent extends Control {
 
     /**
      * @param $transitionName
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function handleTransition($transitionName) {
         $this->execute(null, $transitionName);
@@ -252,7 +256,7 @@ class ApplicationComponent extends Control {
     /**
      * @param Form|null $form
      * @param null $explicitTransitionName
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     private function execute(Form $form = null, $explicitTransitionName = null) {
         try {
@@ -283,7 +287,7 @@ class ApplicationComponent extends Control {
     }
 
     /**
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     private function finalRedirect() {
         if ($this->redirectCallback) {

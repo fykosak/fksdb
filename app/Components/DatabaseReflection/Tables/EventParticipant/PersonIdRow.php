@@ -2,22 +2,16 @@
 
 namespace FKSDB\Components\DatabaseReflection\EventParticipant;
 
-use FKSDB\Components\DatabaseReflection\ValuePrinters\PersonLink;
-use FKSDB\ORM\AbstractModelSingle;
-use FKSDB\ORM\Models\ModelEventParticipant;
+use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 use Nette\Application\UI\PresenterComponent;
 use Nette\Localization\ITranslator;
-use Nette\Utils\Html;
 
 /**
  * Class PersonIdRow
  * @package FKSDB\Components\DatabaseReflection\EventParticipant
  */
 class PersonIdRow extends AbstractParticipantRow {
-    /**
-     * @var PresenterComponent
-     */
-    private $presenterComponent;
+    use DefaultPrinterTrait;
 
     /**
      * PersonIdRow constructor.
@@ -33,15 +27,13 @@ class PersonIdRow extends AbstractParticipantRow {
      * @return string
      */
     public function getTitle(): string {
-        return _('Person');
+        return _('Person info');
     }
 
     /**
-     * @param AbstractModelSingle|ModelEventParticipant $model
-     * @param string $fieldName
-     * @return Html
+     * @return string
      */
-    protected function createHtmlValue(AbstractModelSingle $model, string $fieldName): Html {
-        return (new PersonLink($this->presenterComponent))($model->getPerson());
+    protected function getModelAccessKey(): string {
+        return 'person_info';
     }
 }

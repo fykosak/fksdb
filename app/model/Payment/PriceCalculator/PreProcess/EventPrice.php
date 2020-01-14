@@ -27,22 +27,22 @@ class EventPrice extends AbstractPreProcess {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelPayment $modelPayment
-     * @return \FKSDB\Payment\Price
+     * @param ModelPayment $modelPayment
+     * @return Price
      */
     public static function calculate(ModelPayment $modelPayment): Price {
-       /* $price = new Price(0, $modelPayment->currency);
-        $ids = $this->getData($modelPayment);
-        foreach ($ids as $id) {
-            $row = $this->serviceEventParticipant->findByPrimary($id);
-            $model = ModelEventParticipant::createFromTableRow($row);
-            $price->add($this->getPriceFromModel($model, $price));
-        }*/
+        /* $price = new Price(0, $modelPayment->currency);
+         $ids = $this->getData($modelPayment);
+         foreach ($ids as $id) {
+             $row = $this->serviceEventParticipant->findByPrimary($id);
+             $model = ModelEventParticipant::createFromTableRow($row);
+             $price->add($this->getPriceFromModel($model, $price));
+         }*/
         return new Price(0, $modelPayment->currency);
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelPayment $modelPayment
+     * @param ModelPayment $modelPayment
      * @return array
      */
     public static function getGridItems(ModelPayment $modelPayment): array {
@@ -62,18 +62,11 @@ class EventPrice extends AbstractPreProcess {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelEventParticipant $modelEventAccommodation
-     * @param \FKSDB\Payment\Price $price
-     * @return \FKSDB\Payment\Price
+     * @param ModelEventParticipant $modelEventParticipant
+     * @param Price $price
+     * @return Price
      */
-    private function getPriceFromModel(ModelEventParticipant $modelEventAccommodation, Price $price): Price {
-        switch ($price->getCurrency()) {
-            case Price::CURRENCY_CZK:
-                $amount = $modelEventAccommodation->price;
-                break;
-            default:
-                throw new NotImplementedException(\sprintf(_('Mena %s nieje implentovaná'), $price->getCurrency()), 501);
-        }
-        return new Price($amount, $price->getCurrency());
+    private function getPriceFromModel(ModelEventParticipant $modelEventParticipant, Price $price): Price {
+        throw new NotImplementedException();
     }
 }

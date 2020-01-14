@@ -29,7 +29,7 @@ class DetailResultsModel extends AbstractResultsModel {
      * @param ModelCategory $category
      * @return array
      */
-    public function getDataColumns($category) {
+    public function getDataColumns(ModelCategory $category) {
         if (!isset($this->dataColumns[$category->id])) {
             $dataColumns = [];
             $sum = 0;
@@ -77,10 +77,10 @@ class DetailResultsModel extends AbstractResultsModel {
     }
 
     /**
-     * @param $category
+     * @param ModelCategory $category
      * @return mixed|string
      */
-    protected function composeQuery($category) {
+    protected function composeQuery(ModelCategory $category) {
         if (!$this->series) {
             throw new \Nette\InvalidStateException('Series not set.');
         }
@@ -119,7 +119,7 @@ left join submit s ON s.task_id = t.task_id AND s.ct_id = ct.ct_id";
         $where = $this->conditionsToWhere($conditions);
         $query .= " where $where";
 
-        $query .= " group by p.person_id"; //abuse MySQL misimplementation of GROUP BY
+        $query .= " group by p.person_id, sch.name_abbrev "; //abuse MySQL misimplementation of GROUP BY
         $query .= " order by `" . self::ALIAS_SUM . "` DESC, p.family_name ASC, p.other_name ASC";
 
         $dataAlias = 'data';

@@ -15,7 +15,7 @@ class ServicePerson extends AbstractServiceSingle {
     /**
      * @return string
      */
-    protected function getModelClassName(): string {
+    public function getModelClassName(): string {
         return ModelPerson::class;
     }
 
@@ -41,7 +41,7 @@ class ServicePerson extends AbstractServiceSingle {
     }
 
     /**
-     * @param IModel $model
+     * @param IModel|ModelPerson $model
      * @return mixed|void
      */
     public function save(IModel &$model) {

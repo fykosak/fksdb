@@ -35,6 +35,7 @@ class AESOPContestant extends StoredQueryPostProcessing {
     /**
      * @param $data
      * @return mixed
+     * @throws \Nette\Application\BadRequestException
      */
     public function processData($data) {
         $filtered = $this->filterCategory($data);
@@ -48,6 +49,7 @@ class AESOPContestant extends StoredQueryPostProcessing {
      *
      * @param \FKSDB\ORM\Services\ServiceTask $serviceTask
      * @return int|double
+     * @throws \Nette\Application\BadRequestException
      */
     public function getMaxPoints(ServiceTask $serviceTask) {
         $evalutationStrategy = $this->getEvaluationStrategy();
@@ -69,6 +71,7 @@ class AESOPContestant extends StoredQueryPostProcessing {
     /**
      * @param $data
      * @return array
+     * @throws \Nette\Application\BadRequestException
      */
     private function filterCategory($data) {
         $evaluationStrategy = $this->getEvaluationStrategy();

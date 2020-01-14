@@ -5,19 +5,26 @@ namespace OrgModule;
 use FKSDB\Components\Forms\Factories\OrgFactory;
 use FKSDB\Components\Grids\OrgsGrid;
 use FKSDB\ORM\IModel;
+use FKSDB\ORM\Models\ModelOrg;
 use FKSDB\ORM\Services\ServiceOrg;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Persons\ExtendedPersonHandler;
 
 /**
  * Class OrgPresenter
  * @package OrgModule
+ * @method ModelOrg getModel2(int $id = null)
  */
 class OrgPresenter extends ExtendedPersonPresenter {
 
     protected $modelResourceId = 'org';
     protected $fieldsDefinition = 'adminOrg';
-
+    /**
+     * @var int
+     * @persistent
+     */
+    public $id;
     /**
      * @var ServiceOrg
      */
@@ -43,24 +50,21 @@ class OrgPresenter extends ExtendedPersonPresenter {
     }
 
     /**
-     * @param $id
+     * @param int $id
+     * @throws \Nette\Application\BadRequestException
      */
-    public function titleEdit($id) {
-        $this->setTitle(sprintf(_('Úprava organizátora %s'), $this->getModel()->getPerson()->getFullname()));
+    public function titleEdit(int $id) {
+        $this->setTitle(sprintf(_('Úprava organizátora %s'), $this->getModel2($id)->getPerson()->getFullName()));
+        $this->setIcon('fa fa-pencil');
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @throws \Nette\Application\BadRequestException
      */
-    public function renderEdit($id) {
-        parent::renderEdit($id);
-
-        $org = $this->getModel();
-
-        if ($org->contest_id != $this->getSelectedContest()->contest_id) {
-            $this->flashMessage(_('Editace organizátora mimo zvolený seminář.'), self::FLASH_WARNING);
-        }
+    public function titleDetail(int $id) {
+        $this->setTitle(sprintf(_('Org %s'), $this->getModel2($id)->getPerson()->getFullName()));
+        $this->setIcon('fa fa-user');
     }
 
     public function titleCreate() {
@@ -71,6 +75,27 @@ class OrgPresenter extends ExtendedPersonPresenter {
     public function titleList() {
         $this->setTitle(_('Organizátoři'));
         $this->setIcon('fa fa-address-book');
+    }
+
+    /**
+     * @param int $id
+     * @throws ForbiddenRequestException
+     * @throws \Nette\Application\BadRequestException
+     */
+    public function actionEdit(int $id) {
+        $org = $this->getModel2($id);
+
+        if ($org->contest_id != $this->getSelectedContest()->contest_id) {
+            throw new ForbiddenRequestException(_('Editace organizátora mimo zvolený seminář.'));
+        }
+    }
+
+    /**
+     * @param int $id
+     * @throws \Nette\Application\BadRequestException
+     */
+    public function renderDetail(int $id) {
+        $this->template->model = $this->getModel2($id);
     }
 
     /**
@@ -90,58 +115,56 @@ class OrgPresenter extends ExtendedPersonPresenter {
 
     /**
      * @param $name
-     * @return OrgsGrid|mixed
+     * @return OrgsGrid
      */
-    protected function createComponentGrid($name) {
-        $grid = new OrgsGrid($this->serviceOrg);
-
-        return $grid;
+    protected function createComponentGrid($name): OrgsGrid {
+        return new OrgsGrid($this->serviceOrg, $this->getTableReflectionFactory());
     }
 
     /**
      * @param Form $form
-     * @return mixed|void
+     * @return void
      * @throws \Nette\Application\BadRequestException
+     * @throws \Exception
      */
     protected function appendExtendedContainer(Form $form) {
-        $container = $this->orgFactory->createOrg(0, null, $this->getSelectedContest());
+        $container = $this->orgFactory->createOrg($this->getSelectedContest());
         $form->addComponent($container, ExtendedPersonHandler::CONT_MODEL);
     }
 
     /**
-     * @return mixed|ServiceOrg
+     * @return ServiceOrg
      */
-    protected function getORMService() {
+    protected function getORMService(): ServiceOrg {
         return $this->serviceOrg;
     }
 
     /**
      * @return string
      */
-    public function messageCreate() {
+    public function messageCreate(): string {
         return _('Organizátor %s založen.');
     }
 
     /**
      * @return string
      */
-    public function messageEdit() {
+    public function messageEdit(): string {
         return _('Organizátor %s upraven.');
     }
 
     /**
      * @return string
      */
-    public function messageError() {
+    public function messageError(): string {
         return _('Chyba při zakládání organizátora.');
     }
 
     /**
      * @return string
      */
-    public function messageExists() {
+    public function messageExists(): string {
         return _('Organizátor již existuje.');
     }
-
 }
 

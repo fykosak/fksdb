@@ -2,15 +2,28 @@
 
 namespace FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam;
 
-use FKSDB\Components\DatabaseReflection\ValuePrinters\PhonePrinter;
-use FKSDB\ORM\AbstractModelSingle;
-use Nette\Utils\Html;
+use FKSDB\Components\Controls\PhoneNumber\PhoneNumberFactory;
+use FKSDB\Components\DatabaseReflection\PhoneRowTrait;
+use FKSDB\Components\Forms\Factories\ITestedRowFactory;
+use Nette\Localization\ITranslator;
 
 /**
  * Class PhoneRow
  * @package FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam
  */
-class PhoneRow extends AbstractFyziklaniTeamRow {
+class PhoneRow extends AbstractFyziklaniTeamRow implements ITestedRowFactory {
+    use PhoneRowTrait;
+
+    /**
+     * PhoneRow constructor.
+     * @param ITranslator $translator
+     * @param PhoneNumberFactory $phoneNumberFactory
+     */
+    public function __construct(ITranslator $translator, PhoneNumberFactory $phoneNumberFactory) {
+        parent::__construct($translator);
+        $this->phoneNumberFactory = $phoneNumberFactory;
+    }
+
     /**
      * @return string
      */
@@ -19,11 +32,9 @@ class PhoneRow extends AbstractFyziklaniTeamRow {
     }
 
     /**
-     * @param AbstractModelSingle $model
-     * @param string $accessKey
-     * @return Html
+     * @return string
      */
-    public function createHtmlValue(AbstractModelSingle $model, string $accessKey): Html {
-        return (new PhonePrinter)($model->{$accessKey});
+    public function getModelAccessKey(): string {
+        return 'phone';
     }
 }

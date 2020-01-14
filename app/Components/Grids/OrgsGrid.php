@@ -2,11 +2,16 @@
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Components\Forms\Factories\TableReflectionFactory;
+use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelOrg;
 use FKSDB\ORM\Services\ServiceOrg;
 use Nette\Application\BadRequestException;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Database\Table\Selection;
-use Nette\Utils\Html;
+use NiftyGrid\DuplicateButtonException;
+use NiftyGrid\DuplicateColumnException;
+use NiftyGrid\DuplicateGlobalButtonException;
 use OrgModule\OrgPresenter;
 use SQL\SearchableDataSource;
 
@@ -17,16 +22,17 @@ use SQL\SearchableDataSource;
 class OrgsGrid extends BaseGrid {
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceOrg
+     * @var ServiceOrg
      */
     private $serviceOrg;
 
     /**
      * OrgsGrid constructor.
-     * @param \FKSDB\ORM\Services\ServiceOrg $serviceOrg
+     * @param ServiceOrg $serviceOrg
+     * @param TableReflectionFactory $tableReflectionFactory
      */
-    function __construct(ServiceOrg $serviceOrg) {
-        parent::__construct();
+    function __construct(ServiceOrg $serviceOrg, TableReflectionFactory $tableReflectionFactory) {
+        parent::__construct($tableReflectionFactory);
 
         $this->serviceOrg = $serviceOrg;
     }
@@ -34,10 +40,10 @@ class OrgsGrid extends BaseGrid {
     /**
      * @param OrgPresenter $presenter
      * @throws BadRequestException
-     * @throws \Nette\Application\UI\InvalidLinkException
-     * @throws \NiftyGrid\DuplicateButtonException
-     * @throws \NiftyGrid\DuplicateColumnException
-     * @throws \NiftyGrid\DuplicateGlobalButtonException
+     * @throws InvalidLinkException
+     * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
+     * @throws DuplicateGlobalButtonException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -58,36 +64,23 @@ class OrgsGrid extends BaseGrid {
         $this->setDataSource($dataSource);
         $this->setDefaultOrder('since DESC');
 
-        //
-        // columns
-        //
-        $this->addColumn('display_name', _('Person'))->setRenderer(function ($row) {
-            $model = ModelOrg::createFromActiveRow($row);
-            $person = $model->getPerson();
-            return $person->getFullName();
-        });
-        $this->addColumn('since', _('Začal'));
-        $this->addColumn('until', _('Skončil'))->setRenderer(function ($row) {
-            return ($row->until === NULL) ? Html::el('span')->addAttributes(['class' => 'badge badge-success'])->addText(_('Still organizes')) : $row->until;
-        });
-        $this->addColumn('role', _('Funkce'));
+        $this->addReflectionColumn('referenced', 'person_name', ModelOrg::class);
 
-        //
-        // operations
-        //
-        $this->addButton('edit', _('Upravit'))
-            ->setText(_('Upravit'))
-            ->setLink(function ($row) {
-                return $this->getPresenter()->link('edit', $row->org_id);
-            })
-            ->setShow(function ($row) use ($presenter) {
-                return $presenter->authorized('edit', ['id' => $row->org_id]);
-            });
+        foreach (['since', 'until', 'role'] as $field) {
+            $this->addReflectionColumn(DbNames::TAB_ORG, $field, ModelOrg::class);
+        }
+
+        $this->addLink('org.edit', true);
+        $this->addLink('org.detail', true);
 
         if ($presenter->authorized('create')) {
             $this->addGlobalButton('add')
                 ->setLabel(_('Založit organizátora'))
                 ->setLink($this->getPresenter()->link('create'));
         }
+    }
+
+    protected function getModelClassName(): string {
+        return ModelOrg::class;
     }
 }

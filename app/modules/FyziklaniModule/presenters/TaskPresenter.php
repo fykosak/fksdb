@@ -5,6 +5,8 @@ namespace FyziklaniModule;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\Fyziklani\TaskGrid;
 use FKSDB\model\Fyziklani\FyziklaniTaskImportProcessor;
+use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 
 /**
@@ -28,16 +30,16 @@ class TaskPresenter extends BasePresenter {
     }
 
     /**
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function authorizedList() {
         $this->setAuthorized(($this->eventIsAllowed('fyziklani.task', 'list')));
     }
 
     /**
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function authorizedImport() {
         $this->setAuthorized(($this->eventIsAllowed('fyziklani.task', 'import')));
@@ -45,19 +47,19 @@ class TaskPresenter extends BasePresenter {
 
     /**
      * @return FormControl
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     public function createComponentTaskImportForm(): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
 
         $form->addUpload('csvfile')->setRequired();
-        $form->addSelect('state', _('Vyberte akci'), [
-            self::IMPORT_STATE_UPDATE_N_INSERT => _('Updatovat úlohy a přidat pokud neexistuje'),
-            self::IMPORT_STATE_REMOVE_N_INSERT => _('Odstranit všechny úlohy a nahrát nové'),
-            self::IMPORT_STATE_INSERT => _('Přidat pokud neexistuje')
+        $form->addSelect('state', _('Select action'), [
+            self::IMPORT_STATE_UPDATE_N_INSERT => _('Update tasks and add in case does not exists.'),
+            self::IMPORT_STATE_REMOVE_N_INSERT => _('Delete all tasks and insert new one.'),
+            self::IMPORT_STATE_INSERT => _('Only add in case does not exists.')
         ]);
-        $form->addSubmit('import', _('Importovat'));
+        $form->addSubmit('import', _('Import'));
         $form->onSuccess[] = function (Form $form) {
             $this->taskImportFormSucceeded($form);
         };
@@ -66,8 +68,8 @@ class TaskPresenter extends BasePresenter {
 
     /**
      * @param Form $form
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function taskImportFormSucceeded(Form $form) {
         $values = $form->getValues();
@@ -82,8 +84,8 @@ class TaskPresenter extends BasePresenter {
 
     /**
      * @return TaskGrid
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function createComponentGrid(): TaskGrid {
         return $this->fyziklaniComponentsFactory->createTasksGrid($this->getEvent());

@@ -15,8 +15,6 @@ class DbNames {
     const TAB_EVENT = 'event';
     const TAB_EVENT_ORG = 'event_org';
     const TAB_EVENT_PARTICIPANT = 'event_participant';
-    const TAB_EVENT_ACCOMMODATION = 'event_accommodation';
-    const TAB_EVENT_PERSON_ACCOMMODATION = 'event_person_accommodation';
     const TAB_EVENT_TYPE = 'event_type';
     const TAB_FLAG = 'flag';
     const TAB_GLOBAL_SESSION = 'global_session';
@@ -29,10 +27,10 @@ class DbNames {
     const TAB_PERSON_HISTORY = 'person_history';
     const TAB_PERSON_INFO = 'person_info';
     const TAB_POST_CONTACT = 'post_contact';
+    const TAB_PSC_REGION = 'psc_region';
     const TAB_REGION = 'region';
     const TAB_ROLE = 'role';
     const TAB_SCHOOL = 'school';
-    const TAB_SPAMEE = 'si_spamee'; // obsolete
     const TAB_STORED_QUERY = 'stored_query';
     const TAB_STORED_QUERY_PARAM = 'stored_query_parameter';
     const TAB_STORED_QUERY_TAG = 'stored_query_tag';
@@ -45,7 +43,6 @@ class DbNames {
     const TAB_TEACHER = 'teacher';
     const VIEW_CONTESTANT = 'v_contestant';
     /* payment */
-    const TAB_PAYMENT_ACCOMMODATION = 'payment_accommodation';
     const TAB_PAYMENT = 'payment';
 
     /* Specified tables for events */

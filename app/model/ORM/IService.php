@@ -54,6 +54,7 @@ interface IService {
     public function getTable();
 
     /**
+<<<<<<< HEAD
      * @param IModel $model
      * @param $data
      * @return mixed
@@ -70,5 +71,5 @@ interface IService {
     /**
      * @return string
      */
-    //  public function getModelClassName(): string;
+    public function getModelClassName(): string;
 }

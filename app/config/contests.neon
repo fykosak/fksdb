@@ -130,7 +130,7 @@ parameters:
                     required: false
                 # place to others onfo
                 note:
-                  required: false                         
+                  required: false
         adminEventOrg:
             person:
                 other_name:
@@ -210,20 +210,15 @@ parameters:
                   required: false
                 gender:
                   required: true
-            person_history:
-                school_id:
-                  required: true
-                study_year:
-                  required: true
-            post_contact_d:
-                address:
-                  required: false
-            post_contact_p:
-                address:
-                  required: false
             person_info:
                 email:
                   required: true
+                phone:
+                  required: false
+                phone_parent_m:
+                  required: false
+                phone_parent_d:
+                  required: false
                 born:
                   required: false
                 birthplace:
@@ -232,17 +227,30 @@ parameters:
                   required: false
                 note:
                   required: false
-                phone_parent_m:
-                  required: false
-                phone_parent_d:
-                  required: false
+
                 origin:
                   required: false
                 agreed:
                   required: false
+            post_contact_d:
+                address:
+                  required: false
+            post_contact_p:
+                address:
+                  required: false
+            person_history:
+                school_id:
+                  required: true
+                study_year:
+                  required: true
+
             person_has_flag:
                 spam_mff:
                   required: false
         adminOrg:
             %fykos.adminOrg%
+        adminTeacher:
+            %fykos.adminTeacher%
+        adminEventOrg:
+            %fykos.adminEventOrg%
 

@@ -2,11 +2,15 @@
 
 namespace FKSDB\Messages;
 
+use Nette\SmartObject;
+
 /**
  * Class Message
  * @package FKSDB\Messages
  */
 class Message {
+    use SmartObject;
+
     const LVL_DANGER = 'danger';
     const LVL_SUCCESS = 'success';
     const LVL_WARNING = 'warning';

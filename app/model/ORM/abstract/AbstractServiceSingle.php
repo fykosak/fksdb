@@ -102,10 +102,30 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     }
 
     /**
+     * @return string|AbstractModelSingle|AbstractModelMulti
+     */
+    abstract public function getModelClassName(): string;
+
+    /**
+     * @return string
+     */
+    abstract protected function getTableName(): string;
+
+    /**
+     * @param ActiveRow $row
+     * @return mixed
+     * @deprecated
+     */
+    public function createFromTableRow(ActiveRow $row) {
+        $className = $this->getModelClassName();
+        return new $className($row->toArray(), $row->getTable());
+    }
+
+    /**
      * Syntactic sugar.
      *
      * @param int $key
-     * @return ActiveRow|null
+     * @return AbstractModelSingle|null
      */
     public function findByPrimary($key) {
         $result = $this->getTable()->get($key);
@@ -220,7 +240,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     }
 
     /**
-     * @return TableSelection
+     * @return TypedTableSelection
      */
     public function getTable() {
         return new TypedTableSelection($this->getModelClassName(), $this->getTableName(), $this->context, $this->conventions);
@@ -309,16 +329,4 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
         }
         return $this->columns;
     }
-
-    /**
-     * @return string|AbstractModelSingle
-     */
-    abstract protected function getModelClassName(): string;
-
-    /**
-     * @return string
-     */
-    abstract protected function getTableName(): string;
-
 }
-

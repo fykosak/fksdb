@@ -3,14 +3,14 @@
 namespace FKSDB\Components\DatabaseReflection\PersonInfo;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
-use Nette\Forms\Controls\BaseControl;
-use Nette\Forms\Form;
+use FKSDB\Components\DatabaseReflection\EmailRowTrait;
 
 /**
  * Class EmailField
  * @package FKSDB\Components\Forms\Factories\PersonInfo
  */
 class EmailRow extends AbstractRow {
+    use EmailRowTrait;
 
     /**
      * @return string
@@ -20,18 +20,16 @@ class EmailRow extends AbstractRow {
     }
 
     /**
-     * @return BaseControl
-     */
-    public function createField(): BaseControl {
-        $control = parent::createField();
-        $control->addCondition(Form::FILLED)
-            ->addRule(Form::EMAIL, _('Neplatný tvar e-mailu.'));
-        return $control;
-    }
-    /**
      * @return int
      */
     public function getPermissionsValue(): int {
         return self::PERMISSION_ALLOW_RESTRICT;
+    }
+
+    /**
+     * @return string
+     */
+    public function getModelAccessKey(): string {
+        return 'email';
     }
 }

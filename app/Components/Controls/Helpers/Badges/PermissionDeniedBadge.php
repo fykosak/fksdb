@@ -29,6 +29,7 @@ class PermissionDeniedBadge extends Control {
 
     public function render() {
         $this->template->setTranslator($this->translator);
+        $this->template->html = static::getHtml();
         $this->template->setFile(__DIR__ . '/PermissionDenied.latte');
         $this->template->render();
     }

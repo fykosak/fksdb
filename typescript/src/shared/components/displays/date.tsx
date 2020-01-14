@@ -1,13 +1,14 @@
+import { lang } from '@i18n/i18n';
 import * as React from 'react';
-import { lang } from '../../../i18n/i18n';
 import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
 
-interface Props {
+// TODO
+interface OwnProps {
     date: string;
     options?: DateTimeFormatOptions;
 }
 
-export default class DateDisplay extends React.Component<Props, {}> {
+export default class DateDisplay extends React.Component<OwnProps, {}> {
 
     public render() {
         const {date, options} = this.props;

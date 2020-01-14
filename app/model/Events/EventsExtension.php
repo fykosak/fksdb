@@ -108,7 +108,6 @@ class EventsExtension extends CompilerExtension {
      */
     /**
      * @throws \FKSDB\Config\NeonSchemaException
-     * @throws \Nette\Utils\RegexpException
      */
     public function loadConfiguration() {
         parent::loadConfiguration();
@@ -334,7 +333,6 @@ class EventsExtension extends CompilerExtension {
     }
 
     /**
-     * @throws \Nette\Utils\RegexpException
      */
     private function createFieldFactory() {
         $factory = $this->getContainerBuilder()->addDefinition($this->getFieldName());
@@ -528,7 +526,6 @@ class EventsExtension extends CompilerExtension {
      * @param $definition
      * @return \Nette\DI\ServiceDefinition
      * @throws \FKSDB\Config\NeonSchemaException
-     * @throws \Nette\Utils\RegexpException
      */
     private function createBaseHolderFactory($definitionName, $baseName, $definition) {
         $factoryName = $this->getBaseHolderName($definitionName, $baseName);

@@ -3,7 +3,7 @@
 namespace Authorization\Assertions;
 
 use Nette\Database\Connection;
-use Nette\Security\User;
+use Nette\Security\IUserStorage;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -14,10 +14,10 @@ class EventOrgByYearAssertion extends AbstractEventOrgAssertion {
     /**
      * EventOrgByYearAssertion constructor.
      * @param $eventTypeId
-     * @param User $user
+     * @param IUserStorage $user
      * @param Connection $connection
      */
-    public function __construct($eventTypeId, User $user, Connection $connection) {
+    public function __construct($eventTypeId, IUserStorage $user, Connection $connection) {
         parent::__construct($eventTypeId, 'year', $user, $connection);
     }
 }

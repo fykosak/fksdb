@@ -12,9 +12,9 @@ use Events\Model\Holder\SecondaryModelStrategies\SecondaryModelDataConflictExcep
 use Events\SubmitProcessingException;
 use Exception;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
-use FKSDB\Components\Forms\Controls\PersonAccommodation\ExistingPaymentException;
-use FKSDB\Components\Forms\Controls\PersonAccommodation\FullAccommodationCapacityException;
 use FKSDB\Components\Forms\Controls\ReferencedId;
+use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
+use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Models\ModelEvent;
 use FormUtils;
@@ -22,6 +22,9 @@ use Nette\Database\Connection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
+use Nette\Utils\Json;
+use Nette\Utils\JsonException;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -67,7 +70,7 @@ class ApplicationHandler {
 
     /**
      * ApplicationHandler constructor.
-     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @param ModelEvent $event
      * @param ILogger $logger
      * @param Connection $connection
      * @param Container $container
@@ -112,6 +115,7 @@ class ApplicationHandler {
     /**
      * @param Holder $holder
      * @param $data
+     * @throws JsonException
      */
     public final function store(Holder $holder, $data) {
         $this->_storeAndExecute($holder, $data, null, self::STATE_OVERWRITE);
@@ -121,6 +125,7 @@ class ApplicationHandler {
      * @param Holder $holder
      * @param Form|ArrayHash|null $data
      * @param mixed $explicitTransitionName
+     * @throws JsonException
      */
     public function storeAndExecute(Holder $holder, $data = null, $explicitTransitionName = null) {
         $this->_storeAndExecute($holder, $data, $explicitTransitionName, self::STATE_TRANSITION);
@@ -131,6 +136,7 @@ class ApplicationHandler {
      * @param $data
      * @param $explicitTransitionName
      * @param $execute
+     * @throws JsonException
      */
     private function _storeAndExecute(Holder $holder, $data, $explicitTransitionName, $execute) {
         $this->initializeMachine($holder);
@@ -210,7 +216,7 @@ class ApplicationHandler {
             $this->logger->log($exception->getMessage(), ILogger::ERROR);
             $this->formRollback($data);
             $this->reRaise($exception);
-        } catch (FullAccommodationCapacityException $exception) {
+        } catch (FullCapacityException $exception) {
             $this->logger->log($exception->getMessage(), ILogger::ERROR);
             $this->formRollback($data);
             $this->reRaise($exception);
@@ -228,6 +234,7 @@ class ApplicationHandler {
      * @param $execute
      * @return mixed
      * @throws MachineExecutionException
+     * @throws JsonException
      */
     private function processData($data, $transitions, Holder $holder, $execute) {
         if ($data instanceof Form) {
@@ -237,7 +244,7 @@ class ApplicationHandler {
             $values = $data;
             $form = null;
         }
-
+        Debugger::log(Json::encode((array)$values), 'app-form');
         $primaryName = $holder->getPrimaryHolder()->getName();
         $newStates = [];
         if (isset($values[$primaryName][BaseHolder::STATE_COLUMN])) {
@@ -310,5 +317,4 @@ class ApplicationHandler {
     private function reRaise(Exception $e) {
         throw new ApplicationHandlerException(_('Chyba při ukládání přihlášky.'), null, $e);
     }
-
 }

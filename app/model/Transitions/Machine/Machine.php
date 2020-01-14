@@ -2,12 +2,20 @@
 
 namespace FKSDB\Transitions;
 
+use Exception;
+use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
+use LogicException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Database\Connection;
 use Nette\Database\Table\ActiveRow;
+use Nette\Localization\ITranslator;
+use function array_filter;
+use function array_values;
+use function count;
+use function is_null;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -36,15 +44,21 @@ abstract class Machine {
      * if callback return true, transition is allowed explicit, independently of transition's condition
      */
     private $explicitCondition;
+    /**
+     * @var ITranslator
+     */
+    private $translator;
 
     /**
      * Machine constructor.
      * @param Connection $connection
-     * @param \FKSDB\ORM\IService $service
+     * @param IService $service
+     * @param ITranslator $translator
      */
-    public function __construct(Connection $connection, IService $service) {
+    public function __construct(Connection $connection, IService $service, ITranslator $translator) {
         $this->connection = $connection;
         $this->service = $service;
+        $this->translator = $translator;
     }
 
     /**
@@ -67,7 +81,7 @@ abstract class Machine {
      */
     public function getAvailableTransitions(IStateModel $model = null): array {
         $state = $model ? $model->getState() : NULL;
-        if (\is_null($state)) {
+        if (is_null($state)) {
             $state = self::STATE_INIT;
         }
         return array_filter($this->getTransitions(), function (Transition $transition) use ($model, $state) {
@@ -76,13 +90,22 @@ abstract class Machine {
     }
 
     /**
+     * @param IStateModel $model
+     * @return TransitionButtonsControl
+     */
+    public function createComponentTransitionButtons(IStateModel $model): TransitionButtonsControl {
+        return new TransitionButtonsControl($this, $this->translator, $model);
+    }
+
+    /**
      * @param string $id
      * @param IStateModel $model
      * @return Transition
-     * @throws \Exception
+     * @throws UnavailableTransitionException
+     * @throws Exception
      */
     protected function findTransitionById(string $id, IStateModel $model): Transition {
-        $transitions = \array_filter($this->getAvailableTransitions($model), function (Transition $transition) use ($id) {
+        $transitions = array_filter($this->getAvailableTransitions($model), function (Transition $transition) use ($id) {
             return $transition->getId() === $id;
         });
 
@@ -92,17 +115,19 @@ abstract class Machine {
     /**
      * @param array $transitions
      * @return Transition
-     * @throws \Exception
+     * @throws LogicException
+     * @throws UnavailableTransitionException
+     * Protect more that one transition between nodes
      */
     private function selectTransition(array $transitions): Transition {
-        $length = \count($transitions);
+        $length = count($transitions);
         if ($length > 1) {
-            throw new \Exception();
+            throw new LogicException();
         }
         if (!$length) {
-            throw new \Exception();
+            throw new UnavailableTransitionException();
         }
-        return \array_values($transitions)[0];
+        return array_values($transitions)[0];
     }
 
     /* ********** CONDITION ******** */
@@ -130,8 +155,10 @@ abstract class Machine {
      * @param string $id
      * @param IStateModel $model
      * @return IStateModel
+     * @throws UnavailableTransitionException
      * @throws ForbiddenRequestException
-     * @throws \Exception
+     * @throws BadRequestException
+     * @throws Exception
      */
     public function executeTransition(string $id, IStateModel $model): IStateModel {
         $transition = $this->findTransitionById($id, $model);
@@ -145,7 +172,8 @@ abstract class Machine {
      * @param Transition $transition
      * @param IStateModel|null $model
      * @return IStateModel
-     * @throws \Exception
+     * @throws BadRequestException
+     * @throws Exception
      */
     private function execute(Transition $transition, IStateModel $model = null): IStateModel {
         if (!$this->connection->getPdo()->inTransaction()) {
@@ -153,7 +181,7 @@ abstract class Machine {
         }
         try {
             $transition->beforeExecute($model);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $this->connection->rollBack();
             throw $exception;
         }
@@ -168,7 +196,7 @@ abstract class Machine {
 
         $this->service->save($model);
         // $newModel = $model;
-        $newModel = $model->refresh($this->service);
+        $newModel = $model->refresh();
         $transition->afterExecute($newModel);
         return $newModel;
     }
@@ -190,7 +218,7 @@ abstract class Machine {
 
     /**
      * @return Transition
-     * @throws \Exception
+     * @throws Exception
      */
     private function getCreatingTransition(): Transition {
         $transitions = array_filter($this->getTransitions(), function (Transition $transition) {
@@ -201,7 +229,7 @@ abstract class Machine {
 
     /**
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     public function canCreate(): bool {
         return $this->canExecute($this->getCreatingTransition(), null);
@@ -212,7 +240,7 @@ abstract class Machine {
      * @param IService $service
      * @return IStateModel
      * @throws ForbiddenRequestException
-     * @throws \Exception
+     * @throws Exception
      */
     public function createNewModel($data, IService $service): IStateModel {
         $transition = $this->getCreatingTransition();

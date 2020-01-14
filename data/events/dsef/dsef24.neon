@@ -15,8 +15,8 @@ parameters:
                         required: true
                     born:
                         required: true
-                person_accommodation:
-                    single:
+                person_schedule:
+                    accommodation:
                         required: false
                 post_contact_p:
                     address:

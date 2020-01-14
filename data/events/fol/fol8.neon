@@ -32,7 +32,7 @@ parameters:
 events:
     fol8:
         event_type_id: 9
-        eventYears: [8] # specify for which years this machine is valid, by default all years
+        eventYears: [8,9] # specify for which years this machine is valid, by default all years
         tableLayout: fyziklani.grid
         formLayout: fol.form
         paramScheme:

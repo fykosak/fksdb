@@ -11,6 +11,7 @@
 @import "contests";
 @import "callout";
 @import "badge";
+@import "chart";
 
 .bg-white-container {
   background-color: rgba(255, 255, 255, .85);
@@ -49,6 +50,7 @@ main {
   & > * {
     display: inline-block;
   }
+
   & > * + *:before {
     color: #CCCCCC;
     content: "| ";
@@ -64,9 +66,11 @@ main {
 
 .right-inner-addon {
   position: relative;
+
   input {
     padding-right: 30px;
   }
+
   i {
     position: absolute;
     right: 0;
@@ -123,6 +127,7 @@ main {
 .image-error {
   width: 100%;
   text-align: center;
+
   img {
     height: 20rem;
   }
@@ -151,4 +156,16 @@ main {
 
 .border-pink {
   border-color: deeppink;
+}
+
+.t-shirt-color {
+  height: 1rem;
+  width: 1rem;
+  border-radius: .5rem;
+  display: inline-block;
+  margin-right: .5rem
+}
+
+footer {
+  background-color: rgba(255, 255, 255, .7);
 }

@@ -1,28 +1,24 @@
 {block content}
-    <h3>{_'Base info'}</h3>
-    {foreach ['event_participant_id', 'person_id', 'status', 'price', 'created'] as $field}
-        {control valuePrinter__event_participant__$field $model}
+    <h2>{_'Base info'}</h2>
+    {control valuePrinter__referenced__person_link:row $model}
+    {foreach ['event_participant_id', 'status', 'price', 'created'] as $field}
+        {control valuePrinter__event_participant__$field:row $model}
     {/foreach}
 
     <hr/>
 
     {foreach $groups as $groupName=>$fieldDef}
-        <h3>{$groupName}</h3>
+        <h2>{$groupName}</h2>
         {foreach $fieldDef as $field}
             {if \array_key_exists($field,$fields)}
-                {control valuePrinter__event_participant__$field $model}
+                {control valuePrinter__event_participant__$field:row $model}
             {/if}
         {/foreach}
         <hr/>
     {/foreach}
-
-    <h3>{_'Actions'}</h3>
-
-    {control applicationComponent:inline edit}
-    <hr/>
-
-    <h3>{_'Transitions'}</h3>
-
-    {control applicationComponent:inline transitions}
-
+    {if $hasSchedule}
+        <h2>{_'Schedule'}</h2>
+        {control personScheduleGrid $model->getPerson(),$model->getEvent()}
+    {/if}
+    {include ../AbstractApplication/applicationControl.latte}
 {/block}

@@ -1,0 +1,17 @@
+services:
+    row.schedule_group.schedule_group_type: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleGroup\ScheduleGroupTypeRow
+    row.schedule_group.start: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleGroup\StartRow
+    row.schedule_group.end: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleGroup\EndRow
+    row.schedule_group.name_cs: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleGroup\NameCsRow
+    row.schedule_group.name_en: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleGroup\NameEnRow
+
+    row.schedule_item.require_id_number: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem\RequireIdNumberRow
+    row.schedule_item.price_czk: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem\PriceCZKRow
+    row.schedule_item.price_eur: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem\PriceEURRow
+    row.schedule_item.name_en: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem\NameENRow
+    row.schedule_item.name_cs: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem\NameCSRow
+    row.schedule_item.description_en: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem\DescriptionENRow
+    row.schedule_item.description_cs: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem\DescriptionCSRow
+    row.schedule_item.capacity: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem\CapacityRow
+    row.schedule_item.free_capacity: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem\FreeCapacityRow
+    row.schedule_item.used_capacity: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem\UsedCapacityRow

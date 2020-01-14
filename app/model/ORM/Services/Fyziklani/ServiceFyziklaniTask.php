@@ -15,7 +15,7 @@ class ServiceFyziklaniTask extends AbstractServiceSingle {
     /**
      * @return string
      */
-    protected function getModelClassName(): string {
+    public function getModelClassName(): string {
         return ModelFyziklaniTask::class;
     }
 
@@ -29,7 +29,7 @@ class ServiceFyziklaniTask extends AbstractServiceSingle {
     /**
      * Syntactic sugar.
      * @param string $label
-     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @param ModelEvent $event
      * @return ModelFyziklaniTask|null
      */
     public function findByLabel(string $label, ModelEvent $event) {
@@ -46,7 +46,7 @@ class ServiceFyziklaniTask extends AbstractServiceSingle {
 
     /**
      * Syntactic sugar.
-     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @param ModelEvent $event
      * @return Selection
      */
     public function findAll(ModelEvent $event): Selection {
@@ -54,7 +54,7 @@ class ServiceFyziklaniTask extends AbstractServiceSingle {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @param ModelEvent $event
      * @param bool $hideName
      * @return ModelFyziklaniTask[]
      */

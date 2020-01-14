@@ -4,7 +4,6 @@ namespace OrgModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\EventFactory;
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\Events\EventsGrid;
 use FKSDB\Config\NeonScheme;
 use FKSDB\ORM\IModel;
@@ -55,10 +54,6 @@ class EventPresenter extends EntityPresenter {
      * @var \FKSDB\ORM\Services\ServiceAuthToken $serviceAuthToken
      */
     private $serviceAuthToken;
-    /**
-     * @var TableReflectionFactory
-     */
-    private $tableReflectionFactory;
 
     /**
      * @param ServiceAuthToken $serviceAuthToken
@@ -86,13 +81,6 @@ class EventPresenter extends EntityPresenter {
      */
     public function injectContainer(Container $container) {
         $this->container = $container;
-    }
-
-    /**
-     * @param TableReflectionFactory $tableReflectionFactory
-     */
-    public function injectTableReflectionFactory(TableReflectionFactory $tableReflectionFactory) {
-        $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
     /**
@@ -154,7 +142,7 @@ class EventPresenter extends EntityPresenter {
     protected function createComponentEditComponent($name) {
         $control = $this->createForm();
         $form = $control->getForm();
-        $form->addSubmit('send', _('Uložit'));
+        $form->addSubmit('send', _('Save'));
         $form->onSuccess[] = function (Form $form) {
             $this->handleFormSuccess($form, false);
         };
@@ -167,7 +155,7 @@ class EventPresenter extends EntityPresenter {
      * @return EventsGrid
      */
     protected function createComponentGrid($name): EventsGrid {
-        return new EventsGrid($this->serviceEvent, $this->tableReflectionFactory);
+        return new EventsGrid($this->serviceEvent, $this->getTableReflectionFactory());
     }
 
     /**

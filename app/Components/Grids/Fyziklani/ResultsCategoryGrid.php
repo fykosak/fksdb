@@ -1,14 +1,16 @@
 <?php
 
-
 namespace FKSDB\Components\Grids\Fyziklani;
 
-
+use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FyziklaniModule\BasePresenter;
 use NiftyGrid\DataSource\NDataSource;
+use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class ResultsCategoryGrid
@@ -17,16 +19,16 @@ use NiftyGrid\DataSource\NDataSource;
 class ResultsCategoryGrid extends BaseGrid {
 
     /**
-     *
      * @var ServiceFyziklaniTeam
      */
     private $serviceFyziklaniTeam;
-
     /**
      * @var ModelEvent
      */
     private $event;
-
+    /**
+     * @var string
+     */
     private $category;
 
     /**
@@ -34,31 +36,42 @@ class ResultsCategoryGrid extends BaseGrid {
      * @param ModelEvent $event
      * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
      * @param string $category
+     * @param TableReflectionFactory $tableReflectionFactory
      */
-    public function __construct(ModelEvent $event, ServiceFyziklaniTeam $serviceFyziklaniTeam, string $category) {
+    public function __construct(ModelEvent $event, ServiceFyziklaniTeam $serviceFyziklaniTeam, string $category, TableReflectionFactory $tableReflectionFactory) {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
         $this->event = $event;
         $this->category = $category;
-        parent::__construct();
+        parent::__construct($tableReflectionFactory);
     }
 
     /**
      * @param BasePresenter $presenter
-     * @throws \NiftyGrid\DuplicateColumnException
+     * @throws DuplicateColumnException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
-        $this->addColumn('rank_category', _('Pořadí v kategorii'));
-        $this->addColumn('name', _('Jméno týmu'));
-        $this->addColumn('e_fyziklani_team_id', _('Id týmu'));
+
+        $this->paginate = false;
+
+        $this->addColumns([
+            DbNames::TAB_E_FYZIKLANI_TEAM . '.e_fyziklani_team_id',
+            DbNames::TAB_E_FYZIKLANI_TEAM . '.name',
+            DbNames::TAB_E_FYZIKLANI_TEAM . '.rank_category',
+        ]);
 
         $teams = $this->serviceFyziklaniTeam->findParticipating($this->event)
             ->where('category', $this->category)
-            ->order('rank_category');
+            ->order('e_fyziklani_team_id');
         $dataSource = new NDataSource($teams);
         $this->setDataSource($dataSource);
 
     }
 
-
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        return ModelFyziklaniTeam::class;
+    }
 }

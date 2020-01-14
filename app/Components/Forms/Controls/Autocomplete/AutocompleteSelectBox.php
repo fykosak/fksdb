@@ -6,7 +6,6 @@ use FKSDB\Application\IJavaScriptCollector;
 use Nette\Forms\Controls\TextBase;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Arrays;
-use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -85,7 +84,7 @@ class AutocompleteSelectBox extends TextBase {
             ));
         }
         if (!$this->attachedJS && $obj instanceof IJavaScriptCollector) {
-            Debugger::barDump($obj);
+            // Debugger::barDump($obj);
             $this->attachedJS = true;
             $obj->registerJSFile('js/autocompleteSelect.js');
         }

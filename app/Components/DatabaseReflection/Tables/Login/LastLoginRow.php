@@ -22,10 +22,9 @@ class LastLoginRow extends AbstractLoginRow {
 
     /**
      * @param AbstractModelSingle|ModelLogin $model
-     * @param string $fieldName
      * @return Html
      */
-    protected function createHtmlValue(AbstractModelSingle $model, string $fieldName): Html {
-        return (new DatePrinter)($model->last_login,'d.m.Y H:i:s');
+    protected function createHtmlValue(AbstractModelSingle $model): Html {
+        return (new DatePrinter('d.m.Y H:i:s'))($model->last_login);
     }
 }

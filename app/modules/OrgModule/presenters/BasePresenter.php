@@ -12,7 +12,6 @@ use FKSDB\ORM\Models\ModelRole;
  */
 abstract class BasePresenter extends \ContestPresenter {
 
-
     /**
      * @return ContestChooser
      */

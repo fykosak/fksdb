@@ -27,7 +27,9 @@ abstract class AbstractResultsModel {
     const LABEL_SUM = 'sum';
     const ALIAS_SUM = 'sum';
     const LABEL_PERCETAGE = 'percent';
-    const ALIAS_PERCENTAGE = 'percent';
+    const ALIAS_PERCENTAGE = 'percent';    
+    const LABEL_TOTAL_PERCENTAGE = 'total-percent';
+    const ALIAS_TOTAL_PERCENTAGE = 'total-percent';
 
     /* for use in School Results */
     const LABEL_UNWEIGHTED_SUM = 'unweighted-sum';
@@ -83,7 +85,7 @@ abstract class AbstractResultsModel {
      * @param ModelCategory $category
      * @return array of Nette\Database\Row
      */
-    public function getData($category) {
+    public function getData(ModelCategory $category) {
         $sql = $this->composeQuery($category);
 
         $stmt = $this->connection->query($sql);
@@ -117,10 +119,10 @@ abstract class AbstractResultsModel {
     }
 
     /**
-     * @param $category
+     * @param ModelCategory $category
      * @return mixed
      */
-    abstract protected function composeQuery($category);
+    abstract protected function composeQuery(ModelCategory $category);
 
     /**
      * @note Work only with numeric types.
@@ -187,7 +189,7 @@ abstract class AbstractResultsModel {
      * @param ModelCategory $category
      * @throws InvalidStateException
      */
-    abstract public function getDataColumns($category);
+    abstract public function getDataColumns(ModelCategory $category);
 
 }
 

@@ -6,23 +6,21 @@ use Events\Model\ApplicationHandlerFactory;
 use Events\Model\Grid\SingleEventSource;
 use FKSDB\Components\Events\ApplicationComponent;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
+use FKSDB\Components\Grids\Schedule\PersonGrid;
 use FKSDB\Logging\FlashDumpFactory;
 use FKSDB\Logging\MemoryLogger;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\ORM\Models\ModelEventParticipant;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\Application\ForbiddenRequestException;
+use function in_array;
 
 /**
  * Class ApplicationPresenter
  * @package EventModule
  */
 abstract class AbstractApplicationPresenter extends BasePresenter {
-    const TEAM_EVENTS = [1, 9];
-    /**
-     * @var ModelEventParticipant|ModelFyziklaniTeam
-     */
-    protected $model;
+    use EventEntityTrait;
+
+
     /**
      * @var ApplicationHandlerFactory
      */
@@ -49,9 +47,9 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     /**
      * @return ApplicationComponent
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
-    public function createComponentApplicationComponent() {
+    public function createComponentApplicationComponent(): ApplicationComponent {
         $holders = [];
         $handlers = [];
         $flashDump = $this->dumpFactory->create('application');
@@ -61,17 +59,16 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
             $handlers[$key] = $this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger()); //TODO it's a bit weird to create new logger for each handler
         }
 
-        $component = new ApplicationComponent($handlers[$this->model->getPrimary()], $holders[$this->model->getPrimary()], $flashDump);
-        return $component;
+        return new ApplicationComponent($handlers[$this->getEntity()->getPrimary()], $holders[$this->getEntity()->getPrimary()], $flashDump);
     }
 
     /**
      * @return bool
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     protected function isTeamEvent(): bool {
-        if (\in_array($this->getEvent()->event_type_id, self::TEAM_EVENTS)) {
+        if (in_array($this->getEvent()->event_type_id, self::TEAM_EVENTS)) {
             $this->setAuthorized(false);
             return true;
         }
@@ -79,18 +76,23 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @param $id
-     * @throws BadRequestException
-     * @throws ForbiddenRequestException
-     * @throws \Nette\Application\AbortException
+     * @return PersonGrid
      */
-    public function actionDetail($id) {
-        $this->loadModel($id);
+    protected function createComponentPersonScheduleGrid(): PersonGrid {
+        return new PersonGrid($this->getTableReflectionFactory());
+    }
+
+    /**
+     * @throws AbortException
+     * @throws BadRequestException
+     */
+    protected function renderDetail() {
+        $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
     }
 
     /**
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function renderList() {
         $this->template->event = $this->getEvent();
@@ -107,36 +109,9 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     abstract public function titleDetail();
 
     /**
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
-     * @return void;
-     */
-    abstract public function authorizedDetail();
-
-    /**
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
-     * @return void;
-     */
-    abstract public function authorizedList();
-
-    /**
-     * @param int $id
-     * @throws BadRequestException
-     * @throws ForbiddenRequestException
-     * @throws \Nette\Application\AbortException
-     */
-    abstract protected function loadModel(int $id);
-
-    /**
-     * @return ModelEventParticipant|ModelFyziklaniTeam
-     */
-    abstract protected function getModel();
-
-    /**
      * @return AbstractApplicationGrid
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws AbortException
+     * @throws BadRequestException
      */
     abstract function createComponentGrid(): AbstractApplicationGrid;
 }

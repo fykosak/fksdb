@@ -2,24 +2,26 @@
 
 namespace FKSDB\Components\DatabaseReflection\Event;
 
-use FKSDB\Components\DatabaseReflection\AbstractRow;
+use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 
 /**
  * Class YearRow
  * @package FKSDB\Components\DatabaseReflection\Event
  */
-class YearRow extends AbstractRow {
-    /**
-     * @return int
-     */
-    public function getPermissionsValue(): int {
-        return self::PERMISSION_USE_GLOBAL_ACL;
-    }
+class YearRow extends AbstractEventRowFactory {
+    use DefaultPrinterTrait;
 
     /**
      * @return string
      */
     public function getTitle(): string {
         return _('Contests year');
+    }
+
+    /**
+     * @return string
+     */
+    protected function getModelAccessKey(): string {
+        return 'year';
     }
 }

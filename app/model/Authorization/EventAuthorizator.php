@@ -4,8 +4,8 @@ namespace Authorization;
 
 use Authorization\Assertions\EventOrgByIdAssertion;
 use Nette\Database\Connection;
+use Nette\Security\IUserStorage;
 use Nette\Security\Permission;
-use Nette\Security\User;
 use Nette\SmartObject;
 
 /**
@@ -15,7 +15,7 @@ use Nette\SmartObject;
 class EventAuthorizator {
     use SmartObject;
     /**
-     * @var User
+     * @var IUserStorage
      */
     private $user;
 
@@ -36,12 +36,12 @@ class EventAuthorizator {
 
     /**
      * EventAuthorizator constructor.
-     * @param User $identity
+     * @param IUserStorage $identity
      * @param Permission $acl
      * @param ContestAuthorizator $contestAuthorizator
      * @param Connection $db
      */
-    function __construct(User $identity, Permission $acl, ContestAuthorizator $contestAuthorizator, Connection $db) {
+    function __construct(IUserStorage $identity, Permission $acl, ContestAuthorizator $contestAuthorizator, Connection $db) {
         $this->contestAuthorizator = $contestAuthorizator;
         $this->user = $identity;
         $this->acl = $acl;
@@ -49,9 +49,9 @@ class EventAuthorizator {
     }
 
     /**
-     * @return User
+     * @return IUserStorage
      */
-    public function getUser() {
+    public function getUser(): IUserStorage {
         return $this->user;
     }
 
@@ -69,7 +69,7 @@ class EventAuthorizator {
      * @return bool
      */
     public function isAllowed($resource, $privilege, $event) {
-        if (!$this->getUser()->isLoggedIn()) {
+        if (!$this->getUser()->isAuthenticated()) {
             return false;
         }
         return $this->isAllowedForLogin($resource, $privilege, $event) || $this->contestAuthorizator->isAllowed($resource, $privilege, $event->event_type->contest_id);

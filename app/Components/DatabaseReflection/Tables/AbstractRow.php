@@ -3,11 +3,11 @@
 namespace FKSDB\Components\DatabaseReflection;
 
 use FKSDB\Components\Controls\Helpers\Badges\PermissionDeniedBadge;
-use FKSDB\Components\DatabaseReflection\ValuePrinters\StringPrinter;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Nette\Localization\ITranslator;
+use Nette\SmartObject;
 use Nette\Utils\Html;
 
 /**
@@ -15,6 +15,8 @@ use Nette\Utils\Html;
  * @package FKSDB\Components\Forms\Factories
  */
 abstract class AbstractRow {
+    use SmartObject;
+
     const PERMISSION_USE_GLOBAL_ACL = 1;
     const PERMISSION_ALLOW_BASIC = 16;
     const PERMISSION_ALLOW_RESTRICT = 128;
@@ -39,28 +41,38 @@ abstract class AbstractRow {
         return new TextInput($this->getTitle());
     }
 
-
     /**
-     * @param AbstractModelSingle $model
-     * @param string $fieldName
-     * @param int $userPermissionsLevel
-     * @return Html
+     * @return null|string
      */
-    public function renderValue(AbstractModelSingle $model, string $fieldName, int $userPermissionsLevel): Html {
-        if (!$this->hasPermissions($userPermissionsLevel)) {
-            return PermissionDeniedBadge::getHtml();
-        }
-        return $this->createHtmlValue($model, $fieldName);
+    public function getDescription() {
+        return null;
     }
 
     /**
+     * @param AbstractModelSingle $model
+     * @param int $userPermissionsLevel
+     * @return Html
+     */
+    public function renderValue(AbstractModelSingle $model, int $userPermissionsLevel): Html {
+        if (!$this->hasPermissions($userPermissionsLevel)) {
+            return PermissionDeniedBadge::getHtml();
+        }
+        return $this->createHtmlValue($model);
+    }
+
+    /*
      * @param AbstractModelSingle $model
      * @param string $fieldName
      * @return \Nette\Utils\Html
      */
-    protected function createHtmlValue(AbstractModelSingle $model, string $fieldName): Html {
-        return (new StringPrinter)($model->{$fieldName});
-    }
+    /* protected function createHtmlValue(AbstractModelSingle $model, string $fieldName): Html {
+         return (new StringPrinter)($model->{$fieldName});
+     }*/
+    /**
+     * @param AbstractModelSingle $model
+     * @return Html
+     */
+    abstract protected function createHtmlValue(AbstractModelSingle $model): Html;
 
     /**
      * @param int $userValue
@@ -79,4 +91,5 @@ abstract class AbstractRow {
      * @return string
      */
     abstract public function getTitle(): string;
+
 }

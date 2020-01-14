@@ -3,7 +3,8 @@
 namespace FKSDB\Payment\Handler;
 
 use FKSDB\ORM\Models\ModelPayment;
-use FKSDB\ORM\Services\ServiceEventPersonAccommodation;
+use FKSDB\ORM\Models\Schedule\ModelSchedulePayment;
+use FKSDB\ORM\Services\Schedule\ServiceSchedulePayment;
 use FKSDB\Submits\StorageException;
 use Nette\Utils\ArrayHash;
 
@@ -13,16 +14,16 @@ use Nette\Utils\ArrayHash;
  */
 class PaymentDataHandler {
     /**
-     * @var ServiceEventPersonAccommodation
+     * @var ServiceSchedulePayment
      */
-    private $serviceEventPersonAccommodation;
+    private $serviceSchedulePayment;
 
     /**
      * PaymentDataHandler constructor.
-     * @param ServiceEventPersonAccommodation $serviceEventPersonAccommodation
+     * @param ServiceSchedulePayment $serviceSchedulePayment
      */
-    public function __construct(ServiceEventPersonAccommodation $serviceEventPersonAccommodation) {
-        $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;
+    public function __construct(ServiceSchedulePayment $serviceSchedulePayment) {
+        $this->serviceSchedulePayment = $serviceSchedulePayment;
     }
 
     /**
@@ -31,33 +32,29 @@ class PaymentDataHandler {
      * @throws \Exception
      */
     public function prepareAndUpdate(ArrayHash $data, ModelPayment $payment) {
-        $oldRows = $payment->getRelatedPersonAccommodation();
+        $oldRows = $payment->getRelatedPersonSchedule();
 
-        $newAccommodationIds = $this->prepareData($data);
-        /**
-         * @var \FKSDB\ORM\Models\ModelPaymentAccommodation $row
-         */
+        $newScheduleIds = $this->prepareData($data);
         foreach ($oldRows as $row) {
-            if (in_array($row->event_person_accommodation_id, $newAccommodationIds)) {
+            if (in_array($row->person_schedule_id, $newScheduleIds)) {
                 // do nothing
-                $index = array_search($row->event_person_accommodation_id, $newAccommodationIds);
-                unset($newAccommodationIds[$index]);
+                $index = array_search($row->person_schedule_id, $newScheduleIds);
+                unset($newScheduleIds[$index]);
             } else {
                 $row->delete();
             }
         }
-        foreach ($newAccommodationIds as $id) {
+        foreach ($newScheduleIds as $id) {
             try {
                 /**
-                 * @var \FKSDB\ORM\Models\ModelPaymentAccommodation $model
+                 * @var ModelSchedulePayment $model
                  */
-                $model = $this->serviceEventPersonAccommodation->createNew(['payment_id' => $payment->payment_id, 'event_person_accommodation_id' => $id]);
-                $this->serviceEventPersonAccommodation->save($model);
+                $model = $this->serviceSchedulePayment->createNewModel(['payment_id' => $payment->payment_id, 'person_schedule_id' => $id]);
             } catch (\ModelException $exception) {
                 if ($exception->getPrevious() && $exception->getPrevious()->getCode() == 23000) {
                     throw new StorageException(sprintf(
                         _('Item "%s" has already generated payment.'),
-                        $model->getEventPersonAccommodation()->getLabel()
+                        $model->getPersonSchedule()->getLabel()
                     ));
                 }
                 throw $exception;

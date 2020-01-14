@@ -17,7 +17,7 @@ $(function () {
         transformContainer: function (elContainer, elRefId) {
             const $searchInput = elContainer.find("input[name*='" + this.options.searchMask + "'][type!='hidden']");
             const $compactValueInput = elContainer.find("input[name*='" + this.options.compactValueMask + "']");
-            const $searchButton = elContainer.find("input[type='submit'][name*='" + this.options.submitSearchMask + "']");
+            const originalSearchButton = elContainer.find("input[type='submit'][name*='" + this.options.submitSearchMask + "']");
             const $clearButton = elContainer.find("input[type='submit'][name*='" + this.options.clearMask + "']");
             var compacted = null;
             var options = this.options;
@@ -26,11 +26,11 @@ $(function () {
             }
 
             const searchifyContainer = function () {
-                return;
+
                 // create search button
                 var searchButton = $('<button class="input-group-append btn btn-secondary" type="button"><span class="fa fa-search"></span></button>');
                 searchButton.click(function () {
-                    $searchButton.click();
+                    originalSearchButton.click();
                 });
 
                 var searchInputGroup = $('<div class="input-group"/>');
@@ -55,19 +55,20 @@ $(function () {
 
                 // append handler
                 $searchInput.change(function () {
-                    $searchButton.click();
+                    originalSearchButton.click();
                 });
                 // promote search group in place of the container
-                var searchGroup = $searchInput.closest('.form-group');
+                // var searchGroup = $searchInput.closest('.form-group');
 
 
-                searchGroup.children('.control-label').text(elContainer.find('legend').text());
+                // searchGroup.children('.control-label').text(elContainer.find('legend').text());
+                // searchGroup.attr('id', elContainer.attr('id'));
+                // elContainer.attr('id', null);
+                // elContainer.replaceWith(searchGroup);
+                // elContainer.hide();
+                return;
 
-                searchGroup.attr('id', elContainer.attr('id'));
-                elContainer.attr('id', null);
-                elContainer.replaceWith(searchGroup);
-                elContainer.hide();
-                elContainer.appendTo(searchGroup);// we need the group to working form
+                // elContainer.appendTo(searchGroup);// we need the group to working form
 
                 // ensure proper filling of the referenced id
                 var writableFields = elContainer.find(":input[type!='hidden'][disabled!='disabled']").not($clearButton);
@@ -82,7 +83,7 @@ $(function () {
                     }
                 });
 
-            }
+            };
 
             function decompactifyContainer() {
                 if (compacted !== null) {
@@ -123,6 +124,7 @@ $(function () {
 
 
             function compactifyContainer() {
+
                 if (compacted === null) {
                     const label = elContainer.find('> fieldset > h4').text();
                     const value = $compactValueInput.val();
@@ -151,7 +153,6 @@ $(function () {
             });
 
             var hasErrors = elContainer.find(".has-error");
-
 
             if ($searchInput.length) {
                 searchifyContainer();

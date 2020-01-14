@@ -53,7 +53,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
                             'label' => $this->getLabel($contest, $role),
                         ];
                     }
-                };
+                }
                 return [
                     'link' => null,
                     'active' => false,

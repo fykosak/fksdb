@@ -7,11 +7,10 @@ use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Payment\IPaymentModel;
 use FKSDB\Payment\Price;
-use FKSDB\Transitions\IEventReferencedModel;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
+use Nette\Security\IResource;
 use Nette\Utils\DateTime;
-use Nette\InvalidStateException;
 
 /**
  *
@@ -40,7 +39,7 @@ use Nette\InvalidStateException;
  * @property-read string used_drugs užívané léky
  * @property-read string schedule
  */
-class ModelEventParticipant extends AbstractModelSingle implements IEventReferencedModel, IPaymentModel {
+class ModelEventParticipant extends AbstractModelSingle implements IEventReferencedModel, IPaymentModel, IPersonReferencedModel, IResource {
     /**
      * @return ModelPerson|null
      */
@@ -56,7 +55,7 @@ class ModelEventParticipant extends AbstractModelSingle implements IEventReferen
      */
     public function __toString(): string {
         if (!$this->getPerson()) {
-            throw new InvalidStateException(\sprintf(_('Missing person in application Id %s.'), $this->getPrimary(false)));
+            // throw new InvalidStateException(\sprintf(_('Missing person in application Id %s.'), $this->getPrimary(false)));
         }
         return $this->getPerson()->__toString();
     }
@@ -85,5 +84,12 @@ class ModelEventParticipant extends AbstractModelSingle implements IEventReferen
             throw new BadRequestException('Event is not fyziklani');
         }
         return ModelFyziklaniTeam::createFromActiveRow($row);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    function getResourceId() {
+        return 'event.participant';
     }
 }

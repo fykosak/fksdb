@@ -27,7 +27,7 @@ use Nette\Utils\DateTime;
  * @property-read DateTime registration_begin
  * @property-read DateTime registration_end
  */
-class ModelEvent extends AbstractModelSingle implements IResource {
+class ModelEvent extends AbstractModelSingle implements IResource, IContestReferencedModel {
 
     /**
      * Event can have a holder assigned for purposes of parameter parsing.
@@ -55,17 +55,6 @@ class ModelEvent extends AbstractModelSingle implements IResource {
      */
     public function getEventType(): ModelEventType {
         return ModelEventType::createFromActiveRow($this->event_type);
-    }
-
-    /**
-     * @return ModelEventAccommodation[]
-     */
-    public function getEventAccommodationsAsArray(): array {
-        $data = [];
-        foreach ($this->related(DbNames::TAB_EVENT_ACCOMMODATION) as $item) {
-            $data[] = ModelEventAccommodation::createFromActiveRow($item);
-        }
-        return $data;
     }
 
     /**
@@ -125,7 +114,7 @@ class ModelEvent extends AbstractModelSingle implements IResource {
      * @return GroupedSelection
      */
     public function getScheduleGroups(): GroupedSelection {
-        return $this->related(DbNames::TAB_SCHEDULE_GROUP);
+        return $this->related(DbNames::TAB_SCHEDULE_GROUP,'event_id');
     }
 
     /**

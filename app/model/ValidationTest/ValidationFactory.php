@@ -1,9 +1,10 @@
 <?php
 
-
 namespace FKSDB\ValidationTest;
 
+use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\Services\ServiceContest;
+use Nette\Application\BadRequestException;
 
 /**
  * Class ValidationFactory
@@ -18,24 +19,36 @@ class ValidationFactory {
      * @var ServiceContest
      */
     private $serviceContest;
+    /**
+     * @var TableReflectionFactory
+     */
+    private $tableReflectionFactory;
 
-    public function __construct(ServiceContest $serviceContest) {
+    /**
+     * ValidationFactory constructor.
+     * @param ServiceContest $serviceContest
+     * @param TableReflectionFactory $tableReflectionFactory
+     * @throws BadRequestException
+     */
+    public function __construct(ServiceContest $serviceContest, TableReflectionFactory $tableReflectionFactory) {
         $this->serviceContest = $serviceContest;
+        $this->tableReflectionFactory = $tableReflectionFactory;
         $this->registersTests();
     }
 
     /**
-     *
+     * @throws BadRequestException
      */
     private function registersTests() {
         $this->tests = [
             new Tests\GenderFromBornNumber(),
             new Tests\ParticipantDuration\FykosParticipantDuration($this->serviceContest),
             new Tests\ParticipantDuration\VyfukParticipantDuration($this->serviceContest),
-            new Tests\Phone\PhoneNumber(),
-            new Tests\Phone\PhoneParentDNumber(),
-            new Tests\Phone\PhoneParentMNumber(),
+            new EventCoveringTest(),
         ];
+        foreach (['phone', 'phone_parent_d', 'phone_parent_m', 'health_insurance'] as $fieldName) {
+            $this->tests[] = new PersonInfoFieldTest($this->tableReflectionFactory, $fieldName);
+        }
     }
 
     /**

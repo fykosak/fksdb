@@ -1,12 +1,11 @@
 <?php
 
-
 namespace FKSDB\Components\Grids\Payment;
 
+use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServicePayment;
-use Nette\Utils\Html;
 
 /**
  * Class PaymentGrid
@@ -21,63 +20,17 @@ abstract class PaymentGrid extends BaseGrid {
     /**
      * PaymentGrid constructor.
      * @param ServicePayment $servicePayment
+     * @param TableReflectionFactory $tableReflectionFactory
      */
-    function __construct(ServicePayment $servicePayment) {
-        parent::__construct();
+    function __construct(ServicePayment $servicePayment, TableReflectionFactory $tableReflectionFactory) {
+        parent::__construct($tableReflectionFactory);
         $this->servicePayment = $servicePayment;
     }
 
     /**
-     * @throws \NiftyGrid\DuplicateColumnException
+     * @return string
      */
-    protected function addColumnPaymentId() {
-        $this->addColumn('id', _('#'))->setRenderer(function ($row) {
-            return '#' . ModelPayment::createFromActiveRow($row)->getPaymentId();
-        });
+    protected function getModelClassName(): string {
+        return ModelPayment::class;
     }
-
-    /**
-     * @throws \NiftyGrid\DuplicateColumnException
-     */
-    protected function addColumnPrice() {
-        $this->addColumn('price', _('Price'))->setRenderer(function ($row) {
-            $model = ModelPayment::createFromActiveRow($row);
-            return $model->getPrice()->__toString();
-        });
-    }
-
-    /**
-     * @throws \NiftyGrid\DuplicateColumnException
-     */
-    protected function addColumnState() {
-        $this->addColumn('state', _('Status'))->setRenderer(function ($row) {
-            $model = ModelPayment::createFromActiveRow($row);
-            return Html::el('span')->addAttributes(['class' => $model->getUIClass()])->addText(_($model->getStateLabel()));
-        });
-    }
-
-    /**
-     * @throws \NiftyGrid\DuplicateButtonException
-     */
-    protected function addButtonDetail() {
-        $this->addButton('detail', _('Detail'))
-            ->setText(_('Detail'))
-            ->setLink(function ($row) {
-                return $this->getPresenter()->link(':Event:payment:detail', [
-                    'id' => $row->payment_id,
-                    'eventId' => $row->event_id,
-                ]);
-            });
-    }
-
-    /**
-     * @throws \NiftyGrid\DuplicateColumnException
-     */
-    protected function addColumnsSymbols() {
-        //$this->addColumn('constant_symbol', _('CS'));
-        $this->addColumn('variable_symbol', _('VS'));
-        // $this->addColumn('specific_symbol', _('SS'));
-        // $this->addColumn('bank_account', _('Bank acc.'));
-    }
-
 }

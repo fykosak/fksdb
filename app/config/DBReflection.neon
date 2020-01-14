@@ -1,0 +1,112 @@
+DBReflection:
+    tables:
+         payment:
+             bank_account:
+                 type: string
+                 title: _(Bank account)
+             bank_name:
+                 type: string
+                 title: _(Bank name)
+             constant_symbol:
+                 type: string
+                 title: Constant symbol
+             iban:
+                 type: string
+                 title: _(IBAN)
+             specific_symbol:
+                 type: string
+                 title: specific_symbol
+             swift:
+                 type: string
+                 title: _(SWIFT)
+             variable_symbol:
+                 type: string
+                 title: Variable symbol
+             recipient:
+                 type: string
+                 title: _(Recipient)
+         org:
+             contribution:
+                 type: string
+                 title: _(Contribution)
+                 description: _('Zobrazeno v síni slávy')
+             role:
+                 type: string
+                 title: Role
+         person:
+             born_family_name:
+                 type: string
+                 title: _(Born family name)
+                 description: _('Pouze pokud je odlišné od příjmení.')
+                 permission: PERMISSION_ALLOW_FULL
+             display_name:
+                 type: string
+                 title: _(Display name)
+                 description: _('Pouze pokud je odlišné od "jméno příjmení".')
+                 permission: PERMISSION_ALLOW_BASIC
+             family_name:
+                 type: string
+                 title: _(Family name)
+                 permission: PERMISSION_ALLOW_BASIC
+             other_name:
+                 type: string
+                 title: _(Other name)
+                 permission: PERMISSION_ALLOW_BASIC
+         login:
+             login:
+                 type: string
+                 title: _(Login)
+         event_participant:
+             team: FKSDB\Components\DatabaseReflection\EventParticipant\TeamRow
+         contestant_base:
+             ct_id: FKSDB\Components\DatabaseReflection\Tables\ContestantBase\ContestantId
+             year: FKSDB\Components\DatabaseReflection\Tables\ContestantBase\YearRow
+             contest_id: FKSDB\Components\DatabaseReflection\Tables\ContestantBase\ContestId
+         event_org:
+             event_org_id:
+                 accessKey: e_org_id
+                 type: primaryKey
+                 title: _(Event org Id)
+             note:
+                 type: string
+                 title: _(Note)
+         referenced:
+             payment_id: FKSDB\Components\DatabaseReflection\ReferencedRows\PaymentRow
+    links:
+        payment.detail:
+            destination: ':Event:Payment:detail'
+            params:
+                eventId: event_id
+                id: payment_id
+            title: Detail
+            model: FKSDB\ORM\Models\ModelPayment
+        org.detail:
+            destination: ':Org:Org:detail'
+            params:
+                contestId: contest_id
+                id: org_id
+            title: Detail
+            model: FKSDB\ORM\Models\ModelOrg
+        org.edit:
+            destination: ':Org:Org:edit'
+            params:
+                contestId: contest_id
+                id: org_id
+            title: Edit
+            model: FKSDB\ORM\Models\ModelOrg
+        contestatnt_base.edit:
+            destination: ':Org:Contestant:edit'
+            params:
+                contestId: contest_id
+                id: ct_id
+            title: Edit
+            model: FKSDB\ORM\Models\ModelContestant
+        event_participant.detail: FKSDB\Components\DatabaseReflection\Links\ParticipantDetailLink
+        fyziklani_team.detail:
+            destination: ':Event:TeamApplication:detail'
+            params:
+                eventId: event_id
+                id: e_fyziklani_team_id
+            title: Detail
+            model: FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam
+

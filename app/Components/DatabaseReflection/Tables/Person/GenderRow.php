@@ -41,15 +41,14 @@ class GenderRow extends AbstractRow {
      * @return array
      */
     private function createOptions(): array {
-        return ['M' => 'muž', 'F' => 'žena'];
+        return ['M' => _('Male'), 'F' => _('Female')];
     }
 
     /**
      * @param AbstractModelSingle|ModelPerson $model
-     * @param string $fieldName
      * @return Html
      */
-    protected function createHtmlValue(AbstractModelSingle $model, string $fieldName): Html {
+    protected function createHtmlValue(AbstractModelSingle $model): Html {
         if ($model->gender == 'F') {
             return Html::el('span')->addAttributes(['class' => 'fa fa-venus']);
         } elseif ($model->gender == 'M') {
