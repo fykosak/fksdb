@@ -190,11 +190,9 @@ abstract class Machine {
         }
 
         $this->connection->commit();
-        $this->service->save($model);
         $model->updateState($transition->getToState());
         /* select from DB new (updated) model */
 
-        $this->service->save($model);
         // $newModel = $model;
         $newModel = $model->refresh();
         $transition->afterExecute($newModel);
@@ -250,9 +248,7 @@ abstract class Machine {
         /**
          * @var IStateModel|IModel|ActiveRow $model
          */
-        $model = $service->createNew($data);
-        $service->save($model);
-
+        $model = $service->createNewModel($data);
         return $this->execute($transition, $model);
     }
 }
