@@ -618,17 +618,17 @@ class ExportPresenter extends SeriesPresenter {
             'query_id' => $storedQuery->query_id,
         ])->delete();
         foreach ($metadata['tags'] as $tagTypeId) {
-            $data = array(
+            $data = [
                 'query_id' => $storedQuery->query_id,
                 'tag_type_id' => $tagTypeId,
-            );
+            ];
             //TODO
             $tag = $this->serviceMStoredQueryTag->createNew($data);
             $this->serviceMStoredQueryTag->save($tag);
         }
 
         $this->serviceStoredQueryParameter->getTable()
-            ->where(array('query_id' => $storedQuery->query_id))->delete();
+            ->where(['query_id' => $storedQuery->query_id])->delete();
 
         foreach ($values[self::CONT_PARAMS_META] as $paramMetaData) {
             /**

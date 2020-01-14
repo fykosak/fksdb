@@ -284,7 +284,6 @@ class InboxPresenter extends SeriesPresenter {
                 if ($submit->isEmpty()) {
                     $this->serviceSubmit->dispose($submit);
                 } else {
-                    //TODO
                     $this->serviceSubmit->save($submit);
                 }
             }

@@ -63,8 +63,7 @@ class GlobalSession implements IGlobalSession {
 
             // touch the session for another expiration period
             if ($this->globalSession && !$this->globalSession->isValid()) {
-                $this->globalSession->until = DateTime::from($this->expiration);
-                $this->serviceGlobalSession->save($this->globalSession);
+                $this->serviceGlobalSession->updateModel2($this->globalSession, ['until' => DateTime::from($this->expiration)]);
             }
         }
         $this->started = true;
@@ -156,8 +155,7 @@ class GlobalSession implements IGlobalSession {
         }
 
         if ($value != $this->globalSession->login_id) {
-            $this->globalSession->login_id = $value;
-            $this->serviceGlobalSession->save($this->globalSession);
+            $this->serviceGlobalSession->updateModel2($this->globalSession, ['login_id' => $value]);
         }
     }
 

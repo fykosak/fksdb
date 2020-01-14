@@ -81,6 +81,7 @@ class TasksFromXML extends Stage {
 
         // update fields
         foreach ($this->xmlToColumnMap as $xmlElement => $column) {
+            // TODO property is readonly
             $task->{$column} = (string) $XMLTask->{$xmlElement};
         }
 

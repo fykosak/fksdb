@@ -168,8 +168,8 @@ class SettingsPresenter extends AuthenticatedPresenter {
             $login->setHash($loginData['password']);
         }
 
-        $this->loginService->updateModel($login, $loginData);
-        $this->loginService->save($login);
+        $this->loginService->updateModel2($login, $loginData);
+
         $this->flashMessage(_('Uživatelské informace upraveny.'), self::FLASH_SUCCESS);
         if ($tokenAuthentication) {
             $this->flashMessage(_('Heslo nastaveno.'), self::FLASH_SUCCESS); //TODO here may be Facebook ID

@@ -122,8 +122,7 @@ class CloseFormsFactory {
             $submit = ModelFyziklaniSubmit::createFromActiveRow($row);
             $sum += $submit->points;
         }
-        $this->serviceFyziklaniTeam->updateModel($team, ['points' => $sum]);
-        $this->serviceFyziklaniTeam->save($team);
+        $this->serviceFyziklaniTeam->updateModel2($team, ['points' => $sum]);
         $connection->commit();
         $control->getPresenter()->flashMessage(\sprintf(_('Team %s has successfully closed submitting, with total %d points.'), $team->name, $sum), \BasePresenter::FLASH_SUCCESS);
     }

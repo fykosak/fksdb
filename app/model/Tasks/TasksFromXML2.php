@@ -121,11 +121,12 @@ class TasksFromXML2 extends Stage {
             } else {
                 $value = (string) $XMLTask->{$xmlElement};
             }
-
+// TODO property is readonly
             $task->{$column} = $value;
         }
 
         // store it
+        // TODO
         $this->taskService->save($task);
 
         // forward it to pipeline
