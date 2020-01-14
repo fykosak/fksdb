@@ -59,5 +59,23 @@ class ServicePersonInfo extends AbstractServiceSingle {
         return parent::updateModel($model, $data);
     }
 
+    /**
+     * @param \FKSDB\ORM\IModel|AbstractModelSingle|ModelPersonInfo $model
+     * @param array $data
+     * @param bool $alive
+     * @return mixed|void
+     * @throws \Exception
+     */
+    public function updateModel2(AbstractModelSingle $model, $data = null, $alive = true) {
+        if (isset($data['agreed'])) {
+            if ($data['agreed'] == '1') {
+                $data['agreed'] = new DateTime();
+            } else if ($data['agreed'] == '0') {
+                unset($data['agreed']);
+            }
+        }
+        return parent::updateModel2($model, $data);
+    }
+
 }
 
