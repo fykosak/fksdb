@@ -15,6 +15,9 @@ use function strtolower;
  * @package FKSDB\Components\Controls
  */
 class PhoneNumberFactory {
+    /**
+     * @var ServiceRegion
+     */
     private $serviceRegion;
 
     /**
@@ -37,9 +40,6 @@ class PhoneNumberFactory {
      * @return Html
      */
     public function formatPhone(string $number): Html {
-        /**
-         * @var ModelRegion $region
-         */
         try {
             $region = $this->getRegion($number);
             if ($region) {
@@ -47,7 +47,7 @@ class PhoneNumberFactory {
                     ->addAttributes(['class' => 'phone-flag mr-3'])
                     ->addHtml(Html::el('img')
                         ->addAttributes(['src' => '/images/flags/4x3/' . strtolower($region->country_iso) . '.svg']));
-                return Html::el('span')->addAttributes([])->addHtml($flag)->addText($region->formatPhoneNumber($number));
+                return Html::el('span')->addHtml($flag)->addText($region->formatPhoneNumber($number));
             }
         } catch (InvalidPhoneNumberException $exception) {
         }

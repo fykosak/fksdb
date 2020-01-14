@@ -342,7 +342,6 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     /**
      * @return FormControl
      * @throws \Nette\Application\BadRequestException
-     * @throws \Nette\Utils\RegexpException
      */
     public function createComponentContestantForm() {
         $control = new FormControl();

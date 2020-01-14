@@ -7,11 +7,9 @@ use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
-use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\ORM\Services\Schedule\ServicePersonSchedule;
 use FKSDB\Payment\Price;
 use FKSDB\YearCalculator;
-use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 

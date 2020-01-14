@@ -4,7 +4,6 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\DbNames;
-use FKSDB\ORM\Models\ModelTeacher;
 use FKSDB\ORM\Services\ServiceTeacher;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;

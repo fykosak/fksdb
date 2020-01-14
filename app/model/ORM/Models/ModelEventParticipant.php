@@ -40,6 +40,8 @@ use Nette\Utils\DateTime;
  * @property-read string schedule
  */
 class ModelEventParticipant extends AbstractModelSingle implements IEventReferencedModel, IPaymentModel, IPersonReferencedModel, IResource {
+    const RESOURCE_ID = 'event.participant';
+
     /**
      * @return ModelPerson|null
      */
@@ -90,6 +92,6 @@ class ModelEventParticipant extends AbstractModelSingle implements IEventReferen
      * @inheritDoc
      */
     function getResourceId() {
-        return 'event.participant';
+        return self::RESOURCE_ID;
     }
 }

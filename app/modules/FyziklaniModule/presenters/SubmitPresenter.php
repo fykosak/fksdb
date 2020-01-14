@@ -7,6 +7,8 @@ use FKSDB\Components\Controls\Fyziklani\Submit\DetailControl;
 use FKSDB\Components\Controls\Fyziklani\Submit\QREntryControl;
 use FKSDB\Components\Controls\Fyziklani\Submit\TaskCodeInput;
 use FKSDB\Components\Grids\Fyziklani\SubmitsGrid;
+use FKSDB\model\Fyziklani\ClosedSubmittingException;
+use FKSDB\model\Fyziklani\PointsMismatchException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -218,5 +220,22 @@ class SubmitPresenter extends BasePresenter {
      */
     public function createComponentDetailControl(): DetailControl {
         return $this->fyziklaniComponentsFactory->createSubmitDetailControl();
+    }
+
+    /**
+     * @throws AbortException
+     */
+    public function handleCheck() {
+        try {
+            $log = $this->submit->check($this->submit->points, $this->getUser());
+            $this->flashMessage($log->getMessage(), $log->getLevel());
+            $this->redirect('this');
+        } catch (ClosedSubmittingException $exception) {
+            $this->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
+            $this->redirect('this');
+        } catch (PointsMismatchException $exception) {
+            $this->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
+            $this->redirect('this');
+        }
     }
 }

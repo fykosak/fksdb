@@ -284,4 +284,6 @@ DBReflection:
                 id: e_fyziklani_team_id
             title: Detail
             model: FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam
+    details:
+
 

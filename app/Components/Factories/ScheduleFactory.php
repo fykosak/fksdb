@@ -38,6 +38,7 @@ class ScheduleFactory {
 
     /**
      * ScheduleFactory constructor.
+     * @param ServicePersonSchedule $servicePersonSchedule
      * @param ITranslator $translator
      * @param TableReflectionFactory $tableReflectionFactory
      * @param YearCalculator $yearCalculator

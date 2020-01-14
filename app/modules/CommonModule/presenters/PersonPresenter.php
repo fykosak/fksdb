@@ -282,7 +282,6 @@ class PersonPresenter extends BasePresenter {
     /**
      * @return FormControl
      * @throws BadRequestException
-     * @throws RegexpException
      */
     public function createComponentFormSearch(): FormControl {
         $control = new FormControl();

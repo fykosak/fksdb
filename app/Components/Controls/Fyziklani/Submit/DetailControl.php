@@ -72,5 +72,4 @@ class DetailControl extends Control {
             $this->redirect('this');
         }
     }
-
 }

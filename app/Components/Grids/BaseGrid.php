@@ -26,7 +26,6 @@ use NiftyGrid\GridException;
 use NiftyGrid\GridPaginator;
 use PePa\CSVResponse;
 use SQL\SearchableDataSource;
-use Tracy\Debugger;
 
 /**
  *

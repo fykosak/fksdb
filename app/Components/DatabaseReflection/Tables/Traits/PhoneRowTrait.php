@@ -6,7 +6,6 @@ use FKSDB\Components\Controls\Helpers\Badges\NotSetBadge;
 use FKSDB\Components\Controls\PhoneNumber\PhoneNumberFactory;
 use FKSDB\Components\Forms\Controls\WriteOnlyInput;
 use FKSDB\ORM\AbstractModelSingle;
-use FKSDB\ORM\Services\ServiceRegion;
 use FKSDB\ValidationTest\ValidationLog;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;

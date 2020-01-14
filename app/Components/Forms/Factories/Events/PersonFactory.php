@@ -96,7 +96,7 @@ class PersonFactory extends AbstractFactory {
      * @param BaseMachine $machine
      * @param Container $container
      * @return array|mixed
-     * @throws \Nette\Utils\RegexpException
+     * @throws \Exception
      */
     protected function createComponent(Field $field, BaseMachine $machine, Container $container) {
         $searchType = $this->evaluator->evaluate($this->searchType, $field);

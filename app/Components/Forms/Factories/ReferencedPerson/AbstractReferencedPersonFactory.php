@@ -129,7 +129,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
      * @param IVisibilityResolver $visibilityResolver is person's writeOnly field visible? (i.e. not writeOnly then)
      * @param int $evenId
      * @return array
-     * @throws RegexpException
+     * @throws \Exception
      */
     public function createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, IModifiabilityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver, $evenId = 0) {
 

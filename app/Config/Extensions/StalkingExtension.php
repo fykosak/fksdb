@@ -3,11 +3,7 @@
 namespace FKSDB\Config\Extensions;
 
 use FKSDB\Components\Controls\Stalking\StalkingService;
-use FKSDB\Components\DatabaseReflection\Links\Link;
-use Nette\Application\BadRequestException;
 use Nette\Config\CompilerExtension;
-use Nette\DI\ContainerBuilder;
-use Nette\DI\ServiceDefinition;
 
 /**
  * Class StalkingExtension

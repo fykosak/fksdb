@@ -8,8 +8,6 @@ use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\YearCalculator;
-use Github\Events\Event;
-use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 
