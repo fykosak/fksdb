@@ -281,7 +281,7 @@ class EventPresenter extends EntityPresenter {
             $tokenData = ["until" => $model->registration_end ?: $model->end];
             foreach ($this->serviceAuthToken->findTokensByEventId($model->event_id) as $token) {
                 $this->serviceAuthToken->updateModel2($token, $tokenData);
-                $this->serviceAuthToken->save($token);
+              //  $this->serviceAuthToken->save($token);
             }
 
             /*

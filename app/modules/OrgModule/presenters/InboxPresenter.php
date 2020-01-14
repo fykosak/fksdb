@@ -284,6 +284,7 @@ class InboxPresenter extends SeriesPresenter {
                 if ($submit->isEmpty()) {
                     $this->serviceSubmit->dispose($submit);
                 } else {
+                    //TODO
                     $this->serviceSubmit->save($submit);
                 }
             }
@@ -313,13 +314,13 @@ class InboxPresenter extends SeriesPresenter {
             ))->delete();
             $key = self::TASK_PREFIX . $task->task_id;
             foreach ($values[$key] as $personId) {
-                $data = array(
+                $data = [
                     'task_id' => $task->task_id,
                     'person_id' => $personId,
                     'type' => ModelTaskContribution::TYPE_GRADE,
-                );
-                $contribution = $service->createNew($data);
-                $service->save($contribution);
+                ];
+                $contribution = $service->createNewModel($data);
+                // $service->save($contribution);
             }
         }
 
