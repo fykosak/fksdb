@@ -11,9 +11,11 @@ use FKSDB\ORM\Services\ServiceTask;
 use FKSDB\Submits\ISubmitStorage;
 use FKSDB\Submits\ProcessingException;
 use ModelException;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\FileResponse;
 use Nette\Application\UI\Form;
+use Nette\Database\Table\Selection;
 use Nette\Utils\DateTime;
 use Tracy\Debugger;
 
@@ -27,7 +29,7 @@ class SubmitPresenter extends BasePresenter {
     /** @var ServiceTask */
     private $taskService;
 
-    /** @var \FKSDB\ORM\Services\ServiceSubmit */
+    /** @var ServiceSubmit */
     private $submitService;
 
     /**
@@ -43,7 +45,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @param \FKSDB\ORM\Services\ServiceSubmit $submitService
+     * @param ServiceSubmit $submitService
      */
     public function injectSubmitService(ServiceSubmit $submitService) {
         $this->submitService = $submitService;
@@ -109,7 +111,7 @@ class SubmitPresenter extends BasePresenter {
     /**
      * @param $id
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function actionDownload($id) {
         $submit = $this->submitService->findByPrimary($id);
@@ -197,10 +199,10 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @internal
      * @param mixed $form
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
+     * @internal
      */
     public function handleUploadFormSuccess($form) {
         $values = $form->getValues();
@@ -234,17 +236,16 @@ class SubmitPresenter extends BasePresenter {
                 // store submit
                 $submit = $this->submitService->findByContestant($ctId, $task->task_id);
                 if (!$submit) {
-                    $submit = $this->submitService->createNew(array(
+                    $submit = $this->submitService->createNewModel([
                         'task_id' => $task->task_id,
                         'ct_id' => $ctId,
-                    ));
+                    ]);
                 }
                 //TODO handle cases when user modifies already graded submit (i.e. with bad timings)
-                $submit->submitted_on = new DateTime();
-                $submit->source = ModelSubmit::SOURCE_UPLOAD;
-                $submit->ct_id; // stupid... touch the field in order to have it loaded via ActiveRow
-
-                $this->submitService->save($submit);
+                $submit->update([
+                    'submitted_on' => new DateTime(),
+                    'source' => ModelSubmit::SOURCE_UPLOAD,
+                ]);
 
                 // store file
                 $this->submitStorage->storeFile($taskValues['file']->getTemporaryFile(), $submit);
@@ -271,7 +272,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @return \Nette\Database\Table\Selection
+     * @return Selection
      * @throws BadRequestException
      */
     private function getAvailableTasks() {
