@@ -238,22 +238,18 @@ class ExtendedPersonHandler {
         // initialize model
         $model = $presenter->getModel();
         if (!$model) {
-            $data = array(
+            $data = [
                 'contest_id' => $this->getContest()->contest_id,
+                'person_id' => $person->getPrimary(),
                 'year' => $this->getYear(),
-            );
-            $model = $this->service->createNew($data);
-            $model->person_id = $person->getPrimary();
+            ];
+            $model = $this->service->createNewModel($data);
         }
 
         // update data
         if (isset($values[self::CONT_MODEL])) {
             $data = FormUtils::emptyStrToNull($values[self::CONT_MODEL]);
-            $this->service->updateModel($model, $data);
+            $this->service->updateModel2($model, $data);
         }
-
-        // store model
-        $this->service->save($model);
     }
-
 }
