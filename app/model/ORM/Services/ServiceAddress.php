@@ -35,6 +35,7 @@ class ServiceAddress extends AbstractServiceSingle {
     /**
      * @param \FKSDB\ORM\IModel $model
      * @return mixed|void
+     * @deprecated
      */
     public function save(IModel &$model) {
         $modelClassName = $this->getModelClassName();
