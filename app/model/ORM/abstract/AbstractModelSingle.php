@@ -57,8 +57,9 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
      * @param $value
      */
     public function __set($key, $value) {
+        $this->update([$key => $value]);
         //Debugger::log(\sprintf('Call ActiveRow __set() with parameters %s %s.',$key, $value));
-        return parent::__set($key, $value);
+        //  return parent::__set($key, $value);
     }
 
 }
