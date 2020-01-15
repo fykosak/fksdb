@@ -82,7 +82,7 @@ class SubmitHandler {
             return $this->createSubmit($task, $team, $points, $user);
         } elseif (!$submit->isChecked()) { // check bodovania
             return $submit->check($points, $user);
-        } elseif (!$submit->points) { // ak bol zmazaný
+        } elseif (is_null($submit->points)) { // ak bol zmazaný
             return $submit->changePoints($points, $user);
         } else {
             throw new TaskCodeException(\sprintf(_('Úloha je zadaná a overená.')));
@@ -152,7 +152,7 @@ class SubmitHandler {
      * @return Message
      */
     private function createSubmit(ModelFyziklaniTask $task, ModelFyziklaniTeam $team, int $points, User $user): Message {
-        $this->serviceFyziklaniSubmit->createNewModel([
+        $submit = $this->serviceFyziklaniSubmit->createNewModel([
             'points' => $points,
             'fyziklani_task_id' => $task->fyziklani_task_id,
             'e_fyziklani_team_id' => $team->e_fyziklani_team_id,
@@ -163,7 +163,7 @@ class SubmitHandler {
             'created' => null
         ]);
 
-        Debugger::log(\sprintf('Submit created for team %d and task %s by %s', $team->e_fyziklani_team_id, $task->fyziklani_task_id, $user->getIdentity()->getId()), ModelFyziklaniSubmit::DEBUGGER_LOG_PRIORITY);
+        Debugger::log(\sprintf('Submit %s created for team %d and task %s by %s', $submit->getPrimary(), $team->e_fyziklani_team_id, $task->fyziklani_task_id, $user->getIdentity()->getId()), ModelFyziklaniSubmit::DEBUGGER_LOG_PRIORITY);
         return new Message(\sprintf(_('Body byly uloženy. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
             $points,
             $team->name,
