@@ -61,7 +61,7 @@ class DetailControl extends Control {
      */
     public function handleCheck() {
         try {
-            $log = $this->model->check($this->model->points, $this->getPresenter()->getUser());
+            $log = $this->serviceFyziklaniSubmit->checkSubmit($this->model, $this->model->points, $this->getPresenter()->getUser());
             $this->getPresenter()->flashMessage($log->getMessage(), $log->getLevel());
             $this->redirect('this');
         } catch (ClosedSubmittingException $exception) {

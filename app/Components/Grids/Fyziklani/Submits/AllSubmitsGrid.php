@@ -136,6 +136,7 @@ class AllSubmitsGrid extends SubmitsGrid {
     /**
      * @param $id
      * @throws AbortException
+     * @throws \FKSDB\model\Fyziklani\ClosedSubmittingException
      */
     public function handleDelete($id) {
         $row = $this->serviceFyziklaniSubmit->findByPrimary($id);
@@ -149,7 +150,8 @@ class AllSubmitsGrid extends SubmitsGrid {
             $this->flashMessage('Tento tým má už uzavřené bodování', \BasePresenter::FLASH_WARNING);
             return;
         }
-        $log = $submit->revoke($this->getPresenter()->getUser());
+        $log = $this->serviceFyziklaniSubmit->revokeSubmit($submit, $this->getPresenter()->getUser());
+
         $this->flashMessage($log->getMessage(), \BasePresenter::FLASH_SUCCESS);
         $this->redirect('this');
     }

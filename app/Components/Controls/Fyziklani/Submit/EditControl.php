@@ -117,7 +117,7 @@ class EditControl extends Control {
     private function editFormSucceeded(Form $form) {
         $values = $form->getValues();
         try {
-            $msg = $this->submit->changePoints($values->points, $this->getPresenter()->getUser());
+            $msg = $this->serviceFyziklaniSubmit->changePoints($this->submit, $values->points, $this->getPresenter()->getUser());
             $this->getPresenter()->flashMessage($msg->getMessage(), $msg->getLevel());
             $this->redirect('this');
         } catch (ClosedSubmittingException $exception) {

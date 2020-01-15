@@ -31,10 +31,6 @@ class ModelFyziklaniSubmit extends AbstractModelSingle {
     const STATE_NOT_CHECKED = 'not_checked';
     const STATE_CHECKED = 'checked';
 
-    const DEBUGGER_LOG_PRIORITY = 'fyziklani-info';
-
-    const LOG_FORMAT = 'Submit %d was %s by %s';
-
     /**
      * @return ModelFyziklaniTask
      */
@@ -73,88 +69,5 @@ class ModelFyziklaniSubmit extends AbstractModelSingle {
      */
     public function canChange(): bool {
         return $this->getTeam()->hasOpenSubmitting();
-    }
-
-    /**
-     * @param int $points
-     * @param User $user
-     * @return Message
-     * @throws ClosedSubmittingException
-     */
-    public function changePoints(int $points, User $user): Message {
-        if (!$this->canChange()) {
-            throw new ClosedSubmittingException($this->getTeam());
-        }
-        $this->update([
-            'points' => $points,
-            /* ugly, exclude previous value of `modified` from query
-             * so that `modified` is set automatically by DB
-             * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
-             */
-            'state' => self::STATE_NOT_CHECKED,
-            'modified' => null,
-        ]);
-        Debugger::log(\sprintf(self::LOG_FORMAT . ' points %d', $this->getPrimary(), 'edited', $user->getIdentity()->getId(), $points), self::DEBUGGER_LOG_PRIORITY);
-
-        return new Message(\sprintf(_('Body byly upraveny. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
-            $points,
-            $this->getTeam()->name,
-            $this->getTeam()->e_fyziklani_team_id,
-            $this->getTask()->label,
-            $this->getTask()->name), Message::LVL_SUCCESS);
-    }
-
-    /**
-     * @param User $user
-     * @return Message
-     * @throws ClosedSubmittingException
-     */
-    public function revoke(User $user): Message {
-        if (!$this->canChange()) {
-            throw new ClosedSubmittingException($this->getTeam());
-        }
-        $this->update([
-            'points' => null,
-            'state' => ModelFyziklaniSubmit::STATE_NOT_CHECKED,
-            /* ugly, exclude previous value of `modified` from query
-             * so that `modified` is set automatically by DB
-             * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
-             */
-            'modified' => null
-        ]);
-        Debugger::log(\sprintf(self::LOG_FORMAT, $this->getPrimary(), 'revoked', $user->getIdentity()->getId()), self::DEBUGGER_LOG_PRIORITY);
-        return new Message(\sprintf(_('Submit %d has been revoked.'), $this->fyziklani_submit_id), Message::LVL_SUCCESS);
-    }
-
-    /**
-     * @param int $points
-     * @param User $user
-     * @return Message
-     * @throws ClosedSubmittingException
-     * @throws PointsMismatchException
-     */
-    public function check(int $points, User $user): Message {
-        if (!$this->canChange()) {
-            throw new ClosedSubmittingException($this->getTeam());
-        }
-        if ($this->points != $points) {
-            throw new PointsMismatchException();
-        }
-        $this->update([
-            'state' => self::STATE_CHECKED,
-            /* ugly, exclude previous value of `modified` from query
-             * so that `modified` is set automatically by DB
-             * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
-             */
-            'modified' => null,
-        ]);
-        Debugger::log(\sprintf(self::LOG_FORMAT, $this->getPrimary(), 'checked', $user->getIdentity()->getId()), self::DEBUGGER_LOG_PRIORITY);
-
-        return new Message(\sprintf(_('Bodovanie bolo overené. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
-            $points,
-            $this->getTeam()->name,
-            $this->getTeam()->e_fyziklani_team_id,
-            $this->getTask()->label,
-            $this->getTask()->name), Message::LVL_SUCCESS);
     }
 }
