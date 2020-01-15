@@ -33,6 +33,8 @@ class ModelFyziklaniSubmit extends AbstractModelSingle {
 
     const DEBUGGER_LOG_PRIORITY = 'fyziklani-info';
 
+    const LOG_FORMAT = 'Submit %d was %s by %s';
+
     /**
      * @return ModelFyziklaniTask
      */
@@ -70,10 +72,7 @@ class ModelFyziklaniSubmit extends AbstractModelSingle {
      * @return bool
      */
     public function canChange(): bool {
-        if ($this->getTeam()->hasOpenSubmitting()) {
-            return true;
-        }
-        return false;
+        return $this->getTeam()->hasOpenSubmitting();
     }
 
     /**
@@ -95,7 +94,7 @@ class ModelFyziklaniSubmit extends AbstractModelSingle {
             'state' => self::STATE_NOT_CHECKED,
             'modified' => null,
         ]);
-        Debugger::log(\sprintf('Submit edited points %d by %s', $points, $user->getIdentity()->getId()), self::DEBUGGER_LOG_PRIORITY);
+        Debugger::log(\sprintf(self::LOG_FORMAT . ' points %d', $this->getPrimary(), 'edited', $user->getIdentity()->getId(), $points), self::DEBUGGER_LOG_PRIORITY);
 
         return new Message(\sprintf(_('Body byly upraveny. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
             $points,
@@ -108,8 +107,12 @@ class ModelFyziklaniSubmit extends AbstractModelSingle {
     /**
      * @param User $user
      * @return Message
+     * @throws ClosedSubmittingException
      */
     public function revoke(User $user): Message {
+        if (!$this->canChange()) {
+            throw new ClosedSubmittingException($this->getTeam());
+        }
         $this->update([
             'points' => null,
             'state' => ModelFyziklaniSubmit::STATE_NOT_CHECKED,
@@ -119,7 +122,7 @@ class ModelFyziklaniSubmit extends AbstractModelSingle {
              */
             'modified' => null
         ]);
-        Debugger::log(\sprintf('Submit %d revoked by %s', $this->fyziklani_submit_id, $user->getIdentity()->getId()), self::DEBUGGER_LOG_PRIORITY);
+        Debugger::log(\sprintf(self::LOG_FORMAT, $this->getPrimary(), 'revoked', $user->getIdentity()->getId()), self::DEBUGGER_LOG_PRIORITY);
         return new Message(\sprintf(_('Submit %d has been revoked.'), $this->fyziklani_submit_id), Message::LVL_SUCCESS);
     }
 
@@ -145,7 +148,7 @@ class ModelFyziklaniSubmit extends AbstractModelSingle {
              */
             'modified' => null,
         ]);
-        Debugger::log(\sprintf('Submit %d checked by %s', $this->fyziklani_submit_id, $user->getIdentity()->getId()), self::DEBUGGER_LOG_PRIORITY);
+        Debugger::log(\sprintf(self::LOG_FORMAT, $this->getPrimary(), 'checked', $user->getIdentity()->getId()), self::DEBUGGER_LOG_PRIORITY);
 
         return new Message(\sprintf(_('Bodovanie bolo overené. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
             $points,
