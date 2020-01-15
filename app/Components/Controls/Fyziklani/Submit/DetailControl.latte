@@ -1,52 +1,5 @@
-<h2>{sprintf(_('Submit #%s'),$model->fyziklani_submit_id)}</h2>
-<div>
-    {*control stringValue $model,_('Id'),fyziklani_submit_id*}
-
-    {*control stringValue $model,_('Team Id'),e_fyziklani_team_id*}
-
-    <div class="row">
-        <b class="col-2">{_'Team'}</b>
-        <span class="col-10">{$model->getTeam()->__toString()}
-            <span class="badge badge-info">{$model->getTeam()->hasOpenSubmitting()?_('open submitting'):_('closed submitting')}</span>
-        </span>
-    </div>
-    <hr/>
-    <h3>{_'Task'}</h3>
-    {*control stringValue $model,_('Task Id'),fyziklani_task_id*}
-
-    {*control stringValue $model->getTask(),_('Task'),name*}
-
-    {*control stringValue $model->getTask(),_('Task label'),label*}
-
-    <hr/>
-
-    {control stringValue $model,_('Points'),points}
-
-    <div class="row">
-        <b class="col-2">{_'State'}</b>
-        <span class="col-10">
-             {if $model->state == \FKSDB\ORM\Models\fyziklani\ModelFyziklaniSubmit::STATE_CHECKED}
-                 <span class="badge badge-success">{$model->state}</span>
-             {else}
-                 <span class="badge badge-danger">{$model->state?:'not checked'}</span>
-             {/if}
-
-        </span>
-    </div>
-    <hr/>
-
-    <div class="row">
-        <b class="col-2">{_'Created'}</b>
-        <span class="col-10">{$model->created->format(_('d. m. Y H:i'))}</span>
-    </div>
-    <div class="row">
-        <b class="col-2">{_'Modified'}</b>
-        <span class="col-10">{$model->modified->format(_('d. m. Y H:i'))}</span>
-    </div>
-</div>
 <div class="mt-3">
     <a class="btn btn-success"
        data-confirm="{sprintf(_('Chcete označiť submit ako správny? úloha: %s, body: %s'),$model->getTask()->label,$model->points)}"
        href="{link check!}">{_'Check'}</a>
-    <a class="btn btn-secondary" href="{plink edit id=>$model->fyziklani_submit_id}">{_'Edit'}</a>
 </div>

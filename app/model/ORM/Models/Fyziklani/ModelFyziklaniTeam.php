@@ -20,6 +20,7 @@ use Nette\Utils\DateTime;
  * @property-read  integer points
  * @property-read  string status
  * @property-read  DateTime created
+ * @property-read  DateTime modified
  * @property-read  string phone
  * @property-read  bool force_a
  * @property-read  string password

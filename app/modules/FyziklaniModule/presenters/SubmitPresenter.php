@@ -3,7 +3,7 @@
 namespace FyziklaniModule;
 
 use FKSDB\Components\Controls\Fyziklani\EditControl;
-use FKSDB\Components\Controls\Fyziklani\Submit\DetailControl;
+use FKSDB\Components\Controls\Fyziklani\Submit\CheckControl;
 use FKSDB\Components\Controls\Fyziklani\Submit\QREntryControl;
 use FKSDB\Components\Controls\Fyziklani\Submit\TaskCodeInput;
 use FKSDB\Components\Grids\Fyziklani\SubmitsGrid;
@@ -138,8 +138,8 @@ class SubmitPresenter extends BasePresenter {
      * @throws \ReflectionException
      */
     public function actionDetail($id) {
-        $control = $this->getComponent('detailControl');
-        if (!$control instanceof DetailControl) {
+        $control = $this->getComponent('checkControl');
+        if (!$control instanceof CheckControl) {
             throw new BadRequestException();
         }
         $submit = $this->loadModel($id);
@@ -166,7 +166,9 @@ class SubmitPresenter extends BasePresenter {
         return $this->submit;
     }
 
-
+    public function renderDetail() {
+        $this->template->model = $this->submit;
+    }
 
     /* ****** COMPONENTS **********/
     /**
@@ -214,9 +216,9 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @return DetailControl
+     * @return CheckControl
      */
-    public function createComponentDetailControl(): DetailControl {
+    public function createComponentCheckControl(): CheckControl {
         return $this->fyziklaniComponentsFactory->createSubmitDetailControl();
     }
 }

@@ -12,7 +12,7 @@ use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Statistics\TaskStat
 use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Statistics\TeamStatistics;
 use FKSDB\Components\Controls\Fyziklani\RoutingDownload;
 use FKSDB\Components\Controls\Fyziklani\RoutingEdit;
-use FKSDB\Components\Controls\Fyziklani\Submit\DetailControl;
+use FKSDB\Components\Controls\Fyziklani\Submit\CheckControl;
 use FKSDB\Components\Controls\Fyziklani\Submit\QREntryControl;
 use FKSDB\Components\Controls\Fyziklani\Submit\TaskCodeInput;
 use FKSDB\Components\Forms\Factories\Fyziklani\CloseFormsFactory;
@@ -287,9 +287,9 @@ class FyziklaniFactory {
     }
 
     /**
-     * @return DetailControl
+     * @return CheckControl
      */
-    public function createSubmitDetailControl(): DetailControl {
-        return new DetailControl($this->translator, $this->serviceFyziklaniSubmit);
+    public function createSubmitDetailControl(): CheckControl {
+        return new CheckControl($this->translator, $this->serviceFyziklaniSubmit);
     }
 }

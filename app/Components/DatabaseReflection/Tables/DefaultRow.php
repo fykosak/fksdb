@@ -2,11 +2,8 @@
 
 namespace FKSDB\Components\DatabaseReflection;
 
-use FKSDB\Components\DatabaseReflection\ValuePrinters\StringPrinter;
 use FKSDB\ORM\AbstractModelSingle;
-use Nette\Forms\Controls\BaseControl;
-use Nette\Forms\Controls\TextInput;
-use Nette\Forms\Form;
+use Nette\Application\BadRequestException;
 use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
 

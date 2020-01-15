@@ -16,7 +16,7 @@ use Nette\Templating\FileTemplate;
  * Class DetailControl
  * @property FileTemplate $template
  */
-class DetailControl extends Control {
+class CheckControl extends Control {
     /**
      * @var ITranslator
      */
