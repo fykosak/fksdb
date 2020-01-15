@@ -3,11 +3,13 @@
 namespace FKSDB\ORM;
 
 use Nette\Database\Table\ActiveRow;
+use Nette\DeprecatedException;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 abstract class AbstractModelSingle extends ActiveRow implements IModel {
+
     /**
      * @var bool
      * @deprecated
@@ -36,7 +38,7 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
      * @deprecated use createFromActiveRow
      */
     public static function createFromTableRow(ActiveRow $row): self {
-        return static::createFromActiveRow($row);
+        throw new DeprecatedException('Use createFromActiveRow.');
     }
 
     /**

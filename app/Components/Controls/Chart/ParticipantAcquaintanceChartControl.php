@@ -63,7 +63,7 @@ class ParticipantAcquaintanceChartControl extends ReactComponent implements ICha
         /**
          * @var ModelEvent $event
          */
-        $event = $this->serviceEvent->findByPrimary2($this->eventId);
+        $event = $this->serviceEvent->findByPrimary($this->eventId);
         $event->getParticipants();
         $data = [];
         foreach ($event->getParticipants()->where('status', ['participated', 'applied']) as $row) {

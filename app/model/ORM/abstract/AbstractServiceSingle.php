@@ -6,8 +6,7 @@ use FKSDB\ORM\Tables\TypedTableSelection;
 use InvalidArgumentException;
 use ModelException;
 use Nette\Database\Connection;
-use Nette\Database\Table\ActiveRow;
-use Nette\Database\Table\Selection as TableSelection;
+use Nette\Database\Table\Selection;
 use Nette\InvalidStateException;
 use PDOException;
 use Traversable;
@@ -21,8 +20,7 @@ use Traversable;
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-abstract class AbstractServiceSingle extends TableSelection implements IService {
-
+abstract class AbstractServiceSingle extends Selection implements IService {
     /**
      * @var Connection
      */
@@ -80,10 +78,10 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     }
 
     /**
-     * @internal Used also in MultiTableSelection.
-     *
      * @param array $data
      * @return AbstractModelSingle
+     * @internal Used also in MultiTableSelection.
+     *
      */
     public function createFromArray(array $data) {
         $className = $this->getModelClassName();
@@ -103,16 +101,6 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     abstract protected function getTableName(): string;
 
     /**
-     * @param ActiveRow $row
-     * @return mixed
-     * @deprecated
-     */
-    public function createFromTableRow(ActiveRow $row) {
-        $className = $this->getModelClassName();
-        return new $className($row->toArray(), $row->getTable());
-    }
-
-    /**
      * Syntactic sugar.
      *
      * @param int $key
@@ -122,19 +110,6 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
         $result = $this->getTable()->get($key);
         if ($result !== false) {
             return $result;
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * @param int $key
-     * @return AbstractModelSingle|null
-     */
-    public function findByPrimary2(int $key) {
-        $result = $this->getTable()->get($key);
-        if ($result !== false) {
-            return $this->getModelClassName()::createFromActiveRow($result);
         } else {
             return null;
         }
@@ -165,7 +140,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
      * @return AbstractModelSingle|null
      */
     public function refresh(AbstractModelSingle $model) {
-        return $this->findByPrimary2($model->getPrimary(true));
+        return $this->findByPrimary($model->getPrimary(true));
     }
 
     /**
@@ -188,7 +163,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
      * @throws ModelException
      * @deprecated
      */
-    public function save(IModel & $model) {
+    public function save(IModel &$model) {
         $modelClassName = $this->getModelClassName();
         if (!$model instanceof $modelClassName) {
             throw new InvalidArgumentException('Service for class ' . $this->getModelClassName() . ' cannot store ' . get_class($model));
