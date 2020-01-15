@@ -6,6 +6,35 @@ parameters:
                     PHA: "Praha"
                     BRN: "Brno"
                     OWN: "Přímo na objekt"
+            person:
+
+                person:
+                    other_name:
+                        required: true
+                    family_name:
+                        required: true
+                person_history:
+                    school_id:
+                        required: true
+                person_info:
+                    email:
+                        required: true
+                    born:
+                        required: true
+                    id_number:
+                        required: false
+                        description: _('Číslo OP/pasu, pokud máš')
+                    phone_parent_m:
+                        required: false
+                    phone_parent_d:
+                        required: false
+                    email_parent_m:
+                        required: false
+                    email_parent_d:
+                        required: false
+                    phone:
+                        required: true
+                        description: "Telefon (i s předvolbou státu), který budeš mít s sebou."
 
 events:
     setkani9jaro:
@@ -58,7 +87,7 @@ events:
                         required: true
                         modifiable: %events.setkani.appCond%
                         default: fromLogin
-                        factory: RefPerson(%events.setkani.person%, email, or(state('__init'),role('admin')), role('admin'), false)
+                        factory: RefPerson(%events.setkani9jaro.person%, email, or(state('__init'),role('admin')), role('admin'), false)
                     answer:
                         label: _('Jakou barvu má Výfuček?')
                         required: true
