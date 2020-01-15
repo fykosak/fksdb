@@ -259,7 +259,7 @@ class ContestantSubmits extends BaseControl {
             $submit = $this->submitService->createNew();
         }
 
-        $this->submitService->updateModel($submit, $data);
+        $this->submitService->updateModel2($submit, $data);
         return $submit;
     }
 

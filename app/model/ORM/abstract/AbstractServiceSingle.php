@@ -146,10 +146,10 @@ abstract class AbstractServiceSingle extends Selection implements IService {
     /**
      * @param AbstractModelSingle $model
      * @param Traversable|array $data
+     * @param bool $alive
      * @return int
-     * @throws InvalidArgumentException
      */
-    public function updateModel2(AbstractModelSingle $model, $data = null) {
+    public function updateModel2(AbstractModelSingle $model, $data = null, $alive = true) {
         $this->checkType($model);
         $data = $this->filterData($data);
         return $model->update($data);
