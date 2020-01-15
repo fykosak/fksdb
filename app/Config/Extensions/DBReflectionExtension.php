@@ -12,6 +12,7 @@ use Nette\DI\ContainerBuilder;
 use Nette\DI\ServiceDefinition;
 use Nette\NotImplementedException;
 use stdClass;
+use Tracy\Debugger;
 
 /**
  * Class StalkingExtension
@@ -23,14 +24,19 @@ class DBReflectionExtension extends CompilerExtension {
      */
     public function loadConfiguration() {
         $builder = $this->getContainerBuilder();
-        foreach ($this->config['tables'] as $tableName => $fields) {
-            if (isset($fields['fields'])) {
-                $fields = $fields['fields'];
+
+        foreach ($this->config['tables'] as $tableName => $fieldDefinitions) {
+
+            if (isset($fieldDefinitions['fields'])) {
+                $fields = $fieldDefinitions['fields'];
+            } else {
+                $fields = $fieldDefinitions;
             }
+
             foreach ($fields as $fieldName => $field) {
                 $factory = $this->createField($builder, $tableName, $fieldName, $field);
-                if (isset($fields['referencedAccess'])) {
-                    $factory->addSetup('setReferencedParams', [$fields['modelClassName'], $fields['referencedAccess']]);
+                if (isset($fieldDefinitions['referencedAccess'])) {
+                    $factory->addSetup('setReferencedParams', [$fieldDefinitions['modelClassName'], $fieldDefinitions['referencedAccess']]);
                 }
             }
         }

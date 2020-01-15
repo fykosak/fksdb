@@ -3,32 +3,32 @@ DBReflection:
          payment:
              modelClassName: FKSDB\ORM\Models\ModelPayment
              referencedAccess:
-                 modelClassName: FKSDB\ORM\Models\IPaymentReferencedModel
-                 method: getPayment
-                 nullable: true
+                  modelClassName: FKSDB\ORM\Models\IPaymentReferencedModel
+                  method: getPayment
+                  nullable: true
              fields:
-                bank_account:
+                 bank_account:
                     type: string
                     title: _(Bank account)
-                bank_name:
+                 bank_name:
                     type: string
                     title: _(Bank name)
-                constant_symbol:
+                 constant_symbol:
                     type: string
                     title: Constant symbol
-                iban:
+                 iban:
                     type: string
                     title: _(IBAN)
-                specific_symbol:
+                 specific_symbol:
                     type: string
                     title: specific_symbol
-                swift:
+                 swift:
                     type: string
                     title: _(SWIFT)
-                variable_symbol:
+                 variable_symbol:
                     type: string
                     title: Variable symbol
-                recipient:
+                 recipient:
                     type: string
                     title: _(Recipient)
          org:
@@ -76,6 +76,14 @@ DBReflection:
              note:
                  type: string
                  title: _(Note)
+         e_fyziklani_team:
+             modelClassName: FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam
+             referencedAccess:
+                 modelClassName: FKSDB\ORM\Models\IFyziklaniTeamReferencedModel
+                 method: getFyziklaniTeam
+                 nullable: false
+             fields:
+                opened_submiting: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\OpenedSubmitingRow
          fyziklani_submit:
              fyziklani_submit_id:
                  type: primaryKey

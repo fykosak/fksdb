@@ -3,6 +3,7 @@
 namespace FKSDB\ORM\Models\Fyziklani;
 
 use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\IFyziklaniTeamReferencedModel;
 use Nette\Database\Table\ActiveRow;
 use Nette\Utils\DateTime;
 
@@ -22,7 +23,7 @@ use Nette\Utils\DateTime;
  * @property-read DateTime created
  * @property-read DateTime modified
  */
-class ModelFyziklaniSubmit extends AbstractModelSingle {
+class ModelFyziklaniSubmit extends AbstractModelSingle implements IFyziklaniTeamReferencedModel {
     const STATE_NOT_CHECKED = 'not_checked';
     const STATE_CHECKED = 'checked';
 
@@ -35,8 +36,16 @@ class ModelFyziklaniSubmit extends AbstractModelSingle {
 
     /**
      * @return ModelFyziklaniTeam
+     * @deprecated
      */
     public function getTeam(): ModelFyziklaniTeam {
+        return $this->getFyziklaniTeam();
+    }
+
+    /**
+     * @return ModelFyziklaniTeam
+     */
+    public function getFyziklaniTeam(): ModelFyziklaniTeam {
         return ModelFyziklaniTeam::createFromActiveRow($this->e_fyziklani_team);
     }
 

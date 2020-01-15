@@ -10,6 +10,7 @@ use Nette\InvalidArgumentException;
 use Nette\Localization\ITranslator;
 use Nette\SmartObject;
 use Nette\Utils\Html;
+use Tracy\Debugger;
 
 /**
  * Class TableReflectionFactory

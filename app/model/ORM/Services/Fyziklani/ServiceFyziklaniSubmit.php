@@ -118,13 +118,13 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
         if (!$submit->canChange()) {
             throw new ClosedSubmittingException($submit->getTeam());
         }
-        $this->update([
+        $submit->update([
             'points' => $points,
             /* ugly, exclude previous value of `modified` from query
              * so that `modified` is set automatically by DB
              * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
              */
-            'state' => ModelFyziklaniSubmit::STATE_NOT_CHECKED,
+            'state' => ModelFyziklaniSubmit::STATE_CHECKED,
             'modified' => null,
         ]);
         $this->logEvent($submit, $user, 'edited', sprintf(' points %d', $points));
