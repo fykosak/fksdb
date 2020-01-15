@@ -2,6 +2,7 @@
 
 namespace FyziklaniModule;
 
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Fyziklani\EditControl;
 use FKSDB\Components\Controls\Fyziklani\Submit\CheckControl;
 use FKSDB\Components\Controls\Fyziklani\Submit\QREntryControl;
@@ -46,8 +47,13 @@ class SubmitPresenter extends BasePresenter {
         $this->setIcon('fa fa-pencil');
     }
 
-    public function titleDetail() {
-        $this->setTitle(_('Submit detail'));
+    /**
+     * @param $id
+     * @throws AbortException
+     * @throws \ReflectionException
+     */
+    public function titleDetail($id) {
+        $this->setTitle(sprintf(_('Detail of the submit #%d'), $this->loadModel($id)->fyziklani_submit_id));
         $this->setIcon('fa fa-pencil');
     }
 
@@ -134,16 +140,10 @@ class SubmitPresenter extends BasePresenter {
     /**
      * @param $id
      * @throws AbortException
-     * @throws BadRequestException
      * @throws \ReflectionException
      */
     public function actionDetail($id) {
-        $control = $this->getComponent('checkControl');
-        if (!$control instanceof CheckControl) {
-            throw new BadRequestException();
-        }
-        $submit = $this->loadModel($id);
-        $control->setSubmit($submit);
+        $this->loadModel($id);
     }
 
     /**
@@ -216,9 +216,18 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @return CheckControl
+     * @return FormControl
+     * @throws BadRequestException
      */
-    public function createComponentCheckControl(): CheckControl {
-        return $this->fyziklaniComponentsFactory->createSubmitDetailControl();
+    public function createComponentCheckForm(): FormControl {
+        $control = new FormControl();
+        $form = $control->getForm();
+        $form->addSubmit('submit', _('Check'));
+        $form->onSuccess[] = function () {
+            $log = $this->getServiceFyziklaniSubmit()->checkSubmit($this->submit, $this->submit->points, $this->getUser());
+            $this->flashMessage($log->getMessage(), $log->getLevel());
+            $this->redirect('this');
+        };
+        return $control;
     }
 }

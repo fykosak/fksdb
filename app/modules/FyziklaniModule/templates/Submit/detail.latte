@@ -1,5 +1,4 @@
 {block content}
-    <h2>{sprintf(_('Submit #%s'),$model->fyziklani_submit_id)}</h2>
     <div>
         {control valuePrinter__fyziklani_submit__fyziklani_submit_id:row $model}
 
@@ -10,27 +9,18 @@
         </span>
         </div>
         <hr/>
-        <h3>{_'Task'}</h3>
         {control valuePrinter__fyziklani_task__fyziklani_task_id:row $model}
-
         {control valuePrinter__fyziklani_task__name:row $model->getTask()}
-
         {control valuePrinter__fyziklani_task__label:row $model->getTask()}
-
         <hr/>
-
         {control valuePrinter__fyziklani_submit__points:row $model}
-
         {control valuePrinter__fyziklani_submit__state:row $model}
-
-
         <hr/>
-
         {control valuePrinter__fyziklani_submit__created:row $model}
         {control valuePrinter__fyziklani_submit__modified:row $model}
     </div>
-
-    {control checkControl}
-
+    <div class="my-3">
+        {control checkForm}
+    </div>
     <a class="btn btn-secondary" href="{plink edit id=>$model->fyziklani_submit_id}">{_'Edit'}</a>
 {/block}

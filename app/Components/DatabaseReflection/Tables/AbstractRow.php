@@ -124,7 +124,7 @@ abstract class AbstractRow {
     /**
      * @return string
      */
-    protected final function getModelClassName(): string {
+    protected final function getModelClassName() {
         return $this->modelClassName;
     }
 
