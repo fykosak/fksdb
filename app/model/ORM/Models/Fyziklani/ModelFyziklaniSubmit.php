@@ -2,14 +2,9 @@
 
 namespace FKSDB\ORM\Models\Fyziklani;
 
-use FKSDB\Messages\Message;
-use FKSDB\model\Fyziklani\ClosedSubmittingException;
-use FKSDB\model\Fyziklani\PointsMismatchException;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Database\Table\ActiveRow;
-use Nette\Security\User;
 use Nette\Utils\DateTime;
-use Tracy\Debugger;
 
 /**
  *
