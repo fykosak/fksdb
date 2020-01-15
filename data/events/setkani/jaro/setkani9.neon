@@ -5,7 +5,12 @@ parameters:
                 destination:
                     PHA: "Praha"
                     BRN: "Brno"
-                    OWN: "Přímo na objekt"
+                    OVA-SVN: "Dojedu na nádraží \"Ostrava-Svinov\""
+            departure:
+                destination:
+                    PHA: "Praha"
+                    BRN: "Brno"
+                    OVA-SVN: "Odjedu z nádraží \"Ostrava-Svinov\""
             person:
 
                 person:
@@ -110,7 +115,7 @@ events:
                     departure_destination:
                        label: _('Místo, na které chci cestovat')
                        required: true
-                       factory: Chooser("Zvol místo",Options(%events.setkani9jaro.arrival.destination%))
+                       factory: Chooser("Zvol místo",Options(%events.setkani9jaro.departure.destination%))
                     departure_ticket:
                           label: "Mám zájem o společnou jízdenku ze setkání"
                     tshirt_size:
