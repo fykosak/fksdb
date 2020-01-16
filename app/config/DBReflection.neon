@@ -72,7 +72,7 @@ DBReflection:
                  title: _(Note)
          email_message:
              email_message_id:
-                 type: primeryKey
+                 type: primaryKey
                  title: _(Message Id)
              #recipient:
              #sender:

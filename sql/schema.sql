@@ -1448,7 +1448,7 @@ CREATE TABLE IF NOT EXISTS `email_message`
     `carbon_copy`      VARCHAR(128) NULL     DEFAULT NULL,
     `blind_carbon_copy` VARCHAR(128) NULL     DEFAULT NULL,
     `text`             TEXT         NOT NULL,
-    `state`            ENUM ('saved','waiting','sent','failed','canceled','') CHARACTER SET 'utf8',
+    `state`            ENUM ('saved','waiting','sent','failed','canceled') CHARACTER SET 'utf8' DEFAULT 'saved',
     `created`          DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `sent`             DATETIME     NULL DEFAULT NULL
 )
