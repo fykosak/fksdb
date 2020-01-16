@@ -18,6 +18,7 @@ services:
     ServiceMPostContact:     ServiceMPostContact
     ServiceMStoredQueryTag:  ServiceMStoredQueryTag
     ServiceOrg:              FKSDB\ORM\Services\ServiceOrg
+    ServiceEmailMessage:     FKSDB\ORM\Services\ServiceEmailMessage
     ServicePerson:           FKSDB\ORM\Services\ServicePerson
     ServicePersonHasFlag:    FKSDB\ORM\Services\ServicePersonHasFlag
     ServicePersonHistory:    FKSDB\ORM\Services\ServicePersonHistory

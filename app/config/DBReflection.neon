@@ -70,6 +70,22 @@ DBReflection:
              note:
                  type: string
                  title: _(Note)
+         email_message:
+             email_message_id:
+                 type: primeryKey
+                 title: _(Message Id)
+             #recipient:
+             #sender:
+             #reply_to:
+             subject:
+                 type: string
+                 title: _(Subject)
+             #carbon_copy:
+             #blind_carbon_copy:
+             #text:
+             #state:
+             #created:
+             #send:
          referenced:
              payment_id: FKSDB\Components\DatabaseReflection\ReferencedRows\PaymentRow
     links:

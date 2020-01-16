@@ -5,11 +5,14 @@ namespace CommonModule;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Utils\CSVParser;
 use Mail\StreamTemplate;
+use Nette\Application\BadRequestException;
 use Nette\Forms\Form;
 use Nette\Http\IRequest;
 use Nette\Latte\Engine;
 use Nette\Mail\IMailer;
 use Nette\Mail\Message;
+use function count;
+use function explode;
 
 /**
  * Class MailSenderPresenter
@@ -39,7 +42,7 @@ class SpamPresenter extends BasePresenter {
     }
 
     /**
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     protected function createComponentCsvMailForm() {
         $control = new FormControl();
@@ -50,10 +53,10 @@ class SpamPresenter extends BasePresenter {
             ->setRequired(_('"Subject" is required'))
             ->setOption('description', _('name of column or text'));
 
-        $form->addText('bcc', _('BCC'))->setOption('description', _('name of column or email'));
-        $form->addText('cc', _('CC'))->setOption('description', _('name of column or email'));
-        $form->addText('from', _('From'))->setRequired(_('"From" is required'))->addRule(Form::EMAIL);
-        $form->addText('reply', _('Replay to'))->setRequired(_('"Replay to" is required'))->addRule(Form::EMAIL);
+        $form->addText('bcc', _('BCC'))->addCondition(Form::FILLED)->addRule(Form::EMAIL);
+        $form->addText('cc', _('CC'))->addCondition(Form::FILLED)->addRule(Form::EMAIL);
+        $form->addText('sender', _('Sender'))->setRequired(_('"From" is required'))->addRule(Form::EMAIL);
+        $form->addText('reply_to', _('Replay to'))->setRequired(_('"Replay to" is required'))->addRule(Form::EMAIL);
         $form->addTextArea('text', _('Text'));
         $form->addUpload('file', _('File'))->setRequired(true);
         $form->addSubmit('submit', _('Send'));
@@ -65,14 +68,15 @@ class SpamPresenter extends BasePresenter {
 
     /**
      * @return FormControl
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     protected function createComponentSimpleMailForm(): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
         $form->addText('to', _('To'))->setRequired()->setOption('description', _('Comma separated address. max 40 address'));
 
-        $form->addText('subject', _('Subject'))->setRequired(_('"Subject" is required'));
+        $form->addText('subject', _('Subject'))
+            ->setRequired(_('"Subject" is required'));
 
         $form->addText('bcc', _('BCC'))->addCondition(Form::FILLED)->addRule(Form::EMAIL);
         $form->addText('cc', _('CC'))->addCondition(Form::FILLED)->addRule(Form::EMAIL);
@@ -98,7 +102,7 @@ class SpamPresenter extends BasePresenter {
             // todo multiple addresses
             $to = $row[$values->to];
             $messages[] = $this->composeEmail($to,
-                $values->from,
+                $values->sender,
                 $values->reply,
                 isset($row[$values->subject]) ? $row[$values->subject] : $values->subject,
                 $values->text,
@@ -107,7 +111,7 @@ class SpamPresenter extends BasePresenter {
                 isset($row[$values->bcc]) ? $row[$values->bcc] : ($values->bcc ?: null)
             );
 
-        };
+        }
     }
 
     /**
@@ -153,20 +157,20 @@ class SpamPresenter extends BasePresenter {
      */
     private function handleSimpleMailForm(Form $form) {
         $values = $form->getValues();
-        $toAddress = \explode(',', $values->to);
-        if (\count($toAddress) > 40) {
+        $toAddress = explode(',', $values->to);
+        if (count($toAddress) > 40) {
             $this->flashMessage(_('Max 40 to address (safety limit)'), \BasePresenter::FLASH_WARNING);
             return;
         }
         $messages = [];
-        foreach (\explode(',', $values->to) as $to) {
+        foreach (explode(',', $values->to) as $to) {
             if (!$to) {
                 $this->flashMessage(_('Address is empty'), \BasePresenter::FLASH_WARNING);
                 continue;
             }
             $messages[] = $this->composeEmail(
                 $to,
-                $values->from,
+                $values->sender,
                 $values->reply,
                 $values->subject,
                 $values->text,

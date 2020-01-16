@@ -1435,20 +1435,22 @@ CREATE TABLE IF NOT EXISTS `schedule_payment` (
     ON UPDATE CASCADE
 )
   ENGINE = 'InnoDB';
-
+-- -----------------------------------------------------
+-- Table `email_message`
+-- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `email_message`
 (
     `email_message_id` INT(11)      NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `receiver`         VARCHAR(128) NOT NULL,
+    `recipient`         VARCHAR(128) NOT NULL,
     `sender`           VARCHAR(128) NOT NULL,
     `reply_to`         VARCHAR(128) NOT NULL,
     `subject`          VARCHAR(128) NOT NULL,
-    `cc`               VARCHAR(128) NULL     DEFAULT NULL,
-    `bcc`              VARCHAR(128) NULL     DEFAULT NULL,
+    `carbon_copy`      VARCHAR(128) NULL     DEFAULT NULL,
+    `blind_carbon_copy` VARCHAR(128) NULL     DEFAULT NULL,
     `text`             TEXT         NOT NULL,
-    `state`            ENUM ('saved','waiting', 'sent','failed','canceled','') CHARACTER SET 'utf8',
+    `state`            ENUM ('saved','waiting','sent','failed','canceled','') CHARACTER SET 'utf8',
     `created`          DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `sent`             DATETIME     NULL
+    `sent`             DATETIME     NULL DEFAULT NULL
 )
     ENGINE = 'InnoDB';
 
