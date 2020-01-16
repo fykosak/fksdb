@@ -1436,6 +1436,22 @@ CREATE TABLE IF NOT EXISTS `schedule_payment` (
 )
   ENGINE = 'InnoDB';
 
+CREATE TABLE IF NOT EXISTS `email_message`
+(
+    `email_message_id` INT(11)      NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `receiver`         VARCHAR(128) NOT NULL,
+    `sender`           VARCHAR(128) NOT NULL,
+    `reply_to`         VARCHAR(128) NOT NULL,
+    `subject`          VARCHAR(128) NOT NULL,
+    `cc`               VARCHAR(128) NULL     DEFAULT NULL,
+    `bcc`              VARCHAR(128) NULL     DEFAULT NULL,
+    `text`             TEXT         NOT NULL,
+    `state`            ENUM ('saved','waiting', 'sent','failed','canceled','') CHARACTER SET 'utf8',
+    `created`          DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `sent`             DATETIME     NULL
+)
+    ENGINE = 'InnoDB';
+
 SET SQL_MODE = @OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS = @OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS = @OLD_UNIQUE_CHECKS;
