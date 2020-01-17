@@ -2,7 +2,6 @@
 
 use FKSDB\ORM\Models\ModelEmailMessage;
 use FKSDB\ORM\Services\ServiceEmailMessage;
-
 use Nette\DI\Container;
 use Nette\Mail\IMailer;
 
@@ -27,7 +26,11 @@ $query = $serviceEmailMessage->getMessagesToSend(MESSAGE_LIMIT);
  * @var ModelEmailMessage $model
  */
 foreach ($query as $model) {
-    $message = $model->toMessage();
-    $mailer->send($message);
-
+    try {
+        $message = $model->toMessage();
+        $mailer->send($message);
+        $model->update(['state' => ModelEmailMessage::STATE_SENT, 'sent' => new DateTime()]);
+    } catch (Exception $e) {
+        $model->update(['state' => ModelEmailMessage::STATE_FAILED]);
+    }
 }
