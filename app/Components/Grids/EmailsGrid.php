@@ -43,7 +43,10 @@ class EmailsGrid extends BaseGrid {
         $this->addColumns([
             'email_message.email_message_id',
             'email_message.subject',
+            'email_message.sender',
+            'email_message.reply_to',
             'email_message.state',
+
         ]);
         $this->paginate = false;
     }

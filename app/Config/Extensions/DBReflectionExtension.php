@@ -38,7 +38,7 @@ class DBReflectionExtension extends CompilerExtension {
                             continue;
                         case 'state':
                             $this->registerStateRow($builder, $tableName, $fieldName, $field);
-
+                            continue;
                         case 'email':
                             $this->registerEmailRow($builder, $tableName, $fieldName, $field);
                             continue;
@@ -83,6 +83,7 @@ class DBReflectionExtension extends CompilerExtension {
      * @param string $tableName
      * @param string $fieldName
      * @param array $field
+     * @return ServiceDefinition
      */
     private function registerStringRow(ContainerBuilder $builder, string $tableName, string $fieldName, array $field): ServiceDefinition {
         return $this->setUpDefaultFactory($builder, $tableName, $fieldName, StringRow::class, $field);

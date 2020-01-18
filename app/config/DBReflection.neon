@@ -176,13 +176,13 @@ DBReflection:
              login:
                  type: string
                  title: _(Login)
+                 permission: PERMISSION_ALLOW_RESTRICT
          event_participant:
              team: FKSDB\Components\DatabaseReflection\EventParticipant\TeamRow
              status:
                  type: state
                  title: _(State)
                  states: %event_participant.states%
-                 permission: PERMISSION_ALLOW_RESTRICT
              created: FKSDB\Components\DatabaseReflection\EventParticipant\CreatedRow
              person_id: FKSDB\Components\DatabaseReflection\EventParticipant\PersonIdRow
              swimmer: FKSDB\Components\DatabaseReflection\EventParticipant\SwimmerRow
@@ -221,8 +221,12 @@ DBReflection:
                  type: primaryKey
                  title: _(Message Id)
              #recipient:
-             #sender:
-             #reply_to:
+             sender:
+                 type: email
+                 title: _(Sender)
+             reply_to:
+                 type: email
+                 title: _(Reply to)
              subject:
                  type: string
                  title: _(Subject)
