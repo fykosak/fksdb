@@ -2,6 +2,7 @@
 
 namespace FKSDB\Config\Extensions;
 
+use FKSDB\Components\DatabaseReflection\EmailRow;
 use FKSDB\Components\DatabaseReflection\Links\Link;
 use FKSDB\Components\DatabaseReflection\PrimaryKeyRow;
 use FKSDB\Components\DatabaseReflection\StringRow;
@@ -34,6 +35,9 @@ class DBReflectionExtension extends CompilerExtension {
                         case 'phone':
                             $this->registerPhoneRow($builder, $tableName, $fieldName, $field);
                             continue;
+                        case 'email':
+                            $this->registerEmailRow($builder, $tableName, $fieldName, $field);
+                            continue;
                         default:
                             throw new NotImplementedException();
                     }
@@ -62,19 +66,10 @@ class DBReflectionExtension extends CompilerExtension {
      * @param string $tableName
      * @param string $fieldName
      * @param array $field
+     * @return ServiceDefinition
      */
-    private function registerStringRow(ContainerBuilder $builder, string $tableName, string $fieldName, array $field) {
-        $factory = $builder->addDefinition($this->prefix($tableName . '.' . $fieldName))
-            ->setFactory(StringRow::class)
-            ->addSetup('setUp', [
-                $tableName,
-                $this->translate($field['title']),
-                isset($field['accessKey']) ? $field['accessKey'] : $fieldName,
-                isset($field['description']) ? $this->translate($field['description']) : null
-            ]);
-        if (isset($field['permission'])) {
-            $factory->addSetup('setPermissionValue', $field['permission']);
-        }
+    private function registerStringRow(ContainerBuilder $builder, string $tableName, string $fieldName, array $field): ServiceDefinition {
+        return $this->setUpDefaultFactory($builder, $tableName, $fieldName, StringRow::class, $field);
     }
 
     /**
@@ -82,9 +77,10 @@ class DBReflectionExtension extends CompilerExtension {
      * @param string $tableName
      * @param string $fieldName
      * @param array $field
+     * @return ServiceDefinition
      */
-    private function registerPrimaryKeyRow(ContainerBuilder $builder, string $tableName, string $fieldName, array $field) {
-        $this->setUpDefaultFactory($builder, $tableName, $fieldName, PrimaryKeyRow::class, $field);
+    private function registerPrimaryKeyRow(ContainerBuilder $builder, string $tableName, string $fieldName, array $field): ServiceDefinition {
+        return $this->setUpDefaultFactory($builder, $tableName, $fieldName, PrimaryKeyRow::class, $field);
     }
 
     /**
@@ -92,12 +88,25 @@ class DBReflectionExtension extends CompilerExtension {
      * @param string $tableName
      * @param string $fieldName
      * @param array $field
+     * @return ServiceDefinition
      */
-    private function registerPhoneRow(ContainerBuilder $builder, string $tableName, string $fieldName, array $field) {
+    private function registerPhoneRow(ContainerBuilder $builder, string $tableName, string $fieldName, array $field): ServiceDefinition {
         $factory = $this->setUpDefaultFactory($builder, $tableName, $fieldName, PhoneRow::class, $field);
         if (isset($field['writeOnly'])) {
             $factory->addSetup('setWriteOnly', $field['writeOnly']);
         }
+        return $factory;
+    }
+
+    /**
+     * @param ContainerBuilder $builder
+     * @param string $tableName
+     * @param string $fieldName
+     * @param array $field
+     * @return ServiceDefinition
+     */
+    private function registerEmailRow(ContainerBuilder $builder, string $tableName, string $fieldName, array $field): ServiceDefinition {
+        return $this->setUpDefaultFactory($builder, $tableName, $fieldName, EmailRow::class, $field);
     }
 
     /**

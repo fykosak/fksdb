@@ -106,6 +106,7 @@ stalking:
                 - org.edit
             itemHeadline: org.contest_id
             rows:
+                - org.org_id
                 - org.since
                 - org.until
                 - org.role
