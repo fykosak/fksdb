@@ -30,6 +30,7 @@ use Nette\Utils\DateTime;
  *
  */
 class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferencedModel, IResource {
+    const RESOURCE_ID = 'fyziklani.team';
 
     /**
      * @return string
@@ -138,6 +139,6 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
      * @return string
      */
     public function getResourceId() {
-        return 'fyziklani.team';
+        return self::RESOURCE_ID;
     }
 }
