@@ -3,6 +3,8 @@
 namespace CommonModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Grids\EmailsGrid;
+use FKSDB\ORM\Services\ServiceEmailMessage;
 use FKSDB\Utils\CSVParser;
 use Mail\StreamTemplate;
 use Nette\Application\BadRequestException;
@@ -23,12 +25,20 @@ class SpamPresenter extends BasePresenter {
      * @var IMailer
      */
     private $mailer;
+    private $serviceEmailMessage;
 
     /**
      * @param IMailer $mailer
      */
     public function injectMailer(IMailer $mailer) {
         $this->mailer = $mailer;
+    }
+
+    /**
+     * @param ServiceEmailMessage $serviceEmailMessage
+     */
+    public function injectServiceEmailMessage(ServiceEmailMessage $serviceEmailMessage) {
+        $this->serviceEmailMessage = $serviceEmailMessage;
     }
 
     public function titleDefault() {
@@ -103,7 +113,7 @@ class SpamPresenter extends BasePresenter {
             $to = $row[$values->to];
             $messages[] = $this->composeEmail($to,
                 $values->sender,
-                $values->reply,
+                $values->reply_to,
                 isset($row[$values->subject]) ? $row[$values->subject] : $values->subject,
                 $values->text,
                 ['row' => $row],
@@ -171,7 +181,7 @@ class SpamPresenter extends BasePresenter {
             $messages[] = $this->composeEmail(
                 $to,
                 $values->sender,
-                $values->reply,
+                $values->reply_to,
                 $values->subject,
                 $values->text,
                 [],
@@ -198,5 +208,12 @@ class SpamPresenter extends BasePresenter {
             $template->baseUri = $this->getContext()->getByType(IRequest::class)->getUrl()->getBaseUrl();
         }
         return $template;
+    }
+
+    /**
+     * @return EmailsGrid
+     */
+    protected function createComponentGrid(): EmailsGrid {
+        return new EmailsGrid($this->serviceEmailMessage, $this->getTableReflectionFactory());
     }
 }

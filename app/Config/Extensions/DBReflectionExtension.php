@@ -4,6 +4,7 @@ namespace FKSDB\Config\Extensions;
 
 use FKSDB\Components\DatabaseReflection\Links\Link;
 use FKSDB\Components\DatabaseReflection\PrimaryKeyRow;
+use FKSDB\Components\DatabaseReflection\StateRow;
 use FKSDB\Components\DatabaseReflection\StringRow;
 use FKSDB\Components\DatabaseReflection\Tables\PhoneRow;
 use Nette\Config\CompilerExtension;
@@ -34,6 +35,9 @@ class DBReflectionExtension extends CompilerExtension {
                         case 'phone':
                             $this->registerPhoneRow($builder, $tableName, $fieldName, $field);
                             continue;
+                        case 'state':
+                            $this->registerStateRow($builder, $tableName, $fieldName, $field);
+                            continue;
                         default:
                             throw new NotImplementedException();
                     }
@@ -55,6 +59,19 @@ class DBReflectionExtension extends CompilerExtension {
                     ->setFactory($def);
             }
         }
+    }
+
+    /**
+     * @param ContainerBuilder $builder
+     * @param string $tableName
+     * @param string $fieldName
+     * @param array $field
+     * @return ServiceDefinition
+     */
+    private function registerStateRow(ContainerBuilder $builder, string $tableName, string $fieldName, array $field): ServiceDefinition {
+        $factory = $this->setUpDefaultFactory($builder, $tableName, $fieldName, StateRow::class, $field);
+        $factory->addSetup('setStates', [$field['states']]);
+        return $factory;
     }
 
     /**

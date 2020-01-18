@@ -1,3 +1,33 @@
+parameters:
+    event_participant:
+        states:
+            applied: [badge : 'badge badge-1', label : 'Applied']
+            applied.nodsef: [badge : 'badge badge-1', label : 'applied.nodsef']
+            applied.notsaf: [badge : 'badge badge-1', label : 'applied.notsaf']
+            applied.tsaf: [badge : 'badge badge-1', label : 'applied.tsaf']
+            approved: [badge : 'badge badge-1', label : 'Approved']
+            interested: [badge : 'badge badge-2', label : 'Interested']
+            pending: [badge : 'badge badge-2', label : 'Pending']
+            participated: [badge : 'badge badge-3', label : 'Participated']
+            missed: [badge : 'badge badge-4', label : 'Missed']
+            disqualified : [badge : 'badge badge-5', label : 'Disqualified']
+            rejected : [badge : 'badge badge-6', label : 'Rejected']
+            cancelled : [badge : 'badge badge-6', label : 'Cancelled']
+            paid : [badge : 'badge badge-7', label : 'Paid']
+            out_of_db: [badge : 'badge badge-8', label : 'Out of FKSDB']
+            spare: [badge : 'badge badge-9', label : 'Spare']
+            spare1: [badge : 'badge badge-9', label : 'spare1']
+            spare2: [badge : 'badge badge-9', label : 'spare2']
+            spare3: [badge : 'badge badge-9', label : 'spare3']
+            spare.tsaf: [badge : 'badge badge-9', label : 'spare.tsaf']
+            auto.spare: [badge : 'badge badge-9', label : 'auto.spare']
+            invited: [badge : 'badge badge-10', label : 'Invited']
+            invited1: [badge : 'badge badge-10', label : 'invited1']
+            invited2: [badge : 'badge badge-10', label : 'invited2']
+            invited3: [badge : 'badge badge-10', label : 'invited3']
+            auto.invited: [badge : 'badge badge-10', label : 'auto.invited']
+
+
 DBReflection:
     tables:
          payment:
@@ -56,8 +86,17 @@ DBReflection:
              login:
                  type: string
                  title: _(Login)
+         e_fyziklani_team:
+             status:
+                 type: state
+                 title: _(State)
+                 states: %event_participant.states%
          event_participant:
              team: FKSDB\Components\DatabaseReflection\EventParticipant\TeamRow
+             status:
+                 type: state
+                 title: _(State)
+                 states: %event_participant.states%
          contestant_base:
              ct_id: FKSDB\Components\DatabaseReflection\Tables\ContestantBase\ContestantId
              year: FKSDB\Components\DatabaseReflection\Tables\ContestantBase\YearRow
@@ -83,7 +122,15 @@ DBReflection:
              #carbon_copy:
              #blind_carbon_copy:
              #text:
-             #state:
+             state:
+                 type: state
+                 title: _(State)
+                 states:
+                      saved: [badge :'badge badge-1', label: Saved]
+                      waiting: [badge :'badge badge-2', label: Waiting]
+                      sent: [badge :'badge badge-3', label: Sent]
+                      failed: [badge :'badge badge-4', label: Failed]
+                      canceled: [badge :'badge badge-6', label: Canceled]
              #created:
              #send:
          referenced:
