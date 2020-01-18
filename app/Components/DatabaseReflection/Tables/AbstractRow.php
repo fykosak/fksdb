@@ -53,21 +53,13 @@ abstract class AbstractRow {
      * @param int $userPermissionsLevel
      * @return Html
      */
-    public function renderValue(AbstractModelSingle $model, int $userPermissionsLevel): Html {
+    public final function renderValue(AbstractModelSingle $model, int $userPermissionsLevel): Html {
         if (!$this->hasPermissions($userPermissionsLevel)) {
             return PermissionDeniedBadge::getHtml();
         }
         return $this->createHtmlValue($model);
     }
 
-    /*
-     * @param AbstractModelSingle $model
-     * @param string $fieldName
-     * @return \Nette\Utils\Html
-     */
-    /* protected function createHtmlValue(AbstractModelSingle $model, string $fieldName): Html {
-         return (new StringPrinter)($model->{$fieldName});
-     }*/
     /**
      * @param AbstractModelSingle $model
      * @return Html
