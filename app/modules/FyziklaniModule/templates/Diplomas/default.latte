@@ -9,7 +9,7 @@
             </div>
             {if $presenter->isReadyAllToClose($category)}
                 <a class="btn btn-primary"
-                   href="{link closeAll! category=>$category}">{\sprintf(_('Close %s category'), $category)}</a>
+                   href="{link close! category=>$category}">{\sprintf(_('Close %s category'), $category)}</a>
             {else}
                 <span class="btn btn-primary disabled">{\sprintf(_('Close %s category'), $category)}</span>
             {/if}
@@ -17,7 +17,7 @@
         <h2>{_('Global')}</h2>
         {if $presenter->isReadyAllToClose(null)}
             <a class="btn btn-primary"
-               href="{link closeAll! category=>null}">{\sprintf(_('Close global results'), $category)}</a>
+               href="{link close! category=>null}">{\sprintf(_('Close global results'), $category)}</a>
         {else}
             <span class="btn btn-primary disabled">{\sprintf(_('Close global results'), $category)}</span>
         {/if}

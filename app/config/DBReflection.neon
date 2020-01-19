@@ -328,6 +328,7 @@ DBReflection:
                    - e_fyziklani_team.name
                    - e_fyziklani_team.e_fyziklani_team_id
             -
+                headline: Task
                 fields:
                    - fyziklani_task.fyziklani_task_id
                    - fyziklani_task.name

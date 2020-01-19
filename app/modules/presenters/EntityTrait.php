@@ -17,7 +17,7 @@ trait EntityTrait {
      */
     public $id;
     /**
-     * @var
+     * @var AbstractModelSingle|IModel
      */
     private $model;
 
@@ -57,6 +57,9 @@ trait EntityTrait {
      * @throws BadRequestException
      */
     public function getEntity() {
+        if ($this->model && $this->id !== $this->model->getPrimary()) {
+            $this->model = null;
+        }
         if (!$this->model) {
             $model = $this->getORMService()->findByPrimary($this->id);
             if (!$model) {

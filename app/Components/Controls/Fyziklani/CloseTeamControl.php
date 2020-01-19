@@ -72,7 +72,7 @@ class CloseTeamControl extends Control {
         ]);
         $connection->commit();
         $this->getPresenter()->flashMessage(sprintf(_('Team "%s" has successfully closed submitting, with total %d points.'), $this->team->name, $sum), BasePresenter::FLASH_SUCCESS);
-        $this->getPresenter()->redirect('list');
+        $this->getPresenter()->redirect('list', ['id' => null]);
     }
 
     public function render() {

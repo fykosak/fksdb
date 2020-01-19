@@ -68,7 +68,7 @@ class DiplomasPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function handleCloseAll(string $category = null) {
+    public function handleClose(string $category = null) {
         $closeStrategy = new CloseStrategy($this->getEvent(), $this->getServiceFyziklaniTeam());
         $log = $closeStrategy($category);
         $this->flashMessage(Html::el()->addHtml(Html::el('h3')->addHtml('Rankin has been saved.'))->addHtml(Html::el('ul')->addHtml($log)), \BasePresenter::FLASH_SUCCESS);
