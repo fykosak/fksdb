@@ -65,11 +65,6 @@ class ResultsPresenter extends BasePresenter {
         $this->setIcon('fa fa-pie-chart');
     }
 
-    public function titleResultsFinal() {
-        $this->setTitle(_('Final results'));
-        $this->setIcon('fa fa-trophy');
-    }
-
     public function authorizedDefault() {
         $this->setAuthorized(true);
     }
@@ -84,18 +79,6 @@ class ResultsPresenter extends BasePresenter {
 
     public function authorizedTeamStatistics() {
         $this->authorizedDefault();
-    }
-
-    /**
-     * @throws BadRequestException
-     * @throws AbortException
-     */
-    public function authorizedResultsFinal() {
-        if ($this->getGameSetup()->result_hard_display) {
-            $this->authorizedDefault();
-            return;
-        }
-        $this->setAuthorized($this->isContestsOrgAllowed('fyziklani.results', 'final'));
     }
 
     /**
@@ -157,15 +140,6 @@ class ResultsPresenter extends BasePresenter {
      */
     public function createComponentCorrelationStatistics(): CorrelationStatistics {
         return $this->fyziklaniComponentsFactory->createCorrelationStatistics($this->getEvent());
-    }
-
-    /**
-     * @return FinalResults
-     * @throws BadRequestException
-     * @throws AbortException
-     */
-    public function createComponentOrgResults(): FinalResults {
-        return $this->fyziklaniComponentsFactory->createFinalResults($this->getEvent());
     }
 
     /**

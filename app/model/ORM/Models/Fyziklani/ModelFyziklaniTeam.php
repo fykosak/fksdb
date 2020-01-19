@@ -95,6 +95,13 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
     }
 
     /**
+     * @return bool
+     */
+    public function hasAllSubmitsChecked(): bool {
+        return $this->getNonCheckedSubmits()->count() === 0;
+    }
+
+    /**
      * @return null|ModelFyziklaniTeamPosition
      */
     public function getPosition() {
@@ -111,6 +118,13 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
     public function hasOpenSubmitting(): bool {
         $points = $this->points;
         return !is_numeric($points);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isReadyForClosing(): bool {
+        return $this->hasAllSubmitsChecked() && $this->hasOpenSubmitting();
     }
 
     /**

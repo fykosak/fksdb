@@ -10,16 +10,22 @@ use Nette\Utils\Html;
  * Class OpenSubmitRow
  * @package FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam
  */
-class OpenedSubmitingRow extends AbstractFyziklaniTeamRow {
+class OpenedSubmittingRow extends AbstractFyziklaniTeamRow {
 
     /**
      * @param ModelFyziklaniTeam $model
      * @inheritDoc
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        return Html::el('span')
-            ->addAttributes(['class' => 'badge badge-info'])
-            ->addText($model->hasOpenSubmitting() ? _('Opened') : _('Closed'));
+        $html = Html::el('span');
+        if ($model->hasOpenSubmitting()) {
+            $html->addAttributes(['class' => 'badge badge-1'])
+                ->addText(_('Opened'));
+        } else {
+            $html->addAttributes(['class' => 'badge badge-3'])
+                ->addText(_('Closed'));
+        }
+        return $html;
     }
 
     /**

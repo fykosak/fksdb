@@ -52,7 +52,7 @@ class TeamSubmitsGrid extends SubmitsGrid {
         $this->addLinkButton($presenter, ':Fyziklani:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);
         $this->addLinkButton($presenter, ':Fyziklani:Submit:detail', 'detail', _('Detail'), false, ['id' => 'fyziklani_submit_id']);
 
-        $submits = $this->team->getNonCheckedSubmits()
+        $submits = $this->team->getAllSubmits()
             ->order('fyziklani_submit.created');
 
         $dataSource = new NDataSource($submits);

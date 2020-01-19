@@ -83,7 +83,7 @@ DBReflection:
                  method: getFyziklaniTeam
                  nullable: false
              fields:
-                opened_submiting: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\OpenedSubmitingRow
+                opened_submitting: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\OpenedSubmittingRow
          fyziklani_submit:
              fyziklani_submit_id:
                  type: primaryKey

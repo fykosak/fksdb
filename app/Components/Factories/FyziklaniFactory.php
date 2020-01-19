@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Factories;
 
-use FKSDB\Components\Controls\Fyziklani\CloseTeamControl;
 use FKSDB\Components\Controls\Fyziklani\EditControl;
 use FKSDB\Components\Controls\Fyziklani\FinalResults;
 use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Results\ResultsPresentation;
@@ -14,16 +13,10 @@ use FKSDB\Components\Controls\Fyziklani\RoutingDownload;
 use FKSDB\Components\Controls\Fyziklani\RoutingEdit;
 use FKSDB\Components\Controls\Fyziklani\Submit\QREntryControl;
 use FKSDB\Components\Controls\Fyziklani\Submit\TaskCodeInput;
-use FKSDB\Components\Forms\Factories\Fyziklani\CloseFormsFactory;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\Fyziklani\AllSubmitsGrid;
-use FKSDB\Components\Grids\Fyziklani\CloseTeamsGrid;
-use FKSDB\Components\Grids\Fyziklani\ResultsCategoryGrid;
-use FKSDB\Components\Grids\Fyziklani\ResultsTotalGrid;
 use FKSDB\Components\Grids\Fyziklani\TaskGrid;
-use FKSDB\Components\Grids\Fyziklani\TeamSubmitsGrid;
 use FKSDB\model\Fyziklani\TaskCodeHandlerFactory;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
@@ -75,10 +68,6 @@ class FyziklaniFactory {
      */
     private $translator;
     /**
-     * @var CloseFormsFactory
-     */
-    private $closeFormsFactory;
-    /**
      * @var TableReflectionFactory
      */
     private $tableReflectionFactory;
@@ -115,14 +104,6 @@ class FyziklaniFactory {
         $this->tableReflectionFactory = $tableReflectionFactory;
         $this->context = $context;
         $this->translator = $translator;
-        $this->closeFormsFactory = new CloseFormsFactory($serviceFyziklaniTeam);
-    }
-
-    /**
-     * @return CloseFormsFactory
-     */
-    public function getCloseFormsFactory(): CloseFormsFactory {
-        return $this->closeFormsFactory;
     }
 
     /* ********** ENTRY FORMS + EDIT **********/
@@ -152,24 +133,6 @@ class FyziklaniFactory {
         return new EditControl($event, $this->serviceFyziklaniSubmit, $this->translator);
     }
 
-    /* *************** CLOSING ***************/
-
-    /**
-     * @param ModelEvent $event
-     * @return CloseTeamControl
-     */
-    public function createCloseTeamControl(ModelEvent $event): CloseTeamControl {
-        return new CloseTeamControl($event, $this->serviceFyziklaniTeam, $this->translator, $this->serviceFyziklaniTask, $this);
-    }
-
-    /**
-     * @param ModelEvent $event
-     * @return CloseTeamsGrid
-     */
-    public function createCloseTeamsGrid(ModelEvent $event): CloseTeamsGrid {
-        return new CloseTeamsGrid($event, $this->serviceFyziklaniTeam, $this->tableReflectionFactory);
-    }
-
     /* ************** ROUTING *************/
 
     /**
@@ -181,30 +144,6 @@ class FyziklaniFactory {
     }
 
     /* *********** RESULTS & STATS ********/
-    /**
-     * @param ModelEvent $event
-     * @return FinalResults
-     */
-    public function createFinalResults(ModelEvent $event): FinalResults {
-        return new FinalResults($event, $this->serviceFyziklaniTeam, $this->translator, $this->tableReflectionFactory);
-    }
-
-    /**
-     * @param ModelEvent $event
-     * @param string $category
-     * @return ResultsCategoryGrid
-     */
-    public function createResultsCategoryGrid(ModelEvent $event, string $category): ResultsCategoryGrid {
-        return new ResultsCategoryGrid($event, $this->serviceFyziklaniTeam, $category, $this->tableReflectionFactory);
-    }
-
-    /**
-     * @param ModelEvent $event
-     * @return ResultsTotalGrid
-     */
-    public function createResultsTotalGrid(ModelEvent $event): ResultsTotalGrid {
-        return new ResultsTotalGrid($event, $this->serviceFyziklaniTeam, $this->tableReflectionFactory);
-    }
 
     /**
      * @param ModelEvent $event
@@ -275,13 +214,5 @@ class FyziklaniFactory {
      */
     public function createRoutingDownload(ModelEvent $event): RoutingDownload {
         return new RoutingDownload($event, $this->translator, $this->serviceFyziklaniTeam, $this->serviceFyziklaniRoom);
-    }
-
-    /**
-     * @param ModelFyziklaniTeam $team
-     * @return TeamSubmitsGrid
-     */
-    public function createTeamSubmitsGrid(ModelFyziklaniTeam $team): TeamSubmitsGrid {
-        return new TeamSubmitsGrid($team, $this->serviceFyziklaniSubmit, $this->tableReflectionFactory);
     }
 }

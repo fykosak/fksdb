@@ -2,6 +2,7 @@
 
 namespace FKSDB\model\Fyziklani;
 
+use Closure;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
@@ -25,20 +26,18 @@ class CloseStrategy {
     protected $presenter;
 
     /**
-     *
-     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam
+     * @var ServiceFyziklaniTeam
      */
     private $serviceFyziklaniTeam;
     /**
-     * @var \FKSDB\ORM\Models\ModelEvent
+     * @var ModelEvent
      */
     private $event;
 
-
     /**
      * CloseSubmitStrategy constructor.
-     * @param \FKSDB\ORM\Models\ModelEvent $event
-     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @param ModelEvent $event
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
      */
     public function __construct(ModelEvent $event, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
@@ -69,14 +68,6 @@ class CloseStrategy {
      */
     public function __invoke(string $category = null): Html {
         return $this->close($category);
-    }
-
-    /**
-     * @throws BadRequestException
-     * @internal
-     */
-    public function closeGlobal(): Html {
-        return $this->close(null);
     }
 
     /**
@@ -125,9 +116,9 @@ class CloseStrategy {
     }
 
     /**
-     * @return \Closure
+     * @return callable
      */
-    private static function getSortFunction(): \Closure {
+    private static function getSortFunction(): callable {
         return function (array $b, array $a): int {
             if ($a['points'] > $b['points']) {
                 return 1;
@@ -164,7 +155,7 @@ class CloseStrategy {
         $arraySubmits = [];
         $sum = 0;
         $count = 0;
-        foreach ($team->getSubmits() as $row) {
+        foreach ($team->getAllSubmits() as $row) {
             $submit = ModelFyziklaniSubmit::createFromActiveRow($row);
             if ($submit->points !== null) {
                 $sum += $submit->points;

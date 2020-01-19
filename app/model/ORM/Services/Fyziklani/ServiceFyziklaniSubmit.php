@@ -116,7 +116,7 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
      */
     public function changePoints(ModelFyziklaniSubmit $submit, int $points, User $user): Message {
         if (!$submit->canChange()) {
-            throw new ClosedSubmittingException($submit->getTeam());
+            throw new ClosedSubmittingException($submit->getFyziklaniTeam());
         }
         $submit->update([
             'points' => $points,
@@ -130,8 +130,8 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
         $this->logEvent($submit, $user, 'edited', sprintf(' points %d', $points));
         return new Message(sprintf(_('Body byly upraveny. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
             $points,
-            $submit->getTeam()->name,
-            $submit->getTeam()->e_fyziklani_team_id,
+            $submit->getFyziklaniTeam()->name,
+            $submit->getFyziklaniTeam()->e_fyziklani_team_id,
             $submit->getTask()->label,
             $submit->getTask()->name), Message::LVL_SUCCESS);
     }
@@ -144,7 +144,7 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
      */
     public function revokeSubmit(ModelFyziklaniSubmit $submit, User $user): Message {
         if (!$submit->canChange()) {
-            throw new ClosedSubmittingException($submit->getTeam());
+            throw new ClosedSubmittingException($submit->getFyziklaniTeam());
         }
         $submit->update([
             'points' => null,
@@ -169,7 +169,7 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
      */
     public function checkSubmit(ModelFyziklaniSubmit $submit, int $points, User $user): Message {
         if (!$submit->canChange()) {
-            throw new ClosedSubmittingException($submit->getTeam());
+            throw new ClosedSubmittingException($submit->getFyziklaniTeam());
         }
         if ($submit->points != $points) {
             throw new PointsMismatchException();
@@ -186,8 +186,8 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
 
         return new Message(sprintf(_('Bodovanie bolo overené. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
             $points,
-            $submit->getTeam()->name,
-            $submit->getTeam()->e_fyziklani_team_id,
+            $submit->getFyziklaniTeam()->name,
+            $submit->getFyziklaniTeam()->e_fyziklani_team_id,
             $submit->getTask()->label,
             $submit->getTask()->name), Message::LVL_SUCCESS);
     }

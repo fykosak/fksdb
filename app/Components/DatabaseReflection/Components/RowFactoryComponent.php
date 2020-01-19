@@ -46,6 +46,7 @@ class RowFactoryComponent extends Control {
     /**
      * @param AbstractModelSingle $model
      * @param bool $tested
+     * @throws \Nette\Application\BadRequestException
      */
     public function render(AbstractModelSingle $model, bool $tested = false) {
         $this->template->setTranslator($this->translator);
