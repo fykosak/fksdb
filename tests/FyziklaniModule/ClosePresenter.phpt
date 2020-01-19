@@ -7,7 +7,6 @@ $container = require '../bootstrap.php';
 use Events\Model\ApplicationHandler;
 use MockEnvironment\MockApplicationTrait;
 use Nette\Application\Request;
-use Nette\Application\Responses\RedirectResponse;
 use Nette\Config\Helpers;
 use Nette\DI\Container;
 use Tester\Assert;

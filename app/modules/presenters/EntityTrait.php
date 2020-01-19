@@ -57,6 +57,7 @@ trait EntityTrait {
      * @throws BadRequestException
      */
     public function getEntity() {
+        // protection for tests ev. change URL during app is running
         if ($this->model && $this->id !== $this->model->getPrimary()) {
             $this->model = null;
         }
