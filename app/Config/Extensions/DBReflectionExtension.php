@@ -90,22 +90,18 @@ class DBReflectionExtension extends CompilerExtension {
     private function createField(ContainerBuilder $builder, $tableName, $fieldName, $field): ServiceDefinition {
         $factory = null;
         if (is_array($field)) {
-             switch ($field['type']) {
-                        case 'string':
-                            $this->registerStringRow($builder, $tableName, $fieldName, $field);
-                            continue;
-                        case 'primaryKey':
-                            $this->registerPrimaryKeyRow($builder, $tableName, $fieldName, $field);
-                            continue;
-                        case 'phone':
-                            $this->registerPhoneRow($builder, $tableName, $fieldName, $field);
-                            continue;
-                        case 'email':
-                            $this->registerEmailRow($builder, $tableName, $fieldName, $field);
-                            continue;
-                        default:
-                            throw new NotImplementedException();
-                    }
+            switch ($field['type']) {
+                case 'string':
+                    return $this->registerStringRow($builder, $tableName, $fieldName, $field);
+                case 'primaryKey':
+                    return $this->registerPrimaryKeyRow($builder, $tableName, $fieldName, $field);
+                case 'phone':
+                    return $this->registerPhoneRow($builder, $tableName, $fieldName, $field);
+                case 'email':
+                    return $this->registerEmailRow($builder, $tableName, $fieldName, $field);
+                default:
+                    throw new NotImplementedException();
+            }
         }
         if (is_string($field) && preg_match('/([A-Za-z0-9]+\\\\)*/', $field)) {
             return $builder->addDefinition($this->prefix($tableName . '.' . $fieldName))
