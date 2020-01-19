@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Factories;
 
 use FKSDB\Components\Controls\Fyziklani\EditControl;
-use FKSDB\Components\Controls\Fyziklani\FinalResults;
 use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Results\ResultsPresentation;
 use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Results\ResultsView;
 use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Statistics\CorrelationStatistics;
@@ -14,8 +13,6 @@ use FKSDB\Components\Controls\Fyziklani\RoutingEdit;
 use FKSDB\Components\Controls\Fyziklani\Submit\QREntryControl;
 use FKSDB\Components\Controls\Fyziklani\Submit\TaskCodeInput;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
-use FKSDB\Components\Grids\Fyziklani\AllSubmitsGrid;
-use FKSDB\Components\Grids\Fyziklani\TaskGrid;
 use FKSDB\model\Fyziklani\TaskCodeHandlerFactory;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom;
@@ -186,28 +183,6 @@ class FyziklaniFactory {
     }
 
     /* ********** GRIDS *************/
-    /**
-     * @param ModelEvent $event
-     * @return AllSubmitsGrid
-     */
-    public function createSubmitsGrid(ModelEvent $event): AllSubmitsGrid {
-        return new AllSubmitsGrid(
-            $event,
-            $this->serviceFyziklaniTask,
-            $this->serviceFyziklaniSubmit,
-            $this->serviceFyziklaniTeam,
-            $this->tableReflectionFactory
-        );
-    }
-
-    /**
-     * @param ModelEvent $event
-     * @return TaskGrid
-     */
-    public function createTasksGrid(ModelEvent $event): TaskGrid {
-        return new TaskGrid($event, $this->serviceFyziklaniTask);
-    }
-
     /**
      * @param ModelEvent $event
      * @return RoutingDownload

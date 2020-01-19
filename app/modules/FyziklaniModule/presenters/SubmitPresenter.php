@@ -2,24 +2,26 @@
 
 namespace FyziklaniModule;
 
-use FKSDB\Components\Controls\FormControl\FormControl;
+use EventModule\EventEntityTrait;
 use FKSDB\Components\Controls\Fyziklani\EditControl;
 use FKSDB\Components\Controls\Fyziklani\Submit\QREntryControl;
 use FKSDB\Components\Controls\Fyziklani\Submit\TaskCodeInput;
+use FKSDB\Components\Grids\Fyziklani\AllSubmitsGrid;
 use FKSDB\Components\Grids\Fyziklani\SubmitsGrid;
+use FKSDB\model\Fyziklani\ClosedSubmittingException;
+use FKSDB\model\Fyziklani\PointsMismatchException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 
 /**
  * Class SubmitPresenter
  * @package FyziklaniModule
+ * @method ModelFyziklaniSubmit getEntity()
  */
 class SubmitPresenter extends BasePresenter {
-    /**
-     * @var ModelFyziklaniSubmit
-     */
-    private $submit;
+    use EventEntityTrait;
 
     /* ***** Title methods *****/
     public function titleEntry() {
@@ -47,12 +49,12 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @param $id
      * @throws AbortException
-     * @throws \ReflectionException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
-    public function titleDetail($id) {
-        $this->setTitle(sprintf(_('Detail of the submit #%d'), $this->loadModel($id)->fyziklani_submit_id));
+    public function titleDetail() {
+        $this->setTitle(sprintf(_('Detail of the submit #%d'), $this->getEntity()->fyziklani_submit_id));
         $this->setIcon('fa fa-pencil');
     }
 
@@ -104,7 +106,9 @@ class SubmitPresenter extends BasePresenter {
     public function authorizedAutoClose() {
         $this->authorizedEntry();
     }
+
     /* ******** ACTION METHODS ********/
+
     /**
      * @param $id
      * @throws BadRequestException
@@ -122,51 +126,33 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @param $id
      * @throws BadRequestException
      * @throws AbortException
-     * @throws \ReflectionException
      */
-    public function actionEdit($id) {
+    public function actionEdit() {
         $control = $this->getComponent('editControl');
         if (!$control instanceof EditControl) {
             throw new BadRequestException();
         }
-        $submit = $this->loadModel($id);
-        $control->setSubmit($submit);
+        $control->setSubmit($this->getEntity());
     }
 
     /**
-     * @param $id
      * @throws AbortException
-     * @throws \ReflectionException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
-    public function actionDetail($id) {
-        $this->loadModel($id);
-    }
-
-    /**
-     * @param int $id
-     * @return ModelFyziklaniSubmit
-     * @throws AbortException
-     * @throws \ReflectionException
-     */
-    private function loadModel(int $id): ModelFyziklaniSubmit {
-        if ($this->submit) {
-            return $this->submit;
-        }
-        $row = $this->getServiceFyziklaniSubmit()->findByPrimary($id);
-        if (!$row) {
-            $this->flashMessage(_('Submit neexistuje'), \BasePresenter::FLASH_ERROR);
-            $this->backLinkRedirect();
-            $this->redirect('list');
-        }
-        $this->submit = ModelFyziklaniSubmit::createFromActiveRow($row);
-        return $this->submit;
-    }
-
     public function renderDetail() {
-        $this->template->model = $this->submit;
+        $this->template->model = $this->getEntity();
+    }
+
+    /**
+     * @throws AbortException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     */
+    public function renderEdit() {
+        $this->template->model = $this->getEntity();
     }
 
     /* ****** COMPONENTS **********/
@@ -198,7 +184,13 @@ class SubmitPresenter extends BasePresenter {
      * @throws AbortException
      */
     public function createComponentGrid(): SubmitsGrid {
-        return $this->fyziklaniComponentsFactory->createSubmitsGrid($this->getEvent());
+        return new AllSubmitsGrid(
+            $this->getEvent(),
+            $this->getServiceFyziklaniTask(),
+            $this->getServiceFyziklaniSubmit(),
+            $this->getServiceFyziklaniTeam(),
+            $this->getTableReflectionFactory()
+        );
     }
 
     /**
@@ -215,18 +207,29 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @return FormControl
+     * @throws AbortException
      * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws ClosedSubmittingException
+     * @throws PointsMismatchException
      */
-    public function createComponentCheckForm(): FormControl {
-        $control = new FormControl();
-        $form = $control->getForm();
-        $form->addSubmit('submit', _('Check'));
-        $form->onSuccess[] = function () {
-            $log = $this->getServiceFyziklaniSubmit()->checkSubmit($this->submit, $this->submit->points, $this->getUser());
-            $this->flashMessage($log->getMessage(), $log->getLevel());
-            $this->redirect('this');
-        };
-        return $control;
+    public function handleCheck() {
+        $log = $this->getServiceFyziklaniSubmit()->checkSubmit($this->getEntity(), $this->getEntity()->points, $this->getUser());
+        $this->flashMessage($log->getMessage(), $log->getLevel());
+        $this->redirect('this');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getORMService() {
+        return $this->getServiceFyziklaniSubmit();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getModelResource(): string {
+        return 'fyziklani.submit';
     }
 }

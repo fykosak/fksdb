@@ -2,7 +2,6 @@
 
 namespace FyziklaniModule;
 
-use FKSDB\Components\Controls\Fyziklani\FinalResults;
 use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Results\ResultsPresentation;
 use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Results\ResultsView;
 use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Statistics\CorrelationStatistics;

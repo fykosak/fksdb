@@ -28,6 +28,11 @@ class ClosePresenter extends BasePresenter {
         $this->setIcon('fa fa-check');
     }
 
+    /**
+     * @throws AbortException
+     * @throws BadRequestException
+     * @throws \Nette\Application\ForbiddenRequestException
+     */
     public function titleTeam() {
         $this->setTitle(sprintf(_('Uzavírání bodování týmu "%s"'), $this->getEntity()->name));
         $this->setIcon('fa fa-check-square-o');

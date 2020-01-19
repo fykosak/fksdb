@@ -3,7 +3,9 @@
 namespace FKSDB\ORM\Models\Fyziklani;
 
 use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\IEventReferencedModel;
 use FKSDB\ORM\Models\IFyziklaniTeamReferencedModel;
+use FKSDB\ORM\Models\ModelEvent;
 use Nette\Database\Table\ActiveRow;
 use Nette\Utils\DateTime;
 
@@ -23,7 +25,7 @@ use Nette\Utils\DateTime;
  * @property-read DateTime created
  * @property-read DateTime modified
  */
-class ModelFyziklaniSubmit extends AbstractModelSingle implements IFyziklaniTeamReferencedModel {
+class ModelFyziklaniSubmit extends AbstractModelSingle implements IFyziklaniTeamReferencedModel, IEventReferencedModel {
     const STATE_NOT_CHECKED = 'not_checked';
     const STATE_CHECKED = 'checked';
 
@@ -32,6 +34,13 @@ class ModelFyziklaniSubmit extends AbstractModelSingle implements IFyziklaniTeam
      */
     public function getTask(): ModelFyziklaniTask {
         return ModelFyziklaniTask::createFromActiveRow($this->fyziklani_task);
+    }
+
+    /**
+     * @return ModelEvent
+     */
+    public function getEvent(): ModelEvent {
+        return $this->getFyziklaniTeam()->getEvent();
     }
 
     /**
