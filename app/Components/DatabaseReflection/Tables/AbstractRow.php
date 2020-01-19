@@ -64,7 +64,7 @@ abstract class AbstractRow {
      * @return Html
      * @throws BadRequestException
      */
-    public function renderValue(AbstractModelSingle $model, int $userPermissionsLevel): Html {
+    public final function renderValue(AbstractModelSingle $model, int $userPermissionsLevel): Html {
         if (!$this->hasPermissions($userPermissionsLevel)) {
             return PermissionDeniedBadge::getHtml();
         }

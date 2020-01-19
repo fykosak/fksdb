@@ -85,9 +85,9 @@ abstract class DefaultRow extends AbstractRow {
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public final function getDescription() {
+    public final function getDescription(): string {
         return $this->description ? _($this->description) : '';
     }
 
@@ -103,5 +103,12 @@ abstract class DefaultRow extends AbstractRow {
      */
     protected final function getTableName(): string {
         return $this->tableName;
+    }
+
+    /**
+     * @return array
+     */
+    protected final function getMetaData(): array {
+        return $this->metaData;
     }
 }
