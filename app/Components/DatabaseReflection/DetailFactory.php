@@ -18,7 +18,6 @@ class DetailFactory {
      * @param array $nodes
      */
     public function setNodes(array $nodes) {
-        Debugger::barDump($nodes);
         $this->nodes = $nodes;
     }
 
