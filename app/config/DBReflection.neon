@@ -92,15 +92,21 @@ DBReflection:
              created: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniSubmit\CreatedRow
              modified: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniSubmit\ModifiedRow
          fyziklani_task:
-             fyziklani_task_id:
-                 type: primaryKey
-                 title: _(Task Id)
-             name:
-                 type: string
-                 title: _(Name)
-             label:
-                 type: string
-                 title: _(Label)
+             modelClassName: FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask
+             referencedAccess:
+                modelClassName: FKSDB\ORM\Models\IFyziklaniTaskReferencedModel
+                method: getFyziklaniTask
+                nullable: false
+             fields:
+                fyziklani_task_id:
+                    type: primaryKey
+                    title: _(Task Id)
+                name:
+                    type: string
+                    title: _(Name)
+                label:
+                    type: string
+                    title: _(Label)
          referenced:
              payment_id: FKSDB\Components\DatabaseReflection\ReferencedRows\PaymentRow
     links:
@@ -140,4 +146,24 @@ DBReflection:
                 id: e_fyziklani_team_id
             title: Detail
             model: FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam
-
+    details:
+        fyziklani.submit:
+            -
+                fields:
+                   - fyziklani_submit.fyziklani_submit_id
+                   - e_fyziklani_team.opened_submitting
+                   - e_fyziklani_team.name
+                   - e_fyziklani_team.e_fyziklani_team_id
+            -
+                fields:
+                   - fyziklani_task.fyziklani_task_id
+                   - fyziklani_task.name
+                   - fyziklani_task.label
+            -
+                fields:
+                   - fyziklani_submit.points
+                   - fyziklani_submit.state
+            -
+                fields:
+                   - fyziklani_submit.created
+                   - fyziklani_submit.modified

@@ -2,6 +2,7 @@
 
 namespace FKSDB\Config\Extensions;
 
+use FKSDB\Components\DatabaseReflection\DetailFactory;
 use FKSDB\Components\DatabaseReflection\Links\Link;
 use FKSDB\Components\DatabaseReflection\PrimaryKeyRow;
 use FKSDB\Components\DatabaseReflection\StringRow;
@@ -22,9 +23,18 @@ class DBReflectionExtension extends CompilerExtension {
      * @throws BadRequestException
      */
     public function loadConfiguration() {
-        $builder = $this->getContainerBuilder();
+        $this->registerTables($this->config['tables']);
+        $this->registerLinks($this->config['links']);
+        $this->registerDetails($this->config['details']);
+    }
 
-        foreach ($this->config['tables'] as $tableName => $fieldDefinitions) {
+    /**
+     * @param array $tables
+     * @throws BadRequestException
+     */
+    private function registerTables(array $tables) {
+        $builder = $this->getContainerBuilder();
+        foreach ($tables as $tableName => $fieldDefinitions) {
 
             if (isset($fieldDefinitions['fields'])) {
                 $fields = $fieldDefinitions['fields'];
@@ -39,7 +49,14 @@ class DBReflectionExtension extends CompilerExtension {
                 }
             }
         }
-        foreach ($this->config['links'] as $linkId => $def) {
+    }
+
+    /**
+     * @param array $links
+     */
+    private function registerLinks(array $links) {
+        $builder = $this->getContainerBuilder();
+        foreach ($links as $linkId => $def) {
             if (is_array($def)) {
                 $builder->addDefinition($this->prefix('link.' . $linkId))
                     ->setFactory(Link::class)
@@ -49,6 +66,16 @@ class DBReflectionExtension extends CompilerExtension {
                     ->setFactory($def);
             }
         }
+    }
+
+    /**
+     * @param array $details
+     */
+    private function registerDetails(array $details) {
+        $builder = $this->getContainerBuilder();
+        $builder->addDefinition($this->prefix('detailFactory'))
+            ->setFactory(DetailFactory::class)
+            ->addSetup('setNodes', [$details]);
     }
 
     /**

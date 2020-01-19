@@ -10,6 +10,7 @@ use Nette\Forms\Controls\TextInput;
 use Nette\Localization\ITranslator;
 use Nette\SmartObject;
 use Nette\Utils\Html;
+use Tracy\Debugger;
 
 /**
  * Class AbstractField
@@ -95,7 +96,7 @@ abstract class AbstractRow {
         }
 
         if (isset($this->referencedAccess) && $model instanceof $this->referencedAccess['modelClassName']) {
-            $referencedModel = $model->referencedAccess['method']();
+            $referencedModel = $model->{$this->referencedAccess['method']}();
             if ($referencedModel) {
                 return $referencedModel;
             }

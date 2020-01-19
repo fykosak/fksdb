@@ -1,23 +1,6 @@
 {block content}
-    <div>
-        {control valuePrinter__fyziklani_submit__fyziklani_submit_id:row $model}
+    {control detail 'fyziklani.submit', $model}
 
-        {control valuePrinter__e_fyziklani_team__opened_submitting:row $model->getTeam()}
-
-        {control valuePrinter__e_fyziklani_team__name:row $model->getFyziklaniTeam()}
-        {control valuePrinter__e_fyziklani_team__e_fyziklani_team_id:row $model->getFyziklaniTeam()}
-        <hr/>
-        {control valuePrinter__fyziklani_task__fyziklani_task_id:row $model}
-        {control valuePrinter__fyziklani_task__name:row $model->getTask()}
-        {control valuePrinter__fyziklani_task__label:row $model->getTask()}
-        <hr/>
-        {control valuePrinter__fyziklani_submit__points:row $model}
-        {control valuePrinter__fyziklani_submit__state:row $model}
-        <hr/>
-        {control valuePrinter__fyziklani_submit__created:row $model}
-        {control valuePrinter__fyziklani_submit__modified:row $model}
-    </div>
-    <hr/>
     <div class="my-3">
         {if !$model->isChecked() && $model->getFyziklaniTeam()->hasOpenSubmitting()}
             <a href="{link check!}" class="btn btn-success">{_('Check submit')}</a>
