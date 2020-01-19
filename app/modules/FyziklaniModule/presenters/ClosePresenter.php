@@ -10,6 +10,7 @@ use FKSDB\Components\Grids\Fyziklani\TeamSubmitsGrid;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use function sprintf;
 
 /**
@@ -31,7 +32,7 @@ class ClosePresenter extends BasePresenter {
     /**
      * @throws AbortException
      * @throws BadRequestException
-     * @throws \Nette\Application\ForbiddenRequestException
+     * @throws ForbiddenRequestException
      */
     public function titleTeam() {
         $this->setTitle(sprintf(_('Uzavírání bodování týmu "%s"'), $this->getEntity()->name));
@@ -74,19 +75,13 @@ class ClosePresenter extends BasePresenter {
      */
     public function actionTeam() {
         $team = $this->getEntity();
-        if (!$team->hasOpenSubmitting()) {
-            $this->flashMessage(_('Team má uzatvorené bodovanie'));
-            $this->redirect('list');
-
-        } elseif (!$team->hasAllSubmitsChecked()) {
-            $this->flashMessage(_('Team nemá checknuté všetky úlohy'));
+        try {
+            $team->canClose();
+        } catch (BadRequestException $exception) {
+            $this->flashMessage($exception->getMessage());
             $this->redirect('list');
         }
-        $control = $this->getComponent('closeTeamControl');
-        if (!$control instanceof CloseTeamControl) {
-            throw new BadRequestException();
-        }
-        $control->setTeam($this->getEntity());
+        $this->actionHard();
     }
 
     /**

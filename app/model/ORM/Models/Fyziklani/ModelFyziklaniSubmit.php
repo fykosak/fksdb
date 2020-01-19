@@ -80,7 +80,14 @@ class ModelFyziklaniSubmit extends AbstractModelSingle implements IFyziklaniTeam
     /**
      * @return bool
      */
+    public function canRevoke(): bool {
+        return $this->canChange() && !is_null($this->points);
+    }
+
+    /**
+     * @return bool
+     */
     public function canChange(): bool {
-        return $this->getTeam()->hasOpenSubmitting();
+        return $this->getFyziklaniTeam()->hasOpenSubmitting();
     }
 }

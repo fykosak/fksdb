@@ -80,6 +80,9 @@ class OrgsGrid extends BaseGrid {
         }
     }
 
+    /**
+     * @return string
+     */
     protected function getModelClassName(): string {
         return ModelOrg::class;
     }

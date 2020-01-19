@@ -2,10 +2,7 @@
 
 namespace FKSDB\Components\DatabaseReflection;
 
-use FKSDB\ORM\AbstractModelSingle;
-use Nette\Application\BadRequestException;
 use Nette\Localization\ITranslator;
-use Nette\Utils\Html;
 
 /**
  * Class DefaultRow

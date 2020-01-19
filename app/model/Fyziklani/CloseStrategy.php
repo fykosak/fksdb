@@ -2,7 +2,6 @@
 
 namespace FKSDB\model\Fyziklani;
 
-use Closure;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;

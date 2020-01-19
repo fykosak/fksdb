@@ -64,6 +64,7 @@ class RowFactoryComponent extends Control {
     /**
      * @param AbstractModelSingle $model
      * @param bool $tested
+     * @throws \Nette\Application\BadRequestException
      */
     public function renderRow(AbstractModelSingle $model, bool $tested = false) {
         $this->template->layout = self::LAYOUT_ROW;
@@ -73,6 +74,7 @@ class RowFactoryComponent extends Control {
     /**
      * @param AbstractModelSingle $model
      * @param bool $tested
+     * @throws \Nette\Application\BadRequestException
      */
     public function renderListItem(AbstractModelSingle $model, bool $tested = false) {
         $this->template->layout = self::LAYOUT_LIST_ITEM;
@@ -82,6 +84,7 @@ class RowFactoryComponent extends Control {
     /**
      * @param AbstractModelSingle $model
      * @param bool $tested
+     * @throws \Nette\Application\BadRequestException
      */
     public function renderOnlyValue(AbstractModelSingle $model, bool $tested = false) {
         $this->template->layout = self::LAYOUT_ONLY_VALUE;

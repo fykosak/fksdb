@@ -77,8 +77,6 @@ services:
     #
     # Fyziklani
     #
-    - FKSDB\model\Fyziklani\TaskCodePreprocessor
-    - FKSDB\model\Fyziklani\TaskCodeHandlerFactory
     - FKSDB\Components\Forms\Factories\TableReflectionFactory
     - FKSDB\Components\Controls\PhoneNumber\PhoneNumberFactory
     - FKSDB\Components\DatabaseReflection\MetaDataFactory

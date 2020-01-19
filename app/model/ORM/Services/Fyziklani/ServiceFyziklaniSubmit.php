@@ -11,6 +11,7 @@ use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
+use Nette\Application\BadRequestException;
 use Nette\Database\Table\Selection;
 use Nette\Security\User;
 use Tracy\Debugger;
@@ -141,10 +142,14 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
      * @param User $user
      * @return Message
      * @throws ClosedSubmittingException
+     * @throws BadRequestException
      */
     public function revokeSubmit(ModelFyziklaniSubmit $submit, User $user): Message {
         if (!$submit->canChange()) {
             throw new ClosedSubmittingException($submit->getFyziklaniTeam());
+        }
+        if (!$submit->canRevoke()) {
+            throw new BadRequestException(_('Submit can\'t be revoked'));
         }
         $submit->update([
             'points' => null,

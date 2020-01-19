@@ -12,7 +12,6 @@ use Nette\DI\ContainerBuilder;
 use Nette\DI\ServiceDefinition;
 use Nette\NotImplementedException;
 use stdClass;
-use Tracy\Debugger;
 
 /**
  * Class StalkingExtension

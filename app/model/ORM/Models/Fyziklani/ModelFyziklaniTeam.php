@@ -2,6 +2,8 @@
 
 namespace FKSDB\ORM\Models\Fyziklani;
 
+use FKSDB\model\Fyziklani\ClosedSubmittingException;
+use FKSDB\model\Fyziklani\NotCheckedSubmitsException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\IEventReferencedModel;
@@ -65,13 +67,16 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
     }
 
     /**
-     * @return Selection
-     * @deprecated use getNonRevokedSubmits
-     * @use getNonRevokedSubmits
+     * @return null|ModelFyziklaniTeamPosition
      */
-    public function getSubmits(): Selection {
-        return $this->getNonRevokedSubmits();
+    public function getPosition() {
+        $row = $this->related(DbNames::TAB_FYZIKLANI_TEAM_POSITION, 'e_fyziklani_team_id')->fetch();
+        if ($row) {
+            return ModelFyziklaniTeamPosition::createFromActiveRow($row);
+        }
+        return null;
     }
+    /* ******************** SUBMITS ******************************* */
 
     /**
      * @return Selection
@@ -101,16 +106,6 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
         return $this->getNonCheckedSubmits()->count() === 0;
     }
 
-    /**
-     * @return null|ModelFyziklaniTeamPosition
-     */
-    public function getPosition() {
-        $row = $this->related(DbNames::TAB_FYZIKLANI_TEAM_POSITION, 'e_fyziklani_team_id')->fetch();
-        if ($row) {
-            return ModelFyziklaniTeamPosition::createFromActiveRow($row);
-        }
-        return null;
-    }
 
     /**
      * @return bool
@@ -125,6 +120,21 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
      */
     public function isReadyForClosing(): bool {
         return $this->hasAllSubmitsChecked() && $this->hasOpenSubmitting();
+    }
+
+    /**
+     * @return bool
+     * @throws ClosedSubmittingException
+     * @throws NotCheckedSubmitsException
+     */
+    public function canClose(): bool {
+        if (!$this->hasOpenSubmitting()) {
+            throw new ClosedSubmittingException($this);
+        }
+        if (!$this->hasAllSubmitsChecked()) {
+            throw new NotCheckedSubmitsException();
+        }
+        return true;
     }
 
     /**

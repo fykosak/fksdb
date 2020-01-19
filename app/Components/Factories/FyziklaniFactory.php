@@ -13,7 +13,7 @@ use FKSDB\Components\Controls\Fyziklani\RoutingEdit;
 use FKSDB\Components\Controls\Fyziklani\Submit\QREntryControl;
 use FKSDB\Components\Controls\Fyziklani\Submit\TaskCodeInput;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
-use FKSDB\model\Fyziklani\TaskCodeHandlerFactory;
+use FKSDB\model\Fyziklani\SubmitHandler;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
@@ -43,7 +43,6 @@ class FyziklaniFactory {
      * @var ServiceFyziklaniTeam
      */
     private $serviceFyziklaniTeam;
-
     /**
      * @var ServiceFyziklaniTask
      */
@@ -52,10 +51,6 @@ class FyziklaniFactory {
      * @var ServiceFyziklaniSubmit
      */
     private $serviceFyziklaniSubmit;
-    /**
-     * @var TaskCodeHandlerFactory
-     */
-    private $taskCodeHandlerFactory;
     /**
      * @var Container
      */
@@ -76,7 +71,6 @@ class FyziklaniFactory {
      * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
      * @param ServiceFyziklaniTask $serviceFyziklaniTask
      * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
-     * @param TaskCodeHandlerFactory $taskCodeHandlerFactory
      * @param Container $context
      * @param ITranslator $translator
      * @param TableReflectionFactory $tableReflectionFactory
@@ -87,7 +81,6 @@ class FyziklaniFactory {
         ServiceFyziklaniTeam $serviceFyziklaniTeam,
         ServiceFyziklaniTask $serviceFyziklaniTask,
         ServiceFyziklaniSubmit $serviceFyziklaniSubmit,
-        TaskCodeHandlerFactory $taskCodeHandlerFactory,
         Container $context,
         ITranslator $translator,
         TableReflectionFactory $tableReflectionFactory
@@ -97,7 +90,6 @@ class FyziklaniFactory {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
         $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
         $this->serviceFyziklaniRoom = $serviceFyziklaniRoom;
-        $this->taskCodeHandlerFactory = $taskCodeHandlerFactory;
         $this->tableReflectionFactory = $tableReflectionFactory;
         $this->context = $context;
         $this->translator = $translator;
@@ -109,8 +101,7 @@ class FyziklaniFactory {
      * @return TaskCodeInput
      */
     public function createTaskCodeInput(ModelEvent $event): TaskCodeInput {
-        $handler = $this->taskCodeHandlerFactory->createHandler($event);
-        return new TaskCodeInput($handler, $this->context, $event, $this->serviceFyziklaniRoom, $this->serviceFyziklaniTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
+        return new TaskCodeInput($this->createHandler($event), $this->context, $event, $this->serviceFyziklaniRoom, $this->serviceFyziklaniTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
     }
 
     /**
@@ -118,8 +109,19 @@ class FyziklaniFactory {
      * @return QREntryControl
      */
     public function createQREntryControl(ModelEvent $event): QREntryControl {
-        $handler = $this->taskCodeHandlerFactory->createHandler($event);
-        return new QREntryControl($event, $handler, $this->translator);
+        return new QREntryControl($event,  $this->createHandler($event), $this->translator);
+    }
+    /**
+     * @param ModelEvent $event
+     * @return SubmitHandler
+     */
+    private function createHandler(ModelEvent $event): SubmitHandler {
+        return new SubmitHandler(
+            $this->serviceFyziklaniTeam,
+            $this->serviceFyziklaniTask,
+            $this->serviceFyziklaniSubmit,
+            $event
+        );
     }
 
     /**
