@@ -75,4 +75,19 @@ class ServiceFyziklaniTeam extends AbstractServiceSingle {
         return $teams;
     }
 
+    /**
+     * @param ModelEvent $event
+     * @param string|null $category
+     * @return bool
+     */
+    public function isCategoryReadyForClosing(ModelEvent $event, string $category = null): bool {
+        $query = $this->findParticipating($event);
+        if ($category) {
+            $query->where('category', $category);
+        }
+        $query->where('points', null);
+        $count = $query->count();
+        return $count == 0;
+    }
+
 }

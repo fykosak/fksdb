@@ -7,19 +7,19 @@
                 <span class="text-success">closed: {$stats['closed']}</span>
                 <span>total: {$stats['opened']+$stats['closed']}</span>
             </div>
-            {if $presenter->isReadyAllToClose($category)}
+            {if $presenter->isReadyAllToCalculate($category)}
                 <a class="btn btn-primary"
-                   href="{link close! category=>$category}">{\sprintf(_('Close %s category'), $category)}</a>
+                   href="{link calculate! category=>$category}">{\sprintf(_('Calculate refults for %s category'), $category)}</a>
             {else}
-                <span class="btn btn-primary disabled">{\sprintf(_('Close %s category'), $category)}</span>
+                <span class="btn btn-warnig disabled">{\sprintf(_('Category %s is not ready'), $category)}</span>
             {/if}
         {/foreach}
         <h2>{_('Global')}</h2>
-        {if $presenter->isReadyAllToClose(null)}
+        {if $presenter->isReadyAllToCalculate(null)}
             <a class="btn btn-primary"
-               href="{link close! category=>null}">{\sprintf(_('Close global results'), $category)}</a>
+               href="{link calculate! category=>null}">{\sprintf(_('Calculate global results'), $category)}</a>
         {else}
-            <span class="btn btn-primary disabled">{\sprintf(_('Close global results'), $category)}</span>
+            <span class="btn btn-primary disabled">{\sprintf(_('Total results are not ready'), $category)}</span>
         {/if}
     </div>
 
