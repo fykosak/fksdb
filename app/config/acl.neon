@@ -60,7 +60,7 @@ acl:
     - addResource(fyziklani.results) # final, correlation, presentation,
     - addResource(fyziklani.submit) # deafult
     - addResource(fyziklani.gameSetup) # deafult
-
+    - addResource(fyziklani.diplomas) # deafultm,results
     #event module
     - addResource(event.application) #import
     - addResource(event.dashboard) # default
