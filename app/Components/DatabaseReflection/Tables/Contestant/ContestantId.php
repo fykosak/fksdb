@@ -7,6 +7,10 @@ use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelContestant;
 use Nette\Utils\Html;
 
+/**
+ * Class ContestantId
+ * @package FKSDB\Components\DatabaseReflection\Tables\ContestantBase
+ */
 class ContestantId extends AbstractRow {
 
     /**

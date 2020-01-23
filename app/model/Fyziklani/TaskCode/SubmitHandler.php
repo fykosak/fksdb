@@ -3,7 +3,6 @@
 namespace FKSDB\model\Fyziklani;
 
 use FKSDB\Messages\Message;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
@@ -11,7 +10,6 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Security\User;
-use Tracy\Debugger;
 
 /**
  * Class TaskCodeHandler
@@ -79,11 +77,11 @@ class SubmitHandler {
 
         $submit = $this->serviceFyziklaniSubmit->findByTaskAndTeam($task, $team);
         if (is_null($submit)) { // novo zadaný
-            return $this->createSubmit($task, $team, $points, $user);
+            return $this->serviceFyziklaniSubmit->createSubmit($task, $team, $points, $user);
         } elseif (!$submit->isChecked()) { // check bodovania
-            return $submit->check($points, $user);
-        } elseif (!$submit->points) { // ak bol zmazaný
-            return $submit->changePoints($points, $user);
+            return $this->serviceFyziklaniSubmit->checkSubmit($submit, $points, $user);
+        } elseif (is_null($submit->points)) { // ak bol zmazaný
+            return $this->serviceFyziklaniSubmit->changePoints($submit, $points, $user);
         } else {
             throw new TaskCodeException(\sprintf(_('Úloha je zadaná a overená.')));
         }
@@ -142,33 +140,5 @@ class SubmitHandler {
         }
 
         return $task;
-    }
-
-    /**
-     * @param ModelFyziklaniTask $task
-     * @param ModelFyziklaniTeam $team
-     * @param int $points
-     * @param User $user
-     * @return Message
-     */
-    private function createSubmit(ModelFyziklaniTask $task, ModelFyziklaniTeam $team, int $points, User $user): Message {
-        $this->serviceFyziklaniSubmit->createNewModel([
-            'points' => $points,
-            'fyziklani_task_id' => $task->fyziklani_task_id,
-            'e_fyziklani_team_id' => $team->e_fyziklani_team_id,
-            'state' => ModelFyziklaniSubmit::STATE_NOT_CHECKED,
-            /* ugly, force current timestamp in database
-             * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
-             */
-            'created' => null
-        ]);
-
-        Debugger::log(\sprintf('Submit created for team %d and task %s by %s', $team->e_fyziklani_team_id, $task->fyziklani_task_id, $user->getIdentity()->getId()), ModelFyziklaniSubmit::DEBUGGER_LOG_PRIORITY);
-        return new Message(\sprintf(_('Body byly uloženy. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
-            $points,
-            $team->name,
-            $team->e_fyziklani_team_id,
-            $task->label,
-            $task->name), Message::LVL_SUCCESS);
     }
 }

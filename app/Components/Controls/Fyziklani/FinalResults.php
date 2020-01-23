@@ -10,6 +10,7 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
+use Tracy\Debugger;
 
 /**
  * Class OrgResults
@@ -54,20 +55,22 @@ class FinalResults extends Control {
      * @return bool
      */
     public function isClosedCategory(string $category): bool {
-        $query = $this->serviceFyziklaniTeam->findParticipating($this->event);
-        $query->where('category', $category)->where('rank_category', null);
-        $count = $query->count();
-        return $count == 0;
+        $count = (int)$this->serviceFyziklaniTeam->findParticipating($this->event)
+            ->where('category', $category)
+            ->where('rank_category IS NULL')
+            ->count();
+        Debugger::barDump($count, $category);
+        return $count === 0;
     }
 
     /**
      * @return bool
      */
     public function isClosedTotal(): bool {
-        $query = $this->serviceFyziklaniTeam->findParticipating($this->event);
-        $query->where('rank_total', null);
-        $count = $query->count();
-        return $count == 0;
+        $count = (int)$this->serviceFyziklaniTeam->findParticipating($this->event)
+            ->where('rank_total IS NULL')
+            ->count();
+        return $count === 0;
     }
 
     /**
@@ -95,7 +98,7 @@ class FinalResults extends Control {
      * @return ResultsTotalGrid
      */
     public function createComponentResultsTotalGrid(): ResultsTotalGrid {
-        return new ResultsTotalGrid($this->event, $this->serviceFyziklaniTeam,$this->tableReflectionFactory);
+        return new ResultsTotalGrid($this->event, $this->serviceFyziklaniTeam, $this->tableReflectionFactory);
     }
 
     /**

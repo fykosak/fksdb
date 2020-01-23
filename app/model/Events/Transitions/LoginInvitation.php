@@ -54,6 +54,7 @@ class LoginInvitation {
 
     /**
      * @param Transition $transition
+     * @throws \Exception
      */
     private function send(Transition $transition) {
         $baseHolder = $transition->getBaseHolder();
