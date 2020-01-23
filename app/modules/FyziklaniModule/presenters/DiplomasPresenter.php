@@ -20,7 +20,7 @@ class DiplomasPresenter extends BasePresenter {
     }
 
     public function titleDefault() {
-        $this->setTitle(_('Close submitting'));
+        $this->setTitle(_('Calculate ranking'));
         $this->setIcon('fa fa-check');
     }
 
@@ -68,7 +68,7 @@ class DiplomasPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function handleClose(string $category = null) {
+    public function handleCalculate(string $category = null) {
         $closeStrategy = new CloseStrategy($this->getEvent(), $this->getServiceFyziklaniTeam());
         $log = $closeStrategy($category);
         $this->flashMessage(Html::el()->addHtml(Html::el('h3')->addHtml('Rankin has been saved.'))->addHtml(Html::el('ul')->addHtml($log)), \BasePresenter::FLASH_SUCCESS);
@@ -81,7 +81,7 @@ class DiplomasPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function isReadyAllToClose(string $category = null): bool {
+    public function isReadyAllToCalculate(string $category = null): bool {
         return $this->getServiceFyziklaniTeam()->isCategoryReadyForClosing($this->getEvent(), $category);
     }
 
