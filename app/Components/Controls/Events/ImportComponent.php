@@ -119,7 +119,6 @@ class ImportComponent extends Control {
     /**
      * @param Form $form
      * @throws \Nette\Application\AbortException
-     * @throws \Nette\Utils\JsonException
      */
     private function handleFormImport(Form $form) {
         $values = $form->getValues();

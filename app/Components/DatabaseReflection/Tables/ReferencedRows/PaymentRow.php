@@ -30,6 +30,7 @@ class PaymentRow extends AbstractRow {
         return Html::el('span')
             ->addAttributes(['class' => StateRow::getUIClass($payment)])
             ->addText('#' . $payment->getPaymentId() . ' ' . StateRow::getStateLabel($payment));
+
     }
 
     /**

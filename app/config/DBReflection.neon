@@ -189,14 +189,15 @@ DBReflection:
              note:
                  type: string
                  title: _(Note)
+
          fyziklani_submit:
-             state: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniSubmit\StateRow
-             points: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniSubmit\PointsRow
-             created: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniSubmit\CreatedRow
              fyziklani_submit_id:
                  type: primaryKey
                  title: _(Submit Id)
+             state: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniSubmit\StateRow
+             created: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniSubmit\CreatedRow
              modified: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniSubmit\ModifiedRow
+             points: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniSubmit\PointsRow
          fyziklani_task:
              modelClassName: FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask
              referencedAccess:
@@ -213,6 +214,7 @@ DBReflection:
                 label:
                     type: string
                     title: _(Label)
+
          fyziklani_game_setup:
              tasks_on_board:
                  type: string

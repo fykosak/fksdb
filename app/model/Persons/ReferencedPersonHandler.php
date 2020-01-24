@@ -233,7 +233,6 @@ class ReferencedPersonHandler implements IReferencedHandler {
                 if ($t == 'person_schedule' && isset($data[$t])) {
                     $this->eventScheduleHandler->prepareAndUpdate($data[$t], $models['person'], $this->eventId);
                     continue;
-
                 }
                 $data[$t]['person_id'] = $models['person']->person_id; // this works even for person itself
 

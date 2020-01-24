@@ -98,7 +98,6 @@ class MailSender {
 
     /**
      * @param Transition $transition
-     * @throws \Exception
      */
     public function __invoke(Transition $transition) {
         $this->send($transition);
@@ -106,7 +105,6 @@ class MailSender {
 
     /**
      * @param Transition $transition
-     * @throws \Exception
      */
     private function send(Transition $transition) {
         $personIds = $this->resolveAdressees($transition);

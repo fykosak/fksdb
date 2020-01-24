@@ -239,7 +239,6 @@ class ApplicationComponent extends Control {
      * @param Form $form
      * @param null $explicitTransitionName
      * @throws AbortException
-     * @throws \Nette\Utils\JsonException
      */
     public function handleSubmit(Form $form, $explicitTransitionName = null) {
         $this->execute($form, $explicitTransitionName);
@@ -248,7 +247,6 @@ class ApplicationComponent extends Control {
     /**
      * @param $transitionName
      * @throws AbortException
-     * @throws \Nette\Utils\JsonException
      */
     public function handleTransition($transitionName) {
         $this->execute(null, $transitionName);

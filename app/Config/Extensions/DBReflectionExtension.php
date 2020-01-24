@@ -42,6 +42,7 @@ class DBReflectionExtension extends CompilerExtension {
             } else {
                 $fields = $fieldDefinitions;
             }
+
             foreach ($fields as $fieldName => $field) {
                 $factory = $this->createField($builder, $tableName, $fieldName, $field);
                 if (isset($fieldDefinitions['referencedAccess'])) {
@@ -128,6 +129,7 @@ class DBReflectionExtension extends CompilerExtension {
      * @return ServiceDefinition
      */
     private function registerPrimaryKeyRow(ContainerBuilder $builder, string $tableName, string $fieldName, array $field): ServiceDefinition {
+
         return $this->setUpDefaultFactory($builder, $tableName, $fieldName, PrimaryKeyRow::class, $field);
     }
 

@@ -20,6 +20,7 @@ use function in_array;
 abstract class AbstractApplicationPresenter extends BasePresenter {
     use EventEntityTrait;
 
+
     /**
      * @var ApplicationHandlerFactory
      */
