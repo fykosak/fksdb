@@ -232,21 +232,4 @@ class SubmitPresenter extends BasePresenter {
     protected function getModelResource(): string {
         return 'fyziklani.submit';
     }
-
-    /**
-     * @throws AbortException
-     */
-    public function handleCheck() {
-        try {
-            $log = $this->submit->check($this->submit->points, $this->getUser());
-            $this->flashMessage($log->getMessage(), $log->getLevel());
-            $this->redirect('this');
-        } catch (ClosedSubmittingException $exception) {
-            $this->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
-            $this->redirect('this');
-        } catch (PointsMismatchException $exception) {
-            $this->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
-            $this->redirect('this');
-        }
-    }
 }
