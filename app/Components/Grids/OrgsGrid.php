@@ -64,11 +64,12 @@ class OrgsGrid extends BaseGrid {
         $this->setDataSource($dataSource);
         $this->setDefaultOrder('since DESC');
 
-        $this->addReflectionColumn('referenced', 'person_name', ModelOrg::class);
-
-        foreach (['since', 'until', 'role'] as $field) {
-            $this->addReflectionColumn(DbNames::TAB_ORG, $field, ModelOrg::class);
-        }
+        $this->addColumns([
+            DbNames::TAB_ORG . '.since',
+            DbNames::TAB_ORG . '.until',
+            DbNames::TAB_ORG . '.role',
+            'referenced.person_name'
+        ]);
 
         $this->addLink('org.edit', true);
         $this->addLink('org.detail', true);

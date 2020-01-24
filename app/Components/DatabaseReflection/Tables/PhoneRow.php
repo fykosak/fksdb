@@ -33,10 +33,11 @@ class PhoneRow extends DefaultRow implements ITestedRowFactory {
      * PhoneRow constructor.
      * @param PhoneNumberFactory $phoneNumberFactory
      * @param ITranslator $translator
+     * @param MetaDataFactory $metaDataFactory
      */
-    public function __construct(PhoneNumberFactory $phoneNumberFactory, ITranslator $translator) {
+    public function __construct(PhoneNumberFactory $phoneNumberFactory, ITranslator $translator, MetaDataFactory $metaDataFactory) {
         $this->phoneNumberFactory = $phoneNumberFactory;
-        parent::__construct($translator);
+        parent::__construct($translator, $metaDataFactory);
     }
 
     /**

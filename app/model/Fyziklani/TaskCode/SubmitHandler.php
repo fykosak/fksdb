@@ -10,6 +10,7 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Security\User;
+use function sprintf;
 
 /**
  * Class TaskCodeHandler
@@ -83,7 +84,7 @@ class SubmitHandler {
         } elseif (is_null($submit->points)) { // ak bol zmazaný
             return $this->serviceFyziklaniSubmit->changePoints($submit, $points, $user);
         } else {
-            throw new TaskCodeException(\sprintf(_('Úloha je zadaná a overená.')));
+            throw new TaskCodeException(sprintf(_('Úloha je zadaná a overená.')));
         }
     }
 
@@ -119,7 +120,7 @@ class SubmitHandler {
         $teamId = TaskCodePreprocessor::extractTeamId($fullCode);
 
         if (!$this->serviceFyziklaniTeam->teamExist($teamId, $this->event)) {
-            throw new TaskCodeException(\sprintf(_('Tým %s neexistuje.'), $teamId));
+            throw new TaskCodeException(sprintf(_('Tým %s neexistuje.'), $teamId));
         }
         $teamRow = $this->serviceFyziklaniTeam->findByPrimary($teamId);
         return ModelFyziklaniTeam::createFromActiveRow($teamRow);
