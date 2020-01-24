@@ -66,10 +66,7 @@ class AllPersonsGrid extends BaseGrid {
 
         $this->addColumn('person_schedule_id', _('#'));
 
-        $this->addColumn('person', _('Person'))->setRenderer(function ($row) {
-            $model = ModelPersonSchedule::createFromActiveRow($row);
-            return $model->getPerson()->getFullName();
-        })->setSortable(false);
+        $this->addColumns(['referenced.person_name']);
 
         $this->addColumn('schedule_item', _('Schedule item'))->setRenderer(function ($row) {
             $model = ModelPersonSchedule::createFromActiveRow($row);

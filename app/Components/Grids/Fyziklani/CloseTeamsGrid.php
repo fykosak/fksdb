@@ -54,9 +54,9 @@ class CloseTeamsGrid extends BaseGrid {
             DbNames::TAB_E_FYZIKLANI_TEAM . '.name',
             DbNames::TAB_E_FYZIKLANI_TEAM . '.e_fyziklani_team_id',
             DbNames::TAB_E_FYZIKLANI_TEAM . '.points',
-            DbNames::TAB_E_FYZIKLANI_TEAM . '.category'
+            DbNames::TAB_E_FYZIKLANI_TEAM . '.category',
+            DbNames::TAB_E_FYZIKLANI_TEAM . '.opened_submitting'
         ]);
-
         $this->addLinkButton($presenter, ':Fyziklani:Close:team', 'close', _('Close submitting'), false, [
             'id' => 'e_fyziklani_team_id',
             'eventId' => 'event_id',
@@ -64,7 +64,7 @@ class CloseTeamsGrid extends BaseGrid {
             /**
              * @var ModelFyziklaniTeam $row
              */
-            return $row->hasOpenSubmitting();
+            return $row->isReadyForClosing();
         });
         $teams = $this->serviceFyziklaniTeam->findParticipating($this->event);//->where('points',NULL);
         $this->setDataSource(new NDataSource($teams));

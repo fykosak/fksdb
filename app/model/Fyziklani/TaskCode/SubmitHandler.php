@@ -3,7 +3,6 @@
 namespace FKSDB\model\Fyziklani;
 
 use FKSDB\Messages\Message;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
@@ -80,11 +79,11 @@ class SubmitHandler {
 
         $submit = $this->serviceFyziklaniSubmit->findByTaskAndTeam($task, $team);
         if (is_null($submit)) { // novo zadaný
-            return $this->createSubmit($task, $team, $points, $user);
+            return $this->serviceFyziklaniSubmit->createSubmit($task, $team, $points, $user);
         } elseif (!$submit->isChecked()) { // check bodovania
-            return $submit->check($points, $user);
-        } elseif (!$submit->points) { // ak bol zmazaný
-            return $submit->changePoints($points, $user);
+            return $this->serviceFyziklaniSubmit->checkSubmit($submit, $points, $user);
+        } elseif (is_null($submit->points)) { // ak bol zmazaný
+            return $this->serviceFyziklaniSubmit->changePoints($submit, $points, $user);
         } else {
             throw new TaskCodeException(sprintf(_('Úloha je zadaná a overená.')));
         }
