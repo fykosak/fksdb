@@ -70,7 +70,7 @@ abstract class AbstractRow {
         }
         return $this->createHtmlValue($this->getModel($model));
     }
-    
+
     /**
      * @param string $modelClassName
      * @param array $referencedAccess

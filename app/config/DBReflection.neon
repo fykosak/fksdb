@@ -189,6 +189,14 @@ DBReflection:
              note:
                  type: string
                  title: _(Note)
+         fyziklani_submit:
+             state: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniSubmit\StateRow
+             points: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniSubmit\PointsRow
+             created: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniSubmit\CreatedRow
+             fyziklani_submit_id:
+                 type: primaryKey
+                 title: _(Submit Id)
+             modified: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniSubmit\ModifiedRow
          fyziklani_task:
              modelClassName: FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask
              referencedAccess:
@@ -205,7 +213,6 @@ DBReflection:
                 label:
                     type: string
                     title: _(Label)
-
          fyziklani_game_setup:
              tasks_on_board:
                  type: string
@@ -217,14 +224,6 @@ DBReflection:
              refresh_delay: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniGameSetup\RefreshDelayRow
              result_hard_display: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniGameSetup\ResultHardDisplayRow
              available_points: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniGameSetup\AvailablePointsRow
-         fyziklani_submit:
-             state: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniSubmit\StateRow
-             points: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniSubmit\PointsRow
-             created: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniSubmit\CreatedRow
-             fyziklani_submit_id:
-                 type: primaryKey
-                 title: _(Submit Id)
-             modified: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniSubmit\ModifiedRow
          e_fyziklani_team:
              modelClassName: FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam
              referencedAccess:
@@ -232,7 +231,6 @@ DBReflection:
                  method: getFyziklaniTeam
                  nullable: false
              fields:
-
                 opened_submitting: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\OpenedSubmittingRow
                 e_fyziklani_team_id:
                   type: primaryKey
@@ -250,7 +248,6 @@ DBReflection:
                 rank_category: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\RankInCategoryRow
                 rank_total: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\RankTotalRow
                 points: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\PointsRow
-
          stored_query:
              qid: FKSDB\Components\DatabaseReflection\StoredQuery\StoredQuery\QIDRow
              tags: FKSDB\Components\DatabaseReflection\StoredQuery\StoredQuery\TagsRow
