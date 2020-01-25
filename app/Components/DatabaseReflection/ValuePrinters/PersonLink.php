@@ -44,9 +44,9 @@ class PersonLink extends AbstractValuePrinter {
             throw new BadRequestException();
         }
         try {
-            if ($this->presenterComponent->getPresenter()->authorized(':Common:Stalking:view', ['id' => $person->person_id])) {
+            if ($this->presenterComponent->getPresenter()->authorized(':Common:Person:detail', ['id' => $person->person_id])) {
                 return Html::el('a')
-                    ->addAttributes(['href' => $this->presenterComponent->getPresenter()->link(':Common:Stalking:view', [
+                    ->addAttributes(['href' => $this->presenterComponent->getPresenter()->link(':Common:Person:detail', [
                         'id' => $person->person_id,
                     ])])
                     ->addText($person->getFullName());

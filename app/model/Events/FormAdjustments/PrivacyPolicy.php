@@ -77,6 +77,7 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
 
     /**
      * @param ArrayHash $values
+     * @throws \Exception
      */
     private function trySetAgreed(ArrayHash $values) {
         foreach ($values as $key => $value) {

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace FyziklaniModule;
 
 use Nette\Application\AbortException;
