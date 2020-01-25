@@ -4,11 +4,6 @@ namespace FKSDB\Components\Factories;
 
 use FKSDB\Components\Controls\Fyziklani\EditControl;
 use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\ResultsAndStatistics;
-use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Results\ResultsPresentation;
-use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Results\ResultsView;
-use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Statistics\CorrelationStatistics;
-use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Statistics\TaskStatistics;
-use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Statistics\TeamStatistics;
 use FKSDB\Components\Controls\Fyziklani\RoutingDownload;
 use FKSDB\Components\Controls\Fyziklani\RoutingEdit;
 use FKSDB\Components\Controls\Fyziklani\Submit\QREntryControl;
@@ -102,7 +97,7 @@ class FyziklaniFactory {
      * @return TaskCodeInput
      */
     public function createTaskCodeInput(ModelEvent $event): TaskCodeInput {
-        return new TaskCodeInput($this->createHandler($event), $this->context, $event, $this->serviceFyziklaniRoom, $this->serviceFyziklaniTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
+        return new TaskCodeInput($this->createHandler($event), $this->context, $event, $this->serviceFyziklaniTask, $this->serviceFyziklaniTeam);
     }
 
     /**
@@ -110,8 +105,9 @@ class FyziklaniFactory {
      * @return QREntryControl
      */
     public function createQREntryControl(ModelEvent $event): QREntryControl {
-        return new QREntryControl($event,  $this->createHandler($event), $this->translator);
+        return new QREntryControl($event, $this->createHandler($event), $this->translator);
     }
+
     /**
      * @param ModelEvent $event
      * @return SubmitHandler

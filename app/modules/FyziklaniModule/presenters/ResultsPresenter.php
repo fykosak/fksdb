@@ -3,11 +3,6 @@
 namespace FyziklaniModule;
 
 use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\ResultsAndStatistics;
-use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Results\ResultsPresentation;
-use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Results\ResultsView;
-use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Statistics\CorrelationStatistics;
-use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Statistics\TaskStatistics;
-use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Statistics\TeamStatistics;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 
