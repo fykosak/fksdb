@@ -296,9 +296,12 @@ DBReflection:
                 e_fyziklani_team_id:
                   type: primaryKey
                   title: _(Team Id)
+                status:
+                  type: state
+                  title: _(State)
+                  states: %event_participant.states%
                 name: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\NameRow
                 name_n_id: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\NameNIdRow
-                status: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\StatusRow
                 phone: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\PhoneRow
                 note: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\NoteRow
                 password: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\PasswordRow

@@ -100,6 +100,8 @@ class DBReflectionExtension extends CompilerExtension {
                     return $this->registerPhoneRow($builder, $tableName, $fieldName, $field);
                 case 'email':
                     return $this->registerEmailRow($builder, $tableName, $fieldName, $field);
+                case 'state':
+                    return $this->registerStateRow($builder, $tableName, $fieldName, $field);
                 default:
                     throw new NotImplementedException();
             }
