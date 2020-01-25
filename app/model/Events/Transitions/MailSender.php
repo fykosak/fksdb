@@ -134,6 +134,7 @@ class MailSender {
      * @param ModelLogin $login
      * @param BaseMachine $baseMachine
      * @return Message
+     * @throws \Exception
      */
     private function composeMessage($filename, ModelLogin $login, BaseMachine $baseMachine) {
         $machine = $baseMachine->getMachine();

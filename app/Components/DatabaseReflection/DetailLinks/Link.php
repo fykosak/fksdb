@@ -2,8 +2,6 @@
 
 namespace FKSDB\Components\DatabaseReflection\Links;
 
-use Nette\Application\BadRequestException;
-
 /**
  * Class Link
  * @package FKSDB\Components\DatabaseReflection\Links
@@ -60,6 +58,10 @@ class Link extends AbstractLink {
         return $this->destination;
     }
 
+    /**
+     * @param \FKSDB\ORM\AbstractModelSingle $model
+     * @return array
+     */
     public function prepareParams($model): array {
         $urlParams = [];
         foreach ($this->params as $key => $accessKey) {

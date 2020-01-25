@@ -11,6 +11,7 @@ use Nette\Forms\Controls\BaseControl;
  * @package FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam
  */
 abstract class AbstractFyziklaniTeamRow extends AbstractRow {
+
     /**
      * @return int
      */

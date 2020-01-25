@@ -4,7 +4,6 @@ namespace FKSDB\Components\Grids\Fyziklani;
 
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\DbNames;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FyziklaniModule\BasePresenter;
@@ -52,7 +51,7 @@ class TeamSubmitsGrid extends SubmitsGrid {
         $this->addLinkButton($presenter, ':Fyziklani:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);
         $this->addLinkButton($presenter, ':Fyziklani:Submit:detail', 'detail', _('Detail'), false, ['id' => 'fyziklani_submit_id']);
 
-        $submits = $this->team->getNonCheckedSubmits()
+        $submits = $this->team->getAllSubmits()
             ->order('fyziklani_submit.created');
 
         $dataSource = new NDataSource($submits);

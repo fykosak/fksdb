@@ -72,6 +72,7 @@ class ImportHandler {
      * @param $errorMode
      * @param $stateless
      * @return bool
+     * @throws \Nette\Utils\JsonException
      */
     public function import(ApplicationHandler $handler, $transitions, $errorMode, $stateless) {
         set_time_limit(0);

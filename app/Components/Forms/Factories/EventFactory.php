@@ -15,8 +15,6 @@ use Nette\Forms\Controls\BaseControl;
  */
 class EventFactory extends SingleReflectionFactory {
 
-    const SHOW_UNKNOWN_SCHOOL_HINT = 0x1;
-
     /**
      * @var \FKSDB\ORM\Services\ServiceEventType
      */

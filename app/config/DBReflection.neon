@@ -43,33 +43,39 @@ DBReflection:
              event_type: FKSDB\Components\DatabaseReflection\Event\EventTypeRow
              event_type_id: FKSDB\Components\DatabaseReflection\Event\EventTypeRow
          payment:
-             price: FKSDB\Components\DatabaseReflection\Payment\PriceRow
-             state: FKSDB\Components\DatabaseReflection\Payment\StateRow
-             id: FKSDB\Components\DatabaseReflection\Payment\IdRow
-             bank_account:
-                 type: string
-                 title: _(Bank account)
-             bank_name:
-                 type: string
-                 title: _(Bank name)
-             constant_symbol:
-                 type: string
-                 title: Constant symbol
-             iban:
-                 type: string
-                 title: _(IBAN)
-             specific_symbol:
-                 type: string
-                 title: specific_symbol
-             swift:
-                 type: string
-                 title: _(SWIFT)
-             variable_symbol:
-                 type: string
-                 title: Variable symbol
-             recipient:
-                 type: string
-                 title: _(Recipient)
+             modelClassName: FKSDB\ORM\Models\ModelPayment
+             referencedAccess:
+                  modelClassName: FKSDB\ORM\Models\IPaymentReferencedModel
+                  method: getPayment
+                  nullable: true
+             fields:
+                 bank_account:
+                    type: string
+                    title: _(Bank account)
+                 bank_name:
+                    type: string
+                    title: _(Bank name)
+                 constant_symbol:
+                    type: string
+                    title: Constant symbol
+                 iban:
+                    type: string
+                    title: _(IBAN)
+                 specific_symbol:
+                    type: string
+                    title: _(Specific symbol)
+                 swift:
+                    type: string
+                    title: _(SWIFT)
+                 variable_symbol:
+                    type: string
+                    title: Variable symbol
+                 recipient:
+                    type: string
+                    title: _(Recipient)
+                 price: FKSDB\Components\DatabaseReflection\Payment\PriceRow
+                 state: FKSDB\Components\DatabaseReflection\Payment\StateRow
+                 id: FKSDB\Components\DatabaseReflection\Payment\IdRow
          org:
              org_id:
                   type: primaryKey
@@ -244,6 +250,30 @@ DBReflection:
                       canceled: [badge :'badge badge-6', label: Canceled]
              #created:
              #send:
+         fyziklani_submit:
+             fyziklani_submit_id:
+                 type: primaryKey
+                 title: _(Submit Id)
+             state: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniSubmit\StateRow
+             created: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniSubmit\CreatedRow
+             modified: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniSubmit\ModifiedRow
+             points: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniSubmit\PointsRow
+         fyziklani_task:
+             modelClassName: FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask
+             referencedAccess:
+                modelClassName: FKSDB\ORM\Models\IFyziklaniTaskReferencedModel
+                method: getFyziklaniTask
+                nullable: false
+             fields:
+                fyziklani_task_id:
+                    type: primaryKey
+                    title: _(Task Id)
+                name:
+                    type: string
+                    title: _(Name)
+                label:
+                    type: string
+                    title: _(Label)
          fyziklani_game_setup:
              tasks_on_board:
                  type: string
@@ -255,30 +285,30 @@ DBReflection:
              refresh_delay: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniGameSetup\RefreshDelayRow
              result_hard_display: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniGameSetup\ResultHardDisplayRow
              available_points: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniGameSetup\AvailablePointsRow
-         fyziklani_submit:
-             state: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniSubmit\StateRow
-             points: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniSubmit\PointsRow
-             created: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniSubmit\CreatedRow
          e_fyziklani_team:
-             status:
-                 type: state
-                 title: _(State)
-                 states: %event_participant.states%
-             e_fyziklani_team_id:
+             modelClassName: FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam
+             referencedAccess:
+                 modelClassName: FKSDB\ORM\Models\IFyziklaniTeamReferencedModel
+                 method: getFyziklaniTeam
+                 nullable: false
+             fields:
+                opened_submitting: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\OpenedSubmittingRow
+                e_fyziklani_team_id:
                   type: primaryKey
                   title: _(Team Id)
-             name: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\NameRow
-             name_n_id: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\NameNIdRow
-             phone: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\PhoneRow
-             note: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\NoteRow
-             password: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\PasswordRow
-             category: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\CategoryRow
-             created: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\CreatedRow
-             game_lang: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\GameLangRow
-             force_a: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\ForceARow
-             rank_category: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\RankInCategoryRow
-             rank_total: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\RankTotalRow
-             points: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\PointsRow
+                name: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\NameRow
+                name_n_id: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\NameNIdRow
+                status: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\StatusRow
+                phone: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\PhoneRow
+                note: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\NoteRow
+                password: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\PasswordRow
+                category: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\CategoryRow
+                created: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\CreatedRow
+                game_lang: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\GameLangRow
+                force_a: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\ForceARow
+                rank_category: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\RankInCategoryRow
+                rank_total: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\RankTotalRow
+                points: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\PointsRow
          stored_query:
              qid: FKSDB\Components\DatabaseReflection\StoredQuery\StoredQuery\QIDRow
              tags: FKSDB\Components\DatabaseReflection\StoredQuery\StoredQuery\TagsRow
@@ -349,5 +379,24 @@ DBReflection:
             title: Detail
             model: FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam
     details:
-
-
+        fyziklani.submit:
+            -
+                fields:
+                   - fyziklani_submit.fyziklani_submit_id
+                   - e_fyziklani_team.opened_submitting
+                   - e_fyziklani_team.name
+                   - e_fyziklani_team.e_fyziklani_team_id
+            -
+                headline: Task
+                fields:
+                   - fyziklani_task.fyziklani_task_id
+                   - fyziklani_task.name
+                   - fyziklani_task.label
+            -
+                fields:
+                   - fyziklani_submit.points
+                   - fyziklani_submit.state
+            -
+                fields:
+                   - fyziklani_submit.created
+                   - fyziklani_submit.modified

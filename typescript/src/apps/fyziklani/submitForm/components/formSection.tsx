@@ -20,6 +20,7 @@ import { FORM_NAME } from './formContainer';
 import CodeInput from './input';
 import SubmitButtons from './submitButtons';
 import ValueDisplay from './valueDisplay';
+import Scan from './scan';
 
 export interface OwnProps {
     accessKey: string;
@@ -44,20 +45,25 @@ class FormSection extends React.Component<OwnProps & StateProps, {}> {
         const {valid, submitting, handleSubmit, onSubmit, code, tasks, teams, messages, availablePoints} = this.props;
 
         return (
-            <div>
+            <>
                 {messages.map((message, key) => {
                     return <div key={key} className={'alert alert-' + message.level}> {message.text}</div>;
                 })}
                 <div className="row">
-                    <div className="col-6">
+                    <div className="col-lg-6 col-md-12 mb-3">
                         <h3 className={'fyziklani-headline-color'}>Task's code</h3>
-
                         <div className="form-group">
                             <Field name="code" component={CodeInput}/>
                         </div>
                         <div className="form-group">
                             <Field name="code" component={CodeInputError}/>
                         </div>
+                    </div>
+                    <div className="col-lg-6 col-md-12 mb-3">
+                        <Field name="code" component={Scan}/>
+                    </div>
+
+                    <div className="col-12">
                         <SubmitButtons
                             availablePoints={availablePoints}
                             valid={valid}
@@ -65,11 +71,11 @@ class FormSection extends React.Component<OwnProps & StateProps, {}> {
                             handleSubmit={handleSubmit}
                             onSubmit={onSubmit}/>
                     </div>
-                    <div className="col-6">
-                        <ValueDisplay code={code} tasks={tasks} teams={teams}/>
-                    </div>
+
                 </div>
-            </div>
+                <hr/>
+                <ValueDisplay code={code} tasks={tasks} teams={teams}/>
+            </>
         );
     }
 }
