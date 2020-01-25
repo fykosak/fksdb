@@ -142,7 +142,7 @@ class EventPresenter extends EntityPresenter {
     protected function createComponentEditComponent($name) {
         $control = $this->createForm();
         $form = $control->getForm();
-        $form->addSubmit('send', _('Uložit'));
+        $form->addSubmit('send', _('Save'));
         $form->onSuccess[] = function (Form $form) {
             $this->handleFormSuccess($form, false);
         };

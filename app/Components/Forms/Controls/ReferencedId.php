@@ -11,7 +11,6 @@ use FKSDB\Utils\Promise;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
-use Nette\Utils\RegexpException;
 
 /**
  * Be careful when calling getValue as it executes SQL queries and thus

@@ -133,7 +133,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
         $this->appendExtendedContainer($form);
 
         $handler = $this->handlerFactory->create($this->getORMService(), $this->getSelectedContest(), $this->getSelectedYear(), $this->globalParameters['invitation']['defaultLang']);
-        $submit = $form->addSubmit('send', $create ? _('Založit') : _('Uložit'));
+        $submit = $form->addSubmit('send', $create ? _('Založit') : _('Save'));
 
         $submit->onClick[] = function (SubmitButton $button) use ($handler) {
             $form = $button->getForm();

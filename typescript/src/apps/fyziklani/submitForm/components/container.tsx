@@ -33,7 +33,7 @@ class TaskCode extends React.Component<OwnProps & DispatchProps, {}> {
         const {tasks, teams, onSubmit, availablePoints} = this.props;
         return (
             <div className="row">
-                <div className="col-lg-12 col-md-12">
+                <div className="col-12">
                     <FormContainer tasks={tasks} teams={teams} onSubmit={onSubmit} availablePoints={availablePoints}/>
                 </div>
                 <Powered/>

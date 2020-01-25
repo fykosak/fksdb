@@ -7,7 +7,6 @@ use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\Payment\IPaymentModel;
 use FKSDB\Payment\Price;
-use FKSDB\Payment\PriceCalculator\PriceCalculator;
 use FKSDB\Transitions\IStateModel;
 use FKSDB\Transitions\Machine;
 use FKSDB\Transitions\UnavailableTransitionException;
@@ -36,6 +35,8 @@ use function sprintf;
  * @property-read string variable_symbol
  * @property-read string specific_symbol
  * @property-read string bank_account
+ * @property-read string bank_name
+ * @property-read string recipient
  * @property-read string iban
  * @property-read string swift
  */
@@ -81,17 +82,6 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
     }
 
     /**
-     * @param Machine $machine
-     * @param $id
-     * @throws ForbiddenRequestException
-     * @throws UnavailableTransitionException
-     * @throws BadRequestException
-     */
-    public function executeTransition(Machine $machine, $id) {
-        $machine->executeTransition($id, $this);
-    }
-
-    /**
      * @return string
      */
     public function getPaymentId(): string {
@@ -116,54 +106,7 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
      * @return bool
      */
     public function hasGeneratedSymbols(): bool {
-        return $this->constant_symbol || $this->variable_symbol || $this->specific_symbol || $this->bank_account;
-    }
-
-    /**
-     * @return string
-     * @deprecated
-     */
-    public function getUIClass(): string {
-        $class = 'badge ';
-        switch ($this->state) {
-            case ModelPayment::STATE_WAITING:
-                $class .= 'badge-warning';
-                break;
-            case ModelPayment::STATE_CANCELED:
-                $class .= 'badge-secondary';
-                break;
-            case ModelPayment::STATE_RECEIVED:
-                $class .= 'badge-success';
-                break;
-            case ModelPayment::STATE_NEW:
-                $class .= 'badge-primary';
-                break;
-            default:
-                $class .= 'badge-light';
-        }
-        return $class;
-    }
-
-    /**
-     * @return string
-     * @deprecated
-     */
-    public function getStateLabel() {
-        switch ($this->state) {
-            case ModelPayment::STATE_NEW:
-                return _('New payment');
-
-            case ModelPayment::STATE_WAITING:
-                return _('Waiting for paying');
-
-            case ModelPayment::STATE_CANCELED:
-                return _('Payment canceled');
-
-            case ModelPayment::STATE_RECEIVED:
-                return _('Payment received');
-            default:
-                return $this->state;
-        }
+        return $this->constant_symbol || $this->variable_symbol || $this->specific_symbol || $this->bank_account || $this->bank_name || $this->recipient;
     }
 
     /**
@@ -178,19 +121,6 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
      */
     public function getState() {
         return $this->state;
-    }
-
-    /**
-     * @param PriceCalculator $priceCalculator
-     */
-    public function updatePrice(PriceCalculator $priceCalculator) {
-        $priceCalculator->setCurrency($this->currency);
-        $price = $priceCalculator->execute($this);
-
-        $this->update([
-            'price' => $price->getAmount(),
-            'currency' => $price->getCurrency(),
-        ]);
     }
 
     /**

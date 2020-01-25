@@ -166,7 +166,7 @@ class ApplicationComponent extends Control {
          */
         $saveSubmit = null;
         if ($this->canEdit()) {
-            $saveSubmit = $form->addSubmit('save', _('Uložit'));
+            $saveSubmit = $form->addSubmit('save', _('Save'));
             $saveSubmit->setOption('row', 1);
             $saveSubmit->onClick[] = function (SubmitButton $button) {
                 $buttonForm = $button->getForm();
@@ -256,6 +256,7 @@ class ApplicationComponent extends Control {
      * @param Form|null $form
      * @param null $explicitTransitionName
      * @throws AbortException
+     * @throws \Nette\Utils\JsonException
      */
     private function execute(Form $form = null, $explicitTransitionName = null) {
         try {

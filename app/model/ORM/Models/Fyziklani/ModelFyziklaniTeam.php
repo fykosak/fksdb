@@ -2,6 +2,8 @@
 
 namespace FKSDB\ORM\Models\Fyziklani;
 
+use FKSDB\model\Fyziklani\ClosedSubmittingException;
+use FKSDB\model\Fyziklani\NotCheckedSubmitsException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\IEventReferencedModel;
@@ -11,7 +13,6 @@ use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
 use Nette\Security\IResource;
 use Nette\Utils\DateTime;
-use Tracy\Debugger;
 
 /**
  * @property-read  string category
@@ -21,6 +22,7 @@ use Tracy\Debugger;
  * @property-read  integer points
  * @property-read  string status
  * @property-read  DateTime created
+ * @property-read  DateTime modified
  * @property-read  string phone
  * @property-read  bool force_a
  * @property-read  string password
@@ -31,6 +33,7 @@ use Tracy\Debugger;
  *
  */
 class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferencedModel, IResource {
+    const RESOURCE_ID = 'fyziklani.team';
 
     /**
      * @return string
@@ -65,13 +68,16 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
     }
 
     /**
-     * @return Selection
-     * @deprecated use getNonRevokedSubmits
-     * @use getNonRevokedSubmits
+     * @return null|ModelFyziklaniTeamPosition
      */
-    public function getSubmits(): Selection {
-        return $this->getNonRevokedSubmits();
+    public function getPosition() {
+        $row = $this->related(DbNames::TAB_FYZIKLANI_TEAM_POSITION, 'e_fyziklani_team_id')->fetch();
+        if ($row) {
+            return ModelFyziklaniTeamPosition::createFromActiveRow($row);
+        }
+        return null;
     }
+    /* ******************** SUBMITS ******************************* */
 
     /**
      * @return Selection
@@ -95,15 +101,12 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
     }
 
     /**
-     * @return null|ModelFyziklaniTeamPosition
+     * @return bool
      */
-    public function getPosition() {
-        $row = $this->related(DbNames::TAB_FYZIKLANI_TEAM_POSITION, 'e_fyziklani_team_id')->fetch();
-        if ($row) {
-            return ModelFyziklaniTeamPosition::createFromActiveRow($row);
-        }
-        return null;
+    public function hasAllSubmitsChecked(): bool {
+        return $this->getNonCheckedSubmits()->count() === 0;
     }
+
 
     /**
      * @return bool
@@ -111,6 +114,28 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
     public function hasOpenSubmitting(): bool {
         $points = $this->points;
         return !is_numeric($points);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isReadyForClosing(): bool {
+        return $this->hasAllSubmitsChecked() && $this->hasOpenSubmitting();
+    }
+
+    /**
+     * @return bool
+     * @throws ClosedSubmittingException
+     * @throws NotCheckedSubmitsException
+     */
+    public function canClose(): bool {
+        if (!$this->hasOpenSubmitting()) {
+            throw new ClosedSubmittingException($this);
+        }
+        if (!$this->hasAllSubmitsChecked()) {
+            throw new NotCheckedSubmitsException();
+        }
+        return true;
     }
 
     /**
@@ -139,6 +164,6 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
      * @return string
      */
     public function getResourceId() {
-        return 'fyziklani.team';
+        return self::RESOURCE_ID;
     }
 }

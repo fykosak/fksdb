@@ -6,6 +6,7 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Schedule\GroupControl;
 use FKSDB\Components\Controls\Schedule\ItemControl;
 use FKSDB\Components\Factories\ScheduleFactory;
+use FKSDB\Components\Grids\Schedule\AllPersonsGrid;
 use FKSDB\Components\Grids\Schedule\GroupsGrid;
 use FKSDB\Components\Grids\Schedule\ItemsGrid;
 use FKSDB\Components\Grids\Schedule\PersonsGrid;
@@ -128,7 +129,7 @@ class SchedulePresenter extends BasePresenter {
             }
             $this->item = ModelScheduleItem::createFromActiveRow($row);
         }
-        if ($this->item->getGroup()->getEvent()->event_id !== $this->getEvent()->event_id) {
+        if ($this->item->getScheduleGroup()->getEvent()->event_id !== $this->getEvent()->event_id) {
             throw new ForbiddenRequestException('Schedule item does not belong to this event');
         }
         /**
@@ -140,12 +141,24 @@ class SchedulePresenter extends BasePresenter {
          * @var GroupControl $groupControl
          */
         $groupControl = $this->getComponent('groupControl');
-        $groupControl->setGroup($this->getItem()->getGroup());
+        $groupControl->setGroup($this->getItem()->getScheduleGroup());
         /**
          * @var ItemControl $itemControl
          */
         $itemControl = $this->getComponent('itemControl');
         $itemControl->setItem($this->getItem());
+    }
+
+    /**
+     * @throws AbortException
+     * @throws BadRequestException
+     */
+    public function actionGroups() {
+        /**
+         * @var AllPersonsGrid $component
+         */
+        $component = $this->getComponent('allPersonsGrid');
+        $component->setEvent($this->getEvent());
     }
 
     /**
@@ -184,6 +197,13 @@ class SchedulePresenter extends BasePresenter {
      */
     public function createComponentPersonsGrid(): PersonsGrid {
         return $this->scheduleFactory->createPersonsGrid();
+    }
+
+    /**
+     * @return AllPersonsGrid
+     */
+    public function createComponentAllPersonsGrid(): AllPersonsGrid {
+        return $this->scheduleFactory->createAllPersonsGrid();
     }
 
     /**

@@ -242,8 +242,9 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
     /**
      * @return GroupedSelection
      */
-    public function getEventParticipant(): GroupedSelection {
-        return $this->related(DbNames::TAB_EVENT_PARTICIPANT, 'person_id');
+    public function getEventParticipant(): Selection {
+        return (new Selection(DbNames::TAB_EVENT_PARTICIPANT, $this->getTable()->getConnection()))->where('person_id', $this->person_id);
+        // return $this->related(DbNames::TAB_EVENT_PARTICIPANT, 'person_id');
     }
 
     /**
@@ -462,9 +463,10 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
 
     /**
      * @param ModelEvent $event
+     * @param $yearCalculator
      * @return array
      */
-    public function getRolesForEvent(ModelEvent $event): array {
+    public function getRolesForEvent(ModelEvent $event, $yearCalculator): array {
         $roles = [];
         $eventId = $event->event_id;
         $teachers = $this->getEventTeacher()->where('event_id', $eventId);
@@ -489,6 +491,11 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
             $roles[] = [
                 'type' => 'participant',
                 'participant' => $participant,
+            ];
+        }
+        if (array_key_exists($event->getEventType()->contest_id, $this->getActiveOrgs($yearCalculator))) {
+            $roles[] = [
+                'type' => 'contest_org',
             ];
         }
         return $roles;

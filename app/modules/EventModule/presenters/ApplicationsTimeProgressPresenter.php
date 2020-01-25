@@ -4,10 +4,11 @@ namespace EventModule;
 
 use FKSDB\Components\React\ReactComponent\Events\SingleApplicationsTimeProgress;
 use FKSDB\Components\React\ReactComponent\Events\TeamApplicationsTimeProgress;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\ORM\Services\ServiceEventParticipant;
-use function in_array;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -18,7 +19,8 @@ use Nette\Application\ForbiddenRequestException;
  */
 class ApplicationsTimeProgressPresenter extends BasePresenter {
     private $eventIds = [
-        1 => [1, 27, 95, 116, 125, 137, 145],
+        1 => [30, 31, 32, /*33, 34,*/
+            1, 27, 95, 116, 125, 137, 145],
         2 => [2, 7, 92, 113, 123, 135, 143],
         3 => [3, 126, 35],
         7 => [6, 91, 124],
@@ -59,8 +61,8 @@ class ApplicationsTimeProgressPresenter extends BasePresenter {
             $this->setAuthorized(false);
             return;
         }
-        $participant = $this->eventIsAllowed('event.participant', 'timeProgress');
-        $team = $this->eventIsAllowed('fyziklani.team', 'timeProgress');
+        $participant = $this->eventIsAllowed(ModelEventParticipant::RESOURCE_ID, 'timeProgress');
+        $team = $this->eventIsAllowed(ModelFyziklaniTeam::RESOURCE_ID, 'timeProgress');
         $this->setAuthorized($team || $participant);
     }
 

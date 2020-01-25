@@ -2,8 +2,12 @@
 
 namespace FyziklaniModule;
 
-use FKSDB\Components\Controls\Fyziklani\FinalResults;
 use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\ResultsAndStatistics;
+use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Results\ResultsPresentation;
+use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Results\ResultsView;
+use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Statistics\CorrelationStatistics;
+use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Statistics\TaskStatistics;
+use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Statistics\TeamStatistics;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 
@@ -61,11 +65,6 @@ class ResultsPresenter extends BasePresenter {
         $this->setIcon('fa fa-pie-chart');
     }
 
-    public function titleResultsFinal() {
-        $this->setTitle(_('Final results'));
-        $this->setIcon('fa fa-trophy');
-    }
-
     public function authorizedDefault() {
         $this->setAuthorized(true);
     }
@@ -80,18 +79,6 @@ class ResultsPresenter extends BasePresenter {
 
     public function authorizedTeamStatistics() {
         $this->authorizedDefault();
-    }
-
-    /**
-     * @throws BadRequestException
-     * @throws AbortException
-     */
-    public function authorizedResultsFinal() {
-        if ($this->getGameSetup()->result_hard_display) {
-            $this->authorizedDefault();
-            return;
-        }
-        $this->setAuthorized($this->isContestsOrgAllowed('fyziklani.results', 'final'));
     }
 
     /**
@@ -153,15 +140,6 @@ class ResultsPresenter extends BasePresenter {
      */
     public function createComponentCorrelationStatistics(): ResultsAndStatistics {
         return $this->fyziklaniComponentsFactory->createResultsAndStatistics('fyziklani.statistics.correlation', $this->getEvent());
-    }
-
-    /**
-     * @return FinalResults
-     * @throws BadRequestException
-     * @throws AbortException
-     */
-    public function createComponentOrgResults(): FinalResults {
-        return $this->fyziklaniComponentsFactory->createFinalResults($this->getEvent());
     }
 
     /**

@@ -9,6 +9,10 @@ use FKSDB\ORM\Services\Schedule\ServicePersonSchedule;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleGroup;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleItem;
 use Nette\Utils\ArrayHash;
+use PDOException;
+use function array_values;
+use function preg_match;
+use function sprintf;
 
 /**
  * Class Handler
@@ -48,13 +52,24 @@ class Handler {
      * @param ArrayHash $data
      * @param ModelPerson $person
      * @param $eventId
-     *
      * @throws ExistingPaymentException
      * @throws FullCapacityException
      */
     public function prepareAndUpdate(ArrayHash $data, ModelPerson $person, int $eventId) {
-        list($newScheduleData, $type) = $this->prepareData($data);
-        // Debugger::barDump($newScheduleData);
+        foreach ($this->prepareData($data) as $type => $newScheduleData) {
+            $this->updateDataType($newScheduleData, $type, $person, $eventId);
+        }
+    }
+
+    /**
+     * @param array $newScheduleData
+     * @param string $type
+     * @param ModelPerson $person
+     * @param int $eventId
+     * @throws ExistingPaymentException
+     * @throws FullCapacityException
+     */
+    private function updateDataType(array $newScheduleData, string $type, ModelPerson $person, int $eventId) {
         $oldRows = $this->servicePersonSchedule->getTable()
             ->where('person_id', $person->person_id)
             ->where('schedule_item.schedule_group.event_id', $eventId)->where('schedule_item.schedule_group.schedule_group_type', $type);
@@ -69,9 +84,9 @@ class Handler {
             } else {
                 try {
                     $modelPersonSchedule->delete();
-                } catch (\PDOException $exception) {
-                    if (\preg_match('/payment/', $exception->getMessage())) {
-                        throw new ExistingPaymentException(\sprintf(
+                } catch (PDOException $exception) {
+                    if (preg_match('/payment/', $exception->getMessage())) {
+                        throw new ExistingPaymentException(sprintf(
                             _('Položka "%s" má už vygenerovanú platu, teda nejde zmazať.'),
                             $modelPersonSchedule->getLabel()));
                     } else {
@@ -101,10 +116,11 @@ class Handler {
      * @return integer[]
      */
     private function prepareData(ArrayHash $data): array {
+        $newData = [];
         foreach ($data as $type => $datum) {
-            return [\array_values((array)json_decode($datum)), $type];
+            $newData[$type] = array_values((array)json_decode($datum));
         }
-        return [];
+        return $newData;
     }
 }
 

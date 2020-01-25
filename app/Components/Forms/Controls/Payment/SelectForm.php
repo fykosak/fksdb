@@ -161,7 +161,7 @@ class SelectForm extends Control {
         $currencyField = new CurrencyField();
         $currencyField->setRequired(_('Please select currency'));
         $form->addComponent($currencyField, 'currency');
-        $form->addComponent(new PaymentSelectField($this->servicePersonSchedule, $this->event, $this->type, !$create), 'payment_accommodation');
+        $form->addComponent(new PaymentSelectField($this->servicePersonSchedule, $this->event, [$this->type], !$create), 'payment_accommodation');
         $form->addSubmit('submit', $create ? _('Proceed to summary') : _('Save payment'));
         $form->onSuccess[] = function (Form $form) use ($create) {
             $this->handleSubmit($form, $create);
@@ -234,12 +234,10 @@ class SelectForm extends Control {
     }
 
     /**
-     * @param ModelPayment $model
      * @throws BadRequestException
      */
-    public function renderEdit(ModelPayment $model) {
-        $this->model = $model;
-        $values = $model->toArray();
+    public function renderEdit() {
+        $values = $this->model->toArray();
         $values['payment_accommodation'] = $this->serializeScheduleValue();
         /**
          * @var FormControl $control

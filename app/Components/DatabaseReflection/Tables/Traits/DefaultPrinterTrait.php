@@ -13,7 +13,7 @@ use Nette\Utils\Html;
 trait DefaultPrinterTrait {
     /**
      * @param AbstractModelSingle $model
-     * @return \Nette\Utils\Html
+     * @return Html
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         return (new StringPrinter)($model->{$this->getModelAccessKey()});

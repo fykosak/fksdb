@@ -3,12 +3,15 @@
 namespace FKSDB\Transitions;
 
 use Exception;
+use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
+use LogicException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Database\Connection;
 use Nette\Database\Table\ActiveRow;
+use Nette\Localization\ITranslator;
 use function array_filter;
 use function array_values;
 use function count;
@@ -41,15 +44,24 @@ abstract class Machine {
      * if callback return true, transition is allowed explicit, independently of transition's condition
      */
     private $explicitCondition;
+    /**
+     * @var ITranslator
+     */
+    private $translator;
 
     /**
      * Machine constructor.
      * @param Connection $connection
      * @param IService $service
+<<<<<<< HEAD
+=======
+     * @param ITranslator $translator
+>>>>>>> origin/master
      */
-    public function __construct(Connection $connection, IService $service) {
+    public function __construct(Connection $connection, IService $service, ITranslator $translator) {
         $this->connection = $connection;
         $this->service = $service;
+        $this->translator = $translator;
     }
 
     /**
@@ -81,10 +93,19 @@ abstract class Machine {
     }
 
     /**
+     * @param IStateModel $model
+     * @return TransitionButtonsControl
+     */
+    public function createComponentTransitionButtons(IStateModel $model): TransitionButtonsControl {
+        return new TransitionButtonsControl($this, $this->translator, $model);
+    }
+
+    /**
      * @param string $id
      * @param IStateModel $model
      * @return Transition
      * @throws UnavailableTransitionException
+     * @throws Exception
      */
     protected function findTransitionById(string $id, IStateModel $model): Transition {
         $transitions = array_filter($this->getAvailableTransitions($model), function (Transition $transition) use ($id) {
@@ -98,6 +119,9 @@ abstract class Machine {
      * @param array $transitions
      * @return Transition
      * @throws UnavailableTransitionException
+     * @throws LogicException
+     * @throws UnavailableTransitionException
+     * Protect more that one transition between nodes
      */
     private function selectTransition(array $transitions): Transition {
         $length = count($transitions);
@@ -135,9 +159,10 @@ abstract class Machine {
      * @param string $id
      * @param IStateModel $model
      * @return IStateModel
-     * @throws ForbiddenRequestException
      * @throws UnavailableTransitionException
+     * @throws ForbiddenRequestException
      * @throws BadRequestException
+     * @throws Exception
      */
     public function executeTransition(string $id, IStateModel $model): IStateModel {
         $transition = $this->findTransitionById($id, $model);
@@ -154,7 +179,7 @@ abstract class Machine {
      * @throws BadRequestException
      * @throws Exception
      */
-    private function execute(Transition $transition, IStateModel $model = null): IStateModel {
+    private function execute(Transition $transition, IStateModel $model): IStateModel {
         if (!$this->connection->inTransaction()) {
             $this->connection->beginTransaction();
         }

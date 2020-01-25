@@ -4,6 +4,7 @@ namespace FKSDB\Components\Controls\Fyziklani\Submit;
 
 use BasePresenter;
 use Exception;
+use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Components\Controls\Fyziklani\FyziklaniReactControl;
 use FKSDB\Messages\Message;
 use FKSDB\model\Fyziklani\ClosedSubmittingException;
@@ -15,6 +16,7 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\React\ReactResponse;
 use Nette\Application\AbortException;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\ComponentModel\IComponent;
 use Nette\DI\Container;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
@@ -57,6 +59,7 @@ class TaskCodeInput extends FyziklaniReactControl {
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
         parent::__construct($container, $event);
+        $this->monitor(IJavaScriptCollector::class);
     }
 
     /**
@@ -69,6 +72,16 @@ class TaskCodeInput extends FyziklaniReactControl {
             'tasks' => $this->serviceFyziklaniTask->getTasksAsArray($this->getEvent()),
             'teams' => $this->serviceFyziklaniTeam->getTeamsAsArray($this->getEvent()),
         ]);
+    }
+
+    /**
+     * @param IComponent $obj
+     */
+    protected function attached($obj) {
+        if ($obj instanceof IJavaScriptCollector) {
+            $obj->registerJSFile('https://dmla.github.io/jsqrcode/src/qr_packed.js');
+        }
+        parent::attached($obj);
     }
 
     /**
