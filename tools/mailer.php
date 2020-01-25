@@ -5,7 +5,7 @@ use FKSDB\ORM\Services\ServiceEmailMessage;
 use Nette\DI\Container;
 use Nette\Mail\IMailer;
 
-const MESSAGE_LIMIT = 10;
+const MESSAGE_LIMIT = 20;
 
 /**
  * @var Container $container
@@ -19,9 +19,8 @@ $mailer = $container->getByType(IMailer::class);
  * @var ServiceEmailMessage $serviceEmailMessage
  */
 $serviceEmailMessage = $container->getByType(ServiceEmailMessage::class);
-$argv = $_SERVER['argv']; // TODO is needed?
-
-$query = $serviceEmailMessage->getMessagesToSend(MESSAGE_LIMIT);
+$argv = $_SERVER['argv'];
+$query = $serviceEmailMessage->getMessagesToSend($argv[1] ?: MESSAGE_LIMIT);
 /**
  * @var ModelEmailMessage $model
  */
