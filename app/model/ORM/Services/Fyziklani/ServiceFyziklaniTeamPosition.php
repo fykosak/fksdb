@@ -5,6 +5,8 @@ namespace FKSDB\ORM\Services\Fyziklani;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Tables\TypedTableSelection;
 use Traversable;
 
 /**
@@ -76,5 +78,13 @@ class ServiceFyziklaniTeamPosition extends AbstractServiceSingle {
 
         }
         return $updatedTeams;
+    }
+
+    /**
+     * @param ModelEvent $event
+     * @return TypedTableSelection
+     */
+    public function getAllTeamsForEvents(ModelEvent $event): TypedTableSelection {
+        return $this->getTable()->where('e_fyziklani_team.event_id', $event->event_id);
     }
 }

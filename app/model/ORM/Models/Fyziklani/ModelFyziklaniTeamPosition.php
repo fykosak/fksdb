@@ -12,6 +12,8 @@ use Nette\Database\Table\ActiveRow;
  * @property-read integer row
  * @property-read integer col
  * @property-read ActiveRow room
+ * @property-read double x_coordinate
+ * @property-read double y_coordinate
  */
 class ModelFyziklaniTeamPosition extends AbstractModelSingle {
     /**
