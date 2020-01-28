@@ -90,9 +90,8 @@ events:
                 default: 2
             teamsPerSchool:
                 default: 2
-            gameSetup:
-                default:
-                    %events.fyziklaniGameSetup%
+            rooms:
+                default: [10,11,12,13,14]
 
         baseMachines:
             #

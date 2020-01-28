@@ -1,0 +1,113 @@
+<div style=" background-size: cover">
+    <svg viewBox="0 -1600 1600 1600">
+        <style>
+            .outer-walls polyline, .inner-walls polyline {
+                fill: none;
+                stroke: #555;
+            }
+
+            .outer-walls polyline {
+                stroke-width: 7px;
+            }
+
+            .inner-walls polyline {
+                stroke-width: 4px;
+            }
+
+            .outer-walls polygon, .inner-walls polygon {
+                fill: #555;
+                stroke: none;
+            }
+
+            .corridors polyline {
+                fill: none;
+                stroke: #ccc;
+                stroke-width: 2px;
+                stroke-dasharray: 10 10;
+            }
+
+            .grid polyline {
+                fill: none;
+                stroke: red;
+                stroke-width: 3px;
+                stroke-dasharray: 10 10;
+            }
+
+            polygon.stage {
+                fill: #ccc;
+                stroke: none;
+            }
+
+            circle.team-position.free {
+                fill: none;
+                stroke: #ccc;
+                stroke-width: 3px;
+                stroke-dasharray: 4 4;
+            }
+
+            circle.team-position.occupied {
+                fill: black;
+                stroke: none;
+            }
+        </style>
+        <g>
+            <g class="inner-walls">
+                <polyline points="1080,-460 1000,-380 780,-380"/>
+                <polyline points="740,-380 330,-380 260,-450 260,-850"/>
+                <polyline points="260,-890 260,-1120 340,-1200"/>
+                <polyline points="380,-1240 460,-1320 1080,-1320 1200,-1200 1200,-1020"/>
+
+                <polyline points="1200,-980 1200,-840"/>
+                <polyline points="1200,-800 1200,-580 1120,-500"/>
+                <polyline points="1200,-800 1200,-580 1120,-500"/>
+
+
+                <polygon points="260,-550 430,-380 330,-380 260,-450"/>
+                <!-- Miestnosť pre učiteľov -->
+                <polyline points="1310,-1050 1410,-1050"/>
+                <!-- WC -->
+                <polyline points="1200,-800 1300,-800 1300,-975 1425,-975 1425,-580 1200,-580"/>
+            </g>
+            <g class="outer-walls">
+                <polyline points="1050,-150 1050,-200 600,-200"/>
+                <polyline
+                        points="400,-200 200,-200 200,-300 100,-300 100,-1400 200,-1400 200,-1500 600,-1500 600,-1600 800,-1600 800,-1320"/>
+                <polyline points="1350,-150 1350,-400 1450,-400 1450,-1350 1310,-1350 1310,-1050 1200,-1050"/>
+            </g>
+            <g class="corridors">
+                <polyline points="340,-1200 1080,-460"/>
+                <polyline points="380,-1240 1120,-500"/>
+
+                <polyline points="330,-480 1020,-1170"/>
+                <polyline points="360,-450 1050,-1140"/>
+
+            </g>
+            <polygon points="1200,-1040 1150,-1040 920,-1270 920,-1320 1080,-1320 1200,-1200" class="stage"/>
+        </g>
+        {foreach $places as $place}
+            <circle
+                    class="free team-position"
+                    r="15"
+                    cx="{$place->x_coordinate}"
+                    cy="{-$place->y_coordinate}"></circle>
+
+        {/foreach}
+
+        {foreach $teams as $place}
+            {var $team = $place->getTeam()}
+            <circle
+                    class="occupied team-position"
+                    r="15"
+                    cx="{$place->x_coordinate}"
+                    cy="{-$place->y_coordinate}"></circle>
+
+            {if $team}
+                {var $cor = 'translate('.$place->x_coordinate.','.-($place->y_coordinate+18).')' }
+                <g transform="{$cor}">
+                    <text text-anchor="middle">{$team->e_fyziklani_team_id}</text>
+                </g>
+            {/if}
+
+        {/foreach}
+    </svg>
+</div>

@@ -6,6 +6,7 @@ use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
 use Nette\Application\BadRequestException;
+use Tracy\Debugger;
 
 /**
  * Trait EntityTrait
@@ -57,12 +58,15 @@ trait EntityTrait {
      * @throws BadRequestException
      */
     public function getEntity() {
+
         // protection for tests ev. change URL during app is running
         if ($this->model && $this->id !== $this->model->getPrimary()) {
-            $this->model = null;
+          //  $this->model = null;
         }
         if (!$this->model) {
             $model = $this->getORMService()->findByPrimary($this->id);
+            Debugger::barDump($this->id);
+            Debugger::barDump($model);
             if (!$model) {
                 throw new BadRequestException('Model neexistuje');
             }

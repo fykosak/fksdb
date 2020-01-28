@@ -81,10 +81,18 @@ class ServiceFyziklaniTeamPosition extends AbstractServiceSingle {
     }
 
     /**
-     * @param ModelEvent $event
+     * @param array $roomIds
      * @return TypedTableSelection
      */
-    public function getAllTeamsForEvents(ModelEvent $event): TypedTableSelection {
-        return $this->getTable()->where('e_fyziklani_team.event_id', $event->event_id);
+    public function getAllPlaces(array $roomIds): TypedTableSelection {
+        return $this->getTable()->where('room_id', $roomIds);
+    }
+
+    /**
+     * @param array $roomIds
+     * @return TypedTableSelection
+     */
+    public function getFreePlaces(array $roomIds): TypedTableSelection {
+        return $this->getAllPlaces($roomIds)->where('e_fyziklani_team IS NULL');
     }
 }
