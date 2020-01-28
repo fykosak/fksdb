@@ -81,7 +81,7 @@ class RoomsPresenter extends BasePresenter {
      */
     public function renderList() {
         $this->template->event = $this->getEvent();
-        $this->template->teams = $this->getEvent()->getTeams()->limit(5);
+        $this->template->teams = $this->getEvent()->getTeams();//->limit(5);
     }
 
     /**

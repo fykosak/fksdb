@@ -29,11 +29,6 @@ class ClosePresenter extends BasePresenter {
         $this->setIcon('fa fa-check');
     }
 
-    /**
-     * @throws AbortException
-     * @throws BadRequestException
-     * @throws ForbiddenRequestException
-     */
     public function titleTeam() {
         $this->setTitle(sprintf(_('Uzavírání bodování týmu "%s"'), $this->getEntity()->name));
         $this->setIcon('fa fa-check-square-o');
@@ -70,30 +65,35 @@ class ClosePresenter extends BasePresenter {
     }
     /* *********** ACTIONS **************** */
     /**
-     * @throws BadRequestException
+     * @param int $id
      * @throws AbortException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
-    public function actionTeam() {
-        $team = $this->getEntity();
+    public function actionTeam(int $id) {
+        $team = $this->loadEntity($id);
         try {
             $team->canClose();
         } catch (BadRequestException $exception) {
             $this->flashMessage($exception->getMessage());
             $this->redirect('list');
         }
-        $this->actionHard();
+        $this->actionHard($id);
     }
 
     /**
-     * @throws BadRequestException
+     * @param int $id
      * @throws AbortException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
-    public function actionHard() {
+    public function actionHard(int $id) {
+        $team = $this->loadEntity($id);
         $control = $this->getComponent('closeTeamControl');
         if (!$control instanceof CloseTeamControl) {
             throw new BadRequestException();
         }
-        $control->setTeam($this->getEntity());
+        $control->setTeam($team);
     }
 
     /* ********* COMPONENTS ************* */
@@ -118,8 +118,6 @@ class ClosePresenter extends BasePresenter {
 
     /**
      * @return TeamSubmitsGrid
-     * @throws AbortException
-     * @throws BadRequestException
      */
     protected function createComponentTeamSubmitsGrid(): TeamSubmitsGrid {
         return new TeamSubmitsGrid($this->getEntity(), $this->getServiceFyziklaniSubmit(), $this->getTableReflectionFactory());

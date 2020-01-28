@@ -13,17 +13,11 @@ use Tracy\Debugger;
  */
 trait EntityTrait {
     /**
-     * @var int
-     * @persistent
-     */
-    public $id;
-    /**
      * @var AbstractModelSingle|IModel
      */
     private $model;
 
     /**
-     * @throws BadRequestException
      */
     public function authorizedDetail() {
         $this->setAuthorized($this->isAllowed($this->getEntity(), 'detail'));
@@ -33,9 +27,6 @@ trait EntityTrait {
         $this->setAuthorized($this->isAllowed($this->getModelResource(), 'list'));
     }
 
-    /**
-     * @throws BadRequestException
-     */
     public function authorizedEdit() {
         $this->setAuthorized($this->isAllowed($this->getEntity(), 'edit'));
     }
@@ -46,27 +37,23 @@ trait EntityTrait {
 
     /**
      * @return AbstractModelSingle|IModel
-     * @throws BadRequestException
-     * @deprecated
      */
-    public function getModel() {
-        return $this->getEntity();
+    public function getEntity() {
+        return $this->model;
     }
 
     /**
+     * @param int $id
      * @return AbstractModelSingle|IModel
      * @throws BadRequestException
      */
-    public function getEntity() {
-
+    public function loadEntity(int $id) {
         // protection for tests ev. change URL during app is running
-        if ($this->model && $this->id !== $this->model->getPrimary()) {
-          //  $this->model = null;
+        if ($this->model && $id !== $this->model->getPrimary()) {
+            $this->model = null;
         }
         if (!$this->model) {
-            $model = $this->getORMService()->findByPrimary($this->id);
-            Debugger::barDump($this->id);
-            Debugger::barDump($model);
+            $model = $this->getORMService()->findByPrimary($id);
             if (!$model) {
                 throw new BadRequestException('Model neexistuje');
             }
