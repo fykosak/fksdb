@@ -126,15 +126,28 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @throws BadRequestException
+     * @param int $id
      * @throws AbortException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
-    public function actionEdit() {
+    public function actionEdit(int $id) {
+        $team = $this->loadEntity($id);
         $control = $this->getComponent('editControl');
         if (!$control instanceof EditControl) {
             throw new BadRequestException();
         }
-        $control->setSubmit($this->getEntity());
+        $control->setSubmit($team);
+    }
+
+    /**
+     * @param int $id
+     * @throws AbortException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     */
+    public function actionDetail(int $id) {
+        $this->loadEntity($id);
     }
 
     /**

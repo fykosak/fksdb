@@ -24,6 +24,7 @@ use function sprintf;
  * Class PaymentPresenter
  * @package EventModule
  * @method ModelPayment getEntity
+ * @method ModelPayment loadEntity(int $id)
  */
 class PaymentPresenter extends BasePresenter {
     use EventEntityTrait;
@@ -55,32 +56,32 @@ class PaymentPresenter extends BasePresenter {
     public function injectPaymentComponentFactory(PaymentComponentFactory $paymentComponentFactory) {
         $this->paymentComponentFactory = $paymentComponentFactory;
     }
+
     /* ********* titles *****************/
-    /**
-     *
-     */
     public function titleCreate() {
         $this->setTitle(_('New payment'));
         $this->setIcon('fa fa-credit-card');
     }
 
     /**
+     * @param int $id
      * @throws AbortException
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function titleEdit() {
-        $this->setTitle(sprintf(_('Edit payment #%s'), $this->getEntity()->getPaymentId()));
+    public function titleEdit(int $id) {
+        $this->setTitle(sprintf(_('Edit payment #%s'), $this->loadEntity($id)->getPaymentId()));
         $this->setIcon('fa fa-credit-card');
     }
 
     /**
+     * @param int $id
      * @throws AbortException
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function titleDetail() {
-        $this->setTitle(sprintf(_('Payment detail #%s'), $this->getEntity()->getPaymentId()));
+    public function titleDetail(int $id) {
+        $this->setTitle(sprintf(_('Payment detail #%s'), $this->loadEntity($id)->getPaymentId()));
         $this->setIcon('fa fa-credit-card');
     }
 
@@ -90,22 +91,27 @@ class PaymentPresenter extends BasePresenter {
     }
     /* ********* Authorization *****************/
     /**
+     * @param int $id
      * @throws AbortException
      * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
-    public function authorizedDetail() {
+    public function authorizedDetail(int $id) {
         if (!$this->hasApi()) {
             $this->setAuthorized(false);
             return;
         }
-        $this->setAuthorized($this->isContestsOrgAllowed($this->getEntity(), 'detail'));
+        $this->setAuthorized($this->isContestsOrgAllowed($this->loadEntity($id), 'detail'));
     }
 
     /**
+     * @param int $id
      * @throws AbortException
      * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
-    public function authorizedEdit() {
+    public function authorizedEdit(int $id) {
+        $this->loadEntity($id);
         if (!$this->hasApi()) {
             $this->setAuthorized(false);
             return;
@@ -136,12 +142,25 @@ class PaymentPresenter extends BasePresenter {
         }
         $this->setAuthorized($this->isContestsOrgAllowed('event.payment', 'list'));
     }
+
     /* ********* actions *****************/
     /**
-     * @throws BadRequestException
+     * @param int $id
      * @throws AbortException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
-    public function actionEdit() {
+    public function actionDetail(int $id) {
+        $this->loadEntity($id);
+    }
+
+    /**
+     * @param int $id
+     * @throws AbortException
+     * @throws BadRequestException
+     */
+    public function actionEdit(int $id) {
+        $this->loadEntity($id);
         if (!$this->canEdit()) {
             $this->flashMessage(sprintf(_('Payment #%s can not be edited'), $this->getEntity()->getPaymentId()), \BasePresenter::FLASH_ERROR);
             $this->redirect(':MyPayments:');
@@ -167,11 +186,6 @@ class PaymentPresenter extends BasePresenter {
     }
 
     /* ********* render *****************/
-    /**
-     * @throws AbortException
-     * @throws BadRequestException
-     * @throws ForbiddenRequestException
-     */
     public function renderEdit() {
         $this->template->model = $this->getEntity();
     }
@@ -218,27 +232,7 @@ class PaymentPresenter extends BasePresenter {
     }
 
     /**
-     * @return FormControl
-     * @throws AbortException
-     * @throws BadRequestException
-     */
-    protected function createComponentEditButtonForm(): FormControl {
-        $formControl = new FormControl();
-        $form = $formControl->getForm();
-        if ($this->canEdit()) {
-            $submit = $form->addSubmit('edit', _('Edit items'));
-            $submit->onClick[] = function () {
-                $this->getPresenter()->redirect('edit');
-            };
-        }
-        return $formControl;
-    }
-
-    /**
      * @return TransitionButtonsControl
-     * @throws AbortException
-     * @throws BadRequestException
-     * @throws ForbiddenRequestException
      */
     protected function createComponentTransitionButtons(): TransitionButtonsControl {
         return $this->machine->createComponentTransitionButtons($this->getEntity());

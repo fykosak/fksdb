@@ -53,6 +53,14 @@ class SchoolPresenter extends BasePresenter {
     }
 
     /**
+     * @param int $id
+     * @throws BadRequestException
+     */
+    public function actionDetail(int $id) {
+        $this->loadEntity($id);
+    }
+
+    /**
      * @throws BadRequestException
      */
     public function renderDetail() {
@@ -60,7 +68,7 @@ class SchoolPresenter extends BasePresenter {
     }
 
     /**
-     * @return IService
+     * @return IService|ServiceSchool
      */
     protected function getORMService() {
         return $this->serviceSchool;
