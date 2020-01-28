@@ -11,11 +11,8 @@ use FKSDB\model\Fyziklani\ClosedSubmittingException;
 use FKSDB\model\Fyziklani\SubmitHandler;
 use FKSDB\model\Fyziklani\TaskCodeException;
 use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use FKSDB\React\ReactResponse;
 use Nette\Application\AbortException;
 use Nette\Application\UI\InvalidLinkException;
@@ -30,6 +27,15 @@ use Nette\Utils\JsonException;
  */
 class TaskCodeInput extends FyziklaniReactControl {
     /**
+     * @var ServiceFyziklaniTeam
+     */
+    private $serviceFyziklaniTeam;
+
+    /**
+     * @var ServiceFyziklaniTask
+     */
+    private $serviceFyziklaniTask;
+    /**
      * @var SubmitHandler
      */
     private $handler;
@@ -39,15 +45,20 @@ class TaskCodeInput extends FyziklaniReactControl {
      * @param SubmitHandler $handler
      * @param Container $container
      * @param ModelEvent $event
-     * @param ServiceFyziklaniRoom $serviceFyziklaniRoom
-     * @param ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
      * @param ServiceFyziklaniTask $serviceFyziklaniTask
-     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
      */
-    public function __construct(SubmitHandler $handler, Container $container, ModelEvent $event, ServiceFyziklaniRoom $serviceFyziklaniRoom, ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition, ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceFyziklaniTask $serviceFyziklaniTask, ServiceFyziklaniSubmit $serviceFyziklaniSubmit) {
-        parent::__construct($container, $event, $serviceFyziklaniRoom, $serviceFyziklaniTeamPosition, $serviceFyziklaniTeam, $serviceFyziklaniTask, $serviceFyziklaniSubmit);
+    public function __construct(
+        SubmitHandler $handler,
+        Container $container,
+        ModelEvent $event,
+        ServiceFyziklaniTask $serviceFyziklaniTask,
+        ServiceFyziklaniTeam $serviceFyziklaniTeam
+    ) {
         $this->handler = $handler;
+        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
+        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+        parent::__construct($container, $event);
         $this->monitor(IJavaScriptCollector::class);
     }
 
@@ -57,9 +68,9 @@ class TaskCodeInput extends FyziklaniReactControl {
      */
     public function getData(): string {
         return Json::encode([
-            'availablePoints' => $this->event->getFyziklaniGameSetup()->getAvailablePoints(),
-            'tasks' => $this->serviceFyziklaniTask->getTasksAsArray($this->event),
-            'teams' => $this->serviceFyziklaniTeam->getTeamsAsArray($this->event),
+            'availablePoints' => $this->getEvent()->getFyziklaniGameSetup()->getAvailablePoints(),
+            'tasks' => $this->serviceFyziklaniTask->getTasksAsArray($this->getEvent()),
+            'teams' => $this->serviceFyziklaniTeam->getTeamsAsArray($this->getEvent()),
         ]);
     }
 
@@ -74,27 +85,11 @@ class TaskCodeInput extends FyziklaniReactControl {
     }
 
     /**
-     * @return string
-     */
-    public function getMode(): string {
-        return '';
-    }
-
-    /**
-     * @return string
-     */
-    public function getComponentName(): string {
-        return 'submit-form';
-    }
-
-    /**
-     * @return array
      * @throws InvalidLinkException
      */
-    public function getActions(): array {
-        $actions = parent::getActions();
-        $actions['save'] = $this->link('save!');
-        return $actions;
+    protected function configure() {
+        $this->addAction('save', $this->link('save!'));
+        parent::configure();
     }
 
     /**
@@ -115,5 +110,12 @@ class TaskCodeInput extends FyziklaniReactControl {
         }
         $this->getPresenter()->sendResponse($response);
 
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getReactId(): string {
+        return 'fyziklani.submit-form';
     }
 }

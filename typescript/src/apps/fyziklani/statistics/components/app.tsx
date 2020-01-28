@@ -12,7 +12,7 @@ interface StateProps {
 }
 
 interface OwnProps {
-    mode: string;
+    mode: 'correlation' | 'team' | 'task';
 }
 
 class App extends React.Component<StateProps & OwnProps, {}> {

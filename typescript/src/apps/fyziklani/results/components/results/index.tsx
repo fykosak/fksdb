@@ -7,7 +7,7 @@ import ResultsTable from './table/';
 import FilterSelect from './table/filters/select/';
 
 interface OwnProps {
-    mode: string;
+    mode: 'presentation' | 'view';
 }
 
 export default class Results extends React.Component<OwnProps, {}> {

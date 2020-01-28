@@ -5,7 +5,7 @@ import TasksStats from './task/';
 import TeamStats from './team/';
 
 interface OwnProps {
-    mode: string;
+    mode: 'correlation' | 'team' | 'task';
 }
 
 export default class Statistics extends React.Component<OwnProps, {}> {
@@ -14,7 +14,7 @@ export default class Statistics extends React.Component<OwnProps, {}> {
         let content = null;
         const {mode} = this.props;
         switch (mode) {
-            case 'teams':
+            case 'team':
             default:
                 content = (<TeamStats/>);
                 break;

@@ -25,7 +25,7 @@ class SingleSelect extends React.Component<StateProps & DispatchProps, {}> {
 
     public render() {
         const {categories, filters, onSetFilter, isOrg} = this.props;
-        const availableFilters = createFilters([], categories, false);
+        const availableFilters = createFilters(categories, false);
 
         return <>
             {isOrg && <HardVisibleSwitch/>}
