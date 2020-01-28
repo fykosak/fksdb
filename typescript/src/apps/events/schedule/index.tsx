@@ -3,8 +3,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import Index from './components';
 
-export const eventSchedule: App = (element, reactId, rawData) => {
-    const [module, component, mode] = reactId.split('.');
+export const eventSchedule: App = (element, module, component, mode, rawData) => {
     if (module !== 'event') {
         return false;
     }

@@ -3,7 +3,13 @@
 namespace FKSDB\Components\Controls\Fyziklani;
 
 use FKSDB\Components\React\ReactComponent;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniRoom;
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use Nette\DI\Container;
 
 /**
@@ -11,10 +17,35 @@ use Nette\DI\Container;
  * @package FKSDB\Components\Controls\Fyziklani
  */
 abstract class FyziklaniReactControl extends ReactComponent {
+
     /**
-     * @var ModelEvent
+     * @var ServiceFyziklaniRoom
      */
-    private $event;
+    protected $serviceFyziklaniRoom;
+
+    /**
+     * @var ServiceFyziklaniTeamPosition
+     */
+    protected $serviceFyziklaniTeamPosition;
+
+    /**
+     * @var ServiceFyziklaniTeam
+     */
+    protected $serviceFyziklaniTeam;
+
+    /**
+     * @var ServiceFyziklaniTask
+     */
+    protected $serviceFyziklaniTask;
+    /**
+     * @var ServiceFyziklaniSubmit
+     */
+    protected $serviceFyziklaniSubmit;
+
+    /**
+     * @var \FKSDB\ORM\Models\ModelEvent
+     */
+    protected $event;
 
     /**
      * @var Container
@@ -24,23 +55,52 @@ abstract class FyziklaniReactControl extends ReactComponent {
     /**
      * FyziklaniReactControl constructor.
      * @param Container $container
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @param ServiceFyziklaniRoom $serviceFyziklaniRoom
+     * @param ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @param ServiceFyziklaniTask $serviceFyziklaniTask
+     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
      */
     public function __construct(
         Container $container,
-        ModelEvent $event
+        ModelEvent $event,
+        ServiceFyziklaniRoom $serviceFyziklaniRoom,
+        ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition,
+        ServiceFyziklaniTeam $serviceFyziklaniTeam,
+        ServiceFyziklaniTask $serviceFyziklaniTask,
+        ServiceFyziklaniSubmit $serviceFyziklaniSubmit
     ) {
         parent::__construct($container);
         $this->event = $event;
-        $this->context = $container;
+
+        $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
+        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
+        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+        $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
+        $this->serviceFyziklaniRoom = $serviceFyziklaniRoom;
 
     }
 
+
     /**
-     * @return ModelEvent
+     * @return string
+     */
+    public final function getModuleName(): string {
+        return 'fyziklani';
+    }
+
+    /**
+     * @return \FKSDB\ORM\Models\ModelEvent
      */
     protected final function getEvent() {
         return $this->event;
     }
 
+    /**
+     * @return ModelFyziklaniRoom[]
+     */
+    protected function getRooms() {
+        return $this->serviceFyziklaniRoom->getRoomsByIds($this->getEvent()->getParameter('gameSetup')['rooms']);
+    }
 }

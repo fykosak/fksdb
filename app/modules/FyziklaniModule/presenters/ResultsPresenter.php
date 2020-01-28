@@ -2,7 +2,11 @@
 
 namespace FyziklaniModule;
 
-use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\ResultsAndStatistics;
+use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Results\ResultsPresentation;
+use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Results\ResultsView;
+use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Statistics\CorrelationStatistics;
+use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Statistics\TaskStatistics;
+use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Statistics\TeamStatistics;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 
@@ -93,48 +97,48 @@ class ResultsPresenter extends BasePresenter {
     }
 
     /**
-     * @return ResultsAndStatistics
+     * @return ResultsView
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function createComponentResultsView(): ResultsAndStatistics {
-        return $this->fyziklaniComponentsFactory->createResultsAndStatistics('fyziklani.results.view', $this->getEvent());
+    public function createComponentResultsView(): ResultsView {
+        return $this->fyziklaniComponentsFactory->createResultsView($this->getEvent());
     }
 
     /**
-     * @return ResultsAndStatistics
+     * @return ResultsPresentation
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function createComponentResultsPresentation(): ResultsAndStatistics {
-        return $this->fyziklaniComponentsFactory->createResultsAndStatistics('fyziklani.results.presentation', $this->getEvent());
+    public function createComponentResultsPresentation(): ResultsPresentation {
+        return $this->fyziklaniComponentsFactory->createResultsPresentation($this->getEvent());
     }
 
     /**
-     * @return ResultsAndStatistics
+     * @return TeamStatistics
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function createComponentTeamStatistics(): ResultsAndStatistics {
-        return $this->fyziklaniComponentsFactory->createResultsAndStatistics('fyziklani.statistics.team', $this->getEvent());
+    public function createComponentTeamStatistics(): TeamStatistics {
+        return $this->fyziklaniComponentsFactory->createTeamStatistics($this->getEvent());
     }
 
     /**
-     * @return ResultsAndStatistics
+     * @return TaskStatistics
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function createComponentTaskStatistics(): ResultsAndStatistics {
-        return $this->fyziklaniComponentsFactory->createResultsAndStatistics('fyziklani.statistics.task', $this->getEvent());
+    public function createComponentTaskStatistics(): TaskStatistics {
+        return $this->fyziklaniComponentsFactory->createTaskStatistics($this->getEvent());
     }
 
     /**
-     * @return ResultsAndStatistics
+     * @return CorrelationStatistics
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function createComponentCorrelationStatistics(): ResultsAndStatistics {
-        return $this->fyziklaniComponentsFactory->createResultsAndStatistics('fyziklani.statistics.correlation', $this->getEvent());
+    public function createComponentCorrelationStatistics(): CorrelationStatistics {
+        return $this->fyziklaniComponentsFactory->createCorrelationStatistics($this->getEvent());
     }
 
     /**

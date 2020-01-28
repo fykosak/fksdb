@@ -12,7 +12,7 @@ import { app } from '../reducers';
 import App from './app';
 
 interface OwnProps {
-    mode: 'presentation' | 'view';
+    mode: string;
     actions: NetteActions;
 }
 

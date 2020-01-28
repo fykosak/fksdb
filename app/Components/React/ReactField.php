@@ -11,24 +11,18 @@ use Nette\Utils\JsonException;
  * @package FKSDB\Components\React
  */
 trait ReactField {
-    /**
-     * @var string[]
-     */
-    private $actions = [];
-    /**
-     * @var bool
-     */
     static private $attachedJS = false;
 
     /**
      * @throws JsonException
      */
     protected function appendProperty() {
-        $this->configure();
         $this->setAttribute('data-react-root', true);
-        $this->setAttribute('data-react-id', $this->getReactId());
+        $this->setAttribute('data-module', $this->getModuleName());
+        $this->setAttribute('data-component', $this->getComponentName());
+        $this->setAttribute('data-mode', $this->getMode());
         $this->setAttribute('data-data', $this->getData());
-        $this->setAttribute('data-actions', Json::encode($this->actions));
+        $this->setAttribute('data-actions', Json::encode($this->getActions()));
     }
 
     /**
@@ -46,26 +40,27 @@ trait ReactField {
     }
 
     /**
-     * @return void
+     * @return string
      */
-    protected function configure() {
-    }
-
-    /**
-     * @param string $key
-     * @param string $destination
-     */
-    public function addAction(string $key, string $destination) {
-        $this->actions[$key] = $destination;
-    }
+    abstract function getModuleName(): string;
 
     /**
      * @return string
      */
-    abstract protected function getReactId(): string;
+    abstract function getComponentName(): string;
+
+    /**
+     * @return string
+     */
+    abstract function getMode(): string;
 
     /**
      * @return string
      */
     abstract function getData(): string;
+
+    /**
+     * @return string[]
+     */
+    abstract function getActions(): array;
 }

@@ -19,6 +19,7 @@ interface StateProps {
     filters: Filter[];
     index: number;
     categories: string[];
+    rooms: Room[];
 }
 
 interface DispatchProps {
@@ -30,8 +31,8 @@ interface DispatchProps {
 class MultiSelect extends React.Component<StateProps & DispatchProps, {}> {
 
     public render() {
-        const {categories, filters, index, onRemoveFilter, onAddFilter} = this.props;
-        const availableFilters = createFilters(categories);
+        const {categories, filters, index, rooms, onRemoveFilter, onAddFilter} = this.props;
+        const availableFilters = createFilters(rooms, categories);
 
         return <>
             <h5 className="text-success">{lang.getText('Active filters')}</h5>
@@ -78,6 +79,7 @@ const mapStateToPros = (state: FyziklaniResultsStore): StateProps => {
         categories: state.data.categories,
         filters: state.tableFilter.filters,
         index: state.tableFilter.index,
+        rooms: state.data.rooms,
     };
 };
 

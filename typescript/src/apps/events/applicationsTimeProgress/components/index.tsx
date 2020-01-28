@@ -8,24 +8,25 @@ import {
     Event,
 } from '../../../fyziklani/helpers/interfaces';
 
-type accessKeyValues = 'teams' | 'participants';
-type TimeData = {
-    [key in accessKeyValues]: {
+export interface Data {
+    events: {
+        [eventId: number]: Event;
+    };
+    teams?: {
         [eventId: number]: Array<{
             created: string;
         }>;
-    }
-};
-
-export interface Data extends TimeData {
-    events: {
-        [eventId: number]: Event;
+    };
+    participants?: {
+        [eventId: number]: Array<{
+            created: string;
+        }>;
     };
 }
 
 interface OwnProps {
     data: Data;
-    accessKey: accessKeyValues;
+    accessKey: string;
 }
 
 export default class Timeline extends React.Component<OwnProps, {}> {

@@ -13,7 +13,7 @@ import { app } from '../reducers';
 import App from './app';
 
 interface OwnProps {
-    mode: 'correlation' | 'team' | 'task';
+    mode: string;
     actions: NetteActions;
 }
 

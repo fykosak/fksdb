@@ -3,14 +3,12 @@
 namespace FKSDB\Components\Forms\Factories\Events;
 
 use FKSDB\Components\React\ReactField;
-use Nette\DeprecatedException;
 use Nette\Forms\Controls\TextInput;
 use Nette\Utils\JsonException;
 
 /**
  * Class ScheduleField
  * @package FKSDB\Components\Forms\Factories\Events
- * @deprecated
  */
 class ScheduleField extends TextInput {
 
@@ -30,13 +28,6 @@ class ScheduleField extends TextInput {
         $this->data = $data;
         $this->appendProperty();
         $this->registerMonitor();
-    }
-
-    /**
-     * @return string
-     */
-    protected function getReactId(): string {
-        throw new DeprecatedException();
     }
 
     /**
@@ -65,5 +56,12 @@ class ScheduleField extends TextInput {
      */
     public function getData(): string {
         return json_encode($this->data);
+    }
+
+    /**
+     * @return array
+     */
+    public function getActions(): array {
+        return [];
     }
 }

@@ -3,7 +3,11 @@
 namespace FKSDB\Components\Factories;
 
 use FKSDB\Components\Controls\Fyziklani\EditControl;
-use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\ResultsAndStatistics;
+use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Results\ResultsPresentation;
+use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Results\ResultsView;
+use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Statistics\CorrelationStatistics;
+use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Statistics\TaskStatistics;
+use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Statistics\TeamStatistics;
 use FKSDB\Components\Controls\Fyziklani\RoutingDownload;
 use FKSDB\Components\Controls\Fyziklani\RoutingEdit;
 use FKSDB\Components\Controls\Fyziklani\Submit\QREntryControl;
@@ -97,7 +101,7 @@ class FyziklaniFactory {
      * @return TaskCodeInput
      */
     public function createTaskCodeInput(ModelEvent $event): TaskCodeInput {
-        return new TaskCodeInput($this->createHandler($event), $this->context, $event, $this->serviceFyziklaniTask, $this->serviceFyziklaniTeam);
+        return new TaskCodeInput($this->createHandler($event), $this->context, $event, $this->serviceFyziklaniRoom, $this->serviceFyziklaniTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
     }
 
     /**
@@ -105,9 +109,8 @@ class FyziklaniFactory {
      * @return QREntryControl
      */
     public function createQREntryControl(ModelEvent $event): QREntryControl {
-        return new QREntryControl($event, $this->createHandler($event), $this->translator);
+        return new QREntryControl($event,  $this->createHandler($event), $this->translator);
     }
-
     /**
      * @param ModelEvent $event
      * @return SubmitHandler
@@ -136,19 +139,49 @@ class FyziklaniFactory {
      * @return RoutingEdit
      */
     public function createRoutingEdit(ModelEvent $event): RoutingEdit {
-        return new RoutingEdit($this->context, $event, $this->serviceFyziklaniRoom, $this->serviceFyziklaniTeamPosition, $this->serviceFyziklaniTeam);
+        return new RoutingEdit($this->context, $event, $this->serviceFyziklaniRoom, $this->serviceFyziklaniTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
     }
 
     /* *********** RESULTS & STATS ********/
 
     /**
-     * @param string $reactId
      * @param ModelEvent $event
-     * @return ResultsAndStatistics
+     * @return ResultsView
      */
-    public function createResultsAndStatistics(string $reactId, ModelEvent $event) {
-        return new ResultsAndStatistics($reactId, $this->context, $event, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
+    public function createResultsView(ModelEvent $event): ResultsView {
+        return new ResultsView($this->context, $event, $this->serviceFyziklaniRoom, $this->serviceFyziklaniTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
+    }
 
+    /**
+     * @param ModelEvent $event
+     * @return ResultsPresentation
+     */
+    public function createResultsPresentation(ModelEvent $event): ResultsPresentation {
+        return new ResultsPresentation($this->context, $event, $this->serviceFyziklaniRoom, $this->serviceFyziklaniTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
+    }
+
+    /**
+     * @param ModelEvent $event
+     * @return TeamStatistics
+     */
+    public function createTeamStatistics(ModelEvent $event): TeamStatistics {
+        return new TeamStatistics($this->context, $event, $this->serviceFyziklaniRoom, $this->serviceFyziklaniTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
+    }
+
+    /**
+     * @param ModelEvent $event
+     * @return TaskStatistics
+     */
+    public function createTaskStatistics(ModelEvent $event): TaskStatistics {
+        return new TaskStatistics($this->context, $event, $this->serviceFyziklaniRoom, $this->serviceFyziklaniTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
+    }
+
+    /**
+     * @param ModelEvent $event
+     * @return CorrelationStatistics
+     */
+    public function createCorrelationStatistics(ModelEvent $event): CorrelationStatistics {
+        return new CorrelationStatistics($this->context, $event, $this->serviceFyziklaniRoom, $this->serviceFyziklaniTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
     }
 
     /* ********** GRIDS *************/

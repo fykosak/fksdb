@@ -40,8 +40,22 @@ class TeamApplicationsTimeProgress extends ReactComponent {
     /**
      * @return string
      */
-    protected function getReactId(): string {
-        return 'events.applications-time-progress.teams';
+    function getComponentName(): string {
+        return 'applications-time-progress';
+    }
+
+    /**
+     * @return string
+     */
+    function getModuleName(): string {
+        return 'events';
+    }
+
+    /**
+     * @return string
+     */
+    function getMode(): string {
+        return 'teams';
     }
 
     /**
