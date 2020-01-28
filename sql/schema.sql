@@ -1234,9 +1234,9 @@ CREATE TABLE IF NOT EXISTS `fyziklani_submit` (
 -- -----------------------------------------------------
 -- Table `brawl_room`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `brawl_room` (
+CREATE TABLE IF NOT EXISTS `fyziklani_room` (
   `room_id` INT           NOT NULL AUTO_INCREMENT,
-  `name`    VARCHAR(4) CHARACTER SET 'utf8'
+  `name`    VARCHAR(64) CHARACTER SET 'utf8'
   COLLATE 'utf8_czech_ci' NOT NULL,
   `rows`    INT           NOT NULL,
   `columns` INT           NOT NULL,
@@ -1247,12 +1247,14 @@ CREATE TABLE IF NOT EXISTS `brawl_room` (
 -- -----------------------------------------------------
 -- Table `brawl_team_position`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `brawl_team_position` (
+CREATE TABLE IF NOT EXISTS `fyziklani_team_position` (
   `position_id`         INT NOT NULL AUTO_INCREMENT,
-  `e_fyziklani_team_id` INT NOT NULL,
-  `row`                 INT NOT NULL,
-  `col`                 INT NOT NULL,
+  `e_fyziklani_team_id` INT NULL DEFAULT NULL,
+  `row`                 INT NULL DEFAULT NULL,
+  `col`                 INT NULL DEFAULT NULL,
   `room_id`             INT NOT NULL,
+  `x_coordinate`        DOUBLE NULL DEFAULT NULL,
+  `y_coordinate`        DOUBLE NULL DEFAULT NULL,
   PRIMARY KEY (`position_id`),
   UNIQUE INDEX `e_fyziklani_team_id_UNIQUE` (`e_fyziklani_team_id` ASC),
   INDEX `fk_brawl_team_position_2_idx` (`room_id` ASC),
@@ -1263,7 +1265,7 @@ CREATE TABLE IF NOT EXISTS `brawl_team_position` (
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_brawl_team_position_2`
   FOREIGN KEY (`room_id`)
-  REFERENCES `brawl_room` (`room_id`)
+  REFERENCES `fyziklani_room` (`room_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
 )
