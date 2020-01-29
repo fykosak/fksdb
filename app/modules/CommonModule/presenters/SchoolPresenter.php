@@ -44,9 +44,11 @@ class SchoolPresenter extends BasePresenter {
     }
 
     /**
+     * @param int $id
      * @throws BadRequestException
      */
-    public function titleDetail() {
+    public function titleDetail(int $id) {
+        $this->loadEntity($id);
         $school = $this->getEntity();
         $this->setTitle(sprintf(_('Detail of school %s'), $school->name_abbrev));
         $this->setIcon('fa fa-university');
@@ -60,9 +62,6 @@ class SchoolPresenter extends BasePresenter {
         $this->loadEntity($id);
     }
 
-    /**
-     * @throws BadRequestException
-     */
     public function renderDetail() {
         $this->template->model = $this->getEntity();
     }
@@ -85,7 +84,6 @@ class SchoolPresenter extends BasePresenter {
 
     /**
      * @return ContestantsFromSchoolGrid
-     * @throws BadRequestException
      */
     protected function createComponentContestantsFromSchoolGrid(): ContestantsFromSchoolGrid {
         return new ContestantsFromSchoolGrid($this->getEntity(), $this->getORMService());

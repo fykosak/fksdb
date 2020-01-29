@@ -37,7 +37,7 @@ class DiplomasPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function authorizeDefault() {
-        $this->setAuthorized($this->eventIsAllowed('fyziklani.diplomas', 'default'));
+        $this->setAuthorized($this->eventIsAllowed('fyziklani.diplomas', 'calculate'));
     }
 
     /**

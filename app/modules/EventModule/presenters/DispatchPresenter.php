@@ -47,8 +47,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
      * @return LanguageChooser
      */
     protected function createComponentLanguageChooser(): LanguageChooser {
-        $control = new LanguageChooser($this->session);
-        return $control;
+        return new LanguageChooser($this->session);
     }
 
     /**
