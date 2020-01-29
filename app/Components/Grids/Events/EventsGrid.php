@@ -5,6 +5,7 @@ namespace FKSDB\Components\Grids\Events;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEvent;
 use Nette\Application\BadRequestException;
@@ -38,6 +39,17 @@ class EventsGrid extends BaseGrid {
     }
 
     /**
+     * @param ModelContest $contest
+     * @param int $year
+     */
+    public function setParams(ModelContest $contest,int $year){
+        $events = $this->serviceEvent->getEvents($contest, $year);
+        $dataSource = new NDataSource($events);
+        $this->setDefaultOrder('event.begin ASC');
+        $this->setDataSource($dataSource);
+    }
+
+    /**
      * @param OrgPresenter $presenter
      * @throws BadRequestException
      * @throws DuplicateColumnException
@@ -65,8 +77,9 @@ class EventsGrid extends BaseGrid {
 
         $this->addLinkButton($this->getPresenter(), ':Event:dashboard:default', 'detail', _('Detail'), true, ['eventId' => 'event_id']);
         $this->addLinkButton($this->getPresenter(), 'edit', 'edit', _('Edit'), true, ['id' => 'event_id']);
-        $this->addLinkButton($this->getPresenter(), ':Event:application:list', 'applications', _('Applications'), true, ['eventId' => 'event_id']);
-        $this->addLinkButton($this->getPresenter(), ':Event:teamApplication:list', 'teamApplications', _('Team applications'), true, ['eventId' => 'event_id']);
+
+        $this->addLink('event_participant.list');
+
         $this->addLinkButton($this->getPresenter(), 'EventOrg:list', 'org', _('Organisers'), true, ['eventId' => 'event_id']);
 
         $this->addGlobalButton('add')

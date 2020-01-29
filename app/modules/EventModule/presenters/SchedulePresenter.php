@@ -129,7 +129,7 @@ class SchedulePresenter extends BasePresenter {
             }
             $this->item = ModelScheduleItem::createFromActiveRow($row);
         }
-        if ($this->item->getGroup()->getEvent()->event_id !== $this->getEvent()->event_id) {
+        if ($this->item->getScheduleGroup()->getEvent()->event_id !== $this->getEvent()->event_id) {
             throw new ForbiddenRequestException('Schedule item does not belong to this event');
         }
         /**
@@ -141,7 +141,7 @@ class SchedulePresenter extends BasePresenter {
          * @var GroupControl $groupControl
          */
         $groupControl = $this->getComponent('groupControl');
-        $groupControl->setGroup($this->getItem()->getGroup());
+        $groupControl->setGroup($this->getItem()->getScheduleGroup());
         /**
          * @var ItemControl $itemControl
          */

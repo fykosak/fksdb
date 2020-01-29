@@ -10,7 +10,7 @@ interface OwnProps {
     teams: Team[];
 }
 
-export default class TaskInput extends React.Component<OwnProps, {}> {
+export default class ValueDisplay extends React.Component<OwnProps, {}> {
 
     public render() {
         const {code: value, tasks, teams} = this.props;
@@ -37,14 +37,14 @@ export default class TaskInput extends React.Component<OwnProps, {}> {
         }
 
         return (
-            <div>
+            <>
                 <h3 className={'fyziklani-headline-color'}>Team</h3>
                 {team ? (<span className="text-success">{team.name}</span>) : (
                     <span className="text-danger">Invalid team</span>)}
                 <h3 className={'fyziklani-headline-color'}>Task</h3>
                 {task ? (<span className="text-success">{task.name}</span>) : (
                     <span className="text-danger">Invalid task</span>)}
-            </div>
+            </>
         );
     }
 }

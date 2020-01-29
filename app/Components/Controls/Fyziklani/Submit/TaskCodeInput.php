@@ -4,6 +4,7 @@ namespace FKSDB\Components\Controls\Fyziklani\Submit;
 
 use BasePresenter;
 use Exception;
+use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Components\Controls\Fyziklani\FyziklaniReactControl;
 use FKSDB\Messages\Message;
 use FKSDB\model\Fyziklani\ClosedSubmittingException;
@@ -18,6 +19,7 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use FKSDB\React\ReactResponse;
 use Nette\Application\AbortException;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\ComponentModel\IComponent;
 use Nette\DI\Container;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
@@ -46,6 +48,7 @@ class TaskCodeInput extends FyziklaniReactControl {
     public function __construct(SubmitHandler $handler, Container $container, ModelEvent $event, ServiceFyziklaniRoom $serviceFyziklaniRoom, ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition, ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceFyziklaniTask $serviceFyziklaniTask, ServiceFyziklaniSubmit $serviceFyziklaniSubmit) {
         parent::__construct($container, $event, $serviceFyziklaniRoom, $serviceFyziklaniTeamPosition, $serviceFyziklaniTeam, $serviceFyziklaniTask, $serviceFyziklaniSubmit);
         $this->handler = $handler;
+        $this->monitor(IJavaScriptCollector::class);
     }
 
     /**
@@ -58,6 +61,16 @@ class TaskCodeInput extends FyziklaniReactControl {
             'tasks' => $this->serviceFyziklaniTask->getTasksAsArray($this->event),
             'teams' => $this->serviceFyziklaniTeam->getTeamsAsArray($this->event),
         ]);
+    }
+
+    /**
+     * @param IComponent $obj
+     */
+    protected function attached($obj) {
+        if ($obj instanceof IJavaScriptCollector) {
+            $obj->registerJSFile('https://dmla.github.io/jsqrcode/src/qr_packed.js');
+        }
+        parent::attached($obj);
     }
 
     /**

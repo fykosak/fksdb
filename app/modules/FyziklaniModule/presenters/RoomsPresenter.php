@@ -4,10 +4,12 @@ namespace FyziklaniModule;
 
 use FKSDB\Components\Controls\Fyziklani\RoutingDownload;
 use FKSDB\Components\Controls\Fyziklani\RoutingEdit;
+use FKSDB\Components\Controls\Fyziklani\SittingControl;
 use FKSDB\React\ReactResponse;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use ReactMessage;
+use Tracy\Debugger;
 
 /**
  *
@@ -29,6 +31,7 @@ class RoomsPresenter extends BasePresenter {
         $this->setTitle(_('Download routing'));
         $this->setIcon('fa fa-download');
     }
+
 
     /**
      * @throws AbortException
@@ -56,6 +59,7 @@ class RoomsPresenter extends BasePresenter {
         $this->setAuthorized($download || $edit);
     }
 
+
     /**
      * @throws AbortException
      */
@@ -69,6 +73,23 @@ class RoomsPresenter extends BasePresenter {
             $response->addMessage(new ReactMessage(_('Zmeny boli uložené'), \BasePresenter::FLASH_SUCCESS));
             $this->sendResponse($response);
         }
+    }
+
+    /**
+     * @throws AbortException
+     * @throws BadRequestException
+     */
+    public function renderList() {
+        $this->template->event = $this->getEvent();
+        $this->template->teams = $this->getEvent()->getTeams();//->limit(5);
+    }
+
+    /**
+     * @throws AbortException
+     * @throws BadRequestException
+     */
+    public function renderPreview() {
+        $this->template->event = $this->getEvent();
     }
 
     /**
@@ -87,5 +108,12 @@ class RoomsPresenter extends BasePresenter {
      */
     public function createComponentRouting(): RoutingEdit {
         return $this->fyziklaniComponentsFactory->createRoutingEdit($this->getEvent());
+    }
+
+    /**
+     * @return SittingControl
+     */
+    public function createComponentSitting(): SittingControl {
+        return new SittingControl($this->getServiceFyziklaniTeamPosition(), $this->getTranslator());
     }
 }

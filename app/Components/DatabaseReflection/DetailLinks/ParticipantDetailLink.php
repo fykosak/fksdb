@@ -5,6 +5,10 @@ namespace FKSDB\Components\DatabaseReflection\Links;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use Nette\Application\BadRequestException;
 
+/**
+ * Class ParticipantDetailLink
+ * @package FKSDB\Components\DatabaseReflection\Links
+ */
 class ParticipantDetailLink extends AbstractLink {
 
     /**

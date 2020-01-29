@@ -4,15 +4,12 @@ namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\DatabaseReflection\Links\AbstractLink;
-use FKSDB\Components\DatabaseReflection\Links\Link;
 use FKSDB\Components\DatabaseReflection\RowFactoryComponent;
-use FKSDB\ORM\AbstractModelSingle;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\Localization\ITranslator;
 use Nette\SmartObject;
 use Nette\Utils\Html;
-use Tracy\Debugger;
 
 /**
  * Class TableReflectionFactory
@@ -47,15 +44,7 @@ final class TableReflectionFactory {
      * @throws \Exception
      */
     public function loadService(string $tableName, string $fieldName): AbstractRow {
-        $service = null;
-        try {
-            $service = $this->container->getService('DBReflection.' . $tableName . '.' . $fieldName);
-        } catch (\Exception $exception) {
-
-        }
-        if (!$service) {
-            $service = $this->container->getService('row.' . $tableName . '.' . $fieldName);
-        }
+        $service = $this->container->getService('DBReflection.' . $tableName . '.' . $fieldName);
         if (!$service instanceof AbstractRow) {
             throw new InvalidArgumentException('Field ' . $tableName . '.' . $fieldName . ' not exists');
         }
@@ -96,13 +85,15 @@ final class TableReflectionFactory {
     /**
      * @param string $tableName
      * @param string $fieldName
-     * @param AbstractModelSingle $modelSingle
      * @param int $userPermissionLevel
-     * @return \Nette\Utils\Html
+     * @return callable
      * @throws \Exception
      */
-    public function createGridValue(string $tableName, string $fieldName, AbstractModelSingle $modelSingle, int $userPermissionLevel): Html {
-        return $this->loadService($tableName, $fieldName)->renderValue($modelSingle, $userPermissionLevel);
+    public function createGridCallback(string $tableName, string $fieldName, int $userPermissionLevel): callable {
+        $factory = $this->loadService($tableName, $fieldName);
+        return function ($model) use ($factory, $userPermissionLevel): Html {
+            return $factory->renderValue($model, $userPermissionLevel);
+        };
     }
 
 

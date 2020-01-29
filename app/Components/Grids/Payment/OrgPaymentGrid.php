@@ -35,6 +35,8 @@ class OrgPaymentGrid extends PaymentGrid {
      * @param $presenter
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
+     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws \NiftyGrid\DuplicateGlobalButtonException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -52,11 +54,8 @@ class OrgPaymentGrid extends PaymentGrid {
             DbNames::TAB_PAYMENT . '.state',
             DbNames::TAB_PAYMENT . '.variable_symbol',
         ]);
-
-        $this->addLinkButton($presenter, ':Event:payment:detail', 'detail', 'Detail', false, [
-            'id' => 'payment_id',
-            'eventId' => 'event_id',
-        ]);
+        $this->addLink('payment.detail', false);
         $this->paginate = false;
+        $this->addCSVDownloadButton();
     }
 }

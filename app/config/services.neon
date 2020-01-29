@@ -77,32 +77,9 @@ services:
     #
     # Fyziklani
     #
-    - FKSDB\model\Fyziklani\TaskCodePreprocessor
-    - FKSDB\model\Fyziklani\TaskCodeHandlerFactory
     - FKSDB\Components\Forms\Factories\TableReflectionFactory
     - FKSDB\Components\Controls\PhoneNumber\PhoneNumberFactory
     - FKSDB\Components\DatabaseReflection\MetaDataFactory
 
-    row.teacher.state: FKSDB\Components\DatabaseReflection\Tables\Teacher\StateRow
-    row.teacher.since: FKSDB\Components\DatabaseReflection\Tables\Teacher\SinceRow
-    row.teacher.until: FKSDB\Components\DatabaseReflection\Tables\Teacher\UntilRow
-    row.teacher.number_brochures: FKSDB\Components\DatabaseReflection\Tables\Teacher\NumberBrochuresRow
-    row.teacher.note: FKSDB\Components\DatabaseReflection\Tables\Teacher\NoteRow
-    row.referenced.person_link: FKSDB\Components\DatabaseReflection\ReferencedRows\PersonLinkRow
-    row.referenced.person_name: FKSDB\Components\DatabaseReflection\ReferencedRows\PersonNameRow
-    row.referenced.event_link: FKSDB\Components\DatabaseReflection\ReferencedRows\EventLink
 includes:
     - merger.neon
-    - rows/person.neon
-    - rows/person_info.neon
-    - rows/event_participant.neon
-    - rows/event.neon
-    - rows/payment.neon
-    - rows/login.neon
-    - rows/e_fyziklani_team.neon
-    - rows/org.neon
-    - rows/person_history.neon
-    - rows/fyziklani_submit.neon
-    - rows/stored_query.neon
-    - rows/fyziklani_game_setup.neon
-    - rows/schedule/schedule_group.neon

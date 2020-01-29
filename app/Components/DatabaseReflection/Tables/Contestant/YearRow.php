@@ -7,6 +7,10 @@ use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelContestant;
 use Nette\Utils\Html;
 
+/**
+ * Class YearRow
+ * @package FKSDB\Components\DatabaseReflection\Tables\ContestantBase
+ */
 class YearRow extends AbstractRow {
 
     /**

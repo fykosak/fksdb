@@ -2,29 +2,26 @@
 
 namespace FyziklaniModule;
 
+use EventModule\EventEntityTrait;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Fyziklani\CloseTeamControl;
 use FKSDB\Components\Grids\Fyziklani\CloseTeamsGrid;
+use FKSDB\Components\Grids\Fyziklani\TeamSubmitsGrid;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
+use function sprintf;
 
 /**
  * Class ClosePresenter
  * @package FyziklaniModule
  * @property FormControl closeCategoryAForm
+ * @method ModelFyziklaniTeam getEntity()
  */
 class ClosePresenter extends BasePresenter {
 
-    /** @var ModelFyziklaniTeam */
-    private $team;
-
-    /**
-     * @return ModelFyziklaniTeam
-     */
-    private function getTeam(): ModelFyziklaniTeam {
-        return $this->team;
-    }
+    use EventEntityTrait;
 
     /* ******* TITLE ***********/
     public function titleList() {
@@ -33,8 +30,13 @@ class ClosePresenter extends BasePresenter {
     }
 
     public function titleTeam() {
-        $this->setTitle(sprintf(_('Uzavírání bodování týmu "%s"'), $this->getTeam()->name));
+        $this->setTitle(sprintf(_('Uzavírání bodování týmu "%s"'), $this->getEntity()->name));
         $this->setIcon('fa fa-check-square-o');
+    }
+
+    public function titleHard() {
+        $this->setTitle(_('Hard close submitting'));
+        $this->setIcon('fa fa-check');
     }
 
     /* ******* authorized methods ***********/
@@ -42,43 +44,57 @@ class ClosePresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws AbortException
      */
-    public function authorizedList() {
-        $this->setAuthorized($this->eventIsAllowed('fyziklani.close', 'list'));
+    public function authorizedTeam() {
+        $this->setAuthorized($this->eventIsAllowed($this->getModelResource(), 'team'));
     }
 
     /**
      * @throws BadRequestException
      * @throws AbortException
      */
-    public function authorizedTeam() {
-        $this->setAuthorized($this->eventIsAllowed('fyziklani.close', 'team'));
+    public function authorizedList() {
+        $this->setAuthorized($this->eventIsAllowed($this->getModelResource(), 'team'));
     }
 
+    /**
+     * @throws AbortException
+     * @throws BadRequestException
+     */
+    public function authorizeHard() {
+        $this->setAuthorized($this->eventIsAllowed($this->getModelResource(), 'hard'));
+    }
+    /* *********** ACTIONS **************** */
+    /**
+     * @param int $id
+     * @throws AbortException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     */
+    public function actionTeam(int $id) {
+        $team = $this->loadEntity($id);
+        try {
+            $team->canClose();
+        } catch (BadRequestException $exception) {
+            $this->flashMessage($exception->getMessage());
+            $this->redirect('list');
+        }
+        $this->actionHard($id);
+    }
 
     /**
      * @param int $id
-     * @throws BadRequestException
      * @throws AbortException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
-    public function actionTeam(int $id) {
-        $row = $this->getServiceFyziklaniTeam()->findByPrimary($id);
-        if (!$row) {
-            throw new BadRequestException(_('Team does not exists'), 404);
-        }
-        $this->team = ModelFyziklaniTeam::createFromActiveRow($row);
+    public function actionHard(int $id) {
+        $team = $this->loadEntity($id);
         $control = $this->getComponent('closeTeamControl');
         if (!$control instanceof CloseTeamControl) {
             throw new BadRequestException();
         }
-
-        try {
-            $control->setTeam($this->team);
-        } catch (BadRequestException $exception) {
-            $this->flashMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR);
-            $this->redirect('list');
-        }
+        $control->setTeam($team);
     }
-
 
     /* ********* COMPONENTS ************* */
 
@@ -88,11 +104,7 @@ class ClosePresenter extends BasePresenter {
      * @throws AbortException
      */
     protected function createComponentCloseTeamControl(): CloseTeamControl {
-        $control = $this->fyziklaniComponentsFactory->createCloseTeamControl($this->getEvent());
-        $control->getFormControl()->getForm()->onSuccess[] = function () {
-            $this->getPresenter()->redirect('list');
-        };
-        return $control;
+        return new CloseTeamControl($this->getEvent(), $this->translator, $this->getServiceFyziklaniTask());
     }
 
     /**
@@ -100,72 +112,29 @@ class ClosePresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws AbortException
      */
-    protected function createComponentCloseGrid(): CloseTeamsGrid {
-        return $this->fyziklaniComponentsFactory->createCloseTeamsGrid($this->getEvent());
+    protected function createComponentCloseTeamsGrid(): CloseTeamsGrid {
+        return new CloseTeamsGrid($this->getEvent(), $this->getServiceFyziklaniTeam(), $this->getTableReflectionFactory());
     }
 
     /**
-     * @return FormControl
-     * @throws BadRequestException
-     * @throws AbortException
+     * @return TeamSubmitsGrid
      */
-    public function createComponentCloseAForm(): FormControl {
-        $control = $this->fyziklaniComponentsFactory->getCloseFormsFactory()->createCloseCategoryForm('A', $this->getEvent());
-        $control->getForm()->onSuccess[] = function () {
-            $this->redirect('this');
-        };
-        return $control;
+    protected function createComponentTeamSubmitsGrid(): TeamSubmitsGrid {
+        return new TeamSubmitsGrid($this->getEntity(), $this->getServiceFyziklaniSubmit(), $this->getTableReflectionFactory());
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    protected function getORMService() {
+        return $this->getServiceFyziklaniTeam();
     }
 
     /**
-     * @return FormControl
-     * @throws BadRequestException
-     * @throws AbortException
+     * @inheritDoc
      */
-    public function createComponentCloseBForm(): FormControl {
-        $control = $this->fyziklaniComponentsFactory->getCloseFormsFactory()->createCloseCategoryForm('B', $this->getEvent());
-        $control->getForm()->onSuccess[] = function () {
-            $this->redirect('this');
-        };
-        return $control;
-    }
-
-    /**
-     * @return FormControl
-     * @throws BadRequestException
-     * @throws AbortException
-     */
-    public function createComponentCloseCForm(): FormControl {
-        $control = $this->fyziklaniComponentsFactory->getCloseFormsFactory()->createCloseCategoryForm('C', $this->getEvent());
-        $control->getForm()->onSuccess[] = function () {
-            $this->redirect('this');
-        };
-        return $control;
-    }
-
-    /**
-     * @return FormControl
-     * @throws BadRequestException
-     * @throws AbortException
-     */
-    public function createComponentCloseFForm(): FormControl {
-        $control = $this->fyziklaniComponentsFactory->getCloseFormsFactory()->createCloseCategoryForm('F', $this->getEvent());
-        $control->getForm()->onSuccess[] = function () {
-            $this->redirect('this');
-        };
-        return $control;
-    }
-
-    /**
-     * @return FormControl
-     * @throws BadRequestException
-     * @throws AbortException
-     */
-    public function createComponentCloseTotalForm(): FormControl {
-        $control = $this->fyziklaniComponentsFactory->getCloseFormsFactory()->createCloseTotalForm($this->getEvent());
-        $control->getForm()->onSuccess[] = function () {
-            $this->redirect('this');
-        };
-        return $control;
+    protected function getModelResource(): string {
+        return 'fyziklani.close';
     }
 }
