@@ -52,12 +52,13 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
+     * @param int $id
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function authorizedDetail() {
+    public function authorizedDetail(int $id) {
         if ($this->isTeamEvent()) {
-            parent::authorizedDetail();
+            parent::authorizedDetail($id);
         } else {
             $this->setAuthorized(false);
         }

@@ -6,7 +6,6 @@ use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
 use Nette\Application\BadRequestException;
-use Tracy\Debugger;
 
 /**
  * Trait EntityTrait
@@ -18,17 +17,23 @@ trait EntityTrait {
     private $model;
 
     /**
+     * @param int $id
+     * @throws BadRequestException
      */
-    public function authorizedDetail() {
-        $this->setAuthorized($this->isAllowed($this->getEntity(), 'detail'));
+    public function authorizedDetail(int $id) {
+        $this->setAuthorized($this->isAllowed($this->loadEntity($id), 'detail'));
     }
 
     public function authorizedList() {
         $this->setAuthorized($this->isAllowed($this->getModelResource(), 'list'));
     }
 
-    public function authorizedEdit() {
-        $this->setAuthorized($this->isAllowed($this->getEntity(), 'edit'));
+    /**
+     * @param int $id
+     * @throws BadRequestException
+     */
+    public function authorizedEdit(int $id) {
+        $this->setAuthorized($this->isAllowed($this->loadEntity($id), 'edit'));
     }
 
     public function authorizedCreate() {
