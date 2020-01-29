@@ -4,8 +4,10 @@ use FKSDB\ORM\Models\ModelEmailMessage;
 use FKSDB\ORM\Services\ServiceEmailMessage;
 use Nette\DI\Container;
 use Nette\Mail\IMailer;
+use Tracy\Debugger;
 
-const MESSAGE_LIMIT = 20;
+const DEFAULT_MESSAGE_LIMIT = 20;
+const SAFE_LIMIT = 250;
 
 /**
  * @var Container $container
@@ -20,16 +22,23 @@ $mailer = $container->getByType(IMailer::class);
  */
 $serviceEmailMessage = $container->getByType(ServiceEmailMessage::class);
 $argv = $_SERVER['argv'];
-$query = $serviceEmailMessage->getMessagesToSend($argv[1] ?: MESSAGE_LIMIT);
+$query = $serviceEmailMessage->getMessagesToSend($argv[1] ?: DEFAULT_MESSAGE_LIMIT);
+$counter = 0;
 /**
  * @var ModelEmailMessage $model
  */
 foreach ($query as $model) {
+    $counter++;
+    if ($counter > SAFE_LIMIT) {
+        Debugger::log('Message limit reached.', 'mailer-exceptions');
+        break;
+    }
     try {
         $message = $model->toMessage();
         $mailer->send($message);
         $model->update(['state' => ModelEmailMessage::STATE_SENT, 'sent' => new DateTime()]);
     } catch (Exception $e) {
         $model->update(['state' => ModelEmailMessage::STATE_FAILED]);
+        Debugger::log($e, 'mailer-exceptions');
     }
 }

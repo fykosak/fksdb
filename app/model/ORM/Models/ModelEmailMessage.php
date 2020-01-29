@@ -22,11 +22,11 @@ use FKSDB\ORM\AbstractModelSingle;
  * @property-read DateTime sent
  */
 class ModelEmailMessage extends AbstractModelSingle {
-    const STATE_SAVED = 'saved';
-    const STATE_WAITING = 'waiting';
-    const STATE_SENT = 'sent';
-    const STATE_FAILED = 'failed';
-    const STATE_CANCELED = 'canceled';
+    const STATE_SAVED = 'saved'; // uložená, na ďalšiu úpravu
+    const STATE_WAITING = 'waiting'; //čaká na poslanie
+    const STATE_SENT = 'sent'; // úspešné poslané (môže sa napr. ešte odraziť)
+    const STATE_FAILED = 'failed'; // posielanie zlyhalo
+    const STATE_CANCELED = 'canceled'; // posielanie zrušené
 
     /**
      * @return Message
