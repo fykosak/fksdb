@@ -2,12 +2,14 @@
 
 namespace EventModule;
 
+use FKSDB\Components\Controls\Fyziklani\SittingControl;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
 use FKSDB\Components\Grids\Events\Application\ApplicationGrid;
 use FKSDB\Components\Grids\Events\Application\TeamApplicationGrid;
 use FKSDB\model\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 
@@ -20,12 +22,23 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
      * @var ServiceFyziklaniTeam
      */
     private $serviceFyziklaniTeam;
+    /**
+     * @var ServiceFyziklaniTeamPosition
+     */
+    private $serviceFyziklaniTeamPosition;
 
     /**
      * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
      */
     public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam) {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+    }
+
+    /**
+     * @param ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
+     */
+    public function injectServiceFyziklaniTeamPosition(ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition) {
+        $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
     }
 
     public function titleList() {
@@ -87,6 +100,13 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
         }
         $this->template->rankVisible = $rankVisible;
         $this->template->model = $this->getEntity();
+    }
+
+    /**
+     * @return SittingControl
+     */
+    public function createComponentSitting(): SittingControl {
+        return new SittingControl($this->serviceFyziklaniTeamPosition, $this->getTranslator());
     }
 
     /**

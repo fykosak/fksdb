@@ -53,7 +53,10 @@ abstract class Machine {
      * Machine constructor.
      * @param Connection $connection
      * @param IService $service
+<<<<<<< HEAD
+=======
      * @param ITranslator $translator
+>>>>>>> origin/master
      */
     public function __construct(Connection $connection, IService $service, ITranslator $translator) {
         $this->connection = $connection;
@@ -115,6 +118,7 @@ abstract class Machine {
     /**
      * @param array $transitions
      * @return Transition
+     * @throws UnavailableTransitionException
      * @throws LogicException
      * @throws UnavailableTransitionException
      * Protect more that one transition between nodes
@@ -122,7 +126,7 @@ abstract class Machine {
     private function selectTransition(array $transitions): Transition {
         $length = count($transitions);
         if ($length > 1) {
-            throw new LogicException();
+            throw new UnavailableTransitionException();
         }
         if (!$length) {
             throw new UnavailableTransitionException();
@@ -207,14 +211,6 @@ abstract class Machine {
      * @return string
      */
     abstract public function getCreatingState(): string;
-
-    /**
-     * @return string
-     * @deprecated
-     */
-    public function getInitState(): string {
-        return $this->getCreatingState();
-    }
 
     /**
      * @return Transition

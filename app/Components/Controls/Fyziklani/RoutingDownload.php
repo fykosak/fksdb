@@ -10,7 +10,6 @@ use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 
-
 /**
  * Class Routing
  * @property FileTemplate $template

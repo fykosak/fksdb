@@ -47,6 +47,7 @@ class LoginInvitation {
 
     /**
      * @param Transition $transition
+     * @throws \Exception
      */
     public function __invoke(Transition $transition) {
         $this->send($transition);
