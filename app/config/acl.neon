@@ -55,18 +55,17 @@ acl:
     #fyziklani
     - addResource(fyziklani.dashboard) # default
     - addResource(fyziklani.task) # list, import
-    - addResource(fyziklani.close) # list, team, results
-    - addResource(fyziklani.rooms) # edit, download
+    - addResource(fyziklani.close) # list, team, hard
+    - addResource(fyziklani.sitting) # edit, download, preview, print
     - addResource(fyziklani.results) # final, correlation, presentation,
     - addResource(fyziklani.submit) # deafult
     - addResource(fyziklani.gameSetup) # deafult
-    - addResource(fyziklani.diplomas) # deafultm,results
+    - addResource(fyziklani.diplomas) # calculate, results
     #event module
     - addResource(event.application) #import
     - addResource(event.dashboard) # default
     - addResource(event.schedule) # default
     - addResource(event.model) #default
-    - addResource(event.applicationsTimeProgress) # default
     - addResource(event.payment) # create, edit, list
 
     # ACL
@@ -132,29 +131,32 @@ acl:
 
 # fyziklani
     - allow(guest,fyziklani.dashboard, default)
+    - allow(guest, fyziklani.results, presentation) # môže premietať/pozerať výsledky
 #base for org
     - allow(org, fyziklani.dashboard, ::constant(Nette\Security\Permission::ALL))
-    - allow(org, fyziklani.submit, ::constant(Nette\Security\Permission::ALL)) # može zadavať/upravovať bodovanie
-    - allow(org, fyziklani.close, ::constant(Nette\Security\Permission::ALL)) # može uzatvárať
-    - allow(org, fyziklani.results, presentation) # môže premietať výsledky
-    - allow(org, fyziklani.results, final) # môže pozerať konečné výsledky
     - allow(org, fyziklani.task, list) # može pozerať úlohy
+    - allow(org, fyziklani.close, [list,team]) # not hard!
+    - allow(org, fyziklani.sitting, ::constant(Nette\Security\Permission::ALL)) # editovať routing
+    - allow(org, fyziklani.submit, ::constant(Nette\Security\Permission::ALL)) # može zadavať/upravovať bodovanie
+    - allow(org, fyziklani.diplomas, results) # môže pozerať definitívne výsledky
     # specific ACL
     - allow(taskManager, fyziklani.task, ::constant(Nette\Security\Permission::ALL)) # importovať úlohy
-    - allow(boss, fyziklani.rooms, ::constant(Nette\Security\Permission::ALL)) # editovať routing
     - allow(boss, fyziklani.results, ::constant(Nette\Security\Permission::ALL)) # všetko s výsledkovkami
     - allow(boss, fyziklani.gameSetup, ::constant(Nette\Security\Permission::ALL)) # pozerať nastavnie
+    - allow(boss, fyziklani.close, ::constant(Nette\Security\Permission::ALL)) # pozerať nastavnie
 
 
     # eventModule
+    - allow(registered, event.dashboard, ::constant(Nette\Security\Permission::ALL))
+
+    - allow(org, event.participant, timeProgress, ::constant(Nette\Security\Permission::ALL))
+    - allow(org, fyziklani.team, timeProgress, ::constant(Nette\Security\Permission::ALL))
 
     - allow(org, event.dashboard, ::constant(Nette\Security\Permission::ALL))
-    - allow(registered, event.dashboard, ::constant(Nette\Security\Permission::ALL))
 
     - allow(eventManager, event.schedule, ::constant(Nette\Security\Permission::ALL)) #môže všetko s programom
     - allow(eventManager, event.model, ::constant(Nette\Security\Permission::ALL)) #može vidieť model
     - allow(eventManager, event.application, ::constant(Nette\Security\Permission::ALL)) #môže zobraziť prihlášky
-    - allow(boss, event.applicationsTimeProgress, ::constant(Nette\Security\Permission::ALL))
 
     # payment
     - allow(registered, event.payment, detail, [@ownerAssertion, 'isOwnPayment'])
