@@ -2,7 +2,6 @@
 
 namespace EventModule;
 
-use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
 use FKSDB\Components\Factories\PaymentFactory as PaymentComponentFactory;
 use FKSDB\Components\Forms\Controls\Payment\SelectForm;

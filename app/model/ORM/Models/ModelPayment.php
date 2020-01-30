@@ -5,6 +5,7 @@ namespace FKSDB\ORM\Models;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
+use FKSDB\ORM\Tables\TypedTableSelection;
 use FKSDB\Payment\IPaymentModel;
 use FKSDB\Payment\Price;
 use FKSDB\Transitions\IStateModel;
@@ -15,6 +16,7 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\IResource;
 use Nette\Utils\DateTime;
+use Tracy\Debugger;
 use function in_array;
 use function sprintf;
 
@@ -127,6 +129,7 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
      * @return ModelPayment
      */
     public function refresh(): IStateModel {
-        return self::createFromActiveRow($this->getTable()->wherePrimary($this->payment_id)->fetch());
+        $query = new TypedTableSelection(self::class, DbNames::TAB_PAYMENT, $this->getTable()->getConnection());
+        return $query->get($this->getPrimary());
     }
 }

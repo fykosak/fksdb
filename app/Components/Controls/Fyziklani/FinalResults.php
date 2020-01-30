@@ -59,7 +59,6 @@ class FinalResults extends Control {
             ->where('category', $category)
             ->where('rank_category IS NULL')
             ->count();
-        Debugger::barDump($count, $category);
         return $count === 0;
     }
 
