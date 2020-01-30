@@ -194,11 +194,9 @@ abstract class Machine {
         }
 
         $this->connection->commit();
-        $this->service->save($model);
         $model->updateState($transition->getToState());
         /* select from DB new (updated) model */
 
-        $this->service->save($model);
         // $newModel = $model;
         $newModel = $model->refresh();
         $transition->afterExecute($newModel);

@@ -56,7 +56,7 @@ acl:
     - addResource(fyziklani.dashboard) # default
     - addResource(fyziklani.task) # list, import
     - addResource(fyziklani.close) # list, team, hard
-    - addResource(fyziklani.rooms) # edit, download, preview, print
+    - addResource(fyziklani.sitting) # edit, download, preview, print
     - addResource(fyziklani.results) # final, correlation, presentation,
     - addResource(fyziklani.submit) # deafult
     - addResource(fyziklani.gameSetup) # deafult
@@ -131,17 +131,16 @@ acl:
 
 # fyziklani
     - allow(guest,fyziklani.dashboard, default)
+    - allow(guest, fyziklani.results, presentation) # môže premietať/pozerať výsledky
 #base for org
     - allow(org, fyziklani.dashboard, ::constant(Nette\Security\Permission::ALL))
     - allow(org, fyziklani.task, list) # može pozerať úlohy
     - allow(org, fyziklani.close, [list,team]) # not hard!
-    - allow(org, fyziklani.rooms, ::constant(Nette\Security\Permission::ALL)) # editovať routing
-    - allow(org, fyziklani.results, presentation) # môže premietať výsledky
+    - allow(org, fyziklani.sitting, ::constant(Nette\Security\Permission::ALL)) # editovať routing
     - allow(org, fyziklani.submit, ::constant(Nette\Security\Permission::ALL)) # može zadavať/upravovať bodovanie
     - allow(org, fyziklani.diplomas, results) # môže pozerať definitívne výsledky
     # specific ACL
     - allow(taskManager, fyziklani.task, ::constant(Nette\Security\Permission::ALL)) # importovať úlohy
-    - allow(boss, fyziklani.rooms, ::constant(Nette\Security\Permission::ALL)) # editovať routing
     - allow(boss, fyziklani.results, ::constant(Nette\Security\Permission::ALL)) # všetko s výsledkovkami
     - allow(boss, fyziklani.gameSetup, ::constant(Nette\Security\Permission::ALL)) # pozerať nastavnie
     - allow(boss, fyziklani.close, ::constant(Nette\Security\Permission::ALL)) # pozerať nastavnie

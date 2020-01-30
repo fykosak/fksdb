@@ -19,22 +19,9 @@ use Nette\DI\Container;
 class DispatchPresenter extends AuthenticatedPresenter {
 
     /**
-     *
-     * @var Container
-     */
-    protected $container;
-
-    /**
      * @var ServiceEvent
      */
     protected $serviceEvent;
-
-    /**
-     * @param Container $container
-     */
-    public function injectContainer(Container $container) {
-        $this->container = $container;
-    }
 
     /**
      * @param ServiceEvent $serviceEvent
