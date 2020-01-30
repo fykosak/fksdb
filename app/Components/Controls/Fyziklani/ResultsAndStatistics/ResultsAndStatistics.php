@@ -6,9 +6,13 @@ use FKSDB\Components\Controls\Fyziklani\FyziklaniReactControl;
 use FKSDB\React\ReactResponse;
 use FyziklaniModule\BasePresenter;
 use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\ArgumentOutOfRangeException;
 use Nette\Utils\DateTime;
+use Tracy\Debugger;
+use Tracy\FireLogger;
 
 /**
  * Class ResultsAndStatistics
@@ -31,15 +35,18 @@ abstract class ResultsAndStatistics extends FyziklaniReactControl {
         $actions = parent::getActions();
         $actions['refresh'] = $this->link('refresh!');
         return $actions;
-
     }
 
     /**
      * @throws AbortException
+     * @throws ForbiddenRequestException
      */
     public function handleRefresh() {
         $presenter = $this->getPresenter();
-        if (!($presenter instanceof BasePresenter)) {
+        if (!$presenter->isAjax()) {
+            throw new ForbiddenRequestException();
+        }
+        if (!$presenter instanceof BasePresenter) {
             throw new ArgumentOutOfRangeException();
         }
         $isOrg = $presenter->getEventAuthorizator()->isAllowed('fyziklani.results', 'presentation', $this->getEvent());
@@ -47,8 +54,8 @@ abstract class ResultsAndStatistics extends FyziklaniReactControl {
          * @var \DateTime $lastUpdated
          */
         $request = $this->getReactRequest();
-        $requestData = $request->requestData;
-        $lastUpdated = $requestData ? $requestData : null;
+
+        $lastUpdated = $request->requestDat ?: null;
         $response = new ReactResponse();
         $response->setAct('results-update');
         $gameSetup = $this->getEvent()->getFyziklaniGameSetup();
@@ -72,12 +79,13 @@ abstract class ResultsAndStatistics extends FyziklaniReactControl {
         if ($isOrg || $this->isResultsVisible()) {
             $result['submits'] = $this->serviceFyziklaniSubmit->getSubmitsAsArray($this->getEvent(), $lastUpdated);
         }
-        //if (!$lastUpdated) {
-        $result['rooms'] = $this->getRooms();
-        $result['teams'] = $this->serviceFyziklaniTeam->getTeamsAsArray($this->getEvent());
-        $result['tasks'] = $this->serviceFyziklaniTask->getTasksAsArray($this->getEvent());
-        $result['categories'] = ['A', 'B', 'C'];
-        // }
+        // probably need refresh before competition started
+        if (!$lastUpdated) {
+            $result['rooms'] = $this->getRooms();
+            $result['teams'] = $this->serviceFyziklaniTeam->getTeamsAsArray($this->getEvent());
+            $result['tasks'] = $this->serviceFyziklaniTask->getTasksAsArray($this->getEvent());
+            $result['categories'] = ['A', 'B', 'C'];
+        }
 
         $response->setData($result);
 
@@ -88,13 +96,6 @@ abstract class ResultsAndStatistics extends FyziklaniReactControl {
      * @return bool
      */
     private function isResultsVisible(): bool {
-        $gameSetup = $this->getEvent()->getFyziklaniGameSetup();
-        $hardDisplay = $gameSetup->result_hard_display;
-        $before = (time() < strtotime($gameSetup->result_hide));
-        $after = (time() > strtotime($gameSetup->result_display));
-
-        return $hardDisplay || ($before && $after);
+        return $this->getEvent()->getFyziklaniGameSetup()->isResultsVisible();
     }
-
-
 }

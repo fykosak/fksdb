@@ -101,6 +101,6 @@ abstract class FyziklaniReactControl extends ReactComponent {
      * @return ModelFyziklaniRoom[]
      */
     protected function getRooms() {
-        return $this->serviceFyziklaniRoom->getRoomsByIds($this->getEvent()->getParameter('gameSetup')['rooms']);
+        return $this->serviceFyziklaniRoom->getRoomsByIds($this->getEvent()->getParameter('rooms'));
     }
 }

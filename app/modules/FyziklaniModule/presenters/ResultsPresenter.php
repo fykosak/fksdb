@@ -17,18 +17,14 @@ use Nette\Application\BadRequestException;
 class ResultsPresenter extends BasePresenter {
     /**
      * @return bool
-     * @throws BadRequestException
-     * @throws AbortException
      */
     public function requiresLogin(): bool {
         switch ($this->getAction()) {
             case 'default':
-            case 'resultsView':
+            case 'table':
             case 'taskStatistics':
             case 'teamStatistics':
                 return false;
-            case 'resultsFinal':
-                return !$this->getGameSetup()->result_hard_display;
             default:
                 return parent::requiresLogin();
         }
@@ -44,12 +40,12 @@ class ResultsPresenter extends BasePresenter {
         $this->setIcon('fa fa-trophy');
     }
 
-    public function titleResultsView() {
+    public function titleTable() {
         $this->setTitle(_('Detailed results'));
         $this->setIcon('fa fa-trophy');
     }
 
-    public function titleResultsPresentation() {
+    public function titlePresentation() {
         $this->setIcon('fa fa-table');
         return $this->setTitle(_('Results presentation'));
     }
@@ -68,7 +64,7 @@ class ResultsPresenter extends BasePresenter {
         $this->setAuthorized(true);
     }
 
-    public function authorizedResultsView() {
+    public function authorizedResultsTable() {
         $this->authorizedDefault();
     }
 
@@ -92,7 +88,7 @@ class ResultsPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function authorizedResultsPresentation() {
+    public function authorizedPresentation() {
         $this->setAuthorized($this->eventIsAllowed('fyziklani.results', 'presentation'));
     }
 
@@ -101,7 +97,7 @@ class ResultsPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function createComponentResultsView(): ResultsView {
+    public function createComponentTable(): ResultsView {
         return $this->fyziklaniComponentsFactory->createResultsView($this->getEvent());
     }
 
@@ -110,7 +106,7 @@ class ResultsPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function createComponentResultsPresentation(): ResultsPresentation {
+    public function createComponentPresentation(): ResultsPresentation {
         return $this->fyziklaniComponentsFactory->createResultsPresentation($this->getEvent());
     }
 

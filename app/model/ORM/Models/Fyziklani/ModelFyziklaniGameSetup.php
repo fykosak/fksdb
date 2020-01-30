@@ -27,4 +27,16 @@ class ModelFyziklaniGameSetup extends AbstractModelSingle {
             return trim($value);
         }, \explode(',', $this->available_points));
     }
+
+    /**
+     * @return bool
+     */
+    public function isResultsVisible(): bool {
+        if ($this->result_hard_display) {
+            return true;
+        }
+        $before = (time() < strtotime($this->result_hide));
+        $after = (time() > strtotime($this->result_display));
+        return ($before && $after);
+    }
 }
