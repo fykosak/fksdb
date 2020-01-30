@@ -46,13 +46,6 @@ class ParticipantAcquaintanceChartControl extends ReactComponent implements ICha
 
     /**
      * @return string
-     */
-    function getMode(): string {
-        return '';
-    }
-
-    /**
-     * @return string
      * @throws JsonException
      */
     function getData(): string {
@@ -91,8 +84,8 @@ class ParticipantAcquaintanceChartControl extends ReactComponent implements ICha
     /**
      * @return string
      */
-    function getComponentName(): string {
-        return 'participant-acquaintance';
+    protected function getReactId(): string {
+        return 'chart.participant-acquaintance';
     }
 
     /**
@@ -100,13 +93,6 @@ class ParticipantAcquaintanceChartControl extends ReactComponent implements ICha
      */
     public function getTitle(): string {
         return _('Participant acquaintance');
-    }
-
-    /**
-     * @return string
-     */
-    function getModuleName(): string {
-        return 'chart';
     }
 
     /**
