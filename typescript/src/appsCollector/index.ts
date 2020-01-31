@@ -59,7 +59,7 @@ export type mapRegisterCallback = (element: Element, reactId: string, data: stri
 class MapRegister {
     private apps: {
         [key: string]: mapRegisterCallback;
-    };
+    } = {};
 
     public register(reactId: string, callback: mapRegisterCallback): void {
         if (this.apps.hasOwnProperty(reactId)) {

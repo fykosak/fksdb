@@ -93,8 +93,8 @@ class ResultsPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function createComponentTable(): ResultsView {
-        return $this->fyziklaniComponentsFactory->createResultsAndStatistics('fyziklani.results.view', $this->getEvent());
+    public function createComponentTable(): ResultsAndStatistics {
+        return $this->fyziklaniComponentsFactory->createResultsAndStatistics('fyziklani.results.table', $this->getEvent());
     }
 
     /**
@@ -102,7 +102,7 @@ class ResultsPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function createComponentPresentation(): ResultsPresentation {
+    public function createComponentPresentation(): ResultsAndStatistics {
         return $this->fyziklaniComponentsFactory->createResultsAndStatistics('fyziklani.results.presentation', $this->getEvent());
     }
 

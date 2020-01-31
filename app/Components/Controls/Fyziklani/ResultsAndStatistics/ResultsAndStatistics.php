@@ -100,11 +100,12 @@ class ResultsAndStatistics extends FyziklaniReactControl {
          */
         $request = $this->getReactRequest();
 
-        $lastUpdated = $request->requestDat ?: null;
+        $lastUpdated = $request->requestData ?: null;
         $response = new ReactResponse();
         $response->setAct('results-update');
         $gameSetup = $this->getEvent()->getFyziklaniGameSetup();
         $result = [
+            'availablePoints' => $gameSetup->getAvailablePoints(),
             'basePath' => $this->getHttpRequest()->getUrl()->getBasePath(),
             'gameStart' => $gameSetup->game_start->format('c'),
             'gameEnd' => $gameSetup->game_end->format('c'),
@@ -113,7 +114,7 @@ class ResultsAndStatistics extends FyziklaniReactControl {
                 'toEnd' => strtotime($gameSetup->game_end) - time(),
                 'visible' => $this->isResultsVisible(),
             ],
-            'availablePoints' => $gameSetup->getAvailablePoints(),
+
             'lastUpdated' => (new DateTime())->format('c'),
             'isOrg' => $isOrg,
             'refreshDelay' => $gameSetup->refresh_delay,

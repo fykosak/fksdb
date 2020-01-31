@@ -14,7 +14,7 @@ import {
     line,
 } from 'd3-shape';
 import * as React from 'react';
-import { getAreaPath, getLinePath, PointData } from '../../apps/fyziklani/statistics/middleware/charts/lines';
+import { getAreaPath, getLinePath, PointData } from '../../apps/fyziklaniResults/statistics/middleware/charts/lines';
 import { timeMinute } from 'd3-time';
 
 export type LineChartData = Array<{
