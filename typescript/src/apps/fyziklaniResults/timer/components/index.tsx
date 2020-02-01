@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { State as OptionsState } from '../../hardVisible/reducers';
-import { getCurrentDelta } from '../middleware/timer';
-import { State as TimerState } from '../reducers/timer';
 import { FyziklaniResultsCoreStore } from '../../shared/reducers/coreStore';
+import { getCurrentDelta } from '../middleware/timer';
 
 interface OwnProps {
     mode: 'big' | 'small';

@@ -17,23 +17,13 @@ abstract class FyziklaniReactControl extends ReactComponent {
     private $event;
 
     /**
-     * @var Container
-     */
-    protected $context;
-
-    /**
      * FyziklaniReactControl constructor.
      * @param Container $container
      * @param ModelEvent $event
      */
-    public function __construct(
-        Container $container,
-        ModelEvent $event
-    ) {
+    public function __construct(Container $container, ModelEvent $event) {
         parent::__construct($container);
         $this->event = $event;
-        $this->context = $container;
-
     }
 
     /**

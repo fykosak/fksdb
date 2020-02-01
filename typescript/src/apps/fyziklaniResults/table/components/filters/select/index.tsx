@@ -1,5 +1,4 @@
 import * as React from 'react';
-import MultiSelect from './multiSelect';
 import SingleSelect from './singleSelect';
 
 interface OwnProps {

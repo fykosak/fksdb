@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { State as OptionsState } from '../../hardVisible/reducers';
 import Timer from '../../timer/components';
 import Images from '../../timer/components/images';
-import { State as TimerState } from '../../timer/reducers/timer';
 import { FyziklaniResultsCoreStore } from '../reducers/coreStore';
 
 interface StateProps {

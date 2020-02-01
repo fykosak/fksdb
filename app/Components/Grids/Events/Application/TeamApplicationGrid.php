@@ -2,10 +2,17 @@
 
 namespace FKSDB\Components\Grids\Events\Application;
 
+use FKSDB\Components\Controls\Helpers\Badges\NotSetBadge;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use Nette\Application\AbortException;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
+use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
+use NiftyGrid\DuplicateButtonException;
+use NiftyGrid\DuplicateColumnException;
+use NiftyGrid\DuplicateGlobalButtonException;
 use SQL\SearchableDataSource;
 
 /**
@@ -15,10 +22,10 @@ use SQL\SearchableDataSource;
 class TeamApplicationGrid extends AbstractApplicationGrid {
     /**
      * @param Presenter $presenter
-     * @throws \Nette\Application\UI\InvalidLinkException
-     * @throws \NiftyGrid\DuplicateButtonException
-     * @throws \NiftyGrid\DuplicateColumnException
-     * @throws \NiftyGrid\DuplicateGlobalButtonException
+     * @throws InvalidLinkException
+     * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
+     * @throws DuplicateGlobalButtonException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -34,6 +41,14 @@ class TeamApplicationGrid extends AbstractApplicationGrid {
             DbNames::TAB_E_FYZIKLANI_TEAM . '.name',
             DbNames::TAB_E_FYZIKLANI_TEAM . '.status'
         ]);
+        $this->addColumn('room', _('Room'))->setRenderer(function (ActiveRow $row) {
+            $model = ModelFyziklaniTeam::createFromActiveRow($row);
+            $position = $model->getPosition();
+            if (is_null($position)) {
+                return NotSetBadge::getHtml();
+            }
+            return $position->getRoom()->name;
+        });
         $this->addLinkButton($presenter, 'detail', 'detail', _('Detail'), false, ['id' => 'e_fyziklani_team_id']);
         $this->addCSVDownloadButton();
     }

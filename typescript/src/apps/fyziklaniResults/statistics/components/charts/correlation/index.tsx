@@ -12,7 +12,6 @@ import {
 } from '../../../actions';
 import { Store as StatisticsStore } from '../../../reducers';
 import GlobalCorrelation from './globalCorrelation/chart';
-import Table from './table/chart';
 
 interface StateProps {
     teams: Team[];

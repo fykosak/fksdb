@@ -54,15 +54,13 @@ class Downloader extends React.Component<DispatchProps & StateProps & OwnProps, 
         const {lastUpdated, isRefreshing, isSubmitting, onFetch, error} = this.props;
         return (
             <div className="last-update-info bg-white">
-                <span
-                    className={isRefreshing ? 'text-success' : 'text-danger'}>
-                {lastUpdated}
-                </span>
+                <i
+                    title={error ? (error.status + ' ' + error.statusText) : lastUpdated}
+                    className={isRefreshing ? 'text-success fa fa-check' : 'text-danger fa fa-exclamation-triangle'}/>
                 {isSubmitting && (<i className="fa fa-spinner fa-spin"/>)}
                 {!isRefreshing && (<button className="btn btn-primary btn-sm" onClick={() => {
                     return onFetch();
                 }}>{lang.getText('Fetch')}</button>)}
-                {error && <span className={'text-danger'}>{error.status} {error.statusText}</span>}
             </div>
         );
     }

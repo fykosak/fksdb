@@ -18,9 +18,9 @@ import { Store as SubmitStore } from '../reducers/';
 import CodeInputError from './errorBlock';
 import { FORM_NAME } from './formContainer';
 import CodeInput from './input';
+import Scan from './scan';
 import SubmitButtons from './submitButtons';
 import ValueDisplay from './valueDisplay';
-import Scan from './scan';
 
 export interface OwnProps {
     accessKey: string;

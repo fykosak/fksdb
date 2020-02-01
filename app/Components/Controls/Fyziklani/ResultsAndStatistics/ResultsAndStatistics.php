@@ -16,8 +16,6 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\ArgumentOutOfRangeException;
 use Nette\DI\Container;
 use Nette\Utils\DateTime;
-use Tracy\Debugger;
-use Tracy\FireLogger;
 
 /**
  * Class ResultsAndStatistics
@@ -95,9 +93,7 @@ class ResultsAndStatistics extends FyziklaniReactControl {
             throw new ArgumentOutOfRangeException();
         }
         $isOrg = $presenter->getEventAuthorizator()->isAllowed('fyziklani.results', 'presentation', $this->getEvent());
-        /**
-         * @var \DateTime $lastUpdated
-         */
+
         $request = $this->getReactRequest();
 
         $lastUpdated = $request->requestData ?: null;
@@ -133,7 +129,6 @@ class ResultsAndStatistics extends FyziklaniReactControl {
         }
 
         $response->setData($result);
-
         $this->getPresenter()->sendResponse($response);
     }
 

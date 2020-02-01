@@ -1,4 +1,4 @@
-import { Room, Submits, Task, Team } from '../../../fyziklani/helpers/interfaces';
+import { Submits, Task, Team } from '../../../fyziklani/helpers/interfaces';
 
 export interface ResponseData {
     availablePoints: number[];

@@ -13,7 +13,6 @@ import { select } from 'd3-selection';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
-    Submit,
     Submits,
 } from '../../../../../../fyziklani/helpers/interfaces';
 import { getColorByPoints } from '../../../../middleware/charts/colors';
