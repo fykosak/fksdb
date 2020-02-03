@@ -39,10 +39,13 @@
 {foreach $teams as $team}
     <div class="page">
         <h2>({$team->e_fyziklani_team_id}) {$team->name}</h2>
+
         {control sitting:team $event,$team->e_fyziklani_team_id}
+        {if count($toPay[$team->getPrimary()])}
+            <b>{_'Team has any rests'}</b>
+        {/if}
     </div>
 {/foreach}
 
 </body>
 </html>
-

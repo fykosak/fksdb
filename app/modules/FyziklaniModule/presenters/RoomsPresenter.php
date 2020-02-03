@@ -5,6 +5,10 @@ namespace FyziklaniModule;
 use FKSDB\Components\Controls\Fyziklani\RoutingDownload;
 use FKSDB\Components\Controls\Fyziklani\RoutingEdit;
 use FKSDB\Components\Controls\Fyziklani\SittingControl;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\ORM\Models\ModelPayment;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\React\ReactResponse;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -53,6 +57,22 @@ class RoomsPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
+    public function authorizedPreview() {
+        $this->setAuthorized(($this->eventIsAllowed('fyziklani.sitting', 'preview')));
+    }
+
+    /**
+     * @throws AbortException
+     * @throws BadRequestException
+     */
+    public function authorizedList() {
+        $this->setAuthorized(($this->eventIsAllowed('fyziklani.sitting', 'list')));
+    }
+
+    /**
+     * @throws AbortException
+     * @throws BadRequestException
+     */
     public function authorizedDefault() {
         $download = $this->eventIsAllowed('fyziklani.sitting', 'download');
         $edit = $this->eventIsAllowed('fyziklani.sitting', 'edit');
@@ -81,8 +101,16 @@ class RoomsPresenter extends BasePresenter {
      */
     public function renderList() {
         $this->template->event = $this->getEvent();
-        $this->template->teams = $this->getEvent()->getTeams();//->limit(5);
+        $teams = $this->getEvent()->getTeams();
+        $this->template->teams = $teams;
+        $toPayAll = [];
+        foreach ($teams as $row) {
+            $team = ModelFyziklaniTeam::createFromActiveRow($row);
+            $toPayAll[$team->getPrimary()] = $team->getScheduleRest();
+        }
+        $this->template->toPay = $toPayAll;
     }
+
 
     /**
      * @throws AbortException

@@ -1,75 +1,73 @@
 <div style=" background-size: cover">
     <svg viewBox="0 -1600 1600 1600">
-        <style>
-            text {
-                text-anchor: middle;
-            }
 
-            .outer-walls polyline, .inner-walls polyline {
-                fill: none;
-                stroke: #555;
-            }
+        {block #styles}
+            <style>
+                g.mode-single .team-id {
+                    display: none;
+                }
 
-            .outer-walls polyline {
-                stroke-width: 7px;
-            }
+                g.mode-single .place-id, g.mode-dev .place-id {
+                    display: none;
+                }
 
-            .inner-walls polyline {
-                stroke-width: 4px;
-            }
+                text {
+                    text-anchor: middle;
+                }
 
-            .outer-walls polygon, .inner-walls polygon {
-                fill: #555;
-                stroke: none;
-            }
+                .outer-walls polyline, .inner-walls polyline {
+                    fill: none;
+                    stroke: #555;
+                }
 
-            .corridors polyline {
-                fill: none;
-                stroke: #ccc;
-                stroke-width: 2px;
-                stroke-dasharray: 10 10;
-            }
+                .outer-walls polyline {
+                    stroke-width: 7px;
+                }
 
-            .grid polyline {
-                fill: none;
-                stroke: red;
-                stroke-width: 3px;
-                stroke-dasharray: 10 10;
-            }
+                .inner-walls polyline {
+                    stroke-width: 4px;
+                }
 
-            polygon.stage {
-                fill: #ccc;
-                stroke: none;
-            }
+                .outer-walls polygon, .inner-walls polygon {
+                    fill: #555;
+                    stroke: none;
+                }
 
-            circle.team-position.free {
-                fill: none;
-                stroke: #ccc;
-                stroke-width: 3px;
-                stroke-dasharray: 4 4;
-            }
+                .corridors polyline {
+                    fill: none;
+                    stroke: #ccc;
+                    stroke-width: 2px;
+                    stroke-dasharray: 10 10;
+                }
 
-            circle.team-position.occupied {
-                fill: black;
-                stroke: none;
-            }
+                .grid polyline {
+                    fill: none;
+                    stroke: red;
+                    stroke-width: 3px;
+                    stroke-dasharray: 10 10;
+                }
 
-            circle.team-position.occupied.category-A {
-                fill: #ff5555;
-                stroke: none;
-            }
+                polygon.stage {
+                    fill: #ccc;
+                    stroke: none;
+                }
 
-            circle.team-position.occupied.category-B {
-                fill: #55ff55;
-                stroke: none;
-            }
+                circle.team-position.free {
+                    fill: none;
+                    stroke: #ccc;
+                    stroke-width: 3px;
+                    stroke-dasharray: 4 4;
+                }
 
-            circle.team-position.occupied.category-C {
-                fill: #5555ff;
-                stroke: none;
-            }
-        </style>
-        <g>
+                circle.team-position.occupied {
+                    fill: black;
+                    stroke: none;
+                }
+            </style>
+        {/block}
+
+
+        <g class="{$mode?('mode-'.$mode):null}">
             <g class="inner-walls">
                 <polyline points="1080,-460 1000,-380 780,-380"/>
                 <polyline points="740,-380 330,-380 260,-450 260,-850"/>
@@ -128,34 +126,21 @@
                     <text font-size="3rem" transform="translate(220,-320) rotate(45)">{_'E sector'}</text>
                 </g>
             </g>
+            <g class="places">
+                {block #places}
+                    {foreach $places as $place}
+                        {var $className= 'free'}
+                        {block #team}
+                            <circle
+                                    class="{$className.' team-position'}"
+                                    r="15"
+                                    cx="{$place->x_coordinate}"
+                                    cy="{-$place->y_coordinate}"/>
+                        {/block}
+                    {/foreach}
+                {/block}
+            </g>
         </g>
-        {foreach $places as $place}
-            <circle
-                    class="free team-position"
-                    r="15"
-                    cx="{$place->x_coordinate}"
-                    cy="{-$place->y_coordinate}"/>
-        {var $cor = 'translate('.$place->x_coordinate.','.-($place->y_coordinate-18).')' }
-            <g transform="{$cor}">
-                <text text-anchor="middle">{$place->getPrimary()}</text>
-            </g>
 
-        {/foreach}
-
-        {foreach $teams as $place}
-            {var $team = $place->getTeam()}
-            {var $className ='category-'.$team->category.' occupied team-position' }
-            <circle
-                    class="{$className}"
-                    r="15"
-                    cx="{$place->x_coordinate}"
-                    cy="{-$place->y_coordinate}"/>
-
-        {var $cor = 'translate('.$place->x_coordinate.','.-($place->y_coordinate+18).')' }
-            <g transform="{$cor}">
-                <text text-anchor="middle">{$team->e_fyziklani_team_id}</text>
-            </g>
-
-        {/foreach}
     </svg>
 </div>

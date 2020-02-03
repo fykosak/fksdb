@@ -1,0 +1,41 @@
+{layout './Sitting.latte'}
+{block #places}
+    {foreach $places as $place}
+        {var $team = $place->getTeam()}
+        {if $team}
+            {var $cor = 'translate('.$place->x_coordinate.','.-($place->y_coordinate+15).')' }
+            <g transform="{$cor}">
+                <text text-anchor="middle">{$team->e_fyziklani_team_id}</text>
+            </g>
+            {include #team 'place'=>$place ,'className'=>('category-'.$team->category.' occupied')}
+        {else}
+            {include #team 'place'=>$place ,'className'=>'free'}
+        {/if}
+
+        {var $cor = 'translate('.$place->x_coordinate.','.-($place->y_coordinate-25).')' }
+        <g transform="{$cor}">
+            <text text-anchor="middle">{$place->getPrimary()}</text>
+        </g>
+    {/foreach}
+{/block}
+{block #teams}
+{/block}
+{block #styles}
+    <style>
+        circle.team-position.occupied.category-A {
+            fill: #ff5555;
+            stroke: none;
+        }
+
+        circle.team-position.occupied.category-B {
+            fill: #55ff55;
+            stroke: none;
+        }
+
+        circle.team-position.occupied.category-C {
+            fill: #5555ff;
+            stroke: none;
+        }
+    </style>
+    {include #parent}
+{/block}

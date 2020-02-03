@@ -40,9 +40,7 @@ class SittingControl extends Control {
         $this->template->places = $this->serviceFyziklaniTeamPosition->getAllPlaces($this->getRooms($event));
         $this->template->teams = $this->serviceFyziklaniTeamPosition->getAllPlaces($this->getRooms($event))
             ->where('e_fyziklani_team_id IS NOT NULL');
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Sitting.latte');
-        $this->template->setTranslator($this->translator);
-        $this->template->render();
+        $this->renderDefault('all');
     }
 
     /**
@@ -51,10 +49,26 @@ class SittingControl extends Control {
      */
     public function renderTeam(ModelEvent $event, int $teamId) {
         $this->template->places = $this->serviceFyziklaniTeamPosition->getAllPlaces($this->getRooms($event));
-        $this->template->teams = $this->serviceFyziklaniTeamPosition->getAllPlaces($this->getRooms($event))
-            ->where('e_fyziklani_team_id', $teamId);
+        $this->template->teamId = $teamId;
+        $this->renderDefault('single');
+    }
 
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Sitting.latte');
+    /**
+     * @param ModelEvent $event
+     */
+    public function renderDev(ModelEvent $event) {
+        $this->template->places = $this->serviceFyziklaniTeamPosition->getAllPlaces($this->getRooms($event));
+        $this->template->teams = $this->serviceFyziklaniTeamPosition->getAllPlaces($this->getRooms($event))
+            ->where('e_fyziklani_team_id IS NOT NULL');
+        $this->renderDefault('dev');
+    }
+
+    /**
+     * @param string $mode
+     */
+    public function renderDefault(string $mode) {
+        $this->template->mode = $mode;
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Sitting.' . $mode . '.latte');
         $this->template->setTranslator($this->translator);
         $this->template->render();
     }
