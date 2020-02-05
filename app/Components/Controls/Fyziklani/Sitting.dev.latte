@@ -7,9 +7,9 @@
             <g transform="{$cor}">
                 <text text-anchor="middle">{$team->e_fyziklani_team_id}</text>
             </g>
-            {include #team 'place'=>$place ,'className'=>('category-'.$team->category.' occupied')}
+            {include #place 'place'=>$place ,'className'=>('category-'.$team->category.' occupied game-lang-'.$team->game_lang)}
         {else}
-            {include #team 'place'=>$place ,'className'=>'free'}
+            {include #place 'place'=>$place ,'className'=>'free'}
         {/if}
 
         {var $cor = 'translate('.$place->x_coordinate.','.-($place->y_coordinate-25).')' }
@@ -18,24 +18,32 @@
         </g>
     {/foreach}
 {/block}
-{block #teams}
-{/block}
 {block #styles}
+    {include #parent}
     <style>
-        circle.team-position.occupied.category-A {
-            fill: #ff5555;
-            stroke: none;
+        circle.team-position.category-A {
+            fill: #ff5555 !important;;
         }
 
-        circle.team-position.occupied.category-B {
-            fill: #55ff55;
-            stroke: none;
+        circle.team-position.category-B {
+            fill: #55ff55 !important;;
         }
 
-        circle.team-position.occupied.category-C {
-            fill: #5555ff;
-            stroke: none;
+        circle.team-position.category-C {
+            fill: #5555ff !important;;
+        }
+
+        circle.team-position.game-lang-cs {
+            stroke: black !important;
+            stroke-dasharray: 10 10 !important;
+            stroke-width: 3px !important;
+        }
+
+        circle.team-position.game-lang-en {
+            stroke: black !important;
+            stroke-dasharray: 3 3 !important;
+            stroke-width: 3px !important;
         }
     </style>
-    {include #parent}
+
 {/block}

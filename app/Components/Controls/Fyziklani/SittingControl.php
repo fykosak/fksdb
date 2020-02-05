@@ -37,37 +37,36 @@ class SittingControl extends Control {
      * @param ModelEvent $event
      */
     public function renderAll(ModelEvent $event) {
-        $this->template->places = $this->serviceFyziklaniTeamPosition->getAllPlaces($this->getRooms($event));
-        $this->template->teams = $this->serviceFyziklaniTeamPosition->getAllPlaces($this->getRooms($event))
-            ->where('e_fyziklani_team_id IS NOT NULL');
-        $this->renderDefault('all');
+        $this->render($event, 'all');
     }
 
     /**
      * @param ModelEvent $event
      * @param int $teamId
      */
-    public function renderTeam(ModelEvent $event, int $teamId) {
-        $this->template->places = $this->serviceFyziklaniTeamPosition->getAllPlaces($this->getRooms($event));
+    public function renderTeam(ModelEvent $event, int $teamId, string $lang) {
         $this->template->teamId = $teamId;
-        $this->renderDefault('single');
+        $this->render($event, 'single', $lang);
     }
 
     /**
      * @param ModelEvent $event
      */
     public function renderDev(ModelEvent $event) {
-        $this->template->places = $this->serviceFyziklaniTeamPosition->getAllPlaces($this->getRooms($event));
         $this->template->teams = $this->serviceFyziklaniTeamPosition->getAllPlaces($this->getRooms($event))
             ->where('e_fyziklani_team_id IS NOT NULL');
-        $this->renderDefault('dev');
+        $this->render($event, 'dev');
     }
 
     /**
+     * @param ModelEvent $event
      * @param string $mode
+     * @param string $lang
      */
-    public function renderDefault(string $mode) {
+    public function render(ModelEvent $event, string $mode, string $lang = 'cs') {
+        $this->template->places = $this->serviceFyziklaniTeamPosition->getAllPlaces($this->getRooms($event));
         $this->template->mode = $mode;
+        $this->template->lang = $lang;
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Sitting.' . $mode . '.latte');
         $this->template->setTranslator($this->translator);
         $this->template->render();

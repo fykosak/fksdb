@@ -110,13 +110,15 @@
                     <text font-size="4rem">{_'WC'}</text>
                 </g>
                 <g transform="translate(1200,-100)">
-                    <text font-size="2rem">{_'Attendance'}</text>
+                    <text font-size="2rem">{$lang=='cs'?'Prezentace':'Registration'}</text>
                 </g>
                 <g transform="translate(1360,-1200)">
-                    <text font-size="2rem" transform="rotate(90)">{_'Schedule for teachers'}</text>
+                    <text font-size="2rem"
+                          transform="rotate(90)">{$lang=='cs'?'Program pro učitele':'Schedule for teachers'}</text>
                 </g>
                 <g transform="translate(1065,-1185)">
-                    <text font-size="3rem" stroke="black" fill="white" transform="rotate(45)">{_'Stage'}</text>
+                    <text font-size="3rem" stroke="black" fill="white"
+                          transform="rotate(45)">{$lang=='cs'?'Pódium':'Stage'}</text>
                 </g>
                 <g>
                     <text font-size="3rem" transform="translate(1140,-600) rotate(-45)">{_'A sector'}</text>
@@ -130,7 +132,7 @@
                 {block #places}
                     {foreach $places as $place}
                         {var $className= 'free'}
-                        {block #team}
+                        {block #place}
                             <circle
                                     class="{$className.' team-position'}"
                                     r="15"
