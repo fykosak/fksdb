@@ -1,12 +1,8 @@
-{layout './Sitting.latte'}
+{layout './Seating.latte'}
 {block #places}
     {foreach $places as $place}
         {var $team = $place->getTeam()}
-        {if $team}
-            {var $cor = 'translate('.$place->x_coordinate.','.-($place->y_coordinate+18).')' }
-            <g transform="{$cor}">
-                <text text-anchor="middle">{$team->e_fyziklani_team_id}</text>
-            </g>
+        {if $team && $team->getPrimary() === $teamId}
             {include #place 'place'=>$place ,'className'=>'occupied'}
         {else}
             {include #place 'place'=>$place ,'className'=>'free'}

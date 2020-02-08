@@ -2,7 +2,7 @@
 
 namespace EventModule;
 
-use FKSDB\Components\Controls\Fyziklani\SittingControl;
+use FKSDB\Components\Controls\Fyziklani\SeatingControl;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
 use FKSDB\Components\Grids\Events\Application\ApplicationGrid;
 use FKSDB\Components\Grids\Events\Application\TeamApplicationGrid;
@@ -110,10 +110,10 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @return SittingControl
+     * @return SeatingControl
      */
-    public function createComponentSitting(): SittingControl {
-        return new SittingControl($this->serviceFyziklaniTeamPosition, $this->getTranslator());
+    public function createComponentSeating(): SeatingControl {
+        return new SeatingControl($this->serviceFyziklaniTeamPosition, $this->getTranslator());
     }
 
     /**

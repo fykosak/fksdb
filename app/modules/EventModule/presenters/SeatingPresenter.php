@@ -1,17 +1,19 @@
 <?php
 
-namespace FyziklaniModule;
+namespace EventModule;
 
 use FKSDB\Components\Controls\Fyziklani\RoutingDownload;
 use FKSDB\Components\Controls\Fyziklani\RoutingEdit;
-use FKSDB\Components\Controls\Fyziklani\SittingControl;
+use FKSDB\Components\Controls\Fyziklani\SeatingControl;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use FKSDB\React\ReactResponse;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\DeprecatedException;
 use ReactMessage;
 use Tracy\Debugger;
 
@@ -19,7 +21,19 @@ use Tracy\Debugger;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class RoomsPresenter extends BasePresenter {
+class SeatingPresenter extends BasePresenter {
+
+    /**
+     * @var ServiceFyziklaniTeamPosition
+     */
+    private $serviceFyziklaniTeamPosition;
+
+    /**
+     * @param ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
+     */
+    public function injectServiceFyziklaniTeamPosition(ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition) {
+        $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
+    }
 
     public function titleDefault() {
         $this->setTitle(_('Rozdělení do místností'));
@@ -36,13 +50,23 @@ class RoomsPresenter extends BasePresenter {
         $this->setIcon('fa fa-download');
     }
 
+    public function titleList() {
+        $this->setTitle(_('List of all teams'));
+        $this->setIcon('fa fa-print');
+    }
+
+    public function titlePreview() {
+        $this->setTitle(_('Preview'));
+        $this->setIcon('fa fa-search');
+    }
+
 
     /**
      * @throws AbortException
      * @throws BadRequestException
      */
     public function authorizedEdit() {
-        $this->setAuthorized(($this->eventIsAllowed('fyziklani.sitting', 'edit')));
+        $this->setAuthorized(($this->eventIsAllowed('event.seating', 'edit')));
     }
 
     /**
@@ -50,7 +74,7 @@ class RoomsPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function authorizedDownload() {
-        $this->setAuthorized(($this->eventIsAllowed('fyziklani.sitting', 'download')));
+        $this->setAuthorized(($this->eventIsAllowed('event.seating', 'download')));
     }
 
     /**
@@ -58,7 +82,7 @@ class RoomsPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function authorizedPreview() {
-        $this->setAuthorized(($this->eventIsAllowed('fyziklani.sitting', 'preview')));
+        $this->setAuthorized(($this->eventIsAllowed('event.seating', 'preview')));
     }
 
     /**
@@ -66,7 +90,7 @@ class RoomsPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function authorizedList() {
-        $this->setAuthorized(($this->eventIsAllowed('fyziklani.sitting', 'list')));
+        $this->setAuthorized(($this->eventIsAllowed('event.seating', 'list')));
     }
 
     /**
@@ -74,8 +98,8 @@ class RoomsPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function authorizedDefault() {
-        $download = $this->eventIsAllowed('fyziklani.sitting', 'download');
-        $edit = $this->eventIsAllowed('fyziklani.sitting', 'edit');
+        $download = $this->eventIsAllowed('event.seating', 'download');
+        $edit = $this->eventIsAllowed('event.seating', 'edit');
         $this->setAuthorized($download || $edit);
     }
 
@@ -86,7 +110,7 @@ class RoomsPresenter extends BasePresenter {
     public function renderEdit() {
         if ($this->isAjax()) {
             $data = $this->getHttpRequest()->getPost('requestData');
-            $updatedTeams = $this->getServiceFyziklaniTeamPosition()->updateRouting($data);
+            $updatedTeams = $this->serviceFyziklaniTeamPosition->updateRouting($data);
             $response = new ReactResponse();
             $response->setAct('update-teams');
             $response->setData(['updatedTeams' => $updatedTeams]);
@@ -101,7 +125,7 @@ class RoomsPresenter extends BasePresenter {
      */
     public function renderList() {
         $this->template->event = $this->getEvent();
-        $teams = $this->getEvent()->getTeams();
+        $teams = $this->getEvent()->getTeams()->limit(5);
         $this->template->teams = $teams;
         $toPayAll = [];
         foreach ($teams as $row) {
@@ -122,26 +146,22 @@ class RoomsPresenter extends BasePresenter {
 
     /**
      * @return RoutingDownload
-     * @throws AbortException
-     * @throws BadRequestException
      */
     public function createComponentDownload(): RoutingDownload {
-        return $this->fyziklaniComponentsFactory->createRoutingDownload($this->getEvent());
+        throw new DeprecatedException();
     }
 
     /**
      * @return RoutingEdit
-     * @throws AbortException
-     * @throws BadRequestException
      */
     public function createComponentRouting(): RoutingEdit {
-        return $this->fyziklaniComponentsFactory->createRoutingEdit($this->getEvent());
+        throw new DeprecatedException();
     }
 
     /**
-     * @return SittingControl
+     * @return SeatingControl
      */
-    public function createComponentSitting(): SittingControl {
-        return new SittingControl($this->getServiceFyziklaniTeamPosition(), $this->getTranslator());
+    public function createComponentSeating(): SeatingControl {
+        return new SeatingControl($this->serviceFyziklaniTeamPosition, $this->getTranslator());
     }
 }

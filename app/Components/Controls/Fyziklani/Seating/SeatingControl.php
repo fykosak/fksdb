@@ -6,13 +6,12 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
-use Tracy\Debugger;
 
 /**
  * Class SittingControl
  * @package FKSDB\Components\Controls\Fyziklani
  */
-class SittingControl extends Control {
+class SeatingControl extends Control {
     /**
      * @var ServiceFyziklaniTeamPosition
      */
@@ -23,7 +22,7 @@ class SittingControl extends Control {
     private $translator;
 
     /**
-     * SittingControl constructor.
+     * SeatingControl constructor.
      * @param ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
      * @param ITranslator $translator
      */
@@ -43,6 +42,7 @@ class SittingControl extends Control {
     /**
      * @param ModelEvent $event
      * @param int $teamId
+     * @param string $lang
      */
     public function renderTeam(ModelEvent $event, int $teamId, string $lang) {
         $this->template->teamId = $teamId;
@@ -67,7 +67,7 @@ class SittingControl extends Control {
         $this->template->places = $this->serviceFyziklaniTeamPosition->getAllPlaces($this->getRooms($event));
         $this->template->mode = $mode;
         $this->template->lang = $lang;
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Sitting.' . $mode . '.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Seating.' . $mode . '.latte');
         $this->template->setTranslator($this->translator);
         $this->template->render();
     }

@@ -58,14 +58,13 @@ navigation:
             - fyziklani.diplomas.default
             - fyziklani.task.list
             - fyziklani.task.import
-            - fyziklani.rooms.default
             - fyziklani.gameSetup.default
 
-        fyziklani.rooms.default:
-            - fyziklani.rooms.edit
-            - fyziklani.rooms.download
-            - fyziklani.rooms.preview
-            - fyziklani.rooms.list
+        event.seating.default:
+            - event.seating.edit
+            - event.seating.download
+            - event.seating.preview
+            - event.seating.list
         fyziklani.results.default:
             - fyziklani.dashboard.default
             - fyziklani.diplomas.results
@@ -84,3 +83,4 @@ navigation:
             - event.teamApplication.list
             - event.model.default
             - event.applicationsTimeProgress.default
+            - event.seating.default
