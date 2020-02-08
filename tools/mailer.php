@@ -18,7 +18,7 @@ set_time_limit(60);
  * @var GlobalParameters $mailer
  */
 $globalParameters = $container->getByType(GlobalParameters::class);
-if (!$globalParameters['spamMailer'] || $globalParameters['spamMailer']['enabled']) {
+if (!$globalParameters['spamMailer'] || !$globalParameters['spamMailer']['enabled']) {
     exit(0);
 }
 /**
