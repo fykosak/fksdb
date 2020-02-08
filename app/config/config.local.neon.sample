@@ -52,6 +52,10 @@ parameters:
 	#         - dfsadfsd
     vyfuk:
         forwardRegistration: %fykos.forwardRegistration%
+    #send blank emails by spamMailer
+    spamMailer:
+        enabled: true
+        defualtLimit: 100
 
 nette:
     session:
