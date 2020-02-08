@@ -127,7 +127,6 @@ class ResultsAndStatistics extends FyziklaniReactControl {
             $result['tasks'] = $this->serviceFyziklaniTask->getTasksAsArray($this->getEvent());
             $result['categories'] = ['A', 'B', 'C'];
         }
-
         $response->setData($result);
         $this->getPresenter()->sendResponse($response);
     }
