@@ -1437,6 +1437,24 @@ CREATE TABLE IF NOT EXISTS `schedule_payment` (
     ON UPDATE CASCADE
 )
   ENGINE = 'InnoDB';
+-- -----------------------------------------------------
+-- Table `email_message`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `email_message`
+(
+    `email_message_id` INT(11)      NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `recipient`         VARCHAR(128) NOT NULL,
+    `sender`           VARCHAR(128) NOT NULL,
+    `reply_to`         VARCHAR(128) NOT NULL,
+    `subject`          VARCHAR(128) NOT NULL,
+    `carbon_copy`      VARCHAR(128) NULL     DEFAULT NULL,
+    `blind_carbon_copy` VARCHAR(128) NULL     DEFAULT NULL,
+    `text`             TEXT         NOT NULL,
+    `state`            ENUM ('saved','waiting','sent','failed','canceled') CHARACTER SET 'utf8' DEFAULT 'saved',
+    `created`          DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `sent`             DATETIME     NULL DEFAULT NULL
+)
+    ENGINE = 'InnoDB';
 
 SET SQL_MODE = @OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS = @OLD_FOREIGN_KEY_CHECKS;

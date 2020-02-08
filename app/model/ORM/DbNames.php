@@ -21,6 +21,7 @@ class DbNames {
     const TAB_GRANT = 'grant';
     const TAB_LOGIN = 'login';
     const TAB_ORG = 'org';
+    const TAB_EMAIL_MESSAGE = 'email_message';
 
     const TAB_PERSON = 'person';
     const TAB_PERSON_HAS_FLAG = 'person_has_flag';
