@@ -5,6 +5,7 @@ namespace FKSDB\Components\Grids;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\Models\ModelEmailMessage;
 use FKSDB\ORM\Services\ServiceEmailMessage;
+use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 use SQL\SearchableDataSource;
 
@@ -36,7 +37,8 @@ class EmailsGrid extends BaseGrid {
     protected function configure($presenter) {
         parent::configure($presenter);
         $emails = $this->serviceEmailMessage->getTable();
-        $source = new SearchableDataSource($emails);
+        $source = new NDataSource($emails);
+        //  $source = new SearchableDataSource($emails);
         $this->setDataSource($source);
 
 
