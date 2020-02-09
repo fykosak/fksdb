@@ -17,7 +17,6 @@ use Nette\Utils\Finder;
 require LIBS_DIR . '/../vendor/autoload.php';
 require LIBS_DIR . '/autoload.php';
 
-
 define('CONFIG_DIR', dirname(__FILE__) . DIRECTORY_SEPARATOR . 'config');
 
 // Configure application
@@ -33,8 +32,6 @@ $configurator->onCompile[] = function ($configurator, $compiler) {
 };
 
 // Enable Nette Debugger for error visualisation & logging
-
-
 $configurator->enableDebugger(dirname(__FILE__) . '/../log');
 error_reporting(~E_USER_DEPRECATED & ~E_USER_WARNING);
 
@@ -61,7 +58,6 @@ $container = $configurator->createContainer();
 // Register addons
 //
 Replicator::register();
-
 
 Container::extensionMethod('addDatePicker', function (Container $container, $name, $label = NULL) {
     return $container[$name] = new DatePicker($label);

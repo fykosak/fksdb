@@ -6,6 +6,7 @@ use FKSDB\Components\DatabaseReflection\DetailFactory;
 use FKSDB\Components\DatabaseReflection\EmailRow;
 use FKSDB\Components\DatabaseReflection\Links\Link;
 use FKSDB\Components\DatabaseReflection\PrimaryKeyRow;
+use FKSDB\Components\DatabaseReflection\StateRow;
 use FKSDB\Components\DatabaseReflection\StringRow;
 use FKSDB\Components\DatabaseReflection\Tables\PhoneRow;
 use Nette\Application\BadRequestException;
@@ -99,6 +100,8 @@ class DBReflectionExtension extends CompilerExtension {
                     return $this->registerPhoneRow($builder, $tableName, $fieldName, $field);
                 case 'email':
                     return $this->registerEmailRow($builder, $tableName, $fieldName, $field);
+                case 'state':
+                    return $this->registerStateRow($builder, $tableName, $fieldName, $field);
                 default:
                     throw new NotImplementedException();
             }
@@ -108,6 +111,19 @@ class DBReflectionExtension extends CompilerExtension {
                 ->setFactory($field);
         }
         throw new BadRequestException('Expected string or array give ' . get_class($field));
+    }
+
+    /**
+     * @param ContainerBuilder $builder
+     * @param string $tableName
+     * @param string $fieldName
+     * @param array $field
+     * @return ServiceDefinition
+     */
+    private function registerStateRow(ContainerBuilder $builder, string $tableName, string $fieldName, array $field): ServiceDefinition {
+        $factory = $this->setUpDefaultFactory($builder, $tableName, $fieldName, StateRow::class, $field);
+        $factory->addSetup('setStates', [$field['states']]);
+        return $factory;
     }
 
     /**
