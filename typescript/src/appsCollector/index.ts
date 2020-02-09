@@ -37,11 +37,8 @@ class AppsCollector {
             const selectedItem = this.items.find((item) => {
                 return item(element, reactId, rawData, actions);
             });
-            if (selectedItem) {
+            if (selectedItem || mapRegister.render(element, reactId, rawData, actions)) {
                 element.setAttribute('data-served', '1');
-                return;
-            }
-            if (mapRegister.render(element, reactId, rawData, actions)) {
                 return;
             }
             throw new Error('no match type');
