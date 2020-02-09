@@ -140,6 +140,12 @@ parameters:
             person_info:
                 email:
                   required: true
+                phone:
+                  required: false
+                uk_login:
+                  required: false
+                account:
+                  required: false
         adminTeacher:
             person:
                 other_name:
