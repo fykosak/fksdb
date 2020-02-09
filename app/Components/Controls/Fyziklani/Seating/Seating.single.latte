@@ -1,0 +1,11 @@
+{layout './Seating.latte'}
+{block #places}
+    {foreach $places as $place}
+        {var $team = $place->getTeam()}
+        {if $team && $team->getPrimary() === $teamId}
+            {include #place 'place'=>$place ,'className'=>'occupied'}
+        {else}
+            {include #place 'place'=>$place ,'className'=>'free'}
+        {/if}
+    {/foreach}
+{/block}
