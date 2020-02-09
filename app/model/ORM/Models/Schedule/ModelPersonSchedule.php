@@ -83,6 +83,8 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel, IP
                     $group->start->format(_('__date_format')),
                     $group->end->format(_('__date_format')),
                     $item->name_cs);
+            case ModelScheduleGroup::TYPE_WEEKEND:
+                return $item->getLabel();
             default:
                 throw new NotImplementedException();
         }
