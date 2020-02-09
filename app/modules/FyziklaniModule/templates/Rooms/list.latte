@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style media="print">
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: #FAFAFA;
+            font: 12pt "Tahoma";
+        }
+
+        * {
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+        }
+
+        .page {
+            page-break-before: always;
+            width: 148mm;
+            /* min-height: 210mm;*/
+            padding: 10mm;
+            margin: 0 auto;
+            /* border: 1px #D3D3D3 solid;*/
+            background: white;
+            /* box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);*/
+        }
+
+        @page {
+            size: A5;
+            margin: 0;
+        }
+    </style>
+    <title>Sitting</title>
+</head>
+<body>
+
+{foreach $teams as $team}
+    <div class="page">
+        <h2>({$team->e_fyziklani_team_id}) {$team->name}</h2>
+        {control sitting:team $event,$team->e_fyziklani_team_id}
+    </div>
+{/foreach}
+
+</body>
+</html>
+

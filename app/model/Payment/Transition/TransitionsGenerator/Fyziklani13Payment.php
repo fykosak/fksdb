@@ -90,7 +90,11 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
     /**
      * implicit transition when creating model (it's not executed only try condition!)
      * @param PaymentMachine $machine
+<<<<<<< HEAD
+     * @throws \Exception
+=======
      * @throws Exception
+>>>>>>> origin/master
      */
     private function addTransitionInitToNew(PaymentMachine &$machine) {
         $transition = new Transition(Machine::STATE_INIT, ModelPayment::STATE_NEW, _('Create'));
@@ -100,7 +104,11 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
 
     /**
      * @param PaymentMachine $machine
+<<<<<<< HEAD
+     * @throws \Exception
+=======
      * @throws Exception
+>>>>>>> origin/master
      */
     private function addTransitionNewToWaiting(PaymentMachine &$machine) {
         $transition = new Transition(ModelPayment::STATE_NEW, ModelPayment::STATE_WAITING, _('Confirm payment'));

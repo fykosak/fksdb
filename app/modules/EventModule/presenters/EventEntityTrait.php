@@ -3,7 +3,6 @@
 namespace EventModule;
 
 use FKSDB\EntityTrait;
-use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\IEventReferencedModel;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\AbortException;
@@ -16,26 +15,27 @@ use Nette\Application\ForbiddenRequestException;
  */
 trait EventEntityTrait {
     use EntityTrait {
-        getEntity as loadEntity;
+        loadEntity as loadBaseEntity;
     }
 
     /**
-     * @return AbstractModelSingle|IEventReferencedModel
+     * @param int $id
+     * @return mixed
      * @throws AbortException
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    protected function getEntity() {
-        $model = $this->loadEntity();
+    protected function loadEntity(int $id) {
+        $this->loadBaseEntity($id);
 
-        if (!$model instanceof IEventReferencedModel) {
+        if (!$this->model instanceof IEventReferencedModel) {
             throw new BadRequestException('Model must be a instance of IEventReferencedModel', 500);
         }
-        if ($model->getEvent()->event_id !== $this->getEvent()->event_id) {
+        if ($this->model->getEvent()->event_id !== $this->getEvent()->event_id) {
             throw new ForbiddenRequestException();
         }
 
-        return $model;
+        return $this->model;
     }
 
     /**

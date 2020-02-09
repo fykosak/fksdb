@@ -11,6 +11,7 @@ use FKSDB\Logging\FlashDumpFactory;
 use FKSDB\Logging\MemoryLogger;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use function in_array;
 
 /**
@@ -19,7 +20,6 @@ use function in_array;
  */
 abstract class AbstractApplicationPresenter extends BasePresenter {
     use EventEntityTrait;
-
 
     /**
      * @var ApplicationHandlerFactory
@@ -42,6 +42,40 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      */
     public function injectFlashDumpFactory(FlashDumpFactory $dumpFactory) {
         $this->dumpFactory = $dumpFactory;
+    }
+
+    /**
+     * @param int $id
+     * @throws AbortException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     */
+    public function actionDetail(int $id) {
+        $this->loadEntity($id);
+    }
+
+    /**
+     * @throws AbortException
+     * @throws BadRequestException
+     */
+    protected function renderDetail() {
+        $this->template->event = $this->getEvent();
+        $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
+    }
+
+    /**
+     * @throws BadRequestException
+     * @throws AbortException
+     */
+    public function renderList() {
+        $this->template->event = $this->getEvent();
+    }
+
+    /**
+     * @return PersonGrid
+     */
+    protected function createComponentPersonScheduleGrid(): PersonGrid {
+        return new PersonGrid($this->getTableReflectionFactory());
     }
 
     /**
@@ -73,29 +107,6 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
             return true;
         }
         return false;
-    }
-
-    /**
-     * @return PersonGrid
-     */
-    protected function createComponentPersonScheduleGrid(): PersonGrid {
-        return new PersonGrid($this->getTableReflectionFactory());
-    }
-
-    /**
-     * @throws AbortException
-     * @throws BadRequestException
-     */
-    protected function renderDetail() {
-        $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
-    }
-
-    /**
-     * @throws BadRequestException
-     * @throws AbortException
-     */
-    public function renderList() {
-        $this->template->event = $this->getEvent();
     }
 
     /**

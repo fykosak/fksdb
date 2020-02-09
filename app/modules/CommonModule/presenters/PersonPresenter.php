@@ -18,7 +18,6 @@ use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Html;
-use Nette\Utils\RegexpException;
 use Persons\Deduplication\Merger;
 use Persons\DenyResolver;
 use Persons\ExtendedPersonHandler;

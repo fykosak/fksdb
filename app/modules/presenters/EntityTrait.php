@@ -12,20 +12,16 @@ use Nette\Application\BadRequestException;
  */
 trait EntityTrait {
     /**
-     * @var int
-     * @persistent
-     */
-    public $id;
-    /**
      * @var AbstractModelSingle|IModel
      */
     private $model;
 
     /**
+     * @param int $id
      * @throws BadRequestException
      */
-    public function authorizedDetail() {
-        $this->setAuthorized($this->isAllowed($this->getEntity(), 'detail'));
+    public function authorizedDetail(int $id) {
+        $this->setAuthorized($this->isAllowed($this->loadEntity($id), 'detail'));
     }
 
     public function authorizedList() {
@@ -33,10 +29,11 @@ trait EntityTrait {
     }
 
     /**
+     * @param int $id
      * @throws BadRequestException
      */
-    public function authorizedEdit() {
-        $this->setAuthorized($this->isAllowed($this->getEntity(), 'edit'));
+    public function authorizedEdit(int $id) {
+        $this->setAuthorized($this->isAllowed($this->loadEntity($id), 'edit'));
     }
 
     public function authorizedCreate() {
@@ -45,24 +42,23 @@ trait EntityTrait {
 
     /**
      * @return AbstractModelSingle|IModel
-     * @throws BadRequestException
-     * @deprecated
      */
-    public function getModel() {
-        return $this->getEntity();
+    public function getEntity() {
+        return $this->model;
     }
 
     /**
+     * @param int $id
      * @return AbstractModelSingle|IModel
      * @throws BadRequestException
      */
-    public function getEntity() {
+    public function loadEntity(int $id) {
         // protection for tests ev. change URL during app is running
-        if ($this->model && $this->id !== $this->model->getPrimary()) {
+        if ($this->model && $id !== $this->model->getPrimary()) {
             $this->model = null;
         }
         if (!$this->model) {
-            $model = $this->getORMService()->findByPrimary($this->id);
+            $model = $this->getORMService()->findByPrimary($id);
             if (!$model) {
                 throw new BadRequestException('Model neexistuje');
             }

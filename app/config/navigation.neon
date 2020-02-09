@@ -63,6 +63,8 @@ navigation:
         fyziklani.rooms.default:
             - fyziklani.rooms.edit
             - fyziklani.rooms.download
+            - fyziklani.rooms.preview
+            - fyziklani.rooms.list
         fyziklani.results.default:
             - fyziklani.dashboard.default
             - fyziklani.results.resultsFinal
