@@ -55,7 +55,7 @@ parameters:
     #send blank emails by spamMailer
     spamMailer:
         enabled: true
-        defualtLimit: 100
+        defaultLimit: 100
 
 nette:
     session:
