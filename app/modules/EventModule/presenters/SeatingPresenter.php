@@ -125,7 +125,7 @@ class SeatingPresenter extends BasePresenter {
      */
     public function renderList() {
         $this->template->event = $this->getEvent();
-        $teams = $this->getEvent()->getTeams()->limit(5);
+        $teams = $this->getEvent()->getTeams();
         $this->template->teams = $teams;
         $toPayAll = [];
         foreach ($teams as $row) {
