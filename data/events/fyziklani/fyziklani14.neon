@@ -176,6 +176,7 @@ events:
                         factory: RefPerson(%events.fyziklani14.teacher%, email, true, role('admin'), false)
                     note:
                         label: _('Note')
+                        modifiable: %events.fyziklani14.appCond%
                         required: false
                         visible: true
             #   PARTICIPANT
