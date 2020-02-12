@@ -1,10 +1,10 @@
+import { Team } from '@apps/fyziklani/helpers/interfaces';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
     Action,
     Dispatch,
 } from 'redux';
-import { Team } from '../../../fyziklani/helpers/interfaces';
 import { setPosition } from '../actions/setPosition';
 import { FyziklaniResultsPresentationStore } from '../reducers';
 

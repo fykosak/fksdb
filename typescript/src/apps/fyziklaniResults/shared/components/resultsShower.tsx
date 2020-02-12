@@ -27,7 +27,7 @@ class ResultsShower extends React.Component<StateProps & OwnProps, {}> {
                     </div>) :
                     (<div className={this.props.className}>
                         <div className={'logo row'}>
-                            <img className={'col-3 offset-1'} alt="" src="/images/fof/logo2.svg"/>
+                            <img className={'col-3 offset-1'} alt="" src="/images/fof/logo-2020.svg"/>
                         </div>
                         <Images/>
                         <Timer mode={'big'}/>

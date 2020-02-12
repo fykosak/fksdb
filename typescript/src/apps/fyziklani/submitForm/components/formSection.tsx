@@ -21,6 +21,7 @@ import CodeInput from './input';
 import Scan from './scan';
 import SubmitButtons from './submitButtons';
 import ValueDisplay from './valueDisplay';
+import { lang } from '@i18n/i18n';
 
 export interface OwnProps {
     accessKey: string;
@@ -51,7 +52,7 @@ class FormSection extends React.Component<OwnProps & StateProps, {}> {
                 })}
                 <div className="row">
                     <div className="col-lg-6 col-md-12 mb-3">
-                        <h3 className={'fyziklani-headline-color'}>Task's code</h3>
+                        <h3 className={'fyziklani-headline-color'}>{lang.getText('Code')}</h3>
                         <div className="form-group">
                             <Field name="code" component={CodeInput}/>
                         </div>
