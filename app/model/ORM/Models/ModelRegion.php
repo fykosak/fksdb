@@ -42,6 +42,9 @@ class ModelRegion extends AbstractModelSingle {
             case 9:
                 $regExp = '(\d{3})(\d{3})(\d{3})';
                 break;
+            case 10:
+                $regExp = '(\d{2})(\d{4})(\d{4})';
+                break;
             default:
                 $regExp = '(\d{' . $this->phone_nsn . '})';
         }

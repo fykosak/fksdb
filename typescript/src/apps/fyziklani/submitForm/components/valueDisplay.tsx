@@ -1,3 +1,4 @@
+import { getFullCode, getTask, getTeam } from '@apps/fyziklani/submitForm/middleware/form';
 import * as React from 'react';
 import {
     Task,
@@ -18,23 +19,9 @@ export default class ValueDisplay extends React.Component<OwnProps, {}> {
         if (!value) {
             return null;
         }
-        const length = value.length;
-        const code = '0'.repeat(9 - length) + value;
-
-        const matchedTeam = code.match(/^([0-9]+)/);
-
-        const team = teams.filter((currentTeam) => {
-            return currentTeam.teamId === +matchedTeam[1];
-        })[0];
-
-        const matchedLabel = code.match(/([a-zA-Z]{2})/);
-        let task = null;
-        if (matchedLabel) {
-            // const label = extractTaskLabel(code);
-            task = tasks.filter((currentTask) => {
-                return currentTask.label === matchedLabel[1].toUpperCase();
-            })[0];
-        }
+        const fullCode = getFullCode(value);
+        const team = getTeam(fullCode, teams);
+        const task = getTask(fullCode, tasks);
 
         return (
             <>

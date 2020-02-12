@@ -131,21 +131,7 @@ parameters:
                 # place to others onfo
                 note:
                   required: false
-        adminEventOrg:
-            person:
-                other_name:
-                  required: true
-                family_name:
-                  required: true
-            person_info:
-                email:
-                  required: true
-                phone:
-                  required: false
-                uk_login:
-                  required: false
-                account:
-                  required: false
+        adminEventOrg: %fykos.adminOrg%
         adminTeacher:
             person:
                 other_name:

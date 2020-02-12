@@ -6,16 +6,12 @@ use FKSDB\Components\Controls\Fyziklani\RoutingDownload;
 use FKSDB\Components\Controls\Fyziklani\RoutingEdit;
 use FKSDB\Components\Controls\Fyziklani\SeatingControl;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\ORM\Models\ModelPayment;
-use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use FKSDB\React\ReactResponse;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\DeprecatedException;
 use ReactMessage;
-use Tracy\Debugger;
 
 /**
  *
@@ -60,21 +56,14 @@ class SeatingPresenter extends BasePresenter {
         $this->setIcon('fa fa-search');
     }
 
-
-    /**
-     * @throws AbortException
-     * @throws BadRequestException
-     */
     public function authorizedEdit() {
-        $this->setAuthorized(($this->eventIsAllowed('event.seating', 'edit')));
+        $this->setAuthorized(false);
+        // $this->setAuthorized(($this->eventIsAllowed('event.seating', 'edit')));
     }
 
-    /**
-     * @throws AbortException
-     * @throws BadRequestException
-     */
     public function authorizedDownload() {
-        $this->setAuthorized(($this->eventIsAllowed('event.seating', 'download')));
+        $this->setAuthorized(false);
+        // $this->setAuthorized(($this->eventIsAllowed('event.seating', 'download')));
     }
 
     /**

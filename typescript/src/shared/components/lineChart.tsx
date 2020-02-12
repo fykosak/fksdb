@@ -1,6 +1,5 @@
 import AbstractChart from '@shared/components/chart';
 import {
-    Axis,
     axisBottom,
     axisLeft,
 } from 'd3-axis';
@@ -11,11 +10,9 @@ import {
 import { select } from 'd3-selection';
 import {
     curveBasis, CurveFactory, curveMonotoneX,
-    line,
 } from 'd3-shape';
 import * as React from 'react';
-import { getAreaPath, getLinePath, PointData } from '../../apps/fyziklani/statistics/middleware/charts/lines';
-import { timeMinute } from 'd3-time';
+import { getAreaPath, getLinePath, PointData } from '../../apps/fyziklaniResults/statistics/middleware/charts/lines';
 
 export type LineChartData = Array<{
     name: string;
@@ -117,7 +114,7 @@ export default class LineChart extends AbstractChart<OwnProps, {}> {
     private getAxis(): void {
         const {xScale, yScale, display} = this.props;
         const xAxis = axisBottom(xScale);
-        const yAxis = axisLeft<number>(yScale)
+        const yAxis = axisLeft<number>(yScale);
         if (display && display.xGrid) {
             xAxis.tickSizeInner(-this.size.height + (this.margin.top + this.margin.bottom));
         }

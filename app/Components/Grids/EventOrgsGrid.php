@@ -5,6 +5,7 @@ namespace FKSDB\Components\Grids;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventOrg;
 use FKSDB\ORM\Services\ServiceEventOrg;
+use NiftyGrid\DataSource\NDataSource;
 use SQL\SearchableDataSource;
 
 /**
@@ -46,7 +47,7 @@ class EventOrgsGrid extends BaseGrid {
 
         $orgs = $this->serviceEventOrg->findByEventId($this->event);
 
-        $dataSource = new SearchableDataSource($orgs);
+        $dataSource = new NDataSource($orgs);
         $this->setDataSource($dataSource);
         $this->addColumn('display_name', _('Jméno'))->setRenderer(function ($row) {
             $eventOrg = ModelEventOrg::createFromActiveRow($row);

@@ -19,6 +19,10 @@ class PhoneNumberFactory {
      * @var ServiceRegion
      */
     private $serviceRegion;
+    /**
+     * @var TypedTableSelection
+     */
+    private $table;
 
     /**
      * PhoneNumberFactory constructor.
@@ -26,13 +30,14 @@ class PhoneNumberFactory {
      */
     public function __construct(ServiceRegion $serviceRegion) {
         $this->serviceRegion = $serviceRegion;
+        $this->table = $this->serviceRegion->getTable();
     }
 
     /**
      * @return TypedTableSelection
      */
     private function getAllRegions(): TypedTableSelection {
-        return $this->serviceRegion->getTable();
+        return $this->table;
     }
 
     /**

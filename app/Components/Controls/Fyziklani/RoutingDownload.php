@@ -57,10 +57,10 @@ class RoutingDownload extends Control {
      *
      */
     public function render() {
-        $rooms = $this->serviceFyziklaniRoom->getRoomsByIds($this->event->getParameter('gameSetup')['rooms']);
+        $rooms = $this->serviceFyziklaniRoom->getRoomsByIds($this->event->getParameter('rooms'));
 
         $this->template->rooms = $rooms;
-        $this->template->buildings = $this->event->getParameter('gameSetup')['buildings'];
+       // $this->template->buildings = $this->event->getParameter('gameSetup')['buildings'];
         $this->template->teams = $this->serviceFyziklaniTeam->getTeamsAsArray($this->event);
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'RoutingDownload.latte');
         $this->template->setTranslator($this->translator);
