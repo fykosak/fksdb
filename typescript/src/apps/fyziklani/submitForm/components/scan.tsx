@@ -1,9 +1,8 @@
-import * as React from 'react';
-import { ChangeEvent } from 'react';
-import { WrappedFieldProps } from 'redux-form';
 import { lang } from '@i18n/i18n';
+import * as React from 'react';
+import { WrappedFieldProps } from 'redux-form';
 
-export default class Scan extends React.Component<WrappedFieldProps & {}, { processing: boolean, messages: string[] }> {
+export default class Scan extends React.Component<WrappedFieldProps & {}, { processing: boolean; messages: string[] }> {
     constructor(props) {
         super(props);
         this.state = {processing: false, messages: []};
@@ -42,7 +41,7 @@ export default class Scan extends React.Component<WrappedFieldProps & {}, { proc
         </>;
     }
 
-    private handleOnChange(event: ChangeEvent<HTMLInputElement>) {
+    private handleOnChange(event: React.ChangeEvent<HTMLInputElement>) {
         event.persist();
         this.setState({processing: true, messages: []});
         this.preprocessImage(event).then((code) => {
@@ -53,7 +52,7 @@ export default class Scan extends React.Component<WrappedFieldProps & {}, { proc
         });
     }
 
-    private preprocessImage(event: ChangeEvent<HTMLInputElement>) {
+    private preprocessImage(event: React.ChangeEvent<HTMLInputElement>) {
         return new Promise<string>((resolve, reject) => {
             const reader = new FileReader();
             reader.onload = () => {
@@ -81,5 +80,3 @@ export default class Scan extends React.Component<WrappedFieldProps & {}, { proc
         reject('Failed to parse link.');
     }
 }
-
-

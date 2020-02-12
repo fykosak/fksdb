@@ -82,22 +82,8 @@ class ScheduleField extends TextInput {
     /**
      * @return string
      */
-    public function getMode(): string {
-        return $this->type;
-    }
-
-    /**
-     * @return string
-     */
-    public function getComponentName(): string {
-        return 'schedule';
-    }
-
-    /**
-     * @return string
-     */
-    public function getModuleName(): string {
-        return 'event';
+    protected function getReactId(): string {
+       return 'event.schedule.'.$this->type;
     }
 
     /**
@@ -160,12 +146,5 @@ class ScheduleField extends TextInput {
 
         $groupArray['items'] = $itemList;
         return $groupArray;
-    }
-
-    /**
-     * @return array
-     */
-    public function getActions(): array {
-        return [];
     }
 }

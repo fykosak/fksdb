@@ -4,6 +4,7 @@ namespace FKSDB\ORM\Models;
 
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\ORM\Tables\TypedTableSelection;
 use FKSDB\Payment\IPaymentModel;
@@ -126,7 +127,7 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
     }
 
     /**
-     * @return ModelPayment
+     * @return ModelPayment|IModel|ActiveRow|AbstractModelSingle
      */
     public function refresh(): IStateModel {
         $query = new TypedTableSelection(self::class, DbNames::TAB_PAYMENT, $this->getTable()->getConnection());
