@@ -66,7 +66,7 @@ class PersonContainerResolver implements IVisibilityResolver, IModifiabilityReso
      * @return bool|mixed
      */
     public function isModifiable(ModelPerson $person) {
-        return/* $this->selfResolver->isModifiable($person) || */$this->evaluator->evaluate($this->condition, $this->field);
+        return $this->selfResolver->isModifiable($person) || $this->evaluator->evaluate($this->condition, $this->field);
     }
 
     /**

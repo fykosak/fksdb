@@ -67,8 +67,7 @@
         <hr/>
     {/foreach}
     {include ../AbstractApplication/applicationControl.latte}
-
-    <h2>
-        {control seating:team $event,$model->getPrimary(),$model->game_lang}
-    </h2>
+    <hr/>
+    <h2>{_'Seating'}</h2>
+    {control seating:team $event,$model->getPrimary(),$model->game_lang}
 {/block}
