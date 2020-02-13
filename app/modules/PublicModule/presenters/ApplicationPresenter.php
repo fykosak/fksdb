@@ -135,9 +135,21 @@ class ApplicationPresenter extends BasePresenter {
     /**
      * @param $eventId
      * @param $id
+     * @throws BadRequestException
      */
     public function authorizedDefault($eventId, $id) {
-
+        /**
+         * @var ModelEvent $event
+         */
+        $event = $this->getEvent();
+        if ($this->contestAuthorizator->isAllowed('event.participant', 'edit', $event->getContest())
+            || $this->contestAuthorizator->isAllowed('fyziklani.team', 'edit', $event->getContest())) {
+            $this->setAuthorized(true);
+            return;
+        }
+        if (strtotime($event->registration_begin) > time() || strtotime($event->registration_end) < time()) {
+            throw new BadRequestException('Gone', 410);
+        }
     }
 
     public function authorizedList() {
