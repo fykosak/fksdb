@@ -7,6 +7,7 @@ use Events\Model\ExpressionEvaluator;
 use FKSDB\Components\Forms\Factories\Events\IFieldFactory;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Container;
+use Nette\Forms\IControl;
 use Nette\FreezableObject;
 
 /**
@@ -220,7 +221,7 @@ class Field extends FreezableObject {
 
     /**
      * @param Component $component
-     * @return \Nette\Forms\IControl
+     * @return IControl
      */
     public function getMainControl(Component $component) {
         return $this->factory->getMainControl($component);

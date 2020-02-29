@@ -2,10 +2,10 @@
 
 namespace FKSDB\Payment\PriceCalculator;
 
-use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\Payment\Price;
 use FKSDB\Payment\PriceCalculator\PreProcess\AbstractPreProcess;
+use function array_merge;
 
 /**
  * Class PriceCalculator
@@ -16,29 +16,6 @@ class PriceCalculator {
      * @var AbstractPreProcess[]
      */
     private $preProcess = [];
-    /**
-     * @var \FKSDB\ORM\Models\ModelEvent
-     */
-    private $event;
-    /**
-     * @var string
-     */
-    private $currency;
-
-    /**
-     * PriceCalculator constructor.
-     * @param \FKSDB\ORM\Models\ModelEvent $event
-     */
-    public function __construct(ModelEvent $event) {
-        $this->event = $event;
-    }
-
-    /**
-     * @param $currency
-     */
-    public function setCurrency(string $currency) {
-        $this->currency = $currency;
-    }
 
     /**
      * @param AbstractPreProcess $preProcess
@@ -49,44 +26,26 @@ class PriceCalculator {
 
     /**
      * @param ModelPayment $modelPayment
-     * @return Price
+     * @return void
      */
-    public function execute(ModelPayment $modelPayment): Price {
-        $price = new Price(0, $this->getCurrency());
+    public final function __invoke(ModelPayment $modelPayment) {
+        $price = new Price(0, $modelPayment->currency);
         foreach ($this->preProcess as $preProcess) {
             $subPrice = $preProcess->calculate($modelPayment);
             $price->add($subPrice);
         }
-        return $price;
+        $modelPayment->update(['price' => $price->getAmount(), 'currency' => $price->getCurrency()]);
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelPayment $modelPayment
+     * @param ModelPayment $modelPayment
      * @return array[]
      */
     public function getGridItems(ModelPayment $modelPayment): array {
         $items = [];
         foreach ($this->preProcess as $preProcess) {
-            $items = \array_merge($items, $preProcess->getGridItems($modelPayment));
+            $items = array_merge($items, $preProcess->getGridItems($modelPayment));
         }
         return $items;
     }
-
-    /**
-     * @return string
-     */
-    private function getCurrency(): string {
-        if ($this->currency == null) {
-            throw new \InvalidArgumentException('Currency is not set');
-        }
-        return $this->currency;
-    }
-
-    /**
-     * @return array
-     */
-    public function getCurrencies(): array {
-        return Price::getAllCurrencies();
-    }
-
 }

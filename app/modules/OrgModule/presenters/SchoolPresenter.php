@@ -5,13 +5,19 @@ namespace OrgModule;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\SchoolFactory;
-use FKSDB\Components\Grids\SchoolsGrid;
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
+use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServiceAddress;
 use FKSDB\ORM\Services\ServiceSchool;
 use FormUtils;
 use ModelException;
+use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
+use Nette\Database\Table\ActiveRow;
+use Nette\DeprecatedException;
+use ReflectionException;
 use Tracy\Debugger;
 use Nette\NotImplementedException;
 
@@ -28,12 +34,12 @@ class SchoolPresenter extends EntityPresenter {
     protected $modelResourceId = 'school';
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceSchool
+     * @var ServiceSchool
      */
     private $serviceSchool;
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceAddress
+     * @var ServiceAddress
      */
     private $serviceAddress;
 
@@ -48,7 +54,7 @@ class SchoolPresenter extends EntityPresenter {
     private $addressFactory;
 
     /**
-     * @param \FKSDB\ORM\Services\ServiceSchool $serviceSchool
+     * @param ServiceSchool $serviceSchool
      */
     public function injectServiceSchool(ServiceSchool $serviceSchool) {
         $this->serviceSchool = $serviceSchool;
@@ -75,11 +81,6 @@ class SchoolPresenter extends EntityPresenter {
         $this->addressFactory = $addressFactory;
     }
 
-    public function titleList() {
-        $this->setTitle(_('Školy'));
-        $this->setIcon('fa fa-university');
-    }
-
     public function titleCreate() {
         $this->setTitle(_('Založit školu'));
         $this->setIcon('fa fa-plus');
@@ -99,7 +100,7 @@ class SchoolPresenter extends EntityPresenter {
     /**
      * @param $name
      * @return FormControl
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     protected function createComponentCreateComponent($name) {
         $control = $this->createForm();
@@ -114,19 +115,19 @@ class SchoolPresenter extends EntityPresenter {
     /**
      * @param $name
      * @return FormControl
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     protected function createComponentEditComponent($name) {
         $control = $this->createForm();
         $form = $control->getForm();
-        $form->addSubmit('send', _('Uložit'));
+        $form->addSubmit('send', _('Save'));
         $form->onSuccess[] = [$this, 'handleEditFormSuccess'];
 
         return $control;
     }
 
     /**
-     * @param \FKSDB\ORM\IModel|null $model
+     * @param IModel|null $model
      * @param Form $form
      */
     protected function setDefaults(IModel $model = null, Form $form) {
@@ -134,7 +135,7 @@ class SchoolPresenter extends EntityPresenter {
             return;
         }
         /**
-         * @var \FKSDB\ORM\Models\ModelSchool $model
+         * @var ModelSchool $model
          */
         $defaults = [
             self::CONT_SCHOOL => $model->toArray(),
@@ -145,16 +146,8 @@ class SchoolPresenter extends EntityPresenter {
     }
 
     /**
-     * @param $name
-     * @return SchoolsGrid
-     */
-    protected function createComponentGrid($name) {
-        return new SchoolsGrid($this->serviceSchool);
-    }
-
-    /**
      * @return FormControl
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     private function createForm() {
         $control = new FormControl();
@@ -170,17 +163,17 @@ class SchoolPresenter extends EntityPresenter {
 
     /**
      * @param $id
-     * @return \FKSDB\ORM\AbstractModelSingle|\Nette\Database\Table\ActiveRow|null
+     * @return AbstractModelSingle|ActiveRow|null
      */
     protected function loadModel($id) {
         return $this->serviceSchool->findByPrimary($id);
     }
 
     /**
-     * @internal
      * @param Form $form
-     * @throws \Nette\Application\AbortException
-     * @throws \ReflectionException
+     * @throws AbortException
+     * @throws ReflectionException
+     * @internal
      */
     public function handleCreateFormSuccess(Form $form) {
         $connection = $this->serviceSchool->getConnection();
@@ -216,7 +209,7 @@ class SchoolPresenter extends EntityPresenter {
 
             $this->flashMessage(_('Škola založena'), self::FLASH_SUCCESS);
             $this->backLinkRedirect();
-            $this->redirect('list'); // if there's no backlink
+            $this->redirect(':Common:school:list'); // if there's no backlink
         } catch (ModelException $exception) {
             $connection->rollBack();
             Debugger::log($exception, Debugger::ERROR);
@@ -225,10 +218,10 @@ class SchoolPresenter extends EntityPresenter {
     }
 
     /**
-     * @internal
      * @param Form $form
-     * @throws \Nette\Application\AbortException
-     * @throws \ReflectionException
+     * @throws AbortException
+     * @throws ReflectionException
+     * @internal
      */
     public function handleEditFormSuccess(Form $form) {
         $connection = $this->serviceSchool->getConnection();
@@ -264,7 +257,7 @@ class SchoolPresenter extends EntityPresenter {
 
             $this->flashMessage(_('Škola upravena'), self::FLASH_SUCCESS);
             $this->backLinkRedirect();
-            $this->redirect('list'); // if there's no backlink
+            $this->redirect(':Common:School:list'); // if there's no backlink
         } catch (ModelException $exception) {
             $connection->rollBack();
             Debugger::log($exception, Debugger::ERROR);
@@ -272,4 +265,10 @@ class SchoolPresenter extends EntityPresenter {
         }
     }
 
+    /**
+     * @inheritDoc
+     */
+    protected function createComponentGrid($name) {
+        throw new DeprecatedException();
+    }
 }

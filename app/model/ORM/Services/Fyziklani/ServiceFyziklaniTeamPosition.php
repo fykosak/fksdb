@@ -5,6 +5,8 @@ namespace FKSDB\ORM\Services\Fyziklani;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Tables\TypedTableSelection;
 use Traversable;
 
 /**
@@ -48,7 +50,7 @@ class ServiceFyziklaniTeamPosition extends AbstractServiceSingle {
             $teamData = (object)$teamData;
             try {
                 /**
-                 * @var \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition $model
+                 * @var ModelFyziklaniTeamPosition $model
                  */
                 $model = $this->findByTeamId($teamData->teamId);
                 if (is_numeric($teamData->x) && is_numeric($teamData->y)) {
@@ -60,11 +62,10 @@ class ServiceFyziklaniTeamPosition extends AbstractServiceSingle {
                         'room_id' => $teamData->roomId,
                     ];
                     if (!$model) {
-                        $model = $this->createNew($data);
+                        $this->createNewModel($data);
                     } else {
-                        $this->updateModel($model, $data);
+                        $model->update($data);
                     }
-                    $this->save($model);
                     $updatedTeams[] = $teamData->teamId;
                 } else {
                     if ($model) {
@@ -77,5 +78,21 @@ class ServiceFyziklaniTeamPosition extends AbstractServiceSingle {
 
         }
         return $updatedTeams;
+    }
+
+    /**
+     * @param array $roomIds
+     * @return TypedTableSelection
+     */
+    public function getAllPlaces(array $roomIds): TypedTableSelection {
+        return $this->getTable()->where('room_id', $roomIds);
+    }
+
+    /**
+     * @param array $roomIds
+     * @return TypedTableSelection
+     */
+    public function getFreePlaces(array $roomIds): TypedTableSelection {
+        return $this->getAllPlaces($roomIds)->where('e_fyziklani_team IS NULL');
     }
 }

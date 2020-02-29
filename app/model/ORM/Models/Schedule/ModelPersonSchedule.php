@@ -4,6 +4,9 @@ namespace FKSDB\ORM\Models\Schedule;
 
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\IPaymentReferencedModel;
+use FKSDB\ORM\Models\IPersonReferencedModel;
+use FKSDB\ORM\Models\IScheduleGroupReferencedModel;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\Transitions\IStateModel;
@@ -20,7 +23,7 @@ use Nette\NotImplementedException;
  * @property-read string state
  * @property-read int person_schedule_id
  */
-class ModelPersonSchedule extends AbstractModelSingle implements IStateModel {
+class ModelPersonSchedule extends AbstractModelSingle implements IStateModel, IPersonReferencedModel, IScheduleGroupReferencedModel, IPaymentReferencedModel {
     /**
      * @return ModelPerson
      */
@@ -33,6 +36,13 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel {
      */
     public function getScheduleItem(): ModelScheduleItem {
         return ModelScheduleItem::createFromActiveRow($this->schedule_item);
+    }
+
+    /**
+     * @return ModelScheduleGroup
+     */
+    public function getScheduleGroup(): ModelScheduleGroup {
+        return $this->getScheduleItem()->getScheduleGroup();
     }
 
     /**
@@ -65,13 +75,16 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel {
      */
     public function getLabel(): string {
         $item = $this->getScheduleItem();
-        $group = $item->getGroup();
-        $itemLabel = $item->getLabel();
+        $group = $item->getScheduleGroup();
         switch ($group->schedule_group_type) {
             case ModelScheduleGroup::TYPE_ACCOMMODATION:
-                return \sprintf(_('%s: '),
-                        $this->getPerson()->getFullName()
-                    ) . $itemLabel;
+                return sprintf(_('Accommodation for %s from %s to %s in %s'),
+                    $this->getPerson()->getFullName(),
+                    $group->start->format(_('__date_format')),
+                    $group->end->format(_('__date_format')),
+                    $item->name_cs);
+            case ModelScheduleGroup::TYPE_WEEKEND:
+                return $item->getLabel();
             default:
                 throw new NotImplementedException();
         }

@@ -16,6 +16,7 @@ use Nette,
 	Nette\Database\IReflection,
 	Nette\Database\ISupplementalDriver,
 	Nette\Database\SqlLiteral;
+use Tracy\Debugger;
 
 
 /**
@@ -101,6 +102,8 @@ class SqlBuilder
 
 	public function importConditions(SqlBuilder $builder)
 	{
+        Debugger::barDump($builder,'SQLBImport');
+
 		$this->where = $builder->where;
 		$this->parameters = $builder->parameters;
 		$this->conditions = $builder->conditions;
@@ -127,6 +130,7 @@ class SqlBuilder
 
 	public function addWhere($condition, $parameters = array())
 	{
+	  //  Debugger::barDump($parameters,'SQLBParam');
 		$args = func_get_args();
 		$hash = md5(json_encode($args));
 		if (isset($this->conditions[$hash])) {
@@ -174,7 +178,8 @@ class SqlBuilder
 
 				if ($this->driverName !== 'mysql') {
 					$replace = 'IN (' . $clone->getSql() . ')';
-					$this->parameters = array_merge($this->parameters, $clone->getSqlBuilder()->getParameters());
+                    Debugger::barDump(array_merge($this->parameters, $clone->getSqlBuilder()->getParameters()),' SQLBmerge');
+                    $this->parameters = array_merge($this->parameters, $clone->getSqlBuilder()->getParameters());
 				} else {
 					$parameter = array();
 					foreach ($clone as $row) {

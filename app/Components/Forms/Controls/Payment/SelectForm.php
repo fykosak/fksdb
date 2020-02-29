@@ -24,6 +24,7 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
+use Nette\Utils\JsonException;
 use function json_encode;
 
 /**
@@ -124,8 +125,9 @@ class SelectForm extends Control {
 
     /**
      * @return FormControl
-     * @throws UnsupportedCurrencyException
      * @throws BadRequestException
+     * @throws UnsupportedCurrencyException
+     * @throws JsonException
      */
     public function createComponentFormEdit() {
         return $this->createForm(false);
@@ -133,8 +135,9 @@ class SelectForm extends Control {
 
     /**
      * @return FormControl
-     * @throws UnsupportedCurrencyException
      * @throws BadRequestException
+     * @throws UnsupportedCurrencyException
+     * @throws JsonException
      */
     public function createComponentFormCreate() {
         return $this->createForm(true);
@@ -145,6 +148,7 @@ class SelectForm extends Control {
      * @return FormControl
      * @throws UnsupportedCurrencyException
      * @throws BadRequestException
+     * @throws JsonException
      */
     private function createForm(bool $create) {
         $control = new FormControl();
@@ -157,7 +161,7 @@ class SelectForm extends Control {
         $currencyField = new CurrencyField();
         $currencyField->setRequired(_('Please select currency'));
         $form->addComponent($currencyField, 'currency');
-        $form->addComponent(new PaymentSelectField($this->servicePersonSchedule, $this->event, $this->type, !$create), 'payment_accommodation');
+        $form->addComponent(new PaymentSelectField($this->servicePersonSchedule, $this->event, [$this->type], !$create), 'payment_accommodation');
         $form->addSubmit('submit', $create ? _('Proceed to summary') : _('Save payment'));
         $form->onSuccess[] = function (Form $form) use ($create) {
             $this->handleSubmit($form, $create);
@@ -230,12 +234,10 @@ class SelectForm extends Control {
     }
 
     /**
-     * @param ModelPayment $model
      * @throws BadRequestException
      */
-    public function renderEdit(ModelPayment $model) {
-        $this->model = $model;
-        $values = $model->toArray();
+    public function renderEdit() {
+        $values = $this->model->toArray();
         $values['payment_accommodation'] = $this->serializeScheduleValue();
         /**
          * @var FormControl $control

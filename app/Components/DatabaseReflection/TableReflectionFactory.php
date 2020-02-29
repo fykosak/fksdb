@@ -3,8 +3,8 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
+use FKSDB\Components\DatabaseReflection\Links\AbstractLink;
 use FKSDB\Components\DatabaseReflection\RowFactoryComponent;
-use FKSDB\ORM\AbstractModelSingle;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\Localization\ITranslator;
@@ -17,11 +17,6 @@ use Nette\Utils\Html;
  */
 final class TableReflectionFactory {
     use SmartObject;
-
-    /**
-     * @var AbstractRow[]
-     */
-    private $fieldFactories = [];
     /**
      * @var Container
      */
@@ -49,14 +44,23 @@ final class TableReflectionFactory {
      * @throws \Exception
      */
     public function loadService(string $tableName, string $fieldName): AbstractRow {
-        if (isset($this->fieldFactories[$fieldName])) {
-            return $this->fieldFactories[$fieldName];
-        }
-        $service = $this->container->getService('row.' . $tableName . '.' . $fieldName);
+        $service = $this->container->getService('DBReflection.' . $tableName . '.' . $fieldName);
         if (!$service instanceof AbstractRow) {
             throw new InvalidArgumentException('Field ' . $tableName . '.' . $fieldName . ' not exists');
         }
-        $this->fieldFactories[$fieldName] = $service;
+        return $service;
+    }
+
+    /**
+     * @param $linkId
+     * @return AbstractLink
+     * @throws \Exception
+     */
+    public function loadLinkFactory($linkId): AbstractLink {
+        $service = $this->container->getService('DBReflection.link.' . $linkId);
+        if (!$service instanceof AbstractLink) {
+            throw new InvalidArgumentException('LinkFactory ' . $linkId . ' not exists');
+        }
         return $service;
     }
 
@@ -81,12 +85,35 @@ final class TableReflectionFactory {
     /**
      * @param string $tableName
      * @param string $fieldName
-     * @param AbstractModelSingle $modelSingle
      * @param int $userPermissionLevel
-     * @return \Nette\Utils\Html
+     * @return callable
      * @throws \Exception
      */
-    public function createGridValue(string $tableName, string $fieldName, AbstractModelSingle $modelSingle, int $userPermissionLevel): Html {
-        return $this->loadService($tableName, $fieldName)->renderValue($modelSingle, $userPermissionLevel);
+    public function createGridCallback(string $tableName, string $fieldName, int $userPermissionLevel): callable {
+        $factory = $this->loadService($tableName, $fieldName);
+        return function ($model) use ($factory, $userPermissionLevel): Html {
+            return $factory->renderValue($model, $userPermissionLevel);
+        };
+    }
+
+
+    /**
+     * @param array $rows
+     * @return array
+     */
+    public static function parseRows(array $rows): array {
+        $items = [];
+        foreach ($rows as $item) {
+            $items[] = self::parseRow($item);
+        }
+        return $items;
+    }
+
+    /**
+     * @param string $row
+     * @return array
+     */
+    public static function parseRow(string $row): array {
+        return explode('.', $row);
     }
 }

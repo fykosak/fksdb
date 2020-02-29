@@ -1,7 +1,8 @@
+import { Task, Team } from '@apps/fyziklani/helpers/interfaces';
 import { FormErrors } from 'redux-form';
-import { Props } from '../components/formSection';
+import { OwnProps } from '../components/formSection';
 
-export const getFullCode = (code): string => {
+export const getFullCode = (code: string): string => {
     const length = code.length;
     return (('0').repeat(9 - length) + code).toLocaleUpperCase();
 };
@@ -27,42 +28,50 @@ const getControl = (subCode: Array<string | number>): number => {
         (+subCode[1] + +subCode[4] + +subCode[7]) * 7 +
         (+subCode[2] + +subCode[5] + +subCode[8]);
 };
+export const getTeam = (fullCode: string, teams: Team[]): Team => {
+    const matchedTeam = fullCode.match(/^([0-9]+)/);
+    if (!matchedTeam) {
+        return null;
+    }
+    return teams.filter((currentTeam) => {
+        return currentTeam.teamId === +matchedTeam[1];
+    })[0];
+};
 
-export const validate = (values, props: Props): FormErrors<any> => {
+export const getTask = (fullCode: string, tasks: Task[]): Task => {
+    const matchedLabel = fullCode.match(/^[0-9]+([a-zA-Z]{2})/);
+
+    if (!matchedLabel) {
+        return null;
+    }
+    return tasks.filter((currentTask) => {
+        return currentTask.label === matchedLabel[1].toUpperCase();
+    })[0];
+};
+
+export const validate = (values, props: OwnProps): FormErrors<any> => {
     const errors: { code?: string } = {};
 
     if (!values.code) {
         errors.code = 'Code is empty.';
         return errors;
     }
-    const length = values.code.length;
-    const code = '0'.repeat(9 - length) + values.code;
+    const fullCode = getFullCode(values.code);
 
-    const matchedTeam = code.match(/^([0-9]+)/);
-
-    if (!props.teams.some((currentTeam) => {
-        return currentTeam.teamId === +matchedTeam[1];
-    })) {
+    if (!getTeam(fullCode, props.teams)) {
         errors.code = 'Team does not exists.';
     }
-
-    const matchedLabel = code.match(/([a-zA-Z]{2})/);
-    if (matchedLabel) {
-        // const label = extractTaskLabel(code);
-        if (!props.tasks.some((currentTask) => {
-            return currentTask.label === matchedLabel[1].toUpperCase();
-        })) {
-            errors.code = 'Task does not exists.';
-        }
+    if (!getTask(fullCode, props.tasks)) {
+        errors.code = 'Task does not exists.';
     }
-    const matchedControl = code.match(/[a-zA-Z]{2}([0-9])/);
-    if (matchedControl) {
-        if (!isValidFullCode(code)) {
+
+    if (fullCode.match(/[a-zA-Z]{2}([0-9])$/)) {
+        if (!isValidFullCode(fullCode)) {
             errors.code = 'Invalid control';
         }
     }
-    if (!code.match(/([0-9]{6}[a-zA-Z]{2}[0-9])/)) {
-        errors.code = 'Code is too sort.';
+    if (!fullCode.match(/^([0-9]{6}[a-zA-Z]{2}[0-9])$/)) {
+        errors.code = 'Invalid code format';
     }
 
     return errors;

@@ -7,6 +7,10 @@ use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Utils\Html;
 
+/**
+ * Class CreatedRow
+ * @package FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniSubmit
+ */
 class CreatedRow extends AbstractFyziklaniSubmitRow {
     /**
      * @return string

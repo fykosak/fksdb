@@ -52,7 +52,7 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
      * @param ModelCategory $category
      * @return array
      */
-    public function getDataColumns($category) {
+    public function getDataColumns(ModelCategory $category) {
         if ($this->series === null) {
             throw new InvalidStateException('Series not specified.');
         }
@@ -118,10 +118,10 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
     }
 
     /**
-     * @param $category
+     * @param ModelCategory $category
      * @return mixed|void
      */
-    protected function composeQuery($category) {
+    protected function composeQuery(ModelCategory $category) {
         throw new \Nette\NotSupportedException;
     }
 
@@ -129,7 +129,7 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
      * @param ModelCategory $category
      * @return array of Nette\Database\Row
      */
-    public function getData($category) {
+    public function getData(ModelCategory $category) {
         $categories = [];
         if ($category->id == ModelCategory::CAT_ALL) {
             $categories = $this->cumulativeResultsModel->getCategories();
@@ -160,28 +160,28 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
             $result[] = $resultRow;
         }
         usort($result, function ($a, $b) {
-            return ($a[self::ALIAS_SUM] > $b[self::ALIAS_SUM]) ? -1 : 1;
+            return ($a[self::ALIAS_UNWEIGHTED_SUM] > $b[self::ALIAS_UNWEIGHTED_SUM]) ? -1 : 1;
         });
 
         $prevSum = false;
         for ($i = 0; $i < count($result); $i++) {
-            if ($result[$i][self::ALIAS_SUM] !== $prevSum) {
+            if ($result[$i][self::ALIAS_UNWEIGHTED_SUM] !== $prevSum) {
                 $result[$i][self::DATA_RANK_FROM] = $i + 1;
             } else {
                 $result[$i][self::DATA_RANK_FROM] = $result[$i - 1][self::DATA_RANK_FROM];
             }
-            $prevSum = $result[$i][self::ALIAS_SUM];
+            $prevSum = $result[$i][self::ALIAS_UNWEIGHTED_SUM];
         }
 
         // reverse iteration to get ranking ranges
         $nextSum = false; //because last sum can be null
         for ($i = count($result) - 1; $i >= 0; --$i) {
-            if ($result[$i][self::ALIAS_SUM] !== $nextSum) {
+            if ($result[$i][self::ALIAS_UNWEIGHTED_SUM] !== $nextSum) {
                 $result[$i][self::DATA_RANK_TO] = $i + 1;
             } else {
                 $result[$i][self::DATA_RANK_TO] = $result[$i + 1][self::DATA_RANK_TO];
             }
-            $nextSum = $result[$i][self::ALIAS_SUM];
+            $nextSum = $result[$i][self::ALIAS_UNWEIGHTED_SUM];
         }
 
         return $result;
@@ -199,10 +199,10 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
 
     /**
      * @param $schoolContestants
-     * @param $category
+     * @param ModelCategory $category
      * @return array
      */
-    private function createResultRow($schoolContestants, $category) {
+    private function createResultRow($schoolContestants, ModelCategory $category) {
         $resultRow = [];
         foreach ($this->getDataColumns($category) as $column) {
             $resultRow[$column[self::COL_ALIAS]] = 0;

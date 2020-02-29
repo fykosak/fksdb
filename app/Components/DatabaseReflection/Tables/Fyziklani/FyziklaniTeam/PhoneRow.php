@@ -2,8 +2,10 @@
 
 namespace FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam;
 
+use FKSDB\Components\Controls\PhoneNumber\PhoneNumberFactory;
 use FKSDB\Components\DatabaseReflection\PhoneRowTrait;
 use FKSDB\Components\Forms\Factories\ITestedRowFactory;
+use Nette\Localization\ITranslator;
 
 /**
  * Class PhoneRow
@@ -11,6 +13,16 @@ use FKSDB\Components\Forms\Factories\ITestedRowFactory;
  */
 class PhoneRow extends AbstractFyziklaniTeamRow implements ITestedRowFactory {
     use PhoneRowTrait;
+
+    /**
+     * PhoneRow constructor.
+     * @param ITranslator $translator
+     * @param PhoneNumberFactory $phoneNumberFactory
+     */
+    public function __construct(ITranslator $translator, PhoneNumberFactory $phoneNumberFactory) {
+        parent::__construct($translator);
+        $this->phoneNumberFactory = $phoneNumberFactory;
+    }
 
     /**
      * @return string

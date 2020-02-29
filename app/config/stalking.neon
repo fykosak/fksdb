@@ -5,99 +5,173 @@ stalking:
             label: Base info
             minimalPermission: 1
             table: person
+            model: FKSDB\ORM\Models\ModelPerson
             rows:
-                - family_name
-                - other_name
-                - born_family_name
-                - display_name
-                - gender
-                - person_id
-                - created
+                - person.family_name
+                - person.other_name
+                - person.born_family_name
+                - person.display_name
+                - person.gender
+                - person.person_id
+                - person.created
 
         contact_info:
             layout: single
             label: Contact info
             minimalPermission: 1
             table: person_info
+            model: FKSDB\ORM\Models\ModelPersonInfo
             rows:
-                - email
-                - phone
+                - person_info.email
+                - person_info.phone
 
         contact_parents:
             layout: single
             label: Contact to parents
             minimalPermission: 128
             table: person_info
+            model: FKSDB\ORM\Models\ModelPersonInfo
             rows:
-                - phone_parent_m
-                - phone_parent_d
-                - email_parent_m
-                - email_parent_d
+                - person_info.phone_parent_m
+                - person_info.phone_parent_d
+                - person_info.email_parent_m
+                - person_info.email_parent_d
 
         academic_degree:
             layout: single
             label: Academic degree
             minimalPermission: 128
             table: person_info
+            model: FKSDB\ORM\Models\ModelPersonInfo
             rows:
-                - academic_degree_prefix
-                - academic_degree_suffix
+                - person_info.academic_degree_prefix
+                - person_info.academic_degree_suffix
 
         extended_info:
              layout: single
              label: Extended info
              minimalPermission: 128
              table: person_info
+             model: FKSDB\ORM\Models\ModelPersonInfo
              rows:
-                 - born
-                 - born_id
-                 - birthplace
-                 - id_number
-                 - employer
-                 - uk_login
-                 - health_insurance
-                 - citizenship
-                 - account
-                 - career
-                 - homepage
-                 - im
-                 - linkedin_id
-                 - note
-                 - origin
+                 - person_info.born
+                 - person_info.born_id
+                 - person_info.birthplace
+                 - person_info.id_number
+                 - person_info.employer
+                 - person_info.uk_login
+                 - person_info.health_insurance
+                 - person_info.citizenship
+                 - person_info.account
+                 - person_info.career
+                 - person_info.homepage
+                 - person_info.im
+                 - person_info.linkedin_id
+                 - person_info.note
+                 - person_info.origin
 
         login:
              layout: single
              label: Login
              minimalPermission: 128
              table: login
+             model: FKSDB\ORM\Models\ModelLogin
              rows:
-                 - login
-                 - login_id
-                 - hash
-                 - last_login
+                 - login.login
+                 - login.login_id
+                 - login.hash
+                 - login.last_login
 
         person_history:
             layout: multi
-            label: Peron history
+            label: Person history
             minimalPermission: 128
             table: person_history
-            item_headline: ac_year
+            links: []
+            model: FKSDB\ORM\Models\ModelPersonHistory
+            itemHeadline: person_history.ac_year
             rows:
-                - school_id
-                - study_year
-                - class
+                - person_history.school_id
+                - person_history.study_year
+                - person_history.class
 
         org:
             layout: multi
             label: Org
             minimalPermission: 128
             table: org
-            item_headline: contest_id
+            model: FKSDB\ORM\Models\ModelOrg
+            links:
+                - org.detail
+                - org.edit
+            itemHeadline: org.contest_id
             rows:
-                - since
-                - until
-                - role
-                - order
-                - contribution
-                - tex_signature
-                - domain_alias
+                - org.org_id
+                - org.since
+                - org.until
+                - org.role
+                - org.order
+                - org.contribution
+                - org.tex_signature
+                - org.domain_alias
+        payment:
+            layout: multi
+            label: Payment
+            minimalPermission: 128
+            table: payment
+            model: FKSDB\ORM\Models\ModelPayment
+            links:
+                - payment.detail
+            itemHeadline: payment.id
+            rows:
+                - payment.price
+                - payment.state
+                - referenced.event_link
+        contestant_base:
+            layout: multi
+            label: Contestant
+            minimalPermission: 128
+            table: contestant_base
+            model: FKSDB\ORM\Models\ModelContestant
+            links:
+                - contestatnt_base.edit
+            itemHeadline: contestant_base.ct_id
+            rows:
+                - contestant_base.year
+                - contestant_base.contest_id
+        event_participant:
+            layout: multi
+            label: Event Participant
+            minimalPermission: 128
+            table: event_participant
+            model: FKSDB\ORM\Models\ModelEventParticipant
+            links:
+                - event_participant.detail
+            itemHeadline: event_participant.event_participant_id
+            rows:
+                - event_participant.status
+                - event_participant.team
+                - referenced.event_link
+        event_org:
+            layout: multi
+            label: Event org
+            minimalPermission: 128
+            table: event_org
+            model: FKSDB\ORM\Models\ModelEventOrg
+            links: []
+            itemHeadline: event_org.event_org_id
+            rows:
+                - referenced.event_link
+                - event_org.note
+        event_teacher:
+            layout: multi
+            label: Event teacher
+            minimalPermission: 16
+            table: e_fyziklani_team
+            model: FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam
+            links:
+                - fyziklani_team.detail
+            itemHeadline: e_fyziklani_team.name
+            rows:
+                - referenced.event_link
+                - e_fyziklani_team.status

@@ -29,7 +29,7 @@ class PaymentSelectField extends TextInput {
     /**
      * @var string
      */
-    private $groupType;
+    private $groupTypes;
     /**
      * @var bool
      */
@@ -39,15 +39,15 @@ class PaymentSelectField extends TextInput {
      * PaymentSelectField constructor.
      * @param ServicePersonSchedule $servicePersonSchedule
      * @param ModelEvent $event
-     * @param string $groupType
+     * @param string[] $groupTypes
      * @param bool $showAll
      * @throws JsonException
      */
-    public function __construct(ServicePersonSchedule $servicePersonSchedule, ModelEvent $event, string $groupType, bool $showAll = true) {
+    public function __construct(ServicePersonSchedule $servicePersonSchedule, ModelEvent $event, array $groupTypes, bool $showAll = true) {
         parent::__construct();
         $this->servicePersonSchedule = $servicePersonSchedule;
         $this->event = $event;
-        $this->groupType = $groupType;
+        $this->groupTypes = $groupTypes;
         $this->showAll = $showAll;
         $this->appendProperty();
     }
@@ -58,8 +58,8 @@ class PaymentSelectField extends TextInput {
      */
     public function getData(): string {
         $query = $this->servicePersonSchedule->where('schedule_item.schedule_group.event_id', $this->event->event_id);
-        if ($this->groupType) {
-            $query->where('schedule_item.schedule_group.schedule_group_type', $this->groupType);
+        if (count($this->groupTypes)) {
+            $query->where('schedule_item.schedule_group.schedule_group_type IN', $this->groupTypes);
         }
         $items = [];
         foreach ($query as $row) {
@@ -67,7 +67,7 @@ class PaymentSelectField extends TextInput {
             $model->getPayment();
             if ($this->showAll || !$model->hasActivePayment()) {
                 $items[] = [
-                    'hasPayment' => $model->hasActivePayment(),
+                    'hasPayment' => false, //$model->hasActivePayment(),
                     'label' => $model->getLabel(),
                     'id' => $model->person_schedule_id,
                     'scheduleItem' => $model->getScheduleItem()->__toArray(),
@@ -83,28 +83,7 @@ class PaymentSelectField extends TextInput {
     /**
      * @return string
      */
-    public function getComponentName(): string {
-        return 'accommodation-select';
-    }
-
-    /**
-     * @return string
-     */
-    public function getMode(): string {
-        return '';
-    }
-
-    /**
-     * @return string
-     */
-    public function getModuleName(): string {
-        return 'payment';
-    }
-
-    /**
-     * @return array
-     */
-    public function getActions(): array {
-        return [];
+    protected function getReactId(): string {
+        return 'payment.schedule-select';
     }
 }

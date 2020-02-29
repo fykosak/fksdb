@@ -3,12 +3,13 @@
 namespace FKSDB\ORM\Tables;
 
 use Nette\Database\Connection;
-use Nette\Database\Table\Selection as TableSelection;
+use Nette\Database\Table\Selection;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @template TModel
  */
-class TypedTableSelection extends TableSelection {
+class TypedTableSelection extends Selection {
 
     /**
      * @var string

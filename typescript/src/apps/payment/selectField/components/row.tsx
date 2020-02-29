@@ -6,6 +6,7 @@ import { Dispatch } from 'redux';
 import { PaymentScheduleItem } from '../interfaces';
 import { Store } from '../reducer';
 
+// TODO
 interface OwnProps {
     item?: PaymentScheduleItem;
 }

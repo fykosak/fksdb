@@ -9,19 +9,21 @@ import { saveTeams } from '../../actions/save';
 import { Store as RoutingStore } from '../../reducers/';
 import jqXHR = JQuery.jqXHR;
 
-interface State {
-    teams?: Team[];
-    saving?: boolean;
-    error?: jqXHR<any>;
-
-    onSaveRouting?(teams: Team[]): void;
+interface StateProps {
+    teams: Team[];
+    saving: boolean;
+    error: jqXHR<any>;
 }
 
-interface Props {
+interface DispatchProps {
+    onSaveRouting(teams: Team[]): void;
+}
+
+interface OwnProps {
     accessKey: string;
 }
 
-class Form extends React.Component<State & Props, {}> {
+class Form extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
 
     public render() {
         const {onSaveRouting, teams, saving, error} = this.props;
@@ -35,14 +37,14 @@ class Form extends React.Component<State & Props, {}> {
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<Action>, ownProps: Props): State => {
+const mapDispatchToProps = (dispatch: Dispatch<Action>, ownProps: OwnProps): DispatchProps => {
     const {accessKey} = ownProps;
     return {
         onSaveRouting: (data: Team[]) => saveTeams(accessKey, dispatch, data),
     };
 };
 
-const mapStateToProps = (state: RoutingStore, ownProps: Props): State => {
+const mapStateToProps = (state: RoutingStore, ownProps: OwnProps): StateProps => {
     const {accessKey} = ownProps;
     return {
         error: state.fetchApi.hasOwnProperty(accessKey) ? state.fetchApi[accessKey].error : null,

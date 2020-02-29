@@ -12,13 +12,26 @@ import { ScheduleGroupDef } from '../middleware/interfaces';
 import { app } from '../reducer/';
 import Container from './container';
 
-interface Props {
-    scheduleDef: ScheduleGroupDef[];
+interface OwnProps {
+    scheduleDef: {
+        groups: ScheduleGroupDef[];
+        options: Params;
+    };
     input: HTMLInputElement;
     mode: string;
 }
 
-export default class Index extends React.Component<Props, {}> {
+export interface Params {
+    display: {
+        groupTime: boolean;
+        groupLabel: boolean;
+        capacity: boolean;
+        description: boolean;
+        price: boolean;
+    };
+}
+
+export default class Index extends React.Component<OwnProps, {}> {
 
     public render() {
         const store = config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
@@ -34,15 +47,9 @@ export default class Index extends React.Component<Props, {}> {
     }
 
     private getComponentByMode(): JSX.Element {
-        if (this.props.scheduleDef.length === 0) {
+        if (this.props.scheduleDef.groups.length === 0) {
             return <span className="text text-muted">{lang.getText('No items found.')}</span>;
         }
-        switch (this.props.mode) {
-            case 'accommodation':
-                return <Container groups={this.props.scheduleDef}/>;
-            default:
-                throw new Error('no match');
-        }
-
+        return <Container groups={this.props.scheduleDef.groups} params={this.props.scheduleDef.options}/>;
     }
 }

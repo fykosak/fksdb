@@ -11,13 +11,13 @@ use FKSDB\Transitions\Statements\Statement;
  */
 class LogicOr extends Statement {
     /**
-     * @var callable
+     * @var callable[]
      */
     private $args;
 
     /**
      * LogicOr constructor.
-     * @param mixed ...$args
+     * @param callable[] ...$args
      */
     public function __construct(...$args) {
         $this->args = $args;

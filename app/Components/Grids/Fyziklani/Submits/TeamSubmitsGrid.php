@@ -4,7 +4,6 @@ namespace FKSDB\Components\Grids\Fyziklani;
 
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\DbNames;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FyziklaniModule\BasePresenter;
@@ -30,7 +29,6 @@ class TeamSubmitsGrid extends SubmitsGrid {
      * @param TableReflectionFactory $tableReflectionFactory
      */
     public function __construct(ModelFyziklaniTeam $team, ServiceFyziklaniSubmit $serviceFyziklaniSubmit, TableReflectionFactory $tableReflectionFactory) {
-        $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
         $this->team = $team;
         parent::__construct($serviceFyziklaniSubmit, $tableReflectionFactory);
     }
@@ -45,15 +43,15 @@ class TeamSubmitsGrid extends SubmitsGrid {
         $this->paginate = false;
         $this->addColumnTask();
 
-        $this->addColumnPoints();
-        $this->addReflectionColumn(DbNames::TAB_FYZIKLANI_SUBMIT, 'created', ModelFyziklaniSubmit::class);
+        $this->addColumns([
+            DbNames::TAB_FYZIKLANI_SUBMIT . '.points',
+            DbNames::TAB_FYZIKLANI_SUBMIT . '.created',
+            DbNames::TAB_FYZIKLANI_SUBMIT . '.state',
+        ]);
+        $this->addLinkButton($presenter, ':Fyziklani:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);
+        $this->addLinkButton($presenter, ':Fyziklani:Submit:detail', 'detail', _('Detail'), false, ['id' => 'fyziklani_submit_id']);
 
-        $this->addColumnState();
-
-        $this->addEditButton($presenter);
-        $this->addDetailButton($presenter);
-
-        $submits = $this->team->getNonCheckedSubmits()
+        $submits = $this->team->getAllSubmits()
             ->order('fyziklani_submit.created');
 
         $dataSource = new NDataSource($submits);

@@ -39,6 +39,7 @@ class ServiceAuthToken extends AbstractServiceSingle {
      * @param bool $refresh
      * @param \Nette\Utils\DateTime $since
      * @return ModelAuthToken
+     * @throws \Exception
      */
     public function createToken(ModelLogin $login, $type, DateTime $until = null, $data = null, $refresh = false, DateTime $since = null) {
         if ($since === null) {

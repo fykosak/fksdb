@@ -1,12 +1,16 @@
 <?php
 
-
 namespace EventModule;
 
-
+use FKSDB\Components\React\ReactComponent\Events\SingleApplicationsTimeProgress;
 use FKSDB\Components\React\ReactComponent\Events\TeamApplicationsTimeProgress;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\ORM\Services\ServiceEventParticipant;
+use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 
 /**
@@ -14,28 +18,52 @@ use Nette\Application\ForbiddenRequestException;
  * @package EventModule
  */
 class ApplicationsTimeProgressPresenter extends BasePresenter {
+    private $eventIds = [
+        1 => [30, 31, 32, /*33, 34,*/
+            1, 27, 95, 116, 125, 137, 145],
+        2 => [2, 7, 92, 113, 123, 135, 143],
+        3 => [3, 126, 35],
+        7 => [6, 91, 124],
+        11 => [111, 119, 129, 140],
+        12 => [93, 115, 121, 136, 144],
+        9 => [8, 94, 114, 122, 134, 141],
+    ];
     /**
-     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam
+     * @var ServiceFyziklaniTeam
      */
     private $serviceFyziklaniTeam;
 
     /**
-     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
      */
     public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam) {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 
     /**
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @var ServiceEventParticipant
+     */
+    private $serviceEventParticipant;
+
+    /**
+     * @param ServiceEventParticipant $serviceEventParticipant
+     */
+    public function injectServiceEventParticipant(ServiceEventParticipant $serviceEventParticipant) {
+        $this->serviceEventParticipant = $serviceEventParticipant;
+    }
+
+    /**
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function authorizedDefault() {
-        if (!\in_array($this->getEvent()->event_type_id, [1, 9])) {
+        if (!array_key_exists($this->getEvent()->event_type_id, $this->eventIds)) {
             $this->setAuthorized(false);
             return;
         }
-        $this->setAuthorized($this->eventIsAllowed('event.applicationsTimeProgress', 'default'));
+        $participant = $this->eventIsAllowed(ModelEventParticipant::RESOURCE_ID, 'timeProgress');
+        $team = $this->eventIsAllowed(ModelFyziklaniTeam::RESOURCE_ID, 'timeProgress');
+        $this->setAuthorized($team || $participant);
     }
 
     public function titleDefault() {
@@ -46,8 +74,8 @@ class ApplicationsTimeProgressPresenter extends BasePresenter {
     /**
      * @return TeamApplicationsTimeProgress
      * @throws ForbiddenRequestException
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws AbortException
+     * @throws BadRequestException
      */
     protected function createComponentTeamApplicationsTimeProgress() {
         $events = [];
@@ -55,27 +83,46 @@ class ApplicationsTimeProgressPresenter extends BasePresenter {
             $row = $this->serviceEvent->findByPrimary($id);
             $events[$id] = ModelEvent::createFromActiveRow($row);
         }
-
         return new TeamApplicationsTimeProgress($this->context, $events, $this->serviceFyziklaniTeam);
+    }
+
+    /**
+     * @throws AbortException
+     * @throws BadRequestException
+     */
+    public function renderDefault() {
+        $this->template->teamEvents = self::TEAM_EVENTS;
+        $this->template->eventType = $this->getEvent()->event_type_id;
+    }
+
+    /**
+     * @return SingleApplicationsTimeProgress
+     * @throws ForbiddenRequestException
+     * @throws AbortException
+     * @throws BadRequestException
+     */
+    protected function createComponentSingleApplicationsTimeProgress() {
+        $events = [];
+        foreach ($this->getEventIdsByType() as $id) {
+            $row = $this->serviceEvent->findByPrimary($id);
+            $events[$id] = ModelEvent::createFromActiveRow($row);
+        }
+        return new SingleApplicationsTimeProgress($this->context, $events, $this->serviceEventParticipant);
     }
 
     /**
      * @return int[]
      * @throws ForbiddenRequestException
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
-     * @TODO hardcore eventIds
+     * @throws AbortException
+     * @throws BadRequestException
+     * TODO hardcore eventIds
      */
     private function getEventIdsByType(): array {
-        switch ($this->getEvent()->event_type_id) {
-            case 1:
-                return [1, 27, 95, 116, 125, 137];
-            case 9:
-                return [8, 94, 114, 122, 134];
-            default:
-                throw new ForbiddenRequestException();
-
+        $typeId = $this->getEvent()->event_type_id;
+        if (isset($this->eventIds[$typeId])) {
+            return $this->eventIds[$typeId];
         }
+        throw new ForbiddenRequestException();
     }
 
 }

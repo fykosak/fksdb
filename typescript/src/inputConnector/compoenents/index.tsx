@@ -1,14 +1,14 @@
+import { setInitialData } from '@inputConnector/actions';
 import * as React from 'react';
-import {
-    InputConnectorItems,
-    Store,
-} from '../reducers';
+import { connect } from 'react-redux';
 import {
     Action,
     Dispatch,
 } from 'redux';
-import { setInitialData } from '@inputConnector/actions';
-import { connect } from 'react-redux';
+import {
+    InputConnectorItems,
+    Store,
+} from '../reducers';
 
 export interface OwnProps {
     input: HTMLInputElement;

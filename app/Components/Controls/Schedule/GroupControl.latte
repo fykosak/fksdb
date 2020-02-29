@@ -4,6 +4,8 @@
         <b class="col-2">{_'Id'}</b>
         <span class="col-10">#{$model->schedule_group_id}</span>
     </div>
+    {control valuePrinter__schedule_group__name_cs:row $model}
+    {control valuePrinter__schedule_group__name_en:row $model}
     {control valuePrinter__schedule_group__schedule_group_type:row $model}
 
     <div class="row">

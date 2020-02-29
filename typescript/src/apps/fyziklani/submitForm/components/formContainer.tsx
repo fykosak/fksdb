@@ -16,7 +16,7 @@ import {
 import { validate } from '../middleware/form';
 import FormSection from './formSection';
 
-export interface Props {
+export interface OwnProps {
     tasks: Task[];
     teams: Team[];
     availablePoints: number[];
@@ -25,7 +25,7 @@ export interface Props {
 }
 
 // { code: string }
-class FormContainer extends React.Component<Props & InjectedFormProps<{ code: string }, Props>> {
+class FormContainer extends React.Component<OwnProps & InjectedFormProps<{ code: string }, OwnProps>> {
 
     public render() {
         const {valid, submitting, handleSubmit, onSubmit, tasks, teams, availablePoints} = this.props;

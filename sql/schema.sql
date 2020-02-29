@@ -182,6 +182,8 @@ CREATE TABLE IF NOT EXISTS `region` (
   COMMENT 'NUTS of the EU region\nor ISO 3166-1 for other countries',
   `name`        VARCHAR(255) NOT NULL
   COMMENT 'name of the region in the language intelligible in that region',
+  `phone_nsn` INT(11) NULL DEFAULT NULL,
+  `phone_prefix` VARCHAR(16) NULL DEFAULT NULL,
   PRIMARY KEY (`region_id`),
   UNIQUE INDEX `nuts` (`nuts` ASC)
 )
@@ -811,7 +813,7 @@ CREATE TABLE IF NOT EXISTS `e_fyziklani_participant_with_team` (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `stored_query` (
   `query_id`      INT          NOT NULL AUTO_INCREMENT,
-  `qid`           VARCHAR(16)  NULL     DEFAULT NULL
+  `qid`           VARCHAR(64)  NULL     DEFAULT NULL
   COMMENT 'identifikátor pro URL, práva apod.\ndotazy s QIDem nelze mazat',
   `name`          VARCHAR(32)  NOT NULL
   COMMENT 'název dotazu, identifikace pro člověka',
@@ -1232,9 +1234,9 @@ CREATE TABLE IF NOT EXISTS `fyziklani_submit` (
 -- -----------------------------------------------------
 -- Table `brawl_room`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `brawl_room` (
+CREATE TABLE IF NOT EXISTS `fyziklani_room` (
   `room_id` INT           NOT NULL AUTO_INCREMENT,
-  `name`    VARCHAR(4) CHARACTER SET 'utf8'
+  `name`    VARCHAR(64) CHARACTER SET 'utf8'
   COLLATE 'utf8_czech_ci' NOT NULL,
   `rows`    INT           NOT NULL,
   `columns` INT           NOT NULL,
@@ -1245,12 +1247,14 @@ CREATE TABLE IF NOT EXISTS `brawl_room` (
 -- -----------------------------------------------------
 -- Table `brawl_team_position`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `brawl_team_position` (
+CREATE TABLE IF NOT EXISTS `fyziklani_team_position` (
   `position_id`         INT NOT NULL AUTO_INCREMENT,
-  `e_fyziklani_team_id` INT NOT NULL,
-  `row`                 INT NOT NULL,
-  `col`                 INT NOT NULL,
+  `e_fyziklani_team_id` INT NULL DEFAULT NULL,
+  `row`                 INT NULL DEFAULT NULL,
+  `col`                 INT NULL DEFAULT NULL,
   `room_id`             INT NOT NULL,
+  `x_coordinate`        DOUBLE NULL DEFAULT NULL,
+  `y_coordinate`        DOUBLE NULL DEFAULT NULL,
   PRIMARY KEY (`position_id`),
   UNIQUE INDEX `e_fyziklani_team_id_UNIQUE` (`e_fyziklani_team_id` ASC),
   INDEX `fk_brawl_team_position_2_idx` (`room_id` ASC),
@@ -1261,7 +1265,7 @@ CREATE TABLE IF NOT EXISTS `brawl_team_position` (
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_brawl_team_position_2`
   FOREIGN KEY (`room_id`)
-  REFERENCES `brawl_room` (`room_id`)
+  REFERENCES `fyziklani_room` (`room_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
 )
@@ -1305,6 +1309,8 @@ CREATE TABLE IF NOT EXISTS `payment` (
   `variable_symbol` VARCHAR(256)   NULL     DEFAULT NULL,
   `specific_symbol` VARCHAR(256)   NULL     DEFAULT NULL,
   `bank_account`    VARCHAR(32)    NULL     DEFAULT NULL,
+  `bank_name`       VARCHAR(256)   NULL     DEFAULT NULL,
+  `recipient`       VARCHAR(256)   NULL     DEFAULT NULL,
   `iban`            VARCHAR(256)   NULL     DEFAULT NULL,
   `swift`           VARCHAR(256)   NULL     DEFAULT NULL,
   INDEX `fk_payment_1_idx` (`event_id` ASC),
@@ -1350,18 +1356,20 @@ CREATE TABLE IF NOT EXISTS `fyziklani_game_setup` (
 -- Table `schedule_group`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `schedule_group` (
-  `schedule_group_id`   INT(11)     NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `schedule_group_type` VARCHAR(64) NOT NULL,
-  `event_id`            INT(11)     NOT NULL,
-  `start`               DATETIME    NOT NULL,
-  `end`                 DATETIME    NOT NULL,
-  CONSTRAINT `fk_schedule_group_event`
-  FOREIGN KEY (`event_id`)
-  REFERENCES `event` (`event_id`)
-    ON DELETE RESTRICT
-    ON UPDATE RESTRICT
+    `schedule_group_id`   INT(11)      NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `schedule_group_type` VARCHAR(64)  NOT NULL,
+    `name_cs`             VARCHAR(256) NULL DEFAULT NULL,
+    `name_en`             VARCHAR(256) NULL DEFAULT NULL,
+    `event_id`            INT(11)      NOT NULL,
+    `start`               DATETIME     NOT NULL,
+    `end`                 DATETIME     NOT NULL,
+    CONSTRAINT `fk_schedule_group_event`
+        FOREIGN KEY (`event_id`)
+            REFERENCES `event` (`event_id`)
+            ON DELETE RESTRICT
+            ON UPDATE RESTRICT
 )
-  ENGINE = 'InnoDB';
+    ENGINE = 'InnoDB';
 
 -- -----------------------------------------------------
 -- Table `schedule_item`
@@ -1373,9 +1381,10 @@ CREATE TABLE IF NOT EXISTS `schedule_item` (
   `price_eur`         DECIMAL(11, 2) NULL     DEFAULT NULL,
   `name_cs`           VARCHAR(256)   NULL     DEFAULT NULL,
   `name_en`           VARCHAR(256)   NULL     DEFAULT NULL,
-  `capacity`          INT(11)        NULL     DEFAULT NULL,
+  `capacity`          INT(11)        NOT NULL,
   `require_id_number` INT(1)         NOT NULL DEFAULT 0,
-  `description`       VARCHAR(256)   NULL DEFAULT NULL,
+  `description_cs`       VARCHAR(256)   NULL DEFAULT NULL,
+  `description_en`       VARCHAR(256)   NULL DEFAULT NULL,
   CONSTRAINT `fk_schedule_group`
   FOREIGN KEY (`schedule_group_id`)
   REFERENCES `schedule_group` (`schedule_group_id`)
@@ -1428,6 +1437,24 @@ CREATE TABLE IF NOT EXISTS `schedule_payment` (
     ON UPDATE CASCADE
 )
   ENGINE = 'InnoDB';
+-- -----------------------------------------------------
+-- Table `email_message`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `email_message`
+(
+    `email_message_id` INT(11)      NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `recipient`         VARCHAR(128) NOT NULL,
+    `sender`           VARCHAR(128) NOT NULL,
+    `reply_to`         VARCHAR(128) NOT NULL,
+    `subject`          VARCHAR(128) NOT NULL,
+    `carbon_copy`      VARCHAR(128) NULL     DEFAULT NULL,
+    `blind_carbon_copy` VARCHAR(128) NULL     DEFAULT NULL,
+    `text`             TEXT         NOT NULL,
+    `state`            ENUM ('saved','waiting','sent','failed','canceled') CHARACTER SET 'utf8' DEFAULT 'saved',
+    `created`          DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `sent`             DATETIME     NULL DEFAULT NULL
+)
+    ENGINE = 'InnoDB';
 
 SET SQL_MODE = @OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS = @OLD_FOREIGN_KEY_CHECKS;

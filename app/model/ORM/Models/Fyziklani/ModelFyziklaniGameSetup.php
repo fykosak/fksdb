@@ -20,11 +20,24 @@ use Nette\Utils\DateTime;
  */
 class ModelFyziklaniGameSetup extends AbstractModelSingle {
     /**
-     * @return array
+     * @return int[]
      */
     public function getAvailablePoints(): array {
-        return \array_map(function ($value) {
-            return trim($value);
+        return \array_map(function (string $value): int {
+            return +trim($value);
         }, \explode(',', $this->available_points));
+    }
+
+    /**
+     * @return bool
+     * Take cate, this function is not state-less!!!
+     */
+    public function isResultsVisible(): bool {
+        if ($this->result_hard_display) {
+            return true;
+        }
+        $before = (time() < strtotime($this->result_hide));
+        $after = (time() > strtotime($this->result_display));
+        return ($before && $after);
     }
 }

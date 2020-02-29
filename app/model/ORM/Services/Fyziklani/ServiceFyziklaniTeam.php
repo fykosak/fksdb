@@ -33,7 +33,7 @@ class ServiceFyziklaniTeam extends AbstractServiceSingle {
      * @return TypedTableSelection|Selection
      */
     public function findParticipating(ModelEvent $event) {
-        $result = $this->getTable()->where('status', 'participated')->where('event_id', $event->event_id);;
+        $result = $this->getTable()->where('status', 'participated')->where('event_id', $event->event_id);
         return $result ?: null;
     }
 
@@ -57,7 +57,7 @@ class ServiceFyziklaniTeam extends AbstractServiceSingle {
      * @return Selection|null
      */
     public function findPossiblyAttending(ModelEvent $event) {
-        $result = $this->getTable()->where('status', ['participated', 'approved', 'spare'])->where('event_id', $event->event_id);
+        $result = $this->getTable()->where('status', ['participated', 'approved', 'spare', 'applied'])->where('event_id', $event->event_id);
         return $result ?: null;
     }
 
@@ -73,6 +73,21 @@ class ServiceFyziklaniTeam extends AbstractServiceSingle {
             $teams[] = $team->__toArray(true);
         }
         return $teams;
+    }
+
+    /**
+     * @param ModelEvent $event
+     * @param string|null $category
+     * @return bool
+     */
+    public function isCategoryReadyForClosing(ModelEvent $event, string $category = null): bool {
+        $query = $this->findParticipating($event);
+        if ($category) {
+            $query->where('category', $category);
+        }
+        $query->where('points', null);
+        $count = $query->count();
+        return $count == 0;
     }
 
 }

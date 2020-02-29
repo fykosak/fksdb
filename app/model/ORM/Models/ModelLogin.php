@@ -25,19 +25,19 @@ use Nette\Security\IIdentity;
 class ModelLogin extends AbstractModelSingle implements IIdentity, IPersonReferencedModel {
 
     /**
-     * @var \FKSDB\YearCalculator|null
+     * @var YearCalculator|null
      */
     private $yearCalculator;
 
     /**
-     * @return null|\FKSDB\YearCalculator
+     * @return null|YearCalculator
      */
     protected function getYearCalculator() {
         return $this->yearCalculator;
     }
 
     /**
-     * @param \FKSDB\YearCalculator $yearCalculator
+     * @param YearCalculator $yearCalculator
      */
     public function injectYearCalculator(YearCalculator $yearCalculator) {
         $this->yearCalculator = $yearCalculator;
@@ -54,7 +54,7 @@ class ModelLogin extends AbstractModelSingle implements IIdentity, IPersonRefere
     }
 
     /**
-     * @param \FKSDB\YearCalculator $yearCalculator
+     * @param YearCalculator $yearCalculator
      * @return ModelOrg[] indexed by contest_id (i.e. impersonal orgs)
      */
     public function getActiveOrgs(YearCalculator $yearCalculator) {

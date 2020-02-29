@@ -2,8 +2,6 @@
 
 namespace FKSDB\Transitions;
 
-use FKSDB\ORM\Models\ModelEvent;
-
 /**
  * Class AbstractTransitionsGenerator
  * @package FKSDB\Transitions
@@ -24,10 +22,4 @@ abstract class AbstractTransitionsGenerator {
      * @return mixed
      */
     abstract public function createTransitions(Machine &$machine);
-
-    /**
-     * @param ModelEvent $event
-     * @return Machine
-     */
-    abstract public function createMachine(ModelEvent $event): Machine;
 }
