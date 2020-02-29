@@ -4,7 +4,7 @@ namespace FKSDB\Components\DatabaseReflection;
 
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Forms\Controls\BaseControl;
-use Nette\NotImplementedException;
+use FKSDB\NotImplementedException;
 use Nette\Utils\Html;
 
 /**
