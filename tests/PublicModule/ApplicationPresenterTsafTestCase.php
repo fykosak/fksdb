@@ -1,5 +1,7 @@
 <?php
 
+use Nette\Utils\DateTime;
+
 abstract class ApplicationPresenterTsafTestCase extends ApplicationPresenterDsefTestCase {
 
     protected $dsefEventId;
@@ -12,6 +14,7 @@ abstract class ApplicationPresenterTsafTestCase extends ApplicationPresenterDsef
         $this->tsafEventId = $this->createEvent(array(
             'event_type_id' => 7,
             'event_year' => 7,
+            'registration_end' => new DateTime(date('c', time() + 1000)),
             'parameters' => <<<EOT
 capacity: 5
 EOT

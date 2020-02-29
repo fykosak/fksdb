@@ -9,7 +9,7 @@ use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleItem;
 use Nette\Forms\Controls\TextInput;
-use Nette\NotImplementedException;
+use FKSDB\NotImplementedException;
 use Nette\Utils\JsonException;
 
 /**

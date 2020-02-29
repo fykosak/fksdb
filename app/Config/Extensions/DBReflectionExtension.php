@@ -13,7 +13,7 @@ use Nette\Application\BadRequestException;
 use Nette\Config\CompilerExtension;
 use Nette\DI\ContainerBuilder;
 use Nette\DI\ServiceDefinition;
-use Nette\NotImplementedException;
+use FKSDB\NotImplementedException;
 use stdClass;
 
 /**

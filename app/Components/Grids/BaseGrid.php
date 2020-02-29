@@ -11,7 +11,7 @@ use Nette\Application\BadRequestException;
 use Nette\Application\IPresenter;
 use Nette\Application\UI\Form;
 use Nette\InvalidStateException;
-use Nette\NotImplementedException;
+use FKSDB\NotImplementedException;
 use Nette\Templating\FileTemplate;
 use Nette\Templating\ITemplate;
 use Nette\Utils\Html;

@@ -9,7 +9,7 @@ use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\Models\ModelPerson;
 use Nette\Application\BadRequestException;
 use Nette\Localization\ITranslator;
-use Nette\NotImplementedException;
+use FKSDB\NotImplementedException;
 use Nette\Templating\FileTemplate;
 
 /**
@@ -59,6 +59,7 @@ class StalkingComponent extends StalkingControl {
 
     /**
      * @param array $definition
+     * @throws NotImplementedException
      */
     private function renderSingle(array $definition) {
 

@@ -4,7 +4,7 @@ namespace FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleGroup;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use Nette\Forms\Controls\BaseControl;
-use Nette\NotImplementedException;
+use FKSDB\NotImplementedException;
 
 /**
  * Class AbstractScheduleGroupRow
