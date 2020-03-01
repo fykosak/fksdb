@@ -19,7 +19,8 @@ class EmailPrinter extends AbstractValuePrinter {
         if (\is_null($value)) {
             return NotSetBadge::getHtml();
         } else {
-            return Html::el('a')->addAttributes(['href' => 'mailto:' . $value])->addText($value);
+            list('address' => $address) = \mailparse_rfc822_parse_addresses($value)[0];
+            return Html::el('a')->addAttributes(['href' => 'mailto:' . $address])->addText($value);
         }
     }
 }

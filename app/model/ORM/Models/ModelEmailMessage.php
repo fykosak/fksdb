@@ -6,6 +6,7 @@ use DateTime;
 use \Nette\Mail\Message;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Security\IResource;
+use Tracy\Debugger;
 
 /**
  * Class ModelEmailMessage
@@ -37,15 +38,28 @@ class ModelEmailMessage extends AbstractModelSingle implements IResource {
     public function toMessage(): Message {
         $message = new Message();
         $message->setSubject($this->subject);
-        $message->addTo($this->recipient);
+
+        foreach (\mailparse_rfc822_parse_addresses($this->recipient) as ['display' => $name, 'address' => $address]) {
+            $message->addTo($address, $name);
+        }
+
+        list('display' => $senderName, 'address' => $senderAddress) = \mailparse_rfc822_parse_addresses($this->sender)[0];
+        $message->setFrom($senderAddress, $senderName);
+
+        list('display' => $replyToName, 'address' => $replyToAddress) = \mailparse_rfc822_parse_addresses($this->reply_to)[0];
+        $message->addReplyTo($replyToAddress, $replyToName);
+
         if (!is_null($this->blind_carbon_copy)) {
-            $message->addBcc($this->blind_carbon_copy);
+            foreach (\mailparse_rfc822_parse_addresses($this->blind_carbon_copy) as ['display' => $name, 'address' => $address]) {
+                $message->addBcc($address, $name);
+            }
         }
         if (!is_null($this->carbon_copy)) {
-            $message->addCc($this->carbon_copy);
+            foreach (\mailparse_rfc822_parse_addresses($this->carbon_copy) as ['display' => $name, 'address' => $address]) {
+                $message->addCc($address, $name);
+            }
         }
-        $message->setFrom($this->sender);
-        $message->addReplyTo($this->reply_to);
+
         $message->setHtmlBody($this->text);
 
         return $message;
