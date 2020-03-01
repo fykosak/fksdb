@@ -11,7 +11,7 @@ use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\Transitions\IStateModel;
 use Nette\Database\Table\ActiveRow;
-use Nette\NotImplementedException;
+use FKSDB\NotImplementedException;
 
 /**
  * Class ModelPersonSchedule

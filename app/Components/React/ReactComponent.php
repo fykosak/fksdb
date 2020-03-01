@@ -8,7 +8,7 @@ use Nette\Application\UI\Control;
 use Nette\ComponentModel\IComponent;
 use Nette\DI\Container;
 use Nette\Http\IRequest;
-use Nette\NotImplementedException;
+use FKSDB\NotImplementedException;
 use Nette\Templating\FileTemplate;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
