@@ -11,7 +11,7 @@ use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\Transitions\IStateModel;
 use Nette\Database\Table\ActiveRow;
-use Nette\NotImplementedException;
+use FKSDB\NotImplementedException;
 
 /**
  * Class ModelPersonSchedule
@@ -83,6 +83,8 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel, IP
                     $group->start->format(_('__date_format')),
                     $group->end->format(_('__date_format')),
                     $item->name_cs);
+            case ModelScheduleGroup::TYPE_WEEKEND:
+                return $item->getLabel();
             default:
                 throw new NotImplementedException();
         }

@@ -38,9 +38,6 @@ class MyPaymentGrid extends PaymentGrid {
         $this->addColumn('event', _('Event'))->setRenderer(function ($row) {
             return ModelPayment::createFromActiveRow($row)->getEvent()->name;
         });
-        $this->addLinkButton($presenter, ':Event:payment:detail', 'detail', 'Detail', true, [
-            'id' => 'payment_id',
-            'eventId' => 'event_id',
-        ]);
+        $this->addLink('payment.detail', true);
     }
 }

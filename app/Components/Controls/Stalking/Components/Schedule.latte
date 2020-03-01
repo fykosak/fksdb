@@ -7,8 +7,8 @@
                      <span class="row">
                          {var $model = \FKSDB\ORM\Models\Schedule\ModelPersonSchedule::createFromTableRow($row)}
                          {var $item = $model->getScheduleItem()}
-                         <span class="col-4">{$item->getGroup()->schedule_group_type}</span>
-                         <span class="col-3">{control eventLabel $item->getGroup()->getEvent()}</span>
+                         <span class="col-4">{$item->getScheduleGroup()->schedule_group_type}</span>
+                         <span class="col-3">{control eventLabel $item->getScheduleGroup()->getEvent()}</span>
                          <span class="col-5">{$item->getLabel()}</span>
                      </span>
                 </li>

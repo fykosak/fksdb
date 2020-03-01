@@ -8,6 +8,7 @@ use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
 use FKSDB\Components\Grids\Events\Application\ApplicationGrid;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\AbstractServiceSingle;
+use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Services\ServiceEventParticipant;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -45,14 +46,15 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
+     * @param int $id
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function authorizedDetail() {
+    public function authorizedDetail(int $id) {
         if ($this->isTeamEvent()) {
             $this->setAuthorized(false);
         } else {
-            parent::authorizedDetail();
+            parent::authorizedDetail($id);
         }
     }
 
@@ -64,7 +66,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
         if ($this->isTeamEvent()) {
             $this->setAuthorized(false);
         } else {
-            $this->setAuthorized($this->eventIsAllowed('event.application', 'import'));
+            $this->setAuthorized($this->eventIsAllowed($this->getModelResource(), 'import'));
         }
     }
 
@@ -132,6 +134,6 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @return string
      */
     protected function getModelResource(): string {
-        return 'event.participant';
+        return ModelEventParticipant::RESOURCE_ID;
     }
 }

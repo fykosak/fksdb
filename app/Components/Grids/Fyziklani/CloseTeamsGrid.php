@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Grids\Fyziklani;
 
+use FKSDB\Components\Controls\Helpers\Badges\NotSetBadge;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\DbNames;
@@ -54,9 +55,16 @@ class CloseTeamsGrid extends BaseGrid {
             DbNames::TAB_E_FYZIKLANI_TEAM . '.name',
             DbNames::TAB_E_FYZIKLANI_TEAM . '.e_fyziklani_team_id',
             DbNames::TAB_E_FYZIKLANI_TEAM . '.points',
-            DbNames::TAB_E_FYZIKLANI_TEAM . '.category'
+            DbNames::TAB_E_FYZIKLANI_TEAM . '.category',
+            DbNames::TAB_E_FYZIKLANI_TEAM . '.opened_submitting'
         ]);
-
+        $this->addColumn('room', _('Room'))->setRenderer(function (ModelFyziklaniTeam $row) {
+            $position = $row->getPosition();
+            if (is_null($position)) {
+                return NotSetBadge::getHtml();
+            }
+            return $position->getRoom()->name;
+        });
         $this->addLinkButton($presenter, ':Fyziklani:Close:team', 'close', _('Close submitting'), false, [
             'id' => 'e_fyziklani_team_id',
             'eventId' => 'event_id',
@@ -64,7 +72,7 @@ class CloseTeamsGrid extends BaseGrid {
             /**
              * @var ModelFyziklaniTeam $row
              */
-            return $row->hasOpenSubmitting();
+            return $row->isReadyForClosing();
         });
         $teams = $this->serviceFyziklaniTeam->findParticipating($this->event);//->where('points',NULL);
         $this->setDataSource(new NDataSource($teams));

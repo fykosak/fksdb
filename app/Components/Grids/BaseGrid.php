@@ -11,7 +11,7 @@ use Nette\Application\BadRequestException;
 use Nette\Application\IPresenter;
 use Nette\Application\UI\Form;
 use Nette\InvalidStateException;
-use Nette\NotImplementedException;
+use FKSDB\NotImplementedException;
 use Nette\Templating\FileTemplate;
 use Nette\Templating\ITemplate;
 use Nette\Utils\Html;
@@ -26,7 +26,6 @@ use NiftyGrid\GridException;
 use NiftyGrid\GridPaginator;
 use PePa\CSVResponse;
 use SQL\SearchableDataSource;
-use Tracy\Debugger;
 
 /**
  *
@@ -190,6 +189,7 @@ abstract class BaseGrid extends Grid {
      */
     protected function addReflectionColumn(string $tableName, string $fieldName, string $modelClassName) {
         $factory = $this->tableReflectionFactory->loadService($tableName, $fieldName);
+
         $this->addColumn($fieldName, $factory->getTitle())->setRenderer(function ($row) use ($factory, $fieldName, $modelClassName) {
             $model = $modelClassName::createFromActiveRow($row);
             return $factory->renderValue($model, 1);

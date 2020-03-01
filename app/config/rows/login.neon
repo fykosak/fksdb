@@ -1,4 +1,0 @@
-services:
-    row.login.login_id: FKSDB\Components\DatabaseReflection\Login\LoginIdRow
-    row.login.hash: FKSDB\Components\DatabaseReflection\Login\HashRow
-    row.login.last_login: FKSDB\Components\DatabaseReflection\Login\LastLoginRow

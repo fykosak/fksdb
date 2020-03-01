@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style media="print">
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: #FAFAFA;
+            font: 12pt sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+        }
+
+        .page {
+            page-break-before: always;
+            page-break-after: always;
+            width: 148mm;
+            /* min-height: 210mm;*/
+            padding: 10mm;
+            margin: 0 auto;
+            /* border: 1px #D3D3D3 solid;*/
+            background: white;
+            /* box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);*/
+        }
+
+        @page {
+            size: A5;
+            margin: 0;
+        }
+    </style>
+    <title>Seating plan</title>
+</head>
+<body>
+
+{foreach $teams as $team}
+    <div class="page">
+        <h2 style="font-size: 200%" ">({$team->e_fyziklani_team_id}) {$team->name}</h2>
+
+        {control seating:team $event,$team->e_fyziklani_team_id,$team->game_lang}
+        {if count($toPay[$team->getPrimary()])}
+            <b>{$team->game_lang==='en'?'Payment necessary':'Nutná platba'}</b>
+        {/if}
+        <div style="clear: both"></div>
+        <img src="/images/fyziklani/2020-black.png" style=" float:right;max-width: 25%">
+    </div>
+{/foreach}
+
+</body>
+</html>

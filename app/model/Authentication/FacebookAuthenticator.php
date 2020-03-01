@@ -101,6 +101,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
     /**
      * @param $fbUser
      * @return \FKSDB\ORM\AbstractModelSingle|\FKSDB\ORM\Models\ModelLogin
+     * @throws \Exception
      */
     private function registerFromFB($fbUser) {
         $person = $this->servicePerson->createNew($this->getPersonData($fbUser));
@@ -123,6 +124,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
     /**
      * @param ModelPerson $person
      * @param $fbUser
+     * @throws \Exception
      */
     private function updateFromFB(ModelPerson $person, $fbUser) {
         $personData = $this->getPersonData($fbUser);

@@ -37,6 +37,7 @@ class PaymentMachine extends Machine {
      * @param Connection $connection
      * @param ServicePayment $servicePayment
      * @param ServiceEvent $serviceEvent
+     * @param ITranslator $translator
      */
     public function __construct(Connection $connection, ServicePayment $servicePayment, ServiceEvent $serviceEvent, ITranslator $translator) {
         parent::__construct($connection, $servicePayment, $translator);

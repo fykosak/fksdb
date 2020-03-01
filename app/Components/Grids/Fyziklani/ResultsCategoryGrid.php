@@ -62,7 +62,7 @@ class ResultsCategoryGrid extends BaseGrid {
 
         $teams = $this->serviceFyziklaniTeam->findParticipating($this->event)
             ->where('category', $this->category)
-            ->order('e_fyziklani_team_id');
+            ->order('name');
         $dataSource = new NDataSource($teams);
         $this->setDataSource($dataSource);
 

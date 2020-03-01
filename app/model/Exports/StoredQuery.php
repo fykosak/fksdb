@@ -8,7 +8,7 @@ use Nette\Database\ISupplementalDriver;
 use Nette\Database\Statement;
 use Tracy\Debugger;
 use Nette\InvalidArgumentException;
-use Nette\NotImplementedException;
+use FKSDB\NotImplementedException;
 use Nette\Security\IResource;
 use NiftyGrid\DataSource\IDataSource;
 
