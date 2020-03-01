@@ -33,6 +33,7 @@ class EmailsGrid extends BaseGrid {
     /**
      * @param $presenter
      * @throws DuplicateColumnException
+     * @throws \NiftyGrid\DuplicateButtonException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -44,12 +45,15 @@ class EmailsGrid extends BaseGrid {
 
         $this->addColumns([
             'email_message.email_message_id',
+            'email_message.recipient',
+         //   'email_message.sender',
+          //  'email_message.reply_to',
             'email_message.subject',
-            'email_message.sender',
-            'email_message.reply_to',
+           // 'email_message.carbon_copy',
+          //  'email_message.blind_carbon_copy',
             'email_message.state',
-
         ]);
+        $this->addLinkButton($presenter, ':Common:Spam:detail', 'detail', _('Detail'), false, ['id' => 'email_message_id']);
         $this->paginate = false;
     }
 

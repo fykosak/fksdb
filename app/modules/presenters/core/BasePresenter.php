@@ -11,6 +11,7 @@ use FKSDB\Components\Controls\Navigation\Navigation;
 use FKSDB\Components\Controls\PresenterBuilder;
 use FKSDB\Components\DatabaseReflection\DetailComponent;
 use FKSDB\Components\DatabaseReflection\DetailFactory;
+use FKSDB\Components\DatabaseReflection\ValuePrinterComponent;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\IFilteredDataProvider;
@@ -655,6 +656,15 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
             $this->fullRequest = new FullHttpRequest($this->getHttpRequest(), $payload);
         }
         return $this->fullRequest;
+    }
+
+    /**
+     * @param string $name
+     * @return IComponent|null
+     * @throws \Exception
+     */
+    public function createComponentValuePrinter($name) {
+        return new ValuePrinterComponent($this->getTranslator(), $this->getTableReflectionFactory());
     }
 
     /**

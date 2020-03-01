@@ -226,7 +226,10 @@ DBReflection:
              email_message_id:
                  type: primaryKey
                  title: _(Message Id)
-             #recipient:
+             recipient:
+                 sender:
+                 type: email
+                 title: _(Recipient)
              sender:
                  type: email
                  title: _(Sender)
@@ -236,9 +239,15 @@ DBReflection:
              subject:
                  type: string
                  title: _(Subject)
-             #carbon_copy:
-             #blind_carbon_copy:
-             #text:
+             carbon_copy:
+                 type: email
+                 title: _(Cc)
+             blind_carbon_copy:
+                 type: email
+                 title: _(Bcc)
+             text:
+                 type: string
+                 title: _(Text)
              state:
                  type: state
                  title: _(State)
