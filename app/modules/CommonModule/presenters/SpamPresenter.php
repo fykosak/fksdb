@@ -50,7 +50,7 @@ class SpamPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function authorizedDetail($id) {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowedForAnyContest($this->loadEntity($id), 'list'));
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowedForAnyContest($this->loadEntity($id), 'detail'));
     }
 
     /**
