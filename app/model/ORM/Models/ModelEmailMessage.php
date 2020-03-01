@@ -5,6 +5,7 @@ namespace FKSDB\ORM\Models;
 use DateTime;
 use \Nette\Mail\Message;
 use FKSDB\ORM\AbstractModelSingle;
+use Nette\Security\IResource;
 
 /**
  * Class ModelEmailMessage
@@ -21,12 +22,14 @@ use FKSDB\ORM\AbstractModelSingle;
  * @property-read DateTime created
  * @property-read DateTime sent
  */
-class ModelEmailMessage extends AbstractModelSingle {
+class ModelEmailMessage extends AbstractModelSingle implements IResource {
     const STATE_SAVED = 'saved'; // uložená, na ďalšiu úpravu
     const STATE_WAITING = 'waiting'; //čaká na poslanie
     const STATE_SENT = 'sent'; // úspešné poslané (môže sa napr. ešte odraziť)
     const STATE_FAILED = 'failed'; // posielanie zlyhalo
     const STATE_CANCELED = 'canceled'; // posielanie zrušené
+
+    const RESOURCE_ID = 'email_message';
 
     /**
      * @return Message
@@ -38,7 +41,7 @@ class ModelEmailMessage extends AbstractModelSingle {
         if (!is_null($this->blind_carbon_copy)) {
             $message->addBcc($this->blind_carbon_copy);
         }
-        if (is_null($this->carbon_copy)) {
+        if (!is_null($this->carbon_copy)) {
             $message->addCc($this->carbon_copy);
         }
         $message->setFrom($this->sender);
@@ -46,5 +49,12 @@ class ModelEmailMessage extends AbstractModelSingle {
         $message->setHtmlBody($this->text);
 
         return $message;
+    }
+
+    /**
+     * @return string
+     */
+    public function getResourceId() {
+        return static::RESOURCE_ID;
     }
 }
