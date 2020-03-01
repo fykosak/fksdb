@@ -13,8 +13,7 @@
     "nette/neon": "~2.4.3",
     "nette/reflection": "~2.4.2",
     "nette/php-generator": "~2.6.4",
-    "latte/latte": "~2.4.8",
-    "nette/tester": "~2.0.0"
+    "latte/latte": "~2.4.8"
   },
   "autoload": {
     "classmap": []
