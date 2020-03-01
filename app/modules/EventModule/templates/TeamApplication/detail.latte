@@ -1,4 +1,20 @@
 {block content}
+    {dump $toPay}
+    {if count($toPay)}
+        <h2>{_'Rests'}</h2>
+        <table class="table table-sm table-striped">
+            <tbody>
+            {foreach $toPay as $rest}
+                <tr>
+                    <td>{$rest->getPerson()->getFullName()}</td>
+                    <td>{$rest->getLabel()}</td>
+                    <td>{$rest->getScheduleItem()->getPrice('czk')}/{$rest->getScheduleItem()->getPrice('eur')}</td>
+                </tr>
+            {/foreach}
+            </tbody>
+        </table>
+    {/if}
+    <h2>{_'Info'}</h2>
     {foreach ['e_fyziklani_team_id','name','status','phone','note','password','category','created','game_lang','force_a'] as $field}
         {control valuePrinter__e_fyziklani_team__$field:row $model,true}
     {/foreach}
@@ -51,4 +67,7 @@
         <hr/>
     {/foreach}
     {include ../AbstractApplication/applicationControl.latte}
+    <hr/>
+    <h2>{_'Seating'}</h2>
+    {control seating:team $event,$model->getPrimary(),$model->game_lang}
 {/block}

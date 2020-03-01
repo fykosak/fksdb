@@ -35,15 +35,6 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
     /**
      * @param ActiveRow $row
      * @return static
-     * @deprecated use createFromActiveRow
-     */
-    public static function createFromTableRow(ActiveRow $row): self {
-        throw new DeprecatedException('Use createFromActiveRow.');
-    }
-
-    /**
-     * @param ActiveRow $row
-     * @return static
      */
     public static function createFromActiveRow(ActiveRow $row): self {
         $model = new static($row->toArray(), $row->getTable());

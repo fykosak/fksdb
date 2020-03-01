@@ -1,8 +1,6 @@
 <?php
 
-
 namespace FKSDB\model\Fyziklani;
-
 
 /**
  * Class TaskCodeException

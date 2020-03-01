@@ -2,30 +2,48 @@
 
 namespace EventModule;
 
+use FKSDB\Components\Controls\Fyziklani\SeatingControl;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
 use FKSDB\Components\Grids\Events\Application\ApplicationGrid;
 use FKSDB\Components\Grids\Events\Application\TeamApplicationGrid;
 use FKSDB\model\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\AbstractServiceSingle;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\ORM\Models\ModelPayment;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 
 /**
  * Class ApplicationPresenter
  * @package EventModule
+ * @method ModelFyziklaniTeam getEntity()
  */
 class TeamApplicationPresenter extends AbstractApplicationPresenter {
     /**
      * @var ServiceFyziklaniTeam
      */
     private $serviceFyziklaniTeam;
+    /**
+     * @var ServiceFyziklaniTeamPosition
+     */
+    private $serviceFyziklaniTeamPosition;
 
     /**
      * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
      */
     public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam) {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+    }
+
+    /**
+     * @param ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
+     */
+    public function injectServiceFyziklaniTeamPosition(ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition) {
+        $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
     }
 
     public function titleList() {
@@ -39,12 +57,13 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
+     * @param int $id
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function authorizedDetail() {
+    public function authorizedDetail(int $id) {
         if ($this->isTeamEvent()) {
-            parent::authorizedDetail();
+            parent::authorizedDetail($id);
         } else {
             $this->setAuthorized(false);
         }
@@ -87,6 +106,14 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
         }
         $this->template->rankVisible = $rankVisible;
         $this->template->model = $this->getEntity();
+        $this->template->toPay = $this->getEntity()->getScheduleRest();
+    }
+
+    /**
+     * @return SeatingControl
+     */
+    public function createComponentSeating(): SeatingControl {
+        return new SeatingControl($this->serviceFyziklaniTeamPosition, $this->getTranslator());
     }
 
     /**

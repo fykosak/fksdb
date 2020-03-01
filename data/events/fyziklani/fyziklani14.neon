@@ -90,9 +90,8 @@ events:
                 default: 2
             teamsPerSchool:
                 default: 2
-            gameSetup:
-                default:
-                    %events.fyziklaniGameSetup%
+            rooms:
+                default: [10,11,12,13,14]
 
         baseMachines:
             #
@@ -177,6 +176,7 @@ events:
                         factory: RefPerson(%events.fyziklani14.teacher%, email, true, role('admin'), false)
                     note:
                         label: _('Note')
+                        modifiable: %events.fyziklani14.appCond%
                         required: false
                         visible: true
             #   PARTICIPANT

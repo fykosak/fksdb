@@ -3,7 +3,7 @@
 namespace FKSDB\ValidationTest;
 
 use FKSDB\Messages\Message;
-use Nette\NotImplementedException;
+use FKSDB\NotImplementedException;
 use Nette\Utils\Html;
 
 /**

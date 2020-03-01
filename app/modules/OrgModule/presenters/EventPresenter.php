@@ -18,7 +18,7 @@ use Nette\Application\UI\Form;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Neon\Neon;
-use Nette\NotImplementedException;
+use FKSDB\NotImplementedException;
 use Nette\Utils\Html;
 use Nette\Utils\NeonException;
 use Tracy\Debugger;

@@ -5,7 +5,6 @@ namespace FKSDB\Components\DatabaseReflection\Tables;
 use FKSDB\Components\Controls\Helpers\Badges\NotSetBadge;
 use FKSDB\Components\Controls\PhoneNumber\PhoneNumberFactory;
 use FKSDB\Components\DatabaseReflection\DefaultRow;
-use FKSDB\Components\DatabaseReflection\MetaDataFactory;
 use FKSDB\Components\Forms\Controls\WriteOnlyInput;
 use FKSDB\Components\Forms\Factories\ITestedRowFactory;
 use FKSDB\ORM\AbstractModelSingle;
@@ -34,10 +33,11 @@ class PhoneRow extends DefaultRow implements ITestedRowFactory {
      * PhoneRow constructor.
      * @param PhoneNumberFactory $phoneNumberFactory
      * @param ITranslator $translator
+     * @param MetaDataFactory $metaDataFactory
      */
-    public function __construct(PhoneNumberFactory $phoneNumberFactory, ITranslator $translator) {
+    public function __construct(PhoneNumberFactory $phoneNumberFactory, ITranslator $translator, MetaDataFactory $metaDataFactory) {
         $this->phoneNumberFactory = $phoneNumberFactory;
-        parent::__construct($translator);
+        parent::__construct($translator, $metaDataFactory);
     }
 
     /**

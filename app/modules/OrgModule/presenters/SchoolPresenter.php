@@ -19,7 +19,7 @@ use Nette\Database\Table\ActiveRow;
 use Nette\DeprecatedException;
 use ReflectionException;
 use Tracy\Debugger;
-use Nette\NotImplementedException;
+use FKSDB\NotImplementedException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

@@ -17,7 +17,6 @@ class PriceCalculator {
      */
     private $preProcess = [];
 
-
     /**
      * @param AbstractPreProcess $preProcess
      */

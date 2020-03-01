@@ -51,7 +51,8 @@
         "@i18n",
         "@appsCollector",
         "@inputConnector",
-        "@config"
+        "@config",
+        "@apps"
       ]
     ],
     "member-access": true,

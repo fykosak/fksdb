@@ -83,28 +83,7 @@ class PaymentSelectField extends TextInput {
     /**
      * @return string
      */
-    public function getComponentName(): string {
-        return 'accommodation-select';
-    }
-
-    /**
-     * @return string
-     */
-    public function getMode(): string {
-        return '';
-    }
-
-    /**
-     * @return string
-     */
-    public function getModuleName(): string {
-        return 'payment';
-    }
-
-    /**
-     * @return array
-     */
-    public function getActions(): array {
-        return [];
+    protected function getReactId(): string {
+        return 'payment.schedule-select';
     }
 }

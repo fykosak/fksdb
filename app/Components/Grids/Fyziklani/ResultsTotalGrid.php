@@ -54,7 +54,7 @@ class ResultsTotalGrid extends BaseGrid {
             DbNames::TAB_E_FYZIKLANI_TEAM . '.rank_total',
         ]);
         $teams = $this->serviceFyziklaniTeam->findParticipating($this->event)
-            ->order('e_fyziklani_team_id');
+            ->order('name');
         $dataSource = new NDataSource($teams);
         $this->setDataSource($dataSource);
     }

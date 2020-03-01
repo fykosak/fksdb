@@ -15,7 +15,14 @@ use function strtolower;
  * @package FKSDB\Components\Controls
  */
 class PhoneNumberFactory {
+    /**
+     * @var ServiceRegion
+     */
     private $serviceRegion;
+    /**
+     * @var TypedTableSelection
+     */
+    private $table;
 
     /**
      * PhoneNumberFactory constructor.
@@ -23,13 +30,14 @@ class PhoneNumberFactory {
      */
     public function __construct(ServiceRegion $serviceRegion) {
         $this->serviceRegion = $serviceRegion;
+        $this->table = $this->serviceRegion->getTable();
     }
 
     /**
      * @return TypedTableSelection
      */
     private function getAllRegions(): TypedTableSelection {
-        return $this->serviceRegion->getTable();
+        return $this->table;
     }
 
     /**
@@ -37,9 +45,6 @@ class PhoneNumberFactory {
      * @return Html
      */
     public function formatPhone(string $number): Html {
-        /**
-         * @var ModelRegion $region
-         */
         try {
             $region = $this->getRegion($number);
             if ($region) {
@@ -47,7 +52,7 @@ class PhoneNumberFactory {
                     ->addAttributes(['class' => 'phone-flag mr-3'])
                     ->addHtml(Html::el('img')
                         ->addAttributes(['src' => '/images/flags/4x3/' . strtolower($region->country_iso) . '.svg']));
-                return Html::el('span')->addAttributes([])->addHtml($flag)->addText($region->formatPhoneNumber($number));
+                return Html::el('span')->addHtml($flag)->addText($region->formatPhoneNumber($number));
             }
         } catch (InvalidPhoneNumberException $exception) {
         }

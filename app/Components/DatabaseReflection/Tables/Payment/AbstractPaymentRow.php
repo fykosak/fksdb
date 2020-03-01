@@ -3,7 +3,7 @@
 namespace FKSDB\Components\DatabaseReflection\Payment;
 
 use Nette\Forms\Controls\BaseControl;
-use Nette\NotImplementedException;
+use FKSDB\NotImplementedException;
 
 /**
  * Class AbstractPaymentRow

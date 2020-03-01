@@ -88,6 +88,6 @@ class TaskPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentGrid(): TaskGrid {
-        return $this->fyziklaniComponentsFactory->createTasksGrid($this->getEvent());
+        return new TaskGrid($this->getEvent(), $this->getServiceFyziklaniTask());
     }
 }

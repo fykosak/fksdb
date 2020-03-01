@@ -13,6 +13,9 @@
       "@fetchApi/*": [
         "./src/fetchApi/*"
       ],
+      "@apps/*": [
+        "./src/apps/*"
+      ],
       "@shared/*": [
         "./src/shared/*"
       ],

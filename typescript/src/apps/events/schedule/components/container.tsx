@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ScheduleGroupDef } from '../middleware/interfaces';
-import { Params } from './index';
 import Group from './group';
+import { Params } from './index';
 
 interface OwnProps {
     groups: ScheduleGroupDef[];

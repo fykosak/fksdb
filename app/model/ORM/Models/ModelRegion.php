@@ -4,7 +4,6 @@ namespace FKSDB\ORM\Models;
 
 use FKSDB\Components\Controls\PhoneNumber\InvalidPhoneNumberException;
 use FKSDB\ORM\AbstractModelSingle;
-use Tracy\Debugger;
 
 /**
  *
@@ -42,6 +41,9 @@ class ModelRegion extends AbstractModelSingle {
         switch ($this->phone_nsn) {
             case 9:
                 $regExp = '(\d{3})(\d{3})(\d{3})';
+                break;
+            case 10:
+                $regExp = '(\d{2})(\d{4})(\d{4})';
                 break;
             default:
                 $regExp = '(\d{' . $this->phone_nsn . '})';

@@ -70,6 +70,7 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
      * @param Holder $holder
      * @param ILogger $logger
      * @param Form|null $form
+     * @throws \Exception
      */
     public function process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
         $this->trySetAgreed($values);
@@ -77,6 +78,7 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
 
     /**
      * @param ArrayHash $values
+     * @throws \Exception
      */
     private function trySetAgreed(ArrayHash $values) {
         foreach ($values as $key => $value) {

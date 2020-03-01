@@ -6,7 +6,7 @@ use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServiceEventParticipant;
 use FKSDB\Payment\Price;
-use Nette\NotImplementedException;
+use FKSDB\NotImplementedException;
 
 /**
  * Class EventPrice
