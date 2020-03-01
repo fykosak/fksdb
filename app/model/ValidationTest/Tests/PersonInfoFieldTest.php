@@ -12,7 +12,7 @@ use FKSDB\ORM\Models\ModelPerson;
  * Class AbstractPersonInfoFieldTest
  * @package FKSDB\ValidationTest
  */
-class PersonInfoFieldValidation extends AbstractFieldLevelValidation {
+class PersonInfoFieldTest extends AbstractFieldLevelTest {
     /**
      * AbstractPersonInfoFieldTest constructor.
      * @param TableReflectionFactory $tableReflectionFactory

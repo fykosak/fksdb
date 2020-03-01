@@ -11,7 +11,7 @@ use Nette\Application\BadRequestException;
  * Class AbstractFieldLevelTest
  * @package FKSDB\ValidationTest
  */
-abstract class AbstractFieldLevelValidation extends ValidationTest {
+abstract class AbstractFieldLevelTest extends ValidationTest {
     /**
      * @var AbstractRow|ITestedRowFactory
      */

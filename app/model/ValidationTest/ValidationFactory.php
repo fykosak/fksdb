@@ -44,10 +44,10 @@ class ValidationFactory {
             new Tests\GenderFromBornNumber(),
             new Tests\ParticipantDuration\FykosParticipantDuration($this->serviceContest),
             new Tests\ParticipantDuration\VyfukParticipantDuration($this->serviceContest),
-            new EventCoveringValidation(),
+            new EventCoveringTest(),
         ];
         foreach (['phone', 'phone_parent_d', 'phone_parent_m', 'health_insurance'] as $fieldName) {
-            $this->tests[] = new PersonInfoFieldValidation($this->tableReflectionFactory, $fieldName);
+            $this->tests[] = new PersonInfoFieldTest($this->tableReflectionFactory, $fieldName);
         }
     }
 
