@@ -4,7 +4,7 @@ namespace FKSDB\Results\EvaluationStrategies;
 
 use FKSDB\Results\ModelCategory;
 use Nette\Database\Table\ActiveRow;
-use Nette\NotImplementedException;
+use FKSDB\NotImplementedException;
 
 /**
  * Null Object pattern for FKSDB\Results\EvaluationStrategies\IEvaluationStrategy.
