@@ -61,7 +61,7 @@ class EmailListRow extends DefaultRow {
             return NotSetBadge::getHtml();
         }
         $container = Html::el('span');
-        foreach ($rows as ['address' => $address, 'display' => $display]) {
+        foreach ($rows as list('address' => $address, 'display' => $display)) {
             $container->addHtml(Html::el('a')
                 ->addAttributes(['href' => 'mailto:' . $address])
                 ->addText($display . ' <' . $address . '>')

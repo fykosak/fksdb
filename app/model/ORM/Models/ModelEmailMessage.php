@@ -39,7 +39,7 @@ class ModelEmailMessage extends AbstractModelSingle implements IResource {
         $message = new Message();
         $message->setSubject($this->subject);
 
-        foreach (\mailparse_rfc822_parse_addresses($this->recipient) as ['display' => $name, 'address' => $address]) {
+        foreach (\mailparse_rfc822_parse_addresses($this->recipient) as list('display' => $name, 'address' => $address)) {
             $message->addTo($address, $name);
         }
 
@@ -50,12 +50,12 @@ class ModelEmailMessage extends AbstractModelSingle implements IResource {
         $message->addReplyTo($replyToAddress, $replyToName);
 
         if (!is_null($this->blind_carbon_copy)) {
-            foreach (\mailparse_rfc822_parse_addresses($this->blind_carbon_copy) as ['display' => $name, 'address' => $address]) {
+            foreach (\mailparse_rfc822_parse_addresses($this->blind_carbon_copy) as list('display' => $name, 'address' => $address)) {
                 $message->addBcc($address, $name);
             }
         }
         if (!is_null($this->carbon_copy)) {
-            foreach (\mailparse_rfc822_parse_addresses($this->carbon_copy) as ['display' => $name, 'address' => $address]) {
+            foreach (\mailparse_rfc822_parse_addresses($this->carbon_copy) as list('display' => $name, 'address' => $address)) {
                 $message->addCc($address, $name);
             }
         }
