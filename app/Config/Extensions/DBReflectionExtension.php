@@ -3,6 +3,7 @@
 namespace FKSDB\Config\Extensions;
 
 use FKSDB\Components\DatabaseReflection\DetailFactory;
+use FKSDB\Components\DatabaseReflection\EmailListRow;
 use FKSDB\Components\DatabaseReflection\EmailRow;
 use FKSDB\Components\DatabaseReflection\Links\Link;
 use FKSDB\Components\DatabaseReflection\PrimaryKeyRow;
@@ -100,6 +101,8 @@ class DBReflectionExtension extends CompilerExtension {
                     return $this->registerPhoneRow($builder, $tableName, $fieldName, $field);
                 case 'email':
                     return $this->registerEmailRow($builder, $tableName, $fieldName, $field);
+                case 'emailList':
+                    return $this->registerEmailListRow($builder, $tableName, $fieldName, $field);
                 case 'state':
                     return $this->registerStateRow($builder, $tableName, $fieldName, $field);
                 default:
@@ -119,6 +122,7 @@ class DBReflectionExtension extends CompilerExtension {
      * @param string $fieldName
      * @param array $field
      * @return ServiceDefinition
+     * @throws NotImplementedException
      */
     private function registerStateRow(ContainerBuilder $builder, string $tableName, string $fieldName, array $field): ServiceDefinition {
         $factory = $this->setUpDefaultFactory($builder, $tableName, $fieldName, StateRow::class, $field);
@@ -132,6 +136,7 @@ class DBReflectionExtension extends CompilerExtension {
      * @param string $fieldName
      * @param array $field
      * @return ServiceDefinition
+     * @throws NotImplementedException
      */
     private function registerStringRow(ContainerBuilder $builder, string $tableName, string $fieldName, array $field): ServiceDefinition {
         return $this->setUpDefaultFactory($builder, $tableName, $fieldName, StringRow::class, $field);
@@ -143,6 +148,7 @@ class DBReflectionExtension extends CompilerExtension {
      * @param string $fieldName
      * @param array $field
      * @return ServiceDefinition
+     * @throws NotImplementedException
      */
     private function registerPrimaryKeyRow(ContainerBuilder $builder, string $tableName, string $fieldName, array $field): ServiceDefinition {
 
@@ -155,6 +161,7 @@ class DBReflectionExtension extends CompilerExtension {
      * @param string $fieldName
      * @param array $field
      * @return ServiceDefinition
+     * @throws NotImplementedException
      */
     private function registerPhoneRow(ContainerBuilder $builder, string $tableName, string $fieldName, array $field): ServiceDefinition {
         $factory = $this->setUpDefaultFactory($builder, $tableName, $fieldName, PhoneRow::class, $field);
@@ -170,14 +177,32 @@ class DBReflectionExtension extends CompilerExtension {
      * @param string $fieldName
      * @param array $field
      * @return ServiceDefinition
+     * @throws NotImplementedException
      */
     private function registerEmailRow(ContainerBuilder $builder, string $tableName, string $fieldName, array $field): ServiceDefinition {
         return $this->setUpDefaultFactory($builder, $tableName, $fieldName, EmailRow::class, $field);
     }
 
     /**
+     * @param ContainerBuilder $builder
+     * @param string $tableName
+     * @param string $fieldName
+     * @param array $field
+     * @return ServiceDefinition
+     * @throws NotImplementedException
+     */
+    private function registerEmailListRow(ContainerBuilder $builder, string $tableName, string $fieldName, array $field): ServiceDefinition {
+        $factory = $this->setUpDefaultFactory($builder, $tableName, $fieldName, EmailListRow::class, $field);
+        if (isset($field['maxLength'])) {
+            $factory->addSetup('setMaxLength', $field['maxLength']);
+        }
+        return $factory;
+    }
+
+    /**
      * @param $value
      * @return mixed
+     * @throws NotImplementedException
      */
     private function translate($value): string {
         if (is_string($value)) {
@@ -196,6 +221,7 @@ class DBReflectionExtension extends CompilerExtension {
      * @param string $factoryClassName
      * @param array $field
      * @return ServiceDefinition
+     * @throws NotImplementedException
      */
     private function setUpDefaultFactory(ContainerBuilder $builder, string $tableName, string $fieldName, string $factoryClassName, array $field): ServiceDefinition {
         $factory = $builder->addDefinition($this->prefix($tableName . '.' . $fieldName))

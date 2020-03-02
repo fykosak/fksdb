@@ -227,23 +227,24 @@ DBReflection:
                  type: primaryKey
                  title: _(Message Id)
              recipient:
-                 sender:
-                 type: email
+                 type: emailList
                  title: _(Recipient)
              sender:
-                 type: email
+                 type: emailList
+                 maxLength: 1
                  title: _(Sender)
              reply_to:
-                 type: email
+                 type: emailList
+                 maxLength: 1
                  title: _(Reply to)
              subject:
                  type: string
                  title: _(Subject)
              carbon_copy:
-                 type: email
+                 type: emailList
                  title: _(Cc)
              blind_carbon_copy:
-                 type: email
+                 type: emailList
                  title: _(Bcc)
              text:
                  type: string

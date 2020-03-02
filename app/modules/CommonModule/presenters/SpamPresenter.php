@@ -4,7 +4,6 @@ namespace CommonModule;
 
 use FKSDB\Components\Grids\EmailsGrid;
 use FKSDB\EntityTrait;
-use FKSDB\ORM\IService;
 use FKSDB\ORM\Models\ModelEmailMessage;
 use FKSDB\ORM\Services\ServiceEmailMessage;
 use Nette\Application\BadRequestException;
@@ -41,24 +40,13 @@ class SpamPresenter extends BasePresenter {
         $this->setIcon('fa fa-envelope');
     }
 
-    public function authorizedList() {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowedForAnyContest('email_message', 'list'));
-    }
-
-    /**
-     * @param $id
-     * @throws BadRequestException
-     */
-    public function authorizedDetail($id) {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowedForAnyContest($this->loadEntity($id), 'detail'));
-    }
-
     /**
      * @param $id
      * @throws BadRequestException
      */
     public function renderDetail($id) {
         $this->template->model = $this->loadEntity($id);
+        $this->getEntity()->toMessage();
     }
 
     /**
