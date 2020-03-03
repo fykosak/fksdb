@@ -6,9 +6,11 @@ use FKSDB\Components\Controls\Fyziklani\SeatingControl;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
 use FKSDB\Components\Grids\Events\Application\ApplicationGrid;
 use FKSDB\Components\Grids\Events\Application\TeamApplicationGrid;
+use FKSDB\Components\React\ReactComponent\Events\TeamApplicationsTimeProgress;
 use FKSDB\model\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
@@ -16,6 +18,7 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 
 /**
  * Class ApplicationPresenter
@@ -57,28 +60,13 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @param int $id
+     * @param ModelEvent $event
+     * @return bool
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function authorizedDetail(int $id) {
-        if ($this->isTeamEvent()) {
-            parent::authorizedDetail($id);
-        } else {
-            $this->setAuthorized(false);
-        }
-    }
-
-    /**
-     * @throws AbortException
-     * @throws BadRequestException
-     */
-    public function authorizedList() {
-        if ($this->isTeamEvent()) {
-            parent::authorizedList();
-        } else {
-            $this->setAuthorized(false);
-        }
+    protected function isEnabledForEvent(ModelEvent $event): bool {
+        return $this->isTeamEvent();
     }
 
     /**
@@ -89,7 +77,6 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
     public function createComponentGrid(): AbstractApplicationGrid {
         return new TeamApplicationGrid($this->getEvent(), $this->getTableReflectionFactory());
     }
-
 
     /**
      * @throws BadRequestException
@@ -117,6 +104,29 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
+     * @return TeamApplicationsTimeProgress
+     * @throws AbortException
+     * @throws BadRequestException
+     */
+    protected function createComponentTeamApplicationsTimeProgress() {
+        $eventIds = [];
+        switch ($this->getEvent()->event_type_id) {
+            case 1:
+                $eventIds = [30, 31, 32, /*33, 34,*/
+                    1, 27, 95, 116, 125, 137, 145];
+                break;
+            case 9:
+                $eventIds = [8, 94, 114, 122, 134, 141];
+        }
+        $events = [];
+        foreach ($eventIds as $id) {
+            $row = $this->serviceEvent->findByPrimary($id);
+            $events[$id] = ModelEvent::createFromActiveRow($row);
+        }
+        return new TeamApplicationsTimeProgress($this->context, $events, $this->serviceFyziklaniTeam);
+    }
+
+    /**
      * @return AbstractServiceSingle
      */
     function getORMService() {
@@ -127,6 +137,6 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
      * @return string
      */
     protected function getModelResource(): string {
-        return 'fyziklani.team';
+        return ModelFyziklaniTeam::RESOURCE_ID;
     }
 }

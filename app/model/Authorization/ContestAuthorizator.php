@@ -2,6 +2,7 @@
 
 namespace Authorization;
 
+use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelRole;
 use Nette\Database\Table\ActiveRow;
@@ -57,16 +58,16 @@ class ContestAuthorizator {
      *
      * @param mixed $resource
      * @param string $privilege
-     * @param int|\FKSDB\ORM\Models\ModelContest $contest queried contest
+     * @param int|ModelContest $contest queried contest
      * @return boolean
      */
     public function isAllowed($resource, $privilege, $contest): bool {
         if (!$this->getUser()->isLoggedIn()) {
             $role = new Grant(Grant::CONTEST_ALL, ModelRole::GUEST);
-            return $this->acl->isAllowed($role, $resource, $privilege);
+            return $this->getAcl()->isAllowed($role, $resource, $privilege);
         }
         /**
-         * @var \FKSDB\ORM\Models\ModelLogin $login
+         * @var ModelLogin $login
          */
         $login = $this->getUser()->getIdentity();
         return $this->isAllowedForLogin($login, $resource, $privilege, $contest);
@@ -80,10 +81,10 @@ class ContestAuthorizator {
     public final function isAllowedForAnyContest($resource, $privilege): bool {
         if (!$this->getUser()->isLoggedIn()) {
             $role = new Grant(Grant::CONTEST_ALL, ModelRole::GUEST);
-            return $this->acl->isAllowed($role, $resource, $privilege);
+            return $this->getAcl()->isAllowed($role, $resource, $privilege);
         }
         /**
-         * @var \FKSDB\ORM\Models\ModelLogin $login
+         * @var ModelLogin $login
          */
         $login = $this->getUser()->getIdentity();
 

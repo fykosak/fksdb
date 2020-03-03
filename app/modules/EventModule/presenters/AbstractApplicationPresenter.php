@@ -7,8 +7,11 @@ use Events\Model\Grid\SingleEventSource;
 use FKSDB\Components\Events\ApplicationComponent;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
 use FKSDB\Components\Grids\Schedule\PersonGrid;
+use FKSDB\Components\React\ReactComponent\Events\SingleApplicationsTimeProgress;
 use FKSDB\Logging\FlashDumpFactory;
 use FKSDB\Logging\MemoryLogger;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Services\ServiceEventParticipant;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -31,6 +34,11 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     protected $dumpFactory;
 
     /**
+     * @var ServiceEventParticipant
+     */
+    protected $serviceEventParticipant;
+
+    /**
      * @param ApplicationHandlerFactory $applicationHandlerFactory
      */
     public function injectHandlerFactory(ApplicationHandlerFactory $applicationHandlerFactory) {
@@ -42,6 +50,14 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      */
     public function injectFlashDumpFactory(FlashDumpFactory $dumpFactory) {
         $this->dumpFactory = $dumpFactory;
+    }
+
+
+    /**
+     * @param ServiceEventParticipant $serviceEventParticipant
+     */
+    public function injectServiceEventParticipant(ServiceEventParticipant $serviceEventParticipant) {
+        $this->serviceEventParticipant = $serviceEventParticipant;
     }
 
     /**
@@ -90,10 +106,48 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
         $source = new SingleEventSource($this->getEvent(), $this->container);
         foreach ($source as $key => $holder) {
             $holders[$key] = $holder;
-            $handlers[$key] = $this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger()); //TODO it's a bit weird to create new logger for each handler
+            $handlers[$key] = $this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger());
         }
 
         return new ApplicationComponent($handlers[$this->getEntity()->getPrimary()], $holders[$this->getEntity()->getPrimary()], $flashDump);
+    }
+
+    /**
+     * @return SingleApplicationsTimeProgress
+     * @throws AbortException
+     * @throws BadRequestException
+     */
+    protected function createComponentSingleApplicationsTimeProgress() {
+        $events = [];
+        foreach ($this->getProgressEventIdsByType() as $id) {
+            $row = $this->serviceEvent->findByPrimary($id);
+            $events[$id] = ModelEvent::createFromActiveRow($row);
+        }
+        return new SingleApplicationsTimeProgress($this->context, $events, $this->serviceEventParticipant);
+    }
+
+    /**
+     * @return int[]
+     * @throws AbortException
+     * @throws BadRequestException
+     * TODO hardcore eventIds
+     */
+    private function getProgressEventIdsByType(): array {
+        $eventIds = [
+            1 => [30, 31, 32, /*33, 34,*/
+                1, 27, 95, 116, 125, 137, 145],
+            2 => [2, 7, 92, 113, 123, 135, 143],
+            3 => [3, 126, 35],
+            7 => [6, 91, 124],
+            11 => [111, 119, 129, 140],
+            12 => [93, 115, 121, 136, 144],
+            9 => [8, 94, 114, 122, 134, 141],
+        ];
+        $typeId = $this->getEvent()->event_type_id;
+        if (isset($eventIds[$typeId])) {
+            return $eventIds[$typeId];
+        }
+        return array_values($this->serviceEvent->getTable()->where('event_type_id', $this->getEvent()->event_type_id)->fetchPairs('event_id', 'event_id'));
     }
 
     /**
@@ -103,7 +157,6 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      */
     protected function isTeamEvent(): bool {
         if (in_array($this->getEvent()->event_type_id, self::TEAM_EVENTS)) {
-            $this->setAuthorized(false);
             return true;
         }
         return false;
