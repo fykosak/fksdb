@@ -1,4 +1,16 @@
 # Changelog
+----
+### 2020-03-03
+#### Remove support of PHP7.0
+  * for now is PHP7.0 not supported
+  * only supported version of PHP is PHP7.1
+#### mailparse
+  * add mailparse methods
+  * add new type of row _EmailList_
+    * implements RFC822 email list
+    * add parameters max-length of email list
+  * change type of all email_message fields
+----
 ### 2020-02-29
 #### Email_messages
   * add email_message detail GUI
