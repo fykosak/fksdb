@@ -43,7 +43,7 @@ class ResultsPresenter extends BasePresenter {
 
     public function titlePresentation(): void {
         $this->setIcon('fa fa-table');
-        return $this->setTitle(_('Results presentation'));
+        $this->setTitle(_('Results presentation'));
     }
 
     public function titleTeamStatistics(): void {
