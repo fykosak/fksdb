@@ -38,7 +38,7 @@ class GameSetupPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function authorizedDefault(): void {
-        return $this->setAuthorized($this->eventIsAllowed('fyziklani.gameSetup', 'default'));
+        $this->setAuthorized($this->eventIsAllowed('fyziklani.gameSetup', 'default'));
     }
 
     /**
