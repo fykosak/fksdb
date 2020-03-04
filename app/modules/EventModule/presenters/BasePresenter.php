@@ -4,6 +4,7 @@ namespace EventModule;
 
 use AuthenticatedPresenter;
 use FKSDB\Components\Controls\LanguageChooser;
+use FKSDB\NotImplementedException;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceContestYear;
@@ -103,7 +104,22 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         if (!$this->eventExist()) {
             throw new BadRequestException('Event not found.', 404);
         }
+        if (!$this->isEnabledForEvent($this->getEvent())) {
+            throw new NotImplementedException();
+        }
         parent::startup();
+    }
+
+    /**
+     * @return bool
+     * @throws AbortException
+     * @throws BadRequestException
+     */
+    public function isAuthorized(): bool {
+        if (!$this->isEnabledForEvent($this->getEvent())) {
+            return false;
+        }
+        return parent::isAuthorized();
     }
 
     /**
@@ -217,5 +233,13 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      */
     protected final function getContest(): ModelContest {
         return $this->getEvent()->getContest();
+    }
+
+    /**
+     * @param ModelEvent $event
+     * @return bool
+     */
+    protected function isEnabledForEvent(ModelEvent $event): bool {
+        return true;
     }
 }
