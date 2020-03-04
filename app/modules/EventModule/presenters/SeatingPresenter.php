@@ -6,6 +6,7 @@ use FKSDB\Components\Controls\Fyziklani\RoutingDownload;
 use FKSDB\Components\Controls\Fyziklani\RoutingEdit;
 use FKSDB\Components\Controls\Fyziklani\SeatingControl;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use FKSDB\React\ReactResponse;
 use Nette\Application\AbortException;
@@ -54,6 +55,14 @@ class SeatingPresenter extends BasePresenter {
     public function titlePreview() {
         $this->setTitle(_('Preview'));
         $this->setIcon('fa fa-search');
+    }
+
+    /**
+     * @param ModelEvent $event
+     * @return bool
+     */
+    protected function isEnabledForEvent(ModelEvent $event): bool {
+        return $event->event_type_id === 1;
     }
 
     public function authorizedEdit() {

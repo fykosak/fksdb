@@ -82,5 +82,4 @@ navigation:
             - event.application.list
             - event.teamApplication.list
             - event.model.default
-            - event.applicationsTimeProgress.default
             - event.seating.default
