@@ -51,35 +51,35 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     protected $serviceContestYear;
 
     /**
-     * @param ServiceContestYear $serviceContestYear
-     */
-    public function injectServiceContestYear(ServiceContestYear $serviceContestYear) {
-        $this->serviceContestYear = $serviceContestYear;
-    }
-
-    /**
      * @var YearCalculator
      */
     protected $yearCalculator;
 
     /**
+     * @param ServiceContestYear $serviceContestYear
+     */
+    public function injectServiceContestYear(ServiceContestYear $serviceContestYear): void {
+        $this->serviceContestYear = $serviceContestYear;
+    }
+
+    /**
      * @param YearCalculator $yearCalculator
      */
-    public function injectYearCalculator(YearCalculator $yearCalculator) {
+    public function injectYearCalculator(YearCalculator $yearCalculator): void {
         $this->yearCalculator = $yearCalculator;
     }
 
     /**
      * @param Container $container
      */
-    public function injectContainer(Container $container) {
+    public function injectContainer(Container $container): void {
         $this->container = $container;
     }
 
     /**
      * @param ServiceEvent $serviceEvent
      */
-    public function injectServiceEvent(ServiceEvent $serviceEvent) {
+    public function injectServiceEvent(ServiceEvent $serviceEvent): void {
         $this->serviceEvent = $serviceEvent;
     }
 
@@ -94,7 +94,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @throws BadRequestException
      * @throws AbortException
      */
-    protected function startup() {
+    protected function startup(): void {
         /**
          * @var LanguageChooser $languageChooser
          */

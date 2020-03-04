@@ -17,7 +17,7 @@ class DashboardPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function titleDefault() {
+    public function titleDefault(): void {
         $this->setTitle(sprintf(_('Event %s'), $this->getEvent()->name));
         $this->setIcon('fa fa-dashboard');
     }
@@ -26,7 +26,7 @@ class DashboardPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function authorizedDefault() {
+    public function authorizedDefault(): void {
         $this->setAuthorized($this->eventIsAllowed('event.dashboard', 'default'));
     }
 
@@ -34,7 +34,7 @@ class DashboardPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function renderDefault() {
+    public function renderDefault(): void {
         $this->template->event = $this->getEvent();
         $this->template->webUrl = $this->getWebUrl();
         $this->template->fields = ['event_type', 'year', 'event_year', 'begin', 'end'];
@@ -45,7 +45,7 @@ class DashboardPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    private function getWebUrl() {
+    private function getWebUrl(): string {
         switch ($this->getEvent()->event_type_id) {
             case 1:
                 // FOF

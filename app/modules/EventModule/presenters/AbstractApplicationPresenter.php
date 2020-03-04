@@ -41,22 +41,21 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     /**
      * @param ApplicationHandlerFactory $applicationHandlerFactory
      */
-    public function injectHandlerFactory(ApplicationHandlerFactory $applicationHandlerFactory) {
+    public function injectHandlerFactory(ApplicationHandlerFactory $applicationHandlerFactory): void {
         $this->applicationHandlerFactory = $applicationHandlerFactory;
     }
 
     /**
      * @param FlashDumpFactory $dumpFactory
      */
-    public function injectFlashDumpFactory(FlashDumpFactory $dumpFactory) {
+    public function injectFlashDumpFactory(FlashDumpFactory $dumpFactory): void {
         $this->dumpFactory = $dumpFactory;
     }
-
 
     /**
      * @param ServiceEventParticipant $serviceEventParticipant
      */
-    public function injectServiceEventParticipant(ServiceEventParticipant $serviceEventParticipant) {
+    public function injectServiceEventParticipant(ServiceEventParticipant $serviceEventParticipant): void {
         $this->serviceEventParticipant = $serviceEventParticipant;
     }
 
@@ -66,7 +65,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function actionDetail(int $id) {
+    public function actionDetail(int $id): void {
         $this->loadEntity($id);
     }
 
@@ -74,7 +73,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    protected function renderDetail() {
+    protected function renderDetail(): void {
         $this->template->event = $this->getEvent();
         $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
     }
@@ -83,7 +82,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws AbortException
      */
-    public function renderList() {
+    public function renderList(): void {
         $this->template->event = $this->getEvent();
     }
 
@@ -117,7 +116,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    protected function createComponentSingleApplicationsTimeProgress() {
+    protected function createComponentSingleApplicationsTimeProgress(): SingleApplicationsTimeProgress {
         $events = [];
         foreach ($this->getEventIdsByType() as $id) {
             $row = $this->serviceEvent->findByPrimary($id);
@@ -150,12 +149,12 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     /**
      * @return void
      */
-    abstract public function titleList();
+    abstract public function titleList(): void;
 
     /**
      * @return void
      */
-    abstract public function titleDetail();
+    abstract public function titleDetail(): void;
 
     /**
      * @return AbstractApplicationGrid

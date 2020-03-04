@@ -22,17 +22,17 @@ use Nette\Application\ForbiddenRequestException;
  */
 class ApplicationPresenter extends AbstractApplicationPresenter {
 
-    public function titleList() {
+    public function titleList(): void {
         $this->setTitle(_('List of applications'));
         $this->setIcon('fa fa-users');
     }
 
-    public function titleDetail() {
+    public function titleDetail(): void {
         $this->setTitle(_('Application detail'));
         $this->setIcon('fa fa-user');
     }
 
-    public function titleImport() {
+    public function titleImport(): void {
         $this->setTitle(_('Application import'));
         $this->setIcon('fa fa-upload');
     }
@@ -51,7 +51,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function authorizedImport() {
+    public function authorizedImport(): void {
         $this->setAuthorized($this->eventIsAllowed($this->getModelResource(), 'import'));
     }
 
@@ -83,7 +83,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @throws BadRequestException
      * @throws AbortException
      */
-    public function renderDetail() {
+    public function renderDetail(): void {
         parent::renderDetail();
         $this->template->fields = $this->getEvent()->getHolder()->getPrimaryHolder()->getFields();
         $this->template->model = $this->getEntity();
@@ -96,9 +96,9 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @return AbstractServiceSingle
+     * @return ServiceEventParticipant
      */
-    function getORMService() {
+    function getORMService(): ServiceEventParticipant {
         return $this->serviceEventParticipant;
     }
 

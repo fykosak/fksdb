@@ -22,7 +22,7 @@ class ModelPresenter extends BasePresenter {
     /**
      * @param ExpressionPrinter $expressionPrinter
      */
-    public function injectExpressionPrinter(ExpressionPrinter $expressionPrinter) {
+    public function injectExpressionPrinter(ExpressionPrinter $expressionPrinter): void {
         $this->expressionPrinter = $expressionPrinter;
     }
 
@@ -30,11 +30,11 @@ class ModelPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function authorizedDefault() {
+    public function authorizedDefault(): void {
         $this->setAuthorized($this->eventIsAllowed('event.model', 'default'));
     }
 
-    public function titleDefault() {
+    public function titleDefault(): void {
         $this->setTitle(_('Model akce'));
         $this->setIcon('fa fa-cubes');
     }

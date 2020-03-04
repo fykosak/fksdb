@@ -53,46 +53,46 @@ class SchedulePresenter extends BasePresenter {
     /**
      * @param ServiceScheduleGroup $serviceScheduleGroup
      */
-    public function injectServiceScheduleGroup(ServiceScheduleGroup $serviceScheduleGroup) {
+    public function injectServiceScheduleGroup(ServiceScheduleGroup $serviceScheduleGroup): void {
         $this->serviceScheduleGroup = $serviceScheduleGroup;
     }
 
     /**
      * @param ServiceScheduleItem $serviceScheduleItem
      */
-    public function injectServiceScheduleItem(ServiceScheduleItem $serviceScheduleItem) {
+    public function injectServiceScheduleItem(ServiceScheduleItem $serviceScheduleItem): void {
         $this->serviceScheduleItem = $serviceScheduleItem;
     }
 
     /**
      * @param ScheduleFactory $scheduleFactory
      */
-    public function injectScheduleComponentFactory(ScheduleFactory $scheduleFactory) {
+    public function injectScheduleComponentFactory(ScheduleFactory $scheduleFactory): void {
         $this->scheduleFactory = $scheduleFactory;
     }
 
-    public function titleGroups() {
+    public function titleGroups(): void {
         $this->setTitle(sprintf(_('Schedule groups')));
         $this->setIcon('fa fa-calendar-check-o');
     }
 
-    public function titleItem() {
+    public function titleItem(): void {
         $this->setTitle(sprintf(_('Schedule item #%d'), $this->item->schedule_item_id));
         $this->setIcon('fa fa-calendar-check-o');
     }
 
-    public function titleGroup() {
+    public function titleGroup(): void {
         $this->setTitle(sprintf(_('Schedule group #%d'), $this->group->schedule_group_id));
         $this->setIcon('fa fa-calendar-check-o');
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      * @throws AbortException
      */
-    public function actionGroup($id) {
+    public function actionGroup(int $id): void {
         if (!$this->group) {
             $row = $this->serviceScheduleGroup->findByPrimary($id);
             if (!$row) {
@@ -121,7 +121,7 @@ class SchedulePresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      * @throws AbortException
      */
-    public function actionItem($id) {
+    public function actionItem(int $id): void {
         if (!$this->item) {
             $row = $this->serviceScheduleItem->findByPrimary($id);
             if (!$row) {
@@ -153,7 +153,7 @@ class SchedulePresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function actionGroups() {
+    public function actionGroups(): void {
         /**
          * @var AllPersonsGrid $component
          */

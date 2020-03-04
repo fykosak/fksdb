@@ -38,23 +38,23 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
     /**
      * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
      */
-    public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam) {
+    public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 
     /**
      * @param ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
      */
-    public function injectServiceFyziklaniTeamPosition(ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition) {
+    public function injectServiceFyziklaniTeamPosition(ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition): void {
         $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
     }
 
-    public function titleList() {
+    public function titleList(): void {
         $this->setTitle(_('List of team applications'));
         $this->setIcon('fa fa-users');
     }
 
-    public function titleDetail() {
+    public function titleDetail(): void {
         $this->setTitle(_('Team application detail'));
         $this->setIcon('fa fa-user');
     }
@@ -82,7 +82,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
      * @throws BadRequestException
      * @throws AbortException
      */
-    public function renderDetail() {
+    public function renderDetail(): void {
         parent::renderDetail();
         $this->template->acYear = $this->getAcYear();
         try {
@@ -108,7 +108,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    protected function createComponentTeamApplicationsTimeProgress() {
+    protected function createComponentTeamApplicationsTimeProgress(): TeamApplicationsTimeProgress {
         $events = [];
         foreach ($this->getEventIdsByType() as $id) {
             $row = $this->serviceEvent->findByPrimary($id);
@@ -118,9 +118,9 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @return AbstractServiceSingle
+     * @return ServiceFyziklaniTeam
      */
-    function getORMService() {
+    function getORMService(): ServiceFyziklaniTeam {
         return $this->serviceFyziklaniTeam;
     }
 

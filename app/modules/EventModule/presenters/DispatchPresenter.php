@@ -26,7 +26,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
     /**
      * @param ServiceEvent $serviceEvent
      */
-    public function injectServiceEvent(ServiceEvent $serviceEvent) {
+    public function injectServiceEvent(ServiceEvent $serviceEvent): void {
         $this->serviceEvent = $serviceEvent;
     }
 
@@ -55,7 +55,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
         return new DispatchGrid($this->serviceEvent, $person, $this->yearCalculator);
     }
 
-    public function titleDefault() {
+    public function titleDefault(): void {
         $this->setTitle(_('List of events'));
         $this->setIcon('fa fa-calendar');
     }
@@ -64,7 +64,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function startup() {
+    public function startup(): void {
         /**
          * @var LanguageChooser $languageChooser
          */

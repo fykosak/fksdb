@@ -46,19 +46,19 @@ class PaymentPresenter extends BasePresenter {
     /**
      * @param ServicePayment $servicePayment
      */
-    public function injectServicePayment(ServicePayment $servicePayment) {
+    public function injectServicePayment(ServicePayment $servicePayment): void {
         $this->servicePayment = $servicePayment;
     }
 
     /**
      * @param PaymentComponentFactory $paymentComponentFactory
      */
-    public function injectPaymentComponentFactory(PaymentComponentFactory $paymentComponentFactory) {
+    public function injectPaymentComponentFactory(PaymentComponentFactory $paymentComponentFactory): void {
         $this->paymentComponentFactory = $paymentComponentFactory;
     }
 
     /* ********* titles *****************/
-    public function titleCreate() {
+    public function titleCreate(): void {
         $this->setTitle(_('New payment'));
         $this->setIcon('fa fa-credit-card');
     }
@@ -69,7 +69,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function titleEdit(int $id) {
+    public function titleEdit(int $id): void {
         $this->setTitle(sprintf(_('Edit payment #%s'), $this->loadEntity($id)->getPaymentId()));
         $this->setIcon('fa fa-credit-card');
     }
@@ -80,12 +80,12 @@ class PaymentPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function titleDetail(int $id) {
+    public function titleDetail(int $id): void {
         $this->setTitle(sprintf(_('Payment detail #%s'), $this->loadEntity($id)->getPaymentId()));
         $this->setIcon('fa fa-credit-card');
     }
 
-    public function titleList() {
+    public function titleList(): void {
         $this->setTitle(_('List of payments'));
         $this->setIcon('fa fa-credit-card');
     }
@@ -104,7 +104,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function authorizedDetail(int $id) {
+    public function authorizedDetail(int $id): void {
         $this->setAuthorized($this->isContestsOrgAllowed($this->loadEntity($id), 'detail'));
     }
 
@@ -114,7 +114,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function authorizedEdit(int $id) {
+    public function authorizedEdit(int $id): void {
         $this->loadEntity($id);
         $this->setAuthorized($this->canEdit());
     }
@@ -123,7 +123,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function authorizedCreate() {
+    public function authorizedCreate(): void {
         $this->setAuthorized($this->isContestsOrgAllowed('event.payment', 'create'));
     }
 
@@ -131,27 +131,29 @@ class PaymentPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function authorizedList() {
+    public function authorizedList(): void {
         $this->setAuthorized($this->isContestsOrgAllowed('event.payment', 'list'));
     }
 
     /* ********* actions *****************/
     /**
      * @param int $id
-     * @throws AbortException
+     * @return void
      * @throws BadRequestException
      * @throws ForbiddenRequestException
+     * @throws AbortException
      */
-    public function actionDetail(int $id) {
+    public function actionDetail(int $id): void {
         $this->loadEntity($id);
     }
 
     /**
      * @param int $id
-     * @throws AbortException
+     * @return void
      * @throws BadRequestException
+     * @throws AbortException
      */
-    public function actionEdit(int $id) {
+    public function actionEdit(int $id): void {
         $this->loadEntity($id);
         if (!$this->canEdit()) {
             $this->flashMessage(sprintf(_('Payment #%s can not be edited'), $this->getEntity()->getPaymentId()), \BasePresenter::FLASH_ERROR);
@@ -165,10 +167,11 @@ class PaymentPresenter extends BasePresenter {
     }
 
     /**
-     * @throws BadRequestException
+     * @return void
      * @throws AbortException
+     * @throws BadRequestException
      */
-    public function actionCreate() {
+    public function actionCreate(): void {
         if ((count($this->getMachine()->getAvailableTransitions(null)) === 0)) {
             $this->flashMessage(_('Payment is not allowed in this time!'));
             if (!$this->isOrg()) {
@@ -178,26 +181,22 @@ class PaymentPresenter extends BasePresenter {
     }
 
     /* ********* render *****************/
-    public function renderEdit() {
+    /**
+     * @return void
+     */
+    public function renderEdit(): void {
         $this->template->model = $this->getEntity();
     }
 
     /**
-     * @throws BadRequestException
+     * @return void
      * @throws AbortException
+     * @throws BadRequestException
      */
-    public function renderDetail() {
+    public function renderDetail(): void {
         $this->template->items = $this->getMachine()->getPriceCalculator()->getGridItems($this->getEntity());
         $this->template->model = $this->getEntity();
         $this->template->isOrg = $this->isOrg();
-    }
-    /* ********* startup *****************/
-    /**
-     * @throws AbortException
-     * @throws BadRequestException
-     */
-    protected function startup() {
-        parent::startup();
     }
     /* ********* Components *****************/
     /**
@@ -278,9 +277,9 @@ class PaymentPresenter extends BasePresenter {
     }
 
     /**
-     * @return AbstractServiceSingle
+     * @return ServicePayment
      */
-    function getORMService() {
+    function getORMService(): ServicePayment {
         return $this->servicePayment;
     }
 

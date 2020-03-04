@@ -20,11 +20,11 @@ trait EntityTrait {
      * @param int $id
      * @throws BadRequestException
      */
-    public function authorizedDetail(int $id) {
+    public function authorizedDetail(int $id): void {
         $this->setAuthorized($this->isAllowed($this->loadEntity($id), 'detail'));
     }
 
-    public function authorizedList() {
+    public function authorizedList(): void {
         $this->setAuthorized($this->isAllowed($this->getModelResource(), 'list'));
     }
 
@@ -32,18 +32,18 @@ trait EntityTrait {
      * @param int $id
      * @throws BadRequestException
      */
-    public function authorizedEdit(int $id) {
+    public function authorizedEdit(int $id): void {
         $this->setAuthorized($this->isAllowed($this->loadEntity($id), 'edit'));
     }
 
-    public function authorizedCreate() {
+    public function authorizedCreate(): void {
         $this->setAuthorized($this->isAllowed($this->getModelResource(), 'create'));
     }
 
     /**
      * @return AbstractModelSingle|IModel
      */
-    public function getEntity() {
+    public function getEntity(): AbstractModelSingle {
         return $this->model;
     }
 
@@ -52,7 +52,7 @@ trait EntityTrait {
      * @return AbstractModelSingle|IModel
      * @throws BadRequestException
      */
-    public function loadEntity(int $id) {
+    public function loadEntity(int $id): AbstractModelSingle {
         // protection for tests ev. change URL during app is running
         if ($this->model && $id !== $this->model->getPrimary()) {
             $this->model = null;

@@ -28,31 +28,31 @@ class SeatingPresenter extends BasePresenter {
     /**
      * @param ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
      */
-    public function injectServiceFyziklaniTeamPosition(ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition) {
+    public function injectServiceFyziklaniTeamPosition(ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition): void {
         $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
     }
 
-    public function titleDefault() {
+    public function titleDefault(): void {
         $this->setTitle(_('Rozdělení do místností'));
         $this->setIcon('fa fa-arrows');
     }
 
-    public function titleEdit() {
+    public function titleEdit(): void {
         $this->setTitle(_('Edit routing'));
         $this->setIcon('fa fa-pencil');
     }
 
-    public function titleDownload() {
+    public function titleDownload(): void {
         $this->setTitle(_('Download routing'));
         $this->setIcon('fa fa-download');
     }
 
-    public function titleList() {
+    public function titleList(): void {
         $this->setTitle(_('List of all teams'));
         $this->setIcon('fa fa-print');
     }
 
-    public function titlePreview() {
+    public function titlePreview(): void {
         $this->setTitle(_('Preview'));
         $this->setIcon('fa fa-search');
     }
@@ -65,12 +65,12 @@ class SeatingPresenter extends BasePresenter {
         return $event->event_type_id === 1;
     }
 
-    public function authorizedEdit() {
+    public function authorizedEdit(): void {
         $this->setAuthorized(false);
         // $this->setAuthorized(($this->eventIsAllowed('event.seating', 'edit')));
     }
 
-    public function authorizedDownload() {
+    public function authorizedDownload(): void {
         $this->setAuthorized(false);
         // $this->setAuthorized(($this->eventIsAllowed('event.seating', 'download')));
     }
@@ -79,7 +79,7 @@ class SeatingPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function authorizedPreview() {
+    public function authorizedPreview(): void {
         $this->setAuthorized(($this->eventIsAllowed('event.seating', 'preview')));
     }
 
@@ -87,7 +87,7 @@ class SeatingPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function authorizedList() {
+    public function authorizedList(): void {
         $this->setAuthorized(($this->eventIsAllowed('event.seating', 'list')));
     }
 
@@ -95,7 +95,7 @@ class SeatingPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function authorizedDefault() {
+    public function authorizedDefault(): void {
         $download = $this->eventIsAllowed('event.seating', 'download');
         $edit = $this->eventIsAllowed('event.seating', 'edit');
         $this->setAuthorized($download || $edit);
@@ -105,7 +105,7 @@ class SeatingPresenter extends BasePresenter {
     /**
      * @throws AbortException
      */
-    public function renderEdit() {
+    public function renderEdit(): void {
         if ($this->isAjax()) {
             $data = $this->getHttpRequest()->getPost('requestData');
             $updatedTeams = $this->serviceFyziklaniTeamPosition->updateRouting($data);
@@ -121,7 +121,7 @@ class SeatingPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function renderList() {
+    public function renderList(): void {
         $this->template->event = $this->getEvent();
         $teams = $this->getEvent()->getTeams();
         $this->template->teams = $teams;
@@ -138,7 +138,7 @@ class SeatingPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function renderPreview() {
+    public function renderPreview(): void {
         $this->template->event = $this->getEvent();
     }
 
