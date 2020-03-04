@@ -119,7 +119,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      */
     protected function createComponentSingleApplicationsTimeProgress() {
         $events = [];
-        foreach ($this->getProgressEventIdsByType() as $id) {
+        foreach ($this->getEventIdsByType() as $id) {
             $row = $this->serviceEvent->findByPrimary($id);
             $events[$id] = ModelEvent::createFromActiveRow($row);
         }
@@ -130,24 +130,9 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @return int[]
      * @throws AbortException
      * @throws BadRequestException
-     * TODO hardcore eventIds
      */
-    private function getProgressEventIdsByType(): array {
-        $eventIds = [
-            1 => [30, 31, 32, /*33, 34,*/
-                1, 27, 95, 116, 125, 137, 145],
-            2 => [2, 7, 92, 113, 123, 135, 143],
-            3 => [3, 126, 35],
-            7 => [6, 91, 124],
-            11 => [111, 119, 129, 140],
-            12 => [93, 115, 121, 136, 144],
-            9 => [8, 94, 114, 122, 134, 141],
-        ];
-        $typeId = $this->getEvent()->event_type_id;
-        if (isset($eventIds[$typeId])) {
-            return $eventIds[$typeId];
-        }
-        return array_values($this->serviceEvent->getTable()->where('event_type_id', $this->getEvent()->event_type_id)->fetchPairs('event_id', 'event_id'));
+    protected function getEventIdsByType(): array {
+        return array_values($this->serviceEvent->getEventsByType($this->getEvent()->getEventType())->fetchPairs('event_id', 'event_id'));
     }
 
     /**

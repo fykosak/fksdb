@@ -6,7 +6,7 @@
   * Payments, Applications (single+team), applications, fyziklani,...
   * Remove Application progress presenter
     * progress charts are moved to list view of application presenter
-  
+  * Change source of application time progress charts
 ----
 ### 2020-02-29
 #### Email_messages

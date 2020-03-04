@@ -109,17 +109,8 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
      * @throws BadRequestException
      */
     protected function createComponentTeamApplicationsTimeProgress() {
-        $eventIds = [];
-        switch ($this->getEvent()->event_type_id) {
-            case 1:
-                $eventIds = [30, 31, 32, /*33, 34,*/
-                    1, 27, 95, 116, 125, 137, 145];
-                break;
-            case 9:
-                $eventIds = [8, 94, 114, 122, 134, 141];
-        }
         $events = [];
-        foreach ($eventIds as $id) {
+        foreach ($this->getEventIdsByType() as $id) {
             $row = $this->serviceEvent->findByPrimary($id);
             $events[$id] = ModelEvent::createFromActiveRow($row);
         }
