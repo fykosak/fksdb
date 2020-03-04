@@ -11,6 +11,7 @@ use FKSDB\Components\Grids\Fyziklani\SubmitsGrid;
 use FKSDB\model\Fyziklani\ClosedSubmittingException;
 use FKSDB\model\Fyziklani\PointsMismatchException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -24,36 +25,31 @@ class SubmitPresenter extends BasePresenter {
     use EventEntityTrait;
 
     /* ***** Title methods *****/
-    public function titleEntry() {
+    public function titleEntry(): void {
         $this->setTitle(_('Zadávání bodů'));
         $this->setIcon('fa fa-pencil-square-o');
     }
 
-    public function titleQrEntry() {
+    public function titleQrEntry(): void {
         $this->titleEntry();
     }
 
-    public function titleAutoClose() {
+    public function titleAutoClose(): void {
         $this->setTitle(_('You can close this page'));
         $this->setIcon('fa fa-pencil-square-o');
     }
 
-    public function titleList() {
+    public function titleList(): void {
         $this->setTitle(_('Submits'));
         $this->setIcon('fa fa-table');
     }
 
-    public function titleEdit() {
+    public function titleEdit(): void {
         $this->setTitle(_('Úprava bodování'));
         $this->setIcon('fa fa-pencil');
     }
 
-    /**
-     * @throws AbortException
-     * @throws BadRequestException
-     * @throws ForbiddenRequestException
-     */
-    public function titleDetail() {
+    public function titleDetail(): void {
         $this->setTitle(sprintf(_('Detail of the submit #%d'), $this->getEntity()->fyziklani_submit_id));
         $this->setIcon('fa fa-pencil');
     }
@@ -63,7 +59,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws AbortException
      */
-    public function authorizedEntry() {
+    public function authorizedEntry(): void {
         $this->setAuthorized($this->eventIsAllowed('fyziklani.submit', 'default'));
     }
 
@@ -71,7 +67,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws AbortException
      */
-    public function authorizedDetail() {
+    public function authorizedDetail(): void {
         $this->authorizedEntry();
     }
 
@@ -79,7 +75,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws AbortException
      */
-    public function authorizedQrEntry() {
+    public function authorizedQrEntry(): void {
         $this->authorizedEntry();
     }
 
@@ -87,7 +83,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws AbortException
      */
-    public function authorizedEdit() {
+    public function authorizedEdit(): void {
         $this->authorizedEntry();
     }
 
@@ -95,7 +91,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws AbortException
      */
-    public function authorizedList() {
+    public function authorizedList(): void {
         $this->authorizedEntry();
     }
 
@@ -103,7 +99,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws AbortException
      */
-    public function authorizedAutoClose() {
+    public function authorizedAutoClose(): void {
         $this->authorizedEntry();
     }
 
@@ -113,7 +109,7 @@ class SubmitPresenter extends BasePresenter {
      * @param $id
      * @throws BadRequestException
      */
-    public function actionQrEntry($id) {
+    public function actionQrEntry(string $id): void {
         if (!$id) {
             $this->flashMessage('Code is required', \BasePresenter::FLASH_ERROR);
             return;
@@ -131,7 +127,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function actionEdit(int $id) {
+    public function actionEdit(int $id): void {
         $team = $this->loadEntity($id);
         $control = $this->getComponent('editControl');
         if (!$control instanceof EditControl) {
@@ -146,25 +142,15 @@ class SubmitPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function actionDetail(int $id) {
+    public function actionDetail(int $id): void {
         $this->loadEntity($id);
     }
 
-    /**
-     * @throws AbortException
-     * @throws BadRequestException
-     * @throws ForbiddenRequestException
-     */
-    public function renderDetail() {
+    public function renderDetail(): void {
         $this->template->model = $this->getEntity();
     }
 
-    /**
-     * @throws AbortException
-     * @throws BadRequestException
-     * @throws ForbiddenRequestException
-     */
-    public function renderEdit() {
+    public function renderEdit(): void {
         $this->template->model = $this->getEntity();
     }
 
@@ -222,11 +208,10 @@ class SubmitPresenter extends BasePresenter {
     /**
      * @throws AbortException
      * @throws BadRequestException
-     * @throws ForbiddenRequestException
      * @throws ClosedSubmittingException
      * @throws PointsMismatchException
      */
-    public function handleCheck() {
+    public function handleCheck(): void {
         $log = $this->getServiceFyziklaniSubmit()->checkSubmit($this->getEntity(), $this->getEntity()->points, $this->getUser());
         $this->flashMessage($log->getMessage(), $log->getLevel());
         $this->redirect('this');
@@ -235,7 +220,7 @@ class SubmitPresenter extends BasePresenter {
     /**
      * @inheritDoc
      */
-    protected function getORMService() {
+    protected function getORMService(): ServiceFyziklaniSubmit {
         return $this->getServiceFyziklaniSubmit();
     }
 

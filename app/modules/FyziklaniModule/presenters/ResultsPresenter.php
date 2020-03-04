@@ -26,49 +26,49 @@ class ResultsPresenter extends BasePresenter {
         }
     }
 
-    public function titleCorrelationStatistics() {
+    public function titleCorrelationStatistics(): void {
         $this->setTitle(_('Correlation statistics'));
         $this->setIcon('fa fa-pie-chart');
     }
 
-    public function titleDefault() {
+    public function titleDefault(): void {
         $this->setTitle(_('Results and statistics'));
         $this->setIcon('fa fa-trophy');
     }
 
-    public function titleTable() {
+    public function titleTable(): void {
         $this->setTitle(_('Detailed results'));
         $this->setIcon('fa fa-trophy');
     }
 
-    public function titlePresentation() {
+    public function titlePresentation(): void {
         $this->setIcon('fa fa-table');
         return $this->setTitle(_('Results presentation'));
     }
 
-    public function titleTeamStatistics() {
+    public function titleTeamStatistics(): void {
         $this->setTitle(_('Teams statistics'));
         $this->setIcon('fa fa-line-chart');
     }
 
-    public function titleTaskStatistics() {
+    public function titleTaskStatistics(): void {
         $this->setTitle(_('Tasks statistics'));
         $this->setIcon('fa fa-pie-chart');
     }
 
-    public function authorizedDefault() {
+    public function authorizedDefault(): void {
         $this->setAuthorized(true);
     }
 
-    public function authorizedResultsTable() {
+    public function authorizedResultsTable(): void {
         $this->authorizedDefault();
     }
 
-    public function authorizedTaskStatistics() {
+    public function authorizedTaskStatistics(): void {
         $this->authorizedDefault();
     }
 
-    public function authorizedTeamStatistics() {
+    public function authorizedTeamStatistics(): void {
         $this->authorizedDefault();
     }
 
@@ -76,7 +76,7 @@ class ResultsPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function authorizedCorrelationStatistics() {
+    public function authorizedCorrelationStatistics(): void {
         $this->setAuthorized($this->isContestsOrgAllowed('fyziklani.results', 'correlation'));
     }
 
@@ -84,7 +84,7 @@ class ResultsPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function authorizedPresentation() {
+    public function authorizedPresentation(): void {
         $this->setAuthorized($this->eventIsAllowed('fyziklani.results', 'presentation'));
     }
 

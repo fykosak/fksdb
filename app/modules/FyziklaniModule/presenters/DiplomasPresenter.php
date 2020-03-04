@@ -14,12 +14,12 @@ use Nette\Utils\Html;
  */
 class DiplomasPresenter extends BasePresenter {
 
-    public function titleResults() {
+    public function titleResults(): void {
         $this->setTitle(_('Final results'));
         $this->setIcon('fa fa-trophy');
     }
 
-    public function titleDefault() {
+    public function titleDefault(): void {
         $this->setTitle(_('Calculate ranking'));
         $this->setIcon('fa fa-check');
     }
@@ -28,7 +28,7 @@ class DiplomasPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws AbortException
      */
-    public function authorizedResults() {
+    public function authorizedResults(): void {
         $this->setAuthorized($this->isContestsOrgAllowed('fyziklani.diplomas', 'results'));
     }
 
@@ -36,7 +36,7 @@ class DiplomasPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function authorizeDefault() {
+    public function authorizeDefault(): void {
         $this->setAuthorized($this->eventIsAllowed('fyziklani.diplomas', 'calculate'));
     }
 
@@ -44,7 +44,7 @@ class DiplomasPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function renderDefault() {
+    public function renderDefault(): void {
         $items = [];
         foreach (['A', 'B', 'C'] as $category) {
             $items[$category] = [
@@ -68,7 +68,7 @@ class DiplomasPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function handleCalculate(string $category = null) {
+    public function handleCalculate(string $category = null): void {
         $closeStrategy = new CloseStrategy($this->getEvent(), $this->getServiceFyziklaniTeam());
         $log = $closeStrategy($category);
         $this->flashMessage(Html::el()->addHtml(Html::el('h3')->addHtml('Rankin has been saved.'))->addHtml(Html::el('ul')->addHtml($log)), \BasePresenter::FLASH_SUCCESS);

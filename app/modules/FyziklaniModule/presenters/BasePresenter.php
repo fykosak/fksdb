@@ -42,14 +42,14 @@ abstract class BasePresenter extends EventBasePresenter {
     /**
      * @param FyziklaniFactory $fyziklaniComponentsFactory
      */
-    public function injectFyziklaniComponentsFactory(FyziklaniFactory $fyziklaniComponentsFactory) {
+    public function injectFyziklaniComponentsFactory(FyziklaniFactory $fyziklaniComponentsFactory): void {
         $this->fyziklaniComponentsFactory = $fyziklaniComponentsFactory;
     }
 
     /**
      * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
      */
-    public function injectServiceFyziklaniSubmit(ServiceFyziklaniSubmit $serviceFyziklaniSubmit) {
+    public function injectServiceFyziklaniSubmit(ServiceFyziklaniSubmit $serviceFyziklaniSubmit): void {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
     }
 
@@ -63,7 +63,7 @@ abstract class BasePresenter extends EventBasePresenter {
     /**
      * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
      */
-    public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam) {
+    public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 
@@ -77,7 +77,7 @@ abstract class BasePresenter extends EventBasePresenter {
     /**
      * @param ServiceFyziklaniTask $serviceFyziklaniTask
      */
-    public function injectServiceFyziklaniTask(ServiceFyziklaniTask $serviceFyziklaniTask) {
+    public function injectServiceFyziklaniTask(ServiceFyziklaniTask $serviceFyziklaniTask): void {
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
     }
 
@@ -107,7 +107,7 @@ abstract class BasePresenter extends EventBasePresenter {
      * @throws BadRequestException
      * @throws AbortException
      */
-    protected function startup() {
+    protected function startup(): void {
         parent::startup();
         /**
          * @var FyziklaniChooser $fyziklaniChooser

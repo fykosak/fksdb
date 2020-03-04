@@ -19,7 +19,7 @@ class GameSetupPresenter extends BasePresenter {
     /**
      * @return void
      */
-    public function titleDefault() {
+    public function titleDefault(): void {
         $this->setTitle(_('Fyziklani game setup'));
         $this->setIcon('fa fa-cogs');
     }
@@ -28,7 +28,7 @@ class GameSetupPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function renderDefault() {
+    public function renderDefault(): void {
         $this->template->gameSetup = $this->getGameSetup();
     }
 
@@ -37,7 +37,7 @@ class GameSetupPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function authorizedDefault() {
+    public function authorizedDefault(): void {
         return $this->setAuthorized($this->eventIsAllowed('fyziklani.gameSetup', 'default'));
     }
 

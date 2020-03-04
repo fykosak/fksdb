@@ -19,12 +19,12 @@ class TaskPresenter extends BasePresenter {
     const IMPORT_STATE_REMOVE_N_INSERT = 2;
     const IMPORT_STATE_INSERT = 3;
 
-    public function titleList() {
+    public function titleList(): void {
         $this->setTitle(_('Tasks'));
         $this->setIcon('fa fa-tasks');
     }
 
-    public function titleImport() {
+    public function titleImport(): void {
         $this->setTitle(_('Tasks Import'));
         $this->setIcon('fa fa-upload');
     }
@@ -33,7 +33,7 @@ class TaskPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function authorizedList() {
+    public function authorizedList(): void {
         $this->setAuthorized(($this->eventIsAllowed('fyziklani.task', 'list')));
     }
 
@@ -41,7 +41,7 @@ class TaskPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function authorizedImport() {
+    public function authorizedImport(): void {
         $this->setAuthorized(($this->eventIsAllowed('fyziklani.task', 'import')));
     }
 
@@ -71,7 +71,7 @@ class TaskPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function taskImportFormSucceeded(Form $form) {
+    public function taskImportFormSucceeded(Form $form): void {
         $values = $form->getValues();
         $taskImportProcessor = new FyziklaniTaskImportProcessor($this->getEvent(), $this->getServiceFyziklaniTask());
         $messages = [];
