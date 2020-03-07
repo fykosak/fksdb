@@ -19,7 +19,7 @@ class ParticipantAcquaintanceChartControl extends ReactComponent implements ICha
     /**
      * @var int
      */
-    private $eventId;
+    private $event;
     /**
      * @var ServiceEvent
      */
@@ -28,12 +28,12 @@ class ParticipantAcquaintanceChartControl extends ReactComponent implements ICha
     /**
      * ParticipantAcquaintanceChartControl constructor.
      * @param Container $context
-     * @param int $eventId
+     * @param ModelEvent $event
      * @param ServiceEvent $serviceEvent
      */
-    public function __construct(Container $context, int $eventId, ServiceEvent $serviceEvent) {
+    public function __construct(Container $context, ModelEvent $event, ServiceEvent $serviceEvent) {
         parent::__construct($context);
-        $this->eventId = $eventId;
+        $this->event= $event;
         $this->serviceEvent = $serviceEvent;
     }
 
@@ -49,17 +49,8 @@ class ParticipantAcquaintanceChartControl extends ReactComponent implements ICha
      * @throws JsonException
      */
     function getData(): string {
-        if (!$this->eventId) {
-            $this->getPresenter()->flashMessage(_('no eventId selected'), 'danger');
-            return '';
-        }
-        /**
-         * @var ModelEvent $event
-         */
-        $event = $this->serviceEvent->findByPrimary2($this->eventId);
-        $event->getParticipants();
         $data = [];
-        foreach ($event->getParticipants()->where('status', ['participated', 'applied']) as $row) {
+        foreach ($this->event->getParticipants()->where('status', ['participated', 'applied']) as $row) {
 
             $participant = ModelEventParticipant::createFromActiveRow($row);
 
