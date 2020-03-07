@@ -1,10 +1,10 @@
 import { LineChartData } from '@shared/components/lineChart/interfaces';
-import LineChart from '@shared/components/lineChart/lineChart';
 import LineChartLegend from '@shared/components/lineChart/lineChartLegend';
 import { scaleLinear, scaleTime } from 'd3-scale';
 import * as React from 'react';
-import { PointData } from '@apps/fyziklani/statistics/middleware/charts/lines';
 import { lang } from '@i18n/i18n';
+import LineChart from '@shared/components/lineChart';
+import { PointData } from '@apps/fyziklaniResults/statistics/middleware/charts/lines';
 
 interface Data {
     created: string;
