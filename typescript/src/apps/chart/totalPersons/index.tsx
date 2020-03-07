@@ -4,6 +4,7 @@ import LineChartLegend from '@shared/components/lineChart/lineChartLegend';
 import { scaleLinear, scaleTime } from 'd3-scale';
 import * as React from 'react';
 import { PointData } from '../../fyziklani/statistics/middleware/charts/lines';
+import { lang } from '@i18n/i18n';
 
 interface Data {
     created: string;
@@ -51,47 +52,35 @@ export default class TotalPersons extends React.Component<OwnProps, {}> {
                 });
             }
         });
-
+        const display = {
+            area: false,
+            lines: true,
+            points: false,
+        };
         lineChartData.push({
             color: 'gray',
-            display: {
-                area: false,
-                lines: true,
-                points: false,
-            },
-            name: 'All',
+            display,
+            name: lang.getText('All'),
             points: pointsAll,
         });
 
         lineChartData.push({
             color: '#1175da',
-            display: {
-                area: false,
-                lines: true,
-                points: false,
-            },
-            name: 'Male',
+            display,
+            name: lang.getText('Male'),
             points: pointsMale,
         });
 
         lineChartData.push({
             color: '#da1175',
-            display: {
-                area: false,
-                lines: true,
-                points: false,
-            },
-            name: 'Female',
+            display,
+            name: lang.getText('Female'),
             points: pointsFemale,
         });
         lineChartData.push({
             color: '#da7511',
-            display: {
-                area: false,
-                lines: true,
-                points: false,
-            },
-            name: 'person Id',
+            display,
+            name: lang.getText('Person Id'),
             points: pointsPersonId,
         });
 
