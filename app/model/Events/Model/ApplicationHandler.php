@@ -203,24 +203,7 @@ class ApplicationHandler {
             $this->logger->log($message, ILogger::ERROR);
             $this->formRollback($data);
             $this->reRaise($exception);
-        } catch (DuplicateApplicationException $exception) {
-            $message = $exception->getMessage();
-            $this->logger->log($message, ILogger::ERROR);
-            $this->formRollback($data);
-            $this->reRaise($exception);
-        } catch (MachineExecutionException $exception) {
-            $this->logger->log($exception->getMessage(), ILogger::ERROR);
-            $this->formRollback($data);
-            $this->reRaise($exception);
-        } catch (SubmitProcessingException $exception) {
-            $this->logger->log($exception->getMessage(), ILogger::ERROR);
-            $this->formRollback($data);
-            $this->reRaise($exception);
-        } catch (FullCapacityException $exception) {
-            $this->logger->log($exception->getMessage(), ILogger::ERROR);
-            $this->formRollback($data);
-            $this->reRaise($exception);
-        } catch (ExistingPaymentException $exception) {
+        } catch (DuplicateApplicationException|MachineExecutionException|SubmitProcessingException|FullCapacityException|ExistingPaymentException $exception) {
             $this->logger->log($exception->getMessage(), ILogger::ERROR);
             $this->formRollback($data);
             $this->reRaise($exception);

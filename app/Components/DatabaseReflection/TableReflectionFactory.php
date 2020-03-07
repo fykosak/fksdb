@@ -73,7 +73,7 @@ final class TableReflectionFactory {
     public function createComponent(string $name, int $permissionLevel) {
         $parts = \explode('__', $name);
         if (\count($parts) === 3) {
-            list($prefix, $tableName, $fieldName) = $parts;
+            [$prefix, $tableName, $fieldName] = $parts;
             if ($prefix === 'valuePrinter') {
                 $factory = $this->loadService($tableName, $fieldName);
                 return new RowFactoryComponent($this->translator, $factory, $permissionLevel);

@@ -4,6 +4,7 @@ namespace FKSDB\Components\DatabaseReflection;
 
 use FKSDB\Components\Forms\Factories\ITestedRowFactory;
 use FKSDB\ORM\AbstractModelSingle;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
@@ -14,9 +15,9 @@ use Nette\Templating\FileTemplate;
  * @property FileTemplate $template
  */
 class RowFactoryComponent extends Control {
-    const LAYOUT_LIST_ITEM = 'list-item';
-    const LAYOUT_ROW = 'row';
-    const LAYOUT_ONLY_VALUE = 'only-value';
+    private const LAYOUT_LIST_ITEM = 'list-item';
+    private const LAYOUT_ROW = 'row';
+    private const LAYOUT_ONLY_VALUE = 'only-value';
     /**
      * @var ITranslator
      */
@@ -46,7 +47,7 @@ class RowFactoryComponent extends Control {
     /**
      * @param AbstractModelSingle $model
      * @param bool $tested
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     public function render(AbstractModelSingle $model, bool $tested = false) {
         $this->template->setTranslator($this->translator);
@@ -64,7 +65,7 @@ class RowFactoryComponent extends Control {
     /**
      * @param AbstractModelSingle $model
      * @param bool $tested
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     public function renderRow(AbstractModelSingle $model, bool $tested = false) {
         $this->template->layout = self::LAYOUT_ROW;
@@ -74,7 +75,7 @@ class RowFactoryComponent extends Control {
     /**
      * @param AbstractModelSingle $model
      * @param bool $tested
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     public function renderListItem(AbstractModelSingle $model, bool $tested = false) {
         $this->template->layout = self::LAYOUT_LIST_ITEM;
@@ -84,7 +85,7 @@ class RowFactoryComponent extends Control {
     /**
      * @param AbstractModelSingle $model
      * @param bool $tested
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     public function renderOnlyValue(AbstractModelSingle $model, bool $tested = false) {
         $this->template->layout = self::LAYOUT_ONLY_VALUE;

@@ -175,7 +175,7 @@ class EventsExtension extends CompilerExtension {
                 $this->baseMachineConfig[$key] = $baseMachineDef;
                 break;
             }
-            list($protoDefinitionName, $protoBaseName) = explode('.', $prototype);
+            [$protoDefinitionName, $protoBaseName] = explode('.', $prototype);
             if (!isset($config[$protoDefinitionName]) || !isset($config[$protoDefinitionName]['baseMachines'][$protoBaseName])) {
                 throw new MachineDefinitionException("Prototype '$prototype' not found.");
             }

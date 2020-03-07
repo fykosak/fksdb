@@ -128,7 +128,7 @@ class ImportHandler {
                 $baseHolderName = $primaryBaseHolder->getName();
                 $fieldName = $parts[0];
             } else {
-                list($baseHolderName, $fieldName) = $parts;
+                [$baseHolderName, $fieldName] = $parts;
             }
             if (!isset($values[$baseHolderName])) {
                 $values[$baseHolderName] = new ArrayHash();

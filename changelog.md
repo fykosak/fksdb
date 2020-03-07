@@ -1,4 +1,7 @@
 # Changelog
+### 2020-03-07
+  * update methods in EventModule & FyziklaniModule to PHP7.1
+  * add access level to const
 ### 2020-03-03
 #### enable GUIs for events
   * new method of eventPresenter isEnabledForEvent($event):bool

@@ -124,7 +124,7 @@ class Transition extends FreezableObject {
      */
     public function setMask($mask) {
         $this->mask = $mask;
-        list($this->source, $this->target) = self::parseMask($mask);
+        [$this->source, $this->target] = self::parseMask($mask);
         $this->setName($mask);
     }
 
@@ -402,7 +402,7 @@ class Transition extends FreezableObject {
         if (count($parts) != 2) {
             return false;
         }
-        list($sources, $target) = $parts;
+        [$sources, $target] = $parts;
 
         $sources = explode('|', $sources);
 

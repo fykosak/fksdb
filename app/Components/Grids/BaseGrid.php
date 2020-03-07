@@ -226,7 +226,7 @@ abstract class BaseGrid extends Grid {
 
         foreach ($fields as $name) {
             if (preg_match('/.*\..*/', $name)) {
-                list($table, $field) = TableReflectionFactory::parseRow($name);
+                [$table, $field] = TableReflectionFactory::parseRow($name);
                 $this->addReflectionColumn($table, $field, $this->getModelClassName());
             } else {
                 $this->addReflectionColumn($this->getTableName(), $name, $this->getModelClassName());

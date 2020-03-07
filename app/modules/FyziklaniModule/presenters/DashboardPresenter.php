@@ -14,7 +14,7 @@ class DashboardPresenter extends BasePresenter {
      * @return void
      */
     public function titleDefault(): void {
-        $this->setTitle(_('Herní systém Fyziklání'));
+        $this->setTitle(_('Fyziklani game app'));
         $this->setIcon('fa fa-dashboard');
     }
 

@@ -20,13 +20,14 @@ use Nette\Application\ForbiddenRequestException;
  * Class SubmitPresenter
  * @package FyziklaniModule
  * @method ModelFyziklaniSubmit getEntity()
+ * @method ModelFyziklaniSubmit loadEntity(int $id)
  */
 class SubmitPresenter extends BasePresenter {
     use EventEntityTrait;
 
     /* ***** Title methods *****/
     public function titleEntry(): void {
-        $this->setTitle(_('Zadávání bodů'));
+        $this->setTitle(_('Entry scoring'));
         $this->setIcon('fa fa-pencil-square-o');
     }
 
@@ -45,7 +46,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     public function titleEdit(): void {
-        $this->setTitle(_('Úprava bodování'));
+        $this->setTitle(_('Edit submit'));
         $this->setIcon('fa fa-pencil');
     }
 

@@ -81,7 +81,7 @@ class BornNumber {
             throw new OutOfRangeException('Born number not match');
         }
 
-        list(, , $month, , , $control) = $matches;
+        [, , $month, , , $control] = $matches;
 
         // do roku 1954 přidělovaná devítimístná RČ nelze ověřit
         if ($control === '') {

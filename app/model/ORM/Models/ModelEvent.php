@@ -28,6 +28,7 @@ use Nette\Utils\DateTime;
  * @property-read DateTime registration_end
  */
 class ModelEvent extends AbstractModelSingle implements IResource, IContestReferencedModel {
+    public const RESOURCE_ID = 'fyziklani.game_setup';
 
     /**
      * Event can have a holder assigned for purposes of parameter parsing.
@@ -88,7 +89,7 @@ class ModelEvent extends AbstractModelSingle implements IResource, IContestRefer
      * @return string
      */
     public function getResourceId(): string {
-        return 'event';
+        return self::RESOURCE_ID;
     }
 
     /**

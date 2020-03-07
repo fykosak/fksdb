@@ -310,7 +310,7 @@ class TableMerger {
             $this->refTables = [];
             foreach ($this->connection->getSupplementalDriver()->getTables() as $otherTable) {
                 try {
-                    list($table, $refColumn) = $this->connection->getDatabaseReflection()->getHasManyReference($this->table, $otherTable['name'], self::$refreshReferencing);
+                    [$table, $refColumn] = $this->connection->getDatabaseReflection()->getHasManyReference($this->table, $otherTable['name'], self::$refreshReferencing);
                     self::$refreshReferencing = false;
                     $this->refTables[$table] = $refColumn;
                 } catch (MissingReferenceException $exception) {
@@ -361,7 +361,7 @@ class TableMerger {
     private function getReferencedTable($column) {
         if (!array_key_exists($column, $this->referencedTables)) {
             try {
-                list($table, $refColumn) = $this->connection->getDatabaseReflection()->getBelongsToReference($this->table, $column, self::$refreshReferenced);
+                [$table, $refColumn] = $this->connection->getDatabaseReflection()->getBelongsToReference($this->table, $column, self::$refreshReferenced);
                 self::$refreshReferenced = false;
                 $this->referencedTables[$column] = $table;
             } catch (MissingReferenceException$exception) {

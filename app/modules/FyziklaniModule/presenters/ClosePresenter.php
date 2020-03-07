@@ -18,6 +18,7 @@ use function sprintf;
  * Class ClosePresenter
  * @package FyziklaniModule
  * @property FormControl closeCategoryAForm
+ * @method ModelFyziklaniTeam loadEntity(int $id)
  * @method ModelFyziklaniTeam getEntity()
  */
 class ClosePresenter extends BasePresenter {
@@ -26,7 +27,7 @@ class ClosePresenter extends BasePresenter {
 
     /* ******* TITLE ***********/
     public function titleList(): void {
-        $this->setTitle(_('Uzavírání bodování'));
+        $this->setTitle(_('Close scoring'));
         $this->setIcon('fa fa-check');
     }
 
@@ -37,7 +38,7 @@ class ClosePresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titleTeam(int $id): void {
-        $this->setTitle(sprintf(_('Uzavírání bodování týmu "%s"'), $this->loadEntity($id)->name));
+        $this->setTitle(sprintf(_('Close scoring of team "%s"'), $this->loadEntity($id)->name));
         $this->setIcon('fa fa-check-square-o');
     }
 

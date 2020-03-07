@@ -13,9 +13,9 @@ use Nette\Localization\ITranslator;
  * @package FKSDB\Components\DatabaseReflection
  */
 class ValuePrinterComponent extends Control {
-    const LAYOUT_LIST_ITEM = 'list-item';
-    const LAYOUT_ROW = 'row';
-    const LAYOUT_ONLY_VALUE = 'only-value';
+    private const LAYOUT_LIST_ITEM = 'list-item';
+    private const LAYOUT_ROW = 'row';
+    private const LAYOUT_ONLY_VALUE = 'only-value';
     /**
      * @var ITranslator
      */
@@ -45,7 +45,7 @@ private $tableReflectionFactory;
      * @throws \Exception
      */
     public function render(string $field, AbstractModelSingle $model, int $userPermission, bool $tested) {
-        list($tableName, $fieldName) = TableReflectionFactory::parseRow($field);
+        [$tableName, $fieldName] = TableReflectionFactory::parseRow($field);
         $factory = $this->tableReflectionFactory->loadService($tableName, $fieldName);
 
         $this->template->setTranslator($this->translator);
