@@ -128,6 +128,8 @@ parameters:
                   required: false
                 linkedin_id:
                     required: false
+                pizza:
+                    reuired: false
                 # place to others onfo
                 note:
                   required: false

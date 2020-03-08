@@ -164,6 +164,10 @@ DBReflection:
                  type: string
                  title: Titul za jménem
                  permission: PERMISSION_ALLOW_RESTRICT
+             pizza:
+                 type: string
+                 title: Pizza
+                 permission: PERMISSION_ALLOW_RESTRICT
 
          person_history:
              ac_year: FKSDB\Components\DatabaseReflection\PersonHistory\AcYearRow
