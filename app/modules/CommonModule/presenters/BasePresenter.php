@@ -20,19 +20,12 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @return array
      */
     protected function getNavBarVariant(): array {
-        return [('theme-' . $this->getComponent('themeSwitcher')->getSelectedTheme()) . ' common', 'bg-dark navbar-dark'];
+        return ['theme-light common', 'bg-dark navbar-dark'];
     }
 
     protected function beforeRender() {
         $this->template->theme = $this->theme;
         parent::beforeRender();
-    }
-
-    /**
-     * @return ThemeSwitcher
-     */
-    public function createComponentThemeSwitcher(): ThemeSwitcher {
-        return new ThemeSwitcher($this->session, $this->getTranslator());
     }
 
     /**

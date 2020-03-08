@@ -14,6 +14,7 @@ use Nette\Application\BadRequestException;
  * Class SchoolPresenter
  * @package CommonModule
  * @method ModelSchool getEntity()
+ * @method ModelSchool loadEntity(int $id)
  */
 class SchoolPresenter extends BasePresenter {
 
@@ -48,9 +49,7 @@ class SchoolPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function titleDetail(int $id) {
-        $this->loadEntity($id);
-        $school = $this->getEntity();
-        $this->setTitle(sprintf(_('Detail of school %s'), $school->name_abbrev));
+        $this->setTitle(sprintf(_('Detail of school %s'), $this->loadEntity($id)->name_abbrev));
         $this->setIcon('fa fa-university');
     }
 
@@ -62,8 +61,12 @@ class SchoolPresenter extends BasePresenter {
         $this->loadEntity($id);
     }
 
-    public function renderDetail() {
-        $this->template->model = $this->getEntity();
+    /**
+     * @param int $id
+     * @throws BadRequestException
+     */
+    public function renderDetail(int $id) {
+        $this->template->model = $this->loadEntity($id);
     }
 
     /**

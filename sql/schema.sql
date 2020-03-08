@@ -511,6 +511,7 @@ CREATE TABLE IF NOT EXISTS `person_info` (
   COMMENT 'email rodič otec',
   `email_parent_m`         VARCHAR(255)  NULL DEFAULT NULL
   COMMENT 'email rodič mama',
+  `pizza`                  VARCHAR(255) NULL DEFAULT NULL COMMENT 'pizza',
   PRIMARY KEY (`person_id`),
   UNIQUE INDEX `email_UNIQUE` (`email` ASC),
   UNIQUE INDEX `uk_login_UNIQUE` (`uk_login` ASC),
