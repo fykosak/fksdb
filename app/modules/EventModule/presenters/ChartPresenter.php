@@ -3,7 +3,9 @@
 namespace EventModule;
 
 use FKSDB\ChartPresenterTrait;
-use FKSDB\Components\Controls\Chart\ParticipantAcquaintanceChartControl;
+use FKSDB\Components\Controls\Chart\Event\ParticipantAcquaintanceChartControl;
+use FKSDB\Components\React\ReactComponent\Events\SingleApplicationsTimeProgress;
+use FKSDB\Components\React\ReactComponent\Events\TeamApplicationsTimeProgress;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 
@@ -12,7 +14,6 @@ use Nette\Application\BadRequestException;
  * @package EventModule
  */
 class ChartPresenter extends BasePresenter {
-
     use ChartPresenterTrait;
 
     /**
@@ -22,7 +23,9 @@ class ChartPresenter extends BasePresenter {
      */
     protected function registerCharts(): array {
         return [
-            new ParticipantAcquaintanceChartControl($this->context, $this->getEvent(), $this->serviceEvent),
+            new ParticipantAcquaintanceChartControl($this->context, $this->getEvent()),
+            new SingleApplicationsTimeProgress($this->context, $this->getEvent()),
+            new TeamApplicationsTimeProgress($this->context, $this->getEvent()),
         ];
     }
 
@@ -31,7 +34,12 @@ class ChartPresenter extends BasePresenter {
         $this->selectChart();
     }
 
-    public function renderList() {
+    public function renderDefault() {
         $this->template->charts = $this->getCharts();
+    }
+
+    public function titleDefault() {
+        $this->setTitle(_('Charts'));
+        $this->setIcon('fa fa fa-pie-chart');
     }
 }

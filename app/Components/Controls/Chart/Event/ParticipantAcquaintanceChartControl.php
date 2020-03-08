@@ -1,7 +1,8 @@
 <?php
 
-namespace FKSDB\Components\Controls\Chart;
+namespace FKSDB\Components\Controls\Chart\Event;
 
+use FKSDB\Components\Controls\Chart\IChart;
 use FKSDB\Components\React\ReactComponent;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventParticipant;
@@ -29,12 +30,11 @@ class ParticipantAcquaintanceChartControl extends ReactComponent implements ICha
      * ParticipantAcquaintanceChartControl constructor.
      * @param Container $context
      * @param ModelEvent $event
-     * @param ServiceEvent $serviceEvent
      */
-    public function __construct(Container $context, ModelEvent $event, ServiceEvent $serviceEvent) {
+    public function __construct(Container $context, ModelEvent $event) {
         parent::__construct($context);
-        $this->event= $event;
-        $this->serviceEvent = $serviceEvent;
+        $this->event = $event;
+        $this->serviceEvent = $context->getByType(ServiceEvent::class);
     }
 
     /**

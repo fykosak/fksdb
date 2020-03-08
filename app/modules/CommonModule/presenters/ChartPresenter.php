@@ -4,6 +4,7 @@ namespace CommonModule;
 
 use FKSDB\Components\Controls\Chart\IChart;
 use FKSDB\Components\Controls\Chart\ParticipantAcquaintanceChartControl;
+use FKSDB\Components\Controls\Chart\TotalPersonsChartControl;
 use FKSDB\ORM\Services\ServiceEvent;
 use Nette\Application\UI\Control;
 
@@ -41,7 +42,7 @@ class ChartPresenter extends BasePresenter {
         static $chartComponents;
         if (!$chartComponents) {
             $chartComponents = [
-                new ParticipantAcquaintanceChartControl($this->context, +$this->id, $this->serviceEvent),
+               new TotalPersonsChartControl($this->context),
             ];
         }
         return $chartComponents;

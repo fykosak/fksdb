@@ -26,11 +26,10 @@ class TotalPersonsChartControl extends ReactComponent implements IChart {
     /**
      * TotalPersonsChartControl constructor.
      * @param Container $context
-     * @param ServicePerson $servicePerson
      */
-    public function __construct(Container $context, ServicePerson $servicePerson) {
+    public function __construct(Container $context) {
         parent::__construct($context);
-        $this->servicePerson = $servicePerson;
+        $this->servicePerson = $context->getByType(ServicePerson::class);
     }
 
     /**
@@ -38,13 +37,6 @@ class TotalPersonsChartControl extends ReactComponent implements IChart {
      */
     public function getAction(): string {
         return 'totalPersons';
-    }
-
-    /**
-     * @return string
-     */
-    function getMode(): string {
-        return '';
     }
 
     /**
@@ -69,22 +61,8 @@ class TotalPersonsChartControl extends ReactComponent implements IChart {
     /**
      * @return string
      */
-    function getComponentName(): string {
-        return 'total-persons';
-    }
-
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Total persons in FKSDB');
-    }
-
-    /**
-     * @return string
-     */
-    function getModuleName(): string {
-        return 'chart';
     }
 
     /**
@@ -92,5 +70,12 @@ class TotalPersonsChartControl extends ReactComponent implements IChart {
      */
     public function getControl(): Control {
         return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getReactId(): string {
+        return 'chart.total-person';
     }
 }

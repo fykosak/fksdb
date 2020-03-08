@@ -88,10 +88,10 @@ export default class TotalPersons extends React.Component<OwnProps, {}> {
         const xScale = scaleTime().domain([new Date(data[0].created), new Date()]);
 
         return <div className="row">
-            <div className="chart-container col-lg-8">
+            <div className="chart-container col-lg-9 col-md-8">
                 <LineChart data={lineChartData} xScale={xScale} yScale={yScale} display={{xGrid: true, yGrid: true}}/>
             </div>
-            <div className="chart-legend-container col-lg-4">
+            <div className="chart-legend-container col-lg-3 col-md-4">
                 <LineChartLegend data={lineChartData}/>
             </div>
         </div>;
