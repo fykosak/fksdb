@@ -151,24 +151,13 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     /**
-     * @return int
-     * @throws AbortException
-     */
-    protected function getEventId(): int {
-        if (!$this->eventId) {
-            $this->redirect('Dispatch:default');
-        }
-        return +$this->eventId;
-    }
-
-    /**
      * @return ModelEvent
      * @throws BadRequestException
      * @throws AbortException
      */
     protected function getEvent(): ModelEvent {
         if (!$this->event) {
-            $row = $this->serviceEvent->findByPrimary($this->getEventId());
+            $row = $this->serviceEvent->findByPrimary($this->eventId);
             if (!$row) {
                 throw new BadRequestException('Event not found');
             }
