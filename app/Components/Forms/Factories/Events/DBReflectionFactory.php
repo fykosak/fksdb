@@ -17,7 +17,6 @@ use Nette\Forms\Controls\TextArea;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
-use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -78,7 +77,7 @@ class DBReflectionFactory extends AbstractFactory {
         $column = $this->resolveColumn($field);
         $type = $column['nativetype'];
         $size = $column['size'];
-        Debugger::barDump($element, $field->getName());
+
         /*
          * Create element
          */
@@ -102,7 +101,7 @@ class DBReflectionFactory extends AbstractFactory {
             }
         }
         $element->caption = $field->getLabel();
-        Debugger::barDump($field);
+       // Debugger::barDump($field);
         if ($field->getDescription()) {
 
             $element->setOption('description', $field->getDescription());

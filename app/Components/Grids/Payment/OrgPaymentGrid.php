@@ -3,9 +3,8 @@
 namespace FKSDB\Components\Grids\Payment;
 
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
+use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Models\ModelPayment;
-use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePayment;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
@@ -36,6 +35,8 @@ class OrgPaymentGrid extends PaymentGrid {
      * @param $presenter
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
+     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws \NiftyGrid\DuplicateGlobalButtonException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -45,21 +46,16 @@ class OrgPaymentGrid extends PaymentGrid {
         $dataSource = new NDataSource($schools);
         $this->setDataSource($dataSource);
 
-        $this->addColumnPaymentId();
-
-        $this->addReflectionColumn('referenced', 'person_name', ModelPayment::class);
-
-        $this->addColumn('person_email', _('e-mail'))->setRenderer(function ($row) {
-            return ModelPerson::createFromActiveRow($row->person)->getInfo()->email;
-        });
-
-        $this->addColumnPrice();
-
-        $this->addColumnsSymbols();
-
-        $this->addColumnState();
-
-        $this->addButtonDetail();
+        $this->addColumns([
+            DbNames::TAB_PAYMENT . '.id',
+            'referenced.person_name',
+            // 'referenced.event_name',
+            DbNames::TAB_PAYMENT . '.price',
+            DbNames::TAB_PAYMENT . '.state',
+            DbNames::TAB_PAYMENT . '.variable_symbol',
+        ]);
+        $this->addLink('payment.detail', false);
         $this->paginate = false;
+        $this->addCSVDownloadButton();
     }
 }
