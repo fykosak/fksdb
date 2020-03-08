@@ -62,7 +62,7 @@ class ContestAuthorizator {
      * @param int|ModelContest $contest queried contest
      * @return boolean
      */
-    public function isAllowed($resource, string $privilege, $contest): bool {
+    public function isAllowed($resource, string $privilege = null, $contest): bool {
         if (!$this->getUser()->isLoggedIn()) {
             $role = new Grant(Grant::CONTEST_ALL, ModelRole::GUEST);
             return $this->getAcl()->isAllowed($role, $resource, $privilege);
@@ -79,7 +79,7 @@ class ContestAuthorizator {
      * @param string $privilege
      * @return bool
      */
-    public final function isAllowedForAnyContest($resource, string $privilege): bool {
+    public final function isAllowedForAnyContest($resource, string $privilege = null): bool {
         if (!$this->getUser()->isLoggedIn()) {
             $role = new Grant(Grant::CONTEST_ALL, ModelRole::GUEST);
             return $this->getAcl()->isAllowed($role, $resource, $privilege);
@@ -107,7 +107,7 @@ class ContestAuthorizator {
      * @param ModelContest|int $contest
      * @return bool
      */
-    public final function isAllowedForLogin(ModelLogin $login, $resource, string $privilege, $contest): bool {
+    public final function isAllowedForLogin(ModelLogin $login, $resource, string $privilege = null, $contest): bool {
         $contestId = ($contest instanceof ActiveRow) ? $contest->contest_id : $contest;
         $roles = $login->getRoles();
 
