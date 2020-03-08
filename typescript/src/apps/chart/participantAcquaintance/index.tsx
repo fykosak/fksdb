@@ -69,7 +69,7 @@ export default class Index extends React.Component<OwnProps, State> {
                 cursor={'pointer'}
                 fill={this.getPerson(index).person.gender === 'M' ? 'blue' : 'deeppink'}
                 onClick={() => {
-                    this.setState({activeId: this.state.activeId !== null ? null : index});
+                    this.setState({activeId: this.state.activeId === index ? null : index});
                 }}/>;
         })
         }</>;
