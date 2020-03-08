@@ -78,4 +78,11 @@ class TotalPersonsChartControl extends ReactComponent implements IChart {
     protected function getReactId(): string {
         return 'chart.total-person';
     }
+
+    /**
+     * @return string|null
+     */
+    public function getDescription() {
+        return _('Graf zobrazuje vývoj počtu osôb vo FKSDB a priradené person_id v daný čas.');
+    }
 }

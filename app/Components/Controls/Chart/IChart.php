@@ -23,4 +23,9 @@ interface IChart {
      * @return Control
      */
     public function getControl(): Control;
+
+    /**
+     * @return string
+     */
+    public function getDescription();
 }

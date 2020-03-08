@@ -99,4 +99,11 @@ class SingleApplicationsTimeProgress extends ReactComponent implements IChart {
     public function getControl(): Control {
         return $this;
     }
+
+    /**
+     * @return string|null
+     */
+    public function getDescription() {
+        return null;
+    }
 }

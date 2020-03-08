@@ -52,6 +52,10 @@ trait ChartPresenterTrait {
         $this->setIcon('fa fa-pie-chart');
     }
 
+    public function renderChart() {
+        $this->template->chart = $this->selectedChart;
+    }
+
     /**
      * @param bool $fullyQualified
      * @return string

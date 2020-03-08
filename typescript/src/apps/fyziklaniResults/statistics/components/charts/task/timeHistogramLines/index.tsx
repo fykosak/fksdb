@@ -1,4 +1,6 @@
+import { Submits } from '@apps/fyziklani/helpers/interfaces';
 import LineChart from '@shared/components/lineChart';
+import { LineChartData } from '@shared/components/lineChart/interfaces';
 import {
     scaleLinear,
     scaleTime,
@@ -6,11 +8,9 @@ import {
 import { curveMonotoneX } from 'd3-shape';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Submits } from '@apps/fyziklani/helpers/interfaces';
 import { getColorByPoints } from '../../../../middleware/charts/colors';
 import { submitsByTask } from '../../../../middleware/charts/submitsByTask';
 import { Store as StatisticsStore } from '../../../../reducers';
-import { LineChartData } from '@shared/components/lineChart/interfaces';
 
 interface StateProps {
     submits: Submits;
