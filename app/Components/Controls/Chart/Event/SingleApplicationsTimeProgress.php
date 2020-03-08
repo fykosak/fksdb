@@ -2,10 +2,14 @@
 
 namespace FKSDB\Components\React\ReactComponent\Events;
 
+use FKSDB\Components\Controls\Chart\IChart;
 use FKSDB\Components\React\ReactComponent;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventParticipant;
+use FKSDB\ORM\Models\ModelEventType;
+use FKSDB\ORM\Services\ServiceEvent;
 use FKSDB\ORM\Services\ServiceEventParticipant;
+use Nette\Application\UI\Control;
 use Nette\DI\Container;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
@@ -14,28 +18,31 @@ use Nette\Utils\JsonException;
  * Class TeamApplicationsTimeProgress
  * @package FKSDB\Components\React\ReactComponent\Events
  */
-class SingleApplicationsTimeProgress extends ReactComponent {
+class SingleApplicationsTimeProgress extends ReactComponent implements IChart {
     /**
      * @var ServiceEventParticipant
      */
     private $serviceEventParticipant;
 
     /**
-     * @var ModelEvent[]
+     * @var ModelEventType
      */
-    private $events;
+    private $eventType;
+    /**
+     * @var ServiceEvent
+     */
+    private $serviceEvent;
 
     /**
      * TeamApplicationsTimeProgress constructor.
      * @param Container $context
-     * @param array $events
-     * @param ServiceEventParticipant $serviceEventParticipant
+     * @param ModelEvent $event
      */
-    public function __construct(Container $context, array $events, ServiceEventParticipant $serviceEventParticipant) {
+    public function __construct(Container $context, ModelEvent $event) {
         parent::__construct($context);
-        $this->events = $events;
-        $this->serviceEventParticipant = $serviceEventParticipant;
-
+        $this->eventType = $event->getEventType();
+        $this->serviceEventParticipant = $context->getByType(ServiceEventParticipant::class);
+        $this->serviceEvent = $context->getByType(ServiceEvent::class);
     }
 
     /**
@@ -54,7 +61,10 @@ class SingleApplicationsTimeProgress extends ReactComponent {
             'participants' => [],
             'events' => [],
         ];
-        foreach ($this->events as $event) {
+        /**
+         * @var ModelEvent $event
+         */
+        foreach ($this->serviceEvent->getEventsByType($this->eventType) as $event) {
             $participants = [];
             $query = $this->serviceEventParticipant->findPossiblyAttending($event);
             foreach ($query as $row) {
@@ -67,5 +77,33 @@ class SingleApplicationsTimeProgress extends ReactComponent {
             $data['events'][$event->event_id] = $event->__toArray();
         }
         return Json::encode($data);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAction(): string {
+        return 'singleApplicationProgress';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getTitle(): string {
+        return 'Applications time progress';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getControl(): Control {
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDescription() {
+        return null;
     }
 }

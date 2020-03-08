@@ -6,19 +6,14 @@ use FKSDB\Components\Controls\Fyziklani\SeatingControl;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
 use FKSDB\Components\Grids\Events\Application\ApplicationGrid;
 use FKSDB\Components\Grids\Events\Application\TeamApplicationGrid;
-use FKSDB\Components\React\ReactComponent\Events\TeamApplicationsTimeProgress;
 use FKSDB\model\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Models\ModelPayment;
-use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\Application\ForbiddenRequestException;
 
 /**
  * Class ApplicationPresenter
@@ -101,20 +96,6 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
      */
     public function createComponentSeating(): SeatingControl {
         return new SeatingControl($this->serviceFyziklaniTeamPosition, $this->getTranslator());
-    }
-
-    /**
-     * @return TeamApplicationsTimeProgress
-     * @throws AbortException
-     * @throws BadRequestException
-     */
-    protected function createComponentTeamApplicationsTimeProgress() {
-        $events = [];
-        foreach ($this->getEventIdsByType() as $id) {
-            $row = $this->serviceEvent->findByPrimary($id);
-            $events[$id] = ModelEvent::createFromActiveRow($row);
-        }
-        return new TeamApplicationsTimeProgress($this->context, $events, $this->serviceFyziklaniTeam);
     }
 
     /**
