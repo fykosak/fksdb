@@ -36,10 +36,15 @@ navigation:
             - org.event.list
             - common.deduplicate.person
             - common.person.search
-            - common.validation.default
+            - common.dashboard.default
+            -  org.dashboard.default
         common.dashboard.default:
+            - common.dashboard.default
             - common.validation.default
             - common.person.search
+            - common.spam.list
+            - common.chart.list
+            - common.school.list
         common.validation.default:
             - common.validation.preview
             - common.validation.list

@@ -716,7 +716,7 @@ body[data-contest="vyfuk"] h1, body[data-contest="vyfuk"] h2, body[data-contest=
 .chart.chart-participant-acquaintance path.ribbon.default {
   opacity: 0.2; }
 .chart.chart-participant-acquaintance path.ribbon.active {
-  opacity: 1; }
+  opacity: 0.75; }
 .chart.chart-participant-acquaintance path.ribbon.inactive {
   opacity: 0; }
 

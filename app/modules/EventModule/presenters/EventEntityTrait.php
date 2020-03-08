@@ -8,6 +8,7 @@ use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
+use Nette\Security\IResource;
 
 /**
  * Trait EventEntityTrait
@@ -39,13 +40,13 @@ trait EventEntityTrait {
     }
 
     /**
-     * @param $resource
-     * @param $privilege
+     * @param IResource|string $resource
+     * @param string $privilege
      * @return bool
      * @throws AbortException
      * @throws BadRequestException
      */
-    protected function isAllowed($resource, $privilege): bool {
+    protected function isAllowed($resource, string $privilege): bool {
         return $this->eventIsAllowed($resource, $privilege);
     }
 
@@ -57,11 +58,11 @@ trait EventEntityTrait {
     abstract protected function getEvent(): ModelEvent;
 
     /**
-     * @param $resource
-     * @param $privilege
+     * @param IResource|string $resource
+     * @param string $privilege
      * @return bool
      * @throws BadRequestException
      * @throws AbortException
      */
-    abstract protected function eventIsAllowed($resource, $privilege): bool;
+    abstract protected function eventIsAllowed($resource, string $privilege): bool;
 }

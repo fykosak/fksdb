@@ -13,6 +13,7 @@ use FKSDB\YearCalculator;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
+use Nette\Security\IResource;
 
 /**
  *
@@ -150,24 +151,13 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     /**
-     * @return int
-     * @throws AbortException
-     */
-    protected function getEventId(): int {
-        if (!$this->eventId) {
-            $this->redirect('Dispatch:default');
-        }
-        return +$this->eventId;
-    }
-
-    /**
      * @return ModelEvent
      * @throws BadRequestException
      * @throws AbortException
      */
     protected function getEvent(): ModelEvent {
         if (!$this->event) {
-            $row = $this->serviceEvent->findByPrimary($this->getEventId());
+            $row = $this->serviceEvent->findByPrimary($this->eventId);
             if (!$row) {
                 throw new BadRequestException('Event not found');
             }
@@ -181,13 +171,13 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     /**
-     * @param $resource
-     * @param $privilege
+     * @param IResource|string $resource
+     * @param string $privilege
      * @return bool
      * @throws BadRequestException
      * @throws AbortException
      */
-    protected function eventIsAllowed($resource, $privilege): bool {
+    protected function eventIsAllowed($resource, string $privilege): bool {
         $event = $this->getEvent();
         if (!$event) {
             return false;
@@ -196,13 +186,13 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     /**
-     * @param $resource
-     * @param $privilege
+     * @param IResource|string $resource
+     * @param string $privilege
      * @return bool
      * @throws BadRequestException
      * @throws AbortException
      */
-    protected function isContestsOrgAllowed($resource, $privilege): bool {
+    protected function isContestsOrgAllowed($resource, string $privilege): bool {
         $contest = $this->getContest();
         if (!$contest) {
             return false;

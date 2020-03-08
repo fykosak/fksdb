@@ -123,15 +123,4 @@ abstract class BasePresenter extends EventBasePresenter {
     protected function getNavRoots(): array {
         return ['fyziklani.dashboard.default'];
     }
-
-    /**
-     * @noinspection PhpMissingParentCallCommonInspection
-     * @return int
-     */
-    protected function getEventId(): int {
-        if (!$this->eventId) {
-            $this->eventId = $this->serviceEvent->getTable()->where('event_type_id', 1)->max('event_id');
-        }
-        return $this->eventId;
-    }
 }
