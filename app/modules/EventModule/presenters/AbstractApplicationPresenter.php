@@ -113,29 +113,6 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @return SingleApplicationsTimeProgress
-     * @throws AbortException
-     * @throws BadRequestException
-     */
-    protected function createComponentSingleApplicationsTimeProgress() {
-        $events = [];
-        foreach ($this->getEventIdsByType() as $id) {
-            $row = $this->serviceEvent->findByPrimary($id);
-            $events[$id] = ModelEvent::createFromActiveRow($row);
-        }
-        return new SingleApplicationsTimeProgress($this->context, $events, $this->serviceEventParticipant);
-    }
-
-    /**
-     * @return int[]
-     * @throws AbortException
-     * @throws BadRequestException
-     */
-    protected function getEventIdsByType(): array {
-        return array_values($this->serviceEvent->getEventsByType($this->getEvent()->getEventType())->fetchPairs('event_id', 'event_id'));
-    }
-
-    /**
      * @return bool
      * @throws BadRequestException
      * @throws AbortException
