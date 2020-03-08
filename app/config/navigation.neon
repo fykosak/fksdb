@@ -80,6 +80,7 @@ navigation:
             - fyziklani.results.correlationStatistics
         event.dashboard.default:
             - event.dispatch.default
+            - event.dashboard.default
             - event.payment.list
             - event.payment.create
             - fyziklani.dashboard.default
@@ -88,3 +89,4 @@ navigation:
             - event.teamApplication.list
             - event.model.default
             - event.seating.default
+            - event.chart.default
