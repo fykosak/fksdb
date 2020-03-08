@@ -13,6 +13,7 @@ use FKSDB\YearCalculator;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
+use Nette\Security\IResource;
 
 /**
  *
@@ -181,13 +182,13 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     /**
-     * @param $resource
-     * @param $privilege
+     * @param IResource|string $resource
+     * @param string $privilege
      * @return bool
      * @throws BadRequestException
      * @throws AbortException
      */
-    protected function eventIsAllowed($resource, $privilege): bool {
+    protected function eventIsAllowed($resource, string $privilege): bool {
         $event = $this->getEvent();
         if (!$event) {
             return false;
@@ -196,13 +197,13 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     /**
-     * @param $resource
-     * @param $privilege
+     * @param IResource|string $resource
+     * @param string $privilege
      * @return bool
      * @throws BadRequestException
      * @throws AbortException
      */
-    protected function isContestsOrgAllowed($resource, $privilege): bool {
+    protected function isContestsOrgAllowed($resource, string $privilege): bool {
         $contest = $this->getContest();
         if (!$contest) {
             return false;

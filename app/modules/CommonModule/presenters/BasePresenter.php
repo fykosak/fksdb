@@ -4,17 +4,13 @@ namespace CommonModule;
 
 use AuthenticatedPresenter;
 use FKSDB\Components\Controls\Choosers\ThemeSwitcher;
+use Nette\Security\IResource;
 
 /**
  * Class BasePresenter
  * @package CoreModule
  */
 abstract class BasePresenter extends AuthenticatedPresenter {
-    /**
-     * @var bool
-     * @persistent
-     */
-    public $theme = 'light';
 
     /**
      * @return array
@@ -24,7 +20,6 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     protected function beforeRender() {
-        $this->template->theme = $this->theme;
         parent::beforeRender();
     }
 
@@ -39,11 +34,11 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     /**
-     * @param $resource
-     * @param $privilege
+     * @param IResource|string $resource
+     * @param string $privilege
      * @return bool
      */
-    protected function isAllowed($resource, $privilege): bool {
+    protected function isAllowed($resource, string $privilege): bool {
         return $this->getContestAuthorizator()->isAllowedForAnyContest($resource, $privilege);
     }
 }

@@ -5,6 +5,7 @@ namespace CommonModule;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
+use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
@@ -14,6 +15,9 @@ use Nette\Application\UI\Form;
  * @package CommonModule
  */
 class PizzaPresenter extends BasePresenter {
+    /**
+     * @var ModelPerson[]
+     */
     private $persons = [];
     /**
      * @var PersonFactory
