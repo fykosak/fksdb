@@ -2,19 +2,25 @@
 
 namespace PublicModule;
 
+use FKSDB\Components\Control\AjaxUpload\AjaxUpload;
+use FKSDB\Components\Control\AjaxUpload\SubmitSaveTrait;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Grids\SubmitsGrid;
+use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelSubmit;
+use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\ORM\Services\ServiceTask;
+use FKSDB\Submits\FilesystemSubmitStorage;
 use FKSDB\Submits\ISubmitStorage;
 use FKSDB\Submits\ProcessingException;
 use ModelException;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\FileResponse;
 use Nette\Application\UI\Form;
-use Nette\Utils\DateTime;
+use Nette\Database\Table\Selection;
 use Tracy\Debugger;
 
 /**
@@ -23,15 +29,16 @@ use Tracy\Debugger;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class SubmitPresenter extends BasePresenter {
+    use SubmitSaveTrait;
 
     /** @var ServiceTask */
     private $taskService;
 
-    /** @var \FKSDB\ORM\Services\ServiceSubmit */
+    /** @var ServiceSubmit */
     private $submitService;
 
     /**
-     * @var ISubmitStorage
+     * @var FilesystemSubmitStorage
      */
     private $submitStorage;
 
@@ -43,7 +50,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @param \FKSDB\ORM\Services\ServiceSubmit $submitService
+     * @param ServiceSubmit $submitService
      */
     public function injectSubmitService(ServiceSubmit $submitService) {
         $this->submitService = $submitService;
@@ -73,11 +80,12 @@ class SubmitPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function authorizedDownload($id) {
-        $submit = $this->submitService->findByPrimary($id);
+        $row = $this->submitService->findByPrimary($id);
 
-        if (!$submit) {
+        if (!$row) {
             throw new BadRequestException('Neexistující submit.', 404);
         }
+        $submit = ModelSubmit::createFromActiveRow($row);
 
         $submit->task_id; // stupid touch
         $contest = $submit->getContestant()->getContest();
@@ -96,6 +104,9 @@ class SubmitPresenter extends BasePresenter {
         $this->template->canRegister = false;
         $this->template->hasForward = false;
         if (!$this->template->hasTasks) {
+            /**
+             * @var ModelPerson $person
+             */
             $person = $this->getUser()->getIdentity()->getPerson();
             $contestants = $person->getActiveContestants($this->yearCalculator);
             $contestant = $contestants[$this->getSelectedContest()->contest_id];
@@ -106,13 +117,17 @@ class SubmitPresenter extends BasePresenter {
         }
     }
 
+
     /**
      * @param $id
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function actionDownload($id) {
-        $submit = $this->submitService->findByPrimary($id);
+        /**
+         * @var ModelSubmit $submit
+         */
+        $submit = $this->submitService->findByPrimary2($id);
 
         $filename = $this->submitStorage->retrieveFile($submit);
         if (!$filename) {
@@ -125,11 +140,10 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @param $name
      * @return FormControl
      * @throws BadRequestException
      */
-    public function createComponentUploadForm($name) {
+    public function createComponentUploadForm() {
         $control = new FormControl();
         $form = $control->getForm();
 
@@ -140,7 +154,9 @@ class SubmitPresenter extends BasePresenter {
         if ($studyYear === null) {
             $this->flashMessage(_('Řešitel nemá vyplněn ročník, nebudou dostupné všechny úlohy.'));
         }
-
+        /**
+         * @var ModelTask $task
+         */
         foreach ($this->getAvailableTasks() as $task) {
             if ($task->submit_deadline != $prevDeadline) {
                 $form->addGroup(sprintf(_('Termín %s'), $task->submit_deadline));
@@ -177,7 +193,9 @@ class SubmitPresenter extends BasePresenter {
 
             $form->setCurrentGroup();
             $form->addSubmit('upload', _('Odeslat'));
-            $form->onSuccess[] = array($this, 'handleUploadFormSuccess');
+            $form->onSuccess[] = function (Form $form) {
+                $this->handleUploadFormSuccess($form);
+            };
 
             $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
         }
@@ -186,26 +204,30 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @param $name
-     * @return SubmitsGrid
-     * @throws BadRequestException
+     * @return AjaxUpload
      */
-    public function createComponentSubmitsGrid($name) {
-        $grid = new SubmitsGrid($this->submitService, $this->submitStorage, $this->getContestant());
-
-        return $grid;
+    public function createComponentAjaxUpload(): AjaxUpload {
+        return new AjaxUpload($this->context, $this->submitService, $this->submitStorage);
     }
 
     /**
-     * @internal
+     * @return SubmitsGrid
+     * @throws BadRequestException
+     */
+    public function createComponentSubmitsGrid(): SubmitsGrid {
+        return new SubmitsGrid($this->submitService, $this->submitStorage, $this->getContestant());
+    }
+
+    /**
      * @param mixed $form
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
+     * @throws \Exception
+     * @internal
      */
     public function handleUploadFormSuccess($form) {
         $values = $form->getValues();
 
-        $ctId = $this->getContestant()->ct_id;
         $taskIds = explode(',', $values['tasks']);
         $validIds = $this->getAvailableTasks()->fetchPairs('task_id', 'task_id');
 
@@ -214,7 +236,8 @@ class SubmitPresenter extends BasePresenter {
             $this->submitStorage->beginTransaction();
 
             foreach ($taskIds as $taskId) {
-                $task = $this->taskService->findByPrimary($taskId);
+                $taskRow = $this->taskService->findByPrimary($taskId);
+                $task = ModelTask::createFromActiveRow($taskRow);
 
                 if (!isset($validIds[$taskId])) {
                     $this->flashMessage(sprintf(_('Úlohu %s již není možno odevzdávat.'), $task->label), self::FLASH_ERROR);
@@ -231,23 +254,7 @@ class SubmitPresenter extends BasePresenter {
                     continue;
                 }
 
-                // store submit
-                $submit = $this->submitService->findByContestant($ctId, $task->task_id);
-                if (!$submit) {
-                    $submit = $this->submitService->createNew(array(
-                        'task_id' => $task->task_id,
-                        'ct_id' => $ctId,
-                    ));
-                }
-                //TODO handle cases when user modifies already graded submit (i.e. with bad timings)
-                $submit->submitted_on = new DateTime();
-                $submit->source = ModelSubmit::SOURCE_UPLOAD;
-                $submit->ct_id; // stupid... touch the field in order to have it loaded via ActiveRow
-
-                $this->submitService->save($submit);
-
-                // store file
-                $this->submitStorage->storeFile($taskValues['file']->getTemporaryFile(), $submit);
+                $this->saveSubmitTrait($taskValues['file'], $task, $this->getContestant());
 
                 $this->flashMessage(sprintf(_('Úloha %s odevzdána.'), $task->label), self::FLASH_SUCCESS);
             }
@@ -271,10 +278,10 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @return \Nette\Database\Table\Selection
+     * @return Selection
      * @throws BadRequestException
      */
-    private function getAvailableTasks() {
+    public function getAvailableTasks() {
         $tasks = $this->taskService->getTable();
         $tasks->where('contest_id = ? AND year = ?', $this->getSelectedContest()->contest_id, $this->getSelectedYear());
         $tasks->where('submit_start IS NULL OR submit_start < NOW()');
@@ -284,4 +291,39 @@ class SubmitPresenter extends BasePresenter {
         return $tasks;
     }
 
+    /**
+     * @param integer $taskId
+     * @return ModelTask|null
+     *
+     * @throws BadRequestException
+     */
+    public function isAvailableSubmit($taskId) {
+        /**
+         * @var ModelTask $task
+         */
+        foreach ($this->getAvailableTasks() as $task) {
+            if ($task->task_id == $taskId) {
+                return $task;
+            };
+        }
+        return null;
+    }
+
+    public function titleAjax() {
+        return $this->titleDefault();
+    }
+
+    /**
+     * @return ServiceSubmit
+     */
+    protected function getServiceSubmit(): ServiceSubmit {
+        return $this->submitService;
+    }
+
+    /**
+     * @return ISubmitStorage
+     */
+    protected function getSubmitStorage(): ISubmitStorage {
+        return $this->submitStorage;
+    }
 }
