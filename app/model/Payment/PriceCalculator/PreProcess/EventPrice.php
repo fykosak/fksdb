@@ -6,7 +6,7 @@ use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServiceEventParticipant;
 use FKSDB\Payment\Price;
-use Nette\NotImplementedException;
+use FKSDB\NotImplementedException;
 
 /**
  * Class EventPrice
@@ -27,8 +27,8 @@ class EventPrice extends AbstractPreProcess {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelPayment $modelPayment
-     * @return \FKSDB\Payment\Price
+     * @param ModelPayment $modelPayment
+     * @return Price
      */
     public static function calculate(ModelPayment $modelPayment): Price {
         /* $price = new Price(0, $modelPayment->currency);
@@ -42,7 +42,7 @@ class EventPrice extends AbstractPreProcess {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelPayment $modelPayment
+     * @param ModelPayment $modelPayment
      * @return array
      */
     public static function getGridItems(ModelPayment $modelPayment): array {
@@ -62,9 +62,9 @@ class EventPrice extends AbstractPreProcess {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelEventParticipant $modelEventParticipant
-     * @param \FKSDB\Payment\Price $price
-     * @return \FKSDB\Payment\Price
+     * @param ModelEventParticipant $modelEventParticipant
+     * @param Price $price
+     * @return Price
      */
     private function getPriceFromModel(ModelEventParticipant $modelEventParticipant, Price $price): Price {
         throw new NotImplementedException();

@@ -11,7 +11,6 @@ use FKSDB\Utils\Promise;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
-use Nette\Utils\RegexpException;
 
 /**
  * Be careful when calling getValue as it executes SQL queries and thus
@@ -140,7 +139,6 @@ class ReferencedId extends HiddenField {
      * @param $pvalue
      * @param bool $force
      * @return HiddenField|void
-     * @throws RegexpException
      */
     public function setValue($pvalue, $force = false) {
         $isPromise = ($pvalue === self::VALUE_PROMISE);
@@ -204,9 +202,6 @@ class ReferencedId extends HiddenField {
         $this->referencedContainer->setDisabled($value);
     }
 
-    /**
-     * @throws RegexpException
-     */
     private function createPromise() {
         $referencedId = $this->getValue();
         $values = $this->referencedContainer->getValues();

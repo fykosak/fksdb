@@ -2,10 +2,17 @@
 
 namespace FKSDB\Components\Grids\Events\Application;
 
+use FKSDB\Components\Controls\Helpers\Badges\NotSetBadge;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use Nette\Application\AbortException;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
+use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
+use NiftyGrid\DuplicateButtonException;
+use NiftyGrid\DuplicateColumnException;
+use NiftyGrid\DuplicateGlobalButtonException;
 use SQL\SearchableDataSource;
 
 /**
@@ -15,8 +22,10 @@ use SQL\SearchableDataSource;
 class TeamApplicationGrid extends AbstractApplicationGrid {
     /**
      * @param Presenter $presenter
-     * @throws \NiftyGrid\DuplicateColumnException
-     * @throws \NiftyGrid\DuplicateButtonException
+     * @throws InvalidLinkException
+     * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
+     * @throws DuplicateGlobalButtonException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -27,18 +36,21 @@ class TeamApplicationGrid extends AbstractApplicationGrid {
         $source->setFilterCallback($this->getFilterCallBack());
         $this->setDataSource($source);
 
-        $this->addColumns(['e_fyziklani_team_id', 'name', 'status']);
-
-        $this->addButton('detail')->setShow(function ($row) {
+        $this->addColumns([
+            DbNames::TAB_E_FYZIKLANI_TEAM . '.e_fyziklani_team_id',
+            DbNames::TAB_E_FYZIKLANI_TEAM . '.name',
+            DbNames::TAB_E_FYZIKLANI_TEAM . '.status'
+        ]);
+        $this->addColumn('room', _('Room'))->setRenderer(function (ActiveRow $row) {
             $model = ModelFyziklaniTeam::createFromActiveRow($row);
-            return \in_array($model->getEvent()->event_type_id, [1, 9]);
-        })->setText(_('Detail'))
-            ->setLink(function ($row) {
-                $model = ModelFyziklaniTeam::createFromActiveRow($row);
-                return $this->getPresenter()->link('detail', [
-                    'id' => $model->e_fyziklani_team_id,
-                ]);
-            });
+            $position = $model->getPosition();
+            if (is_null($position)) {
+                return NotSetBadge::getHtml();
+            }
+            return $position->getRoom()->name;
+        });
+        $this->addLinkButton($presenter, 'detail', 'detail', _('Detail'), false, ['id' => 'e_fyziklani_team_id']);
+        $this->addCSVDownloadButton();
     }
 
     /**
@@ -52,7 +64,8 @@ class TeamApplicationGrid extends AbstractApplicationGrid {
      * @return array
      */
     protected function getHoldersColumns(): array {
-        return ['note',
+        return [
+            'note',
             'game_lang',
             'category',
             'force_a',

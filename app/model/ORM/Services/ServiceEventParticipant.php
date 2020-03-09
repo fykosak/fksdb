@@ -6,8 +6,10 @@ use DuplicateApplicationException;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\IModel;
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use ModelException;
+use Nette\Database\Table\Selection;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -60,5 +62,14 @@ class ServiceEventParticipant extends AbstractServiceSingle {
             }
 
         }
+    }
+
+    /**
+     * Syntactic sugar.
+     * @param ModelEvent $event
+     * @return Selection
+     */
+    public function findPossiblyAttending(ModelEvent $event): Selection {
+        return $this->getTable()->where('status', ['participated', 'approved', 'spare', 'applied'])->where('event_id', $event->event_id);
     }
 }

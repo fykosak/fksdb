@@ -3,13 +3,15 @@
 namespace ORM\ModelsMulti\Events;
 
 use FKSDB\ORM\AbstractModelMulti;
+use FKSDB\ORM\Models\IEventReferencedModel;
+use FKSDB\ORM\Models\ModelEvent;
 
 
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class ModelMTsafParticipant extends AbstractModelMulti {
+class ModelMTsafParticipant extends AbstractModelMulti implements IEventReferencedModel {
 
     /**
      * @return mixed
@@ -20,6 +22,13 @@ class ModelMTsafParticipant extends AbstractModelMulti {
             //throw new InvalidStateException("Missing person in application ID '" . $this->getPrimary(false) . "'.");
         }
         return $this->getMainModel()->getPerson()->getFullname();
+    }
+
+    /**
+     * @return ModelEvent
+     */
+    public function getEvent(): ModelEvent {
+        return $this->getMainModel()->getEvent();
     }
 
 }

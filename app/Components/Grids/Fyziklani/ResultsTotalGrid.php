@@ -48,13 +48,21 @@ class ResultsTotalGrid extends BaseGrid {
         parent::configure($presenter);
         $this->paginate = false;
 
-        $this->addReflectionColumn(DbNames::TAB_E_FYZIKLANI_TEAM, 'rank_total', ModelFyziklaniTeam::class);
-        $this->addReflectionColumn(DbNames::TAB_E_FYZIKLANI_TEAM, 'name', ModelFyziklaniTeam::class);
-        $this->addReflectionColumn(DbNames::TAB_E_FYZIKLANI_TEAM, 'e_fyziklani_team_id', ModelFyziklaniTeam::class);
-
+        $this->addColumns([
+            DbNames::TAB_E_FYZIKLANI_TEAM . '.e_fyziklani_team_id',
+            DbNames::TAB_E_FYZIKLANI_TEAM . '.name',
+            DbNames::TAB_E_FYZIKLANI_TEAM . '.rank_total',
+        ]);
         $teams = $this->serviceFyziklaniTeam->findParticipating($this->event)
-            ->order('rank_total');
+            ->order('name');
         $dataSource = new NDataSource($teams);
         $this->setDataSource($dataSource);
+    }
+
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        return ModelFyziklaniTeam::class;
     }
 }

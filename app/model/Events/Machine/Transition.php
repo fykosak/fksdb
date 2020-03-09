@@ -303,8 +303,8 @@ class Transition extends FreezableObject {
     /**
      * Launch induced transitions and sets new state.
      *
-     * @todo Induction work only for one level.     *
      * @throws TransitionConditionFailedException
+     * @todo Induction work only for one level.     *
      */
     public final function execute() {
         if ($blockingTransition = $this->getBlockingTransition()) { // intentionally =

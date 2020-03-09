@@ -26,7 +26,7 @@
     {/if}
 
     <table n:attr="style => $control->width ? 'width: '.$control->width.';'"
-            class="table table-condensed table-hover table-striped">
+            class="table table-sm table-hover table-striped">
         <thead>
         <tr class="grid-flash grid-error" n:foreach="$control['gridForm']->errors as $error">
             <th colspan="{$colsCount}">

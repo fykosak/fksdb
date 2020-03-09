@@ -64,6 +64,7 @@ fksrouter:
             subdomain: %subdomain.db%
             tld: %domain.tld%
             flags: SECURED
+
         '//%subdomain.auth%.%domain.cz%%path%<action login|logout|fb-login|recover>':
             presenter: Authentication
             subdomain: %subdomain.auth%
@@ -103,6 +104,7 @@ fksrouter:
         # Application itself (note the presenters w/out module are handled specially)
         '//[!<subdomain>].%domain.host%.[!<tld>]%path%common/<presenter>/<action=default>[/<id>]':
             module: Common
+            presenter: Dashboard
             subdomain: %subdomain.db%
             tld: %domain.tld%
             flags: SECURED
@@ -119,6 +121,7 @@ fksrouter:
             module: Event
             presenter: Dashboard
             flags: SECURED
+
         '//[!<subdomain>].%domain.host%.[!<tld>]%path%f[<eventId [0-9]+>]/s/q[/<id>]':
             subdomain: %subdomain.db%
             presenter: Submit
@@ -133,7 +136,3 @@ fksrouter:
             tld: %domain.tld%
             contestId: [filterTable: %inverseContestMapping%]
             flags: SECURED
-
-
-
-

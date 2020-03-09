@@ -3,8 +3,8 @@
 namespace FKSDB\Components\DatabaseReflection\EventParticipant;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
-use Nette\Forms\IControl;
-use Nette\NotImplementedException;
+use Nette\Forms\Controls\BaseControl;
+use FKSDB\NotImplementedException;
 
 /**
  * Class AbstractParticipantRow
@@ -13,9 +13,9 @@ use Nette\NotImplementedException;
 abstract class AbstractParticipantRow extends AbstractRow {
 
     /**
-     * @return IControl
+     * @return BaseControl
      */
-    public function creteField(): IControl {
+    public function createField(): BaseControl {
         throw new NotImplementedException();
     }
 

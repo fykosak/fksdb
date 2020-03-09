@@ -9,6 +9,9 @@ use FKSDB\Components\Controls\Loaders\Stylesheet\StylesheetLoader;
 use FKSDB\Components\Controls\Navigation\INavigablePresenter;
 use FKSDB\Components\Controls\Navigation\Navigation;
 use FKSDB\Components\Controls\PresenterBuilder;
+use FKSDB\Components\DatabaseReflection\DetailComponent;
+use FKSDB\Components\DatabaseReflection\DetailFactory;
+use FKSDB\Components\DatabaseReflection\ValuePrinterComponent;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\IFilteredDataProvider;
@@ -17,10 +20,13 @@ use FKSDB\Config\GlobalParameters;
 use FKSDB\Localization\GettextTranslator;
 use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\YearCalculator;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Responses\JsonResponse;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
+use Nette\ComponentModel\IComponent;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 
@@ -111,6 +117,10 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @var TableReflectionFactory
      */
     private $tableReflectionFactory;
+    /**
+     * @var
+     */
+    private $detailFactory;
 
     /**
      * @return YearCalculator
@@ -124,6 +134,13 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      */
     public function injectYearCalculator(YearCalculator $yearCalculator) {
         $this->yearCalculator = $yearCalculator;
+    }
+
+    /**
+     * @param DetailFactory $detailFactory
+     */
+    public function injectDetailFactory(DetailFactory $detailFactory) {
+        $this->detailFactory = $detailFactory;
     }
 
     /**
@@ -309,7 +326,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @param $acName
      * @param $acQ
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function handleAutocomplete($acName, $acQ) {
         if (!$this->isAjax()) {
@@ -338,7 +355,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * Formats title method name.
      * Method should set the title of the page using setTitle method.
      *
-     * @param  string
+     * @param string
      * @return string
      */
     protected static function formatTitleMethod($view) {
@@ -487,9 +504,16 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     }
 
     /**
+     * @return DetailComponent
+     */
+    protected function createComponentDetail(): DetailComponent {
+        return new DetailComponent($this->detailFactory, $this->getTableReflectionFactory(), $this->getTranslator());
+    }
+
+    /**
      * @param bool $need
      * @throws ReflectionException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public final function backLinkRedirect($need = false) {
         $this->putIntoBreadcrumbs();
@@ -525,7 +549,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     /**
      * @param $element
-     * @throws \Nette\Application\ForbiddenRequestException
+     * @throws ForbiddenRequestException
      */
     public function checkRequirements($element) {
         parent::checkRequirements($element);
@@ -636,7 +660,16 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     /**
      * @param string $name
-     * @return \Nette\ComponentModel\IComponent|null
+     * @return IComponent|null
+     * @throws \Exception
+     */
+    public function createComponentValuePrinter($name) {
+        return new ValuePrinterComponent($this->getTranslator(), $this->getTableReflectionFactory());
+    }
+
+    /**
+     * @param string $name
+     * @return IComponent|null
      * @throws \Exception
      */
     public function createComponent($name) {

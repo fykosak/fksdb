@@ -23,7 +23,7 @@ class UntilRow extends AbstractTeacherRow {
         if ($model->until === null) {
             return Html::el('span')->addAttributes(['class' => 'badge badge-success'])->addText(_('Still teaches'));
         }
-        return (new DatePrinter(_('d. m. Y')))($model->until);
+        return (new DatePrinter(_('__date_format')))($model->until);
     }
 
     /**

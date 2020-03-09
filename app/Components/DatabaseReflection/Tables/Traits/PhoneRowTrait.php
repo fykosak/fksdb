@@ -6,7 +6,6 @@ use FKSDB\Components\Controls\Helpers\Badges\NotSetBadge;
 use FKSDB\Components\Controls\PhoneNumber\PhoneNumberFactory;
 use FKSDB\Components\Forms\Controls\WriteOnlyInput;
 use FKSDB\ORM\AbstractModelSingle;
-use FKSDB\ORM\Services\ServiceRegion;
 use FKSDB\ValidationTest\ValidationLog;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
@@ -17,10 +16,7 @@ use Nette\Utils\Html;
  * @package FKSDB\Components\Forms\Factories\PersonInfo
  */
 trait PhoneRowTrait {
-    /**
-     * @var ServiceRegion
-     */
-    private $serviceRegion;
+
     /**
      * @var PhoneNumberFactory
      */
@@ -31,10 +27,16 @@ trait PhoneRowTrait {
      */
     public function createField(): BaseControl {
         $control = new WriteOnlyInput($this->getTitle());
-        $control->setAttribute('placeholder', _('ve tvaru +420123456789'));
+        $control->setAttribute('placeholder', _('+XXXXXXXXXXXX'));
         $control->addRule(Form::MAX_LENGTH, null, 32);
+        $control->setOption('description', _('Use an international format, starting with "+"'));
         $control->addCondition(Form::FILLED)
-            ->addRule($this->phoneNumberFactory->getFormValidationCallback(), _('Phone number is not valid. Please use internation format, starting with "+"'));
+            ->addRule(function (BaseControl $control) {
+                if ($control->getValue() === WriteOnlyInput::VALUE_ORIGINAL) {
+                    return true;
+                }
+                return $this->phoneNumberFactory->getFormValidationCallback()($control);
+            }, _('Phone number is not valid. Please insert a valid number.'));
         return $control;
     }
 

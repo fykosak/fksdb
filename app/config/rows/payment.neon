@@ -1,9 +1,0 @@
-services:
-    row.payment.constant_symbol: FKSDB\Components\DatabaseReflection\Payment\ConstantSymbolRow
-    row.payment.variable_symbol: FKSDB\Components\DatabaseReflection\Payment\VariableSymbolRow
-    row.payment.specific_symbol: FKSDB\Components\DatabaseReflection\Payment\SpecificSymbolRow
-    row.payment.bank_account: FKSDB\Components\DatabaseReflection\Payment\BankAccountRow
-    row.payment.iban: FKSDB\Components\DatabaseReflection\Payment\IBANCodeRow
-    row.payment.swift: FKSDB\Components\DatabaseReflection\Payment\SWIFTCodeRow
-    row.payment.price: FKSDB\Components\DatabaseReflection\Payment\PriceRow
-    row.payment.state: FKSDB\Components\DatabaseReflection\Payment\StateRow

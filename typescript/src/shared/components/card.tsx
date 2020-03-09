@@ -1,12 +1,12 @@
 import * as React from 'react';
 
-export interface Props {
+export interface OwnProps {
     children?: any;
     headline: string | JSX.Element;
     level: string;
 }
 
-export default class Card extends React.Component<Props, {}> {
+export default class Card extends React.Component<OwnProps, {}> {
 
     public render() {
         const {level, headline, children} = this.props;

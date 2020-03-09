@@ -1,15 +1,16 @@
 <?php
 
-
 namespace FKSDB\Components\Grids\Events;
 
-
+use FKSDB\Components\DatabaseReflection\ValuePrinters\EventRole;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceEvent;
-use Nette\Utils\Html;
+use FKSDB\YearCalculator;
 use NiftyGrid\DataSource\NDataSource;
+use NiftyGrid\DuplicateButtonException;
+use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class DispatchGrid
@@ -26,7 +27,7 @@ class DispatchGrid extends BaseGrid {
      */
     private $person;
     /**
-     * @var \FKSDB\YearCalculator
+     * @var YearCalculator
      */
     private $yearCalculator;
 
@@ -34,9 +35,9 @@ class DispatchGrid extends BaseGrid {
      * DispatchGrid constructor.
      * @param ServiceEvent $serviceEvent
      * @param ModelPerson $person
-     * @param \FKSDB\YearCalculator $yearCalculator
+     * @param YearCalculator $yearCalculator
      */
-    function __construct(ServiceEvent $serviceEvent, ModelPerson $person, \FKSDB\YearCalculator $yearCalculator) {
+    function __construct(ServiceEvent $serviceEvent, ModelPerson $person, YearCalculator $yearCalculator) {
         parent::__construct();
         $this->person = $person;
         $this->serviceEvent = $serviceEvent;
@@ -45,8 +46,8 @@ class DispatchGrid extends BaseGrid {
 
     /**
      * @param $presenter
-     * @throws \NiftyGrid\DuplicateButtonException
-     * @throws \NiftyGrid\DuplicateColumnException
+     * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -73,21 +74,9 @@ class DispatchGrid extends BaseGrid {
         })->setSortable(false);
         $this->addColumn('year', _('Year'));
         $this->addColumn('roles', _('Roles'))->setRenderer(function ($row) {
-            $container = Html::el('span');
             $modelEvent = ModelEvent::createFromActiveRow($row);
-            $isEventParticipant = $this->person->isEventParticipant($modelEvent->event_id);
-            if ($isEventParticipant) {
-                $container->addHtml(Html::el('span')->addAttributes(['class' => 'badge badge-success'])->addText(_('Event participant')));
-            }
-            $isEventOrg = count($this->person->getEventOrg()->where('event_id', $modelEvent->event_id));
-            if ($isEventOrg) {
-                $container->addHtml(Html::el('span')->addAttributes(['class' => 'badge badge-info'])->addText(_('Event org')));
-            }
-            $isOrg = \array_key_exists($modelEvent->getEventType()->contest_id, $this->person->getActiveOrgs($this->yearCalculator));
-            if ($isOrg) {
-                $container->addHtml(Html::el('span')->addAttributes(['class' => 'badge badge-warning'])->addText(_('Contest org')));
-            }
-            return $container;
+            $roles = $this->person->getRolesForEvent($modelEvent, $this->yearCalculator);
+            return EventRole::getHtml($roles);
         })->setSortable(false);
 
         //

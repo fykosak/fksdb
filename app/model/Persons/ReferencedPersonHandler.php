@@ -16,7 +16,6 @@ use FKSDB\ORM\Services\ServicePersonInfo;
 use FKSDB\Submits\StorageException;
 use FormUtils;
 use ModelException;
-use Nette\DeprecatedException;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;

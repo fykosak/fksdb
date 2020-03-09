@@ -477,7 +477,7 @@ class ExportPresenter extends SeriesPresenter {
      */
     protected function createComponentComposeForm(): FormControl {
         $control = $this->createDesignForm();
-        $control->getForm()->addSubmit('save', _('Uložit'))
+        $control->getForm()->addSubmit('save', _('Save'))
             ->onClick[] = [$this, 'handleComposeSuccess'];
         return $control;
     }
@@ -488,7 +488,7 @@ class ExportPresenter extends SeriesPresenter {
      */
     protected function createComponentEditForm(): FormControl {
         $control = $this->createDesignForm();
-        $control->getForm()->addSubmit('save', _('Uložit'))
+        $control->getForm()->addSubmit('save', _('Save'))
             ->onClick[] = [$this, 'handleEditSuccess'];
         return $control;
     }

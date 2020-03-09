@@ -18,7 +18,7 @@ use Nette\Application\UI\Form;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Neon\Neon;
-use Nette\NotImplementedException;
+use FKSDB\NotImplementedException;
 use Nette\Utils\Html;
 use Nette\Utils\NeonException;
 use Tracy\Debugger;
@@ -142,7 +142,7 @@ class EventPresenter extends EntityPresenter {
     protected function createComponentEditComponent($name) {
         $control = $this->createForm();
         $form = $control->getForm();
-        $form->addSubmit('send', _('Uložit'));
+        $form->addSubmit('send', _('Save'));
         $form->onSuccess[] = function (Form $form) {
             $this->handleFormSuccess($form, false);
         };

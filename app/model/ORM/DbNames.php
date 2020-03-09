@@ -21,12 +21,14 @@ class DbNames {
     const TAB_GRANT = 'grant';
     const TAB_LOGIN = 'login';
     const TAB_ORG = 'org';
+    const TAB_EMAIL_MESSAGE = 'email_message';
 
     const TAB_PERSON = 'person';
     const TAB_PERSON_HAS_FLAG = 'person_has_flag';
     const TAB_PERSON_HISTORY = 'person_history';
     const TAB_PERSON_INFO = 'person_info';
     const TAB_POST_CONTACT = 'post_contact';
+    const TAB_PSC_REGION = 'psc_region';
     const TAB_REGION = 'region';
     const TAB_ROLE = 'role';
     const TAB_SCHOOL = 'school';
@@ -57,8 +59,8 @@ class DbNames {
     const TAB_FYZIKLANI_SUBMIT = 'fyziklani_submit';
     const TAB_FYZIKLANI_GAME_SETUP = 'fyziklani_game_setup';
 
-    const TAB_FYZIKLANI_ROOM = 'brawl_room';
-    const TAB_FYZIKLANI_TEAM_POSITION = 'brawl_team_position';
+    const TAB_FYZIKLANI_ROOM = 'fyziklani_room';
+    const TAB_FYZIKLANI_TEAM_POSITION = 'fyziklani_team_position';
 
     const TAB_SCHEDULE_GROUP = 'schedule_group';
     const TAB_SCHEDULE_ITEM = 'schedule_item';

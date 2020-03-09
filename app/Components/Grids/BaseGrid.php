@@ -2,18 +2,29 @@
 
 namespace FKSDB\Components\Grids;
 
+use Exception;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\AbstractModelSingle;
+use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
+use Nette\Application\IPresenter;
 use Nette\Application\UI\Form;
 use Nette\InvalidStateException;
-use Nette\NotImplementedException;
+use FKSDB\NotImplementedException;
 use Nette\Templating\FileTemplate;
 use Nette\Templating\ITemplate;
+use Nette\Utils\Html;
 use NiftyGrid\Components\Button;
+use NiftyGrid\Components\Column;
 use NiftyGrid\Components\GlobalButton;
+use NiftyGrid\DuplicateButtonException;
+use NiftyGrid\DuplicateColumnException;
+use NiftyGrid\DuplicateGlobalButtonException;
 use NiftyGrid\Grid;
+use NiftyGrid\GridException;
 use NiftyGrid\GridPaginator;
+use PePa\CSVResponse;
 use SQL\SearchableDataSource;
 
 /**
@@ -53,7 +64,7 @@ abstract class BaseGrid extends Grid {
 
     /**
      * @param null $class
-     * @return \Nette\Templating\ITemplate
+     * @return ITemplate
      */
     protected function createTemplate($class = NULL): ITemplate {
         /**
@@ -71,7 +82,7 @@ abstract class BaseGrid extends Grid {
      * Extended rendering for the paginator
      * ***************************** */
     /**
-     * @throws \NiftyGrid\GridException
+     * @throws GridException
      */
     public function render() {
         $paginator = $this->getPaginator();
@@ -117,7 +128,7 @@ abstract class BaseGrid extends Grid {
 
     /**
      * @return FormControl
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     protected function createComponentSearchForm(): FormControl {
         if (!$this->isSearchable()) {
@@ -149,7 +160,7 @@ abstract class BaseGrid extends Grid {
      * @param string $name
      * @param string $label
      * @return Button
-     * @throws \NiftyGrid\DuplicateButtonException
+     * @throws DuplicateButtonException
      */
     protected function addButton($name, $label = NULL): Button {
         $button = parent::addButton($name, $label);
@@ -161,7 +172,7 @@ abstract class BaseGrid extends Grid {
      * @param $name
      * @param null $label
      * @return GlobalButton
-     * @throws \NiftyGrid\DuplicateGlobalButtonException
+     * @throws DuplicateGlobalButtonException
      */
     public function addGlobalButton($name, $label = NULL): GlobalButton {
         $button = parent::addGlobalButton($name, $label);
@@ -173,11 +184,12 @@ abstract class BaseGrid extends Grid {
      * @param string $tableName
      * @param string $fieldName
      * @param string|AbstractModelSingle $modelClassName
-     * @throws \NiftyGrid\DuplicateColumnException
-     * @throws \Exception
+     * @throws DuplicateColumnException
+     * @throws Exception
      */
     protected function addReflectionColumn(string $tableName, string $fieldName, string $modelClassName) {
         $factory = $this->tableReflectionFactory->loadService($tableName, $fieldName);
+
         $this->addColumn($fieldName, $factory->getTitle())->setRenderer(function ($row) use ($factory, $fieldName, $modelClassName) {
             $model = $modelClassName::createFromActiveRow($row);
             return $factory->renderValue($model, 1);
@@ -188,8 +200,8 @@ abstract class BaseGrid extends Grid {
      * @param string $tableName
      * @param string $fieldName
      * @param callable $accessCallback ActiveRow=>AbstractModelSingle
-     * @throws \NiftyGrid\DuplicateColumnException
-     * @throws \Exception
+     * @throws DuplicateColumnException
+     * @throws Exception
      */
     protected function addJoinedColumn(string $tableName, string $fieldName, callable $accessCallback) {
         $factory = $this->tableReflectionFactory->loadService($tableName, $fieldName);
@@ -200,14 +212,7 @@ abstract class BaseGrid extends Grid {
     }
 
     /**
-     * @return string
-     */
-    protected function getTableName(): string {
-        throw new NotImplementedException();
-    }
-
-    /**
-     * @return string
+     * @return string|AbstractModelSingle
      */
     protected function getModelClassName(): string {
         throw new NotImplementedException();
@@ -215,13 +220,119 @@ abstract class BaseGrid extends Grid {
 
     /**
      * @param array $fields
-     * @throws \NiftyGrid\DuplicateColumnException
+     * @throws DuplicateColumnException
      */
     protected function addColumns(array $fields) {
 
         foreach ($fields as $name) {
-            $this->addReflectionColumn($this->getTableName(), $name, $this->getModelClassName());
+            if (preg_match('/.*\..*/', $name)) {
+                list($table, $field) = TableReflectionFactory::parseRow($name);
+                $this->addReflectionColumn($table, $field, $this->getModelClassName());
+            } else {
+                $this->addReflectionColumn($this->getTableName(), $name, $this->getModelClassName());
+            }
         }
+    }
+
+    /**
+     * @param IPresenter $presenter
+     * @param string $destination
+     * @param string $id
+     * @param string $label
+     * @param bool $checkACL
+     * @param array $params
+     * @return Button
+     * @throws DuplicateButtonException
+     */
+    protected function addLinkButton(IPresenter $presenter, string $destination, string $id, string $label, bool $checkACL = true, array $params = []): Button {
+        $modelClassName = $this->getModelClassName();
+        $paramMapCallback = function ($model) use ($params): array {
+            $URLParams = [];
+            foreach ($params as $key => $value) {
+                $URLParams[$key] = $model->{$value};
+            }
+            return $URLParams;
+        };
+        return $this->addButton($id, $label)
+            ->setText($label)
+            ->setShow(function ($row) use ($presenter, $modelClassName, $destination, $checkACL, $paramMapCallback) {
+                if (!$checkACL) {
+                    return true;
+                }
+                $model = $modelClassName::createFromActiveRow($row);
+                return $presenter->authorized($destination, $paramMapCallback($model));
+            })
+            ->setLink(function ($row) use ($modelClassName, $destination, $paramMapCallback) {
+                $model = $modelClassName::createFromActiveRow($row);
+                return $this->getPresenter()->link($destination, $paramMapCallback($model));
+            });
+    }
+
+    /**
+     * @param $linkId
+     * @param bool $checkACL
+     * @return mixed
+     * @throws DuplicateButtonException
+     * @throws Exception
+     */
+    protected function addLink($linkId, bool $checkACL = false) {
+        $modelClassName = $this->getModelClassName();
+        $factory = $this->tableReflectionFactory->loadLinkFactory($linkId);
+        $button = $this->addButton(str_replace('.', '_', $linkId), $factory->getText())
+            ->setText($factory->getText())
+            ->setLink(function ($row) use ($modelClassName, $factory) {
+                $model = $modelClassName::createFromActiveRow($row);
+                return $this->getPresenter()->link($factory->getDestination($model), $factory->prepareParams($model));
+            });
+        if ($checkACL) {
+            $button->setShow(function ($row) use ($modelClassName, $checkACL, $factory) {
+                if (!$checkACL) {
+                    return true;
+                }
+                $model = $modelClassName::createFromActiveRow($row);
+                return $this->getPresenter()->authorized($factory->getDestination($model), $factory->prepareParams($model));
+            });
+        }
+        return $button;
+    }
+
+    /**
+     * @return GlobalButton
+     * @throws DuplicateGlobalButtonException
+     * @throws \Nette\Application\UI\InvalidLinkException
+     */
+    protected function addCSVDownloadButton(): GlobalButton {
+        return $this->addGlobalButton('csv')
+            ->setLabel(_('Download as csv'))
+            ->setLink($this->link('csv!'));
+    }
+
+    /**
+     * @throws AbortException
+     */
+    public function handleCsv() {
+        $columns = $this['columns']->components;
+        $rows = $this->dataSource->getData();
+        $data = [];
+        foreach ($rows as $row) {
+            $datum = [];
+            /**
+             * @var Column $column
+             */
+            foreach ($columns as $column) {
+                $item = $column->prepareValue($row);
+                if ($item instanceof Html) {
+                    $item = $item->getText();
+                }
+                $datum[$column->name] = $item;
+            }
+            $data[] = $datum;
+        }
+        $response = new CSVResponse($data, 'test.csv');
+        $response->setAddHeading(true);
+        $response->setQuotes(true);
+        $response->setGlue(',');
+        $this->getPresenter()->sendResponse($response);
     }
 
 }

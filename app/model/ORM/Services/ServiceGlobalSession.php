@@ -53,6 +53,7 @@ class ServiceGlobalSession extends AbstractServiceSingle {
      * @param DateTime $until
      * @param DateTime $since
      * @return ModelAuthToken
+     * @throws \Exception
      */
     public function createSession($loginId, DateTime $until = null, DateTime $since = null) {
         if ($since === null) {

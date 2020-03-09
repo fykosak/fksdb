@@ -2,8 +2,6 @@
 
 namespace FKSDB\Components\Forms\Containers\Models;
 
-use Tracy\Debugger;
-
 /**
  * @note Code is copy+pasted from Nette\Forms\Controls\BaseControl.
  * @author Michal Koutný <michal@fykos.cz>

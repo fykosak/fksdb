@@ -30,7 +30,6 @@ use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use Nette\SmartObject;
 use Nette\Utils\Arrays;
-use Nette\Utils\RegexpException;
 use Persons\IModifiabilityResolver;
 use Persons\IVisibilityResolver;
 use Persons\ReferencedPersonHandler;
@@ -129,10 +128,9 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
      * @param IVisibilityResolver $visibilityResolver is person's writeOnly field visible? (i.e. not writeOnly then)
      * @param int $evenId
      * @return array
-     * @throws RegexpException
+     * @throws \Exception
      */
     public function createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, IModifiabilityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver, $evenId = 0) {
-
         $handler = $this->referencedPersonHandlerFactory->create($acYear, null, $evenId);
 
         $hiddenField = new ReferencedId($this->servicePerson, $handler, $this);
@@ -267,8 +265,8 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
      * @param $acYear
      * @param HiddenField $hiddenField
      * @param array $metadata
-     * @throws \Exception
      * @return AddressContainer|BaseControl|null
+     * @throws \Exception
      * @throws \Exception
      */
     public function createField($sub, $fieldName, $acYear, HiddenField $hiddenField, array $metadata) {
@@ -391,6 +389,8 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
                 $control->addCondition(Form::FILLED)
                     ->addRule(Form::EMAIL, _('Neplatný tvar e-mailu.'));
                 $control->setOption('description', _('Nejprve zkuste najít osobu v naší databázi podle e-mailu.'));
+                $control->setAttribute('placeholder', 'your-email@exmaple.com');
+                $control->setAttribute('autocomplete', 'email');
                 break;
             case self::SEARCH_ID:
                 $control = $this->personFactory->createPersonSelect(true, _('Jméno'), $this->personProvider);

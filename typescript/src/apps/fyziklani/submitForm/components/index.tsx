@@ -14,14 +14,14 @@ import {
 import { app } from '../reducers/';
 import Container from './container';
 
-interface Props {
+interface OwnProps {
     tasks: Task[];
     teams: Team[];
     actions: NetteActions;
     availablePoints: number[];
 }
 
-export default class TaskCode extends React.Component<Props, {}> {
+export default class TaskCode extends React.Component<OwnProps, {}> {
     public render() {
         const {tasks, teams, actions, availablePoints} = this.props;
         const store = config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);

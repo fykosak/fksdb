@@ -2,42 +2,32 @@
 
 namespace EventModule;
 
-use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Controls\Payment\StateDisplayControl;
 use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
 use FKSDB\Components\Factories\PaymentFactory as PaymentComponentFactory;
 use FKSDB\Components\Forms\Controls\Payment\SelectForm;
 use FKSDB\Components\Grids\Payment\OrgPaymentGrid;
+use FKSDB\Config\Extensions\PaymentExtension;
+use FKSDB\ORM\AbstractServiceSingle;
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServicePayment;
 use FKSDB\Payment\Transition\PaymentMachine;
 use FKSDB\Transitions\Machine;
-use FKSDB\Transitions\MachineFactory;
 use InvalidArgumentException;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\NotImplementedException;
 use function count;
 use function sprintf;
 
 /**
  * Class PaymentPresenter
  * @package EventModule
+ * @method ModelPayment getEntity
+ * @method ModelPayment loadEntity(int $id)
  */
 class PaymentPresenter extends BasePresenter {
-
-    /**
-     * @var integer
-     * @persistent
-     */
-    public $id;
-
-    /**
-     * @var ModelPayment
-     */
-    private $model;
-
+    use EventEntityTrait;
     /**
      * @var Machine
      */
@@ -47,11 +37,6 @@ class PaymentPresenter extends BasePresenter {
      * @var ServicePayment
      */
     private $servicePayment;
-
-    /**
-     * @var MachineFactory
-     */
-    private $machineFactory;
 
     /**
      * @var PaymentComponentFactory
@@ -66,76 +51,71 @@ class PaymentPresenter extends BasePresenter {
     }
 
     /**
-     * @param MachineFactory $machineFactory
-     */
-    public function injectMachineFactory(MachineFactory $machineFactory) {
-        $this->machineFactory = $machineFactory;
-    }
-
-    /**
      * @param PaymentComponentFactory $paymentComponentFactory
      */
     public function injectPaymentComponentFactory(PaymentComponentFactory $paymentComponentFactory) {
         $this->paymentComponentFactory = $paymentComponentFactory;
     }
+
     /* ********* titles *****************/
-    /**
-     *
-     */
     public function titleCreate() {
         $this->setTitle(_('New payment'));
         $this->setIcon('fa fa-credit-card');
     }
 
     /**
+     * @param int $id
+     * @throws AbortException
      * @throws BadRequestException
      * @throws ForbiddenRequestException
-     * @throws AbortException
      */
-    public function titleEdit() {
-        $this->setTitle(sprintf(_('Edit payment #%s'), $this->getModel()->getPaymentId()));
+    public function titleEdit(int $id) {
+        $this->setTitle(sprintf(_('Edit payment #%s'), $this->loadEntity($id)->getPaymentId()));
         $this->setIcon('fa fa-credit-card');
     }
 
     /**
+     * @param int $id
+     * @throws AbortException
      * @throws BadRequestException
      * @throws ForbiddenRequestException
-     * @throws AbortException
      */
-    public function titleDetail() {
-        $this->setTitle(sprintf(_('Payment detail #%s'), $this->getModel()->getPaymentId()));
+    public function titleDetail(int $id) {
+        $this->setTitle(sprintf(_('Payment detail #%s'), $this->loadEntity($id)->getPaymentId()));
         $this->setIcon('fa fa-credit-card');
     }
 
-    /**
-     *
-     */
     public function titleList() {
         $this->setTitle(_('List of payments'));
         $this->setIcon('fa fa-credit-card');
     }
+
+    /**
+     * @param ModelEvent $event
+     * @return bool
+     */
+    protected function isEnabledForEvent(ModelEvent $event): bool {
+        return $this->hasApi();
+    }
     /* ********* Authorization *****************/
     /**
+     * @param int $id
      * @throws AbortException
      * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
-    public function authorizedDetail() {
-        if (!$this->hasApi()) {
-            $this->setAuthorized(false);
-            return;
-        }
-        $this->setAuthorized($this->isContestsOrgAllowed($this->getModel(), 'detail'));
+    public function authorizedDetail(int $id) {
+        $this->setAuthorized($this->isContestsOrgAllowed($this->loadEntity($id), 'detail'));
     }
 
     /**
+     * @param int $id
      * @throws AbortException
      * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
-    public function authorizedEdit() {
-        if (!$this->hasApi()) {
-            $this->setAuthorized(false);
-            return;
-        }
+    public function authorizedEdit(int $id) {
+        $this->loadEntity($id);
         $this->setAuthorized($this->canEdit());
     }
 
@@ -144,10 +124,6 @@ class PaymentPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function authorizedCreate() {
-        if (!$this->hasApi()) {
-            $this->setAuthorized(false);
-            return;
-        }
         $this->setAuthorized($this->isContestsOrgAllowed('event.payment', 'create'));
     }
 
@@ -156,27 +132,36 @@ class PaymentPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function authorizedList() {
-        if (!$this->hasApi()) {
-            $this->setAuthorized(false);
-            return;
-        }
         $this->setAuthorized($this->isContestsOrgAllowed('event.payment', 'list'));
     }
+
     /* ********* actions *****************/
     /**
-     * @throws BadRequestException
+     * @param int $id
      * @throws AbortException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
-    public function actionEdit() {
+    public function actionDetail(int $id) {
+        $this->loadEntity($id);
+    }
+
+    /**
+     * @param int $id
+     * @throws AbortException
+     * @throws BadRequestException
+     */
+    public function actionEdit(int $id) {
+        $this->loadEntity($id);
         if (!$this->canEdit()) {
-            $this->flashMessage(sprintf(_('Payment #%s can not be edited'), $this->getModel()->getPaymentId()), \BasePresenter::FLASH_ERROR);
+            $this->flashMessage(sprintf(_('Payment #%s can not be edited'), $this->getEntity()->getPaymentId()), \BasePresenter::FLASH_ERROR);
             $this->redirect(':MyPayments:');
         }
         /**
          * @var SelectForm $component
          */
         $component = $this->getComponent('form');
-        $component->setModel($this->getModel());
+        $component->setModel($this->getEntity());
     }
 
     /**
@@ -189,17 +174,12 @@ class PaymentPresenter extends BasePresenter {
             if (!$this->isOrg()) {
                 $this->redirect('Dashboard:default');
             }
-        };
+        }
     }
 
     /* ********* render *****************/
-    /**
-     * @throws BadRequestException
-     * @throws ForbiddenRequestException
-     * @throws AbortException
-     */
     public function renderEdit() {
-        $this->template->model = $this->getModel();
+        $this->template->model = $this->getEntity();
     }
 
     /**
@@ -207,10 +187,8 @@ class PaymentPresenter extends BasePresenter {
      * @throws AbortException
      */
     public function renderDetail() {
-        $this->getMachine()->getPriceCalculator()->setCurrency($this->model->currency);
-
-        $this->template->items = $this->getMachine()->getPriceCalculator()->getGridItems($this->model);
-        $this->template->model = $this->model;
+        $this->template->items = $this->getMachine()->getPriceCalculator()->getGridItems($this->getEntity());
+        $this->template->model = $this->getEntity();
         $this->template->isOrg = $this->isOrg();
     }
     /* ********* startup *****************/
@@ -220,11 +198,6 @@ class PaymentPresenter extends BasePresenter {
      */
     protected function startup() {
         parent::startup();
-        // protection not implements eventPayment
-        if (!$this->hasApi()) {
-            $this->flashMessage(_('Event has not payment API'));
-            $this->redirect(':Event:Dashboard:default');
-        };
     }
     /* ********* Components *****************/
     /**
@@ -246,37 +219,10 @@ class PaymentPresenter extends BasePresenter {
     }
 
     /**
-     * @return FormControl
-     * @throws BadRequestException
-     */
-    protected function createComponentEditButtonForm(): FormControl {
-        $formControl = new FormControl();
-        $form = $formControl->getForm();
-        /**
-         * @var PaymentPresenter $presenter
-         */
-        $presenter = $this->getPresenter();
-        if ($this->model->canEdit() || $presenter->getContestAuthorizator()->isAllowed($this->model, 'org', $this->model->getEvent()->getContest())) {
-            $submit = $form->addSubmit('edit', _('Edit items'));
-            $submit->onClick[] = function () {
-                $this->getPresenter()->redirect('edit');
-            };
-        }
-        return $formControl;
-    }
-
-    /**
-     * @return StateDisplayControl
-     */
-    protected function createComponentStateDisplay(): StateDisplayControl {
-        return new StateDisplayControl($this->translator, $this->model);
-    }
-
-    /**
      * @return TransitionButtonsControl
      */
-    protected function createComponentTransitionButtons() {
-        return new TransitionButtonsControl($this->machine, $this->translator, $this->model);
+    protected function createComponentTransitionButtons(): TransitionButtonsControl {
+        return $this->machine->createComponentTransitionButtons($this->getEntity());
     }
 
 
@@ -287,7 +233,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     private function canEdit(): bool {
-        return ($this->getModel()->canEdit() && $this->isContestsOrgAllowed($this->getModel(), 'edit')) ||
+        return ($this->getEntity()->canEdit() && $this->isContestsOrgAllowed($this->getEntity(), 'edit')) ||
             $this->isOrg();
     }
 
@@ -297,37 +243,21 @@ class PaymentPresenter extends BasePresenter {
      * @throws AbortException
      */
     private function isOrg(): bool {
-        return $this->isContestsOrgAllowed('event.payment', 'org');
-    }
-
-    /**
-     * @return ModelPayment
-     * @throws BadRequestException
-     * @throws ForbiddenRequestException
-     * @throws AbortException
-     */
-    private function getModel(): ModelPayment {
-        if (!$this->model) {
-            $row = $this->servicePayment->findByPrimary($this->id);
-            if (!$row) {
-                throw new BadRequestException(_('Payment does not exists'), 404);
-            }
-            $this->model = ModelPayment::createFromActiveRow($row);
-            if ($this->model->event_id !== $this->getEvent()->event_id) {
-                throw new ForbiddenRequestException(_('Payment does not belong to this event'), 403);
-            }
-        }
-        return $this->model;
+        return $this->isContestsOrgAllowed($this->getModelResource(), 'org');
     }
 
     /**
      * @return PaymentMachine
      * @throws AbortException
      * @throws BadRequestException
+     * @throws \Exception
      */
     private function getMachine(): PaymentMachine {
         if (!$this->machine) {
-            $this->machine = $this->machineFactory->setUpMachine($this->getEvent());
+            $this->machine = $this->context->getService('payment.' . PaymentExtension::MACHINE_PREFIX . $this->getEvent()->event_id);
+            if (!$this->machine instanceof PaymentMachine) {
+                throw new BadRequestException();
+            }
         }
         if (!$this->machine instanceof PaymentMachine) {
             throw new InvalidArgumentException(_('Expected class PaymentMachine'), 500);
@@ -337,15 +267,27 @@ class PaymentPresenter extends BasePresenter {
 
     /**
      * @return bool
-     * @throws AbortException
-     * @throws BadRequestException
      */
     private function hasApi(): bool {
         try {
             $this->getMachine();
-        } catch (NotImplementedException $exception) {
+        } catch (\Exception $exception) {
             return false;
         }
         return true;
+    }
+
+    /**
+     * @return AbstractServiceSingle
+     */
+    function getORMService() {
+        return $this->servicePayment;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getModelResource(): string {
+        return ModelPayment::RESOURCE_ID;
     }
 }
