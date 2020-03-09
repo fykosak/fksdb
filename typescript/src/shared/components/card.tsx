@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 export interface OwnProps {
-    children?: any;
+    children?: React.ReactNode;
     headline: string | JSX.Element;
     level: string;
 }
