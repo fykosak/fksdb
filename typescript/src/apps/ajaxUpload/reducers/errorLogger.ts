@@ -1,6 +1,6 @@
+import { ACTION_SUBMIT_START } from '@fetchApi/actions/submit';
 import { Message } from '@fetchApi/middleware/interfaces';
 import { ACTION_ADD_ERROR } from '../actions';
-import { ACTION_SUBMIT_START } from '@fetchApi/actions/submit';
 
 export interface State {
     errors: Message[];

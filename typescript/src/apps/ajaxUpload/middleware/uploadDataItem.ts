@@ -1,9 +1,9 @@
 export interface UploadDataItem {
     taskId: number;
-    deadline: string;
+    deadline: string | null;
     submitId: number;
     name: string;
-    href: string;
+    href: string | null;
 }
 
 export interface UploadData {

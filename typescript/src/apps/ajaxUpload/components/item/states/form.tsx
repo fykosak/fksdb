@@ -19,7 +19,7 @@ import { Store } from '../../../reducers';
 
 interface OwnProps {
     actions: NetteActions;
-    data: UploadDataItem;
+    submit: UploadDataItem;
     accessKey: string;
 }
 
@@ -27,7 +27,7 @@ interface DispatchProps {
 
     onDropItem(item: any): void;
 
-    onFileUpload(data): void;
+    onFileUpload(data: FormData): void;
 
     onDragStart(): void;
 
@@ -37,8 +37,6 @@ interface DispatchProps {
 }
 
 interface StateProps {
-    // isSubmitting: boolean;
-
     dragged: boolean;
 }
 
@@ -60,7 +58,7 @@ class Form extends React.Component<OwnProps & StateProps & DispatchProps, {}> {
             const data: FileList = event.dataTransfer.files;
             onDropItem(data);
 
-            const formData = handleFileUpload(data, this.props.data.taskId, onAddError);
+            const formData = handleFileUpload(data, this.props.submit.taskId, onAddError);
             if (formData) {
                 onFileUpload(formData);
             }
@@ -69,7 +67,7 @@ class Form extends React.Component<OwnProps & StateProps & DispatchProps, {}> {
         const onFileInputChanged = (event) => {
             event.preventDefault();
             const data: FileList = event.target.files;
-            const formData = handleFileUpload(data, this.props.data.taskId, onAddError);
+            const formData = handleFileUpload(data, this.props.submit.taskId, onAddError);
             if (formData) {
                 onFileUpload(formData);
             }

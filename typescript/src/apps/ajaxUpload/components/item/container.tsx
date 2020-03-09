@@ -1,3 +1,4 @@
+import { UploadDataItem } from '@apps/ajaxUpload/middleware/uploadDataItem';
 import { NetteActions } from '@appsCollector';
 import Card from '@shared/components/card';
 import * as React from 'react';
@@ -13,19 +14,15 @@ interface OwnProps {
 }
 
 interface StateProps {
-    deadline: string;
-    href: string;
-    name: string;
-    submitId: number;
-    taskId: number;
     submitting: boolean;
+    submit: UploadDataItem;
 }
 
 class UploadContainer extends React.Component<OwnProps & StateProps, {}> {
 
     public render() {
 
-        const {deadline, href, name, submitId, taskId, submitting, actions} = this.props;
+        const {submit, submit: {deadline, name, submitId}, submitting, actions} = this.props;
         const headline = (<>
             <h4>{name}</h4>
             <small className="text-muted">{deadline}</small>
@@ -39,8 +36,8 @@ class UploadContainer extends React.Component<OwnProps & StateProps, {}> {
                         <span className="display-1 d-block"><i className="fa fa-spinner fa-spin "/></span>
                     </div>) :
                     (submitId ?
-                            (<File actions={actions} accessKey={accessKey} name={name} href={href} submitId={submitId}/>) :
-                            (<Form actions={actions} accessKey={accessKey} data={{deadline, href, name, submitId, taskId}}/>)
+                            (<File actions={actions} accessKey={accessKey} submit={submit}/>) :
+                            (<Form actions={actions} accessKey={accessKey} submit={submit}/>)
                     )
                 }
             </Card>
@@ -49,20 +46,12 @@ class UploadContainer extends React.Component<OwnProps & StateProps, {}> {
 }
 
 const mapStateToProps = (state: Store, ownProps: OwnProps): StateProps => {
-    const values = {
-        submitting: false,
-    };
     const {accessKey} = ownProps;
-    if (state.fetchApi.hasOwnProperty(accessKey)) {
-        values.submitting = state.fetchApi[accessKey].submitting;
-    }
     return {
-        deadline: state.uploadData.deadline,
-        href: state.uploadData.href,
-        name: state.uploadData.name,
-        submitId: state.uploadData.submitId,
-        taskId: state.uploadData.taskId,
-        ...values,
+        submit: {
+            ...state.uploadData,
+        },
+        submitting: state.fetchApi.hasOwnProperty(accessKey) ? state.fetchApi[accessKey].submitting : false,
     };
 };
 

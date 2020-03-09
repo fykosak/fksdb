@@ -22,7 +22,6 @@ export const handleFileUpload = (data: FileList, taskId: number, setError: (erro
             } else {
                 setError({text: lang.getText('Nepodporovaný formát'), level: 'danger'});
             }
-
         }
     }
     return null;

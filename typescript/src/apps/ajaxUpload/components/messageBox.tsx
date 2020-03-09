@@ -34,8 +34,5 @@ const mapStateToProps = (state: Store, ownProps: OwnProps): StateProps => {
             ...state.errorLogger.errors],
     };
 };
-const mapDispatchToProps = (): {} => {
-    return {};
-};
 
-export default connect(mapStateToProps, mapDispatchToProps)(MessageBox);
+export default connect(mapStateToProps, null)(MessageBox);

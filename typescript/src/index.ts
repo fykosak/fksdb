@@ -1,3 +1,4 @@
+import { ajaxUpload } from '@apps/ajaxUpload';
 import { charts } from '@apps/chart';
 import { eventApplicationsTimeProgress } from '@apps/events/applicationsTimeProgress/';
 import { attendance } from '@apps/events/attendance';
@@ -6,10 +7,9 @@ import { fyziklani } from '@apps/fyziklani/';
 import { fyziklaniResults } from '@apps/fyziklaniResults';
 import { payment } from '@apps/payment/selectField/';
 import { appsCollector } from '@appsCollector';
-import { ajaxUpload } from "./apps/ajaxUpload";
 
 appsCollector.register(eventSchedule);
-appsCollector.register(ajaxUpload);
+ajaxUpload();
 eventApplicationsTimeProgress();
 charts();
 payment();

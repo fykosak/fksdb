@@ -41,7 +41,6 @@ class AppsCollector {
                 element.setAttribute('data-served', '1');
                 return;
             }
-            debugger;
             throw new Error('no match type');
         });
     }

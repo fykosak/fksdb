@@ -105,7 +105,7 @@ class SubmitPresenter extends BasePresenter {
         $this->template->hasForward = false;
         if (!$this->template->hasTasks) {
             /**
-             * @var $person ModelPerson
+             * @var ModelPerson $person
              */
             $person = $this->getUser()->getIdentity()->getPerson();
             $contestants = $person->getActiveContestants($this->yearCalculator);
@@ -125,7 +125,7 @@ class SubmitPresenter extends BasePresenter {
      */
     public function actionDownload($id) {
         /**
-         * @var $submit ModelSubmit
+         * @var ModelSubmit $submit
          */
         $submit = $this->submitService->findByPrimary2($id);
 
@@ -155,7 +155,7 @@ class SubmitPresenter extends BasePresenter {
             $this->flashMessage(_('Řešitel nemá vyplněn ročník, nebudou dostupné všechny úlohy.'));
         }
         /**
-         * @var $task ModelTask
+         * @var ModelTask $task
          */
         foreach ($this->getAvailableTasks() as $task) {
             if ($task->submit_deadline != $prevDeadline) {

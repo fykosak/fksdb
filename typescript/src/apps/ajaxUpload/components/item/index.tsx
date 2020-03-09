@@ -1,6 +1,6 @@
 import { NetteActions } from '@appsCollector';
 import { config } from '@config';
-import * as React from "react";
+import * as React from 'react';
 import { Provider } from 'react-redux';
 import {
     applyMiddleware,
@@ -9,7 +9,7 @@ import {
 import logger from 'redux-logger';
 import { UploadDataItem } from '../../middleware/uploadDataItem';
 import { app } from '../../reducers';
-import App from './app';
+import UploadContainer from '@apps/ajaxUpload/components/item/container';
 
 interface IProps {
     data: UploadDataItem;
@@ -19,11 +19,20 @@ interface IProps {
 export default class Index extends React.Component<IProps, {}> {
 
     public render() {
-        const store = config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
+        const store = config.dev ?
+            createStore(app, {
+                uploadData: {
+                    ...this.props.data,
+                },
+            }, applyMiddleware(logger)) :
+            createStore(app, {
+                uploadData: {
+                    ...this.props.data,
+                },
+            });
+        const accessKey = '@@submit-api/' + this.props.data.taskId;
         return <Provider store={store}>
-            <>
-                <App data={this.props.data} actions={this.props.actions}/>
-            </>
+            <UploadContainer actions={this.props.actions} accessKey={accessKey}/>
         </Provider>;
     }
 }

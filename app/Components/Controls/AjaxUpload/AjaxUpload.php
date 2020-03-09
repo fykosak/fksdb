@@ -60,28 +60,12 @@ class AjaxUpload extends ReactComponent {
     }
 
     /**
-     * @return string
-     */
-    public function getModuleName(): string {
-        return 'public';
-    }
-
-    /**
-     * @return string
-     */
-    public function getMode(): string {
-        return '';
-    }
-
-    /**
-     * @return array
      * @throws InvalidLinkException
      */
-    public function getActions(): array {
-        $actions = parent::getActions();
-        $actions['revoke'] = $this->link('revoke!');
-        $actions['upload'] = $this->link('upload!');
-        return $actions;
+    protected function configure() {
+        $this->addAction('revoke', $this->link('revoke!'));
+        $this->addAction('upload', $this->link('upload!'));
+        parent::configure();
     }
 
     /**
@@ -112,13 +96,6 @@ class AjaxUpload extends ReactComponent {
             throw new BadRequestException();
         }
         return $presenter;
-    }
-
-    /**
-     * @return string
-     */
-    public function getComponentName(): string {
-        return 'ajax-upload';
     }
 
     /**
@@ -185,5 +162,12 @@ class AjaxUpload extends ReactComponent {
         $response->addMessage(new ReactMessage($message->getMessage(), $message->getLevel()));
         $this->getPresenter()->sendResponse($response);
         die();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getReactId(): string {
+        return 'public.ajax-upload';
     }
 }
