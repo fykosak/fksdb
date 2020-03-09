@@ -720,6 +720,32 @@ body[data-contest="vyfuk"] h1, body[data-contest="vyfuk"] h2, body[data-contest=
 .chart.chart-participant-acquaintance path.ribbon.inactive {
   opacity: 0; }
 
+.drop-input {
+  background-color: white;
+  padding: 0.5rem;
+}
+.drop-input.dragged {
+  background-color: #1175da;
+  color: white;
+}
+.drop-input.dragged .drop-input-inner {
+  border-color: white;
+}
+.drop-input .drop-input-inner {
+  border: gray dashed;
+}
+
+@keyframes upload {
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}
 .bg-white-container {
   background-color: rgba(255, 255, 255, 0.85); }
 

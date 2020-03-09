@@ -16,6 +16,7 @@ use Utils;
  * @property-read int task_id
  * @property-read int points
  * @property-read DateTime submit_deadline
+ * @property-read DateTime submit_start
  */
 class ModelTask extends AbstractModelSingle {
 
