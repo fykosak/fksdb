@@ -116,7 +116,7 @@ class AjaxUpload extends ReactComponent {
                 $response->addMessage(new ReactMessage(_('Task not found'), 'warning'));
                 continue;
             }
-            $task = $this->getPresenter()->isAvailableSubmit($matches[1]);
+            $task = $this->getPresenter()->getAvailableTasks()->where('task_id', $matches[1])->fetch();
             if (!$task) {
 
                 $response->setCode(403);
@@ -134,7 +134,7 @@ class AjaxUpload extends ReactComponent {
                 return;
             }
             // store submit
-            $submit = $this->saveSubmitTrait($file, $task, $contestant);
+            $submit = $this->traitSaveSubmit($file, $task, $contestant);
             $this->submitStorage->commit();
             $this->serviceSubmit->getConnection()->commit();
             $response->addMessage(new ReactMessage(_('Upload successful'), 'success'));

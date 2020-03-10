@@ -26,7 +26,7 @@ trait SubmitSaveTrait {
      * @return AbstractModelSingle|ModelSubmit
      * @throws \Exception
      */
-    private function saveSubmitTrait(FileUpload $file, ModelTask $task, ModelContestant $contestant) {
+    private function traitSaveSubmit(FileUpload $file, ModelTask $task, ModelContestant $contestant) {
         $submit = $this->getServiceSubmit()->findByContestant($contestant->ct_id, $task->task_id);
         if (!$submit) {
             $submit = $this->getServiceSubmit()->createNewModel([

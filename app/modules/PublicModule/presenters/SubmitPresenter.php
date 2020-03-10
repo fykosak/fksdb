@@ -12,6 +12,7 @@ use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\ORM\Services\ServiceTask;
+use FKSDB\ORM\Tables\TypedTableSelection;
 use FKSDB\Submits\FilesystemSubmitStorage;
 use FKSDB\Submits\ISubmitStorage;
 use FKSDB\Submits\ProcessingException;
@@ -254,7 +255,7 @@ class SubmitPresenter extends BasePresenter {
                     continue;
                 }
 
-                $this->saveSubmitTrait($taskValues['file'], $task, $this->getContestant());
+                $this->traitSaveSubmit($taskValues['file'], $task, $this->getContestant());
 
                 $this->flashMessage(sprintf(_('Úloha %s odevzdána.'), $task->label), self::FLASH_SUCCESS);
             }
@@ -278,7 +279,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @return Selection
+     * @return TypedTableSelection
      * @throws BadRequestException
      */
     public function getAvailableTasks() {
@@ -289,24 +290,6 @@ class SubmitPresenter extends BasePresenter {
         $tasks->order('ISNULL(submit_deadline) ASC, submit_deadline ASC');
 
         return $tasks;
-    }
-
-    /**
-     * @param integer $taskId
-     * @return ModelTask|null
-     *
-     * @throws BadRequestException
-     */
-    public function isAvailableSubmit($taskId) {
-        /**
-         * @var ModelTask $task
-         */
-        foreach ($this->getAvailableTasks() as $task) {
-            if ($task->task_id == $taskId) {
-                return $task;
-            };
-        }
-        return null;
     }
 
     public function titleAjax() {
