@@ -13,10 +13,13 @@ use FormUtils;
 use Mail\MailTemplateFactory;
 use Mail\SendFailedException;
 use ModelException;
+use Nette\Application\IPresenter;
+use Nette\Application\UI\Presenter;
 use Nette\Database\Connection;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
 use Nette\SmartObject;
+use Nette\Utils\ArrayHash;
 use OrgModule\ContestantPresenter;
 use Tracy\Debugger;
 
@@ -36,12 +39,12 @@ class ExtendedPersonHandler {
     const RESULT_ERROR = 0;
 
     /**
-     * @var \FKSDB\ORM\IService
+     * @var IService
      */
     protected $service;
 
     /**
-     * @var \FKSDB\ORM\Services\ServicePerson
+     * @var ServicePerson
      */
     protected $servicePerson;
 
@@ -61,7 +64,7 @@ class ExtendedPersonHandler {
     private $accountManager;
 
     /**
-     * @var \FKSDB\ORM\Models\ModelContest
+     * @var ModelContest
      */
     private $contest;
 
@@ -82,8 +85,8 @@ class ExtendedPersonHandler {
 
     /**
      * ExtendedPersonHandler constructor.
-     * @param \FKSDB\ORM\IService $service
-     * @param \FKSDB\ORM\Services\ServicePerson $servicePerson
+     * @param IService $service
+     * @param ServicePerson $servicePerson
      * @param Connection $connection
      * @param MailTemplateFactory $mailTemplateFactory
      * @param AccountManager $accountManager
@@ -97,14 +100,14 @@ class ExtendedPersonHandler {
     }
 
     /**
-     * @return \FKSDB\ORM\Models\ModelContest
+     * @return ModelContest
      */
     public function getContest() {
         return $this->contest;
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelContest $contest
+     * @param ModelContest $contest
      */
     public function setContest(ModelContest $contest) {
         $this->contest = $contest;
@@ -139,7 +142,7 @@ class ExtendedPersonHandler {
     }
 
     /**
-     * @return \FKSDB\ORM\Models\ModelPerson
+     * @return ModelPerson
      */
     public function getPerson() {
         return $this->person;
@@ -160,33 +163,25 @@ class ExtendedPersonHandler {
      * @return int
      * @throws \Exception
      */
-    public final function handleForm(Form $form, IExtendedPersonPresenter $presenter, bool $sendEmail) {
+    public final function handleForm(Form $form, IExtendedPersonPresenter $presenter, bool $sendEmail): int {
 
         try {
             if (!$this->connection->beginTransaction()) {
                 throw new ModelException();
             }
-            $values = $form->getValues();
             $create = !$presenter->getModel();
 
-            $person = $this->person = $this->getReferencedPerson($form);
-            $this->storeExtendedModel($person, $values, $presenter);
+            $this->person = $this->getReferencedPerson($form);
+            $this->storeExtendedModel($form->getValues(), $presenter);
 
             // create login
-            $email = $person->getInfo() ? $person->getInfo()->email : null;
-            $login = $person->getLogin();
-            $hasLogin = (bool)$login;
-            if ($sendEmail && ($email && !$login)) {
-                $template = $this->mailTemplateFactory->createLoginInvitation($presenter, $this->getInvitationLang());
-                try {
-                    $this->accountManager->createLoginWithInvitation($template, $person, $email);
-                    $presenter->flashMessage(_('Zvací e-mail odeslán.'), BasePresenter::FLASH_INFO);
-                } catch (SendFailedException $exception) {
-                    $presenter->flashMessage(_('Zvací e-mail se nepodařilo odeslat.'), BasePresenter::FLASH_ERROR);
-                }
+            $email = $this->person->getInfo() ? $this->person->getInfo()->email : null;
+
+            if ($sendEmail && ($email && !$this->person->getLogin())) {
+                $this->sendLoginInvitation($presenter, $email);
             }
             // reload the model (this is workaround to avoid caching of empty but newly created referenced/related models)
-            $person = $this->person = $this->servicePerson->findByPrimary($this->getReferencedPerson($form)->getPrimary());
+            $this->person = $this->servicePerson->findByPrimary($this->getReferencedPerson($form)->getPrimary());
 
             /*
              * Finalize
@@ -195,14 +190,9 @@ class ExtendedPersonHandler {
                 throw new ModelException();
             }
 
-            if ($create) {
-                $msg = $presenter->messageCreate();
-            } else {
-                $msg = $presenter->messageEdit();
-            }
-            $presenter->flashMessage(sprintf($msg, $person->getFullname()), ContestantPresenter::FLASH_SUCCESS);
+            $presenter->flashMessage(sprintf($create ? $presenter->messageCreate() : $presenter->messageEdit(), $this->person->getFullname()), ContestantPresenter::FLASH_SUCCESS);
 
-            if (!$hasLogin) {
+            if (!$this->person->getLogin()) {
                 return self::RESULT_OK_NEW_LOGIN;
             } else {
                 return self::RESULT_OK_EXISTING_LOGIN;
@@ -227,11 +217,25 @@ class ExtendedPersonHandler {
     }
 
     /**
-     * @param ModelPerson $person
-     * @param $values
-     * @param $presenter
+     * @param Presenter $presenter
+     * @param string $email
+     * @throws \Exception
      */
-    protected function storeExtendedModel(ModelPerson $person, $values, $presenter) {
+    private function sendLoginInvitation(Presenter $presenter, string $email) {
+        $template = $this->mailTemplateFactory->createLoginInvitation($presenter, $this->getInvitationLang());
+        try {
+            $this->accountManager->createLoginWithInvitation($template, $this->person, $email);
+            $presenter->flashMessage(_('Zvací e-mail odeslán.'), BasePresenter::FLASH_INFO);
+        } catch (SendFailedException $exception) {
+            $presenter->flashMessage(_('Zvací e-mail se nepodařilo odeslat.'), BasePresenter::FLASH_ERROR);
+        }
+    }
+
+    /**
+     * @param array|ArrayHash $values
+     * @param IExtendedPersonPresenter $presenter
+     */
+    protected function storeExtendedModel($values, $presenter) {
         if ($this->contest === null || $this->year === null) {
             throw new InvalidStateException('Must set contest and year before storing contestant.');
         }
@@ -245,7 +249,7 @@ class ExtendedPersonHandler {
             $data = array_merge([
                 'contest_id' => $this->getContest()->contest_id,
                 'year' => $this->getYear(),
-                'person_id' => $person->getPrimary(),
+                'person_id' => $this->person->getPrimary(),
             ], $data);
             $this->service->createNewModel($data);
         } else {

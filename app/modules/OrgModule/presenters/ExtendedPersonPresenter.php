@@ -135,8 +135,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
         $handler = $this->handlerFactory->create($this->getORMService(), $this->getSelectedContest(), $this->getSelectedYear(), $this->globalParameters['invitation']['defaultLang']);
         $submit = $form->addSubmit('send', $create ? _('Založit') : _('Save'));
 
-        $submit->onClick[] = function (SubmitButton $button) use ($handler) {
-            $form = $button->getForm();
+        $form->onSuccess[] = function (Form $form) use ($handler) {;
             if ($handler->handleForm($form, $this, $this->sendEmail)) {
                 $this->backLinkRedirect();
                 $this->redirect('list');
@@ -151,8 +150,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
      * @throws BadRequestException
      */
     protected final function createComponentCreateComponent($name) {
-        $control = $this->createComponentFormControl(true);
-        return $control;
+        return $this->createComponentFormControl(true);
     }
 
     /**
@@ -161,8 +159,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
      * @throws BadRequestException
      */
     protected final function createComponentEditComponent($name) {
-        $control = $this->createComponentFormControl(false);
-        return $control;
+        return $this->createComponentFormControl(false);
     }
 
     /**
