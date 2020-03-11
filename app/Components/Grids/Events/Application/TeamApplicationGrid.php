@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Grids\Events\Application;
 
 use FKSDB\Components\Controls\Helpers\Badges\NotSetBadge;
+use FKSDB\NotImplementedException;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Application\AbortException;
@@ -22,10 +23,11 @@ use SQL\SearchableDataSource;
 class TeamApplicationGrid extends AbstractApplicationGrid {
     /**
      * @param Presenter $presenter
-     * @throws InvalidLinkException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
+     * @throws InvalidLinkException
+     * @throws NotImplementedException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

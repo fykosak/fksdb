@@ -4,6 +4,7 @@ namespace OrgModule;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Grids\EventOrgsGrid;
+use FKSDB\NotImplementedException;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEvent;
@@ -110,14 +111,6 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
     }
 
     /**
-     * @param $name
-     * @return EventOrgsGrid
-     */
-    protected function createComponentGrid($name): EventOrgsGrid {
-        return new EventOrgsGrid($this->getEvent(), $this->serviceEventOrg);
-    }
-
-    /**
      * @param Form $form
      * @return mixed|void
      */
@@ -174,4 +167,11 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
         return $this->modelEvent;
     }
 
+    /**
+     * @inheritDoc
+     * @throws NotImplementedException
+     */
+    protected function createComponentGrid($name) {
+        throw new NotImplementedException();
+    }
 }

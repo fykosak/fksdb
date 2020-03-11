@@ -12,8 +12,9 @@ use Nette\Security\IResource;
  * @property-read ActiveRow person
  * @property-read ActiveRow event
  * @property-read string note
+ * @property-read int e_org_id
  */
-class ModelEventOrg extends AbstractModelSingle implements IResource, IEventReferencedModel {
+class ModelEventOrg extends AbstractModelSingle implements IResource, IEventReferencedModel, IPersonReferencedModel {
     /**
      * @return ModelPerson
      */

@@ -7,6 +7,7 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\NotImplementedException;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\Selection;
@@ -107,6 +108,7 @@ abstract class AbstractApplicationGrid extends BaseGrid {
     /**
      * @param array $fields
      * @throws DuplicateColumnException
+     * @throws NotImplementedException
      */
     protected function addColumns(array $fields) {
         parent::addColumns($fields);

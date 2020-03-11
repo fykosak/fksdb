@@ -81,6 +81,7 @@ navigation:
         event.dashboard.default:
             - event.dispatch.default
             - event.dashboard.default
+            - event.eventOrg.list
             - event.payment.list
             - event.payment.create
             - fyziklani.dashboard.default
