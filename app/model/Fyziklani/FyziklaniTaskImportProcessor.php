@@ -51,14 +51,13 @@ class FyziklaniTaskImportProcessor {
             try {
                 $task = $this->serviceFyziklaniTask->findByLabel($row['label'], $this->event);
                 if (!$task) {
-                    $task = $this->serviceFyziklaniTask->createNewModel([
+                    $this->serviceFyziklaniTask->createNewModel([
                         'label' => $row['label'],
                         'name' => $row['name'],
                         'event_id' => $this->event->event_id,
                     ]);
                     $messages[] = [sprintf(_('Úloha %s "%s" bola vložena'), $row['label'], $row['name']), \BasePresenter::FLASH_SUCCESS];
                 } elseif ($values->state == TaskPresenter::IMPORT_STATE_UPDATE_N_INSERT) {
-                    $task->update();
                     $this->serviceFyziklaniTask->updateModel2($task, [
                         'label' => $row['label'],
                         'name' => $row['name']

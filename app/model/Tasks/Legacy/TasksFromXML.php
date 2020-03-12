@@ -66,7 +66,7 @@ class TasksFromXML extends Stage {
         $contest = $this->data->getContest();
         $year = $this->data->getYear();
         $series = $this->data->getSeries();
-        $tasknr = (int) (string) $XMLTask->number;
+        $tasknr = (int)(string)$XMLTask->number;
 
         // obtain FKSDB\ORM\Models\ModelTask
         $task = $this->taskService->findBySeries($contest, $year, $series, $tasknr);
@@ -80,13 +80,11 @@ class TasksFromXML extends Stage {
         }
 
         // update fields
+        $data = [];
         foreach ($this->xmlToColumnMap as $xmlElement => $column) {
-            // TODO property is readonly
-            $task->{$column} = (string) $XMLTask->{$xmlElement};
+            $data[$column] = (string)$XMLTask->{$xmlElement};
         }
-
-        // store it
-        $this->taskService->save($task);
+        $this->taskService->updateModel2($task, $data);
 
         // forward it to pipeline
         $this->data->addTask($tasknr, $task);

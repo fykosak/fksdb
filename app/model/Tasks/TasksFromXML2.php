@@ -92,6 +92,7 @@ class TasksFromXML2 extends Stage {
         }
 
         // update fields
+        $data = [];
         foreach (self::$xmlToColumnMap as $xmlElement => $column) {
             $value = NULL;
 
@@ -121,13 +122,9 @@ class TasksFromXML2 extends Stage {
             } else {
                 $value = (string) $XMLTask->{$xmlElement};
             }
-// TODO property is readonly
-            $task->{$column} = $value;
+            $data[$column] = $value;
         }
-
-        // store it
-        // TODO
-        $this->taskService->save($task);
+        $this->taskService->updateModel2($task,$data);
 
         // forward it to pipeline
         $this->data->addTask($tasknr, $task);
