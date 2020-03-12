@@ -45,8 +45,8 @@ acl:
     - addResource(org)           # create, edit, list, delete
     - addResource(eventOrg)      # create, edit, list, delete
     - addResource(event)         # create, edit, list, application
-    - addResource(teacher)        # create, edit, list
-    - addResource(email_message) #list
+    - addResource(teacher)       # create, edit, list
+    - addResource(email_message) # list, detail
 
     #applications
     - addResource(event.participant) #list, detail
@@ -85,7 +85,6 @@ acl:
     - allow(org, teacher, ::constant(Nette\Security\Permission::ALL))
     - allow(org, person, stalk.search)
     - allow(org, person, stalk.basic, [@ownerAssertion, 'existsOwnContestant'])
-    - allow(org, email_message, ::constant(Nette\Security\Permission::ALL))
 
     - allow(webmaster, task, insert) # stahování úloh
 
@@ -121,6 +120,7 @@ acl:
     - allow(boss, org, ::constant(Nette\Security\Permission::ALL))
     - allow(boss, person, edit, [@ownerAssertion, 'existsOwnContestant'])
     - allow(boss, person, stalk.full)
+    - allow(boss, email_message, ::constant(Nette\Security\Permission::ALL))
 
     - allow(schoolManager, school, ::constant(Nette\Security\Permission::ALL))
     # robot role

@@ -67,9 +67,9 @@ class ContestantsFromSchoolGrid extends BaseGrid {
         $this->addButton('editPerson', _('Edit'))
             ->setText(_('Edit'))
             ->setLink(function ($row) use ($presenter) {
-                return $presenter->link('Contestant:edit', array(
+                return $presenter->link('Org:Contestant:edit', [
                     'id' => $row->ct_id,
-                ));
+                ]);
             });
         $this->paginate = false;
     }

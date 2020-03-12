@@ -1,7 +1,8 @@
 <?php
 
-namespace FKSDB\Components\Controls\Chart;
+namespace FKSDB\Components\Controls\Chart\Event;
 
+use FKSDB\Components\Controls\Chart\IChart;
 use FKSDB\Components\React\ReactComponent;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventParticipant;
@@ -19,7 +20,7 @@ class ParticipantAcquaintanceChartControl extends ReactComponent implements ICha
     /**
      * @var int
      */
-    private $eventId;
+    private $event;
     /**
      * @var ServiceEvent
      */
@@ -28,13 +29,12 @@ class ParticipantAcquaintanceChartControl extends ReactComponent implements ICha
     /**
      * ParticipantAcquaintanceChartControl constructor.
      * @param Container $context
-     * @param int $eventId
-     * @param ServiceEvent $serviceEvent
+     * @param ModelEvent $event
      */
-    public function __construct(Container $context, int $eventId, ServiceEvent $serviceEvent) {
+    public function __construct(Container $context, ModelEvent $event) {
         parent::__construct($context);
-        $this->eventId = $eventId;
-        $this->serviceEvent = $serviceEvent;
+        $this->event = $event;
+        $this->serviceEvent = $context->getByType(ServiceEvent::class);
     }
 
     /**
@@ -49,17 +49,8 @@ class ParticipantAcquaintanceChartControl extends ReactComponent implements ICha
      * @throws JsonException
      */
     function getData(): string {
-        if (!$this->eventId) {
-            $this->getPresenter()->flashMessage(_('no eventId selected'), 'danger');
-            return '';
-        }
-        /**
-         * @var ModelEvent $event
-         */
-        $event = $this->serviceEvent->findByPrimary($this->eventId);
-        $event->getParticipants();
         $data = [];
-        foreach ($event->getParticipants()->where('status', ['participated', 'applied']) as $row) {
+        foreach ($this->event->getParticipants()->where('status', ['participated', 'applied']) as $row) {
 
             $participant = ModelEventParticipant::createFromActiveRow($row);
 
@@ -100,5 +91,12 @@ class ParticipantAcquaintanceChartControl extends ReactComponent implements ICha
      */
     public function getControl(): Control {
         return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDescription() {
+        return null;
     }
 }

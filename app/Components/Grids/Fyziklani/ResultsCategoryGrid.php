@@ -46,7 +46,7 @@ class ResultsCategoryGrid extends BaseGrid {
     }
 
     /**
-     * @param BasePresenter $presenter
+     * @param $presenter
      * @throws DuplicateColumnException
      */
     protected function configure($presenter) {

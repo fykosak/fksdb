@@ -6,6 +6,7 @@ use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
 use Nette\Application\BadRequestException;
+use Nette\Security\IResource;
 
 /**
  * Trait EntityTrait
@@ -78,9 +79,9 @@ trait EntityTrait {
     abstract protected function getModelResource(): string;
 
     /**
-     * @param $resource
-     * @param $privilege
+     * @param IResource|string $resource
+     * @param string $privilege
      * @return bool
      */
-    abstract protected function isAllowed($resource, $privilege): bool;
+    abstract protected function isAllowed($resource, string $privilege): bool;
 }

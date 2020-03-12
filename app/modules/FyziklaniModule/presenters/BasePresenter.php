@@ -5,11 +5,10 @@ namespace FyziklaniModule;
 use EventModule\BasePresenter as EventBasePresenter;
 use FKSDB\Components\Controls\Choosers\FyziklaniChooser;
 use FKSDB\Components\Factories\FyziklaniFactory;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 
@@ -39,10 +38,6 @@ abstract class BasePresenter extends EventBasePresenter {
      * @var FyziklaniFactory
      */
     protected $fyziklaniComponentsFactory;
-    /**
-     * @var ModelFyziklaniGameSetup
-     */
-    private $gameSetup;
 
     /**
      * @param FyziklaniFactory $fyziklaniComponentsFactory
@@ -101,12 +96,11 @@ abstract class BasePresenter extends EventBasePresenter {
     }
 
     /**
+     * @param ModelEvent $event
      * @return bool
-     * @throws BadRequestException
-     * @throws AbortException
      */
-    protected function isEventFyziklani(): bool {
-        return $this->getEvent()->event_type_id === 1;
+    protected function isEnabledForEvent(ModelEvent $event): bool {
+        return $event->event_type_id === 1;
     }
 
     /**
@@ -115,10 +109,6 @@ abstract class BasePresenter extends EventBasePresenter {
      */
     protected function startup() {
         parent::startup();
-        if (!$this->isEventFyziklani()) {
-            $this->flashMessage('Event nieje fyziklani', \BasePresenter::FLASH_WARNING);
-            $this->redirect(':Event:Dashboard:default');
-        }
         /**
          * @var FyziklaniChooser $fyziklaniChooser
          */
@@ -133,32 +123,4 @@ abstract class BasePresenter extends EventBasePresenter {
     protected function getNavRoots(): array {
         return ['fyziklani.dashboard.default'];
     }
-
-    /**
-     * @noinspection PhpMissingParentCallCommonInspection
-     * @return int
-     */
-    protected function getEventId(): int {
-        if (!$this->eventId) {
-            $this->eventId = $this->serviceEvent->getTable()->where('event_type_id', 1)->max('event_id');
-        }
-        return $this->eventId;
-    }
-
-    /**
-     * @return ModelFyziklaniGameSetup
-     * @throws BadRequestException
-     * @throws AbortException
-     */
-    protected function getGameSetup(): ModelFyziklaniGameSetup {
-        if (!$this->gameSetup) {
-            $gameSetup = $this->getEvent()->getFyziklaniGameSetup();
-            if (!$gameSetup) {
-                throw new BadRequestException(_('Game is not set up!'), 404);
-            }
-            $this->gameSetup = $gameSetup;
-        }
-        return $this->gameSetup;
-    }
-
 }
