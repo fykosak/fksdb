@@ -13,6 +13,7 @@ services:
   - mysql
 
 before_install:
+  - phpenv config-add tests/php.ini
   - composer self-update
   - echo $'\n[client]\nuser=root' >> ~/.my.cnf
 
