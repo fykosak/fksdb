@@ -30,12 +30,6 @@ interface IService {
     public function findByPrimary($key);
 
     /**
-     * @param $key
-     * @return IModel|null
-     */
-    public function findByPrimary2(int $key);
-
-    /**
      * @param IModel $model
      * @return mixed
      * @deprecated
