@@ -68,7 +68,7 @@ class EventAuthorizator {
      * @param $event
      * @return bool
      */
-    public function isAllowed($resource, $privilege, $event) {
+    public function isAllowed($resource, $privilege, $event): bool {
         if (!$this->getUser()->isAuthenticated()) {
             return false;
         }
@@ -81,8 +81,7 @@ class EventAuthorizator {
      * @param $event
      * @return bool
      */
-    public function isAllowedForLogin($resource, $privilege, $event) {
-        $eventOrgByIdAssertion = new EventOrgByIdAssertion($event->event_type->event_type_id, $this->getUser(), $this->db);
-        return $eventOrgByIdAssertion($this->acl, null, $resource, $privilege, $event->event_id);
+    public function isAllowedForLogin($resource, $privilege, $event): bool {
+        return (new EventOrgByIdAssertion($event->event_type->event_type_id, $this->getUser(), $this->db))($this->getAcl(), null, $resource, $privilege, $event->event_id);
     }
 }

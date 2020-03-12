@@ -5,6 +5,8 @@ namespace FKSDB\ORM\Services;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelSubmit;
+use FKSDB\ORM\Models\ModelTask;
+use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
 
 /**
@@ -64,6 +66,23 @@ class ServiceSubmit extends AbstractServiceSingle {
             ->select(DbNames::TAB_SUBMIT . '.*')
             ->select(DbNames::TAB_TASK . '.*');
         return $submits;
+    }
+
+    /**
+     * @param ModelSubmit|null $submit
+     * @param ModelTask $task
+     * @param Presenter $presenter
+     * @return array
+     * @throws \Nette\Application\UI\InvalidLinkException
+     */
+    public function serializeSubmit($submit, ModelTask $task, Presenter $presenter) {
+        return [
+            'submitId' => $submit ? $submit->submit_id : null,
+            'name' => $task->getFQName(),
+            'href' => $submit ? $presenter->link('download', ['id' => $submit->submit_id]) : null,
+            'taskId' => $task->task_id,
+            'deadline' => sprintf(_('Termín %s'), $task->submit_deadline),
+        ];
     }
 
 }

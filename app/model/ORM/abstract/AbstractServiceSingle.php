@@ -10,6 +10,7 @@ use Nette\Database\Context;
 use Nette\Database\IConventions;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection as TableSelection;
+use Nette\Database\Table\Selection;
 use Nette\InvalidStateException;
 use PDOException;
 use Traversable;
@@ -23,8 +24,7 @@ use Traversable;
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-abstract class AbstractServiceSingle extends TableSelection implements IService {
-
+abstract class AbstractServiceSingle extends Selection implements IService {
     /**
      * @var string
      */
@@ -48,6 +48,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     /**
      * @param Traversable|array|null $data
      * @return AbstractModelSingle
+     * @throws ModelException
      */
     public function createNewModel($data = null): AbstractModelSingle {
         $modelClassName = $this->getModelClassName();
@@ -88,11 +89,14 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     }
 
     /**
-     * @internal Used also in MultiTableSelection.
-     *
      * @param array $data
      * @return AbstractModelSingle
+     * <<<<<<< HEAD
      * @deprecated
+     * =======
+     * @internal Used also in MultiTableSelection.
+     *
+     * >>>>>>> dev-update-nette-17-pre
      */
     public function createFromArray(array $data) {
         $className = $this->getModelClassName();
@@ -112,16 +116,6 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     abstract protected function getTableName(): string;
 
     /**
-     * @param ActiveRow $row
-     * @return mixed
-     * @deprecated
-     */
-    public function createFromTableRow(ActiveRow $row) {
-        $className = $this->getModelClassName();
-        return new $className($row->toArray(), $row->getTable());
-    }
-
-    /**
      * Syntactic sugar.
      *
      * @param int $key
@@ -131,19 +125,6 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
         $result = $this->getTable()->get($key);
         if ($result !== false) {
             return $result;
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * @param int $key
-     * @return AbstractModelSingle|null
-     */
-    public function findByPrimary2(int $key) {
-        $result = $this->getTable()->get($key);
-        if ($result !== false) {
-            return $this->getModelClassName()::createFromActiveRow($result);
         } else {
             return null;
         }
@@ -171,22 +152,23 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
 
     /**
      * @param AbstractModelSingle|IModel $model
-     * @param Traversable|array $data
-     * @return int
-     * @throws InvalidArgumentException
-     */
-    public function updateModel2(IModel $model, $data) {
-        $this->checkType($model);
-        $data = $this->filterData($data);
-        return $model->update($data);
-    }
-
-    /**
-     * @param AbstractModelSingle $model
      * @return AbstractModelSingle|null
      */
     public function refresh(AbstractModelSingle $model) {
-        return $this->findByPrimary2($model->getPrimary(true));
+        return $this->findByPrimary($model->getPrimary(true));
+    }
+
+    /**
+     * @param AbstractModelSingle|IModel $model
+     * @param Traversable|array $data
+     * @param bool $alive
+     * @return int
+     */
+    public function updateModel2(AbstractModelSingle $model, $data = null, $alive = true) {
+
+        $this->checkType($model);
+        $data = $this->filterData($data);
+        return $model->update($data);
     }
 
     /**
@@ -197,7 +179,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
      * @throws ModelException
      * @deprecated
      */
-    public function save(IModel & $model) {
+    public function save(IModel &$model) {
         $modelClassName = $this->getModelClassName();
         if (!$model instanceof $modelClassName) {
             throw new InvalidArgumentException('Service for class ' . $this->getModelClassName() . ' cannot store ' . get_class($model));

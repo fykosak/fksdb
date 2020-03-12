@@ -68,15 +68,15 @@ class ServiceGlobalSession extends AbstractServiceSingle {
             $sessionId = Random::generate(self::SESSION_ID_LENGTH, 'a-zA-Z0-9');
         } while ($this->findByPrimary($sessionId));
 
-        $session = $this->createNew([
+        $session = $this->createNewModel([
             'session_id' => $sessionId,
             'login_id' => $loginId,
             'since' => $since,
             'until' => $until,
             'remote_ip' => $this->request->getRemoteAddress(),
         ]);
-        $this->save($session);
-        $this->context->getConnection()->commit();
+       // $this->save($session);
+        $this->getConnection()->commit();
 
         return $session;
     }

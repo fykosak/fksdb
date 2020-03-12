@@ -104,6 +104,7 @@ fksrouter:
         # Application itself (note the presenters w/out module are handled specially)
         '//[!<subdomain>].%domain.host%.[!<tld>]%path%common/<presenter>/<action=default>[/<id>]':
             module: Common
+            presenter: Dashboard
             subdomain: %subdomain.db%
             tld: %domain.tld%
             flags: SECURED

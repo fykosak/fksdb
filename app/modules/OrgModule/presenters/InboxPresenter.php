@@ -313,11 +313,14 @@ class InboxPresenter extends SeriesPresenter {
             ))->delete();
             $key = self::TASK_PREFIX . $task->task_id;
             foreach ($values[$key] as $personId) {
-                $service->createNewModel([
+                $data = [
                     'task_id' => $task->task_id,
                     'person_id' => $personId,
                     'type' => ModelTaskContribution::TYPE_GRADE,
-                ]);
+                ];
+                $contribution = $service->createNewModel($data);
+                // $service->save($contribution);
+
             }
         }
 

@@ -244,9 +244,7 @@ abstract class Machine {
         /**
          * @var IStateModel|IModel|ActiveRow $model
          */
-        $model = $service->createNew($data);
-        $service->save($model);
-
+        $model = $service->createNewModel($data);
         return $this->execute($transition, $model);
     }
 }

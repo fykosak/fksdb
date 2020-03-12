@@ -66,8 +66,7 @@ class DeadlineFromXML extends Stage {
          * @var ModelTask $task
          */
         foreach ($this->data->getTasks() as $task) {
-            $task->submit_deadline = $deadline;
-            $this->taskService->save($task);
+            $this->taskService->updateModel2($task,['submit_deadline'=>$deadline]);
         }
     }
 

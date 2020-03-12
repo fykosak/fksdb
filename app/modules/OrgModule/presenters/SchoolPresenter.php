@@ -196,7 +196,7 @@ class SchoolPresenter extends EntityPresenter {
              */
             $data = FormUtils::emptyStrToNull($values[self::CONT_SCHOOL]);
             $data['address_id'] = $address->address_id;
-            $school = $this->serviceSchool->createNewModel($data);
+            $this->serviceSchool->createNewModel($data);
 
             /*
              * Finalize
@@ -236,16 +236,13 @@ class SchoolPresenter extends EntityPresenter {
              * Address
              */
             $data = FormUtils::emptyStrToNull($values[self::CONT_ADDRESS]);
-           // $address->update($data);
-            $this->serviceAddress->updateModel($address, $data);
-            $this->serviceAddress->save($address);
+            $this->serviceAddress->updateModel2($address, $data);
 
             /*
              * School
              */
             $data = FormUtils::emptyStrToNull($values[self::CONT_SCHOOL]);
-            $this->serviceSchool->updateModel($school, $data);
-            $this->serviceSchool->save($school);
+            $this->serviceSchool->updateModel2($school, $data);
 
             /*
              * Finalize

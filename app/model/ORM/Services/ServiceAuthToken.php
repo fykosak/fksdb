@@ -65,18 +65,20 @@ class ServiceAuthToken extends AbstractServiceSingle {
                 $tokenData = Random::generate(self::TOKEN_LENGTH, 'a-zA-Z0-9');
             } while ($this->verifyToken($tokenData));
 
-            $token = $this->createNew([
+            $token = $this->createNewModel([
+                'until' => $until,
                 'login_id' => $login->login_id,
                 'token' => $tokenData,
                 'data' => $data,
                 'since' => $since,
                 'type' => $type
             ]);
-
+        } else {
+            $this->updateModel2($token, ['until' => $until]);
         }
+        //  $token->until = $until;
 
-        $this->save($token);
-          $token->update(['until' => $until]);
+        // $this->save($token);
         if (!$outerTransaction) {
             $this->context->getConnection()->commit();
         }

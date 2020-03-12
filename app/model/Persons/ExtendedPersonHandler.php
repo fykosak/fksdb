@@ -194,13 +194,10 @@ class ExtendedPersonHandler {
             /*
              * Finalize
              */
-<<<<<<< HEAD
-            $connection->commit();
-=======
             if (!$this->connection->commit()) {
                 throw new ModelException();
             }
->>>>>>> origin/master
+
 
             if ($create) {
                 $msg = $presenter->messageCreate();
@@ -246,23 +243,18 @@ class ExtendedPersonHandler {
         $model = $presenter->getModel();
         $newData = [];
         if (!$model) {
-            $newData = [
+            $data = [
                 'contest_id' => $this->getContest()->contest_id,
-                'year' => $this->getYear(),
                 'person_id' => $person->getPrimary(),
+                'year' => $this->getYear(),
             ];
-            //$model = $this->service->createNewModel($data);
+            $model = $this->service->createNewModel($data);
         }
 
         // update data
         if (isset($values[self::CONT_MODEL])) {
             $data = FormUtils::emptyStrToNull($values[self::CONT_MODEL]);
-            if (!$model) {
-                $this->service->createNewModel(\array_merge((array)$data, $newData));
-            } else {
-                $this->service->updateModel2($model, $data);
-            }
+            $this->service->updateModel2($model, $data);
         }
     }
-
 }

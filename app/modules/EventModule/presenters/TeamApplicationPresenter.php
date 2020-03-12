@@ -9,9 +9,7 @@ use FKSDB\Components\Grids\Events\Application\TeamApplicationGrid;
 use FKSDB\model\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\ORM\Models\ModelPayment;
-use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use Nette\Application\AbortException;
@@ -57,28 +55,13 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @param int $id
+     * @param ModelEvent $event
+     * @return bool
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function authorizedDetail(int $id) {
-        if ($this->isTeamEvent()) {
-            parent::authorizedDetail($id);
-        } else {
-            $this->setAuthorized(false);
-        }
-    }
-
-    /**
-     * @throws AbortException
-     * @throws BadRequestException
-     */
-    public function authorizedList() {
-        if ($this->isTeamEvent()) {
-            parent::authorizedList();
-        } else {
-            $this->setAuthorized(false);
-        }
+    protected function isEnabledForEvent(ModelEvent $event): bool {
+        return $this->isTeamEvent();
     }
 
     /**
@@ -89,7 +72,6 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
     public function createComponentGrid(): AbstractApplicationGrid {
         return new TeamApplicationGrid($this->getEvent(), $this->getTableReflectionFactory());
     }
-
 
     /**
      * @throws BadRequestException
@@ -127,6 +109,6 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
      * @return string
      */
     protected function getModelResource(): string {
-        return 'fyziklani.team';
+        return ModelFyziklaniTeam::RESOURCE_ID;
     }
 }

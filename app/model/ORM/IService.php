@@ -54,14 +54,6 @@ interface IService {
     public function getTable();
 
     /**
-<<<<<<< HEAD
-     * @param IModel $model
-     * @param $data
-     * @return mixed
-     */
-    public function updateModel2(IModel $model, $data);
-
-    /**
      * @param IModel $model
      * @param $data
      * @return mixed

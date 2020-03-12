@@ -30,7 +30,7 @@ class FyziklaniTaskImportProcessor {
      * @param ModelEvent $event
      * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask $serviceFyziklaniTask
      */
-    public function __construct(ModelEvent$event, ServiceFyziklaniTask $serviceFyziklaniTask) {
+    public function __construct(ModelEvent $event, ServiceFyziklaniTask $serviceFyziklaniTask) {
         $this->event = $event;
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
     }
@@ -51,27 +51,26 @@ class FyziklaniTaskImportProcessor {
             try {
                 $task = $this->serviceFyziklaniTask->findByLabel($row['label'], $this->event);
                 if (!$task) {
-                    $task = $this->serviceFyziklaniTask->createNew([
+                    $this->serviceFyziklaniTask->createNewModel([
                         'label' => $row['label'],
                         'name' => $row['name'],
                         'event_id' => $this->event->event_id,
                     ]);
                     $messages[] = [sprintf(_('Úloha %s "%s" bola vložena'), $row['label'], $row['name']), \BasePresenter::FLASH_SUCCESS];
                 } elseif ($values->state == TaskPresenter::IMPORT_STATE_UPDATE_N_INSERT) {
-                        $this->serviceFyziklaniTask->updateModel($task, [
-                            'label' => $row['label'],
-                            'name' => $row['name']
-                        ]);
-                        $messages[] = [sprintf(_('Úloha %s "%s" byla aktualizována'), $row['label'], $row['name']),\BasePresenter::FLASH_INFO];
+                    $this->serviceFyziklaniTask->updateModel2($task, [
+                        'label' => $row['label'],
+                        'name' => $row['name']
+                    ]);
+                    $messages[] = [sprintf(_('Úloha %s "%s" byla aktualizována'), $row['label'], $row['name']), \BasePresenter::FLASH_INFO];
                 } else {
-                        $messages[] = [
-                            sprintf(_('Úloha %s "%s" nebyla aktualizována'), $row['label'], $row['name']),
-                            'warning'
-                        ];
+                    $messages[] = [
+                        sprintf(_('Úloha %s "%s" nebyla aktualizována'), $row['label'], $row['name']),
+                        'warning'
+                    ];
                 }
-                $this->serviceFyziklaniTask->save($task);
             } catch (\Exception $exception) {
-                $messages[] = [_('Vyskytla se chyba'),\BasePresenter::FLASH_ERROR];
+                $messages[] = [_('Vyskytla se chyba'), \BasePresenter::FLASH_ERROR];
                 Debugger::log($exception);
                 $connection->rollBack();
                 return;

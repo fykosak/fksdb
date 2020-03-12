@@ -276,7 +276,7 @@ class ContestantSubmits extends BaseControl {
         } else {
             $submit->update($data);
         }
-
+        $this->submitService->updateModel2($submit, $data);
 
         return $submit;
     }
