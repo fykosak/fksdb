@@ -8,6 +8,7 @@ use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceSubmit;
+use FKSDB\Submits\FilesystemSubmitUploadedStorage;
 use FKSDB\Submits\ISubmitStorage;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\Selection;
@@ -42,7 +43,7 @@ trait SubmitSaveTrait {
             ]);
         }
         // store file
-        $this->getSubmitStorage()->storeFile($file->getTemporaryFile(), $submit);
+        $this->getSubmitUploadedStorage()->storeFile($file->getTemporaryFile(), $submit);
         return $submit;
     }
 
@@ -52,7 +53,7 @@ trait SubmitSaveTrait {
     abstract protected function getServiceSubmit(): ServiceSubmit;
 
     /**
-     * @return ISubmitStorage
+     * @return FilesystemSubmitUploadedStorage
      */
-    abstract protected function getSubmitStorage():ISubmitStorage;
+    abstract protected function getSubmitUploadedStorage(): FilesystemSubmitUploadedStorage;
 }

@@ -4,7 +4,9 @@ namespace FKSDB\ORM\Models;
 
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
+use Nette\Database\Table\ActiveRow;
 use Nette\Utils\DateTime;
+use Nette\Utils\Strings;
 use Utils;
 
 /**
@@ -15,10 +17,13 @@ use Utils;
  * @property-read string name_cs
  * @property-read int task_id
  * @property-read int points
+ * @property-read int year
+ * @property-read int contest_id
  * @property-read DateTime submit_deadline
- * @property-read DateTime submit_start
+ * @property-read ActiveRow contest
+ * @property-read ActiveRow task
  */
-class ModelTask extends AbstractModelSingle {
+class ModelTask extends AbstractModelSingle implements IContestReferencedModel {
 
     /**
      * (Fully qualified) task name for use in GUI.
@@ -61,4 +66,24 @@ class ModelTask extends AbstractModelSingle {
         return $result;
     }
 
+    /**
+     * @return string
+     */
+    public function webalizeLabel(): string {
+        return Strings::webalize($this->label, null, false);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getContest(): ModelContest {
+        return ModelContest::createFromActiveRow($this->contest);
+    }
+
+    /**
+     * @return ModelTask
+     */
+    public function getTask(): ModelTask {
+        return ModelTask::createFromActiveRow($this->task);
+    }
 }

@@ -28,7 +28,7 @@ class SeriesTable {
     private $serviceContestant;
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceTask
+     * @var ServiceTask
      */
     private $serviceTask;
 
@@ -38,7 +38,7 @@ class SeriesTable {
     private $serviceSubmit;
 
     /**
-     * @var \FKSDB\ORM\Models\ModelContest
+     * @var ModelContest
      */
     private $contest;
 
@@ -60,9 +60,9 @@ class SeriesTable {
 
     /**
      * SeriesTable constructor.
-     * @param \FKSDB\ORM\Services\ServiceContestant $serviceContestant
-     * @param \FKSDB\ORM\Services\ServiceTask $serviceTask
-     * @param \FKSDB\ORM\Services\ServiceSubmit $serviceSubmit
+     * @param ServiceContestant $serviceContestant
+     * @param ServiceTask $serviceTask
+     * @param ServiceSubmit $serviceSubmit
      */
     function __construct(ServiceContestant $serviceContestant, ServiceTask $serviceTask, ServiceSubmit $serviceSubmit) {
         $this->serviceContestant = $serviceContestant;
@@ -78,7 +78,7 @@ class SeriesTable {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelContest $contest
+     * @param ModelContest $contest
      */
     public function setContest(ModelContest $contest) {
         $this->contest = $contest;
@@ -134,7 +134,6 @@ class SeriesTable {
             'contest_id' => $this->getContest()->contest_id,
             'year' => $this->getYear(),
         ])->order('person.family_name, person.other_name, person.person_id');
-        //TODO series
     }
 
     /**

@@ -2,9 +2,11 @@
 
 namespace Authorization;
 
+use FKSDB\ORM\Models\IContestReferencedModel;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelRole;
+use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\IResource;
 use Nette\Security\Permission;
@@ -72,6 +74,18 @@ class ContestAuthorizator {
          */
         $login = $this->getUser()->getIdentity();
         return $this->isAllowedForLogin($login, $resource, $privilege, $contest);
+    }
+
+    /**
+     * User must posses the role (for the resource:privilege) in the context
+     * of the queried contest.
+     *
+     * @param IResource|string|IContestReferencedModel $resource
+     * @param string $privilege
+     * @return boolean
+     */
+    public function isAllowedForContestReferencedModel(IContestReferencedModel $resource, string $privilege = null): bool {
+        return $this->isAllowed($resource, $privilege, $resource->getContest());
     }
 
     /**

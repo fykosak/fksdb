@@ -2,15 +2,15 @@
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Components\Control\AjaxUpload\SubmitDownloadTrait;
 use FKSDB\Components\Control\AjaxUpload\SubmitRevokeTrait;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Services\ServiceSubmit;
-use FKSDB\Submits\FilesystemSubmitStorage;
-use FKSDB\Submits\ISubmitStorage;
+use FKSDB\Submits\FilesystemCorrectedSubmitStorage;
+use FKSDB\Submits\FilesystemSubmitUploadedStorage;
 use Nette\Application\UI\InvalidLinkException;
-use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
@@ -22,29 +22,35 @@ use function sprintf;
  */
 class SubmitsGrid extends BaseGrid {
     use SubmitRevokeTrait;
+    use SubmitDownloadTrait;
 
     /** @var ServiceSubmit */
     private $submitService;
 
-    /** @var FilesystemSubmitStorage */
-    private $submitStorage;
+    /** @var FilesystemSubmitUploadedStorage */
+    private $filesystemSubmitUploadedStorage;
 
     /**
      * @var ModelContestant
      */
     private $contestant;
+    /**
+     * @var FilesystemCorrectedSubmitStorage
+     */
+    private $filesystemCorrectedSubmitStorage;
 
     /**
      * SubmitsGrid constructor.
      * @param ServiceSubmit $submitService
-     * @param FilesystemSubmitStorage $submitStorage
+     * @param FilesystemSubmitUploadedStorage $filesystemSubmitUploadedStorage
      * @param ModelContestant $contestant
+     * @param FilesystemCorrectedSubmitStorage $filesystemCorrectedSubmitStorage
      */
-    function __construct(ServiceSubmit $submitService, FilesystemSubmitStorage $submitStorage, ModelContestant $contestant) {
+    function __construct(ServiceSubmit $submitService, FilesystemSubmitUploadedStorage $filesystemSubmitUploadedStorage, ModelContestant $contestant, FilesystemCorrectedSubmitStorage $filesystemCorrectedSubmitStorage) {
         parent::__construct();
-
+        $this->filesystemCorrectedSubmitStorage = $filesystemCorrectedSubmitStorage;
         $this->submitService = $submitService;
-        $this->submitStorage = $submitStorage;
+        $this->filesystemSubmitUploadedStorage = $filesystemSubmitUploadedStorage;
         $this->contestant = $contestant;
     }
 
@@ -56,10 +62,17 @@ class SubmitsGrid extends BaseGrid {
     }
 
     /**
-     * @return ISubmitStorage
+     * @return FilesystemSubmitUploadedStorage
      */
-    protected function getSubmitStorage(): ISubmitStorage {
-        return $this->submitStorage;
+    protected function getSubmitUploadedStorage(): FilesystemSubmitUploadedStorage {
+        return $this->filesystemSubmitUploadedStorage;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getSubmitCorrectedStorage(): FilesystemCorrectedSubmitStorage {
+        return $this->filesystemCorrectedSubmitStorage;
     }
 
     /**
@@ -82,19 +95,8 @@ class SubmitsGrid extends BaseGrid {
         // columns
         //
         $this->addColumn('task', _('Úloha'))
-            ->setRenderer(function ($row) use ($presenter) {
-                $row->task_id; // stupid caching...
-                $task = $row->getTask();
-                $FQname = $task->getFQName();
-
-                if ($row->source == ModelSubmit::SOURCE_UPLOAD) {
-                    $el = Html::el('a');
-                    $el->href = $presenter->link(':Public:Submit:download', ['id' => $row->submit_id]);
-                    $el->setText($FQname);
-                    return $el;
-                } else {
-                    return $FQname;
-                }
+            ->setRenderer(function (ModelSubmit $row) use ($presenter) {
+                return $row->getTask()->getFQName();
             });
         $this->addColumn('submitted_on', _('Čas odevzdání'));
         $this->addColumn('source', _('Způsob odevzdání'));
@@ -103,7 +105,7 @@ class SubmitsGrid extends BaseGrid {
         // operations
         //
         $this->addButton('revoke', _('Zrušit'))
-            ->setClass('btn btn-xs btn-warning')
+            ->setClass('btn btn-sm btn-warning')
             ->setText(_('Zrušit'))
             ->setShow(function ($row) {
                 return $this->canRevoke($row);
@@ -111,9 +113,20 @@ class SubmitsGrid extends BaseGrid {
             ->setLink(function ($row) {
                 return $this->link('revoke!', $row->submit_id);
             })
-            ->setConfirmationDialog(function ($row) {
+            ->setConfirmationDialog(function (ModelSubmit $row) {
                 return sprintf(_('Opravdu vzít řešení úlohy %s zpět?'), $row->getTask()->getFQName());
             });
+        $this->addButton('download_uploaded')
+            ->setText(_('Download original'))->setLink(function ($row) {
+                return $this->link('downloadUploaded!', $row->submit_id);
+            });
+        $this->addButton('download_corrected')
+            ->setText(_('Download corrected'))->setLink(function ($row) {
+                return $this->link('downloadCorrected!', $row->submit_id);
+            })->setShow(function (ModelSubmit $row) {
+                return $row->corrected;
+            });
+
         $this->paginate = false;
         $this->enableSorting = false;
     }
@@ -122,7 +135,7 @@ class SubmitsGrid extends BaseGrid {
      * @param $id
      * @throws InvalidLinkException
      */
-    public function handleRevoke($id) {
+    public function handleRevoke(int $id) {
         /**
          * @var Message $message
          */

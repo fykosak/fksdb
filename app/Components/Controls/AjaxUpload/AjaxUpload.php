@@ -7,6 +7,7 @@ use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\React\ReactResponse;
+use FKSDB\Submits\FilesystemSubmitUploadedStorage;
 use FKSDB\Submits\ISubmitStorage;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -29,7 +30,7 @@ class AjaxUpload extends ReactComponent {
      */
     private $serviceSubmit;
     /**
-     * @var ISubmitStorage
+     * @var FilesystemSubmitUploadedStorage
      */
     private $submitStorage;
 
@@ -37,9 +38,9 @@ class AjaxUpload extends ReactComponent {
      * AjaxUpload constructor.
      * @param Container $context
      * @param ServiceSubmit $serviceSubmit
-     * @param ISubmitStorage $submitStorage
+     * @param FilesystemSubmitUploadedStorage $submitStorage
      */
-    public function __construct(Container $context, ServiceSubmit $serviceSubmit, ISubmitStorage $submitStorage) {
+    public function __construct(Container $context, ServiceSubmit $serviceSubmit, FilesystemSubmitUploadedStorage $submitStorage) {
         parent::__construct($context);
         $this->serviceSubmit = $serviceSubmit;
         $this->submitStorage = $submitStorage;
@@ -53,9 +54,9 @@ class AjaxUpload extends ReactComponent {
     }
 
     /**
-     * @return ISubmitStorage
+     * @return FilesystemSubmitUploadedStorage
      */
-    protected function getSubmitStorage(): ISubmitStorage {
+    protected function getSubmitUploadedStorage(): FilesystemSubmitUploadedStorage {
         return $this->submitStorage;
     }
 

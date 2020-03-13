@@ -18,6 +18,7 @@ use Nette\Security\IResource;
  * @property-read int points
  * @property-read int ct_id
  * @property-read int task_id
+ * @property-read bool corrected
  */
 class ModelSubmit extends AbstractModelSingle implements IResource {
 

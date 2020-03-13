@@ -2,6 +2,7 @@
 
 namespace OrgModule;
 
+use FKSDB\Components\Control\AjaxUpload\SubmitDownloadTrait;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\FormControl\OptimisticFormControl;
 use FKSDB\Components\Forms\Containers\ModelContainer;
@@ -16,8 +17,12 @@ use FKSDB\ORM\Services\ServiceContestant;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\ORM\Services\ServiceTaskContribution;
-use FKSDB\Submits\ISubmitStorage;
+use FKSDB\Submits\FilesystemCorrectedSubmitStorage;
+use FKSDB\Submits\FilesystemSubmitUploadedStorage;
 use FKSDB\Submits\SeriesTable;
+use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\Caching\Cache;
 use Nette\Security\Permission;
@@ -27,28 +32,31 @@ use Nette\Security\Permission;
  * @package OrgModule
  */
 class InboxPresenter extends SeriesPresenter {
+    use SubmitDownloadTrait;
 
-    const POST_CT_ID = 'ctId';
-    const POST_ORDER = 'order';
     const TASK_PREFIX = 'task';
 
     /**
-     * @var ISubmitStorage
+     * @var FilesystemSubmitUploadedStorage
      */
-    private $submitStorage;
+    private $filesystemSubmitUploadedStorage;
+    /**
+     * @var FilesystemCorrectedSubmitStorage
+     */
+    private $filesystemCorrectedSubmitStorage;
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceTaskContribution
+     * @var ServiceTaskContribution
      */
     private $serviceTaskContribution;
 
     /**
-     * @var \FKSDB\ORM\Services\ServicePerson
+     * @var ServicePerson
      */
     private $servicePerson;
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceSubmit
+     * @var ServiceSubmit
      */
     private $serviceSubmit;
 
@@ -68,10 +76,17 @@ class InboxPresenter extends SeriesPresenter {
     private $personFactory;
 
     /**
-     * @param ISubmitStorage $submitStorage
+     * @param FilesystemSubmitUploadedStorage $filesystemSubmitUploadedStorage
      */
-    public function injectSubmitStorage(ISubmitStorage $submitStorage) {
-        $this->submitStorage = $submitStorage;
+    public function injectSubmitStorage(FilesystemSubmitUploadedStorage $filesystemSubmitUploadedStorage) {
+        $this->filesystemSubmitUploadedStorage = $filesystemSubmitUploadedStorage;
+    }
+
+    /**
+     * @param FilesystemCorrectedSubmitStorage $filesystemCorrectedSubmitStorage
+     */
+    public function injectSubmitCorrectedStorage(FilesystemCorrectedSubmitStorage $filesystemCorrectedSubmitStorage) {
+        $this->filesystemCorrectedSubmitStorage = $filesystemCorrectedSubmitStorage;
     }
 
     /**
@@ -82,28 +97,28 @@ class InboxPresenter extends SeriesPresenter {
     }
 
     /**
-     * @param \FKSDB\ORM\Services\ServicePerson $servicePerson
+     * @param ServicePerson $servicePerson
      */
     public function injectServicePerson(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
     }
 
     /**
-     * @param \FKSDB\ORM\Services\ServiceSubmit $serviceSubmit
+     * @param ServiceSubmit $serviceSubmit
      */
     public function injectServiceSubmit(ServiceSubmit $serviceSubmit) {
         $this->serviceSubmit = $serviceSubmit;
     }
 
     /**
-     * @param \FKSDB\ORM\Services\ServiceContestant $serviceContestant
+     * @param ServiceContestant $serviceContestant
      */
     public function injectServiceContestant(ServiceContestant $serviceContestant) {
         $this->serviceContestant = $serviceContestant;
     }
 
     /**
-     * @param \FKSDB\Submits\SeriesTable $seriesTable
+     * @param SeriesTable $seriesTable
      */
     public function injectSeriesTable(SeriesTable $seriesTable) {
         $this->seriesTable = $seriesTable;
@@ -115,7 +130,43 @@ class InboxPresenter extends SeriesPresenter {
     public function injectPersonFactory(PersonFactory $personFactory) {
         $this->personFactory = $personFactory;
     }
+    /* ***************** AUTH ***********************/
+    /**
+     * @throws BadRequestException
+     */
+    public function authorizedDefault() {
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
+    }
 
+    /**
+     * @throws BadRequestException
+     */
+    public function authorizedHandout() {
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('task', 'edit', $this->getSelectedContest()));
+    }
+
+    /* ***************** TITLES ***********************/
+    public function titleDefault() {
+        $this->setTitle(_('Příjem řešení'));
+        $this->setIcon('fa fa-envelope-open');
+    }
+
+    public function titleHandout() {
+        $this->setTitle(_('Rozdělení úloh opravovatelům'));
+        $this->setIcon('fa fa-inbox');
+    }
+
+    public function titleCorrected() {
+        $this->setTitle(_('Download solutions'));
+        $this->setIcon('fa fa-cloud-download');
+    }
+
+    /* *********** LIVE CYCLE *************/
+    /**
+     * @throws AbortException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     */
     protected function startup() {
         parent::startup();
         $this->seriesTable->setContest($this->getSelectedContest());
@@ -123,27 +174,15 @@ class InboxPresenter extends SeriesPresenter {
         $this->seriesTable->setSeries($this->getSelectedSeries());
     }
 
-    /**
-     * @throws \Nette\Application\BadRequestException
-     */
-    public function authorizedDefault() {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
+    public function actionHandout() {
+        // This workaround fixes inproper caching of referenced tables.
+        $connection = $this->servicePerson->getConnection();
+        $connection->getCache()->clean(array(Cache::ALL => true));
+        $connection->getDatabaseReflection()->setConnection($connection);
     }
-
+    /* ******************** RENDER ****************/
     /**
-     * @throws \Nette\Application\BadRequestException
-     */
-    public function authorizedHandout() {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('task', 'edit', $this->getSelectedContest()));
-    }
-
-    public function titleDefault() {
-        $this->setTitle(_('Příjem řešení'));
-        $this->setIcon('fa fa-envelope-open');
-    }
-
-    /**
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     public function renderDefault() {
         /**
@@ -153,20 +192,8 @@ class InboxPresenter extends SeriesPresenter {
         $control->getForm()->setDefaults();
     }
 
-    public function titleHandout() {
-        $this->setTitle(_('Rozdělení úloh opravovatelům'));
-        $this->setIcon('fa fa-inbox');
-    }
-
-    public function actionHandout() {
-        // This workaround fixes inproper caching of referenced tables.
-        $connection = $this->servicePerson->getConnection();
-        $connection->getCache()->clean(array(Cache::ALL => true));
-        $connection->getDatabaseReflection()->setConnection($connection);
-    }
-
     /**
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     public function renderHandout() {
         $taskIds = [];
@@ -198,9 +225,13 @@ class InboxPresenter extends SeriesPresenter {
 
     }
 
+    public function renderCorrected() {
+        $this->template->seriesTable = $this->seriesTable;
+    }
+    /* ******************* COMPONENTS ******************/
     /**
      * @return OptimisticFormControl
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     protected function createComponentInboxForm() {
         $controlForm = new OptimisticFormControl([$this->seriesTable, 'getFingerprint'], [$this->seriesTable, 'formatAsFormValues']);
@@ -208,10 +239,6 @@ class InboxPresenter extends SeriesPresenter {
             array($this->seriesTable, 'getFingerprint'), array($this->seriesTable, 'formatAsFormValues')
         );*/
         $form = $controlForm->getForm();
-        /*  $renderer = new BootstrapRenderer();
-          $renderer->setColLeft(2);
-          $renderer->setColRight(10);
-          $form->setRenderer($renderer);*/
 
         $contestants = $this->seriesTable->getContestants();
         $tasks = $this->seriesTable->getTasks();
@@ -244,7 +271,7 @@ class InboxPresenter extends SeriesPresenter {
 
     /**
      * @return FormControl
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     protected function createComponentHandoutForm() {
         $formControl = new FormControl();
@@ -265,7 +292,7 @@ class InboxPresenter extends SeriesPresenter {
 
     /**
      * @param Form $form
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function inboxFormSuccess(Form $form) {
         $values = $form->getValues();
@@ -275,11 +302,10 @@ class InboxPresenter extends SeriesPresenter {
         foreach ($values[SeriesTable::FORM_CONTESTANT] as $container) {
             $submits = $container[SeriesTable::FORM_SUBMIT];
 
-            foreach ($submits as $row) {
+            foreach ($submits as $submit) {
                 /**
                  * @var ModelSubmit $submit
                  */
-                $submit = $row;
                 // ACL granularity is very rough, we just check it in action* method
                 if ($submit->isEmpty()) {
                     $this->serviceSubmit->dispose($submit);
@@ -295,7 +321,7 @@ class InboxPresenter extends SeriesPresenter {
 
     /**
      * @param Form $form
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function handoutFormSuccess(Form $form) {
         $values = $form->getValues();
@@ -333,7 +359,7 @@ class InboxPresenter extends SeriesPresenter {
 
     /**
      * @return PersonProvider
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     private function getOrgProvider() {
         if (!$this->orgProvider) {
@@ -343,4 +369,24 @@ class InboxPresenter extends SeriesPresenter {
         return $this->orgProvider;
     }
 
+    /**
+     * @inheritDoc
+     */
+    protected function getServiceSubmit(): ServiceSubmit {
+        return $this->serviceSubmit;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getSubmitUploadedStorage(): FilesystemSubmitUploadedStorage {
+        return $this->filesystemSubmitUploadedStorage;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getSubmitCorrectedStorage(): FilesystemCorrectedSubmitStorage {
+        return $this->filesystemCorrectedSubmitStorage;
+    }
 }
