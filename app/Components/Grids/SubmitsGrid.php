@@ -9,7 +9,7 @@ use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\Submits\FilesystemCorrectedSubmitStorage;
-use FKSDB\Submits\FilesystemSubmitUploadedStorage;
+use FKSDB\Submits\FilesystemUploadedSubmitStorage;
 use Nette\Application\UI\InvalidLinkException;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
@@ -27,7 +27,7 @@ class SubmitsGrid extends BaseGrid {
     /** @var ServiceSubmit */
     private $submitService;
 
-    /** @var FilesystemSubmitUploadedStorage */
+    /** @var FilesystemUploadedSubmitStorage */
     private $filesystemSubmitUploadedStorage;
 
     /**
@@ -42,11 +42,11 @@ class SubmitsGrid extends BaseGrid {
     /**
      * SubmitsGrid constructor.
      * @param ServiceSubmit $submitService
-     * @param FilesystemSubmitUploadedStorage $filesystemSubmitUploadedStorage
+     * @param FilesystemUploadedSubmitStorage $filesystemSubmitUploadedStorage
      * @param ModelContestant $contestant
      * @param FilesystemCorrectedSubmitStorage $filesystemCorrectedSubmitStorage
      */
-    function __construct(ServiceSubmit $submitService, FilesystemSubmitUploadedStorage $filesystemSubmitUploadedStorage, ModelContestant $contestant, FilesystemCorrectedSubmitStorage $filesystemCorrectedSubmitStorage) {
+    function __construct(ServiceSubmit $submitService, FilesystemUploadedSubmitStorage $filesystemSubmitUploadedStorage, ModelContestant $contestant, FilesystemCorrectedSubmitStorage $filesystemCorrectedSubmitStorage) {
         parent::__construct();
         $this->filesystemCorrectedSubmitStorage = $filesystemCorrectedSubmitStorage;
         $this->submitService = $submitService;
@@ -62,9 +62,9 @@ class SubmitsGrid extends BaseGrid {
     }
 
     /**
-     * @return FilesystemSubmitUploadedStorage
+     * @return FilesystemUploadedSubmitStorage
      */
-    protected function getSubmitUploadedStorage(): FilesystemSubmitUploadedStorage {
+    protected function getSubmitUploadedStorage(): FilesystemUploadedSubmitStorage {
         return $this->filesystemSubmitUploadedStorage;
     }
 

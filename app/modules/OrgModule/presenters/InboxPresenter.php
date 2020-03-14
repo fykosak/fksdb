@@ -18,7 +18,7 @@ use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\ORM\Services\ServiceTaskContribution;
 use FKSDB\Submits\FilesystemCorrectedSubmitStorage;
-use FKSDB\Submits\FilesystemSubmitUploadedStorage;
+use FKSDB\Submits\FilesystemUploadedSubmitStorage;
 use FKSDB\Submits\SeriesTable;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -37,7 +37,7 @@ class InboxPresenter extends SeriesPresenter {
     const TASK_PREFIX = 'task';
 
     /**
-     * @var FilesystemSubmitUploadedStorage
+     * @var FilesystemUploadedSubmitStorage
      */
     private $filesystemSubmitUploadedStorage;
     /**
@@ -76,9 +76,9 @@ class InboxPresenter extends SeriesPresenter {
     private $personFactory;
 
     /**
-     * @param FilesystemSubmitUploadedStorage $filesystemSubmitUploadedStorage
+     * @param FilesystemUploadedSubmitStorage $filesystemSubmitUploadedStorage
      */
-    public function injectSubmitStorage(FilesystemSubmitUploadedStorage $filesystemSubmitUploadedStorage) {
+    public function injectSubmitStorage(FilesystemUploadedSubmitStorage $filesystemSubmitUploadedStorage) {
         $this->filesystemSubmitUploadedStorage = $filesystemSubmitUploadedStorage;
     }
 
@@ -379,7 +379,7 @@ class InboxPresenter extends SeriesPresenter {
     /**
      * @inheritDoc
      */
-    protected function getSubmitUploadedStorage(): FilesystemSubmitUploadedStorage {
+    protected function getSubmitUploadedStorage(): FilesystemUploadedSubmitStorage {
         return $this->filesystemSubmitUploadedStorage;
     }
 

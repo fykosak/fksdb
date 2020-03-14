@@ -40,7 +40,7 @@ services:
             - start()
     - Authentication\SSO\TokenGSIDHolder
     submitUploatedStorage:
-        class: FKSDB\Submits\FilesystemSubmitUploadedStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, %contestMapping%)
+        class: FKSDB\Submits\FilesystemUploadedSubmitStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, %contestMapping%)
         setup:
             - addProcessing(@PDFStamper)
     submitCorrectedStorage:

@@ -7,8 +7,8 @@ use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\React\ReactResponse;
-use FKSDB\Submits\FilesystemSubmitUploadedStorage;
-use FKSDB\Submits\ISubmitStorage;
+use FKSDB\Submits\FilesystemCorrectedSubmitStorage;
+use FKSDB\Submits\FilesystemUploadedSubmitStorage;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
@@ -25,25 +25,31 @@ use ReactMessage;
 class AjaxUpload extends ReactComponent {
     use SubmitRevokeTrait;
     use SubmitSaveTrait;
+    use SubmitDownloadTrait {
+        handleDownloadUploaded as traitHandleDownload;
+    }
     /**
      * @var ServiceSubmit
      */
     private $serviceSubmit;
     /**
-     * @var FilesystemSubmitUploadedStorage
+     * @var FilesystemUploadedSubmitStorage
      */
-    private $submitStorage;
+    private $filesystemSubmitUploadedStorage;
+    /**
+     * @var FilesystemCorrectedSubmitStorage
+     */
+    private $filesystemSubmitCorrectedStorage;
 
     /**
      * AjaxUpload constructor.
      * @param Container $context
-     * @param ServiceSubmit $serviceSubmit
-     * @param FilesystemSubmitUploadedStorage $submitStorage
      */
-    public function __construct(Container $context, ServiceSubmit $serviceSubmit, FilesystemSubmitUploadedStorage $submitStorage) {
+    public function __construct(Container $context) {
         parent::__construct($context);
-        $this->serviceSubmit = $serviceSubmit;
-        $this->submitStorage = $submitStorage;
+        $this->filesystemSubmitUploadedStorage = $this->container->getByType(FilesystemUploadedSubmitStorage::class);
+        $this->filesystemSubmitCorrectedStorage = $this->container->getByType(FilesystemCorrectedSubmitStorage::class);
+        $this->serviceSubmit = $this->container->getByType(ServiceSubmit::class);
     }
 
     /**
@@ -54,10 +60,17 @@ class AjaxUpload extends ReactComponent {
     }
 
     /**
-     * @return FilesystemSubmitUploadedStorage
+     * @return FilesystemUploadedSubmitStorage
      */
-    protected function getSubmitUploadedStorage(): FilesystemSubmitUploadedStorage {
-        return $this->submitStorage;
+    protected function getSubmitUploadedStorage(): FilesystemUploadedSubmitStorage {
+        return $this->filesystemSubmitUploadedStorage;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getSubmitCorrectedStorage(): FilesystemCorrectedSubmitStorage {
+        return $this->filesystemSubmitCorrectedStorage;
     }
 
     /**
@@ -66,6 +79,7 @@ class AjaxUpload extends ReactComponent {
     protected function configure() {
         $this->addAction('revoke', $this->link('revoke!'));
         $this->addAction('upload', $this->link('upload!'));
+        $this->addAction('download', $this->link('download!'));
         parent::configure();
     }
 
@@ -166,9 +180,20 @@ class AjaxUpload extends ReactComponent {
     }
 
     /**
+     * @throws BadRequestException
+     * @throws AbortException
+     */
+    public function handleDownload() {
+        $submitId = $this->getReactRequest()->requestData['submitId'];
+        $this->handleDownloadUploaded($submitId);
+        die();
+    }
+
+    /**
      * @inheritDoc
      */
     protected function getReactId(): string {
         return 'public.ajax-upload';
     }
+
 }

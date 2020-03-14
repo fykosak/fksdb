@@ -1,16 +1,15 @@
 <?php
 
-
 namespace FKSDB\Components\Control\AjaxUpload;
-
 
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\Submits\FilesystemCorrectedSubmitStorage;
-use FKSDB\Submits\FilesystemSubmitUploadedStorage;
+use FKSDB\Submits\FilesystemUploadedSubmitStorage;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\FileResponse;
+use OrgModule\InboxPresenter;
 use PublicModule\SubmitPresenter;
 
 /**
@@ -46,14 +45,14 @@ trait SubmitDownloadTrait {
 
     /**
      * @param bool $need
-     * @return SubmitPresenter
+     * @return SubmitPresenter|InboxPresenter
      */
     abstract protected function getPresenter($need = true);
 
     /**
-     * @return FilesystemSubmitUploadedStorage
+     * @return FilesystemUploadedSubmitStorage
      */
-    abstract protected function getSubmitUploadedStorage(): FilesystemSubmitUploadedStorage;
+    abstract protected function getSubmitUploadedStorage(): FilesystemUploadedSubmitStorage;
 
     /**
      * @return FilesystemCorrectedSubmitStorage

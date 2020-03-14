@@ -13,7 +13,7 @@ use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\ORM\Services\ServiceTask;
 use FKSDB\Submits\FilesystemCorrectedSubmitStorage;
-use FKSDB\Submits\FilesystemSubmitUploadedStorage;
+use FKSDB\Submits\FilesystemUploadedSubmitStorage;
 use FKSDB\Submits\ISubmitStorage;
 use FKSDB\Submits\ProcessingException;
 use ModelException;
@@ -39,9 +39,9 @@ class SubmitPresenter extends BasePresenter {
     private $submitService;
 
     /**
-     * @var FilesystemSubmitUploadedStorage
+     * @var FilesystemUploadedSubmitStorage
      */
-    private $filesystemSubmitUploadedStorage;
+    private $uploadedSubmitStorage;
     /**
      * @var FilesystemCorrectedSubmitStorage
      */
@@ -62,10 +62,10 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @param FilesystemSubmitUploadedStorage $filesystemSubmitUploadedStorage
+     * @param FilesystemUploadedSubmitStorage $filesystemUploadedSubmitStorage
      */
-    public function injectSubmitUploadedStorage(FilesystemSubmitUploadedStorage $filesystemSubmitUploadedStorage) {
-        $this->filesystemSubmitUploadedStorage = $filesystemSubmitUploadedStorage;
+    public function injectSubmitUploadedStorage(FilesystemUploadedSubmitStorage $filesystemUploadedSubmitStorage) {
+        $this->uploadedSubmitStorage = $filesystemUploadedSubmitStorage;
     }
 
     /**
@@ -133,6 +133,7 @@ class SubmitPresenter extends BasePresenter {
      * @param $id
      * @throws BadRequestException
      * @throws AbortException
+     * @deprecated 
      */
     public function actionDownload($id) {
         /**
@@ -140,7 +141,7 @@ class SubmitPresenter extends BasePresenter {
          */
         $submit = $this->submitService->findByPrimary2($id);
 
-        $filename = $this->submitStorage->retrieveFile($submit);
+        $filename = $this->uploadedSubmitStorage->retrieveFile($submit);
         if (!$filename) {
             throw new BadRequestException('Poškozený soubor submitu', 500);
         }
@@ -189,7 +190,7 @@ class SubmitPresenter extends BasePresenter {
                 $upload->setDisabled();
             }
 
-            if ($submit && $this->filesystemSubmitUploadedStorage->fileExists($submit)) {
+            if ($submit && $this->uploadedSubmitStorage->fileExists($submit)) {
                 $overwrite = $container->addCheckbox('overwrite', _('Přepsat odeslané řešení.'));
                 $conditionedUpload->addConditionOn($overwrite, Form::EQUAL, false)->addRule(~Form::FILLED, _('Buď zvolte přepsání odeslaného řešení anebo jej neposílejte.'));
             }
@@ -218,7 +219,7 @@ class SubmitPresenter extends BasePresenter {
      * @return AjaxUpload
      */
     public function createComponentAjaxUpload(): AjaxUpload {
-        return new AjaxUpload($this->context, $this->submitService, $this->filesystemSubmitUploadedStorage);
+        return new AjaxUpload($this->context);
     }
 
     /**
@@ -228,7 +229,7 @@ class SubmitPresenter extends BasePresenter {
     public function createComponentSubmitsGrid(): SubmitsGrid {
         return new SubmitsGrid(
             $this->submitService,
-            $this->filesystemSubmitUploadedStorage,
+            $this->uploadedSubmitStorage,
             $this->getContestant(),
             $this->filesystemCorrectedSubmitStorage
         );
@@ -249,7 +250,7 @@ class SubmitPresenter extends BasePresenter {
 
         try {
             $this->submitService->getConnection()->beginTransaction();
-            $this->filesystemSubmitUploadedStorage->beginTransaction();
+            $this->uploadedSubmitStorage->beginTransaction();
 
             foreach ($taskIds as $taskId) {
                 $taskRow = $this->taskService->findByPrimary($taskId);
@@ -275,17 +276,17 @@ class SubmitPresenter extends BasePresenter {
                 $this->flashMessage(sprintf(_('Úloha %s odevzdána.'), $task->label), self::FLASH_SUCCESS);
             }
 
-            $this->filesystemSubmitUploadedStorage->commit();
+            $this->uploadedSubmitStorage->commit();
             $this->submitService->getConnection()->commit();
             $this->redirect('this');
         } catch (ModelException $exception) {
-            $this->filesystemSubmitUploadedStorage->rollback();
+            $this->uploadedSubmitStorage->rollback();
             $this->submitService->getConnection()->rollBack();
 
             Debugger::log($exception);
             $this->flashMessage(_('Došlo k chybě při ukládání úloh.'), self::FLASH_ERROR);
         } catch (ProcessingException $exception) {
-            $this->filesystemSubmitUploadedStorage->rollback();
+            $this->uploadedSubmitStorage->rollback();
             $this->submitService->getConnection()->rollBack();
 
             Debugger::log($exception);
@@ -339,7 +340,7 @@ class SubmitPresenter extends BasePresenter {
     /**
      * @return ISubmitStorage
      */
-    protected function getSubmitStorage(): ISubmitStorage {
-        return $this->filesystemSubmitUploadedStorage;
+    protected function getSubmitUploadedStorage(): ISubmitStorage {
+        return $this->uploadedSubmitStorage;
     }
 }

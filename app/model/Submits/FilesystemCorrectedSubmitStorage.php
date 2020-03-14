@@ -4,10 +4,8 @@ namespace FKSDB\Submits;
 
 use FKSDB\NotImplementedException;
 use FKSDB\ORM\Models\ModelSubmit;
-use Tracy\Debugger;
 use Nette\InvalidStateException;
 use Nette\Utils\Finder;
-use Nette\Utils\Strings;
 use UnexpectedValueException;
 
 /**

@@ -14,7 +14,7 @@ use UnexpectedValueException;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class FilesystemSubmitUploadedStorage implements ISubmitStorage {
+class FilesystemUploadedSubmitStorage implements ISubmitStorage {
     /** Characters delimiting name and metadata in filename. */
     const DELIMITER = '__';
 
