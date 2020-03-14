@@ -75,7 +75,7 @@ parameters:
         filenameMask: '%%s-r%3$d-s%4$d-%5$s'
     corrected:
         # Path to storage directory
-        root: %appDir%/../corrected
+        root: %upload.root%/corrected
 
         # Sprintf pattern of directory name with arguments: contestName, year, series, task label
         directoryMask: %upload.directoryMask%

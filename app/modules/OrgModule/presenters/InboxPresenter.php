@@ -141,13 +141,20 @@ class InboxPresenter extends SeriesPresenter {
     /**
      * @throws BadRequestException
      */
+    public function authorizedList() {
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'list', $this->getSelectedContest()));
+    }
+
+    /**
+     * @throws BadRequestException
+     */
     public function authorizedHandout() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('task', 'edit', $this->getSelectedContest()));
     }
 
     /* ***************** TITLES ***********************/
     public function titleDefault() {
-        $this->setTitle(_('Příjem řešení'));
+        $this->setTitle(_('Inbox'));
         $this->setIcon('fa fa-envelope-open');
     }
 
@@ -156,9 +163,14 @@ class InboxPresenter extends SeriesPresenter {
         $this->setIcon('fa fa-inbox');
     }
 
-    public function titleCorrected() {
-        $this->setTitle(_('Download solutions'));
+    public function titleList() {
+        $this->setTitle(_('List of solutions'));
         $this->setIcon('fa fa-cloud-download');
+    }
+
+    public function titleCheck() {
+        $this->setTitle(_('Check files'));
+        $this->setIcon('fa fa-file');
     }
 
     /* *********** LIVE CYCLE *************/
@@ -179,6 +191,24 @@ class InboxPresenter extends SeriesPresenter {
         $connection = $this->servicePerson->getConnection();
         $connection->getCache()->clean(array(Cache::ALL => true));
         $connection->getDatabaseReflection()->setConnection($connection);
+    }
+
+    public function actionCheck() {
+        /**
+         * @var ModelSubmit $submit
+         */
+        foreach ($this->seriesTable->getSubmits() as $submit) {
+            if ($submit->source === ModelSubmit::SOURCE_UPLOAD) {
+                if (!$this->getSubmitUploadedStorage()->fileExists($submit)) {
+                    $this->flashMessage(sprintf(_('Uploaded submit #%d is broken'), $submit->submit_id), 'danger');
+                }
+            }
+            if ($submit->corrected) {
+                if (!$this->getSubmitCorrectedStorage()->fileExists($submit)) {
+                    $this->flashMessage(sprintf(_('Corrected submit #%d is broken'), $submit->submit_id), 'danger');
+                }
+            }
+        }
     }
     /* ******************** RENDER ****************/
     /**
@@ -225,7 +255,7 @@ class InboxPresenter extends SeriesPresenter {
 
     }
 
-    public function renderCorrected() {
+    public function renderList() {
         $this->template->seriesTable = $this->seriesTable;
     }
     /* ******************* COMPONENTS ******************/
@@ -388,5 +418,12 @@ class InboxPresenter extends SeriesPresenter {
      */
     protected function getSubmitCorrectedStorage(): FilesystemCorrectedSubmitStorage {
         return $this->filesystemCorrectedSubmitStorage;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSubTitle(): string {
+        return parent::getSubTitle() . ' ' . sprintf(_('%s series'), $this->getSelectedSeries());
     }
 }

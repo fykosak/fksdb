@@ -8,6 +8,7 @@ use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Services\ServiceContestant;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\ORM\Services\ServiceTask;
+use FKSDB\ORM\Tables\TypedTableSelection;
 use Nette\Database\Table\Selection;
 
 /**
@@ -153,12 +154,19 @@ class SeriesTable {
     }
 
     /**
+     * @return TypedTableSelection
+     */
+    public function getSubmits(): TypedTableSelection {
+        return $this->serviceSubmit->getTable()
+            ->where('ct_id', $this->getContestants())
+            ->where('task_id', $this->getTasks());
+    }
+
+    /**
      * @return array
      */
     public function getSubmitsTable(): array {
-        $submits = $this->serviceSubmit->getTable()
-            ->where('ct_id', $this->getContestants())
-            ->where('task_id', $this->getTasks());
+        $submits = $this->getSubmits();
 
         // store submits in 2D hash for better access
         $submitsTable = [];

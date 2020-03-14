@@ -133,7 +133,7 @@ class SubmitPresenter extends BasePresenter {
      * @param $id
      * @throws BadRequestException
      * @throws AbortException
-     * @deprecated 
+     * @deprecated
      */
     public function actionDownload($id) {
         /**
