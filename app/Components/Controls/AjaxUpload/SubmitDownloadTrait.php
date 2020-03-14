@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Control\AjaxUpload;
 
+use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\Submits\FilesystemCorrectedSubmitStorage;
@@ -61,39 +62,44 @@ trait SubmitDownloadTrait {
 
     /**
      * @param int $id
-     * @throws BadRequestException
+     * @return array
      * @throws AbortException
+     * @throws BadRequestException
      */
-    public function handleDownloadUploaded(int $id) {
+    public function traitHandleDownloadUploaded(int $id): array {
         $submit = $this->getSubmit($id, 'download.uploaded');
         $filename = $this->getSubmitUploadedStorage()->retrieveFile($submit);
         if ($submit->source != ModelSubmit::SOURCE_UPLOAD) {
-            throw new BadRequestException('Lze stahovat jen uploadovaná řešení.', 501);
+            return [new Message(_('Lze stahovat jen uploadovaná řešení.'), 'danger'),];
         }
         if (!$filename) {
-            throw new BadRequestException('Poškozený soubor submitu', 500);
+            return [new Message(_('Poškozený soubor submitu'), 'danger'),];
         }
         $response = new FileResponse($filename, $submit->getTask()->getFQName() . '-uploaded.pdf', 'application/pdf');
         $this->getPresenter()->sendResponse($response);
+
+        die();
     }
 
     /**
      * @param int $id
-     * @throws BadRequestException
+     * @return array
      * @throws AbortException
+     * @throws BadRequestException
      */
-    public function handleDownloadCorrected(int $id) {
+    public function traitHandleDownloadCorrected(int $id): array {
         $submit = $this->getSubmit($id, 'download.corrected');
         if (!$submit->corrected) {
-            throw new BadRequestException('Opravené riešenie nieje nahrané', 404);
+            return [new Message(_('Opravené riešenie nieje nahrané'), 'warning'),];
         }
 
         $filename = $this->getSubmitCorrectedStorage()->retrieveFile($submit);
         if (!$filename) {
-            throw new BadRequestException('Poškozený soubor submitu', 500);
+            return [new Message(_('Poškozený soubor submitu'), 'danger'),];
         }
 
         $response = new FileResponse($filename, $submit->getTask()->getFQName() . '-corrected.pdf', 'application/pdf');
         $this->getPresenter()->sendResponse($response);
+        die();
     }
 }

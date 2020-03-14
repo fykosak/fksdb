@@ -129,6 +129,12 @@ fksrouter:
             tld: %domain.tld%
             module: Fyziklani
             flags: SECURED
+        '//[!<subdomain>].%domain.host%.[!<tld>]%path%[<contestId %contests%>[<year [0-9]+>]/][series<series [0-9]+>/]<module %modules%>/<presenter>/<action=default>[/<id>]':
+            presenter: Dashboard
+            subdomain: %subdomain.db%
+            tld: %domain.tld%
+            contestId: [filterTable: %inverseContestMapping%]
+            flags: SECURED
 
         '//[!<subdomain>].%domain.host%.[!<tld>]%path%[<contestId %contests%>[<year [0-9]+>]/]<module %modules%>/<presenter>/<action=default>[/<id>]':
             presenter: Dashboard

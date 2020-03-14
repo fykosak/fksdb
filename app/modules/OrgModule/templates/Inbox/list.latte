@@ -1,15 +1,19 @@
+{block user-info}
+    {include #parent}
+    {control seriesChooser}
+{/block}
 {block content}
     <ul>
-        <li><i class="text text-warning fa fa-envelope"></i> - Solution was sent by post</li>
-        <li><a class="text-success" href="#"><i class="fa fa-file"></i></a> - Solution was
+        <li><i class="text text-warning fa fa-envelope"></i>- Solution was sent by post</li>
+        <li><a class="text-success" href="#"><i class="fa fa-file"></i></a>- Solution was
             uploaded, click to download
         </li>
-        <li><a class="text-success" href="#"><i class="fa fa-file-text"></i></a> - Corrected
+        <li><a class="text-success" href="#"><i class="fa fa-file-text"></i></a>- Corrected
             solution was
             uploaded, click to download
         </li>
         <li><i class="text-danger fa fa-file-text"></i>- Corrected solution was not uploaded</li>
-        <li><i class="text-danger fa fa-bar-chart"></i></span> - Solution has points in DB</li>
+        <li><i class="text-danger fa fa-bar-chart"></i>- Solution has points in DB</li>
         <li><i class="text-success fa fa-bar-chart"></i>- Solution has not points in DB</li>
 
     </ul>
@@ -52,7 +56,8 @@
                             {if is_null($submit->raw_points) }
                                 <i class="text-danger fa fa-bar-chart"></i>
                             {else}
-                                <i class="text-success fa fa-bar-chart"></i>
+                                <i class="text-success fa fa-bar-chart"
+                                   title="{$submit->calc_points.' ('.$submit->raw_points.') / '.$submit->getTask()->points}"></i>
                             {/if}
                         {/if}
                     </td>

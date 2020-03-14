@@ -356,6 +356,12 @@ DBReflection:
              event_link: FKSDB\Components\DatabaseReflection\ReferencedRows\EventLink
              person_name: FKSDB\Components\DatabaseReflection\ReferencedRows\PersonNameRow
              payment_id: FKSDB\Components\DatabaseReflection\ReferencedRows\PaymentRow
+             task: FKSDB\Components\DatabaseReflection\ReferencedRows\TaskRow
+         task_contribution:
+             type:
+                type: string
+                title: _(Type)
+
     links:
         payment.detail:
             destination: ':Event:Payment:detail'

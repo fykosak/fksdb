@@ -33,7 +33,7 @@ abstract class SeriesPresenter extends BasePresenter implements ISeriesPresenter
 
     protected function startup() {
         parent::startup();
-        if (! $this->getComponent('seriesChooser')->isValid()) {
+        if (!$this->getComponent('seriesChooser')->isValid()) {
             throw new BadRequestException('Nejsou dostupné žádné série.', 500);
         }
     }
@@ -42,7 +42,7 @@ abstract class SeriesPresenter extends BasePresenter implements ISeriesPresenter
      * @return int
      */
     public function getSelectedSeries() {
-        return  $this->getComponent('seriesChooser')->getSeries();
+        return $this->getComponent('seriesChooser')->getSeries();
     }
 
     /**
@@ -51,6 +51,13 @@ abstract class SeriesPresenter extends BasePresenter implements ISeriesPresenter
      */
     public function createComponentSeriesChooser($name) {
         return new SeriesChooser($this->session, $this->seriesCalculator, $this->serviceContest, $this->translator);
+    }
+
+    /**
+     * @return string
+     */
+    public function getSubTitle(): string {
+        return parent::getSubTitle() . ' ' . sprintf(_('%s series'), $this->getSelectedSeries());
     }
 
 }

@@ -385,6 +385,26 @@ class InboxPresenter extends SeriesPresenter {
         $this->redirect('this');
     }
 
+    /**
+     * @param int $id
+     * @throws AbortException
+     * @throws BadRequestException
+     */
+    public function handleDownloadUploaded(int $id) {
+        list($message) = $this->traitHandleDownloadUploaded($id);
+        $this->getPresenter()->flashMessage($message->getMessage(), $message->getLevel());
+    }
+
+    /**
+     * @param int $id
+     * @throws AbortException
+     * @throws BadRequestException
+     */
+    public function handleDownloadCorrected(int $id) {
+        list($message) = $this->traitHandleDownloadCorrected($id);
+        $this->getPresenter()->flashMessage($message->getMessage(), $message->getLevel());
+    }
+
     private $orgProvider;
 
     /**
@@ -418,12 +438,5 @@ class InboxPresenter extends SeriesPresenter {
      */
     protected function getSubmitCorrectedStorage(): FilesystemCorrectedSubmitStorage {
         return $this->filesystemCorrectedSubmitStorage;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSubTitle(): string {
-        return parent::getSubTitle() . ' ' . sprintf(_('%s series'), $this->getSelectedSeries());
     }
 }

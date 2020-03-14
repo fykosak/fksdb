@@ -10,10 +10,13 @@ use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\Submits\FilesystemCorrectedSubmitStorage;
 use FKSDB\Submits\FilesystemUploadedSubmitStorage;
+use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
+use Tracy\Debugger;
 use function sprintf;
 
 /**
@@ -136,10 +139,27 @@ class SubmitsGrid extends BaseGrid {
      * @throws InvalidLinkException
      */
     public function handleRevoke(int $id) {
-        /**
-         * @var Message $message
-         */
         list($message,) = $this->traitHandleRevoke($id);
+        $this->flashMessage($message->getMessage(), $message->getLevel());
+    }
+
+    /**
+     * @param int $id
+     * @throws AbortException
+     * @throws BadRequestException
+     */
+    public function handleDownloadUploaded(int $id) {
+        list($message) = $this->traitHandleDownloadUploaded($id);
+        $this->flashMessage($message->getMessage(), $message->getLevel());
+    }
+
+    /**
+     * @param int $id
+     * @throws AbortException
+     * @throws BadRequestException
+     */
+    public function handleDownloadCorrected(int $id) {
+        list($message) = $this->traitHandleDownloadCorrected($id);
         $this->flashMessage($message->getMessage(), $message->getLevel());
     }
 }
