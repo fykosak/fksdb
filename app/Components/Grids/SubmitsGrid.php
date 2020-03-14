@@ -4,7 +4,7 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\Components\Control\AjaxUpload\SubmitDownloadTrait;
 use FKSDB\Components\Control\AjaxUpload\SubmitRevokeTrait;
-use FKSDB\Messages\Message;
+use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Services\ServiceSubmit;
@@ -13,11 +13,10 @@ use FKSDB\Submits\FilesystemUploadedSubmitStorage;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\DI\Container;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
-use Tracy\Debugger;
-use function sprintf;
 
 /**
  *
@@ -44,16 +43,14 @@ class SubmitsGrid extends BaseGrid {
 
     /**
      * SubmitsGrid constructor.
-     * @param ServiceSubmit $submitService
-     * @param FilesystemUploadedSubmitStorage $filesystemSubmitUploadedStorage
+     * @param Container $container
      * @param ModelContestant $contestant
-     * @param FilesystemCorrectedSubmitStorage $filesystemCorrectedSubmitStorage
      */
-    function __construct(ServiceSubmit $submitService, FilesystemUploadedSubmitStorage $filesystemSubmitUploadedStorage, ModelContestant $contestant, FilesystemCorrectedSubmitStorage $filesystemCorrectedSubmitStorage) {
-        parent::__construct();
-        $this->filesystemCorrectedSubmitStorage = $filesystemCorrectedSubmitStorage;
-        $this->submitService = $submitService;
-        $this->filesystemSubmitUploadedStorage = $filesystemSubmitUploadedStorage;
+    function __construct(Container $container, ModelContestant $contestant) {
+        parent::__construct($container->getByType(TableReflectionFactory::class));
+        $this->filesystemCorrectedSubmitStorage = $container->getByType(FilesystemCorrectedSubmitStorage::class);
+        $this->submitService = $container->getByType(ServiceSubmit::class);
+        $this->filesystemSubmitUploadedStorage = $container->getByType(FilesystemUploadedSubmitStorage::class);
         $this->contestant = $contestant;
     }
 
@@ -117,7 +114,7 @@ class SubmitsGrid extends BaseGrid {
                 return $this->link('revoke!', $row->submit_id);
             })
             ->setConfirmationDialog(function (ModelSubmit $row) {
-                return sprintf(_('Opravdu vzít řešení úlohy %s zpět?'), $row->getTask()->getFQName());
+                return \sprintf(_('Opravdu vzít řešení úlohy %s zpět?'), $row->getTask()->getFQName());
             });
         $this->addButton('download_uploaded')
             ->setText(_('Download original'))->setLink(function ($row) {

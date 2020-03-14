@@ -20,7 +20,7 @@ use Nette\Security\IResource;
  * @property-read int task_id
  * @property-read bool corrected
  */
-class ModelSubmit extends AbstractModelSingle implements IResource {
+class ModelSubmit extends AbstractModelSingle implements IResource, ITaskReferencedModel {
 
     const SOURCE_UPLOAD = 'upload';
     const SOURCE_POST = 'post';
@@ -36,8 +36,7 @@ class ModelSubmit extends AbstractModelSingle implements IResource {
      * @return ModelTask
      */
     public function getTask(): ModelTask {
-        $data = $this->ref(DbNames::TAB_TASK, 'task_id');
-        return ModelTask::createFromActiveRow($data);
+        return ModelTask::createFromActiveRow($this->ref(DbNames::TAB_TASK, 'task_id'));
     }
 
     /**

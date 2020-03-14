@@ -4,7 +4,6 @@ namespace FKSDB\ORM\Models;
 
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
-use Nette\Database\Table\ActiveRow;
 use Nette\Utils\DateTime;
 use Nette\Utils\Strings;
 use Utils;
@@ -20,8 +19,6 @@ use Utils;
  * @property-read int year
  * @property-read int contest_id
  * @property-read DateTime submit_deadline
- * @property-read ActiveRow contest
- * @property-read ActiveRow task
  */
 class ModelTask extends AbstractModelSingle implements IContestReferencedModel {
 
@@ -31,7 +28,7 @@ class ModelTask extends AbstractModelSingle implements IContestReferencedModel {
      * @return string
      */
     public function getFQName(): string {
-        return sprintf('%s.%s %s', Utils::toRoman($this->series), $this->label, $this->name_cs); //TODO i18n
+        return sprintf('%s.%s %s', Utils::toRoman($this->series), $this->label, $this->name_cs);
     }
 
     /**
@@ -77,13 +74,6 @@ class ModelTask extends AbstractModelSingle implements IContestReferencedModel {
      * @inheritDoc
      */
     public function getContest(): ModelContest {
-        return ModelContest::createFromActiveRow($this->contest);
-    }
-
-    /**
-     * @return ModelTask
-     */
-    public function getTask(): ModelTask {
-        return ModelTask::createFromActiveRow($this->task);
+        return ModelContest::createFromActiveRow($this->ref(DbNames::TAB_CONTEST, 'contest_id'));
     }
 }

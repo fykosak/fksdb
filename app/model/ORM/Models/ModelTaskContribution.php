@@ -3,6 +3,7 @@
 namespace FKSDB\ORM\Models;
 
 use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\DbNames;
 use Nette\Database\Table\ActiveRow;
 
 /**
@@ -14,7 +15,7 @@ use Nette\Database\Table\ActiveRow;
  * @property-read ActiveRow person
  * @property-read ActiveRow task
  */
-class ModelTaskContribution extends AbstractModelSingle implements IPersonReferencedModel, ITaskReferencedModel {
+class ModelTaskContribution extends AbstractModelSingle implements IPersonReferencedModel, ITaskReferencedModel, IContestReferencedModel {
 
     const TYPE_AUTHOR = 'author';
     const TYPE_SOLUTION = 'solution';
@@ -24,13 +25,20 @@ class ModelTaskContribution extends AbstractModelSingle implements IPersonRefere
      * @inheritDoc
      */
     public function getPerson(): ModelPerson {
-        return ModelPerson::createFromActiveRow($this->person);
+        return ModelPerson::createFromActiveRow($this->ref(DbNames::TAB_PERSON, 'person_id'));
     }
 
     /**
      * @inheritDoc
      */
     public function getTask(): ModelTask {
-        return ModelTask::createFromActiveRow($this->task);
+        return ModelTask::createFromActiveRow($this->ref(DbNames::TAB_TASK, 'task_id'));
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getContest(): ModelContest {
+        return $this->getTask()->getContest();
     }
 }

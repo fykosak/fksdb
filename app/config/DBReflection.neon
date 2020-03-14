@@ -356,11 +356,37 @@ DBReflection:
              event_link: FKSDB\Components\DatabaseReflection\ReferencedRows\EventLink
              person_name: FKSDB\Components\DatabaseReflection\ReferencedRows\PersonNameRow
              payment_id: FKSDB\Components\DatabaseReflection\ReferencedRows\PaymentRow
-             task: FKSDB\Components\DatabaseReflection\ReferencedRows\TaskRow
+             contest: FKSDB\Components\DatabaseReflection\ReferencedRows\ContestRow
          task_contribution:
              type:
                 type: string
                 title: _(Type)
+         task:
+             modelClassName: FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask
+             referencedAccess:
+                modelClassName: FKSDB\ORM\Models\ITaskReferencedModel
+                method: getTask
+                nullable: false
+             fields:
+                 fq_name: FKSDB\Components\DatabaseReflection\Tables\Task\FQNameRow
+                 series:
+                    type: string
+                    title: _(Series)
+                 label:
+                     type: string
+                     title: _(Label)
+                 name_cs:
+                     type: string
+                     title: _(Name cs)
+                 task_id:
+                     type: primaryKey
+                     title: _(Task Id)
+                 points:
+                     type: string
+                     title: _(Points)
+                 year:
+                     type: string
+                     title: _(Year)
 
     links:
         payment.detail:

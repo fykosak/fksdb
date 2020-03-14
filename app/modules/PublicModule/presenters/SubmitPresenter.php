@@ -12,14 +12,12 @@ use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\ORM\Services\ServiceTask;
-use FKSDB\Submits\FilesystemCorrectedSubmitStorage;
 use FKSDB\Submits\FilesystemUploadedSubmitStorage;
 use FKSDB\Submits\ISubmitStorage;
 use FKSDB\Submits\ProcessingException;
 use ModelException;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\Application\Responses\FileResponse;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\Selection;
 use Tracy\Debugger;
@@ -42,10 +40,6 @@ class SubmitPresenter extends BasePresenter {
      * @var FilesystemUploadedSubmitStorage
      */
     private $uploadedSubmitStorage;
-    /**
-     * @var FilesystemCorrectedSubmitStorage
-     */
-    private $filesystemCorrectedSubmitStorage;
 
     /**
      * @param ServiceTask $taskService
@@ -67,14 +61,7 @@ class SubmitPresenter extends BasePresenter {
     public function injectSubmitUploadedStorage(FilesystemUploadedSubmitStorage $filesystemUploadedSubmitStorage) {
         $this->uploadedSubmitStorage = $filesystemUploadedSubmitStorage;
     }
-
-    /**
-     * @param FilesystemCorrectedSubmitStorage $filesystemCorrectedSubmitStorage
-     */
-    public function injectSubmitCorrectedStorage(FilesystemCorrectedSubmitStorage $filesystemCorrectedSubmitStorage) {
-        $this->filesystemCorrectedSubmitStorage = $filesystemCorrectedSubmitStorage;
-    }
-
+    /* ******************* AUTH ************************/
     /**
      * @throws BadRequestException
      */
@@ -82,29 +69,29 @@ class SubmitPresenter extends BasePresenter {
         $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', 'upload', $this->getSelectedContest()));
     }
 
+    /**
+     * @throws BadRequestException
+     */
+    public function authorizedAjax() {
+        $this->authorizedDefault();
+    }
+
+    /* ********************** TITLE **********************/
     public function titleDefault() {
         $this->setTitle(_('Odevzdat řešení'));
         $this->setIcon('fa fa-cloud-upload');
     }
 
+    public function titleAjax() {
+        return $this->titleDefault();
+    }
+
     /**
-     * @param $id
      * @throws BadRequestException
+     * @deprecated
      */
-    public function authorizedDownload(int $id) {
-        /**
-         * @var ModelSubmit $submit
-         */
-        $submit = $this->submitService->findByPrimary($id);
-
-        if (!$submit) {
-            throw new BadRequestException('Neexistující submit.', 404);
-        }
-        $this->setAuthorized($this->contestAuthorizator->isAllowedForContestReferencedModel($submit->getContestant(), 'download'));
-
-        if ($submit->source != ModelSubmit::SOURCE_UPLOAD) {
-            throw new BadRequestException('Lze stahovat jen uploadovaná řešení.', 501);
-        }
+    public function actionDownload() {
+        throw new BadRequestException('', 410);
     }
 
     /**
@@ -128,28 +115,6 @@ class SubmitPresenter extends BasePresenter {
         }
     }
 
-
-    /**
-     * @param $id
-     * @throws BadRequestException
-     * @throws AbortException
-     * @deprecated
-     */
-    public function actionDownload($id) {
-        /**
-         * @var ModelSubmit $submit
-         */
-        $submit = $this->submitService->findByPrimary2($id);
-
-        $filename = $this->uploadedSubmitStorage->retrieveFile($submit);
-        if (!$filename) {
-            throw new BadRequestException('Poškozený soubor submitu', 500);
-        }
-
-        //TODO better construct user's filename and PDF type dependency
-        $response = new FileResponse($filename, $submit->getTask()->getFQName() . '.pdf', 'application/pdf');
-        $this->sendResponse($response);
-    }
 
     /**
      * @return FormControl
@@ -228,10 +193,8 @@ class SubmitPresenter extends BasePresenter {
      */
     public function createComponentSubmitsGrid(): SubmitsGrid {
         return new SubmitsGrid(
-            $this->submitService,
-            $this->uploadedSubmitStorage,
-            $this->getContestant(),
-            $this->filesystemCorrectedSubmitStorage
+            $this->context,
+            $this->getContestant()
         );
     }
 
@@ -324,10 +287,6 @@ class SubmitPresenter extends BasePresenter {
             };
         }
         return null;
-    }
-
-    public function titleAjax() {
-        return $this->titleDefault();
     }
 
     /**
