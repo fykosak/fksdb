@@ -6,7 +6,6 @@ use FKSDB\ORM\Models\IContestReferencedModel;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelRole;
-use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\IResource;
 use Nette\Security\Permission;

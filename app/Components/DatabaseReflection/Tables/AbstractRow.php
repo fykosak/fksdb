@@ -10,7 +10,6 @@ use Nette\Forms\Controls\TextInput;
 use Nette\Localization\ITranslator;
 use Nette\SmartObject;
 use Nette\Utils\Html;
-use Tracy\Debugger;
 
 /**
  * Class AbstractField
@@ -45,9 +44,10 @@ abstract class AbstractRow {
     }
 
     /**
+     * @param array $args
      * @return BaseControl
      */
-    public function createField(): BaseControl {
+    public function createField(...$args): BaseControl {
         return new TextInput($this->getTitle());
     }
 

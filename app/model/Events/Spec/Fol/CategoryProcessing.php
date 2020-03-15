@@ -12,6 +12,7 @@ use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Services\ServiceSchool;
 use FKSDB\YearCalculator;
 use Nette\Forms\Form;
+use Nette\InvalidArgumentException;
 use Nette\Utils\ArrayHash;
 
 /**
@@ -32,7 +33,7 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
     private $yearCalculator;
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceSchool
+     * @var ServiceSchool
      */
     private $serviceSchool;
     private $categoryNames;
@@ -43,14 +44,14 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
      *
      * @param int $rulesVersion version 1 is up to year 2017, version 2 from 2018
      * @param YearCalculator $yearCalculator
-     * @param \FKSDB\ORM\Services\ServiceSchool $serviceSchool
+     * @param ServiceSchool $serviceSchool
      */
     function __construct($rulesVersion, YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
         $this->yearCalculator = $yearCalculator;
         $this->serviceSchool = $serviceSchool;
 
         if (!in_array($rulesVersion, [1, 2])) {
-            throw new \Nette\InvalidArgumentException(_("Neplatná hodnota \$rulesVersion."));
+            throw new InvalidArgumentException(_("Neplatná hodnota \$rulesVersion."));
         }
         $this->rulesVersion = $rulesVersion;
 

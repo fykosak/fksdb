@@ -3,6 +3,7 @@
 namespace Exports\Formats;
 
 use Nette\Application\IResponse;
+use Nette\Http\IRequest;
 use Nette\SmartObject;
 
 /**
@@ -40,10 +41,10 @@ class PlainTextResponse implements IResponse {
     }
 
     /**
-     * @param \Nette\Http\IRequest $httpRequest
+     * @param IRequest $httpRequest
      * @param \Nette\Http\IResponse $httpResponse
      */
-    public function send(\Nette\Http\IRequest $httpRequest, \Nette\Http\IResponse $httpResponse) {
+    public function send(IRequest $httpRequest, \Nette\Http\IResponse $httpResponse) {
         $httpResponse->setContentType('text/plain', 'utf-8');
 
         if ($this->name) {

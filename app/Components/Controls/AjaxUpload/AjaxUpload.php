@@ -25,9 +25,7 @@ use ReactMessage;
 class AjaxUpload extends ReactComponent {
     use SubmitRevokeTrait;
     use SubmitSaveTrait;
-    use SubmitDownloadTrait {
-        handleDownloadUploaded as traitHandleDownload;
-    }
+    use SubmitDownloadTrait;
     /**
      * @var ServiceSubmit
      */
@@ -185,7 +183,7 @@ class AjaxUpload extends ReactComponent {
      */
     public function handleDownload() {
         $submitId = $this->getReactRequest()->requestData['submitId'];
-        $this->handleDownloadUploaded($submitId);
+        $this->traitHandleDownloadUploaded($submitId);
         die();
     }
 

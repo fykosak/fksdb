@@ -38,6 +38,7 @@ class ScheduleField extends TextInput {
      * @param string $type
      * @param ServiceScheduleItem $serviceScheduleItem
      * @throws JsonException
+     * @throws NotImplementedException
      */
     public function __construct(ModelEvent $event, string $type, ServiceScheduleItem $serviceScheduleItem) {
         parent::__construct($this->getLabelByType($type));
@@ -59,6 +60,7 @@ class ScheduleField extends TextInput {
     /**
      * @param string $type
      * @return string
+     * @throws NotImplementedException
      */
     private function getLabelByType(string $type): string {
         switch ($type) {

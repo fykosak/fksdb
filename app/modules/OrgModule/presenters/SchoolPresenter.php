@@ -92,9 +92,12 @@ class SchoolPresenter extends EntityPresenter {
         $this->setIcon('fa fa-pencil');
     }
 
+    /**
+     * @throws NotImplementedException
+     */
     public function actionDelete() {
         // This should set active flag to false.
-        throw new NotImplementedException(null, 501);
+        throw new NotImplementedException(null);
     }
 
     /**

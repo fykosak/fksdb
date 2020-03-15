@@ -9,9 +9,6 @@ use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\Submits\FilesystemUploadedSubmitStorage;
-use FKSDB\Submits\ISubmitStorage;
-use Nette\Application\BadRequestException;
-use Nette\Database\Table\Selection;
 use Nette\Http\FileUpload;
 use Nette\Utils\DateTime;
 

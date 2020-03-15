@@ -213,6 +213,7 @@ abstract class BaseGrid extends Grid {
 
     /**
      * @return string|AbstractModelSingle
+     * @throws NotImplementedException
      */
     protected function getModelClassName(): string {
         throw new NotImplementedException();
@@ -221,6 +222,7 @@ abstract class BaseGrid extends Grid {
     /**
      * @param array $fields
      * @throws DuplicateColumnException
+     * @throws NotImplementedException
      */
     protected function addColumns(array $fields) {
 
@@ -243,6 +245,7 @@ abstract class BaseGrid extends Grid {
      * @param array $params
      * @return Button
      * @throws DuplicateButtonException
+     * @throws NotImplementedException
      */
     protected function addLinkButton(IPresenter $presenter, string $destination, string $id, string $label, bool $checkACL = true, array $params = []): Button {
         $modelClassName = $this->getModelClassName();

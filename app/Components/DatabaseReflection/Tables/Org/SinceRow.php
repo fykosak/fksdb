@@ -22,16 +22,15 @@ class SinceRow extends AbstractOrgRowFactory {
     }
 
     /**
-     * @param int|null $min
-     * @param int|null $max
+     * @param array $args
      * @return BaseControl
      * @throws BadRequestException
      */
-    public function createField(int $min = null, int $max = null): BaseControl {
+    public function createField(...$args): BaseControl {
         if (\is_null($max) || \is_null($min)) {
             throw new BadRequestException();
         }
-        $control = parent::createField();
+        $control = parent::createField($args);
         $control->addRule(Form::NUMERIC);
         $control->addRule(Form::FILLED);
         $control->addRule(Form::RANGE, _('Počáteční ročník není v intervalu [%d, %d].'), [$min, $max]);

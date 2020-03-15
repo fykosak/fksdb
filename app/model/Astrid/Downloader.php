@@ -96,19 +96,6 @@ class Downloader {
     }
 
     /**
-     * @param ModelContest $contest
-     * @param $year
-     * @return bool|string
-     */
-    public function downloadFyziklaniRooms(ModelContest $contest, $year) {
-        $mask = $this->parameters['fyziklani']['roomsPath'];
-        $contestName = isset($this->contestMap[$contest->contest_id]) ? $this->contestMap[$contest->contest_id] : $contest->contest_id;
-
-        $path = sprintf($mask, $contestName, $year);
-        return $this->download($path);
-    }
-
-    /**
      * @param $path
      * @return bool|string
      */

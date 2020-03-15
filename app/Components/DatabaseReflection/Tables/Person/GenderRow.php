@@ -29,9 +29,10 @@ class GenderRow extends AbstractRow {
     }
 
     /**
+     * @param array $args
      * @return BaseControl
      */
-    public function createField(): BaseControl {
+    public function createField(...$args): BaseControl {
         $control = new RadioList($this->getTitle(), $this->createOptions());
         $control->setDefaultValue('M');
         return $control;

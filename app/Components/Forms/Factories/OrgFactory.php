@@ -72,7 +72,7 @@ class OrgFactory extends SingleReflectionFactory {
             case 'until':
                 $min = $this->yearCalculator->getFirstYear($contest);
                 $max = $this->yearCalculator->getLastYear($contest);
-                return $this->loadFactory($fieldName)->createField($min, $max);
+                return $this->loadFactory($fieldName)->createField(, $min, $max);
             default:
                 return parent::createField($fieldName);
 

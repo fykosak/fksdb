@@ -36,12 +36,11 @@ class UntilRow extends AbstractOrgRowFactory {
     }
 
     /**
-     * @param int|null $min
-     * @param int|null $max
+     * @param array $args
      * @return BaseControl
      * @throws BadRequestException
      */
-    public function createField(int $min = null, int $max = null): BaseControl {
+    public function createField(...$args): BaseControl {
         if (\is_null($max) || \is_null($min)) {
             throw new BadRequestException();
         }
