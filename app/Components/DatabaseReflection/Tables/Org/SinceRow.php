@@ -27,6 +27,7 @@ class SinceRow extends AbstractOrgRowFactory {
      * @throws BadRequestException
      */
     public function createField(...$args): BaseControl {
+        list($min, $max) = $args;
         if (\is_null($max) || \is_null($min)) {
             throw new BadRequestException();
         }
