@@ -2,13 +2,11 @@
 
 namespace FKSDB\Components\React;
 
-use FKSDB\Application\IJavaScriptCollector;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\ComponentModel\IComponent;
 use Nette\DI\Container;
 use Nette\Http\IRequest;
-use FKSDB\NotImplementedException;
 use Nette\Templating\FileTemplate;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;

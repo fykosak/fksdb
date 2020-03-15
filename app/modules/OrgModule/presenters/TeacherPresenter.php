@@ -27,7 +27,6 @@ class TeacherPresenter extends ExtendedPersonPresenter {
         parent::__construct($context);
     }
 
-    protected $modelResourceId = 'teacher';
     protected $fieldsDefinition = 'adminTeacher';
 
     /**
@@ -152,6 +151,13 @@ class TeacherPresenter extends ExtendedPersonPresenter {
      */
     public function messageExists() {
         return _('Teacher already exist');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getModelResource(): string {
+        return ModelTeacher::RESOURCE_ID;
     }
 }
 

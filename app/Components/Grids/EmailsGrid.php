@@ -9,7 +9,6 @@ use FKSDB\ORM\Services\ServiceEmailMessage;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
-use SQL\SearchableDataSource;
 
 /**
  * Class EmailsGrid

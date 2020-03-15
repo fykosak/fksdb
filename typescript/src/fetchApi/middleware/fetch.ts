@@ -38,7 +38,7 @@ export async function netteFetch<TFormData, TResponseData, T = any>(
 }
 
 export async function uploadFile<F, D, T>(
-    data: Request<F>,
+    data: Request<F> | FormData,
     success: (data: Response<D>) => void,
     error: (e: jqXHR<T>) => void,
     url: string = null,
@@ -86,8 +86,8 @@ export async function dispatchNetteFetch<TFormData, TResponseData, TStore, T = a
 
 export async function dispatchUploadFile<TFormData, TResponseData, TStore, T = any>(
     accessKey: string,
-    dispatch: Dispatch<Action>,
-    data: Request<TFormData>,
+    dispatch: Dispatch<Action<string>>,
+    data: Request<TFormData> | FormData,
     success: (data: Response<TResponseData>) => void,
     error: (e: jqXHR<T>) => void,
     url: string = null,

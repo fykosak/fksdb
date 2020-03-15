@@ -16,27 +16,27 @@ use Nette\Security\IResource;
  * @property-read int year
  */
 class ModelContestant extends AbstractModelSingle implements IResource, IPersonReferencedModel, IContestReferencedModel {
+    const RESOURCE_ID = 'contestant';
+
     /**
      * @return ModelPerson
      */
     public function getPerson(): ModelPerson {
-        $data = $this->person;
-        return ModelPerson::createFromActiveRow($data);
+        return ModelPerson::createFromActiveRow($this->person);
     }
 
     /**
      * @return ModelContest
      */
     public function getContest(): ModelContest {
-        $data = $this->contest;
-        return ModelContest::createFromActiveRow($data);
+        return ModelContest::createFromActiveRow($this->contest);
     }
 
     /**
      * @return string
      */
     public function getResourceId(): string {
-        return 'contestant';
+        return self::RESOURCE_ID;
     }
 
 }

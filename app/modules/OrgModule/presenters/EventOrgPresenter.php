@@ -18,7 +18,6 @@ use Persons\ExtendedPersonHandler;
  */
 class EventOrgPresenter extends ExtendedPersonPresenter {
 
-    protected $modelResourceId = 'eventOrg';
     protected $fieldsDefinition = 'adminEventOrg';
 
     /**
@@ -174,4 +173,12 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
     protected function createComponentGrid($name) {
         throw new NotImplementedException();
     }
+
+    /**
+     * @return string
+     */
+    protected function getModelResource(): string {
+        return 'eventOrg';
+    }
+
 }
