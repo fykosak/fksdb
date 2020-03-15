@@ -31,16 +31,10 @@ abstract class EntityPresenter extends BasePresenter {
     private $model;
 
     /**
-     * Name of the resource that is tested in operations.
-     * @var string
-     */
-    protected $modelResourceId;
-
-    /**
      * @throws BadRequestException
      */
     public function authorizedCreate() {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->modelResourceId, 'create', $this->getSelectedContest()));
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->getModelResource(), 'create', $this->getSelectedContest()));
     }
 
     /**
@@ -55,7 +49,7 @@ abstract class EntityPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function authorizedList() {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->modelResourceId, 'list', $this->getSelectedContest()));
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->getModelResource(), 'list', $this->getSelectedContest()));
     }
 
     /**
@@ -146,4 +140,9 @@ abstract class EntityPresenter extends BasePresenter {
      * @return mixed
      */
     abstract protected function createComponentGrid($name);
+
+    /**
+     * @return string
+     */
+    abstract protected function getModelResource():string ;
 }

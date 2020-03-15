@@ -4,17 +4,14 @@
 {/block}
 {block content}
     <ul>
-        <li><i class="text text-warning fa fa-envelope"></i>- Solution was sent by post</li>
-        <li><a class="text-success" href="#"><i class="fa fa-file"></i></a>- Solution was
-            uploaded, click to download
+        <li><i class="text text-warning fa fa-envelope"></i>- {_'Solution was sent by post'}</li>
+        <li><a class="text-success" href="#"><i class="fa fa-file"></i></a>- {_'Solution was uploaded'}</li>
+        <li><a class="text-success" href="#"><i
+                        class="fa fa-file-text"></i></a>- {_'Corrected solution was uploaded'}
         </li>
-        <li><a class="text-success" href="#"><i class="fa fa-file-text"></i></a>- Corrected
-            solution was
-            uploaded, click to download
-        </li>
-        <li><i class="text-danger fa fa-file-text"></i>- Corrected solution was not uploaded</li>
-        <li><i class="text-danger fa fa-bar-chart"></i>- Solution has points in DB</li>
-        <li><i class="text-success fa fa-bar-chart"></i>- Solution has not points in DB</li>
+        <li><i class="text-danger fa fa-file-text"></i>- {_'Corrected solution was not uploaded'}</li>
+        <li><i class="text-danger fa fa-bar-chart"></i>- {_'Solution has not points in DB'}</li>
+        <li><i class="text-success fa fa-bar-chart"></i>- {_'Solution has points in DB'}</li>
 
     </ul>
     {var $table = $seriesTable->getSubmitsTable()}
@@ -22,6 +19,7 @@
         <thead>
         <tr>
             <th>{_'Person'}</th>
+            -
             {foreach $seriesTable->getTasks() as $task}
                 <th>{$task->label}</th>
             {/foreach}
@@ -36,7 +34,7 @@
                         {if isset($table[$contestant->ct_id]) && isset($table[$contestant->ct_id][$task->task_id])}
                             {var $submit = $table[$contestant->ct_id][$task->task_id]}
                             {if $submit->source === FKSDB\ORM\Models\ModelSubmit::SOURCE_POST}
-                                <i class="text-warning fa fa-envelope"></i>
+                                <i class="text-warning fa fa-envelope" title="#{$submit->submit_id}"></i>
                             {else}
                                 <a class="text-success"
                                    title="{_'Download'}"

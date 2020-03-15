@@ -117,7 +117,7 @@ stalking:
             links:
                 - org.detail
                 - org.edit
-            itemHeadline: org.contest_id
+            itemHeadline: referenced.contest
             rows:
                 - org.org_id
                 - org.since

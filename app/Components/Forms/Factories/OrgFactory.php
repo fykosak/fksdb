@@ -62,14 +62,16 @@ class OrgFactory extends SingleReflectionFactory {
 
     /**
      * @param string $fieldName
-     * @param ModelContest $contest
+     * @param array $args
      * @return mixed
      * @throws \Exception
      */
-    public function createField(string $fieldName, ModelContest $contest = null): BaseControl {
+    public function createField(string $fieldName, ...$args): BaseControl {
+
         switch ($fieldName) {
             case 'since':
             case 'until':
+                list($contest) = $args;
                 $min = $this->yearCalculator->getFirstYear($contest);
                 $max = $this->yearCalculator->getLastYear($contest);
                 return $this->loadFactory($fieldName)->createField($min, $max);
