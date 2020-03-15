@@ -151,7 +151,7 @@ stalking:
             itemHeadline: contestant_base.ct_id
             rows:
                 - contestant_base.year
-                - contestant_base.contest_id
+                - referenced.contest
         event_participant:
             layout: multi
             label: Event Participant

@@ -216,8 +216,9 @@ DBReflection:
              ct_id:
                  type: primaryKey
                  title: _(Contestant Id)
-             year: FKSDB\Components\DatabaseReflection\Tables\ContestantBase\YearRow
-             contest_id: FKSDB\Components\DatabaseReflection\Tables\ContestantBase\ContestId
+             year:
+                 type: string
+                 title: _(Year)
          event_org:
              event_org_id:
                  accessKey: e_org_id

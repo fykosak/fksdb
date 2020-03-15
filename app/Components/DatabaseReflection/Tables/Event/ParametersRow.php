@@ -21,9 +21,10 @@ class ParametersRow extends AbstractEventRowFactory {
     }
 
     /**
+     * @param array $args
      * @return BaseControl
      */
-    public function createField(): BaseControl {
+    public function createField(...$args): BaseControl {
         $control = new TextArea($this->getTitle());
         $control->setOption('description', _('V Neon syntaxi, schéma je specifické pro definici akce.'));
         return $control;

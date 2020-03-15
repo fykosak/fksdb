@@ -19,9 +19,11 @@ abstract class AbstractFyziklaniGameSetupRow extends AbstractRow {
     }
 
     /**
+     * @param array $args
      * @return BaseControl
+     * @throws NotImplementedException
      */
-    public function createField(): BaseControl {
+    public function createField(...$args): BaseControl {
         throw new NotImplementedException();
     }
 }

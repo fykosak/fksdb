@@ -48,9 +48,10 @@ class PhoneRow extends DefaultRow implements ITestedRowFactory {
     }
 
     /**
+     * @param array $args
      * @return BaseControl
      */
-    public function createField(): BaseControl {
+    public function createField(...$args): BaseControl {
         $control = null;
         if ($this->isWriteOnly) {
             $control = new WriteOnlyInput($this->getTitle());

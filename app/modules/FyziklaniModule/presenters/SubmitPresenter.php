@@ -48,11 +48,6 @@ class SubmitPresenter extends BasePresenter {
         $this->setIcon('fa fa-pencil');
     }
 
-    /**
-     * @throws AbortException
-     * @throws BadRequestException
-     * @throws ForbiddenRequestException
-     */
     public function titleDetail() {
         $this->setTitle(sprintf(_('Detail of the submit #%d'), $this->getEntity()->fyziklani_submit_id));
         $this->setIcon('fa fa-pencil');
@@ -150,20 +145,10 @@ class SubmitPresenter extends BasePresenter {
         $this->loadEntity($id);
     }
 
-    /**
-     * @throws AbortException
-     * @throws BadRequestException
-     * @throws ForbiddenRequestException
-     */
     public function renderDetail() {
         $this->template->model = $this->getEntity();
     }
 
-    /**
-     * @throws AbortException
-     * @throws BadRequestException
-     * @throws ForbiddenRequestException
-     */
     public function renderEdit() {
         $this->template->model = $this->getEntity();
     }
@@ -222,7 +207,6 @@ class SubmitPresenter extends BasePresenter {
     /**
      * @throws AbortException
      * @throws BadRequestException
-     * @throws ForbiddenRequestException
      * @throws ClosedSubmittingException
      * @throws PointsMismatchException
      */

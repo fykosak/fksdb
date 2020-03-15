@@ -34,9 +34,10 @@ class SinceRow extends AbstractTeacherRow {
     }
 
     /**
+     * @param array $args
      * @return BaseControl
      */
-    public function createField(): BaseControl {
+    public function createField(...$args): BaseControl {
         return new DateInput($this->getTitle());
     }
 }

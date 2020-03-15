@@ -112,9 +112,12 @@ class EventPresenter extends EntityPresenter {
         $this->setIcon('fa fa-pencil');
     }
 
+    /**
+     * @throws NotImplementedException
+     */
     public function actionDelete() {
 // There's no use case for this. (Errors must be deleted manually via SQL.)
-        throw new NotImplementedException(null, 501);
+        throw new NotImplementedException(null);
     }
 
     /**

@@ -31,9 +31,10 @@ class NoteRow extends AbstractTeacherRow {
     }
 
     /**
+     * @param array $args
      * @return BaseControl
      */
-    public function createField(): BaseControl {
+    public function createField(...$args): BaseControl {
         return (new TextInput(_('Note')))->addRule(Form::MAX_LENGTH, null, 255);
     }
 }

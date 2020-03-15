@@ -664,6 +664,8 @@ CREATE TABLE IF NOT EXISTS `submit` (
   COMMENT 'Pred prepoctem',
   `calc_points`  DECIMAL(4, 2)           NULL     DEFAULT NULL
   COMMENT 'Cache spoctenych bodu.',
+  `corrected`    TINYINT(1)              NULL DEFAULT 0
+      COMMENT 'Má uloha nahrané riešnie?',
   PRIMARY KEY (`submit_id`),
   UNIQUE INDEX `cons_uniq` (`ct_id` ASC, `task_id` ASC),
   INDEX `task_id` (`task_id` ASC),

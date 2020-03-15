@@ -1,0 +1,69 @@
+{block user-info}
+    {include #parent}
+    {control seriesChooser}
+{/block}
+{block content}
+    <ul>
+        <li><i class="text text-warning fa fa-envelope"></i>- Solution was sent by post</li>
+        <li><a class="text-success" href="#"><i class="fa fa-file"></i></a>- Solution was
+            uploaded, click to download
+        </li>
+        <li><a class="text-success" href="#"><i class="fa fa-file-text"></i></a>- Corrected
+            solution was
+            uploaded, click to download
+        </li>
+        <li><i class="text-danger fa fa-file-text"></i>- Corrected solution was not uploaded</li>
+        <li><i class="text-danger fa fa-bar-chart"></i>- Solution has points in DB</li>
+        <li><i class="text-success fa fa-bar-chart"></i>- Solution has not points in DB</li>
+
+    </ul>
+    {var $table = $seriesTable->getSubmitsTable()}
+    <table class="table table-striped table-sm">
+        <thead>
+        <tr>
+            <th>{_'Person'}</th>
+            {foreach $seriesTable->getTasks() as $task}
+                <th>{$task->label}</th>
+            {/foreach}
+        </tr>
+        </thead>
+        <tbody>
+        {foreach $seriesTable->getContestants() as $contestant}
+            <tr>
+                <th scope="row">{$contestant->getPerson()->getFullName()}</th>
+                {foreach $seriesTable->getTasks() as $task}
+                    <td>
+                        {if isset($table[$contestant->ct_id]) && isset($table[$contestant->ct_id][$task->task_id])}
+                            {var $submit = $table[$contestant->ct_id][$task->task_id]}
+                            {if $submit->source === FKSDB\ORM\Models\ModelSubmit::SOURCE_POST}
+                                <i class="text-warning fa fa-envelope"></i>
+                            {else}
+                                <a class="text-success"
+                                   title="{_'Download'}"
+                                   href="{link downloadUploaded! $submit->submit_id}">
+                                    <i class="fa fa-file"></i>
+                                </a>
+                            {/if}
+                            {if $submit->corrected }
+                                <a class="text-success"
+                                   title="{_'Download'}"
+                                   href="{link downloadCorrected! $submit->submit_id}"><i
+                                            class="fa fa-file-text"></i>
+                                </a>
+                            {else}
+                                <i class="text-danger fa fa-file-text"></i>
+                            {/if}
+                            {if is_null($submit->raw_points) }
+                                <i class="text-danger fa fa-bar-chart"></i>
+                            {else}
+                                <i class="text-success fa fa-bar-chart"
+                                   title="{$submit->calc_points.' ('.$submit->raw_points.') / '.$submit->getTask()->points}"></i>
+                            {/if}
+                        {/if}
+                    </td>
+                {/foreach}
+            </tr>
+        {/foreach}
+        </tbody>
+    </table>
+{/block}
