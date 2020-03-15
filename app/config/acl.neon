@@ -71,6 +71,9 @@ acl:
     # ACL
     - allow(contestant, submit, upload)
     - allow(contestant, submit, download, [@ownerAssertion, 'isSubmitUploader'])
+    - allow(contestant, submit, download.uploaded, [@ownerAssertion, 'isSubmitUploader'])
+    - allow(contestant, submit, download.corrected, [@ownerAssertion, 'isSubmitUploader'])
+
     - allow(contestant, submit, revoke, [@ownerAssertion, 'isSubmitUploader'])
 
     - allow(org, submit, edit)      # zadávání bodů

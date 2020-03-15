@@ -6,8 +6,8 @@ $(document).ready(function () {
      */
     function createDownloadLink(taskData) {
         const el = $('<span>');
-        el.attr('class', 'btn btn-sm btn-secondary disabled');
-        el.text('Download ' + taskData.task.label);
+        el.attr('class', 'badge badge-info');
+        el.text('Was uploaded ' + taskData.task.label);
         return el;
     }
 

@@ -85,7 +85,6 @@ DBReflection:
              order: FKSDB\Components\DatabaseReflection\Org\OrderRow
              tex_signature: FKSDB\Components\DatabaseReflection\Org\TexSignatureRow
              domain_alias: FKSDB\Components\DatabaseReflection\Org\DomainAliasRow
-             contest_id: FKSDB\Components\DatabaseReflection\Org\ContestRow
              contribution:
                  type: string
                  title: _(Contribution)

@@ -18,7 +18,6 @@ use Persons\ExtendedPersonHandler;
  */
 class OrgPresenter extends ExtendedPersonPresenter {
 
-    protected $modelResourceId = 'org';
     protected $fieldsDefinition = 'adminOrg';
     /**
      * @var int
@@ -165,6 +164,13 @@ class OrgPresenter extends ExtendedPersonPresenter {
      */
     public function messageExists(): string {
         return _('Organizátor již existuje.');
+    }
+
+    /**
+     * @return string
+     */
+    protected function getModelResource(): string {
+        return ModelOrg::RESOURCE_ID;
     }
 }
 
