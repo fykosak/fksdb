@@ -17,7 +17,6 @@ use Persons\ExtendedPersonHandler;
  */
 class EventOrgPresenter extends ExtendedPersonPresenter {
 
-    protected $modelResourceId = 'eventOrg';
     protected $fieldsDefinition = 'adminEventOrg';
 
     /**
@@ -172,6 +171,13 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
             $this->modelEvent = ModelEvent::createFromActiveRow($this->serviceEvent->findByPrimary($this->eventId));
         }
         return $this->modelEvent;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getModelResource(): string {
+        return 'eventOrg';
     }
 
 }

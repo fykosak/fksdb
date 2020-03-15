@@ -31,8 +31,6 @@ class SchoolPresenter extends EntityPresenter {
     const CONT_ADDRESS = 'address';
     const CONT_SCHOOL = 'school';
 
-    protected $modelResourceId = 'school';
-
     /**
      * @var ServiceSchool
      */
@@ -273,5 +271,12 @@ class SchoolPresenter extends EntityPresenter {
      */
     protected function createComponentGrid($name) {
         throw new DeprecatedException();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getModelResource(): string {
+        return ModelSchool::RESOURCE_ID;
     }
 }
