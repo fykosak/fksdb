@@ -1,15 +1,12 @@
 $(document).ready(function () {
-    // const linkFormat = '/fykos32/public/submit/download/%d';
-    const linkFormat = '/submit/download/%d'; //TODO
     /**
      *
      * @param {{submit_id:string task:{label:string}}} taskData
      * @returns {jQuery.fn.init|jQuery|HTMLElement}
      */
     function createDownloadLink(taskData) {
-        const el = $('<a>');
-        el.attr('class', 'btn btn-sm btn-secondary');
-        el.attr('href', linkFormat.replace('%d', taskData.submit_id));
+        const el = $('<span>');
+        el.attr('class', 'btn btn-sm btn-secondary disabled');
         el.text('Download ' + taskData.task.label);
         return el;
     }

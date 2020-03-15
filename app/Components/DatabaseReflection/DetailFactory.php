@@ -2,8 +2,6 @@
 
 namespace FKSDB\Components\DatabaseReflection;
 
-use Tracy\Debugger;
-
 /**
  * Class DetailFactory
  * @package FKSDB\Components\DatabaseReflection

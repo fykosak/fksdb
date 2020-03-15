@@ -42,6 +42,7 @@ class GroupsGrid extends BaseGrid {
      * @param $presenter
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
+     * @throws \FKSDB\NotImplementedException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

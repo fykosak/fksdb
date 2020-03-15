@@ -7,7 +7,7 @@ import {
     Action,
     Dispatch,
 } from 'redux';
-import { deleteUploadedFile } from '../../../actions/uploadData';
+import { deleteUploadedFile, downloadUploadedFile } from '../../../actions/uploadData';
 
 interface OwnProps {
     submit: UploadDataItem;
@@ -17,6 +17,8 @@ interface OwnProps {
 
 interface DispatchProps {
     onDeleteFile(accessKey: string, submitId: number): void;
+
+    //  onDownloadFile(accessKey: string, submitId: number): void;
 }
 
 class File extends React.Component<OwnProps & DispatchProps, {}> {
@@ -30,19 +32,25 @@ class File extends React.Component<OwnProps & DispatchProps, {}> {
                         }
                     }}>&times;</button>
             <div className="text-center p-2">
-                <a href={this.props.submit.href}>
-                    <span className="display-1 w-100"><i className="fa fa-file-pdf-o"/></span>
-                    <span className="d-block">{this.props.submit.name}</span>
-                </a>
+                <span className="display-1 w-100"><i className="fa fa-file-pdf-o"/></span>
+                <span className="d-block">{this.props.submit.name}</span>
             </div>
 
         </div>;
     }
 }
 
+/*
+              <a href="#" onClick={() => {
+                    this.props.onDownloadFile(this.props.accessKey, this.props.submit.submitId);
+                }}>
+                    </a>
+ */
+
 const mapDispatchToProps = (dispatch: Dispatch<Action<string>>, ownProps: OwnProps): DispatchProps => {
     return {
         onDeleteFile: (accessKey, submitId) => deleteUploadedFile(dispatch, accessKey, submitId, ownProps.actions.getAction('revoke')),
+        // onDownloadFile: (accessKey, submitId) => downloadUploadedFile(dispatch, accessKey, submitId, ownProps.actions.getAction('download')),
     };
 };
 

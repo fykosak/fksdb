@@ -18,7 +18,6 @@ use FKSDB\ORM\Services\ServicePerson;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Utils\JsonException;
-use Nette\Utils\RegexpException;
 use Persons\IModifiabilityResolver;
 use Persons\IVisibilityResolver;
 use Persons\ReferencedPersonHandlerFactory;

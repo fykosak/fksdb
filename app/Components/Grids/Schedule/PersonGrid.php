@@ -45,6 +45,7 @@ class PersonGrid extends BaseGrid {
     /**
      * @param $presenter
      * @throws DuplicateColumnException
+     * @throws \FKSDB\NotImplementedException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

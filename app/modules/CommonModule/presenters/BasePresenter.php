@@ -3,7 +3,6 @@
 namespace CommonModule;
 
 use AuthenticatedPresenter;
-use FKSDB\Components\Controls\Choosers\ThemeSwitcher;
 use Nette\Security\IResource;
 
 /**

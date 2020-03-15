@@ -15,7 +15,6 @@ use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
 use Nette\Security\IResource;
 use Nette\Utils\DateTime;
-use Tracy\Debugger;
 
 /**
  * @property-read  string category

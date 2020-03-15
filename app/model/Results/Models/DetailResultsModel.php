@@ -4,6 +4,7 @@ namespace FKSDB\Results\Models;
 
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\Results\ModelCategory;
+use Nette\InvalidStateException;
 
 /**
  * Detailed results of a single series. Number of tasks is dynamic.
@@ -82,7 +83,7 @@ class DetailResultsModel extends AbstractResultsModel {
      */
     protected function composeQuery(ModelCategory $category) {
         if (!$this->series) {
-            throw new \Nette\InvalidStateException('Series not set.');
+            throw new InvalidStateException('Series not set.');
         }
 
         $select = [];
