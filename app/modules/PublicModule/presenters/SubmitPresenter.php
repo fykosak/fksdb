@@ -30,23 +30,9 @@ use Tracy\Debugger;
 class SubmitPresenter extends BasePresenter {
     use SubmitSaveTrait;
 
-    /** @var ServiceTask */
-    private $taskService;
 
     /** @var ServiceSubmit */
     private $submitService;
-
-    /**
-     * @var FilesystemUploadedSubmitStorage
-     */
-    private $uploadedSubmitStorage;
-
-    /**
-     * @param ServiceTask $taskService
-     */
-    public function injectTaskService(ServiceTask $taskService) {
-        $this->taskService = $taskService;
-    }
 
     /**
      * @param ServiceSubmit $submitService
@@ -56,10 +42,29 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @param FilesystemUploadedSubmitStorage $filesystemUploadedSubmitStorage
+     * @return ServiceSubmit
      */
+    protected function getServiceSubmit(): ServiceSubmit {
+        return $this->submitService;
+    }
+
+    /** @var FilesystemUploadedSubmitStorage */
+    private $uploadedSubmitStorage;
+    /** @param FilesystemUploadedSubmitStorage $filesystemUploadedSubmitStorage */
     public function injectSubmitUploadedStorage(FilesystemUploadedSubmitStorage $filesystemUploadedSubmitStorage) {
         $this->uploadedSubmitStorage = $filesystemUploadedSubmitStorage;
+    }
+    /** @return ISubmitStorage */
+    protected function getSubmitUploadedStorage(): ISubmitStorage {
+        return $this->uploadedSubmitStorage;
+    }
+
+    /** @var ServiceTask */
+    private $taskService;
+
+    /** @param ServiceTask $taskService */
+    public function injectTaskService(ServiceTask $taskService) {
+        $this->taskService = $taskService;
     }
     /* ******************* AUTH ************************/
     /**
@@ -287,19 +292,5 @@ class SubmitPresenter extends BasePresenter {
             };
         }
         return null;
-    }
-
-    /**
-     * @return ServiceSubmit
-     */
-    protected function getServiceSubmit(): ServiceSubmit {
-        return $this->submitService;
-    }
-
-    /**
-     * @return ISubmitStorage
-     */
-    protected function getSubmitUploadedStorage(): ISubmitStorage {
-        return $this->uploadedSubmitStorage;
     }
 }

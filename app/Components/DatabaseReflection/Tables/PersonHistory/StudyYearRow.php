@@ -53,12 +53,12 @@ class StudyYearRow extends AbstractRow {
     }
 
     /**
-     * @param int $acYear
      * @param array $args
      * @return BaseControl
      * @throws BadRequestException
      */
-    public function createField($acYear, ...$args): BaseControl {
+    public function createField(...$args): BaseControl {
+        list ($acYear) = $args;
         if (\is_null($acYear)) {
             throw new BadRequestException();
         }
