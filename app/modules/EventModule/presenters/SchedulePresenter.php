@@ -219,14 +219,4 @@ class SchedulePresenter extends BasePresenter {
     public function createComponentItemControl(): ItemControl {
         return $this->scheduleFactory->createItemControl();
     }
-
-    /**
-     * @return FormControl
-     * @throws BadRequestException
-     */
-    public function createComponentItemEditForm(): FormControl {
-        $control = new FormControl();
-        $form = $control->getForm();
-        return $control;
-    }
 }

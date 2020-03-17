@@ -3,9 +3,6 @@
 namespace EventModule;
 
 use FKSDB\Components\Grids\EventOrgsGrid;
-use FKSDB\EntityTrait;
-use FKSDB\Messages\Message;
-use FKSDB\ORM\IService;
 use FKSDB\ORM\Models\ModelEventOrg;
 use FKSDB\ORM\Services\ServiceEventOrg;
 use Nette\Application\AbortException;
@@ -39,6 +36,21 @@ class EventOrgPresenter extends BasePresenter {
     }
 
     /**
+     * @param int $id
+     * @throws AbortException
+     */
+    public function actionDelete(int $id) {
+        try {
+            list($message) = $this->traitHandleDelete($id);
+            $this->flashMessage($message->getMessage(), $message->getLevel());
+            $this->redirect('list');
+        } catch (BadRequestException $exception) {
+            $this->flashMessage(_('Error during deleting'), self::FLASH_ERROR);
+            $this->redirect('list');
+        }
+    }
+
+    /**
      * @return EventOrgsGrid
      * @throws AbortException
      * @throws BadRequestException
@@ -47,17 +59,6 @@ class EventOrgPresenter extends BasePresenter {
         return new EventOrgsGrid($this->getEvent(), $this->serviceEventOrg, $this->getTableReflectionFactory());
     }
 
-    /*
-     * @param int $id
-     *
-    public function handleDelete(int $id) {
-        try {
-            list($message) = $this->traitHandleDelete($id);
-            $this->flashMessage($message->getMessage(), $message->getLevel());
-        } catch (\Exception $exception) {
-            $this->flashMessage(_('Error during deleting'), self::FLASH_ERROR);
-        }
-    }*/
 
     /**
      * @inheritDoc
@@ -72,4 +73,5 @@ class EventOrgPresenter extends BasePresenter {
     protected function getModelResource(): string {
         return ModelEventOrg::RESOURCE_ID;
     }
+
 }

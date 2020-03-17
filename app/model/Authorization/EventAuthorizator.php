@@ -3,6 +3,7 @@
 namespace Authorization;
 
 use Authorization\Assertions\EventOrgByIdAssertion;
+use FKSDB\ORM\Models\ModelEvent;
 use Nette\Database\Connection;
 use Nette\Security\IUserStorage;
 use Nette\Security\Permission;
@@ -67,12 +68,24 @@ class EventAuthorizator {
      * @param $privilege
      * @param $event
      * @return bool
+     * @deprecated
      */
-    public function isAllowed($resource, $privilege, $event): bool {
+    public function isAllowed($resource, $privilege, ModelEvent $event): bool {
+        return $this->contestAuthorizator->isAllowed($resource, $privilege, $event->getContest());
+    }
+
+    /**
+     * @param $resource
+     * @param $privilege
+     * @param ModelEvent $event
+     * @return bool
+     */
+    public function isEventOrgAllowed($resource, $privilege, ModelEvent $event) {
         if (!$this->getUser()->isAuthenticated()) {
             return false;
         }
         return $this->isAllowedForLogin($resource, $privilege, $event) || $this->contestAuthorizator->isAllowed($resource, $privilege, $event->event_type->contest_id);
+
     }
 
     /**

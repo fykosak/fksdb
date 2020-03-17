@@ -57,7 +57,7 @@ acl:
     - addResource(fyziklani.task) # list, import
     - addResource(fyziklani.close) # list, team, hard
     - addResource(fyziklani.results) # final, correlation, presentation,
-    - addResource(fyziklani.submit) # deafult
+    - addResource(fyziklani.submit) # deafult, detail, edit, revoke, create
     - addResource(fyziklani.gameSetup) # deafult
     - addResource(fyziklani.diplomas) # calculate, results
     #event module
@@ -67,7 +67,8 @@ acl:
     - addResource(event.model) #default
     - addResource(event.payment) # create, edit, list
     - addResource(event.seating) # edit, download, preview, print
-
+    - addResource(event.org)      # create, edit, list, delete
+    - addResource(event.chart)      # list, chart
     # ACL
     - allow(contestant, submit, upload)
     - allow(contestant, submit, download, [@ownerAssertion, 'isSubmitUploader'])
@@ -113,6 +114,7 @@ acl:
     - allow(dataManager, school, ::constant(Nette\Security\Permission::ALL))
 
     - allow(eventManager, event, ::constant(Nette\Security\Permission::ALL)) # TODO add certain privilegies to organizers too
+    - allow(eventManager, event.org, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, eventOrg, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, school, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, export, execute) # TODO (needs better distinction -- assertion at event org)

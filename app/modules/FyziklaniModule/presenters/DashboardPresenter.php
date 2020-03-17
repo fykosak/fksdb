@@ -23,6 +23,6 @@ class DashboardPresenter extends BasePresenter {
      * @throws AbortException
      */
     public function authorizedDefault() {
-        return $this->setAuthorized($this->eventIsAllowed('fyziklani.dashboard', 'default'));
+        return $this->setAuthorized($this->isAllowedForEventOrg('fyziklani.dashboard', 'default'));
     }
 }

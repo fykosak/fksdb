@@ -27,7 +27,7 @@ class DashboardPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function authorizedDefault() {
-        $this->setAuthorized($this->eventIsAllowed('event.dashboard', 'default'));
+        $this->setAuthorized($this->getEventAuthorizator()->isAllowed('event.dashboard', 'default', $this->getEvent()));
     }
 
     /**

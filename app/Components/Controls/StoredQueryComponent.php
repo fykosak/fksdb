@@ -70,7 +70,8 @@ class StoredQueryComponent extends Control {
      * @param StoredQueryFactory $storedQueryFormFactory
      * @param ExportFormatFactory $exportFormatFactory
      */
-    function __construct(StoredQuery $storedQuery, ContestAuthorizator $contestAuthorizator, StoredQueryFactory $storedQueryFormFactory, ExportFormatFactory $exportFormatFactory) {
+    function
+    __construct(StoredQuery $storedQuery, ContestAuthorizator $contestAuthorizator, StoredQueryFactory $storedQueryFormFactory, ExportFormatFactory $exportFormatFactory) {
         parent::__construct();
         $this->storedQuery = $storedQuery;
         $this->contestAuthorizator = $contestAuthorizator;

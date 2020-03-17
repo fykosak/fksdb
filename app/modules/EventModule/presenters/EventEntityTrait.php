@@ -40,29 +40,10 @@ trait EventEntityTrait {
     }
 
     /**
-     * @param IResource|string $resource
-     * @param string $privilege
-     * @return bool
-     * @throws AbortException
-     * @throws BadRequestException
-     */
-    protected function isAllowed($resource, string $privilege): bool {
-        return $this->eventIsAllowed($resource, $privilege);
-    }
-
-    /**
      * @return ModelEvent
      * @throws BadRequestException
      * @throws AbortException
      */
     abstract protected function getEvent(): ModelEvent;
 
-    /**
-     * @param IResource|string $resource
-     * @param string $privilege
-     * @return bool
-     * @throws BadRequestException
-     * @throws AbortException
-     */
-    abstract protected function eventIsAllowed($resource, string $privilege): bool;
 }

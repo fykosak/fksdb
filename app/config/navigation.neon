@@ -90,4 +90,4 @@ navigation:
             - event.teamApplication.list
             - event.model.default
             - event.seating.default
-            - event.chart.default
+            - event.chart.list

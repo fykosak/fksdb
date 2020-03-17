@@ -7,7 +7,6 @@ use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
 use Nette\Application\BadRequestException;
-use Nette\Application\ForbiddenRequestException;
 use Nette\Security\IResource;
 
 /**
@@ -84,16 +83,11 @@ trait EntityTrait {
      * @throws BadRequestException
      */
     public function traitHandleDelete(int $id) {
-        $entity = $this->loadEntity($id);
-        if (!$this->isAllowed($entity, 'delete')) {
-            throw new ForbiddenRequestException();
+        $success = $this->loadEntity($id)->delete();
+        if (!$success) {
+            throw new \ModelException(_('Error during deleting'));
         }
-        $success = $entity->delete();
-        if ($success) {
-            return [new Message(_('Entity has been deleted'), self::FLASH_SUCCESS)];
-        }
-        throw new \ModelException(_('Error during deleting'));
-
+        return [new Message(_('Entity has been deleted'), self::FLASH_SUCCESS)];
     }
 
     /**
