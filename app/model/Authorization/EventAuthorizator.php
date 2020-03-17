@@ -4,6 +4,8 @@ namespace Authorization;
 
 use Authorization\Assertions\EventOrgByIdAssertion;
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Models\ModelLogin;
+use FKSDB\ORM\Models\ModelRole;
 use Nette\Database\Connection;
 use Nette\Security\IUserStorage;
 use Nette\Security\Permission;
@@ -77,6 +79,16 @@ class EventAuthorizator {
     /**
      * @param $resource
      * @param $privilege
+     * @param $event
+     * @return bool
+     */
+    public function isContestOrgAllowed($resource, $privilege, ModelEvent $event): bool {
+        return $this->contestAuthorizator->isAllowed($resource, $privilege, $event->getContest());
+    }
+
+    /**
+     * @param $resource
+     * @param $privilege
      * @param ModelEvent $event
      * @return bool
      */
@@ -84,8 +96,36 @@ class EventAuthorizator {
         if (!$this->getUser()->isAuthenticated()) {
             return false;
         }
-        return $this->isAllowedForLogin($resource, $privilege, $event) || $this->contestAuthorizator->isAllowed($resource, $privilege, $event->event_type->contest_id);
+        if ($this->isContestOrgAllowed($resource, $privilege, $event)) {
+            return true;
+        }
+        return $this->isEventOrg($resource, $privilege, $event);
+    }
 
+    /**
+     * @param $resource
+     * @param $privilege
+     * @param ModelEvent $event
+     * @return bool
+     */
+    public function isEventAndContestOrgAllowed($resource, $privilege, ModelEvent $event) {
+        if (!$this->getUser()->isAuthenticated()) {
+            return false;
+        }
+        $contestOrg = false;
+        /**
+         * @var ModelLogin $login
+         */
+        $login = $this->getUser()->getIdentity();
+
+        $roles = $login->getRoles();
+        foreach ($roles as $role) {
+            if ($role->getRoleId() === ModelRole::ORG && $role->getContestId() === $event->getContest()->contest_id) {
+                $contestOrg = true;
+                break;
+            }
+        }
+        return $contestOrg && $this->isEventOrg($resource, $privilege, $event);
     }
 
     /**
@@ -94,7 +134,7 @@ class EventAuthorizator {
      * @param $event
      * @return bool
      */
-    public function isAllowedForLogin($resource, $privilege, $event): bool {
-        return (new EventOrgByIdAssertion($event->event_type->event_type_id, $this->getUser(), $this->db))($this->getAcl(), null, $resource, $privilege, $event->event_id);
+    private function isEventOrg($resource, $privilege, ModelEvent $event): bool {
+        return (new EventOrgByIdAssertion(null, $this->getUser(), $this->db))($this->getAcl(), null, $resource, $privilege, $event->event_id);
     }
 }

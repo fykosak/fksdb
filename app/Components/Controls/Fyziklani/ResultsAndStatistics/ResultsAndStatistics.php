@@ -90,7 +90,7 @@ class ResultsAndStatistics extends FyziklaniReactControl {
         if (!$presenter instanceof BasePresenter) {
             throw new ArgumentOutOfRangeException();
         }
-        $isOrg = $presenter->getEventAuthorizator()->isAllowed('fyziklani.results', 'presentation', $this->getEvent());
+        $isOrg = $presenter->getEventAuthorizator()->isContestOrgAllowed('fyziklani.results', 'presentation', $this->getEvent());
 
         $request = $this->getReactRequest();
 
