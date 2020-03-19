@@ -76,18 +76,6 @@ class ContestAuthorizator {
     }
 
     /**
-     * User must posses the role (for the resource:privilege) in the context
-     * of the queried contest.
-     *
-     * @param IResource|string|IContestReferencedModel $resource
-     * @param string $privilege
-     * @return boolean
-     */
-    public function isAllowedForContestReferencedModel(IContestReferencedModel $resource, string $privilege = null): bool {
-        return $this->isAllowed($resource, $privilege, $resource->getContest());
-    }
-
-    /**
      * @param IResource|string $resource
      * @param string $privilege
      * @return bool

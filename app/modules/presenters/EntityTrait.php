@@ -2,6 +2,7 @@
 
 namespace FKSDB;
 
+use FKSDB\Messages\Message;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
@@ -37,6 +38,14 @@ trait EntityTrait {
         $this->setAuthorized($this->isAllowed($this->loadEntity($id), 'edit'));
     }
 
+    /**
+     * @param int $id
+     * @throws BadRequestException
+     */
+    public function authorizedDelete(int $id) {
+        $this->setAuthorized($this->isAllowed($this->loadEntity($id), 'delete'));
+    }
+
     public function authorizedCreate() {
         $this->setAuthorized($this->isAllowed($this->getModelResource(), 'create'));
     }
@@ -66,6 +75,19 @@ trait EntityTrait {
             $this->model = $model;
         }
         return $this->model;
+    }
+
+    /**
+     * @param int $id
+     * @return array
+     * @throws BadRequestException
+     */
+    public function traitHandleDelete(int $id) {
+        $success = $this->loadEntity($id)->delete();
+        if (!$success) {
+            throw new \ModelException(_('Error during deleting'));
+        }
+        return [new Message(_('Entity has been deleted'), self::FLASH_SUCCESS)];
     }
 
     /**

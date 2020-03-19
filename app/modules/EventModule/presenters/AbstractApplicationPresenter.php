@@ -138,4 +138,5 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     abstract function createComponentGrid(): AbstractApplicationGrid;
+
 }

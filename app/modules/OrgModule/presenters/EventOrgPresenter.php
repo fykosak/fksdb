@@ -3,7 +3,7 @@
 namespace OrgModule;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
-use FKSDB\Components\Grids\EventOrgsGrid;
+use FKSDB\NotImplementedException;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEvent;
@@ -64,11 +64,6 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
         $this->setIcon('fa fa-user-plus');
     }
 
-    public function titleList() {
-        $this->setTitle(sprintf(_('Organizátoři akce %s'), $this->getEvent()->name));
-        $this->setIcon('fa fa-users');
-    }
-
     /**
      * @param $id
      * @throws \Nette\Application\AbortException
@@ -89,8 +84,8 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
      * @param $id
      * @throws \Nette\Application\AbortException
      */
-    public function actionDelete($id) {
-        $success = $this->serviceEventOrg->getTable()->where('e_org_id', $id)->delete();
+    public function actionDelete(int $id) {
+        $success = $this->serviceEventOrg->getTable()->wherePrimary($id)->delete();
         if ($success) {
             $this->flashMessage(_('Organizátor akce smazán.'), self::FLASH_SUCCESS);
         } else {
@@ -106,14 +101,6 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
     protected function setDefaults(IModel $model = null, Form $form) {
         parent::setDefaults($model, $form);
         //$form[ExtendedPersonHandler::CONT_MODEL]->setDefaults([]);
-    }
-
-    /**
-     * @param $name
-     * @return EventOrgsGrid
-     */
-    protected function createComponentGrid($name): EventOrgsGrid {
-        return new EventOrgsGrid($this->getEvent(), $this->serviceEventOrg);
     }
 
     /**
@@ -171,6 +158,14 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
             $this->modelEvent = ModelEvent::createFromActiveRow($this->serviceEvent->findByPrimary($this->eventId));
         }
         return $this->modelEvent;
+    }
+
+    /**
+     * @inheritDoc
+     * @throws NotImplementedException
+     */
+    protected function createComponentGrid($name) {
+        throw new NotImplementedException();
     }
 
     /**

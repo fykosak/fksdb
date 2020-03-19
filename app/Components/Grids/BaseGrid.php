@@ -10,6 +10,7 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\IPresenter;
 use Nette\Application\UI\Form;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\InvalidStateException;
 use FKSDB\NotImplementedException;
 use Nette\Templating\FileTemplate;
@@ -190,8 +191,10 @@ abstract class BaseGrid extends Grid {
     protected function addReflectionColumn(string $tableName, string $fieldName, string $modelClassName) {
         $factory = $this->tableReflectionFactory->loadService($tableName, $fieldName);
 
-        $this->addColumn($fieldName, $factory->getTitle())->setRenderer(function ($row) use ($factory, $fieldName, $modelClassName) {
-            $model = $modelClassName::createFromActiveRow($row);
+        $this->addColumn($fieldName, $factory->getTitle())->setRenderer(function ($model) use ($factory, $fieldName, $modelClassName) {
+            if (!$model instanceof $modelClassName) {
+                $model = $modelClassName::createFromActiveRow($model);
+            }
             return $factory->renderValue($model, 1);
         });
     }
@@ -225,14 +228,9 @@ abstract class BaseGrid extends Grid {
      * @throws NotImplementedException
      */
     protected function addColumns(array $fields) {
-
         foreach ($fields as $name) {
-            if (preg_match('/.*\..*/', $name)) {
-                list($table, $field) = TableReflectionFactory::parseRow($name);
-                $this->addReflectionColumn($table, $field, $this->getModelClassName());
-            } else {
-                $this->addReflectionColumn($this->getTableName(), $name, $this->getModelClassName());
-            }
+            list($table, $field) = TableReflectionFactory::parseRow($name);
+            $this->addReflectionColumn($table, $field, $this->getModelClassName());
         }
     }
 
@@ -302,7 +300,7 @@ abstract class BaseGrid extends Grid {
     /**
      * @return GlobalButton
      * @throws DuplicateGlobalButtonException
-     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws InvalidLinkException
      */
     protected function addCSVDownloadButton(): GlobalButton {
         return $this->addGlobalButton('csv')

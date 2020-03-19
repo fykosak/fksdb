@@ -59,15 +59,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws AbortException
      */
     public function authorizedEntry() {
-        $this->setAuthorized($this->eventIsAllowed('fyziklani.submit', 'default'));
-    }
-
-    /**
-     * @throws BadRequestException
-     * @throws AbortException
-     */
-    public function authorizedDetail() {
-        $this->authorizedEntry();
+        $this->setAuthorized($this->isAllowedForEventOrg('fyziklani.submit', 'default'));
     }
 
     /**
@@ -75,22 +67,6 @@ class SubmitPresenter extends BasePresenter {
      * @throws AbortException
      */
     public function authorizedQrEntry() {
-        $this->authorizedEntry();
-    }
-
-    /**
-     * @throws BadRequestException
-     * @throws AbortException
-     */
-    public function authorizedEdit() {
-        $this->authorizedEntry();
-    }
-
-    /**
-     * @throws BadRequestException
-     * @throws AbortException
-     */
-    public function authorizedList() {
         $this->authorizedEntry();
     }
 
@@ -227,6 +203,17 @@ class SubmitPresenter extends BasePresenter {
      * @inheritDoc
      */
     protected function getModelResource(): string {
-        return 'fyziklani.submit';
+        return ModelFyziklaniSubmit::RESOURCE_ID;
+    }
+
+    /**
+     * @param $resource
+     * @param string $privilege
+     * @return bool
+     * @throws AbortException
+     * @throws BadRequestException
+     */
+    protected function isAllowed($resource, string $privilege): bool {
+        return $this->isAllowedForEventOrg($resource, $privilege);
     }
 }

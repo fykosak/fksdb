@@ -11,6 +11,7 @@ use FKSDB\ValidationTest\ValidationTest;
 use FKSDB\NotImplementedException;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;
+use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class ValidationGrid
@@ -39,7 +40,7 @@ class ValidationGrid extends BaseGrid {
 
     /**
      * @param \AuthenticatedPresenter $presenter
-     * @throws \NiftyGrid\DuplicateColumnException
+     * @throws DuplicateColumnException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

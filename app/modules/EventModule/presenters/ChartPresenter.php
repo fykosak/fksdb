@@ -17,6 +17,36 @@ class ChartPresenter extends BasePresenter {
     use ChartPresenterTrait;
 
     /**
+     * @throws AbortException
+     * @throws BadRequestException
+     */
+    public function authorizedList() {
+        $this->setAuthorized($this->isAllowed($this->getModelResource(), 'list'));
+    }
+
+    /**
+     * @throws AbortException
+     * @throws BadRequestException
+     */
+    public function authorizedChart() {
+        $this->setAuthorized($this->isAllowed($this->getModelResource(), 'chart'));
+    }
+
+    public function titleList() {
+        $this->setTitle(_('Charts'));
+        $this->setIcon('fa fa fa-pie-chart');
+    }
+
+    public function startup() {
+        parent::startup();
+        $this->selectChart();
+    }
+
+    public function renderList() {
+        $this->template->charts = $this->getCharts();
+    }
+
+    /**
      * @return array
      * @throws AbortException
      * @throws BadRequestException
@@ -29,17 +59,10 @@ class ChartPresenter extends BasePresenter {
         ];
     }
 
-    public function startup() {
-        parent::startup();
-        $this->selectChart();
-    }
-
-    public function renderDefault() {
-        $this->template->charts = $this->getCharts();
-    }
-
-    public function titleDefault() {
-        $this->setTitle(_('Charts'));
-        $this->setIcon('fa fa fa-pie-chart');
+    /**
+     * @inheritDoc
+     */
+    protected function getModelResource(): string {
+        return 'event.chart';
     }
 }
