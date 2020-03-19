@@ -4,6 +4,7 @@ namespace FKSDB\Components\Grids\Fyziklani;
 
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\NotImplementedException;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
@@ -47,7 +48,7 @@ class ResultsCategoryGrid extends BaseGrid {
     /**
      * @param $presenter
      * @throws DuplicateColumnException
-     * @throws \FKSDB\NotImplementedException
+     * @throws NotImplementedException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

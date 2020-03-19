@@ -17,6 +17,7 @@ use InvalidArgumentException;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
+use Nette\Security\IResource;
 use function count;
 use function sprintf;
 

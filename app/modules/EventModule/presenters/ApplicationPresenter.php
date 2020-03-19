@@ -49,7 +49,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @throws BadRequestException
      */
     public function authorizedImport() {
-        $this->setAuthorized($this->eventIsAllowed($this->getModelResource(), 'import'));
+        $this->setAuthorized($this->isAllowed($this->getModelResource(), 'import'));
     }
 
     /**

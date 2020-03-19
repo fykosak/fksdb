@@ -31,7 +31,8 @@ class ModelPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function authorizedDefault() {
-        $this->setAuthorized($this->eventIsAllowed('event.model', 'default'));
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('event.model', 'default', $this->getEvent()->getContest()));
+
     }
 
     public function titleDefault() {

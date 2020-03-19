@@ -11,6 +11,7 @@ use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
+use Nette\Security\IResource;
 use function sprintf;
 
 /**
@@ -51,7 +52,7 @@ class ClosePresenter extends BasePresenter {
      * @throws AbortException
      */
     public function authorizedTeam() {
-        $this->setAuthorized($this->eventIsAllowed($this->getModelResource(), 'team'));
+        $this->setAuthorized($this->isAllowedForEventOrg($this->getModelResource(), 'team'));
     }
 
     /**
@@ -59,7 +60,7 @@ class ClosePresenter extends BasePresenter {
      * @throws AbortException
      */
     public function authorizedList() {
-        $this->setAuthorized($this->eventIsAllowed($this->getModelResource(), 'team'));
+        $this->setAuthorized($this->isAllowedForEventOrg($this->getModelResource(), 'team'));
     }
 
     /**
@@ -67,7 +68,7 @@ class ClosePresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function authorizeHard() {
-        $this->setAuthorized($this->eventIsAllowed($this->getModelResource(), 'hard'));
+        $this->setAuthorized($this->isAllowedForEventOrg($this->getModelResource(), 'hard'));
     }
     /* *********** ACTIONS **************** */
     /**
@@ -142,5 +143,16 @@ class ClosePresenter extends BasePresenter {
      */
     protected function getModelResource(): string {
         return 'fyziklani.close';
+    }
+
+    /**
+     * @param $resource
+     * @param string $privilege
+     * @return bool
+     * @throws AbortException
+     * @throws BadRequestException
+     */
+    protected function isAllowed($resource, string $privilege): bool {
+        return $this->isAllowedForEventOrg($resource, $privilege);
     }
 }

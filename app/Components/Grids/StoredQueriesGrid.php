@@ -86,9 +86,11 @@ class StoredQueriesGrid extends BaseGrid {
         // columns
         //
         $this->addColumn('name', _('Export name'));
-        $this->addReflectionColumn(DbNames::TAB_STORED_QUERY, 'qid', ModelStoredQuery::class);
         $this->addColumn('description', _('Description'))->setTruncate(self::DESCRIPTION_TRUNC);
-        $this->addReflectionColumn(DbNames::TAB_STORED_QUERY, 'tags', ModelStoredQuery::class);
+        $this->addColumns([
+            DbNames::TAB_STORED_QUERY . '.qid',
+            DbNames::TAB_STORED_QUERY . '.tags',
+        ]);
         //
         // operations
         //
@@ -124,6 +126,13 @@ class StoredQueriesGrid extends BaseGrid {
             $this->addGlobalButton('compose', _('Napsat dotaz'))
                 ->setLink($this->getPresenter()->link('compose'));
         }
+    }
+
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        return ModelStoredQuery::class;
     }
 
 }

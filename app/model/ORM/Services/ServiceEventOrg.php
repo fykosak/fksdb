@@ -49,7 +49,7 @@ class ServiceEventOrg extends AbstractServiceSingle {
      * @param ModelEvent $event
      * @return Selection
      */
-    public function findByEventId(ModelEvent $event): Selection {
+    public function findByEvent(ModelEvent $event): Selection {
         return $this->getTable()->where('event_id', $event->event_id);
     }
 }
