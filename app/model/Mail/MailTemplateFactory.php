@@ -8,6 +8,7 @@ use Nette\Application\UI\Control;
 use Nette\Http\IRequest;
 use Nette\InvalidArgumentException;
 use Nette\Latte\Engine;
+use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 
 /**
@@ -26,23 +27,21 @@ class MailTemplateFactory {
      * @var Application
      */
     private $application;
+    /**
+     * @var ITranslator
+     */
+    private $translator;
 
     /**
      * MailTemplateFactory constructor.
      * @param $templateDir
      * @param Application $application
+     * @param ITranslator $translator
      */
-    function __construct($templateDir, Application $application) {
+    function __construct($templateDir, Application $application, ITranslator $translator) {
         $this->templateDir = $templateDir;
         $this->application = $application;
-    }
-
-    /**
-     * @internal For automated testing only.
-     * @param $application
-     */
-    public function injectApplication($application) {
-        $this->application = $application;
+        $this->translator = $translator;
     }
 
     /**
@@ -61,6 +60,21 @@ class MailTemplateFactory {
      */
     public function createPasswordRecovery(Control $control = null, $lang = null) {
         return $this->createFromFile('passwordRecovery', $lang, $control);
+    }
+
+    /**
+     * @param string $templateFile
+     * @param string $lang
+     * @param array $data
+     * @return FileTemplate
+     */
+    public function createWithParameters(string $templateFile, string $lang = null, array $data = []) {
+        $template = $this->createFromFile($templateFile, $lang);
+        $template->setTranslator($this->translator);
+        foreach ($data as $key => $value) {
+            $template->{$key} = $value;
+        }
+        return $template;
     }
 
     /**

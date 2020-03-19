@@ -4,12 +4,13 @@ namespace FKSDB\Transitions;
 
 use Authorization\EventAuthorizator;
 use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\Transitions\Callbacks\EmailCallback;
+use FKSDB\ORM\Services\ServiceEmailMessage;
 use Mail\MailTemplateFactory;
 use Nette\InvalidStateException;
 use Nette\Localization\ITranslator;
 use Nette\Mail\IMailer;
 use Nette\Security\User;
+use Nette\Templating\Template;
 
 /**
  * Class TransitionsFactory
@@ -72,30 +73,37 @@ class TransitionsFactory {
      * @var ITranslator
      */
     private $translator;
+    /**
+     * @var ServiceEmailMessage
+     */
+    private $serviceEmailMessage;
 
     /**
      * TransitionsFactory constructor.
+     * @param ServiceEmailMessage $serviceEmailMessage
      * @param IMailer $mailer
      * @param MailTemplateFactory $mailTemplateFactory
      * @param EventAuthorizator $eventAuthorizator
      * @param User $user
      * @param ITranslator $translator
      */
-    public function __construct(IMailer $mailer, MailTemplateFactory $mailTemplateFactory, EventAuthorizator $eventAuthorizator, User $user, ITranslator $translator) {
+    public function __construct(ServiceEmailMessage $serviceEmailMessage, IMailer $mailer, MailTemplateFactory $mailTemplateFactory, EventAuthorizator $eventAuthorizator, User $user, ITranslator $translator) {
         $this->mailer = $mailer;
         $this->mailTemplateFactory = $mailTemplateFactory;
         $this->eventAuthorizator = $eventAuthorizator;
         $this->user = $user;
         $this->translator = $translator;
+        $this->serviceEmailMessage = $serviceEmailMessage;
     }
 
     /**
      * @param string $templateFile
-     * @param callable $optionsCallback
-     * @return callable
+     * @param string|null $lang
+     * @param array $data
+     * @return Template
      */
-    public function createMailCallback(string $templateFile, callable $optionsCallback): callable {
-        return new EmailCallback($optionsCallback, $templateFile, $this->getTranslator(), $this->getMailer(), $this->getMailTemplateFactory());
+    public function createEmailTemplate(string $templateFile, string $lang = null, array $data = []): Template {
+        return $this->mailTemplateFactory->createWithParameters($templateFile, $lang, $data);
     }
     /* conditions */
 

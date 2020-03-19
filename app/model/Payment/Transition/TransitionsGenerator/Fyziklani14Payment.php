@@ -7,6 +7,7 @@ use Closure;
 use Exception;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelPayment;
+use FKSDB\ORM\Services\ServiceEmailMessage;
 use FKSDB\ORM\Services\ServicePayment;
 use FKSDB\Payment\Transition\PaymentMachine;
 use FKSDB\Transitions\AbstractTransitionsGenerator;
@@ -19,7 +20,6 @@ use FKSDB\Transitions\TransitionsFactory;
 use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
 use Nette\Localization\ITranslator;
-use Nette\Mail\Message;
 use Tracy\Debugger;
 use function get_class;
 use function json_encode;
@@ -30,9 +30,11 @@ use function sprintf;
  * @package FKSDB\Payment\Transition\Transitions
  */
 class Fyziklani14Payment extends AbstractTransitionsGenerator {
-    const EMAIL_BCC = 'fyziklani@fykos.cz';
-    const EMAIL_FROM = 'Fyziklání <fyziklani@fykos.cz>';
-
+    private $emailData = [
+        'blind_carbon_copy' => 'Fyziklání <fyziklani@fykos.cz>',
+        'sender' => 'fyziklani@fykos.cz',
+        'reply_to' => 'Fyziklání <fyziklani@fykos.cz>',
+    ];
     /**
      * @var Connection
      */
@@ -49,6 +51,10 @@ class Fyziklani14Payment extends AbstractTransitionsGenerator {
      * @var ITranslator
      */
     private $translator;
+    /**
+     * @var ServiceEmailMessage
+     */
+    private $serviceEmailMessage;
 
     /**
      * Fyziklani13Payment constructor.
@@ -57,19 +63,22 @@ class Fyziklani14Payment extends AbstractTransitionsGenerator {
      * @param TransitionsFactory $transitionFactory
      * @param EventAuthorizator $eventAuthorizator
      * @param ITranslator $translator
+     * @param ServiceEmailMessage $serviceEmailMessage
      */
     public function __construct(
         ServicePayment $servicePayment,
         Connection $connection,
         TransitionsFactory $transitionFactory,
         EventAuthorizator $eventAuthorizator,
-        ITranslator $translator
+        ITranslator $translator,
+        ServiceEmailMessage $serviceEmailMessage
     ) {
         parent::__construct($transitionFactory);
         $this->connection = $connection;
         $this->servicePayment = $servicePayment;
         $this->eventAuthorizator = $eventAuthorizator;
         $this->translator = $translator;
+        $this->serviceEmailMessage = $serviceEmailMessage;
     }
 
     /**
@@ -111,10 +120,20 @@ class Fyziklani14Payment extends AbstractTransitionsGenerator {
 
         $transition->beforeExecuteCallbacks[] = $machine->getSymbolGenerator();
         $transition->beforeExecuteCallbacks[] = $machine->getPriceCalculator();
-
-        $transition->afterExecuteCallbacks[] = $this->transitionFactory->createMailCallback('fyziklani/fyziklani2020/payment/create',
-            $this->getMailSetupCallback(_('Payment #%s was created'))
-        );
+        /**
+         * @param IStateModel|ModelPayment $model
+         */
+        $transition->afterExecuteCallbacks[] = function (IStateModel $model = null) {
+            $data = $this->emailData;
+            $data['subject'] = sprintf(_('Payment #%s was created'), $model->getPaymentId());
+            $data['recipient'] = $model->getPerson()->getInfo()->email;
+            $data['text'] = (string)$this->transitionFactory->createEmailTemplate(
+                'fyziklani/fyziklani2020/payment/create',
+                $model->getPerson()->getInfo()->preferred_lang,
+                ['model' => $model]
+            );
+            $this->serviceEmailMessage->createNewModel($data);
+        };
 
         $machine->addTransition($transition);
     }
@@ -125,23 +144,6 @@ class Fyziklani14Payment extends AbstractTransitionsGenerator {
      */
     private function getDatesCondition(): callable {
         return new DateBetween('2020-01-01', '2020-02-13');
-    }
-
-    /**
-     * @param string $subject
-     * @return Closure
-     */
-    private function getMailSetupCallback(string $subject): Closure {
-        return function (IStateModel $model) use ($subject): Message {
-            $message = new Message();
-            if ($model instanceof ModelPayment) {
-                $message->setSubject(sprintf(_($subject), $model->getPaymentId()));
-                $message->addTo($model->getPerson()->getInfo()->email);
-            }
-            $message->setFrom(self::EMAIL_FROM);
-            $message->addBcc(self::EMAIL_BCC);
-            return $message;
-        };
     }
 
     /**
@@ -173,8 +175,20 @@ class Fyziklani14Payment extends AbstractTransitionsGenerator {
                 $personSchedule->updateState('received');
             }
         };
-        $transition->afterExecuteCallbacks[] = $this->transitionFactory->createMailCallback('fyziklani/fyziklani2020/payment/receive',
-            $this->getMailSetupCallback(_('We are receive payment #%s')));
+        /**
+         * @param IStateModel|ModelPayment $model
+         */
+        $transition->afterExecuteCallbacks[] = function (IStateModel $model = null) {
+            $data = $this->emailData;
+            $data['subject'] = sprintf(_('We are receive payment #%s'), $model->getPaymentId());
+            $data['recipient'] = $model->getPerson()->getInfo()->email;
+            $data['text'] = (string)$this->transitionFactory->createEmailTemplate(
+                'fyziklani/fyziklani2020/payment/receive',
+                $model->getPerson()->getInfo()->preferred_lang,
+                ['model' => $model]
+            );
+            $this->serviceEmailMessage->createNewModel($data);
+        };
 
         $transition->setCondition(function () {
             return false;

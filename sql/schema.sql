@@ -458,6 +458,8 @@ CREATE TABLE IF NOT EXISTS `grant` (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `person_info` (
   `person_id`              INT(11)      NOT NULL,
+  `preferred_lang`         ENUM('cs','en') NULL DEFAULT NULL
+  COMMENT 'Prefer language code by ISO 639-1',
   `born`                   DATE         NULL DEFAULT NULL
   COMMENT 'datum narození',
   `id_number`              VARCHAR(32)  NULL DEFAULT NULL
