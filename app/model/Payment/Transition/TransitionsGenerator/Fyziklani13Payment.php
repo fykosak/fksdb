@@ -16,7 +16,7 @@ use FKSDB\Transitions\Machine;
 use FKSDB\Transitions\Statements\Conditions\DateBetween;
 use FKSDB\Transitions\Statements\Conditions\ExplicitEventRole;
 use FKSDB\Transitions\Transition;
-use FKSDB\Transitions\TransitionsFactory;
+use Mail\MailTemplateFactory;
 use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
 use Nette\Localization\ITranslator;
@@ -56,30 +56,34 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
      * @var ServiceEmailMessage
      */
     private $serviceEmailMessage;
+    /**
+     * @var MailTemplateFactory
+     */
+    private $mailTemplateFactory;
 
     /**
      * Fyziklani13Payment constructor.
      * @param ServicePayment $servicePayment
      * @param Connection $connection
-     * @param TransitionsFactory $transitionFactory
      * @param EventAuthorizator $eventAuthorizator
      * @param ITranslator $translator
      * @param ServiceEmailMessage $serviceEmailMessage
+     * @param MailTemplateFactory $mailTemplateFactory
      */
     public function __construct(
         ServicePayment $servicePayment,
         Connection $connection,
-        TransitionsFactory $transitionFactory,
         EventAuthorizator $eventAuthorizator,
         ITranslator $translator,
-        ServiceEmailMessage $serviceEmailMessage
+        ServiceEmailMessage $serviceEmailMessage,
+        MailTemplateFactory $mailTemplateFactory
     ) {
-        parent::__construct($transitionFactory);
         $this->connection = $connection;
         $this->servicePayment = $servicePayment;
         $this->eventAuthorizator = $eventAuthorizator;
         $this->translator = $translator;
         $this->serviceEmailMessage = $serviceEmailMessage;
+        $this->mailTemplateFactory = $mailTemplateFactory;
     }
 
     /**
@@ -128,7 +132,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
             $data = $this->emailData;
             $data['subject'] = sprintf(_('Payment #%s was created'), $model->getPaymentId());
             $data['recipient'] = $model->getPerson()->getInfo()->email;
-            $data['text'] = (string)$this->transitionFactory->createEmailTemplate(
+            $data['text'] = (string)$this->mailTemplateFactory->createWithParameters(
                 'fyziklani/fyziklani2019/payment/create',
                 $model->getPerson()->getInfo()->preferred_lang,
                 ['model' => $model]
@@ -182,7 +186,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
             $data = $this->emailData;
             $data['subject'] = sprintf(_('We are receive payment #%s'), $model->getPaymentId());
             $data['recipient'] = $model->getPerson()->getInfo()->email;
-            $data['text'] = (string)$this->transitionFactory->createEmailTemplate(
+            $data['text'] = (string)$this->mailTemplateFactory->createWithParameters(
                 'fyziklani/fyziklani2019/payment/receive',
                 $model->getPerson()->getInfo()->preferred_lang,
                 ['model' => $model]
