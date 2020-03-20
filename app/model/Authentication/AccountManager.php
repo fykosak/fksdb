@@ -118,7 +118,7 @@ class AccountManager {
             'email' => $email,
             'until' => $until,
         ];
-        $template = $this->mailTemplateFactory->createLoginInvitation($person->getInfo()->preferred_lang, $templateParams);
+        $template = $this->mailTemplateFactory->createLoginInvitation($person->getInfo() ? $person->getInfo()->preferred_lang : null, $templateParams);
         $data = [];
         $data['text'] = $template;
         $data['subject'] = _('Založení účtu');

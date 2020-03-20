@@ -130,7 +130,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
             $data['recipient'] = $model->getPerson()->getInfo()->email;
             $data['text'] = (string)$this->mailTemplateFactory->createWithParameters(
                 'fyziklani/fyziklani2019/payment/create',
-                $model->getPerson()->getInfo()->preferred_lang,
+                $model->getPerson()->getInfo() ? $model->getPerson()->getInfo()->preferred_lang : null,
                 ['model' => $model]
             );
             $this->serviceEmailMessage->createNewModel($data);
@@ -184,7 +184,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
             $data['recipient'] = $model->getPerson()->getInfo()->email;
             $data['text'] = (string)$this->mailTemplateFactory->createWithParameters(
                 'fyziklani/fyziklani2019/payment/receive',
-                $model->getPerson()->getInfo()->preferred_lang,
+                $model->getPerson()->getInfo() ? $model->getPerson()->getInfo()->preferred_lang : null,
                 ['model' => $model]
             );
             $this->serviceEmailMessage->createNewModel($data);
