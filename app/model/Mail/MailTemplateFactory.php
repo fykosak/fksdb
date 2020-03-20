@@ -38,10 +38,18 @@ class MailTemplateFactory {
      * @param Application $application
      * @param ITranslator $translator
      */
-    function __construct($templateDir, Application $application, ITranslator $translator) {
+    function __construct(string $templateDir, Application $application, ITranslator $translator) {
         $this->templateDir = $templateDir;
         $this->application = $application;
         $this->translator = $translator;
+    }
+
+    /**
+     * @param Application $application
+     * @internal For automated testing only.
+     */
+    public function injectApplication(Application $application) {
+        $this->application = $application;
     }
 
     /**
