@@ -48,7 +48,7 @@ class MailTemplateFactory {
      * @param Application $application
      * @internal For automated testing only.
      */
-    public function injectApplication(Application $application) {
+    public function injectApplication($application) {
         $this->application = $application;
     }
 
