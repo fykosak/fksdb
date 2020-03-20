@@ -118,9 +118,8 @@ class AccountManager {
             'email' => $email,
             'until' => $until,
         ];
-        $template = $this->mailTemplateFactory->createLoginInvitation($person->getPreferredLang(), $templateParams);
         $data = [];
-        $data['text'] = $template;
+        $data['text'] = (string)$this->mailTemplateFactory->createLoginInvitation($person->getPreferredLang(), $templateParams);
         $data['subject'] = _('Založení účtu');
         $data['sender'] = $this->getEmailFrom();
         $data['recipient'] = $email;
@@ -149,9 +148,8 @@ class AccountManager {
             'login' => $login,
             'until' => $until,
         ];
-        $template = $this->mailTemplateFactory->createPasswordRecovery($lang, $templateParams);
         $data = [];
-        $data['text'] = (string)$template;
+        $data['text'] = (string)$this->mailTemplateFactory->createPasswordRecovery($lang, $templateParams);
         $data['subject'] = _('Obnova hesla');
         $data['sender'] = $this->getEmailFrom();
         $data['recipient'] = $recoveryAddress;
