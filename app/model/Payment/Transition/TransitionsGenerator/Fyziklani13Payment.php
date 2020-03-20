@@ -6,7 +6,6 @@ use Authorization\EventAuthorizator;
 use Closure;
 use Exception;
 use FKSDB\ORM\DbNames;
-use FKSDB\ORM\Models\ModelEmailMessage;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServiceEmailMessage;
 use FKSDB\ORM\Services\ServicePayment;
@@ -130,7 +129,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
             $data['recipient'] = $model->getPerson()->getInfo()->email;
             $data['text'] = (string)$this->mailTemplateFactory->createWithParameters(
                 'fyziklani/fyziklani2019/payment/create',
-                $model->getPerson()->getInfo() ? $model->getPerson()->getInfo()->preferred_lang : null,
+                $model->getPerson()->getPreferredLang(),
                 ['model' => $model]
             );
             $this->serviceEmailMessage->createNewModel($data);
@@ -184,7 +183,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
             $data['recipient'] = $model->getPerson()->getInfo()->email;
             $data['text'] = (string)$this->mailTemplateFactory->createWithParameters(
                 'fyziklani/fyziklani2019/payment/receive',
-                $model->getPerson()->getInfo() ? $model->getPerson()->getInfo()->preferred_lang : null,
+                $model->getPerson()->getPreferredLang(),
                 ['model' => $model]
             );
             $this->serviceEmailMessage->createNewModel($data);
