@@ -1,6 +1,6 @@
 <?php
 
-namespace Authentication;
+namespace FKSDB\Authentication;
 
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelLogin;
@@ -13,7 +13,6 @@ use Nette\InvalidStateException;
 use Nette\Mail\IMailer;
 use Nette\Mail\Message;
 use Nette\Templating\ITemplate;
-use RuntimeException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -206,48 +205,3 @@ class AccountManager {
     }
 
 }
-
-/**
- * Class RecoveryException
- * @package Authentication
- */
-abstract class RecoveryException extends RuntimeException {
-
-}
-
-/**
- * Class RecoveryExistsException
- * @package Authentication
- */
-class RecoveryExistsException extends RecoveryException {
-
-    /**
-     * RecoveryExistsException constructor.
-     * @param null $previous
-     */
-    public function __construct($previous = null) {
-        $message = _('Obnova účtu již probíhá.');
-        $code = null;
-        parent::__construct($message, $code, $previous);
-    }
-
-}
-
-/**
- * Class RecoveryNotImplementedException
- * @package Authentication
- */
-class RecoveryNotImplementedException extends RecoveryException {
-
-    /**
-     * RecoveryNotImplementedException constructor.
-     * @param null $previous
-     */
-    public function __construct($previous = null) {
-        $message = _('Přístup k účtu nelze obnovit.');
-        $code = null;
-        parent::__construct($message, $code, $previous);
-    }
-
-}
-

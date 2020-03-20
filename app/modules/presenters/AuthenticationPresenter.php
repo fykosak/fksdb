@@ -1,10 +1,10 @@
 <?php
 
-use Authentication\AccountManager;
+use FKSDB\Authentication\AccountManager;
 use Authentication\FacebookAuthenticator;
 use Authentication\LoginUserStorage;
 use Authentication\PasswordAuthenticator;
-use Authentication\RecoveryException;
+use FKSDB\Authentication\RecoveryException;
 use Authentication\TokenAuthenticator;
 use FKSDB\Authentication\SSO\IGlobalSession;
 use FKSDB\Authentication\SSO\ServiceSide\Authentication;

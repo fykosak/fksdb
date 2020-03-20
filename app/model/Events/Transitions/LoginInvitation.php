@@ -2,7 +2,7 @@
 
 namespace Events\Transitions;
 
-use Authentication\AccountManager;
+use FKSDB\Authentication\AccountManager;
 use Events\Machine\Transition;
 use Events\Model\Holder\BaseHolder;
 use FKSDB\ORM\Services\ServicePerson;

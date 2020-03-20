@@ -458,6 +458,8 @@ CREATE TABLE IF NOT EXISTS `grant` (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `person_info` (
   `person_id`              INT(11)      NOT NULL,
+  `preferred_lang`         ENUM('cs','en') NULL DEFAULT NULL
+  COMMENT 'Prefer language code by ISO 639-1',
   `born`                   DATE         NULL DEFAULT NULL
   COMMENT 'datum narození',
   `id_number`              VARCHAR(32)  NULL DEFAULT NULL
@@ -664,8 +666,6 @@ CREATE TABLE IF NOT EXISTS `submit` (
   COMMENT 'Pred prepoctem',
   `calc_points`  DECIMAL(4, 2)           NULL     DEFAULT NULL
   COMMENT 'Cache spoctenych bodu.',
-  `corrected`    TINYINT(1)              NULL DEFAULT 0
-      COMMENT 'Má uloha nahrané riešnie?',
   PRIMARY KEY (`submit_id`),
   UNIQUE INDEX `cons_uniq` (`ct_id` ASC, `task_id` ASC),
   INDEX `task_id` (`task_id` ASC),

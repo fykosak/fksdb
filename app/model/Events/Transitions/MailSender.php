@@ -2,7 +2,7 @@
 
 namespace Events\Transitions;
 
-use Authentication\AccountManager;
+use FKSDB\Authentication\AccountManager;
 use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
 use Events\Machine\Transition;

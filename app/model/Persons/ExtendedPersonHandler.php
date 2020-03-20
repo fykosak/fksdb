@@ -2,7 +2,7 @@
 
 namespace Persons;
 
-use Authentication\AccountManager;
+use FKSDB\Authentication\AccountManager;
 use BasePresenter;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
 use FKSDB\ORM\IService;
