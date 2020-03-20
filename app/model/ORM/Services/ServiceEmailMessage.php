@@ -44,7 +44,7 @@ class ServiceEmailMessage extends AbstractServiceSingle {
     public function addMessageToSend(array $data, int $priority = 0): AbstractModelSingle {
         $data['state'] = ModelEmailMessage::STATE_WAITING;
         if (!isset($data['reply_to'])) {
-            $data['reply_to'] = $data['from'];
+            $data['reply_to'] = $data['sender'];
         }
         return $this->createNewModel($data);
     }
