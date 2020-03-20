@@ -2,10 +2,10 @@
 
 namespace FKSDB\ORM\Services;
 
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelEmailMessage;
-
 use FKSDB\ORM\Tables\TypedTableSelection;
 use Nette\Database\Table\Selection;
 
@@ -34,5 +34,18 @@ class ServiceEmailMessage extends AbstractServiceSingle {
      */
     protected function getTableName(): string {
         return DbNames::TAB_EMAIL_MESSAGE;
+    }
+
+    /**
+     * @param array $data
+     * @param int $priority
+     * @return AbstractModelSingle
+     */
+    public function addMessageToSend(array $data, int $priority = 0): AbstractModelSingle {
+        $data['state'] = ModelEmailMessage::STATE_WAITING;
+        if (!isset($data['reply_to'])) {
+            $data['reply_to'] = $data['from'];
+        }
+        return $this->createNewModel($data);
     }
 }

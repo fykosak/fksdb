@@ -6,6 +6,7 @@ use Authorization\EventAuthorizator;
 use Closure;
 use Exception;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\ModelEmailMessage;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServiceEmailMessage;
 use FKSDB\ORM\Services\ServicePayment;
@@ -30,12 +31,7 @@ use function sprintf;
  * @package FKSDB\Payment\Transition\Transitions
  */
 class Fyziklani13Payment extends AbstractTransitionsGenerator {
-    private $emailData = [
-        'blind_carbon_copy' => 'Fyziklání <fyziklani@fykos.cz>',
-        // $data['carbon_copy']=
-        'sender' => 'fyziklani@fykos.cz',
-        'reply_to' => 'Fyziklání <fyziklani@fykos.cz>',
-    ];
+
     /**
      * @var Connection
      */

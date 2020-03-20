@@ -30,11 +30,6 @@ use function sprintf;
  * @package FKSDB\Payment\Transition\Transitions
  */
 class Fyziklani14Payment extends AbstractTransitionsGenerator {
-    private $emailData = [
-        'blind_carbon_copy' => 'Fyziklání <fyziklani@fykos.cz>',
-        'sender' => 'fyziklani@fykos.cz',
-        'reply_to' => 'Fyziklání <fyziklani@fykos.cz>',
-    ];
     /**
      * @var Connection
      */

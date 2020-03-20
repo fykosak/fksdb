@@ -12,6 +12,7 @@ use Nette\Database\Table\ActiveRow;
  * @property-read ActiveRow login
  * @property-read string data
  * @property-read string type
+ * @property-read \DateTime until
  */
 class ModelAuthToken extends AbstractModelSingle {
     /** @const The first login for setting up a password. */
