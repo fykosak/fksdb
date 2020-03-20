@@ -4,7 +4,7 @@
 
 services:
     accountManager:
-        class: Authentication\AccountManager
+        class: FKSDB\Authentication\AccountManager
         setup:
             - setInvitationExpiration(%invitation.expiration%)
             - setRecoveryExpiration(%recovery.expiration%)
