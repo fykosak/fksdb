@@ -3,21 +3,18 @@
 namespace FyziklaniModule;
 
 use EventModule\EventEntityTrait;
-use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Controls\Entity\Fyziklani\Submit\EditControl;
 use FKSDB\Components\Controls\Fyziklani\Submit\TaskCodeInput;
 use FKSDB\Components\Grids\Fyziklani\AllSubmitsGrid;
 use FKSDB\Components\Grids\Fyziklani\SubmitsGrid;
 use FKSDB\model\Fyziklani\ClosedSubmittingException;
-use FKSDB\model\Fyziklani\NotSetGameParametersException;
 use FKSDB\model\Fyziklani\PointsMismatchException;
 use FKSDB\NotImplementedException;
-use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\UI\Form;
-use Nette\Forms\Controls\RadioList;
+use Nette\Application\UI\Control;
 
 /**
  * Class SubmitPresenter
@@ -29,23 +26,19 @@ class SubmitPresenter extends BasePresenter {
 
     /* ***** Title methods *****/
     public function titleEntry() {
-        $this->setTitle(_('Zadávání bodů'));
-        $this->setIcon('fa fa-pencil-square-o');
+        $this->setTitle(_('Zadávání bodů'), 'fa fa-pencil-square-o');
     }
 
     public function titleList() {
-        $this->setTitle(_('Submits'));
-        $this->setIcon('fa fa-table');
+        $this->setTitle(_('Submits'), 'fa fa-table');
     }
 
     public function titleEdit() {
-        $this->setTitle(_('Úprava bodování'));
-        $this->setIcon('fa fa-pencil');
+        $this->setTitle(_('Úprava bodování'), 'fa fa-pencil');
     }
 
     public function titleDetail() {
-        $this->setTitle(sprintf(_('Detail of the submit #%d'), $this->getEntity()->fyziklani_submit_id));
-        $this->setIcon('fa fa-pencil');
+        $this->setTitle(sprintf(_('Detail of the submit #%d'), $this->getEntity()->fyziklani_submit_id), 'fa fa-pencil');
     }
 
     /* ***** Authorized methods *****/
@@ -148,74 +141,17 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @param AbstractModelSingle|ModelFyziklaniSubmit $model
-     * @return array
-     */
-    protected function getFormDefaults(AbstractModelSingle $model): array {
-        return [
-            'team_id' => $model->e_fyziklani_team_id,
-            'points' => $model->points,
-        ];
-    }
-
-    /**
      * @inheritDoc
      */
-    protected function getCreateForm(): FormControl {
+    public function createComponentCreateForm(): Control {
         throw new NotImplementedException();
     }
 
     /**
-     * @return FormControl
-     * @throws AbortException
-     * @throws BadRequestException
-     * @throws NotSetGameParametersException
-     */
-    protected function getEditForm(): FormControl {
-        $control = new FormControl();
-        $form = $control->getForm();
-        $form->addComponent($this->createPointsField(), 'points');
-        $form->addSubmit('send', _('Save'));
-        return $control;
-    }
-
-    /**
-     * @return RadioList
-     * @throws AbortException
-     * @throws BadRequestException
-     * @throws NotSetGameParametersException
-     */
-    private function createPointsField(): RadioList {
-        $field = new RadioList(_('Počet bodů'));
-        $items = [];
-        foreach ($this->getEvent()->getFyziklaniGameSetup()->getAvailablePoints() as $points) {
-            $items[$points] = $points;
-        }
-        $field->setItems($items);
-        $field->setRequired();
-        return $field;
-    }
-
-    /**
      * @inheritDoc
-     */
-    protected function handleCreateFormSuccess(Form $form) {
-        throw new NotImplementedException();
-    }
-
-    /**
-     * @param Form $form
      * @throws AbortException
      */
-    protected function handleEditFormSuccess(Form $form) {
-        $values = $form->getValues();
-        try {
-            $msg = $this->getORMService()->changePoints($this->getEntity(), $values->points, $this->getPresenter()->getUser());
-            $this->getPresenter()->flashMessage($msg->getMessage(), $msg->getLevel());
-            $this->redirect('this');
-        } catch (ClosedSubmittingException $exception) {
-            $this->getPresenter()->flashMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR);
-            $this->redirect('this');
-        }
+    public function createComponentEditForm(): Control {
+        return new EditControl($this->context, $this->getEvent());
     }
 }

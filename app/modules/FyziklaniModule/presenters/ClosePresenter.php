@@ -13,7 +13,7 @@ use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\UI\Form;
+use Nette\Application\UI\Control;
 use function sprintf;
 
 /**
@@ -165,32 +165,17 @@ class ClosePresenter extends BasePresenter {
     public function createComponentGrid(): BaseGrid {
         throw new NotImplementedException();
     }
-
     /**
      * @inheritDoc
      */
-    protected function getCreateForm(): FormControl {
+    public function createComponentCreateForm(): Control {
         throw new NotImplementedException();
     }
 
     /**
      * @inheritDoc
      */
-    protected function getEditForm(): FormControl {
-        throw new NotImplementedException();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function handleCreateFormSuccess(Form $form) {
-        throw new NotImplementedException();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function handleEditFormSuccess(Form $form) {
+    public function createComponentEditForm(): Control {
         throw new NotImplementedException();
     }
 }

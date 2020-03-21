@@ -5,7 +5,6 @@ namespace FKSDB\Components\Factories;
 use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\ResultsAndStatistics;
 use FKSDB\Components\Controls\Fyziklani\RoutingDownload;
 use FKSDB\Components\Controls\Fyziklani\RoutingEdit;
-use FKSDB\Components\Controls\Fyziklani\Submit\QREntryControl;
 use FKSDB\Components\Controls\Fyziklani\Submit\TaskCodeInput;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\model\Fyziklani\SubmitHandler;
@@ -97,14 +96,6 @@ class FyziklaniFactory {
      */
     public function createTaskCodeInput(ModelEvent $event): TaskCodeInput {
         return new TaskCodeInput($this->createHandler($event), $this->context, $event, $this->serviceFyziklaniTask, $this->serviceFyziklaniTeam);
-    }
-
-    /**
-     * @param ModelEvent $event
-     * @return QREntryControl
-     */
-    public function createQREntryControl(ModelEvent $event): QREntryControl {
-        return new QREntryControl($event, $this->createHandler($event), $this->translator);
     }
 
     /**

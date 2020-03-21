@@ -19,6 +19,7 @@ use InvalidArgumentException;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
+use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use function count;
 use function sprintf;
@@ -325,6 +326,20 @@ class PaymentPresenter extends BasePresenter {
      * @inheritDoc
      */
     protected function handleEditFormSuccess(Form $form) {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function createComponentCreateForm(): Control {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function createComponentEditForm(): Control {
         throw new NotImplementedException();
     }
 }

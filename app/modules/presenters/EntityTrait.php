@@ -2,6 +2,7 @@
 
 namespace FKSDB;
 
+use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Messages\Message;
@@ -9,7 +10,7 @@ use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\Form;
+use Nette\Application\UI\Control;
 use Nette\Security\IResource;
 
 /**
@@ -80,33 +81,6 @@ trait EntityTrait {
         return $this->model;
     }
 
-    /**
-     * @return FormControl
-     * @throws BadRequestException
-     * @throws NotImplementedException
-     */
-    public final function createComponentCreateForm(): FormControl {
-        $control = $this->getCreateForm();
-        $form = $control->getForm();
-        $form->onSuccess[] = function (Form $form) {
-            $this->handleCreateFormSuccess($form);
-        };
-        return $control;
-    }
-
-    /**
-     * @return FormControl
-     * @throws BadRequestException
-     * @throws NotImplementedException
-     */
-    public final function createComponentEditForm(): FormControl {
-        $control = $this->getEditForm();
-        $form = $control->getForm();
-        $form->onSuccess[] = function (Form $form) {
-            $this->handleEditFormSuccess($form);
-        };
-        return $control;
-    }
 
     /**
      * @param int $id
@@ -114,48 +88,11 @@ trait EntityTrait {
      */
     protected function traitActionEdit(int $id) {
         $component = $this->getComponent('editForm');
-        if (!$component instanceof FormControl) {
+        if (!$component instanceof IEditEntityForm) {
             throw new BadRequestException();
         }
-        $form = $component->getForm();
-        $form->setDefaults($this->getFormDefaults($this->loadEntity($id)));
+        $component->setModel($this->loadEntity($id));
     }
-
-    /**
-     * @param AbstractModelSingle $model
-     * @return array
-     */
-    protected function getFormDefaults(AbstractModelSingle $model): array {
-        return $model->toArray();
-    }
-
-    /**
-     * @throws NotImplementedException
-     */
-    abstract public function createComponentGrid(): BaseGrid;
-
-    /**
-     * @throws NotImplementedException
-     */
-    abstract protected function getCreateForm(): FormControl;
-
-    /**
-     * @throws NotImplementedException
-     */
-    abstract protected function getEditForm(): FormControl;
-
-    /**
-     * @param Form $form
-     * @throws NotImplementedException
-     */
-    abstract protected function handleCreateFormSuccess(Form $form);
-
-    /**
-     * @param Form $form
-     * @throws NotImplementedException
-     */
-    abstract protected function handleEditFormSuccess(Form $form);
-
     /**
      * @param int $id
      * @return array
@@ -168,6 +105,25 @@ trait EntityTrait {
         }
         return [new Message(_('Entity has been deleted'), self::FLASH_SUCCESS)];
     }
+
+    /**
+     * @return FormControl
+     * @throws BadRequestException
+     * @throws NotImplementedException
+     */
+    abstract public function createComponentCreateForm(): Control;
+
+    /**
+     * @return FormControl
+     * @throws BadRequestException
+     * @throws NotImplementedException
+     */
+    abstract public function createComponentEditForm(): Control;
+
+    /**
+     * @throws NotImplementedException
+     */
+    abstract public function createComponentGrid(): BaseGrid;
 
     /**
      * @return IService
