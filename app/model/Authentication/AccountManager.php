@@ -12,8 +12,6 @@ use FKSDB\ORM\Services\ServiceLogin;
 use Mail\MailTemplateFactory;
 use Mail\SendFailedException;
 use Nette\Utils\DateTime;
-use Nette\Mail\IMailer;
-use Nette\Templating\ITemplate;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -22,25 +20,17 @@ use Nette\Templating\ITemplate;
  */
 class AccountManager {
 
-    /**
-     * @var ServiceLogin
-     */
+    /** @var ServiceLogin */
     private $serviceLogin;
 
-    /**
-     * @var ServiceAuthToken
-     */
+    /** @var ServiceAuthToken */
     private $serviceAuthToken;
     private $invitationExpiration = '+1 month';
     private $recoveryExpiration = '+1 day';
     private $emailFrom;
-    /**
-     * @var ServiceEmailMessage
-     */
+    /** @var ServiceEmailMessage */
     private $serviceEmailMessage;
-    /**
-     * @var MailTemplateFactory
-     */
+    /** @var MailTemplateFactory */
     private $mailTemplateFactory;
 
     /**
@@ -111,7 +101,6 @@ class AccountManager {
     public function createLoginWithInvitation(ModelPerson $person, string $email) {
         $login = $this->createLogin($person);
         //TODO email
-
         $this->serviceLogin->save($login);
 
         $until = DateTime::from($this->getInvitationExpiration());
@@ -130,7 +119,6 @@ class AccountManager {
         $data['recipient'] = $email;
         $this->serviceEmailMessage->addMessageToSend($data);
         return $login;
-
     }
 
     /**
@@ -202,5 +190,4 @@ class AccountManager {
         }
         return $login;
     }
-
 }
