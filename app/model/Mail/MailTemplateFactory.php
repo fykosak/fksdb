@@ -52,12 +52,12 @@ class MailTemplateFactory {
     }
 
     /**
-     * @param Control|null $control
      * @param string $lang ISO 639-1
+     * @param array $data
      * @return FileTemplate
      */
-    public function createLoginInvitation(Control $control = null, $lang = null) {
-        return $this->createFromFile('loginInvitation', $lang, $control);
+    public function createLoginInvitation(string $lang = null, array $data = []): FileTemplate {
+        return $this->createWithParameters('loginInvitation', $lang, $data);
     }
 
     /**

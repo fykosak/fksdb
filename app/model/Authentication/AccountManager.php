@@ -2,11 +2,14 @@
 
 namespace FKSDB\Authentication;
 
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceAuthToken;
+use FKSDB\ORM\Services\ServiceEmailMessage;
 use FKSDB\ORM\Services\ServiceLogin;
+use Mail\MailTemplateFactory;
 use Mail\SendFailedException;
 use Nette\Utils\DateTime;
 use Nette\InvalidStateException;
@@ -38,17 +41,33 @@ class AccountManager {
     private $invitationExpiration = '+1 month';
     private $recoveryExpiration = '+1 day';
     private $emailFrom;
+    /**
+     * @var ServiceEmailMessage
+     */
+    private $serviceEmailMessage;
+    /**
+     * @var MailTemplateFactory
+     */
+    private $mailTemplateFactory;
 
     /**
      * AccountManager constructor.
+     * @param MailTemplateFactory $mailTemplateFactory
      * @param ServiceLogin $serviceLogin
      * @param ServiceAuthToken $serviceAuthToken
      * @param IMailer $mailer
+     * @param ServiceEmailMessage $serviceEmailMessage
      */
-    function __construct(ServiceLogin $serviceLogin, ServiceAuthToken $serviceAuthToken, IMailer $mailer) {
+    function __construct(MailTemplateFactory $mailTemplateFactory,
+                         ServiceLogin $serviceLogin,
+                         ServiceAuthToken $serviceAuthToken,
+                         IMailer $mailer,
+                         ServiceEmailMessage $serviceEmailMessage) {
         $this->serviceLogin = $serviceLogin;
         $this->serviceAuthToken = $serviceAuthToken;
         $this->mailer = $mailer;
+        $this->serviceEmailMessage = $serviceEmailMessage;
+        $this->mailTemplateFactory = $mailTemplateFactory;
     }
 
     /**
@@ -94,9 +113,9 @@ class AccountManager {
      * Creates login and invites user to set up the account.
      *
      * @param ITemplate $template template of the mail
-     * @param \FKSDB\ORM\Models\ModelPerson $person
+     * @param ModelPerson $person
      * @param string $email
-     * @return \FKSDB\ORM\Models\ModelLogin
+     * @return ModelLogin
      * @throws SendFailedException
      * @throws \Exception
      */
@@ -109,29 +128,25 @@ class AccountManager {
         $until = DateTime::from($this->getInvitationExpiration());
         $token = $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_INITIAL_LOGIN, $until);
 
-        // prepare and send email
-        $template->token = $token->token;
-        $template->person = $person;
-        $template->email = $email;
-        $template->until = $until;
+        $templateParams = [
+            'token' => $token->token,
+            'person' => $person,
+            'email' => $email,
+            'until' => $until,
+        ];
+        $data = [];
+        $data['text'] = (string)$this->mailTemplateFactory->createLoginInvitation($person->getPreferredLang(), $templateParams);
+        $data['subject'] = _('Založení účtu');
+        $data['sender'] = $this->getEmailFrom();
+        $data['recipient'] = $email;
+        $this->serviceEmailMessage->addMessageToSend($data);
+        return $login;
 
-        $message = new Message();
-        $message->setHtmlBody($template);
-        $message->setSubject(_('Založení účtu'));
-        $message->setFrom($this->getEmailFrom());
-        $message->addTo($email, $person->getFullName());
-
-        try {
-            $this->mailer->send($message);
-            return $login;
-        } catch (InvalidStateException $exception) {
-            throw new SendFailedException($exception);
-        }
     }
 
     /**
      * @param ITemplate $template
-     * @param \FKSDB\ORM\Models\ModelLogin $login
+     * @param ModelLogin $login
      * @throws \Exception
      */
     public function sendRecovery(ITemplate $template, ModelLogin $login) {
@@ -172,7 +187,7 @@ class AccountManager {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelLogin $login
+     * @param ModelLogin $login
      */
     public function cancelRecovery(ModelLogin $login) {
         $this->serviceAuthToken->getTable()->where(array(
@@ -185,7 +200,7 @@ class AccountManager {
      * @param ModelPerson $person
      * @param null $login
      * @param null $password
-     * @return \FKSDB\ORM\AbstractModelSingle|\FKSDB\ORM\Models\ModelLogin
+     * @return AbstractModelSingle|ModelLogin
      */
     public final function createLogin(ModelPerson $person, $login = null, $password = null) {
         $login = $this->serviceLogin->createNew(array(

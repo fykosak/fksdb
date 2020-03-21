@@ -5,6 +5,8 @@ namespace Events\Transitions;
 use FKSDB\Authentication\AccountManager;
 use Events\Machine\Transition;
 use Events\Model\Holder\BaseHolder;
+use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
 use Mail\MailTemplateFactory;
 use Nette\SmartObject;
@@ -73,14 +75,13 @@ class LoginInvitation {
 
         $login = $person->getLogin();
         if (!$login) {
-            $template = $this->mailTemplateFactory->createLoginInvitation();
-            $login = $this->accountManager->createLoginWithInvitation($template, $person, $email);
+            $login = $this->accountManager->createLoginWithInvitation($person, $email);
         }
     }
 
     /**
      * @param BaseHolder $baseHolder
-     * @return \Nette\Database\Table\ActiveRow|null
+     * @return AbstractModelSingle|null|ModelPerson
      */
     private function getPerson(BaseHolder $baseHolder) {
         return $this->servicePerson->findByPrimary($baseHolder->getPersonId());
