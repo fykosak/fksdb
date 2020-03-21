@@ -2,6 +2,7 @@
 
 namespace Authorization;
 
+use FKSDB\ORM\Models\IContestReferencedModel;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelRole;

@@ -2,7 +2,7 @@
 
 namespace Persons;
 
-use Authentication\AccountManager;
+use FKSDB\Authentication\AccountManager;
 use BasePresenter;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
 use FKSDB\ORM\IService;
@@ -222,9 +222,8 @@ class ExtendedPersonHandler {
      * @throws \Exception
      */
     private function sendLoginInvitation(Presenter $presenter, string $email) {
-        $template = $this->mailTemplateFactory->createLoginInvitation($presenter, $this->getInvitationLang());
         try {
-            $this->accountManager->createLoginWithInvitation($template, $this->person, $email);
+            $this->accountManager->createLoginWithInvitation($this->person, $email);
             $presenter->flashMessage(_('Zvací e-mail odeslán.'), BasePresenter::FLASH_INFO);
         } catch (SendFailedException $exception) {
             $presenter->flashMessage(_('Zvací e-mail se nepodařilo odeslat.'), BasePresenter::FLASH_ERROR);

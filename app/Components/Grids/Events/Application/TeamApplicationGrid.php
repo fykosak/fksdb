@@ -6,7 +6,6 @@ use FKSDB\Components\Controls\Helpers\Badges\NotSetBadge;
 use FKSDB\NotImplementedException;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use Nette\Application\AbortException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\ActiveRow;

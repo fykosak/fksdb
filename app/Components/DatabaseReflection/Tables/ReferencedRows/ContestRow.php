@@ -1,27 +1,29 @@
 <?php
 
-namespace FKSDB\Components\DatabaseReflection\Tables\ContestantBase;
+namespace FKSDB\Components\DatabaseReflection\ReferencedRows;
 
 use FKSDB\Components\Controls\Helpers\Badges\ContestBadge;
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\ORM\AbstractModelSingle;
-use FKSDB\ORM\Models\ModelContestant;
+use FKSDB\ORM\Models\IContestReferencedModel;
 use Nette\Application\BadRequestException;
 use Nette\Utils\Html;
 
 /**
- * Class ContestId
- * @package FKSDB\Components\DatabaseReflection\Tables\ContestantBase
+ * Class ContestRow
+ * @package FKSDB\Components\DatabaseReflection\ReferencedRows
  */
-class ContestId extends AbstractRow {
+class ContestRow extends AbstractRow {
 
     /**
-     * @param ModelContestant $model
      * @inheritDoc
      * @throws BadRequestException
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        return ContestBadge::getHtml($model->contest_id);
+        if (!$model instanceof IContestReferencedModel) {
+            throw new BadRequestException();
+        }
+        return ContestBadge::getHtml($model->getContest()->contest_id);
     }
 
     /**

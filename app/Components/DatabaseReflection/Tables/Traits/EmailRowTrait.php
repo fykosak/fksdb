@@ -17,9 +17,10 @@ use Nette\Utils\Html;
 trait EmailRowTrait {
 
     /**
+     * @param array $args
      * @return BaseControl
      */
-    public function createField(): BaseControl {
+    public function createField(...$args): BaseControl {
         $control = new TextInput($this->getTitle());
         $control->addCondition(Form::FILLED)
             ->addRule(Form::EMAIL, _('Neplatný tvar e-mailu.'));

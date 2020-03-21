@@ -40,9 +40,10 @@ class DomainAliasRow extends AbstractOrgRowFactory {
     }
 
     /**
+     * @param array $args
      * @return BaseControl
      */
-    public function createField(): BaseControl {
+    public function createField(...$args): BaseControl {
         $control = new TextInput($this->getTitle());
         $control->addRule(Form::MAX_LENGTH, null, 32);
         $control->addCondition(Form::FILLED);

@@ -14,9 +14,8 @@ use UnexpectedValueException;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class FilesystemSubmitStorage implements ISubmitStorage {
+class FilesystemUploadedSubmitStorage implements ISubmitStorage {
     /** Characters delimiting name and metadata in filename. */
-
     const DELIMITER = '__';
 
     /** @const File extension that marks original untouched file. */
@@ -99,7 +98,7 @@ class FilesystemSubmitStorage implements ISubmitStorage {
                 $submit = $todo['submit'];
 
                 // remove potential existing instance
-                if ($this->existsFile($submit)) {
+                if ($this->fileExists($submit)) {
                     $this->deleteFile($submit);
                 }
 
@@ -152,7 +151,7 @@ class FilesystemSubmitStorage implements ISubmitStorage {
 
     /**
      * @param string $filename
-     * @param \FKSDB\ORM\Models\ModelSubmit $submit
+     * @param ModelSubmit $submit
      * @return void
      */
     public function storeFile($filename, ModelSubmit $submit) {
@@ -167,21 +166,21 @@ class FilesystemSubmitStorage implements ISubmitStorage {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelSubmit $submit
+     * @param ModelSubmit $submit
      * @param int $type
      * @return null|string
      */
     public function retrieveFile(ModelSubmit $submit, $type = self::TYPE_PROCESSED) {
         $files = $this->retrieveFiles($submit);
         if ($type == self::TYPE_ORIGINAL) {
-            $files = array_filter($files, function($file) {
-                        return Strings::endsWith($file->getRealPath(), self::ORIGINAL_EXT);
-                    });
+            $files = array_filter($files, function (\SplFileInfo $file) {
+                return Strings::endsWith($file->getRealPath(), self::ORIGINAL_EXT);
+            });
         } else {
-            $files = array_filter($files, function($file) {
-                        return !Strings::endsWith($file->getRealPath(), self::ORIGINAL_EXT) &&
-                                !Strings::endsWith($file->getRealPath(), self::TEMPORARY_EXT);
-                    });
+            $files = array_filter($files, function (\SplFileInfo $file) {
+                return !Strings::endsWith($file->getRealPath(), self::ORIGINAL_EXT) &&
+                    !Strings::endsWith($file->getRealPath(), self::TEMPORARY_EXT);
+            });
         }
 
         if (count($files) == 0) {
@@ -197,17 +196,15 @@ class FilesystemSubmitStorage implements ISubmitStorage {
     /**
      * Checks whether there exists valid file for the submit.
      *
-     * @param \FKSDB\ORM\Models\ModelSubmit $submit
+     * @param ModelSubmit $submit
      * @return bool
      */
-    public function existsFile(ModelSubmit $submit) {
-        $filename = $this->retrieveFile($submit);
-
-        return (bool) $filename;
+    public function fileExists(ModelSubmit $submit) {
+        return (bool)$this->retrieveFile($submit);
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelSubmit $submit
+     * @param ModelSubmit $submit
      */
     public function deleteFile(ModelSubmit $submit) {
         $fails = [];
@@ -224,60 +221,44 @@ class FilesystemSubmitStorage implements ISubmitStorage {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelSubmit $submit
-     * @return array
+     * @param ModelSubmit $submit
+     * @return \SplFileInfo[]
      */
-    private function retrieveFiles(ModelSubmit $submit) {
+    private function retrieveFiles(ModelSubmit $submit): array {
         $dir = $this->root . DIRECTORY_SEPARATOR . $this->createDirname($submit);
 
         try {
             $it = Finder::findFiles('*' . self::DELIMITER . $submit->submit_id . '*')->in($dir);
-            $files = iterator_to_array($it, false);
+            return iterator_to_array($it, false);
         } catch (UnexpectedValueException $exception) {
             return [];
         }
-
-        return $files;
     }
 
     /**
-     *
-     * @param \FKSDB\ORM\Models\ModelSubmit $submit
+     * @param ModelSubmit $submit
      * @return string  directory part of the path relative to root, w/out trailing slash
      */
     private function createDirname(ModelSubmit $submit) {
         $task = $submit->getTask();
-        $contestName = isset($this->contestMap[$task->contest_id]) ? $this->contestMap[$task->contest_id] : $task->contest_id;
-        $year = $task->year;
-        $series = $task->series;
-        $label = Strings::webalize($task->label, null, false);
-
-        $directory = sprintf($this->directoryMask, $contestName, $year, $series, $label);
-        return $directory;
+        return sprintf($this->directoryMask, $task->getContest()->getContestSymbol(), $task->year, $task->series, $task->webalizeLabel());
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelSubmit $submit
+     * @param ModelSubmit $submit
      * @return string
      */
     private function createFilename(ModelSubmit $submit) {
         $task = $submit->getTask();
-        $contestName = isset($this->contestMap[$task->contest_id]) ? $this->contestMap[$task->contest_id] : $task->contest_id;
-        $year = $task->year;
-        $series = $task->series;
-        $label = Strings::webalize($task->label, null, false);
 
-        $contestant = $submit->getContestant();
-        $contestantName = $contestant->getPerson()->getFullName();
+        $contestantName = $submit->getContestant()->getPerson()->getFullName();
         $contestantName = preg_replace('/ +/', '_', $contestantName);
         $contestantName = Strings::webalize($contestantName, '_');
 
-        $filename = sprintf($this->filenameMask, $contestantName, $contestName, $year, $series, $label);
+        $filename = sprintf($this->filenameMask, $contestantName, $task->getContest()->getContestSymbol(), $task->year, $task->series, $task->webalizeLabel());
 
         // append metadata
-        $filename = $filename . self::DELIMITER . $submit->submit_id . self::FINAL_EXT;
-
-        return $filename;
+        return $filename . self::DELIMITER . $submit->submit_id . self::FINAL_EXT;
     }
 
 }

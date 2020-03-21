@@ -6,12 +6,14 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\EventFactory;
 use FKSDB\Components\Grids\Events\EventsGrid;
 use FKSDB\Config\NeonScheme;
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceAuthToken;
 use FKSDB\ORM\Services\ServiceEvent;
 use FormUtils;
 use ModelException;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
@@ -33,10 +35,8 @@ class EventPresenter extends EntityPresenter {
 
     const CONT_EVENT = 'event';
 
-    protected $modelResourceId = 'event';
-
     /**
-     * @var \FKSDB\ORM\Services\ServiceEvent
+     * @var ServiceEvent
      */
     private $serviceEvent;
 
@@ -51,7 +51,7 @@ class EventPresenter extends EntityPresenter {
     private $container;
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceAuthToken $serviceAuthToken
+     * @var ServiceAuthToken $serviceAuthToken
      */
     private $serviceAuthToken;
 
@@ -63,7 +63,7 @@ class EventPresenter extends EntityPresenter {
     }
 
     /**
-     * @param \FKSDB\ORM\Services\ServiceEvent $serviceEvent
+     * @param ServiceEvent $serviceEvent
      */
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;
@@ -112,9 +112,12 @@ class EventPresenter extends EntityPresenter {
         $this->setIcon('fa fa-pencil');
     }
 
+    /**
+     * @throws NotImplementedException
+     */
     public function actionDelete() {
 // There's no use case for this. (Errors must be deleted manually via SQL.)
-        throw new NotImplementedException(null, 501);
+        throw new NotImplementedException(null);
     }
 
     /**
@@ -232,7 +235,7 @@ class EventPresenter extends EntityPresenter {
 
     /**
      * @param int $id
-     * @return \FKSDB\ORM\AbstractModelSingle|ModelEvent|null
+     * @return AbstractModelSingle|ModelEvent|null
      */
     protected function loadModel($id) {
         $row = $this->serviceEvent->findByPrimary($id);
@@ -246,7 +249,7 @@ class EventPresenter extends EntityPresenter {
      * @param Form $form
      * @param $isNew
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      * @throws \ReflectionException
      */
     private function handleFormSuccess(Form $form, $isNew) {
@@ -306,4 +309,10 @@ class EventPresenter extends EntityPresenter {
         }
     }
 
+    /**
+     * @inheritDoc
+     */
+    protected function getModelResource(): string {
+        return 'event';
+    }
 }

@@ -67,7 +67,12 @@ class EventOrgsGrid extends BaseGrid {
                 ]);
             });
 
-        if ($presenter->authorized('create')) {
+        $this->addButton('delete')->setText(_('Delete'))
+            ->setLink(function (ModelEventOrg $model) {
+                return $this->getPresenter()->link('delete', $model->getPrimary());
+            });
+
+        if ($this->getPresenter()->authorized('create')) {
             $this->addGlobalButton('create')
                 ->setLabel(_('Add organiser'))
                 ->setLink($this->getPresenter()->link(':Org:EventOrg:create'));

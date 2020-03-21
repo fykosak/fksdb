@@ -31,8 +31,6 @@ class SchoolPresenter extends EntityPresenter {
     const CONT_ADDRESS = 'address';
     const CONT_SCHOOL = 'school';
 
-    protected $modelResourceId = 'school';
-
     /**
      * @var ServiceSchool
      */
@@ -92,9 +90,12 @@ class SchoolPresenter extends EntityPresenter {
         $this->setIcon('fa fa-pencil');
     }
 
+    /**
+     * @throws NotImplementedException
+     */
     public function actionDelete() {
         // This should set active flag to false.
-        throw new NotImplementedException(null, 501);
+        throw new NotImplementedException(null);
     }
 
     /**
@@ -270,5 +271,12 @@ class SchoolPresenter extends EntityPresenter {
      */
     protected function createComponentGrid($name) {
         throw new DeprecatedException();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getModelResource(): string {
+        return ModelSchool::RESOURCE_ID;
     }
 }

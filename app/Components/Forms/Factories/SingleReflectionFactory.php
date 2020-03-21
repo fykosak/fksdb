@@ -42,10 +42,11 @@ abstract class SingleReflectionFactory {
 
     /**
      * @param string $fieldName
+     * @param array $args
      * @return BaseControl
      * @throws \Exception
      */
-    public function createField(string $fieldName): BaseControl {
+    public function createField(string $fieldName, ...$args): BaseControl {
         return $this->loadFactory($fieldName)->createField();
     }
 

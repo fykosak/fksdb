@@ -53,6 +53,13 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
     }
 
     /**
+     * @return string
+     */
+    public function getPreferredLang() {
+        return $this->getInfo() ? $this->getInfo()->preferred_lang : null;
+    }
+
+    /**
      * @return ModelPersonInfo|null
      */
     public function getInfo() {
