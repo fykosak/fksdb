@@ -12,9 +12,7 @@ use FKSDB\ORM\Services\ServiceLogin;
 use Mail\MailTemplateFactory;
 use Mail\SendFailedException;
 use Nette\Utils\DateTime;
-use Nette\InvalidStateException;
 use Nette\Mail\IMailer;
-use Nette\Mail\Message;
 use Nette\Templating\ITemplate;
 
 /**
@@ -33,11 +31,6 @@ class AccountManager {
      * @var ServiceAuthToken
      */
     private $serviceAuthToken;
-
-    /**
-     * @var IMailer
-     */
-    private $mailer;
     private $invitationExpiration = '+1 month';
     private $recoveryExpiration = '+1 day';
     private $emailFrom;
@@ -55,17 +48,14 @@ class AccountManager {
      * @param MailTemplateFactory $mailTemplateFactory
      * @param ServiceLogin $serviceLogin
      * @param ServiceAuthToken $serviceAuthToken
-     * @param IMailer $mailer
      * @param ServiceEmailMessage $serviceEmailMessage
      */
     function __construct(MailTemplateFactory $mailTemplateFactory,
                          ServiceLogin $serviceLogin,
                          ServiceAuthToken $serviceAuthToken,
-                         IMailer $mailer,
                          ServiceEmailMessage $serviceEmailMessage) {
         $this->serviceLogin = $serviceLogin;
         $this->serviceAuthToken = $serviceAuthToken;
-        $this->mailer = $mailer;
         $this->serviceEmailMessage = $serviceEmailMessage;
         $this->mailTemplateFactory = $mailTemplateFactory;
     }
@@ -112,14 +102,13 @@ class AccountManager {
     /**
      * Creates login and invites user to set up the account.
      *
-     * @param ITemplate $template template of the mail
      * @param ModelPerson $person
      * @param string $email
      * @return ModelLogin
      * @throws SendFailedException
      * @throws \Exception
      */
-    public function createLoginWithInvitation(ModelPerson $person, $email) {
+    public function createLoginWithInvitation(ModelPerson $person, string $email) {
         $login = $this->createLogin($person);
         //TODO email
 
@@ -185,24 +174,24 @@ class AccountManager {
      * @param ModelLogin $login
      */
     public function cancelRecovery(ModelLogin $login) {
-        $this->serviceAuthToken->getTable()->where(array(
+        $this->serviceAuthToken->getTable()->where([
             'login_id' => $login->login_id,
             'type' => ModelAuthToken::TYPE_RECOVERY,
-        ))->delete();
+        ])->delete();
     }
 
     /**
      * @param ModelPerson $person
-     * @param null $login
-     * @param null $password
+     * @param string $login
+     * @param string $password
      * @return AbstractModelSingle|ModelLogin
      */
-    public final function createLogin(ModelPerson $person, $login = null, $password = null) {
-        $login = $this->serviceLogin->createNew(array(
+    public final function createLogin(ModelPerson $person, string $login = null, string $password = null) {
+        $login = $this->serviceLogin->createNew([
             'person_id' => $person->person_id,
             'login' => $login,
             'active' => 1,
-        ));
+        ]);
 
         $this->serviceLogin->save($login);
 
