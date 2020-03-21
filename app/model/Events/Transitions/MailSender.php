@@ -18,6 +18,7 @@ use Mail\MailTemplateFactory;
 use Nette\Mail\IMailer;
 use Nette\Mail\Message;
 use Nette\SmartObject;
+use Nette\Utils\DateTime;
 use Nette\Utils\Strings;
 use PublicModule\ApplicationPresenter;
 
@@ -72,7 +73,7 @@ class MailSender {
     private $serviceAuthToken;
 
     /**
-     * @var \FKSDB\ORM\Services\ServicePerson
+     * @var ServicePerson
      */
     private $servicePerson;
 
@@ -177,7 +178,7 @@ class MailSender {
 
     /**
      * @param ModelLogin $login
-     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @param ModelEvent $event
      * @param IModel $application
      * @return ModelAuthToken
      * @throws \Exception
@@ -185,8 +186,7 @@ class MailSender {
     private function createToken(ModelLogin $login, ModelEvent $event, IModel $application) {
         $until = $this->getUntil($event);
         $data = ApplicationPresenter::encodeParameters($event->getPrimary(), $application->getPrimary());
-        $token = $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_EVENT_NOTIFY, $until, $data, true);
-        return $token;
+        return $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_EVENT_NOTIFY, $until, $data, true);
     }
 
     /**
@@ -202,7 +202,7 @@ class MailSender {
 
     /**
      * @param ModelEvent $event
-     * @return \Nette\Utils\DateTime
+     * @return DateTime
      */
     private function getUntil(ModelEvent $event) {
         return $event->registration_end ?: $event->end; //TODO extension point
@@ -231,10 +231,10 @@ class MailSender {
             }
             switch ($addressees) {
                 case self::ADDR_SELF:
-                    $names = array($transition->getBaseHolder()->getName());
+                    $names = [$transition->getBaseHolder()->getName()];
                     break;
                 case self::ADDR_PRIMARY:
-                    $names = array($holder->getPrimaryHolder()->getName());
+                    $names = [$holder->getPrimaryHolder()->getName()];
                     break;
                 case self::ADDR_SECONDARY:
                     $names = [];
