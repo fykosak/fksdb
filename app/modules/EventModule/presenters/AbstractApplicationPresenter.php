@@ -7,10 +7,8 @@ use Events\Model\Grid\SingleEventSource;
 use FKSDB\Components\Events\ApplicationComponent;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
 use FKSDB\Components\Grids\Schedule\PersonGrid;
-use FKSDB\Components\React\ReactComponent\Events\SingleApplicationsTimeProgress;
 use FKSDB\Logging\FlashDumpFactory;
 use FKSDB\Logging\MemoryLogger;
-use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEventParticipant;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -140,4 +138,5 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     abstract function createComponentGrid(): AbstractApplicationGrid;
+
 }

@@ -41,9 +41,10 @@ class CitizenshipRow extends AbstractRow {
     }
 
     /**
+     * @param array $args
      * @return BaseControl
      */
-    public function createField(): BaseControl {
+    public function createField(...$args): BaseControl {
         $control = new SelectBox($this->getTitle());
         $control->setItems($this->getCountries());
         $control->setPrompt(_('Vyberte státní příslušnost'));

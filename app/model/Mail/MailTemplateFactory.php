@@ -87,7 +87,7 @@ class MailTemplateFactory {
     }
 
     /**
-     * @param string $filename
+     * @param $filename
      * @param string $lang
      * @return FileTemplate
      */

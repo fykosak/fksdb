@@ -3,6 +3,7 @@
 namespace OrgModule;
 
 use FKSDB\Components\Grids\ContestantsGrid;
+use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Services\ServiceContestant;
 use Nette\Application\UI\Form;
 
@@ -12,7 +13,6 @@ use Nette\Application\UI\Form;
  */
 class ContestantPresenter extends ExtendedPersonPresenter {
 
-    protected $modelResourceId = 'contestant';
     protected $fieldsDefinition = 'adminContestant';
 
     /**
@@ -109,5 +109,11 @@ class ContestantPresenter extends ExtendedPersonPresenter {
     }
 
 
+    /**
+     * @inheritDoc
+     */
+    protected function getModelResource(): string {
+        return ModelContestant::RESOURCE_ID;
+    }
 }
 

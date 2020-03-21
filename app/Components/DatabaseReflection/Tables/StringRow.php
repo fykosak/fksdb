@@ -24,9 +24,10 @@ class StringRow extends DefaultRow {
     }
 
     /**
+     * @param array $args
      * @return BaseControl
      */
-    public function createField(): BaseControl {
+    public function createField(...$args): BaseControl {
         $control = new TextInput(_($this->getTitle()));
         if ($this->getMetaData()['size']) {
             $control->addRule(Form::MAX_LENGTH, null, $this->getMetaData()['size']);

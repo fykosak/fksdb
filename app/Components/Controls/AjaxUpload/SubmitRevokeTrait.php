@@ -5,7 +5,7 @@ namespace FKSDB\Components\Control\AjaxUpload;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Services\ServiceSubmit;
-use FKSDB\Submits\ISubmitStorage;
+use FKSDB\Submits\FilesystemUploadedSubmitStorage;
 use FKSDB\Submits\StorageException;
 use ModelException;
 use Nette\Application\UI\InvalidLinkException;
@@ -30,9 +30,9 @@ trait SubmitRevokeTrait {
     abstract protected function getPresenter($need = true);
 
     /**
-     * @return ISubmitStorage
+     * @return FilesystemUploadedSubmitStorage
      */
-    abstract protected function getSubmitStorage(): ISubmitStorage;
+    abstract protected function getSubmitUploadedStorage(): FilesystemUploadedSubmitStorage;
 
     /**
      * @param int $submitId
@@ -56,7 +56,7 @@ trait SubmitRevokeTrait {
             return [new Message(_('Nelze zrušit submit.'), 'danger'), null];
         }
         try {
-            $this->getSubmitStorage()->deleteFile($submit);
+            $this->getSubmitUploadedStorage()->deleteFile($submit);
             $this->getServiceSubmit()->dispose($submit);
             $data = $this->getServiceSubmit()->serializeSubmit(null, $submit->getTask(), $this->getPresenter());
 

@@ -48,11 +48,6 @@ class SubmitPresenter extends BasePresenter {
         $this->setIcon('fa fa-pencil');
     }
 
-    /**
-     * @throws AbortException
-     * @throws BadRequestException
-     * @throws ForbiddenRequestException
-     */
     public function titleDetail() {
         $this->setTitle(sprintf(_('Detail of the submit #%d'), $this->getEntity()->fyziklani_submit_id));
         $this->setIcon('fa fa-pencil');
@@ -64,15 +59,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws AbortException
      */
     public function authorizedEntry() {
-        $this->setAuthorized($this->eventIsAllowed('fyziklani.submit', 'default'));
-    }
-
-    /**
-     * @throws BadRequestException
-     * @throws AbortException
-     */
-    public function authorizedDetail() {
-        $this->authorizedEntry();
+        $this->setAuthorized($this->isAllowedForEventOrg('fyziklani.submit', 'default'));
     }
 
     /**
@@ -80,22 +67,6 @@ class SubmitPresenter extends BasePresenter {
      * @throws AbortException
      */
     public function authorizedQrEntry() {
-        $this->authorizedEntry();
-    }
-
-    /**
-     * @throws BadRequestException
-     * @throws AbortException
-     */
-    public function authorizedEdit() {
-        $this->authorizedEntry();
-    }
-
-    /**
-     * @throws BadRequestException
-     * @throws AbortException
-     */
-    public function authorizedList() {
         $this->authorizedEntry();
     }
 
@@ -150,20 +121,10 @@ class SubmitPresenter extends BasePresenter {
         $this->loadEntity($id);
     }
 
-    /**
-     * @throws AbortException
-     * @throws BadRequestException
-     * @throws ForbiddenRequestException
-     */
     public function renderDetail() {
         $this->template->model = $this->getEntity();
     }
 
-    /**
-     * @throws AbortException
-     * @throws BadRequestException
-     * @throws ForbiddenRequestException
-     */
     public function renderEdit() {
         $this->template->model = $this->getEntity();
     }
@@ -222,7 +183,6 @@ class SubmitPresenter extends BasePresenter {
     /**
      * @throws AbortException
      * @throws BadRequestException
-     * @throws ForbiddenRequestException
      * @throws ClosedSubmittingException
      * @throws PointsMismatchException
      */
@@ -243,6 +203,17 @@ class SubmitPresenter extends BasePresenter {
      * @inheritDoc
      */
     protected function getModelResource(): string {
-        return 'fyziklani.submit';
+        return ModelFyziklaniSubmit::RESOURCE_ID;
+    }
+
+    /**
+     * @param $resource
+     * @param string $privilege
+     * @return bool
+     * @throws AbortException
+     * @throws BadRequestException
+     */
+    protected function isAllowed($resource, string $privilege): bool {
+        return $this->isAllowedForEventOrg($resource, $privilege);
     }
 }

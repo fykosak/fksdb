@@ -40,11 +40,12 @@ class EventTypeRow extends AbstractEventRowFactory {
     }
 
     /**
-     * @param ModelContest|null $contest
+     * @param array $args
      * @return BaseControl
      * @throws BadRequestException
      */
-    public function createField(ModelContest $contest = null): BaseControl {
+    public function createField(...$args): BaseControl {
+        list($contest) = $args;
         if (\is_null($contest)) {
             throw new BadRequestException();
         }

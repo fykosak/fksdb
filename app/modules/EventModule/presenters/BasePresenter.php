@@ -176,14 +176,28 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @return bool
      * @throws BadRequestException
      * @throws AbortException
+     * By default check the contest permissions
      */
-    protected function eventIsAllowed($resource, string $privilege): bool {
+    protected function isAllowed($resource, string $privilege): bool {
         $event = $this->getEvent();
         if (!$event) {
             return false;
         }
-        return $this->getEventAuthorizator()->isAllowed($resource, $privilege, $event);
+        return $this->getContestAuthorizator()->isAllowed($resource, $privilege, $event->getContest());
     }
+
+    /**
+     * @param $resource
+     * @param $privilege
+     * @return bool
+     * @throws AbortException
+     * @throws BadRequestException
+     * Explicit method to include event orgs
+     */
+    public function isAllowedForEventOrg($resource, $privilege): bool {
+        return $this->getEventAuthorizator()->isEventOrgAllowed($resource, $privilege, $this->getEvent());
+    }
+
 
     /**
      * @param IResource|string $resource

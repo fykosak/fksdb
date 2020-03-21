@@ -21,9 +21,6 @@ use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
 use Nette\Localization\ITranslator;
 use Tracy\Debugger;
-use function get_class;
-use function json_encode;
-use function sprintf;
 
 /**
  * Class Fyziklani13Payment
@@ -87,7 +84,7 @@ class Fyziklani14Payment extends AbstractTransitionsGenerator {
      */
     public function createTransitions(Machine &$machine) {
         if (!$machine instanceof PaymentMachine) {
-            throw new BadRequestException(sprintf(_('Expected class %s, got %s'), PaymentMachine::class, get_class($machine)));
+            throw new BadRequestException(\sprintf(_('Expected class %s, got %s'), PaymentMachine::class, \get_class($machine)));
         }
         $machine->setExplicitCondition(new ExplicitEventRole($this->eventAuthorizator, 'org', $machine->getEvent(), ModelPayment::RESOURCE_ID));
         $this->addTransitionInitToNew($machine);
@@ -124,14 +121,14 @@ class Fyziklani14Payment extends AbstractTransitionsGenerator {
          */
         $transition->afterExecuteCallbacks[] = function (IStateModel $model = null) {
             $data = $this->emailData;
-            $data['subject'] = sprintf(_('Payment #%s was created'), $model->getPaymentId());
+            $data['subject'] = \sprintf(_('Payment #%s was created'), $model->getPaymentId());
             $data['recipient'] = $model->getPerson()->getInfo()->email;
             $data['text'] = (string)$this->mailTemplateFactory->createWithParameters(
                 'fyziklani/fyziklani2020/payment/create',
                 $model->getPerson()->getPreferredLang(),
                 ['model' => $model]
             );
-            $this->serviceEmailMessage->createNewModel($data);
+            $this->serviceEmailMessage->addMessageToSend($data);
         };
 
         $machine->addTransition($transition);
@@ -179,14 +176,14 @@ class Fyziklani14Payment extends AbstractTransitionsGenerator {
          */
         $transition->afterExecuteCallbacks[] = function (IStateModel $model = null) {
             $data = $this->emailData;
-            $data['subject'] = sprintf(_('We are receive payment #%s'), $model->getPaymentId());
+            $data['subject'] = \sprintf(_('We are receive payment #%s'), $model->getPaymentId());
             $data['recipient'] = $model->getPerson()->getInfo()->email;
             $data['text'] = (string)$this->mailTemplateFactory->createWithParameters(
                 'fyziklani/fyziklani2020/payment/receive',
                 $model->getPerson()->getPreferredLang(),
                 ['model' => $model]
             );
-            $this->serviceEmailMessage->createNewModel($data);
+            $this->serviceEmailMessage->addMessageToSend($data);
         };
 
         $transition->setCondition(function () {
@@ -201,9 +198,9 @@ class Fyziklani14Payment extends AbstractTransitionsGenerator {
      */
     private function getClosureDeleteRows(): Closure {
         return function (ModelPayment $modelPayment) {
-            Debugger::log('payment-deleted--' . json_encode($modelPayment->toArray()), 'payment-info');
+            Debugger::log('payment-deleted--' . \json_encode($modelPayment->toArray()), 'payment-info');
             foreach ($modelPayment->related(DbNames::TAB_SCHEDULE_PAYMENT, 'payment_id') as $row) {
-                Debugger::log('payment-row-deleted--' . json_encode($row->toArray()), 'payment-info');
+                Debugger::log('payment-row-deleted--' . \json_encode($row->toArray()), 'payment-info');
                 $row->delete();
             }
         };

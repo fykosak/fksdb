@@ -42,7 +42,7 @@ class EventsGrid extends BaseGrid {
      * @param ModelContest $contest
      * @param int $year
      */
-    public function setParams(ModelContest $contest,int $year){
+    public function setParams(ModelContest $contest, int $year) {
         $events = $this->serviceEvent->getEvents($contest, $year);
         $dataSource = new NDataSource($events);
         $this->setDefaultOrder('event.begin ASC');
@@ -80,7 +80,7 @@ class EventsGrid extends BaseGrid {
 
         $this->addLink('event_participant.list');
 
-        $this->addLinkButton($this->getPresenter(), 'EventOrg:list', 'org', _('Organisers'), true, ['eventId' => 'event_id']);
+        $this->addLinkButton($this->getPresenter(), ':Event:EventOrg:list', 'org', _('Organisers'), true, ['eventId' => 'event_id']);
 
         $this->addGlobalButton('add')
             ->setLink($this->getPresenter()->link('create'))

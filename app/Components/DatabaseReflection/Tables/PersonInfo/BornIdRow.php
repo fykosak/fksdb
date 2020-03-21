@@ -31,9 +31,10 @@ class BornIdRow extends AbstractRow {
     }
 
     /**
+     * @param array $args
      * @return BaseControl
      */
-    public function createField(): BaseControl {
+    public function createField(...$args): BaseControl {
         $control = new WriteOnlyInput($this->getTitle());
         $control->setOption('description', $this->getDescription());
         $control->addCondition(Form::FILLED)

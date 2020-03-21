@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\DatabaseReflection\Payment;
 
+use FKSDB\Components\DatabaseReflection\AbstractRow;
 use Nette\Forms\Controls\BaseControl;
 use FKSDB\NotImplementedException;
 
@@ -9,11 +10,13 @@ use FKSDB\NotImplementedException;
  * Class AbstractPaymentRow
  * @package FKSDB\Components\DatabaseReflection\Payment
  */
-abstract class AbstractPaymentRow extends \FKSDB\Components\DatabaseReflection\AbstractRow {
+abstract class AbstractPaymentRow extends AbstractRow {
     /**
+     * @param array $args
      * @return BaseControl
+     * @throws NotImplementedException
      */
-    public function createField(): BaseControl {
+    public function createField(...$args): BaseControl {
         throw new NotImplementedException();
     }
 

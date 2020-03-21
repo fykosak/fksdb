@@ -4,6 +4,7 @@ namespace FKSDB\Components\Grids\Events\Application;
 
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\NotImplementedException;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEventParticipant;
@@ -42,6 +43,7 @@ class MyApplicationsGrid extends BaseGrid {
     /**
      * @param Presenter $presenter
      * @throws DuplicateColumnException
+     * @throws NotImplementedException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -58,7 +60,14 @@ class MyApplicationsGrid extends BaseGrid {
         $this->addJoinedColumn(DbNames::TAB_EVENT, 'name', $eventCallBack);
         $this->addJoinedColumn(DbNames::TAB_EVENT, 'year', $eventCallBack);
         $this->addJoinedColumn(DbNames::TAB_EVENT, 'event_year', $eventCallBack);
-        $this->addReflectionColumn(DbNames::TAB_EVENT_PARTICIPANT, 'status', ModelEventParticipant::class);
+        $this->addColumns([DbNames::TAB_EVENT_PARTICIPANT . '.status']);
 
+    }
+
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        return ModelEventParticipant::class;
     }
 }

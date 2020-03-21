@@ -10,7 +10,6 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
-use Tracy\Debugger;
 
 /**
  * Class OrgResults
