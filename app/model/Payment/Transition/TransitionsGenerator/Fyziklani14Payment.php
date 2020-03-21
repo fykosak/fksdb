@@ -128,7 +128,7 @@ class Fyziklani14Payment extends AbstractTransitionsGenerator {
                 $model->getPerson()->getPreferredLang(),
                 ['model' => $model]
             );
-            $this->serviceEmailMessage->createNewModel($data);
+            $this->serviceEmailMessage->addMessageToSend($data);
         };
 
         $machine->addTransition($transition);
@@ -183,7 +183,7 @@ class Fyziklani14Payment extends AbstractTransitionsGenerator {
                 $model->getPerson()->getPreferredLang(),
                 ['model' => $model]
             );
-            $this->serviceEmailMessage->createNewModel($data);
+            $this->serviceEmailMessage->addMessageToSend($data);
         };
 
         $transition->setCondition(function () {

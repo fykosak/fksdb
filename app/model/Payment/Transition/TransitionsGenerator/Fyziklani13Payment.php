@@ -125,14 +125,14 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
          */
         $transition->afterExecuteCallbacks[] = function (IStateModel $model = null) {
             $data = $this->emailData;
-            $data['subject'] = sprintf(_('Payment #%s was created'), $model->getPaymentId());
+            $data['subject'] = \sprintf(_('Payment #%s was created'), $model->getPaymentId());
             $data['recipient'] = $model->getPerson()->getInfo()->email;
             $data['text'] = (string)$this->mailTemplateFactory->createWithParameters(
                 'fyziklani/fyziklani2019/payment/create',
                 $model->getPerson()->getPreferredLang(),
                 ['model' => $model]
             );
-            $this->serviceEmailMessage->createNewModel($data);
+            $this->serviceEmailMessage->addMessageToSend($data);
         };
         $machine->addTransition($transition);
     }
@@ -186,7 +186,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
                 $model->getPerson()->getPreferredLang(),
                 ['model' => $model]
             );
-            $this->serviceEmailMessage->createNewModel($data);
+            $this->serviceEmailMessage->addMessageToSend($data);
         };
 
         $transition->setCondition(function () {

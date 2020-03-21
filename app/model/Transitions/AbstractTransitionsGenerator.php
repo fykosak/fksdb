@@ -13,7 +13,5 @@ abstract class AbstractTransitionsGenerator {
         'blind_carbon_copy' => 'Fyziklání <fyziklani@fykos.cz>',
         // $data['carbon_copy']=
         'sender' => 'fyziklani@fykos.cz',
-        'reply_to' => 'Fyziklání <fyziklani@fykos.cz>',
-        'state' => ModelEmailMessage::STATE_WAITING,
     ];
 }
