@@ -82,7 +82,7 @@ class MailTemplateFactory {
 
     /**
      * @param $filename
-     * @param string $lang
+     * @param string $lang ISO 639-1
      * @return FileTemplate
      */
     public final function createFromFile(string $filename, string $lang = null): FileTemplate {
