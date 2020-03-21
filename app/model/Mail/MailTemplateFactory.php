@@ -15,21 +15,15 @@ use Nette\Templating\FileTemplate;
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
+ * @author Michal Cervenak <miso@fykos.cz>
  */
 class MailTemplateFactory {
 
-    /**
-     * @var string without trailing slash
-     */
+    /** @var string without trailing slash */
     private $templateDir;
-
-    /**
-     * @var Application
-     */
+    /** @var Application */
     private $application;
-    /**
-     * @var ITranslator
-     */
+    /** @var ITranslator */
     private $translator;
 
     /**
@@ -38,7 +32,7 @@ class MailTemplateFactory {
      * @param Application $application
      * @param ITranslator $translator
      */
-    function __construct($templateDir, Application $application, ITranslator $translator) {
+    function __construct(string $templateDir, Application $application, ITranslator $translator) {
         $this->templateDir = $templateDir;
         $this->application = $application;
     }
@@ -65,13 +59,13 @@ class MailTemplateFactory {
      * @param array $data
      * @return FileTemplate
      */
-    public function createPasswordRecovery(string $lang = null, array $data = []) {
+    public function createPasswordRecovery(string $lang = null, array $data = []): FileTemplate {
         return $this->createWithParameters('passwordRecovery', $lang, $data);
     }
 
     /**
      * @param string $templateFile
-     * @param string|null $lang
+     * @param string $lang ISO 639-1
      * @param array $data
      * @return FileTemplate
      */
@@ -90,7 +84,7 @@ class MailTemplateFactory {
      * @param Control|null $control
      * @return FileTemplate
      */
-    public final function createFromFile($filename, $lang = null, Control $control = null) {
+    public final function createFromFile($filename, $lang = null, Control $control = null): FileTemplate {
         $presenter = $this->application->getPresenter();
         if (($lang === null || $control === null) && !$presenter instanceof BasePresenter) {
             throw new InvalidArgumentException("Expecting BasePresenter, got " . ($presenter ? get_class($presenter) : (string)$presenter));
