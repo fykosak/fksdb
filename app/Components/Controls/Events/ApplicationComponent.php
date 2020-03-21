@@ -18,6 +18,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
 use Nette\Templating\FileTemplate;
 use Nette\Templating\ITemplate;
+use Nette\Utils\JsonException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -239,6 +240,7 @@ class ApplicationComponent extends Control {
      * @param Form $form
      * @param null $explicitTransitionName
      * @throws AbortException
+     * @throws JsonException
      */
     public function handleSubmit(Form $form, $explicitTransitionName = null) {
         $this->execute($form, $explicitTransitionName);
@@ -247,6 +249,7 @@ class ApplicationComponent extends Control {
     /**
      * @param $transitionName
      * @throws AbortException
+     * @throws JsonException
      */
     public function handleTransition($transitionName) {
         $this->execute(null, $transitionName);
@@ -256,7 +259,7 @@ class ApplicationComponent extends Control {
      * @param Form|null $form
      * @param null $explicitTransitionName
      * @throws AbortException
-     * @throws \Nette\Utils\JsonException
+     * @throws JsonException
      */
     private function execute(Form $form = null, $explicitTransitionName = null) {
         try {
