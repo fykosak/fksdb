@@ -50,7 +50,6 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
         $this->dumpFactory = $dumpFactory;
     }
 
-
     /**
      * @param ServiceEventParticipant $serviceEventParticipant
      */

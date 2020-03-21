@@ -58,11 +58,12 @@ class SeatingPresenter extends BasePresenter {
     }
 
     /**
-     * @param ModelEvent $event
      * @return bool
+     * @throws AbortException
+     * @throws BadRequestException
      */
-    protected function isEnabledForEvent(ModelEvent $event): bool {
-        return $event->event_type_id === 1;
+    protected function isEnabledForEvent(): bool {
+        return $this->getEvent()->event_type_id === 1;
     }
 
     public function authorizedEdit() {

@@ -2,18 +2,20 @@
 
 namespace EventModule;
 
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Fyziklani\SeatingControl;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
 use FKSDB\Components\Grids\Events\Application\ApplicationGrid;
 use FKSDB\Components\Grids\Events\Application\TeamApplicationGrid;
 use FKSDB\model\Fyziklani\NotSetGameParametersException;
+use FKSDB\NotImplementedException;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\UI\Form;
 
 /**
  * Class ApplicationPresenter
@@ -55,12 +57,11 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @param ModelEvent $event
      * @return bool
      * @throws AbortException
      * @throws BadRequestException
      */
-    protected function isEnabledForEvent(ModelEvent $event): bool {
+    protected function isEnabledForEvent(): bool {
         return $this->isTeamEvent();
     }
 
@@ -110,5 +111,33 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
      */
     protected function getModelResource(): string {
         return ModelFyziklaniTeam::RESOURCE_ID;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getCreateForm(): FormControl {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getEditForm(): FormControl {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function handleCreateFormSuccess(Form $form) {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function handleEditFormSuccess(Form $form) {
+        throw new NotImplementedException();
     }
 }

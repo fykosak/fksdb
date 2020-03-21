@@ -2,11 +2,14 @@
 
 namespace EventModule;
 
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\EventOrgsGrid;
+use FKSDB\NotImplementedException;
 use FKSDB\ORM\Models\ModelEventOrg;
 use FKSDB\ORM\Services\ServiceEventOrg;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\UI\Form;
 
 /**
  * Class EventOrgPresenter
@@ -74,4 +77,31 @@ class EventOrgPresenter extends BasePresenter {
         return ModelEventOrg::RESOURCE_ID;
     }
 
+    /**
+     * @inheritDoc
+     */
+    protected function getCreateForm(): FormControl {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getEditForm(): FormControl {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function handleCreateFormSuccess(Form $form) {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function handleEditFormSuccess(Form $form) {
+        throw new NotImplementedException();
+    }
 }

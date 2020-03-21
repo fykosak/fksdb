@@ -240,10 +240,9 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     /**
-     * @param ModelEvent $event
      * @return bool
      */
-    protected function isEnabledForEvent(ModelEvent $event): bool {
+    protected function isEnabledForEvent(): bool {
         return true;
     }
 }

@@ -2,11 +2,14 @@
 
 namespace CommonModule;
 
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\EmailsGrid;
 use FKSDB\EntityTrait;
+use FKSDB\NotImplementedException;
 use FKSDB\ORM\Models\ModelEmailMessage;
 use FKSDB\ORM\Services\ServiceEmailMessage;
 use Nette\Application\BadRequestException;
+use Nette\Application\UI\Form;
 
 /**
  * Class MailSenderPresenter
@@ -67,5 +70,33 @@ class SpamPresenter extends BasePresenter {
      */
     protected function getModelResource(): string {
         return ModelEmailMessage::RESOURCE_ID;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getCreateForm(): FormControl {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getEditForm(): FormControl {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function handleCreateFormSuccess(Form $form) {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function handleEditFormSuccess(Form $form) {
+        throw new NotImplementedException();
     }
 }

@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Factories;
 
-use FKSDB\Components\Controls\Fyziklani\EditControl;
 use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\ResultsAndStatistics;
 use FKSDB\Components\Controls\Fyziklani\RoutingDownload;
 use FKSDB\Components\Controls\Fyziklani\RoutingEdit;
@@ -119,14 +118,6 @@ class FyziklaniFactory {
             $this->serviceFyziklaniSubmit,
             $event
         );
-    }
-
-    /**
-     * @param ModelEvent $event
-     * @return EditControl
-     */
-    public function createEditSubmitControl(ModelEvent $event): EditControl {
-        return new EditControl($event, $this->serviceFyziklaniSubmit, $this->translator);
     }
 
     /* ************** ROUTING *************/
