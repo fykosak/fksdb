@@ -147,9 +147,6 @@ class AccountManager {
         }
         $until = DateTime::from($this->getRecoveryExpiration());
         $token = $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_RECOVERY, $until);
-
-        // prepare and send email
-
         $templateParams = [
             'token' => $token->token,
             'login' => $login,
