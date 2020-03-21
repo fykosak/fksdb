@@ -13,7 +13,6 @@ use Mail\MailTemplateFactory;
 use Mail\SendFailedException;
 use Nette\Utils\DateTime;
 
-
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
@@ -21,24 +20,17 @@ use Nette\Utils\DateTime;
  */
 class AccountManager {
 
-    /**
-     * @var ServiceLogin
-     */
+    /** @var ServiceLogin */
     private $serviceLogin;
-    /**
-     * @var ServiceAuthToken
-     */
+
+    /** @var ServiceAuthToken */
     private $serviceAuthToken;
     private $invitationExpiration = '+1 month';
     private $recoveryExpiration = '+1 day';
     private $emailFrom;
-    /**
-     * @var ServiceEmailMessage
-     */
+    /** @var ServiceEmailMessage */
     private $serviceEmailMessage;
-    /**
-     * @var MailTemplateFactory
-     */
+    /** @var MailTemplateFactory */
     private $mailTemplateFactory;
 
     /**
@@ -108,6 +100,8 @@ class AccountManager {
      */
     public function createLoginWithInvitation(ModelPerson $person, string $email) {
         $login = $this->createLogin($person);
+        //TODO email
+        $this->serviceLogin->save($login);
 
         $until = DateTime::from($this->getInvitationExpiration());
         $token = $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_INITIAL_LOGIN, $until);
@@ -138,6 +132,16 @@ class AccountManager {
         if (!$recoveryAddress) {
             throw new RecoveryNotImplementedException();
         }
+        $token = $this->serviceAuthToken->getTable()->where(array(
+            'login_id' => $login->login_id,
+            'type' => ModelAuthToken::TYPE_RECOVERY,
+        ))
+            ->where('until > ?', new DateTime())->fetch();
+
+        if ($token) {
+            throw new RecoveryExistsException();
+        }
+
         $until = DateTime::from($this->getRecoveryExpiration());
         $token = $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_RECOVERY, $until);
         $templateParams = [
@@ -171,11 +175,12 @@ class AccountManager {
      * @return AbstractModelSingle|ModelLogin
      */
     public final function createLogin(ModelPerson $person, string $login = null, string $password = null) {
-        $login = $this->serviceLogin->createNewModel([
+        $login = $this->serviceLogin->createNew([
             'person_id' => $person->person_id,
             'login' => $login,
             'active' => 1,
         ]);
+
         $this->serviceLogin->save($login);
 
         /* Must be done after login_id is allocated. */
