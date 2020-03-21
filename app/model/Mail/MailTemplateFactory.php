@@ -4,7 +4,6 @@ namespace Mail;
 
 use BasePresenter;
 use Nette\Application\Application;
-use Nette\Application\UI\Control;
 use Nette\Http\IRequest;
 use Nette\InvalidArgumentException;
 use Nette\Latte\Engine;
@@ -35,11 +34,14 @@ class MailTemplateFactory {
     function __construct(string $templateDir, Application $application, ITranslator $translator) {
         $this->templateDir = $templateDir;
         $this->application = $application;
+        $this->translator = $translator;
     }
 
     /**
-     * @param $application
+     * @param Application $application
      * @internal For automated testing only.
+     * @deprecated
+     * TODO remove this!
      */
     public function injectApplication($application) {
         $this->application = $application;
@@ -80,7 +82,7 @@ class MailTemplateFactory {
 
     /**
      * @param $filename
-     * @param string $lang ISO 639-1
+     * @param string $lang
      * @return FileTemplate
      */
     public final function createFromFile(string $filename, string $lang = null): FileTemplate {
@@ -92,6 +94,7 @@ class MailTemplateFactory {
             $lang = $presenter->getLang();
         }
         $control = $presenter;
+
         $file = $this->templateDir . DIRECTORY_SEPARATOR . "$filename.$lang.latte";
         if (!file_exists($file)) {
             throw new InvalidArgumentException("Cannot find template '$filename.$lang'.");
