@@ -638,8 +638,6 @@ CREATE TABLE IF NOT EXISTS `task` (
   COMMENT 'Od kdy se smi submitovat',
   `submit_deadline` DATETIME     NULL     DEFAULT NULL
   COMMENT 'Do kdy',
-  `corrected`       TINYINT(1)   NULL DEFAULT 0
-  COMMENT 'Má uloha nahrané riešnie?',
   PRIMARY KEY (`task_id`),
   INDEX `contest_id` (`contest_id` ASC),
   UNIQUE INDEX `contest_id_year_series_tasknr` (`contest_id` ASC, `year` ASC, `series` ASC, `tasknr` ASC),
@@ -668,6 +666,8 @@ CREATE TABLE IF NOT EXISTS `submit` (
   COMMENT 'Pred prepoctem',
   `calc_points`  DECIMAL(4, 2)           NULL     DEFAULT NULL
   COMMENT 'Cache spoctenych bodu.',
+  `corrected`       TINYINT(1)   NULL DEFAULT 0
+  COMMENT 'Má uloha nahrané riešnie?',
   PRIMARY KEY (`submit_id`),
   UNIQUE INDEX `cons_uniq` (`ct_id` ASC, `task_id` ASC),
   INDEX `task_id` (`task_id` ASC),
