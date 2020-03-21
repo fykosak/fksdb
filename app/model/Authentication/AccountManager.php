@@ -119,7 +119,7 @@ class AccountManager {
      * @throws SendFailedException
      * @throws \Exception
      */
-    public function createLoginWithInvitation(ITemplate $template, ModelPerson $person, $email) {
+    public function createLoginWithInvitation(ModelPerson $person, $email) {
         $login = $this->createLogin($person);
         //TODO email
 

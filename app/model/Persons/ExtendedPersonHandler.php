@@ -177,9 +177,9 @@ class ExtendedPersonHandler {
             $login = $person->getLogin();
             $hasLogin = (bool)$login;
             if ($sendEmail && ($email && !$login)) {
-                $template = $this->mailTemplateFactory->createLoginInvitation($presenter, $this->getInvitationLang());
+                // $template = $this->mailTemplateFactory->createLoginInvitation($presenter, $this->getInvitationLang());
                 try {
-                    $this->accountManager->createLoginWithInvitation($template, $person, $email);
+                    $this->accountManager->createLoginWithInvitation($person, $email);
                     $presenter->flashMessage(_('Zvací e-mail odeslán.'), BasePresenter::FLASH_INFO);
                 } catch (SendFailedException $exception) {
                     $presenter->flashMessage(_('Zvací e-mail se nepodařilo odeslat.'), BasePresenter::FLASH_ERROR);
