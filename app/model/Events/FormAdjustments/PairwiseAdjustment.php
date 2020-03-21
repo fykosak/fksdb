@@ -10,7 +10,7 @@ use Nette\InvalidArgumentException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 abstract class PairwiseAdjustment extends AbstractAdjustment implements IFormAdjustment {
@@ -20,10 +20,20 @@ abstract class PairwiseAdjustment extends AbstractAdjustment implements IFormAdj
 
     private $rules;
 
+    /**
+     * PairwiseAdjustment constructor.
+     * @param $rules
+     */
     function __construct($rules) {
         $this->rules = $rules;
     }
 
+    /**
+     * @param Form $form
+     * @param Machine $machine
+     * @param Holder $holder
+     * @return mixed|void
+     */
     protected function _adjust(Form $form, Machine $machine, Holder $holder) {
         foreach ($this->rules as $target => $prerequisities) {
             if (is_scalar($prerequisities)) {
@@ -60,6 +70,11 @@ abstract class PairwiseAdjustment extends AbstractAdjustment implements IFormAdj
         }
     }
 
+    /**
+     * @param IControl $target
+     * @param IControl $prerequisity
+     * @return mixed
+     */
     abstract protected function processPair(IControl $target, IControl $prerequisity);
 }
 

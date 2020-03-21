@@ -1,8 +1,8 @@
 <?php
 
-namespace ORM\Tables;
+namespace FKSDB\ORM\Tables;
 
-use AbstractServiceMulti;
+use FKSDB\ORM\AbstractServiceMulti;
 use Nette\Database\Connection;
 use Nette\Database\Table\Selection as TableSelection;
 
@@ -16,6 +16,12 @@ class MultiTableSelection extends TableSelection {
      */
     private $service;
 
+    /**
+     * MultiTableSelection constructor.
+     * @param AbstractServiceMulti $service
+     * @param $table
+     * @param Connection $connection
+     */
     public function __construct(AbstractServiceMulti $service, $table, Connection $connection) {
         parent::__construct($table, $connection);
         $this->service = $service;
@@ -25,7 +31,7 @@ class MultiTableSelection extends TableSelection {
      * This override ensures returned objects are of correct class.
      *
      * @param array $row
-     * @return \AbstractModelMulti
+     * @return \FKSDB\ORM\AbstractModelMulti
      */
     protected function createRow(array $row) {
         $mainModel = $this->service->getMainService()->createFromArray($row);

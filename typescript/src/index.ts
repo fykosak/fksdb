@@ -1,12 +1,20 @@
-import { app } from './app-collector';
-import { eventAccommodation } from './events/accommodation';
-import { eventApplicationsTimeProgress } from './events/applications-time-progress';
-import { fyziklani } from './fyziklani';
-import { payment } from './payment/selectField';
+import { ajaxUpload } from '@apps/ajaxUpload';
+import { charts } from '@apps/chart';
+import { eventApplicationsTimeProgress } from '@apps/events/applicationsTimeProgress/';
+import { attendance } from '@apps/events/attendance';
+import { eventSchedule } from '@apps/events/schedule';
+import { fyziklani } from '@apps/fyziklani/';
+import { fyziklaniResults } from '@apps/fyziklaniResults';
+import { payment } from '@apps/payment/selectField/';
+import { appsCollector } from '@appsCollector';
 
-app.register(fyziklani);
-app.register(eventAccommodation);
-app.register(payment);
-app.register(eventApplicationsTimeProgress);
+appsCollector.register(eventSchedule);
+ajaxUpload();
+eventApplicationsTimeProgress();
+charts();
+payment();
+fyziklani();
+fyziklaniResults();
+attendance();
 
-app.run();
+appsCollector.run();

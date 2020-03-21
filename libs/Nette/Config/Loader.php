@@ -22,8 +22,9 @@ use Nette,
  *
  * @property-read array $dependencies
  */
-class Loader extends Nette\Object
+class Loader
 {
+    use Nette\SmartObject;
 	/** @internal */
 	const INCLUDES_KEY = 'includes';
 

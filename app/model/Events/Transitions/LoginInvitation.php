@@ -2,12 +2,14 @@
 
 namespace Events\Transitions;
 
-use Authentication\AccountManager;
+use FKSDB\Authentication\AccountManager;
 use Events\Machine\Transition;
 use Events\Model\Holder\BaseHolder;
+use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Services\ServicePerson;
 use Mail\MailTemplateFactory;
-use Nette\Object;
-use ServicePerson;
+use Nette\SmartObject;
 
 /**
  * Sends email notification of account creation
@@ -16,8 +18,8 @@ use ServicePerson;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class LoginInvitation extends Object {
-
+class LoginInvitation {
+    use SmartObject;
     /**
      * @var MailTemplateFactory
      */
@@ -33,16 +35,30 @@ class LoginInvitation extends Object {
      */
     private $servicePerson;
 
+    /**
+     * LoginInvitation constructor.
+     * @param MailTemplateFactory $mailTemplateFactory
+     * @param AccountManager $accountManager
+     * @param ServicePerson $servicePerson
+     */
     function __construct(MailTemplateFactory $mailTemplateFactory, AccountManager $accountManager, ServicePerson $servicePerson) {
         $this->mailTemplateFactory = $mailTemplateFactory;
         $this->accountManager = $accountManager;
         $this->servicePerson = $servicePerson;
     }
 
+    /**
+     * @param Transition $transition
+     * @throws \Exception
+     */
     public function __invoke(Transition $transition) {
         $this->send($transition);
     }
 
+    /**
+     * @param Transition $transition
+     * @throws \Exception
+     */
     private function send(Transition $transition) {
         $baseHolder = $transition->getBaseHolder();
         $person = $this->getPerson($baseHolder);
@@ -59,11 +75,14 @@ class LoginInvitation extends Object {
 
         $login = $person->getLogin();
         if (!$login) {
-            $template = $this->mailTemplateFactory->createLoginInvitation();
-            $login = $this->accountManager->createLoginWithInvitation($template, $person, $email);
+            $login = $this->accountManager->createLoginWithInvitation($person, $email);
         }
     }
 
+    /**
+     * @param BaseHolder $baseHolder
+     * @return AbstractModelSingle|null|ModelPerson
+     */
     private function getPerson(BaseHolder $baseHolder) {
         return $this->servicePerson->findByPrimary($baseHolder->getPersonId());
     }

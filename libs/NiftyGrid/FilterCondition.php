@@ -9,12 +9,14 @@
  */
 namespace NiftyGrid;
 
+use Nette\SmartObject;
 use Nette\Utils\Strings;
 /**
  * @author     Jakub Holub
  */
-class FilterCondition extends \Nette\Object
+class FilterCondition
 {
+    use SmartObject;
 	/* filter types */
 	const TEXT = "text";
 	const SELECT = "select";

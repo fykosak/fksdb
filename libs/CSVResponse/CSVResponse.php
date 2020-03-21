@@ -5,7 +5,7 @@ namespace PePa;
 use Nette\Application\IResponse;
 use Nette\Http\IRequest;
 use Nette\Http\IResponse as IHttpResponse;
-use Nette\Object;
+use Nette\SmartObject;
 
 /**
  * CSV download response.
@@ -15,15 +15,15 @@ use Nette\Object;
  * @see http://addons.nette.org/cs/csvresponse
  * @see http://tools.ietf.org/html/rfc4180 (not fully implemented)
  *
- * @property-read array  $data
+ * @property-read array $data
  * @property-read string $name
- * @property-read bool   $addHeading
+ * @property-read bool $addHeading
  * @property-read string $glue
  * @property-read string $contentType
  * @package Nette\Application\Responses
  */
-class CSVResponse extends Object implements IResponse {
-
+class CSVResponse implements IResponse {
+    use SmartObject;
     /** @var array */
     private $data;
 

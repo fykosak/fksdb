@@ -1,6 +1,16 @@
 @import "colors";
 @import "mixins/navigation-item";
 
+.badge-fykos {
+  background-color: $fykosMainColor;
+  color: white;
+}
+
+.badge-vyfuk {
+  background-color: $vyfukMainColor;
+  color: white;
+}
+
 .btn-fykos {
   color: #fff;
   background-color: $fykosMainColor;
@@ -47,6 +57,23 @@
 
 [data-contest~="vyfuk"] .navigation-item .card {
   @include navigation-item($vyfukMainColor, white);
+}
+
+[data-contest~="theme-dark"] {
+  .navigation-item .card {
+    @include navigation-item(#2ed739, black);
+  }
+  color: #fff;
+  main {
+    background-color: black;
+    //background-image: linear-gradient(to bottom, darken(#2ed739, 42%), black);
+  }
+  .bg-white-container {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  .card, .list-group-item {
+    background-color: transparent;
+  }
 }
 
 body[data-contest="vyfuk"] {

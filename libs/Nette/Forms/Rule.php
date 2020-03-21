@@ -19,8 +19,9 @@ use Nette;
  *
  * @author     David Grudl
  */
-final class Rule extends Nette\Object
+final class Rule
 {
+    use Nette\SmartObject;
 	/** type */
 	const CONDITION = 1;
 

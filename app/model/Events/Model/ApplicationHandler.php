@@ -12,15 +12,19 @@ use Events\Model\Holder\SecondaryModelStrategies\SecondaryModelDataConflictExcep
 use Events\SubmitProcessingException;
 use Exception;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
-use FKSDB\Components\Forms\Controls\PersonAccommodation\ExistingPaymentException;
-use FKSDB\Components\Forms\Controls\PersonAccommodation\FullAccommodationCapacityException;
+use FKSDB\Components\Forms\Controls\ReferencedId;
+use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
+use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
 use FKSDB\Logging\ILogger;
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\ModelEvent;
 use FormUtils;
-use Nette\ArrayHash;
 use Nette\Database\Connection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
+use Nette\Utils\ArrayHash;
+use Nette\Utils\Json;
+use Nette\Utils\JsonException;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -64,6 +68,13 @@ class ApplicationHandler {
      */
     private $machine;
 
+    /**
+     * ApplicationHandler constructor.
+     * @param ModelEvent $event
+     * @param ILogger $logger
+     * @param Connection $connection
+     * @param Container $container
+     */
     function __construct(ModelEvent $event, ILogger $logger, Connection $connection, Container $container) {
         $this->event = $event;
         $this->logger = $logger;
@@ -71,10 +82,16 @@ class ApplicationHandler {
         $this->container = $container;
     }
 
+    /**
+     * @return int
+     */
     public function getErrorMode() {
         return $this->errorMode;
     }
 
+    /**
+     * @param $errorMode
+     */
     public function setErrorMode($errorMode) {
         $this->errorMode = $errorMode;
     }
@@ -88,10 +105,18 @@ class ApplicationHandler {
         return $this->machine;
     }
 
+    /**
+     * @return ILogger
+     */
     public function getLogger() {
         return $this->logger;
     }
 
+    /**
+     * @param Holder $holder
+     * @param $data
+     * @throws JsonException
+     */
     public final function store(Holder $holder, $data) {
         $this->_storeAndExecute($holder, $data, null, self::STATE_OVERWRITE);
     }
@@ -100,6 +125,7 @@ class ApplicationHandler {
      * @param Holder $holder
      * @param Form|ArrayHash|null $data
      * @param mixed $explicitTransitionName
+     * @throws JsonException
      */
     public function storeAndExecute(Holder $holder, $data = null, $explicitTransitionName = null) {
         $this->_storeAndExecute($holder, $data, $explicitTransitionName, self::STATE_TRANSITION);
@@ -110,6 +136,7 @@ class ApplicationHandler {
      * @param $data
      * @param $explicitTransitionName
      * @param $execute
+     * @throws JsonException
      */
     private function _storeAndExecute(Holder $holder, $data, $explicitTransitionName, $execute) {
         $this->initializeMachine($holder);
@@ -163,40 +190,40 @@ class ApplicationHandler {
             if ($data && (!isset($transitions[$explicitMachineName]) || !$transitions[$explicitMachineName]->isTerminating())) {
                 $this->logger->log(sprintf(_('Přihláška "%s" uložena.'), (string)$holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS);
             }
-        } catch (ModelDataConflictException $e) {
-            $container = $e->getReferencedId()->getReferencedContainer();
-            $container->setConflicts($e->getConflicts());
+        } catch (ModelDataConflictException $exception) {
+            $container = $exception->getReferencedId()->getReferencedContainer();
+            $container->setConflicts($exception->getConflicts());
 
             $message = sprintf(_('Některá pole skupiny "%s" neodpovídají existujícímu záznamu.'), $container->getOption('label'));
             $this->logger->log($message, ILogger::ERROR);
             $this->formRollback($data);
-            $this->reraise($e);
-        } catch (SecondaryModelDataConflictException $e) {
-            $message = sprintf(_('Data ve skupině "%s" kolidují s již existující přihláškou.'), $e->getBaseHolder()->getLabel());
+            $this->reRaise($exception);
+        } catch (SecondaryModelDataConflictException $exception) {
+            $message = sprintf(_('Data ve skupině "%s" kolidují s již existující přihláškou.'), $exception->getBaseHolder()->getLabel());
             $this->logger->log($message, ILogger::ERROR);
             $this->formRollback($data);
-            $this->reraise($e);
-        } catch (DuplicateApplicationException $e) {
-            $message = $e->getMessage();
+            $this->reRaise($exception);
+        } catch (DuplicateApplicationException $exception) {
+            $message = $exception->getMessage();
             $this->logger->log($message, ILogger::ERROR);
             $this->formRollback($data);
-            $this->reraise($e);
-        } catch (MachineExecutionException $e) {
-            $this->logger->log($e->getMessage(), ILogger::ERROR);
+            $this->reRaise($exception);
+        } catch (MachineExecutionException $exception) {
+            $this->logger->log($exception->getMessage(), ILogger::ERROR);
             $this->formRollback($data);
-            $this->reraise($e);
-        } catch (SubmitProcessingException $e) {
-            $this->logger->log($e->getMessage(), ILogger::ERROR);
+            $this->reRaise($exception);
+        } catch (SubmitProcessingException $exception) {
+            $this->logger->log($exception->getMessage(), ILogger::ERROR);
             $this->formRollback($data);
-            $this->reraise($e);
-        } catch (FullAccommodationCapacityException $e) {
-            $this->logger->log($e->getMessage(), ILogger::ERROR);
+            $this->reRaise($exception);
+        } catch (FullCapacityException $exception) {
+            $this->logger->log($exception->getMessage(), ILogger::ERROR);
             $this->formRollback($data);
-            $this->reraise($e);
-        } catch (ExistingPaymentException $e) {
-            $this->logger->log($e->getMessage(), ILogger::ERROR);
+            $this->reRaise($exception);
+        } catch (ExistingPaymentException $exception) {
+            $this->logger->log($exception->getMessage(), ILogger::ERROR);
             $this->formRollback($data);
-            $this->reraise($e);
+            $this->reRaise($exception);
         }
     }
 
@@ -207,6 +234,7 @@ class ApplicationHandler {
      * @param $execute
      * @return mixed
      * @throws MachineExecutionException
+     * @throws JsonException
      */
     private function processData($data, $transitions, Holder $holder, $execute) {
         if ($data instanceof Form) {
@@ -216,7 +244,7 @@ class ApplicationHandler {
             $values = $data;
             $form = null;
         }
-
+        Debugger::log(Json::encode((array)$values), 'app-form');
         $primaryName = $holder->getPrimaryHolder()->getName();
         $newStates = [];
         if (isset($values[$primaryName][BaseHolder::STATE_COLUMN])) {
@@ -255,7 +283,7 @@ class ApplicationHandler {
      */
     private function formRollback($data) {
         if ($data instanceof Form) {
-            foreach ($data->getComponents(true, 'FKSDB\Components\Forms\Controls\ReferencedId') as $referencedId) {
+            foreach ($data->getComponents(true, ReferencedId::class) as $referencedId) {
                 $referencedId->rollback();
             }
         }
@@ -289,5 +317,4 @@ class ApplicationHandler {
     private function reRaise(Exception $e) {
         throw new ApplicationHandlerException(_('Chyba při ukládání přihlášky.'), null, $e);
     }
-
 }

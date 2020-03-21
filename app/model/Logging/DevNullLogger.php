@@ -9,6 +9,11 @@ namespace FKSDB\Logging;
  */
 class DevNullLogger extends StackedLogger {
 
+    /**
+     * @param $message
+     * @param $level
+     * @return mixed|void
+     */
     protected function doLog($message, $level) {
         /* empty */
     }

@@ -3,7 +3,7 @@
 @import "mixins/callout";
 
 [data-contest~="event-type-1"] main:not(.no-bg) {
-  background: url('/images/fof/prague-layout.svg') no-repeat;
+  //background: url('/images/fof/prague-layout.svg') no-repeat;
   h1, h2, h3 {
     font-weight: bold;
   }

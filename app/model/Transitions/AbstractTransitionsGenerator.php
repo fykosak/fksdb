@@ -2,16 +2,16 @@
 
 namespace FKSDB\Transitions;
 
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\ModelEmailMessage;
 
+/**
+ * Class AbstractTransitionsGenerator
+ * @package FKSDB\Transitions
+ */
 abstract class AbstractTransitionsGenerator {
-    protected $transitionFactory;
-
-    public function __construct(TransitionsFactory $transitionFactory) {
-        $this->transitionFactory = $transitionFactory;
-    }
-
-    abstract public function createTransitions(Machine &$machine);
-
-    abstract public function createMachine(ModelEvent $event): Machine;
+    protected $emailData = [
+        'blind_carbon_copy' => 'Fyziklání <fyziklani@fykos.cz>',
+        // $data['carbon_copy']=
+        'sender' => 'fyziklani@fykos.cz',
+    ];
 }

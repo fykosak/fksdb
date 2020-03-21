@@ -7,7 +7,7 @@ use FKSDB\Transitions\Machine;
 use FKSDB\Transitions\UnavailableTransitionException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
-use Nette\Diagnostics\Debugger;
+use Tracy\Debugger;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 
@@ -30,6 +30,12 @@ class TransitionButtonsControl extends Control {
      */
     private $model;
 
+    /**
+     * TransitionButtonsControl constructor.
+     * @param Machine $machine
+     * @param ITranslator $translator
+     * @param IStateModel $model
+     */
     public function __construct(Machine $machine, ITranslator $translator, IStateModel $model) {
         parent::__construct();
         $this->machine = $machine;
@@ -51,16 +57,15 @@ class TransitionButtonsControl extends Control {
     public function handleTransition($name) {
         try {
             $this->machine->executeTransition($name, $this->model);
-        } catch (ForbiddenRequestException $e) {
-            $this->getPresenter()->flashMessage($e->getMessage(), 'danger');
+        } catch (ForbiddenRequestException $exception) {
+            $this->getPresenter()->flashMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR);
             return;
-        } catch (UnavailableTransitionException $e) {
-            $this->getPresenter()->flashMessage($e->getMessage(), 'danger');
+        } catch (UnavailableTransitionException $exception) {
+            $this->getPresenter()->flashMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR);
             return;
-        } catch (\Exception $e) {
-            Debugger::barDump($e);
-            Debugger::log($e);
-            $this->getPresenter()->flashMessage(_('Nastala chyba'), 'danger');
+        } catch (\Exception $exception) {
+            Debugger::log($exception);
+            $this->getPresenter()->flashMessage(_('Nastala chyba'), \BasePresenter::FLASH_ERROR);
         }
         $this->redirect('this');
     }

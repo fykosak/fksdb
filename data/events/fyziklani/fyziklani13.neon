@@ -28,8 +28,8 @@ parameters:
                 person_has_flag:
                     spam_mff:
                         required: true
-                person_accommodation:
-                    multiNights:
+                person_schedule:
+                    accommodation:
                         required: false
             participant:
                 person:
@@ -50,13 +50,13 @@ parameters:
                 person_has_flag:
                     spam_mff:
                         required: true
-                person_accommodation:
-                    multiNights:
+                person_schedule:
+                    accommodation:
                         required: false
             dep:
                 require:
                     team.teacher_id.person_info.id_number: team.teacher_id.person_accommodation.multiNights
-                    p*.person_id.person_info.id_number: p*.person_accommodation.multiNights
+                    p*.person_id.person_info.id_number: p*.person_id.person_accommodation.multiNights
                 visible:
                     team.teacher_id.person_info.id_number: team.teacher_id.person_accommodation.multiNights
                     p*.person_id.person_info.id_number: p*.person_id.person_accommodation.multiNights
@@ -91,7 +91,7 @@ events:
             #   TEAM
             #
             TEAM:
-                service: @event.ServiceFyziklaniTeam
+                service: @fyziklani.ServiceFyziklaniTeam
                 personIds: [teacher_id]
                 eventId: e_fyziklani_team.event_id
 

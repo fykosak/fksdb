@@ -23,6 +23,11 @@ class StoredQueryGrid extends BaseGrid {
      */
     private $exportFormatFactory;
 
+    /**
+     * StoredQueryGrid constructor.
+     * @param StoredQuery $storedQuery
+     * @param ExportFormatFactory $exportFormatFactory
+     */
     function __construct(StoredQuery $storedQuery, ExportFormatFactory $exportFormatFactory) {
         parent::__construct();
         $this->storedQuery = $storedQuery;
@@ -53,7 +58,7 @@ class StoredQueryGrid extends BaseGrid {
                         });
                 ++$c;
             }
-        } catch (PDOException $e) {
+        } catch (PDOException $exception) {
             // pass, exception should be handled inn parent components
         }
 

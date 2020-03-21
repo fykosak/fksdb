@@ -3,13 +3,13 @@
 namespace Authentication;
 
 use FKSDB\Config\GlobalParameters;
-use FKSDB\ORM\ModelLogin;
+use FKSDB\ORM\Models\ModelLogin;
+use FKSDB\ORM\Services\ServiceLogin;
+use FKSDB\YearCalculator;
 use FullHttpRequest;
 use Github\Events\Event;
 use Nette\InvalidArgumentException;
 use Nette\Security\AuthenticationException;
-use ServiceLogin;
-use YearCalculator;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -27,6 +27,12 @@ class GithubAuthenticator extends AbstractAuthenticator {
      */
     private $globalParameters;
 
+    /**
+     * GithubAuthenticator constructor.
+     * @param GlobalParameters $globalParameters
+     * @param ServiceLogin $serviceLogin
+     * @param \FKSDB\YearCalculator $yearCalculator
+     */
     function __construct(GlobalParameters $globalParameters, ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
         parent::__construct($serviceLogin, $yearCalculator);
         $this->globalParameters = $globalParameters;
@@ -34,7 +40,7 @@ class GithubAuthenticator extends AbstractAuthenticator {
 
     /**
      * @param FullHttpRequest $request
-     * @return \FKSDB\ORM\ModelLogin
+     * @return \FKSDB\ORM\Models\ModelLogin
      * @throws AuthenticationException
      * @throws InactiveLoginException
      * @throws NoLoginException
@@ -63,7 +69,7 @@ class GithubAuthenticator extends AbstractAuthenticator {
         if (!$row) {
             throw new NoLoginException();
         }
-        $login = ModelLogin::createFromTableRow($row);
+        $login = ModelLogin::createFromActiveRow($row);
         if (!$login->active) {
             throw new InactiveLoginException();
         }

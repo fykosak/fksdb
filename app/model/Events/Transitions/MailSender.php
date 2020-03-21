@@ -2,24 +2,25 @@
 
 namespace Events\Transitions;
 
-use Authentication\AccountManager;
+use FKSDB\Authentication\AccountManager;
 use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
 use Events\Machine\Transition;
 use Events\Model\Holder\BaseHolder;
-use FKSDB\ORM\ModelAuthToken;
-use FKSDB\ORM\ModelEvent;
-use FKSDB\ORM\ModelLogin;
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\IModel;
+use FKSDB\ORM\Models\ModelAuthToken;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Models\ModelLogin;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Services\ServiceAuthToken;
+use FKSDB\ORM\Services\ServicePerson;
 use Mail\MailTemplateFactory;
 use Nette\Mail\IMailer;
 use Nette\Mail\Message;
-use Nette\Object;
+use Nette\SmartObject;
+use Nette\Utils\DateTime;
 use Nette\Utils\Strings;
-use ORM\IModel;
 use PublicModule\ApplicationPresenter;
-use ServiceAuthToken;
-use ServicePerson;
 
 /**
  * Sends email with given template name (in standard template directory)
@@ -28,8 +29,8 @@ use ServicePerson;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class MailSender extends Object {
-
+class MailSender {
+    use SmartObject;
     const BCC_PARAM = 'notifyBcc';
     const FROM_PARAM = 'notifyFrom';
 
@@ -96,10 +97,18 @@ class MailSender extends Object {
         $this->servicePerson = $servicePerson;
     }
 
+    /**
+     * @param Transition $transition
+     * @throws \Exception
+     */
     public function __invoke(Transition $transition) {
         $this->send($transition);
     }
 
+    /**
+     * @param Transition $transition
+     * @throws \Exception
+     */
     private function send(Transition $transition) {
         $personIds = $this->resolveAdressees($transition);
         $persons = $this->servicePerson->getTable()
@@ -109,7 +118,7 @@ class MailSender extends Object {
 
         $logins = [];
         foreach ($persons as $row) {
-            $person = ModelPerson::createFromTableRow($row);
+            $person = ModelPerson::createFromActiveRow($row);
             $login = $person->getLogin();
             if (!$login) {
                 $login = $this->accountManager->createLogin($person);
@@ -123,6 +132,13 @@ class MailSender extends Object {
         }
     }
 
+    /**
+     * @param $filename
+     * @param ModelLogin $login
+     * @param BaseMachine $baseMachine
+     * @return Message
+     * @throws \Exception
+     */
     private function composeMessage($filename, ModelLogin $login, BaseMachine $baseMachine) {
         $machine = $baseMachine->getMachine();
         $holder = $machine->getHolder();
@@ -155,31 +171,54 @@ class MailSender extends Object {
         if ($this->hasBcc()) {
             $message->addBcc($holder->getParameter(self::BCC_PARAM));
         }
-        $message->addTo($email, $person->getFullname());
+        $message->addTo($email, $person->getFullName());
 
         return $message;
     }
 
+    /**
+     * @param ModelLogin $login
+     * @param ModelEvent $event
+     * @param IModel $application
+     * @return ModelAuthToken
+     * @throws \Exception
+     */
     private function createToken(ModelLogin $login, ModelEvent $event, IModel $application) {
         $until = $this->getUntil($event);
         $data = ApplicationPresenter::encodeParameters($event->getPrimary(), $application->getPrimary());
-        $token = $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_EVENT_NOTIFY, $until, $data, true);
-        return $token;
+        return $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_EVENT_NOTIFY, $until, $data, true);
     }
 
+    /**
+     * @param ModelEvent $event
+     * @param IModel $application
+     * @param Machine $machine
+     * @return string
+     */
     private function getSubject(ModelEvent $event, IModel $application, Machine $machine) {
         $application = Strings::truncate((string)$application, 20); //TODO extension point
         return $event->name . ': ' . $application . ' ' . mb_strtolower($machine->getPrimaryMachine()->getStateName());
     }
 
+    /**
+     * @param ModelEvent $event
+     * @return DateTime
+     */
     private function getUntil(ModelEvent $event) {
         return $event->registration_end ?: $event->end; //TODO extension point
     }
 
+    /**
+     * @return bool
+     */
     private function hasBcc() {
         return !is_array($this->addressees) && substr($this->addressees, 0, strlen(self::BCC_PREFIX)) == self::BCC_PREFIX;
     }
 
+    /**
+     * @param Transition $transition
+     * @return array
+     */
     private function resolveAdressees(Transition $transition) {
         $holder = $transition->getBaseHolder()->getHolder();
         if (is_array($this->addressees)) {
@@ -192,10 +231,10 @@ class MailSender extends Object {
             }
             switch ($addressees) {
                 case self::ADDR_SELF:
-                    $names = array($transition->getBaseHolder()->getName());
+                    $names = [$transition->getBaseHolder()->getName()];
                     break;
                 case self::ADDR_PRIMARY:
-                    $names = array($holder->getPrimaryHolder()->getName());
+                    $names = [$holder->getPrimaryHolder()->getName()];
                     break;
                 case self::ADDR_SECONDARY:
                     $names = [];

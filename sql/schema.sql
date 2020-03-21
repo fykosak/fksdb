@@ -182,6 +182,8 @@ CREATE TABLE IF NOT EXISTS `region` (
   COMMENT 'NUTS of the EU region\nor ISO 3166-1 for other countries',
   `name`        VARCHAR(255) NOT NULL
   COMMENT 'name of the region in the language intelligible in that region',
+  `phone_nsn` INT(11) NULL DEFAULT NULL,
+  `phone_prefix` VARCHAR(16) NULL DEFAULT NULL,
   PRIMARY KEY (`region_id`),
   UNIQUE INDEX `nuts` (`nuts` ASC)
 )
@@ -456,6 +458,8 @@ CREATE TABLE IF NOT EXISTS `grant` (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `person_info` (
   `person_id`              INT(11)      NOT NULL,
+  `preferred_lang`         ENUM('cs','en') NULL DEFAULT NULL
+  COMMENT 'Prefer language code by ISO 639-1',
   `born`                   DATE         NULL DEFAULT NULL
   COMMENT 'datum narození',
   `id_number`              VARCHAR(32)  NULL DEFAULT NULL
@@ -478,7 +482,7 @@ CREATE TABLE IF NOT EXISTS `person_info` (
   COMMENT 'název města narození osoby',
   `citizenship`            CHAR(2)      NULL DEFAULT NULL
   COMMENT 'Státní příslušnost',
-  `health_insurance`       VARCHAR(64)  NULL DEFAULT NULL
+  `health_insurance`       INT(11)  NULL DEFAULT NULL
   COMMENT 'Zdravotní pojišťovna',
   `employer`               VARCHAR(255) NULL DEFAULT NULL
   COMMENT 'Zaměstnavatel',
@@ -489,10 +493,6 @@ CREATE TABLE IF NOT EXISTS `person_info` (
   `email`                  VARCHAR(255) NULL DEFAULT NULL,
   `origin`                 TEXT         NULL DEFAULT NULL
   COMMENT 'Odkud se o nás dozvěděl.',
-  `tex_signature`          VARCHAR(32)  NULL DEFAULT NULL
-  COMMENT 'zkratka používaná v TeXových vzorácích',
-  `domain_alias`           VARCHAR(32)  NULL DEFAULT NULL
-  COMMENT 'alias v doméně fykos.cz',
   `career`                 TEXT         NULL DEFAULT NULL
   COMMENT 'co studuje/kde pracuje',
   `homepage`               VARCHAR(255) NULL DEFAULT NULL
@@ -505,13 +505,16 @@ CREATE TABLE IF NOT EXISTS `person_info` (
   COMMENT 'tel. číslo rodič mama',
   `duplicates`             TEXT         NULL DEFAULT NULL
   COMMENT 'Označení neduplicitních osob.',
+  `email_parent_d`         VARCHAR(255)  NULL DEFAULT NULL
+  COMMENT 'email rodič otec',
+  `email_parent_m`         VARCHAR(255)  NULL DEFAULT NULL
+  COMMENT 'email rodič mama',
+  `pizza`                  VARCHAR(255) NULL DEFAULT NULL COMMENT 'pizza',
   PRIMARY KEY (`person_id`),
   UNIQUE INDEX `email_UNIQUE` (`email` ASC),
   UNIQUE INDEX `uk_login_UNIQUE` (`uk_login` ASC),
   UNIQUE INDEX `born_id_UNIQUE` (`born_id` ASC),
   UNIQUE INDEX `fb_id_UNIQUE` (`fb_id` ASC),
-  UNIQUE INDEX `domain_alias_UNIQUE` (`domain_alias` ASC),
-  UNIQUE INDEX `tex_signature_UNIQUE` (`tex_signature` ASC),
   UNIQUE INDEX `linkedin_id_UNIQUE` (`linkedin_id` ASC),
   CONSTRAINT `person_info_ibfk_1`
   FOREIGN KEY (`person_id`)
@@ -663,6 +666,8 @@ CREATE TABLE IF NOT EXISTS `submit` (
   COMMENT 'Pred prepoctem',
   `calc_points`  DECIMAL(4, 2)           NULL     DEFAULT NULL
   COMMENT 'Cache spoctenych bodu.',
+  `corrected`       TINYINT(1)   NULL DEFAULT 0
+  COMMENT 'Má uloha nahrané riešnie?',
   PRIMARY KEY (`submit_id`),
   UNIQUE INDEX `cons_uniq` (`ct_id` ASC, `task_id` ASC),
   INDEX `task_id` (`task_id` ASC),
@@ -807,7 +812,7 @@ CREATE TABLE IF NOT EXISTS `e_fyziklani_participant_with_team` (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `stored_query` (
   `query_id`      INT          NOT NULL AUTO_INCREMENT,
-  `qid`           VARCHAR(16)  NULL     DEFAULT NULL
+  `qid`           VARCHAR(64)  NULL     DEFAULT NULL
   COMMENT 'identifikátor pro URL, práva apod.\ndotazy s QIDem nelze mazat',
   `name`          VARCHAR(32)  NOT NULL
   COMMENT 'název dotazu, identifikace pro člověka',
@@ -1198,89 +1203,39 @@ CREATE TABLE IF NOT EXISTS `fyziklani_task` (
 -- Table `fyziklani_submit`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `fyziklani_submit` (
-  `fyziklani_submit_id` INT       NOT NULL AUTO_INCREMENT,
-  `fyziklani_task_id`   INT       NOT NULL,
-  `e_fyziklani_team_id` INT       NOT NULL,
-  `points`              TINYINT   NOT NULL,
-  `created`             TIMESTAMP NOT NULL DEFAULT 0,
-  `modified`            TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `fyziklani_submit_id` INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `fyziklani_task_id`   INT         NOT NULL,
+  `e_fyziklani_team_id` INT         NOT NULL,
+  `points`              TINYINT     NOT NULL,
+  `state`       VARCHAR(64) NULL     DEFAULT NULL,
+  `created`             DATETIME    NULL     DEFAULT CURRENT_TIMESTAMP,
+  `modified`            TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP
   ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`fyziklani_submit_id`),
   INDEX `fk_fyziklani_submit_1_idx` (`fyziklani_task_id` ASC),
   INDEX `fk_fyziklani_submit_2_idx` (`e_fyziklani_team_id` ASC),
   UNIQUE INDEX `uq_fyziklani_task_id_e_fyziklani_team_id` (`fyziklani_task_id` ASC, `e_fyziklani_team_id` ASC),
+
   CONSTRAINT `fk_fyziklani_submit_1`
   FOREIGN KEY (`fyziklani_task_id`)
   REFERENCES `fyziklani_task` (`fyziklani_task_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
+
   CONSTRAINT `fk_fyziklani_submit_2`
   FOREIGN KEY (`e_fyziklani_team_id`)
   REFERENCES `e_fyziklani_team` (`e_fyziklani_team_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
 )
-  ENGINE = InnoDB;
+  ENGINE = 'InnoDB';
 
--- -----------------------------------------------------
--- Table `event_accommodation`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `event_accommodation` (
-  `event_accommodation_id` INT  NOT NULL AUTO_INCREMENT,
-  `event_id`               INT  NOT NULL,
-  `address_id`             INT  NOT NULL,
-  `capacity`               INT  NOT NULL,
-  `name`                   VARCHAR(45) CHARACTER SET 'utf8'
-  COLLATE 'utf8_czech_ci'       NOT NULL,
-  `price_kc`               INT  NULL,
-  `price_eur`              INT  NULL,
-  `date`                   DATE NOT NULL,
-  PRIMARY KEY (`event_accommodation_id`),
-  INDEX `fk_event_accommodation_1_idx` (`event_id` ASC),
-  INDEX `fk_event_accommodation_2_idx` (`address_id` ASC),
-  CONSTRAINT `fk_event_accommodation_1`
-  FOREIGN KEY (`event_id`)
-  REFERENCES `event` (`event_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_event_accommodation_2`
-  FOREIGN KEY (`address_id`)
-  REFERENCES `address` (`address_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
-)
-  ENGINE = InnoDB;
-
--- -----------------------------------------------------
--- Table `event_person_accommodation`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `event_person_accommodation` (
-  `event_person_accommodation_id` INT         NOT NULL AUTO_INCREMENT,
-  `person_id`                     INT         NOT NULL,
-  `event_accommodation_id`        INT         NOT NULL,
-  `status`                        VARCHAR(14) NULL,
-  PRIMARY KEY (`event_person_accommodation_id`),
-  INDEX `fk_event_person_accommodation_1_idx` (`event_accommodation_id` ASC),
-  INDEX `fk_event_person_accommodation_2_idx` (`person_id` ASC),
-  CONSTRAINT `fk_event_person_accommodation_1`
-  FOREIGN KEY (`event_accommodation_id`)
-  REFERENCES `event_accommodation` (`event_accommodation_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_event_person_accommodation_2`
-  FOREIGN KEY (`person_id`)
-  REFERENCES `person` (`person_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
-)
-  ENGINE = InnoDB;
 
 -- -----------------------------------------------------
 -- Table `brawl_room`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `brawl_room` (
+CREATE TABLE IF NOT EXISTS `fyziklani_room` (
   `room_id` INT           NOT NULL AUTO_INCREMENT,
-  `name`    VARCHAR(4) CHARACTER SET 'utf8'
+  `name`    VARCHAR(64) CHARACTER SET 'utf8'
   COLLATE 'utf8_czech_ci' NOT NULL,
   `rows`    INT           NOT NULL,
   `columns` INT           NOT NULL,
@@ -1291,12 +1246,14 @@ CREATE TABLE IF NOT EXISTS `brawl_room` (
 -- -----------------------------------------------------
 -- Table `brawl_team_position`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `brawl_team_position` (
+CREATE TABLE IF NOT EXISTS `fyziklani_team_position` (
   `position_id`         INT NOT NULL AUTO_INCREMENT,
-  `e_fyziklani_team_id` INT NOT NULL,
-  `row`                 INT NOT NULL,
-  `col`                 INT NOT NULL,
+  `e_fyziklani_team_id` INT NULL DEFAULT NULL,
+  `row`                 INT NULL DEFAULT NULL,
+  `col`                 INT NULL DEFAULT NULL,
   `room_id`             INT NOT NULL,
+  `x_coordinate`        DOUBLE NULL DEFAULT NULL,
+  `y_coordinate`        DOUBLE NULL DEFAULT NULL,
   PRIMARY KEY (`position_id`),
   UNIQUE INDEX `e_fyziklani_team_id_UNIQUE` (`e_fyziklani_team_id` ASC),
   INDEX `fk_brawl_team_position_2_idx` (`room_id` ASC),
@@ -1307,7 +1264,7 @@ CREATE TABLE IF NOT EXISTS `brawl_team_position` (
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_brawl_team_position_2`
   FOREIGN KEY (`room_id`)
-  REFERENCES `brawl_room` (`room_id`)
+  REFERENCES `fyziklani_room` (`room_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
 )
@@ -1323,6 +1280,8 @@ CREATE TABLE IF NOT EXISTS `teacher` (
   `since`      DATE,
   `until`      DATE,
   `note`       TEXT,
+  `state`      ENUM('proposal','cooperate','ended','undefined') NOT NULL DEFAULT 'undefined',
+  `number_brochures` INT(11) NOT NULL DEFAULT 0,
   CONSTRAINT `fk_teacher_person_id1`
   FOREIGN KEY (`person_id`)
   REFERENCES `person` (`person_id`)
@@ -1349,6 +1308,8 @@ CREATE TABLE IF NOT EXISTS `payment` (
   `variable_symbol` VARCHAR(256)   NULL     DEFAULT NULL,
   `specific_symbol` VARCHAR(256)   NULL     DEFAULT NULL,
   `bank_account`    VARCHAR(32)    NULL     DEFAULT NULL,
+  `bank_name`       VARCHAR(256)   NULL     DEFAULT NULL,
+  `recipient`       VARCHAR(256)   NULL     DEFAULT NULL,
   `iban`            VARCHAR(256)   NULL     DEFAULT NULL,
   `swift`           VARCHAR(256)   NULL     DEFAULT NULL,
   INDEX `fk_payment_1_idx` (`event_id` ASC),
@@ -1366,26 +1327,6 @@ CREATE TABLE IF NOT EXISTS `payment` (
 )
   ENGINE = 'InnoDB';
 
-
-CREATE TABLE IF NOT EXISTS `payment_accommodation` (
-  `payment_accommodation_id`      INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `payment_id`                    INT(11) NOT NULL,
-  `event_person_accommodation_id` INT(11) NOT NULL,
-  UNIQUE INDEX `UC_payment_accommodation_1` (event_person_accommodation_id),
-  INDEX `fk_accommodation_payment_1_idx` (`payment_id` ASC),
-  INDEX `fk_accommodation_payment_2_idx` (`event_person_accommodation_id` ASC),
-  CONSTRAINT `fk_accommodation_payment_event_person_accommodation1`
-  FOREIGN KEY (`event_person_accommodation_id`)
-  REFERENCES `event_person_accommodation` (`event_person_accommodation_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_accommodation_payment_payment_1`
-  FOREIGN KEY (`payment_id`)
-  REFERENCES `payment` (`payment_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
-)
-  ENGINE = 'InnoDB';
 
 -- -----------------------------------------------------
 -- Table `fyziklani_game_setup`
@@ -1409,6 +1350,110 @@ CREATE TABLE IF NOT EXISTS `fyziklani_game_setup` (
     ON UPDATE RESTRICT
 )
   ENGINE = 'InnoDB';
+
+-- -----------------------------------------------------
+-- Table `schedule_group`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `schedule_group` (
+    `schedule_group_id`   INT(11)      NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `schedule_group_type` VARCHAR(64)  NOT NULL,
+    `name_cs`             VARCHAR(256) NULL DEFAULT NULL,
+    `name_en`             VARCHAR(256) NULL DEFAULT NULL,
+    `event_id`            INT(11)      NOT NULL,
+    `start`               DATETIME     NOT NULL,
+    `end`                 DATETIME     NOT NULL,
+    CONSTRAINT `fk_schedule_group_event`
+        FOREIGN KEY (`event_id`)
+            REFERENCES `event` (`event_id`)
+            ON DELETE RESTRICT
+            ON UPDATE RESTRICT
+)
+    ENGINE = 'InnoDB';
+
+-- -----------------------------------------------------
+-- Table `schedule_item`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `schedule_item` (
+  `schedule_item_id`  INT(11)        NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `schedule_group_id` INT(11)        NOT NULL,
+  `price_czk`         DECIMAL(11, 2) NULL     DEFAULT NULL,
+  `price_eur`         DECIMAL(11, 2) NULL     DEFAULT NULL,
+  `name_cs`           VARCHAR(256)   NULL     DEFAULT NULL,
+  `name_en`           VARCHAR(256)   NULL     DEFAULT NULL,
+  `capacity`          INT(11)        NOT NULL,
+  `require_id_number` INT(1)         NOT NULL DEFAULT 0,
+  `description_cs`       VARCHAR(256)   NULL DEFAULT NULL,
+  `description_en`       VARCHAR(256)   NULL DEFAULT NULL,
+  CONSTRAINT `fk_schedule_group`
+  FOREIGN KEY (`schedule_group_id`)
+  REFERENCES `schedule_group` (`schedule_group_id`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT
+)
+  ENGINE = 'InnoDB';
+
+-- -----------------------------------------------------
+-- Table `person_schedule`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `person_schedule` (
+  `person_schedule_id` INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `person_id`          INT         NOT NULL,
+  `schedule_item_id`   INT         NOT NULL,
+  `state`             VARCHAR(14) NULL,
+  INDEX `fk_person_schedule_1_idx` (`schedule_item_id` ASC),
+  INDEX `fk_person_schedule_2_idx` (`person_id` ASC),
+  CONSTRAINT `fk_schedule_item_1`
+  FOREIGN KEY (`schedule_item_id`)
+  REFERENCES `schedule_item` (`schedule_item_id`)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_schedule_item_2`
+  FOREIGN KEY (`person_id`)
+  REFERENCES `person` (`person_id`)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE
+)
+  ENGINE = 'InnoDB';
+-- -----------------------------------------------------
+-- Table `schedule_payment`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `schedule_payment` (
+  `schedule_payment_id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `payment_id`          INT(11) NOT NULL,
+  `person_schedule_id`  INT(11) NOT NULL,
+  UNIQUE INDEX `UC_schedule_payment_1` (`person_schedule_id`, payment_id),
+  INDEX `fk_schedule_payment_1_idx` (`payment_id` ASC),
+  INDEX `fk_schedule_payment_2_idx` (`person_schedule_id` ASC),
+  CONSTRAINT `fk_schedule_payment_1`
+  FOREIGN KEY (`person_schedule_id`)
+  REFERENCES `person_schedule` (`person_schedule_id`)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_schedule_payment_2`
+  FOREIGN KEY (`payment_id`)
+  REFERENCES `payment` (`payment_id`)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE
+)
+  ENGINE = 'InnoDB';
+-- -----------------------------------------------------
+-- Table `email_message`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `email_message`
+(
+    `email_message_id` INT(11)      NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `recipient`         VARCHAR(128) NOT NULL,
+    `sender`           VARCHAR(128) NOT NULL,
+    `reply_to`         VARCHAR(128) NOT NULL,
+    `subject`          VARCHAR(128) NOT NULL,
+    `carbon_copy`      VARCHAR(128) NULL     DEFAULT NULL,
+    `blind_carbon_copy` VARCHAR(128) NULL     DEFAULT NULL,
+    `text`             TEXT         NOT NULL,
+    `state`            ENUM ('saved','waiting','sent','failed','canceled') CHARACTER SET 'utf8' DEFAULT 'saved',
+    `created`          DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `sent`             DATETIME     NULL DEFAULT NULL
+)
+    ENGINE = 'InnoDB';
 
 SET SQL_MODE = @OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS = @OLD_FOREIGN_KEY_CHECKS;

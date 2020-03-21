@@ -1,35 +1,26 @@
 <?php
 
-
 namespace EventModule;
 
 use AuthenticatedPresenter;
+use FKSDB\Components\Controls\Helpers\Badges\ContestBadge;
 use FKSDB\Components\Controls\LanguageChooser;
-use FKSDB\Components\Controls\Stalking\Helpers\ContestBadge;
 use FKSDB\Components\Grids\Events\DispatchGrid;
-use FKSDB\ORM\ModelPerson;
-use Nette\DI\Container;
-use ServiceEvent;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Services\ServiceEvent;
+use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 
+/**
+ * Class DispatchPresenter
+ * @package EventModule
+ */
 class DispatchPresenter extends AuthenticatedPresenter {
-
-    /**
-     *
-     * @var Container
-     */
-    protected $container;
 
     /**
      * @var ServiceEvent
      */
     protected $serviceEvent;
-
-    /**
-     * @param Container $container
-     */
-    public function injectContainer(Container $container) {
-        $this->container = $container;
-    }
 
     /**
      * @param ServiceEvent $serviceEvent
@@ -42,8 +33,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
      * @return LanguageChooser
      */
     protected function createComponentLanguageChooser(): LanguageChooser {
-        $control = new LanguageChooser($this->session);
-        return $control;
+        return new LanguageChooser($this->session);
     }
 
     /**
@@ -58,7 +48,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
      */
     public function createComponentDispatchGrid(): DispatchGrid {
         /**
-         * @var $person ModelPerson
+         * @var ModelPerson $person
          */
         $person = $this->user->getIdentity()->getPerson();
         return new DispatchGrid($this->serviceEvent, $person, $this->yearCalculator);
@@ -70,14 +60,14 @@ class DispatchPresenter extends AuthenticatedPresenter {
     }
 
     /**
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function startup() {
         /**
-         * @var $languageChooser LanguageChooser
+         * @var LanguageChooser $languageChooser
          */
-        $languageChooser =  $this->getComponent('languageChooser');
+        $languageChooser = $this->getComponent('languageChooser');
         $languageChooser->syncRedirect();
 
         parent::startup();

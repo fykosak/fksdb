@@ -1,0 +1,37 @@
+<div>
+    <style>
+        table {
+            border-collapse: collapse;
+            color: black;
+        }
+
+        td, th {
+            border: solid 1px #ccc;
+            padding: .4rem;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        th {
+            background-color: #ddd;
+        }
+    </style>
+    <table>
+        <thead>
+        <tr>
+            <th>{_('Item')}</th>
+            <th>{_('Price')}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {foreach FKSDB\Payment\PriceCalculator\PreProcess\EventAccommodationPrice::getGridItems($model) as $item}
+            <tr>
+                <td>{$item['label']}</td>
+                <td>{$item['price']}</td>
+            </tr>
+        {/foreach}
+        </tbody>
+    </table>
+</div>

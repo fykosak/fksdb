@@ -1,13 +1,21 @@
 <?php
 
+namespace FKSDB;
+
 use FKSDB\Config\GlobalParameters;
-use FKSDB\ORM\ModelContest;
+use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Models\ModelContestYear;
+use FKSDB\ORM\Services\ServiceContest;
+use FKSDB\ORM\Services\ServiceContestYear;
+use InvalidArgumentException;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
-use Nette\Object;
 use Nette\Utils\Arrays;
 
-class YearCalculator extends Object {
+/**
+ * Class FKSDB\YearCalculator
+ */
+class YearCalculator {
 
     /**
      * @const No. of years of shift for forward registration.
@@ -33,10 +41,25 @@ class YearCalculator extends Object {
      * @var GlobalParameters
      */
     private $globalParameters;
-    private $cache = null;
-    private $revCache = null;
+    /**
+     * @var int[][]
+     */
+    private $cache = [];
+    /**
+     * @var int[][]
+     */
+    private $revCache = [];
+    /**
+     * @var int
+     */
     private $acYear;
 
+    /**
+     * FKSDB\YearCalculator constructor.
+     * @param ServiceContestYear $serviceContestYear
+     * @param ServiceContest $serviceContest
+     * @param GlobalParameters $globalParameters
+     */
     function __construct(ServiceContestYear $serviceContestYear, ServiceContest $serviceContest, GlobalParameters $globalParameters) {
         $this->serviceContestYear = $serviceContestYear;
         $this->serviceContest = $serviceContest;
@@ -45,7 +68,13 @@ class YearCalculator extends Object {
         $this->preloadCache();
     }
 
-    public function getAcademicYear(ActiveRow $contest, $year) {
+    /**
+     * @param ActiveRow|ModelContest $contest
+     * @param $year
+     * @return int
+     * @throws InvalidArgumentException
+     */
+    public function getAcademicYear(ActiveRow $contest, $year): int {
         if (!isset($this->cache[$contest->contest_id]) || !isset($this->cache[$contest->contest_id][$year])) {
             throw new InvalidArgumentException("No academic year defined for {$contest->contest_id}:$year.");
         }
@@ -56,7 +85,7 @@ class YearCalculator extends Object {
      * The academic year starts at 1st day of self::FIRST_AC_MONTH.
      * @return int
      */
-    public function getCurrentAcademicYear() {
+    public function getCurrentAcademicYear(): int {
         if ($this->acYear !== null) {
             return $this->acYear;
         }
@@ -68,7 +97,12 @@ class YearCalculator extends Object {
         return $calYear;
     }
 
-    public function getGraduationYear($studyYear, $acYear = null) {
+    /**
+     * @param int $studyYear
+     * @param int|null $acYear
+     * @return int
+     */
+    public function getGraduationYear(int $studyYear, int $acYear = null): int {
         $acYear = ($acYear !== null) ? $acYear : $this->getCurrentAcademicYear();
 
         if ($studyYear >= 6 && $studyYear <= 9) {
@@ -77,23 +111,42 @@ class YearCalculator extends Object {
         if ($studyYear >= 1 && $studyYear <= 4) {
             return $acYear + (5 - $studyYear);
         }
+        throw new \Nette\InvalidArgumentException('Graduation year not match');
     }
 
-    public function getCurrentYear(ModelContest $contest) {
+    /**
+     * @param ModelContest $contest
+
+     * @return int
+     */
+    public function getCurrentYear(ModelContest $contest): int {
         return $this->revCache[$contest->contest_id][$this->getCurrentAcademicYear()];
     }
 
-    public function getFirstYear(ModelContest $contest) {
+    /**
+     * @param ModelContest $contest
+     * @return mixed
+     */
+    public function getFirstYear(ModelContest $contest): int {
         $years = array_keys($this->cache[$contest->contest_id]);
         return $years[0];
     }
 
-    public function getLastYear(ModelContest $contest) {
+    /**
+     * @param ModelContest $contest
+     * @return mixed
+     */
+    public function getLastYear(ModelContest $contest): int {
         $years = array_keys($this->cache[$contest->contest_id]);
         return $years[count($years) - 1];
     }
 
-    public function isValidYear(ModelContest $contest, $year) {
+    /**
+     * @param \FKSDB\ORM\Models\ModelContest $contest
+     * @param int $year
+     * @return bool
+     */
+    public function isValidYear(ModelContest $contest, int $year = null): bool {
         return $year !== null && $year >= $this->getFirstYear($contest) && $year <= $this->getLastYear($contest);
     }
 
@@ -102,7 +155,7 @@ class YearCalculator extends Object {
      * @param ModelContest $contest
      * @return int
      */
-    public function getForwardShift(ModelContest $contest) {
+    public function getForwardShift(ModelContest $contest): int {
         $calMonth = date('m');
         if ($calMonth < self::FIRST_AC_MONTH) {
             $contestName = $this->globalParameters['contestMapping'][$contest->contest_id];
@@ -121,19 +174,18 @@ class YearCalculator extends Object {
     }
 
     private function preloadCache() {
-        $this->cache = [];
-        $this->revCache = [];
         foreach ($this->serviceContestYear->getTable()->order('year') as $row) {
-            if (!isset($this->cache[$row->contest_id])) {
-                $this->cache[$row->contest_id] = [];
-                $this->revCache[$row->contest_id] = [];
+            $model = ModelContestYear::createFromActiveRow($row);
+            if (!isset($this->cache[$model->contest_id])) {
+                $this->cache[$model->contest_id] = [];
+                $this->revCache[$model->contest_id] = [];
             }
-            $this->cache[$row->contest_id][$row->year] = $row->ac_year;
-            $this->revCache[$row->contest_id][$row->ac_year] = $row->year;
+            $this->cache[$model->contest_id][$model->year] = $model->ac_year;
+            $this->revCache[$model->contest_id][$model->ac_year] = $model->year;
         }
 
         if (!$this->cache) {
-            throw new InvalidStateException('YearCalculator cannot be initalized, table contest_year is probably empty.');
+            throw new InvalidStateException('FKSDB\YearCalculator cannot be initalized, table contest_year is probably empty.');
         }
 
         $pk = $this->serviceContest->getPrimary();

@@ -19,8 +19,9 @@ use Nette;
  *
  * @author     David Grudl
  */
-class Neon extends Nette\Object
+class Neon
 {
+    use Nette\SmartObject;
 	const BLOCK = 1;
 
 	/** @var array */
@@ -294,7 +295,7 @@ class Neon extends Nette\Object
 				} elseif (is_numeric($t)) {
 					$value = $t * 1;
 				} elseif (preg_match('#\d\d\d\d-\d\d?-\d\d?(?:(?:[Tt]| +)\d\d?:\d\d:\d\d(?:\.\d*)? *(?:Z|[-+]\d\d?(?::\d\d)?)?)?\z#A', $t)) {
-					$value = new Nette\DateTime($t);
+					$value = new Nette\Utils\DateTime($t);
 				} else { // literal
 					$value = $t;
 				}

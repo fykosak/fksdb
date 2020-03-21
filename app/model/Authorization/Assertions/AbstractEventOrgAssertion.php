@@ -2,25 +2,28 @@
 
 namespace Authorization\Assertions;
 
-use DbNames;
 use Exports\StoredQuery;
+use FKSDB\ORM\DbNames;
 use Nette\Database\Connection;
-use Nette\Object;
+use Nette\Security\IUserStorage;
 use Nette\Security\Permission;
-use Nette\Security\User;
+use Nette\SmartObject;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-abstract class AbstractEventOrgAssertion extends Object {
+abstract class AbstractEventOrgAssertion {
 
-    private $eventTypeId;
+    use SmartObject;
+    /**
+     * @var string
+     */
     private $parameterName;
 
     /**
-     * @var User
+     * @var IUserStorage
      */
     private $user;
 
@@ -29,21 +32,32 @@ abstract class AbstractEventOrgAssertion extends Object {
      */
     private $connection;
 
-    function __construct($eventTypeId, $parameterName, User $user, Connection $connection) {
-        if (!is_array($eventTypeId)) {
-            $eventTypeId = [$eventTypeId];
-        }
-        $this->eventTypeId = $eventTypeId;
+    /**
+     * AbstractEventOrgAssertion constructor.
+     * @param $eventTypeId
+     * @param $parameterName
+     * @param IUserStorage $user
+     * @param Connection $connection
+     */
+    function __construct($eventTypeId, string $parameterName, IUserStorage $user, Connection $connection) {
         $this->parameterName = $parameterName;
         $this->user = $user;
         $this->connection = $connection;
     }
 
+    /**
+     * @param Permission $acl
+     * @param $role
+     * @param $resourceId
+     * @param $privilege
+     * @param null $parameterValue
+     * @return bool
+     */
     public function __invoke(Permission $acl, $role, $resourceId, $privilege, $parameterValue = null) {
         $storedQuery = $acl->getQueriedResource();
 
         if (!$storedQuery instanceof StoredQuery) {
-            //  throw new InvalidArgumentException('Expected StoredQuery, got \'' . get_class($storedQuery) . '\'.');
+            //  throw new InvalidArgumentException('Expected StoredQuery, got "' . get_class($storedQuery) . '".');
         }
 
         $identity = $this->user->getIdentity();
@@ -52,10 +66,8 @@ abstract class AbstractEventOrgAssertion extends Object {
             return false;
         }
         $rows = $this->connection->table(DbNames::TAB_EVENT_ORG)
-            ->where('person_id', $person->person_id)
-            ->where('event.event_type_id', $this->eventTypeId);
+            ->where('person_id', $person->person_id);
 
-        // $queryParameters = $storedQuery->getParameters(true);
         if ($this->parameterName) {
             $rows->where('event.' . $this->parameterName, /*$queryParameters[$this->parameterName]*/
                 $parameterValue);

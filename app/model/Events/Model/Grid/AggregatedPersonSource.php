@@ -4,10 +4,10 @@ namespace Events\Model\Grid;
 
 use ArrayIterator;
 use Events\Model\Holder\Holder;
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Tables\TypedTableSelection;
 use Nette\DI\Container;
-use Nette\Object;
-use ORM\Tables\TypedTableSelection;
+use Nette\SmartObject;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -19,10 +19,10 @@ use ORM\Tables\TypedTableSelection;
  * @method SingleEventSource limit()
  * @method SingleEventSource count()
  */
-abstract class AggregatedPersonSource extends Object implements IHolderSource {
-
+abstract class AggregatedPersonSource implements IHolderSource {
+    use SmartObject;
     /**
-     * @var TypedTableSelection
+     * @var \FKSDB\ORM\Tables\TypedTableSelection
      */
     private $events;
 
@@ -37,6 +37,11 @@ abstract class AggregatedPersonSource extends Object implements IHolderSource {
      */
     private $holders = null;
 
+    /**
+     * AggregatedPersonSource constructor.
+     * @param TypedTableSelection $events
+     * @param Container $container
+     */
     function __construct(TypedTableSelection $events, Container $container) {
         $this->events = $events;
         $this->container = $container;
@@ -45,7 +50,7 @@ abstract class AggregatedPersonSource extends Object implements IHolderSource {
     private function loadData() {
         $this->holders = [];
         foreach ($this->events as $eventKey => $row) {
-            $event = ModelEvent::createFromTableRow($row);
+            $event = ModelEvent::createFromActiveRow($row);
             $result = $this->processEvent($event);
 
             if ($result instanceof SingleEventSource) {
@@ -60,6 +65,10 @@ abstract class AggregatedPersonSource extends Object implements IHolderSource {
         }
     }
 
+    /**
+     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @return mixed
+     */
     abstract function processEvent(ModelEvent $event);
 
     /**
@@ -71,16 +80,13 @@ abstract class AggregatedPersonSource extends Object implements IHolderSource {
      * @return self
      */
     public function __call($name, $args) {
-        static $delegated = array(
+        static $delegated = [
             'where' => false,
             'order' => false,
             'limit' => false,
             'count' => true,
-        );
-        if (!isset($delegated[$name])) {
-            return parent::__call($name, $args);
-        }
-        $result = call_user_func_array(array($this->events, $name), $args);
+        ];
+        $result = call_user_func_array([$this->events, $name], $args);
         $this->holders = null;
 
         if ($delegated[$name]) {
@@ -90,6 +96,9 @@ abstract class AggregatedPersonSource extends Object implements IHolderSource {
         }
     }
 
+    /**
+     * @return ArrayIterator|\Traversable
+     */
     public final function getIterator() {
         if ($this->holders === null) {
             $this->loadData();

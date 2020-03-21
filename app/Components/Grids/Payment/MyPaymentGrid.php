@@ -2,15 +2,23 @@
 
 namespace FKSDB\Components\Grids\Payment;
 
-use FKSDB\ORM\ModelPayment;
+use BasePresenter;
+use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\ModelPayment;
 use NiftyGrid\DataSource\NDataSource;
+use NiftyGrid\DuplicateButtonException;
+use NiftyGrid\DuplicateColumnException;
 
+/**
+ * Class MyPaymentGrid
+ * @package FKSDB\Components\Grids\Payment
+ */
 class MyPaymentGrid extends PaymentGrid {
 
     /**
-     * @param \BasePresenter $presenter
-     * @throws \NiftyGrid\DuplicateButtonException
-     * @throws \NiftyGrid\DuplicateColumnException
+     * @param BasePresenter $presenter
+     * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -20,18 +28,16 @@ class MyPaymentGrid extends PaymentGrid {
         $dataSource = new NDataSource($payments);
         $this->setDataSource($dataSource);
 
-        $this->addColumnPaymentId();
+        $this->addColumns([
+            DbNames::TAB_PAYMENT . '.id',
+            // 'referenced.event_name',
+            DbNames::TAB_PAYMENT . '.price',
+            DbNames::TAB_PAYMENT . '.state',
+        ]);
 
         $this->addColumn('event', _('Event'))->setRenderer(function ($row) {
-            return ModelPayment::createFromTableRow($row)->getEvent()->name;
+            return ModelPayment::createFromActiveRow($row)->getEvent()->name;
         });
-
-        // $this->addColumnsSymbols();
-
-        $this->addColumnPrice();
-
-        $this->addColumnState();
-
-        $this->addButtonDetail();
+        $this->addLink('payment.detail', true);
     }
 }

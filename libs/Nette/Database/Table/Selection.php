@@ -25,8 +25,9 @@ use Nette,
  *
  * @property-read string $sql
  */
-class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Countable
+class Selection implements \Iterator, \ArrayAccess, \Countable
 {
+    use Nette\SmartObject;
 	/** @var Nette\Database\Connection */
 	protected $connection;
 

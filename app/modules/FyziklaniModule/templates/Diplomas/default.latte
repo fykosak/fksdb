@@ -1,0 +1,26 @@
+{block content}
+    <div>
+        {foreach $items as $category=>$stats}
+            <h2>{_('Category')} {$category}</h2>
+            <div>
+                <span class="text-danger">opened: {$stats['opened']}</span>
+                <span class="text-success">closed: {$stats['closed']}</span>
+                <span>total: {$stats['opened']+$stats['closed']}</span>
+            </div>
+            {if $presenter->isReadyAllToCalculate($category)}
+                <a class="btn btn-primary"
+                   href="{link calculate! category=>$category}">{\sprintf(_('Calculate refults for %s category'), $category)}</a>
+            {else}
+                <span class="btn btn-warnig disabled">{\sprintf(_('Category %s is not ready'), $category)}</span>
+            {/if}
+        {/foreach}
+        <h2>{_('Global')}</h2>
+        {if $presenter->isReadyAllToCalculate(null)}
+            <a class="btn btn-primary"
+               href="{link calculate! category=>null}">{\sprintf(_('Calculate global results'), $category)}</a>
+        {else}
+            <span class="btn btn-primary disabled">{\sprintf(_('Total results are not ready'), $category)}</span>
+        {/if}
+    </div>
+
+{/block}

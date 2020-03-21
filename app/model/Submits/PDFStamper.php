@@ -1,9 +1,9 @@
 <?php
 
-namespace Submits;
+namespace FKSDB\Submits;
 
 use fks_pdf_parser_exception;
-use FKSDB\ORM\ModelSubmit;
+use FKSDB\ORM\Models\ModelSubmit;
 use FPDI;
 use Nette\InvalidStateException;
 use Nette\Utils\Strings;
@@ -36,34 +36,61 @@ class PDFStamper implements IStorageProcessing {
      */
     const STAMP_MASK = 'S%dU%s, %s, %s';
 
-    function __construct($fontSize) {
+    /**
+     * PDFStamper constructor.
+     * @param int $fontSize
+     */
+    function __construct(int $fontSize) {
         $this->fontSize = $fontSize;
     }
 
-    public function getInputFile() {
+    /**
+     * @return string
+     */
+    public function getInputFile(): string {
         return $this->inputFile;
     }
 
-    public function setInputFile($inputFile) {
+    /**
+     * @param string $inputFile
+     */
+    public function setInputFile(string $inputFile) {
         $this->inputFile = $inputFile;
     }
 
-    public function getOutputFile() {
+    /**
+     * @return string
+     */
+    public function getOutputFile(): string {
         return $this->outputFile;
     }
 
-    public function setOutputFile($outputFile) {
+    /**
+     * @param string $outputFile
+     */
+    public function setOutputFile(string $outputFile) {
         $this->outputFile = $outputFile;
     }
 
-    public function getFontSize() {
+    /**
+     * @return int
+     */
+    public function getFontSize(): int {
         return $this->fontSize;
     }
 
-    public function getStampMask() {
+    /**
+     * @return string
+     */
+    public function getStampMask(): string {
         return self::STAMP_MASK;
     }
 
+    /**
+     * @param \FKSDB\ORM\Models\ModelSubmit $submit
+     * @throws ProcessingException
+     * @throws InvalidStateException
+     */
     public function process(ModelSubmit $submit) {
         if (!$this->getInputFile()) {
             throw new InvalidStateException('Input file not set.');
@@ -77,24 +104,27 @@ class PDFStamper implements IStorageProcessing {
         $label = $submit->getTask()->label;
         $person = $submit->getContestant()->getPerson();
 
-        $stampText = sprintf($this->getStampMask(), $series, $label, $person->getFullname(), $submit->submit_id);
+        $stampText = sprintf($this->getStampMask(), $series, $label, $person->getFullName(), $submit->submit_id);
         try {
             $this->stampText($stampText);
-        } catch (fks_pdf_parser_exception $e) {
-            throw new ProcessingException('Cannot add stamp to the PDF.', null, $e);
+        } catch (fks_pdf_parser_exception $exception) {
+            throw new ProcessingException('Cannot add stamp to the PDF.', null, $exception);
         }
     }
 
-    private function stampText($text) {
+    /**
+     * @param string $text
+     */
+    private function stampText(string $text) {
         $pdf = new FPDI();
         $pageCount = $pdf->setSourceFile($this->getInputFile());
 
         for ($page = 1; $page <= $pageCount; ++$page) {
             $tpl = $pdf->importPage($page);
-            $text .= ' page ' . $page . '/' . $pageCount;
+            $actText = $text . ' page ' . $page . '/' . $pageCount;
             $specs = $pdf->getTemplateSize($tpl);
             $orientation = $specs['h'] > $specs['w'] ? 'P' : 'L';
-            $pdf->addPage($orientation);
+            $pdf->AddPage($orientation);
             $pdf->useTemplate($tpl, 1, 1, 0, 0, true);
 
             // calculate size of the stamp
@@ -102,7 +132,7 @@ class PDFStamper implements IStorageProcessing {
             $pdf->SetTextColor(0, 0, 0);
             $pw = 210; // pagewidth, A4 210 mm
             $offset = 7; // vertical offset
-            $tw = $pdf->GetStringWidth($text);
+            $tw = $pdf->GetStringWidth($actText);
             $th = $this->getFontSize() * 0.35; // 1pt = 0.35mm
             $x = ($pw - $tw) / 2;
             $y = $th + $offset;
@@ -111,7 +141,7 @@ class PDFStamper implements IStorageProcessing {
             $pdf->SetFillColor(240, 240, 240);
             $pdf->Rect($x - $margin, $y - $th - $margin, $tw + 2 * $margin, ($th + 2 * $margin), 'F');
 
-            $stampText = Strings::webalize($text, ' ,.', false); // FPDF has only ASCII encoded fonts
+            $stampText = Strings::webalize($actText, ' ,.', false); // FPDF has only ASCII encoded fonts
             $pdf->Text($x, $y, $stampText);
         }
 

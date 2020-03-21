@@ -11,11 +11,11 @@ services:
     PersonHistoryFactory:      FKSDB\Components\Forms\Factories\PersonHistoryFactory
     PersonFactory:      FKSDB\Components\Forms\Factories\PersonFactory
     SchoolFactory:      FKSDB\Components\Forms\Factories\SchoolFactory
-    FyziklaniFactory: FKSDB\Components\Forms\Factories\FyziklaniFactory
     TeacherFactory: FKSDB\Components\Forms\Factories\TeacherFactory
-    PersonAccommodationFactory: FKSDB\Components\Forms\Factories\PersonAccommodationFactory
-    FyziklaniComponentsFactory: FKSDB\Components\React\Fyziklani\FyziklaniComponentsFactory
+    PersonScheduleFactory: FKSDB\Components\Forms\Factories\PersonScheduleFactory
+    FyziklaniComponentsFactory: FKSDB\Components\Factories\FyziklaniFactory
     PaymentComponentFactory: FKSDB\Components\Factories\PaymentFactory
+    ScheduleFactory: FKSDB\Components\Factories\ScheduleFactory
 
     - FKSDB\Components\Forms\Rules\UniqueEmailFactory
     - FKSDB\Components\Forms\Rules\UniqueLoginFactory

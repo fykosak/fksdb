@@ -32,7 +32,7 @@ parameters:
 events:
     fol8:
         event_type_id: 9
-        eventYears: [8] # specify for which years this machine is valid, by default all years
+        eventYears: [8,9] # specify for which years this machine is valid, by default all years
         tableLayout: fyziklani.grid
         formLayout: fol.form
         paramScheme:
@@ -48,7 +48,7 @@ events:
             #   TEAM
             #
             TEAM:
-                service: @event.ServiceFyziklaniTeam
+                service: @fyziklani.ServiceFyziklaniTeam
                 personIds: []
                 eventId: e_fyziklani_team.event_id
 
@@ -57,6 +57,7 @@ events:
                     cancelled: _('Zrušen')
                     participated: _('Účastnil se')
                     missed: _('Nezúčastnil se')
+                    disqualified: _('Diskvalifikován')
 
                 transitions:
                     __init->applied:

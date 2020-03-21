@@ -2,18 +2,20 @@
 
 namespace FKSDB\Transitions;
 
+use FKSDB\Transitions\Statements\Statement;
+
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class Transition {
+final class Transition {
     const TYPE_SUCCESS = 'success';
     const TYPE_WARNING = 'warning';
     const TYPE_DANGER = 'danger';
     const TYPE_PRIMARY = 'primary';
     /**
-     * @var  \Closure
+     * @var Callable
      */
     private $condition;
 
@@ -23,13 +25,13 @@ class Transition {
      */
     private $label;
     /**
-     * @var \Closure[]
+     * @var callable[]
      */
-    public $beforeExecuteClosures = [];
+    public $beforeExecuteCallbacks = [];
     /**
-     * @var \Closure[]
+     * @var callable[]
      */
-    public $afterExecuteClosures = [];
+    public $afterExecuteCallbacks = [];
 
     /**
      * @var string
@@ -54,32 +56,56 @@ class Transition {
         return $this->toState;
     }
 
+    /**
+     * Transition constructor.
+     * @param string $fromState
+     * @param string $toState
+     * @param string $label
+     */
     function __construct(string $fromState, string $toState, string $label) {
         $this->fromState = $fromState;
         $this->toState = $toState;
         $this->label = $label;
     }
 
+    /**
+     * @return string
+     */
     public function getId(): string {
         return $this->fromState . '__' . $this->toState;
     }
 
+    /**
+     * @return string
+     */
     public function getType() {
         return $this->type;
     }
 
+    /**
+     * @param string $type
+     */
     public function setType(string $type) {
         $this->type = $type;
     }
 
+    /**
+     * @return string
+     */
     public function getLabel(): string {
-        return $this->label;
+        return _($this->label);
     }
 
-    public function setCondition(\Closure $closure) {
-        $this->condition = $closure;
+    /**
+     * @param callable|Statement $callback
+     */
+    public function setCondition(callable $callback) {
+        $this->condition = $callback;
     }
 
+    /**
+     * @return bool
+     */
     public function isCreating(): bool {
         return $this->fromState === Machine::STATE_INIT;
     }
@@ -96,8 +122,8 @@ class Transition {
      * @param IStateModel $model
      */
     public final function beforeExecute(IStateModel &$model) {
-        foreach ($this->beforeExecuteClosures as $closure) {
-            $closure($model);
+        foreach ($this->beforeExecuteCallbacks as $callback) {
+            $callback($model);
         }
     }
 
@@ -105,8 +131,8 @@ class Transition {
      * @param IStateModel $model
      */
     public final function afterExecute(IStateModel &$model) {
-        foreach ($this->afterExecuteClosures as $closure) {
-            $closure($model);
+        foreach ($this->afterExecuteCallbacks as $callback) {
+            $callback($model);
         }
     }
 }

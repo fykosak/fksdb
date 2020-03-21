@@ -11,8 +11,8 @@
 
 namespace Nette\Security\Diagnostics;
 
-use Nette,
-	Nette\Diagnostics\Helpers;
+use Nette;
+use Tracy\IBarPanel;
 
 
 /**
@@ -20,8 +20,9 @@ use Nette,
  *
  * @author     David Grudl
  */
-class UserPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
+class UserPanel implements IBarPanel
 {
+    use Nette\SmartObject;
 	/** @var Nette\Security\User */
 	private $user;
 

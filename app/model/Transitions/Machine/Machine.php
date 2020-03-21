@@ -2,15 +2,27 @@
 
 namespace FKSDB\Transitions;
 
+use Exception;
+use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
+use FKSDB\ORM\IModel;
+use FKSDB\ORM\IService;
+use LogicException;
+use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Database\Connection;
+use Nette\Database\Table\ActiveRow;
+use Nette\Localization\ITranslator;
+use function array_filter;
+use function array_values;
+use function count;
+use function is_null;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class Machine {
+abstract class Machine {
 
     const STATE_INIT = '__init';
     const STATE_TERMINATED = '__terminated';
@@ -23,11 +35,34 @@ class Machine {
      * @var Connection
      */
     protected $connection;
+    /**
+     * @var IService
+     */
+    private $service;
+    /**
+     * @var callable
+     * if callback return true, transition is allowed explicit, independently of transition's condition
+     */
+    private $explicitCondition;
+    /**
+     * @var ITranslator
+     */
+    private $translator;
 
-    public function __construct(Connection $connection) {
+    /**
+     * Machine constructor.
+     * @param Connection $connection
+     * @param IService $service
+<<<<<<< HEAD
+=======
+     * @param ITranslator $translator
+>>>>>>> origin/master
+     */
+    public function __construct(Connection $connection, IService $service, ITranslator $translator) {
         $this->connection = $connection;
+        $this->service = $service;
+        $this->translator = $translator;
     }
-
 
     /**
      * @param Transition $transition
@@ -49,62 +84,169 @@ class Machine {
      */
     public function getAvailableTransitions(IStateModel $model = null): array {
         $state = $model ? $model->getState() : NULL;
-        if (\is_null($state)) {
+        if (is_null($state)) {
             $state = self::STATE_INIT;
         }
         return array_filter($this->getTransitions(), function (Transition $transition) use ($model, $state) {
-            return ($transition->getFromState() === $state) && $transition->canExecute($model);
+            return ($transition->getFromState() === $state) && $this->canExecute($transition, $model);
         });
     }
 
     /**
-     * @param $id
      * @param IStateModel $model
-     * @return Transition
-     * @throws UnavailableTransitionException
+     * @return TransitionButtonsControl
      */
-    protected function findTransitionById(string $id, IStateModel $model): Transition {
-        $matchedTransitions = \array_values(\array_filter($this->getAvailableTransitions($model), function (Transition $transition) use ($id) {
-            return $transition->getId() === $id;
-        }));
-
-        /* if (\count($matchedTransitions) > 1) {
-             // moc veľa
-         }*/
-        if (\count($matchedTransitions) === 1) {
-            return $matchedTransitions[0];
-        }
-        throw new UnavailableTransitionException(\sprintf(_('Transition %s is not available'), $id));
+    public function createComponentTransitionButtons(IStateModel $model): TransitionButtonsControl {
+        return new TransitionButtonsControl($this, $this->translator, $model);
     }
 
     /**
      * @param string $id
      * @param IStateModel $model
-     * @return void
-     * @throws ForbiddenRequestException
+     * @return Transition
      * @throws UnavailableTransitionException
+     * @throws Exception
      */
-    public function executeTransition(string $id, IStateModel $model) {
+    protected function findTransitionById(string $id, IStateModel $model): Transition {
+        $transitions = array_filter($this->getAvailableTransitions($model), function (Transition $transition) use ($id) {
+            return $transition->getId() === $id;
+        });
+
+        return $this->selectTransition($transitions);
+    }
+
+    /**
+     * @param array $transitions
+     * @return Transition
+     * @throws UnavailableTransitionException
+     * @throws LogicException
+     * @throws UnavailableTransitionException
+     * Protect more that one transition between nodes
+     */
+    private function selectTransition(array $transitions): Transition {
+        $length = count($transitions);
+        if ($length > 1) {
+            throw new UnavailableTransitionException();
+        }
+        if (!$length) {
+            throw new UnavailableTransitionException();
+        }
+        return array_values($transitions)[0];
+    }
+
+    /* ********** CONDITION ******** */
+    /**
+     * @param callable $condition
+     */
+    public function setExplicitCondition(callable $condition) {
+        $this->explicitCondition = $condition;
+    }
+
+    /**
+     * @param Transition $transition
+     * @param IStateModel|null $model
+     * @return bool
+     */
+    protected function canExecute(Transition $transition, IStateModel $model = null): bool {
+        if ($this->explicitCondition && ($this->explicitCondition)($model)) {
+            return true;
+        }
+        return $transition->canExecute($model);
+    }
+    /* ********** EXECUTION ******** */
+
+    /**
+     * @param string $id
+     * @param IStateModel $model
+     * @return IStateModel
+     * @throws UnavailableTransitionException
+     * @throws ForbiddenRequestException
+     * @throws BadRequestException
+     * @throws Exception
+     */
+    public function executeTransition(string $id, IStateModel $model): IStateModel {
         $transition = $this->findTransitionById($id, $model);
-        if (!$transition->canExecute($model)) {
+        if (!$this->canExecute($transition, $model)) {
             throw new ForbiddenRequestException(_('Prechod sa nedá vykonať'));
         }
-        $this->connection->beginTransaction();
+        return $this->execute($transition, $model);
+    }
+
+    /**
+     * @param Transition $transition
+     * @param IStateModel|null $model
+     * @return IStateModel
+     * @throws BadRequestException
+     * @throws Exception
+     */
+    private function execute(Transition $transition, IStateModel $model): IStateModel {
+        if (!$this->connection->inTransaction()) {
+            $this->connection->beginTransaction();
+        }
         try {
             $transition->beforeExecute($model);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $this->connection->rollBack();
             throw $exception;
+        }
+        if (!$model instanceof IModel) {
+            throw new BadRequestException(_('Expected instance of IModel'));
         }
 
         $this->connection->commit();
         $model->updateState($transition->getToState());
         /* select from DB new (updated) model */
+
+        // $newModel = $model;
         $newModel = $model->refresh();
         $transition->afterExecute($newModel);
+        return $newModel;
     }
 
-    public function getInitState(): string {
-        return self::STATE_INIT;
+    /* ********** MODEL CREATING ******** */
+
+    /**
+     * @return string
+     */
+    abstract public function getCreatingState(): string;
+
+    /**
+     * @return Transition
+     * @throws Exception
+     */
+    private function getCreatingTransition(): Transition {
+        $transitions = array_filter($this->getTransitions(), function (Transition $transition) {
+            return $transition->getFromState() === self::STATE_INIT && $transition->getToState() === $this->getCreatingState();
+        });
+        return $this->selectTransition($transitions);
+    }
+
+    /**
+     * @return bool
+     * @throws Exception
+     */
+    public function canCreate(): bool {
+        return $this->canExecute($this->getCreatingTransition(), null);
+    }
+
+    /**
+     * @param $data
+     * @param IService $service
+     * @return IStateModel
+     * @throws ForbiddenRequestException
+     * @throws Exception
+     */
+    public function createNewModel($data, IService $service): IStateModel {
+        $transition = $this->getCreatingTransition();
+        if (!$this->canExecute($transition, null)) {
+            throw new ForbiddenRequestException(_('Model sa nedá vytvoriť'));
+        }
+        /**
+         * @var IStateModel|IModel|ActiveRow $model
+         */
+        $model = $service->createNew($data);
+        $service->save($model);
+
+        return $this->execute($transition, $model);
     }
 }

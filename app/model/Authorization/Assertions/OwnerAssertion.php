@@ -2,11 +2,10 @@
 
 namespace Authorization\Assertions;
 
-use FKSDB\ORM\ModelPerson;
 use Nette\InvalidStateException;
 use Nette\Security\IResource;
+use Nette\Security\IUserStorage;
 use Nette\Security\Permission;
-use Nette\Security\User;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -16,11 +15,15 @@ use Nette\Security\User;
 class OwnerAssertion {
 
     /**
-     * @var User
+     * @var IUserStorage
      */
     private $user;
 
-    public function __construct(User $user) {
+    /**
+     * OwnerAssertion constructor.
+     * @param IUserStorage $user
+     */
+    public function __construct(IUserStorage $user) {
         $this->user = $user;
     }
 
@@ -34,7 +37,8 @@ class OwnerAssertion {
      * @throws InvalidStateException
      */
     public function isSubmitUploader(Permission $acl, $role, $resourceId, $privilege) {
-        if (!$this->user->isLoggedIn()) {
+
+        if (!$this->user->isAuthenticated()) {
             throw new InvalidStateException('Expecting logged user.');
         }
 
@@ -43,7 +47,8 @@ class OwnerAssertion {
         if (!$submit instanceof IResource) {
             return false;
         }
-        return $submit->getContestant()->getPerson()->getLogin()->login_id === $this->user->getId();
+        return $submit->getContestant()->getPerson()->getLogin()->login_id === $this->user->getIdentity()->getId();
+
     }
 
     /**
@@ -57,7 +62,7 @@ class OwnerAssertion {
      * @throws InvalidStateException
      */
     public function isOwnContestant(Permission $acl, $role, $resourceId, $privilege) {
-        if (!$this->user->isLoggedIn()) {
+        if (!$this->user->isAuthenticated()) {
             throw new InvalidStateException('Expecting logged user.');
         }
 
@@ -78,7 +83,7 @@ class OwnerAssertion {
      * @throws InvalidStateException
      */
     public function existsOwnContestant(Permission $acl, $role, $resourceId, $privilege) {
-        if (!$this->user->isLoggedIn()) {
+        if (!$this->user->isAuthenticated()) {
             throw new InvalidStateException('Expecting logged user.');
         }
 
@@ -90,12 +95,19 @@ class OwnerAssertion {
         return count($contestants) > 0;
     }
 
+    /**
+     * @param Permission $acl
+     * @param $role
+     * @param $resourceId
+     * @param $privilege
+     * @return bool
+     */
     public function isOwnPayment(Permission $acl, $role, $resourceId, $privilege) {
-        if (!$this->user->isLoggedIn()) {
+        if (!$this->user->isAuthenticated()) {
             throw new InvalidStateException('Expecting logged user.');
         }
         /**
-         * @var $loggedPerson ModelPerson
+         * @var \FKSDB\ORM\Models\ModelPerson $loggedPerson
          * $payment
          */
         $loggedPerson = $this->user->getIdentity()->getPerson();
@@ -113,7 +125,7 @@ class OwnerAssertion {
      * @throws InvalidStateException
      */
     public function isOrgSelf(Permission $acl, $role, $resourceId, $privilege) {
-        if (!$this->user->isLoggedIn()) {
+        if (!$this->user->isAuthenticated()) {
             throw new InvalidStateException('Expecting logged user.');
         }
 
@@ -121,7 +133,7 @@ class OwnerAssertion {
         $orgLogin = $org->getPerson()->getLogin();
         $grant = $acl->getQueriedRole();
 
-        return ($org->contest_id == $grant->getContestId()) && ($orgLogin->login_id == $this->user->getId());
+        return ($org->contest_id == $grant->getContestId()) && ($orgLogin->login_id == $this->user->getIdentity()->getId());
     }
 
     /**
@@ -137,7 +149,7 @@ class OwnerAssertion {
      * @throws InvalidStateException
      */
     public function isSelf(Permission $acl, $role, $resourceId, $privilege) {
-        if (!$this->user->isLoggedIn()) {
+        if (!$this->user->isAuthenticated()) {
             throw new InvalidStateException('Expecting logged user.');
         }
 
