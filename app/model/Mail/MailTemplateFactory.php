@@ -14,21 +14,15 @@ use Nette\Templating\FileTemplate;
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
+ * @author Michal Cervenak <miso@fykos.cz>
  */
 class MailTemplateFactory {
 
-    /**
-     * @var string without trailing slash
-     */
+    /** @var string without trailing slash */
     private $templateDir;
-
-    /**
-     * @var Application
-     */
+    /** @var Application */
     private $application;
-    /**
-     * @var ITranslator
-     */
+    /** @var ITranslator */
     private $translator;
 
     /**
