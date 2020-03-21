@@ -2,106 +2,28 @@
 
 namespace FyziklaniModule;
 
-use FKSDB\Components\Controls\FormControl\FormControl;
+use EventModule\EventEntityTrait;
+use FKSDB\Components\Controls\Fyziklani\EditControl;
+use FKSDB\Components\Controls\Fyziklani\Submit\QREntryControl;
+use FKSDB\Components\Controls\Fyziklani\Submit\TaskCodeInput;
+use FKSDB\Components\Grids\Fyziklani\AllSubmitsGrid;
 use FKSDB\Components\Grids\Fyziklani\SubmitsGrid;
-use FKSDB\Components\React\Fyziklani\TaskCodeInput;
-use FKSDB\model\Fyziklani\TaskCodeException;
-use FKSDB\model\Fyziklani\TaskCodeHandler;
-use FKSDB\model\Fyziklani\TaskCodeHandlerFactory;
-use ModelFyziklaniSubmit;
+use FKSDB\model\Fyziklani\ClosedSubmittingException;
+use FKSDB\model\Fyziklani\PointsMismatchException;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\Form;
-use Nette\Forms\Controls\Button;
-use ORM\Models\Events\ModelFyziklaniTeam;
+use Nette\Application\ForbiddenRequestException;
 
+/**
+ * Class SubmitPresenter
+ * @package FyziklaniModule
+ * @method ModelFyziklaniSubmit getEntity()
+ */
 class SubmitPresenter extends BasePresenter {
+    use EventEntityTrait;
 
-    /**
-     *
-     * @var ModelFyziklaniSubmit
-     */
-    private $editSubmit;
-    /**
-     * @var TaskCodeHandlerFactory
-     */
-    private $taskCodeHandlerFactory;
-
-    public function injectTaskCodeHandlerFactory(TaskCodeHandlerFactory $taskCodeHandlerFactory) {
-        $this->taskCodeHandlerFactory = $taskCodeHandlerFactory;
-    }
-
-    /**
-     * @param $id
-     * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
-     */
-    public function actionQrEntry($id) {
-        if (!$id) {
-            $this->flashMessage('Code is required', 'danger');
-            return;
-        }
-        $l = strlen($id);
-        if ($l > 9) {
-            $this->flashMessage('Code is too long', 'danger');
-            return;
-        }
-        $code = str_repeat('0', 9 - $l) . strtoupper($id);
-        $handler = $this->getTaskCodeHandler();
-        try {
-            $handler->checkTaskCode($code);
-        } catch (TaskCodeException $e) {
-            $this->flashMessage($e->getMessage(), 'danger');
-            return;
-        }
-        /**
-         * @var $form Form
-         */
-        $form = $this['entryQRForm']->getForm();
-        $form->setDefaults(['taskCode' => $code]);
-        foreach ($this->getGameSetup()->getAvailablePoints() as $points) {
-            /**
-             * @var $button Button
-             */
-            $button = $form['points' . $points];
-            $button->setDisabled(false);
-        }
-    }
-
-    /**
-     * @param $id
-     * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
-     */
-    public function actionEdit($id) {
-        $this->editSubmit = $this->getServiceFyziklaniSubmit()->findByPrimary($id);
-
-        if (!$this->editSubmit) {
-            throw new BadRequestException(_('Neexistující submit.'), 404);
-        }
-
-        $teamId = $this->editSubmit->e_fyziklani_team_id;
-
-        /* Uzatvorené bodovanie nejde editovať; */
-        $team = ModelFyziklaniTeam::createFromTableRow($this->getServiceFyziklaniTeam()->findByPrimary($teamId));
-        if (!$team->hasOpenSubmit()) {
-            $this->flashMessage(_('Bodování tohoto týmu je uzavřené.'), 'danger');
-            $this->backlinkRedirect();
-            $this->redirect('table'); // if there's no backlink
-        }
-        $submit = $this->editSubmit;
-        $this->template->fyziklani_submit_id = $submit ? true : false;
-        /**
-         * @var $control FormControl
-         */
-        $control = $this['submitEditForm'];
-        $control->getForm()->setDefaults([
-            'team_id' => $submit->e_fyziklani_team_id,
-            'task' => $submit->getTask()->label,
-            'points' => $submit->points,
-            'team' => $submit->getTeam()->name,
-        ]);
-    }
-
+    /* ***** Title methods *****/
     public function titleEntry() {
         $this->setTitle(_('Zadávání bodů'));
         $this->setIcon('fa fa-pencil-square-o');
@@ -112,15 +34,13 @@ class SubmitPresenter extends BasePresenter {
     }
 
     public function titleAutoClose() {
-        $this->titleEntry();
+        $this->setTitle(_('You can close this page'));
+        $this->setIcon('fa fa-pencil-square-o');
     }
 
-    public function authorizedEntry() {
-        $this->setAuthorized(($this->eventIsAllowed('fyziklani.submit', 'default')));
-    }
-
-    public function authorizedQrEntry() {
-        $this->authorizedEntry();
+    public function titleList() {
+        $this->setTitle(_('Submits'));
+        $this->setIcon('fa fa-table');
     }
 
     public function titleEdit() {
@@ -128,107 +48,172 @@ class SubmitPresenter extends BasePresenter {
         $this->setIcon('fa fa-pencil');
     }
 
-    public function authorizedEdit() {
-        $this->authorizedEntry();
+    public function titleDetail() {
+        $this->setTitle(sprintf(_('Detail of the submit #%d'), $this->getEntity()->fyziklani_submit_id));
+        $this->setIcon('fa fa-pencil');
     }
 
-    public function titleTable() {
-        $this->setTitle(_('Submits'));
-        $this->setIcon('fa fa-table');
-    }
-
-    public function authorizedTable() {
-        $this->authorizedEntry();
-    }
-
-    private function getTaskCodeHandler(): TaskCodeHandler {
-        return $this->taskCodeHandlerFactory->createHandler($this->getEvent());
+    /* ***** Authorized methods *****/
+    /**
+     * @throws BadRequestException
+     * @throws AbortException
+     */
+    public function authorizedEntry() {
+        $this->setAuthorized($this->isAllowedForEventOrg('fyziklani.submit', 'default'));
     }
 
     /**
-     * @return TaskCodeInput
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
-    public function createComponentEntryForm(): TaskCodeInput {
-        return $this->fyziklaniFactory->createEntryForm($this->getEvent());
+    public function authorizedQrEntry() {
+        $this->authorizedEntry();
     }
 
-    public function createComponentEntryQRForm() {
-        $form = $this->fyziklaniFactory->createEntryQRForm($this->getGameSetup());
+    /**
+     * @throws BadRequestException
+     * @throws AbortException
+     */
+    public function authorizedAutoClose() {
+        $this->authorizedEntry();
+    }
 
-        $form->getForm()->onSuccess[] = function (Form $form) {
-            $this->entryFormSucceeded($form);
+    /* ******** ACTION METHODS ********/
+
+    /**
+     * @param $id
+     * @throws BadRequestException
+     */
+    public function actionQrEntry($id) {
+        if (!$id) {
+            $this->flashMessage('Code is required', \BasePresenter::FLASH_ERROR);
+            return;
+        }
+        $control = $this->getComponent('entryQRControl');
+        if (!$control instanceof QREntryControl) {
+            throw new BadRequestException();
+        }
+        $control->setCode($id);
+    }
+
+    /**
+     * @param int $id
+     * @throws AbortException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     */
+    public function actionEdit(int $id) {
+        $team = $this->loadEntity($id);
+        $control = $this->getComponent('editControl');
+        if (!$control instanceof EditControl) {
+            throw new BadRequestException();
+        }
+        $control->setSubmit($team);
+    }
+
+    /**
+     * @param int $id
+     * @throws AbortException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     */
+    public function actionDetail(int $id) {
+        $this->loadEntity($id);
+    }
+
+    public function renderDetail() {
+        $this->template->model = $this->getEntity();
+    }
+
+    public function renderEdit() {
+        $this->template->model = $this->getEntity();
+    }
+
+    /* ****** COMPONENTS **********/
+    /**
+     * @return TaskCodeInput
+     * @throws BadRequestException
+     * @throws AbortException
+     */
+    public function createComponentEntryControl(): TaskCodeInput {
+        return $this->fyziklaniComponentsFactory->createTaskCodeInput($this->getEvent());
+    }
+
+    /**
+     * @return QREntryControl
+     * @throws BadRequestException
+     * @throws AbortException
+     */
+    public function createComponentEntryQRControl(): QREntryControl {
+        $control = $this->fyziklaniComponentsFactory->createQREntryControl($this->getEvent());
+        $control->getForm()->onSuccess[] = function () {
+            $this->redirect('autoClose');
         };
-        return $form;
+        return $control;
     }
 
     /**
      * @return SubmitsGrid
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
-    public function createComponentSubmitsGrid(): SubmitsGrid {
-        return $this->fyziklaniComponentsFactory->createSubmitsGrid($this->getEvent());
+    public function createComponentGrid(): SubmitsGrid {
+        return new AllSubmitsGrid(
+            $this->getEvent(),
+            $this->getServiceFyziklaniTask(),
+            $this->getServiceFyziklaniSubmit(),
+            $this->getServiceFyziklaniTeam(),
+            $this->getTableReflectionFactory()
+        );
     }
 
     /**
-     * @return FormControl
+     * @return EditControl
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
-    public function createComponentSubmitEditForm(): FormControl {
-        $control = $this->fyziklaniFactory->createEditForm($this->getGameSetup());
-        $control->getForm()->onSuccess[] = function (Form $form) {
-            $this->editFormSucceeded($form);
+    public function createComponentEditControl(): EditControl {
+        $control = $this->fyziklaniComponentsFactory->createEditSubmitControl($this->getEvent());
+        $control->getForm()->onSuccess[] = function () {
+            $this->redirect('list');
         };
         return $control;
     }
 
-
     /**
-     * @param Form $form
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
+     * @throws BadRequestException
+     * @throws ClosedSubmittingException
+     * @throws PointsMismatchException
      */
-    private function entryFormSucceeded(Form $form) {
-        $handler = $this->getTaskCodeHandler();
-        $values = $form->getValues();
-        $httpData = $form->getHttpData();
-
-        $points = 0;
-        foreach ($httpData as $key => $value) {
-            if (preg_match('/points([0-9])/', $key, $match)) {
-                $points = +$match[1];
-            }
-        }
-        try {
-            $log = $handler->preProcess($values->taskCode, $points);
-            $this->flashMessage($log, 'success');
-            $this->redirect('table');
-        } catch (TaskCodeException $e) {
-            $this->flashMessage($e->getMessage(), 'danger');
-        }
+    public function handleCheck() {
+        $log = $this->getServiceFyziklaniSubmit()->checkSubmit($this->getEntity(), $this->getEntity()->points, $this->getUser());
+        $this->flashMessage($log->getMessage(), $log->getLevel());
+        $this->redirect('this');
     }
 
     /**
-     * @param Form $form
-     * @throws \Nette\Application\AbortException
+     * @inheritDoc
      */
-    private function editFormSucceeded(Form $form) {
-        $values = $form->getValues();
+    protected function getORMService() {
+        return $this->getServiceFyziklaniSubmit();
+    }
 
-        $submit = $this->editSubmit;
-        $this->getServiceFyziklaniSubmit()->updateModel($submit, [
-            'points' => $values->points,
-            /* ugly, exclude previous value of `modified` from query
-             * so that `modified` is set automatically by DB
-             * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
-             */
-            'modified' => null
-        ]);
-        $this->getServiceFyziklaniSubmit()->save($submit);
-        $this->flashMessage(_('Body byly změněny.'), 'success');
-        $this->backlinkRedirect();
-        $this->redirect('table'); // if there's no backlink
+    /**
+     * @inheritDoc
+     */
+    protected function getModelResource(): string {
+        return ModelFyziklaniSubmit::RESOURCE_ID;
+    }
+
+    /**
+     * @param $resource
+     * @param string $privilege
+     * @return bool
+     * @throws AbortException
+     * @throws BadRequestException
+     */
+    protected function isAllowed($resource, string $privilege): bool {
+        return $this->isAllowedForEventOrg($resource, $privilege);
     }
 }

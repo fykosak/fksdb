@@ -2,10 +2,14 @@
 
 namespace FKSDB\Components\Grids;
 
-
+use FKSDB\ORM\Models\ModelSchool;
+use FKSDB\ORM\Services\ServiceSchool;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Database\Table\Selection;
 use Nette\Utils\Html;
-use ServiceSchool;
+use NiftyGrid\DuplicateButtonException;
+use NiftyGrid\DuplicateColumnException;
+use NiftyGrid\DuplicateGlobalButtonException;
 use SQL\SearchableDataSource;
 
 /**
@@ -19,11 +23,22 @@ class SchoolsGrid extends BaseGrid {
      */
     private $serviceSchool;
 
+    /**
+     * SchoolsGrid constructor.
+     * @param ServiceSchool $serviceSchool
+     */
     public function __construct(ServiceSchool $serviceSchool) {
         parent::__construct();
         $this->serviceSchool = $serviceSchool;
     }
 
+    /**
+     * @param $presenter
+     * @throws InvalidLinkException
+     * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
+     * @throws DuplicateGlobalButtonException
+     */
     protected function configure($presenter) {
         parent::configure($presenter);
         //
@@ -43,29 +58,26 @@ class SchoolsGrid extends BaseGrid {
         //
         // columns
         //
-        $this->addColumn('name', _('Název'));
-        $this->addColumn('city', _('Město'));
-        $this->addColumn('active', _('Existuje?'))->setRenderer(function ($row) {
-            return Html::el('span')->addAttributes(['class' => ('badge ' . ($row->active ? 'badge-success' : 'badge-danger'))])->add(($row->active));
+        $this->addColumn('name', _('Name'));
+        $this->addColumn('city', _('City'));
+        $this->addColumn('active', _('Exists?'))->setRenderer(function ($row) {
+            return Html::el('span')->addAttributes(['class' => ('badge ' . ($row->active ? 'badge-success' : 'badge-danger'))])->addText(($row->active));
         });
 
-        //
-        // operations
-        //
-        $this->addButton('edit', _('Upravit'))
-            ->setText(_('Upravit'))
-            ->setLink(function ($row) {
-                return $this->getPresenter()->link('edit', $row->school_id);
-            });
+        $this->addLinkButton($presenter, ':Org:School:edit', 'edit', _('Edit'), false, ['id' => 'school_id']);
+        $this->addLinkButton($presenter, 'detail', 'detail', _('Detail'), false, ['id' => 'school_id']);
+
         $this->addGlobalButton('add')
-            ->setLink($this->getPresenter()->link('create'))
-            ->setLabel(_('Vložit školu'))
+            ->setLink($this->getPresenter()->link(':Org:School:create'))
+            ->setLabel(_('CreateSchool'))
             ->setClass('btn btn-sm btn-primary');
+    }
 
-        //
-        // appeareance
-        //
-
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        return ModelSchool::class;
     }
 
 }

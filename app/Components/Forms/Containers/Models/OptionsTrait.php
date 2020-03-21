@@ -16,8 +16,8 @@ trait OptionsTrait {
      * Options recognized by DefaultFormRenderer
      * - 'description' - textual or Html object description
      *
-     * @param  string key
-     * @param  mixed  value
+     * @param string key
+     * @param mixed  value
      * @return self
      */
     public function setOption($key, $value) {
@@ -31,8 +31,8 @@ trait OptionsTrait {
 
     /**
      * Returns user-specific option.
-     * @param  string key
-     * @param  mixed  default value
+     * @param string key
+     * @param mixed  default value
      * @return mixed
      */
     final public function getOption($key, $default = NULL) {

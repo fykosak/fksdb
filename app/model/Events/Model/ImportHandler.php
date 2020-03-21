@@ -5,17 +5,18 @@ namespace Events\Model;
 use Events\Model\Grid\SingleEventSource;
 use Events\Model\Holder\BaseHolder;
 use FKSDB\Utils\CSVParser;
-use Nette\ArrayHash;
 use Nette\DI\Container;
-use Nette\Object;
-use RuntimeException;
+use Nette\SmartObject;
+use Nette\Utils\ArrayHash;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class ImportHandler extends Object {
+class ImportHandler {
+
+    use SmartObject;
 
     const STATELESS_IGNORE = 'ignore';
     const STATELESS_KEEP = 'keep';
@@ -41,19 +42,38 @@ class ImportHandler extends Object {
      */
     private $keyName;
 
+    /**
+     * ImportHandler constructor.
+     * @param Container $container
+     */
     function __construct(Container $container) {
         $this->container = $container;
     }
 
+    /**
+     * @param CSVParser $parser
+     * @param $keyName
+     */
     public function setInput(CSVParser $parser, $keyName) {
         $this->parser = $parser;
         $this->keyName = $keyName;
     }
 
+    /**
+     * @param SingleEventSource $source
+     */
     public function setSource(SingleEventSource $source) {
         $this->source = $source;
     }
 
+    /**
+     * @param ApplicationHandler $handler
+     * @param $transitions
+     * @param $errorMode
+     * @param $stateless
+     * @return bool
+     * @throws \Nette\Utils\JsonException
+     */
     public function import(ApplicationHandler $handler, $transitions, $errorMode, $stateless) {
         set_time_limit(0);
         $holdersMap = $this->createHoldersMap();
@@ -82,10 +102,10 @@ class ImportHandler extends Object {
                 } elseif ($transitions == ApplicationHandler::STATE_TRANSITION) {
                     $handler->storeAndExecute($holder, $values);
                 }
-            } catch (ApplicationHandlerException $e) {
+            } catch (ApplicationHandlerException $exception) {
                 $hasError = true;
                 if ($errorMode == ApplicationHandler::ERROR_ROLLBACK) {
-                    throw new ImportHandlerException(_('Import se nepovedl.'), null, $e);
+                    throw new ImportHandlerException(_('Import se nepovedl.'), null, $exception);
                 }
             }
         }
@@ -93,6 +113,10 @@ class ImportHandler extends Object {
         return !$hasError;
     }
 
+    /**
+     * @param $row
+     * @return ArrayHash
+     */
     private function rowToValues($row) {
         $primaryBaseHolder = $this->source->getDummyHolder()->getPrimaryHolder();
         $values = new ArrayHash();
@@ -121,6 +145,9 @@ class ImportHandler extends Object {
         return $values;
     }
 
+    /**
+     * @return array
+     */
     private function createHoldersMap() {
         $primaryBaseHolder = $this->source->getDummyHolder()->getPrimaryHolder();
         $pkName = $primaryBaseHolder->getService()->getTable()->getPrimary();
@@ -137,9 +164,5 @@ class ImportHandler extends Object {
         }
         return $result;
     }
-
-}
-
-class ImportHandlerException extends RuntimeException {
 
 }

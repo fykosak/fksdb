@@ -20,8 +20,9 @@ use Nette,
  *
  * @author     Jakub Onderka
  */
-class FileJournal extends Nette\Object implements IJournal
+class FileJournal implements IJournal
 {
+    use Nette\SmartObject;
 	/** Filename with journal */
 	const FILE = 'btfj.dat';
 

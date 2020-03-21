@@ -5,8 +5,9 @@ namespace Authentication;
 use AuthenticatedPresenter;
 use Authentication\SSO\GlobalSession;
 use AuthenticationPresenter;
-use FKSDB\ORM\ModelLogin;
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\Models\ModelLogin;
+use FKSDB\ORM\Services\ServiceLogin;
+use FKSDB\YearCalculator;
 use Nette\Application\Application;
 use Nette\Application\IPresenter;
 use Nette\Http\Request;
@@ -14,13 +15,12 @@ use Nette\Http\Session;
 use Nette\Http\UserStorage;
 use Nette\Security\Identity;
 use Nette\Security\IIdentity;
-use ServiceLogin;
-use YearCalculator;
 
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @see http://forum.nette.org/cs/9574-jak-rozsirit-userstorage
+ * @property IIdentity $identity
  */
 class LoginUserStorage extends UserStorage {
     /** @const HTTP GET parameter holding control information for the SSO */
@@ -59,6 +59,15 @@ class LoginUserStorage extends UserStorage {
      */
     private $request;
 
+    /**
+     * LoginUserStorage constructor.
+     * @param Session $sessionHandler
+     * @param ServiceLogin $loginService
+     * @param \FKSDB\YearCalculator $yearCalculator
+     * @param GlobalSession $globalSession
+     * @param Application $application
+     * @param Request $request
+     */
     function __construct(Session $sessionHandler, ServiceLogin $loginService, YearCalculator $yearCalculator, GlobalSession $globalSession, Application $application, Request $request) {
         parent::__construct($sessionHandler);
         $this->loginService = $loginService;
@@ -68,6 +77,9 @@ class LoginUserStorage extends UserStorage {
         $this->request = $request;
     }
 
+    /**
+     * @return IPresenter
+     */
     public function getPresenter() {
         if ($this->application->getPresenter()) {
             return $this->application->getPresenter();
@@ -85,6 +97,10 @@ class LoginUserStorage extends UserStorage {
         $this->presenter = $presenter;
     }
 
+    /**
+     * @param $state
+     * @return UserStorage|void
+     */
     public function setAuthenticated($state) {
         parent::setAuthenticated($state);
         if ($state) {
@@ -95,6 +111,10 @@ class LoginUserStorage extends UserStorage {
         }
     }
 
+    /**
+     * @return bool
+     * @throws \Nette\Application\AbortException
+     */
     public function isAuthenticated() {
         $local = parent::isAuthenticated();
         $global = isset($this->globalSession[GlobalSession::UID]) ? $this->globalSession[GlobalSession::UID] : null;
@@ -115,7 +135,7 @@ class LoginUserStorage extends UserStorage {
              */
             //parent::setAuthenticated(false);
             /**
-             * @var $presenter AuthenticatedPresenter
+             * @var AuthenticatedPresenter $presenter
              */
             $presenter = $this->getPresenter();
             $ssoData = $presenter->getParameter(self::PARAM_SSO);
@@ -174,7 +194,7 @@ class LoginUserStorage extends UserStorage {
         if (!$row) {
             return null;
         }
-        $login = ModelLogin::createFromTableRow($row);
+        $login = ModelLogin::createFromActiveRow($row);
         $login->person_id; // stupid... touch the field in order to have it loaded via ActiveRow
         $login->injectYearCalculator($this->yearCalculator);
         return $login;

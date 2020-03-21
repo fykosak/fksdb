@@ -2,14 +2,13 @@
 
 namespace Authentication;
 
-use FKSDB\ORM\ModelAuthToken;
-use FKSDB\ORM\ModelLogin;
+use FKSDB\ORM\Models\ModelAuthToken;
+use FKSDB\ORM\Services\ServiceAuthToken;
+use FKSDB\ORM\Services\ServiceLogin;
+use FKSDB\YearCalculator;
 use Nette\Http\Session;
 use Nette\InvalidStateException;
 use Nette\Security\AuthenticationException;
-use ServiceAuthToken;
-use ServiceLogin;
-use YearCalculator;
 
 /**
  * Users authenticator.
@@ -29,6 +28,13 @@ class TokenAuthenticator extends AbstractAuthenticator {
      */
     private $session;
 
+    /**
+     * TokenAuthenticator constructor.
+     * @param ServiceAuthToken $authTokenService
+     * @param Session $session
+     * @param ServiceLogin $serviceLogin
+     * @param YearCalculator $yearCalculator
+     */
     function __construct(ServiceAuthToken $authTokenService, Session $session, ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
         parent::__construct($serviceLogin, $yearCalculator);
         $this->authTokenService = $authTokenService;
@@ -37,7 +43,7 @@ class TokenAuthenticator extends AbstractAuthenticator {
 
     /**
      * @param string $tokenData
-     * @return ModelLogin
+     * @return \FKSDB\ORM\Models\ModelLogin
      * @throws AuthenticationException
      */
     public function authenticate($tokenData) {
@@ -83,6 +89,9 @@ class TokenAuthenticator extends AbstractAuthenticator {
         return false;
     }
 
+    /**
+     * @return array
+     */
     public function getTokenData() {
         if (!$this->isAuthenticatedByToken()) {
             throw new InvalidStateException('Not authenticated by token.');
@@ -99,6 +108,9 @@ class TokenAuthenticator extends AbstractAuthenticator {
         unset($section->data);
     }
 
+    /**
+     * @param \FKSDB\ORM\Models\ModelAuthToken $token
+     */
     private function storeAuthToken(ModelAuthToken $token) {
         $section = $this->session->getSection(self::SESSION_NS);
         $section->token = $token->token;

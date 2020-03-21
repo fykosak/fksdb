@@ -8,9 +8,11 @@ use Events\Model\Holder\Holder;
 use Events\Processings\AbstractProcessing;
 use Events\SubmitProcessingException;
 use FKSDB\Logging\ILogger;
-use Nette\ArrayHash;
+use FKSDB\ORM\Services\ServiceSchool;
+use FKSDB\YearCalculator;
 use Nette\Forms\Form;
-use YearCalculator;
+use Nette\Utils\ArrayHash;
+
 
 /**
  * Na Fyziklani 2013 jsme se rozhodli pocitat tymum automaticky kategorii ve ktere soutezi podle pravidel.
@@ -21,20 +23,34 @@ use YearCalculator;
 class CategoryProcessing extends AbstractProcessing {
 
     /**
-     * @var YearCalculator
+     * @var \FKSDB\YearCalculator
      */
     private $yearCalculator;
 
     /**
-     * @var \ServiceSchool
+     * @var ServiceSchool
      */
     private $serviceSchool;
 
-    function __construct(YearCalculator $yearCalculator, \ServiceSchool $serviceSchool) {
+    /**
+     * CategoryProcessing constructor.
+     * @param \FKSDB\YearCalculator $yearCalculator
+     * @param ServiceSchool $serviceSchool
+     */
+    function __construct(YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
         $this->yearCalculator = $yearCalculator;
         $this->serviceSchool = $serviceSchool;
     }
 
+    /**
+     * @param $states
+     * @param ArrayHash $values
+     * @param Machine $machine
+     * @param Holder $holder
+     * @param ILogger $logger
+     * @param Form|null $form
+     * @return mixed|void
+     */
     protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
 
         if (!isset($values['team'])) {
@@ -66,7 +82,7 @@ class CategoryProcessing extends AbstractProcessing {
                     continue;
                 }
                 /**
-                 * @var $person \FKSDB\ORM\ModelPerson
+                 * @var \FKSDB\ORM\Models\ModelPerson $person
                  */
                 $person = $baseHolder->getModel()->getMainModel()->person;
                 $history = $person->related('person_history')->where('ac_year', $acYear)->fetch();
@@ -92,6 +108,10 @@ class CategoryProcessing extends AbstractProcessing {
         }
     }
 
+    /**
+     * @param $participants
+     * @return string
+     */
     private function getCategory($participants) {
         $coefficient_sum = 0;
         $count_4 = 0;
@@ -119,9 +139,10 @@ class CategoryProcessing extends AbstractProcessing {
 
         $category_handle = $participants ? ($coefficient_sum / count($participants)) : 999;
 
-        if ($abroad > 0) {
-            $result = 'F';
-        } else if ($category_handle <= 2 && $count_4 == 0 && $count_3 <= 2) {
+        // if ($abroad > 0) {
+        //     $result = 'F';
+        // } else
+        if ($category_handle <= 2 && $count_4 == 0 && $count_3 <= 2) {
             $result = 'C';
         } else if ($category_handle <= 3 && $count_4 <= 2) {
             $result = 'B';

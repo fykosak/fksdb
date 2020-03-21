@@ -1,12 +1,16 @@
 <?php
 
+namespace FKSDB\ORM;
+
+use FKSDB\ORM\Tables\TypedTableSelection;
+use InvalidArgumentException;
+use ModelException;
 use Nette\Database\Connection;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection as TableSelection;
 use Nette\InvalidStateException;
-use ORM\IModel;
-use ORM\IService;
-use ORM\Tables\TypedTableSelection;
+use PDOException;
+use Traversable;
 
 /**
  * Service class to high-level manipulation with ORM objects.
@@ -20,35 +24,52 @@ use ORM\Tables\TypedTableSelection;
 abstract class AbstractServiceSingle extends TableSelection implements IService {
 
     /**
-     * @var string
-     */
-    protected $modelClassName;
-
-    /**
-     * @var string
-     */
-    protected $tableName;
-
-    /**
      * @var Connection
      */
     protected $connection;
 
     /**
-     * @var array of AbstractService  singleton instances of descedants
+     * FKSDB\ORM\AbstractServiceSingle constructor.
+     * @param Connection $connection
      */
-    protected static $instances = [];
-
     public function __construct(Connection $connection) {
-        parent::__construct($this->tableName, $connection);
+        parent::__construct($this->getTableName(), $connection);
         $this->connection = $connection;
     }
 
     /**
+     * @param Traversable|array|null $data
+     * @return AbstractModelSingle
+     * @throws ModelException
+     */
+    public function createNewModel($data = null): AbstractModelSingle {
+        $modelClassName = $this->getModelClassName();
+        $data = $this->filterData($data);
+        try {
+            $result = $this->getTable()->insert($data);
+            if ($result !== false) {
+                /**
+                 * @var AbstractModelSingle $model
+                 */
+                $model = ($modelClassName)::createFromActiveRow($result);
+                $model->setNew(false); // only for old compatibility
+                return $model;
+            }
+        } catch (PDOException $exception) {
+            throw new ModelException('Error when storing model.', null, $exception);
+        }
+        $code = $this->getConnection()->errorCode();
+        throw new ModelException("$code: Error when storing a model.");
+    }
+
+
+    /**
      * Use this method to create new models!
      *
-     * @param array $data
+     * @param Traversable $data
      * @return AbstractModelSingle
+     * @throws ModelException
+     * @deprecated use createNewModel
      */
     public function createNew($data = null) {
         if ($data === null) {
@@ -66,14 +87,29 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
      * @return AbstractModelSingle
      */
     public function createFromArray(array $data) {
-        $className = $this->modelClassName;
+        $className = $this->getModelClassName();
         $data = $this->filterData($data);
         $result = new $className($data, $this);
         return $result;
     }
 
+    /**
+     * @return string|AbstractModelSingle|AbstractModelMulti
+     */
+    abstract public function getModelClassName(): string;
+
+    /**
+     * @return string
+     */
+    abstract protected function getTableName(): string;
+
+    /**
+     * @param ActiveRow $row
+     * @return mixed
+     * @deprecated
+     */
     public function createFromTableRow(ActiveRow $row) {
-        $className = $this->modelClassName;
+        $className = $this->getModelClassName();
         return new $className($row->toArray(), $row->getTable());
     }
 
@@ -81,7 +117,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
      * Syntactic sugar.
      *
      * @param int $key
-     * @return ActiveRow|null
+     * @return AbstractModelSingle|null
      */
     public function findByPrimary($key) {
         $result = $this->getTable()->get($key);
@@ -93,16 +129,30 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     }
 
     /**
+     * @param int $key
+     * @return AbstractModelSingle|null
+     */
+    public function findByPrimary2(int $key) {
+        $result = $this->getTable()->get($key);
+        if ($result !== false) {
+            return $this->getModelClassName()::createFromActiveRow($result);
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * Updates values in model from given data.
      *
-     * @param AbstractModelSingle $model
-     * @param boolean $alive
+     * @param IModel $model
      * @param array $data
      * @param boolean $alive
+     * @deprecated
      */
     public function updateModel(IModel $model, $data, $alive = true) {
-        if (!$model instanceof $this->modelClassName) {
-            throw new InvalidArgumentException('Service for class ' . $this->modelClassName . ' cannot store ' . get_class($model));
+        $modelClassName = $this->getModelClassName();
+        if (!$model instanceof $modelClassName) {
+            throw new InvalidArgumentException('Service for class ' . $this->getModelClassName() . ' cannot store ' . get_class($model));
         }
 
         $data = $this->filterData($data);
@@ -112,15 +162,37 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     }
 
     /**
+     * @param AbstractModelSingle $model
+     * @return AbstractModelSingle|null
+     */
+    public function refresh(AbstractModelSingle $model) {
+        return $this->findByPrimary2($model->getPrimary(true));
+    }
+
+    /**
+     * @param AbstractModelSingle $model
+     * @param Traversable|array $data
+     * @return int
+     * @throws InvalidArgumentException
+     */
+    public function updateModel2(AbstractModelSingle $model, $data = null) {
+        $this->checkType($model);
+        $data = $this->filterData($data);
+        return $model->update($data);
+    }
+
+    /**
      * Use this method to store a model!
      *
      * @param IModel $model
      * @throws InvalidArgumentException
      * @throws ModelException
+     * @deprecated
      */
     public function save(IModel & $model) {
-        if (!$model instanceof $this->modelClassName) {
-            throw new InvalidArgumentException('Service for class ' . $this->modelClassName . ' cannot store ' . get_class($model));
+        $modelClassName = $this->getModelClassName();
+        if (!$model instanceof $modelClassName) {
+            throw new InvalidArgumentException('Service for class ' . $this->getModelClassName() . ' cannot store ' . get_class($model));
         }
         try {
             if ($model->isNew()) {
@@ -134,8 +206,8 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
             } else {
                 $result = $model->update() !== false;
             }
-        } catch (PDOException $e) {
-            throw new ModelException('Error when storing model.', null, $e);
+        } catch (PDOException $exception) {
+            throw new ModelException('Error when storing model.', null, $exception);
         }
         if (!$result) {
             $code = $this->getConnection()->errorCode();
@@ -144,17 +216,26 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     }
 
     /**
+     * @param AbstractModelSingle|IModel $model
+     * @throws InvalidArgumentException
+     */
+    private function checkType(AbstractModelSingle $model) {
+        $modelClassName = $this->getModelClassName();
+        if (!$model instanceof $modelClassName) {
+            throw new InvalidArgumentException('Service for class ' . $this->getModelClassName() . ' cannot store ' . get_class($model));
+        }
+    }
+
+    /**
      * Use this method to delete a model!
      * (Name chosen not to collide with parent.)
      *
-     * @param IModel $model
+     * @param IModel|AbstractModelSingle $model
      * @throws InvalidArgumentException
      * @throws InvalidStateException
      */
     public function dispose(IModel $model) {
-        if (!$model instanceof $this->modelClassName) {
-            throw new InvalidArgumentException('Service for class ' . $this->modelClassName . ' cannot store ' . get_class($model));
-        }
+        $this->checkType($model);
         if (!$model->isNew() && $model->delete() === false) {
             $code = $this->getConnection()->errorCode();
             throw new ModelException("$code: Error when deleting a model.");
@@ -162,24 +243,25 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     }
 
     /**
-     * @return TableSelection
+     * @return TypedTableSelection
      */
     public function getTable() {
-        return new TypedTableSelection($this->modelClassName, $this->tableName, $this->connection);
+        return new TypedTableSelection($this->getModelClassName(), $this->getTableName(), $this->connection);
     }
 
     protected $defaults = null;
 
     /**
      * Default data for the new model.
-     *
+     * TODO is this really needed?
      * @return array
      */
     protected function getDefaultData() {
         if ($this->defaults == null) {
             $this->defaults = [];
             foreach ($this->getColumnMetadata() as $column) {
-                if ($column['nativetype'] == 'TIMESTAMP' && isset($column['default']) && $column['default'] == 'CURRENT_TIMESTAMP') {
+                if ($column['nativetype'] == 'TIMESTAMP' && isset($column['default'])
+                    && !preg_match('/^[0-9]{4}/', $column['default'])) {
                     continue;
                 }
                 $this->defaults[$column['name']] = isset($column['default']) ? $column['default'] : null;
@@ -191,7 +273,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     /**
      * Omits array elements whose keys aren't columns in the table.
      *
-     * @param array|null $data
+     * @param array|Traversable|null $data
      * @return array|null
      */
     protected function filterData($data) {
@@ -210,9 +292,12 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
 
     private $columns;
 
+    /**
+     * @return array
+     */
     private function getColumnMetadata() {
         if ($this->columns === null) {
-            $this->columns = $this->getConnection()->getSupplementalDriver()->getColumns($this->tableName);
+            $this->columns = $this->getConnection()->getSupplementalDriver()->getColumns($this->getTableName());
         }
         return $this->columns;
     }

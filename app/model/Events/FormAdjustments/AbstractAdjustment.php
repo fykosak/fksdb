@@ -7,27 +7,44 @@ use Events\Model\Holder\Holder;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
-use Nette\Object;
+use Nette\SmartObject;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-abstract class AbstractAdjustment extends Object implements IFormAdjustment {
+abstract class AbstractAdjustment implements IFormAdjustment {
+
+    use SmartObject;
 
     const DELIMITER = '.';
     const WILDCART = '*';
 
     private $pathCache;
 
+    /**
+     * @param Form $form
+     * @param Machine $machine
+     * @param Holder $holder
+     */
     public final function adjust(Form $form, Machine $machine, Holder $holder) {
         $this->setForm($form);
         $this->_adjust($form, $machine, $holder);
     }
 
+    /**
+     * @param Form $form
+     * @param Machine $machine
+     * @param Holder $holder
+     * @return mixed
+     */
     protected abstract function _adjust(Form $form, Machine $machine, Holder $holder);
 
+    /**
+     * @param $mask
+     * @return bool
+     */
     protected final function hasWildcart($mask) {
         return strpos($mask, self::WILDCART) !== false;
     }
@@ -57,10 +74,13 @@ abstract class AbstractAdjustment extends Object implements IFormAdjustment {
         return $result;
     }
 
+    /**
+     * @param Form $form
+     */
     private function setForm($form) {
         $this->pathCache = [];
-        foreach ($form->getComponents(true, 'Nette\Forms\IControl') as $control) {
-            $path = $control->lookupPath('Nette\Forms\Form');
+        foreach ($form->getComponents(true, IControl::class) as $control) {
+            $path = $control->lookupPath(Form::class);
             $path = str_replace('_1', '', $path);
             $path = str_replace(Component::NAME_SEPARATOR, self::DELIMITER, $path);
             $this->pathCache[$path] = $control;

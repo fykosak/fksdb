@@ -3,12 +3,12 @@
 namespace Tasks;
 
 use FKSDB\Logging\MemoryLogger;
+use FKSDB\ORM\Services\ServiceOrg;
+use FKSDB\ORM\Services\ServiceStudyYear;
+use FKSDB\ORM\Services\ServiceTask;
+use FKSDB\ORM\Services\ServiceTaskContribution;
+use FKSDB\ORM\Services\ServiceTaskStudyYear;
 use Pipeline\Pipeline;
-use ServiceOrg;
-use ServiceStudyYear;
-use ServiceTask;
-use ServiceTaskContribution;
-use ServiceTaskStudyYear;
 use Tasks\Legacy\ContributionsFromXML;
 use Tasks\Legacy\DeadlineFromXML;
 use Tasks\Legacy\StudyYearsFromXML;
@@ -41,12 +41,12 @@ class PipelineFactory {
     private $defaultStudyYears;
 
     /**
-     * @var ServiceTask
+     * @var \FKSDB\ORM\Services\ServiceTask
      */
     private $serviceTask;
 
     /**
-     * @var ServiceTaskContribution
+     * @var \FKSDB\ORM\Services\ServiceTaskContribution
      */
     private $serviceTaskContribution;
 
@@ -56,15 +56,26 @@ class PipelineFactory {
     private $serviceTaskStudyYear;
 
     /**
-     * @var ServiceStudyYear
+     * @var \FKSDB\ORM\Services\ServiceStudyYear
      */
     private $serviceStudyYear;
 
     /**
-     * @var ServiceOrg
+     * @var \FKSDB\ORM\Services\ServiceOrg
      */
     private $serviceOrg;
 
+    /**
+     * PipelineFactory constructor.
+     * @param $columnMappings
+     * @param $contributionMappings
+     * @param $defaultStudyYears
+     * @param \FKSDB\ORM\Services\ServiceTask $serviceTask
+     * @param ServiceTaskContribution $serviceTaskContribution
+     * @param ServiceTaskStudyYear $serviceTaskStudyYear
+     * @param ServiceStudyYear $serviceStudyYear
+     * @param \FKSDB\ORM\Services\ServiceOrg $serviceOrg
+     */
     function __construct($columnMappings, $contributionMappings, $defaultStudyYears, ServiceTask $serviceTask, ServiceTaskContribution $serviceTaskContribution, ServiceTaskStudyYear $serviceTaskStudyYear, ServiceStudyYear $serviceStudyYear, ServiceOrg $serviceOrg) {
         $this->columnMappings = $columnMappings;
         $this->contributionMappings = $contributionMappings;
@@ -78,6 +89,7 @@ class PipelineFactory {
 
     /**
      *
+     * @param $language
      * @return \Pipeline\Pipeline
      */
     public function create($language) {

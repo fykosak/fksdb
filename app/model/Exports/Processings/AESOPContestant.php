@@ -3,14 +3,12 @@
 namespace Exports\Processings;
 
 use Exports\StoredQueryPostProcessing;
-use IEvaluationStrategy;
-use ModelCategory;
-use ResultsModelFactory;
-use ServiceTask;
+use FKSDB\ORM\Services\ServiceTask;
+use FKSDB\Results\ResultsModelFactory;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class AESOPContestant extends StoredQueryPostProcessing {
@@ -20,14 +18,25 @@ class AESOPContestant extends StoredQueryPostProcessing {
     const POINTS = 'points';
     const SPAM_DATE = 'spam-date';
 
+    /**
+     * @return mixed|string
+     */
     public function getDescription() {
-        return 'Profiltruje jenom na kategorii zadanou v parametru \'category\' a spočítá rank v rámci kategorie.';
+        return 'Profiltruje jenom na kategorii zadanou v parametru "category" a spočítá rank v rámci kategorie.';
     }
 
+    /**
+     * @return bool
+     */
     public function keepsCount() {
         return false;
     }
 
+    /**
+     * @param $data
+     * @return mixed
+     * @throws \Nette\Application\BadRequestException
+     */
     public function processData($data) {
         $filtered = $this->filterCategory($data);
         $ranked = $this->calculateRank($filtered);
@@ -37,9 +46,10 @@ class AESOPContestant extends StoredQueryPostProcessing {
 
     /**
      * Processing itself is not injectable so we ask the dependency explicitly per method (the task service).
-     * 
-     * @param ServiceTask $serviceTask
+     *
+     * @param \FKSDB\ORM\Services\ServiceTask $serviceTask
      * @return int|double
+     * @throws \Nette\Application\BadRequestException
      */
     public function getMaxPoints(ServiceTask $serviceTask) {
         $evalutationStrategy = $this->getEvaluationStrategy();
@@ -58,6 +68,11 @@ class AESOPContestant extends StoredQueryPostProcessing {
         return $sum;
     }
 
+    /**
+     * @param $data
+     * @return array
+     * @throws \Nette\Application\BadRequestException
+     */
     private function filterCategory($data) {
         $evaluationStrategy = $this->getEvaluationStrategy();
 
@@ -83,6 +98,10 @@ class AESOPContestant extends StoredQueryPostProcessing {
         return $result;
     }
 
+    /**
+     * @param $data
+     * @return mixed
+     */
     private function calculateRank($data) {
         $points = [];
         foreach ($data as $row) {
@@ -108,6 +127,10 @@ class AESOPContestant extends StoredQueryPostProcessing {
         return $data;
     }
 
+    /**
+     * @param $data
+     * @return mixed
+     */
     private function formatDate($data) {
         foreach ($data as $row) {
             if ($row[self::SPAM_DATE]) {
@@ -118,6 +141,11 @@ class AESOPContestant extends StoredQueryPostProcessing {
         return $data;
     }
 
+    /**
+     * @param $studyYear
+     * @param $acYear
+     * @return int|null
+     */
     private function studyYearToGraduation($studyYear, $acYear) {
         if ($studyYear >= 1 && $studyYear <= 4) {
             return $acYear + (5 - $studyYear);
@@ -129,15 +157,17 @@ class AESOPContestant extends StoredQueryPostProcessing {
     }
 
     /**
-     * @return IEvaluationStrategy
+     * @return \FKSDB\Results\EvaluationStrategies\EvaluationStrategy
+     * @throws \Nette\Application\BadRequestException
      */
     private function getEvaluationStrategy() {
         return ResultsModelFactory::findEvaluationStrategy($this->parameters['contest'], $this->parameters['year']);
     }
 
     /**
-     * 
-     * @return ModelCategory|null
+     *
+     * @return \FKSDB\Results\ModelCategory|null
+     * @throws \Nette\Application\BadRequestException
      */
     private function getCategory() {
         $evaluationStrategy = $this->getEvaluationStrategy();

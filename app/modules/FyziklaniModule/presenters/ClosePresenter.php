@@ -2,137 +2,157 @@
 
 namespace FyziklaniModule;
 
+use EventModule\EventEntityTrait;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Controls\Fyziklani\CloseControl;
+use FKSDB\Components\Controls\Fyziklani\CloseTeamControl;
+use FKSDB\Components\Grids\Fyziklani\CloseTeamsGrid;
+use FKSDB\Components\Grids\Fyziklani\TeamSubmitsGrid;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use ORM\Models\Events\ModelFyziklaniTeam;
+use Nette\Application\ForbiddenRequestException;
+use Nette\Security\IResource;
+use function sprintf;
 
 /**
  * Class ClosePresenter
  * @package FyziklaniModule
  * @property FormControl closeCategoryAForm
+ * @method ModelFyziklaniTeam getEntity()
  */
 class ClosePresenter extends BasePresenter {
 
-    /** @var ModelFyziklaniTeam */
-    private $team;
+    use EventEntityTrait;
 
-    /**
-     * @return ModelFyziklaniTeam
-     */
-    private function getTeam(): ModelFyziklaniTeam {
-        return $this->team;
-    }
-
+    /* ******* TITLE ***********/
     public function titleList() {
         $this->setTitle(_('Uzavírání bodování'));
         $this->setIcon('fa fa-check');
     }
 
-    public function titleTeam() {
-        $this->setTitle(sprintf(_('Uzavírání bodování týmu "%s"'), $this->getTeam()->name));
+    /**
+     * @param int $id
+     * @throws AbortException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     */
+    public function titleTeam(int $id) {
+        $this->setTitle(sprintf(_('Uzavírání bodování týmu "%s"'), $this->loadEntity($id)->name));
         $this->setIcon('fa fa-check-square-o');
     }
 
-    public function authorizedList() {
-        $this->setAuthorized($this->eventIsAllowed('fyziklani.close', 'list'));
+    public function titleHard() {
+        $this->setTitle(_('Hard close submitting'));
+        $this->setIcon('fa fa-check');
     }
 
+    /* ******* authorized methods ***********/
+    /**
+     * @throws BadRequestException
+     * @throws AbortException
+     */
     public function authorizedTeam() {
-        $this->setAuthorized($this->eventIsAllowed('fyziklani.close', 'team'));
-    }
-
-    public function authorizedResults() {
-        $this->setAuthorized($this->eventIsAllowed('fyziklani.close', 'results'));
-    }
-
-    public function renderTeam() {
-        $this->template->submits = $this->getTeam()->getSubmits();
+        $this->setAuthorized($this->isAllowedForEventOrg($this->getModelResource(), 'team'));
     }
 
     /**
-     * @param $id
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
+     */
+    public function authorizedList() {
+        $this->setAuthorized($this->isAllowedForEventOrg($this->getModelResource(), 'team'));
+    }
+
+    /**
+     * @throws AbortException
+     * @throws BadRequestException
+     */
+    public function authorizeHard() {
+        $this->setAuthorized($this->isAllowedForEventOrg($this->getModelResource(), 'hard'));
+    }
+    /* *********** ACTIONS **************** */
+    /**
+     * @param int $id
+     * @throws AbortException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
     public function actionTeam(int $id) {
-        $row = $this->getServiceFyziklaniTeam()->findByPrimary($id);
-        if (!$row) {
-            throw new BadRequestException(_('Team does not exists'), 404);
+        $team = $this->loadEntity($id);
+        try {
+            $team->canClose();
+        } catch (BadRequestException $exception) {
+            $this->flashMessage($exception->getMessage());
+            $this->redirect('list');
         }
-        $this->team = ModelFyziklaniTeam::createFromTableRow($row);
+        $this->actionHard($id);
+    }
 
-        if (!$this->team->hasOpenSubmit()) {
-            $this->flashMessage(sprintf(_('Tým %s má již uzavřeno bodování'), $this->getTeam()->name), 'danger');
-            $this->backlinkRedirect();
-            $this->redirect('list'); // if there's no backlink
+    /**
+     * @param int $id
+     * @throws AbortException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     */
+    public function actionHard(int $id) {
+        $team = $this->loadEntity($id);
+        $control = $this->getComponent('closeTeamControl');
+        if (!$control instanceof CloseTeamControl) {
+            throw new BadRequestException();
         }
+        $control->setTeam($team);
     }
 
+    /* ********* COMPONENTS ************* */
+
     /**
-     * @return CloseControl
+     * @return CloseTeamControl
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
-    protected function createComponentCloseControl(): CloseControl {
-        return $this->fyziklaniComponentsFactory->createCloseControl($this->getEvent());
+    protected function createComponentCloseTeamControl(): CloseTeamControl {
+        return new CloseTeamControl($this->getEvent(), $this->translator, $this->getServiceFyziklaniTask());
     }
 
     /**
-     * @return FormControl
+     * @return CloseTeamsGrid
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
-    protected function createComponentCloseForm(): FormControl {
-        $control = new FormControl();
-        $form = $control->getForm();
-        $form->addCheckbox('submit_task_correct', _('Úkoly a počty bodů jsou správně.'))
-            ->setRequired(_('Zkontrolujte správnost zadání bodů!'));
-        $form->addText('next_task', _('Úloha u vydavačů'))
-            ->setDisabled()
-            ->setDefaultValue($this->getNextTask());
-        $form->addCheckbox('next_task_correct', _('Úloha u vydavačů se shoduje.'))
-            ->setRequired(_('Zkontrolujte prosím shodnost úlohy u vydavačů'));
-        $form->addSubmit('send', 'Potvrdit správnost');
-        $form->onSuccess[] = function () {
-            $this->closeFormSucceeded();
-        };
-        return $control;
+    protected function createComponentCloseTeamsGrid(): CloseTeamsGrid {
+        return new CloseTeamsGrid($this->getEvent(), $this->getServiceFyziklaniTeam(), $this->getTableReflectionFactory());
     }
 
     /**
-     * @throws \Nette\Application\AbortException
+     * @return TeamSubmitsGrid
      */
-    private function closeFormSucceeded() {
-        $connection = $this->getServiceFyziklaniTeam()->getConnection();
-        $connection->beginTransaction();
-        $submits = $this->team->getSubmits();
-        $sum = 0;
-        foreach ($submits as $submit) {
-            $sum += $submit->points;
-        }
-        $this->getServiceFyziklaniTeam()->updateModel($this->team, ['points' => $sum]);
-        $this->getServiceFyziklaniTeam()->save($this->team);
-        $connection->commit();
-        $this->backlinkRedirect();
-        $this->redirect('list'); // if there's no backlink
+    protected function createComponentTeamSubmitsGrid(): TeamSubmitsGrid {
+        return new TeamSubmitsGrid($this->getEntity(), $this->getServiceFyziklaniSubmit(), $this->getTableReflectionFactory());
     }
 
 
     /**
-     * @return string
+     * @inheritDoc
+     */
+    protected function getORMService() {
+        return $this->getServiceFyziklaniTeam();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getModelResource(): string {
+        return 'fyziklani.close';
+    }
+
+    /**
+     * @param $resource
+     * @param string $privilege
+     * @return bool
+     * @throws AbortException
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
      */
-    private function getNextTask(): string {
-        $submits = count($this->team->getSubmits());
-
-        $tasksOnBoard = $this->getGameSetup()->tasks_on_board;
-        /**
-         * @var $nextTask \ModelFyziklaniTask
-         */
-        $nextTask = $this->getServiceFyziklaniTask()->findAll($this->getEvent())->order('label')->limit(1, $submits + $tasksOnBoard)->fetch();
-        return ($nextTask) ? $nextTask->label : '';
+    protected function isAllowed($resource, string $privilege): bool {
+        return $this->isAllowedForEventOrg($resource, $privilege);
     }
-
 }

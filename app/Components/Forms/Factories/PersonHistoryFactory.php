@@ -2,17 +2,15 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
-use FKSDB\Components\Forms\Factories\PersonHistory\ClassField;
-use FKSDB\Components\Forms\Factories\PersonHistory\StudyYearField;
+use FKSDB\ORM\DbNames;
 use Nette\Forms\Controls\BaseControl;
-use Nette\InvalidArgumentException;
 
 /**
  * Class PersonHistoryFactory
  * @package FKSDB\Components\Forms\Factories
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class PersonHistoryFactory {
+class PersonHistoryFactory extends SingleReflectionFactory {
 
     /**
      * @var SchoolFactory
@@ -20,30 +18,37 @@ class PersonHistoryFactory {
     private $schoolFactory;
 
     /**
-     * @var \YearCalculator
+     * PersonHistoryFactory constructor.
+     * @param TableReflectionFactory $tableReflectionFactory
+     * @param SchoolFactory $factorySchool
      */
-    private $yearCalculator;
-
-    public function __construct(SchoolFactory $factorySchool, \YearCalculator $yearCalculator) {
+    public function __construct(TableReflectionFactory $tableReflectionFactory, SchoolFactory $factorySchool) {
+        parent::__construct($tableReflectionFactory);
         $this->schoolFactory = $factorySchool;
-        $this->yearCalculator = $yearCalculator;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getTableName(): string {
+        return DbNames::TAB_PERSON_HISTORY;
     }
 
     /**
      * @param string $fieldName
-     * @param integer $acYear
+     * @param array $args
      * @return BaseControl
+     * @throws \Exception
      */
-    public function createField($fieldName, $acYear): BaseControl {
+    public function createField(string $fieldName, ...$args): BaseControl {
         switch ($fieldName) {
-            case 'class':
-                return new ClassField();
             case 'school_id':
                 return $this->schoolFactory->createSchoolSelect();
             case 'study_year':
-                return new StudyYearField($this->yearCalculator, $acYear);
+                list($acYear) = $args;
+                return $this->loadFactory($fieldName)->createField($acYear);
             default:
-                throw new InvalidArgumentException();
+                return parent::createField($fieldName);
         }
     }
 }

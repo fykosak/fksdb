@@ -2,16 +2,15 @@
 
 namespace Events\Spec\Fyziklani;
 
-use DbNames;
 use Events\FormAdjustments\IFormAdjustment;
 use Events\Machine\Machine;
 use Events\Model\ExpressionEvaluator;
 use Events\Model\Holder\Holder;
+use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Services\ServicePersonHistory;
 use Nette\Database\Connection;
-use Nette\Diagnostics\Debugger;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
-use ServicePersonHistory;
 
 /**
  * More user friendly Due to author's laziness there's no class doc (or it's self explaining).
@@ -40,6 +39,9 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
      */
     private $evaluator;
 
+    /**
+     * @return int|mixed
+     */
     public function getTeamsPerSchool() {
         if ($this->teamsPerSchoolValue === null) {
             $this->teamsPerSchoolValue = $this->evaluator->evaluate($this->teamsPerSchool, $this->getHolder());
@@ -47,10 +49,20 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
         return $this->teamsPerSchoolValue;
     }
 
+    /**
+     * @param $teamsPerSchool
+     */
     public function setTeamsPerSchool($teamsPerSchool) {
         $this->teamsPerSchool = $teamsPerSchool;
     }
 
+    /**
+     * TeamsPerSchool constructor.
+     * @param $teamsPerSchool
+     * @param ExpressionEvaluator $evaluator
+     * @param Connection $connection
+     * @param ServicePersonHistory $servicePersonHistory
+     */
     function __construct($teamsPerSchool, ExpressionEvaluator $evaluator, Connection $connection, ServicePersonHistory $servicePersonHistory) {
         parent::__construct($servicePersonHistory);
         $this->connection = $connection;
@@ -58,6 +70,12 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
         $this->setTeamsPerSchool($teamsPerSchool);
     }
 
+    /**
+     * @param Form $form
+     * @param Machine $machine
+     * @param Holder $holder
+     * @return mixed|void
+     */
     protected function _adjust(Form $form, Machine $machine, Holder $holder) {
         $this->setHolder($holder);
         $schoolControls = $this->getControl('p*.person_id.person_history.school_id');
@@ -84,6 +102,12 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
 
     private $cache;
 
+    /**
+     * @param $first
+     * @param $control
+     * @param $schools
+     * @return bool
+     */
     private function checkMulti($first, $control, $schools) {
 
         $team = $this->getHolder()->getPrimaryHolder()->getModel();

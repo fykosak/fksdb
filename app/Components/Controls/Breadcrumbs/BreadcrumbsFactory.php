@@ -37,6 +37,14 @@ class BreadcrumbsFactory {
      */
     private $expiration;
 
+    /**
+     * BreadcrumbsFactory constructor.
+     * @param $expiration
+     * @param Session $session
+     * @param IRouter $router
+     * @param HttpRequest $httpRequest
+     * @param PresenterFactory $presenterFactory
+     */
     function __construct($expiration, Session $session, IRouter $router, HttpRequest $httpRequest, PresenterFactory $presenterFactory) {
         $this->expiration = $expiration;
         $this->session = $session;
@@ -47,11 +55,10 @@ class BreadcrumbsFactory {
 
     /**
      *
-     * @return \FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs
+     * @return Breadcrumbs
      */
-    public function create() {
-        $component = new Breadcrumbs($this->expiration, $this->session, $this->router, $this->httpRequest, $this->presenterFactory);
-        return $component;
+    public function create(): Breadcrumbs {
+        return new Breadcrumbs($this->expiration, $this->session, $this->router, $this->httpRequest, $this->presenterFactory);
     }
 
 }

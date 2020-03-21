@@ -8,9 +8,9 @@ use Events\Model\Holder\BaseHolder;
 use Events\Model\Holder\Holder;
 use Events\SubmitProcessingException;
 use FKSDB\Logging\ILogger;
-use Nette\ArrayHash;
 use Nette\Forms\Form;
-use Nette\Object;
+use Nette\SmartObject;
+use Nette\Utils\ArrayHash;
 
 /**
  * Checks determining fields in sent data and either terminates the application
@@ -21,8 +21,18 @@ use Nette\Object;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class GenKillProcessing extends Object implements IProcessing {
+class GenKillProcessing implements IProcessing {
+    use SmartObject;
 
+    /**
+     * @param $states
+     * @param ArrayHash $values
+     * @param Machine $machine
+     * @param Holder $holder
+     * @param ILogger $logger
+     * @param Form|null $form
+     * @return array
+     */
     public function process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
         $result = [];
         foreach ($holder as $name => $baseHolder) {

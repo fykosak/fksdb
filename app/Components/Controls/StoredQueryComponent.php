@@ -63,7 +63,15 @@ class StoredQueryComponent extends Control {
      */
     private $showParametrize = true;
 
-    function __construct(StoredQuery $storedQuery, ContestAuthorizator $contestAuthorizator, StoredQueryFactory $storedQueryFormFactory, ExportFormatFactory $exportFormatFactory) {
+    /**
+     * StoredQueryComponent constructor.
+     * @param StoredQuery $storedQuery
+     * @param ContestAuthorizator $contestAuthorizator
+     * @param StoredQueryFactory $storedQueryFormFactory
+     * @param ExportFormatFactory $exportFormatFactory
+     */
+    function
+    __construct(StoredQuery $storedQuery, ContestAuthorizator $contestAuthorizator, StoredQueryFactory $storedQueryFormFactory, ExportFormatFactory $exportFormatFactory) {
         parent::__construct();
         $this->storedQuery = $storedQuery;
         $this->contestAuthorizator = $contestAuthorizator;
@@ -71,18 +79,30 @@ class StoredQueryComponent extends Control {
         $this->exportFormatFactory = $exportFormatFactory;
     }
 
+    /**
+     * @return bool
+     */
     public function getShowParametrize() {
         return $this->showParametrize;
     }
 
+    /**
+     * @param $showParametrize
+     */
     public function setShowParametrize($showParametrize) {
         $this->showParametrize = $showParametrize;
     }
 
+    /**
+     * @param $parameters
+     */
     public function setParameters($parameters) {
         $this->parameters = $parameters;
     }
 
+    /**
+     * @param $parameters
+     */
     public function updateParameters($parameters) {
         if (!$this->parameters) {
             $this->parameters = [];
@@ -90,11 +110,20 @@ class StoredQueryComponent extends Control {
         $this->parameters = array_merge($this->parameters, $parameters);
     }
 
+    /**
+     * @param $name
+     * @return StoredQueryGrid
+     */
     protected function createComponentGrid($name) {
         $grid = new StoredQueryGrid($this->storedQuery, $this->exportFormatFactory);
         return $grid;
     }
 
+    /**
+     * @param $name
+     * @return FormControl
+     * @throws BadRequestException
+     */
     protected function createComponentParametrizeForm($name) {
         $control = new FormControl();
         $form = $control->getForm();
@@ -114,13 +143,16 @@ class StoredQueryComponent extends Control {
         return $control;
     }
 
+    /**
+     * @return bool|null|string
+     */
     public function getSqlError() {
         if ($this->error === null) {
             $this->error = false;
             try {
                 $this->storedQuery->getColumnNames(); // this may throw PDOException in the main query
-            } catch (PDOException $e) {
-                $this->error = $e->getMessage();
+            } catch (PDOException $exception) {
+                $this->error = $exception->getMessage();
             }
         }
         return $this->error;
@@ -134,7 +166,7 @@ class StoredQueryComponent extends Control {
                 $defaults[$key] = array('value' => $value);
             }
             $defaults = array(self::CONT_PARAMS => $defaults);
-            $this['parametrizeForm']->getForm()->setDefaults($defaults);
+            $this->getComponent('parametrizeForm')->getForm()->setDefaults($defaults);
         }
         if (!$this->isAuthorized()) {
             $this->template->error = _('Nedostatečné oprávnění.');
@@ -147,6 +179,12 @@ class StoredQueryComponent extends Control {
         $this->template->render();
     }
 
+    /**
+     * @param $format
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function handleFormat($format) {
         if ($this->parameters) {
             $this->storedQuery->setParameters($this->parameters);
@@ -158,11 +196,14 @@ class StoredQueryComponent extends Control {
             $exportFormat = $this->exportFormatFactory->createFormat($format, $this->storedQuery);
             $response = $exportFormat->getResponse();
             $this->presenter->sendResponse($response);
-        } catch (InvalidArgumentException $e) {
-            throw new BadRequestException(sprintf('Neznámý formát \'%s\'.', $format), 404, $e);
+        } catch (InvalidArgumentException $exception) {
+            throw new BadRequestException(sprintf('Neznámý formát \'%s\'.', $format), 404, $exception);
         }
     }
 
+    /**
+     * @return bool
+     */
     private function isAuthorized() {
         $implicitParameters = $this->storedQuery->getImplicitParameters();
         /*

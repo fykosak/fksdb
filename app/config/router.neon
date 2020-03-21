@@ -24,7 +24,7 @@ parameters:
         db: db
 
     # Pipe-separated list of presenters w/out module
-    rootPresenters: settings|github|my-payment
+    rootPresenters: settings|github|my-payments
 
     # Pipe-separated list of modules
     modules: org|public
@@ -64,6 +64,7 @@ fksrouter:
             subdomain: %subdomain.db%
             tld: %domain.tld%
             flags: SECURED
+
         '//%subdomain.auth%.%domain.cz%%path%<action login|logout|fb-login|recover>':
             presenter: Authentication
             subdomain: %subdomain.auth%
@@ -100,6 +101,14 @@ fksrouter:
             contestId: [filterTable: %inverseContestMapping%]
             flags: SECURED
 
+        # Application itself (note the presenters w/out module are handled specially)
+        '//[!<subdomain>].%domain.host%.[!<tld>]%path%common/<presenter>/<action=default>[/<id>]':
+            module: Common
+            presenter: Dashboard
+            subdomain: %subdomain.db%
+            tld: %domain.tld%
+            flags: SECURED
+
         '//[!<subdomain>].%domain.host%.[!<tld>]%path%fyziklani[<eventId [0-9]+>]/<presenter>/<action=default>[/<id>]':
             subdomain: %subdomain.db%
             tld: %domain.tld%
@@ -112,12 +121,19 @@ fksrouter:
             module: Event
             presenter: Dashboard
             flags: SECURED
-        '//[!<subdomain>].%domain.host%.[!<tld>]%path%f[<eventID [0-9]+>]/s/q[/<id>]':
+
+        '//[!<subdomain>].%domain.host%.[!<tld>]%path%f[<eventId [0-9]+>]/s/q[/<id>]':
             subdomain: %subdomain.db%
             presenter: Submit
             action: qrEntry
             tld: %domain.tld%
             module: Fyziklani
+            flags: SECURED
+        '//[!<subdomain>].%domain.host%.[!<tld>]%path%[<contestId %contests%>[<year [0-9]+>]/][series<series [0-9]+>/]<module %modules%>/<presenter>/<action=default>[/<id>]':
+            presenter: Dashboard
+            subdomain: %subdomain.db%
+            tld: %domain.tld%
+            contestId: [filterTable: %inverseContestMapping%]
             flags: SECURED
 
         '//[!<subdomain>].%domain.host%.[!<tld>]%path%[<contestId %contests%>[<year [0-9]+>]/]<module %modules%>/<presenter>/<action=default>[/<id>]':
@@ -126,7 +142,3 @@ fksrouter:
             tld: %domain.tld%
             contestId: [filterTable: %inverseContestMapping%]
             flags: SECURED
-
-
-
-

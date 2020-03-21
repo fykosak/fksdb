@@ -13,7 +13,8 @@ namespace Nette\Database\Diagnostics;
 
 use Nette,
 	Nette\Database\Helpers,
-	Nette\Diagnostics\Debugger;
+    Tracy\Debugger;
+use Tracy\IBarPanel;
 
 
 /**
@@ -21,8 +22,9 @@ use Nette,
  *
  * @author     David Grudl
  */
-class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
+class ConnectionPanel implements IBarPanel
 {
+    use Nette\SmartObject;
 	/** @var int maximum SQL length */
 	static public $maxLength = 1000;
 
@@ -55,7 +57,7 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 				if (isset($row['class']) && is_subclass_of($row['class'], '\\Nette\\Database\\Connection')) continue;
 				$source[] = array($row['file'], (int) $row['line']);
                                 if(!$depth--) break;
-				
+
 			}
 		}
 		$this->totalTime += $result->getTime();
@@ -71,7 +73,7 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 		if (isset($e->queryString)) {
 			$sql = $e->queryString;
 
-		} elseif ($item = Nette\Diagnostics\Helpers::findTrace($e->getTrace(), 'PDO::prepare')) {
+		} elseif ($item = \Tracy\Helpers::findTrace($e->getTrace(), 'PDO::prepare')) {
 			$sql = $item['args'][0];
 		}
 		return isset($sql) ? array(
@@ -130,7 +132,7 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 				$s .= "</table>";
 			}
 			foreach($source as $sline) {
-				$s .= Nette\Diagnostics\Helpers::editorLink($sline[0], $sline[1])->class('nette-DbConnectionPanel-source');
+				$s .= \Tracy\Helpers::editorLink($sline[0], $sline[1]);
 			}
 
 			$s .= '</td><td>';

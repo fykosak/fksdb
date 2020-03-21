@@ -1,36 +1,42 @@
-$(document).ready(function() {
+$(document).ready(function () {
     $.widget("fks.enterSubmitForm", {
-        _create: function() {
+        _create: function () {
             this.update();
         },
-        update: function() {
+        update: function () {
             var elForm = $(this.element);
             var elSubmit = elForm.find("input[data-submit-on='this']");
             elForm.find("input").not(":data(submit-on-handled)")
-                    .data('submit-on-handled', true)
-                    .keypress(function(e) {
-                if (e.which == 13) {
-                    elSubmit.click();
-                    return false;
-                }
-            });
-        }});
+                .data('submit-on-handled', true)
+                .keypress(function (e) {
+                    if (e.which == 13) {
+                        elSubmit.click();
+                        return false;
+                    }
+                });
+        }
+    });
 
     // TODO is still needed spinner (with Nette ajax)?
     $.ajaxSetup({
-        beforeSend: function() {
+        beforeSend: function () {
             $('#spinner').show();
         },
-        complete: function() {
+        complete: function () {
             $('#spinner').hide();
         }
     });
     $.nette.init();
     $("form[data-submit-on='enter']").enterSubmitForm();
-    $('a.btn-danger').confirm({
+    $('.btn-danger').confirm({
         text: 'O RLY?',
     });
     // TODO form buttons aren't checked
 
+});
+$(function () {
+    $('[data-toggle="popover"]').popover({
+        trigger: 'hover',
+    })
 });
 

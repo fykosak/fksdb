@@ -2,8 +2,6 @@
 
 namespace Events\FormAdjustments;
 
-use Events\FormAdjustments\IFormAdjustment;
-use Events\FormAdjustments\AbstractAdjustment;
 use Events\Machine\Machine;
 use Events\Model\Holder\Holder;
 use Nette\Forms\Form;
@@ -21,12 +19,24 @@ class RegexpCheck extends AbstractAdjustment implements IFormAdjustment {
     private $message;
     private $pattern;
 
+    /**
+     * RegexpCheck constructor.
+     * @param $field
+     * @param $message
+     * @param $pattern
+     */
     function __construct($field, $message, $pattern) {
         $this->field = $field;
         $this->message = $message;
         $this->pattern = $pattern;
     }
 
+    /**
+     * @param Form $form
+     * @param Machine $machine
+     * @param Holder $holder
+     * @return mixed|void
+     */
     protected function _adjust(Form $form, Machine $machine, Holder $holder) {
         $controls = $this->getControl($this->field);
         if (!$controls) {
@@ -34,8 +44,8 @@ class RegexpCheck extends AbstractAdjustment implements IFormAdjustment {
         }
 
         foreach ($controls as $control) {
-            $control->addRule(function(IControl $control) {
-                return (bool) Strings::match($control->getValue(), $this->pattern);
+            $control->addRule(function (IControl $control) {
+                return (bool)Strings::match($control->getValue(), $this->pattern);
             }, $this->message);
         }
     }

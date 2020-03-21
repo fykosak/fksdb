@@ -19,8 +19,9 @@ use Nette;
  *
  * @author     David Grudl
  */
-class PhpWriter extends Nette\Object
+class PhpWriter
 {
+    use Nette\SmartObject;
 	/** @var MacroTokenizer */
 	private $argsTokenizer;
 

@@ -23,12 +23,23 @@ class StoredQueryGrid extends BaseGrid {
      */
     private $exportFormatFactory;
 
+    /**
+     * StoredQueryGrid constructor.
+     * @param StoredQuery $storedQuery
+     * @param ExportFormatFactory $exportFormatFactory
+     */
     function __construct(StoredQuery $storedQuery, ExportFormatFactory $exportFormatFactory) {
         parent::__construct();
         $this->storedQuery = $storedQuery;
         $this->exportFormatFactory = $exportFormatFactory;
     }
 
+    /**
+     * @param $presenter
+     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws \NiftyGrid\DuplicateColumnException
+     * @throws \NiftyGrid\DuplicateGlobalButtonException
+     */
     protected function configure($presenter) {
         parent::configure($presenter);
         //
@@ -47,7 +58,7 @@ class StoredQueryGrid extends BaseGrid {
                         });
                 ++$c;
             }
-        } catch (PDOException $e) {
+        } catch (PDOException $exception) {
             // pass, exception should be handled inn parent components
         }
 

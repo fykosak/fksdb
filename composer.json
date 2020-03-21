@@ -1,9 +1,21 @@
 {
   "require": {
-    "php" : ">=7.0.0",
-    "nette/nette": "~2.0.18"
+    "php": ">=7.0.0",
+    "tracy/tracy": "~2.5.5",
+    "nette/utils": "~2.5.3",
+    "nette/security": "~2.4.4",
+    "nette/finder": "~2.4.2",
+    "nette/http": "~2.4.10",
+    "nette/robot-loader": "~2.4.4",
+    "nette/safe-stream": "~2.3.3",
+    "nette/component-model": "2.4.0",
+    "nette/mail": "~2.4.6",
+    "nette/neon": "~2.4.3",
+    "nette/reflection": "~2.4.2",
+    "nette/php-generator": "~2.6.4",
+    "latte/latte": "~2.4.8"
   },
   "autoload": {
-    "classmap": ["libs/"]
+    "classmap": []
   }
 }

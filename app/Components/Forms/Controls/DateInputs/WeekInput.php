@@ -4,12 +4,22 @@
 namespace FKSDB\Components\Forms\Controls\DateInputs;
 
 
+/**
+ * Class WeekInput
+ * @package FKSDB\Components\Forms\Controls\DateInputs
+ */
 class WeekInput extends AbstractDateInput {
-    protected function getFormat() {
+    /**
+     * @return string
+     */
+    protected function getFormat(): string {
         return 'Y-\WW';
     }
 
-    protected function getType() {
+    /**
+     * @return string
+     */
+    protected function getType(): string {
         return 'week';
     }
 }

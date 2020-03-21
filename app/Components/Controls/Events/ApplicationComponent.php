@@ -10,11 +10,15 @@ use Events\Model\ApplicationHandlerException;
 use Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Logging\FlashMessageDump;
+use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Callback;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
+use Nette\Templating\FileTemplate;
+use Nette\Templating\ITemplate;
+use Nette\Utils\JsonException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -39,7 +43,7 @@ class ApplicationComponent extends Control {
     private $flashDump;
 
     /**
-     * @var Callback($primaryModelId, $eventId)
+     * @var callable ($primaryModelId, $eventId)
      */
     private $redirectCallback;
 
@@ -48,6 +52,12 @@ class ApplicationComponent extends Control {
      */
     private $templateFile;
 
+    /**
+     * ApplicationComponent constructor.
+     * @param ApplicationHandler $handler
+     * @param Holder $holder
+     * @param FlashMessageDump $flashDump
+     */
     function __construct(ApplicationHandler $handler, Holder $holder, FlashMessageDump $flashDump) {
         parent::__construct();
         $this->handler = $handler;
@@ -66,12 +76,18 @@ class ApplicationComponent extends Control {
         }
     }
 
+    /**
+     * @return callable
+     */
     public function getRedirectCallback() {
         return $this->redirectCallback;
     }
 
-    public function setRedirectCallback($redirectCallback) {
-        $this->redirectCallback = new Callback($redirectCallback);
+    /**
+     * @param $redirectCallback
+     */
+    public function setRedirectCallback(callable $redirectCallback) {
+        $this->redirectCallback = $redirectCallback;
     }
 
     /**
@@ -82,7 +98,14 @@ class ApplicationComponent extends Control {
         return $this->getPresenter()->getContestAuthorizator()->isAllowed($event, 'application', $event->getContest());
     }
 
+    /**
+     * @param null $class
+     * @return FileTemplate|ITemplate
+     */
     protected function createTemplate($class = NULL) {
+        /**
+         * @var FileTemplate $template
+         */
         $template = parent::createTemplate($class);
         $template->setTranslator($this->presenter->getTranslator());
         return $template;
@@ -105,6 +128,9 @@ class ApplicationComponent extends Control {
         $this->template->render();
     }
 
+    /**
+     * @param $mode
+     */
     public function renderInline($mode) {
         $this->template->mode = $mode;
         $this->template->holder = $this->holder;
@@ -116,7 +142,11 @@ class ApplicationComponent extends Control {
         $this->template->render();
     }
 
-    protected function createComponentForm($name) {
+    /**
+     * @return FormControl
+     * @throws BadRequestException
+     */
+    protected function createComponentForm() {
         $result = new FormControl();
         $form = $result->getForm();
 
@@ -137,7 +167,7 @@ class ApplicationComponent extends Control {
          */
         $saveSubmit = null;
         if ($this->canEdit()) {
-            $saveSubmit = $form->addSubmit('save', _('Uložit'));
+            $saveSubmit = $form->addSubmit('save', _('Save'));
             $saveSubmit->setOption('row', 1);
             $saveSubmit->onClick[] = function (SubmitButton $button) {
                 $buttonForm = $button->getForm();
@@ -150,7 +180,7 @@ class ApplicationComponent extends Control {
         $primaryMachine = $this->getMachine()->getPrimaryMachine();
         $transitionSubmit = null;
         /**
-         * @var $transition Transition
+         * @var Transition $transition
          */
         foreach ($primaryMachine->getAvailableTransitions(BaseMachine::EXECUTABLE | BaseMachine::VISIBLE) as $transition) {
             $transitionName = $transition->getName();
@@ -206,20 +236,37 @@ class ApplicationComponent extends Control {
         return $result;
     }
 
-    public function handleSubmit(Form $form, $explicitTransitionName = null, $explicitMachineName = null) {
-        $this->execute($form, $explicitTransitionName, $explicitMachineName);
+    /**
+     * @param Form $form
+     * @param null $explicitTransitionName
+     * @throws AbortException
+     * @throws JsonException
+     */
+    public function handleSubmit(Form $form, $explicitTransitionName = null) {
+        $this->execute($form, $explicitTransitionName);
     }
 
+    /**
+     * @param $transitionName
+     * @throws AbortException
+     * @throws JsonException
+     */
     public function handleTransition($transitionName) {
         $this->execute(null, $transitionName);
     }
 
-    private function execute(Form $form = null, $explicitTransitionName = null, $explicitMachineName = null) {
+    /**
+     * @param Form|null $form
+     * @param null $explicitTransitionName
+     * @throws AbortException
+     * @throws JsonException
+     */
+    private function execute(Form $form = null, $explicitTransitionName = null) {
         try {
-            $this->handler->storeAndExecute($this->holder, $form, $explicitTransitionName, $explicitMachineName);
+            $this->handler->storeAndExecute($this->holder, $form, $explicitTransitionName);
             $this->flashDump->dump($this->handler->getLogger(), $this->getPresenter());
             $this->finalRedirect();
-        } catch (ApplicationHandlerException $e) {
+        } catch (ApplicationHandlerException $exception) {
             /* handled elsewhere, here it's to just prevent redirect */
             $this->flashDump->dump($this->handler->getLogger(), $this->getPresenter());
             if (!$form) { // w/out form we don't want to show anything with the same GET params
@@ -235,14 +282,20 @@ class ApplicationComponent extends Control {
         return $this->handler->getMachine($this->holder);
     }
 
+    /**
+     * @return bool
+     */
     private function canEdit() {
         return $this->getMachine()->getPrimaryMachine()->getState() != BaseMachine::STATE_INIT && $this->holder->getPrimaryHolder()->isModifiable();
     }
 
+    /**
+     * @throws AbortException
+     */
     private function finalRedirect() {
         if ($this->redirectCallback) {
             $id = $this->holder->getPrimaryHolder()->getModel()->getPrimary(false);
-            $this->redirectCallback->invoke($id, $this->holder->getEvent()->getPrimary());
+            ($this->redirectCallback)($id, $this->holder->getEvent()->getPrimary());
         } else {
             $this->redirect('this');
         }

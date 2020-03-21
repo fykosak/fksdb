@@ -4,12 +4,22 @@
 namespace FKSDB\Components\Forms\Controls\DateInputs;
 
 
+/**
+ * Class MonthInput
+ * @package FKSDB\Components\Forms\Controls\DateInputs
+ */
 class MonthInput extends AbstractDateInput {
-    protected function getFormat() {
+    /**
+     * @return string
+     */
+    protected function getFormat(): string {
         return 'Y-m';
     }
 
-    protected function getType() {
+    /**
+     * @return string
+     */
+    protected function getType(): string {
         return 'month';
     }
 }

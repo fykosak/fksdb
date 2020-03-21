@@ -3,7 +3,7 @@
 namespace Astrid;
 
 use FKSDB\Config\GlobalParameters;
-use FKSDB\ORM\ModelContest;
+use FKSDB\ORM\Models\ModelContest;
 use Nette\InvalidStateException;
 use RuntimeException;
 
@@ -44,6 +44,15 @@ class Downloader {
      */
     private $parameters;
 
+    /**
+     * Downloader constructor.
+     * @param $httpUser
+     * @param $httpPassword
+     * @param $host
+     * @param $tmpDir
+     * @param $contestMap
+     * @param GlobalParameters $parameters
+     */
     public function __construct($httpUser, $httpPassword, $host, $tmpDir, $contestMap, GlobalParameters $parameters) {
         $this->httpUser = $httpUser;
         $this->httpPassword = $httpPassword;
@@ -54,7 +63,7 @@ class Downloader {
     }
 
     /**
-     * @param \FKSDB\ORM\ModelContest $contest
+     * @param \FKSDB\ORM\Models\ModelContest $contest
      * @param int $year
      * @param int $series
      * @param string $language
@@ -73,7 +82,7 @@ class Downloader {
     }
 
     /**
-     * @param \FKSDB\ORM\ModelContest $contest
+     * @param \FKSDB\ORM\Models\ModelContest $contest
      * @param int $year
      * @param int $series
      * @return string filename of downloaded XML file
@@ -86,14 +95,10 @@ class Downloader {
         return $this->download($path);
     }
 
-    public function downloadFyziklaniRooms(ModelContest $contest, $year) {
-        $mask = $this->parameters['fyziklani']['roomsPath'];
-        $contestName = isset($this->contestMap[$contest->contest_id]) ? $this->contestMap[$contest->contest_id] : $contest->contest_id;
-
-        $path = sprintf($mask, $contestName, $year);
-        return $this->download($path);
-    }
-
+    /**
+     * @param $path
+     * @return bool|string
+     */
     private function download($path) {
         $src = "https://{$this->httpUser}:{$this->httpPassword}@{$this->host}{$path}";
         $dst = tempnam($this->tmpDir, 'task');
@@ -107,6 +112,10 @@ class Downloader {
 
 }
 
+/**
+ * Class DownloadException
+ * @package Astrid
+ */
 class DownloadException extends RuntimeException {
 
 }

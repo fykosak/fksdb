@@ -2,21 +2,20 @@
 
 namespace Persons;
 
-use Authentication\AccountManager;
+use FKSDB\Authentication\AccountManager;
 use FKSDB\Config\GlobalParameters;
-use FKSDB\ORM\ModelContest;
+use FKSDB\ORM\IService;
+use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Services\ServicePerson;
 use Mail\MailTemplateFactory;
 use Nette\Database\Connection;
-use Nette\Object;
-use ORM\IService;
-use ServicePerson;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class ExtendedPersonHandlerFactory extends Object {
+class ExtendedPersonHandlerFactory {
 
     /**
      * @var ServicePerson
@@ -39,24 +38,32 @@ class ExtendedPersonHandlerFactory extends Object {
     private $accountManager;
 
     /**
-     * @var GlobalParameters
+     * ExtendedPersonHandlerFactory constructor.
+     * @param ServicePerson $servicePerson
+     * @param Connection $connection
+     * @param MailTemplateFactory $mailTemplateFactory
+     * @param AccountManager $accountManager
+     * @param GlobalParameters $globalParameters
      */
-    private $globalParameters;
-
     function __construct(ServicePerson $servicePerson, Connection $connection, MailTemplateFactory $mailTemplateFactory, AccountManager $accountManager, GlobalParameters $globalParameters) {
         $this->servicePerson = $servicePerson;
         $this->connection = $connection;
         $this->mailTemplateFactory = $mailTemplateFactory;
         $this->accountManager = $accountManager;
-        $this->globalParameters = $globalParameters;
     }
 
+    /**
+     * @param IService $service
+     * @param ModelContest $contest
+     * @param $year
+     * @param $invitationLang
+     * @return ExtendedPersonHandler
+     */
     public function create(IService $service, ModelContest $contest, $year, $invitationLang) {
-        $handler = new ExtendedPersonHandler($service, $this->servicePerson, $this->connection, $this->mailTemplateFactory, $this->accountManager, $this->globalParameters);
+        $handler = new ExtendedPersonHandler($service, $this->servicePerson, $this->connection, $this->mailTemplateFactory, $this->accountManager);
         $handler->setContest($contest);
         $handler->setYear($year);
         $handler->setInvitationLang($invitationLang);
         return $handler;
     }
-
 }
