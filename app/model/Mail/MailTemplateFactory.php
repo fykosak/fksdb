@@ -80,22 +80,18 @@ class MailTemplateFactory {
 
     /**
      * @param $filename
-     * @param null $lang
-     * @param Control|null $control
+     * @param string $lang ISO 639-1
      * @return FileTemplate
      */
-    public final function createFromFile($filename, $lang = null, Control $control = null): FileTemplate {
+    public final function createFromFile(string $filename, string $lang = null): FileTemplate {
         $presenter = $this->application->getPresenter();
-        if (($lang === null || $control === null) && !$presenter instanceof BasePresenter) {
+        if (($lang === null) && !$presenter instanceof BasePresenter) {
             throw new InvalidArgumentException("Expecting BasePresenter, got " . ($presenter ? get_class($presenter) : (string)$presenter));
         }
         if ($lang === null) {
             $lang = $presenter->getLang();
         }
-        if ($control === null) {
-            $control = $presenter;
-        }
-
+        $control = $presenter;
         $file = $this->templateDir . DIRECTORY_SEPARATOR . "$filename.$lang.latte";
         if (!file_exists($file)) {
             throw new InvalidArgumentException("Cannot find template '$filename.$lang'.");
