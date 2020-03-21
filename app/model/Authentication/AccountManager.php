@@ -25,8 +25,10 @@ class AccountManager {
      * @var ServiceLogin
      */
     private $serviceLogin;
-
-
+    /**
+     * @var IMailer
+     */
+    private $mailer;
     /**
      * @var ServiceAuthToken
      */
@@ -174,13 +176,8 @@ class AccountManager {
 
     /**
      * @param ModelPerson $person
-<<<<<<< HEAD
      * @param string $login
      * @param string $password
-=======
-     * @param null $login
-     * @param null $password
->>>>>>> dev-emails-2
      * @return AbstractModelSingle|ModelLogin
      */
     public final function createLogin(ModelPerson $person, string $login = null, string $password = null) {
