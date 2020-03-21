@@ -31,20 +31,6 @@ class ServiceMPostContact extends AbstractServiceMulti {
         $this->getMainService()->dispose($model->getMainModel());
     }
 
-    /**
-     * @param IModel $model
-     * @param $data
-     * @param bool $alive
-     * @return mixed|void
-     */
-    public function updateModel(IModel $model, $data, $alive = true) {
-        if (!$model instanceof $this->modelClassName) {
-            throw new InvalidArgumentException('Service for class ' . $this->modelClassName . ' cannot store ' . get_class($model));
-        }
-        $this->getMainService()->updateModel2($model->getMainModel(), $data);
-        $this->getJoinedService()->updateModel2($model->getJoinedModel(), $data);
-    }
-
 }
 
 
