@@ -2,6 +2,8 @@
 
 namespace FKSDB\Transitions;
 
+use Mail\MailTemplateFactory;
+
 /**
  * Class TransitionsFactory
  * @package FKSDB\Transitions

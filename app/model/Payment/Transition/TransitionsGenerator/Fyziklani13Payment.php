@@ -133,6 +133,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
                 ['model' => $model]
             );
             $this->serviceEmailMessage->addMessageToSend($data);
+
         };
         $machine->addTransition($transition);
     }

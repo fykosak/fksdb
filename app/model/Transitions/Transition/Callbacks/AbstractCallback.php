@@ -21,6 +21,7 @@ abstract class AbstractCallback {
 
     /**
      * @param IStateModel|null $model
+     * @param array $args
      * @return void
      */
     abstract protected function evaluate(IStateModel $model = null, ...$args);
