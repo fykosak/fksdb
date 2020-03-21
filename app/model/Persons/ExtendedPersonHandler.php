@@ -177,6 +177,7 @@ class ExtendedPersonHandler {
             $login = $person->getLogin();
             $hasLogin = (bool)$login;
             if ($sendEmail && ($email && !$login)) {
+                // $template = $this->mailTemplateFactory->createLoginInvitation($presenter, $this->getInvitationLang());
                 try {
                     $this->accountManager->createLoginWithInvitation($person, $email);
                     $presenter->flashMessage(_('Zvací e-mail odeslán.'), BasePresenter::FLASH_INFO);

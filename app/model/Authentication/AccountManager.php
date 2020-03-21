@@ -11,6 +11,7 @@ use FKSDB\ORM\Services\ServiceEmailMessage;
 use FKSDB\ORM\Services\ServiceLogin;
 use Mail\MailTemplateFactory;
 use Mail\SendFailedException;
+use Nette\Mail\IMailer;
 use Nette\Utils\DateTime;
 
 /**
@@ -25,6 +26,7 @@ class AccountManager {
      */
     private $serviceLogin;
 
+
     /**
      * @var ServiceAuthToken
      */
@@ -37,7 +39,7 @@ class AccountManager {
      */
     private $serviceEmailMessage;
     /**
-     * @var
+     * @var MailTemplateFactory
      */
     private $mailTemplateFactory;
 
@@ -46,14 +48,17 @@ class AccountManager {
      * @param MailTemplateFactory $mailTemplateFactory
      * @param ServiceLogin $serviceLogin
      * @param ServiceAuthToken $serviceAuthToken
+     * @param IMailer $mailer
      * @param ServiceEmailMessage $serviceEmailMessage
      */
     function __construct(MailTemplateFactory $mailTemplateFactory,
                          ServiceLogin $serviceLogin,
                          ServiceAuthToken $serviceAuthToken,
+                         IMailer $mailer,
                          ServiceEmailMessage $serviceEmailMessage) {
         $this->serviceLogin = $serviceLogin;
         $this->serviceAuthToken = $serviceAuthToken;
+        $this->mailer = $mailer;
         $this->serviceEmailMessage = $serviceEmailMessage;
         $this->mailTemplateFactory = $mailTemplateFactory;
     }
@@ -169,8 +174,13 @@ class AccountManager {
 
     /**
      * @param ModelPerson $person
+<<<<<<< HEAD
      * @param string $login
      * @param string $password
+=======
+     * @param null $login
+     * @param null $password
+>>>>>>> dev-emails-2
      * @return AbstractModelSingle|ModelLogin
      */
     public final function createLogin(ModelPerson $person, string $login = null, string $password = null) {
