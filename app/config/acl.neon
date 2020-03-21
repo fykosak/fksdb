@@ -14,7 +14,7 @@ services:
      #   class: Nette\Security\Permission
       #  setup:
 acl:
-    # Roles
+    ## Roles
     - addRole(guest)                    # anonym (automatická role)
     - addRole(registered, guest)        # registrant (automatická role)
     - addRole(contestant, registered)   # řešitel (automatická role)
@@ -26,14 +26,15 @@ acl:
     - addRole(dataManager, [org, exportDesigner]) # správce dat DB
     - addRole(eventManager, org)        # správce přihlášek
     - addRole(boss, org)                # šéf
-    - addRole(aesop)                    # AESOPový stahovač dat
-    - addRole(web)                      # webový stahovač dat (např. fksdbexport)
-    - addRole(wiki)                     # neveřejný webový stahovač dat (např. fksdbexport na org wiki)
     - addRole(schoolManager)            # správce dat škol
     - addRole(superuser, [org, webmaster, taskManager, inboxManager, dataManager, exportDesigner, eventManager, boss])
     - addRole(cartesian)
+    # robot's roles
+    - addRole(aesop)                    # AESOPový stahovač dat
+    - addRole(web)                      # webový stahovač dat (např. fksdbexport)
+    - addRole(wiki)                     # neveřejný webový stahovač dat (např. fksdbexport na org wiki)
 
-    # Resources
+    ## Resources
     - addResource(submit)        # revoke, upload, download, edit, ALL
     - addResource(task)          # insert, edit
     - addResource(person)        # create, edit, list, delete, merge, stalk.restrict, stalk.search, stalk.search, stalk.full, validation
@@ -45,31 +46,32 @@ acl:
     - addResource(org)           # create, edit, list, delete
     - addResource(eventOrg)      # create, edit, list, delete
     - addResource(event)         # create, edit, list, application
-    - addResource(teacher)       # create, edit, list
+    - addResource(teacher)       # create, edit, list, detail
     - addResource(email_message) # list, detail
 
     #applications
-    - addResource(event.participant) #list, detail
-    - addResource(fyziklani.team) #route, list, detail
+    - addResource(event.participant)  # list, detail
+    - addResource(fyziklani.team)     # route, list, detail
 
     #fyziklani
-    - addResource(fyziklani.dashboard) # default
-    - addResource(fyziklani.task) # list, import
-    - addResource(fyziklani.close) # list, team, hard
-    - addResource(fyziklani.results) # final, correlation, presentation,
-    - addResource(fyziklani.submit) # deafult, detail, edit, revoke, create
-    - addResource(fyziklani.gameSetup) # deafult
-    - addResource(fyziklani.diplomas) # calculate, results
+    - addResource(fyziklani.dashboard)  # default
+    - addResource(fyziklani.task)       # list, import
+    - addResource(fyziklani.close)      # list, team, hard
+    - addResource(fyziklani.results)    # final, correlation, presentation,
+    - addResource(fyziklani.submit)     # create, edit, list, detail, revoke,
+    - addResource(fyziklani.gameSetup)  # deafult
+    - addResource(fyziklani.diplomas)   # calculate, results
     #event module
-    - addResource(event.application) #import
-    - addResource(event.dashboard) # default
-    - addResource(event.schedule) # default
-    - addResource(event.model) #default
-    - addResource(event.payment) # create, edit, list
-    - addResource(event.seating) # edit, download, preview, print
-    - addResource(event.org)      # create, edit, list, delete
-    - addResource(event.chart)      # list, chart
-    # ACL
+    - addResource(event.application) # import
+    - addResource(event.dashboard)   # default
+    - addResource(event.schedule)    # default
+    - addResource(event.model)       # default
+    - addResource(event.payment)     # create, edit, list, detail, delete
+    - addResource(event.seating)     # edit, download, preview, print
+    - addResource(event.org)         # create, edit, list, detail, delete
+    - addResource(event.chart)       # list, chart
+
+    ## ACL
     - allow(contestant, submit, upload)
     - allow(contestant, submit, download, [@ownerAssertion, 'isSubmitUploader'])
     - allow(contestant, submit, download.uploaded, [@ownerAssertion, 'isSubmitUploader'])
@@ -125,7 +127,7 @@ acl:
     - allow(boss, org, ::constant(Nette\Security\Permission::ALL))
     - allow(boss, person, edit, [@ownerAssertion, 'existsOwnContestant'])
     - allow(boss, person, stalk.full)
-    - allow(boss, email_message, ::constant(Nette\Security\Permission::ALL))
+    - allow(boss, email_message, list)
 
     - allow(schoolManager, school, ::constant(Nette\Security\Permission::ALL))
     # robot role
