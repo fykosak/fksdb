@@ -145,11 +145,11 @@ class AccountManager {
     }
 
     /**
-     * @param ITemplate $template
      * @param ModelLogin $login
+     * @param string|null $lang
      * @throws \Exception
      */
-    public function sendRecovery(ITemplate $template, ModelLogin $login) {
+    public function sendRecovery(ModelLogin $login, string $lang = null) {
         $person = $login->getPerson();
         $recoveryAddress = $person ? $person->getInfo()->email : null;
         if (!$recoveryAddress) {
@@ -167,23 +167,18 @@ class AccountManager {
 
         $until = DateTime::from($this->getRecoveryExpiration());
         $token = $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_RECOVERY, $until);
+        $templateParams = [
+            'token' => $token->token,
+            'login' => $login,
+            'until' => $until,
+        ];
+        $data = [];
+        $data['text'] = (string)$this->mailTemplateFactory->createPasswordRecovery($lang, $templateParams);
+        $data['subject'] = _('Obnova hesla');
+        $data['sender'] = $this->getEmailFrom();
+        $data['recipient'] = $recoveryAddress;
 
-        // prepare and send email
-        $template->token = $token->token;
-        $template->login = $login;
-        $template->until = $until;
-
-        $message = new Message();
-        $message->setHtmlBody($template);
-        $message->setSubject(_('Obnova hesla'));
-        $message->setFrom($this->getEmailFrom());
-        $message->addTo($recoveryAddress, $login->__toString());
-
-        try {
-            $this->mailer->send($message);
-        } catch (InvalidStateException $exception) {
-            throw new SendFailedException($exception);
-        }
+        $this->serviceEmailMessage->addMessageToSend($data);
     }
 
     /**

@@ -61,12 +61,12 @@ class MailTemplateFactory {
     }
 
     /**
-     * @param Control|null $control
      * @param string $lang ISO 639-1
+     * @param array $data
      * @return FileTemplate
      */
-    public function createPasswordRecovery(Control $control = null, $lang = null) {
-        return $this->createFromFile('passwordRecovery', $lang, $control);
+    public function createPasswordRecovery(string $lang = null, array $data = []) {
+        return $this->createWithParameters('passwordRecovery', $lang, $data);
     }
 
     /**
