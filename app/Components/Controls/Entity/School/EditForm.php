@@ -75,12 +75,12 @@ class EditForm extends AbstractForm implements IEditEntityForm {
                 throw new \ModelException();
             }
 
-            $this->flashMessage(_('Škola upravena'), \BasePresenter::FLASH_SUCCESS);
-            $this->getPresenter()->redirect(':Common:School:list');
+            $this->getPresenter()->flashMessage(_('Škola upravena'), \BasePresenter::FLASH_SUCCESS);
+            $this->getPresenter()->redirect('list');
         } catch (\ModelException $exception) {
             $connection->rollBack();
             Debugger::log($exception, Debugger::ERROR);
-            $this->flashMessage(_('Chyba při úpravě školy.'), \BasePresenter::FLASH_ERROR);
+            $this->getPresenter()->flashMessage(_('Chyba při úpravě školy.'), \BasePresenter::FLASH_ERROR);
         }
     }
 }

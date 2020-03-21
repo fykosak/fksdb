@@ -34,7 +34,7 @@ class ServiceAddress extends AbstractServiceSingle {
     }
 
     /**
-     * @param null $data
+     * @param array|iterable|\ArrayAccess $data
      * @return AbstractModelSingle
      */
     public function createNewModel($data = null): AbstractModelSingle {
@@ -47,6 +47,7 @@ class ServiceAddress extends AbstractServiceSingle {
     /**
      * @param \FKSDB\ORM\IModel $model
      * @return mixed|void
+     * @deprecated
      */
     public function save(IModel &$model) {
         $modelClassName = $this->getModelClassName();
