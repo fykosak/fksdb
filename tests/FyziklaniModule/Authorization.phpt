@@ -24,6 +24,8 @@ class AuthorizationTest extends FyziklaniTestCase {
 
     private $perContestant;
 
+    private $submitId;
+
     function __construct(Container $container) {
         parent::__construct($container);
         $this->setContainer($container);
@@ -52,7 +54,26 @@ class AuthorizationTest extends FyziklaniTestCase {
         $this->insert(DbNames::TAB_CONTESTANT_BASE, array('person_id' => $this->perContestant, 'contest_id' => 1, 'year' => 1));
 
         $this->eventId = $this->createEvent(array());
+        $this->connection->query('INSERT INTO fyziklani_task', [
+            'event_id' => $this->eventId,
+            'label' => 'AA',
+            'name' => 'tmp',
+        ]);
+        $taskId = $this->connection->lastInsertId();
 
+        $this->connection->query('INSERT INTO e_fyziklani_team', [
+            'event_id' => $this->eventId,
+            'name' => 'bar',
+            'status' => 'applied',
+            'category' => 'C',
+        ]);
+        $teamId = $this->connection->lastInsertId();
+        $this->connection->query('INSERT INTO fyziklani_submit', [
+            'fyziklani_task_id' => $taskId,
+            'e_fyziklani_team_id' => $teamId,
+            'points' => 5,
+        ]);
+        $this->submitId = $this->connection->lastInsertId();
 
         $this->mockApplication();
     }
@@ -80,11 +101,10 @@ class AuthorizationTest extends FyziklaniTestCase {
             'year' => 1,
             'eventId' => $this->eventId,
             'action' => $action,
-            'id' => 'dummy',
+            'id' => $this->submitId,
         );
 
-        $request = new Request($presenterName, 'GET', $params);
-        return $request;
+        return new Request($presenterName, 'GET', $params);
     }
 
     /**

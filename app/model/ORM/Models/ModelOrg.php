@@ -23,6 +23,7 @@ use Nette\Security\IResource;
  * @property-read string domain_alias
  */
 class ModelOrg extends AbstractModelSingle implements IResource, IPersonReferencedModel, IContestReferencedModel {
+    const RESOURCE_ID = 'org';
 
     /**
      * @return ModelContest
@@ -42,7 +43,7 @@ class ModelOrg extends AbstractModelSingle implements IResource, IPersonReferenc
      * @return string
      */
     public function getResourceId(): string {
-        return 'org';
+        return self::RESOURCE_ID;
     }
 
 }

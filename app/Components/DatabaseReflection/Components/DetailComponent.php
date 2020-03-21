@@ -54,6 +54,10 @@ class DetailComponent extends Control {
         return parent::createComponent($name);
     }
 
+    /**
+     * @param $section
+     * @param $model
+     */
     public function render($section,$model) {
         $this->template->setTranslator($this->translator);
 

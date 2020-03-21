@@ -1,8 +1,8 @@
 import * as React from 'react';
 
 export interface OwnProps {
-    children: React.ReactNode;
-    headline: string;
+    children?: React.ReactNode;
+    headline: string | JSX.Element;
     level: string;
 }
 

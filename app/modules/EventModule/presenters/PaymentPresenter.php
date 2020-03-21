@@ -8,6 +8,7 @@ use FKSDB\Components\Forms\Controls\Payment\SelectForm;
 use FKSDB\Components\Grids\Payment\OrgPaymentGrid;
 use FKSDB\Config\Extensions\PaymentExtension;
 use FKSDB\ORM\AbstractServiceSingle;
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServicePayment;
 use FKSDB\Payment\Transition\PaymentMachine;
@@ -16,6 +17,7 @@ use InvalidArgumentException;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
+use Nette\Security\IResource;
 use function count;
 use function sprintf;
 
@@ -88,6 +90,14 @@ class PaymentPresenter extends BasePresenter {
         $this->setTitle(_('List of payments'));
         $this->setIcon('fa fa-credit-card');
     }
+
+    /**
+     * @param ModelEvent $event
+     * @return bool
+     */
+    protected function isEnabledForEvent(ModelEvent $event): bool {
+        return $this->hasApi();
+    }
     /* ********* Authorization *****************/
     /**
      * @param int $id
@@ -96,10 +106,6 @@ class PaymentPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function authorizedDetail(int $id) {
-        if (!$this->hasApi()) {
-            $this->setAuthorized(false);
-            return;
-        }
         $this->setAuthorized($this->isContestsOrgAllowed($this->loadEntity($id), 'detail'));
     }
 
@@ -111,10 +117,6 @@ class PaymentPresenter extends BasePresenter {
      */
     public function authorizedEdit(int $id) {
         $this->loadEntity($id);
-        if (!$this->hasApi()) {
-            $this->setAuthorized(false);
-            return;
-        }
         $this->setAuthorized($this->canEdit());
     }
 
@@ -123,10 +125,6 @@ class PaymentPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function authorizedCreate() {
-        if (!$this->hasApi()) {
-            $this->setAuthorized(false);
-            return;
-        }
         $this->setAuthorized($this->isContestsOrgAllowed('event.payment', 'create'));
     }
 
@@ -135,10 +133,6 @@ class PaymentPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function authorizedList() {
-        if (!$this->hasApi()) {
-            $this->setAuthorized(false);
-            return;
-        }
         $this->setAuthorized($this->isContestsOrgAllowed('event.payment', 'list'));
     }
 
@@ -205,11 +199,6 @@ class PaymentPresenter extends BasePresenter {
      */
     protected function startup() {
         parent::startup();
-        // protection not implements eventPayment
-        if (!$this->hasApi()) {
-            $this->flashMessage(_('Event has not payment API'));
-            $this->redirect(':Event:Dashboard:default');
-        }
     }
     /* ********* Components *****************/
     /**

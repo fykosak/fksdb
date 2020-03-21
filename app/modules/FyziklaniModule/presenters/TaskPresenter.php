@@ -34,7 +34,7 @@ class TaskPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function authorizedList() {
-        $this->setAuthorized(($this->eventIsAllowed('fyziklani.task', 'list')));
+        $this->setAuthorized($this->isAllowedForEventOrg('fyziklani.task', 'list'));
     }
 
     /**
@@ -42,7 +42,7 @@ class TaskPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function authorizedImport() {
-        $this->setAuthorized(($this->eventIsAllowed('fyziklani.task', 'import')));
+        $this->setAuthorized($this->isAllowedForEventOrg('fyziklani.task', 'import'));
     }
 
     /**

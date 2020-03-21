@@ -2,73 +2,31 @@
 
 namespace CommonModule;
 
-use FKSDB\Components\Controls\Chart\IChart;
-use FKSDB\Components\Controls\Chart\ParticipantAcquaintanceChartControl;
-use FKSDB\ORM\Services\ServiceEvent;
-use Nette\Application\UI\Control;
+use FKSDB\ChartPresenterTrait;
+use FKSDB\Components\Controls\Chart\TotalPersonsChartControl;
 
 /**
  * Class ChartPresenter
  * @package CommonModule
  */
 class ChartPresenter extends BasePresenter {
-    /**
-     * @var int|string
-     * @persistent
-     */
-    public $id;
-    /**
-     * @var IChart
-     */
-    private $selectedChart;
-
-    /**
-     * @var ServiceEvent
-     */
-    private $serviceEvent;
-
-    /**
-     * @param ServiceEvent $serviceEvent
-     */
-    public function injectServiceEvent(ServiceEvent $serviceEvent) {
-        $this->serviceEvent = $serviceEvent;
-    }
-
-    /**
-     * @return IChart[]
-     */
-    private function getCharts() {
-        static $chartComponents;
-        if (!$chartComponents) {
-            $chartComponents = [
-                new ParticipantAcquaintanceChartControl($this->context, +$this->id, $this->serviceEvent),
-            ];
-        }
-        return $chartComponents;
-    }
-
-    public function titleChart() {
-        $this->setTitle($this->selectedChart->getTitle());
-        $this->setIcon('fa fa-pie-chart');
-    }
+    use ChartPresenterTrait;
 
     public function startup() {
         parent::startup();
-        foreach ($this->getCharts() as $chart) {
-            if ($chart->getAction() === $this->getAction()) {
-                $this->selectedChart = $chart;
-                $this->setView('chart');
-            }
-        }
+        $this->selectChart();
     }
-    public function renderList(){
+
+    public function renderList() {
         $this->template->charts = $this->getCharts();
     }
 
     /**
-     * @return Control
+     * @inheritDoc
      */
-    public function createComponentChart() {
-        return $this->selectedChart->getControl();
+    protected function registerCharts(): array {
+        return [
+            new TotalPersonsChartControl($this->context),
+        ];
     }
 }

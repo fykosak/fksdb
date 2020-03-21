@@ -65,6 +65,7 @@ class EventPrice extends AbstractPreProcess {
      * @param ModelEventParticipant $modelEventParticipant
      * @param Price $price
      * @return Price
+     * @throws NotImplementedException
      */
     private function getPriceFromModel(ModelEventParticipant $modelEventParticipant, Price $price): Price {
         throw new NotImplementedException();

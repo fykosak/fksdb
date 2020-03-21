@@ -147,7 +147,7 @@ class FyziklaniFactory {
      * @return ResultsAndStatistics
      */
     public function createResultsAndStatistics(string $reactId, ModelEvent $event) {
-        return new ResultsAndStatistics($reactId, $this->context, $event, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
+        return new ResultsAndStatistics($reactId, $this->context, $event);
     }
     /* ********** GRIDS *************/
     /**

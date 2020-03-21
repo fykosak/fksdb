@@ -22,10 +22,11 @@ class PrimaryKeyRow extends DefaultRow {
     }
 
     /**
+     * @param array $args
      * @return BaseControl
      * @throws BadRequestException
      */
-    public function createField(): BaseControl {
+    public function createField(...$args): BaseControl {
         throw new BadRequestException();
     }
 }

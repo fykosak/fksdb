@@ -2,7 +2,7 @@
 
 namespace Persons;
 
-use Authentication\AccountManager;
+use FKSDB\Authentication\AccountManager;
 use FKSDB\Config\GlobalParameters;
 use FKSDB\ORM\IService;
 use FKSDB\ORM\Models\ModelContest;

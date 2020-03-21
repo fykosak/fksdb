@@ -102,7 +102,7 @@ class SqlBuilder
 
 	public function importConditions(SqlBuilder $builder)
 	{
-        Debugger::barDump($builder,'SQLBImport');
+       // Debugger::barDump($builder,'SQLBImport');
 
 		$this->where = $builder->where;
 		$this->parameters = $builder->parameters;

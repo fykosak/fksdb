@@ -2,6 +2,7 @@
 
 namespace FyziklaniModule;
 
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 
@@ -10,6 +11,11 @@ use Nette\Application\BadRequestException;
  * @package FyziklaniModule
  */
 class GameSetupPresenter extends BasePresenter {
+    /**
+     * @var ModelFyziklaniGameSetup
+     */
+    private $gameSetup;
+
     /**
      * @return void
      */
@@ -27,14 +33,27 @@ class GameSetupPresenter extends BasePresenter {
     }
 
     /**
-     * @throws BadRequestException
-     * @throws AbortException
      * @return void
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function authorizedDefault() {
-        if (!$this->isEventFyziklani()) {
-            return $this->setAuthorized(false);
+        return $this->setAuthorized($this->isAllowedForEventOrg('fyziklani.gameSetup', 'default'));
+    }
+
+    /**
+     * @return ModelFyziklaniGameSetup
+     * @throws BadRequestException
+     * @throws AbortException
+     */
+    protected function getGameSetup(): ModelFyziklaniGameSetup {
+        if (!$this->gameSetup) {
+            $gameSetup = $this->getEvent()->getFyziklaniGameSetup();
+            if (!$gameSetup) {
+                throw new BadRequestException(_('Game is not set up!'), 404);
+            }
+            $this->gameSetup = $gameSetup;
         }
-        return $this->setAuthorized($this->eventIsAllowed('fyziklani.gameSetup', 'default'));
+        return $this->gameSetup;
     }
 }

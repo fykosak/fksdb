@@ -72,6 +72,7 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel, IP
 
     /**
      * @return string
+     * @throws NotImplementedException
      */
     public function getLabel(): string {
         $item = $this->getScheduleItem();

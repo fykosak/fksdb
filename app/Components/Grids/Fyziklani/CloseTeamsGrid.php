@@ -5,6 +5,7 @@ namespace FKSDB\Components\Grids\Fyziklani;
 use FKSDB\Components\Controls\Helpers\Badges\NotSetBadge;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\NotImplementedException;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
@@ -45,6 +46,7 @@ class CloseTeamsGrid extends BaseGrid {
      * @param BasePresenter $presenter
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
+     * @throws NotImplementedException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

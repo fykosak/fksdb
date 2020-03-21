@@ -10,7 +10,6 @@ use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceEvent;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\DI\Container;
 
 /**
  * Class DispatchPresenter

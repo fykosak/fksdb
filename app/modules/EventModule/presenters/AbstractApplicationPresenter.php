@@ -9,6 +9,7 @@ use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
 use FKSDB\Components\Grids\Schedule\PersonGrid;
 use FKSDB\Logging\FlashDumpFactory;
 use FKSDB\Logging\MemoryLogger;
+use FKSDB\ORM\Services\ServiceEventParticipant;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -31,6 +32,11 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     protected $dumpFactory;
 
     /**
+     * @var ServiceEventParticipant
+     */
+    protected $serviceEventParticipant;
+
+    /**
      * @param ApplicationHandlerFactory $applicationHandlerFactory
      */
     public function injectHandlerFactory(ApplicationHandlerFactory $applicationHandlerFactory) {
@@ -42,6 +48,14 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      */
     public function injectFlashDumpFactory(FlashDumpFactory $dumpFactory) {
         $this->dumpFactory = $dumpFactory;
+    }
+
+
+    /**
+     * @param ServiceEventParticipant $serviceEventParticipant
+     */
+    public function injectServiceEventParticipant(ServiceEventParticipant $serviceEventParticipant) {
+        $this->serviceEventParticipant = $serviceEventParticipant;
     }
 
     /**
@@ -90,7 +104,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
         $source = new SingleEventSource($this->getEvent(), $this->container);
         foreach ($source as $key => $holder) {
             $holders[$key] = $holder;
-            $handlers[$key] = $this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger()); //TODO it's a bit weird to create new logger for each handler
+            $handlers[$key] = $this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger());
         }
 
         return new ApplicationComponent($handlers[$this->getEntity()->getPrimary()], $holders[$this->getEntity()->getPrimary()], $flashDump);
@@ -103,7 +117,6 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      */
     protected function isTeamEvent(): bool {
         if (in_array($this->getEvent()->event_type_id, self::TEAM_EVENTS)) {
-            $this->setAuthorized(false);
             return true;
         }
         return false;
@@ -125,4 +138,5 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     abstract function createComponentGrid(): AbstractApplicationGrid;
+
 }

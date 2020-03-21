@@ -6,6 +6,7 @@ use FKSDB\Components\Controls\Fyziklani\RoutingDownload;
 use FKSDB\Components\Controls\Fyziklani\RoutingEdit;
 use FKSDB\Components\Controls\Fyziklani\SeatingControl;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use FKSDB\React\ReactResponse;
 use Nette\Application\AbortException;
@@ -56,6 +57,14 @@ class SeatingPresenter extends BasePresenter {
         $this->setIcon('fa fa-search');
     }
 
+    /**
+     * @param ModelEvent $event
+     * @return bool
+     */
+    protected function isEnabledForEvent(ModelEvent $event): bool {
+        return $event->event_type_id === 1;
+    }
+
     public function authorizedEdit() {
         $this->setAuthorized(false);
         // $this->setAuthorized(($this->eventIsAllowed('event.seating', 'edit')));
@@ -71,7 +80,7 @@ class SeatingPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function authorizedPreview() {
-        $this->setAuthorized(($this->eventIsAllowed('event.seating', 'preview')));
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('event.seating', 'preview', $this->getEvent()->getContest()));
     }
 
     /**
@@ -79,7 +88,7 @@ class SeatingPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function authorizedList() {
-        $this->setAuthorized(($this->eventIsAllowed('event.seating', 'list')));
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('event.seating', 'list', $this->getEvent()->getContest()));
     }
 
     /**
@@ -87,8 +96,8 @@ class SeatingPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function authorizedDefault() {
-        $download = $this->eventIsAllowed('event.seating', 'download');
-        $edit = $this->eventIsAllowed('event.seating', 'edit');
+        $download = $this->getContestAuthorizator()->isAllowed('event.seating', 'download', $this->getEvent()->getContest());
+        $edit = $this->getContestAuthorizator()->isAllowed('event.seating', 'edit', $this->getEvent()->getContest());
         $this->setAuthorized($download || $edit);
     }
 

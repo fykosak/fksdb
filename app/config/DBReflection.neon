@@ -85,7 +85,6 @@ DBReflection:
              order: FKSDB\Components\DatabaseReflection\Org\OrderRow
              tex_signature: FKSDB\Components\DatabaseReflection\Org\TexSignatureRow
              domain_alias: FKSDB\Components\DatabaseReflection\Org\DomainAliasRow
-             contest_id: FKSDB\Components\DatabaseReflection\Org\ContestRow
              contribution:
                  type: string
                  title: _(Contribution)
@@ -164,6 +163,10 @@ DBReflection:
                  type: string
                  title: Titul za jménem
                  permission: PERMISSION_ALLOW_RESTRICT
+             pizza:
+                 type: string
+                 title: Pizza
+                 permission: PERMISSION_ALLOW_RESTRICT
 
          person_history:
              ac_year: FKSDB\Components\DatabaseReflection\PersonHistory\AcYearRow
@@ -212,8 +215,9 @@ DBReflection:
              ct_id:
                  type: primaryKey
                  title: _(Contestant Id)
-             year: FKSDB\Components\DatabaseReflection\Tables\ContestantBase\YearRow
-             contest_id: FKSDB\Components\DatabaseReflection\Tables\ContestantBase\ContestId
+             year:
+                 type: string
+                 title: _(Year)
          event_org:
              event_org_id:
                  accessKey: e_org_id
@@ -352,6 +356,38 @@ DBReflection:
              event_link: FKSDB\Components\DatabaseReflection\ReferencedRows\EventLink
              person_name: FKSDB\Components\DatabaseReflection\ReferencedRows\PersonNameRow
              payment_id: FKSDB\Components\DatabaseReflection\ReferencedRows\PaymentRow
+             contest: FKSDB\Components\DatabaseReflection\ReferencedRows\ContestRow
+         task_contribution:
+             type:
+                type: string
+                title: _(Type)
+         task:
+             modelClassName: FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask
+             referencedAccess:
+                modelClassName: FKSDB\ORM\Models\ITaskReferencedModel
+                method: getTask
+                nullable: false
+             fields:
+                 fq_name: FKSDB\Components\DatabaseReflection\Tables\Task\FQNameRow
+                 series:
+                    type: string
+                    title: _(Series)
+                 label:
+                     type: string
+                     title: _(Label)
+                 name_cs:
+                     type: string
+                     title: _(Name cs)
+                 task_id:
+                     type: primaryKey
+                     title: _(Task Id)
+                 points:
+                     type: string
+                     title: _(Points)
+                 year:
+                     type: string
+                     title: _(Year)
+
     links:
         payment.detail:
             destination: ':Event:Payment:detail'

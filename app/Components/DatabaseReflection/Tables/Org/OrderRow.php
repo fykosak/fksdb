@@ -50,9 +50,10 @@ class OrderRow extends AbstractOrgRowFactory {
     }
 
     /**
+     * @param array $args
      * @return BaseControl
      */
-    public function createField(): BaseControl {
+    public function createField(...$args): BaseControl {
         $control = new SelectBox($this->getTitle());
         $control->setOption('description', $this->getDescription());
         $control->setItems(self::ORDER_MAPPING);

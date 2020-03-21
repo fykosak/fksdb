@@ -2,10 +2,12 @@
 
 namespace FKSDB;
 
+use FKSDB\Messages\Message;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
 use Nette\Application\BadRequestException;
+use Nette\Security\IResource;
 
 /**
  * Trait EntityTrait
@@ -34,6 +36,14 @@ trait EntityTrait {
      */
     public function authorizedEdit(int $id) {
         $this->setAuthorized($this->isAllowed($this->loadEntity($id), 'edit'));
+    }
+
+    /**
+     * @param int $id
+     * @throws BadRequestException
+     */
+    public function authorizedDelete(int $id) {
+        $this->setAuthorized($this->isAllowed($this->loadEntity($id), 'delete'));
     }
 
     public function authorizedCreate() {
@@ -68,6 +78,19 @@ trait EntityTrait {
     }
 
     /**
+     * @param int $id
+     * @return array
+     * @throws BadRequestException
+     */
+    public function traitHandleDelete(int $id) {
+        $success = $this->loadEntity($id)->delete();
+        if (!$success) {
+            throw new \ModelException(_('Error during deleting'));
+        }
+        return [new Message(_('Entity has been deleted'), self::FLASH_SUCCESS)];
+    }
+
+    /**
      * @return IService
      */
     abstract protected function getORMService();
@@ -78,9 +101,9 @@ trait EntityTrait {
     abstract protected function getModelResource(): string;
 
     /**
-     * @param $resource
-     * @param $privilege
+     * @param IResource|string $resource
+     * @param string $privilege
      * @return bool
      */
-    abstract protected function isAllowed($resource, $privilege): bool;
+    abstract protected function isAllowed($resource, string $privilege): bool;
 }
