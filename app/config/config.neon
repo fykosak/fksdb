@@ -73,6 +73,15 @@ parameters:
 
         # Sprintf pattern of stored file with arguments: contestantName, contestName, year, series, label
         filenameMask: '%%s-r%3$d-s%4$d-%5$s'
+    corrected:
+        # Path to storage directory
+        root: %upload.root%/corrected
+
+        # Sprintf pattern of directory name with arguments: contestName, year, series, task label
+        directoryMask: %upload.directoryMask%
+
+        # Sprintf pattern of stored file with arguments: contestantName, contestName, year, series, label
+        filenameMask: %upload.filenameMask%
 
     # PDF stamper settings
     stamper:

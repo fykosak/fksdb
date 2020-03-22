@@ -5,12 +5,15 @@ namespace FyziklaniModule;
 use EventModule\EventEntityTrait;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Fyziklani\CloseTeamControl;
+use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Fyziklani\CloseTeamsGrid;
 use FKSDB\Components\Grids\Fyziklani\TeamSubmitsGrid;
+use FKSDB\NotImplementedException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
+use Nette\Application\UI\Control;
 use function sprintf;
 
 /**
@@ -18,6 +21,7 @@ use function sprintf;
  * @package FyziklaniModule
  * @property FormControl closeCategoryAForm
  * @method ModelFyziklaniTeam getEntity()
+ * @method ModelFyziklaniTeam loadEntity(int $id)
  */
 class ClosePresenter extends BasePresenter {
 
@@ -51,7 +55,7 @@ class ClosePresenter extends BasePresenter {
      * @throws AbortException
      */
     public function authorizedTeam() {
-        $this->setAuthorized($this->eventIsAllowed($this->getModelResource(), 'team'));
+        $this->setAuthorized($this->isAllowedForEventOrg($this->getModelResource(), 'team'));
     }
 
     /**
@@ -59,7 +63,7 @@ class ClosePresenter extends BasePresenter {
      * @throws AbortException
      */
     public function authorizedList() {
-        $this->setAuthorized($this->eventIsAllowed($this->getModelResource(), 'team'));
+        $this->setAuthorized($this->isAllowedForEventOrg($this->getModelResource(), 'team'));
     }
 
     /**
@@ -67,7 +71,7 @@ class ClosePresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function authorizeHard() {
-        $this->setAuthorized($this->eventIsAllowed($this->getModelResource(), 'hard'));
+        $this->setAuthorized($this->isAllowedForEventOrg($this->getModelResource(), 'hard'));
     }
     /* *********** ACTIONS **************** */
     /**
@@ -142,5 +146,36 @@ class ClosePresenter extends BasePresenter {
      */
     protected function getModelResource(): string {
         return 'fyziklani.close';
+    }
+
+    /**
+     * @param $resource
+     * @param string $privilege
+     * @return bool
+     * @throws AbortException
+     * @throws BadRequestException
+     */
+    protected function isAllowed($resource, string $privilege): bool {
+        return $this->isAllowedForEventOrg($resource, $privilege);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function createComponentGrid(): BaseGrid {
+        throw new NotImplementedException();
+    }
+    /**
+     * @inheritDoc
+     */
+    public function createComponentCreateForm(): Control {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function createComponentEditForm(): Control {
+        throw new NotImplementedException();
     }
 }

@@ -4,7 +4,7 @@
 
 services:
     accountManager:
-        class: Authentication\AccountManager
+        class: FKSDB\Authentication\AccountManager
         setup:
             - setInvitationExpiration(%invitation.expiration%)
             - setRecoveryExpiration(%recovery.expiration%)
@@ -39,10 +39,12 @@ services:
         setup:
             - start()
     - Authentication\SSO\TokenGSIDHolder
-    submitStorage:
-        class: FKSDB\Submits\FilesystemSubmitStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, %contestMapping%)
+    submitUploatedStorage:
+        class: FKSDB\Submits\FilesystemUploadedSubmitStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, %contestMapping%)
         setup:
             - addProcessing(@PDFStamper)
+    submitCorrectedStorage:
+                    class: FKSDB\Submits\FilesystemCorrectedSubmitStorage(%corrected.root%, %corrected.directoryMask%, %corrected.filenameMask%, %contestMapping%)
     - FKSDB\Components\Forms\Controls\Schedule\Handler
     PDFStamper: FKSDB\Submits\PDFStamper(%stamper.fontSize%)
     readOnlyConnection:

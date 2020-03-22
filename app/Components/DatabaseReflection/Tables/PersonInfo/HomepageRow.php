@@ -22,9 +22,10 @@ class HomepageRow extends AbstractRow {
     }
 
     /**
+     * @param array $args
      * @return BaseControl
      */
-    public function createField(): BaseControl {
+    public function createField(...$args): BaseControl {
         return new URLTextBox();
     }
 

@@ -2,11 +2,14 @@
 
 namespace EventModule;
 
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
 use FKSDB\Components\Factories\PaymentFactory as PaymentComponentFactory;
 use FKSDB\Components\Forms\Controls\Payment\SelectForm;
+use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Payment\OrgPaymentGrid;
 use FKSDB\Config\Extensions\PaymentExtension;
+use FKSDB\NotImplementedException;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServicePayment;
@@ -16,6 +19,8 @@ use InvalidArgumentException;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
+use Nette\Application\UI\Control;
+use Nette\Application\UI\Form;
 use function count;
 use function sprintf;
 
@@ -88,6 +93,13 @@ class PaymentPresenter extends BasePresenter {
         $this->setTitle(_('List of payments'));
         $this->setIcon('fa fa-credit-card');
     }
+
+    /**
+     * @return bool
+     */
+    protected function isEnabledForEvent(): bool {
+        return $this->hasApi();
+    }
     /* ********* Authorization *****************/
     /**
      * @param int $id
@@ -96,10 +108,6 @@ class PaymentPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function authorizedDetail(int $id) {
-        if (!$this->hasApi()) {
-            $this->setAuthorized(false);
-            return;
-        }
         $this->setAuthorized($this->isContestsOrgAllowed($this->loadEntity($id), 'detail'));
     }
 
@@ -111,10 +119,6 @@ class PaymentPresenter extends BasePresenter {
      */
     public function authorizedEdit(int $id) {
         $this->loadEntity($id);
-        if (!$this->hasApi()) {
-            $this->setAuthorized(false);
-            return;
-        }
         $this->setAuthorized($this->canEdit());
     }
 
@@ -123,10 +127,6 @@ class PaymentPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function authorizedCreate() {
-        if (!$this->hasApi()) {
-            $this->setAuthorized(false);
-            return;
-        }
         $this->setAuthorized($this->isContestsOrgAllowed('event.payment', 'create'));
     }
 
@@ -135,10 +135,6 @@ class PaymentPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function authorizedList() {
-        if (!$this->hasApi()) {
-            $this->setAuthorized(false);
-            return;
-        }
         $this->setAuthorized($this->isContestsOrgAllowed('event.payment', 'list'));
     }
 
@@ -205,11 +201,6 @@ class PaymentPresenter extends BasePresenter {
      */
     protected function startup() {
         parent::startup();
-        // protection not implements eventPayment
-        if (!$this->hasApi()) {
-            $this->flashMessage(_('Event has not payment API'));
-            $this->redirect(':Event:Dashboard:default');
-        }
     }
     /* ********* Components *****************/
     /**
@@ -301,5 +292,54 @@ class PaymentPresenter extends BasePresenter {
      */
     protected function getModelResource(): string {
         return ModelPayment::RESOURCE_ID;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function createComponentGrid(): BaseGrid {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getCreateForm(): FormControl {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getEditForm(): FormControl {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function handleCreateFormSuccess(Form $form) {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function handleEditFormSuccess(Form $form) {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function createComponentCreateForm(): Control {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function createComponentEditForm(): Control {
+        throw new NotImplementedException();
     }
 }

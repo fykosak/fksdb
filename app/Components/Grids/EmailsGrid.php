@@ -3,11 +3,12 @@
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
+use FKSDB\NotImplementedException;
 use FKSDB\ORM\Models\ModelEmailMessage;
 use FKSDB\ORM\Services\ServiceEmailMessage;
 use NiftyGrid\DataSource\NDataSource;
+use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
-use SQL\SearchableDataSource;
 
 /**
  * Class EmailsGrid
@@ -33,7 +34,8 @@ class EmailsGrid extends BaseGrid {
     /**
      * @param $presenter
      * @throws DuplicateColumnException
-     * @throws \NiftyGrid\DuplicateButtonException
+     * @throws NotImplementedException
+     * @throws DuplicateButtonException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

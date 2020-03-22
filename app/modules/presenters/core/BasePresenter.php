@@ -382,10 +382,14 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     }
 
     /**
-     * @param $title
+     * @param string $title
+     * @param string $icon
      */
-    protected function setTitle($title) {
+    protected function setTitle(string $title, string $icon = '') {
         $this->title = $title;
+        if ($icon) {
+            $this->icon = $icon;
+        }
     }
 
     /**
@@ -397,6 +401,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     /**
      * @param $icon
+     * @deprecated
      */
     protected function setIcon($icon) {
         $this->icon = $icon;

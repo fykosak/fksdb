@@ -5,6 +5,7 @@ namespace FKSDB\Components\DatabaseReflection\Tables;
 use FKSDB\Components\Controls\Helpers\Badges\NotSetBadge;
 use FKSDB\Components\Controls\PhoneNumber\PhoneNumberFactory;
 use FKSDB\Components\DatabaseReflection\DefaultRow;
+use FKSDB\Components\DatabaseReflection\MetaDataFactory;
 use FKSDB\Components\Forms\Controls\WriteOnlyInput;
 use FKSDB\Components\Forms\Factories\ITestedRowFactory;
 use FKSDB\ORM\AbstractModelSingle;
@@ -48,9 +49,10 @@ class PhoneRow extends DefaultRow implements ITestedRowFactory {
     }
 
     /**
+     * @param array $args
      * @return BaseControl
      */
-    public function createField(): BaseControl {
+    public function createField(...$args): BaseControl {
         $control = null;
         if ($this->isWriteOnly) {
             $control = new WriteOnlyInput($this->getTitle());

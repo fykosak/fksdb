@@ -1,14 +1,9 @@
-{define person_info}
-    <h2>{_'Person info'}</h2>
+{define person}
     <div class="card-columns mt-3">
 
         {control stalkingComponent "base_info"}
 
-        {control stalkingComponent "contact_info"}
-
         {control stalkingComponent "extended_info"}
-
-        {control stalkingComponent "contact_parents"}
 
         {control stalkingComponent "academic_degree"}
 
@@ -17,25 +12,34 @@
         {control stalkingComponent "person_history"}
 
         {control flag}
+    </div>
+{/define}
+
+{define contact}
+    <div class="card-columns mt-3">
+
+        {control stalkingComponent "contact_info"}
+
+        {control stalkingComponent "contact_parents"}
 
         {control address}
 
     </div>
 {/define}
 
-{define contests_info}
-    <h2>{_'Contests info'}</h2>
+{define contests}
     <div class="card-columns mt-3">
         {control stalkingComponent "contestant_base"}
 
         {control stalkingComponent "org"}
 
         {control role}
+
+        {control stalkingComponent "task_contribution"}
     </div>
 {/define}
 
 {define events}
-    <h2>{_'Events'}</h2>
     <div class="card-columns mt-3">
         {control stalkingComponent "event_participant"}
 
@@ -50,7 +54,6 @@
 {/define}
 
 {define validation}
-    <h2>{_'Validation'}</h2>
     <div class="card-columns mt-3">
         {control validation}
     </div>
@@ -58,22 +61,27 @@
 
 {block content}
     <div class="nav nav-tabs" id="nav-tab" role="tablist">
-        <a class="nav-item nav-link active" data-toggle="tab" href="#nav-person-info"
-           role="tab">{_'Person info'}</a>
-        <a class="nav-item nav-link" data-toggle="tab" href="#nav-contests-info"
-           role="tab">{_'Contests info'}</a>
+        <a class="nav-item nav-link active" data-toggle="tab" href="#nav-person"
+           role="tab"><i class="fa fa-user mr-1"></i>{_'Person'}</a>
+        <a class="nav-item nav-link" data-toggle="tab" href="#nav-contact"
+           role="tab"><i class="fa fa-phone mr-1"></i>{_'Contact'}</a>
+        <a class="nav-item nav-link" data-toggle="tab" href="#nav-contests"
+           role="tab"><i class="fa fa-trophy mr-1"></i>{_'Contests'}</a>
         <a class="nav-item nav-link" data-toggle="tab" href="#nav-events"
-           role="tab">{_'Events'}</a>
+           role="tab"><i class="fa fa-calendar mr-1"></i>{_'Events'}</a>
         <a class="nav-item nav-link" data-toggle="tab" href="#nav-validation"
-           role="tab">{_'Validation'}</a>
+           role="tab"><i class="fa fa-check mr-1"></i>{_'Validation'}</a>
     </div>
 
-    <div class="tab-content" id="nav-tabContent">
-        <div class="tab-pane fade show active" id="nav-person-info" role="tabpanel" aria-labelledby="nav-home-tab">
-            {include #person_info}
+    <div class="tab-content mt-3" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-person" role="tabpanel" aria-labelledby="nav-home-tab">
+            {include #person}
         </div>
-        <div class="tab-pane fade show" id="nav-contests-info" role="tabpanel" aria-labelledby="nav-home-tab">
-            {include #contests_info}
+        <div class="tab-pane fade show" id="nav-contact" role="tabpanel" aria-labelledby="nav-home-tab">
+            {include #contact}
+        </div>
+        <div class="tab-pane fade show" id="nav-contests" role="tabpanel" aria-labelledby="nav-home-tab">
+            {include #contests}
         </div>
         <div class="tab-pane fade show" id="nav-events" role="tabpanel" aria-labelledby="nav-home-tab">
             {include #events}

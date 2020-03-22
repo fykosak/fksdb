@@ -85,7 +85,7 @@ class ResultsPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function authorizedPresentation() {
-        $this->setAuthorized($this->eventIsAllowed('fyziklani.results', 'presentation'));
+        $this->setAuthorized($this->isAllowedForEventOrg('fyziklani.results', 'presentation'));
     }
 
     /**

@@ -4,6 +4,7 @@ namespace FKSDB\Results\Models;
 
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\Results\ModelCategory;
+use Nette\InvalidStateException;
 
 /**
  * Detailed results of a single series. Number of tasks is dynamic.
@@ -39,14 +40,14 @@ class BrojureResultsModel extends AbstractResultsModel {
      */
     public function getDataColumns(ModelCategory $category) {
         if ($this->series === null) {
-            throw new \Nette\InvalidStateException('Series not specified.');
+            throw new InvalidStateException('Series not specified.');
         }
 
         if (!isset($this->dataColumns[$category->id])) {
             $dataColumns = [];
             $sumLimit = $this->getSumLimit($category);
             $studentPilnySumLimit = $this->getSumLimitForStudentPilny();
-            
+
             foreach ($this->getTasks($this->listedSeries) as $row) {
                 $task = ModelTask::createFromActiveRow($row);
                 $dataColumns[] = [
@@ -133,10 +134,10 @@ class BrojureResultsModel extends AbstractResultsModel {
      */
     protected function composeQuery(ModelCategory $category) {
         if (!$this->series) {
-            throw new \Nette\InvalidStateException('Series not set.');
+            throw new InvalidStateException('Series not set.');
         }
         if (array_search($this->listedSeries, $this->series) === false) {
-            throw new \Nette\InvalidStateException('Listed series is not among series.');
+            throw new InvalidStateException('Listed series is not among series.');
         }
 
         $select = [];
@@ -157,7 +158,7 @@ class BrojureResultsModel extends AbstractResultsModel {
             $select[] = "round(SUM(IF(t.series = " . $series . ", " . $sum . ", null))) AS '" . self::DATA_PREFIX . $i . "'";
             $i += 1;
         }
-        
+
         $studentPilnySumLimit = $this->getSumLimitForStudentPilny();
         $studentPilnySumLimitInversed = $studentPilnySumLimit != 0 ? 1.0 / $studentPilnySumLimit : 0;
 
@@ -195,16 +196,16 @@ left join submit s ON s.task_id = t.task_id AND s.ct_id = ct.ct_id";
 
     /**
      * Returns total points of Student Pilny (without multiplication for first two tasks) for given series
-     * 
+     *
      * @return int sum of Student Pilny points
      */
     private function getSumLimitForStudentPilny() : int {
         return $this->getSumLimit(new ModelCategory(ModelCategory::CAT_HS_4));
     }
-    
+
     /**
      * Returns total points for given category and series
-     * 
+     *
      * @param ModelCategory $category
      * @return int sum of points
      */
@@ -217,7 +218,7 @@ left join submit s ON s.task_id = t.task_id AND s.ct_id = ct.ct_id";
                 $points += $this->evaluationStrategy->getTaskPoints($task, $category);
             }
             $sum += $points;
-        }        
+        }
         return $sum;
     }
 }

@@ -4,6 +4,7 @@ namespace EventModule;
 
 use AuthenticatedPresenter;
 use FKSDB\Components\Controls\LanguageChooser;
+use FKSDB\NotImplementedException;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceContestYear;
@@ -12,6 +13,7 @@ use FKSDB\YearCalculator;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
+use Nette\Security\IResource;
 
 /**
  *
@@ -100,8 +102,8 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         $languageChooser = $this->getComponent('languageChooser');
         $languageChooser->syncRedirect();
 
-        if (!$this->eventExist()) {
-            throw new BadRequestException('Event not found.', 404);
+        if (!$this->isEnabledForEvent($this->getEvent())) {
+            throw new NotImplementedException();
         }
         parent::startup();
     }
@@ -109,74 +111,64 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     /**
      * @return bool
      * @throws BadRequestException
-     * @throws AbortException
+     * @throws BadRequestException
      */
-    protected function eventExist(): bool {
-        return !!$this->getEvent();
+    public function isAuthorized(): bool {
+        if (!$this->isEnabledForEvent($this->getEvent())) {
+            return false;
+        }
+        return parent::isAuthorized();
     }
 
     /**
      * @return int
      * @throws BadRequestException
-     * @throws AbortException
      */
     protected function getAcYear(): int {
         return $this->yearCalculator->getAcademicYear($this->getEvent()->getContest(), $this->getEvent()->year);
     }
 
     /**
+     * @return ModelEvent
      * @return string
      * @throws BadRequestException
-     * @throws AbortException
+     * @throws BadRequestException
      */
     public function getSubTitle(): string {
         return $this->getEvent()->__toString();
     }
 
     /**
-     * @return int
-     * @throws AbortException
-     */
-    protected function getEventId(): int {
-        if (!$this->eventId) {
-            $this->redirect('Dispatch:default');
-        }
-        return +$this->eventId;
-    }
-
-    /**
      * @return ModelEvent
      * @throws BadRequestException
-     * @throws AbortException
      */
     protected function getEvent(): ModelEvent {
         if (!$this->event) {
-            $row = $this->serviceEvent->findByPrimary($this->getEventId());
-            if (!$row) {
-                throw new BadRequestException('Event not found');
+            $model = $this->serviceEvent->findByPrimary($this->eventId);
+            if (!$model) {
+                throw new BadRequestException('Event not found.', 404);
             }
-            $this->event = ModelEvent::createFromActiveRow($row);
-            if ($this->event) {
-                $holder = $this->container->createEventHolder($this->getEvent());
-                $this->event->setHolder($holder);
-            }
+
+            $this->event = $model;
+            $holder = $this->container->createEventHolder($this->event);
+            $this->event->setHolder($holder);
         }
         return $this->event;
     }
 
     /**
-     * @param $resource
-     * @param $privilege
+     * @param IResource|string $resource
+     * @param string $privilege
      * @return bool
      * @throws BadRequestException
-     * @throws AbortException
+     * By default check the contest permissions
      */
-    protected function eventIsAllowed($resource, $privilege): bool {
+    protected function isAllowed($resource, string $privilege): bool {
         $event = $this->getEvent();
         if (!$event) {
             return false;
         }
-        return $this->getEventAuthorizator()->isAllowed($resource, $privilege, $event);
+        return $this->getContestAuthorizator()->isAllowed($resource, $privilege, $event->getContest());
     }
 
     /**
@@ -184,9 +176,20 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @param $privilege
      * @return bool
      * @throws BadRequestException
-     * @throws AbortException
+     * Explicit method to include event orgs
      */
-    protected function isContestsOrgAllowed($resource, $privilege): bool {
+    public function isAllowedForEventOrg($resource, $privilege): bool {
+        return $this->getEventAuthorizator()->isEventOrgAllowed($resource, $privilege, $this->getEvent());
+    }
+
+
+    /**
+     * @param IResource|string $resource
+     * @param string $privilege
+     * @return bool
+     * @throws BadRequestException
+     */
+    protected function isContestsOrgAllowed($resource, string $privilege): bool {
         $contest = $this->getContest();
         if (!$contest) {
             return false;
@@ -197,7 +200,6 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     /**
      * @return array
      * @throws BadRequestException
-     * @throws AbortException
      */
     protected function getNavBarVariant(): array {
         return ['event event-type-' . $this->getEvent()->event_type_id, ($this->getEvent()->event_type_id == 1) ? 'bg-fyziklani navbar-dark' : 'bg-light navbar-light'];
@@ -213,9 +215,15 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     /**
      * @return ModelContest
      * @throws BadRequestException
-     * @throws AbortException
      */
     protected final function getContest(): ModelContest {
         return $this->getEvent()->getContest();
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isEnabledForEvent(): bool {
+        return true;
     }
 }

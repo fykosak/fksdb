@@ -4,10 +4,11 @@ namespace CommonModule;
 
 use FKSDB\Components\Grids\EmailsGrid;
 use FKSDB\EntityTrait;
-use FKSDB\ORM\IService;
+use FKSDB\NotImplementedException;
 use FKSDB\ORM\Models\ModelEmailMessage;
 use FKSDB\ORM\Services\ServiceEmailMessage;
 use Nette\Application\BadRequestException;
+use Nette\Application\UI\Control;
 
 /**
  * Class MailSenderPresenter
@@ -41,31 +42,12 @@ class SpamPresenter extends BasePresenter {
         $this->setIcon('fa fa-envelope');
     }
 
-    public function authorizedList() {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowedForAnyContest('email_message', 'list'));
-    }
-
     /**
      * @param $id
      * @throws BadRequestException
      */
-    public function authorizedDetail($id) {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowedForAnyContest($this->loadEntity($id), 'detail'));
-    }
-
-    /**
-     * @param $id
-     * @throws BadRequestException
-     */
-    public function renderDetail($id) {
+    public function renderDetail(int $id) {
         $this->template->model = $this->loadEntity($id);
-    }
-
-    /**
-     * @return EmailsGrid
-     */
-    protected function createComponentGrid(): EmailsGrid {
-        return new EmailsGrid($this->serviceEmailMessage, $this->getTableReflectionFactory());
     }
 
     /**
@@ -80,5 +62,22 @@ class SpamPresenter extends BasePresenter {
      */
     protected function getModelResource(): string {
         return ModelEmailMessage::RESOURCE_ID;
+    }
+
+    /** @inheritDoc */
+    public function createComponentEditForm(): Control {
+        throw new NotImplementedException();
+    }
+
+    /** @inheritDoc */
+    public function createComponentCreateForm(): Control {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @return EmailsGrid
+     */
+    protected function createComponentGrid(): EmailsGrid {
+        return new EmailsGrid($this->serviceEmailMessage, $this->getTableReflectionFactory());
     }
 }
