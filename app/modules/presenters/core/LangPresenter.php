@@ -4,6 +4,7 @@ namespace FKSDB;
 
 use FKSDB\Components\Controls\Choosers\LanguageChooser;
 use FKSDB\Localization\GettextTranslator;
+use FKSDB\ORM\Models\ModelLogin;
 use Nette\Application\UI\Presenter;
 
 /**
@@ -11,6 +12,8 @@ use Nette\Application\UI\Presenter;
  * @package FKSDB
  */
 abstract class LangPresenter extends Presenter {
+
+    const LANGUAGE_NAMES = ['cs' => 'Čeština', 'en' => 'English', 'sk' => 'Slovenčina'];
 
     /** @var GettextTranslator */
     private $translator;
@@ -41,14 +44,28 @@ abstract class LangPresenter extends Presenter {
          * @var LanguageChooser $languageChooser
          */
         $languageChooser = $this->getComponent('languageChooser');
-        $languageChooser->syncRedirect($this->getLang());
+        $languageChooser->setLang($this->getLang());
     }
 
     /**
      * @return LanguageChooser
      */
     protected final function createComponentLanguageChooser(): LanguageChooser {
-        return new LanguageChooser($this->session);
+        return new LanguageChooser($this->session, !$this->getUserPreferredLang());
+    }
+
+    /**
+     * @return string|null
+     */
+    protected function getUserPreferredLang() {
+        /**
+         * @var ModelLogin $login
+         */
+        $login = $this->getUser()->getIdentity();
+        if ($login && $login->getPerson()) {
+            return $login->getPerson()->getPreferredLang();
+        }
+        return null;
     }
 
     /**
@@ -59,7 +76,10 @@ abstract class LangPresenter extends Presenter {
      */
     public function getLang(): string {
         if (!$this->_lang) {
-            $this->_lang = $this->lang;
+            $this->_lang = $this->getUserPreferredLang();
+            if (!$this->_lang) {
+                $this->_lang = $this->lang;
+            }
             $supportedLanguages = $this->translator->getSupportedLanguages();
             if (!$this->_lang || !in_array($this->_lang, $supportedLanguages)) {
                 $this->_lang = $this->getHttpRequest()->detectLanguage($supportedLanguages);
