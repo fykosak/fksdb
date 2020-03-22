@@ -195,7 +195,7 @@ abstract class BasePresenter extends LangPresenter implements IJavaScriptCollect
          * @var FileTemplate $template
          */
         $template = parent::createTemplate($class);
-        $template->setTranslator($this->translator);
+        $template->setTranslator($this->getTranslator());
 
         return $template;
     }

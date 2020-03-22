@@ -13,9 +13,12 @@ use Nette\Application\UI\Presenter;
 abstract class LangPresenter extends Presenter {
 
     /** @var GettextTranslator */
-    protected $translator;
+    private $translator;
 
-    /** @persistent */
+    /**
+     * @persistent
+     * @internal
+     */
     public $lang;
 
     /** @var string cache */
@@ -38,7 +41,7 @@ abstract class LangPresenter extends Presenter {
          * @var LanguageChooser $languageChooser
          */
         $languageChooser = $this->getComponent('languageChooser');
-        $languageChooser->syncRedirect($this->lang);
+        $languageChooser->syncRedirect($this->getLang());
     }
 
     /**
@@ -49,23 +52,12 @@ abstract class LangPresenter extends Presenter {
     }
 
     /**
-     * @return mixed
-     */
-    public final function getSelectedLanguage() {
-        /**
-         * @var LanguageChooser $languageChooser
-         */
-        $languageChooser = $this->getComponent('languageChooser');
-        return $languageChooser->getLanguage();
-    }
-
-    /**
      * Preferred language of the page
      *
      * @return string ISO 639-1
      * Should be final
      */
-    public function getLang() {
+    public function getLang(): string {
         if (!$this->_lang) {
             $this->_lang = $this->lang;
             $supportedLanguages = $this->translator->getSupportedLanguages();
