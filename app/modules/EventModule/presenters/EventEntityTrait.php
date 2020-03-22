@@ -8,7 +8,6 @@ use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Security\IResource;
 
 /**
  * Trait EventEntityTrait

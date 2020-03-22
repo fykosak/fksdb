@@ -8,7 +8,6 @@ use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
 use FKSDB\Components\Grids\Events\Application\ApplicationGrid;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\AbstractServiceSingle;
-use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -35,12 +34,11 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @param ModelEvent $event
      * @return bool
      * @throws AbortException
      * @throws BadRequestException
      */
-    protected function isEnabledForEvent(ModelEvent $event): bool {
+    protected function isEnabledForEvent(): bool {
         return !$this->isTeamEvent();
     }
 

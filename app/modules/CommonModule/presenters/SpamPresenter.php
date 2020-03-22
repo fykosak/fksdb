@@ -4,9 +4,11 @@ namespace CommonModule;
 
 use FKSDB\Components\Grids\EmailsGrid;
 use FKSDB\EntityTrait;
+use FKSDB\NotImplementedException;
 use FKSDB\ORM\Models\ModelEmailMessage;
 use FKSDB\ORM\Services\ServiceEmailMessage;
 use Nette\Application\BadRequestException;
+use Nette\Application\UI\Control;
 
 /**
  * Class MailSenderPresenter
@@ -49,13 +51,6 @@ class SpamPresenter extends BasePresenter {
     }
 
     /**
-     * @return EmailsGrid
-     */
-    protected function createComponentGrid(): EmailsGrid {
-        return new EmailsGrid($this->serviceEmailMessage, $this->getTableReflectionFactory());
-    }
-
-    /**
      * @inheritDoc
      */
     protected function getORMService() {
@@ -67,5 +62,22 @@ class SpamPresenter extends BasePresenter {
      */
     protected function getModelResource(): string {
         return ModelEmailMessage::RESOURCE_ID;
+    }
+
+    /** @inheritDoc */
+    public function createComponentEditForm(): Control {
+        throw new NotImplementedException();
+    }
+
+    /** @inheritDoc */
+    public function createComponentCreateForm(): Control {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @return EmailsGrid
+     */
+    protected function createComponentGrid(): EmailsGrid {
+        return new EmailsGrid($this->serviceEmailMessage, $this->getTableReflectionFactory());
     }
 }

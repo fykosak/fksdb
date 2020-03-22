@@ -35,7 +35,7 @@ require LIBS_DIR . '/../vendor/autoload.php';
 require LIBS_DIR . '/autoload.php';
 error_reporting(~E_USER_DEPRECATED & ~E_USER_WARNING);
 
-require __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'tester/Tester/bootstrap.php';
+//require __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'tester/Tester/bootstrap.php';
 
 define('CONFIG_DIR', APP_DIR . DIRECTORY_SEPARATOR . 'config');
 

@@ -11,10 +11,11 @@ php:
   - 7.1
 
 before_install:
-#  - composer self-update
+  - phpenv config-add tests/php.ini
+  - composer self-update
 
 install:
-#  - composer install --no-interaction --prefer-source
+  - composer install --no-interaction --prefer-source
   - "sed -e 's/user:/user: root/' app/config/config.local.neon.sample > app/config/config.local.neon"
   - ./i18n/compile.sh
 

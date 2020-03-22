@@ -7,7 +7,6 @@ use FKSDB\ORM\AbstractModelSingle;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
-use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
 
 /**

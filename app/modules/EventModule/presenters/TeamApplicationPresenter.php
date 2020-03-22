@@ -9,7 +9,6 @@ use FKSDB\Components\Grids\Events\Application\TeamApplicationGrid;
 use FKSDB\model\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use Nette\Application\AbortException;
@@ -55,12 +54,11 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @param ModelEvent $event
      * @return bool
      * @throws AbortException
      * @throws BadRequestException
      */
-    protected function isEnabledForEvent(ModelEvent $event): bool {
+    protected function isEnabledForEvent(): bool {
         return $this->isTeamEvent();
     }
 

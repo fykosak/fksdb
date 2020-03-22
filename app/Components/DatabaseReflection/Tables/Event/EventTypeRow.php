@@ -3,7 +3,6 @@
 namespace FKSDB\Components\DatabaseReflection\Event;
 
 use FKSDB\ORM\AbstractModelSingle;
-use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEventType;
 use Nette\Application\BadRequestException;

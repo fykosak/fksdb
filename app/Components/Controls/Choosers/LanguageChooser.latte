@@ -1,12 +1,18 @@
 <ul class="navbar-nav nav">
-    <div class="dropdown">
-        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"><span class="fa fa-language mr-1"></span>{_'Jazyk'}</a>
-        <div class="dropdown-menu">
-        {foreach $languages as $language }
-            <a n:class="$language==$currentLanguage?active:'','dropdown-item'" href="{link changeLang! $language}">{$languageNames[$language]}</a>
-       {/foreach}
+    {if $modifiable}
+        <div class="dropdown">
+            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"><span
+                        class="fa fa-language mr-1"></span>{_'Jazyk'}</a>
+            <div class="dropdown-menu">
+                {foreach $languages as $language }
+                    <a n:class="$language==$currentLanguage?active:'','dropdown-item'"
+                            href="{link changeLang! $language}">{$languageNames[$language]}</a>
+                {/foreach}
+            </div>
         </div>
-    </div>
+    {else}
+        <span class="nav-link disabled"><i class="fa fa-language mr-1"></i>{$languageNames[$currentLanguage]}</span>
+    {/if}
 </ul>
 
 

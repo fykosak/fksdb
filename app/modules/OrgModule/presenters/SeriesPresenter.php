@@ -50,7 +50,7 @@ abstract class SeriesPresenter extends BasePresenter implements ISeriesPresenter
      * @return SeriesChooser
      */
     public function createComponentSeriesChooser($name) {
-        return new SeriesChooser($this->session, $this->seriesCalculator, $this->serviceContest, $this->translator);
+        return new SeriesChooser($this->session, $this->seriesCalculator, $this->serviceContest, $this->getTranslator());
     }
 
     /**

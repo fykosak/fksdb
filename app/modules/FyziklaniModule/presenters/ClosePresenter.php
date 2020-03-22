@@ -5,13 +5,15 @@ namespace FyziklaniModule;
 use EventModule\EventEntityTrait;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Fyziklani\CloseTeamControl;
+use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Fyziklani\CloseTeamsGrid;
 use FKSDB\Components\Grids\Fyziklani\TeamSubmitsGrid;
+use FKSDB\NotImplementedException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Security\IResource;
+use Nette\Application\UI\Control;
 use function sprintf;
 
 /**
@@ -19,6 +21,7 @@ use function sprintf;
  * @package FyziklaniModule
  * @property FormControl closeCategoryAForm
  * @method ModelFyziklaniTeam getEntity()
+ * @method ModelFyziklaniTeam loadEntity(int $id)
  */
 class ClosePresenter extends BasePresenter {
 
@@ -111,7 +114,7 @@ class ClosePresenter extends BasePresenter {
      * @throws AbortException
      */
     protected function createComponentCloseTeamControl(): CloseTeamControl {
-        return new CloseTeamControl($this->getEvent(), $this->translator, $this->getServiceFyziklaniTask());
+        return new CloseTeamControl($this->getEvent(), $this->getTranslator(), $this->getServiceFyziklaniTask());
     }
 
     /**
@@ -154,5 +157,25 @@ class ClosePresenter extends BasePresenter {
      */
     protected function isAllowed($resource, string $privilege): bool {
         return $this->isAllowedForEventOrg($resource, $privilege);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function createComponentGrid(): BaseGrid {
+        throw new NotImplementedException();
+    }
+    /**
+     * @inheritDoc
+     */
+    public function createComponentCreateForm(): Control {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function createComponentEditForm(): Control {
+        throw new NotImplementedException();
     }
 }

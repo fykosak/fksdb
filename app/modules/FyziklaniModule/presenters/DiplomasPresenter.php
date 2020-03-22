@@ -26,14 +26,12 @@ class DiplomasPresenter extends BasePresenter {
 
     /**
      * @throws BadRequestException
-     * @throws AbortException
      */
     public function authorizedResults() {
         $this->setAuthorized($this->isContestsOrgAllowed('fyziklani.diplomas', 'results'));
     }
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function authorizeDefault() {
@@ -41,7 +39,6 @@ class DiplomasPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function renderDefault() {
@@ -78,7 +75,6 @@ class DiplomasPresenter extends BasePresenter {
     /**
      * @param string $category
      * @return bool
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function isReadyAllToCalculate(string $category = null): bool {
@@ -88,9 +84,8 @@ class DiplomasPresenter extends BasePresenter {
     /**
      * @return FinalResults
      * @throws BadRequestException
-     * @throws AbortException
      */
     public function createComponentResults(): FinalResults {
-        return new FinalResults($this->getEvent(), $this->getServiceFyziklaniTeam(), $this->translator, $this->getTableReflectionFactory());
+        return new FinalResults($this->getEvent(), $this->getServiceFyziklaniTeam(), $this->getTranslator(), $this->getTableReflectionFactory());
     }
 }

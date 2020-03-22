@@ -4,12 +4,9 @@ namespace EventModule;
 
 use AuthenticatedPresenter;
 use FKSDB\Components\Controls\Helpers\Badges\ContestBadge;
-use FKSDB\Components\Controls\LanguageChooser;
 use FKSDB\Components\Grids\Events\DispatchGrid;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceEvent;
-use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 
 /**
  * Class DispatchPresenter
@@ -27,13 +24,6 @@ class DispatchPresenter extends AuthenticatedPresenter {
      */
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;
-    }
-
-    /**
-     * @return LanguageChooser
-     */
-    protected function createComponentLanguageChooser(): LanguageChooser {
-        return new LanguageChooser($this->session);
     }
 
     /**
@@ -57,20 +47,6 @@ class DispatchPresenter extends AuthenticatedPresenter {
     public function titleDefault() {
         $this->setTitle(_('List of events'));
         $this->setIcon('fa fa-calendar');
-    }
-
-    /**
-     * @throws AbortException
-     * @throws BadRequestException
-     */
-    public function startup() {
-        /**
-         * @var LanguageChooser $languageChooser
-         */
-        $languageChooser = $this->getComponent('languageChooser');
-        $languageChooser->syncRedirect();
-
-        parent::startup();
     }
 
     /**

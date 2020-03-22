@@ -2,11 +2,15 @@
 
 namespace FKSDB;
 
+use FKSDB\Components\Controls\Entity\IEditEntityForm;
+use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
 use Nette\Application\BadRequestException;
+use Nette\Application\UI\Control;
 use Nette\Security\IResource;
 
 /**
@@ -18,16 +22,12 @@ trait EntityTrait {
      */
     private $model;
 
-    /**
-     * @param int $id
-     * @throws BadRequestException
-     */
-    public function authorizedDetail(int $id) {
-        $this->setAuthorized($this->isAllowed($this->loadEntity($id), 'detail'));
-    }
-
     public function authorizedList() {
         $this->setAuthorized($this->isAllowed($this->getModelResource(), 'list'));
+    }
+
+    public function authorizedCreate() {
+        $this->setAuthorized($this->isAllowed($this->getModelResource(), 'create'));
     }
 
     /**
@@ -46,8 +46,12 @@ trait EntityTrait {
         $this->setAuthorized($this->isAllowed($this->loadEntity($id), 'delete'));
     }
 
-    public function authorizedCreate() {
-        $this->setAuthorized($this->isAllowed($this->getModelResource(), 'create'));
+    /**
+     * @param int $id
+     * @throws BadRequestException
+     */
+    public function authorizedDetail(int $id) {
+        $this->setAuthorized($this->isAllowed($this->loadEntity($id), 'detail'));
     }
 
     /**
@@ -77,6 +81,18 @@ trait EntityTrait {
         return $this->model;
     }
 
+
+    /**
+     * @param int $id
+     * @throws BadRequestException
+     */
+    protected function traitActionEdit(int $id) {
+        $component = $this->getComponent('editForm');
+        if (!$component instanceof IEditEntityForm) {
+            throw new BadRequestException();
+        }
+        $component->setModel($this->loadEntity($id));
+    }
     /**
      * @param int $id
      * @return array
@@ -89,6 +105,25 @@ trait EntityTrait {
         }
         return [new Message(_('Entity has been deleted'), self::FLASH_SUCCESS)];
     }
+
+    /**
+     * @return FormControl
+     * @throws BadRequestException
+     * @throws NotImplementedException
+     */
+    abstract public function createComponentCreateForm(): Control;
+
+    /**
+     * @return FormControl
+     * @throws BadRequestException
+     * @throws NotImplementedException
+     */
+    abstract public function createComponentEditForm(): Control;
+
+    /**
+     * @throws NotImplementedException
+     */
+    abstract public function createComponentGrid(): BaseGrid;
 
     /**
      * @return IService

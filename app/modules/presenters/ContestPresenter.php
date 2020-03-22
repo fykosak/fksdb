@@ -1,7 +1,6 @@
 <?php
 
 use FKSDB\Components\Controls\ContestChooser;
-use FKSDB\Components\Controls\LanguageChooser;
 use FKSDB\ORM\Models\ModelContest;
 use Nette\Application\BadRequestException;
 
@@ -31,25 +30,15 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
         parent::startup();
         /**
          * @var ContestChooser $contestChooser
-         * @var LanguageChooser $languageChooser
          */
         $contestChooser = $this->getComponent('contestChooser');
         $contestChooser->syncRedirect();
-        $languageChooser = $this->getComponent('languageChooser');
-        $languageChooser->syncRedirect();
     }
 
     /**
      * @return ContestChooser
      */
     abstract protected function createComponentContestChooser(): ContestChooser;
-
-    /**
-     * @return LanguageChooser
-     */
-    protected function createComponentLanguageChooser(): LanguageChooser {
-        return new LanguageChooser($this->session);
-    }
 
     /**
      * @return \FKSDB\ORM\Models\ModelContest
@@ -87,21 +76,6 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
      */
     public function getSelectedAcademicYear() {
         return $this->yearCalculator->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
-    }
-
-    /**
-     * @return mixed
-     * @throws BadRequestException
-     */
-    public function getSelectedLanguage() {
-        /**
-         * @var LanguageChooser $languageChooser
-         */
-        $languageChooser = $this->getComponent('languageChooser');
-        if (!$languageChooser->isValid()) {
-            throw new BadRequestException('No languages available.', 403);
-        }
-        return $languageChooser->getLanguage();
     }
 
     /**

@@ -50,7 +50,7 @@ class DashboardPresenter extends BasePresenter {
      * @throws \Nette\Application\BadRequestException
      */
     public function renderDefault() {
-        foreach ($this->news->getNews($this->getSelectedContest(), $this->getSelectedLanguage())
+        foreach ($this->news->getNews($this->getSelectedContest(), $this->getLang())
 	  as $new) {
             $this->flashMessage($new);
         }

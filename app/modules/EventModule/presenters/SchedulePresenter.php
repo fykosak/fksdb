@@ -2,7 +2,6 @@
 
 namespace EventModule;
 
-use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Schedule\GroupControl;
 use FKSDB\Components\Controls\Schedule\ItemControl;
 use FKSDB\Components\Factories\ScheduleFactory;

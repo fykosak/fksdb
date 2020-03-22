@@ -9,10 +9,12 @@ use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
 use FKSDB\Components\Grids\Schedule\PersonGrid;
 use FKSDB\Logging\FlashDumpFactory;
 use FKSDB\Logging\MemoryLogger;
+use FKSDB\NotImplementedException;
 use FKSDB\ORM\Services\ServiceEventParticipant;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
+use Nette\Application\UI\Control;
 use function in_array;
 
 /**
@@ -49,7 +51,6 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     public function injectFlashDumpFactory(FlashDumpFactory $dumpFactory) {
         $this->dumpFactory = $dumpFactory;
     }
-
 
     /**
      * @param ServiceEventParticipant $serviceEventParticipant
@@ -139,4 +140,17 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      */
     abstract function createComponentGrid(): AbstractApplicationGrid;
 
+    /**
+     * @inheritDoc
+     */
+    public function createComponentCreateForm(): Control {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function createComponentEditForm(): Control {
+        throw new NotImplementedException();
+    }
 }
