@@ -58,7 +58,6 @@ class SeatingPresenter extends BasePresenter {
 
     /**
      * @return bool
-     * @throws AbortException
      * @throws BadRequestException
      */
     protected function isEnabledForEvent(): bool {
@@ -76,28 +75,25 @@ class SeatingPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function authorizedPreview() {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('event.seating', 'preview', $this->getEvent()->getContest()));
+        $this->setAuthorized($this->isContestsOrgAuthorized('event.seating', 'preview'));
     }
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function authorizedList() {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('event.seating', 'list', $this->getEvent()->getContest()));
+        $this->setAuthorized($this->isContestsOrgAuthorized('event.seating', 'list'));
     }
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function authorizedDefault() {
-        $download = $this->getContestAuthorizator()->isAllowed('event.seating', 'download', $this->getEvent()->getContest());
-        $edit = $this->getContestAuthorizator()->isAllowed('event.seating', 'edit', $this->getEvent()->getContest());
+        $download = $this->isContestsOrgAuthorized('event.seating', 'download');
+        $edit = $this->isContestsOrgAuthorized('event.seating', 'edit');
         $this->setAuthorized($download || $edit);
     }
 
@@ -118,7 +114,6 @@ class SeatingPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function renderList() {
@@ -135,7 +130,6 @@ class SeatingPresenter extends BasePresenter {
 
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function renderPreview() {

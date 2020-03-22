@@ -19,18 +19,15 @@ use Nette\Application\BadRequestException;
 class ApplicationPresenter extends AbstractApplicationPresenter {
 
     public function titleList() {
-        $this->setTitle(_('List of applications'));
-        $this->setIcon('fa fa-users');
+        $this->setTitle(_('List of applications'), 'fa fa-users');
     }
 
     public function titleDetail() {
-        $this->setTitle(_('Application detail'));
-        $this->setIcon('fa fa-user');
+        $this->setTitle(_('Application detail'), 'fa fa-user');
     }
 
     public function titleImport() {
-        $this->setTitle(_('Application import'));
-        $this->setIcon('fa fa-upload');
+        $this->setTitle(_('Application import'), 'fa fa-upload');
     }
 
     /**
@@ -43,11 +40,11 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
+     * use same method of permissions as trait
      */
     public function authorizedImport() {
-        $this->setAuthorized($this->isAllowed($this->getModelResource(), 'import'));
+        $this->setAuthorized($this->traitIsAuthorized($this->getModelResource(), 'import'));
     }
 
     /**

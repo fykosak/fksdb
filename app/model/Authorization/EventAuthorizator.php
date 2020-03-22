@@ -92,7 +92,7 @@ class EventAuthorizator {
      * @param ModelEvent $event
      * @return bool
      */
-    public function isEventOrgAllowed($resource, $privilege, ModelEvent $event) {
+    public function isEventOrContestOrgAllowed($resource, $privilege, ModelEvent $event) {
         if (!$this->getUser()->isAuthenticated()) {
             return false;
         }
@@ -112,20 +112,10 @@ class EventAuthorizator {
         if (!$this->getUser()->isAuthenticated()) {
             return false;
         }
-        $contestOrg = false;
-        /**
-         * @var ModelLogin $login
-         */
-        $login = $this->getUser()->getIdentity();
-
-        $roles = $login->getRoles();
-        foreach ($roles as $role) {
-            if ($role->getRoleId() === ModelRole::ORG && $role->getContestId() === $event->getContest()->contest_id) {
-                $contestOrg = true;
-                break;
-            }
+        if (!$this->isEventOrg($resource, $privilege, $event)) {
+            return false;
         }
-        return $contestOrg && $this->isEventOrg($resource, $privilege, $event);
+        return $this->contestAuthorizator->isAllowed($resource, $privilege, $event->getContest());
     }
 
     /**
