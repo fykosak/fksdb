@@ -2,6 +2,7 @@
 
 use Authentication\PasswordAuthenticator;
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Forms\Controls\PreferredLangForm;
 use FKSDB\Components\Forms\Factories\LoginFactory;
 use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use FKSDB\Components\Forms\Rules\UniqueLoginFactory;
@@ -108,10 +109,29 @@ class SettingsPresenter extends AuthenticatedPresenter {
     }
 
     /**
+     * @throws BadRequestException
+     */
+    public function actionLang() {
+        $control = $this->getComponent('preferredLangForm');
+        if (!$control instanceof FormControl) {
+            throw new BadRequestException();
+        }
+        $control->getForm()->setDefaults(['preferred_lang' => $this->getUserPreferredLang()]);
+    }
+
+    /**
      * @return FormControl
      * @throws BadRequestException
      */
-    protected function createComponentSettingsForm() {
+    protected function createComponentPreferredLangForm(): FormControl {
+        return new PreferredLangForm($this->context, $this->getTranslator());
+    }
+
+    /**
+     * @return FormControl
+     * @throws BadRequestException
+     */
+    protected function createComponentSettingsForm(): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
         /**

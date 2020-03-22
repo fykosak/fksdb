@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Controls\Choosers;
 
+use FKSDB\LangPresenter;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
@@ -23,21 +24,22 @@ class LanguageChooser extends Control {
     /** @var string */
     private $language;
 
-    /** @var array */
-    private $languageNames = ['cs' => 'Čeština', 'en' => 'English', 'sk' => 'Slovenčina'];
-
     /** @var bool */
     private $initialized = false;
 
     /** @var string */
     const DEFAULT_LANGUAGE = 'cs';
+    /** @var bool */
+    private $modifiable = true;
 
     /**
      * @param Session $session
+     * @param bool $modifiable
      */
-    function __construct(Session $session) {
+    function __construct(Session $session, bool $modifiable) {
         parent::__construct();
         $this->session = $session;
+        $this->modifiable = $modifiable;
     }
 
     /**
@@ -53,15 +55,7 @@ class LanguageChooser extends Control {
      * @param string $lang
      * @throws \Exception
      */
-    public function syncRedirect(string $lang = null) {
-        $this->init($lang);
-    }
-
-    /**
-     * @param string $lang
-     * @throws \Exception
-     */
-    private function init(string $lang = null) {
+    public function setLang(string $lang) {
         if ($this->initialized) {
             return;
         }
@@ -70,7 +64,7 @@ class LanguageChooser extends Control {
             return;
         }
         $this->language = self::DEFAULT_LANGUAGE;
-        if ($lang !== null && $this->isLanguage($lang)) {
+        if ($this->isLanguage($lang)) {
             $this->language = $lang;
         }
     }
@@ -95,9 +89,9 @@ class LanguageChooser extends Control {
      * @throws \Exception
      */
     public function render(string $class = null) {
-
+        $this->template->modifiable = $this->modifiable;
         $this->template->languages = $this->getSupportedLanguages();
-        $this->template->languageNames = $this->languageNames;
+        $this->template->languageNames = LangPresenter::LANGUAGE_NAMES;
         $this->template->currentLanguage = $this->language ?: null;
         $this->template->class = ($class !== null) ? $class : "nav navbar-nav navbar-right";
         $this->template->setTranslator($this->getPresenter()->getTranslator());
