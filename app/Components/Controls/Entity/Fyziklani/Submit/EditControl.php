@@ -1,15 +1,18 @@
 <?php
 
-namespace FKSDB\Components\Controls\Fyziklani;
+namespace FKSDB\Components\Controls\Entity\Fyziklani\Submit;
 
+use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\model\Fyziklani\ClosedSubmittingException;
+use FKSDB\model\Fyziklani\NotSetGameParametersException;
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\Control;
+use Nette\DI\Container;
 use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Form;
 use Nette\Localization\ITranslator;
@@ -20,7 +23,7 @@ use Nette\Templating\FileTemplate;
  * @package FKSDB\Components\Controls\Fyziklani
  * @property FileTemplate $template
  */
-class EditControl extends Control {
+class EditControl extends FormControl implements IEditEntityForm {
     /**
      * @var ServiceFyziklaniSubmit
      */
@@ -39,41 +42,33 @@ class EditControl extends Control {
     protected $translator;
 
     /**
-     * EditSubmitControl constructor.
+     * EditControl constructor.
+     * @param Container $container
      * @param ModelEvent $event
-     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
-     * @param ITranslator $translator
+     * @throws BadRequestException
      */
-    public function __construct(ModelEvent $event, ServiceFyziklaniSubmit $serviceFyziklaniSubmit, ITranslator $translator) {
+    public function __construct(Container $container, ModelEvent $event) {
         parent::__construct();
-        $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
-        $this->translator = $translator;
+        $this->serviceFyziklaniSubmit = $container->getByType(ServiceFyziklaniSubmit::class);
+        $this->translator = $container->getByType(ITranslator::class);
         $this->event = $event;
+
+        $form = $this->getForm();
+        $form->addComponent($this->createPointsField(), 'points');
+        $form->addSubmit('send', _('Save'));
+        $form->onSuccess[] = function (Form $form) {
+            $this->editFormSucceeded($form);
+        };
     }
 
-    /**
-     * @return Form
-     * @throws BadRequestException
-     */
-    public function getForm(): Form {
-        $control = $this->getComponent('form');
-        if ($control instanceof FormControl) {
-            return $control->getForm();
-        }
-        throw new BadRequestException('Expected FormControl got ' . \get_class($control));
-    }
 
     /**
-     * @param ModelFyziklaniSubmit $submit
+     * @param AbstractModelSingle|ModelFyziklaniSubmit $submit
      * @throws BadRequestException
      */
-    public function setSubmit(ModelFyziklaniSubmit $submit) {
+    public function setModel(AbstractModelSingle $submit) {
         $this->submit = $submit;
-        $control = $this->getComponent('form');
-        if (!$control instanceof FormControl) {
-            throw new BadRequestException('Expected FormControl got ' . \get_class($control));
-        }
-        $control->getForm()->setDefaults([
+        $this->getForm()->setDefaults([
             'team_id' => $this->submit->e_fyziklani_team_id,
             'points' => $this->submit->points,
         ]);
@@ -83,6 +78,7 @@ class EditControl extends Control {
     /**
      * @return RadioList
      * TODO to table-reflection factory
+     * @throws NotSetGameParametersException
      */
     private function createPointsField(): RadioList {
         $field = new RadioList(_('Počet bodů'));
@@ -93,21 +89,6 @@ class EditControl extends Control {
         $field->setItems($items);
         $field->setRequired();
         return $field;
-    }
-
-    /**
-     * @return FormControl
-     * @throws BadRequestException
-     */
-    protected function createComponentForm(): FormControl {
-        $control = new FormControl();
-        $form = $control->getForm();
-        $form->addComponent($this->createPointsField(), 'points');
-        $form->addSubmit('send', _('Save'));
-        $form->onSuccess[] = function (Form $form) {
-            $this->editFormSucceeded($form);
-        };
-        return $control;
     }
 
     /**
@@ -124,12 +105,5 @@ class EditControl extends Control {
             $this->getPresenter()->flashMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR);
             $this->redirect('this');
         }
-    }
-
-    public function render() {
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'EditControl.latte');
-        $this->template->submit = $this->submit;
-        $this->template->setTranslator($this->translator);
-        $this->template->render();
     }
 }

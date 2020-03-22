@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\NotImplementedException;
 use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServiceSchool;
 use Nette\Application\UI\InvalidLinkException;
@@ -34,10 +35,11 @@ class SchoolsGrid extends BaseGrid {
 
     /**
      * @param $presenter
-     * @throws InvalidLinkException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
+     * @throws InvalidLinkException
+     * @throws NotImplementedException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -64,11 +66,11 @@ class SchoolsGrid extends BaseGrid {
             return Html::el('span')->addAttributes(['class' => ('badge ' . ($row->active ? 'badge-success' : 'badge-danger'))])->addText(($row->active));
         });
 
-        $this->addLinkButton($presenter, ':Org:School:edit', 'edit', _('Edit'), false, ['id' => 'school_id']);
+        $this->addLinkButton($presenter, 'edit', 'edit', _('Edit'), false, ['id' => 'school_id']);
         $this->addLinkButton($presenter, 'detail', 'detail', _('Detail'), false, ['id' => 'school_id']);
 
         $this->addGlobalButton('add')
-            ->setLink($this->getPresenter()->link(':Org:School:create'))
+            ->setLink($this->getPresenter()->link('create'))
             ->setLabel(_('CreateSchool'))
             ->setClass('btn btn-sm btn-primary');
     }

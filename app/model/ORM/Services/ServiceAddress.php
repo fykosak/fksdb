@@ -2,6 +2,7 @@
 
 namespace FKSDB\ORM\Services;
 
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\IModel;
@@ -33,8 +34,20 @@ class ServiceAddress extends AbstractServiceSingle {
     }
 
     /**
+     * @param array|iterable|\ArrayAccess $data
+     * @return AbstractModelSingle
+     */
+    public function createNewModel($data = null): AbstractModelSingle {
+        if (!isset($data['region_id'])) {
+            $data['region_id'] = $this->inferRegion($data['postal_code']);
+        }
+        return parent::createNewModel($data);
+    }
+
+    /**
      * @param \FKSDB\ORM\IModel $model
      * @return mixed|void
+     * @deprecated
      */
     public function save(IModel &$model) {
         $modelClassName = $this->getModelClassName();
