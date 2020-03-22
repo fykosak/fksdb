@@ -3,7 +3,6 @@
 namespace EventModule;
 
 use AuthenticatedPresenter;
-use FKSDB\Components\Controls\LanguageChooser;
 use FKSDB\NotImplementedException;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;
@@ -84,25 +83,14 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         $this->serviceEvent = $serviceEvent;
     }
 
-    /**+
-     * @return LanguageChooser
-     */
-    protected function createComponentLanguageChooser(): LanguageChooser {
-        return new LanguageChooser($this->session);
-    }
-
     /**
      * @throws BadRequestException
      * @throws AbortException
+     * @throws \Exception
      */
     protected function startup() {
-        /**
-         * @var LanguageChooser $languageChooser
-         */
-        $languageChooser = $this->getComponent('languageChooser');
-        $languageChooser->syncRedirect();
 
-        if (!$this->isEnabledForEvent($this->getEvent())) {
+        if (!$this->isEnabledForEvent()) {
             throw new NotImplementedException();
         }
         parent::startup();
@@ -110,11 +98,9 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /**
      * @return bool
-     * @throws BadRequestException
-     * @throws BadRequestException
      */
     public function isAuthorized(): bool {
-        if (!$this->isEnabledForEvent($this->getEvent())) {
+        if (!$this->isEnabledForEvent()) {
             return false;
         }
         return parent::isAuthorized();

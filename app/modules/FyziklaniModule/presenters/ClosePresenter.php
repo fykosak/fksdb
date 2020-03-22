@@ -114,7 +114,7 @@ class ClosePresenter extends BasePresenter {
      * @throws AbortException
      */
     protected function createComponentCloseTeamControl(): CloseTeamControl {
-        return new CloseTeamControl($this->getEvent(), $this->translator, $this->getServiceFyziklaniTask());
+        return new CloseTeamControl($this->getEvent(), $this->getTranslator(), $this->getServiceFyziklaniTask());
     }
 
     /**

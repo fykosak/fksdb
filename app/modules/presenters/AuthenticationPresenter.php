@@ -31,8 +31,6 @@ use Nette\Utils\DateTime;
  */
 final class AuthenticationPresenter extends BasePresenter {
 
-    use \LanguageNav;
-
     const PARAM_GSID = 'gsid';
     /** @const Indicates that page is accessed via dispatch from the login page. */
     const PARAM_DISPATCH = 'dispatch';
@@ -162,14 +160,6 @@ final class AuthenticationPresenter extends BasePresenter {
      */
     public function injectServicePerson(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function startup() {
-        parent::startup();
-        $this->startupRedirects();
     }
 
     /**
@@ -348,7 +338,7 @@ final class AuthenticationPresenter extends BasePresenter {
              * @var ModelLogin $login
              */
             $login = $this->passwordAuthenticator->findLogin($values['id']);
-            $this->accountManager->sendRecovery($login, $this->getLang());
+            $this->accountManager->sendRecovery($login, $login->getPerson()->getPreferredLang() ?: $this->getLang());
             $email = Utils::cryptEmail($login->getPerson()->getInfo()->email);
             $this->flashMessage(sprintf(_('Na email %s byly poslány další instrukce k obnovení přístupu.'), $email), self::FLASH_SUCCESS);
             $connection->commit();

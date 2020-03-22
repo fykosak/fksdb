@@ -108,11 +108,10 @@ class SettingsPresenter extends AuthenticatedPresenter {
     }
 
     /**
-     * @param $name
      * @return FormControl
      * @throws BadRequestException
      */
-    protected function createComponentSettingsForm($name) {
+    protected function createComponentSettingsForm() {
         $control = new FormControl();
         $form = $control->getForm();
         /**
@@ -138,7 +137,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
         $form->addComponent($loginContainer, self::CONT_LOGIN);
 
         if ($loginContainer->getComponent('old_password', false)) {
-            $loginContainer['old_password']
+            $loginContainer->getComponent('old_password')
                 ->addCondition(Form::FILLED)
                 ->addRule(function (BaseControl $control) use ($login) {
                     $hash = PasswordAuthenticator::calculateHash($control->getValue(), $login);
@@ -150,20 +149,25 @@ class SettingsPresenter extends AuthenticatedPresenter {
 
         $form->addSubmit('send', _('Save'));
 
-        $form->onSuccess[] = array($this, 'handleSettingsFormSuccess');
+        $form->onSuccess[] = function (Form $form) {
+            $this->handleSettingsFormSuccess($form);
+        };
         return $control;
     }
 
     /**
-     * @internal
      * @param Form $form
      * @throws AbortException
+     * @internal
      */
-    public function handleSettingsFormSuccess(Form $form) {
+    private function handleSettingsFormSuccess(Form $form) {
         $values = $form->getValues();
         $tokenAuthentication =
             $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN) ||
             $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_RECOVERY);
+        /**
+         * @var ModelLogin $login
+         */
         $login = $this->getUser()->getIdentity();
 
         $loginData = FormUtils::emptyStrToNull($values[self::CONT_LOGIN]);
