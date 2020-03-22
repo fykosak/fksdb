@@ -17,7 +17,7 @@ use FKSDB\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\IFilteredDataProvider;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Config\GlobalParameters;
-use FKSDB\Localization\GettextTranslator;
+use FKSDB\LangPresenter;
 use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\YearCalculator;
 use Nette\Application\AbortException;
@@ -27,14 +27,13 @@ use Nette\Application\Responses\JsonResponse;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\ComponentModel\IComponent;
-use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 
 /**
  * Base presenter for all application presenters.
  * @property FileTemplate $template
  */
-abstract class BasePresenter extends Presenter implements IJavaScriptCollector, IStylesheetCollector, IAutocompleteJSONProvider, INavigablePresenter {
+abstract class BasePresenter extends LangPresenter implements IJavaScriptCollector, IStylesheetCollector, IAutocompleteJSONProvider, INavigablePresenter {
 
     const FLASH_SUCCESS = 'success';
 
@@ -46,9 +45,6 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     /** @persistent  */
     public $tld;
-
-    /** @persistent */
-    public $lang;
 
     /**
      * Backlink for tree construction for breadcrumbs.
@@ -76,11 +72,6 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     private $presenterBuilder;
 
     /**
-     * @var GettextTranslator
-     */
-    protected $translator;
-
-    /**
      * @var string|null
      */
     protected $title = false;
@@ -98,11 +89,6 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @var array[string] => bool
      */
     private $authorizedCache = [];
-
-    /**
-     * @var string cache
-     */
-    private $_lang;
 
     /**
      * @var FullHttpRequest
@@ -199,12 +185,6 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         $this->presenterBuilder = $presenterBuilder;
     }
 
-    /**
-     * @param GettextTranslator $translator
-     */
-    public function injectTranslator(GettextTranslator $translator) {
-        $this->translator = $translator;
-    }
 
     /**
      * @param null $class
@@ -218,12 +198,6 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         $template->setTranslator($this->translator);
 
         return $template;
-    }
-
-
-    protected function startup() {
-        parent::startup();
-        $this->translator->setLang($this->getLang());
     }
 
     /*	 * ******************************
@@ -410,7 +384,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     /**
      * @param $subtitle
      */
-    protected function setSubtitle($subtitle) {
+    protected function setSubtitle(string $subtitle = null) {
         $this->subtitle = $subtitle;
     }
 
@@ -460,6 +434,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         // this is done beforeRender, because earlier it would create too much traffic? due to redirections etc.
         $this->putIntoBreadcrumbs();
     }
+
 
     /**
      * @return array
@@ -619,35 +594,6 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return $this->authorizedCache[$key];
     }
 
-    /*	 * *******************************
-     * I18n
-     *      * ****************************** */
-
-    /**
-     * Preferred language of the page
-     *
-     * @return string ISO 639-1
-     */
-    public function getLang() {
-        if (!$this->_lang) {
-            $this->_lang = $this->lang;
-            $supportedLanguages = $this->translator->getSupportedLanguages();
-            if (!$this->_lang || !in_array($this->_lang, $supportedLanguages)) {
-                $this->_lang = $this->getHttpRequest()->detectLanguage($supportedLanguages);
-            }
-            if (!$this->_lang) {
-                $this->_lang = $this->globalParameters['localization']['defaultLanguage'];
-            }
-        }
-        return $this->_lang;
-    }
-
-    /**
-     * @return ITranslator
-     */
-    public function getTranslator(): ITranslator {
-        return $this->translator;
-    }
 
     /*	 * *******************************
      * Nette workaround
@@ -664,11 +610,10 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     }
 
     /**
-     * @param string $name
      * @return IComponent|null
      * @throws \Exception
      */
-    public function createComponentValuePrinter($name) {
+    public function createComponentValuePrinter() {
         return new ValuePrinterComponent($this->getTranslator(), $this->getTableReflectionFactory());
     }
 

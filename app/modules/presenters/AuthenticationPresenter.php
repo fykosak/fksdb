@@ -31,8 +31,6 @@ use Nette\Utils\DateTime;
  */
 final class AuthenticationPresenter extends BasePresenter {
 
-    use \LanguageNav;
-
     const PARAM_GSID = 'gsid';
     /** @const Indicates that page is accessed via dispatch from the login page. */
     const PARAM_DISPATCH = 'dispatch';
@@ -162,14 +160,6 @@ final class AuthenticationPresenter extends BasePresenter {
      */
     public function injectServicePerson(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function startup() {
-        parent::startup();
-        $this->startupRedirects();
     }
 
     /**

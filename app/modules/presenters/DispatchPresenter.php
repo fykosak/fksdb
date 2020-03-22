@@ -9,8 +9,6 @@ use FKSDB\ORM\Models\ModelRole;
  */
 class DispatchPresenter extends AuthenticatedPresenter {
 
-    use \LanguageNav;
-
     /**
      * @throws \Nette\Application\UI\InvalidLinkException
      */

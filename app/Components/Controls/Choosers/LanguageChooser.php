@@ -2,12 +2,11 @@
 
 namespace FKSDB\Components\Controls\Choosers;
 
-
+use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
 use Nette\Templating\FileTemplate;
-use Nette\Templating\Template;
-
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -20,9 +19,9 @@ class LanguageChooser extends Control {
     const DEFAULT_FIRST = 'cs';
 
     /**
-     * @var mixed
+     * @var array
      */
-    private $languages;
+    private $supportedLanguages;
 
     /**
      * @var Session
@@ -37,7 +36,9 @@ class LanguageChooser extends Control {
      * @var array
      */
     private $languageNames = ['cs' => 'Čeština', 'en' => 'English', 'sk' => 'Slovenčina'];
-
+    /**
+     * @var bool
+     */
     private $initialized = false;
 
     /**
@@ -55,20 +56,6 @@ class LanguageChooser extends Control {
     }
 
     /**
-     * @param mixed $languages role enum|ALL_LANGUAGES|array of languages
-     */
-    public function setLanguages($languages) {
-        $this->languages = $languages;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLanguages() {
-        return $this->languages;
-    }
-
-    /**
      * @return mixed
      */
     public function getDefaultLanguage() {
@@ -76,35 +63,20 @@ class LanguageChooser extends Control {
     }
 
     /**
-     * @param $defaultLanguage
-     */
-    public function setDefaultLanguage($defaultLanguage) {
-        $this->defaultLanguage = $defaultLanguage;
-    }
-
-    /**
      * @param $language
      * @return bool
      */
     public function isLanguage($language) {
-        return in_array($language, $this->languages);
+        return in_array($language, $this->supportedLanguages);
     }
 
     /**
-     * @param object $params
-     * @return boolean
      * Redirect to correct address accorging to the resolved values.
+     * @param string $lang
      * @throws \Exception
      */
-    public function syncRedirect(&$params) {
-        $this->init($params);
-
-        if ($this->language !== $params->lang) {
-            $params->lang = $this->language;
-
-            return true;
-        }
-        return false;
+    public function syncRedirect(string $lang = null) {
+        $this->init($lang);
     }
 
     /**
@@ -115,32 +87,27 @@ class LanguageChooser extends Control {
     }
 
     /**
-     * @param $params
+     * @param string $lang
      * @throws \Exception
      */
-    private function init($params) {
+    private function init(string $lang = null) {
         if ($this->initialized) {
             return;
         }
         $this->initialized = true;
-
-        $this->setLanguages($this->getSupportedLanguages());
-
-        if (count($this->getLanguages()) == 0) {
+        if (count($this->getSupportedLanguages()) == 0) {
             return;
         }
 
         /* LANGUAGE */
         $this->language = $this->getDefaultLanguage();
 
-        if ($params->lang !== null) {
-
-            if (!$this->isLanguage($params->lang)) {
+        if ($lang !== null) {
+            if (!$this->isLanguage($lang)) {
                 $this->language = $this->getDefaultLanguage();
             } else {
-                $this->language = $params->lang;
+                $this->language = $lang;
             }
-
         }
     }
 
@@ -148,37 +115,28 @@ class LanguageChooser extends Control {
      * @return array of existing languages
      * @throws \Exception
      */
-    private function getSupportedLanguages() {
-        $presenter = $this->getPresenter();
-        if (!($presenter instanceof \BasePresenter)) {
-            throw new \Exception('Wrong presenter');
+    private function getSupportedLanguages(): array {
+        if (!count($this->supportedLanguages)) {
+            $presenter = $this->getPresenter();
+            if (!($presenter instanceof \BasePresenter)) {
+                throw new \Exception('Wrong presenter');
+            }
+            $this->supportedLanguages = $presenter->getTranslator()->getSupportedLanguages();
         }
-        return $presenter->getTranslator()->getSupportedLanguages();
-
+        return $this->supportedLanguages;
     }
 
     /**
-     * @param null $class
-     * @return \Nette\Templating\ITemplate|Template
+     * @param string|null $class
+     * @throws \Exception
      */
-    protected function createTemplate($class = NULL) {
-        /**
-         * @var Template $template
-         */
-        $presenter = $this->getPresenter();
+    public function render(string $class = null) {
 
-        $template = parent::createTemplate($class);
-        if ($presenter instanceof \BasePresenter) {
-            $template->setTranslator($presenter->getTranslator());
-        }
-        return $template;
-    }
-
-    public function render() {
-
-        $this->template->languages = $this->getLanguages();
+        $this->template->languages = $this->getSupportedLanguages();
         $this->template->languageNames = $this->languageNames;
         $this->template->currentLanguage = $this->getLanguage() ? $this->getLanguage() : null;
+        $this->template->class = ($class !== null) ? $class : "nav navbar-nav navbar-right";
+        $this->template->setTranslator($this->getPresenter()->getTranslator());
 
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'LanguageChooser.latte');
         $this->template->render();
@@ -186,9 +144,9 @@ class LanguageChooser extends Control {
 
     /**
      * @param $language
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
-    public function handleChangeLang($language) {
+    public function handleChangeLang(string $language) {
         /**
          * @var \BasePresenter $presenter
          */
@@ -196,5 +154,23 @@ class LanguageChooser extends Control {
         $translator = $presenter->getTranslator();
         $translator->setLang($language);
         $presenter->redirect('this', ['lang' => $language]);
+    }
+
+    /**
+     * @param string $lang
+     * @return string
+     * @throws BadRequestException
+     */
+    private function getLanguageName(string $lang): string {
+        switch ($lang) {
+            case'cs':
+                return _('Čeština');
+            case 'en' :
+                return _('English');
+            case'sk':
+                return _('Slovenčina');
+            default:
+                throw new BadRequestException();
+        }
     }
 }
