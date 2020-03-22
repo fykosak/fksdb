@@ -27,7 +27,7 @@ abstract class LangPresenter extends Presenter {
     /**
      * @param GettextTranslator $translator
      */
-    public function injectTranslator(GettextTranslator $translator) {
+    public final function injectTranslator(GettextTranslator $translator) {
         $this->translator = $translator;
     }
 
