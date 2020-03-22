@@ -4,12 +4,12 @@ namespace FKSDB\Components\Grids;
 
 use Authorization\ContestAuthorizator;
 use Closure;
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\DI\Container;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
@@ -39,14 +39,12 @@ class StoredQueriesGrid extends BaseGrid {
 
     /**
      * StoredQueriesGrid constructor.
-     * @param ServiceStoredQuery $serviceStoredQuery
-     * @param ContestAuthorizator $contestAuthorizator
-     * @param TableReflectionFactory $tableReflectionFactory
+     * @param Container $container
      */
-    function __construct(ServiceStoredQuery $serviceStoredQuery, ContestAuthorizator $contestAuthorizator, TableReflectionFactory $tableReflectionFactory) {
-        parent::__construct($tableReflectionFactory);
-        $this->serviceStoredQuery = $serviceStoredQuery;
-        $this->contestAuthorizator = $contestAuthorizator;
+    function __construct(Container $container) {
+        parent::__construct($container);
+        $this->serviceStoredQuery = $container->getByType(ServiceStoredQuery::class);
+        $this->contestAuthorizator = $container->getByType(ContestAuthorizator::class);
     }
 
     /**

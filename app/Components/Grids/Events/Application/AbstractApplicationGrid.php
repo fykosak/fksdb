@@ -5,12 +5,12 @@ namespace FKSDB\Components\Grids\Events\Application;
 use Closure;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\NotImplementedException;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\Selection;
+use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 use NiftyGrid\DuplicateColumnException;
@@ -31,10 +31,10 @@ abstract class AbstractApplicationGrid extends BaseGrid {
     /**
      * AbstractApplicationGrid constructor.
      * @param ModelEvent $event
-     * @param TableReflectionFactory $tableReflectionFactory
+     * @param Container $container
      */
-    public function __construct(ModelEvent $event, TableReflectionFactory $tableReflectionFactory) {
-        parent::__construct($tableReflectionFactory);
+    public function __construct(ModelEvent $event, Container $container) {
+        parent::__construct($container);
         $this->event = $event;
     }
 

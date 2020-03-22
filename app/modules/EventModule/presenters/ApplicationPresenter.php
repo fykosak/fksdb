@@ -56,7 +56,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @throws BadRequestException
      */
     public function createComponentGrid(): AbstractApplicationGrid {
-        return new ApplicationGrid($this->getEvent(), $this->getTableReflectionFactory());
+        return new ApplicationGrid($this->getEvent(), $this->getContext());
     }
 
     /**

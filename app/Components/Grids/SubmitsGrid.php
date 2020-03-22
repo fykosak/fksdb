@@ -4,7 +4,6 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\Components\Control\AjaxUpload\SubmitDownloadTrait;
 use FKSDB\Components\Control\AjaxUpload\SubmitRevokeTrait;
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Services\ServiceSubmit;
@@ -47,7 +46,7 @@ class SubmitsGrid extends BaseGrid {
      * @param ModelContestant $contestant
      */
     function __construct(Container $container, ModelContestant $contestant) {
-        parent::__construct($container->getByType(TableReflectionFactory::class));
+        parent::__construct($container);
         $this->filesystemCorrectedSubmitStorage = $container->getByType(FilesystemCorrectedSubmitStorage::class);
         $this->submitService = $container->getByType(ServiceSubmit::class);
         $this->filesystemSubmitUploadedStorage = $container->getByType(FilesystemUploadedSubmitStorage::class);

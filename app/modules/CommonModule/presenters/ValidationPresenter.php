@@ -70,7 +70,7 @@ class ValidationPresenter extends BasePresenter {
      * @return ValidationGrid
      */
     public function createComponentGrid(): ValidationGrid {
-        return new ValidationGrid($this->servicePerson, $this->validationFactory->getTests());
+        return new ValidationGrid($this->validationFactory->getTests(), $this->getContext());
     }
 
     /**

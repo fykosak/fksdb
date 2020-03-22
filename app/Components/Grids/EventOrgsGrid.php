@@ -2,12 +2,12 @@
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventOrg;
 use FKSDB\ORM\Services\ServiceEventOrg;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\DI\Container;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
@@ -31,13 +31,12 @@ class EventOrgsGrid extends BaseGrid {
     /**
      * EventOrgsGrid constructor.
      * @param ModelEvent $event
-     * @param ServiceEventOrg $serviceEventOrg
-     * @param TableReflectionFactory $tableReflectionFactory
+     * @param Container $container
      */
-    function __construct(ModelEvent $event, ServiceEventOrg $serviceEventOrg, TableReflectionFactory $tableReflectionFactory) {
-        parent::__construct($tableReflectionFactory);
+    function __construct(ModelEvent $event, Container $container) {
+        parent::__construct($container);
         $this->event = $event;
-        $this->serviceEventOrg = $serviceEventOrg;
+        $this->serviceEventOrg = $container->getByType(ServiceEventOrg::class);
     }
 
     /**

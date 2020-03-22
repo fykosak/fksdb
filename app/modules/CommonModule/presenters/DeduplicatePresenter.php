@@ -92,7 +92,7 @@ class DeduplicatePresenter extends BasePresenter {
         $pairs = $duplicateFinder->getPairs();
         $trunkPersons = $this->servicePerson->getTable()->where('person_id', array_keys($pairs));
 
-        $grid = new PersonsGrid($trunkPersons, $pairs);
+        $grid = new PersonsGrid($trunkPersons, $pairs, $this->getContext());
 
         return $grid;
     }

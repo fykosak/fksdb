@@ -84,10 +84,9 @@ class TaskPresenter extends BasePresenter {
 
     /**
      * @return TaskGrid
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function createComponentGrid(): TaskGrid {
-        return new TaskGrid($this->getEvent(), $this->getServiceFyziklaniTask());
+        return new TaskGrid($this->getEvent(), $this->getContext());
     }
 }

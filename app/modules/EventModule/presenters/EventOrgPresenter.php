@@ -58,7 +58,7 @@ class EventOrgPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     protected function createComponentGrid(): EventOrgsGrid {
-        return new EventOrgsGrid($this->getEvent(), $this->serviceEventOrg, $this->getTableReflectionFactory());
+        return new EventOrgsGrid($this->getEvent(), $this->getContext());
     }
 
 

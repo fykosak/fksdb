@@ -90,7 +90,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @return PersonGrid
      */
     protected function createComponentPersonScheduleGrid(): PersonGrid {
-        return new PersonGrid($this->getTableReflectionFactory());
+        return new PersonGrid($this->getContext());
     }
 
     /**

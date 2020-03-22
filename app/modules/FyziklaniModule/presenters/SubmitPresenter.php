@@ -94,13 +94,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws AbortException
      */
     public function createComponentGrid(): SubmitsGrid {
-        return new AllSubmitsGrid(
-            $this->getEvent(),
-            $this->getServiceFyziklaniTask(),
-            $this->getServiceFyziklaniSubmit(),
-            $this->getServiceFyziklaniTeam(),
-            $this->getTableReflectionFactory()
-        );
+        return new AllSubmitsGrid($this->getEvent(), $this->getContext());
     }
 
     /**

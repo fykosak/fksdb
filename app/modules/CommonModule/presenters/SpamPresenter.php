@@ -78,6 +78,6 @@ class SpamPresenter extends BasePresenter {
      * @return EmailsGrid
      */
     protected function createComponentGrid(): EmailsGrid {
-        return new EmailsGrid($this->serviceEmailMessage, $this->getTableReflectionFactory());
+        return new EmailsGrid($this->getContext());
     }
 }

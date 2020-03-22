@@ -2,11 +2,11 @@
 
 namespace FKSDB\Components\Grids\Fyziklani;
 
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
+use Nette\DI\Container;
 use NiftyGrid\DuplicateColumnException;
 
 /**
@@ -24,12 +24,11 @@ abstract class SubmitsGrid extends BaseGrid {
 
     /**
      * FyziklaniSubmitsGrid constructor.
-     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
-     * @param TableReflectionFactory|null $tableReflectionFactory
+     * @param Container $container
      */
-    public function __construct(ServiceFyziklaniSubmit $serviceFyziklaniSubmit, TableReflectionFactory $tableReflectionFactory) {
-        $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
-        parent::__construct($tableReflectionFactory);
+    public function __construct(Container $container) {
+        $this->serviceFyziklaniSubmit = $container->getByType(ServiceFyziklaniSubmit::class);
+        parent::__construct($container);
     }
 
     /**

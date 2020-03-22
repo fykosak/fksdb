@@ -6,6 +6,7 @@ use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use Nette\Database\Table\Selection;
+use Nette\DI\Container;
 use NiftyGrid\DuplicateColumnException;
 use SQL\SearchableDataSource;
 
@@ -27,12 +28,12 @@ class TaskGrid extends BaseGrid {
     /**
      * FyziklaniTaskGrid constructor.
      * @param ModelEvent $event
-     * @param ServiceFyziklaniTask $serviceFyziklaniTask
+     * @param Container $container
      */
-    public function __construct(ModelEvent $event, ServiceFyziklaniTask $serviceFyziklaniTask) {
-        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
+    public function __construct(ModelEvent $event, Container $container) {
+        $this->serviceFyziklaniTask = $container->getByType(ServiceFyziklaniTask::class);
         $this->event = $event;
-        parent::__construct();
+        parent::__construct($container);
     }
 
     /**

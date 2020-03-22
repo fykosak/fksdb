@@ -93,7 +93,7 @@ class SchoolPresenter extends BasePresenter {
 
     /** @return SchoolsGrid */
     protected function createComponentGrid(): SchoolsGrid {
-        return new SchoolsGrid($this->serviceSchool);
+        return new SchoolsGrid($this->getContext());
     }
 
     /** @inheritDoc */
