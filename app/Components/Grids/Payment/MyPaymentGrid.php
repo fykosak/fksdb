@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Grids\Payment;
 
 use BasePresenter;
+use FKSDB\NotImplementedException;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelPayment;
 use NiftyGrid\DataSource\NDataSource;
@@ -19,6 +20,7 @@ class MyPaymentGrid extends PaymentGrid {
      * @param BasePresenter $presenter
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
+     * @throws NotImplementedException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

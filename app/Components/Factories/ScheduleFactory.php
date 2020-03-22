@@ -10,8 +10,7 @@ use FKSDB\Components\Grids\Schedule\GroupsGrid;
 use FKSDB\Components\Grids\Schedule\ItemsGrid;
 use FKSDB\Components\Grids\Schedule\PersonsGrid;
 use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Services\Schedule\ServicePersonSchedule;
-use FKSDB\YearCalculator;
+use Nette\DI\Container;
 use Nette\Localization\ITranslator;
 
 /**
@@ -28,26 +27,22 @@ class ScheduleFactory {
      */
     private $tableReflectionFactory;
     /**
-     * @var YearCalculator
+     * @var Container
      */
-    private $yearCalculator;
-    /**
-     * @var
-     */
-    private $servicePersonSchedule;
+    private $container;
 
     /**
      * ScheduleFactory constructor.
-     * @param ServicePersonSchedule $servicePersonSchedule
      * @param ITranslator $translator
      * @param TableReflectionFactory $tableReflectionFactory
-     * @param YearCalculator $yearCalculator
+     * @param Container $container
      */
-    public function __construct(ServicePersonSchedule $servicePersonSchedule, ITranslator $translator, TableReflectionFactory $tableReflectionFactory, YearCalculator $yearCalculator) {
+    public function __construct(ITranslator $translator,
+                                TableReflectionFactory $tableReflectionFactory,
+                                Container $container) {
         $this->translator = $translator;
         $this->tableReflectionFactory = $tableReflectionFactory;
-        $this->yearCalculator = $yearCalculator;
-        $this->servicePersonSchedule = $servicePersonSchedule;
+        $this->container = $container;
     }
 
     /**
@@ -55,28 +50,28 @@ class ScheduleFactory {
      * @return GroupsGrid
      */
     public function createGroupsGrid(ModelEvent $event): GroupsGrid {
-        return new GroupsGrid($event, $this->tableReflectionFactory);
+        return new GroupsGrid($event, $this->container);
     }
 
     /**
      * @return ItemsGrid
      */
     public function createItemsGrid(): ItemsGrid {
-        return new ItemsGrid($this->tableReflectionFactory);
+        return new ItemsGrid($this->container);
     }
 
     /**
      * @return PersonsGrid
      */
     public function createPersonsGrid(): PersonsGrid {
-        return new PersonsGrid($this->tableReflectionFactory, $this->yearCalculator);
+        return new PersonsGrid($this->container);
     }
 
     /**
      * @return AllPersonsGrid
      */
     public function createAllPersonsGrid(): AllPersonsGrid {
-        return new AllPersonsGrid($this->servicePersonSchedule, $this->tableReflectionFactory, $this->yearCalculator);
+        return new AllPersonsGrid($this->container);
     }
 
     /**

@@ -123,14 +123,14 @@ class ClosePresenter extends BasePresenter {
      * @throws AbortException
      */
     protected function createComponentCloseTeamsGrid(): CloseTeamsGrid {
-        return new CloseTeamsGrid($this->getEvent(), $this->getServiceFyziklaniTeam(), $this->getTableReflectionFactory());
+        return new CloseTeamsGrid($this->getEvent(), $this->getContext());
     }
 
     /**
      * @return TeamSubmitsGrid
      */
     protected function createComponentTeamSubmitsGrid(): TeamSubmitsGrid {
-        return new TeamSubmitsGrid($this->getEntity(), $this->getServiceFyziklaniSubmit(), $this->getTableReflectionFactory());
+        return new TeamSubmitsGrid($this->getEntity(), $this->getContext());
     }
 
 

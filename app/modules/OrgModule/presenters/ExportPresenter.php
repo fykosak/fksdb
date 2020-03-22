@@ -424,7 +424,7 @@ class ExportPresenter extends SeriesPresenter {
      * @return StoredQueriesGrid
      */
     protected function createComponentGrid(): StoredQueriesGrid {
-        return new StoredQueriesGrid($this->serviceStoredQuery, $this->getContestAuthorizator(), $this->tableReflectionFactory);
+        return new StoredQueriesGrid($this->getContext());
     }
 
     /**
@@ -436,7 +436,7 @@ class ExportPresenter extends SeriesPresenter {
         if ($storedQuery === null) { // workaround when session expires and persistent parameters from component are to be stored (because of redirect)
             return null;
         }
-        $grid = new StoredQueryComponent($storedQuery, $this->getContestAuthorizator(), $this->storedQueryFormFactory, $this->exportFormatFactory);
+        $grid = new StoredQueryComponent($storedQuery, $this->getContestAuthorizator(), $this->storedQueryFormFactory, $this->exportFormatFactory, $this->getContext());
         $grid->setShowParametrize(false);
         return $grid;
     }
@@ -450,7 +450,7 @@ class ExportPresenter extends SeriesPresenter {
         if ($storedQuery === null) { // workaround when session expires and persistent parameters from component are to be stored (because of redirect)
             return null;
         }
-        return new StoredQueryComponent($storedQuery, $this->getContestAuthorizator(), $this->storedQueryFormFactory, $this->exportFormatFactory);
+        return new StoredQueryComponent($storedQuery, $this->getContestAuthorizator(), $this->storedQueryFormFactory, $this->exportFormatFactory, $this->getContext());
     }
 
     /**
@@ -647,8 +647,8 @@ class ExportPresenter extends SeriesPresenter {
      * Very ineffective solution that provides data in
      * specified format.
      *
-     * @deprecated
      * @throws BadRequestException
+     * @deprecated
      */
     public function renderOvvp() {
         /**

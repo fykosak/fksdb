@@ -2,8 +2,13 @@
 
 namespace FKSDB\Components\Grids;
 
-
 use FKSDB\ORM\Services\ServiceContestant;
+use Nette\Application\BadRequestException;
+use Nette\Application\UI\InvalidLinkException;
+use Nette\DI\Container;
+use NiftyGrid\DuplicateButtonException;
+use NiftyGrid\DuplicateColumnException;
+use NiftyGrid\DuplicateGlobalButtonException;
 use OrgModule\BasePresenter;
 use SQL\ViewDataSource;
 
@@ -14,27 +19,26 @@ use SQL\ViewDataSource;
 class ContestantsGrid extends BaseGrid {
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceContestant
+     * @var ServiceContestant
      */
     private $serviceContestant;
 
     /**
      * ContestantsGrid constructor.
-     * @param ServiceContestant $serviceContestant
+     * @param Container $container
      */
-    function __construct(ServiceContestant $serviceContestant) {
-        parent::__construct();
-
-        $this->serviceContestant = $serviceContestant;
+    function __construct(Container $container) {
+        parent::__construct($container);
+        $this->serviceContestant = $container->getByType(ServiceContestant::class);
     }
 
     /**
      * @param BasePresenter $presenter
-     * @throws \Nette\Application\BadRequestException
-     * @throws \Nette\Application\UI\InvalidLinkException
-     * @throws \NiftyGrid\DuplicateButtonException
-     * @throws \NiftyGrid\DuplicateColumnException
-     * @throws \NiftyGrid\DuplicateGlobalButtonException
+     * @throws BadRequestException
+     * @throws InvalidLinkException
+     * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
+     * @throws DuplicateGlobalButtonException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

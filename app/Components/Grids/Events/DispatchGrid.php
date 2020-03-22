@@ -8,6 +8,7 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceEvent;
 use FKSDB\YearCalculator;
+use Nette\DI\Container;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
@@ -33,15 +34,14 @@ class DispatchGrid extends BaseGrid {
 
     /**
      * DispatchGrid constructor.
-     * @param ServiceEvent $serviceEvent
      * @param ModelPerson $person
-     * @param YearCalculator $yearCalculator
+     * @param Container $container
      */
-    function __construct(ServiceEvent $serviceEvent, ModelPerson $person, YearCalculator $yearCalculator) {
-        parent::__construct();
+    function __construct(ModelPerson $person, Container $container) {
+        parent::__construct($container);
         $this->person = $person;
-        $this->serviceEvent = $serviceEvent;
-        $this->yearCalculator = $yearCalculator;
+        $this->serviceEvent = $container->getByType(ServiceEvent::class);
+        $this->yearCalculator = $container->getByType(YearCalculator::class);
     }
 
     /**

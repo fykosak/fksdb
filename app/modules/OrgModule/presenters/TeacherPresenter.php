@@ -96,7 +96,7 @@ class TeacherPresenter extends ExtendedPersonPresenter {
      * @return TeachersGrid
      */
     protected function createComponentGrid($name): TeachersGrid {
-        return new TeachersGrid($this->serviceTeacher, $this->getTableReflectionFactory());
+        return new TeachersGrid($this->getContext());
     }
 
     /**

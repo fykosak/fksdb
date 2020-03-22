@@ -2,12 +2,12 @@
 
 namespace FKSDB\Components\Controls\Fyziklani;
 
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\Fyziklani\ResultsCategoryGrid;
 use FKSDB\Components\Grids\Fyziklani\ResultsTotalGrid;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\UI\Control;
+use Nette\DI\Container;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 
@@ -30,23 +30,24 @@ class FinalResults extends Control {
      */
     private $translator;
     /**
-     * @var TableReflectionFactory
+     * @var Container
      */
-    private $tableReflectionFactory;
+    private $container;
 
     /**
      * FinalResults constructor.
      * @param ModelEvent $event
      * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
      * @param ITranslator $translator
-     * @param TableReflectionFactory $tableReflectionFactory
+     * @param Container $container
      */
-    public function __construct(ModelEvent $event, ServiceFyziklaniTeam $serviceFyziklaniTeam, ITranslator $translator, TableReflectionFactory $tableReflectionFactory) {
+    public function __construct(ModelEvent $event, ServiceFyziklaniTeam $serviceFyziklaniTeam, ITranslator $translator, Container $container) {
         parent::__construct();
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
         $this->event = $event;
         $this->translator = $translator;
-        $this->tableReflectionFactory = $tableReflectionFactory;
+
+        $this->container = $container;
     }
 
     /**
@@ -75,28 +76,28 @@ class FinalResults extends Control {
      * @return ResultsCategoryGrid
      */
     public function createComponentResultsCategoryAGrid(): ResultsCategoryGrid {
-        return new ResultsCategoryGrid($this->event, $this->serviceFyziklaniTeam, 'A', $this->tableReflectionFactory);
+        return new ResultsCategoryGrid($this->event, 'A', $this->container);
     }
 
     /**
      * @return ResultsCategoryGrid
      */
     public function createComponentResultsCategoryBGrid(): ResultsCategoryGrid {
-        return new ResultsCategoryGrid($this->event, $this->serviceFyziklaniTeam, 'B', $this->tableReflectionFactory);
+        return new ResultsCategoryGrid($this->event, 'B', $this->container);
     }
 
     /**
      * @return ResultsCategoryGrid
      */
     public function createComponentResultsCategoryCGrid(): ResultsCategoryGrid {
-        return new ResultsCategoryGrid($this->event, $this->serviceFyziklaniTeam, 'C', $this->tableReflectionFactory);
+        return new ResultsCategoryGrid($this->event, 'C', $this->container);
     }
 
     /**
      * @return ResultsTotalGrid
      */
     public function createComponentResultsTotalGrid(): ResultsTotalGrid {
-        return new ResultsTotalGrid($this->event, $this->serviceFyziklaniTeam, $this->tableReflectionFactory);
+        return new ResultsTotalGrid($this->event, $this->container);
     }
 
     /**
