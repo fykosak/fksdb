@@ -14,7 +14,6 @@ php:
 before_install:
   - phpenv config-add tests/php.ini
   - composer self-update
-  - echo $'\n[client]\nuser=root' >> ~/.my.cnf
 
 install:
   - composer install --no-interaction --prefer-source
