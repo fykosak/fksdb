@@ -12,7 +12,7 @@ use FKSDB\ORM\Models\ModelPerson;
  * Class EventCoveringTest
  * @package FKSDB\ValidationTest
  */
-class EventCoveringTest extends ValidationTest {
+class EventCoveringValidation extends ValidationTest {
 
     /**
      * @param ModelPerson $person
