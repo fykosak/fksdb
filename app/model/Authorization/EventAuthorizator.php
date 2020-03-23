@@ -112,6 +112,11 @@ class EventAuthorizator {
         if (!$this->getUser()->isAuthenticated()) {
             return false;
         }
+        // Bypass for cartesian
+        // TODO bypass to other roles
+        if ($this->contestAuthorizator->isAllowed(Permission::ALL, Permission::ALL, $event->getContest())) {
+            return true;
+        }
         if (!$this->isEventOrg($resource, $privilege, $event)) {
             return false;
         }

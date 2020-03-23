@@ -8,7 +8,6 @@
 services:
     # assertions
     ownerAssertion: Authorization\Assertions\OwnerAssertion
-
     # data services
     #- authorizator:
      #   class: Nette\Security\Permission
@@ -57,7 +56,7 @@ acl:
     - addResource(fyziklani.dashboard)  # default
     - addResource(fyziklani.task)       # list, import
     - addResource(fyziklani.close)      # list, team, hard
-    - addResource(fyziklani.results)    # final, correlation, presentation,
+    - addResource(fyziklani.results)    # correlation, presentation, teamStatistics, taskStatistics, table, list
     - addResource(fyziklani.submit)     # create, edit, list, detail, revoke,
     - addResource(fyziklani.gameSetup)  # deafult
     - addResource(fyziklani.diplomas)   # calculate, results
@@ -138,7 +137,7 @@ acl:
 
 # fyziklani
     - allow(guest,fyziklani.dashboard, default)
-    - allow(guest, fyziklani.results, presentation) # môže premietať/pozerať výsledky
+    - allow(guest, fyziklani.results, [teamStatistics, taskStatistics, table, list]) # môže pozerať výsledky
 #base for org
     - allow(org, fyziklani.dashboard, ::constant(Nette\Security\Permission::ALL))
     - allow(org, fyziklani.task, list) # može pozerať úlohy
