@@ -25,7 +25,7 @@ abstract class AbstractEventOrgAssertion {
     /**
      * @var IUserStorage
      */
-    private $user;
+    protected $user;
 
     /**
      * @var Connection

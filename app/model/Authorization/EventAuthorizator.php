@@ -2,11 +2,8 @@
 
 namespace Authorization;
 
-use Authorization\Assertions\EventOrgByIdAssertion;
 use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Models\ModelLogin;
-use FKSDB\ORM\Models\ModelRole;
-use Nette\Database\Connection;
+use FKSDB\ORM\Models\ModelPerson;
 use Nette\Security\IUserStorage;
 use Nette\Security\Permission;
 use Nette\SmartObject;
@@ -23,16 +20,6 @@ class EventAuthorizator {
     private $user;
 
     /**
-     * @var Permission
-     */
-    private $acl;
-
-    /**
-     * @var Connection
-     */
-    private $db;
-
-    /**
      * @var ContestAuthorizator
      */
     private $contestAuthorizator;
@@ -40,15 +27,11 @@ class EventAuthorizator {
     /**
      * EventAuthorizator constructor.
      * @param IUserStorage $identity
-     * @param Permission $acl
      * @param ContestAuthorizator $contestAuthorizator
-     * @param Connection $db
      */
-    function __construct(IUserStorage $identity, Permission $acl, ContestAuthorizator $contestAuthorizator, Connection $db) {
+    function __construct(IUserStorage $identity, ContestAuthorizator $contestAuthorizator) {
         $this->contestAuthorizator = $contestAuthorizator;
         $this->user = $identity;
-        $this->acl = $acl;
-        $this->db = $db;
     }
 
     /**
@@ -56,13 +39,6 @@ class EventAuthorizator {
      */
     public function getUser(): IUserStorage {
         return $this->user;
-    }
-
-    /**
-     * @return Permission
-     */
-    protected function getAcl() {
-        return $this->acl;
     }
 
     /**
@@ -99,7 +75,7 @@ class EventAuthorizator {
         if ($this->isContestOrgAllowed($resource, $privilege, $event)) {
             return true;
         }
-        return $this->isEventOrg($resource, $privilege, $event);
+        return $this->isEventOrg($event);
     }
 
     /**
@@ -117,19 +93,28 @@ class EventAuthorizator {
         if ($this->contestAuthorizator->isAllowed(Permission::ALL, Permission::ALL, $event->getContest())) {
             return true;
         }
-        if (!$this->isEventOrg($resource, $privilege, $event)) {
+        if (!$this->isEventOrg($event)) {
             return false;
         }
         return $this->contestAuthorizator->isAllowed($resource, $privilege, $event->getContest());
     }
 
     /**
-     * @param $resource
-     * @param $privilege
-     * @param $event
+     * @param ModelEvent $event
      * @return bool
      */
-    private function isEventOrg($resource, $privilege, ModelEvent $event): bool {
-        return (new EventOrgByIdAssertion(null, $this->getUser(), $this->db))($this->getAcl(), null, $resource, $privilege, $event->event_id);
+    private function isEventOrg(ModelEvent $event): bool {
+        $identity = $this->getUser()->getIdentity();
+        if (!$identity) {
+            return false;
+        }
+        /**
+         * @var ModelPerson $person
+         */
+        $person = $identity->getPerson();
+        if (!$person) {
+            return false;
+        }
+        return $person->isEventOrg($event);
     }
 }

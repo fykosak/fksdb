@@ -279,6 +279,14 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
     }
 
     /**
+     * @param ModelEvent $event
+     * @return bool
+     */
+    public function isEventOrg(ModelEvent $event): bool {
+        return (bool)$this->getEventOrg()->where('event_id',$event->getPrimary())->count();
+    }
+
+    /**
      * @return GroupedSelection
      */
     public function getEventOrg() {
@@ -470,10 +478,10 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
 
     /**
      * @param ModelEvent $event
-     * @param $yearCalculator
+     * @param YearCalculator $yearCalculator
      * @return array
      */
-    public function getRolesForEvent(ModelEvent $event, $yearCalculator): array {
+    public function getRolesForEvent(ModelEvent $event, YearCalculator $yearCalculator = null): array {
         $roles = [];
         $eventId = $event->event_id;
         $teachers = $this->getEventTeacher()->where('event_id', $eventId);
@@ -500,11 +508,14 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
                 'participant' => $participant,
             ];
         }
-        if (array_key_exists($event->getEventType()->contest_id, $this->getActiveOrgs($yearCalculator))) {
-            $roles[] = [
-                'type' => 'contest_org',
-            ];
+        if ($yearCalculator) {
+            if (array_key_exists($event->getEventType()->contest_id, $this->getActiveOrgs($yearCalculator))) {
+                $roles[] = [
+                    'type' => 'contest_org',
+                ];
+            }
         }
+
         return $roles;
     }
 
