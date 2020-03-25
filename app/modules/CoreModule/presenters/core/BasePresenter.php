@@ -2,10 +2,9 @@
 
 use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Application\IStylesheetCollector;
+use FKSDB\CollectorPresenterTrait;
 use FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs;
 use FKSDB\Components\Controls\Breadcrumbs\BreadcrumbsFactory;
-use FKSDB\Components\Controls\Loaders\JavaScript\JavaScriptLoader;
-use FKSDB\Components\Controls\Loaders\Stylesheet\StylesheetLoader;
 use FKSDB\Components\Controls\Navigation\INavigablePresenter;
 use FKSDB\Components\Controls\Navigation\Navigation;
 use FKSDB\Components\Controls\PresenterBuilder;
@@ -17,7 +16,8 @@ use FKSDB\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\IFilteredDataProvider;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Config\GlobalParameters;
-use FKSDB\LangPresenter;
+use FKSDB\LangPresenterTrait;
+use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\YearCalculator;
 use Nette\Application\AbortException;
@@ -26,22 +26,24 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Responses\JsonResponse;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
-use Nette\ComponentModel\IComponent;
 use Nette\Templating\FileTemplate;
+use Nette\Templating\ITemplate;
 
 /**
  * Base presenter for all application presenters.
  * @property FileTemplate $template
  */
-abstract class BasePresenter extends LangPresenter implements IJavaScriptCollector, IStylesheetCollector, IAutocompleteJSONProvider, INavigablePresenter {
+abstract class BasePresenter extends Presenter implements IAutocompleteJSONProvider, INavigablePresenter, IJavaScriptCollector, IStylesheetCollector {
+    use CollectorPresenterTrait;
+    use LangPresenterTrait;
 
-    const FLASH_SUCCESS = 'success';
+    const FLASH_SUCCESS = ILogger::SUCCESS;
 
-    const FLASH_INFO = 'info';
+    const FLASH_INFO = ILogger::INFO;
 
-    const FLASH_WARNING = 'warning';
+    const FLASH_WARNING = ILogger::WARNING;
 
-    const FLASH_ERROR = 'danger';
+    const FLASH_ERROR = ILogger::ERROR;
 
     /** @persistent  */
     public $tld;
@@ -185,10 +187,18 @@ abstract class BasePresenter extends LangPresenter implements IJavaScriptCollect
         $this->presenterBuilder = $presenterBuilder;
     }
 
+    /**
+     * @throws Exception
+     */
+    protected function startup() {
+        parent::startup();
+        $this->langTraitStartup();
+    }
+
 
     /**
      * @param null $class
-     * @return FileTemplate|\Nette\Templating\ITemplate
+     * @return FileTemplate|ITemplate
      */
     protected function createTemplate($class = NULL) {
         /**
@@ -200,98 +210,6 @@ abstract class BasePresenter extends LangPresenter implements IJavaScriptCollect
         return $template;
     }
 
-    /*	 * ******************************
-     * Loading assets
-     * ****************************** */
-
-    /**
-     * @return JavaScriptLoader
-     */
-    protected function createComponentJsLoader(): JavaScriptLoader {
-        return new JavaScriptLoader();
-    }
-
-    /**
-     * @return StylesheetLoader
-     */
-    protected function createComponentCssLoader(): StylesheetLoader {
-        return new StylesheetLoader();
-    }
-
-    /*	 * ******************************
-     * IJavaScriptCollector
-     * ****************************** */
-    /**
-     * @param string $file
-     */
-    public function registerJSFile($file) {
-        /**
-         * @var JavaScriptLoader $component
-         */
-        $component = $this->getComponent('jsLoader');
-        $component->addFile($file);
-    }
-
-    /**
-     * @param string $code
-     * @param null $tag
-     */
-    public function registerJSCode($code, $tag = null) {
-        /**
-         * @var JavaScriptLoader $component
-         */
-        $component = $this->getComponent('jsLoader');
-        $component->addInline($code, $tag);
-    }
-
-    /**
-     * @param string $tag
-     */
-    public function unregisterJSCode($tag) {
-        /**
-         * @var JavaScriptLoader $component
-         */
-        $component = $this->getComponent('jsLoader');
-        $component->removeInline($tag);
-    }
-
-    /**
-     * @param string $file
-     */
-    public function unregisterJSFile($file) {
-        /**
-         * @var JavaScriptLoader $component
-         */
-        $component = $this->getComponent('jsLoader');
-        $component->removeFile($file);
-    }
-
-    /*	 * ******************************
-     * IStylesheetCollector
-     * ****************************** */
-    /**
-     * @param string $file
-     * @param array $media
-     */
-    public function registerStylesheetFile($file, $media = []) {
-        /**
-         * @var StylesheetLoader $component
-         */
-        $component = $this->getComponent('cssLoader');
-        $component->addFile($file, $media);
-    }
-
-    /**
-     * @param string $file
-     * @param array $media
-     */
-    public function unregisterStylesheetFile($file, $media = []) {
-        /**
-         * @var StylesheetLoader $component
-         */
-        $component = $$this->getComponent('cssLoader');
-        $component->removeFile($file, $media);
-    }
 
     /*	 * ******************************
      * IJSONProvider
@@ -359,7 +277,7 @@ abstract class BasePresenter extends LangPresenter implements IJavaScriptCollect
      * @param string $title
      * @param string $icon
      */
-    protected function setTitle(string $title, string $icon = '') {
+    protected function setTitle(string $title, string $icon = null) {
         $this->title = $title;
         if ($icon) {
             $this->icon = $icon;
@@ -610,10 +528,10 @@ abstract class BasePresenter extends LangPresenter implements IJavaScriptCollect
     }
 
     /**
-     * @return IComponent|null
+     * @return ValuePrinterComponent
      * @throws \Exception
      */
-    public function createComponentValuePrinter() {
+    public function createComponentValuePrinter(): ValuePrinterComponent {
         return new ValuePrinterComponent($this->getTranslator(), $this->getTableReflectionFactory());
     }
 }

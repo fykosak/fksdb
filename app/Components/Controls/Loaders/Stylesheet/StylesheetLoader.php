@@ -12,9 +12,9 @@ use FKSDB\Components\Controls\Loaders\Webloader;
 class StylesheetLoader extends Webloader {
 
     /**
-     * @return mixed|string
+     * @return string
      */
-    protected function getTemplateFilePrefix() {
+    protected function getTemplateFilePrefix(): string {
         return __DIR__ . DIRECTORY_SEPARATOR . 'Stylesheet';
     }
 

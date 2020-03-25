@@ -84,6 +84,7 @@ class CloseTeamControl extends Control {
 
     /**
      * @return string
+     * @throws \FKSDB\model\Fyziklani\NotSetGameParametersException
      */
     private function getNextTask(): string {
         $submits = count($this->team->getNonRevokedSubmits());

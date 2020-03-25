@@ -5,7 +5,6 @@ namespace EventModule;
 use Events\Machine\Machine;
 use FKSDB\Components\Events\ExpressionPrinter;
 use FKSDB\Components\Events\GraphComponent;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 
 /**

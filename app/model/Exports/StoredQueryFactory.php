@@ -7,7 +7,7 @@ use DOMDocument;
 use DOMNode;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
-use ISeriesPresenter;
+use FKSDB\CoreModule\ISeriesPresenter;
 use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
 use Nette\InvalidArgumentException;

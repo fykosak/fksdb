@@ -30,7 +30,6 @@ class TaskPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function authorizedList() {
@@ -38,7 +37,6 @@ class TaskPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function authorizedImport() {

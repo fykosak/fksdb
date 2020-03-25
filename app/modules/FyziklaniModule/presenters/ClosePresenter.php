@@ -52,7 +52,6 @@ class ClosePresenter extends BasePresenter {
     /* ******* authorized methods ***********/
     /**
      * @throws BadRequestException
-     * @throws AbortException
      */
     public function authorizedTeam() {
         $this->setAuthorized($this->isAllowedForEventOrg($this->getModelResource(), 'team'));
@@ -60,14 +59,12 @@ class ClosePresenter extends BasePresenter {
 
     /**
      * @throws BadRequestException
-     * @throws AbortException
      */
     public function authorizedList() {
         $this->setAuthorized($this->isAllowedForEventOrg($this->getModelResource(), 'team'));
     }
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function authorizeHard() {
@@ -152,7 +149,6 @@ class ClosePresenter extends BasePresenter {
      * @param $resource
      * @param string $privilege
      * @return bool
-     * @throws AbortException
      * @throws BadRequestException
      */
     protected function isAllowed($resource, string $privilege): bool {

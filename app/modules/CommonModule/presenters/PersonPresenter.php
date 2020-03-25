@@ -125,16 +125,14 @@ class PersonPresenter extends BasePresenter {
 
     /* *********** TITLE ***************/
     public function titleSearch() {
-        $this->setTitle(_('Search person'));
-        $this->setIcon('fa fa-search');
+        $this->setTitle(_('Search person'),'fa fa-search');
     }
 
     /**
      * @throws BadRequestException
      */
     public function titleDetail() {
-        $this->setTitle(sprintf(_('Detail of person %s'), $this->getPerson()->getFullName()));
-        $this->setIcon('fa fa-eye');
+        $this->setTitle(sprintf(_('Detail of person %s'), $this->getPerson()->getFullName()),'fa fa-eye');
     }
 
     public function titleMerge() {

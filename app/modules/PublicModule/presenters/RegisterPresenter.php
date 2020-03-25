@@ -2,7 +2,7 @@
 
 namespace PublicModule;
 
-use BasePresenter as CoreBasePresenter;
+use BasePresenter;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Controls\CaptchaBox;
@@ -15,7 +15,7 @@ use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceContestant;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\SeriesCalculator;
-use IContestPresenter;
+use FKSDB\CoreModule\IContestPresenter;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
@@ -52,7 +52,7 @@ use Persons\SelfResolver;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, IExtendedPersonPresenter {
+class RegisterPresenter extends BasePresenter implements IContestPresenter, IExtendedPersonPresenter {
     /**
      * @var integer
      * @persistent
@@ -156,14 +156,14 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     /**
      * @return int
      */
-    public function getSelectedYear() {
+    public function getSelectedYear(): int {
         return $this->year;
     }
 
     /**
      * @return int|mixed
      */
-    public function getSelectedAcademicYear() {
+    public function getSelectedAcademicYear(): int {
         if (!$this->getSelectedContest()) {
             throw new InvalidStateException("Cannot get acadamic year without selected contest.");
         }

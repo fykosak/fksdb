@@ -2,7 +2,6 @@
 
 namespace EventModule;
 
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use function sprintf;
 
@@ -14,16 +13,13 @@ class DashboardPresenter extends BasePresenter {
 
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function titleDefault() {
-        $this->setTitle(sprintf(_('Event %s'), $this->getEvent()->name));
-        $this->setIcon('fa fa-dashboard');
+        $this->setTitle(sprintf(_('Event %s'), $this->getEvent()->name),'fa fa-dashboard');
     }
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function authorizedDefault() {
@@ -31,7 +27,6 @@ class DashboardPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function renderDefault() {
@@ -42,7 +37,6 @@ class DashboardPresenter extends BasePresenter {
 
     /**
      * @return string
-     * @throws AbortException
      * @throws BadRequestException
      */
     private function getWebUrl() {

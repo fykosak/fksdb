@@ -51,9 +51,10 @@ class Handler {
     /**
      * @param ArrayHash $data
      * @param ModelPerson $person
-     * @param $eventId
+     * @param int $eventId
      * @throws ExistingPaymentException
      * @throws FullCapacityException
+     * @throws \FKSDB\NotImplementedException
      */
     public function prepareAndUpdate(ArrayHash $data, ModelPerson $person, int $eventId) {
         foreach ($this->prepareData($data) as $type => $newScheduleData) {
@@ -68,6 +69,7 @@ class Handler {
      * @param int $eventId
      * @throws ExistingPaymentException
      * @throws FullCapacityException
+     * @throws \FKSDB\NotImplementedException
      */
     private function updateDataType(array $newScheduleData, string $type, ModelPerson $person, int $eventId) {
         $oldRows = $this->servicePersonSchedule->getTable()

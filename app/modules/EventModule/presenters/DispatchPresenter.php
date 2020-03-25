@@ -3,10 +3,8 @@
 namespace EventModule;
 
 use AuthenticatedPresenter;
-use FKSDB\Components\Controls\Helpers\Badges\ContestBadge;
 use FKSDB\Components\Grids\Events\DispatchGrid;
 use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\ORM\Services\ServiceEvent;
 
 /**
  * Class DispatchPresenter
@@ -14,44 +12,18 @@ use FKSDB\ORM\Services\ServiceEvent;
  */
 class DispatchPresenter extends AuthenticatedPresenter {
 
-    /**
-     * @var ServiceEvent
-     */
-    protected $serviceEvent;
-
-    /**
-     * @param ServiceEvent $serviceEvent
-     */
-    public function injectServiceEvent(ServiceEvent $serviceEvent) {
-        $this->serviceEvent = $serviceEvent;
-    }
-
-    /**
-     * @return ContestBadge
-     */
-    public function createComponentContestBadge(): ContestBadge {
-        return new ContestBadge();
-    }
-
-    /**
-     * @return DispatchGrid
-     */
+    /** @return DispatchGrid */
     public function createComponentDispatchGrid(): DispatchGrid {
-        /**
-         * @var ModelPerson $person
-         */
-        $person = $this->user->getIdentity()->getPerson();
+        /** @var ModelPerson $person */
+        $person = $this->getUser()->getIdentity()->getPerson();
         return new DispatchGrid($person, $this->getContext());
     }
 
     public function titleDefault() {
-        $this->setTitle(_('List of events'));
-        $this->setIcon('fa fa-calendar');
+        $this->setTitle(_('List of events'), 'fa fa-calendar');
     }
 
-    /**
-     * @return array
-     */
+    /** @return array */
     public function getNavBarVariant(): array {
         return ['event', 'bg-dark navbar-dark'];
     }

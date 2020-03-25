@@ -5,6 +5,7 @@ $container = require '../../bootstrap.php';
 use Exports\ExportFormatFactory;
 use Exports\Formats\AESOPFormat;
 use Exports\StoredQueryPostProcessing;
+use FKSDB\CoreModule\ISeriesPresenter;
 use Nette\DI\Container;
 use Tester\Assert;
 
@@ -37,8 +38,8 @@ class AESOPFormatTest extends DatabaseTestCase {
         );
         $storedQuery = $queryFactory->createQueryFromSQL('SELECT 1, \'ahoj\' FROM dual', $parameters, array('php_post_proc' => 'MockProcessing'));
 
-	// AESOP format requires QID
-	$storedQuery->getQueryPattern()->qid = 'aesop.ct';
+        // AESOP format requires QID
+        $storedQuery->getQueryPattern()->qid = 'aesop.ct';
 
         $this->fixture = $exportFactory->createFormat(ExportFormatFactory::AESOP, $storedQuery);
     }
@@ -57,22 +58,22 @@ class AESOPFormatTest extends DatabaseTestCase {
 
 class MockSeriesPresenter implements ISeriesPresenter {
 
-    public function getSelectedAcademicYear() {
+    public function getSelectedAcademicYear(): int {
         return 2000;
     }
 
     public function getSelectedContest() {
-        return (object) array(
-                    'contest_id' => 1,
-                    'name' => 'FYKOS',
+        return (object)array(
+            'contest_id' => 1,
+            'name' => 'FYKOS',
         );
     }
 
-    public function getSelectedSeries() {
+    public function getSelectedSeries(): int {
         return 1;
     }
 
-    public function getSelectedYear() {
+    public function getSelectedYear(): int {
         return 1;
     }
 
@@ -103,7 +104,7 @@ class MockProcessing extends StoredQueryPostProcessing {
     }
 
     public function getDescription() {
-        
+
     }
 
     public function processData($data) {

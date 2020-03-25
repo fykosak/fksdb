@@ -2,7 +2,6 @@
 
 namespace FyziklaniModule;
 
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 
 /**
@@ -19,8 +18,8 @@ class DashboardPresenter extends BasePresenter {
     }
 
     /**
+     * @return void
      * @throws BadRequestException
-     * @throws AbortException
      */
     public function authorizedDefault() {
         return $this->setAuthorized($this->isAllowedForEventOrg('fyziklani.dashboard', 'default'));

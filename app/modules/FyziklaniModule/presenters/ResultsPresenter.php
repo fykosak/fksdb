@@ -3,7 +3,6 @@
 namespace FyziklaniModule;
 
 use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\ResultsAndStatistics;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 
 /**
@@ -73,7 +72,6 @@ class ResultsPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function authorizedCorrelationStatistics() {
@@ -81,7 +79,6 @@ class ResultsPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function authorizedPresentation() {
@@ -90,7 +87,6 @@ class ResultsPresenter extends BasePresenter {
 
     /**
      * @return ResultsAndStatistics
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function createComponentTable(): ResultsAndStatistics {
@@ -99,7 +95,6 @@ class ResultsPresenter extends BasePresenter {
 
     /**
      * @return ResultsAndStatistics
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function createComponentPresentation(): ResultsAndStatistics {
@@ -108,7 +103,6 @@ class ResultsPresenter extends BasePresenter {
 
     /**
      * @return ResultsAndStatistics
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function createComponentTeamStatistics(): ResultsAndStatistics {
@@ -117,7 +111,6 @@ class ResultsPresenter extends BasePresenter {
 
     /**
      * @return ResultsAndStatistics
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function createComponentTaskStatistics(): ResultsAndStatistics {
@@ -126,7 +119,6 @@ class ResultsPresenter extends BasePresenter {
 
     /**
      * @return ResultsAndStatistics
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function createComponentCorrelationStatistics(): ResultsAndStatistics {

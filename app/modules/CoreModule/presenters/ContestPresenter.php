@@ -1,6 +1,7 @@
 <?php
 
 use FKSDB\Components\Controls\ContestChooser;
+use FKSDB\CoreModule\IContestPresenter;
 use FKSDB\ORM\Models\ModelContest;
 use Nette\Application\BadRequestException;
 
@@ -59,7 +60,7 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
      * @return int
      * @throws BadRequestException
      */
-    public function getSelectedYear() {
+    public function getSelectedYear(): int {
         /**
          * @var ContestChooser $contestChooser
          */
@@ -74,7 +75,7 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
      * @return int
      * @throws BadRequestException
      */
-    public function getSelectedAcademicYear() {
+    public function getSelectedAcademicYear(): int {
         return $this->yearCalculator->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
     }
 

@@ -14,15 +14,16 @@ abstract class Webloader extends Control {
     const FILENAME = 'file';
     const ATTRIBUTES = 'attr';
     const UNTAGGED = '__untagged';
-
+    /** @var string[] */
     private $files = [];
+    /** @var string[] */
     private $inlines = [];
 
     /**
      * @param $file
      * @param array $attributes
      */
-    public function addFile($file, $attributes = []) {
+    public function addFile(string $file, array $attributes = []) {
         $hash = $file . implode(':', $attributes);
         $this->files[$hash] = array(
             self::FILENAME => $file,
@@ -35,7 +36,7 @@ abstract class Webloader extends Control {
      * @param $file
      * @param array $attributes
      */
-    public function removeFile($file, $attributes = []) {
+    public function removeFile(string $file, array $attributes = []) {
         $hash = $file . implode(':', $attributes);
         unset($this->files[$hash]);
         $this->invalidateControl();
@@ -45,7 +46,7 @@ abstract class Webloader extends Control {
      * @param $inline
      * @param string $tag
      */
-    public function addInline($inline, $tag = self::UNTAGGED) {
+    public function addInline(string $inline, string $tag = self::UNTAGGED) {
         $this->inlines[$tag] = $inline;
         $this->invalidateControl();
     }
@@ -53,7 +54,7 @@ abstract class Webloader extends Control {
     /**
      * @param $tag
      */
-    public function removeInline($tag) {
+    public function removeInline(string $tag) {
         if ($tag != self::UNTAGGED) {
             unset($this->inlines[$tag]);
         }
@@ -94,29 +95,29 @@ abstract class Webloader extends Control {
     }
 
     /**
-     * @param $file
+     * @param string $file
      * @return bool
      */
-    public static function isRelative($file) {
+    public static function isRelative(string $file): bool {
         return !preg_match('@https?://|/@Ai', $file);
     }
 
     /**
      * @return mixed
      */
-    abstract protected function getTemplateFilePrefix();
+    abstract protected function getTemplateFilePrefix(): string;
 
     /**
      * @return array
      */
-    protected function getFiles() {
+    protected function getFiles(): array {
         return $this->files;
     }
 
     /**
      * @return array
      */
-    protected function getInlines() {
+    protected function getInlines(): array {
         return $this->inlines;
     }
 

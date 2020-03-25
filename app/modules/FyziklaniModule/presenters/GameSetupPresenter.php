@@ -3,7 +3,6 @@
 namespace FyziklaniModule;
 
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 
 /**
@@ -25,7 +24,6 @@ class GameSetupPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function renderDefault() {
@@ -34,7 +32,6 @@ class GameSetupPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function authorizedDefault() {
@@ -44,7 +41,7 @@ class GameSetupPresenter extends BasePresenter {
     /**
      * @return ModelFyziklaniGameSetup
      * @throws BadRequestException
-     * @throws AbortException
+     * @throws \FKSDB\model\Fyziklani\NotSetGameParametersException
      */
     protected function getGameSetup(): ModelFyziklaniGameSetup {
         if (!$this->gameSetup) {

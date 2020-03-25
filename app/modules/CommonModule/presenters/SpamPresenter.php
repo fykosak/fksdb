@@ -33,13 +33,11 @@ class SpamPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function titleDetail(int $id) {
-        $this->setTitle(sprintf(_('Detail of email #%s'), $this->loadEntity($id)->getPrimary()));
-        $this->setIcon('fa fa-envelope');
+        $this->setTitle(sprintf(_('Detail of email #%s'), $this->loadEntity($id)->getPrimary()),'fa fa-envelope');
     }
 
     public function titleList() {
-        $this->setTitle(_('List of emails'));
-        $this->setIcon('fa fa-envelope');
+        $this->setTitle(_('List of emails'),'fa fa-envelope');
     }
 
     /**

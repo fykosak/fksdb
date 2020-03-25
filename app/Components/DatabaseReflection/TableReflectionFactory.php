@@ -4,7 +4,6 @@ namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\DatabaseReflection\Links\AbstractLink;
-use FKSDB\Components\DatabaseReflection\RowFactoryComponent;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\Localization\ITranslator;

@@ -15,6 +15,7 @@ interface ILogger {
     const WARNING = 'warning';
     const SUCCESS = 'success';
     const INFO = 'info';
+    const PRIMARY = 'primary';
     const DEBUG = 40;
 
     /**

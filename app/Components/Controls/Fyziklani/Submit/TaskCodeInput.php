@@ -65,6 +65,7 @@ class TaskCodeInput extends FyziklaniReactControl {
     /**
      * @return string
      * @throws JsonException
+     * @throws \FKSDB\model\Fyziklani\NotSetGameParametersException
      */
     public function getData(): string {
         return Json::encode([

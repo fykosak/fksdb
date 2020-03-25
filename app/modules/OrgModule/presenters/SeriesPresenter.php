@@ -4,7 +4,7 @@ namespace OrgModule;
 
 use FKSDB\Components\Controls\SeriesChooser;
 use FKSDB\SeriesCalculator;
-use ISeriesPresenter;
+use FKSDB\CoreModule\ISeriesPresenter;
 use Nette\Application\BadRequestException;
 
 /**
@@ -41,7 +41,7 @@ abstract class SeriesPresenter extends BasePresenter implements ISeriesPresenter
     /**
      * @return int
      */
-    public function getSelectedSeries() {
+    public function getSelectedSeries(): int {
         return $this->getComponent('seriesChooser')->getSeries();
     }
 

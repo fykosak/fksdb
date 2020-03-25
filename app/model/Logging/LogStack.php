@@ -30,7 +30,7 @@ abstract class StackedLogger implements ILogger {
 
     /**
      * @param $message
-     * @param int $level
+     * @param string $level
      */
     public final function log($message, $level = self::INFO) {
         $this->doLog($message, $level);

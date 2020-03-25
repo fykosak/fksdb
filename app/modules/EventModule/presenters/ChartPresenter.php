@@ -6,7 +6,6 @@ use FKSDB\ChartPresenterTrait;
 use FKSDB\Components\Controls\Chart\Event\ParticipantAcquaintanceChartControl;
 use FKSDB\Components\React\ReactComponent\Events\SingleApplicationsTimeProgress;
 use FKSDB\Components\React\ReactComponent\Events\TeamApplicationsTimeProgress;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 
 /**
@@ -17,7 +16,6 @@ class ChartPresenter extends BasePresenter {
     use ChartPresenterTrait;
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function authorizedList() {
@@ -25,7 +23,6 @@ class ChartPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function authorizedChart() {
@@ -33,8 +30,7 @@ class ChartPresenter extends BasePresenter {
     }
 
     public function titleList() {
-        $this->setTitle(_('Charts'));
-        $this->setIcon('fa fa fa-pie-chart');
+        $this->setTitle(_('Charts'),'fa fa fa-pie-chart');
     }
 
     public function startup() {
@@ -48,7 +44,6 @@ class ChartPresenter extends BasePresenter {
 
     /**
      * @return array
-     * @throws AbortException
      * @throws BadRequestException
      */
     protected function registerCharts(): array {

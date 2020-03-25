@@ -2,7 +2,6 @@
 
 namespace EventModule;
 
-use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
 use FKSDB\Components\Factories\PaymentFactory as PaymentComponentFactory;
 use FKSDB\Components\Forms\Controls\Payment\SelectForm;
@@ -20,8 +19,6 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
-use Nette\Application\UI\Form;
-use function count;
 use function sprintf;
 
 /**
@@ -63,8 +60,7 @@ class PaymentPresenter extends BasePresenter {
 
     /* ********* titles *****************/
     public function titleCreate() {
-        $this->setTitle(_('New payment'));
-        $this->setIcon('fa fa-credit-card');
+        $this->setTitle(_('New payment'),'fa fa-credit-card');
     }
 
     /**
@@ -74,8 +70,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titleEdit(int $id) {
-        $this->setTitle(sprintf(_('Edit payment #%s'), $this->loadEntity($id)->getPaymentId()));
-        $this->setIcon('fa fa-credit-card');
+        $this->setTitle(sprintf(_('Edit payment #%s'), $this->loadEntity($id)->getPaymentId()),'fa fa-credit-card');
     }
 
     /**
@@ -85,13 +80,11 @@ class PaymentPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titleDetail(int $id) {
-        $this->setTitle(sprintf(_('Payment detail #%s'), $this->loadEntity($id)->getPaymentId()));
-        $this->setIcon('fa fa-credit-card');
+        $this->setTitle(sprintf(_('Payment detail #%s'), $this->loadEntity($id)->getPaymentId()),'fa fa-credit-card');
     }
 
     public function titleList() {
-        $this->setTitle(_('List of payments'));
-        $this->setIcon('fa fa-credit-card');
+        $this->setTitle(_('List of payments'),'fa fa-credit-card');
     }
 
     /**
@@ -123,7 +116,6 @@ class PaymentPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function authorizedCreate() {
@@ -131,7 +123,6 @@ class PaymentPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function authorizedList() {
@@ -157,7 +148,7 @@ class PaymentPresenter extends BasePresenter {
     public function actionEdit(int $id) {
         $this->loadEntity($id);
         if (!$this->canEdit()) {
-            $this->flashMessage(sprintf(_('Payment #%s can not be edited'), $this->getEntity()->getPaymentId()), \BasePresenter::FLASH_ERROR);
+            $this->flashMessage(\sprintf(_('Payment #%s can not be edited'), $this->getEntity()->getPaymentId()), \BasePresenter::FLASH_ERROR);
             $this->redirect(':MyPayments:');
         }
         /**
@@ -172,7 +163,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws AbortException
      */
     public function actionCreate() {
-        if ((count($this->getMachine()->getAvailableTransitions(null)) === 0)) {
+        if ((\count($this->getMachine()->getAvailableTransitions(null)) === 0)) {
             $this->flashMessage(_('Payment is not allowed in this time!'));
             if (!$this->isOrg()) {
                 $this->redirect('Dashboard:default');
@@ -232,7 +223,6 @@ class PaymentPresenter extends BasePresenter {
     /**
      * Is org or (is own payment and can edit)
      * @return bool
-     * @throws AbortException
      * @throws BadRequestException
      */
     private function canEdit(): bool {
@@ -243,7 +233,6 @@ class PaymentPresenter extends BasePresenter {
     /**
      * @return bool
      * @throws BadRequestException
-     * @throws AbortException
      */
     private function isOrg(): bool {
         return $this->isContestsOrgAllowed($this->getModelResource(), 'org');
@@ -298,34 +287,6 @@ class PaymentPresenter extends BasePresenter {
      * @inheritDoc
      */
     public function createComponentGrid(): BaseGrid {
-        throw new NotImplementedException();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getCreateForm(): FormControl {
-        throw new NotImplementedException();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getEditForm(): FormControl {
-        throw new NotImplementedException();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function handleCreateFormSuccess(Form $form) {
-        throw new NotImplementedException();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function handleEditFormSuccess(Form $form) {
         throw new NotImplementedException();
     }
 
