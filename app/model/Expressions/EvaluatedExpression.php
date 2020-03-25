@@ -2,6 +2,7 @@
 
 namespace FKSDB\Expressions;
 
+use Events\Model\ExpressionEvaluator;
 use Nette\SmartObject;
 
 /**
@@ -17,7 +18,7 @@ abstract class EvaluatedExpression {
      * @param $args
      * @return mixed
      */
-    protected final function evalArg($evaluated, ...$args) {
+    protected final function evaluateArgument($evaluated, ...$args) {
         if (is_callable($evaluated)) {
             return $evaluated(...$args);
         } else {

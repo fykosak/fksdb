@@ -13,15 +13,19 @@ abstract class VariadicExpression extends EvaluatedExpression {
      */
     protected $arguments;
 
-    public function __construct() {
-        $this->arguments = func_get_args();
+    /**
+     * VariadicExpression constructor.
+     * @param array ...$args
+     */
+    public function __construct(...$args) {
+        $this->arguments = $args;
     }
 
     /**
      * @param mixed ...$args
      * @return mixed
      */
-    public function __invoke(...$args): bool {
+    public final function __invoke(...$args): bool {
         return $this->evaluate(...$args);
     }
 

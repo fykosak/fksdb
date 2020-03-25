@@ -29,7 +29,7 @@ class Le extends EvaluatedExpression {
      * @return bool
      */
     public function __invoke(...$args): bool {
-        return $this->evalArg($this->a, ...$args) < $this->evalArg($this->b, ...$args);
+        return $this->evaluateArgument($this->a, ...$args) < $this->evaluateArgument($this->b, ...$args);
     }
 
     /**

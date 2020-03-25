@@ -27,7 +27,7 @@ class After extends EvaluatedExpression {
      * @return bool
      */
     public function __invoke(...$args): bool {
-        $datetime = $this->evalArg($this->datetime, ...$args);
+        $datetime = $this->evaluateArgument($this->datetime, ...$args);
         return $datetime->getTimestamp() <= time();
     }
 
