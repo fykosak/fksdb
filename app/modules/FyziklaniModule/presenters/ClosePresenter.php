@@ -14,7 +14,6 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
-use function sprintf;
 
 /**
  * Class ClosePresenter
@@ -29,8 +28,7 @@ class ClosePresenter extends BasePresenter {
 
     /* ******* TITLE ***********/
     public function titleList() {
-        $this->setTitle(_('Uzavírání bodování'));
-        $this->setIcon('fa fa-check');
+        $this->setTitle(_('Uzavírání bodování'), 'fa fa-check');
     }
 
     /**
@@ -40,38 +38,42 @@ class ClosePresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titleTeam(int $id) {
-        $this->setTitle(sprintf(_('Uzavírání bodování týmu "%s"'), $this->loadEntity($id)->name));
-        $this->setIcon('fa fa-check-square-o');
+        $this->setTitle(\sprintf(_('Uzavírání bodování týmu "%s"'), $this->loadEntity($id)->name), 'fa fa-check-square-o');
     }
 
-    public function titleHard() {
-        $this->setTitle(_('Hard close submitting'));
-        $this->setIcon('fa fa-check');
+    /**
+     * @param int $id
+     * @throws AbortException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     */
+    public function titleHard(int $id) {
+        $this->titleTeam($id);
     }
 
     /* ******* authorized methods ***********/
     /**
      * @throws BadRequestException
-     * @throws AbortException
      */
     public function authorizedTeam() {
-        $this->setAuthorized($this->isAllowedForEventOrg($this->getModelResource(), 'team'));
+        $this->setAuthorized($this->isEventOrContestOrgAuthorized($this->getModelResource(), 'team'));
     }
 
     /**
-     * @throws BadRequestException
-     * @throws AbortException
-     */
-    public function authorizedList() {
-        $this->setAuthorized($this->isAllowedForEventOrg($this->getModelResource(), 'team'));
-    }
-
-    /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function authorizeHard() {
-        $this->setAuthorized($this->isAllowedForEventOrg($this->getModelResource(), 'hard'));
+        $this->setAuthorized($this->isEventOrContestOrgAuthorized($this->getModelResource(), 'hard'));
+    }
+
+    /**
+     * @param $resource
+     * @param string $privilege
+     * @return bool
+     * @throws BadRequestException
+     */
+    protected function traitIsAuthorized($resource, string $privilege): bool {
+        return $this->isEventOrContestOrgAuthorized($resource, $privilege);
     }
     /* *********** ACTIONS **************** */
     /**
@@ -149,22 +151,12 @@ class ClosePresenter extends BasePresenter {
     }
 
     /**
-     * @param $resource
-     * @param string $privilege
-     * @return bool
-     * @throws AbortException
-     * @throws BadRequestException
-     */
-    protected function isAllowed($resource, string $privilege): bool {
-        return $this->isAllowedForEventOrg($resource, $privilege);
-    }
-
-    /**
      * @inheritDoc
      */
     public function createComponentGrid(): BaseGrid {
         throw new NotImplementedException();
     }
+
     /**
      * @inheritDoc
      */
@@ -178,4 +170,5 @@ class ClosePresenter extends BasePresenter {
     public function createComponentEditForm(): Control {
         throw new NotImplementedException();
     }
+
 }

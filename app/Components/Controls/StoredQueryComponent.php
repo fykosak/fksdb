@@ -63,6 +63,9 @@ class StoredQueryComponent extends Control {
      * @var bool
      */
     private $showParametrize = true;
+    /**
+     * @var Container
+     */
     private $container;
 
     /**
@@ -73,8 +76,7 @@ class StoredQueryComponent extends Control {
      * @param ExportFormatFactory $exportFormatFactory
      * @param Container $container
      */
-    function
-    __construct(StoredQuery $storedQuery, ContestAuthorizator $contestAuthorizator, StoredQueryFactory $storedQueryFormFactory, ExportFormatFactory $exportFormatFactory, Container $container) {
+    function __construct(StoredQuery $storedQuery, ContestAuthorizator $contestAuthorizator, StoredQueryFactory $storedQueryFormFactory, ExportFormatFactory $exportFormatFactory, Container $container) {
         parent::__construct();
         $this->storedQuery = $storedQuery;
         $this->contestAuthorizator = $contestAuthorizator;
@@ -122,11 +124,10 @@ class StoredQueryComponent extends Control {
     }
 
     /**
-     * @param $name
      * @return FormControl
      * @throws BadRequestException
      */
-    protected function createComponentParametrizeForm($name) {
+    protected function createComponentParametrizeForm() {
         $control = new FormControl();
         $form = $control->getForm();
 

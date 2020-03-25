@@ -59,7 +59,7 @@ navigation:
             - fyziklani.submit.entry
             - fyziklani.submit.list
             - fyziklani.close.list
-            - fyziklani.results.default
+            - fyziklani.results.list
             - fyziklani.diplomas.default
             - fyziklani.task.list
             - fyziklani.task.import

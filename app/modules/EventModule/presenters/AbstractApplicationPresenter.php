@@ -60,6 +60,16 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     }
 
     /**
+     * @param $resource
+     * @param string $privilege
+     * @return bool
+     * @throws BadRequestException
+     */
+    protected function traitIsAuthorized($resource, string $privilege): bool {
+        return $this->isContestsOrgAuthorized($resource, $privilege);
+    }
+
+    /**
      * @param int $id
      * @throws AbortException
      * @throws BadRequestException
