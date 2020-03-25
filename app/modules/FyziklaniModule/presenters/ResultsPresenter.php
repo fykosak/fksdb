@@ -10,6 +10,31 @@ use Nette\Application\BadRequestException;
  * @package FyziklaniModule
  */
 class ResultsPresenter extends BasePresenter {
+
+    public function titleCorrelationStatistics() {
+        $this->setTitle(_('Correlation statistics'), 'fa fa-pie-chart');
+    }
+
+    public function titleList() {
+        $this->setTitle(_('Results and statistics'), 'fa fa-trophy');
+    }
+
+    public function titleTable() {
+        $this->setTitle(_('Detailed results'), 'fa fa-trophy');
+    }
+
+    public function titlePresentation() {
+        $this->setTitle(_('Results presentation'), 'fa fa-table');
+    }
+
+    public function titleTeamStatistics() {
+        $this->setTitle(_('Teams statistics'), 'fa fa-line-chart');
+    }
+
+    public function titleTaskStatistics() {
+        $this->setTitle(_('Tasks statistics'), 'fa fa-pie-chart');
+    }
+
     /**
      * @return bool
      */
@@ -25,64 +50,46 @@ class ResultsPresenter extends BasePresenter {
         }
     }
 
-    public function titleCorrelationStatistics() {
-        $this->setTitle(_('Correlation statistics'));
-        $this->setIcon('fa fa-pie-chart');
+    /**
+     * @throws BadRequestException
+     */
+    public function authorizedList() {
+        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.results', 'list'));
     }
 
-    public function titleDefault() {
-        $this->setTitle(_('Results and statistics'));
-        $this->setIcon('fa fa-trophy');
-    }
-
-    public function titleTable() {
-        $this->setTitle(_('Detailed results'));
-        $this->setIcon('fa fa-trophy');
-    }
-
-    public function titlePresentation() {
-        $this->setIcon('fa fa-table');
-        return $this->setTitle(_('Results presentation'));
-    }
-
-    public function titleTeamStatistics() {
-        $this->setTitle(_('Teams statistics'));
-        $this->setIcon('fa fa-line-chart');
-    }
-
-    public function titleTaskStatistics() {
-        $this->setTitle(_('Tasks statistics'));
-        $this->setIcon('fa fa-pie-chart');
-    }
-
-    public function authorizedDefault() {
-        $this->setAuthorized(true);
-    }
-
+    /**
+     * @throws BadRequestException
+     */
     public function authorizedResultsTable() {
-        $this->authorizedDefault();
+        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.results', 'table'));
     }
 
+    /**
+     * @throws BadRequestException
+     */
     public function authorizedTaskStatistics() {
-        $this->authorizedDefault();
+        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.results', 'taskStatistics'));
     }
 
+    /**
+     * @throws BadRequestException
+     */
     public function authorizedTeamStatistics() {
-        $this->authorizedDefault();
+        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.results', 'teamStatistics'));
     }
 
     /**
      * @throws BadRequestException
      */
     public function authorizedCorrelationStatistics() {
-        $this->setAuthorized($this->isContestsOrgAllowed('fyziklani.results', 'correlation'));
+        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.results', 'correlation'));
     }
 
     /**
      * @throws BadRequestException
      */
     public function authorizedPresentation() {
-        $this->setAuthorized($this->isAllowedForEventOrg('fyziklani.results', 'presentation'));
+        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.results', 'presentation'));
     }
 
     /**

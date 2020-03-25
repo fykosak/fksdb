@@ -16,14 +16,14 @@ class DashboardPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function titleDefault() {
-        $this->setTitle(sprintf(_('Event %s'), $this->getEvent()->name),'fa fa-dashboard');
+        $this->setTitle(sprintf(_('Event %s'), $this->getEvent()->name), 'fa fa-dashboard');
     }
 
     /**
      * @throws BadRequestException
      */
     public function authorizedDefault() {
-        $this->setAuthorized($this->getEventAuthorizator()->isEventOrgAllowed('event.dashboard', 'default', $this->getEvent()));
+        $this->setAuthorized($this->isEventOrContestOrgAuthorized('event.dashboard', 'default'));
     }
 
     /**

@@ -19,18 +19,18 @@ class ChartPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function authorizedList() {
-        $this->setAuthorized($this->isAllowed($this->getModelResource(), 'list'));
+        $this->setAuthorized($this->isContestsOrgAuthorized($this->getModelResource(), 'list'));
     }
 
     /**
      * @throws BadRequestException
      */
     public function authorizedChart() {
-        $this->setAuthorized($this->isAllowed($this->getModelResource(), 'chart'));
+        $this->setAuthorized($this->isContestsOrgAuthorized($this->getModelResource(), 'chart'));
     }
 
     public function titleList() {
-        $this->setTitle(_('Charts'),'fa fa fa-pie-chart');
+        $this->setTitle(_('Charts'), 'fa fa fa-pie-chart');
     }
 
     public function startup() {

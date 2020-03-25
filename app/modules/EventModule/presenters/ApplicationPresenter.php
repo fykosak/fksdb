@@ -18,6 +18,14 @@ use Nette\Application\BadRequestException;
  */
 class ApplicationPresenter extends AbstractApplicationPresenter {
 
+    public function titleList() {
+        $this->setTitle(_('List of applications'), 'fa fa-users');
+    }
+
+    public function titleDetail() {
+        $this->setTitle(_('Application detail'), 'fa fa-user');
+    }
+
     public function titleImport() {
         $this->setTitle(_('Application import'), 'fa fa-upload');
     }
@@ -33,6 +41,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @return bool
      * @throws AbortException
      * @throws BadRequestException
+     * use same method of permissions as trait
      */
     protected function isEnabledForEvent(): bool {
         return !$this->isTeamEvent();

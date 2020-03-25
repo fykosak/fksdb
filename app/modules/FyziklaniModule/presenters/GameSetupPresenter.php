@@ -2,6 +2,7 @@
 
 namespace FyziklaniModule;
 
+use FKSDB\model\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
 use Nette\Application\BadRequestException;
 
@@ -19,12 +20,12 @@ class GameSetupPresenter extends BasePresenter {
      * @return void
      */
     public function titleDefault() {
-        $this->setTitle(_('Fyziklani game setup'));
-        $this->setIcon('fa fa-cogs');
+        $this->setTitle(_('Fyziklani game setup'),'fa fa-cogs');
     }
 
     /**
      * @throws BadRequestException
+     * @throws NotSetGameParametersException
      */
     public function renderDefault() {
         $this->template->gameSetup = $this->getGameSetup();
@@ -35,13 +36,12 @@ class GameSetupPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function authorizedDefault() {
-        return $this->setAuthorized($this->isAllowedForEventOrg('fyziklani.gameSetup', 'default'));
+        return $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.gameSetup', 'default'));
     }
 
     /**
      * @return ModelFyziklaniGameSetup
      * @throws BadRequestException
-     * @throws \FKSDB\model\Fyziklani\NotSetGameParametersException
      */
     protected function getGameSetup(): ModelFyziklaniGameSetup {
         if (!$this->gameSetup) {

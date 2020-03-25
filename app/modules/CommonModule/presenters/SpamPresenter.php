@@ -9,6 +9,7 @@ use FKSDB\ORM\Models\ModelEmailMessage;
 use FKSDB\ORM\Services\ServiceEmailMessage;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
+use Nette\Security\IResource;
 
 /**
  * Class MailSenderPresenter
@@ -33,11 +34,18 @@ class SpamPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function titleDetail(int $id) {
-        $this->setTitle(sprintf(_('Detail of email #%s'), $this->loadEntity($id)->getPrimary()),'fa fa-envelope');
+        $this->setTitle(sprintf(_('Detail of email #%s'), $this->loadEntity($id)->getPrimary()), 'fa fa-envelope');
     }
 
     public function titleList() {
-        $this->setTitle(_('List of emails'),'fa fa-envelope');
+        $this->setTitle(_('List of emails'), 'fa fa-envelope');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function traitIsAuthorized($resource, string $privilege): bool {
+        return $this->isAnyContestAllowed($resource, $privilege);
     }
 
     /**
@@ -53,13 +61,6 @@ class SpamPresenter extends BasePresenter {
      */
     protected function getORMService() {
         return $this->serviceEmailMessage;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getModelResource(): string {
-        return ModelEmailMessage::RESOURCE_ID;
     }
 
     /** @inheritDoc */
@@ -78,4 +79,5 @@ class SpamPresenter extends BasePresenter {
     protected function createComponentGrid(): EmailsGrid {
         return new EmailsGrid($this->getContext());
     }
+
 }

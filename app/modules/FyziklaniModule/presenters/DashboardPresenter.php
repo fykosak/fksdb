@@ -13,8 +13,7 @@ class DashboardPresenter extends BasePresenter {
      * @return void
      */
     public function titleDefault() {
-        $this->setTitle(_('Herní systém Fyziklání'));
-        $this->setIcon('fa fa-dashboard');
+        $this->setTitle(_('Fyziklani game app'), 'fa fa-dashboard');
     }
 
     /**
@@ -22,6 +21,6 @@ class DashboardPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function authorizedDefault() {
-        return $this->setAuthorized($this->isAllowedForEventOrg('fyziklani.dashboard', 'default'));
+        return $this->setAuthorized($this->isEventOrContestOrgAuthorized('fyziklani.dashboard', 'default'));
     }
 }

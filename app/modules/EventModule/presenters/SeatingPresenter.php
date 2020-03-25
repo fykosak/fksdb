@@ -73,22 +73,22 @@ class SeatingPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function authorizedPreview() {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('event.seating', 'preview', $this->getEvent()->getContest()));
+        $this->setAuthorized($this->isContestsOrgAuthorized('event.seating', 'preview'));
     }
 
     /**
      * @throws BadRequestException
      */
     public function authorizedList() {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('event.seating', 'list', $this->getEvent()->getContest()));
+        $this->setAuthorized($this->isContestsOrgAuthorized('event.seating', 'list'));
     }
 
     /**
      * @throws BadRequestException
      */
     public function authorizedDefault() {
-        $download = $this->getContestAuthorizator()->isAllowed('event.seating', 'download', $this->getEvent()->getContest());
-        $edit = $this->getContestAuthorizator()->isAllowed('event.seating', 'edit', $this->getEvent()->getContest());
+        $download = $this->isContestsOrgAuthorized('event.seating', 'download');
+        $edit = $this->isContestsOrgAuthorized('event.seating', 'edit');
         $this->setAuthorized($download || $edit);
     }
 

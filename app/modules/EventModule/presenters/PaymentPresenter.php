@@ -9,7 +9,6 @@ use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Payment\OrgPaymentGrid;
 use FKSDB\Config\Extensions\PaymentExtension;
 use FKSDB\NotImplementedException;
-use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServicePayment;
 use FKSDB\Payment\Transition\PaymentMachine;
@@ -19,6 +18,7 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
+use function count;
 use function sprintf;
 
 /**
@@ -60,7 +60,7 @@ class PaymentPresenter extends BasePresenter {
 
     /* ********* titles *****************/
     public function titleCreate() {
-        $this->setTitle(_('New payment'),'fa fa-credit-card');
+        $this->setTitle(_('New payment'), 'fa fa-credit-card');
     }
 
     /**
@@ -70,7 +70,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titleEdit(int $id) {
-        $this->setTitle(sprintf(_('Edit payment #%s'), $this->loadEntity($id)->getPaymentId()),'fa fa-credit-card');
+        $this->setTitle(sprintf(_('Edit payment #%s'), $this->loadEntity($id)->getPaymentId()), 'fa fa-credit-card');
     }
 
     /**
@@ -80,11 +80,11 @@ class PaymentPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titleDetail(int $id) {
-        $this->setTitle(sprintf(_('Payment detail #%s'), $this->loadEntity($id)->getPaymentId()),'fa fa-credit-card');
+        $this->setTitle(sprintf(_('Payment detail #%s'), $this->loadEntity($id)->getPaymentId()), 'fa fa-credit-card');
     }
 
     public function titleList() {
-        $this->setTitle(_('List of payments'),'fa fa-credit-card');
+        $this->setTitle(_('List of payments'), 'fa fa-credit-card');
     }
 
     /**
@@ -94,15 +94,6 @@ class PaymentPresenter extends BasePresenter {
         return $this->hasApi();
     }
     /* ********* Authorization *****************/
-    /**
-     * @param int $id
-     * @throws AbortException
-     * @throws BadRequestException
-     * @throws ForbiddenRequestException
-     */
-    public function authorizedDetail(int $id) {
-        $this->setAuthorized($this->isContestsOrgAllowed($this->loadEntity($id), 'detail'));
-    }
 
     /**
      * @param int $id
@@ -116,17 +107,13 @@ class PaymentPresenter extends BasePresenter {
     }
 
     /**
+     * @param $resource
+     * @param string $privilege
+     * @return bool
      * @throws BadRequestException
      */
-    public function authorizedCreate() {
-        $this->setAuthorized($this->isContestsOrgAllowed('event.payment', 'create'));
-    }
-
-    /**
-     * @throws BadRequestException
-     */
-    public function authorizedList() {
-        $this->setAuthorized($this->isContestsOrgAllowed('event.payment', 'list'));
+    protected function traitIsAuthorized($resource, string $privilege): bool {
+        return $this->isContestsOrgAuthorized($resource, $privilege);
     }
 
     /* ********* actions *****************/
@@ -226,7 +213,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     private function canEdit(): bool {
-        return ($this->getEntity()->canEdit() && $this->isContestsOrgAllowed($this->getEntity(), 'edit')) ||
+        return ($this->getEntity()->canEdit() && $this->isContestsOrgAuthorized($this->getEntity(), 'edit')) ||
             $this->isOrg();
     }
 
@@ -235,7 +222,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     private function isOrg(): bool {
-        return $this->isContestsOrgAllowed($this->getModelResource(), 'org');
+        return $this->isContestsOrgAuthorized($this->getModelResource(), 'org');
     }
 
     /**
@@ -270,17 +257,10 @@ class PaymentPresenter extends BasePresenter {
     }
 
     /**
-     * @return AbstractServiceSingle
+     * @return ServicePayment
      */
     function getORMService() {
         return $this->servicePayment;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getModelResource(): string {
-        return ModelPayment::RESOURCE_ID;
     }
 
     /**
