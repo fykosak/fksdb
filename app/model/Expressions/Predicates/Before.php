@@ -23,10 +23,11 @@ class Before extends EvaluatedExpression {
     }
 
     /**
+     * @param array $args
      * @return bool
      */
-    public function __invoke() {
-        $datetime = $this->evalArg($this->datetime, func_get_args());
+    public function __invoke(...$args): bool {
+        $datetime = $this->evalArg($this->datetime, ...$args);
         return $datetime->getTimestamp() >= time();
     }
 

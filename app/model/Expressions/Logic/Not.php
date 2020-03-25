@@ -22,11 +22,11 @@ class Not extends EvaluatedExpression {
     }
 
     /**
+     * @param array $args
      * @return bool
      */
-    public function __invoke() {
-        $args = func_get_args();
-        return !$this->evalArg($this->expression, $args);
+    public final function __invoke(...$args): bool {
+        return !$this->evalArg($this->expression, ...$args);
     }
 
     /**
