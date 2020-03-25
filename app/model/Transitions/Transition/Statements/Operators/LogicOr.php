@@ -2,7 +2,6 @@
 
 namespace FKSDB\Transitions\Statements\Operators;
 
-use FKSDB\Transitions\IStateModel;
 use FKSDB\Transitions\Statements\Statement;
 
 /**
@@ -24,13 +23,12 @@ class LogicOr extends Statement {
     }
 
     /**
-     * @param IStateModel|null $model
      * @param array $args
      * @return bool
      */
-    protected function evaluate(IStateModel $model = null, ...$args): bool {
+    protected function evaluate(...$args): bool {
         foreach ($this->args as $arg) {
-            if ($arg($model, ...$args)) {
+            if ($arg(...$args)) {
                 return true;
             }
         }

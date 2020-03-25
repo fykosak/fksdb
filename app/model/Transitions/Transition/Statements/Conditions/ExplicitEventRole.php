@@ -4,7 +4,6 @@ namespace FKSDB\Transitions\Statements\Conditions;
 
 use Authorization\EventAuthorizator;
 use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\Transitions\IStateModel;
 
 /**
  * Class ExplicitEventRole
@@ -34,11 +33,10 @@ class ExplicitEventRole extends EventRole {
     }
 
     /**
-     * @param IStateModel|null $model
      * @param array $args
      * @return bool
      */
-    protected function evaluate(IStateModel $model = null, ...$args): bool {
+    protected function evaluate(...$args): bool {
         return $this->eventAuthorizator->isContestOrgAllowed($this->resource, $this->privilege, $this->event);
     }
 }
