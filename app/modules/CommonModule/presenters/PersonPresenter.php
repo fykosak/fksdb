@@ -6,7 +6,7 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Stalking\StalkingComponent\StalkingComponent;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
-use FKSDB\Logging\FlashDumpFactory;
+use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
@@ -48,11 +48,6 @@ class PersonPresenter extends BasePresenter {
      * @var Merger
      */
     private $personMerger;
-
-    /**
-     * @var FlashDumpFactory
-     */
-    private $flashDumpFactory;
 
     /**
      * @var ModelPerson
@@ -105,13 +100,6 @@ class PersonPresenter extends BasePresenter {
      */
     public function injectPersonMerger(Merger $personMerger) {
         $this->personMerger = $personMerger;
-    }
-
-    /**
-     * @param FlashDumpFactory $flashDumpFactory
-     */
-    public function injectFlashDumpFactory(FlashDumpFactory $flashDumpFactory) {
-        $this->flashDumpFactory = $flashDumpFactory;
     }
 
     /**
@@ -455,8 +443,7 @@ class PersonPresenter extends BasePresenter {
         if ($merger->merge()) {
             $this->setMergeConflicts(null); // flush the session
             $this->flashMessage(_('Osoby úspešně sloučeny.'), self::FLASH_SUCCESS);
-            $flashDump = $this->flashDumpFactory->createPersonMerge();
-            $flashDump->dump($logger, $this);
+            FlashMessageDump::dump($logger, $this);
             $this->backLinkRedirect(true);
         } else {
             $this->setMergeConflicts($merger->getConflicts());

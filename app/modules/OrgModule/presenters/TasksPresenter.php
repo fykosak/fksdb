@@ -5,7 +5,7 @@ namespace OrgModule;
 use Astrid\Downloader;
 use Astrid\DownloadException;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Logging\FlashDumpFactory;
+use FKSDB\Logging\FlashMessageDump;
 use FKSDB\SeriesCalculator;
 use FKSDB\Submits\UploadException;
 use ModelException;
@@ -42,12 +42,6 @@ class TasksPresenter extends BasePresenter {
      * @var PipelineFactory
      */
     private $pipelineFactory;
-
-    /**
-     * @var FlashDumpFactory
-     */
-    private $flashDumpFactory;
-
     /**
      * @var Downloader
      */
@@ -65,13 +59,6 @@ class TasksPresenter extends BasePresenter {
      */
     public function injectPipelineFactory(PipelineFactory $pipelineFactory) {
         $this->pipelineFactory = $pipelineFactory;
-    }
-
-    /**
-     * @param FlashDumpFactory $flashDumpFactory
-     */
-    function injectFlashDumpFactory(FlashDumpFactory $flashDumpFactory) {
-        $this->flashDumpFactory = $flashDumpFactory;
     }
 
     /**
@@ -172,7 +159,6 @@ class TasksPresenter extends BasePresenter {
                 break;
         }
 
-        $dump = $this->flashDumpFactory->create('default');
         foreach ($files as $language => $file) {
             try {
                 $xml = simplexml_load_file($file);
@@ -182,8 +168,7 @@ class TasksPresenter extends BasePresenter {
                     $pipeline = $this->pipelineFactory->create($language);
                     $pipeline->setInput($data);
                     $pipeline->run();
-
-                    $dump->dump($pipeline->getLogger(), $this);
+                    FlashMessageDump::dump($pipeline->getLogger(), $this);
                     $this->flashMessage(sprintf(_('Úlohy pro jazyk %s úspěšně importovány.'), $language), self::FLASH_SUCCESS);
                 } else {
                     if ($language != self::LANG_ALL) {
@@ -194,8 +179,7 @@ class TasksPresenter extends BasePresenter {
                     $pipeline = $this->pipelineFactory->create2();
                     $pipeline->setInput($data);
                     $pipeline->run();
-
-                    $dump->dump($pipeline->getLogger(), $this);
+                    FlashMessageDump::dump($pipeline->getLogger(), $this);
                     $this->flashMessage(_('Úlohy pro úspěšně importovány.'), self::FLASH_SUCCESS);
                 }
             } catch (PipelineException $exception) {

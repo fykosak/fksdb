@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Control\AjaxUpload;
 
+use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Services\ServiceSubmit;
@@ -46,14 +47,14 @@ trait SubmitRevokeTrait {
          */
         $submit = $this->getServiceSubmit()->findByPrimary($submitId);
         if (!$submit) {
-            return [new Message(_('Neexistující submit.'), 'danger'), null];
+            return [new Message(_('Neexistující submit.'), ILogger::ERROR), null];
         }
         $contest = $submit->getContestant()->getContest();
         if (!$this->getPresenter()->getContestAuthorizator()->isAllowed($submit, 'revoke', $contest)) {
-            return [new Message(_('Nedostatečné oprávnění.'), 'danger'), null];
+            return [new Message(_('Nedostatečné oprávnění.'), ILogger::ERROR), null];
         }
         if (!$this->canRevoke($submit)) {
-            return [new Message(_('Nelze zrušit submit.'), 'danger'), null];
+            return [new Message(_('Nelze zrušit submit.'), ILogger::ERROR), null];
         }
         try {
             $this->getSubmitUploadedStorage()->deleteFile($submit);
@@ -64,10 +65,10 @@ trait SubmitRevokeTrait {
 
         } catch (StorageException $exception) {
             Debugger::log($exception);
-            return [new Message(_('Během mazání úlohy %s došlo k chybě.'), 'danger'), null];
+            return [new Message(_('Během mazání úlohy %s došlo k chybě.'), ILogger::ERROR), null];
         } catch (ModelException $exception) {
             Debugger::log($exception);
-            return [new Message(_('Během mazání úlohy %s došlo k chybě.'), 'danger'), null];
+            return [new Message(_('Během mazání úlohy %s došlo k chybě.'), ILogger::ERROR), null];
         }
     }
 

@@ -38,11 +38,6 @@ class ApplicationComponent extends Control {
     private $holder;
 
     /**
-     * @var FlashMessageDump
-     */
-    private $flashDump;
-
-    /**
      * @var callable ($primaryModelId, $eventId)
      */
     private $redirectCallback;
@@ -56,13 +51,12 @@ class ApplicationComponent extends Control {
      * ApplicationComponent constructor.
      * @param ApplicationHandler $handler
      * @param Holder $holder
-     * @param FlashMessageDump $flashDump
+     * @param $flashDump
      */
-    function __construct(ApplicationHandler $handler, Holder $holder, FlashMessageDump $flashDump) {
+    function __construct(ApplicationHandler $handler, Holder $holder, $flashDump = null) {
         parent::__construct();
         $this->handler = $handler;
         $this->holder = $holder;
-        $this->flashDump = $flashDump;
     }
 
     /**
@@ -264,11 +258,11 @@ class ApplicationComponent extends Control {
     private function execute(Form $form = null, $explicitTransitionName = null) {
         try {
             $this->handler->storeAndExecute($this->holder, $form, $explicitTransitionName);
-            $this->flashDump->dump($this->handler->getLogger(), $this->getPresenter());
+            FlashMessageDump::dump($this->handler->getLogger(), $this->getPresenter());
             $this->finalRedirect();
         } catch (ApplicationHandlerException $exception) {
             /* handled elsewhere, here it's to just prevent redirect */
-            $this->flashDump->dump($this->handler->getLogger(), $this->getPresenter());
+            FlashMessageDump::dump($this->handler->getLogger(), $this->getPresenter());
             if (!$form) { // w/out form we don't want to show anything with the same GET params
                 $this->finalRedirect();
             }
@@ -278,14 +272,14 @@ class ApplicationComponent extends Control {
     /**
      * @return Machine
      */
-    private function getMachine() {
+    private function getMachine(): Machine {
         return $this->handler->getMachine($this->holder);
     }
 
     /**
      * @return bool
      */
-    private function canEdit() {
+    private function canEdit(): bool {
         return $this->getMachine()->getPrimaryMachine()->getState() != BaseMachine::STATE_INIT && $this->holder->getPrimaryHolder()->isModifiable();
     }
 

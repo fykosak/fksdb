@@ -27,7 +27,6 @@ class ModelPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function authorizedDefault() {
@@ -42,7 +41,6 @@ class ModelPresenter extends BasePresenter {
 
     /**
      * @return GraphComponent
-     * @throws AbortException
      * @throws BadRequestException
      */
     protected function createComponentGraphComponent(): GraphComponent {

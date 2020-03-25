@@ -18,19 +18,15 @@ use Nette\Application\BadRequestException;
  */
 class ApplicationPresenter extends AbstractApplicationPresenter {
 
-    public function titleList() {
-        $this->setTitle(_('List of applications'));
-        $this->setIcon('fa fa-users');
-    }
-
-    public function titleDetail() {
-        $this->setTitle(_('Application detail'));
-        $this->setIcon('fa fa-user');
-    }
-
     public function titleImport() {
-        $this->setTitle(_('Application import'));
-        $this->setIcon('fa fa-upload');
+        $this->setTitle(_('Application import'), 'fa fa-upload');
+    }
+
+    /**
+     * @throws BadRequestException
+     */
+    public function authorizedImport() {
+        $this->setAuthorized($this->isAllowed($this->getModelResource(), 'import'));
     }
 
     /**
@@ -40,14 +36,6 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      */
     protected function isEnabledForEvent(): bool {
         return !$this->isTeamEvent();
-    }
-
-    /**
-     * @throws AbortException
-     * @throws BadRequestException
-     */
-    public function authorizedImport() {
-        $this->setAuthorized($this->isAllowed($this->getModelResource(), 'import'));
     }
 
     /**
@@ -69,19 +57,18 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
         $logger = new MemoryLogger();
         $machine = $this->container->createEventMachine($this->getEvent());
         $handler = $this->applicationHandlerFactory->create($this->getEvent(), $logger);
-
-        $flashDump = $this->dumpFactory->create('application');
-        return new ImportComponent($machine, $source, $handler, $flashDump, $this->container);
+        return new ImportComponent($machine, $source, $handler, $this->container);
     }
 
     /**
-     * @throws BadRequestException
+     * @param int $id
      * @throws AbortException
+     * @throws BadRequestException
      */
-    public function renderDetail() {
-        parent::renderDetail();
+    public function renderDetail(int $id) {
+        parent::renderDetail($id);
         $this->template->fields = $this->getEvent()->getHolder()->getPrimaryHolder()->getFields();
-        $this->template->model = $this->getEntity();
+
         $this->template->groups = [
             _('Health & food') => ['health_restrictions', 'diet', 'used_drugs', 'note', 'swimmer'],
             _('T-shirt') => ['tshirt_size', 'tshirt_color'],

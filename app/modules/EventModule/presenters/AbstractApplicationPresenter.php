@@ -5,17 +5,15 @@ namespace EventModule;
 use Events\Model\ApplicationHandlerFactory;
 use Events\Model\Grid\SingleEventSource;
 use FKSDB\Components\Events\ApplicationComponent;
+use FKSDB\Components\Events\MassTransitionsControl;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
 use FKSDB\Components\Grids\Schedule\PersonGrid;
-use FKSDB\Logging\FlashDumpFactory;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\NotImplementedException;
 use FKSDB\ORM\Services\ServiceEventParticipant;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
-use function in_array;
 
 /**
  * Class ApplicationPresenter
@@ -28,10 +26,6 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @var ApplicationHandlerFactory
      */
     protected $applicationHandlerFactory;
-    /**
-     * @var FlashDumpFactory
-     */
-    protected $dumpFactory;
 
     /**
      * @var ServiceEventParticipant
@@ -46,13 +40,6 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @param FlashDumpFactory $dumpFactory
-     */
-    public function injectFlashDumpFactory(FlashDumpFactory $dumpFactory) {
-        $this->dumpFactory = $dumpFactory;
-    }
-
-    /**
      * @param ServiceEventParticipant $serviceEventParticipant
      */
     public function injectServiceEventParticipant(ServiceEventParticipant $serviceEventParticipant) {
@@ -63,18 +50,10 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @param int $id
      * @throws AbortException
      * @throws BadRequestException
-     * @throws ForbiddenRequestException
      */
-    public function actionDetail(int $id) {
-        $this->loadEntity($id);
-    }
-
-    /**
-     * @throws AbortException
-     * @throws BadRequestException
-     */
-    protected function renderDetail() {
+    protected function renderDetail(int $id) {
         $this->template->event = $this->getEvent();
+        $this->template->model = $this->loadEntity($id);
         $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
     }
 
@@ -89,7 +68,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     /**
      * @return PersonGrid
      */
-    protected function createComponentPersonScheduleGrid(): PersonGrid {
+    protected final function createComponentPersonScheduleGrid(): PersonGrid {
         return new PersonGrid($this->getContext());
     }
 
@@ -98,17 +77,24 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws AbortException
      */
-    public function createComponentApplicationComponent(): ApplicationComponent {
-        $holders = [];
-        $handlers = [];
-        $flashDump = $this->dumpFactory->create('application');
-        $source = new SingleEventSource($this->getEvent(), $this->container);
+    public final function createComponentApplicationComponent(): ApplicationComponent {
+        $source = new SingleEventSource($this->getEvent(), $this->getContext());
         foreach ($source as $key => $holder) {
-            $holders[$key] = $holder;
-            $handlers[$key] = $this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger());
+            if ($key === $this->getEntity()->getPrimary()) {
+                $handler = $this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger());
+                return new ApplicationComponent($handler, $holder);
+            }
         }
+        throw new BadRequestException();
+    }
 
-        return new ApplicationComponent($handlers[$this->getEntity()->getPrimary()], $holders[$this->getEntity()->getPrimary()], $flashDump);
+    /**
+     * @return MassTransitionsControl
+     * @throws AbortException
+     * @throws BadRequestException
+     */
+    public final function createComponentMassTransition(): MassTransitionsControl {
+        return new MassTransitionsControl($this->getContext(), $this->getEvent());
     }
 
     /**
@@ -116,22 +102,24 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws AbortException
      */
-    protected function isTeamEvent(): bool {
-        if (in_array($this->getEvent()->event_type_id, self::TEAM_EVENTS)) {
+    protected final function isTeamEvent(): bool {
+        if (\in_array($this->getEvent()->event_type_id, self::TEAM_EVENTS)) {
             return true;
         }
         return false;
     }
 
-    /**
-     * @return void
-     */
-    abstract public function titleList();
+    public final function titleList() {
+        $this->setTitle(_('List of applications'), 'fa fa-users');
+    }
 
-    /**
-     * @return void
-     */
-    abstract public function titleDetail();
+    public final function titleDetail() {
+        $this->setTitle(_('Application detail'), 'fa fa-user');
+    }
+
+    public final function titleTransitions() {
+        $this->setTitle(_('Transitions'), 'fa fa-arrow-right');
+    }
 
     /**
      * @return AbstractApplicationGrid

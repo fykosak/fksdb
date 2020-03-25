@@ -25,7 +25,7 @@ class SingleEventSource implements IHolderSource {
     use SmartObject;
 
     /**
-     * @var \FKSDB\ORM\Models\ModelEvent
+     * @var ModelEvent
      */
     private $event;
 
@@ -77,7 +77,7 @@ class SingleEventSource implements IHolderSource {
     }
 
     /**
-     * @return \FKSDB\ORM\Models\ModelEvent
+     * @return ModelEvent
      */
     public function getEvent() {
         return $this->event;
@@ -107,6 +107,10 @@ class SingleEventSource implements IHolderSource {
 
         // load secondaries
         foreach ($this->dummyHolder->getGroupedSecondaryHolders() as $key => $group) {
+            /**
+             * @var Selection $secondarySelection
+             * @var ModelEvent $event
+             */
             $secondarySelection = $group['service']->getTable()->where($group['joinOn'], $joinValues);
             if ($joinToCheck) {
                 $event = reset($group['holders'])->getEvent();
@@ -139,6 +143,9 @@ class SingleEventSource implements IHolderSource {
             }
         }
         foreach ($this->primaryModels as $primaryPK => $primaryModel) {
+            /**
+             * @var Holder $holder
+             */
             $holder = $this->container->createEventHolder($this->event);
             $holder->setModel($primaryModel, isset($cache[$primaryPK]) ? $cache[$primaryPK] : []);
             $this->holders[$primaryPK] = $holder;

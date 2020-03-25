@@ -1,8 +1,8 @@
 {block content}
     <h2>{_'Base info'}</h2>
-    {control valuePrinter__referenced__person_link:row $model}
+    {control valuePrinter:row 'referenced.person_link', $model}
     {foreach ['event_participant_id', 'status', 'price', 'created'] as $field}
-        {control valuePrinter__event_participant__$field:row $model}
+        {control valuePrinter:row 'event_participant.'.$field, $model}
     {/foreach}
 
     <hr/>
@@ -10,8 +10,8 @@
     {foreach $groups as $groupName=>$fieldDef}
         <h2>{$groupName}</h2>
         {foreach $fieldDef as $field}
-            {if \array_key_exists($field,$fields)}
-                {control valuePrinter__event_participant__$field:row $model}
+            {if array_key_exists($field,$fields)}
+                {control valuePrinter:row 'event_participant.'.$field, $model}
             {/if}
         {/foreach}
         <hr/>

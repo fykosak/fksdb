@@ -32,33 +32,27 @@ class SeatingPresenter extends BasePresenter {
     }
 
     public function titleDefault() {
-        $this->setTitle(_('Rozdělení do místností'));
-        $this->setIcon('fa fa-arrows');
+        $this->setTitle(_('Rozdělení do místností'), 'fa fa-arrows');
     }
 
     public function titleEdit() {
-        $this->setTitle(_('Edit routing'));
-        $this->setIcon('fa fa-pencil');
+        $this->setTitle(_('Edit routing'), 'fa fa-pencil');
     }
 
     public function titleDownload() {
-        $this->setTitle(_('Download routing'));
-        $this->setIcon('fa fa-download');
+        $this->setTitle(_('Download routing'), 'fa fa-download');
     }
 
     public function titleList() {
-        $this->setTitle(_('List of all teams'));
-        $this->setIcon('fa fa-print');
+        $this->setTitle(_('List of all teams'), 'fa fa-print');
     }
 
     public function titlePreview() {
-        $this->setTitle(_('Preview'));
-        $this->setIcon('fa fa-search');
+        $this->setTitle(_('Preview'), 'fa fa-search');
     }
 
     /**
      * @return bool
-     * @throws AbortException
      * @throws BadRequestException
      */
     protected function isEnabledForEvent(): bool {
@@ -76,7 +70,6 @@ class SeatingPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function authorizedPreview() {
@@ -84,7 +77,6 @@ class SeatingPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function authorizedList() {
@@ -92,7 +84,6 @@ class SeatingPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function authorizedDefault() {
@@ -118,7 +109,6 @@ class SeatingPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function renderList() {
@@ -135,7 +125,6 @@ class SeatingPresenter extends BasePresenter {
 
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function renderPreview() {
@@ -160,6 +149,6 @@ class SeatingPresenter extends BasePresenter {
      * @return SeatingControl
      */
     public function createComponentSeating(): SeatingControl {
-        return new SeatingControl($this->serviceFyziklaniTeamPosition, $this->getTranslator());
+        return new SeatingControl($this->container);
     }
 }

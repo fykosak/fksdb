@@ -10,7 +10,6 @@ use FKSDB\model\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 
@@ -18,39 +17,19 @@ use Nette\Application\BadRequestException;
  * Class ApplicationPresenter
  * @package EventModule
  * @method ModelFyziklaniTeam getEntity()
+ * @method ModelFyziklaniTeam loadEntity(int $id)
  */
 class TeamApplicationPresenter extends AbstractApplicationPresenter {
     /**
      * @var ServiceFyziklaniTeam
      */
     private $serviceFyziklaniTeam;
-    /**
-     * @var ServiceFyziklaniTeamPosition
-     */
-    private $serviceFyziklaniTeamPosition;
 
     /**
      * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
      */
     public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam) {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
-    }
-
-    /**
-     * @param ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
-     */
-    public function injectServiceFyziklaniTeamPosition(ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition) {
-        $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
-    }
-
-    public function titleList() {
-        $this->setTitle(_('List of team applications'));
-        $this->setIcon('fa fa-users');
-    }
-
-    public function titleDetail() {
-        $this->setTitle(_('Team application detail'));
-        $this->setIcon('fa fa-user');
     }
 
     /**
@@ -72,11 +51,12 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @throws BadRequestException
+     * @param int $id
      * @throws AbortException
+     * @throws BadRequestException
      */
-    public function renderDetail() {
-        parent::renderDetail();
+    public function renderDetail(int $id) {
+        parent::renderDetail($id);
         $this->template->acYear = $this->getAcYear();
         try {
             $setup = $this->getEvent()->getFyziklaniGameSetup();
@@ -85,7 +65,6 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
             $rankVisible = false;
         }
         $this->template->rankVisible = $rankVisible;
-        $this->template->model = $this->getEntity();
         $this->template->toPay = $this->getEntity()->getScheduleRest();
     }
 
@@ -93,7 +72,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
      * @return SeatingControl
      */
     public function createComponentSeating(): SeatingControl {
-        return new SeatingControl($this->serviceFyziklaniTeamPosition, $this->getTranslator());
+        return new SeatingControl($this->container);
     }
 
     /**
