@@ -4,6 +4,8 @@ namespace CommonModule;
 
 use FKSDB\Components\Grids\Deduplicate\PersonsGrid;
 use FKSDB\ORM\Services\ServicePerson;
+use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Persons\Deduplication\DuplicateFinder;
 use Persons\Deduplication\Merger;
@@ -16,7 +18,7 @@ use Persons\Deduplication\Merger;
 class DeduplicatePresenter extends BasePresenter {
 
     /**
-     * @var \FKSDB\ORM\Services\ServicePerson
+     * @var ServicePerson
      */
     private $servicePerson;
 
@@ -46,13 +48,13 @@ class DeduplicatePresenter extends BasePresenter {
     }
 
     public function titlePerson() {
-        $this->setTitle(_('Duplicitní osoby'),'fa fa-exchange');
+        $this->setTitle(_('Duplicitní osoby'), 'fa fa-exchange');
     }
 
     /**
      * @throws ForbiddenRequestException
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function handleBatchMerge() {
         if (!$this->getContestAuthorizator()->isAllowedForAnyContest('person', 'merge')) { //TODO generic authorizator
@@ -83,24 +85,21 @@ class DeduplicatePresenter extends BasePresenter {
     }
 
     /**
-     * @param $name
      * @return PersonsGrid
      */
-    protected function createComponentPersonsGrid($name) {
+    protected function createComponentPersonsGrid(): PersonsGrid {
         $duplicateFinder = $this->createPersonDuplicateFinder();
         $pairs = $duplicateFinder->getPairs();
         $trunkPersons = $this->servicePerson->getTable()->where('person_id', array_keys($pairs));
 
-        $grid = new PersonsGrid($trunkPersons, $pairs, $this->getContext());
-
-        return $grid;
+        return new PersonsGrid($trunkPersons, $pairs, $this->getContext());
     }
 
 
     /**
      * @return DuplicateFinder
      */
-    protected function createPersonDuplicateFinder() {
+    protected function createPersonDuplicateFinder(): DuplicateFinder {
         return new DuplicateFinder($this->servicePerson, $this->globalParameters);
     }
 

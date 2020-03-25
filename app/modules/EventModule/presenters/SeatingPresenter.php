@@ -6,6 +6,7 @@ use FKSDB\Components\Controls\Fyziklani\RoutingDownload;
 use FKSDB\Components\Controls\Fyziklani\RoutingEdit;
 use FKSDB\Components\Controls\Fyziklani\SeatingControl;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use FKSDB\React\ReactResponse;
 use Nette\Application\AbortException;
@@ -133,22 +134,24 @@ class SeatingPresenter extends BasePresenter {
 
     /**
      * @return RoutingDownload
+     * @throws BadRequestException
      */
     public function createComponentDownload(): RoutingDownload {
-        throw new DeprecatedException();
+        return new RoutingDownload($this->getContext(), $this->getEvent());
     }
 
     /**
      * @return RoutingEdit
+     * @throws BadRequestException
      */
     public function createComponentRouting(): RoutingEdit {
-        throw new DeprecatedException();
+        return new RoutingEdit($this->getContext(), $this->getEvent());
     }
 
     /**
      * @return SeatingControl
      */
     public function createComponentSeating(): SeatingControl {
-        return new SeatingControl($this->container);
+        return new SeatingControl($this->getContext());
     }
 }

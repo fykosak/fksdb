@@ -4,6 +4,7 @@ namespace CommonModule;
 
 use FKSDB\ChartPresenterTrait;
 use FKSDB\Components\Controls\Chart\TotalPersonsChartControl;
+use Nette\Application\BadRequestException;
 
 /**
  * Class ChartPresenter
@@ -12,13 +13,17 @@ use FKSDB\Components\Controls\Chart\TotalPersonsChartControl;
 class ChartPresenter extends BasePresenter {
     use ChartPresenterTrait;
 
+    public function authorizedList() {
+        $this->setAuthorized($this->isAnyContestAuthorized($this->getModelResource(), 'list'));
+    }
+
+    public function authorizedChart() {
+        $this->setAuthorized($this->isAnyContestAuthorized($this->getModelResource(), 'chart'));
+    }
+
     public function startup() {
         parent::startup();
         $this->selectChart();
-    }
-
-    public function renderList() {
-        $this->template->charts = $this->getCharts();
     }
 
     /**
@@ -28,5 +33,12 @@ class ChartPresenter extends BasePresenter {
         return [
             new TotalPersonsChartControl($this->context),
         ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getModelResource(): string {
+        return 'chart';
     }
 }

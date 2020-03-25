@@ -29,17 +29,9 @@ class ChartPresenter extends BasePresenter {
         $this->setAuthorized($this->isContestsOrgAuthorized($this->getModelResource(), 'chart'));
     }
 
-    public function titleList() {
-        $this->setTitle(_('Charts'), 'fa fa fa-pie-chart');
-    }
-
     public function startup() {
         parent::startup();
         $this->selectChart();
-    }
-
-    public function renderList() {
-        $this->template->charts = $this->getCharts();
     }
 
     /**

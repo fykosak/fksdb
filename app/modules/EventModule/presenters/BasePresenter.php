@@ -3,7 +3,6 @@
 namespace EventModule;
 
 use AuthenticatedPresenter;
-use Authorization\ContestAuthorizator;
 use FKSDB\NotImplementedException;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;

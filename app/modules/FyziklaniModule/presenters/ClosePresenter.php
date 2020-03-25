@@ -67,12 +67,9 @@ class ClosePresenter extends BasePresenter {
     }
 
     /**
-<<<<<<< HEAD
-=======
      * @param $resource
      * @param string $privilege
      * @return bool
->>>>>>> origin/master
      * @throws BadRequestException
      */
     protected function traitIsAuthorized($resource, string $privilege): bool {
@@ -119,7 +116,7 @@ class ClosePresenter extends BasePresenter {
      * @throws AbortException
      */
     protected function createComponentCloseTeamControl(): CloseTeamControl {
-        return new CloseTeamControl($this->getEvent(), $this->getTranslator(), $this->getServiceFyziklaniTask());
+        return new CloseTeamControl($this->getContext(), $this->getEvent());
     }
 
     /**

@@ -115,7 +115,6 @@ class ApplicationHandler {
     /**
      * @param Holder $holder
      * @param $data
-     * @throws JsonException
      */
     public final function store(Holder $holder, $data) {
         $this->_storeAndExecute($holder, $data, null, self::STATE_OVERWRITE);
@@ -125,7 +124,6 @@ class ApplicationHandler {
      * @param Holder $holder
      * @param Form|ArrayHash|null $data
      * @param mixed $explicitTransitionName
-     * @throws JsonException
      */
     public function storeAndExecute(Holder $holder, $data = null, $explicitTransitionName = null) {
         $this->_storeAndExecute($holder, $data, $explicitTransitionName, self::STATE_TRANSITION);
@@ -136,7 +134,6 @@ class ApplicationHandler {
      * @param $data
      * @param $explicitTransitionName
      * @param $execute
-     * @throws JsonException
      */
     private function _storeAndExecute(Holder $holder, $data, $explicitTransitionName, $execute) {
         $this->initializeMachine($holder);
@@ -234,7 +231,6 @@ class ApplicationHandler {
      * @param $execute
      * @return mixed
      * @throws MachineExecutionException
-     * @throws JsonException
      */
     private function processData($data, $transitions, Holder $holder, $execute) {
         if ($data instanceof Form) {
@@ -244,7 +240,6 @@ class ApplicationHandler {
             $values = $data;
             $form = null;
         }
-        Debugger::log(Json::encode((array)$values), 'app-form');
         $primaryName = $holder->getPrimaryHolder()->getName();
         $newStates = [];
         if (isset($values[$primaryName][BaseHolder::STATE_COLUMN])) {

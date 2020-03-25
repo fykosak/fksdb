@@ -52,13 +52,13 @@
 
         <h3>{_'Parcipant'} {$counter}</h3>
 
-        {control valuePrinter:row 'referenced.'.person_link, $participant,true}
+        {control valuePrinter:row 'referenced.person_link', $participant,true}
 
-        {control valuePrinter:row 'event_participant.'.status, $participant,true}
+        {control valuePrinter:row 'event_participant.status', $participant,true}
 
-        {control valuePrinter:row 'person_history.'.study_year, $history,true}
+        {control valuePrinter:row 'person_history.study_year', $history,true}
 
-        {control valuePrinter:row 'person_history.'.school_id, $history,true}
+        {control valuePrinter:row 'person_history.school_id', $history,true}
         {if $hasSchedule}
             <h4>{_'Schedule'}</h4>
             {control personScheduleGrid $participant->getPerson(),$participant->getEvent()}

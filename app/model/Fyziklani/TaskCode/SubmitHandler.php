@@ -9,6 +9,7 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use Nette\DI\Container;
 use Nette\Security\User;
 use function sprintf;
 
@@ -37,15 +38,13 @@ class SubmitHandler {
 
     /**
      * TaskCodeHandler constructor.
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @param ServiceFyziklaniTask $serviceFyziklaniTask
-     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
+     * @param Container $container
      * @param ModelEvent $event
      */
-    public function __construct(ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceFyziklaniTask $serviceFyziklaniTask, ServiceFyziklaniSubmit $serviceFyziklaniSubmit, ModelEvent $event) {
-        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
-        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
-        $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
+    public function __construct(Container $container, ModelEvent $event) {
+        $this->serviceFyziklaniTeam = $container->getByType(ServiceFyziklaniTeam::class);
+        $this->serviceFyziklaniTask = $container->getByType(ServiceFyziklaniTask::class);
+        $this->serviceFyziklaniSubmit = $container->getByType(ServiceFyziklaniSubmit::class);
         $this->event = $event;
     }
 

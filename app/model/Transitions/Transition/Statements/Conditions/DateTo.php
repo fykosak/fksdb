@@ -27,9 +27,10 @@ class DateTo extends Statement {
 
     /**
      * @param IStateModel $model
+     * @param array $args
      * @return bool
      */
-    protected function evaluate(IStateModel $model = null): bool {
+    protected function evaluate(IStateModel $model = null, ...$args): bool {
         return (\time() <= $this->to->getTimestamp());
     }
 }

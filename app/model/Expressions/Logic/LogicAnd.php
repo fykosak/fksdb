@@ -9,15 +9,15 @@ use FKSDB\Expressions\VariadicExpression;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class And_ extends VariadicExpression {
+class LogicAnd extends VariadicExpression {
 
     /**
      * @param $args
      * @return bool|mixed
      */
-    protected function evaluate($args) {
-        for ($i = 0; $i < $this->getArity(); ++$i) {
-            if (!$this->evalArgAt($i, $args)) {
+    protected function evaluate(...$args): bool {
+        foreach ($this->arguments as $argument) {
+            if (!$this->evalArg($argument, ...$args)) {
                 return false;
             }
         }

@@ -3,6 +3,7 @@
 namespace FKSDB\ORM\Models\Fyziklani;
 
 use FKSDB\ORM\AbstractModelSingle;
+use Nette\Security\IResource;
 use Nette\Utils\DateTime;
 
 /**
@@ -18,7 +19,9 @@ use Nette\Utils\DateTime;
  * @property-read int tasks_on_board
  * @property-read string available_points
  */
-class ModelFyziklaniGameSetup extends AbstractModelSingle {
+class ModelFyziklaniGameSetup extends AbstractModelSingle implements IResource {
+    const RESOURCE_ID = 'fyziklani.gameSetup';
+
     /**
      * @return int[]
      */
@@ -39,5 +42,12 @@ class ModelFyziklaniGameSetup extends AbstractModelSingle {
         $before = (time() < strtotime($this->result_hide));
         $after = (time() > strtotime($this->result_display));
         return ($before && $after);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    function getResourceId() {
+        return self::RESOURCE_ID;
     }
 }

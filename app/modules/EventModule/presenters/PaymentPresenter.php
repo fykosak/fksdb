@@ -3,7 +3,6 @@
 namespace EventModule;
 
 use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
-use FKSDB\Components\Factories\PaymentFactory as PaymentComponentFactory;
 use FKSDB\Components\Forms\Controls\Payment\SelectForm;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Payment\OrgPaymentGrid;
@@ -18,8 +17,6 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
-use function count;
-use function sprintf;
 
 /**
  * Class PaymentPresenter
@@ -29,33 +26,15 @@ use function sprintf;
  */
 class PaymentPresenter extends BasePresenter {
     use EventEntityTrait;
-    /**
-     * @var Machine
-     */
+    /** @var Machine */
     private $machine;
 
-    /**
-     * @var ServicePayment
-     */
+    /** @var ServicePayment */
     private $servicePayment;
 
-    /**
-     * @var PaymentComponentFactory
-     */
-    private $paymentComponentFactory;
-
-    /**
-     * @param ServicePayment $servicePayment
-     */
+    /** @param ServicePayment $servicePayment */
     public function injectServicePayment(ServicePayment $servicePayment) {
         $this->servicePayment = $servicePayment;
-    }
-
-    /**
-     * @param PaymentComponentFactory $paymentComponentFactory
-     */
-    public function injectPaymentComponentFactory(PaymentComponentFactory $paymentComponentFactory) {
-        $this->paymentComponentFactory = $paymentComponentFactory;
     }
 
     /* ********* titles *****************/
@@ -70,7 +49,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titleEdit(int $id) {
-        $this->setTitle(sprintf(_('Edit payment #%s'), $this->loadEntity($id)->getPaymentId()), 'fa fa-credit-card');
+        $this->setTitle(\sprintf(_('Edit payment #%s'), $this->loadEntity($id)->getPaymentId()), 'fa fa-credit-card');
     }
 
     /**
@@ -80,7 +59,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titleDetail(int $id) {
-        $this->setTitle(sprintf(_('Payment detail #%s'), $this->loadEntity($id)->getPaymentId()), 'fa fa-credit-card');
+        $this->setTitle(\sprintf(_('Payment detail #%s'), $this->loadEntity($id)->getPaymentId()), 'fa fa-credit-card');
     }
 
     public function titleList() {
@@ -187,7 +166,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     protected function createComponentOrgGrid(): OrgPaymentGrid {
-        return $this->paymentComponentFactory->createOrgGrid($this->getEvent());
+        return new OrgPaymentGrid($this->getEvent(), $this->getContext());
     }
 
     /**
@@ -196,7 +175,13 @@ class PaymentPresenter extends BasePresenter {
      * @throws AbortException
      */
     protected function createComponentForm(): SelectForm {
-        return $this->paymentComponentFactory->creteForm($this->getEvent(), $this->isOrg(), $this->getMachine());
+        return new SelectForm(
+            $this->container,
+            $this->getEvent(),
+            $this->isOrg(),
+            ['accommodation'],
+            $this->getMachine()
+        );
     }
 
     /**

@@ -25,16 +25,15 @@ class LogicAnd extends Statement {
 
     /**
      * @param IStateModel|null $model
+     * @param array $args
      * @return bool
      */
-    protected function evaluate(IStateModel $model = null): bool {
-        $res = false;
+    protected function evaluate(IStateModel $model = null, ...$args): bool {
         foreach ($this->args as $arg) {
-            $res = $arg($model) && $res;
-            if (!$res) {
+            if (!$arg($model, ...$args)) {
                 return false;
             }
         }
-        return $res;
+        return true;
     }
 }

@@ -76,16 +76,9 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @return AbstractServiceSingle
+     * @return AbstractServiceSingle|ServiceFyziklaniTeam
      */
-    function getORMService() {
+    function getORMService(): ServiceFyziklaniTeam {
         return $this->serviceFyziklaniTeam;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getModelResource(): string {
-        return ModelFyziklaniTeam::RESOURCE_ID;
     }
 }

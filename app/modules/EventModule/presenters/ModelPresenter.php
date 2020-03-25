@@ -34,8 +34,7 @@ class ModelPresenter extends BasePresenter {
     }
 
     public function titleDefault() {
-        $this->setTitle(_('Model akce'));
-        $this->setIcon('fa fa-cubes');
+        $this->setTitle(_('Model akce'), 'fa fa-cubes');
     }
 
     /**

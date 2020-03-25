@@ -3,6 +3,8 @@
 namespace Events\Semantics;
 
 use Events\Model\Holder\BaseHolder;
+use FKSDB\Expressions\EvaluatedExpression;
+use Nette\Application\BadRequestException;
 use Nette\SmartObject;
 
 /**
@@ -10,7 +12,7 @@ use Nette\SmartObject;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class Count {
+class Count extends EvaluatedExpression {
     use SmartObject;
     use WithEventTrait;
 
@@ -25,13 +27,14 @@ class Count {
     }
 
     /**
-     * @param $obj
-     * @return int
+     * @param array $args
+     * @return bool
+     * @throws BadRequestException
      */
-    public function __invoke($obj) {
-        $baseHolder = $this->getHolder($obj)->getPrimaryHolder();
+    public function __invoke(...$args): bool {
+        $baseHolder = $this->getHolder($args[0])->getPrimaryHolder();
         $table = $baseHolder->getService()->getTable();
-        $table->where($baseHolder->getEventId(), $this->getEvent($obj)->getPrimary());
+        $table->where($baseHolder->getEventId(), $this->getEvent($args[0])->getPrimary());
         $table->where(BaseHolder::STATE_COLUMN, $this->state);
         return $table->count('1');
     }

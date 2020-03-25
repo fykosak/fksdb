@@ -9,6 +9,7 @@ use FKSDB\Components\Grids\Fyziklani\AllSubmitsGrid;
 use FKSDB\Components\Grids\Fyziklani\SubmitsGrid;
 use FKSDB\model\Fyziklani\ClosedSubmittingException;
 use FKSDB\model\Fyziklani\PointsMismatchException;
+use FKSDB\model\Fyziklani\SubmitHandler;
 use FKSDB\NotImplementedException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use Nette\Application\AbortException;
@@ -85,7 +86,8 @@ class SubmitPresenter extends BasePresenter {
      * @throws AbortException
      */
     public function createComponentEntryControl(): TaskCodeInput {
-        return $this->fyziklaniComponentsFactory->createTaskCodeInput($this->getEvent());
+        $handler = new SubmitHandler($this->context, $this->getEvent());
+        return new TaskCodeInput($this->context, $handler, $this->getEvent());
     }
 
     /**
@@ -121,16 +123,6 @@ class SubmitPresenter extends BasePresenter {
      */
     protected function getModelResource(): string {
         return ModelFyziklaniSubmit::RESOURCE_ID;
-    }
-
-    /**
-     * @param $resource
-     * @param string $privilege
-     * @return bool
-     * @throws BadRequestException
-     */
-    protected function isAllowed($resource, string $privilege): bool {
-        return $this->isAllowedForEventOrg($resource, $privilege);
     }
 
     /**

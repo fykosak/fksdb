@@ -11,15 +11,17 @@ use FKSDB\Transitions\IStateModel;
 abstract class Statement {
     /**
      * @param IStateModel? $model
+     * @param array $args
      * @return bool
      */
-    abstract protected function evaluate(IStateModel $model = null): bool;
+    abstract protected function evaluate(IStateModel $model = null, ...$args): bool;
 
     /**
      * @param IStateModel? $model
+     * @param array $args
      * @return bool
      */
-    public final function __invoke(IStateModel $model = null): bool {
-        return $this->evaluate($model);
+    public final function __invoke(IStateModel $model = null, ...$args): bool {
+        return $this->evaluate($model, ...$args);
     }
 }

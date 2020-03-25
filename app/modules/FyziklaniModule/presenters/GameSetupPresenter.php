@@ -20,12 +20,11 @@ class GameSetupPresenter extends BasePresenter {
      * @return void
      */
     public function titleDefault() {
-        $this->setTitle(_('Fyziklani game setup'),'fa fa-cogs');
+        $this->setTitle(_('Fyziklani game setup'), 'fa fa-cogs');
     }
 
     /**
      * @throws BadRequestException
-     * @throws NotSetGameParametersException
      */
     public function renderDefault() {
         $this->template->gameSetup = $this->getGameSetup();
@@ -36,7 +35,7 @@ class GameSetupPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function authorizedDefault() {
-        return $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.gameSetup', 'default'));
+        return $this->setAuthorized($this->isContestsOrgAuthorized(ModelFyziklaniGameSetup::RESOURCE_ID, 'default'));
     }
 
     /**
@@ -45,11 +44,11 @@ class GameSetupPresenter extends BasePresenter {
      */
     protected function getGameSetup(): ModelFyziklaniGameSetup {
         if (!$this->gameSetup) {
-            $gameSetup = $this->getEvent()->getFyziklaniGameSetup();
-            if (!$gameSetup) {
+            try {
+                $this->gameSetup = $this->getEvent()->getFyziklaniGameSetup();
+            } catch (NotSetGameParametersException $exception) {
                 throw new BadRequestException(_('Game is not set up!'), 404);
             }
-            $this->gameSetup = $gameSetup;
         }
         return $this->gameSetup;
     }

@@ -24,26 +24,9 @@ abstract class BasePresenter extends EventBasePresenter {
     private $serviceFyziklaniTeam;
 
     /**
-     * @var ServiceFyziklaniTask
-     */
-    private $serviceFyziklaniTask;
-
-    /**
      * @var ServiceFyziklaniSubmit
      */
     private $serviceFyziklaniSubmit;
-
-    /**
-     * @var FyziklaniFactory
-     */
-    protected $fyziklaniComponentsFactory;
-
-    /**
-     * @param FyziklaniFactory $fyziklaniComponentsFactory
-     */
-    public function injectFyziklaniComponentsFactory(FyziklaniFactory $fyziklaniComponentsFactory) {
-        $this->fyziklaniComponentsFactory = $fyziklaniComponentsFactory;
-    }
 
     /**
      * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
@@ -74,27 +57,6 @@ abstract class BasePresenter extends EventBasePresenter {
     }
 
     /**
-     * @param ServiceFyziklaniTask $serviceFyziklaniTask
-     */
-    public function injectServiceFyziklaniTask(ServiceFyziklaniTask $serviceFyziklaniTask) {
-        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
-    }
-
-    /**
-     * @return ServiceFyziklaniTask
-     */
-    protected function getServiceFyziklaniTask(): ServiceFyziklaniTask {
-        return $this->serviceFyziklaniTask;
-    }
-
-    /**
-     * @return FyziklaniChooser
-     */
-    protected function createComponentFyziklaniChooser(): FyziklaniChooser {
-        return new FyziklaniChooser($this->serviceEvent);
-    }
-
-    /**
      * @return bool
      * @throws BadRequestException
      */
@@ -113,6 +75,13 @@ abstract class BasePresenter extends EventBasePresenter {
          */
         $fyziklaniChooser = $this->getComponent('fyziklaniChooser');
         $fyziklaniChooser->setEvent($this->getEvent());
+    }
+
+    /**
+     * @return FyziklaniChooser
+     */
+    protected function createComponentFyziklaniChooser(): FyziklaniChooser {
+        return new FyziklaniChooser($this->serviceEvent);
     }
 
     /**

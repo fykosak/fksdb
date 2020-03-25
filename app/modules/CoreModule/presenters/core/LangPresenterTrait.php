@@ -6,7 +6,7 @@ use FKSDB\Components\Controls\Choosers\LanguageChooser;
 use FKSDB\Localization\GettextTranslator;
 use FKSDB\ORM\Models\ModelLogin;
 use Nette\Http\Request;
-use Nette\Security\IUserStorage;
+use Nette\Security\User;
 
 /**
  * Class LangPresenter
@@ -99,12 +99,12 @@ trait LangPresenterTrait {
     }
 
     /**
-     * @return IUserStorage
+     * @return User
      */
-    abstract function getUser(): IUserStorage;
+    abstract function getUser();
 
     /**
      * @return Request
      */
-    abstract function getHttpRequest(): Request;
+    abstract function getHttpRequest();
 }

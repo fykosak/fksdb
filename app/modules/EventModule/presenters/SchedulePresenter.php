@@ -15,7 +15,6 @@ use FKSDB\ORM\Services\Schedule\ServiceScheduleGroup;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleItem;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use function sprintf;
 
 /**
  * Class SchedulePresenter
@@ -70,15 +69,15 @@ class SchedulePresenter extends BasePresenter {
     }
 
     public function titleGroups() {
-        $this->setTitle(sprintf(_('Schedule groups')),'fa fa-calendar-check-o');
+        $this->setTitle(\sprintf(_('Schedule groups')),'fa fa-calendar-check-o');
     }
 
     public function titleItem() {
-        $this->setTitle(sprintf(_('Schedule item #%d'), $this->item->schedule_item_id),'fa fa-calendar-check-o');
+        $this->setTitle(\sprintf(_('Schedule item #%d'), $this->item->schedule_item_id),'fa fa-calendar-check-o');
     }
 
     public function titleGroup() {
-        $this->setTitle(sprintf(_('Schedule group #%d'), $this->group->schedule_group_id),'fa fa-calendar-check-o');
+        $this->setTitle(\sprintf(_('Schedule group #%d'), $this->group->schedule_group_id),'fa fa-calendar-check-o');
     }
 
     /**

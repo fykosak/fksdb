@@ -8,6 +8,7 @@ use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Components\Controls\Fyziklani\FyziklaniReactControl;
 use FKSDB\Messages\Message;
 use FKSDB\model\Fyziklani\ClosedSubmittingException;
+use FKSDB\model\Fyziklani\NotSetGameParametersException;
 use FKSDB\model\Fyziklani\SubmitHandler;
 use FKSDB\model\Fyziklani\TaskCodeException;
 use FKSDB\ORM\Models\ModelEvent;
@@ -45,19 +46,15 @@ class TaskCodeInput extends FyziklaniReactControl {
      * @param SubmitHandler $handler
      * @param Container $container
      * @param ModelEvent $event
-     * @param ServiceFyziklaniTask $serviceFyziklaniTask
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
      */
     public function __construct(
-        SubmitHandler $handler,
         Container $container,
-        ModelEvent $event,
-        ServiceFyziklaniTask $serviceFyziklaniTask,
-        ServiceFyziklaniTeam $serviceFyziklaniTeam
+        SubmitHandler $handler,
+        ModelEvent $event
     ) {
         $this->handler = $handler;
-        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
-        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+        $this->serviceFyziklaniTask = $container->getByType(ServiceFyziklaniTask::class);
+        $this->serviceFyziklaniTeam = $container->getByType(ServiceFyziklaniTeam::class);
         parent::__construct($container, $event);
         $this->monitor(IJavaScriptCollector::class);
     }
@@ -65,7 +62,7 @@ class TaskCodeInput extends FyziklaniReactControl {
     /**
      * @return string
      * @throws JsonException
-     * @throws \FKSDB\model\Fyziklani\NotSetGameParametersException
+     * @throws NotSetGameParametersException
      */
     public function getData(): string {
         return Json::encode([

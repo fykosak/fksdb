@@ -15,10 +15,21 @@ trait ChartPresenterTrait {
      */
     protected $selectedChart;
 
-    /**
-     * @return IChart[]
-     */
-    abstract protected function registerCharts(): array;
+    public function titleChart() {
+        $this->setTitle($this->selectedChart->getTitle(), 'fa fa-pie-chart');
+    }
+
+    public function titleList() {
+        $this->setTitle(_('Charts'), 'fa fa fa-pie-chart');
+    }
+
+    public function renderChart() {
+        $this->template->chart = $this->selectedChart;
+    }
+
+    public function renderList() {
+        $this->template->charts = $this->getCharts();
+    }
 
     /**
      * @return IChart[]
@@ -47,15 +58,6 @@ trait ChartPresenterTrait {
         return $this->selectedChart->getControl();
     }
 
-    public function titleChart() {
-        $this->setTitle($this->selectedChart->getTitle());
-        $this->setIcon('fa fa-pie-chart');
-    }
-
-    public function renderChart() {
-        $this->template->chart = $this->selectedChart;
-    }
-
     /**
      * @param bool $fullyQualified
      * @return string
@@ -67,4 +69,9 @@ trait ChartPresenterTrait {
      * @return mixed
      */
     abstract function setView($id);
+
+    /**
+     * @return IChart[]
+     */
+    abstract protected function registerCharts(): array;
 }

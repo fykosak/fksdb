@@ -11,7 +11,6 @@ use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServicePersonInfo;
-use FKSDB\ValidationTest\ValidationFactory;
 use FormUtils;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -72,14 +71,6 @@ class PersonPresenter extends BasePresenter {
      * @var string
      */
     private $mode;
-    /**
-     * @var ValidationFactory
-     */
-    private $validationFactory;
-    /**
-     * @var Stalking\StalkingService
-     */
-    private $stalkingService;
 
     /**
      * @param ServicePerson $servicePerson
@@ -109,30 +100,16 @@ class PersonPresenter extends BasePresenter {
         $this->referencedPersonFactory = $referencedPersonFactory;
     }
 
-    /**
-     * @param ValidationFactory $validationFactory
-     */
-    public function injectValidationFactory(ValidationFactory $validationFactory) {
-        $this->validationFactory = $validationFactory;
-    }
-
-    /**
-     * @param Stalking\StalkingService $stalkingService
-     */
-    public function injectStalkingService(Stalking\StalkingService $stalkingService) {
-        $this->stalkingService = $stalkingService;
-    }
-
     /* *********** TITLE ***************/
     public function titleSearch() {
-        $this->setTitle(_('Search person'),'fa fa-search');
+        $this->setTitle(_('Search person'), 'fa fa-search');
     }
 
     /**
      * @throws BadRequestException
      */
     public function titleDetail() {
-        $this->setTitle(sprintf(_('Detail of person %s'), $this->getPerson()->getFullName()),'fa fa-eye');
+        $this->setTitle(sprintf(_('Detail of person %s'), $this->getPerson()->getFullName()), 'fa fa-eye');
     }
 
     public function titleMerge() {
@@ -141,7 +118,7 @@ class PersonPresenter extends BasePresenter {
 
     /* *********** AUTH ***************/
     public function authorizedSearch() {
-        $this->setAuthorized($this->isAllowed('person', 'stalk.search'));
+        $this->setAuthorized($this->isAnyContestAuthorized('person', 'stalk.search'));
     }
 
     /**
@@ -150,11 +127,11 @@ class PersonPresenter extends BasePresenter {
     public function authorizedDetail() {
         $person = $this->getPerson();
 
-        $full = $this->isAllowed($person, 'stalk.full');
+        $full = $this->isAnyContestAuthorized($person, 'stalk.full');
 
-        $restrict = $this->isAllowed($person, 'stalk.restrict');
+        $restrict = $this->isAnyContestAuthorized($person, 'stalk.restrict');
 
-        $basic = $this->isAllowed($person, 'stalk.basic');
+        $basic = $this->isAnyContestAuthorized($person, 'stalk.basic');
 
         $this->setAuthorized($full || $restrict || $basic);
     }
@@ -164,14 +141,14 @@ class PersonPresenter extends BasePresenter {
      * @param $mergedId
      * @throws BadRequestException
      */
-    public function authorizedMerge($trunkId, $mergedId) {
+    public function authorizedMerge(int $trunkId, int $mergedId) {
         $this->trunkPerson = $this->servicePerson->findByPrimary($trunkId);
         $this->mergedPerson = $this->servicePerson->findByPrimary($mergedId);
         if (!$this->trunkPerson || !$this->mergedPerson) {
             throw new BadRequestException('Neexistující osoba.', 404);
         }
-        $authorized = $this->getContestAuthorizator()->isAllowedForAnyContest($this->trunkPerson, 'merge') &&
-            $this->getContestAuthorizator()->isAllowedForAnyContest($this->mergedPerson, 'merge');
+        $authorized = $this->isAnyContestAuthorized($this->trunkPerson, 'merge') &&
+            $this->isAnyContestAuthorized($this->mergedPerson, 'merge');
         $this->setAuthorized($authorized);
     }
 
@@ -180,7 +157,7 @@ class PersonPresenter extends BasePresenter {
      * @param $mergedId
      * @throws BadRequestException
      */
-    public function authorizedDontMerge($trunkId, $mergedId) {
+    public function authorizedDontMerge(int $trunkId, int $mergedId) {
         $this->authorizedMerge($trunkId, $mergedId);
     }
 
@@ -189,7 +166,7 @@ class PersonPresenter extends BasePresenter {
      * @param $trunkId
      * @param $mergedId
      */
-    public function actionMerge($trunkId, $mergedId) {
+    public function actionMerge(int $trunkId, int $mergedId) {
         $this->personMerger->setMergedPair($this->trunkPerson, $this->mergedPerson);
         $this->updateMergeForm($this->getComponent('mergeForm')->getForm());
     }
@@ -199,6 +176,7 @@ class PersonPresenter extends BasePresenter {
      * @param $mergedId
      * @throws AbortException
      * @throws ReflectionException
+     * @throws \Exception
      */
     public function actionDontMerge($trunkId, $mergedId) {
         $mergedPI = $this->servicePersonInfo->findByPrimary($mergedId);
@@ -220,7 +198,7 @@ class PersonPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentStalkingComponent(): StalkingComponent {
-        return new StalkingComponent($this->stalkingService, $this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
+        return new StalkingComponent($this->getContext(), $this->getPerson(), $this->getMode());
     }
 
     /**
@@ -228,7 +206,7 @@ class PersonPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentAddress(): Stalking\Address {
-        return new Stalking\Address($this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
+        return new Stalking\Address($this->getContext(), $this->getPerson(), $this->getMode());
     }
 
     /**
@@ -236,7 +214,7 @@ class PersonPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentRole(): Stalking\Role {
-        return new Stalking\Role($this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
+        return new Stalking\Role($this->getContext(), $this->getPerson(), $this->getMode());
     }
 
     /**
@@ -244,7 +222,7 @@ class PersonPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentFlag(): Stalking\Flag {
-        return new Stalking\Flag($this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
+        return new Stalking\Flag($this->getContext(), $this->getPerson(), $this->getMode());
     }
 
     /**
@@ -252,7 +230,7 @@ class PersonPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentSchedule(): Stalking\Schedule {
-        return new Stalking\Schedule($this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
+        return new Stalking\Schedule($this->getContext(), $this->getPerson(), $this->getMode());
     }
 
     /**
@@ -260,7 +238,7 @@ class PersonPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentValidation(): Stalking\Validation {
-        return new Stalking\Validation($this->validationFactory, $this->getTableReflectionFactory(), $this->getPerson(), $this->getTranslator(), $this->getMode());
+        return new Stalking\Validation($this->getContext(), $this->getPerson(), $this->getMode());
     }
 
 
@@ -304,13 +282,13 @@ class PersonPresenter extends BasePresenter {
      */
     private function getMode() {
         if (!$this->mode) {
-            if ($this->isAllowed($this->getPerson(), 'stalk.basic')) {
+            if ($this->isAnyContestAuthorized($this->getPerson(), 'stalk.basic')) {
                 $this->mode = Stalking\AbstractStalkingComponent::PERMISSION_BASIC;
             }
-            if ($this->isAllowed($this->getPerson(), 'stalk.restrict')) {
+            if ($this->isAnyContestAuthorized($this->getPerson(), 'stalk.restrict')) {
                 $this->mode = Stalking\AbstractStalkingComponent::PERMISSION_RESTRICT;
             }
-            if ($this->isAllowed($this->getPerson(), 'stalk.full')) {
+            if ($this->isAnyContestAuthorized($this->getPerson(), 'stalk.full')) {
                 $this->mode = Stalking\AbstractStalkingComponent::PERMISSION_FULL;
             }
         }
@@ -336,11 +314,10 @@ class PersonPresenter extends BasePresenter {
 
 
     /**
-     * @param $name
      * @return FormControl
      * @throws BadRequestException
      */
-    protected function createComponentMergeForm($name) {
+    protected function createComponentMergeForm() {
         $control = new FormControl();
         $form = $control->getForm();
 
@@ -348,7 +325,9 @@ class PersonPresenter extends BasePresenter {
 
         $form->addSubmit('cancel', _('Storno'))
             ->getControlPrototype()->addAttributes(['class' => 'btn-lg']);
-        $form->onSuccess[] = array($this, 'handleMergeFormSuccess');
+        $form->onSuccess[] = function (Form $form) {
+            $this->handleMergeFormSuccess($form);
+        };
         return $control;
     }
 
@@ -425,7 +404,7 @@ class PersonPresenter extends BasePresenter {
      * @throws AbortException
      * @throws ReflectionException
      */
-    public function handleMergeFormSuccess(Form $form) {
+    private function handleMergeFormSuccess(Form $form) {
         if ($form['cancel']->isSubmittedBy()) {
             $this->setMergeConflicts(null); // flush the session
             $this->backLinkRedirect(true);

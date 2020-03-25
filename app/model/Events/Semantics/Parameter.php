@@ -2,6 +2,8 @@
 
 namespace Events\Semantics;
 
+use FKSDB\Expressions\EvaluatedExpression;
+use Nette\Application\BadRequestException;
 use Nette\SmartObject;
 
 /**
@@ -9,7 +11,7 @@ use Nette\SmartObject;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class Parameter {
+class Parameter extends EvaluatedExpression {
     use SmartObject;
     use WithEventTrait;
 
@@ -24,12 +26,12 @@ class Parameter {
     }
 
     /**
-     * @param $obj
+     * @param array $args
      * @return mixed
+     * @throws BadRequestException
      */
-    public function __invoke($obj) {
-        $holder = $this->getHolder($obj);
-        return $holder->getParameter($this->parameter);
+    public function __invoke(...$args): bool {
+        return $this->getHolder($args[0])->getParameter($this->parameter);
     }
 
     /**

@@ -46,6 +46,14 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
         $this->serviceEventParticipant = $serviceEventParticipant;
     }
 
+    public function titleList() {
+        $this->setTitle(_('List of applications'), 'fa fa-users');
+    }
+
+    public function titleDetail() {
+        $this->setTitle(_('Application detail'), 'fa fa-user');
+    }
+
     /**
      * @param $resource
      * @param string $privilege
@@ -117,18 +125,6 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
             return true;
         }
         return false;
-    }
-
-    public final function titleList() {
-        $this->setTitle(_('List of applications'), 'fa fa-users');
-    }
-
-    public final function titleDetail() {
-        $this->setTitle(_('Application detail'), 'fa fa-user');
-    }
-
-    public final function titleTransitions() {
-        $this->setTitle(_('Transitions'), 'fa fa-arrow-right');
     }
 
     /**

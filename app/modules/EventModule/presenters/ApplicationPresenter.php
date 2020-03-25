@@ -8,7 +8,7 @@ use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
 use FKSDB\Components\Grids\Events\Application\ApplicationGrid;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\AbstractServiceSingle;
-use FKSDB\ORM\Models\ModelEventParticipant;
+use FKSDB\ORM\Services\ServiceEventParticipant;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 
@@ -18,23 +18,16 @@ use Nette\Application\BadRequestException;
  */
 class ApplicationPresenter extends AbstractApplicationPresenter {
 
-    public function titleList() {
-        $this->setTitle(_('List of applications'), 'fa fa-users');
-    }
-
-    public function titleDetail() {
-        $this->setTitle(_('Application detail'), 'fa fa-user');
-    }
-
     public function titleImport() {
         $this->setTitle(_('Application import'), 'fa fa-upload');
     }
 
     /**
      * @throws BadRequestException
+     * Same as
      */
     public function authorizedImport() {
-        $this->setAuthorized($this->isAllowed($this->getModelResource(), 'import'));
+        $this->setAuthorized($this->traitIsAuthorized($this->getModelResource(), 'import'));
     }
 
     /**
@@ -87,16 +80,9 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @return AbstractServiceSingle
+     * @return AbstractServiceSingle|ServiceEventParticipant
      */
-    function getORMService() {
+    function getORMService(): ServiceEventParticipant {
         return $this->serviceEventParticipant;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getModelResource(): string {
-        return ModelEventParticipant::RESOURCE_ID;
     }
 }
