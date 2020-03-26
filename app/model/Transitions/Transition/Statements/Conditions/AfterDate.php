@@ -9,7 +9,7 @@ use FKSDB\Transitions\Statements\Statement;
  * Class DateFrom
  * @package FKSDB\Transitions\Statements\Conditions
  */
-class DateFrom extends Statement {
+class AfterDate extends Statement {
     /**
      * @var DateTime
      */

@@ -14,14 +14,14 @@ use Nette\SmartObject;
 class State extends EvaluatedExpression {
     use SmartObject;
     use WithEventTrait;
-
+    /** @var string */
     private $state;
 
     /**
      * State constructor.
-     * @param $state
+     * @param string $state
      */
-    function __construct($state) {
+    function __construct(string $state) {
         $this->state = $state;
     }
 
@@ -31,8 +31,7 @@ class State extends EvaluatedExpression {
      * @throws BadRequestException
      */
     public function __invoke(...$args): bool {
-        $holder = $this->getHolder($args[0]);
-        return $holder->getMachine()->getPrimaryMachine()->getState() == $this->state;
+        return $this->getHolder($args[0])->getMachine()->getPrimaryMachine()->getState() == $this->state;
     }
 
     /**

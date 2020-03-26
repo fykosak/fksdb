@@ -5,7 +5,6 @@ namespace FKSDB\Transitions\Statements\Conditions;
 use DateTime;
 use Exception;
 use FKSDB\Transitions\Statements\Statement;
-use function time;
 
 /**
  * Class DateBetween
@@ -37,7 +36,7 @@ class DateBetween extends Statement {
      * @return bool
      */
     protected function evaluate(...$args): bool {
-        return (time() <= $this->to->getTimestamp()) && (time() >= $this->from->getTimestamp());
+        return (\time() <= $this->to->getTimestamp()) && (\time() >= $this->from->getTimestamp());
     }
 
 }

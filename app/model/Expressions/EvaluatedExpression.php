@@ -2,7 +2,6 @@
 
 namespace FKSDB\Expressions;
 
-use Events\Model\ExpressionEvaluator;
 use Nette\SmartObject;
 
 /**

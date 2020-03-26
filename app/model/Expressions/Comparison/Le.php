@@ -16,8 +16,8 @@ class Le extends EvaluatedExpression {
 
     /**
      * Le constructor.
-     * @param $a
-     * @param $b
+     * @param callable|mixed $a
+     * @param callable|mixed $b
      */
     function __construct($a, $b) {
         $this->a = $a;

@@ -137,7 +137,6 @@ class BaseHolder extends FreezableObject {
     public function addField(Field $field) {
         $this->updating();
         $field->setBaseHolder($this);
-        $field->freeze();
 
         $name = $field->getName();
         $this->fields[$name] = $field;
