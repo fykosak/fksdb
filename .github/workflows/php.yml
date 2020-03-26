@@ -26,9 +26,3 @@ jobs:
     - run: "sed -e 's/user:/user: root/' app/config/config.local.neon.sample > app/config/config.local.neon"
     - run: ./i18n/compile.sh
     - run: ./tests/run.sh -j 1
-
-    # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
-    # Docs: https://getcomposer.org/doc/articles/scripts.md
-
-    # - name: Run test suite
-    #   run: composer run-script test
