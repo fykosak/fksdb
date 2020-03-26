@@ -20,12 +20,12 @@ class Field {
     private $name;
 
     /** @return string */
-    public function getName() {
+    public function getName(): string {
         return $this->name;
     }
     /* ** LABEL ** */
 
-    /** @var string */
+    /** @var string|null */
     private $label;
 
     /** @return string */
@@ -38,7 +38,7 @@ class Field {
      * @param $name
      * @param $label
      */
-    public function __construct(string $name, string $label) {
+    public function __construct(string $name, string $label = null) {
         $this->name = $name;
         $this->label = $label;
     }
