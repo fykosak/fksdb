@@ -38,7 +38,8 @@ jobs:
     # MYSQL_USER - create the specified user with superuser power for created database
         #mysql user: # optional, default is 
     # MYSQL_PASSWORD - specified superuser password which user is power for created database
-        #mysql password: # optional, default is 
+        #mysql password: # optional, default is
+    - run: sudo systemctl mariadb start 
     - run: composer self-update
     - run: composer install --no-interaction --prefer-source
     #- run: sudo mysql -e "ALTER USER root@localhost IDENTIFIED VIA mysql_native_password; SET PASSWORD = PASSWORD('');"
