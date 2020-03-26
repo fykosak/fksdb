@@ -24,7 +24,8 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+    - run: cd typescript && npm install
     - run: cd typescript && npm ci
-    - run: cd typescript &&  npm run build
+    - run: cd typescript && npm run build
       env:
         CI: true
