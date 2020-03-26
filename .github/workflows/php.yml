@@ -30,7 +30,7 @@ jobs:
         # Version of MariaDB to use
         mariadb version: 10.4
         # MYSQL_ROOT_PASSWORD - root superuser password
-        mysql root password: ''
+        #mysql root password: ''
         # MYSQL_DATABASE - name for the default database that is created
         # mysql database: fksdb
         # MYSQL_USER - create the specified user with superuser power for created database
