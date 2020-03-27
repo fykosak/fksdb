@@ -15,12 +15,13 @@ jobs:
         image: mariadb:10.4
         ports:
           - 3306/tcp
+        env:
+          MYSQL_ROOT_PASSWORD: rootpass
     strategy:
       matrix:
         php-version: [7.0,7.1]
 
     steps:
-    - run: sudo apt-get install mariadb
     - uses: actions/checkout@v2
     # - run: sudo systemctl start mariadb
     - run: composer self-update
@@ -30,7 +31,7 @@ jobs:
     - run: mysql --version
     - run: echo $'\n[client]\nuser=root' >> ~/.my.cnf
     - run: sudo systemctl start mysql
-    #- run: sudo mysql -e "ALTER USER root@localhost IDENTIFIED VIA mysql_native_password; SET PASSWORD = PASSWORD('');"
+    - run: sudo mysql -e -user=root -p=rootpass "ALTER USER root@localhost IDENTIFIED VIA mysql_native_password; SET PASSWORD = PASSWORD('');"
     - run: sudo ./tests/init-database.sh
     - run: sudo ./tests/clear-database.sh
     - run: rm -rf temp/* tmp
