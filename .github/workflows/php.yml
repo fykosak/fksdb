@@ -24,8 +24,8 @@ jobs:
     # - run: sudo systemctl start mariadb
     - run: composer self-update
     - run: composer install --no-interaction --prefer-source
-    - run: sudo systemctl stop mysql
-    - run: sudo systemctl start mariadb
+    - run: sudo systemctl start mysql
+    #- run: sudo systemctl start mariadb
     - run: mysql --version
     #- run: echo $'\n[client]\nuser=root' >> ~/.my.cnf
     - run: sudo mysql -e "ALTER USER root@localhost IDENTIFIED VIA mysql_native_password; SET PASSWORD = PASSWORD('');"
