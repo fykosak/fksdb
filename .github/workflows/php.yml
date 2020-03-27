@@ -15,17 +15,13 @@ jobs:
         image: mariadb:10.4
         ports:
           - 3306/tcp
-      mysql:
-        image: mysql:8.0
-        ports:
-          - 3306/tcp
-        env:
-          MYSQL_ROOT_PASSWORD: ''
     strategy:
       matrix:
         php-version: [7.0,7.1]
 
     steps:
+    - run: sudo apt-get remove mysql
+    - run: sudo apt-get install mariadb
     - uses: actions/checkout@v2
     # - run: sudo systemctl start mariadb
     - run: composer self-update
