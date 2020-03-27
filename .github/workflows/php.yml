@@ -11,7 +11,7 @@ jobs:
 
     runs-on: ubuntu-latest
     services:
-      mariadb:
+      mysql:
         image: mariadb:10.4
         ports:
           - 3306/tcp
