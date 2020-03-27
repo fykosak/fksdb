@@ -28,7 +28,7 @@ jobs:
     #- run: sudo systemctl start mariadb
     - run: mysql --version
     #- run: echo $'\n[client]\nuser=root' >> ~/.my.cnf
-    - run: sudo mysql -e "ALTER USER root@localhost IDENTIFIED VIA mysql_native_password; SET PASSWORD = PASSWORD('');"
+    #- run: sudo mysql -e "ALTER USER root@localhost IDENTIFIED VIA mysql_native_password; SET PASSWORD = PASSWORD('');"
     - run: ./tests/init-database.sh
     - run: ./tests/clear-database.sh
     - run: rm -rf temp/* tmp
