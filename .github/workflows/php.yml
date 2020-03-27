@@ -30,8 +30,8 @@ jobs:
     - run: echo $'\n[client]\nuser=root' >> ~/.my.cnf
     - run: sudo systemctl start mysql
     #- run: sudo mysql -e "ALTER USER root@localhost IDENTIFIED VIA mysql_native_password; SET PASSWORD = PASSWORD('');"
-    - run: ./tests/init-database.sh
-    - run: ./tests/clear-database.sh
+    - run: sudo ./tests/init-database.sh
+    - run: sudo ./tests/clear-database.sh
     - run: rm -rf temp/* tmp
     - run: "sed -e 's/user:/user: root/' app/config/config.local.neon.sample > app/config/config.local.neon"
     - run: ./i18n/compile.sh
