@@ -1,21 +1,33 @@
 @mixin navigation-item($color,$background) {
+  .icon {
+    font-size: 5rem;
+  }
+  a {
+    text-align: center;
+    color: $color;
+  }
   height: 12rem;
   width: 12rem;
-  border-color: $color;
-  border-radius: 0;
   background-color: $background;
   transition-duration: 200ms;
   color: $color;
-  a {
-    color: $color;
-  }
   &:hover, &:focus {
     transition-duration: 200ms;
-    //border-color: $background;
     background-color: $color;
     color: $background;
+
     a {
       color: $background;
     }
   }
+
+  @media (max-width: 767px) {
+    height: 4rem;
+    width: 100%;
+
+    .icon {
+      font-size: 2rem;
+    }
+  }
+
 }
