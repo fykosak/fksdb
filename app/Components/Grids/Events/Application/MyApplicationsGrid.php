@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Grids\Events\Application;
 
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\NotImplementedException;
 use FKSDB\ORM\DbNames;
@@ -11,6 +10,7 @@ use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Models\ModelPerson;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\ActiveRow;
+use Nette\DI\Container;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 
@@ -32,10 +32,10 @@ class MyApplicationsGrid extends BaseGrid {
      * MyApplicationsGrid constructor.
      * @param ModelContest $contest
      * @param ModelPerson $person
-     * @param TableReflectionFactory|null $tableReflectionFactory
+     * @param Container $container
      */
-    public function __construct(ModelContest $contest, ModelPerson $person, TableReflectionFactory $tableReflectionFactory) {
-        parent::__construct($tableReflectionFactory);
+    public function __construct(ModelContest $contest, ModelPerson $person, Container $container) {
+        parent::__construct($container);
         $this->person = $person;
         $this->contest = $contest;
     }

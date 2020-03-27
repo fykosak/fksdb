@@ -146,15 +146,23 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @param IResource|string $resource
      * @param string $privilege
      * @return bool
+     * Standard ACL from acl.neon
      * @throws BadRequestException
-     * By default check the contest permissions
      */
-    protected function isAllowed($resource, string $privilege): bool {
-        $event = $this->getEvent();
-        if (!$event) {
-            return false;
-        }
-        return $this->getContestAuthorizator()->isAllowed($resource, $privilege, $event->getContest());
+    protected function isContestsOrgAuthorized($resource, string $privilege): bool {
+        return $this->getEventAuthorizator()->isContestOrgAllowed($resource, $privilege, $this->getEvent());
+    }
+
+    /**
+     * @param $resource
+     * @param string $privilege
+     * @return bool
+     * @throws BadRequestException
+     * Check if is contest and event org
+     * TODO vyfakuje to aj cartesianov
+     */
+    protected function isEventAndContestOrgAuthorized($resource, string $privilege): bool {
+        return $this->getEventAuthorizator()->isEventAndContestOrgAllowed($resource, $privilege, $this->getEvent());
     }
 
     /**
@@ -162,25 +170,10 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @param $privilege
      * @return bool
      * @throws BadRequestException
-     * Explicit method to include event orgs
+     * Check if has contest permission or is Event org
      */
-    public function isAllowedForEventOrg($resource, $privilege): bool {
-        return $this->getEventAuthorizator()->isEventOrgAllowed($resource, $privilege, $this->getEvent());
-    }
-
-
-    /**
-     * @param IResource|string $resource
-     * @param string $privilege
-     * @return bool
-     * @throws BadRequestException
-     */
-    protected function isContestsOrgAllowed($resource, string $privilege): bool {
-        $contest = $this->getContest();
-        if (!$contest) {
-            return false;
-        }
-        return $this->getContestAuthorizator()->isAllowed($resource, $privilege, $contest);
+    public function isEventOrContestOrgAuthorized($resource, $privilege): bool {
+        return $this->getEventAuthorizator()->isEventOrContestOrgAllowed($resource, $privilege, $this->getEvent());
     }
 
     /**
@@ -188,7 +181,18 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @throws BadRequestException
      */
     protected function getNavBarVariant(): array {
-        return ['event event-type-' . $this->getEvent()->event_type_id, ($this->getEvent()->event_type_id == 1) ? 'bg-fyziklani navbar-dark' : 'bg-light navbar-light'];
+        $classNames = ['event event-type-' . $this->getEvent()->event_type_id, null];
+        switch ($this->getEvent()->event_type_id) {
+            case 1:
+                $classNames[1] = 'bg-fyziklani navbar-dark';
+                break;
+            case 9:
+                $classNames[1] = 'bg-fol navbar-light';
+                break;
+            default:
+                $classNames[1] = 'bg-light navbar-light';
+        }
+        return $classNames;
     }
 
     /**

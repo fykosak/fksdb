@@ -12,6 +12,7 @@ use FKSDB\ORM\Services\Schedule\ServicePersonSchedule;
 use FKSDB\ORM\Services\Schedule\ServiceSchedulePayment;
 use FKSDB\ORM\Services\ServicePayment;
 use FKSDB\Payment\Transition\PaymentMachine;
+use Nette\DI\Container;
 use Nette\Localization\ITranslator;
 
 /**
@@ -48,6 +49,10 @@ class PaymentFactory {
      * @var TableReflectionFactory
      */
     private $tableReflectionFactory;
+    /**
+     * @var Container
+     */
+    private $container;
 
     /**
      * PaymentFactory constructor.
@@ -58,13 +63,16 @@ class PaymentFactory {
      * @param ServicePersonSchedule $servicePersonSchedule
      * @param ITranslator $translator
      * @param ServicePayment $servicePayment
+     * @param Container $container
      */
     public function __construct(TableReflectionFactory $tableReflectionFactory,
                                 ServiceSchedulePayment $serviceSchedulePayment,
                                 PersonFactory $personFactory,
                                 PersonProvider $personProvider,
                                 ServicePersonSchedule $servicePersonSchedule,
-                                ITranslator $translator, ServicePayment $servicePayment) {
+                                ITranslator $translator,
+                                ServicePayment $servicePayment,
+                                Container $container) {
         $this->tableReflectionFactory = $tableReflectionFactory;
         $this->translator = $translator;
         $this->servicePayment = $servicePayment;
@@ -72,6 +80,7 @@ class PaymentFactory {
         $this->personProvider = $personProvider;
         $this->servicePersonSchedule = $servicePersonSchedule;
         $this->serviceSchedulePayment = $serviceSchedulePayment;
+        $this->container = $container;
     }
 
     /**
@@ -79,7 +88,7 @@ class PaymentFactory {
      * @return OrgPaymentGrid
      */
     public function createOrgGrid(ModelEvent $event): OrgPaymentGrid {
-        return new OrgPaymentGrid($this->servicePayment, $event, $this->tableReflectionFactory);
+        return new OrgPaymentGrid($event, $this->container);
     }
 
     /**

@@ -41,7 +41,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
          * @var ModelPerson $person
          */
         $person = $this->user->getIdentity()->getPerson();
-        return new DispatchGrid($this->serviceEvent, $person, $this->yearCalculator);
+        return new DispatchGrid($person, $this->getContext());
     }
 
     public function titleDefault() {

@@ -117,7 +117,7 @@ class OrgPresenter extends ExtendedPersonPresenter {
      * @return OrgsGrid
      */
     protected function createComponentGrid($name): OrgsGrid {
-        return new OrgsGrid($this->serviceOrg, $this->getTableReflectionFactory());
+        return new OrgsGrid($this->getContext());
     }
 
     /**

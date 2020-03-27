@@ -2,11 +2,11 @@
 
 namespace FKSDB\Components\Grids\Fyziklani;
 
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
+use FKSDB\NotImplementedException;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FyziklaniModule\BasePresenter;
+use Nette\DI\Container;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
@@ -25,18 +25,21 @@ class TeamSubmitsGrid extends SubmitsGrid {
     /**
      * FyziklaniSubmitsGrid constructor.
      * @param ModelFyziklaniTeam $team
-     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
-     * @param TableReflectionFactory $tableReflectionFactory
+     * @param Container $container
      */
-    public function __construct(ModelFyziklaniTeam $team, ServiceFyziklaniSubmit $serviceFyziklaniSubmit, TableReflectionFactory $tableReflectionFactory) {
+    public function __construct(ModelFyziklaniTeam $team, Container $container) {
         $this->team = $team;
-        parent::__construct($serviceFyziklaniSubmit, $tableReflectionFactory);
+        parent::__construct($container);
     }
 
     /**
      * @param BasePresenter $presenter
      * @throws DuplicateColumnException
      * @throws DuplicateButtonException
+     * @throws NotImplementedException
+     * @throws NotImplementedException
+     * @throws NotImplementedException
+     * @throws NotImplementedException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

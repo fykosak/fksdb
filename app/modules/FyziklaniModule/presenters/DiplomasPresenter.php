@@ -15,27 +15,25 @@ use Nette\Utils\Html;
 class DiplomasPresenter extends BasePresenter {
 
     public function titleResults() {
-        $this->setTitle(_('Final results'));
-        $this->setIcon('fa fa-trophy');
+        $this->setTitle(_('Final results'), 'fa fa-trophy');
     }
 
     public function titleDefault() {
-        $this->setTitle(_('Calculate ranking'));
-        $this->setIcon('fa fa-check');
+        $this->setTitle(_('Calculate ranking'), 'fa fa-check');
     }
 
     /**
      * @throws BadRequestException
      */
     public function authorizedResults() {
-        $this->setAuthorized($this->isContestsOrgAllowed('fyziklani.diplomas', 'results'));
+        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.diplomas', 'results'));
     }
 
     /**
      * @throws BadRequestException
      */
     public function authorizeDefault() {
-        $this->setAuthorized($this->isAllowedForEventOrg('fyziklani.diplomas', 'calculate'));
+        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.diplomas', 'calculate'));
     }
 
     /**
@@ -86,6 +84,6 @@ class DiplomasPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentResults(): FinalResults {
-        return new FinalResults($this->getEvent(), $this->getServiceFyziklaniTeam(), $this->getTranslator(), $this->getTableReflectionFactory());
+        return new FinalResults($this->getEvent(), $this->getServiceFyziklaniTeam(), $this->getTranslator(), $this->getContext());
     }
 }

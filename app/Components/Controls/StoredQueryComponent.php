@@ -13,6 +13,7 @@ use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
+use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use PDOException;
 
@@ -62,6 +63,10 @@ class StoredQueryComponent extends Control {
      * @var bool
      */
     private $showParametrize = true;
+    /**
+     * @var Container
+     */
+    private $container;
 
     /**
      * StoredQueryComponent constructor.
@@ -69,14 +74,15 @@ class StoredQueryComponent extends Control {
      * @param ContestAuthorizator $contestAuthorizator
      * @param StoredQueryFactory $storedQueryFormFactory
      * @param ExportFormatFactory $exportFormatFactory
+     * @param Container $container
      */
-    function
-    __construct(StoredQuery $storedQuery, ContestAuthorizator $contestAuthorizator, StoredQueryFactory $storedQueryFormFactory, ExportFormatFactory $exportFormatFactory) {
+    function __construct(StoredQuery $storedQuery, ContestAuthorizator $contestAuthorizator, StoredQueryFactory $storedQueryFormFactory, ExportFormatFactory $exportFormatFactory, Container $container) {
         parent::__construct();
         $this->storedQuery = $storedQuery;
         $this->contestAuthorizator = $contestAuthorizator;
         $this->storedQueryFormFactory = $storedQueryFormFactory;
         $this->exportFormatFactory = $exportFormatFactory;
+        $this->container = $container;
     }
 
     /**
@@ -111,20 +117,17 @@ class StoredQueryComponent extends Control {
     }
 
     /**
-     * @param $name
      * @return StoredQueryGrid
      */
-    protected function createComponentGrid($name) {
-        $grid = new StoredQueryGrid($this->storedQuery, $this->exportFormatFactory);
-        return $grid;
+    protected function createComponentGrid() {
+        return new StoredQueryGrid($this->storedQuery, $this->container);
     }
 
     /**
-     * @param $name
      * @return FormControl
      * @throws BadRequestException
      */
-    protected function createComponentParametrizeForm($name) {
+    protected function createComponentParametrizeForm() {
         $control = new FormControl();
         $form = $control->getForm();
 

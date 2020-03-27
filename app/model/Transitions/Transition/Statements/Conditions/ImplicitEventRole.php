@@ -22,6 +22,6 @@ class ImplicitEventRole extends EventRole {
         if (!($model instanceof IEventReferencedModel) || !($model instanceof IResource)) {
             throw new BadRequestException();
         }
-        return $this->eventAuthorizator->isAllowed($model, $this->privilege, $model->getEvent());
+        return $this->eventAuthorizator->isContestOrgAllowed($model, $this->privilege, $model->getEvent());
     }
 }

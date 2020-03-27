@@ -11,6 +11,7 @@ use Nette\Application\BadRequestException;
 use Nette\Application\IPresenter;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\DI\Container;
 use Nette\InvalidStateException;
 use FKSDB\NotImplementedException;
 use Nette\Templating\FileTemplate;
@@ -43,11 +44,11 @@ abstract class BaseGrid extends Grid {
 
     /**
      * BaseGrid constructor.
-     * @param TableReflectionFactory|null $tableReflectionFactory
+     * @param Container $container
      */
-    public function __construct(TableReflectionFactory $tableReflectionFactory = null) {
+    public function __construct(Container $container) {
         parent::__construct();
-        $this->tableReflectionFactory = $tableReflectionFactory;
+        $this->tableReflectionFactory = $container->getByType(TableReflectionFactory::class);
     }
 
     /**

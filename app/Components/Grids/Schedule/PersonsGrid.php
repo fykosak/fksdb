@@ -3,11 +3,12 @@
 namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\DatabaseReflection\ValuePrinters\EventRole;
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\NotImplementedException;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\YearCalculator;
+use Nette\DI\Container;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 
@@ -23,12 +24,11 @@ class PersonsGrid extends BaseGrid {
 
     /**
      * PersonsGrid constructor.
-     * @param TableReflectionFactory $tableReflectionFactory
-     * @param YearCalculator $yearCalculator
+     * @param Container $container
      */
-    public function __construct(TableReflectionFactory $tableReflectionFactory, YearCalculator $yearCalculator) {
-        $this->yearCalculator = $yearCalculator;
-        parent::__construct($tableReflectionFactory);
+    public function __construct(Container $container) {
+        $this->yearCalculator = $container->getByType(YearCalculator::class);
+        parent::__construct($container);
     }
 
     /**
@@ -49,6 +49,7 @@ class PersonsGrid extends BaseGrid {
     /**
      * @param $presenter
      * @throws DuplicateColumnException
+     * @throws NotImplementedException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

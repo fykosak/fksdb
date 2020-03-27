@@ -42,12 +42,16 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /* ***** Authorized methods *****/
-    /**
-     * @throws BadRequestException
-     * @throws AbortException
-     */
     public function authorizedEntry() {
-        $this->setAuthorized($this->isAllowedForEventOrg('fyziklani.submit', 'default'));
+        $this->authorizedCreate();
+    }
+
+    /**
+     * @inheritDoc
+     * @throws BadRequestException
+     */
+    protected function traitIsAuthorized($resource, string $privilege): bool {
+        return $this->isEventOrContestOrgAuthorized($resource, $privilege);
     }
 
     /* ******** ACTION METHODS ********/
@@ -66,12 +70,8 @@ class SubmitPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function actionDetail(int $id) {
-        $this->loadEntity($id);
-    }
-
-    public function renderDetail() {
-        $this->template->model = $this->getEntity();
+    public function renderDetail(int $id) {
+        $this->template->model = $this->loadEntity($id);
     }
 
     public function renderEdit() {
@@ -94,13 +94,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws AbortException
      */
     public function createComponentGrid(): SubmitsGrid {
-        return new AllSubmitsGrid(
-            $this->getEvent(),
-            $this->getServiceFyziklaniTask(),
-            $this->getServiceFyziklaniSubmit(),
-            $this->getServiceFyziklaniTeam(),
-            $this->getTableReflectionFactory()
-        );
+        return new AllSubmitsGrid($this->getEvent(), $this->getContext());
     }
 
     /**
@@ -120,24 +114,6 @@ class SubmitPresenter extends BasePresenter {
      */
     protected function getORMService() {
         return $this->getServiceFyziklaniSubmit();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getModelResource(): string {
-        return ModelFyziklaniSubmit::RESOURCE_ID;
-    }
-
-    /**
-     * @param $resource
-     * @param string $privilege
-     * @return bool
-     * @throws AbortException
-     * @throws BadRequestException
-     */
-    protected function isAllowed($resource, string $privilege): bool {
-        return $this->isAllowedForEventOrg($resource, $privilege);
     }
 
     /**
