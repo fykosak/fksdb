@@ -1,6 +1,7 @@
 {define #link}
     <a href="{$control->getLink($node)}"
-       class="mb-3"><span class="icon d-sm-inline-block d-md-block my-1 mx-2"><i class="{$control->getIcon($node)}"></i></span>
+       class="mb-3 d-block navigation-item p-2">
+        <span class="icon d-sm-inline-block d-md-block mx-2"><i class="{$control->getIcon($node)}"></i></span>
         <span class="text d-xs-inline-block d-md-block">{$control->getTitle($node)}</span>
         {*<span class="d-block card-text small">{$control->getSubTitle($node)}</span>*}
     </a>
@@ -15,9 +16,7 @@
 
             {if $control->isVisible($node)}
                 {var $hasNode = true}
-                <div class="navigation-item">
-                    {include #link, node => $node}
-                </div>
+                {include #link, node => $node}
             {/if}
         {/foreach}
 

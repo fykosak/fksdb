@@ -180,26 +180,23 @@ main.no-bg {
 [data-contest~="event-type-1"] .navigation-item {
   height: 12rem;
   width: 12rem;
+  text-align: center;
+  color: #f44336;
   background-color: white;
-  transition-duration: 200ms;
-  color: #f44336; }
+  transition-duration: 200ms; }
   [data-contest~="event-type-1"] .navigation-item .icon {
     font-size: 5rem; }
-  [data-contest~="event-type-1"] .navigation-item a {
-    text-align: center;
-    color: #f44336; }
   [data-contest~="event-type-1"] .navigation-item:hover, [data-contest~="event-type-1"] .navigation-item:focus {
     transition-duration: 200ms;
     background-color: #f44336;
     color: white; }
-    [data-contest~="event-type-1"] .navigation-item:hover a, [data-contest~="event-type-1"] .navigation-item:focus a {
-      color: white; }
   @media (max-width: 767px) {
     [data-contest~="event-type-1"] .navigation-item {
-      height: 4rem;
+      text-align: start;
+      height: initial;
       width: 100%; }
-      [data-contest~="event-type-1"] .navigation-item .icon {
-        font-size: 2rem; } }
+      [data-contest~="event-type-1"] .navigation-item .icon, [data-contest~="event-type-1"] .navigation-item {
+        font-size: 1.2rem; } }
 
 .btn-fyziklani:hover {
   color: #fff;
@@ -528,100 +525,88 @@ body {
 .navigation-item {
   height: 12rem;
   width: 12rem;
+  text-align: center;
+  color: black;
   background-color: white;
-  transition-duration: 200ms;
-  color: black; }
+  transition-duration: 200ms; }
   .navigation-item .icon {
     font-size: 5rem; }
-  .navigation-item a {
-    text-align: center;
-    color: black; }
   .navigation-item:hover, .navigation-item:focus {
     transition-duration: 200ms;
     background-color: black;
     color: white; }
-    .navigation-item:hover a, .navigation-item:focus a {
-      color: white; }
   @media (max-width: 767px) {
     .navigation-item {
-      height: 4rem;
+      text-align: start;
+      height: initial;
       width: 100%; }
-      .navigation-item .icon {
-        font-size: 2rem; } }
+      .navigation-item .icon, .navigation-item {
+        font-size: 1.2rem; } }
 
 [data-contest~="fykos"] .navigation-item {
   height: 12rem;
   width: 12rem;
+  text-align: center;
+  color: #1175da;
   background-color: white;
-  transition-duration: 200ms;
-  color: #1175da; }
+  transition-duration: 200ms; }
   [data-contest~="fykos"] .navigation-item .icon {
     font-size: 5rem; }
-  [data-contest~="fykos"] .navigation-item a {
-    text-align: center;
-    color: #1175da; }
   [data-contest~="fykos"] .navigation-item:hover, [data-contest~="fykos"] .navigation-item:focus {
     transition-duration: 200ms;
     background-color: #1175da;
     color: white; }
-    [data-contest~="fykos"] .navigation-item:hover a, [data-contest~="fykos"] .navigation-item:focus a {
-      color: white; }
   @media (max-width: 767px) {
     [data-contest~="fykos"] .navigation-item {
-      height: 4rem;
+      text-align: start;
+      height: initial;
       width: 100%; }
-      [data-contest~="fykos"] .navigation-item .icon {
-        font-size: 2rem; } }
+      [data-contest~="fykos"] .navigation-item .icon, [data-contest~="fykos"] .navigation-item {
+        font-size: 1.2rem; } }
 
 [data-contest~="vyfuk"] .navigation-item {
   height: 12rem;
   width: 12rem;
+  text-align: center;
+  color: #ff4800;
   background-color: white;
-  transition-duration: 200ms;
-  color: #ff4800; }
+  transition-duration: 200ms; }
   [data-contest~="vyfuk"] .navigation-item .icon {
     font-size: 5rem; }
-  [data-contest~="vyfuk"] .navigation-item a {
-    text-align: center;
-    color: #ff4800; }
   [data-contest~="vyfuk"] .navigation-item:hover, [data-contest~="vyfuk"] .navigation-item:focus {
     transition-duration: 200ms;
     background-color: #ff4800;
     color: white; }
-    [data-contest~="vyfuk"] .navigation-item:hover a, [data-contest~="vyfuk"] .navigation-item:focus a {
-      color: white; }
   @media (max-width: 767px) {
     [data-contest~="vyfuk"] .navigation-item {
-      height: 4rem;
+      text-align: start;
+      height: initial;
       width: 100%; }
-      [data-contest~="vyfuk"] .navigation-item .icon {
-        font-size: 2rem; } }
+      [data-contest~="vyfuk"] .navigation-item .icon, [data-contest~="vyfuk"] .navigation-item {
+        font-size: 1.2rem; } }
 
 [data-contest~="theme-dark"] {
   color: #fff; }
   [data-contest~="theme-dark"] .navigation-item {
     height: 12rem;
     width: 12rem;
+    text-align: center;
+    color: #2ed739;
     background-color: black;
-    transition-duration: 200ms;
-    color: #2ed739; }
+    transition-duration: 200ms; }
     [data-contest~="theme-dark"] .navigation-item .icon {
       font-size: 5rem; }
-    [data-contest~="theme-dark"] .navigation-item a {
-      text-align: center;
-      color: #2ed739; }
     [data-contest~="theme-dark"] .navigation-item:hover, [data-contest~="theme-dark"] .navigation-item:focus {
       transition-duration: 200ms;
       background-color: #2ed739;
       color: black; }
-      [data-contest~="theme-dark"] .navigation-item:hover a, [data-contest~="theme-dark"] .navigation-item:focus a {
-        color: black; }
     @media (max-width: 767px) {
       [data-contest~="theme-dark"] .navigation-item {
-        height: 4rem;
+        text-align: start;
+        height: initial;
         width: 100%; }
-        [data-contest~="theme-dark"] .navigation-item .icon {
-          font-size: 2rem; } }
+        [data-contest~="theme-dark"] .navigation-item .icon, [data-contest~="theme-dark"] .navigation-item {
+          font-size: 1.2rem; } }
   [data-contest~="theme-dark"] main {
     background-color: black; }
   [data-contest~="theme-dark"] .bg-white-container {
