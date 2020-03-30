@@ -6,6 +6,7 @@ log/*
 temp/*
 !temp/.htaccess
 upload/*
+!upload/corrected/.htaccess
 !upload/.htaccess
 /app/config/config.local.neon
 .idea/*
