@@ -38,6 +38,6 @@ class ExplicitEventRole extends EventRole {
      * @return bool
      */
     protected function evaluate(IStateModel $model = null): bool {
-        return $this->eventAuthorizator->isAllowed($this->resource, $this->privilege, $this->event);
+        return $this->eventAuthorizator->isContestOrgAllowed($this->resource, $this->privilege, $this->event);
     }
 }

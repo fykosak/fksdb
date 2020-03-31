@@ -96,7 +96,6 @@ abstract class BasePresenter extends EventBasePresenter {
 
     /**
      * @return bool
-     * @throws AbortException
      * @throws BadRequestException
      */
     protected function isEnabledForEvent(): bool {

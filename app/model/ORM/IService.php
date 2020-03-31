@@ -48,7 +48,7 @@ interface IService {
     public function getTable();
 
     /**
-     * @return string
+     * @return string|AbstractModelSingle
      */
     public function getModelClassName(): string;
 }

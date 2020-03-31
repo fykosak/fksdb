@@ -13,7 +13,6 @@ use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleGroup;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleItem;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use function sprintf;
@@ -89,7 +88,6 @@ class SchedulePresenter extends BasePresenter {
      * @param $id
      * @throws BadRequestException
      * @throws ForbiddenRequestException
-     * @throws AbortException
      */
     public function actionGroup($id) {
         if (!$this->group) {
@@ -118,7 +116,6 @@ class SchedulePresenter extends BasePresenter {
      * @param int $id
      * @throws BadRequestException
      * @throws ForbiddenRequestException
-     * @throws AbortException
      */
     public function actionItem($id) {
         if (!$this->item) {
@@ -149,7 +146,6 @@ class SchedulePresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function actionGroups() {
@@ -177,7 +173,6 @@ class SchedulePresenter extends BasePresenter {
     /* *************** COMPONENTS ****************/
     /**
      * @return GroupsGrid
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function createComponentGroupsGrid(): GroupsGrid {

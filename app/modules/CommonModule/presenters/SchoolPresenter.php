@@ -11,6 +11,7 @@ use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServiceSchool;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
+use Nette\Security\IResource;
 
 /**
  * Class SchoolPresenter
@@ -54,11 +55,10 @@ class SchoolPresenter extends BasePresenter {
     }
 
     /**
-     * @param int $id
-     * @throws BadRequestException
+     * @inheritDoc
      */
-    public function actionDetail(int $id) {
-        $this->loadEntity($id);
+    protected function traitIsAuthorized($resource, string $privilege): bool {
+        return $this->isAnyContestAllowed($resource, $privilege);
     }
 
     /**
@@ -84,13 +84,6 @@ class SchoolPresenter extends BasePresenter {
         return $this->serviceSchool;
     }
 
-    /**
-     * @return string
-     */
-    protected function getModelResource(): string {
-        return ModelSchool::RESOURCE_ID;
-    }
-
     /** @return SchoolsGrid */
     protected function createComponentGrid(): SchoolsGrid {
         return new SchoolsGrid($this->getContext());
@@ -98,11 +91,12 @@ class SchoolPresenter extends BasePresenter {
 
     /** @inheritDoc */
     public function createComponentEditForm(): Control {
-        return new EditForm($this->context);
+        return new EditForm($this->getContext());
     }
 
     /** @inheritDoc */
     public function createComponentCreateForm(): Control {
-        return new CreateForm($this->context);
+        return new CreateForm($this->getContext());
     }
+
 }
