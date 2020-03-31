@@ -44,7 +44,6 @@ class SubmitPresenter extends BasePresenter {
     /* ***** Authorized methods *****/
     /**
      * @throws BadRequestException
-     * @throws AbortException
      */
     public function authorizedEntry() {
         $this->setAuthorized($this->isAllowedForEventOrg('fyziklani.submit', 'default'));
@@ -127,7 +126,6 @@ class SubmitPresenter extends BasePresenter {
      * @param $resource
      * @param string $privilege
      * @return bool
-     * @throws AbortException
      * @throws BadRequestException
      */
     protected function isAllowed($resource, string $privilege): bool {
