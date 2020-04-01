@@ -2,7 +2,9 @@
 
 use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\ORM\Models\ModelContest;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 
 /**
  * Class ContestPresenter
@@ -23,8 +25,8 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
 
     /**
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\ForbiddenRequestException
+     * @throws AbortException
+     * @throws ForbiddenRequestException
      */
     protected function startup() {
         parent::startup();
@@ -41,7 +43,7 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
     abstract protected function createComponentContestChooser(): ContestChooser;
 
     /**
-     * @return \FKSDB\ORM\Models\ModelContest
+     * @return ModelContest
      * @throws BadRequestException
      */
     public function getSelectedContest() {
