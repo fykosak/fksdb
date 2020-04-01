@@ -121,11 +121,10 @@ class EventPresenter extends EntityPresenter {
     }
 
     /**
-     * @param $name
      * @return FormControl|mixed
      * @throws BadRequestException
      */
-    protected function createComponentCreateComponent($name) {
+    protected function createComponentCreateComponent() {
         $control = $this->createForm();
         $form = $control->getForm();
 
@@ -138,11 +137,10 @@ class EventPresenter extends EntityPresenter {
     }
 
     /**
-     * @param $name
      * @return FormControl|mixed
      * @throws BadRequestException
      */
-    protected function createComponentEditComponent($name) {
+    protected function createComponentEditComponent() {
         $control = $this->createForm();
         $form = $control->getForm();
         $form->addSubmit('send', _('Save'));
@@ -154,10 +152,9 @@ class EventPresenter extends EntityPresenter {
     }
 
     /**
-     * @param $name
      * @return EventsGrid
      */
-    protected function createComponentGrid($name): EventsGrid {
+    protected function createComponentGrid(): EventsGrid {
         return new EventsGrid($this->getContext());
     }
 

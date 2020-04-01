@@ -145,23 +145,19 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     }
 
     /**
-     * @param $name
      * @return FormControl
      * @throws BadRequestException
      */
-    protected final function createComponentCreateComponent($name) {
-        $control = $this->createComponentFormControl(true);
-        return $control;
+    protected final function createComponentCreateComponent() {
+        return $this->createComponentFormControl(true);
     }
 
     /**
-     * @param $name
      * @return FormControl
      * @throws BadRequestException
      */
-    protected final function createComponentEditComponent($name) {
-        $control = $this->createComponentFormControl(false);
-        return $control;
+    protected final function createComponentEditComponent() {
+        return $this->createComponentFormControl(false);
     }
 
     /**

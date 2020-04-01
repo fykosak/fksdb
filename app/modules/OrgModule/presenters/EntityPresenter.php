@@ -124,22 +124,19 @@ abstract class EntityPresenter extends BasePresenter {
     abstract protected function loadModel($id);
 
     /**
-     * @param $name
      * @return mixed
      */
-    abstract protected function createComponentEditComponent($name);
+    abstract protected function createComponentEditComponent();
 
     /**
-     * @param $name
      * @return mixed
      */
-    abstract protected function createComponentCreateComponent($name);
+    abstract protected function createComponentCreateComponent();
 
     /**
-     * @param $name
      * @return mixed
      */
-    abstract protected function createComponentGrid($name);
+    abstract protected function createComponentGrid();
 
     /**
      * @return string

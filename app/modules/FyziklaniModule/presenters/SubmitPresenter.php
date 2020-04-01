@@ -119,13 +119,6 @@ class SubmitPresenter extends BasePresenter {
     /**
      * @inheritDoc
      */
-    protected function getModelResource(): string {
-        return ModelFyziklaniSubmit::RESOURCE_ID;
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function createComponentCreateForm(): Control {
         throw new NotImplementedException();
     }
