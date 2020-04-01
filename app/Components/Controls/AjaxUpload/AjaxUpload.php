@@ -65,6 +65,13 @@ class AjaxUpload extends ReactComponent {
     }
 
     /**
+     * @inheritDoc
+     */
+    protected function getSubmitCorrectedStorage(): FilesystemCorrectedSubmitStorage {
+        return $this->filesystemSubmitCorrectedStorage;
+    }
+
+    /**
      * @throws InvalidLinkException
      */
     protected function configure() {

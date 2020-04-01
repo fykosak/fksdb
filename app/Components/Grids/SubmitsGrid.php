@@ -66,6 +66,14 @@ class SubmitsGrid extends BaseGrid {
     protected function getSubmitUploadedStorage(): FilesystemUploadedSubmitStorage {
         return $this->filesystemSubmitUploadedStorage;
     }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getSubmitCorrectedStorage(): FilesystemCorrectedSubmitStorage {
+        return $this->filesystemCorrectedSubmitStorage;
+    }
+
     /**
      * @param $presenter
      * @throws DuplicateButtonException
