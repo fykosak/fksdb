@@ -46,10 +46,9 @@ class ContestantPresenter extends ExtendedPersonPresenter {
     }
 
     /**
-     * @param $name
      * @return ContestantsGrid
      */
-    protected function createComponentGrid($name) {
+    protected function createComponentGrid() {
         return new ContestantsGrid($this->getContext());
     }
 

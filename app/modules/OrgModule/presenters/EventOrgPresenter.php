@@ -164,7 +164,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
      * @inheritDoc
      * @throws NotImplementedException
      */
-    protected function createComponentGrid($name) {
+    protected function createComponentGrid() {
         throw new NotImplementedException();
     }
 

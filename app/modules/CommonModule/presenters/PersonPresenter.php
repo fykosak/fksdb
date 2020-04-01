@@ -350,11 +350,10 @@ class PersonPresenter extends BasePresenter {
 
 
     /**
-     * @param $name
      * @return FormControl
      * @throws BadRequestException
      */
-    protected function createComponentMergeForm($name) {
+    protected function createComponentMergeForm() {
         $control = new FormControl();
         $form = $control->getForm();
 

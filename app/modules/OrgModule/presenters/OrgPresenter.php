@@ -7,6 +7,7 @@ use FKSDB\Components\Grids\OrgsGrid;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelOrg;
 use FKSDB\ORM\Services\ServiceOrg;
+use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Persons\ExtendedPersonHandler;
@@ -50,7 +51,7 @@ class OrgPresenter extends ExtendedPersonPresenter {
 
     /**
      * @param int $id
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     public function titleEdit(int $id) {
         $this->setTitle(sprintf(_('Úprava organizátora %s'), $this->getModel2($id)->getPerson()->getFullName()));
@@ -59,7 +60,7 @@ class OrgPresenter extends ExtendedPersonPresenter {
 
     /**
      * @param int $id
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     public function titleDetail(int $id) {
         $this->setTitle(sprintf(_('Org %s'), $this->getModel2($id)->getPerson()->getFullName()));
@@ -79,7 +80,7 @@ class OrgPresenter extends ExtendedPersonPresenter {
     /**
      * @param int $id
      * @throws ForbiddenRequestException
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     public function actionEdit(int $id) {
         $org = $this->getModel2($id);
@@ -91,16 +92,16 @@ class OrgPresenter extends ExtendedPersonPresenter {
 
     /**
      * @param int $id
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     public function renderDetail(int $id) {
         $this->template->model = $this->getModel2($id);
     }
 
     /**
-     * @param \FKSDB\ORM\IModel|null $model
+     * @param IModel|null $model
      * @param Form $form
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     protected function setDefaults(IModel $model = null, Form $form) {
         parent::setDefaults($model, $form);
@@ -113,17 +114,16 @@ class OrgPresenter extends ExtendedPersonPresenter {
     }
 
     /**
-     * @param $name
      * @return OrgsGrid
      */
-    protected function createComponentGrid($name): OrgsGrid {
+    protected function createComponentGrid(): OrgsGrid {
         return new OrgsGrid($this->getContext());
     }
 
     /**
      * @param Form $form
      * @return void
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      * @throws \Exception
      */
     protected function appendExtendedContainer(Form $form) {
