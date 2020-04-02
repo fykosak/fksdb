@@ -25,11 +25,11 @@ class Leq extends EvaluatedExpression {
     }
 
     /**
+     * @param array $args
      * @return bool
      */
-    public function __invoke() {
-        $args = func_get_args();
-        return $this->evalArg($this->a, $args) <= $this->evalArg($this->b, $args);
+    public function __invoke(...$args): bool {
+        return $this->evaluateArgument($this->a, ...$args) <= $this->evaluateArgument($this->b, ...$args);
     }
 
     /**

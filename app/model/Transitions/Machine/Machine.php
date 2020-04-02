@@ -53,10 +53,7 @@ abstract class Machine {
      * Machine constructor.
      * @param Connection $connection
      * @param IService $service
-<<<<<<< HEAD
-=======
      * @param ITranslator $translator
->>>>>>> origin/master
      */
     public function __construct(Connection $connection, IService $service, ITranslator $translator) {
         $this->connection = $connection;

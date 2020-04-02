@@ -3,14 +3,13 @@
 namespace FKSDB\Transitions\Statements\Conditions;
 
 use DateTime;
-use FKSDB\Transitions\IStateModel;
 use FKSDB\Transitions\Statements\Statement;
 
 /**
  * Class DateTo
  * @package FKSDB\Transitions\Statements\Conditions
  */
-class DateTo extends Statement {
+class BeforeDate extends Statement {
     /**
      * @var DateTime
      */
@@ -26,10 +25,10 @@ class DateTo extends Statement {
     }
 
     /**
-     * @param IStateModel $model
+     * @param array $args
      * @return bool
      */
-    protected function evaluate(IStateModel $model = null): bool {
+    protected function evaluate(...$args): bool {
         return (\time() <= $this->to->getTimestamp());
     }
 }
