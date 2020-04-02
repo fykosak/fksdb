@@ -14,6 +14,7 @@ use Nette\Database\Table\Selection;
 use Nette\Security\IResource;
 use Nette\Utils\DateTime;
 use Nette\Utils\Json;
+use Nette\Utils\JsonException;
 
 /**
  *
@@ -104,12 +105,15 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
     }
 
     /**
-     * @param null $contestId
-     * @return \Nette\Database\Table\GroupedSelection
+     * @param int|ModelContest $contest
+     * @return GroupedSelection
      */
-    public function getContestants($contestId = null): GroupedSelection {
-        if (!isset($this->person_id)) {
-            $this->person_id = null;
+    public function getContestants($contest = null): GroupedSelection {
+        $contestId = null;
+        if ($contest instanceof ModelContest) {
+            $contestId = $contest->contest_id;
+        } else {
+            $contestId = $contest;
         }
         $related = $this->related(DbNames::TAB_CONTESTANT_BASE, 'person_id');
         if ($contestId) {
@@ -120,7 +124,7 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
 
     /**
      * @param null $contestId
-     * @return \Nette\Database\Table\GroupedSelection
+     * @return GroupedSelection
      */
     public function getOrgs($contestId = null): GroupedSelection {
         if (!isset($this->person_id)) {
@@ -319,7 +323,7 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
     }
 
     /**
-     * @param \FKSDB\YearCalculator $yearCalculator
+     * @param YearCalculator $yearCalculator
      * @return ModelOrg[] indexed by contest_id
      * @internal To get active orgs call FKSDB\ORM\Models\ModelLogin::getActiveOrgs
      */
@@ -338,7 +342,7 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
     /**
      * Active contestant := contestant in the highest year but not older than the current year.
      *
-     * @param \FKSDB\YearCalculator $yearCalculator
+     * @param YearCalculator $yearCalculator
      * @return ModelContestant[] indexed by contest_id
      */
     public function getActiveContestants(YearCalculator $yearCalculator) {
@@ -402,7 +406,7 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
      * @param integer eventId
      * @param string $type
      * @return string
-     * @throws \Nette\Utils\JsonException
+     * @throws JsonException
      */
     public function getSerializedSchedule(int $eventId, string $type) {
         if (!$eventId) {

@@ -69,6 +69,7 @@ class ContestantPresenter extends ExtendedPersonPresenter {
 
     /**
      * @return null
+     * TODO refactoring
      */
     protected function getAcYearFromModel() {
         $model = $this->getModel();

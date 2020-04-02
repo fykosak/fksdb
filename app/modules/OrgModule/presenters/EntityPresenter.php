@@ -3,6 +3,7 @@
 namespace OrgModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
@@ -80,7 +81,7 @@ abstract class EntityPresenter extends BasePresenter {
     }
 
     /**
-     * @return \FKSDB\ORM\AbstractModelSingle|null|IModel
+     * @return AbstractModelSingle|null|IModel
      * @deprecated
      */
     public final function getModel() {
@@ -92,7 +93,7 @@ abstract class EntityPresenter extends BasePresenter {
 
     /**
      * @param int $id
-     * @return \FKSDB\ORM\AbstractModelSingle|IModel
+     * @return AbstractModelSingle|IModel
      * @throws BadRequestException
      */
     public function getModel2(int $id = null) {
@@ -119,7 +120,7 @@ abstract class EntityPresenter extends BasePresenter {
 
     /**
      * @param $id
-     * @return \FKSDB\ORM\AbstractModelSingle
+     * @return AbstractModelSingle
      */
     abstract protected function loadModel($id);
 

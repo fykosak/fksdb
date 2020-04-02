@@ -155,7 +155,7 @@ class PointsPresenter extends SeriesPresenter {
         );
         $contestants = $this->seriesTable->getContestants();
         $tasks = $this->seriesTable->getTasks();
-        $gradedTasks = $this->getGradedTasks();
+        // $gradedTasks = $this->getGradedTasks();
 
         $container = $form->addContainer(SeriesTable::FORM_CONTESTANT);
 

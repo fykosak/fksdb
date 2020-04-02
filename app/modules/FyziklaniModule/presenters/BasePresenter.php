@@ -98,7 +98,7 @@ abstract class BasePresenter extends EventBasePresenter {
      * @return bool
      * @throws BadRequestException
      */
-    protected function isEnabledForEvent(): bool {
+    protected function isEnabled(): bool {
         return $this->getEvent()->event_type_id === 1;
     }
 

@@ -44,21 +44,18 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     public function titleList() {
-        $this->setTitle(_('List of team applications'));
-        $this->setIcon('fa fa-users');
+        $this->setTitle(_('List of team applications'), 'fa fa-users');
     }
 
     public function titleDetail() {
-        $this->setTitle(_('Team application detail'));
-        $this->setIcon('fa fa-user');
+        $this->setTitle(_('Team application detail'), 'fa fa-user');
     }
 
     /**
      * @return bool
-     * @throws AbortException
      * @throws BadRequestException
      */
-    protected function isEnabledForEvent(): bool {
+    protected function isEnabled(): bool {
         return $this->isTeamEvent();
     }
 
@@ -68,7 +65,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
      * @throws BadRequestException
      */
     public function createComponentGrid(): AbstractApplicationGrid {
-        return new TeamApplicationGrid($this->getEvent(), $this->getContext());
+        return new TeamApplicationGrid($this->getEvent(), $this->getHolder(), $this->getContext());
     }
 
     /**
@@ -97,16 +94,9 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @return AbstractServiceSingle
+     * @return AbstractServiceSingle|ServiceFyziklaniTeam
      */
-    function getORMService() {
+    function getORMService(): ServiceFyziklaniTeam {
         return $this->serviceFyziklaniTeam;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getModelResource(): string {
-        return ModelFyziklaniTeam::RESOURCE_ID;
     }
 }

@@ -38,6 +38,7 @@ class ModelEvent extends AbstractModelSingle implements IResource, IContestRefer
 
     /**
      * @param Holder $holder
+     * @deprecated
      */
     public function setHolder(Holder $holder) {
         $this->holder = $holder;
@@ -45,6 +46,7 @@ class ModelEvent extends AbstractModelSingle implements IResource, IContestRefer
 
     /**
      * @return Holder
+     * @deprecated
      */
     public function getHolder(): Holder {
         return $this->holder;
