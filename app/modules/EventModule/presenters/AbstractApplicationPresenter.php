@@ -15,7 +15,6 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
-use function in_array;
 
 /**
  * Class ApplicationPresenter
@@ -112,25 +111,13 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
         $holders = [];
         $handlers = [];
         $flashDump = $this->dumpFactory->create('application');
-        $source = new SingleEventSource($this->getEvent(), $this->container);
+        $source = new SingleEventSource($this->getEvent(), $this->getContext());
         foreach ($source as $key => $holder) {
             $holders[$key] = $holder;
             $handlers[$key] = $this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger());
         }
 
         return new ApplicationComponent($handlers[$this->getEntity()->getPrimary()], $holders[$this->getEntity()->getPrimary()], $flashDump);
-    }
-
-    /**
-     * @return bool
-     * @throws BadRequestException
-     * @throws AbortException
-     */
-    protected function isTeamEvent(): bool {
-        if (in_array($this->getEvent()->event_type_id, self::TEAM_EVENTS)) {
-            return true;
-        }
-        return false;
     }
 
     /**

@@ -32,10 +32,9 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
 
     /**
      * @return bool
-     * @throws AbortException
      * @throws BadRequestException
      */
-    protected function isEnabledForEvent(): bool {
+    protected function isEnabled(): bool {
         return !$this->isTeamEvent();
     }
 
@@ -53,7 +52,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @throws BadRequestException
      */
     public function createComponentGrid(): AbstractApplicationGrid {
-        return new ApplicationGrid($this->getEvent(), $this->getContext());
+        return new ApplicationGrid($this->getEvent(), $this->getHolder(), $this->getContext());
     }
 
     /**
@@ -62,13 +61,13 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @throws BadRequestException
      */
     public function createComponentImport(): ImportComponent {
-        $source = new SingleEventSource($this->getEvent(), $this->container);
+        $source = new SingleEventSource($this->getEvent(), $this->getContext());
         $logger = new MemoryLogger();
-        $machine = $this->container->createEventMachine($this->getEvent());
+        $machine = $this->getContext()->createEventMachine($this->getEvent());
         $handler = $this->applicationHandlerFactory->create($this->getEvent(), $logger);
 
         $flashDump = $this->dumpFactory->create('application');
-        return new ImportComponent($machine, $source, $handler, $flashDump, $this->container);
+        return new ImportComponent($machine, $source, $handler, $flashDump, $this->getContext());
     }
 
     /**
@@ -77,7 +76,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      */
     public function renderDetail() {
         parent::renderDetail();
-        $this->template->fields = $this->getEvent()->getHolder()->getPrimaryHolder()->getFields();
+        $this->template->fields = $this->getHolder()->getPrimaryHolder()->getFields();
         $this->template->model = $this->getEntity();
         $this->template->groups = [
             _('Health & food') => ['health_restrictions', 'diet', 'used_drugs', 'note', 'swimmer'],

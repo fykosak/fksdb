@@ -7,11 +7,10 @@ use DOMDocument;
 use DOMNode;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
-use ISeriesPresenter;
 use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
 use Nette\InvalidArgumentException;
-use Nette\InvalidStateException;
+use OrgModule\SeriesPresenter;
 use Utils;
 use WebService\IXMLNodeSerializer;
 
@@ -33,19 +32,14 @@ class StoredQueryFactory implements IXMLNodeSerializer {
     private $connection;
 
     /**
-     * @var \FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery
+     * @var ServiceStoredQuery
      */
     private $serviceStoredQuery;
 
     /**
-     * @var ISeriesPresenter
-     */
-    private $presenter;
-
-    /**
      * StoredQueryFactory constructor.
      * @param Connection $connection
-     * @param \FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery $serviceStoredQuery
+     * @param ServiceStoredQuery $serviceStoredQuery
      */
     function __construct(Connection $connection, ServiceStoredQuery $serviceStoredQuery) {
         $this->connection = $connection;
@@ -53,47 +47,35 @@ class StoredQueryFactory implements IXMLNodeSerializer {
     }
 
     /**
-     * @return ISeriesPresenter
-     */
-    public function getPresenter() {
-        return $this->presenter;
-    }
-
-    /**
-     * @param ISeriesPresenter $presenter
-     */
-    public function setPresenter(ISeriesPresenter $presenter) {
-        $this->presenter = $presenter;
-    }
-
-    /**
+     * @param SeriesPresenter $presenter
      * @param ModelStoredQuery $patternQuery
      * @return StoredQuery
      * @throws BadRequestException
      */
-    public function createQuery(ModelStoredQuery $patternQuery) {
+    public function createQuery(SeriesPresenter $presenter, ModelStoredQuery $patternQuery): StoredQuery {
         $storedQuery = new StoredQuery($patternQuery, $this->connection);
-        $this->presenterContextToQuery($storedQuery);
-
+        $this->presenterContextToQuery($presenter, $storedQuery);
         return $storedQuery;
     }
 
     /**
+     * @param SeriesPresenter $presenter
      * @param $sql
      * @param $parameters
      * @param array $queryData
      * @return StoredQuery
      * @throws BadRequestException
      */
-    public function createQueryFromSQL($sql, $parameters, $queryData = []) {
-        $patternQuery = $this->serviceStoredQuery->createNew(array_merge(array(
+    public function createQueryFromSQL(SeriesPresenter $presenter, $sql, $parameters, $queryData = []): StoredQuery {
+        /** @var ModelStoredQuery $patternQuery */
+        $patternQuery = $this->serviceStoredQuery->createNew(array_merge([
             'sql' => $sql,
             'php_post_proc' => 0,
-        ), $queryData));
+        ], $queryData));
 
         $patternQuery->setParameters($parameters);
         $storedQuery = new StoredQuery($patternQuery, $this->connection);
-        $this->presenterContextToQuery($storedQuery);
+        $this->presenterContextToQuery($presenter, $storedQuery);
 
         return $storedQuery;
     }
@@ -115,15 +97,11 @@ class StoredQueryFactory implements IXMLNodeSerializer {
     }
 
     /**
+     * @param SeriesPresenter $presenter
      * @param StoredQuery $storedQuery
      * @throws BadRequestException
      */
-    private function presenterContextToQuery(StoredQuery $storedQuery) {
-        if (!$this->getPresenter()) {
-            throw new InvalidStateException("Must provide provider of context for implicit parameters.");
-        }
-
-        $presenter = $this->getPresenter();
+    private function presenterContextToQuery(SeriesPresenter $presenter, StoredQuery $storedQuery) {
         $series = null;
         try {
             $series = $presenter->getSelectedSeries();
@@ -134,12 +112,12 @@ class StoredQueryFactory implements IXMLNodeSerializer {
                 throw $exception;
             }
         }
-        $storedQuery->setImplicitParameters(array(
+        $storedQuery->setImplicitParameters([
             self::PARAM_CONTEST => $presenter->getSelectedContest()->contest_id,
             self::PARAM_YEAR => $presenter->getSelectedYear(),
             self::PARAM_AC_YEAR => $presenter->getSelectedAcademicYear(),
             self::PARAM_SERIES => $series,
-        ));
+        ]);
     }
 
     /**

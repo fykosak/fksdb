@@ -2,6 +2,7 @@
 
 namespace OrgModule;
 
+use Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\EventFactory;
 use FKSDB\Components\Grids\Events\EventsGrid;
@@ -169,8 +170,10 @@ class EventPresenter extends EntityPresenter {
 
         $eventContainer = $this->eventFactory->createEvent($this->getSelectedContest());
         $form->addComponent($eventContainer, self::CONT_EVENT);
-
-        if ($event = $this->getModel()) { // intentionally =
+        /** @var ModelEvent $event */
+        $event = $this->getModel();
+        if ($event) { // intentionally =
+            /** @var Holder $holder */
             $holder = $this->container->createEventHolder($event);
             $scheme = $holder->getPrimaryHolder()->getParamScheme();
             $paramControl = $eventContainer->getComponent('parameters');

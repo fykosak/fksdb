@@ -4,6 +4,7 @@ namespace FKSDB\ORM\Services;
 
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelContestant;
 use Nette\Database\Table\Selection;
 
@@ -31,17 +32,17 @@ class ServiceContestant extends AbstractServiceSingle {
     /**
      * @note Read-only (loads data from view).
      *
-     * @param int $contest_id
+     * @param ModelContest $contest
      * @param int $year
      * @return Selection
      */
-    public function getCurrentContestants($contest_id, $year) {
+    public function getCurrentContestants(ModelContest $contest, $year) {
         $contestants = $this->getConnection()->table($this->viewName)
             ->select('*');
 
 
         $contestants->where([
-            'v_contestant.contest_id' => $contest_id,
+            'v_contestant.contest_id' => $contest->contest_id,
             'v_contestant.year' => $year,
         ]);
 

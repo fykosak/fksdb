@@ -45,7 +45,7 @@ class ContestantsGrid extends BaseGrid {
         //
         // data
         //
-        $contestants = $this->serviceContestant->getCurrentContestants($presenter->getSelectedContest()->contest_id, $presenter->getSelectedYear());
+        $contestants = $this->serviceContestant->getCurrentContestants($presenter->getSelectedContest(), $presenter->getSelectedYear());
 
 
         $this->setDataSource(new ViewDataSource('ct_id', $contestants));

@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Grids\Events\Application;
 
 use Closure;
+use Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Grids\BaseGrid;
@@ -23,19 +24,21 @@ use function str_replace;
  * @package FKSDB\Components\Grids\Events\Application
  */
 abstract class AbstractApplicationGrid extends BaseGrid {
-    /**
-     * @var ModelEvent
-     */
+    /** @var ModelEvent */
     protected $event;
+    /** @var Holder */
+    private $holder;
 
     /**
      * AbstractApplicationGrid constructor.
      * @param ModelEvent $event
+     * @param Holder $holder
      * @param Container $container
      */
-    public function __construct(ModelEvent $event, Container $container) {
+    public function __construct(ModelEvent $event, Holder $holder, Container $container) {
         parent::__construct($container);
         $this->event = $event;
+        $this->holder = $holder;
     }
 
     /**
@@ -113,7 +116,7 @@ abstract class AbstractApplicationGrid extends BaseGrid {
     protected function addColumns(array $fields) {
         parent::addColumns($fields);
 
-        $holderFields = $this->event->getHolder()->getPrimaryHolder()->getFields();
+        $holderFields = $this->holder->getPrimaryHolder()->getFields();
 
         foreach ($holderFields as $name => $def) {
             if (in_array($name, $this->getHoldersColumns())) {

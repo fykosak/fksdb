@@ -109,6 +109,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
      * @param $create
      * @return FormControl
      * @throws BadRequestException
+     * @throws \Exception
      */
     private function createComponentFormControl($create) {
         $control = new FormControl();
