@@ -78,6 +78,8 @@ class MockSeriesPresenter implements ISeriesPresenter {
         return 1;
     }
 
+    public function flashMessage($message, $type = 'info') {
+    }
 }
 
 class MockQueryParameter {

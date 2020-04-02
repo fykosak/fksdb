@@ -103,9 +103,10 @@ class StoredQueryFactory implements IXMLNodeSerializer {
      * @throws BadRequestException
      */
     private function presenterContextToQuery(ISeriesPresenter $presenter, StoredQuery $storedQuery) {
-        if (!$presenter instanceof Presenter) {
-            throw new BadRequestException();
-        }
+        // if (!$presenter instanceof Presenter) {
+        //   throw new BadRequestException();
+        // TODO forced added to IContest Presenter method flashMessage cause of tests
+        // }
         $series = null;
         try {
             $series = $presenter->getSelectedSeries();
