@@ -145,12 +145,12 @@ class ResultsModelFactory implements IXMLNodeSerializer {
      * @param $dataSource
      * @param DOMNode $node
      * @param DOMDocument $doc
-     * @param $format
+     * @param int $format
      * @return mixed|void
      * @throws SoapFault
      * @throws InvalidArgumentException
      */
-    public function fillNode($dataSource, DOMNode $node, DOMDocument $doc, $format) {
+    public function fillNode($dataSource, DOMNode $node, DOMDocument $doc, int $format) {
         if (!$dataSource instanceof AbstractResultsModel) {
             throw new InvalidArgumentException('Expected FKSDB\Results\IResultsModel, got ' . get_class($dataSource) . '.');
         }

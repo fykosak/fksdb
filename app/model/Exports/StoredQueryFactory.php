@@ -8,11 +8,12 @@ use DOMNode;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
 use Nette\Application\BadRequestException;
+use Nette\Application\UI\Presenter;
 use Nette\Database\Connection;
 use Nette\InvalidArgumentException;
-use OrgModule\SeriesPresenter;
 use Utils;
 use WebService\IXMLNodeSerializer;
+use FKSDB\CoreModule\ISeriesPresenter;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -47,26 +48,26 @@ class StoredQueryFactory implements IXMLNodeSerializer {
     }
 
     /**
-     * @param SeriesPresenter $presenter
+     * @param ISeriesPresenter $presenter
      * @param ModelStoredQuery $patternQuery
      * @return StoredQuery
      * @throws BadRequestException
      */
-    public function createQuery(SeriesPresenter $presenter, ModelStoredQuery $patternQuery): StoredQuery {
+    public function createQuery(ISeriesPresenter $presenter, ModelStoredQuery $patternQuery): StoredQuery {
         $storedQuery = new StoredQuery($patternQuery, $this->connection);
         $this->presenterContextToQuery($presenter, $storedQuery);
         return $storedQuery;
     }
 
     /**
-     * @param SeriesPresenter $presenter
+     * @param ISeriesPresenter $presenter
      * @param $sql
      * @param $parameters
      * @param array $queryData
      * @return StoredQuery
      * @throws BadRequestException
      */
-    public function createQueryFromSQL(SeriesPresenter $presenter, $sql, $parameters, $queryData = []): StoredQuery {
+    public function createQueryFromSQL(ISeriesPresenter $presenter, $sql, $parameters, $queryData = []): StoredQuery {
         /** @var ModelStoredQuery $patternQuery */
         $patternQuery = $this->serviceStoredQuery->createNew(array_merge([
             'sql' => $sql,
@@ -85,7 +86,7 @@ class StoredQueryFactory implements IXMLNodeSerializer {
      * @param $parameters
      * @return StoredQuery
      */
-    public function createQueryFromQid($qid, $parameters) {
+    public function createQueryFromQid($qid, $parameters): StoredQuery {
         $patternQuery = $this->serviceStoredQuery->findByQid($qid);
         if (!$patternQuery) {
             throw new InvalidArgumentException("Unknown QID '$qid'.");
@@ -97,11 +98,14 @@ class StoredQueryFactory implements IXMLNodeSerializer {
     }
 
     /**
-     * @param SeriesPresenter $presenter
+     * @param ISeriesPresenter $presenter
      * @param StoredQuery $storedQuery
      * @throws BadRequestException
      */
-    private function presenterContextToQuery(SeriesPresenter $presenter, StoredQuery $storedQuery) {
+    private function presenterContextToQuery(ISeriesPresenter $presenter, StoredQuery $storedQuery) {
+        if (!$presenter instanceof Presenter) {
+            throw new BadRequestException();
+        }
         $series = null;
         try {
             $series = $presenter->getSelectedSeries();
@@ -124,11 +128,11 @@ class StoredQueryFactory implements IXMLNodeSerializer {
      * @param $dataSource
      * @param DOMNode $node
      * @param DOMDocument $doc
-     * @param $format
-     * @return mixed|void
+     * @param int $format
+     * @return void
      * @throws BadRequestException
      */
-    public function fillNode($dataSource, DOMNode $node, DOMDocument $doc, $format) {
+    public function fillNode($dataSource, DOMNode $node, DOMDocument $doc, int $format) {
         if (!$dataSource instanceof StoredQuery) {
             throw new InvalidArgumentException('Expected StoredQuery, got ' . get_class($dataSource) . '.');
         }

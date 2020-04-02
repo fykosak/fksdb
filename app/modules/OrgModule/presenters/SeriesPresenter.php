@@ -4,7 +4,7 @@ namespace OrgModule;
 
 use FKSDB\Components\Controls\SeriesChooser;
 use FKSDB\SeriesCalculator;
-use ISeriesPresenter;
+use FKSDB\CoreModule\ISeriesPresenter;
 use Nette\Application\BadRequestException;
 
 /**

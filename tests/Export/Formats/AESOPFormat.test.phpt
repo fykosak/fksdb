@@ -5,6 +5,7 @@ $container = require '../../bootstrap.php';
 use Exports\ExportFormatFactory;
 use Exports\Formats\AESOPFormat;
 use Exports\StoredQueryPostProcessing;
+use FKSDB\CoreModule\ISeriesPresenter;
 use Nette\DI\Container;
 use Tester\Assert;
 
@@ -29,13 +30,14 @@ class AESOPFormatTest extends DatabaseTestCase {
         parent::setUp();
 
         $exportFactory = $this->container->getByType('Exports\ExportFormatFactory');
+        /** @var \Exports\StoredQueryFactory $queryFactory */
         $queryFactory = $this->container->getByType('Exports\StoredQueryFactory');
-        $queryFactory->setPresenter(new MockSeriesPresenter());
+        //$queryFactory->setPresenter(new MockSeriesPresenter());
 
         $parameters = array(
             'category' => new MockQueryParameter('category'),
         );
-        $storedQuery = $queryFactory->createQueryFromSQL('SELECT 1, \'ahoj\' FROM dual', $parameters, array('php_post_proc' => 'MockProcessing'));
+        $storedQuery = $queryFactory->createQueryFromSQL(new MockSeriesPresenter(),'SELECT 1, \'ahoj\' FROM dual', $parameters, array('php_post_proc' => 'MockProcessing'));
 
 	// AESOP format requires QID
 	$storedQuery->getQueryPattern()->qid = 'aesop.ct';
@@ -103,7 +105,7 @@ class MockProcessing extends StoredQueryPostProcessing {
     }
 
     public function getDescription() {
-        
+
     }
 
     public function processData($data) {
