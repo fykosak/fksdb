@@ -551,8 +551,7 @@ class BaseHolder extends FreezableObject {
         $args = func_get_args();
         array_unshift($args, $this->parameters);
         try {
-            $result = call_user_func_array('Nette\Utils\Arrays::get', $args);
-            return $result;
+            return call_user_func_array('Nette\Utils\Arrays::get', $args);
         } catch (InvalidArgumentException $exception) {
             throw new InvalidArgumentException("No parameter '$name' for event " . $this->getEvent() . ".", null, $exception);
         }

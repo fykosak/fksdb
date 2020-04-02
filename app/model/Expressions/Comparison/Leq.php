@@ -29,7 +29,6 @@ class Leq extends EvaluatedExpression {
      * @return bool
      */
     public function __invoke(...$args): bool {
-        $args = func_get_args();
         return $this->evaluateArgument($this->a, ...$args) <= $this->evaluateArgument($this->b, ...$args);
     }
 
