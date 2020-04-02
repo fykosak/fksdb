@@ -34,7 +34,8 @@ use SQL\SearchableDataSource;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 abstract class BaseGrid extends Grid {
-
+    /** @var Container */
+    private $context;
     /** @persistent string */
     public $searchTerm;
     /**
@@ -48,6 +49,7 @@ abstract class BaseGrid extends Grid {
      */
     public function __construct(Container $container) {
         parent::__construct();
+        $this->context = $container;
         $this->tableReflectionFactory = $container->getByType(TableReflectionFactory::class);
     }
 
@@ -63,6 +65,12 @@ abstract class BaseGrid extends Grid {
         $paginator->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.paginator.latte');
     }
 
+    /**
+     * @return Container
+     */
+    public final function getContext() {
+        return $this->context;
+    }
 
     /**
      * @param null $class

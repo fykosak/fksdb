@@ -2,6 +2,7 @@
 
 namespace OrgModule;
 
+use Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\EventFactory;
 use FKSDB\Components\Grids\Events\EventsGrid;
@@ -121,11 +122,10 @@ class EventPresenter extends EntityPresenter {
     }
 
     /**
-     * @param $name
      * @return FormControl|mixed
      * @throws BadRequestException
      */
-    protected function createComponentCreateComponent($name) {
+    protected function createComponentCreateComponent() {
         $control = $this->createForm();
         $form = $control->getForm();
 
@@ -138,11 +138,10 @@ class EventPresenter extends EntityPresenter {
     }
 
     /**
-     * @param $name
      * @return FormControl|mixed
      * @throws BadRequestException
      */
-    protected function createComponentEditComponent($name) {
+    protected function createComponentEditComponent() {
         $control = $this->createForm();
         $form = $control->getForm();
         $form->addSubmit('send', _('Save'));
@@ -154,10 +153,9 @@ class EventPresenter extends EntityPresenter {
     }
 
     /**
-     * @param $name
      * @return EventsGrid
      */
-    protected function createComponentGrid($name): EventsGrid {
+    protected function createComponentGrid(): EventsGrid {
         return new EventsGrid($this->getContext());
     }
 
@@ -172,8 +170,10 @@ class EventPresenter extends EntityPresenter {
 
         $eventContainer = $this->eventFactory->createEvent($this->getSelectedContest());
         $form->addComponent($eventContainer, self::CONT_EVENT);
-
-        if ($event = $this->getModel()) { // intentionally =
+        /** @var ModelEvent $event */
+        $event = $this->getModel();
+        if ($event) { // intentionally =
+            /** @var Holder $holder */
             $holder = $this->container->createEventHolder($event);
             $scheme = $holder->getPrimaryHolder()->getParamScheme();
             $paramControl = $eventContainer->getComponent('parameters');

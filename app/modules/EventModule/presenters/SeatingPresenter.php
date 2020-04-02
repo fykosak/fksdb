@@ -32,35 +32,30 @@ class SeatingPresenter extends BasePresenter {
     }
 
     public function titleDefault() {
-        $this->setTitle(_('Rozdělení do místností'));
-        $this->setIcon('fa fa-arrows');
+        $this->setTitle(_('Rooming'),'fa fa-arrows');
     }
 
     public function titleEdit() {
-        $this->setTitle(_('Edit routing'));
-        $this->setIcon('fa fa-pencil');
+        $this->setTitle(_('Edit routing'),'fa fa-pencil');
     }
 
     public function titleDownload() {
-        $this->setTitle(_('Download routing'));
-        $this->setIcon('fa fa-download');
+        $this->setTitle(_('Download routing'),'fa fa-download');
     }
 
     public function titleList() {
-        $this->setTitle(_('List of all teams'));
-        $this->setIcon('fa fa-print');
+        $this->setTitle(_('List of all teams'),'fa fa-print');
     }
 
     public function titlePreview() {
-        $this->setTitle(_('Preview'));
-        $this->setIcon('fa fa-search');
+        $this->setTitle(_('Preview'),'fa fa-search');
     }
 
     /**
      * @return bool
      * @throws BadRequestException
      */
-    protected function isEnabledForEvent(): bool {
+    protected function isEnabled(): bool {
         return $this->getEvent()->event_type_id === 1;
     }
 
@@ -108,7 +103,7 @@ class SeatingPresenter extends BasePresenter {
             $response = new ReactResponse();
             $response->setAct('update-teams');
             $response->setData(['updatedTeams' => $updatedTeams]);
-            $response->addMessage(new ReactMessage(_('Zmeny boli uložené'), \BasePresenter::FLASH_SUCCESS));
+            $response->addMessage(new ReactMessage(_('changes has been saved'), \BasePresenter::FLASH_SUCCESS));
             $this->sendResponse($response);
         }
     }

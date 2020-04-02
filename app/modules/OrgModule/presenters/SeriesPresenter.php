@@ -4,7 +4,7 @@ namespace OrgModule;
 
 use FKSDB\Components\Controls\SeriesChooser;
 use FKSDB\SeriesCalculator;
-use ISeriesPresenter;
+use FKSDB\CoreModule\ISeriesPresenter;
 use Nette\Application\BadRequestException;
 
 /**
@@ -40,21 +40,26 @@ abstract class SeriesPresenter extends BasePresenter implements ISeriesPresenter
 
     /**
      * @return int
+     * @throws BadRequestException
      */
     public function getSelectedSeries() {
-        return $this->getComponent('seriesChooser')->getSeries();
+        $control = $this->getComponent('seriesChooser');
+        if (!$control instanceof SeriesChooser) {
+            throw new BadRequestException();
+        }
+        return $control->getSeries();
     }
 
     /**
-     * @param $name
      * @return SeriesChooser
      */
-    public function createComponentSeriesChooser($name) {
+    public function createComponentSeriesChooser() {
         return new SeriesChooser($this->session, $this->seriesCalculator, $this->serviceContest, $this->getTranslator());
     }
 
     /**
      * @return string
+     * @throws BadRequestException
      */
     public function getSubTitle(): string {
         return parent::getSubTitle() . ' ' . sprintf(_('%s series'), $this->getSelectedSeries());

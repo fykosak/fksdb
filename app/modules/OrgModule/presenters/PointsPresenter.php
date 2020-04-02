@@ -14,6 +14,8 @@ use FKSDB\ORM\Services\ServiceTaskContribution;
 use FKSDB\ORM\Services\ServiceTaskStudyYear;
 use FKSDB\Results\SQLResultsCache;
 use FKSDB\Submits\SeriesTable;
+use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Tracy\Debugger;
 use Nette\InvalidArgumentException;
@@ -38,27 +40,27 @@ class PointsPresenter extends SeriesPresenter {
     private $SQLResultsCache;
 
     /**
-     * @var \FKSDB\Submits\SeriesTable
+     * @var SeriesTable
      */
     private $seriesTable;
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceSubmit
+     * @var ServiceSubmit
      */
     private $serviceSubmit;
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceTask
+     * @var ServiceTask
      */
     private $serviceTask;
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceTaskContribution
+     * @var ServiceTaskContribution
      */
     private $serviceTaskContribution;
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceTaskStudyYear
+     * @var ServiceTaskStudyYear
      */
     private $serviceTaskStudyYear;
 
@@ -70,21 +72,21 @@ class PointsPresenter extends SeriesPresenter {
     }
 
     /**
-     * @param \FKSDB\Submits\SeriesTable $seriesTable
+     * @param SeriesTable $seriesTable
      */
     public function injectSeriesTable(SeriesTable $seriesTable) {
         $this->seriesTable = $seriesTable;
     }
 
     /**
-     * @param \FKSDB\ORM\Services\ServiceSubmit $serviceSubmit
+     * @param ServiceSubmit $serviceSubmit
      */
     public function injectServiceSubmit(ServiceSubmit $serviceSubmit) {
         $this->serviceSubmit = $serviceSubmit;
     }
 
     /**
-     * @param \FKSDB\ORM\Services\ServiceTask $serviceTask
+     * @param ServiceTask $serviceTask
      */
     public function injectServiceTask(ServiceTask $serviceTask) {
         $this->serviceTask = $serviceTask;
@@ -112,7 +114,7 @@ class PointsPresenter extends SeriesPresenter {
     }
 
     /**
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     public function authorizedDefault() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'edit', $this->getSelectedContest()));
@@ -138,48 +140,46 @@ class PointsPresenter extends SeriesPresenter {
     }
 
     /**
-     * @param $name
      * @return OptimisticForm
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
-    protected function createComponentPointsForm($name) {
-        //   $controlContainer = new FormControl();
-        //   $formToRemove = $controlContainer->getForm();
-        //  $controlContainer->removeComponent($formToRemove);
+    protected function createComponentPointsForm(): OptimisticForm {
 
         $form = new OptimisticForm(
-            [$this->seriesTable, 'getFingerprint'], [$this->seriesTable, 'formatAsFormValues']
+            function () {
+                return $this->seriesTable->getFingerprint();
+            },
+            function () {
+                return $this->seriesTable->formatAsFormValues();
+            }
         );
-        // $controlContainer->addComponent($form, 'form');
-
-
         $contestants = $this->seriesTable->getContestants();
         $tasks = $this->seriesTable->getTasks();
-        $gradedTasks = $this->getGradedTasks();
+        // $gradedTasks = $this->getGradedTasks();
 
         $container = $form->addContainer(SeriesTable::FORM_CONTESTANT);
 
         foreach ($contestants as $row) {
             $contestant = ModelContestant::createFromActiveRow($row);
-            $fullname = $contestant->getPerson()->getFullName();
+            $fullName = $contestant->getPerson()->getFullName();
             $schoolAbbrev = $contestant->getPerson()->getHistory($this->getSelectedAcademicYear())->getSchool()->name_abbrev;
             $schoolLabel = Html::el('small');
             $schoolLabel->setText('(' . $schoolAbbrev . ')');
             $schoolLabel->class = 'text-muted';
             $label = Html::el('span')
-                ->setText($fullname)
+                ->setText($fullName)
                 ->addHtml(Html::el('br'))
                 ->addText($schoolLabel);
             $control = new ContestantSubmits($tasks, $contestant, $this->serviceSubmit, $this->getSelectedAcademicYear(), $label);
             $control->setClassName('points');
-            // $namingContainer = new ContainerWithOptions();
-            // $container->addComponent($namingContainer,$contestant->ct_id);
             $namingContainer = $container->addContainer($contestant->ct_id);
             $namingContainer->addComponent($control, SeriesTable::FORM_SUBMIT);
         }
 
         $form->addSubmit('save', _('Save'));
-        $form->onSuccess[] = array($this, 'pointsFormSuccess');
+        $form->onSuccess[] = function (Form $form) {
+            return $this->pointsFormSuccess($form);
+        };
 
         // JS dependencies
         $this->registerJSFile('js/points.js');
@@ -189,9 +189,9 @@ class PointsPresenter extends SeriesPresenter {
 
     /**
      * @param Form $form
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
-    public function pointsFormSuccess(Form $form) {
+    private function pointsFormSuccess(Form $form) {
         $values = $form->getValues();
 
         try {
@@ -207,10 +207,8 @@ class PointsPresenter extends SeriesPresenter {
             }
             $this->serviceSubmit->getConnection()->commit();
 
-
             // recalculate points (separate transaction)
             $this->SQLResultsCache->recalculate($this->getSelectedContest(), $this->getSelectedYear());
-
 
             $this->flashMessage(_('Body úloh uloženy.'), self::FLASH_SUCCESS);
         } catch (Exception $exception) {
@@ -221,7 +219,7 @@ class PointsPresenter extends SeriesPresenter {
     }
 
     /**
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function handleInvalidate() {
         try {
@@ -236,24 +234,22 @@ class PointsPresenter extends SeriesPresenter {
     }
 
     /**
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function handleRecalculateAll() {
         try {
-
             $contest = $this->getSelectedContest();
 
             $years = $this->serviceTask->getTable()
                 ->select('year')
-                ->where(array(
+                ->where([
                     'contest_id' => $contest->contest_id,
-                ))->group('year');
+                ])->group('year');
 
             foreach ($years as $year) {
                 $this->SQLResultsCache->recalculate($contest, $year->year);
             }
-
 
             $this->flashMessage(_('Body přepočítány.'), self::FLASH_INFO);
         } catch (InvalidArgumentException $exception) {
@@ -282,11 +278,11 @@ class PointsPresenter extends SeriesPresenter {
             $taskIds[] = $task->task_id;
         }
         $gradedTasks = $this->serviceTaskContribution->getTable()
-            ->where(array(
+            ->where([
                 'person_id' => $person->person_id,
                 'task_id' => $taskIds,
                 'type' => ModelTaskContribution::TYPE_GRADE
-            ))->fetchPairs('task_id', 'task_id');
+            ])->fetchPairs('task_id', 'task_id');
         return array_values($gradedTasks);
     }
 

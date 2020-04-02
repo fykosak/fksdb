@@ -32,7 +32,7 @@ class EventOrgPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function titleList() {
-        $this->setTitle(sprintf(_('Organizátoři akce %s'), $this->getEvent()->name), 'fa fa-users');
+        $this->setTitle(sprintf(_('Organisers of event %s'), $this->getEvent()->name), 'fa fa-users');
     }
 
     /**

@@ -46,10 +46,9 @@ class ContestantPresenter extends ExtendedPersonPresenter {
     }
 
     /**
-     * @param $name
      * @return ContestantsGrid
      */
-    protected function createComponentGrid($name) {
+    protected function createComponentGrid() {
         return new ContestantsGrid($this->getContext());
     }
 
@@ -70,6 +69,7 @@ class ContestantPresenter extends ExtendedPersonPresenter {
 
     /**
      * @return null
+     * TODO refactoring
      */
     protected function getAcYearFromModel() {
         $model = $this->getModel();

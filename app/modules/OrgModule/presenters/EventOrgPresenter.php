@@ -8,6 +8,8 @@ use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEvent;
 use FKSDB\ORM\Services\ServiceEventOrg;
+use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Persons\ExtendedPersonHandler;
 
@@ -25,12 +27,12 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
     private $serviceEventOrg;
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceEvent
+     * @var ServiceEvent
      */
     private $serviceEvent;
 
     /**
-     * @var \FKSDB\ORM\Models\ModelEvent
+     * @var ModelEvent
      */
     private $modelEvent;
 
@@ -47,7 +49,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
     }
 
     /**
-     * @param \FKSDB\ORM\Services\ServiceEvent $serviceEvent
+     * @param ServiceEvent $serviceEvent
      */
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;
@@ -66,8 +68,8 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
 
     /**
      * @param $id
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function renderEdit($id) {
         parent::renderEdit($id);
@@ -82,7 +84,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
 
     /**
      * @param $id
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function actionDelete(int $id) {
         $success = $this->serviceEventOrg->getTable()->wherePrimary($id)->delete();
@@ -95,7 +97,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
     }
 
     /**
-     * @param \FKSDB\ORM\IModel|null $model
+     * @param IModel|null $model
      * @param Form $form
      */
     protected function setDefaults(IModel $model = null, Form $form) {
@@ -151,7 +153,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
     }
 
     /**
-     * @return \FKSDB\ORM\Models\ModelEvent
+     * @return ModelEvent
      */
     private function getEvent(): ModelEvent {
         if (!$this->modelEvent) {
@@ -164,7 +166,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
      * @inheritDoc
      * @throws NotImplementedException
      */
-    protected function createComponentGrid($name) {
+    protected function createComponentGrid() {
         throw new NotImplementedException();
     }
 

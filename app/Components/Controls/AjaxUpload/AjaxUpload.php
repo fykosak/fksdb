@@ -194,4 +194,10 @@ class AjaxUpload extends ReactComponent {
         return 'public.ajax-upload';
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function getContext() {
+        // TODO: Implement getContext() method.
+    }
 }

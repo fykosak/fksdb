@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Controls;
 
 use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelRole;
 use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\YearCalculator;
@@ -85,7 +86,6 @@ class ContestChooser extends Control {
 
     /**
      *
-
      * @param Session $session
      * @param \FKSDB\YearCalculator $yearCalculator
      * @param ServiceContest $serviceContest
@@ -258,9 +258,9 @@ class ContestChooser extends Control {
     private function getContests() {
         if ($this->contests === null) {
             if (is_array($this->contestsDefinition)) { // explicit
-                $contests = array_map(function($contest) {
-                            return ($contest instanceof ModelContest) ? $contest->contest_id : $contest;
-                        }, $this->contestsDefinition);
+                $contests = array_map(function ($contest) {
+                    return ($contest instanceof ModelContest) ? $contest->contest_id : $contest;
+                }, $this->contestsDefinition);
             } else if ($this->contestsDefinition === self::CONTESTS_ALL) { // all
                 $pk = $this->serviceContest->getPrimary();
                 $contests = $this->serviceContest->fetchPairs($pk, $pk);
@@ -283,10 +283,10 @@ class ContestChooser extends Control {
                 $row = $this->serviceContest->findByPrimary($id);
                 $contest = ModelContest::createFromActiveRow($row);
                 $years = $this->getYears($contest);
-                $this->contests[$id] = (object) array(
-                            'contest' => $contest,
-                            'years' => $years,
-                            'currentYear' => $this->yearCalculator->getCurrentYear($contest),
+                $this->contests[$id] = (object)array(
+                    'contest' => $contest,
+                    'years' => $years,
+                    'currentYear' => $this->yearCalculator->getCurrentYear($contest),
                 );
             }
         }
@@ -303,12 +303,13 @@ class ContestChooser extends Control {
             $max = $this->yearCalculator->getLastYear($contest);
             return array_reverse(range($min, $max));
         } else {
+            /** @var ModelLogin $login */
             $login = $this->getLogin();
             $currentYear = $this->yearCalculator->getCurrentYear($contest);
             if (!$login || !$login->getPerson()) {
                 return array($currentYear);
             }
-            $contestants = $login->getPerson()->getContestants($contest->contest_id);
+            $contestants = $login->getPerson()->getContestants($contest);
             $years = [];
             foreach ($contestants as $contestant) {
                 $years[] = $contestant->year;
