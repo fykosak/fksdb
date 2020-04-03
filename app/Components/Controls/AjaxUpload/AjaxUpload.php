@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Control\AjaxUpload;
 
 use FKSDB\Components\React\ReactComponent;
+use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceSubmit;
@@ -133,7 +134,7 @@ class AjaxUpload extends ReactComponent {
             if (!$task) {
 
                 $response->setCode(403);
-                $response->addMessage(new ReactMessage(_('Upload not allowed'), 'danger'));
+                $response->addMessage(new ReactMessage(_('Upload not allowed'), ILogger::ERROR));
                 $this->getPresenter()->sendResponse($response);
             };
             /**
@@ -142,7 +143,7 @@ class AjaxUpload extends ReactComponent {
             $file = $fileContainer;
             if (!$file->isOk()) {
                 $response->setCode(500);
-                $response->addMessage(new ReactMessage(_('File is not Ok'), 'danger'));
+                $response->addMessage(new ReactMessage(_('File is not Ok'), ILogger::ERROR));
                 $this->getPresenter()->sendResponse($response);
                 return;
             }
