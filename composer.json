@@ -18,5 +18,24 @@
   },
   "autoload": {
     "classmap": []
+  },
+  "scripts": {
+    "initTestDatabase": [
+      "./tests/init-database.sh"
+    ],
+    "clearTestDatabase": [
+      "./tests/clear-database.sh"
+    ],
+    "clearTestCache": [
+      "rm -rf temp/tester/"
+    ],
+    "clearCache": [
+      "rm -rf temp/cache/"
+    ],
+    "test":[
+      "@clearTestCache",
+      "@clearTestDatabase",
+      "./tests/run.sh -j 1"
+    ]
   }
 }
