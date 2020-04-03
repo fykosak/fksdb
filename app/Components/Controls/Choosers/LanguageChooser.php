@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Choosers;
 
-use FKSDB\LangPresenter;
+use FKSDB\LangPresenterTrait;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
@@ -91,7 +91,7 @@ class LanguageChooser extends Control {
     public function render(string $class = null) {
         $this->template->modifiable = $this->modifiable;
         $this->template->languages = $this->getSupportedLanguages();
-        $this->template->languageNames = LangPresenter::LANGUAGE_NAMES;
+        $this->template->languageNames = LangPresenterTrait::$languageNames;
         $this->template->currentLanguage = $this->language ?: null;
         $this->template->class = ($class !== null) ? $class : "nav navbar-nav navbar-right";
         $this->template->setTranslator($this->getPresenter()->getTranslator());
