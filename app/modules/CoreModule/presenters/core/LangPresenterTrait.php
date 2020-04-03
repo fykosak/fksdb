@@ -26,7 +26,7 @@ trait LangPresenterTrait {
     public $lang;
 
     /** @var string cache */
-    private $_lang;
+    private $cacheLang;
 
     /**
      * @param GettextTranslator $translator
@@ -75,20 +75,20 @@ trait LangPresenterTrait {
      * Should be final
      */
     public function getLang(): string {
-        if (!$this->_lang) {
-            $this->_lang = $this->getUserPreferredLang();
-            if (!$this->_lang) {
-                $this->_lang = $this->lang;
+        if (!$this->cacheLang) {
+            $this->cacheLang = $this->getUserPreferredLang();
+            if (!$this->cacheLang) {
+                $this->cacheLang = $this->lang;
             }
             $supportedLanguages = $this->translator->getSupportedLanguages();
-            if (!$this->_lang || !in_array($this->_lang, $supportedLanguages)) {
-                $this->_lang = $this->getHttpRequest()->detectLanguage($supportedLanguages);
+            if (!$this->cacheLang || !in_array($this->cacheLang, $supportedLanguages)) {
+                $this->cacheLang = $this->getHttpRequest()->detectLanguage($supportedLanguages);
             }
-            if (!$this->_lang) {
-                $this->_lang = $this->globalParameters['localization']['defaultLanguage'];
+            if (!$this->cacheLang) {
+                $this->cacheLang = $this->globalParameters['localization']['defaultLanguage'];
             }
         }
-        return $this->_lang;
+        return $this->cacheLang;
     }
 
     /**
