@@ -23,7 +23,7 @@ class ContestRow extends AbstractRow {
         if (!$model instanceof IContestReferencedModel) {
             throw new BadRequestException();
         }
-        return ContestBadge::getHtml($model->getContest()->contest_id);
+        return ContestBadge::getHtml($model->getContest());
     }
 
     /**

@@ -3,7 +3,9 @@
 namespace CommonModule;
 
 use FKSDB\Components\Grids\Deduplicate\PersonsGrid;
+use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
+use FKSDB\ORM\Tables\TypedTableSelection;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -90,6 +92,7 @@ class DeduplicatePresenter extends BasePresenter {
     protected function createComponentPersonsGrid(): PersonsGrid {
         $duplicateFinder = $this->createPersonDuplicateFinder();
         $pairs = $duplicateFinder->getPairs();
+        /** @var TypedTableSelection $trunkPersons */
         $trunkPersons = $this->servicePerson->getTable()->where('person_id', array_keys($pairs));
 
         return new PersonsGrid($trunkPersons, $pairs, $this->getContext());

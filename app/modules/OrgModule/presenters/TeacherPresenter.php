@@ -92,10 +92,9 @@ class TeacherPresenter extends ExtendedPersonPresenter {
     }
 
     /**
-     * @param $name
      * @return TeachersGrid
      */
-    protected function createComponentGrid($name): TeachersGrid {
+    protected function createComponentGrid(): TeachersGrid {
         return new TeachersGrid($this->getContext());
     }
 

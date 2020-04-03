@@ -116,18 +116,6 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @return bool
-     * @throws BadRequestException
-     * @throws AbortException
-     */
-    protected final function isTeamEvent(): bool {
-        if (\in_array($this->getEvent()->event_type_id, self::TEAM_EVENTS)) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * @return AbstractApplicationGrid
      * @throws AbortException
      * @throws BadRequestException

@@ -3,7 +3,6 @@
 namespace FKSDB\Transitions\Statements\Conditions;
 
 use FKSDB\ORM\Models\IEventReferencedModel;
-use FKSDB\Transitions\IStateModel;
 use Nette\Application\BadRequestException;
 use Nette\Security\IResource;
 
@@ -14,12 +13,13 @@ use Nette\Security\IResource;
 class ImplicitEventRole extends EventRole {
 
     /**
-     * @param IStateModel|null $model
      * @param array $args
      * @return bool
      * @throws BadRequestException
      */
-    protected function evaluate(IStateModel $model = null, ...$args): bool {
+    protected function evaluate(...$args): bool {
+        list($model) = $args;
+
         if (!($model instanceof IEventReferencedModel) || !($model instanceof IResource)) {
             throw new BadRequestException();
         }

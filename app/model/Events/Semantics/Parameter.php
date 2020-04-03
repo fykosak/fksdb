@@ -30,7 +30,7 @@ class Parameter extends EvaluatedExpression {
      * @return mixed
      * @throws BadRequestException
      */
-    public function __invoke(...$args): bool {
+    public function __invoke(...$args) {
         return $this->getHolder($args[0])->getParameter($this->parameter);
     }
 

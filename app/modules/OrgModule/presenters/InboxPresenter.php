@@ -154,23 +154,19 @@ class InboxPresenter extends SeriesPresenter {
 
     /* ***************** TITLES ***********************/
     public function titleDefault() {
-        $this->setTitle(_('Inbox'));
-        $this->setIcon('fa fa-envelope-open');
+        $this->setTitle(_('Inbox'), 'fa fa-envelope-open');
     }
 
     public function titleHandout() {
-        $this->setTitle(_('Rozdělení úloh opravovatelům'));
-        $this->setIcon('fa fa-inbox');
+        $this->setTitle(_('Rozdělení úloh opravovatelům'), 'fa fa-inbox');
     }
 
     public function titleList() {
-        $this->setTitle(_('List of solutions'));
-        $this->setIcon('fa fa-cloud-download');
+        $this->setTitle(_('List of solutions'), 'fa fa-cloud-download');
     }
 
     public function titleCheck() {
-        $this->setTitle(_('Check files'));
-        $this->setIcon('fa fa-file');
+        $this->setTitle(_('Check files'), 'fa fa-file');
     }
 
     /* *********** LIVE CYCLE *************/
@@ -189,7 +185,7 @@ class InboxPresenter extends SeriesPresenter {
     public function actionHandout() {
         // This workaround fixes inproper caching of referenced tables.
         $connection = $this->servicePerson->getConnection();
-        $connection->getCache()->clean(array(Cache::ALL => true));
+        $connection->getCache()->clean([Cache::ALL => true]);
         $connection->getDatabaseReflection()->setConnection($connection);
     }
 
@@ -197,18 +193,24 @@ class InboxPresenter extends SeriesPresenter {
         /**
          * @var ModelSubmit $submit
          */
+        $errors = 0;
         foreach ($this->seriesTable->getSubmits() as $submit) {
-            if ($submit->source === ModelSubmit::SOURCE_UPLOAD) {
-                if (!$this->getSubmitUploadedStorage()->fileExists($submit)) {
-                    $this->flashMessage(sprintf(_('Uploaded submit #%d is broken'), $submit->submit_id), 'danger');
-                }
+            if ($submit->source === ModelSubmit::SOURCE_UPLOAD && !$this->getSubmitUploadedStorage()->fileExists($submit)) {
+                $errors++;
+                $this->flashMessage(sprintf(_('Uploaded submit #%d is broken'), $submit->submit_id), 'danger');
             }
-            if ($submit->corrected) {
-                if (!$this->getSubmitCorrectedStorage()->fileExists($submit)) {
-                    $this->flashMessage(sprintf(_('Corrected submit #%d is broken'), $submit->submit_id), 'danger');
-                }
+
+            if ($submit->corrected && !$this->getSubmitCorrectedStorage()->fileExists($submit)) {
+                $errors++;
+                $this->flashMessage(sprintf(_('Corrected submit #%d is broken'), $submit->submit_id), 'danger');
+            }
+            if (!$submit->corrected && $this->getSubmitCorrectedStorage()->fileExists($submit)) {
+                $errors++;
+                $this->flashMessage(sprintf(_('Uploaded unregister corrected submit #%d'), $submit->submit_id), 'danger');
             }
         }
+        $this->flashMessage(sprintf(_('Test done, found %d errors'), $errors), $errors ? 'warning' : 'success');
+
     }
     /* ******************** RENDER ****************/
     /**
@@ -231,10 +233,10 @@ class InboxPresenter extends SeriesPresenter {
             $task = ModelTask::createFromActiveRow($row);
             $taskIds[] = $task->task_id;
         }
-        $contributions = $this->serviceTaskContribution->getTable()->where(array(
+        $contributions = $this->serviceTaskContribution->getTable()->where([
             'type' => ModelTaskContribution::TYPE_GRADE,
             'task_id' => $taskIds,
-        ));
+        ]);
 
         $values = [];
         foreach ($contributions as $row) {
@@ -264,7 +266,14 @@ class InboxPresenter extends SeriesPresenter {
      * @throws BadRequestException
      */
     protected function createComponentInboxForm() {
-        $controlForm = new OptimisticFormControl([$this->seriesTable, 'getFingerprint'], [$this->seriesTable, 'formatAsFormValues']);
+        $controlForm = new OptimisticFormControl(
+            function () {
+                return $this->seriesTable->getFingerprint();
+            },
+            function () {
+                return $this->seriesTable->formatAsFormValues();
+            }
+        );
         /*$form = new OptimisticForm(
             array($this->seriesTable, 'getFingerprint'), array($this->seriesTable, 'formatAsFormValues')
         );*/
@@ -306,16 +315,19 @@ class InboxPresenter extends SeriesPresenter {
     protected function createComponentHandoutForm() {
         $formControl = new FormControl();
         $form = $formControl->getForm();
+        $orgProvider = new PersonProvider($this->servicePerson);
 
         foreach ($this->seriesTable->getTasks() as $row) {
             $task = ModelTask::createFromActiveRow($row);
-            $control = $this->personFactory->createPersonSelect(false, $task->getFQName(), $this->getOrgProvider());
+            $control = $this->personFactory->createPersonSelect(false, $task->getFQName(), $orgProvider);
             $control->setMultiSelect(true);
             $form->addComponent($control, self::TASK_PREFIX . $task->task_id);
         }
 
         $form->addSubmit('save', _('Save'));
-        $form->onSuccess[] = callback($this, 'handoutFormSuccess');
+        $form->onSuccess[] = function (Form $form) {
+            $this->handoutFormSuccess($form);
+        };
 
         return $formControl;
     }
@@ -363,19 +375,18 @@ class InboxPresenter extends SeriesPresenter {
 
         foreach ($this->seriesTable->getTasks() as $row) {
             $task = ModelTask::createFromActiveRow($row);
-            $service->getTable()->where(array(
+            $service->getTable()->where([
                 'task_id' => $task->task_id,
                 'type' => ModelTaskContribution::TYPE_GRADE
-            ))->delete();
+            ])->delete();
             $key = self::TASK_PREFIX . $task->task_id;
             foreach ($values[$key] as $personId) {
-                $data = array(
+                $data = [
                     'task_id' => $task->task_id,
                     'person_id' => $personId,
                     'type' => ModelTaskContribution::TYPE_GRADE,
-                );
-                $contribution = $service->createNew($data);
-                $service->save($contribution);
+                ];
+                $this->serviceTaskContribution->createNewModel($data);
             }
         }
 
@@ -403,20 +414,6 @@ class InboxPresenter extends SeriesPresenter {
     public function handleDownloadCorrected(int $id) {
         list($message) = $this->traitHandleDownloadCorrected($id);
         $this->getPresenter()->flashMessage($message->getMessage(), $message->getLevel());
-    }
-
-    private $orgProvider;
-
-    /**
-     * @return PersonProvider
-     * @throws BadRequestException
-     */
-    private function getOrgProvider() {
-        if (!$this->orgProvider) {
-            $this->orgProvider = new PersonProvider($this->servicePerson);
-            $this->orgProvider->filterOrgs($this->getSelectedContest(), $this->yearCalculator);
-        }
-        return $this->orgProvider;
     }
 
     /**

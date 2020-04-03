@@ -8,7 +8,6 @@ use FKSDB\ORM\Models\ModelContest;
  * For presenters that provide contest and year context.
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * Interface IContestPresenter
  */
 interface IContestPresenter {
 
@@ -20,5 +19,12 @@ interface IContestPresenter {
 
     /** @return int */
     public function getSelectedAcademicYear(): int;
+
+    /**
+     * @param string $message
+     * @param string $type
+     * @return void
+     */
+    public function flashMessage($message, $type = 'info');
 }
 

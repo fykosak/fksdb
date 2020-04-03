@@ -28,10 +28,10 @@ class Count extends EvaluatedExpression {
 
     /**
      * @param array $args
-     * @return bool
+     * @return int
      * @throws BadRequestException
      */
-    public function __invoke(...$args): bool {
+    public function __invoke(...$args): int {
         $baseHolder = $this->getHolder($args[0])->getPrimaryHolder();
         $table = $baseHolder->getService()->getTable();
         $table->where($baseHolder->getEventId(), $this->getEvent($args[0])->getPrimary());

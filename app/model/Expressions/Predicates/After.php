@@ -3,6 +3,7 @@
 namespace FKSDB\Expressions\Predicates;
 
 use FKSDB\Expressions\EvaluatedExpression;
+use Nette\InvalidStateException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -16,7 +17,7 @@ class After extends EvaluatedExpression {
 
     /**
      * After constructor.
-     * @param $datetime
+     * @param \DateTimeInterface|callable $datetime
      */
     function __construct($datetime) {
         $this->datetime = $datetime;
@@ -27,7 +28,10 @@ class After extends EvaluatedExpression {
      * @return bool
      */
     public function __invoke(...$args): bool {
-        $datetime = $this->evalArg($this->datetime, ...$args);
+        $datetime = $this->evaluateArgument($this->datetime, ...$args);
+        if (!$datetime instanceof \DateTimeInterface) {
+            throw new InvalidStateException();
+        }
         return $datetime->getTimestamp() <= time();
     }
 

@@ -97,7 +97,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     /**
      * @return EventAuthorizator
      */
-    public function getEventAuthorizator() {
+    public function getEventAuthorizator(): EventAuthorizator {
         return $this->eventAuthorizator;
     }
 
@@ -110,7 +110,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
 
     /**
      * Formats action method name.
-     * @param  string
+     * @param string
      * @return string
      */
     protected static function formatAuthorizedMethod($action) {

@@ -56,7 +56,7 @@ class SeatingPresenter extends BasePresenter {
      * @return bool
      * @throws BadRequestException
      */
-    protected function isEnabledForEvent(): bool {
+    protected function isEnabled(): bool {
         return $this->getEvent()->event_type_id === 1;
     }
 
@@ -104,7 +104,7 @@ class SeatingPresenter extends BasePresenter {
             $response = new ReactResponse();
             $response->setAct('update-teams');
             $response->setData(['updatedTeams' => $updatedTeams]);
-            $response->addMessage(new ReactMessage(_('Zmeny boli uložené'), \BasePresenter::FLASH_SUCCESS));
+            $response->addMessage(new ReactMessage(_('changes has been saved'), \BasePresenter::FLASH_SUCCESS));
             $this->sendResponse($response);
         }
     }

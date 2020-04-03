@@ -32,6 +32,7 @@ use Nette\InvalidStateException;
 use Nette\Utils\Arrays;
 use Nette\Utils\PhpGenerator\ClassType;
 use Nette\Utils\PhpGenerator\Method;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -332,24 +333,23 @@ class EventsExtension extends CompilerExtension {
         $this->transtionFactory = $factory;
     }
 
-    /**
-     */
     private function createFieldFactory() {
         $factory = $this->getContainerBuilder()->addDefinition($this->getFieldName());
-        $factory->setShared(false);
         $factory->setClass(self::CLASS_FIELD, ['%name%', '%label%']);
-        $factory->setInternal(true);
 
         $parameters = array_keys($this->scheme['field']);
         array_unshift($parameters, 'name');
         $factory->setParameters($parameters);
-
         $factory->addSetup('setEvaluator', '@events.expressionEvaluator');
-
-        foreach (Arrays::grep($parameters, "/^name|label$/", PREG_GREP_INVERT) as $parameter) {
-            $factory->addSetup('set' . ucfirst($parameter), "%$parameter%");
+        foreach ($parameters as $parameter) {
+            switch ($parameter) {
+                case 'name':
+                case 'label':
+                    break;
+                default:
+                    $factory->addSetup('set' . ucfirst($parameter), "%$parameter%");
+            }
         }
-
         $this->fieldFactory = $factory;
     }
 
@@ -579,9 +579,8 @@ class EventsExtension extends CompilerExtension {
 
 
             array_unshift($fieldDef, $name);
-            $defka = $this->fieldFactory;
-            $stmt = new Statement($defka, $fieldDef);
-            $factory->addSetup('addField', $stmt);
+
+            $factory->addSetup('addField', new Statement($this->fieldFactory, $fieldDef));
         }
 
         $factory->addSetup('inferEvent', '%event%'); // must be after setParamScheme

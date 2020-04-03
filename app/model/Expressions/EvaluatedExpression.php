@@ -17,7 +17,7 @@ abstract class EvaluatedExpression {
      * @param $args
      * @return mixed
      */
-    protected final function evalArg($evaluated, ...$args) {
+    protected final function evaluateArgument($evaluated, ...$args) {
         if (is_callable($evaluated)) {
             return $evaluated(...$args);
         } else {
@@ -29,6 +29,6 @@ abstract class EvaluatedExpression {
      * @param array ...$args
      * @return bool
      */
-    public abstract function __invoke(...$args): bool;
+    public abstract function __invoke(...$args);
 
 }

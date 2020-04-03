@@ -46,7 +46,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @throws BadRequestException
      */
     public function createComponentGrid(): AbstractApplicationGrid {
-        return new ApplicationGrid($this->getEvent(), $this->getContext());
+        return new ApplicationGrid($this->getEvent(), $this->getHolder(), $this->getContext());
     }
 
     /**
@@ -55,9 +55,9 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @throws BadRequestException
      */
     public function createComponentImport(): ImportComponent {
-        $source = new SingleEventSource($this->getEvent(), $this->container);
+        $source = new SingleEventSource($this->getEvent(), $this->getContext());
         $logger = new MemoryLogger();
-        $machine = $this->container->createEventMachine($this->getEvent());
+        $machine = $this->getContext()->createEventMachine($this->getEvent());
         $handler = $this->applicationHandlerFactory->create($this->getEvent(), $logger);
         return new ImportComponent($machine, $source, $handler, $this->container);
     }
@@ -70,7 +70,6 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
     public function renderDetail(int $id) {
         parent::renderDetail($id);
         $this->template->fields = $this->getEvent()->getHolder()->getPrimaryHolder()->getFields();
-
         $this->template->groups = [
             _('Health & food') => ['health_restrictions', 'diet', 'used_drugs', 'note', 'swimmer'],
             _('T-shirt') => ['tshirt_size', 'tshirt_color'],

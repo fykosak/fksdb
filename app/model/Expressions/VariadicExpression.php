@@ -13,8 +13,8 @@ abstract class VariadicExpression extends EvaluatedExpression {
      */
     protected $arguments;
 
-    public function __construct() {
-        $this->arguments = func_get_args();
+    public function __construct(...$args) {
+        $this->arguments = $args;
     }
 
     /**
@@ -26,15 +26,10 @@ abstract class VariadicExpression extends EvaluatedExpression {
     }
 
     /**
-     * @param $args
-     * @return mixed
+     * VariadicExpression constructor.
+     * @param array ...$args
      */
     abstract protected function evaluate(...$args): bool;
-
-    /**
-     * @return mixed
-     */
-    abstract protected function getInfix();
 
     /**
      * @return string

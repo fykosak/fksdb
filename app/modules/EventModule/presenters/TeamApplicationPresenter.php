@@ -34,10 +34,9 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
 
     /**
      * @return bool
-     * @throws AbortException
      * @throws BadRequestException
      */
-    protected function isEnabledForEvent(): bool {
+    protected function isEnabled(): bool {
         return $this->isTeamEvent();
     }
 
@@ -47,7 +46,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
      * @throws BadRequestException
      */
     public function createComponentGrid(): AbstractApplicationGrid {
-        return new TeamApplicationGrid($this->getEvent(), $this->getContext());
+        return new TeamApplicationGrid($this->getEvent(), $this->getHolder(), $this->getContext());
     }
 
     /**
@@ -72,7 +71,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
      * @return SeatingControl
      */
     public function createComponentSeating(): SeatingControl {
-        return new SeatingControl($this->container);
+        return new SeatingControl($this->getContext());
     }
 
     /**

@@ -137,6 +137,6 @@ class SubmitPresenter extends BasePresenter {
      * @throws AbortException
      */
     public function createComponentEditForm(): Control {
-        return new EditControl($this->context, $this->getEvent());
+        return new EditControl($this->getContext(), $this->getEvent());
     }
 }

@@ -3,15 +3,13 @@
 namespace EventModule;
 
 use AuthenticatedPresenter;
+use Events\Model\Holder\Holder;
 use FKSDB\NotImplementedException;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Services\ServiceContestYear;
 use FKSDB\ORM\Services\ServiceEvent;
-use FKSDB\YearCalculator;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\DI\Container;
 use Nette\Security\IResource;
 
 /**
@@ -21,60 +19,21 @@ use Nette\Security\IResource;
  */
 abstract class BasePresenter extends AuthenticatedPresenter {
 
-    const TEAM_EVENTS = [1, 9];
+    const TEAM_EVENTS = [1, 9, 13];
 
-    /**
-     *
-     * @var ModelEvent
-     */
+    /** @var ModelEvent */
     private $event;
+    /** @var Holder */
+    private $holder;
 
     /**
      * @var int
      * @persistent
      */
     public $eventId;
-    /**
-     *
-     * @var Container
-     */
-    protected $container;
 
-    /**
-     * @var ServiceEvent
-     */
+    /** @var ServiceEvent */
     protected $serviceEvent;
-
-    /**
-     * @var ServiceContestYear
-     */
-    protected $serviceContestYear;
-
-    /**
-     * @param ServiceContestYear $serviceContestYear
-     */
-    public function injectServiceContestYear(ServiceContestYear $serviceContestYear) {
-        $this->serviceContestYear = $serviceContestYear;
-    }
-
-    /**
-     * @var YearCalculator
-     */
-    protected $yearCalculator;
-
-    /**
-     * @param YearCalculator $yearCalculator
-     */
-    public function injectYearCalculator(YearCalculator $yearCalculator) {
-        $this->yearCalculator = $yearCalculator;
-    }
-
-    /**
-     * @param Container $container
-     */
-    public function injectContainer(Container $container) {
-        $this->container = $container;
-    }
 
     /**
      * @param ServiceEvent $serviceEvent
@@ -89,8 +48,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @throws \Exception
      */
     protected function startup() {
-
-        if (!$this->isEnabledForEvent()) {
+        if (!$this->isEnabled()) {
             throw new NotImplementedException();
         }
         parent::startup();
@@ -100,28 +58,10 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @return bool
      */
     public function isAuthorized(): bool {
-        if (!$this->isEnabledForEvent()) {
+        if (!$this->isEnabled()) {
             return false;
         }
         return parent::isAuthorized();
-    }
-
-    /**
-     * @return int
-     * @throws BadRequestException
-     */
-    protected function getAcYear(): int {
-        return $this->yearCalculator->getAcademicYear($this->getEvent()->getContest(), $this->getEvent()->year);
-    }
-
-    /**
-     * @return ModelEvent
-     * @return string
-     * @throws BadRequestException
-     * @throws BadRequestException
-     */
-    public function getSubTitle(): string {
-        return $this->getEvent()->__toString();
     }
 
     /**
@@ -134,14 +74,54 @@ abstract class BasePresenter extends AuthenticatedPresenter {
             if (!$model) {
                 throw new BadRequestException('Event not found.', 404);
             }
-
             $this->event = $model;
-            $holder = $this->container->createEventHolder($this->event);
-            $this->event->setHolder($holder);
         }
         return $this->event;
     }
 
+    /**
+     * @return Holder
+     * @throws BadRequestException
+     */
+    protected function getHolder(): Holder {
+        if (!$this->holder) {
+            $this->holder = $this->getContext()->createEventHolder($this->getEvent());
+        }
+        return $this->holder;
+    }
+
+    /**
+     * @return int
+     * @throws BadRequestException
+     */
+    protected function getAcYear(): int {
+        return $this->yearCalculator->getAcademicYear($this->getContest(), $this->getEvent()->year);
+    }
+
+    /**
+     * @return ModelContest
+     * @throws BadRequestException
+     */
+    protected final function getContest(): ModelContest {
+        return $this->getEvent()->getContest();
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isEnabled(): bool {
+        return true;
+    }
+
+    /**
+     * @return bool
+     * @throws BadRequestException
+     */
+    protected function isTeamEvent(): bool {
+        return (bool)in_array($this->getEvent()->event_type_id, self::TEAM_EVENTS);
+    }
+
+    /* **************** ACL *********************** */
     /**
      * @param IResource|string $resource
      * @param string $privilege
@@ -176,12 +156,34 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         return $this->getEventAuthorizator()->isEventOrContestOrgAllowed($resource, $privilege, $this->getEvent());
     }
 
+    /* ********************** GUI ************************ */
+    /**
+     * @return ModelEvent
+     * @return string
+     * @throws BadRequestException
+     * @throws BadRequestException
+     */
+    public function getSubTitle(): string {
+        return $this->getEvent()->__toString();
+    }
+
     /**
      * @return array
      * @throws BadRequestException
      */
     protected function getNavBarVariant(): array {
-        return ['event event-type-' . $this->getEvent()->event_type_id, ($this->getEvent()->event_type_id == 1) ? 'bg-fyziklani navbar-dark' : 'bg-light navbar-light'];
+        $classNames = ['event event-type-' . $this->getEvent()->event_type_id, null];
+        switch ($this->getEvent()->event_type_id) {
+            case 1:
+                $classNames[1] = 'bg-fyziklani navbar-dark';
+                break;
+            case 9:
+                $classNames[1] = 'bg-fol navbar-light';
+                break;
+            default:
+                $classNames[1] = 'bg-light navbar-light';
+        }
+        return $classNames;
     }
 
     /**
@@ -189,20 +191,5 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      */
     protected function getNavRoots(): array {
         return ['event.dashboard.default'];
-    }
-
-    /**
-     * @return ModelContest
-     * @throws BadRequestException
-     */
-    protected final function getContest(): ModelContest {
-        return $this->getEvent()->getContest();
-    }
-
-    /**
-     * @return bool
-     */
-    protected function isEnabledForEvent(): bool {
-        return true;
     }
 }

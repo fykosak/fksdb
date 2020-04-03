@@ -71,8 +71,7 @@ class Role extends EvaluatedExpression {
                 $event = $this->getEvent($args[0]);
                 return $this->contestAuthorizator->isAllowed($event, 'application', $event->getContest());
             case self::RELATED:
-                $event = $this->getEvent($args[0]);
-                return $this->relatedAuthorizator->isRelatedPerson($this->getHolder($obj));
+                return $this->relatedAuthorizator->isRelatedPerson($this->getHolder($args[0]));
             case self::REGISTERED:
                 return $this->user->isLoggedIn();
             case self::GUEST:

@@ -17,7 +17,7 @@ class LogicAnd extends VariadicExpression {
      */
     protected function evaluate(...$args): bool {
         foreach ($this->arguments as $argument) {
-            if (!$this->evalArg($argument, ...$args)) {
+            if (!$this->evaluateArgument($argument, ...$args)) {
                 return false;
             }
         }

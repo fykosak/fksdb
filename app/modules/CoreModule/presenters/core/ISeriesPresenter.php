@@ -2,17 +2,20 @@
 
 namespace FKSDB\CoreModule;
 
-use FKSDB\CoreModule\IContestPresenter;
+
+use Nette\Application\BadRequestException;
 
 /**
  * For presenters that provide series no. context.
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * Interface ISeriesPresenter
  */
 interface ISeriesPresenter extends IContestPresenter {
 
-    /** @return int */
+    /**
+     * @return int
+     * @throws BadRequestException
+     */
     public function getSelectedSeries(): int;
 }
 
