@@ -61,7 +61,7 @@ trait SubmitRevokeTrait {
             $this->getServiceSubmit()->dispose($submit);
             $data = $this->getServiceSubmit()->serializeSubmit(null, $submit->getTask(), $this->getPresenter());
 
-            return [new Message(sprintf('Odevzdání úlohy %s zrušeno.', $submit->getTask()->getFQName()), 'warning'), $data];
+            return [new Message(sprintf('Odevzdání úlohy %s zrušeno.', $submit->getTask()->getFQName()), ILogger::WARNING), $data];
 
         } catch (StorageException $exception) {
             Debugger::log($exception);

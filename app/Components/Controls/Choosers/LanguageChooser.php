@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Controls\Choosers;
 
-use FKSDB\LangPresenter;
 use FKSDB\LangPresenterTrait;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
@@ -106,9 +105,7 @@ class LanguageChooser extends Control {
      * @throws AbortException
      */
     public function handleChangeLang(string $language) {
-        /**
-         * @var \BasePresenter $presenter
-         */
+        /** @var \BasePresenter $presenter */
         $presenter = $this->getPresenter();
         $translator = $presenter->getTranslator();
         $translator->setLang($language);

@@ -34,6 +34,7 @@ use Nette\Templating\ITemplate;
  * @property FileTemplate $template
  */
 abstract class BasePresenter extends Presenter implements IAutocompleteJSONProvider, INavigablePresenter, IJavaScriptCollector, IStylesheetCollector {
+
     use CollectorPresenterTrait;
     use LangPresenterTrait;
 
@@ -195,7 +196,6 @@ abstract class BasePresenter extends Presenter implements IAutocompleteJSONProvi
         $this->langTraitStartup();
     }
 
-
     /**
      * @param null $class
      * @return FileTemplate|ITemplate
@@ -209,7 +209,6 @@ abstract class BasePresenter extends Presenter implements IAutocompleteJSONProvi
 
         return $template;
     }
-
 
     /*	 * ******************************
      * IJSONProvider

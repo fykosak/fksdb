@@ -2,6 +2,7 @@
 
 namespace FKSDB\model\Fyziklani;
 
+use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\Utils\CSVParser;
@@ -67,7 +68,7 @@ class FyziklaniTaskImportProcessor {
                 } else {
                     $messages[] = [
                         sprintf(_('Úloha %s "%s" nebyla aktualizována'), $row['label'], $row['name']),
-                        'warning'
+                        ILogger::WARNING
                     ];
                 }
                 $this->serviceFyziklaniTask->save($task);
