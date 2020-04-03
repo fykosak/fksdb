@@ -91,7 +91,7 @@ trait SubmitDownloadTrait {
     public function traitHandleDownloadCorrected(int $id): array {
         $submit = $this->getSubmit($id, 'download.corrected');
         if (!$submit->corrected) {
-            return [new Message(_('Opravené riešenie nieje nahrané'), 'warning'),];
+            return [new Message(_('Opravené riešenie nieje nahrané'), ILogger::WARNING),];
         }
 
         $filename = $this->getSubmitCorrectedStorage()->retrieveFile($submit);
