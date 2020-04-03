@@ -18,6 +18,7 @@ use FKSDB\Components\Forms\Controls\Autocomplete\IFilteredDataProvider;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Config\GlobalParameters;
 use FKSDB\LangPresenter;
+use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\YearCalculator;
 use Nette\Application\AbortException;
@@ -35,13 +36,13 @@ use Nette\Templating\FileTemplate;
  */
 abstract class BasePresenter extends LangPresenter implements IJavaScriptCollector, IStylesheetCollector, IAutocompleteJSONProvider, INavigablePresenter {
 
-    const FLASH_SUCCESS = 'success';
+    const FLASH_SUCCESS = ILogger::SUCCESS;
 
-    const FLASH_INFO = 'info';
+    const FLASH_INFO = ILogger::INFO;
 
-    const FLASH_WARNING = 'warning';
+    const FLASH_WARNING = ILogger::WARNING;
 
-    const FLASH_ERROR = 'danger';
+    const FLASH_ERROR = ILogger::ERROR;
 
     /** @persistent  */
     public $tld;

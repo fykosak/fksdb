@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Control\AjaxUpload;
 
+use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Services\ServiceSubmit;
@@ -46,28 +47,28 @@ trait SubmitRevokeTrait {
          */
         $submit = $this->getServiceSubmit()->findByPrimary($submitId);
         if (!$submit) {
-            return [new Message(_('Neexistující submit.'), 'danger'), null];
+            return [new Message(_('Neexistující submit.'), ILogger::ERROR), null];
         }
         $contest = $submit->getContestant()->getContest();
         if (!$this->getPresenter()->getContestAuthorizator()->isAllowed($submit, 'revoke', $contest)) {
-            return [new Message(_('Nedostatečné oprávnění.'), 'danger'), null];
+            return [new Message(_('Nedostatečné oprávnění.'), ILogger::ERROR), null];
         }
         if (!$this->canRevoke($submit)) {
-            return [new Message(_('Nelze zrušit submit.'), 'danger'), null];
+            return [new Message(_('Nelze zrušit submit.'), ILogger::ERROR), null];
         }
         try {
             $this->getSubmitUploadedStorage()->deleteFile($submit);
             $this->getServiceSubmit()->dispose($submit);
             $data = $this->getServiceSubmit()->serializeSubmit(null, $submit->getTask(), $this->getPresenter());
 
-            return [new Message(sprintf('Odevzdání úlohy %s zrušeno.', $submit->getTask()->getFQName()), 'warning'), $data];
+            return [new Message(sprintf('Odevzdání úlohy %s zrušeno.', $submit->getTask()->getFQName()), ILogger::WARNING), $data];
 
         } catch (StorageException $exception) {
             Debugger::log($exception);
-            return [new Message(_('Během mazání úlohy %s došlo k chybě.'), 'danger'), null];
+            return [new Message(_('Během mazání úlohy %s došlo k chybě.'), ILogger::ERROR), null];
         } catch (ModelException $exception) {
             Debugger::log($exception);
-            return [new Message(_('Během mazání úlohy %s došlo k chybě.'), 'danger'), null];
+            return [new Message(_('Během mazání úlohy %s došlo k chybě.'), ILogger::ERROR), null];
         }
     }
 
