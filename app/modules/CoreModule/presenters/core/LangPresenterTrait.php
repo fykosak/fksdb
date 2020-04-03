@@ -5,15 +5,16 @@ namespace FKSDB;
 use FKSDB\Components\Controls\Choosers\LanguageChooser;
 use FKSDB\Localization\GettextTranslator;
 use FKSDB\ORM\Models\ModelLogin;
-use Nette\Application\UI\Presenter;
+use Nette\Http\Request;
+use Nette\Security\User;
 
 /**
  * Class LangPresenter
  * @package FKSDB
  */
-abstract class LangPresenter extends Presenter {
+trait LangPresenterTrait {
 
-    const LANGUAGE_NAMES = ['cs' => 'Čeština', 'en' => 'English', 'sk' => 'Slovenčina'];
+    public static $languageNames = ['cs' => 'Čeština', 'en' => 'English', 'sk' => 'Slovenčina'];
 
     /** @var GettextTranslator */
     private $translator;
@@ -25,7 +26,7 @@ abstract class LangPresenter extends Presenter {
     public $lang;
 
     /** @var string cache */
-    private $_lang;
+    private $cacheLang;
 
     /**
      * @param GettextTranslator $translator
@@ -37,8 +38,7 @@ abstract class LangPresenter extends Presenter {
     /**
      * @throws \Exception
      */
-    protected function startup() {
-        parent::startup();
+    protected function langTraitStartup() {
         $this->translator->setLang($this->getLang());
         /**
          * @var LanguageChooser $languageChooser
@@ -75,20 +75,20 @@ abstract class LangPresenter extends Presenter {
      * Should be final
      */
     public function getLang(): string {
-        if (!$this->_lang) {
-            $this->_lang = $this->getUserPreferredLang();
-            if (!$this->_lang) {
-                $this->_lang = $this->lang;
+        if (!$this->cacheLang) {
+            $this->cacheLang = $this->getUserPreferredLang();
+            if (!$this->cacheLang) {
+                $this->cacheLang = $this->lang;
             }
             $supportedLanguages = $this->translator->getSupportedLanguages();
-            if (!$this->_lang || !in_array($this->_lang, $supportedLanguages)) {
-                $this->_lang = $this->getHttpRequest()->detectLanguage($supportedLanguages);
+            if (!$this->cacheLang || !in_array($this->cacheLang, $supportedLanguages)) {
+                $this->cacheLang = $this->getHttpRequest()->detectLanguage($supportedLanguages);
             }
-            if (!$this->_lang) {
-                $this->_lang = $this->globalParameters['localization']['defaultLanguage'];
+            if (!$this->cacheLang) {
+                $this->cacheLang = $this->globalParameters['localization']['defaultLanguage'];
             }
         }
-        return $this->_lang;
+        return $this->cacheLang;
     }
 
     /**
@@ -97,4 +97,14 @@ abstract class LangPresenter extends Presenter {
     public final function getTranslator(): GettextTranslator {
         return $this->translator;
     }
+
+    /**
+     * @return User
+     */
+    abstract function getUser();
+
+    /**
+     * @return Request
+     */
+    abstract function getHttpRequest();
 }
