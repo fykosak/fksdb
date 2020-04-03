@@ -47,7 +47,7 @@ class EmailsGrid extends BaseGrid {
             'email_message.subject',
             'email_message.state',
         ]);
-        $this->addLinkButton($presenter, 'detail', 'detail', _('Detail'), false, ['id' => 'email_message_id']);
+        $this->addLinkButton('detail', 'detail', _('Detail'), false, ['id' => 'email_message_id']);
         $this->paginate = true;
     }
 

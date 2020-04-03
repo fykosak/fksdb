@@ -224,22 +224,18 @@ abstract class BasePresenter extends LangPresenter implements IJavaScriptCollect
     /**
      * @param string $file
      */
-    public function registerJSFile($file) {
-        /**
-         * @var JavaScriptLoader $component
-         */
+    public final function registerJSFile(string $file) {
+        /** @var JavaScriptLoader $component */
         $component = $this->getComponent('jsLoader');
         $component->addFile($file);
     }
 
     /**
      * @param string $code
-     * @param null $tag
+     * @param string|null $tag
      */
-    public function registerJSCode($code, $tag = null) {
-        /**
-         * @var JavaScriptLoader $component
-         */
+    public final function registerJSCode(string $code, string $tag = null) {
+        /** @var JavaScriptLoader $component */
         $component = $this->getComponent('jsLoader');
         $component->addInline($code, $tag);
     }
@@ -247,10 +243,8 @@ abstract class BasePresenter extends LangPresenter implements IJavaScriptCollect
     /**
      * @param string $tag
      */
-    public function unregisterJSCode($tag) {
-        /**
-         * @var JavaScriptLoader $component
-         */
+    public final function unregisterJSCode(string $tag) {
+        /** @var JavaScriptLoader $component */
         $component = $this->getComponent('jsLoader');
         $component->removeInline($tag);
     }
@@ -258,10 +252,8 @@ abstract class BasePresenter extends LangPresenter implements IJavaScriptCollect
     /**
      * @param string $file
      */
-    public function unregisterJSFile($file) {
-        /**
-         * @var JavaScriptLoader $component
-         */
+    public final function unregisterJSFile(string $file) {
+        /** @var JavaScriptLoader $component */
         $component = $this->getComponent('jsLoader');
         $component->removeFile($file);
     }
@@ -273,10 +265,8 @@ abstract class BasePresenter extends LangPresenter implements IJavaScriptCollect
      * @param string $file
      * @param array $media
      */
-    public function registerStylesheetFile($file, $media = []) {
-        /**
-         * @var StylesheetLoader $component
-         */
+    public final function registerStylesheetFile(string $file, array $media = []) {
+        /** @var StylesheetLoader $component */
         $component = $this->getComponent('cssLoader');
         $component->addFile($file, $media);
     }
@@ -285,11 +275,9 @@ abstract class BasePresenter extends LangPresenter implements IJavaScriptCollect
      * @param string $file
      * @param array $media
      */
-    public function unregisterStylesheetFile($file, $media = []) {
-        /**
-         * @var StylesheetLoader $component
-         */
-        $component = $$this->getComponent('cssLoader');
+    public final function unregisterStylesheetFile(string $file, array $media = []) {
+        /** @var StylesheetLoader $component */
+        $component = $this->getComponent('cssLoader');
         $component->removeFile($file, $media);
     }
 

@@ -53,6 +53,6 @@ class ItemsGrid extends BaseGrid {
             DbNames::TAB_SCHEDULE_ITEM . '.used_capacity',
             DbNames::TAB_SCHEDULE_ITEM . '.require_id_number',
         ]);
-        $this->addLinkButton($presenter, 'item', 'detail', _('Detail'), true, ['id' => 'schedule_item_id']);
+        $this->addLinkButton( 'item', 'detail', _('Detail'), true, ['id' => 'schedule_item_id']);
     }
 }

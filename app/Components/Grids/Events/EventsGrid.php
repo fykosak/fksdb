@@ -74,12 +74,12 @@ class EventsGrid extends BaseGrid {
             DbNames::TAB_EVENT . '.event_year',
         ]);
 
-        $this->addLinkButton($this->getPresenter(), ':Event:dashboard:default', 'detail', _('Detail'), true, ['eventId' => 'event_id']);
-        $this->addLinkButton($this->getPresenter(), 'edit', 'edit', _('Edit'), true, ['id' => 'event_id']);
+        $this->addLinkButton(':Event:dashboard:default', 'detail', _('Detail'), true, ['eventId' => 'event_id']);
+        $this->addLinkButton( 'edit', 'edit', _('Edit'), true, ['id' => 'event_id']);
 
         $this->addLink('event_participant.list');
 
-        $this->addLinkButton($this->getPresenter(), ':Event:EventOrg:list', 'org', _('Organisers'), true, ['eventId' => 'event_id']);
+        $this->addLinkButton( ':Event:EventOrg:list', 'org', _('Organisers'), true, ['eventId' => 'event_id']);
 
         $this->addGlobalButton('add')
             ->setLink($this->getPresenter()->link('create'))
