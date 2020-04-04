@@ -39,7 +39,7 @@ class CummulativeStrategy implements IMergeStrategy {
 
         if ($this->precedence == 'trunk') {
             return $trunk;
-        } else if ($this->precedence == 'merged') {
+        } elseif ($this->precedence == 'merged') {
             return $merged;
         }
 

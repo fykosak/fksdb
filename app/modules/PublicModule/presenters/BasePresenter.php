@@ -41,10 +41,10 @@ abstract class BasePresenter extends \ContestPresenter {
              * @var \FKSDB\ORM\Models\ModelPerson $person
              */
             $person = $this->user->getIdentity()->getPerson();
-            $contestant = $person->related(DbNames::TAB_CONTESTANT_BASE, 'person_id')->where(array(
+            $contestant = $person->related(DbNames::TAB_CONTESTANT_BASE, 'person_id')->where([
                 'contest_id' => $this->getSelectedContest()->contest_id,
                 'year' => $this->getSelectedYear()
-            ))->fetch();
+            ])->fetch();
 
             $this->contestant = $contestant ? ModelContestant::createFromActiveRow($contestant) : null;
         }

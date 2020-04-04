@@ -58,7 +58,7 @@ abstract class AggregatedPersonSource implements IHolderSource {
                     $key = $eventKey . '_' . $holderKey;
                     $this->holders[$key] = $holder;
                 }
-            } else if ($result instanceof Holder) {
+            } elseif ($result instanceof Holder) {
                 $key = $eventKey . '_';
                 $this->holders[$key] = $result;
             }

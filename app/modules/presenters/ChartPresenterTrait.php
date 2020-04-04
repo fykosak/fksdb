@@ -48,8 +48,7 @@ trait ChartPresenterTrait {
     }
 
     public function titleChart() {
-        $this->setTitle($this->selectedChart->getTitle());
-        $this->setIcon('fa fa-pie-chart');
+        $this->setTitle($this->selectedChart->getTitle(), 'fa fa-pie-chart');
     }
 
     public function renderChart() {

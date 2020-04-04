@@ -184,7 +184,7 @@ class BaseMachine extends FreezableObject {
         });
         if (count($candidates) == 0) {
             return null;
-        } else if (count($candidates) > 1) {
+        } elseif (count($candidates) > 1) {
             throw new InvalidArgumentException("Target state '$state' is reachable via multiple edges."); //TODO may this be anytime useful?
         } else {
             return reset($candidates);

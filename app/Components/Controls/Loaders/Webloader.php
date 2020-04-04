@@ -24,10 +24,10 @@ abstract class Webloader extends Control {
      */
     public function addFile($file, $attributes = []) {
         $hash = $file . implode(':', $attributes);
-        $this->files[$hash] = array(
+        $this->files[$hash] = [
             self::FILENAME => $file,
             self::ATTRIBUTES => $attributes,
-        );
+        ];
         $this->invalidateControl();
     }
 
@@ -66,17 +66,17 @@ abstract class Webloader extends Control {
         $files = [];
         if (count($args) == 1 && is_array($args[0])) {
             foreach ($args[0] as $file => $attributes) {
-                $files[] = array(
+                $files[] = [
                     self::FILENAME => $file,
                     self::ATTRIBUTES => $attributes,
-                );
+                ];
             }
         } else {
             foreach ($args as $arg) {
-                $files[] = array(
+                $files[] = [
                     self::FILENAME => $arg,
                     self::ATTRIBUTES => [],
-                );
+                ];
             }
         }
 

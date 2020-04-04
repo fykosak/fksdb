@@ -93,8 +93,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
     }
 
     public function titleDefault() {
-        $this->setTitle(_('Rozcestník'));
-        $this->setIcon('fa fa-home');
+        $this->setTitle(_('Rozcestník'), 'fa fa-home');
     }
 
     /**

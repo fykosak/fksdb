@@ -243,7 +243,7 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
         $pAddresses = $this->getMPostContacts(ModelPostContact::TYPE_PERMANENT);
         if (count($pAddresses)) {
             return reset($pAddresses);
-        } else if (!$noFallback) {
+        } elseif (!$noFallback) {
             return $this->getDeliveryAddress();
         } else {
             return null;

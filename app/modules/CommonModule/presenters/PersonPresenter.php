@@ -124,16 +124,14 @@ class PersonPresenter extends BasePresenter {
 
     /* *********** TITLE ***************/
     public function titleSearch() {
-        $this->setTitle(_('Search person'));
-        $this->setIcon('fa fa-search');
+        $this->setTitle(_('Search person'),'fa fa-search');
     }
 
     /**
      * @throws BadRequestException
      */
     public function titleDetail() {
-        $this->setTitle(sprintf(_('Detail of person %s'), $this->getPerson()->getFullName()));
-        $this->setIcon('fa fa-eye');
+        $this->setTitle(sprintf(_('Detail of person %s'), $this->getPerson()->getFullName()), 'fa fa-eye');
     }
 
     public function titleMerge() {
@@ -348,7 +346,7 @@ class PersonPresenter extends BasePresenter {
 
         $form->addSubmit('cancel', _('Storno'))
             ->getControlPrototype()->addAttributes(['class' => 'btn-lg']);
-        $form->onSuccess[] = array($this, 'handleMergeFormSuccess');
+        $form->onSuccess[] = [$this, 'handleMergeFormSuccess'];
         return $control;
     }
 
@@ -441,7 +439,7 @@ class PersonPresenter extends BasePresenter {
         if ($merger->merge()) {
             $this->setMergeConflicts(null); // flush the session
             $this->flashMessage(_('Osoby úspešně sloučeny.'), self::FLASH_SUCCESS);
-            FlashMessageDump::dump($logger,$this);
+            FlashMessageDump::dump($logger, $this);
             $this->backLinkRedirect(true);
         } else {
             $this->setMergeConflicts($merger->getConflicts());

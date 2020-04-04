@@ -89,7 +89,7 @@ class ServiceAddress extends AbstractServiceSingle {
 
             if (in_array($firstChar, ['1', '2', '3', '4', '5', '6', '7'])) {
                 return ModelRegion::CZECH_REPUBLIC;
-            } else if (in_array($firstChar, ['8', '9', '0'])) {
+            } elseif (in_array($firstChar, ['8', '9', '0'])) {
                 return ModelRegion::SLOVAKIA;
             } else {
                 throw new InvalidPostalCode($postalCode);

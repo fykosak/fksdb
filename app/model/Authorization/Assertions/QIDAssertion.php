@@ -24,7 +24,7 @@ class QIDAssertion {
      */
     function __construct($qids) {
         if (!is_array($qids)) {
-            $qids = array($qids);
+            $qids = [$qids];
         }
         $this->qids = $qids;
     }

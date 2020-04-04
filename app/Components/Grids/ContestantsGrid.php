@@ -64,9 +64,9 @@ class ContestantsGrid extends BaseGrid {
         $this->addButton('editPerson', _('Edit'))
             ->setText(_('Edit'))
             ->setLink(function ($row) use ($presenter) {
-                return $presenter->link('Contestant:edit', array(
+                return $presenter->link('Contestant:edit', [
                     'id' => $row->ct_id,
-                ));
+                ]);
             });
 
         $this->addGlobalButton('add')

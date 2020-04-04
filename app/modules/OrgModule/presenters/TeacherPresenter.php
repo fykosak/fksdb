@@ -72,23 +72,19 @@ class TeacherPresenter extends ExtendedPersonPresenter {
          * @var ModelTeacher $model
          */
         $model = $this->getModel2();
-        $this->setTitle(sprintf(_('Edit teacher %s'), $model->getPerson()->getFullName()));
-        $this->setIcon('fa fa-pencil');
+        $this->setTitle(sprintf(_('Edit teacher %s'), $model->getPerson()->getFullName()), 'fa fa-pencil');
     }
 
     public function titleCreate() {
-        $this->setTitle(_('Create new teacher'));
-        $this->setIcon('fa fa-plus');
+        $this->setTitle(_('Create new teacher'), 'fa fa-plus');
     }
 
     public function titleList() {
-        $this->setTitle(_('Teacher'));
-        $this->setIcon('fa fa-graduation-cap');
+        $this->setTitle(_('Teacher'), 'fa fa-graduation-cap');
     }
 
     public function titleDetail() {
-        $this->setTitle(_('Teacher detail'));
-        $this->setIcon('fa fa-graduation-cap');
+        $this->setTitle(_('Teacher detail'), 'fa fa-graduation-cap');
     }
 
     /**
