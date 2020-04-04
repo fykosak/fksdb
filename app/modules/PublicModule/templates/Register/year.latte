@@ -1,5 +1,3 @@
-{layout '../../../CoreModule/templates/@layout.latte'}
-
 {block content}
     {foreach $years as $year}
         <a href="{link changeYear! $year}" class="col-12 btn btn-primary btn-lg btn-block">{$year}. {_('Ročník')}</a>
