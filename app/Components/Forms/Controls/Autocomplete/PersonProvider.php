@@ -39,18 +39,17 @@ class PersonProvider implements IFilteredDataProvider {
 
     /**
      * Syntactic sugar, should be solved more generally.
-     * @param \FKSDB\ORM\Models\ModelContest $contest
-     * @param \FKSDB\YearCalculator $yearCalculator
+     * @param ModelContest $contest
+     * @param YearCalculator $yearCalculator
      */
     public function filterOrgs(ModelContest $contest, YearCalculator $yearCalculator) {
-        $orgs = $this->servicePerson->getTable()->where([
-            'org:contest_id' => $contest->contest_id
-        ]);
-
         $currentYear = $yearCalculator->getCurrentYear($contest);
-        $orgs->where('org:since <= ?', $currentYear);
-        $orgs->where('org:until IS NULL OR org:until >= ?', $currentYear);
-        $this->searchTable = $orgs;
+        $this->searchTable = $this->servicePerson->getTable()
+            ->where([
+                'org:contest_id' => $contest->contest_id,
+                'org:since <= ?' => $currentYear,
+                'org:until IS NULL OR org:until >= ?' => $currentYear
+            ]);
     }
 
     /**
@@ -92,7 +91,7 @@ class PersonProvider implements IFilteredDataProvider {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelPerson $person
+     * @param ModelPerson $person
      * @return array
      */
     private function getItem(ModelPerson $person) {
