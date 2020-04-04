@@ -60,9 +60,7 @@ class MassTransitionsControl extends Control {
      */
     public function handleTransition(string $name) {
         $source = new SingleEventSource($this->event, $this->container);
-        /**
-         * @var ApplicationHandlerFactory $applicationHandlerFactory
-         */
+        /** @var ApplicationHandlerFactory $applicationHandlerFactory */
         $applicationHandlerFactory = $this->container->getByType(ApplicationHandlerFactory::class);
         $logger = new MemoryLogger();
         foreach ($source as $key => $holder) {

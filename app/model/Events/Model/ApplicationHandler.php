@@ -5,6 +5,7 @@ namespace Events\Model;
 use DuplicateApplicationException;
 use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
+use Events\Machine\Transition;
 use Events\MachineExecutionException;
 use Events\Model\Holder\BaseHolder;
 use Events\Model\Holder\Holder;
@@ -125,7 +126,7 @@ class ApplicationHandler {
      * @param Form|ArrayHash|null $data
      * @param mixed $explicitTransitionName
      */
-    public function storeAndExecute(Holder $holder, $data = null, $explicitTransitionName = null) {
+    public function storeAndExecute(Holder $holder, $data = null, string $explicitTransitionName = null) {
         $this->_storeAndExecute($holder, $data, $explicitTransitionName, self::STATE_TRANSITION);
     }
 
@@ -139,16 +140,13 @@ class ApplicationHandler {
         $this->initializeMachine($holder);
 
         try {
-            $explicitMachineName = $this->machine->getPrimaryMachine()->getName();
-
             $this->beginTransaction();
+
+            $explicitMachineName = $this->machine->getPrimaryMachine()->getName();
 
             $transitions = [];
             if ($explicitTransitionName !== null) {
-                $explicitMachine = $this->machine[$explicitMachineName];
-                $explicitTransition = $explicitMachine->getTransition($explicitTransitionName);
-
-                $transitions[$explicitMachineName] = $explicitTransition;
+                $transitions[$explicitMachineName] = $this->machine->getBaseMachine($explicitMachineName)->getTransition($explicitTransitionName);
             }
 
             if ($data) {
@@ -164,6 +162,10 @@ class ApplicationHandler {
             }
 
             $induced = []; // cache induced transition as they won't match after execution
+            /**
+             * @var  $key
+             * @var Transition $transition
+             */
             foreach ($transitions as $key => $transition) {
                 $induced[$key] = $transition->execute();
             }
@@ -225,14 +227,14 @@ class ApplicationHandler {
     }
 
     /**
-     * @param $data
-     * @param $transitions
+     * @param array|Form|ArrayHash $data
+     * @param array $transitions
      * @param Holder $holder
      * @param $execute
-     * @return mixed
+     * @return array
      * @throws MachineExecutionException
      */
-    private function processData($data, $transitions, Holder $holder, $execute) {
+    private function processData($data, array $transitions, Holder $holder, string $execute): array {
         if ($data instanceof Form) {
             $values = FormUtils::emptyStrToNull($data->getValues());
             $form = $data;
@@ -247,9 +249,9 @@ class ApplicationHandler {
         }
         // Find out transitions
         $newStates = array_merge($newStates, $holder->processFormValues($values, $this->machine, $transitions, $this->logger, $form));
-        if ($execute == self::STATE_TRANSITION) {
+        if ($execute === self::STATE_TRANSITION) {
             foreach ($newStates as $name => $newState) {
-                $transition = $this->machine[$name]->getTransitionByTarget($newState);
+                $transition = $this->machine->getBaseMachine($name)->getTransitionByTarget($newState);
                 if ($transition) {
                     $transitions[$name] = $transition;
                 } elseif (!($this->machine->getBaseMachine($name)->getState() == BaseMachine::STATE_INIT && $newState == BaseMachine::STATE_TERMINATED)) {
