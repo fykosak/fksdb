@@ -15,6 +15,7 @@ use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use Nette\Neon\Neon;
+use Nette\Utils\Arrays;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -137,7 +138,6 @@ class BaseHolder extends FreezableObject {
     public function addField(Field $field) {
         $this->updating();
         $field->setBaseHolder($this);
-        $field->freeze();
 
         $name = $field->getName();
         $this->fields[$name] = $field;
@@ -549,11 +549,8 @@ class BaseHolder extends FreezableObject {
      * @return mixed
      */
     public function getParameter($name, $default = null) {
-        $args = func_get_args();
-        array_unshift($args, $this->parameters);
         try {
-            $result = call_user_func_array('Nette\Utils\Arrays::get', $args);
-            return $result;
+            return Arrays::get($this->parameters, [$name], $default);
         } catch (InvalidArgumentException $exception) {
             throw new InvalidArgumentException("No parameter '$name' for event " . $this->getEvent() . ".", null, $exception);
         }

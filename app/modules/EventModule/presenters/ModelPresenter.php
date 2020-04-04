@@ -34,8 +34,7 @@ class ModelPresenter extends BasePresenter {
     }
 
     public function titleDefault() {
-        $this->setTitle(_('Model akce'));
-        $this->setIcon('fa fa-cubes');
+        $this->setTitle(_('Model of event'), 'fa fa-cubes');
     }
 
     /**
@@ -44,10 +43,8 @@ class ModelPresenter extends BasePresenter {
      */
     protected function createComponentGraphComponent(): GraphComponent {
         $event = $this->getEvent();
-        /**
-         * @var Machine $machine
-         */
-        $machine = $this->container->createEventMachine($event);
+        /** @var Machine $machine */
+        $machine = $this->getContext()->createEventMachine($event);
 
         return new GraphComponent($machine->getPrimaryMachine(), $this->expressionPrinter);
     }

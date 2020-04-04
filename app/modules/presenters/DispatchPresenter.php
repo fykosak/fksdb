@@ -17,7 +17,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
          * @var \FKSDB\ORM\Models\ModelLogin $login
          */
         $login = $this->getUser()->getIdentity();
-        $query = $this->serviceContest->getTable();
+        $query = $this->getServiceContest()->getTable();
         $result = [];
         foreach ($query as $row) {
             $contest = ModelContest::createFromActiveRow($row);

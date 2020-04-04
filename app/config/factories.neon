@@ -22,8 +22,6 @@ services:
     statsModelFactory: StatsModelFactory
     pipelineFactory:
         class: Tasks\PipelineFactory(%tasks.columnMapping%, %tasks.contributionMapping%, %tasks.defaultStudyYears%, ...)
-    flashDumpFactory:
-        class: FKSDB\Logging\FlashDumpFactory(%logToFlash%)
     event.DBReflectionFactory:
         class: FKSDB\Components\Forms\Factories\Events\DBReflectionFactory
 #transition
@@ -34,5 +32,3 @@ services:
 factories:
 # (so far unused)
 
-includes:
-    - logToFlash.neon

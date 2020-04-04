@@ -25,7 +25,10 @@ use FKSDB\Results\Models\AbstractResultsModel;
 use FKSDB\Results\ResultsModelFactory;
 use FormUtils;
 use ModelException;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\UI\InvalidLinkException;
+use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Strings;
 use ServiceMStoredQueryTag;
@@ -57,12 +60,12 @@ class ExportPresenter extends SeriesPresenter {
     public $qid;
 
     /**
-     * @var \FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery
+     * @var ServiceStoredQuery
      */
     private $serviceStoredQuery;
 
     /**
-     * @var \FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryParameter
+     * @var ServiceStoredQueryParameter
      */
     private $serviceStoredQueryParameter;
 
@@ -91,12 +94,12 @@ class ExportPresenter extends SeriesPresenter {
     private $storedQuery;
 
     /**
-     * @var \FKSDB\ORM\Models\StoredQuery\ModelStoredQuery
+     * @var ModelStoredQuery
      */
     private $patternQuery = false;
 
     /**
-     * @param \FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery $serviceStoredQuery
+     * @param ServiceStoredQuery $serviceStoredQuery
      */
     public function injectServiceStoredQuery(ServiceStoredQuery $serviceStoredQuery) {
         $this->serviceStoredQuery = $serviceStoredQuery;
@@ -128,7 +131,6 @@ class ExportPresenter extends SeriesPresenter {
      */
     public function injectStoredQueryFactory(StoredQueryFactory $storedQueryFactory) {
         $this->storedQueryFactory = $storedQueryFactory;
-        $this->storedQueryFactory->setPresenter($this);
     }
 
     /**
@@ -203,11 +205,11 @@ class ExportPresenter extends SeriesPresenter {
             $parameters[] = $parameter;
         }
 
-        return $this->storedQueryFactory->createQueryFromSQL($sql, $parameters);
+        return $this->storedQueryFactory->createQueryFromSQL($this, $sql, $parameters);
     }
 
     /**
-     * @return ModelStoredQuery|\Nette\Database\Table\ActiveRow|null
+     * @return ModelStoredQuery|ActiveRow|null
      */
     public function getPatternQuery() {
         if ($this->patternQuery === false) {
@@ -294,12 +296,12 @@ class ExportPresenter extends SeriesPresenter {
     /**
      * @param $id
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws AbortException
+     * @throws InvalidLinkException
      */
     public function actionExecute($id) {
         $query = $this->getPatternQuery();
-        $storedQuery = $this->storedQueryFactory->createQuery($query);
+        $storedQuery = $this->storedQueryFactory->createQuery($this, $query);
         $this->setStoredQuery($storedQuery);
 
         if ($query && $this->getParameter('qid')) {
@@ -527,7 +529,7 @@ class ExportPresenter extends SeriesPresenter {
 
     /**
      * @param SubmitButton $button
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function handleComposeExecute(SubmitButton $button) {
         $form = $button->getForm();
@@ -543,7 +545,7 @@ class ExportPresenter extends SeriesPresenter {
 
     /**
      * @param SubmitButton $button
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      * @throws \ReflectionException
      */
     public function handleEditSuccess(SubmitButton $button) {
@@ -570,7 +572,7 @@ class ExportPresenter extends SeriesPresenter {
 
     /**
      * @param SubmitButton $button
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      * @throws \ReflectionException
      */
     public function handleComposeSuccess(SubmitButton $button) {
@@ -581,9 +583,9 @@ class ExportPresenter extends SeriesPresenter {
 
             $form = $button->getForm();
             $values = $form->getValues();
+            /** @var ModelStoredQuery $storedQuery */
             $storedQuery = $this->serviceStoredQuery->createNew();
             $this->handleSave($values, $storedQuery);
-
 
             $this->flashMessage(_('Dotaz vytvořen.'), self::FLASH_SUCCESS);
             $this->backLinkRedirect();
@@ -613,25 +615,23 @@ class ExportPresenter extends SeriesPresenter {
 
         $this->serviceStoredQuery->save($storedQuery);
 
-        $this->serviceMStoredQueryTag->getJoinedService()->getTable()->where(array(
+        $this->serviceMStoredQueryTag->getJoinedService()->getTable()->where([
             'query_id' => $storedQuery->query_id,
-        ))->delete();
+        ])->delete();
         foreach ($metadata['tags'] as $tagTypeId) {
-            $data = array(
+            $data = [
                 'query_id' => $storedQuery->query_id,
                 'tag_type_id' => $tagTypeId,
-            );
+            ];
             $tag = $this->serviceMStoredQueryTag->createNew($data);
             $this->serviceMStoredQueryTag->save($tag);
         }
 
         $this->serviceStoredQueryParameter->getTable()
-            ->where(array('query_id' => $storedQuery->query_id))->delete();
+            ->where(['query_id' => $storedQuery->query_id])->delete();
 
         foreach ($values[self::CONT_PARAMS_META] as $paramMetaData) {
-            /**
-             * @var ModelStoredQueryParameter $parameter
-             */
+            /** @var ModelStoredQueryParameter $parameter */
             $parameter = $this->serviceStoredQueryParameter->createNew($paramMetaData);
             $parameter->setDefaultValue($paramMetaData['default']);
 

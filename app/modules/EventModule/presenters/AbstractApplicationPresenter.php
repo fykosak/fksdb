@@ -5,9 +5,9 @@ namespace EventModule;
 use Events\Model\ApplicationHandlerFactory;
 use Events\Model\Grid\SingleEventSource;
 use FKSDB\Components\Events\ApplicationComponent;
+use FKSDB\Components\Events\MassTransitionsControl;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
 use FKSDB\Components\Grids\Schedule\PersonGrid;
-use FKSDB\Logging\FlashDumpFactory;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\NotImplementedException;
 use FKSDB\ORM\Services\ServiceEventParticipant;
@@ -15,7 +15,7 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
-use function in_array;
+use Nette\InvalidStateException;
 
 /**
  * Class ApplicationPresenter
@@ -24,18 +24,10 @@ use function in_array;
 abstract class AbstractApplicationPresenter extends BasePresenter {
     use EventEntityTrait;
 
-    /**
-     * @var ApplicationHandlerFactory
-     */
+    /** @var ApplicationHandlerFactory */
     protected $applicationHandlerFactory;
-    /**
-     * @var FlashDumpFactory
-     */
-    protected $dumpFactory;
 
-    /**
-     * @var ServiceEventParticipant
-     */
+    /** @var ServiceEventParticipant */
     protected $serviceEventParticipant;
 
     /**
@@ -46,17 +38,22 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @param FlashDumpFactory $dumpFactory
-     */
-    public function injectFlashDumpFactory(FlashDumpFactory $dumpFactory) {
-        $this->dumpFactory = $dumpFactory;
-    }
-
-    /**
      * @param ServiceEventParticipant $serviceEventParticipant
      */
     public function injectServiceEventParticipant(ServiceEventParticipant $serviceEventParticipant) {
         $this->serviceEventParticipant = $serviceEventParticipant;
+    }
+
+    public final function titleList() {
+        $this->setTitle(_('List of applications'), 'fa fa-users');
+    }
+
+    public final function titleDetail() {
+        $this->setTitle(_('Application detail'), 'fa fa-user');
+    }
+
+    public final function titleTransitions() {
+        $this->setTitle(_('Group transitions'), 'fa fa-user');
     }
 
     /**
@@ -109,39 +106,23 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws AbortException
      */
     public function createComponentApplicationComponent(): ApplicationComponent {
-        $holders = [];
-        $handlers = [];
-        $flashDump = $this->dumpFactory->create('application');
-        $source = new SingleEventSource($this->getEvent(), $this->container);
-        foreach ($source as $key => $holder) {
-            $holders[$key] = $holder;
-            $handlers[$key] = $this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger());
+        $source = new SingleEventSource($this->getEvent(), $this->getContext());
+        foreach ($source->getHolders() as $key => $holder) {
+            if ($key === $this->getEntity()->getPrimary()) {
+                return new ApplicationComponent($this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger()), $holder);
+            }
         }
-
-        return new ApplicationComponent($handlers[$this->getEntity()->getPrimary()], $holders[$this->getEntity()->getPrimary()], $flashDump);
+        throw new InvalidStateException();
     }
 
     /**
-     * @return bool
-     * @throws BadRequestException
+     * @return MassTransitionsControl
      * @throws AbortException
+     * @throws BadRequestException
      */
-    protected function isTeamEvent(): bool {
-        if (in_array($this->getEvent()->event_type_id, self::TEAM_EVENTS)) {
-            return true;
-        }
-        return false;
+    public final function createComponentMassTransitions(): MassTransitionsControl {
+        return new MassTransitionsControl($this->getContext(), $this->getEvent());
     }
-
-    /**
-     * @return void
-     */
-    abstract public function titleList();
-
-    /**
-     * @return void
-     */
-    abstract public function titleDetail();
 
     /**
      * @return AbstractApplicationGrid

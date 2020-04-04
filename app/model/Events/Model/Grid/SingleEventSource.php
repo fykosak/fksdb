@@ -139,6 +139,7 @@ class SingleEventSource implements IHolderSource {
             }
         }
         foreach ($this->primaryModels as $primaryPK => $primaryModel) {
+            /** @var Holder $holder */
             $holder = $this->container->createEventHolder($this->event);
             $holder->setModel($primaryModel, isset($cache[$primaryPK]) ? $cache[$primaryPK] : []);
             $this->holders[$primaryPK] = $holder;
@@ -168,6 +169,17 @@ class SingleEventSource implements IHolderSource {
         } else {
             return $this;
         }
+    }
+
+    /**
+     * @return Holder[]
+     */
+    public function getHolders(): array {
+        if ($this->primaryModels === null) {
+            $this->loadData();
+            $this->createHolders();
+        }
+        return $this->holders;
     }
 
     /**

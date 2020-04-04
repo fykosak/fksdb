@@ -9,6 +9,7 @@ use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\ContestantSubmits;
 use FKSDB\Components\Forms\Factories\PersonFactory;
+use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Models\ModelTask;
@@ -197,19 +198,19 @@ class InboxPresenter extends SeriesPresenter {
         foreach ($this->seriesTable->getSubmits() as $submit) {
             if ($submit->source === ModelSubmit::SOURCE_UPLOAD && !$this->getSubmitUploadedStorage()->fileExists($submit)) {
                 $errors++;
-                $this->flashMessage(sprintf(_('Uploaded submit #%d is broken'), $submit->submit_id), 'danger');
+                $this->flashMessage(sprintf(_('Uploaded submit #%d is broken'), $submit->submit_id), ILogger::ERROR);
             }
 
             if ($submit->corrected && !$this->getSubmitCorrectedStorage()->fileExists($submit)) {
                 $errors++;
-                $this->flashMessage(sprintf(_('Corrected submit #%d is broken'), $submit->submit_id), 'danger');
+                $this->flashMessage(sprintf(_('Corrected submit #%d is broken'), $submit->submit_id), ILogger::ERROR);
             }
             if (!$submit->corrected && $this->getSubmitCorrectedStorage()->fileExists($submit)) {
                 $errors++;
-                $this->flashMessage(sprintf(_('Uploaded unregister corrected submit #%d'), $submit->submit_id), 'danger');
+                $this->flashMessage(sprintf(_('Uploaded unregister corrected submit #%d'), $submit->submit_id), ILogger::ERROR);
             }
         }
-        $this->flashMessage(sprintf(_('Test done, found %d errors'), $errors), $errors ? 'warning' : 'success');
+        $this->flashMessage(sprintf(_('Test done, found %d errors'), $errors), $errors ? ILogger::WARNING : ILogger::SUCCESS);
 
     }
     /* ******************** RENDER ****************/
@@ -316,6 +317,7 @@ class InboxPresenter extends SeriesPresenter {
         $formControl = new FormControl();
         $form = $formControl->getForm();
         $orgProvider = new PersonProvider($this->servicePerson);
+        $orgProvider->filterOrgs($this->getSelectedContest(), $this->yearCalculator);
 
         foreach ($this->seriesTable->getTasks() as $row) {
             $task = ModelTask::createFromActiveRow($row);

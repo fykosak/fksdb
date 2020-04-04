@@ -2,6 +2,7 @@
 
 namespace FKSDB\model\Fyziklani;
 
+use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\Utils\CSVParser;
@@ -30,7 +31,7 @@ class FyziklaniTaskImportProcessor {
      * @param ModelEvent $event
      * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask $serviceFyziklaniTask
      */
-    public function __construct(ModelEvent$event, ServiceFyziklaniTask $serviceFyziklaniTask) {
+    public function __construct(ModelEvent $event, ServiceFyziklaniTask $serviceFyziklaniTask) {
         $this->event = $event;
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
     }
@@ -58,20 +59,20 @@ class FyziklaniTaskImportProcessor {
                     ]);
                     $messages[] = [sprintf(_('Úloha %s "%s" bola vložena'), $row['label'], $row['name']), \BasePresenter::FLASH_SUCCESS];
                 } elseif ($values->state == TaskPresenter::IMPORT_STATE_UPDATE_N_INSERT) {
-                        $this->serviceFyziklaniTask->updateModel($task, [
-                            'label' => $row['label'],
-                            'name' => $row['name']
-                        ]);
-                        $messages[] = [sprintf(_('Úloha %s "%s" byla aktualizována'), $row['label'], $row['name']),\BasePresenter::FLASH_INFO];
+                    $this->serviceFyziklaniTask->updateModel($task, [
+                        'label' => $row['label'],
+                        'name' => $row['name']
+                    ]);
+                    $messages[] = [sprintf(_('Úloha %s "%s" byla aktualizována'), $row['label'], $row['name']), \BasePresenter::FLASH_INFO];
                 } else {
-                        $messages[] = [
-                            sprintf(_('Úloha %s "%s" nebyla aktualizována'), $row['label'], $row['name']),
-                            'warning'
-                        ];
+                    $messages[] = [
+                        sprintf(_('Úloha %s "%s" nebyla aktualizována'), $row['label'], $row['name']),
+                        ILogger::WARNING
+                    ];
                 }
                 $this->serviceFyziklaniTask->save($task);
             } catch (\Exception $exception) {
-                $messages[] = [_('Vyskytla se chyba'),\BasePresenter::FLASH_ERROR];
+                $messages[] = [_('Vyskytla se chyba'), \BasePresenter::FLASH_ERROR];
                 Debugger::log($exception);
                 $connection->rollBack();
                 return;

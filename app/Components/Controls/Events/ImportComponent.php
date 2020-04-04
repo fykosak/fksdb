@@ -41,11 +41,6 @@ class ImportComponent extends Control {
     private $handler;
 
     /**
-     * @var FlashMessageDump
-     */
-    private $flashDump;
-
-    /**
      * @var Container
      */
     private $container;
@@ -55,15 +50,13 @@ class ImportComponent extends Control {
      * @param Machine $machine
      * @param SingleEventSource $source
      * @param ApplicationHandler $handler
-     * @param FlashMessageDump $flashDump
      * @param Container $container
      */
-    function __construct(Machine $machine, SingleEventSource $source, ApplicationHandler $handler, FlashMessageDump $flashDump, Container $container) {
+    function __construct(Machine $machine, SingleEventSource $source, ApplicationHandler $handler, Container $container) {
         parent::__construct();
         $this->machine = $machine;
         $this->source = $source;
         $this->handler = $handler;
-        $this->flashDump = $flashDump;
         $this->container = $container;
     }
 
@@ -142,8 +135,7 @@ class ImportComponent extends Control {
             $result = $importHandler->import($this->handler, $transitions, $errorMode, $stateless);
             $elapsedTime = Debugger::timer();
 
-
-            $this->flashDump->dump($this->handler->getLogger(), $this->getPresenter());
+            FlashMessageDump::dump($this->handler->getLogger(), $this->getPresenter());
             if ($result) {
                 $this->getPresenter()->flashMessage(sprintf(_('Import úspěšně proběhl (%.2f s).'), $elapsedTime), BasePresenter::FLASH_SUCCESS);
             } else {
@@ -152,7 +144,7 @@ class ImportComponent extends Control {
 
             $this->redirect('this');
         } catch (ImportHandlerException $exception) {
-            $this->flashDump->dump($this->handler->getLogger(), $this->getPresenter());
+            FlashMessageDump::dump($this->handler->getLogger(), $this->getPresenter());
             $this->getPresenter()->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
         }
     }

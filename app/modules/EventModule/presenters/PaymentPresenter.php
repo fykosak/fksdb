@@ -90,7 +90,7 @@ class PaymentPresenter extends BasePresenter {
     /**
      * @return bool
      */
-    protected function isEnabledForEvent(): bool {
+    protected function isEnabled(): bool {
         return $this->hasApi();
     }
     /* ********* Authorization *****************/
@@ -233,7 +233,7 @@ class PaymentPresenter extends BasePresenter {
      */
     private function getMachine(): PaymentMachine {
         if (!$this->machine) {
-            $this->machine = $this->context->getService('payment.' . PaymentExtension::MACHINE_PREFIX . $this->getEvent()->event_id);
+            $this->machine = $this->getContext()->getService('payment.' . PaymentExtension::MACHINE_PREFIX . $this->getEvent()->event_id);
             if (!$this->machine instanceof PaymentMachine) {
                 throw new BadRequestException();
             }

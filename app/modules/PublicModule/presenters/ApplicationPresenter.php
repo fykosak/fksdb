@@ -13,7 +13,6 @@ use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\Components\Events\ApplicationComponent;
 use FKSDB\Components\Events\ApplicationsGrid;
 use FKSDB\Components\Grids\Events\LayoutResolver;
-use FKSDB\Logging\FlashDumpFactory;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\AbstractModelMulti;
 use FKSDB\ORM\AbstractModelSingle;
@@ -86,11 +85,6 @@ class ApplicationPresenter extends BasePresenter {
     private $handlerFactory;
 
     /**
-     * @var FlashDumpFactory
-     */
-    private $flashDumpFactory;
-
-    /**
      * @param ServiceEvent $serviceEvent
      */
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
@@ -123,13 +117,6 @@ class ApplicationPresenter extends BasePresenter {
      */
     public function injectHandlerFactory(ApplicationHandlerFactory $handlerFactory) {
         $this->handlerFactory = $handlerFactory;
-    }
-
-    /**
-     * @param FlashDumpFactory $flashDumpFactory
-     */
-    public function injectFlashDumpFactory(FlashDumpFactory $flashDumpFactory) {
-        $this->flashDumpFactory = $flashDumpFactory;
     }
 
     /**
@@ -287,8 +274,7 @@ class ApplicationPresenter extends BasePresenter {
     protected function createComponentApplication() {
         $logger = new MemoryLogger();
         $handler = $this->handlerFactory->create($this->getEvent(), $logger);
-        $flashDump = $this->flashDumpFactory->createApplication();
-        $component = new ApplicationComponent($handler, $this->getHolder(), $flashDump);
+        $component = new ApplicationComponent($handler, $this->getHolder());
         $component->setRedirectCallback(function ($modelId, $eventId) {
             $this->backLinkRedirect();
             $this->redirect('this', array(
@@ -312,8 +298,7 @@ class ApplicationPresenter extends BasePresenter {
 
         $source = new RelatedPersonSource($person, $events, $this->container);
 
-        $flashDump = $this->flashDumpFactory->createApplication();
-        $grid = new ApplicationsGrid($this->container, $source, $this->handlerFactory, $flashDump);
+        $grid = new ApplicationsGrid($this->container, $source, $this->handlerFactory);
 
         $grid->setTemplate('myApplications');
 
@@ -331,8 +316,7 @@ class ApplicationPresenter extends BasePresenter {
             ->where('registration_end >= NOW()');
 
         $source = new InitSource($events, $this->container);
-        $flashDump = $this->flashDumpFactory->createApplication();
-        $grid = new ApplicationsGrid($this->container, $source, $this->handlerFactory, $flashDump);
+        $grid = new ApplicationsGrid($this->container, $source, $this->handlerFactory);
         $grid->setTemplate('myApplications');
 
         return $grid;

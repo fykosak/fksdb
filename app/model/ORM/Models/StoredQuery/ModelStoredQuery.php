@@ -15,6 +15,7 @@ use Nette\Security\IResource;
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @property-read string php_post_proc
+ * @property-read int query_id
  */
 class ModelStoredQuery extends AbstractModelSingle implements IResource {
     /**
