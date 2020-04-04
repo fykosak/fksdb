@@ -9,7 +9,7 @@ use Nette\Application\UI\Control;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-abstract class Webloader extends Control {
+abstract class WebLoader extends Control {
 
     const FILENAME = 'file';
     const ATTRIBUTES = 'attr';
@@ -22,12 +22,12 @@ abstract class Webloader extends Control {
      * @param $file
      * @param array $attributes
      */
-    public function addFile($file, $attributes = []) {
+    public function addFile(string $file, array $attributes = []) {
         $hash = $file . implode(':', $attributes);
-        $this->files[$hash] = array(
+        $this->files[$hash] = [
             self::FILENAME => $file,
             self::ATTRIBUTES => $attributes,
-        );
+        ];
         $this->invalidateControl();
     }
 
@@ -35,8 +35,8 @@ abstract class Webloader extends Control {
      * @param $file
      * @param array $attributes
      */
-    public function removeFile($file, $attributes = []) {
-        $hash = $file . implode(':', $attributes);
+    public function removeFile(string $file, array $attributes = []) {
+        $hash = $file . join(':', $attributes);
         unset($this->files[$hash]);
         $this->invalidateControl();
     }
@@ -45,7 +45,7 @@ abstract class Webloader extends Control {
      * @param $inline
      * @param string $tag
      */
-    public function addInline($inline, $tag = self::UNTAGGED) {
+    public function addInline(string $inline, string $tag = self::UNTAGGED) {
         $this->inlines[$tag] = $inline;
         $this->invalidateControl();
     }
@@ -53,16 +53,17 @@ abstract class Webloader extends Control {
     /**
      * @param $tag
      */
-    public function removeInline($tag) {
+    public function removeInline(string $tag) {
         if ($tag != self::UNTAGGED) {
             unset($this->inlines[$tag]);
         }
         $this->invalidateControl();
     }
 
-    public function render() {
-        $args = func_get_args();
-
+    /**
+     * @param mixed ...$args
+     */
+    public function render(...$args) {
         $files = [];
         if (count($args) == 1 && is_array($args[0])) {
             foreach ($args[0] as $file => $attributes) {
@@ -89,7 +90,7 @@ abstract class Webloader extends Control {
     public function renderInline() {
         $template = $this->createTemplate();
         $template->setFile($this->getTemplateFilePrefix() . '.inlines.latte');
-        $template->inlines = $this->getInlines();
+        $template->inlines = $this->getInLines();
         $template->render();
     }
 
@@ -97,26 +98,26 @@ abstract class Webloader extends Control {
      * @param $file
      * @return bool
      */
-    public static function isRelative($file) {
+    public static function isRelative(string $file): bool {
         return !preg_match('@https?://|/@Ai', $file);
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    abstract protected function getTemplateFilePrefix();
+    abstract protected function getTemplateFilePrefix(): string;
 
     /**
      * @return array
      */
-    protected function getFiles() {
+    protected function getFiles(): array {
         return $this->files;
     }
 
     /**
      * @return array
      */
-    protected function getInlines() {
+    protected function getInLines(): array {
         return $this->inlines;
     }
 

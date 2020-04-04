@@ -25,7 +25,7 @@ abstract class VariadicExpression extends EvaluatedExpression {
      * @param mixed ...$args
      * @return mixed
      */
-    public final function __invoke(...$args): bool {
+    public final function __invoke(...$args) {
         return $this->evaluate(...$args);
     }
 
@@ -33,7 +33,7 @@ abstract class VariadicExpression extends EvaluatedExpression {
      * @param $args
      * @return mixed
      */
-    abstract protected function evaluate(...$args): bool;
+    abstract protected function evaluate(...$args);
 
     /**
      * @return mixed

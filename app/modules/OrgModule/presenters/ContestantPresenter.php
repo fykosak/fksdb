@@ -76,7 +76,7 @@ class ContestantPresenter extends ExtendedPersonPresenter {
         if (!$model) {
             return null;
         }
-        return $this->yearCalculator->getAcademicYear($this->serviceContest->findByPrimary($model->contest_id), $model->year);
+        return $this->yearCalculator->getAcademicYear($this->getServiceContest()->findByPrimary($model->contest_id), $model->year);
     }
 
     /**

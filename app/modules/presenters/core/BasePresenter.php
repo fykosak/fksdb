@@ -61,7 +61,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     protected $yearCalculator;
 
     /** @var ServiceContest */
-    protected $serviceContest;
+    private $serviceContest;
 
     /** @var GlobalParameters */
     protected $globalParameters;
@@ -90,7 +90,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     private $authorized = true;
 
     /**
-     * @var array[string] => bool
+     * @var bool[]
      */
     private $authorizedCache = [];
 
@@ -279,9 +279,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      */
     protected function setTitle(string $title, string $icon = '') {
         $this->title = $title;
-        if ($icon) {
-            $this->icon = $icon;
-        }
+        $this->icon = $icon;
     }
 
     /**
