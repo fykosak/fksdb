@@ -57,13 +57,11 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
 
     public function titleEdit() {
         $model = $this->getModel();
-        $this->setTitle(sprintf(_('Úprava organizátora %s akce %s'), $model->getPerson()->getFullname(), $model->getEvent()->name));
-        $this->setIcon('fa fa-user');
+        $this->setTitle(sprintf(_('Úprava organizátora %s akce %s'), $model->getPerson()->getFullname(), $model->getEvent()->name), 'fa fa-user');
     }
 
     public function titleCreate() {
-        $this->setTitle(sprintf(_('Založit organizátora akce %s'), $this->getEvent()->name));
-        $this->setIcon('fa fa-user-plus');
+        $this->setTitle(sprintf(_('Založit organizátora akce %s'), $this->getEvent()->name), 'fa fa-user-plus');
     }
 
     /**

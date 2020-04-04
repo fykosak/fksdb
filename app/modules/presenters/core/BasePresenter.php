@@ -288,15 +288,6 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     public function getIcon() {
         return $this->icon;
     }
-
-    /**
-     * @param $icon
-     * @deprecated
-     */
-    protected function setIcon($icon) {
-        $this->icon = $icon;
-    }
-
     /**
      * @param $subtitle
      */
@@ -420,7 +411,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         $backLink = $component->getBackLinkUrl();
         if ($backLink) {
             $this->redirectUrl($backLink);
-        } else if ($need) {
+        } elseif ($need) {
             $this->redirect(':Authentication:login'); // will cause dispatch
         }
     }

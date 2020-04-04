@@ -183,7 +183,7 @@ class TableMerger {
                         if ($backTrunk) {
                             $referencingMerger->setMergedPair($backTrunk, $backMerged);
                         }
-                    } else if ($refMerged) {
+                    } elseif ($refMerged) {
                         $this->logUpdate($refMerged, $newParent);
                         $refMerged->update($newParent); //TODO allow delete refMerged
                     }

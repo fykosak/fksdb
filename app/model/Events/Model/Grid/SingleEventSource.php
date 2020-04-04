@@ -95,7 +95,7 @@ class SingleEventSource implements IHolderSource {
         foreach ($this->dummyHolder->getGroupedSecondaryHolders() as $key => $group) {
             if ($joinToCheck === false) {
                 $joinToCheck = $group['joinTo'];
-            } else if ($group['joinTo'] !== $joinToCheck) {
+            } elseif ($group['joinTo'] !== $joinToCheck) {
                 throw new InvalidStateException(sprintf("SingleEventSource needs all secondary holders to be joined to the same column. Conflict '%s' and '%s'.", $group['joinTo'], $joinToCheck));
             }
         }
@@ -155,13 +155,13 @@ class SingleEventSource implements IHolderSource {
      * @return SingleEventSource
      */
     public function __call($name, $args) {
-        static $delegated = array(
+        static $delegated = [
             'where' => false,
             'order' => false,
             'limit' => false,
             'count' => true,
-        );
-        $result = call_user_func_array(array($this->primarySelection, $name), $args);
+        ];
+        $result = call_user_func_array([$this->primarySelection, $name], $args);
         $this->primaryModels = null;
 
         if ($delegated[$name]) {

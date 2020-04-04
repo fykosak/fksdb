@@ -291,7 +291,7 @@ class BaseHolder extends FreezableObject {
     public function setModel($model) {
         if ($model instanceof IModel) {
             $this->model = $model;
-        } else if ($model) {
+        } elseif ($model) {
             $this->model = $this->service->findByPrimary($model);
         } else {
             $this->model = null;
@@ -301,7 +301,7 @@ class BaseHolder extends FreezableObject {
     public function saveModel() {
         if ($this->getModelState() == BaseMachine::STATE_TERMINATED) {
             $this->service->dispose($this->getModel());
-        } else if ($this->getModelState() != BaseMachine::STATE_INIT) {
+        } elseif ($this->getModelState() != BaseMachine::STATE_INIT) {
             $this->service->save($this->getModel());
         }
     }

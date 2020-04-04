@@ -63,6 +63,7 @@ class TasksPresenter extends BasePresenter {
     public function injectPipelineFactory(PipelineFactory $pipelineFactory) {
         $this->pipelineFactory = $pipelineFactory;
     }
+
     /**
      * @param Downloader $downloader
      */
@@ -78,8 +79,7 @@ class TasksPresenter extends BasePresenter {
     }
 
     public function titleImport() {
-        $this->setTitle(_('Import úloh'));
-        $this->setIcon('fa fa-upload');
+        $this->setTitle(_('Import úloh'), 'fa fa-upload');
     }
 
     /**
@@ -90,11 +90,11 @@ class TasksPresenter extends BasePresenter {
         $control = new FormControl();
         $form = $control->getForm();
 
-        $source = $form->addRadioList('source', _('Zdroj úloh'), array(
+        $source = $form->addRadioList('source', _('Zdroj úloh'), [
             self::SOURCE_ASTRID => _('Astrid'),
             self::SOURCE_ASTRID_2 => _('Astrid (nové XML)'),
             self::SOURCE_FILE => _('XML soubor'),
-        ));
+        ]);
         $source->setDefaultValue(self::SOURCE_ASTRID_2);
 
         // Astrid download

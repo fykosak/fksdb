@@ -227,7 +227,7 @@ class Breadcrumbs extends Control {
             $presenterClassName = $this->presenterFactory->formatPresenterClass($presenterName);
             $action = $parameters[Presenter::ACTION_KEY];
             $methodName = call_user_func("$presenterClassName::publicFormatActionMethod", $action);
-            $identifyingParameters = array(Presenter::ACTION_KEY);
+            $identifyingParameters = [Presenter::ACTION_KEY];
 
             $rc = call_user_func("$presenterClassName::getReflection");
             if ($rc->hasMethod($methodName)) {
@@ -251,9 +251,9 @@ class Breadcrumbs extends Control {
             $paramKey = Utils::getFingerprint($filteredParameters);
             $key = $presenterName . ':' . $paramKey;
             return $key;
-        } else if ($request instanceof NaviRequest) {
+        } elseif ($request instanceof NaviRequest) {
             return $request->pathKey;
-        } else if (is_string($request)) { // caching + recursion
+        } elseif (is_string($request)) { // caching + recursion
             $pathKeyCache = $this->getPathKeyCache();
             $requests = $this->getRequests();
             $requestKey = $request;
