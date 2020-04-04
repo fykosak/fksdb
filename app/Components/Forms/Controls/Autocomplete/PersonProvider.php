@@ -49,7 +49,7 @@ class PersonProvider implements IFilteredDataProvider {
 
         $currentYear = $yearCalculator->getCurrentYear($contest);
         $orgs->where('org:since <= ?', $currentYear);
-        $orgs->where('org:until IS NULL OR org:until <= ?', $currentYear);
+        $orgs->where('org:until IS NULL OR org:until >= ?', $currentYear);
         $this->searchTable = $orgs;
     }
 
@@ -81,7 +81,7 @@ class PersonProvider implements IFilteredDataProvider {
      */
     public function getItems() {
         $persons = $this->searchTable
-            ->order('family_name, other_name')->limit(50);
+            ->order('family_name, other_name');
 
 
         $result = [];
