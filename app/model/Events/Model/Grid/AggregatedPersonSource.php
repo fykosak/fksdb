@@ -54,7 +54,7 @@ abstract class AggregatedPersonSource implements IHolderSource {
             $result = $this->processEvent($event);
 
             if ($result instanceof SingleEventSource) {
-                foreach ($result as $holderKey => $holder) {
+                foreach ($result->getHolders() as $holderKey => $holder) {
                     $key = $eventKey . '_' . $holderKey;
                     $this->holders[$key] = $holder;
                 }

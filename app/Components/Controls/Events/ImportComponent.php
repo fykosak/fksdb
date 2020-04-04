@@ -50,7 +50,6 @@ class ImportComponent extends Control {
      * @param Machine $machine
      * @param SingleEventSource $source
      * @param ApplicationHandler $handler
-     * @param FlashMessageDump $flashDump
      * @param Container $container
      */
     function __construct(Machine $machine, SingleEventSource $source, ApplicationHandler $handler, Container $container) {

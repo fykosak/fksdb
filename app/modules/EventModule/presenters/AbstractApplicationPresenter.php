@@ -5,6 +5,7 @@ namespace EventModule;
 use Events\Model\ApplicationHandlerFactory;
 use Events\Model\Grid\SingleEventSource;
 use FKSDB\Components\Events\ApplicationComponent;
+use FKSDB\Components\Events\MassTransitionsControl;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
 use FKSDB\Components\Grids\Schedule\PersonGrid;
 use FKSDB\Logging\MemoryLogger;
@@ -14,6 +15,7 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
+use Nette\InvalidStateException;
 
 /**
  * Class ApplicationPresenter
@@ -22,14 +24,10 @@ use Nette\Application\UI\Control;
 abstract class AbstractApplicationPresenter extends BasePresenter {
     use EventEntityTrait;
 
-    /**
-     * @var ApplicationHandlerFactory
-     */
+    /** @var ApplicationHandlerFactory */
     protected $applicationHandlerFactory;
 
-    /**
-     * @var ServiceEventParticipant
-     */
+    /** @var ServiceEventParticipant */
     protected $serviceEventParticipant;
 
     /**
@@ -44,6 +42,18 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      */
     public function injectServiceEventParticipant(ServiceEventParticipant $serviceEventParticipant) {
         $this->serviceEventParticipant = $serviceEventParticipant;
+    }
+
+    public final function titleList() {
+        $this->setTitle(_('List of applications'), 'fa fa-users');
+    }
+
+    public final function titleDetail() {
+        $this->setTitle(_('Application detail'), 'fa fa-user');
+    }
+
+    public final function titleTransitions() {
+        $this->setTitle(_('Group transitions'), 'fa fa-user');
     }
 
     /**
@@ -96,26 +106,23 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws AbortException
      */
     public function createComponentApplicationComponent(): ApplicationComponent {
-        $holders = [];
-        $handlers = [];
         $source = new SingleEventSource($this->getEvent(), $this->getContext());
-        foreach ($source as $key => $holder) {
-            $holders[$key] = $holder;
-            $handlers[$key] = $this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger());
+        foreach ($source->getHolders() as $key => $holder) {
+            if ($key === $this->getEntity()->getPrimary()) {
+                return new ApplicationComponent($this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger()), $holder);
+            }
         }
-
-        return new ApplicationComponent($handlers[$this->getEntity()->getPrimary()], $holders[$this->getEntity()->getPrimary()]);
+        throw new InvalidStateException();
     }
 
     /**
-     * @return void
+     * @return MassTransitionsControl
+     * @throws AbortException
+     * @throws BadRequestException
      */
-    abstract public function titleList();
-
-    /**
-     * @return void
-     */
-    abstract public function titleDetail();
+    public final function createComponentMassTransitions(): MassTransitionsControl {
+        return new MassTransitionsControl($this->getContext(), $this->getEvent());
+    }
 
     /**
      * @return AbstractApplicationGrid

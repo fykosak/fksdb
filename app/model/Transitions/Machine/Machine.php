@@ -12,10 +12,6 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Database\Connection;
 use Nette\Database\Table\ActiveRow;
 use Nette\Localization\ITranslator;
-use function array_filter;
-use function array_values;
-use function count;
-use function is_null;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -81,10 +77,10 @@ abstract class Machine {
      */
     public function getAvailableTransitions(IStateModel $model = null): array {
         $state = $model ? $model->getState() : NULL;
-        if (is_null($state)) {
+        if (\is_null($state)) {
             $state = self::STATE_INIT;
         }
-        return array_filter($this->getTransitions(), function (Transition $transition) use ($model, $state) {
+        return \array_filter($this->getTransitions(), function (Transition $transition) use ($model, $state) {
             return ($transition->getFromState() === $state) && $this->canExecute($transition, $model);
         });
     }
@@ -101,11 +97,10 @@ abstract class Machine {
      * @param string $id
      * @param IStateModel $model
      * @return Transition
-     * @throws UnavailableTransitionException
-     * @throws Exception
+     * @throws UnavailableTransitionsException
      */
     protected function findTransitionById(string $id, IStateModel $model): Transition {
-        $transitions = array_filter($this->getAvailableTransitions($model), function (Transition $transition) use ($id) {
+        $transitions = \array_filter($this->getAvailableTransitions($model), function (Transition $transition) use ($id) {
             return $transition->getId() === $id;
         });
 
@@ -115,20 +110,19 @@ abstract class Machine {
     /**
      * @param array $transitions
      * @return Transition
-     * @throws UnavailableTransitionException
      * @throws LogicException
-     * @throws UnavailableTransitionException
+     * @throws UnavailableTransitionsException
      * Protect more that one transition between nodes
      */
     private function selectTransition(array $transitions): Transition {
-        $length = count($transitions);
+        $length = \count($transitions);
         if ($length > 1) {
-            throw new UnavailableTransitionException();
+            throw new UnavailableTransitionsException();
         }
         if (!$length) {
-            throw new UnavailableTransitionException();
+            throw new UnavailableTransitionsException();
         }
-        return array_values($transitions)[0];
+        return \array_values($transitions)[0];
     }
 
     /* ********** CONDITION ******** */
@@ -156,7 +150,7 @@ abstract class Machine {
      * @param string $id
      * @param IStateModel $model
      * @return IStateModel
-     * @throws UnavailableTransitionException
+     * @throws UnavailableTransitionsException
      * @throws ForbiddenRequestException
      * @throws BadRequestException
      * @throws Exception
@@ -212,7 +206,7 @@ abstract class Machine {
      * @throws Exception
      */
     private function getCreatingTransition(): Transition {
-        $transitions = array_filter($this->getTransitions(), function (Transition $transition) {
+        $transitions = \array_filter($this->getTransitions(), function (Transition $transition) {
             return $transition->getFromState() === self::STATE_INIT && $transition->getToState() === $this->getCreatingState();
         });
         return $this->selectTransition($transitions);
