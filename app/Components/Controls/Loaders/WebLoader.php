@@ -14,8 +14,13 @@ abstract class WebLoader extends Control {
     const FILENAME = 'file';
     const ATTRIBUTES = 'attr';
     const UNTAGGED = '__untagged';
-
+    /**
+     * @var string[]
+     */
     private $files = [];
+    /**
+     * @var string[]
+     */
     private $inlines = [];
 
     /**
@@ -23,7 +28,7 @@ abstract class WebLoader extends Control {
      * @param array $attributes
      */
     public function addFile(string $file, array $attributes = []) {
-        $hash = $file . implode(':', $attributes);
+        $hash = $file . join(':', $attributes);
         $this->files[$hash] = [
             self::FILENAME => $file,
             self::ATTRIBUTES => $attributes,
@@ -67,17 +72,17 @@ abstract class WebLoader extends Control {
         $files = [];
         if (count($args) == 1 && is_array($args[0])) {
             foreach ($args[0] as $file => $attributes) {
-                $files[] = array(
+                $files[] = [
                     self::FILENAME => $file,
                     self::ATTRIBUTES => $attributes,
-                );
+                ];
             }
         } else {
             foreach ($args as $arg) {
-                $files[] = array(
+                $files[] = [
                     self::FILENAME => $arg,
                     self::ATTRIBUTES => [],
-                );
+                ];
             }
         }
 
