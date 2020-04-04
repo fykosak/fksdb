@@ -66,8 +66,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
         $machine = $this->getContext()->createEventMachine($this->getEvent());
         $handler = $this->applicationHandlerFactory->create($this->getEvent(), $logger);
 
-        $flashDump = $this->dumpFactory->create('application');
-        return new ImportComponent($machine, $source, $handler, $flashDump, $this->getContext());
+        return new ImportComponent($machine, $source, $handler, $this->getContext());
     }
 
     /**

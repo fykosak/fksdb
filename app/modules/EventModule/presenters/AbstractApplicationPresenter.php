@@ -7,7 +7,6 @@ use Events\Model\Grid\SingleEventSource;
 use FKSDB\Components\Events\ApplicationComponent;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
 use FKSDB\Components\Grids\Schedule\PersonGrid;
-use FKSDB\Logging\FlashDumpFactory;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\NotImplementedException;
 use FKSDB\ORM\Services\ServiceEventParticipant;
@@ -27,10 +26,6 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @var ApplicationHandlerFactory
      */
     protected $applicationHandlerFactory;
-    /**
-     * @var FlashDumpFactory
-     */
-    protected $dumpFactory;
 
     /**
      * @var ServiceEventParticipant
@@ -42,13 +37,6 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      */
     public function injectHandlerFactory(ApplicationHandlerFactory $applicationHandlerFactory) {
         $this->applicationHandlerFactory = $applicationHandlerFactory;
-    }
-
-    /**
-     * @param FlashDumpFactory $dumpFactory
-     */
-    public function injectFlashDumpFactory(FlashDumpFactory $dumpFactory) {
-        $this->dumpFactory = $dumpFactory;
     }
 
     /**
@@ -110,14 +98,13 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     public function createComponentApplicationComponent(): ApplicationComponent {
         $holders = [];
         $handlers = [];
-        $flashDump = $this->dumpFactory->create('application');
         $source = new SingleEventSource($this->getEvent(), $this->getContext());
         foreach ($source as $key => $holder) {
             $holders[$key] = $holder;
             $handlers[$key] = $this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger());
         }
 
-        return new ApplicationComponent($handlers[$this->getEntity()->getPrimary()], $holders[$this->getEntity()->getPrimary()], $flashDump);
+        return new ApplicationComponent($handlers[$this->getEntity()->getPrimary()], $holders[$this->getEntity()->getPrimary()]);
     }
 
     /**
