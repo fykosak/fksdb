@@ -7,6 +7,7 @@ use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\YearCalculator;
 use Nette\Database\Table\Selection;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -62,7 +63,7 @@ class PersonProvider implements IFilteredDataProvider {
         $search = trim($search);
         $search = str_replace(' ', '', $search);
         $this->searchTable
-                ->where('family_name LIKE concat(?, \'%\') OR other_name LIKE concat(?, \'%\') OR concat(other_name, family_name) LIKE concat(?,  \'%\')', $search, $search, $search);
+            ->where('family_name LIKE concat(?, \'%\') OR other_name LIKE concat(?, \'%\') OR concat(other_name, family_name) LIKE concat(?,  \'%\')', $search, $search, $search);
         return $this->getItems();
     }
 
@@ -80,7 +81,7 @@ class PersonProvider implements IFilteredDataProvider {
      */
     public function getItems() {
         $persons = $this->searchTable
-                ->order('family_name, other_name');
+            ->order('family_name, other_name')->limit(50);
 
 
         $result = [];
