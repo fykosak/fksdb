@@ -63,6 +63,7 @@ class ApplicationsGrid extends Control {
      * @var ApplicationHandlerFactory
      */
     private $handlerFactory;
+
     /**
      * @var string
      */

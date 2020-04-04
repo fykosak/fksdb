@@ -44,6 +44,7 @@ class TasksPresenter extends BasePresenter {
      * @var PipelineFactory
      */
     private $pipelineFactory;
+
     /**
      * @var Downloader
      */
@@ -171,6 +172,7 @@ class TasksPresenter extends BasePresenter {
                     $pipeline->setInput($data);
                     $pipeline->run();
                     FlashMessageDump::dump($pipeline->getLogger(), $this);
+
                     $this->flashMessage(sprintf(_('Úlohy pro jazyk %s úspěšně importovány.'), $language), self::FLASH_SUCCESS);
                 } else {
                     if ($language != self::LANG_ALL) {

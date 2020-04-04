@@ -32,7 +32,6 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
 
     /**
      * @return bool
-     * @throws AbortException
      * @throws BadRequestException
      * use same method of permissions as trait
      */
@@ -59,7 +58,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
         $logger = new MemoryLogger();
         $machine = $this->getContext()->createEventMachine($this->getEvent());
         $handler = $this->applicationHandlerFactory->create($this->getEvent(), $logger);
-        return new ImportComponent($machine, $source, $handler, $this->container);
+        return new ImportComponent($machine, $source, $handler, $this->getContext());
     }
 
     /**

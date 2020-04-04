@@ -51,9 +51,8 @@ class ApplicationComponent extends Control {
      * ApplicationComponent constructor.
      * @param ApplicationHandler $handler
      * @param Holder $holder
-     * @param $flashDump
      */
-    function __construct(ApplicationHandler $handler, Holder $holder, $flashDump = null) {
+    function __construct(ApplicationHandler $handler, Holder $holder) {
         parent::__construct();
         $this->handler = $handler;
         $this->holder = $holder;
@@ -234,7 +233,6 @@ class ApplicationComponent extends Control {
      * @param Form $form
      * @param null $explicitTransitionName
      * @throws AbortException
-     * @throws JsonException
      */
     public function handleSubmit(Form $form, $explicitTransitionName = null) {
         $this->execute($form, $explicitTransitionName);
@@ -243,7 +241,6 @@ class ApplicationComponent extends Control {
     /**
      * @param $transitionName
      * @throws AbortException
-     * @throws JsonException
      */
     public function handleTransition($transitionName) {
         $this->execute(null, $transitionName);
@@ -253,7 +250,6 @@ class ApplicationComponent extends Control {
      * @param Form|null $form
      * @param null $explicitTransitionName
      * @throws AbortException
-     * @throws JsonException
      */
     private function execute(Form $form = null, $explicitTransitionName = null) {
         try {

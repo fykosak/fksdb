@@ -118,6 +118,7 @@ class ApplicationPresenter extends BasePresenter {
     public function injectHandlerFactory(ApplicationHandlerFactory $handlerFactory) {
         $this->handlerFactory = $handlerFactory;
     }
+
     /**
      * @param $eventId
      * @param $id
