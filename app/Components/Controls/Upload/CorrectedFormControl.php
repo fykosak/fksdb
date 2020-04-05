@@ -2,40 +2,22 @@
 
 namespace FKSDB\Components\Controls\Upload;
 
-use FKSDB\Components\Controls\BaseControl;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Logging\ILogger;
-use FKSDB\Submits\SeriesTable;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
-use Nette\DI\Container;
 
 /**
  * Class CorrectedFormControl
  * @package FKSDB\Components\Controls\Upload
  */
-class CorrectedFormControl extends BaseControl {
-    /**
-     * @var SeriesTable
-     */
-    private $seriesTable;
-
-    /**
-     * CheckSubmitsControl constructor.
-     * @param Container $context
-     * @param SeriesTable $seriesTable
-     */
-    public function __construct(Container $context, SeriesTable $seriesTable) {
-        parent::__construct($context);
-        $this->seriesTable = $seriesTable;
-    }
+class CorrectedFormControl extends SeriesTableControl {
 
     /**
      * @inheritDoc
      */
     public function render() {
-        $this->template->seriesTable = $this->seriesTable;
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'CorrectedFormControl.latte');
         $this->template->render();
     }

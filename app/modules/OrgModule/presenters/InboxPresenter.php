@@ -6,6 +6,7 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\FormControl\OptimisticFormControl;
 use FKSDB\Components\Controls\Upload\CheckSubmitsControl;
 use FKSDB\Components\Controls\Upload\CorrectedFormControl;
+use FKSDB\Components\Controls\Upload\PointsTableControl;
 use FKSDB\Components\Controls\Upload\SubmitsTableControl;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
@@ -115,6 +116,20 @@ class InboxPresenter extends SeriesPresenter {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('task', 'edit', $this->getSelectedContest()));
     }
 
+    /**
+     * @throws BadRequestException
+     */
+    public function authorizedPoints() {
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'points', $this->getSelectedContest()));
+    }
+
+    /**
+     * @throws BadRequestException
+     */
+    public function authorizedCorrected() {
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'corrected', $this->getSelectedContest()));
+    }
+
     /* ***************** TITLES ***********************/
     public function titleDefault() {
         $this->setTitle(_('Inbox'), 'fa fa-envelope-open');
@@ -126,6 +141,14 @@ class InboxPresenter extends SeriesPresenter {
 
     public function titleList() {
         $this->setTitle(_('List of solutions'), 'fa fa-cloud-download');
+    }
+
+    public function titleCorrected() {
+        $this->setTitle(_('Corrected'), 'fa fa-inbox');
+    }
+
+    public function titlePoints() {
+        $this->setTitle(_('Points'), 'fa fa-inbox');
     }
 
     /* *********** LIVE CYCLE *************/
@@ -275,6 +298,13 @@ class InboxPresenter extends SeriesPresenter {
      */
     protected function createComponentSubmitsTableControl(): SubmitsTableControl {
         return new SubmitsTableControl($this->getContext(), $this->seriesTable);
+    }
+
+    /**
+     * @return PointsTableControl
+     */
+    protected function createComponentPointsTableControl(): PointsTableControl {
+        return new PointsTableControl($this->getContext(), $this->seriesTable);
     }
 
     /**
