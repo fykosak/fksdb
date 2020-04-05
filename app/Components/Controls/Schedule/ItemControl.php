@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Controls\Schedule;
 
+use FKSDB\Components\DatabaseReflection\ValuePrinterComponent;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 use Nette\Application\UI\Control;
@@ -53,17 +54,11 @@ class ItemControl extends Control {
         $this->template->render();
     }
 
-
     /**
-     * @param string $name
-     * @return IComponent|null
+     * @return ValuePrinterComponent
      * @throws \Exception
      */
-    public function createComponent($name) {
-        $printerComponent = $this->tableReflectionFactory->createComponent($name, 2048);
-        if ($printerComponent) {
-            return $printerComponent;
-        }
-        return parent::createComponent($name);
+    public function createComponentValuePrinter(): ValuePrinterComponent {
+        return new ValuePrinterComponent($this->translator, $this->tableReflectionFactory);
     }
 }

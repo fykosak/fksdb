@@ -6,6 +6,7 @@ use FKSDB\Components\Controls\Helpers\Badges\ContestBadge;
 use FKSDB\Components\Controls\Helpers\Badges\NoRecordsBadge;
 use FKSDB\Components\Controls\Helpers\Badges\PermissionDeniedBadge;
 use FKSDB\Components\Controls\Stalking\Helpers\EventLabelControl;
+use FKSDB\Components\DatabaseReflection\ValuePrinterComponent;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\Models\ModelPerson;
 use Nette\Application\UI\Control;
@@ -92,15 +93,10 @@ abstract class StalkingControl extends Control {
     }
 
     /**
-     * @param string $name
-     * @return \Nette\ComponentModel\IComponent|null
+     * @return ValuePrinterComponent
      * @throws \Exception
      */
-    public function createComponent($name) {
-        $printerComponent = $this->tableReflectionFactory->createComponent($name, $this->userPermissions);
-        if ($printerComponent) {
-            return $printerComponent;
-        }
-        return parent::createComponent($name);
+    public function createComponentValuePrinter(): ValuePrinterComponent {
+        return new ValuePrinterComponent($this->translator, $this->tableReflectionFactory);
     }
 }

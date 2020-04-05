@@ -2,7 +2,7 @@
     <ul class="list-group">
         {foreach ['game_start','result_display','result_hide','game_end',
 'refresh_delay','tasks_on_board','result_hard_display','available_points'] as $field}
-            {control valuePrinter__fyziklani_game_setup__$field:listItem $gameSetup}
+            {control valuePrinter:listItem 'fyziklani_game_setup.'.$field, $gameSetup}
         {/foreach}
     </ul>
 {/block}

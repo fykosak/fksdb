@@ -4,7 +4,7 @@
     <p>{$event->report}</p>
     <ul class="list-group mb-3">
         {foreach $fields as $fieldName}
-            {control valuePrinter__event__$fieldName:listItem $event}
+            {control valuePrinter:listItem 'event.'.$fieldName, $event}
         {/foreach}
         <li class="list-group-item">
             <a class="col-12" href="{$webUrl}">{_'Event web-site'}</a>
