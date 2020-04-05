@@ -99,16 +99,11 @@ class PaymentFactory {
      */
     public function creteForm(ModelEvent $event, bool $isOrg, PaymentMachine $machine): SelectForm {
         return new SelectForm(
+            $this->container,
             $event,
             $isOrg,
-            'accommodation',
-            $this->translator,
-            $this->servicePayment,
-            $machine,
-            $this->personFactory,
-            $this->personProvider,
-            $this->servicePersonSchedule,
-            $this->serviceSchedulePayment
+            ['accommodation'],
+            $machine
         );
     }
 }

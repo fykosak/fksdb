@@ -10,6 +10,8 @@ use FKSDB\Components\DatabaseReflection\ValuePrinterComponent;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\Models\ModelPerson;
 use Nette\Application\UI\Control;
+use Nette\ComponentModel\IComponent;
+use Nette\DI\Container;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 
@@ -45,17 +47,16 @@ abstract class StalkingControl extends Control {
 
     /**
      * StalkingComponent constructor.
+     * @param Container $container
      * @param ModelPerson $modelPerson
-     * @param TableReflectionFactory $tableReflectionFactory
-     * @param ITranslator $translator
      * @param int $userPermissions
      */
-    public function __construct(ModelPerson $modelPerson, TableReflectionFactory $tableReflectionFactory, ITranslator $translator, int $userPermissions) {
+    public function __construct(Container $container, ModelPerson $modelPerson, int $userPermissions) {
         parent::__construct();
         $this->userPermissions = $userPermissions;
         $this->modelPerson = $modelPerson;
-        $this->translator = $translator;
-        $this->tableReflectionFactory = $tableReflectionFactory;
+        $this->translator = $container->getByType(ITranslator::class);
+        $this->tableReflectionFactory = $container->getByType(TableReflectionFactory::class);
     }
 
     public function beforeRender() {
@@ -86,7 +87,7 @@ abstract class StalkingControl extends Control {
     }
 
     /**
-     * @return \FKSDB\Components\Controls\Helpers\Badges\NoRecordsBadge
+     * @return NoRecordsBadge
      */
     public function createComponentNoRecords(): NoRecordsBadge {
         return new NoRecordsBadge($this->translator);

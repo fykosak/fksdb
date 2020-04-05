@@ -249,8 +249,7 @@ class Breadcrumbs extends Control {
             }
 
             $paramKey = Utils::getFingerprint($filteredParameters);
-            $key = $presenterName . ':' . $paramKey;
-            return $key;
+            return $presenterName . ':' . $paramKey;
         } elseif ($request instanceof NaviRequest) {
             return $request->pathKey;
         } elseif (is_string($request)) { // caching + recursion
@@ -317,8 +316,7 @@ class Breadcrumbs extends Control {
         $presenterName = $request->getPresenterName();
         $parameters = $this->filterParameters($request->getParameters());
         $paramKey = Utils::getFingerprint($parameters);
-        $key = $presenterName . ':' . $paramKey;
-        return $key;
+        return $presenterName . ':' . $paramKey;
     }
 
     /**

@@ -47,7 +47,7 @@ class ResultsAndStatistics extends FyziklaniReactControl {
      * @param Container $container
      * @param ModelEvent $event
      */
-    public function __construct(string $reactId, Container $container, ModelEvent $event) {
+    public function __construct(Container $container, ModelEvent $event, string $reactId) {
         parent::__construct($container, $event);
         $this->reactId = $reactId;
         $this->serviceFyziklaniSubmit = $this->container->getByType(ServiceFyziklaniSubmit::class);

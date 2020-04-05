@@ -95,7 +95,7 @@ class AjaxUpload extends ReactComponent {
         foreach ($this->getPresenter()->getAvailableTasks() as $task) {
             $submit = $this->serviceSubmit->findByContestant($this->getPresenter()->getContestant()->ct_id, $task->task_id);
             $data[$task->task_id] = $this->serviceSubmit->serializeSubmit($submit, $task, $this->getPresenter());
-        };
+        }
         return json_encode($data);
     }
 
@@ -136,7 +136,7 @@ class AjaxUpload extends ReactComponent {
                 $response->setCode(403);
                 $response->addMessage(new ReactMessage(_('Upload not allowed'), ILogger::ERROR));
                 $this->getPresenter()->sendResponse($response);
-            };
+            }
             /**
              * @var FileUpload $file
              */

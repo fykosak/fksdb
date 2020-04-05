@@ -57,7 +57,7 @@ class PizzaPresenter extends BasePresenter {
             $values = $form->getValues();
             foreach ($values->persons as $personId) {
                 $this->persons[] = $this->servicePerson->findByPrimary($personId);
-            };
+            }
         };
         return $control;
     }

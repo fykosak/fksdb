@@ -39,9 +39,8 @@ class AESOPContestant extends StoredQueryPostProcessing {
      */
     public function processData($data) {
         $filtered = $this->filterCategory($data);
-        $ranked = $this->calculateRank($filtered);
         //$formated = $this->formatDate($ranked); //implemented in SQL
-        return $ranked;
+        return $this->calculateRank($filtered);
     }
 
     /**

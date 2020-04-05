@@ -82,7 +82,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
      * @return SeatingControl
      */
     public function createComponentSeating(): SeatingControl {
-        return new SeatingControl($this->serviceFyziklaniTeamPosition, $this->getTranslator());
+        return new SeatingControl($this->getContext());
     }
 
     /**

@@ -36,21 +36,6 @@ class ResultsPresenter extends BasePresenter {
     }
 
     /**
-     * @return bool
-     */
-    public function requiresLogin(): bool {
-        switch ($this->getAction()) {
-            case 'default':
-            case 'table':
-            case 'taskStatistics':
-            case 'teamStatistics':
-                return false;
-            default:
-                return parent::requiresLogin();
-        }
-    }
-
-    /**
      * @throws BadRequestException
      */
     public function authorizedList() {
@@ -97,7 +82,7 @@ class ResultsPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentTable(): ResultsAndStatistics {
-        return $this->fyziklaniComponentsFactory->createResultsAndStatistics('fyziklani.results.table', $this->getEvent());
+        return new ResultsAndStatistics($this->getContext(), $this->getEvent(), 'fyziklani.results.table');
     }
 
     /**
@@ -105,7 +90,7 @@ class ResultsPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentPresentation(): ResultsAndStatistics {
-        return $this->fyziklaniComponentsFactory->createResultsAndStatistics('fyziklani.results.presentation', $this->getEvent());
+        return new ResultsAndStatistics($this->getContext(), $this->getEvent(), 'fyziklani.results.presentation');
     }
 
     /**
@@ -113,7 +98,7 @@ class ResultsPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentTeamStatistics(): ResultsAndStatistics {
-        return $this->fyziklaniComponentsFactory->createResultsAndStatistics('fyziklani.statistics.team', $this->getEvent());
+        return new ResultsAndStatistics($this->getContext(), $this->getEvent(), 'fyziklani.statistics.team');
     }
 
     /**
@@ -121,7 +106,7 @@ class ResultsPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentTaskStatistics(): ResultsAndStatistics {
-        return $this->fyziklaniComponentsFactory->createResultsAndStatistics('fyziklani.statistics.task', $this->getEvent());
+        return new ResultsAndStatistics($this->getContext(), $this->getEvent(), 'fyziklani.statistics.task');
     }
 
     /**
@@ -129,7 +114,7 @@ class ResultsPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentCorrelationStatistics(): ResultsAndStatistics {
-        return $this->fyziklaniComponentsFactory->createResultsAndStatistics('fyziklani.statistics.correlation', $this->getEvent());
+        return new ResultsAndStatistics($this->getContext(), $this->getEvent(), 'fyziklani.statistics.correlation');
     }
 
     /**
