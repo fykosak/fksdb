@@ -36,18 +36,8 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @param IResource|string $resource
      * @param string $privilege
      * @return bool
-     * @deprecated
      */
-    protected function isAllowed($resource, string $privilege): bool {
-        return $this->getContestAuthorizator()->isAllowedForAnyContest($resource, $privilege);
-    }
-
-    /**
-     * @param IResource|string $resource
-     * @param string $privilege
-     * @return bool
-     */
-    protected function isAnyContestAllowed($resource, string $privilege): bool {
+    protected function isAnyContestAuthorized($resource, string $privilege): bool {
         return $this->getContestAuthorizator()->isAllowedForAnyContest($resource, $privilege);
     }
 }

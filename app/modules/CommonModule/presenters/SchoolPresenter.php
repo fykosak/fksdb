@@ -58,7 +58,7 @@ class SchoolPresenter extends BasePresenter {
      * @inheritDoc
      */
     protected function traitIsAuthorized($resource, string $privilege): bool {
-        return $this->isAnyContestAllowed($resource, $privilege);
+        return $this->isAnyContestAuthorized($resource, $privilege);
     }
 
     /**
