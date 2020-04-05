@@ -121,7 +121,8 @@ abstract class AbstractModelMulti implements IModel {
             return $this->getJoinedModel()->__get($name);
         }
         // this reference isn't that important
-        return null;
+        $null = null;
+        return $null;
     }
 
     /**
