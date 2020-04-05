@@ -2,10 +2,9 @@
 
 use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Application\IStylesheetCollector;
+use FKSDB\CollectorPresenterTrait;
 use FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs;
 use FKSDB\Components\Controls\Breadcrumbs\BreadcrumbsFactory;
-use FKSDB\Components\Controls\Loaders\JavaScript\JavaScriptLoader;
-use FKSDB\Components\Controls\Loaders\Stylesheet\StylesheetLoader;
 use FKSDB\Components\Controls\Navigation\INavigablePresenter;
 use FKSDB\Components\Controls\Navigation\Navigation;
 use FKSDB\Components\Controls\PresenterBuilder;
@@ -17,7 +16,8 @@ use FKSDB\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\IFilteredDataProvider;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Config\GlobalParameters;
-use FKSDB\LangPresenter;
+use FKSDB\LangPresenterTrait;
+use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\YearCalculator;
 use Nette\Application\AbortException;
@@ -28,20 +28,24 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\ComponentModel\IComponent;
 use Nette\Templating\FileTemplate;
+use Nette\Templating\ITemplate;
 
 /**
  * Base presenter for all application presenters.
  * @property FileTemplate $template
  */
-abstract class BasePresenter extends LangPresenter implements IJavaScriptCollector, IStylesheetCollector, IAutocompleteJSONProvider, INavigablePresenter {
+abstract class BasePresenter extends Presenter implements IJavaScriptCollector, IStylesheetCollector, IAutocompleteJSONProvider, INavigablePresenter {
 
-    const FLASH_SUCCESS = 'success';
+    use CollectorPresenterTrait;
+    use LangPresenterTrait;
 
-    const FLASH_INFO = 'info';
+    const FLASH_SUCCESS = ILogger::SUCCESS;
 
-    const FLASH_WARNING = 'warning';
+    const FLASH_INFO = ILogger::INFO;
 
-    const FLASH_ERROR = 'danger';
+    const FLASH_WARNING = ILogger::WARNING;
+
+    const FLASH_ERROR = ILogger::ERROR;
 
     /** @persistent  */
     public $tld;
@@ -57,7 +61,7 @@ abstract class BasePresenter extends LangPresenter implements IJavaScriptCollect
     protected $yearCalculator;
 
     /** @var ServiceContest */
-    protected $serviceContest;
+    private $serviceContest;
 
     /** @var GlobalParameters */
     protected $globalParameters;
@@ -86,7 +90,7 @@ abstract class BasePresenter extends LangPresenter implements IJavaScriptCollect
     private $authorized = true;
 
     /**
-     * @var array[string] => bool
+     * @var bool[]
      */
     private $authorizedCache = [];
 
@@ -185,10 +189,17 @@ abstract class BasePresenter extends LangPresenter implements IJavaScriptCollect
         $this->presenterBuilder = $presenterBuilder;
     }
 
+    /**
+     * @throws Exception
+     */
+    protected function startup() {
+        parent::startup();
+        $this->langTraitStartup();
+    }
 
     /**
      * @param null $class
-     * @return FileTemplate|\Nette\Templating\ITemplate
+     * @return FileTemplate|ITemplate
      */
     protected function createTemplate($class = NULL) {
         /**
@@ -198,87 +209,6 @@ abstract class BasePresenter extends LangPresenter implements IJavaScriptCollect
         $template->setTranslator($this->getTranslator());
 
         return $template;
-    }
-
-    /*	 * ******************************
-     * Loading assets
-     * ****************************** */
-
-    /**
-     * @return JavaScriptLoader
-     */
-    protected function createComponentJsLoader(): JavaScriptLoader {
-        return new JavaScriptLoader();
-    }
-
-    /**
-     * @return StylesheetLoader
-     */
-    protected function createComponentCssLoader(): StylesheetLoader {
-        return new StylesheetLoader();
-    }
-
-    /*	 * ******************************
-     * IJavaScriptCollector
-     * ****************************** */
-    /**
-     * @param string $file
-     */
-    public final function registerJSFile(string $file) {
-        /** @var JavaScriptLoader $component */
-        $component = $this->getComponent('jsLoader');
-        $component->addFile($file);
-    }
-
-    /**
-     * @param string $code
-     * @param string|null $tag
-     */
-    public final function registerJSCode(string $code, string $tag = null) {
-        /** @var JavaScriptLoader $component */
-        $component = $this->getComponent('jsLoader');
-        $component->addInline($code, $tag);
-    }
-
-    /**
-     * @param string $tag
-     */
-    public final function unregisterJSCode(string $tag) {
-        /** @var JavaScriptLoader $component */
-        $component = $this->getComponent('jsLoader');
-        $component->removeInline($tag);
-    }
-
-    /**
-     * @param string $file
-     */
-    public final function unregisterJSFile(string $file) {
-        /** @var JavaScriptLoader $component */
-        $component = $this->getComponent('jsLoader');
-        $component->removeFile($file);
-    }
-
-    /*	 * ******************************
-     * IStylesheetCollector
-     * ****************************** */
-    /**
-     * @param string $file
-     * @param array $media
-     */
-    public final function registerStylesheetFile(string $file, array $media = []) {
-        /** @var StylesheetLoader $component */
-        $component = $this->getComponent('cssLoader');
-        $component->addFile($file, $media);
-    }
-
-    /**
-     * @param string $file
-     * @param array $media
-     */
-    public final function unregisterStylesheetFile(string $file, array $media = []) {
-        /** @var StylesheetLoader $component */
-        $component = $this->getComponent('cssLoader');
-        $component->removeFile($file, $media);
     }
 
     /*	 * ******************************
@@ -349,9 +279,7 @@ abstract class BasePresenter extends LangPresenter implements IJavaScriptCollect
      */
     protected function setTitle(string $title, string $icon = '') {
         $this->title = $title;
-        if ($icon) {
-            $this->icon = $icon;
-        }
+        $this->icon = $icon;
     }
 
     /**
@@ -360,15 +288,6 @@ abstract class BasePresenter extends LangPresenter implements IJavaScriptCollect
     public function getIcon() {
         return $this->icon;
     }
-
-    /**
-     * @param $icon
-     * @deprecated
-     */
-    protected function setIcon($icon) {
-        $this->icon = $icon;
-    }
-
     /**
      * @param $subtitle
      */
@@ -492,7 +411,7 @@ abstract class BasePresenter extends LangPresenter implements IJavaScriptCollect
         $backLink = $component->getBackLinkUrl();
         if ($backLink) {
             $this->redirectUrl($backLink);
-        } else if ($need) {
+        } elseif ($need) {
             $this->redirect(':Authentication:login'); // will cause dispatch
         }
     }
@@ -603,18 +522,5 @@ abstract class BasePresenter extends LangPresenter implements IJavaScriptCollect
      */
     public function createComponentValuePrinter() {
         return new ValuePrinterComponent($this->getTranslator(), $this->getTableReflectionFactory());
-    }
-
-    /**
-     * @param string $name
-     * @return IComponent|null
-     * @throws \Exception
-     */
-    public function createComponent($name) {
-        $printerComponent = $this->getTableReflectionFactory()->createComponent($name, 2048);
-        if ($printerComponent) {
-            return $printerComponent;
-        }
-        return parent::createComponent($name);
     }
 }

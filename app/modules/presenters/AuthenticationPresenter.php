@@ -188,7 +188,7 @@ final class AuthenticationPresenter extends BasePresenter {
 
         if ($this->isLoggedIn()) {
             $this->getUser()->logout(true); //clear identity
-        } else if ($this->getParameter(self::PARAM_GSID)) { // global session may exist but central login doesn't know it (e.g. expired its session)
+        } elseif ($this->getParameter(self::PARAM_GSID)) { // global session may exist but central login doesn't know it (e.g. expired its session)
             // We restart the global session with provided parameter.
             // This is secure as only harm an attacker can make to the user is to log him out.
             $this->globalSession->destroy();

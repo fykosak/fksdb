@@ -65,24 +65,6 @@ final class TableReflectionFactory {
     }
 
     /**
-     * @param string $name
-     * @param int $permissionLevel
-     * @return RowFactoryComponent|null
-     * @throws \Exception
-     */
-    public function createComponent(string $name, int $permissionLevel) {
-        $parts = \explode('__', $name);
-        if (\count($parts) === 3) {
-            list($prefix, $tableName, $fieldName) = $parts;
-            if ($prefix === 'valuePrinter') {
-                $factory = $this->loadService($tableName, $fieldName);
-                return new RowFactoryComponent($this->translator, $factory, $permissionLevel);
-            }
-        }
-        return null;
-    }
-
-    /**
      * @param string $tableName
      * @param string $fieldName
      * @param int $userPermissionLevel

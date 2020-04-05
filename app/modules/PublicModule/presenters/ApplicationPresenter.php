@@ -13,7 +13,6 @@ use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\Components\Events\ApplicationComponent;
 use FKSDB\Components\Events\ApplicationsGrid;
 use FKSDB\Components\Grids\Events\LayoutResolver;
-use FKSDB\Logging\FlashDumpFactory;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\AbstractModelMulti;
 use FKSDB\ORM\AbstractModelSingle;
@@ -86,11 +85,6 @@ class ApplicationPresenter extends BasePresenter {
     private $handlerFactory;
 
     /**
-     * @var FlashDumpFactory
-     */
-    private $flashDumpFactory;
-
-    /**
      * @param ServiceEvent $serviceEvent
      */
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
@@ -126,13 +120,6 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @param FlashDumpFactory $flashDumpFactory
-     */
-    public function injectFlashDumpFactory(FlashDumpFactory $flashDumpFactory) {
-        $this->flashDumpFactory = $flashDumpFactory;
-    }
-
-    /**
      * @param $eventId
      * @param $id
      * @throws BadRequestException
@@ -158,11 +145,10 @@ class ApplicationPresenter extends BasePresenter {
 
     public function titleDefault() {
         if ($this->getEventApplication()) {
-            $this->setTitle(sprintf(_('Application for %s: %s'), $this->getEvent()->name, $this->getEventApplication()->__toString()));
+            $this->setTitle(sprintf(_('Application for %s: %s'), $this->getEvent()->name, $this->getEventApplication()->__toString()), 'fa fa-calendar-check-o');
         } else {
-            $this->setTitle("{$this->getEvent()}");
+            $this->setTitle("{$this->getEvent()}", 'fa fa-calendar-check-o');
         }
-        $this->setIcon('fa fa-calendar-check-o');
     }
 
     /**
@@ -171,11 +157,10 @@ class ApplicationPresenter extends BasePresenter {
     public function titleList() {
         $contest = $this->getSelectedContest();
         if ($contest) {
-            $this->setTitle(sprintf(_('Moje přihlášky (%s)'), $contest->name));
+            $this->setTitle(sprintf(_('Moje přihlášky (%s)'), $contest->name), 'fa fa-calendar');
         } else {
-            $this->setTitle(_('Moje přihlášky'));
+            $this->setTitle(_('Moje přihlášky'), 'fa fa-calendar');
         }
-        $this->setIcon('fa fa-calendar');
     }
 
     protected function unauthorizedAccess() {
@@ -234,7 +219,7 @@ class ApplicationPresenter extends BasePresenter {
             if ($this->getMachine()->getPrimaryMachine()->getState() == BaseMachine::STATE_INIT) {
                 $this->setView('closed');
                 $this->flashMessage(_('Přihlašování není povoleno.'), BasePresenter::FLASH_INFO);
-            } else if (!$this->getParameter(self::PARAM_AFTER, false)) {
+            } elseif (!$this->getParameter(self::PARAM_AFTER, false)) {
                 $this->flashMessage(_('Automat přihlášky nemá aktuálně žádné možné přechody.'), BasePresenter::FLASH_INFO);
             }
         }
@@ -272,10 +257,10 @@ class ApplicationPresenter extends BasePresenter {
             if (!$this->getEvent()) {
                 throw new BadRequestException(_('Neexistující akce.'), 404);
             }
-            $component->setContests(array(
+            $component->setContests([
                 $this->getEvent()->getEventType()->contest_id,
-            ));
-        } else if ($this->getAction() == 'list') {
+            ]);
+        } elseif ($this->getAction() == 'list') {
             $component->setContests(ContestChooser::CONTESTS_ALL);
         }
         return $component;
@@ -287,15 +272,14 @@ class ApplicationPresenter extends BasePresenter {
     protected function createComponentApplication() {
         $logger = new MemoryLogger();
         $handler = $this->handlerFactory->create($this->getEvent(), $logger);
-        $flashDump = $this->flashDumpFactory->createApplication();
-        $component = new ApplicationComponent($handler, $this->getHolder(), $flashDump);
+        $component = new ApplicationComponent($handler, $this->getHolder());
         $component->setRedirectCallback(function ($modelId, $eventId) {
             $this->backLinkRedirect();
-            $this->redirect('this', array(
+            $this->redirect('this', [
                 'eventId' => $eventId,
                 'id' => $modelId,
                 self::PARAM_AFTER => true,
-            ));
+            ]);
         });
         $component->setTemplate($this->layoutResolver->getFormLayout($this->getEvent()));
         return $component;
@@ -312,8 +296,7 @@ class ApplicationPresenter extends BasePresenter {
 
         $source = new RelatedPersonSource($person, $events, $this->container);
 
-        $flashDump = $this->flashDumpFactory->createApplication();
-        $grid = new ApplicationsGrid($this->container, $source, $this->handlerFactory, $flashDump);
+        $grid = new ApplicationsGrid($this->container, $source, $this->handlerFactory);
 
         $grid->setTemplate('myApplications');
 
@@ -331,8 +314,7 @@ class ApplicationPresenter extends BasePresenter {
             ->where('registration_end >= NOW()');
 
         $source = new InitSource($events, $this->container);
-        $flashDump = $this->flashDumpFactory->createApplication();
-        $grid = new ApplicationsGrid($this->container, $source, $this->handlerFactory, $flashDump);
+        $grid = new ApplicationsGrid($this->container, $source, $this->handlerFactory);
         $grid->setTemplate('myApplications');
 
         return $grid;
@@ -424,10 +406,10 @@ class ApplicationPresenter extends BasePresenter {
         if (count($parts) != 2) {
             throw new InvalidArgumentException("Cannot decode '$data'.");
         }
-        return array(
+        return [
             'eventId' => $parts[0],
             'id' => $parts[1],
-        );
+        ];
     }
 
     /**

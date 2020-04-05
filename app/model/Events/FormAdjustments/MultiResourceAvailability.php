@@ -36,7 +36,7 @@ class MultiResourceAvailability extends AbstractAdjustment {
      */
     private function setFields($fields) {
         if(!is_array($fields)){
-            $fields = array($fields);
+            $fields = [$fields];
         }
         $this->fields = $fields;
     }
@@ -50,7 +50,7 @@ class MultiResourceAvailability extends AbstractAdjustment {
      * @param string|array $includeStates any state or array of state
      * @param string|array $excludeStates any state or array of state
      */
-    function __construct($fields, $paramCapacity, $message, Connection $database, $includeStates = BaseMachine::STATE_ANY, $excludeStates = array('cancelled')) {
+    function __construct($fields, $paramCapacity, $message, Connection $database, $includeStates = BaseMachine::STATE_ANY, $excludeStates = ['cancelled']) {
         $this->setFields($fields);
         $this->database = $database;
         $this->paramCapacity = $paramCapacity;
@@ -66,10 +66,10 @@ class MultiResourceAvailability extends AbstractAdjustment {
      */
     protected function _adjust(Form $form, Machine $machine, Holder $holder) {
         $groups = $holder->getGroupedSecondaryHolders();
-        $groups[] = array(
+        $groups[] = [
             'service' => $holder->getPrimaryHolder()->getService(),
-            'holders' => array($holder->getPrimaryHolder()),
-        );
+            'holders' => [$holder->getPrimaryHolder()],
+        ];
 
         $services = [];
         $controls = [];
@@ -87,7 +87,7 @@ class MultiResourceAvailability extends AbstractAdjustment {
                         $holders[] = $baseHolder;
                         $controls[] = $foundControls[$name];
                         $field = $fieldMask;
-                    }else if($name == substr($fieldMask,0,strpos($fieldMask,self::DELIMITER))){
+                    }elseif($name == substr($fieldMask,0,strpos($fieldMask,self::DELIMITER))){
                         $holders[] = $baseHolder;
                         $controls[] = reset($foundControls); // assume single result;
                         $field = $fieldMask;
@@ -95,11 +95,11 @@ class MultiResourceAvailability extends AbstractAdjustment {
                 }
             }
             if($holders){
-                $services[] = array(
+                $services[] = [
                     'service' => $group['service'],
                     'holders' => $holders,
                     'field' => $field,
-                );
+                ];
             }
         }
 

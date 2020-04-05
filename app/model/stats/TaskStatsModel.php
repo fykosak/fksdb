@@ -66,9 +66,7 @@ class TaskStatsModel {
                 "AND series = ? AND label IN ('" . implode("','", $labels) . "')";
 
         $stmt = $this->connection->query($sql, $this->contest->contest_id, $this->year, $this->series);
-        $result = $stmt->fetchAll();
-
-        return $result;
+        return $stmt->fetchAll();
     }
 
 }

@@ -159,10 +159,10 @@ class ContestChooser extends Control {
 
         $contestId = isset($this->contest) ? $this->contest->contest_id : null;
         if ($this->year != $presenter->year || $contestId != $presenter->contestId) {
-            $presenter->redirect('this', array(
+            $presenter->redirect('this', [
                 'contestId' => $contestId,
                 'year' => $this->year
-            ));
+            ]);
         }
     }
 
@@ -261,7 +261,7 @@ class ContestChooser extends Control {
                 $contests = array_map(function ($contest) {
                     return ($contest instanceof ModelContest) ? $contest->contest_id : $contest;
                 }, $this->contestsDefinition);
-            } else if ($this->contestsDefinition === self::CONTESTS_ALL) { // all
+            } elseif ($this->contestsDefinition === self::CONTESTS_ALL) { // all
                 $pk = $this->serviceContest->getPrimary();
                 $contests = $this->serviceContest->fetchPairs($pk, $pk);
             } else { // implicity -- by role
@@ -270,7 +270,7 @@ class ContestChooser extends Control {
                 if ($login) {
                     if ($this->contestsDefinition == ModelRole::ORG) {
                         $contests = array_keys($login->getActiveOrgs($this->yearCalculator));
-                    } else if ($this->contestsDefinition == ModelRole::CONTESTANT) {
+                    } elseif ($this->contestsDefinition == ModelRole::CONTESTANT) {
                         $person = $login->getPerson();
                         if ($person) {
                             $contests = array_keys($person->getActiveContestants($this->yearCalculator));
@@ -283,11 +283,11 @@ class ContestChooser extends Control {
                 $row = $this->serviceContest->findByPrimary($id);
                 $contest = ModelContest::createFromActiveRow($row);
                 $years = $this->getYears($contest);
-                $this->contests[$id] = (object)array(
+                $this->contests[$id] = (object)[
                     'contest' => $contest,
                     'years' => $years,
                     'currentYear' => $this->yearCalculator->getCurrentYear($contest),
-                );
+                ];
             }
         }
         return $this->contests;
@@ -307,7 +307,7 @@ class ContestChooser extends Control {
             $login = $this->getLogin();
             $currentYear = $this->yearCalculator->getCurrentYear($contest);
             if (!$login || !$login->getPerson()) {
-                return array($currentYear);
+                return [$currentYear];
             }
             $contestants = $login->getPerson()->getContestants($contest);
             $years = [];
@@ -363,9 +363,9 @@ class ContestChooser extends Control {
         }
 
         if ($backupYear && $backupYear != $year) {
-            $presenter->redirect('this', array('contestId' => $contestId, 'year' => $year));
+            $presenter->redirect('this', ['contestId' => $contestId, 'year' => $year]);
         } else {
-            $presenter->redirect('this', array('contestId' => $contestId));
+            $presenter->redirect('this', ['contestId' => $contestId]);
         }
     }
 
@@ -376,9 +376,9 @@ class ContestChooser extends Control {
      */
     public function handleChangeYear($contest, $year) {
         $presenter = $this->getPresenter();
-        $presenter->redirect('this', array(
+        $presenter->redirect('this', [
             'contestId' => $contest, //WHY? contestId should be persistent
-            'year' => $year));
+            'year' => $year]);
     }
 
     /**

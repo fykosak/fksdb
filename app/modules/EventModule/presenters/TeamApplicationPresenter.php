@@ -43,14 +43,6 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
         $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
     }
 
-    public function titleList() {
-        $this->setTitle(_('List of team applications'), 'fa fa-users');
-    }
-
-    public function titleDetail() {
-        $this->setTitle(_('Team application detail'), 'fa fa-user');
-    }
-
     /**
      * @return bool
      * @throws BadRequestException
@@ -90,7 +82,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
      * @return SeatingControl
      */
     public function createComponentSeating(): SeatingControl {
-        return new SeatingControl($this->serviceFyziklaniTeamPosition, $this->getTranslator());
+        return new SeatingControl($this->getContext());
     }
 
     /**

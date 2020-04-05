@@ -63,7 +63,7 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
                 self::ABROAD => _('Zahraniční SŠ'),
                 self::OPEN => _('Open'),
             ];
-        } else if ($this->rulesVersion == 2) {
+        } elseif ($this->rulesVersion == 2) {
             $this->categoryNames = [
                 self::HIGH_SCHOOL_A => _('Středoškoláci A'),
                 self::HIGH_SCHOOL_B => _('Středoškoláci B'),
@@ -160,7 +160,7 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
 
             if ($competitor['study_year'] === null) {
                 $olds += 1;
-            } else if ($competitor['study_year'] >= 1 && $competitor['study_year'] <= 4) {
+            } elseif ($competitor['study_year'] >= 1 && $competitor['study_year'] <= 4) {
                 $year[(int)$competitor['study_year']] += 1;
             } else {
                 $year[0] += 1; // ZŠ

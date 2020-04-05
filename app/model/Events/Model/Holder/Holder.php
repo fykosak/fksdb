@@ -300,13 +300,13 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
             foreach ($this->secondaryBaseHolders as $baseHolder) {
                 $key = spl_object_hash($baseHolder->getService());
                 if (!isset($this->groupedHolders[$key])) {
-                    $this->groupedHolders[$key] = array(
+                    $this->groupedHolders[$key] = [
                         'joinOn' => $baseHolder->getJoinOn(),
                         'joinTo' => $baseHolder->getJoinTo(),
                         'service' => $baseHolder->getService(),
                         'personIds' => $baseHolder->getPersonIds(),
                         'holders' => [],
-                    );
+                    ];
                 }
                 $this->groupedHolders[$key]['holders'][] = $baseHolder;
                 /*
@@ -331,7 +331,7 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
         $parts = explode('.', $name, 2);
         if (count($parts) == 1) {
             return $this->primaryHolder->getParameter($name);
-        } else if (isset($this->baseHolders[$parts[0]])) {
+        } elseif (isset($this->baseHolders[$parts[0]])) {
             return $this->baseHolders[$parts[0]]->getParameter($parts[1]);
         } else {
             throw new InvalidArgumentException("Invalid parameter '$name' from a base holder.");

@@ -9,6 +9,7 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
+use Nette\DI\Container;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 use function sprintf;
@@ -38,19 +39,17 @@ class CloseTeamControl extends Control {
 
     /**
      * CloseTeamControl constructor.
+     * @param Container $container
      * @param ModelEvent $event
-     * @param ITranslator $translator
-     * @param ServiceFyziklaniTask $serviceFyziklaniTask
      */
     public function __construct(
-        ModelEvent $event,
-        ITranslator $translator,
-        ServiceFyziklaniTask $serviceFyziklaniTask
+        Container $container,
+        ModelEvent $event
     ) {
         parent::__construct();
         $this->event = $event;
-        $this->translator = $translator;
-        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
+        $this->translator = $container->getByType(ITranslator::class);
+        $this->serviceFyziklaniTask = $container->getByType(ServiceFyziklaniTask::class);
     }
 
     /**
@@ -84,6 +83,7 @@ class CloseTeamControl extends Control {
 
     /**
      * @return string
+     * @throws \FKSDB\model\Fyziklani\NotSetGameParametersException
      */
     private function getNextTask(): string {
         $submits = count($this->team->getNonRevokedSubmits());

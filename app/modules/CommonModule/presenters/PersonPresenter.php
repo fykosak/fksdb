@@ -6,7 +6,7 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Stalking\StalkingComponent\StalkingComponent;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
-use FKSDB\Logging\FlashDumpFactory;
+use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
@@ -48,12 +48,6 @@ class PersonPresenter extends BasePresenter {
      * @var Merger
      */
     private $personMerger;
-
-    /**
-     * @var FlashDumpFactory
-     */
-    private $flashDumpFactory;
-
     /**
      * @var ModelPerson
      */
@@ -108,13 +102,6 @@ class PersonPresenter extends BasePresenter {
     }
 
     /**
-     * @param FlashDumpFactory $flashDumpFactory
-     */
-    public function injectFlashDumpFactory(FlashDumpFactory $flashDumpFactory) {
-        $this->flashDumpFactory = $flashDumpFactory;
-    }
-
-    /**
      * @param ReferencedPersonFactory $referencedPersonFactory
      */
     public function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory) {
@@ -137,16 +124,14 @@ class PersonPresenter extends BasePresenter {
 
     /* *********** TITLE ***************/
     public function titleSearch() {
-        $this->setTitle(_('Search person'));
-        $this->setIcon('fa fa-search');
+        $this->setTitle(_('Search person'), 'fa fa-search');
     }
 
     /**
      * @throws BadRequestException
      */
     public function titleDetail() {
-        $this->setTitle(sprintf(_('Detail of person %s'), $this->getPerson()->getFullName()));
-        $this->setIcon('fa fa-eye');
+        $this->setTitle(sprintf(_('Detail of person %s'), $this->getPerson()->getFullName()), 'fa fa-eye');
     }
 
     public function titleMerge() {
@@ -234,7 +219,7 @@ class PersonPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentStalkingComponent(): StalkingComponent {
-        return new StalkingComponent($this->stalkingService, $this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
+        return new StalkingComponent($this->getContext(), $this->getPerson(), $this->getMode());
     }
 
     /**
@@ -242,7 +227,7 @@ class PersonPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentAddress(): Stalking\Address {
-        return new Stalking\Address($this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
+        return new Stalking\Address($this->getContext(), $this->getPerson(), $this->getMode());
     }
 
     /**
@@ -250,7 +235,7 @@ class PersonPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentRole(): Stalking\Role {
-        return new Stalking\Role($this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
+        return new Stalking\Role($this->getContext(), $this->getPerson(), $this->getMode());
     }
 
     /**
@@ -258,7 +243,7 @@ class PersonPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentFlag(): Stalking\Flag {
-        return new Stalking\Flag($this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
+        return new Stalking\Flag($this->getContext(), $this->getPerson(), $this->getMode());
     }
 
     /**
@@ -266,7 +251,7 @@ class PersonPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentSchedule(): Stalking\Schedule {
-        return new Stalking\Schedule($this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
+        return new Stalking\Schedule($this->getContext(), $this->getPerson(), $this->getMode());
     }
 
     /**
@@ -274,7 +259,7 @@ class PersonPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentValidation(): Stalking\Validation {
-        return new Stalking\Validation($this->validationFactory, $this->getTableReflectionFactory(), $this->getPerson(), $this->getTranslator(), $this->getMode());
+        return new Stalking\Validation($this->getContext(), $this->getPerson(), $this->getMode());
     }
 
 
@@ -361,7 +346,7 @@ class PersonPresenter extends BasePresenter {
 
         $form->addSubmit('cancel', _('Storno'))
             ->getControlPrototype()->addAttributes(['class' => 'btn-lg']);
-        $form->onSuccess[] = array($this, 'handleMergeFormSuccess');
+        $form->onSuccess[] = [$this, 'handleMergeFormSuccess'];
         return $control;
     }
 
@@ -454,8 +439,7 @@ class PersonPresenter extends BasePresenter {
         if ($merger->merge()) {
             $this->setMergeConflicts(null); // flush the session
             $this->flashMessage(_('Osoby úspešně sloučeny.'), self::FLASH_SUCCESS);
-            $flashDump = $this->flashDumpFactory->createPersonMerge();
-            $flashDump->dump($logger, $this);
+            FlashMessageDump::dump($logger, $this);
             $this->backLinkRedirect(true);
         } else {
             $this->setMergeConflicts($merger->getConflicts());

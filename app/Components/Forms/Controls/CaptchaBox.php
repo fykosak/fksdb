@@ -16,10 +16,10 @@ class CaptchaBox extends SelectBox {
     const VALUE_NO = 'pqrt';
 
     public function __construct() {
-        parent::__construct(_('Jsi robot?'), array(
+        parent::__construct(_('Jsi robot?'), [
             self::VALUE_NO => _('ne'),
             self::VALUE_YES => _('ano'),
-        ));
+        ]);
 
         $this->addRule(function(BaseControl $control) {
                     return $control->getValue() == self::VALUE_NO;

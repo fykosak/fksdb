@@ -14,8 +14,13 @@ abstract class WebLoader extends Control {
     const FILENAME = 'file';
     const ATTRIBUTES = 'attr';
     const UNTAGGED = '__untagged';
-
+    /**
+     * @var string[]
+     */
     private $files = [];
+    /**
+     * @var string[]
+     */
     private $inlines = [];
 
     /**
@@ -36,7 +41,7 @@ abstract class WebLoader extends Control {
      * @param array $attributes
      */
     public function removeFile(string $file, array $attributes = []) {
-        $hash = $file . implode(':', $attributes);
+        $hash = $file . join(':', $attributes);
         unset($this->files[$hash]);
         $this->invalidateControl();
     }

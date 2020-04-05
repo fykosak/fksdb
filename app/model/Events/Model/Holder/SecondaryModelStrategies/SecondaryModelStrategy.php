@@ -63,7 +63,7 @@ abstract class SecondaryModelStrategy {
     public function updateSecondaryModels(IService $service, $joinOn, $joinTo, $holders, IModel $primaryModel) {
         $joinValue = $joinTo ? $primaryModel[$joinTo] : $primaryModel->getPrimary();
         foreach ($holders as $baseHolder) {
-            $joinData = array($joinOn => $joinValue);
+            $joinData = [$joinOn => $joinValue];
             if ($joinTo) {
                 $existing = $service->getTable()->where($joinData)->where(BaseHolder::EVENT_COLUMN, $baseHolder->getEvent()->getPrimary());
                 $conflicts = [];

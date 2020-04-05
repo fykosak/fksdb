@@ -66,11 +66,6 @@ class ApplicationsGrid extends Control {
     private $handlerFactory;
 
     /**
-     * @var FlashMessageDump
-     */
-    private $flashDump;
-
-    /**
      * @var string
      */
     private $templateFile;
@@ -85,15 +80,13 @@ class ApplicationsGrid extends Control {
      * @param Container $container
      * @param IHolderSource $source
      * @param ApplicationHandlerFactory $handlerFactory
-     * @param FlashMessageDump $flashDump
      */
-    function __construct(Container $container, IHolderSource $source, ApplicationHandlerFactory $handlerFactory, FlashMessageDump $flashDump) {
+    function __construct(Container $container, IHolderSource $source, ApplicationHandlerFactory $handlerFactory) {
         parent::__construct();
         $this->monitor(IJavaScriptCollector::class);
         $this->container = $container;
         $this->source = $source;
         $this->handlerFactory = $handlerFactory;
-        $this->flashDump = $flashDump;
         $this->processSource();
     }
 
@@ -158,7 +151,7 @@ class ApplicationsGrid extends Control {
         if (!$key) {
             parent::createComponent($name);
         }
-        return new ApplicationComponent($this->handlers[$key], $this->holders[$key], $this->flashDump);
+        return new ApplicationComponent($this->handlers[$key], $this->holders[$key]);
     }
 
     /**

@@ -21,8 +21,7 @@ class MyPaymentsPresenter extends AuthenticatedPresenter {
 
 
     public function titleDefault() {
-        $this->setTitle(_('My payments'));
-        $this->setIcon('fa fa-credit-card');
+        $this->setTitle(_('My payments'), 'fa fa-credit-card');
     }
 
     /**

@@ -18,14 +18,6 @@ use Nette\Application\BadRequestException;
  */
 class ApplicationPresenter extends AbstractApplicationPresenter {
 
-    public function titleList() {
-        $this->setTitle(_('List of applications'), 'fa fa-users');
-    }
-
-    public function titleDetail() {
-        $this->setTitle(_('Application detail'), 'fa fa-user');
-    }
-
     public function titleImport() {
         $this->setTitle(_('Application import'), 'fa fa-upload');
     }
@@ -62,12 +54,10 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      */
     public function createComponentImport(): ImportComponent {
         $source = new SingleEventSource($this->getEvent(), $this->getContext());
-        $logger = new MemoryLogger();
         $machine = $this->getContext()->createEventMachine($this->getEvent());
-        $handler = $this->applicationHandlerFactory->create($this->getEvent(), $logger);
+        $handler = $this->applicationHandlerFactory->create($this->getEvent(),  new MemoryLogger());
 
-        $flashDump = $this->dumpFactory->create('application');
-        return new ImportComponent($machine, $source, $handler, $flashDump, $this->getContext());
+        return new ImportComponent($machine, $source, $handler, $this->getContext());
     }
 
     /**

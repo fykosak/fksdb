@@ -144,9 +144,9 @@ class ReferencedId extends HiddenField {
         $isPromise = ($pvalue === self::VALUE_PROMISE);
         if (!($pvalue instanceof IModel) && !$isPromise) {
             $pvalue = $this->service->findByPrimary($pvalue);
-        } else if ($isPromise) {
+        } elseif ($isPromise) {
             $pvalue = $this->service->createNew();
-        } else if ($pvalue instanceof IModel) {
+        } elseif ($pvalue instanceof IModel) {
             $this->model = $pvalue;
         }
         $container = $this->referencedContainer;
@@ -161,7 +161,7 @@ class ReferencedId extends HiddenField {
 
         if ($isPromise) {
             $value = self::VALUE_PROMISE;
-        } else if ($pvalue instanceof IModel) {
+        } elseif ($pvalue instanceof IModel) {
             $value = $pvalue->getPrimary();
         } else {
             $value = $pvalue;
@@ -213,7 +213,7 @@ class ReferencedId extends HiddenField {
                     $this->setValue($model, IReferencedSetter::MODE_FORCE);
                     $this->setModelCreated(true);
                     return $model->getPrimary();
-                } else if ($referencedId) {
+                } elseif ($referencedId) {
                     $model = $this->getService()->findByPrimary($referencedId);
                     $this->handler->update($model, $values);
                     // reload the model (this is workaround to avoid caching of empty but newly created referenced/related models)

@@ -130,8 +130,7 @@ class PointsPresenter extends SeriesPresenter {
     }
 
     public function titleDefault() {
-        $this->setIcon('fa fa-trophy');
-        $this->setTitle(sprintf(_('Zadávání bodů %d. série'), $this->getSelectedSeries()));
+        $this->setTitle(sprintf(_('Zadávání bodů %d. série'), $this->getSelectedSeries()), 'fa fa-trophy');
     }
 
     public function renderDefault() {

@@ -25,7 +25,7 @@ class DeadlineFromXML extends Stage {
      * @var \FKSDB\ORM\Services\ServiceTask
      */
     private $taskService;
-    private static $months = array(
+    private static $months = [
         'ledna' => '1.',
         'února' => '2.',
         'března' => '3.',
@@ -38,7 +38,7 @@ class DeadlineFromXML extends Stage {
         'října' => '10.',
         'listopadu' => '11.',
         'prosince' => '12.',
-    );
+    ];
 
     /**
      * DeadlineFromXML constructor.

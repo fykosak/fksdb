@@ -122,12 +122,12 @@ class CategoryProcessing extends AbstractProcessing {
             $coefficient = ($studyYear >= 1 && $studyYear <= 4) ? $studyYear : 0;
             $coefficientSum += $coefficient;
 
-            if ($coefficient == 4)
+            if ($coefficient == 4) {
                 $count4++;
-            else if ($coefficient == 3)
+            } elseif ($coefficient == 3) {
                 $count3++;
+            }
         }
-
 
         $categoryHandle = $participants ? ($coefficientSum / count($participants)) : 999;
 
@@ -136,9 +136,9 @@ class CategoryProcessing extends AbstractProcessing {
         // } else
         if ($categoryHandle <= 2 && $count4 == 0 && $count3 <= 2) {
             $result = 'C';
-        } else if ($categoryHandle <= 3 && $count4 <= 2) {
+        } elseif ($categoryHandle <= 3 && $count4 <= 2) {
             $result = 'B';
-        } else if ($categoryHandle <= 4) {
+        } elseif ($categoryHandle <= 4) {
             $result = 'A';
         } else {
             throw new SubmitProcessingException(_('Nelze spočítat kategorii.'));

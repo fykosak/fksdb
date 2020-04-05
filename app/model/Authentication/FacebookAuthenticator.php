@@ -91,11 +91,10 @@ class FacebookAuthenticator extends AbstractAuthenticator {
         $result = $this->servicePerson->getTable()->where('person_info:email = ? OR person_info:fb_id = ?', $fbUser['email'], $fbUser['id']);
         if (count($result) > 1) {
             throw new AuthenticationException(_('Facebook účtu odpovídá více osob.'));
-        } else if (count($result) == 0) {
+        } elseif (count($result) == 0) {
             return null;
         } else {
-            $person = $result->fetch();
-            return $person;
+            return $result->fetch();
         }
     }
 
@@ -160,12 +159,12 @@ class FacebookAuthenticator extends AbstractAuthenticator {
      * @return array
      */
     private function getPersonData($fbUser) {
-        return array(
+        return [
             'family_name' => $fbUser['last_name'],
             'other_name' => $fbUser['first_name'],
             'display_name' => ($fbUser['first_name'] . ' ' . $fbUser['last_name'] != $fbUser['name']) ? $fbUser['name'] : null,
             'gender' => ($fbUser['gender']) == 'female' ? 'F' : 'M',
-        );
+        ];
     }
 
     /**
@@ -173,10 +172,10 @@ class FacebookAuthenticator extends AbstractAuthenticator {
      * @return array
      */
     private function getPersonInfoData($fbUser) {
-        return array(
+        return [
             'email' => $fbUser['email'],
             'fb_id' => $fbUser['id'],
-        );
+        ];
     }
 
 }

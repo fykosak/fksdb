@@ -50,10 +50,12 @@ class SubmitPresenter extends BasePresenter {
 
     /** @var FilesystemUploadedSubmitStorage */
     private $uploadedSubmitStorage;
+
     /** @param FilesystemUploadedSubmitStorage $filesystemUploadedSubmitStorage */
     public function injectSubmitUploadedStorage(FilesystemUploadedSubmitStorage $filesystemUploadedSubmitStorage) {
         $this->uploadedSubmitStorage = $filesystemUploadedSubmitStorage;
     }
+
     /** @return ISubmitStorage */
     protected function getSubmitUploadedStorage(): ISubmitStorage {
         return $this->uploadedSubmitStorage;
@@ -83,8 +85,7 @@ class SubmitPresenter extends BasePresenter {
 
     /* ********************** TITLE **********************/
     public function titleDefault() {
-        $this->setTitle(_('Odevzdat řešení'));
-        $this->setIcon('fa fa-cloud-upload');
+        $this->setTitle(_('Odevzdat řešení'), 'fa fa-cloud-upload');
     }
 
     public function titleAjax() {
@@ -289,7 +290,7 @@ class SubmitPresenter extends BasePresenter {
         foreach ($this->getAvailableTasks() as $task) {
             if ($task->task_id == $taskId) {
                 return $task;
-            };
+            }
         }
         return null;
     }

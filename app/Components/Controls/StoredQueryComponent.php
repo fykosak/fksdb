@@ -166,9 +166,9 @@ class StoredQueryComponent extends Control {
             $this->storedQuery->setParameters($this->parameters);
             $defaults = [];
             foreach ($this->parameters as $key => $value) {
-                $defaults[$key] = array('value' => $value);
+                $defaults[$key] = ['value' => $value];
             }
-            $defaults = array(self::CONT_PARAMS => $defaults);
+            $defaults = [self::CONT_PARAMS => $defaults];
             $this->getComponent('parametrizeForm')->getForm()->setDefaults($defaults);
         }
         if (!$this->isAuthorized()) {
