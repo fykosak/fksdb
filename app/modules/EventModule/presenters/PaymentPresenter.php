@@ -176,7 +176,7 @@ class PaymentPresenter extends BasePresenter {
      */
     protected function createComponentForm(): SelectForm {
         return new SelectForm(
-            $this->container,
+            $this->getContext(),
             $this->getEvent(),
             $this->isOrg(),
             ['accommodation'],

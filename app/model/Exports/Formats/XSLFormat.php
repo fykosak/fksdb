@@ -91,8 +91,7 @@ class XSLFormat implements IExportFormat {
         $this->xmlSerializer->fillNode($this->storedQuery, $export, $doc, IXMLNodeSerializer::EXPORT_FORMAT_1);
 
         // Prepare response
-        $response = new PlainTextResponse($proc->transformToXml($doc));
-        return $response;
+        return new PlainTextResponse($proc->transformToXml($doc));
     }
 
 }

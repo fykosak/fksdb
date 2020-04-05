@@ -4,7 +4,6 @@ namespace EventModule;
 
 use FKSDB\Components\Controls\Schedule\GroupControl;
 use FKSDB\Components\Controls\Schedule\ItemControl;
-use FKSDB\Components\Factories\ScheduleFactory;
 use FKSDB\Components\Grids\Schedule\AllPersonsGrid;
 use FKSDB\Components\Grids\Schedule\GroupsGrid;
 use FKSDB\Components\Grids\Schedule\ItemsGrid;
@@ -26,10 +25,6 @@ class SchedulePresenter extends BasePresenter {
      * @persistent
      */
     public $id;
-    /**
-     * @var ScheduleFactory
-     */
-    private $scheduleFactory;
     /**
      * @var ModelScheduleGroup
      */
@@ -59,13 +54,6 @@ class SchedulePresenter extends BasePresenter {
      */
     public function injectServiceScheduleItem(ServiceScheduleItem $serviceScheduleItem) {
         $this->serviceScheduleItem = $serviceScheduleItem;
-    }
-
-    /**
-     * @param ScheduleFactory $scheduleFactory
-     */
-    public function injectScheduleComponentFactory(ScheduleFactory $scheduleFactory) {
-        $this->scheduleFactory = $scheduleFactory;
     }
 
     public function titleGroups() {
@@ -172,41 +160,41 @@ class SchedulePresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentGroupsGrid(): GroupsGrid {
-        return $this->scheduleFactory->createGroupsGrid($this->getEvent());
+        return new GroupsGrid($this->getEvent(), $this->getContext());
     }
 
     /**
      * @return ItemsGrid
      */
     public function createComponentItemsGrid(): ItemsGrid {
-        return $this->scheduleFactory->createItemsGrid();
+        return new ItemsGrid($this->getContext());
     }
 
     /**
      * @return PersonsGrid
      */
     public function createComponentPersonsGrid(): PersonsGrid {
-        return $this->scheduleFactory->createPersonsGrid();
+        return new PersonsGrid($this->getContext());
     }
 
     /**
      * @return AllPersonsGrid
      */
     public function createComponentAllPersonsGrid(): AllPersonsGrid {
-        return $this->scheduleFactory->createAllPersonsGrid();
+        return new AllPersonsGrid($this->getContext());
     }
 
     /**
      * @return GroupControl
      */
     public function createComponentGroupControl(): GroupControl {
-        return $this->scheduleFactory->createGroupControl();
+        return new GroupControl($this->getTranslator(), $this->getTableReflectionFactory());
     }
 
     /**
      * @return ItemControl
      */
     public function createComponentItemControl(): ItemControl {
-        return $this->scheduleFactory->createItemControl();
+        return new ItemControl($this->getTranslator(), $this->getTableReflectionFactory());
     }
 }

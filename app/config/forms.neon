@@ -13,7 +13,6 @@ services:
     SchoolFactory:      FKSDB\Components\Forms\Factories\SchoolFactory
     TeacherFactory: FKSDB\Components\Forms\Factories\TeacherFactory
     PersonScheduleFactory: FKSDB\Components\Forms\Factories\PersonScheduleFactory
-    ScheduleFactory: FKSDB\Components\Factories\ScheduleFactory
 
     - FKSDB\Components\Forms\Rules\UniqueEmailFactory
     - FKSDB\Components\Forms\Rules\UniqueLoginFactory

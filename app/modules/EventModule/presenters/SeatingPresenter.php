@@ -33,7 +33,7 @@ class SeatingPresenter extends BasePresenter {
     }
 
     public function titleDefault() {
-        $this->setTitle(_('Rozdělení do místností'), 'fa fa-arrows');
+        $this->setTitle(_('Rooming'), 'fa fa-arrows');
     }
 
     public function titleEdit() {
