@@ -55,10 +55,9 @@ class ItemControl extends Control {
     }
 
     /**
-     * @return IComponent|null
-     * @throws \Exception
+     * @return ValuePrinterComponent
      */
-    public function createComponentValuePrinter() {
+    public function createComponentValuePrinter(): ValuePrinterComponent {
         return new ValuePrinterComponent($this->translator, $this->tableReflectionFactory);
     }
 }
