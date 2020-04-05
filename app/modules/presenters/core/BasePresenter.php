@@ -288,15 +288,6 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     public function getIcon() {
         return $this->icon;
     }
-
-    /**
-     * @param $icon
-     * @deprecated
-     */
-    protected function setIcon($icon) {
-        $this->icon = $icon;
-    }
-
     /**
      * @param $subtitle
      */
@@ -420,7 +411,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         $backLink = $component->getBackLinkUrl();
         if ($backLink) {
             $this->redirectUrl($backLink);
-        } else if ($need) {
+        } elseif ($need) {
             $this->redirect(':Authentication:login'); // will cause dispatch
         }
     }
@@ -531,18 +522,5 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      */
     public function createComponentValuePrinter() {
         return new ValuePrinterComponent($this->getTranslator(), $this->getTableReflectionFactory());
-    }
-
-    /**
-     * @param string $name
-     * @return IComponent|null
-     * @throws \Exception
-     */
-    public function createComponent($name) {
-        $printerComponent = $this->getTableReflectionFactory()->createComponent($name, 2048);
-        if ($printerComponent) {
-            return $printerComponent;
-        }
-        return parent::createComponent($name);
     }
 }

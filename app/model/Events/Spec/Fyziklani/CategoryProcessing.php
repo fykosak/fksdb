@@ -122,7 +122,7 @@ class CategoryProcessing extends AbstractProcessing {
             $country = $this->serviceSchool->getTable()
                 ->select('address.region.country_iso')
                 ->where(['school_id' => $participant['school_id']])->fetch();
-            if (!in_array($country->country_iso, array('CZ', 'SK'))) {
+            if (!in_array($country->country_iso, ['CZ', 'SK'])) {
                 $abroad += 1;
             }
 
@@ -130,10 +130,12 @@ class CategoryProcessing extends AbstractProcessing {
             $coefficient = ($studyYear >= 1 && $studyYear <= 4) ? $studyYear : 0;
             $coefficient_sum += $coefficient;
 
-            if ($coefficient == 4)
+            if ($coefficient == 4) {
                 $count_4++;
-            else if ($coefficient == 3)
+            }
+            elseif ($coefficient == 3) {
                 $count_3++;
+            }
         }
 
 
@@ -144,9 +146,9 @@ class CategoryProcessing extends AbstractProcessing {
         // } else
         if ($category_handle <= 2 && $count_4 == 0 && $count_3 <= 2) {
             $result = 'C';
-        } else if ($category_handle <= 3 && $count_4 <= 2) {
+        } elseif ($category_handle <= 3 && $count_4 <= 2) {
             $result = 'B';
-        } else if ($category_handle <= 4) {
+        } elseif ($category_handle <= 4) {
             $result = 'A';
         } else {
             throw new SubmitProcessingException(_('Nelze spočítat kategorii.'));

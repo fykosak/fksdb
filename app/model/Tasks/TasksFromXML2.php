@@ -83,12 +83,12 @@ class TasksFromXML2 extends Stage {
         // obtain FKSDB\ORM\Models\ModelTask
         $task = $this->taskService->findBySeries($contest, $year, $series, $tasknr);
         if ($task == null) {
-            $task = $this->taskService->createNew(array(
+            $task = $this->taskService->createNew([
                 'contest_id' => $contest->contest_id,
                 'year' => $year,
                 'series' => $series,
                 'tasknr' => $tasknr,
-            ));
+            ]);
         }
 
         // update fields

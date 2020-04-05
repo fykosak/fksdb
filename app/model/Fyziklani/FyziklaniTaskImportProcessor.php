@@ -7,6 +7,7 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\Utils\CSVParser;
 use FyziklaniModule\TaskPresenter;
+use Nette\DI\Container;
 use Tracy\Debugger;
 
 /**
@@ -18,22 +19,22 @@ class FyziklaniTaskImportProcessor {
 
     /**
      *
-     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask
+     * @var ServiceFyziklaniTask
      */
     private $serviceFyziklaniTask;
     /**
-     * @var \FKSDB\ORM\Models\ModelEvent
+     * @var ModelEvent
      */
     private $event;
 
     /**
      * FyziklaniTaskImportProcessor constructor.
+     * @param Container $container
      * @param ModelEvent $event
-     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask $serviceFyziklaniTask
      */
-    public function __construct(ModelEvent $event, ServiceFyziklaniTask $serviceFyziklaniTask) {
+    public function __construct(Container $container, ModelEvent $event) {
         $this->event = $event;
-        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
+        $this->serviceFyziklaniTask = $container->getByType(ServiceFyziklaniTask::class);
     }
 
     /**

@@ -74,25 +74,25 @@ class ImportComponent extends Control {
             ->addRule(Form::MIME_TYPE, _('Lze nahrávat pouze CSV soubory.'), 'text/plain'); //TODO verify this check at production server
 
         $form->addRadioList('errorMode', _('Chování při chybě'))
-            ->setItems(array(
+            ->setItems([
                 ApplicationHandler::ERROR_ROLLBACK => _('Zastavit import a rollbackovat.'),
                 ApplicationHandler::ERROR_SKIP => _('Přeskočit přihlášku a pokračovat.'),
-            ))
+            ])
             ->setDefaultValue(ApplicationHandler::ERROR_SKIP);
 
 
         $form->addRadioList('transitions', _('Přechody přihlášek'))
-            ->setItems(array(
+            ->setItems([
                 ApplicationHandler::STATE_TRANSITION => _('Vykonat přechod, pokud je možný (jinak chyba).'),
                 ApplicationHandler::STATE_OVERWRITE => _('Pouze nastavit stav.'),
-            ))
+            ])
             ->setDefaultValue(ApplicationHandler::STATE_TRANSITION);
 
         $form->addRadioList('stateless', _('Přihlášky bez uvedeného stavu'))
-            ->setItems(array(
+            ->setItems([
                 ImportHandler::STATELESS_IGNORE => _('Ignorovat.'),
                 ImportHandler::STATELESS_KEEP => _('Ponechat původní stav.'),
-            ))
+            ])
             ->setDefaultValue(ImportHandler::STATELESS_IGNORE);
 
         $form->addComponent($this->createKeyElement(), 'key');

@@ -2,10 +2,9 @@
 
 namespace FKSDB\Components\Controls\Stalking;
 
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ValidationTest\ValidationFactory;
-use Nette\Localization\ITranslator;
+use Nette\DI\Container;
 
 /**
  * Class StalkingValidation
@@ -19,15 +18,13 @@ class Validation extends AbstractStalkingComponent {
 
     /**
      * Validation constructor.
-     * @param ValidationFactory $validationFactory
-     * @param TableReflectionFactory $factory
+     * @param Container $container
      * @param ModelPerson $modelPerson
-     * @param ITranslator $translator
      * @param $mode
      */
-    public function __construct(ValidationFactory $validationFactory, TableReflectionFactory $factory, ModelPerson $modelPerson, ITranslator $translator, $mode) {
-        parent::__construct($modelPerson, $factory, $translator, $mode);
-        $this->validationFactory = $validationFactory;
+    public function __construct(Container $container, ModelPerson $modelPerson, $mode) {
+        parent::__construct($container, $modelPerson, $mode);
+        $this->validationFactory = $container->getByType(ValidationFactory::class);
     }
 
     /**

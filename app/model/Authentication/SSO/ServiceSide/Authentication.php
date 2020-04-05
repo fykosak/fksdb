@@ -63,10 +63,10 @@ class Authentication {
     public function login($backlink = null) {
         $backlink = $backlink ? : $this->getDefaultBacklink();
 
-        $data = array(
+        $data = [
             self::PARAM_BACKLINK => $backlink,
             self::PARAM_FLAG => self::FLAG_SSO_LOGIN,
-        );
+        ];
 
         $redirectURL = $this->setHttpParams($this->loginURL, $data);
 
@@ -81,11 +81,11 @@ class Authentication {
     public function logout($backlink = null) {
         $backlink = $backlink ? : $this->getDefaultBacklink();
 
-        $data = array(
+        $data = [
             self::PARAM_BACKLINK => $backlink,
             self::PARAM_FLAG => self::FLAG_SSO_LOGIN,
             self::PARAM_GSID => $this->globalSession->getId(),
-        );
+        ];
 
         $redirectURL = $this->setHttpParams($this->logoutURL, $data);
 

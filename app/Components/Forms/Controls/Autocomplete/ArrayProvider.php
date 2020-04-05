@@ -20,10 +20,10 @@ class ArrayProvider implements IFilteredDataProvider {
         $this->data = [];
         $this->labelById = $data;
         foreach ($data as $id => $label) {
-            $this->data[] = array(
+            $this->data[] = [
                 self::VALUE => $id,
                 self::LABEL => $label,
-            );
+            ];
         }
     }
 

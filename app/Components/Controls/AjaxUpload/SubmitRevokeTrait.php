@@ -10,6 +10,7 @@ use FKSDB\Submits\FilesystemUploadedSubmitStorage;
 use FKSDB\Submits\StorageException;
 use ModelException;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\DI\Container;
 use PublicModule\SubmitPresenter;
 use Tracy\Debugger;
 use function sprintf;
@@ -19,21 +20,6 @@ use function sprintf;
  * @package FKSDB\Components\Control\AjaxUpload
  */
 trait SubmitRevokeTrait {
-    /**
-     * @return ServiceSubmit
-     */
-    abstract protected function getServiceSubmit(): ServiceSubmit;
-
-    /**
-     * @param bool $need
-     * @return SubmitPresenter
-     */
-    abstract protected function getPresenter($need = true);
-
-    /**
-     * @return FilesystemUploadedSubmitStorage
-     */
-    abstract protected function getSubmitUploadedStorage(): FilesystemUploadedSubmitStorage;
 
     /**
      * @param int $submitId
@@ -41,11 +27,12 @@ trait SubmitRevokeTrait {
      * @throws InvalidLinkException
      */
     public function traitHandleRevoke(int $submitId): array {
-
-        /**
-         * @var ModelSubmit $submit
-         */
-        $submit = $this->getServiceSubmit()->findByPrimary($submitId);
+        /** @var ServiceSubmit $serviceSubmit */
+        $serviceSubmit = $this->getContext()->getByType(ServiceSubmit::class);
+        /** @var FilesystemUploadedSubmitStorage $submitUploadedStorage */
+        $submitUploadedStorage = $this->getContext()->getByType(FilesystemUploadedSubmitStorage::class);
+        /** @var ModelSubmit $submit */
+        $submit = $serviceSubmit->findByPrimary($submitId);
         if (!$submit) {
             return [new Message(_('Neexistující submit.'), ILogger::ERROR), null];
         }
@@ -57,9 +44,9 @@ trait SubmitRevokeTrait {
             return [new Message(_('Nelze zrušit submit.'), ILogger::ERROR), null];
         }
         try {
-            $this->getSubmitUploadedStorage()->deleteFile($submit);
-            $this->getServiceSubmit()->dispose($submit);
-            $data = $this->getServiceSubmit()->serializeSubmit(null, $submit->getTask(), $this->getPresenter());
+            $submitUploadedStorage->deleteFile($submit);
+            $serviceSubmit->dispose($submit);
+            $data = $serviceSubmit->serializeSubmit(null, $submit->getTask(), $this->getPresenter());
 
             return [new Message(sprintf('Odevzdání úlohy %s zrušeno.', $submit->getTask()->getFQName()), ILogger::WARNING), $data];
 
@@ -88,4 +75,15 @@ trait SubmitRevokeTrait {
 
         return ($now <= $deadline) && ($now >= $start);
     }
+
+    /**
+     * @param bool $need
+     * @return SubmitPresenter
+     */
+    abstract protected function getPresenter($need = true);
+
+    /**
+     * @return Container
+     */
+    abstract function getContext();
 }

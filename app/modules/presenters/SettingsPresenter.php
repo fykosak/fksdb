@@ -83,8 +83,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
     }
 
     public function titleDefault() {
-        $this->setTitle(_('Settings'));
-        $this->setIcon('fa fa-cogs');
+        $this->setTitle(_('Settings'), 'fa fa-cogs');
     }
 
     public function renderDefault() {
@@ -128,7 +127,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
 
         if ($tokenAuthentication) {
             $options = LoginFactory::SHOW_PASSWORD | LoginFactory::REQUIRE_PASSWORD;
-        } else if (!$login->hash) {
+        } elseif (!$login->hash) {
             $options = LoginFactory::SHOW_PASSWORD;
         } else {
             $options = LoginFactory::SHOW_PASSWORD | LoginFactory::VERIFY_OLD_PASSWORD;

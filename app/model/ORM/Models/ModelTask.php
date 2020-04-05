@@ -19,6 +19,7 @@ use Utils;
  * @property-read int year
  * @property-read int contest_id
  * @property-read DateTime submit_deadline
+ * @property-read DateTime submit_start
  */
 class ModelTask extends AbstractModelSingle implements IContestReferencedModel {
 

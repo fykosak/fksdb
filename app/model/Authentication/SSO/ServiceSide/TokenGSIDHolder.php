@@ -76,7 +76,7 @@ class TokenGSIDHolder implements IGSIDHolder {
             and (until is null or until >= now())';
 
         $stmt = $this->connection->prepare($sql);
-        $stmt->execute(array($token));
+        $stmt->execute([$token]);
 
         $row = $stmt->fetch();
         if (!$row) {

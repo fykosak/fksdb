@@ -13,7 +13,6 @@ use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\ORM\Services\ServiceTask;
 use FKSDB\Submits\FilesystemUploadedSubmitStorage;
-use FKSDB\Submits\ISubmitStorage;
 use FKSDB\Submits\ProcessingException;
 use ModelException;
 use Nette\Application\AbortException;
@@ -41,22 +40,12 @@ class SubmitPresenter extends BasePresenter {
         $this->submitService = $submitService;
     }
 
-    /**
-     * @return ServiceSubmit
-     */
-    protected function getServiceSubmit(): ServiceSubmit {
-        return $this->submitService;
-    }
-
     /** @var FilesystemUploadedSubmitStorage */
     private $uploadedSubmitStorage;
+
     /** @param FilesystemUploadedSubmitStorage $filesystemUploadedSubmitStorage */
     public function injectSubmitUploadedStorage(FilesystemUploadedSubmitStorage $filesystemUploadedSubmitStorage) {
         $this->uploadedSubmitStorage = $filesystemUploadedSubmitStorage;
-    }
-    /** @return ISubmitStorage */
-    protected function getSubmitUploadedStorage(): ISubmitStorage {
-        return $this->uploadedSubmitStorage;
     }
 
     /** @var ServiceTask */
@@ -83,8 +72,7 @@ class SubmitPresenter extends BasePresenter {
 
     /* ********************** TITLE **********************/
     public function titleDefault() {
-        $this->setTitle(_('Odevzdat řešení'));
-        $this->setIcon('fa fa-cloud-upload');
+        $this->setTitle(_('Odevzdat řešení'), 'fa fa-cloud-upload');
     }
 
     public function titleAjax() {
@@ -289,7 +277,7 @@ class SubmitPresenter extends BasePresenter {
         foreach ($this->getAvailableTasks() as $task) {
             if ($task->task_id == $taskId) {
                 return $task;
-            };
+            }
         }
         return null;
     }

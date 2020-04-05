@@ -40,14 +40,11 @@ class RoutingEdit extends FyziklaniReactControl {
      * RoutingEdit constructor.
      * @param Container $container
      * @param ModelEvent $event
-     * @param ServiceFyziklaniRoom $serviceFyziklaniRoom
-     * @param ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
      */
-    public function __construct(Container $container, ModelEvent $event, ServiceFyziklaniRoom $serviceFyziklaniRoom, ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
-        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
-        $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
-        $this->serviceFyziklaniRoom = $serviceFyziklaniRoom;
+    public function __construct(Container $container, ModelEvent $event) {
+        $this->serviceFyziklaniTeam = $container->getByType(ServiceFyziklaniTeam::class);
+        $this->serviceFyziklaniTeamPosition = $container->getByType(ServiceFyziklaniTeamPosition::class);
+        $this->serviceFyziklaniRoom = $container->getByType(ServiceFyziklaniRoom::class);
         parent::__construct($container, $event);
     }
 

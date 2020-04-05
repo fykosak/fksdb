@@ -7,6 +7,7 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\UI\Control;
+use Nette\DI\Container;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 
@@ -21,7 +22,7 @@ class RoutingDownload extends Control {
      */
     private static $JSAttached = false;
     /**
-     * @var
+     * @var ITranslator
      */
     private $translator;
     /**
@@ -39,16 +40,14 @@ class RoutingDownload extends Control {
 
     /**
      * RoutingDownload constructor.
+     * @param Container $container
      * @param ModelEvent $event
-     * @param ITranslator $translator
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @param ServiceFyziklaniRoom $serviceFyziklaniRoom
      */
-    public function __construct(ModelEvent $event, ITranslator $translator, ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceFyziklaniRoom $serviceFyziklaniRoom) {
-        $this->translator = $translator;
+    public function __construct(Container $container, ModelEvent $event) {
+        $this->translator = $container->getByType(ITranslator::class);
         $this->event = $event;
-        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
-        $this->serviceFyziklaniRoom = $serviceFyziklaniRoom;
+        $this->serviceFyziklaniTeam = $container->getByType(ServiceFyziklaniTeam::class);
+        $this->serviceFyziklaniRoom = $container->getByType(ServiceFyziklaniRoom::class);
 
         parent::__construct();
     }
@@ -60,7 +59,7 @@ class RoutingDownload extends Control {
         $rooms = $this->serviceFyziklaniRoom->getRoomsByIds($this->event->getParameter('rooms'));
 
         $this->template->rooms = $rooms;
-       // $this->template->buildings = $this->event->getParameter('gameSetup')['buildings'];
+        // $this->template->buildings = $this->event->getParameter('gameSetup')['buildings'];
         $this->template->teams = $this->serviceFyziklaniTeam->getTeamsAsArray($this->event);
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'RoutingDownload.latte');
         $this->template->setTranslator($this->translator);

@@ -31,14 +31,6 @@ class AjaxUpload extends ReactComponent {
      * @var ServiceSubmit
      */
     private $serviceSubmit;
-    /**
-     * @var FilesystemUploadedSubmitStorage
-     */
-    private $filesystemSubmitUploadedStorage;
-    /**
-     * @var FilesystemCorrectedSubmitStorage
-     */
-    private $filesystemSubmitCorrectedStorage;
 
     /**
      * AjaxUpload constructor.
@@ -46,30 +38,7 @@ class AjaxUpload extends ReactComponent {
      */
     public function __construct(Container $context) {
         parent::__construct($context);
-        $this->filesystemSubmitUploadedStorage = $this->container->getByType(FilesystemUploadedSubmitStorage::class);
-        $this->filesystemSubmitCorrectedStorage = $this->container->getByType(FilesystemCorrectedSubmitStorage::class);
         $this->serviceSubmit = $this->container->getByType(ServiceSubmit::class);
-    }
-
-    /**
-     * @return ServiceSubmit
-     */
-    protected function getServiceSubmit(): ServiceSubmit {
-        return $this->serviceSubmit;
-    }
-
-    /**
-     * @return FilesystemUploadedSubmitStorage
-     */
-    protected function getSubmitUploadedStorage(): FilesystemUploadedSubmitStorage {
-        return $this->filesystemSubmitUploadedStorage;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getSubmitCorrectedStorage(): FilesystemCorrectedSubmitStorage {
-        return $this->filesystemSubmitCorrectedStorage;
     }
 
     /**
@@ -95,7 +64,7 @@ class AjaxUpload extends ReactComponent {
         foreach ($this->getPresenter()->getAvailableTasks() as $task) {
             $submit = $this->serviceSubmit->findByContestant($this->getPresenter()->getContestant()->ct_id, $task->task_id);
             $data[$task->task_id] = $this->serviceSubmit->serializeSubmit($submit, $task, $this->getPresenter());
-        };
+        }
         return json_encode($data);
     }
 
@@ -120,12 +89,13 @@ class AjaxUpload extends ReactComponent {
      */
     public function handleUpload() {
         $response = new ReactResponse();
-
+        /** @var FilesystemUploadedSubmitStorage $filesystemUploadedSubmitStorage */
+        $filesystemUploadedSubmitStorage = $this->getContext()->getByType(FilesystemUploadedSubmitStorage::class);
         $contestant = $this->getPresenter()->getContestant();
         $files = $this->getHttpRequest()->getFiles();
         foreach ($files as $name => $fileContainer) {
             $this->serviceSubmit->getConnection()->beginTransaction();
-            $this->submitStorage->beginTransaction();
+            $filesystemUploadedSubmitStorage->beginTransaction();
             if (!preg_match('/task([0-9]+)/', $name, $matches)) {
                 $response->addMessage(new ReactMessage(_('Task not found'), ILogger::WARNING));
                 continue;
@@ -136,7 +106,7 @@ class AjaxUpload extends ReactComponent {
                 $response->setCode(403);
                 $response->addMessage(new ReactMessage(_('Upload not allowed'), ILogger::ERROR));
                 $this->getPresenter()->sendResponse($response);
-            };
+            }
             /**
              * @var FileUpload $file
              */
@@ -149,7 +119,7 @@ class AjaxUpload extends ReactComponent {
             }
             // store submit
             $submit = $this->saveSubmitTrait($file, $task, $contestant);
-            $this->submitStorage->commit();
+            $filesystemUploadedSubmitStorage->commit();
             $this->serviceSubmit->getConnection()->commit();
             $response->addMessage(new ReactMessage(_('Upload successful'), ILogger::SUCCESS));
             $response->setAct('upload');
@@ -193,12 +163,5 @@ class AjaxUpload extends ReactComponent {
      */
     protected function getReactId(): string {
         return 'public.ajax-upload';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getContext() {
-        // TODO: Implement getContext() method.
     }
 }

@@ -238,10 +238,10 @@ class ExtendedPersonHandler {
         // initialize model
         $model = $presenter->getModel();
         if (!$model) {
-            $data = array(
+            $data = [
                 'contest_id' => $this->getContest()->contest_id,
                 'year' => $this->getYear(),
-            );
+            ];
             $model = $this->service->createNew($data);
             $model->person_id = $person->getPrimary();
         }

@@ -119,7 +119,7 @@ class FilesystemCorrectedSubmitStorage implements ISubmitStorage {
 
         if (count($files) == 0) {
             return null;
-        } else if (count($files) > 1) {
+        } elseif (count($files) > 1) {
             throw new InvalidStateException("Ambiguity in file database for submit #{$submit->submit_id}.");
         } else {
             $file = array_pop($files);

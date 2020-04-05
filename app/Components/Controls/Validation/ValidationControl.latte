@@ -3,7 +3,7 @@
 {foreach $logs as $log}
     <div class="mt-3">
         <h3>
-            {*control valuePrinter__person__person_link:onlyValue $log['model']*}
+            {*control valuePrinter:onlyValue person, person_link, $log['model']*}
             <a href="{plink :Common:Stalking:view id=>$log['model']->person_id}">{$log['model']->getFullName()}</a>
             <span class="badge badge-secondary">#{$log['model']->person_id}</span>
         </h3>

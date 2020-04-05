@@ -2,24 +2,23 @@
 
 namespace OrgModule;
 
-use FKSDB\Components\Control\AjaxUpload\SubmitDownloadTrait;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\FormControl\OptimisticFormControl;
+use FKSDB\Components\Controls\Upload\CheckSubmitsControl;
+use FKSDB\Components\Controls\Upload\CorrectedFormControl;
+use FKSDB\Components\Controls\Upload\PointsTableControl;
+use FKSDB\Components\Controls\Upload\SubmitsTableControl;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\ContestantSubmits;
 use FKSDB\Components\Forms\Factories\PersonFactory;
-use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Models\ModelTaskContribution;
-use FKSDB\ORM\Services\ServiceContestant;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\ORM\Services\ServiceTaskContribution;
-use FKSDB\Submits\FilesystemCorrectedSubmitStorage;
-use FKSDB\Submits\FilesystemUploadedSubmitStorage;
 use FKSDB\Submits\SeriesTable;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -33,18 +32,8 @@ use Nette\Security\Permission;
  * @package OrgModule
  */
 class InboxPresenter extends SeriesPresenter {
-    use SubmitDownloadTrait;
 
     const TASK_PREFIX = 'task';
-
-    /**
-     * @var FilesystemUploadedSubmitStorage
-     */
-    private $filesystemSubmitUploadedStorage;
-    /**
-     * @var FilesystemCorrectedSubmitStorage
-     */
-    private $filesystemCorrectedSubmitStorage;
 
     /**
      * @var ServiceTaskContribution
@@ -62,11 +51,6 @@ class InboxPresenter extends SeriesPresenter {
     private $serviceSubmit;
 
     /**
-     * @var ServiceContestant
-     */
-    private $serviceContestant;
-
-    /**
      * @var SeriesTable
      */
     private $seriesTable;
@@ -75,20 +59,6 @@ class InboxPresenter extends SeriesPresenter {
      * @var PersonFactory
      */
     private $personFactory;
-
-    /**
-     * @param FilesystemUploadedSubmitStorage $filesystemSubmitUploadedStorage
-     */
-    public function injectSubmitStorage(FilesystemUploadedSubmitStorage $filesystemSubmitUploadedStorage) {
-        $this->filesystemSubmitUploadedStorage = $filesystemSubmitUploadedStorage;
-    }
-
-    /**
-     * @param FilesystemCorrectedSubmitStorage $filesystemCorrectedSubmitStorage
-     */
-    public function injectSubmitCorrectedStorage(FilesystemCorrectedSubmitStorage $filesystemCorrectedSubmitStorage) {
-        $this->filesystemCorrectedSubmitStorage = $filesystemCorrectedSubmitStorage;
-    }
 
     /**
      * @param ServiceTaskContribution $serviceTaskContribution
@@ -109,13 +79,6 @@ class InboxPresenter extends SeriesPresenter {
      */
     public function injectServiceSubmit(ServiceSubmit $serviceSubmit) {
         $this->serviceSubmit = $serviceSubmit;
-    }
-
-    /**
-     * @param ServiceContestant $serviceContestant
-     */
-    public function injectServiceContestant(ServiceContestant $serviceContestant) {
-        $this->serviceContestant = $serviceContestant;
     }
 
     /**
@@ -153,6 +116,20 @@ class InboxPresenter extends SeriesPresenter {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('task', 'edit', $this->getSelectedContest()));
     }
 
+    /**
+     * @throws BadRequestException
+     */
+    public function authorizedPoints() {
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'points', $this->getSelectedContest()));
+    }
+
+    /**
+     * @throws BadRequestException
+     */
+    public function authorizedCorrected() {
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'corrected', $this->getSelectedContest()));
+    }
+
     /* ***************** TITLES ***********************/
     public function titleDefault() {
         $this->setTitle(_('Inbox'), 'fa fa-envelope-open');
@@ -166,8 +143,12 @@ class InboxPresenter extends SeriesPresenter {
         $this->setTitle(_('List of solutions'), 'fa fa-cloud-download');
     }
 
-    public function titleCheck() {
-        $this->setTitle(_('Check files'), 'fa fa-file');
+    public function titleCorrected() {
+        $this->setTitle(_('Corrected'), 'fa fa-inbox');
+    }
+
+    public function titlePoints() {
+        $this->setTitle(_('Points'), 'fa fa-inbox');
     }
 
     /* *********** LIVE CYCLE *************/
@@ -190,37 +171,12 @@ class InboxPresenter extends SeriesPresenter {
         $connection->getDatabaseReflection()->setConnection($connection);
     }
 
-    public function actionCheck() {
-        /**
-         * @var ModelSubmit $submit
-         */
-        $errors = 0;
-        foreach ($this->seriesTable->getSubmits() as $submit) {
-            if ($submit->source === ModelSubmit::SOURCE_UPLOAD && !$this->getSubmitUploadedStorage()->fileExists($submit)) {
-                $errors++;
-                $this->flashMessage(sprintf(_('Uploaded submit #%d is broken'), $submit->submit_id), ILogger::ERROR);
-            }
-
-            if ($submit->corrected && !$this->getSubmitCorrectedStorage()->fileExists($submit)) {
-                $errors++;
-                $this->flashMessage(sprintf(_('Corrected submit #%d is broken'), $submit->submit_id), ILogger::ERROR);
-            }
-            if (!$submit->corrected && $this->getSubmitCorrectedStorage()->fileExists($submit)) {
-                $errors++;
-                $this->flashMessage(sprintf(_('Uploaded unregister corrected submit #%d'), $submit->submit_id), ILogger::ERROR);
-            }
-        }
-        $this->flashMessage(sprintf(_('Test done, found %d errors'), $errors), $errors ? ILogger::WARNING : ILogger::SUCCESS);
-
-    }
     /* ******************** RENDER ****************/
     /**
      * @throws BadRequestException
      */
     public function renderDefault() {
-        /**
-         * @var OptimisticFormControl $control
-         */
+        /** @var OptimisticFormControl $control */
         $control = $this->getComponent('inboxForm');
         $control->getForm()->setDefaults();
     }
@@ -250,16 +206,10 @@ class InboxPresenter extends SeriesPresenter {
             }
             $values[$key][] = $personId;
         }
-        /**
-         * @var FormControl $control
-         */
+        /** @var FormControl $control */
         $control = $this->getComponent('handoutForm');
         $control->getForm()->setDefaults($values);
 
-    }
-
-    public function renderList() {
-        $this->template->seriesTable = $this->seriesTable;
     }
     /* ******************* COMPONENTS ******************/
     /**
@@ -275,16 +225,12 @@ class InboxPresenter extends SeriesPresenter {
                 return $this->seriesTable->formatAsFormValues();
             }
         );
-        /*$form = new OptimisticForm(
-            array($this->seriesTable, 'getFingerprint'), array($this->seriesTable, 'formatAsFormValues')
-        );*/
         $form = $controlForm->getForm();
 
         $contestants = $this->seriesTable->getContestants();
         $tasks = $this->seriesTable->getTasks();
         $container = new ModelContainer();
         $form->addComponent($container, SeriesTable::FORM_CONTESTANT);
-        // $container = $form->addContainer(SeriesTable::FORM_CONTESTANT);
 
         foreach ($contestants as $row) {
             $contestant = ModelContestant::createFromActiveRow($row);
@@ -292,7 +238,6 @@ class InboxPresenter extends SeriesPresenter {
             $control->setClassName('inbox');
             $namingContainer = new ModelContainer();
             $container->addComponent($namingContainer, $contestant->ct_id);
-            // $namingContainer = $container->addContainer($contestant->ct_id);
             $namingContainer->addComponent($control, SeriesTable::FORM_SUBMIT);
         }
 
@@ -335,6 +280,34 @@ class InboxPresenter extends SeriesPresenter {
     }
 
     /**
+     * @return CorrectedFormControl
+     */
+    public function createComponentCorrectedFormControl(): CorrectedFormControl {
+        return new CorrectedFormControl($this->getContext(), $this->seriesTable);
+    }
+
+    /**
+     * @return CheckSubmitsControl
+     */
+    protected function createComponentCheckControl(): CheckSubmitsControl {
+        return new CheckSubmitsControl($this->getContext(), $this->seriesTable);
+    }
+
+    /**
+     * @return SubmitsTableControl
+     */
+    protected function createComponentSubmitsTableControl(): SubmitsTableControl {
+        return new SubmitsTableControl($this->getContext(), $this->seriesTable);
+    }
+
+    /**
+     * @return PointsTableControl
+     */
+    protected function createComponentPointsTableControl(): PointsTableControl {
+        return new PointsTableControl($this->getContext(), $this->seriesTable);
+    }
+
+    /**
      * @param Form $form
      * @throws AbortException
      */
@@ -347,9 +320,7 @@ class InboxPresenter extends SeriesPresenter {
             $submits = $container[SeriesTable::FORM_SUBMIT];
 
             foreach ($submits as $submit) {
-                /**
-                 * @var ModelSubmit $submit
-                 */
+                /** @var ModelSubmit $submit */
                 // ACL granularity is very rough, we just check it in action* method
                 if ($submit->isEmpty()) {
                     $this->serviceSubmit->dispose($submit);
@@ -396,46 +367,5 @@ class InboxPresenter extends SeriesPresenter {
 
         $this->flashMessage(_('Přiřazení opravovatelů uloženo.'), self::FLASH_SUCCESS);
         $this->redirect('this');
-    }
-
-    /**
-     * @param int $id
-     * @throws AbortException
-     * @throws BadRequestException
-     */
-    public function handleDownloadUploaded(int $id) {
-        list($message) = $this->traitHandleDownloadUploaded($id);
-        $this->getPresenter()->flashMessage($message->getMessage(), $message->getLevel());
-    }
-
-    /**
-     * @param int $id
-     * @throws AbortException
-     * @throws BadRequestException
-     */
-    public function handleDownloadCorrected(int $id) {
-        list($message) = $this->traitHandleDownloadCorrected($id);
-        $this->getPresenter()->flashMessage($message->getMessage(), $message->getLevel());
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getServiceSubmit(): ServiceSubmit {
-        return $this->serviceSubmit;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getSubmitUploadedStorage(): FilesystemUploadedSubmitStorage {
-        return $this->filesystemSubmitUploadedStorage;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getSubmitCorrectedStorage(): FilesystemCorrectedSubmitStorage {
-        return $this->filesystemCorrectedSubmitStorage;
     }
 }
