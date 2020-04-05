@@ -523,17 +523,4 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     public function createComponentValuePrinter() {
         return new ValuePrinterComponent($this->getTranslator(), $this->getTableReflectionFactory());
     }
-
-    /**
-     * @param string $name
-     * @return IComponent|null
-     * @throws \Exception
-     */
-    public function createComponent($name) {
-        $printerComponent = $this->getTableReflectionFactory()->createComponent($name, 2048);
-        if ($printerComponent) {
-            return $printerComponent;
-        }
-        return parent::createComponent($name);
-    }
 }
