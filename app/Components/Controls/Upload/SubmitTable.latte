@@ -1,0 +1,28 @@
+{layout '../@layout.latte'}
+{block content}
+    {var $table = $seriesTable->getSubmitsTable()}
+    <table class="table table-striped table-sm">
+        <thead>
+        <tr>
+            <th>{_'Person'}</th>
+            {foreach $seriesTable->getTasks() as $task}
+                <th>{$task->label}</th>
+            {/foreach}
+        </tr>
+        </thead>
+        <tbody>
+        {foreach $seriesTable->getContestants() as $contestant}
+            <tr>
+                <th scope="row">{$contestant->getPerson()->getFullName()}</th>
+                {foreach $seriesTable->getTasks() as $task}
+                    {var $submit = (isset($table[$contestant->ct_id]) && isset($table[$contestant->ct_id][$task->task_id]))?
+                    $table[$contestant->ct_id][$task->task_id]
+                    :null}
+                    {block submit-row $submit}{/block}
+
+                {/foreach}
+            </tr>
+        {/foreach}
+        </tbody>
+    </table>
+{/block}

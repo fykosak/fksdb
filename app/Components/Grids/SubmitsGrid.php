@@ -28,17 +28,10 @@ class SubmitsGrid extends BaseGrid {
     /** @var ServiceSubmit */
     private $submitService;
 
-    /** @var FilesystemUploadedSubmitStorage */
-    private $filesystemSubmitUploadedStorage;
-
     /**
      * @var ModelContestant
      */
     private $contestant;
-    /**
-     * @var FilesystemCorrectedSubmitStorage
-     */
-    private $filesystemCorrectedSubmitStorage;
 
     /**
      * SubmitsGrid constructor.
@@ -47,31 +40,8 @@ class SubmitsGrid extends BaseGrid {
      */
     function __construct(Container $container, ModelContestant $contestant) {
         parent::__construct($container);
-        $this->filesystemCorrectedSubmitStorage = $container->getByType(FilesystemCorrectedSubmitStorage::class);
         $this->submitService = $container->getByType(ServiceSubmit::class);
-        $this->filesystemSubmitUploadedStorage = $container->getByType(FilesystemUploadedSubmitStorage::class);
         $this->contestant = $contestant;
-    }
-
-    /**
-     * @return ServiceSubmit
-     */
-    protected function getServiceSubmit(): ServiceSubmit {
-        return $this->submitService;
-    }
-
-    /**
-     * @return FilesystemUploadedSubmitStorage
-     */
-    protected function getSubmitUploadedStorage(): FilesystemUploadedSubmitStorage {
-        return $this->filesystemSubmitUploadedStorage;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getSubmitCorrectedStorage(): FilesystemCorrectedSubmitStorage {
-        return $this->filesystemCorrectedSubmitStorage;
     }
 
     /**

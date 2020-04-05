@@ -1,0 +1,14 @@
+{layout './SubmitTable.latte'}
+{block content}
+    {control form}
+    <hr/>
+    {include #parent}
+{/block}
+{block submit-row}
+    {if $submit}
+        <td class="{$submit->corrected?'bg-success text-white':'bg-danger text-white'}">
+            #{$submit->submit_id}</td>
+    {else}
+        <td></td>
+    {/if}
+{/block}
