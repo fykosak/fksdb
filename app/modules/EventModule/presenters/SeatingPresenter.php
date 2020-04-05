@@ -32,23 +32,23 @@ class SeatingPresenter extends BasePresenter {
     }
 
     public function titleDefault() {
-        $this->setTitle(_('Rooming'),'fa fa-arrows');
+        $this->setTitle(_('Rooming'), 'fa fa-arrows');
     }
 
     public function titleEdit() {
-        $this->setTitle(_('Edit routing'),'fa fa-pencil');
+        $this->setTitle(_('Edit routing'), 'fa fa-pencil');
     }
 
     public function titleDownload() {
-        $this->setTitle(_('Download routing'),'fa fa-download');
+        $this->setTitle(_('Download routing'), 'fa fa-download');
     }
 
     public function titleList() {
-        $this->setTitle(_('List of all teams'),'fa fa-print');
+        $this->setTitle(_('List of all teams'), 'fa fa-print');
     }
 
     public function titlePreview() {
-        $this->setTitle(_('Preview'),'fa fa-search');
+        $this->setTitle(_('Preview'), 'fa fa-search');
     }
 
     /**
@@ -149,6 +149,6 @@ class SeatingPresenter extends BasePresenter {
      * @return SeatingControl
      */
     public function createComponentSeating(): SeatingControl {
-        return new SeatingControl($this->serviceFyziklaniTeamPosition, $this->getTranslator());
+        return new SeatingControl($this->getContext());
     }
 }

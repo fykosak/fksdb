@@ -281,14 +281,12 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
                 } else {
                     $options = 0;
                 }
-                $container = $this->addressFactory->createAddress($options, $hiddenField);
-                return $container;
+                return $this->addressFactory->createAddress($options, $hiddenField);
             } else {
                 throw new InvalidArgumentException("Only 'address' field is supported.");
             }
         } elseif ($sub == 'person_has_flag') {
-            $control = $this->flagFactory->createFlag($hiddenField, $metadata);
-            return $control;
+            return $this->flagFactory->createFlag($hiddenField, $metadata);
         } else {
             $control = null;
             switch ($sub) {

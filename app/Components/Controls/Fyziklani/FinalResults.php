@@ -37,16 +37,13 @@ class FinalResults extends Control {
     /**
      * FinalResults constructor.
      * @param ModelEvent $event
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @param ITranslator $translator
      * @param Container $container
      */
-    public function __construct(ModelEvent $event, ServiceFyziklaniTeam $serviceFyziklaniTeam, ITranslator $translator, Container $container) {
+    public function __construct(Container $container, ModelEvent $event) {
         parent::__construct();
-        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+        $this->serviceFyziklaniTeam = $container->getByType(ServiceFyziklaniTeam::class);
         $this->event = $event;
-        $this->translator = $translator;
-
+        $this->translator = $container->getByType(ITranslator::class);
         $this->container = $container;
     }
 

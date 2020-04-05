@@ -94,8 +94,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
         } elseif (count($result) == 0) {
             return null;
         } else {
-            $person = $result->fetch();
-            return $person;
+            return $result->fetch();
         }
     }
 

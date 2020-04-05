@@ -69,7 +69,7 @@ class TaskPresenter extends BasePresenter {
      */
     public function taskImportFormSucceeded(Form $form) {
         $values = $form->getValues();
-        $taskImportProcessor = new FyziklaniTaskImportProcessor($this->getEvent(), $this->getServiceFyziklaniTask());
+        $taskImportProcessor = new FyziklaniTaskImportProcessor($this->getContext(), $this->getEvent());
         $messages = [];
         $taskImportProcessor($values, $messages);
         foreach ($messages as $message) {

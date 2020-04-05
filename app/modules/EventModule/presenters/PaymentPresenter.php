@@ -3,7 +3,6 @@
 namespace EventModule;
 
 use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
-use FKSDB\Components\Factories\PaymentFactory as PaymentComponentFactory;
 use FKSDB\Components\Forms\Controls\Payment\SelectForm;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Payment\OrgPaymentGrid;
@@ -39,23 +38,12 @@ class PaymentPresenter extends BasePresenter {
      */
     private $servicePayment;
 
-    /**
-     * @var PaymentComponentFactory
-     */
-    private $paymentComponentFactory;
 
     /**
      * @param ServicePayment $servicePayment
      */
     public function injectServicePayment(ServicePayment $servicePayment) {
         $this->servicePayment = $servicePayment;
-    }
-
-    /**
-     * @param PaymentComponentFactory $paymentComponentFactory
-     */
-    public function injectPaymentComponentFactory(PaymentComponentFactory $paymentComponentFactory) {
-        $this->paymentComponentFactory = $paymentComponentFactory;
     }
 
     /* ********* titles *****************/
@@ -187,7 +175,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     protected function createComponentOrgGrid(): OrgPaymentGrid {
-        return $this->paymentComponentFactory->createOrgGrid($this->getEvent());
+        return new OrgPaymentGrid($this->getEvent(), $this->getContext());
     }
 
     /**
@@ -196,7 +184,13 @@ class PaymentPresenter extends BasePresenter {
      * @throws AbortException
      */
     protected function createComponentForm(): SelectForm {
-        return $this->paymentComponentFactory->creteForm($this->getEvent(), $this->isOrg(), $this->getMachine());
+        return new SelectForm(
+            $this->getContext(),
+            $this->getEvent(),
+            $this->isOrg(),
+            ['accommodation'],
+            $this->getMachine()
+        );
     }
 
     /**

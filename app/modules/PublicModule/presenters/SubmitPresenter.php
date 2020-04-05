@@ -290,7 +290,7 @@ class SubmitPresenter extends BasePresenter {
         foreach ($this->getAvailableTasks() as $task) {
             if ($task->task_id == $taskId) {
                 return $task;
-            };
+            }
         }
         return null;
     }

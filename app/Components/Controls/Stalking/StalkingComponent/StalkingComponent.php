@@ -8,6 +8,7 @@ use FKSDB\Components\Controls\Stalking\StalkingService;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\Models\ModelPerson;
 use Nette\Application\BadRequestException;
+use Nette\DI\Container;
 use Nette\Localization\ITranslator;
 use FKSDB\NotImplementedException;
 use Nette\Templating\FileTemplate;
@@ -25,15 +26,13 @@ class StalkingComponent extends StalkingControl {
 
     /**
      * StalkingComponent constructor.
-     * @param StalkingService $stalkingService
+     * @param Container $container
      * @param ModelPerson $modelPerson
-     * @param TableReflectionFactory $tableReflectionFactory
-     * @param ITranslator $translator
      * @param int $userPermission
      */
-    public function __construct(StalkingService $stalkingService, ModelPerson $modelPerson, TableReflectionFactory $tableReflectionFactory, ITranslator $translator, int $userPermission) {
-        parent::__construct($modelPerson, $tableReflectionFactory, $translator, $userPermission);
-        $this->stalkingService = $stalkingService;
+    public function __construct(Container $container, ModelPerson $modelPerson, int $userPermission) {
+        parent::__construct($container, $modelPerson, $userPermission);
+        $this->stalkingService = $container->getByType(StalkingService::class);
     }
 
     /**

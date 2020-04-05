@@ -4,7 +4,6 @@ namespace FyziklaniModule;
 
 use EventModule\BasePresenter as EventBasePresenter;
 use FKSDB\Components\Controls\Choosers\FyziklaniChooser;
-use FKSDB\Components\Factories\FyziklaniFactory;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
@@ -32,18 +31,6 @@ abstract class BasePresenter extends EventBasePresenter {
      * @var ServiceFyziklaniSubmit
      */
     private $serviceFyziklaniSubmit;
-
-    /**
-     * @var FyziklaniFactory
-     */
-    protected $fyziklaniComponentsFactory;
-
-    /**
-     * @param FyziklaniFactory $fyziklaniComponentsFactory
-     */
-    public function injectFyziklaniComponentsFactory(FyziklaniFactory $fyziklaniComponentsFactory) {
-        $this->fyziklaniComponentsFactory = $fyziklaniComponentsFactory;
-    }
 
     /**
      * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit

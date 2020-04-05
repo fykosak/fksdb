@@ -22,10 +22,10 @@ use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
+use Nette\DI\Container;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 use Nette\Utils\JsonException;
-use function json_encode;
 
 /**
  * Class SelectForm
@@ -34,9 +34,9 @@ use function json_encode;
  */
 class SelectForm extends Control {
     /**
-     * @var string
+     * @var string[]
      */
-    private $type;
+    private $types;
     /**
      * @var PersonFactory
      */
@@ -81,39 +81,30 @@ class SelectForm extends Control {
 
     /**
      * SelectForm constructor.
+     * @param Container $container
      * @param ModelEvent $event
      * @param bool $isOrg
-     * @param string $type
-     * @param ITranslator $translator
-     * @param ServicePayment $servicePayment
+     * @param string[] $types
      * @param PaymentMachine $machine
-     * @param PersonFactory $personFactory
-     * @param PersonProvider $personProvider
-     * @param ServicePersonSchedule $servicePersonSchedule
-     * @param ServiceSchedulePayment $serviceSchedulePayment
      */
-    public function __construct(ModelEvent $event,
+    public function __construct(Container $container,
+                                ModelEvent $event,
                                 bool $isOrg,
-                                string $type,
-                                ITranslator $translator,
-                                ServicePayment $servicePayment,
-                                PaymentMachine $machine,
-                                PersonFactory $personFactory,
-                                PersonProvider $personProvider,
-                                ServicePersonSchedule $servicePersonSchedule,
-                                ServiceSchedulePayment $serviceSchedulePayment
+                                array $types,
+                                PaymentMachine $machine
     ) {
         parent::__construct();
-        $this->translator = $translator;
         $this->event = $event;
         $this->machine = $machine;
-        $this->servicePayment = $servicePayment;
         $this->isOrg = $isOrg;
-        $this->type = $type;
-        $this->personFactory = $personFactory;
-        $this->personProvider = $personProvider;
-        $this->servicePersonSchedule = $servicePersonSchedule;
-        $this->serviceSchedulePayment = $serviceSchedulePayment;
+        $this->types = $types;
+
+        $this->translator = $container->getByType(ITranslator::class);
+        $this->servicePayment = $container->getByType(ServicePayment::class);
+        $this->personFactory = $container->getByType(PersonFactory::class);
+        $this->personProvider = $container->getByType(PersonProvider::class);
+        $this->servicePersonSchedule = $container->getByType(ServicePersonSchedule::class);
+        $this->serviceSchedulePayment = $container->getByType(ServiceSchedulePayment::class);
     }
 
     /**
@@ -161,7 +152,7 @@ class SelectForm extends Control {
         $currencyField = new CurrencyField();
         $currencyField->setRequired(_('Please select currency'));
         $form->addComponent($currencyField, 'currency');
-        $form->addComponent(new PaymentSelectField($this->servicePersonSchedule, $this->event, [$this->type], !$create), 'payment_accommodation');
+        $form->addComponent(new PaymentSelectField($this->servicePersonSchedule, $this->event, $this->types, !$create), 'payment_accommodation');
         $form->addSubmit('submit', $create ? _('Proceed to summary') : _('Save payment'));
         $form->onSuccess[] = function (Form $form) use ($create) {
             $this->handleSubmit($form, $create);
@@ -258,6 +249,6 @@ class SelectForm extends Control {
         foreach ($query as $row) {
             $items[$row->person_schedule_id] = true;
         }
-        return json_encode($items);
+        return \json_encode($items);
     }
 }

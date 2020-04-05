@@ -155,9 +155,9 @@ class ApplicationHandler {
 
             if ($transition->isCreating()) {
                 $this->logger->log(sprintf(_('Přihláška "%s" vytvořena.'), (string)$holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS);
-            } else if ($transition->isTerminating()) {
+            } elseif ($transition->isTerminating()) {
                 $this->logger->log(_('Přihláška smazána.'), ILogger::SUCCESS);
-            } else if (isset($transition)) {
+            } elseif (isset($transition)) {
                 $this->logger->log(sprintf(_('Stav přihlášky "%s" změněn.'), (string)$holder->getPrimaryHolder()->getModel()), ILogger::INFO);
             }
         } catch (ModelDataConflictException $exception) {
