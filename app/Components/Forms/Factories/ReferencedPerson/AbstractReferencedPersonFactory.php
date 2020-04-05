@@ -151,7 +151,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
             if ($sub == ReferencedPersonHandler::POST_CONTACT_DELIVERY) {
                 $subcontainer->setOption('showGroup', true);
                 $subcontainer->setOption('label', _('Doručovací adresa'));
-            } else if ($sub == ReferencedPersonHandler::POST_CONTACT_PERMANENT) {
+            } elseif ($sub == ReferencedPersonHandler::POST_CONTACT_PERMANENT) {
                 $subcontainer->setOption('showGroup', true);
                 $label = _('Trvalá adresa');
                 if (isset($container[ReferencedPersonHandler::POST_CONTACT_DELIVERY])) {
@@ -188,10 +188,10 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
             $container->addComponent($subcontainer, $sub);
         }
 
-        return array(
+        return [
             $hiddenField,
             $container,
-        );
+        ];
     }
 
 
@@ -232,13 +232,13 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
 
                 if (!$controlVisible && !$controlModifiable) {
                     $container[$sub]->removeComponent($component);
-                } else if (!$controlVisible && $controlModifiable) {
+                } elseif (!$controlVisible && $controlModifiable) {
                     $this->setWriteOnly($component, true);
                     $component->setDisabled(false);
-                } else if ($controlVisible && !$controlModifiable) {
+                } elseif ($controlVisible && !$controlModifiable) {
                     $component->setDisabled();
                     $component->setValue($value);
-                } else if ($controlVisible && $controlModifiable) {
+                } elseif ($controlVisible && $controlModifiable) {
                     $this->setWriteOnly($component, false);
                     $component->setDisabled(false);
                 }
@@ -286,7 +286,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
             } else {
                 throw new InvalidArgumentException("Only 'address' field is supported.");
             }
-        } else if ($sub == 'person_has_flag') {
+        } elseif ($sub == 'person_has_flag') {
             $control = $this->flagFactory->createFlag($hiddenField, $metadata);
             return $control;
         } else {
@@ -353,7 +353,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
     protected function setWriteOnly($component, $value) {
         if ($component instanceof IWriteOnly) {
             $component->setWriteOnly($value);
-        } else if ($component instanceof Container) {
+        } elseif ($component instanceof Container) {
             foreach ($component->getComponents() as $subcomponent) {
                 $this->setWriteOnly($subcomponent, $value);
             }
@@ -367,7 +367,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
     protected function isWriteOnly($component) {
         if ($component instanceof IWriteOnly) {
             return true;
-        } else if ($component instanceof Container) {
+        } elseif ($component instanceof Container) {
             foreach ($component->getComponents() as $subcomponent) {
                 if ($this->isWriteOnly($subcomponent)) {
                     return true;

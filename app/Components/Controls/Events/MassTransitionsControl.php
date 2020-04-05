@@ -5,6 +5,7 @@ namespace FKSDB\Components\Events;
 use Events\Machine\Machine;
 use Events\Model\ApplicationHandlerFactory;
 use Events\Model\Grid\SingleEventSource;
+use Events\Model\Holder\Holder;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelEvent;
@@ -63,15 +64,24 @@ class MassTransitionsControl extends Control {
         /** @var ApplicationHandlerFactory $applicationHandlerFactory */
         $applicationHandlerFactory = $this->container->getByType(ApplicationHandlerFactory::class);
         $logger = new MemoryLogger();
-        foreach ($source as $key => $holder) {
+        $total = 0;
+        $errored = 0;
+        foreach ($source->getHolders() as $key => $holder) {
             $handler = $applicationHandlerFactory->create($this->event, $logger);
+            $total++;
             try {
-                $handler->storeAndExecute($holder, null, $name);
+                $handler->onlyExecute($holder, $name);
             } catch (\Exception $exception) {
-                Debugger::barDump($exception);
+                $errored++;
             }
         }
         FlashMessageDump::dump($logger, $this->getPresenter(), true);
+        $this->getPresenter()->flashMessage(sprintf(
+            _('Total %d applications, state changed %d, unavailable %d. '),
+            $total,
+            $total - $errored,
+            $errored
+        ));
         $this->getPresenter()->redirect('this');
     }
 }

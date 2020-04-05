@@ -42,8 +42,7 @@ class DashboardPresenter extends BasePresenter {
     }
 
     public function titleDefault() {
-        $this->setTitle(_('Pultík'));
-        $this->setIcon('fa fa-dashboard');
+        $this->setTitle(_('Pultík'),'fa fa-dashboard');
     }
 
     /**

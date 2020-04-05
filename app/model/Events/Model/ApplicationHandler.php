@@ -18,6 +18,7 @@ use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
 use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\Transitions\UnavailableTransitionException;
 use FormUtils;
 use Nette\Database\Connection;
 use Nette\DI\Container;
@@ -132,6 +133,66 @@ class ApplicationHandler {
 
     /**
      * @param Holder $holder
+     * @param string $explicitTransitionName
+     */
+    public function onlyExecute(Holder $holder, string $explicitTransitionName) {
+        $this->initializeMachine($holder);
+
+        try {
+            $explicitMachineName = $this->machine->getPrimaryMachine()->getName();
+            $this->beginTransaction();
+            $transition = $this->machine->getBaseMachine($explicitMachineName)->getTransition($explicitTransitionName);
+            if ($holder->getPrimaryHolder()->getModelState() !== $transition->getSource()) {
+                throw new UnavailableTransitionException($transition, $holder->getPrimaryHolder()->getModel());
+            }
+            $transition->execute();
+            $holder->saveModels();
+            $transition->executed([]);
+
+            $this->commit();
+
+            if ($transition->isCreating()) {
+                $this->logger->log(sprintf(_('Přihláška "%s" vytvořena.'), (string)$holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS);
+            } elseif ($transition->isTerminating()) {
+                $this->logger->log(_('Přihláška smazána.'), ILogger::SUCCESS);
+            } elseif (isset($transition)) {
+                $this->logger->log(sprintf(_('Stav přihlášky "%s" změněn.'), (string)$holder->getPrimaryHolder()->getModel()), ILogger::INFO);
+            }
+        } catch (ModelDataConflictException $exception) {
+            $container = $exception->getReferencedId()->getReferencedContainer();
+            $container->setConflicts($exception->getConflicts());
+
+            $message = sprintf(_('Některá pole skupiny "%s" neodpovídají existujícímu záznamu.'), $container->getOption('label'));
+            $this->logger->log($message, ILogger::ERROR);
+            $this->reRaise($exception);
+        } catch (SecondaryModelDataConflictException $exception) {
+            $message = sprintf(_('Data ve skupině "%s" kolidují s již existující přihláškou.'), $exception->getBaseHolder()->getLabel());
+            $this->logger->log($message, ILogger::ERROR);
+            $this->reRaise($exception);
+        } catch (DuplicateApplicationException $exception) {
+            $message = $exception->getMessage();
+            $this->logger->log($message, ILogger::ERROR);
+            $this->reRaise($exception);
+        } catch (MachineExecutionException $exception) {
+            $this->logger->log($exception->getMessage(), ILogger::ERROR);
+            $this->reRaise($exception);
+        } catch (SubmitProcessingException $exception) {
+            $this->logger->log($exception->getMessage(), ILogger::ERROR);
+            $this->reRaise($exception);
+        } catch (FullCapacityException $exception) {
+            $this->logger->log($exception->getMessage(), ILogger::ERROR);
+            $this->reRaise($exception);
+        } catch (ExistingPaymentException $exception) {
+            $this->logger->log($exception->getMessage(), ILogger::ERROR);
+            $this->reRaise($exception);
+        } catch (UnavailableTransitionException $exception) {
+            $this->logger->log($exception->getMessage(), ILogger::ERROR);
+            $this->reRaise($exception);
+        }
+    }
+
+    /**
+     * @param Holder $holder
      * @param $data
      * @param $explicitTransitionName
      * @param $execute
@@ -140,12 +201,13 @@ class ApplicationHandler {
         $this->initializeMachine($holder);
 
         try {
-            $this->beginTransaction();
-
             $explicitMachineName = $this->machine->getPrimaryMachine()->getName();
 
+            $this->beginTransaction();
+            /** @var Transition[] $transitions */
             $transitions = [];
-            if ($explicitTransitionName !== null) {
+            // saved transition of baseModel/baseMachine/baseHolder/baseShit/base*
+            if ($explicitTransitionName) {
                 $transitions[$explicitMachineName] = $this->machine->getBaseMachine($explicitMachineName)->getTransition($explicitTransitionName);
             }
 
@@ -180,10 +242,10 @@ class ApplicationHandler {
 
             if (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isCreating()) {
                 $this->logger->log(sprintf(_('Přihláška "%s" vytvořena.'), (string)$holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS);
-            } else if (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isTerminating()) {
+            } elseif (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isTerminating()) {
                 //$this->logger->log(sprintf(_("Přihláška '%s' smazána."), (string) $holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS);
                 $this->logger->log(_('Přihláška smazána.'), ILogger::SUCCESS);
-            } else if (isset($transitions[$explicitMachineName])) {
+            } elseif (isset($transitions[$explicitMachineName])) {
                 $this->logger->log(sprintf(_('Stav přihlášky "%s" změněn.'), (string)$holder->getPrimaryHolder()->getModel()), ILogger::INFO);
             }
             if ($data && (!isset($transitions[$explicitMachineName]) || !$transitions[$explicitMachineName]->isTerminating())) {

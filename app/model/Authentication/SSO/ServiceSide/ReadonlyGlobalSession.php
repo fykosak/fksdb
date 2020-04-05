@@ -61,7 +61,7 @@ class ReadonlyGlobalSession implements IGlobalSession {
             and until >= now()';
 
         $stmt = $this->connection->prepare($sql);
-        $stmt->execute(array($gsid));
+        $stmt->execute([$gsid]);
 
         $row = $stmt->fetch();
 

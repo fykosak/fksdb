@@ -212,7 +212,6 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
 
         $result = [];
         foreach ($postContacts as $postContact) {
-            $postContact->address_id; // stupid touch
             $address = $postContact->ref(DbNames::TAB_ADDRESS, 'address_id');
             $result[] = ModelMPostContact::createFromExistingModels(
                 ModelAddress::createFromActiveRow($address), ModelPostContact::createFromActiveRow($postContact)
@@ -243,7 +242,7 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
         $pAddresses = $this->getMPostContacts(ModelPostContact::TYPE_PERMANENT);
         if (count($pAddresses)) {
             return reset($pAddresses);
-        } else if (!$noFallback) {
+        } elseif (!$noFallback) {
             return $this->getDeliveryAddress();
         } else {
             return null;

@@ -189,13 +189,13 @@ class ApplicationComponent extends Control {
                 $submit->setOption('row', 1);
                 if ($transitionSubmit !== false) {
                     $transitionSubmit = $submit;
-                } else if ($transitionSubmit) {
+                } elseif ($transitionSubmit) {
                     $transitionSubmit = false; // if there is more than one submit set no one
                 }
-            } else if ($transition->isTerminating()) {
+            } elseif ($transition->isTerminating()) {
                 $submit->getControlPrototype()->addClass('btn-sm btn-danger');
                 $submit->setOption('row', 3);
-            } else if ($transition->isDangerous()) {
+            } elseif ($transition->isDangerous()) {
                 $submit->getControlPrototype()->addClass('btn-sm btn-danger');
                 $submit->setOption('row', 2);
             } else {
@@ -222,7 +222,7 @@ class ApplicationComponent extends Control {
         $form->getElementPrototype()->data['submit-on'] = 'enter';
         if ($saveSubmit) {
             $saveSubmit->getControlPrototype()->data['submit-on'] = 'this';
-        } else if ($transitionSubmit) {
+        } elseif ($transitionSubmit) {
             $transitionSubmit->getControlPrototype()->data['submit-on'] = 'this';
         }
 

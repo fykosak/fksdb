@@ -9,7 +9,7 @@ use Nette\Application\UI\Control;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-abstract class Webloader extends Control {
+abstract class WebLoader extends Control {
 
     const FILENAME = 'file';
     const ATTRIBUTES = 'attr';
@@ -24,11 +24,11 @@ abstract class Webloader extends Control {
      * @param array $attributes
      */
     public function addFile(string $file, array $attributes = []) {
-        $hash = $file . implode(':', $attributes);
-        $this->files[$hash] = array(
+        $hash = $file . join(':', $attributes);
+        $this->files[$hash] = [
             self::FILENAME => $file,
             self::ATTRIBUTES => $attributes,
-        );
+        ];
         $this->invalidateControl();
     }
 
@@ -37,7 +37,7 @@ abstract class Webloader extends Control {
      * @param array $attributes
      */
     public function removeFile(string $file, array $attributes = []) {
-        $hash = $file . implode(':', $attributes);
+        $hash = $file . join(':', $attributes);
         unset($this->files[$hash]);
         $this->invalidateControl();
     }
@@ -61,23 +61,24 @@ abstract class Webloader extends Control {
         $this->invalidateControl();
     }
 
-    public function render() {
-        $args = func_get_args();
-
+    /**
+     * @param mixed ...$args
+     */
+    public function render(...$args) {
         $files = [];
         if (count($args) == 1 && is_array($args[0])) {
             foreach ($args[0] as $file => $attributes) {
-                $files[] = array(
+                $files[] = [
                     self::FILENAME => $file,
                     self::ATTRIBUTES => $attributes,
-                );
+                ];
             }
         } else {
             foreach ($args as $arg) {
-                $files[] = array(
+                $files[] = [
                     self::FILENAME => $arg,
                     self::ATTRIBUTES => [],
-                );
+                ];
             }
         }
 
@@ -90,7 +91,7 @@ abstract class Webloader extends Control {
     public function renderInline() {
         $template = $this->createTemplate();
         $template->setFile($this->getTemplateFilePrefix() . '.inlines.latte');
-        $template->inlines = $this->getInlines();
+        $template->inlines = $this->getInLines();
         $template->render();
     }
 
@@ -103,7 +104,7 @@ abstract class Webloader extends Control {
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     abstract protected function getTemplateFilePrefix(): string;
 
@@ -117,7 +118,7 @@ abstract class Webloader extends Control {
     /**
      * @return array
      */
-    protected function getInlines(): array {
+    protected function getInLines(): array {
         return $this->inlines;
     }
 

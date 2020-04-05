@@ -77,45 +77,45 @@ class PersonsGrid extends BaseGrid {
             ->setText(_('Sloučit A<-B'))
             ->setClass("btn btn-sm btn-primary")
             ->setLink(function ($row) use ($presenter, $pairs) {
-                return $presenter->link("Person:merge", array(
+                return $presenter->link("Person:merge", [
                     'trunkId' => $row->person_id,
                     'mergedId' => $pairs[$row->person_id][DuplicateFinder::IDX_PERSON]->person_id,
-                ));
+                ]);
             })
             ->setShow(function ($row) use ($presenter, $pairs) {
-                return $presenter->authorized("Person:merge", array(
+                return $presenter->authorized("Person:merge", [
                     'trunkId' => $row->person_id,
                     'mergedId' => $pairs[$row->person_id][DuplicateFinder::IDX_PERSON]->person_id,
-                ));
+                ]);
             });
         $this->addButton("mergeBA", _('Sloučit B<-A'))
             ->setText(_('Sloučit B<-A'))
             ->setLink(function ($row) use ($presenter, $pairs) {
-                return $presenter->link("Person:merge", array(
+                return $presenter->link("Person:merge", [
                     'trunkId' => $pairs[$row->person_id][DuplicateFinder::IDX_PERSON]->person_id,
                     'mergedId' => $row->person_id,
-                ));
+                ]);
             })
             ->setShow(function ($row) use ($presenter, $pairs) {
-                return $presenter->authorized("Person:merge", array(
+                return $presenter->authorized("Person:merge", [
                     'trunkId' => $pairs[$row->person_id][DuplicateFinder::IDX_PERSON]->person_id,
                     'mergedId' => $row->person_id,
-                ));
+                ]);
             });
         $this->addButton("dontMerge", _('Nejde o duplicitu'))
             ->setText(_('Nejde o duplicitu'))
             ->setClass("btn btn-sm btn-primary")
             ->setLink(function ($row) use ($presenter, $pairs) {
-                return $presenter->link("Person:dontMerge", array(
+                return $presenter->link("Person:dontMerge", [
                     'trunkId' => $pairs[$row->person_id][DuplicateFinder::IDX_PERSON]->person_id,
                     'mergedId' => $row->person_id,
-                ));
+                ]);
             })
             ->setShow(function ($row) use ($presenter, $pairs) {
-                return $presenter->authorized("Person:dontMerge", array(
+                return $presenter->authorized("Person:dontMerge", [
                     'trunkId' => $pairs[$row->person_id][DuplicateFinder::IDX_PERSON]->person_id,
                     'mergedId' => $row->person_id,
-                ));
+                ]);
             });
     }
 

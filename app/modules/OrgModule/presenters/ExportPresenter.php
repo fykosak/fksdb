@@ -301,7 +301,7 @@ class ExportPresenter extends SeriesPresenter {
      */
     public function actionExecute($id) {
         $query = $this->getPatternQuery();
-        $storedQuery = $this->storedQueryFactory->createQuery($query);
+        $storedQuery = $this->storedQueryFactory->createQuery($this, $query);
         $this->setStoredQuery($storedQuery);
 
         if ($query && $this->getParameter('qid')) {
@@ -315,7 +315,7 @@ class ExportPresenter extends SeriesPresenter {
             $storedQueryComponent->updateParameters($parameters);
 
             if ($this->getParameter('format')) {
-                $this->createRequest($storedQueryComponent, 'format!', array('format' => $this->getParameter('format')), 'forward');
+                $this->createRequest($storedQueryComponent, 'format!', ['format' => $this->getParameter('format')], 'forward');
                 $this->forward($this->lastCreatedRequest);
             }
         }
@@ -325,8 +325,7 @@ class ExportPresenter extends SeriesPresenter {
      * @param $id
      */
     public function titleEdit($id) {
-        $this->setTitle(sprintf(_('Úprava dotazu %s'), $this->getPatternQuery()->name));
-        $this->setIcon('fa fa-pencil');
+        $this->setTitle(sprintf(_('Úprava dotazu %s'), $this->getPatternQuery()->name), 'fa fa-pencil');
     }
 
     /**
@@ -357,8 +356,7 @@ class ExportPresenter extends SeriesPresenter {
     }
 
     public function titleCompose() {
-        $this->setTitle(sprintf(_('Napsat dotaz')));
-        $this->setIcon('fa fa-pencil');
+        $this->setTitle(sprintf(_('Napsat dotaz')), 'fa fa-pencil');
     }
 
     public function renderCompose() {
@@ -369,8 +367,7 @@ class ExportPresenter extends SeriesPresenter {
     }
 
     public function titleList() {
-        $this->setTitle(_('Exporty'));
-        $this->setIcon('fa fa-database');
+        $this->setTitle(_('Exports'), 'fa fa-database');
     }
 
     /**
@@ -383,8 +380,7 @@ class ExportPresenter extends SeriesPresenter {
             $title .= " ($qid)";
         }
 
-        $this->setTitle($title);
-        $this->setIcon('fa fa-database');
+        $this->setTitle($title, 'fa fa-database');
     }
 
     /**
@@ -398,8 +394,7 @@ class ExportPresenter extends SeriesPresenter {
      * @param $id
      */
     public function titleExecute($id) {
-        $this->setTitle(sprintf(_('%s'), $this->getPatternQuery()->name));
-        $this->setIcon('fa fa-play-circle-o');
+        $this->setTitle(sprintf(_('%s'), $this->getPatternQuery()->name), 'fa fa-play-circle-o');
     }
 
     /**
@@ -522,7 +517,7 @@ class ExportPresenter extends SeriesPresenter {
         $submit = $form->addSubmit('execute', _('Spustit'))
             ->setValidationScope(false);
         $submit->getControlPrototype()->addClass('btn-success');
-        $submit->onClick[] = array($this, 'handleComposeExecute');
+        $submit->onClick[] = [$this, 'handleComposeExecute'];
 
         return $control;
     }
@@ -539,7 +534,7 @@ class ExportPresenter extends SeriesPresenter {
         if ($this->isAjax()) {
             $this->invalidateControl('adhocResultsComponent');
         } else {
-            $this->redirect('this', array(self::PARAM_LOAD_FROM_SESSION => true));
+            $this->redirect('this', [self::PARAM_LOAD_FROM_SESSION => true]);
         }
     }
 
@@ -663,7 +658,7 @@ class ExportPresenter extends SeriesPresenter {
 
         foreach ($model->getCategories() as $category) {
             $rows = [];
-            $model->setSeries(array(1, 2, 3, 4, 5, 6));
+            $model->setSeries([1, 2, 3, 4, 5, 6]);
 
             $header = $model->getDataColumns($category);
             $sumCol = 0;
@@ -737,7 +732,7 @@ class ExportPresenter extends SeriesPresenter {
                     $studyYear = ($contestant->study_year >= 1 && $contestant->study_year <= 4) ? $contestant->study_year : ($contestant->study_year - 9);
                     if ($contestant->contest_id == ModelContest::ID_FYKOS) {
                         $row[] = 1991 + $year - $studyYear;
-                    } else if ($contestant->contest_id == ModelContest::ID_VYFUK) {
+                    } elseif ($contestant->contest_id == ModelContest::ID_VYFUK) {
                         $row[] = 2015 + $year - $studyYear;
                     }
                 } else {

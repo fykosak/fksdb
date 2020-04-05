@@ -51,11 +51,11 @@ final class TableReflectionFactory {
     }
 
     /**
-     * @param $linkId
+     * @param string $linkId
      * @return AbstractLink
      * @throws \Exception
      */
-    public function loadLinkFactory($linkId): AbstractLink {
+    public function loadLinkFactory(string $linkId): AbstractLink {
         $service = $this->container->getService('DBReflection.link.' . $linkId);
         if (!$service instanceof AbstractLink) {
             throw new InvalidArgumentException('LinkFactory ' . $linkId . ' not exists');

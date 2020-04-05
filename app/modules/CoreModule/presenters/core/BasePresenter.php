@@ -60,7 +60,7 @@ abstract class BasePresenter extends Presenter implements IAutocompleteJSONProvi
     protected $yearCalculator;
 
     /** @var ServiceContest */
-    protected $serviceContest;
+    private $serviceContest;
 
     /** @var GlobalParameters */
     protected $globalParameters;
@@ -89,7 +89,7 @@ abstract class BasePresenter extends Presenter implements IAutocompleteJSONProvi
     private $authorized = true;
 
     /**
-     * @var array[string] => bool
+     * @var bool[]
      */
     private $authorizedCache = [];
 
@@ -278,9 +278,7 @@ abstract class BasePresenter extends Presenter implements IAutocompleteJSONProvi
      */
     protected function setTitle(string $title, string $icon = null) {
         $this->title = $title;
-        if ($icon) {
-            $this->icon = $icon;
-        }
+        $this->icon = $icon;
     }
 
     /**
@@ -289,15 +287,6 @@ abstract class BasePresenter extends Presenter implements IAutocompleteJSONProvi
     public function getIcon() {
         return $this->icon;
     }
-
-    /**
-     * @param $icon
-     * @deprecated
-     */
-    protected function setIcon($icon) {
-        $this->icon = $icon;
-    }
-
     /**
      * @param $subtitle
      */
@@ -421,7 +410,7 @@ abstract class BasePresenter extends Presenter implements IAutocompleteJSONProvi
         $backLink = $component->getBackLinkUrl();
         if ($backLink) {
             $this->redirectUrl($backLink);
-        } else if ($need) {
+        } elseif ($need) {
             $this->redirect(':Authentication:login'); // will cause dispatch
         }
     }

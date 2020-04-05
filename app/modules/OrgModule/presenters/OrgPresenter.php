@@ -54,8 +54,7 @@ class OrgPresenter extends ExtendedPersonPresenter {
      * @throws BadRequestException
      */
     public function titleEdit(int $id) {
-        $this->setTitle(sprintf(_('Úprava organizátora %s'), $this->getModel2($id)->getPerson()->getFullName()));
-        $this->setIcon('fa fa-pencil');
+        $this->setTitle(sprintf(_('Úprava organizátora %s'), $this->getModel2($id)->getPerson()->getFullName()), 'fa fa-pencil');
     }
 
     /**
@@ -63,18 +62,15 @@ class OrgPresenter extends ExtendedPersonPresenter {
      * @throws BadRequestException
      */
     public function titleDetail(int $id) {
-        $this->setTitle(sprintf(_('Org %s'), $this->getModel2($id)->getPerson()->getFullName()));
-        $this->setIcon('fa fa-user');
+        $this->setTitle(sprintf(_('Org %s'), $this->getModel2($id)->getPerson()->getFullName()), 'fa fa-user');
     }
 
     public function titleCreate() {
-        $this->setTitle(_('Založit organizátora'));
-        $this->setIcon('fa fa-user-plus');
+        $this->setTitle(_('Založit organizátora'), 'fa fa-user-plus');
     }
 
     public function titleList() {
-        $this->setTitle(_('Organizátoři'));
-        $this->setIcon('fa fa-address-book');
+        $this->setTitle(_('Organizátoři'), 'fa fa-address-book');
     }
 
     /**

@@ -14,6 +14,7 @@ use FKSDB\ORM\Services\ServiceEventParticipant;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
+use Nette\InvalidStateException;
 
 /**
  * Class ApplicationPresenter
@@ -22,14 +23,10 @@ use Nette\Application\UI\Control;
 abstract class AbstractApplicationPresenter extends BasePresenter {
     use EventEntityTrait;
 
-    /**
-     * @var ApplicationHandlerFactory
-     */
+    /** @var ApplicationHandlerFactory */
     protected $applicationHandlerFactory;
 
-    /**
-     * @var ServiceEventParticipant
-     */
+    /** @var ServiceEventParticipant */
     protected $serviceEventParticipant;
 
     /**
@@ -45,13 +42,16 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     public function injectServiceEventParticipant(ServiceEventParticipant $serviceEventParticipant) {
         $this->serviceEventParticipant = $serviceEventParticipant;
     }
-
-    public function titleList() {
+    public final function titleList() {
         $this->setTitle(_('List of applications'), 'fa fa-users');
     }
 
-    public function titleDetail() {
+    public final function titleDetail() {
         $this->setTitle(_('Application detail'), 'fa fa-user');
+    }
+
+    public final function titleTransitions() {
+        $this->setTitle(_('Group transitions'), 'fa fa-user');
     }
 
     /**
@@ -95,15 +95,14 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws AbortException
      */
-    public final function createComponentApplicationComponent(): ApplicationComponent {
+    public function createComponentApplicationComponent(): ApplicationComponent {
         $source = new SingleEventSource($this->getEvent(), $this->getContext());
-        foreach ($source as $key => $holder) {
+        foreach ($source->getHolders() as $key => $holder) {
             if ($key === $this->getEntity()->getPrimary()) {
-                $handler = $this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger());
-                return new ApplicationComponent($handler, $holder);
+                return new ApplicationComponent($this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger()), $holder);
             }
         }
-        throw new BadRequestException();
+        throw new InvalidStateException();
     }
 
     /**
@@ -111,7 +110,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public final function createComponentMassTransition(): MassTransitionsControl {
+    public final function createComponentMassTransitions(): MassTransitionsControl {
         return new MassTransitionsControl($this->getContext(), $this->getEvent());
     }
 

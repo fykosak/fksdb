@@ -157,7 +157,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         // if token did nod succeed redirect to login credentials page
         if (!$this->getUser()->isLoggedIn() && ($methods & self::AUTH_ALLOW_LOGIN)) {
             $this->optionalLoginRedirect();
-        } else if (!$this->isAuthorized()) {
+        } elseif (!$this->isAuthorized()) {
             $this->unauthorizedAccess();
         }
     }
@@ -182,10 +182,10 @@ abstract class AuthenticatedPresenter extends BasePresenter {
             $reason = AuthenticationPresenter::REASON_AUTH;
         }
 
-        $this->redirect(':Authentication:login', array(
+        $this->redirect(':Authentication:login', [
             'backlink' => $this->storeRequest(),
             AuthenticationPresenter::PARAM_REASON => $reason
-        ));
+        ]);
     }
 
     /**
@@ -256,10 +256,10 @@ abstract class AuthenticatedPresenter extends BasePresenter {
             return;
         }
         try {
-            $credentials = array(
+            $credentials = [
                 PasswordAuthenticator::USERNAME => $_SERVER['PHP_AUTH_USER'],
                 PasswordAuthenticator::PASSWORD => $_SERVER['PHP_AUTH_PW'],
-            );
+            ];
             $login = $this->passwordAuthenticator->authenticate($credentials);
 
             Debugger::log("$login signed in using HTTP authentication.");

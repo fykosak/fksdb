@@ -150,7 +150,7 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter, IExt
      * @return ModelContest|ActiveRow|null
      */
     public function getSelectedContest() {
-        return $this->contestId ? $this->serviceContest->findByPrimary($this->contestId) : null;
+        return $this->contestId ? $this->getServiceContest()->findByPrimary($this->contestId) : null;
     }
 
     /**
@@ -249,7 +249,7 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter, IExt
     }
 
     public function titleYear() {
-        $this->setSubtitle($this->serviceContest->findByPrimary($this->contestId)->name);
+        $this->setSubtitle($this->getServiceContest()->findByPrimary($this->contestId)->name);
         $this->setTitle(_('Zvolit ročník'));
     }
 
@@ -261,20 +261,21 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter, IExt
     }
 
     public function titleEmail() {
-        $this->setSubtitle($this->serviceContest->findByPrimary($this->contestId)->name);
+        $this->setSubtitle($this->getServiceContest()->findByPrimary($this->contestId)->name);
         $this->setTitle(_('Zadejte e-mail'));
     }
 
     public function renderContest() {
-        $pk = $this->serviceContest->getPrimary();
+        $pk = $this->getServiceContest()->getPrimary();
 
         $this->template->contests = array_map(function ($value) {
-            return $this->serviceContest->findByPrimary($value);
-        }, $this->serviceContest->fetchPairs($pk, $pk));
+            return $this->getServiceContest()->findByPrimary($value);
+        }, $this->getServiceContest()->fetchPairs($pk, $pk));
     }
 
     public function renderYear() {
-        $contest = $this->serviceContest->findByPrimary($this->contestId);
+        /** @var ModelContest $contest */
+        $contest = $this->getServiceContest()->findByPrimary($this->contestId);
         $this->template->years = [];
         $this->template->years[] = $this->yearCalculator->getCurrentYear($contest) + $this->yearCalculator->getForwardShift($contest);
     }
@@ -446,7 +447,7 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter, IExt
         /**
          * @var ModelContest $contest
          */
-        $contest = $this->serviceContest->findByPrimary($this->contestId);
+        $contest = $this->getServiceContest()->findByPrimary($this->contestId);
         if ($contest) {
             return [$contest->getContestSymbol(), 'bg-dark navbar-dark'];
         }

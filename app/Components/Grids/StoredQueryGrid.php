@@ -74,7 +74,7 @@ class StoredQueryGrid extends BaseGrid {
         foreach ($this->exportFormatFactory->getFormats($this->storedQuery) as $formatName => $label) {
             $this->addGlobalButton('format_' . $formatName)
                 ->setLabel($label)
-                ->setLink($this->getParent()->link('format!', array('format' => $formatName)));
+                ->setLink($this->getParent()->link('format!', ['format' => $formatName]));
         }
 
 
@@ -84,7 +84,7 @@ class StoredQueryGrid extends BaseGrid {
                 ->setClass('btn btn-sm btn-secondary')
                 ->setLink($this->getPresenter()->link('Export:show', $this->storedQuery->getQueryPattern()->getPrimary()));
             if ($qid = $this->storedQuery->getQueryPattern()->qid) { // intentionally =
-                $parameters = array('qid' => $qid, 'bc' => null);
+                $parameters = ['qid' => $qid, 'bc' => null];
                 $queryParameters = $this->storedQuery->getParameters();
                 foreach ($this->storedQuery->getParameterNames() as $key) {
                     if (array_key_exists($key, $queryParameters)) {
