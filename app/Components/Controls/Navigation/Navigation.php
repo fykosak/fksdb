@@ -3,7 +3,10 @@
 namespace FKSDB\Components\Controls\Navigation;
 
 use FKSDB\Components\Controls\PresenterBuilder;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
+use Nette\Application\UI\InvalidLinkException;
+use Nette\Application\UI\Presenter;
 use Nette\InvalidArgumentException;
 use Nette\Templating\FileTemplate;
 use ReflectionClass;
@@ -80,8 +83,8 @@ class Navigation extends Control {
     /**
      * @param \stdClass $node
      * @return bool|mixed
-     * @throws \Nette\Application\BadRequestException
-     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws BadRequestException
+     * @throws InvalidLinkException
      * @throws \ReflectionException
      */
     public function isVisible(\stdClass $node) {
@@ -102,8 +105,8 @@ class Navigation extends Control {
 
     /**
      * @param $node
-     * @return null|string
-     * @throws \Nette\Application\BadRequestException
+     * @return array
+     * @throws BadRequestException
      */
     public function getTitle($node) {
         if (isset($node->title)) {
@@ -118,13 +121,13 @@ class Navigation extends Control {
 
             return $presenter->getTitle();
         }
-        return null;
+        return [];
     }
 
     /**
      * @param $node
      * @return null|string
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     public function getSubTitle($node) {
         if (isset($node->title)) {
@@ -143,32 +146,10 @@ class Navigation extends Control {
     }
 
     /**
-     * @param $node
-     * @return null|string
-     * @throws \Nette\Application\BadRequestException
-     */
-    public function getIcon($node) {
-        if (isset($node->icon)) {
-            return $node->icon;
-        }
-        if (isset($node->linkPresenter)) {
-            /**
-             * @var \BasePresenter $presenter
-             */
-            $presenter = $this->preparePresenter($node->linkPresenter, $node->linkAction, $node->linkParams);
-            $presenter->setView($presenter->getView()); // to force update the title
-
-            return $presenter->getIcon();
-        }
-        return null;
-    }
-
-
-    /**
      * @param \stdClass $node
      * @return null|string
-     * @throws \Nette\Application\BadRequestException
-     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws BadRequestException
+     * @throws InvalidLinkException
      * @throws \ReflectionException
      */
     public function getLink(\stdClass $node) {
@@ -258,8 +239,8 @@ class Navigation extends Control {
      * @param \BasePresenter $presenter
      * @param \stdClass $node
      * @return string
-     * @throws \Nette\Application\BadRequestException
-     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws BadRequestException
+     * @throws InvalidLinkException
      * @throws \ReflectionException
      */
     private function createLink(\BasePresenter $presenter, \stdClass $node) {
@@ -276,8 +257,8 @@ class Navigation extends Control {
      * @param \BasePresenter $presenter
      * @param \stdClass $node
      * @return mixed
-     * @throws \Nette\Application\BadRequestException
-     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws BadRequestException
+     * @throws InvalidLinkException
      * @throws \ReflectionException
      */
     private function isAllowed(\BasePresenter $presenter, \stdClass $node) {
@@ -315,8 +296,8 @@ class Navigation extends Control {
      * @param $presenterName
      * @param $action
      * @param $providedParams
-     * @return \Nette\Application\UI\Presenter
-     * @throws \Nette\Application\BadRequestException
+     * @return Presenter
+     * @throws BadRequestException
      */
     public function preparePresenter($presenterName, $action, $providedParams) {
         $ownPresenter = $this->getPresenter();

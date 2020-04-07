@@ -125,7 +125,7 @@ trait EntityTrait {
     /**
      * @throws NotImplementedException
      */
-    abstract public function createComponentGrid(): BaseGrid;
+    abstract protected function createComponentGrid(): BaseGrid;
 
     /**
      * @return IService|AbstractServiceSingle

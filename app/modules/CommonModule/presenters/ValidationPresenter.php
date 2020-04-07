@@ -39,15 +39,15 @@ class ValidationPresenter extends BasePresenter {
     }
 
     public function titleDefault() {
-        $this->setTitle('Data validation', 'fa fa-check');
+        $this->setTitle(_('Data validation'), 'fa fa-check');
     }
 
     public function titleList() {
-        $this->setTitle('All test', 'fa fa-check');
+        $this->setTitle(_('All test'), 'fa fa-check');
     }
 
     public function titlePreview() {
-        $this->setTitle('Select test', 'fa fa-check');
+        $this->setTitle(_('Select test'), 'fa fa-check');
     }
 
     public function authorizedDefault() {

@@ -27,12 +27,8 @@ class EventOrgPresenter extends BasePresenter {
         $this->serviceEventOrg = $serviceEventOrg;
     }
 
-    /**
-     * @throws AbortException
-     * @throws BadRequestException
-     */
     public function titleList() {
-        $this->setTitle(sprintf(_('Organisers of event %s'), $this->getEvent()->name), 'fa fa-users');
+        $this->setTitle(sprintf(_('Organisers of event')), 'fa fa-users');
     }
 
     /**
