@@ -5,11 +5,9 @@ namespace FKSDB\Components\Controls\Stalking\StalkingComponent;
 use Exception;
 use FKSDB\Components\Controls\Stalking\StalkingControl;
 use FKSDB\Components\Controls\Stalking\StalkingService;
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\Models\ModelPerson;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
-use Nette\Localization\ITranslator;
 use FKSDB\NotImplementedException;
 use Nette\Templating\FileTemplate;
 
@@ -78,7 +76,7 @@ class StalkingComponent extends StalkingControl {
         }
 
         $this->template->model = $model;
-        $this->template->rows = $this->parseRows($definition['rows']);
+        $this->template->rows = $definition['rows'];
         $this->template->setFile(__DIR__ . '/layout.single.latte');
         $this->template->render();
     }
@@ -95,31 +93,10 @@ class StalkingComponent extends StalkingControl {
         $this->template->links = array_map(function ($link) {
             return $this->tableReflectionFactory->loadLinkFactory($link);
         }, $definition['links']);
-        $this->template->rows = $this->parseRows($definition['rows']);
+        $this->template->rows = $definition['rows'];
         $this->template->models = $models;
-        $this->template->itemHeadline = $this->parseRow($definition['itemHeadline']);
+        $this->template->itemHeadline = $definition['itemHeadline'];
         $this->template->setFile(__DIR__ . '/layout.multi.latte');
         $this->template->render();
     }
-
-    /**
-     * @param array $rows
-     * @return array
-     */
-    private function parseRows(array $rows): array {
-        $items = [];
-        foreach ($rows as $item) {
-            $items[] = $this->parseRow($item);
-        }
-        return $items;
-    }
-
-    /**
-     * @param string $row
-     * @return array
-     */
-    private function parseRow(string $row): array {
-        return explode('.', $row);
-    }
-
 }

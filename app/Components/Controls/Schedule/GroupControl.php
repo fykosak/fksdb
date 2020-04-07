@@ -6,7 +6,6 @@ use FKSDB\Components\DatabaseReflection\ValuePrinterComponent;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
 use Nette\Application\UI\Control;
-use Nette\ComponentModel\IComponent;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 

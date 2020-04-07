@@ -8,7 +8,6 @@ use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\React\ReactResponse;
-use FKSDB\Submits\FilesystemCorrectedSubmitStorage;
 use FKSDB\Submits\FilesystemUploadedSubmitStorage;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;

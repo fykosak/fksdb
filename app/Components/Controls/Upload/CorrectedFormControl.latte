@@ -6,8 +6,13 @@
 {/block}
 {block submit-row}
     {if $submit}
-        <td class="{$submit->corrected?'bg-success text-white':'bg-danger text-white'}">
-            #{$submit->submit_id}</td>
+        {if $correctedSubmitStorage->fileExists($submit) && $submit->corrected}
+            <td class="bg-success text-white">#{$submit->submit_id}</td>
+        {elseif !$correctedSubmitStorage->fileExists($submit) && !$submit->corrected}
+            <td class="bg-danger text-white">#{$submit->submit_id}</td>
+        {else}
+            <td class="bg-warning text-white">#{$submit->submit_id}</td>
+        {/if}
     {else}
         <td></td>
     {/if}

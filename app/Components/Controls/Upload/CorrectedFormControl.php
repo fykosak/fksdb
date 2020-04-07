@@ -4,6 +4,7 @@ namespace FKSDB\Components\Controls\Upload;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Logging\ILogger;
+use FKSDB\Submits\FilesystemCorrectedSubmitStorage;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
@@ -18,6 +19,8 @@ class CorrectedFormControl extends SeriesTableControl {
      * @inheritDoc
      */
     public function render() {
+        $correctedSubmitStorage = $this->getContext()->getByType(FilesystemCorrectedSubmitStorage::class);
+        $this->template->correctedSubmitStorage = $correctedSubmitStorage;
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'CorrectedFormControl.latte');
         $this->template->render();
     }
@@ -48,7 +51,7 @@ class CorrectedFormControl extends SeriesTableControl {
             $ids[] = trim($value);
         }
         try {
-            $updated = $this->seriesTable->getSubmits()->where('submit_id', $ids)->update(['corrected' => 1]);
+            $updated = $this->getContext()->getSubmits()->where('submit_id', $ids)->update(['corrected' => 1]);
             $this->flashMessage(sprintf(_('Updated %d submits'), $updated), ILogger::INFO);
         } catch (\PDOException $exception) {
             $this->flashMessage(_('Error during updating'), ILogger::ERROR);

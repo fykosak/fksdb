@@ -5,7 +5,6 @@ namespace FKSDB\Components\Events;
 use Events\Machine\Machine;
 use Events\Model\ApplicationHandlerFactory;
 use Events\Model\Grid\SingleEventSource;
-use Events\Model\Holder\Holder;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelEvent;
@@ -14,8 +13,6 @@ use Nette\Application\UI\Control;
 use Nette\DI\Container;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
-use Tracy\Debugger;
-
 /**
  * Class MassTransitionsControl
  * @package FKSDB\Components\Events

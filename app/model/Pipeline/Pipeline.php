@@ -92,7 +92,7 @@ class Pipeline {
 
     /**
      * @param $message
-     * @param int $level
+     * @param string $level
      */
     public function log($message, $level = ILogger::INFO) {
         if ($this->logger) {

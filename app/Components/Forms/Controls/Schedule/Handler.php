@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Forms\Controls\Schedule;
 
+use FKSDB\NotImplementedException;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
@@ -51,9 +52,10 @@ class Handler {
     /**
      * @param ArrayHash $data
      * @param ModelPerson $person
-     * @param $eventId
+     * @param int $eventId
      * @throws ExistingPaymentException
      * @throws FullCapacityException
+     * @throws NotImplementedException
      */
     public function prepareAndUpdate(ArrayHash $data, ModelPerson $person, int $eventId) {
         foreach ($this->prepareData($data) as $type => $newScheduleData) {
@@ -68,6 +70,7 @@ class Handler {
      * @param int $eventId
      * @throws ExistingPaymentException
      * @throws FullCapacityException
+     * @throws NotImplementedException
      */
     private function updateDataType(array $newScheduleData, string $type, ModelPerson $person, int $eventId) {
         $oldRows = $this->servicePersonSchedule->getTable()
