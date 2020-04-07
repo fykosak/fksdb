@@ -36,7 +36,7 @@ class ApplicationGrid extends AbstractApplicationGrid {
             'referenced.person_name',
             DbNames::TAB_EVENT_PARTICIPANT . '.status',
         ]);
-        $this->addLinkButton($presenter, 'detail', 'detail', _('Detail'), false, ['id' => 'event_participant_id']);
+        $this->addLinkButton( 'detail', 'detail', _('Detail'), false, ['id' => 'event_participant_id']);
         $this->addCSVDownloadButton();
     }
 

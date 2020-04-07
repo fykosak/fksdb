@@ -23,7 +23,6 @@ use Persons\DenyResolver;
 use Persons\ExtendedPersonHandler;
 use ReflectionException;
 use FKSDB\Components\Controls\Stalking;
-use function str_replace;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -140,7 +139,7 @@ class PersonPresenter extends BasePresenter {
 
     /* *********** AUTH ***************/
     public function authorizedSearch() {
-        $this->setAuthorized($this->isAllowed('person', 'stalk.search'));
+        $this->setAuthorized($this->isAnyContestAuthorized('person', 'stalk.search'));
     }
 
     /**
@@ -149,11 +148,11 @@ class PersonPresenter extends BasePresenter {
     public function authorizedDetail() {
         $person = $this->getPerson();
 
-        $full = $this->isAllowed($person, 'stalk.full');
+        $full = $this->isAnyContestAuthorized($person, 'stalk.full');
 
-        $restrict = $this->isAllowed($person, 'stalk.restrict');
+        $restrict = $this->isAnyContestAuthorized($person, 'stalk.restrict');
 
-        $basic = $this->isAllowed($person, 'stalk.basic');
+        $basic = $this->isAnyContestAuthorized($person, 'stalk.basic');
 
         $this->setAuthorized($full || $restrict || $basic);
     }
@@ -303,13 +302,13 @@ class PersonPresenter extends BasePresenter {
      */
     private function getMode() {
         if (!$this->mode) {
-            if ($this->isAllowed($this->getPerson(), 'stalk.basic')) {
+            if ($this->isAnyContestAuthorized($this->getPerson(), 'stalk.basic')) {
                 $this->mode = Stalking\AbstractStalkingComponent::PERMISSION_BASIC;
             }
-            if ($this->isAllowed($this->getPerson(), 'stalk.restrict')) {
+            if ($this->isAnyContestAuthorized($this->getPerson(), 'stalk.restrict')) {
                 $this->mode = Stalking\AbstractStalkingComponent::PERMISSION_RESTRICT;
             }
-            if ($this->isAllowed($this->getPerson(), 'stalk.full')) {
+            if ($this->isAnyContestAuthorized($this->getPerson(), 'stalk.full')) {
                 $this->mode = Stalking\AbstractStalkingComponent::PERMISSION_FULL;
             }
         }
@@ -377,7 +376,7 @@ class PersonPresenter extends BasePresenter {
                 }
                 $pairContainer = new ContainerWithOptions();
                 $tableContainer->addComponent($pairContainer, $pairId);
-                $pairContainer->setOption('label', str_replace('_', ' ', $table));
+                $pairContainer->setOption('label', \str_replace('_', ' ', $table));
                 foreach ($data[Merger::IDX_TRUNK] as $column => $value) {
                     if (isset($data[Merger::IDX_RESOLUTION]) && array_key_exists($column, $data[Merger::IDX_RESOLUTION])) {
                         $default = $data[Merger::IDX_RESOLUTION][$column];

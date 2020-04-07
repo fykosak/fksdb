@@ -7,7 +7,6 @@ use Events\Model\Holder\BaseHolder;
 use Events\TransitionConditionFailedException;
 use Events\TransitionOnExecutedException;
 use Events\TransitionUnsatisfiedTargetException;
-use FKSDB\ORM\IModel;
 use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
 

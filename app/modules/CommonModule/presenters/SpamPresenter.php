@@ -5,11 +5,9 @@ namespace CommonModule;
 use FKSDB\Components\Grids\EmailsGrid;
 use FKSDB\EntityTrait;
 use FKSDB\NotImplementedException;
-use FKSDB\ORM\Models\ModelEmailMessage;
 use FKSDB\ORM\Services\ServiceEmailMessage;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
-use Nette\Security\IResource;
 
 /**
  * Class MailSenderPresenter
@@ -45,7 +43,7 @@ class SpamPresenter extends BasePresenter {
      * @inheritDoc
      */
     protected function traitIsAuthorized($resource, string $privilege): bool {
-        return $this->isAnyContestAllowed($resource, $privilege);
+        return $this->isAnyContestAuthorized($resource, $privilege);
     }
 
     /**

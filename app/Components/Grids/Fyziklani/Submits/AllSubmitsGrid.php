@@ -77,8 +77,8 @@ class AllSubmitsGrid extends SubmitsGrid {
             DbNames::TAB_FYZIKLANI_SUBMIT . '.points',
             DbNames::TAB_FYZIKLANI_SUBMIT . '.created',
         ]);
-        $this->addLinkButton($presenter, ':Fyziklani:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);
-        $this->addLinkButton($presenter, ':Fyziklani:Submit:detail', 'detail', _('Detail'), false, ['id' => 'fyziklani_submit_id']);
+        $this->addLinkButton( ':Fyziklani:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);
+        $this->addLinkButton( ':Fyziklani:Submit:detail', 'detail', _('Detail'), false, ['id' => 'fyziklani_submit_id']);
 
         $this->addButton('delete', null)
             ->setClass('btn btn-sm btn-danger')

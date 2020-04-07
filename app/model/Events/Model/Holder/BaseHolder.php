@@ -544,7 +544,7 @@ class BaseHolder extends FreezableObject {
     }
 
     /**
-     * @param $name
+     * @param string|int|int[]|string[] $name
      * @param null $default
      * @return mixed
      */

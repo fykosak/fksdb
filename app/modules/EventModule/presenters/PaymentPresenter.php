@@ -17,8 +17,6 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
-use function count;
-use function sprintf;
 
 /**
  * Class PaymentPresenter
@@ -58,7 +56,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titleEdit(int $id) {
-        $this->setTitle(sprintf(_('Edit payment #%s'), $this->loadEntity($id)->getPaymentId()), 'fa fa-credit-card');
+        $this->setTitle(\sprintf(_('Edit payment #%s'), $this->loadEntity($id)->getPaymentId()), 'fa fa-credit-card');
     }
 
     /**
@@ -68,7 +66,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titleDetail(int $id) {
-        $this->setTitle(sprintf(_('Payment detail #%s'), $this->loadEntity($id)->getPaymentId()), 'fa fa-credit-card');
+        $this->setTitle(\sprintf(_('Payment detail #%s'), $this->loadEntity($id)->getPaymentId()), 'fa fa-credit-card');
     }
 
     public function titleList() {
@@ -123,7 +121,7 @@ class PaymentPresenter extends BasePresenter {
     public function actionEdit(int $id) {
         $this->loadEntity($id);
         if (!$this->canEdit()) {
-            $this->flashMessage(sprintf(_('Payment #%s can not be edited'), $this->getEntity()->getPaymentId()), \BasePresenter::FLASH_ERROR);
+            $this->flashMessage(\sprintf(_('Payment #%s can not be edited'), $this->getEntity()->getPaymentId()), \BasePresenter::FLASH_ERROR);
             $this->redirect(':MyPayments:');
         }
         /**
@@ -138,7 +136,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws AbortException
      */
     public function actionCreate() {
-        if ((count($this->getMachine()->getAvailableTransitions(null)) === 0)) {
+        if (\count($this->getMachine()->getAvailableTransitions(null)) === 0) {
             $this->flashMessage(_('Payment is not allowed in this time!'));
             if (!$this->isOrg()) {
                 $this->redirect('Dashboard:default');

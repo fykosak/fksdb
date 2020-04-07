@@ -1,41 +1,50 @@
-{block content}
-    {if count($toPay)}
-        <h2>{_'Rests'}</h2>
-        <table class="table table-sm table-striped">
-            <tbody>
-            {foreach $toPay as $rest}
-                <tr>
-                    <td>{$rest->getPerson()->getFullName()}</td>
-                    <td>{$rest->getLabel()}</td>
-                    <td>{$rest->getScheduleItem()->getPrice('czk')}/{$rest->getScheduleItem()->getPrice('eur')}</td>
-                </tr>
-            {/foreach}
-            </tbody>
-        </table>
+{define #personSchedule}
+    {if $hasSchedule}
+        <h4 class="mt-3 pull-left">{_'Schedule'}</h4>
+        {control personScheduleGrid $person,$event}
     {/if}
+{/define}
+
+{block content}
+    {control teamRestsControl $model}
+    <hr/>
     <h2>{_'Info'}</h2>
-    {foreach ['e_fyziklani_team_id','name','status','phone','note','password','category','created','game_lang','force_a'] as $field}
-        {control valuePrinter:row 'e_fyziklani_team.'. $field, $model,true}
+    {foreach [
+    'e_fyziklani_team.e_fyziklani_team_id',
+    'e_fyziklani_team.name',
+    'e_fyziklani_team.status',
+    'e_fyziklani_team.phone',
+    'e_fyziklani_team.note',
+    'e_fyziklani_team.password',
+    'e_fyziklani_team.category',
+    'e_fyziklani_team.created',
+    'e_fyziklani_team.game_lang',
+    'e_fyziklani_team.force_a',
+    ] as $field}
+        {control valuePrinter:row $field, $model}
     {/foreach}
     <hr/>
 
     <h2>{_'Rank & points'}</h2>
     {if $rankVisible}
-        {foreach ['rank_category','rank_total','points'] as $field}
-            {control valuePrinter:row 'e_fyziklani_team.'. $field, $model,true}
+        {foreach ['e_fyziklani_team.rank_category','e_fyziklani_team.rank_total','e_fyziklani_team.points'] as $field}
+            {control valuePrinter:row $field, $model}
         {/foreach}
     {else}
         <span class="badge badge-info">{_'Results is not accessible.'}</span>
     {/if}
+    <hr/>
+    {control schoolCheck $model}
 
     <hr/>
 
     <h2>{_'Teacher'}</h2>
     {var $teacher = $model->getTeacher() }
     {if $teacher}
-        {control valuePrinter:row 'referenced.person_link', $teacher,true}
+        {control valuePrinter:row 'referenced.person_link', $teacher}
+        {include #personSchedule, person => $teacher,event=> $model->getEvent()}
         {if $hasSchedule}
-            <h4>{_'Schedule'}</h4>
+            <h4 class="mt-3 pull-left">{_'Schedule'}</h4>
             {control personScheduleGrid $teacher, $model->getEvent()}
         {/if}
     {/if}
@@ -45,24 +54,21 @@
 
     {var $counter = 0;}
     {foreach $model->getParticipants() as $row}
-        {var $participant = FKSDB\ORM\Models\ModelEventParticipant::createFromTableRow($row->event_participant)}
+        {var $participant = FKSDB\ORM\Models\ModelEventParticipant::createFromActiveRow($row->event_participant)}
         {var $counter ++}
         {var $history=$participant->getPerson()->getHistory($acYear)}
-        {var $school = $history->getSchool()}
 
         <h3>{_'Parcipant'} {$counter}</h3>
 
-        {control valuePrinter:row 'referenced.person_link', $participant,true}
+        {control valuePrinter:row 'referenced.person_link', $participant}
 
-        {control valuePrinter:row 'event_participant.status', $participant,true}
+        {control valuePrinter:row 'event_participant.status', $participant}
 
-        {control valuePrinter:row 'person_history.study_year', $history,true}
+        {control valuePrinter:row 'person_history.study_year', $history}
 
-        {control valuePrinter:row 'person_history.school_id', $history,true}
-        {if $hasSchedule}
-            <h4>{_'Schedule'}</h4>
-            {control personScheduleGrid $participant->getPerson(),$participant->getEvent()}
-        {/if}
+        {control valuePrinter:row 'person_history.school_id', $history}
+
+        {include #personSchedule, person => $participant->getPerson(),event=>$model->getEvent()}
         <hr/>
     {/foreach}
     {include ../AbstractApplication/applicationControl.latte}
