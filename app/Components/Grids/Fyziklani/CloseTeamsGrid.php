@@ -67,7 +67,7 @@ class CloseTeamsGrid extends BaseGrid {
             }
             return $position->getRoom()->name;
         });
-        $this->addLinkButton($presenter, ':Fyziklani:Close:team', 'close', _('Close submitting'), false, [
+        $this->addLinkButton( ':Fyziklani:Close:team', 'close', _('Close submitting'), false, [
             'id' => 'e_fyziklani_team_id',
             'eventId' => 'event_id',
         ])->setShow(function ($row) {

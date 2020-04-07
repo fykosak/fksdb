@@ -51,8 +51,8 @@ class TeamSubmitsGrid extends SubmitsGrid {
             DbNames::TAB_FYZIKLANI_SUBMIT . '.created',
             DbNames::TAB_FYZIKLANI_SUBMIT . '.state',
         ]);
-        $this->addLinkButton($presenter, ':Fyziklani:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);
-        $this->addLinkButton($presenter, ':Fyziklani:Submit:detail', 'detail', _('Detail'), false, ['id' => 'fyziklani_submit_id']);
+        $this->addLinkButton( ':Fyziklani:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);
+        $this->addLinkButton( ':Fyziklani:Submit:detail', 'detail', _('Detail'), false, ['id' => 'fyziklani_submit_id']);
 
         $submits = $this->team->getAllSubmits()
             ->order('fyziklani_submit.created');
