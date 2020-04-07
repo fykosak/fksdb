@@ -4,6 +4,8 @@ $container = require '../../bootstrap.php';
 
 use Exports\ExportFormatFactory;
 use Exports\Formats\AESOPFormat;
+use Exports\Formats\PlainTextResponse;
+use Exports\StoredQueryFactory;
 use Exports\StoredQueryPostProcessing;
 use FKSDB\CoreModule\ISeriesPresenter;
 use Nette\DI\Container;
@@ -28,19 +30,19 @@ class AESOPFormatTest extends DatabaseTestCase {
 
     protected function setUp() {
         parent::setUp();
-
-        $exportFactory = $this->container->getByType('Exports\ExportFormatFactory');
-        /** @var \Exports\StoredQueryFactory $queryFactory */
-        $queryFactory = $this->container->getByType('Exports\StoredQueryFactory');
+        /** @var ExportFormatFactory $exportFactory */
+        $exportFactory = $this->container->getByType(ExportFormatFactory::class);
+        /** @var StoredQueryFactory $queryFactory */
+        $queryFactory = $this->container->getByType(StoredQueryFactory::class);
         //$queryFactory->setPresenter(new MockSeriesPresenter());
 
-        $parameters = array(
+        $parameters = [
             'category' => new MockQueryParameter('category'),
-        );
-        $storedQuery = $queryFactory->createQueryFromSQL(new MockSeriesPresenter(),'SELECT 1, \'ahoj\' FROM dual', $parameters, array('php_post_proc' => 'MockProcessing'));
+        ];
+        $storedQuery = $queryFactory->createQueryFromSQL(new MockSeriesPresenter(), 'SELECT 1, \'ahoj\' FROM dual', $parameters, ['php_post_proc' => 'MockProcessing']);
 
-	// AESOP format requires QID
-	$storedQuery->getQueryPattern()->qid = 'aesop.ct';
+        // AESOP format requires QID
+        $storedQuery->getQueryPattern()->qid = 'aesop.ct';
 
         $this->fixture = $exportFactory->createFormat(ExportFormatFactory::AESOP, $storedQuery);
     }
@@ -52,7 +54,7 @@ class AESOPFormatTest extends DatabaseTestCase {
     public function testResponse() {
         $response = $this->fixture->getResponse();
 
-        Assert::type('Exports\Formats\PlaintextResponse', $response);
+        Assert::type(PlainTextResponse::class, $response);
     }
 
 }
@@ -64,9 +66,9 @@ class MockSeriesPresenter implements ISeriesPresenter {
     }
 
     public function getSelectedContest() {
-        return (object) array(
-                    'contest_id' => 1,
-                    'name' => 'FYKOS',
+        return (object)array(
+            'contest_id' => 1,
+            'name' => 'FYKOS',
         );
     }
 

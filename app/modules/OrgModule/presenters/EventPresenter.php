@@ -274,9 +274,7 @@ class EventPresenter extends EntityPresenter {
         }
 
         try {
-            if (!$connection->beginTransaction()) {
-                throw new ModelException();
-            }
+            $connection->beginTransaction();
             // update also 'until' of authTokens in case that registration end has changed
             $tokenData = ["until" => $model->registration_end ?: $model->end];
             foreach ($this->serviceAuthToken->findTokensByEventId($model->event_id) as $token) {
@@ -287,9 +285,7 @@ class EventPresenter extends EntityPresenter {
             /*
              * Finalize
              */
-            if (!$connection->commit()) {
-                throw new ModelException();
-            }
+            $connection->commit();
 
             $this->flashMessage(sprintf(_('Akce %s uložena.'), $model->name), self::FLASH_SUCCESS);
             $this->backLinkRedirect();

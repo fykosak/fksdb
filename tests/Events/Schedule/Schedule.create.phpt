@@ -14,7 +14,7 @@ class ScheduleTest extends ScheduleTestCase {
         $response = $this->fixture->run($request);
         Assert::type('Nette\Application\Responses\RedirectResponse', $response);
 
-        Assert::equal('3', $this->connection->fetchColumn('SELECT count(*) FROM person_schedule WHERE schedule_item_id = ?', $this->itemId));
+        Assert::equal(3, (int)$this->connection->fetchField('SELECT count(*) FROM person_schedule WHERE schedule_item_id = ?', $this->itemId));
     }
 
     public function getAccommodationCapacity() {

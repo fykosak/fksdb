@@ -70,7 +70,7 @@ class ServicePersonInfo extends AbstractServiceSingle {
         if (isset($data['agreed'])) {
             if ($data['agreed'] == '1') {
                 $data['agreed'] = new DateTime();
-            } else if ($data['agreed'] == '0') {
+            } elseif ($data['agreed'] == '0') {
                 unset($data['agreed']);
             }
         }

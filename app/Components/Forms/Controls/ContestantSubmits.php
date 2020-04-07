@@ -189,8 +189,7 @@ class ContestantSubmits extends BaseControl {
             $result[(int)$tasknr] = $this->serializeSubmit($submit);
         }
 
-        $row = $this->submitService->createNew();
-        $dummySubmit = ModelSubmit::createFromActiveRow($row);
+        $dummySubmit = $this->submitService->createNew();
         $data = $dummySubmit->toArray();
         foreach ($this->tasks as $tasknr => $task) {
             if (isset($result[$tasknr])) {
@@ -217,10 +216,8 @@ class ContestantSubmits extends BaseControl {
             if (!$serializedSubmit) {
                 continue;
             }
-
             $result[] = $this->deserializeSubmit($serializedSubmit, $tasknr);
         }
-
         return $result;
     }
 
@@ -271,12 +268,10 @@ class ContestantSubmits extends BaseControl {
 
         $submit = $this->submitService->findByContestant($ctId, $taskId);
         if (!$submit) {
-            $submit = $this->submitService->createNew($data);
-            //$this->submitService->save($submit);
+            $this->submitService->createNewModel($data);
         } else {
-            $submit->update($data);
+            $this->submitService->updateModel2($submit, $data);
         }
-        $this->submitService->updateModel2($submit, $data);
 
         return $submit;
     }
@@ -284,10 +279,10 @@ class ContestantSubmits extends BaseControl {
     /**
      * Workaround to perform server-side conversion of dates.
      *
-     * @todo Improve client side so that this is not needed anymore.
      * @param string $source
      * @param bool $parse
      * @return string
+     * @todo Improve client side so that this is not needed anymore.
      */
     private function sourceToFormat($source, $parse = false) {
         switch ($source) {

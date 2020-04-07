@@ -40,31 +40,31 @@ EOT
         parent::tearDown();
     }
 
-    public function getTestData() {
-        return array(
-            array(3, false),
-            array(2, true),
-        );
+    public function getTestData(): array {
+        return [
+            [3, false],
+            [2, true],
+        ];
     }
 
     /**
      * @dataProvider getTestData
      */
     public function testDisplay($capacity, $diabled) {
-        Assert::equal('2', $this->connection->query('SELECT SUM(accomodation) FROM event_participant WHERE event_id = ?', $this->eventId)->fetchColumn());
+        Assert::equal(2, (int)$this->connection->query('SELECT SUM(accomodation) FROM event_participant WHERE event_id = ?', $this->eventId)->fetchField());
 
         $this->connection->query('UPDATE event SET parameters = ? WHERE event_id = ?', <<<EOT
 accomodationCapacity: $capacity                
 EOT
-                , $this->eventId);
+            , $this->eventId);
 
-        $request = new Request('Public:Application', 'GET', array(
+        $request = new Request('Public:Application', 'GET', [
             'action' => 'default',
             'lang' => 'cs',
             'contestId' => 1,
             'year' => 1,
             'eventId' => $this->tsafEventId,
-        ));
+        ]);
 
         $response = $this->fixture->run($request);
         Assert::type('Nette\Application\Responses\TextResponse', $response);
@@ -72,13 +72,13 @@ EOT
         $source = $response->getSource();
         Assert::type('Nette\Templating\ITemplate', $source);
 
-        $html = (string) $source;
+        $html = (string)$source;
         $dom = DomQuery::fromHtml($html);
-        Assert::true((bool) $dom->xpath('//input[@name="participantDsef[accomodation]"]'));
-        Assert::equal($diabled, (bool) $dom->xpath('//input[@name="participantDsef[accomodation]"][@disabled="disabled"]'));
+        Assert::true((bool)$dom->xpath('//input[@name="participantDsef[accomodation]"]'));
+        Assert::equal($diabled, (bool)$dom->xpath('//input[@name="participantDsef[accomodation]"][@disabled="disabled"]'));
     }
 
-    public function getCapacity() {
+    public function getCapacity(): int {
         return 3;
     }
 

@@ -238,14 +238,12 @@ class ReferencedPersonHandler implements IReferencedHandler {
                     continue;
                 }
                 $data[$t]['person_id'] = $models['person']->person_id; // this works even for person itself
-                if ($services[$t] instanceof AbstractServiceSingle) {
-                    $services[$t]->updateModel2($model, $data[$t]);
-                } else {
+               // if ($services[$t] instanceof AbstractServiceSingle) {
+               //     $services[$t]->updateModel2($model, $data[$t]);
+              //  } else {
                     $services[$t]->updateModel($model, $data[$t]);
-                 //   $services[$t]->save($model);
-                }
-
-
+                    $services[$t]->save($model);
+              //  }
             }
 
             $this->commit();

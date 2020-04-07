@@ -49,7 +49,12 @@ class ServiceAuthToken extends AbstractServiceSingle {
 
         $connection = $this->context->getConnection();
         $outerTransaction = false;
-        $connection->beginTransaction();
+        if ($connection->getPdo()->inTransaction()) {
+            $outerTransaction = true;
+        } else {
+            $connection->beginTransaction();
+        }
+
         if ($refresh) {
             $token = $this->getTable()
                 ->where('login_id', $login->login_id)

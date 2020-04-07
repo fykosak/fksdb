@@ -45,17 +45,5 @@ class ModelPersonInfo extends AbstractModelSingle {
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromActiveRow($this->ref(DbNames::TAB_PERSON, 'person_id'));
     }
-
-    public function update($data) {
-        if (isset($data['agreed'])) {
-            if ($data['agreed'] == '1') {
-                $data['agreed'] = new DateTime();
-            } else if ($data['agreed'] == '0') {
-                unset($data['agreed']);
-            }
-        }
-        return parent::update($data);
-    }
-
 }
 

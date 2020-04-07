@@ -38,10 +38,7 @@ class CreateForm extends AbstractForm {
         $values = $form->getValues();
 
         try {
-            if (!$connection->beginTransaction()) {
-                throw new \ModelException();
-            }
-            Debugger::barDump($values);
+            $connection->beginTransaction();
             /* Address */
             $data = \FormUtils::emptyStrToNull($values[self::CONT_ADDRESS]);
             $address = $this->serviceAddress->createNewModel($data);
@@ -50,9 +47,7 @@ class CreateForm extends AbstractForm {
             $data['address_id'] = $address->address_id;
             $this->serviceSchool->createNewModel($data);
             /* Finalize */
-            if (!$connection->commit()) {
-                throw new \ModelException();
-            }
+            $connection->commit();
 
             $this->getPresenter()->flashMessage(_('Škola založena'), \BasePresenter::FLASH_SUCCESS);
 

@@ -137,7 +137,7 @@ class WriteonlyTraitTest extends ApplicationPresenterDsefTestCase {
         Assert::equal(1, $eApplication->e_dsef_group_id);
         Assert::equal(3, $eApplication->lunch_count);
 
-        $addressId = $this->connection->fetchColumn('SELECT address_id FROM post_contact WHERE person_id = ? AND type = ?', $this->personId, ModelPostContact::TYPE_PERMANENT);
+        $addressId = $this->connection->fetchField('SELECT address_id FROM post_contact WHERE person_id = ? AND type = ?', $this->personId, ModelPostContact::TYPE_PERMANENT);
         Assert::notEqual(false, $addressId);
         $address = $this->connection->fetch('SELECT * FROM address WHERE address_id = ?', $addressId);
         Assert::notEqual(false, $address);

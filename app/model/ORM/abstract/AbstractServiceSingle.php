@@ -197,6 +197,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
             throw new ModelException('Error when storing model.', null, $exception);
         }
         if (!$result) {
+            var_dump($this->context->getConnection()->getPdo()->errorInfo());
             $code = $this->context->getConnection()->getPdo()->errorCode();
             throw new ModelException("$code: Error when storing a model.");
         }
