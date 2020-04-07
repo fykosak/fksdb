@@ -267,10 +267,10 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     }
 
     /**
-     * @return null|string
+     * @return array
      */
-    public function getTitle() {
-        return $this->title;
+    public function getTitle(): array {
+        return [$this->title, $this->icon];
     }
 
     /**
@@ -282,12 +282,6 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         $this->icon = $icon;
     }
 
-    /**
-     * @return string
-     */
-    public function getIcon() {
-        return $this->icon;
-    }
     /**
      * @param $subtitle
      */
@@ -328,14 +322,13 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         parent::beforeRender();
 
         $this->tryCall($this->formatTitleMethod($this->getView()), $this->params);
-        $this->template->title = $this->getTitle();
+        list($this->template->title, $this->template->icon) = $this->getTitle();
 
         list ($symbol, $type) = $this->getNavBarVariant();
         $this->template->contestSymbol = $symbol;
         $this->template->navbarClass = $type;
 
         $this->template->subtitle = $this->getSubtitle();
-        $this->template->icon = $this->getIcon();
         $this->template->navRoots = $this->getNavRoots();
 
         // this is done beforeRender, because earlier it would create too much traffic? due to redirections etc.

@@ -147,7 +147,7 @@ class ApplicationPresenter extends BasePresenter {
         if ($this->getEventApplication()) {
             $this->setTitle(sprintf(_('Application for %s: %s'), $this->getEvent()->name, $this->getEventApplication()->__toString()), 'fa fa-calendar-check-o');
         } else {
-            $this->setTitle("{$this->getEvent()}", 'fa fa-calendar-check-o');
+            $this->setTitle($this->getEvent(), 'fa fa-calendar-check-o');
         }
     }
 

@@ -26,9 +26,9 @@ interface INavigablePresenter extends IPresenter {
     /**
      * Returns title of the current view.
      *
-     * @return string
+     * @return array
      */
-    public function getTitle();
+    public function getTitle(): array;
 
     /**
      * Publish access of the protecetd static method.

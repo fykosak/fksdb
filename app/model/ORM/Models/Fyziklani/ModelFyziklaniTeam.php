@@ -145,6 +145,18 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
      * @return ModelPersonSchedule[]
      */
     public function getScheduleRest(array $types = ['accommodation', 'weekend']): array {
+        $toPay = [];
+        /** @var ModelPerson $person */
+        foreach ($this->getPersons() as $person) {
+            $toPay[] = $person->getScheduleRests($this->getEvent(), $types);
+        }
+        return $toPay;
+    }
+
+    /**
+     * @return ModelPerson[]
+     */
+    public function getPersons(): array {
         $persons = [];
         foreach ($this->getParticipants() as $pRow) {
             $persons[] = ModelPerson::createFromActiveRow($pRow->event_participant->person);
@@ -153,23 +165,7 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
         if ($teacher) {
             $persons[] = $teacher;
         }
-        $toPay = [];
-        /**
-         * @var ModelPerson $person
-         */
-        foreach ($persons as $person) {
-            $schedule = $person->getScheduleForEvent($this->getEvent())
-                ->where('schedule_item.schedule_group.schedule_group_type', $types)
-                ->where('schedule_item.price_czk IS NOT NULL');
-            foreach ($schedule as $pSchRow) {
-                $pSchedule = ModelPersonSchedule::createFromActiveRow($pSchRow);
-                $payment = $pSchedule->getPayment();
-                if (!$payment || $payment->state !== ModelPayment::STATE_RECEIVED) {
-                    $toPay[] = $pSchedule;
-                }
-            }
-        }
-        return $toPay;
+        return $persons;
     }
 
     /**

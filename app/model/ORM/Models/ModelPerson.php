@@ -6,6 +6,7 @@ use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
+use FKSDB\ORM\Models\Schedule\ModelSchedulePayment;
 use FKSDB\YearCalculator;
 use ModelMPersonHasFlag;
 use ModelMPostContact;
@@ -469,6 +470,26 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
      */
     public function getSchedule(): GroupedSelection {
         return $this->related(DbNames::TAB_PERSON_SCHEDULE, 'person_id');
+    }
+
+    /**
+     * @param ModelEvent $event
+     * @param array $types
+     * @return ModelSchedulePayment[]
+     */
+    public function getScheduleRests(ModelEvent $event, array $types = ['accommodation', 'weekend']): array {
+        $toPay = [];
+        $schedule = $this->getScheduleForEvent($event)
+            ->where('schedule_item.schedule_group.schedule_group_type', $types)
+            ->where('schedule_item.price_czk IS NOT NULL');
+        foreach ($schedule as $pSchRow) {
+            $pSchedule = ModelPersonSchedule::createFromActiveRow($pSchRow);
+            $payment = $pSchedule->getPayment();
+            if (!$payment || $payment->state !== ModelPayment::STATE_RECEIVED) {
+                $toPay[] = $pSchedule;
+            }
+        }
+        return $toPay;
     }
 
     /**
