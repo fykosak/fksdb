@@ -51,7 +51,7 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
      * @return bool|mixed|ActiveRow|\Nette\Database\Table\Selection|null
      */
     public function &__get($key) {
-        if (isset($this->tmpData[$key])) {
+        if (array_key_exists($key, $this->tmpData)) {
             return $this->tmpData[$key];
         }
         return parent::__get($key);
@@ -62,7 +62,7 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
      * @return bool
      */
     public function __isset($key): bool {
-        if (isset($this->tmpData[$key])) {
+        if (array_key_exists($key, $this->tmpData)) {
             return true;
         }
         return parent::__isset($key);
