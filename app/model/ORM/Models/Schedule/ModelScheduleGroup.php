@@ -29,6 +29,8 @@ class ModelScheduleGroup extends AbstractModelSingle implements IEventReferenced
     const TYPE_ACCOMMODATION_TEACHER = 'accommodation_teacher';
     const TYPE_TEACHER_PRESENT = 'teacher_present';
     const TYPE_WEEKEND = 'weekend';
+    CONST TYPE_WEEKEND_INFO = 'weekend_info';
+
 
     /**
      * @return GroupedSelection

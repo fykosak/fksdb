@@ -32,7 +32,6 @@ use Nette\InvalidStateException;
 use Nette\Utils\Arrays;
 use Nette\Utils\PhpGenerator\ClassType;
 use Nette\Utils\PhpGenerator\Method;
-use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

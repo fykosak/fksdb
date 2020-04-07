@@ -5,7 +5,6 @@ namespace FKSDB\Payment\PriceCalculator;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\Payment\Price;
 use FKSDB\Payment\PriceCalculator\PreProcess\AbstractPreProcess;
-use function array_merge;
 
 /**
  * Class PriceCalculator
@@ -44,7 +43,7 @@ class PriceCalculator {
     public function getGridItems(ModelPayment $modelPayment): array {
         $items = [];
         foreach ($this->preProcess as $preProcess) {
-            $items = array_merge($items, $preProcess->getGridItems($modelPayment));
+            $items = \array_merge($items, $preProcess->getGridItems($modelPayment));
         }
         return $items;
     }

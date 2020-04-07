@@ -493,6 +493,4 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
                 throw new InvalidArgumentException("Unknown person sub '$sub'.");
         }
     }
-
 }
-

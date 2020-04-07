@@ -44,7 +44,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function createComponentGrid(): AbstractApplicationGrid {
+    protected function createComponentGrid(): AbstractApplicationGrid {
         return new ApplicationGrid($this->getEvent(), $this->getHolder(), $this->getContext());
     }
 
@@ -53,10 +53,10 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function createComponentImport(): ImportComponent {
+    protected function createComponentImport(): ImportComponent {
         $source = new SingleEventSource($this->getEvent(), $this->getContext());
         $machine = $this->getContext()->createEventMachine($this->getEvent());
-        $handler = $this->applicationHandlerFactory->create($this->getEvent(),  new MemoryLogger());
+        $handler = $this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger());
         return new ImportComponent($machine, $source, $handler, $this->getContext());
     }
 
@@ -79,7 +79,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
     /**
      * @return AbstractServiceSingle|ServiceEventParticipant
      */
-    function getORMService(): ServiceEventParticipant {
+    protected function getORMService() {
         return $this->serviceEventParticipant;
     }
 }

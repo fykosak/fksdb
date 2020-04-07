@@ -22,7 +22,6 @@ use Nette\Utils\ArrayHash;
 use Nette\Utils\JsonException;
 use ServiceMPersonHasFlag;
 use ServiceMPostContact;
-use function array_keys;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -146,9 +145,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @throws ExistingPaymentException
      */
     public function update(IModel $model, ArrayHash $values) {
-        /**
-         * @var ModelPerson $model
-         */
+        /** @var ModelPerson $model */
         $this->store($model, $values);
     }
 
@@ -185,7 +182,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
                 'person' => &$person,
                 'person_info' => ($info = $person->getInfo()) ?: $this->servicePersonInfo->createNew(),
                 'person_history' => ($history = $person->getHistory($this->acYear)) ?: $this->servicePersonHistory->createNew(['ac_year' => $this->acYear]),
-                'person_schedule' => (($this->eventId && isset($data['person_schedule']) && $person->getSerializedSchedule($this->eventId, array_keys((array)$data['person_schedule'])[0])) ?: null),
+                'person_schedule' => (($this->eventId && isset($data['person_schedule']) && $person->getSerializedSchedule($this->eventId, \array_keys((array)$data['person_schedule'])[0])) ?: null),
                 self::POST_CONTACT_DELIVERY => ($dataPostContact = $person->getDeliveryAddress()) ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_DELIVERY]),
                 self::POST_CONTACT_PERMANENT => ($dataPostContact = $person->getPermanentAddress(true)) ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_PERMANENT])
             ];
@@ -198,7 +195,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
                 self::POST_CONTACT_PERMANENT => $this->serviceMPostContact,
             ];
 
-            $originalModels = array_keys(iterator_to_array($data));
+            $originalModels = \array_keys(iterator_to_array($data));
 
             $this->prepareFlagServices($data, $services);
             $this->prepareFlagModels($person, $data, $models);
@@ -223,7 +220,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
             foreach ($models as $t => & $model) {
 
                 if (!isset($data[$t])) {
-                    if (in_array($t, $originalModels) && in_array($t, [self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT])) {
+                    if (\in_array($t, $originalModels) && \in_array($t, [self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT])) {
                         // delete only post contacts, other "children" could be left all-nulls
                         $services[$t]->dispose($model);
                     }

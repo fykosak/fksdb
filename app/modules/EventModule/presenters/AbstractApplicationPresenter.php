@@ -46,8 +46,13 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
         $this->setTitle(_('List of applications'), 'fa fa-users');
     }
 
-    public final function titleDetail() {
-        $this->setTitle(_('Application detail'), 'fa fa-user');
+    /**
+     * @param int $id
+     * @throws AbortException
+     * @throws BadRequestException
+     */
+    public final function titleDetail(int $id) {
+        $this->setTitle(\sprintf(_('Application detail "%s"'), $this->loadEntity($id)->__toString()), 'fa fa-user');
     }
 
     public final function titleTransitions() {
@@ -69,7 +74,15 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    protected function renderDetail(int $id) {
+    protected function actionDetail(int $id) {
+        $this->loadEntity($id);
+    }
+
+    /**
+     * @throws AbortException
+     * @throws BadRequestException
+     */
+    public function renderDetail($id) {
         $this->template->event = $this->getEvent();
         $this->template->model = $this->loadEntity($id);
         $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
@@ -95,7 +108,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws AbortException
      */
-    public function createComponentApplicationComponent(): ApplicationComponent {
+    protected function createComponentApplicationComponent(): ApplicationComponent {
         $source = new SingleEventSource($this->getEvent(), $this->getContext());
         foreach ($source->getHolders() as $key => $holder) {
             if ($key === $this->getEntity()->getPrimary()) {
@@ -110,7 +123,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public final function createComponentMassTransitions(): MassTransitionsControl {
+    protected final function createComponentMassTransitions(): MassTransitionsControl {
         return new MassTransitionsControl($this->getContext(), $this->getEvent());
     }
 
@@ -119,7 +132,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    abstract function createComponentGrid(): AbstractApplicationGrid;
+    abstract protected function createComponentGrid(): AbstractApplicationGrid;
 
     /**
      * @inheritDoc

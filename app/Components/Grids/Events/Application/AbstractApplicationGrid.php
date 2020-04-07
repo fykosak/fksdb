@@ -15,9 +15,6 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 use NiftyGrid\DuplicateColumnException;
-use function count;
-use function in_array;
-use function str_replace;
 
 /**
  * Class AbstractApplicationGrid
@@ -72,7 +69,7 @@ abstract class AbstractApplicationGrid extends BaseGrid {
                 ->addText(': ')
                 ->addHtml(Html::el('i')->addText(_($state['description'])))
                 ->addText(' (' . $state['count'] . ')');
-            $stateContainer->addCheckbox(str_replace('.', '__', $state['state']), $label);
+            $stateContainer->addCheckbox(\str_replace('.', '__', $state['state']), $label);
         }
         $form->addComponent($stateContainer, 'status');
         $form->addSubmit('submit', _('Apply filter'));
@@ -94,10 +91,10 @@ abstract class AbstractApplicationGrid extends BaseGrid {
             $states = [];
             foreach ($value->status as $state => $value) {
                 if ($value) {
-                    $states[] = str_replace('__', '.', $state);
+                    $states[] = \str_replace('__', '.', $state);
                 }
             }
-            if (count($states)) {
+            if (\count($states)) {
                 $table->where('status IN ?', $states);
             }
         };
@@ -119,7 +116,7 @@ abstract class AbstractApplicationGrid extends BaseGrid {
         $holderFields = $this->holder->getPrimaryHolder()->getFields();
 
         foreach ($holderFields as $name => $def) {
-            if (in_array($name, $this->getHoldersColumns())) {
+            if (\in_array($name, $this->getHoldersColumns())) {
                 $this->addReflectionColumn($this->getTableName(), $name, $this->getModelClassName());
             }
         }

@@ -1,8 +1,8 @@
 {define #link}
     <a href="{$control->getLink($node)}"
        class="mb-3 d-block navigation-item p-2">
-        <span class="icon d-sm-inline-block d-md-block mx-2"><i class="{$control->getIcon($node)}"></i></span>
-        <span class="text d-xs-inline-block d-md-block">{$control->getTitle($node)}</span>
+        <span class="icon d-sm-inline-block d-md-block mx-2"><i class="{$control->getTitle($node)[1]}"></i></span>
+        <span class="text d-xs-inline-block d-md-block">{$control->getTitle($node)[0]}</span>
         {*<span class="d-block card-text small">{$control->getSubTitle($node)}</span>*}
     </a>
 {/define}

@@ -4,7 +4,6 @@ namespace FKSDB\Components\DatabaseReflection;
 
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use Nette\Application\UI\Control;
-use Nette\ComponentModel\IComponent;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 

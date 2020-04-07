@@ -67,8 +67,8 @@ class SchoolsGrid extends BaseGrid {
             return Html::el('span')->addAttributes(['class' => ('badge ' . ($row->active ? 'badge-success' : 'badge-danger'))])->addText(($row->active));
         });
 
-        $this->addLinkButton($presenter, 'edit', 'edit', _('Edit'), false, ['id' => 'school_id']);
-        $this->addLinkButton($presenter, 'detail', 'detail', _('Detail'), false, ['id' => 'school_id']);
+        $this->addLinkButton( 'edit', 'edit', _('Edit'), false, ['id' => 'school_id']);
+        $this->addLinkButton( 'detail', 'detail', _('Detail'), false, ['id' => 'school_id']);
 
         $this->addGlobalButton('add')
             ->setLink($this->getPresenter()->link('create'))

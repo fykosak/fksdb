@@ -5,11 +5,9 @@ namespace CommonModule;
 use FKSDB\Components\Grids\EmailsGrid;
 use FKSDB\EntityTrait;
 use FKSDB\NotImplementedException;
-use FKSDB\ORM\Models\ModelEmailMessage;
 use FKSDB\ORM\Services\ServiceEmailMessage;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
-use Nette\Security\IResource;
 
 /**
  * Class MailSenderPresenter

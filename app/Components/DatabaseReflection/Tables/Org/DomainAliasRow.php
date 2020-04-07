@@ -5,7 +5,6 @@ namespace FKSDB\Components\DatabaseReflection\Org;
 use FKSDB\Components\DatabaseReflection\ValuePrinters\EmailPrinter;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelContest;
-use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelOrg;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\BaseControl;

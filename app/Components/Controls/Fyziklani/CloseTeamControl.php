@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Controls\Fyziklani;
 
 use BasePresenter;
+use FKSDB\model\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
@@ -12,7 +13,6 @@ use Nette\Application\UI\Control;
 use Nette\DI\Container;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
-use function sprintf;
 
 /**
  * Class CloseTeamControl
@@ -70,10 +70,13 @@ class CloseTeamControl extends Control {
             'points' => $sum,
         ]);
         $connection->commit();
-        $this->getPresenter()->flashMessage(sprintf(_('Team "%s" has successfully closed submitting, with total %d points.'), $this->team->name, $sum), BasePresenter::FLASH_SUCCESS);
+        $this->getPresenter()->flashMessage(\sprintf(_('Team "%s" has successfully closed submitting, with total %d points.'), $this->team->name, $sum), BasePresenter::FLASH_SUCCESS);
         $this->getPresenter()->redirect('list', ['id' => null]);
     }
 
+    /**
+     * @throws NotSetGameParametersException
+     */
     public function render() {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'CloseTeamControl.latte');
         $this->template->setTranslator($this->translator);
@@ -83,7 +86,7 @@ class CloseTeamControl extends Control {
 
     /**
      * @return string
-     * @throws \FKSDB\model\Fyziklani\NotSetGameParametersException
+     * @throws NotSetGameParametersException
      */
     private function getNextTask(): string {
         $submits = count($this->team->getNonRevokedSubmits());

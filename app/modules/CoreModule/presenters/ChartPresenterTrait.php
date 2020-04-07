@@ -34,7 +34,7 @@ trait ChartPresenterTrait {
     /**
      * @return IChart[]
      */
-    protected function getCharts() {
+    protected function getCharts(): array {
         static $chartComponents;
         if (!$chartComponents) {
             $chartComponents = $this->registerCharts();
@@ -54,9 +54,18 @@ trait ChartPresenterTrait {
     /**
      * @return Control
      */
-    public function createComponentChart() {
+    public function createComponentChart(): Control {
         return $this->selectedChart->getControl();
     }
+
+    abstract public function authorizedList();
+
+    abstract public function authorizedChart();
+
+    /**
+     * @return IChart[]
+     */
+    abstract protected function registerCharts(): array;
 
     /**
      * @param bool $fullyQualified
@@ -69,9 +78,4 @@ trait ChartPresenterTrait {
      * @return mixed
      */
     abstract function setView($id);
-
-    /**
-     * @return IChart[]
-     */
-    abstract protected function registerCharts(): array;
 }

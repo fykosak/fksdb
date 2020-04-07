@@ -7,6 +7,7 @@ use FKSDB\Components\Forms\Controls\ContestantSubmits;
 use FKSDB\Components\Forms\OptimisticForm;
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelLogin;
+use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Models\ModelTaskContribution;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\ORM\Services\ServiceTask;
@@ -263,9 +264,7 @@ class PointsPresenter extends SeriesPresenter {
      * @return array
      */
     private function getGradedTasks() {
-        /**
-         * @var ModelLogin $login
-         */
+        /**@var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
         $person = $login->getPerson();
         if (!$person) {
@@ -273,6 +272,7 @@ class PointsPresenter extends SeriesPresenter {
         }
 
         $taskIds = [];
+        /** @var ModelTask $task */
         foreach ($this->seriesTable->getTasks() as $task) {
             $taskIds[] = $task->task_id;
         }

@@ -2,7 +2,6 @@
 
 namespace Events\Semantics;
 
-use FKSDB\Expressions\EvaluatedExpression;
 use Nette\Application\BadRequestException;
 use Nette\SmartObject;
 

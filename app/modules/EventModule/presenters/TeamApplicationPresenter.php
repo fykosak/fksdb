@@ -2,7 +2,9 @@
 
 namespace EventModule;
 
+use FKSDB\Components\Controls\Fyziklani\SchoolCheckControl;
 use FKSDB\Components\Controls\Fyziklani\SeatingControl;
+use FKSDB\Components\Controls\Schedule\Rests\TeamRestsControl;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
 use FKSDB\Components\Grids\Events\Application\ApplicationGrid;
 use FKSDB\Components\Grids\Events\Application\TeamApplicationGrid;
@@ -20,9 +22,7 @@ use Nette\Application\BadRequestException;
  * @method ModelFyziklaniTeam loadEntity(int $id)
  */
 class TeamApplicationPresenter extends AbstractApplicationPresenter {
-    /**
-     * @var ServiceFyziklaniTeam
-     */
+    /** @var ServiceFyziklaniTeam */
     private $serviceFyziklaniTeam;
 
     /**
@@ -41,16 +41,9 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @return ApplicationGrid
-     * @throws AbortException
-     * @throws BadRequestException
-     */
-    public function createComponentGrid(): AbstractApplicationGrid {
-        return new TeamApplicationGrid($this->getEvent(), $this->getHolder(), $this->getContext());
-    }
-
-    /**
      * @param int $id
+     * @throws BadRequestException
+
      * @throws AbortException
      * @throws BadRequestException
      */
@@ -64,20 +57,45 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
             $rankVisible = false;
         }
         $this->template->rankVisible = $rankVisible;
-        $this->template->toPay = $this->getEntity()->getScheduleRest();
+        $this->template->model = $this->getEntity();
     }
 
     /**
      * @return SeatingControl
      */
-    public function createComponentSeating(): SeatingControl {
+    protected function createComponentSeating(): SeatingControl {
         return new SeatingControl($this->getContext());
+    }
+
+    /**
+     * @return SchoolCheckControl
+     * @throws AbortException
+     * @throws BadRequestException
+     */
+    protected function createComponentSchoolCheck(): SchoolCheckControl {
+        return new SchoolCheckControl($this->getEvent(), $this->getAcYear(), $this->getContext());
+    }
+
+    /**
+     * @return ApplicationGrid
+     * @throws AbortException
+     * @throws BadRequestException
+     */
+    protected function createComponentGrid(): AbstractApplicationGrid {
+        return new TeamApplicationGrid($this->getEvent(), $this->getHolder(), $this->getContext());
+    }
+
+    /**
+     * @return TeamRestsControl
+     */
+    protected function createComponentTeamRestsControl(): TeamRestsControl {
+        return new TeamRestsControl($this->getContext());
     }
 
     /**
      * @return AbstractServiceSingle|ServiceFyziklaniTeam
      */
-    function getORMService(): ServiceFyziklaniTeam {
+    protected function getORMService(): ServiceFyziklaniTeam {
         return $this->serviceFyziklaniTeam;
     }
 }
