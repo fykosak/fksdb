@@ -603,13 +603,12 @@ class ExportPresenter extends SeriesPresenter {
 
         $metadata = $values[self::CONT_META];
         $metadata = FormUtils::emptyStrToNull($metadata);
-        // $this->serviceStoredQuery->updateModel($storedQuery, $metadata);
+        $this->serviceStoredQuery->updateModel($storedQuery, $metadata);
 
         $sqlData = $values[self::CONT_CONSOLE];
-        //  $this->serviceStoredQuery->updateModel($storedQuery, $sqlData);
-        $this->serviceStoredQuery->updateModel2($storedQuery, array_merge($metadata, $sqlData));
+        $this->serviceStoredQuery->updateModel($storedQuery, $sqlData);
 
-        // $this->serviceStoredQuery->save($storedQuery);
+        $this->serviceStoredQuery->save($storedQuery);
 
         $this->serviceMStoredQueryTag->getJoinedService()->getTable()->where([
             'query_id' => $storedQuery->query_id,
@@ -627,18 +626,12 @@ class ExportPresenter extends SeriesPresenter {
             ->where(['query_id' => $storedQuery->query_id])->delete();
 
         foreach ($values[self::CONT_PARAMS_META] as $paramMetaData) {
-            /**
-             * @var ModelStoredQueryParameter $parameter
-             */
-            // $paramMetaData['query_id'] = $storedQuery->query_id;
-           // $parameter = $this->serviceStoredQueryParameter->createNewModel($paramMetaData);
-
             /** @var ModelStoredQueryParameter $parameter */
             $parameter = $this->serviceStoredQueryParameter->createNew($paramMetaData);
             $parameter->setDefaultValue($paramMetaData['default']);
 
-            //$parameter->query_id = $storedQuery->query_id;
-            //$this->serviceStoredQueryParameter->save($parameter);
+            $parameter->query_id = $storedQuery->query_id;
+            $this->serviceStoredQueryParameter->save($parameter);
         }
 
         $this->clearSession();

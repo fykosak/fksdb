@@ -92,10 +92,15 @@ abstract class AbstractServiceMulti implements IService {
     /**
      * @param IModel|AbstractModelMulti $model
      * @param $data
+     * @param bool $alive
      * @return mixed|void
      */
-    public function updateModel(IModel $model, $data) {
-        $this->updateModel2($model, $data);
+    public function updateModel(IModel $model, $data, $alive = true) {
+        if (!$model instanceof $this->modelClassName) {
+            throw new InvalidArgumentException('Service for class ' . $this->modelClassName . ' cannot store ' . get_class($model));
+        }
+        $this->getMainService()->updateModel($model->getMainModel(), $data, $alive);
+        $this->getJoinedService()->updateModel($model->getJoinedModel(), $data, $alive);
     }
 
     /**

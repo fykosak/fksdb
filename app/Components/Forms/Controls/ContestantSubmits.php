@@ -190,7 +190,7 @@ class ContestantSubmits extends BaseControl {
         }
 
         $row = $this->submitService->createNew();
-        $dummySubmit = ModelSubmit::createFromTableRow($row);
+        $dummySubmit = ModelSubmit::createFromActiveRow($row);
         $data = $dummySubmit->toArray();
         foreach ($this->tasks as $tasknr => $task) {
             if (isset($result[$tasknr])) {

@@ -37,7 +37,7 @@ class ServicePerson extends AbstractServiceSingle {
             return null;
         }
         $result = $this->getTable()->where(':person_info.email', $email)->fetch();
-        return $result ? ModelPerson::createFromTableRow($result) : null;
+        return $result ? ModelPerson::createFromActiveRow($result) : null;
     }
 
     /**

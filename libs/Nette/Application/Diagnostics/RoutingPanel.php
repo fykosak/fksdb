@@ -11,9 +11,10 @@
 
 namespace Nette\Application\Diagnostics;
 
-use Nette;
-use Nette\Application\Routers;
-use Tracy\Debugger;
+use Nette,
+	Nette\Application\Routers,
+	Nette\Application\UI\Presenter, // templates
+    Tracy\Debugger;
 use Tracy\IBarPanel;
 
 
@@ -22,8 +23,7 @@ use Tracy\IBarPanel;
  *
  * @author     David Grudl
  */
-
-class RoutingPanel implements IBarPanel
+class RoutingPanel  implements IBarPanel
 {
     use Nette\SmartObject;
 	/** @var Nette\Application\IRouter */
@@ -118,4 +118,5 @@ class RoutingPanel implements IBarPanel
 			'module' => rtrim($module, ':')
 		);
 	}
+
 }

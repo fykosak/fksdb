@@ -33,7 +33,7 @@ class EventPrice extends AbstractPreProcess {
          $ids = $this->getData($modelPayment);
          foreach ($ids as $id) {
              $row = $this->serviceEventParticipant->findByPrimary($id);
-             $model = ModelEventParticipant::createFromTableRow($row);
+             $model = ModelEventParticipant::createFromActiveRow($row);
              $price->add($this->getPriceFromModel($model, $price));
          }*/
         return new Price(0, $modelPayment->currency);
@@ -49,7 +49,7 @@ class EventPrice extends AbstractPreProcess {
         $ids = $this->getData([]);
         foreach ($ids as $id) {
             $row = $this->serviceEventParticipant->findByPrimary($id);
-            $model = ModelEventParticipant::createFromTableRow($row);
+            $model = ModelEventParticipant::createFromActiveRow($row);
             $items[] = [
                 'price' => $this->getPriceFromModel($model, $price),
                 'label' => '',// TODO
