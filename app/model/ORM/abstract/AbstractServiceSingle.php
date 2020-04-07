@@ -10,6 +10,7 @@ use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection as TableSelection;
 use Nette\InvalidStateException;
 use PDOException;
+use Tracy\Debugger;
 use Traversable;
 
 /**
@@ -81,10 +82,10 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     }
 
     /**
-     * @internal Used also in MultiTableSelection.
-     *
      * @param array $data
      * @return AbstractModelSingle
+     * @internal Used also in MultiTableSelection.
+     *
      */
     public function createFromArray(array $data) {
         $className = $this->getModelClassName();
@@ -188,7 +189,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
      * @throws ModelException
      * @deprecated
      */
-    public function save(IModel & $model) {
+    public function save(IModel &$model) {
         $modelClassName = $this->getModelClassName();
         /**
          * @var AbstractModelSingle $model
@@ -209,6 +210,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
                 $result = $model->update($model->getTmpData()) !== false;
             }
         } catch (PDOException $exception) {
+            Debugger::barDump($exception);
             throw new ModelException('Error when storing model.', null, $exception);
         }
         if (!$result) {

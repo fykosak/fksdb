@@ -3,12 +3,23 @@
 namespace FKSDB\ORM;
 
 use Nette\Database\Table\ActiveRow;
+use Nette\Database\Table\Selection;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 abstract class AbstractModelSingle extends ActiveRow implements IModel {
     private $tmpData = [];
+
+    /**
+     * AbstractModelSingle constructor.
+     * @param array $data
+     * @param Selection $table
+     */
+    public function __construct(array $data, Selection $table) {
+        parent::__construct($data, $table);
+        $this->tmpData = $data;
+    }
 
     /**
      * @var bool
@@ -46,6 +57,9 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
      * @return static
      */
     public static function createFromActiveRow(ActiveRow $row): self {
+        if ($row instanceof static) {
+            return $row;
+        }
         $model = new static($row->toArray(), $row->getTable());
         if ($model->getPrimary(false)) {
             $model->setNew(false);
@@ -96,5 +110,13 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
     public function __unset($key) {
         unset($this->tmpData[$key]);
         return parent::__unset($key);
+    }
+
+    /**
+     * @return array|mixed
+     */
+    public function toArray() {
+        $data = parent::toArray();
+        return array_merge($data, $this->tmpData);
     }
 }

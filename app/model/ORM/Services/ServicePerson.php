@@ -45,7 +45,7 @@ class ServicePerson extends AbstractServiceSingle {
      * @return mixed|void
      */
     public function save(IModel &$model) {
-        if (!isset($model->gender)) {
+        if (is_null($model->gender)) {
             $model->inferGender();
         }
         return parent::save($model);
