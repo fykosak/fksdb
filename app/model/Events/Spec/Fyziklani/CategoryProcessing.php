@@ -8,9 +8,11 @@ use Events\Model\Holder\Holder;
 use Events\Processings\AbstractProcessing;
 use Events\SubmitProcessingException;
 use FKSDB\Logging\ILogger;
-use Nette\ArrayHash;
+use FKSDB\ORM\Services\ServiceSchool;
+use FKSDB\YearCalculator;
 use Nette\Forms\Form;
-use YearCalculator;
+use Nette\Utils\ArrayHash;
+
 
 /**
  * Na Fyziklani 2013 jsme se rozhodli pocitat tymum automaticky kategorii ve ktere soutezi podle pravidel.
@@ -21,20 +23,34 @@ use YearCalculator;
 class CategoryProcessing extends AbstractProcessing {
 
     /**
-     * @var YearCalculator
+     * @var \FKSDB\YearCalculator
      */
     private $yearCalculator;
 
     /**
-     * @var \ServiceSchool
+     * @var ServiceSchool
      */
     private $serviceSchool;
 
-    function __construct(YearCalculator $yearCalculator, \ServiceSchool $serviceSchool) {
+    /**
+     * CategoryProcessing constructor.
+     * @param \FKSDB\YearCalculator $yearCalculator
+     * @param ServiceSchool $serviceSchool
+     */
+    function __construct(YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
         $this->yearCalculator = $yearCalculator;
         $this->serviceSchool = $serviceSchool;
     }
 
+    /**
+     * @param $states
+     * @param ArrayHash $values
+     * @param Machine $machine
+     * @param Holder $holder
+     * @param ILogger $logger
+     * @param Form|null $form
+     * @return mixed|void
+     */
     protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
 
         if (!isset($values['team'])) {
@@ -66,7 +82,7 @@ class CategoryProcessing extends AbstractProcessing {
                     continue;
                 }
                 /**
-                 * @var $person \FKSDB\ORM\ModelPerson
+                 * @var \FKSDB\ORM\Models\ModelPerson $person
                  */
                 $person = $baseHolder->getModel()->getMainModel()->person;
                 $history = $person->related('person_history')->where('ac_year', $acYear)->fetch();
@@ -92,40 +108,37 @@ class CategoryProcessing extends AbstractProcessing {
         }
     }
 
+    /**
+     * @param $participants
+     * @return string
+     */
     private function getCategory($participants) {
-        $coefficient_sum = 0;
-        $count_4 = 0;
-        $count_3 = 0;
-        $abroad = 0;
+        $coefficientSum = 0;
+        $count4 = 0;
+        $count3 = 0;
 
         foreach ($participants as $participant) {
-            $country = $this->serviceSchool->getTable()
-                ->select('address.region.country_iso')
-                ->where(['school_id' => $participant['school_id']])->fetch();
-            if (!in_array($country->country_iso, array('CZ', 'SK'))) {
-                $abroad += 1;
-            }
-
             $studyYear = $participant['study_year'];
             $coefficient = ($studyYear >= 1 && $studyYear <= 4) ? $studyYear : 0;
-            $coefficient_sum += $coefficient;
+            $coefficientSum += $coefficient;
 
-            if ($coefficient == 4)
-                $count_4++;
-            else if ($coefficient == 3)
-                $count_3++;
+            if ($coefficient == 4) {
+                $count4++;
+            } elseif ($coefficient == 3) {
+                $count3++;
+            }
         }
 
+        $categoryHandle = $participants ? ($coefficientSum / count($participants)) : 999;
 
-        $category_handle = $participants ? ($coefficient_sum / count($participants)) : 999;
-
-        if ($abroad > 0) {
-            $result = 'F';
-        } else if ($category_handle <= 2 && $count_4 == 0 && $count_3 <= 2) {
+        // if ($abroad > 0) {
+        //     $result = 'F';
+        // } else
+        if ($categoryHandle <= 2 && $count4 == 0 && $count3 <= 2) {
             $result = 'C';
-        } else if ($category_handle <= 3 && $count_4 <= 2) {
+        } elseif ($categoryHandle <= 3 && $count4 <= 2) {
             $result = 'B';
-        } else if ($category_handle <= 4) {
+        } elseif ($categoryHandle <= 4) {
             $result = 'A';
         } else {
             throw new SubmitProcessingException(_('Nelze spočítat kategorii.'));

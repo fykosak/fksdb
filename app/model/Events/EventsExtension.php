@@ -2,7 +2,24 @@
 
 namespace Events;
 
+use Events\Machine\BaseMachine;
+use Events\Machine\Machine;
 use Events\Machine\Transition;
+use Events\Model\Holder\BaseHolder;
+use Events\Model\Holder\Field;
+use Events\Model\Holder\Holder;
+use Events\Model\Holder\SameYearEvent;
+use Events\Semantics\Count;
+use Events\Semantics\EventWas;
+use Events\Semantics\Parameter;
+use Events\Semantics\RegOpen;
+use Events\Semantics\Role;
+use Events\Semantics\State;
+use FKSDB\Components\Forms\Factories\Events\ArrayOptions;
+use FKSDB\Components\Forms\Factories\Events\CheckboxFactory;
+use FKSDB\Components\Forms\Factories\Events\ChooserFactory;
+use FKSDB\Components\Forms\Factories\Events\PersonFactory;
+use FKSDB\Components\Grids\Events\LayoutResolver;
 use FKSDB\Config\Expressions\Helpers;
 use FKSDB\Config\NeonScheme;
 use Nette\Config\CompilerExtension;
@@ -32,13 +49,13 @@ class EventsExtension extends CompilerExtension {
     const HOLDER_PREFIX = 'Holder_';
     const BASE_MACHINE_PREFIX = 'BaseMachine_';
     const BASE_HOLDER_PREFIX = 'BaseHolder_';
-    const CLASS_MACHINE = 'Events\Machine\Machine';
-    const CLASS_BASE_MACHINE = 'Events\Machine\BaseMachine';
-    const CLASS_TRANSITION = 'Events\Machine\Transition';
-    const CLASS_FIELD = 'Events\Model\Holder\Field';
-    const CLASS_BASE_HOLDER = 'Events\Model\Holder\BaseHolder';
-    const CLASS_HOLDER = 'Events\Model\Holder\Holder';
-    const CLASS_RESOLVER = 'FKSDB\Components\Grids\Events\LayoutResolver';
+    const CLASS_MACHINE = Machine::class;
+    const CLASS_BASE_MACHINE = BaseMachine::class;
+    const CLASS_TRANSITION = Transition::class;
+    const CLASS_FIELD = Field::class;
+    const CLASS_BASE_HOLDER = BaseHolder::class;
+    const CLASS_HOLDER = Holder::class;
+    const CLASS_RESOLVER = LayoutResolver::class;
 
     /** @const Maximum length of state identifier. */
     const STATE_SIZE = 20;
@@ -47,17 +64,17 @@ class EventsExtension extends CompilerExtension {
     const NAME_PATTERN = '/[a-z0-9_]/i';
 
     public static $semanticMap = [
-        'RefPerson' => 'FKSDB\Components\Forms\Factories\Events\PersonFactory',
-        'Chooser' => 'FKSDB\Components\Forms\Factories\Events\ChooserFactory',
-        'Checkbox'=> 'FKSDB\Components\Forms\Factories\Events\CheckboxFactory',
-        'Options' => 'FKSDB\Components\Forms\Factories\Events\ArrayOptions',
-        'role' => 'Events\Semantics\Role',
-        'regOpen' => 'Events\Semantics\RegOpen',
-        'eventWas' => 'Events\Semantics\EventWas',
-        'state' => 'Events\Semantics\State',
-        'param' => 'Events\Semantics\Parameter',
-        'parameter' => 'Events\Semantics\Parameter',
-        'count' => 'Events\Semantics\Count',
+        'RefPerson' => PersonFactory::class,
+        'Chooser' => ChooserFactory::class,
+        'Checkbox' => CheckboxFactory::class,
+        'Options' => ArrayOptions::class,
+        'role' => Role::class,
+        'regOpen' => RegOpen::class,
+        'eventWas' => EventWas::class,
+        'state' => State::class,
+        'param' => Parameter::class,
+        'parameter' => Parameter::class,
+        'count' => Count::class,
     ];
     private $scheme;
 
@@ -77,6 +94,10 @@ class EventsExtension extends CompilerExtension {
     private $schemeFile;
     private $baseDefinitions = ['machines' => [], 'holders' => []];
 
+    /**
+     * EventsExtension constructor.
+     * @param $schemaFile
+     */
     function __construct($schemaFile) {
         $this->schemeFile = $schemaFile;
         Helpers::registerSemantic(self::$semanticMap);
@@ -85,7 +106,9 @@ class EventsExtension extends CompilerExtension {
     /*
      * Configuration loading
      */
-
+    /**
+     * @throws \FKSDB\Config\NeonSchemaException
+     */
     public function loadConfiguration() {
         parent::loadConfiguration();
 
@@ -132,6 +155,11 @@ class EventsExtension extends CompilerExtension {
         $this->scheme = $loader->load($this->schemeFile);
     }
 
+    /**
+     * @param $definitionName
+     * @param $baseName
+     * @return mixed
+     */
     private function getBaseMachineConfig($definitionName, $baseName) {
         $key = "$definitionName.$baseName";
         while (!isset($this->baseMachineConfig[$key])) { // 'while' instead of 'if' so that 'break' can be used instead of return
@@ -157,7 +185,7 @@ class EventsExtension extends CompilerExtension {
              */
             $protoConfig = $this->getBaseMachineConfig($protoDefinitionName, $protoBaseName);
             $eventTypeId = $config[$protoDefinitionName]['event_type_id'];
-            $protoConfig['eventRelation'] = new Statement('Events\Model\Holder\SameYearEvent', [$eventTypeId]);
+            $protoConfig['eventRelation'] = new Statement(SameYearEvent::class, [$eventTypeId]);
             $protoConfig['paramScheme'] = $config[$protoDefinitionName]['paramScheme'];
             $this->baseMachineConfig[$key] = ConfigHelpers::merge($baseMachineDef, $protoConfig);
             break;
@@ -165,6 +193,9 @@ class EventsExtension extends CompilerExtension {
         return $this->baseMachineConfig[$key];
     }
 
+    /**
+     * @param $name
+     */
     private function validateConfigName($name) {
         if (!preg_match(self::NAME_PATTERN, $name)) {
             throw new InvalidArgumentException("Section name '$name' in events configuration is invalid.");
@@ -175,6 +206,10 @@ class EventsExtension extends CompilerExtension {
      * Dispatch factories
      */
 
+    /**
+     * @param Method $method
+     * @param $nameCallback
+     */
     private function createDispatchFactoryBody(Method $method, $nameCallback) {
         $method->setBody(NULL);
         $method->addBody('$eventTypeId = $event->event_type_id;');
@@ -217,6 +252,9 @@ class EventsExtension extends CompilerExtension {
         $method->addBody('}');
     }
 
+    /**
+     * @return array
+     */
     private function getTransposedDefinitions() {
         $result = [];
         foreach ($this->definitionsMap as $definitionName => $definition) {
@@ -240,14 +278,17 @@ class EventsExtension extends CompilerExtension {
         $def = $this->getContainerBuilder()->addDefinition(self::MAIN_FACTORY);
         $def->setShared(false);
         $def->setClass(self::CLASS_MACHINE);
-        $def->setParameters(['FKSDB\ORM\ModelEvent event']);
+        $def->setParameters(['FKSDB\ORM\Models\ModelEvent event']);
 
         $def = $this->getContainerBuilder()->addDefinition(self::MAIN_HOLDER);
         $def->setShared(false);
         $def->setClass(self::CLASS_HOLDER);
-        $def->setParameters(['FKSDB\ORM\ModelEvent event']);
+        $def->setParameters(['FKSDB\ORM\Models\ModelEvent event']);
     }
 
+    /**
+     * @param ClassType $class
+     */
     public function afterCompile(ClassType $class) {
         $methodName = Container::getMethodName(self::MAIN_FACTORY, false);
         $method = $class->methods[$methodName];
@@ -293,20 +334,21 @@ class EventsExtension extends CompilerExtension {
 
     private function createFieldFactory() {
         $factory = $this->getContainerBuilder()->addDefinition($this->getFieldName());
-        $factory->setShared(false);
         $factory->setClass(self::CLASS_FIELD, ['%name%', '%label%']);
-        $factory->setInternal(true);
 
         $parameters = array_keys($this->scheme['field']);
         array_unshift($parameters, 'name');
         $factory->setParameters($parameters);
-
         $factory->addSetup('setEvaluator', '@events.expressionEvaluator');
-
-        foreach (Arrays::grep($parameters, "/^name|label$/", PREG_GREP_INVERT) as $parameter) {
-            $factory->addSetup('set' . ucfirst($parameter), "%$parameter%");
+        foreach ($parameters as $parameter) {
+            switch ($parameter) {
+                case 'name':
+                case 'label':
+                    break;
+                default:
+                    $factory->addSetup('set' . ucfirst($parameter), "%$parameter%");
+            }
         }
-
         $this->fieldFactory = $factory;
     }
 
@@ -314,6 +356,11 @@ class EventsExtension extends CompilerExtension {
      * Specialized machine factories
      */
 
+    /**
+     * @param $name
+     * @param $definition
+     * @throws \FKSDB\Config\NeonSchemaException
+     */
     private function createMachineFactory($name, $definition) {
         $machineDef = NeonScheme::readSection($definition['machine'], $this->scheme['machine']);
 
@@ -366,6 +413,13 @@ class EventsExtension extends CompilerExtension {
         $factory->addSetup('freeze');
     }
 
+    /**
+     * @param $name
+     * @param $baseName
+     * @param $definition
+     * @return \Nette\DI\ServiceDefinition
+     * @throws \FKSDB\Config\NeonSchemaException
+     */
     private function createBaseMachineFactory($name, $baseName, $definition) {
         $factoryName = $this->getBaseMachineName($name, $baseName);
         $factory = $this->getContainerBuilder()->addDefinition($factoryName);
@@ -408,6 +462,11 @@ class EventsExtension extends CompilerExtension {
      * Specialized data factories
      */
 
+    /**
+     * @param $name
+     * @param $definition
+     * @throws \FKSDB\Config\NeonSchemaException
+     */
     private function createHolderFactory($name, $definition) {
         $machineDef = NeonScheme::readSection($definition['machine'], $this->scheme['machine']);
 
@@ -419,7 +478,7 @@ class EventsExtension extends CompilerExtension {
         $factory->setShared(false);
         $factory->setClass(self::CLASS_HOLDER);
         $factory->setInternal(true);
-        $factory->setParameters(['FKSDB\ORM\ModelEvent event']);
+        $factory->setParameters(['FKSDB\ORM\Models\ModelEvent event']);
 
         /*
          * Create and add base machines into the machine (i.e. creating instances).
@@ -457,10 +516,16 @@ class EventsExtension extends CompilerExtension {
         }
 
 
-
         $factory->addSetup('freeze');
     }
 
+    /**
+     * @param $definitionName
+     * @param $baseName
+     * @param $definition
+     * @return \Nette\DI\ServiceDefinition
+     * @throws \FKSDB\Config\NeonSchemaException
+     */
     private function createBaseHolderFactory($definitionName, $baseName, $definition) {
         $factoryName = $this->getBaseHolderName($definitionName, $baseName);
         $factory = $this->getContainerBuilder()->addDefinition($factoryName);
@@ -513,9 +578,8 @@ class EventsExtension extends CompilerExtension {
 
 
             array_unshift($fieldDef, $name);
-            $defka = $this->fieldFactory;
-            $stmt = new Statement($defka, $fieldDef);
-            $factory->addSetup('addField', $stmt);
+
+            $factory->addSetup('addField', new Statement($this->fieldFactory, $fieldDef));
         }
 
         $factory->addSetup('inferEvent', '%event%'); // must be after setParamScheme
@@ -527,32 +591,60 @@ class EventsExtension extends CompilerExtension {
      * Naming
      */
 
+    /**
+     * @param $name
+     * @return string
+     */
     private function getMachineName($name) {
         return $this->prefix(self::MACHINE_PREFIX . $name);
     }
 
+    /**
+     * @param $name
+     * @return string
+     */
     private function getHolderName($name) {
         return $this->prefix(self::HOLDER_PREFIX . $name);
     }
 
+    /**
+     * @param $name
+     * @param $baseName
+     * @return string
+     */
     private function getBaseMachineName($name, $baseName) {
         return $this->prefix(self::BASE_MACHINE_PREFIX . $name . '_' . $baseName);
     }
 
+    /**
+     * @param $name
+     * @param $baseName
+     * @return string
+     */
     private function getBaseHolderName($name, $baseName) {
         return $this->prefix(self::BASE_HOLDER_PREFIX . $name . '_' . $baseName);
     }
 
+    /**
+     * @return string
+     */
     private function getTransitionName() {
         return $this->prefix(self::TRANSITION_FACTORY);
     }
 
+    /**
+     * @return string
+     */
     private function getFieldName() {
         return $this->prefix(self::FIELD_FACTORY);
     }
 
 }
 
+/**
+ * Class MachineDefinitionException
+ * @package Events
+ */
 class MachineDefinitionException extends InvalidStateException {
 
 }

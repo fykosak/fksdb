@@ -4,6 +4,7 @@ namespace FKSDB\Components\Forms\Rules;
 
 use FKSDB\Components\Forms\Controls\WriteOnlyInput;
 use Nette\Forms\Controls\BaseControl;
+use Nette\OutOfRangeException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -14,10 +15,14 @@ use Nette\Forms\Controls\BaseControl;
  */
 class BornNumber {
 
+    /**
+     * @param BaseControl $control
+     * @return bool
+     */
     public function __invoke(BaseControl $control) {
         $rc = $control->getValue();
         // suppose once validated is always valid
-        if($rc == WriteOnlyInput::VALUE_ORIGINAL) {
+        if ($rc == WriteOnlyInput::VALUE_ORIGINAL) {
             return true;
         }
         $matches = [];
@@ -35,9 +40,10 @@ class BornNumber {
 
         // kontrolní číslice
         $mod = ($year . $month . $day . $ext) % 11;
-        if ($mod === 10)
+        if ($mod === 10) {
             $mod = 0;
-        if ($mod !== (int) $c) {
+        }
+        if ($mod !== (int)$c) {
             return FALSE;
         }
 
@@ -48,12 +54,15 @@ class BornNumber {
         $year += $year < 54 ? 2000 : 1900;
 
         // k měsíci může být připočteno 20, 50 nebo 70
-        if ($month > 70 && $year > 2003)
+        if ($month > 70 && $year > 2003) {
             $month -= 70;
-        elseif ($month > 50)
+        }
+        elseif ($month > 50) {
             $month -= 50;
-        elseif ($month > 20 && $year > 2003)
+        }
+        elseif ($month > 20 && $year > 2003) {
             $month -= 20;
+        }
 
         if (!checkdate($month, $day, $year)) {
             return FALSE;
@@ -64,6 +73,30 @@ class BornNumber {
 
         // cislo je OK
         return TRUE;
+    }
+
+    /**
+     * @param string $bornNumber
+     * @return string
+     * @throws OutOfRangeException
+     */
+    public static function getGender(string $bornNumber): string {
+        if (!preg_match('#^\s*(\d\d)(\d\d)(\d\d)[ /]*(\d\d\d)(\d?)\s*$#', $bornNumber, $matches)) {
+            throw new OutOfRangeException('Born number not match');
+        }
+
+        list(, , $month, , , $control) = $matches;
+
+        // do roku 1954 přidělovaná devítimístná RČ nelze ověřit
+        if ($control === '') {
+            throw new OutOfRangeException('Born number before 1954');
+        }
+        if ($month > 50) {
+            return 'F';
+        }
+        else {
+            return 'M';
+        }
     }
 
 }

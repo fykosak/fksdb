@@ -6,7 +6,7 @@ $(document).ready(function() {
             el.text('-'); //TODO
             return el;
         } else {
-            var el = $('<input type="text">');
+            var el = $('<input type="number" class="form-control">');
             el.attr('placeholder', 'Úloha ' + taskData.task.label);
 
             el.change(function() {
@@ -29,7 +29,7 @@ $(document).ready(function() {
     $("input.points").submitFields({
         createElements: function(taskData, allData, dataEl, containerEl) {
             var substEl = createElement(taskData, dataEl, allData);
-            substEl.addClass('points-field');
+            substEl.addClass('points-field col');
             containerEl.append(substEl);
         }
     });

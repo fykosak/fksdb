@@ -32,11 +32,19 @@ class ReadonlyGlobalSession implements IGlobalSession {
      */
     private $data = [];
 
+    /**
+     * ReadonlyGlobalSession constructor.
+     * @param PDO $connection
+     * @param IGSIDHolder $gsidHolder
+     */
     function __construct(PDO $connection, IGSIDHolder $gsidHolder) {
         $this->connection = $connection;
         $this->gsidHolder = $gsidHolder;
     }
 
+    /**
+     * @return string
+     */
     public function getId() {
         return $this->gsidHolder->getGSID();
     }
@@ -53,7 +61,7 @@ class ReadonlyGlobalSession implements IGlobalSession {
             and until >= now()';
 
         $stmt = $this->connection->prepare($sql);
-        $stmt->execute(array($gsid));
+        $stmt->execute([$gsid]);
 
         $row = $stmt->fetch();
 
@@ -72,18 +80,33 @@ class ReadonlyGlobalSession implements IGlobalSession {
      * ArrayAccess
      */
 
+    /**
+     * @param mixed $offset
+     * @return bool
+     */
     public function offsetExists($offset) {
         return isset($this->data[$offset]);
     }
 
+    /**
+     * @param mixed $offset
+     * @return mixed
+     */
     public function offsetGet($offset) {
         return $this->data[$offset];
     }
 
+    /**
+     * @param mixed $offset
+     * @param mixed $value
+     */
     public function offsetSet($offset, $value) {
         throw new LogicException("This session is read-only.");
     }
 
+    /**
+     * @param mixed $offset
+     */
     public function offsetUnset($offset) {
         throw new LogicException("This session is read-only.");
     }

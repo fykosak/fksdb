@@ -1,0 +1,10 @@
+{foreach $data as $section}
+    {if isset($section['headline'])}
+        <h2>{_($section['headline'])}</h2>
+    {/if}
+    {foreach $section['fields'] as $field}
+        {var $def = FKSDB\Components\Forms\Factories\TableReflectionFactory::parseRow($field)}
+        {control valuePrinter:row $def[0].'.'.$def[1], $model}
+    {/foreach}
+    <hr/>
+{/foreach}

@@ -28,16 +28,25 @@ abstract class Stage {
      */
     abstract public function getOutput();
 
+    /**
+     * @return Pipeline
+     */
     public function getPipeline() {
         return $this->pipeline;
     }
 
+    /**
+     * @param Pipeline $pipeline
+     */
     public function setPipeline(Pipeline $pipeline) {
         $this->pipeline = $pipeline;
     }
 
+    /**
+     * @param $message
+     * @param string $level
+     */
     protected function log(string $message, string $level = ILogger::INFO) {
         $this->getPipeline()->log($message, $level);
     }
-
 }

@@ -2,13 +2,13 @@
 
 namespace Authentication;
 
-use FKSDB\ORM\ModelPerson;
-use Nette\Security\AuthenticationException;
+use FKSDB\ORM\Models\ModelLogin;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Services\ServiceLogin;
+use FKSDB\ORM\Services\ServicePerson;
+use FKSDB\YearCalculator;
 use Nette\Security\IAuthenticator;
 use Nette\Security\IIdentity;
-use ServiceLogin;
-use ServicePerson;
-use YearCalculator;
 
 /**
  * Users authenticator.
@@ -20,6 +20,12 @@ class PasswordAuthenticator extends AbstractAuthenticator implements IAuthentica
      */
     private $servicePerson;
 
+    /**
+     * PasswordAuthenticator constructor.
+     * @param \FKSDB\ORM\Services\ServiceLogin $serviceLogin
+     * @param \FKSDB\YearCalculator $yearCalculator
+     * @param ServicePerson $servicePerson
+     */
     function __construct(ServiceLogin $serviceLogin, YearCalculator $yearCalculator, ServicePerson $servicePerson) {
         parent::__construct($serviceLogin, $yearCalculator);
         $this->servicePerson = $servicePerson;
@@ -29,7 +35,10 @@ class PasswordAuthenticator extends AbstractAuthenticator implements IAuthentica
      * Performs an authentication.
      * @param array $credentials
      * @return IIdentity
-     * @throws AuthenticationException
+     * @throws InactiveLoginException
+     * @throws InvalidCredentialsException
+     * @throws NoLoginException
+     * @throws UnknownLoginException
      */
     public function authenticate(array $credentials) {
         list($id, $password) = $credentials;
@@ -47,12 +56,19 @@ class PasswordAuthenticator extends AbstractAuthenticator implements IAuthentica
         return $login;
     }
 
+    /**
+     * @param $id
+     * @return ModelLogin
+     * @throws InactiveLoginException
+     * @throws NoLoginException
+     * @throws UnknownLoginException
+     */
     public function findLogin($id) {
         $row = $this->servicePerson->getTable()->where('person_info:email = ?', $id)->fetch();
         $login = null;
 
         if ($row) {
-            $person = ModelPerson::createFromTableRow($row);
+            $person = ModelPerson::createFromActiveRow($row);
             $login = $person->getLogin();
             if (!$login) {
                 throw new NoLoginException();
@@ -75,7 +91,7 @@ class PasswordAuthenticator extends AbstractAuthenticator implements IAuthentica
 
     /**
      * @param string $password
-     * @param \FKSDB\ORM\ModelLogin $login
+     * @param \FKSDB\ORM\Models\ModelLogin $login
      * @return string
      */
     public static function calculateHash($password, $login) {

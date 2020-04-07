@@ -11,11 +11,17 @@ namespace FKSDB\Logging;
  */
 interface ILogger {
 
-    const ERROR = 0;
-    const WARNING = 10;
-    const SUCCESS = 20;
-    const INFO = 30;
+    const ERROR = 'danger';
+    const WARNING = 'warning';
+    const SUCCESS = 'success';
+    const INFO = 'info';
+    const PRIMARY = 'primary';
     const DEBUG = 40;
 
+    /**
+     * @param string $message
+     * @param string $level
+     * @return mixed
+     */
     public function log($message, $level = self::INFO);
 }

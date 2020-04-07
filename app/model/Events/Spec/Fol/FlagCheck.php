@@ -2,14 +2,14 @@
 
 namespace Events\Spec\Fol;
 
-use Events\FormAdjustments\IFormAdjustment;
 use Events\FormAdjustments\AbstractAdjustment;
+use Events\FormAdjustments\IFormAdjustment;
 use Events\Machine\Machine;
 use Events\Model\Holder\Holder;
+use FKSDB\ORM\Services\ServicePersonHistory;
+use FKSDB\ORM\Services\ServiceSchool;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
-use ServiceSchool;
-use ServicePersonHistory;
 
 /**
  * More user friendly Due to author's laziness there's no class doc (or it's self explaining).
@@ -19,7 +19,7 @@ use ServicePersonHistory;
 class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
 
     /**
-     * @var ServiceSchool
+     * @var \FKSDB\ORM\Services\ServiceSchool
      */
     private $serviceSchool;
 
@@ -33,19 +33,36 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
      */
     private $holder;
 
+    /**
+     * @return Holder
+     */
     public function getHolder() {
         return $this->holder;
     }
 
+    /**
+     * @param Holder $holder
+     */
     public function setHolder(Holder $holder) {
         $this->holder = $holder;
     }
 
+    /**
+     * FlagCheck constructor.
+     * @param ServiceSchool $serviceSchool
+     * @param ServicePersonHistory $servicePersonHistory
+     */
     function __construct(ServiceSchool $serviceSchool, ServicePersonHistory $servicePersonHistory) {
         $this->serviceSchool = $serviceSchool;
         $this->servicePersonHistory = $servicePersonHistory;
     }
 
+    /**
+     * @param Form $form
+     * @param Machine $machine
+     * @param Holder $holder
+     * @return mixed|void
+     */
     protected function _adjust(Form $form, Machine $machine, Holder $holder) {
         $this->setHolder($holder);
         $schoolControls = $this->getControl('p*.person_id.person_history.school_id');
@@ -92,6 +109,11 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
 //                };
     }
 
+    /**
+     * @param $studyYearControl
+     * @param $personControl
+     * @return bool|mixed|\Nette\Database\Table\ActiveRow|\Nette\Database\Table\Selection|null
+     */
     private function getStudyYear($studyYearControl, $personControl) {
         if($studyYearControl->getValue()) {
             return $studyYearControl->getValue();
@@ -104,6 +126,11 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
         return $personHistory->study_year;
     }
 
+    /**
+     * @param $schoolControl
+     * @param $personControl
+     * @return bool|mixed|\Nette\Database\Table\ActiveRow|\Nette\Database\Table\Selection|null
+     */
     private function getSchoolId($schoolControl, $personControl) {
         if($schoolControl->getValue()) {
             return $schoolControl->getValue();
@@ -116,16 +143,24 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
         return $school->school_id;
     }
 
-    private function isCzSkSchool($school_id) {
-        $country = $this->serviceSchool->getTable()->select('address.region.country_iso')->where(['school_id' => $school_id])->fetch();
+    /**
+     * @param $schoolId
+     * @return bool
+     */
+    private function isCzSkSchool($schoolId) {
+        $country = $this->serviceSchool->getTable()->select('address.region.country_iso')->where(['school_id' => $schoolId])->fetch();
         if (in_array($country->country_iso, ['CZ', 'SK'])) {
             return true;
         }
         return false;
     }
 
-    private function isStudent($study_year) {
-        return ($study_year === null) ? false : true;
+    /**
+     * @param $studyYear
+     * @return bool
+     */
+    private function isStudent($studyYear) {
+        return ($studyYear === null) ? false : true;
     }
 
 }

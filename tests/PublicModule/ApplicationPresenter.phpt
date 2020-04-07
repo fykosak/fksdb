@@ -4,7 +4,7 @@ $container = require '../bootstrap.php';
 
 use Events\EventTestCase;
 use Nette\Application\Request;
-use Nette\DateTime;
+use Nette\Utils\DateTime;
 use Nette\DI\Container;
 use PublicModule\ApplicationPresenter;
 use Tester\Assert;

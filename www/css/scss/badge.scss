@@ -1,0 +1,53 @@
+@mixin badge($color,$background) {
+  color: $color;
+  background-color: $background;
+}
+
+.badge-1 {
+  @include badge(white, #1f77b4);
+}
+
+/* style 2 */
+.badge-2 {
+  @include badge(black, #ff7f0e);
+}
+
+/* style 3 */
+.badge-3 {
+  @include badge(white, #2ca02c)
+}
+
+/* style 4 */
+.badge-4 {
+  @include badge(white, #d62728);
+}
+
+/* style 5 */
+.badge-5 {
+  @include badge(white, #9467bd)
+}
+
+/* style 6 */
+.badge-6 {
+  @include badge(white, #8c564b);
+}
+
+/* style 7 */
+.badge-7 {
+  @include badge(black, #e377c2);
+}
+
+/* style 8 */
+.badge-8 {
+  @include badge(black, #cccccc);
+}
+
+/* style 9 */
+.badge-9 {
+  @include badge(black, #bcbd22)
+}
+
+/* style 10 */
+.badge-10 {
+  @include badge(black, #17becf)
+}

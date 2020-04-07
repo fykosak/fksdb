@@ -2,15 +2,16 @@
 
 namespace Tasks\Legacy;
 
-use Nette\DateTime;
+use FKSDB\ORM\Models\ModelTask;
+use FKSDB\ORM\Services\ServiceTask;
+use Nette\Utils\DateTime;
 use Pipeline\PipelineException;
 use Pipeline\Stage;
-use ServiceTask;
 use Tasks\SeriesData;
 
 /**
  * @note Assumes TasksFromXML has been run previously.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class DeadlineFromXML extends Stage {
@@ -21,10 +22,10 @@ class DeadlineFromXML extends Stage {
     private $data;
 
     /**
-     * @var ServiceTask
+     * @var \FKSDB\ORM\Services\ServiceTask
      */
     private $taskService;
-    private static $months = array(
+    private static $months = [
         'ledna' => '1.',
         'února' => '2.',
         'března' => '3.',
@@ -37,12 +38,19 @@ class DeadlineFromXML extends Stage {
         'října' => '10.',
         'listopadu' => '11.',
         'prosince' => '12.',
-    );
+    ];
 
+    /**
+     * DeadlineFromXML constructor.
+     * @param \FKSDB\ORM\Services\ServiceTask $taskService
+     */
     function __construct(ServiceTask $taskService) {
         $this->taskService = $taskService;
     }
 
+    /**
+     * @return mixed|SeriesData
+     */
     public function getOutput() {
         return $this->data;
     }
@@ -54,20 +62,25 @@ class DeadlineFromXML extends Stage {
         }
 
         $deadline = $this->datetimeFromString($XMLproblems['deadline']);
-
+        /**
+         * @var ModelTask $task
+         */
         foreach ($this->data->getTasks() as $task) {
             $task->submit_deadline = $deadline;
             $this->taskService->save($task);
         }
     }
 
+    /**
+     * @param mixed $data
+     */
     public function setInput($data) {
         $this->data = $data;
     }
 
     /**
      * @param string $string
-     * @return DateTime
+     * @return \DateTime
      */
     private function datetimeFromString($string) {
         $compactString = strtr($string, '~', ' ');

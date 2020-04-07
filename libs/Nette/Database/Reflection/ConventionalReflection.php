@@ -21,8 +21,9 @@ use Nette;
  * @author     Jan Skrasek
  * @property-write Nette\Database\Connection $connection
  */
-class ConventionalReflection extends Nette\Object implements Nette\Database\IReflection
+class ConventionalReflection implements Nette\Database\IReflection
 {
+    use Nette\SmartObject;
 	/** @var string */
 	protected $primary;
 

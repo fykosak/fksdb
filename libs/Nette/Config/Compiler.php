@@ -24,8 +24,9 @@ use Nette,
  * @property-read Nette\DI\ContainerBuilder $containerBuilder
  * @property-read array $config
  */
-class Compiler extends Nette\Object
+class Compiler
 {
+    use Nette\SmartObject;
 	/** @var CompilerExtension[] */
 	private $extensions = array();
 

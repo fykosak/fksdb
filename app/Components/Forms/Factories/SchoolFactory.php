@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
-use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\SchoolProvider;
 use Nette\Forms\Form;
 
@@ -21,12 +21,18 @@ class SchoolFactory {
      */
     private $schoolProvider;
 
+    /**
+     * SchoolFactory constructor.
+     * @param SchoolProvider $schoolProvider
+     */
     function __construct(SchoolProvider $schoolProvider) {
         $this->schoolProvider = $schoolProvider;
     }
 
-
-    public function createSchool() {
+    /**
+     * @return ModelContainer
+     */
+    public function createSchool(): ModelContainer {
         $container = new ModelContainer();
         $container->addText('name_full', _('Plný název'))
             ->addRule(Form::MAX_LENGTH, null, 255)
@@ -62,7 +68,11 @@ class SchoolFactory {
         return $container;
     }
 
-    public function createSchoolSelect($options = 0) {
+    /**
+     * @param int $options
+     * @return AutocompleteSelectBox
+     */
+    public function createSchoolSelect($options = 0): AutocompleteSelectBox {
         $schoolElement = new AutocompleteSelectBox(true, _('Škola'));
         $schoolElement->setDataProvider($this->schoolProvider);
         if ($options & self::SHOW_UNKNOWN_SCHOOL_HINT) {

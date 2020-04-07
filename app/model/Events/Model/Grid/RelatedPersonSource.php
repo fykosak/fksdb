@@ -3,10 +3,10 @@
 namespace Events\Model\Grid;
 
 use Events\UndeclaredEventException;
-use FKSDB\ORM\ModelEvent;
-use FKSDB\ORM\ModelPerson;
-use ORM\Tables\TypedTableSelection;
-use SystemContainer;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Tables\TypedTableSelection;
+use Nette\DI\Container;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -21,21 +21,31 @@ use SystemContainer;
 class RelatedPersonSource extends AggregatedPersonSource implements IHolderSource {
 
     /**
-     * @var ModelPerson
+     * @var \FKSDB\ORM\Models\ModelPerson
      */
     private $person;
 
-    function __construct(ModelPerson $person, TypedTableSelection $events, SystemContainer $container) {
+    /**
+     * RelatedPersonSource constructor.
+     * @param \FKSDB\ORM\Models\ModelPerson $person
+     * @param \FKSDB\ORM\Tables\TypedTableSelection $events
+     * @param Container $container
+     */
+    function __construct(ModelPerson $person, TypedTableSelection $events, Container $container) {
         parent::__construct($events, $container);
         $this->person = $person;
     }
 
+    /**
+     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @return SingleEventSource|null
+     */
     public function processEvent(ModelEvent $event) {
         $personId = $this->person->getPrimary();
 
 	try {
             $eventSource = new SingleEventSource($event, $this->container);
-	} catch (UndeclaredEventException $e) {
+	} catch (UndeclaredEventException $exception) {
 	    return null;
 	}
 

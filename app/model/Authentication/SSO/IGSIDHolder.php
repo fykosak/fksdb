@@ -11,5 +11,9 @@ interface IGSIDHolder {
 
     public function getGSID();
 
+    /**
+     * @param $gsid
+     * @return mixed
+     */
     public function setGSID($gsid);
 }

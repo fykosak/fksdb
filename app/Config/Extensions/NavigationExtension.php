@@ -2,6 +2,7 @@
 
 namespace FKSDB\Config\Extensions;
 
+use FKSDB\Components\Controls\Navigation\Navigation;
 use Nette\Config\CompilerExtension;
 
 /**
@@ -22,7 +23,7 @@ class NavigationExtension extends CompilerExtension {
             'structure' => [],
         ]);
         $navbar = $builder->addDefinition('navbar')
-                ->setClass('FKSDB\Components\Controls\Navigation\Navigation');
+            ->setClass(Navigation::class);
         $navbar->setShared(true)->setAutowired(true);
 
 
@@ -36,6 +37,11 @@ class NavigationExtension extends CompilerExtension {
         $navbar->addSetup('$service->setStructure(?);', [$config['structure']]);
     }
 
+    /**
+     * @param $navbar
+     * @param $nodeId
+     * @param array $arguments
+     */
     private function createNode($navbar, $nodeId, $arguments = []) {
         if (!isset($arguments['link'])) {
             $this->parseIdAsLink($nodeId, $arguments);
@@ -45,6 +51,11 @@ class NavigationExtension extends CompilerExtension {
         $navbar->addSetup('$service->createNode(?, ?);', [$nodeId, $arguments]);
     }
 
+    /**
+     * @param $structure
+     * @param $navbar
+     * @param null $parent
+     */
     private function createFromStructure($structure, $navbar, $parent = null) {
         foreach ($structure as $nodeId => $children) {
             if (is_array($children)) {
@@ -55,7 +66,7 @@ class NavigationExtension extends CompilerExtension {
                     }
                 }
                 $this->createFromStructure($children, $navbar, $nodeId);
-            } else if (!is_array($children)) {
+            } elseif (!is_array($children)) {
                 $nodeId = $children;
                 if (!isset($this->createdNodes[$nodeId])) {
                     $this->createNode($navbar, $nodeId);
@@ -67,6 +78,10 @@ class NavigationExtension extends CompilerExtension {
         }
     }
 
+    /**
+     * @param $nodeId
+     * @param $arguments
+     */
     private function parseIdAsLink($nodeId, &$arguments) {
         $FQAction = str_replace('.', ':', $nodeId);
         $a = strrpos($FQAction, ':');

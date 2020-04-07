@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Forms\Containers;
 
-use AbstractModelMulti;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
+use FKSDB\ORM\AbstractModelMulti;
 use Nette\Database\Table\ActiveRow;
 
 /**
@@ -13,6 +13,11 @@ use Nette\Database\Table\ActiveRow;
  */
 class ModelContainer extends ContainerWithOptions {
 
+    /**
+     * @param $values
+     * @param bool $erase
+     * @return \Nette\Forms\Container|void
+     */
     public function setValues($values, $erase = FALSE) {
         if ($values instanceof ActiveRow || $values instanceof AbstractModelMulti) {
             $values = $values->toArray();
@@ -20,6 +25,9 @@ class ModelContainer extends ContainerWithOptions {
         parent::setValues($values, $erase);
     }
 
+    /**
+     * @param bool $value
+     */
     public function setDisabled($value = true) {
         foreach ($this->getComponents() as $component) {
             $component->setDisabled($value);
@@ -27,5 +35,3 @@ class ModelContainer extends ContainerWithOptions {
     }
 
 }
-
-?>

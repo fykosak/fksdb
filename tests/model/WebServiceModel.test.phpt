@@ -2,6 +2,7 @@
 
 $container = require '../bootstrap.php';
 
+use FKSDB\WebService\WebServiceModel;
 use Nette\DI\Container;
 use Tester\Assert;
 
@@ -53,8 +54,8 @@ class WebServiceModelTest extends DatabaseTestCase {
             'brojure' => '1 2 3 4 5 6',
         );
         $result = $this->fixture->GetResults((object) $resultsReq);
-        
-        Assert::type('SoapVar', $result);        
+
+        Assert::type('SoapVar', $result);
     }
 
 }

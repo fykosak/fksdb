@@ -25,10 +25,17 @@ class TokenGSIDHolder implements IGSIDHolder {
     private $connection;
     private $cachedGSID = false;
 
+    /**
+     * TokenGSIDHolder constructor.
+     * @param PDO $connection
+     */
     function __construct(PDO $connection) {
         $this->connection = $connection;
     }
 
+    /**
+     * @return bool|null
+     */
     public function getGSID() {
         if ($this->cachedGSID === false) {
             if (isset($_GET[self::URL_PARAM])) {
@@ -45,6 +52,9 @@ class TokenGSIDHolder implements IGSIDHolder {
         return $this->cachedGSID;
     }
 
+    /**
+     * @param $gsid
+     */
     public function setGSID($gsid) {
         if ($gsid) {
             $_SESSION[self::SESSION_KEY] = $gsid;
@@ -55,6 +65,10 @@ class TokenGSIDHolder implements IGSIDHolder {
         }
     }
 
+    /**
+     * @param $token
+     * @return null
+     */
     private function getGSIDFromDB($token) {
         $sql = 'SELECT data FROM `' . self::TABLE . '`
             where token = ?
@@ -62,7 +76,7 @@ class TokenGSIDHolder implements IGSIDHolder {
             and (until is null or until >= now())';
 
         $stmt = $this->connection->prepare($sql);
-        $stmt->execute(array($token));
+        $stmt->execute([$token]);
 
         $row = $stmt->fetch();
         if (!$row) {

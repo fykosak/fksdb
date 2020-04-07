@@ -1,0 +1,27 @@
+<h2>{_'Schedule item'}</h2>
+<div>
+    <div class="row">
+        <b class="col-2">{_'Id'}</b>
+        <span class="col-10">#{$model->schedule_item_id}</span>
+    </div>
+    <div class="row">
+        <b class="col-2">{_'Schedule group'}</b>
+        <span class="col-10">
+                <a href="{plink group id=>$model->schedule_group_id}" }>
+                    {sprintf(_('Schedule group #%s'),$model->schedule_group_id)}</a>
+        </span>
+    </div>
+    {control valuePrinter:row 'schedule_item.price_eur', $model}
+    {control valuePrinter:row 'schedule_item.price_czk',$model}
+
+    {control valuePrinter:row 'schedule_item.name_cs', $model}
+    {control valuePrinter:row 'schedule_item.name_en',$model}
+
+    {control valuePrinter:row 'schedule_item.description_cs', $model}
+    {control valuePrinter:row 'schedule_item.description_en', $model}
+
+    {control valuePrinter:row 'schedule_item.capacity', $model}
+    {control valuePrinter:row 'schedule_item.used_capacity', $model}
+    {control valuePrinter:row 'schedule_item.free_capacity', $model}
+    {control valuePrinter:row 'schedule_item.require_id_number', $model}
+</div>

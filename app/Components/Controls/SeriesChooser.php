@@ -2,11 +2,11 @@
 
 namespace FKSDB\Components\Controls;
 
+use FKSDB\ORM\Services\ServiceContest;
+use FKSDB\SeriesCalculator;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
 use Nette\Localization\ITranslator;
-use SeriesCalculator;
-use ServiceContest;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -29,7 +29,7 @@ class SeriesChooser extends Control {
     private $seriesCalculator;
 
     /**
-     * @var ServiceContest
+     * @var \FKSDB\ORM\Services\ServiceContest
      */
     private $serviceContest;
 
@@ -53,6 +53,13 @@ class SeriesChooser extends Control {
      */
     private $valid;
 
+    /**
+     * SeriesChooser constructor.
+     * @param Session $session
+     * @param SeriesCalculator $seriesCalculator
+     * @param \FKSDB\ORM\Services\ServiceContest $serviceContest
+     * @param ITranslator $translator
+     */
     function __construct(Session $session, SeriesCalculator $seriesCalculator, ServiceContest $serviceContest, ITranslator $translator) {
         parent::__construct();
         $this->session = $session;
@@ -61,11 +68,17 @@ class SeriesChooser extends Control {
         $this->translator = $translator;
     }
 
+    /**
+     * @return bool
+     */
     public function isValid() {
         $this->init();
         return $this->valid;
     }
 
+    /**
+     * @return int
+     */
     public function getSeries() {
         $this->init();
         return $this->series;
@@ -101,7 +114,7 @@ class SeriesChooser extends Control {
 
         // 3) default (last resort)
         if (!$series || !$this->isValidSeries($series)) {
-            $series = $this->seriesCalculator->getCurrentSeries($contest, $year);
+            $series = $this->seriesCalculator->getCurrentSeries($contest);
         }
 
         $this->series = $series;
@@ -125,6 +138,10 @@ class SeriesChooser extends Control {
         $this->template->render();
     }
 
+    /**
+     * @param $contestId
+     * @throws \Nette\Application\AbortException
+     */
     public function handleChange($contestId) {
         $presenter = $this->getPresenter();
         $backupYear = null;
@@ -140,9 +157,9 @@ class SeriesChooser extends Control {
         }
 
         if ($backupYear && $backupYear != $year) {
-            $presenter->redirect('this', array('contestId' => $contestId, 'year' => $year));
+            $presenter->redirect('this', ['contestId' => $contestId, 'year' => $year]);
         } else {
-            $presenter->redirect('this', array('contestId' => $contestId));
+            $presenter->redirect('this', ['contestId' => $contestId]);
         }
     }
 
@@ -162,10 +179,18 @@ class SeriesChooser extends Control {
         }
     }
 
+    /**
+     * @param $series
+     * @return bool
+     */
     private function isValidSeries($series) {
         return in_array($series, $this->getAllowedSeries());
     }
 
+    /**
+     * @param null $class
+     * @return \Nette\Templating\ITemplate
+     */
     protected function createTemplate($class = NULL) {
         $template = parent::createTemplate($class);
         $template->setTranslator($this->translator);

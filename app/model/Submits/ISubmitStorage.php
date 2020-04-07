@@ -1,8 +1,8 @@
 <?php
 
-namespace Submits;
+namespace FKSDB\Submits;
 
-use FKSDB\ORM\ModelSubmit;
+use FKSDB\ORM\Models\ModelSubmit;
 
 
 /**
@@ -22,7 +22,7 @@ interface ISubmitStorage {
     public function beginTransaction();
 
     /**
-     * @throws SubmitStorageException for unsuccessful commit
+     * @throws StorageException for unsuccessful commit
      * @return void
      */
     public function commit();
@@ -33,7 +33,7 @@ interface ISubmitStorage {
     public function rollback();
 
     /**
-     * @param \Submits\IStorageProcessing $processing
+     * @param IStorageProcessing $processing
      * @return void
      */
     public function addProcessing(IStorageProcessing $processing);
@@ -49,22 +49,22 @@ interface ISubmitStorage {
 
     /**
      *
-     * @param \FKSDB\ORM\ModelSubmit $submit
-     * @param enum $type
+     * @param ModelSubmit $submit
+     * @param int $type
      * @return string filename with absolute path
      */
     public function retrieveFile(ModelSubmit $submit, $type = self::TYPE_PROCESSED);
 
     /**
-     * @param \FKSDB\ORM\ModelSubmit $submit
+     * @param ModelSubmit $submit
      * @return bool
      */
-    public function existsFile(ModelSubmit $submit);
+    public function fileExists(ModelSubmit $submit);
 
     /**
-     * @param \FKSDB\ORM\ModelSubmit $submit
+     * @param ModelSubmit $submit
      */
     public function deleteFile(ModelSubmit $submit);
 }
 
-?>
+

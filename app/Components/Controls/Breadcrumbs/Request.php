@@ -36,7 +36,15 @@ class Request {
      */
     public $pathKey;
 
-    function __construct($user, AppRequest $request, $title, $parent, $pathKey) {
+    /**
+     * Request constructor.
+     * @param $user
+     * @param AppRequest $request
+     * @param $title
+     * @param $parent
+     * @param $pathKey
+     */
+    function __construct($user, AppRequest $request, array $title, $parent, $pathKey) {
         $this->user = $user;
         $this->request = $request;
         $this->title = $title;

@@ -18,17 +18,17 @@ interface INavigablePresenter extends IPresenter {
     /**
      * Should set persistent parameter identifying the backlink.
      *
-     * @param string $backlink
+     * @param string $backLink
      * @return string|null  original value of the backlink parameter
      */
-    public function setBacklink($backlink);
+    public function setBackLink($backLink);
 
     /**
      * Returns title of the current view.
      *
-     * @return string
+     * @return array
      */
-    public function getTitle();
+    public function getTitle(): array;
 
     /**
      * Publish access of the protecetd static method.
@@ -44,4 +44,4 @@ interface INavigablePresenter extends IPresenter {
     public static function getBacklinkParamName();
 }
 
-?>
+

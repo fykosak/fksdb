@@ -2,40 +2,85 @@
 
 namespace FKSDB\Components\React;
 
-use FKSDB\Application\IJavaScriptCollector;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\ComponentModel\IComponent;
+use Nette\DI\Container;
+use Nette\Http\IRequest;
 use Nette\Templating\FileTemplate;
+use Nette\Utils\Json;
+use Nette\Utils\JsonException;
 
 /**
  * Class ReactComponent
  * @property FileTemplate template
+ *
  */
-abstract class ReactComponent extends Control implements IReactComponent {
+abstract class ReactComponent extends Control {
+
+    use ReactField;
     /**
-     * @var bool
+     * @var Container
      */
-    protected static $reactJSAttached = false;
+    protected $container;
 
     /**
-     * @param $obj IComponent
+     * ReactComponent constructor.
+     * @param Container $context
      */
-    protected function attached($obj) {
-        if (!static::$reactJSAttached && $obj instanceof IJavaScriptCollector) {
-            static::$reactJSAttached = true;
-            $obj->registerJSFile('js/lib/react.min.js');
-            $obj->registerJSFile('js/lib/react-dom.min.js');
-            $obj->registerJSFile('js/bundle-all.min.js');
-        }
+    public function __construct(Container $context) {
+        parent::__construct();
+        $this->container = $context;
     }
 
-    public final function render() {
-        $this->template->moduleName = $this->getModuleName();
-        $this->template->componentName = $this->getComponentName();
-        $this->template->mode = $this->getMode();
+    /**
+     * @param IComponent $obj
+     */
+    protected function attached($obj) {
+        $this->attachedReact($obj);
+        parent::attached($obj);
+    }
 
+    /**
+     * @throws JsonException
+     */
+    public final function render() {
+        $this->configure();
+        $this->template->reactId = $this->getReactId();
+        $this->template->actions = Json::encode($this->actions);
         $this->template->data = $this->getData();
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR.'ReactComponent.latte');
+
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ReactComponent.latte');
         $this->template->render();
+    }
+
+    /**
+     * @return IRequest
+     * @throws BadRequestException
+     */
+    protected function getHttpRequest(): IRequest {
+        $service = $this->container->getByType(IRequest::class);
+        if ($service instanceof IRequest) {
+            return $service;
+        }
+        throw new BadRequestException();
+    }
+
+    /**
+     * @return object
+     * @throws BadRequestException
+     */
+    protected function getReactRequest() {
+
+        $requestData = $this->getHttpRequest()->getPost('requestData');
+        $act = $this->getHttpRequest()->getPost('act');
+        return (object)['requestData' => $requestData, 'act' => $act];
+    }
+
+    /**
+     * @return Container
+     */
+    public final function getContext() {
+        return $this->container;
     }
 }

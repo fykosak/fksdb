@@ -5,6 +5,10 @@ namespace FKSDB\Components\Grids;
 use Exports\ExportFormatFactory;
 use Exports\StoredQuery;
 use FKSDB\Components\Controls\StoredQueryComponent;
+use Nette\Application\UI\InvalidLinkException;
+use Nette\DI\Container;
+use NiftyGrid\DuplicateColumnException;
+use NiftyGrid\DuplicateGlobalButtonException;
 use PDOException;
 
 /**
@@ -23,12 +27,23 @@ class StoredQueryGrid extends BaseGrid {
      */
     private $exportFormatFactory;
 
-    function __construct(StoredQuery $storedQuery, ExportFormatFactory $exportFormatFactory) {
-        parent::__construct();
+    /**
+     * StoredQueryGrid constructor.
+     * @param StoredQuery $storedQuery
+     * @param Container $container
+     */
+    function __construct(StoredQuery $storedQuery, Container $container) {
+        parent::__construct($container);
         $this->storedQuery = $storedQuery;
-        $this->exportFormatFactory = $exportFormatFactory;
+        $this->exportFormatFactory = $container->getByType(ExportFormatFactory::class);
     }
 
+    /**
+     * @param $presenter
+     * @throws InvalidLinkException
+     * @throws DuplicateColumnException
+     * @throws DuplicateGlobalButtonException
+     */
     protected function configure($presenter) {
         parent::configure($presenter);
         //
@@ -42,12 +57,12 @@ class StoredQueryGrid extends BaseGrid {
         try {
             $c = 0;
             foreach ($this->storedQuery->getColumnNames() as $name) {
-                $this->addColumn($c + 1, $name)->setRenderer(function($row) use($c) {
-                            echo $row[$c];
-                        });
+                $this->addColumn($c + 1, $name)->setRenderer(function ($row) use ($c) {
+                    echo $row[$c];
+                });
                 ++$c;
             }
-        } catch (PDOException $e) {
+        } catch (PDOException $exception) {
             // pass, exception should be handled inn parent components
         }
 
@@ -58,18 +73,18 @@ class StoredQueryGrid extends BaseGrid {
 
         foreach ($this->exportFormatFactory->getFormats($this->storedQuery) as $formatName => $label) {
             $this->addGlobalButton('format_' . $formatName)
-                    ->setLabel($label)
-                    ->setLink($this->getParent()->link('format!', array('format' => $formatName)));
+                ->setLabel($label)
+                ->setLink($this->getParent()->link('format!', ['format' => $formatName]));
         }
 
 
         if (!$this->storedQuery->getQueryPattern()->isNew()) {
             $this->addGlobalButton('show')
-                    ->setLabel(_('Podrobnosti dotazu'))
-                    ->setClass('btn btn-sm btn-secondary')
-                    ->setLink($this->getPresenter()->link('Export:show', $this->storedQuery->getQueryPattern()->getPrimary()));
+                ->setLabel(_('Podrobnosti dotazu'))
+                ->setClass('btn btn-sm btn-secondary')
+                ->setLink($this->getPresenter()->link('Export:show', $this->storedQuery->getQueryPattern()->getPrimary()));
             if ($qid = $this->storedQuery->getQueryPattern()->qid) { // intentionally =
-                $parameters = array('qid' => $qid, 'bc' => null);
+                $parameters = ['qid' => $qid, 'bc' => null];
                 $queryParameters = $this->storedQuery->getParameters();
                 foreach ($this->storedQuery->getParameterNames() as $key) {
                     if (array_key_exists($key, $queryParameters)) {
@@ -77,9 +92,9 @@ class StoredQueryGrid extends BaseGrid {
                     }
                 }
                 $this->addGlobalButton('qid')
-                        ->setLabel(_('Odkaz'))
-                        ->setClass('btn btn-sm btn-secondary')
-                        ->setLink($this->getPresenter()->link('Export:execute', $parameters));
+                    ->setLabel(_('Odkaz'))
+                    ->setClass('btn btn-sm btn-secondary')
+                    ->setLink($this->getPresenter()->link('Export:execute', $parameters));
             }
         }
     }

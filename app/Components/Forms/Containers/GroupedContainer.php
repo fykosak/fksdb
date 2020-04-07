@@ -19,21 +19,25 @@ class GroupedContainer extends Container {
      * @var ControlGroup[]
      */
     private $groups = [];
-    private $withoutGroup = [];
     private $prefix;
 
+    /**
+     * GroupedContainer constructor.
+     * @param $prefix
+     */
     public function __construct($prefix) {
         parent::__construct();
-        $this->monitor('Nette\Forms\Form');
+        $this->monitor(Form::class);
         $this->prefix = $prefix;
     }
 
     /**
      * @note Copy+paste from Nette\Forms\Form.
-     * @param type $caption
-     * @return type
+     * @param string $caption
+     * @param bool $setAsCurrent
+     * @return ControlGroup
      */
-    public function addGroup($caption, $setAsCurrent = true) {
+    public function addGroup($caption, $setAsCurrent = true): ControlGroup {
         $group = new ControlGroup;
         $group->setOption('label', $caption);
         $group->setOption('visual', TRUE);
@@ -64,6 +68,9 @@ class GroupedContainer extends Container {
 //        parent::addComponent($component, $name, $insertBefore);
 //    }
 
+    /**
+     * @param $obj
+     */
     protected function attached($obj) {
         parent::attached($obj);
         if ($obj instanceof Form) {

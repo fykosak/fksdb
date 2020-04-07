@@ -18,6 +18,9 @@ parameters:
                         required: true
                     born:
                         required: true
+                    id_number:
+                        required: false
+                        description: _('Číslo OP/pasu, pokud máš')
                     phone_parent_m:
                         required: false
                     phone_parent_d:
@@ -45,8 +48,9 @@ parameters:
                     black: Černé
             arrival:
                 destination:
-                    aut: "ÚAN Florenc"
-                    phl: "Hlavní nádraží"
+                    flr: "ÚAN Florenc"
+                    hln: "Hlavní nádraží"
+                    kni: "Na Knížecí"
 
                 time:
                     start: 17:30
@@ -57,7 +61,7 @@ parameters:
 events:
     setkani:
         event_type_id: [11,12]
-        #eventYears: [4] # specify for which years this machine is valid, by default all years
+        eventYears: [1,2,3,4,5,6,7] # specify for which years this machine is valid, by default all years
         tableLayout: event.grid
         formLayout: setkani.form
         paramScheme:
@@ -113,9 +117,17 @@ events:
                     arrival_time:
                        label: "Předpokládaný příjezd"
                        description: "Čas příjezdu"
+                    arrival_destination:
+                       label: "Na jaké místo přijedeš?"
+                       required: true
+                       factory: Chooser("Zvol místo",Options(%events.setkani.arrival.destination%))
                     departure_time:
                        label: "Předpokládaný odjezd"
                        description: "Čas odjezdu"
+                    departure_destination:
+                       label: "Z jakého místa chceš odjíždět?"
+                       required: true
+                       factory: Chooser("Zvol místo",Options(%events.setkani.arrival.destination%))
                     tshirt_size:
                         label: "Jaké tričko nosíš?"
                         required: true

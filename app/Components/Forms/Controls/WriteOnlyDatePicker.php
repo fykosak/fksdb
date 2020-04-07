@@ -15,17 +15,28 @@ class WriteOnlyDatePicker extends DatePicker implements IWriteOnly {
 
     use WriteOnlyTrait;
 
-    public function __construct($label = NULL, $cols = NULL, $maxLength = NULL) {
-        parent::__construct($label, $cols, $maxLength);
+    /**
+     * WriteOnlyDatePicker constructor.
+     * @param null $label
+     */
+    public function __construct($label = NULL) {
+        parent::__construct($label);
         $this->writeOnlyAppendMonitors();
     }
 
+    /**
+     * @return \Nette\Utils\Html
+     */
     public function getControl() {
         $control = parent::getControl();
         $control = $this->writeOnlyAdjustControl($control);
         return $control;
     }
 
+    /**
+     * @param $value
+     * @return DatePicker|void
+     */
     public function setValue($value) {
         if ($value == self::VALUE_ORIGINAL) {
             $this->value = $value;
@@ -40,6 +51,9 @@ class WriteOnlyDatePicker extends DatePicker implements IWriteOnly {
         $this->writeOnlyLoadHttpData();
     }
 
+    /**
+     * @param $obj
+     */
     protected function attached($obj) {
         parent::attached($obj);
         $this->writeOnlyAttached($obj);

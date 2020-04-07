@@ -2,10 +2,17 @@
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\ModelOrg;
+use FKSDB\ORM\Services\ServiceOrg;
+use Nette\Application\BadRequestException;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Database\Table\Selection;
-use Nette\Utils\Html;
-
-use ServiceOrg;
+use Nette\DI\Container;
+use NiftyGrid\DuplicateButtonException;
+use NiftyGrid\DuplicateColumnException;
+use NiftyGrid\DuplicateGlobalButtonException;
+use OrgModule\OrgPresenter;
 use SQL\SearchableDataSource;
 
 /**
@@ -19,17 +26,22 @@ class OrgsGrid extends BaseGrid {
      */
     private $serviceOrg;
 
-    function __construct(ServiceOrg $serviceOrg) {
-        parent::__construct();
-
-        $this->serviceOrg = $serviceOrg;
+    /**
+     * OrgsGrid constructor.
+     * @param Container $container
+     */
+    function __construct(Container $container) {
+        parent::__construct($container);
+        $this->serviceOrg = $container->getByType(ServiceOrg::class);
     }
 
     /**
-     * @param $presenter
-     * @throws \Nette\Application\UI\InvalidLinkException
-     * @throws \NiftyGrid\DuplicateColumnException
-     * @throws \NiftyGrid\DuplicateGlobalButtonException
+     * @param OrgPresenter $presenter
+     * @throws BadRequestException
+     * @throws InvalidLinkException
+     * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
+     * @throws DuplicateGlobalButtonException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -50,42 +62,27 @@ class OrgsGrid extends BaseGrid {
         $this->setDataSource($dataSource);
         $this->setDefaultOrder('since DESC');
 
-        //
-        // columns
-        //
-        $this->addColumn('display_name', _('Jméno'))->setRenderer(function ($row) {
-            $person = $row->getPerson();
-            return $person->getFullname();
-        });
-        $this->addColumn('since', _('Začal'));
-        $this->addColumn('until', _('Skončil'))->setRenderer(function ($row) {
-            return ($row->until === NULL) ? Html::el('span')->addAttributes(['class' => 'badge badge-success'])->add(_('Still organizes')) : $row->until;
-        });
-        $this->addColumn('role', _('Funkce'));
+        $this->addColumns([
+            DbNames::TAB_ORG . '.since',
+            DbNames::TAB_ORG . '.until',
+            DbNames::TAB_ORG . '.role',
+            'referenced.person_name'
+        ]);
 
-        //
-        // operations
-        //
-        $this->addButton("edit", _("Upravit"))
-            ->setText('Upravit')//todo i18n
-            ->setLink(function ($row) {
-                return $this->getPresenter()->link("edit", $row->org_id);
-            })
-            ->setShow(function ($row) use ($presenter) {
-                return $presenter->authorized("edit", array('id' => $row->org_id));
-            });
+        $this->addLink('org.edit', true);
+        $this->addLink('org.detail', true);
 
         if ($presenter->authorized('create')) {
             $this->addGlobalButton('add')
-                ->setLabel('Založit organizátora')
+                ->setLabel(_('Založit organizátora'))
                 ->setLink($this->getPresenter()->link('create'));
         }
-
-
-        //
-        // appeareance
-        //
-
     }
 
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        return ModelOrg::class;
+    }
 }

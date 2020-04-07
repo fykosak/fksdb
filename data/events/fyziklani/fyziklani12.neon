@@ -71,37 +71,16 @@ events:
                 default: 2
             teamsPerSchool:
                 default: 2
-            availablePoints:
-                default: [5, 3, 2, 1]
-            tasksOnBoard:
-                default: 7
-            refreshDelay:
-                default: 30000
-            resultsHardDisplay:
-                default: false
-            # TODO make relative to game
-            resultsDisplay:
-                default: '1970-01-01T00:00:00'
-            # TODO make relative to game
-            resultsHide:
-                default: '1970-01-01T01:00:00'
-            # TODO infer from event begin date
-            gameStart:
-                default: '1970-01-01T00:00:00'
-            # TODO infer from event end date
-            gameEnd:
-                default: '1970-01-01T01:00:00'
-            rooms:
-                default: []
-            buildings:
-                 default: []
+            gameSetup:
+                default:
+                    %events.fyziklaniGameSetup%
 
         baseMachines:
             #
             #   TEAM
             #
             TEAM:
-                service: @event.ServiceFyziklaniTeam
+                service: @fyziklani.ServiceFyziklaniTeam
                 personIds: [teacher_id]
                 eventId: e_fyziklani_team.event_id
 
@@ -112,6 +91,7 @@ events:
                     participated: _('Účastnil se')
                     cancelled: _('Zrušen')
                     missed: _('Nepřijel')
+                    disqualified: _('Diskvalifikován')
 
                 transitions:
                     __init->pending:
@@ -144,12 +124,12 @@ events:
 
                 fields:
                     name:
-                        label: _('Název týmu') # i18n
+                        label: _('Název týmu')
                         required: true
                         visible: true # or condition
                         modifiable: %events.fyziklani12.appCond%
                     category:
-                        label: _('Kategorie') # i18n
+                        label: _('Kategorie')
                         required: true
                         visible: neg(state('__init'))
                         modifiable: false
@@ -170,7 +150,7 @@ events:
                         modifiable: %events.fyziklani12.appCond%
                         factory: RefPerson(%events.fyziklani12.teacher%, email, true, role('admin'), false)
                     teacher_present:
-                        label: _('Učitel má zájem o program')
+                        label: _('Učitel má zájem o program během soutěže.')
                         visible: true
                         modifiable: %events.fyziklani12.appCond%
                     teacher_accomodation:
@@ -266,6 +246,7 @@ events:
                 - Events\FormAdjustments\UniqueCheck('*.person_id', "Osoba je již na Fyziklání přihlášena.")
                 - Events\FormAdjustments\MultiResourceAvailability(['team.teacher_accomodation', '*.accomodation'], %events.fyziklani12.accomodation%, 'Kapacita ubytování je již vyčerpána (zbývá %avail).')
                 - Events\Spec\Fyziklani\SchoolsInTeam(param('schoolsInTeam'))
+                - Events\FormAdjustments\RegexpCheck('team.name', "Název týmu smí obsahovat pouze latinku, řečtinu, cyrilici a ASCII znaky.", '/^[\p{Latin}\p{Greek}\p{Cyrillic}\x{0020}-\x{00FF}]+$/u')
                 # Needs testing, may not work correctly when school field is disabled (i.e. not sent by browser).
                 #- Events\Spec\Fyziklani\TeamsPerSchool(param('teamsPerSchool'))
 

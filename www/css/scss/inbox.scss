@@ -1,0 +1,14 @@
+.inbox-field {
+  display: block;
+  width: 100px;
+  float: left;
+  margin: 2px;
+  input {
+    width: 90px;
+  }
+}
+
+ul.inbox-swappable {
+  list-style-type: none;
+  cursor: move;
+}

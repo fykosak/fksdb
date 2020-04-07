@@ -2,11 +2,10 @@
 
 namespace Tasks;
 
+use FKSDB\ORM\Services\ServiceStudyYear;
+use FKSDB\ORM\Services\ServiceTaskStudyYear;
 use Pipeline\Stage;
-use ServiceStudyYear;
-use ServiceTaskStudyYear;
 use SimpleXMLElement;
-use Tasks\SeriesData;
 
 /**
  * @note Assumes TasksFromXML has been run previously.
@@ -39,12 +38,21 @@ class StudyYearsFromXML2 extends Stage {
      */
     private $serviceStudyYear;
 
+    /**
+     * StudyYearsFromXML2 constructor.
+     * @param $defaultStudyYears
+     * @param \FKSDB\ORM\Services\ServiceTaskStudyYear $serviceTaskStudyYear
+     * @param ServiceStudyYear $serviceStudyYear
+     */
     function __construct($defaultStudyYears, ServiceTaskStudyYear $serviceTaskStudyYear, ServiceStudyYear $serviceStudyYear) {
         $this->defaultStudyYears = $defaultStudyYears;
         $this->serviceTaskStudyYear = $serviceTaskStudyYear;
         $this->serviceStudyYear = $serviceStudyYear;
     }
 
+    /**
+     * @param mixed $data
+     */
     public function setInput($data) {
         $this->data = $data;
     }
@@ -56,13 +64,19 @@ class StudyYearsFromXML2 extends Stage {
         }
     }
 
+    /**
+     * @return mixed|SeriesData
+     */
     public function getOutput() {
         return $this->data;
     }
 
+    /**
+     * @param SimpleXMLElement $XMLTask
+     */
     private function processTask(SimpleXMLElement $XMLTask) {
         $tasks = $this->data->getTasks();
-        $tasknr = (int) (string) $XMLTask->number;
+        $tasknr = (int)(string)$XMLTask->number;
 
         $task = $tasks[$tasknr];
         $this->serviceTaskStudyYear->getConnection()->beginTransaction();
@@ -76,7 +90,7 @@ class StudyYearsFromXML2 extends Stage {
         $contributors = [];
         if ($parentEl && isset($parentEl->{self::XML_ELEMENT_CHILD})) {
             foreach ($parentEl->{self::XML_ELEMENT_CHILD} as $element) {
-                $studyYear = (string) $element;
+                $studyYear = (string)$element;
                 $studyYear = trim($studyYear);
                 if (!$studyYear) {
                     continue;

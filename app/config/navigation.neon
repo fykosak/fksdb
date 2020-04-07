@@ -29,13 +29,25 @@ navigation:
             - org.points.default
             - org.tasks.import
             - org.contestant.list
-            - org.school.list
+            - common.school.list
             - org.teacher.list
             - org.export.list
             - org.org.list
             - org.event.list
-            - org.deduplicate.person
-            - org.stalking.default
+            - common.deduplicate.person
+            - common.person.search
+            - common.dashboard.default
+            - org.dashboard.default
+        common.dashboard.default:
+            - common.dashboard.default
+            - common.validation.default
+            - common.person.search
+            - common.spam.list
+            - common.chart.list
+            - common.school.list
+        common.validation.default:
+            - common.validation.preview
+            - common.validation.list
         public.dashboard.default:
             - dispatch.default
             - public.submit.default
@@ -44,16 +56,38 @@ navigation:
             - vyfuk
             - fyziklani
         fyziklani.dashboard.default:
-            - dispatch.default
             - fyziklani.submit.entry
-            - fyziklani.submit.table
-            - fyziklani.close.table
-            - fyziklani.results.default
-            - fyziklani.task.table
+            - fyziklani.submit.list
+            - fyziklani.close.list
+            - fyziklani.results.list
+            - fyziklani.diplomas.default
+            - fyziklani.task.list
             - fyziklani.task.import
-            - fyziklani.rooms.default
-        fyziklani.rooms.default:
-            - fyziklani.rooms.edit
-            - fyziklani.rooms.download
+            - fyziklani.gameSetup.default
 
-
+        event.seating.default:
+            - event.seating.edit
+            - event.seating.download
+            - event.seating.preview
+            - event.seating.list
+        fyziklani.results.default:
+            - fyziklani.dashboard.default
+            - fyziklani.diplomas.results
+            - fyziklani.results.presentation
+            - fyziklani.results.table
+            - fyziklani.results.teamStatistics
+            - fyziklani.results.taskStatistics
+            - fyziklani.results.correlationStatistics
+        event.dashboard.default:
+            - event.teamApplication.list
+            - event.application.list
+            - event.eventOrg.list
+            - event.payment.create
+            - event.payment.list
+            - fyziklani.dashboard.default
+            - event.schedule.groups
+            - event.seating.default
+            - event.model.default
+            - event.chart.list
+            - event.dispatch.default
+            - event.dashboard.default

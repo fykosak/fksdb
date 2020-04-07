@@ -44,6 +44,10 @@ class BaseMachine extends FreezableObject {
      */
     private $machine;
 
+    /**
+     * BaseMachine constructor.
+     * @param $name
+     */
     public function __construct($name) {
         $this->name = $name;
     }
@@ -120,7 +124,7 @@ class BaseMachine extends FreezableObject {
     }
 
     /**
-     * @return string
+     * @return string[]
      */
     public function getStates() {
         return $this->states;
@@ -156,10 +160,10 @@ class BaseMachine extends FreezableObject {
      * @return Transition[]
      */
     public function getAvailableTransitions($mode = self::EXECUTABLE) {
-        return array_filter($this->getMatchingTransitions(), function(Transition $transition) use($mode) {
-                    return
-                            (!($mode & self::EXECUTABLE) || $transition->canExecute()) && (!($mode & self::VISIBLE) || $transition->isVisible());
-                });
+        return array_filter($this->getMatchingTransitions(), function (Transition $transition) use ($mode) {
+            return
+                (!($mode & self::EXECUTABLE) || $transition->canExecute()) && (!($mode & self::VISIBLE) || $transition->isVisible());
+        });
     }
 
     /**
@@ -175,12 +179,12 @@ class BaseMachine extends FreezableObject {
      * @return Transition[]
      */
     public function getTransitionByTarget($state) {
-        $candidates = array_filter($this->getMatchingTransitions(), function(Transition $transition) use($state) {
-                    return $transition->getTarget() == $state;
-                });
+        $candidates = array_filter($this->getMatchingTransitions(), function (Transition $transition) use ($state) {
+            return $transition->getTarget() == $state;
+        });
         if (count($candidates) == 0) {
             return null;
-        } else if (count($candidates) > 1) {
+        } elseif (count($candidates) > 1) {
             throw new InvalidArgumentException("Target state '$state' is reachable via multiple edges."); //TODO may this be anytime useful?
         } else {
             return reset($candidates);
@@ -195,9 +199,9 @@ class BaseMachine extends FreezableObject {
         if ($mask === null) {
             $mask = $this->getState();
         }
-        return array_filter($this->transitions, function(Transition $transition) use($mask) {
-                    return $transition->matches($mask);
-                });
+        return array_filter($this->transitions, function (Transition $transition) use ($mask) {
+            return $transition->matches($mask);
+        });
     }
 
 }

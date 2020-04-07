@@ -15,12 +15,17 @@ class CummulativeStrategy implements IMergeStrategy {
 
     /**
      *
-     * @param null|enum $precedence trunk|merged
+     * @param null|mixed $precedence trunk|merged
      */
     function __construct($precedence = null) {
         $this->precedence = $precedence;
     }
 
+    /**
+     * @param mixed $trunk
+     * @param mixed $merged
+     * @return mixed
+     */
     public function mergeValues($trunk, $merged) {
         if ($merged === null) {
             return $trunk;
@@ -34,15 +39,20 @@ class CummulativeStrategy implements IMergeStrategy {
 
         if ($this->precedence == 'trunk') {
             return $trunk;
-        } else if ($this->precedence == 'merged') {
+        } elseif ($this->precedence == 'merged') {
             return $merged;
         }
 
         throw new CannotMergeException();
     }
 
+    /**
+     * @param $trunk
+     * @param $merged
+     * @return bool
+     */
     private function equals($trunk, $merged) {
-        if ($trunk instanceof DateTime && $merged instanceof DateTime) {
+        if ($trunk instanceof \DateTime && $merged instanceof \DateTime) {
             return $trunk->getTimestamp() == $merged->getTimestamp();
         } else {
             return $trunk == $merged;

@@ -2,10 +2,13 @@
 
 namespace FKSDB\Components\Forms\Factories\ReferencedPerson;
 
+use Closure;
+use FKSDB\Components\Forms\Containers\AddressContainer;
 use FKSDB\Components\Forms\Containers\IWriteOnly;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Containers\Models\IReferencedSetter;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
+use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\AddressFactory;
@@ -13,7 +16,11 @@ use FKSDB\Components\Forms\Factories\FlagFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Factories\PersonHistoryFactory;
 use FKSDB\Components\Forms\Factories\PersonInfoFactory;
-use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\IModel;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Models\ModelPostContact;
+use FKSDB\ORM\Services\ServiceFlag;
+use FKSDB\ORM\Services\ServicePerson;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\HiddenField;
@@ -21,22 +28,21 @@ use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
-use Nette\Object;
+use Nette\SmartObject;
 use Nette\Utils\Arrays;
-use ORM\IModel;
 use Persons\IModifiabilityResolver;
 use Persons\IVisibilityResolver;
 use Persons\ReferencedPersonHandler;
 use Persons\ReferencedPersonHandlerFactory;
-use ServiceFlag;
-use ServicePerson;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-abstract class AbstractReferencedPersonFactory extends Object implements IReferencedSetter {
+abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
+
+    use SmartObject;
 
     const SEARCH_EMAIL = 'email';
     const SEARCH_ID = 'id';
@@ -89,6 +95,18 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
      */
     protected $addressFactory;
 
+    /**
+     * AbstractReferencedPersonFactory constructor.
+     * @param AddressFactory $addressFactory
+     * @param FlagFactory $flagFactory
+     * @param ServicePerson $servicePerson
+     * @param PersonFactory $personFactory
+     * @param ReferencedPersonHandlerFactory $referencedPersonHandlerFactory
+     * @param PersonProvider $personProvider
+     * @param ServiceFlag $serviceFlag
+     * @param PersonInfoFactory $personInfoFactory
+     * @param PersonHistoryFactory $personHistoryFactory
+     */
     public function __construct(AddressFactory $addressFactory, FlagFactory $flagFactory, ServicePerson $servicePerson, PersonFactory $personFactory, ReferencedPersonHandlerFactory $referencedPersonHandlerFactory, PersonProvider $personProvider, ServiceFlag $serviceFlag, PersonInfoFactory $personInfoFactory, PersonHistoryFactory $personHistoryFactory) {
         $this->servicePerson = $servicePerson;
         $this->personFactory = $personFactory;
@@ -108,10 +126,11 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
      * @param boolean $allowClear
      * @param IModifiabilityResolver $modifiabilityResolver is person's filled field modifiable?
      * @param IVisibilityResolver $visibilityResolver is person's writeOnly field visible? (i.e. not writeOnly then)
+     * @param int $evenId
      * @return array
+     * @throws \Exception
      */
     public function createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, IModifiabilityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver, $evenId = 0) {
-
         $handler = $this->referencedPersonHandlerFactory->create($acYear, null, $evenId);
 
         $hiddenField = new ReferencedId($this->servicePerson, $handler, $this);
@@ -127,13 +146,12 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
         $container->setOption('acYear', $acYear);
         $container->setOption('modifiabilityResolver', $modifiabilityResolver);
         $container->setOption('visibilityResolver', $visibilityResolver);
-
         foreach ($fieldsDefinition as $sub => $fields) {
             $subcontainer = new ContainerWithOptions();
             if ($sub == ReferencedPersonHandler::POST_CONTACT_DELIVERY) {
                 $subcontainer->setOption('showGroup', true);
                 $subcontainer->setOption('label', _('Doručovací adresa'));
-            } else if ($sub == ReferencedPersonHandler::POST_CONTACT_PERMANENT) {
+            } elseif ($sub == ReferencedPersonHandler::POST_CONTACT_PERMANENT) {
                 $subcontainer->setOption('showGroup', true);
                 $label = _('Trvalá adresa');
                 if (isset($container[ReferencedPersonHandler::POST_CONTACT_DELIVERY])) {
@@ -141,12 +159,7 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
                 }
                 $subcontainer->setOption('label', $label);
             }
-
             foreach ($fields as $fieldName => $metadata) {
-                if (is_scalar($metadata)) {
-                    // old compatibility
-                    throw new \InvalidArgumentException('Metadata must be a vector');
-                }
                 $control = $this->createField($sub, $fieldName, $acYear, $hiddenField, $metadata);
                 $fullFieldName = "$sub.$fieldName";
                 if ($handler->isSecondaryKey($fullFieldName)) {
@@ -175,13 +188,19 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
             $container->addComponent($subcontainer, $sub);
         }
 
-        return array(
+        return [
             $hiddenField,
             $container,
-        );
+        ];
     }
 
 
+    /**
+     * @param ReferencedContainer $container
+     * @param IModel|null $model
+     * @param string $mode
+     * @return mixed|void
+     */
     public function setModel(ReferencedContainer $container, IModel $model = null, $mode = self::MODE_NORMAL) {
         $acYear = $container->getOption('acYear');
         $modifiable = $model ? $container->getOption('modifiabilityResolver')->isModifiable($model) : true;
@@ -195,7 +214,6 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
 
         $container->getReferencedId()->getHandler()->setResolution($resolution);
         $container->getComponent(ReferencedContainer::CONTROL_COMPACT)->setValue($model ? $model->getFullname() : null);
-
         foreach ($container->getComponents() as $sub => $subcontainer) {
             if (!$subcontainer instanceof Container) {
                 continue;
@@ -209,18 +227,18 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
                 }
                 $realValue = $this->getPersonValue($model, $sub, $fieldName, $acYear, $options); // not extrapolated
                 $value = $this->getPersonValue($model, $sub, $fieldName, $acYear, $options | self::EXTRAPOLATE);
-
                 $controlModifiable = ($realValue !== null) ? $modifiable : true;
                 $controlVisible = $this->isWriteOnly($component) ? $visible : true;
 
                 if (!$controlVisible && !$controlModifiable) {
                     $container[$sub]->removeComponent($component);
-                } else if (!$controlVisible && $controlModifiable) {
+                } elseif (!$controlVisible && $controlModifiable) {
                     $this->setWriteOnly($component, true);
                     $component->setDisabled(false);
-                } else if ($controlVisible && !$controlModifiable) {
+                } elseif ($controlVisible && !$controlModifiable) {
                     $component->setDisabled();
-                } else if ($controlVisible && $controlModifiable) {
+                    $component->setValue($value);
+                } elseif ($controlVisible && $controlModifiable) {
                     $this->setWriteOnly($component, false);
                     $component->setDisabled(false);
                 }
@@ -241,11 +259,21 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
         }
     }
 
-    public function createField($sub, $fieldName, $acYear, HiddenField $hiddenField = null, $metadata = []) {
-        if (in_array($sub, array(
+    /**
+     * @param $sub
+     * @param $fieldName
+     * @param $acYear
+     * @param HiddenField $hiddenField
+     * @param array $metadata
+     * @return AddressContainer|BaseControl|null
+     * @throws \Exception
+     * @throws \Exception
+     */
+    public function createField($sub, $fieldName, $acYear, HiddenField $hiddenField, array $metadata) {
+        if (in_array($sub, [
             ReferencedPersonHandler::POST_CONTACT_DELIVERY,
             ReferencedPersonHandler::POST_CONTACT_PERMANENT,
-        ))) {
+        ])) {
             if ($fieldName == 'address') {
                 $required = Arrays::get($metadata, 'required', false);
                 if ($required) {
@@ -253,14 +281,12 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
                 } else {
                     $options = 0;
                 }
-                $container = $this->addressFactory->createAddress($options, $hiddenField);
-                return $container;
+                return $this->addressFactory->createAddress($options, $hiddenField);
             } else {
                 throw new InvalidArgumentException("Only 'address' field is supported.");
             }
-        } else if ($sub == 'person_has_flag') {
-            $control = $this->flagFactory->createFlag($hiddenField, $metadata);
-            return $control;
+        } elseif ($sub == 'person_has_flag') {
+            return $this->flagFactory->createFlag($hiddenField, $metadata);
         } else {
             $control = null;
             switch ($sub) {
@@ -283,6 +309,12 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
         }
     }
 
+    /**
+     * @param BaseControl $control
+     * @param HiddenField $hiddenField
+     * @param $fieldName
+     * @param array $metadata
+     */
     protected function appendMetadata(BaseControl &$control, HiddenField $hiddenField, $fieldName, array $metadata) {
         foreach ($metadata as $key => $value) {
             switch ($key) {
@@ -312,20 +344,28 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
         }
     }
 
+    /**
+     * @param $component
+     * @param $value
+     */
     protected function setWriteOnly($component, $value) {
         if ($component instanceof IWriteOnly) {
             $component->setWriteOnly($value);
-        } else if ($component instanceof Container) {
+        } elseif ($component instanceof Container) {
             foreach ($component->getComponents() as $subcomponent) {
                 $this->setWriteOnly($subcomponent, $value);
             }
         }
     }
 
+    /**
+     * @param $component
+     * @return bool
+     */
     protected function isWriteOnly($component) {
         if ($component instanceof IWriteOnly) {
             return true;
-        } else if ($component instanceof Container) {
+        } elseif ($component instanceof Container) {
             foreach ($component->getComponents() as $subcomponent) {
                 if ($this->isWriteOnly($subcomponent)) {
                     return true;
@@ -335,6 +375,10 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
         return false;
     }
 
+    /**
+     * @param $searchType
+     * @return AutocompleteSelectBox|TextInput
+     */
     protected function createSearchControl($searchType) {
 
         switch ($searchType) {
@@ -343,6 +387,8 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
                 $control->addCondition(Form::FILLED)
                     ->addRule(Form::EMAIL, _('Neplatný tvar e-mailu.'));
                 $control->setOption('description', _('Nejprve zkuste najít osobu v naší databázi podle e-mailu.'));
+                $control->setAttribute('placeholder', 'your-email@exmaple.com');
+                $control->setAttribute('autocomplete', 'email');
                 break;
             case self::SEARCH_ID:
                 $control = $this->personFactory->createPersonSelect(true, _('Jméno'), $this->personProvider);
@@ -353,6 +399,10 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
         return $control;
     }
 
+    /**
+     * @param $searchType
+     * @return Closure
+     */
     protected function createSearchCallback($searchType) {
         $service = $this->servicePerson;
         switch ($searchType) {
@@ -372,6 +422,10 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
         }
     }
 
+    /**
+     * @param $searchType
+     * @return Closure
+     */
     protected function createTermToValuesCallback($searchType) {
         switch ($searchType) {
             case self::SEARCH_EMAIL:
@@ -388,11 +442,26 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
         }
     }
 
+    /**
+     * @param ModelPerson $person
+     * @param $sub
+     * @param $field
+     * @param $acYear
+     * @return bool
+     */
     public final function isFilled(ModelPerson $person, $sub, $field, $acYear) {
         $value = $this->getPersonValue($person, $sub, $field, $acYear, self::TARGET_VALIDATION);
         return !($value === null || $value === '');
     }
 
+    /**
+     * @param ModelPerson|null $person
+     * @param $sub
+     * @param $field
+     * @param $acYear
+     * @param $options
+     * @return bool|ModelPostContact|mixed|null
+     */
     protected function getPersonValue(ModelPerson $person = null, $sub, $field, $acYear, $options) {
         if (!$person) {
             return null;
@@ -424,6 +493,4 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
                 throw new InvalidArgumentException("Unknown person sub '$sub'.");
         }
     }
-
 }
-

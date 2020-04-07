@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Controls\PersonFlag;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
 use Nette\Utils\Arrays;
@@ -13,7 +14,12 @@ use Nette\Utils\Arrays;
  */
 class FlagFactory {
 
-    public function createFlag(HiddenField $hiddenField = null, $metadata = []) {
+    /**
+     * @param HiddenField|null $hiddenField
+     * @param array $metadata
+     * @return BaseControl
+     */
+    public function createFlag(HiddenField $hiddenField = null, $metadata = []): BaseControl {
         $control = $this->createSpamMff();
 
         if (Arrays::get($metadata, 'required', false)) {
@@ -32,9 +38,11 @@ class FlagFactory {
         return $control;
     }
 
-    public function createSpamMff() {
-        $control = new PersonFlag(_('Přeji si dostávat informace o dění na MFF a akcích, které pořádáme'));
-        return $control;
+    /**
+     * @return PersonFlag
+     */
+    public function createSpamMff(): PersonFlag {
+        return new PersonFlag(_('Přeji si dostávat informace o dění na MFF a akcích, které pořádáme'));
     }
 
 }

@@ -11,14 +11,14 @@ interface IStylesheetCollector {
 
     /**
      * @param string $file path relative to webroot
-     * @param $media array
+     * @param array $media
      */
-    public function registerStylesheetFile($file, $media = ['all']);
+    public function registerStylesheetFile(string $file, array $media = ['all']);
 
     /**
      * @param string $file path relative to webroot
-     * @param $media array
+     * @param array $media
      */
-    public function unregisterStylesheetFile($file, $media = ['all']);
+    public function unregisterStylesheetFile(string $file, array $media = ['all']);
 }
 

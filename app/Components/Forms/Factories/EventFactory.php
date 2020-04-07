@@ -3,84 +3,67 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
-use FKSDB\Components\Forms\Controls\DateTimeBox;
-use FKSDB\ORM\ModelContest;
-use Nette\Forms\ControlGroup;
-use Nette\Forms\Controls\SelectBox;
-use Nette\Forms\Form;
-use ServiceEventType;
+use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Services\ServiceEventType;
+use Nette\Forms\Controls\BaseControl;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class EventFactory {
-
-    const SHOW_UNKNOWN_SCHOOL_HINT = 0x1;
+class EventFactory extends SingleReflectionFactory {
 
     /**
-     * @var ServiceEventType
+     * @var \FKSDB\ORM\Services\ServiceEventType
      */
     private $serviceEventType;
 
-    function __construct(ServiceEventType $serviceEventType) {
+    /**
+     * EventFactory constructor.
+     * @param ServiceEventType $serviceEventType
+     * @param TableReflectionFactory $tableReflectionFactory
+     */
+    function __construct(ServiceEventType $serviceEventType, TableReflectionFactory $tableReflectionFactory) {
+        parent::__construct($tableReflectionFactory);
         $this->serviceEventType = $serviceEventType;
     }
 
     /**
-     * @param type $options
+     * @param ModelContest $contest
+     * @return ModelContainer
+     * @throws \Exception
      */
-    public function createEvent(ModelContest $contest, $options = 0, ControlGroup $group = null) {
+    public function createEvent(ModelContest $contest): ModelContainer {
         $container = new ModelContainer();
-        $container->setCurrentGroup($group);
-
-        $type = $this->createEventType($contest);
-        $type->addRule(Form::FILLED, _('%label je povinný.'));
-
-        $container->addComponent($type, 'event_type_id');
-
-        $container->addText('event_year', _('Ročník akce'))
-                ->addRule(Form::INTEGER, _('%label musí být číslo.'))
-                ->addRule(Form::FILLED, _('%label je povinný.'))
-                ->setOption('description', _('Ročník akce musí být unikátní pro daný typ akce.'));
-
-        $container->addText('name', _('Název'))
-                ->addRule(Form::FILLED, _('%label je povinný.'))
-                ->addRule(Form::MAX_LENGTH, null, 255)
-                ->setOption('description', _('U soustředka místo.'));
-
-        $container->addDatePicker('begin', _('Začátek akce'))
-                ->addRule(Form::FILLED, _('%label je povinný.'));
-
-        $container->addDatePicker('end', _('Konec akce'))
-                ->addRule(Form::FILLED, _('%label je povinný.'))
-                ->setOption('description', _('U jednodenních akcí shodný se začátkem.'));
-
-        $control = new DateTimeBox(_('Začátek registrace'));
-        $container->addComponent($control, 'registration_begin');
-
-        $control = new DateTimeBox(_('Konec registrace'));
-        $container->addComponent($control, 'registration_end');
-
-
-        $container->addTextArea('report', _('Text'))
-                ->setOption('description', _('Shrnující text k akci.'));
-
-        $container->addTextArea('parameters', _('Parametry'))
-                ->setOption('description', _('V Neon syntaxi, schéma je specifické pro definici akce.'));
-
+        foreach (['event_type_id', 'event_year', 'name', 'begin', 'end', 'registration_begin', 'registration_end', 'report', 'parameters'] as $field) {
+            $control = $this->createField($field, $contest);
+            $container->addComponent($control, $field);
+        }
         return $container;
     }
 
-    public function createEventType(ModelContest $contest) {
-        $element = new SelectBox(_('Typ akce'));
-
-        $types = $this->serviceEventType->getTable()->where('contest_id', $contest->contest_id)->fetchPairs('event_type_id', 'name');
-        $element->setItems($types);
-        $element->setPrompt(_('Zvolit typ'));
-
-        return $element;
+    /**
+     * @return string
+     */
+    protected function getTableName(): string {
+        return DbNames::TAB_EVENT;
     }
 
+    /**
+     * @param string $fieldName
+     * @param array $args
+     * @return BaseControl
+     * @throws \Exception
+     */
+    public function createField(string $fieldName, ...$args): BaseControl {
+        list ($contest) = $args;
+        switch ($fieldName) {
+            case 'event_type_id':
+                return $this->loadFactory($fieldName)->createField($contest);
+            default:
+                return parent::createField($fieldName);
+        }
+    }
 }

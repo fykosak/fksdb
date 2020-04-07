@@ -12,14 +12,18 @@ class ArrayProvider implements IFilteredDataProvider {
     private $data;
     private $labelById;
 
+    /**
+     * ArrayProvider constructor.
+     * @param array $data
+     */
     function __construct(array $data) {
         $this->data = [];
         $this->labelById = $data;
         foreach ($data as $id => $label) {
-            $this->data[] = array(
+            $this->data[] = [
                 self::VALUE => $id,
                 self::LABEL => $label,
-            );
+            ];
         }
     }
 
@@ -40,14 +44,24 @@ class ArrayProvider implements IFilteredDataProvider {
         return $result;
     }
 
+    /**
+     * @param mixed $id
+     * @return mixed
+     */
     public function getItemLabel($id) {
         return $this->labelById[$id];
     }
 
+    /**
+     * @return array
+     */
     public function getItems() {
         return $this->data;
     }
 
+    /**
+     * @param $id
+     */
     public function setDefaultValue($id) {
         /* intentionally blank */
     }

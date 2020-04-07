@@ -22,6 +22,10 @@ class PersonFlag extends SelectBox {
      */
     private $useExplicitValues = false;
 
+    /**
+     * PersonFlag constructor.
+     * @param null $label
+     */
     public function __construct($label = NULL) {
 	$items = [
 	    self::FLAG_YES => _('Ano'),
@@ -31,6 +35,9 @@ class PersonFlag extends SelectBox {
 	$this->setPrompt('–');
     }
 
+    /**
+     * @return bool|mixed|null
+     */
     public function getValue() {
 	if ($this->useExplicitValues) {
 	    return parent::getValue();
@@ -46,16 +53,23 @@ class PersonFlag extends SelectBox {
 	}
     }
 
+    /**
+     * @param $value
+     * @return \Nette\Forms\Controls\BaseControl|void
+     */
     public function setValue($value) {
 	if ($value === true || $value === '1' || $value === 1) {
 	    parent::setValue(self::FLAG_YES);
-	} else if ($value === false || $value === '0' || $value === 0) {
+	} elseif ($value === false || $value === '0' || $value === 0) {
 	    parent::setValue(self::FLAG_NO);
 	} else {
 	    parent::setValue($value);
 	}
     }
 
+    /**
+     * @return \Nette\Utils\Html
+     */
     public function getControl() {
 	$oldMapped = $this->useExplicitValues;
 	$this->useExplicitValues = true;

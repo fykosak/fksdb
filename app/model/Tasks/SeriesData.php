@@ -2,7 +2,7 @@
 
 namespace Tasks;
 
-use FKSDB\ORM\ModelContest;
+use FKSDB\ORM\Models\ModelContest;
 
 /**
  * "POD" to hold series pipeline processing data.
@@ -37,10 +37,18 @@ class SeriesData {
     private $data;
 
     /**
-     * @var array[tasknr] of FKSDB\ORM\ModelTask
+     * @var array[tasknr] of FKSDB\ORM\Models\ModelTask
      */
     private $tasks = [];
 
+    /**
+     * SeriesData constructor.
+     * @param ModelContest $contest
+     * @param $year
+     * @param $series
+     * @param $language
+     * @param $data
+     */
     function __construct(ModelContest $contest, $year, $series, $language, $data) {
         $this->contest = $contest;
         $this->year = $year;
@@ -49,30 +57,52 @@ class SeriesData {
         $this->data = $data;
     }
 
+    /**
+     * @return \FKSDB\ORM\Models\ModelContest
+     */
     public function getContest() {
         return $this->contest;
     }
 
+    /**
+     * @return int
+     */
     public function getYear() {
         return $this->year;
     }
 
+    /**
+     * @return int
+     */
     public function getSeries() {
         return $this->series;
     }
 
+    /**
+     * @return mixed
+     */
     public function getData() {
         return $this->data;
     }
 
+    /**
+     * @return string
+     */
     function getLanguage() {
         return $this->language;
     }
 
+    /**
+     * @return array
+     */
     public function getTasks() {
         return $this->tasks;
     }
 
+    /**
+     * @param $tasknr
+     * @param $task
+     */
     public function addTask($tasknr, $task) {
         $this->tasks[$tasknr] = $task;
     }

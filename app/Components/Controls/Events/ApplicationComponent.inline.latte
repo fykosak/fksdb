@@ -10,14 +10,14 @@
 {if $transition->isCreating()}
 <a href="{plink :Public:Application:default eventId => $holder->getEvent()->event_id}" class="btn btn-xs btn-success">{$transition->getLabel()}</a>
 {elseif $transition->isDangerous()}
-<a n:href="transition! $transition->getName()" class="btn btn-xs btn-danger">{$transition->getLabel()}</a>
+<a n:href="transition! $transition->getName()" class="btn btn-xs btn-sm btn-danger">{$transition->getLabel()}</a>
 {else}
-<a n:href="transition! $transition->getName()" class="btn btn-xs btn-secondary">{$transition->getLabel()}</a>
+<a n:href="transition! $transition->getName()" class="btn btn-xs btn-sm btn-secondary">{$transition->getLabel()}</a>
 {/if}
     {/foreach}
     {else}
 <em>{_'žádné'}</em>
     {/if $iterations}
 {elseif $mode == 'edit'}
-<a n:if="$canEdit" href="{plink :Public:Application:default id => $primaryModel->getPrimary(), eventId => $holder->getEvent()->event_id}" class="btn btn-xs btn-primary">{_'Upravit'}</a>
+<a n:if="$canEdit" href="{plink :Public:Application:default id => $primaryModel->getPrimary(), eventId => $holder->getEvent()->event_id}" class="btn btn-xs btn-sm btn-primary">{_'Upravit'}</a>
 {/if}

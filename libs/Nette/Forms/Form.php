@@ -215,7 +215,7 @@ class Form extends Container
 		if (isset($session->$key)) {
 			$token = $session->$key;
 		} else {
-			$session->$key = $token = Nette\Utils\Strings::random();
+			$session->$key = $token = Nette\Utils\Random::generate();
 		}
 		$session->setExpiration($timeout, $key);
 		$this[self::PROTECTOR_ID] = new Controls\HiddenField($token);
@@ -457,7 +457,7 @@ class Form extends Container
 
 	/**
 	 * Returns the values submitted by the form.
-	 * @return Nette\ArrayHash|array
+	 * @return Nette\Utils\ArrayHash|array
 	 */
 	public function getValues($asArray = FALSE)
 	{

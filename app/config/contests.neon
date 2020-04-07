@@ -76,6 +76,8 @@ parameters:
                   required: true
                 family_name:
                   required: true
+                born_family_name:
+                  required: false
             post_contact_d:
                 address:
                   required: false
@@ -83,37 +85,55 @@ parameters:
                 address:
                   required: false
             person_info:
+                # extends table person
+                academic_degree_prefix:
+                  required: false
+                academic_degree_suffix:
+                  required: false
+                # contact info
                 email:
                   required: false
                 phone:
                   required: false
-                career:
+                phone_parent_m:
                   required: false
-                uk_login:
+                phone_parent_d:
                   required: false
-                account:
-                  required: false
-                homepage:
-                  required: false
-                note:
-                  required: false
+                # to DPP/
                 born:
                   required: false
                 born_id:
                   required: false
-                id_number:
-                  required: false
                 birthplace:
                   required: false
-        adminEventOrg:
-            person:
-                other_name:
-                  required: true
-                family_name:
-                  required: true
-            person_info:
-                email:
-                  required: true
+                id_number:
+                  required: false
+                employer:
+                  required: false
+                health_insurance:
+                  required: false
+                citizenship:
+                  required: false
+                # required to ORG
+                uk_login:
+                  required: false
+                account:
+                  required: false
+                # to webpage
+                career:
+                  required: false
+                homepage:
+                  required: false
+                im:
+                  required: false
+                linkedin_id:
+                    required: false
+                pizza:
+                    reuired: false
+                # place to others onfo
+                note:
+                  required: false
+        adminEventOrg: %fykos.adminOrg%
         adminTeacher:
             person:
                 other_name:
@@ -184,20 +204,15 @@ parameters:
                   required: false
                 gender:
                   required: true
-            person_history:
-                school_id:
-                  required: true
-                study_year:
-                  required: true
-            post_contact_d:
-                address:
-                  required: false
-            post_contact_p:
-                address:
-                  required: false
             person_info:
                 email:
                   required: true
+                phone:
+                  required: false
+                phone_parent_m:
+                  required: false
+                phone_parent_d:
+                  required: false
                 born:
                   required: false
                 birthplace:
@@ -206,38 +221,30 @@ parameters:
                   required: false
                 note:
                   required: false
-                phone_parent_m:
-                  required: false
-                phone_parent_d:
-                  required: false
+
                 origin:
                   required: false
                 agreed:
                   required: false
+            post_contact_d:
+                address:
+                  required: false
+            post_contact_p:
+                address:
+                  required: false
+            person_history:
+                school_id:
+                  required: true
+                study_year:
+                  required: true
+
             person_has_flag:
                 spam_mff:
                   required: false
         adminOrg:
-            person:
-                other_name:
-                  required: true
-                family_name:
-                  required: true
-            person_info:
-                email:
-                  required: false
-                career:
-                  required: false
-                uk_login:
-                  required: false
-                account:
-                  required: false
-                homepage:
-                  required: false
-                note:
-                  required: false
-                phone_parent_m:
-                  required: false
-                phone_parent_d:
-                  required: false
+            %fykos.adminOrg%
+        adminTeacher:
+            %fykos.adminTeacher%
+        adminEventOrg:
+            %fykos.adminEventOrg%
 

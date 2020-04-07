@@ -19,8 +19,9 @@ use Nette;
  *
  * @author     David Grudl
  */
-class PresenterFactory extends Nette\Object implements IPresenterFactory
+class PresenterFactory implements IPresenterFactory
 {
+    use Nette\SmartObject;
 	/** @var bool */
 	public $caseSensitive = FALSE;
 

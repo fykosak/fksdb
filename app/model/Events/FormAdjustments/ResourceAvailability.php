@@ -6,11 +6,12 @@ use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
 use Events\Model\Holder\BaseHolder;
 use Events\Model\Holder\Holder;
+use Nette\Database\Table\GroupedSelection;
 use Nette\Forms\Form;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ResourceAvailability extends AbstractAdjustment {
@@ -28,22 +29,25 @@ class ResourceAvailability extends AbstractAdjustment {
     private $excludeStates;
     private $message;
 
+    /**
+     * @param $fields
+     */
     private function setFields($fields) {
         if (!is_array($fields)) {
-            $fields = array($fields);
+            $fields = [$fields];
         }
         $this->fields = $fields;
     }
 
     /**
-     * 
+     *
      * @param array|string $fields Fields that contain amount of the resource
      * @param string $paramCapacity Name of the parameter with overall capacity.
      * @param string $message String '%avail' will be substitued for the actual amount of available resource.
      * @param string|array $includeStates any state or array of state
      * @param string|array $excludeStates any state or array of state
      */
-    function __construct($fields, $paramCapacity, $message, $includeStates = BaseMachine::STATE_ANY, $excludeStates = array('cancelled')) {
+    function __construct($fields, $paramCapacity, $message, $includeStates = BaseMachine::STATE_ANY, $excludeStates = ['cancelled']) {
         $this->setFields($fields);
         $this->paramCapacity = $paramCapacity;
         $this->message = $message;
@@ -51,18 +55,27 @@ class ResourceAvailability extends AbstractAdjustment {
         $this->excludeStates = $excludeStates;
     }
 
+    /**
+     * @param Form $form
+     * @param Machine $machine
+     * @param Holder $holder
+     */
     protected function _adjust(Form $form, Machine $machine, Holder $holder) {
         $groups = $holder->getGroupedSecondaryHolders();
-        $groups[] = array(
+        $groups[] = [
             'service' => $holder->getPrimaryHolder()->getService(),
-            'holders' => array($holder->getPrimaryHolder()),
-        );
+            'holders' => [$holder->getPrimaryHolder()],
+        ];
 
         $services = [];
         $controls = [];
+
         foreach ($groups as $group) {
             $holders = [];
             $field = null;
+            /**
+             * @var BaseHolder $baseHolder
+             */
             foreach ($group['holders'] as $baseHolder) {
                 $name = $baseHolder->getName();
                 foreach ($this->fields as $fieldMask) {
@@ -74,7 +87,7 @@ class ResourceAvailability extends AbstractAdjustment {
                         $holders[] = $baseHolder;
                         $controls[] = $foundControls[$name];
                         $field = $fieldMask;
-                    } else if ($name == substr($fieldMask, 0, strpos($fieldMask, self::DELIMITER))) {
+                    } elseif ($name == substr($fieldMask, 0, strpos($fieldMask, self::DELIMITER))) {
                         $holders[] = $baseHolder;
                         $controls[] = reset($foundControls); // assume single result;
                         $field = $fieldMask;
@@ -82,18 +95,24 @@ class ResourceAvailability extends AbstractAdjustment {
                 }
             }
             if ($holders) {
-                $services[] = array(
+                $services[] = [
                     'service' => $group['service'],
                     'holders' => $holders,
                     'field' => $field,
-                );
+                ];
             }
         }
 
         $usage = 0;
         foreach ($services as $serviceData) {
+            /**
+             * @var BaseHolder $firstHolder
+             */
             $firstHolder = reset($serviceData['holders']);
             $event = $firstHolder->getEvent();
+            /**
+             * @var GroupedSelection $table
+             */
             $table = $serviceData['service']->getTable();
             $table->where($firstHolder->getEventId(), $event->getPrimary());
             if ($this->includeStates !== BaseMachine::STATE_ANY) {

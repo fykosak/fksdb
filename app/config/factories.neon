@@ -18,18 +18,17 @@ services:
         class: FKSDB\Components\Controls\Breadcrumbs\BreadcrumbsFactory(%navigation.expiration%, ...)
     storedQueryFactory:
         class: Exports\StoredQueryFactory(@readOnlyConnection,...)
-    resultsModelFactory: ResultsModelFactory
+    resultsModelFactory: FKSDB\Results\ResultsModelFactory
     statsModelFactory: StatsModelFactory
     pipelineFactory:
         class: Tasks\PipelineFactory(%tasks.columnMapping%, %tasks.contributionMapping%, %tasks.defaultStudyYears%, ...)
-    flashDumpFactory:
-        class: FKSDB\Logging\FlashDumpFactory(%logToFlash%)
     event.DBReflectionFactory:
         class: FKSDB\Components\Forms\Factories\Events\DBReflectionFactory
+#transition
+    transitionsFactory: FKSDB\Transitions\TransitionsFactory
+
 
 
 factories:
 # (so far unused)
 
-includes:
-    - logToFlash.neon

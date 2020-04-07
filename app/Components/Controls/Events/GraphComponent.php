@@ -19,15 +19,23 @@ class GraphComponent extends Control {
     private $baseMachine;
     private $expressionPrinter;
 
+    /**
+     * GraphComponent constructor.
+     * @param BaseMachine $baseMachine
+     * @param ExpressionPrinter $expressionPrinter
+     */
     function __construct(BaseMachine $baseMachine, ExpressionPrinter $expressionPrinter) {
         parent::__construct();
-        $this->monitor('FKSDB\Application\IJavaScriptCollector');
+        $this->monitor(IJavaScriptCollector::class);
         $this->baseMachine = $baseMachine;
         $this->expressionPrinter = $expressionPrinter;
     }
 
     private $attachedJS = false;
 
+    /**
+     * @param $obj
+     */
     protected function attached($obj) {
         parent::attached($obj);
         if (!$this->attachedJS && $obj instanceof IJavaScriptCollector) {
@@ -38,6 +46,10 @@ class GraphComponent extends Control {
         }
     }
 
+    /**
+     * @param null $class
+     * @return \Nette\Templating\ITemplate
+     */
     protected function createTemplate($class = NULL) {
         $template = parent::createTemplate($class);
         $template->setTranslator($this->presenter->getTranslator());
@@ -45,23 +57,26 @@ class GraphComponent extends Control {
     }
 
     public function renderCanvas() {
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . "GraphComponent.canvas.latte");
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'GraphComponent.canvas.latte');
         $this->renderTemplate();
     }
 
     public function renderScript() {
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . "GraphComponent.script.latte");
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'GraphComponent.script.latte');
         $this->renderTemplate();
     }
 
     private function renderTemplate() {
         $this->template->machine = $this->baseMachine;
-        $this->template->states = array_merge(array_keys($this->baseMachine->getStates()), array(BaseMachine::STATE_INIT, BaseMachine::STATE_TERMINATED));
+        $this->template->states = array_merge(array_keys($this->baseMachine->getStates()), [BaseMachine::STATE_INIT, BaseMachine::STATE_TERMINATED]);
         $this->template->id = $this->getHtmlId();
         $this->template->printer = $this->expressionPrinter;
         $this->template->render();
     }
 
+    /**
+     * @return string
+     */
     private function getHtmlId() {
         return 'graph-' . $this->getUniqueId();
     }

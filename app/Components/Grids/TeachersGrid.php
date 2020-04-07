@@ -2,8 +2,16 @@
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\ModelTeacher;
+use FKSDB\ORM\Services\ServiceTeacher;
+use Nette\Application\BadRequestException;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Database\Table\Selection;
-use Nette\Utils\Html;
+use Nette\DI\Container;
+use NiftyGrid\DuplicateButtonException;
+use NiftyGrid\DuplicateColumnException;
+use NiftyGrid\DuplicateGlobalButtonException;
 use OrgModule\TeacherPresenter;
 use SQL\SearchableDataSource;
 
@@ -14,17 +22,26 @@ use SQL\SearchableDataSource;
 class TeachersGrid extends BaseGrid {
 
     /**
-     * @var \ServiceTeacher
+     * @var ServiceTeacher
      */
     private $serviceTeacher;
 
-    function __construct(\ServiceTeacher $serviceTeacher) {
-        parent::__construct();
-        $this->serviceTeacher = $serviceTeacher;
+    /**
+     * TeachersGrid constructor.
+     * @param Container $container
+     */
+    function __construct(Container $container) {
+        parent::__construct($container);
+        $this->serviceTeacher = $container->getByType(ServiceTeacher::class);
     }
 
     /**
-     * @param $presenter TeacherPresenter
+     * @param TeacherPresenter $presenter
+     * @throws InvalidLinkException
+     * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
+     * @throws DuplicateGlobalButtonException
+     * @throws BadRequestException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -44,41 +61,34 @@ class TeachersGrid extends BaseGrid {
         //
         // columns
         //
-        $this->addColumn('display_name', _('Name'))->setRenderer(function (\FKSDB\ORM\ModelTeacher $row) {
-            $person = $row->getPerson();
-            return $person->getFullname();
-        });
-        $this->addColumn('since', _('Since'))->setRenderer(function (\FKSDB\ORM\ModelTeacher $row) {
-            if ($row->since === null) {
-                return Html::el('span')->addAttributes(['class' => 'badge badge-secondary'])->add(_('undefined'));
-            }
-            return $row->since->format('Y-m-d');
-        });
-        $this->addColumn('until', _('Until'))->setRenderer(function (\FKSDB\ORM\ModelTeacher $row) {
-            if ($row->until === null) {
-                return Html::el('span')->addAttributes(['class' => 'badge badge-success'])->add(_('Still teaches'));
-            }
-            return $row->until->format('Y-m-d');
-        });
-        $this->addColumn('school_id', _('School'))->setRenderer(function (\FKSDB\ORM\ModelTeacher $row) {
+        $this->addColumns([
+            'referenced.person_name',
+            DbNames::TAB_TEACHER . '.note',
+            DbNames::TAB_TEACHER . '.state',
+            DbNames::TAB_TEACHER . '.since',
+            DbNames::TAB_TEACHER . '.until',
+            DbNames::TAB_TEACHER . '.number_brochures',
+        ]);
+        $this->addColumn('school_id', _('School'))->setRenderer(function (ModelTeacher $row) {
             return $row->getSchool()->name_abbrev;
         });
-
         //
         // operations
         //
         $this->addButton('edit', _('Edit'))
-            ->setText('Edit')//todo i18n
+            ->setText(_('Edit'))
             ->setLink(function ($row) {
                 return $this->getPresenter()->link('edit', $row->teacher_id);
-            })
-            ->setShow(function ($row) use ($presenter) {
-                return $presenter->authorized('edit', ['id' => $row->teacher_id]);
+            });
+        $this->addButton('detail', _('Detail'))
+            ->setText(_('Detail'))
+            ->setLink(function ($row) {
+                return $this->getPresenter()->link('detail', ['id' => $row->teacher_id]);
             });
 
         if ($presenter->authorized('create')) {
             $this->addGlobalButton('add')
-                ->setLabel('Create new teacher')
+                ->setLabel(_('Create new teacher'))
                 ->setLink($this->getPresenter()->link('create'));
         }
     }

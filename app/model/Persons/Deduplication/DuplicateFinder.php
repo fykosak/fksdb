@@ -3,10 +3,9 @@
 namespace Persons\Deduplication;
 
 use FKSDB\Config\GlobalParameters;
+use FKSDB\ORM\Services\ServicePerson;
 use Nette\Database\Table\ActiveRow;
-
 use Nette\Utils\Strings;
-use ServicePerson;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -20,7 +19,7 @@ class DuplicateFinder {
     const DIFFERENT_PATTERN = 'not-same';
 
     /**
-     * @var ServicePerson
+     * @var \FKSDB\ORM\Services\ServicePerson
      */
     private $servicePerson;
 
@@ -29,11 +28,19 @@ class DuplicateFinder {
      */
     private $parameters;
 
+    /**
+     * DuplicateFinder constructor.
+     * @param \FKSDB\ORM\Services\ServicePerson $servicePerson
+     * @param GlobalParameters $parameters
+     */
     function __construct(ServicePerson $servicePerson, GlobalParameters $parameters) {
         $this->servicePerson = $servicePerson;
         $this->parameters = $parameters['deduplication']['finder'];
     }
 
+    /**
+     * @return array
+     */
     public function getPairs() {
         $buckets = [];
         /* Create buckets for quadratic search. */
@@ -67,6 +74,10 @@ class DuplicateFinder {
         return $pairs;
     }
 
+    /**
+     * @param ActiveRow $row
+     * @return string
+     */
     private function getBucketKey(ActiveRow $row) {
         $fam = Strings::webalize($row->family_name);
         return substr($fam, 0, 3) . substr($fam, -1);
@@ -96,7 +107,7 @@ class DuplicateFinder {
          */
         if (!$a->PI || !$b->PI) { // if person_info records don't exist
             $emailScore = 0.5; // cannot say anything
-        } else if (!$a->email || !$b->email) {
+        } elseif (!$a->email || !$b->email) {
             $emailScore = 0.8; // a little bit more
         } else {
             $emailScore = 1 - $this->relativeDistance($a->email, $b->email);
@@ -109,6 +120,10 @@ class DuplicateFinder {
         return $this->parameters['familyWeight'] * $familyScore + $this->parameters['otherWeight'] * $otherScore + $this->parameters['emailWeight'] * $emailScore;
     }
 
+    /**
+     * @param ActiveRow $person
+     * @return array
+     */
     private function getDifferentPersons(ActiveRow $person) {
         if (!isset($person->duplicates)) {
             return [];
@@ -122,10 +137,20 @@ class DuplicateFinder {
         return $differentPersonIds;
     }
 
+    /**
+     * @param $a
+     * @param $b
+     * @return float|int
+     */
     private function stringScore($a, $b) {
         return 1 - $this->relativeDistance(Strings::webalize($a), Strings::webalize($b));
     }
 
+    /**
+     * @param $a
+     * @param $b
+     * @return float|int
+     */
     private function relativeDistance($a, $b) {
         $maxLen = max(strlen($a), strlen($b));
         if ($maxLen == 0) {

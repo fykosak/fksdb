@@ -1,8 +1,8 @@
 <?php
 
 use Events\EventTestCase;
-use Nette\DateTime;
 use Nette\DI\Container;
+use Nette\Utils\DateTime;
 use PublicModule\ApplicationPresenter;
 use Tester\Assert;
 
