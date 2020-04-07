@@ -11,7 +11,6 @@ use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServiceSchool;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
-use Nette\Security\IResource;
 
 /**
  * Class SchoolPresenter

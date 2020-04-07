@@ -4,8 +4,6 @@ namespace Authorization;
 
 use Authorization\Assertions\EventOrgByIdAssertion;
 use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Models\ModelLogin;
-use FKSDB\ORM\Models\ModelRole;
 use Nette\Database\Connection;
 use Nette\Security\IUserStorage;
 use Nette\Security\Permission;

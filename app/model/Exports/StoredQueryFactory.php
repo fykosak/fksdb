@@ -8,7 +8,6 @@ use DOMNode;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\Presenter;
 use Nette\Database\Connection;
 use Nette\InvalidArgumentException;
 use Utils;

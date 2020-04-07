@@ -7,8 +7,6 @@ use FKSDB\Components\Control\AjaxUpload\SubmitRevokeTrait;
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Services\ServiceSubmit;
-use FKSDB\Submits\FilesystemCorrectedSubmitStorage;
-use FKSDB\Submits\FilesystemUploadedSubmitStorage;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
@@ -63,7 +61,7 @@ class SubmitsGrid extends BaseGrid {
         //
         // columns
         //
-        $this->addColumn('task', _('Úloha'))
+        $this->addColumn('task', _('Task'))
             ->setRenderer(function (ModelSubmit $row) use ($presenter) {
                 return $row->getTask()->getFQName();
             });
@@ -73,9 +71,9 @@ class SubmitsGrid extends BaseGrid {
         //
         // operations
         //
-        $this->addButton('revoke', _('Zrušit'))
+        $this->addButton('revoke', _('Cancel'))
             ->setClass('btn btn-sm btn-warning')
-            ->setText(_('Zrušit'))
+            ->setText(_('Cancel'))
             ->setShow(function ($row) {
                 return $this->canRevoke($row);
             })
@@ -105,7 +103,7 @@ class SubmitsGrid extends BaseGrid {
      * @throws InvalidLinkException
      */
     public function handleRevoke(int $id) {
-        list($message,) = $this->traitHandleRevoke($id);
+        list($message) = $this->traitHandleRevoke($id);
         $this->flashMessage($message->getMessage(), $message->getLevel());
     }
 

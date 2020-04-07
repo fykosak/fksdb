@@ -8,7 +8,6 @@ use Events\Model\ApplicationHandlerFactory;
 use Events\Model\Grid\IHolderSource;
 use Events\Model\Holder\Holder;
 use FKSDB\Application\IJavaScriptCollector;
-use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\UI\Control;

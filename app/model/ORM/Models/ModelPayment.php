@@ -14,8 +14,6 @@ use FKSDB\Transitions\Machine;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\IResource;
 use Nette\Utils\DateTime;
-use function in_array;
-use function sprintf;
 
 /**
  *
@@ -84,14 +82,14 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
      * @return string
      */
     public function getPaymentId(): string {
-        return sprintf('%d%04d', $this->event_id, $this->payment_id);
+        return \sprintf('%d%04d', $this->event_id, $this->payment_id);
     }
 
     /**
      * @return bool
      */
     public function canEdit(): bool {
-        return in_array($this->getState(), [Machine::STATE_INIT, self::STATE_NEW]);
+        return \in_array($this->getState(), [Machine::STATE_INIT, self::STATE_NEW]);
     }
 
     /**

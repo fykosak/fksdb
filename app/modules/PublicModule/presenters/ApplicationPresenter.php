@@ -28,7 +28,6 @@ use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
-use function sprintf;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -145,7 +144,7 @@ class ApplicationPresenter extends BasePresenter {
 
     public function titleDefault() {
         if ($this->getEventApplication()) {
-            $this->setTitle(sprintf(_('Application for %s: %s'), $this->getEvent()->name, $this->getEventApplication()->__toString()), 'fa fa-calendar-check-o');
+            $this->setTitle(\sprintf(_('Application for %s: %s'), $this->getEvent()->name, $this->getEventApplication()->__toString()), 'fa fa-calendar-check-o');
         } else {
             $this->setTitle($this->getEvent(), 'fa fa-calendar-check-o');
         }
@@ -157,7 +156,7 @@ class ApplicationPresenter extends BasePresenter {
     public function titleList() {
         $contest = $this->getSelectedContest();
         if ($contest) {
-            $this->setTitle(sprintf(_('Moje přihlášky (%s)'), $contest->name), 'fa fa-calendar');
+            $this->setTitle(\sprintf(_('Moje přihlášky (%s)'), $contest->name), 'fa fa-calendar');
         } else {
             $this->setTitle(_('Moje přihlášky'), 'fa fa-calendar');
         }
