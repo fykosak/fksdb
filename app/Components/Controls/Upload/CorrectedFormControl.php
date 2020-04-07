@@ -47,12 +47,12 @@ class CorrectedFormControl extends SeriesTableControl {
     private function handleSuccess(Form $form) {
         $values = $form->getValues();
         $ids = [];
-        foreach (explode(',', $values['submits']) as $value) {
+        foreach (\explode(',', $values['submits']) as $value) {
             $ids[] = trim($value);
         }
         try {
-            $updated = $this->getContext()->getSubmits()->where('submit_id', $ids)->update(['corrected' => 1]);
-            $this->flashMessage(sprintf(_('Updated %d submits'), $updated), ILogger::INFO);
+            $updated = $this->getSeriesTable()->getSubmits()->where('submit_id', $ids)->update(['corrected' => 1]);
+            $this->flashMessage(\sprintf(_('Updated %d submits'), $updated), ILogger::INFO);
         } catch (\PDOException $exception) {
             $this->flashMessage(_('Error during updating'), ILogger::ERROR);
         }

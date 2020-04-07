@@ -23,7 +23,6 @@ use Persons\DenyResolver;
 use Persons\ExtendedPersonHandler;
 use ReflectionException;
 use FKSDB\Components\Controls\Stalking;
-use function str_replace;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -377,7 +376,7 @@ class PersonPresenter extends BasePresenter {
                 }
                 $pairContainer = new ContainerWithOptions();
                 $tableContainer->addComponent($pairContainer, $pairId);
-                $pairContainer->setOption('label', str_replace('_', ' ', $table));
+                $pairContainer->setOption('label', \str_replace('_', ' ', $table));
                 foreach ($data[Merger::IDX_TRUNK] as $column => $value) {
                     if (isset($data[Merger::IDX_RESOLUTION]) && array_key_exists($column, $data[Merger::IDX_RESOLUTION])) {
                         $default = $data[Merger::IDX_RESOLUTION][$column];

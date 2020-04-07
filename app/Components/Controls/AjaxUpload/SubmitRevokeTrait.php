@@ -13,7 +13,6 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use PublicModule\SubmitPresenter;
 use Tracy\Debugger;
-use function sprintf;
 
 /**
  * Trait SubmitRevokeTrait
@@ -48,7 +47,7 @@ trait SubmitRevokeTrait {
             $serviceSubmit->dispose($submit);
             $data = $serviceSubmit->serializeSubmit(null, $submit->getTask(), $this->getPresenter());
 
-            return [new Message(sprintf('Odevzdání úlohy %s zrušeno.', $submit->getTask()->getFQName()), ILogger::WARNING), $data];
+            return [new Message(\sprintf('Odevzdání úlohy %s zrušeno.', $submit->getTask()->getFQName()), ILogger::WARNING), $data];
 
         } catch (StorageException $exception) {
             Debugger::log($exception);
