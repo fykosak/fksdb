@@ -3,6 +3,7 @@
 namespace OrgModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
@@ -31,16 +32,10 @@ abstract class EntityPresenter extends BasePresenter {
     private $model;
 
     /**
-     * Name of the resource that is tested in operations.
-     * @var string
-     */
-    protected $modelResourceId;
-
-    /**
      * @throws BadRequestException
      */
     public function authorizedCreate() {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->modelResourceId, 'create', $this->getSelectedContest()));
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->getModelResource(), 'create', $this->getSelectedContest()));
     }
 
     /**
@@ -55,7 +50,7 @@ abstract class EntityPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function authorizedList() {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->modelResourceId, 'list', $this->getSelectedContest()));
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->getModelResource(), 'list', $this->getSelectedContest()));
     }
 
     /**
@@ -86,7 +81,7 @@ abstract class EntityPresenter extends BasePresenter {
     }
 
     /**
-     * @return \FKSDB\ORM\AbstractModelSingle|null|IModel
+     * @return AbstractModelSingle|null|IModel
      * @deprecated
      */
     public final function getModel() {
@@ -98,7 +93,7 @@ abstract class EntityPresenter extends BasePresenter {
 
     /**
      * @param int $id
-     * @return \FKSDB\ORM\AbstractModelSingle|IModel
+     * @return AbstractModelSingle|IModel
      * @throws BadRequestException
      */
     public function getModel2(int $id = null) {
@@ -125,25 +120,27 @@ abstract class EntityPresenter extends BasePresenter {
 
     /**
      * @param $id
-     * @return \FKSDB\ORM\AbstractModelSingle
+     * @return AbstractModelSingle
      */
     abstract protected function loadModel($id);
 
     /**
-     * @param $name
      * @return mixed
      */
-    abstract protected function createComponentEditComponent($name);
+    abstract protected function createComponentEditComponent();
 
     /**
-     * @param $name
      * @return mixed
      */
-    abstract protected function createComponentCreateComponent($name);
+    abstract protected function createComponentCreateComponent();
 
     /**
-     * @param $name
      * @return mixed
      */
-    abstract protected function createComponentGrid($name);
+    abstract protected function createComponentGrid();
+
+    /**
+     * @return string
+     */
+    abstract protected function getModelResource():string ;
 }

@@ -3,6 +3,7 @@
 namespace Events\Machine;
 
 use Events\Model\ExpressionEvaluator;
+use Events\Model\Holder\BaseHolder;
 use Events\TransitionConditionFailedException;
 use Events\TransitionOnExecutedException;
 use Events\TransitionUnsatisfiedTargetException;
@@ -16,54 +17,34 @@ use Nette\InvalidArgumentException;
  */
 class Transition extends FreezableObject {
 
-    /**
-     * @var BaseMachine
-     */
+    /** @var BaseMachine */
     private $baseMachine;
 
-    /**
-     * @var Transition[]
-     */
+    /** @var Transition[] */
     private $inducedTransitions = [];
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $mask;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $name;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $target;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $source;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $label;
 
-    /**
-     * @var boolean|callable
-     */
+    /** @var boolean|callable */
     private $condition;
 
-    /**
-     * @var boolean|callable
-     */
+    /** @var boolean|callable */
     private $dangerous;
 
-    /**
-     * @var boolean|callable
-     */
+    /** @var boolean|callable */
     private $visible;
 
     /**
@@ -146,35 +127,42 @@ class Transition extends FreezableObject {
     /**
      * @return string
      */
-    public function getTarget() {
+    public function getTarget(): string {
         return $this->target;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSource(): string {
+        return $this->source;
     }
 
     /**
      * @return bool
      */
-    public function isCreating() {
+    public function isCreating(): bool {
         return strpos($this->source, BaseMachine::STATE_INIT) !== false;
     }
 
     /**
      * @return bool
      */
-    public function isTerminating() {
+    public function isTerminating(): bool {
         return $this->target == BaseMachine::STATE_TERMINATED;
     }
 
     /**
      * @return bool
      */
-    public function isDangerous() {
+    public function isDangerous(): bool {
         return $this->isTerminating() || $this->evaluator->evaluate($this->dangerous, $this);
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
-    public function isVisible() {
+    public function isVisible(): bool {
         return $this->evaluator->evaluate($this->visible, $this);
     }
 
@@ -311,7 +299,6 @@ class Transition extends FreezableObject {
             throw new TransitionConditionFailedException($blockingTransition);
         }
 
-
         $inducedTransitions = [];
         foreach ($this->getInducedTransitions() as $inducedTransition) {
             $inducedTransition->_execute();
@@ -353,9 +340,9 @@ class Transition extends FreezableObject {
     }
 
     /**
-     * @return \Events\Model\Holder\BaseHolder
+     * @return BaseHolder
      */
-    public function getBaseHolder() {
+    public function getBaseHolder(): BaseHolder {
         return $this->getBaseMachine()->getMachine()->getHolder()->getBaseHolder($this->getBaseMachine()->getName());
     }
 
@@ -388,16 +375,16 @@ class Transition extends FreezableObject {
      * @param string $mask
      * @return array
      */
-    private static function parseMask($mask) {
+    private static function parseMask(string $mask): array {
         return explode('->', $mask);
     }
 
     /**
-     * @param $mask
-     * @param $states
+     * @param string $mask
+     * @param array $states
      * @return bool
      */
-    public static function validateTransition($mask, $states) {
+    public static function validateTransition(string $mask, array $states): bool {
         $parts = self::parseMask($mask);
         if (count($parts) != 2) {
             return false;
@@ -407,12 +394,12 @@ class Transition extends FreezableObject {
         $sources = explode('|', $sources);
 
         foreach ($sources as $source) {
-            if (!in_array($source, array_merge($states, array(BaseMachine::STATE_ANY, BaseMachine::STATE_INIT)))) {
+            if (!in_array($source, array_merge($states, [BaseMachine::STATE_ANY, BaseMachine::STATE_INIT]))) {
                 return false;
             }
         }
 
-        if (!in_array($target, array_merge($states, array(BaseMachine::STATE_TERMINATED)))) {
+        if (!in_array($target, array_merge($states, [BaseMachine::STATE_TERMINATED]))) {
             return false;
         }
 

@@ -24,7 +24,7 @@ class StoredQueryTagAssertion {
      */
     function __construct($tagNames) {
         if (!is_array($tagNames)) {
-            $tagNames = array($tagNames);
+            $tagNames = [$tagNames];
         }
         $this->tagNames = $tagNames;
     }

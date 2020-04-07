@@ -6,6 +6,7 @@ use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
+use FKSDB\ORM\Models\Schedule\ModelSchedulePayment;
 use FKSDB\YearCalculator;
 use ModelMPersonHasFlag;
 use ModelMPostContact;
@@ -14,6 +15,7 @@ use Nette\Database\Table\Selection;
 use Nette\Security\IResource;
 use Nette\Utils\DateTime;
 use Nette\Utils\Json;
+use Nette\Utils\JsonException;
 
 /**
  *
@@ -47,6 +49,13 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
      */
     public function getPerson(): ModelPerson {
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPreferredLang() {
+        return $this->getInfo() ? $this->getInfo()->preferred_lang : null;
     }
 
     /**
@@ -87,10 +96,16 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
     }
 
     /**
-     * @param null $contestId
-     * @return \Nette\Database\Table\GroupedSelection
+     * @param int|ModelContest $contest
+     * @return GroupedSelection
      */
-    public function getContestants($contestId = null): GroupedSelection {
+    public function getContestants($contest = null): GroupedSelection {
+        $contestId = null;
+        if ($contest instanceof ModelContest) {
+            $contestId = $contest->contest_id;
+        } else {
+            $contestId = $contest;
+        }
         $related = $this->related(DbNames::TAB_CONTESTANT_BASE, 'person_id');
         if ($contestId) {
             $related->where('contest_id', $contestId);
@@ -100,7 +115,7 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
 
     /**
      * @param null $contestId
-     * @return \Nette\Database\Table\GroupedSelection
+     * @return GroupedSelection
      */
     public function getOrgs($contestId = null): GroupedSelection {
         $related = $this->related(DbNames::TAB_ORG, 'person_id');
@@ -179,7 +194,6 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
 
         $result = [];
         foreach ($postContacts as $postContact) {
-            $postContact->address_id; // stupid touch
             $address = $postContact->ref(DbNames::TAB_ADDRESS, 'address_id');
             $result[] = ModelMPostContact::createFromExistingModels(
                 ModelAddress::createFromActiveRow($address), ModelPostContact::createFromActiveRow($postContact)
@@ -210,7 +224,7 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
         $pAddresses = $this->getMPostContacts(ModelPostContact::TYPE_PERMANENT);
         if (count($pAddresses)) {
             return reset($pAddresses);
-        } else if (!$noFallback) {
+        } elseif (!$noFallback) {
             return $this->getDeliveryAddress();
         } else {
             return null;
@@ -221,8 +235,8 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
      * @return GroupedSelection
      */
     public function getEventParticipant(): Selection {
-        return (new Selection(DbNames::TAB_EVENT_PARTICIPANT, $this->getTable()->getConnection()))->where('person_id', $this->person_id);
-        // return $this->related(DbNames::TAB_EVENT_PARTICIPANT, 'person_id');
+        //return (new Selection($this->getTable()->data,bNames::TAB_EVENT_PARTICIPANT, $this->getTable()->getConnection()))->where('person_id', $this->person_id);
+        return $this->related(DbNames::TAB_EVENT_PARTICIPANT, 'person_id');
     }
 
     /**
@@ -284,7 +298,7 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
     }
 
     /**
-     * @param \FKSDB\YearCalculator $yearCalculator
+     * @param YearCalculator $yearCalculator
      * @return ModelOrg[] indexed by contest_id
      * @internal To get active orgs call FKSDB\ORM\Models\ModelLogin::getActiveOrgs
      */
@@ -303,7 +317,7 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
     /**
      * Active contestant := contestant in the highest year but not older than the current year.
      *
-     * @param \FKSDB\YearCalculator $yearCalculator
+     * @param YearCalculator $yearCalculator
      * @return ModelContestant[] indexed by contest_id
      */
     public function getActiveContestants(YearCalculator $yearCalculator) {
@@ -367,7 +381,7 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
      * @param integer eventId
      * @param string $type
      * @return string
-     * @throws \Nette\Utils\JsonException
+     * @throws JsonException
      */
     public function getSerializedSchedule(int $eventId, string $type) {
         if (!$eventId) {
@@ -431,6 +445,26 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
      */
     public function getSchedule(): GroupedSelection {
         return $this->related(DbNames::TAB_PERSON_SCHEDULE, 'person_id');
+    }
+
+    /**
+     * @param ModelEvent $event
+     * @param array $types
+     * @return ModelSchedulePayment[]
+     */
+    public function getScheduleRests(ModelEvent $event, array $types = ['accommodation', 'weekend']): array {
+        $toPay = [];
+        $schedule = $this->getScheduleForEvent($event)
+            ->where('schedule_item.schedule_group.schedule_group_type', $types)
+            ->where('schedule_item.price_czk IS NOT NULL');
+        foreach ($schedule as $pSchRow) {
+            $pSchedule = ModelPersonSchedule::createFromActiveRow($pSchRow);
+            $payment = $pSchedule->getPayment();
+            if (!$payment || $payment->state !== ModelPayment::STATE_RECEIVED) {
+                $toPay[] = $pSchedule;
+            }
+        }
+        return $toPay;
     }
 
     /**

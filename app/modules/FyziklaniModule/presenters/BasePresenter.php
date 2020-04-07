@@ -4,8 +4,6 @@ namespace FyziklaniModule;
 
 use EventModule\BasePresenter as EventBasePresenter;
 use FKSDB\Components\Controls\Choosers\FyziklaniChooser;
-use FKSDB\Components\Factories\FyziklaniFactory;
-use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
@@ -33,18 +31,6 @@ abstract class BasePresenter extends EventBasePresenter {
      * @var ServiceFyziklaniSubmit
      */
     private $serviceFyziklaniSubmit;
-
-    /**
-     * @var FyziklaniFactory
-     */
-    protected $fyziklaniComponentsFactory;
-
-    /**
-     * @param FyziklaniFactory $fyziklaniComponentsFactory
-     */
-    public function injectFyziklaniComponentsFactory(FyziklaniFactory $fyziklaniComponentsFactory) {
-        $this->fyziklaniComponentsFactory = $fyziklaniComponentsFactory;
-    }
 
     /**
      * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
@@ -96,11 +82,11 @@ abstract class BasePresenter extends EventBasePresenter {
     }
 
     /**
-     * @param ModelEvent $event
      * @return bool
+     * @throws BadRequestException
      */
-    protected function isEnabledForEvent(ModelEvent $event): bool {
-        return $event->event_type_id === 1;
+    protected function isEnabled(): bool {
+        return $this->getEvent()->event_type_id === 1;
     }
 
     /**

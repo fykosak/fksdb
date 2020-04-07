@@ -158,7 +158,7 @@ class ContestantSubmits extends BaseControl {
         if (!$value) {
             $this->rawValue = $this->serializeValue([]);
             $this->value = $this->deserializeValue($this->rawValue);
-        } else if (is_string($value)) {
+        } elseif (is_string($value)) {
             $this->rawValue = $value;
             $this->value = $this->deserializeValue($value);
         } else {

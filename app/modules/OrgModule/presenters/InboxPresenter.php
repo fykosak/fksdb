@@ -4,6 +4,10 @@ namespace OrgModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\FormControl\OptimisticFormControl;
+use FKSDB\Components\Controls\Upload\CheckSubmitsControl;
+use FKSDB\Components\Controls\Upload\CorrectedFormControl;
+use FKSDB\Components\Controls\Upload\PointsTableControl;
+use FKSDB\Components\Controls\Upload\SubmitsTableControl;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\ContestantSubmits;
@@ -12,12 +16,13 @@ use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Models\ModelTaskContribution;
-use FKSDB\ORM\Services\ServiceContestant;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\ORM\Services\ServiceTaskContribution;
-use FKSDB\Submits\ISubmitStorage;
 use FKSDB\Submits\SeriesTable;
+use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\Caching\Cache;
 use Nette\Security\Permission;
@@ -28,14 +33,7 @@ use Nette\Security\Permission;
  */
 class InboxPresenter extends SeriesPresenter {
 
-    const POST_CT_ID = 'ctId';
-    const POST_ORDER = 'order';
     const TASK_PREFIX = 'task';
-
-    /**
-     * @var ISubmitStorage
-     */
-    private $submitStorage;
 
     /**
      * @var ServiceTaskContribution
@@ -53,11 +51,6 @@ class InboxPresenter extends SeriesPresenter {
     private $serviceSubmit;
 
     /**
-     * @var ServiceContestant
-     */
-    private $serviceContestant;
-
-    /**
      * @var SeriesTable
      */
     private $seriesTable;
@@ -66,13 +59,6 @@ class InboxPresenter extends SeriesPresenter {
      * @var PersonFactory
      */
     private $personFactory;
-
-    /**
-     * @param ISubmitStorage $submitStorage
-     */
-    public function injectSubmitStorage(ISubmitStorage $submitStorage) {
-        $this->submitStorage = $submitStorage;
-    }
 
     /**
      * @param ServiceTaskContribution $serviceTaskContribution
@@ -96,13 +82,6 @@ class InboxPresenter extends SeriesPresenter {
     }
 
     /**
-     * @param ServiceContestant $serviceContestant
-     */
-    public function injectServiceContestant(ServiceContestant $serviceContestant) {
-        $this->serviceContestant = $serviceContestant;
-    }
-
-    /**
      * @param SeriesTable $seriesTable
      */
     public function injectSeriesTable(SeriesTable $seriesTable) {
@@ -115,47 +94,74 @@ class InboxPresenter extends SeriesPresenter {
     public function injectPersonFactory(PersonFactory $personFactory) {
         $this->personFactory = $personFactory;
     }
-
-    protected function startup() {
-        parent::startup();
-        $this->seriesTable->setContest($this->getSelectedContest());
-        $this->seriesTable->setYear($this->getSelectedYear());
-        $this->seriesTable->setSeries($this->getSelectedSeries());
-    }
-
+    /* ***************** AUTH ***********************/
     /**
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     public function authorizedDefault() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
     }
 
     /**
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
+     */
+    public function authorizedList() {
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'list', $this->getSelectedContest()));
+    }
+
+    /**
+     * @throws BadRequestException
      */
     public function authorizedHandout() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('task', 'edit', $this->getSelectedContest()));
     }
 
-    public function titleDefault() {
-        $this->setTitle(_('Příjem řešení'));
-        $this->setIcon('fa fa-envelope-open');
+    /**
+     * @throws BadRequestException
+     */
+    public function authorizedPoints() {
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'points', $this->getSelectedContest()));
     }
 
     /**
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
-    public function renderDefault() {
-        /**
-         * @var OptimisticFormControl $control
-         */
-        $control = $this->getComponent('inboxForm');
-        $control->getForm()->setDefaults();
+    public function authorizedCorrected() {
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'corrected', $this->getSelectedContest()));
+    }
+
+    /* ***************** TITLES ***********************/
+    public function titleDefault() {
+        $this->setTitle(_('Inbox'), 'fa fa-envelope-open');
     }
 
     public function titleHandout() {
-        $this->setTitle(_('Rozdělení úloh opravovatelům'));
-        $this->setIcon('fa fa-inbox');
+        $this->setTitle(_('Rozdělení úloh opravovatelům'), 'fa fa-inbox');
+    }
+
+    public function titleList() {
+        $this->setTitle(_('List of solutions'), 'fa fa-cloud-download');
+    }
+
+    public function titleCorrected() {
+        $this->setTitle(_('Corrected'), 'fa fa-inbox');
+    }
+
+    public function titlePoints() {
+        $this->setTitle(_('Points'), 'fa fa-inbox');
+    }
+
+    /* *********** LIVE CYCLE *************/
+    /**
+     * @throws AbortException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     */
+    protected function startup() {
+        parent::startup();
+        $this->seriesTable->setContest($this->getSelectedContest());
+        $this->seriesTable->setYear($this->getSelectedYear());
+        $this->seriesTable->setSeries($this->getSelectedSeries());
     }
 
     public function actionHandout() {
@@ -165,8 +171,18 @@ class InboxPresenter extends SeriesPresenter {
        // $connection->getDatabaseReflection()->setConnection($connection);
     }
 
+    /* ******************** RENDER ****************/
     /**
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
+     */
+    public function renderDefault() {
+        /** @var OptimisticFormControl $control */
+        $control = $this->getComponent('inboxForm');
+        $control->getForm()->setDefaults();
+    }
+
+    /**
+     * @throws BadRequestException
      */
     public function renderHandout() {
         $taskIds = [];
@@ -174,10 +190,10 @@ class InboxPresenter extends SeriesPresenter {
             $task = ModelTask::createFromActiveRow($row);
             $taskIds[] = $task->task_id;
         }
-        $contributions = $this->serviceTaskContribution->getTable()->where(array(
+        $contributions = $this->serviceTaskContribution->getTable()->where([
             'type' => ModelTaskContribution::TYPE_GRADE,
             'task_id' => $taskIds,
-        ));
+        ]);
 
         $values = [];
         foreach ($contributions as $row) {
@@ -190,34 +206,31 @@ class InboxPresenter extends SeriesPresenter {
             }
             $values[$key][] = $personId;
         }
-        /**
-         * @var FormControl $control
-         */
+        /** @var FormControl $control */
         $control = $this->getComponent('handoutForm');
         $control->getForm()->setDefaults($values);
 
     }
-
+    /* ******************* COMPONENTS ******************/
     /**
      * @return OptimisticFormControl
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     protected function createComponentInboxForm() {
-        $controlForm = new OptimisticFormControl([$this->seriesTable, 'getFingerprint'], [$this->seriesTable, 'formatAsFormValues']);
-        /*$form = new OptimisticForm(
-            array($this->seriesTable, 'getFingerprint'), array($this->seriesTable, 'formatAsFormValues')
-        );*/
+        $controlForm = new OptimisticFormControl(
+            function () {
+                return $this->seriesTable->getFingerprint();
+            },
+            function () {
+                return $this->seriesTable->formatAsFormValues();
+            }
+        );
         $form = $controlForm->getForm();
-        /*  $renderer = new BootstrapRenderer();
-          $renderer->setColLeft(2);
-          $renderer->setColRight(10);
-          $form->setRenderer($renderer);*/
 
         $contestants = $this->seriesTable->getContestants();
         $tasks = $this->seriesTable->getTasks();
         $container = new ModelContainer();
         $form->addComponent($container, SeriesTable::FORM_CONTESTANT);
-        // $container = $form->addContainer(SeriesTable::FORM_CONTESTANT);
 
         foreach ($contestants as $row) {
             $contestant = ModelContestant::createFromActiveRow($row);
@@ -225,7 +238,6 @@ class InboxPresenter extends SeriesPresenter {
             $control->setClassName('inbox');
             $namingContainer = new ModelContainer();
             $container->addComponent($namingContainer, $contestant->ct_id);
-            // $namingContainer = $container->addContainer($contestant->ct_id);
             $namingContainer->addComponent($control, SeriesTable::FORM_SUBMIT);
         }
 
@@ -244,28 +256,60 @@ class InboxPresenter extends SeriesPresenter {
 
     /**
      * @return FormControl
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     protected function createComponentHandoutForm() {
         $formControl = new FormControl();
         $form = $formControl->getForm();
+        $orgProvider = new PersonProvider($this->servicePerson);
+        $orgProvider->filterOrgs($this->getSelectedContest(), $this->yearCalculator);
 
         foreach ($this->seriesTable->getTasks() as $row) {
             $task = ModelTask::createFromActiveRow($row);
-            $control = $this->personFactory->createPersonSelect(false, $task->getFQName(), $this->getOrgProvider());
+            $control = $this->personFactory->createPersonSelect(false, $task->getFQName(), $orgProvider);
             $control->setMultiSelect(true);
             $form->addComponent($control, self::TASK_PREFIX . $task->task_id);
         }
 
         $form->addSubmit('save', _('Save'));
-        $form->onSuccess[] = callback($this, 'handoutFormSuccess');
+        $form->onSuccess[] = function (Form $form) {
+            $this->handoutFormSuccess($form);
+        };
 
         return $formControl;
     }
 
     /**
+     * @return CorrectedFormControl
+     */
+    public function createComponentCorrectedFormControl(): CorrectedFormControl {
+        return new CorrectedFormControl($this->getContext(), $this->seriesTable);
+    }
+
+    /**
+     * @return CheckSubmitsControl
+     */
+    protected function createComponentCheckControl(): CheckSubmitsControl {
+        return new CheckSubmitsControl($this->getContext(), $this->seriesTable);
+    }
+
+    /**
+     * @return SubmitsTableControl
+     */
+    protected function createComponentSubmitsTableControl(): SubmitsTableControl {
+        return new SubmitsTableControl($this->getContext(), $this->seriesTable);
+    }
+
+    /**
+     * @return PointsTableControl
+     */
+    protected function createComponentPointsTableControl(): PointsTableControl {
+        return new PointsTableControl($this->getContext(), $this->seriesTable);
+    }
+
+    /**
      * @param Form $form
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function inboxFormSuccess(Form $form) {
         $values = $form->getValues();
@@ -275,11 +319,8 @@ class InboxPresenter extends SeriesPresenter {
         foreach ($values[SeriesTable::FORM_CONTESTANT] as $container) {
             $submits = $container[SeriesTable::FORM_SUBMIT];
 
-            foreach ($submits as $row) {
-                /**
-                 * @var ModelSubmit $submit
-                 */
-                $submit = $row;
+            foreach ($submits as $submit) {
+                /** @var ModelSubmit $submit */
                 // ACL granularity is very rough, we just check it in action* method
                 if ($submit->isEmpty()) {
                     $this->serviceSubmit->dispose($submit);
@@ -295,7 +336,7 @@ class InboxPresenter extends SeriesPresenter {
 
     /**
      * @param Form $form
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function handoutFormSuccess(Form $form) {
         $values = $form->getValues();
@@ -307,10 +348,10 @@ class InboxPresenter extends SeriesPresenter {
 
         foreach ($this->seriesTable->getTasks() as $row) {
             $task = ModelTask::createFromActiveRow($row);
-            $service->getTable()->where(array(
+            $service->getTable()->where([
                 'task_id' => $task->task_id,
                 'type' => ModelTaskContribution::TYPE_GRADE
-            ))->delete();
+            ])->delete();
             $key = self::TASK_PREFIX . $task->task_id;
             foreach ($values[$key] as $personId) {
                 $data = [
@@ -318,9 +359,7 @@ class InboxPresenter extends SeriesPresenter {
                     'person_id' => $personId,
                     'type' => ModelTaskContribution::TYPE_GRADE,
                 ];
-                $contribution = $service->createNewModel($data);
-                // $service->save($contribution);
-
+                $this->serviceTaskContribution->createNewModel($data);
             }
         }
 
@@ -329,19 +368,4 @@ class InboxPresenter extends SeriesPresenter {
         $this->flashMessage(_('Přiřazení opravovatelů uloženo.'), self::FLASH_SUCCESS);
         $this->redirect('this');
     }
-
-    private $orgProvider;
-
-    /**
-     * @return PersonProvider
-     * @throws \Nette\Application\BadRequestException
-     */
-    private function getOrgProvider() {
-        if (!$this->orgProvider) {
-            $this->orgProvider = new PersonProvider($this->servicePerson);
-            $this->orgProvider->filterOrgs($this->getSelectedContest(), $this->yearCalculator);
-        }
-        return $this->orgProvider;
-    }
-
 }

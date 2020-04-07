@@ -18,6 +18,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
 use Nette\Templating\FileTemplate;
 use Nette\Templating\ITemplate;
+use Nette\Utils\JsonException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -37,11 +38,6 @@ class ApplicationComponent extends Control {
     private $holder;
 
     /**
-     * @var FlashMessageDump
-     */
-    private $flashDump;
-
-    /**
      * @var callable ($primaryModelId, $eventId)
      */
     private $redirectCallback;
@@ -55,13 +51,11 @@ class ApplicationComponent extends Control {
      * ApplicationComponent constructor.
      * @param ApplicationHandler $handler
      * @param Holder $holder
-     * @param FlashMessageDump $flashDump
      */
-    function __construct(ApplicationHandler $handler, Holder $holder, FlashMessageDump $flashDump) {
+    function __construct(ApplicationHandler $handler, Holder $holder) {
         parent::__construct();
         $this->handler = $handler;
         $this->holder = $holder;
-        $this->flashDump = $flashDump;
     }
 
     /**
@@ -195,13 +189,13 @@ class ApplicationComponent extends Control {
                 $submit->setOption('row', 1);
                 if ($transitionSubmit !== false) {
                     $transitionSubmit = $submit;
-                } else if ($transitionSubmit) {
+                } elseif ($transitionSubmit) {
                     $transitionSubmit = false; // if there is more than one submit set no one
                 }
-            } else if ($transition->isTerminating()) {
+            } elseif ($transition->isTerminating()) {
                 $submit->getControlPrototype()->addClass('btn-sm btn-danger');
                 $submit->setOption('row', 3);
-            } else if ($transition->isDangerous()) {
+            } elseif ($transition->isDangerous()) {
                 $submit->getControlPrototype()->addClass('btn-sm btn-danger');
                 $submit->setOption('row', 2);
             } else {
@@ -228,7 +222,7 @@ class ApplicationComponent extends Control {
         $form->getElementPrototype()->data['submit-on'] = 'enter';
         if ($saveSubmit) {
             $saveSubmit->getControlPrototype()->data['submit-on'] = 'this';
-        } else if ($transitionSubmit) {
+        } elseif ($transitionSubmit) {
             $transitionSubmit->getControlPrototype()->data['submit-on'] = 'this';
         }
 
@@ -239,6 +233,7 @@ class ApplicationComponent extends Control {
      * @param Form $form
      * @param null $explicitTransitionName
      * @throws AbortException
+     * @throws JsonException
      */
     public function handleSubmit(Form $form, $explicitTransitionName = null) {
         $this->execute($form, $explicitTransitionName);
@@ -247,6 +242,7 @@ class ApplicationComponent extends Control {
     /**
      * @param $transitionName
      * @throws AbortException
+     * @throws JsonException
      */
     public function handleTransition($transitionName) {
         $this->execute(null, $transitionName);
@@ -256,16 +252,16 @@ class ApplicationComponent extends Control {
      * @param Form|null $form
      * @param null $explicitTransitionName
      * @throws AbortException
-     * @throws \Nette\Utils\JsonException
+     * @throws JsonException
      */
     private function execute(Form $form = null, $explicitTransitionName = null) {
         try {
             $this->handler->storeAndExecute($this->holder, $form, $explicitTransitionName);
-            $this->flashDump->dump($this->handler->getLogger(), $this->getPresenter());
+            FlashMessageDump::dump($this->handler->getLogger(), $this->getPresenter());
             $this->finalRedirect();
         } catch (ApplicationHandlerException $exception) {
             /* handled elsewhere, here it's to just prevent redirect */
-            $this->flashDump->dump($this->handler->getLogger(), $this->getPresenter());
+            FlashMessageDump::dump($this->handler->getLogger(), $this->getPresenter());
             if (!$form) { // w/out form we don't want to show anything with the same GET params
                 $this->finalRedirect();
             }

@@ -6,7 +6,6 @@ use FKSDB\ChartPresenterTrait;
 use FKSDB\Components\Controls\Chart\Event\ParticipantAcquaintanceChartControl;
 use FKSDB\Components\React\ReactComponent\Events\SingleApplicationsTimeProgress;
 use FKSDB\Components\React\ReactComponent\Events\TeamApplicationsTimeProgress;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 
 /**
@@ -17,16 +16,17 @@ class ChartPresenter extends BasePresenter {
     use ChartPresenterTrait;
 
     /**
-     * @return array
-     * @throws AbortException
      * @throws BadRequestException
      */
-    protected function registerCharts(): array {
-        return [
-            new ParticipantAcquaintanceChartControl($this->context, $this->getEvent()),
-            new SingleApplicationsTimeProgress($this->context, $this->getEvent()),
-            new TeamApplicationsTimeProgress($this->context, $this->getEvent()),
-        ];
+    public function authorizedList() {
+        $this->setAuthorized($this->isContestsOrgAuthorized($this->getModelResource(), 'list'));
+    }
+
+    /**
+     * @throws BadRequestException
+     */
+    public function authorizedChart() {
+        $this->setAuthorized($this->isContestsOrgAuthorized($this->getModelResource(), 'chart'));
     }
 
     public function startup() {
@@ -34,12 +34,22 @@ class ChartPresenter extends BasePresenter {
         $this->selectChart();
     }
 
-    public function renderDefault() {
-        $this->template->charts = $this->getCharts();
+    /**
+     * @return array
+     * @throws BadRequestException
+     */
+    protected function registerCharts(): array {
+        return [
+            new ParticipantAcquaintanceChartControl($this->getContext(), $this->getEvent()),
+            new SingleApplicationsTimeProgress($this->getContext(), $this->getEvent()),
+            new TeamApplicationsTimeProgress($this->getContext(), $this->getEvent()),
+        ];
     }
 
-    public function titleDefault() {
-        $this->setTitle(_('Charts'));
-        $this->setIcon('fa fa fa-pie-chart');
+    /**
+     * @inheritDoc
+     */
+    protected function getModelResource(): string {
+        return 'event.chart';
     }
 }

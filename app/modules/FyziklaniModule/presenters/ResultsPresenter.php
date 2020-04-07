@@ -3,7 +3,6 @@
 namespace FyziklaniModule;
 
 use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\ResultsAndStatistics;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 
 /**
@@ -11,126 +10,111 @@ use Nette\Application\BadRequestException;
  * @package FyziklaniModule
  */
 class ResultsPresenter extends BasePresenter {
-    /**
-     * @return bool
-     */
-    public function requiresLogin(): bool {
-        switch ($this->getAction()) {
-            case 'default':
-            case 'table':
-            case 'taskStatistics':
-            case 'teamStatistics':
-                return false;
-            default:
-                return parent::requiresLogin();
-        }
-    }
 
     public function titleCorrelationStatistics() {
-        $this->setTitle(_('Correlation statistics'));
-        $this->setIcon('fa fa-pie-chart');
+        $this->setTitle(_('Correlation statistics'), 'fa fa-pie-chart');
     }
 
-    public function titleDefault() {
-        $this->setTitle(_('Results and statistics'));
-        $this->setIcon('fa fa-trophy');
+    public function titleList() {
+        $this->setTitle(_('Results and statistics'), 'fa fa-trophy');
     }
 
     public function titleTable() {
-        $this->setTitle(_('Detailed results'));
-        $this->setIcon('fa fa-trophy');
+        $this->setTitle(_('Detailed results'), 'fa fa-trophy');
     }
 
     public function titlePresentation() {
-        $this->setIcon('fa fa-table');
-        return $this->setTitle(_('Results presentation'));
+        $this->setTitle(_('Results presentation'), 'fa fa-table');
     }
 
     public function titleTeamStatistics() {
-        $this->setTitle(_('Teams statistics'));
-        $this->setIcon('fa fa-line-chart');
+        $this->setTitle(_('Teams statistics'), 'fa fa-line-chart');
     }
 
     public function titleTaskStatistics() {
-        $this->setTitle(_('Tasks statistics'));
-        $this->setIcon('fa fa-pie-chart');
-    }
-
-    public function authorizedDefault() {
-        $this->setAuthorized(true);
-    }
-
-    public function authorizedResultsTable() {
-        $this->authorizedDefault();
-    }
-
-    public function authorizedTaskStatistics() {
-        $this->authorizedDefault();
-    }
-
-    public function authorizedTeamStatistics() {
-        $this->authorizedDefault();
+        $this->setTitle(_('Tasks statistics'), 'fa fa-pie-chart');
     }
 
     /**
-     * @throws AbortException
+     * @throws BadRequestException
+     */
+    public function authorizedList() {
+        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.results', 'list'));
+    }
+
+    /**
+     * @throws BadRequestException
+     */
+    public function authorizedResultsTable() {
+        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.results', 'table'));
+    }
+
+    /**
+     * @throws BadRequestException
+     */
+    public function authorizedTaskStatistics() {
+        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.results', 'taskStatistics'));
+    }
+
+    /**
+     * @throws BadRequestException
+     */
+    public function authorizedTeamStatistics() {
+        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.results', 'teamStatistics'));
+    }
+
+    /**
      * @throws BadRequestException
      */
     public function authorizedCorrelationStatistics() {
-        $this->setAuthorized($this->isContestsOrgAllowed('fyziklani.results', 'correlation'));
+        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.results', 'correlation'));
     }
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function authorizedPresentation() {
-        $this->setAuthorized($this->eventIsAllowed('fyziklani.results', 'presentation'));
+        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.results', 'presentation'));
     }
 
     /**
      * @return ResultsAndStatistics
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function createComponentTable(): ResultsAndStatistics {
-        return $this->fyziklaniComponentsFactory->createResultsAndStatistics('fyziklani.results.table', $this->getEvent());
+        return new ResultsAndStatistics($this->getContext(), $this->getEvent(), 'fyziklani.results.table');
     }
 
     /**
      * @return ResultsAndStatistics
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function createComponentPresentation(): ResultsAndStatistics {
-        return $this->fyziklaniComponentsFactory->createResultsAndStatistics('fyziklani.results.presentation', $this->getEvent());
+        return new ResultsAndStatistics($this->getContext(), $this->getEvent(), 'fyziklani.results.presentation');
     }
 
     /**
      * @return ResultsAndStatistics
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function createComponentTeamStatistics(): ResultsAndStatistics {
-        return $this->fyziklaniComponentsFactory->createResultsAndStatistics('fyziklani.statistics.team', $this->getEvent());
+        return new ResultsAndStatistics($this->getContext(), $this->getEvent(), 'fyziklani.statistics.team');
     }
 
     /**
      * @return ResultsAndStatistics
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function createComponentTaskStatistics(): ResultsAndStatistics {
-        return $this->fyziklaniComponentsFactory->createResultsAndStatistics('fyziklani.statistics.task', $this->getEvent());
+        return new ResultsAndStatistics($this->getContext(), $this->getEvent(), 'fyziklani.statistics.task');
     }
 
     /**
      * @return ResultsAndStatistics
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function createComponentCorrelationStatistics(): ResultsAndStatistics {
-        return $this->fyziklaniComponentsFactory->createResultsAndStatistics('fyziklani.statistics.correlation', $this->getEvent());
+        return new ResultsAndStatistics($this->getContext(), $this->getEvent(), 'fyziklani.statistics.correlation');
     }
 
     /**

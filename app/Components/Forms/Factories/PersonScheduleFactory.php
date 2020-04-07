@@ -23,7 +23,7 @@ class PersonScheduleFactory {
      * @param ServiceScheduleItem $serviceScheduleItem
      */
     public function __construct(ServiceScheduleItem $serviceScheduleItem) {
-        $this->serviceScheduleItem=$serviceScheduleItem;
+        $this->serviceScheduleItem = $serviceScheduleItem;
     }
 
     /**
@@ -31,8 +31,9 @@ class PersonScheduleFactory {
      * @param ModelEvent $event
      * @return BaseControl
      * @throws JsonException
+     * @throws \FKSDB\NotImplementedException
      */
     public function createField($fieldName, ModelEvent $event) {
-        return new ScheduleField($event, $fieldName,$this->serviceScheduleItem);
+        return new ScheduleField($event, $fieldName, $this->serviceScheduleItem);
     }
 }

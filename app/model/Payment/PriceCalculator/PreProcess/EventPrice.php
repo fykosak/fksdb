@@ -2,11 +2,9 @@
 
 namespace FKSDB\Payment\PriceCalculator\PreProcess;
 
-use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServiceEventParticipant;
 use FKSDB\Payment\Price;
-use FKSDB\NotImplementedException;
 
 /**
  * Class EventPrice
@@ -59,14 +57,5 @@ class EventPrice extends AbstractPreProcess {
         }
         return $items;*/
         return [];
-    }
-
-    /**
-     * @param ModelEventParticipant $modelEventParticipant
-     * @param Price $price
-     * @return Price
-     */
-    private function getPriceFromModel(ModelEventParticipant $modelEventParticipant, Price $price): Price {
-        throw new NotImplementedException();
     }
 }

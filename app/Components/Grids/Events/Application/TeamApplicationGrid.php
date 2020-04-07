@@ -3,9 +3,9 @@
 namespace FKSDB\Components\Grids\Events\Application;
 
 use FKSDB\Components\Controls\Helpers\Badges\NotSetBadge;
+use FKSDB\NotImplementedException;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use Nette\Application\AbortException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\ActiveRow;
@@ -22,10 +22,11 @@ use SQL\SearchableDataSource;
 class TeamApplicationGrid extends AbstractApplicationGrid {
     /**
      * @param Presenter $presenter
-     * @throws InvalidLinkException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
+     * @throws InvalidLinkException
+     * @throws NotImplementedException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -49,7 +50,7 @@ class TeamApplicationGrid extends AbstractApplicationGrid {
             }
             return $position->getRoom()->name;
         });
-        $this->addLinkButton($presenter, 'detail', 'detail', _('Detail'), false, ['id' => 'e_fyziklani_team_id']);
+        $this->addLinkButton( 'detail', 'detail', _('Detail'), false, ['id' => 'e_fyziklani_team_id']);
         $this->addCSVDownloadButton();
     }
 

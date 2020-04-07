@@ -2,13 +2,14 @@
 
 namespace FKSDB\Components\Grids\Fyziklani;
 
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\NotImplementedException;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FyziklaniModule\BasePresenter;
+use Nette\DI\Container;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 
@@ -31,18 +32,18 @@ class ResultsTotalGrid extends BaseGrid {
     /**
      * FyziklaniSubmitsGrid constructor.
      * @param ModelEvent $event
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @param TableReflectionFactory $tableReflectionFactory
+     * @param Container $container
      */
-    public function __construct(ModelEvent $event, ServiceFyziklaniTeam $serviceFyziklaniTeam, TableReflectionFactory $tableReflectionFactory) {
-        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+    public function __construct(ModelEvent $event, Container $container) {
+        $this->serviceFyziklaniTeam = $container->getByType(ServiceFyziklaniTeam::class);
         $this->event = $event;
-        parent::__construct($tableReflectionFactory);
+        parent::__construct($container);
     }
 
     /**
      * @param BasePresenter $presenter
      * @throws DuplicateColumnException
+     * @throws NotImplementedException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

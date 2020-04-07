@@ -22,9 +22,10 @@ class RegistrationEndRow extends AbstractEventRowFactory {
     }
 
     /**
+     * @param array $args
      * @return BaseControl
      */
-    public function createField(): BaseControl {
+    public function createField(...$args): BaseControl {
         return new DateTimeLocalInput($this->getTitle());
     }
 

@@ -3,11 +3,12 @@
 namespace FKSDB\Components\Control\AjaxUpload;
 
 use FKSDB\Components\React\ReactComponent;
+use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\React\ReactResponse;
-use FKSDB\Submits\ISubmitStorage;
+use FKSDB\Submits\FilesystemUploadedSubmitStorage;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
@@ -24,39 +25,19 @@ use ReactMessage;
 class AjaxUpload extends ReactComponent {
     use SubmitRevokeTrait;
     use SubmitSaveTrait;
+    use SubmitDownloadTrait;
     /**
      * @var ServiceSubmit
      */
     private $serviceSubmit;
-    /**
-     * @var ISubmitStorage
-     */
-    private $submitStorage;
 
     /**
      * AjaxUpload constructor.
      * @param Container $context
-     * @param ServiceSubmit $serviceSubmit
-     * @param ISubmitStorage $submitStorage
      */
-    public function __construct(Container $context, ServiceSubmit $serviceSubmit, ISubmitStorage $submitStorage) {
+    public function __construct(Container $context) {
         parent::__construct($context);
-        $this->serviceSubmit = $serviceSubmit;
-        $this->submitStorage = $submitStorage;
-    }
-
-    /**
-     * @return ServiceSubmit
-     */
-    protected function getServiceSubmit(): ServiceSubmit {
-        return $this->serviceSubmit;
-    }
-
-    /**
-     * @return ISubmitStorage
-     */
-    protected function getSubmitStorage(): ISubmitStorage {
-        return $this->submitStorage;
+        $this->serviceSubmit = $this->container->getByType(ServiceSubmit::class);
     }
 
     /**
@@ -65,6 +46,7 @@ class AjaxUpload extends ReactComponent {
     protected function configure() {
         $this->addAction('revoke', $this->link('revoke!'));
         $this->addAction('upload', $this->link('upload!'));
+        $this->addAction('download', $this->link('download!'));
         parent::configure();
     }
 
@@ -106,21 +88,22 @@ class AjaxUpload extends ReactComponent {
      */
     public function handleUpload() {
         $response = new ReactResponse();
-
+        /** @var FilesystemUploadedSubmitStorage $filesystemUploadedSubmitStorage */
+        $filesystemUploadedSubmitStorage = $this->getContext()->getByType(FilesystemUploadedSubmitStorage::class);
         $contestant = $this->getPresenter()->getContestant();
         $files = $this->getHttpRequest()->getFiles();
         foreach ($files as $name => $fileContainer) {
             $this->serviceSubmit->getConnection()->beginTransaction();
-            $this->submitStorage->beginTransaction();
+            $filesystemUploadedSubmitStorage->beginTransaction();
             if (!preg_match('/task([0-9]+)/', $name, $matches)) {
-                $response->addMessage(new ReactMessage(_('Task not found'), 'warning'));
+                $response->addMessage(new ReactMessage(_('Task not found'), ILogger::WARNING));
                 continue;
             }
             $task = $this->getPresenter()->isAvailableSubmit($matches[1]);
             if (!$task) {
 
                 $response->setCode(403);
-                $response->addMessage(new ReactMessage(_('Upload not allowed'), 'danger'));
+                $response->addMessage(new ReactMessage(_('Upload not allowed'), ILogger::ERROR));
                 $this->getPresenter()->sendResponse($response);
             }
             /**
@@ -129,15 +112,15 @@ class AjaxUpload extends ReactComponent {
             $file = $fileContainer;
             if (!$file->isOk()) {
                 $response->setCode(500);
-                $response->addMessage(new ReactMessage(_('File is not Ok'), 'danger'));
+                $response->addMessage(new ReactMessage(_('File is not Ok'), ILogger::ERROR));
                 $this->getPresenter()->sendResponse($response);
                 return;
             }
             // store submit
             $submit = $this->saveSubmitTrait($file, $task, $contestant);
-            $this->submitStorage->commit();
+            $filesystemUploadedSubmitStorage->commit();
             $this->serviceSubmit->getConnection()->commit();
-            $response->addMessage(new ReactMessage(_('Upload successful'), 'success'));
+            $response->addMessage(new ReactMessage(_('Upload successful'), ILogger::SUCCESS));
             $response->setAct('upload');
             $response->setData($this->serviceSubmit->serializeSubmit($submit, $task, $this->getPresenter()));
             $this->getPresenter()->sendResponse($response);
@@ -161,6 +144,16 @@ class AjaxUpload extends ReactComponent {
         }
         $response->addMessage(new ReactMessage($message->getMessage(), $message->getLevel()));
         $this->getPresenter()->sendResponse($response);
+        die();
+    }
+
+    /**
+     * @throws BadRequestException
+     * @throws AbortException
+     */
+    public function handleDownload() {
+        $submitId = $this->getReactRequest()->requestData['submitId'];
+        $this->traitHandleDownloadUploaded($submitId);
         die();
     }
 

@@ -12,13 +12,11 @@ use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\ORM\Services\ServiceTask;
-use FKSDB\Submits\FilesystemSubmitStorage;
-use FKSDB\Submits\ISubmitStorage;
+use FKSDB\Submits\FilesystemUploadedSubmitStorage;
 use FKSDB\Submits\ProcessingException;
 use ModelException;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\Application\Responses\FileResponse;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\Selection;
 use Tracy\Debugger;
@@ -31,23 +29,9 @@ use Tracy\Debugger;
 class SubmitPresenter extends BasePresenter {
     use SubmitSaveTrait;
 
-    /** @var ServiceTask */
-    private $taskService;
 
     /** @var ServiceSubmit */
     private $submitService;
-
-    /**
-     * @var FilesystemSubmitStorage
-     */
-    private $submitStorage;
-
-    /**
-     * @param ServiceTask $taskService
-     */
-    public function injectTaskService(ServiceTask $taskService) {
-        $this->taskService = $taskService;
-    }
 
     /**
      * @param ServiceSubmit $submitService
@@ -56,13 +40,22 @@ class SubmitPresenter extends BasePresenter {
         $this->submitService = $submitService;
     }
 
-    /**
-     * @param ISubmitStorage $submitStorage
-     */
-    public function injectSubmitStorage(ISubmitStorage $submitStorage) {
-        $this->submitStorage = $submitStorage;
+    /** @var FilesystemUploadedSubmitStorage */
+    private $uploadedSubmitStorage;
+
+    /** @param FilesystemUploadedSubmitStorage $filesystemUploadedSubmitStorage */
+    public function injectSubmitUploadedStorage(FilesystemUploadedSubmitStorage $filesystemUploadedSubmitStorage) {
+        $this->uploadedSubmitStorage = $filesystemUploadedSubmitStorage;
     }
 
+    /** @var ServiceTask */
+    private $taskService;
+
+    /** @param ServiceTask $taskService */
+    public function injectTaskService(ServiceTask $taskService) {
+        $this->taskService = $taskService;
+    }
+    /* ******************* AUTH ************************/
     /**
      * @throws BadRequestException
      */
@@ -70,30 +63,28 @@ class SubmitPresenter extends BasePresenter {
         $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', 'upload', $this->getSelectedContest()));
     }
 
+    /**
+     * @throws BadRequestException
+     */
+    public function authorizedAjax() {
+        $this->authorizedDefault();
+    }
+
+    /* ********************** TITLE **********************/
     public function titleDefault() {
-        $this->setTitle(_('Odevzdat řešení'));
-        $this->setIcon('fa fa-cloud-upload');
+        $this->setTitle(_('Odevzdat řešení'), 'fa fa-cloud-upload');
+    }
+
+    public function titleAjax() {
+        return $this->titleDefault();
     }
 
     /**
-     * @param $id
      * @throws BadRequestException
+     * @deprecated
      */
-    public function authorizedDownload($id) {
-        $row = $this->submitService->findByPrimary($id);
-
-        if (!$row) {
-            throw new BadRequestException('Neexistující submit.', 404);
-        }
-        $submit = ModelSubmit::createFromActiveRow($row);
-
-        $submit->task_id; // stupid touch
-        $contest = $submit->getContestant()->getContest();
-        $this->setAuthorized($this->contestAuthorizator->isAllowed($submit, 'download', $contest));
-
-        if ($submit->source != ModelSubmit::SOURCE_UPLOAD) {
-            throw new BadRequestException('Lze stahovat jen uploadovaná řešení.', 501);
-        }
+    public function actionDownload() {
+        throw new BadRequestException('', 410);
     }
 
     /**
@@ -115,28 +106,6 @@ class SubmitPresenter extends BasePresenter {
 
             $this->template->hasForward = ($this->getSelectedYear() == $this->getYearCalculator()->getCurrentYear($this->getSelectedContest())) && ($this->getYearCalculator()->getForwardShift($this->getSelectedContest()) > 0);
         }
-    }
-
-
-    /**
-     * @param $id
-     * @throws BadRequestException
-     * @throws AbortException
-     */
-    public function actionDownload($id) {
-        /**
-         * @var ModelSubmit $submit
-         */
-        $submit = $this->submitService->findByPrimary($id);
-
-        $filename = $this->submitStorage->retrieveFile($submit);
-        if (!$filename) {
-            throw new BadRequestException('Poškozený soubor submitu', 500);
-        }
-
-        //TODO better construct user's filename and PDF type dependency
-        $response = new FileResponse($filename, $submit->getTask()->getFQName() . '.pdf', 'application/pdf');
-        $this->sendResponse($response);
     }
 
     /**
@@ -178,7 +147,7 @@ class SubmitPresenter extends BasePresenter {
                 $upload->setDisabled();
             }
 
-            if ($submit && $this->submitStorage->existsFile($submit)) {
+            if ($submit && $this->uploadedSubmitStorage->fileExists($submit)) {
                 $overwrite = $container->addCheckbox('overwrite', _('Přepsat odeslané řešení.'));
                 $conditionedUpload->addConditionOn($overwrite, Form::EQUAL, false)->addRule(~Form::FILLED, _('Buď zvolte přepsání odeslaného řešení anebo jej neposílejte.'));
             }
@@ -207,7 +176,7 @@ class SubmitPresenter extends BasePresenter {
      * @return AjaxUpload
      */
     public function createComponentAjaxUpload(): AjaxUpload {
-        return new AjaxUpload($this->context, $this->submitService, $this->submitStorage);
+        return new AjaxUpload($this->context);
     }
 
     /**
@@ -215,17 +184,16 @@ class SubmitPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentSubmitsGrid(): SubmitsGrid {
-        return new SubmitsGrid($this->submitService, $this->submitStorage, $this->getContestant());
+        return new SubmitsGrid(
+            $this->context,
+            $this->getContestant()
+        );
     }
 
     /**
      * @param mixed $form
      * @throws BadRequestException
      * @throws AbortException
-<<<<<<< HEAD
-=======
-     * @throws \Exception
->>>>>>> origin/master
      * @internal
      */
     public function handleUploadFormSuccess($form) {
@@ -236,7 +204,7 @@ class SubmitPresenter extends BasePresenter {
 
         try {
             $this->submitService->getConnection()->beginTransaction();
-            $this->submitStorage->beginTransaction();
+            $this->uploadedSubmitStorage->beginTransaction();
 
             foreach ($taskIds as $taskId) {
                 $taskRow = $this->taskService->findByPrimary($taskId);
@@ -262,17 +230,17 @@ class SubmitPresenter extends BasePresenter {
                 $this->flashMessage(sprintf(_('Úloha %s odevzdána.'), $task->label), self::FLASH_SUCCESS);
             }
 
-            $this->submitStorage->commit();
+            $this->uploadedSubmitStorage->commit();
             $this->submitService->getConnection()->commit();
             $this->redirect('this');
         } catch (ModelException $exception) {
-            $this->submitStorage->rollback();
+            $this->uploadedSubmitStorage->rollback();
             $this->submitService->getConnection()->rollBack();
 
             Debugger::log($exception);
             $this->flashMessage(_('Došlo k chybě při ukládání úloh.'), self::FLASH_ERROR);
         } catch (ProcessingException $exception) {
-            $this->submitStorage->rollback();
+            $this->uploadedSubmitStorage->rollback();
             $this->submitService->getConnection()->rollBack();
 
             Debugger::log($exception);
@@ -307,26 +275,8 @@ class SubmitPresenter extends BasePresenter {
         foreach ($this->getAvailableTasks() as $task) {
             if ($task->task_id == $taskId) {
                 return $task;
-            };
+            }
         }
         return null;
-    }
-
-    public function titleAjax() {
-        return $this->titleDefault();
-    }
-
-    /**
-     * @return ServiceSubmit
-     */
-    protected function getServiceSubmit(): ServiceSubmit {
-        return $this->submitService;
-    }
-
-    /**
-     * @return ISubmitStorage
-     */
-    protected function getSubmitStorage(): ISubmitStorage {
-        return $this->submitStorage;
     }
 }

@@ -56,6 +56,7 @@ interface IService {
     public function updateModel(IModel $model, $data);
     /**
      * @return string
+     * @return string|AbstractModelSingle
      */
     public function getModelClassName(): string;
 }

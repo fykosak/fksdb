@@ -4,6 +4,7 @@ namespace FKSDB\Results\Models;
 
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\Results\ModelCategory;
+use Nette\InvalidStateException;
 
 /**
  * Detailed results of a single series. Number of tasks is dynamic.
@@ -82,7 +83,7 @@ class DetailResultsModel extends AbstractResultsModel {
      */
     protected function composeQuery(ModelCategory $category) {
         if (!$this->series) {
-            throw new \Nette\InvalidStateException('Series not set.');
+            throw new InvalidStateException('Series not set.');
         }
 
         $select = [];
@@ -123,9 +124,8 @@ left join submit s ON s.task_id = t.task_id AND s.ct_id = ct.ct_id";
         $query .= " order by `" . self::ALIAS_SUM . "` DESC, p.family_name ASC, p.other_name ASC";
 
         $dataAlias = 'data';
-        $wrappedQuery = "select $dataAlias.*, @rownum := @rownum + 1, @rank := IF($dataAlias." . self::ALIAS_SUM . " = @prevSum or ($dataAlias." . self::ALIAS_SUM . " is null and @prevSum is null), @rank, @rownum) AS `" . self::DATA_RANK_FROM . "`, @prevSum := $dataAlias." . self::ALIAS_SUM . "
+        return "select $dataAlias.*, @rownum := @rownum + 1, @rank := IF($dataAlias." . self::ALIAS_SUM . " = @prevSum or ($dataAlias." . self::ALIAS_SUM . " is null and @prevSum is null), @rank, @rownum) AS `" . self::DATA_RANK_FROM . "`, @prevSum := $dataAlias." . self::ALIAS_SUM . "
         from ($query) data, (select @rownum := 0, @rank := 0, @prevSum := -1) init";
-        return $wrappedQuery;
     }
 
 }

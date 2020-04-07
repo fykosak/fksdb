@@ -6,7 +6,7 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Stalking\StalkingComponent\StalkingComponent;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
-use FKSDB\Logging\FlashDumpFactory;
+use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
@@ -23,7 +23,6 @@ use Persons\DenyResolver;
 use Persons\ExtendedPersonHandler;
 use ReflectionException;
 use FKSDB\Components\Controls\Stalking;
-use function str_replace;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -48,12 +47,6 @@ class PersonPresenter extends BasePresenter {
      * @var Merger
      */
     private $personMerger;
-
-    /**
-     * @var FlashDumpFactory
-     */
-    private $flashDumpFactory;
-
     /**
      * @var ModelPerson
      */
@@ -108,13 +101,6 @@ class PersonPresenter extends BasePresenter {
     }
 
     /**
-     * @param FlashDumpFactory $flashDumpFactory
-     */
-    public function injectFlashDumpFactory(FlashDumpFactory $flashDumpFactory) {
-        $this->flashDumpFactory = $flashDumpFactory;
-    }
-
-    /**
      * @param ReferencedPersonFactory $referencedPersonFactory
      */
     public function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory) {
@@ -137,16 +123,14 @@ class PersonPresenter extends BasePresenter {
 
     /* *********** TITLE ***************/
     public function titleSearch() {
-        $this->setTitle(_('Search person'));
-        $this->setIcon('fa fa-search');
+        $this->setTitle(_('Search person'), 'fa fa-search');
     }
 
     /**
      * @throws BadRequestException
      */
     public function titleDetail() {
-        $this->setTitle(sprintf(_('Detail of person %s'), $this->getPerson()->getFullName()));
-        $this->setIcon('fa fa-eye');
+        $this->setTitle(sprintf(_('Detail of person %s'), $this->getPerson()->getFullName()), 'fa fa-eye');
     }
 
     public function titleMerge() {
@@ -155,7 +139,7 @@ class PersonPresenter extends BasePresenter {
 
     /* *********** AUTH ***************/
     public function authorizedSearch() {
-        $this->setAuthorized($this->isAllowed('person', 'stalk.search'));
+        $this->setAuthorized($this->isAnyContestAuthorized('person', 'stalk.search'));
     }
 
     /**
@@ -164,11 +148,11 @@ class PersonPresenter extends BasePresenter {
     public function authorizedDetail() {
         $person = $this->getPerson();
 
-        $full = $this->isAllowed($person, 'stalk.full');
+        $full = $this->isAnyContestAuthorized($person, 'stalk.full');
 
-        $restrict = $this->isAllowed($person, 'stalk.restrict');
+        $restrict = $this->isAnyContestAuthorized($person, 'stalk.restrict');
 
-        $basic = $this->isAllowed($person, 'stalk.basic');
+        $basic = $this->isAnyContestAuthorized($person, 'stalk.basic');
 
         $this->setAuthorized($full || $restrict || $basic);
     }
@@ -233,7 +217,7 @@ class PersonPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentStalkingComponent(): StalkingComponent {
-        return new StalkingComponent($this->stalkingService, $this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
+        return new StalkingComponent($this->getContext(), $this->getPerson(), $this->getMode());
     }
 
     /**
@@ -241,7 +225,7 @@ class PersonPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentAddress(): Stalking\Address {
-        return new Stalking\Address($this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
+        return new Stalking\Address($this->getContext(), $this->getPerson(), $this->getMode());
     }
 
     /**
@@ -249,7 +233,7 @@ class PersonPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentRole(): Stalking\Role {
-        return new Stalking\Role($this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
+        return new Stalking\Role($this->getContext(), $this->getPerson(), $this->getMode());
     }
 
     /**
@@ -257,7 +241,7 @@ class PersonPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentFlag(): Stalking\Flag {
-        return new Stalking\Flag($this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
+        return new Stalking\Flag($this->getContext(), $this->getPerson(), $this->getMode());
     }
 
     /**
@@ -265,7 +249,7 @@ class PersonPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentSchedule(): Stalking\Schedule {
-        return new Stalking\Schedule($this->getPerson(), $this->getTableReflectionFactory(), $this->getTranslator(), $this->getMode());
+        return new Stalking\Schedule($this->getContext(), $this->getPerson(), $this->getMode());
     }
 
     /**
@@ -273,7 +257,7 @@ class PersonPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentValidation(): Stalking\Validation {
-        return new Stalking\Validation($this->validationFactory, $this->getTableReflectionFactory(), $this->getPerson(), $this->getTranslator(), $this->getMode());
+        return new Stalking\Validation($this->getContext(), $this->getPerson(), $this->getMode());
     }
 
 
@@ -317,13 +301,13 @@ class PersonPresenter extends BasePresenter {
      */
     private function getMode() {
         if (!$this->mode) {
-            if ($this->isAllowed($this->getPerson(), 'stalk.basic')) {
+            if ($this->isAnyContestAuthorized($this->getPerson(), 'stalk.basic')) {
                 $this->mode = Stalking\AbstractStalkingComponent::PERMISSION_BASIC;
             }
-            if ($this->isAllowed($this->getPerson(), 'stalk.restrict')) {
+            if ($this->isAnyContestAuthorized($this->getPerson(), 'stalk.restrict')) {
                 $this->mode = Stalking\AbstractStalkingComponent::PERMISSION_RESTRICT;
             }
-            if ($this->isAllowed($this->getPerson(), 'stalk.full')) {
+            if ($this->isAnyContestAuthorized($this->getPerson(), 'stalk.full')) {
                 $this->mode = Stalking\AbstractStalkingComponent::PERMISSION_FULL;
             }
         }
@@ -349,11 +333,10 @@ class PersonPresenter extends BasePresenter {
 
 
     /**
-     * @param $name
      * @return FormControl
      * @throws BadRequestException
      */
-    protected function createComponentMergeForm($name) {
+    protected function createComponentMergeForm() {
         $control = new FormControl();
         $form = $control->getForm();
 
@@ -361,7 +344,7 @@ class PersonPresenter extends BasePresenter {
 
         $form->addSubmit('cancel', _('Storno'))
             ->getControlPrototype()->addAttributes(['class' => 'btn-lg']);
-        $form->onSuccess[] = array($this, 'handleMergeFormSuccess');
+        $form->onSuccess[] = [$this, 'handleMergeFormSuccess'];
         return $control;
     }
 
@@ -392,7 +375,7 @@ class PersonPresenter extends BasePresenter {
                 }
                 $pairContainer = new ContainerWithOptions();
                 $tableContainer->addComponent($pairContainer, $pairId);
-                $pairContainer->setOption('label', str_replace('_', ' ', $table));
+                $pairContainer->setOption('label', \str_replace('_', ' ', $table));
                 foreach ($data[Merger::IDX_TRUNK] as $column => $value) {
                     if (isset($data[Merger::IDX_RESOLUTION]) && array_key_exists($column, $data[Merger::IDX_RESOLUTION])) {
                         $default = $data[Merger::IDX_RESOLUTION][$column];
@@ -454,8 +437,7 @@ class PersonPresenter extends BasePresenter {
         if ($merger->merge()) {
             $this->setMergeConflicts(null); // flush the session
             $this->flashMessage(_('Osoby úspešně sloučeny.'), self::FLASH_SUCCESS);
-            $flashDump = $this->flashDumpFactory->createPersonMerge();
-            $flashDump->dump($logger, $this);
+            FlashMessageDump::dump($logger, $this);
             $this->backLinkRedirect(true);
         } else {
             $this->setMergeConflicts($merger->getConflicts());

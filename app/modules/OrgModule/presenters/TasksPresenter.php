@@ -5,10 +5,12 @@ namespace OrgModule;
 use Astrid\Downloader;
 use Astrid\DownloadException;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Logging\FlashDumpFactory;
+use FKSDB\Logging\FlashMessageDump;
 use FKSDB\SeriesCalculator;
 use FKSDB\Submits\UploadException;
 use ModelException;
+use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Tracy\Debugger;
 use Pipeline\PipelineException;
@@ -34,7 +36,7 @@ class TasksPresenter extends BasePresenter {
     private static $languages = ['cs', 'en'];
 
     /**
-     * @var \FKSDB\SeriesCalculator
+     * @var SeriesCalculator
      */
     private $seriesCalculator;
 
@@ -42,11 +44,6 @@ class TasksPresenter extends BasePresenter {
      * @var PipelineFactory
      */
     private $pipelineFactory;
-
-    /**
-     * @var FlashDumpFactory
-     */
-    private $flashDumpFactory;
 
     /**
      * @var Downloader
@@ -68,13 +65,6 @@ class TasksPresenter extends BasePresenter {
     }
 
     /**
-     * @param FlashDumpFactory $flashDumpFactory
-     */
-    function injectFlashDumpFactory(FlashDumpFactory $flashDumpFactory) {
-        $this->flashDumpFactory = $flashDumpFactory;
-    }
-
-    /**
      * @param Downloader $downloader
      */
     function injectDownloader(Downloader $downloader) {
@@ -82,30 +72,29 @@ class TasksPresenter extends BasePresenter {
     }
 
     /**
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     public function authorizedImport() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('task', 'insert', $this->getSelectedContest()));
     }
 
     public function titleImport() {
-        $this->setTitle(_('Import úloh'));
-        $this->setIcon('fa fa-upload');
+        $this->setTitle(_('Import úloh'), 'fa fa-upload');
     }
 
     /**
      * @return FormControl
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     protected function createComponentSeriesForm(): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
 
-        $source = $form->addRadioList('source', _('Zdroj úloh'), array(
+        $source = $form->addRadioList('source', _('Zdroj úloh'), [
             self::SOURCE_ASTRID => _('Astrid'),
             self::SOURCE_ASTRID_2 => _('Astrid (nové XML)'),
             self::SOURCE_FILE => _('XML soubor'),
-        ));
+        ]);
         $source->setDefaultValue(self::SOURCE_ASTRID_2);
 
         // Astrid download
@@ -139,8 +128,8 @@ class TasksPresenter extends BasePresenter {
 
     /**
      * @param Form $seriesForm
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function validSubmitSeriesForm(Form $seriesForm) {
         $values = $seriesForm->getValues();
@@ -172,7 +161,6 @@ class TasksPresenter extends BasePresenter {
                 break;
         }
 
-        $dump = $this->flashDumpFactory->create('default');
         foreach ($files as $language => $file) {
             try {
                 $xml = simplexml_load_file($file);
@@ -182,8 +170,8 @@ class TasksPresenter extends BasePresenter {
                     $pipeline = $this->pipelineFactory->create($language);
                     $pipeline->setInput($data);
                     $pipeline->run();
+                    FlashMessageDump::dump($pipeline->getLogger(), $this);
 
-                    $dump->dump($pipeline->getLogger(), $this);
                     $this->flashMessage(sprintf(_('Úlohy pro jazyk %s úspěšně importovány.'), $language), self::FLASH_SUCCESS);
                 } else {
                     if ($language != self::LANG_ALL) {
@@ -194,8 +182,7 @@ class TasksPresenter extends BasePresenter {
                     $pipeline = $this->pipelineFactory->create2();
                     $pipeline->setInput($data);
                     $pipeline->run();
-
-                    $dump->dump($pipeline->getLogger(), $this);
+                    FlashMessageDump::dump($pipeline->getLogger(), $this);
                     $this->flashMessage(_('Úlohy pro úspěšně importovány.'), self::FLASH_SUCCESS);
                 }
             } catch (PipelineException $exception) {

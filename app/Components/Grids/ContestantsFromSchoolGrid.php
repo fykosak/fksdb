@@ -4,7 +4,9 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelSchool;
+use FKSDB\ORM\Services\ServiceContestant;
 use Nette\Database\Table\Selection;
+use Nette\DI\Container;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use OrgModule\BasePresenter;
@@ -28,12 +30,12 @@ class ContestantsFromSchoolGrid extends BaseGrid {
     /**
      * ContestantsGrid constructor.
      * @param ModelSchool $school
-     * @param Selection $serviceContestant
+     * @param Container $container
      */
-    function __construct(ModelSchool $school, Selection $serviceContestant) {
-        parent::__construct();
+    function __construct(ModelSchool $school, Container $container) {
+        parent::__construct($container);
         $this->school = $school;
-        $this->serviceContestant = $serviceContestant;
+        $this->serviceContestant = $container->getByType(ServiceContestant::class);
     }
 
     /**

@@ -9,7 +9,6 @@ use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\ORM\Services\Schedule\ServicePersonSchedule;
 use Nette\Forms\Controls\TextInput;
 use Nette\Utils\JsonException;
-use function json_encode;
 
 /**
  * Class PaymentSelectField
@@ -77,7 +76,7 @@ class PaymentSelectField extends TextInput {
                 ];
             }
         }
-        return json_encode($items);
+        return \json_encode($items);
     }
 
     /**

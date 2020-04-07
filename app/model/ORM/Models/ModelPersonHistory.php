@@ -98,7 +98,7 @@ class ModelPersonHistory extends AbstractModelSingle {
                     $result = null;
                 }
             }
-        } else if ($studyYear >= 1 && $studyYear <= 4) {
+        } elseif ($studyYear >= 1 && $studyYear <= 4) {
             $result = $studyYear + $diff;
             if ($result > 4) {
                 $result = null;

@@ -2,13 +2,15 @@
 
 namespace CommonModule;
 
-use FKSDB\Components\Grids\ContestantsFromSchoolGrid;
+use FKSDB\Components\Controls\Entity\School\CreateForm;
+use FKSDB\Components\Controls\Entity\School\EditForm;
 use FKSDB\Components\Grids\SchoolsGrid;
 use FKSDB\EntityTrait;
 use FKSDB\ORM\IService;
 use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServiceSchool;
 use Nette\Application\BadRequestException;
+use Nette\Application\UI\Control;
 
 /**
  * Class SchoolPresenter
@@ -17,31 +19,30 @@ use Nette\Application\BadRequestException;
  * @method ModelSchool loadEntity(int $id)
  */
 class SchoolPresenter extends BasePresenter {
-
     use EntityTrait;
 
-    /**
-     * @return string
-     */
-    protected function getModelResource(): string {
-        return ModelSchool::RESOURCE_ID;
-    }
-
-    /**
-     * @var ServiceSchool
-     */
+    /** @var ServiceSchool */
     private $serviceSchool;
 
-    /**
-     * @param ServiceSchool $serviceSchool
-     */
+    /** @param ServiceSchool $serviceSchool */
     public function injectServiceSchool(ServiceSchool $serviceSchool) {
         $this->serviceSchool = $serviceSchool;
     }
 
     public function titleList() {
-        $this->setTitle(_('Schools'));
-        $this->setIcon('fa fa-university');
+        $this->setTitle(_('Schools'), 'fa fa-university');
+    }
+
+    public function titleCreate() {
+        $this->setTitle(_('Založit školu'), 'fa fa-plus');
+    }
+
+    /**
+     * @param int $id
+     * @throws BadRequestException
+     */
+    public function titleEdit(int $id) {
+        $this->setTitle(sprintf(_('Úprava školy %s'), $this->loadEntity($id)->name_abbrev), 'fa fa-pencil');
     }
 
     /**
@@ -49,16 +50,22 @@ class SchoolPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function titleDetail(int $id) {
-        $this->setTitle(sprintf(_('Detail of school %s'), $this->loadEntity($id)->name_abbrev));
-        $this->setIcon('fa fa-university');
+        $this->setTitle(sprintf(_('Detail of school %s'), $this->loadEntity($id)->name_abbrev), 'fa fa-university');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function traitIsAuthorized($resource, string $privilege): bool {
+        return $this->isAnyContestAuthorized($resource, $privilege);
     }
 
     /**
      * @param int $id
      * @throws BadRequestException
      */
-    public function actionDetail(int $id) {
-        $this->loadEntity($id);
+    public function actionEdit(int $id) {
+        $this->traitActionEdit($id);
     }
 
     /**
@@ -76,19 +83,19 @@ class SchoolPresenter extends BasePresenter {
         return $this->serviceSchool;
     }
 
-
-    /**
-     * @return SchoolsGrid
-     */
+    /** @return SchoolsGrid */
     protected function createComponentGrid(): SchoolsGrid {
-        return new SchoolsGrid($this->serviceSchool);
+        return new SchoolsGrid($this->getContext());
     }
 
-
-    /**
-     * @return ContestantsFromSchoolGrid
-     */
-    protected function createComponentContestantsFromSchoolGrid(): ContestantsFromSchoolGrid {
-        return new ContestantsFromSchoolGrid($this->getEntity(), $this->getORMService());
+    /** @inheritDoc */
+    public function createComponentEditForm(): Control {
+        return new EditForm($this->getContext());
     }
+
+    /** @inheritDoc */
+    public function createComponentCreateForm(): Control {
+        return new CreateForm($this->getContext());
+    }
+
 }

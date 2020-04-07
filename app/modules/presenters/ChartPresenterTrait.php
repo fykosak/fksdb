@@ -3,6 +3,7 @@
 namespace FKSDB;
 
 use FKSDB\Components\Controls\Chart\IChart;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 
 /**
@@ -15,15 +16,27 @@ trait ChartPresenterTrait {
      */
     protected $selectedChart;
 
-    /**
-     * @return IChart[]
-     */
-    abstract protected function registerCharts(): array;
+
+    public function titleChart() {
+        $this->setTitle($this->selectedChart->getTitle(), 'fa fa-pie-chart');
+    }
+
+    public function titleList() {
+        $this->setTitle(_('Charts'), 'fa fa fa-pie-chart');
+    }
+
+    public function renderChart() {
+        $this->template->chart = $this->selectedChart;
+    }
+
+    public function renderList() {
+        $this->template->charts = $this->getCharts();
+    }
 
     /**
      * @return IChart[]
      */
-    protected function getCharts() {
+    protected function getCharts(): array {
         static $chartComponents;
         if (!$chartComponents) {
             $chartComponents = $this->registerCharts();
@@ -43,18 +56,19 @@ trait ChartPresenterTrait {
     /**
      * @return Control
      */
-    public function createComponentChart() {
+    public function createComponentChart(): Control {
         return $this->selectedChart->getControl();
     }
 
-    public function titleChart() {
-        $this->setTitle($this->selectedChart->getTitle());
-        $this->setIcon('fa fa-pie-chart');
-    }
 
-    public function renderChart() {
-        $this->template->chart = $this->selectedChart;
-    }
+    abstract public function authorizedList();
+
+    abstract public function authorizedChart();
+
+    /**
+     * @return IChart[]
+     */
+    abstract protected function registerCharts(): array;
 
     /**
      * @param bool $fullyQualified

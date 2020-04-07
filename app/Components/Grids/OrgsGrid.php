@@ -2,13 +2,13 @@
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelOrg;
 use FKSDB\ORM\Services\ServiceOrg;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Database\Table\Selection;
+use Nette\DI\Container;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
@@ -28,13 +28,11 @@ class OrgsGrid extends BaseGrid {
 
     /**
      * OrgsGrid constructor.
-     * @param ServiceOrg $serviceOrg
-     * @param TableReflectionFactory $tableReflectionFactory
+     * @param Container $container
      */
-    function __construct(ServiceOrg $serviceOrg, TableReflectionFactory $tableReflectionFactory) {
-        parent::__construct($tableReflectionFactory);
-
-        $this->serviceOrg = $serviceOrg;
+    function __construct(Container $container) {
+        parent::__construct($container);
+        $this->serviceOrg = $container->getByType(ServiceOrg::class);
     }
 
     /**

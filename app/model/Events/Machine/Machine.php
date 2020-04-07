@@ -18,11 +18,6 @@ use Nette\InvalidArgumentException;
 class Machine extends FreezableObject implements ArrayAccess, IteratorAggregate {
 
     /**
-     * @var array of function(ArrayHash $values, Machine $machine)
-     */
-    public $onSubmit;
-
-    /**
      * @var BaseMachine[]
      */
     private $baseMachines = [];

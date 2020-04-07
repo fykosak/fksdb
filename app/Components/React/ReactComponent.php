@@ -2,13 +2,11 @@
 
 namespace FKSDB\Components\React;
 
-use FKSDB\Application\IJavaScriptCollector;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\ComponentModel\IComponent;
 use Nette\DI\Container;
 use Nette\Http\IRequest;
-use FKSDB\NotImplementedException;
 use Nette\Templating\FileTemplate;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
@@ -77,5 +75,12 @@ abstract class ReactComponent extends Control {
         $requestData = $this->getHttpRequest()->getPost('requestData');
         $act = $this->getHttpRequest()->getPost('act');
         return (object)['requestData' => $requestData, 'act' => $act];
+    }
+
+    /**
+     * @return Container
+     */
+    public final function getContext() {
+        return $this->container;
     }
 }

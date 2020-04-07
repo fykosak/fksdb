@@ -2,10 +2,9 @@
 
 use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Application\IStylesheetCollector;
+use FKSDB\CollectorPresenterTrait;
 use FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs;
 use FKSDB\Components\Controls\Breadcrumbs\BreadcrumbsFactory;
-use FKSDB\Components\Controls\Loaders\JavaScript\JavaScriptLoader;
-use FKSDB\Components\Controls\Loaders\Stylesheet\StylesheetLoader;
 use FKSDB\Components\Controls\Navigation\INavigablePresenter;
 use FKSDB\Components\Controls\Navigation\Navigation;
 use FKSDB\Components\Controls\PresenterBuilder;
@@ -17,7 +16,8 @@ use FKSDB\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\IFilteredDataProvider;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Config\GlobalParameters;
-use FKSDB\Localization\GettextTranslator;
+use FKSDB\LangPresenterTrait;
+use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\YearCalculator;
 use Nette\Application\AbortException;
@@ -27,8 +27,8 @@ use Nette\Application\Responses\JsonResponse;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\ComponentModel\IComponent;
-use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
+use Nette\Templating\ITemplate;
 
 /**
  * Base presenter for all application presenters.
@@ -36,19 +36,19 @@ use Nette\Templating\FileTemplate;
  */
 abstract class BasePresenter extends Presenter implements IJavaScriptCollector, IStylesheetCollector, IAutocompleteJSONProvider, INavigablePresenter {
 
-    const FLASH_SUCCESS = 'success';
+    use CollectorPresenterTrait;
+    use LangPresenterTrait;
 
-    const FLASH_INFO = 'info';
+    const FLASH_SUCCESS = ILogger::SUCCESS;
 
-    const FLASH_WARNING = 'warning';
+    const FLASH_INFO = ILogger::INFO;
 
-    const FLASH_ERROR = 'danger';
+    const FLASH_WARNING = ILogger::WARNING;
+
+    const FLASH_ERROR = ILogger::ERROR;
 
     /** @persistent  */
     public $tld;
-
-    /** @persistent */
-    public $lang;
 
     /**
      * Backlink for tree construction for breadcrumbs.
@@ -61,7 +61,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     protected $yearCalculator;
 
     /** @var ServiceContest */
-    protected $serviceContest;
+    private $serviceContest;
 
     /** @var GlobalParameters */
     protected $globalParameters;
@@ -74,11 +74,6 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     /** @var PresenterBuilder */
     private $presenterBuilder;
-
-    /**
-     * @var GettextTranslator
-     */
-    protected $translator;
 
     /**
      * @var string|null
@@ -95,14 +90,9 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     private $authorized = true;
 
     /**
-     * @var array[string] => bool
+     * @var bool[]
      */
     private $authorizedCache = [];
-
-    /**
-     * @var string cache
-     */
-    private $_lang;
 
     /**
      * @var FullHttpRequest
@@ -200,123 +190,25 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     }
 
     /**
-     * @param GettextTranslator $translator
+     * @throws Exception
      */
-    public function injectTranslator(GettextTranslator $translator) {
-        $this->translator = $translator;
+    protected function startup() {
+        parent::startup();
+        $this->langTraitStartup();
     }
 
     /**
      * @param null $class
-     * @return FileTemplate|\Nette\Templating\ITemplate
+     * @return FileTemplate|ITemplate
      */
     protected function createTemplate($class = NULL) {
         /**
          * @var FileTemplate $template
          */
         $template = parent::createTemplate($class);
-        $template->setTranslator($this->translator);
+        $template->setTranslator($this->getTranslator());
 
         return $template;
-    }
-
-
-    protected function startup() {
-        parent::startup();
-        $this->translator->setLang($this->getLang());
-    }
-
-    /*	 * ******************************
-     * Loading assets
-     * ****************************** */
-
-    /**
-     * @return JavaScriptLoader
-     */
-    protected function createComponentJsLoader(): JavaScriptLoader {
-        return new JavaScriptLoader();
-    }
-
-    /**
-     * @return StylesheetLoader
-     */
-    protected function createComponentCssLoader(): StylesheetLoader {
-        return new StylesheetLoader();
-    }
-
-    /*	 * ******************************
-     * IJavaScriptCollector
-     * ****************************** */
-    /**
-     * @param string $file
-     */
-    public function registerJSFile($file) {
-        /**
-         * @var JavaScriptLoader $component
-         */
-        $component = $this->getComponent('jsLoader');
-        $component->addFile($file);
-    }
-
-    /**
-     * @param string $code
-     * @param null $tag
-     */
-    public function registerJSCode($code, $tag = null) {
-        /**
-         * @var JavaScriptLoader $component
-         */
-        $component = $this->getComponent('jsLoader');
-        $component->addInline($code, $tag);
-    }
-
-    /**
-     * @param string $tag
-     */
-    public function unregisterJSCode($tag) {
-        /**
-         * @var JavaScriptLoader $component
-         */
-        $component = $this->getComponent('jsLoader');
-        $component->removeInline($tag);
-    }
-
-    /**
-     * @param string $file
-     */
-    public function unregisterJSFile($file) {
-        /**
-         * @var JavaScriptLoader $component
-         */
-        $component = $this->getComponent('jsLoader');
-        $component->removeFile($file);
-    }
-
-    /*	 * ******************************
-     * IStylesheetCollector
-     * ****************************** */
-    /**
-     * @param string $file
-     * @param array $media
-     */
-    public function registerStylesheetFile($file, $media = []) {
-        /**
-         * @var StylesheetLoader $component
-         */
-        $component = $this->getComponent('cssLoader');
-        $component->addFile($file, $media);
-    }
-
-    /**
-     * @param string $file
-     * @param array $media
-     */
-    public function unregisterStylesheetFile($file, $media = []) {
-        /**
-         * @var StylesheetLoader $component
-         */
-        $component = $$this->getComponent('cssLoader');
-        $component->removeFile($file, $media);
     }
 
     /*	 * ******************************
@@ -375,37 +267,25 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     }
 
     /**
-     * @return null|string
+     * @return array
      */
-    public function getTitle() {
-        return $this->title;
+    public function getTitle(): array {
+        return [$this->title, $this->icon];
     }
 
     /**
-     * @param $title
+     * @param string $title
+     * @param string $icon
      */
-    protected function setTitle($title) {
+    protected function setTitle(string $title, string $icon = '') {
         $this->title = $title;
-    }
-
-    /**
-     * @return string
-     */
-    public function getIcon() {
-        return $this->icon;
-    }
-
-    /**
-     * @param $icon
-     */
-    protected function setIcon($icon) {
         $this->icon = $icon;
     }
 
     /**
      * @param $subtitle
      */
-    protected function setSubtitle($subtitle) {
+    protected function setSubtitle(string $subtitle = null) {
         $this->subtitle = $subtitle;
     }
 
@@ -442,19 +322,19 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         parent::beforeRender();
 
         $this->tryCall($this->formatTitleMethod($this->getView()), $this->params);
-        $this->template->title = $this->getTitle();
+        list($this->template->title, $this->template->icon) = $this->getTitle();
 
         list ($symbol, $type) = $this->getNavBarVariant();
         $this->template->contestSymbol = $symbol;
         $this->template->navbarClass = $type;
 
         $this->template->subtitle = $this->getSubtitle();
-        $this->template->icon = $this->getIcon();
         $this->template->navRoots = $this->getNavRoots();
 
         // this is done beforeRender, because earlier it would create too much traffic? due to redirections etc.
         $this->putIntoBreadcrumbs();
     }
+
 
     /**
      * @return array
@@ -524,7 +404,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         $backLink = $component->getBackLinkUrl();
         if ($backLink) {
             $this->redirectUrl($backLink);
-        } else if ($need) {
+        } elseif ($need) {
             $this->redirect(':Authentication:login'); // will cause dispatch
         }
     }
@@ -614,35 +494,6 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return $this->authorizedCache[$key];
     }
 
-    /*	 * *******************************
-     * I18n
-     *      * ****************************** */
-
-    /**
-     * Preferred language of the page
-     *
-     * @return string ISO 639-1
-     */
-    public function getLang() {
-        if (!$this->_lang) {
-            $this->_lang = $this->lang;
-            $supportedLanguages = $this->translator->getSupportedLanguages();
-            if (!$this->_lang || !in_array($this->_lang, $supportedLanguages)) {
-                $this->_lang = $this->getHttpRequest()->detectLanguage($supportedLanguages);
-            }
-            if (!$this->_lang) {
-                $this->_lang = $this->globalParameters['localization']['defaultLanguage'];
-            }
-        }
-        return $this->_lang;
-    }
-
-    /**
-     * @return ITranslator
-     */
-    public function getTranslator(): ITranslator {
-        return $this->translator;
-    }
 
     /*	 * *******************************
      * Nette workaround
@@ -659,24 +510,10 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     }
 
     /**
-     * @param string $name
      * @return IComponent|null
      * @throws \Exception
      */
-    public function createComponentValuePrinter($name) {
+    public function createComponentValuePrinter() {
         return new ValuePrinterComponent($this->getTranslator(), $this->getTableReflectionFactory());
-    }
-
-    /**
-     * @param string $name
-     * @return IComponent|null
-     * @throws \Exception
-     */
-    public function createComponent($name) {
-        $printerComponent = $this->getTableReflectionFactory()->createComponent($name, 2048);
-        if ($printerComponent) {
-            return $printerComponent;
-        }
-        return parent::createComponent($name);
     }
 }

@@ -13,3 +13,12 @@ export const deleteUploadedFile = (dispatch: Dispatch<Action<string>>, accessKey
         },
     }, () => null, () => null, link);
 };
+
+export const downloadUploadedFile = (dispatch: Dispatch<Action<string>>, accessKey: string, submitId: number, link: string) => {
+    return dispatchNetteFetch<{ submitId: number }, any, Store>(accessKey, dispatch, {
+        act: 'download',
+        requestData: {
+            submitId,
+        },
+    }, () => null, () => null, link);
+};

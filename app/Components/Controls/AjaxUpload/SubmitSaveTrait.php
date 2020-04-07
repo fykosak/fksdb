@@ -7,7 +7,8 @@ use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceSubmit;
-use FKSDB\Submits\ISubmitStorage;
+use FKSDB\Submits\FilesystemUploadedSubmitStorage;
+use Nette\DI\Container;
 use Nette\Http\FileUpload;
 use Nette\Utils\DateTime;
 
@@ -24,9 +25,11 @@ trait SubmitSaveTrait {
      * @throws \Exception
      */
     private function saveSubmitTrait(FileUpload $file, ModelTask $task, ModelContestant $contestant) {
-        $submit = $this->getServiceSubmit()->findByContestant($contestant->ct_id, $task->task_id);
+        /** @var ServiceSubmit $serviceSubmit */
+        $serviceSubmit = $this->getContext()->getByType(ServiceSubmit::class);
+        $submit = $serviceSubmit->findByContestant($contestant->ct_id, $task->task_id);
         if (!$submit) {
-            $submit = $this->getServiceSubmit()->createNewModel([
+            $submit = $serviceSubmit->createNewModel([
                 'task_id' => $task->task_id,
                 'ct_id' => $contestant->ct_id,
                 'submitted_on' => new DateTime(),
@@ -39,17 +42,14 @@ trait SubmitSaveTrait {
             ]);
         }
         // store file
-        $this->getSubmitStorage()->storeFile($file->getTemporaryFile(), $submit);
+        /** @var FilesystemUploadedSubmitStorage $submitUploadedStorage */
+        $submitUploadedStorage = $this->getContext()->getByType(FilesystemUploadedSubmitStorage::class);
+        $submitUploadedStorage->storeFile($file->getTemporaryFile(), $submit);
         return $submit;
     }
 
     /**
-     * @return ServiceSubmit
+     * @return Container
      */
-    abstract protected function getServiceSubmit(): ServiceSubmit;
-
-    /**
-     * @return ISubmitStorage
-     */
-    abstract protected function getSubmitStorage():ISubmitStorage;
+    abstract function getContext();
 }

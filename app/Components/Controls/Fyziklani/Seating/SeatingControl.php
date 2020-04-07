@@ -5,6 +5,7 @@ namespace FKSDB\Components\Controls\Fyziklani;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use Nette\Application\UI\Control;
+use Nette\DI\Container;
 use Nette\Localization\ITranslator;
 
 /**
@@ -23,13 +24,12 @@ class SeatingControl extends Control {
 
     /**
      * SeatingControl constructor.
-     * @param ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
-     * @param ITranslator $translator
+     * @param Container $container
      */
-    public function __construct(ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition, ITranslator $translator) {
+    public function __construct(Container $container) {
         parent::__construct();
-        $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
-        $this->translator = $translator;
+        $this->serviceFyziklaniTeamPosition = $container->getByType(ServiceFyziklaniTeamPosition::class);
+        $this->translator = $container->getByType(ITranslator::class);
     }
 
     /**

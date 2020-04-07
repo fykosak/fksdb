@@ -61,8 +61,7 @@ abstract class AbstractServiceMulti implements IService {
         $joinedModel = $this->getJoinedService()->createNew($data);
 
         $className = $this->modelClassName;
-        $result = new $className($this, $mainModel, $joinedModel);
-        return $result;
+        return new $className($this, $mainModel, $joinedModel);
     }
 
     /**
@@ -87,8 +86,7 @@ abstract class AbstractServiceMulti implements IService {
      */
     public function composeModel(AbstractModelSingle $mainModel, AbstractModelSingle $joinedModel) {
         $className = $this->modelClassName;
-        $result = new $className($this, $mainModel, $joinedModel);
-        return $result;
+        return new $className($this, $mainModel, $joinedModel);
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace FKSDB\ORM\Services;
 
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\IModel;
@@ -30,6 +31,17 @@ class ServiceAddress extends AbstractServiceSingle {
      */
     protected function getTableName(): string {
         return DbNames::TAB_ADDRESS;
+    }
+
+    /**
+     * @param array|iterable|\ArrayAccess $data
+     * @return AbstractModelSingle
+     */
+    public function createNewModel($data = null): AbstractModelSingle {
+        if (!isset($data['region_id'])) {
+            $data['region_id'] = $this->inferRegion($data['postal_code']);
+        }
+        return parent::createNewModel($data);
     }
 
     /**
@@ -77,7 +89,7 @@ class ServiceAddress extends AbstractServiceSingle {
 
             if (in_array($firstChar, ['1', '2', '3', '4', '5', '6', '7'])) {
                 return ModelRegion::CZECH_REPUBLIC;
-            } else if (in_array($firstChar, ['8', '9', '0'])) {
+            } elseif (in_array($firstChar, ['8', '9', '0'])) {
                 return ModelRegion::SLOVAKIA;
             } else {
                 throw new InvalidPostalCode($postalCode);

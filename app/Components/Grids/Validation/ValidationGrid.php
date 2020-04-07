@@ -9,8 +9,10 @@ use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ValidationTest\ValidationLog;
 use FKSDB\ValidationTest\ValidationTest;
 use FKSDB\NotImplementedException;
+use Nette\DI\Container;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;
+use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class ValidationGrid
@@ -28,18 +30,18 @@ class ValidationGrid extends BaseGrid {
 
     /**
      * ValidationGrid constructor.
-     * @param ServicePerson $servicePerson
      * @param ValidationTest[] $tests
+     * @param Container $container
      */
-    public function __construct(ServicePerson $servicePerson, array $tests) {
-        parent::__construct();
-        $this->servicePerson = $servicePerson;
+    public function __construct(array $tests, Container $container) {
+        parent::__construct($container);
+        $this->servicePerson = $container->getByType(ServicePerson::class);
         $this->tests = $tests;
     }
 
     /**
      * @param \AuthenticatedPresenter $presenter
-     * @throws \NiftyGrid\DuplicateColumnException
+     * @throws DuplicateColumnException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

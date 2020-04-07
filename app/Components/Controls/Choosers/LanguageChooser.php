@@ -2,12 +2,11 @@
 
 namespace FKSDB\Components\Controls\Choosers;
 
-
+use FKSDB\LangPresenterTrait;
+use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
 use Nette\Templating\FileTemplate;
-use Nette\Templating\Template;
-
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -16,131 +15,57 @@ use Nette\Templating\Template;
  * @property FileTemplate $template
  */
 class LanguageChooser extends Control {
+    /** @var array */
+    private $supportedLanguages;
 
-    const DEFAULT_FIRST = 'cs';
-
-    /**
-     * @var mixed
-     */
-    private $languages;
-
-    /**
-     * @var Session
-     */
+    /** @var Session */
     private $session;
 
-    /**
-     * @var mixed
-     */
+    /** @var string */
     private $language;
-    /**
-     * @var array
-     */
-    private $languageNames = ['cs' => 'Čeština', 'en' => 'English', 'sk' => 'Slovenčina'];
 
+    /** @var bool */
     private $initialized = false;
 
-    /**
-     * @var mixed DEFAULT_*
-     */
-    private $defaultLanguage = self::DEFAULT_FIRST;
+    /** @var string */
+    const DEFAULT_LANGUAGE = 'cs';
+    /** @var bool */
+    private $modifiable = true;
 
     /**
-     *
      * @param Session $session
+     * @param bool $modifiable
      */
-    function __construct(Session $session) {
+    function __construct(Session $session, bool $modifiable) {
         parent::__construct();
         $this->session = $session;
+        $this->modifiable = $modifiable;
     }
 
     /**
-     * @param mixed $languages role enum|ALL_LANGUAGES|array of languages
-     */
-    public function setLanguages($languages) {
-        $this->languages = $languages;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLanguages() {
-        return $this->languages;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDefaultLanguage() {
-        return $this->defaultLanguage;
-    }
-
-    /**
-     * @param $defaultLanguage
-     */
-    public function setDefaultLanguage($defaultLanguage) {
-        $this->defaultLanguage = $defaultLanguage;
-    }
-
-    /**
-     * @param $language
+     * @param string $language
      * @return bool
      */
-    public function isLanguage($language) {
-        return in_array($language, $this->languages);
+    private function isLanguage(string $language): bool {
+        return in_array($language, $this->supportedLanguages);
     }
 
     /**
-     * @param object $params
-     * @return boolean
      * Redirect to correct address accorging to the resolved values.
+     * @param string $lang
      * @throws \Exception
      */
-    public function syncRedirect(&$params) {
-        $this->init($params);
-
-        if ($this->language !== $params->lang) {
-            $params->lang = $this->language;
-
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLanguage() {
-        return $this->language;
-    }
-
-    /**
-     * @param $params
-     * @throws \Exception
-     */
-    private function init($params) {
+    public function setLang(string $lang) {
         if ($this->initialized) {
             return;
         }
         $this->initialized = true;
-
-        $this->setLanguages($this->getSupportedLanguages());
-
-        if (count($this->getLanguages()) == 0) {
+        if (count($this->getSupportedLanguages()) == 0) {
             return;
         }
-
-        /* LANGUAGE */
-        $this->language = $this->getDefaultLanguage();
-
-        if ($params->lang !== null) {
-
-            if (!$this->isLanguage($params->lang)) {
-                $this->language = $this->getDefaultLanguage();
-            } else {
-                $this->language = $params->lang;
-            }
-
+        $this->language = self::DEFAULT_LANGUAGE;
+        if ($this->isLanguage($lang)) {
+            $this->language = $lang;
         }
     }
 
@@ -148,37 +73,28 @@ class LanguageChooser extends Control {
      * @return array of existing languages
      * @throws \Exception
      */
-    private function getSupportedLanguages() {
-        $presenter = $this->getPresenter();
-        if (!($presenter instanceof \BasePresenter)) {
-            throw new \Exception('Wrong presenter');
+    private function getSupportedLanguages(): array {
+        if (!count($this->supportedLanguages)) {
+            $presenter = $this->getPresenter();
+            if (!($presenter instanceof \BasePresenter)) {
+                throw new \Exception('Wrong presenter');
+            }
+            $this->supportedLanguages = $presenter->getTranslator()->getSupportedLanguages();
         }
-        return $presenter->getTranslator()->getSupportedLanguages();
-
+        return $this->supportedLanguages;
     }
 
     /**
-     * @param null $class
-     * @return \Nette\Templating\ITemplate|Template
+     * @param string|null $class
+     * @throws \Exception
      */
-    protected function createTemplate($class = NULL) {
-        /**
-         * @var Template $template
-         */
-        $presenter = $this->getPresenter();
-
-        $template = parent::createTemplate($class);
-        if ($presenter instanceof \BasePresenter) {
-            $template->setTranslator($presenter->getTranslator());
-        }
-        return $template;
-    }
-
-    public function render() {
-
-        $this->template->languages = $this->getLanguages();
-        $this->template->languageNames = $this->languageNames;
-        $this->template->currentLanguage = $this->getLanguage() ? $this->getLanguage() : null;
+    public function render(string $class = null) {
+        $this->template->modifiable = $this->modifiable;
+        $this->template->languages = $this->getSupportedLanguages();
+        $this->template->languageNames = LangPresenterTrait::$languageNames;
+        $this->template->currentLanguage = $this->language ?: null;
+        $this->template->class = ($class !== null) ? $class : "nav navbar-nav navbar-right";
+        $this->template->setTranslator($this->getPresenter()->getTranslator());
 
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'LanguageChooser.latte');
         $this->template->render();
@@ -186,9 +102,9 @@ class LanguageChooser extends Control {
 
     /**
      * @param $language
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
-    public function handleChangeLang($language) {
+    public function handleChangeLang(string $language) {
         /**
          * @var \BasePresenter $presenter
          */

@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics;
 
 use FKSDB\Components\Controls\Fyziklani\FyziklaniReactControl;
+use FKSDB\model\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
@@ -45,16 +46,13 @@ class ResultsAndStatistics extends FyziklaniReactControl {
      * @param string $reactId
      * @param Container $container
      * @param ModelEvent $event
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @param ServiceFyziklaniTask $serviceFyziklaniTask
-     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
      */
-    public function __construct(string $reactId, Container $container, ModelEvent $event, ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceFyziklaniTask $serviceFyziklaniTask, ServiceFyziklaniSubmit $serviceFyziklaniSubmit) {
-        $this->reactId = $reactId;
-        $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
-        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
-        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+    public function __construct(Container $container, ModelEvent $event, string $reactId) {
         parent::__construct($container, $event);
+        $this->reactId = $reactId;
+        $this->serviceFyziklaniSubmit = $this->container->getByType(ServiceFyziklaniSubmit::class);
+        $this->serviceFyziklaniTask = $this->container->getByType(ServiceFyziklaniTask::class);
+        $this->serviceFyziklaniTeam = $this->container->getByType(ServiceFyziklaniTeam::class);
     }
 
     /**
@@ -92,7 +90,7 @@ class ResultsAndStatistics extends FyziklaniReactControl {
         if (!$presenter instanceof BasePresenter) {
             throw new ArgumentOutOfRangeException();
         }
-        $isOrg = $presenter->getEventAuthorizator()->isAllowed('fyziklani.results', 'presentation', $this->getEvent());
+        $isOrg = $presenter->getEventAuthorizator()->isContestOrgAllowed('fyziklani.results', 'presentation', $this->getEvent());
 
         $request = $this->getReactRequest();
 
@@ -133,6 +131,7 @@ class ResultsAndStatistics extends FyziklaniReactControl {
 
     /**
      * @return bool
+     * @throws NotSetGameParametersException
      */
     private function isResultsVisible(): bool {
         return $this->getEvent()->getFyziklaniGameSetup()->isResultsVisible();

@@ -4,6 +4,7 @@
 namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\NotImplementedException;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
@@ -35,8 +36,9 @@ class ItemsGrid extends BaseGrid {
 
     /**
      * @param $presenter
-     * @throws DuplicateColumnException
      * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
+     * @throws NotImplementedException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -51,6 +53,6 @@ class ItemsGrid extends BaseGrid {
             DbNames::TAB_SCHEDULE_ITEM . '.used_capacity',
             DbNames::TAB_SCHEDULE_ITEM . '.require_id_number',
         ]);
-        $this->addLinkButton($presenter, 'item', 'detail', _('Detail'), true, ['id' => 'schedule_item_id']);
+        $this->addLinkButton( 'item', 'detail', _('Detail'), true, ['id' => 'schedule_item_id']);
     }
 }

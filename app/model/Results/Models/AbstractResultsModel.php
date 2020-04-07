@@ -27,7 +27,7 @@ abstract class AbstractResultsModel {
     const LABEL_SUM = 'sum';
     const ALIAS_SUM = 'sum';
     const LABEL_PERCETAGE = 'percent';
-    const ALIAS_PERCENTAGE = 'percent';    
+    const ALIAS_PERCENTAGE = 'percent';
     const LABEL_TOTAL_PERCENTAGE = 'total-percent';
     const ALIAS_TOTAL_PERCENTAGE = 'total-percent';
 
@@ -148,7 +148,7 @@ abstract class AbstractResultsModel {
                 } else {
                     $where[] = $inClause;
                 }
-            } else if ($value === null) {
+            } elseif ($value === null) {
                 $where[] = "$col IS NULL";
             } else {
                 $where[] = "$col = $value";

@@ -8,6 +8,7 @@ use FKSDB\ORM\Models\IFyziklaniTaskReferencedModel;
 use FKSDB\ORM\Models\IFyziklaniTeamReferencedModel;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Database\Table\ActiveRow;
+use Nette\Security\IResource;
 use Nette\Utils\DateTime;
 
 /**
@@ -26,9 +27,11 @@ use Nette\Utils\DateTime;
  * @property-read DateTime created
  * @property-read DateTime modified
  */
-class ModelFyziklaniSubmit extends AbstractModelSingle implements IFyziklaniTeamReferencedModel, IEventReferencedModel, IFyziklaniTaskReferencedModel {
+class ModelFyziklaniSubmit extends AbstractModelSingle implements IFyziklaniTeamReferencedModel, IEventReferencedModel, IFyziklaniTaskReferencedModel, IResource {
     const STATE_NOT_CHECKED = 'not_checked';
     const STATE_CHECKED = 'checked';
+
+    const RESOURCE_ID = 'fyziklani.submit';
 
     /**
      * @return ModelFyziklaniTask
@@ -98,5 +101,12 @@ class ModelFyziklaniSubmit extends AbstractModelSingle implements IFyziklaniTeam
      */
     public function canChange(): bool {
         return $this->getFyziklaniTeam()->hasOpenSubmitting();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    function getResourceId() {
+        return self::RESOURCE_ID;
     }
 }

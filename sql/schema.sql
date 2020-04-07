@@ -393,8 +393,14 @@ CREATE TABLE IF NOT EXISTS `org` (
   `order`        TINYINT(4)   NOT NULL
   COMMENT 'pořadí pro řazení ve výpisech',
   `contribution` TEXT         NULL     DEFAULT NULL,
+  `tex_signature`          VARCHAR(32)  NULL DEFAULT NULL
+      COMMENT 'zkratka používaná v TeXových vzorácích',
+  `domain_alias`           VARCHAR(32)  NULL DEFAULT NULL
+      COMMENT 'alias v doméně fykos.cz',
   PRIMARY KEY (`org_id`),
   UNIQUE INDEX `contest_id` (`contest_id` ASC, `person_id` ASC),
+  UNIQUE INDEX `domain_alias_UNIQUE` (`contest_id` ASC, `domain_alias` ASC),
+  UNIQUE INDEX `tex_signature_UNIQUE` (`contest_id` ASC, `tex_signature` ASC),
   INDEX `person_id` (`person_id` ASC),
   CONSTRAINT `org_ibfk_1`
   FOREIGN KEY (`person_id`)
@@ -458,6 +464,8 @@ CREATE TABLE IF NOT EXISTS `grant` (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `person_info` (
   `person_id`              INT(11)      NOT NULL,
+  `preferred_lang`         ENUM('cs','en') NULL DEFAULT NULL
+  COMMENT 'Prefer language code by ISO 639-1',
   `born`                   DATE         NULL DEFAULT NULL
   COMMENT 'datum narození',
   `id_number`              VARCHAR(32)  NULL DEFAULT NULL
@@ -664,6 +672,8 @@ CREATE TABLE IF NOT EXISTS `submit` (
   COMMENT 'Pred prepoctem',
   `calc_points`  DECIMAL(4, 2)           NULL     DEFAULT NULL
   COMMENT 'Cache spoctenych bodu.',
+  `corrected`       TINYINT(1)   NULL DEFAULT 0
+  COMMENT 'Má uloha nahrané riešnie?',
   PRIMARY KEY (`submit_id`),
   UNIQUE INDEX `cons_uniq` (`ct_id` ASC, `task_id` ASC),
   INDEX `task_id` (`task_id` ASC),
@@ -1352,7 +1362,7 @@ CREATE TABLE IF NOT EXISTS `fyziklani_game_setup` (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `schedule_group` (
     `schedule_group_id`   INT(11)      NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `schedule_group_type` VARCHAR(64)  NOT NULL,
+    `schedule_group_type` ENUM ('accommodation','weekend','visa','accommodation_gender','accommodation_teacher','teacher_present','weekend_info') NOT NULL,
     `name_cs`             VARCHAR(256) NULL DEFAULT NULL,
     `name_en`             VARCHAR(256) NULL DEFAULT NULL,
     `event_id`            INT(11)      NOT NULL,

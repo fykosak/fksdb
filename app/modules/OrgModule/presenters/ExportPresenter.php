@@ -25,7 +25,10 @@ use FKSDB\Results\Models\AbstractResultsModel;
 use FKSDB\Results\ResultsModelFactory;
 use FormUtils;
 use ModelException;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\UI\InvalidLinkException;
+use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Strings;
 use ServiceMStoredQueryTag;
@@ -57,12 +60,12 @@ class ExportPresenter extends SeriesPresenter {
     public $qid;
 
     /**
-     * @var \FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery
+     * @var ServiceStoredQuery
      */
     private $serviceStoredQuery;
 
     /**
-     * @var \FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryParameter
+     * @var ServiceStoredQueryParameter
      */
     private $serviceStoredQueryParameter;
 
@@ -91,12 +94,12 @@ class ExportPresenter extends SeriesPresenter {
     private $storedQuery;
 
     /**
-     * @var \FKSDB\ORM\Models\StoredQuery\ModelStoredQuery
+     * @var ModelStoredQuery
      */
     private $patternQuery = false;
 
     /**
-     * @param \FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery $serviceStoredQuery
+     * @param ServiceStoredQuery $serviceStoredQuery
      */
     public function injectServiceStoredQuery(ServiceStoredQuery $serviceStoredQuery) {
         $this->serviceStoredQuery = $serviceStoredQuery;
@@ -128,7 +131,6 @@ class ExportPresenter extends SeriesPresenter {
      */
     public function injectStoredQueryFactory(StoredQueryFactory $storedQueryFactory) {
         $this->storedQueryFactory = $storedQueryFactory;
-        $this->storedQueryFactory->setPresenter($this);
     }
 
     /**
@@ -203,11 +205,11 @@ class ExportPresenter extends SeriesPresenter {
             $parameters[] = $parameter;
         }
 
-        return $this->storedQueryFactory->createQueryFromSQL($sql, $parameters);
+        return $this->storedQueryFactory->createQueryFromSQL($this, $sql, $parameters);
     }
 
     /**
-     * @return ModelStoredQuery|\Nette\Database\Table\ActiveRow|null
+     * @return ModelStoredQuery|ActiveRow|null
      */
     public function getPatternQuery() {
         if ($this->patternQuery === false) {
@@ -294,12 +296,12 @@ class ExportPresenter extends SeriesPresenter {
     /**
      * @param $id
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws AbortException
+     * @throws InvalidLinkException
      */
     public function actionExecute($id) {
         $query = $this->getPatternQuery();
-        $storedQuery = $this->storedQueryFactory->createQuery($query);
+        $storedQuery = $this->storedQueryFactory->createQuery($this, $query);
         $this->setStoredQuery($storedQuery);
 
         if ($query && $this->getParameter('qid')) {
@@ -313,7 +315,7 @@ class ExportPresenter extends SeriesPresenter {
             $storedQueryComponent->updateParameters($parameters);
 
             if ($this->getParameter('format')) {
-                $this->createRequest($storedQueryComponent, 'format!', array('format' => $this->getParameter('format')), 'forward');
+                $this->createRequest($storedQueryComponent, 'format!', ['format' => $this->getParameter('format')], 'forward');
                 $this->forward($this->lastCreatedRequest);
             }
         }
@@ -323,8 +325,7 @@ class ExportPresenter extends SeriesPresenter {
      * @param $id
      */
     public function titleEdit($id) {
-        $this->setTitle(sprintf(_('Úprava dotazu %s'), $this->getPatternQuery()->name));
-        $this->setIcon('fa fa-pencil');
+        $this->setTitle(sprintf(_('Úprava dotazu %s'), $this->getPatternQuery()->name), 'fa fa-pencil');
     }
 
     /**
@@ -355,8 +356,7 @@ class ExportPresenter extends SeriesPresenter {
     }
 
     public function titleCompose() {
-        $this->setTitle(sprintf(_('Napsat dotaz')));
-        $this->setIcon('fa fa-pencil');
+        $this->setTitle(sprintf(_('Napsat dotaz')), 'fa fa-pencil');
     }
 
     public function renderCompose() {
@@ -367,8 +367,7 @@ class ExportPresenter extends SeriesPresenter {
     }
 
     public function titleList() {
-        $this->setTitle(_('Exporty'));
-        $this->setIcon('fa fa-database');
+        $this->setTitle(_('Exports'), 'fa fa-database');
     }
 
     /**
@@ -381,8 +380,7 @@ class ExportPresenter extends SeriesPresenter {
             $title .= " ($qid)";
         }
 
-        $this->setTitle($title);
-        $this->setIcon('fa fa-database');
+        $this->setTitle($title, 'fa fa-database');
     }
 
     /**
@@ -396,8 +394,7 @@ class ExportPresenter extends SeriesPresenter {
      * @param $id
      */
     public function titleExecute($id) {
-        $this->setTitle(sprintf(_('%s'), $this->getPatternQuery()->name));
-        $this->setIcon('fa fa-play-circle-o');
+        $this->setTitle(sprintf(_('%s'), $this->getPatternQuery()->name), 'fa fa-play-circle-o');
     }
 
     /**
@@ -424,7 +421,7 @@ class ExportPresenter extends SeriesPresenter {
      * @return StoredQueriesGrid
      */
     protected function createComponentGrid(): StoredQueriesGrid {
-        return new StoredQueriesGrid($this->serviceStoredQuery, $this->getContestAuthorizator(), $this->tableReflectionFactory);
+        return new StoredQueriesGrid($this->getContext());
     }
 
     /**
@@ -436,7 +433,7 @@ class ExportPresenter extends SeriesPresenter {
         if ($storedQuery === null) { // workaround when session expires and persistent parameters from component are to be stored (because of redirect)
             return null;
         }
-        $grid = new StoredQueryComponent($storedQuery, $this->getContestAuthorizator(), $this->storedQueryFormFactory, $this->exportFormatFactory);
+        $grid = new StoredQueryComponent($storedQuery, $this->getContestAuthorizator(), $this->storedQueryFormFactory, $this->exportFormatFactory, $this->getContext());
         $grid->setShowParametrize(false);
         return $grid;
     }
@@ -450,7 +447,7 @@ class ExportPresenter extends SeriesPresenter {
         if ($storedQuery === null) { // workaround when session expires and persistent parameters from component are to be stored (because of redirect)
             return null;
         }
-        return new StoredQueryComponent($storedQuery, $this->getContestAuthorizator(), $this->storedQueryFormFactory, $this->exportFormatFactory);
+        return new StoredQueryComponent($storedQuery, $this->getContestAuthorizator(), $this->storedQueryFormFactory, $this->exportFormatFactory, $this->getContext());
     }
 
     /**
@@ -520,14 +517,14 @@ class ExportPresenter extends SeriesPresenter {
         $submit = $form->addSubmit('execute', _('Spustit'))
             ->setValidationScope(false);
         $submit->getControlPrototype()->addClass('btn-success');
-        $submit->onClick[] = array($this, 'handleComposeExecute');
+        $submit->onClick[] = [$this, 'handleComposeExecute'];
 
         return $control;
     }
 
     /**
      * @param SubmitButton $button
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function handleComposeExecute(SubmitButton $button) {
         $form = $button->getForm();
@@ -537,13 +534,13 @@ class ExportPresenter extends SeriesPresenter {
         if ($this->isAjax()) {
             $this->invalidateControl('adhocResultsComponent');
         } else {
-            $this->redirect('this', array(self::PARAM_LOAD_FROM_SESSION => true));
+            $this->redirect('this', [self::PARAM_LOAD_FROM_SESSION => true]);
         }
     }
 
     /**
      * @param SubmitButton $button
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      * @throws \ReflectionException
      */
     public function handleEditSuccess(SubmitButton $button) {
@@ -570,7 +567,7 @@ class ExportPresenter extends SeriesPresenter {
 
     /**
      * @param SubmitButton $button
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      * @throws \ReflectionException
      */
     public function handleComposeSuccess(SubmitButton $button) {
@@ -581,9 +578,9 @@ class ExportPresenter extends SeriesPresenter {
 
             $form = $button->getForm();
             $values = $form->getValues();
+            /** @var ModelStoredQuery $storedQuery */
             $storedQuery = $this->serviceStoredQuery->createNew();
             $this->handleSave($values, $storedQuery);
-
 
             $this->flashMessage(_('Dotaz vytvořen.'), self::FLASH_SUCCESS);
             $this->backLinkRedirect();
@@ -622,7 +619,6 @@ class ExportPresenter extends SeriesPresenter {
                 'query_id' => $storedQuery->query_id,
                 'tag_type_id' => $tagTypeId,
             ];
-            //TODO
             $tag = $this->serviceMStoredQueryTag->createNew($data);
             $this->serviceMStoredQueryTag->save($tag);
         }
@@ -634,8 +630,11 @@ class ExportPresenter extends SeriesPresenter {
             /**
              * @var ModelStoredQueryParameter $parameter
              */
-            $paramMetaData['query_id'] = $storedQuery->query_id;
-            $parameter = $this->serviceStoredQueryParameter->createNewModel($paramMetaData);
+            // $paramMetaData['query_id'] = $storedQuery->query_id;
+           // $parameter = $this->serviceStoredQueryParameter->createNewModel($paramMetaData);
+
+            /** @var ModelStoredQueryParameter $parameter */
+            $parameter = $this->serviceStoredQueryParameter->createNew($paramMetaData);
             $parameter->setDefaultValue($paramMetaData['default']);
 
             //$parameter->query_id = $storedQuery->query_id;
@@ -666,7 +665,7 @@ class ExportPresenter extends SeriesPresenter {
 
         foreach ($model->getCategories() as $category) {
             $rows = [];
-            $model->setSeries(array(1, 2, 3, 4, 5, 6));
+            $model->setSeries([1, 2, 3, 4, 5, 6]);
 
             $header = $model->getDataColumns($category);
             $sumCol = 0;
@@ -740,7 +739,7 @@ class ExportPresenter extends SeriesPresenter {
                     $studyYear = ($contestant->study_year >= 1 && $contestant->study_year <= 4) ? $contestant->study_year : ($contestant->study_year - 9);
                     if ($contestant->contest_id == ModelContest::ID_FYKOS) {
                         $row[] = 1991 + $year - $studyYear;
-                    } else if ($contestant->contest_id == ModelContest::ID_VYFUK) {
+                    } elseif ($contestant->contest_id == ModelContest::ID_VYFUK) {
                         $row[] = 2015 + $year - $studyYear;
                     }
                 } else {

@@ -37,7 +37,7 @@ navigation:
             - common.deduplicate.person
             - common.person.search
             - common.dashboard.default
-            -  org.dashboard.default
+            - org.dashboard.default
         common.dashboard.default:
             - common.dashboard.default
             - common.validation.default
@@ -59,7 +59,7 @@ navigation:
             - fyziklani.submit.entry
             - fyziklani.submit.list
             - fyziklani.close.list
-            - fyziklani.results.default
+            - fyziklani.results.list
             - fyziklani.diplomas.default
             - fyziklani.task.list
             - fyziklani.task.import
@@ -79,14 +79,15 @@ navigation:
             - fyziklani.results.taskStatistics
             - fyziklani.results.correlationStatistics
         event.dashboard.default:
-            - event.dispatch.default
-            - event.dashboard.default
-            - event.payment.list
+            - event.teamApplication.list
+            - event.application.list
+            - event.eventOrg.list
             - event.payment.create
+            - event.payment.list
             - fyziklani.dashboard.default
             - event.schedule.groups
-            - event.application.list
-            - event.teamApplication.list
-            - event.model.default
             - event.seating.default
-            - event.chart.default
+            - event.model.default
+            - event.chart.list
+            - event.dispatch.default
+            - event.dashboard.default

@@ -4,7 +4,6 @@ namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\DatabaseReflection\Links\AbstractLink;
-use FKSDB\Components\DatabaseReflection\RowFactoryComponent;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\Localization\ITranslator;
@@ -52,34 +51,16 @@ final class TableReflectionFactory {
     }
 
     /**
-     * @param $linkId
+     * @param string $linkId
      * @return AbstractLink
      * @throws \Exception
      */
-    public function loadLinkFactory($linkId): AbstractLink {
+    public function loadLinkFactory(string $linkId): AbstractLink {
         $service = $this->container->getService('DBReflection.link.' . $linkId);
         if (!$service instanceof AbstractLink) {
             throw new InvalidArgumentException('LinkFactory ' . $linkId . ' not exists');
         }
         return $service;
-    }
-
-    /**
-     * @param string $name
-     * @param int $permissionLevel
-     * @return RowFactoryComponent|null
-     * @throws \Exception
-     */
-    public function createComponent(string $name, int $permissionLevel) {
-        $parts = \explode('__', $name);
-        if (\count($parts) === 3) {
-            list($prefix, $tableName, $fieldName) = $parts;
-            if ($prefix === 'valuePrinter') {
-                $factory = $this->loadService($tableName, $fieldName);
-                return new RowFactoryComponent($this->translator, $factory, $permissionLevel);
-            }
-        }
-        return null;
     }
 
     /**

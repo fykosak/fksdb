@@ -1,8 +1,6 @@
 <?php
 
-
 namespace FKSDB\Components\Controls\FormControl;
-
 
 use FKSDB\Components\Forms\OptimisticForm;
 use Nette\Application\UI\Form;
@@ -13,15 +11,10 @@ use Nette\Application\UI\Form;
  */
 class OptimisticFormControl extends FormControl {
 
-
-    /**
-     * @var array
-     */
+    /** @var callable */
     private $fingerprintCallback;
 
-    /**
-     * @var array
-     */
+    /** @var callable */
     private $defaultsCallback;
 
     /**
@@ -36,10 +29,8 @@ class OptimisticFormControl extends FormControl {
         parent::__construct();
     }
 
-    /**
-     * @return OptimisticForm
-     */
-    protected function createForm(): Form {
+    /** @return OptimisticForm */
+    protected function createComponentForm(): Form {
         return new OptimisticForm($this->fingerprintCallback, $this->defaultsCallback);
     }
 }

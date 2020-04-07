@@ -84,6 +84,7 @@ class SchoolProvider implements IFilteredDataProvider {
 
     /**
      * @return array|void
+     * @throws NotImplementedException
      */
     public function getItems() {
         throw new NotImplementedException();

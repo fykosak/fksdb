@@ -94,6 +94,19 @@ stalking:
                 - person_history.school_id
                 - person_history.study_year
                 - person_history.class
+        task_contribution:
+            layout: multi
+            label: Task contribution
+            minimalPermission: 1024
+            table: task_contribution
+            links: []
+            model: FKSDB\ORM\Models\ModelTaskContribution
+            itemHeadline: task.fq_name
+            rows:
+                - task_contribution.type
+                - referenced.contest
+                - task.year
+                - task.series
 
         org:
             layout: multi
@@ -104,7 +117,7 @@ stalking:
             links:
                 - org.detail
                 - org.edit
-            itemHeadline: org.contest_id
+            itemHeadline: referenced.contest
             rows:
                 - org.org_id
                 - org.since
@@ -138,7 +151,7 @@ stalking:
             itemHeadline: contestant_base.ct_id
             rows:
                 - contestant_base.year
-                - contestant_base.contest_id
+                - referenced.contest
         event_participant:
             layout: multi
             label: Event Participant

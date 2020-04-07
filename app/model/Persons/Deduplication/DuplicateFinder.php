@@ -107,7 +107,7 @@ class DuplicateFinder {
          */
         if (!$a->PI || !$b->PI) { // if person_info records don't exist
             $emailScore = 0.5; // cannot say anything
-        } else if (!$a->email || !$b->email) {
+        } elseif (!$a->email || !$b->email) {
             $emailScore = 0.8; // a little bit more
         } else {
             $emailScore = 1 - $this->relativeDistance($a->email, $b->email);

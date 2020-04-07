@@ -24,7 +24,6 @@ use Nette\Utils\ArrayHash;
 use Nette\Utils\JsonException;
 use ServiceMPersonHasFlag;
 use ServiceMPostContact;
-use function array_keys;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -148,9 +147,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @throws ExistingPaymentException
      */
     public function update(IModel $model, ArrayHash $values) {
-        /**
-         * @var ModelPerson $model
-         */
+        /** @var ModelPerson $model */
         $this->store($model, $values);
     }
 
@@ -187,7 +184,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
                 'person' => &$person,
                 'person_info' => ($info = $person->getInfo()) ?: $this->servicePersonInfo->createNew(),
                 'person_history' => ($history = $person->getHistory($this->acYear)) ?: $this->servicePersonHistory->createNew(['ac_year' => $this->acYear]),
-                'person_schedule' => (($this->eventId && isset($data['person_schedule']) && $person->getSerializedSchedule($this->eventId, array_keys((array)$data['person_schedule'])[0])) ?: null),
+                'person_schedule' => (($this->eventId && isset($data['person_schedule']) && $person->getSerializedSchedule($this->eventId, \array_keys((array)$data['person_schedule'])[0])) ?: null),
                 self::POST_CONTACT_DELIVERY => ($dataPostContact = $person->getDeliveryAddress()) ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_DELIVERY]),
                 self::POST_CONTACT_PERMANENT => ($dataPostContact = $person->getPermanentAddress(true)) ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_PERMANENT])
             ];
@@ -203,7 +200,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
                 self::POST_CONTACT_PERMANENT => $this->serviceMPostContact,
             ];
 
-            $originalModels = array_keys(iterator_to_array($data));
+            $originalModels = \array_keys(iterator_to_array($data));
 
             $this->prepareFlagServices($data, $services);
             $this->prepareFlagModels($person, $data, $models);
@@ -219,7 +216,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
                 if (count($conflicts)) {
                     throw new ModelDataConflictException($conflicts);
                 }
-            } else if ($this->resolution == self::RESOLUTION_KEEP) {
+            } elseif ($this->resolution == self::RESOLUTION_KEEP) {
                 $data = $this->removeConflicts($data, $conflicts);
             }
             // It's like this: $this->resolution == self::RESOLUTION_OVERWRITE) {
@@ -228,7 +225,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
             foreach ($models as $t => & $model) {
 
                 if (!isset($data[$t])) {
-                    if (in_array($t, $originalModels) && in_array($t, array(self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT))) {
+                    if (\in_array($t, $originalModels) && \in_array($t, [self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT])) {
                         // delete only post contacts, other "children" could be left all-nulls
                         $services[$t]->dispose($model);
                     }
@@ -327,7 +324,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @param ArrayHash $data
      */
     private function resolvePostContacts(ArrayHash $data) {
-        foreach (array(self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT) as $type) {
+        foreach ([self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT] as $type) {
             if (!isset($data[$type])) {
                 continue;
             }
@@ -363,7 +360,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
                 continue;
             }
 
-            $models[$fid] = ($flag = $person->getMPersonHasFlag($fid)) ?: $this->serviceMPersonHasFlag->createNew(array('fid' => $fid));
+            $models[$fid] = ($flag = $person->getMPersonHasFlag($fid)) ?: $this->serviceMPersonHasFlag->createNew(['fid' => $fid]);
 
             $data[$fid] = new ArrayHash();
             $data[$fid]['value'] = $value;
