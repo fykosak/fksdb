@@ -16,7 +16,7 @@ class ServicePersonHasFlag extends AbstractServiceSingle {
     /**
      * @return string
      */
-    protected function getModelClassName(): string {
+    public function getModelClassName(): string {
         return ModelPersonHasFlag::class;
     }
 
@@ -30,6 +30,7 @@ class ServicePersonHasFlag extends AbstractServiceSingle {
     /**
      * @param null $data
      * @return \FKSDB\ORM\AbstractModelSingle
+     * @throws \Exception
      */
     public function createNew($data = null) {
         if ($data === null) {
@@ -44,6 +45,7 @@ class ServicePersonHasFlag extends AbstractServiceSingle {
      * @param array $data
      * @param bool $alive
      * @return mixed|void
+     * @throws \Exception
      */
     public function updateModel(IModel $model, $data, $alive = true) {
         if ($data === null) {

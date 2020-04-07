@@ -24,8 +24,9 @@ use Nette,
  *
  * @property-read Nette\Application\IRequest $request
  */
-class MicroPresenter extends Nette\Object implements Application\IPresenter
+class MicroPresenter implements Application\IPresenter
 {
+    use Nette\SmartObject;
 	/** @var Nette\DI\Container */
 	private $context;
 

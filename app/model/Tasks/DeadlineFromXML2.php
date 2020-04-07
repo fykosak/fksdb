@@ -3,6 +3,7 @@
 namespace Tasks;
 
 use FKSDB\Logging\ILogger;
+use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceTask;
 use Nette\Utils\DateTime;
 use Pipeline\Stage;
@@ -49,7 +50,9 @@ class DeadlineFromXML2 extends Stage {
         }
 
         $datetime = DateTime::createFromFormat('Y-m-d\TH:i:s', $deadline);
-
+        /**
+         * @var ModelTask $task
+         */
         foreach ($this->data->getTasks() as $task) {
             $task->submit_deadline = $datetime;
             $this->taskService->save($task);

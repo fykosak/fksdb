@@ -2,12 +2,11 @@
 
 namespace Persons;
 
-use FKSDB\Components\Forms\Controls\PersonAccommodation\Handler;
-use FKSDB\ORM\Services\ServiceEventPersonAccommodation;
+use FKSDB\Components\Forms\Controls\Schedule\Handler;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServicePersonHistory;
 use FKSDB\ORM\Services\ServicePersonInfo;
-use Nette\Object;
+use Nette\SmartObject;
 use ServiceMPersonHasFlag;
 use ServiceMPostContact;
 
@@ -16,20 +15,20 @@ use ServiceMPostContact;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class ReferencedPersonHandlerFactory extends Object {
-
+class ReferencedPersonHandlerFactory {
+    use SmartObject;
     /**
-     * @var \FKSDB\ORM\Services\ServicePerson
+     * @var ServicePerson
      */
     private $servicePerson;
 
     /**
-     * @var \FKSDB\ORM\Services\ServicePersonInfo
+     * @var ServicePersonInfo
      */
     private $servicePersonInfo;
 
     /**
-     * @var \FKSDB\ORM\Services\ServicePersonHistory
+     * @var ServicePersonHistory
      */
     private $servicePersonHistory;
 
@@ -43,40 +42,33 @@ class ReferencedPersonHandlerFactory extends Object {
      */
     private $serviceMPersonHasFlag;
     /**
-     * @var ServiceEventPersonAccommodation
-     */
-    private $serviceEventPersonAccommodation;
-    /**
      * @var Handler
      */
-    private $eventAccommodationHandler;
+    private $eventScheduleHandler;
 
     /**
      * ReferencedPersonHandlerFactory constructor.
-     * @param Handler $eventAccommodationAdjustment
-     * @param ServiceEventPersonAccommodation $serviceEventPersonAccommodation
      * @param ServicePerson $servicePerson
      * @param ServicePersonInfo $servicePersonInfo
-     * @param \FKSDB\ORM\Services\ServicePersonHistory $servicePersonHistory
+     * @param ServicePersonHistory $servicePersonHistory
      * @param ServiceMPostContact $serviceMPostContact
      * @param ServiceMPersonHasFlag $serviceMPersonHasFlag
+     * @param Handler $eventScheduleHandler
      */
     function __construct(
-        Handler $eventAccommodationAdjustment,
-        ServiceEventPersonAccommodation $serviceEventPersonAccommodation,
         ServicePerson $servicePerson,
         ServicePersonInfo $servicePersonInfo,
         ServicePersonHistory $servicePersonHistory,
         ServiceMPostContact $serviceMPostContact,
-        ServiceMPersonHasFlag $serviceMPersonHasFlag
+        ServiceMPersonHasFlag $serviceMPersonHasFlag,
+        Handler $eventScheduleHandler
     ) {
         $this->servicePerson = $servicePerson;
         $this->servicePersonInfo = $servicePersonInfo;
         $this->servicePersonHistory = $servicePersonHistory;
         $this->serviceMPostContact = $serviceMPostContact;
         $this->serviceMPersonHasFlag = $serviceMPersonHasFlag;
-        $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;
-        $this->eventAccommodationHandler = $eventAccommodationAdjustment;
+        $this->eventScheduleHandler = $eventScheduleHandler;
     }
 
     /**
@@ -87,13 +79,12 @@ class ReferencedPersonHandlerFactory extends Object {
      */
     public function create($acYear, $resolution = ReferencedPersonHandler::RESOLUTION_EXCEPTION, $eventId) {
         $handler = new ReferencedPersonHandler(
-            $this->eventAccommodationHandler,
-            $this->serviceEventPersonAccommodation,
             $this->servicePerson,
             $this->servicePersonInfo,
             $this->servicePersonHistory,
             $this->serviceMPostContact,
             $this->serviceMPersonHasFlag,
+            $this->eventScheduleHandler,
             $acYear,
             $resolution
         );

@@ -9,7 +9,7 @@ use FKSDB\Logging\ILogger;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
-use Nette\Object;
+use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
 
 /**
@@ -17,8 +17,8 @@ use Nette\Utils\ArrayHash;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-abstract class AbstractProcessing extends Object implements IProcessing {
-
+abstract class AbstractProcessing implements IProcessing {
+    use SmartObject;
     const DELIMITER = '.';
     const WILDCART = '*';
 

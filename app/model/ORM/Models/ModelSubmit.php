@@ -10,24 +10,25 @@ use Nette\Security\IResource;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property DateTime submitted_on
- * @property integer submit_id
- * @property string source
- * @property string note
- * @property integer raw_points
- * @property int points
- * @property int ct_id
- * @property int task_id
+ * @property-read DateTime submitted_on
+ * @property-read integer submit_id
+ * @property-read string source
+ * @property-read string note
+ * @property-read integer raw_points
+ * @property-read int points
+ * @property-read int ct_id
+ * @property-read int task_id
+ * @property-read bool corrected
  */
-class ModelSubmit extends AbstractModelSingle implements IResource {
+class ModelSubmit extends AbstractModelSingle implements IResource, ITaskReferencedModel {
 
     const SOURCE_UPLOAD = 'upload';
     const SOURCE_POST = 'post';
 
     /**
-     * @return boolean
+     * @return bool
      */
-    public function isEmpty() {
+    public function isEmpty(): bool {
         return !($this->submitted_on || $this->note);
     }
 
@@ -35,15 +36,14 @@ class ModelSubmit extends AbstractModelSingle implements IResource {
      * @return ModelTask
      */
     public function getTask(): ModelTask {
-        $data = $this->ref(DbNames::TAB_TASK, 'task_id');
-        return ModelTask::createFromTableRow($data);
+        return ModelTask::createFromActiveRow($this->ref(DbNames::TAB_TASK, 'task_id'));
     }
 
     /**
      * @return ModelContestant
      */
     public function getContestant(): ModelContestant {
-        return ModelContestant::createFromTableRow($this->ref(DbNames::TAB_CONTESTANT_BASE, 'ct_id'));
+        return ModelContestant::createFromActiveRow($this->ref(DbNames::TAB_CONTESTANT_BASE, 'ct_id'));
     }
 
     /**
@@ -56,7 +56,7 @@ class ModelSubmit extends AbstractModelSingle implements IResource {
     /**
      * @return string
      */
-    public function getFingerprint() {
+    public function getFingerprint(): string {
         return md5(implode(':', [
             $this->submit_id,
             $this->submitted_on,

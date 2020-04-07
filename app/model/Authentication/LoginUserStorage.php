@@ -148,11 +148,11 @@ class LoginUserStorage extends UserStorage {
                 $allowedNonlogin = ($presenter->getAllowedAuthMethods() &
                     (AuthenticatedPresenter::AUTH_ALLOW_HTTP | AuthenticatedPresenter::AUTH_ALLOW_GITHUB));
                 if ($presenter->requiresLogin() && !$allowedNonlogin) {
-                    $params = array(
+                    $params = [
                         'backlink' => (string)$this->request->getUrl(),
                         AuthenticationPresenter::PARAM_FLAG => AuthenticationPresenter::FLAG_SSO_PROBE,
                         AuthenticationPresenter::PARAM_REASON => AuthenticationPresenter::REASON_AUTH,
-                    );
+                    ];
 
                     $presenter->redirect(':Authentication:login', $params);
                 }
@@ -194,7 +194,7 @@ class LoginUserStorage extends UserStorage {
         if (!$row) {
             return null;
         }
-        $login = ModelLogin::createFromTableRow($row);
+        $login = ModelLogin::createFromActiveRow($row);
         $login->person_id; // stupid... touch the field in order to have it loaded via ActiveRow
         $login->injectYearCalculator($this->yearCalculator);
         return $login;

@@ -2,8 +2,6 @@
 
 namespace FKSDB\Transitions\Callbacks;
 
-use FKSDB\Transitions\IStateModel;
-
 /**
  * Class AbstractCallback
  * @package FKSDB\Transitions\Callbacks
@@ -11,16 +9,16 @@ use FKSDB\Transitions\IStateModel;
 abstract class AbstractCallback {
 
     /**
-     * @param IStateModel|null $model
+     * @param array $args
      * @return void
      */
-    public final function __invoke(IStateModel $model = null) {
-        $this->evaluate($model);
+    public final function __invoke(...$args) {
+        $this->evaluate(...$args);
     }
 
     /**
-     * @param IStateModel|null $model
+     * @param array $args
      * @return void
      */
-    abstract protected function evaluate(IStateModel $model = null);
+    abstract protected function evaluate(...$args);
 }

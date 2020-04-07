@@ -86,7 +86,7 @@ class ApplicationHandlerTest extends EventTestCase {
             'team' =>
                 array(
                     'name' => $teamName,
-                    'phone' => '',
+                    'phone' => '+420987654321',
                     'force_a' => false,
                     'teacher_id' => $id1,
                     'teacher_id_1' =>
@@ -206,7 +206,7 @@ class ApplicationHandlerTest extends EventTestCase {
         $result = $this->serviceTeam->getTable()->where('name', $teamName)->fetch();
         Assert::notEqual(false, $result);
 
-        $team = ModelFyziklaniTeam::createFromTableRow($result);
+        $team = ModelFyziklaniTeam::createFromActiveRow($result);
         Assert::equal($teamName, $team->name);
 
         $count = $this->connection->fetchField('SELECT COUNT(1) FROM e_fyziklani_participant WHERE e_fyziklani_team_id = ?', $this->holder->getPrimaryHolder()->getModel()->getPrimary());

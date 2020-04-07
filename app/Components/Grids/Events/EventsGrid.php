@@ -3,10 +3,15 @@
 namespace FKSDB\Components\Grids\Events;
 
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEvent;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\DI\Container;
 use NiftyGrid\DataSource\NDataSource;
+use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
 use OrgModule\OrgPresenter;
@@ -19,17 +24,28 @@ class EventsGrid extends BaseGrid {
 
     /**
      *
-     * @var \FKSDB\ORM\Services\ServiceEvent
+     * @var ServiceEvent
      */
     private $serviceEvent;
 
     /**
      * EventsGrid constructor.
-     * @param \FKSDB\ORM\Services\ServiceEvent $serviceEvent
+     * @param Container $container
      */
-    function __construct(ServiceEvent $serviceEvent) {
-        parent::__construct();
-        $this->serviceEvent = $serviceEvent;
+    function __construct(Container $container) {
+        parent::__construct($container);
+        $this->serviceEvent = $container->getByType(ServiceEvent::class);
+    }
+
+    /**
+     * @param ModelContest $contest
+     * @param int $year
+     */
+    public function setParams(ModelContest $contest, int $year) {
+        $events = $this->serviceEvent->getEvents($contest, $year);
+        $dataSource = new NDataSource($events);
+        $this->setDefaultOrder('event.begin ASC');
+        $this->setDataSource($dataSource);
     }
 
     /**
@@ -38,13 +54,10 @@ class EventsGrid extends BaseGrid {
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
-     * @throws \NiftyGrid\DuplicateButtonException
+     * @throws DuplicateButtonException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
-        //
-        // data
-        //
         $events = $this->serviceEvent->getEvents($presenter->getSelectedContest(), $presenter->getSelectedYear());
 
         $dataSource = new NDataSource($events);
@@ -52,47 +65,33 @@ class EventsGrid extends BaseGrid {
         $this->setDefaultOrder('event.begin ASC');
         $this->setDataSource($dataSource);
 
-        //
-        // columns
-        //
         $this->addColumn('event_id', _('Id akce'));
-        $this->addColumn('type_name', _('Typ akce'));
-        $this->addColumn('name', _('Name'));
-        $this->addColumn('year', _('Ročník semináře'));
-        $this->addColumn('event_year', _('Ročník akce'));
-        //
-        // operations
-        //
-        $this->addButton('detail')
-            ->setText(_('Detail'))
-            ->setLink(function ($row) {
-                return $this->getPresenter()->link(':Event:Detail:', ['eventId' => $row->event_id]);
-            });
-        $this->addButton('edit', _('Edit'))
-            ->setText(_('Edit'))
-            ->setLink(function ($row) {
-                return $this->getPresenter()->link('edit', $row->event_id);
-            });
-        $this->addButton('old_applications')
-            ->setText(_('Applications'))
-            ->setLink(function ($row) {
-                return $this->getPresenter()->link('applications', $row->event_id);
-            });
-        $this->addButton('applications')
-            ->setText(_('Applications (test GUI)'))
-            ->setLink(function ($row) {
-                return $this->getPresenter()->link(':Event:application:list', ['eventId' => $row->event_id]);
-            });
-        $this->addButton('org')
-            ->setText(_('Organisers'))
-            ->setLink(function ($row) {
-                return $this->getPresenter()->link('EventOrg:list', ['eventId' => $row->event_id]);
-            });
+
+        $this->addColumns([
+            DbNames::TAB_EVENT . '.event_type',
+            DbNames::TAB_EVENT . '.name',
+            DbNames::TAB_EVENT . '.year',
+            DbNames::TAB_EVENT . '.event_year',
+        ]);
+
+        $this->addLinkButton(':Event:dashboard:default', 'detail', _('Detail'), true, ['eventId' => 'event_id']);
+        $this->addLinkButton( 'edit', 'edit', _('Edit'), true, ['id' => 'event_id']);
+
+        $this->addLink('event_participant.list');
+
+        $this->addLinkButton( ':Event:EventOrg:list', 'org', _('Organisers'), true, ['eventId' => 'event_id']);
 
         $this->addGlobalButton('add')
             ->setLink($this->getPresenter()->link('create'))
             ->setLabel('Add event')
             ->setClass('btn btn-sm btn-primary');
+    }
+
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        return ModelEvent::class;
     }
 
 }

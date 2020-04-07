@@ -5,7 +5,7 @@ namespace Exports\Formats;
 use DOMDocument;
 use Exports\IExportFormat;
 use Exports\StoredQuery;
-use Nette\Object;
+use Nette\SmartObject;
 use WebService\IXMLNodeSerializer;
 use XSLTProcessor;
 
@@ -14,8 +14,8 @@ use XSLTProcessor;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class XSLFormat extends Object implements IExportFormat {
-
+class XSLFormat implements IExportFormat {
+    use SmartObject;
     /**
      * @var StoredQuery
      */
@@ -91,8 +91,7 @@ class XSLFormat extends Object implements IExportFormat {
         $this->xmlSerializer->fillNode($this->storedQuery, $export, $doc, IXMLNodeSerializer::EXPORT_FORMAT_1);
 
         // Prepare response
-        $response = new PlainTextResponse($proc->transformToXml($doc));
-        return $response;
+        return new PlainTextResponse($proc->transformToXml($doc));
     }
 
 }

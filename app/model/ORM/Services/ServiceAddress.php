@@ -2,6 +2,7 @@
 
 namespace FKSDB\ORM\Services;
 
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\IModel;
@@ -21,7 +22,7 @@ class ServiceAddress extends AbstractServiceSingle {
     /**
      * @return string
      */
-    protected function getModelClassName(): string {
+    public function getModelClassName(): string {
         return ModelAddress::class;
     }
 
@@ -33,8 +34,20 @@ class ServiceAddress extends AbstractServiceSingle {
     }
 
     /**
+     * @param array|iterable|\ArrayAccess $data
+     * @return AbstractModelSingle
+     */
+    public function createNewModel($data = null): AbstractModelSingle {
+        if (!isset($data['region_id'])) {
+            $data['region_id'] = $this->inferRegion($data['postal_code']);
+        }
+        return parent::createNewModel($data);
+    }
+
+    /**
      * @param \FKSDB\ORM\IModel $model
      * @return mixed|void
+     * @deprecated
      */
     public function save(IModel &$model) {
         $modelClassName = $this->getModelClassName();
@@ -64,8 +77,7 @@ class ServiceAddress extends AbstractServiceSingle {
         if (!preg_match(self::PATTERN, $postalCode)) {
             throw new InvalidPostalCode($postalCode);
         }
-
-        $row = $this->getTable()->getConnection()->table('psc_region')->where('psc = ?', $postalCode)->fetch();
+        $row = $this->getTable()->getConnection()->table(DbNames::TAB_PSC_REGION)->where('psc = ?', $postalCode)->fetch();
         if ($row) {
             return $row->region_id;
         } else {
@@ -77,7 +89,7 @@ class ServiceAddress extends AbstractServiceSingle {
 
             if (in_array($firstChar, ['1', '2', '3', '4', '5', '6', '7'])) {
                 return ModelRegion::CZECH_REPUBLIC;
-            } else if (in_array($firstChar, ['8', '9', '0'])) {
+            } elseif (in_array($firstChar, ['8', '9', '0'])) {
                 return ModelRegion::SLOVAKIA;
             } else {
                 throw new InvalidPostalCode($postalCode);

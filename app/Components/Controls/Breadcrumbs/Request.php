@@ -44,7 +44,7 @@ class Request {
      * @param $parent
      * @param $pathKey
      */
-    function __construct($user, AppRequest $request, $title, $parent, $pathKey) {
+    function __construct($user, AppRequest $request, array $title, $parent, $pathKey) {
         $this->user = $user;
         $this->request = $request;
         $this->title = $title;

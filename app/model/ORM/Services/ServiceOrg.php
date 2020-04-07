@@ -14,7 +14,7 @@ class ServiceOrg extends AbstractServiceSingle {
     /**
      * @return string
      */
-    protected function getModelClassName(): string {
+    public function getModelClassName(): string {
         return ModelOrg::class;
     }
 
@@ -29,16 +29,16 @@ class ServiceOrg extends AbstractServiceSingle {
      * Syntactic sugar.
      *
      * @param mixed $signature
-     * @param mixed $contest_id
+     * @param mixed $contestId
      * @return ModelOrg|null
      */
-    public function findByTeXSignature($signature, $contest_id) {
+    public function findByTeXSignature($signature, $contestId) {
         if (!$signature) {
             return null;
         }
         $result = $this->getTable()->where('tex_signature', $signature)
-            ->where('contest_id', $contest_id)->fetch();
-        return $result ? ModelOrg::createFromTableRow($result) : null;
+            ->where('contest_id', $contestId)->fetch();
+        return $result ? ModelOrg::createFromActiveRow($result) : null;
     }
 
 }

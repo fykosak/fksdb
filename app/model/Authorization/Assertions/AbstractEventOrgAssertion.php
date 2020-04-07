@@ -5,22 +5,25 @@ namespace Authorization\Assertions;
 use Exports\StoredQuery;
 use FKSDB\ORM\DbNames;
 use Nette\Database\Connection;
-use Nette\Object;
+use Nette\Security\IUserStorage;
 use Nette\Security\Permission;
-use Nette\Security\User;
+use Nette\SmartObject;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-abstract class AbstractEventOrgAssertion extends Object {
+abstract class AbstractEventOrgAssertion {
 
-    private $eventTypeId;
+    use SmartObject;
+    /**
+     * @var string
+     */
     private $parameterName;
 
     /**
-     * @var User
+     * @var IUserStorage
      */
     private $user;
 
@@ -33,14 +36,10 @@ abstract class AbstractEventOrgAssertion extends Object {
      * AbstractEventOrgAssertion constructor.
      * @param $eventTypeId
      * @param $parameterName
-     * @param User $user
+     * @param IUserStorage $user
      * @param Connection $connection
      */
-    function __construct($eventTypeId, $parameterName, User $user, Connection $connection) {
-        if (!is_array($eventTypeId)) {
-            $eventTypeId = [$eventTypeId];
-        }
-        $this->eventTypeId = $eventTypeId;
+    function __construct($eventTypeId, string $parameterName, IUserStorage $user, Connection $connection) {
         $this->parameterName = $parameterName;
         $this->user = $user;
         $this->connection = $connection;
@@ -67,10 +66,8 @@ abstract class AbstractEventOrgAssertion extends Object {
             return false;
         }
         $rows = $this->connection->table(DbNames::TAB_EVENT_ORG)
-            ->where('person_id', $person->person_id)
-            ->where('event.event_type_id', $this->eventTypeId);
+            ->where('person_id', $person->person_id);
 
-        // $queryParameters = $storedQuery->getParameters(true);
         if ($this->parameterName) {
             $rows->where('event.' . $this->parameterName, /*$queryParameters[$this->parameterName]*/
                 $parameterValue);

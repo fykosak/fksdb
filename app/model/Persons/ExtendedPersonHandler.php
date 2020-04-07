@@ -2,7 +2,7 @@
 
 namespace Persons;
 
-use Authentication\AccountManager;
+use FKSDB\Authentication\AccountManager;
 use BasePresenter;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
 use FKSDB\ORM\IService;
@@ -14,26 +14,26 @@ use Mail\MailTemplateFactory;
 use Mail\SendFailedException;
 use ModelException;
 use Nette\Database\Connection;
-use Tracy\Debugger;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
-use Nette\Object;
+use Nette\SmartObject;
 use OrgModule\ContestantPresenter;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class ExtendedPersonHandler extends Object {
-
+class ExtendedPersonHandler {
+    use SmartObject;
     const CONT_AGGR = 'aggr';
     const CONT_PERSON = 'person';
     const CONT_MODEL = 'model';
     const EL_PERSON = 'person_id';
     const RESULT_OK_EXISTING_LOGIN = 1;
     const RESULT_OK_NEW_LOGIN = 2;
-    const RESULT_ERROR = false;
+    const RESULT_ERROR = 0;
 
     /**
      * @var \FKSDB\ORM\IService
@@ -156,12 +156,14 @@ class ExtendedPersonHandler extends Object {
     /**
      * @param Form $form
      * @param IExtendedPersonPresenter $presenter
-     * @return bool
+     * @param bool $sendEmail
+     * @return int
+     * @throws \Exception
      */
-    public final function handleForm(Form $form, IExtendedPersonPresenter $presenter) {
-        $connection = $this->connection;
+    public final function handleForm(Form $form, IExtendedPersonPresenter $presenter, bool $sendEmail) {
+
         try {
-            if (!$connection->beginTransaction()) {
+            if (!$this->connection->beginTransaction()) {
                 throw new ModelException();
             }
             $values = $form->getValues();
@@ -174,10 +176,10 @@ class ExtendedPersonHandler extends Object {
             $email = $person->getInfo() ? $person->getInfo()->email : null;
             $login = $person->getLogin();
             $hasLogin = (bool)$login;
-            if ($email && !$login) {
-                $template = $this->mailTemplateFactory->createLoginInvitation($presenter, $this->getInvitationLang());
+            if ($sendEmail && ($email && !$login)) {
+                // $template = $this->mailTemplateFactory->createLoginInvitation($presenter, $this->getInvitationLang());
                 try {
-                    $this->accountManager->createLoginWithInvitation($template, $person, $email);
+                    $this->accountManager->createLoginWithInvitation($person, $email);
                     $presenter->flashMessage(_('Zvací e-mail odeslán.'), BasePresenter::FLASH_INFO);
                 } catch (SendFailedException $exception) {
                     $presenter->flashMessage(_('Zvací e-mail se nepodařilo odeslat.'), BasePresenter::FLASH_ERROR);
@@ -189,7 +191,7 @@ class ExtendedPersonHandler extends Object {
             /*
              * Finalize
              */
-            if (!$connection->commit()) {
+            if (!$this->connection->commit()) {
                 throw new ModelException();
             }
 
@@ -206,7 +208,7 @@ class ExtendedPersonHandler extends Object {
                 return self::RESULT_OK_EXISTING_LOGIN;
             }
         } catch (ModelException $exception) {
-            $connection->rollBack();
+            $this->connection->rollBack();
             if ($exception->getPrevious() && $exception->getPrevious()->getCode() == 23000) {
                 $presenter->flashMessage($presenter->messageExists(), ContestantPresenter::FLASH_ERROR);
             } else {
@@ -219,7 +221,7 @@ class ExtendedPersonHandler extends Object {
             $form->addError(_('Zadaná data se neshodují s již uloženými.'));
             $exception->getReferencedId()->getReferencedContainer()->setConflicts($exception->getConflicts());
             $exception->getReferencedId()->rollback();
-            $connection->rollBack();
+            $this->connection->rollBack();
             return self::RESULT_ERROR;
         }
     }
@@ -236,10 +238,10 @@ class ExtendedPersonHandler extends Object {
         // initialize model
         $model = $presenter->getModel();
         if (!$model) {
-            $data = array(
+            $data = [
                 'contest_id' => $this->getContest()->contest_id,
                 'year' => $this->getYear(),
-            );
+            ];
             $model = $this->service->createNew($data);
             $model->person_id = $person->getPrimary();
         }

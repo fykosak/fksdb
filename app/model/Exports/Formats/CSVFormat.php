@@ -2,7 +2,7 @@
 
 use Exports\IExportFormat;
 use Exports\StoredQuery;
-use Nette\Object;
+use Nette\SmartObject;
 use PePa\CSVResponse;
 
 /**
@@ -10,8 +10,8 @@ use PePa\CSVResponse;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class CSVFormat extends Object implements IExportFormat {
-
+class CSVFormat implements IExportFormat {
+    use SmartObject;
     const DEFAULT_DELIMITER = ';';
     const DEFAULT_QUOTE = false;
 

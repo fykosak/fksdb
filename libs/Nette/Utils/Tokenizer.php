@@ -19,8 +19,9 @@ use Nette;
  *
  * @author     David Grudl
  */
-class Tokenizer extends Nette\Object
+class Tokenizer
 {
+    use Nette\SmartObject;
 	/** @var array */
 	public $tokens;
 

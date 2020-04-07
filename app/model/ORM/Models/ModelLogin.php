@@ -15,29 +15,29 @@ use Nette\Security\IIdentity;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property boolean active
- * @property integer login_id
- * @property DateTime last_login
- * @property string hash
- * @property ActiveRow person
- * @property string login
+ * @property-read boolean active
+ * @property-read integer login_id
+ * @property-read DateTime last_login
+ * @property-read string hash
+ * @property-read ActiveRow person
+ * @property-read string login
  */
-class ModelLogin extends AbstractModelSingle implements IIdentity {
+class ModelLogin extends AbstractModelSingle implements IIdentity, IPersonReferencedModel {
 
     /**
-     * @var \FKSDB\YearCalculator|null
+     * @var YearCalculator|null
      */
     private $yearCalculator;
 
     /**
-     * @return null|\FKSDB\YearCalculator
+     * @return null|YearCalculator
      */
     protected function getYearCalculator() {
         return $this->yearCalculator;
     }
 
     /**
-     * @param \FKSDB\YearCalculator $yearCalculator
+     * @param YearCalculator $yearCalculator
      */
     public function injectYearCalculator(YearCalculator $yearCalculator) {
         $this->yearCalculator = $yearCalculator;
@@ -48,14 +48,14 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
      */
     public function getPerson() {
         if ($this->person) {
-            return ModelPerson::createFromTableRow($this->person);
+            return ModelPerson::createFromActiveRow($this->person);
         }
         return null;
     }
 
     /**
-     * @param \FKSDB\YearCalculator $yearCalculator
-     * @return array of FKSDB\ORM\Models\ModelOrg|null indexed by contest_id (i.e. impersonal orgs)
+     * @param YearCalculator $yearCalculator
+     * @return ModelOrg[] indexed by contest_id (i.e. impersonal orgs)
      */
     public function getActiveOrgs(YearCalculator $yearCalculator) {
         if ($this->getPerson()) {
@@ -152,13 +152,10 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
             }
             $this->roles = [];
             $this->roles[] = new Grant(Grant::CONTEST_ALL, ModelRole::REGISTERED);
-            /* TODO 'registered' role, should be returned always, but consider whether it cannot happen
-             * that Identity is known, however user is not logged in.
-             */
 
             // explicitly assigned roles
             foreach ($this->related(DbNames::TAB_GRANT, 'login_id') as $row) {
-                $grant = ModelGrant::createFromTableRow($row);
+                $grant = ModelGrant::createFromActiveRow($row);
                 $this->roles[] = new Grant($grant->contest_id, $grant->ref(DbNames::TAB_ROLE, 'role_id')->name);
             }
             // roles from other tables

@@ -2,29 +2,29 @@
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Components\Control\AjaxUpload\SubmitDownloadTrait;
+use FKSDB\Components\Control\AjaxUpload\SubmitRevokeTrait;
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Services\ServiceSubmit;
-use FKSDB\Submits\FilesystemSubmitStorage;
-use FKSDB\Submits\StorageException;
-use ModelException;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Tracy\Debugger;
-use Nette\Utils\Html;
+use Nette\Application\UI\InvalidLinkException;
+use Nette\DI\Container;
 use NiftyGrid\DataSource\NDataSource;
-use PublicModule\BasePresenter;
+use NiftyGrid\DuplicateButtonException;
+use NiftyGrid\DuplicateColumnException;
 
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class SubmitsGrid extends BaseGrid {
+    use SubmitRevokeTrait;
+    use SubmitDownloadTrait;
 
     /** @var ServiceSubmit */
     private $submitService;
-
-    /** @var FilesystemSubmitStorage */
-    private $submitStorage;
 
     /**
      * @var ModelContestant
@@ -33,22 +33,19 @@ class SubmitsGrid extends BaseGrid {
 
     /**
      * SubmitsGrid constructor.
-     * @param \FKSDB\ORM\Services\ServiceSubmit $submitService
-     * @param FilesystemSubmitStorage $submitStorage
+     * @param Container $container
      * @param ModelContestant $contestant
      */
-    function __construct(ServiceSubmit $submitService, FilesystemSubmitStorage $submitStorage, ModelContestant $contestant) {
-        parent::__construct();
-
-        $this->submitService = $submitService;
-        $this->submitStorage = $submitStorage;
+    function __construct(Container $container, ModelContestant $contestant) {
+        parent::__construct($container);
+        $this->submitService = $container->getByType(ServiceSubmit::class);
         $this->contestant = $contestant;
     }
 
     /**
      * @param $presenter
-     * @throws \NiftyGrid\DuplicateButtonException
-     * @throws \NiftyGrid\DuplicateColumnException
+     * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -64,20 +61,9 @@ class SubmitsGrid extends BaseGrid {
         //
         // columns
         //
-        $this->addColumn('task', _('Úloha'))
-            ->setRenderer(function ($row) use ($presenter) {
-                $row->task_id; // stupid caching...
-                $task = $row->getTask();
-                $FQname = $task->getFQName();
-
-                if ($row->source == ModelSubmit::SOURCE_UPLOAD) {
-                    $el = Html::el('a');
-                    $el->href = $presenter->link(':Public:Submit:download', array('id' => $row->submit_id));
-                    $el->setText($FQname);
-                    return $el;
-                } else {
-                    return $FQname;
-                }
+        $this->addColumn('task', _('Task'))
+            ->setRenderer(function (ModelSubmit $row) use ($presenter) {
+                return $row->getTask()->getFQName();
             });
         $this->addColumn('submitted_on', _('Čas odevzdání'));
         $this->addColumn('source', _('Způsob odevzdání'));
@@ -85,80 +71,59 @@ class SubmitsGrid extends BaseGrid {
         //
         // operations
         //
-        $this->addButton('revoke', _('Zrušit'))
-            ->setClass('btn btn-xs btn-warning')
-            ->setText(_('Zrušit'))
+        $this->addButton('revoke', _('Cancel'))
+            ->setClass('btn btn-sm btn-warning')
+            ->setText(_('Cancel'))
             ->setShow(function ($row) {
                 return $this->canRevoke($row);
             })
             ->setLink(function ($row) {
                 return $this->link('revoke!', $row->submit_id);
             })
-            ->setConfirmationDialog(function ($row) {
+            ->setConfirmationDialog(function (ModelSubmit $row) {
                 return \sprintf(_('Opravdu vzít řešení úlohy %s zpět?'), $row->getTask()->getFQName());
             });
+        $this->addButton('download_uploaded')
+            ->setText(_('Download original'))->setLink(function ($row) {
+                return $this->link('downloadUploaded!', $row->submit_id);
+            });
+        $this->addButton('download_corrected')
+            ->setText(_('Download corrected'))->setLink(function ($row) {
+                return $this->link('downloadCorrected!', $row->submit_id);
+            })->setShow(function (ModelSubmit $row) {
+                return $row->corrected;
+            });
 
-
-        //
-        // appeareance
-        //
         $this->paginate = false;
         $this->enableSorting = false;
     }
 
     /**
      * @param $id
-     * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws InvalidLinkException
      */
-    public function handleRevoke($id) {
-        $row = $this->submitService->findByPrimary($id);
-
-        if (!$row) {
-            throw new BadRequestException('Neexistující submit.', 404);
-        }
-        $submit = ModelSubmit::createFromTableRow($row);
-
-//        $submit->task_id; // stupid touch
-        $contest = $submit->getContestant()->getContest();
-        if (!$this->presenter->getContestAuthorizator()->isAllowed($submit, 'revoke', $contest)) {
-            throw new BadRequestException('Nedostatečné oprávnění.', 403);
-        }
-
-        if (!$this->canRevoke($submit)) {
-            throw new BadRequestException('Nelze zrušit submit.', 403);
-        }
-
-        try {
-            $this->submitStorage->deleteFile($submit);
-            $this->submitService->dispose($submit);
-            $this->flashMessage(sprintf('Odevzdání úlohy %s zrušeno.', $submit->getTask()->getFQName()), BasePresenter::FLASH_SUCCESS);
-            $this->redirect('this');
-        } catch (StorageException $exception) {
-            $this->flashMessage(sprintf('Během mazání úlohy %s došlo k chybě.', $submit->getTask()->getFQName()), BasePresenter::FLASH_ERROR);
-            Debugger::log($exception);
-        } catch (ModelException $exception) {
-            $this->flashMessage(sprintf('Během mazání úlohy %s došlo k chybě.', $submit->getTask()->getFQName()), BasePresenter::FLASH_ERROR);
-            Debugger::log($exception);
-        }
+    public function handleRevoke(int $id) {
+        list($message) = $this->traitHandleRevoke($id);
+        $this->flashMessage($message->getMessage(), $message->getLevel());
     }
 
     /**
-     * @internal
-     * @param \FKSDB\ORM\Models\ModelSubmit $submit
-     * @return boolean
+     * @param int $id
+     * @throws AbortException
+     * @throws BadRequestException
      */
-    public function canRevoke(ModelSubmit $submit) {
-        if ($submit->source != ModelSubmit::SOURCE_UPLOAD) {
-            return false;
-        }
-
-        $now = time();
-        $start = $submit->getTask()->submit_start ? $submit->getTask()->submit_start->getTimestamp() : 0;
-        $deadline = $submit->getTask()->submit_deadline ? $submit->getTask()->submit_deadline->getTimestamp() : ($now + 1);
-
-
-        return ($now <= $deadline) && ($now >= $start);
+    public function handleDownloadUploaded(int $id) {
+        list($message) = $this->traitHandleDownloadUploaded($id);
+        $this->flashMessage($message->getMessage(), $message->getLevel());
     }
 
+    /**
+     * @param int $id
+     * @throws AbortException
+     * @throws BadRequestException
+     */
+    public function handleDownloadCorrected(int $id) {
+        list($message) = $this->traitHandleDownloadCorrected($id);
+        $this->flashMessage($message->getMessage(), $message->getLevel());
+    }
 }

@@ -116,7 +116,6 @@ class YearCalculator {
 
     /**
      * @param ModelContest $contest
-
      * @return int
      */
     public function getCurrentYear(ModelContest $contest): int {
@@ -125,24 +124,24 @@ class YearCalculator {
 
     /**
      * @param ModelContest $contest
-     * @return mixed
+     * @return int
      */
     public function getFirstYear(ModelContest $contest): int {
         $years = array_keys($this->cache[$contest->contest_id]);
-        return $years[0];
+        return reset($years);
     }
 
     /**
      * @param ModelContest $contest
-     * @return mixed
+     * @return int
      */
     public function getLastYear(ModelContest $contest): int {
         $years = array_keys($this->cache[$contest->contest_id]);
-        return $years[count($years) - 1];
+        return end($years);
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelContest $contest
+     * @param ModelContest $contest
      * @param int $year
      * @return bool
      */
@@ -151,9 +150,9 @@ class YearCalculator {
     }
 
     /**
-     * @see getCurrentAcademicYear
      * @param ModelContest $contest
      * @return int
+     * @see getCurrentAcademicYear
      */
     public function getForwardShift(ModelContest $contest): int {
         $calMonth = date('m');
@@ -175,7 +174,7 @@ class YearCalculator {
 
     private function preloadCache() {
         foreach ($this->serviceContestYear->getTable()->order('year') as $row) {
-            $model = ModelContestYear::createFromTableRow($row);
+            $model = ModelContestYear::createFromActiveRow($row);
             if (!isset($this->cache[$model->contest_id])) {
                 $this->cache[$model->contest_id] = [];
                 $this->revCache[$model->contest_id] = [];

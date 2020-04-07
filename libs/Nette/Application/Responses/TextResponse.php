@@ -21,8 +21,9 @@ use Nette;
  *
  * @property-read mixed $source
  */
-class TextResponse extends Nette\Object implements Nette\Application\IResponse
+class TextResponse implements Nette\Application\IResponse
 {
+    use Nette\SmartObject;
 	/** @var mixed */
 	private $source;
 

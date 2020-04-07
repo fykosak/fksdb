@@ -6,7 +6,7 @@ use Events\Model\Grid\SingleEventSource;
 use Events\Model\Holder\BaseHolder;
 use FKSDB\Utils\CSVParser;
 use Nette\DI\Container;
-use Nette\Object;
+use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
 
 /**
@@ -14,7 +14,9 @@ use Nette\Utils\ArrayHash;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class ImportHandler extends Object {
+class ImportHandler {
+
+    use SmartObject;
 
     const STATELESS_IGNORE = 'ignore';
     const STATELESS_KEEP = 'keep';
@@ -70,6 +72,7 @@ class ImportHandler extends Object {
      * @param $errorMode
      * @param $stateless
      * @return bool
+     * @throws \Nette\Utils\JsonException
      */
     public function import(ApplicationHandler $handler, $transitions, $errorMode, $stateless) {
         set_time_limit(0);
@@ -87,7 +90,7 @@ class ImportHandler extends Object {
             if (!isset($values[$baseHolderName][BaseHolder::STATE_COLUMN]) || !$values[$baseHolderName][BaseHolder::STATE_COLUMN]) {
                 if ($stateless == self::STATELESS_IGNORE) {
                     continue;
-                } else if ($stateless == self::STATELESS_KEEP) {
+                } elseif ($stateless == self::STATELESS_KEEP) {
                     unset($values[$baseHolderName][BaseHolder::STATE_COLUMN]);
                 }
             }

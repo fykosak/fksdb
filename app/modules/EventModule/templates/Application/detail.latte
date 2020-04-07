@@ -1,94 +1,24 @@
 {block content}
-
-    {control stringValue $model, _('event_participant_id'), event_participant_id}
-
-    {control personValue $model->getPerson(), $model->getEvent()->year, $model->getEvent()->getEventType()->contest_id}
-
-    {control stringValue $model, _('Status'), status}
-
-    {control stringValue $model, _('Created'), created}
-
-    {control priceValue $model, _('Price'), price}
+    <h2>{_'Base info'}</h2>
+    {control valuePrinter:row 'referenced.person_link', $model}
+    {foreach ['event_participant_id', 'status', 'price', 'created'] as $field}
+        {control valuePrinter:row 'event_participant.'.$field, $model}
+    {/foreach}
 
     <hr/>
-    <h3>{_'Health & food'}</h3>
-    {if \array_key_exists('health_restrictions',$fields)}
-        {control stringValue $model, _('Health restrictions'), health_restrictions}
-    {/if}
 
-    {if \array_key_exists('diet',$fields)}
-        {control stringValue $model, _('Diet'), diet}
+    {foreach $groups as $groupName=>$fieldDef}
+        <h2>{$groupName}</h2>
+        {foreach $fieldDef as $field}
+            {if array_key_exists($field,$fields)}
+                {control valuePrinter:row 'event_participant.'.$field, $model}
+            {/if}
+        {/foreach}
+        <hr/>
+    {/foreach}
+    {if $hasSchedule}
+        <h2>{_'Schedule'}</h2>
+        {control personScheduleGrid $model->getPerson(),$model->getEvent()}
     {/if}
-
-    {if \array_key_exists('used_drugs',$fields)}
-        {control stringValue $model, _('Used drugs'), used_drugs}
-    {/if}
-
-    {if \array_key_exists('note',$fields)}
-        {control stringValue $model, _('Note'), note}
-    {/if}
-
-    {if \array_key_exists('swimmer',$fields)}
-        {control binaryValue $model, _('Swimmer'),swimmer}
-    {/if}
-
-    <hr/>
-    <h3>{_'T-shirt'}</h3>
-    {if \array_key_exists('tshirt_size',$fields)}
-        {control stringValue $model, _('Size'), tshirt_size}
-    {/if}
-
-    {if \array_key_exists('tshirt_color',$fields)}
-        <div class="row">
-            <b class="col-2">{_'Color'}</b>
-            <span class="col-10">
-             {if \is_null($model->tshirt_color)}
-                 {control notSet}
-             {else}
-             <i style="
-                     background-color: {$model->tshirt_color};
-                     height:1rem;
-                     width: 1rem;
-                     border-radius: .5rem;
-                     display: inline-block;
-                     margin-right: .5rem "></i>{$model->tshirt_color}
-             {/if}
-            </span>
-        </div>
-    {/if}
-
-    <hr/>
-    <h3>{_'Arrival'}</h3>
-    {if \array_key_exists('arrival_time',$fields)}
-        {control stringValue $model, _('Time'), arrival_time}
-    {/if}
-    {if \array_key_exists('arrival_destination',$fields)}
-        {control stringValue $model, _('Destination'), arrival_destination}
-    {/if}
-    {if \array_key_exists('arrival_ticket',$fields)}
-        {control binaryValue $model, _('Ticket'), arrival_ticket}
-    {/if}
-    <hr/>
-
-    <h3>{_'Departure'}</h3>
-    {if \array_key_exists('departure_time',$fields)}
-        {control stringValue $model, _('Time'), departure_time}
-    {/if}
-    {if \array_key_exists('departure_destination',$fields)}
-        {control stringValue $model, _('Destination'), departure_destination}
-    {/if}
-    {if \array_key_exists('departure_ticket',$fields)}
-        {control binaryValue $model, _('Ticket'), departure_ticket}
-    {/if}
-    <hr/>
-
-    <h3>{_'Actions'}</h3>
-
-    {control applicationComponent:inline edit}
-    <hr/>
-
-    <h3>{_'Transitions'}</h3>
-
-    {control applicationComponent:inline transitions}
-
+    {include ../AbstractApplication/applicationControl.latte}
 {/block}

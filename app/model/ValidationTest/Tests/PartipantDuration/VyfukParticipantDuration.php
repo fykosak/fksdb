@@ -10,18 +10,22 @@ use FKSDB\ORM\Models\ModelContest;
  * @package FKSDB\ValidationTest\Tests\ParticipantDuration
  */
 class VyfukParticipantDuration extends ParticipantsDuration {
+    /**
+     * @var ModelContest
+     */
+    private $contest;
 
     /**
      * @return string
      */
-    public static function getAction(): string {
+    public function getAction(): string {
         return 'participants_duration_vyfuk';
     }
 
     /**
      * @return string
      */
-    public static function getTitle(): string {
+    public function getTitle(): string {
         return _('Participate on Výfuk events');
     }
 
@@ -29,12 +33,10 @@ class VyfukParticipantDuration extends ParticipantsDuration {
      * @return ModelContest
      */
     protected function getContest(): ModelContest {
-        static $model;
-        if ($model) {
-            return $model;
+        if (!$this->contest) {
+            $row = $this->serviceContest->findByPrimary(2);
+            $this->contest = ModelContest::createFromActiveRow($row);
         }
-        $row = $this->serviceContest->findByPrimary(2);
-        $model = ModelContest::createFromTableRow($row);
-        return $model;
+        return $this->contest;
     }
 }

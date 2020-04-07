@@ -2,14 +2,15 @@
 
 namespace Events\Model\Holder;
 
-use Nette\Object;
+use Nette\SmartObject;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class DataValidator extends Object {
+class DataValidator {
+    use SmartObject;
 
     private $validationErrors;
     private $stateStack = [];

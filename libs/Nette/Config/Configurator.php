@@ -23,8 +23,9 @@ use Nette,
  * @property   bool $debugMode
  * @property-write $tempDirectory
  */
-class Configurator extends Nette\Object
+class Configurator
 {
+    use Nette\SmartObject;
 	/** config file sections */
 	const AUTO = NULL,
 		NONE = FALSE;

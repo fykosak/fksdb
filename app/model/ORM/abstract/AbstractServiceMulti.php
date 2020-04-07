@@ -5,7 +5,7 @@ namespace FKSDB\ORM;
 use FKSDB\ORM\Tables\MultiTableSelection;
 use InvalidArgumentException;
 use Nette\InvalidStateException;
-use Nette\Object;
+use Nette\SmartObject;
 
 /**
  * Service for object representing one side of M:N relation, or entity in is-a relation ship.
@@ -13,8 +13,8 @@ use Nette\Object;
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-abstract class AbstractServiceMulti extends Object implements IService {
-
+abstract class AbstractServiceMulti implements IService {
+    use SmartObject;
     /**
      * @var string
      */
@@ -60,8 +60,7 @@ abstract class AbstractServiceMulti extends Object implements IService {
         $joinedModel = $this->getJoinedService()->createNew($data);
 
         $className = $this->modelClassName;
-        $result = new $className($this, $mainModel, $joinedModel);
-        return $result;
+        return new $className($this, $mainModel, $joinedModel);
     }
 
     /**
@@ -72,8 +71,7 @@ abstract class AbstractServiceMulti extends Object implements IService {
      */
     public function composeModel(AbstractModelSingle $mainModel, AbstractModelSingle $joinedModel) {
         $className = $this->modelClassName;
-        $result = new $className($this, $mainModel, $joinedModel);
-        return $result;
+        return new $className($this, $mainModel, $joinedModel);
     }
 
     /**
@@ -190,6 +188,13 @@ abstract class AbstractServiceMulti extends Object implements IService {
         $selection->select("$mainTable.*");
 
         return $selection;
+    }
+
+    /**
+     * @return string|AbstractModelMulti
+     */
+    public function getModelClassName(): string {
+        return $this->modelClassName;
     }
 
 }

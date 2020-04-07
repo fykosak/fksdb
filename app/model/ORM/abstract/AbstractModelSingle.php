@@ -10,27 +10,42 @@ use Nette\Database\Table\ActiveRow;
 abstract class AbstractModelSingle extends ActiveRow implements IModel {
     private $tmpData = [];
 
+    /**
+     * @var bool
+     * @deprecated
+     */
     protected $stored = true;
 
     /**
-     * @return bool|mixed
+     * @return bool
+     * @deprecated
      */
-    public function isNew() {
+    public function isNew(): bool {
         return !$this->stored;
     }
 
     /**
      * @param bool $value
+     * @deprecated
      */
-    public function setNew($value = true) {
+    public function setNew(bool $value = true) {
         $this->stored = !$value;
     }
 
     /**
      * @param ActiveRow $row
      * @return static
+     * @deprecated use createFromActiveRow
      */
-    public static function createFromTableRow(ActiveRow $row) {
+    public static function createFromTableRow(ActiveRow $row): self {
+        return static::createFromActiveRow($row);
+    }
+
+    /**
+     * @param ActiveRow $row
+     * @return static
+     */
+    public static function createFromActiveRow(ActiveRow $row): self {
         $model = new static($row->toArray(), $row->getTable());
         if ($model->getPrimary(false)) {
             $model->setNew(false);
@@ -82,5 +97,4 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
         unset($this->tmpData[$key]);
         return parent::__unset($key);
     }
-
 }

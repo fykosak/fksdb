@@ -8,10 +8,11 @@ use Nette\Database\Table\ActiveRow;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property string token
- * @property ActiveRow login
- * @property string data
- * @property string type
+ * @property-read string token
+ * @property-read ActiveRow login
+ * @property-read string data
+ * @property-read string type
+ * @property-read \DateTime until
  */
 class ModelAuthToken extends AbstractModelSingle {
     /** @const The first login for setting up a password. */
@@ -31,7 +32,7 @@ class ModelAuthToken extends AbstractModelSingle {
      */
     public function getLogin(): ModelLogin {
         $data = $this->login;
-        return ModelLogin::createFromTableRow($data);
+        return ModelLogin::createFromActiveRow($data);
     }
 
 }

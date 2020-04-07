@@ -29,6 +29,7 @@ abstract class ResourceAvailabilityTestCase extends EventTestCase {
         $this->eventId = $this->createEvent(array(
             'event_type_id' => 2,
             'event_year' => 20,
+            'registration_end' => new DateTime(date('c', time() + 1000)),
             'parameters' => <<<EOT
 accomodationCapacity: $capacity
 EOT

@@ -7,16 +7,20 @@ use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use InvalidArgumentException;
 use ModelMStoredQueryTag;
+use Nette\Database\Table\GroupedSelection;
 use Nette\Security\IResource;
 
 /**
  * @todo Better (general) support for related collection setter.
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property string php_post_proc
+ * @property-read string php_post_proc
+ * @property-read int query_id
  */
 class ModelStoredQuery extends AbstractModelSingle implements IResource {
-
+    /**
+     * @var array
+     */
     private $outerParameters;
 
     /**
@@ -26,9 +30,9 @@ class ModelStoredQuery extends AbstractModelSingle implements IResource {
 
     /**
      * @param bool $outer
-     * @return array
+     * @return ModelStoredQueryParameter[]
      */
-    public function getParameters($outer = true) {
+    public function getParameters($outer = true): array {
         if ($this->outerParameters && $outer) {
             return $this->outerParameters;
         } else {
@@ -37,7 +41,7 @@ class ModelStoredQuery extends AbstractModelSingle implements IResource {
             }
             $result = [];
             foreach ($this->related(DbNames::TAB_STORED_QUERY_PARAM, 'query_id') as $row) {
-                $result[] = ModelStoredQueryParameter::createFromTableRow($row);
+                $result[] = ModelStoredQueryParameter::createFromActiveRow($row);
             }
             return $result;
         }
@@ -67,17 +71,14 @@ class ModelStoredQuery extends AbstractModelSingle implements IResource {
     /**
      * @return \Nette\Database\Table\GroupedSelection
      */
-    public function getTags() {
-        if (!isset($this->query_id)) {
-            $this->query_id = null;
-        }
+    public function getTags(): GroupedSelection {
         return $this->related(DbNames::TAB_STORED_QUERY_TAG, 'query_id');
     }
 
     /**
      * @return ModelMStoredQueryTag[]
      */
-    public function getMStoredQueryTags() {
+    public function getMStoredQueryTags(): array {
         $tags = $this->getTags();
 
         if (!$tags || count($tags) == 0) {
@@ -88,7 +89,7 @@ class ModelStoredQuery extends AbstractModelSingle implements IResource {
             $tag->tag_type_id; // stupid touch
             $tagType = $tag->ref(DbNames::TAB_STORED_QUERY_TAG_TYPE, 'tag_type_id');
             $result[] = ModelMStoredQueryTag::createFromExistingModels(
-                ModelStoredQueryTagType::createFromTableRow($tagType), ModelStoredQueryTag::createFromTableRow($tag)
+                ModelStoredQueryTagType::createFromActiveRow($tagType), ModelStoredQueryTag::createFromActiveRow($tag)
             );
         }
         return $result;

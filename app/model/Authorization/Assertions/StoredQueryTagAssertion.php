@@ -4,15 +4,17 @@ namespace Authorization\Assertions;
 
 use Exports\StoredQuery;
 use Nette\InvalidArgumentException;
-use Nette\Object;
 use Nette\Security\Permission;
+use Nette\SmartObject;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Lukáš Timko <lukast@fykos.cz>
  */
-class StoredQueryTagAssertion extends Object {
+class StoredQueryTagAssertion {
+
+    use SmartObject;
 
     private $tagNames;
 
@@ -22,7 +24,7 @@ class StoredQueryTagAssertion extends Object {
      */
     function __construct($tagNames) {
         if (!is_array($tagNames)) {
-            $tagNames = array($tagNames);
+            $tagNames = [$tagNames];
         }
         $this->tagNames = $tagNames;
     }
@@ -39,7 +41,7 @@ class StoredQueryTagAssertion extends Object {
         if (!$storedQuery instanceof StoredQuery) {
             throw new InvalidArgumentException('Expected StoredQuery, got \'' . get_class($storedQuery) . '\'.');
         }
-        foreach($storedQuery->getQueryPattern()->getMStoredQueryTags() as $modelMStoredQueryTag) {
+        foreach ($storedQuery->getQueryPattern()->getMStoredQueryTags() as $modelMStoredQueryTag) {
             $tagName = $modelMStoredQueryTag->getStoredQueryTagType()->name;
             if (in_array($tagName, $this->tagNames)) {
                 return true;

@@ -4,7 +4,7 @@
 
 services:
     accountManager:
-        class: Authentication\AccountManager
+        class: FKSDB\Authentication\AccountManager
         setup:
             - setInvitationExpiration(%invitation.expiration%)
             - setRecoveryExpiration(%recovery.expiration%)
@@ -39,11 +39,13 @@ services:
         setup:
             - start()
     - Authentication\SSO\TokenGSIDHolder
-    submitStorage:
-        class: FKSDB\Submits\FilesystemSubmitStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, %contestMapping%)
+    submitUploatedStorage:
+        class: FKSDB\Submits\FilesystemUploadedSubmitStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, %contestMapping%)
         setup:
             - addProcessing(@PDFStamper)
-    - FKSDB\Components\Forms\Controls\PersonAccommodation\Handler
+    submitCorrectedStorage:
+                    class: FKSDB\Submits\FilesystemCorrectedSubmitStorage(%corrected.root%, %corrected.directoryMask%, %corrected.filenameMask%, %contestMapping%)
+    - FKSDB\Components\Forms\Controls\Schedule\Handler
     PDFStamper: FKSDB\Submits\PDFStamper(%stamper.fontSize%)
     readOnlyConnection:
         class: Nette\Database\Connection(%ro-database.dsn%, %ro-database.user%, %ro-database.password%)
@@ -77,8 +79,9 @@ services:
     #
     # Fyziklani
     #
-    - FKSDB\model\Fyziklani\TaskCodePreprocessor
-    - FKSDB\model\Fyziklani\TaskCodeHandlerFactory
+    - FKSDB\Components\Forms\Factories\TableReflectionFactory
+    - FKSDB\Components\Controls\PhoneNumber\PhoneNumberFactory
+    - FKSDB\Components\DatabaseReflection\MetaDataFactory
 
 includes:
     - merger.neon

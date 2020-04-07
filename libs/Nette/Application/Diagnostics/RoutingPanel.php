@@ -23,8 +23,9 @@ use Tracy\IBarPanel;
  *
  * @author     David Grudl
  */
-class RoutingPanel extends Nette\Object implements IBarPanel
+class RoutingPanel  implements IBarPanel
 {
+    use Nette\SmartObject;
 	/** @var Nette\Application\IRouter */
 	private $router;
 

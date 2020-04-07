@@ -2,10 +2,15 @@
 
 namespace FKSDB\Components\Grids\Payment;
 
+use FKSDB\NotImplementedException;
+use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\ORM\Services\ServicePayment;
+use Nette\Application\UI\InvalidLinkException;
+use Nette\DI\Container;
 use NiftyGrid\DataSource\NDataSource;
+use NiftyGrid\DuplicateButtonException;
+use NiftyGrid\DuplicateColumnException;
+use NiftyGrid\DuplicateGlobalButtonException;
 
 /**
  *
@@ -13,24 +18,28 @@ use NiftyGrid\DataSource\NDataSource;
  */
 class OrgPaymentGrid extends PaymentGrid {
     /**
-     * @var \FKSDB\ORM\Models\ModelEvent
+     * @var ModelEvent
      */
     private $event;
 
     /**
      * OrgPaymentGrid constructor.
-     * @param ServicePayment $servicePayment
-     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @param ModelEvent $event
+     * @param Container $container
      */
-    public function __construct(ServicePayment $servicePayment, ModelEvent $event) {
-        parent::__construct($servicePayment);
+    public function __construct(ModelEvent $event, Container $container) {
+        parent::__construct($container);
         $this->event = $event;
     }
 
     /**
      * @param $presenter
-     * @throws \NiftyGrid\DuplicateButtonException
-     * @throws \NiftyGrid\DuplicateColumnException
+     * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
+     * @throws InvalidLinkException
+     * @throws DuplicateGlobalButtonException
+     * @throws NotImplementedException
+     * @throws NotImplementedException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -40,23 +49,16 @@ class OrgPaymentGrid extends PaymentGrid {
         $dataSource = new NDataSource($schools);
         $this->setDataSource($dataSource);
 
-        $this->addColumnPaymentId();
-
-        $this->addColumn('person_name', _('Person'))->setRenderer(function ($row) {
-            return ModelPerson::createFromTableRow($row->person)->getFullName();
-        });
-
-        $this->addColumn('person_email', _('e-mail'))->setRenderer(function ($row) {
-            return ModelPerson::createFromTableRow($row->person)->getInfo()->email;
-        });
-
-        $this->addColumnPrice();
-
-        $this->addColumnsSymbols();
-
-        $this->addColumnState();
-
-        $this->addButtonDetail();
+        $this->addColumns([
+            DbNames::TAB_PAYMENT . '.id',
+            'referenced.person_name',
+            // 'referenced.event_name',
+            DbNames::TAB_PAYMENT . '.price',
+            DbNames::TAB_PAYMENT . '.state',
+            DbNames::TAB_PAYMENT . '.variable_symbol',
+        ]);
+        $this->addLink('payment.detail', false);
         $this->paginate = false;
+        $this->addCSVDownloadButton();
     }
 }

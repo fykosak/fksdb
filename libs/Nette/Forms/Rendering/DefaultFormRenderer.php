@@ -20,8 +20,9 @@ use Nette,
  *
  * @author     David Grudl
  */
-class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRenderer
+class DefaultFormRenderer implements Nette\Forms\IFormRenderer
 {
+    use Nette\SmartObject;
 	/**
 	 *  /--- form.container
 	 *

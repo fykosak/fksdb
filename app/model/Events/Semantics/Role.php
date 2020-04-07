@@ -4,8 +4,10 @@ namespace Events\Semantics;
 
 use Authorization\ContestAuthorizator;
 use Authorization\RelatedPersonAuthorizator;
-use Nette\Object;
+use FKSDB\Expressions\EvaluatedExpression;
+use Nette\Application\BadRequestException;
 use Nette\Security\User;
+use Nette\SmartObject;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -13,8 +15,9 @@ use Nette\Security\User;
  * @obsolete Needs refactoring due to ConditionEvaluator (for only contestans events)
  * @author Michal Koutný <michal@fykos.cz>
  */
-class Role extends Object {
+class Role extends EvaluatedExpression {
 
+    use SmartObject;
     use WithEventTrait;
 
     const GUEST = 'guest';
@@ -58,17 +61,17 @@ class Role extends Object {
     }
 
     /**
-     * @param $obj
+     * @param array $args
      * @return bool
+     * @throws BadRequestException
      */
-    public function __invoke($obj) {
+    public function __invoke(...$args): bool {
         switch ($this->role) {
             case self::ADMIN:
-                $event = $this->getEvent($obj);
-                return $this->contestAuthorizator->isAllowed($event, 'application', $event->getEventType()->contest);
+                $event = $this->getEvent($args[0]);
+                return $this->contestAuthorizator->isAllowed($event, 'application', $event->getContest());
             case self::RELATED:
-                $event = $this->getEvent($obj);
-                return $this->relatedAuthorizator->isRelatedPerson($this->getHolder($obj));
+                return $this->relatedAuthorizator->isRelatedPerson($this->getHolder($args[0]));
             case self::REGISTERED:
                 return $this->user->isLoggedIn();
             case self::GUEST:

@@ -25,57 +25,15 @@ class OptimisticForm extends Form {
     private $defaultsCallback;
 
     /**
-     * @var string
-     */
-    private $customError;
-
-    /**
-     * @var boolean
-     */
-    private $refreshOnConflict = true;
-
-    /**
      *
      * @param callable $fingerprintCallback returns fingerprint of current version of the data
      * @param callable $defaultsCallback returns current version of data, formatted as an array
      */
     public function __construct(callable $fingerprintCallback, callable $defaultsCallback) {
         parent::__construct();
-
         $this->fingerprintCallback = $fingerprintCallback;
         $this->defaultsCallback = $defaultsCallback;
-
         $this->addHidden(self::FINGERPRINT);
-    }
-
-    /**
-     * @return string
-     */
-    public function getCustomError() {
-        return $this->customError;
-    }
-
-    /**
-     * @param $customError
-     */
-    public function setCustomError($customError) {
-        $this->customError = $customError;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getRefreshOnConflict() {
-        return $this->refreshOnConflict;
-    }
-
-    /**
-     * Sets whether form values are refreshed when conflict occured.
-     *
-     * @param boolean $refreshOnConflict
-     */
-    public function setRefreshOnConflict($refreshOnConflict) {
-        $this->refreshOnConflict = $refreshOnConflict;
     }
 
     /**
@@ -105,17 +63,11 @@ class OptimisticForm extends Form {
         $currentFingerprint = ($this->fingerprintCallback)();
 
         if ($receivedFingerprint != $currentFingerprint) {
-            $this->addError(_('Od zobrazení formuláře byla změněna jeho data.')); //TODO customize message accordint to refreshOnConflict value
+            $this->addError(_('Od zobrazení formuláře byla změněna jeho data.'));
             $this->setFingerprint($currentFingerprint);
-
-
-            if ($this->getRefreshOnConflict()) {
-                parent::setValues(($this->defaultsCallback)());
-            }
-
+            parent::setValues(($this->defaultsCallback)());
             return false;
         }
-
         return parent::isValid();
     }
 
@@ -125,5 +77,4 @@ class OptimisticForm extends Form {
     private function setFingerprint($fingerprint) {
         $this[self::FINGERPRINT]->setValue($fingerprint);
     }
-
 }

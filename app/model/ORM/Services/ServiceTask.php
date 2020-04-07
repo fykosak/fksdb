@@ -15,7 +15,7 @@ class ServiceTask extends AbstractServiceSingle {
     /**
      * @return string
      */
-    protected function getModelClassName(): string {
+    public function getModelClassName(): string {
         return ModelTask::class;
     }
 
@@ -44,7 +44,7 @@ class ServiceTask extends AbstractServiceSingle {
         ])->fetch();
 
         if ($result !== false) {
-            return ModelTask::createFromTableRow($result);
+            return ModelTask::createFromActiveRow($result);
         } else {
             return null;
         }

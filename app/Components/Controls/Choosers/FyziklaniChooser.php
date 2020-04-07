@@ -47,7 +47,7 @@ class FyziklaniChooser extends Control {
         $events = [];
         $query = $this->serviceEvent->getTable()->where('event_type_id=?', self::EVENT_TYPE_ID)->order('event_year DESC');
         foreach ($query as $row) {
-            $events[] = ModelEvent::createFromTableRow($row);
+            $events[] = ModelEvent::createFromActiveRow($row);
         }
         return $events;
     }

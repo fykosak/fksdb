@@ -20,8 +20,9 @@ use Nette,
  *
  * @author     David Grudl
  */
-class CacheMacro extends Nette\Object implements Latte\IMacro
+class CacheMacro  implements Latte\IMacro
 {
+    use Nette\SmartObject;
 	/** @var bool */
 	private $used;
 

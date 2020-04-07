@@ -17,7 +17,7 @@ class ServicePersonInfo extends AbstractServiceSingle {
     /**
      * @return string
      */
-    protected function getModelClassName(): string {
+    public function getModelClassName(): string {
         return ModelPersonInfo::class;
     }
 
@@ -31,6 +31,7 @@ class ServicePersonInfo extends AbstractServiceSingle {
     /**
      * @param null $data
      * @return AbstractModelSingle
+     * @throws \Exception
      */
     public function createNew($data = null) {
         if ($data && isset($data['agreed']) && $data['agreed'] == '1') {
@@ -45,12 +46,13 @@ class ServicePersonInfo extends AbstractServiceSingle {
      * @param array $data
      * @param bool $alive
      * @return mixed|void
+     * @throws \Exception
      */
     public function updateModel(IModel $model, $data, $alive = true) {
         if (isset($data['agreed'])) {
             if ($data['agreed'] == '1') {
                 $data['agreed'] = new DateTime();
-            } else if ($data['agreed'] == '0') {
+            } elseif ($data['agreed'] == '0') {
                 unset($data['agreed']);
             }
         }

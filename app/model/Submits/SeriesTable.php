@@ -8,6 +8,7 @@ use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Services\ServiceContestant;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\ORM\Services\ServiceTask;
+use FKSDB\ORM\Tables\TypedTableSelection;
 use Nette\Database\Table\Selection;
 
 /**
@@ -28,7 +29,7 @@ class SeriesTable {
     private $serviceContestant;
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceTask
+     * @var ServiceTask
      */
     private $serviceTask;
 
@@ -38,7 +39,7 @@ class SeriesTable {
     private $serviceSubmit;
 
     /**
-     * @var \FKSDB\ORM\Models\ModelContest
+     * @var ModelContest
      */
     private $contest;
 
@@ -60,9 +61,9 @@ class SeriesTable {
 
     /**
      * SeriesTable constructor.
-     * @param \FKSDB\ORM\Services\ServiceContestant $serviceContestant
-     * @param \FKSDB\ORM\Services\ServiceTask $serviceTask
-     * @param \FKSDB\ORM\Services\ServiceSubmit $serviceSubmit
+     * @param ServiceContestant $serviceContestant
+     * @param ServiceTask $serviceTask
+     * @param ServiceSubmit $serviceSubmit
      */
     function __construct(ServiceContestant $serviceContestant, ServiceTask $serviceTask, ServiceSubmit $serviceSubmit) {
         $this->serviceContestant = $serviceContestant;
@@ -78,7 +79,7 @@ class SeriesTable {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelContest $contest
+     * @param ModelContest $contest
      */
     public function setContest(ModelContest $contest) {
         $this->contest = $contest;
@@ -134,7 +135,6 @@ class SeriesTable {
             'contest_id' => $this->getContest()->contest_id,
             'year' => $this->getYear(),
         ])->order('person.family_name, person.other_name, person.person_id');
-        //TODO series
     }
 
     /**
@@ -154,17 +154,24 @@ class SeriesTable {
     }
 
     /**
+     * @return TypedTableSelection
+     */
+    public function getSubmits(): TypedTableSelection {
+        return $this->serviceSubmit->getTable()
+            ->where('ct_id', $this->getContestants())
+            ->where('task_id', $this->getTasks());
+    }
+
+    /**
      * @return array
      */
     public function getSubmitsTable(): array {
-        $submits = $this->serviceSubmit->getTable()
-            ->where('ct_id', $this->getContestants())
-            ->where('task_id', $this->getTasks());
+        $submits = $this->getSubmits();
 
         // store submits in 2D hash for better access
         $submitsTable = [];
         foreach ($submits as $row) {
-            $submit = ModelSubmit::createFromTableRow($row);
+            $submit = ModelSubmit::createFromActiveRow($row);
             if (!isset($submitsTable[$submit->ct_id])) {
                 $submitsTable[$submit->ct_id] = [];
             }
@@ -181,7 +188,7 @@ class SeriesTable {
         $contestants = $this->getContestants();
         $result = [];
         foreach ($contestants as $contestantRow) {
-            $contestant = ModelContestant::createFromTableRow($contestantRow);
+            $contestant = ModelContestant::createFromActiveRow($contestantRow);
             $ctId = $contestant->ct_id;
             if (isset($submitsTable[$ctId])) {
                 $result[$ctId] = [self::FORM_SUBMIT => $submitsTable[$ctId]];

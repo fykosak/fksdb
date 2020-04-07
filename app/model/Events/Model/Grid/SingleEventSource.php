@@ -10,8 +10,7 @@ use FKSDB\ORM\Models\ModelEvent;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
-use Nette\Object;
-use Tracy\Debugger;
+use Nette\SmartObject;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -22,7 +21,8 @@ use Tracy\Debugger;
  * @method SingleEventSource limit()
  * @method SingleEventSource count()
  */
-class SingleEventSource extends Object implements IHolderSource {
+class SingleEventSource implements IHolderSource {
+    use SmartObject;
 
     /**
      * @var \FKSDB\ORM\Models\ModelEvent
@@ -95,7 +95,7 @@ class SingleEventSource extends Object implements IHolderSource {
         foreach ($this->dummyHolder->getGroupedSecondaryHolders() as $key => $group) {
             if ($joinToCheck === false) {
                 $joinToCheck = $group['joinTo'];
-            } else if ($group['joinTo'] !== $joinToCheck) {
+            } elseif ($group['joinTo'] !== $joinToCheck) {
                 throw new InvalidStateException(sprintf("SingleEventSource needs all secondary holders to be joined to the same column. Conflict '%s' and '%s'.", $group['joinTo'], $joinToCheck));
             }
         }
@@ -139,6 +139,7 @@ class SingleEventSource extends Object implements IHolderSource {
             }
         }
         foreach ($this->primaryModels as $primaryPK => $primaryModel) {
+            /** @var Holder $holder */
             $holder = $this->container->createEventHolder($this->event);
             $holder->setModel($primaryModel, isset($cache[$primaryPK]) ? $cache[$primaryPK] : []);
             $this->holders[$primaryPK] = $holder;
@@ -154,16 +155,13 @@ class SingleEventSource extends Object implements IHolderSource {
      * @return SingleEventSource
      */
     public function __call($name, $args) {
-        static $delegated = array(
+        static $delegated = [
             'where' => false,
             'order' => false,
             'limit' => false,
             'count' => true,
-        );
-        if (!isset($delegated[$name])) {
-            return parent::__call($name, $args);
-        }
-        $result = call_user_func_array(array($this->primarySelection, $name), $args);
+        ];
+        $result = call_user_func_array([$this->primarySelection, $name], $args);
         $this->primaryModels = null;
 
         if ($delegated[$name]) {
@@ -171,6 +169,17 @@ class SingleEventSource extends Object implements IHolderSource {
         } else {
             return $this;
         }
+    }
+
+    /**
+     * @return Holder[]
+     */
+    public function getHolders(): array {
+        if ($this->primaryModels === null) {
+            $this->loadData();
+            $this->createHolders();
+        }
+        return $this->holders;
     }
 
     /**

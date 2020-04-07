@@ -11,8 +11,7 @@
 
 namespace Nette\Config;
 
-use Nette,
-	Nette\DI\ContainerBuilder;
+use Nette;
 
 
 /**
@@ -22,8 +21,9 @@ use Nette,
  * @property-read array $config
  * @property-read Nette\DI\ContainerBuilder $containerBuilder
  */
-abstract class CompilerExtension extends Nette\Object
+abstract class CompilerExtension
 {
+    use Nette\SmartObject;
 	/** @var Compiler */
 	protected $compiler;
 

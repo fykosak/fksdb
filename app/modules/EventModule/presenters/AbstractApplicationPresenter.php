@@ -4,40 +4,31 @@ namespace EventModule;
 
 use Events\Model\ApplicationHandlerFactory;
 use Events\Model\Grid\SingleEventSource;
-use FKSDB\Components\Controls\Helpers\Badges\NotSetBadge;
-use FKSDB\Components\Controls\Helpers\ValuePrinters\BinaryValueControl;
-use FKSDB\Components\Controls\Helpers\ValuePrinters\IsSetValueControl;
-use FKSDB\Components\Controls\Helpers\ValuePrinters\PersonValueControl;
-use FKSDB\Components\Controls\Helpers\ValuePrinters\PhoneValueControl;
-use FKSDB\Components\Controls\Helpers\ValuePrinters\PriceValueControl;
-use FKSDB\Components\Controls\Helpers\ValuePrinters\StringValueControl;
-use FKSDB\Components\Controls\Stalking\Helpers\PersonLinkControl;
 use FKSDB\Components\Events\ApplicationComponent;
+use FKSDB\Components\Events\MassTransitionsControl;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
-use FKSDB\Logging\FlashDumpFactory;
+use FKSDB\Components\Grids\Schedule\PersonGrid;
 use FKSDB\Logging\MemoryLogger;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\ORM\Models\ModelEventParticipant;
+use FKSDB\NotImplementedException;
+use FKSDB\ORM\Services\ServiceEventParticipant;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
+use Nette\Application\UI\Control;
+use Nette\InvalidStateException;
 
 /**
  * Class ApplicationPresenter
  * @package EventModule
  */
 abstract class AbstractApplicationPresenter extends BasePresenter {
-    /**
-     * @var ModelEventParticipant|ModelFyziklaniTeam
-     */
-    protected $model;
-    /**
-     * @var ApplicationHandlerFactory
-     */
-    private $applicationHandlerFactory;
-    /**
-     * @var FlashDumpFactory
-     */
-    private $dumpFactory;
+    use EventEntityTrait;
+
+    /** @var ApplicationHandlerFactory */
+    protected $applicationHandlerFactory;
+
+    /** @var ServiceEventParticipant */
+    protected $serviceEventParticipant;
 
     /**
      * @param ApplicationHandlerFactory $applicationHandlerFactory
@@ -47,138 +38,116 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @param FlashDumpFactory $dumpFactory
+     * @param ServiceEventParticipant $serviceEventParticipant
      */
-    public function injectFlashDumpFactory(FlashDumpFactory $dumpFactory) {
-        $this->dumpFactory = $dumpFactory;
+    public function injectServiceEventParticipant(ServiceEventParticipant $serviceEventParticipant) {
+        $this->serviceEventParticipant = $serviceEventParticipant;
+    }
+
+    public final function titleList() {
+        $this->setTitle(_('List of applications'), 'fa fa-users');
+    }
+
+    /**
+     * @param int $id
+     * @throws AbortException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     */
+    public final function titleDetail(int $id) {
+        $this->setTitle(sprintf(_('Application detail "%s"'), $this->loadEntity($id)->__toString()), 'fa fa-user');
+    }
+
+    public final function titleTransitions() {
+        $this->setTitle(_('Group transitions'), 'fa fa-user');
+    }
+
+    /**
+     * @param $resource
+     * @param string $privilege
+     * @return bool
+     * @throws BadRequestException
+     */
+    protected function traitIsAuthorized($resource, string $privilege): bool {
+        return $this->isContestsOrgAuthorized($resource, $privilege);
+    }
+
+    /**
+     * @param int $id
+     * @throws AbortException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     */
+    protected function actionDetail(int $id) {
+        $this->loadEntity($id);
+    }
+
+    /**
+     * @throws AbortException
+     * @throws BadRequestException
+     */
+    public function renderDetail() {
+        $this->template->event = $this->getEvent();
+        $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
+    }
+
+    /**
+     * @throws BadRequestException
+     * @throws AbortException
+     */
+    public function renderList() {
+        $this->template->event = $this->getEvent();
+    }
+
+    /**
+     * @return PersonGrid
+     */
+    protected function createComponentPersonScheduleGrid(): PersonGrid {
+        return new PersonGrid($this->getContext());
     }
 
     /**
      * @return ApplicationComponent
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
-    public function createComponentApplicationComponent() {
-        $holders = [];
-        $handlers = [];
-        $flashDump = $this->dumpFactory->createApplication();
-        $source = new SingleEventSource($this->getEvent(), $this->container);
-        foreach ($source as $key => $holder) {
-            $holders[$key] = $holder;
-            $handlers[$key] = $this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger()); //TODO it's a bit weird to create new logger for each handler
+    protected function createComponentApplicationComponent(): ApplicationComponent {
+        $source = new SingleEventSource($this->getEvent(), $this->getContext());
+        foreach ($source->getHolders() as $key => $holder) {
+            if ($key === $this->getEntity()->getPrimary()) {
+                return new ApplicationComponent($this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger()), $holder);
+            }
         }
-
-        $component = new ApplicationComponent($handlers[$this->model->getPrimary()], $holders[$this->model->getPrimary()], $flashDump);
-        return $component;
+        throw new InvalidStateException();
     }
 
     /**
-     * @return \FKSDB\Components\Controls\Helpers\ValuePrinters\BinaryValueControl
-     */
-    public function createComponentBinaryValue(): BinaryValueControl {
-        return new BinaryValueControl($this->getTranslator());
-    }
-
-    /**
-     * @return PersonLinkControl
-     */
-    public function createComponentPersonLink(): PersonLinkControl {
-        return new PersonLinkControl();
-    }
-
-    /**
-     * @return PersonValueControl
-     */
-    public function createComponentPersonValue(): PersonValueControl {
-        return new PersonValueControl($this->getTranslator());
-    }
-
-    /**
-     * @return \FKSDB\Components\Controls\Helpers\ValuePrinters\StringValueControl
-     */
-    public function createComponentStringValue(): StringValueControl {
-        return new StringValueControl($this->getTranslator());
-    }
-
-    /**
-     * @return \FKSDB\Components\Controls\Helpers\Badges\NotSetBadge
-     */
-    public function createComponentNotSet(): NotSetBadge {
-        return new NotSetBadge($this->getTranslator());
-    }
-
-    /**
-     * @return PhoneValueControl
-     */
-    public function createComponentPhoneValue(): PhoneValueControl {
-        return new PhoneValueControl($this->getTranslator());
-    }
-
-    /**
-     * @return \FKSDB\Components\Controls\Helpers\ValuePrinters\IsSetValueControl
-     */
-    public function createComponentIsSetValue(): IsSetValueControl {
-        return new IsSetValueControl($this->getTranslator());
-    }
-
-    /**
-     * @return \FKSDB\Components\Controls\Helpers\ValuePrinters\PriceValueControl
-     */
-    public function createComponentPriceValue(): PriceValueControl {
-        return new PriceValueControl($this->getTranslator());
-    }
-
-    /**
-     * @param $id
+     * @return MassTransitionsControl
+     * @throws AbortException
      * @throws BadRequestException
-     * @throws ForbiddenRequestException
-     * @throws \Nette\Application\AbortException
      */
-    public function actionDetail($id) {
-        $this->loadModel($id);
+    protected final function createComponentMassTransitions(): MassTransitionsControl {
+        return new MassTransitionsControl($this->getContext(), $this->getEvent());
     }
-
-    /**
-     * @return void
-     */
-    abstract public function titleList();
-
-    /**
-     * @return void
-     */
-    abstract public function titleDetail();
-
-    /**
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
-     * @return void;
-     */
-    abstract public function authorizedDetail();
-
-    /**
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
-     * @return void;
-     */
-    abstract public function authorizedList();
-
-    /**
-     * @param int $id
-     * @throws BadRequestException
-     * @throws ForbiddenRequestException
-     * @throws \Nette\Application\AbortException
-     */
-    abstract protected function loadModel(int $id);
-
-    /**
-     * @return ModelEventParticipant|ModelFyziklaniTeam
-     */
-    abstract protected function getModel();
 
     /**
      * @return AbstractApplicationGrid
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws AbortException
+     * @throws BadRequestException
      */
-    abstract function createComponentGrid(): AbstractApplicationGrid;
+    abstract protected function createComponentGrid(): AbstractApplicationGrid;
+
+    /**
+     * @inheritDoc
+     */
+    public function createComponentCreateForm(): Control {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function createComponentEditForm(): Control {
+        throw new NotImplementedException();
+    }
 }

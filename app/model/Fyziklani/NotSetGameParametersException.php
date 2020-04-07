@@ -4,7 +4,7 @@
 namespace FKSDB\model\Fyziklani;
 
 
-use Nette\NotImplementedException;
+use FKSDB\NotImplementedException;
 
 /**
  * Class NotSetGameParametersException
