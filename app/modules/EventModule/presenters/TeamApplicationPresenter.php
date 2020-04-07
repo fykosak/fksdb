@@ -2,6 +2,7 @@
 
 namespace EventModule;
 
+use FKSDB\Components\Controls\Fyziklani\SchoolCheckControl;
 use FKSDB\Components\Controls\Fyziklani\SeatingControl;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
 use FKSDB\Components\Grids\Events\Application\ApplicationGrid;
@@ -9,10 +10,12 @@ use FKSDB\Components\Grids\Events\Application\TeamApplicationGrid;
 use FKSDB\model\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Tracy\Debugger;
 
 /**
  * Class ApplicationPresenter
@@ -83,6 +86,15 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
      */
     public function createComponentSeating(): SeatingControl {
         return new SeatingControl($this->getContext());
+    }
+
+    /**
+     * @return SchoolCheckControl
+     * @throws AbortException
+     * @throws BadRequestException
+     */
+    public function createComponentSchoolCheck(): SchoolCheckControl {
+        return new SchoolCheckControl($this->getEvent(), $this->getAcYear(), $this->getContext());
     }
 
     /**

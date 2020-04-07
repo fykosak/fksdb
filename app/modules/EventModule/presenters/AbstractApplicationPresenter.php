@@ -48,8 +48,14 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
         $this->setTitle(_('List of applications'), 'fa fa-users');
     }
 
-    public final function titleDetail() {
-        $this->setTitle(_('Application detail'), 'fa fa-user');
+    /**
+     * @param int $id
+     * @throws AbortException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     */
+    public final function titleDetail(int $id) {
+        $this->setTitle(sprintf(_('Application detail "%s"'), $this->loadEntity($id)->__toString()), 'fa fa-user');
     }
 
     public final function titleTransitions() {

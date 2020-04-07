@@ -37,12 +37,6 @@ abstract class BaseControl extends Control {
         $template->setTranslator($translator);
         return $template;
     }
-
-    /**
-     * @return void
-     */
-    abstract public function render();
-
     /**
      * @return Container
      */
