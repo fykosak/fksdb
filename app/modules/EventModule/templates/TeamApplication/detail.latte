@@ -1,18 +1,12 @@
-{block content}
-    {if count($toPay)}
-        <h2>{_'Rests'}</h2>
-        <table class="table table-sm table-striped">
-            <tbody>
-            {foreach $toPay as $rest}
-                <tr>
-                    <td>{$rest->getPerson()->getFullName()}</td>
-                    <td>{$rest->getLabel()}</td>
-                    <td>{$rest->getScheduleItem()->getPrice('czk')}/{$rest->getScheduleItem()->getPrice('eur')}</td>
-                </tr>
-            {/foreach}
-            </tbody>
-        </table>
+{define #personSchedule}
+    {if $hasSchedule}
+        <h4 class="mt-3 pull-left">{_'Schedule'}</h4>
+        {control personScheduleGrid $person,$event}
     {/if}
+{/define}
+
+{block content}
+    {control teamRestsControl $model}
     <hr/>
     <h2>{_'Info'}</h2>
     {foreach [
@@ -48,8 +42,9 @@
     {var $teacher = $model->getTeacher() }
     {if $teacher}
         {control valuePrinter:row 'referenced.person_link', $teacher}
+        {include #personSchedule, person => $teacher,event=> $model->getEvent()}
         {if $hasSchedule}
-            <h4>{_'Schedule'}</h4>
+            <h4 class="mt-3 pull-left">{_'Schedule'}</h4>
             {control personScheduleGrid $teacher, $model->getEvent()}
         {/if}
     {/if}
@@ -72,10 +67,8 @@
         {control valuePrinter:row 'person_history.study_year', $history}
 
         {control valuePrinter:row 'person_history.school_id', $history}
-        {if $hasSchedule}
-            <h4>{_'Schedule'}</h4>
-            {control personScheduleGrid $participant->getPerson(),$participant->getEvent()}
-        {/if}
+
+        {include #personSchedule, person => $participant->getPerson(),event=>$model->getEvent()}
         <hr/>
     {/foreach}
     {include ../AbstractApplication/applicationControl.latte}

@@ -78,7 +78,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function actionDetail(int $id) {
+    protected function actionDetail(int $id) {
         $this->loadEntity($id);
     }
 
@@ -86,7 +86,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    protected function renderDetail() {
+    public function renderDetail() {
         $this->template->event = $this->getEvent();
         $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
     }
@@ -111,7 +111,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws AbortException
      */
-    public function createComponentApplicationComponent(): ApplicationComponent {
+    protected function createComponentApplicationComponent(): ApplicationComponent {
         $source = new SingleEventSource($this->getEvent(), $this->getContext());
         foreach ($source->getHolders() as $key => $holder) {
             if ($key === $this->getEntity()->getPrimary()) {
@@ -126,7 +126,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public final function createComponentMassTransitions(): MassTransitionsControl {
+    protected final function createComponentMassTransitions(): MassTransitionsControl {
         return new MassTransitionsControl($this->getContext(), $this->getEvent());
     }
 
@@ -135,7 +135,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    abstract function createComponentGrid(): AbstractApplicationGrid;
+    abstract protected function createComponentGrid(): AbstractApplicationGrid;
 
     /**
      * @inheritDoc
