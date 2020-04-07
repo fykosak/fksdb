@@ -8,11 +8,10 @@ use ModelException;
 use Nette\Database\Connection;
 use Nette\Database\Context;
 use Nette\Database\IConventions;
-use Nette\Database\Table\ActiveRow;
-use Nette\Database\Table\Selection as TableSelection;
 use Nette\Database\Table\Selection;
 use Nette\InvalidStateException;
 use PDOException;
+use Tracy\Debugger;
 use Traversable;
 
 /**
@@ -91,12 +90,8 @@ abstract class AbstractServiceSingle extends Selection implements IService {
     /**
      * @param array $data
      * @return AbstractModelSingle
-     * <<<<<<< HEAD
      * @deprecated
-     * =======
      * @internal Used also in MultiTableSelection.
-     *
-     * >>>>>>> dev-update-nette-17-pre
      */
     public function createFromArray(array $data) {
         $className = $this->getModelClassName();
@@ -164,7 +159,6 @@ abstract class AbstractServiceSingle extends Selection implements IService {
      * @return int
      */
     public function updateModel2(AbstractModelSingle $model, $data = null, $alive = true) {
-
         $this->checkType($model);
         $data = $this->filterData($data);
         return $model->update($data);
@@ -180,22 +174,26 @@ abstract class AbstractServiceSingle extends Selection implements IService {
      */
     public function save(IModel &$model) {
         $modelClassName = $this->getModelClassName();
+        /**
+         * @var AbstractModelSingle $model
+         */
         if (!$model instanceof $modelClassName) {
             throw new InvalidArgumentException('Service for class ' . $this->getModelClassName() . ' cannot store ' . get_class($model));
         }
         try {
             if ($model->isNew()) {
-                $result = $this->getTable()->insert($model->toArray());
+                $result = $this->getTable()->insert($model->getTmpData());
                 if ($result !== false) {
-                    $model = $modelClassName::createFromTableRow($result);
+                    $model = $modelClassName::createFromActiveRow($result);
                     $model->setNew(false);
                 } else {
                     $result = false;
                 }
             } else {
-                $result = $model->update() !== false;
+                $result = $model->update($model->getTmpData()) !== false;
             }
         } catch (PDOException $exception) {
+            Debugger::barDump($exception);
             throw new ModelException('Error when storing model.', null, $exception);
         }
         if (!$result) {

@@ -113,7 +113,7 @@ abstract class AbstractServiceMulti implements IService {
     /**
      * Use this method to store a model!
      *
-     * @param IModel $model
+     * @param IModel|AbstractModelMulti $model
      */
     public function save(IModel &$model) {
         if (!$model instanceof $this->modelClassName) {

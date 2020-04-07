@@ -24,6 +24,7 @@ use Nette\Utils\ArrayHash;
 use Nette\Utils\JsonException;
 use ServiceMPersonHasFlag;
 use ServiceMPostContact;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -265,10 +266,10 @@ class ReferencedPersonHandler implements IReferencedHandler {
     /**
      * @param $model
      * @param ArrayHash $values
-     * @return ArrayHash
+     * @return array
      */
-    private function getConflicts($model, ArrayHash $values) {
-        $conflicts = new ArrayHash();
+    private function getConflicts($model, ArrayHash $values): array {
+        $conflicts = [];
         foreach ($values as $key => $value) {
             if (isset($model[$key])) {
                 if ($model[$key] instanceof IModel) {
@@ -277,7 +278,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
                         $conflicts[$key] = $subConflicts;
                     }
                 } else {
-                    if ($model[$key] != $value) {
+                    if (!is_null($model[$key]) && $model[$key] != $value) {
                         $conflicts[$key] = $value;
                     }
                 }
@@ -292,7 +293,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @param ArrayHash $conflicts
      * @return ArrayHash
      */
-    private function removeConflicts(ArrayHash $data, ArrayHash $conflicts) {
+    private function removeConflicts($data, $conflicts) {
         $result = $data;
         foreach ($conflicts as $key => $value) {
             if (isset($data[$key])) {

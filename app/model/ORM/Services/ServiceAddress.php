@@ -57,7 +57,7 @@ class ServiceAddress extends AbstractServiceSingle {
         /**
          * @var \FKSDB\ORM\Models\ModelAddress $model
          */
-        if (!isset($model->region_id)) {
+        if (is_null($model->region_id)) {
             $model->region_id = $this->inferRegion($model->postal_code);
         }
         parent::save($model);
