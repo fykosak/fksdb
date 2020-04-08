@@ -194,8 +194,8 @@ php:
 nette:
     database:
         reflection: discovered
-    application:
-        errorPresenter: Error
+    #application:
+      #  errorPresenter: Error
 
     session:
         expiration: 14 days

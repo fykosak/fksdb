@@ -10,7 +10,7 @@ use FKSDB\Config\Extensions\StalkingExtension;
 use JanTvrdik\Components\DatePicker;
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Application\Responses\TextResponse;
-use Nette\Config\Configurator;
+use Nette\Configurator;
 use Nette\Forms\Container;
 use Nette\Utils\Finder;
 use Tester\Assert;

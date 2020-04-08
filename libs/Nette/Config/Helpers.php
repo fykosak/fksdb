@@ -56,36 +56,4 @@ class Helpers
 		}
 	}
 
-
-	/**
-	 * Finds out and removes information about the parent.
-	 * @return mixed
-	 */
-	public static function takeParent(& $data)
-	{
-		if (is_array($data) && isset($data[self::EXTENDS_KEY])) {
-			$parent = $data[self::EXTENDS_KEY];
-			unset($data[self::EXTENDS_KEY]);
-			return $parent;
-		}
-	}
-
-
-	/**
-	 * @return bool
-	 */
-	public static function isOverwriting(& $data)
-	{
-		return is_array($data) && isset($data[self::EXTENDS_KEY]) && $data[self::EXTENDS_KEY] === self::OVERWRITE;
-	}
-
-
-	/**
-	 * @return bool
-	 */
-	public static function isInheriting(& $data)
-	{
-		return is_array($data) && isset($data[self::EXTENDS_KEY]) && $data[self::EXTENDS_KEY] !== self::OVERWRITE;
-	}
-
 }

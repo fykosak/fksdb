@@ -4,7 +4,6 @@ namespace Exports;
 
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use Nette\Database\Connection;
-use Nette\Database\Statement;
 use Tracy\Debugger;
 use Nette\InvalidArgumentException;
 use FKSDB\NotImplementedException;
@@ -286,7 +285,7 @@ class StoredQuery implements IDataSource, IResource {
     }
 
     /**
-     * @return mixed|Statement|null
+     * @return mixed|\PDOStatement|null
      */
     public function getData() {
         if ($this->data === null) {

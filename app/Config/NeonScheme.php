@@ -4,9 +4,9 @@ namespace FKSDB\Config;
 
 use FKSDB\Config\Expressions\Helpers;
 use Nette\InvalidArgumentException;
+use Nette\Neon\Exception;
 use Nette\Utils\Arrays;
-use Nette\Utils\NeonException;
-use Tracy\Debugger;
+
 
 /**
  * So far only helper methods to "checked" laoding of Neon configuration.
@@ -27,7 +27,6 @@ class NeonScheme {
      * @throws NeonSchemaException
      */
     public static function readSection($section, $sectionScheme) {
-
         if (!is_array($section)) {
             throw new NeonSchemaException('Expected array got \'' . (string)$section . '\'.');
         }
@@ -66,9 +65,6 @@ class NeonScheme {
             } elseif ($type != self::TYPE_NEON) {
                 throw new NeonSchemaException("Unknown type '$type'.");
             }
-            if ($key === 'required') {
-                Debugger::barDump($result[$key]);
-            }
         }
         $unknown = array_diff(array_keys($section), array_keys($sectionScheme));
         if ($unknown) {
@@ -83,7 +79,7 @@ class NeonScheme {
  * Class NeonSchemaException
  * @package FKSDB\Config
  */
-class NeonSchemaException extends NeonException {
+class NeonSchemaException extends Exception {
 
 }
 

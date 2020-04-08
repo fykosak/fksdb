@@ -34,7 +34,6 @@ use Nette\InvalidStateException;
 use Nette\PhpGenerator\ClassType;
 use Nette\Utils\Arrays;
 use Nette\PhpGenerator\Method;
-use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -567,7 +566,7 @@ class EventsExtension extends CompilerExtension {
         $hasNondetermining = false;
         foreach ($definition['fields'] as $name => $fieldDef) {
             $fieldDef = NeonScheme::readSection($fieldDef, $this->scheme['field']);
-
+         //   @Debugger::barDump($fieldDef['factory']->arguments[0]);
             if ($fieldDef['determining']) {
                 if ($fieldDef['required']) {
                     throw new MachineDefinitionException("Field '$name' cannot be both required and determining. Set required on the base holder.");
@@ -579,8 +578,6 @@ class EventsExtension extends CompilerExtension {
             } else {
                 $hasNondetermining = true;
             }
-
-
             array_unshift($fieldDef, $name);
             $factory->addSetup('addField', [new Statement($this->fieldFactory, $fieldDef)]);
 

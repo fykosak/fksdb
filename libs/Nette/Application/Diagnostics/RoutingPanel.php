@@ -33,7 +33,7 @@ class RoutingPanel  implements IBarPanel
 	private $httpRequest;
 
 	/** @var array */
-	private $routers = array();
+	private $routers = [];
 
 	/** @var Nette\Application\Request */
 	private $request;
@@ -43,11 +43,11 @@ class RoutingPanel  implements IBarPanel
 	{
 
 		Debugger::getBlueScreen()->addPanel(function($e) use ($application) {
-			return $e ? NULL : array(
+			return $e ? NULL : [
 				'tab' => 'Nette Application',
-				'panel' => '<h3>Requests</h3>' . \Tracy\Helpers::clickableDump($application->getRequests())
-					. '<h3>Presenter</h3>' . \Tracy\Helpers::clickableDump($application->getPresenter())
-			);
+				'panel' => '<h3>Requests</h3>'/* . \Tracy\Helpers::clickableDump($application->getRequests())*/
+					. '<h3>Presenter</h3>' /*. \Tracy\Helpers::clickableDump($application->getPresenter())*/
+            ];
 		});
 	}
 

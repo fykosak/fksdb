@@ -58,16 +58,6 @@ abstract class Object
 {
 
 	/**
-	 * Access to reflection.
-	 * @return Nette\Reflection\ClassType
-	 */
-	public static function getReflection()
-	{
-		return new Reflection\ClassType(get_called_class());
-	}
-
-
-	/**
 	 * Call to undefined method.
 	 * @param  string  method name
 	 * @param  array   arguments

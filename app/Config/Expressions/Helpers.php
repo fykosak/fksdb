@@ -50,20 +50,24 @@ class Helpers {
      */
     public static function statementFromExpression($expression) {
         if ($expression instanceof Statement) {
-           // Debugger::barDump($expression, 'B');
+            // Debugger::barDump($expression, 'B');
+
             $arguments = [];
             foreach ($expression->arguments as $attribute) {
-                if ($attribute === '...') {
-                    continue;
-                }
                 $arguments[] = self::statementFromExpression($attribute);
             }
             $class = Arrays::get(self::$semanticMap, $expression->entity, $expression->entity);
             if (function_exists($class)) { // workaround for Nette interpretation of entities
                 $class = ['', $class];
             }
-        //    Debugger::barDump(new Statement($class, $arguments), 'A');
+            //    Debugger::barDump(new Statement($class, $arguments), 'A');
             return new Statement($class, $arguments);
+        } elseif (is_array($expression)) {
+        //    Debugger::barDump($expression, 'Ar');
+            return array_map(function ($subExpresion) {
+                return self::statementFromExpression($subExpresion);
+            }, $expression);
+
         } else {
             return $expression;
         }

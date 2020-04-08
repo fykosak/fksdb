@@ -73,8 +73,8 @@ class NetteLoader extends AutoLoader
 		'Nette\UnknownImageFileException' => '/common/Image',
 		'Nette\Utils\AssertionException' => '/Utils/Validators',
 		'Nette\Utils\JsonException' => '/Utils/Json',
-		'Nette\Utils\NeonEntity' => '/Utils/Neon',
-		'Nette\Utils\NeonException' => '/Utils/Neon',
+		//'Nette\Utils\NeonEntity' => '/Utils/Neon',
+		//'Nette\Utils\NeonException' => '/Utils/Neon',
 		'Nette\Utils\RegexpException' => '/Utils/Strings',
 		'Nette\Utils\TokenizerException' => '/Utils/Tokenizer',
 	);

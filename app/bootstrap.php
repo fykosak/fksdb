@@ -10,6 +10,7 @@ use FKSDB\Config\Extensions\StalkingExtension;
 use JanTvrdik\Components\DatePicker;
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Configurator;
+use Nette\DI\Compiler;
 use Nette\Forms\Container;
 use Nette\Utils\Finder;
 
@@ -20,8 +21,9 @@ require LIBS_DIR . '/autoload.php';
 define('CONFIG_DIR', dirname(__FILE__) . DIRECTORY_SEPARATOR . 'config');
 
 // Configure application
-$configurator = new \Nette\Configurator();
-$configurator->onCompile[] = function (Configurator $configurator, \Nette\DI\Compiler $compiler) {
+$configurator = new Configurator();
+$configurator->onCompile[] = function (Configurator $configurator, Compiler $compiler) {
+    $compiler->addExtension('nette', new \Nette\Config\Extensions\NetteExtension());
     $compiler->addExtension('fksrouter', new RouterExtension());
     $compiler->addExtension('acl', new ACLExtension());
     $compiler->addExtension('navigation', new NavigationExtension());
@@ -29,6 +31,7 @@ $configurator->onCompile[] = function (Configurator $configurator, \Nette\DI\Com
     $compiler->addExtension('stalking', new StalkingExtension());
     $compiler->addExtension('payment', new PaymentExtension());
     $compiler->addExtension('DBReflection', new DBReflectionExtension());
+
 
 };
 
