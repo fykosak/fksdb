@@ -13,18 +13,22 @@ use Nette\Database\Table\Selection;
  * @package FKSDB\ValidationTest\Tests\ParticipantDuration
  */
 class FykosParticipantDuration extends ParticipantsDuration {
+    /**
+     * @var ModelContest
+     */
+    private $contest;
 
     /**
      * @return string
      */
-    public static function getAction(): string {
+    public function getAction(): string {
         return 'participants_duration_fykos';
     }
 
     /**
      * @return string
      */
-    public static function getTitle(): string {
+    public function getTitle(): string {
         return _('Participate on FYKOS events');
     }
 
@@ -32,13 +36,11 @@ class FykosParticipantDuration extends ParticipantsDuration {
      * @return ModelContest
      */
     protected function getContest(): ModelContest {
-        static $model;
-        if ($model) {
-            return $model;
+        if (!$this->contest) {
+            $row = $this->serviceContest->findByPrimary(1);
+            $this->contest = ModelContest::createFromActiveRow($row);
         }
-        $row = $this->serviceContest->findByPrimary(1);
-        $model = ModelContest::createFromTableRow($row);
-        return $model;
+        return $this->contest;
     }
 
     /**

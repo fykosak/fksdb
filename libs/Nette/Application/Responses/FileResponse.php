@@ -23,8 +23,9 @@ use Nette;
  * @property-read string $name
  * @property-read string $contentType
  */
-class FileResponse extends Nette\Object implements Nette\Application\IResponse
+class FileResponse implements Nette\Application\IResponse
 {
+    use Nette\SmartObject;
 	/** @var string */
 	private $file;
 

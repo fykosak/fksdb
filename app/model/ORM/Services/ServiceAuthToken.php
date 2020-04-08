@@ -4,11 +4,11 @@ namespace FKSDB\ORM\Services;
 
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelLogin;
-use Nette\DateTime;
+use Nette\Utils\DateTime;
 use Nette\Utils\Random;
-use Nette\Utils\Strings;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -16,10 +16,11 @@ use Nette\Utils\Strings;
 class ServiceAuthToken extends AbstractServiceSingle {
 
     const TOKEN_LENGTH = 32; // for 62 characters ~ 128 bit
+
     /**
      * @return string
      */
-    protected function getModelClassName(): string {
+    public function getModelClassName(): string {
         return ModelAuthToken::class;
     }
 
@@ -34,23 +35,24 @@ class ServiceAuthToken extends AbstractServiceSingle {
      *
      * @param \FKSDB\ORM\Models\ModelLogin $login
      * @param string $type
-     * @param \Nette\DateTime $until
+     * @param \Nette\Utils\DateTime $until
      * @param null $data
      * @param bool $refresh
-     * @param \Nette\DateTime $since
+     * @param \Nette\Utils\DateTime $since
      * @return ModelAuthToken
+     * @throws \Exception
      */
     public function createToken(ModelLogin $login, $type, DateTime $until = null, $data = null, $refresh = false, DateTime $since = null) {
         if ($since === null) {
             $since = new DateTime();
         }
 
-        $connection = $this->getConnection();
+        $connection = $this->context->getConnection();
         $outerTransaction = false;
-        if (!$connection->inTransaction()) {
-            $this->getConnection()->beginTransaction();
-        } else {
+        if ($connection->getPdo()->inTransaction()) {
             $outerTransaction = true;
+        } else {
+            $connection->beginTransaction();
         }
 
         if ($refresh) {
@@ -69,19 +71,22 @@ class ServiceAuthToken extends AbstractServiceSingle {
                 $tokenData = Random::generate(self::TOKEN_LENGTH, 'a-zA-Z0-9');
             } while ($this->verifyToken($tokenData));
 
-            $token = $this->createNew([
+            $token = $this->createNewModel([
+                'until' => $until,
                 'login_id' => $login->login_id,
                 'token' => $tokenData,
                 'data' => $data,
                 'since' => $since,
                 'type' => $type
             ]);
+        } else {
+            $this->updateModel2($token, ['until' => $until]);
         }
-        $token->until = $until;
+        //  $token->until = $until;
 
-        $this->save($token);
+        // $this->save($token);
         if (!$outerTransaction) {
-            $this->getConnection()->commit();
+            $this->context->getConnection()->commit();
         }
 
         return $token;
@@ -135,11 +140,9 @@ class ServiceAuthToken extends AbstractServiceSingle {
             ->where('data LIKE ?', $eventId . ':%');
         $tokens = [];
         foreach ($res as $token) {
-            $tokens[] = ModelAuthToken::createFromTableRow($token);
+            $tokens[] = ModelAuthToken::createFromActiveRow($token);
         }
         return $tokens;
     }
-
-    //TODO garbage collection
 }
 

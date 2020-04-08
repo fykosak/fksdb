@@ -5,7 +5,7 @@ namespace Authentication\SSO;
 use FKSDB\Authentication\SSO\IGlobalSession;
 use FKSDB\Authentication\SSO\IGSIDHolder;
 use FKSDB\ORM\Services\ServiceGlobalSession;
-use Nette\DateTime;
+use Nette\Utils\DateTime;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 
@@ -139,6 +139,7 @@ class GlobalSession implements IGlobalSession {
     /**
      * @param mixed $offset
      * @param mixed $value
+     * @throws \Exception
      */
     public function offsetSet($offset, $value) {
         if (!$this->started) {
@@ -156,6 +157,10 @@ class GlobalSession implements IGlobalSession {
         }
 
         if ($value != $this->globalSession->login_id) {
+            // $this->globalSession->update(['login_id' => $value]);
+            // $this->serviceGlobalSession->updateModel2($this->globalSession, ['login_id' => $value]);
+            // $this->globalSession = $this->serviceGlobalSession->refresh($this->globalSession);
+            //TODO
             $this->globalSession->login_id = $value;
             $this->serviceGlobalSession->save($this->globalSession);
         }

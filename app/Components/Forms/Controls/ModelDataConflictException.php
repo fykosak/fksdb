@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Controls;
 
-use Nette\ArrayHash;
+use Nette\Utils\ArrayHash;
 use RuntimeException;
 
 /**

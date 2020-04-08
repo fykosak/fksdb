@@ -4,7 +4,7 @@ namespace EventModule;
 
 use FKSDB\Components\Controls\Schedule\GroupControl;
 use FKSDB\Components\Controls\Schedule\ItemControl;
-use FKSDB\Components\Factories\ScheduleFactory;
+use FKSDB\Components\Grids\Schedule\AllPersonsGrid;
 use FKSDB\Components\Grids\Schedule\GroupsGrid;
 use FKSDB\Components\Grids\Schedule\ItemsGrid;
 use FKSDB\Components\Grids\Schedule\PersonsGrid;
@@ -12,11 +12,8 @@ use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleGroup;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleItem;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Database\Connection;
-use Nette\InvalidArgumentException;
 
 /**
  * Class SchedulePresenter
@@ -28,14 +25,6 @@ class SchedulePresenter extends BasePresenter {
      * @persistent
      */
     public $id;
-    /**
-     * @var Connection
-     */
-    private $connection;
-    /**
-     * @var ScheduleFactory
-     */
-    private $scheduleFactory;
     /**
      * @var ModelScheduleGroup
      */
@@ -54,13 +43,6 @@ class SchedulePresenter extends BasePresenter {
     private $serviceScheduleItem;
 
     /**
-     * @param Connection $connection
-     */
-    public function injectConnection(Connection $connection) {
-        $this->connection = $connection;
-    }
-
-    /**
      * @param ServiceScheduleGroup $serviceScheduleGroup
      */
     public function injectServiceScheduleGroup(ServiceScheduleGroup $serviceScheduleGroup) {
@@ -74,123 +56,22 @@ class SchedulePresenter extends BasePresenter {
         $this->serviceScheduleItem = $serviceScheduleItem;
     }
 
-    /**
-     * @param ScheduleFactory $scheduleFactory
-     */
-    public function injectScheduleComponentFactory(ScheduleFactory $scheduleFactory) {
-        $this->scheduleFactory = $scheduleFactory;
-    }
-
-    /**
-     * @deprecated
-     */
-    public function titleDefault() {
-        $this->setTitle(\sprintf(_('Schedule')));
-        $this->setIcon('fa fa-calendar-check-o');
-    }
-
     public function titleGroups() {
-        $this->setTitle(\sprintf(_('Schedule groups')));
-        $this->setIcon('fa fa-calendar-check-o');
+        $this->setTitle(\sprintf(_('Schedule groups')), 'fa fa-calendar-check-o');
     }
 
     public function titleItem() {
-        $this->setTitle(\sprintf(_('Schedule item #%d'), $this->item->schedule_item_id));
-        $this->setIcon('fa fa-calendar-check-o');
+        $this->setTitle(\sprintf(_('Schedule item #%d'), $this->item->schedule_item_id), 'fa fa-calendar-check-o');
     }
 
     public function titleGroup() {
-        $this->setTitle(\sprintf(_('Schedule group #%d'), $this->group->schedule_group_id));
-        $this->setIcon('fa fa-calendar-check-o');
-    }
-
-    /**
-     * @return bool
-     * @throws AbortException
-     * @deprecated
-     * @throws BadRequestException
-     */
-    protected function hasEventSchedule() {
-        try {
-            $this->getEvent()->getParameter('schedule');
-        } catch (InvalidArgumentException $e) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * @throws AbortException
-     * @throws BadRequestException
-     * @deprecated
-     */
-    public function authorizedDefault() {
-
-        if ($this->hasEventSchedule()) {
-            return $this->setAuthorized($this->eventIsAllowed('event.schedule', 'default'));
-        }
-        return $this->setAuthorized(false);
-    }
-
-    /**
-     * @throws AbortException
-     * @throws BadRequestException
-     * @deprecated
-     */
-    public function renderDefault() {
-        $query = $this->connection->query('SELECT p.name,p.person_id,apps.type, group_concat(DISTINCT apps.team separator \', \') AS `team`,schedule
-FROM v_person p
-right join (
-  select teacher_id as person_id,\'teacher\' as type, event_id, name as team, teacher_schedule as schedule
-  FROM e_fyziklani_team eft
-  WHERE eft.status != \'cancelled\'
-  UNION ALL
-  SELECT person_id, \'participant\' AS type, ep.event_id, eftp.name, ep.schedule
-  FROM event_participant ep
-  right join e_fyziklani_participant efp on efp.event_participant_id = ep.event_participant_id
-  LEFT JOIN e_fyziklani_team eftp on eftp.e_fyziklani_team_id = efp.e_fyziklani_team_id
-  WHERE eftp.status != \'cancelled\' 
-) apps ON apps.person_id = p.person_id
-LEFT JOIN event e ON e.event_id = apps.event_id
-WHERE e.event_id=?
-GROUP BY p.person_id,type,schedule', $this->getEvent()->event_id)->fetchAll();
-        $schedule = $this->getEvent()->getParameter('schedule');
-        $results = [];
-        $stats = [];
-        foreach ($query as $row) {
-            if ($row->schedule) {
-                $innerSchedule = json_decode($row->schedule);
-                $results[] = [
-                    'name' => $row->name,
-                    'schedule' => $innerSchedule,
-                    'person_id' => $row->person_id,
-                    'type' => $row->type,
-                    'team' => $row->team,
-                ];
-                foreach ($innerSchedule as $key => $item) {
-                    if (!isset($stats[$key])) {
-                        $stats[$key] = [];
-                    }
-                    if (!isset($stats[$key][$item])) {
-                        $stats[$key][$item] = 0;
-                    }
-                    $stats[$key][$item] += 1;
-
-                }
-            };
-
-        }
-
-        $this->template->participants = $results;
-        $this->template->schedule = $schedule;
-        $this->template->stats = $stats;
+        $this->setTitle(\sprintf(_('Schedule group #%d'), $this->group->schedule_group_id), 'fa fa-calendar-check-o');
     }
 
     /**
      * @param $id
      * @throws BadRequestException
      * @throws ForbiddenRequestException
-     * @throws AbortException
      */
     public function actionGroup($id) {
         if (!$this->group) {
@@ -198,7 +79,7 @@ GROUP BY p.person_id,type,schedule', $this->getEvent()->event_id)->fetchAll();
             if (!$row) {
                 throw new BadRequestException();
             }
-            $this->group = ModelScheduleGroup::createFromTableRow($row);
+            $this->group = ModelScheduleGroup::createFromActiveRow($row);
         }
         if ($this->group->getEvent()->event_id !== $this->getEvent()->event_id) {
             throw new ForbiddenRequestException('Schedule group does not belong to this event');
@@ -216,10 +97,9 @@ GROUP BY p.person_id,type,schedule', $this->getEvent()->event_id)->fetchAll();
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @throws BadRequestException
      * @throws ForbiddenRequestException
-     * @throws AbortException
      */
     public function actionItem($id) {
         if (!$this->item) {
@@ -227,9 +107,9 @@ GROUP BY p.person_id,type,schedule', $this->getEvent()->event_id)->fetchAll();
             if (!$row) {
                 throw new BadRequestException();
             }
-            $this->item = ModelScheduleItem::createFromTableRow($row);
+            $this->item = ModelScheduleItem::createFromActiveRow($row);
         }
-        if ($this->item->getGroup()->getEvent()->event_id !== $this->getEvent()->event_id) {
+        if ($this->item->getScheduleGroup()->getEvent()->event_id !== $this->getEvent()->event_id) {
             throw new ForbiddenRequestException('Schedule item does not belong to this event');
         }
         /**
@@ -241,12 +121,23 @@ GROUP BY p.person_id,type,schedule', $this->getEvent()->event_id)->fetchAll();
          * @var GroupControl $groupControl
          */
         $groupControl = $this->getComponent('groupControl');
-        $groupControl->setGroup($this->getItem()->getGroup());
+        $groupControl->setGroup($this->getItem()->getScheduleGroup());
         /**
          * @var ItemControl $itemControl
          */
         $itemControl = $this->getComponent('itemControl');
         $itemControl->setItem($this->getItem());
+    }
+
+    /**
+     * @throws BadRequestException
+     */
+    public function actionGroups() {
+        /**
+         * @var AllPersonsGrid $component
+         */
+        $component = $this->getComponent('allPersonsGrid');
+        $component->setEvent($this->getEvent());
     }
 
     /**
@@ -263,48 +154,47 @@ GROUP BY p.person_id,type,schedule', $this->getEvent()->event_id)->fetchAll();
         return $this->item;
     }
 
-    /**
-     *
-     */
-    public function renderItem() {
-        $this->template->item = $this->getItem();
-        $this->template->group = $this->getItem()->getGroup();
-    }
     /* *************** COMPONENTS ****************/
     /**
      * @return GroupsGrid
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function createComponentGroupsGrid(): GroupsGrid {
-        return $this->scheduleFactory->createGroupsGrid($this->getEvent());
+        return new GroupsGrid($this->getEvent(), $this->getContext());
     }
 
     /**
      * @return ItemsGrid
      */
     public function createComponentItemsGrid(): ItemsGrid {
-        return $this->scheduleFactory->createItemsGrid();
+        return new ItemsGrid($this->getContext());
     }
 
     /**
      * @return PersonsGrid
      */
     public function createComponentPersonsGrid(): PersonsGrid {
-        return $this->scheduleFactory->createPersonsGrid();
+        return new PersonsGrid($this->getContext());
+    }
+
+    /**
+     * @return AllPersonsGrid
+     */
+    public function createComponentAllPersonsGrid(): AllPersonsGrid {
+        return new AllPersonsGrid($this->getContext());
     }
 
     /**
      * @return GroupControl
      */
     public function createComponentGroupControl(): GroupControl {
-        return $this->scheduleFactory->createGroupControl();
+        return new GroupControl($this->getTranslator(), $this->getTableReflectionFactory());
     }
 
     /**
      * @return ItemControl
      */
     public function createComponentItemControl(): ItemControl {
-        return $this->scheduleFactory->createItemControl();
+        return new ItemControl($this->getTranslator(), $this->getTableReflectionFactory());
     }
 }

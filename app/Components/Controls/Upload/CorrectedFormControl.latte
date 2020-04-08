@@ -1,0 +1,19 @@
+{layout './SubmitTable.latte'}
+{block content}
+    {control form}
+    <hr/>
+    {include #parent}
+{/block}
+{block submit-row}
+    {if $submit}
+        {if $correctedSubmitStorage->fileExists($submit) && $submit->corrected}
+            <td class="bg-success text-white">#{$submit->submit_id}</td>
+        {elseif !$correctedSubmitStorage->fileExists($submit) && !$submit->corrected}
+            <td class="bg-danger text-white">#{$submit->submit_id}</td>
+        {else}
+            <td class="bg-warning text-white">#{$submit->submit_id}</td>
+        {/if}
+    {else}
+        <td></td>
+    {/if}
+{/block}

@@ -6,7 +6,8 @@ use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use Nette;
-use Nette\Database\Connection;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -16,7 +17,7 @@ class ServiceStoredQuery extends AbstractServiceSingle {
     /**
      * @return string
      */
-    protected function getModelClassName(): string {
+    public function getModelClassName(): string {
         return ModelStoredQuery::class;
     }
 
@@ -35,11 +36,12 @@ class ServiceStoredQuery extends AbstractServiceSingle {
 
     /**
      * FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery constructor.
-     * @param Connection $connection
+     * @param Context $context
      * @param ServiceStoredQueryTag $serviceStoredQueryTag
+     * @param IConventions $conventions
      */
-    public function __construct(Connection $connection, ServiceStoredQueryTag $serviceStoredQueryTag) {
-        parent::__construct($connection);
+    public function __construct(Context $context, ServiceStoredQueryTag $serviceStoredQueryTag, IConventions $conventions) {
+        parent::__construct($context, $conventions);
         $this->serviceStoredQueryTag = $serviceStoredQueryTag;
     }
 
@@ -54,11 +56,11 @@ class ServiceStoredQuery extends AbstractServiceSingle {
             return null;
         }
         $result = $this->getTable()->where('qid', $qid)->fetch();
-        return $result ? ModelStoredQuery::createFromTableRow($result) : null;
+        return $result ? ModelStoredQuery::createFromActiveRow($result) : null;
     }
 
     /**
-     * @param int|null $tagTypeId
+     * @param int|array|null $tagTypeId
      * @return Nette\Database\Table\Selection|null
      */
     public function findByTagType($tagTypeId) {

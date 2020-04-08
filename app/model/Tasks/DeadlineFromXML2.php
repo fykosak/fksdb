@@ -3,8 +3,9 @@
 namespace Tasks;
 
 use FKSDB\Logging\ILogger;
+use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceTask;
-use Nette\DateTime;
+use Nette\Utils\DateTime;
 use Pipeline\Stage;
 
 
@@ -42,17 +43,18 @@ class DeadlineFromXML2 extends Stage {
 
     public function process() {
         $xml = $this->data->getData();
-        $deadline = (string) $xml->deadline[0];
+        $deadline = (string)$xml->deadline[0];
         if (!$deadline) {
             $this->log(_('Chybí deadline série.'), ILogger::WARNING);
             return;
         }
 
         $datetime = DateTime::createFromFormat('Y-m-d\TH:i:s', $deadline);
-
+        /**
+         * @var ModelTask $task
+         */
         foreach ($this->data->getTasks() as $task) {
-            $task->submit_deadline = $datetime;
-            $this->taskService->save($task);
+            $this->taskService->updateModel2($task,['submit_deadline'=>$datetime]);
         }
     }
 

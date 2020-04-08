@@ -2,8 +2,9 @@
 
 namespace Tasks\Legacy;
 
+use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceTask;
-use Nette\DateTime;
+use Nette\Utils\DateTime;
 use Pipeline\PipelineException;
 use Pipeline\Stage;
 use Tasks\SeriesData;
@@ -24,7 +25,7 @@ class DeadlineFromXML extends Stage {
      * @var \FKSDB\ORM\Services\ServiceTask
      */
     private $taskService;
-    private static $months = array(
+    private static $months = [
         'ledna' => '1.',
         'února' => '2.',
         'března' => '3.',
@@ -37,7 +38,7 @@ class DeadlineFromXML extends Stage {
         'října' => '10.',
         'listopadu' => '11.',
         'prosince' => '12.',
-    );
+    ];
 
     /**
      * DeadlineFromXML constructor.
@@ -61,10 +62,11 @@ class DeadlineFromXML extends Stage {
         }
 
         $deadline = $this->datetimeFromString($XMLproblems['deadline']);
-
+        /**
+         * @var ModelTask $task
+         */
         foreach ($this->data->getTasks() as $task) {
-            $task->submit_deadline = $deadline;
-            $this->taskService->save($task);
+            $this->taskService->updateModel2($task,['submit_deadline'=>$deadline]);
         }
     }
 

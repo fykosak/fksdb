@@ -15,7 +15,7 @@ class ServiceFyziklaniTask extends AbstractServiceSingle {
     /**
      * @return string
      */
-    protected function getModelClassName(): string {
+    public function getModelClassName(): string {
         return ModelFyziklaniTask::class;
     }
 
@@ -29,7 +29,7 @@ class ServiceFyziklaniTask extends AbstractServiceSingle {
     /**
      * Syntactic sugar.
      * @param string $label
-     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @param ModelEvent $event
      * @return ModelFyziklaniTask|null
      */
     public function findByLabel(string $label, ModelEvent $event) {
@@ -41,12 +41,12 @@ class ServiceFyziklaniTask extends AbstractServiceSingle {
             'event_id' => $event->event_id,
         ])->fetch();
 
-        return $result ? ModelFyziklaniTask::createFromTableRow($result) : null;
+        return $result ? ModelFyziklaniTask::createFromActiveRow($result) : null;
     }
 
     /**
      * Syntactic sugar.
-     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @param ModelEvent $event
      * @return Selection
      */
     public function findAll(ModelEvent $event): Selection {
@@ -54,7 +54,7 @@ class ServiceFyziklaniTask extends AbstractServiceSingle {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @param ModelEvent $event
      * @param bool $hideName
      * @return ModelFyziklaniTask[]
      */
@@ -62,7 +62,7 @@ class ServiceFyziklaniTask extends AbstractServiceSingle {
         $tasks = [];
 
         foreach ($this->findAll($event)->order('label') as $row) {
-            $model = ModelFyziklaniTask::createFromTableRow($row);
+            $model = ModelFyziklaniTask::createFromActiveRow($row);
             $tasks[] = $model->__toArray($hideName);
         }
         return $tasks;

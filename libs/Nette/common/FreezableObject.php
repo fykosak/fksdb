@@ -21,8 +21,9 @@ use Nette;
  *
  * @property-read bool $frozen
  */
-abstract class FreezableObject extends Object implements IFreezable
+abstract class FreezableObject implements IFreezable
 {
+    use SmartObject;
 	/** @var bool */
 	private $frozen = FALSE;
 

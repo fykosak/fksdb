@@ -58,7 +58,7 @@ class AddressContainer extends ModelContainer {
 
             $values = $address->toArray();
             $values['country_iso'] = $address->region_id ? $address->region->country_iso : null;
-        } else if (is_array($values) && isset($values['region_id'])) {
+        } elseif (is_array($values) && isset($values['region_id'])) {
             $region = $this->serviceRegion->findByPrimary($values['region_id']);
             $values['country_iso'] = $region->country_iso;
         }
@@ -68,7 +68,7 @@ class AddressContainer extends ModelContainer {
 
     /**
      * @param bool $asArray
-     * @return array|\Nette\ArrayHash
+     * @return array|\Nette\Utils\ArrayHash
      */
     public function getValues($asArray = FALSE) {
         $values = parent::getValues($asArray);

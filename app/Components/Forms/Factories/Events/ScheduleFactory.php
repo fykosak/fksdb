@@ -35,6 +35,7 @@ class ScheduleFactory extends AbstractFactory {
      * @param BaseMachine $machine
      * @param Container $container
      * @return ScheduleField
+     * @throws \Nette\Utils\JsonException
      */
     protected function createComponent(Field $field, BaseMachine $machine, Container $container) {
         $component = new ScheduleField($this->data);

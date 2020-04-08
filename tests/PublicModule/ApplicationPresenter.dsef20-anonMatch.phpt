@@ -3,7 +3,8 @@
 $container = require '../bootstrap.php';
 
 use FKSDB\Components\Forms\Controls\ReferencedId;
-use Nette\DateTime;
+use Nette\Application\Responses\RedirectResponse;
+use Nette\Utils\DateTime;
 use Tester\Assert;
 
 class ApplicationPresenterTest extends ApplicationPresenterDsefTestCase {
@@ -16,40 +17,40 @@ class ApplicationPresenterTest extends ApplicationPresenterDsefTestCase {
     public function testRegistration() {
         //Assert::equal(false, $this->fixture->getUser()->isLoggedIn()); (presnter not ready for redirect)
 
-        $request = $this->createPostRequest(array(
-            'participant' => array(
+        $request = $this->createPostRequest([
+            'participant' => [
                 'person_id' => ReferencedId::VALUE_PROMISE,
-                'person_id_1' => array(
+                'person_id_1' => [
                     '_c_compact' => " ",
-                    'person' => array(
+                    'person' => [
                         'other_name' => "Paní",
                         'family_name' => "Bílá",
-                    ),
-                    'person_info' => array(
+                    ],
+                    'person_info' => [
                         'email' => "bila@hrad.cz",
                         'id_number' => "1231354",
                         'born' => "1. 1. 2000",
-                    ),
-                    'post_contact_p' => array(
-                        'address' => array(
+                    ],
+                    'post_contact_p' => [
+                        'address' => [
                             'target' => "jkljhkjh",
                             'city' => "jkhlkjh",
                             'postal_code' => "64546",
                             'country_iso' => "",
-                        ),
-                    ),
-                ),
+                        ],
+                    ],
+                ],
                 'e_dsef_group_id' => "1",
                 'lunch_count' => "3",
                 'message' => "",
-            ),
+            ],
             'privacy' => "on",
             'c_a_p_t_cha' => "pqrt",
             '__init__applied' => "Přihlásit účastníka",
-        ));
+        ]);
 
         $response = $this->fixture->run($request);
-        Assert::type('Nette\Application\Responses\RedirectResponse', $response);
+        Assert::type(RedirectResponse::class, $response);
 
         $application = $this->assertApplication($this->eventId, 'bila@hrad.cz');
         Assert::equal('applied', $application->status);

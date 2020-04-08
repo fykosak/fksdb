@@ -3,6 +3,7 @@
 namespace FKSDB\Authentication\SSO\ServiceSide;
 
 use FKSDB\Authentication\SSO\IGSIDHolder;
+use Nette\Database\Connection;
 use PDO;
 
 /**
@@ -20,16 +21,16 @@ class TokenGSIDHolder implements IGSIDHolder {
     const SESSION_KEY = '_sso';
 
     /**
-     * @var PDO
+     * @var Connection
      */
     private $connection;
     private $cachedGSID = false;
 
     /**
      * TokenGSIDHolder constructor.
-     * @param PDO $connection
+     * @param Connection $connection
      */
-    function __construct(PDO $connection) {
+    function __construct(Connection $connection) {
         $this->connection = $connection;
     }
 
@@ -75,8 +76,9 @@ class TokenGSIDHolder implements IGSIDHolder {
             and since <= now()
             and (until is null or until >= now())';
 
-        $stmt = $this->connection->prepare($sql);
-        $stmt->execute(array($token));
+        $stmt = $this->connection->getPdo()->prepare($sql);
+
+        $stmt->execute([$token]);
 
         $row = $stmt->fetch();
         if (!$row) {

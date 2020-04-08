@@ -2,8 +2,7 @@
 
 namespace FKSDB\Utils;
 
-use Nette\Callback;
-use Nette\Object;
+use Nette\SmartObject;
 
 /**
  * Pseudopromise where we want to evaluate a value (provided as callback)
@@ -11,21 +10,27 @@ use Nette\Object;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class Promise extends Object {
-
+class Promise {
+    use SmartObject;
     /**
-     * @var Callback
+     * @var callable
      */
     private $callback;
+    /**
+     * @var bool
+     */
     private $called = false;
+    /**
+     * @var
+     */
     private $value;
 
     /**
      * Promise constructor.
      * @param $callback
      */
-    public function __construct($callback) {
-        $this->callback = new Callback($callback);
+    public function __construct(callable $callback) {
+        $this->callback = $callback;
     }
 
     /**
@@ -33,7 +38,7 @@ class Promise extends Object {
      */
     public function getValue() {
         if (!$this->called) {
-            $this->value = $this->callback->invoke();
+            $this->value = ($this->callback)();
             $this->called = true;
         }
         return $this->value;

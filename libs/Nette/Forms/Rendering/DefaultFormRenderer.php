@@ -20,8 +20,9 @@ use Nette,
  *
  * @author     David Grudl
  */
-class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRenderer
+class DefaultFormRenderer implements Nette\Forms\IFormRenderer
 {
+    use Nette\SmartObject;
 	/**
 	 *  /--- form.container
 	 *
@@ -254,11 +255,11 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 			foreach ($errors as $error) {
 				$item = clone $li;
 				if ($error instanceof Html) {
-					$item->add($error);
+					$item->addHtml($error);
 				} else {
 					$item->setText($error);
 				}
-				$ul->add($item);
+				$ul->addHtml($item);
 			}
 			return "\n" . $ul->render(0);
 		}
@@ -348,15 +349,15 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 
 			} else {
 				if ($buttons) {
-					$container->add($this->renderPairMulti($buttons));
+					$container->addHtml($this->renderPairMulti($buttons));
 					$buttons = NULL;
 				}
-				$container->add($this->renderPair($control));
+				$container->addHtml($this->renderPair($control));
 			}
 		}
 
 		if ($buttons) {
-			$container->add($this->renderPairMulti($buttons));
+			$container->addHtml($this->renderPairMulti($buttons));
 		}
 
 		$s = '';
@@ -375,8 +376,8 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 	public function renderPair(Nette\Forms\IControl $control)
 	{
 		$pair = $this->getWrapper('pair container');
-		$pair->add($this->renderLabel($control));
-		$pair->add($this->renderControl($control));
+		$pair->addHtml($this->renderLabel($control));
+		$pair->addHtml($this->renderControl($control));
 		$pair->class($this->getValue($control->isRequired() ? 'pair .required' : 'pair .optional'), TRUE);
 		$pair->class($control->getOption('class'), TRUE);
 		if (++$this->counter % 2) {
@@ -402,8 +403,8 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 			$s[] = (string) $control->getControl();
 		}
 		$pair = $this->getWrapper('pair container');
-		$pair->add($this->renderLabel($control));
-		$pair->add($this->getWrapper('control container')->setHtml(implode(" ", $s)));
+		$pair->addHtml($this->renderLabel($control));
+		$pair->addHtml($this->getWrapper('control container')->setHtml(implode(" ", $s)));
 		return $pair->render(0);
 	}
 

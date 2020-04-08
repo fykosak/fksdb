@@ -14,7 +14,7 @@ use FKSDB\Utils\CSVParser;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
-use Nette\Diagnostics\Debugger;
+use Tracy\Debugger;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\SubmitButton;
 
@@ -41,11 +41,6 @@ class ImportComponent extends Control {
     private $handler;
 
     /**
-     * @var FlashMessageDump
-     */
-    private $flashDump;
-
-    /**
      * @var Container
      */
     private $container;
@@ -55,15 +50,13 @@ class ImportComponent extends Control {
      * @param Machine $machine
      * @param SingleEventSource $source
      * @param ApplicationHandler $handler
-     * @param FlashMessageDump $flashDump
      * @param Container $container
      */
-    function __construct(Machine $machine, SingleEventSource $source, ApplicationHandler $handler, FlashMessageDump $flashDump, Container $container) {
+    function __construct(Machine $machine, SingleEventSource $source, ApplicationHandler $handler, Container $container) {
         parent::__construct();
         $this->machine = $machine;
         $this->source = $source;
         $this->handler = $handler;
-        $this->flashDump = $flashDump;
         $this->container = $container;
     }
 
@@ -81,25 +74,25 @@ class ImportComponent extends Control {
             ->addRule(Form::MIME_TYPE, _('Lze nahrávat pouze CSV soubory.'), 'text/plain'); //TODO verify this check at production server
 
         $form->addRadioList('errorMode', _('Chování při chybě'))
-            ->setItems(array(
+            ->setItems([
                 ApplicationHandler::ERROR_ROLLBACK => _('Zastavit import a rollbackovat.'),
                 ApplicationHandler::ERROR_SKIP => _('Přeskočit přihlášku a pokračovat.'),
-            ))
+            ])
             ->setDefaultValue(ApplicationHandler::ERROR_SKIP);
 
 
         $form->addRadioList('transitions', _('Přechody přihlášek'))
-            ->setItems(array(
+            ->setItems([
                 ApplicationHandler::STATE_TRANSITION => _('Vykonat přechod, pokud je možný (jinak chyba).'),
                 ApplicationHandler::STATE_OVERWRITE => _('Pouze nastavit stav.'),
-            ))
+            ])
             ->setDefaultValue(ApplicationHandler::STATE_TRANSITION);
 
         $form->addRadioList('stateless', _('Přihlášky bez uvedeného stavu'))
-            ->setItems(array(
+            ->setItems([
                 ImportHandler::STATELESS_IGNORE => _('Ignorovat.'),
                 ImportHandler::STATELESS_KEEP => _('Ponechat původní stav.'),
-            ))
+            ])
             ->setDefaultValue(ImportHandler::STATELESS_IGNORE);
 
         $form->addComponent($this->createKeyElement(), 'key');
@@ -119,6 +112,7 @@ class ImportComponent extends Control {
     /**
      * @param Form $form
      * @throws \Nette\Application\AbortException
+     * @throws \Nette\Utils\JsonException
      */
     private function handleFormImport(Form $form) {
         $values = $form->getValues();
@@ -141,8 +135,7 @@ class ImportComponent extends Control {
             $result = $importHandler->import($this->handler, $transitions, $errorMode, $stateless);
             $elapsedTime = Debugger::timer();
 
-
-            $this->flashDump->dump($this->handler->getLogger(), $this->getPresenter());
+            FlashMessageDump::dump($this->handler->getLogger(), $this->getPresenter());
             if ($result) {
                 $this->getPresenter()->flashMessage(sprintf(_('Import úspěšně proběhl (%.2f s).'), $elapsedTime), BasePresenter::FLASH_SUCCESS);
             } else {
@@ -151,7 +144,7 @@ class ImportComponent extends Control {
 
             $this->redirect('this');
         } catch (ImportHandlerException $exception) {
-            $this->flashDump->dump($this->handler->getLogger(), $this->getPresenter());
+            FlashMessageDump::dump($this->handler->getLogger(), $this->getPresenter());
             $this->getPresenter()->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
         }
     }

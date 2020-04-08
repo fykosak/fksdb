@@ -8,8 +8,8 @@ use Events\Processings\AbstractProcessing;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Services\ServiceSchool;
 use FKSDB\YearCalculator;
-use Nette\ArrayHash;
 use Nette\Forms\Form;
+use Nette\Utils\ArrayHash;
 
 /**
  * Class FlagProcessing
@@ -97,11 +97,11 @@ class FlagProcessing extends AbstractProcessing {
     }
 
     /**
-     * @param $school_id
+     * @param int $schoolId
      * @return bool
      */
-    private function isCzSkSchool($school_id) {
-        $country = $this->serviceSchool->getTable()->select('address.region.country_iso')->where(['school_id' => $school_id])->fetch();
+    private function isCzSkSchool($schoolId) {
+        $country = $this->serviceSchool->getTable()->select('address.region.country_iso')->where(['school_id' => $schoolId])->fetch();
         if (in_array($country->country_iso, ['CZ', 'SK'])) {
             return true;
         }
@@ -109,10 +109,10 @@ class FlagProcessing extends AbstractProcessing {
     }
 
     /**
-     * @param $study_year
+     * @param $studyYear
      * @return bool
      */
-    private function isStudent($study_year) {
-        return ($study_year === null) ? false : true;
+    private function isStudent($studyYear) {
+        return ($studyYear === null) ? false : true;
     }
 }

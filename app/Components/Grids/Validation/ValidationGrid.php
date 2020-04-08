@@ -2,14 +2,17 @@
 
 namespace FKSDB\Components\Grids\Validation;
 
+use FKSDB\Components\DatabaseReflection\ValuePrinters\PersonLink;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ValidationTest\ValidationLog;
 use FKSDB\ValidationTest\ValidationTest;
-use Nette\NotImplementedException;
+use FKSDB\NotImplementedException;
+use Nette\DI\Container;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;
+use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class ValidationGrid
@@ -27,18 +30,18 @@ class ValidationGrid extends BaseGrid {
 
     /**
      * ValidationGrid constructor.
-     * @param ServicePerson $servicePerson
      * @param ValidationTest[] $tests
+     * @param Container $container
      */
-    public function __construct(ServicePerson $servicePerson, array $tests) {
-        parent::__construct();
-        $this->servicePerson = $servicePerson;
+    public function __construct(array $tests, Container $container) {
+        parent::__construct($container);
+        $this->servicePerson = $container->getByType(ServicePerson::class);
         $this->tests = $tests;
     }
 
     /**
      * @param \AuthenticatedPresenter $presenter
-     * @throws \NiftyGrid\DuplicateColumnException
+     * @throws DuplicateColumnException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -48,14 +51,12 @@ class ValidationGrid extends BaseGrid {
         $this->setDataSource($dataSource);
 
         $this->addColumn('display_name', _('Person'))->setRenderer(function ($row) {
-            $person = ModelPerson::createFromTableRow($row);
-            return Html::el('a')->addAttributes([
-                'href' => $this->getPresenter()->link(':Org:Stalking:view', ['id' => $person->person_id]),
-            ])->addText($person->getFullName());
+            $person = ModelPerson::createFromActiveRow($row);
+            return (new PersonLink($this->getPresenter()))($person);
         });
         foreach ($this->tests as $test) {
-            $this->addColumn($test::getAction(), $test::getTitle())->setRenderer(function ($row) use ($test) {
-                $person = ModelPerson::createFromTableRow($row);
+            $this->addColumn($test->getAction(), $test->getTitle())->setRenderer(function ($row) use ($test) {
+                $person = ModelPerson::createFromActiveRow($row);
                 $log = $test->run($person);
                 return self::createHtmlLog($log);
             });
@@ -69,7 +70,7 @@ class ValidationGrid extends BaseGrid {
      */
     protected static function createHtmlLog(ValidationLog $log): Html {
         $icon = Html::el('span');
-        switch ($log->level) {
+        switch ($log->getLevel()) {
             case ValidationLog::LVL_DANGER:
                 $icon->addAttributes(['class' => 'fa fa-close']);
                 break;
@@ -83,12 +84,11 @@ class ValidationGrid extends BaseGrid {
                 $icon->addAttributes(['class' => 'fa fa-check']);
                 break;
             default:
-                throw new NotImplementedException(\sprintf('%s is not supported', $log->level));
+                throw new NotImplementedException(\sprintf('%s is not supported', $log->getLevel()));
         }
         return Html::el('span')->addAttributes([
-            'class' => 'text-' . $log->level,
-            'title' => $log->message,
+            'class' => 'text-' . $log->getLevel(),
+            'title' => $log->getMessage(),
         ])->addHtml($icon);
-
     }
 }

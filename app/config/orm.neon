@@ -18,6 +18,7 @@ services:
     ServiceMPostContact:     ServiceMPostContact
     ServiceMStoredQueryTag:  ServiceMStoredQueryTag
     ServiceOrg:              FKSDB\ORM\Services\ServiceOrg
+    ServiceEmailMessage:     FKSDB\ORM\Services\ServiceEmailMessage
     ServicePerson:           FKSDB\ORM\Services\ServicePerson
     ServicePersonHasFlag:    FKSDB\ORM\Services\ServicePersonHasFlag
     ServicePersonHistory:    FKSDB\ORM\Services\ServicePersonHistory
@@ -31,11 +32,8 @@ services:
     ServiceTask:             FKSDB\ORM\Services\ServiceTask
     ServiceTaskContribution: FKSDB\ORM\Services\ServiceTaskContribution
     ServiceTaskStudyYear:    FKSDB\ORM\Services\ServiceTaskStudyYear
-    ServiceEventAccommodation: FKSDB\ORM\Services\ServiceEventAccommodation
-    ServiceEventPersonAccommodation: FKSDB\ORM\Services\ServiceEventPersonAccommodation
     ServiceTeacher:          FKSDB\ORM\Services\ServiceTeacher
     ServicePayment:          FKSDB\ORM\Services\ServicePayment
-    ServicePaymentAccommodation: FKSDB\ORM\Services\ServicePaymentAccommodation
 
     ServiceStoredQuery:      FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery
     ServiceStoredQueryParameter: FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryParameter
@@ -49,12 +47,15 @@ services:
     fyziklani.ServiceFyziklaniTask:    FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask
     fyziklani.ServiceFyziklaniTeam:             FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam
 
+    schedule.ServiceScheduleGroup: FKSDB\ORM\Services\Schedule\ServiceScheduleGroup
+    schedule.ServiceScheduleItem: FKSDB\ORM\Services\Schedule\ServiceScheduleItem
+    schedule.ServicePersonSchedule: FKSDB\ORM\Services\Schedule\ServicePersonSchedule
+    schedule.ServiceSchedulePayment: FKSDB\ORM\Services\Schedule\ServiceSchedulePayment
 
     event.ServiceEventParticipant:          FKSDB\ORM\Services\ServiceEventParticipant
     event.ServiceDsefGroup:                 FKSDB\ORM\Services\Events\ServiceDsefGroup
     event.ServiceDsefParticipant:           FKSDB\ORM\Services\Events\ServiceDsefParticipant
     event.ServiceMDsefParticipant:          ORM\ServicesMulti\Events\ServiceMDsefParticipant
-
 
     event.ServiceFyziklaniParticipant:      FKSDB\ORM\Services\Events\ServiceFyziklaniParticipant
     event.ServiceMFyziklaniParticipant:     ORM\ServicesMulti\Events\ServiceMFyziklaniParticipant

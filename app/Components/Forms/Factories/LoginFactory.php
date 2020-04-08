@@ -32,6 +32,7 @@ class LoginFactory {
         $container->setCurrentGroup($group);
 
         $login = $container->addText('login', _('Přihlašovací jméno'));
+        $login->setAttribute('autocomplete', 'username');
 
         if ($loginRule) {
             $login->addRule($loginRule, _('Daný login již někdo používá.'));
@@ -39,25 +40,23 @@ class LoginFactory {
 
         if ($options & self::SHOW_PASSWORD) {
             if ($options & self::VERIFY_OLD_PASSWORD) {
-                $container->addPassword('old_password', _('Staré heslo'));
+                $container->addPassword('old_password', _('Staré heslo'))->setAttribute('autocomplete', 'current-password');
             }
             $newPwd = $container->addPassword('password', _('Heslo'));
+            $newPwd->setAttribute('autocomplete', 'new-password');
             $newPwd->addCondition(Form::FILLED)->addRule(Form::MIN_LENGTH, _('Heslo musí mít alespoň %d znaků.'), 6);
 
             if ($options & self::VERIFY_OLD_PASSWORD) {
                 $newPwd->addConditionOn($container['old_password'], Form::FILLED)
-                    ->addRule(Form::FILLED, _("Je třeba nastavit nové heslo."));
-            } else if ($options & self::REQUIRE_PASSWORD) {
-                $newPwd->addRule(Form::FILLED, _("Heslo nemůže být prázdné."));
+                    ->addRule(Form::FILLED, _('Je třeba nastavit nové heslo.'));
+            } elseif ($options & self::REQUIRE_PASSWORD) {
+                $newPwd->addRule(Form::FILLED, _('Heslo nemůže být prázdné.'));
             }
 
 
             $container->addPassword('password_verify', _('Heslo (ověření)'))
-                ->addRule(Form::EQUAL, _('Zadaná hesla se neshodují.'), $newPwd);
-        }
-
-        if ($options & self::SHOW_ACTIVE) {
-            $container->addCheckbox('active', _('Aktivní účet'));
+                ->addRule(Form::EQUAL, _('Zadaná hesla se neshodují.'), $newPwd)
+                ->setAttribute('autocomplete', 'new-password');
         }
 
         return $container;

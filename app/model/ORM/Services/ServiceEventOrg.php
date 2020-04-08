@@ -19,7 +19,7 @@ class ServiceEventOrg extends AbstractServiceSingle {
     /**
      * @return string
      */
-    protected function getModelClassName(): string {
+    public function getModelClassName(): string {
         return ModelEventOrg::class;
     }
 
@@ -31,8 +31,9 @@ class ServiceEventOrg extends AbstractServiceSingle {
     }
 
     /**
-     * @param \FKSDB\ORM\IModel $model
+     * @param \FKSDB\ORM\IModel|ModelEventOrg $model
      * @return mixed|void
+     * @deprecated
      */
     public function save(IModel &$model) {
         try {
@@ -49,7 +50,7 @@ class ServiceEventOrg extends AbstractServiceSingle {
      * @param ModelEvent $event
      * @return Selection
      */
-    public function findByEventId(ModelEvent $event): Selection {
+    public function findByEvent(ModelEvent $event): Selection {
         return $this->getTable()->where('event_id', $event->event_id);
     }
 }

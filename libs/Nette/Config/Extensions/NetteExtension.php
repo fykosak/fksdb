@@ -11,9 +11,8 @@
 
 namespace Nette\Config\Extensions;
 
-use Nette,
-	Nette\DI\ContainerBuilder,
-	Nette\Utils\Validators;
+use Nette;
+use Tracy\Debugger;
 
 
 /**
@@ -365,5 +364,4 @@ class NetteExtension extends Nette\DI\CompilerExtension
 
 		return 'Nette\Caching\Storages\FileStorage::$useDirectories = ' . ($useDirs ? 'TRUE' : 'FALSE') . ";\n";
 	}
-
 }

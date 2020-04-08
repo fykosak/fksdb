@@ -2,16 +2,17 @@
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
-
-use FKSDB\Components\React\IReactComponent;
 use FKSDB\Components\React\ReactField;
+use Nette\DeprecatedException;
 use Nette\Forms\Controls\TextInput;
+use Nette\Utils\JsonException;
 
 /**
  * Class ScheduleField
  * @package FKSDB\Components\Forms\Factories\Events
+ * @deprecated
  */
-class ScheduleField extends TextInput implements IReactComponent {
+class ScheduleField extends TextInput {
 
     use ReactField;
     /**
@@ -22,12 +23,20 @@ class ScheduleField extends TextInput implements IReactComponent {
     /**
      * ScheduleField constructor.
      * @param $data
+     * @throws JsonException
      */
     public function __construct($data) {
         parent::__construct(_('Schedule'));
         $this->data = $data;
         $this->appendProperty();
         $this->registerMonitor();
+    }
+
+    /**
+     * @return string
+     */
+    protected function getReactId(): string {
+        throw new DeprecatedException();
     }
 
     /**
@@ -56,20 +65,5 @@ class ScheduleField extends TextInput implements IReactComponent {
      */
     public function getData(): string {
         return json_encode($this->data);
-    }
-
-    /**
-     * @param $obj
-     */
-    public function attached($obj) {
-        parent::attached($obj);
-        $this->attachedReact($obj);
-    }
-
-    /**
-     * @return array
-     */
-    public function getActions(): array {
-        return [];
     }
 }

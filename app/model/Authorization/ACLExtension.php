@@ -17,13 +17,13 @@ use Nette\Security\Permission;
  */
 class ACLExtension extends \Nette\DI\CompilerExtension {
 
-    public static $semanticMap = array(
+    public static $semanticMap = [
         'qid' => QIDAssertion::class,
         'queryTag' => StoredQueryTagAssertion::class,
         'isEventOrg' => EventOrgAssertion::class,
         'isEventOrgById' => EventOrgByIdAssertion::class,
         'isEventOrgByYear' => EventOrgByYearAssertion::class,
-    );
+    ];
 
     public function __construct() {
         Helpers::registerSemantic(self::$semanticMap);

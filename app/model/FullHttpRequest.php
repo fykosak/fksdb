@@ -1,7 +1,7 @@
 <?php
 
 use Nette\Http\Request;
-use Nette\Object;
+use Nette\SmartObject;
 
 /**
  * Unfortunately Nette Http\Request doesn't make raw HTTP data accessible.
@@ -9,13 +9,15 @@ use Nette\Object;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class FullHttpRequest extends Object {
+class FullHttpRequest {
 
-	/** @var Request  */
-	private $request;
+    use SmartObject;
 
-	/** @var string  */
-	private $payload;
+    /** @var Request */
+    private $request;
+
+    /** @var string */
+    private $payload;
 
     /**
      * FullHttpRequest constructor.
@@ -23,22 +25,22 @@ class FullHttpRequest extends Object {
      * @param $payload
      */
     function __construct(Request $request, $payload) {
-		$this->request = $request;
-		$this->payload = $payload;
-	}
+        $this->request = $request;
+        $this->payload = $payload;
+    }
 
     /**
      * @return Request
      */
-    function getRequest() {
-		return $this->request;
-	}
+    function getRequest(): Request {
+        return $this->request;
+    }
 
     /**
      * @return string
      */
     function getPayload() {
-		return $this->payload;
-	}
+        return $this->payload;
+    }
 
 }

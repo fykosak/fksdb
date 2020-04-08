@@ -11,7 +11,7 @@ use FKSDB\ORM\Services\ServiceEvent;
 use FKSDB\ORM\Services\ServiceTask;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
-use Nette\Object;
+use Nette\SmartObject;
 use Nette\Utils\Arrays;
 
 /**
@@ -19,8 +19,8 @@ use Nette\Utils\Arrays;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class ExportFormatFactory extends Object {
-
+class ExportFormatFactory {
+    use SmartObject;
     const AESOP = 'aesop';
     const CSV_HEADLESS = 'csv';
     const CSV_HEAD = 'csvh';
@@ -66,11 +66,11 @@ class ExportFormatFactory extends Object {
         $this->storedQueryFactory = $storedQueryFactory;
         $this->serviceEvent = $serviceEvent;
         $this->serviceContest = $serviceContest;
-        $this->defaultFormats = array(
-            self::CSV_HEAD => _('Uložit CSV'),
+        $this->defaultFormats = [
+            self::CSV_HEAD => _('Save CSV'),
             self::CSV_HEADLESS => _('Uložit CSV (bez hlavičky)'),
             self::CSV_QUOTE_HEAD => _('Uložit CSV s uvozovkami')
-        );
+        ];
     }
 
     /**
@@ -127,33 +127,33 @@ class ExportFormatFactory extends Object {
         $eventId = sprintf($parameters[$qid]['idMask'], $contestName, $queryParameters['year'], $category);
 
         $format = new AESOPFormat($storedQuery, $xslFile, $this->storedQueryFactory);
-        $format->addParameters(array(
+        $format->addParameters([
             'errors-to' => $maintainer,
             'event' => $eventId,
             'year' => $queryParameters['ac_year'],
-        ));
+        ]);
 
-        if(array_key_exists('eventTypeId', $parameters[$qid])) {
+        if (array_key_exists('eventTypeId', $parameters[$qid])) {
             $contest = $this->serviceContest->findByPrimary($queryParameters['contest']);
             $event = $this->serviceEvent->getByEventTypeId($contest, $queryParameters['year'], $parameters[$qid]['eventTypeId']);
-            $format->addParameters(array(
+            $format->addParameters([
                 'start-date' => $event->begin->format('Y-m-d'),
                 'end-date' => $event->end->format('Y-m-d'),
-            ));
+            ]);
         }
 
         // temporary 'bugfix' for team competition max-rank computation
         if ($qid != 'aesop.fol' && $qid != 'aesop.klani.ct' && $qid != 'aesop.klani.uc') {
-            $format->addParameters(array(
+            $format->addParameters([
                 'max-rank' => $storedQuery->getCount(),
-            ));
+            ]);
         }
 
         if ($qid == 'aesop.ct') {
-            $format->addParameters(array(
+            $format->addParameters([
                 'max-points' => $storedQuery->getPostProcessing()
                     ->getMaxPoints($this->container->getByType(ServiceTask::class)),
-            ));
+            ]);
         }
 
         return $format;
@@ -165,9 +165,8 @@ class ExportFormatFactory extends Object {
      * @param bool $quote
      * @return CSVFormat
      */
-    private function createCSV(StoredQuery $storedQuery, $header, $quote = CSVFormat::DEFAULT_QUOTE) {
-        $format = new CSVFormat($storedQuery, $header, CSVFormat::DEFAULT_DELIMITER, $quote);
-        return $format;
+    private function createCSV(StoredQuery $storedQuery, $header, $quote = CSVFormat::DEFAULT_QUOTE): CSVFormat {
+        return new CSVFormat($storedQuery, $header, CSVFormat::DEFAULT_DELIMITER, $quote);
     }
 
 }

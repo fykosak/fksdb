@@ -6,8 +6,6 @@ use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use Nette\Application\UI\Presenter;
-use Nette\ArrayHash;
-use Nette\Callback;
 use Nette\ComponentModel\Component;
 use Nette\ComponentModel\IComponent;
 use Nette\Forms\Container;
@@ -15,8 +13,8 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 use Nette\InvalidStateException;
+use Nette\Utils\ArrayHash;
 use Nette\Utils\Arrays;
-
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -54,12 +52,12 @@ class ReferencedContainer extends ContainerWithOptions {
     private $allowClear = true;
 
     /**
-     * @var Callback
+     * @var callable
      */
     private $searchCallback;
 
     /**
-     * @var Callback
+     * @var callable
      */
     private $termToValuesCallback;
 
@@ -98,17 +96,16 @@ class ReferencedContainer extends ContainerWithOptions {
 
     /**
      * @param IControl|null $control
-     * @param null $searchCallback
-     * @param null $termToValuesCallback
-     * @throws \Nette\Utils\RegexpException
+     * @param callable|null $searchCallback
+     * @param callable|null $termToValuesCallback
      */
-    public function setSearch(IControl $control = null, $searchCallback = null, $termToValuesCallback = null) {
+    public function setSearch(IControl $control = null, callable $searchCallback = null, callable $termToValuesCallback = null) {
         if ($control == null) {
             $this->referencedId->setValue(null); //is it needed?
             $this->hasSearch = false;
         } else {
-            $this->searchCallback = new Callback($searchCallback);
-            $this->termToValuesCallback = new Callback($termToValuesCallback);
+            $this->searchCallback = $searchCallback;
+            $this->termToValuesCallback = $termToValuesCallback;
             $this->addComponent($control, self::CONTROL_SEARCH);
             $this->hasSearch = true;
         }
@@ -146,16 +143,16 @@ class ReferencedContainer extends ContainerWithOptions {
     }
 
     /**
-     * @param ArrayHash $conflicts
+     * @param array $conflicts
      * @param null $container
      */
-    public function setConflicts(ArrayHash $conflicts, $container = null) {
+    public function setConflicts(array $conflicts, $container = null) {
         $container = $container ?: $this;
         foreach ($conflicts as $key => $value) {
             $component = $container->getComponent($key, false);
             if ($component instanceof Container) {
                 $this->setConflicts($value, $component);
-            } else if ($component instanceof BaseControl) {
+            } elseif ($component instanceof BaseControl) {
                 $component->addError(null);
             }
         }
@@ -166,13 +163,12 @@ class ReferencedContainer extends ContainerWithOptions {
      *
      * @staticvar array $searchComponents
      * @param boolean $value
-     * @throws \Nette\Utils\RegexpException
      */
     public function setSearchButton($value) {
-        static $searchComponents = array(
+        static $searchComponents = [
             self::CONTROL_SEARCH,
             self::SUBMIT_SEARCH,
-        );
+        ];
 
         $value = $value && $this->hasSearch;
 
@@ -231,12 +227,12 @@ class ReferencedContainer extends ContainerWithOptions {
         $submit->onClick[] = function () {
 
             $term = $this->getComponent(self::CONTROL_SEARCH)->getValue();
-            $model = $this->searchCallback->invoke($term);
+            $model = ($this->searchCallback)($term);
 
             $values = new ArrayHash();
             if (!$model) {
                 $model = ReferencedId::VALUE_PROMISE;
-                $values = $this->termToValuesCallback->invoke($term);
+                $values = ($this->termToValuesCallback)($term);
             }
             $this->referencedId->setValue($model);
             $this->setValues($values);
@@ -257,10 +253,10 @@ class ReferencedContainer extends ContainerWithOptions {
             $control->getTemplate()->mainContainer = $this;
             $control->getTemplate()->level = 2; //TODO should depend on lookup path
             $payload = $presenter->getPayload();
-            $payload->{self::JSON_DATA} = (object)array(
+            $payload->{self::JSON_DATA} = (object)[
                 'id' => $this->referencedId->getHtmlId(),
                 'value' => $this->referencedId->getValue(),
-            );
+            ];
         }
     }
 
@@ -300,15 +296,13 @@ class ReferencedContainer extends ContainerWithOptions {
     private function updateHtmlData() {
         $this->setOption('id', sprintf(self::ID_MASK, $this->getForm()->getName(), $this->lookupPath('Nette\Forms\Form')));
         $referencedId = $this->referencedId->getHtmlId();
-        $this->setOption('data', [
-            'referenced-id' => $referencedId,
-            'referenced' => 1,
-        ]);
+        $this->setOption('data-referenced-id', $referencedId);
+        $this->setOption('data-referenced', 1);
     }
 
     /**
      * @param $name
-     * @param $component
+     * @param ContainerWithOptions $component
      */
     private function hideComponent($name, $component) {
         $component->setOption('visible', false);
@@ -318,7 +312,7 @@ class ReferencedContainer extends ContainerWithOptions {
         if ($component instanceof BaseControl) {
             //$component->setOption('wasDisabled', $component->isDisabled());
             $component->setDisabled(true);
-        } else if ($component instanceof Container) {
+        } elseif ($component instanceof Container) {
             foreach ($component->getComponents() as $subcomponent) {
                 $this->hideComponent(null, $subcomponent);
             }
@@ -327,7 +321,7 @@ class ReferencedContainer extends ContainerWithOptions {
 
     /**
      * @param $name
-     * @param $component
+     * @param ContainerWithOptions $component
      */
     private function showComponent($name, $component) {
         $component->setOption('visible', true);
@@ -337,7 +331,7 @@ class ReferencedContainer extends ContainerWithOptions {
         if ($component instanceof BaseControl) {
             //$component->setDisabled($component->getOption('wasDisabled', $component->isDisabled()));
             $component->setDisabled(false);
-        } else if ($component instanceof Container) {
+        } elseif ($component instanceof Container) {
             foreach ($component->getComponents() as $subcomponent) {
                 $this->showComponent(null, $subcomponent);
             }

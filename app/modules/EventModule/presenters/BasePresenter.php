@@ -3,12 +3,14 @@
 namespace EventModule;
 
 use AuthenticatedPresenter;
-use FKSDB\Components\Controls\LanguageChooser;
+use Events\Model\Holder\Holder;
+use FKSDB\NotImplementedException;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEvent;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\DI\Container;
+use Nette\Security\IResource;
 
 /**
  *
@@ -17,34 +19,21 @@ use Nette\DI\Container;
  */
 abstract class BasePresenter extends AuthenticatedPresenter {
 
-    /**
-     *
-     * @var \FKSDB\ORM\Models\ModelEvent
-     */
+    const TEAM_EVENTS = [1, 9, 13];
+
+    /** @var ModelEvent */
     private $event;
+    /** @var Holder */
+    private $holder;
 
     /**
      * @var int
      * @persistent
      */
     public $eventId;
-    /**
-     *
-     * @var Container
-     */
-    protected $container;
 
-    /**
-     * @var \FKSDB\ORM\Services\ServiceEvent
-     */
+    /** @var ServiceEvent */
     protected $serviceEvent;
-
-    /**
-     * @param Container $container
-     */
-    public function injectContainer(Container $container) {
-        $this->container = $container;
-    }
 
     /**
      * @param ServiceEvent $serviceEvent
@@ -53,116 +42,148 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         $this->serviceEvent = $serviceEvent;
     }
 
-    /**+
-     * @return LanguageChooser
-     */
-    protected function createComponentLanguageChooser(): LanguageChooser {
-        return new LanguageChooser($this->session);
-    }
-
     /**
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
+     * @throws \Exception
      */
     protected function startup() {
-        /**
-         * @var LanguageChooser $languageChooser
-         */
-        $languageChooser = $this->getComponent('languageChooser');
-        $languageChooser->syncRedirect();
-
-        if (!$this->eventExist()) {
-            throw new BadRequestException('Event not found.', 404);
+        if (!$this->isEnabled()) {
+            throw new NotImplementedException();
         }
         parent::startup();
     }
 
     /**
      * @return bool
-     * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
      */
-    protected function eventExist(): bool {
-        return !!$this->getEvent();
+    public function isAuthorized(): bool {
+        if (!$this->isEnabled()) {
+            return false;
+        }
+        return parent::isAuthorized();
     }
 
     /**
+     * @return ModelEvent
+     * @throws BadRequestException
+     */
+    protected function getEvent(): ModelEvent {
+        if (!$this->event) {
+            $model = $this->serviceEvent->findByPrimary($this->eventId);
+            if (!$model) {
+                throw new BadRequestException('Event not found.', 404);
+            }
+            $this->event = $model;
+        }
+        return $this->event;
+    }
+
+    /**
+     * @return Holder
+     * @throws BadRequestException
+     */
+    protected function getHolder(): Holder {
+        if (!$this->holder) {
+            $this->holder = $this->getContext()->createEventHolder($this->getEvent());
+        }
+        return $this->holder;
+    }
+
+    /**
+     * @return int
+     * @throws BadRequestException
+     */
+    protected function getAcYear(): int {
+        return $this->yearCalculator->getAcademicYear($this->getContest(), $this->getEvent()->year);
+    }
+
+    /**
+     * @return ModelContest
+     * @throws BadRequestException
+     */
+    protected final function getContest(): ModelContest {
+        return $this->getEvent()->getContest();
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isEnabled(): bool {
+        return true;
+    }
+
+    /**
+     * @return bool
+     * @throws BadRequestException
+     */
+    protected function isTeamEvent(): bool {
+        return (bool)in_array($this->getEvent()->event_type_id, self::TEAM_EVENTS);
+    }
+
+    /* **************** ACL *********************** */
+    /**
+     * @param IResource|string $resource
+     * @param string $privilege
+     * @return bool
+     * Standard ACL from acl.neon
+     * @throws BadRequestException
+     */
+    protected function isContestsOrgAuthorized($resource, string $privilege): bool {
+        return $this->getEventAuthorizator()->isContestOrgAllowed($resource, $privilege, $this->getEvent());
+    }
+
+    /**
+     * @param $resource
+     * @param string $privilege
+     * @return bool
+     * @throws BadRequestException
+     * Check if is contest and event org
+     * TODO vyfakuje to aj cartesianov
+     */
+    protected function isEventAndContestOrgAuthorized($resource, string $privilege): bool {
+        return $this->getEventAuthorizator()->isEventAndContestOrgAllowed($resource, $privilege, $this->getEvent());
+    }
+
+    /**
+     * @param $resource
+     * @param $privilege
+     * @return bool
+     * @throws BadRequestException
+     * Check if has contest permission or is Event org
+     */
+    public function isEventOrContestOrgAuthorized($resource, $privilege): bool {
+        return $this->getEventAuthorizator()->isEventOrContestOrgAllowed($resource, $privilege, $this->getEvent());
+    }
+
+    /* ********************** GUI ************************ */
+    /**
+     * @return ModelEvent
      * @return string
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws BadRequestException
      */
     public function getSubTitle(): string {
         return $this->getEvent()->__toString();
     }
 
     /**
-     * @return int
-     * @throws \Nette\Application\AbortException
-     */
-    protected function getEventId(): int {
-        if (!$this->eventId) {
-            $this->redirect('Dispatch:default');
-        }
-        return +$this->eventId;
-    }
-
-    /**
-     * @return \FKSDB\ORM\Models\ModelEvent
-     * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
-     */
-    protected function getEvent(): ModelEvent {
-        if (!$this->event) {
-            $row = $this->serviceEvent->findByPrimary($this->getEventId());
-            if (!$row) {
-                throw new BadRequestException('Event not found');
-            }
-            $this->event = ModelEvent::createFromTableRow($row);
-            if ($this->event) {
-                $holder = $this->container->createEventHolder($this->getEvent());
-                $this->event->setHolder($holder);
-            }
-        }
-        return $this->event;
-    }
-
-    /**
-     * @param $resource
-     * @param $privilege
-     * @return bool
-     * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
-     */
-    protected function eventIsAllowed($resource, $privilege): bool {
-        $event = $this->getEvent();
-        if (!$event) {
-            return false;
-        }
-        return $this->getEventAuthorizator()->isAllowed($resource, $privilege, $event);
-    }
-
-    /**
-     * @param $resource
-     * @param $privilege
-     * @return bool
-     * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
-     */
-    protected function isContestsOrgAllowed($resource, $privilege): bool {
-        $contest = $this->getContest();
-        if (!$contest) {
-            return false;
-        }
-        return $this->getContestAuthorizator()->isAllowed($resource, $privilege, $contest);
-    }
-
-    /**
      * @return array
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
      */
     protected function getNavBarVariant(): array {
-        return ['event event-type-' . $this->getEvent()->event_type_id, ($this->getEvent()->event_type_id == 1) ? 'bg-fyziklani navbar-dark' : 'bg-light navbar-light'];
+        $classNames = ['event event-type-' . $this->getEvent()->event_type_id, null];
+        switch ($this->getEvent()->event_type_id) {
+            case 1:
+                $classNames[1] = 'bg-fyziklani navbar-dark';
+                break;
+            case 9:
+                $classNames[1] = 'bg-fol navbar-light';
+                break;
+            default:
+                $classNames[1] = 'bg-light navbar-light';
+        }
+        return $classNames;
     }
 
     /**
@@ -171,14 +192,4 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     protected function getNavRoots(): array {
         return ['event.dashboard.default'];
     }
-
-    /**
-     * @return \FKSDB\ORM\Models\ModelContest
-     * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
-     */
-    protected final function getContest(): ModelContest {
-        return $this->getEvent()->getContest();
-    }
-
 }

@@ -20,8 +20,9 @@ DELETE FROM task;
 DELETE FROM fyziklani_submit;
 DELETE FROM fyziklani_task;
 
-DELETE FROM event_person_accommodation;
-DELETE FROM event_accommodation;
+DELETE FROM person_schedule;
+DELETE FROM schedule_item;
+DELETE FROM schedule_group;
 
 DELETE FROM e_tsaf_participant;
 DELETE FROM e_dsef_participant;

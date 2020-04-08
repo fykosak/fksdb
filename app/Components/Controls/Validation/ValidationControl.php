@@ -85,7 +85,7 @@ class ValidationControl extends Control {
         $levelsContainer = new ContainerWithOptions();
         $levelsContainer->setOption('label', _('Level'));
 
-        foreach (ValidationTest::getAvailableLevels() as $level) {
+        foreach (ValidationLog::getAvailableLevels() as $level) {
             $field = $levelsContainer->addCheckbox($level, _($level));
             if (\in_array($level, $this->levels)) {
                 $field->setDefaultValue(true);
@@ -96,7 +96,7 @@ class ValidationControl extends Control {
         $testsContainer = new ContainerWithOptions();
         $testsContainer->setOption('label', _('Tests'));
         foreach ($this->availableTests as $key => $test) {
-            $field = $testsContainer->addCheckbox($key, $test::getTitle());
+            $field = $testsContainer->addCheckbox($key, $test->getTitle());
             if (\in_array($test, $this->tests)) {
                 $field->setDefaultValue(true);
             }
@@ -136,13 +136,13 @@ class ValidationControl extends Control {
         $logs = [];
         foreach ($query as $row) {
 
-            $model = ModelPerson::createFromTableRow($row);
+            $model = ModelPerson::createFromActiveRow($row);
             $log = [];
             foreach ($this->tests as $test) {
                 $log[] = $test->run($model);
             }
             $personLog = \array_filter($log, function (ValidationLog $simpleLog) {
-                return \in_array($simpleLog->level, $this->levels);
+                return \in_array($simpleLog->getLevel(), $this->levels);
             });
             if (\count($personLog)) {
                 $logs[] = ['model' => $model, 'log' => $personLog];
@@ -153,7 +153,6 @@ class ValidationControl extends Control {
     }
 
     public function render() {
-
         $this->template->logs = $this->calculateProblems();
         $this->template->setTranslator($this->translator);
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ValidationControl.latte');

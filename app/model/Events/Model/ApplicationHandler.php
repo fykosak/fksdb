@@ -5,6 +5,7 @@ namespace Events\Model;
 use DuplicateApplicationException;
 use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
+use Events\Machine\Transition;
 use Events\MachineExecutionException;
 use Events\Model\Holder\BaseHolder;
 use Events\Model\Holder\Holder;
@@ -12,16 +13,20 @@ use Events\Model\Holder\SecondaryModelStrategies\SecondaryModelDataConflictExcep
 use Events\SubmitProcessingException;
 use Exception;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
-use FKSDB\Components\Forms\Controls\PersonAccommodation\ExistingPaymentException;
-use FKSDB\Components\Forms\Controls\PersonAccommodation\FullAccommodationCapacityException;
 use FKSDB\Components\Forms\Controls\ReferencedId;
+use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
+use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\Transitions\UnavailableTransitionException;
 use FormUtils;
-use Nette\ArrayHash;
 use Nette\Database\Connection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
+use Nette\Utils\ArrayHash;
+use Nette\Utils\Json;
+use Nette\Utils\JsonException;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -67,7 +72,7 @@ class ApplicationHandler {
 
     /**
      * ApplicationHandler constructor.
-     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @param ModelEvent $event
      * @param ILogger $logger
      * @param Connection $connection
      * @param Container $container
@@ -112,6 +117,7 @@ class ApplicationHandler {
     /**
      * @param Holder $holder
      * @param $data
+     * @throws JsonException
      */
     public final function store(Holder $holder, $data) {
         $this->_storeAndExecute($holder, $data, null, self::STATE_OVERWRITE);
@@ -121,6 +127,7 @@ class ApplicationHandler {
      * @param Holder $holder
      * @param Form|ArrayHash|null $data
      * @param mixed $explicitTransitionName
+     * @throws JsonException
      */
     public function storeAndExecute(Holder $holder, $data = null, $explicitTransitionName = null) {
         $this->_storeAndExecute($holder, $data, $explicitTransitionName, self::STATE_TRANSITION);
@@ -128,9 +135,70 @@ class ApplicationHandler {
 
     /**
      * @param Holder $holder
+     * @param string $explicitTransitionName
+     */
+    public function onlyExecute(Holder $holder, string $explicitTransitionName) {
+        $this->initializeMachine($holder);
+
+        try {
+            $explicitMachineName = $this->machine->getPrimaryMachine()->getName();
+            $this->beginTransaction();
+            $transition = $this->machine->getBaseMachine($explicitMachineName)->getTransition($explicitTransitionName);
+            if ($holder->getPrimaryHolder()->getModelState() !== $transition->getSource()) {
+                throw new UnavailableTransitionException($transition, $holder->getPrimaryHolder()->getModel());
+            }
+            $transition->execute();
+            $holder->saveModels();
+            $transition->executed([]);
+
+            $this->commit();
+
+            if ($transition->isCreating()) {
+                $this->logger->log(sprintf(_('Přihláška "%s" vytvořena.'), (string)$holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS);
+            } elseif ($transition->isTerminating()) {
+                $this->logger->log(_('Přihláška smazána.'), ILogger::SUCCESS);
+            } elseif (isset($transition)) {
+                $this->logger->log(sprintf(_('Stav přihlášky "%s" změněn.'), (string)$holder->getPrimaryHolder()->getModel()), ILogger::INFO);
+            }
+        } catch (ModelDataConflictException $exception) {
+            $container = $exception->getReferencedId()->getReferencedContainer();
+            $container->setConflicts($exception->getConflicts());
+
+            $message = sprintf(_('Některá pole skupiny "%s" neodpovídají existujícímu záznamu.'), $container->getOption('label'));
+            $this->logger->log($message, ILogger::ERROR);
+            $this->reRaise($exception);
+        } catch (SecondaryModelDataConflictException $exception) {
+            $message = sprintf(_('Data ve skupině "%s" kolidují s již existující přihláškou.'), $exception->getBaseHolder()->getLabel());
+            $this->logger->log($message, ILogger::ERROR);
+            $this->reRaise($exception);
+        } catch (DuplicateApplicationException $exception) {
+            $message = $exception->getMessage();
+            $this->logger->log($message, ILogger::ERROR);
+            $this->reRaise($exception);
+        } catch (MachineExecutionException $exception) {
+            $this->logger->log($exception->getMessage(), ILogger::ERROR);
+            $this->reRaise($exception);
+        } catch (SubmitProcessingException $exception) {
+            $this->logger->log($exception->getMessage(), ILogger::ERROR);
+            $this->reRaise($exception);
+        } catch (FullCapacityException $exception) {
+            $this->logger->log($exception->getMessage(), ILogger::ERROR);
+            $this->reRaise($exception);
+        } catch (ExistingPaymentException $exception) {
+            $this->logger->log($exception->getMessage(), ILogger::ERROR);
+            $this->reRaise($exception);
+        } catch (UnavailableTransitionException $exception) {
+            $this->logger->log($exception->getMessage(), ILogger::ERROR);
+            $this->reRaise($exception);
+        }
+    }
+
+    /**
+     * @param Holder $holder
      * @param $data
      * @param $explicitTransitionName
      * @param $execute
+     * @throws JsonException
      */
     private function _storeAndExecute(Holder $holder, $data, $explicitTransitionName, $execute) {
         $this->initializeMachine($holder);
@@ -139,13 +207,11 @@ class ApplicationHandler {
             $explicitMachineName = $this->machine->getPrimaryMachine()->getName();
 
             $this->beginTransaction();
-
+            /** @var Transition[] $transitions */
             $transitions = [];
-            if ($explicitTransitionName !== null) {
-                $explicitMachine = $this->machine[$explicitMachineName];
-                $explicitTransition = $explicitMachine->getTransition($explicitTransitionName);
-
-                $transitions[$explicitMachineName] = $explicitTransition;
+            // saved transition of baseModel/baseMachine/baseHolder/baseShit/base*
+            if ($explicitTransitionName) {
+                $transitions[$explicitMachineName] = $this->machine->getBaseMachine($explicitMachineName)->getTransition($explicitTransitionName);
             }
 
             if ($data) {
@@ -175,10 +241,10 @@ class ApplicationHandler {
 
             if (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isCreating()) {
                 $this->logger->log(sprintf(_('Přihláška "%s" vytvořena.'), (string)$holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS);
-            } else if (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isTerminating()) {
+            } elseif (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isTerminating()) {
                 //$this->logger->log(sprintf(_("Přihláška '%s' smazána."), (string) $holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS);
                 $this->logger->log(_('Přihláška smazána.'), ILogger::SUCCESS);
-            } else if (isset($transitions[$explicitMachineName])) {
+            } elseif (isset($transitions[$explicitMachineName])) {
                 $this->logger->log(sprintf(_('Stav přihlášky "%s" změněn.'), (string)$holder->getPrimaryHolder()->getModel()), ILogger::INFO);
             }
             if ($data && (!isset($transitions[$explicitMachineName]) || !$transitions[$explicitMachineName]->isTerminating())) {
@@ -210,7 +276,7 @@ class ApplicationHandler {
             $this->logger->log($exception->getMessage(), ILogger::ERROR);
             $this->formRollback($data);
             $this->reRaise($exception);
-        } catch (FullAccommodationCapacityException $exception) {
+        } catch (FullCapacityException $exception) {
             $this->logger->log($exception->getMessage(), ILogger::ERROR);
             $this->formRollback($data);
             $this->reRaise($exception);
@@ -228,6 +294,7 @@ class ApplicationHandler {
      * @param $execute
      * @return mixed
      * @throws MachineExecutionException
+     * @throws JsonException
      */
     private function processData($data, $transitions, Holder $holder, $execute) {
         if ($data instanceof Form) {
@@ -237,7 +304,7 @@ class ApplicationHandler {
             $values = $data;
             $form = null;
         }
-
+        Debugger::log(Json::encode((array)$values), 'app-form');
         $primaryName = $holder->getPrimaryHolder()->getName();
         $newStates = [];
         if (isset($values[$primaryName][BaseHolder::STATE_COLUMN])) {
@@ -284,7 +351,7 @@ class ApplicationHandler {
     }
 
     public function beginTransaction() {
-        if (!$this->connection->inTransaction()) {
+        if (!$this->connection->getPdo()->inTransaction()) {
             $this->connection->beginTransaction();
         }
     }
@@ -299,7 +366,7 @@ class ApplicationHandler {
      * @param bool $final
      */
     public function commit($final = false) {
-        if ($this->connection->inTransaction() && ($this->errorMode == self::ERROR_ROLLBACK || $final)) {
+        if ($this->connection->getPdo()->inTransaction() && ($this->errorMode == self::ERROR_ROLLBACK || $final)) {
             $this->connection->commit();
         }
     }
@@ -310,5 +377,4 @@ class ApplicationHandler {
     private function reRaise(Exception $e) {
         throw new ApplicationHandlerException(_('Chyba při ukládání přihlášky.'), null, $e);
     }
-
 }

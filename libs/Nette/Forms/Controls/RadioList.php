@@ -153,10 +153,10 @@ class RadioList extends BaseControl
 			}
 
 			if ($key !== NULL) {
-				return Html::el()->add($control)->add($label);
+				return Html::el()->addHtml($control)->addHtml($label);
 			}
 
-			$container->add((string) $control . (string) $label . $separator);
+			$container->addHtml((string) $control . (string) $label . $separator);
 			$control->data('nette-rules', NULL);
 			// TODO: separator after last item?
 		}

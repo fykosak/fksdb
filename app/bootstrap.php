@@ -2,19 +2,20 @@
 
 use Authorization\ACLExtension;
 use Events\EventsExtension;
+use FKSDB\Config\Extensions\DBReflectionExtension;
 use FKSDB\Config\Extensions\NavigationExtension;
+use FKSDB\Config\Extensions\PaymentExtension;
 use FKSDB\Config\Extensions\RouterExtension;
+use FKSDB\Config\Extensions\StalkingExtension;
 use JanTvrdik\Components\DatePicker;
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Config\Configurator;
 use Nette\Forms\Container;
 use Nette\Utils\Finder;
-use Tracy\Debugger;
 
 // Load Nette Framework
 require LIBS_DIR . '/../vendor/autoload.php';
 require LIBS_DIR . '/autoload.php';
-
 
 define('CONFIG_DIR', dirname(__FILE__) . DIRECTORY_SEPARATOR . 'config');
 
@@ -28,10 +29,6 @@ $configurator->onCompile[] = function (Configurator $configurator, \Nette\DI\Com
 };
 
 // Enable Nette Debugger for error visualisation & logging
-Debugger::getBar()->addPanel(new Nette\Bridges\HttpTracy\SessionPanel);
-Debugger::enable();
-
-
 $configurator->enableDebugger(dirname(__FILE__) . '/../log');
 error_reporting(~E_USER_DEPRECATED & ~E_USER_WARNING);
 
@@ -58,7 +55,6 @@ $container = $configurator->createContainer();
 // Register addons
 //
 Replicator::register();
-
 
 Container::extensionMethod('addDatePicker', function (Container $container, $name, $label = NULL) {
     return $container[$name] = new DatePicker($label);

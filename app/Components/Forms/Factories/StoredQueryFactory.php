@@ -36,11 +36,10 @@ class StoredQueryFactory {
     }
 
     /**
-     * @param int $options
      * @param ControlGroup|null $group
      * @return ModelContainer
      */
-    public function createConsole($options = 0, ControlGroup $group = null) {
+    public function createConsole(ControlGroup $group = null) {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
 
@@ -51,11 +50,10 @@ class StoredQueryFactory {
     }
 
     /**
-     * @param int $options
      * @param ControlGroup|null $group
      * @return ModelContainer
      */
-    public function createMetadata($options = 0, ControlGroup $group = null) {
+    public function createMetadata(ControlGroup $group = null) {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
 
@@ -66,7 +64,7 @@ class StoredQueryFactory {
         $container->addText('qid', _('QID'))
             ->setOption('description', _('Dotazy s QIDem nelze smazat a QID lze použít pro práva a trvalé odkazování.'))
             ->addCondition(Form::FILLED)
-            ->addRule(Form::MAX_LENGTH, _('Název dotazu je moc dlouhý.'), 16)
+            ->addRule(Form::MAX_LENGTH, _('Název dotazu je moc dlouhý.'), 64)
             ->addRule(Form::REGEXP, _('QID může být jen z písmen anglické abecedy a číslic a tečky.'), '/^[a-z][a-z0-9.]*$/i');
 
         $container->addComponent($this->createTagSelect(false, _('Štítky'), new StoredQueryTagTypeProvider($this->serviceStoredQueryTagType)), 'tags');
@@ -82,11 +80,10 @@ class StoredQueryFactory {
     }
 
     /**
-     * @param int $options
      * @param ControlGroup|null $group
      * @return Replicator
      */
-    public function createParametersMetadata($options = 0, ControlGroup $group = null) {
+    public function createParametersMetadata(ControlGroup $group = null) {
         $replicator = new Replicator(function ($replContainer) use ($group) {
             $this->buildParameterMetadata($replContainer, $group);
 
@@ -124,7 +121,7 @@ class StoredQueryFactory {
         $container->addSelect('type', _('Datový typ'))
             ->setItems([
                 ModelStoredQueryParameter::TYPE_INT => 'integer',
-                ModelStoredQueryParameter::TYPE_STR => 'string',
+                ModelStoredQueryParameter::TYPE_STRING => 'string',
                 ModelStoredQueryParameter::TYPE_BOOL => 'bool',
             ]);
 
@@ -149,7 +146,7 @@ class StoredQueryFactory {
 
             switch ($parameter->type) {
                 case ModelStoredQueryParameter::TYPE_INT:
-                case ModelStoredQueryParameter::TYPE_STR:
+                case ModelStoredQueryParameter::TYPE_STRING:
                     $valueElement = $subcontainer->addText('value', $name);
                     $valueElement->setOption('description', $parameter->description);
                     if ($parameter->type == ModelStoredQueryParameter::TYPE_INT) {

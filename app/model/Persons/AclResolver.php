@@ -5,15 +5,15 @@ namespace Persons;
 use Authorization\ContestAuthorizator;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelPerson;
-use Nette\Object;
+use Nette\SmartObject;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class AclResolver extends Object implements IVisibilityResolver, IModifiabilityResolver {
-
+class AclResolver implements IVisibilityResolver, IModifiabilityResolver {
+    use SmartObject;
     /**
      * @var ContestAuthorizator
      */

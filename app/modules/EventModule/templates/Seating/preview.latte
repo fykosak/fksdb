@@ -1,0 +1,32 @@
+{block content}
+    <h2>{_'All teams'}</h2>
+    {control seating:all $event}
+    <h2>{_'All team includes catogory and position Id'}</h2>
+    {control seating:dev $event}
+    <div>
+        <div class="row">
+            <div style="width: 15px;height: 15px;background-color: #ff0000;border-radius: 15px"></div>
+            <span class="col">{_'Category'} A</span>
+        </div>
+        <div class="row">
+            <div style="width: 15px;height: 15px;background-color: #00FF00;border-radius: 15px"></div>
+            <span class="col">{_'Category'} B</span>
+        </div>
+        <div class="row">
+            <div style="width: 15px;height: 15px;background-color: #0000FF;border-radius: 15px"></div>
+            <span class="col">{_'Category'} C</span>
+        </div>
+
+        <div class="row">
+            <div style="width: 15px;height: 15px;border: dashed 2px #000;border-radius: 15px"></div>
+            <span class="col">{_'Czech'}</span>
+        </div>
+        <div class="row">
+            <div style="width: 15px;height: 15px;border: dotted 2px #000;border-radius: 15px"></div>
+            <span class="col">{_'English'}</span>
+        </div>
+    </div>
+
+    <h2>{_'Empty'}</h2>
+    {control seating $event, 'empty'}
+{/block content}

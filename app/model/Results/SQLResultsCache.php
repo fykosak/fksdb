@@ -58,7 +58,7 @@ class SQLResultsCache {
             SET ?
             WHERE (' . implode(') and (', $conditions) . ')';
 
-        $this->connection->exec($sql, $data);
+        $this->connection->query($sql, $data);
     }
 
     /**
@@ -82,7 +82,7 @@ class SQLResultsCache {
 
         $this->connection->beginTransaction();
         foreach ($tasks as $row) {
-            $task = ModelTask::createFromTableRow($row);
+            $task = ModelTask::createFromActiveRow($row);
             $conditions = [];
             $conditions[] = 't.contest_id = ' . $contest->contest_id;
             $conditions[] = 't.year = ' . (int)$year;
@@ -97,7 +97,7 @@ class SQLResultsCache {
             )
             WHERE (' . implode(') and (', $conditions) . ')';
 
-            $this->connection->exec($sql);
+            $this->connection->query($sql);
         }
         $this->connection->commit();
     }

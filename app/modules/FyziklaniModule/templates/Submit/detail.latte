@@ -1,0 +1,11 @@
+{block content}
+    {control detail 'fyziklani.submit', $model}
+
+    <div class="my-3">
+        {if !$model->isChecked() && $model->getFyziklaniTeam()->hasOpenSubmitting()}
+            <a href="{link check!}" class="btn btn-success">{_('Check submit')}</a>
+        {/if}
+    </div>
+    <a class="btn btn-secondary" href="{plink edit id=>$model->fyziklani_submit_id}">{_'Edit'}</a>
+
+{/block}

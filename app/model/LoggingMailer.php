@@ -3,7 +3,7 @@
 use FKSDB\Config\GlobalParameters;
 use Nette\Mail\IMailer;
 use Nette\Mail\Message;
-use Nette\Object;
+use Nette\SmartObject;
 use Nette\Utils\Arrays;
 
 /**
@@ -11,7 +11,8 @@ use Nette\Utils\Arrays;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class LoggingMailer extends Object implements IMailer {
+class LoggingMailer implements IMailer {
+    use SmartObject;
 
     /**
      * @var IMailer

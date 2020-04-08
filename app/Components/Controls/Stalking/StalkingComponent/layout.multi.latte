@@ -1,0 +1,24 @@
+{layout '../@layout.latte'}
+{block content}
+    {if count($models)}
+        {foreach $models as $model}
+            <h3 class="card-header">
+                {control valuePrinter:onlyValue $itemHeadline, $model}
+                <div class="btn-group float-right" role="group" aria-label="Basic example" class="">
+                    {foreach $links as $linkFactory}
+                        {($linkFactory)($model)}
+                    {/foreach}
+                </div>
+            </h3>
+            <ul class="list-group list-group-flush">
+                {foreach $rows as $field}
+                    {control valuePrinter:listItem $field, $model}
+                {/foreach}
+            </ul>
+        {/foreach}
+    {else}
+        <div class="card-body">
+            {control noRecords}
+        </div>
+    {/if}
+{/block}

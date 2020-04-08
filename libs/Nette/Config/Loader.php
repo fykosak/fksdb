@@ -121,5 +121,4 @@ class Loader extends Nette\Object {
         }
         return $item;
     }
-
 }

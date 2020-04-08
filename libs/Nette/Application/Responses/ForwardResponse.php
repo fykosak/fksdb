@@ -21,8 +21,9 @@ use Nette;
  *
  * @property-read Nette\Application\Request $request
  */
-class ForwardResponse extends Nette\Object implements Nette\Application\IResponse
+class ForwardResponse implements Nette\Application\IResponse
 {
+    use Nette\SmartObject;
 	/** @var Nette\Application\Request */
 	private $request;
 

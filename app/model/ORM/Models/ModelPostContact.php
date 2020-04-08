@@ -7,7 +7,7 @@ use FKSDB\ORM\AbstractModelSingle;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property \Nette\Database\Table\ActiveRow address
+ * @property-read \Nette\Database\Table\ActiveRow address
  */
 class ModelPostContact extends AbstractModelSingle {
     const TYPE_DELIVERY = 'D';
@@ -19,7 +19,7 @@ class ModelPostContact extends AbstractModelSingle {
     public function getAddress() {
         $address = $this->address;
         if ($address) {
-            return ModelAddress::createFromTableRow($address);
+            return ModelAddress::createFromActiveRow($address);
         } else {
             return null;
         }

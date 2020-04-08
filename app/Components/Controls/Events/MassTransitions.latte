@@ -1,0 +1,13 @@
+{foreach $transitions as $transition}
+    {continueIf $transition->isCreating()}
+    {continueIf $transition->isTerminating()}
+    <h3>{_($transition->getLabel())}</h3>
+    <p>
+        <small class="text-muted">{$transition->getMask()}</small>
+    </p>
+    <p>
+        {var $className = $transition->isDangerous()?'btn btn-danger':'btn btn-secondary'}
+        <a class="{$className}" href="{link transition! $transition->getName()}">{_'Evalute'}</a>
+    </p>
+    <hr/>
+{/foreach}

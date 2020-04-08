@@ -6,19 +6,19 @@ use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
 use Events\Model\Holder\Holder;
 use FKSDB\Logging\ILogger;
-use Nette\ArrayHash;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
-use Nette\Object;
+use Nette\SmartObject;
+use Nette\Utils\ArrayHash;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-abstract class AbstractProcessing extends Object implements IProcessing {
-
+abstract class AbstractProcessing implements IProcessing {
+    use SmartObject;
     const DELIMITER = '.';
     const WILDCART = '*';
 

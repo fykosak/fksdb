@@ -2,9 +2,11 @@
 
 namespace Persons;
 
-use Authentication\AccountManager;
+use FKSDB\Authentication\AccountManager;
 use BasePresenter;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
+use FKSDB\ORM\AbstractServiceMulti;
+use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\IService;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelPerson;
@@ -14,29 +16,30 @@ use Mail\MailTemplateFactory;
 use Mail\SendFailedException;
 use ModelException;
 use Nette\Database\Connection;
-use Nette\Diagnostics\Debugger;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
-use Nette\Object;
+use Nette\SmartObject;
 use OrgModule\ContestantPresenter;
+use Tracy\Debugger;
+use Traversable;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class ExtendedPersonHandler extends Object {
-
+class ExtendedPersonHandler {
+    use SmartObject;
     const CONT_AGGR = 'aggr';
     const CONT_PERSON = 'person';
     const CONT_MODEL = 'model';
     const EL_PERSON = 'person_id';
     const RESULT_OK_EXISTING_LOGIN = 1;
     const RESULT_OK_NEW_LOGIN = 2;
-    const RESULT_ERROR = false;
+    const RESULT_ERROR = 0;
 
     /**
-     * @var \FKSDB\ORM\IService
+     * @var \FKSDB\ORM\IService|AbstractServiceMulti|AbstractServiceSingle
      */
     protected $service;
 
@@ -156,14 +159,14 @@ class ExtendedPersonHandler extends Object {
     /**
      * @param Form $form
      * @param IExtendedPersonPresenter $presenter
-     * @return bool
+     * @param bool $sendEmail
+     * @return int
+     * @throws \Exception
      */
-    public final function handleForm(Form $form, IExtendedPersonPresenter $presenter) {
-        $connection = $this->connection;
+    public final function handleForm(Form $form, IExtendedPersonPresenter $presenter, bool $sendEmail) {
+
         try {
-            if (!$connection->beginTransaction()) {
-                throw new ModelException();
-            }
+           $this->connection->beginTransaction();
             $values = $form->getValues();
             $create = !$presenter->getModel();
 
@@ -174,10 +177,10 @@ class ExtendedPersonHandler extends Object {
             $email = $person->getInfo() ? $person->getInfo()->email : null;
             $login = $person->getLogin();
             $hasLogin = (bool)$login;
-            if ($email && !$login) {
-                $template = $this->mailTemplateFactory->createLoginInvitation($presenter, $this->getInvitationLang());
+            if ($sendEmail && ($email && !$login)) {
+                // $template = $this->mailTemplateFactory->createLoginInvitation($presenter, $this->getInvitationLang());
                 try {
-                    $this->accountManager->createLoginWithInvitation($template, $person, $email);
+                    $this->accountManager->createLoginWithInvitation($person, $email);
                     $presenter->flashMessage(_('Zvací e-mail odeslán.'), BasePresenter::FLASH_INFO);
                 } catch (SendFailedException $exception) {
                     $presenter->flashMessage(_('Zvací e-mail se nepodařilo odeslat.'), BasePresenter::FLASH_ERROR);
@@ -189,16 +192,17 @@ class ExtendedPersonHandler extends Object {
             /*
              * Finalize
              */
-            if (!$connection->commit()) {
+            if (!$this->connection->commit()) {
                 throw new ModelException();
             }
+
 
             if ($create) {
                 $msg = $presenter->messageCreate();
             } else {
                 $msg = $presenter->messageEdit();
             }
-            $presenter->flashMessage(sprintf($msg, $person->getFullname()), ContestantPresenter::FLASH_SUCCESS);
+            $presenter->flashMessage(sprintf($msg, $person->getFullName()), ContestantPresenter::FLASH_SUCCESS);
 
             if (!$hasLogin) {
                 return self::RESULT_OK_NEW_LOGIN;
@@ -206,7 +210,7 @@ class ExtendedPersonHandler extends Object {
                 return self::RESULT_OK_EXISTING_LOGIN;
             }
         } catch (ModelException $exception) {
-            $connection->rollBack();
+            $this->connection->rollBack();
             if ($exception->getPrevious() && $exception->getPrevious()->getCode() == 23000) {
                 $presenter->flashMessage($presenter->messageExists(), ContestantPresenter::FLASH_ERROR);
             } else {
@@ -219,39 +223,36 @@ class ExtendedPersonHandler extends Object {
             $form->addError(_('Zadaná data se neshodují s již uloženými.'));
             $exception->getReferencedId()->getReferencedContainer()->setConflicts($exception->getConflicts());
             $exception->getReferencedId()->rollback();
-            $connection->rollBack();
+            $this->connection->rollBack();
             return self::RESULT_ERROR;
         }
     }
 
     /**
      * @param ModelPerson $person
-     * @param $values
-     * @param $presenter
+     * @param array|Traversable $values
+     * @param IExtendedPersonPresenter $presenter
      */
-    protected function storeExtendedModel(ModelPerson $person, $values, $presenter) {
+    protected function storeExtendedModel(ModelPerson $person, $values, IExtendedPersonPresenter $presenter) {
         if ($this->contest === null || $this->year === null) {
             throw new InvalidStateException('Must set contest and year before storing contestant.');
         }
         // initialize model
         $model = $presenter->getModel();
+        $newData = [];
         if (!$model) {
-            $data = array(
+            $data = [
                 'contest_id' => $this->getContest()->contest_id,
+                'person_id' => $person->getPrimary(),
                 'year' => $this->getYear(),
-            );
-            $model = $this->service->createNew($data);
-            $model->person_id = $person->getPrimary();
+            ];
+            $model = $this->service->createNewModel($data);
         }
 
         // update data
         if (isset($values[self::CONT_MODEL])) {
             $data = FormUtils::emptyStrToNull($values[self::CONT_MODEL]);
-            $this->service->updateModel($model, $data);
+            $this->service->updateModel2($model, $data);
         }
-
-        // store model
-        $this->service->save($model);
     }
-
 }

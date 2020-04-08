@@ -20,7 +20,4 @@ use Nette;
  * @author     David Grudl
  */
 class Engine extends \Latte\Engine
-{
-
-
-}
+{}

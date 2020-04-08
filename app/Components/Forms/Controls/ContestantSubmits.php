@@ -9,7 +9,7 @@ use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FormUtils;
 use InvalidArgumentException;
-use Nette\DateTime;
+use Nette\Utils\DateTime;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 use Traversable;
@@ -158,7 +158,7 @@ class ContestantSubmits extends BaseControl {
         if (!$value) {
             $this->rawValue = $this->serializeValue([]);
             $this->value = $this->deserializeValue($this->rawValue);
-        } else if (is_string($value)) {
+        } elseif (is_string($value)) {
             $this->rawValue = $value;
             $this->value = $this->deserializeValue($value);
         } else {
@@ -186,17 +186,16 @@ class ContestantSubmits extends BaseControl {
             if (isset($result[$tasknr])) {
                 throw new InvalidArgumentException("Task with no. $tasknr is present multiple times in passed value.");
             }
-            $result[(int) $tasknr] = $this->serializeSubmit($submit);
+            $result[(int)$tasknr] = $this->serializeSubmit($submit);
         }
 
         $dummySubmit = $this->submitService->createNew();
+        $data = $dummySubmit->toArray();
         foreach ($this->tasks as $tasknr => $task) {
             if (isset($result[$tasknr])) {
                 continue;
             }
-
-            $dummySubmit->task_id = $task->task_id;
-            $result[$tasknr] = $this->serializeSubmit($dummySubmit);
+            $result[$tasknr] = $this->serializeDummySubmit($data, $task->task_id);
         }
 
         ksort($result);
@@ -217,11 +216,24 @@ class ContestantSubmits extends BaseControl {
             if (!$serializedSubmit) {
                 continue;
             }
-
             $result[] = $this->deserializeSubmit($serializedSubmit, $tasknr);
         }
-
         return $result;
+    }
+
+    /**
+     * @param $data
+     * @param int $taskId
+     * @return array
+     */
+    private function serializeDummySubmit($data, int $taskId) {
+        $data['submitted_on'] = null;
+
+        $data['task'] = [
+            'label' => $this->getTask($taskId)->label,
+            'disabled' => $this->isTaskDisabled(),
+        ]; // ORM workaround
+        return $data;
     }
 
     /**
@@ -256,20 +268,21 @@ class ContestantSubmits extends BaseControl {
 
         $submit = $this->submitService->findByContestant($ctId, $taskId);
         if (!$submit) {
-            $submit = $this->submitService->createNew();
+            $this->submitService->createNewModel($data);
+        } else {
+            $this->submitService->updateModel2($submit, $data);
         }
 
-        $this->submitService->updateModel($submit, $data);
         return $submit;
     }
 
     /**
      * Workaround to perform server-side conversion of dates.
      *
-     * @todo Improve client side so that this is not needed anymore.
      * @param string $source
      * @param bool $parse
      * @return string
+     * @todo Improve client side so that this is not needed anymore.
      */
     private function sourceToFormat($source, $parse = false) {
         switch ($source) {
