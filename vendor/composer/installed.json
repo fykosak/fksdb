@@ -75,17 +75,17 @@
     },
     {
         "name": "nette/caching",
-        "version": "v2.5.8",
-        "version_normalized": "2.5.8.0",
+        "version": "v2.5.9",
+        "version_normalized": "2.5.9.0",
         "source": {
             "type": "git",
             "url": "https://github.com/nette/caching.git",
-            "reference": "7fba7c7ab2585fafb7b31152f2595e1551120555"
+            "reference": "d93ef446836a5a0ff7ef78d5ffebb7fe043f9953"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/nette/caching/zipball/7fba7c7ab2585fafb7b31152f2595e1551120555",
-            "reference": "7fba7c7ab2585fafb7b31152f2595e1551120555",
+            "url": "https://api.github.com/repos/nette/caching/zipball/d93ef446836a5a0ff7ef78d5ffebb7fe043f9953",
+            "reference": "d93ef446836a5a0ff7ef78d5ffebb7fe043f9953",
             "shasum": ""
         },
         "require": {
@@ -105,7 +105,7 @@
         "suggest": {
             "ext-pdo_sqlite": "to use SQLiteStorage or SQLiteJournal"
         },
-        "time": "2018-03-21T11:04:32+00:00",
+        "time": "2019-11-19T18:38:13+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -209,17 +209,17 @@
     },
     {
         "name": "nette/database",
-        "version": "v2.4.8",
-        "version_normalized": "2.4.8.0",
+        "version": "v2.4.9",
+        "version_normalized": "2.4.9.0",
         "source": {
             "type": "git",
             "url": "https://github.com/nette/database.git",
-            "reference": "388b172536f49e93c4b775c0adb1db2233a42c9f"
+            "reference": "ac4fe411062798529194ff6a3808768abc57964f"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/nette/database/zipball/388b172536f49e93c4b775c0adb1db2233a42c9f",
-            "reference": "388b172536f49e93c4b775c0adb1db2233a42c9f",
+            "url": "https://api.github.com/repos/nette/database/zipball/ac4fe411062798529194ff6a3808768abc57964f",
+            "reference": "ac4fe411062798529194ff6a3808768abc57964f",
             "shasum": ""
         },
         "require": {
@@ -237,7 +237,7 @@
             "nette/tester": "^2.0",
             "tracy/tracy": "^2.4"
         },
-        "time": "2018-11-26T15:09:27+00:00",
+        "time": "2019-11-19T18:29:14+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -680,7 +680,8 @@
             "annotation",
             "nette",
             "reflection"
-        ]
+        ],
+        "abandoned": true
     },
     {
         "name": "nette/robot-loader",
@@ -945,17 +946,17 @@
     },
     {
         "name": "nette/utils",
-        "version": "v2.5.3",
-        "version_normalized": "2.5.3.0",
+        "version": "v2.5.4",
+        "version_normalized": "2.5.4.0",
         "source": {
             "type": "git",
             "url": "https://github.com/nette/utils.git",
-            "reference": "17b9f76f2abd0c943adfb556e56f2165460b15ce"
+            "reference": "b343b5749f8c2daa0d15f30380ccdba0579c2ed1"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/nette/utils/zipball/17b9f76f2abd0c943adfb556e56f2165460b15ce",
-            "reference": "17b9f76f2abd0c943adfb556e56f2165460b15ce",
+            "url": "https://api.github.com/repos/nette/utils/zipball/b343b5749f8c2daa0d15f30380ccdba0579c2ed1",
+            "reference": "b343b5749f8c2daa0d15f30380ccdba0579c2ed1",
             "shasum": ""
         },
         "require": {
@@ -976,7 +977,7 @@
             "ext-mbstring": "to use Strings::lower() etc...",
             "ext-xml": "to use Strings::length() etc. when mbstring is not available"
         },
-        "time": "2018-09-18T10:22:16+00:00",
+        "time": "2019-11-19T00:32:02+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
