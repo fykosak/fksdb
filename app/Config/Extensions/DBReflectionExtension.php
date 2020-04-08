@@ -15,6 +15,7 @@ use Nette\DI\ContainerBuilder;
 use Nette\DI\ServiceDefinition;
 use FKSDB\NotImplementedException;
 use Nette\DI\Statement;
+use Tracy\Debugger;
 
 
 /**

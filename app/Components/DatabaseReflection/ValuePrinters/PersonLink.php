@@ -5,7 +5,8 @@ namespace FKSDB\Components\DatabaseReflection\ValuePrinters;
 use FKSDB\ORM\Models\IPersonReferencedModel;
 use FKSDB\ORM\Models\ModelPerson;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\PresenterComponent;
+use Nette\Application\LinkGenerator;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\MemberAccessException;
 use Nette\Utils\Html;
 
@@ -15,23 +16,23 @@ use Nette\Utils\Html;
  */
 class PersonLink extends AbstractValuePrinter {
     /**
-     * @var PresenterComponent
+     * @var LinkGenerator
      */
     private $presenterComponent;
 
     /**
      * PersonLink constructor.
-     * @param PresenterComponent $presenterComponent
+     * @param LinkGenerator $presenterComponent
      */
-    public function __construct(PresenterComponent $presenterComponent) {
+    public function __construct(LinkGenerator $presenterComponent) {
         $this->presenterComponent = $presenterComponent;
     }
 
     /**
-     * @param ModelPerson|IPersonReferencedModel $model
+     * @param null $model
      * @return Html
-     * @throws \Nette\Application\UI\InvalidLinkException
      * @throws BadRequestException
+     * @throws InvalidLinkException
      */
     public function getHtml($model): Html {
         $person = null;
@@ -43,18 +44,10 @@ class PersonLink extends AbstractValuePrinter {
         if (!$person instanceof ModelPerson) {
             throw new BadRequestException();
         }
-        try {
-            if ($this->presenterComponent->getPresenter()->authorized(':Common:Person:detail', ['id' => $person->person_id])) {
-                return Html::el('a')
-                    ->addAttributes(['href' => $this->presenterComponent->getPresenter()->link(':Common:Person:detail', [
-                        'id' => $person->person_id,
-                    ])])
-                    ->addText($person->getFullName());
-            }
-        } catch (MemberAccessException $exception) {
-
-        }
-        return Html::el('span')
+        return Html::el('a')
+            ->addAttributes(['href' => $this->presenterComponent->link(':Common:Person:detail', [
+                'id' => $person->person_id,
+            ])])
             ->addText($person->getFullName());
     }
 }

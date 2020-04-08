@@ -275,7 +275,9 @@ final class AuthenticationPresenter extends BasePresenter {
             ->addRule(Form::FILLED, _('Zadejte heslo.'));
         $form->addSubmit('send', _('Přihlásit'));
         $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
-        $form->onSuccess[] = callback($this, 'loginFormSubmitted');
+        $form->onSuccess[] = function (Form $form) {
+            $this->loginFormSubmitted($form);
+        };
         return $form;
     }
 
@@ -305,12 +307,12 @@ final class AuthenticationPresenter extends BasePresenter {
      * @param $form
      * @throws AbortException
      */
-    public function loginFormSubmitted($form) {
+    public function loginFormSubmitted(Form $form) {
         try {
             $this->user->login($form['id']->value, $form['password']->value);
-            /**
-             * @var ModelLogin $login
-             */
+            \Tracy\Debugger::barDump($this->user);
+            die();
+            /** @var ModelLogin $login */
             $login = $this->user->getIdentity();
             $this->loginBackLinkRedirect($login);
             $this->initialRedirect();

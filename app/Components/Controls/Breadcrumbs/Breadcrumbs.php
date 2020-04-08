@@ -9,7 +9,7 @@ use Nette\Application\PresenterFactory;
 use Nette\Application\Request as AppRequest;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Presenter;
-use Nette\Application\UI\PresenterComponentReflection;
+use Nette\Application\UI\ComponentReflection;
 use Tracy\Debugger;
 use Nette\Http\Request as HttpRequest;
 use Nette\Http\Session;
@@ -236,7 +236,7 @@ class Breadcrumbs extends Control {
                     $identifyingParameters[] = $param->name;
                 }
             }
-            $reflection = new PresenterComponentReflection($presenterClassName);
+            $reflection = new ComponentReflection($presenterClassName);
             $identifyingParameters += array_keys($reflection->getPersistentParams());
 
             $filteredParameters = [];

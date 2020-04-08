@@ -23,16 +23,13 @@ define('CONFIG_DIR', dirname(__FILE__) . DIRECTORY_SEPARATOR . 'config');
 // Configure application
 $configurator = new Configurator();
 $configurator->onCompile[] = function (Configurator $configurator, Compiler $compiler) {
-    //$compiler->addExtension('nette', new \Nette\Config\Extensions\NetteExtension());
+    $compiler->addExtension('DBReflection', new DBReflectionExtension());
     $compiler->addExtension('fksrouter', new RouterExtension());
     $compiler->addExtension('acl', new ACLExtension());
     $compiler->addExtension('navigation', new NavigationExtension());
     $compiler->addExtension('events', new EventsExtension(CONFIG_DIR . '/events.neon'));
     $compiler->addExtension('stalking', new StalkingExtension());
     $compiler->addExtension('payment', new PaymentExtension());
-    $compiler->addExtension('DBReflection', new DBReflectionExtension());
-
-
 };
 
 // Enable Nette Debugger for error visualisation & logging
