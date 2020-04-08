@@ -5,6 +5,7 @@ namespace Authorization;
 use Authorization\Assertions\EventOrgByIdAssertion;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Database\Connection;
+use Nette\Database\Context;
 use Nette\Security\IUserStorage;
 use Nette\Security\Permission;
 use Nette\SmartObject;
@@ -26,7 +27,7 @@ class EventAuthorizator {
     private $acl;
 
     /**
-     * @var Connection
+     * @var Context
      */
     private $db;
 
@@ -40,9 +41,9 @@ class EventAuthorizator {
      * @param IUserStorage $identity
      * @param Permission $acl
      * @param ContestAuthorizator $contestAuthorizator
-     * @param Connection $db
+     * @param Context $db
      */
-    function __construct(IUserStorage $identity, Permission $acl, ContestAuthorizator $contestAuthorizator, Connection $db) {
+    function __construct(IUserStorage $identity, Permission $acl, ContestAuthorizator $contestAuthorizator, Context $db) {
         $this->contestAuthorizator = $contestAuthorizator;
         $this->user = $identity;
         $this->acl = $acl;

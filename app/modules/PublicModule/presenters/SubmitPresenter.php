@@ -108,7 +108,6 @@ class SubmitPresenter extends BasePresenter {
         }
     }
 
-
     /**
      * @return FormControl
      * @throws BadRequestException
@@ -195,7 +194,6 @@ class SubmitPresenter extends BasePresenter {
      * @param mixed $form
      * @throws BadRequestException
      * @throws AbortException
-     * @throws \Exception
      * @internal
      */
     public function handleUploadFormSuccess($form) {

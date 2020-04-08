@@ -170,8 +170,8 @@ abstract class Machine {
      * @throws BadRequestException
      * @throws Exception
      */
-    private function execute(Transition $transition, IStateModel $model): IStateModel {
-        if (!$this->connection->inTransaction()) {
+    private function execute(Transition $transition, IStateModel $model = null): IStateModel {
+        if (!$this->connection->getPdo()->inTransaction()) {
             $this->connection->beginTransaction();
         }
         try {
@@ -235,9 +235,7 @@ abstract class Machine {
         /**
          * @var IStateModel|IModel|ActiveRow $model
          */
-        $model = $service->createNew($data);
-        $service->save($model);
-
+        $model = $service->createNewModel($data);
         return $this->execute($transition, $model);
     }
 }

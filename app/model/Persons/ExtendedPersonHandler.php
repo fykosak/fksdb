@@ -5,6 +5,8 @@ namespace Persons;
 use FKSDB\Authentication\AccountManager;
 use BasePresenter;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
+use FKSDB\ORM\AbstractServiceMulti;
+use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\IService;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelPerson;
@@ -19,6 +21,7 @@ use Nette\InvalidStateException;
 use Nette\SmartObject;
 use OrgModule\ContestantPresenter;
 use Tracy\Debugger;
+use Traversable;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -36,7 +39,7 @@ class ExtendedPersonHandler {
     const RESULT_ERROR = 0;
 
     /**
-     * @var \FKSDB\ORM\IService
+     * @var \FKSDB\ORM\IService|AbstractServiceMulti|AbstractServiceSingle
      */
     protected $service;
 
@@ -163,9 +166,7 @@ class ExtendedPersonHandler {
     public final function handleForm(Form $form, IExtendedPersonPresenter $presenter, bool $sendEmail) {
 
         try {
-            if (!$this->connection->beginTransaction()) {
-                throw new ModelException();
-            }
+           $this->connection->beginTransaction();
             $values = $form->getValues();
             $create = !$presenter->getModel();
 
@@ -195,12 +196,13 @@ class ExtendedPersonHandler {
                 throw new ModelException();
             }
 
+
             if ($create) {
                 $msg = $presenter->messageCreate();
             } else {
                 $msg = $presenter->messageEdit();
             }
-            $presenter->flashMessage(sprintf($msg, $person->getFullname()), ContestantPresenter::FLASH_SUCCESS);
+            $presenter->flashMessage(sprintf($msg, $person->getFullName()), ContestantPresenter::FLASH_SUCCESS);
 
             if (!$hasLogin) {
                 return self::RESULT_OK_NEW_LOGIN;
@@ -228,32 +230,29 @@ class ExtendedPersonHandler {
 
     /**
      * @param ModelPerson $person
-     * @param $values
-     * @param $presenter
+     * @param array|Traversable $values
+     * @param IExtendedPersonPresenter $presenter
      */
-    protected function storeExtendedModel(ModelPerson $person, $values, $presenter) {
+    protected function storeExtendedModel(ModelPerson $person, $values, IExtendedPersonPresenter $presenter) {
         if ($this->contest === null || $this->year === null) {
             throw new InvalidStateException('Must set contest and year before storing contestant.');
         }
         // initialize model
         $model = $presenter->getModel();
+        $newData = [];
         if (!$model) {
             $data = [
                 'contest_id' => $this->getContest()->contest_id,
+                'person_id' => $person->getPrimary(),
                 'year' => $this->getYear(),
             ];
-            $model = $this->service->createNew($data);
-            $model->person_id = $person->getPrimary();
+            $model = $this->service->createNewModel($data);
         }
 
         // update data
         if (isset($values[self::CONT_MODEL])) {
             $data = FormUtils::emptyStrToNull($values[self::CONT_MODEL]);
-            $this->service->updateModel($model, $data);
+            $this->service->updateModel2($model, $data);
         }
-
-        // store model
-        $this->service->save($model);
     }
-
 }

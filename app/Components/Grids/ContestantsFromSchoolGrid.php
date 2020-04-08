@@ -19,7 +19,7 @@ use SQL\ViewDataSource;
 class ContestantsFromSchoolGrid extends BaseGrid {
 
     /**
-     * @var Selection
+     * @var ServiceContestant
      */
     private $serviceContestant;
     /**
@@ -46,7 +46,7 @@ class ContestantsFromSchoolGrid extends BaseGrid {
     protected function configure($presenter) {
         parent::configure($presenter);
 
-        $contestants = $this->serviceContestant->getConnection()->table(DbNames::VIEW_CONTESTANT)
+        $contestants = $this->serviceContestant->getContext()->table(DbNames::VIEW_CONTESTANT)
             ->select('*')->where([
                 'v_contestant.school_id' => $this->school->school_id,
             ]);

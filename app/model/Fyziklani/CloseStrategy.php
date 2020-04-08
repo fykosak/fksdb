@@ -77,13 +77,15 @@ class CloseStrategy {
     private function saveResults(array $data, bool $total): Html {
         $log = Html::el('ul');
         foreach ($data as $index => $teamData) {
+            /**
+             * @var ModelFyziklaniTeam $team
+             */
             $team = $teamData['team'];
             if ($total) {
-                $this->serviceFyziklaniTeam->updateModel($team, ['rank_total' => $index + 1]);
+                $this->serviceFyziklaniTeam->updateModel2($team, ['rank_total' => $index + 1]);
             } else {
-                $this->serviceFyziklaniTeam->updateModel($team, ['rank_category' => $index + 1]);
+                $this->serviceFyziklaniTeam->updateModel2($team, ['rank_category' => $index + 1]);
             }
-            $this->serviceFyziklaniTeam->save($team);
             $log->addHtml(Html::el('li')
                 ->addText(_('Team') . $team->name . ':(' . $team->e_fyziklani_team_id . ')' . _('Pořadí') . ': ' . ($index + 1)));
         }

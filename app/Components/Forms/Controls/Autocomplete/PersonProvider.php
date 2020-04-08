@@ -42,13 +42,13 @@ class PersonProvider implements IFilteredDataProvider {
      * @param YearCalculator $yearCalculator
      */
     public function filterOrgs(ModelContest $contest, YearCalculator $yearCalculator) {
-        $currentYear = $yearCalculator->getCurrentYear($contest);
         $this->searchTable = $this->servicePerson->getTable()
             ->where([
-                'org:contest_id' => $contest->contest_id,
-                'org:since <= ?' => $currentYear,
-                'org:until IS NULL OR org:until >= ?' => $currentYear
-            ]);
+                ':org.contest_id' => $contest->contest_id
+            ])
+            ->where(':org.since <= ?', $yearCalculator->getCurrentYear($contest))
+            ->where(':org.until IS NULL OR :org.until <= ?', $yearCalculator->getCurrentYear($contest));
+
     }
 
     /**
@@ -71,7 +71,7 @@ class PersonProvider implements IFilteredDataProvider {
      */
     public function getItemLabel($id) {
         $person = $this->servicePerson->findByPrimary($id);
-        return $person->getFullname();
+        return $person->getFullName();
     }
 
     /**

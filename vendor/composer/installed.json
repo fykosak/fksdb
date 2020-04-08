@@ -208,6 +208,80 @@
         ]
     },
     {
+        "name": "nette/database",
+        "version": "v2.4.9",
+        "version_normalized": "2.4.9.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/nette/database.git",
+            "reference": "ac4fe411062798529194ff6a3808768abc57964f"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/nette/database/zipball/ac4fe411062798529194ff6a3808768abc57964f",
+            "reference": "ac4fe411062798529194ff6a3808768abc57964f",
+            "shasum": ""
+        },
+        "require": {
+            "ext-pdo": "*",
+            "nette/caching": "^2.2",
+            "nette/utils": "^2.4",
+            "php": ">=5.6.0"
+        },
+        "conflict": {
+            "nette/nette": "<2.2"
+        },
+        "require-dev": {
+            "mockery/mockery": "^1.0.0",
+            "nette/di": "^2.4 || ~3.0.0",
+            "nette/tester": "^2.0",
+            "tracy/tracy": "^2.4"
+        },
+        "time": "2019-11-19T18:29:14+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.4-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "src/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause",
+            "GPL-2.0",
+            "GPL-3.0"
+        ],
+        "authors": [
+            {
+                "name": "David Grudl",
+                "homepage": "https://davidgrudl.com"
+            },
+            {
+                "name": "Nette Community",
+                "homepage": "https://nette.org/contributors"
+            }
+        ],
+        "description": "💾 Nette Database: layer with a familiar PDO-like API but much more powerful. Building queries, advanced joins, drivers for MySQL, PostgreSQL, SQLite, MS SQL Server and Oracle.",
+        "homepage": "https://nette.org",
+        "keywords": [
+            "database",
+            "mssql",
+            "mysql",
+            "nette",
+            "notorm",
+            "oracle",
+            "pdo",
+            "postgresql",
+            "queries",
+            "sqlite"
+        ]
+    },
+    {
         "name": "nette/finder",
         "version": "v2.4.2",
         "version_normalized": "2.4.2.0",

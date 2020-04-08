@@ -3,7 +3,8 @@
 namespace FKSDB\ORM\Tables;
 
 use FKSDB\ORM\AbstractServiceMulti;
-use Nette\Database\Connection;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 use Nette\Database\Table\Selection as TableSelection;
 
 /**
@@ -20,10 +21,11 @@ class MultiTableSelection extends TableSelection {
      * MultiTableSelection constructor.
      * @param AbstractServiceMulti $service
      * @param $table
-     * @param Connection $connection
+     * @param Context $connection
+     * @param IConventions $conventions
      */
-    public function __construct(AbstractServiceMulti $service, $table, Connection $connection) {
-        parent::__construct($table, $connection);
+    public function __construct(AbstractServiceMulti $service, $table, Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, $table);
         $this->service = $service;
     }
 

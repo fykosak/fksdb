@@ -55,18 +55,18 @@ abstract class EventTestCase extends DatabaseTestCase {
             $data['end'] = '2016-01-01';
         }
         $this->connection->query('INSERT INTO event', $data);
-        return $this->connection->lastInsertId();
+        return $this->connection->getInsertId();
     }
 
-    protected function createPostRequest($postData, $post = array()) {
-        $post = Helpers::merge($post, array(
+    protected function createPostRequest($postData, $post = []) {
+        $post = Helpers::merge($post, [
                     'action' => 'default',
                     'lang' => 'cs',
                     'contestId' => 1,
                     'year' => 1,
                     'eventId' => $this->eventId,
                     'do' => 'application-form-form-submit',
-        ));
+        ]);
 
         $request = new Request('Public:Application', 'POST', $post, $postData);
         return $request;

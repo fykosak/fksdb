@@ -143,10 +143,10 @@ class ReferencedContainer extends ContainerWithOptions {
     }
 
     /**
-     * @param ArrayHash $conflicts
+     * @param array $conflicts
      * @param null $container
      */
-    public function setConflicts(ArrayHash $conflicts, $container = null) {
+    public function setConflicts(array $conflicts, $container = null) {
         $container = $container ?: $this;
         foreach ($conflicts as $key => $value) {
             $component = $container->getComponent($key, false);

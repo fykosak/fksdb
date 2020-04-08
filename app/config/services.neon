@@ -3,6 +3,9 @@
 #
 
 services:
+    database.database.context: Nette\Database\Context
+    database.database.conventions: Nette\Database\Conventions\DiscoveredConventions
+    database.database.structure: Nette\Database\Structure
     accountManager:
         class: FKSDB\Authentication\AccountManager
         setup:

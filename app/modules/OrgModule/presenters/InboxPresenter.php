@@ -166,9 +166,9 @@ class InboxPresenter extends SeriesPresenter {
 
     public function actionHandout() {
         // This workaround fixes inproper caching of referenced tables.
-        $connection = $this->servicePerson->getConnection();
-        $connection->getCache()->clean([Cache::ALL => true]);
-        $connection->getDatabaseReflection()->setConnection($connection);
+       // $connection = $this->servicePerson->getConnection();
+       // $connection->getCache()->clean(array(Cache::ALL => true));
+       // $connection->getDatabaseReflection()->setConnection($connection);
     }
 
     /* ******************** RENDER ****************/
