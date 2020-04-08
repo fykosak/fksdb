@@ -5,7 +5,7 @@ namespace Events;
 use DatabaseTestCase;
 use MockEnvironment\MockApplicationTrait;
 use Nette\Application\Request;
-use Nette\Config\Helpers;
+use Nette\DI\Config\Helpers;
 use Nette\Database\Row;
 use Tester\Assert;
 

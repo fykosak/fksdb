@@ -21,23 +21,27 @@ use FKSDB\Components\Forms\Factories\Events\ChooserFactory;
 use FKSDB\Components\Forms\Factories\Events\PersonFactory;
 use FKSDB\Components\Grids\Events\LayoutResolver;
 use FKSDB\Config\Expressions\Helpers;
+use FKSDB\Config\NeonSchemaException;
 use FKSDB\Config\NeonScheme;
-use Nette\Config\Helpers as ConfigHelpers;
-use Nette\Config\Loader;
+use Nette\DI\Config\Helpers as ConfigHelpers;
+use Nette\DI\Config\Loader;
+use Nette\DI\CompilerExtension;
 use Nette\DI\Container;
+use Nette\DI\ServiceDefinition;
 use Nette\DI\Statement;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
+use Nette\PhpGenerator\ClassType;
 use Nette\Utils\Arrays;
-use Nette\Utils\PhpGenerator\ClassType;
-use Nette\Utils\PhpGenerator\Method;
+use Nette\PhpGenerator\Method;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class EventsExtension extends \Nette\DI\CompilerExtension {
+class EventsExtension extends CompilerExtension {
 
     const MAIN_FACTORY = 'eventMachine';
     const MAIN_HOLDER = 'eventHolder';
@@ -106,7 +110,7 @@ class EventsExtension extends \Nette\DI\CompilerExtension {
      * Configuration loading
      */
     /**
-     * @throws \FKSDB\Config\NeonSchemaException
+     * @throws NeonSchemaException
      */
     public function loadConfiguration() {
         parent::loadConfiguration();
@@ -220,7 +224,7 @@ class EventsExtension extends \Nette\DI\CompilerExtension {
         $indent = "\t";
         foreach ($definitions as $definitionName => $keys) {
             $machineName = $nameCallback($definitionName);
-            $methodName = Container::getMethodName($machineName, false);
+            $methodName = Container::getMethodName($machineName);
             $resultStmt = "return \$this->$methodName(\$event);";
             $cases = false;
             foreach ($keys as $key) {
@@ -276,24 +280,24 @@ class EventsExtension extends \Nette\DI\CompilerExtension {
     private function createDispatchFactories() {
         $def = $this->getContainerBuilder()->addDefinition(self::MAIN_FACTORY);
 
-        $def->setClass(self::CLASS_MACHINE);
+        $def->setFactory(self::CLASS_MACHINE);
         $def->setParameters(['FKSDB\ORM\Models\ModelEvent event']);
 
         $def = $this->getContainerBuilder()->addDefinition(self::MAIN_HOLDER);
 
-        $def->setClass(self::CLASS_HOLDER);
+        $def->setFactory(self::CLASS_HOLDER);
         $def->setParameters(['FKSDB\ORM\Models\ModelEvent event']);
     }
 
     /**
      * @param ClassType $class
      */
-    public function afterCompile(\Nette\PhpGenerator\ClassType $class) {
-        $methodName = Container::getMethodName(self::MAIN_FACTORY, false);
+    public function afterCompile(ClassType $class) {
+        $methodName = Container::getMethodName(self::MAIN_FACTORY);
         $method = $class->methods[$methodName];
         $this->createDispatchFactoryBody($method, [$this, 'getMachineName']);
 
-        $methodName = Container::getMethodName(self::MAIN_HOLDER, false);
+        $methodName = Container::getMethodName(self::MAIN_HOLDER);
         $method = $class->methods[$methodName];
         $this->createDispatchFactoryBody($method, [$this, 'getHolderName']);
     }
@@ -301,7 +305,7 @@ class EventsExtension extends \Nette\DI\CompilerExtension {
     private function createLayoutResolverFactory() {
         $def = $this->getContainerBuilder()->addDefinition(self::MAIN_RESOLVER);
 
-        $def->setClass(self::CLASS_RESOLVER);
+        $def->setFactory(self::CLASS_RESOLVER);
 
         $parameters = $this->getContainerBuilder()->parameters;
         $templateDir = $parameters['events']['templateDir'];
@@ -315,10 +319,11 @@ class EventsExtension extends \Nette\DI\CompilerExtension {
     private function createTransitionFactory() {
         $factory = $this->getContainerBuilder()->addDefinition($this->getTransitionName());
 
-        $factory->setClass(self::CLASS_TRANSITION, ['%mask%', '%label%']);
+        $factory->setFactory(self::CLASS_TRANSITION, ['%mask%', '%label%']);
 
 
         $parameters = array_keys($this->scheme['transition']);
+
         array_unshift($parameters, 'mask');
         $factory->setParameters($parameters);
 
@@ -333,12 +338,12 @@ class EventsExtension extends \Nette\DI\CompilerExtension {
 
     private function createFieldFactory() {
         $factory = $this->getContainerBuilder()->addDefinition($this->getFieldName());
-        $factory->setClass(self::CLASS_FIELD, ['%name%', '%label%']);
+        $factory->setFactory(self::CLASS_FIELD, ['%name%', '%label%']);
 
         $parameters = array_keys($this->scheme['field']);
         array_unshift($parameters, 'name');
         $factory->setParameters($parameters);
-       $factory->addSetup('setEvaluator', ['@events.expressionEvaluator']);
+        $factory->addSetup('setEvaluator', ['@events.expressionEvaluator']);
         foreach ($parameters as $parameter) {
             switch ($parameter) {
                 case 'name':
@@ -358,7 +363,7 @@ class EventsExtension extends \Nette\DI\CompilerExtension {
     /**
      * @param $name
      * @param $definition
-     * @throws \FKSDB\Config\NeonSchemaException
+     * @throws NeonSchemaException
      */
     private function createMachineFactory($name, $definition) {
         $machineDef = NeonScheme::readSection($definition['machine'], $this->scheme['machine']);
@@ -369,7 +374,7 @@ class EventsExtension extends \Nette\DI\CompilerExtension {
         $factoryName = $this->getMachineName($name);
         $factory = $this->getContainerBuilder()->addDefinition($factoryName);
 
-        $factory->setClass(self::CLASS_MACHINE);
+        $factory->setType(self::CLASS_MACHINE);
 
 
         /*
@@ -416,14 +421,14 @@ class EventsExtension extends \Nette\DI\CompilerExtension {
      * @param $name
      * @param $baseName
      * @param $definition
-     * @return \Nette\DI\ServiceDefinition
-     * @throws \FKSDB\Config\NeonSchemaException
+     * @return ServiceDefinition
+     * @throws NeonSchemaException
      */
     private function createBaseMachineFactory($name, $baseName, $definition) {
         $factoryName = $this->getBaseMachineName($name, $baseName);
         $factory = $this->getContainerBuilder()->addDefinition($factoryName);
 
-        $factory->setClass(self::CLASS_BASE_MACHINE, ['%name%']);
+        $factory->setFactory(self::CLASS_BASE_MACHINE, ['%name%']);
 
 
         $parameters = array_keys($this->scheme['bmInstance']);
@@ -464,7 +469,7 @@ class EventsExtension extends \Nette\DI\CompilerExtension {
     /**
      * @param $name
      * @param $definition
-     * @throws \FKSDB\Config\NeonSchemaException
+     * @throws NeonSchemaException
      */
     private function createHolderFactory($name, $definition) {
         $machineDef = NeonScheme::readSection($definition['machine'], $this->scheme['machine']);
@@ -475,7 +480,7 @@ class EventsExtension extends \Nette\DI\CompilerExtension {
         $factoryName = $this->getHolderName($name);
         $factory = $this->getContainerBuilder()->addDefinition($factoryName);
 
-        $factory->setClass(self::CLASS_HOLDER);
+        $factory->setFactory(self::CLASS_HOLDER);
 
         $factory->setParameters(['FKSDB\ORM\Models\ModelEvent event']);
 
@@ -522,14 +527,14 @@ class EventsExtension extends \Nette\DI\CompilerExtension {
      * @param $definitionName
      * @param $baseName
      * @param $definition
-     * @return \Nette\DI\ServiceDefinition
-     * @throws \FKSDB\Config\NeonSchemaException
+     * @return ServiceDefinition
+     * @throws NeonSchemaException
      */
     private function createBaseHolderFactory($definitionName, $baseName, $definition) {
         $factoryName = $this->getBaseHolderName($definitionName, $baseName);
         $factory = $this->getContainerBuilder()->addDefinition($factoryName);
 
-        $factory->setClass(self::CLASS_BASE_HOLDER, ['%name%']);
+        $factory->setFactory(self::CLASS_BASE_HOLDER, ['%name%']);
 
 
         $parameters = array_keys($this->scheme['bmInstance']);
@@ -577,7 +582,7 @@ class EventsExtension extends \Nette\DI\CompilerExtension {
 
 
             array_unshift($fieldDef, $name);
-            $factory->addSetup('addField', new Statement($this->fieldFactory, $fieldDef));
+            $factory->addSetup('addField', [new Statement($this->fieldFactory, $fieldDef)]);
 
         }
 

@@ -7,7 +7,7 @@ use FKSDB\Config\Extensions\NavigationExtension;
 use FKSDB\Config\Extensions\PaymentExtension;
 use FKSDB\Config\Extensions\RouterExtension;
 use FKSDB\Config\Extensions\StalkingExtension;
-use Nette\Config\Configurator;
+use Nette\Configurator;
 use Nette\Utils\Finder;
 
 define('LIBS_DIR', __DIR__ . '/../libs');

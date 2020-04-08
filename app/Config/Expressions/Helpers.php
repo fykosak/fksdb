@@ -15,6 +15,7 @@ use Nette\DI\Statement;
 use Nette\Reflection\ClassType;
 use Nette\Utils\Arrays;
 use stdClass;
+use Tracy\Debugger;
 use Traversable;
 
 /**
@@ -48,23 +49,24 @@ class Helpers {
      * @return mixed|Statement
      */
     public static function statementFromExpression($expression) {
-        if (!$expression instanceof stdClass) {
+        if ($expression instanceof Statement) {
+           // Debugger::barDump($expression, 'B');
+            $arguments = [];
+            foreach ($expression->arguments as $attribute) {
+                if ($attribute === '...') {
+                    continue;
+                }
+                $arguments[] = self::statementFromExpression($attribute);
+            }
+            $class = Arrays::get(self::$semanticMap, $expression->entity, $expression->entity);
+            if (function_exists($class)) { // workaround for Nette interpretation of entities
+                $class = ['', $class];
+            }
+        //    Debugger::barDump(new Statement($class, $arguments), 'A');
+            return new Statement($class, $arguments);
+        } else {
             return $expression;
         }
-
-        $arguments = [];
-        foreach ($expression->attributes as $attribute) {
-            if ($attribute === '...') {
-                continue;
-            }
-            $arguments[] = self::statementFromExpression($attribute);
-        }
-
-        $class = Arrays::get(self::$semanticMap, $expression->value, $expression->value);
-        if (function_exists($class)) { // workaround for Nette interpretation of entities
-            $class = ['', $class];
-        }
-        return new Statement($class, $arguments);
     }
 
     /**
@@ -75,25 +77,43 @@ class Helpers {
      * @return mixed
      */
     public static function evalExpression($expression, Container $container) {
-        if (!$expression instanceof stdClass) {
+        Debugger::barDump($expression, '1');
+        if ($expression instanceof stdClass) {
+            $arguments = [];
+            foreach ($expression->attributes as $attribute) {
+                if ($attribute === '...') {
+                    continue;
+                }
+                $arguments[] = self::evalExpression($attribute, $container);
+            }
+
+            $entity = Arrays::get(self::$semanticMap, $expression->value, $expression->value);
+            if (function_exists($entity)) {
+                return call_user_func_array($entity, $arguments);
+            } else {
+                $rc = ClassType::from($entity);
+                return $rc->newInstanceArgs(DIHelpers::autowireArguments($rc->getConstructor(), $arguments, $container));
+            }
+        } elseif ($expression instanceof Statement) {
+            $arguments = [];
+            foreach ($expression->arguments as $attribute) {
+                if ($attribute === '...') {
+                    continue;
+                }
+                $arguments[] = self::evalExpression($attribute, $container);
+            }
+
+            $entity = Arrays::get(self::$semanticMap, $expression->entity, $expression->entity);
+            if (function_exists($entity)) {
+                return call_user_func_array($entity, $arguments);
+            } else {
+                $rc = ClassType::from($entity);
+                return $rc->newInstanceArgs(DIHelpers::autowireArguments($rc->getConstructor(), $arguments, $container));
+            }
+        } else {
             return $expression;
         }
 
-        $arguments = [];
-        foreach ($expression->attributes as $attribute) {
-            if ($attribute === '...') {
-                continue;
-            }
-            $arguments[] = self::evalExpression($attribute, $container);
-        }
-
-        $entity = Arrays::get(self::$semanticMap, $expression->value, $expression->value);
-        if (function_exists($entity)) {
-            return call_user_func_array($entity, $arguments);
-        } else {
-            $rc = ClassType::from($entity);
-            return $rc->newInstanceArgs(DIHelpers::autowireArguments($rc->getConstructor(), $arguments, $container));
-        }
     }
 
     /**

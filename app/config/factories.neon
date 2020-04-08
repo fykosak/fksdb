@@ -27,7 +27,3 @@ services:
 #transition
     transitionsFactory: FKSDB\Transitions\TransitionsFactory
 
-
-factories:
-# (so far unused)
-

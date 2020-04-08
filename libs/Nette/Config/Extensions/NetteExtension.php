@@ -266,7 +266,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 				);
 			}
 
-			if (!$container->parameters['productionMode'] && $info['debugger']) {
+		/*	if (!$container->parameters['productionMode'] && $info['debugger']) {
 				$panel = $container->addDefinition($this->prefix("database.{$name}ConnectionPanel"))
 					->setClass('Nette\Database\Diagnostics\ConnectionPanel')
 					->setAutowired(FALSE)
@@ -275,7 +275,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 					->addSetup('Nette\Diagnostics\Debugger::$bar->addPanel(?)', array('@self'));
 
 				$connection->addSetup('$service->onQuery[] = ?', array(array($panel, 'logQuery')));
-			}
+			}*/
 		}
 	}
 

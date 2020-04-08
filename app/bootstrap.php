@@ -9,7 +9,7 @@ use FKSDB\Config\Extensions\RouterExtension;
 use FKSDB\Config\Extensions\StalkingExtension;
 use JanTvrdik\Components\DatePicker;
 use Kdyby\Extension\Forms\Replicator\Replicator;
-use Nette\Config\Configurator;
+use Nette\Configurator;
 use Nette\Forms\Container;
 use Nette\Utils\Finder;
 
@@ -26,6 +26,10 @@ $configurator->onCompile[] = function (Configurator $configurator, \Nette\DI\Com
     $compiler->addExtension('acl', new ACLExtension());
     $compiler->addExtension('navigation', new NavigationExtension());
     $compiler->addExtension('events', new EventsExtension(CONFIG_DIR . '/events.neon'));
+    $compiler->addExtension('stalking', new StalkingExtension());
+    $compiler->addExtension('payment', new PaymentExtension());
+    $compiler->addExtension('DBReflection', new DBReflectionExtension());
+
 };
 
 // Enable Nette Debugger for error visualisation & logging
