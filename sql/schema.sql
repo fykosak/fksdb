@@ -644,6 +644,8 @@ CREATE TABLE IF NOT EXISTS `task` (
   COMMENT 'Od kdy se smi submitovat',
   `submit_deadline` DATETIME     NULL     DEFAULT NULL
   COMMENT 'Do kdy',
+  `is_quiz` 		BOOLEAN     DEFAULT FALSE
+  COMMENT 'Je uloha soubor kvizu',
   PRIMARY KEY (`task_id`),
   INDEX `contest_id` (`contest_id` ASC),
   UNIQUE INDEX `contest_id_year_series_tasknr` (`contest_id` ASC, `year` ASC, `series` ASC, `tasknr` ASC),
@@ -1460,6 +1462,35 @@ CREATE TABLE IF NOT EXISTS `email_message`
     `sent`             DATETIME     NULL DEFAULT NULL
 )
     ENGINE = 'InnoDB';
+-- -----------------------------------------------------
+-- Table `quiz`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `quiz` (
+  `task_id`         INT(11)      NOT NULL AUTO_INCREMENT,
+  `label`           VARCHAR(16)  NOT NULL
+  COMMENT 'Oznaceni kvizove otazky ve formatu Rocnik-Serie-Uloha-Otazka (napr. 9-7-1-2)',
+  `name_cs`         VARCHAR(255) NULL     DEFAULT NULL
+  COMMENT 'Jmeno otazky',
+  `name_en`         VARCHAR(255) NULL     DEFAULT NULL,
+  `contest_id`      INT(11)      NOT NULL
+  COMMENT 'Seminar',
+  `year`            TINYINT(4)   NOT NULL
+  COMMENT 'Rocnik seminare',
+  `series`          TINYINT(4)   NOT NULL
+  COMMENT 'Serie',
+  `tasknr`          TINYINT(4)   NULL     DEFAULT NULL
+  COMMENT 'Uloha',
+  `question`          TINYINT(4)   NULL     DEFAULT NULL
+  COMMENT 'Otazka',
+  `points`          TINYINT(4)   NULL     DEFAULT NULL
+  COMMENT 'Pocet bodu',
+  `correct_answer`    VARCHAR(1)     NULL     DEFAULT NULL
+  COMMENT 'Spravna odpoved',
+  PRIMARY KEY (`quiz_id`),
+  INDEX `contest_id` (`contest_id` ASC),
+  UNIQUE INDEX `contest_id_year_series_tasknr_question` (`contest_id` ASC, `year` ASC, `series` ASC, `tasknr` ASC, `question` ASC),
+)
+  ENGINE = 'InnoDB';
 
 SET SQL_MODE = @OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS = @OLD_FOREIGN_KEY_CHECKS;

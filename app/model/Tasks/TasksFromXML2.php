@@ -79,15 +79,17 @@ class TasksFromXML2 extends Stage {
         $year = $this->data->getYear();
         $series = $this->data->getSeries();
         $tasknr = (int) (string) $XMLTask->number;
+        $is_quiz = isset($XMLTask['quiz']) ? 1 : 0;
 
         // obtain FKSDB\ORM\Models\ModelTask
-        $task = $this->taskService->findBySeries($contest, $year, $series, $tasknr);
+        $task = $this->taskService->findBySeries($contest, $year, $series, $tasknr, $is_quiz);
         if ($task == null) {
             $task = $this->taskService->createNew(array(
                 'contest_id' => $contest->contest_id,
                 'year' => $year,
                 'series' => $series,
                 'tasknr' => $tasknr,
+                'is_quiz' => $is_quiz,
             ));
         }
 

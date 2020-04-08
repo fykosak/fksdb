@@ -73,7 +73,7 @@ class SeriesCalculator {
         //TODO allow variance?
 		//Implementation of prserie
 		if ($contest->contest_id == 2 && $year >= 9) {
-			return 9;
+			return 8;
 		} else {
 			return 6;
 		}
