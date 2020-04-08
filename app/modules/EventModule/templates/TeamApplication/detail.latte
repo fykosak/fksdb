@@ -74,5 +74,5 @@
     {include ../AbstractApplication/applicationControl.latte}
     <hr/>
     <h2>{_'Seating'}</h2>
-    {control seating:team $event,$model->getPrimary(),$model->game_lang}
+    {control seating:team $event,$model->getPrimary(),$model->game_lang?:'cs'}
 {/block}
