@@ -70,7 +70,7 @@ class SingleEventSource implements IHolderSource {
         $this->event = $event;
         $this->container = $container;
 
-        $this->dummyHolder = $this->container->createEventHolder($this->event);
+        $this->dummyHolder = $this->container->createServiceEventHolder($this->event);
         $primaryHolder = $this->dummyHolder->getPrimaryHolder();
         $eventIdColumn = $primaryHolder->getEventId();
         $this->primarySelection = $primaryHolder->getService()->getTable()->where($eventIdColumn, $this->event->getPrimary());
@@ -140,7 +140,7 @@ class SingleEventSource implements IHolderSource {
         }
         foreach ($this->primaryModels as $primaryPK => $primaryModel) {
             /** @var Holder $holder */
-            $holder = $this->container->createEventHolder($this->event);
+            $holder = $this->container->createServiceEventHolder($this->event);
             $holder->setModel($primaryModel, isset($cache[$primaryPK]) ? $cache[$primaryPK] : []);
             $this->holders[$primaryPK] = $holder;
         }

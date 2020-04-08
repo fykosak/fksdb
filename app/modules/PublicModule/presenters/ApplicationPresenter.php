@@ -372,7 +372,7 @@ class ApplicationPresenter extends BasePresenter {
      */
     private function getHolder() {
         if (!$this->holder) {
-            $this->holder = $this->container->createEventHolder($this->getEvent());
+            $this->holder = $this->container->createServiceEventHolder($this->getEvent());
         }
         return $this->holder;
     }

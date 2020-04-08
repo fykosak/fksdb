@@ -95,7 +95,7 @@ class ImportHandler {
                 }
             }
 
-            $holder = isset($holdersMap[$keyValue]) ? $holdersMap[$keyValue] : $this->container->createEventHolder($this->source->getEvent());
+            $holder = isset($holdersMap[$keyValue]) ? $holdersMap[$keyValue] : $this->container->createServiceEventHolder($this->source->getEvent());
             try {
                 if ($transitions == ApplicationHandler::STATE_OVERWRITE) {
                     $handler->store($holder, $values);

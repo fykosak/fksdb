@@ -34,7 +34,7 @@ class InitSource extends AggregatedPersonSource implements IHolderSource {
      */
     public function processEvent(ModelEvent $event) {
 
-        $holder = $this->container->createEventHolder($event);
+        $holder = $this->container->createServiceEventHolder($event);
         $holder->setModel();
 
         return $holder;

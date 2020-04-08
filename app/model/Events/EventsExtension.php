@@ -34,6 +34,8 @@ use Nette\InvalidStateException;
 use Nette\PhpGenerator\ClassType;
 use Nette\Utils\Arrays;
 use Nette\PhpGenerator\Method;
+use Nette\Utils\Random;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -91,8 +93,6 @@ class EventsExtension extends CompilerExtension {
      * @var array[baseMachineFullName] => expanded configuration
      */
     private $baseMachineConfig = [];
-    private $transtionFactory;
-    private $fieldFactory;
     private $schemeFile;
     private $baseDefinitions = ['machines' => [], 'holders' => []];
 
@@ -119,8 +119,6 @@ class EventsExtension extends CompilerExtension {
         $config = $this->getConfig();
 
         $this->createDispatchFactories();
-        $this->createTransitionFactory();
-        $this->createFieldFactory();
 
         foreach ($config as $definitionName => $definition) {
             $this->validateConfigName($definitionName);
@@ -299,6 +297,7 @@ class EventsExtension extends CompilerExtension {
         $methodName = Container::getMethodName(self::MAIN_HOLDER);
         $method = $class->methods[$methodName];
         $this->createDispatchFactoryBody($method, [$this, 'getHolderName']);
+
     }
 
     private function createLayoutResolverFactory() {
@@ -311,48 +310,46 @@ class EventsExtension extends CompilerExtension {
         $def->setArguments([$templateDir, $this->definitionsMap]); //TODO!!
     }
 
-    /*
-     * Shared factories
+
+    /**
+     * @param $definition
+     * @return ServiceDefinition
      */
+    private function createTransitionService(array $definition): ServiceDefinition {
+        $transition = $this->getContainerBuilder()
+            ->addDefinition(Random::generate(20))
+            ->setFactory(self::CLASS_TRANSITION, [$definition['0'], $definition['label']]);
 
-    private function createTransitionFactory() {
-        $factory = $this->getContainerBuilder()->addDefinition($this->getTransitionName());
+        $transition->addSetup('setCondition', [$definition['condition']]);
+        $transition->addSetup('setEvaluator', ['@events.expressionEvaluator']);
+        $transition->addSetup('$service->onExecuted = array_merge($service->onExecuted, ?)', [$definition['onExecuted']]);
+        $transition->addSetup('setDangerous', [$definition['dangerous']]);
+        $transition->addSetup('setVisible', [$definition['visible']]);
 
-        $factory->setFactory(self::CLASS_TRANSITION, ['%mask%', '%label%']);
-
-
-        $parameters = array_keys($this->scheme['transition']);
-
-        array_unshift($parameters, 'mask');
-        $factory->setParameters($parameters);
-
-        $factory->addSetup('setCondition', ['%condition%']);
-        $factory->addSetup('setEvaluator', ['@events.expressionEvaluator']);
-        $factory->addSetup('$service->onExecuted = array_merge($service->onExecuted, ?)', ['%onExecuted%']);
-        $factory->addSetup('setDangerous', ['%dangerous%']);
-        $factory->addSetup('setVisible', ['%visible%']);
-
-        $this->transtionFactory = $factory;
+        return $transition;
     }
 
-    private function createFieldFactory() {
-        $factory = $this->getContainerBuilder()->addDefinition($this->getFieldName());
-        $factory->setFactory(self::CLASS_FIELD, ['%name%', '%label%']);
 
-        $parameters = array_keys($this->scheme['field']);
-        array_unshift($parameters, 'name');
-        $factory->setParameters($parameters);
-        $factory->addSetup('setEvaluator', ['@events.expressionEvaluator']);
-        foreach ($parameters as $parameter) {
-            switch ($parameter) {
+    /**
+     * @param array $fieldDefinition
+     * @return ServiceDefinition
+     */
+    private function createFieldService(array $fieldDefinition): ServiceDefinition {
+        $field = $this->getContainerBuilder()
+            ->addDefinition(Random::generate('20'))
+            ->setFactory(self::CLASS_FIELD, [$fieldDefinition['0'], $fieldDefinition['label']]);
+
+        $field->addSetup('setEvaluator', ['@events.expressionEvaluator']);
+        foreach ($fieldDefinition as $key => $parameter) {
+            switch ($key) {
                 case 'name':
                 case 'label':
                     break;
                 default:
-                    $factory->addSetup('set' . ucfirst($parameter), ["%$parameter%"]);
+                    $field->addSetup('set' . ucfirst($key), [$parameter]);
             }
         }
-        $this->fieldFactory = $factory;
+        return $field;
     }
 
     /*
@@ -451,9 +448,7 @@ class EventsExtension extends CompilerExtension {
             }
 
             array_unshift($transitionDef, $mask);
-            $defka = $this->transtionFactory;
-            $stmt = new Statement($defka, $transitionDef);
-            $factory->addSetup('addTransition', [$stmt]);
+            $factory->addSetup('addTransition', [$this->createTransitionService($transitionDef)]);
         }
 
         return $factory;
@@ -553,15 +548,14 @@ class EventsExtension extends CompilerExtension {
         }
         $factory->addSetup('setParamScheme', [$paramScheme]);
 
-
         foreach (Arrays::grep($parameters, '/^modifiable|visible|label|description$/') as $parameter) {
+            Debugger::barDump($definition);
             $factory->addSetup('set' . ucfirst($parameter), ["%$parameter%"]);
         }
 
         $hasNondetermining = false;
         foreach ($definition['fields'] as $name => $fieldDef) {
             $fieldDef = NeonScheme::readSection($fieldDef, $this->scheme['field']);
-         //   @Debugger::barDump($fieldDef['factory']->arguments[0]);
             if ($fieldDef['determining']) {
                 if ($fieldDef['required']) {
                     throw new MachineDefinitionException("Field '$name' cannot be both required and determining. Set required on the base holder.");
@@ -574,8 +568,7 @@ class EventsExtension extends CompilerExtension {
                 $hasNondetermining = true;
             }
             array_unshift($fieldDef, $name);
-            $factory->addSetup('addField', [new Statement($this->fieldFactory, $fieldDef)]);
-
+            $factory->addSetup('addField', [$this->createFieldService($fieldDef)]);
         }
 
         $factory->addSetup('inferEvent', ['%event%']); // must be after setParamScheme
@@ -619,20 +612,6 @@ class EventsExtension extends CompilerExtension {
      */
     private function getBaseHolderName($name, $baseName) {
         return $this->prefix(self::BASE_HOLDER_PREFIX . $name . '_' . $baseName);
-    }
-
-    /**
-     * @return string
-     */
-    private function getTransitionName() {
-        return $this->prefix(self::TRANSITION_FACTORY);
-    }
-
-    /**
-     * @return string
-     */
-    private function getFieldName() {
-        return $this->prefix(self::FIELD_FACTORY);
     }
 
 }

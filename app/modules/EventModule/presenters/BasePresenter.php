@@ -85,7 +85,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      */
     protected function getHolder(): Holder {
         if (!$this->holder) {
-            $this->holder = $this->getContext()->createEventHolder($this->getEvent());
+            $this->holder = $this->getContext()->createServiceEventHolder($this->getEvent());
         }
         return $this->holder;
     }
