@@ -14,8 +14,6 @@ use Nette\DI\Helpers as DIHelpers;
 use Nette\DI\Statement;
 use Nette\Reflection\ClassType;
 use Nette\Utils\Arrays;
-use stdClass;
-use Tracy\Debugger;
 use Traversable;
 
 /**
@@ -45,7 +43,7 @@ class Helpers {
     /**
      * Transforms into dynamic expression tree built from FKSDB\Expressions\*.
      *
-     * @param stdClass $expression
+     * @param Statement|mixed $expression
      * @return mixed|Statement
      */
     public static function statementFromExpression($expression) {
@@ -81,24 +79,7 @@ class Helpers {
      * @return mixed
      */
     public static function evalExpression($expression, Container $container) {
-        Debugger::barDump($expression, '1');
-        if ($expression instanceof stdClass) {
-            $arguments = [];
-            foreach ($expression->attributes as $attribute) {
-                if ($attribute === '...') {
-                    continue;
-                }
-                $arguments[] = self::evalExpression($attribute, $container);
-            }
-
-            $entity = Arrays::get(self::$semanticMap, $expression->value, $expression->value);
-            if (function_exists($entity)) {
-                return call_user_func_array($entity, $arguments);
-            } else {
-                $rc = ClassType::from($entity);
-                return $rc->newInstanceArgs(DIHelpers::autowireArguments($rc->getConstructor(), $arguments, $container));
-            }
-        } elseif ($expression instanceof Statement) {
+       if ($expression instanceof Statement) {
             $arguments = [];
             foreach ($expression->arguments as $attribute) {
                 if ($attribute === '...') {
@@ -117,7 +98,6 @@ class Helpers {
         } else {
             return $expression;
         }
-
     }
 
     /**

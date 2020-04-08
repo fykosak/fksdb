@@ -8,6 +8,7 @@
 namespace Nette\Caching;
 
 use Nette;
+use Tracy\Debugger;
 
 
 /**
@@ -349,7 +350,6 @@ class Cache
 		}
 		return true;
 	}
-
 
 	/**
 	 * Checks CONSTS dependency.

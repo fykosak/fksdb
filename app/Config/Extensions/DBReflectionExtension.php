@@ -15,7 +15,7 @@ use Nette\DI\ContainerBuilder;
 use Nette\DI\ServiceDefinition;
 use FKSDB\NotImplementedException;
 use Nette\DI\Statement;
-use stdClass;
+
 
 /**
  * Class StalkingExtension
@@ -189,9 +189,6 @@ class DBReflectionExtension extends CompilerExtension {
     private function translate($value): string {
         if (is_string($value)) {
             return $value;
-        }
-        if ($value instanceof stdClass) {
-            return ($value->value)(...$value->attributes);
         }
         if ($value instanceof Statement) {
             return ($value->entity)(...$value->arguments);

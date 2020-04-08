@@ -8,6 +8,7 @@
 namespace Nette\Reflection;
 
 use Nette;
+use Tracy\Debugger;
 
 
 /**
