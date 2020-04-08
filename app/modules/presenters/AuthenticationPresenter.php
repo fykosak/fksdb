@@ -95,9 +95,6 @@ final class AuthenticationPresenter extends BasePresenter {
     /**
      * @param FacebookAuthenticator $facebookAuthenticator
      */
-    /**
-     * @param FacebookAuthenticator $facebookAuthenticator
-     */
     public function injectFacebookAuthenticator(FacebookAuthenticator $facebookAuthenticator) {
         $this->facebookAuthenticator = $facebookAuthenticator;
     }
@@ -105,26 +102,15 @@ final class AuthenticationPresenter extends BasePresenter {
     /**
      * @param ServiceAuthToken $serviceAuthToken
      */
-    /**
-     * @param ServiceAuthToken $serviceAuthToken
-     */
     public function injectServiceAuthToken(ServiceAuthToken $serviceAuthToken) {
         $this->serviceAuthToken = $serviceAuthToken;
     }
-
-    /**
-     * @param IGlobalSession $globalSession
-     */
     /**
      * @param IGlobalSession $globalSession
      */
     public function injectGlobalSession(IGlobalSession $globalSession) {
         $this->globalSession = $globalSession;
     }
-
-    /**
-     * @param PasswordAuthenticator $passwordAuthenticator
-     */
     /**
      * @param PasswordAuthenticator $passwordAuthenticator
      */
@@ -135,26 +121,15 @@ final class AuthenticationPresenter extends BasePresenter {
     /**
      * @param AccountManager $accountManager
      */
-    /**
-     * @param AccountManager $accountManager
-     */
     public function injectAccountManager(AccountManager $accountManager) {
         $this->accountManager = $accountManager;
     }
-
-    /**
-     * @param MailTemplateFactory $mailTemplateFactory
-     */
     /**
      * @param MailTemplateFactory $mailTemplateFactory
      */
     public function injectMailTemplateFactory(MailTemplateFactory $mailTemplateFactory) {
         $this->mailTemplateFactory = $mailTemplateFactory;
     }
-
-    /**
-     * @param ServicePerson $servicePerson
-     */
     /**
      * @param ServicePerson $servicePerson
      */
@@ -305,7 +280,9 @@ final class AuthenticationPresenter extends BasePresenter {
 
         $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
 
-        $form->onSuccess[] = callback($this, 'recoverFormSubmitted');
+        $form->onSuccess[] = function (Form $form) {
+            $this->recoverFormSubmitted($form);
+        };
         return $form;
     }
 
@@ -328,13 +305,9 @@ final class AuthenticationPresenter extends BasePresenter {
     /**
      * @param Form $form
      * @throws AbortException
-     */
-    /**
-     * @param Form $form
-     * @throws AbortException
      * @throws Exception
      */
-    public function recoverFormSubmitted(Form $form) {
+    private function recoverFormSubmitted(Form $form) {
         $connection = $this->serviceAuthToken->getConnection();
         try {
             $values = $form->getValues();

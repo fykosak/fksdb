@@ -4,7 +4,7 @@ $container = require '../bootstrap.php';
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Application\Responses\TextResponse;
-use Nette\Templating\ITemplate;
+use Nette\Application\UI\ITemplate;
 use Tester\Assert;
 
 class ApplicationPresenterTest extends ApplicationPresenterDsefTestCase {

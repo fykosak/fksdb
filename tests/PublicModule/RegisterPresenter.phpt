@@ -7,7 +7,7 @@ use Nette\Application\IPresenterFactory;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
 use Nette\DI\Container;
-use Nette\Templating\ITemplate;
+use Nette\Application\UI\ITemplate;
 use PublicModule\RegisterPresenter;
 use Tester\Assert;
 

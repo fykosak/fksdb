@@ -5,7 +5,7 @@ namespace FKSDB\Components\Controls\Upload;
 use FKSDB\Components\Controls\BaseControl;
 use FKSDB\Submits\SeriesTable;
 use Nette\DI\Container;
-use Nette\Templating\ITemplate;
+use Nette\Application\UI\ITemplate;
 
 /**
  * Class SeriesTableControl
