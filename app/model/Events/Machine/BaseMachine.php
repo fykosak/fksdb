@@ -2,16 +2,14 @@
 
 namespace Events\Machine;
 
-use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
-use Nette\InvalidStateException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class BaseMachine extends FreezableObject {
+class BaseMachine {
 
     const STATE_INIT = '__init';
     const STATE_TERMINATED = '__terminated';
@@ -57,7 +55,6 @@ class BaseMachine extends FreezableObject {
      * @param $label
      */
     public function addState($state, $label) {
-        $this->updating();
         $this->states[$state] = $label;
     }
 
@@ -65,7 +62,6 @@ class BaseMachine extends FreezableObject {
      * @param Transition $transition
      */
     public function addTransition(Transition $transition) {
-        $this->updating();
         $transition->setBaseMachine($this);
         $transition->freeze();
 
@@ -84,9 +80,6 @@ class BaseMachine extends FreezableObject {
      * @param $induced
      */
     public function addInducedTransition($transitionMask, $induced) {
-        if (!$this->isFrozen()) {
-            throw new InvalidStateException('Cannot add induced transitions to unfreezed base machine.');
-        }
         foreach ($this->getMatchingTransitions($transitionMask) as $transition) {
             foreach ($induced as $machineName => $state) {
                 $targetMachine = $this->getMachine()->getBaseMachine($machineName);

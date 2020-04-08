@@ -4,7 +4,6 @@ namespace CommonModule;
 
 use FKSDB\ChartPresenterTrait;
 use FKSDB\Components\Controls\Chart\TotalPersonsChartControl;
-use Nette\Application\BadRequestException;
 
 /**
  * Class ChartPresenter

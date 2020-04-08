@@ -9,7 +9,6 @@ use Authorization\Assertions\QIDAssertion;
 use Authorization\Assertions\StoredQueryTagAssertion;
 use FKSDB\Config\Expressions\Helpers;
 use Nette\Security\Permission;
-use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

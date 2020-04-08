@@ -5,7 +5,6 @@ namespace FKSDB\Components\Grids;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServiceContestant;
-use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;

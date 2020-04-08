@@ -12,11 +12,9 @@ use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\DI\Container;
 use Nette\Localization\ITranslator;
-use Nette\Templating\FileTemplate;
 /**
  * Class MassTransitionsControl
  * @package FKSDB\Components\Events
- * @property FileTemplate $template
  */
 class MassTransitionsControl extends Control {
     /**

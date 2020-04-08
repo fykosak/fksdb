@@ -5,12 +5,11 @@ namespace FKSDB\Components\DatabaseReflection;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
-use Nette\Templating\FileTemplate;
 
 /**
  * Class DetailComponent
  * @package FKSDB\Components\DatabaseReflection
- * @property FileTemplate $template
+ *
  */
 class DetailComponent extends Control {
     /**

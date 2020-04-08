@@ -16,7 +16,6 @@ use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
-use Nette\Templating\FileTemplate;
 use Nette\Utils\Random;
 use Utils;
 
@@ -134,9 +133,6 @@ class Breadcrumbs extends Control {
                 'title' => $naviRequest->title,
             ];
         }
-        /**
-         * @var FileTemplate $template
-         */
         $template = $this->getTemplate();
         $template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Breadcrumbs.latte');
         $template->path = $path;

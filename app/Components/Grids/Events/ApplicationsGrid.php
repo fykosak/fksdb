@@ -15,7 +15,6 @@ use Nette\Application\UI\Presenter;
 use Nette\ComponentModel\IComponent;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
-use Nette\Templating\ITemplate;
 use Nette\Utils\Strings;
 
 

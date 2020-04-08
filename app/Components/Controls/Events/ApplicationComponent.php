@@ -16,8 +16,6 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
-use Nette\Templating\FileTemplate;
-use Nette\Templating\ITemplate;
 use Nette\Utils\JsonException;
 
 /**
@@ -92,12 +90,9 @@ class ApplicationComponent extends Control {
     }
 
     /**
-     * @return FileTemplate|ITemplate
+     * @return \Nette\Application\UI\ITemplate
      */
     protected function createTemplate() {
-        /**
-         * @var FileTemplate $template
-         */
         $template = parent::createTemplate();
         $template->setTranslator($this->presenter->getTranslator());
         return $template;

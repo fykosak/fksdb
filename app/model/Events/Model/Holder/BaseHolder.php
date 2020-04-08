@@ -11,7 +11,6 @@ use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
 use FKSDB\ORM\Models\ModelEvent;
-use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use Nette\Neon\Neon;
@@ -22,7 +21,7 @@ use Nette\Utils\Arrays;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class BaseHolder extends FreezableObject {
+class BaseHolder {
 
     const STATE_COLUMN = 'status';
     const EVENT_COLUMN = 'event_id';
@@ -136,7 +135,6 @@ class BaseHolder extends FreezableObject {
      * @param Field $field
      */
     public function addField(Field $field) {
-        $this->updating();
         $field->setBaseHolder($this);
 
         $name = $field->getName();
@@ -161,7 +159,6 @@ class BaseHolder extends FreezableObject {
      * @param Holder $holder
      */
     public function setHolder(Holder $holder) {
-        $this->updating();
         $this->holder = $holder;
     }
 
@@ -169,7 +166,6 @@ class BaseHolder extends FreezableObject {
      * @param $modifiable
      */
     public function setModifiable($modifiable) {
-        $this->updating();
         $this->modifiable = $modifiable;
     }
 
@@ -177,7 +173,6 @@ class BaseHolder extends FreezableObject {
      * @param $visible
      */
     public function setVisible($visible) {
-        $this->updating();
         $this->visible = $visible;
     }
 
@@ -200,7 +195,6 @@ class BaseHolder extends FreezableObject {
      * @throws \FKSDB\Config\NeonSchemaException
      */
     private function setEvent(ModelEvent $event) {
-        $this->updating();
         $this->event = $event;
         $this->cacheParameters();
     }
@@ -228,7 +222,6 @@ class BaseHolder extends FreezableObject {
      * @param $paramScheme
      */
     public function setParamScheme($paramScheme) {
-        $this->updating();
         $this->paramScheme = $paramScheme;
     }
 
@@ -257,7 +250,6 @@ class BaseHolder extends FreezableObject {
      * @param DataValidator $validator
      */
     public function setValidator(DataValidator $validator) {
-        $this->updating();
         $this->validator = $validator;
     }
 
@@ -352,7 +344,6 @@ class BaseHolder extends FreezableObject {
      * @param \FKSDB\ORM\IService $service
      */
     public function setService(IService $service) {
-        $this->updating();
         $this->service = $service;
     }
 
@@ -367,7 +358,6 @@ class BaseHolder extends FreezableObject {
      * @param $label
      */
     public function setLabel($label) {
-        $this->updating();
         $this->label = $label;
     }
 
@@ -382,7 +372,6 @@ class BaseHolder extends FreezableObject {
      * @param $description
      */
     public function setDescription($description) {
-        $this->updating();
         $this->description = $description;
     }
 
@@ -397,7 +386,6 @@ class BaseHolder extends FreezableObject {
      * @param $joinOn
      */
     public function setJoinOn($joinOn) {
-        $this->updating();
         $this->joinOn = $joinOn;
     }
 
@@ -412,7 +400,6 @@ class BaseHolder extends FreezableObject {
      * @param $joinTo
      */
     public function setJoinTo($joinTo) {
-        $this->updating();
         $this->joinTo = $joinTo;
     }
 
@@ -427,7 +414,6 @@ class BaseHolder extends FreezableObject {
      * @param $personIds
      */
     public function setPersonIds($personIds) {
-        $this->updating();
         if (!$this->getService()) {
             throw new InvalidStateException('Call serService prior setting person IDs.');
         }

@@ -7,12 +7,11 @@ use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
-use Nette\Templating\FileTemplate;
 
 /**
  * Class DetailControl
  * @package FKSDB\Components\Forms\Controls\Payment
- * @property FileTemplate $template
+ *
  */
 class ItemControl extends Control {
     /**

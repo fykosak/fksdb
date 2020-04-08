@@ -2,7 +2,6 @@
 
 namespace Authentication;
 
-use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceLogin;

@@ -1,15 +1,12 @@
-[submodule "libs/facebook-sdk"]	
-	path = libs/facebook-sdk	
-	url = https://github.com/facebook/facebook-php-sdk.git		
-[submodule "libs/BootstrapFormRenderer"]	
-	path = libs/BootstrapFormRenderer	
-	url = https://github.com/Werkov/BootstrapFormRenderer.git	
-[submodule "libs/Nette-ajax"]	
-	path = libs/Nette-ajax	
-	url = https://github.com/vojtech-dobes/nette.ajax.js.git	
-[submodule "libs/jquery.confirm"]	
-	path = libs/jquery.confirm	
-	url = https://github.com/myclabs/jquery.confirm.git	
-[submodule "libs/graph-dracula"]	
-	path = libs/graph-dracula	
-	url = https://github.com/strathausen/dracula.git	
+[submodule "libs/facebook-sdk"]
+	path = libs/facebook-sdk
+	url = https://github.com/facebook/facebook-php-sdk.git
+[submodule "libs/Nette-ajax"]
+	path = libs/Nette-ajax
+	url = https://github.com/vojtech-dobes/nette.ajax.js.git
+[submodule "libs/jquery.confirm"]
+	path = libs/jquery.confirm
+	url = https://github.com/myclabs/jquery.confirm.git
+[submodule "libs/graph-dracula"]
+	path = libs/graph-dracula
+	url = https://github.com/strathausen/dracula.git

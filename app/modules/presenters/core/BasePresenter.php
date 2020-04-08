@@ -27,11 +27,10 @@ use Nette\Application\Responses\JsonResponse;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\ComponentModel\IComponent;
-use Nette\Templating\FileTemplate;
 
 /**
  * Base presenter for all application presenters.
- * @property FileTemplate $template
+ *
  */
 abstract class BasePresenter extends Presenter implements IJavaScriptCollector, IStylesheetCollector, IAutocompleteJSONProvider, INavigablePresenter {
 

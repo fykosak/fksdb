@@ -11,12 +11,11 @@ use FKSDB\ValidationTest\ValidationTest;
 use Nette\Application\UI\Control;
 use Nette\Forms\Form;
 use Nette\Localization\ITranslator;
-use Nette\Templating\FileTemplate;
 
 /**
  * Class ValidationControl
  * @package FKSDB\Components\Controls\Validation
- * @property FileTemplate $template
+ *
  */
 class ValidationControl extends Control {
 

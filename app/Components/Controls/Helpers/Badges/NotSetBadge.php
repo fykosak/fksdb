@@ -2,13 +2,12 @@
 
 namespace FKSDB\Components\Controls\Helpers\Badges;
 
-use Nette\Templating\FileTemplate;
 use Nette\Utils\Html;
 
 /**
  *
  * @package FKSDB\Components\Controls\Stalking\Helpers
- * @property FileTemplate $template
+ *
  */
 class NotSetBadge {
     /**

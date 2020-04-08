@@ -2,12 +2,10 @@
 
 namespace FKSDB\Components\Controls\Stalking;
 
-use Nette\Templating\FileTemplate;
-
 /**
  * Class StalkingComponent
  * @package FKSDB\Components\Controls\Stalking
- * @property FileTemplate $template
+ *
  */
 abstract class AbstractStalkingComponent extends StalkingControl {
 

@@ -11,6 +11,7 @@ use JanTvrdik\Components\DatePicker;
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Application\Responses\TextResponse;
 use Nette\Configurator;
+use Nette\DI\Compiler;
 use Nette\Forms\Container;
 use Nette\Utils\Finder;
 use Tester\Assert;
@@ -36,13 +37,11 @@ require LIBS_DIR . '/../vendor/autoload.php';
 require LIBS_DIR . '/autoload.php';
 error_reporting(~E_USER_DEPRECATED & ~E_USER_WARNING);
 
-//require __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'tester/Tester/bootstrap.php';
-
 define('CONFIG_DIR', APP_DIR . DIRECTORY_SEPARATOR . 'config');
 
 // Configure application
 $configurator = new Configurator();
-$configurator->onCompile[] = function ($configurator, $compiler) {
+$configurator->onCompile[] = function (Configurator $configurator, Compiler $compiler) {
     $compiler->addExtension('fksrouter', new RouterExtension());
     $compiler->addExtension('acl', new ACLExtension());
     $compiler->addExtension('navigation', new NavigationExtension());

@@ -6,13 +6,11 @@ use FKSDB\LangPresenterTrait;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
-use Nette\Templating\FileTemplate;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Jakub Šafin <xellos@fykos.cz>
- * @property FileTemplate $template
  */
 class LanguageChooser extends Control {
     /** @var array */

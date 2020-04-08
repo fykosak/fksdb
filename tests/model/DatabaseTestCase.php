@@ -2,6 +2,7 @@
 
 use Authentication\PasswordAuthenticator;
 use Nette\Database\Connection;
+use Nette\Database\Context;
 use Nette\DI\Container;
 use Tester\Assert;
 use Tester\Environment;
@@ -19,8 +20,8 @@ abstract class DatabaseTestCase extends TestCase {
     private $instanceNo;
 
     function __construct(Container $container) {
-        /** @var \Nette\Database\Context $context */
-        $context = $container->getService('database.database.context');
+        /** @var Context $context */
+        $context = $container->getByType(Context::class);
         $this->connection = $context->getConnection();
         $max = $container->parameters['tester']['dbInstances'];
         $this->instanceNo = (getmypid() % $max) + 1;

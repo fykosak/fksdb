@@ -8,14 +8,11 @@ use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\Application\IPresenter;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
 use FKSDB\NotImplementedException;
-use Nette\Templating\FileTemplate;
-use Nette\Templating\ITemplate;
 use Nette\Utils\Html;
 use NiftyGrid\Components\Button;
 use NiftyGrid\Components\Column;
@@ -73,13 +70,10 @@ abstract class BaseGrid extends Grid {
     }
 
     /**
-     * @return ITemplate
+     * @return \Nette\Application\UI\ITemplate
      */
-    protected function createTemplate(): ITemplate {
-        /**
-         * @var GridPaginator $paginator
-         * @var FileTemplate $template
-         */
+    protected function createTemplate() {
+        /** @var GridPaginator $paginator */
         $paginator = $this->getComponent('paginator');
         $paginator->getTemplate()->setTranslator($this->presenter->getTranslator());
         $template = parent::createTemplate();

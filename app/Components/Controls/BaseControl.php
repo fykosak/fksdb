@@ -5,7 +5,6 @@ namespace FKSDB\Components\Controls;
 use Nette\Application\UI\Control;
 use Nette\DI\Container;
 use Nette\Localization\ITranslator;
-use Nette\Templating\ITemplate;
 
 /**
  * Class BaseControl

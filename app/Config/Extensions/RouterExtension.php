@@ -2,12 +2,8 @@
 
 namespace FKSDB\Config\Extensions;
 
-use FKSDB\Config\Expressions\Helpers;
-use FKSDB\Config\NeonScheme;
 use Nette\Application\Routers\Route;
 use Nette\DI\CompilerExtension;
-use Nette\DI\Container;
-use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

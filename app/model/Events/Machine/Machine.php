@@ -7,7 +7,6 @@ use ArrayIterator;
 use Events\Model\Holder\Holder;
 use IteratorAggregate;
 use LogicException;
-use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
 
 /**
@@ -15,7 +14,7 @@ use Nette\InvalidArgumentException;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class Machine extends FreezableObject implements ArrayAccess, IteratorAggregate {
+class Machine implements ArrayAccess, IteratorAggregate {
 
     /**
      * @var BaseMachine[]
@@ -36,7 +35,6 @@ class Machine extends FreezableObject implements ArrayAccess, IteratorAggregate 
      * @param $name
      */
     public function setPrimaryMachine($name) {
-        $this->updating();
         $this->primaryMachine = $this->getBaseMachine($name);
     }
 
@@ -51,12 +49,10 @@ class Machine extends FreezableObject implements ArrayAccess, IteratorAggregate 
      * @param BaseMachine $baseMachine
      */
     public function addBaseMachine(BaseMachine $baseMachine) {
-        $this->updating();
         $name = $baseMachine->getName();
         $this->baseMachines[$name] = $baseMachine;
 
         $baseMachine->setMachine($this);
-        $baseMachine->freeze();
     }
 
     /**

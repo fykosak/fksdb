@@ -9,7 +9,6 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\ITemplate;
 use Nette\Application\UI\Presenter;
 use Nette\InvalidArgumentException;
-use Nette\Templating\FileTemplate;
 use ReflectionClass;
 use ReflectionMethod;
 
@@ -198,9 +197,6 @@ class Navigation extends Control {
      * @param null $root
      */
     public function renderNavbar($root = null) {
-        /**
-         * @var FileTemplate $template
-         */
         $template = $this->getTemplate();
         $template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Navigation.navbar.latte');
         $this->renderFromRoot($template, $root, true);
@@ -210,9 +206,6 @@ class Navigation extends Control {
      * @param null $root
      */
     public function render($root = null) {
-        /**
-         * @var FileTemplate $template
-         */
         $template = $this->getTemplate();
         $template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Navigation.latte');
         $this->renderFromRoot($template, $root, false);

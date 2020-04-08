@@ -5,13 +5,12 @@ namespace FKSDB\Components\Controls\Helpers\Badges;
 use FKSDB\ORM\Models\ModelContest;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
-use Nette\Templating\FileTemplate;
 use Nette\Utils\Html;
 
 /**
  * Class ContestBadge
  * @package FKSDB\Components\Controls\Stalking\Helpers
- * @property FileTemplate $template
+ *
  */
 class ContestBadge extends Control {
 

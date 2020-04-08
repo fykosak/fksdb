@@ -24,7 +24,6 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
-use Nette\Caching\Cache;
 use Nette\Security\Permission;
 
 /**

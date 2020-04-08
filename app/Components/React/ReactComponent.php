@@ -7,14 +7,11 @@ use Nette\Application\UI\Control;
 use Nette\ComponentModel\IComponent;
 use Nette\DI\Container;
 use Nette\Http\IRequest;
-use Nette\Templating\FileTemplate;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 
 /**
  * Class ReactComponent
- * @property FileTemplate template
- *
  */
 abstract class ReactComponent extends Control {
 

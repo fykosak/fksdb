@@ -9,11 +9,10 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\UI\Control;
 use Nette\DI\Container;
 use Nette\Localization\ITranslator;
-use Nette\Templating\FileTemplate;
 
 /**
  * Class Routing
- * @property FileTemplate $template
+ *
  *
  */
 class RoutingDownload extends Control {

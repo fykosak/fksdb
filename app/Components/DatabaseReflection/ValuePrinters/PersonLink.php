@@ -7,7 +7,6 @@ use FKSDB\ORM\Models\ModelPerson;
 use Nette\Application\BadRequestException;
 use Nette\Application\LinkGenerator;
 use Nette\Application\UI\InvalidLinkException;
-use Nette\MemberAccessException;
 use Nette\Utils\Html;
 
 /**
