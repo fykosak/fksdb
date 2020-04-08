@@ -19,7 +19,9 @@ abstract class DatabaseTestCase extends TestCase {
     private $instanceNo;
 
     function __construct(Container $container) {
-        $this->connection = $container->getService('nette.database.default');
+        /** @var \Nette\Database\Context $context */
+        $context = $container->getService('database.database.context');
+        $this->connection = $context->getConnection();
         $max = $container->parameters['tester']['dbInstances'];
         $this->instanceNo = (getmypid() % $max) + 1;
         $this->connection->query('USE fksdb_test' . $this->instanceNo);
