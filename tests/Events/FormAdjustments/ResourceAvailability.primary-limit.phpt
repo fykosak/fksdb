@@ -4,6 +4,8 @@ namespace Events\Model;
 
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
+use Nette\Application\Responses\TextResponse;
+use Nette\Templating\ITemplate;
 use Tester\Assert;
 use Tester\DomQuery;
 
@@ -21,10 +23,10 @@ class ResourceAvailabilityTest extends ResourceAvailabilityTestCase {
         ]);
 
         $response = $this->fixture->run($request);
-        Assert::type('Nette\Application\Responses\TextResponse', $response);
+        Assert::type(TextResponse::class, $response);
 
         $source = $response->getSource();
-        Assert::type('Nette\Templating\ITemplate', $source);
+        Assert::type(ITemplate::class, $source);
 
         $html = (string) $source;
         $dom = DomQuery::fromHtml($html);

@@ -2,6 +2,7 @@
 
 namespace Events\Accommodation;
 
+use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
 
 $container = require '../../bootstrap.php';
@@ -12,7 +13,7 @@ class ScheduleTest extends ScheduleTestCase {
         $request = $this->createAccommodationRequest();
 
         $response = $this->fixture->run($request);
-        Assert::type('Nette\Application\Responses\RedirectResponse', $response);
+        Assert::type(RedirectResponse::class, $response);
 
         Assert::equal(3, (int)$this->connection->fetchField('SELECT count(*) FROM person_schedule WHERE schedule_item_id = ?', $this->itemId));
     }

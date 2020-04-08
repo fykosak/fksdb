@@ -2,7 +2,7 @@
 
 namespace Authorization\Assertions;
 
-use Nette\Database\Connection;
+use Nette\Database\Context;
 use Nette\Security\IUserStorage;
 
 /**
@@ -16,9 +16,9 @@ class EventOrgByIdAssertion extends AbstractEventOrgAssertion {
      * EventOrgByIdAssertion constructor.
      * @param $eventTypeId
      * @param IUserStorage $user
-     * @param Connection $connection
+     * @param Context $connection
      */
-    public function __construct($eventTypeId, IUserStorage $user, Connection $connection) {
+    public function __construct($eventTypeId, IUserStorage $user, Context $connection) {
         parent::__construct($eventTypeId, 'event_id', $user, $connection);
 
     }

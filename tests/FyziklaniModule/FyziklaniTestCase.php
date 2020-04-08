@@ -30,8 +30,8 @@ abstract class FyziklaniTestCase extends DatabaseTestCase {
             ('applied.tsaf'),
             ('applied.notsaf')");
 
-        $this->userPersonId = $this->createPerson('Paní', 'Černá', array('email' => 'cerna@hrad.cz', 'born' => DateTime::from('2000-01-01')), true);
-        $this->insert(DbNames::TAB_ORG, array('person_id' => $this->userPersonId, 'contest_id' => 1, 'since' => 0, 'order' => 0));
+        $this->userPersonId = $this->createPerson('Paní', 'Černá', ['email' => 'cerna@hrad.cz', 'born' => DateTime::from('2000-01-01')], true);
+        $this->insert(DbNames::TAB_ORG, ['person_id' => $this->userPersonId, 'contest_id' => 1, 'since' => 0, 'order' => 0]);
     }
 
     protected function tearDown() {

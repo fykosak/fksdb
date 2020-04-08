@@ -181,6 +181,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
             throw new InvalidArgumentException('Service for class ' . $this->getModelClassName() . ' cannot store ' . get_class($model));
         }
         try {
+            var_dump($model->isNew());
             if ($model->isNew()) {
                 $result = $this->getTable()->insert($model->getTmpData());
                 if ($result !== false) {
@@ -193,11 +194,11 @@ abstract class AbstractServiceSingle extends Selection implements IService {
                 $result = $model->update($model->getTmpData()) !== false;
             }
         } catch (PDOException $exception) {
-            Debugger::barDump($exception);
+            Debugger::log($exception);
             throw new ModelException('Error when storing model.', null, $exception);
         }
-        if (!$result) {
-            var_dump($this->context->getConnection()->getPdo()->errorInfo());
+        // besause ActiveRow return false when 0 rows where effected https://stackoverflow.com/questions/11813911/php-pdo-error-number-00000-when-query-is-correct
+        if (!(int)$this->context->getConnection()->getPdo()->errorInfo()) {
             $code = $this->context->getConnection()->getPdo()->errorCode();
             throw new ModelException("$code: Error when storing a model.");
         }

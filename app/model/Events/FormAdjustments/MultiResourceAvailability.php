@@ -6,7 +6,7 @@ use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
 use Events\Model\Holder\BaseHolder;
 use Events\Model\Holder\Holder;
-use Nette\Database\Connection;
+use Nette\Database\Context;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
@@ -29,6 +29,9 @@ class MultiResourceAvailability extends AbstractAdjustment {
     private $includeStates;
     private $excludeStates;
     private $message;
+    /**
+     * @var Context
+     */
     private $database;
 
     /**
@@ -46,11 +49,11 @@ class MultiResourceAvailability extends AbstractAdjustment {
      * @param array|string $fields Fields that contain amount of the resource
      * @param string $paramCapacity Name of the parameter with overall capacity.
      * @param string $message String '%avail' will be substitued for the actual amount of available resource.
-     * @param Connection $database
+     * @param Context $database
      * @param string|array $includeStates any state or array of state
      * @param string|array $excludeStates any state or array of state
      */
-    function __construct($fields, $paramCapacity, $message, Connection $database, $includeStates = BaseMachine::STATE_ANY, $excludeStates = ['cancelled']) {
+    function __construct($fields, $paramCapacity, $message, Context $database, $includeStates = BaseMachine::STATE_ANY, $excludeStates = ['cancelled']) {
         $this->setFields($fields);
         $this->database = $database;
         $this->paramCapacity = $paramCapacity;

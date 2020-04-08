@@ -1,6 +1,7 @@
 <?php
 
 use Authentication\PasswordAuthenticator;
+use Nette\Database\Connection;
 use Nette\DI\Container;
 use Tester\Assert;
 use Tester\Environment;
@@ -9,7 +10,7 @@ use Tester\TestCase;
 abstract class DatabaseTestCase extends TestCase {
 
     /**
-     * @var \Nette\Database\Connection
+     * @var Connection
      */
     protected $connection;
     /**
@@ -51,7 +52,7 @@ abstract class DatabaseTestCase extends TestCase {
      * @param boolean|array $loginData Login credentials
      * @return int
      */
-    protected function createPerson($name, $surname, $info = array(), $loginData = false) {
+    protected function createPerson($name, $surname, $info = [], $loginData = false) {
         $this->connection->query("INSERT INTO person (other_name, family_name) VALUES(?, ?)", $name, $surname);
         $personId = $this->connection->getInsertId();
 
@@ -61,11 +62,11 @@ abstract class DatabaseTestCase extends TestCase {
         }
 
         if ($loginData) {
-            $data = array(
+            $data = [
                 'login_id' => $personId,
                 'person_id' => $personId,
                 'active' => 1
-            );
+            ];
 
             if (is_array($loginData)) {
                 $loginData = array_merge($data, $loginData);

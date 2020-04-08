@@ -3,6 +3,8 @@
 namespace Events\Model;
 
 use Nette\Application\Request;
+use Nette\Application\Responses\TextResponse;
+use Nette\Templating\ITemplate;
 use Tester\Assert;
 use Tester\DomQuery;
 
@@ -14,24 +16,24 @@ class ResourceAvailabilityTest extends ResourceAvailabilityTestCase {
 
     protected function setUp() {
         parent::setUp();
-        $this->tsafEventId = $this->createEvent(array(
+        $this->tsafEventId = $this->createEvent([
             'event_type_id' => 7,
             'event_year' => 7,
             'parameters' => <<<EOT
 EOT
-        ));
+        ]);
 
 
         foreach ($this->persons as $personId) {
-            $eid = $this->insert('event_participant', array(
+            $eid = $this->insert('event_participant', [
                 'person_id' => $personId,
                 'event_id' => $this->tsafEventId,
                 'status' => 'applied',
                 'accomodation' => 1,
-            ));
-            $this->insert('e_tsaf_participant', array(
+            ]);
+            $this->insert('e_tsaf_participant', [
                 'event_participant_id' => $eid,
-            ));
+            ]);
         }
     }
 
@@ -67,10 +69,10 @@ EOT
         ]);
 
         $response = $this->fixture->run($request);
-        Assert::type('Nette\Application\Responses\TextResponse', $response);
+        Assert::type(TextResponse::class, $response);
 
         $source = $response->getSource();
-        Assert::type('Nette\Templating\ITemplate', $source);
+        Assert::type(ITemplate::class, $source);
 
         $html = (string)$source;
         $dom = DomQuery::fromHtml($html);

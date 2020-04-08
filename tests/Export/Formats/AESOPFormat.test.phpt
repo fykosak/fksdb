@@ -66,10 +66,10 @@ class MockSeriesPresenter implements ISeriesPresenter {
     }
 
     public function getSelectedContest() {
-        return (object)array(
+        return (object)[
             'contest_id' => 1,
             'name' => 'FYKOS',
-        );
+        ];
     }
 
     public function getSelectedSeries() {

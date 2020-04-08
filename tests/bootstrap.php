@@ -2,6 +2,7 @@
 
 use Authorization\ACLExtension;
 use Events\EventsExtension;
+use FKSDB\Config\Extensions\DBReflectionExtension;
 use FKSDB\Config\Extensions\NavigationExtension;
 use FKSDB\Config\Extensions\PaymentExtension;
 use FKSDB\Config\Extensions\RouterExtension;
@@ -48,7 +49,7 @@ $configurator->onCompile[] = function ($configurator, $compiler) {
     $compiler->addExtension('stalking', new StalkingExtension());
     $compiler->addExtension('events', new EventsExtension(CONFIG_DIR . '/events.neon'));
     $compiler->addExtension('payment', new PaymentExtension());
-    $compiler->addExtension('DBReflection', new \FKSDB\Config\Extensions\DBReflectionExtension());
+    $compiler->addExtension('DBReflection', new DBReflectionExtension());
 };
 
 $configurator->setDebugMode(false);
