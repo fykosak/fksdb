@@ -53,7 +53,6 @@ class CreateForm extends AbstractForm {
 
             $this->getPresenter()->redirect('list'); // if there's no backlink
         } catch (\ModelException $exception) {
-            Debugger::barDump($exception);
             $connection->rollBack();
             Debugger::log($exception, Debugger::ERROR);
             $this->getPresenter()->flashMessage(_('Chyba při zakládání školy.'), \BasePresenter::FLASH_ERROR);

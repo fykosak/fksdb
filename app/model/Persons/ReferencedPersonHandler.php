@@ -176,7 +176,6 @@ class ReferencedPersonHandler implements IReferencedHandler {
          */
         try {
             $this->beginTransaction();
-            // Debugger::barDump($data);
             /*
              * Person & its extensions
              */

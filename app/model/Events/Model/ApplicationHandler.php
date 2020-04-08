@@ -269,8 +269,6 @@ class ApplicationHandler {
             $this->formRollback($data);
             $this->reRaise($exception);
         } catch (MachineExecutionException $exception) {
-            Debugger::$maxDepth = 5;
-            Debugger::barDump($exception->getPrevious());
             $this->logger->log($exception->getMessage(), ILogger::ERROR);
             $this->formRollback($data);
             $this->reRaise($exception);
