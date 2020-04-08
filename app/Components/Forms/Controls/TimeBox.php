@@ -18,14 +18,13 @@ class TimeBox extends TextInput {
     /**
      * TimeBox constructor.
      * @param null $label
-     * @param null $cols
      * @param null $maxLength
      */
-    public function __construct($label = NULL, $cols = NULL, $maxLength = NULL) {
-        parent::__construct($label, $cols, $maxLength);
+    public function __construct($label = NULL, $maxLength = NULL) {
+        parent::__construct($label, $maxLength);
 
         $this->addCondition(Form::FILLED)
-                ->addRule(Form::REGEXP, _('%label očekává hh:mm[:ss].'), '/^[0-2]?\d:[0-5]\d(:[0-5]\d)?$/');
+                ->addRule(Form::PATTERN, _('%label očekává hh:mm[:ss].'), '/^[0-2]?\d:[0-5]\d(:[0-5]\d)?$/');
     }
 
     /**

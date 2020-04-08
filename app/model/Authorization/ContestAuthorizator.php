@@ -10,6 +10,7 @@ use Nette\Security\IResource;
 use Nette\Security\Permission;
 use Nette\Security\User;
 use Nette\SmartObject;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

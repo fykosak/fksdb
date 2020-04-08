@@ -65,7 +65,7 @@ class StoredQueryFactory {
             ->setOption('description', _('Dotazy s QIDem nelze smazat a QID lze použít pro práva a trvalé odkazování.'))
             ->addCondition(Form::FILLED)
             ->addRule(Form::MAX_LENGTH, _('Název dotazu je moc dlouhý.'), 64)
-            ->addRule(Form::REGEXP, _('QID může být jen z písmen anglické abecedy a číslic a tečky.'), '/^[a-z][a-z0-9.]*$/i');
+            ->addRule(Form::PATTERN, _('QID může být jen z písmen anglické abecedy a číslic a tečky.'), '/^[a-z][a-z0-9.]*$/i');
 
         $container->addComponent($this->createTagSelect(false, _('Štítky'), new StoredQueryTagTypeProvider($this->serviceStoredQueryTagType)), 'tags');
 
@@ -114,7 +114,7 @@ class StoredQueryFactory {
         $container->addText('name', _('Název'))
             ->addRule(Form::FILLED, _('Název parametru musí být vyplněn.'))
             ->addRule(Form::MAX_LENGTH, _('Název parametru je moc dlouhý.'), 16)
-            ->addRule(Form::REGEXP, _('Název parametru může být jen z malých písmen anglické abecedy, číslic nebo podtržítka.'), '/^[a-z][a-z0-9_]*$/');
+            ->addRule(Form::PATTERN, _('Název parametru může být jen z malých písmen anglické abecedy, číslic nebo podtržítka.'), '/^[a-z][a-z0-9_]*$/');
 
         $container->addText('description', _('Popis'));
 

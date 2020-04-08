@@ -6,6 +6,7 @@ use FKSDB\Components\Controls\PresenterBuilder;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\Application\UI\ITemplate;
 use Nette\Application\UI\Presenter;
 use Nette\InvalidArgumentException;
 use Nette\Templating\FileTemplate;
@@ -218,11 +219,11 @@ class Navigation extends Control {
     }
 
     /**
-     * @param FileTemplate $template
+     * @param ITemplate $template
      * @param $root
      * @param bool $isNavbar
      */
-    private function renderFromRoot(FileTemplate $template, $root, $isNavbar = false) {
+    private function renderFromRoot(ITemplate $template, $root, $isNavbar = false) {
         if (!is_null($root)) {
             if ($root) {
                 $template->nodes = $isNavbar ? [$root => $this->structure[$root]] : $this->structure[$root];
@@ -301,7 +302,7 @@ class Navigation extends Control {
      */
     public function preparePresenter($presenterName, $action, $providedParams) {
         $ownPresenter = $this->getPresenter();
-        $presenter = $this->presenterBuilder->preparePresenter($presenterName, $action, $providedParams, $ownPresenter->getParameter());
+        $presenter = $this->presenterBuilder->preparePresenter($presenterName, $action, $providedParams, $ownPresenter->getParameters());
         if (!$presenter instanceof INavigablePresenter) {
             $class = get_class($presenter);
             throw new InvalidArgumentException("Presenter must be instance of INavigablePresenter, $class given.");

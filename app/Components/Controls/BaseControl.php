@@ -27,11 +27,10 @@ abstract class BaseControl extends Control {
     }
 
     /**
-     * @param null $class
-     * @return ITemplate
+     * @return \Nette\Application\UI\ITemplate
      */
-    protected function createTemplate($class = NULL) {
-        $template = parent::createTemplate($class);
+    protected function createTemplate() {
+        $template = parent::createTemplate();
         /** @var ITranslator $translator */
         $translator = $this->getContext()->getByType(ITranslator::class);
         $template->setTranslator($translator);

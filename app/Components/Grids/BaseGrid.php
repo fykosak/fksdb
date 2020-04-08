@@ -73,17 +73,16 @@ abstract class BaseGrid extends Grid {
     }
 
     /**
-     * @param null $class
      * @return ITemplate
      */
-    protected function createTemplate($class = NULL): ITemplate {
+    protected function createTemplate(): ITemplate {
         /**
          * @var GridPaginator $paginator
          * @var FileTemplate $template
          */
         $paginator = $this->getComponent('paginator');
         $paginator->getTemplate()->setTranslator($this->presenter->getTranslator());
-        $template = parent::createTemplate($class);
+        $template = parent::createTemplate();
         $template->setTranslator($this->presenter->getTranslator());
         return $template;
     }

@@ -28,7 +28,7 @@ class NetteLoader extends AutoLoader
 	public $renamed = array(
 		'Nette\Http\User' => 'Nette\Security\User',
 		'Nette\Templating\DefaultHelpers' => 'Nette\Templating\Helpers',
-		'Nette\Latte\ParseException' => 'Nette\Latte\CompileException',
+	//	'Nette\Latte\ParseException' => 'Nette\Latte\CompileException',
 	);
 
 	/** @var array */
@@ -53,14 +53,14 @@ class NetteLoader extends AutoLoader
 		//'Nette\Environment' => '/common/Environment',
 		'Nette\FatalErrorException' => '/common/exceptions',
 		'Nette\FileNotFoundException' => '/common/exceptions',
-		'Nette\Framework' => '/common/Framework',
+		// 'Nette\Framework' => '/common/Framework',
 		'Nette\FreezableObject' => '/common/FreezableObject',
 		'Nette\IFreezable' => '/common/IFreezable',
 		'Nette\IOException' => '/common/exceptions',
 		'Nette\Image' => '/common/Image',
 		'Nette\InvalidArgumentException' => '/common/exceptions',
 		'Nette\InvalidStateException' => '/common/exceptions',
-		'Nette\Latte\CompileException' => '/Latte/exceptions',
+		//'Nette\Latte\CompileException' => '/Latte/exceptions',
 		'Nette\Mail\SmtpException' => '/Mail/SmtpMailer',
 		'Nette\MemberAccessException' => '/common/exceptions',
 		'Nette\NotImplementedException' => '/common/exceptions',

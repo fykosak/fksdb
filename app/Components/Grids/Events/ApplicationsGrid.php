@@ -154,11 +154,10 @@ class ApplicationsGrid extends Control {
     }
 
     /**
-     * @param null $class
-     * @return ITemplate
+     * @return \Nette\Application\UI\ITemplate
      */
-    protected function createTemplate($class = NULL) {
-        $template = parent::createTemplate($class);
+    protected function createTemplate() {
+        $template = parent::createTemplate();
         $template->setTranslator($this->presenter->getTranslator());
         return $template;
     }

@@ -92,14 +92,13 @@ class ApplicationComponent extends Control {
     }
 
     /**
-     * @param null $class
      * @return FileTemplate|ITemplate
      */
-    protected function createTemplate($class = NULL) {
+    protected function createTemplate() {
         /**
          * @var FileTemplate $template
          */
-        $template = parent::createTemplate($class);
+        $template = parent::createTemplate();
         $template->setTranslator($this->presenter->getTranslator());
         return $template;
     }

@@ -270,9 +270,19 @@ final class AuthenticationPresenter extends BasePresenter {
     protected function createComponentLoginForm() {
         $form = new Form($this, 'loginForm');
         $form->addText('id', _('Přihlašovací jméno nebo email'))
-            ->addRule(Form::FILLED, _('Zadejte přihlašovací jméno nebo emailovou adresu.'));
+            ->addRule(Form::FILLED, _('Zadejte přihlašovací jméno nebo emailovou adresu.'))
+            ->getControlPrototype()->addAttributes([
+                'class' => 'top form-control',
+                'autofocus' => true,
+                'placeholder' => _('Přihlašovací jméno nebo email'),
+                'autocomplete' => 'username'
+            ]);
         $form->addPassword('password', _('Heslo'))
-            ->addRule(Form::FILLED, _('Zadejte heslo.'));
+            ->addRule(Form::FILLED, _('Zadejte heslo.'))->getControlPrototype()->addAttributes([
+                'class' => 'bottom mb-3 form-control',
+                'placeholder' => _('Heslo'),
+                'autocomplete' => 'current-password',
+            ]);
         $form->addSubmit('send', _('Přihlásit'));
         $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
         $form->onSuccess[] = function (Form $form) {
@@ -300,18 +310,12 @@ final class AuthenticationPresenter extends BasePresenter {
     }
 
     /**
-     * @param $form
+     * @param Form $form
      * @throws AbortException
      */
-    /**
-     * @param $form
-     * @throws AbortException
-     */
-    public function loginFormSubmitted(Form $form) {
+    private function loginFormSubmitted(Form $form) {
         try {
             $this->user->login($form['id']->value, $form['password']->value);
-            \Tracy\Debugger::barDump($this->user);
-            die();
             /** @var ModelLogin $login */
             $login = $this->user->getIdentity();
             $this->loginBackLinkRedirect($login);

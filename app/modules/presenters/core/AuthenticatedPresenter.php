@@ -128,7 +128,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
             $this->setAuthorized($this->isAuthorized() && $this->getUser()->isLoggedIn());
             if ($this->isAuthorized()) { // check authorization
                 $method = $this->formatAuthorizedMethod($this->getAction());
-                $this->tryCall($method, $this->getParameter());
+                $this->tryCall($method, $this->getParameters());
             }
         }
     }
