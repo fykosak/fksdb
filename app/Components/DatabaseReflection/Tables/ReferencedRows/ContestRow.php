@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\DatabaseReflection\ReferencedRows;
 
-use FKSDB\Components\Controls\Helpers\Badges\ContestBadge;
+use FKSDB\Components\Controls\Badges\ContestBadge;
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\IContestReferencedModel;

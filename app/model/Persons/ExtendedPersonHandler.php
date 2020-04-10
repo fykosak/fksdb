@@ -166,7 +166,7 @@ class ExtendedPersonHandler {
     public final function handleForm(Form $form, IExtendedPersonPresenter $presenter, bool $sendEmail) {
 
         try {
-           $this->connection->beginTransaction();
+            $this->connection->beginTransaction();
             $values = $form->getValues();
             $create = !$presenter->getModel();
 
@@ -192,10 +192,7 @@ class ExtendedPersonHandler {
             /*
              * Finalize
              */
-            if (!$this->connection->commit()) {
-                throw new ModelException();
-            }
-
+            $this->connection->commit();
 
             if ($create) {
                 $msg = $presenter->messageCreate();

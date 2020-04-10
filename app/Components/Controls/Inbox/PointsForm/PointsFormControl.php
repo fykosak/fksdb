@@ -3,20 +3,19 @@
 namespace FKSDB\Components\Controls\Inbox;
 
 use FKSDB\Components\Forms\OptimisticForm;
-use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\Submits\SeriesTable;
 use Nette\Application\AbortException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
-use Tracy\Debugger;
 
 /**
  * Class PointsFormControl
  * @package FKSDB\Components\Controls\Inbox
  */
-class PointsFormControl extends SeriesTableControl {
+class PointsFormControl extends SeriesTableFormControl {
     /**
      * @var callable
      */
@@ -35,37 +34,18 @@ class PointsFormControl extends SeriesTableControl {
     }
 
     /**
-     * @return OptimisticForm
-     */
-    public function createComponentForm(): OptimisticForm {
-        $form = new OptimisticForm(
-            function () {
-                return $this->getSeriesTable()->getFingerprint();
-            },
-            function () {
-                return $this->getSeriesTable()->formatAsFormValues();
-            }
-        );
-        $form->addSubmit('submit', _('Save'));
-        $form->onError[] = function (Form $form) {
-            foreach ($form->getErrors() as $error) {
-                $this->flashMessage($error, ILogger::ERROR);
-            }
-        };
-        $form->onSuccess[] = function (Form $form) {
-            $this->handleFormSuccess($form);
-        };
-        return $form;
-    }
-
-    /**
      * @param Form $form
      * @throws AbortException
+     * @throws ForbiddenRequestException
      */
-    private function handleFormSuccess(Form $form) {
+    protected function handleFormSuccess(Form $form) {
         /** @var ServiceSubmit $serviceSubmit */
         $serviceSubmit = $this->getContext()->getByType(ServiceSubmit::class);
         foreach ($form->getHttpData()['submits'] as $submitId => $points) {
+            if (!$this->getSeriesTable()->getSubmits()->where('submit_id', $submitId)->fetch()) {
+                // secure check for rewrite submitId.
+                throw new ForbiddenRequestException();
+            }
             /** @var ModelSubmit $submit */
             $submit = $serviceSubmit->findByPrimary($submitId);
             if ($points !== "" && $points !== $submit->raw_points) {

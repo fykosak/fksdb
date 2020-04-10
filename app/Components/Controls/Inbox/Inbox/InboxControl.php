@@ -7,6 +7,7 @@ use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Services\ServiceSubmit;
 use Nette\Application\AbortException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 
 /**
@@ -14,41 +15,21 @@ use Nette\Application\UI\Form;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class InboxControl extends SeriesTableControl {
-    /**
-     * @return OptimisticForm
-     */
-    public function createComponentForm(): OptimisticForm {
-        $form = new OptimisticForm(
-            function () {
-                return $this->getSeriesTable()->getFingerprint();
-            },
-            function () {
-                return $this->getSeriesTable()->formatAsFormValues();
-            }
-        );
-        $form->addSubmit('submit', _('Save'));
-        $form->onError[] = function (Form $form) {
-            foreach ($form->getErrors() as $error) {
-                $this->flashMessage($error, ILogger::ERROR);
-            }
-        };
-        $form->onSuccess[] = function (Form $form) {
-            $this->handleFormSuccess($form);
-        };
-        return $form;
-    }
-
+class InboxControl extends SeriesTableFormControl {
     /**
      * @param Form $form
      * @throws AbortException
+     * @throws ForbiddenRequestException
      */
-    private function handleFormSuccess(Form $form) {
+    protected function handleFormSuccess(Form $form) {
         /** @var ServiceSubmit $serviceSubmit */
         $serviceSubmit = $this->getContext()->getByType(ServiceSubmit::class);
         foreach ($form->getHttpData()['submits'] as $ctId => $tasks) {
             foreach ($tasks as $taskNo => $submittedOn) {
-
+                if (!$this->getSeriesTable()->getContestants()->where('ct_id', $ctId)->fetch()) {
+                    // secure check for rewrite ct_id.
+                    throw new ForbiddenRequestException();
+                }
                 $submit = $serviceSubmit->findByContestant($ctId, $taskNo);
                 if ($submittedOn && $submit) {
                     //   $serviceSubmit->updateModel2($submit, ['submitted_on' => $submittedOn]);
@@ -72,7 +53,6 @@ class InboxControl extends SeriesTableControl {
         $this->invalidateControl();
         $this->getPresenter()->redirect('this');
     }
-
 
     public function render() {
         $form = $this->getComponent('form');

@@ -1,10 +1,4 @@
-{layout '../layout.latte'}
-{block content}
-    {form 'form'}
-        {include #parent}
-        {input 'submit','class'=>'btn btn-success'}
-    {/form}
-{/block}
+{layout '../layout.form.latte'}
 {define #submit-row}
     <td>
         {if $submit && ($submit->source === FKSDB\ORM\Models\ModelSubmit::SOURCE_UPLOAD)}

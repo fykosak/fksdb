@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\DatabaseReflection\Tables;
 
-use FKSDB\Components\Controls\Helpers\Badges\NotSetBadge;
+use FKSDB\Components\Controls\Badges\NotSetBadge;
 use FKSDB\Components\Controls\PhoneNumber\PhoneNumberFactory;
 use FKSDB\Components\DatabaseReflection\DefaultRow;
 use FKSDB\Components\DatabaseReflection\MetaDataFactory;

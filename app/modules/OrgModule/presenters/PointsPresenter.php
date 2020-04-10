@@ -14,7 +14,6 @@ use FKSDB\Results\SQLResultsCache;
 use FKSDB\Submits\SeriesTable;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\Control;
 use Tracy\Debugger;
 use Nette\InvalidArgumentException;
 
