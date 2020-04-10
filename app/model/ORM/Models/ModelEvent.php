@@ -28,7 +28,7 @@ use Nette\Utils\DateTime;
  * @property-read DateTime registration_end
  */
 class ModelEvent extends AbstractModelSingle implements IResource, IContestReferencedModel {
-
+    const RESOURCE_ID = 'event';
     /**
      * Event can have a holder assigned for purposes of parameter parsing.
      * Nothing else (currently).
@@ -90,7 +90,7 @@ class ModelEvent extends AbstractModelSingle implements IResource, IContestRefer
      * @return string
      */
     public function getResourceId(): string {
-        return 'event';
+        return self::RESOURCE_ID;
     }
 
     /**
