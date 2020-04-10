@@ -58,7 +58,7 @@ class SQLResultsCache {
             SET ?
             WHERE (' . implode(') and (', $conditions) . ')';
 
-        $this->connection->exec($sql, $data);
+        $this->connection->query($sql, $data);
     }
 
     /**
@@ -97,7 +97,7 @@ class SQLResultsCache {
             )
             WHERE (' . implode(') and (', $conditions) . ')';
 
-            $this->connection->exec($sql);
+            $this->connection->query($sql);
         }
         $this->connection->commit();
     }

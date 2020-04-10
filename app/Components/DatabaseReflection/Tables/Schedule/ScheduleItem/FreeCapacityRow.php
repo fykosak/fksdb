@@ -23,6 +23,10 @@ class FreeCapacityRow extends AbstractScheduleItemRow {
      * @return Html
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        return Html::el('span')->addText($model->getFreeCapacity());
+        try {
+            return Html::el('span')->addText($model->getAvailableCapacity());
+        } catch (\LogicException $e) {
+            return Html::el('span')->addHtml('&#8734;');
+        }
     }
 }

@@ -27,15 +27,14 @@ parameters:
                 person_schedule:
                     accommodation:
                         required: false
-                    accommodation_teacher_separated:
+                    accommodation_teacher:
                         required: false
-                    visa_requirement:
+                    visa:
                         required: false
-                    weekend_schedule:
+                    teacher_present:
                         required: false
-
-
-
+                    weekend:
+                        required: false
             participant:
                 person:
                     other_name:
@@ -58,18 +57,21 @@ parameters:
                 person_schedule:
                     accommodation:
                         required: false
-                    accommodation_same_gender:
+                    accommodation_gender:
                         required: false
-                    weekend_schedule:
+                    visa:
+                        required: false
+                    weekend:
                         required: false
             dep:
                 require:
                     team.teacher_id.person_info.id_number: team.teacher_id.person_schedule.accommodation
                     p*.person_id.person_info.id_number: p*.person_id.person_schedule.accommodation
                 visible:
-                    team.teacher_id.person_schedule.accommodation_teacher_separated: team.teacher_id.person_schedule.accommodation
                     team.teacher_id.person_info.id_number: team.teacher_id.person_schedule.accommodation
                     p*.person_id.person_info.id_number: p*.person_id.person_schedule.accommodation
+                    team.teacher_id.person_schedule.accommodation_teacher: team.teacher_id.person_schedule.accommodation
+                    p*.person_id.person_schedule.accommodation_gender: p*.person_id.person_schedule.accommodation
 
 
 events:
@@ -88,9 +90,8 @@ events:
                 default: 2
             teamsPerSchool:
                 default: 2
-            gameSetup:
-                default:
-                    %events.fyziklaniGameSetup%
+            rooms:
+                default: [10,11,12,13,14]
 
         baseMachines:
             #
@@ -144,27 +145,27 @@ events:
                     name:
                         label: _('Název týmu')
                         required: true
-                        visible: true # or condition
+                        visible: true
                         modifiable: %events.fyziklani14.appCond%
                     game_lang:
-                        label: _('Jazyk ve kterém chcete soutěžit.')
+                        label: _('Jazyk, ve kterém chcete soutěžit.')
                         required: true
                         visible: true
                         modifiable: %events.fyziklani14.appCond%
-                        factory: Chooser('Select lang/Vyberte jazyk',Options(%events.fyziklani14.gameLangs%))
+                        factory: Chooser('Select language/Vyberte jazyk',Options(%events.fyziklani14.gameLangs%))
                     category:
                         label: _('Kategorie')
                         required: true
                         visible: neg(state('__init'))
                         modifiable: false
                     force_a:
-                        label: _('Chceme se účastnit v kategorii A')
+                        label: _('Chceme soutěžit v kategorii A')
                         visible: true
                         description: _('Po zaškrtnutí této možnosti budete zařazeni do nejvyšší kategorie (s nejstaršími účastníky) bez ohledu na ročníky členů vašeho týmu. Tato kategorie je také jediná, která je součástí programu MŠMT Excelence SŠ.')
 
                     phone:
                         label: _('Kontaktní telefon')
-                        required: false
+                        required: true
                         visible: true
                         modifiable: %events.fyziklani14.appCond%
                     teacher_id:
@@ -173,6 +174,11 @@ events:
                         visible: true
                         modifiable: %events.fyziklani14.appCond%
                         factory: RefPerson(%events.fyziklani14.teacher%, email, true, role('admin'), false)
+                    note:
+                        label: _('Note')
+                        modifiable: %events.fyziklani14.appCond%
+                        required: false
+                        visible: true
             #   PARTICIPANT
             #
             PARTICIPANT:
@@ -191,7 +197,7 @@ events:
                         condition: %events.fyziklani14.appCond%
                         label: _('Přihlásit člena')
                     applied->__terminated:
-                        condition: %events.fyziklani14.appCond% # TODO the time period is not specified in rules
+                        condition: %events.fyziklani14.appCond%
                         label: _('Odebrat člena')
                     applied->participated:
                         condition: role('admin')

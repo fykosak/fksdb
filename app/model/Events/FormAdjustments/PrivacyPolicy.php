@@ -70,6 +70,7 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
      * @param Holder $holder
      * @param ILogger $logger
      * @param Form|null $form
+     * @throws \Exception
      */
     public function process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
         $this->trySetAgreed($values);
@@ -77,6 +78,7 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
 
     /**
      * @param ArrayHash $values
+     * @throws \Exception
      */
     private function trySetAgreed(ArrayHash $values) {
         foreach ($values as $key => $value) {
@@ -87,7 +89,9 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
                     $personId = $value;
                     $personInfo = $this->servicePersonInfo->findByPrimary($personId);
                     if ($personInfo) {
-                        $this->servicePersonInfo->updateModel($personInfo, array('agreed' => 1));
+
+                        $this->servicePersonInfo->updateModel($personInfo, ['agreed' => 1]);
+
                         // This is done in ApplicationHandler transaction, still can be rolled back.
                         $this->servicePersonInfo->save($personInfo);
                         $values[$key . '_1']['person_info']['agreed'] = 1;

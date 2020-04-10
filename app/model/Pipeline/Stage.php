@@ -44,10 +44,10 @@ abstract class Stage {
 
     /**
      * @param $message
-     * @param int $level
+     * @param string $level
      */
-    protected function log($message, $level = ILogger::INFO) {
-        $this->getPipeline()->log($message);
+    protected function log($message, string $level = ILogger::INFO) {
+        $this->getPipeline()->log($message, $level);
     }
 
 }

@@ -12,7 +12,6 @@ use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Utils\RegexpException;
 use Persons\AclResolver;
 use Persons\ExtendedPersonHandler;
 use Persons\ExtendedPersonHandlerFactory;
@@ -110,7 +109,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
      * @param $create
      * @return FormControl
      * @throws BadRequestException
-     * @throws RegexpException
+     * @throws \Exception
      */
     private function createComponentFormControl($create) {
         $control = new FormControl();
@@ -134,7 +133,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
         $this->appendExtendedContainer($form);
 
         $handler = $this->handlerFactory->create($this->getORMService(), $this->getSelectedContest(), $this->getSelectedYear(), $this->globalParameters['invitation']['defaultLang']);
-        $submit = $form->addSubmit('send', $create ? _('Založit') : _('Uložit'));
+        $submit = $form->addSubmit('send', $create ? _('Založit') : _('Save'));
 
         $submit->onClick[] = function (SubmitButton $button) use ($handler) {
             $form = $button->getForm();
@@ -147,25 +146,19 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     }
 
     /**
-     * @param $name
      * @return FormControl
      * @throws BadRequestException
-     * @throws RegexpException
      */
-    protected final function createComponentCreateComponent($name) {
-        $control = $this->createComponentFormControl(true);
-        return $control;
+    protected final function createComponentCreateComponent() {
+        return $this->createComponentFormControl(true);
     }
 
     /**
-     * @param $name
      * @return FormControl
      * @throws BadRequestException
-     * @throws RegexpException
      */
-    protected final function createComponentEditComponent($name) {
-        $control = $this->createComponentFormControl(false);
-        return $control;
+    protected final function createComponentEditComponent() {
+        return $this->createComponentFormControl(false);
     }
 
     /**

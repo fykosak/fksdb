@@ -68,7 +68,7 @@ class GraphComponent extends Control {
 
     private function renderTemplate() {
         $this->template->machine = $this->baseMachine;
-        $this->template->states = array_merge(array_keys($this->baseMachine->getStates()), array(BaseMachine::STATE_INIT, BaseMachine::STATE_TERMINATED));
+        $this->template->states = array_merge(array_keys($this->baseMachine->getStates()), [BaseMachine::STATE_INIT, BaseMachine::STATE_TERMINATED]);
         $this->template->id = $this->getHtmlId();
         $this->template->printer = $this->expressionPrinter;
         $this->template->render();

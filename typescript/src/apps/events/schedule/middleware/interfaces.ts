@@ -1,10 +1,10 @@
-import { Price } from '@shared/components/displays/price/interfaces';
 import { LocalizedString } from '@i18n/i18n';
+import { Price } from '@shared/components/displays/price/interfaces';
 
 export interface ScheduleItemDef {
     scheduleGroupId: number;
     price: Price;
-    totalCapacity: number;
+    totalCapacity?: number;
     usedCapacity: number;
     scheduleItemId: number;
     label: LocalizedString;
@@ -16,7 +16,7 @@ export interface ScheduleGroupDef {
     items: ScheduleItemDef[];
     scheduleGroupId: number;
     scheduleGroupType: ScheduleGroupType;
-    label: string;
+    label: LocalizedString;
     eventId: number;
     start: string;
     end: string;

@@ -38,6 +38,7 @@ class ModelEvent extends AbstractModelSingle implements IResource, IContestRefer
 
     /**
      * @param Holder $holder
+     * @deprecated
      */
     public function setHolder(Holder $holder) {
         $this->holder = $holder;
@@ -45,6 +46,7 @@ class ModelEvent extends AbstractModelSingle implements IResource, IContestRefer
 
     /**
      * @return Holder
+     * @deprecated
      */
     public function getHolder(): Holder {
         return $this->holder;
@@ -105,7 +107,7 @@ class ModelEvent extends AbstractModelSingle implements IResource, IContestRefer
     public function getFyziklaniGameSetup(): ModelFyziklaniGameSetup {
         $gameSetup = $this->related(DbNames::TAB_FYZIKLANI_GAME_SETUP, 'event_id')->fetch();
         if (!$gameSetup) {
-            throw new NotSetGameParametersException(_('Herné parametre niesu nastavené'), 404);
+            throw new NotSetGameParametersException(_('Herné parametre niesu nastavené'));
         }
         return ModelFyziklaniGameSetup::createFromActiveRow($gameSetup);
     }
@@ -114,7 +116,7 @@ class ModelEvent extends AbstractModelSingle implements IResource, IContestRefer
      * @return GroupedSelection
      */
     public function getScheduleGroups(): GroupedSelection {
-        return $this->related(DbNames::TAB_SCHEDULE_GROUP,'event_id');
+        return $this->related(DbNames::TAB_SCHEDULE_GROUP, 'event_id');
     }
 
     /**
@@ -139,8 +141,8 @@ class ModelEvent extends AbstractModelSingle implements IResource, IContestRefer
             'eventId' => $this->event_id,
             'year' => $this->year,
             'eventYear' => $this->event_year,
-            'begin' => $this->begin->format('c'),
-            'end' => $this->end->format('c'),
+            'begin' => $this->begin ? $this->begin->format('c') : null,
+            'end' => $this->end ? $this->end->format('c') : null,
             'registration_begin' => $this->registration_begin->format('c'),
             'registration_end' => $this->registration_end->format('c'),
             'name' => $this->name,

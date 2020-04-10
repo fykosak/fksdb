@@ -1,12 +1,13 @@
 <?php
 
-
 namespace FKSDB\React;
 
 use FKSDB\Messages\Message;
 use Nette;
+use Nette\Http\IRequest;
+use Nette\Http\IResponse;
 use Nette\SmartObject;
-
+use Nette\Utils\JsonException;
 
 /**
  * Class FKSDB\React\ReactResponse
@@ -28,12 +29,23 @@ final class ReactResponse implements Nette\Application\IResponse {
      * @var string
      */
     private $act;
+    /**
+     * @var int
+     */
+    private $code = 200;
 
     /**
      * @return string
      */
     final public function getContentType(): string {
         return 'application/json';
+    }
+
+    /**
+     * @param int $code
+     */
+    public function setCode(int $code) {
+        $this->code = $code;
     }
 
     /**
@@ -65,11 +77,12 @@ final class ReactResponse implements Nette\Application\IResponse {
     }
 
     /**
-     * @param \Nette\Http\IRequest $httpRequest
-     * @param \Nette\Http\IResponse $httpResponse
-     * @throws \Nette\Utils\JsonException
+     * @param IRequest $httpRequest
+     * @param IResponse $httpResponse
+     * @throws JsonException
      */
-    public function send(Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse) {
+    public function send(IRequest $httpRequest, IResponse $httpResponse) {
+        $httpResponse->setCode($this->code);
         $httpResponse->setContentType($this->getContentType());
         $httpResponse->setExpiration(FALSE);
         $response = [

@@ -2,10 +2,10 @@
 
 namespace FKSDB\Components\Controls\Schedule;
 
+use FKSDB\Components\DatabaseReflection\ValuePrinterComponent;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
 use Nette\Application\UI\Control;
-use Nette\ComponentModel\IComponent;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 
@@ -54,15 +54,9 @@ class GroupControl extends Control {
     }
 
     /**
-     * @param string $name
-     * @return IComponent|null
-     * @throws \Exception
+     * @return ValuePrinterComponent
      */
-    public function createComponent($name) {
-        $printerComponent = $this->tableReflectionFactory->createComponent($name, 2048);
-        if ($printerComponent) {
-            return $printerComponent;
-        }
-        return parent::createComponent($name);
+    public function createComponentValuePrinter(): ValuePrinterComponent {
+        return new ValuePrinterComponent($this->translator, $this->tableReflectionFactory);
     }
 }

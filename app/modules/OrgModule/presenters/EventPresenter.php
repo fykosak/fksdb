@@ -2,23 +2,26 @@
 
 namespace OrgModule;
 
+use Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\EventFactory;
 use FKSDB\Components\Grids\Events\EventsGrid;
 use FKSDB\Config\NeonScheme;
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceAuthToken;
 use FKSDB\ORM\Services\ServiceEvent;
 use FormUtils;
 use ModelException;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Neon\Neon;
-use Nette\NotImplementedException;
+use FKSDB\NotImplementedException;
 use Nette\Utils\Html;
 use Nette\Utils\NeonException;
 use Tracy\Debugger;
@@ -33,10 +36,8 @@ class EventPresenter extends EntityPresenter {
 
     const CONT_EVENT = 'event';
 
-    protected $modelResourceId = 'event';
-
     /**
-     * @var \FKSDB\ORM\Services\ServiceEvent
+     * @var ServiceEvent
      */
     private $serviceEvent;
 
@@ -51,7 +52,7 @@ class EventPresenter extends EntityPresenter {
     private $container;
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceAuthToken $serviceAuthToken
+     * @var ServiceAuthToken $serviceAuthToken
      */
     private $serviceAuthToken;
 
@@ -63,7 +64,7 @@ class EventPresenter extends EntityPresenter {
     }
 
     /**
-     * @param \FKSDB\ORM\Services\ServiceEvent $serviceEvent
+     * @param ServiceEvent $serviceEvent
      */
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;
@@ -97,32 +98,31 @@ class EventPresenter extends EntityPresenter {
     }
 
     public function titleList() {
-        $this->setTitle(_('Akce'));
-        $this->setIcon('fa fa-calendar-check-o');
+        $this->setTitle(_('Events'),'fa fa-calendar-check-o');
     }
 
     public function titleCreate() {
-        $this->setTitle(_('Přidat akci'));
-        $this->setIcon('fa fa-calendar-plus-o');
+        $this->setTitle(_('Add event'),'fa fa-calendar-plus-o');
     }
 
     public function titleEdit() {
         $model = $this->getModel();
-        $this->setTitle(sprintf(_('Úprava akce %s'), $model->name));
-        $this->setIcon('fa fa-pencil');
-    }
-
-    public function actionDelete() {
-// There's no use case for this. (Errors must be deleted manually via SQL.)
-        throw new NotImplementedException(null, 501);
+        $this->setTitle(sprintf(_('Edit event %s'), $model->name),'fa fa-pencil');
     }
 
     /**
-     * @param $name
+     * @throws NotImplementedException
+     */
+    public function actionDelete() {
+// There's no use case for this. (Errors must be deleted manually via SQL.)
+        throw new NotImplementedException(null);
+    }
+
+    /**
      * @return FormControl|mixed
      * @throws BadRequestException
      */
-    protected function createComponentCreateComponent($name) {
+    protected function createComponentCreateComponent() {
         $control = $this->createForm();
         $form = $control->getForm();
 
@@ -135,14 +135,13 @@ class EventPresenter extends EntityPresenter {
     }
 
     /**
-     * @param $name
      * @return FormControl|mixed
      * @throws BadRequestException
      */
-    protected function createComponentEditComponent($name) {
+    protected function createComponentEditComponent() {
         $control = $this->createForm();
         $form = $control->getForm();
-        $form->addSubmit('send', _('Uložit'));
+        $form->addSubmit('send', _('Save'));
         $form->onSuccess[] = function (Form $form) {
             $this->handleFormSuccess($form, false);
         };
@@ -151,11 +150,10 @@ class EventPresenter extends EntityPresenter {
     }
 
     /**
-     * @param $name
      * @return EventsGrid
      */
-    protected function createComponentGrid($name): EventsGrid {
-        return new EventsGrid($this->serviceEvent, $this->getTableReflectionFactory());
+    protected function createComponentGrid(): EventsGrid {
+        return new EventsGrid($this->getContext());
     }
 
     /**
@@ -169,8 +167,10 @@ class EventPresenter extends EntityPresenter {
 
         $eventContainer = $this->eventFactory->createEvent($this->getSelectedContest());
         $form->addComponent($eventContainer, self::CONT_EVENT);
-
-        if ($event = $this->getModel()) { // intentionally =
+        /** @var ModelEvent $event */
+        $event = $this->getModel();
+        if ($event) { // intentionally =
+            /** @var Holder $holder */
             $holder = $this->container->createEventHolder($event);
             $scheme = $holder->getPrimaryHolder()->getParamScheme();
             $paramControl = $eventContainer->getComponent('parameters');
@@ -232,7 +232,7 @@ class EventPresenter extends EntityPresenter {
 
     /**
      * @param int $id
-     * @return \FKSDB\ORM\AbstractModelSingle|ModelEvent|null
+     * @return AbstractModelSingle|ModelEvent|null
      */
     protected function loadModel($id) {
         $row = $this->serviceEvent->findByPrimary($id);
@@ -244,54 +244,48 @@ class EventPresenter extends EntityPresenter {
 
     /**
      * @param Form $form
-     * @param $isNew
+     * @param bool $isNew
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      * @throws \ReflectionException
      */
     private function handleFormSuccess(Form $form, $isNew) {
+
         $connection = $this->serviceEvent->getConnection();
         $values = $form->getValues();
+        $data = FormUtils::emptyStrToNull($values[self::CONT_EVENT]);
+
+        /**
+         * @var ModelEvent $model
+         */
         if ($isNew) {
-            $model = $this->serviceEvent->createNew();
-            $model->year = $this->getSelectedYear();
-        } else {
-            $model = $this->getModel();
-        }
-
-
-        try {
-            if (!$connection->beginTransaction()) {
-                throw new ModelException();
-            }
-
-            /*
-             * Event
-             */
-            $data = FormUtils::emptyStrToNull($values[self::CONT_EVENT]);
-            $this->serviceEvent->updateModel($model, $data);
-
-            if (!$this->getContestAuthorizator()
-                ->isAllowed($model, $isNew ? 'create' : 'edit', $this->getSelectedContest())
-            ) {
+            if (!$this->getContestAuthorizator()->isAllowed('event', 'create', $this->getSelectedContest())) {
                 throw new ForbiddenRequestException();
             }
 
-            $this->serviceEvent->save($model);
+            $data['year'] = $this->getSelectedYear();
+            $model = $this->serviceEvent->createNewModel($data);
+        } else {
+            if (!$this->getContestAuthorizator()->isAllowed($model, 'edit', $this->getSelectedContest())) {
+                throw new ForbiddenRequestException();
+            }
+            $model = $this->getModel();
+            $this->serviceEvent->updateModel2($model, $data);
+        }
 
+        try {
+            $connection->beginTransaction();
             // update also 'until' of authTokens in case that registration end has changed
             $tokenData = ["until" => $model->registration_end ?: $model->end];
-            foreach ($this->serviceAuthToken->findTokensByEventId($model->id) as $token) {
-                $this->serviceAuthToken->updateModel($token, $tokenData);
-                $this->serviceAuthToken->save($token);
+            foreach ($this->serviceAuthToken->findTokensByEventId($model->event_id) as $token) {
+                $this->serviceAuthToken->updateModel2($token, $tokenData);
+              //  $this->serviceAuthToken->save($token);
             }
 
             /*
              * Finalize
              */
-            if (!$connection->commit()) {
-                throw new ModelException();
-            }
+            $connection->commit();
 
             $this->flashMessage(sprintf(_('Akce %s uložena.'), $model->name), self::FLASH_SUCCESS);
             $this->backLinkRedirect();
@@ -306,4 +300,10 @@ class EventPresenter extends EntityPresenter {
         }
     }
 
+    /**
+     * @inheritDoc
+     */
+    protected function getModelResource(): string {
+        return 'event';
+    }
 }

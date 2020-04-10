@@ -2,12 +2,13 @@
 
 use Authorization\ACLExtension;
 use Events\EventsExtension;
+use FKSDB\Config\Extensions\DBReflectionExtension;
 use FKSDB\Config\Extensions\NavigationExtension;
+use FKSDB\Config\Extensions\PaymentExtension;
 use FKSDB\Config\Extensions\RouterExtension;
 use FKSDB\Config\Extensions\StalkingExtension;
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Config\Configurator;
-use Nette\DI\Compiler;
 use Nette\Utils\Finder;
 
 // Load Nette Framework
@@ -20,7 +21,7 @@ define('CONFIG_DIR', dirname(__FILE__) . DIRECTORY_SEPARATOR . 'config');
 $configurator = new Configurator();
 /**
  * @param Configurator $configurator
- * @param Compiler $compiler
+ * @param $compiler
  */
 $configurator->onCompile[] = function ($configurator, $compiler) {
     $compiler->addExtension('fksrouter', new RouterExtension());
@@ -28,10 +29,11 @@ $configurator->onCompile[] = function ($configurator, $compiler) {
     $compiler->addExtension('navigation', new NavigationExtension());
     $compiler->addExtension('stalking', new StalkingExtension());
     $compiler->addExtension('events', new EventsExtension(CONFIG_DIR . '/events.neon'));
+    $compiler->addExtension('payment', new PaymentExtension());
+    $compiler->addExtension('DBReflection', new DBReflectionExtension());
 };
 
 // Enable Nette Debugger for error visualisation & logging
-
 $configurator->enableDebugger(dirname(__FILE__) . '/../log');
 error_reporting(~E_USER_DEPRECATED & ~E_USER_WARNING);
 
@@ -57,7 +59,6 @@ $container = $configurator->createContainer();
 // Register addons
 //
 Replicator::register();
-\Tracy\Debugger::$maxLength = 100000000;
 //
 // Configure and run the application!
 $container->application->run();

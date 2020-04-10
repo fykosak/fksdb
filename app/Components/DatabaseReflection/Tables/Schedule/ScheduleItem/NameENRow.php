@@ -1,6 +1,5 @@
 <?php
 
-
 namespace FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem;
 
 use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;

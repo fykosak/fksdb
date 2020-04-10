@@ -1,18 +1,17 @@
 <?php
 
-
 namespace FKSDB\ORM\Models\Schedule;
 
-use FKSDB\Localization\GettextTranslator;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\IEventReferencedModel;
+use FKSDB\ORM\Models\IScheduleGroupReferencedModel;
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\Payment\Price;
 use FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException;
-use Nette\Application\BadRequestException;
+use LogicException;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
-use Nette\Localization\ITranslator;
-use Nette\NotImplementedException;
 
 /**
  * Class ModelScheduleItem
@@ -20,20 +19,28 @@ use Nette\NotImplementedException;
  * @property-read ActiveRow schedule_group
  * @property-read float price_eur
  * @property-read float price_czk
- * @property-read int capacity
+ * @property-read int|null capacity
  * @property-read int schedule_item_id
  * @property-read int schedule_group_id
  * @property-read string name_cs
  * @property-read string name_en
  * @property-read int require_id_number
- * @property-read string description
+ * @property-read string description_cs
+ * @property-read string description_en
  */
-class ModelScheduleItem extends AbstractModelSingle {
+class ModelScheduleItem extends AbstractModelSingle implements IScheduleGroupReferencedModel, IEventReferencedModel {
     /**
      * @return ModelScheduleGroup
      */
-    public function getGroup(): ModelScheduleGroup {
+    public function getScheduleGroup(): ModelScheduleGroup {
         return ModelScheduleGroup::createFromActiveRow($this->schedule_group);
+    }
+
+    /**
+     * @return ModelEvent
+     */
+    public function getEvent(): ModelEvent {
+        return $this->getScheduleGroup()->getEvent();
     }
 
     /**
@@ -53,17 +60,24 @@ class ModelScheduleItem extends AbstractModelSingle {
     }
 
     /**
-     * @return integer|null
-     */
-    public function getCapacity(): int {
-        return $this->capacity;
-    }
-
-    /**
      * @return GroupedSelection
      */
     public function getInterested(): GroupedSelection {
         return $this->related(DbNames::TAB_PERSON_SCHEDULE);
+    }
+    /* ****** CAPACITY CALCULATION *******/
+    /**
+     * @return integer|null
+     */
+    public function getCapacity() {
+        return $this->capacity;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUnlimitedCapacity(): bool {
+        return is_null($this->getCapacity());
     }
 
     /**
@@ -76,30 +90,29 @@ class ModelScheduleItem extends AbstractModelSingle {
     /**
      * @return int
      */
-    public function getFreeCapacity(): int {
-        return $this->getAvailableCapacity();
-    }
-
-    /**
-     * @return int
-     */
-    public function getAvailableCapacity(): int {
+    private function calculateAvailableCapacity(): int {
         return ($this->getCapacity() - $this->getUsedCapacity());
     }
 
     /**
-     * @return string
-     * @deprecated
+     * @return bool
      */
-    public function getShortLabel(): string {
-        $group = $this->getGroup();
-        switch ($group->schedule_group_type) {
-            case ModelScheduleGroup::TYPE_ACCOMMODATION:
-                return \sprintf(_('Accommodation in "%s".'),
-                    $this->name_cs
-                );
+    public function hasFreeCapacity(): bool {
+        if ($this->isUnlimitedCapacity()) {
+            return true;
         }
-        return $this->getLabel();
+        return $this->calculateAvailableCapacity() > 0;
+    }
+
+    /**
+     * @return int
+     * @throws LogicException
+     */
+    public function getAvailableCapacity() {
+        if ($this->isUnlimitedCapacity()) {
+            throw new LogicException(_('Unlimited capacity'));
+        }
+        return $this->calculateAvailableCapacity();
     }
 
     /**
@@ -107,18 +120,7 @@ class ModelScheduleItem extends AbstractModelSingle {
      * Label include datetime from schedule group
      */
     public function getLabel(): string {
-        $group = $this->getGroup();
-        switch ($group->schedule_group_type) {
-            case ModelScheduleGroup::TYPE_ACCOMMODATION:
-                return $group->getLabel() . ' ' . \sprintf(_('in "%s"'),
-                        $this->name_cs
-                    );
-            case ModelScheduleGroup::TYPE_ACCOMMODATION_TEACHER_SEPARATED:
-            case ModelScheduleGroup::TYPE_VISA_REQUIREMENT:
-            case ModelScheduleGroup::TYPE_ACCOMMODATION_SAME_GENDER_REQUIRED:
-                return $group->getLabel();
-        }
-        throw new NotImplementedException();
+        return $this->name_cs . '/' . $this->name_en;
     }
 
     /**
@@ -136,7 +138,7 @@ class ModelScheduleItem extends AbstractModelSingle {
             'scheduleGroupId' => $this->schedule_group_id,
             'price' => [
                 'eur' => $this->price_eur,
-                'czk' => $this->price_czk
+                'czk' => $this->price_czk,
             ],
             'totalCapacity' => $this->capacity,
             'usedCapacity' => $this->getUsedCapacity(),
@@ -147,8 +149,8 @@ class ModelScheduleItem extends AbstractModelSingle {
             ],
             'requireIdNumber' => $this->require_id_number,
             'description' => [
-                'cs' => $this->description,
-                'en' => $this->description,
+                'cs' => $this->description_cs,
+                'en' => $this->description_en,
             ],
         ];
     }

@@ -2,6 +2,7 @@
 
 $container = require '../bootstrap.php';
 
+use Nette\Application\Responses\RedirectResponse;
 use Nette\DI\Container;
 use PublicModule\SubmitTestCase;
 use Tester\Assert;
@@ -19,19 +20,19 @@ class SubmitPresenterTest extends SubmitTestCase {
     }
 
     public function testSubmit() {
-        $request = $this->createPostRequest(array(
+        $request = $this->createPostRequest([
             'upload' => 'Odeslat',
             'tasks' => "{$this->taskAll},{$this->taskRestricted}",
             '_token_' => self::TOKEN,
-        ));
+        ]);
 
-        $request->setFiles(array(
+        $request->setFiles([
             "task{$this->taskAll}" => $this->createFileUpload(),
             "task{$this->taskRestricted}" => $this->createFileUpload(),
-        ));
+        ]);
         $response = $this->fixture->run($request);
 
-        Assert::type('Nette\Application\Responses\RedirectResponse', $response);
+        Assert::type(RedirectResponse::class, $response);
         dump($response);
 
         $this->assertSubmit($this->contestantId, $this->taskAll);

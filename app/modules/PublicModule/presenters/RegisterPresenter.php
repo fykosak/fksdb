@@ -9,11 +9,17 @@ use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Config\Expressions\Helpers;
+use FKSDB\ORM\IModel;
+use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceContestant;
 use FKSDB\ORM\Services\ServicePerson;
+use FKSDB\SeriesCalculator;
 use IContestPresenter;
+use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
+use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
@@ -64,7 +70,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     public $personId;
 
     /**
-     * @var \FKSDB\ORM\Models\ModelPerson
+     * @var ModelPerson
      */
     private $person;
 
@@ -93,14 +99,14 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     protected $servicePerson;
 
     /**
-     * @var \FKSDB\SeriesCalculator
+     * @var SeriesCalculator
      */
     protected $seriesCalculator;
 
     /**
-     * @param \FKSDB\SeriesCalculator $seriesCalculator
+     * @param SeriesCalculator $seriesCalculator
      */
-    public function injectSeriesCalculator(\FKSDB\SeriesCalculator $seriesCalculator) {
+    public function injectSeriesCalculator(SeriesCalculator $seriesCalculator) {
         $this->seriesCalculator = $seriesCalculator;
     }
 
@@ -141,10 +147,10 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
 
     /**
-     * @return \FKSDB\ORM\Models\ModelContest|\Nette\Database\Table\ActiveRow|null
+     * @return ModelContest|ActiveRow|null
      */
     public function getSelectedContest() {
-        return $this->contestId ? $this->serviceContest->findByPrimary($this->contestId) : null;
+        return $this->contestId ? $this->getServiceContest()->findByPrimary($this->contestId) : null;
     }
 
     /**
@@ -180,14 +186,14 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
     /**
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function actionDefault() {
         $this->redirect('contest');
     }
 
     /**
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function actionContestant() {
 
@@ -243,7 +249,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
     public function titleYear() {
-        $this->setSubtitle($this->serviceContest->findByPrimary($this->contestId)->name);
+        $this->setSubtitle($this->getServiceContest()->findByPrimary($this->contestId)->name);
         $this->setTitle(_('Zvolit ročník'));
     }
 
@@ -255,27 +261,28 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
     public function titleEmail() {
-        $this->setSubtitle($this->serviceContest->findByPrimary($this->contestId)->name);
+        $this->setSubtitle($this->getServiceContest()->findByPrimary($this->contestId)->name);
         $this->setTitle(_('Zadejte e-mail'));
     }
 
     public function renderContest() {
-        $pk = $this->serviceContest->getPrimary();
+        $pk = $this->getServiceContest()->getPrimary();
 
         $this->template->contests = array_map(function ($value) {
-            return $this->serviceContest->findByPrimary($value);
-        }, $this->serviceContest->fetchPairs($pk, $pk));
+            return $this->getServiceContest()->findByPrimary($value);
+        }, $this->getServiceContest()->fetchPairs($pk, $pk));
     }
 
     public function renderYear() {
-        $contest = $this->serviceContest->findByPrimary($this->contestId);
+        /** @var ModelContest $contest */
+        $contest = $this->getServiceContest()->findByPrimary($this->contestId);
         $this->template->years = [];
         $this->template->years[] = $this->yearCalculator->getCurrentYear($contest) + $this->yearCalculator->getForwardShift($contest);
     }
 
     /**
      * @param $contestId
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function handleChangeContest($contestId) {
         $this->redirect('this', ['contestId' => $contestId,]);
@@ -283,7 +290,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     /**
      * @param $year
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function handleChangeYear($year) {
         $this->redirect('this', ['year' => $year,]);
@@ -292,7 +299,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     /**
      * @return FormControl
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     public function createComponentEmailForm() {
         $control = new FormControl();
@@ -307,7 +314,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     /**
      * @param Form $form
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function emailFormSucceeded(Form $form) {
         $values = $form->getValues();
@@ -341,8 +348,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     /**
      * @return FormControl
-     * @throws \Nette\Application\BadRequestException
-     * @throws \Nette\Utils\RegexpException
+     * @throws BadRequestException
      */
     public function createComponentContestantForm() {
         $control = new FormControl();
@@ -393,7 +399,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
     /**
-     * @return null|\FKSDB\ORM\IModel
+     * @return null|IModel
      */
     public function getModel() {
         return null; //we always create new contestant
@@ -439,9 +445,9 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      */
     protected function getNavBarVariant(): array {
         /**
-         * @var \FKSDB\ORM\Models\ModelContest $contest
+         * @var ModelContest $contest
          */
-        $contest = $this->serviceContest->findByPrimary($this->contestId);
+        $contest = $this->getServiceContest()->findByPrimary($this->contestId);
         if ($contest) {
             return [$contest->getContestSymbol(), 'bg-dark navbar-dark'];
         }

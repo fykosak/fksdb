@@ -1,9 +1,9 @@
 <?php
 
-
 namespace FyziklaniModule;
 
-use Nette\Application\AbortException;
+use FKSDB\model\Fyziklani\NotSetGameParametersException;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
 use Nette\Application\BadRequestException;
 
 /**
@@ -12,30 +12,46 @@ use Nette\Application\BadRequestException;
  */
 class GameSetupPresenter extends BasePresenter {
     /**
+     * @var ModelFyziklaniGameSetup
+     */
+    private $gameSetup;
+
+    /**
      * @return void
      */
     public function titleDefault() {
-        $this->setTitle(_('Fyziklani game setup'));
-        $this->setIcon('fa fa-cogs');
+        $this->setTitle(_('Fyziklani game setup'),'fa fa-cogs');
     }
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
+     * @throws NotSetGameParametersException
      */
     public function renderDefault() {
         $this->template->gameSetup = $this->getGameSetup();
     }
 
     /**
-     * @throws BadRequestException
-     * @throws AbortException
      * @return void
+     * @throws BadRequestException
      */
     public function authorizedDefault() {
-        if (!$this->isEventFyziklani()) {
-            return $this->setAuthorized(false);
+        return $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.gameSetup', 'default'));
+    }
+
+    /**
+     * @return ModelFyziklaniGameSetup
+     * @throws BadRequestException
+     * @throws NotSetGameParametersException
+     */
+    protected function getGameSetup(): ModelFyziklaniGameSetup {
+        if (!$this->gameSetup) {
+            $gameSetup = $this->getEvent()->getFyziklaniGameSetup();
+            if (!$gameSetup) {
+                throw new BadRequestException(_('Game is not set up!'), 404);
+            }
+            $this->gameSetup = $gameSetup;
         }
-        return $this->setAuthorized($this->eventIsAllowed('fyziklani.gameSetup', 'default'));
+        return $this->gameSetup;
     }
 }

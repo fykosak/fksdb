@@ -35,12 +35,12 @@ class AESOPContestant extends StoredQueryPostProcessing {
     /**
      * @param $data
      * @return mixed
+     * @throws \Nette\Application\BadRequestException
      */
     public function processData($data) {
         $filtered = $this->filterCategory($data);
-        $ranked = $this->calculateRank($filtered);
         //$formated = $this->formatDate($ranked); //implemented in SQL
-        return $ranked;
+        return $this->calculateRank($filtered);
     }
 
     /**
@@ -79,7 +79,7 @@ class AESOPContestant extends StoredQueryPostProcessing {
         $category = $this->getCategory();
         if ($category) {
             $studyYears = $evaluationStrategy->categoryToStudyYears($category);
-            $studyYears = is_array($studyYears) ? $studyYears : array($studyYears);
+            $studyYears = is_array($studyYears) ? $studyYears : [$studyYears];
         }
 
         $graduationYears = [];
@@ -148,7 +148,7 @@ class AESOPContestant extends StoredQueryPostProcessing {
     private function studyYearToGraduation($studyYear, $acYear) {
         if ($studyYear >= 1 && $studyYear <= 4) {
             return $acYear + (5 - $studyYear);
-        } else if ($studyYear >= 6 && $studyYear <= 9) {
+        } elseif ($studyYear >= 6 && $studyYear <= 9) {
             return $acYear + (14 - $studyYear);
         } else {
             return null;

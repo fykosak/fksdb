@@ -3,7 +3,7 @@ import * as React from 'react';
 import { SubmitHandler } from 'redux-form';
 import { SubmitFormRequest } from '../actions';
 
-interface Props {
+interface OwnProps {
     valid: boolean;
     submitting: boolean;
     availablePoints: number[];
@@ -12,7 +12,7 @@ interface Props {
     onSubmit?(values: SubmitFormRequest): Promise<Response<void>>;
 }
 
-export default class TaskInput extends React.Component<Props, {}> {
+export default class TaskInput extends React.Component<OwnProps, {}> {
 
     public render() {
         const {valid, submitting, handleSubmit, onSubmit, availablePoints} = this.props;

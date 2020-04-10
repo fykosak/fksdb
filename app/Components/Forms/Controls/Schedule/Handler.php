@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Forms\Controls\Schedule;
 
+use FKSDB\NotImplementedException;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
@@ -9,6 +10,7 @@ use FKSDB\ORM\Services\Schedule\ServicePersonSchedule;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleGroup;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleItem;
 use Nette\Utils\ArrayHash;
+use PDOException;
 
 /**
  * Class Handler
@@ -47,14 +49,27 @@ class Handler {
     /**
      * @param ArrayHash $data
      * @param ModelPerson $person
-     * @param $eventId
-     *
+     * @param int $eventId
      * @throws ExistingPaymentException
      * @throws FullCapacityException
+     * @throws NotImplementedException
      */
     public function prepareAndUpdate(ArrayHash $data, ModelPerson $person, int $eventId) {
-        list($newScheduleData, $type) = $this->prepareData($data);
-        // Debugger::barDump($newScheduleData);
+        foreach ($this->prepareData($data) as $type => $newScheduleData) {
+            $this->updateDataType($newScheduleData, $type, $person, $eventId);
+        }
+    }
+
+    /**
+     * @param array $newScheduleData
+     * @param string $type
+     * @param ModelPerson $person
+     * @param int $eventId
+     * @throws ExistingPaymentException
+     * @throws FullCapacityException
+     * @throws NotImplementedException
+     */
+    private function updateDataType(array $newScheduleData, string $type, ModelPerson $person, int $eventId) {
         $oldRows = $this->servicePersonSchedule->getTable()
             ->where('person_id', $person->person_id)
             ->where('schedule_item.schedule_group.event_id', $eventId)->where('schedule_item.schedule_group.schedule_group_type', $type);
@@ -62,14 +77,14 @@ class Handler {
         foreach ($oldRows as $row) {
 
             $modelPersonSchedule = ModelPersonSchedule::createFromActiveRow($row);
-            if (in_array($modelPersonSchedule->schedule_item_id, $newScheduleData)) {
+            if (\in_array($modelPersonSchedule->schedule_item_id, $newScheduleData)) {
                 // do nothing
-                $index = array_search($modelPersonSchedule->schedule_item_id, $newScheduleData);
+                $index = \array_search($modelPersonSchedule->schedule_item_id, $newScheduleData);
                 unset($newScheduleData[$index]);
             } else {
                 try {
                     $modelPersonSchedule->delete();
-                } catch (\PDOException $exception) {
+                } catch (PDOException $exception) {
                     if (\preg_match('/payment/', $exception->getMessage())) {
                         throw new ExistingPaymentException(\sprintf(
                             _('Položka "%s" má už vygenerovanú platu, teda nejde zmazať.'),
@@ -84,10 +99,10 @@ class Handler {
         foreach ($newScheduleData as $id) {
             $query = $this->serviceScheduleItem->findByPrimary($id);
             $modelScheduleItem = ModelScheduleItem::createFromActiveRow($query);
-            if ($modelScheduleItem->getAvailableCapacity() > 0) {
+            if ($modelScheduleItem->hasFreeCapacity()) {
                 $this->servicePersonSchedule->createNewModel(['person_id' => $person->person_id, 'schedule_item_id' => $id]);
             } else {
-                throw new FullCapacityException(sprintf(
+                throw new FullCapacityException(\sprintf(
                     _('Osobu %s nepodarilo ptihlásiť na "%s", z dôvodu plnej kapacity.'),
                     $person->getFullName(),
                     $modelScheduleItem->getLabel()
@@ -101,10 +116,11 @@ class Handler {
      * @return integer[]
      */
     private function prepareData(ArrayHash $data): array {
+        $newData = [];
         foreach ($data as $type => $datum) {
-            return [\array_values((array)json_decode($datum)), $type];
+            $newData[$type] = \array_values((array)\json_decode($datum));
         }
-        return [];
+        return $newData;
     }
 }
 

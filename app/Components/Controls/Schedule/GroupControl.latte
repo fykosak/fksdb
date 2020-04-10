@@ -4,18 +4,20 @@
         <b class="col-2">{_'Id'}</b>
         <span class="col-10">#{$model->schedule_group_id}</span>
     </div>
-    {control valuePrinter__schedule_group__schedule_group_type:row $model}
+    {control valuePrinter:row 'schedule_group.name_cs',$model}
+    {control valuePrinter:row 'schedule_group.name_en', $model}
+    {control valuePrinter:row 'schedule_group.schedule_group_type', $model}
 
     <div class="row">
         <b class="col-2">{_'Event'}</b>
-        <span class="col-10">{$model->getEvent()->__toString()}
+        <span class="col-10">{$model->getEvent()->,toString()}
             <a class="btn btn-sm btn-secondary" href="{plink groups}" }>
                     {_'All groups'}</a>
                 <a class="btn btn-sm btn-secondary" href="{plink :Event:Dashboard:}" }>
                     {_'Event detail'}</a>
             </span>
     </div>
-    {control valuePrinter__schedule_group__start:row $model}
+    {control valuePrinter:row 'schedule_group.start', $model}
 
-    {control valuePrinter__schedule_group__end:row $model}
+    {control valuePrinter:row 'schedule_group.end', $model}
 </div>

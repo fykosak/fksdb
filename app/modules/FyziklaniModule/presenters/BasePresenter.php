@@ -4,12 +4,9 @@ namespace FyziklaniModule;
 
 use EventModule\BasePresenter as EventBasePresenter;
 use FKSDB\Components\Controls\Choosers\FyziklaniChooser;
-use FKSDB\Components\Factories\FyziklaniFactory;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 
@@ -31,49 +28,15 @@ abstract class BasePresenter extends EventBasePresenter {
     private $serviceFyziklaniTask;
 
     /**
-     * @var ServiceFyziklaniTeamPosition
-     */
-    private $serviceFyziklaniTeamPosition;
-    /**
      * @var ServiceFyziklaniSubmit
      */
     private $serviceFyziklaniSubmit;
-
-    /**
-     * @var FyziklaniFactory
-     */
-    protected $fyziklaniComponentsFactory;
-    /**
-     * @var ModelFyziklaniGameSetup
-     */
-    private $gameSetup;
-
-    /**
-     * @param FyziklaniFactory $fyziklaniComponentsFactory
-     */
-    public function injectFyziklaniComponentsFactory(FyziklaniFactory $fyziklaniComponentsFactory) {
-        $this->fyziklaniComponentsFactory = $fyziklaniComponentsFactory;
-    }
 
     /**
      * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
      */
     public function injectServiceFyziklaniSubmit(ServiceFyziklaniSubmit $serviceFyziklaniSubmit) {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
-    }
-
-    /**
-     * @param ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
-     */
-    public function injectServiceFyziklaniTeamPosition(ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition) {
-        $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
-    }
-
-    /**
-     * @return ServiceFyziklaniTeamPosition
-     */
-    protected function getServiceFyziklaniTeamPosition(): ServiceFyziklaniTeamPosition {
-        return $this->serviceFyziklaniTeamPosition;
     }
 
     /**
@@ -121,9 +84,8 @@ abstract class BasePresenter extends EventBasePresenter {
     /**
      * @return bool
      * @throws BadRequestException
-     * @throws AbortException
      */
-    protected function isEventFyziklani(): bool {
+    protected function isEnabled(): bool {
         return $this->getEvent()->event_type_id === 1;
     }
 
@@ -133,10 +95,6 @@ abstract class BasePresenter extends EventBasePresenter {
      */
     protected function startup() {
         parent::startup();
-        if (!$this->isEventFyziklani()) {
-            $this->flashMessage('Event nieje fyziklani', \BasePresenter::FLASH_WARNING);
-            $this->redirect(':Event:Dashboard:default');
-        }
         /**
          * @var FyziklaniChooser $fyziklaniChooser
          */
@@ -151,32 +109,4 @@ abstract class BasePresenter extends EventBasePresenter {
     protected function getNavRoots(): array {
         return ['fyziklani.dashboard.default'];
     }
-
-    /**
-     * @noinspection PhpMissingParentCallCommonInspection
-     * @return int
-     */
-    protected function getEventId(): int {
-        if (!$this->eventId) {
-            $this->eventId = $this->serviceEvent->getTable()->where('event_type_id', 1)->max('event_id');
-        }
-        return $this->eventId;
-    }
-
-    /**
-     * @return ModelFyziklaniGameSetup
-     * @throws BadRequestException
-     * @throws AbortException
-     */
-    protected function getGameSetup(): ModelFyziklaniGameSetup {
-        if (!$this->gameSetup) {
-            $gameSetup = $this->getEvent()->getFyziklaniGameSetup();
-            if (!$gameSetup) {
-                throw new BadRequestException(_('Game is not set up!'), 404);
-            }
-            $this->gameSetup = $gameSetup;
-        }
-        return $this->gameSetup;
-    }
-
 }

@@ -11,7 +11,6 @@ use FKSDB\Utils\Promise;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
-use Nette\Utils\RegexpException;
 
 /**
  * Be careful when calling getValue as it executes SQL queries and thus
@@ -162,7 +161,7 @@ class ReferencedId extends HiddenField {
         }
         if ($isPromise) {
             $value = self::VALUE_PROMISE;
-        } else if ($pvalue instanceof IModel) {
+        } elseif ($pvalue instanceof IModel) {
             $value = $pvalue->getPrimary();
         } else {
             $value = $pvalue;
@@ -203,9 +202,6 @@ class ReferencedId extends HiddenField {
         $this->referencedContainer->setDisabled($value);
     }
 
-    /**
-     * @throws RegexpException
-     */
     private function createPromise() {
         $referencedId = $this->getValue();
         $values = $this->referencedContainer->getValues();
@@ -217,7 +213,7 @@ class ReferencedId extends HiddenField {
                     $this->setValue($model, IReferencedSetter::MODE_FORCE);
                     $this->setModelCreated(true);
                     return $model->getPrimary();
-                } else if ($referencedId) {
+                } elseif ($referencedId) {
                     $model = $this->getService()->findByPrimary($referencedId);
                     $this->handler->update($model, $values);
                     // reload the model (this is workaround to avoid caching of empty but newly created referenced/related models)

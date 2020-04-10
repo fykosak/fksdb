@@ -24,6 +24,6 @@ class EndRow extends AbstractScheduleGroupRow {
      * @return Html
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        return (new DatePrinter())($model->end);
+        return (new DatePrinter('d. m. Y H:i'))($model->end);
     }
 }

@@ -66,11 +66,11 @@ class ExportFormatFactory {
         $this->storedQueryFactory = $storedQueryFactory;
         $this->serviceEvent = $serviceEvent;
         $this->serviceContest = $serviceContest;
-        $this->defaultFormats = array(
-            self::CSV_HEAD => _('Uložit CSV'),
+        $this->defaultFormats = [
+            self::CSV_HEAD => _('Save CSV'),
             self::CSV_HEADLESS => _('Uložit CSV (bez hlavičky)'),
             self::CSV_QUOTE_HEAD => _('Uložit CSV s uvozovkami')
-        );
+        ];
     }
 
     /**
@@ -127,33 +127,33 @@ class ExportFormatFactory {
         $eventId = sprintf($parameters[$qid]['idMask'], $contestName, $queryParameters['year'], $category);
 
         $format = new AESOPFormat($storedQuery, $xslFile, $this->storedQueryFactory);
-        $format->addParameters(array(
+        $format->addParameters([
             'errors-to' => $maintainer,
             'event' => $eventId,
             'year' => $queryParameters['ac_year'],
-        ));
+        ]);
 
         if (array_key_exists('eventTypeId', $parameters[$qid])) {
             $contest = $this->serviceContest->findByPrimary($queryParameters['contest']);
             $event = $this->serviceEvent->getByEventTypeId($contest, $queryParameters['year'], $parameters[$qid]['eventTypeId']);
-            $format->addParameters(array(
+            $format->addParameters([
                 'start-date' => $event->begin->format('Y-m-d'),
                 'end-date' => $event->end->format('Y-m-d'),
-            ));
+            ]);
         }
 
         // temporary 'bugfix' for team competition max-rank computation
         if ($qid != 'aesop.fol' && $qid != 'aesop.klani.ct' && $qid != 'aesop.klani.uc') {
-            $format->addParameters(array(
+            $format->addParameters([
                 'max-rank' => $storedQuery->getCount(),
-            ));
+            ]);
         }
 
         if ($qid == 'aesop.ct') {
-            $format->addParameters(array(
+            $format->addParameters([
                 'max-points' => $storedQuery->getPostProcessing()
                     ->getMaxPoints($this->container->getByType(ServiceTask::class)),
-            ));
+            ]);
         }
 
         return $format;
@@ -165,9 +165,8 @@ class ExportFormatFactory {
      * @param bool $quote
      * @return CSVFormat
      */
-    private function createCSV(StoredQuery $storedQuery, $header, $quote = CSVFormat::DEFAULT_QUOTE) {
-        $format = new CSVFormat($storedQuery, $header, CSVFormat::DEFAULT_DELIMITER, $quote);
-        return $format;
+    private function createCSV(StoredQuery $storedQuery, $header, $quote = CSVFormat::DEFAULT_QUOTE): CSVFormat {
+        return new CSVFormat($storedQuery, $header, CSVFormat::DEFAULT_DELIMITER, $quote);
     }
 
 }

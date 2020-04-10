@@ -1,10 +1,11 @@
 <?php
 
-use Authentication\AccountManager;
+use Authentication\SSO\GlobalSession;
+use FKSDB\Authentication\AccountManager;
 use Authentication\FacebookAuthenticator;
 use Authentication\LoginUserStorage;
 use Authentication\PasswordAuthenticator;
-use Authentication\RecoveryException;
+use FKSDB\Authentication\RecoveryException;
 use Authentication\TokenAuthenticator;
 use FKSDB\Authentication\SSO\IGlobalSession;
 use FKSDB\Authentication\SSO\ServiceSide\Authentication;
@@ -14,7 +15,9 @@ use FKSDB\ORM\Services\ServiceAuthToken;
 use FKSDB\ORM\Services\ServicePerson;
 use Mail\MailTemplateFactory;
 use Mail\SendFailedException;
+use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Http\Url;
 use Nette\Security\AuthenticationException;
 use Nette\Utils\DateTime;
@@ -27,8 +30,6 @@ use Nette\Utils\DateTime;
  * Class AuthenticationPresenter
  */
 final class AuthenticationPresenter extends BasePresenter {
-
-    use \LanguageNav;
 
     const PARAM_GSID = 'gsid';
     /** @const Indicates that page is accessed via dispatch from the login page. */
@@ -62,7 +63,7 @@ final class AuthenticationPresenter extends BasePresenter {
 
     /**
      * todo check if type is persistent
-     * @var \Authentication\SSO\GlobalSession
+     * @var GlobalSession
      */
     private $globalSession;
 
@@ -162,16 +163,8 @@ final class AuthenticationPresenter extends BasePresenter {
     }
 
     /**
-     * @throws Exception
-     */
-    public function startup() {
-        parent::startup();
-        $this->startupRedirects();
-    }
-
-    /**
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws AbortException
+     * @throws InvalidLinkException
      */
     public function actionLogout() {
         $subDomainAuth = $this->globalParameters['subdomain']['auth'];
@@ -195,7 +188,7 @@ final class AuthenticationPresenter extends BasePresenter {
 
         if ($this->isLoggedIn()) {
             $this->getUser()->logout(true); //clear identity
-        } else if ($this->getParameter(self::PARAM_GSID)) { // global session may exist but central login doesn't know it (e.g. expired its session)
+        } elseif ($this->getParameter(self::PARAM_GSID)) { // global session may exist but central login doesn't know it (e.g. expired its session)
             // We restart the global session with provided parameter.
             // This is secure as only harm an attacker can make to the user is to log him out.
             $this->globalSession->destroy();
@@ -211,12 +204,12 @@ final class AuthenticationPresenter extends BasePresenter {
     }
 
     /**
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function actionLogin() {
         if ($this->isLoggedIn()) {
             /**
-             * @var \FKSDB\ORM\Models\ModelLogin $login
+             * @var ModelLogin $login
              */
             $login = $this->getUser()->getIdentity();
             $this->loginBackLinkRedirect($login);
@@ -241,7 +234,7 @@ final class AuthenticationPresenter extends BasePresenter {
     }
 
     /**
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function actionRecover() {
         if ($this->isLoggedIn()) {
@@ -281,8 +274,10 @@ final class AuthenticationPresenter extends BasePresenter {
         $form->addPassword('password', _('Heslo'))
             ->addRule(Form::FILLED, _('Zadejte heslo.'));
         $form->addSubmit('send', _('Přihlásit'));
-      //  $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
-        $form->onSuccess[] = callback($this, 'loginFormSubmitted');
+        $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
+        $form->onSuccess[] = function (Form $form) {
+            return $this->loginFormSubmitted($form);
+        };
         return $form;
     }
 
@@ -300,19 +295,17 @@ final class AuthenticationPresenter extends BasePresenter {
 
         $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
 
-        $form->onSuccess[] = callback($this, 'recoverFormSubmitted');
+        $form->onSuccess[] = function (Form $form) {
+            $this->recoverFormSubmitted($form);
+        };
         return $form;
     }
 
     /**
      * @param $form
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
-    /**
-     * @param $form
-     * @throws \Nette\Application\AbortException
-     */
-    public function loginFormSubmitted($form) {
+    private function loginFormSubmitted(Form $form) {
         try {
             $this->user->login($form['id']->value, $form['password']->value);
             /**
@@ -328,11 +321,11 @@ final class AuthenticationPresenter extends BasePresenter {
 
     /**
      * @param Form $form
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     /**
      * @param Form $form
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      * @throws Exception
      */
     public function recoverFormSubmitted(Form $form) {
@@ -345,8 +338,7 @@ final class AuthenticationPresenter extends BasePresenter {
              * @var ModelLogin $login
              */
             $login = $this->passwordAuthenticator->findLogin($values['id']);
-            $template = $this->mailTemplateFactory->createPasswordRecovery($this, $this->getLang());
-            $this->accountManager->sendRecovery($template, $login);
+            $this->accountManager->sendRecovery($login, $login->getPerson()->getPreferredLang() ?: $this->getLang());
             $email = Utils::cryptEmail($login->getPerson()->getInfo()->email);
             $this->flashMessage(sprintf(_('Na email %s byly poslány další instrukce k obnovení přístupu.'), $email), self::FLASH_SUCCESS);
             $connection->commit();
@@ -365,11 +357,12 @@ final class AuthenticationPresenter extends BasePresenter {
 
     /**
      * @param null $login
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     /**
      * @param null $login
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
+     * @throws Exception
      */
     private function loginBackLinkRedirect($login = null) {
         if (!$this->backlink) {
@@ -408,7 +401,7 @@ final class AuthenticationPresenter extends BasePresenter {
     }
 
     /**
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     private function initialRedirect() {
         if ($this->backlink) {

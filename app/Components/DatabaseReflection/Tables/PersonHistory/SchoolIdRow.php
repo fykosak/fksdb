@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\DatabaseReflection\PersonHistory;
 
-use FKSDB\Components\Controls\Helpers\Badges\NotSetBadge;
+use FKSDB\Components\Controls\Badges\NotSetBadge;
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelPersonHistory;
@@ -42,10 +42,11 @@ class SchoolIdRow extends AbstractRow {
     }
 
     /**
+     * @param array $args
      * @return BaseControl
      * @throws BadRequestException
      */
-    public function createField(): BaseControl {
+    public function createField(...$args): BaseControl {
         throw new BadRequestException();
     }
 }

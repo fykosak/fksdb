@@ -39,18 +39,15 @@ class ValidationPresenter extends BasePresenter {
     }
 
     public function titleDefault() {
-        $this->setIcon('fa fa-check');
-        $this->setTitle('Validation tests');
+        $this->setTitle(_('Data validation'), 'fa fa-check');
     }
 
     public function titleList() {
-        $this->setIcon('fa fa-check');
-        $this->setTitle('All test');
+        $this->setTitle(_('All test'), 'fa fa-check');
     }
 
     public function titlePreview() {
-        $this->setIcon('fa fa-check');
-        $this->setTitle('Select test');
+        $this->setTitle(_('Select test'), 'fa fa-check');
     }
 
     public function authorizedDefault() {
@@ -70,7 +67,7 @@ class ValidationPresenter extends BasePresenter {
      * @return ValidationGrid
      */
     public function createComponentGrid(): ValidationGrid {
-        return new ValidationGrid($this->servicePerson, $this->validationFactory->getTests());
+        return new ValidationGrid($this->validationFactory->getTests(), $this->getContext());
     }
 
     /**

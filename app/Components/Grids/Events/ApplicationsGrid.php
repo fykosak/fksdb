@@ -8,12 +8,14 @@ use Events\Model\ApplicationHandlerFactory;
 use Events\Model\Grid\IHolderSource;
 use Events\Model\Holder\Holder;
 use FKSDB\Application\IJavaScriptCollector;
-use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Logging\MemoryLogger;
+use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Presenter;
+use Nette\ComponentModel\IComponent;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
+use Nette\Templating\ITemplate;
 use Nette\Utils\Strings;
 
 
@@ -48,7 +50,7 @@ class ApplicationsGrid extends Control {
     private $machines = [];
 
     /**
-     * @var \FKSDB\ORM\Models\ModelEvent[]
+     * @var ModelEvent[]
      */
     private $eventApplications = [];
 
@@ -61,11 +63,6 @@ class ApplicationsGrid extends Control {
      * @var ApplicationHandlerFactory
      */
     private $handlerFactory;
-
-    /**
-     * @var FlashMessageDump
-     */
-    private $flashDump;
 
     /**
      * @var string
@@ -82,15 +79,13 @@ class ApplicationsGrid extends Control {
      * @param Container $container
      * @param IHolderSource $source
      * @param ApplicationHandlerFactory $handlerFactory
-     * @param FlashMessageDump $flashDump
      */
-    function __construct(Container $container, IHolderSource $source, ApplicationHandlerFactory $handlerFactory, FlashMessageDump $flashDump) {
+    function __construct(Container $container, IHolderSource $source, ApplicationHandlerFactory $handlerFactory) {
         parent::__construct();
         $this->monitor(IJavaScriptCollector::class);
         $this->container = $container;
         $this->source = $source;
         $this->handlerFactory = $handlerFactory;
-        $this->flashDump = $flashDump;
         $this->processSource();
     }
 
@@ -144,7 +139,7 @@ class ApplicationsGrid extends Control {
 
     /**
      * @param $name
-     * @return ApplicationComponent|\Nette\ComponentModel\IComponent
+     * @return ApplicationComponent|IComponent
      */
     protected function createComponent($name) {
 
@@ -155,13 +150,12 @@ class ApplicationsGrid extends Control {
         if (!$key) {
             parent::createComponent($name);
         }
-        $component = new ApplicationComponent($this->handlers[$key], $this->holders[$key], $this->flashDump);
-        return $component;
+        return new ApplicationComponent($this->handlers[$key], $this->holders[$key]);
     }
 
     /**
      * @param null $class
-     * @return \Nette\Templating\ITemplate
+     * @return ITemplate
      */
     protected function createTemplate($class = NULL) {
         $template = parent::createTemplate($class);

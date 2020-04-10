@@ -109,12 +109,12 @@ class Breadcrumbs extends Control {
     }
 
     public function reset() {
-        foreach (array(
-    self::SECTION_BACKIDS,
-    self::SECTION_REQUESTS,
-    self::SECTION_REVERSE,
-    self::SECTION_PATH_REVERSE,
-        ) as $sectionName) {
+        foreach ([
+                     self::SECTION_BACKIDS,
+                     self::SECTION_REQUESTS,
+                     self::SECTION_REVERSE,
+                     self::SECTION_PATH_REVERSE,
+                 ] as $sectionName) {
             $this->session->getSection($sectionName)->remove();
         }
     }
@@ -129,10 +129,10 @@ class Breadcrumbs extends Control {
         $path = [];
         foreach ($this->getTraversePath($request) as $naviRequest) {
             $url = $this->router->constructUrl($naviRequest->request, $this->httpRequest->getUrl());
-            $path[] = (object) array(
-                        'url' => $url,
-                        'title' => $naviRequest->title,
-            );
+            $path[] = (object)[
+                'url' => $url,
+                'title' => $naviRequest->title,
+            ];
         }
         /**
          * @var FileTemplate $template
@@ -227,7 +227,7 @@ class Breadcrumbs extends Control {
             $presenterClassName = $this->presenterFactory->formatPresenterClass($presenterName);
             $action = $parameters[Presenter::ACTION_KEY];
             $methodName = call_user_func("$presenterClassName::publicFormatActionMethod", $action);
-            $identifyingParameters = array(Presenter::ACTION_KEY);
+            $identifyingParameters = [Presenter::ACTION_KEY];
 
             $rc = call_user_func("$presenterClassName::getReflection");
             if ($rc->hasMethod($methodName)) {
@@ -249,11 +249,10 @@ class Breadcrumbs extends Control {
             }
 
             $paramKey = Utils::getFingerprint($filteredParameters);
-            $key = $presenterName . ':' . $paramKey;
-            return $key;
-        } else if ($request instanceof NaviRequest) {
+            return $presenterName . ':' . $paramKey;
+        } elseif ($request instanceof NaviRequest) {
             return $request->pathKey;
-        } else if (is_string($request)) { // caching + recursion
+        } elseif (is_string($request)) { // caching + recursion
             $pathKeyCache = $this->getPathKeyCache();
             $requests = $this->getRequests();
             $requestKey = $request;
@@ -317,8 +316,7 @@ class Breadcrumbs extends Control {
         $presenterName = $request->getPresenterName();
         $parameters = $this->filterParameters($request->getParameters());
         $paramKey = Utils::getFingerprint($parameters);
-        $key = $presenterName . ':' . $paramKey;
-        return $key;
+        return $presenterName . ':' . $paramKey;
     }
 
     /**

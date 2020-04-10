@@ -11,14 +11,17 @@
                     {sprintf(_('Schedule group #%s'),$model->schedule_group_id)}</a>
         </span>
     </div>
-    {control valuePrinter__schedule_item__price_eur:row $model}
-    {control valuePrinter__schedule_item__price_czk:row $model}
+    {control valuePrinter:row 'schedule_item.price_eur', $model}
+    {control valuePrinter:row 'schedule_item.price_czk',$model}
 
-    {control valuePrinter__schedule_item__name_cs:row $model}
-    {control valuePrinter__schedule_item__name_en:row $model}
+    {control valuePrinter:row 'schedule_item.name_cs', $model}
+    {control valuePrinter:row 'schedule_item.name_en',$model}
 
-    {control valuePrinter__schedule_item__capacity:row $model}
-    {control valuePrinter__schedule_item__used_capacity:row $model}
-    {control valuePrinter__schedule_item__free_capacity:row $model}
-    {control valuePrinter__schedule_item__require_id_number:row $model}
+    {control valuePrinter:row 'schedule_item.description_cs', $model}
+    {control valuePrinter:row 'schedule_item.description_en', $model}
+
+    {control valuePrinter:row 'schedule_item.capacity', $model}
+    {control valuePrinter:row 'schedule_item.used_capacity', $model}
+    {control valuePrinter:row 'schedule_item.free_capacity', $model}
+    {control valuePrinter:row 'schedule_item.require_id_number', $model}
 </div>

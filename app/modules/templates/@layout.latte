@@ -61,13 +61,15 @@
         </div><!-- /.navbar-collapse -->
     </nav>
     <main id="wrap" style="min-height:100%">
-        <div class="container py-4 bg-white-container" style="height:100%">
+        <div class="{$containerClassNames}" style="height:100%">
             {control breadcrumbs}
             {block titleBody}
                 <h1 class="page-header"><i class="{$icon} mr-2"></i>{$title}
                 <small class="text-secondary small"> {$subtitle}</small></h1>{/block}
             {block flashes}
-                <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">{$flash->message}</div>
+                {foreach $flashes as $flash}
+                    <div class="alert alert-{$flash->type}">{$flash->message}</div>
+                {/foreach}
             {/block}
             {include #content}
         </div>

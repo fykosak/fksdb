@@ -37,7 +37,11 @@ class NumberBrochuresRow extends AbstractTeacherRow {
         return _('Number of brochures/propagation items, that he wants to send.');
     }
 
-    public function createField(): BaseControl {
+    /**
+     * @param array $args
+     * @return BaseControl
+     */
+    public function createField(...$args): BaseControl {
         return (new TextInput(_('Number of brochures')))->addRule(Form::INTEGER)->setOption('description', $this->getDescription());
     }
 }

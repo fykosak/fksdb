@@ -1,9 +1,10 @@
 <?php
 
 use FKSDB\Components\Controls\ContestChooser;
-use FKSDB\Components\Controls\LanguageChooser;
 use FKSDB\ORM\Models\ModelContest;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 
 /**
  * Class ContestPresenter
@@ -24,19 +25,16 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
 
     /**
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\ForbiddenRequestException
+     * @throws AbortException
+     * @throws ForbiddenRequestException
      */
     protected function startup() {
         parent::startup();
         /**
          * @var ContestChooser $contestChooser
-         * @var LanguageChooser $languageChooser
          */
         $contestChooser = $this->getComponent('contestChooser');
         $contestChooser->syncRedirect();
-        $languageChooser = $this->getComponent('languageChooser');
-        $languageChooser->syncRedirect();
     }
 
     /**
@@ -45,14 +43,7 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
     abstract protected function createComponentContestChooser(): ContestChooser;
 
     /**
-     * @return LanguageChooser
-     */
-    protected function createComponentLanguageChooser(): LanguageChooser {
-        return new LanguageChooser($this->session);
-    }
-
-    /**
-     * @return \FKSDB\ORM\Models\ModelContest
+     * @return ModelContest
      * @throws BadRequestException
      */
     public function getSelectedContest() {
@@ -90,25 +81,10 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
     }
 
     /**
-     * @return mixed
-     * @throws BadRequestException
-     */
-    public function getSelectedLanguage() {
-        /**
-         * @var LanguageChooser $languageChooser
-         */
-        $languageChooser = $this->getComponent('languageChooser');
-        if (!$languageChooser->isValid()) {
-            throw new BadRequestException('No languages available.', 403);
-        }
-        return $languageChooser->getLanguage();
-    }
-
-    /**
      * @return array
      */
     protected function getNavBarVariant(): array {
-        $row = $this->serviceContest->findByPrimary($this->contestId);
+        $row = $this->getServiceContest()->findByPrimary($this->contestId);
         if ($row) {
             $contest = ModelContest::createFromActiveRow($row);
             return [$contest->getContestSymbol(), 'navbar-dark bg-' . $contest->getContestSymbol()];

@@ -4,20 +4,20 @@ namespace FKSDB\Components\Controls\Fyziklani\Submit;
 
 use BasePresenter;
 use Exception;
+use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Components\Controls\Fyziklani\FyziklaniReactControl;
 use FKSDB\Messages\Message;
 use FKSDB\model\Fyziklani\ClosedSubmittingException;
+use FKSDB\model\Fyziklani\NotSetGameParametersException;
 use FKSDB\model\Fyziklani\SubmitHandler;
 use FKSDB\model\Fyziklani\TaskCodeException;
 use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use FKSDB\React\ReactResponse;
 use Nette\Application\AbortException;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\ComponentModel\IComponent;
 use Nette\DI\Container;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
@@ -28,6 +28,15 @@ use Nette\Utils\JsonException;
  */
 class TaskCodeInput extends FyziklaniReactControl {
     /**
+     * @var ServiceFyziklaniTeam
+     */
+    private $serviceFyziklaniTeam;
+
+    /**
+     * @var ServiceFyziklaniTask
+     */
+    private $serviceFyziklaniTask;
+    /**
      * @var SubmitHandler
      */
     private $handler;
@@ -37,51 +46,48 @@ class TaskCodeInput extends FyziklaniReactControl {
      * @param SubmitHandler $handler
      * @param Container $container
      * @param ModelEvent $event
-     * @param ServiceFyziklaniRoom $serviceFyziklaniRoom
-     * @param ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @param ServiceFyziklaniTask $serviceFyziklaniTask
-     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
      */
-    public function __construct(SubmitHandler $handler, Container $container, ModelEvent $event, ServiceFyziklaniRoom $serviceFyziklaniRoom, ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition, ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceFyziklaniTask $serviceFyziklaniTask, ServiceFyziklaniSubmit $serviceFyziklaniSubmit) {
-        parent::__construct($container, $event, $serviceFyziklaniRoom, $serviceFyziklaniTeamPosition, $serviceFyziklaniTeam, $serviceFyziklaniTask, $serviceFyziklaniSubmit);
+    public function __construct(
+        Container $container,
+        SubmitHandler $handler,
+        ModelEvent $event
+    ) {
         $this->handler = $handler;
+        $this->serviceFyziklaniTask = $container->getByType(ServiceFyziklaniTask::class);
+        $this->serviceFyziklaniTeam = $container->getByType(ServiceFyziklaniTeam::class);
+        parent::__construct($container, $event);
+        $this->monitor(IJavaScriptCollector::class);
     }
 
     /**
      * @return string
      * @throws JsonException
+     * @throws NotSetGameParametersException
      */
     public function getData(): string {
         return Json::encode([
-            'availablePoints' => $this->event->getFyziklaniGameSetup()->getAvailablePoints(),
-            'tasks' => $this->serviceFyziklaniTask->getTasksAsArray($this->event),
-            'teams' => $this->serviceFyziklaniTeam->getTeamsAsArray($this->event),
+            'availablePoints' => $this->getEvent()->getFyziklaniGameSetup()->getAvailablePoints(),
+            'tasks' => $this->serviceFyziklaniTask->getTasksAsArray($this->getEvent()),
+            'teams' => $this->serviceFyziklaniTeam->getTeamsAsArray($this->getEvent()),
         ]);
     }
 
     /**
-     * @return string
+     * @param IComponent $obj
      */
-    public function getMode(): string {
-        return '';
+    protected function attached($obj) {
+        if ($obj instanceof IJavaScriptCollector) {
+            $obj->registerJSFile('https://dmla.github.io/jsqrcode/src/qr_packed.js');
+        }
+        parent::attached($obj);
     }
 
     /**
-     * @return string
-     */
-    public function getComponentName(): string {
-        return 'submit-form';
-    }
-
-    /**
-     * @return array
      * @throws InvalidLinkException
      */
-    public function getActions(): array {
-        $actions = parent::getActions();
-        $actions['save'] = $this->link('save!');
-        return $actions;
+    protected function configure() {
+        $this->addAction('save', $this->link('save!'));
+        parent::configure();
     }
 
     /**
@@ -102,5 +108,12 @@ class TaskCodeInput extends FyziklaniReactControl {
         }
         $this->getPresenter()->sendResponse($response);
 
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getReactId(): string {
+        return 'fyziklani.submit-form';
     }
 }

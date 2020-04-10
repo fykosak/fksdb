@@ -1,5 +1,6 @@
 <?php
 
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Tracy\Debugger;
 
@@ -24,9 +25,9 @@ class ErrorPresenter extends BasePresenter {
     }
 
     /**
-     * @param  Exception
+     * @param Exception
      * @return void
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function renderDefault($exception) {
         if ($this->isAjax()) { // AJAX request? Just note this error in payload.
@@ -35,7 +36,7 @@ class ErrorPresenter extends BasePresenter {
         } elseif ($exception instanceof BadRequestException) {
             $code = $exception->getCode();
             // known exception or general 500
-            $this->setView(in_array($code, [403, 404, 405]) ? $code : '500');
+            $this->setView(in_array($code, [403, 404, 405, 410]) ? $code : '500');
             // log to access.log
             Debugger::log("HTTP code $code: {$exception->getMessage()} in {$exception->getFile()}:{$exception->getLine()}", 'access');
         } else {

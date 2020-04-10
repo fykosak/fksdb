@@ -30,7 +30,6 @@ use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use Nette\SmartObject;
 use Nette\Utils\Arrays;
-use Nette\Utils\RegexpException;
 use Persons\IModifiabilityResolver;
 use Persons\IVisibilityResolver;
 use Persons\ReferencedPersonHandler;
@@ -129,10 +128,9 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
      * @param IVisibilityResolver $visibilityResolver is person's writeOnly field visible? (i.e. not writeOnly then)
      * @param int $evenId
      * @return array
-     * @throws RegexpException
+     * @throws \Exception
      */
     public function createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, IModifiabilityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver, $evenId = 0) {
-
         $handler = $this->referencedPersonHandlerFactory->create($acYear, null, $evenId);
 
         $hiddenField = new ReferencedId($this->servicePerson, $handler, $this);
@@ -153,7 +151,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
             if ($sub == ReferencedPersonHandler::POST_CONTACT_DELIVERY) {
                 $subcontainer->setOption('showGroup', true);
                 $subcontainer->setOption('label', _('Doručovací adresa'));
-            } else if ($sub == ReferencedPersonHandler::POST_CONTACT_PERMANENT) {
+            } elseif ($sub == ReferencedPersonHandler::POST_CONTACT_PERMANENT) {
                 $subcontainer->setOption('showGroup', true);
                 $label = _('Trvalá adresa');
                 if (isset($container[ReferencedPersonHandler::POST_CONTACT_DELIVERY])) {
@@ -190,10 +188,10 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
             $container->addComponent($subcontainer, $sub);
         }
 
-        return array(
+        return [
             $hiddenField,
             $container,
-        );
+        ];
     }
 
 
@@ -234,13 +232,13 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
 
                 if (!$controlVisible && !$controlModifiable) {
                     $container[$sub]->removeComponent($component);
-                } else if (!$controlVisible && $controlModifiable) {
+                } elseif (!$controlVisible && $controlModifiable) {
                     $this->setWriteOnly($component, true);
                     $component->setDisabled(false);
-                } else if ($controlVisible && !$controlModifiable) {
+                } elseif ($controlVisible && !$controlModifiable) {
                     $component->setDisabled();
                     $component->setValue($value);
-                } else if ($controlVisible && $controlModifiable) {
+                } elseif ($controlVisible && $controlModifiable) {
                     $this->setWriteOnly($component, false);
                     $component->setDisabled(false);
                 }
@@ -267,8 +265,8 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
      * @param $acYear
      * @param HiddenField $hiddenField
      * @param array $metadata
-     * @throws \Exception
      * @return AddressContainer|BaseControl|null
+     * @throws \Exception
      * @throws \Exception
      */
     public function createField($sub, $fieldName, $acYear, HiddenField $hiddenField, array $metadata) {
@@ -283,14 +281,12 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
                 } else {
                     $options = 0;
                 }
-                $container = $this->addressFactory->createAddress($options, $hiddenField);
-                return $container;
+                return $this->addressFactory->createAddress($options, $hiddenField);
             } else {
                 throw new InvalidArgumentException("Only 'address' field is supported.");
             }
-        } else if ($sub == 'person_has_flag') {
-            $control = $this->flagFactory->createFlag($hiddenField, $metadata);
-            return $control;
+        } elseif ($sub == 'person_has_flag') {
+            return $this->flagFactory->createFlag($hiddenField, $metadata);
         } else {
             $control = null;
             switch ($sub) {
@@ -355,7 +351,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
     protected function setWriteOnly($component, $value) {
         if ($component instanceof IWriteOnly) {
             $component->setWriteOnly($value);
-        } else if ($component instanceof Container) {
+        } elseif ($component instanceof Container) {
             foreach ($component->getComponents() as $subcomponent) {
                 $this->setWriteOnly($subcomponent, $value);
             }
@@ -369,7 +365,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
     protected function isWriteOnly($component) {
         if ($component instanceof IWriteOnly) {
             return true;
-        } else if ($component instanceof Container) {
+        } elseif ($component instanceof Container) {
             foreach ($component->getComponents() as $subcomponent) {
                 if ($this->isWriteOnly($subcomponent)) {
                     return true;
@@ -391,6 +387,8 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
                 $control->addCondition(Form::FILLED)
                     ->addRule(Form::EMAIL, _('Neplatný tvar e-mailu.'));
                 $control->setOption('description', _('Nejprve zkuste najít osobu v naší databázi podle e-mailu.'));
+                $control->setAttribute('placeholder', 'your-email@exmaple.com');
+                $control->setAttribute('autocomplete', 'email');
                 break;
             case self::SEARCH_ID:
                 $control = $this->personFactory->createPersonSelect(true, _('Jméno'), $this->personProvider);
@@ -495,6 +493,4 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
                 throw new InvalidArgumentException("Unknown person sub '$sub'.");
         }
     }
-
 }
-

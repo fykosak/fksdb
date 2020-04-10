@@ -23,9 +23,11 @@ class BornRow extends AbstractRow {
     }
 
     /**
+     * @param array $args
      * @return BaseControl
+     * @throws \Exception
      */
-    public function createField(): BaseControl {
+    public function createField(...$args): BaseControl {
         $control = new WriteOnlyDatePicker($this->getTitle());
         $control->setDefaultValue((new \DateTime())->modify('-16 years'));
         return $control;

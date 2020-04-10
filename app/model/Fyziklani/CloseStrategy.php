@@ -25,20 +25,18 @@ class CloseStrategy {
     protected $presenter;
 
     /**
-     *
-     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam
+     * @var ServiceFyziklaniTeam
      */
     private $serviceFyziklaniTeam;
     /**
-     * @var \FKSDB\ORM\Models\ModelEvent
+     * @var ModelEvent
      */
     private $event;
 
-
     /**
      * CloseSubmitStrategy constructor.
-     * @param \FKSDB\ORM\Models\ModelEvent $event
-     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @param ModelEvent $event
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
      */
     public function __construct(ModelEvent $event, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
@@ -72,14 +70,6 @@ class CloseStrategy {
     }
 
     /**
-     * @throws BadRequestException
-     * @internal
-     */
-    public function closeGlobal(): Html {
-        return $this->close(null);
-    }
-
-    /**
      * @param Traversable|array $data
      * @param $total
      * @return Html
@@ -87,13 +77,15 @@ class CloseStrategy {
     private function saveResults(array $data, bool $total): Html {
         $log = Html::el('ul');
         foreach ($data as $index => $teamData) {
+            /**
+             * @var ModelFyziklaniTeam $team
+             */
             $team = $teamData['team'];
             if ($total) {
-                $this->serviceFyziklaniTeam->updateModel($team, ['rank_total' => $index + 1]);
+                $this->serviceFyziklaniTeam->updateModel2($team, ['rank_total' => $index + 1]);
             } else {
-                $this->serviceFyziklaniTeam->updateModel($team, ['rank_category' => $index + 1]);
+                $this->serviceFyziklaniTeam->updateModel2($team, ['rank_category' => $index + 1]);
             }
-            $this->serviceFyziklaniTeam->save($team);
             $log->addHtml(Html::el('li')
                 ->addText(_('Team') . $team->name . ':(' . $team->e_fyziklani_team_id . ')' . _('Pořadí') . ': ' . ($index + 1)));
         }
@@ -125,9 +117,9 @@ class CloseStrategy {
     }
 
     /**
-     * @return \Closure
+     * @return callable
      */
-    private static function getSortFunction(): \Closure {
+    private static function getSortFunction(): callable {
         return function (array $b, array $a): int {
             if ($a['points'] > $b['points']) {
                 return 1;
@@ -164,7 +156,7 @@ class CloseStrategy {
         $arraySubmits = [];
         $sum = 0;
         $count = 0;
-        foreach ($team->getSubmits() as $row) {
+        foreach ($team->getAllSubmits() as $row) {
             $submit = ModelFyziklaniSubmit::createFromActiveRow($row);
             if ($submit->points !== null) {
                 $sum += $submit->points;

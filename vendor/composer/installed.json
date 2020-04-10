@@ -75,17 +75,17 @@
     },
     {
         "name": "nette/caching",
-        "version": "v2.5.8",
-        "version_normalized": "2.5.8.0",
+        "version": "v2.5.9",
+        "version_normalized": "2.5.9.0",
         "source": {
             "type": "git",
             "url": "https://github.com/nette/caching.git",
-            "reference": "7fba7c7ab2585fafb7b31152f2595e1551120555"
+            "reference": "d93ef446836a5a0ff7ef78d5ffebb7fe043f9953"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/nette/caching/zipball/7fba7c7ab2585fafb7b31152f2595e1551120555",
-            "reference": "7fba7c7ab2585fafb7b31152f2595e1551120555",
+            "url": "https://api.github.com/repos/nette/caching/zipball/d93ef446836a5a0ff7ef78d5ffebb7fe043f9953",
+            "reference": "d93ef446836a5a0ff7ef78d5ffebb7fe043f9953",
             "shasum": ""
         },
         "require": {
@@ -105,7 +105,7 @@
         "suggest": {
             "ext-pdo_sqlite": "to use SQLiteStorage or SQLiteJournal"
         },
-        "time": "2018-03-21T11:04:32+00:00",
+        "time": "2019-11-19T18:38:13+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -205,6 +205,80 @@
         "keywords": [
             "components",
             "nette"
+        ]
+    },
+    {
+        "name": "nette/database",
+        "version": "v2.4.9",
+        "version_normalized": "2.4.9.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/nette/database.git",
+            "reference": "ac4fe411062798529194ff6a3808768abc57964f"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/nette/database/zipball/ac4fe411062798529194ff6a3808768abc57964f",
+            "reference": "ac4fe411062798529194ff6a3808768abc57964f",
+            "shasum": ""
+        },
+        "require": {
+            "ext-pdo": "*",
+            "nette/caching": "^2.2",
+            "nette/utils": "^2.4",
+            "php": ">=5.6.0"
+        },
+        "conflict": {
+            "nette/nette": "<2.2"
+        },
+        "require-dev": {
+            "mockery/mockery": "^1.0.0",
+            "nette/di": "^2.4 || ~3.0.0",
+            "nette/tester": "^2.0",
+            "tracy/tracy": "^2.4"
+        },
+        "time": "2019-11-19T18:29:14+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.4-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "src/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause",
+            "GPL-2.0",
+            "GPL-3.0"
+        ],
+        "authors": [
+            {
+                "name": "David Grudl",
+                "homepage": "https://davidgrudl.com"
+            },
+            {
+                "name": "Nette Community",
+                "homepage": "https://nette.org/contributors"
+            }
+        ],
+        "description": "💾 Nette Database: layer with a familiar PDO-like API but much more powerful. Building queries, advanced joins, drivers for MySQL, PostgreSQL, SQLite, MS SQL Server and Oracle.",
+        "homepage": "https://nette.org",
+        "keywords": [
+            "database",
+            "mssql",
+            "mysql",
+            "nette",
+            "notorm",
+            "oracle",
+            "pdo",
+            "postgresql",
+            "queries",
+            "sqlite"
         ]
     },
     {
@@ -676,7 +750,8 @@
             "annotation",
             "nette",
             "reflection"
-        ]
+        ],
+        "abandoned": true
     },
     {
         "name": "nette/robot-loader",
@@ -876,18 +951,82 @@
         ]
     },
     {
-        "name": "nette/utils",
-        "version": "v2.5.3",
-        "version_normalized": "2.5.3.0",
+        "name": "nette/tester",
+        "version": "v2.0.2",
+        "version_normalized": "2.0.2.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/nette/utils.git",
-            "reference": "17b9f76f2abd0c943adfb556e56f2165460b15ce"
+            "url": "https://github.com/nette/tester.git",
+            "reference": "3f273cf0ef82939e5ed07baaa5cf21ea6f657fc2"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/nette/utils/zipball/17b9f76f2abd0c943adfb556e56f2165460b15ce",
-            "reference": "17b9f76f2abd0c943adfb556e56f2165460b15ce",
+            "url": "https://api.github.com/repos/nette/tester/zipball/3f273cf0ef82939e5ed07baaa5cf21ea6f657fc2",
+            "reference": "3f273cf0ef82939e5ed07baaa5cf21ea6f657fc2",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.6.0"
+        },
+        "time": "2018-06-07T11:24:40+00:00",
+        "bin": [
+            "src/tester"
+        ],
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.0-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "src/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause",
+            "GPL-2.0",
+            "GPL-3.0"
+        ],
+        "authors": [
+            {
+                "name": "David Grudl",
+                "homepage": "https://davidgrudl.com"
+            },
+            {
+                "name": "Nette Community",
+                "homepage": "https://nette.org/contributors"
+            }
+        ],
+        "description": "Nette Tester: enjoyable unit testing in PHP with code coverage reporter. ????",
+        "homepage": "https://tester.nette.org",
+        "keywords": [
+            "Xdebug",
+            "assertions",
+            "clover",
+            "code coverage",
+            "nette",
+            "phpdbg",
+            "phpunit",
+            "testing",
+            "unit"
+        ]
+    },
+    {
+        "name": "nette/utils",
+        "version": "v2.5.4",
+        "version_normalized": "2.5.4.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/nette/utils.git",
+            "reference": "b343b5749f8c2daa0d15f30380ccdba0579c2ed1"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/nette/utils/zipball/b343b5749f8c2daa0d15f30380ccdba0579c2ed1",
+            "reference": "b343b5749f8c2daa0d15f30380ccdba0579c2ed1",
             "shasum": ""
         },
         "require": {
@@ -908,7 +1047,7 @@
             "ext-mbstring": "to use Strings::lower() etc...",
             "ext-xml": "to use Strings::length() etc. when mbstring is not available"
         },
-        "time": "2018-09-18T10:22:16+00:00",
+        "time": "2019-11-19T00:32:02+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {

@@ -2,7 +2,7 @@
 
 namespace Events\Transitions;
 
-use Authentication\AccountManager;
+use FKSDB\Authentication\AccountManager;
 use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
 use Events\Machine\Transition;
@@ -18,6 +18,7 @@ use Mail\MailTemplateFactory;
 use Nette\Mail\IMailer;
 use Nette\Mail\Message;
 use Nette\SmartObject;
+use Nette\Utils\DateTime;
 use Nette\Utils\Strings;
 use PublicModule\ApplicationPresenter;
 
@@ -72,7 +73,7 @@ class MailSender {
     private $serviceAuthToken;
 
     /**
-     * @var \FKSDB\ORM\Services\ServicePerson
+     * @var ServicePerson
      */
     private $servicePerson;
 
@@ -98,6 +99,7 @@ class MailSender {
 
     /**
      * @param Transition $transition
+     * @throws \Exception
      */
     public function __invoke(Transition $transition) {
         $this->send($transition);
@@ -105,12 +107,13 @@ class MailSender {
 
     /**
      * @param Transition $transition
+     * @throws \Exception
      */
     private function send(Transition $transition) {
         $personIds = $this->resolveAdressees($transition);
         $persons = $this->servicePerson->getTable()
             ->where('person.person_id', $personIds)
-            ->where('person_info:email IS NOT NULL')
+            ->where(':person_info.email IS NOT NULL')
             ->fetchPairs('person_id');
 
         $logins = [];
@@ -134,6 +137,7 @@ class MailSender {
      * @param ModelLogin $login
      * @param BaseMachine $baseMachine
      * @return Message
+     * @throws \Exception
      */
     private function composeMessage($filename, ModelLogin $login, BaseMachine $baseMachine) {
         $machine = $baseMachine->getMachine();
@@ -174,15 +178,15 @@ class MailSender {
 
     /**
      * @param ModelLogin $login
-     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @param ModelEvent $event
      * @param IModel $application
      * @return ModelAuthToken
+     * @throws \Exception
      */
     private function createToken(ModelLogin $login, ModelEvent $event, IModel $application) {
         $until = $this->getUntil($event);
         $data = ApplicationPresenter::encodeParameters($event->getPrimary(), $application->getPrimary());
-        $token = $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_EVENT_NOTIFY, $until, $data, true);
-        return $token;
+        return $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_EVENT_NOTIFY, $until, $data, true);
     }
 
     /**
@@ -198,7 +202,7 @@ class MailSender {
 
     /**
      * @param ModelEvent $event
-     * @return \Nette\Utils\DateTime
+     * @return DateTime
      */
     private function getUntil(ModelEvent $event) {
         return $event->registration_end ?: $event->end; //TODO extension point
@@ -227,10 +231,10 @@ class MailSender {
             }
             switch ($addressees) {
                 case self::ADDR_SELF:
-                    $names = array($transition->getBaseHolder()->getName());
+                    $names = [$transition->getBaseHolder()->getName()];
                     break;
                 case self::ADDR_PRIMARY:
-                    $names = array($holder->getPrimaryHolder()->getName());
+                    $names = [$holder->getPrimaryHolder()->getName()];
                     break;
                 case self::ADDR_SECONDARY:
                     $names = [];

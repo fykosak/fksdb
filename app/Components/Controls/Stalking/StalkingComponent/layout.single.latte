@@ -1,12 +1,12 @@
 {layout '../@layout.latte'}
 {block content}
-    {if \is_null($model)}
+    {if is_null($model)}
         <div class="card-body">
             {control noRecords}
         </div>
     {else}
-        {foreach $rows as $row}
-            {control 'valuePrinter__'.$table.'__'.$row:listItem $model,true}
+        {foreach $rows as $field}
+            {control valuePrinter:listItem $field, $model}
         {/foreach}
     {/if}
 {/block}

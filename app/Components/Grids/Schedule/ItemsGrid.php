@@ -4,6 +4,7 @@
 namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\NotImplementedException;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
@@ -29,32 +30,29 @@ class ItemsGrid extends BaseGrid {
     /**
      * @return string
      */
-    public function getTableName(): string {
-        return DbNames::TAB_SCHEDULE_ITEM;
-    }
-
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelScheduleItem::class;
     }
 
     /**
      * @param $presenter
-     * @throws DuplicateColumnException
      * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
+     * @throws NotImplementedException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
         $this->paginate = false;
         $this->addColumn('schedule_item_id', _('#'));
-        $this->addColumns(['name_cs', 'name_en', 'price_czk', 'price_eur', 'capacity', 'used_capacity', 'require_id_number']);
-
-        $this->addButton('detail', _('Detail'))->setText(_('Detail'))
-            ->setLink(function ($row) {
-                return $this->getPresenter()->link('item', ['id' => $row->schedule_item_id]);
-            });
+        $this->addColumns([
+            DbNames::TAB_SCHEDULE_ITEM . '.name_cs',
+            DbNames::TAB_SCHEDULE_ITEM . '.name_en',
+            DbNames::TAB_SCHEDULE_ITEM . '.price_czk',
+            DbNames::TAB_SCHEDULE_ITEM . '.price_eur',
+            DbNames::TAB_SCHEDULE_ITEM . '.capacity',
+            DbNames::TAB_SCHEDULE_ITEM . '.used_capacity',
+            DbNames::TAB_SCHEDULE_ITEM . '.require_id_number',
+        ]);
+        $this->addLinkButton( 'item', 'detail', _('Detail'), true, ['id' => 'schedule_item_id']);
     }
-
 }

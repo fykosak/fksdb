@@ -6,7 +6,8 @@ use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use Nette;
-use Nette\Database\Connection;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -35,11 +36,12 @@ class ServiceStoredQuery extends AbstractServiceSingle {
 
     /**
      * FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery constructor.
-     * @param Connection $connection
+     * @param Context $context
      * @param ServiceStoredQueryTag $serviceStoredQueryTag
+     * @param IConventions $conventions
      */
-    public function __construct(Connection $connection, ServiceStoredQueryTag $serviceStoredQueryTag) {
-        parent::__construct($connection);
+    public function __construct(Context $context, ServiceStoredQueryTag $serviceStoredQueryTag, IConventions $conventions) {
+        parent::__construct($context, $conventions);
         $this->serviceStoredQueryTag = $serviceStoredQueryTag;
     }
 

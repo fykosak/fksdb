@@ -2,169 +2,82 @@
 
 namespace FyziklaniModule;
 
-use FKSDB\Components\Controls\Fyziklani\EditControl;
-use FKSDB\Components\Controls\Fyziklani\Submit\DetailControl;
-use FKSDB\Components\Controls\Fyziklani\Submit\QREntryControl;
+use EventModule\EventEntityTrait;
+use FKSDB\Components\Controls\Entity\Fyziklani\Submit\EditControl;
 use FKSDB\Components\Controls\Fyziklani\Submit\TaskCodeInput;
+use FKSDB\Components\Grids\Fyziklani\AllSubmitsGrid;
 use FKSDB\Components\Grids\Fyziklani\SubmitsGrid;
+use FKSDB\model\Fyziklani\ClosedSubmittingException;
+use FKSDB\model\Fyziklani\PointsMismatchException;
+use FKSDB\model\Fyziklani\SubmitHandler;
+use FKSDB\NotImplementedException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
+use Nette\Application\UI\Control;
 
 /**
  * Class SubmitPresenter
  * @package FyziklaniModule
+ * @method ModelFyziklaniSubmit getEntity()
  */
 class SubmitPresenter extends BasePresenter {
-    /**
-     * @var ModelFyziklaniSubmit
-     */
-    private $submit;
+    use EventEntityTrait;
 
     /* ***** Title methods *****/
     public function titleEntry() {
-        $this->setTitle(_('Zadávání bodů'));
-        $this->setIcon('fa fa-pencil-square-o');
-    }
-
-    public function titleQrEntry() {
-        $this->titleEntry();
-    }
-
-    public function titleAutoClose() {
-        $this->setTitle(_('You can close this page'));
-        $this->setIcon('fa fa-pencil-square-o');
+        $this->setTitle(_('Zadávání bodů'), 'fa fa-pencil-square-o');
     }
 
     public function titleList() {
-        $this->setTitle(_('Submits'));
-        $this->setIcon('fa fa-table');
+        $this->setTitle(_('Submits'), 'fa fa-table');
     }
 
     public function titleEdit() {
-        $this->setTitle(_('Úprava bodování'));
-        $this->setIcon('fa fa-pencil');
+        $this->setTitle(_('Úprava bodování'), 'fa fa-pencil');
     }
 
     public function titleDetail() {
-        $this->setTitle(_('Submit detail'));
-        $this->setIcon('fa fa-pencil');
+        $this->setTitle(sprintf(_('Detail of the submit #%d'), $this->getEntity()->fyziklani_submit_id), 'fa fa-pencil');
     }
 
     /* ***** Authorized methods *****/
-    /**
-     * @throws BadRequestException
-     * @throws AbortException
-     */
     public function authorizedEntry() {
-        $this->setAuthorized($this->eventIsAllowed('fyziklani.submit', 'default'));
+        $this->authorizedCreate();
     }
 
     /**
+     * @inheritDoc
      * @throws BadRequestException
-     * @throws AbortException
      */
-    public function authorizedDetail() {
-        $this->authorizedEntry();
+    protected function traitIsAuthorized($resource, string $privilege): bool {
+        return $this->isEventOrContestOrgAuthorized($resource, $privilege);
     }
 
-    /**
-     * @throws BadRequestException
-     * @throws AbortException
-     */
-    public function authorizedQrEntry() {
-        $this->authorizedEntry();
-    }
-
-    /**
-     * @throws BadRequestException
-     * @throws AbortException
-     */
-    public function authorizedEdit() {
-        $this->authorizedEntry();
-    }
-
-    /**
-     * @throws BadRequestException
-     * @throws AbortException
-     */
-    public function authorizedList() {
-        $this->authorizedEntry();
-    }
-
-    /**
-     * @throws BadRequestException
-     * @throws AbortException
-     */
-    public function authorizedAutoClose() {
-        $this->authorizedEntry();
-    }
     /* ******** ACTION METHODS ********/
-    /**
-     * @param $id
-     * @throws BadRequestException
-     */
-    public function actionQrEntry($id) {
-        if (!$id) {
-            $this->flashMessage('Code is required', \BasePresenter::FLASH_ERROR);
-            return;
-        }
-        $control = $this->getComponent('entryQRControl');
-        if (!$control instanceof QREntryControl) {
-            throw new BadRequestException();
-        }
-        $control->setCode($id);
-    }
 
     /**
-     * @param $id
-     * @throws BadRequestException
-     * @throws AbortException
-     */
-    public function actionEdit($id) {
-        $control = $this->getComponent('editControl');
-        if (!$control instanceof EditControl) {
-            throw new BadRequestException();
-        }
-        $submit = $this->loadModel($id);
-        $control->setSubmit($submit);
-    }
-
-    /**
-     * @param $id
-     * @throws AbortException
+     * @param int $id
      * @throws BadRequestException
      */
-    public function actionDetail($id) {
-        $control = $this->getComponent('detailControl');
-        if (!$control instanceof DetailControl) {
-            throw new BadRequestException();
-        }
-        $submit = $this->loadModel($id);
-        $control->setSubmit($submit);
+    public function actionEdit(int $id) {
+        $this->traitActionEdit($id);
     }
 
     /**
      * @param int $id
-     * @return ModelFyziklaniSubmit
      * @throws AbortException
-     * @throws \ReflectionException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
-    private function loadModel(int $id): ModelFyziklaniSubmit {
-        if ($this->submit) {
-            return $this->submit;
-        }
-        $row = $this->getServiceFyziklaniSubmit()->findByPrimary($id);
-        if (!$row) {
-            $this->flashMessage(_('Submit neexistuje'), \BasePresenter::FLASH_ERROR);
-            $this->backLinkRedirect();
-            $this->redirect('list');
-        };
-        $this->submit = ModelFyziklaniSubmit::createFromActiveRow($row);
-        return $this->submit;
+    public function renderDetail(int $id) {
+        $this->template->model = $this->loadEntity($id);
     }
 
-
+    public function renderEdit() {
+        $this->template->model = $this->getEntity();
+    }
 
     /* ****** COMPONENTS **********/
     /**
@@ -173,20 +86,8 @@ class SubmitPresenter extends BasePresenter {
      * @throws AbortException
      */
     public function createComponentEntryControl(): TaskCodeInput {
-        return $this->fyziklaniComponentsFactory->createTaskCodeInput($this->getEvent());
-    }
-
-    /**
-     * @return QREntryControl
-     * @throws BadRequestException
-     * @throws AbortException
-     */
-    public function createComponentEntryQRControl(): QREntryControl {
-        $control = $this->fyziklaniComponentsFactory->createQREntryControl($this->getEvent());
-        $control->getForm()->onSuccess[] = function () {
-            $this->redirect('autoClose');
-        };
-        return $control;
+        $handler = new SubmitHandler($this->context, $this->getEvent());
+        return new TaskCodeInput($this->context, $handler, $this->getEvent());
     }
 
     /**
@@ -195,26 +96,47 @@ class SubmitPresenter extends BasePresenter {
      * @throws AbortException
      */
     public function createComponentGrid(): SubmitsGrid {
-        return $this->fyziklaniComponentsFactory->createSubmitsGrid($this->getEvent());
+        return new AllSubmitsGrid($this->getEvent(), $this->getContext());
     }
 
     /**
-     * @return EditControl
+     * @throws AbortException
      * @throws BadRequestException
+     * @throws ClosedSubmittingException
+     * @throws PointsMismatchException
+     */
+    public function handleCheck() {
+        $log = $this->getServiceFyziklaniSubmit()->checkSubmit($this->getEntity(), $this->getEntity()->points, $this->getUser());
+        $this->flashMessage($log->getMessage(), $log->getLevel());
+        $this->redirect('this');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getORMService() {
+        return $this->getServiceFyziklaniSubmit();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getModelResource(): string {
+        return ModelFyziklaniSubmit::RESOURCE_ID;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function createComponentCreateForm(): Control {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @inheritDoc
      * @throws AbortException
      */
-    public function createComponentEditControl(): EditControl {
-        $control = $this->fyziklaniComponentsFactory->createEditSubmitControl($this->getEvent());
-        $control->getForm()->onSuccess[] = function () {
-            $this->redirect('list');
-        };
-        return $control;
-    }
-
-    /**
-     * @return DetailControl
-     */
-    public function createComponentDetailControl(): DetailControl {
-        return $this->fyziklaniComponentsFactory->createSubmitDetailControl();
+    public function createComponentEditForm(): Control {
+        return new EditControl($this->getContext(), $this->getEvent());
     }
 }

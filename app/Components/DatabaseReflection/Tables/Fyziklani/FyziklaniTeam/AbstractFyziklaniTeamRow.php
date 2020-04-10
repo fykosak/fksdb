@@ -11,6 +11,7 @@ use Nette\Forms\Controls\BaseControl;
  * @package FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam
  */
 abstract class AbstractFyziklaniTeamRow extends AbstractRow {
+
     /**
      * @return int
      */
@@ -19,10 +20,11 @@ abstract class AbstractFyziklaniTeamRow extends AbstractRow {
     }
 
     /**
+     * @param array $args
      * @return BaseControl
      * @throws BadRequestException
      */
-    public function createField(): BaseControl {
+    public function createField(...$args): BaseControl {
         throw new BadRequestException();
     }
 }

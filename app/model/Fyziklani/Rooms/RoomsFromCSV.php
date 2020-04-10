@@ -70,10 +70,10 @@ class RoomsFromCSV extends Stage {
                 continue;
             }
             $team = $teams[$teamId];
-            $this->serviceTeam->updateModel($team, [
+            $this->serviceTeam->updateModel2($team, [
                 'room' => $room,
             ]);
-            $this->serviceTeam->save($team);
+          //  $this->serviceTeam->save($team);
             $updatedTeams[$teamId] = $team;
             if ($room) {
                 unset($teams[$teamId]);

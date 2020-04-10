@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\DatabaseReflection\Tables\Teacher;
 
-use FKSDB\Components\Controls\Helpers\Badges\NotSetBadge;
+use FKSDB\Components\Controls\Badges\NotSetBadge;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelTeacher;
 use Nette\Forms\Controls\BaseControl;
@@ -51,9 +51,10 @@ class StateRow extends AbstractTeacherRow {
     }
 
     /**
+     * @param array $args
      * @return BaseControl
      */
-    public function createField(): BaseControl {
+    public function createField(...$args): BaseControl {
         return new SelectBox($this->getTitle(), $this->getItems());
     }
 

@@ -96,7 +96,7 @@ class PersonFactory extends AbstractFactory {
      * @param BaseMachine $machine
      * @param Container $container
      * @return array|mixed
-     * @throws \Nette\Utils\RegexpException
+     * @throws \Exception
      */
     protected function createComponent(Field $field, BaseMachine $machine, Container $container) {
         $searchType = $this->evaluator->evaluate($this->searchType, $field);
@@ -177,7 +177,7 @@ class PersonFactory extends AbstractFactory {
         foreach ($fieldsDefinition as $subName => $sub) {
             foreach ($sub as $fieldName => $metadata) {
                 if (!is_array($metadata)) {
-                    $metadata = array('required' => $metadata);
+                    $metadata = ['required' => $metadata];
                 }
                 if ($metadata['required'] && !$this->referencedEventPersonFactory->isFilled($person, $subName, $fieldName, $acYear)) {
                     $validator->addError(sprintf(_('%s: %s je povinná položka.'), $field->getBaseHolder()->getLabel(), $field->getLabel() . '.' . $subName . '.' . $fieldName)); //TODO better GUI name than DB identifier

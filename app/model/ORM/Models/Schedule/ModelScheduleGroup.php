@@ -9,8 +9,6 @@ use FKSDB\ORM\Models\IEventReferencedModel;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
-use Nette\NotImplementedException;
-use Tracy\Debugger;
 
 /**
  * Class ModelScheduleGroup
@@ -21,14 +19,18 @@ use Tracy\Debugger;
  * @property-read ActiveRow event
  * @property-read DateTime start
  * @property-read DateTime end
+ * @property-read string name_cs
+ * @property-read string name_en
  */
 class ModelScheduleGroup extends AbstractModelSingle implements IEventReferencedModel {
     const TYPE_ACCOMMODATION = 'accommodation';
-    const TYPE_DSEF_GROUP = 'dsef_group';
-    const TYPE_VISA_REQUIREMENT = 'visa_requirement';
-    const TYPE_ACCOMMODATION_SAME_GENDER = 'accommodation_same_gender';
-    const TYPE_ACCOMMODATION_TEACHER_SEPARATED = 'accommodation_teacher_separated';
-    const TYPE_WEEKEND_SCHEDULE = 'weekend_schedule';
+    const TYPE_VISA = 'visa';
+    const TYPE_ACCOMMODATION_GENDER = 'accommodation_gender';
+    const TYPE_ACCOMMODATION_TEACHER = 'accommodation_teacher';
+    const TYPE_TEACHER_PRESENT = 'teacher_present';
+    const TYPE_WEEKEND = 'weekend';
+    CONST TYPE_WEEKEND_INFO = 'weekend_info';
+
 
     /**
      * @return GroupedSelection
@@ -49,22 +51,7 @@ class ModelScheduleGroup extends AbstractModelSingle implements IEventReferenced
      * Label include datetime from schedule group
      */
     public function getLabel(): string {
-        switch ($this->schedule_group_type) {
-            case self::TYPE_ACCOMMODATION:
-                return \sprintf(_('Accommodation from %s to %s'),
-                    $this->start->format('d. m. Y'),
-                    $this->end->format('d. m. Y')
-                );
-            case self::TYPE_ACCOMMODATION_SAME_GENDER:
-                return _('Accommodation with another gender');
-            case self::TYPE_VISA_REQUIREMENT:
-                return _('Visa to Czech Republic');
-            case self::TYPE_ACCOMMODATION_TEACHER_SEPARATED:
-                return _('Teacher require specific accommodation');
-            case self::TYPE_WEEKEND_SCHEDULE:
-                return _('Weekend schedule');
-        }
-        throw new NotImplementedException();
+        return $this->name_cs . '/' . $this->name_en;
     }
 
     /**
@@ -74,7 +61,10 @@ class ModelScheduleGroup extends AbstractModelSingle implements IEventReferenced
         return [
             'scheduleGroupId' => $this->schedule_group_id,
             'scheduleGroupType' => $this->schedule_group_type,
-            'label' => $this->getLabel(),
+            'label' => [
+                'cs' => $this->name_cs,
+                'en' => $this->name_en,
+            ],
             'eventId' => $this->event_id,
             'start' => $this->start->format('c'),
             'end' => $this->end->format('c'),

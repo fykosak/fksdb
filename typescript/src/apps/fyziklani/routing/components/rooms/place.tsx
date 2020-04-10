@@ -13,19 +13,22 @@ import { DragNDropData } from '../../middleware/interfaces';
 import { Store as RoutingStore } from '../../reducers/';
 import TeamComponent from '../team/';
 
-interface State {
-    onDrop?: (teamId: number, place: Place) => void;
-    teams?: Team[];
-    draggedTeamId?: number;
+interface StateProps {
+    teams: Team[];
+    draggedTeamId: number;
 }
 
-interface Props {
+interface DispatchProps {
+    onDrop(teamId: number, place: Place): void;
+}
+
+interface OwnProps {
     x: number;
     y: number;
     roomId: number;
 }
 
-class PlaceComponent extends React.Component<State & Props, {}> {
+class PlaceComponent extends React.Component<StateProps & OwnProps & DispatchProps, {}> {
     public render() {
         const {x, y, onDrop, teams, draggedTeamId, roomId} = this.props;
         const team = teams && teams.filter((currentTeam) => {
@@ -53,13 +56,13 @@ class PlaceComponent extends React.Component<State & Props, {}> {
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): State => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
     return {
         onDrop: (teamId, place) => dispatch(dropItem<DragNDropData>({teamId, place})),
     };
 };
 
-const mapStateToProps = (state: RoutingStore): State => {
+const mapStateToProps = (state: RoutingStore): StateProps => {
     return {
         draggedTeamId: (state.dragNDrop.data && state.dragNDrop.data.hasOwnProperty('teamId')) ? state.dragNDrop.data.teamId : null,
         teams: state.teams.availableTeams,
