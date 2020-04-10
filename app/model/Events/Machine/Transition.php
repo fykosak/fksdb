@@ -318,7 +318,7 @@ class Transition extends FreezableObject {
     /**
      * Triggers onExecuted event.
      *
-     * @param $inducedTransitions
+     * @param Transition[] $inducedTransitions
      */
     public final function executed($inducedTransitions) {
         foreach ($inducedTransitions as $inducedTransition) {

@@ -585,6 +585,12 @@ body {
       [data-contest~="vyfuk"] .navigation-item .icon, [data-contest~="vyfuk"] .navigation-item {
         font-size: 1.2rem; } }
 
+[data-contest~="fykos"] .bg-contest {
+  background-color: #1175da; }
+
+[data-contest~="vyfuk"] .bg-contest {
+  background-color: #ff4800; }
+
 [data-contest~="theme-dark"] {
   color: #fff; }
   [data-contest~="theme-dark"] .navigation-item {

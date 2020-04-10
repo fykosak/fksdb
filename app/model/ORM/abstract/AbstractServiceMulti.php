@@ -54,10 +54,25 @@ abstract class AbstractServiceMulti implements IService {
      *
      * @param array $data
      * @return AbstractModelMulti
+     * @deprecated
      */
     public function createNew($data = null) {
         $mainModel = $this->getMainService()->createNew($data);
         $joinedModel = $this->getJoinedService()->createNew($data);
+
+        $className = $this->modelClassName;
+        return new $className($this, $mainModel, $joinedModel);
+    }
+
+    /**
+     * Use this method to create new models!
+     *
+     * @param array $data
+     * @return AbstractModelMulti
+     */
+    public function createNewModel($data) {
+        $mainModel = $this->getMainService()->createNewModel($data);
+        $joinedModel = $this->getJoinedService()->createNewModel($data);
 
         $className = $this->modelClassName;
         return new $className($this, $mainModel, $joinedModel);
@@ -75,7 +90,7 @@ abstract class AbstractServiceMulti implements IService {
     }
 
     /**
-     * @param IModel $model
+     * @param IModel|AbstractModelMulti $model
      * @param $data
      * @param bool $alive
      * @return mixed|void
@@ -89,9 +104,21 @@ abstract class AbstractServiceMulti implements IService {
     }
 
     /**
+     * @param IModel $model
+     * @param $data
+     */
+    public function updateModel2(IModel $model, $data) {
+        if (!$model instanceof $this->modelClassName) {
+            throw new InvalidArgumentException('Service for class ' . $this->modelClassName . ' cannot store ' . get_class($model));
+        }
+        $this->getMainService()->updateModel2($model->getMainModel(), $data);
+        $this->getJoinedService()->updateModel2($model->getJoinedModel(), $data);
+    }
+
+    /**
      * Use this method to store a model!
      *
-     * @param IModel $model
+     * @param IModel|AbstractModelMulti $model
      */
     public function save(IModel &$model) {
         if (!$model instanceof $this->modelClassName) {
@@ -177,13 +204,31 @@ abstract class AbstractServiceMulti implements IService {
     }
 
     /**
+     *
+     * @param int $key ID of the joined models
+     * @return AbstractModelMulti|null
+     */
+    public function findByPrimary2(int $key) {
+        $joinedModel = $this->getJoinedService()->findByPrimary2($key);
+        if (!$joinedModel) {
+            return null;
+        }
+        $this->modelClassName;
+        $mainModel = $this->getMainService()
+            ->getTable()
+            ->where($this->joiningColumn, $joinedModel->{$this->joiningColumn})
+            ->fetch(); //?? is this always unique??
+        return $this->composeModel($mainModel, $joinedModel);
+    }
+
+    /**
      * @return \Nette\Database\Table\Selection|MultiTableSelection
      */
     public function getTable() {
         $joinedTable = $this->getJoinedService()->getTable()->getName();
         $mainTable = $this->getMainService()->getTable()->getName();
 
-        $selection = new MultiTableSelection($this, $joinedTable, $this->getJoinedService()->getConnection());
+        $selection = new MultiTableSelection($this, $joinedTable, $this->getJoinedService()->getContext(), $this->getJoinedService()->getConventions());
         $selection->select("$joinedTable.*");
         $selection->select("$mainTable.*");
 

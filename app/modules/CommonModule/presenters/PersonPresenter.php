@@ -201,13 +201,12 @@ class PersonPresenter extends BasePresenter {
     public function actionDontMerge($trunkId, $mergedId) {
         $mergedPI = $this->servicePersonInfo->findByPrimary($mergedId);
         $mergedData = ['duplicates' => trim($mergedPI->duplicates . ",not-same($trunkId)", ',')];
-        $this->servicePersonInfo->updateModel($mergedPI, $mergedData);
-        $this->servicePersonInfo->save($mergedPI);
+        $this->servicePersonInfo->updateModel2($mergedPI, $mergedData);
 
         $trunkPI = $this->servicePersonInfo->findByPrimary($trunkId);
         $trunkData = ['duplicates' => trim($trunkPI->duplicates . ",not-same($mergedId)", ',')];
-        $this->servicePersonInfo->updateModel($trunkPI, $trunkData);
-        $this->servicePersonInfo->save($trunkPI);
+        $this->servicePersonInfo->updateModel2($trunkPI, $trunkData);
+
 
         $this->flashMessage(_('Osoby úspešně nesloučeny.'), self::FLASH_SUCCESS);
         $this->backLinkRedirect(true);

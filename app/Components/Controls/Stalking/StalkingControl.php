@@ -2,9 +2,9 @@
 
 namespace FKSDB\Components\Controls\Stalking;
 
-use FKSDB\Components\Controls\Helpers\Badges\ContestBadge;
-use FKSDB\Components\Controls\Helpers\Badges\NoRecordsBadge;
-use FKSDB\Components\Controls\Helpers\Badges\PermissionDeniedBadge;
+use FKSDB\Components\Controls\Badges\ContestBadge;
+use FKSDB\Components\Controls\Badges\NoRecordsBadge;
+use FKSDB\Components\Controls\Badges\PermissionDeniedBadge;
 use FKSDB\Components\DatabaseReflection\ValuePrinterComponent;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\Models\ModelPerson;

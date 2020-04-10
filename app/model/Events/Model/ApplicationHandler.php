@@ -351,7 +351,7 @@ class ApplicationHandler {
     }
 
     public function beginTransaction() {
-        if (!$this->connection->inTransaction()) {
+        if (!$this->connection->getPdo()->inTransaction()) {
             $this->connection->beginTransaction();
         }
     }
@@ -366,7 +366,7 @@ class ApplicationHandler {
      * @param bool $final
      */
     public function commit($final = false) {
-        if ($this->connection->inTransaction() && ($this->errorMode == self::ERROR_ROLLBACK || $final)) {
+        if ($this->connection->getPdo()->inTransaction() && ($this->errorMode == self::ERROR_ROLLBACK || $final)) {
             $this->connection->commit();
         }
     }

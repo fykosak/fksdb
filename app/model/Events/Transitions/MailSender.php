@@ -113,7 +113,7 @@ class MailSender {
         $personIds = $this->resolveAdressees($transition);
         $persons = $this->servicePerson->getTable()
             ->where('person.person_id', $personIds)
-            ->where('person_info:email IS NOT NULL')
+            ->where(':person_info.email IS NOT NULL')
             ->fetchPairs('person_id');
 
         $logins = [];

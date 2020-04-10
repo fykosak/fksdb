@@ -9,7 +9,7 @@ use FKSDB\ORM\IService;
 use LogicException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Database\Connection;
+use Nette\Database\Context;
 use Nette\Database\Table\ActiveRow;
 use Nette\Localization\ITranslator;
 
@@ -28,9 +28,9 @@ abstract class Machine {
      */
     private $transitions = [];
     /**
-     * @var Connection
+     * @var Context
      */
-    protected $connection;
+    protected $context;
     /**
      * @var IService
      */
@@ -47,12 +47,13 @@ abstract class Machine {
 
     /**
      * Machine constructor.
-     * @param Connection $connection
+     * @param Context $context
      * @param IService $service
      * @param ITranslator $translator
      */
-    public function __construct(Connection $connection, IService $service, ITranslator $translator) {
-        $this->connection = $connection;
+    public function __construct(Context $context, IService $service, ITranslator $translator) {
+        $this->context = $context;
+
         $this->service = $service;
         $this->translator = $translator;
     }
@@ -170,26 +171,26 @@ abstract class Machine {
      * @throws BadRequestException
      * @throws Exception
      */
-    private function execute(Transition $transition, IStateModel $model): IStateModel {
-        if (!$this->connection->inTransaction()) {
-            $this->connection->beginTransaction();
+    private function execute(Transition $transition, IStateModel $model = null): IStateModel {
+        if (!$this->context->getConnection()->getPdo()->inTransaction()) {
+            $this->context->getConnection()->beginTransaction();
         }
         try {
             $transition->beforeExecute($model);
         } catch (Exception $exception) {
-            $this->connection->rollBack();
+            $this->context->getConnection()->rollBack();
             throw $exception;
         }
         if (!$model instanceof IModel) {
             throw new BadRequestException(_('Expected instance of IModel'));
         }
 
-        $this->connection->commit();
+        $this->context->getConnection()->commit();
         $model->updateState($transition->getToState());
         /* select from DB new (updated) model */
 
         // $newModel = $model;
-        $newModel = $model->refresh();
+        $newModel = $model->refresh($this->context,$this->context->getConventions());
         $transition->afterExecute($newModel);
         return $newModel;
     }
@@ -235,9 +236,7 @@ abstract class Machine {
         /**
          * @var IStateModel|IModel|ActiveRow $model
          */
-        $model = $service->createNew($data);
-        $service->save($model);
-
+        $model = $service->createNewModel($data);
         return $this->execute($transition, $model);
     }
 }

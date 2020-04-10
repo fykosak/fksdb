@@ -330,6 +330,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
         $this->template->subtitle = $this->getSubtitle();
         $this->template->navRoots = $this->getNavRoots();
+        $this->template->containerClassNames = $this->getContainerClassNames();
 
         // this is done beforeRender, because earlier it would create too much traffic? due to redirections etc.
         $this->putIntoBreadcrumbs();
@@ -348,6 +349,13 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      */
     protected function getNavBarVariant(): array {
         return [null, null];
+    }
+
+    /**
+     * @return string
+     */
+    protected function getContainerClassNames(): string {
+        return 'container py-4 bg-white-container';
     }
 
     /**

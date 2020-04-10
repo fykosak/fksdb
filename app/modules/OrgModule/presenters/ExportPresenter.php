@@ -650,7 +650,8 @@ class ExportPresenter extends SeriesPresenter {
          * @var ResultsModelFactory $modelFactory
          */
         $modelFactory = $this->getService('resultsModelFactory');
-        $serviceContestant = $this->getService(ServiceContestant::class);
+        /** @var ServiceContestant $serviceContestant */
+        $serviceContestant = $this->getContext()->getByType(ServiceContestant::class);
 
 
         $model = $modelFactory->createCumulativeResultsModel($this->getSelectedContest(), $this->getSelectedYear());
@@ -681,7 +682,7 @@ class ExportPresenter extends SeriesPresenter {
 
                 $row = [];
                 //TODO unechecked
-                $contestant = $serviceContestant->getTable()->getConnection()->table(DbNames::VIEW_CONTESTANT)->where('ct_id', $ctid);
+                $contestant = $serviceContestant->getContext()->table(DbNames::VIEW_CONTESTANT)->where('ct_id', $ctid);
                 $person = ModelPerson::createFromActiveRow($contestant->person);
 
                 // jména

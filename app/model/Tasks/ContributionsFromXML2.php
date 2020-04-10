@@ -111,13 +111,12 @@ class ContributionsFromXML2 extends Stage {
 
             // store new contributions
             foreach ($contributors as $contributor) {
-                $contribution = $this->taskContributionService->createNew([
+               $this->taskContributionService->createNewModel([
                     'person_id' => $contributor->person_id,
                     'task_id' => $task->task_id,
                     'type' => $type,
                 ]);
 
-                $this->taskContributionService->save($contribution);
             }
         }
 

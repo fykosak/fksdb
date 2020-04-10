@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\DatabaseReflection\EventParticipant;
 
-use FKSDB\Components\Controls\Helpers\Badges\NotSetBadge;
+use FKSDB\Components\Controls\Badges\NotSetBadge;
 use FKSDB\Components\DatabaseReflection\ValuePrinters\StringPrinter;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelEventParticipant;

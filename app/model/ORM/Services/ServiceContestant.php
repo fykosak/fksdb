@@ -37,7 +37,7 @@ class ServiceContestant extends AbstractServiceSingle {
      * @return Selection
      */
     public function getCurrentContestants(ModelContest $contest, $year) {
-        $contestants = $this->getConnection()->table($this->viewName)
+        $contestants = $this->getContext()->table($this->viewName)
             ->select('*');
 
 

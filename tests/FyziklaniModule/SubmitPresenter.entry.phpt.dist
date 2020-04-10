@@ -72,7 +72,7 @@ class SubmitPresenterTest extends FyziklaniTestCase {
         ], ['action' => 'qrEntry', 'id' => '000001AA9']);
 
         $response = $this->fixture->run($request);
-        Assert::type('Nette\Application\Responses\RedirectResponse', $response);
+        Assert::type(\Nette\Application\Responses\RedirectResponse::class, $response);
 
         $submit = $this->findSubmit($this->taskId, $this->teamId);
         Assert::notEqual(false, $submit);
@@ -87,10 +87,10 @@ class SubmitPresenterTest extends FyziklaniTestCase {
         ], ['action' => 'qrEntry', 'id' => '000001AA8']);
 
         $response = $this->fixture->run($request);
-        Assert::type('Nette\Application\Responses\TextResponse', $response);
+        Assert::type(\Nette\Application\Responses\TextResponse::class, $response);
 
         $source = $response->getSource();
-        Assert::type('Nette\Templating\ITemplate', $source);
+        Assert::type(\Nette\Templating\ITemplate::class, $source);
 
         $html = $source->__toString(true);
         Assert::contains('Chybně zadaný kód úlohy', $html);
