@@ -91,9 +91,7 @@ class CloseTeamControl extends Control {
     private function getNextTask(): string {
         $submits = count($this->team->getNonRevokedSubmits());
         $tasksOnBoard = $this->event->getFyziklaniGameSetup()->tasks_on_board;
-        /**
-         * @var ModelFyziklaniTask $nextTask
-         */
+        /** @var ModelFyziklaniTask $nextTask */
         $nextTask = $this->serviceFyziklaniTask->findAll($this->event)->order('label')->limit(1, $submits + $tasksOnBoard)->fetch();
         return ($nextTask) ? $nextTask->label : '';
     }

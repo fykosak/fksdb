@@ -84,7 +84,6 @@ trait WriteOnlyTrait {
      * @param $obj
      */
     protected function writeOnlyAttached($obj) {
-        parent::attached($obj);
         if (!$this->writeOnlyAttachedOnValidate && $obj instanceof Form) {
             $that = $this;
             $obj->onValidate = $obj->onValidate ?: [];

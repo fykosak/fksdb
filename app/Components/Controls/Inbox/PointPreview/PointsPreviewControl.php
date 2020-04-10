@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Controls\Upload;
+namespace FKSDB\Components\Controls\Inbox;
 
 use FKSDB\Submits\SeriesTable;
 use Nette\DI\Container;
@@ -9,7 +9,7 @@ use Nette\DI\Container;
  * Class PointsTableControl
  * @package FKSDB\Components\Controls\Upload
  */
-class PointsTableControl extends SeriesTableControl {
+class PointsPreviewControl extends SeriesTableControl {
 
     /**
      * CheckSubmitsControl constructor.
@@ -24,7 +24,7 @@ class PointsTableControl extends SeriesTableControl {
      * @inheritDoc
      */
     public function render() {
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'PointsTableControl.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR.'layout.latte');
         $this->template->render();
     }
 }

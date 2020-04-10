@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Controls\Upload;
+namespace FKSDB\Components\Controls\Inbox;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Logging\ILogger;
@@ -13,7 +13,7 @@ use Nette\Application\UI\Form;
  * Class CorrectedFormControl
  * @package FKSDB\Components\Controls\Upload
  */
-class CorrectedFormControl extends SeriesTableControl {
+class CorrectedControl extends SeriesTableControl {
 
     /**
      * @inheritDoc
@@ -21,7 +21,7 @@ class CorrectedFormControl extends SeriesTableControl {
     public function render() {
         $correctedSubmitStorage = $this->getContext()->getByType(FilesystemCorrectedSubmitStorage::class);
         $this->template->correctedSubmitStorage = $correctedSubmitStorage;
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'CorrectedFormControl.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
         $this->template->render();
     }
 

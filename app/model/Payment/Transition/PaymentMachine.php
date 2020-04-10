@@ -11,6 +11,7 @@ use FKSDB\Payment\SymbolGenerator\Generators\AbstractSymbolGenerator;
 use FKSDB\Transitions\AbstractTransitionsGenerator;
 use FKSDB\Transitions\Machine;
 use Nette\Database\Connection;
+use Nette\Database\Context;
 use Nette\Localization\ITranslator;
 
 /**
@@ -34,12 +35,12 @@ class PaymentMachine extends Machine {
 
     /**
      * PaymentMachine constructor.
-     * @param Connection $connection
+     * @param Context $connection
      * @param ServicePayment $servicePayment
      * @param ServiceEvent $serviceEvent
      * @param ITranslator $translator
      */
-    public function __construct(Connection $connection, ServicePayment $servicePayment, ServiceEvent $serviceEvent, ITranslator $translator) {
+    public function __construct(Context $connection, ServicePayment $servicePayment, ServiceEvent $serviceEvent, ITranslator $translator) {
         parent::__construct($connection, $servicePayment, $translator);
         $this->serviceEvent = $serviceEvent;
     }

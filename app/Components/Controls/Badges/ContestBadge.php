@@ -1,10 +1,9 @@
 <?php
 
-namespace FKSDB\Components\Controls\Helpers\Badges;
+namespace FKSDB\Components\Controls\Badges;
 
 use FKSDB\ORM\Models\ModelContest;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\Control;
 use Nette\Templating\FileTemplate;
 use Nette\Utils\Html;
 
@@ -13,24 +12,14 @@ use Nette\Utils\Html;
  * @package FKSDB\Components\Controls\Stalking\Helpers
  * @property FileTemplate $template
  */
-class ContestBadge extends Control {
-
+class ContestBadge extends Badge {
     /**
-     * @param $contestId
-     * @throws BadRequestException
-     */
-    public function render($contestId) {
-        $this->template->html = self::getHtml($contestId);
-        $this->template->setFile(__DIR__ . '/Contest.latte');
-        $this->template->render();
-    }
-
-    /**
-     * @param int|ModelContest $contest
+     * @param mixed ...$args
      * @return Html
      * @throws BadRequestException
      */
-    public static function getHtml($contest) {
+    public static function getHtml(...$args): Html {
+        list($contest) = $args;
         $contestId = $contest;
         if ($contest instanceof ModelContest) {
             $contestId = $contest->contest_id;

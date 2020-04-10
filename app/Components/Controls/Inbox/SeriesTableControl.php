@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Controls\Upload;
+namespace FKSDB\Components\Controls\Inbox;
 
 use FKSDB\Components\Controls\BaseControl;
 use FKSDB\Submits\SeriesTable;
@@ -12,19 +12,21 @@ use Nette\Templating\ITemplate;
  * @package FKSDB\Components\Controls\Upload
  */
 abstract class SeriesTableControl extends BaseControl {
-    /**
-     * @var SeriesTable
-     */
+    /** @var SeriesTable */
     private $seriesTable;
+    /** @var bool */
+    private $displayAll;
 
     /**
      * CheckSubmitsControl constructor.
      * @param Container $context
      * @param SeriesTable $seriesTable
+     * @param bool $displayAll
      */
-    public function __construct(Container $context, SeriesTable $seriesTable) {
+    public function __construct(Container $context, SeriesTable $seriesTable, bool $displayAll = false) {
         parent::__construct($context);
         $this->seriesTable = $seriesTable;
+        $this->displayAll = $displayAll;
     }
 
     /**
@@ -34,6 +36,7 @@ abstract class SeriesTableControl extends BaseControl {
     protected function createTemplate($class = NULL) {
         $template = parent::createTemplate($class);
         $template->seriesTable = $this->getSeriesTable();
+        $template->displayAll = $this->displayAll;
         return $template;
     }
 

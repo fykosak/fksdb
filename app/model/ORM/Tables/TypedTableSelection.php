@@ -24,7 +24,7 @@ class TypedTableSelection extends Selection {
      * @param Context $connection
      * @param IConventions $conventions
      */
-    public function __construct($modelClassName, $table, Context $connection, IConventions $conventions) {
+    public function __construct(string $modelClassName, string $table, Context $connection, IConventions $conventions) {
         parent::__construct($connection, $conventions, $table);
         $this->modelClassName = $modelClassName;
     }

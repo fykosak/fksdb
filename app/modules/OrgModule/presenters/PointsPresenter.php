@@ -3,24 +3,19 @@
 namespace OrgModule;
 
 use Exception;
-use FKSDB\Components\Forms\Controls\ContestantSubmits;
-use FKSDB\Components\Forms\OptimisticForm;
-use FKSDB\ORM\Models\ModelContestant;
+use FKSDB\Components\Controls\Inbox\PointsFormControl;
+use FKSDB\Components\Controls\Inbox\PointsPreviewControl;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Models\ModelTaskContribution;
-use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\ORM\Services\ServiceTask;
 use FKSDB\ORM\Services\ServiceTaskContribution;
-use FKSDB\ORM\Services\ServiceTaskStudyYear;
 use FKSDB\Results\SQLResultsCache;
 use FKSDB\Submits\SeriesTable;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\Form;
 use Tracy\Debugger;
 use Nette\InvalidArgumentException;
-use Nette\Utils\Html;
 
 /**
  * Class PointsPresenter
@@ -30,7 +25,6 @@ class PointsPresenter extends SeriesPresenter {
 
     /**
      * Show all tasks?
-     *
      * @persistent
      */
     public $all;
@@ -46,11 +40,6 @@ class PointsPresenter extends SeriesPresenter {
     private $seriesTable;
 
     /**
-     * @var ServiceSubmit
-     */
-    private $serviceSubmit;
-
-    /**
      * @var ServiceTask
      */
     private $serviceTask;
@@ -59,11 +48,6 @@ class PointsPresenter extends SeriesPresenter {
      * @var ServiceTaskContribution
      */
     private $serviceTaskContribution;
-
-    /**
-     * @var ServiceTaskStudyYear
-     */
-    private $serviceTaskStudyYear;
 
     /**
      * @param SQLResultsCache $SQLResultsCache
@@ -80,13 +64,6 @@ class PointsPresenter extends SeriesPresenter {
     }
 
     /**
-     * @param ServiceSubmit $serviceSubmit
-     */
-    public function injectServiceSubmit(ServiceSubmit $serviceSubmit) {
-        $this->serviceSubmit = $serviceSubmit;
-    }
-
-    /**
      * @param ServiceTask $serviceTask
      */
     public function injectServiceTask(ServiceTask $serviceTask) {
@@ -100,13 +77,6 @@ class PointsPresenter extends SeriesPresenter {
         $this->serviceTaskContribution = $serviceTaskContribution;
     }
 
-    /**
-     * @param ServiceTaskStudyYear $serviceTaskStudyYear
-     */
-    public function injectServiceTaskStudyYear(ServiceTaskStudyYear $serviceTaskStudyYear) {
-        $this->serviceTaskStudyYear = $serviceTaskStudyYear;
-    }
-
     protected function startup() {
         parent::startup();
         $this->seriesTable->setContest($this->getSelectedContest());
@@ -117,11 +87,29 @@ class PointsPresenter extends SeriesPresenter {
     /**
      * @throws BadRequestException
      */
-    public function authorizedDefault() {
+    public function titleEntry() {
+        $this->setTitle(sprintf(_('Zadávání bodů %d. série'), $this->getSelectedSeries()), 'fa fa-trophy');
+    }
+
+    public function titlePreview() {
+        $this->setTitle(_('Points'), 'fa fa-inbox');
+    }
+
+    /**
+     * @throws BadRequestException
+     */
+    public function authorizedEntry() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'edit', $this->getSelectedContest()));
     }
 
-    public function actionDefault() {
+    /**
+     * @throws BadRequestException
+     */
+    public function authorizedPreview() {
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'points', $this->getSelectedContest()));
+    }
+
+    public function actionEntry() {
         if ($this->all) {
             $this->seriesTable->setTaskFilter(null);
         } else {
@@ -130,93 +118,25 @@ class PointsPresenter extends SeriesPresenter {
         }
     }
 
-    public function titleDefault() {
-        $this->setTitle(sprintf(_('Zadávání bodů %d. série'), $this->getSelectedSeries()), 'fa fa-trophy');
-    }
 
-    public function renderDefault() {
-        $this->getComponent('pointsForm')->getForm()->setDefaults();
+    public function renderEntry() {
         $this->template->showAll = (bool)$this->all;
     }
 
     /**
-     * @return OptimisticForm
-     * @throws BadRequestException
+     * @return PointsFormControl
      */
-    protected function createComponentPointsForm(): OptimisticForm {
-
-        $form = new OptimisticForm(
-            function () {
-                return $this->seriesTable->getFingerprint();
-            },
-            function () {
-                return $this->seriesTable->formatAsFormValues();
-            }
-        );
-        $contestants = $this->seriesTable->getContestants();
-        $tasks = $this->seriesTable->getTasks();
-        // $gradedTasks = $this->getGradedTasks();
-
-        $container = $form->addContainer(SeriesTable::FORM_CONTESTANT);
-
-        foreach ($contestants as $row) {
-            $contestant = ModelContestant::createFromActiveRow($row);
-            $fullName = $contestant->getPerson()->getFullName();
-            $schoolAbbrev = $contestant->getPerson()->getHistory($this->getSelectedAcademicYear())->getSchool()->name_abbrev;
-            $schoolLabel = Html::el('small');
-            $schoolLabel->setText('(' . $schoolAbbrev . ')');
-            $schoolLabel->class = 'text-muted';
-            $label = Html::el('span')
-                ->setText($fullName)
-                ->addHtml(Html::el('br'))
-                ->addText($schoolLabel);
-            $control = new ContestantSubmits($tasks, $contestant, $this->serviceSubmit, $this->getSelectedAcademicYear(), $label);
-            $control->setClassName('points');
-            $namingContainer = $container->addContainer($contestant->ct_id);
-            $namingContainer->addComponent($control, SeriesTable::FORM_SUBMIT);
-        }
-
-        $form->addSubmit('save', _('Save'));
-        $form->onSuccess[] = function (Form $form) {
-            return $this->pointsFormSuccess($form);
-        };
-
-        // JS dependencies
-        $this->registerJSFile('js/points.js');
-
-        return $form;
+    protected function createComponentPointsForm(): PointsFormControl {
+        return new PointsFormControl(function () {
+            $this->SQLResultsCache->recalculate($this->getSelectedContest(), $this->getSelectedYear());
+        }, $this->getContext(), $this->seriesTable);
     }
 
     /**
-     * @param Form $form
-     * @throws AbortException
+     * @return PointsPreviewControl
      */
-    private function pointsFormSuccess(Form $form) {
-        $values = $form->getValues();
-
-        try {
-            $this->serviceSubmit->getConnection()->beginTransaction();
-
-            foreach ($values[SeriesTable::FORM_CONTESTANT] as $container) {
-                $submits = $container[SeriesTable::FORM_SUBMIT];
-                foreach ($submits as $submit) {
-                    if (!$submit->isEmpty()) {
-                        // TODO
-                        $this->serviceSubmit->save($submit);
-                    }
-                }
-            }
-            $this->serviceSubmit->getConnection()->commit();
-
-            // recalculate points (separate transaction)
-            $this->SQLResultsCache->recalculate($this->getSelectedContest(), $this->getSelectedYear());
-
-            $this->flashMessage(_('Body úloh uloženy.'), self::FLASH_SUCCESS);
-        } catch (Exception $exception) {
-            $this->flashMessage(_('Chyba při ukládání bodů.'), self::FLASH_ERROR);
-            Debugger::log($exception);
-        }
-        $this->redirect('this');
+    protected function createComponentPointsTableControl(): PointsPreviewControl {
+        return new PointsPreviewControl($this->getContext(), $this->seriesTable);
     }
 
     /**
@@ -264,7 +184,7 @@ class PointsPresenter extends SeriesPresenter {
     /**
      * @return array
      */
-    private function getGradedTasks() {
+    private function getGradedTasks(): array {
         /**@var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
         $person = $login->getPerson();
@@ -286,4 +206,10 @@ class PointsPresenter extends SeriesPresenter {
         return array_values($gradedTasks);
     }
 
+    /**
+     * @return string
+     */
+    protected function getContainerClassNames(): string {
+        return str_replace('container ', 'container-fluid ', parent::getContainerClassNames());
+    }
 }

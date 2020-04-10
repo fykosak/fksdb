@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Controls\Upload;
+namespace FKSDB\Components\Controls\Inbox;
 
 use FKSDB\Components\Controls\BaseControl;
 use FKSDB\Logging\ILogger;
@@ -17,7 +17,7 @@ use Nette\Templating\FileTemplate;
  * @package FKSDB\Components\Controls\Upload
  * @property FileTemplate $template
  */
-class CheckSubmitsControl extends BaseControl {
+class SubmitCheckControl extends BaseControl {
     /**
      * @var SeriesTable
      */
@@ -34,7 +34,7 @@ class CheckSubmitsControl extends BaseControl {
     }
 
     public function render() {
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'CheckSubmitsControl.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
         $this->template->render();
     }
 
