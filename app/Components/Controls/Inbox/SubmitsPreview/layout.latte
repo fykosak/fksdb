@@ -1,5 +1,5 @@
-{layout './SubmitTable.latte'}
-{block submit-row}
+{layout '../layout.latte'}
+{define #submit-row}
     {if $submit}
         <td>
             {if $submit->source === FKSDB\ORM\Models\ModelSubmit::SOURCE_POST}
@@ -32,4 +32,4 @@
     {else}
         <td></td>
     {/if}
-{/block}
+{/define}

@@ -1,5 +1,5 @@
-{layout './SubmitTable.latte'}
-{block submit-row}
+{layout '../layout.latte'}
+{define #submit-row}
     <td>
         {if !$submit}
             <span>-</span>
@@ -11,4 +11,4 @@
             <span>{$submit->calc_points}</span>
         {/if}
     </td>
-{/block}
+{/define}

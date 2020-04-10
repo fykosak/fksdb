@@ -1,0 +1,18 @@
+{layout '../layout.latte'}
+{block content}
+    {form 'form'}
+        {include #parent}
+        {input 'submit','class'=>'btn btn-success'}
+    {/form}
+{/block}
+{define #submit-row}
+    <td>
+        {if $submit && ($submit->source === FKSDB\ORM\Models\ModelSubmit::SOURCE_UPLOAD)}
+            <span class="badge badge-info">{_'was uploaded'}</span>
+        {else}
+        {var $name = 'submits['.$ctId.']['.$taskId.']'}
+            <input type="date" class="form-control" name="{$name}"
+                   value="{isset($submit)?$submit->submitted_on->format('Y-m-d'):null}"/>
+        {/if}
+    </td>
+{/define}

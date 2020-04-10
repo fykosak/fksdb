@@ -3,7 +3,7 @@
 namespace OrgModule;
 
 use Exception;
-use FKSDB\Components\Forms\Controls\ContestantSubmits;
+use FKSDB\Components\Forms\Controls\ContestantsSubmits;
 use FKSDB\Components\Forms\OptimisticForm;
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelLogin;
@@ -166,11 +166,7 @@ class PointsPresenter extends SeriesPresenter {
             $schoolLabel = Html::el('small');
             $schoolLabel->setText('(' . $schoolAbbrev . ')');
             $schoolLabel->class = 'text-muted';
-            $label = Html::el('span')
-                ->setText($fullName)
-                ->addHtml(Html::el('br'))
-                ->addText($schoolLabel);
-            $control = new ContestantSubmits($tasks, $contestant, $this->serviceSubmit, $this->getSelectedAcademicYear(), $label);
+            $control = new ContestantsSubmits($tasks, $contestant, $this->serviceSubmit, $this->getSelectedAcademicYear());
             $control->setClassName('points');
             $namingContainer = $container->addContainer($contestant->ct_id);
             $namingContainer->addComponent($control, SeriesTable::FORM_SUBMIT);

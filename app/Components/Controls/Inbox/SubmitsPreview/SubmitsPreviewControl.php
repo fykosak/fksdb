@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Controls\Upload;
+namespace FKSDB\Components\Controls\Inbox;
 
 use FKSDB\Components\Control\AjaxUpload\SubmitDownloadTrait;
 use Nette\Application\AbortException;
@@ -10,11 +10,11 @@ use Nette\Application\BadRequestException;
  * Class SubmitsTableControl
  * @package FKSDB\Components\Controls\Upload
  */
-class SubmitsTableControl extends SeriesTableControl {
+class SubmitsPreviewControl extends SeriesTableControl {
     use SubmitDownloadTrait;
 
     public function render() {
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'SubmitsTableControl.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
         $this->template->render();
     }
 

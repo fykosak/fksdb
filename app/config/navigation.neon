@@ -25,7 +25,6 @@ navigation:
         org.dashboard.default:
             - dispatch.default
             - org.inbox.default
-            - org.inbox.handout
             - org.points.default
             - org.tasks.import
             - org.contestant.list
@@ -91,3 +90,9 @@ navigation:
             - event.chart.list
             - event.dispatch.default
             - event.dashboard.default
+        org.inbox.default:
+            - org.inbox.list
+            - org.inbox.inbox
+            - org.inbox.handout
+            - org.inbox.points
+            - org.inbox.corrected

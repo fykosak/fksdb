@@ -3,21 +3,16 @@
 namespace OrgModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Controls\FormControl\OptimisticFormControl;
+use FKSDB\Components\Controls\Inbox\CorrectedControl;
+use FKSDB\Components\Controls\Inbox\PointsPreviewControl;
+use FKSDB\Components\Controls\Inbox\SubmitsPreviewControl;
 use FKSDB\Components\Controls\Upload\CheckSubmitsControl;
-use FKSDB\Components\Controls\Upload\CorrectedFormControl;
-use FKSDB\Components\Controls\Upload\PointsTableControl;
-use FKSDB\Components\Controls\Upload\SubmitsTableControl;
-use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
-use FKSDB\Components\Forms\Controls\ContestantSubmits;
+use FKSDB\Components\Controls\Inbox\InboxControl;
 use FKSDB\Components\Forms\Factories\PersonFactory;
-use FKSDB\ORM\Models\ModelContestant;
-use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Models\ModelTaskContribution;
 use FKSDB\ORM\Services\ServicePerson;
-use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\ORM\Services\ServiceTaskContribution;
 use FKSDB\Submits\SeriesTable;
 use Nette\Application\AbortException;
@@ -45,11 +40,6 @@ class InboxPresenter extends SeriesPresenter {
     private $servicePerson;
 
     /**
-     * @var ServiceSubmit
-     */
-    private $serviceSubmit;
-
-    /**
      * @var SeriesTable
      */
     private $seriesTable;
@@ -74,13 +64,6 @@ class InboxPresenter extends SeriesPresenter {
     }
 
     /**
-     * @param ServiceSubmit $serviceSubmit
-     */
-    public function injectServiceSubmit(ServiceSubmit $serviceSubmit) {
-        $this->serviceSubmit = $serviceSubmit;
-    }
-
-    /**
      * @param SeriesTable $seriesTable
      */
     public function injectSeriesTable(SeriesTable $seriesTable) {
@@ -94,10 +77,18 @@ class InboxPresenter extends SeriesPresenter {
         $this->personFactory = $personFactory;
     }
     /* ***************** AUTH ***********************/
+
     /**
      * @throws BadRequestException
      */
     public function authorizedDefault() {
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
+    }
+
+    /**
+     * @throws BadRequestException
+     */
+    public function authorizedInbox() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
     }
 
@@ -130,8 +121,12 @@ class InboxPresenter extends SeriesPresenter {
     }
 
     /* ***************** TITLES ***********************/
-    public function titleDefault() {
+    public function titleInbox() {
         $this->setTitle(_('Inbox'), 'fa fa-envelope-open');
+    }
+
+    public function titleDefault() {
+        $this->setTitle(_('Inbox dashboard'), 'fa fa-envelope-open');
     }
 
     public function titleHandout() {
@@ -139,7 +134,7 @@ class InboxPresenter extends SeriesPresenter {
     }
 
     public function titleList() {
-        $this->setTitle(_('List of solutions'), 'fa fa-cloud-download');
+        $this->setTitle(_('List of submits'), 'fa fa-cloud-download');
     }
 
     public function titleCorrected() {
@@ -165,20 +160,12 @@ class InboxPresenter extends SeriesPresenter {
 
     public function actionHandout() {
         // This workaround fixes inproper caching of referenced tables.
-       // $connection = $this->servicePerson->getConnection();
-       // $connection->getCache()->clean(array(Cache::ALL => true));
-       // $connection->getDatabaseReflection()->setConnection($connection);
+        // $connection = $this->servicePerson->getConnection();
+        // $connection->getCache()->clean(array(Cache::ALL => true));
+        // $connection->getDatabaseReflection()->setConnection($connection);
     }
 
     /* ******************** RENDER ****************/
-    /**
-     * @throws BadRequestException
-     */
-    public function renderDefault() {
-        /** @var OptimisticFormControl $control */
-        $control = $this->getComponent('inboxForm');
-        $control->getForm()->setDefaults();
-    }
 
     /**
      * @throws BadRequestException
@@ -212,45 +199,10 @@ class InboxPresenter extends SeriesPresenter {
     }
     /* ******************* COMPONENTS ******************/
     /**
-     * @return OptimisticFormControl
-     * @throws BadRequestException
+     * @return InboxControl
      */
-    protected function createComponentInboxForm() {
-        $controlForm = new OptimisticFormControl(
-            function () {
-                return $this->seriesTable->getFingerprint();
-            },
-            function () {
-                return $this->seriesTable->formatAsFormValues();
-            }
-        );
-        $form = $controlForm->getForm();
-
-        $contestants = $this->seriesTable->getContestants();
-        $tasks = $this->seriesTable->getTasks();
-        $container = new ModelContainer();
-        $form->addComponent($container, SeriesTable::FORM_CONTESTANT);
-
-        foreach ($contestants as $row) {
-            $contestant = ModelContestant::createFromActiveRow($row);
-            $control = new ContestantSubmits($tasks, $contestant, $this->serviceSubmit, $this->getSelectedAcademicYear(), $contestant->getPerson()->getFullName());
-            $control->setClassName('inbox');
-            $namingContainer = new ModelContainer();
-            $container->addComponent($namingContainer, $contestant->ct_id);
-            $namingContainer->addComponent($control, SeriesTable::FORM_SUBMIT);
-        }
-
-        $form->addSubmit('save', _('Save'));
-        $form->onSuccess[] = function (Form $form) {
-            $this->inboxFormSuccess($form);
-        };
-
-        // JS dependencies
-        $this->registerJSFile('js/datePicker.js');
-        $this->registerJSFile('js/jquery.ui.swappable.js');
-        $this->registerJSFile('js/inbox.js');
-
-        return $controlForm;
+    protected function createComponentInboxForm(): InboxControl {
+        return new InboxControl($this->getContext(), $this->seriesTable);
     }
 
     /**
@@ -279,10 +231,10 @@ class InboxPresenter extends SeriesPresenter {
     }
 
     /**
-     * @return CorrectedFormControl
+     * @return CorrectedControl
      */
-    public function createComponentCorrectedFormControl(): CorrectedFormControl {
-        return new CorrectedFormControl($this->getContext(), $this->seriesTable);
+    public function createComponentCorrectedFormControl(): CorrectedControl {
+        return new CorrectedControl($this->getContext(), $this->seriesTable);
     }
 
     /**
@@ -293,44 +245,17 @@ class InboxPresenter extends SeriesPresenter {
     }
 
     /**
-     * @return SubmitsTableControl
+     * @return SubmitsPreviewControl
      */
-    protected function createComponentSubmitsTableControl(): SubmitsTableControl {
-        return new SubmitsTableControl($this->getContext(), $this->seriesTable);
+    protected function createComponentSubmitsTableControl(): SubmitsPreviewControl {
+        return new SubmitsPreviewControl($this->getContext(), $this->seriesTable);
     }
 
     /**
-     * @return PointsTableControl
+     * @return PointsPreviewControl
      */
-    protected function createComponentPointsTableControl(): PointsTableControl {
-        return new PointsTableControl($this->getContext(), $this->seriesTable);
-    }
-
-    /**
-     * @param Form $form
-     * @throws AbortException
-     */
-    public function inboxFormSuccess(Form $form) {
-        $values = $form->getValues();
-
-        $this->serviceSubmit->getConnection()->beginTransaction();
-
-        foreach ($values[SeriesTable::FORM_CONTESTANT] as $container) {
-            $submits = $container[SeriesTable::FORM_SUBMIT];
-
-            foreach ($submits as $submit) {
-                /** @var ModelSubmit $submit */
-                // ACL granularity is very rough, we just check it in action* method
-                if ($submit->isEmpty()) {
-                    $this->serviceSubmit->dispose($submit);
-                } else {
-                    $this->serviceSubmit->save($submit);
-                }
-            }
-        }
-        $this->serviceSubmit->getConnection()->commit();
-        $this->flashMessage(_('Informace o řešeních uložena.'), self::FLASH_SUCCESS);
-        $this->redirect('this');
+    protected function createComponentPointsTableControl(): PointsPreviewControl {
+        return new PointsPreviewControl($this->getContext(), $this->seriesTable);
     }
 
     /**

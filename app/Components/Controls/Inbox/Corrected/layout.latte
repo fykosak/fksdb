@@ -1,10 +1,10 @@
-{layout './SubmitTable.latte'}
+{layout '../layout.latte'}
 {block content}
     {control form}
     <hr/>
     {include #parent}
 {/block}
-{block submit-row}
+{define #submit-row}
     {if $submit}
         {if $correctedSubmitStorage->fileExists($submit) && $submit->corrected}
             <td class="bg-success text-white">#{$submit->submit_id}</td>
@@ -16,4 +16,4 @@
     {else}
         <td></td>
     {/if}
-{/block}
+{/define}
