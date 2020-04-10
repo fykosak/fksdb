@@ -59,6 +59,14 @@
   @include navigation-item($vyfukMainColor, white);
 }
 
+[data-contest~="fykos"] .bg-contest {
+  background-color: $fykosMainColor;
+}
+
+[data-contest~="vyfuk"] .bg-contest {
+  background-color: $vyfukMainColor;
+}
+
 [data-contest~="theme-dark"] {
   .navigation-item {
     @include navigation-item(#2ed739, black);

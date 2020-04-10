@@ -1,0 +1,16 @@
+{layout '../layout.latte'}
+{block content}
+    {form 'form'}
+        {include #parent}
+        {input 'submit','class'=>'btn btn-success'}
+    {/form}
+{/block}
+{define #submit-row}
+    <td>
+        {if $submit }
+            {var $name = 'submits['.$submit->submit_id.']'}
+            <input type="number" class="form-control" min="0" step="1" name="{$name}"
+                   value="{$submit->raw_points}"/>
+        {/if}
+    </td>
+{/define}

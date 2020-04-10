@@ -25,7 +25,7 @@ navigation:
         org.dashboard.default:
             - dispatch.default
             - org.inbox.default
-            - org.points.default
+            - org.points.entry
             - org.tasks.import
             - org.contestant.list
             - common.school.list
@@ -94,5 +94,6 @@ navigation:
             - org.inbox.list
             - org.inbox.inbox
             - org.inbox.handout
-            - org.inbox.points
+            - org.points.preview
+            - org.points.entry
             - org.inbox.corrected

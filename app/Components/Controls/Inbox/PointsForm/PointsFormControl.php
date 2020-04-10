@@ -6,15 +6,34 @@ use FKSDB\Components\Forms\OptimisticForm;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Services\ServiceSubmit;
+use FKSDB\Submits\SeriesTable;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
+use Nette\DI\Container;
+use Tracy\Debugger;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
+ * Class PointsFormControl
+ * @package FKSDB\Components\Controls\Inbox
  */
-class InboxControl extends SeriesTableControl {
+class PointsFormControl extends SeriesTableControl {
+    /**
+     * @var callable
+     */
+    private $invalidCacheCallback;
+
+    /**
+     * PointsFormControl constructor.
+     * @param callable $invalidCacheCallback
+     * @param Container $context
+     * @param SeriesTable $seriesTable
+     * @param bool $displayAll
+     */
+    public function __construct(callable $invalidCacheCallback, Container $context, SeriesTable $seriesTable, bool $displayAll = false) {
+        parent::__construct($context, $seriesTable, $displayAll);
+        $this->invalidCacheCallback = $invalidCacheCallback;
+    }
+
     /**
      * @return OptimisticForm
      */
@@ -46,33 +65,19 @@ class InboxControl extends SeriesTableControl {
     private function handleFormSuccess(Form $form) {
         /** @var ServiceSubmit $serviceSubmit */
         $serviceSubmit = $this->getContext()->getByType(ServiceSubmit::class);
-        foreach ($form->getHttpData()['submits'] as $ctId => $tasks) {
-            foreach ($tasks as $taskNo => $submittedOn) {
-
-                $submit = $serviceSubmit->findByContestant($ctId, $taskNo);
-                if ($submittedOn && $submit) {
-                    //   $serviceSubmit->updateModel2($submit, ['submitted_on' => $submittedOn]);
-                    //    $this->flashMessage(sprintf(_('Submit #%d updated'), $submit->submit_id), ILogger::INFO);
-                } elseif (!$submittedOn && $submit) {
-                    $this->flashMessage(\sprintf(_('Submit #%d deleted'), $submit->submit_id), ILogger::WARNING);
-                    $submit->delete();
-                } elseif ($submittedOn && !$submit) {
-                    $serviceSubmit->createNewModel([
-                        'task_id' => $taskNo,
-                        'ct_id' => $ctId,
-                        'submitted_on' => $submittedOn,
-                        'source' => ModelSubmit::SOURCE_POST,
-                    ]);
-                    $this->flashMessage(\sprintf(_('Submit for contestant #%d and task %d created'), $ctId, $taskNo), ILogger::SUCCESS);
-                } else {
-                    // do nothing
-                }
+        foreach ($form->getHttpData()['submits'] as $submitId => $points) {
+            /** @var ModelSubmit $submit */
+            $submit = $serviceSubmit->findByPrimary($submitId);
+            if ($points !== "" && $points !== $submit->raw_points) {
+                $serviceSubmit->updateModel2($submit, ['raw_points' => +$points]);
+            } elseif (!is_null($submit->raw_points) && $points === "") {
+                $serviceSubmit->updateModel2($submit, ['raw_points' => null]);
             }
         }
+        ($this->invalidCacheCallback)();
         $this->invalidateControl();
         $this->getPresenter()->redirect('this');
     }
-
 
     public function render() {
         $form = $this->getComponent('form');

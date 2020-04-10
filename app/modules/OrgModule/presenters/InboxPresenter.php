@@ -4,7 +4,6 @@ namespace OrgModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Inbox\CorrectedControl;
-use FKSDB\Components\Controls\Inbox\PointsPreviewControl;
 use FKSDB\Components\Controls\Inbox\SubmitsPreviewControl;
 use FKSDB\Components\Controls\Upload\CheckSubmitsControl;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
@@ -109,13 +108,6 @@ class InboxPresenter extends SeriesPresenter {
     /**
      * @throws BadRequestException
      */
-    public function authorizedPoints() {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'points', $this->getSelectedContest()));
-    }
-
-    /**
-     * @throws BadRequestException
-     */
     public function authorizedCorrected() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'corrected', $this->getSelectedContest()));
     }
@@ -139,10 +131,6 @@ class InboxPresenter extends SeriesPresenter {
 
     public function titleCorrected() {
         $this->setTitle(_('Corrected'), 'fa fa-inbox');
-    }
-
-    public function titlePoints() {
-        $this->setTitle(_('Points'), 'fa fa-inbox');
     }
 
     /* *********** LIVE CYCLE *************/
@@ -252,13 +240,6 @@ class InboxPresenter extends SeriesPresenter {
     }
 
     /**
-     * @return PointsPreviewControl
-     */
-    protected function createComponentPointsTableControl(): PointsPreviewControl {
-        return new PointsPreviewControl($this->getContext(), $this->seriesTable);
-    }
-
-    /**
      * @param Form $form
      * @throws AbortException
      */
@@ -291,5 +272,17 @@ class InboxPresenter extends SeriesPresenter {
 
         $this->flashMessage(_('Přiřazení opravovatelů uloženo.'), self::FLASH_SUCCESS);
         $this->redirect('this');
+    }
+
+    /**
+     * @return string
+     */
+    protected function getContainerClassNames(): string {
+        switch ($this->getAction()) {
+            case 'inbox':
+                return str_replace('container ', 'container-fluid ', parent::getContainerClassNames());
+            default:
+                return parent::getContainerClassNames();
+        }
     }
 }
