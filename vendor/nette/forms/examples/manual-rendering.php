@@ -28,9 +28,7 @@ $form->addRadioList('gender', null, [
 	'f' => 'female',
 ]);
 
-$form->addText('email')
-	->setRequired(false)
-	->addRule($form::EMAIL, 'Incorrect email address');
+$form->addEmail('email');
 
 $form->addSubmit('submit');
 
@@ -48,7 +46,7 @@ if ($form->isSuccess()) {
 	<meta charset="utf-8">
 	<title>Nette Forms manual form rendering</title>
 	<link rel="stylesheet" media="screen" href="assets/style.css" />
-	<script src="https://nette.github.io/resources/js/netteForms.js"></script>
+	<script src="https://nette.github.io/resources/js/2/netteForms.js"></script>
 </head>
 
 <body>
