@@ -14,7 +14,6 @@ abstract class AbstractDateInput extends TextInput {
     /**
      * AbstractDateInput constructor.
      * @param null $label
-     * @param null $cols
      * @param null $maxLength
      */
     public function __construct($label = NULL, $maxLength = NULL) {

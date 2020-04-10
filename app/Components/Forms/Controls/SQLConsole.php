@@ -19,7 +19,6 @@ class SQLConsole extends TextArea {
     /**
      * SQLConsole constructor.
      * @param null $label
-     * @param null $cols
      * @param null $rows
      */
     public function __construct($label = NULL, $rows = NULL) {

@@ -17,7 +17,7 @@
                     <th scope="row">{$contestant->getPerson()->getFullName()}</th>
                     {foreach $seriesTable->getTasks() as $task}
                         {var $submit = isset($table[$contestant->ct_id][$task->task_id])?$table[$contestant->ct_id][$task->task_id]:null}
-                        {block submit-row $submit}{/block}
+                        {include submit-row submit=>$submit}
                     {/foreach}
                 </tr>
             {/if}

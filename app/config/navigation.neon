@@ -1,6 +1,6 @@
 navigation:
     nodes:
-        org.dashboard.default:
+        Org.dashboard.default:
             # title: Organizátorský pultík
             # params:
             # link:
@@ -14,80 +14,80 @@ navigation:
             title: Web FYKOSu
             link: http://%domain.cz%/
             icon: 'fa fa-external-link'
-        fyziklani:
+        Fyziklani:
             title: Web Fyziklani
-            link: http://fyziklani.cz/
+            link: http://Fyziklani.cz/
             icon: 'fa fa-external-link'
-        public.submit.default:
+        Public.submit.default:
             visible: true
 
     structure:
         org.dashboard.default:
-            - dispatch.default
-            - org.inbox.default
-            - org.inbox.handout
-            - org.points.default
-            - org.tasks.import
-            - org.contestant.list
-            - common.school.list
-            - org.teacher.list
-            - org.export.list
-            - org.org.list
-            - org.event.list
-            - common.deduplicate.person
-            - common.person.search
-            - common.dashboard.default
-            - org.dashboard.default
+            - Dispatch.default
+            - Org.Inbox.default
+            - Org.Inbox.handout
+            - Org.Points.default
+            - Org.Tasks.import
+            - Org.Contestant.list
+            - Common.School.list
+            - Org.Teacher.list
+            - Org.Export.list
+            - Org.Org.list
+            - Org.Event.list
+            - Common.Deduplicate.person
+            - Common.Person.search
+            - Common.Dashboard.default
+            - Org.Dashboard.default
         common.dashboard.default:
-            - common.dashboard.default
-            - common.validation.default
-            - common.person.search
-            - common.spam.list
-            - common.chart.list
-            - common.school.list
+            - Common.Dashboard.default
+            - Common.Validation.default
+            - Common.Person.search
+            - Common.Spam.list
+            - Common.Chart.list
+            - Common.School.list
         common.validation.default:
-            - common.validation.preview
-            - common.validation.list
+            - Common.Validation.preview
+            - Common.Validation.list
         public.dashboard.default:
-            - dispatch.default
-            - public.submit.default
-            - public.application.list
+            - Dispatch.Default
+            - Public.Submit.default
+            - Public.Application.list
             - fykos
             - vyfuk
-            - fyziklani
+            - Fyziklani
         fyziklani.dashboard.default:
-            - fyziklani.submit.entry
-            - fyziklani.submit.list
-            - fyziklani.close.list
-            - fyziklani.results.list
-            - fyziklani.diplomas.default
-            - fyziklani.task.list
-            - fyziklani.task.import
-            - fyziklani.gameSetup.default
+            - Fyziklani.Submit.entry
+            - Fyziklani.Submit.list
+            - Fyziklani.Close.list
+            - Fyziklani.Results.list
+            - Fyziklani.Diplomas.default
+            - Fyziklani.Task.list
+            - Fyziklani.Task.import
+            - Fyziklani.GameSetup.default
 
         event.seating.default:
-            - event.seating.edit
-            - event.seating.download
-            - event.seating.preview
-            - event.seating.list
+            - Event.Seating.edit
+            - Event.Seating.download
+            - Event.Seating.preview
+            - Event.Seating.list
         fyziklani.results.default:
-            - fyziklani.dashboard.default
-            - fyziklani.diplomas.results
-            - fyziklani.results.presentation
-            - fyziklani.results.table
-            - fyziklani.results.teamStatistics
-            - fyziklani.results.taskStatistics
-            - fyziklani.results.correlationStatistics
+            - Fyziklani.Dashboard.default
+            - Fyziklani.Diplomas.results
+            - Fyziklani.Results.presentation
+            - Fyziklani.Results.table
+            - Fyziklani.Results.teamStatistics
+            - Fyziklani.Results.taskStatistics
+            - Fyziklani.Results.correlationStatistics
         event.dashboard.default:
-            - event.teamApplication.list
-            - event.application.list
-            - event.eventOrg.list
-            - event.payment.create
-            - event.payment.list
-            - fyziklani.dashboard.default
-            - event.schedule.groups
-            - event.seating.default
-            - event.model.default
-            - event.chart.list
-            - event.dispatch.default
-            - event.dashboard.default
+            - Event.TeamApplication.list
+            - Event.Application.list
+            - Event.EventOrg.list
+            - Event.Payment.create
+            - Event.Payment.list
+            - Fyziklani.Dashboard.default
+            - Event.Schedule.groups
+            - Event.Seating.default
+            - Event.Model.default
+            - Event.Chart.list
+            - Event.Dispatch.default
+            - Event.Dashboard.default

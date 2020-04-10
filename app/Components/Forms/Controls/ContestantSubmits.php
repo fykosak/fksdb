@@ -4,6 +4,7 @@ namespace FKSDB\Components\Forms\Controls;
 
 use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Components\ClientDataTrait;
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Services\ServiceSubmit;
@@ -12,6 +13,7 @@ use InvalidArgumentException;
 use Nette\Utils\DateTime;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
+use Tracy\Debugger;
 use Traversable;
 
 /**
@@ -34,11 +36,11 @@ class ContestantSubmits extends BaseControl {
     private $rawValue;
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceSubmit
+     * @var ServiceSubmit
      */
     private $submitService;
     /**
-     * @var \FKSDB\ORM\Models\ModelContestant
+     * @var ModelContestant
      */
     private $contestant;
 
@@ -55,19 +57,19 @@ class ContestantSubmits extends BaseControl {
     /**
      *
      * @param Traversable|array $tasks
-     * @param \FKSDB\ORM\Models\ModelContestant $contestant
-     * @param \FKSDB\ORM\Services\ServiceSubmit $submitService
+     * @param ModelContestant $contestant
+     * @param ServiceSubmit $submitService
      * @param $acYear
      * @param string|null $label
      */
     function __construct($tasks, ModelContestant $contestant, ServiceSubmit $submitService, $acYear, $label = null) {
-        parent::__construct($label);
-        $this->monitor(IJavaScriptCollector::class);
-
-        $this->setTasks($tasks);
         $this->submitService = $submitService;
         $this->contestant = $contestant;
         $this->acYear = $acYear;
+        $this->setTasks($tasks);
+        parent::__construct($label);
+        $this->monitor(IJavaScriptCollector::class);
+
     }
 
     /**
@@ -151,10 +153,13 @@ class ContestantSubmits extends BaseControl {
     /**
      *
      * @param array|Traversable|string $value of FKSDB\ORM\Models\ModelTask
-     * @return \FKSDB\Components\Forms\Controls\ContestantSubmits
+     * @return ContestantSubmits
      * @throws InvalidArgumentException
      */
     public function setValue($value) {
+        if (is_null($value) && is_null($this->rawValue)) {
+            return $this;
+        }
         if (!$value) {
             $this->rawValue = $this->serializeValue([]);
             $this->value = $this->deserializeValue($this->rawValue);
@@ -188,7 +193,6 @@ class ContestantSubmits extends BaseControl {
             }
             $result[(int)$tasknr] = $this->serializeSubmit($submit);
         }
-
         $dummySubmit = $this->submitService->createNew();
         $data = $dummySubmit->toArray();
         foreach ($this->tasks as $tasknr => $task) {
@@ -237,7 +241,7 @@ class ContestantSubmits extends BaseControl {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelSubmit $submit
+     * @param ModelSubmit $submit
      * @return array
      */
     private function serializeSubmit(ModelSubmit $submit) {
@@ -254,7 +258,7 @@ class ContestantSubmits extends BaseControl {
     /**
      * @param $data
      * @param $tasknr
-     * @return \FKSDB\ORM\AbstractModelSingle|\FKSDB\ORM\Models\ModelSubmit|null
+     * @return AbstractModelSingle|ModelSubmit|null
      */
     private function deserializeSubmit($data, $tasknr) {
         unset($data['submit_id']); // security

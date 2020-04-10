@@ -20,7 +20,6 @@ use Persons\ExtendedPersonHandler;
 class TeacherPresenter extends ExtendedPersonPresenter {
     /**
      * TeacherPresenter constructor.
-     * @param Nette\DI\Container|NULL $context
      */
     public function __construct() {
         $this->sendEmail = false;

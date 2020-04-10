@@ -4,8 +4,8 @@
 {define errors}
     {if $form instanceof Nette\Forms\Form}
         {var $fieldErrors = []}
-        {foreach $form->getControls() as $control}
-            {foreach $control->getErrors() as $error}
+        {foreach $form->getControls() as $cont}
+            {foreach $cont->getErrors() as $error}
                 {var $fieldErrors[$error] = 1}
             {/foreach}
         {/foreach}
@@ -40,7 +40,7 @@
         <div>
             <div class="checkbox">
                 {label $field}
-                    {input $field} {$field->getLabel()->setName(null)}
+                    {input $field} {*$field->getLabel()->setName(null)*}
                 {/label}
             </div>
             {include #metadata field => $field}

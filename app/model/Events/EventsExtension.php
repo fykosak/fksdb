@@ -35,7 +35,6 @@ use Nette\PhpGenerator\ClassType;
 use Nette\Utils\Arrays;
 use Nette\PhpGenerator\Method;
 use Nette\Utils\Random;
-use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -549,7 +548,6 @@ class EventsExtension extends CompilerExtension {
         $factory->addSetup('setParamScheme', [$paramScheme]);
 
         foreach (Arrays::grep($parameters, '/^modifiable|visible|label|description$/') as $parameter) {
-            Debugger::barDump($definition);
             $factory->addSetup('set' . ucfirst($parameter), ["%$parameter%"]);
         }
 
