@@ -75,7 +75,7 @@ class LoginInvitation {
 
         $login = $person->getLogin();
         if (!$login) {
-            $login = $this->accountManager->createLoginWithInvitation($person, $email);
+            $this->accountManager->createLoginWithInvitation($person, $email);
         }
     }
 

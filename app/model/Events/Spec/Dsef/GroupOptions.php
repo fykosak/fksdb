@@ -22,7 +22,7 @@ class GroupOptions implements IOptionsProvider {
     private $serviceMParticipant;
 
     /**
-     * @var \FKSDB\ORM\Services\Events\ServiceDsefGroup
+     * @var ServiceDsefGroup
      */
     private $serviceDsefGroup;
     private $includeStates;
@@ -37,7 +37,7 @@ class GroupOptions implements IOptionsProvider {
      * @note In NEON instatiate as GroupOptions(..., ['state1'],['state1', 'state2']).
      *
      * @param ServiceMDsefParticipant $serviceMParticipant
-     * @param \FKSDB\ORM\Services\Events\ServiceDsefGroup $serviceDsefGroup
+     * @param ServiceDsefGroup $serviceDsefGroup
      * @param string|array $includeStates any state or array of state
      * @param string|array $excludeStates any state or array of state
      */

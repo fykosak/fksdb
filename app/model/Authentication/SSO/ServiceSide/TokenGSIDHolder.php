@@ -4,7 +4,6 @@ namespace FKSDB\Authentication\SSO\ServiceSide;
 
 use FKSDB\Authentication\SSO\IGSIDHolder;
 use Nette\Database\Connection;
-use PDO;
 
 /**
  * Reads and stores GSID from "real" session (expects its started).

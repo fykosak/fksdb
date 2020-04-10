@@ -4,7 +4,6 @@ namespace FKSDB\ORM\Services;
 
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
-use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelLogin;
 use Nette\Utils\DateTime;

@@ -113,8 +113,9 @@ class TasksPresenter extends BasePresenter {
 
         $form->addSubmit('submit', _('Importovat'));
 
-        $form->onSuccess[] = callback($this, 'validSubmitSeriesForm');
-
+        $form->onSuccess[] = function (Form $seriesForm) {
+            return $this->validSubmitSeriesForm($seriesForm);
+        };
         return $control;
     }
 
@@ -131,7 +132,7 @@ class TasksPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function validSubmitSeriesForm(Form $seriesForm) {
+    private function validSubmitSeriesForm(Form $seriesForm) {
         $values = $seriesForm->getValues();
         $series = $values['series'];
         $files = [];

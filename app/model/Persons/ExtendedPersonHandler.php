@@ -239,7 +239,7 @@ class ExtendedPersonHandler {
         }
         // initialize model
         $model = $presenter->getModel();
-        $newData = [];
+
         if (!$model) {
             $data = [
                 'contest_id' => $this->getContest()->contest_id,

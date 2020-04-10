@@ -3,7 +3,6 @@
 namespace FKSDB;
 
 use FKSDB\Components\Controls\Chart\IChart;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 
 /**
