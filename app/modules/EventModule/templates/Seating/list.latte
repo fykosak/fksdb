@@ -39,7 +39,7 @@
 
 {foreach $teams as $team}
     <div class="page">
-        <h2 style="font-size: 200%" ">({$team->e_fyziklani_team_id}) {$team->name}</h2>
+        <h2 style="font-size: 200%">({$team->e_fyziklani_team_id}) {$team->name}</h2>
 
         {control seating:team $event,$team->e_fyziklani_team_id,$team->game_lang}
         {if count($toPay[$team->getPrimary()])}

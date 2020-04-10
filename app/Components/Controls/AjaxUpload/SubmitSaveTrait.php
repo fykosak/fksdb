@@ -1,6 +1,5 @@
 <?php
 
-
 namespace FKSDB\Components\Control\AjaxUpload;
 
 use FKSDB\ORM\AbstractModelSingle;

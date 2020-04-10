@@ -2,7 +2,9 @@
 
 namespace Events\Accommodation;
 
+use FKSDB\ORM\DbNames;
 use Nette\Application\Request;
+use Nette\Application\Responses\RedirectResponse;
 use Nette\Config\Helpers;
 use Nette\Utils\DateTime;
 use Tester\Assert;
@@ -26,7 +28,7 @@ class ScheduleTest extends ScheduleTestCase {
             'event_id' => $this->eventId,
             'status' => 'cancelled',
         ]);
-        $this->insert(\FKSDB\ORM\DbNames::TAB_E_DSEF_PARTICIPANT,
+        $this->insert(DbNames::TAB_E_DSEF_PARTICIPANT,
             [
                 'event_participant_id' => $this->dsefAppId,
                 'e_dsef_group_id' => 2,
@@ -36,7 +38,7 @@ class ScheduleTest extends ScheduleTestCase {
             'schedule_item_id' => $this->itemId,
         ]);
         $loginId = $this->insert('login', ['person_id' => $this->lastPersonId, 'active' => 1]);
-        $this->insert(\FKSDB\ORM\DbNames::TAB_GRANT, ['login_id' => $loginId, 'role_id' => 5, 'contest_id' => 1]);
+        $this->insert(DbNames::TAB_GRANT, ['login_id' => $loginId, 'role_id' => 5, 'contest_id' => 1]);
         $this->authenticate($loginId);
 
     }
@@ -77,7 +79,7 @@ class ScheduleTest extends ScheduleTestCase {
             'cancelled____terminated' => 'Zrušit přihlášku',
         ];
 
-        $post = Helpers::merge([], array(
+        $post = Helpers::merge([], [
             'action' => 'default',
             'lang' => 'cs',
             'contestId' => 1,
@@ -85,7 +87,7 @@ class ScheduleTest extends ScheduleTestCase {
             'eventId' => $this->eventId,
             'id' => $this->dsefAppId,
             'do' => 'application-form-form-submit',
-        ));
+        ]);
         $query = $this->connection->query('SELECT DATABASE() as db')->fetch();
        // echo $query->db;
 
@@ -94,11 +96,11 @@ class ScheduleTest extends ScheduleTestCase {
         $response = $this->fixture->run($request);
       //  echo \get_class($response->getSource()->render());
         // \var_dump($response);
-        Assert::type('Nette\Application\Responses\RedirectResponse', $response);
+        Assert::type(RedirectResponse::class, $response);
 
 
-        //Assert::equal('cancelled', $this->connection->fetchColumn('SELECT status FROM event_participant WHERE event_participant_id=?', $this->dsefAppId));
-        Assert::equal('0', $this->connection->fetchColumn('SELECT count(*) FROM person_schedule WHERE schedule_item_id = ? AND person_id=?', $this->itemId, $this->lastPersonId));
+        //Assert::equal('cancelled', $this->connection->fetchField('SELECT status FROM event_participant WHERE event_participant_id=?', $this->dsefAppId));
+        Assert::equal(0, (int)$this->connection->fetchField('SELECT count(*) FROM person_schedule WHERE schedule_item_id = ? AND person_id=?', $this->itemId, $this->lastPersonId));
     }
 
     public function getAccommodationCapacity() {

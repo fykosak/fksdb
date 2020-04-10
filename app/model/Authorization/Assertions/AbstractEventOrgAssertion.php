@@ -4,7 +4,7 @@ namespace Authorization\Assertions;
 
 use Exports\StoredQuery;
 use FKSDB\ORM\DbNames;
-use Nette\Database\Connection;
+use Nette\Database\Context;
 use Nette\Security\IUserStorage;
 use Nette\Security\Permission;
 use Nette\SmartObject;
@@ -28,7 +28,7 @@ abstract class AbstractEventOrgAssertion {
     private $user;
 
     /**
-     * @var Connection
+     * @var Context
      */
     private $connection;
 
@@ -37,9 +37,9 @@ abstract class AbstractEventOrgAssertion {
      * @param $eventTypeId
      * @param $parameterName
      * @param IUserStorage $user
-     * @param Connection $connection
+     * @param Context $connection
      */
-    function __construct($eventTypeId, string $parameterName, IUserStorage $user, Connection $connection) {
+    function __construct($eventTypeId, string $parameterName, IUserStorage $user, Context $connection) {
         $this->parameterName = $parameterName;
         $this->user = $user;
         $this->connection = $connection;

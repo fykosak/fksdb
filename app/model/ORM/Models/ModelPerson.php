@@ -35,9 +35,6 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
      *
      */
     public function getLogin() {
-        if (!isset($this->person_id)) {
-            $this->person_id = null;
-        }
         $logins = $this->related(DbNames::TAB_LOGIN, 'person_id');
         $logins->rewind();
         if (!$logins->valid()) {
@@ -65,10 +62,6 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
      * @return ModelPersonInfo|null
      */
     public function getInfo() {
-        if (!isset($this->person_id)) {
-            $this->person_id = null;
-        }
-
         $infos = $this->related(DbNames::TAB_PERSON_INFO, 'person_id');
         $infos->rewind();
         if (!$infos->valid()) {
@@ -84,9 +77,6 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
      * @return ModelPersonHistory|null
      */
     public function getHistory($acYear, $extrapolated = false) {
-        if (!isset($this->person_id)) {
-            $this->person_id = null;
-        }
         $histories = $this->related(DbNames::TAB_PERSON_HISTORY, 'person_id')
             ->where('ac_year', $acYear);
         $history = $histories->fetch();
@@ -128,9 +118,6 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
      * @return GroupedSelection
      */
     public function getOrgs($contestId = null): GroupedSelection {
-        if (!isset($this->person_id)) {
-            $this->person_id = null;
-        }
         $related = $this->related(DbNames::TAB_ORG, 'person_id');
         if ($contestId) {
             $related->where('contest_id', $contestId);
@@ -142,9 +129,6 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
      * @return GroupedSelection
      */
     public function getFlags(): GroupedSelection {
-        if (!isset($this->person_id)) {
-            $this->person_id = null;
-        }
         return $this->related(DbNames::TAB_PERSON_HAS_FLAG, 'person_id');
     }
 
@@ -191,9 +175,6 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
      * @return GroupedSelection
      */
     public function getPostContacts() {
-        if (!isset($this->person_id)) {
-            $this->person_id = null;
-        }
         return $this->related(DbNames::TAB_POST_CONTACT, 'person_id');
     }
 
@@ -254,8 +235,8 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
      * @return GroupedSelection
      */
     public function getEventParticipant(): Selection {
-        return (new Selection(DbNames::TAB_EVENT_PARTICIPANT, $this->getTable()->getConnection()))->where('person_id', $this->person_id);
-        // return $this->related(DbNames::TAB_EVENT_PARTICIPANT, 'person_id');
+        //return (new Selection($this->getTable()->data,bNames::TAB_EVENT_PARTICIPANT, $this->getTable()->getConnection()))->where('person_id', $this->person_id);
+        return $this->related(DbNames::TAB_EVENT_PARTICIPANT, 'person_id');
     }
 
     /**
@@ -286,9 +267,6 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
      * @return GroupedSelection
      */
     public function getEventOrg() {
-        if (!isset($this->person_id)) {
-            $this->person_id = null;
-        }
         return $this->related(DbNames::TAB_EVENT_ORG, 'person_id');
     }
 
@@ -296,9 +274,6 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
      * @return null|ModelPersonHistory the most recent person's history record (if any)
      */
     private function getLastHistory() {
-        if (!isset($this->person_id)) {
-            $this->person_id = null;
-        }
         $history = $this->related(DbNames::TAB_PERSON_HISTORY, 'person_id')->order(('ac_year DESC'))->fetch();
 
         if ($history) {

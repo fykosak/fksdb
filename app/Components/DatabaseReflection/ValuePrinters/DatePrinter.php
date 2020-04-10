@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\DatabaseReflection\ValuePrinters;
 
-use FKSDB\Components\Controls\Helpers\Badges\NotSetBadge;
+use FKSDB\Components\Controls\Badges\NotSetBadge;
 use Nette\Utils\DateTime;
 use Nette\Utils\Html;
 

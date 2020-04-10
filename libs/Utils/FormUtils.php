@@ -1,8 +1,8 @@
 <?php
 
-use Nette\Utils\ArrayHash;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
+use Nette\Utils\ArrayHash;
 
 /**
  *
@@ -15,7 +15,7 @@ class FormUtils {
      *
      * @todo Move to general utils.
      * @param string|array|Traversable $values
-     * @return array
+     * @return ArrayHash
      */
     public static function emptyStrToNull($values) {
         if ($values instanceof Traversable || is_array($values)) {

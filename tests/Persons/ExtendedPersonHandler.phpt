@@ -10,6 +10,8 @@ use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Services\ServiceContest;
+use FKSDB\ORM\Services\ServiceContestant;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Tester\Assert;
@@ -39,15 +41,15 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
     protected function setUp() {
         parent::setUp();
 
-        $handlerFactory = $this->container->getByType('Persons\ExtendedPersonHandlerFactory');
+        $handlerFactory = $this->container->getByType(ExtendedPersonHandlerFactory::class);
 
-        $service = $this->container->getService('ServiceContestant');
-        $contest = $this->container->getService('ServiceContest')->findByPrimary(ModelContest::ID_FYKOS);
+        $service = $this->container->getByType(ServiceContestant::class);
+        $contest = $this->container->getByType(ServiceContest::class)->findByPrimary(ModelContest::ID_FYKOS);
         $year = 1;
         $invitationLang = 'cs';
         $this->fixture = $handlerFactory->create($service, $contest, $year, $invitationLang);
 
-        $this->referencedPersonFactory = $this->container->getByType('FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory');
+        $this->referencedPersonFactory = $this->container->getByType(ReferencedPersonFactory::class);
     }
 
     protected function tearDown() {

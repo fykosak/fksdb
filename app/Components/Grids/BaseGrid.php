@@ -8,7 +8,6 @@ use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\Application\IPresenter;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;

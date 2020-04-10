@@ -6,7 +6,7 @@ use BasePresenter;
 
 class MockPresenter extends BasePresenter {
 
-    public function link($destination, $args = array()) {
+    public function link($destination, $args = []) {
         return '';
     }
 

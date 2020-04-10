@@ -6,8 +6,11 @@ $container = require '../bootstrap.php';
 
 use FKSDB\ORM\DbNames;
 use MockEnvironment\MockApplicationTrait;
+use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Request;
+use Nette\Application\Responses\RedirectResponse;
+use Nette\Application\Responses\TextResponse;
 use Nette\DI\Container;
 use Nette\Utils\DateTime;
 use Tester\Assert;
@@ -34,32 +37,32 @@ class AuthorizationTest extends FyziklaniTestCase {
     protected function setUp() {
         parent::setUp();
 
-        $this->perPerson = $this->createPerson('Karkulka', 'Červená', array(
+        $this->perPerson = $this->createPerson('Karkulka', 'Červená', [
             'email' => 'karkulka@les.cz', 'born' => DateTime::from('2000-01-01')
-        ), true);
+        ], true);
 
-        $this->perOrg = $this->createPerson('Karkulka', 'Červená', array(
+        $this->perOrg = $this->createPerson('Karkulka', 'Červená', [
             'email' => 'karkulka2@les.cz', 'born' => DateTime::from('2000-01-01')
-        ), true);
-        $this->insert(DbNames::TAB_ORG, array('person_id' => $this->perOrg, 'contest_id' => 1, 'since' => 0, 'order' => 0));
+        ], true);
+        $this->insert(DbNames::TAB_ORG, ['person_id' => $this->perOrg, 'contest_id' => 1, 'since' => 0, 'order' => 0]);
 
-        $this->perOrgOther = $this->createPerson('Karkulka', 'Červená', array(
+        $this->perOrgOther = $this->createPerson('Karkulka', 'Červená', [
             'email' => 'karkulka3@les.cz', 'born' => DateTime::from('2000-01-01')
-        ), true);
-        $this->insert(DbNames::TAB_ORG, array('person_id' => $this->perOrgOther, 'contest_id' => 2, 'since' => 0, 'order' => 0));
+        ], true);
+        $this->insert(DbNames::TAB_ORG, ['person_id' => $this->perOrgOther, 'contest_id' => 2, 'since' => 0, 'order' => 0]);
 
-        $this->perContestant = $this->createPerson('Karkulka', 'Červená', array(
+        $this->perContestant = $this->createPerson('Karkulka', 'Červená', [
             'email' => 'karkulka4@les.cz', 'born' => DateTime::from('2000-01-01')
-        ), true);
-        $this->insert(DbNames::TAB_CONTESTANT_BASE, array('person_id' => $this->perContestant, 'contest_id' => 1, 'year' => 1));
+        ], true);
+        $this->insert(DbNames::TAB_CONTESTANT_BASE, ['person_id' => $this->perContestant, 'contest_id' => 1, 'year' => 1]);
 
-        $this->eventId = $this->createEvent(array());
+        $this->eventId = $this->createEvent([]);
         $this->connection->query('INSERT INTO fyziklani_task', [
             'event_id' => $this->eventId,
             'label' => 'AA',
             'name' => 'tmp',
         ]);
-        $taskId = $this->connection->lastInsertId();
+        $taskId = $this->connection->getInsertId();
 
         $this->connection->query('INSERT INTO e_fyziklani_team', [
             'event_id' => $this->eventId,
@@ -67,13 +70,13 @@ class AuthorizationTest extends FyziklaniTestCase {
             'status' => 'applied',
             'category' => 'C',
         ]);
-        $teamId = $this->connection->lastInsertId();
+        $teamId = $this->connection->getInsertId();
         $this->connection->query('INSERT INTO fyziklani_submit', [
             'fyziklani_task_id' => $taskId,
             'e_fyziklani_team_id' => $teamId,
             'points' => 5,
         ]);
-        $this->submitId = $this->connection->lastInsertId();
+        $this->submitId = $this->connection->getInsertId();
 
         $this->mockApplication();
     }
@@ -95,14 +98,14 @@ class AuthorizationTest extends FyziklaniTestCase {
     }
 
     private function createGetRequest($presenterName, $action) {
-        $params = array(
+        $params = [
             'lang' => 'cs',
             'contestId' => 1,
             'year' => 1,
             'eventId' => $this->eventId,
             'action' => $action,
             'id' => $this->submitId,
-        );
+        ];
 
         return new Request($presenterName, 'GET', $params);
     }
@@ -112,7 +115,7 @@ class AuthorizationTest extends FyziklaniTestCase {
      */
     public function testAccess($personId, $presenterName, $actions, $results) {
         if (!is_array($actions)) {
-            $actions = array($actions);
+            $actions = [$actions];
         }
         if (!is_array($results)) {
             $results = array_fill(0, count($actions), $results);
@@ -132,19 +135,19 @@ class AuthorizationTest extends FyziklaniTestCase {
             } catch (ForbiddenRequestException $e) {
                 $forbidden = true;
                 $response = $e->getCode();
-            } catch (\Nette\Application\BadRequestException $e) {
+            } catch (BadRequestException $e) {
                 $forbidden = ($e->getCode() == 403);
                 $response = $e->getCode();
             }
             if ($results[$i]) {
                 if (is_object($response)) {
-                    Assert::type('Nette\Application\Responses\TextResponse', $response);
+                    Assert::type(TextResponse::class, $response);
                 } else {
                     Assert::notSame(403, $response);
                 }
             } else {
                 if (!$forbidden) {
-                    Assert::type('Nette\Application\Responses\RedirectResponse', $response);
+                    Assert::type(RedirectResponse::class, $response);
                     $url = $response->getUrl();
                     Assert::contains('login', $url);
                 }

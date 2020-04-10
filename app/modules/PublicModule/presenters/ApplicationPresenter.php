@@ -335,7 +335,7 @@ class ApplicationPresenter extends BasePresenter {
             $eventId = $eventId ?: $this->getParameter('eventId');
             $row = $this->serviceEvent->findByPrimary($eventId);
             if ($row) {
-                $this->event = ModelEvent::createFromTableRow($row);
+                $this->event = ModelEvent::createFromActiveRow($row);
             }
         }
 
@@ -360,7 +360,7 @@ class ApplicationPresenter extends BasePresenter {
 
             $this->eventApplication = $service->findByPrimary($id);
             /* if ($row) {
-                 $this->eventApplication = ($service->getModelClassName())::createFromTableRow($row);
+                 $this->eventApplication = ($service->getModelClassName())::createFromActiveRow($row);
              }*/
         }
 

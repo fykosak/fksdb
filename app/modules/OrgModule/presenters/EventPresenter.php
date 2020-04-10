@@ -244,54 +244,48 @@ class EventPresenter extends EntityPresenter {
 
     /**
      * @param Form $form
-     * @param $isNew
+     * @param bool $isNew
      * @throws BadRequestException
      * @throws AbortException
      * @throws \ReflectionException
      */
     private function handleFormSuccess(Form $form, $isNew) {
+
         $connection = $this->serviceEvent->getConnection();
         $values = $form->getValues();
+        $data = FormUtils::emptyStrToNull($values[self::CONT_EVENT]);
+
+        /**
+         * @var ModelEvent $model
+         */
         if ($isNew) {
-            $model = $this->serviceEvent->createNew();
-            $model->year = $this->getSelectedYear();
-        } else {
-            $model = $this->getModel();
-        }
-
-
-        try {
-            if (!$connection->beginTransaction()) {
-                throw new ModelException();
-            }
-
-            /*
-             * Event
-             */
-            $data = FormUtils::emptyStrToNull($values[self::CONT_EVENT]);
-            $this->serviceEvent->updateModel($model, $data);
-
-            if (!$this->getContestAuthorizator()
-                ->isAllowed($model, $isNew ? 'create' : 'edit', $this->getSelectedContest())
-            ) {
+            if (!$this->getContestAuthorizator()->isAllowed('event', 'create', $this->getSelectedContest())) {
                 throw new ForbiddenRequestException();
             }
 
-            $this->serviceEvent->save($model);
+            $data['year'] = $this->getSelectedYear();
+            $model = $this->serviceEvent->createNewModel($data);
+        } else {
+            if (!$this->getContestAuthorizator()->isAllowed($model, 'edit', $this->getSelectedContest())) {
+                throw new ForbiddenRequestException();
+            }
+            $model = $this->getModel();
+            $this->serviceEvent->updateModel2($model, $data);
+        }
 
+        try {
+            $connection->beginTransaction();
             // update also 'until' of authTokens in case that registration end has changed
             $tokenData = ["until" => $model->registration_end ?: $model->end];
-            foreach ($this->serviceAuthToken->findTokensByEventId($model->id) as $token) {
-                $this->serviceAuthToken->updateModel($token, $tokenData);
-                $this->serviceAuthToken->save($token);
+            foreach ($this->serviceAuthToken->findTokensByEventId($model->event_id) as $token) {
+                $this->serviceAuthToken->updateModel2($token, $tokenData);
+              //  $this->serviceAuthToken->save($token);
             }
 
             /*
              * Finalize
              */
-            if (!$connection->commit()) {
-                throw new ModelException();
-            }
+            $connection->commit();
 
             $this->flashMessage(sprintf(_('Akce %s uložena.'), $model->name), self::FLASH_SUCCESS);
             $this->backLinkRedirect();

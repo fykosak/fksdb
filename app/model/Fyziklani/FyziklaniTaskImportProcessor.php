@@ -33,6 +33,7 @@ class FyziklaniTaskImportProcessor {
      * @param ModelEvent $event
      */
     public function __construct(Container $container, ModelEvent $event) {
+
         $this->event = $event;
         $this->serviceFyziklaniTask = $container->getByType(ServiceFyziklaniTask::class);
     }
@@ -53,14 +54,14 @@ class FyziklaniTaskImportProcessor {
             try {
                 $task = $this->serviceFyziklaniTask->findByLabel($row['label'], $this->event);
                 if (!$task) {
-                    $task = $this->serviceFyziklaniTask->createNew([
+                    $this->serviceFyziklaniTask->createNewModel([
                         'label' => $row['label'],
                         'name' => $row['name'],
                         'event_id' => $this->event->event_id,
                     ]);
                     $messages[] = [sprintf(_('Úloha %s "%s" bola vložena'), $row['label'], $row['name']), \BasePresenter::FLASH_SUCCESS];
                 } elseif ($values->state == TaskPresenter::IMPORT_STATE_UPDATE_N_INSERT) {
-                    $this->serviceFyziklaniTask->updateModel($task, [
+                    $this->serviceFyziklaniTask->updateModel2($task, [
                         'label' => $row['label'],
                         'name' => $row['name']
                     ]);
@@ -71,7 +72,6 @@ class FyziklaniTaskImportProcessor {
                         ILogger::WARNING
                     ];
                 }
-                $this->serviceFyziklaniTask->save($task);
             } catch (\Exception $exception) {
                 $messages[] = [_('Vyskytla se chyba'), \BasePresenter::FLASH_ERROR];
                 Debugger::log($exception);

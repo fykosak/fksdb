@@ -88,7 +88,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
         }
 
         // try both e-mail and FB ID
-        $result = $this->servicePerson->getTable()->where('person_info:email = ? OR person_info:fb_id = ?', $fbUser['email'], $fbUser['id']);
+        $result = $this->servicePerson->getTable()->where(':person_info.email = ? OR person_info.fb_id = ?', $fbUser['email'], $fbUser['id']);
         if (count($result) > 1) {
             throw new AuthenticationException(_('Facebook účtu odpovídá více osob.'));
         } elseif (count($result) == 0) {
@@ -132,7 +132,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
         unset($personData['family_name']);
         unset($personData['other_name']);
         unset($personData['display_name']);
-        $this->servicePerson->updateModel($person, $personData);
+        $this->servicePerson->updateModel2($person, $personData);
 
         $personInfo = $person->getInfo();
         $personInfoData = $this->getPersonInfoData($fbUser);
@@ -146,7 +146,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
             unset($personInfoData['email']);
         }
         /* Email nor fb_id can violate unique constraint here as we've used it to identify the person in authenticate. */
-        $this->servicePersonInfo->updateModel($personInfo, $personInfoData);
+        $this->servicePersonInfo->updateModel2($personInfo, $personInfoData);
 
         $this->servicePerson->getConnection()->beginTransaction();
         $this->servicePerson->save($person);
