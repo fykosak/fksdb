@@ -3,6 +3,7 @@
 namespace OrgModule;
 
 use FKSDB\Components\Controls\SeriesChooser;
+use FKSDB\Expressions\BadTypeException;
 use FKSDB\SeriesCalculator;
 use FKSDB\CoreModule\ISeriesPresenter;
 use Nette\Application\BadRequestException;
@@ -33,7 +34,11 @@ abstract class SeriesPresenter extends BasePresenter implements ISeriesPresenter
 
     protected function startup() {
         parent::startup();
-        if (!$this->getComponent('seriesChooser')->isValid()) {
+        $control = $this->getComponent('seriesChooser');
+        if (!$control instanceof SeriesChooser) {
+            throw new BadTypeException(SeriesChooser::class, $control);
+        }
+        if (!$control->isValid()) {
             throw new BadRequestException('Nejsou dostupné žádné série.', 500);
         }
     }
@@ -45,7 +50,7 @@ abstract class SeriesPresenter extends BasePresenter implements ISeriesPresenter
     public function getSelectedSeries() {
         $control = $this->getComponent('seriesChooser');
         if (!$control instanceof SeriesChooser) {
-            throw new BadRequestException();
+            throw new BadTypeException(SeriesChooser::class, $control);
         }
         return $control->getSeries();
     }
@@ -53,7 +58,7 @@ abstract class SeriesPresenter extends BasePresenter implements ISeriesPresenter
     /**
      * @return SeriesChooser
      */
-    public function createComponentSeriesChooser() {
+    public function createComponentSeriesChooser(): SeriesChooser {
         return new SeriesChooser($this->session, $this->seriesCalculator, $this->getServiceContest(), $this->getTranslator());
     }
 
@@ -62,7 +67,7 @@ abstract class SeriesPresenter extends BasePresenter implements ISeriesPresenter
      * @throws BadRequestException
      */
     public function getSubTitle(): string {
-        return parent::getSubTitle() . ' ' . sprintf(_('%s series'), $this->getSelectedSeries());
+        return parent::getSubTitle() . ' ' . sprintf(_('%d. series'), $this->getSelectedSeries());
     }
 
 }

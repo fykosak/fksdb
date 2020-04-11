@@ -121,7 +121,7 @@ class SeriesTable {
     }
 
     /**
-     * @param $taskFilter
+     * @param array|null $taskFilter
      */
     public function setTaskFilter($taskFilter) {
         $this->taskFilter = $taskFilter;
@@ -216,5 +216,4 @@ class SeriesTable {
         }
         return md5($fingerprint);
     }
-
 }

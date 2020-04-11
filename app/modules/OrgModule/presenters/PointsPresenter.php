@@ -110,12 +110,7 @@ class PointsPresenter extends SeriesPresenter {
     }
 
     public function actionEntry() {
-        if ($this->all) {
-            $this->seriesTable->setTaskFilter(null);
-        } else {
-            $gradedTasks = $this->getGradedTasks();
-            $this->seriesTable->setTaskFilter($gradedTasks);
-        }
+        $this->seriesTable->setTaskFilter($this->all ? null : $this->getGradedTasks());
     }
 
 
