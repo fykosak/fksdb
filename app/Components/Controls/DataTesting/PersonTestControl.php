@@ -1,24 +1,26 @@
 <?php
 
-namespace FKSDB\Components\Controls\Validation;
+namespace FKSDB\Components\Controls\DataTesting;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
+use FKSDB\DataTesting\Tests\Person\PersonTest;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
-use FKSDB\ValidationTest\ValidationLog;
-use FKSDB\ValidationTest\ValidationTest;
+use FKSDB\DataTesting\TestsLogger;
+use FKSDB\DataTesting\TestLog;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Forms\Form;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 
 /**
- * Class ValidationControl
- * @package FKSDB\Components\Controls\Validation
- * @property FileTemplate $template
+ * Class PersonTestControl
+ * @package FKSDB\Components\Controls\DataTesting
+ * @property-read FileTemplate $template
  */
-class ValidationControl extends Control {
+class PersonTestControl extends Control {
 
     /**
      * @var int
@@ -32,7 +34,7 @@ class ValidationControl extends Control {
     public $endId = 0;
 
     /**
-     * @var ValidationTest[]
+     * @var PersonTest[]
      * @persistent
      */
     public $tests = [];
@@ -71,7 +73,7 @@ class ValidationControl extends Control {
 
     /**
      * @return FormControl
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     public function createComponentForm() {
         $control = new FormControl();
@@ -85,7 +87,7 @@ class ValidationControl extends Control {
         $levelsContainer = new ContainerWithOptions();
         $levelsContainer->setOption('label', _('Level'));
 
-        foreach (ValidationLog::getAvailableLevels() as $level) {
+        foreach (TestLog::getAvailableLevels() as $level) {
             $field = $levelsContainer->addCheckbox($level, _($level));
             if (\in_array($level, $this->levels)) {
                 $field->setDefaultValue(true);
@@ -137,11 +139,12 @@ class ValidationControl extends Control {
         foreach ($query as $row) {
 
             $model = ModelPerson::createFromActiveRow($row);
-            $log = [];
+
+            $logger = new TestsLogger();
             foreach ($this->tests as $test) {
-                $log[] = $test->run($model);
+                $test->run($logger, $model);
             }
-            $personLog = \array_filter($log, function (ValidationLog $simpleLog) {
+            $personLog = \array_filter($logger->getLogs(), function (TestLog $simpleLog) {
                 return \in_array($simpleLog->getLevel(), $this->levels);
             });
             if (\count($personLog)) {
@@ -155,7 +158,7 @@ class ValidationControl extends Control {
     public function render() {
         $this->template->logs = $this->calculateProblems();
         $this->template->setTranslator($this->translator);
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ValidationControl.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
         $this->template->render();
     }
 
@@ -165,6 +168,5 @@ class ValidationControl extends Control {
     public function handleChangePage($page) {
         $this->page = $page;
         $this->invalidateControl();
-
     }
 }

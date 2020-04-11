@@ -9,7 +9,7 @@ use FKSDB\Components\DatabaseReflection\MetaDataFactory;
 use FKSDB\Components\Forms\Controls\WriteOnlyInput;
 use FKSDB\Components\Forms\Factories\ITestedRowFactory;
 use FKSDB\ORM\AbstractModelSingle;
-use FKSDB\ValidationTest\ValidationLog;
+use FKSDB\DataTesting\TestLog;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
@@ -74,18 +74,18 @@ class PhoneRow extends DefaultRow implements ITestedRowFactory {
 
     /**
      * @param AbstractModelSingle $model
-     * @return ValidationLog
+     * @return TestLog
      */
-    public final function runTest(AbstractModelSingle $model): ValidationLog {
+    public final function runTest(AbstractModelSingle $model): TestLog {
 
         $value = $model->{$this->getModelAccessKey()};
         if (\is_null($value)) {
-            return new ValidationLog($this->getTitle(), \sprintf('%s is not set', $this->getTitle()), ValidationLog::LVL_INFO);
+            return new TestLog($this->getTitle(), \sprintf('%s is not set', $this->getTitle()), TestLog::LVL_INFO);
         }
         if (!$this->phoneNumberFactory->isValid($value)) {
-            return new ValidationLog($this->getTitle(), \sprintf('%s number (%s) is not valid', $this->getTitle(), $value), ValidationLog::LVL_DANGER);
+            return new TestLog($this->getTitle(), \sprintf('%s number (%s) is not valid', $this->getTitle(), $value), TestLog::LVL_DANGER);
         } else {
-            return new ValidationLog($this->getTitle(), \sprintf('%s is valid', $this->getTitle()), ValidationLog::LVL_SUCCESS);
+            return new TestLog($this->getTitle(), \sprintf('%s is valid', $this->getTitle()), TestLog::LVL_SUCCESS);
         }
     }
 

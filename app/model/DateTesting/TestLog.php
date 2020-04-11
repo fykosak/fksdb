@@ -1,16 +1,16 @@
 <?php
 
-namespace FKSDB\ValidationTest;
+namespace FKSDB\DataTesting;
 
 use FKSDB\Messages\Message;
 use FKSDB\NotImplementedException;
 use Nette\Utils\Html;
 
 /**
- * Class ValidationLog
- * @package FKSDB\ValidationTest
+ * Class TestLog
+ * @package FKSDB\DataTesting
  */
-class ValidationLog extends Message {
+class TestLog extends Message {
     /**
      * @var Html
      */
@@ -21,7 +21,7 @@ class ValidationLog extends Message {
     public $testName;
 
     /**
-     * ValidationLog constructor.
+     * TestLog constructor.
      * @param string $testName
      * @param string $message
      * @param string $level
@@ -39,7 +39,6 @@ class ValidationLog extends Message {
     public static function getAvailableLevels(): array {
         return [self::LVL_DANGER, self::LVL_WARNING, self::LVL_SUCCESS, self::LVL_INFO];
     }
-
 
     /**
      * @return string
@@ -66,7 +65,9 @@ class ValidationLog extends Message {
      */
     public function createHtmlIcon(): Html {
         $icon = Html::el('span');
-        $icon->addAttributes(['class' => $this->mapLevelToIcon()]);
+        $icon->addAttributes([
+            'class' => $this->mapLevelToIcon(),
+        ]);
         return Html::el('span')->addAttributes([
             'class' => 'text-' . $this->getLevel(),
             'title' => $this->getMessage(),

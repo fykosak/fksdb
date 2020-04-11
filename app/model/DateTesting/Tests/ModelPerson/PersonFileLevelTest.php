@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\ValidationTest;
+namespace FKSDB\DataTesting\Tests\Person;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\Forms\Factories\ITestedRowFactory;
@@ -8,18 +8,14 @@ use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use Nette\Application\BadRequestException;
 
 /**
- * Class AbstractFieldLevelTest
- * @package FKSDB\ValidationTest
+ * Class PersonFileLevelTest
+ * @package FKSDB\DataTesting\Tests\Person
  */
-abstract class AbstractFieldLevelValidation extends ValidationTest {
+abstract class PersonFileLevelTest extends PersonTest {
     /**
      * @var AbstractRow|ITestedRowFactory
      */
     private $rowFactory;
-    /**
-     * @var TableReflectionFactory
-     */
-    protected $tableReflectionFactory;
     /**
      * @var string
      */
@@ -33,19 +29,19 @@ abstract class AbstractFieldLevelValidation extends ValidationTest {
      * @throws BadRequestException
      */
     public function __construct(TableReflectionFactory $tableReflectionFactory, string $factoryTableName, string $factoryFieldName) {
-        $this->tableReflectionFactory = $tableReflectionFactory;
         $this->actionName = $factoryTableName . '__' . $factoryFieldName;
-        $this->loadFactory($factoryTableName, $factoryFieldName);
+        $this->loadFactory($tableReflectionFactory, $factoryTableName, $factoryFieldName);
     }
 
     /**
+     * @param TableReflectionFactory $tableReflectionFactory
      * @param string $factoryTableName
      * @param string $factoryFieldName
      * @throws BadRequestException
      * @throws \Exception
      */
-    private final function loadFactory(string $factoryTableName, string $factoryFieldName) {
-        $rowFactory = $this->tableReflectionFactory->loadService($factoryTableName, $factoryFieldName);
+    private final function loadFactory(TableReflectionFactory $tableReflectionFactory, string $factoryTableName, string $factoryFieldName) {
+        $rowFactory = $tableReflectionFactory->loadService($factoryTableName, $factoryFieldName);
         if (!$rowFactory instanceof ITestedRowFactory) {
             throw new BadRequestException();
         }

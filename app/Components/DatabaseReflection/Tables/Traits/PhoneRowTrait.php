@@ -6,7 +6,8 @@ use FKSDB\Components\Controls\Badges\NotSetBadge;
 use FKSDB\Components\Controls\PhoneNumber\PhoneNumberFactory;
 use FKSDB\Components\Forms\Controls\WriteOnlyInput;
 use FKSDB\ORM\AbstractModelSingle;
-use FKSDB\ValidationTest\ValidationLog;
+use FKSDB\DataTesting\TestsLogger;
+use FKSDB\DataTesting\TestLog;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
@@ -42,19 +43,18 @@ trait PhoneRowTrait {
     }
 
     /**
+     * @param TestsLogger $logger
      * @param AbstractModelSingle $model
-     * @return ValidationLog
      */
-    public final function runTest(AbstractModelSingle $model): ValidationLog {
+    public final function runTest(TestsLogger $logger, AbstractModelSingle $model) {
 
         $value = $model->{$this->getModelAccessKey()};
         if (\is_null($value)) {
-            return new ValidationLog($this->getTitle(), \sprintf('%s is not set', $this->getTitle()), ValidationLog::LVL_INFO);
-        }
-        if (!$this->phoneNumberFactory->isValid($value)) {
-            return new ValidationLog($this->getTitle(), \sprintf('%s number (%s) is not valid', $this->getTitle(), $value), ValidationLog::LVL_DANGER);
+            return;
+        } elseif (!$this->phoneNumberFactory->isValid($value)) {
+            $logger->log(new TestLog($this->getTitle(), \sprintf('%s number (%s) is not valid', $this->getTitle(), $value), TestLog::LVL_DANGER));
         } else {
-            return new ValidationLog($this->getTitle(), \sprintf('%s is valid', $this->getTitle()), ValidationLog::LVL_SUCCESS);
+            $logger->log(new TestLog($this->getTitle(), \sprintf('%s is valid', $this->getTitle()), TestLog::LVL_SUCCESS));
         }
     }
 

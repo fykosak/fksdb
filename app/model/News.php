@@ -12,13 +12,9 @@ class News {
     use SmartObject;
 
     /**
-     * @var ServiceContest
-     */
-    /**
      * @var GlobalParameters
      */
     private $globalParameters;
-
 
     /**
      * News constructor.

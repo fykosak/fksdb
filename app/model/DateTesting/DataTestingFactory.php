@@ -1,18 +1,19 @@
 <?php
 
-namespace FKSDB\ValidationTest;
+namespace FKSDB\DataTesting;
 
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
+use FKSDB\DataTesting\Tests\Person\PersonTest;
 use FKSDB\ORM\Services\ServiceContest;
 use Nette\Application\BadRequestException;
 
 /**
- * Class ValidationFactory
- * @package FKSDB\ValidationTest
+ * Class DataTestingFactory
+ * @package FKSDB\DataTesting
  */
-class ValidationFactory {
+class DataTestingFactory {
     /**
-     * @var ValidationTest[]
+     * @var PersonTest[][]
      */
     private $tests = [];
     /**
@@ -25,7 +26,7 @@ class ValidationFactory {
     private $tableReflectionFactory;
 
     /**
-     * ValidationFactory constructor.
+     * DataTestingFactory constructor.
      * @param ServiceContest $serviceContest
      * @param TableReflectionFactory $tableReflectionFactory
      * @throws BadRequestException
@@ -40,21 +41,25 @@ class ValidationFactory {
      * @throws BadRequestException
      */
     private function registersTests() {
-        $this->tests = [
-            new Tests\GenderFromBornNumber(),
-            new Tests\ParticipantDuration\FykosParticipantDuration($this->serviceContest),
-            new Tests\ParticipantDuration\VyfukParticipantDuration($this->serviceContest),
-            new EventCoveringValidation(),
+        $tests = [
+            new Tests\Person\GenderFromBornNumberTest(),
+            new Tests\Person\ParticipantsDurationTest(),
+            new Tests\Person\EventCoveringTest(),
         ];
-        foreach (['phone', 'phone_parent_d', 'phone_parent_m', 'health_insurance'] as $fieldName) {
-            $this->tests[] = new PersonInfoFieldValidation($this->tableReflectionFactory, $fieldName);
+        foreach (['phone', 'phone_parent_d', 'phone_parent_m'] as $fieldName) {
+            $tests[] = new Tests\Person\PersonInfoFieldTest($this->tableReflectionFactory, $fieldName);
         }
+        $this->tests['person'] = $tests;
     }
 
     /**
-     * @return ValidationTest[]
+     * @param string $section
+     * @return PersonTest[]
      */
-    public function getTests(): array {
-        return $this->tests;
+    public function getTests(string $section): array {
+        if (isset($this->tests[$section])) {
+            return $this->tests[$section];
+        }
+        return [];
     }
 }

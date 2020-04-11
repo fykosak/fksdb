@@ -1,26 +1,36 @@
 <?php
 
-namespace FKSDB\ValidationTest;
+namespace FKSDB\DataTesting\Tests\Person;
 
+use FKSDB\DataTesting\TestLog;
+use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelEventOrg;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Models\ModelOrg;
 use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\DataTesting\TestsLogger;
 
 /**
  * Class EventCoveringTest
- * @package FKSDB\ValidationTest
+ * @package FKSDB\DataTesting\Tests\Person
  */
-class EventCoveringValidation extends ValidationTest {
+class EventCoveringTest extends PersonTest {
 
     /**
+     * @param TestsLogger $logger
      * @param ModelPerson $person
-     * @return ValidationLog
+     * @return void
      */
-    public function run(ModelPerson $person): ValidationLog {
-        $contestantYears = [1 => [], 2 => []];
-        $participantsYears = [1 => [], 2 => []];
+    public function run(TestsLogger $logger, ModelPerson $person) {
+        $contestantYears = [
+            ModelContest::ID_FYKOS => [],
+            ModelContest::ID_VYFUK => [],
+        ];
+        $participantsYears = [
+            ModelContest::ID_FYKOS => [],
+            ModelContest::ID_VYFUK => [],
+        ];
         foreach ($person->getEventParticipant() as $row) {
             $eventParticipant = ModelEventParticipant::createFromActiveRow($row);
             $year = $eventParticipant->getEvent()->year;
@@ -39,46 +49,38 @@ class EventCoveringValidation extends ValidationTest {
         }
         $eventOrgYears = $this->getEventOrgYears($person);
 
-        $log = '';
-        $log .= $this->check($participantsYears, $eventOrgYears, 'eventParticipant', $person);
-        $log .= $this->check($contestantYears, $eventOrgYears, 'contestant', $person);
-
-        if ($log) {
-            return new ValidationLog($this->getTitle(), $log, ValidationLog::LVL_DANGER);
-        }
-        return new ValidationLog($this->getTitle(), 'Test pass', ValidationLog::LVL_SUCCESS);
+        $this->check($logger, $participantsYears, $eventOrgYears, 'eventParticipant', $person);
+        $this->check($logger, $contestantYears, $eventOrgYears, 'contestant', $person);
     }
 
     /**
+     * @param TestsLogger $logger
      * @param int[][] $data
      * @param array $orgs
      * @param string $type
      * @param ModelPerson $person
-     * @return string
      */
-    private function check(array $data, array $orgs, string $type, ModelPerson $person): string {
-        $log = '';
+    private function check(TestsLogger $logger, array $data, array $orgs, string $type, ModelPerson $person) {
         foreach ($data as $contestId => $contestYears) {
             foreach ($contestYears as $year) {
                 if (\in_array($year, $orgs[$contestId])) {
-                    $log .= $this->createLog($year, $contestId, $type, 'eventOrg');
+                    $logger->log($this->createLog($year, $contestId, $type, 'eventOrg'));
                 }
                 $query = $person->getOrgs($contestId);
                 foreach ($query as $row) {
                     $org = ModelOrg::createFromActiveRow($row);
                     if ($org->until) {
                         if ($org->until >= $year && $org->since <= $year) {
-                            $log .= $this->createLog($year, $contestId, $type, 'org');
+                            $logger->log($this->createLog($year, $contestId, $type, 'org'));
                         }
                     } else {
                         if ($org->since <= $year) {
-                            $log .= $this->createLog($year, $contestId, $type, 'org');
+                            $logger->log($this->createLog($year, $contestId, $type, 'org'));
                         }
                     }
                 }
             }
         }
-        return $log;
     }
 
     /**
@@ -86,10 +88,10 @@ class EventCoveringValidation extends ValidationTest {
      * @param int $contestId
      * @param string $typeP
      * @param string $typeO
-     * @return string
+     * @return TestLog
      */
-    private function createLog(int $year, int $contestId, string $typeP, string $typeO): string {
-        return \sprintf(_('Organization and participation at same year %d and contestId %d %s<->%s. '), $year, $contestId, $typeP, $typeO) . "\n";
+    private function createLog(int $year, int $contestId, string $typeP, string $typeO) {
+        return new TestLog($this->getTitle(), \sprintf(_('Organization and participation at same year %d and contestId %d %s<->%s. '), $year, $contestId, $typeP, $typeO), TestLog::LVL_DANGER);
     }
 
     /**
@@ -97,7 +99,10 @@ class EventCoveringValidation extends ValidationTest {
      * @return array
      */
     private function getEventOrgYears(ModelPerson $person): array {
-        $eventOrgYears = [1 => [], 2 => []];
+        $eventOrgYears = [
+            ModelContest::ID_FYKOS => [],
+            ModelContest::ID_VYFUK => [],
+        ];
         foreach ($person->getEventOrg() as $row) {
             $eventOrg = ModelEventOrg::createFromActiveRow($row);
             $year = $eventOrg->getEvent()->year;
