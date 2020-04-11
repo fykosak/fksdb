@@ -10,6 +10,7 @@ use Nette\DI\Container;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
 use PDOException;
+use Tracy\Debugger;
 
 /**
  *
@@ -57,8 +58,8 @@ class StoredQueryGrid extends BaseGrid {
         try {
             $c = 0;
             foreach ($this->storedQuery->getColumnNames() as $name) {
-                $this->addColumn($c + 1, $name)->setRenderer(function ($row) use ($c) {
-                    echo $row[$c];
+                $this->addColumn($c + 1, $name)->setRenderer(function (\stdClass $row) use ($c) {
+                    echo ((array)$row)[$c];
                 });
                 ++$c;
             }

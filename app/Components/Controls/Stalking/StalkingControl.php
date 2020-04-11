@@ -67,7 +67,7 @@ abstract class StalkingControl extends Control {
      * @return ContestBadge
      */
     public function createComponentContestBadge(): ContestBadge {
-        return new ContestBadge();
+        return new ContestBadge($this->translator);
     }
 
     /**
