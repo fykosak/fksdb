@@ -87,7 +87,7 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
             return;
         }
 
-        $event = $holder->getEvent();
+        $event = $holder->getPrimaryHolder()->getEvent();
         $contest = $event->getEventType()->contest;
         $year = $event->year;
         $acYear = $this->yearCalculator->getAcademicYear($contest, $year);
@@ -97,16 +97,14 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
             if ($name == 'team') {
                 continue;
             }
-            $formControls = [
-                'school_id' => $this->getControl("$name.person_id.person_history.school_id"),
-                'study_year' => $this->getControl("$name.person_id.person_history.study_year"),
-            ];
-            $formControls['school_id'] = reset($formControls['school_id']);
-            $formControls['study_year'] = reset($formControls['study_year']);
+            $schoolControls = $this->getControl("$name.person_id.person_history.school_id");
+            $schoolControl = reset($schoolControls);
+            $studyYearControls = $this->getControl("$name.person_id.person_history.study_year");
+            $studyYearControl = reset($studyYearControls);
 
             $formValues = [
-                'school_id' => ($formControls['school_id'] ? $formControls['school_id']->getValue() : null),
-                'study_year' => ($formControls['study_year'] ? $formControls['study_year']->getValue() : null),
+                'school_id' => ($schoolControl ? $schoolControl->getValue() : null),
+                'study_year' => ($studyYearControl ? $studyYearControl->getValue() : null),
             ];
 
             if (!$formValues['school_id']) {

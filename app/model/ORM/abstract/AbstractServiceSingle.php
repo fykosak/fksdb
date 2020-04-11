@@ -181,7 +181,6 @@ abstract class AbstractServiceSingle extends Selection implements IService {
             throw new InvalidArgumentException('Service for class ' . $this->getModelClassName() . ' cannot store ' . get_class($model));
         }
         try {
-            var_dump($model->isNew());
             if ($model->isNew()) {
                 $result = $this->getTable()->insert($model->getTmpData());
                 if ($result !== false) {
