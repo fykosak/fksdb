@@ -344,7 +344,9 @@ class PersonPresenter extends BasePresenter {
 
         $form->addSubmit('cancel', _('Storno'))
             ->getControlPrototype()->addAttributes(['class' => 'btn-lg']);
-        $form->onSuccess[] = [$this, 'handleMergeFormSuccess'];
+        $form->onSuccess[] = function (Form $form) {
+            $this->handleMergeFormSuccess($form);
+        };
         return $control;
     }
 

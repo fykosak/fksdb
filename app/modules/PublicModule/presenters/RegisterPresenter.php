@@ -304,11 +304,11 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     public function createComponentEmailForm() {
         $control = new FormControl();
         $form = $control->getForm();
-        // $form = new Form();
-        // $form->setRenderer(new BootstrapRenderer());
         $form->addText('email', _('e-mail'));
         $form->addSubmit('submit', _('Vyhledat'));
-        $form->onSuccess[] = [$this, 'emailFormSucceeded'];
+        $form->onSuccess[] = function (Form $form) {
+            $this->emailFormSucceeded($form);
+        };
         return $control;
     }
 
@@ -316,7 +316,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @param Form $form
      * @throws AbortException
      */
-    public function emailFormSucceeded(Form $form) {
+    private function emailFormSucceeded(Form $form) {
         $values = $form->getValues();
 
         $this->redirect('this', ['email' => $values->email,]);
