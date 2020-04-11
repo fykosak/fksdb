@@ -164,6 +164,9 @@ class StoredQueryFactory implements IXMLNodeSerializer {
             $rowNode = $doc->createElement('row');
             $dataNode->appendChild($rowNode);
             foreach ($row as $colName => $value) {
+                if (is_numeric($colName)) {
+                    continue;
+                }
                 if ($format == self::EXPORT_FORMAT_1) {
                     $colNode = $doc->createElement('col');
                 } elseif ($format == self::EXPORT_FORMAT_2) {
