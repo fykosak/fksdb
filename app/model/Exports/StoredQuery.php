@@ -304,7 +304,6 @@ class StoredQuery implements IDataSource, IResource {
             if ($this->limit !== null && $this->offset !== null) {
                 $sql .= " LIMIT {$this->offset}, {$this->limit}";
             }
-            Debugger::$maxLen = 100000000;
 
             $statement = $this->bindParams($sql);
             $statement->execute();
