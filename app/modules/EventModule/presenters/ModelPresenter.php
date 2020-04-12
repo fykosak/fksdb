@@ -30,7 +30,6 @@ class ModelPresenter extends BasePresenter {
      */
     public function authorizedDefault() {
         $this->setAuthorized($this->isContestsOrgAuthorized('event.model', 'default'));
-
     }
 
     public function titleDefault() {
@@ -42,10 +41,8 @@ class ModelPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     protected function createComponentGraphComponent(): GraphComponent {
-        $event = $this->getEvent();
         /** @var Machine $machine */
-        $machine = $this->getContext()->createEventMachine($event);
-
+        $machine = $this->getContext()->createEventMachine($this->getEvent());
         return new GraphComponent($machine->getPrimaryMachine(), $this->expressionPrinter);
     }
 }
