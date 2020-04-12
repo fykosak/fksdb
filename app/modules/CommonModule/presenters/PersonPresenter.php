@@ -11,7 +11,7 @@ use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServicePersonInfo;
-use FKSDB\ValidationTest\ValidationFactory;
+use FKSDB\DataTesting\DataTestingFactory;
 use FormUtils;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -71,7 +71,7 @@ class PersonPresenter extends BasePresenter {
      */
     private $mode;
     /**
-     * @var ValidationFactory
+     * @var DataTestingFactory
      */
     private $validationFactory;
     /**
@@ -108,9 +108,9 @@ class PersonPresenter extends BasePresenter {
     }
 
     /**
-     * @param ValidationFactory $validationFactory
+     * @param DataTestingFactory $validationFactory
      */
-    public function injectValidationFactory(ValidationFactory $validationFactory) {
+    public function injectValidationFactory(DataTestingFactory $validationFactory) {
         $this->validationFactory = $validationFactory;
     }
 
