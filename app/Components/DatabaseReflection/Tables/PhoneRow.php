@@ -8,6 +8,7 @@ use FKSDB\Components\DatabaseReflection\DefaultRow;
 use FKSDB\Components\DatabaseReflection\MetaDataFactory;
 use FKSDB\Components\Forms\Controls\WriteOnlyInput;
 use FKSDB\Components\Forms\Factories\ITestedRowFactory;
+use FKSDB\DataTesting\TestsLogger;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\DataTesting\TestLog;
 use Nette\Forms\Controls\BaseControl;
@@ -15,6 +16,7 @@ use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
+use Tracy\Debugger;
 
 /**
  * Class PhoneRow
@@ -73,19 +75,20 @@ class PhoneRow extends DefaultRow implements ITestedRowFactory {
     }
 
     /**
+     * @param TestsLogger $logger
      * @param AbstractModelSingle $model
-     * @return TestLog
+     * @return void
      */
-    public final function runTest(AbstractModelSingle $model): TestLog {
+    public final function runTest(TestsLogger $logger, AbstractModelSingle $model) {
 
         $value = $model->{$this->getModelAccessKey()};
         if (\is_null($value)) {
-            return new TestLog($this->getTitle(), \sprintf('%s is not set', $this->getTitle()), TestLog::LVL_INFO);
+            return;
         }
         if (!$this->phoneNumberFactory->isValid($value)) {
-            return new TestLog($this->getTitle(), \sprintf('%s number (%s) is not valid', $this->getTitle(), $value), TestLog::LVL_DANGER);
+            $logger->log(new TestLog($this->getTitle(), \sprintf('%s number (%s) is not valid', $this->getTitle(), $value), TestLog::LVL_DANGER));
         } else {
-            return new TestLog($this->getTitle(), \sprintf('%s is valid', $this->getTitle()), TestLog::LVL_SUCCESS);
+            $logger->log(new TestLog($this->getTitle(), \sprintf('%s is valid', $this->getTitle()), TestLog::LVL_SUCCESS));
         }
     }
 
