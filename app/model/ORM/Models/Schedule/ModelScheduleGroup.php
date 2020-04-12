@@ -9,6 +9,7 @@ use FKSDB\ORM\Models\IEventReferencedModel;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
+use Nette\Security\IResource;
 
 /**
  * Class ModelScheduleGroup
@@ -22,7 +23,10 @@ use Nette\Database\Table\GroupedSelection;
  * @property-read string name_cs
  * @property-read string name_en
  */
-class ModelScheduleGroup extends AbstractModelSingle implements IEventReferencedModel {
+class ModelScheduleGroup extends AbstractModelSingle implements IEventReferencedModel, IResource {
+
+    const RESOURCE_ID = 'event.scheduleGroup';
+
     const TYPE_ACCOMMODATION = 'accommodation';
     const TYPE_VISA = 'visa';
     const TYPE_ACCOMMODATION_GENDER = 'accommodation_gender';
@@ -69,5 +73,12 @@ class ModelScheduleGroup extends AbstractModelSingle implements IEventReferenced
             'start' => $this->start->format('c'),
             'end' => $this->end->format('c'),
         ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    function getResourceId() {
+        return self::RESOURCE_ID;
     }
 }

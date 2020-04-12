@@ -84,7 +84,7 @@ navigation:
             - event.payment.create
             - event.payment.list
             - fyziklani.dashboard.default
-            - event.schedule.groups
+            - event.scheduleGroup.list
             - event.seating.default
             - event.model.default
             - event.chart.list

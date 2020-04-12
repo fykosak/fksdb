@@ -71,6 +71,8 @@ acl:
     - addResource(event.seating)     # edit, download, preview, print
     - addResource(event.org)         # create, edit, list, detail, delete
     - addResource(event.chart)       # list, chart
+    - addResource(event.scheduleGroup)
+    - addResource(event.scheduleItem)
 
     ## ACL
     - allow(contestant, submit, upload)
