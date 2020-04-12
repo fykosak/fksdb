@@ -23,6 +23,7 @@ use FKSDB\Components\Grids\Events\LayoutResolver;
 use FKSDB\Config\Expressions\Helpers;
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\Config\NeonScheme;
+use FKSDB\Events\EventDispatchFactory;
 use Nette\DI\Config\Helpers as ConfigHelpers;
 use Nette\DI\Config\Loader;
 use Nette\DI\CompilerExtension;
@@ -31,10 +32,9 @@ use Nette\DI\ServiceDefinition;
 use Nette\DI\Statement;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
-use Nette\PhpGenerator\ClassType;
 use Nette\Utils\Arrays;
-use Nette\PhpGenerator\Method;
 use Nette\Utils\Random;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -146,6 +146,18 @@ class EventsExtension extends CompilerExtension {
         }
 
         $this->createLayoutResolverFactory();
+
+        $eventDispatchFactory = $this->getContainerBuilder()
+            ->addDefinition('event.dispatch')->setType(EventDispatchFactory::class);
+
+        $definitions = $this->getTransposedDefinitions();
+        foreach ($definitions as $definitionName => $keys) {
+            $holderName = $this->getHolderName($definitionName);
+            $machineName = $this->getMachineName($definitionName);
+            $machineMethodName = Container::getMethodName($machineName);
+            $holderMethodName = Container::getMethodName($holderName);
+            $eventDispatchFactory->addSetup('addEvent', [$keys, $machineMethodName, $holderMethodName]);
+        }
     }
 
     private function loadScheme() {
@@ -206,52 +218,6 @@ class EventsExtension extends CompilerExtension {
      */
 
     /**
-     * @param Method $method
-     * @param $nameCallback
-     */
-    private function createDispatchFactoryBody(Method $method, $nameCallback) {
-        $method->setBody(NULL);
-        $method->addBody('$eventTypeId = $event->event_type_id;');
-        $method->addBody('$eventYear = $event->event_year;');
-        $method->addBody('$key = "$eventTypeId-$eventYear";');
-        $method->addBody('switch($key) {');
-        $definitions = $this->getTransposedDefinitions();
-        $universals = [];
-        $indent = "\t";
-        foreach ($definitions as $definitionName => $keys) {
-            $machineName = $nameCallback($definitionName);
-            $methodName = Container::getMethodName($machineName);
-            $resultStmt = "return \$this->$methodName(\$event);";
-            $cases = false;
-            foreach ($keys as $key) {
-                if (strpos($key, '-') === false) {
-                    $universals[$key] = $resultStmt;
-                    continue;
-                } else {
-                    $cases = true;
-                    $method->addBody('case ?:', [$key]);
-                }
-            }
-            if ($cases) {
-                $method->addBody($indent . $resultStmt);
-                $method->addBody('break;');
-            }
-        }
-
-        $method->addBody('default:');
-        $method->addBody($indent . 'switch($eventTypeId) {');
-        foreach ($universals as $key => $resultStmt) {
-            $method->addBody($indent . 'case ?:', [$key]);
-            $method->addBody($indent . $resultStmt);
-            $method->addBody($indent . 'break;');
-        }
-        $method->addBody('default:');
-        $method->addBody('throw new Events\UndeclaredEventException("Unknown event_type_id $eventTypeId for event year $eventYear.");');
-        $method->addBody($indent . '}');
-        $method->addBody('}');
-    }
-
-    /**
      * @return array
      */
     private function getTransposedDefinitions() {
@@ -283,20 +249,6 @@ class EventsExtension extends CompilerExtension {
 
         $def->setFactory(self::CLASS_HOLDER);
         $def->setParameters(['FKSDB\ORM\Models\ModelEvent event']);
-    }
-
-    /**
-     * @param ClassType $class
-     */
-    public function afterCompile(ClassType $class) {
-        $methodName = Container::getMethodName(self::MAIN_FACTORY);
-        $method = $class->methods[$methodName];
-        $this->createDispatchFactoryBody($method, [$this, 'getMachineName']);
-
-        $methodName = Container::getMethodName(self::MAIN_HOLDER);
-        $method = $class->methods[$methodName];
-        $this->createDispatchFactoryBody($method, [$this, 'getHolderName']);
-
     }
 
     private function createLayoutResolverFactory() {
@@ -569,7 +521,7 @@ class EventsExtension extends CompilerExtension {
             $factory->addSetup('addField', [$this->createFieldService($fieldDef)]);
         }
 
-        $factory->addSetup('inferEvent', ['%event%']); // must be after setParamScheme
+       // $factory->addSetup('inferEvent', ['%event%']); // must be after setParamScheme
 
         return $factory;
     }

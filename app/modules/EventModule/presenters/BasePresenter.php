@@ -4,6 +4,7 @@ namespace EventModule;
 
 use AuthenticatedPresenter;
 use Events\Model\Holder\Holder;
+use FKSDB\Events\EventDispatchFactory;
 use FKSDB\NotImplementedException;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;
@@ -11,6 +12,7 @@ use FKSDB\ORM\Services\ServiceEvent;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Security\IResource;
+use Tracy\Debugger;
 
 /**
  *
@@ -34,12 +36,23 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /** @var ServiceEvent */
     protected $serviceEvent;
+    /**
+     * @var EventDispatchFactory
+     */
+    private $eventDispatchFactory;
 
     /**
      * @param ServiceEvent $serviceEvent
      */
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;
+    }
+
+    /**
+     * @param EventDispatchFactory $eventDispatchFactory
+     */
+    public function injectEventDispatch(EventDispatchFactory $eventDispatchFactory) {
+        $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
     /**
@@ -85,7 +98,8 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      */
     protected function getHolder(): Holder {
         if (!$this->holder) {
-            $this->holder = $this->getContext()->createServiceEventHolder($this->getEvent());
+            $this->holder = $this->eventDispatchFactory->getEventHolder($this->getEvent());
+            //$this->holder = $this->getContext()->createServiceEventHolder($this->getEvent());
         }
         return $this->holder;
     }

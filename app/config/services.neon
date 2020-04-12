@@ -66,6 +66,7 @@ services:
         setup:
             - setLogPath(%logDir%/mail)
     - FKSDB\ValidationTest\ValidationFactory
+    #- FKSDB\Events\EventDispatchFactory
 
 
     #
