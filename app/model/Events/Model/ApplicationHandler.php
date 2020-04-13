@@ -220,7 +220,7 @@ class ApplicationHandler {
             }
 
             if ($execute == self::STATE_OVERWRITE) {
-                foreach ($holder as $name => $baseHolder) {
+                foreach ($holder->getBaseHolders() as $name => $baseHolder) {
                     if (isset($data[$name][BaseHolder::STATE_COLUMN])) {
                         $baseHolder->setModelState($data[$name][BaseHolder::STATE_COLUMN]);
                     }

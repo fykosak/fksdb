@@ -87,7 +87,7 @@ class ApplicationComponent extends Control {
      * Syntactic sugar for the template.
      */
     public function isEventAdmin() {
-        $event = $this->holder->getEvent();
+        $event = $this->holder->getPrimaryHolder()->getEvent();
         return $this->getPresenter()->getContestAuthorizator()->isAllowed($event, 'application', $event->getContest());
     }
 
@@ -115,7 +115,7 @@ class ApplicationComponent extends Control {
 
         $this->template->setFile($this->templateFile);
         $this->template->holder = $this->holder;
-        $this->template->event = $this->holder->getEvent();
+        $this->template->event = $this->holder->getPrimaryHolder()->getEvent();
         $this->template->primaryModel = $this->holder->getPrimaryHolder()->getModel();
         $this->template->primaryMachine = $this->getMachine()->getPrimaryMachine();
         $this->template->render();
@@ -146,9 +146,9 @@ class ApplicationComponent extends Control {
         /*
          * Create containers
          */
-        foreach ($this->holder as $name => $baseHolder) {
+        foreach ($this->holder->getBaseHolders() as $name => $baseHolder) {
             $baseMachine = $this->getMachine()->getBaseMachine($name);
-            if (!$baseHolder->isVisible($baseMachine)) {
+            if (!$baseHolder->isVisible()) {
                 continue;
             }
             $container = $baseHolder->createFormContainer($baseMachine);
@@ -288,7 +288,7 @@ class ApplicationComponent extends Control {
     private function finalRedirect() {
         if ($this->redirectCallback) {
             $id = $this->holder->getPrimaryHolder()->getModel()->getPrimary(false);
-            ($this->redirectCallback)($id, $this->holder->getEvent()->getPrimary());
+            ($this->redirectCallback)($id, $this->holder->getPrimaryHolder()->getEvent()->getPrimary());
         } else {
             $this->redirect('this');
         }

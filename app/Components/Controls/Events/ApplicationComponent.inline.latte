@@ -9,7 +9,7 @@
     {if}
     {foreach $primaryMachine->getAvailableTransitions(Events\Machine\BaseMachine::EXECUTABLE | Events\Machine\BaseMachine::VISIBLE) as $transition}
 {if $transition->isCreating()}
-<a href="{plink :Public:Application:default eventId => $holder->getEvent()->event_id}" class="btn btn-xs btn-success">{$transition->getLabel()}</a>
+<a href="{plink :Public:Application:default eventId => $holder->getPrimaryHolder()->getEvent()->event_id}" class="btn btn-xs btn-success">{$transition->getLabel()}</a>
 {elseif $transition->isDangerous()}
 <a n:href="transition! $transition->getName()" class="btn btn-xs btn-sm btn-danger">{$transition->getLabel()}</a>
 {else}
@@ -20,5 +20,5 @@
 <em>{_'žádné'}</em>
     {/if $iterations}
 {elseif $mode == 'edit'}
-<a n:if="$canEdit" href="{plink :Public:Application:default id => $primaryModel->getPrimary(), eventId => $holder->getEvent()->event_id}" class="btn btn-xs btn-sm btn-primary">{_'Upravit'}</a>
+<a n:if="$canEdit" href="{plink :Public:Application:default id => $primaryModel->getPrimary(), eventId => $holder->getPrimaryHolder()->getEvent()->event_id}" class="btn btn-xs btn-sm btn-primary">{_'Upravit'}</a>
 {/if}

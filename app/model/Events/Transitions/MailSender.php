@@ -142,7 +142,7 @@ class MailSender {
     private function composeMessage($filename, ModelLogin $login, BaseMachine $baseMachine) {
         $machine = $baseMachine->getMachine();
         $holder = $machine->getHolder();
-        $baseHolder = $holder[$baseMachine->getName()];
+        $baseHolder = $holder->getBaseHolder($baseMachine->getName());
         $person = $login->getPerson();
         $event = $baseHolder->getEvent();
         $email = $person->getInfo()->email;
@@ -246,7 +246,7 @@ class MailSender {
                     }
                     break;
                 case self::ADDR_ALL:
-                    $names = array_keys(iterator_to_array($transition->getBaseHolder()->getHolder()));
+                    $names = array_keys($transition->getBaseHolder()->getHolder()->getBaseHolders());
                     break;
                 default:
                     $names = [];
@@ -256,7 +256,7 @@ class MailSender {
 
         $persons = [];
         foreach ($names as $name) {
-            $personId = $holder[$name]->getPersonId();
+            $personId = $holder->getBaseHolder($name)->getPersonId();
             if ($personId) {
                 $persons[] = $personId;
             }

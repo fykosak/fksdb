@@ -2,8 +2,6 @@
 
 namespace Events\Model\Holder;
 
-use ArrayAccess;
-use ArrayIterator;
 use Events\FormAdjustments\IFormAdjustment;
 use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
@@ -13,8 +11,7 @@ use Events\Processings\GenKillProcessing;
 use Events\Processings\IProcessing;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\IModel;
-use IteratorAggregate;
-use LogicException;
+use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\UI\Form;
 use Nette\Database\Connection;
 use Nette\FreezableObject;
@@ -28,7 +25,7 @@ use Nette\Utils\ArrayHash;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
+class Holder extends FreezableObject {
 
     /**
      * @var IFormAdjustment[]
@@ -94,7 +91,7 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
     /**
      * @param $name
      */
-    public function setPrimaryHolder($name) {
+    public function setPrimaryHolder(string $name) {
         $this->updating();
         $primaryHolder = $this->primaryHolder = $this->getBaseHolder($name);
         $this->secondaryBaseHolders = array_filter($this->baseHolders, function (BaseHolder $baseHolder) use ($primaryHolder) {
@@ -138,10 +135,10 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return BaseHolder
      */
-    public function getBaseHolder($name) {
+    public function getBaseHolder(string $name): BaseHolder {
         if (!array_key_exists($name, $this->baseHolders)) {
             throw new InvalidArgumentException("Unknown base holder '$name'.");
         }
@@ -149,19 +146,18 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
     }
 
     /**
-     * @param $name
-     * @return bool
+     * @return BaseHolder[]
      */
-    public function hasBaseHolder($name) {
-        return isset($this->baseHolders[$name]);
+    public function getBaseHolders(): array {
+        return $this->baseHolders;
     }
 
     /**
-     * @deprecated Use getEvent on primary holder explicitly.
-     * @return \FKSDB\ORM\Models\ModelEvent
+     * @param $name
+     * @return bool
      */
-    public function getEvent() {
-        return $this->primaryHolder->getEvent();
+    public function hasBaseHolder($name): bool {
+        return isset($this->baseHolders[$name]);
     }
 
     /**
@@ -197,7 +193,7 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
     }
 
     /**
-     * @param \FKSDB\ORM\IModel|null $primaryModel
+     * @param IModel|null $primaryModel
      * @param array|null $secondaryModels
      */
     public function setModel(IModel $primaryModel = null, array $secondaryModels = null) {
@@ -337,47 +333,4 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
             throw new InvalidArgumentException("Invalid parameter '$name' from a base holder.");
         }
     }
-
-    /*
-     * Syntax-sugar Interfaces
-     */
-
-    /**
-     * @return ArrayIterator|\Traversable
-     */
-    public function getIterator() {
-        return new ArrayIterator($this->baseHolders);
-    }
-
-    /**
-     * @param mixed $offset
-     * @return bool
-     */
-    public function offsetExists($offset) {
-        return isset($this->baseHolders[$offset]);
-    }
-
-    /**
-     * @param mixed $offset
-     * @return BaseHolder|mixed
-     */
-    public function offsetGet($offset) {
-        return $this->baseHolders[$offset];
-    }
-
-    /**
-     * @param mixed $offset
-     * @param mixed $value
-     */
-    public function offsetSet($offset, $value) {
-        throw new LogicException('Use addBaseHolder method.');
-    }
-
-    /**
-     * @param mixed $offset
-     */
-    public function offsetUnset($offset) {
-        throw new LogicException('Cannot delete a base holder.');
-    }
-
 }
