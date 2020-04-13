@@ -26,7 +26,7 @@ trait WithEventTrait {
     }
 
     /**
-     * @param Holder|Transition|Field|BaseHolder $obj
+     * @param mixed $obj
      * @return Holder
      * @throws BadRequestException
      */

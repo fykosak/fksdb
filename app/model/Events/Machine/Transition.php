@@ -4,6 +4,7 @@ namespace Events\Machine;
 
 use Events\Model\ExpressionEvaluator;
 use Events\Model\Holder\BaseHolder;
+use Events\Model\Holder\Holder;
 use Events\TransitionConditionFailedException;
 use Events\TransitionOnExecutedException;
 use Events\TransitionUnsatisfiedTargetException;
@@ -220,16 +221,17 @@ class Transition extends FreezableObject {
     }
 
     /**
+     * @param Holder $holder
      * @return Transition[]
      */
-    private function getInducedTransitions(): array {
+    private function getInducedTransitions(Holder $holder): array {
         $result = [];
         foreach ($this->inducedTransitions as $baseMachineName => $targetState) {
             $targetMachine = $this->getBaseMachine()->getMachine()->getBaseMachine($baseMachineName);
-            $oldState = $this->getBaseHolder()->getHolder()->getBaseHolder($baseMachineName)->getModelState();
+            $oldState = $holder->getBaseHolder($baseMachineName)->getModelState();
             $inducedTransition = $targetMachine->getTransitionByTarget($oldState, $targetState);
             if ($inducedTransition) {
-                $result[] = $inducedTransition;
+                $result[$baseMachineName] = $inducedTransition;
             }
         }
         return $result;
@@ -237,11 +239,12 @@ class Transition extends FreezableObject {
 
     /**
      *
+     * @param Holder $holder
      * @return null|Transition
      */
-    private function getBlockingTransition() {
-        foreach ($this->getInducedTransitions() as $inducedTransition) {
-            if ($inducedTransition->getBlockingTransition()) {
+    private function getBlockingTransition(Holder $holder) {
+        foreach ($this->getInducedTransitions($holder) as $inducedTransition) {
+            if ($inducedTransition->getBlockingTransition($holder)) {
                 return $inducedTransition;
             }
         }
@@ -259,27 +262,29 @@ class Transition extends FreezableObject {
     }
 
     /**
+     * @param Holder $holder
      * @param Transition[] $inducedTransitions
      * @return bool
      */
-    private function validateTarget(array $inducedTransitions): bool {
+    private function validateTarget(Holder $holder, array $inducedTransitions): bool {
         foreach ($inducedTransitions as $inducedTransition) {
-            if (($result = $inducedTransition->validateTarget([])) !== true) { // intentionally =
+            if (($result = $inducedTransition->validateTarget($holder, [])) !== true) { // intentionally =
                 return $result;
             }
         }
 
-        $baseHolder = $this->getBaseHolder();
+        $baseHolder = $holder->getBaseHolder($this->getBaseMachine()->getName());
         $validator = $baseHolder->getValidator();
         $validator->validate($baseHolder, $this->getTarget());
         return $validator->getValidationResult();
     }
 
     /**
+     * @param Holder $holder
      * @return bool
      */
-    public final function canExecute() {
-        return !$this->getBlockingTransition();
+    public final function canExecute(Holder $holder) {
+        return !$this->getBlockingTransition($holder);
     }
 
     /**
@@ -292,24 +297,25 @@ class Transition extends FreezableObject {
     /**
      * Launch induced transitions and sets new state.
      *
-     * @throws TransitionConditionFailedException
-     * @todo Induction work only for one level.     *
+     * @param Holder $holder
+     * @return array
+     * @todo Induction work only for one level.
      */
-    public final function execute() {
-        $blockingTransition = $this->getBlockingTransition();
+    public final function execute(Holder $holder) {
+        $blockingTransition = $this->getBlockingTransition($holder);
         if ($blockingTransition) {
             throw new TransitionConditionFailedException($blockingTransition);
         }
 
         $inducedTransitions = [];
-        foreach ($this->getInducedTransitions() as $inducedTransition) {
-            $inducedTransition->_execute();
+        foreach ($this->getInducedTransitions($holder) as $holderName => $inducedTransition) {
+            $inducedTransition->_execute($holder->getBaseHolder($holderName));
             $inducedTransitions[] = $inducedTransition;
         }
 
-        $this->_execute();
+        $this->_execute($holder->getBaseHolder($this->getBaseMachine()->getName()));
 
-        $validationResult = $this->validateTarget($inducedTransitions);
+        $validationResult = $this->validateTarget($holder, $inducedTransitions);
         if ($validationResult !== true) {
             throw new TransitionUnsatisfiedTargetException($validationResult);
         }
@@ -320,14 +326,15 @@ class Transition extends FreezableObject {
     /**
      * Triggers onExecuted event.
      *
+     * @param Holder $holder
      * @param Transition[] $inducedTransitions
      */
-    public final function executed($inducedTransitions) {
+    public final function executed(Holder $holder, $inducedTransitions) {
         foreach ($inducedTransitions as $inducedTransition) {
-            $inducedTransition->executed([]);
+            $inducedTransition->executed($holder, []);
         }
         try {
-            $this->onExecuted($this);
+            $this->onExecuted($this, $holder);
         } catch (\Exception $exception) {
             throw new TransitionOnExecutedException($this->getName(), null, $exception);
         }
@@ -335,16 +342,10 @@ class Transition extends FreezableObject {
 
     /**
      * @note Assumes the condition is fullfilled.
+     * @param BaseHolder $holder
      */
-    private function _execute() {
-        $this->getBaseHolder()->setModelState($this->getTarget());
-    }
-
-    /**
-     * @return BaseHolder
-     */
-    public function getBaseHolder(): BaseHolder {
-        return $this->getBaseMachine()->getMachine()->getHolder()->getBaseHolder($this->getBaseMachine()->getName());
+    private function _execute(BaseHolder $holder) {
+        $holder->setModelState($this->getTarget());
     }
 
     /**

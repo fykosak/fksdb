@@ -33,7 +33,7 @@ class TransitionConditionFailedException extends MachineExecutionException {
      * @param null $previous
      */
     public function __construct(Transition $blockingTransition, $code = null, $previous = null) {
-        $message = sprintf(_("Nelze provést akci '%s' v automatu '%s'."), $blockingTransition->getLabel(), $blockingTransition->getBaseHolder()->getLabel());
+        $message = sprintf(_("Nelze provést akci '%s' v automatu '%s'."), $blockingTransition->getLabel(), $blockingTransition->getBaseMachine()->getName());
         parent::__construct($message, $code, $previous);
         $this->transition = $blockingTransition;
     }

@@ -214,7 +214,7 @@ class ApplicationPresenter extends BasePresenter {
         }
 
 
-        if (!$this->getMachine()->getPrimaryMachine()->getAvailableTransitions($this->getHolder()->getPrimaryHolder()->getModelState())) {
+        if (!$this->getMachine()->getPrimaryMachine()->getAvailableTransitions($this->holder, $this->getHolder()->getPrimaryHolder()->getModelState())) {
 
             if ($this->getHolder()->getPrimaryHolder()->getModelState() == BaseMachine::STATE_INIT) {
                 $this->setView('closed');

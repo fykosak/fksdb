@@ -2,6 +2,7 @@
 
 namespace Events\Machine;
 
+use Events\Model\Holder\Holder;
 use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
 
@@ -134,14 +135,15 @@ class BaseMachine extends FreezableObject {
     }
 
     /**
+     * @param Holder $holder
      * @param string $sourceState
      * @param int $mode
      * @return Transition[]
      */
-    public function getAvailableTransitions(string $sourceState, $mode = self::EXECUTABLE): array {
-        return array_filter($this->getMatchingTransitions($sourceState), function (Transition $transition) use ($mode) {
+    public function getAvailableTransitions(Holder $holder, string $sourceState, $mode = self::EXECUTABLE): array {
+        return array_filter($this->getMatchingTransitions($sourceState), function (Transition $transition) use ($mode, $holder) {
             return
-                (!($mode & self::EXECUTABLE) || $transition->canExecute()) && (!($mode & self::VISIBLE) || $transition->isVisible());
+                (!($mode & self::EXECUTABLE) || $transition->canExecute($holder)) && (!($mode & self::VISIBLE) || $transition->isVisible());
         });
     }
 

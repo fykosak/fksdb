@@ -100,18 +100,20 @@ class MailSender {
 
     /**
      * @param Transition $transition
+     * @param Holder $holder
      * @throws \Exception
      */
-    public function __invoke(Transition $transition) {
-        $this->send($transition);
+    public function __invoke(Transition $transition, Holder $holder) {
+        $this->send($transition, $holder);
     }
 
     /**
      * @param Transition $transition
+     * @param Holder $holder
      * @throws \Exception
      */
-    private function send(Transition $transition) {
-        $personIds = $this->resolveAdressees($transition);
+    private function send(Transition $transition, Holder $holder) {
+        $personIds = $this->resolveAdressees($transition, $holder);
         $persons = $this->servicePerson->getTable()
             ->where('person.person_id', $personIds)
             ->where(':person_info.email IS NOT NULL')
@@ -128,7 +130,7 @@ class MailSender {
         }
 
         foreach ($logins as $login) {
-            $message = $this->composeMessage($this->filename, $login, $transition->getBaseMachine(), $transition->getBaseHolder());
+            $message = $this->composeMessage($this->filename, $login, $transition->getBaseMachine(), $holder->getBaseHolder($transition->getBaseMachine()->getName()));
             $this->mailer->send($message);
         }
     }
@@ -144,7 +146,7 @@ class MailSender {
     private function composeMessage($filename, ModelLogin $login, BaseMachine $baseMachine, BaseHolder $baseHolder) {
         $machine = $baseMachine->getMachine();
 
-        $holder =  $baseHolder->getHolder();
+        $holder = $baseHolder->getHolder();
         $person = $login->getPerson();
         $event = $baseHolder->getEvent();
         $email = $person->getInfo()->email;
@@ -220,10 +222,10 @@ class MailSender {
 
     /**
      * @param Transition $transition
+     * @param Holder $holder
      * @return array
      */
-    private function resolveAdressees(Transition $transition) {
-        $holder = $transition->getBaseHolder()->getHolder();
+    private function resolveAdressees(Transition $transition, Holder $holder) {
         if (is_array($this->addressees)) {
             $names = $this->addressees;
         } else {
@@ -234,7 +236,7 @@ class MailSender {
             }
             switch ($addressees) {
                 case self::ADDR_SELF:
-                    $names = [$transition->getBaseHolder()->getName()];
+                    $names = [$transition->getBaseMachine()->getName()];
                     break;
                 case self::ADDR_PRIMARY:
                     $names = [$holder->getPrimaryHolder()->getName()];
@@ -249,7 +251,7 @@ class MailSender {
                     }
                     break;
                 case self::ADDR_ALL:
-                    $names = array_keys($transition->getBaseHolder()->getHolder()->getBaseHolders());
+                    $names = array_keys($holder->getBaseHolders());
                     break;
                 default:
                     $names = [];

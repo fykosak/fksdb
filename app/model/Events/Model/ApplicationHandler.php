@@ -148,9 +148,9 @@ class ApplicationHandler {
                 throw new UnavailableTransitionException($transition, $holder->getPrimaryHolder()->getModel());
             }
 
-            $transition->execute();
+            $transition->execute($holder);
             $holder->saveModels();
-            $transition->executed([]);
+            $transition->executed($holder, []);
 
             $this->commit();
 
@@ -229,13 +229,13 @@ class ApplicationHandler {
 
             $induced = []; // cache induced transition as they won't match after execution
             foreach ($transitions as $key => $transition) {
-                $induced[$key] = $transition->execute();
+                $induced[$key] = $transition->execute($holder);
             }
 
             $holder->saveModels();
 
             foreach ($transitions as $key => $transition) {
-                $transition->executed($induced[$key]); //note the 'd', it only triggers onExecuted event
+                $transition->executed($holder, $induced[$key]); //note the 'd', it only triggers onExecuted event
             }
 
             $this->commit();

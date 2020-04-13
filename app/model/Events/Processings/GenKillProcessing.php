@@ -57,7 +57,7 @@ class GenKillProcessing implements IProcessing {
                 if (isset($values[$name][BaseHolder::STATE_COLUMN])) {
                     $result[$name] = $values[$name][BaseHolder::STATE_COLUMN];
                 } else {
-                    $transitions = $baseMachine->getAvailableTransitions($holder->getBaseHolder($name)->getModelState());
+                    $transitions = $baseMachine->getAvailableTransitions($holder, $holder->getBaseHolder($name)->getModelState());
                     if (count($transitions) == 0) {
                         throw new SubmitProcessingException(_("$name: Není definován přechod z počátečního stavu."));
                     } elseif (isset($states[$name])) {
