@@ -118,16 +118,6 @@ class ClosePresenter extends BasePresenter {
     protected function createComponentCloseTeamControl(): CloseTeamControl {
         return new CloseTeamControl($this->getContext(), $this->getEvent());
     }
-
-    /**
-     * @return CloseTeamsGrid
-     * @throws BadRequestException
-     * @throws AbortException
-     */
-    protected function createComponentCloseTeamsGrid(): CloseTeamsGrid {
-        return new CloseTeamsGrid($this->getEvent(), $this->getContext());
-    }
-
     /**
      * @return TeamSubmitsGrid
      */
@@ -151,10 +141,12 @@ class ClosePresenter extends BasePresenter {
     }
 
     /**
-     * @inheritDoc
+     * @return BaseGrid
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function createComponentGrid(): BaseGrid {
-        throw new NotImplementedException();
+        return new CloseTeamsGrid($this->getEvent(), $this->getContext());
     }
 
     /**

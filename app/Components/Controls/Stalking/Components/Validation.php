@@ -44,7 +44,6 @@ class Validation extends AbstractStalkingComponent {
 
     public function render() {
         $this->beforeRender();
-        $logs = [];
         $logger = new TestsLogger();
         foreach ($this->validationFactory->getTests('person') as $test) {
             $test->run($logger, $this->modelPerson);

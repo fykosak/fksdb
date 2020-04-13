@@ -7,7 +7,6 @@ use FKSDB\Components\Grids\Schedule\AllPersonsGrid;
 use FKSDB\Components\Grids\Schedule\GroupsGrid;
 use FKSDB\NotImplementedException;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleGroup;
-use FKSDB\ORM\Services\Schedule\ServiceScheduleItem;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
