@@ -59,8 +59,7 @@ class DataValidator {
     private function pushState(BaseHolder $baseHolder, $state) {
         $baseMachine = $baseHolder->getHolder()->getMachine()->getBaseMachine($baseHolder->getName());
 
-        $this->stateStack[] = $baseMachine->getState();
-        $baseMachine->setState($state);
+        $this->stateStack[] = $baseHolder->getModelState();
     }
 
     /**
@@ -70,7 +69,6 @@ class DataValidator {
         $baseMachine = $baseHolder->getHolder()->getMachine()->getBaseMachine($baseHolder->getName());
 
         $state = array_pop($this->stateStack);
-        $baseMachine->setState($state);
     }
 
 }

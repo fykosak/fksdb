@@ -197,7 +197,7 @@ class MailSender {
      */
     private function getSubject(ModelEvent $event, IModel $application, Machine $machine) {
         $application = Strings::truncate((string)$application, 20); //TODO extension point
-        return $event->name . ': ' . $application . ' ' . mb_strtolower($machine->getPrimaryMachine()->getStateName());
+        return $event->name . ': ' . $application . ' ' . mb_strtolower($machine->getPrimaryMachine()->getStateName($machine->getHolder()->getPrimaryHolder()->getModelState()));
     }
 
     /**

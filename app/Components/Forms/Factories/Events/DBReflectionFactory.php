@@ -116,7 +116,7 @@ class DBReflectionFactory extends AbstractFactory {
      * @param Container $container
      */
     protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container) {
-        if ($machine->getState() == BaseMachine::STATE_INIT && $field->getDefault() === null) {
+        if ($machine->getMachine()->getHolder()->getBaseHolder($machine->getName())->getModelState() == BaseMachine::STATE_INIT && $field->getDefault() === null) {
             $column = $this->resolveColumn($field);
             $default = $column['default'];
         } else {

@@ -279,7 +279,7 @@ class ApplicationComponent extends Control {
      * @return bool
      */
     private function canEdit() {
-        return $this->getMachine()->getPrimaryMachine()->getState() != BaseMachine::STATE_INIT && $this->holder->getPrimaryHolder()->isModifiable();
+        return $this->getMachine()->getHolder()->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT && $this->holder->getPrimaryHolder()->isModifiable();
     }
 
     /**

@@ -147,6 +147,7 @@ class ApplicationHandler {
             if ($holder->getPrimaryHolder()->getModelState() !== $transition->getSource()) {
                 throw new UnavailableTransitionException($transition, $holder->getPrimaryHolder()->getModel());
             }
+
             $transition->execute();
             $holder->saveModels();
             $transition->executed([]);
@@ -317,9 +318,10 @@ class ApplicationHandler {
                 $transition = $this->machine[$name]->getTransitionByTarget($newState);
                 if ($transition) {
                     $transitions[$name] = $transition;
-                } elseif (!($this->machine->getBaseMachine($name)->getState() == BaseMachine::STATE_INIT && $newState == BaseMachine::STATE_TERMINATED)) {
+                } elseif (!($this->machine->getHolder()->getBaseHolder($name)->getModelState() == BaseMachine::STATE_INIT && $newState == BaseMachine::STATE_TERMINATED)) {
                     $msg = _('Ze stavu "%s" automatu "%s" neexistuje přechod do stavu "%s".');
-                    throw new MachineExecutionException(sprintf($msg, $this->machine->getBaseMachine($name)->getStateName(), $holder->getBaseHolder($name)->getLabel(), $this->machine->getBaseMachine($name)->getStateName($newState)));
+                    $state = $this->machine->getHolder()->getBaseHolder($name)->getModelState();
+                    throw new MachineExecutionException(sprintf($msg, $this->machine->getBaseMachine($name)->getStateName($state), $holder->getBaseHolder($name)->getLabel(), $this->machine->getBaseMachine($name)->getStateName($newState)));
                 }
             }
         }

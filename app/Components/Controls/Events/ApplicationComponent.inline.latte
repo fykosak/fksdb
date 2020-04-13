@@ -1,8 +1,9 @@
 {if $mode == 'state'}
-    {if $primaryMachine->getState() == Events\Machine\BaseMachine::STATE_INIT || $primaryMachine->getState() == Events\Machine\BaseMachine::STATE_TERMINATED}
+    {var $state = $primaryMachine->getMachine()->getHolder()->getPrimaryHolder()->getModelState()}
+    {if $state == Events\Machine\BaseMachine::STATE_INIT || $state == Events\Machine\BaseMachine::STATE_TERMINATED}
 <em>&mdash;</em>
     {else}
-    {$primaryMachine->getStateName()}
+    {$primaryMachine->getStateName($state)}
     {/if}
 {elseif  $mode == 'transitions'}
     {if}

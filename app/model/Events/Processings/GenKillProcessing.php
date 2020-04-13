@@ -53,7 +53,7 @@ class GenKillProcessing implements IProcessing {
             $baseMachine = $machine->getBaseMachine($name);
             if (!$isFilled) {
                 $result[$name] = BaseMachine::STATE_TERMINATED;
-            } elseif ($baseMachine->getState() == BaseMachine::STATE_INIT) {
+            } elseif ($machine->getHolder()->getBaseHolder($name)->getModelState() == BaseMachine::STATE_INIT) {
                 if (isset($values[$name][BaseHolder::STATE_COLUMN])) {
                     $result[$name] = $values[$name][BaseHolder::STATE_COLUMN];
                 } else {

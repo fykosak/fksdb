@@ -74,10 +74,6 @@ class Machine extends FreezableObject implements ArrayAccess, IteratorAggregate 
      * @param Holder $holder
      */
     public function setHolder(Holder $holder) {
-        foreach ($this->baseMachines as $name => $baseMachine) {
-            $state = $holder[$name]->getModelState();
-            $baseMachine->setState($state);
-        }
         $this->holder = $holder;
         if ($holder->getMachine() !== $this) {
             $holder->setMachine($this);

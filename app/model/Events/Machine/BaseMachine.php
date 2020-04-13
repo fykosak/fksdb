@@ -23,12 +23,6 @@ class BaseMachine extends FreezableObject {
      * @var string
      */
     private $name;
-
-    /**
-     * @var string
-     */
-    private $state;
-
     /**
      * @var string[]
      */
@@ -57,7 +51,6 @@ class BaseMachine extends FreezableObject {
      * @param $label
      */
     public function addState($state, $label) {
-        $this->updating();
         $this->states[$state] = $label;
     }
 
@@ -110,20 +103,6 @@ class BaseMachine extends FreezableObject {
     }
 
     /**
-     * @return string
-     */
-    public function getState() {
-        return $this->state;
-    }
-
-    /**
-     * @param $state
-     */
-    public function setState($state) {
-        $this->state = $state;
-    }
-
-    /**
      * @return string[]
      */
     public function getStates() {
@@ -134,10 +113,7 @@ class BaseMachine extends FreezableObject {
      * @param string state identification
      * @return string
      */
-    public function getStateName($state = null) {
-        if ($state === null) {
-            $state = $this->state;
-        }
+    public function getStateName(string $state) {
         switch ($state) {
             case self::STATE_INIT:
                 return _('vznikající');
@@ -197,7 +173,7 @@ class BaseMachine extends FreezableObject {
      */
     private function getMatchingTransitions($mask = null) {
         if ($mask === null) {
-            $mask = $this->getState();
+            $mask = $this->getMachine()->getHolder()->getBaseHolder($this->name)->getModelState();
         }
         return array_filter($this->transitions, function (Transition $transition) use ($mask) {
             return $transition->matches($mask);

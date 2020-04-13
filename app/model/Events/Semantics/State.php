@@ -31,7 +31,7 @@ class State extends EvaluatedExpression {
      * @throws BadRequestException
      */
     public function __invoke(...$args): bool {
-        return $this->getHolder($args[0])->getMachine()->getPrimaryMachine()->getState() == $this->state;
+        return $this->getHolder($args[0])->getPrimaryHolder()->getModelState() == $this->state;
     }
 
     /**

@@ -220,9 +220,9 @@ class Transition extends FreezableObject {
     }
 
     /**
-     * @return array
+     * @return Transition[]
      */
-    private function getInducedTransitions() {
+    private function getInducedTransitions(): array {
         $result = [];
         foreach ($this->inducedTransitions as $baseMachineName => $targetState) {
             $targetMachine = $this->getBaseMachine()->getMachine()->getBaseMachine($baseMachineName);
@@ -258,10 +258,10 @@ class Transition extends FreezableObject {
     }
 
     /**
-     * @param $inducedTransitions
+     * @param Transition[] $inducedTransitions
      * @return bool
      */
-    private function validateTarget($inducedTransitions) {
+    private function validateTarget(array $inducedTransitions): bool {
         foreach ($inducedTransitions as $inducedTransition) {
             if (($result = $inducedTransition->validateTarget([])) !== true) { // intentionally =
                 return $result;
@@ -295,7 +295,8 @@ class Transition extends FreezableObject {
      * @todo Induction work only for one level.     *
      */
     public final function execute() {
-        if ($blockingTransition = $this->getBlockingTransition()) { // intentionally =
+        $blockingTransition = $this->getBlockingTransition();
+        if ($blockingTransition) {
             throw new TransitionConditionFailedException($blockingTransition);
         }
 
@@ -335,7 +336,6 @@ class Transition extends FreezableObject {
      * @note Assumes the condition is fullfilled.
      */
     private function _execute() {
-        $this->getBaseMachine()->setState($this->getTarget());
         $this->getBaseHolder()->setModelState($this->getTarget());
     }
 
