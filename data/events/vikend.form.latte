@@ -1,7 +1,7 @@
 {layout '../../app/Components/Controls/Events/ApplicationComponent.form.latte'}
 
 {block content}
-{if $primaryMachine->getMachine()->getHolder()->getPrimaryHolder()->getModelState() == '__init' && !$control->isEventAdmin()}
+{if $holder->getPrimaryHolder()->getModelState() == '__init' && !$control->isEventAdmin()}
 <ul>
     <li n:if="!$control->getPresenter()->getUser()->isLoggedIn()">
         {var $backlink = $control->getPresenter()->application->storeRequest()}

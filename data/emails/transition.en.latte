@@ -1,4 +1,4 @@
-{var $state = $machine->getHolder()->getPrimaryHolder()->getModelState()}
+{var $state = $holder->getPrimaryHolder()->getModelState()}
 <p>
     {$person->getFullname()}'s application for <em>{$event}</em> state updated.
     New state <em>{$machine->getPrimaryMachine()->getStateName($state)}</em>.

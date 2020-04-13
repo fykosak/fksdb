@@ -164,9 +164,6 @@ class Holder {
      */
     public function setMachine(Machine $machine) {
         $this->machine = $machine;
-        if ($machine->getHolder() !== $this) {
-            $machine->setHolder($this);
-        }
     }
 
     /**

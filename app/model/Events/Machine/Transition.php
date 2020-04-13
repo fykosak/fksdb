@@ -154,17 +154,19 @@ class Transition {
     }
 
     /**
+     * @param Holder $holder
      * @return bool
      */
-    public function isDangerous(): bool {
-        return $this->isTerminating() || $this->evaluator->evaluate($this->dangerous, $this);
+    public function isDangerous(Holder $holder): bool {
+        return $this->isTerminating() || $this->getEvaluator()->evaluate($this->dangerous, $holder);
     }
 
     /**
+     * @param Holder $holder
      * @return bool
      */
-    public function isVisible(): bool {
-        return $this->evaluator->evaluate($this->visible, $this);
+    public function isVisible(Holder $holder): bool {
+        return $this->getEvaluator()->evaluate($this->visible, $holder);
     }
 
     /**
@@ -191,7 +193,7 @@ class Transition {
     /**
      * @return ExpressionEvaluator
      */
-    public function getEvaluator() {
+    private function getEvaluator(): ExpressionEvaluator {
         return $this->evaluator;
     }
 
@@ -245,17 +247,18 @@ class Transition {
                 return $inducedTransition;
             }
         }
-        if (!$this->isConditionFulfilled()) {
+        if (!$this->isConditionFulfilled($holder)) {
             return $this;
         }
         return null;
     }
 
     /**
-     * @return mixed
+     * @param Holder $holder
+     * @return bool
      */
-    private function isConditionFulfilled() {
-        return $this->evaluator->evaluate($this->condition, $this);
+    private function isConditionFulfilled(Holder $holder) {
+        return $this->getEvaluator()->evaluate($this->condition, $holder);
     }
 
     /**
@@ -306,11 +309,11 @@ class Transition {
 
         $inducedTransitions = [];
         foreach ($this->getInducedTransitions($holder) as $holderName => $inducedTransition) {
-            $inducedTransition->_execute($holder->getBaseHolder($holderName));
+            $inducedTransition->changeState($holder->getBaseHolder($holderName));
             $inducedTransitions[] = $inducedTransition;
         }
 
-        $this->_execute($holder->getBaseHolder($this->getBaseMachine()->getName()));
+        $this->changeState($holder->getBaseHolder($this->getBaseMachine()->getName()));
 
         $validationResult = $this->validateTarget($holder, $inducedTransitions);
         if ($validationResult !== true) {
@@ -341,7 +344,7 @@ class Transition {
      * @note Assumes the condition is fullfilled.
      * @param BaseHolder $holder
      */
-    private function _execute(BaseHolder $holder) {
+    private function changeState(BaseHolder $holder) {
         $holder->setModelState($this->getTarget());
     }
 
@@ -397,13 +400,9 @@ class Transition {
                 return false;
             }
         }
-
         if (!in_array($target, array_merge($states, [BaseMachine::STATE_TERMINATED]))) {
             return false;
         }
-
         return true;
     }
-
 }
-

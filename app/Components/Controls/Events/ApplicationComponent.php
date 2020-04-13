@@ -148,7 +148,7 @@ class ApplicationComponent extends Control {
          */
         foreach ($this->holder->getBaseHolders() as $name => $baseHolder) {
             $baseMachine = $this->getMachine()->getBaseMachine($name);
-            if (!$baseHolder->isVisible()) {
+            if (!$baseHolder->isVisible($this->holder)) {
                 continue;
             }
             $container = $baseHolder->createFormContainer($baseMachine);
@@ -193,7 +193,7 @@ class ApplicationComponent extends Control {
             } elseif ($transition->isTerminating()) {
                 $submit->getControlPrototype()->addClass('btn-sm btn-danger');
                 $submit->setOption('row', 3);
-            } elseif ($transition->isDangerous()) {
+            } elseif ($transition->isDangerous($this->holder)) {
                 $submit->getControlPrototype()->addClass('btn-sm btn-danger');
                 $submit->setOption('row', 2);
             } else {

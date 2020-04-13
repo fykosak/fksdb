@@ -2,7 +2,6 @@
 
 namespace Events\Machine;
 
-use Events\Model\Holder\Holder;
 use Nette\InvalidArgumentException;
 
 /**
@@ -21,11 +20,6 @@ class Machine {
      * @var BaseMachine
      */
     private $primaryMachine;
-
-    /**
-     * @var Holder
-     */
-    private $holder;
 
     /**
      * @param $name
@@ -60,22 +54,5 @@ class Machine {
             throw new InvalidArgumentException("Unknown base machine '$name'.");
         }
         return $this->baseMachines[$name];
-    }
-
-    /**
-     * @param Holder $holder
-     */
-    public function setHolder(Holder $holder) {
-        $this->holder = $holder;
-        if ($holder->getMachine() !== $this) {
-            $holder->setMachine($this);
-        }
-    }
-
-    /**
-     * @return Holder
-     */
-    public function getHolder() {
-        return $this->holder;
     }
 }

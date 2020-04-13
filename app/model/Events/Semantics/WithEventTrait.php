@@ -8,6 +8,7 @@ use Events\Model\Holder\Field;
 use Events\Model\Holder\Holder;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\BadRequestException;
+use Nette\DeprecatedException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -35,7 +36,7 @@ trait WithEventTrait {
             return $obj;
         }
         if ($obj instanceof Transition) {
-            return $obj->getBaseMachine()->getMachine()->getHolder();
+            throw new DeprecatedException();
         }
         if ($obj instanceof Field) {
             return $obj->getBaseHolder()->getHolder();

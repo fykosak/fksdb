@@ -1,4 +1,4 @@
-{var $state = $machine->getHolder()->getPrimaryHolder()->getModelState()}
+{var $state = $holder->getPrimaryHolder()->getModelState()}
 <p>
     Změna stavu přihlášky osoby {$person->getFullname()} na akci <em>{$event}</em>.
     Nový stav <em>{$machine->getPrimaryMachine()->getStateName($state)}</em>.

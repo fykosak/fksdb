@@ -142,7 +142,7 @@ class BaseMachine {
     public function getAvailableTransitions(Holder $holder, string $sourceState, $mode = self::EXECUTABLE): array {
         return array_filter($this->getMatchingTransitions($sourceState), function (Transition $transition) use ($mode, $holder) {
             return
-                (!($mode & self::EXECUTABLE) || $transition->canExecute($holder)) && (!($mode & self::VISIBLE) || $transition->isVisible());
+                (!($mode & self::EXECUTABLE) || $transition->canExecute($holder)) && (!($mode & self::VISIBLE) || $transition->isVisible($holder));
         });
     }
 
