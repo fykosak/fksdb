@@ -55,7 +55,7 @@ navigation:
             - vyfuk
             - fyziklani
         fyziklani.dashboard.default:
-            - fyziklani.submit.entry
+            - fyziklani.submit.create
             - fyziklani.submit.list
             - fyziklani.close.list
             - fyziklani.results.list
