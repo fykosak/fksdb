@@ -33,13 +33,20 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     public $eventId;
 
     /** @var ServiceEvent */
-    protected $serviceEvent;
+    private $serviceEvent;
 
     /**
      * @param ServiceEvent $serviceEvent
      */
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;
+    }
+
+    /**
+     * @return ServiceEvent
+     */
+    protected function getServiceEvent(): ServiceEvent {
+        return $this->serviceEvent;
     }
 
     /**
@@ -70,7 +77,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      */
     protected function getEvent(): ModelEvent {
         if (!$this->event) {
-            $model = $this->serviceEvent->findByPrimary($this->eventId);
+            $model = $this->getServiceEvent()->findByPrimary($this->eventId);
             if (!$model) {
                 throw new BadRequestException('Event not found.', 404);
             }

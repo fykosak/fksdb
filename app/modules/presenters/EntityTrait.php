@@ -10,7 +10,9 @@ use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\IResource;
 
@@ -53,6 +55,31 @@ trait EntityTrait {
      */
     public function authorizedDetail(int $id) {
         $this->setAuthorized($this->traitIsAuthorized($this->loadEntity($id), 'detail'));
+    }
+
+
+    public function titleList() {
+    }
+
+    public function titleCreate() {
+    }
+
+    /**
+     * @param int $id
+     */
+    public function titleEdit(int $id) {
+    }
+
+    /**
+     * @param int $id
+     */
+    public function titleDetail(int $id) {
+    }
+
+    /**
+     * @param int $id
+     */
+    public function titleDelete(int $id) {
     }
 
     /**

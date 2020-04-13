@@ -35,24 +35,13 @@ class AllPersonsGrid extends BaseGrid {
     /**
      * PersonsGrid constructor.
      * @param Container $container
-     */
-    public function __construct(Container $container) {
-        $this->yearCalculator = $container->getByType(YearCalculator::class);
-        $this->servicePersonSchedule = $container->getByType(ServicePersonSchedule::class);
-        parent::__construct($container);
-    }
-
-    /**
      * @param ModelEvent $event
      */
-    public function setEvent(ModelEvent $event) {
+    public function __construct(Container $container, ModelEvent $event) {
+        $this->yearCalculator = $container->getByType(YearCalculator::class);
+        $this->servicePersonSchedule = $container->getByType(ServicePersonSchedule::class);
         $this->event = $event;
-        $query = $this->servicePersonSchedule->getTable()
-            ->where('schedule_item.schedule_group.event_id', $event->event_id)
-            // ->where('person_schedule_id', 508)
-            ->order('person_schedule_id');//->limit(10, 140);
-        $dataSource = new NDataSource($query);
-        $this->setDataSource($dataSource);
+        parent::__construct($container);
     }
 
     /**
@@ -63,6 +52,14 @@ class AllPersonsGrid extends BaseGrid {
      */
     protected function configure($presenter) {
         parent::configure($presenter);
+        $query = $this->servicePersonSchedule->getTable()
+            ->where('schedule_item.schedule_group.event_id', $this->event->event_id)
+            // ->where('person_schedule_id', 508)
+            ->order('person_schedule_id');//->limit(10, 140);
+        $dataSource = new NDataSource($query);
+        $this->setDataSource($dataSource);
+
+
         $this->paginate = false;
 
         $this->addColumn('person_schedule_id', _('#'));

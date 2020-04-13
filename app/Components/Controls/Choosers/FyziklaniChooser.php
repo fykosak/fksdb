@@ -3,8 +3,12 @@
 namespace FKSDB\Components\Controls\Choosers;
 
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Models\ModelEventType;
 use FKSDB\ORM\Services\ServiceEvent;
+use FKSDB\ORM\Tables\TypedTableSelection;
+use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
+use Nette\Database\Table\Selection;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -12,44 +16,32 @@ use Nette\Application\UI\Control;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class FyziklaniChooser extends Control {
-
-    const EVENT_TYPE_ID = 1;
     /**
-     * @var \FKSDB\ORM\Models\ModelEvent
+     * @var ModelEvent
      */
     private $event;
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceEvent
+     * @var ServiceEvent
      */
     private $serviceEvent;
 
     /**
      * FyziklaniChooser constructor.
      * @param ServiceEvent $serviceEvent
-     */
-    function __construct(ServiceEvent $serviceEvent) {
-        parent::__construct();
-        $this->serviceEvent = $serviceEvent;
-    }
-
-    /**
      * @param ModelEvent $event
      */
-    public function setEvent(ModelEvent $event) {
+    function __construct(ServiceEvent $serviceEvent, ModelEvent $event) {
+        parent::__construct();
+        $this->serviceEvent = $serviceEvent;
         $this->event = $event;
     }
 
     /**
-     * @return ModelEvent[]
+     * @return TypedTableSelection
      */
-    private function getAllFyziklani(): array {
-        $events = [];
-        $query = $this->serviceEvent->getTable()->where('event_type_id=?', self::EVENT_TYPE_ID)->order('event_year DESC');
-        foreach ($query as $row) {
-            $events[] = ModelEvent::createFromActiveRow($row);
-        }
-        return $events;
+    private function getAllFyziklani(): TypedTableSelection {
+        return $this->serviceEvent->getTable()->where('event_type_id=?', ModelEventType::FYZIKLANI)->order('event_year DESC');
     }
 
     public function render() {
@@ -61,7 +53,7 @@ class FyziklaniChooser extends Control {
 
     /**
      * @param $eventId
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function handleChange($eventId) {
         $presenter = $this->getPresenter();
