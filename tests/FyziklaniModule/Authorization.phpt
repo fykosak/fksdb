@@ -89,11 +89,11 @@ class AuthorizationTest extends FyziklaniTestCase {
 
     public function getTestData() {
         return [
-            [null, 'Fyziklani:Submit', ['entry', 'edit', 'list'], false],
-            ['perPerson', 'Fyziklani:Submit', ['entry', 'edit', 'list'], false],
-            ['perOrg', 'Fyziklani:Submit', ['entry', 'list'], true], # TODO 'edit',
-            ['perOrgOther', 'Fyziklani:Submit', ['entry', 'edit', 'list'], false],
-            ['perContestant', 'Fyziklani:Submit', ['entry', 'edit', 'list'], false],
+            [null, 'Fyziklani:Submit', ['create', 'edit', 'list'], false],
+            ['perPerson', 'Fyziklani:Submit', ['create', 'edit', 'list'], false],
+            ['perOrg', 'Fyziklani:Submit', ['create', 'list'], true], # TODO 'edit',
+            ['perOrgOther', 'Fyziklani:Submit', ['create', 'edit', 'list'], false],
+            ['perContestant', 'Fyziklani:Submit', ['create', 'edit', 'list'], false],
         ];
     }
 
