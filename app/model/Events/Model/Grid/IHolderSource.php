@@ -2,6 +2,7 @@
 
 namespace Events\Model\Grid;
 
+use Events\Model\Holder\Holder;
 use IteratorAggregate;
 
 /**
@@ -9,6 +10,9 @@ use IteratorAggregate;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-interface IHolderSource extends IteratorAggregate {
-
+interface IHolderSource {
+    /**
+     * @return Holder[]
+     */
+    public function getHolders(): array;
 }

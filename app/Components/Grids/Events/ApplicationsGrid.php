@@ -129,11 +129,13 @@ class ApplicationsGrid extends Control {
 
     private function processSource() {
         $this->eventApplications = [];
-        foreach ($this->source as $key => $holder) {
-            $this->eventApplications[$key] = $holder->getEvent();
+
+        foreach ($this->source->getHolders() as $key => $holder) {
+            $event = $holder->getPrimaryHolder()->getEvent();
+            $this->eventApplications[$key] = $event;
             $this->holders[$key] = $holder;
-            $this->machines[$key] = $this->container->createEventMachine($holder->getEvent());
-            $this->handlers[$key] = $this->handlerFactory->create($holder->getEvent(), new MemoryLogger()); //TODO it's a bit weird to create new logger for each handler
+            $this->machines[$key] = $this->container->createEventMachine($event);
+            $this->handlers[$key] = $this->handlerFactory->create($event, new MemoryLogger()); //TODO it's a bit weird to create new logger for each handler
         }
     }
 
@@ -159,7 +161,7 @@ class ApplicationsGrid extends Control {
      */
     protected function createTemplate($class = NULL) {
         $template = parent::createTemplate($class);
-        $template->setTranslator($this->presenter->getTranslator());
+        $template->setTranslator($this->getPresenter()->getTranslator());
         return $template;
     }
 

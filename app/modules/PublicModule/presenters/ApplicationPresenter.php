@@ -14,6 +14,7 @@ use FKSDB\Components\Events\ApplicationComponent;
 use FKSDB\Components\Events\ApplicationsGrid;
 use FKSDB\Components\Grids\Events\LayoutResolver;
 use FKSDB\Logging\MemoryLogger;
+use FKSDB\NotImplementedException;
 use FKSDB\ORM\AbstractModelMulti;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
@@ -268,6 +269,7 @@ class ApplicationPresenter extends BasePresenter {
 
     /**
      * @return ApplicationComponent
+     * @throws NotImplementedException
      */
     protected function createComponentApplication() {
         $logger = new MemoryLogger();

@@ -184,15 +184,4 @@ class SingleEventSource implements IHolderSource {
         }
         return $this->holders;
     }
-
-    /**
-     * @return ArrayIterator|\Traversable
-     */
-    public function getIterator() {
-        if ($this->primaryModels === null) {
-            $this->loadData();
-            $this->createHolders();
-        }
-        return new ArrayIterator($this->holders);
-    }
 }

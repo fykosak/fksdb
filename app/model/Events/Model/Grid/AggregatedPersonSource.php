@@ -96,13 +96,13 @@ abstract class AggregatedPersonSource implements IHolderSource {
     }
 
     /**
-     * @return ArrayIterator|\Traversable
+     * @return Holder[]
      */
-    public final function getIterator() {
+    public function getHolders(): array {
         if ($this->holders === null) {
             $this->loadData();
         }
-        return new ArrayIterator($this->holders);
+        return $this->holders;
     }
 
 }
