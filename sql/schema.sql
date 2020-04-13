@@ -1466,7 +1466,7 @@ CREATE TABLE IF NOT EXISTS `email_message`
 -- Table `quiz`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `quiz` (
-  `task_id`         INT(11)      NOT NULL AUTO_INCREMENT,
+  `quiz_id`         INT(11)      NOT NULL AUTO_INCREMENT,
   `label`           VARCHAR(16)  NOT NULL
   COMMENT 'Oznaceni kvizove otazky ve formatu Rocnik-Serie-Uloha-Otazka (napr. 9-7-1-2)',
   `name_cs`         VARCHAR(255) NULL     DEFAULT NULL
@@ -1489,6 +1489,9 @@ CREATE TABLE IF NOT EXISTS `quiz` (
   PRIMARY KEY (`quiz_id`),
   INDEX `contest_id` (`contest_id` ASC),
   UNIQUE INDEX `contest_id_year_series_tasknr_question` (`contest_id` ASC, `year` ASC, `series` ASC, `tasknr` ASC, `question` ASC),
+  CONSTRAINT `quiz_ibfk_1`
+  FOREIGN KEY (`contest_id`)
+  REFERENCES `contest` (`contest_id`)
 )
   ENGINE = 'InnoDB';
 
