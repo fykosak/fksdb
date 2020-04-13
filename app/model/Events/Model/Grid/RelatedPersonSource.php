@@ -21,14 +21,14 @@ use Nette\DI\Container;
 class RelatedPersonSource extends AggregatedPersonSource implements IHolderSource {
 
     /**
-     * @var \FKSDB\ORM\Models\ModelPerson
+     * @var ModelPerson
      */
     private $person;
 
     /**
      * RelatedPersonSource constructor.
-     * @param \FKSDB\ORM\Models\ModelPerson $person
-     * @param \FKSDB\ORM\Tables\TypedTableSelection $events
+     * @param ModelPerson $person
+     * @param TypedTableSelection $events
      * @param Container $container
      */
     function __construct(ModelPerson $person, TypedTableSelection $events, Container $container) {
@@ -37,31 +37,31 @@ class RelatedPersonSource extends AggregatedPersonSource implements IHolderSourc
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @param ModelEvent $event
      * @return SingleEventSource|null
      */
     public function processEvent(ModelEvent $event) {
         $personId = $this->person->getPrimary();
 
-	try {
+        try {
             $eventSource = new SingleEventSource($event, $this->container);
-	} catch (UndeclaredEventException $exception) {
-	    return null;
-	}
+        } catch (UndeclaredEventException $exception) {
+            return null;
+        }
 
 
-        $subconditions = [];
+        $subConditions = [];
         $count = 0;
 
         $primaryPersonIds = $eventSource->getDummyHolder()->getPrimaryHolder()->getPersonIds();
         if ($primaryPersonIds) {
-            $subconditions[] = implode(' = ?  OR ', $primaryPersonIds) . ' = ?';
+            $subConditions[] = implode(' = ?  OR ', $primaryPersonIds) . ' = ?';
             $count += count($primaryPersonIds);
         }
 
         foreach ($eventSource->getDummyHolder()->getGroupedSecondaryHolders() as $group) {
             if ($group['personIds']) {
-                $subconditions[] = implode(' = ?  OR ', $group['personIds']) . ' = ?';
+                $subConditions[] = implode(' = ?  OR ', $group['personIds']) . ' = ?';
                 $count += count($group['personIds']);
             }
         }
@@ -71,7 +71,7 @@ class RelatedPersonSource extends AggregatedPersonSource implements IHolderSourc
         } else {
             $parameters = array_fill(0, $count, $personId);
         }
-        $eventSource->where(implode(' OR ', $subconditions), $parameters);
+        $eventSource->where(implode(' OR ', $subConditions), $parameters);
 
         return $eventSource;
     }

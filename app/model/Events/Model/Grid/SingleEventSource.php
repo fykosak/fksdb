@@ -7,6 +7,7 @@ use Events\Model\Holder\BaseHolder;
 use Events\Model\Holder\Holder;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Tables\TypedTableSelection;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
@@ -25,7 +26,7 @@ class SingleEventSource implements IHolderSource {
     use SmartObject;
 
     /**
-     * @var \FKSDB\ORM\Models\ModelEvent
+     * @var ModelEvent
      */
     private $event;
 
@@ -77,7 +78,7 @@ class SingleEventSource implements IHolderSource {
     }
 
     /**
-     * @return \FKSDB\ORM\Models\ModelEvent
+     * @return ModelEvent
      */
     public function getEvent() {
         return $this->event;
@@ -107,8 +108,10 @@ class SingleEventSource implements IHolderSource {
 
         // load secondaries
         foreach ($this->dummyHolder->getGroupedSecondaryHolders() as $key => $group) {
+            /** @var TypedTableSelection $secondarySelection */
             $secondarySelection = $group['service']->getTable()->where($group['joinOn'], $joinValues);
             if ($joinToCheck) {
+                /** @var ModelEvent $event */
                 $event = reset($group['holders'])->getEvent();
                 $secondarySelection->where(BaseHolder::EVENT_COLUMN, $event->getPrimary());
             }
@@ -192,5 +195,4 @@ class SingleEventSource implements IHolderSource {
         }
         return new ArrayIterator($this->holders);
     }
-
 }

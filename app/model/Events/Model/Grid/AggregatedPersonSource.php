@@ -22,7 +22,7 @@ use Nette\SmartObject;
 abstract class AggregatedPersonSource implements IHolderSource {
     use SmartObject;
     /**
-     * @var \FKSDB\ORM\Tables\TypedTableSelection
+     * @var TypedTableSelection
      */
     private $events;
 
@@ -32,7 +32,6 @@ abstract class AggregatedPersonSource implements IHolderSource {
     protected $container;
 
     /**
-     *
      * @var Holder[]
      */
     private $holders = null;
@@ -66,7 +65,7 @@ abstract class AggregatedPersonSource implements IHolderSource {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @param ModelEvent $event
      * @return mixed
      */
     abstract function processEvent(ModelEvent $event);

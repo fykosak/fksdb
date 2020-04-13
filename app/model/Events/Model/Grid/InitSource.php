@@ -2,6 +2,7 @@
 
 namespace Events\Model\Grid;
 
+use Events\Model\Holder\Holder;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Tables\TypedTableSelection;
 use Nette\DI\Container;
@@ -18,7 +19,6 @@ use Nette\DI\Container;
  */
 class InitSource extends AggregatedPersonSource implements IHolderSource {
 
-
     /**
      * InitSource constructor.
      * @param TypedTableSelection $events
@@ -33,10 +33,9 @@ class InitSource extends AggregatedPersonSource implements IHolderSource {
      * @return mixed
      */
     public function processEvent(ModelEvent $event) {
-
+        /** @var Holder $holder */
         $holder = $this->container->createEventHolder($event);
         $holder->setModel();
-
         return $holder;
     }
 

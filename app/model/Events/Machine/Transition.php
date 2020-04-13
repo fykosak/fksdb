@@ -275,7 +275,7 @@ class Transition {
 
         $baseHolder = $holder->getBaseHolder($this->getBaseMachine()->getName());
         $validator = $baseHolder->getValidator();
-        $validator->validate($baseHolder, $this->getTarget());
+        $validator->validate($baseHolder);
         return $validator->getValidationResult();
     }
 

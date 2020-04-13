@@ -187,7 +187,7 @@ class BaseHolder {
     /**
      * @return ModelEvent
      */
-    public function getEvent() {
+    public function getEvent(): ModelEvent {
         return $this->event;
     }
 
@@ -463,7 +463,7 @@ class BaseHolder {
     /**
      * @return Field[]
      */
-    public function getDeterminingFields() {
+    public function getDeterminingFields(): array {
         return array_filter($this->fields, function (Field $field) {
             return $field->isDetermining();
         });
@@ -473,7 +473,7 @@ class BaseHolder {
      * @param BaseMachine $machine
      * @return ContainerWithOptions
      */
-    public function createFormContainer(BaseMachine $machine) {
+    public function createFormContainer(BaseMachine $machine): ContainerWithOptions {
         $container = new ContainerWithOptions();
         $container->setOption('label', $this->getLabel());
         $container->setOption('description', $this->getDescription());
@@ -537,7 +537,7 @@ class BaseHolder {
      */
     public function getParameter($name, $default = null) {
         try {
-            return Arrays::get($this->parameters, [$name], $default);
+            return Arrays::get($this->parameters, $name, $default);
         } catch (InvalidArgumentException $exception) {
             throw new InvalidArgumentException("No parameter '$name' for event " . $this->getEvent() . ".", null, $exception);
         }
