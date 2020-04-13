@@ -165,7 +165,7 @@ class ApplicationPresenter extends BasePresenter {
     protected function unauthorizedAccess() {
         if ($this->getAction() == 'default') {
             $this->initializeMachine();
-            if ($this->getMachine()->getHolder()->getPrimaryHolder()->getModelState() == BaseMachine::STATE_INIT) {
+            if ($this->getHolder()->getPrimaryHolder()->getModelState() == BaseMachine::STATE_INIT) {
                 return;
             }
         }
@@ -214,8 +214,9 @@ class ApplicationPresenter extends BasePresenter {
         }
 
 
-        if (!$this->getMachine()->getPrimaryMachine()->getAvailableTransitions()) {
-            if ($this->getMachine()->getHolder()->getPrimaryHolder()->getModelState() == BaseMachine::STATE_INIT) {
+        if (!$this->getMachine()->getPrimaryMachine()->getAvailableTransitions($this->getHolder()->getPrimaryHolder()->getModelState())) {
+
+            if ($this->getHolder()->getPrimaryHolder()->getModelState() == BaseMachine::STATE_INIT) {
                 $this->setView('closed');
                 $this->flashMessage(_('Přihlašování není povoleno.'), BasePresenter::FLASH_INFO);
             } elseif (!$this->getParameter(self::PARAM_AFTER, false)) {

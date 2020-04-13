@@ -315,12 +315,14 @@ class ApplicationHandler {
         $newStates = array_merge($newStates, $holder->processFormValues($values, $this->machine, $transitions, $this->logger, $form));
         if ($execute == self::STATE_TRANSITION) {
             foreach ($newStates as $name => $newState) {
-                $transition = $this->machine[$name]->getTransitionByTarget($newState);
+                $state = $holder->getBaseHolder($name)->getModelState();
+                Debugger::barDump($state);
+                Debugger::barDump($this->machine->getBaseMachine($name)->getTransitionByTarget($state, $newState), $name);
+                $transition = $this->machine->getBaseMachine($name)->getTransitionByTarget($state, $newState);
                 if ($transition) {
                     $transitions[$name] = $transition;
-                } elseif (!($this->machine->getHolder()->getBaseHolder($name)->getModelState() == BaseMachine::STATE_INIT && $newState == BaseMachine::STATE_TERMINATED)) {
+                } elseif (!($state == BaseMachine::STATE_INIT && $newState == BaseMachine::STATE_TERMINATED)) {
                     $msg = _('Ze stavu "%s" automatu "%s" neexistuje přechod do stavu "%s".');
-                    $state = $this->machine->getHolder()->getBaseHolder($name)->getModelState();
                     throw new MachineExecutionException(sprintf($msg, $this->machine->getBaseMachine($name)->getStateName($state), $holder->getBaseHolder($name)->getLabel(), $this->machine->getBaseMachine($name)->getStateName($newState)));
                 }
             }

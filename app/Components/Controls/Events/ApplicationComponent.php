@@ -172,10 +172,8 @@ class ApplicationComponent extends Control {
          */
         $primaryMachine = $this->getMachine()->getPrimaryMachine();
         $transitionSubmit = null;
-        /**
-         * @var Transition $transition
-         */
-        foreach ($primaryMachine->getAvailableTransitions(BaseMachine::EXECUTABLE | BaseMachine::VISIBLE) as $transition) {
+
+        foreach ($primaryMachine->getAvailableTransitions($this->holder->getPrimaryHolder()->getModelState(),BaseMachine::EXECUTABLE | BaseMachine::VISIBLE) as $transition) {
             $transitionName = $transition->getName();
             $submit = $form->addSubmit($transitionName, $transition->getLabel());
 
@@ -279,7 +277,7 @@ class ApplicationComponent extends Control {
      * @return bool
      */
     private function canEdit() {
-        return $this->getMachine()->getHolder()->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT && $this->holder->getPrimaryHolder()->isModifiable();
+        return $this->holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT && $this->holder->getPrimaryHolder()->isModifiable();
     }
 
     /**

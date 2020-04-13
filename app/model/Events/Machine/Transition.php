@@ -226,7 +226,8 @@ class Transition extends FreezableObject {
         $result = [];
         foreach ($this->inducedTransitions as $baseMachineName => $targetState) {
             $targetMachine = $this->getBaseMachine()->getMachine()->getBaseMachine($baseMachineName);
-            $inducedTransition = $targetMachine->getTransitionByTarget($targetState);
+            $oldState = $this->getBaseHolder()->getHolder()->getBaseHolder($baseMachineName)->getModelState();
+            $inducedTransition = $targetMachine->getTransitionByTarget($oldState, $targetState);
             if ($inducedTransition) {
                 $result[] = $inducedTransition;
             }

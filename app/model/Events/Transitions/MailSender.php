@@ -2,6 +2,7 @@
 
 namespace Events\Transitions;
 
+use Events\Model\Holder\Holder;
 use FKSDB\Authentication\AccountManager;
 use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
@@ -127,7 +128,7 @@ class MailSender {
         }
 
         foreach ($logins as $login) {
-            $message = $this->composeMessage($this->filename, $login, $transition->getBaseMachine());
+            $message = $this->composeMessage($this->filename, $login, $transition->getBaseMachine(), $transition->getBaseHolder());
             $this->mailer->send($message);
         }
     }
@@ -136,13 +137,14 @@ class MailSender {
      * @param $filename
      * @param ModelLogin $login
      * @param BaseMachine $baseMachine
+     * @param BaseHolder $baseHolder
      * @return Message
      * @throws \Exception
      */
-    private function composeMessage($filename, ModelLogin $login, BaseMachine $baseMachine) {
+    private function composeMessage($filename, ModelLogin $login, BaseMachine $baseMachine, BaseHolder $baseHolder) {
         $machine = $baseMachine->getMachine();
-        $holder = $machine->getHolder();
-        $baseHolder = $holder->getBaseHolder($baseMachine->getName());
+
+        $holder =  $baseHolder->getHolder();
         $person = $login->getPerson();
         $event = $baseHolder->getEvent();
         $email = $person->getInfo()->email;
@@ -165,7 +167,7 @@ class MailSender {
 
         $message = new Message();
         $message->setHtmlBody($template);
-        $message->setSubject($this->getSubject($event, $application, $machine));
+        $message->setSubject($this->getSubject($event, $application, $holder, $machine));
 
         $message->setFrom($holder->getParameter(self::FROM_PARAM));
         if ($this->hasBcc()) {
@@ -192,12 +194,13 @@ class MailSender {
     /**
      * @param ModelEvent $event
      * @param IModel $application
+     * @param Holder $holder
      * @param Machine $machine
      * @return string
      */
-    private function getSubject(ModelEvent $event, IModel $application, Machine $machine) {
+    private function getSubject(ModelEvent $event, IModel $application, Holder $holder, Machine $machine) {
         $application = Strings::truncate((string)$application, 20); //TODO extension point
-        return $event->name . ': ' . $application . ' ' . mb_strtolower($machine->getPrimaryMachine()->getStateName($machine->getHolder()->getPrimaryHolder()->getModelState()));
+        return $event->name . ': ' . $application . ' ' . mb_strtolower($machine->getPrimaryMachine()->getStateName($holder->getPrimaryHolder()->getModelState()));
     }
 
     /**

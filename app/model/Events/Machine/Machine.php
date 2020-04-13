@@ -4,6 +4,7 @@ namespace Events\Machine;
 
 use ArrayAccess;
 use ArrayIterator;
+use Events\Model\Holder\BaseHolder;
 use Events\Model\Holder\Holder;
 use IteratorAggregate;
 use LogicException;
@@ -63,7 +64,7 @@ class Machine extends FreezableObject implements ArrayAccess, IteratorAggregate 
      * @param $name
      * @return BaseMachine
      */
-    public function getBaseMachine($name) {
+    public function getBaseMachine(string $name): BaseMachine {
         if (!array_key_exists($name, $this->baseMachines)) {
             throw new InvalidArgumentException("Unknown base machine '$name'.");
         }

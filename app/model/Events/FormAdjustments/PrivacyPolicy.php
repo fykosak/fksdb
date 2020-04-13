@@ -42,7 +42,7 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
      */
     function __construct(ServicePersonInfo $servicePersonInfo, PersonInfoFactory $personInfoFactory) {
         $this->servicePersonInfo = $servicePersonInfo;
-        $this->personInfoFactory=$personInfoFactory;
+        $this->personInfoFactory = $personInfoFactory;
     }
 
     /**
@@ -52,7 +52,7 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
      * @throws \Exception
      */
     public function adjust(Form $form, Machine $machine, Holder $holder) {
-        if ($machine->getHolder()->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT) {
+        if ($holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT) {
             return;
         }
 

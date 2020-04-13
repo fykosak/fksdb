@@ -4,7 +4,6 @@ namespace Events\Machine;
 
 use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
-use Nette\InvalidStateException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -42,27 +41,8 @@ class BaseMachine extends FreezableObject {
      * BaseMachine constructor.
      * @param $name
      */
-    public function __construct($name) {
+    public function __construct(string $name) {
         $this->name = $name;
-    }
-
-    /**
-     * @param $state
-     * @param $label
-     */
-    public function addState($state, $label) {
-        $this->states[$state] = $label;
-    }
-
-    /**
-     * @param Transition $transition
-     */
-    public function addTransition(Transition $transition) {
-        $this->updating();
-        $transition->setBaseMachine($this);
-        $transition->freeze();
-
-        $this->transitions[$transition->getName()] = $transition;
     }
 
     /**
@@ -73,19 +53,18 @@ class BaseMachine extends FreezableObject {
     }
 
     /**
-     * @param $transitionMask
-     * @param $induced
+     * @param string $state
+     * @param string $label
      */
-    public function addInducedTransition($transitionMask, $induced) {
-        if (!$this->isFrozen()) {
-            throw new InvalidStateException('Cannot add induced transitions to unfreezed base machine.');
-        }
-        foreach ($this->getMatchingTransitions($transitionMask) as $transition) {
-            foreach ($induced as $machineName => $state) {
-                $targetMachine = $this->getMachine()->getBaseMachine($machineName);
-                $transition->addInducedTransition($targetMachine, $state);
-            }
-        }
+    public function addState(string $state, string $label) {
+        $this->states[$state] = $label;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getStates(): array {
+        return $this->states;
     }
 
     /**
@@ -103,17 +82,40 @@ class BaseMachine extends FreezableObject {
     }
 
     /**
-     * @return string[]
+     * @param Transition $transition
      */
-    public function getStates() {
-        return $this->states;
+    public function addTransition(Transition $transition) {
+        $transition->setBaseMachine($this);
+        $this->transitions[$transition->getName()] = $transition;
+    }
+
+    /**
+     * @param string $name
+     * @return Transition
+     */
+    public function getTransition(string $name): Transition {
+        return $this->transitions[$name];
+    }
+
+
+    /**
+     * @param $transitionMask
+     * @param $induced
+     */
+    public function addInducedTransition($transitionMask, $induced) {
+        foreach ($this->getMatchingTransitions($transitionMask) as $transition) {
+            foreach ($induced as $machineName => $state) {
+                $targetMachine = $this->getMachine()->getBaseMachine($machineName);
+                $transition->addInducedTransition($targetMachine, $state);
+            }
+        }
     }
 
     /**
      * @param string state identification
      * @return string
      */
-    public function getStateName(string $state) {
+    public function getStateName(string $state): string {
         switch ($state) {
             case self::STATE_INIT:
                 return _('vznikající');
@@ -127,57 +129,48 @@ class BaseMachine extends FreezableObject {
     /**
      * @return Transition[]
      */
-    public function getTransitions() {
+    public function getTransitions(): array {
         return $this->transitions;
     }
 
     /**
+     * @param string $sourceState
      * @param int $mode
      * @return Transition[]
      */
-    public function getAvailableTransitions($mode = self::EXECUTABLE) {
-        return array_filter($this->getMatchingTransitions(), function (Transition $transition) use ($mode) {
+    public function getAvailableTransitions(string $sourceState, $mode = self::EXECUTABLE): array {
+        return array_filter($this->getMatchingTransitions($sourceState), function (Transition $transition) use ($mode) {
             return
                 (!($mode & self::EXECUTABLE) || $transition->canExecute()) && (!($mode & self::VISIBLE) || $transition->isVisible());
         });
     }
 
-    /**
-     * @param $name
-     * @return Transition
-     */
-    public function getTransition($name) {
-        return $this->transitions[$name];
-    }
 
     /**
-     * @param $state
-     * @return Transition[]
+     * @param string $sourceState
+     * @param string $targetState
+     * @return Transition[]|null
      */
-    public function getTransitionByTarget($state) {
-        $candidates = array_filter($this->getMatchingTransitions(), function (Transition $transition) use ($state) {
-            return $transition->getTarget() == $state;
+    public function getTransitionByTarget(string $sourceState, string $targetState) {
+        $candidates = array_filter($this->getMatchingTransitions($sourceState), function (Transition $transition) use ($targetState) {
+            return $transition->getTarget() == $targetState;
         });
         if (count($candidates) == 0) {
             return null;
         } elseif (count($candidates) > 1) {
-            throw new InvalidArgumentException("Target state '$state' is reachable via multiple edges."); //TODO may this be anytime useful?
+            throw new InvalidArgumentException(sprintf('Target state %s is from state %s reachable via multiple edges.', $targetState, $sourceState)); //TODO may this be anytime useful?
         } else {
             return reset($candidates);
         }
     }
 
     /**
-     * @param null $mask
+     * @param string $sourceStateMask
      * @return Transition[]
      */
-    private function getMatchingTransitions($mask = null) {
-        if ($mask === null) {
-            $mask = $this->getMachine()->getHolder()->getBaseHolder($this->name)->getModelState();
-        }
-        return array_filter($this->transitions, function (Transition $transition) use ($mask) {
-            return $transition->matches($mask);
+    private function getMatchingTransitions(string $sourceStateMask): array {
+        return array_filter($this->transitions, function (Transition $transition) use ($sourceStateMask) {
+            return $transition->matches($sourceStateMask);
         });
     }
-
 }
