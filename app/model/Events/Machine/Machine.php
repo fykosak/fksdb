@@ -2,13 +2,7 @@
 
 namespace Events\Machine;
 
-use ArrayAccess;
-use ArrayIterator;
-use Events\Model\Holder\BaseHolder;
 use Events\Model\Holder\Holder;
-use IteratorAggregate;
-use LogicException;
-use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
 
 /**
@@ -16,7 +10,7 @@ use Nette\InvalidArgumentException;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class Machine extends FreezableObject implements ArrayAccess, IteratorAggregate {
+class Machine {
 
     /**
      * @var BaseMachine[]
@@ -37,7 +31,6 @@ class Machine extends FreezableObject implements ArrayAccess, IteratorAggregate 
      * @param $name
      */
     public function setPrimaryMachine($name) {
-        $this->updating();
         $this->primaryMachine = $this->getBaseMachine($name);
     }
 
@@ -52,12 +45,10 @@ class Machine extends FreezableObject implements ArrayAccess, IteratorAggregate 
      * @param BaseMachine $baseMachine
      */
     public function addBaseMachine(BaseMachine $baseMachine) {
-        $this->updating();
         $name = $baseMachine->getName();
         $this->baseMachines[$name] = $baseMachine;
 
         $baseMachine->setMachine($this);
-        $baseMachine->freeze();
     }
 
     /**
@@ -87,48 +78,4 @@ class Machine extends FreezableObject implements ArrayAccess, IteratorAggregate 
     public function getHolder() {
         return $this->holder;
     }
-
-    /*
-     * Syntactic-sugar interfaces
-     */
-
-    /**
-     * @return ArrayIterator|\Traversable
-     */
-    public function getIterator() {
-        return new ArrayIterator($this->baseMachines);
-    }
-
-    /**
-     * @param mixed $offset
-     * @return bool
-     */
-    public function offsetExists($offset) {
-        return isset($this->baseMachines[$offset]);
-    }
-
-    /**
-     * @param mixed $offset
-     * @return BaseMachine|mixed
-     */
-    public function offsetGet($offset) {
-        return $this->baseMachines[$offset];
-    }
-
-    /**
-     * @param mixed $offset
-     * @param mixed $value
-     */
-    public function offsetSet($offset, $value) {
-        throw new LogicException('Use addBaseMachine method.');
-    }
-
-    /**
-     * @param mixed $offset
-     */
-    public function offsetUnset($offset) {
-        throw new LogicException('Cannot delete a base machine.');
-    }
-
 }
-

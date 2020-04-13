@@ -409,8 +409,6 @@ class EventsExtension extends CompilerExtension {
                 $factory->addSetup("\$service->getBaseMachine(?)->addInducedTransition(?, ?)", [$instanceName, $mask, $induced]);
             }
         }
-
-        $factory->addSetup('freeze');
     }
 
     /**
@@ -514,9 +512,6 @@ class EventsExtension extends CompilerExtension {
         foreach ($machineDef['formAdjustments'] as $formAdjustment) {
             $factory->addSetup('addFormAdjustment', $formAdjustment);
         }
-
-
-        $factory->addSetup('freeze');
     }
 
     /**

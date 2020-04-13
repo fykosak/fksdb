@@ -11,10 +11,8 @@ use Events\Processings\GenKillProcessing;
 use Events\Processings\IProcessing;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\IModel;
-use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\UI\Form;
 use Nette\Database\Connection;
-use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
 use Nette\Utils\ArrayHash;
 
@@ -25,7 +23,7 @@ use Nette\Utils\ArrayHash;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class Holder extends FreezableObject {
+class Holder {
 
     /**
      * @var IFormAdjustment[]
@@ -92,7 +90,6 @@ class Holder extends FreezableObject {
      * @param $name
      */
     public function setPrimaryHolder(string $name) {
-        $this->updating();
         $primaryHolder = $this->primaryHolder = $this->getBaseHolder($name);
         $this->secondaryBaseHolders = array_filter($this->baseHolders, function (BaseHolder $baseHolder) use ($primaryHolder) {
             return $baseHolder !== $primaryHolder;
@@ -110,10 +107,7 @@ class Holder extends FreezableObject {
      * @param BaseHolder $baseHolder
      */
     public function addBaseHolder(BaseHolder $baseHolder) {
-        $this->updating();
         $baseHolder->setHolder($this);
-        $baseHolder->freeze();
-
         $name = $baseHolder->getName();
         $this->baseHolders[$name] = $baseHolder;
     }
@@ -122,7 +116,6 @@ class Holder extends FreezableObject {
      * @param IFormAdjustment $formAdjusment
      */
     public function addFormAdjustment(IFormAdjustment $formAdjusment) {
-        $this->updating();
         $this->formAdjustments[] = $formAdjusment;
     }
 
@@ -130,7 +123,6 @@ class Holder extends FreezableObject {
      * @param IProcessing $processing
      */
     public function addProcessing(IProcessing $processing) {
-        $this->updating();
         $this->processings[] = $processing;
     }
 
@@ -188,7 +180,6 @@ class Holder extends FreezableObject {
      * @param SecondaryModelStrategy $secondaryModelStrategy
      */
     public function setSecondaryModelStrategy(SecondaryModelStrategy $secondaryModelStrategy) {
-        $this->updating();
         $this->secondaryModelStrategy = $secondaryModelStrategy;
     }
 

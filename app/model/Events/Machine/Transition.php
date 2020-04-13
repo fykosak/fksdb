@@ -8,15 +8,16 @@ use Events\Model\Holder\Holder;
 use Events\TransitionConditionFailedException;
 use Events\TransitionOnExecutedException;
 use Events\TransitionUnsatisfiedTargetException;
-use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
+use Nette\SmartObject;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class Transition extends FreezableObject {
+class Transition {
+    use SmartObject;
 
     /** @var BaseMachine */
     private $baseMachine;
@@ -121,7 +122,6 @@ class Transition extends FreezableObject {
      * @param BaseMachine $baseMachine
      */
     public function setBaseMachine(BaseMachine $baseMachine) {
-        $this->updating();
         $this->baseMachine = $baseMachine;
     }
 
@@ -171,7 +171,6 @@ class Transition extends FreezableObject {
      * @param $condition
      */
     public function setCondition($condition) {
-        $this->updating();
         $this->condition = $condition;
     }
 
@@ -179,7 +178,6 @@ class Transition extends FreezableObject {
      * @param $dangerous
      */
     public function setDangerous($dangerous) {
-        $this->updating();
         $this->dangerous = $dangerous;
     }
 
@@ -187,7 +185,6 @@ class Transition extends FreezableObject {
      * @param $visible
      */
     public function setVisible($visible) {
-        $this->updating();
         $this->visible = $visible;
     }
 

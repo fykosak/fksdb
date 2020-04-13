@@ -3,7 +3,6 @@
 namespace Events\Machine;
 
 use Events\Model\Holder\Holder;
-use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
 
 /**
@@ -11,7 +10,7 @@ use Nette\InvalidArgumentException;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class BaseMachine extends FreezableObject {
+class BaseMachine {
 
     const STATE_INIT = '__init';
     const STATE_TERMINATED = '__terminated';
