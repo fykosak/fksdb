@@ -1,13 +1,13 @@
 {var $state = $holder->getPrimaryHolder()->getModelState()}
 {if $mode == 'state'}
-    {if $state == Events\Machine\BaseMachine::STATE_INIT || $state == Events\Machine\BaseMachine::STATE_TERMINATED}
+    {if $state == FKSDB\Events\Machine\BaseMachine::STATE_INIT || $state == FKSDB\Events\Machine\BaseMachine::STATE_TERMINATED}
         <em>&mdash;</em>
     {else}
         {$primaryMachine->getStateName($state)}
     {/if}
 {elseif  $mode == 'transitions'}
     {if}
-        {foreach $primaryMachine->getAvailableTransitions($holder,$state,Events\Machine\BaseMachine::EXECUTABLE | Events\Machine\BaseMachine::VISIBLE) as $transition}
+        {foreach $primaryMachine->getAvailableTransitions($holder,$state,FKSDB\Events\Machine\BaseMachine::EXECUTABLE | FKSDB\Events\Machine\BaseMachine::VISIBLE) as $transition}
             {if $transition->isCreating()}
                 <a href="{plink :Public:Application:default eventId => $holder->getPrimaryHolder()->getEvent()->event_id}"
                    class="btn btn-xs btn-success">{$transition->getLabel()}</a>
