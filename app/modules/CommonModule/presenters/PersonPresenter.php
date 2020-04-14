@@ -11,7 +11,7 @@ use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServicePersonInfo;
-use FKSDB\ValidationTest\ValidationFactory;
+use FKSDB\DataTesting\DataTestingFactory;
 use FormUtils;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -71,7 +71,7 @@ class PersonPresenter extends BasePresenter {
      */
     private $mode;
     /**
-     * @var ValidationFactory
+     * @var DataTestingFactory
      */
     private $validationFactory;
     /**
@@ -108,9 +108,9 @@ class PersonPresenter extends BasePresenter {
     }
 
     /**
-     * @param ValidationFactory $validationFactory
+     * @param DataTestingFactory $validationFactory
      */
-    public function injectValidationFactory(ValidationFactory $validationFactory) {
+    public function injectValidationFactory(DataTestingFactory $validationFactory) {
         $this->validationFactory = $validationFactory;
     }
 
@@ -197,6 +197,7 @@ class PersonPresenter extends BasePresenter {
      * @param $mergedId
      * @throws AbortException
      * @throws ReflectionException
+     * @throws \Exception
      */
     public function actionDontMerge($trunkId, $mergedId) {
         $mergedPI = $this->servicePersonInfo->findByPrimary($mergedId);
@@ -264,6 +265,7 @@ class PersonPresenter extends BasePresenter {
     /**
      * @return FormControl
      * @throws BadRequestException
+     * @throws \Exception
      */
     public function createComponentFormSearch(): FormControl {
         $control = new FormControl();
@@ -344,7 +346,9 @@ class PersonPresenter extends BasePresenter {
 
         $form->addSubmit('cancel', _('Storno'))
             ->getControlPrototype()->addAttributes(['class' => 'btn-lg']);
-        $form->onSuccess[] = [$this, 'handleMergeFormSuccess'];
+        $form->onSuccess[] = function (Form $form) {
+            $this->handleMergeFormSuccess($form);
+        };
         return $control;
     }
 

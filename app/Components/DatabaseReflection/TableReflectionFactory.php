@@ -42,8 +42,13 @@ final class TableReflectionFactory {
      * @throws InvalidArgumentException
      * @throws \Exception
      */
-    public function loadService(string $tableName, string $fieldName): AbstractRow {
-        $service = $this->container->getService('DBReflection.' . $tableName . '.' . $fieldName);
+    public function loadService(string $tableName, string $fieldName = null): AbstractRow {
+        if (is_null($fieldName)) {
+            $factoryName = $tableName;
+        } else {
+            $factoryName = $tableName . '.' . $fieldName;
+        }
+        $service = $this->container->getService('DBReflection.' . $factoryName);
         if (!$service instanceof AbstractRow) {
             throw new InvalidArgumentException('Field ' . $tableName . '.' . $fieldName . ' not exists');
         }

@@ -12,6 +12,7 @@ use FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException;
 use LogicException;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
+use Nette\Security\IResource;
 
 /**
  * Class ModelScheduleItem
@@ -28,7 +29,9 @@ use Nette\Database\Table\GroupedSelection;
  * @property-read string description_cs
  * @property-read string description_en
  */
-class ModelScheduleItem extends AbstractModelSingle implements IScheduleGroupReferencedModel, IEventReferencedModel {
+class ModelScheduleItem extends AbstractModelSingle implements IScheduleGroupReferencedModel, IEventReferencedModel, IResource {
+    const RESOURCE_ID = 'event.scheduleItem';
+
     /**
      * @return ModelScheduleGroup
      */
@@ -153,5 +156,12 @@ class ModelScheduleItem extends AbstractModelSingle implements IScheduleGroupRef
                 'en' => $this->description_en,
             ],
         ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    function getResourceId() {
+        return self::RESOURCE_ID;
     }
 }

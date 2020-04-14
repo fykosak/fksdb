@@ -2,10 +2,10 @@
 
 namespace CommonModule;
 
-use FKSDB\Components\Controls\Validation\ValidationControl;
-use FKSDB\Components\Grids\Validation\ValidationGrid;
+use FKSDB\Components\Controls\DataTesting\PersonTestControl;
+use FKSDB\Components\Grids\DataTesting\PersonsGrid;
 use FKSDB\ORM\Services\ServicePerson;
-use FKSDB\ValidationTest\ValidationFactory;
+use FKSDB\DataTesting\DataTestingFactory;
 
 /**
  * Class ValidationPresenter
@@ -18,7 +18,7 @@ class ValidationPresenter extends BasePresenter {
      */
     private $servicePerson;
     /**
-     * @var ValidationFactory
+     * @var DataTestingFactory
      */
     private $validationFactory;
 
@@ -32,9 +32,9 @@ class ValidationPresenter extends BasePresenter {
     }
 
     /**
-     * @param ValidationFactory $validationFactory
+     * @param DataTestingFactory $validationFactory
      */
-    public function injectValidationFactory(ValidationFactory $validationFactory) {
+    public function injectValidationFactory(DataTestingFactory $validationFactory) {
         $this->validationFactory = $validationFactory;
     }
 
@@ -64,17 +64,17 @@ class ValidationPresenter extends BasePresenter {
     }
 
     /**
-     * @return ValidationGrid
+     * @return PersonsGrid
      */
-    public function createComponentGrid(): ValidationGrid {
-        return new ValidationGrid($this->validationFactory->getTests(), $this->getContext());
+    public function createComponentGrid(): PersonsGrid {
+        return new PersonsGrid($this->validationFactory->getTests('person'), $this->getContext());
     }
 
     /**
-     * @return ValidationControl
+     * @return PersonTestControl
      */
-    public function createComponentValidationControl(): ValidationControl {
-        return new ValidationControl($this->servicePerson, $this->getTranslator(), $this->validationFactory->getTests());
+    public function createComponentValidationControl(): PersonTestControl {
+        return new PersonTestControl($this->servicePerson, $this->getTranslator(), $this->validationFactory->getTests('person'));
     }
 }
 

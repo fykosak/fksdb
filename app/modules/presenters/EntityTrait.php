@@ -55,6 +55,31 @@ trait EntityTrait {
         $this->setAuthorized($this->traitIsAuthorized($this->loadEntity($id), 'detail'));
     }
 
+
+    public function titleList() {
+    }
+
+    public function titleCreate() {
+    }
+
+    /**
+     * @param int $id
+     */
+    public function titleEdit(int $id) {
+    }
+
+    /**
+     * @param int $id
+     */
+    public function titleDetail(int $id) {
+    }
+
+    /**
+     * @param int $id
+     */
+    public function titleDelete(int $id) {
+    }
+
     /**
      * @return AbstractModelSingle|IModel
      */

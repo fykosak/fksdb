@@ -1,6 +1,7 @@
 <?php
 
 use FKSDB\Components\Controls\ContestChooser;
+use FKSDB\Expressions\BadTypeException;
 use FKSDB\ORM\Models\ModelContest;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -30,10 +31,10 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
      */
     protected function startup() {
         parent::startup();
-        /**
-         * @var ContestChooser $contestChooser
-         */
         $contestChooser = $this->getComponent('contestChooser');
+        if (!$contestChooser instanceof ContestChooser) {
+            throw new BadTypeException(ContestChooser::class, $contestChooser);
+        }
         $contestChooser->syncRedirect();
     }
 
@@ -47,10 +48,10 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
      * @throws BadRequestException
      */
     public function getSelectedContest() {
-        /**
-         * @var ContestChooser $contestChooser
-         */
         $contestChooser = $this->getComponent('contestChooser');
+        if (!$contestChooser instanceof ContestChooser) {
+            throw new BadTypeException(ContestChooser::class, $contestChooser);
+        }
         if (!$contestChooser->isValid()) {
             throw new BadRequestException('No contests available.', 403);
         }
@@ -62,10 +63,10 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
      * @throws BadRequestException
      */
     public function getSelectedYear() {
-        /**
-         * @var ContestChooser $contestChooser
-         */
         $contestChooser = $this->getComponent('contestChooser');
+        if (!$contestChooser instanceof ContestChooser) {
+            throw new BadTypeException(ContestChooser::class, $contestChooser);
+        }
         if (!$contestChooser->isValid()) {
             throw new BadRequestException('No contests available.', 403);
         }

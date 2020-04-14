@@ -214,7 +214,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
         }
 
         $container->getReferencedId()->getHandler()->setResolution($resolution);
-        $container->getComponent(ReferencedContainer::CONTROL_COMPACT)->setValue($model ? $model->getFullname() : null);
+        $container->getComponent(ReferencedContainer::CONTROL_COMPACT)->setValue($model ? $model->getFullName() : null);
         foreach ($container->getComponents() as $sub => $subcontainer) {
             if (!$subcontainer instanceof Container) {
                 continue;
