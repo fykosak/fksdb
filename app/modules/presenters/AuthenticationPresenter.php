@@ -188,7 +188,7 @@ final class AuthenticationPresenter extends BasePresenter {
 
         if ($this->isLoggedIn()) {
             $this->getUser()->logout(true); //clear identity
-        } else if ($this->getParameter(self::PARAM_GSID)) { // global session may exist but central login doesn't know it (e.g. expired its session)
+        } elseif ($this->getParameter(self::PARAM_GSID)) { // global session may exist but central login doesn't know it (e.g. expired its session)
             // We restart the global session with provided parameter.
             // This is secure as only harm an attacker can make to the user is to log him out.
             $this->globalSession->destroy();
@@ -275,7 +275,9 @@ final class AuthenticationPresenter extends BasePresenter {
             ->addRule(Form::FILLED, _('Zadejte heslo.'));
         $form->addSubmit('send', _('Přihlásit'));
         $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
-        $form->onSuccess[] = callback($this, 'loginFormSubmitted');
+        $form->onSuccess[] = function (Form $form) {
+            return $this->loginFormSubmitted($form);
+        };
         return $form;
     }
 
@@ -293,7 +295,9 @@ final class AuthenticationPresenter extends BasePresenter {
 
         $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
 
-        $form->onSuccess[] = callback($this, 'recoverFormSubmitted');
+        $form->onSuccess[] = function (Form $form) {
+            $this->recoverFormSubmitted($form);
+        };
         return $form;
     }
 
@@ -301,11 +305,7 @@ final class AuthenticationPresenter extends BasePresenter {
      * @param $form
      * @throws AbortException
      */
-    /**
-     * @param $form
-     * @throws AbortException
-     */
-    public function loginFormSubmitted($form) {
+    private function loginFormSubmitted(Form $form) {
         try {
             $this->user->login($form['id']->value, $form['password']->value);
             /**

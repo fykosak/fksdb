@@ -100,10 +100,10 @@ class WebServiceModel {
             throw new SoapFault('Sender', 'Missing credentials.');
         }
 
-        $credentials = array(
+        $credentials = [
             IAuthenticator::USERNAME => $args->username,
             IAuthenticator::PASSWORD => $args->password,
-        );
+        ];
 
         try {
             $this->authenticatedLogin = $this->authenticator->authenticate($credentials);
@@ -147,7 +147,7 @@ class WebServiceModel {
             $resultsModel = $this->resultsModelFactory->createCumulativeResultsModel($contest, $args->year);
 
             if (!is_array($args->cumulatives->cumulative)) {
-                $args->cumulatives->cumulative = array($args->cumulatives->cumulative);
+                $args->cumulatives->cumulative = [$args->cumulatives->cumulative];
             }
 
             foreach ($args->cumulatives->cumulative as $cumulative) {
@@ -160,7 +160,7 @@ class WebServiceModel {
             $resultsModel = $this->resultsModelFactory->createSchoolCumulativeResultsModel($contest, $args->year);
 
             if (!is_array($args->{'school-cumulatives'}->{'school-cumulative'})) {
-                $args->{'school-cumulatives'}->{'school-cumulative'} = array($args->{'school-cumulatives'}->{'school-cumulative'});
+                $args->{'school-cumulatives'}->{'school-cumulative'} = [$args->{'school-cumulatives'}->{'school-cumulative'}];
             }
 
             foreach ($args->{'school-cumulatives'}->{'school-cumulative'} as $cumulative) {
@@ -186,7 +186,7 @@ class WebServiceModel {
             $resultsModel = $this->resultsModelFactory->createBrojureResultsModel($contest, $args->year);
 
             if (!is_array($args->brojures->brojure)) {
-                $args->brojures->brojure = array($args->brojures->brojure);
+                $args->brojures->brojure = [$args->brojures->brojure];
             }
 
             foreach ($args->brojures->brojure as $brojure) {
@@ -226,7 +226,7 @@ class WebServiceModel {
 
         if (isset($args->series)) {
             if (!is_array($args->series)) {
-                $args->series = array($args->series);
+                $args->series = [$args->series];
             }
             foreach ($args->series as $series) {
                 $seriesNo = $series->series;
@@ -274,7 +274,7 @@ class WebServiceModel {
 
         // stupid PHP deserialization
         if (!is_array($args->parameter)) {
-            $args->parameter = array($args->parameter);
+            $args->parameter = [$args->parameter];
         }
         foreach ($args->parameter as $parameter) {
             $parameters[$parameter->name] = $parameter->{'_'};
@@ -322,7 +322,7 @@ class WebServiceModel {
         if (!$this->authenticatedLogin) {
             $this->log("Unauthenticated access to $serviceName.");
             throw new SoapFault('Sender', "Unauthenticated access to $serviceName.");
-        } else if ($arg !== null) {
+        } elseif ($arg !== null) {
             $this->log("Called $serviceName($arg).");
         } else {
             $this->log("Called $serviceName.");

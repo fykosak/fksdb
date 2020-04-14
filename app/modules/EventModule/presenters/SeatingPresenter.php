@@ -32,36 +32,30 @@ class SeatingPresenter extends BasePresenter {
     }
 
     public function titleDefault() {
-        $this->setTitle(_('Rozdělení do místností'));
-        $this->setIcon('fa fa-arrows');
+        $this->setTitle(_('Rooming'), 'fa fa-arrows');
     }
 
     public function titleEdit() {
-        $this->setTitle(_('Edit routing'));
-        $this->setIcon('fa fa-pencil');
+        $this->setTitle(_('Edit routing'), 'fa fa-pencil');
     }
 
     public function titleDownload() {
-        $this->setTitle(_('Download routing'));
-        $this->setIcon('fa fa-download');
+        $this->setTitle(_('Download routing'), 'fa fa-download');
     }
 
     public function titleList() {
-        $this->setTitle(_('List of all teams'));
-        $this->setIcon('fa fa-print');
+        $this->setTitle(_('List of all teams'), 'fa fa-print');
     }
 
     public function titlePreview() {
-        $this->setTitle(_('Preview'));
-        $this->setIcon('fa fa-search');
+        $this->setTitle(_('Preview'), 'fa fa-search');
     }
 
     /**
      * @return bool
-     * @throws AbortException
      * @throws BadRequestException
      */
-    protected function isEnabledForEvent(): bool {
+    protected function isEnabled(): bool {
         return $this->getEvent()->event_type_id === 1;
     }
 
@@ -76,28 +70,25 @@ class SeatingPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function authorizedPreview() {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('event.seating', 'preview', $this->getEvent()->getContest()));
+        $this->setAuthorized($this->isContestsOrgAuthorized('event.seating', 'preview'));
     }
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function authorizedList() {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('event.seating', 'list', $this->getEvent()->getContest()));
+        $this->setAuthorized($this->isContestsOrgAuthorized('event.seating', 'list'));
     }
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function authorizedDefault() {
-        $download = $this->getContestAuthorizator()->isAllowed('event.seating', 'download', $this->getEvent()->getContest());
-        $edit = $this->getContestAuthorizator()->isAllowed('event.seating', 'edit', $this->getEvent()->getContest());
+        $download = $this->isContestsOrgAuthorized('event.seating', 'download');
+        $edit = $this->isContestsOrgAuthorized('event.seating', 'edit');
         $this->setAuthorized($download || $edit);
     }
 
@@ -112,13 +103,12 @@ class SeatingPresenter extends BasePresenter {
             $response = new ReactResponse();
             $response->setAct('update-teams');
             $response->setData(['updatedTeams' => $updatedTeams]);
-            $response->addMessage(new ReactMessage(_('Zmeny boli uložené'), \BasePresenter::FLASH_SUCCESS));
+            $response->addMessage(new ReactMessage(_('changes has been saved'), \BasePresenter::FLASH_SUCCESS));
             $this->sendResponse($response);
         }
     }
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function renderList() {
@@ -135,7 +125,6 @@ class SeatingPresenter extends BasePresenter {
 
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function renderPreview() {
@@ -160,6 +149,6 @@ class SeatingPresenter extends BasePresenter {
      * @return SeatingControl
      */
     public function createComponentSeating(): SeatingControl {
-        return new SeatingControl($this->serviceFyziklaniTeamPosition, $this->getTranslator());
+        return new SeatingControl($this->getContext());
     }
 }

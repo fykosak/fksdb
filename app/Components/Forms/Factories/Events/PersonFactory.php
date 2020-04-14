@@ -177,7 +177,7 @@ class PersonFactory extends AbstractFactory {
         foreach ($fieldsDefinition as $subName => $sub) {
             foreach ($sub as $fieldName => $metadata) {
                 if (!is_array($metadata)) {
-                    $metadata = array('required' => $metadata);
+                    $metadata = ['required' => $metadata];
                 }
                 if ($metadata['required'] && !$this->referencedEventPersonFactory->isFilled($person, $subName, $fieldName, $acYear)) {
                     $validator->addError(sprintf(_('%s: %s je povinná položka.'), $field->getBaseHolder()->getLabel(), $field->getLabel() . '.' . $subName . '.' . $fieldName)); //TODO better GUI name than DB identifier

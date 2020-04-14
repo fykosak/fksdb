@@ -44,7 +44,7 @@ class DuplicateFinder {
     public function getPairs() {
         $buckets = [];
         /* Create buckets for quadratic search. */
-        foreach ($this->servicePerson->getTable()->select("person.*, person_info:email, person_info:duplicates, person_info:person_id AS 'PI'") as $person) {
+        foreach ($this->servicePerson->getTable()->select("person.*, person_info.email, person_info:duplicates, person_info:person_id AS 'PI'") as $person) {
             $bucketKey = $this->getBucketKey($person);
             if (!isset($buckets[$bucketKey])) {
                 $buckets[$bucketKey] = [];
@@ -107,7 +107,7 @@ class DuplicateFinder {
          */
         if (!$a->PI || !$b->PI) { // if person_info records don't exist
             $emailScore = 0.5; // cannot say anything
-        } else if (!$a->email || !$b->email) {
+        } elseif (!$a->email || !$b->email) {
             $emailScore = 0.8; // a little bit more
         } else {
             $emailScore = 1 - $this->relativeDistance($a->email, $b->email);

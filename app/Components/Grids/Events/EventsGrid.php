@@ -2,14 +2,13 @@
 
 namespace FKSDB\Components\Grids\Events;
 
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEvent;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\DI\Container;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
@@ -30,12 +29,11 @@ class EventsGrid extends BaseGrid {
 
     /**
      * EventsGrid constructor.
-     * @param ServiceEvent $serviceEvent
-     * @param TableReflectionFactory $tableReflectionFactory
+     * @param Container $container
      */
-    function __construct(ServiceEvent $serviceEvent, TableReflectionFactory $tableReflectionFactory) {
-        parent::__construct($tableReflectionFactory);
-        $this->serviceEvent = $serviceEvent;
+    function __construct(Container $container) {
+        parent::__construct($container);
+        $this->serviceEvent = $container->getByType(ServiceEvent::class);
     }
 
     /**
@@ -66,21 +64,20 @@ class EventsGrid extends BaseGrid {
         $this->setDefaultOrder('event.begin ASC');
         $this->setDataSource($dataSource);
 
-        $this->addColumn('event_id', _('Id akce'));
-
         $this->addColumns([
-            DbNames::TAB_EVENT . '.event_type',
-            DbNames::TAB_EVENT . '.name',
-            DbNames::TAB_EVENT . '.year',
-            DbNames::TAB_EVENT . '.event_year',
+            'event.event_id',
+            'event.event_type',
+            'event.name',
+            'event.year',
+            'event.event_year',
         ]);
 
-        $this->addLinkButton($this->getPresenter(), ':Event:dashboard:default', 'detail', _('Detail'), true, ['eventId' => 'event_id']);
-        $this->addLinkButton($this->getPresenter(), 'edit', 'edit', _('Edit'), true, ['id' => 'event_id']);
+        $this->addLinkButton(':Event:dashboard:default', 'detail', _('Detail'), true, ['eventId' => 'event_id']);
+        $this->addLinkButton('edit', 'edit', _('Edit'), true, ['id' => 'event_id']);
 
         $this->addLink('event_participant.list');
 
-        $this->addLinkButton($this->getPresenter(), ':Event:EventOrg:list', 'org', _('Organisers'), true, ['eventId' => 'event_id']);
+        $this->addLinkButton(':Event:EventOrg:list', 'org', _('Organisers'), true, ['eventId' => 'event_id']);
 
         $this->addGlobalButton('add')
             ->setLink($this->getPresenter()->link('create'))

@@ -57,7 +57,7 @@ class PizzaPresenter extends BasePresenter {
             $values = $form->getValues();
             foreach ($values->persons as $personId) {
                 $this->persons[] = $this->servicePerson->findByPrimary($personId);
-            };
+            }
         };
         return $control;
     }
@@ -67,7 +67,6 @@ class PizzaPresenter extends BasePresenter {
     }
 
     public function titleDefault() {
-        $this->setTitle(_('Pizza'));
-        $this->setIcon('fa fa-cutlery');
+        $this->setTitle(_('Pizza'),'fa fa-cutlery');
     }
 }

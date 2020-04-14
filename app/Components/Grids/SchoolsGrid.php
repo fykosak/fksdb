@@ -7,6 +7,7 @@ use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServiceSchool;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Database\Table\Selection;
+use Nette\DI\Container;
 use Nette\Utils\Html;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
@@ -26,11 +27,11 @@ class SchoolsGrid extends BaseGrid {
 
     /**
      * SchoolsGrid constructor.
-     * @param ServiceSchool $serviceSchool
+     * @param Container $container
      */
-    public function __construct(ServiceSchool $serviceSchool) {
-        parent::__construct();
-        $this->serviceSchool = $serviceSchool;
+    public function __construct(Container $container) {
+        parent::__construct($container);
+        $this->serviceSchool = $container->getByType(ServiceSchool::class);
     }
 
     /**
@@ -66,8 +67,8 @@ class SchoolsGrid extends BaseGrid {
             return Html::el('span')->addAttributes(['class' => ('badge ' . ($row->active ? 'badge-success' : 'badge-danger'))])->addText(($row->active));
         });
 
-        $this->addLinkButton($presenter, 'edit', 'edit', _('Edit'), false, ['id' => 'school_id']);
-        $this->addLinkButton($presenter, 'detail', 'detail', _('Detail'), false, ['id' => 'school_id']);
+        $this->addLinkButton( 'edit', 'edit', _('Edit'), false, ['id' => 'school_id']);
+        $this->addLinkButton( 'detail', 'detail', _('Detail'), false, ['id' => 'school_id']);
 
         $this->addGlobalButton('add')
             ->setLink($this->getPresenter()->link('create'))

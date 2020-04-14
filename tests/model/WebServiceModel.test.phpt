@@ -32,7 +32,7 @@ class WebServiceModelTest extends DatabaseTestCase {
         parent::setUp();
 
         $this->fixture = $this->container->getService('webServiceModel');
-        $this->person = $this->createPerson('Homer', 'Simpson', array(), array('login' => 'homer', 'hash' => '123456'));
+        $this->person = $this->createPerson('Homer', 'Simpson', [], ['login' => 'homer', 'hash' => '123456']);
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
     }
 
@@ -41,21 +41,21 @@ class WebServiceModelTest extends DatabaseTestCase {
     }
 
     public function testResults() {
-        $header = array(
+        $header = [
             'username' => 'homer',
             'password' => '123456',
-        );
+        ];
 
         $this->fixture->AuthenticationCredentials((object) $header);
 
-        $resultsReq = array(
+        $resultsReq = [
             'contest' => 'fykos',
             'year' => 1,
             'brojure' => '1 2 3 4 5 6',
-        );
+        ];
         $result = $this->fixture->GetResults((object) $resultsReq);
 
-        Assert::type('SoapVar', $result);
+        Assert::type(SoapVar::class, $result);
     }
 
 }

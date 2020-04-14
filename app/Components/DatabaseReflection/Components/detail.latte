@@ -4,7 +4,7 @@
     {/if}
     {foreach $section['fields'] as $field}
         {var $def = FKSDB\Components\Forms\Factories\TableReflectionFactory::parseRow($field)}
-        {control valuePrinter__$def[0]__$def[1]:row $model}
+        {control valuePrinter:row $def[0].'.'.$def[1], $model}
     {/foreach}
     <hr/>
 {/foreach}

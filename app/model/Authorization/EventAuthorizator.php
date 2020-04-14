@@ -4,9 +4,7 @@ namespace Authorization;
 
 use Authorization\Assertions\EventOrgByIdAssertion;
 use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Models\ModelLogin;
-use FKSDB\ORM\Models\ModelRole;
-use Nette\Database\Connection;
+use Nette\Database\Context;
 use Nette\Security\IUserStorage;
 use Nette\Security\Permission;
 use Nette\SmartObject;
@@ -28,7 +26,7 @@ class EventAuthorizator {
     private $acl;
 
     /**
-     * @var Connection
+     * @var Context
      */
     private $db;
 
@@ -42,9 +40,9 @@ class EventAuthorizator {
      * @param IUserStorage $identity
      * @param Permission $acl
      * @param ContestAuthorizator $contestAuthorizator
-     * @param Connection $db
+     * @param Context $db
      */
-    function __construct(IUserStorage $identity, Permission $acl, ContestAuthorizator $contestAuthorizator, Connection $db) {
+    function __construct(IUserStorage $identity, Permission $acl, ContestAuthorizator $contestAuthorizator, Context $db) {
         $this->contestAuthorizator = $contestAuthorizator;
         $this->user = $identity;
         $this->acl = $acl;
@@ -92,7 +90,7 @@ class EventAuthorizator {
      * @param ModelEvent $event
      * @return bool
      */
-    public function isEventOrgAllowed($resource, $privilege, ModelEvent $event) {
+    public function isEventOrContestOrgAllowed($resource, $privilege, ModelEvent $event) {
         if (!$this->getUser()->isAuthenticated()) {
             return false;
         }
@@ -112,20 +110,10 @@ class EventAuthorizator {
         if (!$this->getUser()->isAuthenticated()) {
             return false;
         }
-        $contestOrg = false;
-        /**
-         * @var ModelLogin $login
-         */
-        $login = $this->getUser()->getIdentity();
-
-        $roles = $login->getRoles();
-        foreach ($roles as $role) {
-            if ($role->getRoleId() === ModelRole::ORG && $role->getContestId() === $event->getContest()->contest_id) {
-                $contestOrg = true;
-                break;
-            }
+        if (!$this->isEventOrg($resource, $privilege, $event)) {
+            return false;
         }
-        return $contestOrg && $this->isEventOrg($resource, $privilege, $event);
+        return $this->contestAuthorizator->isAllowed($resource, $privilege, $event->getContest());
     }
 
     /**

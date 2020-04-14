@@ -8,9 +8,9 @@ use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\Application\IPresenter;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\DI\Container;
 use Nette\InvalidStateException;
 use FKSDB\NotImplementedException;
 use Nette\Templating\FileTemplate;
@@ -33,7 +33,8 @@ use SQL\SearchableDataSource;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 abstract class BaseGrid extends Grid {
-
+    /** @var Container */
+    private $context;
     /** @persistent string */
     public $searchTerm;
     /**
@@ -43,11 +44,12 @@ abstract class BaseGrid extends Grid {
 
     /**
      * BaseGrid constructor.
-     * @param TableReflectionFactory|null $tableReflectionFactory
+     * @param Container $container
      */
-    public function __construct(TableReflectionFactory $tableReflectionFactory = null) {
+    public function __construct(Container $container) {
         parent::__construct();
-        $this->tableReflectionFactory = $tableReflectionFactory;
+        $this->context = $container;
+        $this->tableReflectionFactory = $container->getByType(TableReflectionFactory::class);
     }
 
     /**
@@ -62,6 +64,12 @@ abstract class BaseGrid extends Grid {
         $paginator->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.paginator.latte');
     }
 
+    /**
+     * @return Container
+     */
+    public final function getContext() {
+        return $this->context;
+    }
 
     /**
      * @param null $class
@@ -100,7 +108,7 @@ abstract class BaseGrid extends Grid {
          */
         $page = $paginator->page;
         if ($paginator->pageCount < 2) {
-            $steps = array($page);
+            $steps = [$page];
         } else {
             $arr = range(max($paginator->firstPage, $page - 3), min($paginator->lastPage, $page + 3));
             $count = 4;
@@ -196,7 +204,7 @@ abstract class BaseGrid extends Grid {
                 $model = $modelClassName::createFromActiveRow($model);
             }
             return $factory->renderValue($model, 1);
-        });
+        })->setSortable(false);
     }
 
     /**
@@ -235,7 +243,6 @@ abstract class BaseGrid extends Grid {
     }
 
     /**
-     * @param IPresenter $presenter
      * @param string $destination
      * @param string $id
      * @param string $label
@@ -245,7 +252,7 @@ abstract class BaseGrid extends Grid {
      * @throws DuplicateButtonException
      * @throws NotImplementedException
      */
-    protected function addLinkButton(IPresenter $presenter, string $destination, string $id, string $label, bool $checkACL = true, array $params = []): Button {
+    protected function addLinkButton(string $destination, string $id, string $label, bool $checkACL = true, array $params = []): Button {
         $modelClassName = $this->getModelClassName();
         $paramMapCallback = function ($model) use ($params): array {
             $URLParams = [];
@@ -254,31 +261,32 @@ abstract class BaseGrid extends Grid {
             }
             return $URLParams;
         };
-        return $this->addButton($id, $label)
+        /** @var Button $button */
+        $button = $this->addButton($id, $label)
             ->setText($label)
-            ->setShow(function ($row) use ($presenter, $modelClassName, $destination, $checkACL, $paramMapCallback) {
-                if (!$checkACL) {
-                    return true;
-                }
-                $model = $modelClassName::createFromActiveRow($row);
-                return $presenter->authorized($destination, $paramMapCallback($model));
-            })
             ->setLink(function ($row) use ($modelClassName, $destination, $paramMapCallback) {
                 $model = $modelClassName::createFromActiveRow($row);
                 return $this->getPresenter()->link($destination, $paramMapCallback($model));
             });
+        if ($checkACL) {
+            $button->setShow(function ($row) use ($modelClassName, $destination, $paramMapCallback) {
+                return $this->getPresenter()->authorized($destination, $paramMapCallback($modelClassName::createFromActiveRow($row)));
+            });
+        }
+        return $button;
     }
 
     /**
-     * @param $linkId
+     * @param string $linkId
      * @param bool $checkACL
-     * @return mixed
+     * @return Button
      * @throws DuplicateButtonException
      * @throws Exception
      */
-    protected function addLink($linkId, bool $checkACL = false) {
+    protected function addLink(string $linkId, bool $checkACL = false): Button {
         $modelClassName = $this->getModelClassName();
         $factory = $this->tableReflectionFactory->loadLinkFactory($linkId);
+        /** @var Button $button */
         $button = $this->addButton(str_replace('.', '_', $linkId), $factory->getText())
             ->setText($factory->getText())
             ->setLink(function ($row) use ($modelClassName, $factory) {
@@ -286,10 +294,7 @@ abstract class BaseGrid extends Grid {
                 return $this->getPresenter()->link($factory->getDestination($model), $factory->prepareParams($model));
             });
         if ($checkACL) {
-            $button->setShow(function ($row) use ($modelClassName, $checkACL, $factory) {
-                if (!$checkACL) {
-                    return true;
-                }
+            $button->setShow(function ($row) use ($modelClassName, $factory) {
                 $model = $modelClassName::createFromActiveRow($row);
                 return $this->getPresenter()->authorized($factory->getDestination($model), $factory->prepareParams($model));
             });
@@ -298,7 +303,7 @@ abstract class BaseGrid extends Grid {
     }
 
     /**
-     * @return GlobalButton
+     * @return GlobalButton|Button
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
      */
@@ -317,9 +322,7 @@ abstract class BaseGrid extends Grid {
         $data = [];
         foreach ($rows as $row) {
             $datum = [];
-            /**
-             * @var Column $column
-             */
+            /** @var Column $column */
             foreach ($columns as $column) {
                 $item = $column->prepareValue($row);
                 if ($item instanceof Html) {

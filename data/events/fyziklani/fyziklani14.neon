@@ -145,7 +145,7 @@ events:
                     name:
                         label: _('Název týmu')
                         required: true
-                        visible: true # or condition
+                        visible: true
                         modifiable: %events.fyziklani14.appCond%
                     game_lang:
                         label: _('Jazyk, ve kterém chcete soutěžit.')
@@ -197,7 +197,7 @@ events:
                         condition: %events.fyziklani14.appCond%
                         label: _('Přihlásit člena')
                     applied->__terminated:
-                        condition: %events.fyziklani14.appCond% # TODO the time period is not specified in rules
+                        condition: %events.fyziklani14.appCond%
                         label: _('Odebrat člena')
                     applied->participated:
                         condition: role('admin')

@@ -109,6 +109,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
      * @param $create
      * @return FormControl
      * @throws BadRequestException
+     * @throws \Exception
      */
     private function createComponentFormControl($create) {
         $control = new FormControl();
@@ -145,23 +146,19 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     }
 
     /**
-     * @param $name
      * @return FormControl
      * @throws BadRequestException
      */
-    protected final function createComponentCreateComponent($name) {
-        $control = $this->createComponentFormControl(true);
-        return $control;
+    protected final function createComponentCreateComponent() {
+        return $this->createComponentFormControl(true);
     }
 
     /**
-     * @param $name
      * @return FormControl
      * @throws BadRequestException
      */
-    protected final function createComponentEditComponent($name) {
-        $control = $this->createComponentFormControl(false);
-        return $control;
+    protected final function createComponentEditComponent() {
+        return $this->createComponentFormControl(false);
     }
 
     /**

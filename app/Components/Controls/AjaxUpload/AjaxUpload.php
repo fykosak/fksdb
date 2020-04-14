@@ -3,11 +3,11 @@
 namespace FKSDB\Components\Control\AjaxUpload;
 
 use FKSDB\Components\React\ReactComponent;
+use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\React\ReactResponse;
-use FKSDB\Submits\FilesystemCorrectedSubmitStorage;
 use FKSDB\Submits\FilesystemUploadedSubmitStorage;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -30,14 +30,6 @@ class AjaxUpload extends ReactComponent {
      * @var ServiceSubmit
      */
     private $serviceSubmit;
-    /**
-     * @var FilesystemUploadedSubmitStorage
-     */
-    private $filesystemSubmitUploadedStorage;
-    /**
-     * @var FilesystemCorrectedSubmitStorage
-     */
-    private $filesystemSubmitCorrectedStorage;
 
     /**
      * AjaxUpload constructor.
@@ -45,30 +37,7 @@ class AjaxUpload extends ReactComponent {
      */
     public function __construct(Container $context) {
         parent::__construct($context);
-        $this->filesystemSubmitUploadedStorage = $this->container->getByType(FilesystemUploadedSubmitStorage::class);
-        $this->filesystemSubmitCorrectedStorage = $this->container->getByType(FilesystemCorrectedSubmitStorage::class);
         $this->serviceSubmit = $this->container->getByType(ServiceSubmit::class);
-    }
-
-    /**
-     * @return ServiceSubmit
-     */
-    protected function getServiceSubmit(): ServiceSubmit {
-        return $this->serviceSubmit;
-    }
-
-    /**
-     * @return FilesystemUploadedSubmitStorage
-     */
-    protected function getSubmitUploadedStorage(): FilesystemUploadedSubmitStorage {
-        return $this->filesystemSubmitUploadedStorage;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getSubmitCorrectedStorage(): FilesystemCorrectedSubmitStorage {
-        return $this->filesystemSubmitCorrectedStorage;
     }
 
     /**
@@ -94,7 +63,7 @@ class AjaxUpload extends ReactComponent {
         foreach ($this->getPresenter()->getAvailableTasks() as $task) {
             $submit = $this->serviceSubmit->findByContestant($this->getPresenter()->getContestant()->ct_id, $task->task_id);
             $data[$task->task_id] = $this->serviceSubmit->serializeSubmit($submit, $task, $this->getPresenter());
-        };
+        }
         return json_encode($data);
     }
 
@@ -119,38 +88,39 @@ class AjaxUpload extends ReactComponent {
      */
     public function handleUpload() {
         $response = new ReactResponse();
-
+        /** @var FilesystemUploadedSubmitStorage $filesystemUploadedSubmitStorage */
+        $filesystemUploadedSubmitStorage = $this->getContext()->getByType(FilesystemUploadedSubmitStorage::class);
         $contestant = $this->getPresenter()->getContestant();
         $files = $this->getHttpRequest()->getFiles();
         foreach ($files as $name => $fileContainer) {
             $this->serviceSubmit->getConnection()->beginTransaction();
-            $this->submitStorage->beginTransaction();
+            $filesystemUploadedSubmitStorage->beginTransaction();
             if (!preg_match('/task([0-9]+)/', $name, $matches)) {
-                $response->addMessage(new ReactMessage(_('Task not found'), 'warning'));
+                $response->addMessage(new ReactMessage(_('Task not found'), ILogger::WARNING));
                 continue;
             }
             $task = $this->getPresenter()->isAvailableSubmit($matches[1]);
             if (!$task) {
 
                 $response->setCode(403);
-                $response->addMessage(new ReactMessage(_('Upload not allowed'), 'danger'));
+                $response->addMessage(new ReactMessage(_('Upload not allowed'), ILogger::ERROR));
                 $this->getPresenter()->sendResponse($response);
-            };
+            }
             /**
              * @var FileUpload $file
              */
             $file = $fileContainer;
             if (!$file->isOk()) {
                 $response->setCode(500);
-                $response->addMessage(new ReactMessage(_('File is not Ok'), 'danger'));
+                $response->addMessage(new ReactMessage(_('File is not Ok'), ILogger::ERROR));
                 $this->getPresenter()->sendResponse($response);
                 return;
             }
             // store submit
             $submit = $this->saveSubmitTrait($file, $task, $contestant);
-            $this->submitStorage->commit();
+            $filesystemUploadedSubmitStorage->commit();
             $this->serviceSubmit->getConnection()->commit();
-            $response->addMessage(new ReactMessage(_('Upload successful'), 'success'));
+            $response->addMessage(new ReactMessage(_('Upload successful'), ILogger::SUCCESS));
             $response->setAct('upload');
             $response->setData($this->serviceSubmit->serializeSubmit($submit, $task, $this->getPresenter()));
             $this->getPresenter()->sendResponse($response);
@@ -193,5 +163,4 @@ class AjaxUpload extends ReactComponent {
     protected function getReactId(): string {
         return 'public.ajax-upload';
     }
-
 }

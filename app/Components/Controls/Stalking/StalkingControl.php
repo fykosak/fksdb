@@ -2,13 +2,14 @@
 
 namespace FKSDB\Components\Controls\Stalking;
 
-use FKSDB\Components\Controls\Helpers\Badges\ContestBadge;
-use FKSDB\Components\Controls\Helpers\Badges\NoRecordsBadge;
-use FKSDB\Components\Controls\Helpers\Badges\PermissionDeniedBadge;
-use FKSDB\Components\Controls\Stalking\Helpers\EventLabelControl;
+use FKSDB\Components\Controls\Badges\ContestBadge;
+use FKSDB\Components\Controls\Badges\NoRecordsBadge;
+use FKSDB\Components\Controls\Badges\PermissionDeniedBadge;
+use FKSDB\Components\DatabaseReflection\ValuePrinterComponent;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\Models\ModelPerson;
 use Nette\Application\UI\Control;
+use Nette\DI\Container;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 
@@ -44,17 +45,16 @@ abstract class StalkingControl extends Control {
 
     /**
      * StalkingComponent constructor.
+     * @param Container $container
      * @param ModelPerson $modelPerson
-     * @param TableReflectionFactory $tableReflectionFactory
-     * @param ITranslator $translator
      * @param int $userPermissions
      */
-    public function __construct(ModelPerson $modelPerson, TableReflectionFactory $tableReflectionFactory, ITranslator $translator, int $userPermissions) {
+    public function __construct(Container $container, ModelPerson $modelPerson, int $userPermissions) {
         parent::__construct();
         $this->userPermissions = $userPermissions;
         $this->modelPerson = $modelPerson;
-        $this->translator = $translator;
-        $this->tableReflectionFactory = $tableReflectionFactory;
+        $this->translator = $container->getByType(ITranslator::class);
+        $this->tableReflectionFactory = $container->getByType(TableReflectionFactory::class);
     }
 
     public function beforeRender() {
@@ -67,7 +67,7 @@ abstract class StalkingControl extends Control {
      * @return ContestBadge
      */
     public function createComponentContestBadge(): ContestBadge {
-        return new ContestBadge();
+        return new ContestBadge($this->translator);
     }
 
     /**
@@ -78,29 +78,16 @@ abstract class StalkingControl extends Control {
     }
 
     /**
-     * @return EventLabelControl
-     */
-    public function createComponentEventLabel(): EventLabelControl {
-        return new EventLabelControl();
-    }
-
-    /**
-     * @return \FKSDB\Components\Controls\Helpers\Badges\NoRecordsBadge
+     * @return NoRecordsBadge
      */
     public function createComponentNoRecords(): NoRecordsBadge {
         return new NoRecordsBadge($this->translator);
     }
 
     /**
-     * @param string $name
-     * @return \Nette\ComponentModel\IComponent|null
-     * @throws \Exception
+     * @return ValuePrinterComponent
      */
-    public function createComponent($name) {
-        $printerComponent = $this->tableReflectionFactory->createComponent($name, $this->userPermissions);
-        if ($printerComponent) {
-            return $printerComponent;
-        }
-        return parent::createComponent($name);
+    public function createComponentValuePrinter(): ValuePrinterComponent {
+        return new ValuePrinterComponent($this->translator, $this->tableReflectionFactory);
     }
 }

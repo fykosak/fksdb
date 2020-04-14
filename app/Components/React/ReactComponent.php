@@ -76,4 +76,11 @@ abstract class ReactComponent extends Control {
         $act = $this->getHttpRequest()->getPost('act');
         return (object)['requestData' => $requestData, 'act' => $act];
     }
+
+    /**
+     * @return Container
+     */
+    public final function getContext() {
+        return $this->container;
+    }
 }

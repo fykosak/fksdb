@@ -54,11 +54,10 @@ class SchoolPresenter extends BasePresenter {
     }
 
     /**
-     * @param int $id
-     * @throws BadRequestException
+     * @inheritDoc
      */
-    public function actionDetail(int $id) {
-        $this->loadEntity($id);
+    protected function traitIsAuthorized($resource, string $privilege): bool {
+        return $this->isAnyContestAuthorized($resource, $privilege);
     }
 
     /**
@@ -84,25 +83,19 @@ class SchoolPresenter extends BasePresenter {
         return $this->serviceSchool;
     }
 
-    /**
-     * @return string
-     */
-    protected function getModelResource(): string {
-        return ModelSchool::RESOURCE_ID;
-    }
-
     /** @return SchoolsGrid */
     protected function createComponentGrid(): SchoolsGrid {
-        return new SchoolsGrid($this->serviceSchool);
+        return new SchoolsGrid($this->getContext());
     }
 
     /** @inheritDoc */
     public function createComponentEditForm(): Control {
-        return new EditForm($this->context);
+        return new EditForm($this->getContext());
     }
 
     /** @inheritDoc */
     public function createComponentCreateForm(): Control {
-        return new CreateForm($this->context);
+        return new CreateForm($this->getContext());
     }
+
 }

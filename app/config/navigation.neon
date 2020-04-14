@@ -25,8 +25,7 @@ navigation:
         org.dashboard.default:
             - dispatch.default
             - org.inbox.default
-            - org.inbox.handout
-            - org.points.default
+            - org.points.entry
             - org.tasks.import
             - org.contestant.list
             - common.school.list
@@ -37,7 +36,7 @@ navigation:
             - common.deduplicate.person
             - common.person.search
             - common.dashboard.default
-            -  org.dashboard.default
+            - org.dashboard.default
         common.dashboard.default:
             - common.dashboard.default
             - common.validation.default
@@ -56,10 +55,10 @@ navigation:
             - vyfuk
             - fyziklani
         fyziklani.dashboard.default:
-            - fyziklani.submit.entry
+            - fyziklani.submit.create
             - fyziklani.submit.list
             - fyziklani.close.list
-            - fyziklani.results.default
+            - fyziklani.results.list
             - fyziklani.diplomas.default
             - fyziklani.task.list
             - fyziklani.task.import
@@ -79,15 +78,22 @@ navigation:
             - fyziklani.results.taskStatistics
             - fyziklani.results.correlationStatistics
         event.dashboard.default:
+            - event.teamApplication.list
+            - event.application.list
+            - event.eventOrg.list
+            - event.payment.create
+            - event.payment.list
+            - fyziklani.dashboard.default
+            - event.scheduleGroup.list
+            - event.seating.default
+            - event.model.default
+            - event.chart.list
             - event.dispatch.default
             - event.dashboard.default
-            - event.eventOrg.list
-            - event.payment.list
-            - event.payment.create
-            - fyziklani.dashboard.default
-            - event.schedule.groups
-            - event.application.list
-            - event.teamApplication.list
-            - event.model.default
-            - event.seating.default
-            - event.chart.list
+        org.inbox.default:
+            - org.inbox.list
+            - org.inbox.inbox
+            - org.inbox.handout
+            - org.points.preview
+            - org.points.entry
+            - org.inbox.corrected

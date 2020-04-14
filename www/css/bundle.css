@@ -177,22 +177,26 @@ main.no-bg {
 .bg-fyziklani {
   background-color: #f44336; }
 
-[data-contest~="event-type-1"] .navigation-item .card {
+[data-contest~="event-type-1"] .navigation-item {
   height: 12rem;
   width: 12rem;
-  border-color: #f44336;
-  border-radius: 0;
+  text-align: center;
+  color: #f44336;
   background-color: white;
-  transition-duration: 200ms;
-  color: #f44336; }
-  [data-contest~="event-type-1"] .navigation-item .card a {
-    color: #f44336; }
-  [data-contest~="event-type-1"] .navigation-item .card:hover, [data-contest~="event-type-1"] .navigation-item .card:focus {
+  transition-duration: 200ms; }
+  [data-contest~="event-type-1"] .navigation-item .icon {
+    font-size: 5rem; }
+  [data-contest~="event-type-1"] .navigation-item:hover, [data-contest~="event-type-1"] .navigation-item:focus {
     transition-duration: 200ms;
     background-color: #f44336;
     color: white; }
-    [data-contest~="event-type-1"] .navigation-item .card:hover a, [data-contest~="event-type-1"] .navigation-item .card:focus a {
-      color: white; }
+  @media (max-width: 767px) {
+    [data-contest~="event-type-1"] .navigation-item {
+      text-align: start;
+      height: initial;
+      width: 100%; }
+      [data-contest~="event-type-1"] .navigation-item .icon, [data-contest~="event-type-1"] .navigation-item {
+        font-size: 1.2rem; } }
 
 .btn-fyziklani:hover {
   color: #fff;
@@ -218,6 +222,9 @@ hr.fyziklani-hr-red {
 .badge-fyziklani {
   background-color: #f44336;
   color: white; }
+
+.bg-fol {
+  background-color: #18f3bd; }
 
 .inbox-field {
   display: block;
@@ -515,75 +522,97 @@ body {
 .bg-fykos {
   background-color: #1175da; }
 
-.navigation-item .card {
+.navigation-item {
   height: 12rem;
   width: 12rem;
-  border-color: black;
-  border-radius: 0;
+  text-align: center;
+  color: black;
   background-color: white;
-  transition-duration: 200ms;
-  color: black; }
-  .navigation-item .card a {
-    color: black; }
-  .navigation-item .card:hover, .navigation-item .card:focus {
+  transition-duration: 200ms; }
+  .navigation-item .icon {
+    font-size: 5rem; }
+  .navigation-item:hover, .navigation-item:focus {
     transition-duration: 200ms;
     background-color: black;
     color: white; }
-    .navigation-item .card:hover a, .navigation-item .card:focus a {
-      color: white; }
+  @media (max-width: 767px) {
+    .navigation-item {
+      text-align: start;
+      height: initial;
+      width: 100%; }
+      .navigation-item .icon, .navigation-item {
+        font-size: 1.2rem; } }
 
-[data-contest~="fykos"] .navigation-item .card {
+[data-contest~="fykos"] .navigation-item {
   height: 12rem;
   width: 12rem;
-  border-color: #1175da;
-  border-radius: 0;
+  text-align: center;
+  color: #1175da;
   background-color: white;
-  transition-duration: 200ms;
-  color: #1175da; }
-  [data-contest~="fykos"] .navigation-item .card a {
-    color: #1175da; }
-  [data-contest~="fykos"] .navigation-item .card:hover, [data-contest~="fykos"] .navigation-item .card:focus {
+  transition-duration: 200ms; }
+  [data-contest~="fykos"] .navigation-item .icon {
+    font-size: 5rem; }
+  [data-contest~="fykos"] .navigation-item:hover, [data-contest~="fykos"] .navigation-item:focus {
     transition-duration: 200ms;
     background-color: #1175da;
     color: white; }
-    [data-contest~="fykos"] .navigation-item .card:hover a, [data-contest~="fykos"] .navigation-item .card:focus a {
-      color: white; }
+  @media (max-width: 767px) {
+    [data-contest~="fykos"] .navigation-item {
+      text-align: start;
+      height: initial;
+      width: 100%; }
+      [data-contest~="fykos"] .navigation-item .icon, [data-contest~="fykos"] .navigation-item {
+        font-size: 1.2rem; } }
 
-[data-contest~="vyfuk"] .navigation-item .card {
+[data-contest~="vyfuk"] .navigation-item {
   height: 12rem;
   width: 12rem;
-  border-color: #ff4800;
-  border-radius: 0;
+  text-align: center;
+  color: #ff4800;
   background-color: white;
-  transition-duration: 200ms;
-  color: #ff4800; }
-  [data-contest~="vyfuk"] .navigation-item .card a {
-    color: #ff4800; }
-  [data-contest~="vyfuk"] .navigation-item .card:hover, [data-contest~="vyfuk"] .navigation-item .card:focus {
+  transition-duration: 200ms; }
+  [data-contest~="vyfuk"] .navigation-item .icon {
+    font-size: 5rem; }
+  [data-contest~="vyfuk"] .navigation-item:hover, [data-contest~="vyfuk"] .navigation-item:focus {
     transition-duration: 200ms;
     background-color: #ff4800;
     color: white; }
-    [data-contest~="vyfuk"] .navigation-item .card:hover a, [data-contest~="vyfuk"] .navigation-item .card:focus a {
-      color: white; }
+  @media (max-width: 767px) {
+    [data-contest~="vyfuk"] .navigation-item {
+      text-align: start;
+      height: initial;
+      width: 100%; }
+      [data-contest~="vyfuk"] .navigation-item .icon, [data-contest~="vyfuk"] .navigation-item {
+        font-size: 1.2rem; } }
+
+[data-contest~="fykos"] .bg-contest {
+  background-color: #1175da; }
+
+[data-contest~="vyfuk"] .bg-contest {
+  background-color: #ff4800; }
 
 [data-contest~="theme-dark"] {
   color: #fff; }
-  [data-contest~="theme-dark"] .navigation-item .card {
+  [data-contest~="theme-dark"] .navigation-item {
     height: 12rem;
     width: 12rem;
-    border-color: #2ed739;
-    border-radius: 0;
+    text-align: center;
+    color: #2ed739;
     background-color: black;
-    transition-duration: 200ms;
-    color: #2ed739; }
-    [data-contest~="theme-dark"] .navigation-item .card a {
-      color: #2ed739; }
-    [data-contest~="theme-dark"] .navigation-item .card:hover, [data-contest~="theme-dark"] .navigation-item .card:focus {
+    transition-duration: 200ms; }
+    [data-contest~="theme-dark"] .navigation-item .icon {
+      font-size: 5rem; }
+    [data-contest~="theme-dark"] .navigation-item:hover, [data-contest~="theme-dark"] .navigation-item:focus {
       transition-duration: 200ms;
       background-color: #2ed739;
       color: black; }
-      [data-contest~="theme-dark"] .navigation-item .card:hover a, [data-contest~="theme-dark"] .navigation-item .card:focus a {
-        color: black; }
+    @media (max-width: 767px) {
+      [data-contest~="theme-dark"] .navigation-item {
+        text-align: start;
+        height: initial;
+        width: 100%; }
+        [data-contest~="theme-dark"] .navigation-item .icon, [data-contest~="theme-dark"] .navigation-item {
+          font-size: 1.2rem; } }
   [data-contest~="theme-dark"] main {
     background-color: black; }
   [data-contest~="theme-dark"] .bg-white-container {
@@ -707,6 +736,24 @@ body[data-contest="vyfuk"] h1, body[data-contest="vyfuk"] h2, body[data-contest=
   color: black;
   background-color: #17becf; }
 
+.drop-input {
+  background-color: white;
+  padding: .5rem; }
+  .drop-input.dragged {
+    background-color: #1175da;
+    color: white; }
+    .drop-input.dragged .drop-input-inner {
+      border-color: white; }
+  .drop-input .drop-input-inner {
+    border: gray dashed; }
+
+@keyframes upload {
+  0% {
+    opacity: .5; }
+  50% {
+    opacity: 1; }
+  100% {
+    opacity: .5; } }
 .chart.chart-participant-acquaintance text, .chart.chart-participant-acquaintance path {
   transition-duration: .7s; }
 .chart.chart-participant-acquaintance path.arc.active {
@@ -720,32 +767,6 @@ body[data-contest="vyfuk"] h1, body[data-contest="vyfuk"] h2, body[data-contest=
 .chart.chart-participant-acquaintance path.ribbon.inactive {
   opacity: 0; }
 
-.drop-input {
-  background-color: white;
-  padding: 0.5rem;
-}
-.drop-input.dragged {
-  background-color: #1175da;
-  color: white;
-}
-.drop-input.dragged .drop-input-inner {
-  border-color: white;
-}
-.drop-input .drop-input-inner {
-  border: gray dashed;
-}
-
-@keyframes upload {
-  0% {
-    opacity: 0.5;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0.5;
-  }
-}
 .bg-white-container {
   background-color: rgba(255, 255, 255, 0.85); }
 

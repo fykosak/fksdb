@@ -4,12 +4,9 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\Components\Control\AjaxUpload\SubmitDownloadTrait;
 use FKSDB\Components\Control\AjaxUpload\SubmitRevokeTrait;
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Services\ServiceSubmit;
-use FKSDB\Submits\FilesystemCorrectedSubmitStorage;
-use FKSDB\Submits\FilesystemUploadedSubmitStorage;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
@@ -29,17 +26,10 @@ class SubmitsGrid extends BaseGrid {
     /** @var ServiceSubmit */
     private $submitService;
 
-    /** @var FilesystemUploadedSubmitStorage */
-    private $filesystemSubmitUploadedStorage;
-
     /**
      * @var ModelContestant
      */
     private $contestant;
-    /**
-     * @var FilesystemCorrectedSubmitStorage
-     */
-    private $filesystemCorrectedSubmitStorage;
 
     /**
      * SubmitsGrid constructor.
@@ -47,32 +37,9 @@ class SubmitsGrid extends BaseGrid {
      * @param ModelContestant $contestant
      */
     function __construct(Container $container, ModelContestant $contestant) {
-        parent::__construct($container->getByType(TableReflectionFactory::class));
-        $this->filesystemCorrectedSubmitStorage = $container->getByType(FilesystemCorrectedSubmitStorage::class);
+        parent::__construct($container);
         $this->submitService = $container->getByType(ServiceSubmit::class);
-        $this->filesystemSubmitUploadedStorage = $container->getByType(FilesystemUploadedSubmitStorage::class);
         $this->contestant = $contestant;
-    }
-
-    /**
-     * @return ServiceSubmit
-     */
-    protected function getServiceSubmit(): ServiceSubmit {
-        return $this->submitService;
-    }
-
-    /**
-     * @return FilesystemUploadedSubmitStorage
-     */
-    protected function getSubmitUploadedStorage(): FilesystemUploadedSubmitStorage {
-        return $this->filesystemSubmitUploadedStorage;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getSubmitCorrectedStorage(): FilesystemCorrectedSubmitStorage {
-        return $this->filesystemCorrectedSubmitStorage;
     }
 
     /**
@@ -94,7 +61,7 @@ class SubmitsGrid extends BaseGrid {
         //
         // columns
         //
-        $this->addColumn('task', _('Úloha'))
+        $this->addColumn('task', _('Task'))
             ->setRenderer(function (ModelSubmit $row) use ($presenter) {
                 return $row->getTask()->getFQName();
             });
@@ -104,9 +71,9 @@ class SubmitsGrid extends BaseGrid {
         //
         // operations
         //
-        $this->addButton('revoke', _('Zrušit'))
+        $this->addButton('revoke', _('Cancel'))
             ->setClass('btn btn-sm btn-warning')
-            ->setText(_('Zrušit'))
+            ->setText(_('Cancel'))
             ->setShow(function ($row) {
                 return $this->canRevoke($row);
             })
@@ -136,7 +103,7 @@ class SubmitsGrid extends BaseGrid {
      * @throws InvalidLinkException
      */
     public function handleRevoke(int $id) {
-        list($message,) = $this->traitHandleRevoke($id);
+        list($message) = $this->traitHandleRevoke($id);
         $this->flashMessage($message->getMessage(), $message->getLevel());
     }
 

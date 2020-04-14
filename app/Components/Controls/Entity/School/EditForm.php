@@ -58,9 +58,7 @@ class EditForm extends AbstractForm implements IEditEntityForm {
         $address = $school->getAddress();
 
         try {
-            if (!$connection->beginTransaction()) {
-                throw new \ModelException();
-            }
+            $connection->beginTransaction();
 
             /* Address */
             $data = \FormUtils::emptyStrToNull($values[self::CONT_ADDRESS]);
@@ -71,9 +69,7 @@ class EditForm extends AbstractForm implements IEditEntityForm {
             $this->serviceSchool->updateModel2($school, $data);
 
             /* Finalize */
-            if (!$connection->commit()) {
-                throw new \ModelException();
-            }
+            $connection->commit();
 
             $this->getPresenter()->flashMessage(_('Škola upravena'), \BasePresenter::FLASH_SUCCESS);
             $this->getPresenter()->redirect('list');

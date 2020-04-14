@@ -3,7 +3,7 @@
 namespace EventModule;
 
 use AuthenticatedPresenter;
-use FKSDB\Components\Controls\Helpers\Badges\ContestBadge;
+use FKSDB\Components\Controls\Badges\ContestBadge;
 use FKSDB\Components\Grids\Events\DispatchGrid;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceEvent;
@@ -41,12 +41,11 @@ class DispatchPresenter extends AuthenticatedPresenter {
          * @var ModelPerson $person
          */
         $person = $this->user->getIdentity()->getPerson();
-        return new DispatchGrid($this->serviceEvent, $person, $this->yearCalculator);
+        return new DispatchGrid($person, $this->getContext());
     }
 
     public function titleDefault() {
-        $this->setTitle(_('List of events'));
-        $this->setIcon('fa fa-calendar');
+        $this->setTitle(_('List of events'),'fa fa-calendar');
     }
 
     /**

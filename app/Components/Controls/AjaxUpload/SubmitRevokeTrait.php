@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Control\AjaxUpload;
 
+use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Services\ServiceSubmit;
@@ -9,30 +10,15 @@ use FKSDB\Submits\FilesystemUploadedSubmitStorage;
 use FKSDB\Submits\StorageException;
 use ModelException;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\DI\Container;
 use PublicModule\SubmitPresenter;
 use Tracy\Debugger;
-use function sprintf;
 
 /**
  * Trait SubmitRevokeTrait
  * @package FKSDB\Components\Control\AjaxUpload
  */
 trait SubmitRevokeTrait {
-    /**
-     * @return ServiceSubmit
-     */
-    abstract protected function getServiceSubmit(): ServiceSubmit;
-
-    /**
-     * @param bool $need
-     * @return SubmitPresenter
-     */
-    abstract protected function getPresenter($need = true);
-
-    /**
-     * @return FilesystemUploadedSubmitStorage
-     */
-    abstract protected function getSubmitUploadedStorage(): FilesystemUploadedSubmitStorage;
 
     /**
      * @param int $submitId
@@ -40,34 +26,35 @@ trait SubmitRevokeTrait {
      * @throws InvalidLinkException
      */
     public function traitHandleRevoke(int $submitId): array {
-
-        /**
-         * @var ModelSubmit $submit
-         */
-        $submit = $this->getServiceSubmit()->findByPrimary($submitId);
+        /** @var ServiceSubmit $serviceSubmit */
+        $serviceSubmit = $this->getContext()->getByType(ServiceSubmit::class);
+        /** @var FilesystemUploadedSubmitStorage $submitUploadedStorage */
+        $submitUploadedStorage = $this->getContext()->getByType(FilesystemUploadedSubmitStorage::class);
+        /** @var ModelSubmit $submit */
+        $submit = $serviceSubmit->findByPrimary($submitId);
         if (!$submit) {
-            return [new Message(_('Neexistující submit.'), 'danger'), null];
+            return [new Message(_('Neexistující submit.'), ILogger::ERROR), null];
         }
         $contest = $submit->getContestant()->getContest();
         if (!$this->getPresenter()->getContestAuthorizator()->isAllowed($submit, 'revoke', $contest)) {
-            return [new Message(_('Nedostatečné oprávnění.'), 'danger'), null];
+            return [new Message(_('Nedostatečné oprávnění.'), ILogger::ERROR), null];
         }
         if (!$this->canRevoke($submit)) {
-            return [new Message(_('Nelze zrušit submit.'), 'danger'), null];
+            return [new Message(_('Nelze zrušit submit.'), ILogger::ERROR), null];
         }
         try {
-            $this->getSubmitUploadedStorage()->deleteFile($submit);
-            $this->getServiceSubmit()->dispose($submit);
-            $data = $this->getServiceSubmit()->serializeSubmit(null, $submit->getTask(), $this->getPresenter());
+            $submitUploadedStorage->deleteFile($submit);
+            $serviceSubmit->dispose($submit);
+            $data = $serviceSubmit->serializeSubmit(null, $submit->getTask(), $this->getPresenter());
 
-            return [new Message(sprintf('Odevzdání úlohy %s zrušeno.', $submit->getTask()->getFQName()), 'warning'), $data];
+            return [new Message(\sprintf('Odevzdání úlohy %s zrušeno.', $submit->getTask()->getFQName()), ILogger::WARNING), $data];
 
         } catch (StorageException $exception) {
             Debugger::log($exception);
-            return [new Message(_('Během mazání úlohy %s došlo k chybě.'), 'danger'), null];
+            return [new Message(_('Během mazání úlohy %s došlo k chybě.'), ILogger::ERROR), null];
         } catch (ModelException $exception) {
             Debugger::log($exception);
-            return [new Message(_('Během mazání úlohy %s došlo k chybě.'), 'danger'), null];
+            return [new Message(_('Během mazání úlohy %s došlo k chybě.'), ILogger::ERROR), null];
         }
     }
 
@@ -87,4 +74,15 @@ trait SubmitRevokeTrait {
 
         return ($now <= $deadline) && ($now >= $start);
     }
+
+    /**
+     * @param bool $need
+     * @return SubmitPresenter
+     */
+    abstract protected function getPresenter($need = true);
+
+    /**
+     * @return Container
+     */
+    abstract function getContext();
 }

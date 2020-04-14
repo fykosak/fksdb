@@ -22,7 +22,7 @@ class GroupOptions implements IOptionsProvider {
     private $serviceMParticipant;
 
     /**
-     * @var \FKSDB\ORM\Services\Events\ServiceDsefGroup
+     * @var ServiceDsefGroup
      */
     private $serviceDsefGroup;
     private $includeStates;
@@ -37,7 +37,7 @@ class GroupOptions implements IOptionsProvider {
      * @note In NEON instatiate as GroupOptions(..., ['state1'],['state1', 'state2']).
      *
      * @param ServiceMDsefParticipant $serviceMParticipant
-     * @param \FKSDB\ORM\Services\Events\ServiceDsefGroup $serviceDsefGroup
+     * @param ServiceDsefGroup $serviceDsefGroup
      * @param string|array $includeStates any state or array of state
      * @param string|array $excludeStates any state or array of state
      */
@@ -87,8 +87,7 @@ class GroupOptions implements IOptionsProvider {
         $application = $baseHolder->getModel();
         $groups = $this->getGroups($event->getPrimary());
 
-        $selection = $this->serviceMParticipant->getTable()
-            ->getConnection()->table(DbNames::TAB_E_DSEF_PARTICIPANT)
+        $selection = $this->serviceMParticipant->getMainService()->getContext()->table(DbNames::TAB_E_DSEF_PARTICIPANT)
             ->select('e_dsef_group_id, count(event_participant.event_participant_id) AS occupied')
             ->group('e_dsef_group_id')
             ->where('event_id', $event->event_id)

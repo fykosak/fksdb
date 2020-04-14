@@ -4,16 +4,19 @@ namespace OrgModule;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\NotImplementedException;
-use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Models\ModelEventOrg;
 use FKSDB\ORM\Services\ServiceEvent;
 use FKSDB\ORM\Services\ServiceEventOrg;
+use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Persons\ExtendedPersonHandler;
 
 /**
  * Class EventOrgPresenter
  * @package OrgModule
+ * @method ModelEventOrg getModel()
  */
 class EventOrgPresenter extends ExtendedPersonPresenter {
 
@@ -25,12 +28,12 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
     private $serviceEventOrg;
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceEvent
+     * @var ServiceEvent
      */
     private $serviceEvent;
 
     /**
-     * @var \FKSDB\ORM\Models\ModelEvent
+     * @var ModelEvent
      */
     private $modelEvent;
 
@@ -47,7 +50,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
     }
 
     /**
-     * @param \FKSDB\ORM\Services\ServiceEvent $serviceEvent
+     * @param ServiceEvent $serviceEvent
      */
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;
@@ -55,19 +58,17 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
 
     public function titleEdit() {
         $model = $this->getModel();
-        $this->setTitle(sprintf(_('Úprava organizátora %s akce %s'), $model->getPerson()->getFullname(), $model->getEvent()->name));
-        $this->setIcon('fa fa-user');
+        $this->setTitle(sprintf(_('Úprava organizátora %s akce %s'), $model->getPerson()->getFullName(), $model->getEvent()->name), 'fa fa-user');
     }
 
     public function titleCreate() {
-        $this->setTitle(sprintf(_('Založit organizátora akce %s'), $this->getEvent()->name));
-        $this->setIcon('fa fa-user-plus');
+        $this->setTitle(sprintf(_('Založit organizátora akce %s'), $this->getEvent()->name), 'fa fa-user-plus');
     }
 
     /**
      * @param $id
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function renderEdit($id) {
         parent::renderEdit($id);
@@ -82,7 +83,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
 
     /**
      * @param $id
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function actionDelete(int $id) {
         $success = $this->serviceEventOrg->getTable()->wherePrimary($id)->delete();
@@ -92,15 +93,6 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
             $this->flashMessage(_('Nepodařilo se smazat organizátora akce.'), self::FLASH_ERROR);
         }
         $this->redirect('list');
-    }
-
-    /**
-     * @param \FKSDB\ORM\IModel|null $model
-     * @param Form $form
-     */
-    protected function setDefaults(IModel $model = null, Form $form) {
-        parent::setDefaults($model, $form);
-        //$form[ExtendedPersonHandler::CONT_MODEL]->setDefaults([]);
     }
 
     /**
@@ -151,11 +143,11 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
     }
 
     /**
-     * @return \FKSDB\ORM\Models\ModelEvent
+     * @return ModelEvent
      */
     private function getEvent(): ModelEvent {
         if (!$this->modelEvent) {
-            $this->modelEvent = ModelEvent::createFromActiveRow($this->serviceEvent->findByPrimary($this->eventId));
+            $this->modelEvent = $this->serviceEvent->findByPrimary($this->eventId);
         }
         return $this->modelEvent;
     }
@@ -164,7 +156,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
      * @inheritDoc
      * @throws NotImplementedException
      */
-    protected function createComponentGrid($name) {
+    protected function createComponentGrid() {
         throw new NotImplementedException();
     }
 

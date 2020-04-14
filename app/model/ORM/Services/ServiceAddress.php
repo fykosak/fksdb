@@ -9,8 +9,8 @@ use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelAddress;
 use FKSDB\ORM\Models\ModelRegion;
 use InvalidPostalCode;
-use Tracy\Debugger;
 use Nette\InvalidArgumentException;
+use Tracy\Debugger;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -45,8 +45,8 @@ class ServiceAddress extends AbstractServiceSingle {
     }
 
     /**
-     * @param \FKSDB\ORM\IModel $model
-     * @return mixed|void
+     * @param IModel $model
+     * @return void
      * @deprecated
      */
     public function save(IModel &$model) {
@@ -54,10 +54,8 @@ class ServiceAddress extends AbstractServiceSingle {
         if (!$model instanceof $modelClassName) {
             throw new InvalidArgumentException('Service for class ' . $this->getModelClassName() . ' cannot store ' . get_class($model));
         }
-        /**
-         * @var \FKSDB\ORM\Models\ModelAddress $model
-         */
-        if (!isset($model->region_id)) {
+        /** @var ModelAddress $model */
+        if (is_null($model->region_id)) {
             $model->region_id = $this->inferRegion($model->postal_code);
         }
         parent::save($model);
@@ -77,7 +75,7 @@ class ServiceAddress extends AbstractServiceSingle {
         if (!preg_match(self::PATTERN, $postalCode)) {
             throw new InvalidPostalCode($postalCode);
         }
-        $row = $this->getTable()->getConnection()->table(DbNames::TAB_PSC_REGION)->where('psc = ?', $postalCode)->fetch();
+        $row = $this->getContext()->table(DbNames::TAB_PSC_REGION)->where('psc = ?', $postalCode)->fetch();
         if ($row) {
             return $row->region_id;
         } else {
@@ -89,7 +87,7 @@ class ServiceAddress extends AbstractServiceSingle {
 
             if (in_array($firstChar, ['1', '2', '3', '4', '5', '6', '7'])) {
                 return ModelRegion::CZECH_REPUBLIC;
-            } else if (in_array($firstChar, ['8', '9', '0'])) {
+            } elseif (in_array($firstChar, ['8', '9', '0'])) {
                 return ModelRegion::SLOVAKIA;
             } else {
                 throw new InvalidPostalCode($postalCode);
@@ -110,5 +108,4 @@ class ServiceAddress extends AbstractServiceSingle {
             return false;
         }
     }
-
 }

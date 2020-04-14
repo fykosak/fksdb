@@ -57,7 +57,7 @@ class ServiceSchedulePayment extends AbstractServiceSingle {
                 $row->delete();
             }
         }
-        if (!$this->connection->inTransaction()) {
+        if (!$this->getConnection()->getPdo()->inTransaction()) {
             throw new StorageException(_('Not in transaction!'));
         }
         foreach ($newScheduleIds as $id) {
