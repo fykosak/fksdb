@@ -1,10 +1,10 @@
 <?php
 
-namespace Events\Processings;
+namespace FKSDB\Events\Processings;
 
-use Events\Machine\BaseMachine;
-use Events\Machine\Machine;
-use Events\Model\Holder\Holder;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Logging\ILogger;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Form;

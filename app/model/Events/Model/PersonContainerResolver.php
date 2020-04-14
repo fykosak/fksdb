@@ -1,8 +1,8 @@
 <?php
 
-namespace Events\Model;
+namespace FKSDB\Events\Model;
 
-use Events\Model\Holder\Field;
+use FKSDB\Events\Model\Holder\Field;
 use FKSDB\ORM\Models\ModelPerson;
 use Nette\SmartObject;
 use Persons\IModifiabilityResolver;

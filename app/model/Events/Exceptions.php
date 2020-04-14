@@ -1,8 +1,8 @@
 <?php
 
-namespace Events;
+namespace FKSDB\Events;
 
-use Events\Machine\Transition;
+use FKSDB\Events\Machine\Transition;
 use Nette\InvalidArgumentException;
 use RuntimeException;
 use Traversable;

@@ -2,8 +2,8 @@
 
 namespace EventModule;
 
-use Events\Model\ApplicationHandlerFactory;
-use Events\Model\Grid\SingleEventSource;
+use FKSDB\Events\Model\ApplicationHandlerFactory;
+use FKSDB\Events\Model\Grid\SingleEventSource;
 use FKSDB\Components\Events\ApplicationComponent;
 use FKSDB\Components\Events\MassTransitionsControl;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;

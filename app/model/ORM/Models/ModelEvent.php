@@ -2,7 +2,7 @@
 
 namespace FKSDB\ORM\Models;
 
-use Events\Model\Holder\Holder;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\model\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;

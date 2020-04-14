@@ -1,13 +1,13 @@
 <?php
 
-namespace Events\Machine;
+namespace FKSDB\Events\Machine;
 
-use Events\Model\ExpressionEvaluator;
-use Events\Model\Holder\BaseHolder;
-use Events\Model\Holder\Holder;
-use Events\TransitionConditionFailedException;
-use Events\TransitionOnExecutedException;
-use Events\TransitionUnsatisfiedTargetException;
+use FKSDB\Events\Model\ExpressionEvaluator;
+use FKSDB\Events\Model\Holder\BaseHolder;
+use FKSDB\Events\Model\Holder\Holder;
+use FKSDB\Events\TransitionConditionFailedException;
+use FKSDB\Events\TransitionOnExecutedException;
+use FKSDB\Events\TransitionUnsatisfiedTargetException;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace Events\Semantics;
+namespace FKSDB\Events\Semantics;
 
-use Events\Model\Holder\BaseHolder;
+use FKSDB\Events\Model\Holder\BaseHolder;
 use Nette\Application\BadRequestException;
 use Nette\SmartObject;
 

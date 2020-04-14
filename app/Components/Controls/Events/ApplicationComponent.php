@@ -2,11 +2,11 @@
 
 namespace FKSDB\Components\Events;
 
-use Events\Machine\BaseMachine;
-use Events\Machine\Machine;
-use Events\Model\ApplicationHandler;
-use Events\Model\ApplicationHandlerException;
-use Events\Model\Holder\Holder;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\ApplicationHandler;
+use FKSDB\Events\Model\ApplicationHandlerException;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Logging\FlashMessageDump;
 use Nette\Application\AbortException;

@@ -55,7 +55,7 @@ events:
                         condition: %events.dsef2_1.appCond%
                         label: Přihlásit účastníka
                         onExecuted:
-                            - Events\Transitions\MailSender(confirmation, .self)
+                            - FKSDB\Events\Transitions\MailSender(confirmation, .self)
                     applied->participated:
                         condition: and(role('admin'),eventWas())
                         label: Prezentovat
@@ -82,7 +82,7 @@ events:
                         label: Preferovaná skupina
                         required: true
                         modifiable: %events.dsef2_1.appCond%
-                        factory: Chooser(Zvolit skupinu, Events\Spec\Dsef\GroupOptions())
+                        factory: Chooser(Zvolit skupinu, FKSDB\Events\Spec\Dsef\GroupOptions())
                     accomodation:
                         label: Ubytování
                         description: %events.dsef2_1.accomodation%
@@ -111,8 +111,8 @@ events:
                     required: true # default false, it's conjuction with fields requirement
                     primary: true # base machine states are propagated to the machine
             formAdjustments:
-                - Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
-                - Events\FormAdjustments\ResourceAvailability('participant.accomodation', accomodationCapacity, 'Kapacita ubytování je již vyčerpána.')
+                - FKSDB\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
+                - FKSDB\Events\FormAdjustments\ResourceAvailability('participant.accomodation', accomodationCapacity, 'Kapacita ubytování je již vyčerpána.')
                 - @events.privacyPolicy
                 - @events.captcha
 

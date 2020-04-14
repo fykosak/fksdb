@@ -1,6 +1,6 @@
 <?php
 
-namespace Events\Model\Holder;
+namespace FKSDB\Events\Model\Holder;
 
 use Nette\SmartObject;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Events\Semantics;
+namespace FKSDB\Events\Semantics;
 
 use FKSDB\Expressions\EvaluatedExpression;
 use Nette\Application\BadRequestException;

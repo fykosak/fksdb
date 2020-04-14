@@ -1,7 +1,7 @@
 {layout '../../app/Components/Controls/Events/ApplicationComponent.form.latte'}
 
 {block content}
-{if $holder->getPrimaryHolder()->getModelState() == '__init' && !$control->isEventAdmin()}
+{if $holder->getPrimaryHolder()->getModelState() == FKSDB\Events\Machine\BaseMachine::STATE_INIT && !$control->isEventAdmin()}
 <ul>
     <li>
         Podrobné informace jsou k nalezení na stránce <a href="http://dsef.cz/">Dne s experimentální fyzikou</a>.

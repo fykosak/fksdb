@@ -48,7 +48,7 @@ events:
                         label: Preferovaná skupina
                         required: true
                         modifiable: %events.dsef1.appCond%
-                        factory: Chooser(Zvolit skupinu, Events\Spec\Dsef\GroupOptions())
+                        factory: Chooser(Zvolit skupinu, FKSDB\Events\Spec\Dsef\GroupOptions())
                     lunch_count:
                         label:  Počet baget k obědu
                         modifiable: %events.dsef1.appCond%
@@ -70,7 +70,7 @@ events:
                     required: true # default false, it's conjuction with fields requirement
                     primary: true # base machine states are propagated to the machine
             formAdjustments:
-                - Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
+                - FKSDB\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 - @events.privacyPolicy
                 - @events.captcha
 

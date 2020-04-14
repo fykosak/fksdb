@@ -3,12 +3,12 @@
 namespace PublicModule;
 
 use Authorization\RelatedPersonAuthorizator;
-use Events\Machine\BaseMachine;
-use Events\Machine\Machine;
-use Events\Model\ApplicationHandlerFactory;
-use Events\Model\Grid\InitSource;
-use Events\Model\Grid\RelatedPersonSource;
-use Events\Model\Holder\Holder;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\ApplicationHandlerFactory;
+use FKSDB\Events\Model\Grid\InitSource;
+use FKSDB\Events\Model\Grid\RelatedPersonSource;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\Components\Events\ApplicationComponent;
 use FKSDB\Components\Events\ApplicationsGrid;

@@ -1,8 +1,8 @@
 <?php
 
-namespace Events\Model\Grid;
+namespace FKSDB\Events\Model\Grid;
 
-use Events\Model\Holder\Holder;
+use FKSDB\Events\Model\Holder\Holder;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

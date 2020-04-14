@@ -1,9 +1,9 @@
 <?php
 
-namespace Events\Model;
+namespace FKSDB\Events\Model;
 
-use Events\Model\Grid\SingleEventSource;
-use Events\Model\Holder\BaseHolder;
+use FKSDB\Events\Model\Grid\SingleEventSource;
+use FKSDB\Events\Model\Holder\BaseHolder;
 use FKSDB\Utils\CSVParser;
 use Nette\DI\Container;
 use Nette\SmartObject;

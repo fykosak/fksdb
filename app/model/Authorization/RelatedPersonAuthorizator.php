@@ -2,8 +2,8 @@
 
 namespace Authorization;
 
-use Events\Machine\BaseMachine;
-use Events\Model\Holder\Holder;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Model\Holder\Holder;
 use Nette\Security\IUserStorage;
 use Nette\SmartObject;
 

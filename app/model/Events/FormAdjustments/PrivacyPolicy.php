@@ -1,11 +1,11 @@
 <?php
 
-namespace Events\FormAdjustments;
+namespace FKSDB\Events\FormAdjustments;
 
-use Events\Machine\BaseMachine;
-use Events\Machine\Machine;
-use Events\Model\Holder\Holder;
-use Events\Processings\IProcessing;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\Holder\Holder;
+use FKSDB\Events\Processings\IProcessing;
 use FKSDB\Components\Forms\Factories\PersonInfoFactory;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Services\ServicePersonInfo;

@@ -2,11 +2,11 @@
 
 namespace FKSDB\Components\Events;
 
-use Events\Machine\Machine;
-use Events\Model\ApplicationHandler;
-use Events\Model\ApplicationHandlerFactory;
-use Events\Model\Grid\IHolderSource;
-use Events\Model\Holder\Holder;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\ApplicationHandler;
+use FKSDB\Events\Model\ApplicationHandlerFactory;
+use FKSDB\Events\Model\Grid\IHolderSource;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelEvent;

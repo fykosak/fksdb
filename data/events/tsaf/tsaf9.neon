@@ -72,34 +72,34 @@ events:
                         condition: role('admin')
                         label: Pozvat účastníka
                         onExecuted:
-                            - Events\Transitions\MailSender(tsaf/invited, .self)
+                            - FKSDB\Events\Transitions\MailSender(tsaf/invited, .self)
                     auto.invited->invited: # this must be duplicate of __init->invited
                         condition: role('admin')
                         label: Pozvat účastníka
                         onExecuted:
-                            - Events\Transitions\MailSender(tsaf/invited, .self)
+                            - FKSDB\Events\Transitions\MailSender(tsaf/invited, .self)
                     # to spare
                     __init->spare:
                         condition: %events.tsaf9.appCond%
                         label: Přihlásit náhradníka
                         onExecuted:
-                            - Events\Transitions\MailSender(confirmation, .self)
+                            - FKSDB\Events\Transitions\MailSender(confirmation, .self)
                     # to applied
                     __init->applied:
                         condition: and(role('admin'),le(count('applied'),parameter('capacity')))
                         label: Přihlásit účastníka
                         onExecuted:
-                            - Events\Transitions\MailSender(confirmation, .self)
+                            - FKSDB\Events\Transitions\MailSender(confirmation, .self)
                     spare->applied:
                         condition: and(role('admin'),le(count('applied'),parameter('capacity')))
                         label: Potvrdit účastníka
                         onExecuted:
-                            - Events\Transitions\MailSender(transition, self)
+                            - FKSDB\Events\Transitions\MailSender(transition, self)
                     invited->applied:
                         condition: and(or(regOpen(),role('admin')),le(count('applied'),parameter('capacity')))
                         label: Potvrdit účast
                         onExecuted:
-                            - Events\Transitions\MailSender(transition, self)
+                            - FKSDB\Events\Transitions\MailSender(transition, self)
                     # to end-states
                     applied|applied.nodsef->participated:
                         condition: and(role('admin'),eventWas())
@@ -164,7 +164,7 @@ events:
         #   explanation: machine consists of several instances of base machines
         #
         machine:
-            secondaryModelStrategy: Events\Model\Holder\SecondaryModelStrategies\CarefulRewrite(['status'])
+            secondaryModelStrategy: FKSDB\Events\Model\Holder\SecondaryModelStrategies\CarefulRewrite(['status'])
             baseMachines:
                 participantTsaf:
                     bmName: PARTICIPANT_TSAF
@@ -176,7 +176,7 @@ events:
                     label: DSEF
 
             formAdjustments:
-                - Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
+                - FKSDB\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 - @events.privacyPolicy
                 - @events.captcha
 

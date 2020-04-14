@@ -1,6 +1,6 @@
 <?php
 
-namespace Events\Accommodation;
+namespace FKSDB\Events\Accommodation;
 
 use Nette\Application\Responses\TextResponse;
 use Tester\Assert;

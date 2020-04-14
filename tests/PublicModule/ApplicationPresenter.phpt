@@ -2,7 +2,7 @@
 
 $container = require '../bootstrap.php';
 
-use Events\EventTestCase;
+use FKSDB\Events\EventTestCase;
 use Nette\Application\BadRequestException;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;

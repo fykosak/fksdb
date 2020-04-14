@@ -2,7 +2,7 @@
 
 namespace EventModule;
 
-use Events\Model\Grid\SingleEventSource;
+use FKSDB\Events\Model\Grid\SingleEventSource;
 use FKSDB\Components\Events\ImportComponent;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
 use FKSDB\Components\Grids\Events\Application\ApplicationGrid;

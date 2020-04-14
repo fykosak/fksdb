@@ -1,6 +1,6 @@
 <?php
 
-namespace Events\Machine;
+namespace FKSDB\Events\Machine;
 
 use Nette\InvalidArgumentException;
 

@@ -1,20 +1,20 @@
 <?php
 
-namespace Events;
+namespace FKSDB\Events;
 
-use Events\Machine\BaseMachine;
-use Events\Machine\Machine;
-use Events\Machine\Transition;
-use Events\Model\Holder\BaseHolder;
-use Events\Model\Holder\Field;
-use Events\Model\Holder\Holder;
-use Events\Model\Holder\SameYearEvent;
-use Events\Semantics\Count;
-use Events\Semantics\EventWas;
-use Events\Semantics\Parameter;
-use Events\Semantics\RegOpen;
-use Events\Semantics\Role;
-use Events\Semantics\State;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Machine\Transition;
+use FKSDB\Events\Model\Holder\BaseHolder;
+use FKSDB\Events\Model\Holder\Field;
+use FKSDB\Events\Model\Holder\Holder;
+use FKSDB\Events\Model\Holder\SameYearEvent;
+use FKSDB\Events\Semantics\Count;
+use FKSDB\Events\Semantics\EventWas;
+use FKSDB\Events\Semantics\Parameter;
+use FKSDB\Events\Semantics\RegOpen;
+use FKSDB\Events\Semantics\Role;
+use FKSDB\Events\Semantics\State;
 use FKSDB\Components\Forms\Factories\Events\ArrayOptions;
 use FKSDB\Components\Forms\Factories\Events\CheckboxFactory;
 use FKSDB\Components\Forms\Factories\Events\ChooserFactory;

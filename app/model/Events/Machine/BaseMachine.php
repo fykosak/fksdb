@@ -1,8 +1,8 @@
 <?php
 
-namespace Events\Machine;
+namespace FKSDB\Events\Machine;
 
-use Events\Model\Holder\Holder;
+use FKSDB\Events\Model\Holder\Holder;
 use Nette\InvalidArgumentException;
 
 /**

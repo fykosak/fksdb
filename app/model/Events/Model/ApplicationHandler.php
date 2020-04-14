@@ -1,16 +1,16 @@
 <?php
 
-namespace Events\Model;
+namespace FKSDB\Events\Model;
 
 use DuplicateApplicationException;
-use Events\Machine\BaseMachine;
-use Events\Machine\Machine;
-use Events\Machine\Transition;
-use Events\MachineExecutionException;
-use Events\Model\Holder\BaseHolder;
-use Events\Model\Holder\Holder;
-use Events\Model\Holder\SecondaryModelStrategies\SecondaryModelDataConflictException;
-use Events\SubmitProcessingException;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Machine\Transition;
+use FKSDB\Events\MachineExecutionException;
+use FKSDB\Events\Model\Holder\BaseHolder;
+use FKSDB\Events\Model\Holder\Holder;
+use FKSDB\Events\Model\Holder\SecondaryModelStrategies\SecondaryModelDataConflictException;
+use FKSDB\Events\SubmitProcessingException;
 use Exception;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
 use FKSDB\Components\Forms\Controls\ReferencedId;

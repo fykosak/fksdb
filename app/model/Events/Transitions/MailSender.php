@@ -1,13 +1,13 @@
 <?php
 
-namespace Events\Transitions;
+namespace FKSDB\Events\Transitions;
 
-use Events\Model\Holder\Holder;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Authentication\AccountManager;
-use Events\Machine\BaseMachine;
-use Events\Machine\Machine;
-use Events\Machine\Transition;
-use Events\Model\Holder\BaseHolder;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Machine\Transition;
+use FKSDB\Events\Model\Holder\BaseHolder;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelEvent;

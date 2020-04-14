@@ -1,14 +1,14 @@
 <?php
 
-namespace Events\Model\Holder;
+namespace FKSDB\Events\Model\Holder;
 
-use Events\FormAdjustments\IFormAdjustment;
-use Events\Machine\BaseMachine;
-use Events\Machine\Machine;
-use Events\Machine\Transition;
-use Events\Model\Holder\SecondaryModelStrategies\SecondaryModelStrategy;
-use Events\Processings\GenKillProcessing;
-use Events\Processings\IProcessing;
+use FKSDB\Events\FormAdjustments\IFormAdjustment;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Machine\Transition;
+use FKSDB\Events\Model\Holder\SecondaryModelStrategies\SecondaryModelStrategy;
+use FKSDB\Events\Processings\GenKillProcessing;
+use FKSDB\Events\Processings\IProcessing;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\IModel;
 use Nette\Application\UI\Form;

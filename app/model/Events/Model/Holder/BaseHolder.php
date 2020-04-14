@@ -1,9 +1,13 @@
 <?php
 
-namespace Events\Model\Holder;
+namespace FKSDB\Events\Model\Holder;
 
-use Events\Machine\BaseMachine;
-use Events\Model\ExpressionEvaluator;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Model\ExpressionEvaluator;
+use FKSDB\Events\Model\Holder\DataValidator;
+use FKSDB\Events\Model\Holder\Field;
+use FKSDB\Events\Model\Holder\Holder;
+use FKSDB\Events\Model\Holder\IEventRelation;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\Config\NeonScheme;

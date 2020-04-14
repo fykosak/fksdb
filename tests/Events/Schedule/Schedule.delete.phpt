@@ -1,6 +1,6 @@
 <?php
 
-namespace Events\Accommodation;
+namespace FKSDB\Events\Accommodation;
 
 use FKSDB\ORM\DbNames;
 use Nette\Application\Request;
