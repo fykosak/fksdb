@@ -5,7 +5,7 @@ namespace OrgModule;
 use BasePresenter;
 use Nette\Application\AbortException;
 use Tracy\Debugger;
-use SoapResponse;
+use FKSDB\WebService\SoapResponse;
 
 /**
  * Description of WebServicePresenter
@@ -17,7 +17,8 @@ class WebServicePresenter extends BasePresenter {
      * @throws AbortException
      */
     public function renderDefault() {
-        $server = $this->getService('soapServer');
+        /** @var \SoapServer $server */
+        $server = $this->getContext()->getByType(\SoapServer::class);
         try {
             $response = new SoapResponse($server);
             $this->sendResponse($response);

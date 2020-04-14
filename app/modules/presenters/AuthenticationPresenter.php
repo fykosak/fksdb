@@ -31,8 +31,6 @@ use Nette\Utils\DateTime;
  */
 final class AuthenticationPresenter extends BasePresenter {
 
-    use \LanguageNav;
-
     const PARAM_GSID = 'gsid';
     /** @const Indicates that page is accessed via dispatch from the login page. */
     const PARAM_DISPATCH = 'dispatch';
@@ -165,14 +163,6 @@ final class AuthenticationPresenter extends BasePresenter {
     }
 
     /**
-     * @throws Exception
-     */
-    public function startup() {
-        parent::startup();
-        $this->startupRedirects();
-    }
-
-    /**
      * @throws AbortException
      * @throws InvalidLinkException
      */
@@ -198,7 +188,7 @@ final class AuthenticationPresenter extends BasePresenter {
 
         if ($this->isLoggedIn()) {
             $this->getUser()->logout(true); //clear identity
-        } else if ($this->getParameter(self::PARAM_GSID)) { // global session may exist but central login doesn't know it (e.g. expired its session)
+        } elseif ($this->getParameter(self::PARAM_GSID)) { // global session may exist but central login doesn't know it (e.g. expired its session)
             // We restart the global session with provided parameter.
             // This is secure as only harm an attacker can make to the user is to log him out.
             $this->globalSession->destroy();
@@ -285,7 +275,9 @@ final class AuthenticationPresenter extends BasePresenter {
             ->addRule(Form::FILLED, _('Zadejte heslo.'));
         $form->addSubmit('send', _('Přihlásit'));
         $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
-        $form->onSuccess[] = callback($this, 'loginFormSubmitted');
+        $form->onSuccess[] = function (Form $form) {
+            return $this->loginFormSubmitted($form);
+        };
         return $form;
     }
 
@@ -303,7 +295,9 @@ final class AuthenticationPresenter extends BasePresenter {
 
         $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
 
-        $form->onSuccess[] = callback($this, 'recoverFormSubmitted');
+        $form->onSuccess[] = function (Form $form) {
+            $this->recoverFormSubmitted($form);
+        };
         return $form;
     }
 
@@ -311,11 +305,7 @@ final class AuthenticationPresenter extends BasePresenter {
      * @param $form
      * @throws AbortException
      */
-    /**
-     * @param $form
-     * @throws AbortException
-     */
-    public function loginFormSubmitted($form) {
+    private function loginFormSubmitted(Form $form) {
         try {
             $this->user->login($form['id']->value, $form['password']->value);
             /**
@@ -348,7 +338,7 @@ final class AuthenticationPresenter extends BasePresenter {
              * @var ModelLogin $login
              */
             $login = $this->passwordAuthenticator->findLogin($values['id']);
-            $this->accountManager->sendRecovery($login, $this->getLang());
+            $this->accountManager->sendRecovery($login, $login->getPerson()->getPreferredLang() ?: $this->getLang());
             $email = Utils::cryptEmail($login->getPerson()->getInfo()->email);
             $this->flashMessage(sprintf(_('Na email %s byly poslány další instrukce k obnovení přístupu.'), $email), self::FLASH_SUCCESS);
             $connection->commit();

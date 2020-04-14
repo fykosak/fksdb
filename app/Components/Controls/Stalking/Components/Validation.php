@@ -2,10 +2,10 @@
 
 namespace FKSDB\Components\Controls\Stalking;
 
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\ValidationTest\ValidationFactory;
-use Nette\Localization\ITranslator;
+use FKSDB\DataTesting\TestsLogger;
+use FKSDB\DataTesting\DataTestingFactory;
+use Nette\DI\Container;
 
 /**
  * Class StalkingValidation
@@ -13,21 +13,19 @@ use Nette\Localization\ITranslator;
  */
 class Validation extends AbstractStalkingComponent {
     /**
-     * @var ValidationFactory
+     * @var DataTestingFactory
      */
     private $validationFactory;
 
     /**
      * Validation constructor.
-     * @param ValidationFactory $validationFactory
-     * @param TableReflectionFactory $factory
+     * @param Container $container
      * @param ModelPerson $modelPerson
-     * @param ITranslator $translator
      * @param $mode
      */
-    public function __construct(ValidationFactory $validationFactory, TableReflectionFactory $factory, ModelPerson $modelPerson, ITranslator $translator, $mode) {
-        parent::__construct($modelPerson, $factory, $translator, $mode);
-        $this->validationFactory = $validationFactory;
+    public function __construct(Container $container, ModelPerson $modelPerson, $mode) {
+        parent::__construct($container, $modelPerson, $mode);
+        $this->validationFactory = $container->getByType(DataTestingFactory::class);
     }
 
     /**
@@ -46,12 +44,12 @@ class Validation extends AbstractStalkingComponent {
 
     public function render() {
         $this->beforeRender();
-        $logs = [];
-        foreach ($this->validationFactory->getTests() as $test) {
-            $logs[] = $test->run($this->modelPerson);
+        $logger = new TestsLogger();
+        foreach ($this->validationFactory->getTests('person') as $test) {
+            $test->run($logger, $this->modelPerson);
         }
 
-        $this->template->logs = $logs;
+        $this->template->logs = $logger->getLogs();
         $this->template->setFile(__DIR__ . '/Validation.latte');
         $this->template->render();
     }

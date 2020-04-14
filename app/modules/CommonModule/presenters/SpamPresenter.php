@@ -4,9 +4,10 @@ namespace CommonModule;
 
 use FKSDB\Components\Grids\EmailsGrid;
 use FKSDB\EntityTrait;
-use FKSDB\ORM\Models\ModelEmailMessage;
+use FKSDB\NotImplementedException;
 use FKSDB\ORM\Services\ServiceEmailMessage;
 use Nette\Application\BadRequestException;
+use Nette\Application\UI\Control;
 
 /**
  * Class MailSenderPresenter
@@ -31,13 +32,18 @@ class SpamPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function titleDetail(int $id) {
-        $this->setTitle(sprintf(_('Detail of email #%s'), $this->loadEntity($id)->getPrimary()));
-        $this->setIcon('fa fa-envelope');
+        $this->setTitle(sprintf(_('Detail of email #%s'), $this->loadEntity($id)->getPrimary()), 'fa fa-envelope');
     }
 
     public function titleList() {
-        $this->setTitle(_('List of emails'));
-        $this->setIcon('fa fa-envelope');
+        $this->setTitle(_('List of emails'), 'fa fa-envelope');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function traitIsAuthorized($resource, string $privilege): bool {
+        return $this->isAnyContestAuthorized($resource, $privilege);
     }
 
     /**
@@ -49,23 +55,27 @@ class SpamPresenter extends BasePresenter {
     }
 
     /**
-     * @return EmailsGrid
-     */
-    protected function createComponentGrid(): EmailsGrid {
-        return new EmailsGrid($this->serviceEmailMessage, $this->getTableReflectionFactory());
-    }
-
-    /**
      * @inheritDoc
      */
     protected function getORMService() {
         return $this->serviceEmailMessage;
     }
 
-    /**
-     * @inheritDoc
-     */
-    protected function getModelResource(): string {
-        return ModelEmailMessage::RESOURCE_ID;
+    /** @inheritDoc */
+    public function createComponentEditForm(): Control {
+        throw new NotImplementedException();
     }
+
+    /** @inheritDoc */
+    public function createComponentCreateForm(): Control {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @return EmailsGrid
+     */
+    protected function createComponentGrid(): EmailsGrid {
+        return new EmailsGrid($this->getContext());
+    }
+
 }

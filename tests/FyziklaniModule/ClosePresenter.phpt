@@ -7,6 +7,7 @@ $container = require '../bootstrap.php';
 use Events\Model\ApplicationHandler;
 use MockEnvironment\MockApplicationTrait;
 use Nette\Application\Request;
+use Nette\Application\Responses\RedirectResponse;
 use Nette\Config\Helpers;
 use Nette\DI\Container;
 use Tester\Assert;
@@ -161,7 +162,7 @@ class ClosePresenterTest extends FyziklaniTestCase {
             'do' => 'closeTeamControl-close',
         ]);
         $response = $this->fixture->run($request);
-        Assert::type('Nette\Application\Responses\RedirectResponse', $response);
+        Assert::type(RedirectResponse::class, $response);
         $team = $this->findTeam($teamId);
         Assert::notEqual(false, $team);
         Assert::equal($pointsSum, $team->points);
@@ -182,7 +183,7 @@ class ClosePresenterTest extends FyziklaniTestCase {
             ]);
 
             $response = $this->fixture->run($request);
-            Assert::type('Nette\Application\Responses\RedirectResponse', $response);
+            Assert::type(\Nette\Application\Responses\RedirectResponse::class, $response);
 
             foreach ($this->getTestTeams($category) as $teamData) {
                 list($teamId, , $cRank,) = $teamData;
@@ -207,7 +208,7 @@ class ClosePresenterTest extends FyziklaniTestCase {
           ]);
 
           $response = $this->fixture->run($request);
-          Assert::type('Nette\Application\Responses\RedirectResponse', $response);
+          Assert::type(\Nette\Application\Responses\RedirectResponse::class, $response);
 
           foreach ($this->getTestTeams($category) as $teamData) {
               list($teamId, $pointsSum, $cRank, $rank) = $teamData;

@@ -63,7 +63,7 @@ class DBReflectionExtension extends CompilerExtension {
                 $builder->addDefinition($this->prefix('link.' . $linkId))
                     ->setFactory(Link::class)
                     ->addSetup('setParams', [$def['destination'], $def['params'], $def['title'], $def['model']]);
-            } else if (is_string($def)) {
+            } elseif (is_string($def)) {
                 $builder->addDefinition($this->prefix('link.' . $linkId))
                     ->setFactory($def);
             }

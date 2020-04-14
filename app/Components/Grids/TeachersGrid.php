@@ -2,12 +2,13 @@
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\ModelTeacher;
 use FKSDB\ORM\Services\ServiceTeacher;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Database\Table\Selection;
+use Nette\DI\Container;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
@@ -27,12 +28,11 @@ class TeachersGrid extends BaseGrid {
 
     /**
      * TeachersGrid constructor.
-     * @param ServiceTeacher $serviceTeacher
-     * @param TableReflectionFactory $tableReflectionFactory
+     * @param Container $container
      */
-    function __construct(ServiceTeacher $serviceTeacher, TableReflectionFactory $tableReflectionFactory) {
-        parent::__construct($tableReflectionFactory);
-        $this->serviceTeacher = $serviceTeacher;
+    function __construct(Container $container) {
+        parent::__construct($container);
+        $this->serviceTeacher = $container->getByType(ServiceTeacher::class);
     }
 
     /**
@@ -69,7 +69,7 @@ class TeachersGrid extends BaseGrid {
             DbNames::TAB_TEACHER . '.until',
             DbNames::TAB_TEACHER . '.number_brochures',
         ]);
-        $this->addColumn('school_id', _('School'))->setRenderer(function ($row) {
+        $this->addColumn('school_id', _('School'))->setRenderer(function (ModelTeacher $row) {
             return $row->getSchool()->name_abbrev;
         });
         //

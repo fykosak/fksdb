@@ -8,6 +8,7 @@ use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Components\Controls\Fyziklani\FyziklaniReactControl;
 use FKSDB\Messages\Message;
 use FKSDB\model\Fyziklani\ClosedSubmittingException;
+use FKSDB\model\Fyziklani\NotSetGameParametersException;
 use FKSDB\model\Fyziklani\SubmitHandler;
 use FKSDB\model\Fyziklani\TaskCodeException;
 use FKSDB\ORM\Models\ModelEvent;
@@ -35,29 +36,15 @@ class TaskCodeInput extends FyziklaniReactControl {
      * @var ServiceFyziklaniTask
      */
     private $serviceFyziklaniTask;
-    /**
-     * @var SubmitHandler
-     */
-    private $handler;
 
     /**
      * TaskCodeInput constructor.
-     * @param SubmitHandler $handler
      * @param Container $container
      * @param ModelEvent $event
-     * @param ServiceFyziklaniTask $serviceFyziklaniTask
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
      */
-    public function __construct(
-        SubmitHandler $handler,
-        Container $container,
-        ModelEvent $event,
-        ServiceFyziklaniTask $serviceFyziklaniTask,
-        ServiceFyziklaniTeam $serviceFyziklaniTeam
-    ) {
-        $this->handler = $handler;
-        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
-        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+    public function __construct(Container $container, ModelEvent $event) {
+        $this->serviceFyziklaniTask = $container->getByType(ServiceFyziklaniTask::class);
+        $this->serviceFyziklaniTeam = $container->getByType(ServiceFyziklaniTeam::class);
         parent::__construct($container, $event);
         $this->monitor(IJavaScriptCollector::class);
     }
@@ -65,6 +52,7 @@ class TaskCodeInput extends FyziklaniReactControl {
     /**
      * @return string
      * @throws JsonException
+     * @throws NotSetGameParametersException
      */
     public function getData(): string {
         return Json::encode([
@@ -101,7 +89,8 @@ class TaskCodeInput extends FyziklaniReactControl {
         $response = new ReactResponse();
         $response->setAct($request->act);
         try {
-            $log = $this->handler->preProcess($request->requestData['code'], +$request->requestData['points'], $this->getPresenter()->getUser());
+            $handler = new SubmitHandler($this->getContext(), $this->getEvent());
+            $log = $handler->preProcess($request->requestData['code'], +$request->requestData['points'], $this->getPresenter()->getUser());
             $response->addMessage($log);
         } catch (TaskCodeException $exception) {
             $response->addMessage(new Message($exception->getMessage(), BasePresenter::FLASH_ERROR));

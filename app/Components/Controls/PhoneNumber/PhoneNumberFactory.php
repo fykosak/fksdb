@@ -8,7 +8,6 @@ use FKSDB\ORM\Services\ServiceRegion;
 use FKSDB\ORM\Tables\TypedTableSelection;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
-use function strtolower;
 
 /**
  * Class PhoneNumberFactory
@@ -51,7 +50,7 @@ class PhoneNumberFactory {
                 $flag = Html::el('span')
                     ->addAttributes(['class' => 'phone-flag mr-3'])
                     ->addHtml(Html::el('img')
-                        ->addAttributes(['src' => '/images/flags/4x3/' . strtolower($region->country_iso) . '.svg']));
+                        ->addAttributes(['src' => '/images/flags/4x3/' . \strtolower($region->country_iso) . '.svg']));
                 return Html::el('span')->addHtml($flag)->addText($region->formatPhoneNumber($number));
             }
         } catch (InvalidPhoneNumberException $exception) {

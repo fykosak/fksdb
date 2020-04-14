@@ -32,15 +32,15 @@ class ServiceAddressTest extends TestCase {
     }
 
     public function getPostalCodeData() {
-        return array(
-            array('01233', 2),
-            array('67401', 3),
-            array('654a5', null),
-            array('354 0', null),
-        );
+        return [
+            ['01233', 2],
+            ['67401', 3],
+            ['654a5', null],
+            ['354 0', null],
+        ];
     }
 
 }
 
-$testCase = new ServiceAddressTest($container->getService('ServiceAddress'));
+$testCase = new ServiceAddressTest($container->getByType(ServiceAddress::class));
 $testCase->run();

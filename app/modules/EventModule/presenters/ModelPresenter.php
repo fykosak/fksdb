@@ -5,7 +5,6 @@ namespace EventModule;
 use Events\Machine\Machine;
 use FKSDB\Components\Events\ExpressionPrinter;
 use FKSDB\Components\Events\GraphComponent;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 
 /**
@@ -27,31 +26,23 @@ class ModelPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function authorizedDefault() {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('event.model', 'default', $this->getEvent()->getContest()));
-
+        $this->setAuthorized($this->isContestsOrgAuthorized('event.model', 'default'));
     }
 
     public function titleDefault() {
-        $this->setTitle(_('Model akce'));
-        $this->setIcon('fa fa-cubes');
+        $this->setTitle(_('Model of event'), 'fa fa-cubes');
     }
 
     /**
      * @return GraphComponent
-     * @throws AbortException
      * @throws BadRequestException
      */
     protected function createComponentGraphComponent(): GraphComponent {
-        $event = $this->getEvent();
-        /**
-         * @var Machine $machine
-         */
-        $machine = $this->container->createEventMachine($event);
-
+        /** @var Machine $machine */
+        $machine = $this->getContext()->createEventMachine($this->getEvent());
         return new GraphComponent($machine->getPrimaryMachine(), $this->expressionPrinter);
     }
 }

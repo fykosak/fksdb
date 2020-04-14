@@ -9,8 +9,8 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use Nette\DI\Container;
 use Nette\Security\User;
-use function sprintf;
 
 /**
  * Class TaskCodeHandler
@@ -37,15 +37,13 @@ class SubmitHandler {
 
     /**
      * TaskCodeHandler constructor.
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @param ServiceFyziklaniTask $serviceFyziklaniTask
-     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
+     * @param Container $container
      * @param ModelEvent $event
      */
-    public function __construct(ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceFyziklaniTask $serviceFyziklaniTask, ServiceFyziklaniSubmit $serviceFyziklaniSubmit, ModelEvent $event) {
-        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
-        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
-        $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
+    public function __construct(Container $container, ModelEvent $event) {
+        $this->serviceFyziklaniTeam = $container->getByType(ServiceFyziklaniTeam::class);
+        $this->serviceFyziklaniTask = $container->getByType(ServiceFyziklaniTask::class);
+        $this->serviceFyziklaniSubmit = $container->getByType(ServiceFyziklaniSubmit::class);
         $this->event = $event;
     }
 
@@ -84,7 +82,7 @@ class SubmitHandler {
         } elseif (is_null($submit->points)) { // ak bol zmazaný
             return $this->serviceFyziklaniSubmit->changePoints($submit, $points, $user);
         } else {
-            throw new TaskCodeException(sprintf(_('Úloha je zadaná a overená.')));
+            throw new TaskCodeException(\sprintf(_('Úloha je zadaná a overená.')));
         }
     }
 
@@ -120,7 +118,7 @@ class SubmitHandler {
         $teamId = TaskCodePreprocessor::extractTeamId($fullCode);
 
         if (!$this->serviceFyziklaniTeam->teamExist($teamId, $this->event)) {
-            throw new TaskCodeException(sprintf(_('Tým %s neexistuje.'), $teamId));
+            throw new TaskCodeException(\sprintf(_('Tým %s neexistuje.'), $teamId));
         }
         $teamRow = $this->serviceFyziklaniTeam->findByPrimary($teamId);
         return ModelFyziklaniTeam::createFromActiveRow($teamRow);
@@ -137,7 +135,7 @@ class SubmitHandler {
         $taskLabel = TaskCodePreprocessor::extractTaskLabel($fullCode);
         $task = $this->serviceFyziklaniTask->findByLabel($taskLabel, $this->event);
         if (!$task) {
-            throw new TaskCodeException(sprintf(_('Úloha %s neexistuje.'), $taskLabel));
+            throw new TaskCodeException(\sprintf(_('Úloha %s neexistuje.'), $taskLabel));
         }
 
         return $task;

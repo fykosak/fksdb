@@ -2,6 +2,7 @@
 
 use Authorization\ACLExtension;
 use Events\EventsExtension;
+use FKSDB\Config\Extensions\DBReflectionExtension;
 use FKSDB\Config\Extensions\NavigationExtension;
 use FKSDB\Config\Extensions\PaymentExtension;
 use FKSDB\Config\Extensions\RouterExtension;
@@ -35,7 +36,7 @@ require LIBS_DIR . '/../vendor/autoload.php';
 require LIBS_DIR . '/autoload.php';
 error_reporting(~E_USER_DEPRECATED & ~E_USER_WARNING);
 
-require __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'tester/Tester/bootstrap.php';
+//require __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'tester/Tester/bootstrap.php';
 
 define('CONFIG_DIR', APP_DIR . DIRECTORY_SEPARATOR . 'config');
 
@@ -48,7 +49,7 @@ $configurator->onCompile[] = function ($configurator, $compiler) {
     $compiler->addExtension('stalking', new StalkingExtension());
     $compiler->addExtension('events', new EventsExtension(CONFIG_DIR . '/events.neon'));
     $compiler->addExtension('payment', new PaymentExtension());
-    $compiler->addExtension('DBReflection', new \FKSDB\Config\Extensions\DBReflectionExtension());
+    $compiler->addExtension('DBReflection', new DBReflectionExtension());
 };
 
 $configurator->setDebugMode(false);

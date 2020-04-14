@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\DatabaseReflection\ReferencedRows;
 
-use FKSDB\Components\Controls\Helpers\Badges\ContestBadge;
+use FKSDB\Components\Controls\Badges\ContestBadge;
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\IContestReferencedModel;
@@ -23,7 +23,7 @@ class ContestRow extends AbstractRow {
         if (!$model instanceof IContestReferencedModel) {
             throw new BadRequestException();
         }
-        return ContestBadge::getHtml($model->getContest()->contest_id);
+        return ContestBadge::getHtml($model->getContest());
     }
 
     /**

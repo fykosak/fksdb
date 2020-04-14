@@ -2,10 +2,8 @@
 
 namespace FKSDB\Components\DatabaseReflection;
 
-use Exception;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use Nette\Application\UI\Control;
-use Nette\ComponentModel\IComponent;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 
@@ -34,34 +32,28 @@ class DetailComponent extends Control {
      * @param TableReflectionFactory $tableReflectionFactory
      * @param ITranslator $translator
      */
-    public function __construct(DetailFactory$detailFactory,TableReflectionFactory $tableReflectionFactory, ITranslator $translator) {
+    public function __construct(DetailFactory $detailFactory, TableReflectionFactory $tableReflectionFactory, ITranslator $translator) {
         parent::__construct();
-        $this->detailFactory=$detailFactory;
+        $this->detailFactory = $detailFactory;
         $this->tableReflectionFactory = $tableReflectionFactory;
         $this->translator = $translator;
     }
 
     /**
-     * @param string $name
-     * @return IComponent|null
-     * @throws Exception
+     * @return ValuePrinterComponent
      */
-    public function createComponent($name) {
-        $printerComponent = $this->tableReflectionFactory->createComponent($name, 2048);
-        if ($printerComponent) {
-            return $printerComponent;
-        }
-        return parent::createComponent($name);
+    public function createComponentValuePrinter(): ValuePrinterComponent {
+        return new ValuePrinterComponent($this->translator, $this->tableReflectionFactory);
     }
 
     /**
      * @param $section
      * @param $model
      */
-    public function render($section,$model) {
+    public function render($section, $model) {
         $this->template->setTranslator($this->translator);
 
-     $this->template->data = $this->detailFactory->getSection($section);
+        $this->template->data = $this->detailFactory->getSection($section);
 
         $this->template->model = $model;
         $this->template->setFile(__DIR__ . '/detail.latte');

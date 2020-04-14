@@ -150,7 +150,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @return ModelContest|ActiveRow|null
      */
     public function getSelectedContest() {
-        return $this->contestId ? $this->serviceContest->findByPrimary($this->contestId) : null;
+        return $this->contestId ? $this->getServiceContest()->findByPrimary($this->contestId) : null;
     }
 
     /**
@@ -249,7 +249,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
     public function titleYear() {
-        $this->setSubtitle($this->serviceContest->findByPrimary($this->contestId)->name);
+        $this->setSubtitle($this->getServiceContest()->findByPrimary($this->contestId)->name);
         $this->setTitle(_('Zvolit ročník'));
     }
 
@@ -261,20 +261,21 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
     public function titleEmail() {
-        $this->setSubtitle($this->serviceContest->findByPrimary($this->contestId)->name);
+        $this->setSubtitle($this->getServiceContest()->findByPrimary($this->contestId)->name);
         $this->setTitle(_('Zadejte e-mail'));
     }
 
     public function renderContest() {
-        $pk = $this->serviceContest->getPrimary();
+        $pk = $this->getServiceContest()->getPrimary();
 
         $this->template->contests = array_map(function ($value) {
-            return $this->serviceContest->findByPrimary($value);
-        }, $this->serviceContest->fetchPairs($pk, $pk));
+            return $this->getServiceContest()->findByPrimary($value);
+        }, $this->getServiceContest()->fetchPairs($pk, $pk));
     }
 
     public function renderYear() {
-        $contest = $this->serviceContest->findByPrimary($this->contestId);
+        /** @var ModelContest $contest */
+        $contest = $this->getServiceContest()->findByPrimary($this->contestId);
         $this->template->years = [];
         $this->template->years[] = $this->yearCalculator->getCurrentYear($contest) + $this->yearCalculator->getForwardShift($contest);
     }
@@ -303,11 +304,11 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     public function createComponentEmailForm() {
         $control = new FormControl();
         $form = $control->getForm();
-        // $form = new Form();
-        // $form->setRenderer(new BootstrapRenderer());
         $form->addText('email', _('e-mail'));
         $form->addSubmit('submit', _('Vyhledat'));
-        $form->onSuccess[] = [$this, 'emailFormSucceeded'];
+        $form->onSuccess[] = function (Form $form) {
+            $this->emailFormSucceeded($form);
+        };
         return $control;
     }
 
@@ -315,7 +316,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @param Form $form
      * @throws AbortException
      */
-    public function emailFormSucceeded(Form $form) {
+    private function emailFormSucceeded(Form $form) {
         $values = $form->getValues();
 
         $this->redirect('this', ['email' => $values->email,]);
@@ -348,6 +349,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     /**
      * @return FormControl
      * @throws BadRequestException
+     * @throws \Exception
      */
     public function createComponentContestantForm() {
         $control = new FormControl();
@@ -446,7 +448,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         /**
          * @var ModelContest $contest
          */
-        $contest = $this->serviceContest->findByPrimary($this->contestId);
+        $contest = $this->getServiceContest()->findByPrimary($this->contestId);
         if ($contest) {
             return [$contest->getContestSymbol(), 'bg-dark navbar-dark'];
         }

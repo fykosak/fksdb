@@ -42,15 +42,14 @@ class DashboardPresenter extends BasePresenter {
     }
 
     public function titleDefault() {
-        $this->setTitle(_('Pultík'));
-        $this->setIcon('fa fa-dashboard');
+        $this->setTitle(_('Pultík'),'fa fa-dashboard');
     }
 
     /**
      * @throws \Nette\Application\BadRequestException
      */
     public function renderDefault() {
-        foreach ($this->news->getNews($this->getSelectedContest(), $this->getSelectedLanguage())
+        foreach ($this->news->getNews($this->getSelectedContest(), $this->getLang())
 	  as $new) {
             $this->flashMessage($new);
         }

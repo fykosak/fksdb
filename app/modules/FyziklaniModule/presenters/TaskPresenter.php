@@ -20,29 +20,25 @@ class TaskPresenter extends BasePresenter {
     const IMPORT_STATE_INSERT = 3;
 
     public function titleList() {
-        $this->setTitle(_('Tasks'));
-        $this->setIcon('fa fa-tasks');
+        $this->setTitle(_('Tasks'), 'fa fa-tasks');
     }
 
     public function titleImport() {
-        $this->setTitle(_('Tasks Import'));
-        $this->setIcon('fa fa-upload');
+        $this->setTitle(_('Tasks Import'), 'fa fa-upload');
     }
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function authorizedList() {
-        $this->setAuthorized($this->isAllowedForEventOrg('fyziklani.task', 'list'));
+        $this->setAuthorized($this->isEventOrContestOrgAuthorized('fyziklani.task', 'list'));
     }
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function authorizedImport() {
-        $this->setAuthorized($this->isAllowedForEventOrg('fyziklani.task', 'import'));
+        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.task', 'import'));
     }
 
     /**
@@ -73,7 +69,7 @@ class TaskPresenter extends BasePresenter {
      */
     public function taskImportFormSucceeded(Form $form) {
         $values = $form->getValues();
-        $taskImportProcessor = new FyziklaniTaskImportProcessor($this->getEvent(), $this->getServiceFyziklaniTask());
+        $taskImportProcessor = new FyziklaniTaskImportProcessor($this->getContext(), $this->getEvent());
         $messages = [];
         $taskImportProcessor($values, $messages);
         foreach ($messages as $message) {
@@ -84,10 +80,9 @@ class TaskPresenter extends BasePresenter {
 
     /**
      * @return TaskGrid
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function createComponentGrid(): TaskGrid {
-        return new TaskGrid($this->getEvent(), $this->getServiceFyziklaniTask());
+        return new TaskGrid($this->getEvent(), $this->getContext());
     }
 }

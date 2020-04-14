@@ -90,7 +90,7 @@ class ImportHandler {
             if (!isset($values[$baseHolderName][BaseHolder::STATE_COLUMN]) || !$values[$baseHolderName][BaseHolder::STATE_COLUMN]) {
                 if ($stateless == self::STATELESS_IGNORE) {
                     continue;
-                } else if ($stateless == self::STATELESS_KEEP) {
+                } elseif ($stateless == self::STATELESS_KEEP) {
                     unset($values[$baseHolderName][BaseHolder::STATE_COLUMN]);
                 }
             }

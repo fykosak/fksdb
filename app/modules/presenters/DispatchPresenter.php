@@ -9,8 +9,6 @@ use FKSDB\ORM\Models\ModelRole;
  */
 class DispatchPresenter extends AuthenticatedPresenter {
 
-    use \LanguageNav;
-
     /**
      * @throws \Nette\Application\UI\InvalidLinkException
      */
@@ -19,7 +17,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
          * @var \FKSDB\ORM\Models\ModelLogin $login
          */
         $login = $this->getUser()->getIdentity();
-        $query = $this->serviceContest->getTable();
+        $query = $this->getServiceContest()->getTable();
         $result = [];
         foreach ($query as $row) {
             $contest = ModelContest::createFromActiveRow($row);
@@ -95,8 +93,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
     }
 
     public function titleDefault() {
-        $this->setTitle(_('Rozcestník'));
-        $this->setIcon('fa fa-home');
+        $this->setTitle(_('Rozcestník'), 'fa fa-home');
     }
 
     /**

@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\DatabaseReflection;
 
-use FKSDB\Components\Controls\Helpers\Badges\PermissionDeniedBadge;
+use FKSDB\Components\Controls\Badges\PermissionDeniedBadge;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\BaseControl;

@@ -2,16 +2,16 @@
 
 namespace EventModule;
 
+use FKSDB\Components\Controls\Fyziklani\SchoolCheckControl;
 use FKSDB\Components\Controls\Fyziklani\SeatingControl;
+use FKSDB\Components\Controls\Schedule\Rests\TeamRestsControl;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
 use FKSDB\Components\Grids\Events\Application\ApplicationGrid;
 use FKSDB\Components\Grids\Events\Application\TeamApplicationGrid;
 use FKSDB\model\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 
@@ -21,14 +21,8 @@ use Nette\Application\BadRequestException;
  * @method ModelFyziklaniTeam getEntity()
  */
 class TeamApplicationPresenter extends AbstractApplicationPresenter {
-    /**
-     * @var ServiceFyziklaniTeam
-     */
+    /** @var ServiceFyziklaniTeam */
     private $serviceFyziklaniTeam;
-    /**
-     * @var ServiceFyziklaniTeamPosition
-     */
-    private $serviceFyziklaniTeamPosition;
 
     /**
      * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
@@ -38,39 +32,11 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @param ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
-     */
-    public function injectServiceFyziklaniTeamPosition(ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition) {
-        $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
-    }
-
-    public function titleList() {
-        $this->setTitle(_('List of team applications'));
-        $this->setIcon('fa fa-users');
-    }
-
-    public function titleDetail() {
-        $this->setTitle(_('Team application detail'));
-        $this->setIcon('fa fa-user');
-    }
-
-    /**
-     * @param ModelEvent $event
      * @return bool
-     * @throws AbortException
      * @throws BadRequestException
      */
-    protected function isEnabledForEvent(ModelEvent $event): bool {
+    protected function isEnabled(): bool {
         return $this->isTeamEvent();
-    }
-
-    /**
-     * @return ApplicationGrid
-     * @throws AbortException
-     * @throws BadRequestException
-     */
-    public function createComponentGrid(): AbstractApplicationGrid {
-        return new TeamApplicationGrid($this->getEvent(), $this->getTableReflectionFactory());
     }
 
     /**
@@ -88,27 +54,44 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
         }
         $this->template->rankVisible = $rankVisible;
         $this->template->model = $this->getEntity();
-        $this->template->toPay = $this->getEntity()->getScheduleRest();
     }
 
     /**
      * @return SeatingControl
      */
-    public function createComponentSeating(): SeatingControl {
-        return new SeatingControl($this->serviceFyziklaniTeamPosition, $this->getTranslator());
+    protected function createComponentSeating(): SeatingControl {
+        return new SeatingControl($this->getContext());
     }
 
     /**
-     * @return AbstractServiceSingle
+     * @return SchoolCheckControl
+     * @throws AbortException
+     * @throws BadRequestException
      */
-    function getORMService() {
+    protected function createComponentSchoolCheck(): SchoolCheckControl {
+        return new SchoolCheckControl($this->getEvent(), $this->getAcYear(), $this->getContext());
+    }
+
+    /**
+     * @return ApplicationGrid
+     * @throws AbortException
+     * @throws BadRequestException
+     */
+    protected function createComponentGrid(): AbstractApplicationGrid {
+        return new TeamApplicationGrid($this->getEvent(), $this->getHolder(), $this->getContext());
+    }
+
+    /**
+     * @return TeamRestsControl
+     */
+    protected function createComponentTeamRestsControl(): TeamRestsControl {
+        return new TeamRestsControl($this->getContext());
+    }
+
+    /**
+     * @return AbstractServiceSingle|ServiceFyziklaniTeam
+     */
+    protected function getORMService(): ServiceFyziklaniTeam {
         return $this->serviceFyziklaniTeam;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getModelResource(): string {
-        return ModelFyziklaniTeam::RESOURCE_ID;
     }
 }

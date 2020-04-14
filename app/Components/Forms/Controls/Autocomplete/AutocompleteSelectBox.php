@@ -79,12 +79,11 @@ class AutocompleteSelectBox extends TextBase {
             $this->attachedJSON = true;
             $name = $this->lookupPath(IAutocompleteJSONProvider::class);
 
-            $this->ajaxUrl = $obj->link('autocomplete!', array(
+            $this->ajaxUrl = $obj->link('autocomplete!', [
                 self::PARAM_NAME => $name,
-            ));
+            ]);
         }
         if (!$this->attachedJS && $obj instanceof IJavaScriptCollector) {
-            // Debugger::barDump($obj);
             $this->attachedJS = true;
             $obj->registerJSFile('js/autocompleteSelect.js');
         }
@@ -176,7 +175,7 @@ class AutocompleteSelectBox extends TextBase {
     }
 
     public function loadHttpData() {
-        $path = explode('[', strtr(str_replace(array('[]', ']'), '', $this->getHtmlName()), '.', '_'));
+        $path = explode('[', strtr(str_replace(['[]', ']'], '', $this->getHtmlName()), '.', '_'));
         $metaPath = $path;
         $metaPath[count($metaPath) - 1] .= self::META_ELEMENT_SUFFIX;
         try {
@@ -200,7 +199,7 @@ class AutocompleteSelectBox extends TextBase {
         if ($this->isMultiSelect()) {
             if (is_array($value)) {
                 $this->value = $value;
-            } else if ($value === '') {
+            } elseif ($value === '') {
                 $this->value = [];
             } else {
                 $this->value = explode(self::INTERNAL_DELIMITER, $value);

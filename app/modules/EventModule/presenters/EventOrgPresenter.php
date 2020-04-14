@@ -3,10 +3,11 @@
 namespace EventModule;
 
 use FKSDB\Components\Grids\EventOrgsGrid;
-use FKSDB\ORM\Models\ModelEventOrg;
+use FKSDB\NotImplementedException;
 use FKSDB\ORM\Services\ServiceEventOrg;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\UI\Control;
 
 /**
  * Class EventOrgPresenter
@@ -26,13 +27,16 @@ class EventOrgPresenter extends BasePresenter {
         $this->serviceEventOrg = $serviceEventOrg;
     }
 
+    public function titleList() {
+        $this->setTitle(sprintf(_('Organisers of event')), 'fa fa-users');
+    }
+
     /**
-     * @throws AbortException
+     * @inheritDoc
      * @throws BadRequestException
      */
-    public function titleList() {
-        $this->setTitle(sprintf(_('Organizátoři akce %s'), $this->getEvent()->name));
-        $this->setIcon('fa fa-users');
+    protected function traitIsAuthorized($resource, string $privilege): bool {
+        return $this->isContestsOrgAuthorized($resource, $privilege);
     }
 
     /**
@@ -51,16 +55,6 @@ class EventOrgPresenter extends BasePresenter {
     }
 
     /**
-     * @return EventOrgsGrid
-     * @throws AbortException
-     * @throws BadRequestException
-     */
-    protected function createComponentGrid(): EventOrgsGrid {
-        return new EventOrgsGrid($this->getEvent(), $this->serviceEventOrg, $this->getTableReflectionFactory());
-    }
-
-
-    /**
      * @inheritDoc
      */
     protected function getORMService(): ServiceEventOrg {
@@ -68,10 +62,26 @@ class EventOrgPresenter extends BasePresenter {
     }
 
     /**
+     * @return EventOrgsGrid
+     * @throws AbortException
+     * @throws BadRequestException
+     */
+    protected function createComponentGrid(): EventOrgsGrid {
+        return new EventOrgsGrid($this->getEvent(), $this->getContext());
+    }
+
+    /**
      * @inheritDoc
      */
-    protected function getModelResource(): string {
-        return ModelEventOrg::RESOURCE_ID;
+    public function createComponentCreateForm(): Control {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function createComponentEditForm(): Control {
+        throw new NotImplementedException();
     }
 
 }

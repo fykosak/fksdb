@@ -2,8 +2,6 @@
 
 namespace FKSDB\Transitions;
 
-use FKSDB\ORM\Models\ModelEmailMessage;
-
 /**
  * Class AbstractTransitionsGenerator
  * @package FKSDB\Transitions

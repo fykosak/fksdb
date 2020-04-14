@@ -17,12 +17,18 @@ abstract class EvaluatedExpression {
      * @param $args
      * @return mixed
      */
-    protected function evalArg($evaluated, $args) {
+    protected final function evaluateArgument($evaluated, ...$args) {
         if (is_callable($evaluated)) {
-            return call_user_func_array($evaluated, $args);
+            return $evaluated(...$args);
         } else {
             return $evaluated;
         }
     }
+
+    /**
+     * @param array ...$args
+     * @return bool
+     */
+    public abstract function __invoke(...$args);
 
 }

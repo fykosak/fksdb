@@ -33,7 +33,6 @@ class ServiceMPersonHasFlag extends AbstractServiceMulti {
         }
         $joinedModel = $this->getJoinedService()->createNew($data);
 
-        $result = new ModelMPersonHasFlag($this, $mainModel, $joinedModel);
-        return $result;
+        return new ModelMPersonHasFlag($this, $mainModel, $joinedModel);
     }
 }

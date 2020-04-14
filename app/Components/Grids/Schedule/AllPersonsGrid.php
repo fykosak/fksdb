@@ -3,13 +3,14 @@
 namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\DatabaseReflection\ValuePrinters\EventRole;
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\NotImplementedException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\ORM\Services\Schedule\ServicePersonSchedule;
 use FKSDB\Payment\Price;
 use FKSDB\YearCalculator;
+use Nette\DI\Container;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 
@@ -33,35 +34,32 @@ class AllPersonsGrid extends BaseGrid {
 
     /**
      * PersonsGrid constructor.
-     * @param ServicePersonSchedule $servicePersonSchedule
-     * @param TableReflectionFactory $tableReflectionFactory
-     * @param YearCalculator $yearCalculator
-     */
-    public function __construct(ServicePersonSchedule $servicePersonSchedule, TableReflectionFactory $tableReflectionFactory, YearCalculator $yearCalculator) {
-        $this->yearCalculator = $yearCalculator;
-        $this->servicePersonSchedule = $servicePersonSchedule;
-        parent::__construct($tableReflectionFactory);
-    }
-
-    /**
+     * @param Container $container
      * @param ModelEvent $event
      */
-    public function setEvent(ModelEvent $event) {
+    public function __construct(Container $container, ModelEvent $event) {
+        $this->yearCalculator = $container->getByType(YearCalculator::class);
+        $this->servicePersonSchedule = $container->getByType(ServicePersonSchedule::class);
         $this->event = $event;
-        $query = $this->servicePersonSchedule->getTable()
-            ->where('schedule_item.schedule_group.event_id', $event->event_id)
-            // ->where('person_schedule_id', 508)
-            ->order('person_schedule_id');//->limit(10, 140);
-        $dataSource = new NDataSource($query);
-        $this->setDataSource($dataSource);
+        parent::__construct($container);
     }
 
     /**
      * @param $presenter
      * @throws DuplicateColumnException
+     * @throws NotImplementedException
+     * @throws NotImplementedException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
+        $query = $this->servicePersonSchedule->getTable()
+            ->where('schedule_item.schedule_group.event_id', $this->event->event_id)
+            // ->where('person_schedule_id', 508)
+            ->order('person_schedule_id');//->limit(10, 140);
+        $dataSource = new NDataSource($query);
+        $this->setDataSource($dataSource);
+
+
         $this->paginate = false;
 
         $this->addColumn('person_schedule_id', _('#'));
@@ -90,6 +88,8 @@ class AllPersonsGrid extends BaseGrid {
 
     /**
      * @throws DuplicateColumnException
+     * @throws NotImplementedException
+     * @throws NotImplementedException
      */
     protected function addColumnPayment() {
         $this->addColumns(['referenced.payment_id']);

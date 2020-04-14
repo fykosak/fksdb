@@ -129,10 +129,10 @@ class ResultsModelFactory implements IXMLNodeSerializer {
             } else {
                 return new EvaluationFykos2001();
             }
-        } else if ($contestId == ModelContest::ID_VYFUK) {
+        } elseif ($contestId == ModelContest::ID_VYFUK) {
             if ($year >= 4) {
                 return new EvaluationVyfuk2014();
-            } else if ($year >= 2) {
+            } elseif ($year >= 2) {
                 return new EvaluationVyfuk2012();
             } else {
                 return new EvaluationVyfuk2011();
@@ -145,12 +145,12 @@ class ResultsModelFactory implements IXMLNodeSerializer {
      * @param $dataSource
      * @param DOMNode $node
      * @param DOMDocument $doc
-     * @param $format
+     * @param int $format
      * @return mixed|void
      * @throws SoapFault
      * @throws InvalidArgumentException
      */
-    public function fillNode($dataSource, DOMNode $node, DOMDocument $doc, $format) {
+    public function fillNode($dataSource, DOMNode $node, DOMDocument $doc, int $format) {
         if (!$dataSource instanceof AbstractResultsModel) {
             throw new InvalidArgumentException('Expected FKSDB\Results\IResultsModel, got ' . get_class($dataSource) . '.');
         }

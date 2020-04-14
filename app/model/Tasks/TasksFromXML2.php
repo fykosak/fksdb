@@ -83,15 +83,16 @@ class TasksFromXML2 extends Stage {
         // obtain FKSDB\ORM\Models\ModelTask
         $task = $this->taskService->findBySeries($contest, $year, $series, $tasknr);
         if ($task == null) {
-            $task = $this->taskService->createNew(array(
+            $task = $this->taskService->createNew([
                 'contest_id' => $contest->contest_id,
                 'year' => $year,
                 'series' => $series,
                 'tasknr' => $tasknr,
-            ));
+            ]);
         }
 
         // update fields
+        $data = [];
         foreach (self::$xmlToColumnMap as $xmlElement => $column) {
             $value = NULL;
 
@@ -121,12 +122,9 @@ class TasksFromXML2 extends Stage {
             } else {
                 $value = (string) $XMLTask->{$xmlElement};
             }
-
-            $task->{$column} = $value;
+            $data[$column] = $value;
         }
-
-        // store it
-        $this->taskService->save($task);
+        $this->taskService->updateModel2($task,$data);
 
         // forward it to pipeline
         $this->data->addTask($tasknr, $task);

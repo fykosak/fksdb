@@ -23,11 +23,11 @@ class AESOPFormat extends XSLFormat {
     function __construct(StoredQuery $storedQuery, $xslFile, IXMLNodeSerializer $xmlSerializer) {
         parent::__construct($storedQuery, $xslFile, $xmlSerializer);
 
-        $this->setParameters(array(
+        $this->setParameters([
             'version' => 1,
             'date' => date('Y-m-d H:i:s'),
             'id-scope' => self::ID_SCOPE,
-        ));
+        ]);
     }
 
     /**

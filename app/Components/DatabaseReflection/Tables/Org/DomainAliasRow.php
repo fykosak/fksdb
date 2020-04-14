@@ -4,6 +4,7 @@ namespace FKSDB\Components\DatabaseReflection\Org;
 
 use FKSDB\Components\DatabaseReflection\ValuePrinters\EmailPrinter;
 use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelOrg;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\BaseControl;
@@ -30,9 +31,9 @@ class DomainAliasRow extends AbstractOrgRowFactory {
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         switch ($model->contest_id) {
-            case 1:
+            case ModelContest::ID_FYKOS:
                 return (new EmailPrinter)($model->domain_alias . '@fykos.cz');
-            case 2:
+            case ModelContest::ID_VYFUK:
                 return (new EmailPrinter)($model->domain_alias . '@vyfuk.mff.cuni.cz');
             default:
                 throw new BadRequestException();

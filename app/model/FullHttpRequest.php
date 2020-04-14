@@ -32,7 +32,7 @@ class FullHttpRequest {
     /**
      * @return Request
      */
-    function getRequest() {
+    function getRequest(): Request {
         return $this->request;
     }
 

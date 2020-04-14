@@ -84,14 +84,14 @@ class DBReflectionFactory extends AbstractFactory {
         if (!$element) {
             if ($type == 'TINYINT' && $size == 1) {
                 $element = new Checkbox($field->getLabel());
-            } else if (substr_compare($type, 'INT', '-3') == 0) {
+            } elseif (substr_compare($type, 'INT', '-3') == 0) {
                 $element = new TextInput($field->getLabel());
                 $element->addCondition(Form::FILLED)
                     ->addRule(Form::INTEGER, _('%label musí být celé číslo.'))
                     ->addRule(Form::MAX_LENGTH, null, $size);
-            } else if ($type == 'TEXT') {
+            } elseif ($type == 'TEXT') {
                 $element = new TextArea($field->getLabel());
-            } else if ($type == 'TIME') {
+            } elseif ($type == 'TIME') {
                 $element = new TimeBox($field->getLabel());
             } else {
                 $element = new TextInput($field->getLabel());
@@ -101,7 +101,6 @@ class DBReflectionFactory extends AbstractFactory {
             }
         }
         $element->caption = $field->getLabel();
-       // Debugger::barDump($field);
         if ($field->getDescription()) {
 
             $element->setOption('description', $field->getDescription());
@@ -156,7 +155,7 @@ class DBReflectionFactory extends AbstractFactory {
         if ($service instanceof AbstractServiceSingle) {
             $tableName = $service->getTable()->getName();
             $column = $this->getColumnMetadata($tableName, $columnName);
-        } else if ($service instanceof AbstractServiceMulti) {
+        } elseif ($service instanceof AbstractServiceMulti) {
             $tableName = $service->getMainService()->getTable()->getName();
             $column = $this->getColumnMetadata($tableName, $columnName);
             if ($column === null) {

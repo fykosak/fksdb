@@ -3,7 +3,8 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\ORM\AbstractModelSingle;
-use FKSDB\ValidationTest\ValidationLog;
+use FKSDB\DataTesting\TestsLogger;
+use FKSDB\DataTesting\TestLog;
 
 /**
  * Interface ITestedRowFactory
@@ -11,8 +12,9 @@ use FKSDB\ValidationTest\ValidationLog;
  */
 interface ITestedRowFactory {
     /**
+     * @param TestsLogger $logger
      * @param AbstractModelSingle $model
-     * @return ValidationLog
+     * @return TestLog
      */
-    public function runTest(AbstractModelSingle $model): ValidationLog;
+    public function runTest(TestsLogger $logger, AbstractModelSingle $model);
 }

@@ -2,6 +2,7 @@
 
 namespace FKSDB\Messages;
 
+use FKSDB\Logging\ILogger;
 use Nette\SmartObject;
 
 /**
@@ -11,10 +12,10 @@ use Nette\SmartObject;
 class Message {
     use SmartObject;
 
-    const LVL_DANGER = 'danger';
-    const LVL_SUCCESS = 'success';
-    const LVL_WARNING = 'warning';
-    const LVL_INFO = 'info';
+    const LVL_DANGER = ILogger::ERROR;
+    const LVL_SUCCESS = ILogger::SUCCESS;
+    const LVL_WARNING = ILogger::WARNING;
+    const LVL_INFO = ILogger::INFO;
     /**
      * @var string
      */

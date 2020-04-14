@@ -3,9 +3,12 @@
 namespace OrgModule;
 
 use FKSDB\Components\Controls\SeriesChooser;
+use FKSDB\Expressions\BadTypeException;
 use FKSDB\SeriesCalculator;
-use ISeriesPresenter;
+use FKSDB\CoreModule\ISeriesPresenter;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 
 /**
  * Presenter providing series context and a way to modify it.
@@ -31,33 +34,50 @@ abstract class SeriesPresenter extends BasePresenter implements ISeriesPresenter
         $this->seriesCalculator = $seriesCalculator;
     }
 
+    /**
+     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws AbortException
+     * @throws ForbiddenRequestException
+     * @throws \Exception
+     */
     protected function startup() {
         parent::startup();
-        if (!$this->getComponent('seriesChooser')->isValid()) {
+        $control = $this->getComponent('seriesChooser');
+        if (!$control instanceof SeriesChooser) {
+            throw new BadTypeException(SeriesChooser::class, $control);
+        }
+        if (!$control->isValid()) {
             throw new BadRequestException('Nejsou dostupné žádné série.', 500);
         }
     }
 
     /**
      * @return int
+     * @throws BadRequestException
+     * @throws \Exception
      */
     public function getSelectedSeries() {
-        return $this->getComponent('seriesChooser')->getSeries();
+        $control = $this->getComponent('seriesChooser');
+        if (!$control instanceof SeriesChooser) {
+            throw new BadTypeException(SeriesChooser::class, $control);
+        }
+        return $control->getSeries();
     }
 
     /**
-     * @param $name
      * @return SeriesChooser
      */
-    public function createComponentSeriesChooser($name) {
-        return new SeriesChooser($this->session, $this->seriesCalculator, $this->serviceContest, $this->translator);
+    public function createComponentSeriesChooser(): SeriesChooser {
+        return new SeriesChooser($this->session, $this->seriesCalculator, $this->getServiceContest(), $this->getTranslator());
     }
 
     /**
      * @return string
+     * @throws BadRequestException
      */
     public function getSubTitle(): string {
-        return parent::getSubTitle() . ' ' . sprintf(_('%s series'), $this->getSelectedSeries());
+        return parent::getSubTitle() . ' ' . sprintf(_('%d. series'), $this->getSelectedSeries());
     }
 
 }
