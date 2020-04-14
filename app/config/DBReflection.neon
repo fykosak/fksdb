@@ -31,6 +31,9 @@ parameters:
 DBReflection:
     tables:
          event:
+             event_id:
+                 type: primaryKey
+                 title: _('Event Id')
              event_year: FKSDB\Components\DatabaseReflection\Event\EventYearRow
              name: FKSDB\Components\DatabaseReflection\Event\NameRow
              begin: FKSDB\Components\DatabaseReflection\Event\BeginRow

@@ -10,7 +10,6 @@ use FKSDB\Payment\PriceCalculator\PriceCalculator;
 use FKSDB\Payment\SymbolGenerator\Generators\AbstractSymbolGenerator;
 use FKSDB\Transitions\AbstractTransitionsGenerator;
 use FKSDB\Transitions\Machine;
-use Nette\Database\Connection;
 use Nette\Database\Context;
 use Nette\Localization\ITranslator;
 

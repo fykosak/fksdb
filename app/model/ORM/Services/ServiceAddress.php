@@ -46,7 +46,7 @@ class ServiceAddress extends AbstractServiceSingle {
 
     /**
      * @param IModel $model
-     * @return mixed|void
+     * @return void
      * @deprecated
      */
     public function save(IModel &$model) {
@@ -108,5 +108,4 @@ class ServiceAddress extends AbstractServiceSingle {
             return false;
         }
     }
-
 }

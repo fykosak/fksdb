@@ -6,6 +6,7 @@ use Authentication\TokenAuthenticator;
 use Authorization\ContestAuthorizator;
 use Authorization\EventAuthorizator;
 use FKSDB\ORM\Models\ModelAuthToken;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Tracy\Debugger;
@@ -135,7 +136,8 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     /**
      * @throws BadRequestException
      * @throws ForbiddenRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
+     * @throws Exception
      */
     protected function startup() {
         parent::startup();
@@ -163,7 +165,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     }
 
     /**
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     private function optionalLoginRedirect() {
         if (!$this->requiresLogin()) {
@@ -173,7 +175,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     }
 
     /**
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     protected final function loginRedirect() {
         if ($this->user->logoutReason === UserStorage::INACTIVITY) {
@@ -222,7 +224,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     }
 
     /**
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     private function tryAuthToken() {
         $tokenData = $this->getParam(TokenAuthenticator::PARAM_AUTH_TOKEN);

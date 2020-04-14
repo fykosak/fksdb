@@ -9,8 +9,6 @@ use FKSDB\Components\Grids\Fyziklani\AllSubmitsGrid;
 use FKSDB\Components\Grids\Fyziklani\SubmitsGrid;
 use FKSDB\model\Fyziklani\ClosedSubmittingException;
 use FKSDB\model\Fyziklani\PointsMismatchException;
-use FKSDB\model\Fyziklani\SubmitHandler;
-use FKSDB\NotImplementedException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;

@@ -24,14 +24,14 @@ interface IService {
     public function createNewModel($data);
 
     /**
-     * @param $key
-     * @return mixed
+     * @param int $key
+     * @return AbstractModelSingle|AbstractModelMulti|IModel
      */
     public function findByPrimary($key);
 
     /**
      * @param IModel $model
-     * @return mixed
+     * @return void
      * @deprecated
      */
     public function save(IModel &$model);
@@ -54,6 +54,7 @@ interface IService {
      * @deprecated
      */
     public function updateModel(IModel $model, $data);
+
     /**
      * @return string
      * @return string|AbstractModelSingle

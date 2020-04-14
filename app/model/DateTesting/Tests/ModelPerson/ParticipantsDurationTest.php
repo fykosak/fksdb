@@ -5,7 +5,6 @@ namespace FKSDB\DataTesting\Tests\Person;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\DataTesting\TestsLogger;
 use FKSDB\DataTesting\TestLog;
 use Nette\Database\Table\GroupedSelection;
