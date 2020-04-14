@@ -8,7 +8,6 @@ use FKSDB\ORM\Services\ServiceEvent;
 use FKSDB\ORM\Tables\TypedTableSelection;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
-use Nette\Database\Table\Selection;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

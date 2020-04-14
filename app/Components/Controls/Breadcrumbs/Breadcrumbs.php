@@ -104,7 +104,7 @@ class Breadcrumbs extends Control {
 
         $requestKey = $this->getRequestKey($request);
         $backLinkId = $this->getBackLinkId($requestKey);
-        $originalBackLink = $presenter->setBacklink($backLinkId);
+        $originalBackLink = $presenter->setBackLink($backLinkId);
         $this->storeRequest($originalBackLink);
     }
 

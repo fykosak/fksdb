@@ -12,6 +12,7 @@ use Nette\Database\Table\ActiveRow;
  * @property-read string postal_code
  * @property-read string city
  * @property-read ActiveRow region
+ * @property-read int region_id
  */
 class ModelAddress extends AbstractModelSingle {
 

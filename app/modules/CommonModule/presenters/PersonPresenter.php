@@ -197,6 +197,7 @@ class PersonPresenter extends BasePresenter {
      * @param $mergedId
      * @throws AbortException
      * @throws ReflectionException
+     * @throws \Exception
      */
     public function actionDontMerge($trunkId, $mergedId) {
         $mergedPI = $this->servicePersonInfo->findByPrimary($mergedId);
@@ -264,6 +265,7 @@ class PersonPresenter extends BasePresenter {
     /**
      * @return FormControl
      * @throws BadRequestException
+     * @throws \Exception
      */
     public function createComponentFormSearch(): FormControl {
         $control = new FormControl();

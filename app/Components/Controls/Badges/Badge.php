@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Controls\Badges;
 
 use Nette\Application\UI\Control;
-use Nette\Caching\Storages\FileStorage;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 use Nette\Utils\Html;

@@ -4,7 +4,6 @@ namespace OrgModule;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\NotImplementedException;
-use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventOrg;
 use FKSDB\ORM\Services\ServiceEvent;

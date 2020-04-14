@@ -10,7 +10,6 @@ use Nette\DI\Container;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
 use PDOException;
-use Tracy\Debugger;
 
 /**
  *

@@ -6,7 +6,9 @@ use FKSDB\Components\Controls\SeriesChooser;
 use FKSDB\Expressions\BadTypeException;
 use FKSDB\SeriesCalculator;
 use FKSDB\CoreModule\ISeriesPresenter;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 
 /**
  * Presenter providing series context and a way to modify it.
@@ -32,6 +34,13 @@ abstract class SeriesPresenter extends BasePresenter implements ISeriesPresenter
         $this->seriesCalculator = $seriesCalculator;
     }
 
+    /**
+     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws AbortException
+     * @throws ForbiddenRequestException
+     * @throws \Exception
+     */
     protected function startup() {
         parent::startup();
         $control = $this->getComponent('seriesChooser');
@@ -46,6 +55,7 @@ abstract class SeriesPresenter extends BasePresenter implements ISeriesPresenter
     /**
      * @return int
      * @throws BadRequestException
+     * @throws \Exception
      */
     public function getSelectedSeries() {
         $control = $this->getComponent('seriesChooser');
