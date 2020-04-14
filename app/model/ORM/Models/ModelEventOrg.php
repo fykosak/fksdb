@@ -3,7 +3,6 @@
 namespace FKSDB\ORM\Models;
 
 use FKSDB\ORM\AbstractModelSingle;
-use FKSDB\Transitions\IEventReferencedModel;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 use Nette\Security\IResource;
@@ -13,8 +12,11 @@ use Nette\Security\IResource;
  * @property-read ActiveRow person
  * @property-read ActiveRow event
  * @property-read string note
+ * @property-read int e_org_id
  */
-class ModelEventOrg extends AbstractModelSingle implements IResource, IEventReferencedModel {
+class ModelEventOrg extends AbstractModelSingle implements IResource, IEventReferencedModel, IPersonReferencedModel {
+    const RESOURCE_ID = 'eventOrg';
+
     /**
      * @return ModelPerson
      */
@@ -33,7 +35,7 @@ class ModelEventOrg extends AbstractModelSingle implements IResource, IEventRefe
      * @return string
      */
     public function getResourceId(): string {
-        return 'eventOrg';
+        return self::RESOURCE_ID;
     }
 
     /**

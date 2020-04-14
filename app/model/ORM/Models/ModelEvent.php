@@ -26,9 +26,10 @@ use Nette\Utils\DateTime;
  * @property-read DateTime end
  * @property-read DateTime registration_begin
  * @property-read DateTime registration_end
+ * @property-read string parameters
  */
 class ModelEvent extends AbstractModelSingle implements IResource, IContestReferencedModel {
-
+    const RESOURCE_ID = 'event';
     /**
      * Event can have a holder assigned for purposes of parameter parsing.
      * Nothing else (currently).
@@ -38,6 +39,7 @@ class ModelEvent extends AbstractModelSingle implements IResource, IContestRefer
 
     /**
      * @param Holder $holder
+     * @deprecated
      */
     public function setHolder(Holder $holder) {
         $this->holder = $holder;
@@ -45,6 +47,7 @@ class ModelEvent extends AbstractModelSingle implements IResource, IContestRefer
 
     /**
      * @return Holder
+     * @deprecated
      */
     public function getHolder(): Holder {
         return $this->holder;
@@ -55,17 +58,6 @@ class ModelEvent extends AbstractModelSingle implements IResource, IContestRefer
      */
     public function getEventType(): ModelEventType {
         return ModelEventType::createFromActiveRow($this->event_type);
-    }
-
-    /**
-     * @return ModelEventAccommodation[]
-     */
-    public function getEventAccommodationsAsArray(): array {
-        $data = [];
-        foreach ($this->related(DbNames::TAB_EVENT_ACCOMMODATION) as $item) {
-            $data[] = ModelEventAccommodation::createFromActiveRow($item);
-        }
-        return $data;
     }
 
     /**
@@ -99,7 +91,7 @@ class ModelEvent extends AbstractModelSingle implements IResource, IContestRefer
      * @return string
      */
     public function getResourceId(): string {
-        return 'event';
+        return self::RESOURCE_ID;
     }
 
     /**
@@ -116,7 +108,7 @@ class ModelEvent extends AbstractModelSingle implements IResource, IContestRefer
     public function getFyziklaniGameSetup(): ModelFyziklaniGameSetup {
         $gameSetup = $this->related(DbNames::TAB_FYZIKLANI_GAME_SETUP, 'event_id')->fetch();
         if (!$gameSetup) {
-            throw new NotSetGameParametersException(_('Herné parametre niesu nastavené'), 404);
+            throw new NotSetGameParametersException(_('Herné parametre niesu nastavené'));
         }
         return ModelFyziklaniGameSetup::createFromActiveRow($gameSetup);
     }
@@ -125,7 +117,7 @@ class ModelEvent extends AbstractModelSingle implements IResource, IContestRefer
      * @return GroupedSelection
      */
     public function getScheduleGroups(): GroupedSelection {
-        return $this->related(DbNames::TAB_SCHEDULE_GROUP);
+        return $this->related(DbNames::TAB_SCHEDULE_GROUP, 'event_id');
     }
 
     /**
@@ -150,8 +142,8 @@ class ModelEvent extends AbstractModelSingle implements IResource, IContestRefer
             'eventId' => $this->event_id,
             'year' => $this->year,
             'eventYear' => $this->event_year,
-            'begin' => $this->begin->format('c'),
-            'end' => $this->end->format('c'),
+            'begin' => $this->begin ? $this->begin->format('c') : null,
+            'end' => $this->end ? $this->end->format('c') : null,
             'registration_begin' => $this->registration_begin->format('c'),
             'registration_end' => $this->registration_end->format('c'),
             'name' => $this->name,

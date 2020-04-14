@@ -3,8 +3,11 @@
 #
 
 services:
+    database.database.context: Nette\Database\Context
+    database.database.conventions: Nette\Database\Conventions\DiscoveredConventions
+    database.database.structure: Nette\Database\Structure
     accountManager:
-        class: Authentication\AccountManager
+        class: FKSDB\Authentication\AccountManager
         setup:
             - setInvitationExpiration(%invitation.expiration%)
             - setRecoveryExpiration(%recovery.expiration%)
@@ -39,11 +42,13 @@ services:
         setup:
             - start()
     - Authentication\SSO\TokenGSIDHolder
-    submitStorage:
-        class: FKSDB\Submits\FilesystemSubmitStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, %contestMapping%)
+    submitUploatedStorage:
+        class: FKSDB\Submits\FilesystemUploadedSubmitStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, %contestMapping%)
         setup:
             - addProcessing(@PDFStamper)
-    - FKSDB\Components\Forms\Controls\PersonAccommodation\Handler
+    submitCorrectedStorage:
+                    class: FKSDB\Submits\FilesystemCorrectedSubmitStorage(%corrected.root%, %corrected.directoryMask%, %corrected.filenameMask%, %contestMapping%)
+    - FKSDB\Components\Forms\Controls\Schedule\Handler
     PDFStamper: FKSDB\Submits\PDFStamper(%stamper.fontSize%)
     readOnlyConnection:
         class: Nette\Database\Connection(%ro-database.dsn%, %ro-database.user%, %ro-database.password%)
@@ -63,7 +68,7 @@ services:
         class: LoggingMailer(Nette\Mail\SendmailMailer())
         setup:
             - setLogPath(%logDir%/mail)
-    - FKSDB\ValidationTest\ValidationFactory
+    - FKSDB\DataTesting\DataTestingFactory
 
 
     #
@@ -77,18 +82,9 @@ services:
     #
     # Fyziklani
     #
-    - FKSDB\model\Fyziklani\TaskCodePreprocessor
-    - FKSDB\model\Fyziklani\TaskCodeHandlerFactory
     - FKSDB\Components\Forms\Factories\TableReflectionFactory
+    - FKSDB\Components\Controls\PhoneNumber\PhoneNumberFactory
+    - FKSDB\Components\DatabaseReflection\MetaDataFactory
 
 includes:
     - merger.neon
-    - rows/person.neon
-    - rows/person_info.neon
-    - rows/event_participant.neon
-    - rows/event.neon
-    - rows/payment.neon
-    - rows/login.neon
-    - rows/e_fyziklani_team.neon
-    - rows/org.neon
-    - rows/person_history.neon

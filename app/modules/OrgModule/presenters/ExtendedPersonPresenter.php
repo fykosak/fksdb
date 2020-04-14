@@ -6,7 +6,9 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Config\Expressions\Helpers;
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
@@ -20,6 +22,10 @@ use Persons\IExtendedPersonPresenter;
  * @package OrgModule
  */
 abstract class ExtendedPersonPresenter extends EntityPresenter implements IExtendedPersonPresenter {
+    /**
+     * @var bool
+     */
+    protected $sendEmail = true;
 
     /**
      * @var ReferencedPersonFactory
@@ -58,7 +64,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     }
 
     /**
-     * @param \FKSDB\ORM\IModel|null $model
+     * @param IModel|null $model
      * @param Form $form
      */
     protected function setDefaults(IModel $model = null, Form $form) {
@@ -73,7 +79,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
 
     /**
      * @return array|mixed
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     private function getFieldsDefinition() {
         $contestId = $this->getSelectedContest()->contest_id;
@@ -102,8 +108,8 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     /**
      * @param $create
      * @return FormControl
-     * @throws \Nette\Application\BadRequestException
-     * @throws \Nette\Utils\RegexpException
+     * @throws BadRequestException
+     * @throws \Exception
      */
     private function createComponentFormControl($create) {
         $control = new FormControl();
@@ -127,11 +133,11 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
         $this->appendExtendedContainer($form);
 
         $handler = $this->handlerFactory->create($this->getORMService(), $this->getSelectedContest(), $this->getSelectedYear(), $this->globalParameters['invitation']['defaultLang']);
-        $submit = $form->addSubmit('send', $create ? _('Založit') : _('Uložit'));
+        $submit = $form->addSubmit('send', $create ? _('Založit') : _('Save'));
 
         $submit->onClick[] = function (SubmitButton $button) use ($handler) {
             $form = $button->getForm();
-            if ($handler->handleForm($form, $this)) {
+            if ($handler->handleForm($form, $this, $this->sendEmail)) {
                 $this->backLinkRedirect();
                 $this->redirect('list');
             }
@@ -140,34 +146,27 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     }
 
     /**
-     * @param $name
      * @return FormControl
-     * @throws \Nette\Application\BadRequestException
-     * @throws \Nette\Utils\RegexpException
+     * @throws BadRequestException
      */
-    protected final function createComponentCreateComponent($name) {
-        $control = $this->createComponentFormControl(true);
-        return $control;
+    protected final function createComponentCreateComponent() {
+        return $this->createComponentFormControl(true);
     }
 
     /**
-     * @param $name
      * @return FormControl
-     * @throws \Nette\Application\BadRequestException
-     * @throws \Nette\Utils\RegexpException
+     * @throws BadRequestException
      */
-    protected final function createComponentEditComponent($name) {
-        $control = $this->createComponentFormControl(false);
-        return $control;
+    protected final function createComponentEditComponent() {
+        return $this->createComponentFormControl(false);
     }
 
     /**
      * @param $id
-     * @return \FKSDB\ORM\AbstractModelSingle
+     * @return AbstractModelSingle
      */
     protected function loadModel($id) {
         return $this->getORMService()->findByPrimary($id);
     }
 
 }
-

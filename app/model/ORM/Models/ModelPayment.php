@@ -4,12 +4,15 @@ namespace FKSDB\ORM\Models;
 
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\IModel;
+use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
+use FKSDB\ORM\Tables\TypedTableSelection;
 use FKSDB\Payment\IPaymentModel;
 use FKSDB\Payment\Price;
-use FKSDB\Payment\PriceCalculator\PriceCalculator;
-use FKSDB\Transitions\IEventReferencedModel;
 use FKSDB\Transitions\IStateModel;
 use FKSDB\Transitions\Machine;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\IResource;
 use Nette\Utils\DateTime;
@@ -31,6 +34,8 @@ use Nette\Utils\DateTime;
  * @property-read string variable_symbol
  * @property-read string specific_symbol
  * @property-read string bank_account
+ * @property-read string bank_name
+ * @property-read string recipient
  * @property-read string iban
  * @property-read string swift
  */
@@ -57,13 +62,13 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
     }
 
     /**
-     * @return ModelEventPersonAccommodation[]
+     * @return ModelPersonSchedule[]
      */
-    public function getRelatedPersonAccommodation(): array {
-        $query = $this->related(DbNames::TAB_PAYMENT_ACCOMMODATION, 'payment_id');
+    public function getRelatedPersonSchedule(): array {
+        $query = $this->related(DbNames::TAB_SCHEDULE_PAYMENT, 'payment_id');
         $items = [];
         foreach ($query as $row) {
-            $items[] = ModelEventPersonAccommodation::createFromActiveRow($row->event_person_accommodation);
+            $items[] = ModelPersonSchedule::createFromActiveRow($row->person_schedule);
         }
         return $items;
     }
@@ -73,15 +78,6 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
      */
     public function getResourceId(): string {
         return self::RESOURCE_ID;
-    }
-
-    /**
-     * @param Machine $machine
-     * @param $id
-     * @throws \Nette\Application\ForbiddenRequestException
-     */
-    public function executeTransition(Machine $machine, $id) {
-        $machine->executeTransition($id, $this);
     }
 
     /**
@@ -99,7 +95,7 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
     }
 
     /**
-     * @return \FKSDB\Payment\Price
+     * @return Price
      */
     public function getPrice(): Price {
         return new Price($this->price, $this->currency);
@@ -109,54 +105,7 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
      * @return bool
      */
     public function hasGeneratedSymbols(): bool {
-        return $this->constant_symbol || $this->variable_symbol || $this->specific_symbol || $this->bank_account;
-    }
-
-    /**
-     * @return string
-     * @deprecated
-     */
-    public function getUIClass(): string {
-        $class = 'badge ';
-        switch ($this->state) {
-            case ModelPayment::STATE_WAITING:
-                $class .= 'badge-warning';
-                break;
-            case ModelPayment::STATE_CANCELED:
-                $class .= 'badge-secondary';
-                break;
-            case ModelPayment::STATE_RECEIVED:
-                $class .= 'badge-success';
-                break;
-            case ModelPayment::STATE_NEW:
-                $class .= 'badge-primary';
-                break;
-            default:
-                $class .= 'badge-light';
-        }
-        return $class;
-    }
-
-    /**
-     * @return string
-     * @deprecated
-     */
-    public function getStateLabel() {
-        switch ($this->state) {
-            case ModelPayment::STATE_NEW:
-                return _('New payment');
-
-            case ModelPayment::STATE_WAITING:
-                return _('Waiting for paying');
-
-            case ModelPayment::STATE_CANCELED:
-                return _('Payment canceled');
-
-            case ModelPayment::STATE_RECEIVED:
-                return _('Payment received');
-            default:
-                return $this->state;
-        }
+        return $this->constant_symbol || $this->variable_symbol || $this->specific_symbol || $this->bank_account || $this->bank_name || $this->recipient;
     }
 
     /**
@@ -174,22 +123,12 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
     }
 
     /**
-     * @param PriceCalculator $priceCalculator
+     * @param Context $connection
+     * @param IConventions $conventions
+     * @return ModelPayment|IModel|ActiveRow|AbstractModelSingle
      */
-    public function updatePrice(PriceCalculator $priceCalculator) {
-        $priceCalculator->setCurrency($this->currency);
-        $price = $priceCalculator->execute($this);
-
-        $this->update([
-            'price' => $price->getAmount(),
-            'currency' => $price->getCurrency(),
-        ]);
-    }
-
-    /**
-     * @return ModelPayment
-     */
-    public function refresh(): IStateModel {
-        return self::createFromActiveRow($this->getTable()->wherePrimary($this->payment_id)->fetch());
+    public function refresh(Context $connection, IConventions $conventions): IStateModel {
+        $query = new TypedTableSelection(self::class, DbNames::TAB_PAYMENT, $connection, $conventions);
+        return $query->get($this->getPrimary());
     }
 }

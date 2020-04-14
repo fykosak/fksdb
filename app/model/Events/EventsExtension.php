@@ -108,7 +108,6 @@ class EventsExtension extends CompilerExtension {
      */
     /**
      * @throws \FKSDB\Config\NeonSchemaException
-     * @throws \Nette\Utils\RegexpException
      */
     public function loadConfiguration() {
         parent::loadConfiguration();
@@ -333,25 +332,23 @@ class EventsExtension extends CompilerExtension {
         $this->transtionFactory = $factory;
     }
 
-    /**
-     * @throws \Nette\Utils\RegexpException
-     */
     private function createFieldFactory() {
         $factory = $this->getContainerBuilder()->addDefinition($this->getFieldName());
-        $factory->setShared(false);
         $factory->setClass(self::CLASS_FIELD, ['%name%', '%label%']);
-        $factory->setInternal(true);
 
         $parameters = array_keys($this->scheme['field']);
         array_unshift($parameters, 'name');
         $factory->setParameters($parameters);
-
         $factory->addSetup('setEvaluator', '@events.expressionEvaluator');
-
-        foreach (Arrays::grep($parameters, "/^name|label$/", PREG_GREP_INVERT) as $parameter) {
-            $factory->addSetup('set' . ucfirst($parameter), "%$parameter%");
+        foreach ($parameters as $parameter) {
+            switch ($parameter) {
+                case 'name':
+                case 'label':
+                    break;
+                default:
+                    $factory->addSetup('set' . ucfirst($parameter), "%$parameter%");
+            }
         }
-
         $this->fieldFactory = $factory;
     }
 
@@ -528,7 +525,6 @@ class EventsExtension extends CompilerExtension {
      * @param $definition
      * @return \Nette\DI\ServiceDefinition
      * @throws \FKSDB\Config\NeonSchemaException
-     * @throws \Nette\Utils\RegexpException
      */
     private function createBaseHolderFactory($definitionName, $baseName, $definition) {
         $factoryName = $this->getBaseHolderName($definitionName, $baseName);
@@ -582,9 +578,8 @@ class EventsExtension extends CompilerExtension {
 
 
             array_unshift($fieldDef, $name);
-            $defka = $this->fieldFactory;
-            $stmt = new Statement($defka, $fieldDef);
-            $factory->addSetup('addField', $stmt);
+
+            $factory->addSetup('addField', new Statement($this->fieldFactory, $fieldDef));
         }
 
         $factory->addSetup('inferEvent', '%event%'); // must be after setParamScheme

@@ -18,16 +18,17 @@ use Nette\Security\IResource;
  * @property-read int points
  * @property-read int ct_id
  * @property-read int task_id
+ * @property-read bool corrected
  */
-class ModelSubmit extends AbstractModelSingle implements IResource {
+class ModelSubmit extends AbstractModelSingle implements IResource, ITaskReferencedModel {
 
     const SOURCE_UPLOAD = 'upload';
     const SOURCE_POST = 'post';
 
     /**
-     * @return boolean
+     * @return bool
      */
-    public function isEmpty() {
+    public function isEmpty(): bool {
         return !($this->submitted_on || $this->note);
     }
 
@@ -35,8 +36,7 @@ class ModelSubmit extends AbstractModelSingle implements IResource {
      * @return ModelTask
      */
     public function getTask(): ModelTask {
-        $data = $this->ref(DbNames::TAB_TASK, 'task_id');
-        return ModelTask::createFromActiveRow($data);
+        return ModelTask::createFromActiveRow($this->ref(DbNames::TAB_TASK, 'task_id'));
     }
 
     /**
@@ -56,7 +56,7 @@ class ModelSubmit extends AbstractModelSingle implements IResource {
     /**
      * @return string
      */
-    public function getFingerprint() {
+    public function getFingerprint(): string {
         return md5(implode(':', [
             $this->submit_id,
             $this->submitted_on,

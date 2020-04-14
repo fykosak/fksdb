@@ -4,9 +4,9 @@ namespace FKSDB\Config\Expressions;
 
 use FKSDB\Expressions\Comparison\Le;
 use FKSDB\Expressions\Comparison\Leq;
-use FKSDB\Expressions\Logic\And_;
+use FKSDB\Expressions\Logic\LogicAnd;
 use FKSDB\Expressions\Logic\Not;
-use FKSDB\Expressions\Logic\Or_;
+use FKSDB\Expressions\Logic\LogicOr;
 use FKSDB\Expressions\Predicates\After;
 use FKSDB\Expressions\Predicates\Before;
 use Nette\DI\Container;
@@ -25,8 +25,8 @@ use Traversable;
 class Helpers {
 
     private static $semanticMap = [
-        'and' => And_::class,
-        'or' => Or_::class,
+        'and' => LogicAnd::class,
+        'or' => LogicOr::class,
         'neg' => Not::class,
         'after' => After::class,
         'before' => Before::class,

@@ -3,16 +3,17 @@
 namespace OrgModule;
 
 use FKSDB\Components\Grids\ContestantsGrid;
+use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Services\ServiceContestant;
 use Nette\Application\UI\Form;
 
 /**
  * Class ContestantPresenter
  * @package OrgModule
+ * @method ModelContestant getModel()
  */
 class ContestantPresenter extends ExtendedPersonPresenter {
 
-    protected $modelResourceId = 'contestant';
     protected $fieldsDefinition = 'adminContestant';
 
     /**
@@ -31,27 +32,22 @@ class ContestantPresenter extends ExtendedPersonPresenter {
      * @param $id
      */
     public function titleEdit($id) {
-        $this->setTitle(sprintf(_('Úprava řešitele %s'), $this->getModel()->getPerson()->getFullname()));
-        $this->setIcon('fa fa-user');
+        $this->setTitle(sprintf(_('Úprava řešitele %s'), $this->getModel()->getPerson()->getFullName()), 'fa fa-user');
     }
 
     public function titleCreate() {
-        $this->setTitle(_('Založit řešitele'));
-        $this->setIcon('fa fa-user-plus');
+        $this->setTitle(_('Založit řešitele'), 'fa fa-user-plus');
     }
 
     public function titleList() {
-        $this->setTitle(_('Řešitelé'));
-        $this->setIcon('fa fa-users');
+        $this->setTitle(_('Řešitelé'), 'fa fa-users');
     }
 
     /**
-     * @param $name
      * @return ContestantsGrid
      */
-    protected function createComponentGrid($name) {
-        $grid = new ContestantsGrid($this->serviceContestant);
-        return $grid;
+    protected function createComponentGrid() {
+        return new ContestantsGrid($this->getContext());
     }
 
     /**
@@ -71,13 +67,14 @@ class ContestantPresenter extends ExtendedPersonPresenter {
 
     /**
      * @return null
+     * TODO refactoring
      */
     protected function getAcYearFromModel() {
         $model = $this->getModel();
         if (!$model) {
             return null;
         }
-        return $this->yearCalculator->getAcademicYear($this->serviceContest->findByPrimary($model->contest_id), $model->year);
+        return $this->yearCalculator->getAcademicYear($this->getServiceContest()->findByPrimary($model->contest_id), $model->year);
     }
 
     /**
@@ -109,5 +106,11 @@ class ContestantPresenter extends ExtendedPersonPresenter {
     }
 
 
+    /**
+     * @inheritDoc
+     */
+    protected function getModelResource(): string {
+        return ModelContestant::RESOURCE_ID;
+    }
 }
 

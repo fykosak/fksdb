@@ -2,10 +2,13 @@
 
 namespace FKSDB\Components\Forms\Factories\ReferencedPerson;
 
+use Closure;
+use FKSDB\Components\Forms\Containers\AddressContainer;
 use FKSDB\Components\Forms\Containers\IWriteOnly;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Containers\Models\IReferencedSetter;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
+use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\AddressFactory;
@@ -15,6 +18,7 @@ use FKSDB\Components\Forms\Factories\PersonHistoryFactory;
 use FKSDB\Components\Forms\Factories\PersonInfoFactory;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Models\ModelPostContact;
 use FKSDB\ORM\Services\ServiceFlag;
 use FKSDB\ORM\Services\ServicePerson;
 use Nette\Forms\Container;
@@ -49,7 +53,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
     const HAS_DELIVERY = 0x8;
 
     /**
-     * @var \FKSDB\ORM\Services\ServicePerson
+     * @var ServicePerson
      */
     protected $servicePerson;
 
@@ -78,7 +82,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
     protected $personProvider;
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceFlag
+     * @var ServiceFlag
      */
     protected $serviceFlag;
 
@@ -95,11 +99,11 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
      * AbstractReferencedPersonFactory constructor.
      * @param AddressFactory $addressFactory
      * @param FlagFactory $flagFactory
-     * @param \FKSDB\ORM\Services\ServicePerson $servicePerson
+     * @param ServicePerson $servicePerson
      * @param PersonFactory $personFactory
      * @param ReferencedPersonHandlerFactory $referencedPersonHandlerFactory
      * @param PersonProvider $personProvider
-     * @param \FKSDB\ORM\Services\ServiceFlag $serviceFlag
+     * @param ServiceFlag $serviceFlag
      * @param PersonInfoFactory $personInfoFactory
      * @param PersonHistoryFactory $personHistoryFactory
      */
@@ -124,10 +128,9 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
      * @param IVisibilityResolver $visibilityResolver is person's writeOnly field visible? (i.e. not writeOnly then)
      * @param int $evenId
      * @return array
-     * @throws \Nette\Utils\RegexpException
+     * @throws \Exception
      */
     public function createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, IModifiabilityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver, $evenId = 0) {
-
         $handler = $this->referencedPersonHandlerFactory->create($acYear, null, $evenId);
 
         $hiddenField = new ReferencedId($this->servicePerson, $handler, $this);
@@ -148,7 +151,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
             if ($sub == ReferencedPersonHandler::POST_CONTACT_DELIVERY) {
                 $subcontainer->setOption('showGroup', true);
                 $subcontainer->setOption('label', _('Doručovací adresa'));
-            } else if ($sub == ReferencedPersonHandler::POST_CONTACT_PERMANENT) {
+            } elseif ($sub == ReferencedPersonHandler::POST_CONTACT_PERMANENT) {
                 $subcontainer->setOption('showGroup', true);
                 $label = _('Trvalá adresa');
                 if (isset($container[ReferencedPersonHandler::POST_CONTACT_DELIVERY])) {
@@ -185,10 +188,10 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
             $container->addComponent($subcontainer, $sub);
         }
 
-        return array(
+        return [
             $hiddenField,
             $container,
-        );
+        ];
     }
 
 
@@ -210,7 +213,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
         }
 
         $container->getReferencedId()->getHandler()->setResolution($resolution);
-        $container->getComponent(ReferencedContainer::CONTROL_COMPACT)->setValue($model ? $model->getFullname() : null);
+        $container->getComponent(ReferencedContainer::CONTROL_COMPACT)->setValue($model ? $model->getFullName() : null);
         foreach ($container->getComponents() as $sub => $subcontainer) {
             if (!$subcontainer instanceof Container) {
                 continue;
@@ -229,13 +232,13 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
 
                 if (!$controlVisible && !$controlModifiable) {
                     $container[$sub]->removeComponent($component);
-                } else if (!$controlVisible && $controlModifiable) {
+                } elseif (!$controlVisible && $controlModifiable) {
                     $this->setWriteOnly($component, true);
                     $component->setDisabled(false);
-                } else if ($controlVisible && !$controlModifiable) {
+                } elseif ($controlVisible && !$controlModifiable) {
                     $component->setDisabled();
                     $component->setValue($value);
-                } else if ($controlVisible && $controlModifiable) {
+                } elseif ($controlVisible && $controlModifiable) {
                     $this->setWriteOnly($component, false);
                     $component->setDisabled(false);
                 }
@@ -262,7 +265,9 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
      * @param $acYear
      * @param HiddenField $hiddenField
      * @param array $metadata
-     * @return \FKSDB\Components\Forms\Containers\AddressContainer|BaseControl|null
+     * @return AddressContainer|BaseControl|null
+     * @throws \Exception
+     * @throws \Exception
      */
     public function createField($sub, $fieldName, $acYear, HiddenField $hiddenField, array $metadata) {
         if (in_array($sub, [
@@ -276,14 +281,12 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
                 } else {
                     $options = 0;
                 }
-                $container = $this->addressFactory->createAddress($options, $hiddenField);
-                return $container;
+                return $this->addressFactory->createAddress($options, $hiddenField);
             } else {
                 throw new InvalidArgumentException("Only 'address' field is supported.");
             }
-        } else if ($sub == 'person_has_flag') {
-            $control = $this->flagFactory->createFlag($hiddenField, $metadata);
-            return $control;
+        } elseif ($sub == 'person_has_flag') {
+            return $this->flagFactory->createFlag($hiddenField, $metadata);
         } else {
             $control = null;
             switch ($sub) {
@@ -348,7 +351,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
     protected function setWriteOnly($component, $value) {
         if ($component instanceof IWriteOnly) {
             $component->setWriteOnly($value);
-        } else if ($component instanceof Container) {
+        } elseif ($component instanceof Container) {
             foreach ($component->getComponents() as $subcomponent) {
                 $this->setWriteOnly($subcomponent, $value);
             }
@@ -362,7 +365,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
     protected function isWriteOnly($component) {
         if ($component instanceof IWriteOnly) {
             return true;
-        } else if ($component instanceof Container) {
+        } elseif ($component instanceof Container) {
             foreach ($component->getComponents() as $subcomponent) {
                 if ($this->isWriteOnly($subcomponent)) {
                     return true;
@@ -374,7 +377,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
 
     /**
      * @param $searchType
-     * @return \FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox|TextInput
+     * @return AutocompleteSelectBox|TextInput
      */
     protected function createSearchControl($searchType) {
 
@@ -384,6 +387,8 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
                 $control->addCondition(Form::FILLED)
                     ->addRule(Form::EMAIL, _('Neplatný tvar e-mailu.'));
                 $control->setOption('description', _('Nejprve zkuste najít osobu v naší databázi podle e-mailu.'));
+                $control->setAttribute('placeholder', 'your-email@exmaple.com');
+                $control->setAttribute('autocomplete', 'email');
                 break;
             case self::SEARCH_ID:
                 $control = $this->personFactory->createPersonSelect(true, _('Jméno'), $this->personProvider);
@@ -396,7 +401,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
 
     /**
      * @param $searchType
-     * @return \Closure
+     * @return Closure
      */
     protected function createSearchCallback($searchType) {
         $service = $this->servicePerson;
@@ -419,7 +424,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
 
     /**
      * @param $searchType
-     * @return \Closure
+     * @return Closure
      */
     protected function createTermToValuesCallback($searchType) {
         switch ($searchType) {
@@ -438,7 +443,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelPerson $person
+     * @param ModelPerson $person
      * @param $sub
      * @param $field
      * @param $acYear
@@ -450,12 +455,12 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelPerson|null $person
+     * @param ModelPerson|null $person
      * @param $sub
      * @param $field
      * @param $acYear
      * @param $options
-     * @return bool|\FKSDB\ORM\Models\ModelPostContact|mixed|null
+     * @return bool|ModelPostContact|mixed|null
      */
     protected function getPersonValue(ModelPerson $person = null, $sub, $field, $acYear, $options) {
         if (!$person) {
@@ -488,6 +493,4 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
                 throw new InvalidArgumentException("Unknown person sub '$sub'.");
         }
     }
-
 }
-

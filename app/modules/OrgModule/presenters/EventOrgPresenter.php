@@ -3,21 +3,23 @@
 namespace OrgModule;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
-use FKSDB\Components\Grids\EventOrgsGrid;
-use FKSDB\ORM\IModel;
+use FKSDB\NotImplementedException;
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Models\ModelEventOrg;
 use FKSDB\ORM\Services\ServiceEvent;
 use FKSDB\ORM\Services\ServiceEventOrg;
+use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Persons\ExtendedPersonHandler;
 
 /**
  * Class EventOrgPresenter
  * @package OrgModule
+ * @method ModelEventOrg getModel()
  */
 class EventOrgPresenter extends ExtendedPersonPresenter {
 
-    protected $modelResourceId = 'eventOrg';
     protected $fieldsDefinition = 'adminEventOrg';
 
     /**
@@ -26,12 +28,12 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
     private $serviceEventOrg;
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceEvent
+     * @var ServiceEvent
      */
     private $serviceEvent;
 
     /**
-     * @var \FKSDB\ORM\Models\ModelEvent
+     * @var ModelEvent
      */
     private $modelEvent;
 
@@ -48,7 +50,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
     }
 
     /**
-     * @param \FKSDB\ORM\Services\ServiceEvent $serviceEvent
+     * @param ServiceEvent $serviceEvent
      */
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;
@@ -56,24 +58,17 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
 
     public function titleEdit() {
         $model = $this->getModel();
-        $this->setTitle(sprintf(_('Úprava organizátora %s akce %s'), $model->getPerson()->getFullname(), $model->getEvent()->name));
-        $this->setIcon('fa fa-user');
+        $this->setTitle(sprintf(_('Úprava organizátora %s akce %s'), $model->getPerson()->getFullName(), $model->getEvent()->name), 'fa fa-user');
     }
 
     public function titleCreate() {
-        $this->setTitle(sprintf(_('Založit organizátora akce %s'), $this->getEvent()->name));
-        $this->setIcon('fa fa-user-plus');
-    }
-
-    public function titleList() {
-        $this->setTitle(sprintf(_('Organizátoři akce %s'), $this->getEvent()->name));
-        $this->setIcon('fa fa-users');
+        $this->setTitle(sprintf(_('Založit organizátora akce %s'), $this->getEvent()->name), 'fa fa-user-plus');
     }
 
     /**
      * @param $id
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function renderEdit($id) {
         parent::renderEdit($id);
@@ -88,33 +83,16 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
 
     /**
      * @param $id
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
-    public function actionDelete($id) {
-        $success = $this->serviceEventOrg->getTable()->where('e_org_id', $id)->delete();
+    public function actionDelete(int $id) {
+        $success = $this->serviceEventOrg->getTable()->wherePrimary($id)->delete();
         if ($success) {
             $this->flashMessage(_('Organizátor akce smazán.'), self::FLASH_SUCCESS);
         } else {
             $this->flashMessage(_('Nepodařilo se smazat organizátora akce.'), self::FLASH_ERROR);
         }
         $this->redirect('list');
-    }
-
-    /**
-     * @param \FKSDB\ORM\IModel|null $model
-     * @param Form $form
-     */
-    protected function setDefaults(IModel $model = null, Form $form) {
-        parent::setDefaults($model, $form);
-        //$form[ExtendedPersonHandler::CONT_MODEL]->setDefaults([]);
-    }
-
-    /**
-     * @param $name
-     * @return EventOrgsGrid
-     */
-    protected function createComponentGrid($name): EventOrgsGrid {
-        return new EventOrgsGrid($this->getEvent(), $this->serviceEventOrg);
     }
 
     /**
@@ -165,13 +143,28 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
     }
 
     /**
-     * @return \FKSDB\ORM\Models\ModelEvent
+     * @return ModelEvent
      */
     private function getEvent(): ModelEvent {
         if (!$this->modelEvent) {
-            $this->modelEvent = ModelEvent::createFromActiveRow($this->serviceEvent->findByPrimary($this->eventId));
+            $this->modelEvent = $this->serviceEvent->findByPrimary($this->eventId);
         }
         return $this->modelEvent;
+    }
+
+    /**
+     * @inheritDoc
+     * @throws NotImplementedException
+     */
+    protected function createComponentGrid() {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @return string
+     */
+    protected function getModelResource(): string {
+        return 'eventOrg';
     }
 
 }

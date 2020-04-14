@@ -13,14 +13,14 @@ use Nette\Templating\FileTemplate;
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
- * @author Jakub Šafin <xellos@fykos.cz>
+ * @author Michal Červeňák <miso@fykos.cz>
  * @property FileTemplate $template
  */
 class ThemeSwitcher extends Control {
     /**
      * @var array
      */
-    private $availableThemes = ['dark', 'light'];
+    private $availableThemes = ['light', 'dark'];
     /**
      * @var Session
      */

@@ -3,10 +3,9 @@
 namespace FKSDB\Components\Controls\PhoneNumber;
 
 use Closure;
-use FKSDB\Components\Controls\PhoneNumber\Region\AbstractRegion;
-use FKSDB\Components\Controls\PhoneNumber\Region\Czech;
-use FKSDB\Components\Controls\PhoneNumber\Region\Slovakia;
-use FKSDB\Components\Controls\PhoneNumber\Region\Spain;
+use FKSDB\ORM\Models\ModelRegion;
+use FKSDB\ORM\Services\ServiceRegion;
+use FKSDB\ORM\Tables\TypedTableSelection;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
@@ -16,20 +15,43 @@ use Nette\Utils\Html;
  */
 class PhoneNumberFactory {
     /**
-     * @var AbstractRegion[]
+     * @var ServiceRegion
      */
-    static $regions = [Slovakia::class, Czech::class, Spain::class];
+    private $serviceRegion;
+    /**
+     * @var TypedTableSelection
+     */
+    private $table;
 
     /**
-     * @param $number
+     * PhoneNumberFactory constructor.
+     * @param ServiceRegion $serviceRegion
+     */
+    public function __construct(ServiceRegion $serviceRegion) {
+        $this->serviceRegion = $serviceRegion;
+        $this->table = $this->serviceRegion->getTable();
+    }
+
+    /**
+     * @return TypedTableSelection
+     */
+    private function getAllRegions(): TypedTableSelection {
+        return $this->table;
+    }
+
+    /**
+     * @param string $number
      * @return Html
      */
-    public static function format(string $number): Html {
+    public function formatPhone(string $number): Html {
         try {
-            foreach (static::$regions as $region) {
-                if ($region::match($number)) {
-                    return $region::create($number);
-                }
+            $region = $this->getRegion($number);
+            if ($region) {
+                $flag = Html::el('span')
+                    ->addAttributes(['class' => 'phone-flag mr-3'])
+                    ->addHtml(Html::el('img')
+                        ->addAttributes(['src' => '/images/flags/4x3/' . \strtolower($region->country_iso) . '.svg']));
+                return Html::el('span')->addHtml($flag)->addText($region->formatPhoneNumber($number));
             }
         } catch (InvalidPhoneNumberException $exception) {
         }
@@ -38,30 +60,35 @@ class PhoneNumberFactory {
 
     /**
      * @param string $number
-     * @return bool
+     * @return ModelRegion|null
      */
-    public static function isValid(string $number): bool {
-        foreach (static::$regions as $region) {
-            if ($region::match($number)) {
-                return true;
+    private function getRegion(string $number) {
+        /**
+         * @var ModelRegion $region
+         */
+        foreach ($this->getAllRegions() as $region) {
+            if ($region->matchPhone($number)) {
+                return $region;
             }
         }
-        return false;
+        return null;
+    }
+
+    /**
+     * @param string $number
+     * @return bool
+     */
+    public function isValid(string $number): bool {
+        return !!$this->getRegion($number);
     }
 
     /**
      * @return Closure
      */
-    public static function getFormValidationCallback(): Closure {
+    public function getFormValidationCallback(): Closure {
         return function (BaseControl $control): bool {
             $value = $control->getValue();
-            foreach (static::$regions as $region) {
-                if ($region::match($value)) {
-                    return true;
-                }
-            }
-            return false;
+            return $this->isValid($value);
         };
-
     }
 }

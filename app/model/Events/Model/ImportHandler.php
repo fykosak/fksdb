@@ -72,6 +72,7 @@ class ImportHandler {
      * @param $errorMode
      * @param $stateless
      * @return bool
+     * @throws \Nette\Utils\JsonException
      */
     public function import(ApplicationHandler $handler, $transitions, $errorMode, $stateless) {
         set_time_limit(0);
@@ -89,7 +90,7 @@ class ImportHandler {
             if (!isset($values[$baseHolderName][BaseHolder::STATE_COLUMN]) || !$values[$baseHolderName][BaseHolder::STATE_COLUMN]) {
                 if ($stateless == self::STATELESS_IGNORE) {
                     continue;
-                } else if ($stateless == self::STATELESS_KEEP) {
+                } elseif ($stateless == self::STATELESS_KEEP) {
                     unset($values[$baseHolderName][BaseHolder::STATE_COLUMN]);
                 }
             }

@@ -3,10 +3,9 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
-use FKSDB\Components\DatabaseReflection\Org\SinceRow;
-use FKSDB\Components\DatabaseReflection\PersonHistory\StudyYearRow;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use Nette\Forms\Controls\BaseControl;
+use Nette\InvalidStateException;
 
 /**
  * Class SingleReflectionFactory
@@ -33,7 +32,8 @@ abstract class SingleReflectionFactory {
 
     /**
      * @param string $fieldName
-     * @return AbstractRow|SinceRow|StudyYearRow
+     * @return AbstractRow
+     * @throws InvalidStateException
      * @throws \Exception
      */
     protected function loadFactory(string $fieldName): AbstractRow {
@@ -42,10 +42,11 @@ abstract class SingleReflectionFactory {
 
     /**
      * @param string $fieldName
+     * @param array $args
      * @return BaseControl
      * @throws \Exception
      */
-    public function createField(string $fieldName): BaseControl {
+    public function createField(string $fieldName, ...$args): BaseControl {
         return $this->loadFactory($fieldName)->createField();
     }
 

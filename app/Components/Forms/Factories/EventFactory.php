@@ -15,8 +15,6 @@ use Nette\Forms\Controls\BaseControl;
  */
 class EventFactory extends SingleReflectionFactory {
 
-    const SHOW_UNKNOWN_SCHOOL_HINT = 0x1;
-
     /**
      * @var \FKSDB\ORM\Services\ServiceEventType
      */
@@ -55,11 +53,12 @@ class EventFactory extends SingleReflectionFactory {
 
     /**
      * @param string $fieldName
-     * @param ModelContest $contest
+     * @param array $args
      * @return BaseControl
      * @throws \Exception
      */
-    public function createField(string $fieldName, ModelContest $contest = null): BaseControl {
+    public function createField(string $fieldName, ...$args): BaseControl {
+        list ($contest) = $args;
         switch ($fieldName) {
             case 'event_type_id':
                 return $this->loadFactory($fieldName)->createField($contest);

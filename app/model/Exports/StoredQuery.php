@@ -4,11 +4,9 @@ namespace Exports;
 
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use Nette\Database\Connection;
-use Nette\Database\ISupplementalDriver;
 use Nette\Database\Statement;
-use Tracy\Debugger;
 use Nette\InvalidArgumentException;
-use Nette\NotImplementedException;
+use FKSDB\NotImplementedException;
 use Nette\Security\IResource;
 use NiftyGrid\DataSource\IDataSource;
 
@@ -179,14 +177,14 @@ class StoredQuery implements IDataSource, IResource {
 
             $count = $statement->columnCount();
 
-            if ($this->connection->getSupplementalDriver()->isSupported(ISupplementalDriver::SUPPORT_COLUMNS_META)) { // workaround for PHP bugs #53782, #54695 (copy+paste from Nette\Database\Statement
-                for ($col = 0; $col < $count; $col++) {
-                    $meta = $statement->getColumnMeta($col);
-                    $this->columnNames[] = $meta['name'];
-                }
-            } else {
-                $this->columnNames = range(1, $count);
+            // if ($this->connection->getSupplementalDriver()->isSupported(ISupplementalDriver::SUPPORT_COLUMNS_META)) { // workaround for PHP bugs #53782, #54695 (copy+paste from Nette\Database\Statement
+            for ($col = 0; $col < $count; $col++) {
+                $meta = $statement->getColumnMeta($col);
+                $this->columnNames[] = $meta['name'];
             }
+            // } else {
+            //     $this->columnNames = range(1, $count);
+            //  }
         }
         return $this->columnNames;
     }
@@ -207,10 +205,10 @@ class StoredQuery implements IDataSource, IResource {
     /**
      *
      * @param string $sql
-     * @return Statement
+     * @return \PDOStatement
      */
-    private function bindParams($sql) {
-        $statement = $this->connection->prepare($sql);
+    private function bindParams($sql): \PDOStatement {
+        $statement = $this->connection->getPdo()->prepare($sql);
         if ($this->postProcessing) {
             $this->postProcessing->resetParameters();
         }
@@ -260,6 +258,7 @@ class StoredQuery implements IDataSource, IResource {
 
     /**
      * @param array $filters
+     * @throws NotImplementedException
      */
     public function filterData(array $filters) {
         throw new NotImplementedException();
@@ -275,7 +274,7 @@ class StoredQuery implements IDataSource, IResource {
             $sql = "SELECT COUNT(1) FROM ($innerSql) " . self::INNER_QUERY;
             $statement = $this->bindParams($sql);
             $statement->execute();
-            $this->count = $statement->fetchField();
+            $this->count = $statement->fetchColumn();
             if ($this->postProcessing) {
                 if (!$this->postProcessing->keepsCount()) {
                     $this->count = count($this->getData());
@@ -293,8 +292,7 @@ class StoredQuery implements IDataSource, IResource {
             $innerSql = $this->getQueryPattern()->sql;
             if ($this->orders || $this->limit !== null || $this->offset !== null) {
                 $sql = "SELECT * FROM ($innerSql) " . self::INNER_QUERY;
-            }
-            else {
+            } else {
                 $sql = $innerSql;
             }
 
@@ -305,7 +303,6 @@ class StoredQuery implements IDataSource, IResource {
             if ($this->limit !== null && $this->offset !== null) {
                 $sql .= " LIMIT {$this->offset}, {$this->limit}";
             }
-            Debugger::$maxLen = 100000000;
 
             $statement = $this->bindParams($sql);
             $statement->execute();

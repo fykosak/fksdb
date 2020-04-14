@@ -8,7 +8,7 @@ use Events\Model\ExpressionEvaluator;
 use Events\Model\Holder\Holder;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Services\ServicePersonHistory;
-use Nette\Database\Connection;
+use Nette\Database\Context;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 
@@ -20,9 +20,9 @@ use Nette\Forms\IControl;
 class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
 
     /**
-     * @var Connection
+     * @var Context
      */
-    private $connection;
+    private $context;
 
     /**
      * @var mixed
@@ -60,12 +60,12 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
      * TeamsPerSchool constructor.
      * @param $teamsPerSchool
      * @param ExpressionEvaluator $evaluator
-     * @param Connection $connection
+     * @param Context $context
      * @param ServicePersonHistory $servicePersonHistory
      */
-    function __construct($teamsPerSchool, ExpressionEvaluator $evaluator, Connection $connection, ServicePersonHistory $servicePersonHistory) {
+    function __construct($teamsPerSchool, ExpressionEvaluator $evaluator, Context $context, ServicePersonHistory $servicePersonHistory) {
         parent::__construct($servicePersonHistory);
-        $this->connection = $connection;
+        $this->context = $context;
         $this->evaluator = $evaluator;
         $this->setTeamsPerSchool($teamsPerSchool);
     }
@@ -122,7 +122,7 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
              * This may not be optimal.
              */
             $acYear = $event->event_type->contest->related('contest_year')->where('year', $event->year)->fetch()->ac_year;
-            $result = $this->connection->table(DbNames::TAB_EVENT_PARTICIPANT)
+            $result = $this->context->table(DbNames::TAB_EVENT_PARTICIPANT)
                 ->select('person.person_history:school_id')
                 ->select("GROUP_CONCAT(DISTINCT e_fyziklani_participant:e_fyziklani_team.name ORDER BY e_fyziklani_participant:e_fyziklani_team.created SEPARATOR ', ') AS teams")
                 ->where($baseHolder->getEventId(), $event->getPrimary())

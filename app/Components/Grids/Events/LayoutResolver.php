@@ -45,7 +45,7 @@ class LayoutResolver {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @param ModelEvent $event
      * @return string
      */
     public function getFormLayout(ModelEvent $event) {

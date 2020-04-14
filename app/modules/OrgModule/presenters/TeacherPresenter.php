@@ -2,24 +2,37 @@
 
 namespace OrgModule;
 
+use Exception;
 use FKSDB\Components\Forms\Factories\SchoolFactory;
 use FKSDB\Components\Forms\Factories\TeacherFactory;
 use FKSDB\Components\Grids\TeachersGrid;
+use FKSDB\ORM\Models\ModelTeacher;
 use FKSDB\ORM\Services\ServiceTeacher;
+use Nette;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Persons\ExtendedPersonHandler;
 
 /**
  * Class TeacherPresenter
  * @package OrgModule
+ * @method ModelTeacher getModel2()
+ * @method ModelTeacher getModel()
  */
 class TeacherPresenter extends ExtendedPersonPresenter {
+    /**
+     * TeacherPresenter constructor.
+     * @param Nette\DI\Container|NULL $context
+     */
+    public function __construct(Nette\DI\Container $context = NULL) {
+        $this->sendEmail = false;
+        parent::__construct($context);
+    }
 
-    protected $modelResourceId = 'teacher';
     protected $fieldsDefinition = 'adminTeacher';
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceTeacher
+     * @var ServiceTeacher
      */
     private $serviceTeacher;
 
@@ -33,7 +46,7 @@ class TeacherPresenter extends ExtendedPersonPresenter {
     private $schoolFactory;
 
     /**
-     * @param \FKSDB\ORM\Services\ServiceTeacher $serviceTeacher
+     * @param ServiceTeacher $serviceTeacher
      */
     public function injectServiceTeacher(ServiceTeacher $serviceTeacher) {
         $this->serviceTeacher = $serviceTeacher;
@@ -53,36 +66,37 @@ class TeacherPresenter extends ExtendedPersonPresenter {
         $this->schoolFactory = $schoolFactory;
     }
 
+    /**
+     * @throws BadRequestException
+     */
     public function titleEdit() {
-        /**
-         * @var \FKSDB\ORM\Models\ModelTeacher $model
-         */
-        $model = $this->getModel();
-        $this->setTitle(sprintf(_('Edit teacher %s'), $model->getPerson()->getFullName()));
-        $this->setIcon('fa fa-pencil');
+        $model = $this->getModel2();
+        $this->setTitle(sprintf(_('Edit teacher %s'), $model->getPerson()->getFullName()), 'fa fa-pencil');
     }
 
     public function titleCreate() {
-        $this->setTitle(_('Create new teacher'));
-        $this->setIcon('fa fa-plus');
+        $this->setTitle(_('Create new teacher'), 'fa fa-plus');
     }
 
     public function titleList() {
-        $this->setTitle(_('Teacher'));
-        $this->setIcon('fa fa-graduation-cap');
+        $this->setTitle(_('Teacher'), 'fa fa-graduation-cap');
+    }
+
+    public function titleDetail() {
+        $this->setTitle(_('Teacher detail'), 'fa fa-graduation-cap');
     }
 
     /**
-     * @param $name
      * @return TeachersGrid
      */
-    protected function createComponentGrid($name): TeachersGrid {
-        return new TeachersGrid($this->serviceTeacher);
+    protected function createComponentGrid(): TeachersGrid {
+        return new TeachersGrid($this->getContext());
     }
 
     /**
      * @param Form $form
      * @return mixed|void
+     * @throws Exception
      */
     protected function appendExtendedContainer(Form $form) {
         $container = $this->teacherFactory->createTeacher();
@@ -92,7 +106,14 @@ class TeacherPresenter extends ExtendedPersonPresenter {
     }
 
     /**
-     * @return mixed|\FKSDB\ORM\Services\ServiceTeacher
+     * @throws BadRequestException
+     */
+    public function renderDetail() {
+        $this->template->model = $this->getModel2();
+    }
+
+    /**
+     * @return mixed|ServiceTeacher
      */
     protected function getORMService() {
         return $this->serviceTeacher;
@@ -124,6 +145,13 @@ class TeacherPresenter extends ExtendedPersonPresenter {
      */
     public function messageExists() {
         return _('Teacher already exist');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getModelResource(): string {
+        return ModelTeacher::RESOURCE_ID;
     }
 }
 

@@ -1,7 +1,6 @@
 {layout '../../../templates/@layout.latte'}
 
 {block content}
-    {dump $contests}
     {foreach $contests as $contest}
         <a href="{link changeContest! $contest->contest_id}"
                 n:class="'col-12 btn btn-lg btn-block ','btn-'.$contest->getContestSymbol()">{$contest->name}</a>

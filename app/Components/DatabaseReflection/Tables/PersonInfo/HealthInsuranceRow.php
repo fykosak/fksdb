@@ -3,11 +3,8 @@
 namespace FKSDB\Components\DatabaseReflection\PersonInfo;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
-use FKSDB\Components\DatabaseReflection\ValuePrinters\StringPrinter;
-use FKSDB\Components\Forms\Factories\ITestedRowFactory;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelPersonInfo;
-use FKSDB\ValidationTest\ValidationLog;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
@@ -16,7 +13,7 @@ use Nette\Utils\Html;
  * Class HealthInsuranceField
  * @package FKSDB\Components\Forms\Factories\PersonInfo
  */
-class HealthInsuranceRow extends AbstractRow implements ITestedRowFactory {
+class HealthInsuranceRow extends AbstractRow {
     const ID_MAPPING = [
         111 => '(111) Všeobecná zdravotní pojišťovna ČR',
         201 => '(201) Vojenská zdravotní pojišťovna ČR',
@@ -63,27 +60,13 @@ class HealthInsuranceRow extends AbstractRow implements ITestedRowFactory {
     }
 
     /**
+     * @param array $args
      * @return BaseControl
      */
-    public function createField(): BaseControl {
+    public function createField(...$args): BaseControl {
         $control = new SelectBox($this->getTitle());
         $control->setItems(self::ID_MAPPING);
         $control->setPrompt(_('Vybete zdravotní pojišťovnu'));
         return $control;
-    }
-
-    /**
-     * @param AbstractModelSingle|ModelPersonInfo $model
-     * @return ValidationLog
-     */
-    public function runTest(AbstractModelSingle $model): ValidationLog {
-        $testName = 'person_info__health_insurance';
-        if (\is_null($model->health_insurance)) {
-            return new ValidationLog($testName, _('Health insurance is not set'), ValidationLog::LVL_INFO);
-        }
-        if (\array_key_exists($model->health_insurance, self::ID_MAPPING)) {
-            return new ValidationLog($testName, _('Health insurance is valid'), ValidationLog::LVL_SUCCESS);
-        }
-        return new ValidationLog($testName, _('Undefined Health insurance'), ValidationLog::LVL_DANGER);
     }
 }

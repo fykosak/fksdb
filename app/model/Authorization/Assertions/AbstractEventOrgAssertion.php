@@ -4,7 +4,7 @@ namespace Authorization\Assertions;
 
 use Exports\StoredQuery;
 use FKSDB\ORM\DbNames;
-use Nette\Database\Connection;
+use Nette\Database\Context;
 use Nette\Security\IUserStorage;
 use Nette\Security\Permission;
 use Nette\SmartObject;
@@ -17,8 +17,9 @@ use Nette\SmartObject;
 abstract class AbstractEventOrgAssertion {
 
     use SmartObject;
-
-    private $eventTypeId;
+    /**
+     * @var string
+     */
     private $parameterName;
 
     /**
@@ -27,7 +28,7 @@ abstract class AbstractEventOrgAssertion {
     private $user;
 
     /**
-     * @var Connection
+     * @var Context
      */
     private $connection;
 
@@ -36,13 +37,9 @@ abstract class AbstractEventOrgAssertion {
      * @param $eventTypeId
      * @param $parameterName
      * @param IUserStorage $user
-     * @param Connection $connection
+     * @param Context $connection
      */
-    function __construct($eventTypeId, $parameterName, IUserStorage $user, Connection $connection) {
-        if (!is_array($eventTypeId)) {
-            $eventTypeId = [$eventTypeId];
-        }
-        $this->eventTypeId = $eventTypeId;
+    function __construct($eventTypeId, string $parameterName, IUserStorage $user, Context $connection) {
         $this->parameterName = $parameterName;
         $this->user = $user;
         $this->connection = $connection;
@@ -69,10 +66,8 @@ abstract class AbstractEventOrgAssertion {
             return false;
         }
         $rows = $this->connection->table(DbNames::TAB_EVENT_ORG)
-            ->where('person_id', $person->person_id)
-            ->where('event.event_type_id', $this->eventTypeId);
+            ->where('person_id', $person->person_id);
 
-        // $queryParameters = $storedQuery->getParameters(true);
         if ($this->parameterName) {
             $rows->where('event.' . $this->parameterName, /*$queryParameters[$this->parameterName]*/
                 $parameterValue);

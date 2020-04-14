@@ -12,11 +12,12 @@ use PDO;
  * @property-read string type
  * @property-read integer default_integer
  * @property-read string default_string
+ * @property-read int query_id
  */
 class ModelStoredQueryParameter extends AbstractModelSingle {
 
     const TYPE_INT = 'integer';
-    const TYPE_STR = 'string';
+    const TYPE_STRING = 'string';
     const TYPE_BOOL = 'bool';
 
     /**
@@ -28,7 +29,7 @@ class ModelStoredQueryParameter extends AbstractModelSingle {
             case self::TYPE_INT:
             case self::TYPE_BOOL:
                 return $this->default_integer;
-            case self::TYPE_STR:
+            case self::TYPE_STRING:
                 return $this->default_string;
             default:
                 throw new InvalidStateException("Unsupported parameter type '{$this->type}'.");
@@ -45,7 +46,7 @@ class ModelStoredQueryParameter extends AbstractModelSingle {
             case self::TYPE_BOOL:
                 $this->default_integer = (int)$value;
                 break;
-            case self::TYPE_STR:
+            case self::TYPE_STRING:
                 $this->default_string = $value;
                 break;
             default:
@@ -62,7 +63,7 @@ class ModelStoredQueryParameter extends AbstractModelSingle {
             case self::TYPE_INT:
             case self::TYPE_BOOL:
                 return PDO::PARAM_INT;
-            case self::TYPE_STR:
+            case self::TYPE_STRING:
                 return PDO::PARAM_STR;
             default:
                 throw new InvalidStateException("Unsupported parameter type '{$this->type}'.");

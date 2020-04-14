@@ -37,6 +37,7 @@ class SeriesCalculator {
     /**
      * @param ModelContest $contest
      * @return int
+     * @throws \Exception
      */
     public function getCurrentSeries(ModelContest $contest): int {
         $year = $this->yearCalculator->getCurrentYear($contest);
@@ -55,11 +56,10 @@ class SeriesCalculator {
      * @return int
      */
     public function getLastSeries(ModelContest $contest, int $year): int {
-        $row = $this->serviceTask->getTable()->where([
+        return $this->serviceTask->getTable()->where([
             'contest_id' => $contest->contest_id,
             'year' => $year
         ])->max('series');
-        return $row;
     }
 
     /**

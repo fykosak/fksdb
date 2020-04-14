@@ -4,7 +4,7 @@
             {$currentEvent?  $currentEvent->name: _('Event') }
         </a>
         <div class="dropdown-menu">
-            {foreach $availableFyziklani as $key => $fyziklani}
+            {foreach $availableFyziklani as $fyziklani}
                 {if $fyziklani->event_id == $currentEvent->event_id}
                     <span class="dropdown-item active">{$fyziklani->name}</span>
                 {else}

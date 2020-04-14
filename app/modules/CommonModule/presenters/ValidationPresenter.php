@@ -2,10 +2,10 @@
 
 namespace CommonModule;
 
-use FKSDB\Components\Controls\Validation\ValidationControl;
-use FKSDB\Components\Grids\Validation\ValidationGrid;
+use FKSDB\Components\Controls\DataTesting\PersonTestControl;
+use FKSDB\Components\Grids\DataTesting\PersonsGrid;
 use FKSDB\ORM\Services\ServicePerson;
-use FKSDB\ValidationTest\ValidationFactory;
+use FKSDB\DataTesting\DataTestingFactory;
 
 /**
  * Class ValidationPresenter
@@ -18,7 +18,7 @@ class ValidationPresenter extends BasePresenter {
      */
     private $servicePerson;
     /**
-     * @var ValidationFactory
+     * @var DataTestingFactory
      */
     private $validationFactory;
 
@@ -32,25 +32,22 @@ class ValidationPresenter extends BasePresenter {
     }
 
     /**
-     * @param ValidationFactory $validationFactory
+     * @param DataTestingFactory $validationFactory
      */
-    public function injectValidationFactory(ValidationFactory $validationFactory) {
+    public function injectValidationFactory(DataTestingFactory $validationFactory) {
         $this->validationFactory = $validationFactory;
     }
 
     public function titleDefault() {
-        $this->setIcon('fa fa-check');
-        $this->setTitle('Validation tests');
+        $this->setTitle(_('Data validation'), 'fa fa-check');
     }
 
     public function titleList() {
-        $this->setIcon('fa fa-check');
-        $this->setTitle('All test');
+        $this->setTitle(_('All test'), 'fa fa-check');
     }
 
     public function titlePreview() {
-        $this->setIcon('fa fa-check');
-        $this->setTitle('Select test');
+        $this->setTitle(_('Select test'), 'fa fa-check');
     }
 
     public function authorizedDefault() {
@@ -67,17 +64,17 @@ class ValidationPresenter extends BasePresenter {
     }
 
     /**
-     * @return ValidationGrid
+     * @return PersonsGrid
      */
-    public function createComponentGrid(): ValidationGrid {
-        return new ValidationGrid($this->servicePerson, $this->validationFactory->getTests());
+    public function createComponentGrid(): PersonsGrid {
+        return new PersonsGrid($this->validationFactory->getTests('person'), $this->getContext());
     }
 
     /**
-     * @return ValidationControl
+     * @return PersonTestControl
      */
-    public function createComponentValidationControl(): ValidationControl {
-        return new ValidationControl($this->servicePerson, $this->getTranslator(), $this->validationFactory->getTests());
+    public function createComponentValidationControl(): PersonTestControl {
+        return new PersonTestControl($this->servicePerson, $this->getTranslator(), $this->validationFactory->getTests('person'));
     }
 }
 

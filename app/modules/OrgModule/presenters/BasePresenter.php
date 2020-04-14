@@ -12,12 +12,11 @@ use FKSDB\ORM\Models\ModelRole;
  */
 abstract class BasePresenter extends \ContestPresenter {
 
-
     /**
      * @return ContestChooser
      */
     protected function createComponentContestChooser(): ContestChooser {
-        $control = new ContestChooser($this->session, $this->yearCalculator, $this->serviceContest);
+        $control = new ContestChooser($this->session, $this->yearCalculator, $this->getServiceContest());
         $control->setContests(ModelRole::ORG);
         return $control;
     }

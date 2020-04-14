@@ -33,7 +33,6 @@ class ServiceMStoredQueryTag extends AbstractServiceMulti {
         }
         $joinedModel = $this->getJoinedService()->createNew($data);
 
-        $result = new ModelMStoredQueryTag($this, $mainModel, $joinedModel);
-        return $result;
+        return new ModelMStoredQueryTag($this, $mainModel, $joinedModel);
     }
 }

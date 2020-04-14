@@ -32,7 +32,7 @@ class ServiceFyziklaniRoom extends AbstractServiceSingle {
         $rooms = [];
         foreach ($ids as $roomId) {
             /**
-             * @var \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniRoom $room
+             * @var ModelFyziklaniRoom $room
              */
             $room = ModelFyziklaniRoom::createFromActiveRow($this->findByPrimary($roomId));
             if ($room) {

@@ -47,30 +47,42 @@
   background-color: $fykosMainColor;
 }
 
-.navigation-item .card {
+.navigation-item {
   @include navigation-item(black, white);
 }
 
-[data-contest~="fykos"] .navigation-item .card {
+[data-contest~="fykos"] .navigation-item {
   @include navigation-item($fykosMainColor, white);
 }
 
-[data-contest~="vyfuk"] .navigation-item .card {
+[data-contest~="vyfuk"] .navigation-item {
   @include navigation-item($vyfukMainColor, white);
 }
 
+[data-contest~="fykos"] .bg-contest {
+  background-color: $fykosMainColor;
+}
+
+[data-contest~="vyfuk"] .bg-contest {
+  background-color: $vyfukMainColor;
+}
+
 [data-contest~="theme-dark"] {
-  .navigation-item .card {
+  .navigation-item {
     @include navigation-item(#2ed739, black);
   }
+
   color: #fff;
+
   main {
     background-color: black;
     //background-image: linear-gradient(to bottom, darken(#2ed739, 42%), black);
   }
+
   .bg-white-container {
     background-color: rgba(255, 255, 255, 0.1);
   }
+
   .card, .list-group-item {
     background-color: transparent;
   }

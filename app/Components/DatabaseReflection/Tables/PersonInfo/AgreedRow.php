@@ -24,13 +24,15 @@ class AgreedRow extends AbstractRow {
     }
 
     /**
+     * @param array $args
      * @return BaseControl
      */
-    public function createField(): BaseControl {
+    public function createField(...$args): BaseControl {
         $control = new Checkbox($this->getTitle());
         $link = Html::el('a');
         $link->setText(_('Text souhlasu'));
-        $link->addAttributes(['href' => _('http://fykos.cz/doc/souhlas.pdf')]);
+        $link->addAttributes(['href' => _('http://fykos.cz/doc/souhlas.pdf'),
+                              'target' => '_blank']);
         $control->setOption('description', $link);
         return $control;
     }

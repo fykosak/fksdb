@@ -36,6 +36,7 @@ use Nette\Utils\DateTime;
  * @property-read string employer
  * @property-read string academic_degree_prefix
  * @property-read string academic_degree_suffix
+ * @property-read string preferred_lang
  */
 class ModelPersonInfo extends AbstractModelSingle {
     /**
@@ -44,6 +45,5 @@ class ModelPersonInfo extends AbstractModelSingle {
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromActiveRow($this->ref(DbNames::TAB_PERSON, 'person_id'));
     }
-
 }
 

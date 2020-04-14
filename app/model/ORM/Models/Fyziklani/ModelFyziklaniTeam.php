@@ -2,11 +2,17 @@
 
 namespace FKSDB\ORM\Models\Fyziklani;
 
+use FKSDB\model\Fyziklani\ClosedSubmittingException;
+use FKSDB\model\Fyziklani\NotCheckedSubmitsException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\IEventReferencedModel;
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
+use Nette\Security\IResource;
 use Nette\Utils\DateTime;
 
 /**
@@ -17,6 +23,7 @@ use Nette\Utils\DateTime;
  * @property-read  integer points
  * @property-read  string status
  * @property-read  DateTime created
+ * @property-read  DateTime modified
  * @property-read  string phone
  * @property-read  bool force_a
  * @property-read  string password
@@ -26,13 +33,25 @@ use Nette\Utils\DateTime;
  * @author Michal Červeňák <miso@fykos.cz>
  *
  */
-class ModelFyziklaniTeam extends AbstractModelSingle {
+class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferencedModel, IResource {
+    const RESOURCE_ID = 'fyziklani.team';
 
     /**
      * @return string
      */
     public function __toString(): string {
         return $this->name;
+    }
+
+    /**
+     * @return ModelPerson|NULL
+     */
+    public function getTeacher() {
+        $row = $this->ref(DbNames::TAB_PERSON, 'teacher_id');
+        if ($row) {
+            return ModelPerson::createFromActiveRow($row);
+        }
+        return null;
     }
 
     /**
@@ -50,13 +69,6 @@ class ModelFyziklaniTeam extends AbstractModelSingle {
     }
 
     /**
-     * @return Selection
-     */
-    public function getSubmits(): Selection {
-        return $this->related(DbNames::TAB_FYZIKLANI_SUBMIT, 'e_fyziklani_team_id')->where('points IS NOT NULL');
-    }
-
-    /**
      * @return null|ModelFyziklaniTeamPosition
      */
     public function getPosition() {
@@ -66,6 +78,36 @@ class ModelFyziklaniTeam extends AbstractModelSingle {
         }
         return null;
     }
+    /* ******************** SUBMITS ******************************* */
+
+    /**
+     * @return Selection
+     */
+    public function getAllSubmits(): Selection {
+        return $this->related(DbNames::TAB_FYZIKLANI_SUBMIT, 'e_fyziklani_team_id');
+    }
+
+    /**
+     * @return Selection
+     */
+    public function getNonRevokedSubmits(): Selection {
+        return $this->getAllSubmits()->where('points IS NOT NULL');
+    }
+
+    /**
+     * @return Selection
+     */
+    public function getNonCheckedSubmits(): Selection {
+        return $this->getNonRevokedSubmits()->where('state IS NULL OR state != ?', ModelFyziklaniSubmit::STATE_CHECKED);
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasAllSubmitsChecked(): bool {
+        return $this->getNonCheckedSubmits()->count() === 0;
+    }
+
 
     /**
      * @return bool
@@ -73,6 +115,56 @@ class ModelFyziklaniTeam extends AbstractModelSingle {
     public function hasOpenSubmitting(): bool {
         $points = $this->points;
         return !is_numeric($points);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isReadyForClosing(): bool {
+        return $this->hasAllSubmitsChecked() && $this->hasOpenSubmitting();
+    }
+
+    /**
+     * @return bool
+     * @throws ClosedSubmittingException
+     * @throws NotCheckedSubmitsException
+     */
+    public function canClose(): bool {
+        if (!$this->hasOpenSubmitting()) {
+            throw new ClosedSubmittingException($this);
+        }
+        if (!$this->hasAllSubmitsChecked()) {
+            throw new NotCheckedSubmitsException();
+        }
+        return true;
+    }
+
+    /**
+     * @param array $types
+     * @return ModelPersonSchedule[]
+     */
+    public function getScheduleRest(array $types = ['accommodation', 'weekend']): array {
+        $toPay = [];
+        /** @var ModelPerson $person */
+        foreach ($this->getPersons() as $person) {
+            $toPay[] = $person->getScheduleRests($this->getEvent(), $types);
+        }
+        return $toPay;
+    }
+
+    /**
+     * @return ModelPerson[]
+     */
+    public function getPersons(): array {
+        $persons = [];
+        foreach ($this->getParticipants() as $pRow) {
+            $persons[] = ModelPerson::createFromActiveRow($pRow->event_participant->person);
+        }
+        $teacher = $this->getTeacher();
+        if ($teacher) {
+            $persons[] = $teacher;
+        }
+        return $persons;
     }
 
     /**
@@ -96,4 +188,11 @@ class ModelFyziklaniTeam extends AbstractModelSingle {
         return $data;
     }
 
+    /**
+     * Returns a string identifier of the Resource.
+     * @return string
+     */
+    public function getResourceId() {
+        return self::RESOURCE_ID;
+    }
 }

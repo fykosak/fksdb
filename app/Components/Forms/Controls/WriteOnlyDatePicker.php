@@ -4,12 +4,14 @@ namespace FKSDB\Components\Forms\Controls;
 
 use FKSDB\Components\Forms\Containers\IWriteOnly;
 use JanTvrdik\Components\DatePicker;
+use Nette\Utils\Html;
 
 /**
  * When user doesn't fill it (i.e. desires original value), it behaves like disabled.
  * Only FILLED validation works properly because there's used special value to distinguish unchanged input.
  *
  * @author Michal Koutný <michal@fykos.cz>
+ * @deprecated like extends od DatePicker use HTML5 elements
  */
 class WriteOnlyDatePicker extends DatePicker implements IWriteOnly {
 
@@ -25,7 +27,7 @@ class WriteOnlyDatePicker extends DatePicker implements IWriteOnly {
     }
 
     /**
-     * @return \Nette\Utils\Html
+     * @return Html
      */
     public function getControl() {
         $control = parent::getControl();

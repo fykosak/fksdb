@@ -13,13 +13,19 @@ use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\Components\Events\ApplicationComponent;
 use FKSDB\Components\Events\ApplicationsGrid;
 use FKSDB\Components\Grids\Events\LayoutResolver;
-use FKSDB\Logging\FlashDumpFactory;
 use FKSDB\Logging\MemoryLogger;
+use FKSDB\ORM\AbstractModelMulti;
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\ORM\Models\IEventReferencedModel;
 use FKSDB\ORM\Models\ModelAuthToken;
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Services\ServiceEvent;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 
@@ -33,12 +39,12 @@ class ApplicationPresenter extends BasePresenter {
     const PARAM_AFTER = 'a';
 
     /**
-     * @var \FKSDB\ORM\Models\ModelEvent
+     * @var ModelEvent|null
      */
-    private $event = false;
+    private $event;
 
     /**
-     * @var IModel|\FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam|ModelEventParticipant
+     * @var IModel|ModelFyziklaniTeam|ModelEventParticipant
      */
     private $eventApplication = false;
 
@@ -53,7 +59,7 @@ class ApplicationPresenter extends BasePresenter {
     private $machine;
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceEvent
+     * @var ServiceEvent
      */
     private $serviceEvent;
 
@@ -78,12 +84,7 @@ class ApplicationPresenter extends BasePresenter {
     private $handlerFactory;
 
     /**
-     * @var FlashDumpFactory
-     */
-    private $flashDumpFactory;
-
-    /**
-     * @param \FKSDB\ORM\Services\ServiceEvent $serviceEvent
+     * @param ServiceEvent $serviceEvent
      */
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;
@@ -118,18 +119,23 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @param FlashDumpFactory $flashDumpFactory
-     */
-    public function injectFlashDumpFactory(FlashDumpFactory $flashDumpFactory) {
-        $this->flashDumpFactory = $flashDumpFactory;
-    }
-
-    /**
      * @param $eventId
      * @param $id
+     * @throws BadRequestException
      */
     public function authorizedDefault($eventId, $id) {
-
+        /**
+         * @var ModelEvent $event
+         */
+        $event = $this->getEvent();
+        if ($this->contestAuthorizator->isAllowed('event.participant', 'edit', $event->getContest())
+            || $this->contestAuthorizator->isAllowed('fyziklani.team', 'edit', $event->getContest())) {
+            $this->setAuthorized(true);
+            return;
+        }
+        if (strtotime($event->registration_begin) > time() || strtotime($event->registration_end) < time()) {
+            throw new BadRequestException('Gone', 410);
+        }
     }
 
     public function authorizedList() {
@@ -138,11 +144,10 @@ class ApplicationPresenter extends BasePresenter {
 
     public function titleDefault() {
         if ($this->getEventApplication()) {
-            $this->setTitle(\sprintf(_('Application for %s: %s'), $this->getEvent()->name, $this->getEventApplication()->__toString()));
+            $this->setTitle(\sprintf(_('Application for %s: %s'), $this->getEvent()->name, $this->getEventApplication()->__toString()), 'fa fa-calendar-check-o');
         } else {
-            $this->setTitle("{$this->getEvent()}");
+            $this->setTitle($this->getEvent(), 'fa fa-calendar-check-o');
         }
-        $this->setIcon('fa fa-calendar-check-o');
     }
 
     /**
@@ -151,11 +156,10 @@ class ApplicationPresenter extends BasePresenter {
     public function titleList() {
         $contest = $this->getSelectedContest();
         if ($contest) {
-            $this->setTitle(sprintf(_('Moje přihlášky (%s)'), $contest->name));
+            $this->setTitle(\sprintf(_('Moje přihlášky (%s)'), $contest->name), 'fa fa-calendar');
         } else {
-            $this->setTitle(_('Moje přihlášky'));
+            $this->setTitle(_('Moje přihlášky'), 'fa fa-calendar');
         }
-        $this->setIcon('fa fa-calendar');
     }
 
     protected function unauthorizedAccess() {
@@ -180,14 +184,23 @@ class ApplicationPresenter extends BasePresenter {
      * @param $eventId
      * @param $id
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function actionDefault($eventId, $id) {
         if (!$this->getEvent()) {
             throw new BadRequestException(_('Neexistující akce.'), 404);
         }
-        if ($id && !$this->getEventApplication()) {
-            throw new BadRequestException(_('Neexistující přihláška.'), 404);
+        $eventApplication = $this->getEventApplication();
+        if ($id) { // test if there is a new application, case is set there are a edit od application, empty => new application
+            if (!$eventApplication) {
+                throw new BadRequestException(_('Neexistující přihláška.'), 404);
+            }
+            if (!$eventApplication instanceof IEventReferencedModel) {
+                throw new BadRequestException();
+            }
+            if ($this->getEvent()->event_id !== $eventApplication->getEvent()->event_id) {
+                throw new ForbiddenRequestException();
+            }
         }
 
         $this->initializeMachine();
@@ -205,7 +218,7 @@ class ApplicationPresenter extends BasePresenter {
             if ($this->getMachine()->getPrimaryMachine()->getState() == BaseMachine::STATE_INIT) {
                 $this->setView('closed');
                 $this->flashMessage(_('Přihlašování není povoleno.'), BasePresenter::FLASH_INFO);
-            } else if (!$this->getParameter(self::PARAM_AFTER, false)) {
+            } elseif (!$this->getParameter(self::PARAM_AFTER, false)) {
                 $this->flashMessage(_('Automat přihlášky nemá aktuálně žádné možné přechody.'), BasePresenter::FLASH_INFO);
             }
         }
@@ -243,10 +256,10 @@ class ApplicationPresenter extends BasePresenter {
             if (!$this->getEvent()) {
                 throw new BadRequestException(_('Neexistující akce.'), 404);
             }
-            $component->setContests(array(
+            $component->setContests([
                 $this->getEvent()->getEventType()->contest_id,
-            ));
-        } else if ($this->getAction() == 'list') {
+            ]);
+        } elseif ($this->getAction() == 'list') {
             $component->setContests(ContestChooser::CONTESTS_ALL);
         }
         return $component;
@@ -258,15 +271,14 @@ class ApplicationPresenter extends BasePresenter {
     protected function createComponentApplication() {
         $logger = new MemoryLogger();
         $handler = $this->handlerFactory->create($this->getEvent(), $logger);
-        $flashDump = $this->flashDumpFactory->createApplication();
-        $component = new ApplicationComponent($handler, $this->getHolder(), $flashDump);
+        $component = new ApplicationComponent($handler, $this->getHolder());
         $component->setRedirectCallback(function ($modelId, $eventId) {
             $this->backLinkRedirect();
-            $this->redirect('this', array(
+            $this->redirect('this', [
                 'eventId' => $eventId,
                 'id' => $modelId,
                 self::PARAM_AFTER => true,
-            ));
+            ]);
         });
         $component->setTemplate($this->layoutResolver->getFormLayout($this->getEvent()));
         return $component;
@@ -283,8 +295,7 @@ class ApplicationPresenter extends BasePresenter {
 
         $source = new RelatedPersonSource($person, $events, $this->container);
 
-        $flashDump = $this->flashDumpFactory->createApplication();
-        $grid = new ApplicationsGrid($this->container, $source, $this->handlerFactory, $flashDump);
+        $grid = new ApplicationsGrid($this->container, $source, $this->handlerFactory);
 
         $grid->setTemplate('myApplications');
 
@@ -302,18 +313,17 @@ class ApplicationPresenter extends BasePresenter {
             ->where('registration_end >= NOW()');
 
         $source = new InitSource($events, $this->container);
-        $flashDump = $this->flashDumpFactory->createApplication();
-        $grid = new ApplicationsGrid($this->container, $source, $this->handlerFactory, $flashDump);
+        $grid = new ApplicationsGrid($this->container, $source, $this->handlerFactory);
         $grid->setTemplate('myApplications');
 
         return $grid;
     }
 
     /**
-     * @return \FKSDB\ORM\Models\ModelEvent|\Nette\Database\Table\ActiveRow|null
+     * @return ModelEvent|null
      */
     private function getEvent() {
-        if ($this->event === false) {
+        if (!$this->event) {
             $eventId = null;
             if ($this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_EVENT_NOTIFY)) {
                 $data = $this->getTokenAuthenticator()->getTokenData();
@@ -323,28 +333,35 @@ class ApplicationPresenter extends BasePresenter {
                 }
             }
             $eventId = $eventId ?: $this->getParameter('eventId');
-            $this->event = $this->serviceEvent->findByPrimary($eventId);
+            $row = $this->serviceEvent->findByPrimary($eventId);
+            if ($row) {
+                $this->event = ModelEvent::createFromActiveRow($row);
+            }
         }
 
         return $this->event;
     }
 
     /**
-     * @return ModelEventParticipant|mixed|IModel|\FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam
+     * @return AbstractModelMulti|AbstractModelSingle|IModel|ModelFyziklaniTeam|ModelEventParticipant|IEventReferencedModel
      */
     private function getEventApplication() {
-        if ($this->eventApplication === false) {
+        if (!$this->eventApplication) {
             $id = null;
-            if ($this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_EVENT_NOTIFY)) {
-                $data = $this->getTokenAuthenticator()->getTokenData();
-                if ($data) {
-                    $data = self::decodeParameters($this->getTokenAuthenticator()->getTokenData());
-                    $eventId = $data['id']; // TODO $id?
-                }
-            }
+            //if ($this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_EVENT_NOTIFY)) {
+            //   $data = $this->getTokenAuthenticator()->getTokenData();
+            //   if ($data) {
+            //    $data = self::decodeParameters($this->getTokenAuthenticator()->getTokenData());
+            //$eventId = $data['id']; // TODO $id?
+            //  }
+            // }
             $id = $id ?: $this->getParameter('id');
             $service = $this->getHolder()->getPrimaryHolder()->getService();
+
             $this->eventApplication = $service->findByPrimary($id);
+            /* if ($row) {
+                 $this->eventApplication = ($service->getModelClassName())::createFromActiveRow($row);
+             }*/
         }
 
         return $this->eventApplication;
@@ -388,10 +405,10 @@ class ApplicationPresenter extends BasePresenter {
         if (count($parts) != 2) {
             throw new InvalidArgumentException("Cannot decode '$data'.");
         }
-        return array(
+        return [
             'eventId' => $parts[0],
             'id' => $parts[1],
-        );
+        ];
     }
 
     /**
@@ -399,7 +416,7 @@ class ApplicationPresenter extends BasePresenter {
      */
     public function getNavBarVariant(): array {
         $event = $this->getEvent();
-        $parent = parent::getNavBarVariant();;
+        $parent = parent::getNavBarVariant();
         if (!$event) {
             return $parent;
         }

@@ -39,18 +39,19 @@ class ServiceAuthToken extends AbstractServiceSingle {
      * @param bool $refresh
      * @param \Nette\Utils\DateTime $since
      * @return ModelAuthToken
+     * @throws \Exception
      */
     public function createToken(ModelLogin $login, $type, DateTime $until = null, $data = null, $refresh = false, DateTime $since = null) {
         if ($since === null) {
             $since = new DateTime();
         }
 
-        $connection = $this->getConnection();
+        $connection = $this->context->getConnection();
         $outerTransaction = false;
-        if (!$connection->inTransaction()) {
-            $this->getConnection()->beginTransaction();
-        } else {
+        if ($connection->getPdo()->inTransaction()) {
             $outerTransaction = true;
+        } else {
+            $connection->beginTransaction();
         }
 
         if ($refresh) {
@@ -69,19 +70,22 @@ class ServiceAuthToken extends AbstractServiceSingle {
                 $tokenData = Random::generate(self::TOKEN_LENGTH, 'a-zA-Z0-9');
             } while ($this->verifyToken($tokenData));
 
-            $token = $this->createNew([
+            $token = $this->createNewModel([
+                'until' => $until,
                 'login_id' => $login->login_id,
                 'token' => $tokenData,
                 'data' => $data,
                 'since' => $since,
                 'type' => $type
             ]);
+        } else {
+            $this->updateModel2($token, ['until' => $until]);
         }
-        $token->until = $until;
+        //  $token->until = $until;
 
-        $this->save($token);
+        // $this->save($token);
         if (!$outerTransaction) {
-            $this->getConnection()->commit();
+            $this->context->getConnection()->commit();
         }
 
         return $token;
@@ -139,7 +143,5 @@ class ServiceAuthToken extends AbstractServiceSingle {
         }
         return $tokens;
     }
-
-    //TODO garbage collection
 }
 

@@ -6,7 +6,8 @@ use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelGlobalSession;
-use Nette\Database\Connection;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 use Nette\Http\Request;
 use Nette\Utils\DateTime;
 use Nette\Utils\Random;
@@ -40,10 +41,11 @@ class ServiceGlobalSession extends AbstractServiceSingle {
     /**
      * FKSDB\ORM\Services\ServiceGlobalSession constructor.
      * @param Request $request
-     * @param Connection $connection
+     * @param Context $context
+     * @param IConventions $conventions
      */
-    function __construct(Request $request, Connection $connection) {
-        parent::__construct($connection);
+    function __construct(Request $request, Context $context, IConventions $conventions) {
+        parent::__construct($context, $conventions);
         $this->request = $request;
     }
 
@@ -53,26 +55,27 @@ class ServiceGlobalSession extends AbstractServiceSingle {
      * @param DateTime $until
      * @param DateTime $since
      * @return ModelAuthToken
+     * @throws \Exception
      */
     public function createSession($loginId, DateTime $until = null, DateTime $since = null) {
         if ($since === null) {
             $since = new DateTime();
         }
 
-        $this->getConnection()->beginTransaction();
+        $this->context->getConnection()->beginTransaction();
 
         do {
             $sessionId = Random::generate(self::SESSION_ID_LENGTH, 'a-zA-Z0-9');
         } while ($this->findByPrimary($sessionId));
 
-        $session = $this->createNew([
+        $session = $this->createNewModel([
             'session_id' => $sessionId,
             'login_id' => $loginId,
             'since' => $since,
             'until' => $until,
             'remote_ip' => $this->request->getRemoteAddress(),
         ]);
-        $this->save($session);
+       // $this->save($session);
         $this->getConnection()->commit();
 
         return $session;
