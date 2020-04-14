@@ -16,7 +16,6 @@ use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
-use Tracy\Debugger;
 
 /**
  * Class PhoneRow

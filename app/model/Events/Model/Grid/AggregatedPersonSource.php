@@ -2,7 +2,6 @@
 
 namespace Events\Model\Grid;
 
-use ArrayIterator;
 use Events\Model\Holder\Holder;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Tables\TypedTableSelection;

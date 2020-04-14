@@ -4,7 +4,6 @@ namespace FKSDB\Components\Events;
 
 use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
-use Events\Machine\Transition;
 use Events\Model\ApplicationHandler;
 use Events\Model\ApplicationHandlerException;
 use Events\Model\Holder\Holder;
@@ -148,7 +147,7 @@ class ApplicationComponent extends Control {
          */
         foreach ($this->holder->getBaseHolders() as $name => $baseHolder) {
             $baseMachine = $this->getMachine()->getBaseMachine($name);
-            if (!$baseHolder->isVisible($this->holder)) {
+            if (!$baseHolder->isVisible()) {
                 continue;
             }
             $container = $baseHolder->createFormContainer($baseMachine);

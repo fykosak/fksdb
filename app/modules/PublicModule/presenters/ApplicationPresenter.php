@@ -143,6 +143,9 @@ class ApplicationPresenter extends BasePresenter {
         $this->setAuthorized($this->getUser()->isLoggedIn() && $this->getUser()->getIdentity()->getPerson());
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function titleDefault() {
         if ($this->getEventApplication()) {
             $this->setTitle(\sprintf(_('Application for %s: %s'), $this->getEvent()->name, $this->getEventApplication()->__toString()), 'fa fa-calendar-check-o');

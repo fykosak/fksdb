@@ -82,7 +82,7 @@ class Holder {
     /**
      * @return Connection
      */
-    public function getConnection() {
+    public function getConnection(): Connection {
         return $this->connection;
     }
 
@@ -99,7 +99,7 @@ class Holder {
     /**
      * @return BaseHolder
      */
-    public function getPrimaryHolder() {
+    public function getPrimaryHolder(): BaseHolder {
         return $this->primaryHolder;
     }
 
@@ -155,7 +155,7 @@ class Holder {
     /**
      * @return Machine
      */
-    public function getMachine() {
+    public function getMachine(): Machine {
         return $this->machine;
     }
 
@@ -169,7 +169,7 @@ class Holder {
     /**
      * @return SecondaryModelStrategy
      */
-    public function getSecondaryModelStrategy() {
+    public function getSecondaryModelStrategy(): SecondaryModelStrategy {
         return $this->secondaryModelStrategy;
     }
 
@@ -231,7 +231,7 @@ class Holder {
      * @param Form $form
      * @return string[] machineName => new state
      */
-    public function processFormValues(ArrayHash $values, Machine $machine, $transitions, ILogger $logger, Form $form = null) {
+    public function processFormValues(ArrayHash $values, Machine $machine, $transitions, ILogger $logger, Form $form = null): array {
         $newStates = [];
         foreach ($transitions as $name => $transition) {
             $newStates[$name] = $transition->getTarget();
@@ -277,7 +277,7 @@ class Holder {
      * Group secondary by service
      * @return array[] items: joinOn, service, holders
      */
-    public function getGroupedSecondaryHolders() {
+    public function getGroupedSecondaryHolders(): array {
         if ($this->groupedHolders == null) {
             $this->groupedHolders = [];
 

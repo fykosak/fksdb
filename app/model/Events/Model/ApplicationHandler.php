@@ -170,6 +170,7 @@ class ApplicationHandler {
             $this->reRaise($exception);
         } catch (SecondaryModelDataConflictException $exception) {
             $message = sprintf(_('Data ve skupině "%s" kolidují s již existující přihláškou.'), $exception->getBaseHolder()->getLabel());
+            Debugger::log($exception, 'app-conflict');
             $this->logger->log($message, ILogger::ERROR);
             $this->reRaise($exception);
         } catch (DuplicateApplicationException $exception) {
@@ -261,6 +262,7 @@ class ApplicationHandler {
             $this->reRaise($exception);
         } catch (SecondaryModelDataConflictException $exception) {
             $message = sprintf(_('Data ve skupině "%s" kolidují s již existující přihláškou.'), $exception->getBaseHolder()->getLabel());
+            Debugger::log($exception, 'app-conflict');
             $this->logger->log($message, ILogger::ERROR);
             $this->formRollback($data);
             $this->reRaise($exception);

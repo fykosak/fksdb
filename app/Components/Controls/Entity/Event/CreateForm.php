@@ -7,10 +7,8 @@ use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Services\ServiceEvent;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
-use Tracy\Debugger;
 
 /**
  * Class CreateForm

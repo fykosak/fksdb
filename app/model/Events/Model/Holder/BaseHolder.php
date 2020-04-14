@@ -128,7 +128,7 @@ class BaseHolder {
      * BaseHolder constructor.
      * @param $name
      */
-    function __construct($name) {
+    function __construct(string $name) {
         $this->name = $name;
     }
 
@@ -137,7 +137,6 @@ class BaseHolder {
      */
     public function addField(Field $field) {
         $field->setBaseHolder($this);
-
         $name = $field->getName();
         $this->fields[$name] = $field;
     }
@@ -145,14 +144,14 @@ class BaseHolder {
     /**
      * @return Field[]
      */
-    public function getFields() {
+    public function getFields(): array {
         return $this->fields;
     }
 
     /**
      * @return Holder
      */
-    public function getHolder() {
+    public function getHolder(): Holder {
         return $this->holder;
     }
 
@@ -243,7 +242,7 @@ class BaseHolder {
     /**
      * @return DataValidator
      */
-    public function getValidator() {
+    public function getValidator(): DataValidator {
         return $this->validator;
     }
 
@@ -255,23 +254,23 @@ class BaseHolder {
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
-    public function isVisible() {
-        return $this->evaluator->evaluate($this->visible, $this);
+    public function isVisible(): bool {
+        return $this->getEvaluator()->evaluate($this->visible, $this);
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
-    public function isModifiable() {
-        return $this->evaluator->evaluate($this->modifiable, $this);
+    public function isModifiable(): bool {
+        return $this->getEvaluator()->evaluate($this->modifiable, $this);
     }
 
     /**
      * @return IModel
      */
-    public function & getModel() {
+    public function &getModel() {
         if (!$this->model) {
             $this->model = $this->getService()->createNew();
         }
@@ -302,7 +301,7 @@ class BaseHolder {
     /**
      * @return string
      */
-    public function getModelState() {
+    public function getModelState(): string {
         $model = $this->getModel();
         if ($model->isNew() && !$model[self::STATE_COLUMN]) {
             return BaseMachine::STATE_INIT;
@@ -312,9 +311,9 @@ class BaseHolder {
     }
 
     /**
-     * @param $state
+     * @param string $state
      */
-    public function setModelState($state) {
+    public function setModelState(string $state) {
         $this->getService()->updateModel($this->getModel(), [self::STATE_COLUMN => $state]);
     }
 
@@ -330,14 +329,14 @@ class BaseHolder {
     /**
      * @return string
      */
-    public function getName() {
+    public function getName(): string {
         return $this->name;
     }
 
     /**
      * @return IService|AbstractServiceSingle|AbstractServiceMulti
      */
-    public function getService() {
+    public function getService(): IService {
         return $this->service;
     }
 
@@ -356,7 +355,7 @@ class BaseHolder {
     }
 
     /**
-     * @param $label
+     * @param string $label
      */
     public function setLabel($label) {
         $this->label = $label;
@@ -370,7 +369,7 @@ class BaseHolder {
     }
 
     /**
-     * @param $description
+     * @param string $description
      */
     public function setDescription($description) {
         $this->description = $description;
@@ -384,7 +383,7 @@ class BaseHolder {
     }
 
     /**
-     * @param $joinOn
+     * @param string $joinOn
      */
     public function setJoinOn($joinOn) {
         $this->joinOn = $joinOn;
@@ -398,7 +397,7 @@ class BaseHolder {
     }
 
     /**
-     * @param $joinTo
+     * @param string $joinTo
      */
     public function setJoinTo($joinTo) {
         $this->joinTo = $joinTo;
@@ -440,10 +439,10 @@ class BaseHolder {
     }
 
     /**
-     * @param $column
+     * @param string $column
      * @return string
      */
-    private function resolveColumnJoins($column) {
+    private function resolveColumnJoins(string $column): string {
         if (strpos($column, '.') === false && strpos($column, ':') === false) {
             $column = $this->getService()->getTable()->getName() . '.' . $column;
         }

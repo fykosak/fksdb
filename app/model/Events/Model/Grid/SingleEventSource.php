@@ -2,7 +2,6 @@
 
 namespace Events\Model\Grid;
 
-use ArrayIterator;
 use Events\Model\Holder\BaseHolder;
 use Events\Model\Holder\Holder;
 use FKSDB\ORM\IModel;
@@ -21,6 +20,7 @@ use Nette\SmartObject;
  * @method SingleEventSource order()
  * @method SingleEventSource limit()
  * @method SingleEventSource count()
+ * @method SingleEventSource where(string $cond, ...$args)
  */
 class SingleEventSource implements IHolderSource {
     use SmartObject;

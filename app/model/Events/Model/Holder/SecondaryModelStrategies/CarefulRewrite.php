@@ -31,7 +31,7 @@ class CarefulRewrite extends SecondaryModelStrategy {
      */
     protected function resolveMultipleSecondaries(BaseHolder $holder, $secondaries, $joinData) {
         if (count($secondaries) > 1) {
-            throw new SecondaryModelConflictException($holder->getModel(), $secondaries);
+            throw new SecondaryModelConflictException($holder, $secondaries);
         }
 
         $currentModel = $holder->getModel();
