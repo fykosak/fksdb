@@ -105,7 +105,7 @@ class TasksFromXML2 extends Stage {
                 $csvalue = null;
 
                 if (count($elements) == 1) {
-                    if (count($elements[0]->attributes(self::XML_NAMESPACE)) == 0 || $elements[0]->attribute(self::XML_NAMESPACE)->lang == 'cs') {
+                    if (count($elements[0]->attributes(self::XML_NAMESPACE)) == 0 || $elements[0]->attributes(self::XML_NAMESPACE)->lang == 'cs') {
                         $csvalue = (string) $elements[0];
                     }
                 }
