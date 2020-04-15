@@ -53,7 +53,7 @@ class TasksFromXML2 extends Stage {
 
     public function process() {
         $xml = $this->data->getData();
-        $sImported = (string) $xml->number;
+        $sImported = (string)$xml->number;
         $sSet = $this->data->getSeries();
         if ($sImported != $sSet) {
             throw new PipelineException(sprintf(_('Nesouhlasí importovaná (%s) a nastavená (%s) série.'), $sImported, $sSet));
@@ -78,18 +78,7 @@ class TasksFromXML2 extends Stage {
         $contest = $this->data->getContest();
         $year = $this->data->getYear();
         $series = $this->data->getSeries();
-        $tasknr = (int) (string) $XMLTask->number;
-
-        // obtain FKSDB\ORM\Models\ModelTask
-        $task = $this->taskService->findBySeries($contest, $year, $series, $tasknr);
-        if ($task == null) {
-            $task = $this->taskService->createNew([
-                'contest_id' => $contest->contest_id,
-                'year' => $year,
-                'series' => $series,
-                'tasknr' => $tasknr,
-            ]);
-        }
+        $tasknr = (int)(string)$XMLTask->number;
 
         // update fields
         $data = [];
@@ -105,8 +94,8 @@ class TasksFromXML2 extends Stage {
                 $csvalue = null;
 
                 if (count($elements) == 1) {
-                    if (count($elements[0]->attributes(self::XML_NAMESPACE)) == 0 || $elements[0]->attribute(self::XML_NAMESPACE)->lang == 'cs') {
-                        $csvalue = (string) $elements[0];
+                    if (count($elements[0]->attributes(self::XML_NAMESPACE)) == 0 || $elements[0]->attributes(self::XML_NAMESPACE)->lang == 'cs') {
+                        $csvalue = (string)$elements[0];
                     }
                 }
                 foreach ($elements as $el) {
@@ -114,18 +103,30 @@ class TasksFromXML2 extends Stage {
                         continue;
                     }
                     if ($el->attributes(self::XML_NAMESPACE)->lang == $lang) {
-                        $value = (string) $el;
+                        $value = (string)$el;
                         break;
                     }
                 }
                 $value = $value ?: $csvalue;
             } else {
-                $value = (string) $XMLTask->{$xmlElement};
+                $value = (string)$XMLTask->{$xmlElement};
             }
             $data[$column] = $value;
         }
-        $this->taskService->updateModel2($task,$data);
 
+        // obtain FKSDB\ORM\Models\ModelTask
+        $task = $this->taskService->findBySeries($contest, $year, $series, $tasknr);
+
+        if ($task == null) {
+            $task = $this->taskService->createNewModel(array_merge($data, [
+                'contest_id' => $contest->contest_id,
+                'year' => $year,
+                'series' => $series,
+                'tasknr' => $tasknr,
+            ]));
+        } else {
+            $this->taskService->updateModel2($task, $data);
+        }
         // forward it to pipeline
         $this->data->addTask($tasknr, $task);
     }

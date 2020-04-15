@@ -199,5 +199,4 @@ class TasksPresenter extends BasePresenter {
         }
         $this->redirect('this');
     }
-
 }
