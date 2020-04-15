@@ -1,6 +1,6 @@
 <?php
 
-namespace Tasks;
+namespace FKSDB\Tasks;
 
 use FKSDB\ORM\Models\ModelContest;
 
@@ -58,7 +58,7 @@ class SeriesData {
     }
 
     /**
-     * @return \FKSDB\ORM\Models\ModelContest
+     * @return ModelContest
      */
     public function getContest() {
         return $this->contest;

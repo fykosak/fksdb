@@ -2,8 +2,7 @@
 
 namespace OrgModule;
 
-use Astrid\Downloader;
-use Astrid\DownloadException;
+use FKSDB\Astrid\Downloader;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\SeriesCalculator;
@@ -12,11 +11,12 @@ use ModelException;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
+use Nette\DeprecatedException;
 use Tracy\Debugger;
 use Pipeline\PipelineException;
 use SimpleXMLElement;
-use Tasks\PipelineFactory;
-use Tasks\SeriesData;
+use FKSDB\Tasks\PipelineFactory;
+use FKSDB\Tasks\SeriesData;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -123,8 +123,8 @@ class TasksPresenter extends BasePresenter {
      * @param SimpleXMLElement $xml
      * @return bool
      */
-    private function isLegacyXml(SimpleXMLElement $xml) {
-        return $xml->getName() == 'problems';
+    private function isLegacyXml(SimpleXMLElement $xml): bool {
+        return $xml->getName() === 'problems';
     }
 
     /**
@@ -139,17 +139,9 @@ class TasksPresenter extends BasePresenter {
 
         switch ($values['source']) {
             case self::SOURCE_ASTRID:
-                foreach (self::$languages as $language) {
-                    try {
-                        $file = $this->downloader->downloadSeriesTasks($this->getSelectedContest(), $this->getSelectedYear(), $series, $language);
-                        $files[$language] = $file;
-                    } catch (DownloadException $exception) {
-                        $this->flashMessage(sprintf(_('Úlohy pro jazyk %s se nepodařilo stáhnout.'), $language), self::FLASH_WARNING);
-                    }
-                }
-                break;
+                throw new BadRequestException('', 410);
             case self::SOURCE_ASTRID_2:
-                $file = $this->downloader->downloadSeriesTasks2($this->getSelectedContest(), $this->getSelectedYear(), $series);
+                $file = $this->downloader->downloadSeriesTasks($this->getSelectedContest(), $this->getSelectedYear(), $series);
                 $files[self::LANG_ALL] = $file;
                 break;
             case self::SOURCE_FILE:
@@ -167,20 +159,14 @@ class TasksPresenter extends BasePresenter {
                 $xml = simplexml_load_file($file);
 
                 if ($this->isLegacyXml($xml)) {
-                    $data = new SeriesData($this->getSelectedContest(), $this->getSelectedYear(), $series, $language, $xml);
-                    $pipeline = $this->pipelineFactory->create($language);
-                    $pipeline->setInput($data);
-                    $pipeline->run();
-                    FlashMessageDump::dump($pipeline->getLogger(), $this);
-
-                    $this->flashMessage(sprintf(_('Úlohy pro jazyk %s úspěšně importovány.'), $language), self::FLASH_SUCCESS);
+                    throw new DeprecatedException();
                 } else {
                     if ($language != self::LANG_ALL) {
                         $this->flashMessage(sprintf(_('Jazyk %s je ignorován, budou importovány známé jazyky.'), $language));
                     }
 
                     $data = new SeriesData($this->getSelectedContest(), $this->getSelectedYear(), $series, self::LANG_ALL, $xml);
-                    $pipeline = $this->pipelineFactory->create2();
+                    $pipeline = $this->pipelineFactory->create();
                     $pipeline->setInput($data);
                     $pipeline->run();
                     FlashMessageDump::dump($pipeline->getLogger(), $this);
@@ -193,7 +179,6 @@ class TasksPresenter extends BasePresenter {
                 $this->flashMessage(sprintf(_('Při ukládání úloh pro jazyk %s došlo k chybě.'), $language), self::FLASH_ERROR);
                 Debugger::log($exception);
             } finally {
-
                 unlink($file);
             }
         }

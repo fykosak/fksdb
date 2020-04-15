@@ -1,6 +1,6 @@
 <?php
 
-namespace Tasks;
+namespace FKSDB\Tasks;
 
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Models\ModelTask;
@@ -14,7 +14,7 @@ use Pipeline\Stage;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class DeadlineFromXML2 extends Stage {
+class DeadlineFromXML extends Stage {
 
     /**
      * @var SeriesData
@@ -22,7 +22,7 @@ class DeadlineFromXML2 extends Stage {
     private $data;
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceTask
+     * @var ServiceTask
      */
     private $taskService;
 

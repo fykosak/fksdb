@@ -1,12 +1,12 @@
 <?php
 
-namespace Tasks\Legacy;
+namespace FKSDB\Tasks;
 
 use FKSDB\ORM\Services\ServiceOrg;
 use FKSDB\ORM\Services\ServiceTaskContribution;
 use Pipeline\Stage;
 use SimpleXMLElement;
-use Tasks\SeriesData;
+
 
 /**
  * @note Assumes TasksFromXML has been run previously.
@@ -14,8 +14,6 @@ use Tasks\SeriesData;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ContributionsFromXML extends Stage {
-
-    const DELIMITER = ',';
 
     /**
      * @var SeriesData
@@ -25,10 +23,13 @@ class ContributionsFromXML extends Stage {
     /**
      * @var array   contribution type => xml element
      */
-    private $contributionFromXML;
+    private static $contributionFromXML = [
+        'author' => 'authors/author',
+        'solution' => 'solution-authors/solution-author',
+    ];
 
     /**
-     * @var ServiceTaskContribution
+     * @var \FKSDB\ORM\Services\ServiceTaskContribution
      */
     private $taskContributionService;
 
@@ -38,13 +39,11 @@ class ContributionsFromXML extends Stage {
     private $serviceOrg;
 
     /**
-     * ContributionsFromXML constructor.
-     * @param $contributionFromXML
+     * ContributionsFromXML2 constructor.
      * @param ServiceTaskContribution $taskContributionService
      * @param ServiceOrg $serviceOrg
      */
-    public function __construct($contributionFromXML, ServiceTaskContribution $taskContributionService, ServiceOrg $serviceOrg) {
-        $this->contributionFromXML = $contributionFromXML;
+    public function __construct(ServiceTaskContribution $taskContributionService, ServiceOrg $serviceOrg) {
         $this->taskContributionService = $taskContributionService;
         $this->serviceOrg = $serviceOrg;
     }
@@ -57,7 +56,8 @@ class ContributionsFromXML extends Stage {
     }
 
     public function process() {
-        foreach ($this->data->getData() as $task) {
+        $xml = $this->data->getData();
+        foreach ($xml->problems[0]->problem as $task) {
             $this->processTask($task);
         }
     }
@@ -79,10 +79,16 @@ class ContributionsFromXML extends Stage {
         $task = $tasks[$tasknr];
         $this->taskContributionService->getConnection()->beginTransaction();
 
-        foreach ($this->contributionFromXML as $type => $XMLElement) {
+        foreach (self::$contributionFromXML as $type => $XMLElement) {
+            list($parent, $child) = explode('/', $XMLElement);
+            $parentEl = $XMLTask->{$parent}[0];
             // parse contributors
             $contributors = [];
-            foreach (explode(self::DELIMITER, (string) $XMLTask->{$XMLElement}) as $signature) {
+            if (!$parentEl || !isset($parentEl->{$child})) {
+                continue;
+            }
+            foreach ($parentEl->{$child} as $element) {
+                $signature = (string) $element;
                 $signature = trim($signature);
                 if (!$signature) {
                     continue;
@@ -105,12 +111,12 @@ class ContributionsFromXML extends Stage {
 
             // store new contributions
             foreach ($contributors as $contributor) {
-                $this->taskContributionService->createNewModel([
-
+               $this->taskContributionService->createNewModel([
                     'person_id' => $contributor->person_id,
                     'task_id' => $task->task_id,
                     'type' => $type,
                 ]);
+
             }
         }
 
