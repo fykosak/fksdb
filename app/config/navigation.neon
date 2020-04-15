@@ -55,7 +55,7 @@ navigation:
             - vyfuk
             - fyziklani
         fyziklani.dashboard.default:
-            - fyziklani.submit.entry
+            - fyziklani.submit.create
             - fyziklani.submit.list
             - fyziklani.close.list
             - fyziklani.results.list
@@ -84,7 +84,7 @@ navigation:
             - event.payment.create
             - event.payment.list
             - fyziklani.dashboard.default
-            - event.schedule.groups
+            - event.scheduleGroup.list
             - event.seating.default
             - event.model.default
             - event.chart.list

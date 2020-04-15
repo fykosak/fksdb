@@ -26,6 +26,7 @@ use Nette\Utils\DateTime;
  * @property-read DateTime end
  * @property-read DateTime registration_begin
  * @property-read DateTime registration_end
+ * @property-read string parameters
  */
 class ModelEvent extends AbstractModelSingle implements IResource, IContestReferencedModel {
     const RESOURCE_ID = 'event';

@@ -30,10 +30,10 @@ abstract class AbstractModelMulti implements IModel {
      * @note DO NOT use directly, use AbstracServiceMulti::composeModel or FKSDB\ORM\AbstractModelMulti::createFromExistingModels.
      *
      * @param AbstractServiceMulti $service
-     * @param IModel $mainModel
-     * @param \FKSDB\ORM\IModel $joinedModel
+     * @param AbstractModelSingle $mainModel
+     * @param AbstractModelSingle $joinedModel
      */
-    public function __construct($service, $mainModel, $joinedModel) {
+    public function __construct($service, AbstractModelSingle $mainModel, AbstractModelSingle $joinedModel) {
         if ($service == null) {
             $this->joinedModel = $joinedModel;
             $this->mainModel = $mainModel;

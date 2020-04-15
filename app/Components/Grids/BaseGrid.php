@@ -204,7 +204,7 @@ abstract class BaseGrid extends Grid {
                 $model = $modelClassName::createFromActiveRow($model);
             }
             return $factory->renderValue($model, 1);
-        });
+        })->setSortable(false);
     }
 
     /**

@@ -36,23 +36,13 @@ class TaskCodeInput extends FyziklaniReactControl {
      * @var ServiceFyziklaniTask
      */
     private $serviceFyziklaniTask;
-    /**
-     * @var SubmitHandler
-     */
-    private $handler;
 
     /**
      * TaskCodeInput constructor.
-     * @param SubmitHandler $handler
      * @param Container $container
      * @param ModelEvent $event
      */
-    public function __construct(
-        Container $container,
-        SubmitHandler $handler,
-        ModelEvent $event
-    ) {
-        $this->handler = $handler;
+    public function __construct(Container $container, ModelEvent $event) {
         $this->serviceFyziklaniTask = $container->getByType(ServiceFyziklaniTask::class);
         $this->serviceFyziklaniTeam = $container->getByType(ServiceFyziklaniTeam::class);
         parent::__construct($container, $event);
@@ -99,7 +89,8 @@ class TaskCodeInput extends FyziklaniReactControl {
         $response = new ReactResponse();
         $response->setAct($request->act);
         try {
-            $log = $this->handler->preProcess($request->requestData['code'], +$request->requestData['points'], $this->getPresenter()->getUser());
+            $handler = new SubmitHandler($this->getContext(), $this->getEvent());
+            $log = $handler->preProcess($request->requestData['code'], +$request->requestData['points'], $this->getPresenter()->getUser());
             $response->addMessage($log);
         } catch (TaskCodeException $exception) {
             $response->addMessage(new Message($exception->getMessage(), BasePresenter::FLASH_ERROR));

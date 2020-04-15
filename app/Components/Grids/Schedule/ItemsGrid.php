@@ -8,6 +8,7 @@ use FKSDB\NotImplementedException;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
+use Nette\DI\Container;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
@@ -17,14 +18,19 @@ use NiftyGrid\DuplicateColumnException;
  * @package FKSDB\Components\Grids\Schedule
  */
 class ItemsGrid extends BaseGrid {
+    /**
+     * @var ModelScheduleGroup
+     */
+    private $group;
 
     /**
+     * ItemsGrid constructor.
+     * @param Container $container
      * @param ModelScheduleGroup $group
      */
-    public function setGroup(ModelScheduleGroup $group) {
-        $items = $group->getItems();
-        $dataSource = new NDataSource($items);
-        $this->setDataSource($dataSource);
+    public function __construct(Container $container, ModelScheduleGroup $group) {
+        parent::__construct($container);
+        $this->group = $group;
     }
 
     /**
@@ -42,6 +48,9 @@ class ItemsGrid extends BaseGrid {
      */
     protected function configure($presenter) {
         parent::configure($presenter);
+        $items = $this->group->getItems();
+        $dataSource = new NDataSource($items);
+        $this->setDataSource($dataSource);
         $this->paginate = false;
         $this->addColumn('schedule_item_id', _('#'));
         $this->addColumns([
@@ -53,6 +62,6 @@ class ItemsGrid extends BaseGrid {
             DbNames::TAB_SCHEDULE_ITEM . '.used_capacity',
             DbNames::TAB_SCHEDULE_ITEM . '.require_id_number',
         ]);
-        $this->addLinkButton( 'item', 'detail', _('Detail'), true, ['id' => 'schedule_item_id']);
+        $this->addLinkButton('detail', 'detail', _('Detail'), true, ['id' => 'schedule_item_id']);
     }
 }

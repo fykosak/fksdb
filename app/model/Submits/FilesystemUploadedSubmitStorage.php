@@ -210,8 +210,8 @@ class FilesystemUploadedSubmitStorage implements ISubmitStorage {
         $fails = [];
         $files = $this->retrieveFiles($submit);
         foreach ($files as $file) {
-            if (!unlink($file->getRealpath())) {
-                $fails[] = $file->getRealpath();
+            if (!unlink($file->getRealPath())) {
+                $fails[] = $file->getRealPath();
             }
         }
 

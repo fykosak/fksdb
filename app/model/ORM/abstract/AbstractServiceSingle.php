@@ -186,11 +186,9 @@ abstract class AbstractServiceSingle extends Selection implements IService {
                 if ($result !== false) {
                     $model = $modelClassName::createFromActiveRow($result);
                     $model->setNew(false);
-                } else {
-                    $result = false;
                 }
             } else {
-                $result = $model->update($model->getTmpData()) !== false;
+                $model->update($model->getTmpData());
             }
         } catch (PDOException $exception) {
             Debugger::log($exception);

@@ -11,7 +11,6 @@ use FKSDB\Payment\IPaymentModel;
 use FKSDB\Payment\Price;
 use FKSDB\Transitions\IStateModel;
 use FKSDB\Transitions\Machine;
-use Nette\Database\Connection;
 use Nette\Database\Context;
 use Nette\Database\IConventions;
 use Nette\Database\Table\ActiveRow;
