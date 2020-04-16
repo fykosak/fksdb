@@ -8,15 +8,13 @@
 {elseif  $mode == 'transitions'}
     {if}
         {foreach $primaryMachine->getAvailableTransitions($holder,$state,FKSDB\Events\Machine\BaseMachine::EXECUTABLE | FKSDB\Events\Machine\BaseMachine::VISIBLE) as $transition}
+            {var $className = 'btn btn-sm btn-'.$transition->getType()}
             {if $transition->isCreating()}
                 <a href="{plink :Public:Application:default eventId => $holder->getPrimaryHolder()->getEvent()->event_id}"
-                   class="btn btn-xs btn-success">{$transition->getLabel()}</a>
-            {elseif $transition->isDangerous($holder)}
-                <a n:href="transition! $transition->getName()"
-                        class="btn btn-xs btn-sm btn-danger">{$transition->getLabel()}</a>
+                   class="{$className}">{$transition->getLabel()}</a>
             {else}
                 <a n:href="transition! $transition->getName()"
-                        class="btn btn-xs btn-sm btn-secondary">{$transition->getLabel()}</a>
+                        class="{$className}">{$transition->getLabel()}</a>
             {/if}
         {/foreach}
     {else}

@@ -132,11 +132,11 @@ events:
                     approved|spare->missed:
                         condition: and(role('admin'),eventWas())
                         label: _('Nepřijel')
-                        dangerous: true
+                        type: danger
                     pending|spare|approved->cancelled:
                         condition: role('admin')
                         label: _('Zrušit tým')
-                        dangerous: true
+                        type: danger
                     cancelled->__terminated:
                         condition: role('admin')
                         label: _('Smazat tým')

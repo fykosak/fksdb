@@ -48,11 +48,11 @@ events:
                     applied->missed:
                         condition: and(role('admin'),eventWas())
                         label: _('Nepřijel')
-                        dangerous: true
+                        type: danger
                     applied->cancelled:
                         condition: and(role('admin'),neg(or(state('missed'),state('participated'),state('cancelled'))))
                         label: _('Zrušit přihlášku')
-                        dangerous: true
+                        type: danger
                     cancelled->__terminated:
                         condition: role('admin')
                         label: _('Smazat přihlášku')

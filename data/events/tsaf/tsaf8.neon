@@ -109,20 +109,20 @@ events:
                     applied->missed:
                         condition: and(role('admin'),eventWas())
                         label: Nepřijel
-                        dangerous: true
+                        type: danger
                     invited->rejected:
                         condition: %events.tsaf8.appCond%
                         label: Odmítnout účast
-                        dangerous: true
+                        type: danger
                     # to cancelled/termination
                     auto.invited|invited|applied->cancelled:
                         condition: role('admin')
                         label: Zrušit přihlášku
-                        dangerous: true
+                        type: danger
                     spare->cancelled:
                         condition: role('admin')
                         label: Zrušit přihlášku
-                        dangerous: true
+                        type: danger
                     cancelled->__terminated:
                         condition: role('admin')
                         label: Smazat přihlášku

@@ -75,8 +75,8 @@ transition:
         default: []
         type: expression array
     # Requires confirmation in the GUI
-    dangerous:
-        default: false
+    type:
+        default: secondary
         type: expression
     # Cannot be executed from the GUI (event when it's condition == true)
     visible:

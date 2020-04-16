@@ -8,6 +8,7 @@ use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Events\TransitionConditionFailedException;
 use FKSDB\Events\TransitionOnExecutedException;
 use FKSDB\Events\TransitionUnsatisfiedTargetException;
+use FKSDB\Logging\ILogger;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 
@@ -18,6 +19,11 @@ use Nette\SmartObject;
  */
 class Transition {
     use SmartObject;
+
+    const TYPE_SUCCESS = ILogger::SUCCESS;
+    const TYPE_WARNING = ILogger::WARNING;
+    const TYPE_DANGEROUS = ILogger::ERROR;
+    const TYPE_DEFAULT = 'secondary';
 
     /** @var BaseMachine */
     private $baseMachine;
@@ -44,9 +50,6 @@ class Transition {
     private $condition;
 
     /** @var boolean|callable */
-    private $dangerous;
-
-    /** @var boolean|callable */
     private $visible;
 
     /**
@@ -58,15 +61,21 @@ class Transition {
      * @var array
      */
     public $onExecuted = [];
+    /**
+     * @var
+     */
+    private $type;
 
     /**
      * Transition constructor.
-     * @param $mask
-     * @param $label
+     * @param string $mask
+     * @param string $label
+     * @param string $type
      */
-    function __construct($mask, $label) {
+    function __construct(string $mask, string $label, string $type) {
         $this->setMask($mask);
         $this->label = $label;
+        $this->type = $type;
     }
 
     /**
@@ -74,14 +83,27 @@ class Transition {
      *
      * @return string
      */
-    public function getName() {
+    public function getName(): string {
         return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType(): string {
+        if ($this->isTerminating()) {
+            return self::TYPE_DANGEROUS;
+        }
+        if ($this->isCreating()) {
+            return self::TYPE_SUCCESS;
+        }
+        return $this->type;
     }
 
     /**
      * @param $name
      */
-    private function setName($name) {
+    private function setName(string $name) {
         // it's used for component naming
         $name = str_replace('*', '_any_', $name);
         $name = str_replace('|', '_or_', $name);
@@ -157,14 +179,6 @@ class Transition {
      * @param Holder $holder
      * @return bool
      */
-    public function isDangerous(Holder $holder): bool {
-        return $this->isTerminating() || $this->getEvaluator()->evaluate($this->dangerous, $holder);
-    }
-
-    /**
-     * @param Holder $holder
-     * @return bool
-     */
     public function isVisible(Holder $holder): bool {
         return $this->getEvaluator()->evaluate($this->visible, $holder);
     }
@@ -175,14 +189,6 @@ class Transition {
     public function setCondition($condition) {
         $this->condition = $condition;
     }
-
-    /**
-     * @param $dangerous
-     */
-    public function setDangerous($dangerous) {
-        $this->dangerous = $dangerous;
-    }
-
     /**
      * @param $visible
      */

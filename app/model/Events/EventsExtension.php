@@ -316,7 +316,7 @@ class EventsExtension extends CompilerExtension {
     private function createTransitionFactory() {
         $factory = $this->getContainerBuilder()->addDefinition($this->getTransitionName());
         $factory->setShared(false);
-        $factory->setClass(self::CLASS_TRANSITION, ['%mask%', '%label%']);
+        $factory->setClass(self::CLASS_TRANSITION, ['%mask%', '%label%', '%type%']);
         $factory->setInternal(true);
 
         $parameters = array_keys($this->scheme['transition']);
@@ -326,7 +326,6 @@ class EventsExtension extends CompilerExtension {
         $factory->addSetup('setCondition', '%condition%');
         $factory->addSetup('setEvaluator', '@events.expressionEvaluator');
         $factory->addSetup('$service->onExecuted = array_merge($service->onExecuted, ?)', '%onExecuted%');
-        $factory->addSetup('setDangerous', '%dangerous%');
         $factory->addSetup('setVisible', '%visible%');
 
         $this->transtionFactory = $factory;

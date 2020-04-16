@@ -182,23 +182,13 @@ class ApplicationComponent extends Control {
             };
 
             if ($transition->isCreating()) {
-                $submit->getControlPrototype()->addClass('btn-sm btn-success');
-                $submit->setOption('row', 1);
                 if ($transitionSubmit !== false) {
                     $transitionSubmit = $submit;
                 } elseif ($transitionSubmit) {
                     $transitionSubmit = false; // if there is more than one submit set no one
                 }
-            } elseif ($transition->isTerminating()) {
-                $submit->getControlPrototype()->addClass('btn-sm btn-danger');
-                $submit->setOption('row', 3);
-            } elseif ($transition->isDangerous($this->holder)) {
-                $submit->getControlPrototype()->addClass('btn-sm btn-danger');
-                $submit->setOption('row', 2);
-            } else {
-                $submit->getControlPrototype()->addClass('btn-sm btn-secondary');
-                $submit->setOption('row', 2);
             }
+            $submit->getControlPrototype()->addAttributes(['btn btn-' . $transition->getType()]);
         }
 
         /*
