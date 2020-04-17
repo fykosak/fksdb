@@ -1,1 +1,0 @@
-../../libs/jquery.confirm/jquery.confirm.min.js
