@@ -9,7 +9,6 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\ORM\Tables\TypedTableSelection;
 use FyziklaniModule\BasePresenter;
 use Nette\Application\BadRequestException;
-use Nette\Database\Table\Selection;
 use Nette\Utils\Html;
 use Traversable;
 
@@ -94,15 +93,14 @@ class CloseStrategy {
     }
 
     /**
-     * @param Selection $teams
+     * @param TypedTableSelection $teams
      * @return array[]
      * @throws BadRequestException
      */
-    private function getTeamsStats(Selection $teams): array {
+    private function getTeamsStats(TypedTableSelection $teams): array {
         $teamsData = [];
-        foreach ($teams as $row) {
-            $team = ModelFyziklaniTeam::createFromActiveRow($row);
-
+        /** @var ModelFyziklaniTeam $team */
+        foreach ($teams as $team) {
             if ($team->hasOpenSubmitting()) {
                 throw new BadRequestException('Tým ' . $team->name . '(' . $team->e_fyziklani_team_id . ') nemá uzavřené bodování');
             }

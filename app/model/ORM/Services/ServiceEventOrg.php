@@ -10,7 +10,6 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventOrg;
 use FKSDB\ORM\Tables\TypedTableSelection;
 use ModelException;
-use Nette\Database\Table\Selection;
 
 /**
  * Class FKSDB\ORM\Services\ServiceEventOrg

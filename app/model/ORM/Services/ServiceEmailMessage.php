@@ -7,7 +7,6 @@ use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelEmailMessage;
 use FKSDB\ORM\Tables\TypedTableSelection;
-use Nette\Database\Table\Selection;
 
 /**
  * Class ServiceEmailMessage

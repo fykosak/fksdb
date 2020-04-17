@@ -7,7 +7,6 @@ use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Tables\TypedTableSelection;
-use Nette\Database\Table\Selection;
 
 /**
  * @author Lukáš Timko <lukast@fykos.cz>

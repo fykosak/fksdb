@@ -49,15 +49,11 @@ class AllSubmitsGrid extends SubmitsGrid {
      * @param ModelEvent $event
      * @param Container $container
      */
-    public function __construct(
-        ModelEvent $event,
-        Container $container
-    ) {
+    public function __construct(ModelEvent $event, Container $container) {
         parent::__construct($container);
         $this->event = $event;
         $this->serviceFyziklaniTask = $container->getByType(ServiceFyziklaniTask::class);
         $this->serviceFyziklaniTeam = $container->getByType(ServiceFyziklaniTeam::class);
-
     }
 
     /**

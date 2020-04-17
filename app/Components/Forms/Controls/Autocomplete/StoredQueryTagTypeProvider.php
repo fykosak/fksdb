@@ -4,7 +4,7 @@ namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryTagType;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
-use Nette\Database\Table\Selection;
+use FKSDB\ORM\Tables\TypedTableSelection;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -16,18 +16,18 @@ class StoredQueryTagTypeProvider implements IFilteredDataProvider {
     const DESCRIPTION = 'description';
 
     /**
-     * @var \FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryTagType
+     * @var ServiceStoredQueryTagType
      */
     private $serviceStoredQueryTagType;
 
     /**
-     * @var Selection
+     * @var TypedTableSelection
      */
     private $searchTable;
 
     /**
      * StoredQueryTagTypeProvider constructor.
-     * @param \FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryTagType $serviceStoredQueryTagType
+     * @param ServiceStoredQueryTagType $serviceStoredQueryTagType
      */
     function __construct(ServiceStoredQueryTagType $serviceStoredQueryTagType) {
         $this->serviceStoredQueryTagType = $serviceStoredQueryTagType;
@@ -66,6 +66,7 @@ class StoredQueryTagTypeProvider implements IFilteredDataProvider {
             ->order('name');
 
         $result = [];
+        /** @var ModelStoredQueryTagType $tagType */
         foreach ($tagTypes as $tagType) {
             $result[] = [
                 self::LABEL => $tagType->name,

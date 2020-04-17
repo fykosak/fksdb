@@ -8,7 +8,6 @@ use FKSDB\ORM\Tables\TypedTableSelection;
 use FKSDB\Results\EvaluationStrategies\EvaluationStrategy;
 use FKSDB\Results\ModelCategory;
 use Nette\Database\Connection;
-use Nette\Database\Table\Selection;
 use Nette\InvalidStateException;
 
 /**
