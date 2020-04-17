@@ -6,6 +6,7 @@ use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Tables\TypedTableSelection;
 use Nette\Database\Table\Selection;
 
 /**
@@ -47,9 +48,9 @@ class ServiceFyziklaniTask extends AbstractServiceSingle {
     /**
      * Syntactic sugar.
      * @param ModelEvent $event
-     * @return Selection
+     * @return Selection|TypedTableSelection
      */
-    public function findAll(ModelEvent $event): Selection {
+    public function findAll(ModelEvent $event): TypedTableSelection {
         return $this->getTable()->where('event_id', $event->event_id);
     }
 

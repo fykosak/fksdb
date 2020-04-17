@@ -64,11 +64,11 @@ class PasswordAuthenticator extends AbstractAuthenticator implements IAuthentica
      * @throws UnknownLoginException
      */
     public function findLogin($id) {
-        $row = $this->servicePerson->getTable()->where(':person_info.email = ?', $id)->fetch();
+        /** @var ModelPerson $person */
+        $person = $this->servicePerson->getTable()->where(':person_info.email = ?', $id)->fetch();
         $login = null;
 
-        if ($row) {
-            $person = ModelPerson::createFromActiveRow($row);
+        if ($person) {
             $login = $person->getLogin();
             if (!$login) {
                 throw new NoLoginException();

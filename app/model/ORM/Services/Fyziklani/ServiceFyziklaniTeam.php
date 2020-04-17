@@ -54,7 +54,7 @@ class ServiceFyziklaniTeam extends AbstractServiceSingle {
     /**
      * Syntactic sugar.
      * @param ModelEvent $event
-     * @return Selection|null
+     * @return Selection|TypedTableSelection|null
      */
     public function findPossiblyAttending(ModelEvent $event) {
         $result = $this->getTable()->where('status', ['participated', 'approved', 'spare', 'applied'])->where('event_id', $event->event_id);

@@ -34,8 +34,8 @@ class DetailResultsModel extends AbstractResultsModel {
         if (!isset($this->dataColumns[$category->id])) {
             $dataColumns = [];
             $sum = 0;
-            foreach ($this->getTasks($this->series) as $row) {
-                $task = ModelTask::createFromActiveRow($row);
+            /** @var ModelTask $task */
+            foreach ($this->getTasks($this->series) as $task) {
                 $taskPoints = $this->evaluationStrategy->getTaskPoints($task, $category);
                 $dataColumns[] = [
                     self::COL_DEF_LABEL => $task->label,
@@ -92,8 +92,8 @@ class DetailResultsModel extends AbstractResultsModel {
 
         $tasks = $this->getTasks($this->series);
         $i = 0;
-        foreach ($tasks as $row) {
-            $task = ModelTask::createFromActiveRow($row);
+        /** @var ModelTask $task */
+        foreach ($tasks as $task) {
             $points = $this->evaluationStrategy->getPointsColumn($task);
             $select[] = "round(MAX(IF(t.task_id = " . $task->task_id . ", " . $points . ", null))) AS '" . self::DATA_PREFIX . $i . "'";
             $i += 1;

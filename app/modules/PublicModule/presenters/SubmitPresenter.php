@@ -208,8 +208,8 @@ class SubmitPresenter extends BasePresenter {
             $this->uploadedSubmitStorage->beginTransaction();
 
             foreach ($taskIds as $taskId) {
-                $taskRow = $this->taskService->findByPrimary($taskId);
-                $task = ModelTask::createFromActiveRow($taskRow);
+                /** @var ModelTask $task */
+                $task = $this->taskService->findByPrimary($taskId);
 
                 if (!isset($validIds[$taskId])) {
                     $this->flashMessage(sprintf(_('Úlohu %s již není možno odevzdávat.'), $task->label), self::FLASH_ERROR);

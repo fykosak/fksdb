@@ -117,8 +117,8 @@ class MailSender {
             ->fetchPairs('person_id');
 
         $logins = [];
-        foreach ($persons as $row) {
-            $person = ModelPerson::createFromActiveRow($row);
+        /** @var ModelPerson $person */
+        foreach ($persons as $person) {
             $login = $person->getLogin();
             if (!$login) {
                 $login = $this->accountManager->createLogin($person);

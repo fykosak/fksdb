@@ -5,6 +5,7 @@ namespace FKSDB\ORM\Services;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelRegion;
+use FKSDB\ORM\Tables\TypedTableSelection;
 use Nette\Database\Table\Selection;
 
 /**
@@ -27,11 +28,9 @@ class ServiceRegion extends AbstractServiceSingle {
     }
 
     /**
-     * @return Selection
+     * @return Selection|TypedTableSelection
      */
-    public function getCountries(): Selection {
+    public function getCountries(): TypedTableSelection {
         return $this->getTable()->where('country_iso = nuts');
     }
-
 }
-
