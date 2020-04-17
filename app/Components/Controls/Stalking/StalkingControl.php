@@ -26,14 +26,6 @@ abstract class StalkingControl extends Control {
     const PERMISSION_USE_FIELD_LEVEL = 2048;
 
     /**
-     * @var int
-     */
-    protected $userPermissions;
-    /**
-     * @var ModelPerson;
-     */
-    protected $modelPerson;
-    /**
      * @var ITranslator
      */
     protected $translator;
@@ -46,21 +38,22 @@ abstract class StalkingControl extends Control {
     /**
      * StalkingComponent constructor.
      * @param Container $container
-     * @param ModelPerson $modelPerson
-     * @param int $userPermissions
      */
-    public function __construct(Container $container, ModelPerson $modelPerson, int $userPermissions) {
+    public function __construct(Container $container) {
         parent::__construct();
-        $this->userPermissions = $userPermissions;
-        $this->modelPerson = $modelPerson;
+
         $this->translator = $container->getByType(ITranslator::class);
         $this->tableReflectionFactory = $container->getByType(TableReflectionFactory::class);
     }
 
-    public function beforeRender() {
+    /**
+     * @param ModelPerson $person
+     * @param int $userPermissions
+     */
+    public function beforeRender(ModelPerson $person, int $userPermissions) {
         $this->template->setTranslator($this->translator);
-        $this->template->userPermissions = $this->userPermissions;
-        $this->template->gender = $this->modelPerson->gender;
+        $this->template->userPermissions = $userPermissions;
+        $this->template->gender = $person->gender;
     }
 
     /**

@@ -83,10 +83,11 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     }
 
     /**
+     * @param int $id
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function renderDetail() {
+    public function renderDetail(int $id) {
         $this->template->event = $this->getEvent();
         $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
     }

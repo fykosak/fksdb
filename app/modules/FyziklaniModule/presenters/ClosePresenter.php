@@ -125,7 +125,6 @@ class ClosePresenter extends BasePresenter {
         return new TeamSubmitsGrid($this->getEntity(), $this->getContext());
     }
 
-
     /**
      * @inheritDoc
      */

@@ -5,7 +5,7 @@ namespace Persons\Deduplication;
 use FKSDB\Logging\DevNullLogger;
 use FKSDB\Logging\ILogger;
 use Nette\Caching\Cache;
-use Nette\Database\Connection;
+use Nette\Database\Context;
 use Nette\Database\Table\ActiveRow;
 use Nette\MemberAccessException;
 
@@ -34,9 +34,9 @@ class Merger {
     private $mergedRow;
 
     /**
-     * @var Connection
+     * @var Context
      */
-    private $connection;
+    private $context;
 
     /**
      * @var array
@@ -57,11 +57,11 @@ class Merger {
     /**
      * Merger constructor.
      * @param $configuration
-     * @param Connection $connection
+     * @param Context $context
      */
-    function __construct($configuration, Connection $connection) {
+    function __construct($configuration, Context $context) {
         $this->configuration = $configuration;
-        $this->connection = $connection;
+        $this->context = $context;
         $this->logger = new DevNullLogger();
     }
 
@@ -120,32 +120,32 @@ class Merger {
      */
     public function merge($commit = null) {
         // This workaround fixes inproper caching of referenced tables.
-        $this->connection->getCache()->clean([Cache::ALL => true]);
-        $this->connection->getDatabaseReflection()->setConnection($this->connection);
+        $this->context->getConnection()->getCache()->clean([Cache::ALL => true]);
+        $this->context->getConnection()->getDatabaseReflection()->setConnection($this->context->getConnection());
 
         $table = $this->trunkRow->getTable()->getName();
         $tableMerger = $this->getMerger($table);
         $commit = ($commit === null) ? $this->configuration['commit'] : $commit;
 
 
-        $this->connection->beginTransaction();
+        $this->context->getConnection()->beginTransaction();
 
         $tableMerger->setMergedPair($this->trunkRow, $this->mergedRow);
         $this->resetConflicts();
         try {
             $tableMerger->merge();
         } catch (MemberAccessException $exception) { // this is workaround for non-working Nette database cache
-            $this->connection->rollBack();
+            $this->context->getConnection()->rollBack();
             return false;
         }
         if ($this->hasConflicts()) {
-            $this->connection->rollBack();
+            $this->context->getConnection()->rollBack();
             return false;
         } else {
             if ($commit) {
-                $this->connection->commit();
+                $this->context->getConnection()->commit();
             } else {
-                $this->connection->rollBack();
+                $this->context->getConnection()->rollBack();
             }
             return true;
         }
@@ -169,7 +169,7 @@ class Merger {
      * @return TableMerger
      */
     private function createTableMerger($table) {
-        $tableMerger = new TableMerger($table, $this, $this->connection, $this->configuration['defaultStrategy'], $this->getLogger());
+        $tableMerger = new TableMerger($table, $this, $this->context, $this->configuration['defaultStrategy'], $this->getLogger());
         if (isset($this->configuration['secondaryKeys'][$table])) {
             $tableMerger->setSecondaryKey($this->configuration['secondaryKeys'][$table]);
         }

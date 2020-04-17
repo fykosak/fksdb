@@ -79,10 +79,10 @@ class ContributionsFromXML extends Stage {
         $task = $tasks[$tasknr];
         $this->taskContributionService->getConnection()->beginTransaction();
 
-        foreach ($this->contributionFromXML as $type => $XMLElement) {
+        foreach ($this->contributionFromXML as $type => $xmlElement) {
             // parse contributors
             $contributors = [];
-            foreach (explode(self::DELIMITER, (string) $XMLTask->{$XMLElement}) as $signature) {
+            foreach (explode(self::DELIMITER, (string) $XMLTask->{$xmlElement}) as $signature) {
                 $signature = trim($signature);
                 if (!$signature) {
                     continue;
