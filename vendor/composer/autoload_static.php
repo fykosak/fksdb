@@ -12,7 +12,22 @@ class ComposerStaticInita3f44992ecfcf211db902b2355f8076f
         'a1d067aa2e53d6b47171c03cfc0ea5be' => __DIR__ . '/..' . '/nette/safe-stream/src/loader.php',
     );
 
+    public static $prefixLengthsPsr4 = array (
+        's' => 
+        array (
+            'setasign\\Fpdi\\' => 14,
+        ),
+    );
+
+    public static $prefixDirsPsr4 = array (
+        'setasign\\Fpdi\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/setasign/fpdi/src',
+        ),
+    );
+
     public static $classMap = array (
+        'FPDF' => __DIR__ . '/..' . '/setasign/fpdf/fpdf.php',
         'Latte\\CompileException' => __DIR__ . '/..' . '/latte/latte/src/Latte/exceptions.php',
         'Latte\\Compiler' => __DIR__ . '/..' . '/latte/latte/src/Latte/Compiler/Compiler.php',
         'Latte\\Engine' => __DIR__ . '/..' . '/latte/latte/src/Latte/Engine.php',
@@ -266,6 +281,8 @@ class ComposerStaticInita3f44992ecfcf211db902b2355f8076f
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
+            $loader->prefixLengthsPsr4 = ComposerStaticInita3f44992ecfcf211db902b2355f8076f::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInita3f44992ecfcf211db902b2355f8076f::$prefixDirsPsr4;
             $loader->classMap = ComposerStaticInita3f44992ecfcf211db902b2355f8076f::$classMap;
 
         }, null, ClassLoader::class);
