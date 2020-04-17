@@ -232,7 +232,11 @@ class PersonPresenter extends BasePresenter {
         $this->template->userPermissions = $this->getUserPermissions($person);
         $this->template->person = $person;
         $this->template->isSelf = $this->getUser()->getIdentity()->getPerson()->person_id === $person->person_id;
-        Debugger::log(sprintf('Person %d stalk personId %d', $this->getUser()->getIdentity()->getPerson()->person_id, $person->person_id), 'stalking-log');
+        /** @var ModelPerson $userPerson */
+        $userPerson = $this->getUser()->getIdentity()->getPerson();
+        Debugger::log(sprintf('%s (%d) stalk %s (%d)',
+            $userPerson->getFullName(), $userPerson->person_id,
+            $person->getFullName(), $person->person_id), 'stalking-log');
     }
     /* ******************* COMPONENTS *******************/
     /**
