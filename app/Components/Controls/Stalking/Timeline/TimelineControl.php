@@ -120,7 +120,7 @@ class TimelineControl extends ReactComponent {
         $eventTeachers = [];
         foreach ($this->person->getEventTeacher() as $row) {
             $team = ModelFyziklaniTeam::createFromActiveRow($row);
-            $eventTeachers = ['event' => $this->eventToArray($team->getEvent()), 'model' => null];
+            $eventTeachers[] = ['event' => $this->eventToArray($team->getEvent()), 'model' => null];
             $events[] = $team->getEvent();
 
         }
