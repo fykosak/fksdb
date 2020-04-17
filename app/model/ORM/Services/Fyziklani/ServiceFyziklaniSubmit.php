@@ -12,6 +12,7 @@ use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Tables\TypedTableSelection;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\Selection;
 use Nette\Security\User;
@@ -56,9 +57,9 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
     /**
      * Syntactic sugar.
      * @param ModelEvent $event
-     * @return Selection
+     * @return TypedTableSelection
      */
-    public function findAll(ModelEvent $event): Selection {
+    public function findAll(ModelEvent $event): TypedTableSelection {
         return $this->getTable()->where('e_fyziklani_team_id.event_id', $event->event_id);
     }
 

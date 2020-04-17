@@ -8,6 +8,7 @@ use FKSDB\ORM\DbNames;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventParticipant;
+use FKSDB\ORM\Tables\TypedTableSelection;
 use ModelException;
 use Nette\Database\Table\Selection;
 
@@ -67,9 +68,9 @@ class ServiceEventParticipant extends AbstractServiceSingle {
     /**
      * Syntactic sugar.
      * @param ModelEvent $event
-     * @return Selection
+     * @return TypedTableSelection
      */
-    public function findPossiblyAttending(ModelEvent $event): Selection {
+    public function findPossiblyAttending(ModelEvent $event): TypedTableSelection {
         return $this->getTable()->where('status', ['participated', 'approved', 'spare', 'applied'])->where('event_id', $event->event_id);
     }
 }

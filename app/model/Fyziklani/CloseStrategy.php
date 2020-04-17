@@ -6,6 +6,7 @@ use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\ORM\Tables\TypedTableSelection;
 use FyziklaniModule\BasePresenter;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\Selection;
@@ -138,9 +139,9 @@ class CloseStrategy {
 
     /**
      * @param string|null $category
-     * @return Selection
+     * @return TypedTableSelection
      */
-    private function getAllTeams(string $category = null): Selection {
+    private function getAllTeams(string $category = null): TypedTableSelection {
         $query = $this->serviceFyziklaniTeam->findParticipating($this->event);
         if ($category) {
             $query->where('category', $category);

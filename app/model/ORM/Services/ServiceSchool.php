@@ -5,6 +5,7 @@ namespace FKSDB\ORM\Services;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelSchool;
+use FKSDB\ORM\Tables\TypedTableSelection;
 use Nette\Database\Table\Selection;
 
 /**
@@ -27,9 +28,9 @@ class ServiceSchool extends AbstractServiceSingle {
     }
 
     /**
-     * @return \Nette\Database\Table\Selection
+     * @return TypedTableSelection
      */
-    public function getSchools(): Selection {
+    public function getSchools(): TypedTableSelection {
         return $this->getTable()
             ->select(DbNames::TAB_SCHOOL . '.*')
             ->select(DbNames::TAB_ADDRESS . '.*');

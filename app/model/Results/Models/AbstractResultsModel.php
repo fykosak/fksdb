@@ -160,7 +160,7 @@ abstract class AbstractResultsModel {
 
     /**
      * @param $series
-     * @return Selection|TypedTableSelection
+     * @return TypedTableSelection
      */
     protected function getTasks($series): TypedTableSelection {
         return $this->serviceTask->getTable()

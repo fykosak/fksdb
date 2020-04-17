@@ -28,7 +28,7 @@ class ServiceRegion extends AbstractServiceSingle {
     }
 
     /**
-     * @return Selection|TypedTableSelection
+     * @return TypedTableSelection
      */
     public function getCountries(): TypedTableSelection {
         return $this->getTable()->where('country_iso = nuts');

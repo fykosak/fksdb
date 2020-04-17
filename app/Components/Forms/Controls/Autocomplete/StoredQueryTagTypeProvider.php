@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
+use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryTagType;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
 use Nette\Database\Table\Selection;
 
@@ -43,15 +44,16 @@ class StoredQueryTagTypeProvider implements IFilteredDataProvider {
         $search = trim($search);
         $search = str_replace(' ', '', $search);
         $this->searchTable
-                ->where('name LIKE concat(?, \'%\') OR description LIKE concat(?, \'%\')', $search, $search);
+            ->where('name LIKE concat(?, \'%\') OR description LIKE concat(?, \'%\')', $search, $search);
         return $this->getItems();
     }
 
     /**
-     * @param mixed $id
-     * @return bool|mixed|\Nette\Database\Table\ActiveRow|Selection|null
+     * @param int $id
+     * @return string
      */
-    public function getItemLabel($id) {
+    public function getItemLabel($id): string {
+        /** @var ModelStoredQueryTagType $tagType */
         $tagType = $this->serviceStoredQueryTagType->findByPrimary($id);
         return $tagType->name;
     }
@@ -61,7 +63,7 @@ class StoredQueryTagTypeProvider implements IFilteredDataProvider {
      */
     public function getItems() {
         $tagTypes = $this->searchTable
-                ->order('name');
+            ->order('name');
 
         $result = [];
         foreach ($tagTypes as $tagType) {

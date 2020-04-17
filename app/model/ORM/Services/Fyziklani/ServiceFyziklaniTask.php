@@ -48,7 +48,7 @@ class ServiceFyziklaniTask extends AbstractServiceSingle {
     /**
      * Syntactic sugar.
      * @param ModelEvent $event
-     * @return Selection|TypedTableSelection
+     * @return TypedTableSelection
      */
     public function findAll(ModelEvent $event): TypedTableSelection {
         return $this->getTable()->where('event_id', $event->event_id);

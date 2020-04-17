@@ -8,6 +8,7 @@ use FKSDB\ORM\DbNames;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventOrg;
+use FKSDB\ORM\Tables\TypedTableSelection;
 use ModelException;
 use Nette\Database\Table\Selection;
 
@@ -48,9 +49,9 @@ class ServiceEventOrg extends AbstractServiceSingle {
 
     /**
      * @param ModelEvent $event
-     * @return Selection
+     * @return TypedTableSelection
      */
-    public function findByEvent(ModelEvent $event): Selection {
+    public function findByEvent(ModelEvent $event): TypedTableSelection {
         return $this->getTable()->where('event_id', $event->event_id);
     }
 }
