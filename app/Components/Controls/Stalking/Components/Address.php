@@ -2,15 +2,20 @@
 
 namespace FKSDB\Components\Controls\Stalking;
 
+use FKSDB\ORM\Models\ModelPerson;
+
 /**
  * Class Address
  * @package FKSDB\Components\Controls\Stalking
  */
 class Address extends AbstractStalkingComponent {
-
-    public function render() {
-        $this->beforeRender();
-        $this->template->MAddress = $this->modelPerson->getMPostContacts();
+    /**
+     * @param ModelPerson $person
+     * @param int $userPermissions
+     */
+    public function render(ModelPerson $person, int $userPermissions) {
+        $this->beforeRender($person, $userPermissions);
+        $this->template->MAddress = $person->getMPostContacts();
         $this->template->setFile(__DIR__ . '/Address.latte');
         $this->template->render();
     }
@@ -26,6 +31,6 @@ class Address extends AbstractStalkingComponent {
      * @return string[]
      */
     protected function getAllowedPermissions(): array {
-        return [AbstractStalkingComponent::PERMISSION_FULL ,AbstractStalkingComponent::PERMISSION_RESTRICT];
+        return [AbstractStalkingComponent::PERMISSION_FULL, AbstractStalkingComponent::PERMISSION_RESTRICT];
     }
 }

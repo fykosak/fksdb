@@ -6,6 +6,7 @@ use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
+use FKSDB\ORM\Models\Schedule\ModelSchedulePayment;
 use FKSDB\ORM\Tables\TypedTableSelection;
 use FKSDB\Payment\IPaymentModel;
 use FKSDB\Payment\Price;
@@ -67,6 +68,7 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
     public function getRelatedPersonSchedule(): array {
         $query = $this->related(DbNames::TAB_SCHEDULE_PAYMENT, 'payment_id');
         $items = [];
+        /** @var ModelSchedulePayment $row */
         foreach ($query as $row) {
             $items[] = ModelPersonSchedule::createFromActiveRow($row->person_schedule);
         }

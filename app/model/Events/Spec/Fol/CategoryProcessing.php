@@ -9,6 +9,7 @@ use Events\Model\Holder\Holder;
 use Events\Processings\AbstractProcessing;
 use FKSDB\Components\Forms\Factories\Events\IOptionsProvider;
 use FKSDB\Logging\ILogger;
+use FKSDB\ORM\Models\ModelRegion;
 use FKSDB\ORM\Services\ServiceSchool;
 use FKSDB\YearCalculator;
 use Nette\Forms\Form;
@@ -152,6 +153,7 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
             if (!$competitor['school_id']) { // for future
                 $olds += 1;
             } else {
+                /** @var ModelRegion $country */
                 $country = $this->serviceSchool->getTable()->select('address.region.country_iso')->where(['school_id' => $competitor['school_id']])->fetch();
                 if (!in_array($country->country_iso, ['CZ', 'SK'])) {
                     $abroad += 1;

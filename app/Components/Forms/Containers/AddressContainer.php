@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Forms\Containers;
 
 use FKSDB\ORM\AbstractModelMulti;
+use FKSDB\ORM\Models\ModelAddress;
 use FKSDB\ORM\Services\ServiceRegion;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
@@ -55,6 +56,7 @@ class AddressContainer extends ModelContainer {
             } else {
                 $address = $values;
             }
+            /** @var ModelAddress $address */
 
             $values = $address->toArray();
             $values['country_iso'] = $address->region_id ? $address->region->country_iso : null;

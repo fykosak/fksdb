@@ -119,16 +119,16 @@ class PaymentPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function actionEdit(int $id) {
-        $this->loadEntity($id);
+        $payment = $this->loadEntity($id);
         if (!$this->canEdit()) {
-            $this->flashMessage(\sprintf(_('Payment #%s can not be edited'), $this->getEntity()->getPaymentId()), \BasePresenter::FLASH_ERROR);
+            $this->flashMessage(\sprintf(_('Payment #%s can not be edited'), $payment->getPaymentId()), \BasePresenter::FLASH_ERROR);
             $this->redirect(':MyPayments:');
         }
         /**
          * @var SelectForm $component
          */
         $component = $this->getComponent('form');
-        $component->setModel($this->getEntity());
+        $component->setModel($payment);
     }
 
     /**
@@ -145,26 +145,26 @@ class PaymentPresenter extends BasePresenter {
     }
 
     /* ********* render *****************/
-    public function renderEdit() {
-        $this->template->model = $this->getEntity();
+    /**
+     * @param int $id
+     * @throws AbortException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     */
+    public function renderEdit(int $id) {
+        $this->template->model = $this->loadEntity($id);
     }
 
     /**
-     * @throws BadRequestException
+     * @param int $id
      * @throws AbortException
+     * @throws BadRequestException
      */
-    public function renderDetail() {
-        $this->template->items = $this->getMachine()->getPriceCalculator()->getGridItems($this->getEntity());
-        $this->template->model = $this->getEntity();
+    public function renderDetail(int $id) {
+        $payment = $this->loadEntity($id);
+        $this->template->items = $this->getMachine()->getPriceCalculator()->getGridItems($payment);
+        $this->template->model = $payment;
         $this->template->isOrg = $this->isOrg();
-    }
-    /* ********* startup *****************/
-    /**
-     * @throws AbortException
-     * @throws BadRequestException
-     */
-    protected function startup() {
-        parent::startup();
     }
     /* ********* Components *****************/
     /**

@@ -6,6 +6,7 @@ use FKSDB\model\Fyziklani\ClosedSubmittingException;
 use FKSDB\model\Fyziklani\NotCheckedSubmitsException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\Events\ModelFyziklaniParticipant;
 use FKSDB\ORM\Models\IEventReferencedModel;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;

@@ -20,11 +20,9 @@ class Validation extends AbstractStalkingComponent {
     /**
      * Validation constructor.
      * @param Container $container
-     * @param ModelPerson $modelPerson
-     * @param $mode
      */
-    public function __construct(Container $container, ModelPerson $modelPerson, $mode) {
-        parent::__construct($container, $modelPerson, $mode);
+    public function __construct(Container $container) {
+        parent::__construct($container);
         $this->validationFactory = $container->getByType(DataTestingFactory::class);
     }
 
@@ -42,11 +40,15 @@ class Validation extends AbstractStalkingComponent {
         return [self::PERMISSION_RESTRICT, self::PERMISSION_FULL, self::PERMISSION_FULL];
     }
 
-    public function render() {
-        $this->beforeRender();
+    /**
+     * @param ModelPerson $person
+     * @param int $userPermissions
+     */
+    public function render(ModelPerson $person, int $userPermissions) {
+        $this->beforeRender($person, $userPermissions);
         $logger = new TestsLogger();
         foreach ($this->validationFactory->getTests('person') as $test) {
-            $test->run($logger, $this->modelPerson);
+            $test->run($logger, $person);
         }
 
         $this->template->logs = $logger->getLogs();
