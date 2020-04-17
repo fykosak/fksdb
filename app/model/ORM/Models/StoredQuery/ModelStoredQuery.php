@@ -85,6 +85,7 @@ class ModelStoredQuery extends AbstractModelSingle implements IResource {
             return [];
         }
         $result = [];
+        /** @var ModelStoredQueryTag $tag */
         foreach ($tags as $tag) {
             $tag->tag_type_id; // stupid touch
             $tagType = $tag->ref(DbNames::TAB_STORED_QUERY_TAG_TYPE, 'tag_type_id');

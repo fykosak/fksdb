@@ -56,12 +56,12 @@ class DeadlineFromXML extends Stage {
     }
 
     public function process() {
-        $XMLproblems = $this->data->getData();
-        if (!$XMLproblems['deadline']) {
+        $xmlProblems = $this->data->getData();
+        if (!$xmlProblems['deadline']) {
             return;
         }
 
-        $deadline = $this->datetimeFromString($XMLproblems['deadline']);
+        $deadline = $this->datetimeFromString($xmlProblems['deadline']);
         /**
          * @var ModelTask $task
          */

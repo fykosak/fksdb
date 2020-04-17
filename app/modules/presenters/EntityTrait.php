@@ -12,6 +12,7 @@ use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
+use Nette\InvalidStateException;
 use Nette\Security\IResource;
 
 /**
@@ -82,8 +83,12 @@ trait EntityTrait {
 
     /**
      * @return AbstractModelSingle|IModel
+     * @throws InvalidStateException
      */
     public function getEntity() {
+        if (!$this->model) {
+            throw new InvalidStateException(_('Entity is not loaded'));
+        }
         return $this->model;
     }
 

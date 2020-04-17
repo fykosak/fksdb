@@ -121,7 +121,7 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
             /*
              * This may not be optimal.
              */
-            $acYear = $event->event_type->contest->related('contest_year')->where('year', $event->year)->fetch()->ac_year;
+            $acYear = $event->getContest()->related('contest_year')->where('year', $event->year)->fetch()->ac_year;
             $result = $this->context->table(DbNames::TAB_EVENT_PARTICIPANT)
                 ->select('person.person_history:school_id')
                 ->select("GROUP_CONCAT(DISTINCT e_fyziklani_participant:e_fyziklani_team.name ORDER BY e_fyziklani_participant:e_fyziklani_team.created SEPARATOR ', ') AS teams")

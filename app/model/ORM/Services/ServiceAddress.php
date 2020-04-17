@@ -75,6 +75,7 @@ class ServiceAddress extends AbstractServiceSingle {
         if (!preg_match(self::PATTERN, $postalCode)) {
             throw new InvalidPostalCode($postalCode);
         }
+        /** @var ModelRegion $row */
         $row = $this->getContext()->table(DbNames::TAB_PSC_REGION)->where('psc = ?', $postalCode)->fetch();
         if ($row) {
             return $row->region_id;
