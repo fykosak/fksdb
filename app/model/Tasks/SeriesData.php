@@ -27,11 +27,6 @@ class SeriesData {
     private $series;
 
     /**
-     * @var string ISO 2 chars
-     */
-    private $language;
-
-    /**
      * @var mixed
      */
     private $data;
@@ -46,14 +41,12 @@ class SeriesData {
      * @param ModelContest $contest
      * @param $year
      * @param $series
-     * @param $language
      * @param $data
      */
-    function __construct(ModelContest $contest, $year, $series, $language, $data) {
+    function __construct(ModelContest $contest, $year, $series, $data) {
         $this->contest = $contest;
         $this->year = $year;
         $this->series = $series;
-        $this->language = $language;
         $this->data = $data;
     }
 
@@ -83,13 +76,6 @@ class SeriesData {
      */
     public function getData() {
         return $this->data;
-    }
-
-    /**
-     * @return string
-     */
-    function getLanguage() {
-        return $this->language;
     }
 
     /**

@@ -66,7 +66,7 @@ class Downloader {
      * @return string filename of downloaded XML file
      */
     public function downloadSeriesTasks(ModelContest $contest, int $year, int $series): string {
-        $mask = $this->parameters['tasks']['paths2'];
+        $mask = $this->parameters['tasks']['paths'];
         $contestName = isset($this->contestMap[$contest->contest_id]) ? $this->contestMap[$contest->contest_id] : $contest->contest_id;
 
         $path = sprintf($mask, $contestName, $year, $series);
