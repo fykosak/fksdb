@@ -38,7 +38,7 @@ abstract class Stage {
     /**
      * @param Pipeline $pipeline
      */
-    protected final function setPipeline(Pipeline $pipeline) {
+    public final function setPipeline(Pipeline $pipeline) {
         $this->pipeline = $pipeline;
     }
 
