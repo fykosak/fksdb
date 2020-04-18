@@ -29,13 +29,13 @@ class ServiceTask extends AbstractServiceSingle {
     /**
      * Syntactic sugar.
      *
-     * @param \FKSDB\ORM\Models\ModelContest $contest
+     * @param ModelContest $contest
      * @param int $year
      * @param int $series
      * @param int $tasknr
-     * @return \FKSDB\ORM\Models\ModelTask|null
+     * @return ModelTask|null
      */
-    public function findBySeries(ModelContest $contest, $year, $series, $tasknr) {
+    public function findBySeries(ModelContest $contest, int $year, int $series, int $tasknr) {
         $result = $this->getTable()->where([
             'contest_id' => $contest->contest_id,
             'year' => $year,

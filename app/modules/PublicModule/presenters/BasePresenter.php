@@ -38,9 +38,7 @@ abstract class BasePresenter extends \ContestPresenter {
      */
     public function getContestant() {
         if ($this->contestant === false) {
-            /**
-             * @var ModelPerson $person
-             */
+            /** @var ModelPerson $person */
             $person = $this->user->getIdentity()->getPerson();
             $contestant = $person->related(DbNames::TAB_CONTESTANT_BASE, 'person_id')->where([
                 'contest_id' => $this->getSelectedContest()->contest_id,

@@ -63,12 +63,12 @@ class GithubAuthenticator extends AbstractAuthenticator {
         if ($signature !== $expectedHash) {
             //throw new AuthenticationException(_('Nesprávný hash požadavku.'));
         }
-        /** @var ModelLogin $login */
-        $login = $this->serviceLogin->getTable()->where('login = ?', $loginName)->fetch();
+        $row = $this->serviceLogin->getTable()->where('login = ?', $loginName)->fetch();
 
-        if (!$login) {
+        if (!$row) {
             throw new NoLoginException();
         }
+        $login = ModelLogin::createFromActiveRow($row);
         if (!$login->active) {
             throw new InactiveLoginException();
         }

@@ -27,10 +27,10 @@ class ServiceFlag extends AbstractServiceSingle {
     /**
      * Syntactic sugar.
      *
-     * @param integer $fid
-     * @return \FKSDB\ORM\Models\ModelFlag|null
+     * @param int $fid
+     * @return ModelFlag|null
      */
-    public function findByFid($fid) {
+    public function findByFid(int $fid) {
         if (!$fid) {
             return null;
         }

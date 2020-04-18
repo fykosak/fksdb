@@ -4,6 +4,7 @@ namespace FKSDB\Components\Forms\Containers;
 
 use FKSDB\ORM\AbstractModelMulti;
 use FKSDB\ORM\Models\ModelAddress;
+use FKSDB\ORM\Models\ModelRegion;
 use FKSDB\ORM\Services\ServiceRegion;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
@@ -78,6 +79,7 @@ class AddressContainer extends ModelContainer {
             if (!$this->serviceRegion) {
                 throw new InvalidStateException("You must set FKSDB\ORM\Services\ServiceRegion before getting values from the address container.");
             }
+            /** @var ModelRegion|ActiveRow $region */
             $region = $this->serviceRegion->getCountries()->where('country_iso', $values['country_iso'])->fetch();
             $values['region_id'] = $region ? $region->region_id : null;
         }

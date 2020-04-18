@@ -132,12 +132,12 @@ class AccountManager {
         if (!$recoveryAddress) {
             throw new RecoveryNotImplementedException();
         }
-        $token = $this->serviceAuthToken->getTable()->where([
+        $row = $this->serviceAuthToken->getTable()->where([
             'login_id' => $login->login_id,
             'type' => ModelAuthToken::TYPE_RECOVERY,
         ])
             ->where('until > ?', new DateTime())->fetch();
-
+        $token = ModelAuthToken::createFromActiveRow($row);
         if ($token) {
             throw new RecoveryExistsException();
         }

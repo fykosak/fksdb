@@ -33,9 +33,6 @@ class ServiceFyziklaniTask extends AbstractServiceSingle {
      * @return ModelFyziklaniTask|null
      */
     public function findByLabel(string $label, ModelEvent $event) {
-        /**
-         * @var ModelFyziklaniTask $result
-         */
         $result = $this->getTable()->where([
             'label' => $label,
             'event_id' => $event->event_id,

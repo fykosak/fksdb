@@ -120,11 +120,10 @@ class BornCheck extends AbstractAdjustment implements IFormAdjustment {
         }
 
         $personId = $personControl->getValue();
-        /** @var ModelPersonHistory $personHistory */
-        $personHistory = $this->servicePersonHistory->getTable()
+        $personHistoryRow = $this->servicePersonHistory->getTable()
             ->where('person_id', $personId)
             ->where('ac_year', $this->getHolder()->getEvent()->getAcYear())->fetch();
-        return $personHistory ? $personHistory->study_year : null;
+        return $personHistoryRow ? ModelPersonHistory::createFromActiveRow($personHistoryRow)->study_year : null;
     }
 
     /**
@@ -138,11 +137,11 @@ class BornCheck extends AbstractAdjustment implements IFormAdjustment {
         }
 
         $personId = $personControl->getValue();
-        /** @var ModelSchool $school */
-        $school = $this->servicePersonHistory->getTable()
+
+        $schoolRow = $this->servicePersonHistory->getTable()
             ->where('person_id', $personId)
             ->where('ac_year', $this->getHolder()->getEvent()->getAcYear())->fetch();
-        return $school->school_id;
+        return ModelSchool::createFromActiveRow($schoolRow)->school_id;
     }
 
     /**
@@ -150,8 +149,8 @@ class BornCheck extends AbstractAdjustment implements IFormAdjustment {
      * @return bool
      */
     private function isCzSkSchool(int $schoolId) {
-        /** @var ModelRegion $country */
-        $country = $this->serviceSchool->getTable()->select('address.region.country_iso')->where(['school_id' => $schoolId])->fetch();
+        $countryRow = $this->serviceSchool->getTable()->select('address.region.country_iso')->where(['school_id' => $schoolId])->fetch();
+        $country = ModelRegion::createFromActiveRow($countryRow);
         if (in_array($country->country_iso, ['CZ', 'SK'])) {
             return true;
         }

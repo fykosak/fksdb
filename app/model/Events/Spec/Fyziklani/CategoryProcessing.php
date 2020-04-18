@@ -12,6 +12,7 @@ use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelPersonHistory;
 use FKSDB\ORM\Services\ServiceSchool;
 use FKSDB\YearCalculator;
+use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 
@@ -85,7 +86,7 @@ class CategoryProcessing extends AbstractProcessing {
                 }
                 /** @var ModelPerson $person */
                 $person = $baseHolder->getModel()->getMainModel()->person;
-                /** @var ModelPersonHistory $history */
+                /** @var ModelPersonHistory|ActiveRow $history */
                 $history = $person->related('person_history')->where('ac_year', $acYear)->fetch();
                 $participantData = [
                     'school_id' => $history->school_id,

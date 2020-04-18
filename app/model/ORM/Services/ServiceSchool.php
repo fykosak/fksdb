@@ -34,6 +34,4 @@ class ServiceSchool extends AbstractServiceSingle {
             ->select(DbNames::TAB_SCHOOL . '.*')
             ->select(DbNames::TAB_ADDRESS . '.*');
     }
-
 }
-

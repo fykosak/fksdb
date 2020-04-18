@@ -45,22 +45,19 @@ class ServiceEventParticipant extends AbstractServiceSingle {
     }
 
     /**
-     * @param IModel $model
+     * @param IModel|ModelEventParticipant $model
      * @param array $data
      * @param bool $alive
      * @return mixed|void
+     * @deprecated
      */
     public function updateModel(IModel $model, $data, $alive = true) {
-        /**
-         * @var \FKSDB\ORM\Models\ModelEventParticipant $model
-         */
         parent::updateModel($model, $data, $alive);
         if (!$alive && !$model->isNew()) {
             $person = $model->getPerson();
             if ($person) {
                 $person->removeScheduleForEvent($model->event_id);
             }
-
         }
     }
 

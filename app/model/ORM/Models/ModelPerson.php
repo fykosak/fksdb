@@ -76,9 +76,8 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
      * @return ModelPersonHistory|null
      */
     public function getHistory($acYear, $extrapolated = false) {
-        $histories = $this->related(DbNames::TAB_PERSON_HISTORY, 'person_id')
-            ->where('ac_year', $acYear);
-        $history = $histories->fetch();
+        $history = $this->related(DbNames::TAB_PERSON_HISTORY, 'person_id')
+            ->where('ac_year', $acYear)->fetch();
         if ($history) {
             return ModelPersonHistory::createFromActiveRow($history);
         }

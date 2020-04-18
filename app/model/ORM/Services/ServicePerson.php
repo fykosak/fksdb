@@ -29,10 +29,10 @@ class ServicePerson extends AbstractServiceSingle {
     /**
      * Syntactic sugar.
      *
-     * @param mixed $email
-     * @return \FKSDB\ORM\Models\ModelPerson|null
+     * @param string $email
+     * @return ModelPerson|null
      */
-    public function findByEmail($email) {
+    public function findByEmail(string $email) {
         if (!$email) {
             return null;
         }

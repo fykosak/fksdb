@@ -9,6 +9,7 @@ use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Tables\TypedTableSelection;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
+use Tracy\Debugger;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -40,7 +41,7 @@ class ServiceSubmit extends AbstractServiceSingle {
      * @param int $taskId
      * @return ModelSubmit|null
      */
-    public function findByContestant($ctId, $taskId) {
+    public function findByContestant(int $ctId, int $taskId) {
         $key = $ctId . ':' . $taskId;
 
         if (!array_key_exists($key, $this->submitCache)) {
@@ -48,7 +49,6 @@ class ServiceSubmit extends AbstractServiceSingle {
                 'ct_id' => $ctId,
                 'task_id' => $taskId,
             ])->fetch();
-
             if ($result !== false) {
                 $this->submitCache[$key] = $result;
             } else {
@@ -62,7 +62,7 @@ class ServiceSubmit extends AbstractServiceSingle {
      *
      * @return TypedTableSelection
      */
-    public function getSubmits() {
+    public function getSubmits(): TypedTableSelection {
         return $this->getTable()
             ->select(DbNames::TAB_SUBMIT . '.*')
             ->select(DbNames::TAB_TASK . '.*');
@@ -75,7 +75,7 @@ class ServiceSubmit extends AbstractServiceSingle {
      * @return array
      * @throws InvalidLinkException
      */
-    public function serializeSubmit($submit, ModelTask $task, Presenter $presenter) {
+    public function serializeSubmit($submit, ModelTask $task, Presenter $presenter): array {
         return [
             'submitId' => $submit ? $submit->submit_id : null,
             'name' => $task->getFQName(),
@@ -84,5 +84,4 @@ class ServiceSubmit extends AbstractServiceSingle {
             'deadline' => sprintf(_('Termín %s'), $task->submit_deadline),
         ];
     }
-
 }

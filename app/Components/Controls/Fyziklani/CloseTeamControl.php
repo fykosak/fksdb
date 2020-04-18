@@ -10,6 +10,7 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
+use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
@@ -91,7 +92,7 @@ class CloseTeamControl extends Control {
     private function getNextTask(): string {
         $submits = count($this->team->getNonRevokedSubmits());
         $tasksOnBoard = $this->event->getFyziklaniGameSetup()->tasks_on_board;
-        /** @var ModelFyziklaniTask $nextTask */
+        /** @var ModelFyziklaniTask|ActiveRow $nextTask */
         $nextTask = $this->serviceFyziklaniTask->findAll($this->event)->order('label')->limit(1, $submits + $tasksOnBoard)->fetch();
         return ($nextTask) ? $nextTask->label : '';
     }

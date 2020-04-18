@@ -5,7 +5,7 @@ namespace FKSDB\ORM\Services\StoredQuery;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
-use Nette;
+use FKSDB\ORM\Tables\TypedTableSelection;
 use Nette\Database\Context;
 use Nette\Database\IConventions;
 
@@ -48,10 +48,10 @@ class ServiceStoredQuery extends AbstractServiceSingle {
     /**
      * Syntactic sugar.
      *
-     * @param string|null $qid
-     * @return \FKSDB\ORM\Models\StoredQuery\ModelStoredQuery|null
+     * @param string $qid
+     * @return ModelStoredQuery|null
      */
-    public function findByQid($qid) {
+    public function findByQid(string $qid) {
         if (!$qid) {
             return null;
         }
@@ -61,15 +61,13 @@ class ServiceStoredQuery extends AbstractServiceSingle {
 
     /**
      * @param int|array|null $tagTypeId
-     * @return Nette\Database\Table\Selection|null
+     * @return TypedTableSelection
      */
-    public function findByTagType($tagTypeId) {
+    public function findByTagType($tagTypeId): TypedTableSelection {
         if (!$tagTypeId) {
             return null;
         }
         $queryIds = $this->serviceStoredQueryTag->findByTagTypeId($tagTypeId)->fetchPairs('query_id', 'query_id');
-        $result = $this->getTable()->where('query_id', $queryIds);
-        return $result ?: null;
+        return $this->getTable()->where('query_id', $queryIds);
     }
-
 }

@@ -39,14 +39,13 @@ class SameYearEvent implements IEventRelation {
             'event_type_id' => $this->eventTypeId,
             'year' => $event->year,
         ]);
-        /** @var ModelEvent $model */
-        $model = $result->fetch();
-        if ($model === false) {
+        $row = $result->fetch();
+        if ($row === false) {
             throw new InvalidArgumentException("No event with event_type_id " . $this->eventTypeId . " for the year " . $event->year . ".");
         } elseif ($result->fetch() !== false) {
             throw new InvalidArgumentException("Ambiguous events with event_type_id " . $this->eventTypeId . " for the year " . $event->year . ".");
         } else {
-            return $model;
+            return ModelEvent::createFromActiveRow($row);
         }
     }
 
