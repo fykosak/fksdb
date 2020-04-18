@@ -3,12 +3,13 @@
 namespace OrgModule;
 
 use FKSDB\Components\Controls\SeriesChooser;
-use FKSDB\Expressions\BadTypeException;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\SeriesCalculator;
 use FKSDB\CoreModule\ISeriesPresenter;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
+use Nette\Http\Response;
 
 /**
  * Presenter providing series context and a way to modify it.
@@ -48,7 +49,7 @@ abstract class SeriesPresenter extends BasePresenter implements ISeriesPresenter
             throw new BadTypeException(SeriesChooser::class, $control);
         }
         if (!$control->isValid()) {
-            throw new BadRequestException('Nejsou dostupné žádné série.', 500);
+            throw new BadRequestException('Nejsou dostupné žádné série.', Response::S500_INTERNAL_SERVER_ERROR);
         }
     }
 

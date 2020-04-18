@@ -4,7 +4,7 @@ namespace FKSDB\ORM;
 
 use FKSDB\ORM\Tables\TypedTableSelection;
 use InvalidArgumentException;
-use ModelException;
+use FKSDB\Exceptions\ModelException;
 use Nette\Database\Connection;
 use Nette\Database\Context;
 use Nette\Database\IConventions;

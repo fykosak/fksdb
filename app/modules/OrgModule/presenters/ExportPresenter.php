@@ -12,14 +12,16 @@ use FKSDB\Components\Controls\StoredQueryComponent;
 use FKSDB\Components\Controls\StoredQueryTagCloud;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory as StoredQueryFormFactory;
 use FKSDB\Components\Grids\StoredQueriesGrid;
+use FKSDB\Exceptions\NotFoundException;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryParameter;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryParameter;
 use FormUtils;
-use ModelException;
+use FKSDB\Exceptions\ModelException;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Controls\SubmitButton;
@@ -231,7 +233,7 @@ class ExportPresenter extends SeriesPresenter {
     public function authorizedEdit($id) {
         $query = $this->getPatternQuery();
         if (!$query) {
-            throw new BadRequestException('Neexistující dotaz.', 404);
+            throw new NotFoundException('Neexistující dotaz.');
         }
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed($query, 'edit', $this->getSelectedContest()));
     }
@@ -243,7 +245,7 @@ class ExportPresenter extends SeriesPresenter {
     public function authorizedShow($id) {
         $query = $this->getPatternQuery();
         if (!$query) {
-            throw new BadRequestException('Neexistující dotaz.', 404);
+            throw new NotFoundException('Neexistující dotaz.');
         }
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed($query, 'show', $this->getSelectedContest()));
     }
@@ -255,7 +257,7 @@ class ExportPresenter extends SeriesPresenter {
     public function authorizedExecute($id) {
         $query = $this->getPatternQuery();
         if (!$query) {
-            throw new BadRequestException('Neexistující dotaz.', 404);
+            throw new NotFoundException('Neexistující dotaz.');
         }
         // proper authorization is done in StoredQueryComponent
     }
@@ -538,7 +540,7 @@ class ExportPresenter extends SeriesPresenter {
         try {
             $storedQuery = $this->getPatternQuery();
             if (!$this->getContestAuthorizator()->isAllowed($storedQuery, 'edit', $this->getSelectedContest())) {
-                throw new BadRequestException('Nedostatečné oprávnění ke vytvoření dotazu.', 403);
+                throw new ForbiddenRequestException('Nedostatečné oprávnění ke vytvoření dotazu.');
             }
 
             $form = $button->getForm();
@@ -564,7 +566,7 @@ class ExportPresenter extends SeriesPresenter {
     private function handleComposeSuccess(SubmitButton $button) {
         try {
             if (!$this->getContestAuthorizator()->isAllowed('storedQuery', 'create', $this->getSelectedContest())) {
-                throw new BadRequestException('Nedostatečné oprávnění ke vytvoření dotazu.', 403);
+                throw new ForbiddenRequestException('Nedostatečné oprávnění ke vytvoření dotazu.');
             }
 
             $form = $button->getForm();

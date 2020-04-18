@@ -3,6 +3,7 @@
 namespace FKSDB\Components\DatabaseReflection\Org;
 
 use FKSDB\Components\DatabaseReflection\ValuePrinters\EmailPrinter;
+use FKSDB\Exceptions\NotFoundException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelOrg;
@@ -36,7 +37,7 @@ class DomainAliasRow extends AbstractOrgRowFactory {
             case ModelContest::ID_VYFUK:
                 return (new EmailPrinter)($model->domain_alias . '@vyfuk.mff.cuni.cz');
             default:
-                throw new BadRequestException();
+                throw new NotFoundException(sprintf(_('Contest %d not found'), $model->contest_id));
         }
     }
 

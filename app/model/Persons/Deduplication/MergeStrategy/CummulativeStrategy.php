@@ -43,7 +43,7 @@ class CummulativeStrategy implements IMergeStrategy {
             return $merged;
         }
 
-        throw new CannotMergeException();
+        throw new CannotMergeException;
     }
 
     /**

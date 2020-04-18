@@ -16,6 +16,7 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\ArgumentOutOfRangeException;
 use Nette\DI\Container;
+use Nette\Http\Response;
 use Nette\Utils\DateTime;
 
 /**
@@ -79,16 +80,15 @@ class ResultsAndStatistics extends FyziklaniReactControl {
 
     /**
      * @throws AbortException
-     * @throws ForbiddenRequestException
      * @throws BadRequestException
      */
     public function handleRefresh() {
         $presenter = $this->getPresenter();
         if (!$presenter->isAjax()) {
-            throw new ForbiddenRequestException();
+            throw new BadRequestException('',Response::S405_METHOD_NOT_ALLOWED);
         }
         if (!$presenter instanceof BasePresenter) {
-            throw new ArgumentOutOfRangeException();
+            throw new ArgumentOutOfRangeException;
         }
         $isOrg = $presenter->getEventAuthorizator()->isContestOrgAllowed('fyziklani.results', 'presentation', $this->getEvent());
 

@@ -67,11 +67,11 @@ class GithubAuthenticator extends AbstractAuthenticator {
         $row = $this->serviceLogin->getTable()->where('login = ?', $loginName)->fetch();
 
         if (!$row) {
-            throw new NoLoginException();
+            throw new NoLoginException;
         }
         $login = ModelLogin::createFromActiveRow($row);
         if (!$login->active) {
-            throw new InactiveLoginException();
+            throw new InactiveLoginException;
         }
 
         $this->logAuthentication($login);

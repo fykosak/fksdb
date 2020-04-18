@@ -8,7 +8,7 @@ use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\Submits\FilesystemUploadedSubmitStorage;
 use FKSDB\Submits\StorageException;
-use ModelException;
+use FKSDB\Exceptions\ModelException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use PublicModule\SubmitPresenter;

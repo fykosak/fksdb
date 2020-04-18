@@ -9,6 +9,7 @@ use Exports\StoredQueryFactory as StoredQueryFactorySQL;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory;
 use FKSDB\Components\Grids\StoredQueryGrid;
+use FKSDB\Exceptions\NotFoundException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
@@ -193,14 +194,15 @@ class StoredQueryComponent extends Control {
             $this->storedQuery->setParameters($this->parameters);
         }
         if (!$this->isAuthorized()) {
-            throw new ForbiddenRequestException();
+            throw new ForbiddenRequestException;
         }
         try {
             $exportFormat = $this->exportFormatFactory->createFormat($format, $this->storedQuery);
             $response = $exportFormat->getResponse();
             $this->presenter->sendResponse($response);
         } catch (InvalidArgumentException $exception) {
-            throw new BadRequestException(sprintf('Neznámý formát \'%s\'.', $format), 404, $exception);
+
+            throw new NotFoundException(sprintf('Neznámý formát \'%s\'.', $format), $exception);
         }
     }
 

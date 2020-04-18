@@ -11,7 +11,6 @@ use FKSDB\ORM\Models\ModelRegion;
 use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServicePersonHistory;
 use FKSDB\ORM\Services\ServiceSchool;
-use Nette\Application\UI\Control;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;

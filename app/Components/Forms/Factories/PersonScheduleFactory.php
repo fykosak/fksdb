@@ -31,7 +31,7 @@ class PersonScheduleFactory {
      * @param ModelEvent $event
      * @return BaseControl
      * @throws JsonException
-     * @throws \FKSDB\NotImplementedException
+     * @throws \FKSDB\Exceptions\NotImplementedException
      */
     public function createField($fieldName, ModelEvent $event) {
         return new ScheduleField($event, $fieldName, $this->serviceScheduleItem);

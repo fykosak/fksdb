@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Controls\Badges;
 
+use FKSDB\Exceptions\NotFoundException;
 use FKSDB\ORM\Models\ModelContest;
 use Nette\Application\BadRequestException;
 use Nette\Templating\FileTemplate;
@@ -31,7 +32,7 @@ class ContestBadge extends Badge {
             case ModelContest::ID_VYFUK:
                 return $component->addAttributes(['class' => 'badge badge-vyfuk'])->addText(_('Výfuk'));
         }
-        throw new BadRequestException();
+        throw new NotFoundException(sprintf(_('Contest %d not found'), $contestId));
     }
 }
 

@@ -1,5 +1,6 @@
 <?php
 
+use FKSDB\Exceptions\ModelException;
 use FKSDB\ORM\Models\ModelPerson;
 
 /**

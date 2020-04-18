@@ -4,7 +4,7 @@ namespace FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniGameSetup;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use Nette\Forms\Controls\BaseControl;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 
 /**
  * Class AbstractFyziklaniGameSetupRow
@@ -24,6 +24,6 @@ abstract class AbstractFyziklaniGameSetupRow extends AbstractRow {
      * @throws NotImplementedException
      */
     public function createField(...$args): BaseControl {
-        throw new NotImplementedException();
+        throw new NotImplementedException;
     }
 }

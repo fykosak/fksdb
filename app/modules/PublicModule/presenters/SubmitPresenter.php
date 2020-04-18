@@ -7,6 +7,7 @@ use FKSDB\Components\Control\AjaxUpload\SubmitSaveTrait;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Grids\SubmitsGrid;
+use FKSDB\Exceptions\GoneException;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Models\ModelTask;
@@ -14,7 +15,7 @@ use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\ORM\Services\ServiceTask;
 use FKSDB\Submits\FilesystemUploadedSubmitStorage;
 use FKSDB\Submits\ProcessingException;
-use ModelException;
+use FKSDB\Exceptions\ModelException;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
@@ -84,7 +85,7 @@ class SubmitPresenter extends BasePresenter {
      * @deprecated
      */
     public function actionDownload() {
-        throw new BadRequestException('', 410);
+        throw new GoneException('');
     }
 
     /**

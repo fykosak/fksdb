@@ -6,6 +6,7 @@ use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException;
 use FKSDB\Payment\SymbolGenerator\Generators\AbstractSymbolGenerator;
 use FKSDB\Payment\SymbolGenerator\AlreadyGeneratedSymbolsException;
+use Nette\Http\Response;
 use Nette\OutOfRangeException;
 
 /**
@@ -63,7 +64,7 @@ class DefaultGenerator extends AbstractSymbolGenerator {
             $info['variable_symbol'] = $variableNumber;
             return $info;
         }
-        throw new UnsupportedCurrencyException($modelPayment->currency, 501);
+        throw new UnsupportedCurrencyException($modelPayment->currency, Response::S501_NOT_IMPLEMENTED);
     }
 
     /**

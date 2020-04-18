@@ -8,7 +8,7 @@ use FKSDB\ORM\DbNames;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventParticipant;
-use ModelException;
+use FKSDB\Exceptions\ModelException;
 use Nette\Database\Table\Selection;
 
 /**
