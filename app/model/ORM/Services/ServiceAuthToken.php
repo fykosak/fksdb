@@ -105,8 +105,9 @@ class ServiceAuthToken extends AbstractServiceSingle {
             $tokens->where('since <= NOW()')
                 ->where('until IS NULL OR until >= NOW()');
         }
-        $tokenRow = $tokens->fetch();
-        return $tokenRow ? ModelAuthToken::createFromActiveRow($tokenRow) : null;
+        /** @var ModelAuthToken $token */
+        $token = $tokens->fetch();
+        return $token ?: null;
     }
 
     /**

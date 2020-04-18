@@ -47,7 +47,6 @@ abstract class BasePresenter extends \ContestPresenter {
 
             $this->contestant = $contestant ? ModelContestant::createFromActiveRow($contestant) : null;
         }
-
         return $this->contestant;
     }
 

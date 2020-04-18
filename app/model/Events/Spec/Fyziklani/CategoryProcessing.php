@@ -86,7 +86,6 @@ class CategoryProcessing extends AbstractProcessing {
                 }
                 /** @var ModelPerson $person */
                 $person = $baseHolder->getModel()->getMainModel()->person;
-                /** @var ModelPersonHistory|ActiveRow $history */
                 $history = $person->related('person_history')->where('ac_year', $acYear)->fetch();
                 $participantData = [
                     'school_id' => $history->school_id,

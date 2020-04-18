@@ -88,7 +88,7 @@ class BornCheck extends AbstractAdjustment implements IFormAdjustment {
                     }
                     $schoolId = $this->getSchoolId($schoolControl, $personControl);
                     $studyYear = $this->getStudyYear($studyYearControl, $personControl);
-                    if ($this->isCzSkSchool($schoolId) && $this->isStudent($studyYear)) {
+                    if ($this->serviceSchool->isCzSkSchool($schoolId) && $this->isStudent($studyYear)) {
                         $form->addError($msg);
                         return false;
                     }
@@ -112,7 +112,7 @@ class BornCheck extends AbstractAdjustment implements IFormAdjustment {
     /**
      * @param BaseControl $studyYearControl
      * @param BaseControl $personControl
-     * @return bool|mixed|\Nette\Database\Table\ActiveRow|\Nette\Database\Table\Selection|null
+     * @return int|null
      */
     private function getStudyYear($studyYearControl, $personControl) {
         if ($studyYearControl->getValue()) {
@@ -120,41 +120,28 @@ class BornCheck extends AbstractAdjustment implements IFormAdjustment {
         }
 
         $personId = $personControl->getValue();
-        $personHistoryRow = $this->servicePersonHistory->getTable()
+        /** @var ModelPersonHistory|false $personHistory */
+        $personHistory = $this->servicePersonHistory->getTable()
             ->where('person_id', $personId)
             ->where('ac_year', $this->getHolder()->getEvent()->getAcYear())->fetch();
-        return $personHistoryRow ? ModelPersonHistory::createFromActiveRow($personHistoryRow)->study_year : null;
+        return $personHistory ? $personHistory->study_year : null;
     }
 
     /**
      * @param BaseControl $schoolControl
      * @param BaseControl $personControl
-     * @return bool|mixed|\Nette\Database\Table\ActiveRow|\Nette\Database\Table\Selection|null
+     * @return int
      */
     private function getSchoolId($schoolControl, $personControl) {
         if ($schoolControl->getValue()) {
             return $schoolControl->getValue();
         }
-
         $personId = $personControl->getValue();
-
-        $schoolRow = $this->servicePersonHistory->getTable()
+        /** @var ModelSchool|false $school */
+        $school = $this->servicePersonHistory->getTable()
             ->where('person_id', $personId)
             ->where('ac_year', $this->getHolder()->getEvent()->getAcYear())->fetch();
-        return ModelSchool::createFromActiveRow($schoolRow)->school_id;
-    }
-
-    /**
-     * @param int $schoolId
-     * @return bool
-     */
-    private function isCzSkSchool(int $schoolId) {
-        $countryRow = $this->serviceSchool->getTable()->select('address.region.country_iso')->where(['school_id' => $schoolId])->fetch();
-        $country = ModelRegion::createFromActiveRow($countryRow);
-        if (in_array($country->country_iso, ['CZ', 'SK'])) {
-            return true;
-        }
-        return false;
+        return $school->school_id;
     }
 
     /**
@@ -164,6 +151,4 @@ class BornCheck extends AbstractAdjustment implements IFormAdjustment {
     private function isStudent($studyYear) {
         return ($studyYear === null) ? false : true;
     }
-
 }
-

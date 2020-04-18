@@ -36,18 +36,13 @@ class ServiceTask extends AbstractServiceSingle {
      * @return ModelTask|null
      */
     public function findBySeries(ModelContest $contest, int $year, int $series, int $tasknr) {
+        /** @var ModelTask $result */
         $result = $this->getTable()->where([
             'contest_id' => $contest->contest_id,
             'year' => $year,
             'series' => $series,
             'tasknr' => $tasknr,
         ])->fetch();
-
-        if ($result !== false) {
-            return ModelTask::createFromActiveRow($result);
-        } else {
-            return null;
-        }
+        return $result ?: null;
     }
-
 }

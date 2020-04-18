@@ -29,11 +29,12 @@ class ServiceFyziklaniTeamPosition extends AbstractServiceSingle {
 
     /**
      * @param int $teamId
-     * @return ModelFyziklaniTeamPosition
+     * @return ModelFyziklaniTeamPosition|null
      */
     public function findByTeamId(int $teamId) {
+        /** @var ModelFyziklaniTeamPosition $row */
         $row = $this->getTable()->where('e_fyziklani_team_id', $teamId)->fetch();
-        return $row ? ModelFyziklaniTeamPosition::createFromActiveRow($row) : null;
+        return $row ? $row : null;
     }
 
     /**

@@ -46,11 +46,12 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
      * @return ModelFyziklaniSubmit|null
      */
     public function findByTaskAndTeam(ModelFyziklaniTask $task, ModelFyziklaniTeam $team) {
+        /** @var ModelFyziklaniSubmit $row */
         $row = $this->getTable()->where([
             'fyziklani_task_id' => $task->fyziklani_task_id,
             'e_fyziklani_team_id' => $team->e_fyziklani_team_id,
         ])->fetch();
-        return $row ? ModelFyziklaniSubmit::createFromActiveRow($row) : null;
+        return $row ?: null;
     }
 
     /**

@@ -153,8 +153,8 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
             if (!$competitor['school_id']) { // for future
                 $olds += 1;
             } else {
-                $countryRow = $this->serviceSchool->getTable()->select('address.region.country_iso')->where(['school_id' => $competitor['school_id']])->fetch();
-                $country = ModelRegion::createFromActiveRow($countryRow);
+                /** @var ModelRegion|false $country */
+                $country = $this->serviceSchool->getTable()->select('address.region.country_iso')->where(['school_id' => $competitor['school_id']])->fetch();
                 if (!in_array($country->country_iso, ['CZ', 'SK'])) {
                     $abroad += 1;
                 }

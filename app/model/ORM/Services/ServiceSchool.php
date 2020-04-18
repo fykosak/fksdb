@@ -4,6 +4,7 @@ namespace FKSDB\ORM\Services;
 
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\ModelRegion;
 use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Tables\TypedTableSelection;
 
@@ -33,5 +34,15 @@ class ServiceSchool extends AbstractServiceSingle {
         return $this->getTable()
             ->select(DbNames::TAB_SCHOOL . '.*')
             ->select(DbNames::TAB_ADDRESS . '.*');
+    }
+
+    /**
+     * @param int $schoolId
+     * @return bool
+     */
+    public function isCzSkSchool(int $schoolId): bool {
+        /** @var ModelRegion|false $country */
+        $country = $this->getTable()->select('address.region.country_iso')->where(['school_id' => $schoolId])->fetch();
+        return in_array($country->country_iso, ['CZ', 'SK']);
     }
 }

@@ -55,8 +55,9 @@ class ServiceStoredQuery extends AbstractServiceSingle {
         if (!$qid) {
             return null;
         }
+        /** @var ModelStoredQuery $result */
         $result = $this->getTable()->where('qid', $qid)->fetch();
-        return $result ? ModelStoredQuery::createFromActiveRow($result) : null;
+        return $result ?: null;
     }
 
     /**

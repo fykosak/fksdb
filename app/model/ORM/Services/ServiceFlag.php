@@ -34,7 +34,8 @@ class ServiceFlag extends AbstractServiceSingle {
         if (!$fid) {
             return null;
         }
+        /** @var ModelFlag $result */
         $result = $this->getTable()->where('fid', $fid)->fetch();
-        return $result ? ModelFlag::createFromActiveRow($result) : null;
+        return $result ?: null;
     }
 }

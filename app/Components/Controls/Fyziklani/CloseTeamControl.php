@@ -14,6 +14,7 @@ use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
+use Tracy\Debugger;
 
 /**
  * Class CloseTeamControl
@@ -92,7 +93,7 @@ class CloseTeamControl extends Control {
     private function getNextTask(): string {
         $submits = count($this->team->getNonRevokedSubmits());
         $tasksOnBoard = $this->event->getFyziklaniGameSetup()->tasks_on_board;
-        /** @var ModelFyziklaniTask|ActiveRow $nextTask */
+        /** @var ModelFyziklaniTask|null $nextTask */
         $nextTask = $this->serviceFyziklaniTask->findAll($this->event)->order('label')->limit(1, $submits + $tasksOnBoard)->fetch();
         return ($nextTask) ? $nextTask->label : '';
     }
