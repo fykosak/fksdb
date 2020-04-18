@@ -6,8 +6,12 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Stalking\StalkingComponent\StalkingComponent;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
+use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\EntityTrait;
 use FKSDB\Logging\FlashMessageDump;
+use FKSDB\Logging\ILogger;
 use FKSDB\Logging\MemoryLogger;
+use FKSDB\NotImplementedException;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServicePersonInfo;
@@ -15,6 +19,7 @@ use FKSDB\DataTesting\DataTestingFactory;
 use FormUtils;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Html;
@@ -23,6 +28,7 @@ use Persons\DenyResolver;
 use Persons\ExtendedPersonHandler;
 use ReflectionException;
 use FKSDB\Components\Controls\Stalking;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -31,8 +37,11 @@ use FKSDB\Components\Controls\Stalking;
  *             It's better to use ReferencedId and ReferencedContainer
  *             inside the particular form.
  * @author Michal Koutný <michal@fykos.cz>
+ * @method ModelPerson loadEntity(int $id)
+ * @method ModelPerson getEntity()
  */
 class PersonPresenter extends BasePresenter {
+    use EntityTrait;
     /**
      * @var ServicePerson
      */
@@ -67,7 +76,7 @@ class PersonPresenter extends BasePresenter {
      */
     private $person;
     /**
-     * @var string
+     * @var int
      */
     private $mode;
     /**
@@ -123,14 +132,15 @@ class PersonPresenter extends BasePresenter {
 
     /* *********** TITLE ***************/
     public function titleSearch() {
-        $this->setTitle(_('Search person'), 'fa fa-search');
+        $this->setTitle(_('Find person'), 'fa fa-search');
     }
 
     /**
+     * @param int $id
      * @throws BadRequestException
      */
-    public function titleDetail() {
-        $this->setTitle(sprintf(_('Detail of person %s'), $this->getPerson()->getFullName()), 'fa fa-eye');
+    public function titleDetail(int $id) {
+        $this->setTitle(sprintf(_('Detail of person %s'), $this->loadEntity($id)->getFullName()), 'fa fa-eye');
     }
 
     public function titleMerge() {
@@ -143,10 +153,11 @@ class PersonPresenter extends BasePresenter {
     }
 
     /**
+     * @param int $id
      * @throws BadRequestException
      */
-    public function authorizedDetail() {
-        $person = $this->getPerson();
+    public function authorizedDetail(int $id) {
+        $person = $this->loadEntity($id);
 
         $full = $this->isAnyContestAuthorized($person, 'stalk.full');
 
@@ -208,59 +219,74 @@ class PersonPresenter extends BasePresenter {
         $trunkData = ['duplicates' => trim($trunkPI->duplicates . ",not-same($mergedId)", ',')];
         $this->servicePersonInfo->updateModel2($trunkPI, $trunkData);
 
-
-        $this->flashMessage(_('Osoby úspešně nesloučeny.'), self::FLASH_SUCCESS);
+        $this->flashMessage(_('Osoby úspešně nesloučeny.'), ILogger::SUCCESS);
         $this->backLinkRedirect(true);
+    }
+
+    /**
+     * @param int $id
+     * @throws BadRequestException
+     */
+    public function renderDetail(int $id) {
+        $person = $this->loadEntity($id);
+        $this->template->userPermissions = $this->getUserPermissions($person);
+        $this->template->person = $person;
+        $this->template->isSelf = $this->getUser()->getIdentity()->getPerson()->person_id === $person->person_id;
+        /** @var ModelPerson $userPerson */
+        $userPerson = $this->getUser()->getIdentity()->getPerson();
+        Debugger::log(sprintf('%s (%d) stalk %s (%d)',
+            $userPerson->getFullName(), $userPerson->person_id,
+            $person->getFullName(), $person->person_id), 'stalking-log');
     }
     /* ******************* COMPONENTS *******************/
     /**
      * @return StalkingComponent
-     * @throws BadRequestException
      */
     public function createComponentStalkingComponent(): StalkingComponent {
-        return new StalkingComponent($this->getContext(), $this->getPerson(), $this->getMode());
+        return new StalkingComponent($this->getContext());
     }
 
     /**
      * @return Stalking\Address
-     * @throws BadRequestException
      */
     public function createComponentAddress(): Stalking\Address {
-        return new Stalking\Address($this->getContext(), $this->getPerson(), $this->getMode());
+        return new Stalking\Address($this->getContext());
     }
 
     /**
      * @return Stalking\Role
-     * @throws BadRequestException
      */
     public function createComponentRole(): Stalking\Role {
-        return new Stalking\Role($this->getContext(), $this->getPerson(), $this->getMode());
+        return new Stalking\Role($this->getContext());
     }
 
     /**
      * @return Stalking\Flag
-     * @throws BadRequestException
      */
     public function createComponentFlag(): Stalking\Flag {
-        return new Stalking\Flag($this->getContext(), $this->getPerson(), $this->getMode());
+        return new Stalking\Flag($this->getContext());
     }
 
     /**
      * @return Stalking\Schedule
-     * @throws BadRequestException
      */
     public function createComponentSchedule(): Stalking\Schedule {
-        return new Stalking\Schedule($this->getContext(), $this->getPerson(), $this->getMode());
+        return new Stalking\Schedule($this->getContext());
     }
 
     /**
      * @return Stalking\Validation
-     * @throws BadRequestException
      */
     public function createComponentValidation(): Stalking\Validation {
-        return new Stalking\Validation($this->getContext(), $this->getPerson(), $this->getMode());
+        return new Stalking\Validation($this->getContext());
     }
 
+    /**
+     * @return Stalking\Timeline\TimelineControl
+     */
+    public function createComponentTimeline(): Stalking\Timeline\TimelineControl {
+        return new Stalking\Timeline\TimelineControl($this->getContext(), $this->getEntity());
+    }
 
     /**
      * @return FormControl
@@ -298,41 +324,23 @@ class PersonPresenter extends BasePresenter {
     }
 
     /**
-     * @return string
-     * @throws BadRequestException
+     * @param ModelPerson $person
+     * @return int
      */
-    private function getMode() {
+    private function getUserPermissions(ModelPerson $person): int {
         if (!$this->mode) {
-            if ($this->isAnyContestAuthorized($this->getPerson(), 'stalk.basic')) {
+            if ($this->isAnyContestAuthorized($person, 'stalk.basic')) {
                 $this->mode = Stalking\AbstractStalkingComponent::PERMISSION_BASIC;
             }
-            if ($this->isAnyContestAuthorized($this->getPerson(), 'stalk.restrict')) {
+            if ($this->isAnyContestAuthorized($person, 'stalk.restrict')) {
                 $this->mode = Stalking\AbstractStalkingComponent::PERMISSION_RESTRICT;
             }
-            if ($this->isAnyContestAuthorized($this->getPerson(), 'stalk.full')) {
+            if ($this->isAnyContestAuthorized($person, 'stalk.full')) {
                 $this->mode = Stalking\AbstractStalkingComponent::PERMISSION_FULL;
             }
         }
         return $this->mode;
     }
-
-    /**
-     * @return ModelPerson
-     * @throws BadRequestException
-     */
-    private function getPerson(): ModelPerson {
-        if (!$this->person) {
-            $id = $this->getParameter('id');
-            $row = $this->servicePerson->findByPrimary($id);
-            if (!$row) {
-                throw new BadRequestException(_('Osoba neexistuje'), 404);
-            }
-            $this->person = ModelPerson::createFromActiveRow($row);
-        }
-
-        return $this->person;
-    }
-
 
     /**
      * @return FormControl
@@ -476,5 +484,41 @@ class PersonPresenter extends BasePresenter {
         } else {
             return [];
         }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function createComponentCreateForm(): Control {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function createComponentEditForm(): Control {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function createComponentGrid(): BaseGrid {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getORMService() {
+        return $this->servicePerson;
+    }
+
+    /**
+     * @inheritDoc
+     * all auth method is overwritten
+     */
+    protected function traitIsAuthorized($resource, string $privilege): bool {
+        return false;
     }
 }

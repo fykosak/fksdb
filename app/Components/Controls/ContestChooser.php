@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Controls;
 
 use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelRole;
 use FKSDB\ORM\Services\ServiceContest;
@@ -311,6 +312,7 @@ class ContestChooser extends Control {
             }
             $contestants = $login->getPerson()->getContestants($contest);
             $years = [];
+            /** @var ModelContestant $contestant */
             foreach ($contestants as $contestant) {
                 $years[] = $contestant->year;
             }

@@ -6,6 +6,7 @@ import { eventSchedule } from '@apps/events/schedule';
 import { fyziklani } from '@apps/fyziklani/';
 import { fyziklaniResults } from '@apps/fyziklaniResults';
 import { payment } from '@apps/payment/selectField/';
+import { person } from '@apps/person';
 import { appsCollector } from '@appsCollector';
 
 appsCollector.register(eventSchedule);
@@ -16,5 +17,6 @@ payment();
 fyziklani();
 fyziklaniResults();
 attendance();
+person();
 
 appsCollector.run();

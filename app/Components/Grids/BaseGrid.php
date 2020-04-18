@@ -255,11 +255,11 @@ abstract class BaseGrid extends Grid {
     protected function addLinkButton(string $destination, string $id, string $label, bool $checkACL = true, array $params = []): Button {
         $modelClassName = $this->getModelClassName();
         $paramMapCallback = function ($model) use ($params): array {
-            $URLParams = [];
+            $hrefParams = [];
             foreach ($params as $key => $value) {
-                $URLParams[$key] = $model->{$value};
+                $hrefParams[$key] = $model->{$value};
             }
-            return $URLParams;
+            return $hrefParams;
         };
         /** @var Button $button */
         $button = $this->addButton($id, $label)

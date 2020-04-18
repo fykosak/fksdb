@@ -79,8 +79,8 @@ class ContributionsFromXML extends Stage {
         $task = $tasks[$tasknr];
         $this->taskContributionService->getConnection()->beginTransaction();
 
-        foreach (self::$contributionFromXML as $type => $XMLElement) {
-            list($parent, $child) = explode('/', $XMLElement);
+        foreach (self::$contributionFromXML as $type => $xmlElement) {
+            list($parent, $child) = explode('/', $xmlElement);
             $parentEl = $XMLTask->{$parent}[0];
             // parse contributors
             $contributors = [];
