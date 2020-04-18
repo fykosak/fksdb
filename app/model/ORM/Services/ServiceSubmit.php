@@ -9,7 +9,6 @@ use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Tables\TypedTableSelection;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
-use Tracy\Debugger;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>

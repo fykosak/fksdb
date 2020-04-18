@@ -9,10 +9,8 @@ use Events\Processings\AbstractProcessing;
 use Events\SubmitProcessingException;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\ORM\Models\ModelPersonHistory;
 use FKSDB\ORM\Services\ServiceSchool;
 use FKSDB\YearCalculator;
-use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 

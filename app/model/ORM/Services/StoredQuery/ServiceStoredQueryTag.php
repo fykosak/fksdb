@@ -6,7 +6,6 @@ use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryTag;
 use FKSDB\ORM\Tables\TypedTableSelection;
-use Nette;
 
 /**
  * @author Lukáš Timko <lukast@fykos.cz>

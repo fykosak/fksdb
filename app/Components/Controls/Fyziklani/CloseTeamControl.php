@@ -10,11 +10,9 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
-use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
-use Tracy\Debugger;
 
 /**
  * Class CloseTeamControl
