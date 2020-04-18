@@ -35,7 +35,7 @@ class DeadlineFromXML extends Stage {
     }
 
     /**
-     * @return mixed|SeriesData
+     * @return SeriesData
      */
     public function getOutput() {
         return $this->data;
@@ -50,16 +50,14 @@ class DeadlineFromXML extends Stage {
         }
 
         $datetime = DateTime::createFromFormat('Y-m-d\TH:i:s', $deadline);
-        /**
-         * @var ModelTask $task
-         */
+        /**@var ModelTask $task */
         foreach ($this->data->getTasks() as $task) {
-            $this->taskService->updateModel2($task,['submit_deadline'=>$datetime]);
+            $this->taskService->updateModel2($task, ['submit_deadline' => $datetime]);
         }
     }
 
     /**
-     * @param mixed $data
+     * @param SeriesData $data
      */
     public function setInput($data) {
         $this->data = $data;

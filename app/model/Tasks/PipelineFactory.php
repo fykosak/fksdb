@@ -92,17 +92,10 @@ class PipelineFactory {
         $pipeline->setLogger(new MemoryLogger());
 
         // common stages
-        $metadataStage = new TasksFromXML($this->serviceTask);
-        $pipeline->addStage($metadataStage);
-
-        $deadlineStage = new DeadlineFromXML($this->serviceTask);
-        $pipeline->addStage($deadlineStage);
-
-        $contributionStage = new ContributionsFromXML($this->serviceTaskContribution, $this->serviceOrg);
-        $pipeline->addStage($contributionStage);
-
-        $studyYearStage = new StudyYearsFromXML($this->defaultStudyYears, $this->serviceTaskStudyYear, $this->serviceStudyYear);
-        $pipeline->addStage($studyYearStage);
+        $pipeline->addStage(new TasksFromXML($this->serviceTask));
+        $pipeline->addStage(new DeadlineFromXML($this->serviceTask));
+        $pipeline->addStage(new ContributionsFromXML($this->serviceTaskContribution, $this->serviceOrg));
+        $pipeline->addStage(new StudyYearsFromXML($this->defaultStudyYears, $this->serviceTaskStudyYear, $this->serviceStudyYear));
 
         return $pipeline;
     }

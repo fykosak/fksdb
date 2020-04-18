@@ -29,7 +29,7 @@ class ContributionsFromXML extends Stage {
     ];
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceTaskContribution
+     * @var ServiceTaskContribution
      */
     private $taskContributionService;
 
