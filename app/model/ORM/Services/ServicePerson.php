@@ -32,7 +32,7 @@ class ServicePerson extends AbstractServiceSingle {
      * @param string $email
      * @return ModelPerson|null
      */
-    public function findByEmail(string $email) {
+    public function findByEmail($email) {
         if (!$email) {
             return null;
         }
