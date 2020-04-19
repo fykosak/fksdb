@@ -1,6 +1,6 @@
 <?php
 
-namespace Tasks;
+namespace FKSDB\Tasks;
 
 use FKSDB\ORM\Services\ServiceStudyYear;
 use FKSDB\ORM\Services\ServiceTaskStudyYear;
@@ -12,7 +12,7 @@ use SimpleXMLElement;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class StudyYearsFromXML2 extends Stage {
+class StudyYearsFromXML extends Stage {
 
     const XML_ELEMENT_PARENT = 'study-years';
 
@@ -41,7 +41,7 @@ class StudyYearsFromXML2 extends Stage {
     /**
      * StudyYearsFromXML2 constructor.
      * @param $defaultStudyYears
-     * @param \FKSDB\ORM\Services\ServiceTaskStudyYear $serviceTaskStudyYear
+     * @param ServiceTaskStudyYear $serviceTaskStudyYear
      * @param ServiceStudyYear $serviceStudyYear
      */
     function __construct($defaultStudyYears, ServiceTaskStudyYear $serviceTaskStudyYear, ServiceStudyYear $serviceStudyYear) {

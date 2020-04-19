@@ -31,14 +31,14 @@ abstract class Stage {
     /**
      * @return Pipeline
      */
-    public function getPipeline() {
+    protected final function getPipeline(): Pipeline {
         return $this->pipeline;
     }
 
     /**
      * @param Pipeline $pipeline
      */
-    public function setPipeline(Pipeline $pipeline) {
+    public final function setPipeline(Pipeline $pipeline) {
         $this->pipeline = $pipeline;
     }
 
@@ -46,8 +46,7 @@ abstract class Stage {
      * @param $message
      * @param string $level
      */
-    protected function log($message, string $level = ILogger::INFO) {
+    protected final function log($message, string $level = ILogger::INFO) {
         $this->getPipeline()->log($message, $level);
     }
-
 }
