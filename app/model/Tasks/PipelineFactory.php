@@ -84,11 +84,11 @@ class PipelineFactory {
      * @param ServiceStudyYear $serviceStudyYear
      * @param \FKSDB\ORM\Services\ServiceOrg $serviceOrg
      */
-    function __construct($columnMappings, $contributionMappings, $defaultStudyYears, ServiceQuest $questService, ServiceTask $serviceTask, ServiceTaskContribution $serviceTaskContribution, ServiceTaskStudyYear $serviceTaskStudyYear, ServiceStudyYear $serviceStudyYear, ServiceOrg $serviceOrg) {
+    function __construct($columnMappings, $contributionMappings, $defaultStudyYears, ServiceQuest $serviceQuest, ServiceTask $serviceTask, ServiceTaskContribution $serviceTaskContribution, ServiceTaskStudyYear $serviceTaskStudyYear, ServiceStudyYear $serviceStudyYear, ServiceOrg $serviceOrg) {
         $this->columnMappings = $columnMappings;
         $this->contributionMappings = $contributionMappings;
         $this->defaultStudyYears = $defaultStudyYears;
-        $this->questService = $questService;
+        $this->serviceQuest = $serviceQuest;
         $this->serviceTask = $serviceTask;
         $this->serviceTaskContribution = $serviceTaskContribution;
         $this->serviceTaskStudyYear = $serviceTaskStudyYear;

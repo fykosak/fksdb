@@ -21,15 +21,22 @@ class TasksFromXML2 extends Stage {
      * @var SeriesData
      */
     private $data;
-
+    
     /**
      * @var array   xml element => task column
      */
-    private static $xmlToColumnMap = [
+    private static $xmlToTaskColumnMap = [
         'name[@xml:lang="cs"]' => 'name_cs',
         'name[@xml:lang="en"]' => 'name_en',
         'points' => 'points',
         'label' => 'label',
+    ];
+    
+    /**
+     * @var array   xml element => quest column
+     */
+    private static $xmlToQuestColumnMap = [
+        'points' => 'points',
     ];
 
     /**
@@ -72,7 +79,7 @@ class TasksFromXML2 extends Stage {
             if (isset($task->quests[0]->quest)) {
                 $quests = $task->quests[0]->quest;
                 foreach ($quests as $quest) {
-                    $this->processQuest($quest);
+                    $this->processQuest($task, $quest);
                 }
             }
         }
@@ -108,7 +115,7 @@ class TasksFromXML2 extends Stage {
         }
 
         // update fields
-        foreach (self::$xmlToColumnMap as $xmlElement => $column) {
+        foreach (self::$xmlToTaskColumnMap as $xmlElement => $column) {
             $value = NULL;
 
             // Argh, I was not able not make ->xpath() working so emulate it.
@@ -150,27 +157,30 @@ class TasksFromXML2 extends Stage {
     /**
      * Implementation of prserie questions
      * 
-     * @param SimpleXMLElement $XMLQuestion
+     * @param SimpleXMLElement $XMLQuest
      */
-    private function processQuest(SimpleXMLElement $XMLQuest) {
+    private function processQuest(SimpleXMLElement $XMLTask, SimpleXMLElement $XMLQuest) {
         $contest = $this->data->getContest();
         $year = $this->data->getYear();
         $series = $this->data->getSeries();
-        $tasknr = (int) (string) $XMLQuest->number;
-        $questnr = (int) (string) $XMLQuest->quest->number;
-        $correct_answer = (string) $XMLQuest->quest->correct;
+        $tasknr = (int) (string) $XMLTask->number;
+        $questnr = (int) (string) $XMLQuest->number;
+        $answer = (string) $XMLQuest->answer;
         
-        $quest = $this->questService->createNewModel(array(
-            'contest' => $contest->contest_id,
-            'year' => $year,
-            'series' => $series,
-            'tasknr' => $tasknr,
-            'questnr' => $questnr,
-            'correct_answer' => $correct_answer,
-        ));
+        $task = $this->questService->findBySeries($contest, $year, $series, $tasknr, $questnr);
+        if ($task == null) {
+            $quest = $this->questService->createNew(array(
+                'contest_id' => $contest->contest_id,
+                'year' => $year,
+                'series' => $series,
+                'tasknr' => $tasknr,
+                'questnr' => $questnr,
+                'answer' => $answer,
+            ));
+        }
         
         // update fields
-        foreach (self::$xmlToColumnMap as $xmlElement => $column) {
+        foreach (self::$xmlToQuestColumnMap as $xmlElement => $column) {
             $value = NULL;
             
             // Argh, I was not able not make ->xpath() working so emulate it.
@@ -178,7 +188,7 @@ class TasksFromXML2 extends Stage {
             if (preg_match('/([a-z]*)\[@xml:lang="([a-z]*)"\]/', $xmlElement, $matches)) {
                 $name = $matches[1];
                 $lang = $matches[2];
-                $elements = $XMLQuestion->{$name};
+                $elements = $XMLQuest->{$name};
                 $csvalue = null;
                 
                 if (count($elements) == 1) {
@@ -197,17 +207,17 @@ class TasksFromXML2 extends Stage {
                 }
                 $value = $value ?: $csvalue;
             } else {
-                $value = (string) $XMLQuestion->{$xmlElement};
+                $value = (string) $XMLQuest->{$xmlElement};
             }
             
-            $task->{$column} = $value;
+            $quest->{$column} = $value;
         }
         
         // store it
         $this->questService->save($quest);
         
         // forward it to pipeline
-        $this->data->addQuestion($questnr, $quest);
+        $this->data->addQuest($questnr, $quest);
         
     }
 

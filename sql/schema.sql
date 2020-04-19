@@ -1463,13 +1463,11 @@ CREATE TABLE IF NOT EXISTS `email_message`
 )
     ENGINE = 'InnoDB';
 -- -----------------------------------------------------
--- Table `quiz`
+-- Table `quest`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `quest` (
-  `quest_id`         INT(11)      NOT NULL AUTO_INCREMENT,
-  `label`           VARCHAR(16)  NOT NULL
-  COMMENT 'Oznaceni kvizove otazky ve formatu Rocnik-Serie-Uloha-Otazka (napr. 9-7-1-2)',
-  `contest_id`      INT(11)      NOT NULL
+  `quest_id`     INT(11)      NOT NULL AUTO_INCREMENT,
+  `contest_id`   INT(11)      NOT NULL
   COMMENT 'Seminar',
   `year`            TINYINT(4)   NOT NULL
   COMMENT 'Rocnik seminare',
@@ -1477,11 +1475,11 @@ CREATE TABLE IF NOT EXISTS `quest` (
   COMMENT 'Serie',
   `tasknr`          TINYINT(4)   NULL     DEFAULT NULL
   COMMENT 'Uloha',
-  `questnr`          TINYINT(4)   NULL     DEFAULT NULL
+  `questnr`      TINYINT(4)   NULL     DEFAULT NULL
   COMMENT 'Otazka',
-  `points`          TINYINT(4)   NULL     DEFAULT NULL
+  `points`       TINYINT(4)   NULL     DEFAULT NULL
   COMMENT 'Pocet bodu',
-  `correct_answer`    VARCHAR(1)     NULL     DEFAULT NULL
+  `answer`       VARCHAR(1)   NULL     DEFAULT NULL
   COMMENT 'Spravna odpoved',
   PRIMARY KEY (`quest_id`),
   INDEX `contest_id` (`contest_id` ASC),
@@ -1490,7 +1488,8 @@ CREATE TABLE IF NOT EXISTS `quest` (
   FOREIGN KEY (`contest_id`)
   REFERENCES `contest` (`contest_id`)
 )
-  ENGINE = 'InnoDB';
+  ENGINE = InnoDB
+  DEFAULT CHARACTER SET = utf8;
 
 SET SQL_MODE = @OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS = @OLD_FOREIGN_KEY_CHECKS;

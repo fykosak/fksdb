@@ -40,6 +40,11 @@ class SeriesData {
      * @var array[tasknr] of FKSDB\ORM\Models\ModelTask
      */
     private $tasks = [];
+    /**
+     * 
+     * @var array[questnr] of FKSDB\ORM\Models\ModelQuest
+     */
+    private $quests = [];
 
     /**
      * SeriesData constructor.
@@ -105,6 +110,10 @@ class SeriesData {
      */
     public function addTask($tasknr, $task) {
         $this->tasks[$tasknr] = $task;
+    }
+    
+    public function addQuest($questnr, $quest) {
+        $this->quests[$questnr] = $quest;
     }
 
 }
