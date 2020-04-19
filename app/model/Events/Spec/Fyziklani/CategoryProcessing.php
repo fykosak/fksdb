@@ -9,7 +9,6 @@ use Events\Processings\AbstractProcessing;
 use Events\SubmitProcessingException;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\ORM\Models\ModelPersonHistory;
 use FKSDB\ORM\Services\ServiceSchool;
 use FKSDB\YearCalculator;
 use Nette\Forms\Form;
@@ -85,7 +84,6 @@ class CategoryProcessing extends AbstractProcessing {
                 }
                 /** @var ModelPerson $person */
                 $person = $baseHolder->getModel()->getMainModel()->person;
-                /** @var ModelPersonHistory $history */
                 $history = $person->related('person_history')->where('ac_year', $acYear)->fetch();
                 $participantData = [
                     'school_id' => $history->school_id,

@@ -24,4 +24,3 @@ class ServiceRole extends AbstractServiceSingle {
         return DbNames::TAB_ROLE;
     }
 }
-

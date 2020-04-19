@@ -6,13 +6,12 @@ use FKSDB\model\Fyziklani\ClosedSubmittingException;
 use FKSDB\model\Fyziklani\NotCheckedSubmitsException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
-use FKSDB\ORM\Models\Events\ModelFyziklaniParticipant;
 use FKSDB\ORM\Models\IEventReferencedModel;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use Nette\Database\Table\ActiveRow;
-use Nette\Database\Table\Selection;
+use Nette\Database\Table\GroupedSelection;
 use Nette\Security\IResource;
 use Nette\Utils\DateTime;
 
@@ -63,9 +62,9 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
     }
 
     /**
-     * @return Selection
+     * @return GroupedSelection
      */
-    public function getParticipants(): Selection {
+    public function getParticipants(): GroupedSelection {
         return $this->related(DbNames::TAB_E_FYZIKLANI_PARTICIPANT, 'e_fyziklani_team_id');
     }
 
@@ -82,23 +81,23 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
     /* ******************** SUBMITS ******************************* */
 
     /**
-     * @return Selection
+     * @return GroupedSelection
      */
-    public function getAllSubmits(): Selection {
+    public function getAllSubmits(): GroupedSelection {
         return $this->related(DbNames::TAB_FYZIKLANI_SUBMIT, 'e_fyziklani_team_id');
     }
 
     /**
-     * @return Selection
+     * @return GroupedSelection
      */
-    public function getNonRevokedSubmits(): Selection {
+    public function getNonRevokedSubmits(): GroupedSelection {
         return $this->getAllSubmits()->where('points IS NOT NULL');
     }
 
     /**
-     * @return Selection
+     * @return GroupedSelection
      */
-    public function getNonCheckedSubmits(): Selection {
+    public function getNonCheckedSubmits(): GroupedSelection {
         return $this->getNonRevokedSubmits()->where('state IS NULL OR state != ?', ModelFyziklaniSubmit::STATE_CHECKED);
     }
 

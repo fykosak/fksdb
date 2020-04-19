@@ -29,14 +29,12 @@ class ServiceFyziklaniTeamPosition extends AbstractServiceSingle {
 
     /**
      * @param int $teamId
-     * @return ModelFyziklaniTeamPosition
+     * @return ModelFyziklaniTeamPosition|null
      */
     public function findByTeamId(int $teamId) {
+        /** @var ModelFyziklaniTeamPosition $row */
         $row = $this->getTable()->where('e_fyziklani_team_id', $teamId)->fetch();
-        if ($row) {
-            return ModelFyziklaniTeamPosition::createFromActiveRow($row);
-        }
-        return null;
+        return $row ? $row : null;
     }
 
     /**
@@ -48,9 +46,7 @@ class ServiceFyziklaniTeamPosition extends AbstractServiceSingle {
         foreach ($data as $teamData) {
             $teamData = (object)$teamData;
             try {
-                /**
-                 * @var ModelFyziklaniTeamPosition $model
-                 */
+                /** @var ModelFyziklaniTeamPosition $model */
                 $model = $this->findByTeamId($teamData->teamId);
                 if (is_numeric($teamData->x) && is_numeric($teamData->y)) {
 

@@ -12,13 +12,13 @@ use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\ORM\Services\ServiceTask;
+use FKSDB\ORM\Tables\TypedTableSelection;
 use FKSDB\Submits\FilesystemUploadedSubmitStorage;
 use FKSDB\Submits\ProcessingException;
 use ModelException;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
-use Nette\Database\Table\Selection;
 use Tracy\Debugger;
 
 /**
@@ -123,9 +123,7 @@ class SubmitPresenter extends BasePresenter {
         if ($studyYear === null) {
             $this->flashMessage(_('Řešitel nemá vyplněn ročník, nebudou dostupné všechny úlohy.'));
         }
-        /**
-         * @var ModelTask $task
-         */
+        /** @var ModelTask $task */
         foreach ($this->getAvailableTasks() as $task) {
             if ($task->submit_deadline != $prevDeadline) {
                 $form->addGroup(sprintf(_('Termín %s'), $task->submit_deadline));
@@ -208,8 +206,8 @@ class SubmitPresenter extends BasePresenter {
             $this->uploadedSubmitStorage->beginTransaction();
 
             foreach ($taskIds as $taskId) {
-                $taskRow = $this->taskService->findByPrimary($taskId);
-                $task = ModelTask::createFromActiveRow($taskRow);
+                /** @var ModelTask $task */
+                $task = $this->taskService->findByPrimary($taskId);
 
                 if (!isset($validIds[$taskId])) {
                     $this->flashMessage(sprintf(_('Úlohu %s již není možno odevzdávat.'), $task->label), self::FLASH_ERROR);
@@ -250,10 +248,10 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @return Selection
+     * @return TypedTableSelection
      * @throws BadRequestException
      */
-    public function getAvailableTasks() {
+    public function getAvailableTasks(): TypedTableSelection {
         $tasks = $this->taskService->getTable();
         $tasks->where('contest_id = ? AND year = ?', $this->getSelectedContest()->contest_id, $this->getSelectedYear());
         $tasks->where('submit_start IS NULL OR submit_start < NOW()');
@@ -270,9 +268,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function isAvailableSubmit($taskId) {
-        /**
-         * @var ModelTask $task
-         */
+        /** @var ModelTask $task */
         foreach ($this->getAvailableTasks() as $task) {
             if ($task->task_id == $taskId) {
                 return $task;

@@ -9,6 +9,7 @@ use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\ActiveRow;
+use Nette\Database\Table\GroupedSelection;
 use Nette\Database\Table\Selection;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
@@ -55,7 +56,7 @@ class TeamApplicationGrid extends AbstractApplicationGrid {
     }
 
     /**
-     * @return Selection
+     * @return GroupedSelection
      */
     protected function getSource(): Selection {
         return $this->event->getTeams();

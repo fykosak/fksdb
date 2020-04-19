@@ -333,9 +333,9 @@ class ApplicationPresenter extends BasePresenter {
                 }
             }
             $eventId = $eventId ?: $this->getParameter('eventId');
-            $row = $this->serviceEvent->findByPrimary($eventId);
-            if ($row) {
-                $this->event = ModelEvent::createFromActiveRow($row);
+            $event = $this->serviceEvent->findByPrimary($eventId);
+            if ($event) {
+                $this->event = $event;
             }
         }
 
