@@ -156,6 +156,8 @@ class TasksPresenter extends BasePresenter {
         } catch (ModelException $exception) {
             $this->flashMessage(sprintf(_('Při ukládání úloh došlo k chybě.')), self::FLASH_ERROR);
             Debugger::log($exception);
+        } catch (DeprecatedException $exception) {
+            $this->flashMessage(_('Legacy XML format is deprecated'), self::FLASH_ERROR);
         } finally {
             unlink($file);
         }
