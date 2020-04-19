@@ -644,8 +644,6 @@ CREATE TABLE IF NOT EXISTS `task` (
   COMMENT 'Od kdy se smi submitovat',
   `submit_deadline` DATETIME     NULL     DEFAULT NULL
   COMMENT 'Do kdy',
-  `is_quiz` 		BOOLEAN     DEFAULT FALSE
-  COMMENT 'Je uloha soubor kvizu',
   PRIMARY KEY (`task_id`),
   INDEX `contest_id` (`contest_id` ASC),
   UNIQUE INDEX `contest_id_year_series_tasknr` (`contest_id` ASC, `year` ASC, `series` ASC, `tasknr` ASC),
@@ -1467,14 +1465,7 @@ CREATE TABLE IF NOT EXISTS `email_message`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `quest` (
   `quest_id`     INT(11)      NOT NULL AUTO_INCREMENT,
-  `contest_id`   INT(11)      NOT NULL
-  COMMENT 'Seminar',
-  `year`            TINYINT(4)   NOT NULL
-  COMMENT 'Rocnik seminare',
-  `series`          TINYINT(4)   NOT NULL
-  COMMENT 'Serie',
-  `tasknr`          TINYINT(4)   NULL     DEFAULT NULL
-  COMMENT 'Uloha',
+  `task_id`      INT(11)      NOT NULL,
   `questnr`      TINYINT(4)   NULL     DEFAULT NULL
   COMMENT 'Otazka',
   `points`       TINYINT(4)   NULL     DEFAULT NULL
@@ -1482,14 +1473,12 @@ CREATE TABLE IF NOT EXISTS `quest` (
   `answer`       VARCHAR(1)   NULL     DEFAULT NULL
   COMMENT 'Spravna odpoved',
   PRIMARY KEY (`quest_id`),
-  INDEX `contest_id` (`contest_id` ASC),
-  UNIQUE INDEX `contest_id_year_series_tasknr_questnr` (`contest_id` ASC, `year` ASC, `series` ASC, `tasknr` ASC, `questnr` ASC),
+  UNIQUE INDEX `quest_taks_ui` (`task_id` ASC),
   CONSTRAINT `quest_ibfk_1`
-  FOREIGN KEY (`contest_id`)
-  REFERENCES `contest` (`contest_id`)
+  FOREIGN KEY (`task_id`)
+  REFERENCES `task` (`task_id`)
 )
-  ENGINE = InnoDB
-  DEFAULT CHARACTER SET = utf8;
+  ENGINE = InnoDB;
 
 SET SQL_MODE = @OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS = @OLD_FOREIGN_KEY_CHECKS;

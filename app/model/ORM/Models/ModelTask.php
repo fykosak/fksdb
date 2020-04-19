@@ -4,6 +4,7 @@ namespace FKSDB\ORM\Models;
 
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
+use Nette\InvalidStateException;
 use Nette\Utils\DateTime;
 use Nette\Utils\Strings;
 use Utils;
@@ -61,6 +62,17 @@ class ModelTask extends AbstractModelSingle implements IContestReferencedModel {
             $result[$studyYearModel->study_year] = $studyYearModel;
         }
         return $result;
+    }
+
+    /**
+     * @return ModelQuest
+     */
+    public function getQuest(): ModelQuest {
+        $questRow = $this->related(DbNames::TAB_QUEST, 'task_id')->fetch();
+        if (!$questRow) {
+            throw new InvalidStateException;
+        }
+        return ModelQuest::createFromActiveRow($questRow);
     }
 
     /**

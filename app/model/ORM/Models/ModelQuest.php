@@ -4,19 +4,26 @@ namespace FKSDB\ORM\Models;
 
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
+use Nette\Database\Table\ActiveRow;
 
 /**
- * 
- * @author Miroslav Jarý <mira.jary@gmail.com>
  *
+ * @author Miroslav Jarý <mira.jary@gmail.com>
+ * @property-read ActiveRow task
+ * @property-read int task_id
  */
 class ModelQuest extends AbstractModelSingle implements IContestReferencedModel {
     /**
-     * 
-     * {@inheritDoc}
-     * @see \FKSDB\ORM\Models\IContestReferencedModel::getContest()
+     * @return ModelTask
+     */
+    public function getTask(): ModelTask {
+        return ModelTask::createFromActiveRow($this->task);
+    }
+
+    /**
+     * @return ModelContest
      */
     public function getContest(): ModelContest {
-        return ModelContest::createFromActiveRow($this->ref(DbNames::TAB_CONTEST, 'contest_id'));
+        return $this->getTask()->getContest();
     }
 }
