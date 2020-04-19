@@ -4,7 +4,7 @@ namespace FKSDB\ORM;
 
 use FKSDB\ORM\Tables\TypedTableSelection;
 use InvalidArgumentException;
-use ModelException;
+use FKSDB\Exceptions\ModelException;
 use Nette\Database\Connection;
 use Nette\Database\Context;
 use Nette\Database\IConventions;
@@ -220,7 +220,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
     /**
      * @return TypedTableSelection
      */
-    public function getTable() {
+    public function getTable(): TypedTableSelection {
         return new TypedTableSelection($this->getModelClassName(), $this->getTableName(), $this->context, $this->conventions);
     }
 

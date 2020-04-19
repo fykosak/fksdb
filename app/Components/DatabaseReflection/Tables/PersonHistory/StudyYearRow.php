@@ -5,7 +5,7 @@ namespace FKSDB\Components\DatabaseReflection\PersonHistory;
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 use FKSDB\YearCalculator;
-use Nette\Application\BadRequestException;
+use http\Exception\InvalidArgumentException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Localization\ITranslator;
@@ -55,12 +55,12 @@ class StudyYearRow extends AbstractRow {
     /**
      * @param array $args
      * @return BaseControl
-     * @throws BadRequestException
+     * @throws InvalidArgumentException
      */
     public function createField(...$args): BaseControl {
         list ($acYear) = $args;
         if (\is_null($acYear)) {
-            throw new BadRequestException();
+            throw new \InvalidArgumentException;
         }
         $control = new SelectBox($this->getTitle());
         $control->setItems($this->createOptions($acYear));

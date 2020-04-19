@@ -9,6 +9,7 @@ use FKSDB\ORM\Models\ModelRole;
 use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\YearCalculator;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
 
@@ -281,8 +282,8 @@ class ContestChooser extends Control {
             }
             $this->contests = [];
             foreach ($contests as $id) {
-                $row = $this->serviceContest->findByPrimary($id);
-                $contest = ModelContest::createFromActiveRow($row);
+                /** @var ModelContest $contest */
+                $contest = $this->serviceContest->findByPrimary($id);
                 $years = $this->getYears($contest);
                 $this->contests[$id] = (object)[
                     'contest' => $contest,
@@ -335,7 +336,7 @@ class ContestChooser extends Control {
      */
     public function render($class = null) {
         if (!$this->isValid()) {
-            throw new BadRequestException('No contests available.', 403);
+            throw new ForbiddenRequestException('No contests available.');
         }
         $this->template->contests = $this->getContests();
         $this->template->currentContest = $this->getContest() ? $this->getContest()->contest_id : null;

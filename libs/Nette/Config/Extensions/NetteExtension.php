@@ -134,12 +134,12 @@ class NetteExtension extends Nette\Config\CompilerExtension {
 
         $user = $container->addDefinition('user')// no namespace for back compatibility
         ->setClass('Nette\Security\User');
-
+/*
         if (!$container->parameters['productionMode'] && $config['security']['debugger']) {
             $user->addSetup('\Tracy\Debugger::getBar()->addPanel(?)', array(
                 new Nette\DI\Statement('Nette\Security\Diagnostics\UserPanel')
             ));
-        }
+        }*/
 
         if ($config['security']['users']) {
             $container->addDefinition($this->prefix('authenticator'))

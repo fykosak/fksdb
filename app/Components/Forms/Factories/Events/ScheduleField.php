@@ -36,28 +36,7 @@ class ScheduleField extends TextInput {
      * @return string
      */
     protected function getReactId(): string {
-        throw new DeprecatedException();
-    }
-
-    /**
-     * @return string
-     */
-    public function getComponentName(): string {
-        return 'schedule';
-    }
-
-    /**
-     * @return string
-     */
-    public function getModuleName(): string {
-        return 'fyziklani';
-    }
-
-    /**
-     * @return string
-     */
-    public function getMode(): string {
-        return '';
+        throw new DeprecatedException;
     }
 
     /**

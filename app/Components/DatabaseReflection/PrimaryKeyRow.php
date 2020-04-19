@@ -3,6 +3,7 @@
 namespace FKSDB\Components\DatabaseReflection;
 
 use FKSDB\Components\DatabaseReflection\ValuePrinters\StringPrinter;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\BaseControl;
@@ -27,6 +28,6 @@ class PrimaryKeyRow extends DefaultRow {
      * @throws BadRequestException
      */
     public function createField(...$args): BaseControl {
-        throw new BadRequestException();
+        throw new NotImplementedException;
     }
 }

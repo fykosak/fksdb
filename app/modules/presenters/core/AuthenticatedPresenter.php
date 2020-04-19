@@ -220,7 +220,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     protected function unauthorizedAccess() {
-        throw new ForbiddenRequestException();
+        throw new ForbiddenRequestException;
     }
 
     /**
@@ -306,7 +306,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
             $method = $this->formatAuthorizedMethod($this->getAction());
             $this->tryCall($method, $this->getParameter());
         } catch (AuthenticationException $exception) {
-            throw new BadRequestException(_('Chyba autentizace.'), 403, $exception);
+            throw new ForbiddenRequestException(_('Chyba autentizace.'), \Nette\Http\Response::S403_FORBIDDEN, $exception);
         }
     }
 

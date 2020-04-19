@@ -5,7 +5,6 @@ namespace FKSDB\Components\DatabaseReflection\Org;
 use FKSDB\Components\DatabaseReflection\ValuePrinters\StringPrinter;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelOrg;
-use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
@@ -38,12 +37,12 @@ class UntilRow extends AbstractOrgRowFactory {
     /**
      * @param array $args
      * @return BaseControl
-     * @throws BadRequestException
+     * @throws \InvalidArgumentException
      */
     public function createField(...$args): BaseControl {
         list($min, $max) = $args;
         if (\is_null($max) || \is_null($min)) {
-            throw new BadRequestException();
+            throw new \InvalidArgumentException;
         }
         $control = new TextInput($this->getTitle());
 

@@ -65,7 +65,7 @@ abstract class AbstractForm extends FormControl {
                 $serviceAuthToken->updateModel2($token, $tokenData);
             }
             $connection->commit();
-        } catch (\ModelException $exception) {
+        } catch (\FKSDB\Exceptions\ModelException $exception) {
             $connection->rollBack();
             Debugger::log($exception, Debugger::ERROR);
             $this->flashMessage(_('Chyba přidání akce.'), ILogger::ERROR);

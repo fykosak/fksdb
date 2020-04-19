@@ -2,6 +2,7 @@
 
 namespace FKSDB\ORM\Tables;
 
+use FKSDB\ORM\AbstractModelSingle;
 use Nette\Database\Context;
 use Nette\Database\IConventions;
 use Nette\Database\Table\Selection;
@@ -33,12 +34,10 @@ class TypedTableSelection extends Selection {
      * This override ensures returned objects are of correct class.
      *
      * @param array $row
-     * @return \FKSDB\ORM\AbstractModelSingle
+     * @return AbstractModelSingle
      */
     protected function createRow(array $row) {
         $className = $this->modelClassName;
         return new $className($row, $this);
     }
-
 }
-

@@ -4,7 +4,8 @@ namespace EventModule;
 
 use AuthenticatedPresenter;
 use Events\Model\Holder\Holder;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotFoundException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEvent;
@@ -56,7 +57,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      */
     protected function startup() {
         if (!$this->isEnabled()) {
-            throw new NotImplementedException();
+            throw new NotImplementedException;
         }
         parent::startup();
     }
@@ -79,7 +80,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         if (!$this->event) {
             $model = $this->getServiceEvent()->findByPrimary($this->eventId);
             if (!$model) {
-                throw new BadRequestException('Event not found.', 404);
+                throw new NotFoundException('Event not found.');
             }
             $this->event = $model;
         }

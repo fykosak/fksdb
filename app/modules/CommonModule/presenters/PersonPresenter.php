@@ -8,10 +8,11 @@ use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\EntityTrait;
+use FKSDB\Exceptions\NotFoundException;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Logging\ILogger;
 use FKSDB\Logging\MemoryLogger;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServicePersonInfo;
@@ -177,7 +178,7 @@ class PersonPresenter extends BasePresenter {
         $this->trunkPerson = $this->servicePerson->findByPrimary($trunkId);
         $this->mergedPerson = $this->servicePerson->findByPrimary($mergedId);
         if (!$this->trunkPerson || !$this->mergedPerson) {
-            throw new BadRequestException('Neexistující osoba.', 404);
+            throw new NotFoundException('Neexistující osoba.');
         }
         $authorized = $this->getContestAuthorizator()->isAllowedForAnyContest($this->trunkPerson, 'merge') &&
             $this->getContestAuthorizator()->isAllowedForAnyContest($this->mergedPerson, 'merge');
@@ -490,21 +491,21 @@ class PersonPresenter extends BasePresenter {
      * @inheritDoc
      */
     public function createComponentCreateForm(): Control {
-        throw new NotImplementedException();
+        throw new NotImplementedException;
     }
 
     /**
      * @inheritDoc
      */
     public function createComponentEditForm(): Control {
-        throw new NotImplementedException();
+        throw new NotImplementedException;
     }
 
     /**
      * @inheritDoc
      */
     protected function createComponentGrid(): BaseGrid {
-        throw new NotImplementedException();
+        throw new NotImplementedException;
     }
 
     /**

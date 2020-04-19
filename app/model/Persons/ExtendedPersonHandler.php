@@ -14,7 +14,7 @@ use FKSDB\ORM\Services\ServicePerson;
 use FormUtils;
 use Mail\MailTemplateFactory;
 use Mail\SendFailedException;
-use ModelException;
+use FKSDB\Exceptions\ModelException;
 use Nette\Database\Connection;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;

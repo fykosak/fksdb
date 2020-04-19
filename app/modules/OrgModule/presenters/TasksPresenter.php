@@ -7,7 +7,7 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\SeriesCalculator;
 use FKSDB\Submits\UploadException;
-use ModelException;
+use FKSDB\Exceptions\ModelException;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
@@ -129,7 +129,7 @@ class TasksPresenter extends BasePresenter {
                 break;
             case self::SOURCE_FILE:
                 if (!$values['file']->isOk()) {
-                    throw new UploadException();
+                    throw new UploadException;
                 }
                 $file = $values['file']->getTemporaryFile();
                 break;

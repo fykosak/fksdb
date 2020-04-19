@@ -4,7 +4,7 @@ namespace FKSDB\Components\DatabaseReflection\EventParticipant;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use Nette\Forms\Controls\BaseControl;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 
 /**
  * Class AbstractParticipantRow
@@ -18,7 +18,7 @@ abstract class AbstractParticipantRow extends AbstractRow {
      * @throws NotImplementedException
      */
     public function createField(...$args): BaseControl {
-        throw new NotImplementedException();
+        throw new NotImplementedException;
     }
 
     /**

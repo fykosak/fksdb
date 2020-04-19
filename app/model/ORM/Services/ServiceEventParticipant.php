@@ -8,8 +8,8 @@ use FKSDB\ORM\DbNames;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventParticipant;
-use ModelException;
-use Nette\Database\Table\Selection;
+use FKSDB\Exceptions\ModelException;
+use FKSDB\ORM\Tables\TypedTableSelection;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -45,31 +45,28 @@ class ServiceEventParticipant extends AbstractServiceSingle {
     }
 
     /**
-     * @param IModel $model
+     * @param IModel|ModelEventParticipant $model
      * @param array $data
      * @param bool $alive
      * @return mixed|void
+     * @deprecated
      */
     public function updateModel(IModel $model, $data, $alive = true) {
-        /**
-         * @var \FKSDB\ORM\Models\ModelEventParticipant $model
-         */
         parent::updateModel($model, $data, $alive);
         if (!$alive && !$model->isNew()) {
             $person = $model->getPerson();
             if ($person) {
                 $person->removeScheduleForEvent($model->event_id);
             }
-
         }
     }
 
     /**
      * Syntactic sugar.
      * @param ModelEvent $event
-     * @return Selection
+     * @return TypedTableSelection
      */
-    public function findPossiblyAttending(ModelEvent $event): Selection {
+    public function findPossiblyAttending(ModelEvent $event): TypedTableSelection {
         return $this->getTable()->where('status', ['participated', 'approved', 'spare', 'applied'])->where('event_id', $event->event_id);
     }
 }
