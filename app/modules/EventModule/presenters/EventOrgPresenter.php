@@ -3,7 +3,7 @@
 namespace EventModule;
 
 use FKSDB\Components\Grids\EventOrgsGrid;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Services\ServiceEventOrg;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -74,14 +74,14 @@ class EventOrgPresenter extends BasePresenter {
      * @inheritDoc
      */
     public function createComponentCreateForm(): Control {
-        throw new NotImplementedException();
+        throw new NotImplementedException;
     }
 
     /**
      * @inheritDoc
      */
     public function createComponentEditForm(): Control {
-        throw new NotImplementedException();
+        throw new NotImplementedException;
     }
 
 }

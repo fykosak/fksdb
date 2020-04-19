@@ -97,7 +97,7 @@ class SubmitHandler {
         $fullCode = TaskCodePreprocessor::createFullCode($code);
         /* skontroluje pratnosť kontrolu */
         if (!TaskCodePreprocessor::checkControlNumber($fullCode)) {
-            throw new ControlMismatchException();
+            throw new ControlMismatchException;
         }
         $team = $this->getTeam($code);
         /* otvorenie submitu */

@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\React;
 
+use FKSDB\Exceptions\BadTypeException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\ComponentModel\IComponent;
@@ -63,7 +64,7 @@ abstract class ReactComponent extends Control {
         if ($service instanceof IRequest) {
             return $service;
         }
-        throw new BadRequestException();
+        throw new BadTypeException(IRequest::class, $service);
     }
 
     /**

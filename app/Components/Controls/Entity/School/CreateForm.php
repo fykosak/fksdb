@@ -52,7 +52,7 @@ class CreateForm extends AbstractForm {
             $this->getPresenter()->flashMessage(_('Škola založena'), \BasePresenter::FLASH_SUCCESS);
 
             $this->getPresenter()->redirect('list'); // if there's no backlink
-        } catch (\ModelException $exception) {
+        } catch (\FKSDB\Exceptions\ModelException $exception) {
             $connection->rollBack();
             Debugger::log($exception, Debugger::ERROR);
             $this->getPresenter()->flashMessage(_('Chyba při zakládání školy.'), \BasePresenter::FLASH_ERROR);

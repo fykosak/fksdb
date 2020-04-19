@@ -5,8 +5,8 @@ namespace EventModule;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Schedule\ItemsGrid;
 use FKSDB\Components\Grids\Schedule\PersonsGrid;
-use FKSDB\Expressions\BadTypeException;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleGroup;
@@ -15,6 +15,7 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
+use Nette\InvalidStateException;
 
 /**
  * Class ScheduleItemPresenter
@@ -88,7 +89,7 @@ class ScheduleItemPresenter extends BasePresenter {
     }
 
     /**
-     * @throws BadRequestException
+     * @throws InvalidStateException
      */
     public function renderList() {
         $this->template->group = $this->getGroup();
@@ -115,20 +116,20 @@ class ScheduleItemPresenter extends BasePresenter {
     protected function loadEntity(int $id) {
         $entity = $this->traitLoadEntity($id);
         if ($entity->schedule_group_id !== $this->getGroup()->schedule_group_id) {
-            throw new ForbiddenRequestException();
+            throw new ForbiddenRequestException;
         }
         return $entity;
     }
 
     /**
      * @return ModelScheduleGroup
-     * @throws BadRequestException
+     * @throws InvalidStateException
      */
     private function getGroup(): ModelScheduleGroup {
         if (!$this->group) {
             $group = $this->serviceScheduleGroup->findByPrimary($this->groupId);
             if (!$group) {
-                throw new BadRequestException();
+                throw new InvalidStateException;
             }
             $this->group = $group;
         }
@@ -139,19 +140,19 @@ class ScheduleItemPresenter extends BasePresenter {
      * @inheritDoc
      */
     public function createComponentCreateForm(): Control {
-        throw new NotImplementedException();
+        throw new NotImplementedException;
     }
 
     /**
      * @inheritDoc
      */
     public function createComponentEditForm(): Control {
-        throw new NotImplementedException();
+        throw new NotImplementedException;
     }
 
     /**
      * @inheritDoc
-     * @throws BadRequestException
+     * @throws InvalidStateException
      */
     protected function createComponentGrid(): BaseGrid {
         return new ItemsGrid($this->getContext(), $this->getGroup());

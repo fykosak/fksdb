@@ -5,6 +5,7 @@ namespace FKSDB\Components\Grids;
 use Exception;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -12,7 +13,7 @@ use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 use Nette\Templating\FileTemplate;
 use Nette\Templating\ITemplate;
 use Nette\Utils\Html;
@@ -57,9 +58,7 @@ abstract class BaseGrid extends Grid {
      */
     protected function configure($presenter) {
         $this->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.latte');
-        /**
-         * @var GridPaginator $paginator
-         */
+        /** @var GridPaginator $paginator */
         $paginator = $this->getComponent('paginator');
         $paginator->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.paginator.latte');
     }
@@ -74,16 +73,21 @@ abstract class BaseGrid extends Grid {
     /**
      * @param null $class
      * @return ITemplate
+     * @throws BadTypeException
      */
     protected function createTemplate($class = NULL): ITemplate {
+        $presenter = $this->getPresenter();
+        if (!$presenter instanceof \BasePresenter) {
+            throw new BadTypeException(\BasePresenter::class, $presenter);
+        }
         /**
          * @var GridPaginator $paginator
          * @var FileTemplate $template
          */
         $paginator = $this->getComponent('paginator');
-        $paginator->getTemplate()->setTranslator($this->presenter->getTranslator());
+        $paginator->getTemplate()->setTranslator($presenter->getTranslator());
         $template = parent::createTemplate($class);
-        $template->setTranslator($this->presenter->getTranslator());
+        $template->setTranslator($presenter->getTranslator());
         return $template;
     }
 
@@ -227,7 +231,7 @@ abstract class BaseGrid extends Grid {
      * @throws NotImplementedException
      */
     protected function getModelClassName(): string {
-        throw new NotImplementedException();
+        throw new NotImplementedException;
     }
 
     /**

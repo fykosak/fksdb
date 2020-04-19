@@ -8,8 +8,8 @@ use FKSDB\ORM\DbNames;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventParticipant;
+use FKSDB\Exceptions\ModelException;
 use FKSDB\ORM\Tables\TypedTableSelection;
-use ModelException;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>

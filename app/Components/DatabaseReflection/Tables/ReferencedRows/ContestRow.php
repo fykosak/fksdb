@@ -4,6 +4,7 @@ namespace FKSDB\Components\DatabaseReflection\ReferencedRows;
 
 use FKSDB\Components\Controls\Badges\ContestBadge;
 use FKSDB\Components\DatabaseReflection\AbstractRow;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\IContestReferencedModel;
 use Nette\Application\BadRequestException;
@@ -21,7 +22,7 @@ class ContestRow extends AbstractRow {
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         if (!$model instanceof IContestReferencedModel) {
-            throw new BadRequestException();
+            throw new BadTypeException(IContestReferencedModel::class, $model);
         }
         return ContestBadge::getHtml($model->getContest());
     }

@@ -1,7 +1,7 @@
 <?php
 
 use FKSDB\Components\Controls\ContestChooser;
-use FKSDB\Expressions\BadTypeException;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelContest;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -53,7 +53,7 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
             throw new BadTypeException(ContestChooser::class, $contestChooser);
         }
         if (!$contestChooser->isValid()) {
-            throw new BadRequestException('No contests available.', 403);
+            throw new ForbiddenRequestException('No contests available.');
         }
         return $contestChooser->getContest();
     }
@@ -68,7 +68,7 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
             throw new BadTypeException(ContestChooser::class, $contestChooser);
         }
         if (!$contestChooser->isValid()) {
-            throw new BadRequestException('No contests available.', 403);
+            throw new ForbiddenRequestException('No contests available.');
         }
         return $contestChooser->getYear();
     }

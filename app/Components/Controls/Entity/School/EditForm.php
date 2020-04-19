@@ -73,7 +73,7 @@ class EditForm extends AbstractForm implements IEditEntityForm {
 
             $this->getPresenter()->flashMessage(_('Škola upravena'), \BasePresenter::FLASH_SUCCESS);
             $this->getPresenter()->redirect('list');
-        } catch (\ModelException $exception) {
+        } catch (\FKSDB\Exceptions\ModelException $exception) {
             $connection->rollBack();
             Debugger::log($exception, Debugger::ERROR);
             $this->getPresenter()->flashMessage(_('Chyba při úpravě školy.'), \BasePresenter::FLASH_ERROR);

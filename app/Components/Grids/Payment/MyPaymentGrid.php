@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Grids\Payment;
 
 use BasePresenter;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelPayment;
 use NiftyGrid\DataSource\NDataSource;

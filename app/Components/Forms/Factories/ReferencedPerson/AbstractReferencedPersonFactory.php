@@ -300,7 +300,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
                     $control = $this->personFactory->createField($fieldName);
                     break;
                 default:
-                    throw new InvalidArgumentException();
+                    throw new InvalidArgumentException;
 
             }
             $this->appendMetadata($control, $hiddenField, $fieldName, $metadata);

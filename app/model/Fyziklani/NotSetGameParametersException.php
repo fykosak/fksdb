@@ -4,7 +4,7 @@
 namespace FKSDB\model\Fyziklani;
 
 
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 
 /**
  * Class NotSetGameParametersException

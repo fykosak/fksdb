@@ -134,7 +134,7 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
             throw new ClosedSubmittingException($this);
         }
         if (!$this->hasAllSubmitsChecked()) {
-            throw new NotCheckedSubmitsException();
+            throw new NotCheckedSubmitsException;
         }
         return true;
     }

@@ -4,7 +4,7 @@ namespace CommonModule;
 
 use FKSDB\Components\Grids\EmailsGrid;
 use FKSDB\EntityTrait;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Services\ServiceEmailMessage;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
@@ -63,12 +63,12 @@ class SpamPresenter extends BasePresenter {
 
     /** @inheritDoc */
     public function createComponentEditForm(): Control {
-        throw new NotImplementedException();
+        throw new NotImplementedException;
     }
 
     /** @inheritDoc */
     public function createComponentCreateForm(): Control {
-        throw new NotImplementedException();
+        throw new NotImplementedException;
     }
 
     /**

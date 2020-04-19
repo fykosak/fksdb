@@ -8,8 +8,9 @@ use FKSDB\ORM\DbNames;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventOrg;
+use FKSDB\Exceptions\ModelException;
 use FKSDB\ORM\Tables\TypedTableSelection;
-use ModelException;
+
 
 /**
  * Class FKSDB\ORM\Services\ServiceEventOrg

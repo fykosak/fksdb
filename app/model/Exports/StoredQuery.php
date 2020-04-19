@@ -5,7 +5,7 @@ namespace Exports;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use Nette\Database\Connection;
 use Nette\InvalidArgumentException;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 use Nette\Security\IResource;
 use NiftyGrid\DataSource\IDataSource;
 
@@ -260,7 +260,7 @@ class StoredQuery implements IDataSource, IResource {
      * @throws NotImplementedException
      */
     public function filterData(array $filters) {
-        throw new NotImplementedException();
+        throw new NotImplementedException;
     }
 
     /**

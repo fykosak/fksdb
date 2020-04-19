@@ -86,8 +86,7 @@ class StudyYearsFromXML2 extends Stage {
         $hasYears = false;
 
         $parentEl = $XMLTask->{self::XML_ELEMENT_PARENT};
-        // parse contributors
-        $contributors = [];
+
         if ($parentEl && isset($parentEl->{self::XML_ELEMENT_CHILD})) {
             foreach ($parentEl->{self::XML_ELEMENT_CHILD} as $element) {
                 $studyYear = (string)$element;

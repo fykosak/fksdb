@@ -178,7 +178,7 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
             throw new ClosedSubmittingException($submit->getFyziklaniTeam());
         }
         if ($submit->points != $points) {
-            throw new PointsMismatchException();
+            throw new PointsMismatchException;
         }
         $submit->update([
             'state' => ModelFyziklaniSubmit::STATE_CHECKED,
