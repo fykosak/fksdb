@@ -24,6 +24,7 @@ services:
     ServicePersonHistory:    FKSDB\ORM\Services\ServicePersonHistory
     ServicePersonInfo:       FKSDB\ORM\Services\ServicePersonInfo
     ServicePostContact:      FKSDB\ORM\Services\ServicePostContact
+    ServiceQuest:            FKSDB\ORM\Services\ServiceQuest
     ServiceRegion:           FKSDB\ORM\Services\ServiceRegion
     ServiceSubmit:           FKSDB\ORM\Services\ServiceSubmit
     ServiceSchool:           FKSDB\ORM\Services\ServiceSchool

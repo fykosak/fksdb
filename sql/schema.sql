@@ -1465,13 +1465,10 @@ CREATE TABLE IF NOT EXISTS `email_message`
 -- -----------------------------------------------------
 -- Table `quiz`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `quiz` (
-  `quiz_id`         INT(11)      NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `quest` (
+  `quest_id`         INT(11)      NOT NULL AUTO_INCREMENT,
   `label`           VARCHAR(16)  NOT NULL
   COMMENT 'Oznaceni kvizove otazky ve formatu Rocnik-Serie-Uloha-Otazka (napr. 9-7-1-2)',
-  `name_cs`         VARCHAR(255) NULL     DEFAULT NULL
-  COMMENT 'Jmeno otazky',
-  `name_en`         VARCHAR(255) NULL     DEFAULT NULL,
   `contest_id`      INT(11)      NOT NULL
   COMMENT 'Seminar',
   `year`            TINYINT(4)   NOT NULL
@@ -1480,16 +1477,16 @@ CREATE TABLE IF NOT EXISTS `quiz` (
   COMMENT 'Serie',
   `tasknr`          TINYINT(4)   NULL     DEFAULT NULL
   COMMENT 'Uloha',
-  `question`          TINYINT(4)   NULL     DEFAULT NULL
+  `questnr`          TINYINT(4)   NULL     DEFAULT NULL
   COMMENT 'Otazka',
   `points`          TINYINT(4)   NULL     DEFAULT NULL
   COMMENT 'Pocet bodu',
   `correct_answer`    VARCHAR(1)     NULL     DEFAULT NULL
   COMMENT 'Spravna odpoved',
-  PRIMARY KEY (`quiz_id`),
+  PRIMARY KEY (`quest_id`),
   INDEX `contest_id` (`contest_id` ASC),
-  UNIQUE INDEX `contest_id_year_series_tasknr_question` (`contest_id` ASC, `year` ASC, `series` ASC, `tasknr` ASC, `question` ASC),
-  CONSTRAINT `quiz_ibfk_1`
+  UNIQUE INDEX `contest_id_year_series_tasknr_questnr` (`contest_id` ASC, `year` ASC, `series` ASC, `tasknr` ASC, `questnr` ASC),
+  CONSTRAINT `quest_ibfk_1`
   FOREIGN KEY (`contest_id`)
   REFERENCES `contest` (`contest_id`)
 )

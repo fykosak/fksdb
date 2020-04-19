@@ -3,6 +3,7 @@
 namespace Tasks;
 
 use FKSDB\ORM\Services\ServiceTask;
+use FKSDB\ORM\Services\ServiceQuest;
 use Pipeline\PipelineException;
 use Pipeline\Stage;
 use SimpleXMLElement;
@@ -35,13 +36,20 @@ class TasksFromXML2 extends Stage {
      * @var \FKSDB\ORM\Services\ServiceTask
      */
     private $taskService;
+    /**
+     * 
+     * @var \FKSDB\ORM\Services\ServiceQuest
+     */
+    private $questService;
 
     /**
      * TasksFromXML2 constructor.
      * @param \FKSDB\ORM\Services\ServiceTask $taskService
+     * @param \FKSDB\ORM\Services\ServiceQuest $questService
      */
-    public function __construct(ServiceTask $taskService) {
+    public function __construct(ServiceTask $taskService, ServiceQuest $questService) {
         $this->taskService = $taskService;
+        $this->questService = $questService;
     }
 
     /**
@@ -61,6 +69,12 @@ class TasksFromXML2 extends Stage {
         $problems = $xml->problems[0]->problem;
         foreach ($problems as $task) {
             $this->processTask($task);
+            if (isset($task->quests[0]->quest)) {
+                $quests = $task->quests[0]->quest;
+                foreach ($quests as $quest) {
+                    $this->processQuest($quest);
+                }
+            }
         }
     }
 
@@ -79,7 +93,7 @@ class TasksFromXML2 extends Stage {
         $year = $this->data->getYear();
         $series = $this->data->getSeries();
         $tasknr = (int) (string) $XMLTask->number;
-        $is_quiz = isset($XMLTask['quiz']) ? 1 : 0;
+        $is_quiz = $XMLTask->question ? 1 : 0;
 
         // obtain FKSDB\ORM\Models\ModelTask
         $task = $this->taskService->findBySeries($contest, $year, $series, $tasknr, $is_quiz);
@@ -106,7 +120,7 @@ class TasksFromXML2 extends Stage {
                 $csvalue = null;
 
                 if (count($elements) == 1) {
-                    if (count($elements[0]->attributes(self::XML_NAMESPACE)) == 0 || $elements[0]->attribute(self::XML_NAMESPACE)->lang == 'cs') {
+                    if (count($elements[0]->attributes(self::XML_NAMESPACE)) == 0 || $elements[0]->attributes(self::XML_NAMESPACE)->lang == 'cs') {
                         $csvalue = (string) $elements[0];
                     }
                 }
@@ -132,6 +146,69 @@ class TasksFromXML2 extends Stage {
 
         // forward it to pipeline
         $this->data->addTask($tasknr, $task);
+    }
+    /**
+     * Implementation of prserie questions
+     * 
+     * @param SimpleXMLElement $XMLQuestion
+     */
+    private function processQuest(SimpleXMLElement $XMLQuest) {
+        $contest = $this->data->getContest();
+        $year = $this->data->getYear();
+        $series = $this->data->getSeries();
+        $tasknr = (int) (string) $XMLQuest->number;
+        $questnr = (int) (string) $XMLQuest->quest->number;
+        $correct_answer = (string) $XMLQuest->quest->correct;
+        
+        $quest = $this->questService->createNewModel(array(
+            'contest' => $contest->contest_id,
+            'year' => $year,
+            'series' => $series,
+            'tasknr' => $tasknr,
+            'questnr' => $questnr,
+            'correct_answer' => $correct_answer,
+        ));
+        
+        // update fields
+        foreach (self::$xmlToColumnMap as $xmlElement => $column) {
+            $value = NULL;
+            
+            // Argh, I was not able not make ->xpath() working so emulate it.
+            $matches = [];
+            if (preg_match('/([a-z]*)\[@xml:lang="([a-z]*)"\]/', $xmlElement, $matches)) {
+                $name = $matches[1];
+                $lang = $matches[2];
+                $elements = $XMLQuestion->{$name};
+                $csvalue = null;
+                
+                if (count($elements) == 1) {
+                    if (count($elements[0]->attributes(self::XML_NAMESPACE)) == 0 || $elements[0]->attributes(self::XML_NAMESPACE)->lang == 'cs') {
+                        $csvalue = (string) $elements[0];
+                    }
+                }
+                foreach ($elements as $el) {
+                    if (count($el->attributes(self::XML_NAMESPACE)) == 0) {
+                        continue;
+                    }
+                    if ($el->attributes(self::XML_NAMESPACE)->lang == $lang) {
+                        $value = (string) $el;
+                        break;
+                    }
+                }
+                $value = $value ?: $csvalue;
+            } else {
+                $value = (string) $XMLQuestion->{$xmlElement};
+            }
+            
+            $task->{$column} = $value;
+        }
+        
+        // store it
+        $this->questService->save($quest);
+        
+        // forward it to pipeline
+        $this->data->addQuestion($questnr, $quest);
+        
     }
 
 }

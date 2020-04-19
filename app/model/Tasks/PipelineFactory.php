@@ -8,6 +8,7 @@ use FKSDB\ORM\Services\ServiceStudyYear;
 use FKSDB\ORM\Services\ServiceTask;
 use FKSDB\ORM\Services\ServiceTaskContribution;
 use FKSDB\ORM\Services\ServiceTaskStudyYear;
+use FKSDB\ORM\Services\ServiceQuest;
 use Pipeline\Pipeline;
 use Tasks\Legacy\ContributionsFromXML;
 use Tasks\Legacy\DeadlineFromXML;
@@ -39,6 +40,12 @@ class PipelineFactory {
      * @var array
      */
     private $defaultStudyYears;
+    
+    /**
+     * 
+     * @var \FKSDB\ORM\Services\ServiceQuest
+     */
+    private $serviceQuest;
 
     /**
      * @var \FKSDB\ORM\Services\ServiceTask
@@ -70,16 +77,18 @@ class PipelineFactory {
      * @param $columnMappings
      * @param $contributionMappings
      * @param $defaultStudyYears
+     * @param \FKSDB\ORM\Services\ServiceQuest $serviceQuest
      * @param \FKSDB\ORM\Services\ServiceTask $serviceTask
      * @param ServiceTaskContribution $serviceTaskContribution
      * @param ServiceTaskStudyYear $serviceTaskStudyYear
      * @param ServiceStudyYear $serviceStudyYear
      * @param \FKSDB\ORM\Services\ServiceOrg $serviceOrg
      */
-    function __construct($columnMappings, $contributionMappings, $defaultStudyYears, ServiceTask $serviceTask, ServiceTaskContribution $serviceTaskContribution, ServiceTaskStudyYear $serviceTaskStudyYear, ServiceStudyYear $serviceStudyYear, ServiceOrg $serviceOrg) {
+    function __construct($columnMappings, $contributionMappings, $defaultStudyYears, ServiceQuest $questService, ServiceTask $serviceTask, ServiceTaskContribution $serviceTaskContribution, ServiceTaskStudyYear $serviceTaskStudyYear, ServiceStudyYear $serviceStudyYear, ServiceOrg $serviceOrg) {
         $this->columnMappings = $columnMappings;
         $this->contributionMappings = $contributionMappings;
         $this->defaultStudyYears = $defaultStudyYears;
+        $this->questService = $questService;
         $this->serviceTask = $serviceTask;
         $this->serviceTaskContribution = $serviceTaskContribution;
         $this->serviceTaskStudyYear = $serviceTaskStudyYear;
@@ -98,7 +107,7 @@ class PipelineFactory {
 
 
         // common stages
-        $metadataStage = new TasksFromXML($this->columnMappings[$language], $this->serviceTask);
+        $metadataStage = new TasksFromXML($this->columnMappings[$language], $this->serviceTask, $this->serviceQuest);
         $pipeline->addStage($metadataStage);
 
         if ($language == 'cs') {
@@ -124,7 +133,7 @@ class PipelineFactory {
         $pipeline->setLogger(new MemoryLogger());
 
         // common stages
-        $metadataStage = new TasksFromXML2($this->serviceTask);
+        $metadataStage = new TasksFromXML2($this->serviceTask, $this->serviceQuest);
         $pipeline->addStage($metadataStage);
 
         $deadlineStage = new DeadlineFromXML2($this->serviceTask);

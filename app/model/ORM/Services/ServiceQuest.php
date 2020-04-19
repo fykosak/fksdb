@@ -5,25 +5,29 @@ namespace FKSDB\ORM\Services;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelContest;
-use FKSDB\ORM\Models\ModelTask;
+use FKSDB\ORM\Models\ModelQuest;
 
 /**
- * @author Michal Koutný <xm.koutny@gmail.com>
+ * 
+ * @author Miroslav Jarý <mira.jary@gmail.com>
+ *
  */
-class ServiceQuiz extends AbstractServiceSingle {
-
+class ServiceQuest extends AbstractServiceSingle {
     /**
-     * @return string
+     * 
+     * {@inheritDoc}
+     * @see \FKSDB\ORM\AbstractServiceSingle::getModelClassName()
      */
     public function getModelClassName(): string {
-        return ModelQuiz::class;
+        return ModelQuest::class;
     }
-
     /**
-     * @return string
+     * 
+     * {@inheritDoc}
+     * @see \FKSDB\ORM\AbstractServiceSingle::getTableName()
      */
     protected function getTableName(): string {
-        return DbNames::TAB_QUIZ;
+        return DbNames::TAB_QUEST;
     }
 
     /**
@@ -35,20 +39,21 @@ class ServiceQuiz extends AbstractServiceSingle {
      * @param int $tasknr
      * @return \FKSDB\ORM\Models\ModelTask|null
      */
-    public function findBySeries(ModelContest $contest, $year, $series, $tasknr, $is_quiz) {
+    public function findBySeries(ModelContest $contest, $year, $series, $tasknr, $questnr) {
         $result = $this->getTable()->where([
             'contest_id' => $contest->contest_id,
             'year' => $year,
             'series' => $series,
             'tasknr' => $tasknr,
-            'is_quiz' => $is_quiz,
+            'questnr' => $questnr,
         ])->fetch();
 
         if ($result !== false) {
-            return ModelTask::createFromActiveRow($result);
+            return ModelQuest::createFromActiveRow($result);
         } else {
             return null;
         }
     }
+
 
 }
