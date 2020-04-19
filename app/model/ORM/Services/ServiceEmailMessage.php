@@ -2,12 +2,11 @@
 
 namespace FKSDB\ORM\Services;
 
-use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelEmailMessage;
 use FKSDB\ORM\Tables\TypedTableSelection;
-use Nette\Database\Table\Selection;
+use Nette\Database\Table\ActiveRow;
 
 /**
  * Class ServiceEmailMessage
@@ -18,7 +17,7 @@ class ServiceEmailMessage extends AbstractServiceSingle {
      * @param int $limit
      * @return TypedTableSelection
      */
-    public function getMessagesToSend(int $limit): Selection {
+    public function getMessagesToSend(int $limit): TypedTableSelection {
         return $this->getTable()->where('state', ModelEmailMessage::STATE_WAITING)->limit($limit);
     }
 
@@ -39,9 +38,9 @@ class ServiceEmailMessage extends AbstractServiceSingle {
     /**
      * @param array $data
      * @param int $priority
-     * @return AbstractModelSingle
+     * @return ModelEmailMessage|ActiveRow
      */
-    public function addMessageToSend(array $data, int $priority = 0): AbstractModelSingle {
+    public function addMessageToSend(array $data, int $priority = 0): ModelEmailMessage {
         $data['state'] = ModelEmailMessage::STATE_WAITING;
         if (!isset($data['reply_to'])) {
             $data['reply_to'] = $data['sender'];

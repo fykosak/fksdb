@@ -282,8 +282,8 @@ class ContestChooser extends Control {
             }
             $this->contests = [];
             foreach ($contests as $id) {
-                $row = $this->serviceContest->findByPrimary($id);
-                $contest = ModelContest::createFromActiveRow($row);
+                /** @var ModelContest $contest */
+                $contest = $this->serviceContest->findByPrimary($id);
                 $years = $this->getYears($contest);
                 $this->contests[$id] = (object)[
                     'contest' => $contest,

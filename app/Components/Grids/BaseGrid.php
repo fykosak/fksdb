@@ -268,13 +268,18 @@ abstract class BaseGrid extends Grid {
         /** @var Button $button */
         $button = $this->addButton($id, $label)
             ->setText($label)
-            ->setLink(function ($row) use ($modelClassName, $destination, $paramMapCallback) {
-                $model = $modelClassName::createFromActiveRow($row);
+            ->setLink(function ($model) use ($modelClassName, $destination, $paramMapCallback) {
+                if (!$model instanceof $modelClassName) {
+                    $model = $modelClassName::createFromActiveRow($model);
+                }
                 return $this->getPresenter()->link($destination, $paramMapCallback($model));
             });
         if ($checkACL) {
-            $button->setShow(function ($row) use ($modelClassName, $destination, $paramMapCallback) {
-                return $this->getPresenter()->authorized($destination, $paramMapCallback($modelClassName::createFromActiveRow($row)));
+            $button->setShow(function ($model) use ($modelClassName, $destination, $paramMapCallback) {
+                if (!$model instanceof $modelClassName) {
+                    $model = $modelClassName::createFromActiveRow($model);
+                }
+                return $this->getPresenter()->authorized($destination, $paramMapCallback($model));
             });
         }
         return $button;
@@ -293,13 +298,17 @@ abstract class BaseGrid extends Grid {
         /** @var Button $button */
         $button = $this->addButton(str_replace('.', '_', $linkId), $factory->getText())
             ->setText($factory->getText())
-            ->setLink(function ($row) use ($modelClassName, $factory) {
-                $model = $modelClassName::createFromActiveRow($row);
+            ->setLink(function ($model) use ($modelClassName, $factory) {
+                if (!$model instanceof $modelClassName) {
+                    $model = $modelClassName::createFromActiveRow($model);
+                }
                 return $this->getPresenter()->link($factory->getDestination($model), $factory->prepareParams($model));
             });
         if ($checkACL) {
-            $button->setShow(function ($row) use ($modelClassName, $factory) {
-                $model = $modelClassName::createFromActiveRow($row);
+            $button->setShow(function ($model) use ($modelClassName, $factory) {
+                if (!$model instanceof $modelClassName) {
+                    $model = $modelClassName::createFromActiveRow($model);
+                }
                 return $this->getPresenter()->authorized($factory->getDestination($model), $factory->prepareParams($model));
             });
         }

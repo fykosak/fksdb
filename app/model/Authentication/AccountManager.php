@@ -137,7 +137,6 @@ class AccountManager {
             'type' => ModelAuthToken::TYPE_RECOVERY,
         ])
             ->where('until > ?', new DateTime())->fetch();
-
         if ($token) {
             throw new RecoveryExistsException;
         }

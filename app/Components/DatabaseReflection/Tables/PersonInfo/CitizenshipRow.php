@@ -57,8 +57,8 @@ class CitizenshipRow extends AbstractRow {
     private function getCountries() {
         $countries = $this->serviceRegion->getCountries();
         $results = [];
-        foreach ($countries as $row) {
-            $country = ModelRegion::createFromActiveRow($row);
+        /** @var ModelRegion $country */
+        foreach ($countries as $country) {
             $results[$country->country_iso] = $country->name;
         }
         return $results;

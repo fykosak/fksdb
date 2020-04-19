@@ -1,6 +1,5 @@
 <?php
 
-
 namespace FKSDB\ORM\Services\Schedule;
 
 use FKSDB\ORM\AbstractServiceSingle;

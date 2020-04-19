@@ -43,9 +43,8 @@ class TotalPersonsChartControl extends ReactComponent implements IChart {
     function getData(): string {
         $query = $this->servicePerson->getTable()->order('created');
         $data = [];
-        foreach ($query as $row) {
-
-            $person = ModelPerson::createFromActiveRow($row);
+        /** @var ModelPerson $person */
+        foreach ($query as $person) {
             $data[] = [
                 'created' => $person->created->format('c'),
                 'gender' => $person->gender,

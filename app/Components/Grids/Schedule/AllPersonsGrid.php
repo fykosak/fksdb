@@ -54,7 +54,6 @@ class AllPersonsGrid extends BaseGrid {
         parent::configure($presenter);
         $query = $this->servicePersonSchedule->getTable()
             ->where('schedule_item.schedule_group.event_id', $this->event->event_id)
-            // ->where('person_schedule_id', 508)
             ->order('person_schedule_id');//->limit(10, 140);
         $dataSource = new NDataSource($query);
         $this->setDataSource($dataSource);
@@ -66,22 +65,22 @@ class AllPersonsGrid extends BaseGrid {
 
         $this->addColumns(['referenced.person_name']);
 
-        $this->addColumn('schedule_item', _('Schedule item'))->setRenderer(function ($row) {
-            $model = ModelPersonSchedule::createFromActiveRow($row);
+        $this->addColumn('schedule_item', _('Schedule item'))->setRenderer(function (ModelPersonSchedule $model) {
             return $model->getScheduleItem()->getLabel();
         })->setSortable(false);
-        $this->addColumn('schedule_group', _('Schedule group'))->setRenderer(function ($row) {
-            $model = ModelPersonSchedule::createFromActiveRow($row);
+        $this->addColumn('schedule_group', _('Schedule group'))->setRenderer(function (ModelPersonSchedule $model) {
             return $model->getScheduleItem()->getScheduleGroup()->getLabel();
         })->setSortable(false);
 
-        $this->addColumn('price', _('Price'))->setRenderer(function ($row) {
-            $model = ModelPersonSchedule::createFromActiveRow($row);
+        $this->addColumn('price', _('Price'))->setRenderer(function (ModelPersonSchedule $model) {
             return $model->getScheduleItem()->getPrice(Price::CURRENCY_EUR)->__toString() .
                 '/' . $model->getScheduleItem()->getPrice(Price::CURRENCY_CZK)->__toString();
         })->setSortable(false);
 
-        $this->addColumnRole();
+        $this->addColumn('role', _('Role'))
+            ->setRenderer(function (ModelPersonSchedule $model) {
+                return EventRole::calculateRoles($model->getPerson(), $this->event, $this->yearCalculator);
+            })->setSortable(false);
 
         $this->addColumnPayment();
     }
@@ -93,17 +92,6 @@ class AllPersonsGrid extends BaseGrid {
      */
     protected function addColumnPayment() {
         $this->addColumns(['referenced.payment_id']);
-    }
-
-    /**
-     * @throws DuplicateColumnException
-     */
-    protected function addColumnRole() {
-        $this->addColumn('role', _('Role'))
-            ->setRenderer(function ($row) {
-                $model = ModelPersonSchedule::createFromActiveRow($row);
-                return EventRole::calculateRoles($model->getPerson(), $this->event, $this->yearCalculator);
-            })->setSortable(false);
     }
 
     /**
