@@ -12,7 +12,6 @@ use FKSDB\React\ReactResponse;
 use FyziklaniModule\BasePresenter;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\ArgumentOutOfRangeException;
 use Nette\DI\Container;
