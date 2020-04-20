@@ -1,6 +1,6 @@
 <?php
 
-namespace Tasks;
+namespace FKSDB\Tasks;
 
 use FKSDB\ORM\Services\ServiceOrg;
 use FKSDB\ORM\Services\ServiceTaskContribution;
@@ -13,7 +13,7 @@ use SimpleXMLElement;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class ContributionsFromXML2 extends Stage {
+class ContributionsFromXML extends Stage {
 
     /**
      * @var SeriesData
@@ -29,7 +29,7 @@ class ContributionsFromXML2 extends Stage {
     ];
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceTaskContribution
+     * @var ServiceTaskContribution
      */
     private $taskContributionService;
 

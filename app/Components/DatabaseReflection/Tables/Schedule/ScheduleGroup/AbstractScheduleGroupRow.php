@@ -4,7 +4,7 @@ namespace FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleGroup;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use Nette\Forms\Controls\BaseControl;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 
 /**
  * Class AbstractScheduleGroupRow
@@ -24,6 +24,6 @@ abstract class AbstractScheduleGroupRow extends AbstractRow {
      * @throws NotImplementedException
      */
     public function createField(...$args): BaseControl {
-        throw new NotImplementedException();
+        throw new NotImplementedException;
     }
 }

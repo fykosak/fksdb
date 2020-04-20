@@ -130,16 +130,15 @@ class AccountManager {
         $person = $login->getPerson();
         $recoveryAddress = $person ? $person->getInfo()->email : null;
         if (!$recoveryAddress) {
-            throw new RecoveryNotImplementedException();
+            throw new RecoveryNotImplementedException;
         }
         $token = $this->serviceAuthToken->getTable()->where([
             'login_id' => $login->login_id,
             'type' => ModelAuthToken::TYPE_RECOVERY,
         ])
             ->where('until > ?', new DateTime())->fetch();
-
         if ($token) {
-            throw new RecoveryExistsException();
+            throw new RecoveryExistsException;
         }
 
         $until = DateTime::from($this->getRecoveryExpiration());

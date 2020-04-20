@@ -55,8 +55,7 @@ class PaymentMachine extends Machine {
      * @param int $eventId
      */
     public function setEventId(int $eventId) {
-        $row = $this->serviceEvent->findByPrimary($eventId);
-        $this->event = ModelEvent::createFromActiveRow($row);
+        $this->event =  $this->serviceEvent->findByPrimary($eventId);
     }
 
     /**

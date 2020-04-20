@@ -7,7 +7,8 @@ use FKSDB\Components\Controls\Stalking\StalkingService;
 use FKSDB\ORM\Models\ModelPerson;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
+use Nette\InvalidStateException;
 use Nette\Templating\FileTemplate;
 
 /**
@@ -50,7 +51,7 @@ class StalkingComponent extends StalkingControl {
             case 'multi':
                 return $this->renderMulti($definition, $person);
             default:
-                throw new BadRequestException();
+                throw new InvalidStateException;
         }
     }
 
@@ -73,7 +74,7 @@ class StalkingComponent extends StalkingControl {
                 $model = $person->getLogin();
                 break;
             default:
-                throw new NotImplementedException();
+                throw new NotImplementedException;
         }
 
         $this->template->model = $model;

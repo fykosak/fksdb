@@ -51,5 +51,4 @@ class Request {
         $this->parent = $parent;
         $this->pathKey = $pathKey;
     }
-
 }

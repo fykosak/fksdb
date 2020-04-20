@@ -24,4 +24,3 @@ class ServicePostContact extends AbstractServiceSingle {
         return DbNames::TAB_POST_CONTACT;
     }
 }
-

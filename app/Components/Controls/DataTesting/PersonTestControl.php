@@ -132,13 +132,10 @@ class PersonTestControl extends Control {
      * @return array
      */
     private function calculateProblems(): array {
-        $query = $this->servicePerson->getTable();
-
-        $query->where('person_id BETWEEN ? AND ?', $this->startId, $this->endId);
+        $query = $this->servicePerson->getTable()->where('person_id BETWEEN ? AND ?', $this->startId, $this->endId);
         $logs = [];
-        foreach ($query as $row) {
-
-            $model = ModelPerson::createFromActiveRow($row);
+        /** @var ModelPerson $model */
+        foreach ($query as $model) {
 
             $logger = new TestsLogger();
             foreach ($this->tests as $test) {

@@ -1,8 +1,9 @@
 <?php
 
-namespace FKSDB\Expressions;
+namespace FKSDB\Exceptions;
 
 use Nette\Application\BadRequestException;
+use Nette\Http\Response;
 
 /**
  * Class BadTypeException
@@ -16,6 +17,6 @@ class BadTypeException extends BadRequestException {
      * @param \Exception|NULL $previous
      */
     public function __construct(string $expected, $got, \Exception $previous = NULL) {
-        parent::__construct(sprintf(_('Expected presenter of %s type, got %s.'), $expected, get_class($got)), 500, $previous);
+        parent::__construct(\sprintf(_('Expected type %s, got %s.'), $expected, \get_class($got)), Response::S500_INTERNAL_SERVER_ERROR, $previous);
     }
 }

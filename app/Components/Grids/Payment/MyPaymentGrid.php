@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Grids\Payment;
 
 use BasePresenter;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelPayment;
 use NiftyGrid\DataSource\NDataSource;
@@ -37,8 +37,8 @@ class MyPaymentGrid extends PaymentGrid {
             DbNames::TAB_PAYMENT . '.state',
         ]);
 
-        $this->addColumn('event', _('Event'))->setRenderer(function ($row) {
-            return ModelPayment::createFromActiveRow($row)->getEvent()->name;
+        $this->addColumn('event', _('Event'))->setRenderer(function (ModelPayment $payment) {
+            return $payment->getEvent()->name;
         });
         $this->addLink('payment.detail', true);
     }

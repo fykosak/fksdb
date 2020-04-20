@@ -5,7 +5,7 @@ namespace FKSDB\ORM\Services\StoredQuery;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryTag;
-use Nette;
+use FKSDB\ORM\Tables\TypedTableSelection;
 
 /**
  * @author Lukáš Timko <lukast@fykos.cz>
@@ -28,13 +28,12 @@ class ServiceStoredQueryTag extends AbstractServiceSingle {
 
     /**
      * @param int|null $tagTypeId
-     * @return Nette\Database\Table\Selection|null
+     * @return TypedTableSelection|null
      */
     public function findByTagTypeId($tagTypeId) {
         if (!$tagTypeId) {
             return null;
         }
-        $result = $this->getTable()->where('tag_type_id', $tagTypeId);
-        return $result ?: null;
+        return $this->getTable()->where('tag_type_id', $tagTypeId);
     }
 }

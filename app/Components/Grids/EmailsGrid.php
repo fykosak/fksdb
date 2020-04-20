@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelEmailMessage;
 use FKSDB\ORM\Services\ServiceEmailMessage;
 use Nette\DI\Container;
