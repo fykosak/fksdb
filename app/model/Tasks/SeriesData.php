@@ -1,13 +1,12 @@
 <?php
 
-namespace Tasks;
+namespace FKSDB\Tasks;
 
-use ModelContest;
-use SimpleXMLElement;
+use FKSDB\ORM\Models\ModelContest;
 
 /**
  * "POD" to hold series pipeline processing data.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class SeriesData {
@@ -28,43 +27,68 @@ class SeriesData {
     private $series;
 
     /**
-     * @var SimpleXMLElement
+     * @var mixed
      */
-    private $XML;
+    private $data;
 
     /**
-     *
-     * @var array[tasknr] of ModelTask
+     * @var array[tasknr] of FKSDB\ORM\Models\ModelTask
      */
-    private $tasks = array();
+    private $tasks = [];
 
-    public function __construct(ModelContest $contest, $year, $series, SimpleXMLElement $XML) {
+    /**
+     * SeriesData constructor.
+     * @param ModelContest $contest
+     * @param $year
+     * @param $series
+     * @param $data
+     */
+    function __construct(ModelContest $contest, $year, $series, $data) {
         $this->contest = $contest;
         $this->year = $year;
         $this->series = $series;
-        $this->XML = $XML;
+        $this->data = $data;
     }
 
+    /**
+     * @return ModelContest
+     */
     public function getContest() {
         return $this->contest;
     }
 
+    /**
+     * @return int
+     */
     public function getYear() {
         return $this->year;
     }
 
+    /**
+     * @return int
+     */
     public function getSeries() {
         return $this->series;
     }
 
-    public function getXML() {
-        return $this->XML;
+    /**
+     * @return mixed
+     */
+    public function getData() {
+        return $this->data;
     }
 
+    /**
+     * @return array
+     */
     public function getTasks() {
         return $this->tasks;
     }
 
+    /**
+     * @param $tasknr
+     * @param $task
+     */
     public function addTask($tasknr, $task) {
         $this->tasks[$tasknr] = $task;
     }

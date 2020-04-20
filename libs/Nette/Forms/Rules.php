@@ -19,8 +19,9 @@ use Nette;
  *
  * @author     David Grudl
  */
-final class Rules extends Nette\Object implements \IteratorAggregate
+final class Rules implements \IteratorAggregate
 {
+    use Nette\SmartObject;
 	/** @internal */
 	const VALIDATE_PREFIX = 'validate';
 

@@ -25,8 +25,9 @@ use Nette;
  * @method Parameter setOptional(bool $on)
  * @method Parameter setDefaultValue(mixed $value)
  */
-class Parameter extends Nette\Object
+class Parameter
 {
+    use Nette\SmartObject;
 	/** @var string */
 	public $name;
 

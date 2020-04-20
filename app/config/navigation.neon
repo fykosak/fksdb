@@ -9,36 +9,91 @@ navigation:
         vyfuk:
             title: Web Výfuku
             link: http://vyfuk.mff.cuni.cz/
+            icon: 'fa fa-external-link'
         fykos:
             title: Web FYKOSu
             link: http://%domain.cz%/
+            icon: 'fa fa-external-link'
+        fyziklani:
+            title: Web Fyziklani
+            link: http://fyziklani.cz/
+            icon: 'fa fa-external-link'
         public.submit.default:
             visible: true
 
     structure:
         org.dashboard.default:
+            - dispatch.default
             - org.inbox.default
-            - org.inbox.handout
-            - org.points.default
+            - org.points.entry
             - org.tasks.import
             - org.contestant.list
-            - org.school.list
+            - common.school.list
+            - org.teacher.list
             - org.export.list
             - org.org.list
             - org.event.list
-            - org.deduplicate.person
+            - common.deduplicate.person
+            - common.person.search
+            - common.dashboard.default
+            - org.dashboard.default
+        common.dashboard.default:
+            - common.dashboard.default
+            - common.validation.default
+            - common.person.search
+            - common.spam.list
+            - common.chart.list
+            - common.school.list
+        common.validation.default:
+            - common.validation.preview
+            - common.validation.list
         public.dashboard.default:
+            - dispatch.default
             - public.submit.default
-            - public.application.list           
+            - public.application.list
             - fykos
             - vyfuk
+            - fyziklani
         fyziklani.dashboard.default:
-            - fyziklani.submit.entry
-            - fyziklani.submit.table
-            - fyziklani.close.table
-            - fyziklani.results.default
-            - fyziklani.task.table
+            - fyziklani.submit.create
+            - fyziklani.submit.list
+            - fyziklani.close.list
+            - fyziklani.results.list
+            - fyziklani.diplomas.default
+            - fyziklani.task.list
             - fyziklani.task.import
-            - fyziklani.rooms.import
-            
-        
+            - fyziklani.gameSetup.default
+
+        event.seating.default:
+            - event.seating.edit
+            - event.seating.download
+            - event.seating.preview
+            - event.seating.list
+        fyziklani.results.default:
+            - fyziklani.dashboard.default
+            - fyziklani.diplomas.results
+            - fyziklani.results.presentation
+            - fyziklani.results.table
+            - fyziklani.results.teamStatistics
+            - fyziklani.results.taskStatistics
+            - fyziklani.results.correlationStatistics
+        event.dashboard.default:
+            - event.teamApplication.list
+            - event.application.list
+            - event.eventOrg.list
+            - event.payment.create
+            - event.payment.list
+            - fyziklani.dashboard.default
+            - event.scheduleGroup.list
+            - event.seating.default
+            - event.model.default
+            - event.chart.list
+            - event.dispatch.default
+            - event.dashboard.default
+        org.inbox.default:
+            - org.inbox.list
+            - org.inbox.inbox
+            - org.inbox.handout
+            - org.points.preview
+            - org.points.entry
+            - org.inbox.corrected

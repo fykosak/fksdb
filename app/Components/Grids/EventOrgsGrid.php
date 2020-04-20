@@ -2,64 +2,86 @@
 
 namespace FKSDB\Components\Grids;
 
-use Nette\Database\Table\Selection;
-use ServiceEventOrg;
-use SQL\SearchableDataSource;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Models\ModelEventOrg;
+use FKSDB\ORM\Services\ServiceEventOrg;
+use Nette\Application\BadRequestException;
+use Nette\Application\UI\InvalidLinkException;
+use Nette\DI\Container;
+use NiftyGrid\DataSource\NDataSource;
+use NiftyGrid\DuplicateButtonException;
+use NiftyGrid\DuplicateColumnException;
+use NiftyGrid\DuplicateGlobalButtonException;
 
-
+/**
+ * Class EventOrgsGrid
+ * @package FKSDB\Components\Grids
+ */
 class EventOrgsGrid extends BaseGrid {
 
     /**
      * @var ServiceEventOrg
      */
     private $serviceEventOrg;
+    /**
+     * @var ModelEvent
+     */
+    private $event;
 
-    private $event_id;
-
-    function __construct($event_id, ServiceEventOrg $serviceEventOrg) {
-        parent::__construct();
-        $this->event_id = $event_id;
-        $this->serviceEventOrg = $serviceEventOrg;
+    /**
+     * EventOrgsGrid constructor.
+     * @param ModelEvent $event
+     * @param Container $container
+     */
+    function __construct(ModelEvent $event, Container $container) {
+        parent::__construct($container);
+        $this->event = $event;
+        $this->serviceEventOrg = $container->getByType(ServiceEventOrg::class);
     }
 
+    /**
+     * @param \AuthenticatedPresenter $presenter
+     * @throws BadRequestException
+     * @throws InvalidLinkException
+     * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
+     * @throws DuplicateGlobalButtonException
+     */
     protected function configure($presenter) {
         parent::configure($presenter);
 
+        $orgs = $this->serviceEventOrg->findByEvent($this->event);
 
-        $orgs = $this->serviceEventOrg->findByEventID($this->event_id);
-
-        $dataSource = new SearchableDataSource($orgs);
+        $dataSource = new NDataSource($orgs);
         $this->setDataSource($dataSource);
-        $this->addColumn('display_name', _('Jméno'))->setRenderer(function ($row) {
-            $person = $row->getPerson();
-            return $person->getFullname();
-        });
-        $this->addColumn('note', _('Poznámka'));
-        $that = $this;
-        $this->addButton("edit", _("Upravit"))->setText('Upravit')//todo i18n
-            ->setLink(function ($row) use ($that) {
-                return $that->getPresenter()->link('edit', $row->e_org_id);
-            })
-            ->setShow(function($row) use ($presenter) {
-                return $presenter->authorized("edit", ['id' => $row->e_org_id]);
+        $this->addColumns(['referenced.person_name']);
+        $this->addColumn('note', _('Note'));
+        $this->addButton('edit', _('Edit'))->setText(_('Edit'))
+            ->setLink(function (ModelEventOrg $model) {
+                return $this->getPresenter()->link(':Org:EventOrg:edit', [
+                    'id' => $model->e_org_id,
+                    'contestId' => $model->getEvent()->getEventType()->contest_id,
+                    'year' => $model->getEvent()->year,
+                    'eventId' => $model->getEvent()->event_id,
+                ]);
             });
-        $this->addButton("delete", _("Smazat"))->setClass('btn btn-xs btn-danger')->setText('Smazat')//todo i18n
-            ->setLink(function ($row) use ($that) {
-                return $that->getPresenter()->link("delete", $row->e_org_id);
-            })
-            ->setShow(function($row) use ($presenter) {
-                return $presenter->authorized("delete", ['id' => $row->e_org_id]);
-            })
-            ->setConfirmationDialog(function () {
-                return _("Opravdu smazat organizátora?"); //todo i18n
-            });
-        
-        if ($presenter->authorized('create')) {
-            $this->addGlobalButton('add')
-                    ->setLabel('Přidat organizátora')
-                    ->setLink($this->getPresenter()->link('create'));
-        }
 
+        $this->addButton('delete')->setText(_('Delete'))
+            ->setLink(function (ModelEventOrg $model) {
+                return $this->getPresenter()->link('delete', $model->getPrimary());
+            });
+
+        if ($this->getPresenter()->authorized('create')) {
+            $this->addGlobalButton('create')
+                ->setLabel(_('Add organiser'))
+                ->setLink($this->getPresenter()->link(':Org:EventOrg:create'));
+        }
     }
 
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        return ModelEventOrg::class;
+    }
 }

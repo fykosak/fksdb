@@ -2,6 +2,7 @@
 
 $container = require '../bootstrap.php';
 
+use FKSDB\ORM\Services\ServicePersonHistory;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -17,13 +18,13 @@ class ModelPersonHistoryTest extends TestCase {
     }
 
     public function testSimple() {
-        $fixture = $this->service->createNew(array(
+        $fixture = $this->service->createNew([
             'person_id' => 1,
             'ac_year' => 2000,
             'school_id' => 123,
             'class' => '3.B',
             'study_year' => 3,
-        ));
+        ]);
 
         $extrapolated = $fixture->extrapolate(2001);
         Assert::same(2001, $extrapolated->ac_year);
@@ -33,13 +34,13 @@ class ModelPersonHistoryTest extends TestCase {
     }
 
     public function testNull() {
-        $fixture = $this->service->createNew(array(
+        $fixture = $this->service->createNew([
             'person_id' => 1,
             'ac_year' => 2000,
             'school_id' => 123,
             'class' => null,
             'study_year' => 3,
-        ));
+        ]);
 
         $extrapolated = $fixture->extrapolate(2001);
         Assert::same(2001, $extrapolated->ac_year);
@@ -52,13 +53,13 @@ class ModelPersonHistoryTest extends TestCase {
      * @dataProvider getStudyYearData
      */
     public function testStudyYear($from, $step, $to) {
-        $fixture = $this->service->createNew(array(
+        $fixture = $this->service->createNew([
             'person_id' => 1,
             'ac_year' => 2000,
             'school_id' => 123,
             'class' => null,
             'study_year' => $from,
-        ));
+        ]);
 
         $extrapolated = $fixture->extrapolate(2000 + $step);
         Assert::same(2000 + $step, $extrapolated->ac_year);
@@ -68,16 +69,16 @@ class ModelPersonHistoryTest extends TestCase {
     }
 
     public function getStudyYearData() {
-        return array(
-            array(6, 1, 7),
-            array(9, 1, 1),
-            array(4, 1, null),
-            array(9, 5, null),
-            array(6, 7, 4),
-        );
+        return [
+            [6, 1, 7],
+            [9, 1, 1],
+            [4, 1, null],
+            [9, 5, null],
+            [6, 7, 4],
+        ];
     }
 
 }
 
-$testCase = new ModelPersonHistoryTest($container->getService('ServicePersonHistory'));
+$testCase = new ModelPersonHistoryTest($container->getByType(ServicePersonHistory::class));
 $testCase->run();

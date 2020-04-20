@@ -3,8 +3,18 @@
 namespace FKSDB\Components\Grids;
 
 use Authorization\ContestAuthorizator;
+use Closure;
+use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
+use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
+use Nette\Application\BadRequestException;
+use Nette\Application\UI\InvalidLinkException;
+use Nette\DI\Container;
 use NiftyGrid\DataSource\NDataSource;
-use ServiceStoredQuery;
+use NiftyGrid\DuplicateButtonException;
+use NiftyGrid\DuplicateColumnException;
+use NiftyGrid\DuplicateGlobalButtonException;
+use OrgModule\ExportPresenter;
 
 /**
  *
@@ -24,34 +34,48 @@ class StoredQueriesGrid extends BaseGrid {
      * @var ContestAuthorizator
      */
     private $contestAuthorizator;
-    
+
     private $isFilteredByTag = false;
 
-    function __construct(ServiceStoredQuery $serviceStoredQuery, ContestAuthorizator $contestAuthorizator) {
-        $this->serviceStoredQuery = $serviceStoredQuery;
-        $this->contestAuthorizator = $contestAuthorizator;
+    /**
+     * StoredQueriesGrid constructor.
+     * @param Container $container
+     */
+    function __construct(Container $container) {
+        parent::__construct($container);
+        $this->serviceStoredQuery = $container->getByType(ServiceStoredQuery::class);
+        $this->contestAuthorizator = $container->getByType(ContestAuthorizator::class);
     }
 
-    public function getFilterByTagCallback(){
-        $that=$this;
-        return function(array $tagTypeId) use($that){
-            if(empty($tagTypeId)){
+    /**
+     * @return Closure
+     */
+    public function getFilterByTagCallback(): Closure {
+        return function (array $tagTypeId) {
+            if (empty($tagTypeId)) {
                 $this->isFilteredByTag = false;
                 return;
             }
-            $queries = $that->serviceStoredQuery->findByTagType($tagTypeId)->order('name');
-            $that->setDataSource(new NDataSource($queries));
-            $that->isFilteredByTag = true;
+            $queries = $this->serviceStoredQuery->findByTagType($tagTypeId)->order('name');
+            $this->setDataSource(new NDataSource($queries));
+            $this->isFilteredByTag = true;
         };
     }
 
+    /**
+     * @param ExportPresenter $presenter
+     * @throws BadRequestException
+     * @throws InvalidLinkException
+     * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
+     * @throws DuplicateGlobalButtonException
+     */
     protected function configure($presenter) {
         parent::configure($presenter);
-
         //
         // data
         //
-        if(!$this->isFilteredByTag){
+        if (!$this->isFilteredByTag) {
             $queries = $this->serviceStoredQuery->getTable()->order('name');
             $this->setDataSource(new NDataSource($queries));
         }
@@ -59,45 +83,54 @@ class StoredQueriesGrid extends BaseGrid {
         //
         // columns
         //
-        $this->addColumn('name', _('Název'));
-        $this->addColumn('description', _('Popis'))->setTruncate(self::DESCRIPTION_TRUNC);
-
+        $this->addColumn('name', _('Export name'));
+        $this->addColumn('description', _('Description'))->setTruncate(self::DESCRIPTION_TRUNC);
+        $this->addColumns([
+            DbNames::TAB_STORED_QUERY . '.qid',
+            DbNames::TAB_STORED_QUERY . '.tags',
+        ]);
         //
         // operations
         //
-        $that = $this;
         $contest = $presenter->getSelectedContest();
-        $this->addButton("edit", _("Upravit"))
-                ->setText('Upravit') //todo i18n
-                ->setLink(function($row) use ($that) {
-                            return $that->getPresenter()->link("edit", $row->query_id);
-                        })
-                ->setShow(function($row) use ($that, $contest) {
-                            return $that->contestAuthorizator->isAllowed($row, 'edit', $contest);
-                        });
-        $this->addButton("show", _("Podrobnosti"))
-                ->setText('Podrobnosti') //todo i18n
-                ->setLink(function($row) use ($that) {
-                            return $that->getPresenter()->link("show", $row->query_id);
-                        })
-                ->setShow(function($row) use ($that, $contest) {
-                            return $that->contestAuthorizator->isAllowed($row, 'show', $contest);
-                        });
+        $this->addButton('edit', _('Edit'))
+            ->setText(_('Edit'))
+            ->setLink(function ($row) {
+                return $this->getPresenter()->link('edit', $row->query_id);
+            })
+            ->setShow(function ($row) use ($contest) {
+                return $this->contestAuthorizator->isAllowed($row, 'edit', $contest);
+            });
+        $this->addButton('show', _('Podrobnosti'))
+            ->setText(_('Podrobnosti'))
+            ->setLink(function ($row) {
+                return $this->getPresenter()->link('show', $row->query_id);
+            })
+            ->setShow(function ($row) use ($contest) {
+                return $this->contestAuthorizator->isAllowed($row, 'show', $contest);
+            });
 
-        $this->addButton("execute", _("Spustit"))
-                ->setClass("btn btn-xs btn-primary")
-                ->setText('Spustit') //todo i18n
-                ->setLink(function($row) use ($that) {
-                            return $that->getPresenter()->link("execute", $row->query_id);
-                        })
-                ->setShow(function($row) use ($that, $contest) {
-                            return $that->contestAuthorizator->isAllowed($row, 'show', $contest);
-                        });
+        $this->addButton('execute', _('Execute'))
+            ->setClass('btn btn-sm btn-primary')
+            ->setText(_('Spustit'))
+            ->setLink(function ($row) {
+                return $this->getPresenter()->link('execute', $row->query_id);
+            })
+            ->setShow(function ($row) use ($contest) {
+                return $this->contestAuthorizator->isAllowed($row, 'execute', $contest);
+            });
 
-        if ($this->getPresenter()->authorized('compose')) {
-            $this->addGlobalButton('compose', 'Napsat dotaz')
-                    ->setLink($this->getPresenter()->link('compose'));
+        if ($presenter->authorized('compose')) {
+            $this->addGlobalButton('compose', _('Napsat dotaz'))
+                ->setLink($this->getPresenter()->link('compose'));
         }
+    }
+
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        return ModelStoredQuery::class;
     }
 
 }

@@ -3,8 +3,11 @@
 #
 
 services:
+    database.database.context: Nette\Database\Context
+    database.database.conventions: Nette\Database\Conventions\DiscoveredConventions
+    database.database.structure: Nette\Database\Structure
     accountManager:
-        class: Authentication\AccountManager
+        class: FKSDB\Authentication\AccountManager
         setup:
             - setInvitationExpiration(%invitation.expiration%)
             - setRecoveryExpiration(%recovery.expiration%)
@@ -17,21 +20,21 @@ services:
     - Authorization\EventAuthorizator
     - Authorization\RelatedPersonAuthorizator
     - FKSDB\Components\Events\ExpressionPrinter
-    downloader: Astrid\Downloader(%astrid.user%, %astrid.password%, %astrid.host%, %tempDir%, %contestMapping%, ...)
+    downloader: FKSDB\Astrid\Downloader(%astrid.user%, %astrid.password%, %astrid.host%, %tempDir%, %contestMapping%, ...)
     Facebook: self({appId: %facebook.appId%, secret: %facebook.secret%})
-    - FKS\Config\GlobalParameters
-    yearCalculator: YearCalculator
+    globalParameters: FKSDB\Config\GlobalParameters
+    yearCalculator: FKSDB\YearCalculator
     news: News
-    seriesCalculator: SeriesCalculator
-    - SQLResultsCache
-    - Submits\SeriesTable
+    seriesCalculator: FKSDB\SeriesCalculator
+    SQLResultsCache: FKSDB\Results\SQLResultsCache
+    seriesTable: FKSDB\Submits\SeriesTable
     - Persons\ExtendedPersonHandlerFactory
     - Persons\SelfResolver
     merger:
         class: Persons\Deduplication\Merger(%merger%, ...)
     - FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider
     - FKSDB\Components\Forms\Controls\Autocomplete\SchoolProvider
-    - FKS\Components\Controls\PresenterBuilder
+    - FKSDB\Components\Controls\PresenterBuilder
     - Github\EventFactory
     - Maintenance\Updater
     globalSession:
@@ -39,15 +42,18 @@ services:
         setup:
             - start()
     - Authentication\SSO\TokenGSIDHolder
-    submitStorage: 
-        class: Submits\FilesystemSubmitStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, %contestMapping%)
+    submitUploatedStorage:
+        class: FKSDB\Submits\FilesystemUploadedSubmitStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, %contestMapping%)
         setup:
             - addProcessing(@PDFStamper)
-    PDFStamper: Submits\PDFStamper(%stamper.fontSize%)
+    submitCorrectedStorage:
+                    class: FKSDB\Submits\FilesystemCorrectedSubmitStorage(%corrected.root%, %corrected.directoryMask%, %corrected.filenameMask%, %contestMapping%)
+    - FKSDB\Components\Forms\Controls\Schedule\Handler
+    PDFStamper: FKSDB\Submits\PDFStamper(%stamper.fontSize%)
     readOnlyConnection:
         class: Nette\Database\Connection(%ro-database.dsn%, %ro-database.user%, %ro-database.password%)
         autowired: false
-    translator: FKS\Localization\GettextTranslator(%localization.locales%, %localization.localeDir%)
+    translator: FKSDB\Localization\GettextTranslator(%localization.locales%, %localization.localeDir%)
 
     # web services
     soapServer:
@@ -55,13 +61,14 @@ services:
         setup:
             - setObject(@webServiceModel)
 
-    webServiceModel: WebServiceModel(%inverseContestMapping%, ...)
+    webServiceModel: FKSDB\WebService\WebServiceModel(%inverseContestMapping%, ...)
 
     nette.userStorage: Authentication\LoginUserStorage
     nette.mailer:
         class: LoggingMailer(Nette\Mail\SendmailMailer())
         setup:
             - setLogPath(%logDir%/mail)
+    - FKSDB\DataTesting\DataTestingFactory
 
 
     #
@@ -75,7 +82,9 @@ services:
     #
     # Fyziklani
     #
-    - FKSDB\model\Fyziklani\TaskCodePreprocessor
+    - FKSDB\Components\Forms\Factories\TableReflectionFactory
+    - FKSDB\Components\Controls\PhoneNumber\PhoneNumberFactory
+    - FKSDB\Components\DatabaseReflection\MetaDataFactory
 
 includes:
     - merger.neon

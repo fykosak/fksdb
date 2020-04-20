@@ -52,13 +52,13 @@ class DatePicker extends Forms\Controls\BaseControl
 		parent::__construct($label);
                 $this->monitor('FKS\Application\IJavaScriptCollector');
 	}
-        
+
 	protected function attached($component)
         {
 		parent::attached($component);
                 if($component instanceof IJavaScriptCollector) {
                     $component->registerJSFile('js/datePicker.js');
-                }                	
+                }
         }
 
 
@@ -149,7 +149,7 @@ class DatePicker extends Forms\Controls\BaseControl
 		if ($value !== NULL) {
 			// DateTime constructor throws Exception when invalid input given
 			try {
-				$value = Nette\DateTime::from($value); // clone DateTime when given
+				$value = Nette\Utils\DateTime::from($value); // clone DateTime when given
 			} catch (Exception $e) {
 				$value = NULL;
 			}
@@ -178,6 +178,18 @@ class DatePicker extends Forms\Controls\BaseControl
 		return $this->rawValue;
 	}
 
+        /**
+         * Sets default date in UI widget,
+         * but does not set it as a form value.
+         *
+         * @param DateTime $date
+         * @return self
+         */
+        public function setDefaultDate(DateTime $date)
+        {
+            $this->setAttribute('default-date', $date->format('Y-m-d'));
+            return $this;
+        }
 
 
 	/**

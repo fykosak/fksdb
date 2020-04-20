@@ -4,17 +4,19 @@ namespace Events\Semantics;
 
 use Authorization\ContestAuthorizator;
 use Authorization\RelatedPersonAuthorizator;
-use Nette\Object;
+use FKSDB\Expressions\EvaluatedExpression;
 use Nette\Security\User;
+use Nette\SmartObject;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @obsolete Needs refactoring due to ConditionEvaluator (for only contestans events)
  * @author Michal Koutný <michal@fykos.cz>
  */
-class Role extends Object {
+class Role extends EvaluatedExpression {
 
+    use SmartObject;
     use WithEventTrait;
 
     const GUEST = 'guest';
@@ -43,6 +45,13 @@ class Role extends Object {
      */
     private $relatedAuthorizator;
 
+    /**
+     * Role constructor.
+     * @param $role
+     * @param User $user
+     * @param ContestAuthorizator $contestAuthorizator
+     * @param RelatedPersonAuthorizator $relatedAuthorizator
+     */
     function __construct($role, User $user, ContestAuthorizator $contestAuthorizator, RelatedPersonAuthorizator $relatedAuthorizator) {
         $this->role = $role;
         $this->user = $user;
@@ -50,14 +59,17 @@ class Role extends Object {
         $this->relatedAuthorizator = $relatedAuthorizator;
     }
 
-    public function __invoke($obj) {
+    /**
+     * @param array $args
+     * @return bool
+     */
+    public function __invoke(...$args): bool {
         switch ($this->role) {
             case self::ADMIN:
-                $event = $this->getEvent($obj);
-                return $this->contestAuthorizator->isAllowed($event, 'application', $event->getEventType()->contest);
+                $event = $this->getEvent($args[0]);
+                return $this->contestAuthorizator->isAllowed($event, 'application', $event->getContest());
             case self::RELATED:
-                $event = $this->getEvent($obj);
-                return $this->relatedAuthorizator->isRelatedPerson($this->getHolder($obj));
+                return $this->relatedAuthorizator->isRelatedPerson($this->getHolder($args[0]));
             case self::REGISTERED:
                 return $this->user->isLoggedIn();
             case self::GUEST:
@@ -67,6 +79,9 @@ class Role extends Object {
         }
     }
 
+    /**
+     * @return string
+     */
     public function __toString() {
         return "role({$this->role})";
     }

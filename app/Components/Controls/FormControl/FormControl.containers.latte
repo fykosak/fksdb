@@ -1,0 +1,62 @@
+{*
+    Actual rendering
+*}
+{form form}
+
+    {* render root container *}
+    {snippet groupContainer}
+        {includeblock FormControl.latte}
+
+        {include #errors form => $mainContainer}
+
+        {var $container = $mainContainer,
+    $level = isset($level) ? $level : 0
+}
+        {block group}
+            {var
+    $withOptions = $container instanceof FKSDB\Components\Forms\Containers\Models\ContainerWithOptions,
+    $id = $level > 1 ? $container->getOption('id') : $container->getName(),
+    }
+            {var $attrs =  $withOptions? array_filter($container->getOptions(),function($v){
+                    return preg_match('/^data-.*/',$v);
+                    },ARRAY_FILTER_USE_KEY):[]}
+            <div n:if="!$withOptions || $container->getOption('visible', true)"
+                    n:snippet="group-$id"
+                    n:attr="(expand) $attrs"
+            >
+
+                <fieldset
+                        class="{(($level>1 || ($level==1 && count($container->getComponents())>1 && !($container->name=='aggr')))?('col-12 bd-callout '.($level==1?'bd-callout-info':($level==2?'bd-callout-warning':'bd-callout-danger'))):'')}"
+                        data-level={$level}>
+                    {if $level > 0 && $withOptions && $container->getOption('label')}
+                        <h4>{$container->getOption('label')}</h4>
+                    {/if}
+                    <p n:if="$level > 0 && $withOptions && $container->getOption('description')">{$container->getOption('description')}</p>
+                    {var $controls = []}
+                    {foreach $container->getComponents() as $component}
+                        {if $component instanceof Nette\Forms\Container}
+                            {if $controls}
+                                {include #controls controls => $controls}
+                                {var $controls = []}
+                            {/if}
+                            {if $level < 2 || ($withOptions && $component->getOption('showGroup'))}
+                                {include #group container => $component, level => $level + 1}
+                            {else}
+                                {include #controls controls => $component->getControls()}
+                            {/if}
+                        {else}
+                            {var $controls[] = $component}
+                        {/if}
+                    {/foreach}
+                    {if $controls}
+                        {include #controls controls => $controls}
+                        {var $controls = []}
+                    {/if}
+                </fieldset>
+            </div>
+        {/block}
+
+
+    {/snippet}
+
+{/form}

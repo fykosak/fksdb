@@ -1,15 +1,13 @@
 <?php
 
-namespace Astrid;
+namespace FKSDB\Astrid;
 
-use FKS\Config\GlobalParameters;
-use ModelContest;
-use Nette\InvalidStateException;
-use RuntimeException;
+use FKSDB\Config\GlobalParameters;
+use FKSDB\ORM\Models\ModelContest;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class Downloader {
@@ -44,7 +42,16 @@ class Downloader {
      */
     private $parameters;
 
-    public function __construct($httpUser, $httpPassword, $host, $tmpDir, $contestMap, GlobalParameters $parameters) {
+    /**
+     * Downloader constructor.
+     * @param string $httpUser
+     * @param string $httpPassword
+     * @param string $host
+     * @param string $tmpDir
+     * @param array $contestMap
+     * @param GlobalParameters $parameters
+     */
+    public function __construct(string $httpUser, string $httpPassword, string $host, string $tmpDir, array $contestMap, GlobalParameters $parameters) {
         $this->httpUser = $httpUser;
         $this->httpPassword = $httpPassword;
         $this->host = $host;
@@ -52,47 +59,32 @@ class Downloader {
         $this->contestMap = $contestMap;
         $this->parameters = $parameters;
     }
-
     /**
-     * @param \Tasks\ModelContest $contest
+     * @param ModelContest $contest
      * @param int $year
      * @param int $series
-     * @param string $language
      * @return string filename of downloaded XML file
      */
-    public function downloadSeriesTasks(ModelContest $contest, $year, $series, $language) {
-        if (!array_key_exists($language, $this->parameters['tasks']['paths'])) {
-            throw new InvalidStateException("Unspecified path mask for language '$language'.");
-        }
-
-        $mask = $this->parameters['tasks']['paths'][$language];
+    public function downloadSeriesTasks(ModelContest $contest, int $year, int $series): string {
+        $mask = $this->parameters['tasks']['paths'];
         $contestName = isset($this->contestMap[$contest->contest_id]) ? $this->contestMap[$contest->contest_id] : $contest->contest_id;
 
         $path = sprintf($mask, $contestName, $year, $series);
         return $this->download($path);
     }
 
-    public function downloadFyziklaniRooms(ModelContest $contest, $year) {
-        $mask = $this->parameters['fyziklani']['roomsPath'];
-        $contestName = isset($this->contestMap[$contest->contest_id]) ? $this->contestMap[$contest->contest_id] : $contest->contest_id;
-
-        $path = sprintf($mask, $contestName, $year);
-        return $this->download($path);
-    }
-
-    private function download($path) {
+    /**
+     * @param $path
+     * @return bool|string
+     */
+    private function download(string $path) {
         $src = "https://{$this->httpUser}:{$this->httpPassword}@{$this->host}{$path}";
         $dst = tempnam($this->tmpDir, 'task');
 
         if (!@copy($src, $dst)) {
             throw new DownloadException("Cannot copy file '$src'.");
         }
-
         return $dst;
     }
-
 }
 
-class DownloadException extends RuntimeException {
-    
-}

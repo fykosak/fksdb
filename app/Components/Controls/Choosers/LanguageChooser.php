@@ -2,160 +2,111 @@
 
 namespace FKSDB\Components\Controls\Choosers;
 
-use Nette\Application\BadRequestException;
+use FKSDB\LangPresenterTrait;
+use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
-use Nette\Diagnostics\Debugger;
 use Nette\Http\Session;
-use Nette\Templating\Template;
-use OrgModule\BasePresenter;
+use Nette\Templating\FileTemplate;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Jakub Šafin <xellos@fykos.cz>
+ * @property FileTemplate $template
  */
 class LanguageChooser extends Control {
+    /** @var array */
+    private $supportedLanguages;
 
-    const DEFAULT_FIRST = 'cs';
-
-    /**
-     * @var mixed
-     */
-    private $languages;
-
-    /**
-     * @var Session
-     */
+    /** @var Session */
     private $session;
 
-    /**
-     * @var mixed
-     */
+    /** @var string */
     private $language;
-    /**
-     * @var array
-     */
-    private $languageNames = ['cs' => 'Čeština', 'en' => 'English', 'sk' => 'Slovenčina'];
 
+    /** @var bool */
     private $initialized = false;
 
-    /**
-     * @var mixed DEFAULT_*
-     */
-    private $defaultLanguage = self::DEFAULT_FIRST;
+    /** @var string */
+    const DEFAULT_LANGUAGE = 'cs';
+    /** @var bool */
+    private $modifiable = true;
 
     /**
-     *
      * @param Session $session
+     * @param bool $modifiable
      */
-    function __construct(Session $session) {
+    function __construct(Session $session, bool $modifiable) {
         parent::__construct();
         $this->session = $session;
+        $this->modifiable = $modifiable;
     }
 
     /**
-     * @param mixed $languages role enum|ALL_LANGUAGES|array of languages
+     * @param string $language
+     * @return bool
      */
-    public function setLanguages($languages) {
-        $this->languages = $languages;
-    }
-
-    public function getLanguages() {
-        return $this->languages;
-    }
-
-    public function getDefaultLanguage() {
-        return $this->defaultLanguage;
-    }
-
-    public function setDefaultLanguage($defaultLanguage) {
-        $this->defaultLanguage = $defaultLanguage;
-    }
-
-    public function isLanguage($language) {
-        return in_array($language, $this->languages);
+    private function isLanguage(string $language): bool {
+        return in_array($language, $this->supportedLanguages);
     }
 
     /**
-     * @param $params object
-     * @return boolean
      * Redirect to correct address accorging to the resolved values.
+     * @param string $lang
+     * @throws \Exception
      */
-    public function syncRedirect(&$params) {
-        $this->init($params);
-
-        if ($this->language !== $params->lang) {
-            $params->lang = $this->language;
-
-            return true;
-        }
-        return false;
-    }
-
-    public function getLanguage() {
-        return $this->language;
-    }
-
-    private function init($params) {
+    public function setLang(string $lang) {
         if ($this->initialized) {
             return;
         }
         $this->initialized = true;
-
-        $this->setLanguages($this->getSupportedLanguages());
-
-        if (count($this->getLanguages()) == 0) {
+        if (count($this->getSupportedLanguages()) == 0) {
             return;
         }
-
-        /* LANGUAGE */
-        $this->language = $this->getDefaultLanguage();
-
-        if ($params->lang !== null) {
-
-            if (!$this->isLanguage($params->lang)) {
-                $this->language = $this->getDefaultLanguage();
-            } else {
-                $this->language = $params->lang;
-            }
-
+        $this->language = self::DEFAULT_LANGUAGE;
+        if ($this->isLanguage($lang)) {
+            $this->language = $lang;
         }
     }
 
     /**
      * @return array of existing languages
+     * @throws \Exception
      */
-    private function getSupportedLanguages() {
-        /**
-         * @var $presenter BasePresenter|\BrawlModule\BasePresenter|\PublicModule\BasePresenter
-         */
-        $presenter = $this->getPresenter();
-        return $presenter->getTranslator()->getSupportedLanguages();
-
+    private function getSupportedLanguages(): array {
+        if (!count($this->supportedLanguages)) {
+            $presenter = $this->getPresenter();
+            if (!($presenter instanceof \BasePresenter)) {
+                throw new \Exception('Wrong presenter');
+            }
+            $this->supportedLanguages = $presenter->getTranslator()->getSupportedLanguages();
+        }
+        return $this->supportedLanguages;
     }
 
-    protected function createTemplate($class = NULL) {
-        /**
-         * @var $template Template
-         */
-        $template = parent::createTemplate($class);
-        $template->setTranslator($this->getPresenter()->getTranslator());
-        return $template;
-    }
+    /**
+     * @param string|null $class
+     * @throws \Exception
+     */
+    public function render(string $class = null) {
+        $this->template->modifiable = $this->modifiable;
+        $this->template->languages = $this->getSupportedLanguages();
+        $this->template->languageNames = LangPresenterTrait::$languageNames;
+        $this->template->currentLanguage = $this->language ?: null;
+        $this->template->class = ($class !== null) ? $class : "nav navbar-nav navbar-right";
+        $this->template->setTranslator($this->getPresenter()->getTranslator());
 
-    public function render() {
-
-        $this->template->languages = $this->getLanguages();
-        $this->template->languageNames = $this->languageNames;
-        $this->template->currentLanguage = $this->getLanguage() ? $this->getLanguage() : null;
-
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR.'LanguageChooser.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'LanguageChooser.latte');
         $this->template->render();
     }
 
-    public function handleChangeLang($language) {
+    /**
+     * @param $language
+     * @throws AbortException
+     */
+    public function handleChangeLang(string $language) {
         /**
-         * @var $presenter \BasePresenter
+         * @var \BasePresenter $presenter
          */
         $presenter = $this->getPresenter();
         $translator = $presenter->getTranslator();

@@ -1,20 +1,19 @@
 <?php
 
-namespace Tasks;
+namespace FKSDB\Tasks;
 
-use FKS\Logging\MemoryLogger;
-use Nette\InvalidStateException;
+use FKSDB\Logging\MemoryLogger;
+use FKSDB\ORM\Services\ServiceOrg;
+use FKSDB\ORM\Services\ServiceStudyYear;
+use FKSDB\ORM\Services\ServiceTask;
+use FKSDB\ORM\Services\ServiceTaskContribution;
+use FKSDB\ORM\Services\ServiceTaskStudyYear;
 use Pipeline\Pipeline;
-use ServicePerson;
-use ServiceStudyYear;
-use ServiceTask;
-use ServiceTaskContribution;
-use ServiceTaskStudyYear;
 
 /**
  * This is not real factory, it's only used as an internode for defining
  * pipelines inside Neon and inject them into presenters at once.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class PipelineFactory {
@@ -58,11 +57,22 @@ class PipelineFactory {
     private $serviceStudyYear;
 
     /**
-     * @var ServicePerson
+     * @var ServiceOrg
      */
-    private $servicePerson;
+    private $serviceOrg;
 
-    function __construct($columnMappings, $contributionMappings, $defaultStudyYears, ServiceTask $serviceTask, ServiceTaskContribution $serviceTaskContribution, ServiceTaskStudyYear $serviceTaskStudyYear, ServiceStudyYear $serviceStudyYear, ServicePerson $servicePerson) {
+    /**
+     * PipelineFactory constructor.
+     * @param $columnMappings
+     * @param $contributionMappings
+     * @param $defaultStudyYears
+     * @param ServiceTask $serviceTask
+     * @param ServiceTaskContribution $serviceTaskContribution
+     * @param ServiceTaskStudyYear $serviceTaskStudyYear
+     * @param ServiceStudyYear $serviceStudyYear
+     * @param ServiceOrg $serviceOrg
+     */
+    function __construct($columnMappings, $contributionMappings, $defaultStudyYears, ServiceTask $serviceTask, ServiceTaskContribution $serviceTaskContribution, ServiceTaskStudyYear $serviceTaskStudyYear, ServiceStudyYear $serviceStudyYear, ServiceOrg $serviceOrg) {
         $this->columnMappings = $columnMappings;
         $this->contributionMappings = $contributionMappings;
         $this->defaultStudyYears = $defaultStudyYears;
@@ -70,49 +80,23 @@ class PipelineFactory {
         $this->serviceTaskContribution = $serviceTaskContribution;
         $this->serviceTaskStudyYear = $serviceTaskStudyYear;
         $this->serviceStudyYear = $serviceStudyYear;
-        $this->servicePerson = $servicePerson;
+        $this->serviceOrg = $serviceOrg;
     }
 
     /**
-     * 
-     * @param string $language ISO 639-1
-     * @return \Pipeline\Pipeline
-     * @throws InvalidStateException
+     *
+     * @return Pipeline
      */
-    public function create($language) {
-        if (!array_key_exists($language, $this->columnMappings)) {
-            throw new InvalidStateException("Missing mapping specification for language '$language'.");
-        }
-
+    public function create(): Pipeline {
         $pipeline = new Pipeline();
         $pipeline->setLogger(new MemoryLogger());
 
         // common stages
-        $metadataStage = new TasksFromXML($this->columnMappings[$language], $this->serviceTask);
-        $pipeline->addStage($metadataStage);
-
-        // NOTE: There's no need to store content of the tasks in the database.
-        // language customizations
-        switch ($language) {
-            case 'cs':
-                $this->appendCzech($pipeline);
-                break;
-            default:
-                break;
-        }
+        $pipeline->addStage(new TasksFromXML($this->serviceTask));
+        $pipeline->addStage(new DeadlineFromXML($this->serviceTask));
+        $pipeline->addStage(new ContributionsFromXML($this->serviceTaskContribution, $this->serviceOrg));
+        $pipeline->addStage(new StudyYearsFromXML($this->defaultStudyYears, $this->serviceTaskStudyYear, $this->serviceStudyYear));
 
         return $pipeline;
     }
-
-    protected function appendCzech(Pipeline $pipeline) {
-        $deadlineStage = new DeadlineFromXML($this->serviceTask);
-        $pipeline->addStage($deadlineStage);
-
-        $contributionStage = new ContributionsFromXML($this->contributionMappings, $this->serviceTaskContribution, $this->servicePerson);
-        $pipeline->addStage($contributionStage);
-
-        $studyYearStage = new StudyYearsFromXML($this->defaultStudyYears, $this->serviceTaskStudyYear, $this->serviceStudyYear);
-        $pipeline->addStage($studyYearStage);
-    }
-
 }

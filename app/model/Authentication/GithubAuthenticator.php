@@ -2,15 +2,14 @@
 
 namespace Authentication;
 
-use FKS\Config\GlobalParameters;
+use FKSDB\Config\GlobalParameters;
+use FKSDB\ORM\Models\ModelLogin;
+use FKSDB\ORM\Services\ServiceLogin;
+use FKSDB\YearCalculator;
 use FullHttpRequest;
 use Github\Events\Event;
-use ModelLogin;
-use Nette\Http\Request;
 use Nette\InvalidArgumentException;
 use Nette\Security\AuthenticationException;
-use ServiceLogin;
-use YearCalculator;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -21,22 +20,30 @@ class GithubAuthenticator extends AbstractAuthenticator {
 
     const PARAM_AUTH_TOKEN = 'at';
     const SESSION_NS = 'auth';
-	const HTTP_AUTH_HEADER = 'X-Hub-Signature';
+    const HTTP_AUTH_HEADER = 'X-Hub-Signature';
 
     /**
      * @var GlobalParameters
      */
     private $globalParameters;
 
+    /**
+     * GithubAuthenticator constructor.
+     * @param GlobalParameters $globalParameters
+     * @param ServiceLogin $serviceLogin
+     * @param YearCalculator $yearCalculator
+     */
     function __construct(GlobalParameters $globalParameters, ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
         parent::__construct($serviceLogin, $yearCalculator);
         $this->globalParameters = $globalParameters;
     }
 
     /**
-     * @param Request $request
+     * @param FullHttpRequest $request
      * @return ModelLogin
      * @throws AuthenticationException
+     * @throws InactiveLoginException
+     * @throws NoLoginException
      */
     public function authenticate(FullHttpRequest $request) {
         $loginName = $this->globalParameters['github']['login'];
@@ -56,15 +63,13 @@ class GithubAuthenticator extends AbstractAuthenticator {
         if ($signature !== $expectedHash) {
             //throw new AuthenticationException(_('Nesprávný hash požadavku.'));
         }
-
+        /** @var ModelLogin $login */
         $login = $this->serviceLogin->getTable()->where('login = ?', $loginName)->fetch();
-
         if (!$login) {
             throw new NoLoginException();
         }
-
         if (!$login->active) {
-            throw new InactiveLoginException();
+            throw new InactiveLoginException;
         }
 
         $this->logAuthentication($login);

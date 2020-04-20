@@ -12,8 +12,8 @@
 namespace Nette\DI\Diagnostics;
 
 use Nette,
-	Nette\DI\Container,
-	Nette\Diagnostics\Helpers;
+	Nette\DI\Container;
+use Tracy\IBarPanel;
 
 
 /**
@@ -21,8 +21,9 @@ use Nette,
  *
  * @author     Patrik Votoček
  */
-class ContainerPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
+class ContainerPanel implements IBarPanel
 {
+    use Nette\SmartObject;
 	/** @var Nette\DI\Container */
 	private $container;
 

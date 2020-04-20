@@ -24,7 +24,7 @@ parameters:
         db: db
 
     # Pipe-separated list of presenters w/out module
-    rootPresenters: settings|github
+    rootPresenters: settings|github|my-payments
 
     # Pipe-separated list of modules
     modules: org|public
@@ -64,6 +64,7 @@ fksrouter:
             subdomain: %subdomain.db%
             tld: %domain.tld%
             flags: SECURED
+
         '//%subdomain.auth%.%domain.cz%%path%<action login|logout|fb-login|recover>':
             presenter: Authentication
             subdomain: %subdomain.auth%
@@ -79,6 +80,20 @@ fksrouter:
             flags: SECURED
             year: null
 
+        '//%subdomain.db%.%domain.host%.[!<tld>]%path%[<contestId %contests%>/]<presenter register>/<action=default>':
+            module: Public
+            subdomain: %subdomain.auth%
+            tld: %domain.tld%
+            contestId: [filterTable: %inverseContestMapping%]
+            flags: [ONE_WAY, SECURED]
+
+        '//[!<subdomain>].%domain.host%.[!<tld>]%path%':
+            subdomain: %subdomain.db%
+            presenter: Dispatch
+            tld: %domain.tld%
+            action: default
+            flags:  SECURED
+
         # Application itself (note the presenters w/out module are handled specially)
         '//[!<subdomain>].%domain.host%.[!<tld>]%path%':
             subdomain: %subdomain.db%
@@ -93,7 +108,15 @@ fksrouter:
             contestId: [filterTable: %inverseContestMapping%]
             flags: SECURED
 
-        '//[!<subdomain>].%domain.host%.[!<tld>]%path%brawl/event<eventId -?[0-9]+>/<presenter>/<action=default>[/<id>]':
+        # Application itself (note the presenters w/out module are handled specially)
+        '//[!<subdomain>].%domain.host%.[!<tld>]%path%common/<presenter>/<action=default>[/<id>]':
+            module: Common
+            presenter: Dashboard
+            subdomain: %subdomain.db%
+            tld: %domain.tld%
+            flags: SECURED
+
+        '//[!<subdomain>].%domain.host%.[!<tld>]%path%fyziklani[<eventId [0-9]+>]/<presenter>/<action=default>[/<id>]':
             subdomain: %subdomain.db%
             presenter: Dashboard
             tld: %domain.tld%
@@ -101,7 +124,22 @@ fksrouter:
             module: Brawl
             flags: SECURED
 
-        '//[!<subdomain>].%domain.host%.[!<tld>]%path%<module %modules%>/[<contestId %contests%>/[year<year -?[0-9]+>/[series<series -?[0-9]+>/]]][<presenter>/]<action=default>[/<id>]':
+        '//[!<subdomain>].%domain.host%.[!<tld>]%path%event[<eventId [0-9]+>]/<presenter>/<action=default>[/<id>]':
+            subdomain: %subdomain.db%
+            tld: %domain.tld%
+            module: Event
+            presenter: Dashboard
+            flags: SECURED
+
+        '//[!<subdomain>].%domain.host%.[!<tld>]%path%f[<eventId [0-9]+>]/s/q[/<id>]':
+            subdomain: %subdomain.db%
+            presenter: Submit
+            action: qrEntry
+            tld: %domain.tld%
+            module: Fyziklani
+            flags: SECURED
+        '//[!<subdomain>].%domain.host%.[!<tld>]%path%[<contestId %contests%>[<year [0-9]+>]/][series<series [0-9]+>/]<module %modules%>/<presenter>/<action=default>[/<id>]':
+            presenter: Dashboard
             subdomain: %subdomain.db%
             tld: %domain.tld%
             contestId: [filterTable: %inverseContestMapping%]
@@ -112,4 +150,9 @@ fksrouter:
 
 
 
-
+        '//[!<subdomain>].%domain.host%.[!<tld>]%path%[<contestId %contests%>[<year [0-9]+>]/]<module %modules%>/<presenter>/<action=default>[/<id>]':
+            presenter: Dashboard
+            subdomain: %subdomain.db%
+            tld: %domain.tld%
+            contestId: [filterTable: %inverseContestMapping%]
+            flags: SECURED

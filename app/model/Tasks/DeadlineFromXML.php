@@ -1,15 +1,17 @@
 <?php
 
-namespace Tasks;
+namespace FKSDB\Tasks;
 
-use Nette\DateTime;
-use Pipeline\PipelineException;
+use FKSDB\Logging\ILogger;
+use FKSDB\ORM\Models\ModelTask;
+use FKSDB\ORM\Services\ServiceTask;
+use Nette\Utils\DateTime;
 use Pipeline\Stage;
-use ServiceTask;
+
 
 /**
  * @note Assumes TasksFromXML has been run previously.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class DeadlineFromXML extends Stage {
@@ -23,66 +25,42 @@ class DeadlineFromXML extends Stage {
      * @var ServiceTask
      */
     private $taskService;
-    private static $months = array(
-        'ledna' => '1.',
-        'února' => '2.',
-        'března' => '3.',
-        'dubna' => '4.',
-        'května' => '5.',
-        'června' => '6.',
-        'července' => '7.',
-        'srpna' => '8.',
-        'září' => '9.',
-        'října' => '10.',
-        'listopadu' => '11.',
-        'prosince' => '12.',
-    );
 
+    /**
+     * DeadlineFromXML2 constructor.
+     * @param ServiceTask $taskService
+     */
     function __construct(ServiceTask $taskService) {
         $this->taskService = $taskService;
     }
 
+    /**
+     * @return SeriesData
+     */
     public function getOutput() {
         return $this->data;
     }
 
     public function process() {
-        $XMLproblems = $this->data->getXML();
-        if (!$XMLproblems['deadline']) {
+        $xml = $this->data->getData();
+        $deadline = (string)$xml->deadline[0];
+        if (!$deadline) {
+            $this->log(_('Chybí deadline série.'), ILogger::WARNING);
             return;
         }
 
-        $deadline = $this->datetimeFromString($XMLproblems['deadline']);
-
+        $datetime = DateTime::createFromFormat('Y-m-d\TH:i:s', $deadline);
+        /**@var ModelTask $task */
         foreach ($this->data->getTasks() as $task) {
-            $task->submit_deadline = $deadline;
-            $this->taskService->save($task);
+            $this->taskService->updateModel2($task, ['submit_deadline' => $datetime]);
         }
-    }
-
-    public function setInput($data) {
-        $this->data = $data;
     }
 
     /**
-     * @param string $string
-     * @return DateTime
+     * @param SeriesData $data
      */
-    private function datetimeFromString($string) {
-        $compactString = strtr($string, '~', ' ');
-        $compactString = str_replace(' ', '', $compactString);
-        $compactString = mb_strtolower($compactString);
-        $compactString = str_replace(array_keys(self::$months), array_values(self::$months), $compactString);
-
-        if (!($datetime = DateTime::createFromFormat('j.n.YG.i', $compactString))) {
-            $datetime = DateTime::createFromFormat('j.n.Y', $compactString . '23.59');
-        }
-
-        if (!$datetime) {
-            throw new PipelineException("Cannot parse date '$string'.");
-        }
-
-        return $datetime;
+    public function setInput($data) {
+        $this->data = $data;
     }
 
 }

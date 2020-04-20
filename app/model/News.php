@@ -1,33 +1,44 @@
 <?php
 
-use FKS\Config\GlobalParameters;
-use Nette\Object;
+use FKSDB\Config\GlobalParameters;
+use FKSDB\ORM\Models\ModelContest;
+use Nette\SmartObject;
 
-class News extends Object {
-    /**
-     * @var ServiceContest
-     */
+/**
+ * Class News
+ */
+class News {
+    use SmartObject;
+
     /**
      * @var GlobalParameters
      */
     private $globalParameters;
 
-    
+    /**
+     * News constructor.
+     * @param GlobalParameters $globalParameters
+     */
     function __construct(GlobalParameters $globalParameters) {
         $this->globalParameters = $globalParameters;
     }
 
+    /**
+     * @param ModelContest $contest
+     * @param $lang
+     * @return array
+     */
     public function getNews(ModelContest $contest, $lang) {
         $contestName = $this->globalParameters['contestMapping'][$contest->contest_id];
-	if (!isset($this->globalParameters[$contestName]['news'][$lang])) {
-            return array(); 
-	}
+        if (!isset($this->globalParameters[$contestName]['news'][$lang])) {
+            return [];
+        }
         $news = $this->globalParameters[$contestName]['news'][$lang];
-	if ($news) {
+        if ($news) {
             return $news;
-	} else {
-            return array();
-	}
+        } else {
+            return [];
+        }
     }
 
 }

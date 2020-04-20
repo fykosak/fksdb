@@ -2,13 +2,17 @@
 
 namespace MockEnvironment;
 
-use ModelLogin;
+use Authentication\LoginUserStorage;
+use FKSDB\ORM\Models\ModelLogin;
+use FKSDB\ORM\Services\ServiceLogin;
+use Mail\MailTemplateFactory;
+use Nette\Application\IPresenterFactory;
 use Nette\DI\Container;
 use Tester\Assert;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 trait MockApplicationTrait {
@@ -19,6 +23,9 @@ trait MockApplicationTrait {
         $this->container = $container;
     }
 
+    /**
+     * @return Container
+     */
     protected function getContainer() {
         return $this->container;
     }
@@ -26,10 +33,10 @@ trait MockApplicationTrait {
     protected function mockApplication() {
         $container = $this->getContainer();
         $mockPresenter = new MockPresenter($container);
-        $container->callMethod(array($mockPresenter, 'injectTranslator'));
+        $container->callMethod([$mockPresenter, 'injectTranslator']);
         $application = new MockApplication($mockPresenter);
 
-        $mailFactory = $container->getByType('Mail\MailTemplateFactory');
+        $mailFactory = $container->getByType(MailTemplateFactory::class);
         $mailFactory->injectApplication($application);
     }
 
@@ -44,20 +51,20 @@ trait MockApplicationTrait {
     protected function authenticate($login) {
         $container = $this->getContainer();
         if (!$login instanceof ModelLogin) {
-            $login = $container->getService('ServiceLogin')->findByPrimary($login);
-            Assert::type('ModelLogin', $login);
+            $login = $container->getByType(ServiceLogin::class)->findByPrimary($login);
+            Assert::type(ModelLogin::class, $login);
         }
-        $storage = $container->getByType('Authentication\LoginUserStorage');
+        $storage = $container->getByType(LoginUserStorage::class);
         $storage->setIdentity($login);
         $storage->setAuthenticated(true);
     }
 
     protected function createPresenter($presenterName) {
-        $presenterFactory = $this->getContainer()->getByType('Nette\Application\IPresenterFactory');
+        $presenterFactory = $this->getContainer()->getByType(IPresenterFactory::class);
         $presenter = $presenterFactory->createPresenter($presenterName);
         $presenter->autoCanonicalize = false;
 
-        $this->getContainer()->getByType('Authentication\LoginUserStorage')->setPresenter($presenter);
+        $this->getContainer()->getByType(LoginUserStorage::class)->setPresenter($presenter);
         return $presenter;
     }
 

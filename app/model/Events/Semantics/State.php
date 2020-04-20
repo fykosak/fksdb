@@ -2,28 +2,39 @@
 
 namespace Events\Semantics;
 
-use Nette\Object;
+use FKSDB\Expressions\EvaluatedExpression;
+use Nette\SmartObject;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class State extends Object {
-
+class State extends EvaluatedExpression {
+    use SmartObject;
     use WithEventTrait;
-
+    /** @var string */
     private $state;
 
-    function __construct($state) {
+    /**
+     * State constructor.
+     * @param string $state
+     */
+    function __construct(string $state) {
         $this->state = $state;
     }
 
-    public function __invoke($obj) {
-        $holder = $this->getHolder($obj);
-        return $holder->getMachine()->getPrimaryMachine()->getState() == $this->state;
+    /**
+     * @param array $args
+     * @return bool
+     */
+    public function __invoke(...$args): bool {
+        return $this->getHolder($args[0])->getMachine()->getPrimaryMachine()->getState() == $this->state;
     }
 
+    /**
+     * @return string
+     */
     public function __toString() {
         return "state == {$this->state}";
     }

@@ -20,6 +20,10 @@ DELETE FROM task;
 DELETE FROM fyziklani_submit;
 DELETE FROM fyziklani_task;
 
+DELETE FROM person_schedule;
+DELETE FROM schedule_item;
+DELETE FROM schedule_group;
+
 DELETE FROM e_tsaf_participant;
 DELETE FROM e_dsef_participant;
 DELETE FROM e_dsef_group;
@@ -27,6 +31,7 @@ DELETE FROM e_fyziklani_participant;
 DELETE FROM event_participant;
 DELETE FROM e_fyziklani_team;
 DELETE FROM event_status;
+DELETE FROM fyziklani_game_setup;
 DELETE FROM event;
 DELETE FROM event_type;
 

@@ -7,11 +7,13 @@ use Events\Machine\Machine;
 use Events\Model\Holder\Holder;
 use Events\Processings\AbstractProcessing;
 use Events\SubmitProcessingException;
-use FKS\Logging\ILogger;
-use Nette\ArrayHash;
-use Nette\Diagnostics\Debugger;
+use FKSDB\Logging\ILogger;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Services\ServiceSchool;
+use FKSDB\YearCalculator;
 use Nette\Forms\Form;
-use YearCalculator;
+use Nette\Utils\ArrayHash;
+
 
 /**
  * Na Fyziklani 2013 jsme se rozhodli pocitat tymum automaticky kategorii ve ktere soutezi podle pravidel.
@@ -19,21 +21,38 @@ use YearCalculator;
  * @author Aleš Podolník <ales@fykos.cz>
  * @author Michal Koutný <michal@fykos.cz> (ported to FKSDB)
  */
-class CategoryProcessing extends AbstractProcessing
-{
+class CategoryProcessing extends AbstractProcessing {
 
     /**
-     * @var YearCalculator
+     * @var \FKSDB\YearCalculator
      */
     private $yearCalculator;
 
-    function __construct(YearCalculator $yearCalculator)
-    {
+    /**
+     * @var ServiceSchool
+     */
+    private $serviceSchool;
+
+    /**
+     * CategoryProcessing constructor.
+     * @param \FKSDB\YearCalculator $yearCalculator
+     * @param ServiceSchool $serviceSchool
+     */
+    function __construct(YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
         $this->yearCalculator = $yearCalculator;
+        $this->serviceSchool = $serviceSchool;
     }
 
-    protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null)
-    {
+    /**
+     * @param $states
+     * @param ArrayHash $values
+     * @param Machine $machine
+     * @param Holder $holder
+     * @param ILogger $logger
+     * @param Form|null $form
+     * @return mixed|void
+     */
+    protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
 
         if (!isset($values['team'])) {
             return;
@@ -45,58 +64,80 @@ class CategoryProcessing extends AbstractProcessing
         $year = $event->year;
         $acYear = $this->yearCalculator->getAcademicYear($contest, $year);
 
-        $participants = array();
+        $participants = [];
         foreach ($holder as $name => $baseHolder) {
             if ($name == 'team') {
                 continue;
             }
-            $formControl = $this->getControl("$name.person_id.person_history.study_year");
-            $formControl = reset($formControl);
-            $formValue = $formControl ? $formControl->getValue() : null;
+            $studyYearControl = $this->getControl("$name.person_id.person_history.study_year");
+            $schoolControl = $this->getControl("$name.person_id.person_history.school_id");
 
-            if (!$formValue) {
+            $studyYearControl = reset($studyYearControl);
+            $schoolControl = reset($schoolControl);
+
+            $schoolValue = $schoolControl ? $schoolControl->getValue() : null;
+            $studyYearValue = $studyYearControl ? $studyYearControl->getValue() : null;
+
+            if (!$studyYearValue) {
                 if ($this->isBaseReallyEmpty($name)) {
                     continue;
                 }
+                /** @var ModelPerson $person */
                 $person = $baseHolder->getModel()->getMainModel()->person;
-                $studyYear = $person->related('person_history')->where('ac_year', $acYear)->fetch()->study_year;
+                $history = $person->related('person_history')->where('ac_year', $acYear)->fetch();
+                $participantData = [
+                    'school_id' => $history->school_id,
+                    'study_year' => $history->study_year,
+                ];
+
             } else {
-                $studyYear = $formValue;
+                $participantData = [
+                    'school_id' => $schoolValue,
+                    'study_year' => $studyYearValue,
+                ];
             }
-            $participants[] = $studyYear;
+            $participants[] = $participantData;
         }
 
-        $result = $values['team']['category'] = $values['team']['force_a'] ? "A" : $this->getCategory($participants);
+        $values['team']['category'] = $values['team']['force_a'] ? "A" : $this->getCategory($participants);
         $original = $holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
-        if ($original != $result) {
-            $logger->log(sprintf(_('Tým zařazen do kategorie %s.'), $result), ILogger::INFO);
+
+        if ($original != $values['team']['category']) {
+            $logger->log(sprintf(_('Tým zařazen do kategorie %s.'), $values['team']['category']), ILogger::INFO);
         }
     }
 
-    private function getCategory($participants)
-    {
-        $coefficient_sum = 0;
-        $count_4 = 0;
-        $count_3 = 0;
+    /**
+     * @param $participants
+     * @return string
+     */
+    private function getCategory($participants) {
+        $coefficientSum = 0;
+        $count4 = 0;
+        $count3 = 0;
 
-        foreach ($participants as $studyYear) {
+        foreach ($participants as $participant) {
+            $studyYear = $participant['study_year'];
             $coefficient = ($studyYear >= 1 && $studyYear <= 4) ? $studyYear : 0;
-            $coefficient_sum += $coefficient;
+            $coefficientSum += $coefficient;
 
-            if ($coefficient == 4)
-                $count_4++;
-            else if ($coefficient == 3)
-                $count_3++;
+            if ($coefficient == 4) {
+                $count4++;
+            } elseif ($coefficient == 3) {
+                $count3++;
+            }
         }
 
+        $categoryHandle = $participants ? ($coefficientSum / count($participants)) : 999;
 
-        $category_handle = $participants ? ($coefficient_sum / count($participants)) : 999;
-
-        if ($category_handle <= 2 && $count_4 == 0 && $count_3 <= 2) {
+        // if ($abroad > 0) {
+        //     $result = 'F';
+        // } else
+        if ($categoryHandle <= 2 && $count4 == 0 && $count3 <= 2) {
             $result = 'C';
-        } else if ($category_handle <= 3 && $count_4 <= 2) {
+        } elseif ($categoryHandle <= 3 && $count4 <= 2) {
             $result = 'B';
-        } else if ($category_handle <= 4) {
+        } elseif ($categoryHandle <= 4) {
             $result = 'A';
         } else {
             throw new SubmitProcessingException(_('Nelze spočítat kategorii.'));

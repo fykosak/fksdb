@@ -43,7 +43,7 @@ baseMachine:
     transitions:
     fields:
     service:
-        default: @ServiceEventParticipant
+        default: @FKSDB\ORM\Services\ServiceEventParticipant
     # When used as secondary model, specify column that is FK to the primary model.
     joinOn:
         default: null
@@ -62,7 +62,7 @@ baseMachine:
     # Parameter (Neon) scheme for the baseHolder
     paramScheme:
         default: null
-    
+
 
 transition:
     condition:

@@ -6,7 +6,9 @@ use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
 use Events\Model\Holder\BaseHolder;
 use Events\Model\Holder\Holder;
+use Nette\Database\Context;
 use Nette\Forms\Form;
+use Nette\Utils\Html;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -27,11 +29,17 @@ class MultiResourceAvailability extends AbstractAdjustment {
     private $includeStates;
     private $excludeStates;
     private $message;
+    /**
+     * @var Context
+     */
     private $database;
 
+    /**
+     * @param $fields
+     */
     private function setFields($fields) {
         if(!is_array($fields)){
-            $fields = array($fields);
+            $fields = [$fields];
         }
         $this->fields = $fields;
     }
@@ -41,10 +49,11 @@ class MultiResourceAvailability extends AbstractAdjustment {
      * @param array|string $fields Fields that contain amount of the resource
      * @param string $paramCapacity Name of the parameter with overall capacity.
      * @param string $message String '%avail' will be substitued for the actual amount of available resource.
+     * @param Context $database
      * @param string|array $includeStates any state or array of state
      * @param string|array $excludeStates any state or array of state
      */
-    function __construct($fields,$paramCapacity,$message,\Nette\Database\Connection $database,$includeStates = BaseMachine::STATE_ANY,$excludeStates = array('cancelled')) {
+    function __construct($fields, $paramCapacity, $message, Context $database, $includeStates = BaseMachine::STATE_ANY, $excludeStates = ['cancelled']) {
         $this->setFields($fields);
         $this->database = $database;
         $this->paramCapacity = $paramCapacity;
@@ -53,17 +62,22 @@ class MultiResourceAvailability extends AbstractAdjustment {
         $this->excludeStates = $excludeStates;
     }
 
-    protected function _adjust(Form $form,Machine $machine,Holder $holder) {
+    /**
+     * @param Form $form
+     * @param Machine $machine
+     * @param Holder $holder
+     */
+    protected function _adjust(Form $form, Machine $machine, Holder $holder) {
         $groups = $holder->getGroupedSecondaryHolders();
-        $groups[] = array(
+        $groups[] = [
             'service' => $holder->getPrimaryHolder()->getService(),
-            'holders' => array($holder->getPrimaryHolder()),
-        );
+            'holders' => [$holder->getPrimaryHolder()],
+        ];
 
-        $services = array();
-        $controls = array();
+        $services = [];
+        $controls = [];
         foreach ($groups as $group) {
-            $holders = array();
+            $holders = [];
             $field = null;
             foreach ($group['holders'] as $baseHolder) {
                 $name = $baseHolder->getName();
@@ -76,7 +90,7 @@ class MultiResourceAvailability extends AbstractAdjustment {
                         $holders[] = $baseHolder;
                         $controls[] = $foundControls[$name];
                         $field = $fieldMask;
-                    }else if($name == substr($fieldMask,0,strpos($fieldMask,self::DELIMITER))){
+                    }elseif($name == substr($fieldMask,0,strpos($fieldMask,self::DELIMITER))){
                         $holders[] = $baseHolder;
                         $controls[] = reset($foundControls); // assume single result;
                         $field = $fieldMask;
@@ -84,11 +98,11 @@ class MultiResourceAvailability extends AbstractAdjustment {
                 }
             }
             if($holders){
-                $services[] = array(
+                $services[] = [
                     'service' => $group['service'],
                     'holders' => $holders,
                     'field' => $field,
-                );
+                ];
             }
         }
 
@@ -98,7 +112,6 @@ class MultiResourceAvailability extends AbstractAdjustment {
             $event = $firstHolder->getEvent();
             $tableName = $serviceData['service']->getTable()->getName();
             $table = $this->database->table($tableName);
-            //   \Nette\Diagnostics\Debugger::barDump($table);
             $table->where($firstHolder->getEventId(),$event->getPrimary());
             if($this->includeStates !== BaseMachine::STATE_ANY){
                 $table->where(BaseHolder::STATE_COLUMN,$this->includeStates);
@@ -133,7 +146,6 @@ class MultiResourceAvailability extends AbstractAdjustment {
 
             //$usage += $table->sum($column);
         }
-        //  \Nette\Diagnostics\Debugger::barDump($usage);
         $capacities = [];
         $o = is_scalar($this->paramCapacity) ? $holder->getParameter($this->paramCapacity) : $this->paramCapacity;
         foreach ($o as $key => $option) {
@@ -149,9 +161,9 @@ class MultiResourceAvailability extends AbstractAdjustment {
             foreach ($items as $key => $item) {
                 $delta = $capacities[$key] - (array_key_exists($key,$usage) ? $usage[$key] : 0);
                 if($delta > 0){
-                    $newItems[$key] = \Nette\Utils\Html::el('option')->setText($item.'('.$delta.')');
+                    $newItems[$key] = Html::el('option')->setText($item.'('.$delta.')');
                 }else{
-                    $newItems[$key] = \Nette\Utils\Html::el('option')->setText($item)->addAttributes(['disabled' => true]);
+                    $newItems[$key] = Html::el('option')->setText($item)->addAttributes(['disabled' => true]);
                 }
             }
             $control->setItems($newItems);
@@ -167,7 +179,6 @@ class MultiResourceAvailability extends AbstractAdjustment {
                 }
 
             }
-            \Nette\Diagnostics\Debugger::barDump($controlsUsages);
             foreach ($controlsUsages as $k =>$u ){
                 $us = (array_key_exists($k,$usage) ? $usage[$k] : 0)+$u;
                 if($capacities[$k]-$us<0){

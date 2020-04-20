@@ -6,13 +6,13 @@ use Nette\InvalidArgumentException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 interface IMergeStrategy {
 
     /**
-     * 
+     *
      * @param mixed $trunk
      * @param mixed $merged
      * @throws CannotMergeException
@@ -20,6 +20,10 @@ interface IMergeStrategy {
     public function mergeValues($trunk, $merged);
 }
 
+/**
+ * Class CannotMergeException
+ * @package Persons\Deduplication\MergeStrategy
+ */
 class CannotMergeException extends InvalidArgumentException {
-    
+
 }

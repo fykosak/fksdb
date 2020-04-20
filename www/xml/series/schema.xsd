@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://fykos.cz/xml/series/schema" xmlns:t="http://fykos.cz/xml/series/schema" targetNamespace="http://fykos.cz/xml/series/schema" elementFormDefault="qualified">
+
+    <xs:import schemaLocation="http://www.w3.org/2001/xml.xsd" namespace="http://www.w3.org/XML/1998/namespace"/>
+
+    <xs:element name="series">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="contest">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:pattern value="(FYKOS|VYFUK)[0-9]{1,2}"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="number">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:positiveInteger">
+                            <xs:maxInclusive value="11"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="deadline" type="xs:dateTime"/>
+                <xs:element name="deadline-post" type="xs:date"/>
+                <xs:element name="problems">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="problem" type="problemType" maxOccurs="unbounded">
+                                <xs:key name="nameLangKey">
+                                    <xs:selector xpath="t:name"/>
+                                    <xs:field xpath="@xml:lang"/>
+                                </xs:key>
+                                <xs:key name="originLangKey">
+                                    <xs:selector xpath="t:origin"/>
+                                    <xs:field xpath="@xml:lang"/>
+                                </xs:key>
+                                <xs:key name="taskLangKey">
+                                    <xs:selector xpath="t:task"/>
+                                    <xs:field xpath="@xml:lang"/>
+                                </xs:key>
+
+                                <xs:keyref name="nameLang-originLangKeyref" refer="originLangKey">
+                                    <xs:selector xpath="t:name"/>
+                                    <xs:field xpath="@xml:lang"/>
+                                </xs:keyref>
+                                <xs:keyref name="originLang-taskLangKeyref" refer="taskLangKey">
+                                    <xs:selector xpath="t:origin"/>
+                                    <xs:field xpath="@xml:lang"/>
+                                </xs:keyref>
+                                <xs:keyref name="taskLang-nameLangKeyref" refer="nameLangKey">
+                                    <xs:selector xpath="t:task"/>
+                                    <xs:field xpath="@xml:lang"/>
+                                </xs:keyref>
+                                <xs:keyref name="figureLang-taskLangKeyref" refer="taskLangKey">
+                                    <xs:selector xpath="t:figures/t:figure"/>
+                                    <xs:field xpath="@xml:lang"/>
+                                </xs:keyref>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                    <xs:unique name="problemNumberUnique">
+                        <xs:selector xpath="t:problem"/>
+                        <xs:field xpath="t:number"/>
+                    </xs:unique>
+                    <xs:unique name="problemLabelUnique">
+                        <xs:selector xpath="t:problem"/>
+                        <xs:field xpath="t:label"/>
+                    </xs:unique>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="version" type="versionType" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="problemType">
+        <xs:sequence>
+            <xs:element name="number">
+                <xs:simpleType>
+                    <xs:restriction base="xs:positiveInteger">
+                        <xs:maxInclusive value="8"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="label">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="1"/>
+                        <xs:enumeration value="2"/>
+                        <xs:enumeration value="3"/>
+                        <xs:enumeration value="4"/>
+                        <xs:enumeration value="5"/>
+                        <xs:enumeration value="P"/>
+                        <xs:enumeration value="E"/>
+                        <xs:enumeration value="S"/>
+                        <xs:enumeration value="C"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="name" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                            <xs:attribute ref="xml:lang" use="required"/>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="origin" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                            <xs:attribute ref="xml:lang" use="required"/>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="points" type="xs:positiveInteger"/>
+            <xs:element name="topics">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="topic" type="topicType" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+                <xs:unique name="topicUnique">
+                    <xs:selector xpath="t:topic"/>
+                    <xs:field xpath="."/>
+                </xs:unique>
+            </xs:element>
+            <xs:element name="tags" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="tag" maxOccurs="unbounded">
+                            <xs:simpleType>
+                                <xs:restriction base="xs:string">
+                                    <xs:enumeration value="hard"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+                <xs:unique name="tagUnique">
+                    <xs:selector xpath="t:tag"/>
+                    <xs:field xpath="."/>
+                </xs:unique>
+            </xs:element>
+            <xs:element name="authors">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="author" maxOccurs="unbounded" type="signatureType"/>
+                    </xs:sequence>
+                </xs:complexType>
+                <xs:unique name="authorUnique">
+                    <xs:selector xpath="t:author"/>
+                    <xs:field xpath="."/>
+                </xs:unique>
+            </xs:element>
+            <xs:element name="solution-authors">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="solution-author" maxOccurs="unbounded" type="signatureType"/>
+                    </xs:sequence>
+                </xs:complexType>
+                <xs:unique name="solution-authorUnique">
+                    <xs:selector xpath="t:solution-author"/>
+                    <xs:field xpath="."/>
+                </xs:unique>
+            </xs:element>
+            <xs:element name="study-years" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="study-year" maxOccurs="unbounded">
+                            <xs:simpleType>
+                                <xs:restriction base="xs:positiveInteger">
+                                    <xs:maxInclusive value="9"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+                <xs:unique name="study-yearUnique">
+                    <xs:selector xpath="t:study-year"/>
+                    <xs:field xpath="."/>
+                </xs:unique>
+            </xs:element>
+            <xs:element name="task" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                            <xs:attribute ref="xml:lang" use="required"/>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="figures" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="figure" type="figureType" maxOccurs="unbounded">
+                            <xs:unique name="figureDataExtensionUnique">
+                                <xs:selector xpath="t:data"/>
+                                <xs:field xpath="@extension"/>
+                            </xs:unique>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+                <xs:unique name="figureLangUnique">
+                    <xs:selector xpath="t:figure"/>
+                    <xs:field xpath="@xml:lang"/>
+                </xs:unique>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    
+    <xs:simpleType name="extensionType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="jpg"/>
+            <xs:enumeration value="eps"/>
+            <xs:enumeration value="png"/>
+            <xs:enumeration value="svg"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="figureDataUnrestrictedType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="extension" type="extensionType" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="figureDataType">
+        <xs:simpleContent>
+            <xs:restriction base="figureDataUnrestrictedType">
+               <!--<xs:maxLength value=""/>-->
+            </xs:restriction>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="figureType">
+        <xs:sequence>
+            <xs:element name="caption" type="xs:string"/>
+            <xs:element name="data" type="figureDataType" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute ref="xml:lang" use="required"/>
+    </xs:complexType>
+
+    <xs:simpleType name="signatureType">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[a-z]+"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="versionType">
+        <xs:restriction base="xs:integer">
+            <xs:enumeration value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="topicType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="mechHmBodu"/>
+            <xs:enumeration value="mechTuhTel"/>
+            <xs:enumeration value="hydroMech"/>
+            <xs:enumeration value="mechPlynu"/>
+            <xs:enumeration value="gravPole"/>
+            <xs:enumeration value="kmitani"/>
+            <xs:enumeration value="vlneni"/>
+            <xs:enumeration value="molFyzika"/>
+            <xs:enumeration value="termoDyn"/>
+            <xs:enumeration value="statFyz"/>
+            <xs:enumeration value="optikaGeom"/>
+            <xs:enumeration value="optikaVln"/>
+            <xs:enumeration value="elProud"/>
+            <xs:enumeration value="elPole"/>
+            <xs:enumeration value="magPole"/>
+            <xs:enumeration value="relat"/>
+            <xs:enumeration value="kvantFyz"/>
+            <xs:enumeration value="jadFyz"/>
+            <xs:enumeration value="astroFyz"/>
+            <xs:enumeration value="matematika"/>
+            <xs:enumeration value="chemie"/>
+            <xs:enumeration value="biofyzika"/>
+            <xs:enumeration value="other"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

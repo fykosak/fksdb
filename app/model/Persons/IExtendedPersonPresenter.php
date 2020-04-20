@@ -2,7 +2,9 @@
 
 namespace Persons;
 
-use ORM\IModel;
+use FKSDB\ORM\AbstractModelMulti;
+use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\IModel;
 
 /**
  *
@@ -11,24 +13,37 @@ use ORM\IModel;
 interface IExtendedPersonPresenter {
 
     /**
-     * @return IModel
+     * @return IModel|AbstractModelSingle|AbstractModelMulti
      */
     public function getModel();
 
     /**
      * @note First '%s' is replaced with referenced person's name.
+     * @return string
      */
     public function messageCreate();
 
     /**
      * @note First '%s' is replaced with referenced person's name.
+     * @return string
      */
     public function messageEdit();
 
+    /**
+     * @return string
+     */
     public function messageError();
-    
+
+    /**
+     * @return string
+     */
     public function messageExists();
-    
+
+    /**
+     * @param $message
+     * @param string $type
+     * @return mixed
+     */
     public function flashMessage($message, $type = 'info');
 }
 

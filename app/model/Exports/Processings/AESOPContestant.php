@@ -3,14 +3,12 @@
 namespace Exports\Processings;
 
 use Exports\StoredQueryPostProcessing;
-use IEvaluationStrategy;
-use ModelCategory;
-use ResultsModelFactory;
-use ServiceTask;
+use FKSDB\ORM\Services\ServiceTask;
+use FKSDB\Results\ResultsModelFactory;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class AESOPContestant extends StoredQueryPostProcessing {
@@ -20,26 +18,37 @@ class AESOPContestant extends StoredQueryPostProcessing {
     const POINTS = 'points';
     const SPAM_DATE = 'spam-date';
 
+    /**
+     * @return mixed|string
+     */
     public function getDescription() {
-        return 'Profiltruje jenom na kategorii zadanou v parametru \'category\' a spočítá rank v rámci kategorie.';
+        return 'Profiltruje jenom na kategorii zadanou v parametru "category" a spočítá rank v rámci kategorie.';
     }
 
+    /**
+     * @return bool
+     */
     public function keepsCount() {
         return false;
     }
 
+    /**
+     * @param $data
+     * @return mixed
+     * @throws \Nette\Application\BadRequestException
+     */
     public function processData($data) {
         $filtered = $this->filterCategory($data);
-        $ranked = $this->calculateRank($filtered);
         //$formated = $this->formatDate($ranked); //implemented in SQL
-        return $ranked;
+        return $this->calculateRank($filtered);
     }
 
     /**
      * Processing itself is not injectable so we ask the dependency explicitly per method (the task service).
-     * 
-     * @param ServiceTask $serviceTask
+     *
+     * @param \FKSDB\ORM\Services\ServiceTask $serviceTask
      * @return int|double
+     * @throws \Nette\Application\BadRequestException
      */
     public function getMaxPoints(ServiceTask $serviceTask) {
         $evalutationStrategy = $this->getEvaluationStrategy();
@@ -58,22 +67,27 @@ class AESOPContestant extends StoredQueryPostProcessing {
         return $sum;
     }
 
+    /**
+     * @param $data
+     * @return array
+     * @throws \Nette\Application\BadRequestException
+     */
     private function filterCategory($data) {
         $evaluationStrategy = $this->getEvaluationStrategy();
 
-        $studyYears = array();
+        $studyYears = [];
         $category = $this->getCategory();
         if ($category) {
             $studyYears = $evaluationStrategy->categoryToStudyYears($category);
-            $studyYears = is_array($studyYears) ? $studyYears : array($studyYears);
+            $studyYears = is_array($studyYears) ? $studyYears : [$studyYears];
         }
 
-        $graduationYears = array();
+        $graduationYears = [];
         foreach ($studyYears as $studyYear) {
             $graduationYears[] = $this->studyYearToGraduation($studyYear, $this->parameters['ac_year']);
         }
 
-        $result = array();
+        $result = [];
         foreach ($data as $row) {
             if (!in_array($row[self::END_YEAR], $graduationYears)) {
                 continue;
@@ -83,8 +97,12 @@ class AESOPContestant extends StoredQueryPostProcessing {
         return $result;
     }
 
+    /**
+     * @param $data
+     * @return mixed
+     */
     private function calculateRank($data) {
-        $points = array();
+        $points = [];
         foreach ($data as $row) {
             if (!isset($points[$row[self::POINTS]])) {
                 $points[$row[self::POINTS]] = 1;
@@ -94,7 +112,7 @@ class AESOPContestant extends StoredQueryPostProcessing {
         }
 
         krsort($points);
-        $ranks = array();
+        $ranks = [];
         $cumsum = 0;
         foreach ($points as $pointsValue => $count) {
             $ranks[$pointsValue] = $cumsum + 1;
@@ -108,6 +126,10 @@ class AESOPContestant extends StoredQueryPostProcessing {
         return $data;
     }
 
+    /**
+     * @param $data
+     * @return mixed
+     */
     private function formatDate($data) {
         foreach ($data as $row) {
             if ($row[self::SPAM_DATE]) {
@@ -118,10 +140,15 @@ class AESOPContestant extends StoredQueryPostProcessing {
         return $data;
     }
 
+    /**
+     * @param $studyYear
+     * @param $acYear
+     * @return int|null
+     */
     private function studyYearToGraduation($studyYear, $acYear) {
         if ($studyYear >= 1 && $studyYear <= 4) {
             return $acYear + (5 - $studyYear);
-        } else if ($studyYear >= 6 && $studyYear <= 9) {
+        } elseif ($studyYear >= 6 && $studyYear <= 9) {
             return $acYear + (14 - $studyYear);
         } else {
             return null;
@@ -129,15 +156,17 @@ class AESOPContestant extends StoredQueryPostProcessing {
     }
 
     /**
-     * @return IEvaluationStrategy
+     * @return \FKSDB\Results\EvaluationStrategies\EvaluationStrategy
+     * @throws \Nette\Application\BadRequestException
      */
     private function getEvaluationStrategy() {
         return ResultsModelFactory::findEvaluationStrategy($this->parameters['contest'], $this->parameters['year']);
     }
 
     /**
-     * 
-     * @return ModelCategory|null
+     *
+     * @return \FKSDB\Results\ModelCategory|null
+     * @throws \Nette\Application\BadRequestException
      */
     private function getCategory() {
         $evaluationStrategy = $this->getEvaluationStrategy();

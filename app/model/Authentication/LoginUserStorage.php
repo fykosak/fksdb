@@ -3,10 +3,11 @@
 namespace Authentication;
 
 use AuthenticatedPresenter;
-use Authentication\LoginUserStorage;
 use Authentication\SSO\GlobalSession;
 use AuthenticationPresenter;
-use ModelLogin;
+use FKSDB\ORM\Models\ModelLogin;
+use FKSDB\ORM\Services\ServiceLogin;
+use FKSDB\YearCalculator;
 use Nette\Application\Application;
 use Nette\Application\IPresenter;
 use Nette\Http\Request;
@@ -14,13 +15,12 @@ use Nette\Http\Session;
 use Nette\Http\UserStorage;
 use Nette\Security\Identity;
 use Nette\Security\IIdentity;
-use ServiceLogin;
-use YearCalculator;
 
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @see http://forum.nette.org/cs/9574-jak-rozsirit-userstorage
+ * @property IIdentity $identity
  */
 class LoginUserStorage extends UserStorage {
     /** @const HTTP GET parameter holding control information for the SSO */
@@ -45,7 +45,6 @@ class LoginUserStorage extends UserStorage {
     private $globalSession;
 
     /**
-
      * @var Application
      */
     private $application;
@@ -60,6 +59,15 @@ class LoginUserStorage extends UserStorage {
      */
     private $request;
 
+    /**
+     * LoginUserStorage constructor.
+     * @param Session $sessionHandler
+     * @param ServiceLogin $loginService
+     * @param \FKSDB\YearCalculator $yearCalculator
+     * @param GlobalSession $globalSession
+     * @param Application $application
+     * @param Request $request
+     */
     function __construct(Session $sessionHandler, ServiceLogin $loginService, YearCalculator $yearCalculator, GlobalSession $globalSession, Application $application, Request $request) {
         parent::__construct($sessionHandler);
         $this->loginService = $loginService;
@@ -69,6 +77,9 @@ class LoginUserStorage extends UserStorage {
         $this->request = $request;
     }
 
+    /**
+     * @return IPresenter
+     */
     public function getPresenter() {
         if ($this->application->getPresenter()) {
             return $this->application->getPresenter();
@@ -79,13 +90,17 @@ class LoginUserStorage extends UserStorage {
 
     /**
      * @internal Used internally or for testing purposes only.
-     * 
+     *
      * @param IPresenter $presenter
      */
     public function setPresenter(IPresenter $presenter) {
         $this->presenter = $presenter;
     }
 
+    /**
+     * @param $state
+     * @return UserStorage|void
+     */
     public function setAuthenticated($state) {
         parent::setAuthenticated($state);
         if ($state) {
@@ -96,6 +111,10 @@ class LoginUserStorage extends UserStorage {
         }
     }
 
+    /**
+     * @return bool
+     * @throws \Nette\Application\AbortException
+     */
     public function isAuthenticated() {
         $local = parent::isAuthenticated();
         $global = isset($this->globalSession[GlobalSession::UID]) ? $this->globalSession[GlobalSession::UID] : null;
@@ -115,7 +134,9 @@ class LoginUserStorage extends UserStorage {
              * probably is not needed anymore.
              */
             //parent::setAuthenticated(false);
-
+            /**
+             * @var AuthenticatedPresenter $presenter
+             */
             $presenter = $this->getPresenter();
             $ssoData = $presenter->getParameter(self::PARAM_SSO);
 
@@ -125,13 +146,13 @@ class LoginUserStorage extends UserStorage {
              */
             if (!$ssoData && $presenter instanceof AuthenticatedPresenter) {
                 $allowedNonlogin = ($presenter->getAllowedAuthMethods() &
-                        (AuthenticatedPresenter::AUTH_ALLOW_HTTP | AuthenticatedPresenter::AUTH_ALLOW_GITHUB));
+                    (AuthenticatedPresenter::AUTH_ALLOW_HTTP | AuthenticatedPresenter::AUTH_ALLOW_GITHUB));
                 if ($presenter->requiresLogin() && !$allowedNonlogin) {
-                    $params = array(
-                        'backlink' => (string) $this->request->getUrl(),
+                    $params = [
+                        'backlink' => (string)$this->request->getUrl(),
                         AuthenticationPresenter::PARAM_FLAG => AuthenticationPresenter::FLAG_SSO_PROBE,
                         AuthenticationPresenter::PARAM_REASON => AuthenticationPresenter::REASON_AUTH,
-                    );
+                    ];
 
                     $presenter->redirect(':Authentication:login', $params);
                 }
@@ -141,8 +162,8 @@ class LoginUserStorage extends UserStorage {
     }
 
     /**
-     * @param IIdentity
-     * @return LoginUserStorage
+     * @param IIdentity|NULL $identity
+     * @return UserStorage
      */
     public function setIdentity(IIdentity $identity = NULL) {
         $this->identity = $identity;
@@ -153,7 +174,7 @@ class LoginUserStorage extends UserStorage {
     }
 
     /**
-     * @return IIdentity|NULL
+     * @return ModelLogin|NULL
      */
     public function getIdentity() {
         $local = parent::getIdentity();
@@ -168,7 +189,9 @@ class LoginUserStorage extends UserStorage {
         }
 
         // Find login
+        /** @var ModelLogin $login */
         $login = $this->loginService->findByPrimary($local->getId());
+
         if (!$login) {
             return null;
         }

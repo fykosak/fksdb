@@ -7,18 +7,21 @@ use Events\Model\ApplicationHandler;
 use Events\Model\ApplicationHandlerFactory;
 use Events\Model\Grid\IHolderSource;
 use Events\Model\Holder\Holder;
-use FKS\Application\IJavaScriptCollector;
-use FKS\Logging\FlashMessageDump;
-use FKS\Logging\MemoryLogger;
-use ModelEvent;
+use FKSDB\Application\IJavaScriptCollector;
+use FKSDB\Logging\MemoryLogger;
+use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\UI\Control;
+use Nette\Application\UI\Presenter;
+use Nette\ComponentModel\IComponent;
+use Nette\DI\Container;
 use Nette\InvalidStateException;
+use Nette\Templating\ITemplate;
 use Nette\Utils\Strings;
-use SystemContainer;
+
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ApplicationsGrid extends Control {
@@ -27,7 +30,7 @@ class ApplicationsGrid extends Control {
 
     /**
      *
-     * @var SystemContainer
+     * @var Container
      */
     private $container;
 
@@ -39,32 +42,27 @@ class ApplicationsGrid extends Control {
     /**
      * @var Holder[]
      */
-    private $holders = array();
+    private $holders = [];
 
     /**
      * @var Machine[]
      */
-    private $machines = array();
+    private $machines = [];
 
     /**
      * @var ModelEvent[]
      */
-    private $eventApplications = array();
+    private $eventApplications = [];
 
     /**
      * @var ApplicationHandler[]
      */
-    private $handlers = array();
+    private $handlers = [];
 
     /**
      * @var ApplicationHandlerFactory
      */
     private $handlerFactory;
-
-    /**
-     * @var FlashMessageDump
-     */
-    private $flashDump;
 
     /**
      * @var string
@@ -76,18 +74,26 @@ class ApplicationsGrid extends Control {
      */
     private $searchable = false;
 
-    function __construct(SystemContainer $container, IHolderSource $source, ApplicationHandlerFactory $handlerFactory, FlashMessageDump $flashDump) {
+    /**
+     * ApplicationsGrid constructor.
+     * @param Container $container
+     * @param IHolderSource $source
+     * @param ApplicationHandlerFactory $handlerFactory
+     */
+    function __construct(Container $container, IHolderSource $source, ApplicationHandlerFactory $handlerFactory) {
         parent::__construct();
-        $this->monitor('FKS\Application\IJavaScriptCollector');
+        $this->monitor(IJavaScriptCollector::class);
         $this->container = $container;
         $this->source = $source;
         $this->handlerFactory = $handlerFactory;
-        $this->flashDump = $flashDump;
         $this->processSource();
     }
 
     private $attachedJS = false;
 
+    /**
+     * @param $obj
+     */
     protected function attached($obj) {
         parent::attached($obj);
         if (!$this->attachedJS && $obj instanceof IJavaScriptCollector) {
@@ -107,16 +113,22 @@ class ApplicationsGrid extends Control {
         }
     }
 
+    /**
+     * @return bool
+     */
     public function isSearchable() {
         return $this->searchable;
     }
 
+    /**
+     * @param $searchable
+     */
     public function setSearchable($searchable) {
         $this->searchable = $searchable;
     }
 
     private function processSource() {
-        $this->eventApplications = array();
+        $this->eventApplications = [];
         foreach ($this->source as $key => $holder) {
             $this->eventApplications[$key] = $holder->getEvent();
             $this->holders[$key] = $holder;
@@ -125,7 +137,12 @@ class ApplicationsGrid extends Control {
         }
     }
 
+    /**
+     * @param $name
+     * @return ApplicationComponent|IComponent
+     */
     protected function createComponent($name) {
+
         $key = null;
         if (Strings::startsWith($name, self::NAME_PREFIX)) {
             $key = substr($name, strlen(self::NAME_PREFIX));
@@ -133,12 +150,13 @@ class ApplicationsGrid extends Control {
         if (!$key) {
             parent::createComponent($name);
         }
-
-
-        $component = new ApplicationComponent($this->handlers[$key], $this->holders[$key], $this->flashDump);
-        return $component;
+        return new ApplicationComponent($this->handlers[$key], $this->holders[$key]);
     }
 
+    /**
+     * @param null $class
+     * @return ITemplate
+     */
     protected function createTemplate($class = NULL) {
         $template = parent::createTemplate($class);
         $template->setTranslator($this->presenter->getTranslator());
@@ -153,7 +171,7 @@ class ApplicationsGrid extends Control {
         $this->template->eventApplications = $this->eventApplications;
         $this->template->holders = $this->holders;
         $this->template->machines = $this->machines;
-        $this->template->htmlId = $this->lookupPath('Nette\Application\UI\Presenter');
+        $this->template->htmlId = $this->lookupPath(Presenter::class);
 
         $this->template->setFile($this->templateFile);
         $this->template->render();

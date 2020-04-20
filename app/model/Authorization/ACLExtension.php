@@ -2,27 +2,32 @@
 
 namespace Authorization;
 
-use FKS\Config\Expressions\Helpers;
+use Authorization\Assertions\EventOrgAssertion;
+use Authorization\Assertions\EventOrgByIdAssertion;
+use Authorization\Assertions\EventOrgByYearAssertion;
+use Authorization\Assertions\QIDAssertion;
+use Authorization\Assertions\StoredQueryTagAssertion;
+use FKSDB\Config\Expressions\Helpers;
 use Nette\Config\CompilerExtension;
+use Nette\Security\Permission;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ACLExtension extends CompilerExtension {
 
-    public static $semanticMap = array(
-        'qid' => 'Authorization\Assertions\QIDAssertion',
-        'queryTag' => 'Authorization\Assertions\StoredQueryTagAssertion',
-        'isEventOrg' => 'Authorization\Assertions\EventOrgAssertion',
-        'isEventOrgById' => 'Authorization\Assertions\EventOrgByIdAssertion',
-        'isEventOrgByYear' => 'Authorization\Assertions\EventOrgByYearAssertion',
-    );
+    public static $semanticMap = [
+        'qid' => QIDAssertion::class,
+        'queryTag' => StoredQueryTagAssertion::class,
+        'isEventOrg' => EventOrgAssertion::class,
+        'isEventOrgById' => EventOrgByIdAssertion::class,
+        'isEventOrgByYear' => EventOrgByYearAssertion::class,
+    ];
 
     public function __construct() {
         Helpers::registerSemantic(self::$semanticMap);
-
     }
 
     public function loadConfiguration() {
@@ -30,7 +35,7 @@ class ACLExtension extends CompilerExtension {
 
         $builder = $this->getContainerBuilder();
         $definition = $builder->addDefinition('authorization')
-                ->setClass('Nette\Security\Permission');
+            ->setClass(Permission::class);
 
         $config = $this->getConfig();
 

@@ -7,10 +7,18 @@ use Nette\InvalidArgumentException;
 use RuntimeException;
 use Traversable;
 
+/**
+ * Class MachineExecutionException
+ * @package Events
+ */
 class MachineExecutionException extends RuntimeException {
-    
+
 }
 
+/**
+ * Class TransitionConditionFailedException
+ * @package Events
+ */
 class TransitionConditionFailedException extends MachineExecutionException {
 
     /**
@@ -18,18 +26,31 @@ class TransitionConditionFailedException extends MachineExecutionException {
      */
     private $transition;
 
+    /**
+     * TransitionConditionFailedException constructor.
+     * @param Transition $blockingTransition
+     * @param null $code
+     * @param null $previous
+     */
     public function __construct(Transition $blockingTransition, $code = null, $previous = null) {
         $message = sprintf(_("Nelze provést akci '%s' v automatu '%s'."), $blockingTransition->getLabel(), $blockingTransition->getBaseHolder()->getLabel());
         parent::__construct($message, $code, $previous);
         $this->transition = $blockingTransition;
     }
 
+    /**
+     * @return Transition
+     */
     public function getTransition() {
         return $this->transition;
     }
 
 }
 
+/**
+ * Class TransitionUnsatisfiedTargetException
+ * @package Events
+ */
 class TransitionUnsatisfiedTargetException extends MachineExecutionException {
 
     /**
@@ -37,6 +58,12 @@ class TransitionUnsatisfiedTargetException extends MachineExecutionException {
      */
     private $validationResult;
 
+    /**
+     * TransitionUnsatisfiedTargetException constructor.
+     * @param $validationResult
+     * @param null $code
+     * @param null $previous
+     */
     public function __construct($validationResult, $code = null, $previous = null) {
         $message = '';
         foreach ($validationResult as $result) {
@@ -46,20 +73,35 @@ class TransitionUnsatisfiedTargetException extends MachineExecutionException {
         $this->validationResult = $validationResult;
     }
 
+    /**
+     * @return array|Traversable
+     */
     public function getValidationResult() {
         return $this->validationResult;
     }
 
 }
 
+/**
+ * Class SubmitProcessingException
+ * @package Events
+ */
 class SubmitProcessingException extends RuntimeException {
-    
+
 }
 
+/**
+ * Class TransitionOnExecutedException
+ * @package Events
+ */
 class TransitionOnExecutedException extends MachineExecutionException {
-    
+
 }
 
+/**
+ * Class UndeclaredEventException
+ * @package Events
+ */
 class UndeclaredEventException extends InvalidArgumentException {
-	
+
 }

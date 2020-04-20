@@ -1,0 +1,49 @@
+{layout './Seating.latte'}
+{block #places}
+    {foreach $places as $place}
+        {var $team = $place->getTeam()}
+        {if $team}
+            {var $cor = 'translate('.$place->x_coordinate.','.-($place->y_coordinate+15).')' }
+            <g transform="{$cor}">
+                <text text-anchor="middle">{$team->e_fyziklani_team_id}</text>
+            </g>
+            {include #place 'place'=>$place ,'className'=>('category-'.$team->category.' occupied game-lang-'.$team->game_lang)}
+        {else}
+            {include #place 'place'=>$place ,'className'=>'free'}
+        {/if}
+
+        {var $cor = 'translate('.$place->x_coordinate.','.-($place->y_coordinate-25).')' }
+        <g transform="{$cor}">
+            <text text-anchor="middle">{$place->getPrimary()}</text>
+        </g>
+    {/foreach}
+{/block}
+{block #styles}
+    {include #parent}
+    <style>
+        circle.team-position.category-A {
+            fill: #ff5555 !important;;
+        }
+
+        circle.team-position.category-B {
+            fill: #55ff55 !important;;
+        }
+
+        circle.team-position.category-C {
+            fill: #5555ff !important;;
+        }
+
+        circle.team-position.game-lang-cs {
+            stroke: black !important;
+            stroke-dasharray: 10 10 !important;
+            stroke-width: 3px !important;
+        }
+
+        circle.team-position.game-lang-en {
+            stroke: black !important;
+            stroke-dasharray: 3 3 !important;
+            stroke-width: 3px !important;
+        }
+    </style>
+
+{/block}

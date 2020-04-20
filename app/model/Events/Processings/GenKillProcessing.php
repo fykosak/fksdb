@@ -7,24 +7,34 @@ use Events\Machine\Machine;
 use Events\Model\Holder\BaseHolder;
 use Events\Model\Holder\Holder;
 use Events\SubmitProcessingException;
-use FKS\Logging\ILogger;
-use Nette\ArrayHash;
+use FKSDB\Logging\ILogger;
 use Nette\Forms\Form;
-use Nette\Object;
+use Nette\SmartObject;
+use Nette\Utils\ArrayHash;
 
 /**
  * Checks determining fields in sent data and either terminates the application
  * or tries to find unambiguous transition from the initial state.
- * 
+ *
  * @note Transition conditions are evaluated od pre-edited data.
  * @note All determining fields must be filled to consider application complete.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class GenKillProcessing extends Object implements IProcessing {
+class GenKillProcessing implements IProcessing {
+    use SmartObject;
 
+    /**
+     * @param $states
+     * @param ArrayHash $values
+     * @param Machine $machine
+     * @param Holder $holder
+     * @param ILogger $logger
+     * @param Form|null $form
+     * @return array
+     */
     public function process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
-        $result = array();
+        $result = [];
         foreach ($holder as $name => $baseHolder) {
             if (!isset($values[$name])) { // whole machine unmodofiable/invisible
                 continue;
@@ -50,9 +60,9 @@ class GenKillProcessing extends Object implements IProcessing {
                     $transitions = $baseMachine->getAvailableTransitions();
                     if (count($transitions) == 0) {
                         throw new SubmitProcessingException(_("$name: Není definován přechod z počátečního stavu."));
-                    } else if (isset($states[$name])) {
+                    } elseif (isset($states[$name])) {
                         $result[$name] = $states[$name]; // propagate already set state
-                    } else if (count($transitions) > 1) {
+                    } elseif (count($transitions) > 1) {
                         throw new SubmitProcessingException(_("$name: Přechod z počátečního stavu není jednoznačný."));
                     } else {
                         $result[$name] = reset($transitions)->getTarget();

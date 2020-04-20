@@ -2,6 +2,7 @@
 
 $container = require '../bootstrap.php';
 
+use FKSDB\ORM\Services\ServicePerson;
 use Nette\DI\Container;
 use Tester\Assert;
 
@@ -32,5 +33,5 @@ class ModelPersonHistoryTest extends DatabaseTestCase {
 
 }
 
-$testCase = new ModelPersonHistoryTest($container->getService('ServicePerson'), $container);
+$testCase = new ModelPersonHistoryTest($container->getByType(ServicePerson::class), $container);
 $testCase->run();

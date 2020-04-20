@@ -1,21 +1,19 @@
 <?php
 
-namespace Tasks;
+namespace FKSDB\Tasks;
 
-use Pipeline\Pipeline;
+use FKSDB\ORM\Services\ServiceOrg;
+use FKSDB\ORM\Services\ServiceTaskContribution;
 use Pipeline\Stage;
-use ServicePerson;
-use ServiceTaskContribution;
 use SimpleXMLElement;
+
 
 /**
  * @note Assumes TasksFromXML has been run previously.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ContributionsFromXML extends Stage {
-
-    const DELIMITER = ',';
 
     /**
      * @var SeriesData
@@ -23,9 +21,12 @@ class ContributionsFromXML extends Stage {
     private $data;
 
     /**
-     * @var array   contribution type => xml element 
+     * @var array   contribution type => xml element
      */
-    private $contributionFromXML;
+    private static $contributionFromXML = [
+        'author' => 'authors/author',
+        'solution' => 'solution-authors/solution-author',
+    ];
 
     /**
      * @var ServiceTaskContribution
@@ -33,30 +34,44 @@ class ContributionsFromXML extends Stage {
     private $taskContributionService;
 
     /**
-     * @var ServicePerson
+     * @var ServiceOrg
      */
-    private $servicePerson;
+    private $serviceOrg;
 
-    public function __construct($contributionFromXML, ServiceTaskContribution $taskContributionService, ServicePerson $servicePerson) {
-        $this->contributionFromXML = $contributionFromXML;
+    /**
+     * ContributionsFromXML2 constructor.
+     * @param ServiceTaskContribution $taskContributionService
+     * @param ServiceOrg $serviceOrg
+     */
+    public function __construct(ServiceTaskContribution $taskContributionService, ServiceOrg $serviceOrg) {
         $this->taskContributionService = $taskContributionService;
-        $this->servicePerson = $servicePerson;
+        $this->serviceOrg = $serviceOrg;
     }
 
+    /**
+     * @param mixed $data
+     */
     public function setInput($data) {
         $this->data = $data;
     }
 
     public function process() {
-        foreach ($this->data->getXML() as $task) {
+        $xml = $this->data->getData();
+        foreach ($xml->problems[0]->problem as $task) {
             $this->processTask($task);
         }
     }
 
+    /**
+     * @return mixed|SeriesData
+     */
     public function getOutput() {
         return $this->data;
     }
 
+    /**
+     * @param SimpleXMLElement $XMLTask
+     */
     private function processTask(SimpleXMLElement $XMLTask) {
         $tasks = $this->data->getTasks();
         $tasknr = (int) (string) $XMLTask->number;
@@ -64,28 +79,29 @@ class ContributionsFromXML extends Stage {
         $task = $tasks[$tasknr];
         $this->taskContributionService->getConnection()->beginTransaction();
 
-        foreach ($this->contributionFromXML as $type => $XMLElement) {
-            // parse contributors            
-            $contributors = array();
-            foreach (explode(self::DELIMITER, (string) $XMLTask->{$XMLElement}) as $signature) {
+        foreach (self::$contributionFromXML as $type => $xmlElement) {
+            list($parent, $child) = explode('/', $xmlElement);
+            $parentEl = $XMLTask->{$parent}[0];
+            // parse contributors
+            $contributors = [];
+            if (!$parentEl || !isset($parentEl->{$child})) {
+                continue;
+            }
+            foreach ($parentEl->{$child} as $element) {
+                $signature = (string) $element;
                 $signature = trim($signature);
                 if (!$signature) {
                     continue;
                 }
 
 
-                $person = $this->servicePerson->findByTeXSignature($signature);
-                if (!$person) {
+                $org = $this->serviceOrg->findByTeXSignature($signature, $this->data->getContest()->contest_id);
+
+                if (!$org) {
                     $this->log(sprintf(_("Neznámý TeX identifikátor '%s'."), $signature));
                     continue;
                 }
-
-                $org = $person->getOrgs($this->data->getContest()->contest_id)->fetch();
-
-                if (!$org) {
-                    $this->log(sprintf(_("Osoba '%s' není org."), (string) $person), Pipeline::LOG_WARNING);
-                }
-                $contributors[] = $person;
+                $contributors[] = $org;
             }
 
             // delete old contributions
@@ -95,13 +111,12 @@ class ContributionsFromXML extends Stage {
 
             // store new contributions
             foreach ($contributors as $contributor) {
-                $contribution = $this->taskContributionService->createNew(array(
+               $this->taskContributionService->createNewModel([
                     'person_id' => $contributor->person_id,
                     'task_id' => $task->task_id,
                     'type' => $type,
-                ));
+                ]);
 
-                $this->taskContributionService->save($contribution);
             }
         }
 

@@ -22,8 +22,9 @@ use Nette;
  * @property-read string|array|\Closure $native
  * @property-read bool $static
  */
-final class Callback extends Object
+final class Callback
 {
+    use SmartObject;
 	/** @var callable */
 	private $cb;
 
