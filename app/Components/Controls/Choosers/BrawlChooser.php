@@ -2,6 +2,9 @@
 
 namespace FKSDB\Components\Controls\Choosers;
 
+use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Services\ServiceEvent;
 use Nette\Application\UI\Control;
 
 /**
@@ -13,7 +16,7 @@ class BrawlChooser extends Control {
 
     const EVENT_TYPE_ID = 1;
     /**
-     * @var \ModelEvent
+     * @var ModelEvent
      */
     private $event;
 
@@ -22,11 +25,11 @@ class BrawlChooser extends Control {
      */
     private $eventId;
     /**
-     * @var \ModelEvent[]
+     * @var ModelEvent[]
      */
     private $brawls;
     /**
-     * @var \ServiceEvent
+     * @var ServiceEvent
      */
     private $serviceEvent;
     /**
@@ -34,14 +37,17 @@ class BrawlChooser extends Control {
      */
     private $initialized = false;
 
-
-    function __construct(\ServiceEvent $serviceEvent) {
+    /**
+     * BrawlChooser constructor.
+     * @param ServiceEvent $serviceEvent
+     */
+    function __construct(ServiceEvent $serviceEvent) {
         parent::__construct();
         $this->serviceEvent = $serviceEvent;
     }
 
     /**
-     * @param $params object
+     * @param \stdClass $params
      * @return boolean
      * Redirect to correct address according to the resolved values.
      */
@@ -63,7 +69,7 @@ class BrawlChooser extends Control {
     }
 
     /**
-     * @param $params object
+     * @param mixed $params
      */
     protected function init($params) {
         if ($this->initialized) {
@@ -83,7 +89,7 @@ class BrawlChooser extends Control {
     }
 
     /**
-     * @return \ModelContest[]
+     * @return ModelContest[]
      */
     private function getBrawls() {
         if ($this->brawls === null) {
@@ -101,14 +107,14 @@ class BrawlChooser extends Control {
      */
     private function getBrawlIds() {
         $events = $this->getBrawls();
-        $ids = array_map(function (\ModelEvent $event) {
+        $ids = array_map(function (ModelEvent $event) {
             return $event->event_id;
         }, $events);
         return $ids;
     }
 
     /**
-     * @return \ModelEvent
+     * @return ModelEvent
      */
     private function getEvent() {
         if (!$this->event) {
@@ -120,10 +126,14 @@ class BrawlChooser extends Control {
     public function render() {
         $this->template->availableBrawls = $this->getBrawls();
         $this->template->currentEvent = $this->getEvent();
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR.'BrawlChooser.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'BrawlChooser.latte');
         $this->template->render();
     }
 
+    /**
+     * @param $eventId
+     * @throws \Nette\Application\AbortException
+     */
     public function handleChange($eventId) {
         $presenter = $this->getPresenter();
         $presenter->redirect('this', ['eventId' => $eventId]);

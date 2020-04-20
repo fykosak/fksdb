@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Controls\Navs;
 
-use FKSDB\Components\Controls\Choosers\BrawlChooser;
 use FKSDB\Components\Controls\Choosers\Chooser;
 use FKSDB\Components\Controls\Choosers\DispatchChooser;
 use FKSDB\Components\Controls\Choosers\LanguageChooser;
@@ -10,7 +9,6 @@ use FKSDB\Components\Controls\Choosers\SeriesChooser;
 use FKSDB\Components\Controls\Choosers\YearChooser;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
-use Nette\Diagnostics\Debugger;
 use Nette\Http\Session;
 use Nette\Localization\ITranslator;
 
@@ -91,14 +89,6 @@ class Nav extends Control {
     protected function createComponentYearChooser() {
         $control = new YearChooser($this->session, $this->yearCalculator, $this->serviceContest);
 
-        return $control;
-    }
-
-    /**
-     * @return BrawlChooser
-     */
-    protected function createComponentBrawlChooser() {
-        $control = new BrawlChooser($this->serviceEvent);
         return $control;
     }
 
