@@ -11,7 +11,6 @@ use Nette\Utils\Html;
  * Only FILLED validation works properly because there's used special value to distinguish unchanged input.
  *
  * @author Michal Koutný <michal@fykos.cz>
- * @deprecated like extends od DatePicker use HTML5 elements
  */
 class WriteOnlyDatePicker extends DateInput implements IWriteOnly {
 
@@ -42,7 +41,6 @@ class WriteOnlyDatePicker extends DateInput implements IWriteOnly {
     public function setValue($value) {
         if ($value == self::VALUE_ORIGINAL) {
             $this->value = $value;
-            $this->rawValue = $value;
         } else {
             parent::setValue($value);
         }
