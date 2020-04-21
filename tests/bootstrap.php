@@ -10,7 +10,6 @@ use FKSDB\Config\Extensions\StalkingExtension;
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Application\Responses\TextResponse;
 use Nette\Config\Configurator;
-use Nette\Forms\Container;
 use Nette\Utils\Finder;
 use Tester\Assert;
 use Tracy\Debugger;
@@ -95,10 +94,6 @@ function dumpResponse(TextResponse $response) {
     /* Use assert so that expected is dumped as a string to file. */
     Assert::equal('', $html);
 }
-/*
-Container::extensionMethod('addDatePicker', function (Container $container, $name, $label = NULL) {
-    return $container[$name] = new DatePicker($label);
-});*/
 
 /* Always acquire locks in the order as below! */
 define('LOCK_DB', __DIR__ . '/tmp/database.lock');
