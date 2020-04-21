@@ -4,6 +4,7 @@ namespace FKSDB\Components\Forms\Controls\DateInputs;
 
 use Nette\Utils\DateTime;
 use Nette\Forms\Controls\TextInput;
+use Nette\Utils\Html;
 
 /**
  * Class AbstractDateInput
@@ -13,9 +14,9 @@ abstract class AbstractDateInput extends TextInput {
 
     /**
      * AbstractDateInput constructor.
-     * @param null $label
-     * @param null $cols
-     * @param null $maxLength
+     * @param string $label
+     * @param string $cols
+     * @param string $maxLength
      */
     public function __construct($label = NULL, $cols = NULL, $maxLength = NULL) {
         parent::__construct($label, $cols, $maxLength);
@@ -23,20 +24,19 @@ abstract class AbstractDateInput extends TextInput {
     }
 
     /**
-     * @return \Nette\Utils\Html
+     * @return Html
      */
     public function getControl() {
         $control = parent::getControl();
         if ($this->value) {
             $control->value = $this->value->format($this->getFormat());
         }
-
         return $control;
     }
 
     /**
-     * @param $value
-     * @return \Nette\Forms\Controls\TextBase|void
+     * @param string|DateTime $value
+     * @return static
      */
     public function setValue($value) {
         if ($value) {
@@ -44,6 +44,7 @@ abstract class AbstractDateInput extends TextInput {
         } else {
             $this->value = null;
         }
+        return $this;
     }
 
     /**
