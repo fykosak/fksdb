@@ -1,8 +1,6 @@
 <?php
 
-
 namespace FKSDB\Components\Forms\Controls\DateInputs;
-
 
 /**
  * Class WeekInput
