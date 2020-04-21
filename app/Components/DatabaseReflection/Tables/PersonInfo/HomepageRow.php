@@ -27,7 +27,9 @@ class HomepageRow extends AbstractRow {
      * @return BaseControl
      */
     public function createField(...$args): BaseControl {
-        return (new TextInput($this->getTitle()))->addRule(Form::URL);
+        $control = new TextInput($this->getTitle());
+        $control->addCondition(Form::FILLED)->addRule(Form::URL);
+        return $control;
     }
 
     /**
