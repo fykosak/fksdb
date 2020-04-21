@@ -222,9 +222,9 @@ abstract class AbstractServiceMulti implements IService {
     }
 
     /**
-     * @return \Nette\Database\Table\Selection|MultiTableSelection
+     * @return MultiTableSelection
      */
-    public function getTable() {
+    public function getTable(): MultiTableSelection {
         $joinedTable = $this->getJoinedService()->getTable()->getName();
         $mainTable = $this->getMainService()->getTable()->getName();
 

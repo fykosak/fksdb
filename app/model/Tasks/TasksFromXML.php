@@ -1,6 +1,6 @@
 <?php
 
-namespace Tasks;
+namespace FKSDB\Tasks;
 
 use FKSDB\ORM\Services\ServiceTask;
 use Pipeline\PipelineException;
@@ -12,7 +12,7 @@ use SimpleXMLElement;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class TasksFromXML2 extends Stage {
+class TasksFromXML extends Stage {
 
     const XML_NAMESPACE = 'http://www.w3.org/XML/1998/namespace';
 
@@ -32,13 +32,13 @@ class TasksFromXML2 extends Stage {
     ];
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceTask
+     * @var ServiceTask
      */
     private $taskService;
 
     /**
      * TasksFromXML2 constructor.
-     * @param \FKSDB\ORM\Services\ServiceTask $taskService
+     * @param ServiceTask $taskService
      */
     public function __construct(ServiceTask $taskService) {
         $this->taskService = $taskService;

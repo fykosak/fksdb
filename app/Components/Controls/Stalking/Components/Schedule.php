@@ -3,14 +3,20 @@
 
 namespace FKSDB\Components\Controls\Stalking;
 
+use FKSDB\ORM\Models\ModelPerson;
+
 /**
  * Class Schedule
  * @package FKSDB\Components\Controls\Stalking
  */
 class Schedule extends AbstractStalkingComponent {
-    public function render() {
-        $this->beforeRender();
-        $this->template->schedule = $this->modelPerson->getSchedule();
+    /**
+     * @param ModelPerson $person
+     * @param int $userPermissions
+     */
+    public function render(ModelPerson $person, int $userPermissions) {
+        $this->beforeRender($person, $userPermissions);
+        $this->template->schedule = $person->getSchedule();
         $this->template->setFile(__DIR__ . '/Schedule.latte');
         $this->template->render();
     }

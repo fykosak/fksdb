@@ -7,7 +7,7 @@ use Events\Model\Holder\BaseHolder;
 use Events\Model\Holder\Holder;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelEvent;
-use Nette\Database\Table\Selection;
+use FKSDB\ORM\Tables\TypedTableSelection;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
 use Nette\SmartObject;
@@ -25,7 +25,7 @@ class SingleEventSource implements IHolderSource {
     use SmartObject;
 
     /**
-     * @var \FKSDB\ORM\Models\ModelEvent
+     * @var ModelEvent
      */
     private $event;
 
@@ -46,7 +46,7 @@ class SingleEventSource implements IHolderSource {
     private $secondaryModels = null;
 
     /**
-     * @var Selection
+     * @var TypedTableSelection
      */
     private $primarySelection;
 
@@ -77,7 +77,7 @@ class SingleEventSource implements IHolderSource {
     }
 
     /**
-     * @return \FKSDB\ORM\Models\ModelEvent
+     * @return ModelEvent
      */
     public function getEvent() {
         return $this->event;

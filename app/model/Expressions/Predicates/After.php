@@ -30,7 +30,7 @@ class After extends EvaluatedExpression {
     public function __invoke(...$args): bool {
         $datetime = $this->evaluateArgument($this->datetime, ...$args);
         if (!$datetime instanceof \DateTimeInterface) {
-            throw new InvalidStateException();
+            throw new InvalidStateException;
         }
         return $datetime->getTimestamp() <= time();
     }

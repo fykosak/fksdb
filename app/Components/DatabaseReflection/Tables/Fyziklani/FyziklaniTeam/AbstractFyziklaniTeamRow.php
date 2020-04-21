@@ -3,6 +3,7 @@
 namespace FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
+use FKSDB\Exceptions\NotImplementedException;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\BaseControl;
 
@@ -25,6 +26,6 @@ abstract class AbstractFyziklaniTeamRow extends AbstractRow {
      * @throws BadRequestException
      */
     public function createField(...$args): BaseControl {
-        throw new BadRequestException();
+        throw new NotImplementedException;
     }
 }

@@ -13,7 +13,7 @@ use FKSDB\Transitions\IStateModel;
 use Nette\Database\Context;
 use Nette\Database\IConventions;
 use Nette\Database\Table\ActiveRow;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 
 /**
  * Class ModelPersonSchedule
@@ -89,7 +89,7 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel, IP
             case ModelScheduleGroup::TYPE_WEEKEND:
                 return $item->getLabel();
             default:
-                throw new NotImplementedException();
+                throw new NotImplementedException;
         }
     }
 
@@ -115,6 +115,6 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel, IP
      * @throws NotImplementedException
      */
     public function refresh(Context $connection, IConventions $conventions): IStateModel {
-        throw new NotImplementedException();
+        throw new NotImplementedException;
     }
 }

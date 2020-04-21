@@ -1,7 +1,7 @@
 <?php
 
 use FKSDB\Components\Controls\ContestChooser;
-use FKSDB\Expressions\BadTypeException;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelContest;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -47,13 +47,13 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
      * @return ModelContest
      * @throws BadRequestException
      */
-    public function getSelectedContest() {
+    public function getSelectedContest(): ModelContest {
         $contestChooser = $this->getComponent('contestChooser');
         if (!$contestChooser instanceof ContestChooser) {
             throw new BadTypeException(ContestChooser::class, $contestChooser);
         }
         if (!$contestChooser->isValid()) {
-            throw new BadRequestException('No contests available.', 403);
+            throw new ForbiddenRequestException('No contests available.');
         }
         return $contestChooser->getContest();
     }
@@ -62,13 +62,13 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
      * @return int
      * @throws BadRequestException
      */
-    public function getSelectedYear() {
+    public function getSelectedYear(): int {
         $contestChooser = $this->getComponent('contestChooser');
         if (!$contestChooser instanceof ContestChooser) {
             throw new BadTypeException(ContestChooser::class, $contestChooser);
         }
         if (!$contestChooser->isValid()) {
-            throw new BadRequestException('No contests available.', 403);
+            throw new ForbiddenRequestException('No contests available.');
         }
         return $contestChooser->getYear();
     }
@@ -77,7 +77,7 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
      * @return int
      * @throws BadRequestException
      */
-    public function getSelectedAcademicYear() {
+    public function getSelectedAcademicYear(): int {
         return $this->yearCalculator->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
     }
 
@@ -85,9 +85,9 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
      * @return array
      */
     protected function getNavBarVariant(): array {
-        $row = $this->getServiceContest()->findByPrimary($this->contestId);
-        if ($row) {
-            $contest = ModelContest::createFromActiveRow($row);
+        /** @var ModelContest $contest */
+        $contest = $this->getServiceContest()->findByPrimary($this->contestId);
+        if ($contest) {
             return [$contest->getContestSymbol(), 'navbar-dark bg-' . $contest->getContestSymbol()];
         }
         return parent::getNavBarVariant();

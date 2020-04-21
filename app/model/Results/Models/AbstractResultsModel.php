@@ -4,10 +4,10 @@ namespace FKSDB\Results\Models;
 
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Services\ServiceTask;
+use FKSDB\ORM\Tables\TypedTableSelection;
 use FKSDB\Results\EvaluationStrategies\EvaluationStrategy;
 use FKSDB\Results\ModelCategory;
 use Nette\Database\Connection;
-use Nette\Database\Table\Selection;
 use Nette\InvalidStateException;
 
 /**
@@ -159,9 +159,9 @@ abstract class AbstractResultsModel {
 
     /**
      * @param $series
-     * @return Selection
+     * @return TypedTableSelection
      */
-    protected function getTasks($series) {
+    protected function getTasks($series): TypedTableSelection {
         return $this->serviceTask->getTable()
             ->select('task_id, label, points,series')
             ->where([

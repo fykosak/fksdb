@@ -99,5 +99,4 @@ class Pipeline {
             $this->logger->log($message, $level);
         }
     }
-
 }

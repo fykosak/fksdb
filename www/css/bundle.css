@@ -766,6 +766,28 @@ body[data-contest="vyfuk"] h1, body[data-contest="vyfuk"] h2, body[data-contest=
   opacity: 0.75; }
 .chart.chart-participant-acquaintance path.ribbon.inactive {
   opacity: 0; }
+.chart.person-timeline .content circle {
+  stroke: black;
+  stroke-width: 1; }
+  .chart.person-timeline .content circle[data-contest-id="2"] {
+    fill: #ff4800; }
+  .chart.person-timeline .content circle[data-contest-id="1"] {
+    fill: #1175da; }
+  .chart.person-timeline .content circle[data-event-type-id="1"] {
+    fill: #f44336; }
+  .chart.person-timeline .content circle[data-event-type-id="9"] {
+    fill: #18f3bd; }
+.chart.person-timeline .content rect {
+  stroke: white;
+  stroke-width: 1; }
+.chart.person-timeline .content g[data-contest-id="1"] rect {
+  fill: #1175da; }
+.chart.person-timeline .content g[data-contest-id="2"] rect {
+  fill: #ff4800; }
+.chart.person-timeline .content text {
+  text-anchor: middle;
+  alignment-baseline: middle;
+  fill: white; }
 
 .bg-white-container {
   background-color: rgba(255, 255, 255, 0.85); }
