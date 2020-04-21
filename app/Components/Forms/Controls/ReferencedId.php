@@ -140,9 +140,9 @@ class ReferencedId extends HiddenField {
     /**
      * @param string|int|IModel|AbstractModelSingle|ModelPerson $pValue
      * @param bool $force
-     * @return HiddenField|void
+     * @return HiddenField
      */
-    public function setValue($pValue, $force = false) {
+    public function setValue($pValue, bool $force = false) {
         $isPromise = ($pValue === self::VALUE_PROMISE);
         if (!($pValue instanceof IModel) && !$isPromise) {
             $pValue = $this->service->findByPrimary($pValue);
@@ -170,7 +170,7 @@ class ReferencedId extends HiddenField {
         } else {
             $value = $pValue;
         }
-        parent::setValue($value);
+        return parent::setValue($value);
     }
 
     /**

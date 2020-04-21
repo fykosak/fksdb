@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Forms\Controls;
 
 use Nette\Forms\Controls\SelectBox;
+use Nette\Utils\Html;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -27,54 +28,55 @@ class PersonFlag extends SelectBox {
      * @param null $label
      */
     public function __construct($label = NULL) {
-	$items = [
-	    self::FLAG_YES => _('Ano'),
-	    self::FLAG_NO => _('Ne'),
-    ];
+        $items = [
+            self::FLAG_YES => _('Ano'),
+            self::FLAG_NO => _('Ne'),
+        ];
         parent::__construct($label, $items);
-	$this->setPrompt('–');
+        $this->setPrompt('–');
     }
 
     /**
      * @return bool|mixed|null
      */
     public function getValue() {
-	if ($this->useExplicitValues) {
-	    return parent::getValue();
-	}
+        if ($this->useExplicitValues) {
+            return parent::getValue();
+        }
 
-	switch($this->value) {
-	    case self::FLAG_YES:
-		return true;
-	    case self::FLAG_NO:
-		return false;
-	    default:
-		return null;
-	}
+        switch ($this->value) {
+            case self::FLAG_YES:
+                return true;
+            case self::FLAG_NO:
+                return false;
+            default:
+                return null;
+        }
     }
 
     /**
      * @param $value
-     * @return \Nette\Forms\Controls\BaseControl|void
+     * @return static
      */
     public function setValue($value) {
-	if ($value === true || $value === '1' || $value === 1) {
-	    parent::setValue(self::FLAG_YES);
-	} elseif ($value === false || $value === '0' || $value === 0) {
-	    parent::setValue(self::FLAG_NO);
-	} else {
-	    parent::setValue($value);
-	}
+        if ($value === true || $value === '1' || $value === 1) {
+            parent::setValue(self::FLAG_YES);
+        } elseif ($value === false || $value === '0' || $value === 0) {
+            parent::setValue(self::FLAG_NO);
+        } else {
+            parent::setValue($value);
+        }
+        return $this;
     }
 
     /**
-     * @return \Nette\Utils\Html
+     * @return Html
      */
     public function getControl() {
-	$oldMapped = $this->useExplicitValues;
-	$this->useExplicitValues = true;
-	$control = parent::getControl();
-	$this->useExplicitValues = $oldMapped;
-	return $control;
+        $oldMapped = $this->useExplicitValues;
+        $this->useExplicitValues = true;
+        $control = parent::getControl();
+        $this->useExplicitValues = $oldMapped;
+        return $control;
     }
 }

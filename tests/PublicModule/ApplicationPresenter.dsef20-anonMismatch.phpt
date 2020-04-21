@@ -51,8 +51,9 @@ class ApplicationPresenterTest extends ApplicationPresenterDsefTestCase {
         $source = $response->getSource();
         Assert::type(ITemplate::class, $source);
 
-        $html = (string) $source;
-        Assert::contains('<div id="frmform-participant-person_id_1-person_info-born-pair" class="form-group has-error">', $html);
+        $html = (string)$source;
+        Assert::contains('<div
+            id="frm-application-form-form-participant-person_id_1-person_info-born-pair" class="form-group has-error">', $html);
 
         $info = $this->assertPersonInfo($this->personId);
         Assert::equal(null, $info->id_number); // shouldn't be rewritten

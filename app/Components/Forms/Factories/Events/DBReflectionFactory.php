@@ -4,7 +4,7 @@ namespace FKSDB\Components\Forms\Factories\Events;
 
 use Events\Machine\BaseMachine;
 use Events\Model\Holder\Field;
-use FKSDB\Components\Forms\Controls\TimeBox;
+use FKSDB\Components\Forms\Controls\DateInputs\TimeInput;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\AbstractServiceMulti;
 use FKSDB\ORM\AbstractServiceSingle;
@@ -92,7 +92,7 @@ class DBReflectionFactory extends AbstractFactory {
             } elseif ($type == 'TEXT') {
                 $element = new TextArea($field->getLabel());
             } elseif ($type == 'TIME') {
-                $element = new TimeBox($field->getLabel());
+                $element = new TimeInput($field->getLabel());
             } else {
                 $element = new TextInput($field->getLabel());
                 if ($size) {

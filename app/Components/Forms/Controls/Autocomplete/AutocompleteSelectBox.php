@@ -193,7 +193,7 @@ class AutocompleteSelectBox extends TextBase {
 
     /**
      * @param $value
-     * @return TextBase|void
+     * @return TextBase
      */
     public function setValue($value) {
         if ($this->isMultiSelect()) {
@@ -214,6 +214,7 @@ class AutocompleteSelectBox extends TextBase {
         if ($this->dataProvider) {
             $this->dataProvider->setDefaultValue($this->value);
         }
+        return $this;
     }
 
     /**

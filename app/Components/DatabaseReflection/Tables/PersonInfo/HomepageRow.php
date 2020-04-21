@@ -4,8 +4,9 @@ namespace FKSDB\Components\DatabaseReflection\PersonInfo;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
-use FKSDB\Components\Forms\Controls\URLTextBox;
 use Nette\Forms\Controls\BaseControl;
+use Nette\Forms\Controls\TextInput;
+use Nette\Forms\Form;
 
 /**
  * Class HomepageField
@@ -26,7 +27,7 @@ class HomepageRow extends AbstractRow {
      * @return BaseControl
      */
     public function createField(...$args): BaseControl {
-        return new URLTextBox();
+        return (new TextInput($this->getTitle()))->addRule(Form::URL);
     }
 
     /**
