@@ -3,9 +3,11 @@
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
 use FKSDB\Application\IJavaScriptCollector;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextBase;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Arrays;
+use Nette\Utils\Html;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -55,10 +57,10 @@ class AutocompleteSelectBox extends TextBase {
     /**
      * AutocompleteSelectBox constructor.
      * @param $ajax
-     * @param null $label
-     * @param null $renderMethod
+     * @param string $label
+     * @param string $renderMethod
      */
-    function __construct($ajax, $label = null, $renderMethod = null) {
+    function __construct(bool $ajax, string $label = null, string $renderMethod = null) {
         parent::__construct($label);
 
         $this->monitor(IAutocompleteJSONProvider::class);
@@ -129,7 +131,7 @@ class AutocompleteSelectBox extends TextBase {
     }
 
     /**
-     * @return \Nette\Utils\Html
+     * @return Html
      */
     public function getControl() {
         $control = parent::getControl();
@@ -138,10 +140,9 @@ class AutocompleteSelectBox extends TextBase {
             'data-ac-ajax' => (int)$this->isAjax(),
             'data-ac-multiselect' => (int)$this->isMultiSelect(),
             'data-ac-ajax-url' => $this->ajaxUrl,
-            'data-ac-render-method' => $this->renderMethod,
+            'data-ac-render-method' => $this->getRenderMethod(),
+            'class' => self::SELECTOR_CLASS,
         ]);
-
-        $control->addClass(self::SELECTOR_CLASS);
 
         $defaultValue = $this->getValue();
         if ($defaultValue) {
@@ -219,7 +220,7 @@ class AutocompleteSelectBox extends TextBase {
 
     /**
      * @param $value
-     * @return \Nette\Forms\Controls\BaseControl
+     * @return BaseControl
      */
     public function setDefaultValue($value) {
         if ($this->dataProvider) {

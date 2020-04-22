@@ -46,5 +46,4 @@ trait OptionsTrait {
     final public function getOptions() {
         return $this->options;
     }
-
 }
