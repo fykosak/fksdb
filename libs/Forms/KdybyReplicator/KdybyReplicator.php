@@ -58,13 +58,13 @@ class Replicator extends Container
 	 *
 	 * @throws \Nette\InvalidArgumentException
 	 */
-	public function __construct($factory, $createDefault = 0, $forceDefault = FALSE)
+	public function __construct(callable $factory, $createDefault = 0, $forceDefault = FALSE)
 	{
 		parent::__construct();
 		$this->monitor('Nette\Application\UI\Presenter');
 
 		try {
-			$this->factoryCallback = callback($factory);
+			$this->factoryCallback = $factory;
 		} catch (Nette\InvalidArgumentException $e) {
 			$type = is_object($factory) ? 'instanceof ' . get_class($factory) : gettype($factory);
 			throw new Nette\InvalidArgumentException(
@@ -81,9 +81,9 @@ class Replicator extends Container
 	/**
 	 * @param callable $factory
 	 */
-	public function setFactory($factory)
+	public function setFactory(callable $factory)
 	{
-		$this->factoryCallback = callback($factory);
+		$this->factoryCallback = $factory;
 	}
 
 
@@ -141,7 +141,7 @@ class Replicator extends Container
 		$container->currentGroup = $this->currentGroup;
 		$this->addComponent($container, $name, $this->getFirstControlName());
 
-		$this->factoryCallback->invoke($container);
+        ($this->factoryCallback)($container);
 
 		return $this->created[$container->name] = $container;
 	}
@@ -478,7 +478,7 @@ class Replicator extends Container
 			$_this->onClick[] = function (SubmitButton $button) use ($replicator, $callback) {
 				/** @var Replicator $replicator */
 				if (is_callable($callback)) {
-					callback($callback)->invoke($replicator, $button->parent);
+					$callback($replicator, $button->parent);
 				}
 				$replicator->remove($button->parent);
 			};
@@ -490,7 +490,7 @@ class Replicator extends Container
 			$_this->onClick[] = function (SubmitButton $button) use ($replicator, $allowEmpty, $callback) {
 				/** @var Replicator $replicator */
 				if (!is_bool($allowEmpty)) {
-					$callback = callback($allowEmpty);
+					$callback = $allowEmpty;
 					$allowEmpty = FALSE;
 				}
 				if ($allowEmpty === FALSE && $replicator->isAllFilled() === FALSE) {
@@ -498,7 +498,7 @@ class Replicator extends Container
 				}
 				$newContainer = $replicator->createOne();
 				if (is_callable($callback)) {
-					callback($callback)->invoke($replicator, $newContainer);
+					$callback($replicator, $newContainer);
 				}
 			};
 			return $_this;

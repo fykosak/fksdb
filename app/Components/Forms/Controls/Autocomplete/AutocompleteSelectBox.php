@@ -19,7 +19,7 @@ use Nette\Utils\Html;
  */
 class AutocompleteSelectBox extends TextBase {
 
-    const SELECTOR_CLASS = 'autocompleteSelect';
+    const SELECTOR_CLASS = 'autocomplete-select';
     const PARAM_SEARCH = 'acQ';
     const PARAM_NAME = 'acName';
     const INTERNAL_DELIMITER = ',';
@@ -141,7 +141,7 @@ class AutocompleteSelectBox extends TextBase {
             'data-ac-multiselect' => (int)$this->isMultiSelect(),
             'data-ac-ajax-url' => $this->ajaxUrl,
             'data-ac-render-method' => $this->getRenderMethod(),
-            'class' => self::SELECTOR_CLASS,
+            'class' => self::SELECTOR_CLASS . ' form-control',
         ]);
 
         $defaultValue = $this->getValue();
