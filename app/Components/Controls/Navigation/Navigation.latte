@@ -12,8 +12,7 @@
     <div class="d-md-flex justify-content-md-around flex-wrap">
 
         {foreach $nodes as $nodeId => $item}
-            {var node => is_array($item) ? $control->getNode($nodeId) : $control->getNode($item)}
-
+            {var $node => is_array($item) ? $control->getNode($nodeId) : $control->getNode($item)}
             {if $control->isVisible($node)}
                 {var $hasNode = true}
                 {include #link, node => $node}
