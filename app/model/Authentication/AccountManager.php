@@ -172,6 +172,7 @@ class AccountManager {
      * @param string $login
      * @param string $password
      * @return AbstractModelSingle|ModelLogin
+     * TODO can be refactored to new WF
      */
     public final function createLogin(ModelPerson $person, string $login = null, string $password = null) {
         $login = $this->serviceLogin->createNew([

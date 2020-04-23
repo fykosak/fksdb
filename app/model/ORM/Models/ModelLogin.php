@@ -127,6 +127,14 @@ class ModelLogin extends AbstractModelSingle implements IIdentity, IPersonRefere
         $this->hash = PasswordAuthenticator::calculateHash($password, $this);
     }
 
+    /**
+     * @param string $password
+     * @return string
+     */
+    public function createHash(string $password): string {
+        return PasswordAuthenticator::calculateHash($password, $this);
+    }
+
     // ----- IIdentity implementation ----------
 
     /**
