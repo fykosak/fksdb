@@ -100,17 +100,15 @@ class TasksFromXML2 extends Stage {
         $year = $this->data->getYear();
         $series = $this->data->getSeries();
         $tasknr = (int) (string) $XMLTask->number;
-        $is_quiz = $XMLTask->question ? 1 : 0;
 
         // obtain FKSDB\ORM\Models\ModelTask
-        $task = $this->taskService->findBySeries($contest, $year, $series, $tasknr, $is_quiz);
+        $task = $this->taskService->findBySeries($contest, $year, $series, $tasknr);
         if ($task == null) {
             $task = $this->taskService->createNew(array(
                 'contest_id' => $contest->contest_id,
                 'year' => $year,
                 'series' => $series,
                 'tasknr' => $tasknr,
-                'is_quiz' => $is_quiz,
             ));
         }
 
@@ -155,25 +153,21 @@ class TasksFromXML2 extends Stage {
         $this->data->addTask($tasknr, $task);
     }
     /**
-     * Implementation of prserie questions
+     * Implementation of prserie quests
      * 
      * @param SimpleXMLElement $XMLQuest
      */
     private function processQuest(SimpleXMLElement $XMLTask, SimpleXMLElement $XMLQuest) {
-        $contest = $this->data->getContest();
-        $year = $this->data->getYear();
-        $series = $this->data->getSeries();
+        $tasks = $this->data->getTasks();
         $tasknr = (int) (string) $XMLTask->number;
+        $task = $tasks[$tasknr];
         $questnr = (int) (string) $XMLQuest->number;
         $answer = (string) $XMLQuest->answer;
         
-        $task = $this->questService->findBySeries($contest, $year, $series, $tasknr, $questnr);
-        if ($task == null) {
+        $quest = $this->questService->findByTask($task, $questnr);
+        if ($quest == null) {
             $quest = $this->questService->createNew(array(
-                'contest_id' => $contest->contest_id,
-                'year' => $year,
-                'series' => $series,
-                'tasknr' => $tasknr,
+                'task_id' => $task->task_id,
                 'questnr' => $questnr,
                 'answer' => $answer,
             ));

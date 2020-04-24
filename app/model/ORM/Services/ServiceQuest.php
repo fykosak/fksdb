@@ -28,4 +28,17 @@ class ServiceQuest extends AbstractServiceSingle {
     protected function getTableName(): string {
         return DbNames::TAB_QUEST;
     }
+    
+    public function findByTask($task, $questnr) {
+        $result = $this->getTable()->where([
+            'task_id' => $task->task_id,
+            'questnr' => $questnr,
+        ])->fetch();
+        
+        if ($result !== false) {
+            return ModelQuest::createFromActiveRow($result);
+        } else {
+            return null;
+        }
+    }
 }

@@ -75,7 +75,7 @@ class ContributionsFromXML2 extends Stage {
     private function processTask(SimpleXMLElement $XMLTask) {
         $tasks = $this->data->getTasks();
         $tasknr = (int) (string) $XMLTask->number;
-
+        
         $task = $tasks[$tasknr];
         $this->taskContributionService->getConnection()->beginTransaction();
 

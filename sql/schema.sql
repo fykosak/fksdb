@@ -1466,6 +1466,7 @@ CREATE TABLE IF NOT EXISTS `email_message`
 CREATE TABLE IF NOT EXISTS `quest` (
   `quest_id`     INT(11)      NOT NULL AUTO_INCREMENT,
   `task_id`      INT(11)      NOT NULL,
+  COMMENT 'ID ulohy ve ktere je otazka obsazena'
   `questnr`      TINYINT(4)   NULL     DEFAULT NULL
   COMMENT 'Otazka',
   `points`       TINYINT(4)   NULL     DEFAULT NULL
@@ -1473,7 +1474,7 @@ CREATE TABLE IF NOT EXISTS `quest` (
   `answer`       VARCHAR(1)   NULL     DEFAULT NULL
   COMMENT 'Spravna odpoved',
   PRIMARY KEY (`quest_id`),
-  UNIQUE INDEX `quest_taks_ui` (`task_id` ASC),
+  INDEX `quest_task_ui` (`task_id` ASC),
   CONSTRAINT `quest_ibfk_1`
   FOREIGN KEY (`task_id`)
   REFERENCES `task` (`task_id`)
