@@ -2,6 +2,8 @@
 
 namespace FKSDB\Components\Controls\Navigation;
 
+use FKSDB\UI\PageTitle;
+use FKSDB\UI\Title;
 use Nette\Application\IPresenter;
 
 /**
@@ -26,9 +28,9 @@ interface INavigablePresenter extends IPresenter {
     /**
      * Returns title of the current view.
      *
-     * @return array
+     * @return PageTitle
      */
-    public function getTitle(): array;
+    public function getTitle(): PageTitle;
 
     /**
      * Publish access of the protecetd static method.

@@ -1,4 +1,4 @@
-<ul n:if="$allowedSeries" class="nav navbar-nav navbar-right">
+{if $allowedSeries}
     <li class="dropdown nav-item">
         <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">{_'Série'} {$currentSeries}</a>
         <ul class="dropdown-menu">
@@ -10,6 +10,4 @@
             {/foreach}
         </ul>
     </li>
-</ul>
-
-
+{/if}

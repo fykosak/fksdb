@@ -183,10 +183,12 @@ class ScheduleItemPresenter extends BasePresenter {
     }
 
     /**
-     * @return string
+     * @param string $title
+     * @param string $icon
+     * @param string $subTitle
      * @throws BadRequestException
      */
-    public function getSubTitle(): string {
-        return parent::getSubTitle() . ' ->' . sprintf('"%s/%s"', $this->getGroup()->name_cs, $this->getGroup()->name_en);
+    protected function setTitle(string $title, string $icon = '', string $subTitle = '') {
+        parent::setTitle($title, $icon, $subTitle . ' ->' . sprintf('"%s/%s"', $this->getGroup()->name_cs, $this->getGroup()->name_en));
     }
 }

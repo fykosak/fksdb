@@ -51,7 +51,7 @@ trait LangPresenterTrait {
      * @return LanguageChooser
      */
     protected final function createComponentLanguageChooser(): LanguageChooser {
-        return new LanguageChooser($this->session, !$this->getUserPreferredLang());
+        return new LanguageChooser($this->getContext(), $this->getSession(), !$this->getUserPreferredLang());
     }
 
     /**

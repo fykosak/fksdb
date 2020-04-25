@@ -1,5 +1,5 @@
 <ol n:if="$path" class="breadcrumb">
     <li n:foreach="$path as $request" n:class="'breadcrumb-item '.($iterator->isLast() ? 'active')"><a
                 href="{$request->url}" n:tag-if="!$iterator->isLast()"><i
-                    class="{$request->title[1]} mr-1"></i>{$request->title[0]}</a></li>
+                    class="{$request->title->icon} mr-1"></i>{$request->title->title}</a></li>
 </ol>

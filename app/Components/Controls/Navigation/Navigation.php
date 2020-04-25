@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Controls\Navigation;
 
 use FKSDB\Components\Controls\PresenterBuilder;
+use FKSDB\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\InvalidLinkException;
@@ -100,12 +101,12 @@ class Navigation extends Control {
 
     /**
      * @param $node
-     * @return array
+     * @return PageTitle
      * @throws BadRequestException
      */
-    public function getTitle(\stdClass $node) {
+    public function getTitle(\stdClass $node): PageTitle {
         if (isset($node->title)) {
-            return [$node->title, $node->icon];
+            return new PageTitle($node->title, $node->icon);
         }
         if (isset($node->linkPresenter)) {
             $presenter = $this->preparePresenter($node->linkPresenter, $node->linkAction, $node->linkParams);
@@ -113,7 +114,7 @@ class Navigation extends Control {
 
             return $presenter->getTitle();
         }
-        return [];
+        return new PageTitle('');
     }
 
     /**

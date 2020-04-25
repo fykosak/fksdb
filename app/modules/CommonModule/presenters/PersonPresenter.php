@@ -80,14 +80,6 @@ class PersonPresenter extends BasePresenter {
      * @var int
      */
     private $mode;
-    /**
-     * @var DataTestingFactory
-     */
-    private $validationFactory;
-    /**
-     * @var Stalking\StalkingService
-     */
-    private $stalkingService;
 
     /**
      * @param ServicePerson $servicePerson
@@ -115,20 +107,6 @@ class PersonPresenter extends BasePresenter {
      */
     public function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory) {
         $this->referencedPersonFactory = $referencedPersonFactory;
-    }
-
-    /**
-     * @param DataTestingFactory $validationFactory
-     */
-    public function injectValidationFactory(DataTestingFactory $validationFactory) {
-        $this->validationFactory = $validationFactory;
-    }
-
-    /**
-     * @param Stalking\StalkingService $stalkingService
-     */
-    public function injectStalkingService(Stalking\StalkingService $stalkingService) {
-        $this->stalkingService = $stalkingService;
     }
 
     /* *********** TITLE ***************/
