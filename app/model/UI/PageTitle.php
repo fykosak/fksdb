@@ -26,7 +26,7 @@ class PageTitle extends Title {
     public function toHtml(): Html {
         $container = Html::el('span');
         if ($this->icon) {
-            $container->addHtml(Html::el('i')->addAttributes(['class' => $this->icon]));
+            $container->addHtml(Html::el('i')->addAttributes(['class' => $this->icon . ' mr-2']));
         }
         $container->addText($this->title);
         if ($this->subTitle) {
