@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Controls\Navigation;
 
 use FKSDB\UI\PageTitle;
-use FKSDB\UI\Title;
 use Nette\Application\IPresenter;
 
 /**

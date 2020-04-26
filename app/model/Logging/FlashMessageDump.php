@@ -2,7 +2,6 @@
 
 namespace FKSDB\Logging;
 
-use FKSDB\Messages\Message;
 use Nette\Application\UI\Control;
 
 /**

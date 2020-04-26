@@ -2,7 +2,6 @@
 
 namespace FKSDB\UI;
 
-use FKSDB\UI\Title;
 use Nette\Utils\Html;
 
 /**

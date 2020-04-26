@@ -2,7 +2,6 @@
 
 namespace Pipeline;
 
-use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
 
 /**

@@ -6,7 +6,6 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventType;
 use FKSDB\ORM\Services\ServiceEvent;
 use FKSDB\ORM\Tables\TypedTableSelection;
-use FKSDB\UI\PageTitle;
 use FKSDB\UI\Title;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;

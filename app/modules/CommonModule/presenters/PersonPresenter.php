@@ -16,7 +16,6 @@ use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServicePersonInfo;
-use FKSDB\DataTesting\DataTestingFactory;
 use FormUtils;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
