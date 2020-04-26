@@ -1,13 +1,13 @@
 {if $allowedSeries}
-    <li class="dropdown nav-item">
+    <div class="dropdown nav-item">
         <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">{_'Série'} {$currentSeries}</a>
-        <ul class="dropdown-menu">
+        <div class="dropdown-menu">
             {foreach $allowedSeries as $series}
-                <li>
+                <div>
                     <a {if $series==$currentSeries} class="active dropdown-item"{else}  class="dropdown-item"{/if}
                             href="{plink this series => $series}">{_'Série'} {$series}</a>
-                </li>
+                </div>
             {/foreach}
-        </ul>
-    </li>
+        </div>
+    </div>
 {/if}

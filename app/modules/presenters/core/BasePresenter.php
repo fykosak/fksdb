@@ -256,7 +256,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @return PageTitle
      */
     public function getTitle(): PageTitle {
-        return $this->pageTitle;
+        return $this->pageTitle ?: new PageTitle('');
     }
 
     /**

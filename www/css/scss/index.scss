@@ -34,9 +34,18 @@ h1 .small {
 
 html, body {
   font-family: 'Source Sans Pro', sans-serif;
-  /*padding-top: 35px;*/
   height: 100%;
   /* The html and body elements cannot have any padding or margin. */
+}
+
+$footerHeight: 65px;
+body {
+  margin: 0 auto;
+  padding: $footerHeight 0;
+}
+
+main {
+  min-height: 100%;
 }
 
 .list-piped {
@@ -160,6 +169,7 @@ html, body {
 }
 
 footer {
+  min-height: $footerHeight;
   background-color: rgba(255, 255, 255, .7);
 }
 
