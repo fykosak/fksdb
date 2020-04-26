@@ -38,6 +38,10 @@ class ModelSubmit extends AbstractModelSingle implements IResource, ITaskReferen
     public function getTask(): ModelTask {
         return ModelTask::createFromActiveRow($this->ref(DbNames::TAB_TASK, 'task_id'));
     }
+    
+    public function isQuiz(): bool {
+        return ModelQuest::createFromActiveRow($this->ref(DbNames::TAB_QUEST, 'task_id'));
+    }
 
     /**
      * @return ModelContestant

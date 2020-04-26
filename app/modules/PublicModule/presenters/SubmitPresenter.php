@@ -12,6 +12,7 @@ use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\ORM\Services\ServiceTask;
+use FKSDB\ORM\Services\ServiceQuest;
 use FKSDB\Submits\FilesystemUploadedSubmitStorage;
 use FKSDB\Submits\ISubmitStorage;
 use FKSDB\Submits\ProcessingException;
@@ -65,6 +66,14 @@ class SubmitPresenter extends BasePresenter {
     /** @param ServiceTask $taskService */
     public function injectTaskService(ServiceTask $taskService) {
         $this->taskService = $taskService;
+    }
+    
+    /** @var ServiceQuest */
+    private $questService;
+    
+    /** @param ServiceQuest $questService */
+    public function injectQuestService(ServiceQuest $questService) {
+        $this->questService = $questService;
     }
     /* ******************* AUTH ************************/
     /**
@@ -140,6 +149,9 @@ class SubmitPresenter extends BasePresenter {
          * @var ModelTask $task
          */
         foreach ($this->getAvailableTasks() as $task) {
+            $quests = $this->questService->getTable();
+            $quests->where('task_id = ?',  $task->task_id);
+            
             if ($task->submit_deadline != $prevDeadline) {
                 $form->addGroup(sprintf(_('Termín %s'), $task->submit_deadline));
             }
@@ -147,24 +159,33 @@ class SubmitPresenter extends BasePresenter {
             if ($submit && $submit->source == ModelSubmit::SOURCE_POST) {
                 continue; // prevDeadline will work though
             }
+            
             $container = new ModelContainer();
             $form->addComponent($container, 'task' . $task->task_id);
             //$container = $form->addContainer();
-            $upload = $container->addUpload('file', $task->getFQName());
-            $conditionedUpload = $upload
-                ->addCondition(Form::FILLED)
-                ->addRule(Form::MIME_TYPE, _('Lze nahrávat pouze PDF soubory.'), 'application/pdf'); //TODO verify this check at production server
-
-            if (!in_array($studyYear, array_keys($task->getStudyYears()))) {
-                $upload->setOption('description', _('Úloha není určena pro Tvou kategorii.'));
-                $upload->setDisabled();
+            if (!sizeof($quests)) {
+                $upload = $container->addUpload('file', $task->getFQName());
+                $conditionedUpload = $upload
+                    ->addCondition(Form::FILLED)
+                    ->addRule(Form::MIME_TYPE, _('Lze nahrávat pouze PDF soubory.'), 'application/pdf'); //TODO verify this check at production server
+                    
+                if (!in_array($studyYear, array_keys($task->getStudyYears()))) {
+                    $upload->setOption('description', _('Úloha není určena pro Tvou kategorii.'));
+                    $upload->setDisabled();
+                }
+                
+                if ($submit && $this->uploadedSubmitStorage->fileExists($submit)) {
+                    $overwrite = $container->addCheckbox('overwrite', _('Přepsat odeslané řešení.'));
+                    $conditionedUpload->addConditionOn($overwrite, Form::EQUAL, false)->addRule(~Form::FILLED, _('Buď zvolte přepsání odeslaného řešení anebo jej neposílejte.'));
+                }
+            } else {
+                //Implementation of prserie quests
+                $options = ["", "A", "B", "C", "D"];
+                foreach ($quests as $quest) {
+                    $select = $container->addSelect('quest' . $quest->quest_id, $quest->getFQName());
+                    $select->setItems($options);
+                }
             }
-
-            if ($submit && $this->uploadedSubmitStorage->fileExists($submit)) {
-                $overwrite = $container->addCheckbox('overwrite', _('Přepsat odeslané řešení.'));
-                $conditionedUpload->addConditionOn($overwrite, Form::EQUAL, false)->addRule(~Form::FILLED, _('Buď zvolte přepsání odeslaného řešení anebo jej neposílejte.'));
-            }
-
 
             $prevDeadline = $task->submit_deadline;
             $taskIds[] = $task->task_id;
@@ -230,7 +251,7 @@ class SubmitPresenter extends BasePresenter {
                 }
 
                 $taskValues = $values['task' . $task->task_id];
-
+                
                 if (!isset($taskValues['file'])) { // upload field was disabled
                     continue;
                 }
