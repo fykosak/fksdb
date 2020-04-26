@@ -18,7 +18,7 @@ trait OptionsTrait {
      *
      * @param string key
      * @param mixed  value
-     * @return self
+     * @return static
      */
     public function setOption($key, $value) {
         if ($value === NULL) {
@@ -43,7 +43,7 @@ trait OptionsTrait {
      * Returns user-specific options.
      * @return array
      */
-    final public function getOptions() {
+    final public function getOptions(): array {
         return $this->options;
     }
 }

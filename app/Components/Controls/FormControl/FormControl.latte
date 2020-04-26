@@ -38,32 +38,27 @@
 
 {define checkbox}
     <div n:class="form-group, $field->hasErrors() ? has-error" id="{$field->getHtmlId()}-pair">
-
         <div class="form-check">
-            <div class="form-check-input">{$field->getControlPart()}</div>
-            <label class="form-check-label">
-                {$field->getLabelPart()}
-            </label>
+            {var $field->getControlPrototype()->addAttributes(['class'=>'form-check-input'])}
+            {$field->getControlPart()}
+            {var $field->getLabelPrototype()->addAttributes(['class'=>'form-check-label'])}
+            {$field->getLabelPart()}
         </div>
         {include #metadata field => $field}
-
     </div>
 {/define}
 
 {define radiolist}
     <div n:class="form-group, $field->hasErrors() ? has-error" id="{$field->getHtmlId()}-pair">
         {label $field /}
-
         {foreach $field->getItems() as $key => $item}
+            {dump $field->getControlPart($key)}
             <div class="form-check">
-                <div class="form-check-input">{$field->getControlPart($key)}</div>
-                <label class="form-check-label">
-                    {$field->getLabelPart($key)}
-                </label>
+                {$field->getControlPart($key)->addAttributes(['class'=>'form-check-input'])}
+                {$field->getLabelPart($key)->addAttributes(['class'=>'form-check-label'])}
             </div>
         {/foreach}
         {include #metadata field => $field}
-
     </div>
 {/define}
 
