@@ -3,6 +3,7 @@
 namespace Persons\Deduplication;
 
 use FKSDB\Logging\ILogger;
+use FKSDB\Messages\Message;
 use Nette\Database\Connection;
 use Nette\Database\Context;
 use Nette\Database\Reflection\AmbiguousReferenceKeyException;
@@ -78,7 +79,7 @@ class TableMerger {
         $this->table = $table;
         $this->merger = $merger;
         $this->connection = $context->getConnection();
-        $this->context=$context;
+        $this->context = $context;
         $this->globalMergeStrategy = $globalMergeStrategy;
         $this->logger = $logger;
     }
@@ -281,7 +282,7 @@ class TableMerger {
             }
         }
         if ($msg) {
-            $this->logger->log(sprintf(_('%s(%s) nové hodnoty: %s'), $row->getTable()->getName(), $row->getPrimary(), implode(', ', $msg)));
+            $this->logger->log(new Message(sprintf(_('%s(%s) nové hodnoty: %s'), $row->getTable()->getName(), $row->getPrimary(), implode(', ', $msg)), ILogger::INFO));
         }
     }
 
@@ -289,14 +290,14 @@ class TableMerger {
      * @param ActiveRow $row
      */
     private function logDelete(ActiveRow $row) {
-        $this->logger->log(sprintf(_('%s(%s) sloučen a smazán.'), $row->getTable()->getName(), $row->getPrimary()));
+        $this->logger->log(new Message(sprintf(_('%s(%s) sloučen a smazán.'), $row->getTable()->getName(), $row->getPrimary()), ILogger::INFO));
     }
 
     /**
      * @param ActiveRow $row
      */
     private function logTrunk(ActiveRow $row) {
-        $this->logger->log(sprintf(_('%s(%s) rozšířen sloučením.'), $row->getTable()->getName(), $row->getPrimary()));
+        $this->logger->log(new Message(sprintf(_('%s(%s) rozšířen sloučením.'), $row->getTable()->getName(), $row->getPrimary()), ILogger::INFO));
     }
 
     /*     * ******************************
@@ -350,7 +351,7 @@ class TableMerger {
      */
     private function isPrimaryKey($column) {
         if ($this->primaryKey === null) {
-           $this->primaryKey = $this->context->getDatabaseReflection()->getPrimary($this->table);
+            $this->primaryKey = $this->context->getDatabaseReflection()->getPrimary($this->table);
         }
         return $column == $this->primaryKey;
     }
