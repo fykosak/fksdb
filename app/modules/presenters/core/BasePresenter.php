@@ -256,7 +256,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @return PageTitle
      */
     public function getTitle(): PageTitle {
-        return $this->pageTitle ?: new PageTitle('');
+        return $this->pageTitle ?: new PageTitle();
     }
 
     /**
@@ -319,6 +319,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     protected function getPageStyleContainer(): PageStyleContainer {
         $container = new PageStyleContainer();
+        $container->navBarClassName = 'bg-light navbar-light';
         $container->mainContainerClassName = 'container bg-white-container';
         return $container;
     }
@@ -327,9 +328,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @throws ReflectionException
      */
     protected function putIntoBreadcrumbs() {
-        /**
-         * @var Breadcrumbs $component
-         */
+        /** @var Breadcrumbs $component */
         $component = $this->getComponent('breadcrumbs');
         $component->setBackLink($this->getRequest());
     }

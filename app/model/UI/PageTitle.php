@@ -18,7 +18,7 @@ class PageTitle extends Title {
      * @param string $icon
      * @param string $subTitle
      */
-    public function __construct(string $title, string $icon = '', string $subTitle = null) {
+    public function __construct(string $title = '', string $icon = '', string $subTitle = null) {
         parent::__construct($title, $icon);
         $this->subTitle = $subTitle;
     }
