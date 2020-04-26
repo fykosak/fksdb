@@ -39,6 +39,7 @@ class DbNames {
     const TAB_STORED_QUERY_TAG_TYPE = 'stored_query_tag_type';
     const TAB_STUDY_YEAR = 'study_year';
     const TAB_SUBMIT = 'submit';
+    const TAB_SUBMIT_QUEST = 'submit_quest';
     const TAB_TASK = 'task';
     const TAB_TASK_CONTRIBUTION = 'task_contribution';
     const TAB_TASK_STUDY_YEAR = 'task_study_year';

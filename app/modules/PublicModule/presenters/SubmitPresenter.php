@@ -11,6 +11,7 @@ use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceSubmit;
+use FKSDB\ORM\Services\ServiceSubmitQuest;
 use FKSDB\ORM\Services\ServiceTask;
 use FKSDB\ORM\Services\ServiceQuest;
 use FKSDB\Submits\FilesystemUploadedSubmitStorage;
@@ -31,15 +32,19 @@ use Tracy\Debugger;
 class SubmitPresenter extends BasePresenter {
     use SubmitSaveTrait;
 
-
+    
     /** @var ServiceSubmit */
     private $submitService;
+
+    /** @var ServiceSubmit */
+    private $submitQuestService;
 
     /**
      * @param ServiceSubmit $submitService
      */
-    public function injectSubmitService(ServiceSubmit $submitService) {
+    public function injectSubmitService(ServiceSubmit $submitService, ServiceSubmitQuest $submitQuestService) {
         $this->submitService = $submitService;
+        $this->submitQuestService = $submitQuestService;
     }
 
     /**
@@ -47,6 +52,10 @@ class SubmitPresenter extends BasePresenter {
      */
     protected function getServiceSubmit(): ServiceSubmit {
         return $this->submitService;
+    }
+    
+    protected function getServiceSubmitQuest(): ServiceSubmitQuest {
+        return $this->submitQuestService;
     }
 
     /** @var FilesystemUploadedSubmitStorage */
@@ -180,10 +189,13 @@ class SubmitPresenter extends BasePresenter {
                 }
             } else {
                 //Implementation of prserie quests
-                $options = ["", "A", "B", "C", "D"];
+                $options = ['A' => 'A', 'B' => 'B', 'C' => 'C', 'D' => 'D'];
                 foreach ($quests as $quest) {
-                    $select = $container->addSelect('quest' . $quest->quest_id, $quest->getFQName());
-                    $select->setItems($options);
+                    $existingEntry = $this->getServiceSubmitQuest()->findQuestByContestant($this->getContestant()->ct_id, $quest->quest_id);
+                    $existingAnswer = $existingEntry->answer;
+                    
+                    $select = $container->addRadioList('quest' . $quest->quest_id, $quest->getFQName(), $options);
+                    $select->setValue($existingAnswer);
                 }
             }
 
@@ -242,6 +254,9 @@ class SubmitPresenter extends BasePresenter {
             $this->uploadedSubmitStorage->beginTransaction();
 
             foreach ($taskIds as $taskId) {
+                $quests = $this->questService->getTable();
+                $quests->where('task_id = ?',  $taskId);
+                
                 $taskRow = $this->taskService->findByPrimary($taskId);
                 $task = ModelTask::createFromActiveRow($taskRow);
 
@@ -252,17 +267,25 @@ class SubmitPresenter extends BasePresenter {
 
                 $taskValues = $values['task' . $task->task_id];
                 
+                //Implementation of prserie quests
+                foreach ($quests as $quest) {
+                    $name = "quest" . $quest->quest_id;
+                    $answer = $taskValues[$name];
+                    $this->saveSubmitedQuest($quest, $this->getContestant(), $answer);
+                }
+                
                 if (!isset($taskValues['file'])) { // upload field was disabled
                     continue;
                 }
+
                 if (!$taskValues['file']->isOk()) {
                     Debugger::log(sprintf("Uploaded file error %s.", $taskValues['file']->getError()), Debugger::WARNING);
                     continue;
                 }
-
                 $this->saveSubmitTrait($taskValues['file'], $task, $this->getContestant());
 
                 $this->flashMessage(sprintf(_('Úloha %s odevzdána.'), $task->label), self::FLASH_SUCCESS);
+                
             }
 
             $this->uploadedSubmitStorage->commit();

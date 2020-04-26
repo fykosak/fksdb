@@ -1465,8 +1465,8 @@ CREATE TABLE IF NOT EXISTS `email_message`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `quest` (
   `quest_id`     INT(11)      NOT NULL AUTO_INCREMENT,
-  `task_id`      INT(11)      NOT NULL,
-  COMMENT 'ID ulohy ve ktere je otazka obsazena'
+  `task_id`      INT(11)      NOT NULL
+  COMMENT 'ID ulohy ve ktere je otazka obsazena',
   `questnr`      TINYINT(4)   NULL     DEFAULT NULL
   COMMENT 'Otazka',
   `points`       TINYINT(4)   NULL     DEFAULT NULL
@@ -1478,6 +1478,29 @@ CREATE TABLE IF NOT EXISTS `quest` (
   CONSTRAINT `quest_ibfk_1`
   FOREIGN KEY (`task_id`)
   REFERENCES `task` (`task_id`)
+)
+  ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `submit_quest`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `submit_quest` (
+  `submit_quest_id`    INT(11)       NOT NULL AUTO_INCREMENT,
+  `ct_id`        INT(11)       NOT NULL
+  COMMENT 'Contestant',
+  `quest_id`     INT(11)       NOT NULL
+  COMMENT 'Quest',
+  `submitted_on` DATETIME      NULL     DEFAULT NULL,
+  `answer`       VARCHAR(1)    NULL,
+  PRIMARY KEY (`submit_quest_id`),
+  UNIQUE INDEX `submit_qst` (`ct_id` ASC, `quest_id` ASC),
+  INDEX `quest_id` (`quest_id` ASC),
+  CONSTRAINT `submit_qst_ibfk_1`
+  FOREIGN KEY (`ct_id`)
+  REFERENCES `contestant_base` (`ct_id`),
+  CONSTRAINT `submit_qst_ibfk_2`
+  FOREIGN KEY (`quest_id`)
+  REFERENCES `quest` (`quest_id`)
 )
   ENGINE = InnoDB;
 

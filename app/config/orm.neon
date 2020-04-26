@@ -27,6 +27,7 @@ services:
     ServiceQuest:            FKSDB\ORM\Services\ServiceQuest
     ServiceRegion:           FKSDB\ORM\Services\ServiceRegion
     ServiceSubmit:           FKSDB\ORM\Services\ServiceSubmit
+    ServiceSubmitQuest:      FKSDB\ORM\Services\ServiceSubmitQuest
     ServiceSchool:           FKSDB\ORM\Services\ServiceSchool
 
     ServiceStudyYear:        FKSDB\ORM\Services\ServiceStudyYear

@@ -5,6 +5,7 @@ namespace FKSDB\Components\Control\AjaxUpload;
 
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelContestant;
+use FKSDB\ORM\Models\ModelQuest;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceSubmit;
@@ -44,6 +45,23 @@ trait SubmitSaveTrait {
         return $submit;
     }
 
+    private function saveSubmitedQuest(ModelQuest $quest, ModelContestant $contestant, $answer) {
+        $submit = $this->getServiceSubmitQuest()->findQuestByContestant($contestant->ct_id, $quest->quest_id);
+        if (!$submit) {
+            $submit = $this->getServiceSubmitQuest()->createNewModel([
+                'quest_id' => $quest->quest_id,
+                'ct_id' => $contestant->ct_id,
+                'submitted_on' => new DateTime(),
+                'answer' => $answer,
+            ]);
+        } else {
+            $submit->update([
+                'submitted_on' => new DateTime(),
+                'answer' => $answer,
+            ]);
+        }
+        
+    }
     /**
      * @return ServiceSubmit
      */
