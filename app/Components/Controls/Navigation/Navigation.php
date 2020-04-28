@@ -4,6 +4,7 @@ namespace FKSDB\Components\Controls\Navigation;
 
 use FKSDB\Components\Controls\BaseControl;
 use FKSDB\Components\Controls\PresenterBuilder;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
@@ -176,7 +177,7 @@ class Navigation extends BaseControl {
      */
     public function renderNavbar(string $root) {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Navigation.navbar.latte');
-        $this->renderFromRoot($root, [$root => $this->structure[$root]]);
+        $this->renderFromRoot([$root => $this->structure[$root]]);
     }
 
     /**
@@ -184,14 +185,13 @@ class Navigation extends BaseControl {
      */
     public function render(string $root) {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Navigation.latte');
-        $this->renderFromRoot($root, $this->structure[$root]);
+        $this->renderFromRoot($this->structure[$root]);
     }
 
     /**
-     * @param string $root
      * @param array $nodes
      */
-    private function renderFromRoot(string $root, array $nodes) {
+    private function renderFromRoot(array $nodes) {
         $this->template->nodes = $nodes;
         $this->template->render();
     }
@@ -247,20 +247,18 @@ class Navigation extends BaseControl {
     }
 
     /**
-     * @param $presenterName
-     * @param $action
+     * @param string $presenterName
+     * @param string $action
      * @param $providedParams
-     * @return Presenter
+     * @return Presenter|INavigablePresenter
      * @throws BadRequestException
      */
     public function preparePresenter(string $presenterName, string $action, $providedParams): Presenter {
         $ownPresenter = $this->getPresenter();
         $presenter = $this->presenterBuilder->preparePresenter($presenterName, $action, $providedParams, $ownPresenter->getParameter());
         if (!$presenter instanceof INavigablePresenter) {
-            $class = get_class($presenter);
-            throw new InvalidArgumentException("Presenter must be instance of INavigablePresenter, $class given.");
+            throw new BadTypeException(INavigablePresenter::class, $presenter);
         }
         return $presenter;
     }
-
 }

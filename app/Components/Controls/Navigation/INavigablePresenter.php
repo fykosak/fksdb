@@ -37,12 +37,12 @@ interface INavigablePresenter extends IPresenter {
      * @param string $action
      * @return string
      */
-    public static function publicFormatActionMethod($action);
+    public static function publicFormatActionMethod(string $action): string;
 
     /**
      * @return string
      */
-    public static function getBacklinkParamName();
+    public static function getBackLinkParamName(): string;
 }
 
 

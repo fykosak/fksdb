@@ -282,7 +282,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @param string $action
      * @return string
      */
-    public static function publicFormatActionMethod($action) {
+    public static function publicFormatActionMethod(string $action): string {
         return static::formatActionMethod($action);
     }
 

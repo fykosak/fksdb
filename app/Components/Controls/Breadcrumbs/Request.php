@@ -27,7 +27,7 @@ class Request {
      * @var PageTitle
      */
     public $title;
-    /*
+    /**
      * @var string backling ID
      */
     public $parent;
@@ -39,13 +39,13 @@ class Request {
 
     /**
      * Request constructor.
-     * @param $user
+     * @param int|null $user
      * @param AppRequest $request
-     * @param $title
-     * @param $parent
-     * @param $pathKey
+     * @param PageTitle $title
+     * @param string $parent
+     * @param string $pathKey
      */
-    function __construct($user, AppRequest $request, PageTitle $title, $parent, $pathKey) {
+    function __construct($user, AppRequest $request, PageTitle $title, string $parent, string $pathKey) {
         $this->user = $user;
         $this->request = $request;
         $this->title = $title;
