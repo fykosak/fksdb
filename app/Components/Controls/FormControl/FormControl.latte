@@ -28,11 +28,9 @@
     <div n:class="form-group, $field->hasErrors() ? has-error, $field->isRequired() ? required"
             id="{$field->getHtmlId()}-pair">
         {label $field/}
-        <div>
             {? $field->getControlPrototype()->addClass($field->getControlPrototype()->type!='file'?'form-control':'form-control-file')}
             {input $field}
             {include #metadata field => $field}
-        </div>
     </div>
 {/define}
 

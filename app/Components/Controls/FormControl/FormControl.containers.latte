@@ -5,7 +5,8 @@
 
         {include #errors form => $mainContainer}
 
-        {var $container = $mainContainer,    $level = isset($level) ? $level : 0}
+        {var $container = $mainContainer}
+        {var $level = isset($level) ? $level : 0}
         {block group}
             {var $withOptions = $container instanceof FKSDB\Components\Forms\Containers\Models\ContainerWithOptions}
             {var $id = $level > 1 ? $container->getOption('id') : $container->getName()            }
