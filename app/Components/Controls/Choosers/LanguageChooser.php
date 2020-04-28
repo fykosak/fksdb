@@ -25,39 +25,25 @@ class LanguageChooser extends Chooser {
     private $modifiable;
 
     /**
-     * @param Container $container
+     * @param string $lang
      * @param bool $modifiable
+     * @throws \Exception
      */
-    function __construct(Container $container, bool $modifiable) {
-        parent::__construct($container);
+    public function setLang(string $lang , bool $modifiable) {
+        $this->language = $lang;
         $this->modifiable = $modifiable;
     }
 
-    /**
-     * Redirect to correct address accorging to the resolved values.
-     * @param string $lang
-     * @throws \Exception
-     */
-    public function setLang(string $lang) {
-        $this->language = $lang;
-    }
-
-    /**
-     * @param string|null $class
-     */
-    public function render(string $class = null) {
+    public function render() {
         $this->beforeRender();
         $this->template->modifiable = $this->modifiable;
-        $this->template->languageNames = LangPresenterTrait::$languageNames;
-        $this->template->currentLanguage = $this->language ?: null;
-        $this->template->class = $class ?: 'nav navbar-nav navbar-right';
-
+        $this->template->currentLanguageName = LangPresenterTrait::$languageNames[$this->language] ?: null;
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'LanguageChooser.latte');
         $this->template->render();
     }
 
     public function getTitle(): Title {
-        return new Title(_('Language'), 'fa fa-language');
+        return new Title(isset(LangPresenterTrait::$languageNames[$this->language]) ? LangPresenterTrait::$languageNames[$this->language] : _('Language'), 'fa fa-language');
     }
 
     /**

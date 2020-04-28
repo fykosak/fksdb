@@ -39,27 +39,25 @@ trait LangPresenterTrait {
     /**
      * @throws \Exception
      */
-    protected function langTraitStartup() {
+    protected final function langTraitStartup() {
         $this->translator->setLang($this->getLang());
         /** @var LanguageChooser $languageChooser */
         $languageChooser = $this->getComponent('languageChooser');
-        $languageChooser->setLang($this->getLang());
+        $languageChooser->setLang($this->getLang(), !$this->getUserPreferredLang());
     }
 
     /**
      * @return LanguageChooser
      */
     protected final function createComponentLanguageChooser(): LanguageChooser {
-        return new LanguageChooser($this->getContext(), !$this->getUserPreferredLang());
+        return new LanguageChooser($this->getContext());
     }
 
     /**
      * @return string|null
      */
-    protected function getUserPreferredLang() {
-        /**
-         * @var ModelLogin $login
-         */
+    private final function getUserPreferredLang() {
+        /**@var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
         if ($login && $login->getPerson()) {
             return $login->getPerson()->getPreferredLang();
@@ -74,7 +72,7 @@ trait LangPresenterTrait {
      * Should be final
      * @throws BadRequestException
      */
-    public function getLang(): string {
+    public final function getLang(): string {
         if (!$this->cacheLang) {
             $this->cacheLang = $this->getUserPreferredLang();
             if (!$this->cacheLang) {
