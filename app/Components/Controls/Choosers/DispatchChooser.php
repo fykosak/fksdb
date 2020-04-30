@@ -3,13 +3,14 @@
 namespace FKSDB\Components\Controls\Choosers;
 
 use Authorization\Grant;
-use FKSDB\ORM\Models\ModelLogin;
-use FKSDB\ORM\Services\ServiceContest;
+use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Models\ModelRole;
 use FKSDB\UI\Title;
 use FKSDB\YearCalculator;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
-use Nette\Http\Session;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -17,11 +18,7 @@ use Nette\Http\Session;
  * @author Michal Koutný <michal@fykos.cz>
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class DispatchChooser extends Chooser {
-
-    const SOURCE_SESSION = 0x1;
-    const SOURCE_URL = 0x2;
-    const CONTEST_SOURCE = 0xffffffff;
+class DispatchChooser extends ContestChooser {
 
     /**
      * @var YearCalculator
@@ -31,19 +28,17 @@ class DispatchChooser extends Chooser {
     /**
      *
      * @param Container $container
-     * @param Session $session
-     * @param YearCalculator $yearCalculator
-     * @param ServiceContest $serviceContest
      */
-    function __construct(Container $container, Session $session, YearCalculator $yearCalculator, ServiceContest $serviceContest) {
+    function __construct(Container $container) {
         parent::__construct($container);
-        $this->yearCalculator = $yearCalculator;
+        $this->yearCalculator = $container->getByType(YearCalculator::class);
     }
 
     /**
      * @param object $params
      * @return boolean
      * Redirect to correct address according to the resolved values.
+     * @throws BadRequestException
      */
     public function syncRedirect(&$params) {
         $this->init($params);
@@ -60,10 +55,17 @@ class DispatchChooser extends Chooser {
         return false;
     }
 
+    /**
+     * @return ModelContest
+     */
     public function getContest() {
         return $this->contest;
     }
 
+    /**
+     * @param object $params
+     * @throws BadRequestException
+     */
     protected function init($params) {
 
         if ($this->initialized) {
@@ -135,13 +137,11 @@ class DispatchChooser extends Chooser {
         return $result;
     }
 
-    public function render() {
-        $this->template->availableCombinations = $this->getContests();
-        $this->template->currentContest = $this->getContest();
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'DispatchChooser.latte');
-        $this->template->render();
-    }
-
+    /**
+     * @param $contestId
+     * @param $role
+     * @throws AbortException
+     */
     public function handleChange($contestId, $role) {
         $presenter = $this->getPresenter();
         if ($this->role === $role) {
@@ -159,23 +159,42 @@ class DispatchChooser extends Chooser {
 
     }
 
+    /**
+     * @return Title
+     */
     protected function getTitle(): Title {
-        // TODO: Implement getTitle() method.
+        return new Title($this->getContest() ? $this->getContest()->name : _('Contest'));
     }
 
+    /**
+     * @return array[]
+     */
     protected function getItems() {
-        // TODO: Implement getItems() method.
+        return $this->getContests();
     }
 
+    /**
+     * @param $item
+     * @return bool
+     */
     public function isItemActive($item): bool {
-        // TODO: Implement isItemActive() method.
+        return false;
     }
 
+    /**
+     * @param $item
+     * @return string
+     */
     public function getItemLabel($item): string {
-        // TODO: Implement getItemLabel() method.
+        return $item['contest']->name . ' - ' . $item['role'] === 'org' ? _('Org') : _('Contestant');
     }
 
+    /**
+     * @param $item
+     * @return string
+     * @throws InvalidLinkException
+     */
     public function getItemLink($item): string {
-        // TODO: Implement getItemLink() method.
+        return $this->link('change!', [$item['contest']->contest_id, $item['role']]);
     }
 }

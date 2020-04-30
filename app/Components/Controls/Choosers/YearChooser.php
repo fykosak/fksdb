@@ -2,12 +2,14 @@
 
 namespace FKSDB\Components\Controls\Choosers;
 
-use ModelRole;
-use Nette\Application\BadRequestException;
-use Nette\Diagnostics\Debugger;
-use Nette\Http\Session;
-use ServiceContest;
-use YearCalculator;
+use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Models\ModelContestant;
+use FKSDB\ORM\Models\ModelRole;
+use FKSDB\UI\Title;
+use FKSDB\YearCalculator;
+use Nette\Application\UI\InvalidLinkException;
+use Nette\Database\Table\ActiveRow;
+use Nette\DI\Container;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -15,7 +17,7 @@ use YearCalculator;
  * @author Michal Koutný <michal@fykos.cz>
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class YearChooser extends Chooser {
+class YearChooser extends ContestChooser {
 
     /**
      * @var YearCalculator
@@ -29,17 +31,15 @@ class YearChooser extends Chooser {
 
     /**
      *
-     * @param Session $session
-     * @param YearCalculator $yearCalculator
-     * @param ServiceContest $serviceContest
+     * @param Container $container
      */
-    function __construct(Session $session, YearCalculator $yearCalculator, ServiceContest $serviceContest) {
-        parent::__construct($session, $serviceContest);
-        $this->yearCalculator = $yearCalculator;
+    function __construct(Container $container) {
+        parent::__construct($container);
+        $this->yearCalculator = $container->getByType(YearCalculator::class);
     }
 
     /**
-     * @param $params object
+     * @param object $params
      * @return integer
      * Redirect to corrrect address according to the resolved values.
      */
@@ -52,10 +52,16 @@ class YearChooser extends Chooser {
         return false;
     }
 
+    /**
+     * @return int
+     */
     public function getYear() {
         return $this->year;
     }
 
+    /**
+     * @param object $params
+     */
     protected function init($params) {
         if ($this->initialized) {
             return;
@@ -76,6 +82,9 @@ class YearChooser extends Chooser {
         }
     }
 
+    /**
+     * @return array
+     */
     private function getYears() {
 
         if ($this->role === ModelRole::ORG) {
@@ -83,10 +92,6 @@ class YearChooser extends Chooser {
             $max = $this->yearCalculator->getLastYear($this->contest);
             return array_reverse(range($min, $max));
         } else {
-
-            /**
-             * @var $login \ModelLogin
-             */
             $login = $this->getLogin();
             if (is_null($this->contest)) {
                 return [];
@@ -97,6 +102,7 @@ class YearChooser extends Chooser {
             }
             $contestants = $login->getPerson()->getContestants($this->contest->contest_id);
             $years = [];
+            /** @var ModelContestant|ActiveRow $contestant */
             foreach ($contestants as $contestant) {
                 $years[] = $contestant->year;
             }
@@ -106,25 +112,14 @@ class YearChooser extends Chooser {
         }
     }
 
-    public function render() {
-        $this->template->years = $this->getYears();
-        $this->template->currentYear = $this->getYear();
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'YearChooser.latte');
-        $this->template->render();
-    }
-
     /**
-     * @param $year integer
+     * @param $session
+     * @param $params
+     * @param ModelContest $contest
+     * @param null $override
+     * @return int|mixed|null
      */
-    public function handleChange($year) {
-        $presenter = $this->getPresenter();
-        $presenter->redirect('this', [
-                'year' => $year,
-            ]
-        );
-    }
-
-    private function calculateYear($session, $params, \ModelContest $contest, $override = null) {
+    private function calculateYear($session, $params, ModelContest $contest, $override = null) {
         $year = null;
         // session
         if (isset($session->year)) {
@@ -150,5 +145,45 @@ class YearChooser extends Chooser {
             }
         }
         return $year;
+    }
+
+    /**
+     * @return Title
+     */
+    protected function getTitle(): Title {
+        $headline = $this->getYear() ? sprintf(_('Contest year %d'), $this->getYear()) : _('Contest year');
+        return new Title($headline);
+    }
+
+    /**
+     * @return int[]
+     */
+    protected function getItems() {
+        return $this->getYears();
+    }
+
+    /**
+     * @param int $item
+     * @return bool
+     */
+    public function isItemActive($item): bool {
+        return $item === $this->getYear();
+    }
+
+    /**
+     * @param int $item
+     * @return string
+     */
+    public function getItemLabel($item): string {
+        return sprintf(_('Contest year %d'), $item);
+    }
+
+    /**
+     * @param int $item
+     * @return string
+     * @throws InvalidLinkException
+     */
+    public function getItemLink($item): string {
+        return $this->getPresenter()->link('this', ['year' => $item]);
     }
 }

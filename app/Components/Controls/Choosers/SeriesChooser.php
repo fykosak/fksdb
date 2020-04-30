@@ -7,15 +7,13 @@ use FKSDB\UI\PageTitle;
 use FKSDB\UI\Title;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
-use Nette\Http\Session;
-use Nette\Localization\ITranslator;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class SeriesChooser extends Chooser {
+class SeriesChooser extends ContestChooser {
 
     const SESSION_SECTION = 'seriesPreset';
     const SESSION_KEY = 'series';
@@ -34,9 +32,13 @@ class SeriesChooser extends Chooser {
      */
     private $year;
 
+    /**
+     * SeriesChooser constructor.
+     * @param Container $container
+     */
     function __construct(Container $container) {
         parent::__construct($container);
-        $this->seriesCalculator = $seriesCalculator;
+        $this->seriesCalculator = $container->getByType(SeriesCalculator::class);
     }
 
     public function getSeries() {
@@ -110,6 +112,7 @@ class SeriesChooser extends Chooser {
         }
         return false;
     }
+
     /**
      * @return Title
      */
@@ -146,6 +149,6 @@ class SeriesChooser extends Chooser {
      * @throws InvalidLinkException
      */
     public function getItemLink($item): string {
-        return $this->getPresenter()->link('this', ['series' => $series]);
+        return $this->getPresenter()->link('this', ['series' => $item]);
     }
 }
