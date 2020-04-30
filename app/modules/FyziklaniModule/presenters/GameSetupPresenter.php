@@ -2,6 +2,7 @@
 
 namespace FyziklaniModule;
 
+use FKSDB\Exceptions\NotFoundException;
 use FKSDB\model\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
 use Nette\Application\BadRequestException;
@@ -18,9 +19,10 @@ class GameSetupPresenter extends BasePresenter {
 
     /**
      * @return void
+     * @throws BadRequestException
      */
     public function titleDefault() {
-        $this->setTitle(_('Fyziklani game setup'),'fa fa-cogs');
+        $this->setTitle(_('Fyziklani game setup'), 'fa fa-cogs');
     }
 
     /**
@@ -48,7 +50,7 @@ class GameSetupPresenter extends BasePresenter {
         if (!$this->gameSetup) {
             $gameSetup = $this->getEvent()->getFyziklaniGameSetup();
             if (!$gameSetup) {
-                throw new BadRequestException(_('Game is not set up!'), 404);
+                throw new NotFoundException(_('Game is not set up!'));
             }
             $this->gameSetup = $gameSetup;
         }

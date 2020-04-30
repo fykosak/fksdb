@@ -6,11 +6,14 @@ use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
+use FKSDB\ORM\Models\Schedule\ModelSchedulePayment;
 use FKSDB\ORM\Tables\TypedTableSelection;
 use FKSDB\Payment\IPaymentModel;
 use FKSDB\Payment\Price;
 use FKSDB\Transitions\IStateModel;
 use FKSDB\Transitions\Machine;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\IResource;
 use Nette\Utils\DateTime;
@@ -65,6 +68,7 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
     public function getRelatedPersonSchedule(): array {
         $query = $this->related(DbNames::TAB_SCHEDULE_PAYMENT, 'payment_id');
         $items = [];
+        /** @var ModelSchedulePayment $row */
         foreach ($query as $row) {
             $items[] = ModelPersonSchedule::createFromActiveRow($row->person_schedule);
         }
@@ -121,10 +125,12 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
     }
 
     /**
+     * @param Context $connection
+     * @param IConventions $conventions
      * @return ModelPayment|IModel|ActiveRow|AbstractModelSingle
      */
-    public function refresh(): IStateModel {
-        $query = new TypedTableSelection(self::class, DbNames::TAB_PAYMENT, $this->getTable()->getConnection());
+    public function refresh(Context $connection, IConventions $conventions): IStateModel {
+        $query = new TypedTableSelection(self::class, DbNames::TAB_PAYMENT, $connection, $conventions);
         return $query->get($this->getPrimary());
     }
 }

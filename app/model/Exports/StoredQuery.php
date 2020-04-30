@@ -4,9 +4,8 @@ namespace Exports;
 
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use Nette\Database\Connection;
-use Tracy\Debugger;
 use Nette\InvalidArgumentException;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 use Nette\Security\IResource;
 use NiftyGrid\DataSource\IDataSource;
 
@@ -261,7 +260,7 @@ class StoredQuery implements IDataSource, IResource {
      * @throws NotImplementedException
      */
     public function filterData(array $filters) {
-        throw new NotImplementedException();
+        throw new NotImplementedException;
     }
 
     /**
@@ -303,7 +302,6 @@ class StoredQuery implements IDataSource, IResource {
             if ($this->limit !== null && $this->offset !== null) {
                 $sql .= " LIMIT {$this->offset}, {$this->limit}";
             }
-            Debugger::$maxLen = 100000000;
 
             $statement = $this->bindParams($sql);
             $statement->execute();

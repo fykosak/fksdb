@@ -4,7 +4,8 @@ namespace FKSDB\Components\Controls\Breadcrumbs;
 
 use Nette\Application\IPresenterFactory;
 use Nette\Application\IRouter;
-use Nette\Http\Request as HttpRequest;
+use Nette\Application\PresenterFactory;
+use Nette\Http\Request;
 use Nette\Http\Session;
 
 /**
@@ -23,7 +24,7 @@ class BreadcrumbsFactory {
     private $router;
 
     /**
-     * @var HttpRequest
+     * @var Request
      */
     private $httpRequest;
 
@@ -42,10 +43,10 @@ class BreadcrumbsFactory {
      * @param $expiration
      * @param Session $session
      * @param IRouter $router
-     * @param HttpRequest $httpRequest
-     * @param IPresenterFactory $presenterFactory
+     * @param Request $httpRequest
+     * @param PresenterFactory $presenterFactory
      */
-    function __construct($expiration, Session $session, IRouter $router, HttpRequest $httpRequest, IPresenterFactory $presenterFactory) {
+    function __construct($expiration, Session $session, IRouter $router, Request $httpRequest, PresenterFactory $presenterFactory) {
         $this->expiration = $expiration;
         $this->session = $session;
         $this->router = $router;

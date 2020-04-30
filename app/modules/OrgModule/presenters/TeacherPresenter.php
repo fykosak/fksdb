@@ -16,6 +16,8 @@ use Persons\ExtendedPersonHandler;
 /**
  * Class TeacherPresenter
  * @package OrgModule
+ * @method ModelTeacher getModel2()
+ * @method ModelTeacher getModel()
  */
 class TeacherPresenter extends ExtendedPersonPresenter {
     /**
@@ -67,9 +69,6 @@ class TeacherPresenter extends ExtendedPersonPresenter {
      * @throws BadRequestException
      */
     public function titleEdit() {
-        /**
-         * @var ModelTeacher $model
-         */
         $model = $this->getModel2();
         $this->setTitle(sprintf(_('Edit teacher %s'), $model->getPerson()->getFullName()), 'fa fa-pencil');
     }

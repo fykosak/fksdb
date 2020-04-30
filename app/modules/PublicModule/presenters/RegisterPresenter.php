@@ -14,6 +14,7 @@ use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceContestant;
 use FKSDB\ORM\Services\ServicePerson;
+use FKSDB\UI\PageStyleContainer;
 use FKSDB\SeriesCalculator;
 use IContestPresenter;
 use Nette\Application\AbortException;
@@ -249,8 +250,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
     public function titleYear() {
-        $this->setSubtitle($this->getServiceContest()->findByPrimary($this->contestId)->name);
-        $this->setTitle(_('Zvolit ročník'));
+        $this->setTitle(_('Zvolit ročník'), '', $this->getServiceContest()->findByPrimary($this->contestId)->name);
     }
 
     public function actionEmail() {
@@ -261,8 +261,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
     public function titleEmail() {
-        $this->setSubtitle($this->getServiceContest()->findByPrimary($this->contestId)->name);
-        $this->setTitle(_('Zadejte e-mail'));
+        $this->setTitle(_('Zadejte e-mail'), 'fa fa-envelope', $this->getServiceContest()->findByPrimary($this->contestId)->name);
     }
 
     public function renderContest() {
@@ -304,11 +303,11 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     public function createComponentEmailForm() {
         $control = new FormControl();
         $form = $control->getForm();
-        // $form = new Form();
-        // $form->setRenderer(new BootstrapRenderer());
         $form->addText('email', _('e-mail'));
         $form->addSubmit('submit', _('Vyhledat'));
-        $form->onSuccess[] = [$this, 'emailFormSucceeded'];
+        $form->onSuccess[] = function (Form $form) {
+            $this->emailFormSucceeded($form);
+        };
         return $control;
     }
 
@@ -316,7 +315,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @param Form $form
      * @throws AbortException
      */
-    public function emailFormSucceeded(Form $form) {
+    private function emailFormSucceeded(Form $form) {
         $values = $form->getValues();
 
         $this->redirect('this', ['email' => $values->email,]);
@@ -349,6 +348,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     /**
      * @return FormControl
      * @throws BadRequestException
+     * @throws \Exception
      */
     public function createComponentContestantForm() {
         $control = new FormControl();
@@ -440,17 +440,17 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         return null;
     }
 
+
     /**
-     * @return array
+     * @return PageStyleContainer
      */
-    protected function getNavBarVariant(): array {
-        /**
-         * @var ModelContest $contest
-         */
-        $contest = $this->getServiceContest()->findByPrimary($this->contestId);
+    protected function getPageStyleContainer(): PageStyleContainer {
+        $container = parent::getPageStyleContainer();
+        $contest = $this->getSelectedContest();
         if ($contest) {
-            return [$contest->getContestSymbol(), 'bg-dark navbar-dark'];
+            $container->navBarClassName = 'bg-dark navbar-dark';
+            $container->styleId = $contest->getContestSymbol();
         }
-        return parent::getNavBarVariant();
+        return $container;
     }
 }

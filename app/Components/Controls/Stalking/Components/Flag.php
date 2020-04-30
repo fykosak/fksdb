@@ -2,15 +2,20 @@
 
 namespace FKSDB\Components\Controls\Stalking;
 
+use FKSDB\ORM\Models\ModelPerson;
+
 /**
  * Class Flag
  * @package FKSDB\Components\Controls\Stalking
  */
 class Flag extends AbstractStalkingComponent {
-
-    public function render() {
-        $this->beforeRender();
-        $this->template->flags = $this->modelPerson->getMPersonHasFlags();
+    /**
+     * @param ModelPerson $person
+     * @param int $userPermissions
+     */
+    public function render(ModelPerson $person, int $userPermissions) {
+        $this->beforeRender($person, $userPermissions);
+        $this->template->flags = $person->getMPersonHasFlags();
         $this->template->setFile(__DIR__ . '/Flag.latte');
         $this->template->render();
     }

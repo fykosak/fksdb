@@ -4,6 +4,7 @@ namespace FKSDB\Components\DatabaseReflection\PersonHistory;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
+use FKSDB\Exceptions\NotImplementedException;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\BaseControl;
 
@@ -13,6 +14,7 @@ use Nette\Forms\Controls\BaseControl;
  */
 class AcYearRow extends AbstractRow {
     use DefaultPrinterTrait;
+
     /**
      * @return string
      */
@@ -33,7 +35,7 @@ class AcYearRow extends AbstractRow {
      * @throws BadRequestException
      */
     public function createField(...$args): BaseControl {
-        throw new BadRequestException();
+        throw new NotImplementedException;
     }
 
     /**

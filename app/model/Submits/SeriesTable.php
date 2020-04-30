@@ -9,7 +9,6 @@ use FKSDB\ORM\Services\ServiceContestant;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\ORM\Services\ServiceTask;
 use FKSDB\ORM\Tables\TypedTableSelection;
-use Nette\Database\Table\Selection;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -121,16 +120,16 @@ class SeriesTable {
     }
 
     /**
-     * @param $taskFilter
+     * @param array|null $taskFilter
      */
     public function setTaskFilter($taskFilter) {
         $this->taskFilter = $taskFilter;
     }
 
     /**
-     * @return Selection
+     * @return TypedTableSelection
      */
-    public function getContestants(): Selection {
+    public function getContestants(): TypedTableSelection {
         return $this->serviceContestant->getTable()->where([
             'contest_id' => $this->getContest()->contest_id,
             'year' => $this->getYear(),
@@ -138,9 +137,9 @@ class SeriesTable {
     }
 
     /**
-     * @return Selection
+     * @return TypedTableSelection
      */
-    public function getTasks(): Selection {
+    public function getTasks(): TypedTableSelection {
         $tasks = $this->serviceTask->getTable()->where([
             'contest_id' => $this->getContest()->contest_id,
             'year' => $this->getYear(),
@@ -170,8 +169,8 @@ class SeriesTable {
 
         // store submits in 2D hash for better access
         $submitsTable = [];
-        foreach ($submits as $row) {
-            $submit = ModelSubmit::createFromActiveRow($row);
+        /** @var ModelSubmit $submit */
+        foreach ($submits as $submit) {
             if (!isset($submitsTable[$submit->ct_id])) {
                 $submitsTable[$submit->ct_id] = [];
             }
@@ -187,8 +186,8 @@ class SeriesTable {
         $submitsTable = $this->getSubmitsTable();
         $contestants = $this->getContestants();
         $result = [];
-        foreach ($contestants as $contestantRow) {
-            $contestant = ModelContestant::createFromActiveRow($contestantRow);
+        /** @var ModelContestant $contestant */
+        foreach ($contestants as $contestant) {
             $ctId = $contestant->ct_id;
             if (isset($submitsTable[$ctId])) {
                 $result[$ctId] = [self::FORM_SUBMIT => $submitsTable[$ctId]];
@@ -216,5 +215,4 @@ class SeriesTable {
         }
         return md5($fingerprint);
     }
-
 }

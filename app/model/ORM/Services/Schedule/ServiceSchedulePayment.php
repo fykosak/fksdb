@@ -57,15 +57,15 @@ class ServiceSchedulePayment extends AbstractServiceSingle {
                 $row->delete();
             }
         }
-        if (!$this->connection->inTransaction()) {
+        if (!$this->getConnection()->getPdo()->inTransaction()) {
             throw new StorageException(_('Not in transaction!'));
         }
         foreach ($newScheduleIds as $id) {
             $query = $this->getTable()->where('person_schedule_id', $id)->where('payment.state !=? OR payment.state IS NULL', ModelPayment::STATE_CANCELED);
             $count = $query->count();
             if ($count > 0) {
-                $row = $query->fetch();
-                $model = ModelSchedulePayment::createFromActiveRow($row);
+                /** @var ModelSchedulePayment $model */
+                $model = $query->fetch();
                 throw new DuplicatePaymentException(sprintf(
                     _('Item "%s" has already another payment.'),
                     $model->getPersonSchedule()->getLabel()

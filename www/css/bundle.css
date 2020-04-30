@@ -238,45 +238,44 @@ ul.inbox-swappable {
   list-style-type: none;
   cursor: move; }
 
-body {
+body[data-style-id="login"] {
+  background: url(/images/bg/1.jpg) 50%;
+  background-size: cover;
   /*  &[data-bg="4"] main.login {
       background: url(/images/bg/4.jpg) 0 10%;
       background-size: cover;
     }*/ }
-  body main.login {
+  body[data-style-id="login"][data-bg="1"] {
     background: url(/images/bg/1.jpg) 50%;
     background-size: cover; }
-  body[data-bg="1"] main.login {
-    background: url(/images/bg/1.jpg) 50%;
-    background-size: cover; }
-  body[data-bg="2"] main.login {
+  body[data-style-id="login"][data-bg="2"] {
     background: url(/images/bg/2.jpg) 0 10%;
     background-size: cover; }
-  body[data-bg="3"] main.login {
+  body[data-style-id="login"][data-bg="3"] {
     background: url(/images/bg/3.jpg) 0 10%;
     background-size: cover; }
-
-.form-signin {
-  background-color: white;
-  max-width: 330px;
-  margin: 0 auto; }
-  .form-signin .form-control {
-    position: relative;
-    font-size: 16px;
-    height: auto;
-    padding: 10px;
-    box-sizing: border-box; }
-    .form-signin .form-control:focus {
-      z-index: 2; }
-  .form-signin input.top {
-    margin-bottom: -1px;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0; }
-  .form-signin input.bottom {
-    border-top-left-radius: 0;
-    border-top-right-radius: 0; }
-  .form-signin input.last {
-    margin-bottom: 10px; }
+  body[data-style-id="login"] .login-form-container {
+    max-width: 330px;
+    margin: 0 auto; }
+  body[data-style-id="login"] .form-signin {
+    background-color: white; }
+    body[data-style-id="login"] .form-signin .form-control {
+      position: relative;
+      font-size: 16px;
+      height: auto;
+      padding: 10px;
+      box-sizing: border-box; }
+      body[data-style-id="login"] .form-signin .form-control:focus {
+        z-index: 2; }
+    body[data-style-id="login"] .form-signin input.top {
+      margin-bottom: -1px;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0; }
+    body[data-style-id="login"] .form-signin input.bottom {
+      border-top-left-radius: 0;
+      border-top-right-radius: 0; }
+    body[data-style-id="login"] .form-signin input.last {
+      margin-bottom: 10px; }
 
 #imageWP {
   text-align: center; }
@@ -585,6 +584,12 @@ body {
       [data-contest~="vyfuk"] .navigation-item .icon, [data-contest~="vyfuk"] .navigation-item {
         font-size: 1.2rem; } }
 
+[data-contest~="fykos"] .bg-contest {
+  background-color: #1175da; }
+
+[data-contest~="vyfuk"] .bg-contest {
+  background-color: #ff4800; }
+
 [data-contest~="theme-dark"] {
   color: #fff; }
   [data-contest~="theme-dark"] .navigation-item {
@@ -760,6 +765,28 @@ body[data-contest="vyfuk"] h1, body[data-contest="vyfuk"] h2, body[data-contest=
   opacity: 0.75; }
 .chart.chart-participant-acquaintance path.ribbon.inactive {
   opacity: 0; }
+.chart.person-timeline .content circle {
+  stroke: black;
+  stroke-width: 1; }
+  .chart.person-timeline .content circle[data-contest-id="2"] {
+    fill: #ff4800; }
+  .chart.person-timeline .content circle[data-contest-id="1"] {
+    fill: #1175da; }
+  .chart.person-timeline .content circle[data-event-type-id="1"] {
+    fill: #f44336; }
+  .chart.person-timeline .content circle[data-event-type-id="9"] {
+    fill: #18f3bd; }
+.chart.person-timeline .content rect {
+  stroke: white;
+  stroke-width: 1; }
+.chart.person-timeline .content g[data-contest-id="1"] rect {
+  fill: #1175da; }
+.chart.person-timeline .content g[data-contest-id="2"] rect {
+  fill: #ff4800; }
+.chart.person-timeline .content text {
+  text-anchor: middle;
+  alignment-baseline: middle;
+  fill: white; }
 
 .bg-white-container {
   background-color: rgba(255, 255, 255, 0.85); }
@@ -778,16 +805,15 @@ h1 .small {
 
 html, body {
   font-family: 'Source Sans Pro', sans-serif;
-  /*padding-top: 35px;*/
   height: 100%;
   /* The html and body elements cannot have any padding or margin. */ }
 
-/* Wrapper for page content to push down footer */
+body {
+  margin: 0 auto;
+  padding: 65px 0; }
+
 main {
-  /* Negative indent footer by its height */
-  margin: 0 auto -55px;
-  /* Pad bottom by footer height */
-  padding: 55px 0; }
+  min-height: 100%; }
 
 .list-piped > * {
   display: inline-block; }
@@ -878,6 +904,7 @@ main {
   margin-right: 0.5rem; }
 
 footer {
+  min-height: 65px;
   background-color: rgba(255, 255, 255, 0.7); }
 
 .legend.line-chart-legend .legend-item {

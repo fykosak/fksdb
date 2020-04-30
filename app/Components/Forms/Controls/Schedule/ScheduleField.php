@@ -9,7 +9,7 @@ use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleItem;
 use Nette\Forms\Controls\TextInput;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 use Nette\Utils\JsonException;
 
 /**
@@ -77,7 +77,7 @@ class ScheduleField extends TextInput {
             case ModelScheduleGroup::TYPE_TEACHER_PRESENT:
                 return _('Program during competition');
             default:
-                throw new NotImplementedException();
+                throw new NotImplementedException;
         }
     }
 
@@ -85,7 +85,7 @@ class ScheduleField extends TextInput {
      * @return string
      */
     protected function getReactId(): string {
-       return 'event.schedule.'.$this->type;
+        return 'event.schedule.' . $this->type;
     }
 
     /**
@@ -141,8 +141,8 @@ class ScheduleField extends TextInput {
         $groupArray = $group->__toArray();
         $itemList = [];
         $items = $this->serviceScheduleItem->getTable()->where('schedule_group_id', $group->schedule_group_id);
-        foreach ($items as $itemRow) {
-            $item = ModelScheduleItem::createFromActiveRow($itemRow);
+        /** @var ModelScheduleItem $item */
+        foreach ($items as $item) {
             $itemList[] = $item->__toArray();
         }
 

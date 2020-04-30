@@ -12,21 +12,16 @@ use FKSDB\Components\Controls\StoredQueryComponent;
 use FKSDB\Components\Controls\StoredQueryTagCloud;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory as StoredQueryFormFactory;
 use FKSDB\Components\Grids\StoredQueriesGrid;
-use FKSDB\ORM\DbNames;
-use FKSDB\ORM\Models\ModelContest;
-use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\ORM\Models\ModelPostContact;
+use FKSDB\Exceptions\NotFoundException;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryParameter;
-use FKSDB\ORM\Services\ServiceContestant;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryParameter;
-use FKSDB\Results\Models\AbstractResultsModel;
-use FKSDB\Results\ResultsModelFactory;
 use FormUtils;
-use ModelException;
+use FKSDB\Exceptions\ModelException;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Controls\SubmitButton;
@@ -45,14 +40,8 @@ class ExportPresenter extends SeriesPresenter {
     const CONT_PARAMS_META = 'paramsMeta';
     const CONT_META = 'meta';
     const SESSION_NS = 'sql';
-    const PARAM_PREFIX = 'p-';
     const PARAM_LOAD_FROM_SESSION = 'lfs';
     const PARAM_HTTP_AUTH = 'ha';
-
-    /**
-     * @persistent
-     */
-    public $lfs;
 
     /**
      * @persistent
@@ -89,7 +78,7 @@ class ExportPresenter extends SeriesPresenter {
      */
     private $exportFormatFactory;
     /**
-     * @var
+     * @var StoredQuery
      */
     private $storedQuery;
 
@@ -197,9 +186,7 @@ class ExportPresenter extends SeriesPresenter {
         $sql = $data[self::CONT_CONSOLE]['sql'];
         $parameters = [];
         foreach ($data[self::CONT_PARAMS_META] as $paramMetaData) {
-            /**
-             * @var ModelStoredQueryParameter $parameter
-             */
+            /** @var ModelStoredQueryParameter $parameter */
             $parameter = $this->serviceStoredQueryParameter->createNew($paramMetaData);
             $parameter->setDefaultValue($paramMetaData['default']);
             $parameters[] = $parameter;
@@ -246,7 +233,7 @@ class ExportPresenter extends SeriesPresenter {
     public function authorizedEdit($id) {
         $query = $this->getPatternQuery();
         if (!$query) {
-            throw new BadRequestException('Neexistující dotaz.', 404);
+            throw new NotFoundException('Neexistující dotaz.');
         }
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed($query, 'edit', $this->getSelectedContest()));
     }
@@ -258,7 +245,7 @@ class ExportPresenter extends SeriesPresenter {
     public function authorizedShow($id) {
         $query = $this->getPatternQuery();
         if (!$query) {
-            throw new BadRequestException('Neexistující dotaz.', 404);
+            throw new NotFoundException('Neexistující dotaz.');
         }
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed($query, 'show', $this->getSelectedContest()));
     }
@@ -270,7 +257,7 @@ class ExportPresenter extends SeriesPresenter {
     public function authorizedExecute($id) {
         $query = $this->getPatternQuery();
         if (!$query) {
-            throw new BadRequestException('Neexistující dotaz.', 404);
+            throw new NotFoundException('Neexistující dotaz.');
         }
         // proper authorization is done in StoredQueryComponent
     }
@@ -323,6 +310,7 @@ class ExportPresenter extends SeriesPresenter {
 
     /**
      * @param $id
+     * @throws BadRequestException
      */
     public function titleEdit($id) {
         $this->setTitle(sprintf(_('Úprava dotazu %s'), $this->getPatternQuery()->name), 'fa fa-pencil');
@@ -372,6 +360,7 @@ class ExportPresenter extends SeriesPresenter {
 
     /**
      * @param $id
+     * @throws BadRequestException
      */
     public function titleShow($id) {
         $title = sprintf(_('Detail dotazu %s'), $this->getPatternQuery()->name);
@@ -392,6 +381,7 @@ class ExportPresenter extends SeriesPresenter {
 
     /**
      * @param $id
+     * @throws BadRequestException
      */
     public function titleExecute($id) {
         $this->setTitle(sprintf(_('%s'), $this->getPatternQuery()->name), 'fa fa-play-circle-o');
@@ -475,7 +465,9 @@ class ExportPresenter extends SeriesPresenter {
     protected function createComponentComposeForm(): FormControl {
         $control = $this->createDesignForm();
         $control->getForm()->addSubmit('save', _('Save'))
-            ->onClick[] = [$this, 'handleComposeSuccess'];
+            ->onClick[] = function (SubmitButton $button) {
+            $this->handleComposeSuccess($button);
+        };
         return $control;
     }
 
@@ -486,7 +478,9 @@ class ExportPresenter extends SeriesPresenter {
     protected function createComponentEditForm(): FormControl {
         $control = $this->createDesignForm();
         $control->getForm()->addSubmit('save', _('Save'))
-            ->onClick[] = [$this, 'handleEditSuccess'];
+            ->onClick[] = function (SubmitButton $button) {
+            $this->handleEditSuccess($button);
+        };
         return $control;
     }
 
@@ -517,7 +511,9 @@ class ExportPresenter extends SeriesPresenter {
         $submit = $form->addSubmit('execute', _('Spustit'))
             ->setValidationScope(false);
         $submit->getControlPrototype()->addClass('btn-success');
-        $submit->onClick[] = [$this, 'handleComposeExecute'];
+        $submit->onClick[] = function (SubmitButton $button) {
+            $this->handleComposeExecute($button);
+        };
 
         return $control;
     }
@@ -526,7 +522,7 @@ class ExportPresenter extends SeriesPresenter {
      * @param SubmitButton $button
      * @throws AbortException
      */
-    public function handleComposeExecute(SubmitButton $button) {
+    private function handleComposeExecute(SubmitButton $button) {
         $form = $button->getForm();
         $values = $form->getValues();
         $this->storeDesignFormToSession($values);
@@ -543,11 +539,11 @@ class ExportPresenter extends SeriesPresenter {
      * @throws AbortException
      * @throws \ReflectionException
      */
-    public function handleEditSuccess(SubmitButton $button) {
+    private function handleEditSuccess(SubmitButton $button) {
         try {
             $storedQuery = $this->getPatternQuery();
             if (!$this->getContestAuthorizator()->isAllowed($storedQuery, 'edit', $this->getSelectedContest())) {
-                throw new BadRequestException('Nedostatečné oprávnění ke vytvoření dotazu.', 403);
+                throw new ForbiddenRequestException('Nedostatečné oprávnění ke vytvoření dotazu.');
             }
 
             $form = $button->getForm();
@@ -570,10 +566,10 @@ class ExportPresenter extends SeriesPresenter {
      * @throws AbortException
      * @throws \ReflectionException
      */
-    public function handleComposeSuccess(SubmitButton $button) {
+    private function handleComposeSuccess(SubmitButton $button) {
         try {
             if (!$this->getContestAuthorizator()->isAllowed('storedQuery', 'create', $this->getSelectedContest())) {
-                throw new BadRequestException('Nedostatečné oprávnění ke vytvoření dotazu.', 403);
+                throw new ForbiddenRequestException('Nedostatečné oprávnění ke vytvoření dotazu.');
             }
 
             $form = $button->getForm();
@@ -637,130 +633,4 @@ class ExportPresenter extends SeriesPresenter {
         $this->clearSession();
         $connection->commit();
     }
-
-    /**
-     * Very ineffective solution that provides data in
-     * specified format.
-     *
-     * @throws BadRequestException
-     * @deprecated
-     */
-    public function renderOvvp() {
-        /**
-         * @var ResultsModelFactory $modelFactory
-         */
-        $modelFactory = $this->getService('resultsModelFactory');
-        /** @var ServiceContestant $serviceContestant */
-        $serviceContestant = $this->getContext()->getByType(ServiceContestant::class);
-
-
-        $model = $modelFactory->createCumulativeResultsModel($this->getSelectedContest(), $this->getSelectedYear());
-        $this->template->data = [];
-
-        foreach ($model->getCategories() as $category) {
-            $rows = [];
-            $model->setSeries([1, 2, 3, 4, 5, 6]);
-
-            $header = $model->getDataColumns($category);
-            $sumCol = 0;
-            foreach ($header as $column) {
-                if ($column[AbstractResultsModel::COL_DEF_LABEL] == AbstractResultsModel::LABEL_SUM) {
-                    break;
-                }
-                $sumCol++;
-            }
-
-            $datas = [];
-            foreach ($model->getData($category) as $data) {
-                if ($data->sum !== null) {
-                    $datas[] = $data;
-                }
-            }
-
-            foreach ($datas as $data) {
-                $ctid = $data->ct_id;
-
-                $row = [];
-                //TODO unechecked
-                $contestant = $serviceContestant->getContext()->table(DbNames::VIEW_CONTESTANT)->where('ct_id', $ctid);
-                $person = ModelPerson::createFromActiveRow($contestant->person);
-
-                // jména
-                $row[] = $person->other_name;
-                $row[] = $person->family_name;
-
-                // adresa dom
-                $contacts = $person->getPostContacts();
-                $bestMatch = null;
-                foreach ($contacts as $contact) {
-                    if ($contact->type == 'D') {
-                        $bestMatch = $contact;
-                        break;
-                    } else {
-                        $bestMatch = $contact;
-                    }
-                }
-                if ($bestMatch) {
-                    $bestMatch = ModelPostContact::createFromActiveRow($bestMatch);
-                    $address = $bestMatch->getAddress();
-                    $parts = explode(' ', $address->target);
-
-                    $row[] = implode(' ', array_slice($parts, 0, count($parts) - 1));
-                    $row[] = $parts[count($parts) - 1];
-                    $row[] = $address->city;
-                    $row[] = $address->postal_code;
-                    $row[] = ($address->region->country_iso == 'EP') ? '' : strtolower($address->region->country_iso);
-                } else {
-                    $row[] = '';
-                    $row[] = '';
-                    $row[] = '';
-                    $row[] = '';
-                    $row[] = '';
-                }
-
-                // škola
-                if ($contestant->school) {
-                    $row[] = $contestant->school->name_abbrev;
-                    $row[] = $contestant->school->izo;
-                } else {
-                    $row[] = '';
-                    $row[] = '';
-                }
-
-                // rok maturity
-                if ($contestant->study_year !== null) {
-                    $year = $this->getSelectedYear();
-                    $studyYear = ($contestant->study_year >= 1 && $contestant->study_year <= 4) ? $contestant->study_year : ($contestant->study_year - 9);
-                    if ($contestant->contest_id == ModelContest::ID_FYKOS) {
-                        $row[] = 1991 + $year - $studyYear;
-                    } elseif ($contestant->contest_id == ModelContest::ID_VYFUK) {
-                        $row[] = 2015 + $year - $studyYear;
-                    }
-                } else {
-                    $row[] = '';
-                }
-
-                // e-mail
-                if ($person->getLogin() && $person->getLogin()->email) {
-                    $row[] = $person->getLogin()->email;
-                } else {
-                    $row[] = '';
-                }
-
-                // pořadí
-                $row[] = (($data->from == $data->to) ? $data->from : ($data->from . '-' . $data->to)) . '/' . count($datas);
-
-                // body
-                $row[] = $data->sum . '/' . $header[$sumCol][AbstractResultsModel::COL_DEF_LIMIT];
-
-
-                // append
-                if ($data->sum !== null) {
-                    $rows[] = $row;
-                }
-            }
-            $this->template->data[$category->id] = $rows;
-        }
-    }
-
 }

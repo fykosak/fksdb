@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Controls;
 
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
+use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryTag;
 use Nette\Application\UI\Control;
 use Nette\InvalidArgumentException;
 use ServiceMStoredQueryTag;
@@ -98,6 +99,7 @@ class StoredQueryTagCloud extends Control {
     private function createNextActiveTagIds(){
         $tags = $this->serviceMStoredQueryTag->getMainService();
         $nextActiveTagIds = [];
+        /** @var ModelStoredQueryTag $tag */
         foreach($tags as $tag) {
             $activeTagIds = $this->activeTagIds;
             if(array_key_exists($tag->tag_type_id, $activeTagIds)) {

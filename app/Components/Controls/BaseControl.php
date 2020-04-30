@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Controls;
 
 use Nette\Application\UI\Control;
+use Nette\Application\UI\ITemplate;
 use Nette\DI\Container;
 use Nette\Localization\ITranslator;
 
@@ -26,7 +27,7 @@ abstract class BaseControl extends Control {
     }
 
     /**
-     * @return \Nette\Application\UI\ITemplate
+     * @return ITemplate
      */
     protected function createTemplate() {
         $template = parent::createTemplate();
@@ -35,6 +36,7 @@ abstract class BaseControl extends Control {
         $template->setTranslator($translator);
         return $template;
     }
+
     /**
      * @return Container
      */

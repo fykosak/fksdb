@@ -3,6 +3,7 @@
 namespace FKSDB\Components\DatabaseReflection\ReferencedRows;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\StoredQuery\ISchoolReferencedModel;
 use Nette\Application\BadRequestException;
@@ -34,7 +35,7 @@ class SchoolNameRow extends AbstractRow {
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         if (!$model instanceof ISchoolReferencedModel) {
-            throw new BadRequestException();
+            throw new BadTypeException(ISchoolReferencedModel::class, $model);
         }
         return Html::el('span')->addText($model->getSchool()->name_abbrev);
     }

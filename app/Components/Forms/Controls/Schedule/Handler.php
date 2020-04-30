@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Controls\Schedule;
 
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
@@ -74,9 +74,8 @@ class Handler {
             ->where('person_id', $person->person_id)
             ->where('schedule_item.schedule_group.event_id', $eventId)->where('schedule_item.schedule_group.schedule_group_type', $type);
 
-        foreach ($oldRows as $row) {
-
-            $modelPersonSchedule = ModelPersonSchedule::createFromActiveRow($row);
+        /** @var ModelPersonSchedule $modelPersonSchedule */
+        foreach ($oldRows as $modelPersonSchedule) {
             if (\in_array($modelPersonSchedule->schedule_item_id, $newScheduleData)) {
                 // do nothing
                 $index = \array_search($modelPersonSchedule->schedule_item_id, $newScheduleData);
@@ -97,8 +96,8 @@ class Handler {
         }
 
         foreach ($newScheduleData as $id) {
-            $query = $this->serviceScheduleItem->findByPrimary($id);
-            $modelScheduleItem = ModelScheduleItem::createFromActiveRow($query);
+            /** @var ModelScheduleItem $modelScheduleItem */
+            $modelScheduleItem = $this->serviceScheduleItem->findByPrimary($id);
             if ($modelScheduleItem->hasFreeCapacity()) {
                 $this->servicePersonSchedule->createNewModel(['person_id' => $person->person_id, 'schedule_item_id' => $id]);
             } else {

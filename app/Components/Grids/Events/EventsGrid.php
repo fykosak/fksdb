@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Grids\Events;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEvent;
@@ -65,21 +64,20 @@ class EventsGrid extends BaseGrid {
         $this->setDefaultOrder('event.begin ASC');
         $this->setDataSource($dataSource);
 
-        $this->addColumn('event_id', _('Id akce'));
-
         $this->addColumns([
-            DbNames::TAB_EVENT . '.event_type',
-            DbNames::TAB_EVENT . '.name',
-            DbNames::TAB_EVENT . '.year',
-            DbNames::TAB_EVENT . '.event_year',
+            'event.event_id',
+            'event.event_type',
+            'event.name',
+            'event.year',
+            'event.event_year',
         ]);
 
         $this->addLinkButton(':Event:dashboard:default', 'detail', _('Detail'), true, ['eventId' => 'event_id']);
-        $this->addLinkButton( 'edit', 'edit', _('Edit'), true, ['id' => 'event_id']);
+        $this->addLinkButton('edit', 'edit', _('Edit'), true, ['id' => 'event_id']);
 
         $this->addLink('event_participant.list');
 
-        $this->addLinkButton( ':Event:EventOrg:list', 'org', _('Organisers'), true, ['eventId' => 'event_id']);
+        $this->addLinkButton(':Event:EventOrg:list', 'org', _('Organisers'), true, ['eventId' => 'event_id']);
 
         $this->addGlobalButton('add')
             ->setLink($this->getPresenter()->link('create'))

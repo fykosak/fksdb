@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Control\AjaxUpload;
 
+use FKSDB\Exceptions\NotFoundException;
 use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelSubmit;
@@ -10,6 +11,7 @@ use FKSDB\Submits\FilesystemCorrectedSubmitStorage;
 use FKSDB\Submits\FilesystemUploadedSubmitStorage;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Responses\FileResponse;
 use Nette\DI\Container;
 use OrgModule\InboxPresenter;
@@ -33,10 +35,10 @@ trait SubmitDownloadTrait {
         $submit = $serviceSubmit->findByPrimary($id);
 
         if (!$submit) {
-            throw new BadRequestException('Neexistující submit.', 404);
+            throw new NotFoundException('Neexistující submit.');
         }
         if (!$this->getPresenter()->getContestAuthorizator()->isAllowed($submit, $privilege, $submit->getContestant()->getContest())) {
-            throw new  BadRequestException('Nedostatečné oprávnění.', 403);
+            throw new  ForbiddenRequestException('Nedostatečné oprávnění.');
         }
         return $submit;
     }

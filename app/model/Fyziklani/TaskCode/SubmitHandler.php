@@ -9,6 +9,7 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container;
 use Nette\Security\User;
 
@@ -96,7 +97,7 @@ class SubmitHandler {
         $fullCode = TaskCodePreprocessor::createFullCode($code);
         /* skontroluje pratnosť kontrolu */
         if (!TaskCodePreprocessor::checkControlNumber($fullCode)) {
-            throw new ControlMismatchException();
+            throw new ControlMismatchException;
         }
         $team = $this->getTeam($code);
         /* otvorenie submitu */
@@ -109,7 +110,7 @@ class SubmitHandler {
 
     /**
      * @param string $code
-     * @return ModelFyziklaniTeam
+     * @return ModelFyziklaniTeam|ActiveRow
      * @throws TaskCodeException
      */
     public function getTeam(string $code): ModelFyziklaniTeam {
@@ -120,8 +121,7 @@ class SubmitHandler {
         if (!$this->serviceFyziklaniTeam->teamExist($teamId, $this->event)) {
             throw new TaskCodeException(\sprintf(_('Tým %s neexistuje.'), $teamId));
         }
-        $teamRow = $this->serviceFyziklaniTeam->findByPrimary($teamId);
-        return ModelFyziklaniTeam::createFromActiveRow($teamRow);
+        return $this->serviceFyziklaniTeam->findByPrimary($teamId);
     }
 
     /**

@@ -5,6 +5,7 @@ namespace FKSDB\Components\Events;
 use Events\Machine\BaseMachine;
 use FKSDB\Application\IJavaScriptCollector;
 use Nette\Application\UI\Control;
+use Nette\Templating\ITemplate;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -43,6 +44,7 @@ class GraphComponent extends Control {
             $obj->registerJSFile('js/graph/raphael.js');
             $obj->registerJSFile('js/graph/dracula_graffle.js');
             $obj->registerJSFile('js/graph/dracula_graph.js');
+            $obj->registerJSFile('js/eventModelGraph.js');
         }
     }
 
@@ -55,21 +57,11 @@ class GraphComponent extends Control {
         return $template;
     }
 
-    public function renderCanvas() {
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'GraphComponent.canvas.latte');
-        $this->renderTemplate();
-    }
-
-    public function renderScript() {
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'GraphComponent.script.latte');
-        $this->renderTemplate();
-    }
-
-    private function renderTemplate() {
-        $this->template->machine = $this->baseMachine;
-        $this->template->states = array_merge(array_keys($this->baseMachine->getStates()), [BaseMachine::STATE_INIT, BaseMachine::STATE_TERMINATED]);
+    public function render() {
+        $this->template->nodes = json_encode($this->prepareNodes());
+        $this->template->edges = json_encode($this->prepareTransitions());
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'GraphComponent.latte');
         $this->template->id = $this->getHtmlId();
-        $this->template->printer = $this->expressionPrinter;
         $this->template->render();
     }
 
@@ -80,5 +72,50 @@ class GraphComponent extends Control {
         return 'graph-' . $this->getUniqueId();
     }
 
+    /**
+     * @return array
+     */
+    private function getAllStates(): array {
+        return array_merge(array_keys($this->baseMachine->getStates()), [BaseMachine::STATE_INIT, BaseMachine::STATE_TERMINATED]);
+    }
+
+    /**
+     * @return array
+     */
+    private function prepareNodes(): array {
+        $states = $this->getAllStates();
+        $nodes = [];
+        foreach ($states as $state) {
+
+            $nodes[] = [
+                'id' => $state,
+                'label' => $this->baseMachine->getStateName($state),
+                'type' => $state === BaseMachine::STATE_INIT ? 'init' : $state === BaseMachine::STATE_TERMINATED ? 'terminated' : 'default'
+            ];
+        }
+        return $nodes;
+    }
+
+    /**
+     * @return array
+     */
+    private function prepareTransitions(): array {
+        $states = $this->getAllStates();
+        $edges = [];
+        foreach ($this->baseMachine->getTransitions() as $transition) {
+            foreach ($states as $state) {
+                if ($transition->matches($state)) {
+                    $edges[] = [
+                        'source' => $state,
+                        'target' => $transition->getTarget(),
+                        'condition' => $this->expressionPrinter->printExpression($transition->getCondition()),
+                        'label' => $transition->getLabel(),
+                    ];
+
+                }
+            }
+        }
+        return $edges;
+    }
 }
 

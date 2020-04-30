@@ -5,6 +5,7 @@ namespace FKSDB\Components\Grids;
 use Exception;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -12,7 +13,7 @@ use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 use Nette\Utils\Html;
 use NiftyGrid\Components\Button;
 use NiftyGrid\Components\Column;
@@ -55,9 +56,7 @@ abstract class BaseGrid extends Grid {
      */
     protected function configure($presenter) {
         $this->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.latte');
-        /**
-         * @var GridPaginator $paginator
-         */
+        /** @var GridPaginator $paginator */
         $paginator = $this->getComponent('paginator');
         $paginator->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.paginator.latte');
     }
@@ -73,11 +72,16 @@ abstract class BaseGrid extends Grid {
      * @return \Nette\Application\UI\ITemplate
      */
     protected function createTemplate() {
+        $presenter = $this->getPresenter();
+        if (!$presenter instanceof \BasePresenter) {
+            throw new BadTypeException(\BasePresenter::class, $presenter);
+        }
+
         /** @var GridPaginator $paginator */
         $paginator = $this->getComponent('paginator');
-        $paginator->getTemplate()->setTranslator($this->presenter->getTranslator());
+        $paginator->getTemplate()->setTranslator($presenter->getTranslator());
         $template = parent::createTemplate();
-        $template->setTranslator($this->presenter->getTranslator());
+        $template->setTranslator($presenter->getTranslator());
         return $template;
     }
 
@@ -198,7 +202,7 @@ abstract class BaseGrid extends Grid {
                 $model = $modelClassName::createFromActiveRow($model);
             }
             return $factory->renderValue($model, 1);
-        });
+        })->setSortable(false);
     }
 
     /**
@@ -221,7 +225,7 @@ abstract class BaseGrid extends Grid {
      * @throws NotImplementedException
      */
     protected function getModelClassName(): string {
-        throw new NotImplementedException();
+        throw new NotImplementedException;
     }
 
     /**
@@ -249,22 +253,27 @@ abstract class BaseGrid extends Grid {
     protected function addLinkButton(string $destination, string $id, string $label, bool $checkACL = true, array $params = []): Button {
         $modelClassName = $this->getModelClassName();
         $paramMapCallback = function ($model) use ($params): array {
-            $URLParams = [];
+            $hrefParams = [];
             foreach ($params as $key => $value) {
-                $URLParams[$key] = $model->{$value};
+                $hrefParams[$key] = $model->{$value};
             }
-            return $URLParams;
+            return $hrefParams;
         };
         /** @var Button $button */
         $button = $this->addButton($id, $label)
             ->setText($label)
-            ->setLink(function ($row) use ($modelClassName, $destination, $paramMapCallback) {
-                $model = $modelClassName::createFromActiveRow($row);
+            ->setLink(function ($model) use ($modelClassName, $destination, $paramMapCallback) {
+                if (!$model instanceof $modelClassName) {
+                    $model = $modelClassName::createFromActiveRow($model);
+                }
                 return $this->getPresenter()->link($destination, $paramMapCallback($model));
             });
         if ($checkACL) {
-            $button->setShow(function ($row) use ($modelClassName, $destination, $paramMapCallback) {
-                return $this->getPresenter()->authorized($destination, $paramMapCallback($modelClassName::createFromActiveRow($row)));
+            $button->setShow(function ($model) use ($modelClassName, $destination, $paramMapCallback) {
+                if (!$model instanceof $modelClassName) {
+                    $model = $modelClassName::createFromActiveRow($model);
+                }
+                return $this->getPresenter()->authorized($destination, $paramMapCallback($model));
             });
         }
         return $button;
@@ -283,13 +292,17 @@ abstract class BaseGrid extends Grid {
         /** @var Button $button */
         $button = $this->addButton(str_replace('.', '_', $linkId), $factory->getText())
             ->setText($factory->getText())
-            ->setLink(function ($row) use ($modelClassName, $factory) {
-                $model = $modelClassName::createFromActiveRow($row);
+            ->setLink(function ($model) use ($modelClassName, $factory) {
+                if (!$model instanceof $modelClassName) {
+                    $model = $modelClassName::createFromActiveRow($model);
+                }
                 return $this->getPresenter()->link($factory->getDestination($model), $factory->prepareParams($model));
             });
         if ($checkACL) {
-            $button->setShow(function ($row) use ($modelClassName, $factory) {
-                $model = $modelClassName::createFromActiveRow($row);
+            $button->setShow(function ($model) use ($modelClassName, $factory) {
+                if (!$model instanceof $modelClassName) {
+                    $model = $modelClassName::createFromActiveRow($model);
+                }
                 return $this->getPresenter()->authorized($factory->getDestination($model), $factory->prepareParams($model));
             });
         }

@@ -10,8 +10,10 @@ use FKSDB\ORM\Models\IScheduleGroupReferencedModel;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\Transitions\IStateModel;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 use Nette\Database\Table\ActiveRow;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 
 /**
  * Class ModelPersonSchedule
@@ -87,7 +89,7 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel, IP
             case ModelScheduleGroup::TYPE_WEEKEND:
                 return $item->getLabel();
             default:
-                throw new NotImplementedException();
+                throw new NotImplementedException;
         }
     }
 
@@ -107,10 +109,12 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel, IP
     }
 
     /**
+     * @param Context $connection
+     * @param IConventions $conventions
      * @return IStateModel
      * @throws NotImplementedException
      */
-    public function refresh(): IStateModel {
-        throw new NotImplementedException();
+    public function refresh(Context $connection, IConventions $conventions): IStateModel {
+        throw new NotImplementedException;
     }
 }

@@ -14,7 +14,7 @@ use FKSDB\ORM\Services\ServicePerson;
 use FormUtils;
 use Mail\MailTemplateFactory;
 use Mail\SendFailedException;
-use ModelException;
+use FKSDB\Exceptions\ModelException;
 use Nette\Database\Connection;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
@@ -166,7 +166,7 @@ class ExtendedPersonHandler {
     public final function handleForm(Form $form, IExtendedPersonPresenter $presenter, bool $sendEmail) {
 
         try {
-           $this->connection->beginTransaction();
+            $this->connection->beginTransaction();
             $values = $form->getValues();
             $create = !$presenter->getModel();
 
@@ -192,10 +192,7 @@ class ExtendedPersonHandler {
             /*
              * Finalize
              */
-            if (!$this->connection->commit()) {
-                throw new ModelException();
-            }
-
+            $this->connection->commit();
 
             if ($create) {
                 $msg = $presenter->messageCreate();
@@ -239,7 +236,7 @@ class ExtendedPersonHandler {
         }
         // initialize model
         $model = $presenter->getModel();
-        $newData = [];
+
         if (!$model) {
             $data = [
                 'contest_id' => $this->getContest()->contest_id,

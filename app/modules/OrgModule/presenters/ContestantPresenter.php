@@ -10,6 +10,7 @@ use Nette\Application\UI\Form;
 /**
  * Class ContestantPresenter
  * @package OrgModule
+ * @method ModelContestant getModel()
  */
 class ContestantPresenter extends ExtendedPersonPresenter {
 
@@ -31,7 +32,7 @@ class ContestantPresenter extends ExtendedPersonPresenter {
      * @param $id
      */
     public function titleEdit($id) {
-        $this->setTitle(sprintf(_('Úprava řešitele %s'), $this->getModel()->getPerson()->getFullname()), 'fa fa-user');
+        $this->setTitle(sprintf(_('Úprava řešitele %s'), $this->getModel()->getPerson()->getFullName()), 'fa fa-user');
     }
 
     public function titleCreate() {

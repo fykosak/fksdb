@@ -26,9 +26,10 @@ use Nette\Utils\DateTime;
  * @property-read DateTime end
  * @property-read DateTime registration_begin
  * @property-read DateTime registration_end
+ * @property-read string parameters
  */
 class ModelEvent extends AbstractModelSingle implements IResource, IContestReferencedModel {
-
+    const RESOURCE_ID = 'event';
     /**
      * Event can have a holder assigned for purposes of parameter parsing.
      * Nothing else (currently).
@@ -90,7 +91,7 @@ class ModelEvent extends AbstractModelSingle implements IResource, IContestRefer
      * @return string
      */
     public function getResourceId(): string {
-        return 'event';
+        return self::RESOURCE_ID;
     }
 
     /**
@@ -105,11 +106,11 @@ class ModelEvent extends AbstractModelSingle implements IResource, IContestRefer
      * @throws NotSetGameParametersException
      */
     public function getFyziklaniGameSetup(): ModelFyziklaniGameSetup {
-        $gameSetup = $this->related(DbNames::TAB_FYZIKLANI_GAME_SETUP, 'event_id')->fetch();
-        if (!$gameSetup) {
+        $gameSetupRow = $this->related(DbNames::TAB_FYZIKLANI_GAME_SETUP, 'event_id')->fetch();
+        if (!$gameSetupRow) {
             throw new NotSetGameParametersException(_('Herné parametre niesu nastavené'));
         }
-        return ModelFyziklaniGameSetup::createFromActiveRow($gameSetup);
+        return ModelFyziklaniGameSetup::createFromActiveRow($gameSetupRow);
     }
 
     /**

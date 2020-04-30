@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\DatabaseReflection\Links;
 
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Application\BadRequestException;
 use Nette\Application\LinkGenerator;
@@ -70,7 +71,7 @@ abstract class AbstractLink {
     public function createLink($model): string {
         $modelClassName = $this->getModelClassName();
         if (!$model instanceof $modelClassName) {
-            throw new BadRequestException();
+            throw new BadTypeException($modelClassName, $model);
         }
         return $this->presenterComponent->link(
             $this->getDestination($model),

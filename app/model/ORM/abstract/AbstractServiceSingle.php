@@ -4,7 +4,7 @@ namespace FKSDB\ORM;
 
 use FKSDB\ORM\Tables\TypedTableSelection;
 use InvalidArgumentException;
-use ModelException;
+use FKSDB\Exceptions\ModelException;
 use Nette\Database\Connection;
 use Nette\Database\Context;
 use Nette\Database\IConventions;
@@ -181,23 +181,20 @@ abstract class AbstractServiceSingle extends Selection implements IService {
             throw new InvalidArgumentException('Service for class ' . $this->getModelClassName() . ' cannot store ' . get_class($model));
         }
         try {
-            var_dump($model->isNew());
             if ($model->isNew()) {
                 $result = $this->getTable()->insert($model->getTmpData());
                 if ($result !== false) {
                     $model = $modelClassName::createFromActiveRow($result);
                     $model->setNew(false);
-                } else {
-                    $result = false;
                 }
             } else {
-                $result = $model->update($model->getTmpData()) !== false;
+                $model->update($model->getTmpData());
             }
         } catch (PDOException $exception) {
             Debugger::log($exception);
             throw new ModelException('Error when storing model.', null, $exception);
         }
-        // besause ActiveRow return false when 0 rows where effected https://stackoverflow.com/questions/11813911/php-pdo-error-number-00000-when-query-is-correct
+        // because ActiveRow return false when 0 rows where effected https://stackoverflow.com/questions/11813911/php-pdo-error-number-00000-when-query-is-correct
         if (!(int)$this->context->getConnection()->getPdo()->errorInfo()) {
             $code = $this->context->getConnection()->getPdo()->errorCode();
             throw new ModelException("$code: Error when storing a model.");
@@ -223,7 +220,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
     /**
      * @return TypedTableSelection
      */
-    public function getTable() {
+    public function getTable(): TypedTableSelection {
         return new TypedTableSelection($this->getModelClassName(), $this->getTableName(), $this->context, $this->conventions);
     }
 

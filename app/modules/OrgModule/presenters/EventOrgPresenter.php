@@ -3,9 +3,9 @@
 namespace OrgModule;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
-use FKSDB\NotImplementedException;
-use FKSDB\ORM\IModel;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Models\ModelEventOrg;
 use FKSDB\ORM\Services\ServiceEvent;
 use FKSDB\ORM\Services\ServiceEventOrg;
 use Nette\Application\AbortException;
@@ -16,6 +16,7 @@ use Persons\ExtendedPersonHandler;
 /**
  * Class EventOrgPresenter
  * @package OrgModule
+ * @method ModelEventOrg getModel()
  */
 class EventOrgPresenter extends ExtendedPersonPresenter {
 
@@ -57,7 +58,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
 
     public function titleEdit() {
         $model = $this->getModel();
-        $this->setTitle(sprintf(_('Úprava organizátora %s akce %s'), $model->getPerson()->getFullname(), $model->getEvent()->name), 'fa fa-user');
+        $this->setTitle(sprintf(_('Úprava organizátora %s akce %s'), $model->getPerson()->getFullName(), $model->getEvent()->name), 'fa fa-user');
     }
 
     public function titleCreate() {
@@ -92,15 +93,6 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
             $this->flashMessage(_('Nepodařilo se smazat organizátora akce.'), self::FLASH_ERROR);
         }
         $this->redirect('list');
-    }
-
-    /**
-     * @param IModel|null $model
-     * @param Form $form
-     */
-    protected function setDefaults(IModel $model = null, Form $form) {
-        parent::setDefaults($model, $form);
-        //$form[ExtendedPersonHandler::CONT_MODEL]->setDefaults([]);
     }
 
     /**
@@ -155,7 +147,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
      */
     private function getEvent(): ModelEvent {
         if (!$this->modelEvent) {
-            $this->modelEvent = ModelEvent::createFromActiveRow($this->serviceEvent->findByPrimary($this->eventId));
+            $this->modelEvent = $this->serviceEvent->findByPrimary($this->eventId);
         }
         return $this->modelEvent;
     }
@@ -165,7 +157,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
      * @throws NotImplementedException
      */
     protected function createComponentGrid() {
-        throw new NotImplementedException();
+        throw new NotImplementedException;
     }
 
     /**

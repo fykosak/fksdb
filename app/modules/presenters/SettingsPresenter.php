@@ -164,14 +164,12 @@ class SettingsPresenter extends AuthenticatedPresenter {
         $tokenAuthentication =
             $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN) ||
             $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_RECOVERY);
-        /**
-         * @var ModelLogin $login
-         */
+        /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
 
         $loginData = FormUtils::emptyStrToNull($values[self::CONT_LOGIN]);
         if ($loginData['password']) {
-            $login->setHash($loginData['password']);
+            $loginData['hash'] = $login->createHash($loginData['password']);
         }
 
         $this->loginService->updateModel2($login, $loginData);

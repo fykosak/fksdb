@@ -5,10 +5,12 @@ namespace EventModule;
 use AuthenticatedPresenter;
 use Events\Model\Holder\Holder;
 use FKSDB\Events\EventDispatchFactory;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotFoundException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEvent;
+use FKSDB\UI\PageStyleContainer;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Security\IResource;
@@ -48,6 +50,10 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         $this->serviceEvent = $serviceEvent;
     }
 
+    protected function getServiceEvent(): ServiceEvent {
+        return $this->serviceEvent;
+    }
+
     /**
      * @param EventDispatchFactory $eventDispatchFactory
      */
@@ -62,7 +68,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      */
     protected function startup() {
         if (!$this->isEnabled()) {
-            throw new NotImplementedException();
+            throw new NotImplementedException;
         }
         parent::startup();
     }
@@ -83,9 +89,9 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      */
     protected function getEvent(): ModelEvent {
         if (!$this->event) {
-            $model = $this->serviceEvent->findByPrimary($this->eventId);
+            $model = $this->getServiceEvent()->findByPrimary($this->eventId);
             if (!$model) {
-                throw new BadRequestException('Event not found.', 404);
+                throw new NotFoundException('Event not found.');
             }
             $this->event = $model;
         }
@@ -172,36 +178,37 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /* ********************** GUI ************************ */
     /**
-     * @return ModelEvent
-     * @return string
-     * @throws BadRequestException
+     * @param string $title
+     * @param string $icon
+     * @param string $subTitle
      * @throws BadRequestException
      */
-    public function getSubTitle(): string {
-        return $this->getEvent()->__toString();
+    protected function setTitle(string $title, string $icon = '', string $subTitle = '') {
+        parent::setTitle($title, $icon, $subTitle ?: $this->getEvent()->__toString());
     }
 
     /**
-     * @return array
+     * @return PageStyleContainer
      * @throws BadRequestException
      */
-    protected function getNavBarVariant(): array {
-        $classNames = ['event event-type-' . $this->getEvent()->event_type_id, null];
+    protected function getPageStyleContainer(): PageStyleContainer {
+        $container = parent::getPageStyleContainer();
+        $container->styleId = 'event event-type-' . $this->getEvent()->event_type_id;
         switch ($this->getEvent()->event_type_id) {
             case 1:
-                $classNames[1] = 'bg-fyziklani navbar-dark';
+                $container->navBarClassName = 'bg-fyziklani navbar-dark';
                 break;
             case 9:
-                $classNames[1] = 'bg-fol navbar-light';
+                $container->navBarClassName = 'bg-fol navbar-light';
                 break;
             default:
-                $classNames[1] = 'bg-light navbar-light';
+                $container->navBarClassName = 'bg-light navbar-light';
         }
-        return $classNames;
+        return $container;
     }
 
     /**
-     * @return array
+     * @return array|string[]
      */
     protected function getNavRoots(): array {
         return ['event.dashboard.default'];

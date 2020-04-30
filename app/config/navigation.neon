@@ -25,7 +25,6 @@ navigation:
         org.dashboard.default:
             - Dispatch.default
             - Org.Inbox.default
-            - Org.Inbox.handout
             - Org.Points.default
             - Org.Tasks.import
             - Org.Contestant.list
@@ -56,7 +55,7 @@ navigation:
             - vyfuk
             - Fyziklani
         fyziklani.dashboard.default:
-            - Fyziklani.Submit.entry
+            - Fyziklani.Submit.create
             - Fyziklani.Submit.list
             - Fyziklani.Close.list
             - Fyziklani.Results.list
@@ -85,9 +84,16 @@ navigation:
             - Event.Payment.create
             - Event.Payment.list
             - Fyziklani.Dashboard.default
-            - Event.Schedule.groups
+            - Event.ScheduleGroup.groups
             - Event.Seating.default
             - Event.Model.default
             - Event.Chart.list
             - Event.Dispatch.default
             - Event.Dashboard.default
+        org.inbox.default:
+            - Org.Inbox.list
+            - Org.Inbox.inbox
+            - Org.Inbox.handout
+            - Org.Inbox.preview
+            - Org.Points.entry
+            - Org.Inbox.corrected

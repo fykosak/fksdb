@@ -8,6 +8,7 @@ use FKSDB\Config\Extensions\PaymentExtension;
 use FKSDB\Config\Extensions\RouterExtension;
 use FKSDB\Config\Extensions\StalkingExtension;
 use Nette\Configurator;
+use Nette\DI\Compiler;
 use Nette\Utils\Finder;
 
 define('LIBS_DIR', __DIR__ . '/../libs');
@@ -20,7 +21,7 @@ require LIBS_DIR . '/autoload.php';
 
 // Configure application
 $configurator = new Configurator();
-$configurator->onCompile[] = function ($configurator, $compiler) {
+$configurator->onCompile[] = function (Configurator $configurator, Compiler $compiler) {
     $compiler->addExtension('fksrouter', new RouterExtension());
     $compiler->addExtension('acl', new ACLExtension());
     $compiler->addExtension('navigation', new NavigationExtension());
@@ -50,6 +51,4 @@ foreach (Finder::findFiles('*.neon')->from(dirname(__FILE__) . '/../data/events'
     $configurator->addConfig($filename, Configurator::NONE);
 }
 
-$container = $configurator->createContainer();
-
-return $container;
+return $configurator->createContainer();

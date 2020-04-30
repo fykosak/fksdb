@@ -173,8 +173,8 @@ class YearCalculator {
     }
 
     private function preloadCache() {
-        foreach ($this->serviceContestYear->getTable()->order('year') as $row) {
-            $model = ModelContestYear::createFromActiveRow($row);
+        /** @var ModelContestYear $model */
+        foreach ($this->serviceContestYear->getTable()->order('year') as $model) {
             if (!isset($this->cache[$model->contest_id])) {
                 $this->cache[$model->contest_id] = [];
                 $this->revCache[$model->contest_id] = [];

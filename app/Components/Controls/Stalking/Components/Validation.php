@@ -3,7 +3,8 @@
 namespace FKSDB\Components\Controls\Stalking;
 
 use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\ValidationTest\ValidationFactory;
+use FKSDB\DataTesting\TestsLogger;
+use FKSDB\DataTesting\DataTestingFactory;
 use Nette\DI\Container;
 
 /**
@@ -12,19 +13,17 @@ use Nette\DI\Container;
  */
 class Validation extends AbstractStalkingComponent {
     /**
-     * @var ValidationFactory
+     * @var DataTestingFactory
      */
     private $validationFactory;
 
     /**
      * Validation constructor.
      * @param Container $container
-     * @param ModelPerson $modelPerson
-     * @param $mode
      */
-    public function __construct(Container $container, ModelPerson $modelPerson, $mode) {
-        parent::__construct($container, $modelPerson, $mode);
-        $this->validationFactory = $container->getByType(ValidationFactory::class);
+    public function __construct(Container $container) {
+        parent::__construct($container);
+        $this->validationFactory = $container->getByType(DataTestingFactory::class);
     }
 
     /**
@@ -41,14 +40,18 @@ class Validation extends AbstractStalkingComponent {
         return [self::PERMISSION_RESTRICT, self::PERMISSION_FULL, self::PERMISSION_FULL];
     }
 
-    public function render() {
-        $this->beforeRender();
-        $logs = [];
-        foreach ($this->validationFactory->getTests() as $test) {
-            $logs[] = $test->run($this->modelPerson);
+    /**
+     * @param ModelPerson $person
+     * @param int $userPermissions
+     */
+    public function render(ModelPerson $person, int $userPermissions) {
+        $this->beforeRender($person, $userPermissions);
+        $logger = new TestsLogger();
+        foreach ($this->validationFactory->getTests('person') as $test) {
+            $test->run($logger, $person);
         }
 
-        $this->template->logs = $logs;
+        $this->template->logs = $logger->getLogs();
         $this->template->setFile(__DIR__ . '/Validation.latte');
         $this->template->render();
     }

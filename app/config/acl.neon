@@ -71,6 +71,8 @@ acl:
     - addResource(event.seating)     # edit, download, preview, print
     - addResource(event.org)         # create, edit, list, detail, delete
     - addResource(event.chart)       # list, chart
+    - addResource(event.scheduleGroup)
+    - addResource(event.scheduleItem)
 
     ## ACL
     - allow(contestant, submit, upload)
@@ -85,13 +87,14 @@ acl:
     - allow(org, school, list)
     # - allow(org, storedQuery, list) # aby měli přehled // TODO vedie k milnému dojmu, že to môžu spustiť
     - allow(org, org, list)
-    - allow(org, org, edit, [@ownerAssertion, 'isOrgSelf'])
+    - allow(org, org, edit, [@ownerAssertion, 'isSelf'])
     - allow(org, person, edit, [@ownerAssertion, 'isSelf'])
     - allow(org, storedQuery, show)
     - allow(org, export, execute, and(qid('fyziklani.prez'), isEventOrgByYear(::constant(FKSDB\ORM\Models\ModelEventType::FYZIKLANI))))
     - allow(org, teacher, ::constant(Nette\Security\Permission::ALL))
     - allow(org, person, stalk.search)
     - allow(org, person, stalk.basic, [@ownerAssertion, 'existsOwnContestant'])
+    - allow(org, person, stalk.full, [@ownerAssertion, 'isSelf'])
 
     - allow(webmaster, task, insert) # stahování úloh
 
@@ -167,8 +170,8 @@ acl:
     - allow(eventManager, event.application, ::constant(Nette\Security\Permission::ALL)) #môže zobraziť prihlášky
 
     # payment
-    - allow(registered, event.payment, detail, [@ownerAssertion, 'isOwnPayment'])
-    - allow(registered, event.payment, edit, [@ownerAssertion, 'isOwnPayment'])
+    - allow(registered, event.payment, detail, [@ownerAssertion, 'isSelf'])
+    - allow(registered, event.payment, edit, [@ownerAssertion, 'isSelf'])
     - allow(registered, event.payment, create)
     #paymnet org
     - allow(org, event.payment, ::constant(Nette\Security\Permission::ALL))

@@ -2,8 +2,9 @@
 
 namespace FKSDB\Components\DatabaseReflection\PersonHistory;
 
-use FKSDB\Components\Controls\Helpers\Badges\NotSetBadge;
+use FKSDB\Components\Controls\Badges\NotSetBadge;
 use FKSDB\Components\DatabaseReflection\AbstractRow;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelPersonHistory;
 use Nette\Application\BadRequestException;
@@ -47,6 +48,6 @@ class SchoolIdRow extends AbstractRow {
      * @throws BadRequestException
      */
     public function createField(...$args): BaseControl {
-        throw new BadRequestException();
+        throw new NotImplementedException;
     }
 }

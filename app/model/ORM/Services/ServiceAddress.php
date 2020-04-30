@@ -45,8 +45,8 @@ class ServiceAddress extends AbstractServiceSingle {
     }
 
     /**
-     * @param \FKSDB\ORM\IModel $model
-     * @return mixed|void
+     * @param IModel $model
+     * @return void
      * @deprecated
      */
     public function save(IModel &$model) {
@@ -54,9 +54,7 @@ class ServiceAddress extends AbstractServiceSingle {
         if (!$model instanceof $modelClassName) {
             throw new InvalidArgumentException('Service for class ' . $this->getModelClassName() . ' cannot store ' . get_class($model));
         }
-        /**
-         * @var \FKSDB\ORM\Models\ModelAddress $model
-         */
+        /** @var ModelAddress $model */
         if (is_null($model->region_id)) {
             $model->region_id = $this->inferRegion($model->postal_code);
         }
@@ -110,5 +108,4 @@ class ServiceAddress extends AbstractServiceSingle {
             return false;
         }
     }
-
 }

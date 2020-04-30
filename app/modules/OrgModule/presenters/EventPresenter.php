@@ -2,66 +2,28 @@
 
 namespace OrgModule;
 
-use Events\Model\Holder\Holder;
-use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Forms\Factories\EventFactory;
+use FKSDB\Components\Controls\Entity\Event\CreateForm;
+use FKSDB\Components\Controls\Entity\Event\EditForm;
 use FKSDB\Components\Grids\Events\EventsGrid;
-use FKSDB\Config\NeonScheme;
-use FKSDB\ORM\AbstractModelSingle;
-use FKSDB\ORM\IModel;
+use FKSDB\EntityTrait;
 use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Services\ServiceAuthToken;
 use FKSDB\ORM\Services\ServiceEvent;
-use FormUtils;
-use ModelException;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\Application\ForbiddenRequestException;
-use Nette\Application\UI\Form;
-use Nette\DI\Container;
-use Nette\Forms\Controls\BaseControl;
-use Nette\Neon\Neon;
-use FKSDB\NotImplementedException;
-use Nette\Utils\Html;
-use Nette\Utils\NeonException;
-use Tracy\Debugger;
-use Utils;
-
+use Nette\Application\UI\Control;
+use FKSDB\Exceptions\NotImplementedException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  * @author Michal Koutný <michal@fykos.cz>
+ * @method ModelEvent loadEntity(int $id)
  */
-class EventPresenter extends EntityPresenter {
-
-    const CONT_EVENT = 'event';
+class EventPresenter extends BasePresenter {
+    use EntityTrait;
 
     /**
      * @var ServiceEvent
      */
     private $serviceEvent;
-
-    /**
-     * @var EventFactory
-     */
-    private $eventFactory;
-
-    /**
-     * @var Container
-     */
-    private $container;
-
-    /**
-     * @var ServiceAuthToken $serviceAuthToken
-     */
-    private $serviceAuthToken;
-
-    /**
-     * @param ServiceAuthToken $serviceAuthToken
-     */
-    public function injectServiceAuthToken(ServiceAuthToken $serviceAuthToken) {
-        $this->serviceAuthToken = $serviceAuthToken;
-    }
 
     /**
      * @param ServiceEvent $serviceEvent
@@ -70,83 +32,35 @@ class EventPresenter extends EntityPresenter {
         $this->serviceEvent = $serviceEvent;
     }
 
-    /**
-     * @param EventFactory $eventFactory
-     */
-    public function injectEventFactory(EventFactory $eventFactory) {
-        $this->eventFactory = $eventFactory;
-    }
-
-    /**
-     * @param Container $container
-     */
-    public function injectContainer(Container $container) {
-        $this->container = $container;
-    }
-
-    /**
-     * @param $id
-     * @throws BadRequestException
-     */
-    public function authorizedApplications($id) {
-        $model = $this->getModel();
-        if (!$model) {
-            throw new BadRequestException('Neexistující model.', 404);
-        }
-        $this->setAuthorized($this->getContestAuthorizator()
-            ->isAllowed($model, 'application', $this->getSelectedContest()));
-    }
-
     public function titleList() {
-        $this->setTitle(_('Events'),'fa fa-calendar-check-o');
+        $this->setTitle(_('Events'), 'fa fa-calendar-check-o');
     }
 
     public function titleCreate() {
-        $this->setTitle(_('Add event'),'fa fa-calendar-plus-o');
+        $this->setTitle(_('Add event'), 'fa fa-calendar-plus-o');
     }
 
-    public function titleEdit() {
-        $model = $this->getModel();
-        $this->setTitle(sprintf(_('Edit event %s'), $model->name),'fa fa-pencil');
+    /**
+     * @param int $id
+     * @throws BadRequestException
+     */
+    public function titleEdit(int $id) {
+        $this->setTitle(sprintf(_('Edit event %s'), $this->loadEntity($id)->name), 'fa fa-pencil');
     }
 
     /**
      * @throws NotImplementedException
      */
     public function actionDelete() {
-// There's no use case for this. (Errors must be deleted manually via SQL.)
-        throw new NotImplementedException(null);
+        throw new NotImplementedException;
     }
 
     /**
-     * @return FormControl|mixed
+     * @param int $id
      * @throws BadRequestException
      */
-    protected function createComponentCreateComponent() {
-        $control = $this->createForm();
-        $form = $control->getForm();
-
-        $form->addSubmit('send', _('Přidat'));
-        $form->onSuccess[] = function (Form $form) {
-            $this->handleFormSuccess($form, true);
-        };
-
-        return $control;
-    }
-
-    /**
-     * @return FormControl|mixed
-     * @throws BadRequestException
-     */
-    protected function createComponentEditComponent() {
-        $control = $this->createForm();
-        $form = $control->getForm();
-        $form->addSubmit('send', _('Save'));
-        $form->onSuccess[] = function (Form $form) {
-            $this->handleFormSuccess($form, false);
-        };
-
-        return $control;
+    public function actionEdit(int $id) {
+        $this->traitActionEdit($id);
     }
 
     /**
@@ -199,111 +113,35 @@ class EventPresenter extends EntityPresenter {
     /**
      * @param $scheme
      * @return Html
+=======
+     * @inheritDoc
+>>>>>>> origin/master
      */
-    private function createParamDescription($scheme) {
-        $result = Html::el('ul');
-        foreach ($scheme as $key => $meta) {
-            $item = Html::el('li');
-            $result->addText($item);
-
-            $item->addHtml(Html::el(null)->setText($key));
-            if (isset($meta['default'])) {
-                $item->addText(': ');
-                $item->addHtml(Html::el(null)->setText(Utils::getRepr($meta['default'])));
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param IModel|null $model
-     * @param Form $form
-     */
-    protected function setDefaults(IModel $model = null, Form $form) {
-        if (!$model) {
-            return;
-        }
-        $defaults = [
-            self::CONT_EVENT => $model->toArray(),
-        ];
-        $form->setDefaults($defaults);
-    }
-
-    /**
-     * @param int $id
-     * @return AbstractModelSingle|ModelEvent|null
-     */
-    protected function loadModel($id) {
-        $row = $this->serviceEvent->findByPrimary($id);
-        if (!$row) {
-            return null;
-        }
-        return ModelEvent::createFromActiveRow($row);
-    }
-
-    /**
-     * @param Form $form
-     * @param bool $isNew
-     * @throws BadRequestException
-     * @throws AbortException
-     * @throws \ReflectionException
-     */
-    private function handleFormSuccess(Form $form, $isNew) {
-
-        $connection = $this->serviceEvent->getConnection();
-        $values = $form->getValues();
-        $data = FormUtils::emptyStrToNull($values[self::CONT_EVENT]);
-
-        /**
-         * @var ModelEvent $model
-         */
-        if ($isNew) {
-            if (!$this->getContestAuthorizator()->isAllowed('event', 'create', $this->getSelectedContest())) {
-                throw new ForbiddenRequestException();
-            }
-
-            $data['year'] = $this->getSelectedYear();
-            $model = $this->serviceEvent->createNewModel($data);
-        } else {
-            if (!$this->getContestAuthorizator()->isAllowed($model, 'edit', $this->getSelectedContest())) {
-                throw new ForbiddenRequestException();
-            }
-            $model = $this->getModel();
-            $this->serviceEvent->updateModel2($model, $data);
-        }
-
-        try {
-            $connection->beginTransaction();
-            // update also 'until' of authTokens in case that registration end has changed
-            $tokenData = ["until" => $model->registration_end ?: $model->end];
-            foreach ($this->serviceAuthToken->findTokensByEventId($model->event_id) as $token) {
-                $this->serviceAuthToken->updateModel2($token, $tokenData);
-              //  $this->serviceAuthToken->save($token);
-            }
-
-            /*
-             * Finalize
-             */
-            $connection->commit();
-
-            $this->flashMessage(sprintf(_('Akce %s uložena.'), $model->name), self::FLASH_SUCCESS);
-            $this->backLinkRedirect();
-            $this->redirect('list'); // if there's no backlink
-        } catch (ModelException $exception) {
-            $connection->rollBack();
-            Debugger::log($exception, Debugger::ERROR);
-            $this->flashMessage(_('Chyba přidání akce.'), self::FLASH_ERROR);
-        } catch (ForbiddenRequestException $exception) {
-            $connection->rollBack();
-            $this->flashMessage(_('Nedostatečné oprávnění.'), self::FLASH_ERROR);
-        }
+    public function createComponentCreateForm(): Control {
+        return new CreateForm($this->getContext(), $this->getSelectedContest(), $this->getSelectedYear());
     }
 
     /**
      * @inheritDoc
      */
-    protected function getModelResource(): string {
-        return 'event';
+    public function createComponentEditForm(): Control {
+        return new EditForm($this->getContext(), $this->getSelectedContest());
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getORMService() {
+        return $this->serviceEvent;
+    }
+
+    /**
+     * @param $resource
+     * @param string $privilege
+     * @return bool
+     * @throws BadRequestException
+     */
+    protected function traitIsAuthorized($resource, string $privilege): bool {
+        return $this->getContestAuthorizator()->isAllowed($resource, $privilege, $this->getSelectedContest());
     }
 }

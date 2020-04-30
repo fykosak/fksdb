@@ -3,10 +3,11 @@
 namespace EventModule;
 
 use AuthenticatedPresenter;
-use FKSDB\Components\Controls\Helpers\Badges\ContestBadge;
+use FKSDB\Components\Controls\Badges\ContestBadge;
 use FKSDB\Components\Grids\Events\DispatchGrid;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceEvent;
+use FKSDB\UI\PageStyleContainer;
 
 /**
  * Class DispatchPresenter
@@ -48,10 +49,14 @@ class DispatchPresenter extends AuthenticatedPresenter {
         $this->setTitle(_('List of events'),'fa fa-calendar');
     }
 
+
     /**
-     * @return array
+     * @return PageStyleContainer
      */
-    public function getNavBarVariant(): array {
-        return ['event', 'bg-dark navbar-dark'];
+    protected function getPageStyleContainer(): PageStyleContainer {
+        $container = parent::getPageStyleContainer();
+        $container->styleId = 'event';
+        $container->navBarClassName = 'bg-dark navbar-dark';
+        return $container;
     }
 }

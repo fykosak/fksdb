@@ -69,6 +69,4 @@ class Link extends AbstractLink {
         }
         return $urlParams;
     }
-
-
 }

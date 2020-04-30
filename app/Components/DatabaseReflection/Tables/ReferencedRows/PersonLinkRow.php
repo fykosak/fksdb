@@ -4,6 +4,7 @@ namespace FKSDB\Components\DatabaseReflection\ReferencedRows;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\DatabaseReflection\ValuePrinters\PersonLink;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\IPersonReferencedModel;
 use Nette\Application\BadRequestException;
@@ -53,7 +54,7 @@ class PersonLinkRow extends AbstractRow {
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         if (!$model instanceof IPersonReferencedModel) {
-            throw new BadRequestException();
+            throw new BadTypeException(IPersonReferencedModel::class, $model);
         }
         return (new PersonLink($this->presenterComponent))($model->getPerson());
     }

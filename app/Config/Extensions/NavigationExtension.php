@@ -82,10 +82,10 @@ class NavigationExtension extends \Nette\DI\CompilerExtension {
      * @param $arguments
      */
     private function parseIdAsLink($nodeId, &$arguments) {
-        $FQAction = str_replace('.', ':', $nodeId);
-        $a = strrpos($FQAction, ':');
-        $presenterName = substr($FQAction, 0, $a);
-        $action = substr($FQAction, $a + 1);
+        $fullQualityAction = str_replace('.', ':', $nodeId);
+        $a = strrpos($fullQualityAction, ':');
+        $presenterName = substr($fullQualityAction, 0, $a);
+        $action = substr($fullQualityAction, $a + 1);
         $arguments['linkPresenter'] = $presenterName;
         $arguments['linkAction'] = $action;
         $arguments['linkParams'] = isset($arguments['params']) ? $arguments['params'] : null;

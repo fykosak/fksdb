@@ -7,7 +7,6 @@ use FKSDB\Config\Extensions\NavigationExtension;
 use FKSDB\Config\Extensions\PaymentExtension;
 use FKSDB\Config\Extensions\RouterExtension;
 use FKSDB\Config\Extensions\StalkingExtension;
-use JanTvrdik\Components\DatePicker;
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Configurator;
 use Nette\DI\Compiler;
@@ -59,10 +58,6 @@ $container = $configurator->createContainer();
 // Register addons
 //
 Replicator::register();
-
-Container::extensionMethod('addDatePicker', function (Container $container, $name, $label = NULL) {
-    return $container[$name] = new DatePicker($label);
-});
 
 //
 // Configure and run the application!

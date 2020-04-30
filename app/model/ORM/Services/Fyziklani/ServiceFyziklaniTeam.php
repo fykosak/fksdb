@@ -7,7 +7,6 @@ use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Tables\TypedTableSelection;
-use Nette\Database\Table\Selection;
 
 /**
  * @author Michal Červeňák <miso@fykos.cz>
@@ -30,11 +29,10 @@ class ServiceFyziklaniTeam extends AbstractServiceSingle {
     /**
      * Syntactic sugar.
      * @param ModelEvent $event
-     * @return TypedTableSelection|Selection
+     * @return TypedTableSelection|null
      */
-    public function findParticipating(ModelEvent $event) {
-        $result = $this->getTable()->where('status', 'participated')->where('event_id', $event->event_id);
-        return $result ?: null;
+    public function findParticipating(ModelEvent $event): TypedTableSelection {
+        return $this->getTable()->where('status', 'participated')->where('event_id', $event->event_id);
     }
 
     /**
@@ -54,11 +52,10 @@ class ServiceFyziklaniTeam extends AbstractServiceSingle {
     /**
      * Syntactic sugar.
      * @param ModelEvent $event
-     * @return Selection|null
+     * @return TypedTableSelection
      */
-    public function findPossiblyAttending(ModelEvent $event) {
-        $result = $this->getTable()->where('status', ['participated', 'approved', 'spare', 'applied'])->where('event_id', $event->event_id);
-        return $result ?: null;
+    public function findPossiblyAttending(ModelEvent $event): TypedTableSelection {
+        return $this->getTable()->where('status', ['participated', 'approved', 'spare', 'applied'])->where('event_id', $event->event_id);
     }
 
     /**
@@ -67,7 +64,6 @@ class ServiceFyziklaniTeam extends AbstractServiceSingle {
      */
     public function getTeamsAsArray(ModelEvent $event): array {
         $teams = [];
-
         foreach ($this->findPossiblyAttending($event) as $row) {
             $team = ModelFyziklaniTeam::createFromActiveRow($row);
             $teams[] = $team->__toArray(true);

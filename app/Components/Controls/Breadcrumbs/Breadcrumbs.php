@@ -4,6 +4,7 @@ namespace FKSDB\Components\Controls\Breadcrumbs;
 
 use FKSDB\Components\Controls\Breadcrumbs\Request as NaviRequest;
 use FKSDB\Components\Controls\Navigation\INavigablePresenter;
+use FKSDB\Exceptions\BadTypeException;
 use Nette\Application\IRouter;
 use Nette\Application\PresenterFactory;
 use Nette\Application\Request as AppRequest;
@@ -15,7 +16,6 @@ use Nette\Http\Request as HttpRequest;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Nette\InvalidArgumentException;
-use Nette\InvalidStateException;
 use Nette\Utils\Random;
 use Utils;
 
@@ -93,12 +93,12 @@ class Breadcrumbs extends Control {
     /**
      * @param AppRequest $request
      * @throws \ReflectionException
+     * @throws BadTypeException
      */
     public function setBackLink(AppRequest $request) {
         $presenter = $this->getPresenter();
         if (!$presenter instanceof INavigablePresenter) {
-            $class = get_class($presenter);
-            throw new InvalidStateException("Expected presenter of INavigablePresenter type, got '$class'.");
+            throw new BadTypeException(INavigablePresenter::class,$presenter);
         }
 
         $requestKey = $this->getRequestKey($request);
@@ -133,11 +133,9 @@ class Breadcrumbs extends Control {
                 'title' => $naviRequest->title,
             ];
         }
-        $template = $this->getTemplate();
-        $template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Breadcrumbs.latte');
-        $template->path = $path;
-        $template->render();
-        //$this->reset();
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Breadcrumbs.latte');
+        $this->template->path = $path;
+        $this->template->render();
     }
 
     /*     * **********************
@@ -270,6 +268,7 @@ class Breadcrumbs extends Control {
     /**
      * @param $backLink
      * @throws \ReflectionException
+     * @throws BadTypeException
      */
     private function storeRequest($backLink) {
         if ($this->storedRequest) {
@@ -293,14 +292,18 @@ class Breadcrumbs extends Control {
     }
 
     /**
-     * @param INavigablePresenter $presenter
+     * @param INavigablePresenter|Presenter $presenter
      * @param AppRequest $request
      * @param $backLink
      * @return Request
      * @throws \ReflectionException
+     * @throws BadTypeException
      */
-    protected function createNaviRequest(INavigablePresenter $presenter, AppRequest $request, $backLink) {
+    protected function createNaviRequest(Presenter $presenter, AppRequest $request, $backLink) {
         $pathKey = $this->getPathKey($request);
+        if (!$presenter instanceof INavigablePresenter) {
+            throw new BadTypeException(INavigablePresenter::class, $presenter);
+        }
         return new NaviRequest($presenter->getUser()->getId(), $request, $presenter->getTitle(), $backLink, $pathKey);
     }
 

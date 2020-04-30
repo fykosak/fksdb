@@ -8,7 +8,8 @@ use FKSDB\Components\Controls\Fyziklani\CloseTeamControl;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Fyziklani\CloseTeamsGrid;
 use FKSDB\Components\Grids\Fyziklani\TeamSubmitsGrid;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -103,7 +104,7 @@ class ClosePresenter extends BasePresenter {
         $team = $this->loadEntity($id);
         $control = $this->getComponent('closeTeamControl');
         if (!$control instanceof CloseTeamControl) {
-            throw new BadRequestException();
+            throw new BadTypeException(CloseTeamControl::class, $control);
         }
         $control->setTeam($team);
     }
@@ -120,21 +121,11 @@ class ClosePresenter extends BasePresenter {
     }
 
     /**
-     * @return CloseTeamsGrid
-     * @throws BadRequestException
-     * @throws AbortException
-     */
-    protected function createComponentCloseTeamsGrid(): CloseTeamsGrid {
-        return new CloseTeamsGrid($this->getEvent(), $this->getContext());
-    }
-
-    /**
      * @return TeamSubmitsGrid
      */
     protected function createComponentTeamSubmitsGrid(): TeamSubmitsGrid {
         return new TeamSubmitsGrid($this->getEntity(), $this->getContext());
     }
-
 
     /**
      * @inheritDoc
@@ -151,24 +142,26 @@ class ClosePresenter extends BasePresenter {
     }
 
     /**
-     * @inheritDoc
+     * @return BaseGrid
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function createComponentGrid(): BaseGrid {
-        throw new NotImplementedException();
+        return new CloseTeamsGrid($this->getEvent(), $this->getContext());
     }
 
     /**
      * @inheritDoc
      */
     public function createComponentCreateForm(): Control {
-        throw new NotImplementedException();
+        throw new NotImplementedException;
     }
 
     /**
      * @inheritDoc
      */
     public function createComponentEditForm(): Control {
-        throw new NotImplementedException();
+        throw new NotImplementedException;
     }
 
 }

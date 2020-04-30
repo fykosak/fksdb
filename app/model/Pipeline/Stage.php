@@ -2,7 +2,7 @@
 
 namespace Pipeline;
 
-use FKSDB\Logging\ILogger;
+use FKSDB\Messages\Message;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -31,23 +31,21 @@ abstract class Stage {
     /**
      * @return Pipeline
      */
-    public function getPipeline() {
+    protected final function getPipeline(): Pipeline {
         return $this->pipeline;
     }
 
     /**
      * @param Pipeline $pipeline
      */
-    public function setPipeline(Pipeline $pipeline) {
+    public final function setPipeline(Pipeline $pipeline) {
         $this->pipeline = $pipeline;
     }
 
     /**
-     * @param $message
-     * @param string $level
+     * @param Message $message
      */
-    protected function log($message, string $level = ILogger::INFO) {
-        $this->getPipeline()->log($message, $level);
+    protected final function log(Message $message) {
+        $this->getPipeline()->log($message);
     }
-
 }

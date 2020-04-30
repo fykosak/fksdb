@@ -11,13 +11,10 @@ use Nette\SmartObject;
  */
 class Message {
     use SmartObject;
-    /** @deprecated */
+
     const LVL_DANGER = ILogger::ERROR;
-    /** @deprecated */
     const LVL_SUCCESS = ILogger::SUCCESS;
-    /** @deprecated */
     const LVL_WARNING = ILogger::WARNING;
-    /** @deprecated */
     const LVL_INFO = ILogger::INFO;
     /**
      * @var string
@@ -93,5 +90,4 @@ class Message {
             'level' => $this->level,
         ];
     }
-
 }

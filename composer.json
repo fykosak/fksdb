@@ -41,7 +41,7 @@
     "test": [
       "@clearTestCache",
       "@clearTestDatabase",
-      "./tests/run.sh -j 1"
+      "vendor/bin/tester tests -p php --coverage coverage.html --coverage-src app -s -c tests/php.ini -j 1"
     ]
   }
 }
