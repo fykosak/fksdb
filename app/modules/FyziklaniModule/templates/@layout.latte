@@ -1,9 +1,5 @@
 {layout '../../templates/@layout.latte'}
-{block nav}
+{block nav-left}
     {include #parent}
     {control fyziklaniChooser}
-{/block}
-{block user-info}
-    {control languageChooser,null}
-    {include #parent}
 {/block}

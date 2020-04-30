@@ -16,7 +16,6 @@ use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServicePersonInfo;
-use FKSDB\DataTesting\DataTestingFactory;
 use FormUtils;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -80,14 +79,6 @@ class PersonPresenter extends BasePresenter {
      * @var int
      */
     private $mode;
-    /**
-     * @var DataTestingFactory
-     */
-    private $validationFactory;
-    /**
-     * @var Stalking\StalkingService
-     */
-    private $stalkingService;
 
     /**
      * @param ServicePerson $servicePerson
@@ -115,20 +106,6 @@ class PersonPresenter extends BasePresenter {
      */
     public function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory) {
         $this->referencedPersonFactory = $referencedPersonFactory;
-    }
-
-    /**
-     * @param DataTestingFactory $validationFactory
-     */
-    public function injectValidationFactory(DataTestingFactory $validationFactory) {
-        $this->validationFactory = $validationFactory;
-    }
-
-    /**
-     * @param Stalking\StalkingService $stalkingService
-     */
-    public function injectStalkingService(Stalking\StalkingService $stalkingService) {
-        $this->stalkingService = $stalkingService;
     }
 
     /* *********** TITLE ***************/

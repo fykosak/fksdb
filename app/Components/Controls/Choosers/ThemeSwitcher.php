@@ -2,13 +2,11 @@
 
 namespace FKSDB\Components\Controls\Choosers;
 
-
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
-
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

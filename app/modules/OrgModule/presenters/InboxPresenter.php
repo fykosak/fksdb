@@ -13,6 +13,7 @@ use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Models\ModelTaskContribution;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServiceTaskContribution;
+use FKSDB\UI\PageStyleContainer;
 use FKSDB\Submits\SeriesTable;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -273,14 +274,14 @@ class InboxPresenter extends SeriesPresenter {
     }
 
     /**
-     * @return string
+     * @return PageStyleContainer
      */
-    protected function getContainerClassNames(): string {
+    protected function getPageStyleContainer(): PageStyleContainer {
+        $container = parent::getPageStyleContainer();
         switch ($this->getAction()) {
             case 'inbox':
-                return str_replace('container ', 'container-fluid ', parent::getContainerClassNames());
-            default:
-                return parent::getContainerClassNames();
+                $container->mainContainerClassName = str_replace('container ', 'container-fluid ', $container->mainContainerClassName).' px-3';
         }
+        return $container;
     }
 }

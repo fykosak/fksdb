@@ -3,6 +3,7 @@
 use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelContest;
+use FKSDB\UI\PageStyleContainer;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -82,21 +83,25 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
     }
 
     /**
-     * @return array
+     * @return PageStyleContainer
      */
-    protected function getNavBarVariant(): array {
+    protected function getPageStyleContainer(): PageStyleContainer {
+        $container = parent::getPageStyleContainer();
         /** @var ModelContest $contest */
         $contest = $this->getServiceContest()->findByPrimary($this->contestId);
         if ($contest) {
-            return [$contest->getContestSymbol(), 'navbar-dark bg-' . $contest->getContestSymbol()];
+            $container->styleId = $contest->getContestSymbol();
+            $container->navBarClassName = 'navbar-dark bg-' . $contest->getContestSymbol();
         }
-        return parent::getNavBarVariant();
+        return $container;
     }
 
     /**
-     * @return string
+     * @param string $title
+     * @param string $icon
+     * @param string $subTitle
      */
-    public function getSubTitle(): string {
-        return sprintf(_('%d. ročník'), $this->year);
+    protected function setTitle(string $title, string $icon = '', string $subTitle = '') {
+        parent::setTitle($title, $icon, sprintf(_('%d. ročník'), $this->year) . ' ' . $subTitle);
     }
 }

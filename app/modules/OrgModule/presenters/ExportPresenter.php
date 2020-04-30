@@ -310,6 +310,7 @@ class ExportPresenter extends SeriesPresenter {
 
     /**
      * @param $id
+     * @throws BadRequestException
      */
     public function titleEdit($id) {
         $this->setTitle(sprintf(_('Úprava dotazu %s'), $this->getPatternQuery()->name), 'fa fa-pencil');
@@ -359,6 +360,7 @@ class ExportPresenter extends SeriesPresenter {
 
     /**
      * @param $id
+     * @throws BadRequestException
      */
     public function titleShow($id) {
         $title = sprintf(_('Detail dotazu %s'), $this->getPatternQuery()->name);
@@ -379,6 +381,7 @@ class ExportPresenter extends SeriesPresenter {
 
     /**
      * @param $id
+     * @throws BadRequestException
      */
     public function titleExecute($id) {
         $this->setTitle(sprintf(_('%s'), $this->getPatternQuery()->name), 'fa fa-play-circle-o');

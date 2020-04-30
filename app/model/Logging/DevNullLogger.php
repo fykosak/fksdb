@@ -2,6 +2,8 @@
 
 namespace FKSDB\Logging;
 
+use FKSDB\Messages\Message;
+
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
@@ -11,10 +13,9 @@ class DevNullLogger extends StackedLogger {
 
     /**
      * @param $message
-     * @param $level
      * @return mixed|void
      */
-    protected function doLog($message, $level) {
+    protected function doLog(Message $message) {
         /* empty */
     }
 

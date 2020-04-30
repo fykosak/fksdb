@@ -177,7 +177,7 @@ events:
             PARTICIPANT:
                 service: @event.ServiceMFyziklaniParticipant
                 joinOn: e_fyziklani_team_id
-                personIds: [e_fyziklani_participant:event_participant.person_id]
+                personIds: [:e_fyziklani_participant.event_participant.person_id]
 
                 states:
                     applied: _('Přihlášen')

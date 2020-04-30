@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Forms\Controls;
 
 use FKSDB\Components\Forms\Containers\IWriteOnly;
-use JanTvrdik\Components\DatePicker;
+use FKSDB\Components\Forms\Controls\DateInputs\DateInput;
 use Nette\Utils\Html;
 
 /**
@@ -11,9 +11,8 @@ use Nette\Utils\Html;
  * Only FILLED validation works properly because there's used special value to distinguish unchanged input.
  *
  * @author Michal Koutný <michal@fykos.cz>
- * @deprecated like extends od DatePicker use HTML5 elements
  */
-class WriteOnlyDatePicker extends DatePicker implements IWriteOnly {
+class WriteOnlyDatePicker extends DateInput implements IWriteOnly {
 
     use WriteOnlyTrait;
 
@@ -37,12 +36,11 @@ class WriteOnlyDatePicker extends DatePicker implements IWriteOnly {
 
     /**
      * @param $value
-     * @return DatePicker|void
+     * @return static|void
      */
     public function setValue($value) {
         if ($value == self::VALUE_ORIGINAL) {
             $this->value = $value;
-            $this->rawValue = $value;
         } else {
             parent::setValue($value);
         }
