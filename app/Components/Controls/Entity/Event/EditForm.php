@@ -18,7 +18,7 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextArea;
 use Nette\Neon\Neon;
 use Nette\Utils\Html;
-use Nette\Utils\NeonException;
+use Nette\Neon\Exception;
 
 /**
  * Class EditControl
@@ -73,7 +73,7 @@ class EditForm extends AbstractForm implements IEditEntityForm {
                 }
                 NeonScheme::readSection($parameters, $scheme);
                 return true;
-            } catch (NeonException $exception) {
+            } catch (Exception $exception) {
                 $control->addError($exception->getMessage());
                 return false;
             }

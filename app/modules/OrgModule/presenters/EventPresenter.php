@@ -2,15 +2,22 @@
 
 namespace OrgModule;
 
+use Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\Entity\Event\CreateForm;
 use FKSDB\Components\Controls\Entity\Event\EditForm;
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\Events\EventsGrid;
+use FKSDB\Config\NeonScheme;
 use FKSDB\EntityTrait;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEvent;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use FKSDB\Exceptions\NotImplementedException;
+use Nette\Forms\Controls\BaseControl;
+use Nette\Neon\Exception;
+use Nette\Neon\Neon;
+use Nette\Utils\Html;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -100,7 +107,7 @@ class EventPresenter extends BasePresenter {
 
                     NeonScheme::readSection($parameters, $scheme);
                     return true;
-                } catch (NeonException $exception) {
+                } catch (Exception $exception) {
                     $control->addError($exception->getMessage());
                     return false;
                 }
@@ -113,9 +120,7 @@ class EventPresenter extends BasePresenter {
     /**
      * @param $scheme
      * @return Html
-=======
      * @inheritDoc
->>>>>>> origin/master
      */
     public function createComponentCreateForm(): Control {
         return new CreateForm($this->getContext(), $this->getSelectedContest(), $this->getSelectedYear());

@@ -4,34 +4,37 @@ namespace FKSDB\Components\Events;
 
 use Events\Machine\BaseMachine;
 use FKSDB\Application\IJavaScriptCollector;
-use Nette\Application\UI\Control;
-use Nette\Templating\ITemplate;
+use FKSDB\Components\Controls\BaseControl;
+use Nette\DI\Container;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class GraphComponent extends Control {
+class GraphComponent extends BaseControl {
 
     /**
      * @var BaseMachine
      */
     private $baseMachine;
+    /** @var ExpressionPrinter */
     private $expressionPrinter;
 
     /**
      * GraphComponent constructor.
+     * @param Container $container
      * @param BaseMachine $baseMachine
      * @param ExpressionPrinter $expressionPrinter
      */
-    function __construct(BaseMachine $baseMachine, ExpressionPrinter $expressionPrinter) {
-        parent::__construct();
+    function __construct(Container $container, BaseMachine $baseMachine, ExpressionPrinter $expressionPrinter) {
+        parent::__construct($container);
         $this->monitor(IJavaScriptCollector::class);
         $this->baseMachine = $baseMachine;
         $this->expressionPrinter = $expressionPrinter;
     }
 
+    /** @var bool */
     private $attachedJS = false;
 
     /**
@@ -46,15 +49,6 @@ class GraphComponent extends Control {
             $obj->registerJSFile('js/graph/dracula_graph.js');
             $obj->registerJSFile('js/eventModelGraph.js');
         }
-    }
-
-    /**
-     * @return \Nette\Application\UI\ITemplate
-     */
-    protected function createTemplate() {
-        $template = parent::createTemplate();
-        $template->setTranslator($this->presenter->getTranslator());
-        return $template;
     }
 
     public function render() {
