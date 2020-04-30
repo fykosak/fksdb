@@ -19,6 +19,7 @@ class GameSetupPresenter extends BasePresenter {
 
     /**
      * @return void
+     * @throws BadRequestException
      */
     public function titleDefault() {
         $this->setTitle(_('Fyziklani game setup'), 'fa fa-cogs');

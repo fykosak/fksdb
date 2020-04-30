@@ -13,6 +13,7 @@ use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceAuthToken;
 use FKSDB\ORM\Services\ServicePerson;
+use FKSDB\UI\PageStyleContainer;
 use Mail\MailTemplateFactory;
 use Mail\SendFailedException;
 use Nette\Application\AbortException;
@@ -412,5 +413,12 @@ final class AuthenticationPresenter extends BasePresenter {
 
     public function renderLogin() {
         $this->template->login = $this->login;
+    }
+
+    protected function getPageStyleContainer(): PageStyleContainer {
+        $container = parent::getPageStyleContainer();
+        $container->styleId = 'login';
+        $container->mainContainerClassName = '';
+        return $container;
     }
 }

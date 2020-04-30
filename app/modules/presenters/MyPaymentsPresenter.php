@@ -1,7 +1,6 @@
 <?php
 
 use FKSDB\Components\Grids\Payment\MyPaymentGrid;
-use FKSDB\ORM\Services\ServicePayment;
 
 /**
  * Class MyPaymentsPresenter

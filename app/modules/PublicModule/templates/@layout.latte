@@ -1,9 +1,8 @@
 {layout '../../templates/@layout.latte'}
 
-{block user-info}
-    {include #parent}
-    {control languageChooser,null}
+{block nav-right}
     {if $control['contestChooser']->isValid()}
         {control contestChooser}
     {/if}
+    {include #parent}
 {/block}

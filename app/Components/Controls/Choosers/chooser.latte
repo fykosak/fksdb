@@ -1,0 +1,18 @@
+{layout ../@layout.latte}
+{block content}
+    <div class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
+            <span n:tag-if="$title->icon" class="{$title->icon}"></span>
+            {$title->title}
+        </a>
+        <div class="dropdown-menu">
+            {foreach $items as $item}
+                {if $control->isItemActive($item)}
+                    <span class="dropdown-item active">{$control->getItemLabel($item)}</span>
+                {else}
+                    <a class="dropdown-item" href="{$control->getItemLink($item)}">{$control->getItemLabel($item)}</a>
+                {/if}
+            {/foreach}
+        </div>
+    </div>
+{/block}
