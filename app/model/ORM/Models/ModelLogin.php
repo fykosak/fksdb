@@ -146,7 +146,6 @@ class ModelLogin extends AbstractModelSingle implements IIdentity, IPersonRefere
                 $grant = ModelGrant::createFromActiveRow($row);
                 $this->roles[] = new Grant($grant->contest_id, $grant->ref(DbNames::TAB_ROLE, 'role_id')->name);
             }
-
             // roles from other tables
             $person = $this->getPerson();
             if ($person) {
@@ -158,6 +157,8 @@ class ModelLogin extends AbstractModelSingle implements IIdentity, IPersonRefere
                 }
             }
         }
+
         return $this->roles;
     }
+
 }

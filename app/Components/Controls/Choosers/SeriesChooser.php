@@ -2,13 +2,13 @@
 
 namespace FKSDB\Components\Controls\Choosers;
 
-use Nette\Application\UI\Control;
-use Nette\Diagnostics\Debugger;
+use FKSDB\SeriesCalculator;
+use FKSDB\UI\PageTitle;
+use FKSDB\UI\Title;
+use Nette\Application\UI\InvalidLinkException;
+use Nette\DI\Container;
 use Nette\Http\Session;
 use Nette\Localization\ITranslator;
-use OrgModule\BasePresenter;
-use SeriesCalculator;
-use ServiceContest;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -26,11 +26,6 @@ class SeriesChooser extends Chooser {
     private $seriesCalculator;
 
     /**
-     * @var ITranslator
-     */
-    private $translator;
-
-    /**
      * @var int
      */
     private $series;
@@ -39,10 +34,9 @@ class SeriesChooser extends Chooser {
      */
     private $year;
 
-    function __construct(Session $session, SeriesCalculator $seriesCalculator, ServiceContest $serviceContest, ITranslator $translator) {
-        parent::__construct($session, $serviceContest);
+    function __construct(Container $container) {
+        parent::__construct($container);
         $this->seriesCalculator = $seriesCalculator;
-        $this->translator = $translator;
     }
 
     public function getSeries() {
@@ -90,16 +84,6 @@ class SeriesChooser extends Chooser {
     }
 
     /**
-     * @return void
-     */
-    public function render() {
-        $this->template->allowedSeries = $this->getAllowedSeries();
-        $this->template->currentSeries = $this->getSeries();
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR.'SeriesChooser.latte');
-        $this->template->render();
-    }
-
-    /**
      * @return array of int of allowed series
      */
     private function getAllowedSeries() {
@@ -118,12 +102,6 @@ class SeriesChooser extends Chooser {
         return in_array($series, $this->getAllowedSeries());
     }
 
-    protected function createTemplate($class = NULL) {
-        $template = parent::createTemplate($class);
-        $template->setTranslator($this->translator);
-        return $template;
-    }
-
     public function syncRedirect(&$params) {
         $this->init($params);
         if ($this->series != $params->series) {
@@ -131,5 +109,43 @@ class SeriesChooser extends Chooser {
             return true;
         }
         return false;
+    }
+    /**
+     * @return Title
+     */
+    protected function getTitle(): Title {
+        return new PageTitle(_('Series'));
+    }
+
+    /**
+     * @return string[]
+     */
+    protected function getItems() {
+        return $this->getAllowedSeries();
+    }
+
+    /**
+     * @param string $item
+     * @return bool
+     */
+    public function isItemActive($item): bool {
+        return $item === $this->getSeries();
+    }
+
+    /**
+     * @param string|int $item
+     * @return string
+     */
+    public function getItemLabel($item): string {
+        return sprintf(_('Series %d'), $item);
+    }
+
+    /**
+     * @param string|int $item
+     * @return string
+     * @throws InvalidLinkException
+     */
+    public function getItemLink($item): string {
+        return $this->getPresenter()->link('this', ['series' => $series]);
     }
 }

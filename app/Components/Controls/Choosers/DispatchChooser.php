@@ -3,12 +3,13 @@
 namespace FKSDB\Components\Controls\Choosers;
 
 use Authorization\Grant;
-use ModelRole;
+use FKSDB\ORM\Models\ModelLogin;
+use FKSDB\ORM\Services\ServiceContest;
+use FKSDB\UI\Title;
+use FKSDB\YearCalculator;
 use Nette\Application\BadRequestException;
-use Nette\Diagnostics\Debugger;
+use Nette\DI\Container;
 use Nette\Http\Session;
-use ServiceContest;
-use YearCalculator;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -29,17 +30,18 @@ class DispatchChooser extends Chooser {
 
     /**
      *
+     * @param Container $container
      * @param Session $session
      * @param YearCalculator $yearCalculator
      * @param ServiceContest $serviceContest
      */
-    function __construct(Session $session, YearCalculator $yearCalculator, ServiceContest $serviceContest) {
-        parent::__construct($session, $serviceContest);
+    function __construct(Container $container, Session $session, YearCalculator $yearCalculator, ServiceContest $serviceContest) {
+        parent::__construct($container);
         $this->yearCalculator = $yearCalculator;
     }
 
     /**
-     * @param $params object
+     * @param object $params
      * @return boolean
      * Redirect to correct address according to the resolved values.
      */
@@ -122,10 +124,8 @@ class DispatchChooser extends Chooser {
             return [];
         }
         $result = [];
-        $roles = $login->getRoles(\ModelLogin::NO_ACL_ROLES);
-        /**
-         * @var $role Grant
-         */
+        $roles = $login->getRoles();
+        /**@var Grant $role */
         foreach ($roles as $role) {
             $result[] = [
                 'contest' => $this->serviceContest->findByPrimary($role->getContestId()),
@@ -157,5 +157,25 @@ class DispatchChooser extends Chooser {
         }
 
 
+    }
+
+    protected function getTitle(): Title {
+        // TODO: Implement getTitle() method.
+    }
+
+    protected function getItems() {
+        // TODO: Implement getItems() method.
+    }
+
+    public function isItemActive($item): bool {
+        // TODO: Implement isItemActive() method.
+    }
+
+    public function getItemLabel($item): string {
+        // TODO: Implement getItemLabel() method.
+    }
+
+    public function getItemLink($item): string {
+        // TODO: Implement getItemLink() method.
     }
 }
