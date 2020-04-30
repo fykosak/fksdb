@@ -52,7 +52,7 @@ class StoredQueryTagTypeProvider implements IFilteredDataProvider {
      * @param int $id
      * @return string
      */
-    public function getItemLabel($id): string {
+    public function getItemLabel(int $id): string {
         /** @var ModelStoredQueryTagType $tagType */
         $tagType = $this->serviceStoredQueryTagType->findByPrimary($id);
         return $tagType->name;
@@ -61,7 +61,7 @@ class StoredQueryTagTypeProvider implements IFilteredDataProvider {
     /**
      * @return array
      */
-    public function getItems() {
+    public function getItems(): array {
         $tagTypes = $this->searchTable
             ->order('name');
 

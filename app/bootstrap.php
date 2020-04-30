@@ -21,7 +21,6 @@ define('CONFIG_DIR', dirname(__FILE__) . DIRECTORY_SEPARATOR . 'config');
 // Configure application
 $configurator = new Configurator();
 $configurator->onCompile[] = function (Configurator $configurator, Compiler $compiler) {
-
     $compiler->addExtension('fksrouter', new RouterExtension());
     $compiler->addExtension('acl', new ACLExtension());
     $compiler->addExtension('navigation', new NavigationExtension());
@@ -53,12 +52,11 @@ foreach (Finder::findFiles('*.neon')->from(dirname(__FILE__) . '/../data/events'
 
 $container = $configurator->createContainer();
 
-
 //
 // Register addons
 //
 Replicator::register();
-
 //
 // Configure and run the application!
 $container->application->run();
+

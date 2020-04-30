@@ -17,8 +17,6 @@ class FormControl extends Control {
 
     const SNIPPET_MAIN = 'groupContainer';
 
-    const TEMPLATE_PATH = 'FormControl.containers.latte';
-
     /**
      * @return Form
      */
@@ -38,19 +36,11 @@ class FormControl extends Control {
         return $component;
     }
 
-    /**
-     * @return string
-     */
-    private function getTemplateFile(): string {
-        return __DIR__ . DIRECTORY_SEPARATOR . self::TEMPLATE_PATH;
-    }
-
     public function render() {
         if (!isset($this->template->mainContainer)) {
             $this->template->mainContainer = $this->getComponent('form');
         }
-        $this->template->setFile($this->getTemplateFile());
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'FormControl.containers.latte');
         $this->template->render();
     }
-
 }
