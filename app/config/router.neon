@@ -95,7 +95,6 @@ fksrouter:
             flags:  SECURED
 
         # Application itself (note the presenters w/out module are handled specially)
-
         '//[!<subdomain>].%domain.host%.[!<tld>]%path%[<contestId %contests%>[<year [0-9]+>]/]<presenter %rootPresenters%>/<action=default>[/<id>]':
             subdomain: %subdomain.db%
             tld: %domain.tld%
@@ -112,10 +111,8 @@ fksrouter:
 
         '//[!<subdomain>].%domain.host%.[!<tld>]%path%fyziklani[<eventId [0-9]+>]/<presenter>/<action=default>[/<id>]':
             subdomain: %subdomain.db%
-            presenter: Dashboard
             tld: %domain.tld%
-            eventId: -1
-            module: Brawl
+            module: Fyziklani
             flags: SECURED
 
         '//[!<subdomain>].%domain.host%.[!<tld>]%path%event[<eventId [0-9]+>]/<presenter>/<action=default>[/<id>]':
@@ -137,12 +134,7 @@ fksrouter:
             subdomain: %subdomain.db%
             tld: %domain.tld%
             contestId: [filterTable: %inverseContestMapping%]
-            year: -1
-            series: -1
             flags: SECURED
-               # Empty params <module %modules%>
-
-
 
         '//[!<subdomain>].%domain.host%.[!<tld>]%path%[<contestId %contests%>[<year [0-9]+>]/]<module %modules%>/<presenter>/<action=default>[/<id>]':
             presenter: Dashboard

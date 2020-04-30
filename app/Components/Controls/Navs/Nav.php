@@ -2,106 +2,70 @@
 
 namespace FKSDB\Components\Controls\Navs;
 
-use FKSDB\Components\Controls\Choosers\Chooser;
+use FKSDB\Components\Controls\BaseControl;
+use FKSDB\Components\Controls\Choosers\ContestChooser;
 use FKSDB\Components\Controls\Choosers\DispatchChooser;
 use FKSDB\Components\Controls\Choosers\LanguageChooser;
 use FKSDB\Components\Controls\Choosers\SeriesChooser;
 use FKSDB\Components\Controls\Choosers\YearChooser;
-use Nette\Application\BadRequestException;
-use Nette\Application\UI\Control;
-use Nette\Http\Session;
-use Nette\Localization\ITranslator;
+use Nette\DI\Container;
 
-class Nav extends Control {
-
-    /**
-     * @var \ServiceEvent
-     */
-    private $serviceEvent;
-
-    /**
-     * @var string
-     */
-    protected $role;
-    /**
-     * @var \YearCalculator
-     */
-    protected $yearCalculator;
-    /**
-     * @var Session
-     */
-    protected $session;
-    /**
-     * @var \ServiceContest
-     */
-    protected $serviceContest;
-
-    /**
-     * @var \SeriesCalculator
-     */
-    private $seriesCalculator;
-
-    /**
-     * @var ITranslator
-     */
-    private $translator;
+/**
+ * Class Nav
+ * @package FKSDB\Components\Controls\Navs
+ */
+class Nav extends BaseControl {
 
     /**
      * @var string[]
      */
     private $choosers;
+    /**
+     * @var Container
+     */
+    private $context;
 
-    public function __construct(
-        \YearCalculator $yearCalculator,
-        \SeriesCalculator $seriesCalculator,
-        Session $session,
-        \ServiceContest $serviceContest,
-        ITranslator $translator
-    ) {
-        parent::__construct();
-        $this->yearCalculator = $yearCalculator;
-        $this->session = $session;
-        $this->serviceContest = $serviceContest;
-        $this->translator = $translator;
-        $this->seriesCalculator = $seriesCalculator;
+    /**
+     * Nav constructor.
+     * @param Container $container
+     */
+    public function __construct(Container $container) {
+        parent::__construct($container);
+        $this->context = $container;
     }
 
     /**
      * @return LanguageChooser
      */
-    protected function createComponentLangChooser() {
-        $control = new LanguageChooser($this->session);
-        return $control;
+    protected function createComponentLangChooser(): LanguageChooser {
+        return new LanguageChooser($this->context);
     }
 
     /**
      * @return DispatchChooser
      */
-    protected function createComponentDispatchChooser() {
-        $control = new DispatchChooser($this->session, $this->yearCalculator, $this->serviceContest);
-
-        return $control;
+    protected function createComponentDispatchChooser(): DispatchChooser {
+        return new DispatchChooser($this->context);
     }
 
     /**
      * @return YearChooser
      */
-    protected function createComponentYearChooser() {
-        $control = new YearChooser($this->session, $this->yearCalculator, $this->serviceContest);
-
-        return $control;
+    protected function createComponentYearChooser(): YearChooser {
+        return new YearChooser($this->context);
     }
 
     /**
      * @return SeriesChooser
      */
-    protected function createComponentSeriesChooser() {
-        $control = new SeriesChooser($this->session, $this->seriesCalculator, $this->serviceContest, $this->translator);
-
-        return $control;
+    protected function createComponentSeriesChooser(): SeriesChooser {
+        return new SeriesChooser($this->context);
     }
 
-    public function setChoosers($choosers) {
+    /**
+     * @param string[] $choosers
+     */
+    public function setChoosers(array $choosers) {
         $this->choosers = $choosers;
     }
 
@@ -112,7 +76,7 @@ class Nav extends Control {
     }
 
     /**
-     * @param $params object
+     * @param object $params
      * @return object
      * redirect to correct URL
      */
@@ -120,10 +84,7 @@ class Nav extends Control {
         $redirect = false;
 
         foreach ($this->choosers as $chooser) {
-            Debugger::barDump($chooser);
-            /**
-             * @var $chooserControl Chooser
-             */
+            /** @var ContestChooser $chooserControl */
             $chooserControl = $this[$chooser . 'Chooser'];
             $currentRedirect = $chooserControl->syncRedirect($params);
             $redirect = $redirect || $currentRedirect;
@@ -134,5 +95,4 @@ class Nav extends Control {
             return null;
         }
     }
-
 }
