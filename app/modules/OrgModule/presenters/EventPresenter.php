@@ -78,46 +78,6 @@ class EventPresenter extends BasePresenter {
     }
 
     /**
-     * @return FormControl
-     * @throws BadRequestException
-     * @throws \Exception
-     */
-    private function createForm() {
-        $control = new FormControl();
-        $form = $control->getForm();
-
-        $eventContainer = $this->eventFactory->createEvent($this->getSelectedContest());
-        $form->addComponent($eventContainer, self::CONT_EVENT);
-        /** @var ModelEvent $event */
-        $event = $this->getModel();
-        if ($event) { // intentionally =
-            /** @var Holder $holder */
-            $holder = $this->container->createServiceEventHolder($event);
-            $scheme = $holder->getPrimaryHolder()->getParamScheme();
-            $paramControl = $eventContainer->getComponent('parameters');
-            $paramControl->setOption('description', $this->createParamDescription($scheme));
-            $paramControl->addRule(function (BaseControl $control) use ($scheme) {
-                $parameters = $control->getValue();
-                try {
-                    if ($parameters) {
-                        $parameters = Neon::decode($parameters);
-                    } else {
-                        $parameters = [];
-                    }
-
-                    NeonScheme::readSection($parameters, $scheme);
-                    return true;
-                } catch (Exception $exception) {
-                    $control->addError($exception->getMessage());
-                    return false;
-                }
-            }, _('Parametry nesplňují Neon schéma'));
-        }
-
-        return $control;
-    }
-
-    /**
      * @param $scheme
      * @return Html
      * @inheritDoc
