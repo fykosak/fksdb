@@ -16,7 +16,7 @@ use Nette\Templating\FileTemplate;
  */
 class LanguageChooser extends Control {
     /** @var array */
-    private $supportedLanguages;
+    private $supportedLanguages = [];
 
     /** @var Session */
     private $session;
