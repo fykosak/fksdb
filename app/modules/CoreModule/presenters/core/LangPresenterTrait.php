@@ -72,7 +72,7 @@ trait LangPresenterTrait {
      * Should be final
      * @throws BadRequestException
      */
-    public final function getLang(): string {
+    public function getLang(): string {
         if (!$this->cacheLang) {
             $this->cacheLang = $this->getUserPreferredLang();
             if (!$this->cacheLang) {
