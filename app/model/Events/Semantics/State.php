@@ -3,7 +3,6 @@
 namespace Events\Semantics;
 
 use FKSDB\Expressions\EvaluatedExpression;
-use Nette\Application\BadRequestException;
 use Nette\SmartObject;
 
 /**
@@ -28,7 +27,6 @@ class State extends EvaluatedExpression {
     /**
      * @param array $args
      * @return bool
-     * @throws BadRequestException
      */
     public function __invoke(...$args): bool {
         return $this->getHolder($args[0])->getMachine()->getPrimaryMachine()->getState() == $this->state;

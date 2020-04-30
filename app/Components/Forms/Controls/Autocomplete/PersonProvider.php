@@ -5,8 +5,8 @@ namespace FKSDB\Components\Forms\Controls\Autocomplete;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
+use FKSDB\ORM\Tables\TypedTableSelection;
 use FKSDB\YearCalculator;
-use Nette\Database\Table\Selection;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -23,7 +23,7 @@ class PersonProvider implements IFilteredDataProvider {
     private $servicePerson;
 
     /**
-     * @var Selection
+     * @var TypedTableSelection
      */
     private $searchTable;
 

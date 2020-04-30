@@ -13,7 +13,7 @@ use Nette\Application\BadRequestException;
 use Nette\Config\CompilerExtension;
 use Nette\DI\ContainerBuilder;
 use Nette\DI\ServiceDefinition;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 use stdClass;
 
 /**
@@ -103,7 +103,7 @@ class DBReflectionExtension extends CompilerExtension {
                 case 'state':
                     return $this->registerStateRow($builder, $tableName, $fieldName, $field);
                 default:
-                    throw new NotImplementedException();
+                    throw new NotImplementedException;
             }
         }
         if (is_string($field) && preg_match('/([A-Za-z0-9]+\\\\)*/', $field)) {
@@ -192,7 +192,7 @@ class DBReflectionExtension extends CompilerExtension {
         if ($value instanceof stdClass) {
             return ($value->value)(...$value->attributes);
         }
-        throw new NotImplementedException();
+        throw new NotImplementedException;
     }
 
     /**

@@ -85,7 +85,7 @@ class FlagProcessing extends AbstractProcessing {
             } else {
                 $participantData = $formValues;
             }
-            if (!($this->isCzSkSchool($participantData['school_id']) && $this->isStudent($participantData['study_year']))) {
+            if (!($this->serviceSchool->isCzSkSchool($participantData['school_id']) && $this->isStudent($participantData['study_year']))) {
                 $personHasFlag = $values[$name]['person_id_1']['person_has_flag'];
                 $personHasFlag->offsetUnset('spam_mff');
 //                $a=$c;
@@ -94,18 +94,6 @@ class FlagProcessing extends AbstractProcessing {
                 //unset($values[$name]['person_id_1']['person_has_flag']);
             }
         }
-    }
-
-    /**
-     * @param int $schoolId
-     * @return bool
-     */
-    private function isCzSkSchool($schoolId) {
-        $country = $this->serviceSchool->getTable()->select('address.region.country_iso')->where(['school_id' => $schoolId])->fetch();
-        if (in_array($country->country_iso, ['CZ', 'SK'])) {
-            return true;
-        }
-        return false;
     }
 
     /**

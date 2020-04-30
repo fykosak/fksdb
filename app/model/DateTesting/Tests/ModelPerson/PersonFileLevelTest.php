@@ -5,6 +5,7 @@ namespace FKSDB\DataTesting\Tests\Person;
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\Forms\Factories\ITestedRowFactory;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
+use FKSDB\Exceptions\BadTypeException;
 use Nette\Application\BadRequestException;
 
 /**
@@ -43,7 +44,7 @@ abstract class PersonFileLevelTest extends PersonTest {
     private final function loadFactory(TableReflectionFactory $tableReflectionFactory, string $factoryTableName, string $factoryFieldName) {
         $rowFactory = $tableReflectionFactory->loadService($factoryTableName, $factoryFieldName);
         if (!$rowFactory instanceof ITestedRowFactory) {
-            throw new BadRequestException();
+            throw new BadTypeException(ITestedRowFactory::class, $rowFactory);
         }
         $this->rowFactory = $rowFactory;
     }

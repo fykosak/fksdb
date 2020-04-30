@@ -35,6 +35,7 @@ class SubmitPresenter extends BasePresenter {
 
     /**
      * @param int $id
+     * @throws BadRequestException
      */
     public function titleEdit(int $id) {
         $this->setTitle(_('Úprava bodování'), 'fa fa-pencil');

@@ -3,6 +3,7 @@
 namespace FKSDB\Components\DatabaseReflection\StoredQuery\StoredQuery;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryTagType;
@@ -35,7 +36,7 @@ class TagsRow extends AbstractRow {
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         if (!$model instanceof ModelStoredQuery) {
-            throw new BadRequestException();
+            throw new BadTypeException(ModelStoredQuery::class, $model);
         }
         $baseEl = Html::el('div')->addAttributes(['class' => 'stored-query-tags']);
         foreach ($model->getTags() as $tagRow) {

@@ -42,7 +42,7 @@ class ServicePersonInfo extends AbstractServiceSingle {
     }
 
     /**
-     * @param \FKSDB\ORM\IModel $model
+     * @param IModel $model
      * @param array $data
      * @param bool $alive
      * @return mixed|void
@@ -60,7 +60,7 @@ class ServicePersonInfo extends AbstractServiceSingle {
     }
 
     /**
-     * @param \FKSDB\ORM\IModel|AbstractModelSingle|ModelPersonInfo $model
+     * @param IModel|AbstractModelSingle|ModelPersonInfo $model
      * @param array $data
      * @param bool $alive
      * @return mixed|void
@@ -76,6 +76,4 @@ class ServicePersonInfo extends AbstractServiceSingle {
         }
         return parent::updateModel2($model, $data);
     }
-
 }
-

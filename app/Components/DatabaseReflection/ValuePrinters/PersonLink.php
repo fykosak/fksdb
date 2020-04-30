@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\DatabaseReflection\ValuePrinters;
 
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\IPersonReferencedModel;
 use FKSDB\ORM\Models\ModelPerson;
 use Nette\Application\BadRequestException;
@@ -41,7 +42,7 @@ class PersonLink extends AbstractValuePrinter {
             $person = $model;
         }
         if (!$person instanceof ModelPerson) {
-            throw new BadRequestException();
+            throw new BadTypeException(ModelPerson::class, $person);
         }
         try {
             if ($this->presenterComponent->getPresenter()->authorized(':Common:Person:detail', ['id' => $person->person_id])) {

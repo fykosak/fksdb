@@ -19,6 +19,8 @@ use FKSDB\Config\GlobalParameters;
 use FKSDB\LangPresenterTrait;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Services\ServiceContest;
+use FKSDB\UI\PageStyleContainer;
+use FKSDB\UI\PageTitle;
 use FKSDB\YearCalculator;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -26,7 +28,6 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Responses\JsonResponse;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
-use Nette\ComponentModel\IComponent;
 use Nette\Templating\FileTemplate;
 use Nette\Templating\ITemplate;
 
@@ -76,13 +77,9 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     private $presenterBuilder;
 
     /**
-     * @var string|null
+     * @var PageTitle
      */
-    protected $title = false;
-    /**
-     * @var string
-     */
-    protected $icon = '';
+    protected $pageTitle;
 
     /**
      * @var bool
@@ -98,11 +95,6 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @var FullHttpRequest
      */
     private $fullRequest;
-
-    /**
-     * @var string
-     */
-    private $subtitle;
     /**
      * @var TableReflectionFactory
      */
@@ -140,9 +132,6 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
-    /**
-     * @return TableReflectionFactory
-     */
     public final function getTableReflectionFactory(): TableReflectionFactory {
         return $this->tableReflectionFactory;
     }
@@ -202,12 +191,9 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @return FileTemplate|ITemplate
      */
     protected function createTemplate($class = NULL) {
-        /**
-         * @var FileTemplate $template
-         */
+        /** @var FileTemplate $template */
         $template = parent::createTemplate($class);
         $template->setTranslator($this->getTranslator());
-
         return $template;
     }
 
@@ -262,31 +248,24 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         parent::setView($view);
         $method = $this->formatTitleMethod($this->getView());
         if (!$this->tryCall($method, $this->getParameter())) {
-            $this->title = null;
+            $this->pageTitle = null;
         }
     }
 
     /**
-     * @return array
+     * @return PageTitle
      */
-    public function getTitle(): array {
-        return [$this->title, $this->icon];
+    public function getTitle(): PageTitle {
+        return $this->pageTitle ?: new PageTitle();
     }
 
     /**
      * @param string $title
      * @param string $icon
+     * @param string $subTitle
      */
-    protected function setTitle(string $title, string $icon = '') {
-        $this->title = $title;
-        $this->icon = $icon;
-    }
-
-    /**
-     * @param $subtitle
-     */
-    protected function setSubtitle(string $subtitle = null) {
-        $this->subtitle = $subtitle;
+    protected function setTitle(string $title, string $icon = '', string $subTitle = '') {
+        $this->pageTitle = new PageTitle($title, $icon, $subTitle);
     }
 
     /**
@@ -303,7 +282,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @param string $action
      * @return string
      */
-    public static function publicFormatActionMethod($action) {
+    public static function publicFormatActionMethod(string $action): string {
         return static::formatActionMethod($action);
     }
 
@@ -322,20 +301,14 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         parent::beforeRender();
 
         $this->tryCall($this->formatTitleMethod($this->getView()), $this->params);
-        list($this->template->title, $this->template->icon) = $this->getTitle();
-
-        list ($symbol, $type) = $this->getNavBarVariant();
-        $this->template->contestSymbol = $symbol;
-        $this->template->navbarClass = $type;
-
-        $this->template->subtitle = $this->getSubtitle();
+        $this->template->pageTitle = $this->getTitle();
+        $this->template->pageStyleContainer = $this->getPageStyleContainer();
+        $this->template->lang = $this->getLang();
         $this->template->navRoots = $this->getNavRoots();
-        $this->template->containerClassNames = $this->getContainerClassNames();
 
         // this is done beforeRender, because earlier it would create too much traffic? due to redirections etc.
         $this->putIntoBreadcrumbs();
     }
-
 
     /**
      * @return array
@@ -344,34 +317,18 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return [];
     }
 
-    /**
-     * @return array
-     */
-    protected function getNavBarVariant(): array {
-        return [null, null];
-    }
-
-    /**
-     * @return string
-     */
-    protected function getContainerClassNames(): string {
-        return 'container py-4 bg-white-container';
-    }
-
-    /**
-     * @return string
-     */
-    public function getSubtitle(): string {
-        return $this->subtitle ?: '';
+    protected function getPageStyleContainer(): PageStyleContainer {
+        $container = new PageStyleContainer();
+        $container->navBarClassName = 'bg-light navbar-light';
+        $container->mainContainerClassName = 'container bg-white-container';
+        return $container;
     }
 
     /**
      * @throws ReflectionException
      */
     protected function putIntoBreadcrumbs() {
-        /**
-         * @var Breadcrumbs $component
-         */
+        /** @var Breadcrumbs $component */
         $component = $this->getComponent('breadcrumbs');
         $component->setBackLink($this->getRequest());
     }
@@ -487,9 +444,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
              * Now create a mock presenter and evaluate accessibility.
              */
             $baseParams = $this->getParameter();
-            /**
-             * @var BasePresenter $testedPresenter
-             */
+            /** @var BasePresenter $testedPresenter */
             $testedPresenter = $this->presenterBuilder->preparePresenter($presenter, $action, $args, $baseParams);
 
             try {
@@ -518,10 +473,10 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     }
 
     /**
-     * @return IComponent|null
+     * @return ValuePrinterComponent
      * @throws \Exception
      */
-    public function createComponentValuePrinter() {
+    public function createComponentValuePrinter(): ValuePrinterComponent {
         return new ValuePrinterComponent($this->getTranslator(), $this->getTableReflectionFactory());
     }
 }

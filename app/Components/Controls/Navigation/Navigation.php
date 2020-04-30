@@ -2,13 +2,15 @@
 
 namespace FKSDB\Components\Controls\Navigation;
 
+use FKSDB\Components\Controls\BaseControl;
 use FKSDB\Components\Controls\PresenterBuilder;
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\UI\PageTitle;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\Control;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
+use Nette\DI\Container;
 use Nette\InvalidArgumentException;
-use Nette\Templating\FileTemplate;
 use ReflectionClass;
 use ReflectionMethod;
 
@@ -17,23 +19,32 @@ use ReflectionMethod;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class Navigation extends Control {
-
+class Navigation extends BaseControl {
+    /**
+     * @var array
+     */
     private $nodes = [];
+    /**
+     * @var array
+     */
     private $nodeChildren = [];
 
     /**
      * @var PresenterBuilder
      */
     private $presenterBuilder;
+    /**
+     * @var array
+     */
     private $structure;
 
     /**
      * Navigation constructor.
      * @param PresenterBuilder $presenterBuilder
+     * @param Container $container
      */
-    function __construct(PresenterBuilder $presenterBuilder) {
-        parent::__construct();
+    function __construct(PresenterBuilder $presenterBuilder, Container $container) {
+        parent::__construct($container);
         $this->presenterBuilder = $presenterBuilder;
     }
 
@@ -49,7 +60,7 @@ class Navigation extends Control {
      * @param $node
      * @return bool
      */
-    public function isActive($node) {
+    public function isActive(\stdClass $node): bool {
         if (isset($node->linkPresenter)) {
             /**
              * @var \BasePresenter $presenter
@@ -82,22 +93,17 @@ class Navigation extends Control {
 
     /**
      * @param \stdClass $node
-     * @return bool|mixed
+     * @return bool
      * @throws BadRequestException
-     * @throws InvalidLinkException
      * @throws \ReflectionException
      */
-    public function isVisible(\stdClass $node) {
+    public function isVisible(\stdClass $node): bool {
         if (isset($node->visible)) {
             return $node->visible;
         }
 
         if (isset($node->linkPresenter)) {
-            /**
-             * @var \BasePresenter $presenter
-             */
-            $presenter = $this->getPresenter();
-            return $this->isAllowed($presenter, $node);
+            return $this->isAllowed($this->getPresenter(), $node);
         }
 
         return true;
@@ -105,44 +111,20 @@ class Navigation extends Control {
 
     /**
      * @param $node
-     * @return array
+     * @return PageTitle
      * @throws BadRequestException
      */
-    public function getTitle($node) {
+    public function getTitle(\stdClass $node): PageTitle {
         if (isset($node->title)) {
-            return $node->title;
+            return new PageTitle($node->title, $node->icon);
         }
         if (isset($node->linkPresenter)) {
-            /**
-             * @var \BasePresenter $presenter
-             */
             $presenter = $this->preparePresenter($node->linkPresenter, $node->linkAction, $node->linkParams);
             $presenter->setView($presenter->getView()); // to force update the title
 
             return $presenter->getTitle();
         }
-        return [];
-    }
-
-    /**
-     * @param $node
-     * @return null|string
-     * @throws BadRequestException
-     */
-    public function getSubTitle($node) {
-        if (isset($node->title)) {
-            return $node->title;
-        }
-        if (isset($node->linkPresenter)) {
-            /**
-             * @var \BasePresenter $presenter
-             */
-            $presenter = $this->preparePresenter($node->linkPresenter, $node->linkAction, $node->linkParams);
-            $presenter->setView($presenter->getView()); // to force update the title
-
-            return $presenter->getSubtitle();
-        }
-        return null;
+        return new PageTitle('');
     }
 
     /**
@@ -157,9 +139,6 @@ class Navigation extends Control {
             return $node->link;
         }
         if (isset($node->linkPresenter)) {
-            /**
-             * @var \BasePresenter $presenter
-             */
             $presenter = $this->getPresenter();
             return $this->createLink($presenter, $node);
         }
@@ -194,59 +173,38 @@ class Navigation extends Control {
     }
 
     /**
-     * @param null $root
+     * @param string $root
      */
-    public function renderNavbar($root = null) {
-        /**
-         * @var FileTemplate $template
-         */
-        $template = $this->getTemplate();
-        $template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Navigation.navbar.latte');
-        $this->renderFromRoot($template, $root, true);
+    public function renderNavbar(string $root) {
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Navigation.navbar.latte');
+        $this->renderFromRoot([$root => $this->structure[$root]]);
     }
 
     /**
-     * @param null $root
+     * @param string $root
      */
-    public function render($root = null) {
-        /**
-         * @var FileTemplate $template
-         */
-        $template = $this->getTemplate();
-        $template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Navigation.latte');
-        $this->renderFromRoot($template, $root, false);
+    public function render(string $root) {
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Navigation.latte');
+        $this->renderFromRoot($this->structure[$root]);
     }
 
     /**
-     * @param FileTemplate $template
-     * @param $root
-     * @param bool $isNavbar
+     * @param array $nodes
      */
-    private function renderFromRoot(FileTemplate $template, $root, $isNavbar = false) {
-        if (!is_null($root)) {
-            if ($root) {
-                $template->nodes = $isNavbar ? [$root => $this->structure[$root]] : $this->structure[$root];
-            } else {
-                $template->nodes = [];
-            }
-        } else {
-            $template->nodes = $this->structure;
-        }
-        $template->render();
+    private function renderFromRoot(array $nodes) {
+        $this->template->nodes = $nodes;
+        $this->template->render();
     }
 
     /**
-     * @param \BasePresenter $presenter
+     * @param Presenter $presenter
      * @param \stdClass $node
      * @return string
      * @throws BadRequestException
      * @throws InvalidLinkException
      * @throws \ReflectionException
      */
-    private function createLink(\BasePresenter $presenter, \stdClass $node) {
-        /**
-         * @var \BasePresenter $linkedPresenter
-         */
+    private function createLink(Presenter $presenter, \stdClass $node): string {
         $linkedPresenter = $this->preparePresenter($node->linkPresenter, $node->linkAction, $node->linkParams);
         $linkParams = $this->actionParams($linkedPresenter, $node->linkAction, $node->linkParams);
 
@@ -254,30 +212,26 @@ class Navigation extends Control {
     }
 
     /**
-     * @param \BasePresenter $presenter
+     * @param Presenter $presenter
      * @param \stdClass $node
-     * @return mixed
+     * @return bool
      * @throws BadRequestException
-     * @throws InvalidLinkException
      * @throws \ReflectionException
      */
-    private function isAllowed(\BasePresenter $presenter, \stdClass $node) {
-        /**
-         * @var \BasePresenter $allowedPresenter
-         */
+    private function isAllowed(Presenter $presenter, \stdClass $node): bool {
         $allowedPresenter = $this->preparePresenter($node->linkPresenter, $node->linkAction, $node->linkParams);
         $allowedParams = $this->actionParams($allowedPresenter, $node->linkAction, $node->linkParams);
         return $presenter->authorized(':' . $node->linkPresenter . ':' . $node->linkAction, $allowedParams);
     }
 
     /**
-     * @param \BasePresenter $presenter
+     * @param Presenter $presenter
      * @param $actionParams
      * @param $params
      * @return array
      * @throws \ReflectionException
      */
-    private function actionParams(\BasePresenter $presenter, $actionParams, $params) {
+    private function actionParams(Presenter $presenter, $actionParams, $params): array {
         $method = $presenter->publicFormatActionMethod($actionParams);
 
         $actionParams = [];
@@ -293,20 +247,18 @@ class Navigation extends Control {
     }
 
     /**
-     * @param $presenterName
-     * @param $action
+     * @param string $presenterName
+     * @param string $action
      * @param $providedParams
-     * @return Presenter
+     * @return Presenter|INavigablePresenter
      * @throws BadRequestException
      */
-    public function preparePresenter($presenterName, $action, $providedParams) {
+    public function preparePresenter(string $presenterName, string $action, $providedParams): Presenter {
         $ownPresenter = $this->getPresenter();
         $presenter = $this->presenterBuilder->preparePresenter($presenterName, $action, $providedParams, $ownPresenter->getParameter());
         if (!$presenter instanceof INavigablePresenter) {
-            $class = get_class($presenter);
-            throw new InvalidArgumentException("Presenter must be instance of INavigablePresenter, $class given.");
+            throw new BadTypeException(INavigablePresenter::class, $presenter);
         }
         return $presenter;
     }
-
 }

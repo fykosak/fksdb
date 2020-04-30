@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Forms\Controls;
 
+use Nette\Http\Response;
 use Nette\Utils\ArrayHash;
 use RuntimeException;
 
@@ -20,11 +21,10 @@ class ModelDataConflictException extends RuntimeException {
     /**
      * ModelDataConflictException constructor.
      * @param $conflicts
-     * @param null $code
      * @param null $previous
      */
-    public function __construct($conflicts, $code = null, $previous = null) {
-        parent::__construct(null, $code, $previous);
+    public function __construct($conflicts, $previous = null) {
+        parent::__construct(null, Response::S409_CONFLICT, $previous);
         $this->conflicts = $conflicts;
     }
 

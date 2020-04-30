@@ -2,7 +2,6 @@
 
 namespace FKSDB\Logging;
 
-use FKSDB\Messages\Message;
 use Nette\Application\UI\Control;
 
 /**
@@ -15,17 +14,13 @@ use Nette\Application\UI\Control;
  */
 class FlashMessageDump {
     /**
-     * @param ILogger $logger
+     * @param MemoryLogger $logger
      * @param Control $control
      * @param bool $clear
      */
-    public static function dump(ILogger $logger, Control $control, bool $clear = true) {
+    public static function dump(MemoryLogger $logger, Control $control, bool $clear = true) {
         foreach ($logger->getMessages() as $message) {
-            if ($message instanceof Message) {
-                $control->flashMessage($message->getMessage(), $message->getLevel());
-            } else {
-                $control->flashMessage($message[MemoryLogger::IDX_MESSAGE], $message[MemoryLogger::IDX_LEVEL]);
-            }
+            $control->flashMessage($message->getMessage(), $message->getLevel());
         }
         if ($clear) {
             $logger->clear();

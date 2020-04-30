@@ -67,9 +67,10 @@ class SingleApplicationsTimeProgress extends ReactComponent implements IChart {
         foreach ($this->serviceEvent->getEventsByType($this->eventType) as $event) {
             $participants = [];
             $query = $this->serviceEventParticipant->findPossiblyAttending($event);
-            foreach ($query as $row) {
+            /** @var ModelEventParticipant $participant */
+            foreach ($query as $participant) {
                 $participants[] = [
-                    'created' => ModelEventParticipant::createFromActiveRow($row)->created->format('c'),
+                    'created' => $participant->created->format('c'),
                 ];
             }
 

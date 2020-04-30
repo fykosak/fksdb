@@ -3,6 +3,7 @@
 namespace EventModule;
 
 use FKSDB\EntityTrait;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\IEventReferencedModel;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\AbortException;
@@ -29,10 +30,10 @@ trait EventEntityTrait {
         $this->loadBaseEntity($id);
 
         if (!$this->model instanceof IEventReferencedModel) {
-            throw new BadRequestException('Model must be a instance of IEventReferencedModel', 500);
+            throw new BadTypeException(IEventReferencedModel::class, $this->model);
         }
         if ($this->model->getEvent()->event_id !== $this->getEvent()->event_id) {
-            throw new ForbiddenRequestException();
+            throw new ForbiddenRequestException;
         }
 
         return $this->model;

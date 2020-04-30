@@ -2,13 +2,13 @@
 
 namespace FKSDB\Components\Controls\Stalking\StalkingComponent;
 
-use Exception;
 use FKSDB\Components\Controls\Stalking\StalkingControl;
 use FKSDB\Components\Controls\Stalking\StalkingService;
 use FKSDB\ORM\Models\ModelPerson;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
+use Nette\InvalidStateException;
 use Nette\Templating\FileTemplate;
 
 /**
@@ -25,54 +25,56 @@ class StalkingComponent extends StalkingControl {
     /**
      * StalkingComponent constructor.
      * @param Container $container
-     * @param ModelPerson $modelPerson
-     * @param int $userPermission
      */
-    public function __construct(Container $container, ModelPerson $modelPerson, int $userPermission) {
-        parent::__construct($container, $modelPerson, $userPermission);
+    public function __construct(Container $container) {
+        parent::__construct($container);
         $this->stalkingService = $container->getByType(StalkingService::class);
     }
 
     /**
      * @param string $section
+     * @param ModelPerson $person
+     * @param int $userPermissions
+     * @return void
      * @throws BadRequestException
-     * @throws Exception
+     * @throws NotImplementedException
      */
-    public function render(string $section) {
+    public function render(string $section, ModelPerson $person, int $userPermissions) {
         $definition = $this->stalkingService->getSection($section);
-        $this->beforeRender();
+        $this->beforeRender($person, $userPermissions);
         $this->template->headline = _($definition['label']);
         $this->template->minimalPermissions = $definition['minimalPermission'];
 
         switch ($definition['layout']) {
             case 'single':
-                return $this->renderSingle($definition);
+                return $this->renderSingle($definition, $person);
             case 'multi':
-                return $this->renderMulti($definition);
+                return $this->renderMulti($definition, $person);
             default:
-                throw new BadRequestException();
+                throw new InvalidStateException;
         }
     }
 
     /**
      * @param array $definition
+     * @param ModelPerson $person
      * @throws NotImplementedException
      */
-    private function renderSingle(array $definition) {
+    private function renderSingle(array $definition, ModelPerson $person) {
 
         $model = null;
         switch ($definition['table']) {
             case 'person_info':
-                $model = $this->modelPerson->getInfo();
+                $model = $person->getInfo();
                 break;
             case 'person':
-                $model = $this->modelPerson;
+                $model = $person;
                 break;
             case 'login':
-                $model = $this->modelPerson->getLogin();
+                $model = $person->getLogin();
                 break;
             default:
-                throw new NotImplementedException();
+                throw new NotImplementedException;
         }
 
         $this->template->model = $model;
@@ -83,10 +85,11 @@ class StalkingComponent extends StalkingControl {
 
     /**
      * @param array $definition
+     * @param ModelPerson $person
      */
-    private function renderMulti(array $definition) {
+    private function renderMulti(array $definition, ModelPerson $person) {
         $models = [];
-        $query = $this->modelPerson->related($definition['table']);
+        $query = $person->related($definition['table']);
         foreach ($query as $datum) {
             $models[] = ($definition['model'])::createFromActiveRow($datum);
         }

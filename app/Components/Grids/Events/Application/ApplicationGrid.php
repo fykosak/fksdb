@@ -6,6 +6,7 @@ use Exception;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use Nette\Application\UI\Presenter;
+use Nette\Database\Table\GroupedSelection;
 use Nette\Database\Table\Selection;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
@@ -36,19 +37,19 @@ class ApplicationGrid extends AbstractApplicationGrid {
             'referenced.person_name',
             DbNames::TAB_EVENT_PARTICIPANT . '.status',
         ]);
-        $this->addLinkButton( 'detail', 'detail', _('Detail'), false, ['id' => 'event_participant_id']);
+        $this->addLinkButton('detail', 'detail', _('Detail'), false, ['id' => 'event_participant_id']);
         $this->addCSVDownloadButton();
     }
 
     /**
-     * @return Selection
+     * @return GroupedSelection
      */
     protected function getSource(): Selection {
         return $this->event->getParticipants();
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     protected function getHoldersColumns(): array {
         return [
