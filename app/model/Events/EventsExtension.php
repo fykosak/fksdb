@@ -33,8 +33,7 @@ use Nette\DI\Statement;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use Nette\Utils\Arrays;
-use Nette\Utils\PhpGenerator\ClassType;
-use Nette\Utils\PhpGenerator\Method;
+use Nette\Utils\Strings;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -92,7 +91,7 @@ class EventsExtension extends CompilerExtension {
      * @var array[baseMachineFullName] => expanded configuration
      */
     private $baseMachineConfig = [];
-    private $transtionFactory;
+    //  private $transtionFactory;
     private $fieldFactory;
     private $schemeFile;
     private $baseDefinitions = ['machines' => [], 'holders' => []];
@@ -120,7 +119,7 @@ class EventsExtension extends CompilerExtension {
         $config = $this->getConfig();
 
         $this->createDispatchFactories();
-        $this->createTransitionFactory();
+        // $this->createTransitionFactory();
         $this->createFieldFactory();
 
         foreach ($config as $definitionName => $definition) {
@@ -257,25 +256,31 @@ class EventsExtension extends CompilerExtension {
         $def->setArguments([$templateDir, $this->definitionsMap]); //TODO!!
     }
 
-    /*
-     * Shared factories
+    /**
+     * @param string $baseName
+     * @param string $mask
+     * @param array $definition
+     * @return ServiceDefinition
      */
-
-    private function createTransitionFactory() {
-        $factory = $this->getContainerBuilder()->addDefinition($this->getTransitionName());
-        $factory->setClass(self::CLASS_TRANSITION, ['%mask%', '%label%']);
-
+    private function createTransitionService(string $baseName, string $mask, array $definition): ServiceDefinition {
+        $id = uniqid($baseName . '_transition_' . str_replace('-', '_', Strings::webalize($mask)).'__');
+        $factory = $this->getContainerBuilder()->addDefinition($id);
+        $factory->setFactory(Transition::class, [$mask, $definition['label']]);
         $parameters = array_keys($this->scheme['transition']);
-        array_unshift($parameters, 'mask');
-        $factory->setParameters($parameters);
-
-        $factory->addSetup('setCondition', '%condition%');
-        $factory->addSetup('setEvaluator', '@events.expressionEvaluator');
-        $factory->addSetup('$service->onExecuted = array_merge($service->onExecuted, ?)', '%onExecuted%');
-        $factory->addSetup('setDangerous', '%dangerous%');
-        $factory->addSetup('setVisible', '%visible%');
-
-        $this->transtionFactory = $factory;
+        foreach ($parameters as $parameter) {
+            switch ($parameter) {
+                case 'label':
+                case 'onExecuted':
+                    break;
+                default:
+                    if (isset($definition[$parameter])) {
+                        $factory->addSetup('set' . ucfirst($parameter), [$definition[$parameter]]);
+                    }
+            }
+        }
+        $factory->addSetup('setEvaluator', ['@events.expressionEvaluator']);
+        $factory->addSetup('$service->onExecuted = array_merge($service->onExecuted, ?)', [$definition['onExecuted']]);
+        return $factory;
     }
 
     private function createFieldFactory() {
@@ -390,9 +395,8 @@ class EventsExtension extends CompilerExtension {
             }
 
             array_unshift($transitionDef, $mask);
-            $defka = $this->transtionFactory;
-            $stmt = new Statement($defka, $transitionDef);
-            $factory->addSetup('addTransition', $stmt);
+            //   $defka = $this->transtionFactory;
+            $factory->addSetup('addTransition', $this->createTransitionService($factoryName, $mask, $transitionDef));
         }
 
         return $factory;
