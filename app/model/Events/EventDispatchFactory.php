@@ -43,10 +43,26 @@ class EventDispatchFactory {
      * @throws BadRequestException
      */
     public function getEventMachine(ModelEvent $event) {
+        $definition = $this->findDefinition($event);
+        Debugger::barDump($definition);
+        return $this->container->{$definition['machineMethod']}($event);
+    }
+
+    /**
+     * @param ModelEvent $event
+     * @return string[]
+     * @throws BadRequestException
+     */
+    private function findDefinition(ModelEvent $event): array {
         $key = $this->createKey($event);
         foreach ($this->definitions as $definition) {
             if (in_array($key, $definition['keys'])) {
-                return $this->container->{$definition['machineMethod']}($event);
+                return $definition;
+            }
+        }
+        foreach ($this->definitions as $definition) {
+            if (in_array((string)$event->event_type_id, $definition['keys'])) {
+                return $definition;
             }
         }
         throw new BadRequestException();
@@ -58,13 +74,8 @@ class EventDispatchFactory {
      * @throws BadRequestException
      */
     public function getDummyHolder(ModelEvent $event): Holder {
-        $key = $this->createKey($event);
-        foreach ($this->definitions as $definition) {
-            if (in_array($key, $definition['keys'])) {
-                return $this->container->{$definition['holderMethod']}($event);
-            }
-        }
-        throw new BadRequestException();
+        $definition = $this->findDefinition($event);
+        return $this->container->{$definition['holderMethod']}($event);
     }
 
     /**
@@ -72,9 +83,7 @@ class EventDispatchFactory {
      * @return string
      */
     private function createKey(ModelEvent $event): string {
-        $eventTypeId = $event->event_type_id;
-        $eventYear = $event->event_year;
-        return "$eventTypeId-$eventYear";
+        return $event->event_type_id . '-' . $event->event_year;
     }
 
 }

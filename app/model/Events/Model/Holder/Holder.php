@@ -20,6 +20,7 @@ use Nette\Database\Connection;
 use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
 use Nette\Utils\ArrayHash;
+use Tracy\Debugger;
 
 /**
  * A bit bloated class.

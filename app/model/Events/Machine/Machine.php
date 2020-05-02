@@ -15,7 +15,7 @@ use Nette\InvalidArgumentException;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class Machine implements ArrayAccess, IteratorAggregate {
+class Machine extends FreezableObject implements ArrayAccess, IteratorAggregate {
 
     /**
      * @var BaseMachine[]
@@ -36,6 +36,7 @@ class Machine implements ArrayAccess, IteratorAggregate {
      * @param $name
      */
     public function setPrimaryMachine($name) {
+        $this->updating();
         $this->primaryMachine = $this->getBaseMachine($name);
     }
 
@@ -50,6 +51,7 @@ class Machine implements ArrayAccess, IteratorAggregate {
      * @param BaseMachine $baseMachine
      */
     public function addBaseMachine(BaseMachine $baseMachine) {
+        $this->updating();
         $name = $baseMachine->getName();
         $this->baseMachines[$name] = $baseMachine;
 
