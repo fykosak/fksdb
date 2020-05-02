@@ -367,7 +367,8 @@ class ContainerBuilder
 				}
 				$method = $class->addMethod($methodName)
 					->addDocument("@return $type")
-					->setVisibility($def->shared || $def->internal ? 'protected' : 'public')
+                    ->setVisibility('public')
+					//->setVisibility($def->shared || $def->internal ? 'protected' : 'public')
 					->setBody($name === self::THIS_CONTAINER ? 'return $this;' : $this->generateService($name));
 
 				foreach ($this->expand($def->parameters) as $k => $v) {

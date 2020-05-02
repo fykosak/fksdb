@@ -78,6 +78,7 @@ services:
     events.expressionEvaluator: Events\Model\ExpressionEvaluator
     events.privacyPolicy: Events\FormAdjustments\PrivacyPolicy
     events.captcha: Events\FormAdjustments\Captcha
+    #- FKSDB\Events\EventDispatchFactory
 
     #
     # Fyziklani

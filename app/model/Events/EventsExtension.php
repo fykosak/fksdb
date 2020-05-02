@@ -21,11 +21,14 @@ use FKSDB\Components\Forms\Factories\Events\ChooserFactory;
 use FKSDB\Components\Forms\Factories\Events\PersonFactory;
 use FKSDB\Components\Grids\Events\LayoutResolver;
 use FKSDB\Config\Expressions\Helpers;
+use FKSDB\Config\NeonSchemaException;
 use FKSDB\Config\NeonScheme;
+use FKSDB\Events\EventDispatchFactory;
 use Nette\Config\CompilerExtension;
 use Nette\Config\Helpers as ConfigHelpers;
 use Nette\Config\Loader;
 use Nette\DI\Container;
+use Nette\DI\ServiceDefinition;
 use Nette\DI\Statement;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
@@ -107,7 +110,7 @@ class EventsExtension extends CompilerExtension {
      * Configuration loading
      */
     /**
-     * @throws \FKSDB\Config\NeonSchemaException
+     * @throws NeonSchemaException
      */
     public function loadConfiguration() {
         parent::loadConfiguration();
@@ -147,6 +150,17 @@ class EventsExtension extends CompilerExtension {
         }
 
         $this->createLayoutResolverFactory();
+        $eventDispatchFactory = $this->getContainerBuilder()
+            ->addDefinition('event.dispatch')->setFactory(EventDispatchFactory::class);
+
+        $definitions = $this->getTransposedDefinitions();
+        foreach ($definitions as $definitionName => $keys) {
+            $holderName = $this->getHolderName($definitionName);
+            $machineName = $this->getMachineName($definitionName);
+            $machineMethodName = Container::getMethodName($machineName);
+            $holderMethodName = Container::getMethodName($holderName, false);
+            $eventDispatchFactory->addSetup('addEvent', [$keys, $machineMethodName, $holderMethodName]);
+        }
     }
 
     private function loadScheme() {
@@ -202,56 +216,6 @@ class EventsExtension extends CompilerExtension {
         }
     }
 
-    /*
-     * Dispatch factories
-     */
-
-    /**
-     * @param Method $method
-     * @param $nameCallback
-     */
-    private function createDispatchFactoryBody(Method $method, $nameCallback) {
-        $method->setBody(NULL);
-        $method->addBody('$eventTypeId = $event->event_type_id;');
-        $method->addBody('$eventYear = $event->event_year;');
-        $method->addBody('$key = "$eventTypeId-$eventYear";');
-        $method->addBody('switch($key) {');
-        $definitions = $this->getTransposedDefinitions();
-        $universals = [];
-        $indent = "\t";
-        foreach ($definitions as $definitionName => $keys) {
-            $machineName = $nameCallback($definitionName);
-            $methodName = Container::getMethodName($machineName, false);
-            $resultStmt = "return \$this->$methodName(\$event);";
-            $cases = false;
-            foreach ($keys as $key) {
-                if (strpos($key, '-') === false) {
-                    $universals[$key] = $resultStmt;
-                    continue;
-                } else {
-                    $cases = true;
-                    $method->addBody('case ?:', [$key]);
-                }
-            }
-            if ($cases) {
-                $method->addBody($indent . $resultStmt);
-                $method->addBody('break;');
-            }
-        }
-
-        $method->addBody('default:');
-        $method->addBody($indent . 'switch($eventTypeId) {');
-        foreach ($universals as $key => $resultStmt) {
-            $method->addBody($indent . 'case ?:', [$key]);
-            $method->addBody($indent . $resultStmt);
-            $method->addBody($indent . 'break;');
-        }
-        $method->addBody('default:');
-        $method->addBody('throw new Events\UndeclaredEventException("Unknown event_type_id $eventTypeId for event year $eventYear.");');
-        $method->addBody($indent . '}');
-        $method->addBody('}');
-    }
-
     /**
      * @return array
      */
@@ -276,32 +240,16 @@ class EventsExtension extends CompilerExtension {
 
     private function createDispatchFactories() {
         $def = $this->getContainerBuilder()->addDefinition(self::MAIN_FACTORY);
-        $def->setShared(false);
         $def->setClass(self::CLASS_MACHINE);
         $def->setParameters(['FKSDB\ORM\Models\ModelEvent event']);
 
         $def = $this->getContainerBuilder()->addDefinition(self::MAIN_HOLDER);
-        $def->setShared(false);
         $def->setClass(self::CLASS_HOLDER);
         $def->setParameters(['FKSDB\ORM\Models\ModelEvent event']);
     }
 
-    /**
-     * @param ClassType $class
-     */
-    public function afterCompile(ClassType $class) {
-        $methodName = Container::getMethodName(self::MAIN_FACTORY, false);
-        $method = $class->methods[$methodName];
-        $this->createDispatchFactoryBody($method, [$this, 'getMachineName']);
-
-        $methodName = Container::getMethodName(self::MAIN_HOLDER, false);
-        $method = $class->methods[$methodName];
-        $this->createDispatchFactoryBody($method, [$this, 'getHolderName']);
-    }
-
     private function createLayoutResolverFactory() {
         $def = $this->getContainerBuilder()->addDefinition(self::MAIN_RESOLVER);
-        $def->setShared(true);
         $def->setClass(self::CLASS_RESOLVER);
 
         $parameters = $this->getContainerBuilder()->parameters;
@@ -315,9 +263,7 @@ class EventsExtension extends CompilerExtension {
 
     private function createTransitionFactory() {
         $factory = $this->getContainerBuilder()->addDefinition($this->getTransitionName());
-        $factory->setShared(false);
         $factory->setClass(self::CLASS_TRANSITION, ['%mask%', '%label%']);
-        $factory->setInternal(true);
 
         $parameters = array_keys($this->scheme['transition']);
         array_unshift($parameters, 'mask');
@@ -359,7 +305,7 @@ class EventsExtension extends CompilerExtension {
     /**
      * @param $name
      * @param $definition
-     * @throws \FKSDB\Config\NeonSchemaException
+     * @throws NeonSchemaException
      */
     private function createMachineFactory($name, $definition) {
         $machineDef = NeonScheme::readSection($definition['machine'], $this->scheme['machine']);
@@ -369,10 +315,7 @@ class EventsExtension extends CompilerExtension {
          */
         $factoryName = $this->getMachineName($name);
         $factory = $this->getContainerBuilder()->addDefinition($factoryName);
-        $factory->setShared(false);
-        $factory->setClass(self::CLASS_MACHINE);
-        $factory->setInternal(true);
-
+        $factory->setFactory(self::CLASS_MACHINE);
         /*
          * Create and add base machines into the machine (i.e. creating instances).
          */
@@ -409,23 +352,20 @@ class EventsExtension extends CompilerExtension {
                 $factory->addSetup("\$service->getBaseMachine(?)->addInducedTransition(?, ?)", [$instanceName, $mask, $induced]);
             }
         }
-
-        $factory->addSetup('freeze');
     }
 
     /**
      * @param $name
      * @param $baseName
      * @param $definition
-     * @return \Nette\DI\ServiceDefinition
-     * @throws \FKSDB\Config\NeonSchemaException
+     * @return ServiceDefinition
+     * @throws NeonSchemaException
      */
     private function createBaseMachineFactory($name, $baseName, $definition) {
         $factoryName = $this->getBaseMachineName($name, $baseName);
         $factory = $this->getContainerBuilder()->addDefinition($factoryName);
-        $factory->setShared(false);
-        $factory->setClass(self::CLASS_BASE_MACHINE, ['%name%']);
-        $factory->setInternal(true);
+
+        $factory->setFactory(self::CLASS_BASE_MACHINE, ['%name%']);
 
         $parameters = array_keys($this->scheme['bmInstance']);
         array_unshift($parameters, 'name');
@@ -465,7 +405,7 @@ class EventsExtension extends CompilerExtension {
     /**
      * @param $name
      * @param $definition
-     * @throws \FKSDB\Config\NeonSchemaException
+     * @throws NeonSchemaException
      */
     private function createHolderFactory($name, $definition) {
         $machineDef = NeonScheme::readSection($definition['machine'], $this->scheme['machine']);
@@ -475,9 +415,7 @@ class EventsExtension extends CompilerExtension {
          */
         $factoryName = $this->getHolderName($name);
         $factory = $this->getContainerBuilder()->addDefinition($factoryName);
-        $factory->setShared(false);
         $factory->setClass(self::CLASS_HOLDER);
-        $factory->setInternal(true);
         $factory->setParameters(['FKSDB\ORM\Models\ModelEvent event']);
 
         /*
@@ -514,24 +452,19 @@ class EventsExtension extends CompilerExtension {
         foreach ($machineDef['formAdjustments'] as $formAdjustment) {
             $factory->addSetup('addFormAdjustment', $formAdjustment);
         }
-
-
-        $factory->addSetup('freeze');
     }
 
     /**
      * @param $definitionName
      * @param $baseName
      * @param $definition
-     * @return \Nette\DI\ServiceDefinition
-     * @throws \FKSDB\Config\NeonSchemaException
+     * @return ServiceDefinition
+     * @throws NeonSchemaException
      */
     private function createBaseHolderFactory($definitionName, $baseName, $definition) {
         $factoryName = $this->getBaseHolderName($definitionName, $baseName);
         $factory = $this->getContainerBuilder()->addDefinition($factoryName);
-        $factory->setShared(false);
-        $factory->setClass(self::CLASS_BASE_HOLDER, ['%name%']);
-        $factory->setInternal(true);
+        $factory->setFactory(self::CLASS_BASE_HOLDER, ['%name%']);
 
         $parameters = array_keys($this->scheme['bmInstance']);
         array_unshift($parameters, 'event');

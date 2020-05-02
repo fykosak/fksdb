@@ -8,6 +8,7 @@ use Events\Model\ApplicationHandlerFactory;
 use Events\Model\Grid\IHolderSource;
 use Events\Model\Holder\Holder;
 use FKSDB\Application\IJavaScriptCollector;
+use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\UI\Control;
@@ -132,7 +133,9 @@ class ApplicationsGrid extends Control {
         foreach ($this->source as $key => $holder) {
             $this->eventApplications[$key] = $holder->getEvent();
             $this->holders[$key] = $holder;
-            $this->machines[$key] = $this->container->createEventMachine($holder->getEvent());
+            /** @var EventDispatchFactory $factory */
+            $factory = $this->container->getByType(EventDispatchFactory::class);
+            $this->machines[$key] = $factory->getEventMachine($holder->getEvent());
             $this->handlers[$key] = $this->handlerFactory->create($holder->getEvent(), new MemoryLogger()); //TODO it's a bit weird to create new logger for each handler
         }
     }

@@ -16,6 +16,7 @@ use FKSDB\Components\Forms\Controls\ModelDataConflictException;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
 use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
+use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelEvent;
@@ -329,10 +330,13 @@ class ApplicationHandler {
 
     /**
      * @param Holder $holder
+     * @throws \Nette\Application\BadRequestException
      */
     private function initializeMachine(Holder $holder) {
         if (!$this->machine) {
-            $this->machine = $this->container->createEventMachine($this->event);
+            /** @var EventDispatchFactory $factory */
+            $factory = $this->container->getByType(EventDispatchFactory::class);
+            $this->machine = $factory->getEventMachine($this->event);
         }
         if ($this->machine->getHolder() !== $holder) {
             $this->machine->setHolder($holder);
