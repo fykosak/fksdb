@@ -252,7 +252,6 @@ class ApplicationPresenter extends BasePresenter {
 
     private function initializeMachine() {
         $this->getHolder()->setModel($this->getEventApplication());
-        $this->getHolder()->setMachine($this->getMachine());
     }
 
     /**

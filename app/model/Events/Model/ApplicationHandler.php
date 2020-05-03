@@ -339,9 +339,7 @@ class ApplicationHandler {
     private function initializeMachine(Holder $holder) {
         if (!$this->machine) {
             $this->machine = $this->container->createEventMachine($this->event);
-            $holder->setMachine($this->machine);
         }
-
     }
 
     /**
