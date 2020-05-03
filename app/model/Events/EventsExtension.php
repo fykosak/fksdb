@@ -263,7 +263,7 @@ class EventsExtension extends CompilerExtension {
     private function createTransitionService(string $baseName, string $mask, array $definition): ServiceDefinition {
         $id = uniqid($baseName . '_transition_' . str_replace('-', '_', Strings::webalize($mask)) . '__');
         $factory = $this->getContainerBuilder()->addDefinition($id);
-        $factory->setFactory(Transition::class, [$mask, $definition['label'], $definition['type']]);
+        $factory->setFactory(Transition::class, [$mask, $definition['label'], $definition['behaviorType']]);
         $parameters = array_keys($this->scheme['transition']);
         foreach ($parameters as $parameter) {
             switch ($parameter) {

@@ -130,11 +130,11 @@ events:
                     invited->rejected:
                         condition: or(before(param('deadline')),role('admin'))
                         label: Odmítnout účast
-                        type: danger
+                        behaviorType: danger
                     spare->rejected:
                         condition: or(before(param('deadline')),role('admin'))
                         label: Odmítnout účast
-                        type: danger
+                        behaviorType: danger
                     interested->applied:
                         condition: role('admin')
                         label: Schválit jako účastníka

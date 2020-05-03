@@ -57,11 +57,6 @@ class Holder {
     private $connection;
 
     /**
-     * @var Machine
-     */
-    private $machine;
-
-    /**
      * @var SecondaryModelStrategy
      */
     private $secondaryModelStrategy;
@@ -152,21 +147,6 @@ class Holder {
     public function hasBaseHolder($name): bool {
         return isset($this->baseHolders[$name]);
     }
-
-    /**
-     * @return Machine
-     */
-    public function getMachine(): Machine {
-        return $this->machine;
-    }
-
-    /**
-     * @param Machine $machine
-     */
-    public function setMachine(Machine $machine) {
-        $this->machine = $machine;
-    }
-
     /**
      * @return SecondaryModelStrategy
      */

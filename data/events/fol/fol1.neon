@@ -70,11 +70,11 @@ events:
                     applied->missed:
                         condition: and(role('admin'),eventWas())
                         label: Nezúčastnil se
-                        type: danger
+                        behaviorType: danger
                     applied->cancelled:
                         condition: role('admin')
                         label: Zrušit tým
-                        type: danger
+                        behaviorType: danger
                     cancelled->__terminated:
                         condition: role('admin')
                         label: Smazat tým
