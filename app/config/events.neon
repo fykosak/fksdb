@@ -19,7 +19,7 @@ definition:
 machine:
     # Strategy for handling secondary models
     secondaryModelStrategy:
-        default: Events\Model\Holder\SecondaryModelStrategies\CarefulRewrite()
+        default: FKSDB\Events\Model\Holder\SecondaryModelStrategies\CarefulRewrite()
         type: expression
     baseMachines:
     # processing checks invariants/calculates data on edit form submit, before transitions
@@ -75,8 +75,8 @@ transition:
         default: []
         type: expression array
     # Requires confirmation in the GUI
-    dangerous:
-        default: false
+    type:
+        default: secondary
         type: expression
     # Cannot be executed from the GUI (event when it's condition == true)
     visible:

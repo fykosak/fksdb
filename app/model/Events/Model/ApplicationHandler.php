@@ -1,16 +1,16 @@
 <?php
 
-namespace Events\Model;
+namespace FKSDB\Events\Model;
 
 use DuplicateApplicationException;
-use Events\Machine\BaseMachine;
-use Events\Machine\Machine;
-use Events\Machine\Transition;
-use Events\MachineExecutionException;
-use Events\Model\Holder\BaseHolder;
-use Events\Model\Holder\Holder;
-use Events\Model\Holder\SecondaryModelStrategies\SecondaryModelDataConflictException;
-use Events\SubmitProcessingException;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Machine\Transition;
+use FKSDB\Events\MachineExecutionException;
+use FKSDB\Events\Model\Holder\BaseHolder;
+use FKSDB\Events\Model\Holder\Holder;
+use FKSDB\Events\Model\Holder\SecondaryModelStrategies\SecondaryModelDataConflictException;
+use FKSDB\Events\SubmitProcessingException;
 use Exception;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
 use FKSDB\Components\Forms\Controls\ReferencedId;
@@ -149,9 +149,10 @@ class ApplicationHandler {
             if ($holder->getPrimaryHolder()->getModelState() !== $transition->getSource()) {
                 throw new UnavailableTransitionException($transition, $holder->getPrimaryHolder()->getModel());
             }
-            $transition->execute();
+
+            $transition->execute($holder);
             $holder->saveModels();
-            $transition->executed([]);
+            $transition->executed($holder, []);
 
             $this->commit();
 
@@ -171,6 +172,7 @@ class ApplicationHandler {
             $this->reRaise($exception);
         } catch (SecondaryModelDataConflictException $exception) {
             $message = sprintf(_('Data ve skupině "%s" kolidují s již existující přihláškou.'), $exception->getBaseHolder()->getLabel());
+            Debugger::log($exception, 'app-conflict');
             $this->logger->log(new Message($message, ILogger::ERROR));
             $this->reRaise($exception);
         } catch (DuplicateApplicationException $exception) {
@@ -221,7 +223,7 @@ class ApplicationHandler {
             }
 
             if ($execute == self::STATE_OVERWRITE) {
-                foreach ($holder as $name => $baseHolder) {
+                foreach ($holder->getBaseHolders() as $name => $baseHolder) {
                     if (isset($data[$name][BaseHolder::STATE_COLUMN])) {
                         $baseHolder->setModelState($data[$name][BaseHolder::STATE_COLUMN]);
                     }
@@ -230,13 +232,13 @@ class ApplicationHandler {
 
             $induced = []; // cache induced transition as they won't match after execution
             foreach ($transitions as $key => $transition) {
-                $induced[$key] = $transition->execute();
+                $induced[$key] = $transition->execute($holder);
             }
 
             $holder->saveModels();
 
             foreach ($transitions as $key => $transition) {
-                $transition->executed($induced[$key]); //note the 'd', it only triggers onExecuted event
+                $transition->executed($holder, $induced[$key]); //note the 'd', it only triggers onExecuted event
             }
 
             $this->commit();
@@ -262,6 +264,7 @@ class ApplicationHandler {
             $this->reRaise($exception);
         } catch (SecondaryModelDataConflictException $exception) {
             $message = sprintf(_('Data ve skupině "%s" kolidují s již existující přihláškou.'), $exception->getBaseHolder()->getLabel());
+            Debugger::log($exception, 'app-conflict');
             $this->logger->log(new Message($message, ILogger::ERROR));
             $this->formRollback($data);
             $this->reRaise($exception);
@@ -316,12 +319,15 @@ class ApplicationHandler {
         $newStates = array_merge($newStates, $holder->processFormValues($values, $this->machine, $transitions, $this->logger, $form));
         if ($execute == self::STATE_TRANSITION) {
             foreach ($newStates as $name => $newState) {
-                $transition = $this->machine[$name]->getTransitionByTarget($newState);
+                $state = $holder->getBaseHolder($name)->getModelState();
+                Debugger::barDump($state);
+                Debugger::barDump($this->machine->getBaseMachine($name)->getTransitionByTarget($state, $newState), $name);
+                $transition = $this->machine->getBaseMachine($name)->getTransitionByTarget($state, $newState);
                 if ($transition) {
                     $transitions[$name] = $transition;
-                } elseif (!($this->machine->getBaseMachine($name)->getState() == BaseMachine::STATE_INIT && $newState == BaseMachine::STATE_TERMINATED)) {
+                } elseif (!($state == BaseMachine::STATE_INIT && $newState == BaseMachine::STATE_TERMINATED)) {
                     $msg = _('Ze stavu "%s" automatu "%s" neexistuje přechod do stavu "%s".');
-                    throw new MachineExecutionException(sprintf($msg, $this->machine->getBaseMachine($name)->getStateName(), $holder->getBaseHolder($name)->getLabel(), $this->machine->getBaseMachine($name)->getStateName($newState)));
+                    throw new MachineExecutionException(sprintf($msg, $this->machine->getBaseMachine($name)->getStateName($state), $holder->getBaseHolder($name)->getLabel(), $this->machine->getBaseMachine($name)->getStateName($newState)));
                 }
             }
         }
@@ -337,10 +343,9 @@ class ApplicationHandler {
             /** @var EventDispatchFactory $factory */
             $factory = $this->container->getByType(EventDispatchFactory::class);
             $this->machine = $factory->getEventMachine($this->event);
+            $holder->setMachine($this->machine);
         }
-        if ($this->machine->getHolder() !== $holder) {
-            $this->machine->setHolder($holder);
-        }
+
     }
 
     /**

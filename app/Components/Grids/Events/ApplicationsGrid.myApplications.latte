@@ -13,7 +13,7 @@
 {block row}
 <tr>
     <td><span title="{$event->event_type->name}">{$event->name}</span></td>
-    <td>{if $holder->getPrimaryHolder()->getModelState() == Events\Machine\BaseMachine::STATE_INIT}&mdash;{else}{$holder->getPrimaryHolder()->getModel()->__toString()}{/if}</td>
+    <td>{if $holder->getPrimaryHolder()->getModelState() == FKSDB\Events\Machine\BaseMachine::STATE_INIT}&mdash;{else}{$holder->getPrimaryHolder()->getModel()->__toString()}{/if}</td>
     {include #menuRow key => $key, holder => $holder}
 </tr>
 {/block}

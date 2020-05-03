@@ -66,7 +66,7 @@ events:
                         condition: or(and(regOpen(),le(count('applied'),param('capacity'))), role('admin'))
                         label: _('Přihlásit náhradníka')
                         onExecuted:
-                            - Events\Transitions\MailSender(confirmation, .self)
+                            - FKSDB\Events\Transitions\MailSender(confirmation, .self)
                     spare->applied:
                         condition: role('admin')
                         label: _('Nasadit náhradníka')
@@ -76,11 +76,11 @@ events:
                     applied->missed:
                         condition: and(role('admin'),eventWas())
                         label: _('Nepřijel')
-                        dangerous: true
+                        type: danger
                     spare|applied->cancelled:
                         condition: and(role('admin'),neg(or(state('missed'),state('participated'),state('cancelled'))))
                         label: _('Zrušit přihlášku')
-                        dangerous: true
+                        type: danger
                     cancelled->__terminated:
                         condition: role('admin')
                         label: _('Smazat přihlášku')
@@ -116,7 +116,7 @@ events:
                     required: true
                     primary: true
             formAdjustments:
-                - Events\FormAdjustments\UniqueCheck('participant.person_id', _('Zvolená osoba je již přihlášená.'))
+                - FKSDB\Events\FormAdjustments\UniqueCheck('participant.person_id', _('Zvolená osoba je již přihlášená.'))
                 - @events.privacyPolicy
                 - @events.captcha
 

@@ -1,12 +1,12 @@
 <?php
 
-namespace Events\Spec\Fol;
+namespace FKSDB\Events\Spec\Fol;
 
-use Events\FormAdjustments\AbstractAdjustment;
-use Events\FormAdjustments\IFormAdjustment;
-use Events\Machine\Machine;
-use Events\Model\Holder\Holder;
 use FKSDB\ORM\Models\ModelSchool;
+use FKSDB\Events\FormAdjustments\AbstractAdjustment;
+use FKSDB\Events\FormAdjustments\IFormAdjustment;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\ORM\Services\ServicePersonHistory;
 use FKSDB\ORM\Services\ServiceSchool;
 use Nette\Forms\Form;
@@ -122,8 +122,9 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
 
         $personId = $personControl->getValue(false);
         $personHistory = $this->servicePersonHistory->getTable()
-            ->where('person_id', $personId)
-            ->where('ac_year', $this->getHolder()->getEvent()->getAcYear())->fetch();
+                ->where('person_id', $personId)
+                ->where('ac_year', $this->getHolder()->getPrimaryHolder()->getEvent()->getAcYear())->fetch();
+
         return $personHistory->study_year;
     }
 
@@ -140,8 +141,8 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
         $personId = $personControl->getValue(false);
         /** @var ModelSchool|false $school */
         $school = $this->servicePersonHistory->getTable()
-            ->where('person_id', $personId)
-            ->where('ac_year', $this->getHolder()->getEvent()->getAcYear())->fetch();
+                ->where('person_id', $personId)
+                ->where('ac_year', $this->getHolder()->getPrimaryHolder()->getEvent()->getAcYear())->fetch();
         return $school->school_id;
     }
 

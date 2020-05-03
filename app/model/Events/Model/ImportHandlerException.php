@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Events\Model;
+namespace FKSDB\Events\Model;
 
 /**
  * Class ImportHandlerException

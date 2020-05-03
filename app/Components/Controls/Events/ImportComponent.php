@@ -3,11 +3,11 @@
 namespace FKSDB\Components\Events;
 
 use BasePresenter;
-use Events\Machine\Machine;
-use Events\Model\ApplicationHandler;
-use Events\Model\Grid\SingleEventSource;
-use Events\Model\ImportHandler;
-use Events\Model\ImportHandlerException;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\ApplicationHandler;
+use FKSDB\Events\Model\Grid\SingleEventSource;
+use FKSDB\Events\Model\ImportHandler;
+use FKSDB\Events\Model\ImportHandlerException;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Utils\CSVParser;

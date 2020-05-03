@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
-use Events\Machine\BaseMachine;
-use Events\Model\Holder\Field;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Model\Holder\Field;
 use FKSDB\Components\Forms\Controls\TimeBox;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\AbstractServiceMulti;
@@ -116,7 +116,8 @@ class DBReflectionFactory extends AbstractFactory {
      * @param Container $container
      */
     protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container) {
-        if ($machine->getState() == BaseMachine::STATE_INIT && $field->getDefault() === null) {
+
+        if ($field->getBaseHolder()->getModelState() == BaseMachine::STATE_INIT && $field->getDefault() === null) {
             $column = $this->resolveColumn($field);
             $default = $column['default'];
         } else {
