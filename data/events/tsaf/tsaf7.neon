@@ -110,20 +110,20 @@ events:
                     applied|applied.nodsef->missed:
                         condition: and(role('admin'),eventWas())
                         label: Nepřijel
-                        type: danger
+                        behaviorType: danger
                     invited->rejected:
                         condition: %events.tsaf7.appCond%
                         label: Odmítnout účast
-                        type: danger
+                        behaviorType: danger
                     # to cancelled/termination
                     auto.invited|invited|applied|applied.nodsef->cancelled:
                         condition: role('admin')
                         label: Zrušit přihlášku
-                        type: danger
+                        behaviorType: danger
                     spare->cancelled:
                         condition: role('admin')
                         label: Zrušit přihlášku
-                        type: danger
+                        behaviorType: danger
                     cancelled->__terminated:
                         condition: role('admin')
                         label: Smazat přihlášku

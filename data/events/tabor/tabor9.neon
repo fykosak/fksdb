@@ -86,11 +86,11 @@ events:
                     invited->rejected:
                         condition: or(before(param('deadline')),role('admin'))
                         label: Odmítnout účast
-                        type: danger
+                        behaviorType: danger
                     spare->rejected:
                         condition: or(before(param('deadline')),role('admin'))
                         label: Odmítnout účast
-                        type: warning
+                        behaviorType: warning
                     interested->applied:
                         condition: role('admin')
                         label: Schválit jako účastníka
@@ -108,7 +108,7 @@ events:
                     invited|auto.invited|spare|auto.spare|applied|interested|paid->cancelled:
                         condition: role('admin')
                         label: Zrušit přihlášku
-                        type: danger
+                        behaviorType: danger
                     cancelled->__terminated:
                         condition: role('admin')
                         label: Smazat přihlášku
