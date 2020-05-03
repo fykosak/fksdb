@@ -23,7 +23,6 @@ use FKSDB\Components\Grids\Events\LayoutResolver;
 use FKSDB\Config\Expressions\Helpers;
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\Config\NeonScheme;
-use FKSDB\Events\EventDispatchFactory;
 use Nette\Config\CompilerExtension;
 use Nette\Config\Helpers as ConfigHelpers;
 use Nette\Config\Loader;
@@ -33,8 +32,6 @@ use Nette\DI\Statement;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use Nette\Utils\Arrays;
-use Nette\Utils\PhpGenerator\ClassType;
-use Nette\Utils\PhpGenerator\Method;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -157,9 +154,8 @@ class EventsExtension extends CompilerExtension {
         foreach ($definitions as $definitionName => $keys) {
             $holderName = $this->getHolderName($definitionName);
             $machineName = $this->getMachineName($definitionName);
-            $machineMethodName = Container::getMethodName($machineName);
             $holderMethodName = Container::getMethodName($holderName, false);
-            $eventDispatchFactory->addSetup('addEvent', [$keys, $machineMethodName, $holderMethodName]);
+            $eventDispatchFactory->addSetup('addEvent', [$keys,  $holderMethodName, $machineName]);
         }
     }
 
