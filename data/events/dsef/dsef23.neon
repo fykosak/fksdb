@@ -73,12 +73,12 @@ events:
                     applied|applied.tsaf|applied.notsaf->missed:
                         condition: and(role('admin'),eventWas())
                         label: Nepřijel
-                        type: danger
+                        behaviorType: danger
                     # cancel and termination
                     applied|applied.notsaf->cancelled:
                         condition: role('admin')
                         label: Zrušit přihlášku
-                        type: danger
+                        behaviorType: danger
                     cancelled->__terminated:
                         condition: role('admin')
                         label: Smazat přihlášku
