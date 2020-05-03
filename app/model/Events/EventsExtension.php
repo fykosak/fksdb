@@ -40,8 +40,6 @@ use Nette\Utils\Arrays;
  */
 class EventsExtension extends CompilerExtension {
 
-    const MAIN_FACTORY = 'eventMachine';
-    const MAIN_HOLDER = 'eventHolder';
     const MAIN_RESOLVER = 'eventLayoutResolver';
     const TRANSITION_FACTORY = 'Transition';
     const FIELD_FACTORY = 'Field';
@@ -116,7 +114,6 @@ class EventsExtension extends CompilerExtension {
 
         $config = $this->getConfig();
 
-        $this->createDispatchFactories();
         $this->createTransitionFactory();
         $this->createFieldFactory();
 
@@ -232,16 +229,6 @@ class EventsExtension extends CompilerExtension {
             }
         }
         return $result;
-    }
-
-    private function createDispatchFactories() {
-        $def = $this->getContainerBuilder()->addDefinition(self::MAIN_FACTORY);
-        $def->setClass(self::CLASS_MACHINE);
-        $def->setParameters(['FKSDB\ORM\Models\ModelEvent event']);
-
-        $def = $this->getContainerBuilder()->addDefinition(self::MAIN_HOLDER);
-        $def->setClass(self::CLASS_HOLDER);
-        $def->setParameters(['FKSDB\ORM\Models\ModelEvent event']);
     }
 
     private function createLayoutResolverFactory() {
