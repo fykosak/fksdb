@@ -42,7 +42,6 @@ use Nette\Utils\Strings;
 class EventsExtension extends CompilerExtension {
 
     const MAIN_RESOLVER = 'eventLayoutResolver';
-    const TRANSITION_FACTORY = 'Transition';
     const FIELD_FACTORY = 'Field';
     const MACHINE_PREFIX = 'Machine_';
     const HOLDER_PREFIX = 'Holder_';
@@ -58,7 +57,7 @@ class EventsExtension extends CompilerExtension {
 
     /** @const Regexp for configuration section names */
     const NAME_PATTERN = '/[a-z0-9_]/i';
-
+    /** @var string[] */
     public static $semanticMap = [
         'RefPerson' => PersonFactory::class,
         'Chooser' => ChooserFactory::class,
@@ -86,9 +85,11 @@ class EventsExtension extends CompilerExtension {
      * @var array[baseMachineFullName] => expanded configuration
      */
     private $baseMachineConfig = [];
-    //  private $transtionFactory;
+    /** @var ServiceDefinition */
     private $fieldFactory;
+    /** @var */
     private $schemeFile;
+    /** @var array[] */
     private $baseDefinitions = ['holders' => []];
 
     /**
@@ -227,8 +228,7 @@ class EventsExtension extends CompilerExtension {
             throw new MachineDefinitionException("Transition $mask with non-false visibility must have label defined.");
         }
 
-        $id = uniqid($baseName . '_transition_' . str_replace('-', '_', Strings::webalize($mask)) . '__');
-        $factory = $this->getContainerBuilder()->addDefinition($id);
+        $factory = $this->getContainerBuilder()->addDefinition($this->getTransitionName($baseName, $mask));
         $factory->setFactory(Transition::class, [$mask, $definition['label'], $definition['behaviorType']]);
         $parameters = array_keys($this->scheme['transition']);
         foreach ($parameters as $parameter) {
@@ -348,7 +348,7 @@ class EventsExtension extends CompilerExtension {
      * @return ServiceDefinition
      * @throws NeonSchemaException
      */
-    private function createBaseMachineFactory($eventName, $baseName, $instanceName) {
+    private function createBaseMachineFactory(string $eventName, string $baseName, string $instanceName): ServiceDefinition {
         $definition = $this->getBaseMachineConfig($eventName, $baseName);
         $factoryName = $this->getBaseMachineName($eventName, $baseName);
         $factory = $this->getContainerBuilder()->addDefinition(uniqid($factoryName));
@@ -545,10 +545,12 @@ class EventsExtension extends CompilerExtension {
     }
 
     /**
+     * @param string $baseName
+     * @param string $mask
      * @return string
      */
-    private function getTransitionName() {
-        return $this->prefix(self::TRANSITION_FACTORY);
+    private function getTransitionName(string $baseName, string $mask): string {
+        return $id = uniqid($baseName . '_transition_' . str_replace('-', '_', Strings::webalize($mask)) . '__');
     }
 
     /**
