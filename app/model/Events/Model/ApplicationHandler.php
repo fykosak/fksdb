@@ -319,8 +319,6 @@ class ApplicationHandler {
         if ($execute == self::STATE_TRANSITION) {
             foreach ($newStates as $name => $newState) {
                 $state = $holder->getBaseHolder($name)->getModelState();
-                Debugger::barDump($state);
-                Debugger::barDump($this->machine->getBaseMachine($name)->getTransitionByTarget($state, $newState), $name);
                 $transition = $this->machine->getBaseMachine($name)->getTransitionByTarget($state, $newState);
                 if ($transition) {
                     $transitions[$name] = $transition;
