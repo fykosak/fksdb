@@ -155,7 +155,7 @@ class EventsExtension extends CompilerExtension {
             $holderName = $this->getHolderName($definitionName);
             $machineName = $this->getMachineName($definitionName);
             $holderMethodName = Container::getMethodName($holderName, false);
-            $eventDispatchFactory->addSetup('addEvent', [$keys,  $holderMethodName, $machineName]);
+            $eventDispatchFactory->addSetup('addEvent', [$keys, $holderMethodName, $machineName]);
         }
     }
 
@@ -255,11 +255,20 @@ class EventsExtension extends CompilerExtension {
 
     /**
      * @param string $baseName
+     * @param array $states
      * @param string $mask
      * @param array $definition
      * @return ServiceDefinition
      */
-    private function createTransitionService(string $baseName, string $mask, array $definition): ServiceDefinition {
+    private function createTransitionService(string $baseName, array $states, string $mask, array $definition): ServiceDefinition {
+        if (!Transition::validateTransition($mask, $states)) {
+            throw new MachineDefinitionException("Invalid transition $mask for base machine $baseName.");
+        }
+
+        if (!$definition['label'] && $definition['visible'] !== false) {
+            throw new MachineDefinitionException("Transition $mask with non-false visibility must have label defined.");
+        }
+
         $id = uniqid($baseName . '_transition_' . str_replace('-', '_', Strings::webalize($mask)) . '__');
         $factory = $this->getContainerBuilder()->addDefinition($id);
         $factory->setFactory(Transition::class, [$mask, $definition['label'], $definition['behaviorType']]);
@@ -268,7 +277,7 @@ class EventsExtension extends CompilerExtension {
             switch ($parameter) {
                 case 'label':
                 case 'onExecuted':
-                case 'type':
+                case 'behaviorType':
                     break;
                 default:
                     if (isset($definition[$parameter])) {
@@ -383,15 +392,9 @@ class EventsExtension extends CompilerExtension {
         }
         $states = array_keys($definition['states']);
 
-        foreach ($definition['transitions'] as $mask => $transitionDef) {
-            if (!Transition::validateTransition($mask, $states)) {
-                throw new MachineDefinitionException("Invalid transition $mask for base machine $name.$baseName.");
-            }
-            $transitionDef = NeonScheme::readSection($transitionDef, $this->scheme['transition']);
-            if (!$transitionDef['label'] && $transitionDef['visible'] !== false) {
-                throw new MachineDefinitionException("Transition $mask with non-false visibility must have label defined.");
-            }
-            $factory->addSetup('addTransition', $this->createTransitionService($factoryName, $mask, $transitionDef));
+        foreach ($definition['transitions'] as $mask => $transitionRawDef) {
+            $transitionDef = NeonScheme::readSection($transitionRawDef, $this->scheme['transition']);
+            $factory->addSetup('addTransition', $this->createTransitionService($factoryName, $states, $mask, $transitionDef));
         }
 
         return $factory;
