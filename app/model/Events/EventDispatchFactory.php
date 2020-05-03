@@ -2,13 +2,10 @@
 
 namespace FKSDB\Events;
 
-use FKSDB\Events\Model\Holder\BaseHolder;
 use FKSDB\Events\Model\Holder\Holder;
-use FKSDB\Config\NeonSchemaException;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
-use Tracy\Debugger;
 
 /**
  * Class EventDispatchFactory
@@ -44,7 +41,6 @@ class EventDispatchFactory {
      */
     public function getEventMachine(ModelEvent $event) {
         $definition = $this->findDefinition($event);
-        Debugger::barDump($definition);
         return $this->container->{$definition['machineMethod']}($event);
     }
 
