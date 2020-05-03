@@ -47,7 +47,6 @@ class EventsExtension extends CompilerExtension {
     const HOLDER_PREFIX = 'Holder_';
     const BASE_MACHINE_PREFIX = 'BaseMachine_';
     const BASE_HOLDER_PREFIX = 'BaseHolder_';
-    const CLASS_MACHINE = Machine::class;
     const CLASS_BASE_MACHINE = BaseMachine::class;
     const CLASS_TRANSITION = Transition::class;
     const CLASS_FIELD = Field::class;
@@ -74,6 +73,7 @@ class EventsExtension extends CompilerExtension {
         'parameter' => Parameter::class,
         'count' => Count::class,
     ];
+    /** @var  */
     private $scheme;
 
     /**
@@ -116,6 +116,8 @@ class EventsExtension extends CompilerExtension {
 
         $this->createTransitionFactory();
         $this->createFieldFactory();
+        $eventDispatchFactory = $this->getContainerBuilder()
+            ->addDefinition('event.dispatch')->setFactory(EventDispatchFactory::class);
 
         foreach ($config as $definitionName => $definition) {
             $this->validateConfigName($definitionName);
@@ -129,6 +131,7 @@ class EventsExtension extends CompilerExtension {
                 'formLayout' => $definition['formLayout'],
             ];
 
+
             /*
              * Create base machine factories.
              */
@@ -138,22 +141,16 @@ class EventsExtension extends CompilerExtension {
                 $this->baseDefinitions['machines'][$baseName] = $this->createBaseMachineFactory($definitionName, $baseName, $baseMachineDef);
                 $this->baseDefinitions['holders'][$baseName] = $this->createBaseHolderFactory($definitionName, $baseName, $baseMachineDef);
             }
-
-            $this->createMachineFactory($definitionName, $definition);
+            $keys = $this->createAccessKeys($eventTypeIds, $definition);
+            $machineService = $this->createMachineFactory($definitionName, $definition);
             $this->createHolderFactory($definitionName, $definition);
+            $holderName = $this->getHolderName($definitionName);
+            $holderMethodName = Container::getMethodName($holderName, false);
+
+            $eventDispatchFactory->addSetup('addEvent', [$keys, $holderMethodName, $machineService]);
         }
 
         $this->createLayoutResolverFactory();
-        $eventDispatchFactory = $this->getContainerBuilder()
-            ->addDefinition('event.dispatch')->setFactory(EventDispatchFactory::class);
-
-        $definitions = $this->getTransposedDefinitions();
-        foreach ($definitions as $definitionName => $keys) {
-            $holderName = $this->getHolderName($definitionName);
-            $machineName = $this->getMachineName($definitionName);
-            $holderMethodName = Container::getMethodName($holderName, false);
-            $eventDispatchFactory->addSetup('addEvent', [$keys,  $holderMethodName, $machineName]);
-        }
     }
 
     private function loadScheme() {
@@ -209,28 +206,6 @@ class EventsExtension extends CompilerExtension {
         }
     }
 
-    /**
-     * @return array
-     */
-    private function getTransposedDefinitions() {
-        $result = [];
-        foreach ($this->definitionsMap as $definitionName => $definition) {
-            $result[$definitionName] = [];
-            foreach ($definition['eventTypes'] as $eventType) {
-                if ($definition['years'] === true) {
-                    $key = "$eventType";
-                    $result[$definitionName][] = $key;
-                } else {
-                    foreach ($definition['years'] as $year) {
-                        $key = "$eventType-$year";
-                        $result[$definitionName][] = $key;
-                    }
-                }
-            }
-        }
-        return $result;
-    }
-
     private function createLayoutResolverFactory() {
         $def = $this->getContainerBuilder()->addDefinition(self::MAIN_RESOLVER);
         $def->setClass(self::CLASS_RESOLVER);
@@ -282,6 +257,25 @@ class EventsExtension extends CompilerExtension {
         $this->fieldFactory = $factory;
     }
 
+    /**
+     * @param $eventTypeIds
+     * @param $definition
+     * @return array
+     */
+    private function createAccessKeys($eventTypeIds, $definition): array {
+        $keys = [];
+        foreach ($eventTypeIds as $eventTypeId) {
+            if ($definition['eventYears'] === true) {
+                $keys[] = (string)$eventTypeId;
+            } else {
+                foreach ($definition['eventYears'] as $year) {
+                    $key = $eventTypeId . '-' . $year;
+                    $keys[] = $key;
+                }
+            }
+        }
+        return $keys;
+    }
     /*
      * Specialized machine factories
      */
@@ -289,9 +283,10 @@ class EventsExtension extends CompilerExtension {
     /**
      * @param $name
      * @param $definition
+     * @return ServiceDefinition
      * @throws NeonSchemaException
      */
-    private function createMachineFactory($name, $definition) {
+    private function createMachineFactory($name, $definition): ServiceDefinition {
         $machineDef = NeonScheme::readSection($definition['machine'], $this->scheme['machine']);
 
         /*
@@ -299,7 +294,7 @@ class EventsExtension extends CompilerExtension {
          */
         $factoryName = $this->getMachineName($name);
         $factory = $this->getContainerBuilder()->addDefinition($factoryName);
-        $factory->setFactory(self::CLASS_MACHINE);
+        $factory->setFactory(Machine::class);
         /*
          * Create and add base machines into the machine (i.e. creating instances).
          */
@@ -317,8 +312,7 @@ class EventsExtension extends CompilerExtension {
 
             $defka = $this->baseDefinitions['machines'][$instanceDef['bmName']];
             $instanceDef['name'] = $instanceName;
-            $stmt = new Statement($defka, $instanceDef);
-            $factory->addSetup('addBaseMachine', $stmt);
+            $factory->addSetup('addBaseMachine', new Statement($defka, $instanceDef));
         }
         if (!$primaryName) {
             throw new MachineDefinitionException('No primary machine defined.');
@@ -336,6 +330,7 @@ class EventsExtension extends CompilerExtension {
                 $factory->addSetup("\$service->getBaseMachine(?)->addInducedTransition(?, ?)", [$instanceName, $mask, $induced]);
             }
         }
+        return $factory;
     }
 
     /**
