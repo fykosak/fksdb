@@ -154,9 +154,8 @@ class EventsExtension extends CompilerExtension {
         foreach ($definitions as $definitionName => $keys) {
             $holderName = $this->getHolderName($definitionName);
             $machineName = $this->getMachineName($definitionName);
-            $machineMethodName = Container::getMethodName($machineName);
             $holderMethodName = Container::getMethodName($holderName, false);
-            $eventDispatchFactory->addSetup('addEvent', [$keys, $machineMethodName, $holderMethodName]);
+            $eventDispatchFactory->addSetup('addEvent', [$keys,  $holderMethodName, $machineName]);
         }
     }
 
