@@ -75,7 +75,19 @@ class Transition {
     function __construct(string $mask, $label = null, string $type = self::TYPE_DEFAULT) {
         $this->setMask($mask);
         $this->label = $label;
+        if (!in_array($type, $this->getAllowedBehaviorTypes())) {
+            throw new InvalidArgumentException(sprintf('Behavior type %s not allowed', $type));
+        }
         $this->type = $type;
+    }
+
+    private function getAllowedBehaviorTypes(): array {
+        return [
+            self::TYPE_SUCCESS,
+            self::TYPE_WARNING,
+            self::TYPE_DANGEROUS,
+            self::TYPE_DEFAULT,
+        ];
     }
 
     /**
