@@ -32,7 +32,6 @@ use Nette\DI\Statement;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use Nette\Utils\Arrays;
-use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -48,7 +47,6 @@ class EventsExtension extends CompilerExtension {
     const HOLDER_PREFIX = 'Holder_';
     const BASE_MACHINE_PREFIX = 'BaseMachine_';
     const BASE_HOLDER_PREFIX = 'BaseHolder_';
-    const CLASS_BASE_MACHINE = BaseMachine::class;
     const CLASS_TRANSITION = Transition::class;
     const CLASS_FIELD = Field::class;
     const CLASS_BASE_HOLDER = BaseHolder::class;
@@ -91,7 +89,7 @@ class EventsExtension extends CompilerExtension {
     private $transtionFactory;
     private $fieldFactory;
     private $schemeFile;
-    private $baseDefinitions = ['machines' => [], 'holders' => []];
+    private $baseDefinitions = ['holders' => []];
 
     /**
      * EventsExtension constructor.
@@ -131,7 +129,6 @@ class EventsExtension extends CompilerExtension {
                 'tableLayout' => $definition['tableLayout'],
                 'formLayout' => $definition['formLayout'],
             ];
-
 
             /*
              * Create base machine factories.
@@ -342,7 +339,7 @@ class EventsExtension extends CompilerExtension {
         $factoryName = $this->getBaseMachineName($eventName, $baseName);
         $factory = $this->getContainerBuilder()->addDefinition(uniqid($factoryName));
 
-        $factory->setFactory(self::CLASS_BASE_MACHINE, [$instanceName]);
+        $factory->setFactory(BaseMachine::class, [$instanceName]);
         // no parameter must be set
         /*  $parameters = array_keys($this->scheme['bmInstance']);
           foreach ($parameters as $parameter) {
