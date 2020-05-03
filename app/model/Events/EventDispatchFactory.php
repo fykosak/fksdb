@@ -2,8 +2,8 @@
 
 namespace FKSDB\Events;
 
-use Events\Model\Holder\BaseHolder;
-use Events\Model\Holder\Holder;
+use FKSDB\Events\Model\Holder\BaseHolder;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\BadRequestException;

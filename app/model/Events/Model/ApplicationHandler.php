@@ -345,7 +345,6 @@ class ApplicationHandler {
             $this->machine = $factory->getEventMachine($this->event);
             $holder->setMachine($this->machine);
         }
-
     }
 
     /**

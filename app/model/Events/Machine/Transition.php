@@ -72,7 +72,7 @@ class Transition {
      * @param string $label
      * @param string $type
      */
-    function __construct(string $mask, string $label, string $type) {
+    function __construct(string $mask, $label = null, string $type = self::TYPE_DEFAULT) {
         $this->setMask($mask);
         $this->label = $label;
         $this->type = $type;
@@ -189,6 +189,7 @@ class Transition {
     public function setCondition($condition) {
         $this->condition = $condition;
     }
+
     /**
      * @param $visible
      */

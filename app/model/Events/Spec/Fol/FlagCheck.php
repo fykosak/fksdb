@@ -124,7 +124,6 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
         $personHistory = $this->servicePersonHistory->getTable()
                 ->where('person_id', $personId)
                 ->where('ac_year', $this->getHolder()->getPrimaryHolder()->getEvent()->getAcYear())->fetch();
-
         return $personHistory->study_year;
     }
 

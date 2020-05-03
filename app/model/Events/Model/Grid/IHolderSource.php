@@ -14,5 +14,4 @@ interface IHolderSource {
      * @return Holder[]
      */
     public function getHolders(): array;
-
 }
