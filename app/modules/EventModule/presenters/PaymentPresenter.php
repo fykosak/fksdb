@@ -7,12 +7,12 @@ use FKSDB\Components\Forms\Controls\Payment\SelectForm;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Payment\OrgPaymentGrid;
 use FKSDB\Config\Extensions\PaymentExtension;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServicePayment;
 use FKSDB\Payment\Transition\PaymentMachine;
 use FKSDB\Transitions\Machine;
-use InvalidArgumentException;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -119,16 +119,16 @@ class PaymentPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function actionEdit(int $id) {
-        $this->loadEntity($id);
+        $payment = $this->loadEntity($id);
         if (!$this->canEdit()) {
-            $this->flashMessage(\sprintf(_('Payment #%s can not be edited'), $this->getEntity()->getPaymentId()), \BasePresenter::FLASH_ERROR);
+            $this->flashMessage(\sprintf(_('Payment #%s can not be edited'), $payment->getPaymentId()), \BasePresenter::FLASH_ERROR);
             $this->redirect(':MyPayments:');
         }
         /**
          * @var SelectForm $component
          */
         $component = $this->getComponent('form');
-        $component->setModel($this->getEntity());
+        $component->setModel($payment);
     }
 
     /**
@@ -145,26 +145,26 @@ class PaymentPresenter extends BasePresenter {
     }
 
     /* ********* render *****************/
-    public function renderEdit() {
-        $this->template->model = $this->getEntity();
+    /**
+     * @param int $id
+     * @throws AbortException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     */
+    public function renderEdit(int $id) {
+        $this->template->model = $this->loadEntity($id);
     }
 
     /**
-     * @throws BadRequestException
+     * @param int $id
      * @throws AbortException
+     * @throws BadRequestException
      */
-    public function renderDetail() {
-        $this->template->items = $this->getMachine()->getPriceCalculator()->getGridItems($this->getEntity());
-        $this->template->model = $this->getEntity();
+    public function renderDetail(int $id) {
+        $payment = $this->loadEntity($id);
+        $this->template->items = $this->getMachine()->getPriceCalculator()->getGridItems($payment);
+        $this->template->model = $payment;
         $this->template->isOrg = $this->isOrg();
-    }
-    /* ********* startup *****************/
-    /**
-     * @throws AbortException
-     * @throws BadRequestException
-     */
-    protected function startup() {
-        parent::startup();
     }
     /* ********* Components *****************/
     /**
@@ -226,12 +226,9 @@ class PaymentPresenter extends BasePresenter {
     private function getMachine(): PaymentMachine {
         if (!$this->machine) {
             $this->machine = $this->getContext()->getService('payment.' . PaymentExtension::MACHINE_PREFIX . $this->getEvent()->event_id);
-            if (!$this->machine instanceof PaymentMachine) {
-                throw new BadRequestException();
-            }
         }
         if (!$this->machine instanceof PaymentMachine) {
-            throw new InvalidArgumentException(_('Expected class PaymentMachine'), 500);
+            throw new BadTypeException(PaymentMachine::class, $this->machine);
         }
         return $this->machine;
     }
@@ -259,20 +256,20 @@ class PaymentPresenter extends BasePresenter {
      * @inheritDoc
      */
     public function createComponentGrid(): BaseGrid {
-        throw new NotImplementedException();
+        throw new NotImplementedException;
     }
 
     /**
      * @inheritDoc
      */
     public function createComponentCreateForm(): Control {
-        throw new NotImplementedException();
+        throw new NotImplementedException;
     }
 
     /**
      * @inheritDoc
      */
     public function createComponentEditForm(): Control {
-        throw new NotImplementedException();
+        throw new NotImplementedException;
     }
 }

@@ -2,7 +2,6 @@
 
 namespace FKSDB\Events\Semantics;
 
-use Nette\Application\BadRequestException;
 use Nette\SmartObject;
 
 /**
@@ -27,7 +26,6 @@ class Parameter {
     /**
      * @param array $args
      * @return mixed
-     * @throws BadRequestException
      */
     public function __invoke(...$args) {
         return $this->getHolder($args[0])->getParameter($this->parameter);

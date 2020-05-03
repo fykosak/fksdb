@@ -29,15 +29,16 @@ class ServicePerson extends AbstractServiceSingle {
     /**
      * Syntactic sugar.
      *
-     * @param mixed $email
-     * @return \FKSDB\ORM\Models\ModelPerson|null
+     * @param string $email
+     * @return ModelPerson|null
      */
     public function findByEmail($email) {
         if (!$email) {
             return null;
         }
+        /** @var ModelPerson|false $result */
         $result = $this->getTable()->where(':person_info.email', $email)->fetch();
-        return $result ? ModelPerson::createFromActiveRow($result) : null;
+        return $result ?: null;
     }
 
     /**

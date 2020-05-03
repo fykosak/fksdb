@@ -10,7 +10,7 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEvent;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -52,7 +52,7 @@ class EventPresenter extends BasePresenter {
      * @throws NotImplementedException
      */
     public function actionDelete() {
-        throw new NotImplementedException();
+        throw new NotImplementedException;
     }
 
     /**

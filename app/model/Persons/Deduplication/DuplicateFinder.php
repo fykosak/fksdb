@@ -3,6 +3,8 @@
 namespace Persons\Deduplication;
 
 use FKSDB\Config\GlobalParameters;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Models\ModelPersonInfo;
 use FKSDB\ORM\Services\ServicePerson;
 use Nette\Database\Table\ActiveRow;
 use Nette\Utils\Strings;
@@ -19,7 +21,7 @@ class DuplicateFinder {
     const DIFFERENT_PATTERN = 'not-same';
 
     /**
-     * @var \FKSDB\ORM\Services\ServicePerson
+     * @var ServicePerson
      */
     private $servicePerson;
 
@@ -30,7 +32,7 @@ class DuplicateFinder {
 
     /**
      * DuplicateFinder constructor.
-     * @param \FKSDB\ORM\Services\ServicePerson $servicePerson
+     * @param ServicePerson $servicePerson
      * @param GlobalParameters $parameters
      */
     function __construct(ServicePerson $servicePerson, GlobalParameters $parameters) {
@@ -44,7 +46,7 @@ class DuplicateFinder {
     public function getPairs() {
         $buckets = [];
         /* Create buckets for quadratic search. */
-        foreach ($this->servicePerson->getTable()->select("person.*, person_info.email, person_info:duplicates, person_info:person_id AS 'PI'") as $person) {
+        foreach ($this->servicePerson->getTable()->select("person.*, :person_info.email, :person_info.duplicates, :person_info.person_id AS 'PI'") as $person) {
             $bucketKey = $this->getBucketKey($person);
             if (!isset($buckets[$bucketKey])) {
                 $buckets[$bucketKey] = [];
@@ -75,23 +77,23 @@ class DuplicateFinder {
     }
 
     /**
-     * @param ActiveRow $row
+     * @param ModelPerson $row
      * @return string
      */
-    private function getBucketKey(ActiveRow $row) {
+    private function getBucketKey(ModelPerson $row) {
         $fam = Strings::webalize($row->family_name);
         return substr($fam, 0, 3) . substr($fam, -1);
         //return $row->gender . mb_substr($row->family_name, 0, 2);
     }
 
     /**
+     * @param ModelPerson|ModelPersonInfo $a
+     * @param ModelPerson|ModelPersonInfo $b
+     * @return float
      * @todo Implement more than binary score.
      *
-     * @param ActiveRow $a
-     * @param ActiveRow $b
-     * @return float
      */
-    private function getSimilarityScore(ActiveRow $a, ActiveRow $b) {
+    private function getSimilarityScore(ModelPerson $a, ModelPerson $b) {
         /*
          * Check explixit difference
          */
@@ -121,7 +123,7 @@ class DuplicateFinder {
     }
 
     /**
-     * @param ActiveRow $person
+     * @param ActiveRow|ModelPersonInfo $person
      * @return array
      */
     private function getDifferentPersons(ActiveRow $person) {

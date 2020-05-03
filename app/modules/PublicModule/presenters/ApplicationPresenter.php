@@ -13,6 +13,9 @@ use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\Components\Events\ApplicationComponent;
 use FKSDB\Components\Events\ApplicationsGrid;
 use FKSDB\Components\Grids\Events\LayoutResolver;
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Exceptions\GoneException;
+use FKSDB\Exceptions\NotFoundException;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\NotImplementedException;
 use FKSDB\ORM\AbstractModelMulti;
@@ -24,6 +27,7 @@ use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Services\ServiceEvent;
+use FKSDB\UI\PageStyleContainer;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -135,7 +139,7 @@ class ApplicationPresenter extends BasePresenter {
             return;
         }
         if (strtotime($event->registration_begin) > time() || strtotime($event->registration_end) < time()) {
-            throw new BadRequestException('Gone', 410);
+            throw new GoneException;
         }
     }
 
@@ -192,18 +196,18 @@ class ApplicationPresenter extends BasePresenter {
      */
     public function actionDefault($eventId, $id) {
         if (!$this->getEvent()) {
-            throw new BadRequestException(_('Neexistující akce.'), 404);
+            throw new NotFoundException(_('Neexistující akce.'));
         }
         $eventApplication = $this->getEventApplication();
         if ($id) { // test if there is a new application, case is set there are a edit od application, empty => new application
             if (!$eventApplication) {
-                throw new BadRequestException(_('Neexistující přihláška.'), 404);
+                throw new NotFoundException(_('Neexistující přihláška.'));
             }
             if (!$eventApplication instanceof IEventReferencedModel) {
-                throw new BadRequestException();
+                throw new BadTypeException(IEventReferencedModel::class, $eventApplication);
             }
             if ($this->getEvent()->event_id !== $eventApplication->getEvent()->event_id) {
-                throw new ForbiddenRequestException();
+                throw new ForbiddenRequestException;
             }
         }
 
@@ -259,7 +263,7 @@ class ApplicationPresenter extends BasePresenter {
         $component = parent::createComponentContestChooser();
         if ($this->getAction() == 'default') {
             if (!$this->getEvent()) {
-                throw new BadRequestException(_('Neexistující akce.'), 404);
+                throw new NotFoundException(_('Neexistující akce.'));
             }
             $component->setContests([
                 $this->getEvent()->getEventType()->contest_id,
@@ -339,9 +343,9 @@ class ApplicationPresenter extends BasePresenter {
                 }
             }
             $eventId = $eventId ?: $this->getParameter('eventId');
-            $row = $this->serviceEvent->findByPrimary($eventId);
-            if ($row) {
-                $this->event = ModelEvent::createFromActiveRow($row);
+            $event = $this->serviceEvent->findByPrimary($eventId);
+            if ($event) {
+                $this->event = $event;
             }
         }
 
@@ -418,17 +422,16 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @return array
+     * @return PageStyleContainer
      */
-    public function getNavBarVariant(): array {
+    protected function getPageStyleContainer(): PageStyleContainer {
+        $container = parent::getPageStyleContainer();
         $event = $this->getEvent();
-        $parent = parent::getNavBarVariant();
         if (!$event) {
-            return $parent;
+            return $container;
         }
-        $parent[0] .= ' event-type-' . $event->event_type_id;
-        return $parent;
+        $container->styleId = ' event-type-' . $event->event_type_id;
+        return $container;
     }
-
 }
 

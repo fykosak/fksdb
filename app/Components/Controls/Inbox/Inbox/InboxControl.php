@@ -6,9 +6,11 @@ use FKSDB\Components\Forms\OptimisticForm;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Services\ServiceSubmit;
+use FKSDB\Submits\SeriesTable;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
+use Nette\DI\Container;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -16,6 +18,15 @@ use Nette\Application\UI\Form;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class InboxControl extends SeriesTableFormControl {
+    /**
+     * InboxControl constructor.
+     * @param Container $context
+     * @param SeriesTable $seriesTable
+     */
+    public function __construct(Container $context, SeriesTable $seriesTable) {
+        parent::__construct($context, $seriesTable, true);
+    }
+
     /**
      * @param Form $form
      * @throws AbortException
@@ -28,7 +39,7 @@ class InboxControl extends SeriesTableFormControl {
             foreach ($tasks as $taskNo => $submittedOn) {
                 if (!$this->getSeriesTable()->getContestants()->where('ct_id', $ctId)->fetch()) {
                     // secure check for rewrite ct_id.
-                    throw new ForbiddenRequestException();
+                    throw new ForbiddenRequestException;
                 }
                 $submit = $serviceSubmit->findByContestant($ctId, $taskNo);
                 if ($submittedOn && $submit) {

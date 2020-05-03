@@ -28,7 +28,6 @@ class Count {
     /**
      * @param array $args
      * @return int
-     * @throws BadRequestException
      */
     public function __invoke(...$args): int {
         $baseHolder = $this->getHolder($args[0])->getPrimaryHolder();

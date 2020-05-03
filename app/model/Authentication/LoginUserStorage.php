@@ -189,12 +189,12 @@ class LoginUserStorage extends UserStorage {
         }
 
         // Find login
-        $row = $this->loginService->findByPrimary($local->getId());
+        /** @var ModelLogin $login */
+        $login = $this->loginService->findByPrimary($local->getId());
 
-        if (!$row) {
+        if (!$login) {
             return null;
         }
-        $login = ModelLogin::createFromActiveRow($row);
         $login->person_id; // stupid... touch the field in order to have it loaded via ActiveRow
         $login->injectYearCalculator($this->yearCalculator);
         return $login;

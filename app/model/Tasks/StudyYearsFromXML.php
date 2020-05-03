@@ -1,7 +1,9 @@
 <?php
 
-namespace Tasks;
+namespace FKSDB\Tasks;
 
+use FKSDB\Logging\ILogger;
+use FKSDB\Messages\Message;
 use FKSDB\ORM\Services\ServiceStudyYear;
 use FKSDB\ORM\Services\ServiceTaskStudyYear;
 use Pipeline\Stage;
@@ -12,7 +14,7 @@ use SimpleXMLElement;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class StudyYearsFromXML2 extends Stage {
+class StudyYearsFromXML extends Stage {
 
     const XML_ELEMENT_PARENT = 'study-years';
 
@@ -41,7 +43,7 @@ class StudyYearsFromXML2 extends Stage {
     /**
      * StudyYearsFromXML2 constructor.
      * @param $defaultStudyYears
-     * @param \FKSDB\ORM\Services\ServiceTaskStudyYear $serviceTaskStudyYear
+     * @param ServiceTaskStudyYear $serviceTaskStudyYear
      * @param ServiceStudyYear $serviceStudyYear
      */
     function __construct($defaultStudyYears, ServiceTaskStudyYear $serviceTaskStudyYear, ServiceStudyYear $serviceStudyYear) {
@@ -86,8 +88,7 @@ class StudyYearsFromXML2 extends Stage {
         $hasYears = false;
 
         $parentEl = $XMLTask->{self::XML_ELEMENT_PARENT};
-        // parse contributors
-        $contributors = [];
+
         if ($parentEl && isset($parentEl->{self::XML_ELEMENT_CHILD})) {
             foreach ($parentEl->{self::XML_ELEMENT_CHILD} as $element) {
                 $studyYear = (string)$element;
@@ -98,7 +99,7 @@ class StudyYearsFromXML2 extends Stage {
                 $hasYears = true;
 
                 if (!$this->serviceStudyYear->findByPrimary($studyYear)) {
-                    $this->log(sprintf(_("Neznámý ročník '%s'."), $studyYear));
+                    $this->log(new Message(sprintf(_("Neznámý ročník '%s'."), $studyYear), ILogger::INFO));
                     continue;
                 }
 
@@ -108,7 +109,7 @@ class StudyYearsFromXML2 extends Stage {
 
         if (!$studyYears) {
             if ($hasYears) {
-                $this->log(_('Doplnění defaultních ročníků i přes nesprávnou specifikaci.'));
+                $this->log(new Message(_('Doplnění defaultních ročníků i přes nesprávnou specifikaci.'), ILogger::INFO));
             }
             $studyYears = $this->defaultStudyYears[$this->data->getContest()->contest_id];
         }

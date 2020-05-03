@@ -55,6 +55,7 @@ class ServiceAuthToken extends AbstractServiceSingle {
         }
 
         if ($refresh) {
+            /** @var ModelAuthToken $token */
             $token = $this->getTable()
                 ->where('login_id', $login->login_id)
                 ->where('type', $type)
@@ -104,14 +105,9 @@ class ServiceAuthToken extends AbstractServiceSingle {
             $tokens->where('since <= NOW()')
                 ->where('until IS NULL OR until >= NOW()');
         }
-
-
+        /** @var ModelAuthToken $token */
         $token = $tokens->fetch();
-        if (!$token) {
-            return null;
-        } else {
-            return $token;
-        }
+        return $token ?: null;
     }
 
     /**

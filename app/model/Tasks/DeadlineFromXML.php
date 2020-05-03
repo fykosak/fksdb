@@ -1,8 +1,9 @@
 <?php
 
-namespace Tasks;
+namespace FKSDB\Tasks;
 
 use FKSDB\Logging\ILogger;
+use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceTask;
 use Nette\Utils\DateTime;
@@ -14,7 +15,7 @@ use Pipeline\Stage;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class DeadlineFromXML2 extends Stage {
+class DeadlineFromXML extends Stage {
 
     /**
      * @var SeriesData
@@ -22,7 +23,7 @@ class DeadlineFromXML2 extends Stage {
     private $data;
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceTask
+     * @var ServiceTask
      */
     private $taskService;
 
@@ -35,7 +36,7 @@ class DeadlineFromXML2 extends Stage {
     }
 
     /**
-     * @return mixed|SeriesData
+     * @return SeriesData
      */
     public function getOutput() {
         return $this->data;
@@ -45,21 +46,19 @@ class DeadlineFromXML2 extends Stage {
         $xml = $this->data->getData();
         $deadline = (string)$xml->deadline[0];
         if (!$deadline) {
-            $this->log(_('Chybí deadline série.'), ILogger::WARNING);
+            $this->log(new Message(_('Chybí deadline série.'), ILogger::WARNING));
             return;
         }
 
         $datetime = DateTime::createFromFormat('Y-m-d\TH:i:s', $deadline);
-        /**
-         * @var ModelTask $task
-         */
+        /**@var ModelTask $task */
         foreach ($this->data->getTasks() as $task) {
-            $this->taskService->updateModel2($task,['submit_deadline'=>$datetime]);
+            $this->taskService->updateModel2($task, ['submit_deadline' => $datetime]);
         }
     }
 
     /**
-     * @param mixed $data
+     * @param SeriesData $data
      */
     public function setInput($data) {
         $this->data = $data;

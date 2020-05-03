@@ -6,7 +6,6 @@ use FKSDB\Events\Model\Holder\BaseHolder;
 use FKSDB\Events\Model\Holder\Field;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\ORM\Models\ModelEvent;
-use Nette\Application\BadRequestException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -18,7 +17,7 @@ trait WithEventTrait {
     /**
      * @param mixed $obj
      * @return ModelEvent
-     * @throws BadRequestException
+     * @throws \InvalidArgumentException
      */
     protected function getEvent($obj): ModelEvent {
         return ($holder = $this->getHolder($obj)) ? $holder->getPrimaryHolder()->getEvent() : null;
@@ -27,7 +26,7 @@ trait WithEventTrait {
     /**
      * @param mixed $obj
      * @return Holder
-     * @throws BadRequestException
+     * @throws \InvalidArgumentException
      */
     protected function getHolder($obj): Holder {
         if ($obj instanceof Holder) {
@@ -39,7 +38,7 @@ trait WithEventTrait {
         if ($obj instanceof BaseHolder) {
             return $obj->getHolder();
         }
-        throw new BadRequestException();
+        throw new \InvalidArgumentException;
 
     }
 

@@ -11,6 +11,7 @@ use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 
 /**
  * Class ApplicationPresenter
@@ -61,13 +62,15 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @throws BadRequestException
+     * @param int $id
      * @throws AbortException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
-    public function renderDetail() {
-        parent::renderDetail();
+    public function renderDetail(int $id) {
+        parent::renderDetail($id);
         $this->template->fields = $this->getHolder()->getPrimaryHolder()->getFields();
-        $this->template->model = $this->getEntity();
+        $this->template->model = $this->loadEntity($id);
         $this->template->groups = [
             _('Health & food') => ['health_restrictions', 'diet', 'used_drugs', 'note', 'swimmer'],
             _('T-shirt') => ['tshirt_size', 'tshirt_color'],

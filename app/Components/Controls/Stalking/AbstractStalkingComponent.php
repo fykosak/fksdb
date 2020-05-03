@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Controls\Stalking;
 
+use FKSDB\ORM\Models\ModelPerson;
 use Nette\Templating\FileTemplate;
 
 /**
@@ -10,9 +11,12 @@ use Nette\Templating\FileTemplate;
  * @property FileTemplate $template
  */
 abstract class AbstractStalkingComponent extends StalkingControl {
-
-    public function beforeRender() {
-        parent::beforeRender();
+    /**
+     * @param ModelPerson $person
+     * @param int $userPermissions
+     */
+    public function beforeRender(ModelPerson $person, int $userPermissions) {
+        parent::beforeRender($person, $userPermissions);
         $this->template->headline = $this->getHeadline();
         $this->template->minimalPermissions = min($this->getAllowedPermissions());
     }

@@ -81,8 +81,8 @@ class SQLResultsCache {
 
 
         $this->connection->beginTransaction();
-        foreach ($tasks as $row) {
-            $task = ModelTask::createFromActiveRow($row);
+        /** @var ModelTask $task */
+        foreach ($tasks as $task) {
             $conditions = [];
             $conditions[] = 't.contest_id = ' . $contest->contest_id;
             $conditions[] = 't.year = ' . (int)$year;

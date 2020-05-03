@@ -47,7 +47,7 @@ class SingleEventSource implements IHolderSource {
     private $secondaryModels = null;
 
     /**
-     * @var Selection
+     * @var TypedTableSelection
      */
     private $primarySelection;
 

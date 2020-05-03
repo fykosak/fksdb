@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Control\AjaxUpload;
 
 use FKSDB\Components\React\ReactComponent;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelTask;
@@ -14,6 +15,7 @@ use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use Nette\Http\FileUpload;
+use Nette\Http\Response;
 use PublicModule\SubmitPresenter;
 use ReactMessage;
 
@@ -75,7 +77,7 @@ class AjaxUpload extends ReactComponent {
     public function getPresenter($need = TRUE) {
         $presenter = parent::getPresenter();
         if (!$presenter instanceof SubmitPresenter) {
-            throw new BadRequestException();
+            throw new BadTypeException(SubmitPresenter::class, $presenter);
         }
         return $presenter;
     }
@@ -102,7 +104,7 @@ class AjaxUpload extends ReactComponent {
             $task = $this->getPresenter()->isAvailableSubmit($matches[1]);
             if (!$task) {
 
-                $response->setCode(403);
+                $response->setCode(Response::S403_FORBIDDEN);
                 $response->addMessage(new ReactMessage(_('Upload not allowed'), ILogger::ERROR));
                 $this->getPresenter()->sendResponse($response);
             }
@@ -111,7 +113,7 @@ class AjaxUpload extends ReactComponent {
              */
             $file = $fileContainer;
             if (!$file->isOk()) {
-                $response->setCode(500);
+                $response->setCode(Response::S500_INTERNAL_SERVER_ERROR);
                 $response->addMessage(new ReactMessage(_('File is not Ok'), ILogger::ERROR));
                 $this->getPresenter()->sendResponse($response);
                 return;

@@ -5,7 +5,6 @@ namespace FKSDB\Events\Semantics;
 use Authorization\ContestAuthorizator;
 use Authorization\RelatedPersonAuthorizator;
 use FKSDB\Expressions\EvaluatedExpression;
-use Nette\Application\BadRequestException;
 use Nette\Security\User;
 use Nette\SmartObject;
 
@@ -63,7 +62,6 @@ class Role extends EvaluatedExpression {
     /**
      * @param array $args
      * @return bool
-     * @throws BadRequestException
      */
     public function __invoke(...$args): bool {
         switch ($this->role) {

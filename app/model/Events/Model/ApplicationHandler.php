@@ -17,6 +17,7 @@ use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
 use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
 use FKSDB\Logging\ILogger;
+use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\Transitions\UnavailableTransitionException;
 use FormUtils;
@@ -155,42 +156,42 @@ class ApplicationHandler {
             $this->commit();
 
             if ($transition->isCreating()) {
-                $this->logger->log(sprintf(_('Přihláška "%s" vytvořena.'), (string)$holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS);
+                $this->logger->log(new Message(sprintf(_('Přihláška "%s" vytvořena.'), (string)$holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS));
             } elseif ($transition->isTerminating()) {
-                $this->logger->log(_('Přihláška smazána.'), ILogger::SUCCESS);
+                $this->logger->log(new Message(_('Přihláška smazána.'), ILogger::SUCCESS));
             } elseif (isset($transition)) {
-                $this->logger->log(sprintf(_('Stav přihlášky "%s" změněn.'), (string)$holder->getPrimaryHolder()->getModel()), ILogger::INFO);
+                $this->logger->log(new Message(sprintf(_('Stav přihlášky "%s" změněn.'), (string)$holder->getPrimaryHolder()->getModel()), ILogger::INFO));
             }
         } catch (ModelDataConflictException $exception) {
             $container = $exception->getReferencedId()->getReferencedContainer();
             $container->setConflicts($exception->getConflicts());
 
             $message = sprintf(_('Některá pole skupiny "%s" neodpovídají existujícímu záznamu.'), $container->getOption('label'));
-            $this->logger->log($message, ILogger::ERROR);
+            $this->logger->log(new Message($message, ILogger::ERROR));
             $this->reRaise($exception);
         } catch (SecondaryModelDataConflictException $exception) {
             $message = sprintf(_('Data ve skupině "%s" kolidují s již existující přihláškou.'), $exception->getBaseHolder()->getLabel());
             Debugger::log($exception, 'app-conflict');
-            $this->logger->log($message, ILogger::ERROR);
+            $this->logger->log(new Message($message, ILogger::ERROR));
             $this->reRaise($exception);
         } catch (DuplicateApplicationException $exception) {
             $message = $exception->getMessage();
-            $this->logger->log($message, ILogger::ERROR);
+            $this->logger->log(new Message($message, ILogger::ERROR));
             $this->reRaise($exception);
         } catch (MachineExecutionException $exception) {
-            $this->logger->log($exception->getMessage(), ILogger::ERROR);
+            $this->logger->log(new Message($exception->getMessage(), ILogger::ERROR));
             $this->reRaise($exception);
         } catch (SubmitProcessingException $exception) {
-            $this->logger->log($exception->getMessage(), ILogger::ERROR);
+            $this->logger->log(new Message($exception->getMessage(), ILogger::ERROR));
             $this->reRaise($exception);
         } catch (FullCapacityException $exception) {
-            $this->logger->log($exception->getMessage(), ILogger::ERROR);
+            $this->logger->log(new Message($exception->getMessage(), ILogger::ERROR));
             $this->reRaise($exception);
         } catch (ExistingPaymentException $exception) {
-            $this->logger->log($exception->getMessage(), ILogger::ERROR);
+            $this->logger->log(new Message($exception->getMessage(), ILogger::ERROR));
             $this->reRaise($exception);
         } catch (UnavailableTransitionException $exception) {
-            $this->logger->log($exception->getMessage(), ILogger::ERROR);
+            $this->logger->log(new Message($exception->getMessage(), ILogger::ERROR));
             $this->reRaise($exception);
         }
     }
@@ -242,49 +243,49 @@ class ApplicationHandler {
             $this->commit();
 
             if (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isCreating()) {
-                $this->logger->log(sprintf(_('Přihláška "%s" vytvořena.'), (string)$holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS);
+                $this->logger->log(new Message(sprintf(_('Přihláška "%s" vytvořena.'), (string)$holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS));
             } elseif (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isTerminating()) {
                 //$this->logger->log(sprintf(_("Přihláška '%s' smazána."), (string) $holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS);
-                $this->logger->log(_('Přihláška smazána.'), ILogger::SUCCESS);
+                $this->logger->log(new Message(_('Přihláška smazána.'), ILogger::SUCCESS));
             } elseif (isset($transitions[$explicitMachineName])) {
-                $this->logger->log(sprintf(_('Stav přihlášky "%s" změněn.'), (string)$holder->getPrimaryHolder()->getModel()), ILogger::INFO);
+                $this->logger->log(new Message(sprintf(_('Stav přihlášky "%s" změněn.'), (string)$holder->getPrimaryHolder()->getModel()), ILogger::INFO));
             }
             if ($data && (!isset($transitions[$explicitMachineName]) || !$transitions[$explicitMachineName]->isTerminating())) {
-                $this->logger->log(sprintf(_('Přihláška "%s" uložena.'), (string)$holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS);
+                $this->logger->log(new Message(sprintf(_('Přihláška "%s" uložena.'), (string)$holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS));
             }
         } catch (ModelDataConflictException $exception) {
             $container = $exception->getReferencedId()->getReferencedContainer();
             $container->setConflicts($exception->getConflicts());
 
             $message = sprintf(_('Některá pole skupiny "%s" neodpovídají existujícímu záznamu.'), $container->getOption('label'));
-            $this->logger->log($message, ILogger::ERROR);
+            $this->logger->log(new Message($message, ILogger::ERROR));
             $this->formRollback($data);
             $this->reRaise($exception);
         } catch (SecondaryModelDataConflictException $exception) {
             $message = sprintf(_('Data ve skupině "%s" kolidují s již existující přihláškou.'), $exception->getBaseHolder()->getLabel());
             Debugger::log($exception, 'app-conflict');
-            $this->logger->log($message, ILogger::ERROR);
+            $this->logger->log(new Message($message, ILogger::ERROR));
             $this->formRollback($data);
             $this->reRaise($exception);
         } catch (DuplicateApplicationException $exception) {
             $message = $exception->getMessage();
-            $this->logger->log($message, ILogger::ERROR);
+            $this->logger->log(new Message($message, ILogger::ERROR));
             $this->formRollback($data);
             $this->reRaise($exception);
         } catch (MachineExecutionException $exception) {
-            $this->logger->log($exception->getMessage(), ILogger::ERROR);
+            $this->logger->log(new Message($exception->getMessage(), ILogger::ERROR));
             $this->formRollback($data);
             $this->reRaise($exception);
         } catch (SubmitProcessingException $exception) {
-            $this->logger->log($exception->getMessage(), ILogger::ERROR);
+            $this->logger->log(new Message($exception->getMessage(), ILogger::ERROR));
             $this->formRollback($data);
             $this->reRaise($exception);
         } catch (FullCapacityException $exception) {
-            $this->logger->log($exception->getMessage(), ILogger::ERROR);
+            $this->logger->log(new Message($exception->getMessage(), ILogger::ERROR));
             $this->formRollback($data);
             $this->reRaise($exception);
         } catch (ExistingPaymentException $exception) {
-            $this->logger->log($exception->getMessage(), ILogger::ERROR);
+            $this->logger->log(new Message($exception->getMessage(), ILogger::ERROR));
             $this->formRollback($data);
             $this->reRaise($exception);
         }
