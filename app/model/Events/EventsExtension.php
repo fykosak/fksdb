@@ -32,9 +32,7 @@ use Nette\DI\Statement;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use Nette\Utils\Arrays;
-use Nette\Utils\Random;
 use Nette\Utils\Strings;
-use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -49,8 +47,6 @@ class EventsExtension extends CompilerExtension {
     const HOLDER_PREFIX = 'Holder_';
     const BASE_MACHINE_PREFIX = 'BaseMachine_';
     const BASE_HOLDER_PREFIX = 'BaseHolder_';
-    const CLASS_FIELD = Field::class;
-    const CLASS_RESOLVER = LayoutResolver::class;
 
     /** @const Maximum length of state identifier. */
     const STATE_SIZE = 20;
@@ -202,7 +198,7 @@ class EventsExtension extends CompilerExtension {
 
     private function createLayoutResolverFactory() {
         $def = $this->getContainerBuilder()->addDefinition(self::MAIN_RESOLVER);
-        $def->setFactory(self::CLASS_RESOLVER);
+        $def->setFactory(LayoutResolver::class);
 
         $parameters = $this->getContainerBuilder()->parameters;
         $templateDir = $parameters['events']['templateDir'];
@@ -252,8 +248,8 @@ class EventsExtension extends CompilerExtension {
      */
     private function createFieldService(array $fieldDefinition): ServiceDefinition {
         $field = $this->getContainerBuilder()
-            ->addDefinition(Random::generate('20'))
-            ->setFactory(self::CLASS_FIELD, [$fieldDefinition['0'], $fieldDefinition['label']]);
+            ->addDefinition($this->getFieldName())
+            ->setFactory(Field::class, [$fieldDefinition['0'], $fieldDefinition['label']]);
 
         $field->addSetup('setEvaluator', ['@events.expressionEvaluator']);
         foreach ($fieldDefinition as $key => $parameter) {
@@ -395,7 +391,7 @@ class EventsExtension extends CompilerExtension {
         $factoryName = $this->getHolderName($name);
         $factory = $this->getContainerBuilder()->addDefinition($factoryName);
         $factory->setFactory(Holder::class);
-      //  $factory->setParameters(['FKSDB\ORM\Models\ModelEvent event']);
+        //  $factory->setParameters(['FKSDB\ORM\Models\ModelEvent event']);
 
         // Create and add base machines into the machine (i.e. creating instances).
         $primaryName = null;
@@ -409,7 +405,7 @@ class EventsExtension extends CompilerExtension {
                 }
             }
             $baseHolderFactory = $this->createBaseHolderFactory($name, $instanceDef['bmName'], $instanceName, $instanceDef);
-            $factory->addSetup('addBaseHolder', [$baseHolderFactory]);
+            $factory->addSetup('addBaseHolder', [new Statement($baseHolderFactory)]);
         }
         if (!$primaryName) {
             throw new MachineDefinitionException('No primary machine defined.');
@@ -491,7 +487,7 @@ class EventsExtension extends CompilerExtension {
                 $hasNondetermining = true;
             }
             array_unshift($fieldDef, $name);
-            $factory->addSetup('addField', [$this->createFieldService($fieldDef)]);
+            $factory->addSetup('addField', [new Statement($this->createFieldService($fieldDef))]);
         }
         return $factory;
     }
@@ -540,14 +536,14 @@ class EventsExtension extends CompilerExtension {
      * @return string
      */
     private function getTransitionName(string $baseName, string $mask): string {
-        return $id = uniqid($baseName . '_transition_' . str_replace('-', '_', Strings::webalize($mask)) . '__');
+        return uniqid($baseName . '_transition_' . str_replace('-', '_', Strings::webalize($mask)) . '__');
     }
 
     /**
      * @return string
      */
     private function getFieldName() {
-        return $this->prefix(self::FIELD_FACTORY);
+        return $this->prefix(uniqid(self::FIELD_FACTORY));
     }
 }
 
