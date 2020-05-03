@@ -1,20 +1,20 @@
 <?php
 
-namespace Events;
+namespace FKSDB\Events;
 
-use Events\Machine\BaseMachine;
-use Events\Machine\Machine;
-use Events\Machine\Transition;
-use Events\Model\Holder\BaseHolder;
-use Events\Model\Holder\Field;
-use Events\Model\Holder\Holder;
-use Events\Model\Holder\SameYearEvent;
-use Events\Semantics\Count;
-use Events\Semantics\EventWas;
-use Events\Semantics\Parameter;
-use Events\Semantics\RegOpen;
-use Events\Semantics\Role;
-use Events\Semantics\State;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Machine\Transition;
+use FKSDB\Events\Model\Holder\BaseHolder;
+use FKSDB\Events\Model\Holder\Field;
+use FKSDB\Events\Model\Holder\Holder;
+use FKSDB\Events\Model\Holder\SameYearEvent;
+use FKSDB\Events\Semantics\Count;
+use FKSDB\Events\Semantics\EventWas;
+use FKSDB\Events\Semantics\Parameter;
+use FKSDB\Events\Semantics\RegOpen;
+use FKSDB\Events\Semantics\Role;
+use FKSDB\Events\Semantics\State;
 use FKSDB\Components\Forms\Factories\Events\ArrayOptions;
 use FKSDB\Components\Forms\Factories\Events\CheckboxFactory;
 use FKSDB\Components\Forms\Factories\Events\ChooserFactory;
@@ -35,6 +35,7 @@ use Nette\InvalidStateException;
 use Nette\Utils\Arrays;
 use Nette\Utils\Random;
 use Tracy\Debugger;
+use Nette\Utils\Strings;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -43,18 +44,12 @@ use Tracy\Debugger;
  */
 class EventsExtension extends CompilerExtension {
 
-    const MAIN_FACTORY = 'eventMachine';
-    const MAIN_HOLDER = 'eventHolder';
     const MAIN_RESOLVER = 'eventLayoutResolver';
-    const TRANSITION_FACTORY = 'Transition';
     const FIELD_FACTORY = 'Field';
     const MACHINE_PREFIX = 'Machine_';
     const HOLDER_PREFIX = 'Holder_';
     const BASE_MACHINE_PREFIX = 'BaseMachine_';
     const BASE_HOLDER_PREFIX = 'BaseHolder_';
-    const CLASS_MACHINE = Machine::class;
-    const CLASS_BASE_MACHINE = BaseMachine::class;
-    const CLASS_TRANSITION = Transition::class;
     const CLASS_FIELD = Field::class;
     const CLASS_BASE_HOLDER = BaseHolder::class;
     const CLASS_HOLDER = Holder::class;
@@ -65,7 +60,7 @@ class EventsExtension extends CompilerExtension {
 
     /** @const Regexp for configuration section names */
     const NAME_PATTERN = '/[a-z0-9_]/i';
-
+    /** @var string[] */
     public static $semanticMap = [
         'RefPerson' => PersonFactory::class,
         'Chooser' => ChooserFactory::class,
@@ -79,6 +74,7 @@ class EventsExtension extends CompilerExtension {
         'parameter' => Parameter::class,
         'count' => Count::class,
     ];
+    /** @var */
     private $scheme;
 
     /**
@@ -92,8 +88,14 @@ class EventsExtension extends CompilerExtension {
      * @var array[baseMachineFullName] => expanded configuration
      */
     private $baseMachineConfig = [];
+
+    /** @var ServiceDefinition */
+    private $fieldFactory;
+    /** @var */
+
     private $schemeFile;
-    private $baseDefinitions = ['machines' => [], 'holders' => []];
+    /** @var array[] */
+    private $baseDefinitions = ['holders' => []];
 
     /**
      * EventsExtension constructor.
@@ -117,7 +119,10 @@ class EventsExtension extends CompilerExtension {
 
         $config = $this->getConfig();
 
-        $this->createDispatchFactories();
+        $this->createFieldFactory();
+        $eventDispatchFactory = $this->getContainerBuilder()
+            ->addDefinition('event.dispatch')->setFactory(EventDispatchFactory::class);
+
 
         foreach ($config as $definitionName => $definition) {
             $this->validateConfigName($definitionName);
@@ -137,12 +142,15 @@ class EventsExtension extends CompilerExtension {
             foreach ($definition['baseMachines'] as $baseName => $baseMachineDef) {
                 $this->validateConfigName($baseName);
                 $baseMachineDef = $this->getBaseMachineConfig($definitionName, $baseName);
-                $this->baseDefinitions['machines'][$baseName] = $this->createBaseMachineFactory($definitionName, $baseName, $baseMachineDef);
                 $this->baseDefinitions['holders'][$baseName] = $this->createBaseHolderFactory($definitionName, $baseName, $baseMachineDef);
             }
-
+            $keys = $this->createAccessKeys($eventTypeIds, $definition);
             $this->createMachineFactory($definitionName, $definition);
             $this->createHolderFactory($definitionName, $definition);
+            $holderName = $this->getHolderName($definitionName);
+            $machineName = $this->getMachineName($definitionName);
+            $holderMethodName = Container::getMethodName($holderName, false);
+            $eventDispatchFactory->addSetup('addEvent', [$keys, $holderMethodName, $machineName]);
         }
 
         $this->createLayoutResolverFactory();
@@ -213,71 +221,49 @@ class EventsExtension extends CompilerExtension {
         }
     }
 
-    /*
-     * Dispatch factories
-     */
-
-    /**
-     * @return array
-     */
-    private function getTransposedDefinitions() {
-        $result = [];
-        foreach ($this->definitionsMap as $definitionName => $definition) {
-            $result[$definitionName] = [];
-            foreach ($definition['eventTypes'] as $eventType) {
-                if ($definition['years'] === true) {
-                    $key = "$eventType";
-                    $result[$definitionName][] = $key;
-                } else {
-                    foreach ($definition['years'] as $year) {
-                        $key = "$eventType-$year";
-                        $result[$definitionName][] = $key;
-                    }
-                }
-            }
-        }
-        return $result;
-    }
-
-    private function createDispatchFactories() {
-        $def = $this->getContainerBuilder()->addDefinition(self::MAIN_FACTORY);
-
-        $def->setFactory(self::CLASS_MACHINE);
-        $def->setParameters(['FKSDB\ORM\Models\ModelEvent event']);
-
-        $def = $this->getContainerBuilder()->addDefinition(self::MAIN_HOLDER);
-
-        $def->setFactory(self::CLASS_HOLDER);
-        $def->setParameters(['FKSDB\ORM\Models\ModelEvent event']);
-    }
-
     private function createLayoutResolverFactory() {
         $def = $this->getContainerBuilder()->addDefinition(self::MAIN_RESOLVER);
-
-        $def->setFactory(self::CLASS_RESOLVER);
+        $def->setClass(self::CLASS_RESOLVER);
 
         $parameters = $this->getContainerBuilder()->parameters;
         $templateDir = $parameters['events']['templateDir'];
         $def->setArguments([$templateDir, $this->definitionsMap]); //TODO!!
     }
 
-
     /**
-     * @param $definition
+     * @param string $baseName
+     * @param array $states
+     * @param string $mask
+     * @param array $definition
      * @return ServiceDefinition
      */
-    private function createTransitionService(array $definition): ServiceDefinition {
-        $transition = $this->getContainerBuilder()
-            ->addDefinition(Random::generate(20))
-            ->setFactory(self::CLASS_TRANSITION, [$definition['0'], $definition['label']]);
+    private function createTransitionService(string $baseName, array $states, string $mask, array $definition): ServiceDefinition {
+        if (!Transition::validateTransition($mask, $states)) {
+            throw new MachineDefinitionException("Invalid transition $mask for base machine $baseName.");
+        }
 
-        $transition->addSetup('setCondition', [$definition['condition']]);
-        $transition->addSetup('setEvaluator', ['@events.expressionEvaluator']);
-        $transition->addSetup('$service->onExecuted = array_merge($service->onExecuted, ?)', [$definition['onExecuted']]);
-        $transition->addSetup('setDangerous', [$definition['dangerous']]);
-        $transition->addSetup('setVisible', [$definition['visible']]);
+        if (!$definition['label'] && $definition['visible'] !== false) {
+            throw new MachineDefinitionException("Transition $mask with non-false visibility must have label defined.");
+        }
 
-        return $transition;
+        $factory = $this->getContainerBuilder()->addDefinition($this->getTransitionName($baseName, $mask));
+        $factory->setFactory(Transition::class, [$mask, $definition['label'], $definition['behaviorType']]);
+        $parameters = array_keys($this->scheme['transition']);
+        foreach ($parameters as $parameter) {
+            switch ($parameter) {
+                case 'label':
+                case 'onExecuted':
+                case 'behaviorType':
+                    break;
+                default:
+                    if (isset($definition[$parameter])) {
+                        $factory->addSetup('set' . ucfirst($parameter), [$definition[$parameter]]);
+                    }
+            }
+        }
+        $factory->addSetup('setEvaluator', ['@events.expressionEvaluator']);
+        $factory->addSetup('$service->onExecuted = array_merge($service->onExecuted, ?)', [$definition['onExecuted']]);
+        return $factory;
     }
 
 
@@ -303,6 +289,25 @@ class EventsExtension extends CompilerExtension {
         return $field;
     }
 
+    /**
+     * @param $eventTypeIds
+     * @param $definition
+     * @return array
+     */
+    private function createAccessKeys($eventTypeIds, $definition): array {
+        $keys = [];
+        foreach ($eventTypeIds as $eventTypeId) {
+            if ($definition['eventYears'] === true) {
+                $keys[] = (string)$eventTypeId;
+            } else {
+                foreach ($definition['eventYears'] as $year) {
+                    $key = $eventTypeId . '-' . $year;
+                    $keys[] = $key;
+                }
+            }
+        }
+        return $keys;
+    }
     /*
      * Specialized machine factories
      */
@@ -310,27 +315,25 @@ class EventsExtension extends CompilerExtension {
     /**
      * @param $name
      * @param $definition
+     * @return ServiceDefinition
      * @throws NeonSchemaException
      */
-    private function createMachineFactory($name, $definition) {
-        $machineDef = NeonScheme::readSection($definition['machine'], $this->scheme['machine']);
+    private function createMachineFactory($name, $definition): ServiceDefinition {
+        $machinesDef = NeonScheme::readSection($definition['machine'], $this->scheme['machine']);
 
         /*
          * Create factory definition.
          */
         $factoryName = $this->getMachineName($name);
         $factory = $this->getContainerBuilder()->addDefinition($factoryName);
-
-        $factory->setType(self::CLASS_MACHINE);
-
+        $factory->setFactory(Machine::class);
 
         /*
          * Create and add base machines into the machine (i.e. creating instances).
          */
         $primaryName = null;
-        foreach ($machineDef['baseMachines'] as $instanceName => $instanceDef) {
+        foreach ($machinesDef['baseMachines'] as $instanceName => $instanceDef) {
             $instanceDef = NeonScheme::readSection($instanceDef, $this->scheme['bmInstance']);
-
             if ($instanceDef['primary']) {
                 if (!$primaryName) {
                     $primaryName = $instanceName;
@@ -338,11 +341,8 @@ class EventsExtension extends CompilerExtension {
                     throw new MachineDefinitionException('Multiple primary machines defined.');
                 }
             }
-
-            $defka = $this->baseDefinitions['machines'][$instanceDef['bmName']];
-            $instanceDef['name'] = $instanceName;
-            $stmt = new Statement($defka, $instanceDef);
-            $factory->addSetup('addBaseMachine', [$stmt]);
+            $baseMachineFactory = $this->createBaseMachineFactory($name, $instanceDef['bmName'], $instanceName);
+            $factory->addSetup('addBaseMachine', $baseMachineFactory);
         }
         if (!$primaryName) {
             throw new MachineDefinitionException('No primary machine defined.');
@@ -353,32 +353,41 @@ class EventsExtension extends CompilerExtension {
         /*
          * Set other attributes of the machine.
          */
-        foreach (array_keys($machineDef['baseMachines']) as $instanceName) {
-            $joins = Arrays::get($machineDef['joins'], $instanceName, []);
+        foreach (array_keys($machinesDef['baseMachines']) as $instanceName) {
+            $joins = Arrays::get($machinesDef['joins'], $instanceName, []);
 
             foreach ($joins as $mask => $induced) {
                 $factory->addSetup("\$service->getBaseMachine(?)->addInducedTransition(?, ?)", [$instanceName, $mask, $induced]);
             }
         }
+        return $factory;
     }
 
     /**
-     * @param $name
+     * @param $eventName
      * @param $baseName
-     * @param $definition
+     * @param $instanceName
      * @return ServiceDefinition
      * @throws NeonSchemaException
      */
-    private function createBaseMachineFactory($name, $baseName, $definition) {
-        $factoryName = $this->getBaseMachineName($name, $baseName);
-        $factory = $this->getContainerBuilder()->addDefinition($factoryName);
+    private function createBaseMachineFactory(string $eventName, string $baseName, string $instanceName): ServiceDefinition {
+        $definition = $this->getBaseMachineConfig($eventName, $baseName);
+        $factoryName = $this->getBaseMachineName($eventName, $baseName);
+        $factory = $this->getContainerBuilder()->addDefinition(uniqid($factoryName));
 
-        $factory->setFactory(self::CLASS_BASE_MACHINE, ['%name%']);
-
-
-        $parameters = array_keys($this->scheme['bmInstance']);
-        array_unshift($parameters, 'name');
-        $factory->setParameters($parameters);
+        $factory->setFactory(BaseMachine::class, [$instanceName]);
+        // no parameter must be set
+        /*  $parameters = array_keys($this->scheme['bmInstance']);
+          foreach ($parameters as $parameter) {
+              switch ($parameter) {
+                  case 'label':
+                  case 'name':
+                  case 'bmName':
+                      break;
+                  default:
+                      $factory->addSetup('set' . ucfirst($parameter), $instanceDefinition[$parameter]);
+              }
+          }*/
 
         $definition = NeonScheme::readSection($definition, $this->scheme['baseMachine']);
         foreach ($definition['states'] as $state => $label) {
@@ -389,17 +398,9 @@ class EventsExtension extends CompilerExtension {
         }
         $states = array_keys($definition['states']);
 
-        foreach ($definition['transitions'] as $mask => $transitionDef) {
-            if (!Transition::validateTransition($mask, $states)) {
-                throw new MachineDefinitionException("Invalid transition $mask for base machine $name.$baseName.");
-            }
-            $transitionDef = NeonScheme::readSection($transitionDef, $this->scheme['transition']);
-            if (!$transitionDef['label'] && $transitionDef['visible'] !== false) {
-                throw new MachineDefinitionException("Transition $mask with non-false visibility must have label defined.");
-            }
-
-            array_unshift($transitionDef, $mask);
-            $factory->addSetup('addTransition', [$this->createTransitionService($transitionDef)]);
+        foreach ($definition['transitions'] as $mask => $transitionRawDef) {
+            $transitionDef = NeonScheme::readSection($transitionRawDef, $this->scheme['transition']);
+            $factory->addSetup('addTransition', $this->createTransitionService($factoryName, $states, $mask, $transitionDef));
         }
 
         return $factory;
@@ -422,9 +423,7 @@ class EventsExtension extends CompilerExtension {
          */
         $factoryName = $this->getHolderName($name);
         $factory = $this->getContainerBuilder()->addDefinition($factoryName);
-
-        $factory->setFactory(self::CLASS_HOLDER);
-
+        $factory->setClass(self::CLASS_HOLDER);
         $factory->setParameters(['FKSDB\ORM\Models\ModelEvent event']);
 
         /*
@@ -473,9 +472,7 @@ class EventsExtension extends CompilerExtension {
     private function createBaseHolderFactory($definitionName, $baseName, $definition) {
         $factoryName = $this->getBaseHolderName($definitionName, $baseName);
         $factory = $this->getContainerBuilder()->addDefinition($factoryName);
-
         $factory->setFactory(self::CLASS_BASE_HOLDER, ['%name%']);
-
 
         $parameters = array_keys($this->scheme['bmInstance']);
         array_unshift($parameters, 'event');
@@ -564,6 +561,21 @@ class EventsExtension extends CompilerExtension {
         return $this->prefix(self::BASE_HOLDER_PREFIX . $name . '_' . $baseName);
     }
 
+    /**
+     * @param string $baseName
+     * @param string $mask
+     * @return string
+     */
+    private function getTransitionName(string $baseName, string $mask): string {
+        return $id = uniqid($baseName . '_transition_' . str_replace('-', '_', Strings::webalize($mask)) . '__');
+    }
+
+    /**
+     * @return string
+     */
+    private function getFieldName() {
+        return $this->prefix(self::FIELD_FACTORY);
+    }
 }
 
 /**

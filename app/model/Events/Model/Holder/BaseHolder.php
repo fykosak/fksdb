@@ -1,10 +1,15 @@
 <?php
 
-namespace Events\Model\Holder;
+namespace FKSDB\Events\Model\Holder;
 
-use Events\Machine\BaseMachine;
-use Events\Model\ExpressionEvaluator;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Model\ExpressionEvaluator;
+use FKSDB\Events\Model\Holder\DataValidator;
+use FKSDB\Events\Model\Holder\Field;
+use FKSDB\Events\Model\Holder\Holder;
+use FKSDB\Events\Model\Holder\IEventRelation;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
+use FKSDB\Config\NeonSchemaException;
 use FKSDB\Config\NeonScheme;
 use FKSDB\ORM\AbstractServiceMulti;
 use FKSDB\ORM\AbstractServiceSingle;
@@ -87,7 +92,7 @@ class BaseHolder {
     private $fields = [];
 
     /**
-     * @var \FKSDB\ORM\IModel
+     * @var IModel
      */
     private $model;
 
@@ -127,7 +132,7 @@ class BaseHolder {
      * BaseHolder constructor.
      * @param $name
      */
-    function __construct($name) {
+    function __construct(string $name) {
         $this->name = $name;
     }
 
@@ -136,7 +141,6 @@ class BaseHolder {
      */
     public function addField(Field $field) {
         $field->setBaseHolder($this);
-
         $name = $field->getName();
         $this->fields[$name] = $field;
     }
@@ -144,14 +148,14 @@ class BaseHolder {
     /**
      * @return Field[]
      */
-    public function getFields() {
+    public function getFields(): array {
         return $this->fields;
     }
 
     /**
      * @return Holder
      */
-    public function getHolder() {
+    public function getHolder(): Holder {
         return $this->holder;
     }
 
@@ -186,13 +190,13 @@ class BaseHolder {
     /**
      * @return ModelEvent
      */
-    public function getEvent() {
+    public function getEvent(): ModelEvent {
         return $this->event;
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelEvent $event
-     * @throws \FKSDB\Config\NeonSchemaException
+     * @param ModelEvent $event
+     * @throws NeonSchemaException
      */
     private function setEvent(ModelEvent $event) {
         $this->event = $event;
@@ -200,8 +204,8 @@ class BaseHolder {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelEvent $event
-     * @throws \FKSDB\Config\NeonSchemaException
+     * @param ModelEvent $event
+     * @throws NeonSchemaException
      */
     public function inferEvent(ModelEvent $event) {
         if ($this->eventRelation instanceof IEventRelation) {
@@ -242,7 +246,7 @@ class BaseHolder {
     /**
      * @return DataValidator
      */
-    public function getValidator() {
+    public function getValidator(): DataValidator {
         return $this->validator;
     }
 
@@ -254,23 +258,23 @@ class BaseHolder {
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
-    public function isVisible() {
-        return $this->evaluator->evaluate($this->visible, $this);
+    public function isVisible(): bool {
+        return $this->getEvaluator()->evaluate($this->visible, $this);
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
-    public function isModifiable() {
-        return $this->evaluator->evaluate($this->modifiable, $this);
+    public function isModifiable(): bool {
+        return $this->getEvaluator()->evaluate($this->modifiable, $this);
     }
 
     /**
-     * @return \FKSDB\ORM\IModel
+     * @return IModel
      */
-    public function & getModel() {
+    public function &getModel() {
         if (!$this->model) {
             $this->model = $this->getService()->createNew();
         }
@@ -301,7 +305,7 @@ class BaseHolder {
     /**
      * @return string
      */
-    public function getModelState() {
+    public function getModelState(): string {
         $model = $this->getModel();
         if ($model->isNew() && !$model[self::STATE_COLUMN]) {
             return BaseMachine::STATE_INIT;
@@ -311,9 +315,9 @@ class BaseHolder {
     }
 
     /**
-     * @param $state
+     * @param string $state
      */
-    public function setModelState($state) {
+    public function setModelState(string $state) {
         $this->getService()->updateModel($this->getModel(), [self::STATE_COLUMN => $state]);
     }
 
@@ -329,19 +333,19 @@ class BaseHolder {
     /**
      * @return string
      */
-    public function getName() {
+    public function getName(): string {
         return $this->name;
     }
 
     /**
      * @return IService|AbstractServiceSingle|AbstractServiceMulti
      */
-    public function getService() {
+    public function getService(): IService {
         return $this->service;
     }
 
     /**
-     * @param \FKSDB\ORM\IService $service
+     * @param IService $service
      */
     public function setService(IService $service) {
         $this->service = $service;
@@ -355,7 +359,7 @@ class BaseHolder {
     }
 
     /**
-     * @param $label
+     * @param string $label
      */
     public function setLabel($label) {
         $this->label = $label;
@@ -369,7 +373,7 @@ class BaseHolder {
     }
 
     /**
-     * @param $description
+     * @param string $description
      */
     public function setDescription($description) {
         $this->description = $description;
@@ -383,7 +387,7 @@ class BaseHolder {
     }
 
     /**
-     * @param $joinOn
+     * @param string $joinOn
      */
     public function setJoinOn($joinOn) {
         $this->joinOn = $joinOn;
@@ -397,7 +401,7 @@ class BaseHolder {
     }
 
     /**
-     * @param $joinTo
+     * @param string $joinTo
      */
     public function setJoinTo($joinTo) {
         $this->joinTo = $joinTo;
@@ -439,10 +443,10 @@ class BaseHolder {
     }
 
     /**
-     * @param $column
+     * @param string $column
      * @return string
      */
-    private function resolveColumnJoins($column) {
+    private function resolveColumnJoins(string $column): string {
         if (strpos($column, '.') === false && strpos($column, ':') === false) {
             $column = $this->getService()->getTable()->getName() . '.' . $column;
         }
@@ -462,7 +466,7 @@ class BaseHolder {
     /**
      * @return Field[]
      */
-    public function getDeterminingFields() {
+    public function getDeterminingFields(): array {
         return array_filter($this->fields, function (Field $field) {
             return $field->isDetermining();
         });
@@ -472,7 +476,7 @@ class BaseHolder {
      * @param BaseMachine $machine
      * @return ContainerWithOptions
      */
-    public function createFormContainer(BaseMachine $machine) {
+    public function createFormContainer(BaseMachine $machine): ContainerWithOptions {
         $container = new ContainerWithOptions();
         $container->setOption('label', $this->getLabel());
         $container->setOption('description', $this->getDescription());
@@ -521,7 +525,7 @@ class BaseHolder {
      * Parameter handling
      */
     /**
-     * @throws \FKSDB\Config\NeonSchemaException
+     * @throws NeonSchemaException
      */
     private function cacheParameters() {
         $parameters = isset($this->getEvent()->parameters) ? $this->getEvent()->parameters : '';
@@ -536,7 +540,7 @@ class BaseHolder {
      */
     public function getParameter($name, $default = null) {
         try {
-            return Arrays::get($this->parameters, [$name], $default);
+            return Arrays::get($this->parameters, $name, $default);
         } catch (InvalidArgumentException $exception) {
             throw new InvalidArgumentException("No parameter '$name' for event " . $this->getEvent() . ".", null, $exception);
         }

@@ -2,9 +2,9 @@
 
 namespace FKSDB\Components\Events;
 
-use Events\Machine\Machine;
-use Events\Model\ApplicationHandlerFactory;
-use Events\Model\Grid\SingleEventSource;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\ApplicationHandlerFactory;
+use FKSDB\Events\Model\Grid\SingleEventSource;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelEvent;

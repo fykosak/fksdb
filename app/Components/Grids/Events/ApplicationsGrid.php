@@ -2,12 +2,13 @@
 
 namespace FKSDB\Components\Events;
 
-use Events\Machine\Machine;
-use Events\Model\ApplicationHandler;
-use Events\Model\ApplicationHandlerFactory;
-use Events\Model\Grid\IHolderSource;
-use Events\Model\Holder\Holder;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\ApplicationHandler;
+use FKSDB\Events\Model\ApplicationHandlerFactory;
+use FKSDB\Events\Model\Grid\IHolderSource;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Application\IJavaScriptCollector;
+use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\UI\Control;
@@ -128,11 +129,15 @@ class ApplicationsGrid extends Control {
 
     private function processSource() {
         $this->eventApplications = [];
-        foreach ($this->source as $key => $holder) {
-            $this->eventApplications[$key] = $holder->getEvent();
+
+        foreach ($this->source->getHolders() as $key => $holder) {
+            $event = $holder->getPrimaryHolder()->getEvent();
+            $this->eventApplications[$key] = $event;
             $this->holders[$key] = $holder;
-            $this->machines[$key] = $this->container->createEventMachine($holder->getEvent());
-            $this->handlers[$key] = $this->handlerFactory->create($holder->getEvent(), new MemoryLogger()); //TODO it's a bit weird to create new logger for each handler
+            /** @var EventDispatchFactory $factory */
+            $factory = $this->container->getByType(EventDispatchFactory::class);
+            $this->machines[$key] = $factory->getEventMachine($event);
+            $this->handlers[$key] = $this->handlerFactory->create($event, new MemoryLogger()); //TODO it's a bit weird to create new logger for each handler
         }
     }
 

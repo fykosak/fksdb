@@ -1,24 +1,21 @@
 <?php
 
-namespace Events\Model\Holder;
+namespace FKSDB\Events\Model\Holder;
 
-use ArrayAccess;
-use ArrayIterator;
-use Events\FormAdjustments\IFormAdjustment;
-use Events\Machine\BaseMachine;
-use Events\Machine\Machine;
-use Events\Machine\Transition;
-use Events\Model\Holder\SecondaryModelStrategies\SecondaryModelStrategy;
-use Events\Processings\GenKillProcessing;
-use Events\Processings\IProcessing;
+use FKSDB\Events\FormAdjustments\IFormAdjustment;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Machine\Transition;
+use FKSDB\Events\Model\Holder\SecondaryModelStrategies\SecondaryModelStrategy;
+use FKSDB\Events\Processings\GenKillProcessing;
+use FKSDB\Events\Processings\IProcessing;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\IModel;
-use IteratorAggregate;
-use LogicException;
 use Nette\Application\UI\Form;
 use Nette\Database\Connection;
 use Nette\InvalidArgumentException;
 use Nette\Utils\ArrayHash;
+use Tracy\Debugger;
 
 /**
  * A bit bloated class.
@@ -27,7 +24,7 @@ use Nette\Utils\ArrayHash;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class Holder implements ArrayAccess, IteratorAggregate {
+class Holder {
 
     /**
      * @var IFormAdjustment[]
@@ -60,11 +57,6 @@ class Holder implements ArrayAccess, IteratorAggregate {
     private $connection;
 
     /**
-     * @var Machine
-     */
-    private $machine;
-
-    /**
      * @var SecondaryModelStrategy
      */
     private $secondaryModelStrategy;
@@ -86,14 +78,14 @@ class Holder implements ArrayAccess, IteratorAggregate {
     /**
      * @return Connection
      */
-    public function getConnection() {
+    public function getConnection(): Connection {
         return $this->connection;
     }
 
     /**
      * @param $name
      */
-    public function setPrimaryHolder($name) {
+    public function setPrimaryHolder(string $name) {
         $primaryHolder = $this->primaryHolder = $this->getBaseHolder($name);
         $this->secondaryBaseHolders = array_filter($this->baseHolders, function (BaseHolder $baseHolder) use ($primaryHolder) {
             return $baseHolder !== $primaryHolder;
@@ -103,7 +95,7 @@ class Holder implements ArrayAccess, IteratorAggregate {
     /**
      * @return BaseHolder
      */
-    public function getPrimaryHolder() {
+    public function getPrimaryHolder(): BaseHolder {
         return $this->primaryHolder;
     }
 
@@ -112,7 +104,6 @@ class Holder implements ArrayAccess, IteratorAggregate {
      */
     public function addBaseHolder(BaseHolder $baseHolder) {
         $baseHolder->setHolder($this);
-
         $name = $baseHolder->getName();
         $this->baseHolders[$name] = $baseHolder;
     }
@@ -132,10 +123,10 @@ class Holder implements ArrayAccess, IteratorAggregate {
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return BaseHolder
      */
-    public function getBaseHolder($name) {
+    public function getBaseHolder(string $name): BaseHolder {
         if (!array_key_exists($name, $this->baseHolders)) {
             throw new InvalidArgumentException("Unknown base holder '$name'.");
         }
@@ -143,42 +134,23 @@ class Holder implements ArrayAccess, IteratorAggregate {
     }
 
     /**
+     * @return BaseHolder[]
+     */
+    public function getBaseHolders(): array {
+        return $this->baseHolders;
+    }
+
+    /**
      * @param $name
      * @return bool
      */
-    public function hasBaseHolder($name) {
+    public function hasBaseHolder($name): bool {
         return isset($this->baseHolders[$name]);
     }
-
-    /**
-     * @deprecated Use getEvent on primary holder explicitly.
-     * @return \FKSDB\ORM\Models\ModelEvent
-     */
-    public function getEvent() {
-        return $this->primaryHolder->getEvent();
-    }
-
-    /**
-     * @return Machine
-     */
-    public function getMachine() {
-        return $this->machine;
-    }
-
-    /**
-     * @param Machine $machine
-     */
-    public function setMachine(Machine $machine) {
-        $this->machine = $machine;
-        if ($machine->getHolder() !== $this) {
-            $machine->setHolder($this);
-        }
-    }
-
     /**
      * @return SecondaryModelStrategy
      */
-    public function getSecondaryModelStrategy() {
+    public function getSecondaryModelStrategy(): SecondaryModelStrategy {
         return $this->secondaryModelStrategy;
     }
 
@@ -190,7 +162,7 @@ class Holder implements ArrayAccess, IteratorAggregate {
     }
 
     /**
-     * @param \FKSDB\ORM\IModel|null $primaryModel
+     * @param IModel|null $primaryModel
      * @param array|null $secondaryModels
      */
     public function setModel(IModel $primaryModel = null, array $secondaryModels = null) {
@@ -240,7 +212,7 @@ class Holder implements ArrayAccess, IteratorAggregate {
      * @param Form $form
      * @return string[] machineName => new state
      */
-    public function processFormValues(ArrayHash $values, Machine $machine, $transitions, ILogger $logger, Form $form = null) {
+    public function processFormValues(ArrayHash $values, Machine $machine, $transitions, ILogger $logger, Form $form = null): array {
         $newStates = [];
         foreach ($transitions as $name => $transition) {
             $newStates[$name] = $transition->getTarget();
@@ -286,7 +258,7 @@ class Holder implements ArrayAccess, IteratorAggregate {
      * Group secondary by service
      * @return array[] items: joinOn, service, holders
      */
-    public function getGroupedSecondaryHolders() {
+    public function getGroupedSecondaryHolders(): array {
         if ($this->groupedHolders == null) {
             $this->groupedHolders = [];
 
@@ -330,47 +302,4 @@ class Holder implements ArrayAccess, IteratorAggregate {
             throw new InvalidArgumentException("Invalid parameter '$name' from a base holder.");
         }
     }
-
-    /*
-     * Syntax-sugar Interfaces
-     */
-
-    /**
-     * @return ArrayIterator|\Traversable
-     */
-    public function getIterator() {
-        return new ArrayIterator($this->baseHolders);
-    }
-
-    /**
-     * @param mixed $offset
-     * @return bool
-     */
-    public function offsetExists($offset) {
-        return isset($this->baseHolders[$offset]);
-    }
-
-    /**
-     * @param mixed $offset
-     * @return BaseHolder|mixed
-     */
-    public function offsetGet($offset) {
-        return $this->baseHolders[$offset];
-    }
-
-    /**
-     * @param mixed $offset
-     * @param mixed $value
-     */
-    public function offsetSet($offset, $value) {
-        throw new LogicException('Use addBaseHolder method.');
-    }
-
-    /**
-     * @param mixed $offset
-     */
-    public function offsetUnset($offset) {
-        throw new LogicException('Cannot delete a base holder.');
-    }
-
 }

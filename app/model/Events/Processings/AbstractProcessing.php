@@ -1,10 +1,10 @@
 <?php
 
-namespace Events\Processings;
+namespace FKSDB\Events\Processings;
 
-use Events\Machine\BaseMachine;
-use Events\Machine\Machine;
-use Events\Model\Holder\Holder;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Logging\ILogger;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Form;
@@ -25,6 +25,9 @@ abstract class AbstractProcessing implements IProcessing {
     private $valuesPathCache;
     private $formPathCache;
     private $states;
+    /**
+     * @var Holder
+     */
     private $holder;
     private $values;
 
@@ -113,7 +116,7 @@ abstract class AbstractProcessing implements IProcessing {
      * @return boolean
      */
     protected final function isBaseReallyEmpty($name) {
-        $baseHolder = $this->holder[$name];
+        $baseHolder = $this->holder->getBaseHolder($name);
         if ($baseHolder->getModelState() == BaseMachine::STATE_INIT) {
             return true; // it was empty since begining
         }

@@ -1,7 +1,7 @@
 <?php
 
 use Authorization\ACLExtension;
-use Events\EventsExtension;
+use FKSDB\Events\EventsExtension;
 use FKSDB\Config\Extensions\DBReflectionExtension;
 use FKSDB\Config\Extensions\NavigationExtension;
 use FKSDB\Config\Extensions\PaymentExtension;

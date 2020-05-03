@@ -1,7 +1,7 @@
 <?php
 
 use Authorization\ACLExtension;
-use Events\EventsExtension;
+use FKSDB\Events\EventsExtension;
 use FKSDB\Config\Extensions\DBReflectionExtension;
 use FKSDB\Config\Extensions\NavigationExtension;
 use FKSDB\Config\Extensions\PaymentExtension;
@@ -11,6 +11,8 @@ use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Application\Responses\TextResponse;
 use Nette\Configurator;
 use Nette\DI\Compiler;
+use Nette\Config\Compiler;
+use Nette\Config\Configurator;
 use Nette\Utils\Finder;
 use Tester\Assert;
 use Tracy\Debugger;

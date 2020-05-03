@@ -2,19 +2,25 @@
 
 namespace FKSDB\Events;
 
-use Events\Model\Holder\BaseHolder;
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use Tracy\Debugger;
+use FKSDB\Events\Model\Holder\Holder;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\ORM\Models\ModelEvent;
+use Nette\Application\BadRequestException;
+use Nette\DI\Container;
 
 /**
  * Class EventDispatchFactory
  * @package Events
  */
 class EventDispatchFactory {
+    /** @var array */
     private $definitions = [];
+    /** @var Container */
     private $container;
 
     /**
@@ -27,25 +33,43 @@ class EventDispatchFactory {
 
     /**
      * @param array $key
-     * @param string $machineMethodName
+     * @param string $machineName
      * @param string $holderMethodName
      */
-    public function addEvent(array $key, string $machineMethodName, string $holderMethodName) {
-        $this->definitions[] = ['keys' => $key, 'machineMethod' => $machineMethodName, 'holderMethod' => $holderMethodName];
+    public function addEvent(array $key, string $holderMethodName, string $machineName) {
+        $this->definitions[] = [
+            'keys' => $key,
+            'holderMethod' => $holderMethodName,
+            'machineName' => $machineName,
+        ];
     }
 
     /**
      * @param ModelEvent $event
      * @return mixed
      * @throws BadRequestException
+     * @throws \Exception
      */
-    public function getEventMachine(ModelEvent $event) {
-        $eventTypeId = $event->event_type_id;
-        $eventYear = $event->event_year;
-        $key = "$eventTypeId-$eventYear";
+    public function getEventMachine(ModelEvent $event): Machine {
+        $definition = $this->findDefinition($event);
+        return $this->container->getService($definition['machineName']);
+    }
+
+    /**
+     * @param ModelEvent $event
+     * @return string[]
+     * @throws BadRequestException
+     */
+    private function findDefinition(ModelEvent $event): array {
+        $key = $this->createKey($event);
         foreach ($this->definitions as $definition) {
             if (in_array($key, $definition['keys'])) {
-                return $this->container->{$definition['machineMethod']}($event);
+                return $definition;
+            }
+        }
+        foreach ($this->definitions as $definition) {
+            if (in_array((string)$event->event_type_id, $definition['keys'])) {
+                return $definition;
             }
         }
         throw new BadRequestException();
@@ -53,23 +77,19 @@ class EventDispatchFactory {
 
     /**
      * @param ModelEvent $event
-     * @return mixed
+     * @return Holder
      * @throws BadRequestException
-     * @throws NeonSchemaException
      */
-    public function getEventHolder(ModelEvent $event): BaseHolder {
-        Debugger::barDump($this);
-        $eventTypeId = $event->event_type_id;
-        $eventYear = $event->event_year;
-        $key = "$eventTypeId-$eventYear";
-        foreach ($this->definitions as $definition) {
-            if (in_array($key, $definition['keys'])) {
-                /** @var BaseHolder $baseHolder */
-                $baseHolder = $this->container->{$definition['holderMethod']}($event);
-                $baseHolder->inferEvent($event);
-            }
-        }
-        throw new BadRequestException();
+    public function getDummyHolder(ModelEvent $event): Holder {
+        $definition = $this->findDefinition($event);
+        return $this->container->{$definition['holderMethod']}($event);
     }
 
+    /**
+     * @param ModelEvent $event
+     * @return string
+     */
+    private function createKey(ModelEvent $event): string {
+        return $event->event_type_id . '-' . $event->event_year;
+    }
 }

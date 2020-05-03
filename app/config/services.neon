@@ -75,10 +75,10 @@ services:
     #
     # Events
     #
-    events.dataValidator: Events\Model\Holder\DataValidator
-    events.expressionEvaluator: Events\Model\ExpressionEvaluator
-    events.privacyPolicy: Events\FormAdjustments\PrivacyPolicy
-    events.captcha: Events\FormAdjustments\Captcha
+    events.dataValidator: FKSDB\Events\Model\Holder\DataValidator
+    events.expressionEvaluator: FKSDB\Events\Model\ExpressionEvaluator
+    events.privacyPolicy: FKSDB\Events\FormAdjustments\PrivacyPolicy
+    events.captcha: FKSDB\Events\FormAdjustments\Captcha
 
     #
     # Fyziklani

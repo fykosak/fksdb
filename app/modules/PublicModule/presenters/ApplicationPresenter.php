@@ -3,20 +3,22 @@
 namespace PublicModule;
 
 use Authorization\RelatedPersonAuthorizator;
-use Events\Machine\BaseMachine;
-use Events\Machine\Machine;
-use Events\Model\ApplicationHandlerFactory;
-use Events\Model\Grid\InitSource;
-use Events\Model\Grid\RelatedPersonSource;
-use Events\Model\Holder\Holder;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\ApplicationHandlerFactory;
+use FKSDB\Events\Model\Grid\InitSource;
+use FKSDB\Events\Model\Grid\RelatedPersonSource;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\Components\Events\ApplicationComponent;
 use FKSDB\Components\Events\ApplicationsGrid;
 use FKSDB\Components\Grids\Events\LayoutResolver;
+use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\GoneException;
 use FKSDB\Exceptions\NotFoundException;
 use FKSDB\Logging\MemoryLogger;
+use FKSDB\NotImplementedException;
 use FKSDB\ORM\AbstractModelMulti;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
@@ -146,6 +148,9 @@ class ApplicationPresenter extends BasePresenter {
         $this->setAuthorized($this->getUser()->isLoggedIn() && $this->getUser()->getIdentity()->getPerson());
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function titleDefault() {
         if ($this->getEventApplication()) {
             $this->setTitle(\sprintf(_('Application for %s: %s'), $this->getEvent()->name, $this->getEventApplication()->__toString()), 'fa fa-calendar-check-o');
@@ -169,7 +174,7 @@ class ApplicationPresenter extends BasePresenter {
     protected function unauthorizedAccess() {
         if ($this->getAction() == 'default') {
             $this->initializeMachine();
-            if ($this->getMachine()->getPrimaryMachine()->getState() == BaseMachine::STATE_INIT) {
+            if ($this->getHolder()->getPrimaryHolder()->getModelState() == BaseMachine::STATE_INIT) {
                 return;
             }
         }
@@ -218,8 +223,9 @@ class ApplicationPresenter extends BasePresenter {
         }
 
 
-        if (!$this->getMachine()->getPrimaryMachine()->getAvailableTransitions()) {
-            if ($this->getMachine()->getPrimaryMachine()->getState() == BaseMachine::STATE_INIT) {
+        if (!$this->getMachine()->getPrimaryMachine()->getAvailableTransitions($this->holder, $this->getHolder()->getPrimaryHolder()->getModelState())) {
+
+            if ($this->getHolder()->getPrimaryHolder()->getModelState() == BaseMachine::STATE_INIT) {
                 $this->setView('closed');
                 $this->flashMessage(_('Přihlašování není povoleno.'), BasePresenter::FLASH_INFO);
             } elseif (!$this->getParameter(self::PARAM_AFTER, false)) {
@@ -247,7 +253,6 @@ class ApplicationPresenter extends BasePresenter {
 
     private function initializeMachine() {
         $this->getHolder()->setModel($this->getEventApplication());
-        $this->getMachine()->setHolder($this->getHolder());
     }
 
     /**
@@ -271,6 +276,7 @@ class ApplicationPresenter extends BasePresenter {
 
     /**
      * @return ApplicationComponent
+     * @throws NotImplementedException
      */
     protected function createComponentApplication() {
         $logger = new MemoryLogger();
@@ -373,20 +379,27 @@ class ApplicationPresenter extends BasePresenter {
 
     /**
      * @return Holder
+     * @throws BadRequestException
+     * @throws \FKSDB\Config\NeonSchemaException
      */
     private function getHolder() {
         if (!$this->holder) {
-            $this->holder = $this->container->createServiceEventHolder($this->getEvent());
+            /** @var EventDispatchFactory $factory */
+            $factory = $this->container->getByType(EventDispatchFactory::class);
+            $this->holder = $factory->getDummyHolder($this->getEvent());
         }
         return $this->holder;
     }
 
     /**
      * @return Machine
+     * @throws BadRequestException
      */
     private function getMachine() {
         if (!$this->machine) {
-            $this->machine = $this->container->createEventMachine($this->getEvent());
+            /** @var EventDispatchFactory $factory */
+            $factory = $this->getContext()->getByType(EventDispatchFactory::class);
+            $this->machine = $factory->getEventMachine($this->getEvent());
         }
         return $this->machine;
     }

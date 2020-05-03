@@ -1,9 +1,9 @@
 <?php
 
-namespace Events\Spec\Dsef;
+namespace FKSDB\Events\Spec\Dsef;
 
-use Events\Machine\BaseMachine;
-use Events\Model\Holder\Field;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Model\Holder\Field;
 use FKSDB\Components\Forms\Factories\Events\IOptionsProvider;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Services\Events\ServiceDsefGroup;

@@ -2,12 +2,11 @@
 
 namespace FKSDB\Components\Events;
 
-use Events\Machine\BaseMachine;
-use Events\Machine\Machine;
-use Events\Machine\Transition;
-use Events\Model\ApplicationHandler;
-use Events\Model\ApplicationHandlerException;
-use Events\Model\Holder\Holder;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\ApplicationHandler;
+use FKSDB\Events\Model\ApplicationHandlerException;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Logging\FlashMessageDump;
 use Nette\Application\AbortException;
@@ -85,7 +84,7 @@ class ApplicationComponent extends Control {
      * Syntactic sugar for the template.
      */
     public function isEventAdmin() {
-        $event = $this->holder->getEvent();
+        $event = $this->holder->getPrimaryHolder()->getEvent();
         return $this->getPresenter()->getContestAuthorizator()->isAllowed($event, 'application', $event->getContest());
     }
 
@@ -109,7 +108,7 @@ class ApplicationComponent extends Control {
 
         $this->template->setFile($this->templateFile);
         $this->template->holder = $this->holder;
-        $this->template->event = $this->holder->getEvent();
+        $this->template->event = $this->holder->getPrimaryHolder()->getEvent();
         $this->template->primaryModel = $this->holder->getPrimaryHolder()->getModel();
         $this->template->primaryMachine = $this->getMachine()->getPrimaryMachine();
         $this->template->render();
@@ -140,9 +139,9 @@ class ApplicationComponent extends Control {
         /*
          * Create containers
          */
-        foreach ($this->holder as $name => $baseHolder) {
+        foreach ($this->holder->getBaseHolders() as $name => $baseHolder) {
             $baseMachine = $this->getMachine()->getBaseMachine($name);
-            if (!$baseHolder->isVisible($baseMachine)) {
+            if (!$baseHolder->isVisible()) {
                 continue;
             }
             $container = $baseHolder->createFormContainer($baseMachine);
@@ -166,10 +165,8 @@ class ApplicationComponent extends Control {
          */
         $primaryMachine = $this->getMachine()->getPrimaryMachine();
         $transitionSubmit = null;
-        /**
-         * @var Transition $transition
-         */
-        foreach ($primaryMachine->getAvailableTransitions(BaseMachine::EXECUTABLE | BaseMachine::VISIBLE) as $transition) {
+
+        foreach ($primaryMachine->getAvailableTransitions($this->holder, $this->holder->getPrimaryHolder()->getModelState(), BaseMachine::EXECUTABLE | BaseMachine::VISIBLE) as $transition) {
             $transitionName = $transition->getName();
             $submit = $form->addSubmit($transitionName, $transition->getLabel());
 
@@ -179,23 +176,13 @@ class ApplicationComponent extends Control {
             };
 
             if ($transition->isCreating()) {
-                $submit->getControlPrototype()->addClass('btn-sm btn-success');
-                $submit->setOption('row', 1);
                 if ($transitionSubmit !== false) {
                     $transitionSubmit = $submit;
                 } elseif ($transitionSubmit) {
                     $transitionSubmit = false; // if there is more than one submit set no one
                 }
-            } elseif ($transition->isTerminating()) {
-                $submit->getControlPrototype()->addClass('btn-sm btn-danger');
-                $submit->setOption('row', 3);
-            } elseif ($transition->isDangerous()) {
-                $submit->getControlPrototype()->addClass('btn-sm btn-danger');
-                $submit->setOption('row', 2);
-            } else {
-                $submit->getControlPrototype()->addClass('btn-sm btn-secondary');
-                $submit->setOption('row', 2);
             }
+            $submit->getControlPrototype()->addAttributes(['btn btn-' . $transition->getType()]);
         }
 
         /*
@@ -273,7 +260,7 @@ class ApplicationComponent extends Control {
      * @return bool
      */
     private function canEdit() {
-        return $this->getMachine()->getPrimaryMachine()->getState() != BaseMachine::STATE_INIT && $this->holder->getPrimaryHolder()->isModifiable();
+        return $this->holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT && $this->holder->getPrimaryHolder()->isModifiable();
     }
 
     /**
@@ -282,7 +269,7 @@ class ApplicationComponent extends Control {
     private function finalRedirect() {
         if ($this->redirectCallback) {
             $id = $this->holder->getPrimaryHolder()->getModel()->getPrimary(false);
-            ($this->redirectCallback)($id, $this->holder->getEvent()->getPrimary());
+            ($this->redirectCallback)($id, $this->holder->getPrimaryHolder()->getEvent()->getPrimary());
         } else {
             $this->redirect('this');
         }

@@ -2,8 +2,8 @@
 
 namespace Authorization;
 
-use Events\Machine\BaseMachine;
-use Events\Model\Holder\Holder;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Model\Holder\Holder;
 use Nette\Security\IUserStorage;
 use Nette\SmartObject;
 
@@ -58,7 +58,7 @@ class RelatedPersonAuthorizator {
             return false;
         }
 
-        foreach ($holder as $baseHolder) {
+        foreach ($holder->getBaseHolders() as $baseHolder) {
             if ($baseHolder->getPersonId() == $person->person_id) {
                 return true;
             }

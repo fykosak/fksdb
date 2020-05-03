@@ -2,7 +2,7 @@
 
 {block content}
 <ul>
-{if $primaryMachine->getState() == '__init' && !$control->isEventAdmin()}
+{if $holder->getPrimaryHolder()->getModelState() == '__init' && !$control->isEventAdmin()}
 {if $presenter->getLang() == 'cs'}
     <li>Vyplnění této přihlášky přihlásíte tým na Fyziklání online.
         Každému členu týmu přijde e-mail s odkazem umožňujícím úpravu přihlášky.</li>

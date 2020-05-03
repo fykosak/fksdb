@@ -6,7 +6,7 @@
         <small class="text-muted">{$transition->getMask()}</small>
     </p>
     <p>
-        {var $className = $transition->isDangerous()?'btn btn-danger':'btn btn-secondary'}
+        {var $className = 'btn btn-'.$transition->getType()}
         <a class="{$className}" href="{link transition! $transition->getName()}">{_'Evalute'}</a>
     </p>
     <hr/>
