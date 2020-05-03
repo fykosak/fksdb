@@ -1,6 +1,6 @@
 <?php
 
-namespace Events\Model\Holder;
+namespace FKSDB\Events\Model\Holder;
 
 use FKSDB\ORM\Models\ModelEvent;
 
@@ -12,8 +12,8 @@ use FKSDB\ORM\Models\ModelEvent;
 interface IEventRelation {
 
     /**
-     * @param \FKSDB\ORM\Models\ModelEvent $event
-     * @return \FKSDB\ORM\Models\ModelEvent
+     * @param ModelEvent $event
+     * @return ModelEvent
      */
     public function getEvent(ModelEvent $event);
 }

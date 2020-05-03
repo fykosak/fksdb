@@ -98,12 +98,12 @@ events:
                         condition: %events.fyziklani12.appCond%
                         label: _('Přihlásit tým')
                         onExecuted:
-                            - Events\Transitions\MailSender(team, .*)
+                            - FKSDB\Events\Transitions\MailSender(team, .*)
                     pending->approved:
                         condition: role('admin')
                         label: _('Schválit účast')
                         onExecuted:
-                            - Events\Transitions\MailSender(team, *)
+                            - FKSDB\Events\Transitions\MailSender(team, *)
                     pending->spare:
                         condition: role('admin')
                         label: _('Potvrdit jako náhradníka')
@@ -113,11 +113,11 @@ events:
                     approved|spare->missed:
                         condition: and(role('admin'),eventWas())
                         label: _('Nepřijel')
-                        dangerous: true
+                        type: danger
                     pending|spare|approved->cancelled:
                         condition: role('admin')
                         label: _('Zrušit tým')
-                        dangerous: true
+                        type: danger
                     cancelled->__terminated:
                         condition: role('admin')
                         label: _('Smazat tým')
@@ -180,7 +180,7 @@ events:
                         condition: %events.fyziklani12.appCond%
                         label: _('Přihlásit člena')
                         onExecuted:
-                            - Events\Transitions\MailSender(member,self)
+                            - FKSDB\Events\Transitions\MailSender(member,self)
                     applied->__terminated:
                         condition: %events.fyziklani12.appCond% # TODO the time period is not specified in rules
                         label: _('Odebrat člena')
@@ -240,18 +240,18 @@ events:
             formAdjustments:
                 - @events.privacyPolicy
                 - @events.captcha
-                - Events\FormAdjustments\DependentRequirements(%events.fyziklani12.dep.require%)
-                - Events\FormAdjustments\DependentVisibility(%events.fyziklani12.dep.visible%)
-                - Events\FormAdjustments\UniqueCheck('team.name', "Tým s názvem '%value' již existuje.")
-                - Events\FormAdjustments\UniqueCheck('*.person_id', "Osoba je již na Fyziklání přihlášena.")
-                - Events\FormAdjustments\MultiResourceAvailability(['team.teacher_accomodation', '*.accomodation'], %events.fyziklani12.accomodation%, 'Kapacita ubytování je již vyčerpána (zbývá %avail).')
-                - Events\Spec\Fyziklani\SchoolsInTeam(param('schoolsInTeam'))
-                - Events\FormAdjustments\RegexpCheck('team.name', "Název týmu smí obsahovat pouze latinku, řečtinu, cyrilici a ASCII znaky.", '/^[\p{Latin}\p{Greek}\p{Cyrillic}\x{0020}-\x{00FF}]+$/u')
+                - FKSDB\Events\FormAdjustments\DependentRequirements(%events.fyziklani12.dep.require%)
+                - FKSDB\Events\FormAdjustments\DependentVisibility(%events.fyziklani12.dep.visible%)
+                - FKSDB\Events\FormAdjustments\UniqueCheck('team.name', "Tým s názvem '%value' již existuje.")
+                - FKSDB\Events\FormAdjustments\UniqueCheck('*.person_id', "Osoba je již na Fyziklání přihlášena.")
+                - FKSDB\Events\FormAdjustments\MultiResourceAvailability(['team.teacher_accomodation', '*.accomodation'], %events.fyziklani12.accomodation%, 'Kapacita ubytování je již vyčerpána (zbývá %avail).')
+                - FKSDB\Events\Spec\Fyziklani\SchoolsInTeam(param('schoolsInTeam'))
+                - FKSDB\Events\FormAdjustments\RegexpCheck('team.name', "Název týmu smí obsahovat pouze latinku, řečtinu, cyrilici a ASCII znaky.", '/^[\p{Latin}\p{Greek}\p{Cyrillic}\x{0020}-\x{00FF}]+$/u')
                 # Needs testing, may not work correctly when school field is disabled (i.e. not sent by browser).
-                #- Events\Spec\Fyziklani\TeamsPerSchool(param('teamsPerSchool'))
+                #- FKSDB\Events\Spec\Fyziklani\TeamsPerSchool(param('teamsPerSchool'))
 
             processings:
-                - Events\Spec\Fyziklani\CategoryProcessing()
+                - FKSDB\Events\Spec\Fyziklani\CategoryProcessing()
                 - @events.privacyPolicy
 
             joins:

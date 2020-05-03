@@ -1,8 +1,9 @@
 <?php
 
-namespace Events\Model\Grid;
+namespace FKSDB\Events\Model\Grid;
 
 use FKSDB\Events\EventDispatchFactory;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Tables\TypedTableSelection;
 use Nette\DI\Container;
@@ -18,7 +19,6 @@ use Nette\DI\Container;
  * @method SingleEventSource count()
  */
 class InitSource extends AggregatedPersonSource implements IHolderSource {
-
 
     /**
      * InitSource constructor.
@@ -42,7 +42,6 @@ class InitSource extends AggregatedPersonSource implements IHolderSource {
         $holder = $factory->getDummyHolder($event);
 
         $holder->setModel();
-
         return $holder;
     }
 

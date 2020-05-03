@@ -1,7 +1,7 @@
 <?php
 
 use Authorization\ACLExtension;
-use Events\EventsExtension;
+use FKSDB\Events\EventsExtension;
 use FKSDB\Config\Extensions\DBReflectionExtension;
 use FKSDB\Config\Extensions\NavigationExtension;
 use FKSDB\Config\Extensions\PaymentExtension;
@@ -9,6 +9,7 @@ use FKSDB\Config\Extensions\RouterExtension;
 use FKSDB\Config\Extensions\StalkingExtension;
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Application\Responses\TextResponse;
+use Nette\Config\Compiler;
 use Nette\Config\Configurator;
 use Nette\Utils\Finder;
 use Tester\Assert;
@@ -40,7 +41,7 @@ define('CONFIG_DIR', APP_DIR . DIRECTORY_SEPARATOR . 'config');
 
 // Configure application
 $configurator = new Configurator();
-$configurator->onCompile[] = function ($configurator, $compiler) {
+$configurator->onCompile[] = function ($configurator, Compiler $compiler) {
     $compiler->addExtension('fksrouter', new RouterExtension());
     $compiler->addExtension('acl', new ACLExtension());
     $compiler->addExtension('navigation', new NavigationExtension());

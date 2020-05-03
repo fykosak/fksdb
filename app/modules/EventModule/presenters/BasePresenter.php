@@ -3,10 +3,10 @@
 namespace EventModule;
 
 use AuthenticatedPresenter;
-use Events\Model\Holder\Holder;
 use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Exceptions\NotFoundException;
 use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEvent;

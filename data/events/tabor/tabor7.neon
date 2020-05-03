@@ -54,43 +54,43 @@ events:
                         condition: role('admin')
                         label: Pozvat účastníka
                         onExecuted:
-                           - Events\Transitions\MailSender(tabor/invited, .self)
+                           - FKSDB\Events\Transitions\MailSender(tabor/invited, .self)
                     auto.invited->invited: # this must be duplicate of __init->invited
                         condition: role('admin')
                         label: Pozvat účastníka
                         onExecuted:
-                            - Events\Transitions\MailSender(tabor/invited, .self)
+                            - FKSDB\Events\Transitions\MailSender(tabor/invited, .self)
                     __init->spare:
                         condition: role('admin')
                         label: Pozvat náhradníka
                         onExecuted:
-                            - Events\Transitions\MailSender(tabor/spare, .self)
+                            - FKSDB\Events\Transitions\MailSender(tabor/spare, .self)
                     auto.spare->spare: # this must be duplicate of __init->spare
                         condition: role('admin')
                         label: Pozvat náhradníka
                         onExecuted:
-                            - Events\Transitions\MailSender(tabor/spare, .self)
+                            - FKSDB\Events\Transitions\MailSender(tabor/spare, .self)
                     invited->applied:
                         condition: or(before(param('deadline')),role('admin'))
                         label: Potrvrdit učast
                         onExecuted:
-                            - Events\Transitions\MailSender(tabor/confirm-applied, .self)
+                            - FKSDB\Events\Transitions\MailSender(tabor/confirm-applied, .self)
                     spare->interested:
                         condition: before(param('deadline'))
                         label: Chci jet
                         onExecuted:
-                            - Events\Transitions\MailSender(tabor/confirm-interested, .self)
+                            - FKSDB\Events\Transitions\MailSender(tabor/confirm-interested, .self)
                     applied->paid:
                         condition: role('admin')
                         label: Zaplatil
                     invited->rejected:
                         condition: or(before(param('deadline')),role('admin'))
                         label: Odmítnout účast
-                        dangerous: true
+                        type: danger
                     spare->rejected:
                         condition: or(before(param('deadline')),role('admin'))
                         label: Odmítnout účast
-                        dangerous: true
+                        type: danger
                     interested->applied:
                         condition: role('admin')
                         label: Schválit jako účastníka
@@ -159,7 +159,7 @@ events:
                     primary: true # base machine states are propagated to the machine
                     modifiable: or(neg(or(state('participated'),state('missed'),state('rejected'))),role('admin'))
             formAdjustments:
-                - Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
+                - FKSDB\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 - @events.privacyPolicy
 
             processings:

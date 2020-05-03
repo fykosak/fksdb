@@ -1,12 +1,12 @@
 <?php
 
-namespace Events\Model;
+namespace FKSDB\Events\Model;
 
 $container = require '../../bootstrap.php';
 
-use Events\EventTestCase;
-use Events\Model\Holder\Holder;
 use FKSDB\Events\EventDispatchFactory;
+use FKSDB\Events\EventTestCase;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Logging\DevNullLogger;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
@@ -76,7 +76,7 @@ class ApplicationHandlerTest extends EventTestCase {
 
     /**
      * This test doesn't test much, at least it detects weird data passing in CategoryProcessing.
-     * @throws Events\Model\ApplicationHandlerException
+     * @throws FKSDB\Events\Model\ApplicationHandlerException
      */
     public function testNewApplication() {
         $id1 = $this->createPerson('Karel', 'Kolář', ['email' => 'k.kolar@email.cz']);

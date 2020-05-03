@@ -54,12 +54,12 @@ events:
                         condition: %events.dsef23.appCond%
                         label: Přihlásit účastníka
                         onExecuted:
-                            - Events\Transitions\MailSender(confirmation, .self)
+                            - FKSDB\Events\Transitions\MailSender(confirmation, .self)
                     __init|spare.tsaf->applied.tsaf:
                         condition: %events.dsef23.appCond%
                         visible: false
                         onExecuted:
-                            - Events\Transitions\MailSender(confirmation, .self)
+                            - FKSDB\Events\Transitions\MailSender(confirmation, .self)
                     applied.tsaf->applied.notsaf:
                         condition: role('admin')
                         visible: false
@@ -73,12 +73,12 @@ events:
                     applied|applied.tsaf|applied.notsaf->missed:
                         condition: and(role('admin'),eventWas())
                         label: Nepřijel
-                        dangerous: true
+                        type: danger
                     # cancel and termination
                     applied|applied.notsaf->cancelled:
                         condition: role('admin')
                         label: Zrušit přihlášku
-                        dangerous: true
+                        type: danger
                     cancelled->__terminated:
                         condition: role('admin')
                         label: Smazat přihlášku
@@ -97,7 +97,7 @@ events:
                         label: Preferovaná skupina
                         required: true
                         modifiable: %events.dsef23.appCond%
-                        factory: Chooser(Zvolit skupinu, Events\Spec\Dsef\GroupOptions())
+                        factory: Chooser(Zvolit skupinu, FKSDB\Events\Spec\Dsef\GroupOptions())
                     lunch_count:
                         label:  Počet baget k obědu
                         modifiable: %events.dsef23.appCond%
@@ -116,7 +116,7 @@ events:
                     required: true # default false, it's conjuction with fields requirement
                     primary: true # base machine states are propagated to the machine
             formAdjustments:
-                - Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
+                - FKSDB\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 - @events.privacyPolicy
                 - @events.captcha
 

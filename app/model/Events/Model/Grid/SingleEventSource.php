@@ -1,14 +1,15 @@
 <?php
 
-namespace Events\Model\Grid;
+namespace FKSDB\Events\Model\Grid;
 
 use ArrayIterator;
-use Events\Model\Holder\BaseHolder;
-use Events\Model\Holder\Holder;
 use FKSDB\Events\EventDispatchFactory;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Tables\TypedTableSelection;
+use FKSDB\Events\Model\Holder\BaseHolder;
+use FKSDB\Events\Model\Holder\Holder;
+use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
 use Nette\SmartObject;
@@ -21,6 +22,7 @@ use Nette\SmartObject;
  * @method SingleEventSource order()
  * @method SingleEventSource limit()
  * @method SingleEventSource count()
+ * @method SingleEventSource where(string $cond, ...$args)
  */
 class SingleEventSource implements IHolderSource {
     use SmartObject;
@@ -112,8 +114,10 @@ class SingleEventSource implements IHolderSource {
 
         // load secondaries
         foreach ($this->dummyHolder->getGroupedSecondaryHolders() as $key => $group) {
+            /** @var TypedTableSelection $secondarySelection */
             $secondarySelection = $group['service']->getTable()->where($group['joinOn'], $joinValues);
             if ($joinToCheck) {
+                /** @var ModelEvent $event */
                 $event = reset($group['holders'])->getEvent();
                 $secondarySelection->where(BaseHolder::EVENT_COLUMN, $event->getPrimary());
             }
@@ -187,16 +191,4 @@ class SingleEventSource implements IHolderSource {
         }
         return $this->holders;
     }
-
-    /**
-     * @return ArrayIterator|\Traversable
-     */
-    public function getIterator() {
-        if ($this->primaryModels === null) {
-            $this->loadData();
-            $this->createHolders();
-        }
-        return new ArrayIterator($this->holders);
-    }
-
 }

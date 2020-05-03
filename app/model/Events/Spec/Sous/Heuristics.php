@@ -1,6 +1,6 @@
 <?php
 
-namespace Events\Spec\Sous;
+namespace FKSDB\Events\Spec\Sous;
 
 use ORM\ModelsMulti\Events\ModelMSousParticipant;
 use Exports\StoredQueryPostProcessing;

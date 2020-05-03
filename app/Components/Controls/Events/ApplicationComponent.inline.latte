@@ -1,23 +1,27 @@
+{var $state = $holder->getPrimaryHolder()->getModelState()}
 {if $mode == 'state'}
-    {if $primaryMachine->getState() == Events\Machine\BaseMachine::STATE_INIT || $primaryMachine->getState() == Events\Machine\BaseMachine::STATE_TERMINATED}
-<em>&mdash;</em>
+    {if $state == FKSDB\Events\Machine\BaseMachine::STATE_INIT || $state == FKSDB\Events\Machine\BaseMachine::STATE_TERMINATED}
+        <em>&mdash;</em>
     {else}
-    {$primaryMachine->getStateName()}
+        {$primaryMachine->getStateName($state)}
     {/if}
 {elseif  $mode == 'transitions'}
     {if}
-    {foreach $primaryMachine->getAvailableTransitions(Events\Machine\BaseMachine::EXECUTABLE | Events\Machine\BaseMachine::VISIBLE) as $transition}
-{if $transition->isCreating()}
-<a href="{plink :Public:Application:default eventId => $holder->getEvent()->event_id}" class="btn btn-xs btn-success">{$transition->getLabel()}</a>
-{elseif $transition->isDangerous()}
-<a n:href="transition! $transition->getName()" class="btn btn-xs btn-sm btn-danger">{$transition->getLabel()}</a>
-{else}
-<a n:href="transition! $transition->getName()" class="btn btn-xs btn-sm btn-secondary">{$transition->getLabel()}</a>
-{/if}
-    {/foreach}
+        {foreach $primaryMachine->getAvailableTransitions($holder,$state,FKSDB\Events\Machine\BaseMachine::EXECUTABLE | FKSDB\Events\Machine\BaseMachine::VISIBLE) as $transition}
+            {var $className = 'btn btn-sm btn-'.$transition->getType()}
+            {if $transition->isCreating()}
+                <a href="{plink :Public:Application:default eventId => $holder->getPrimaryHolder()->getEvent()->event_id}"
+                   class="{$className}">{$transition->getLabel()}</a>
+            {else}
+                <a n:href="transition! $transition->getName()"
+                        class="{$className}">{$transition->getLabel()}</a>
+            {/if}
+        {/foreach}
     {else}
-<em>{_'žádné'}</em>
+        <em>{_'žádné'}</em>
     {/if $iterations}
 {elseif $mode == 'edit'}
-<a n:if="$canEdit" href="{plink :Public:Application:default id => $primaryModel->getPrimary(), eventId => $holder->getEvent()->event_id}" class="btn btn-xs btn-sm btn-primary">{_'Upravit'}</a>
+    <a n:if="$canEdit"
+            href="{plink :Public:Application:default id => $primaryModel->getPrimary(), eventId => $holder->getPrimaryHolder()->getEvent()->event_id}"
+            class="btn btn-xs btn-sm btn-primary">{_'Upravit'}</a>
 {/if}

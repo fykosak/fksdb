@@ -1,5 +1,6 @@
+{var $state = $holder->getPrimaryHolder()->getModelState()}
 <p>
-    Změna přihlášky týmu <em>{$application}</em>. Aktuální stav &ndash; <em>{$machine->getPrimaryMachine()->getStateName()}</em>.
+    Změna přihlášky týmu <em>{$application}</em>. Aktuální stav &ndash; <em>{$machine->getPrimaryMachine()->getStateName($state)}</em>.
 </p>
 {include 'inc/eventEdit.cs.latte' event => $event, token => $token}
 {include 'inc/closing.cs.latte'}

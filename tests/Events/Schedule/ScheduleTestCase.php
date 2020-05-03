@@ -1,9 +1,9 @@
 <?php
 
-namespace Events\Accommodation;
+namespace FKSDB\Events\Accommodation;
 
 
-use Events\EventTestCase;
+use FKSDB\Events\EventTestCase;
 use Nette\DI\Container;
 use Nette\Utils\DateTime;
 
