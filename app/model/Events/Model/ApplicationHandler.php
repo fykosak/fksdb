@@ -174,7 +174,6 @@ class ApplicationHandler {
             $message = sprintf(_('Data ve skupině "%s" kolidují s již existující přihláškou.'), $exception->getBaseHolder()->getLabel());
             Debugger::log($exception, 'app-conflict');
             $this->logger->log(new Message($message, ILogger::ERROR));
-
             $this->reRaise($exception);
         } catch (DuplicateApplicationException $exception) {
             $message = $exception->getMessage();
