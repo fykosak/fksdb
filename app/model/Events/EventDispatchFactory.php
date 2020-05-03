@@ -2,16 +2,11 @@
 
 namespace FKSDB\Events;
 
-use FKSDB\Config\NeonSchemaException;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
-use Tracy\Debugger;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Events\Machine\Machine;
-use FKSDB\ORM\Models\ModelEvent;
-use Nette\Application\BadRequestException;
-use Nette\DI\Container;
 
 /**
  * Class EventDispatchFactory
@@ -79,10 +74,14 @@ class EventDispatchFactory {
      * @param ModelEvent $event
      * @return Holder
      * @throws BadRequestException
+     * @throws \FKSDB\Config\NeonSchemaException
      */
     public function getDummyHolder(ModelEvent $event): Holder {
         $definition = $this->findDefinition($event);
-        return $this->container->{$definition['holderMethod']}($event);
+        /** @var Holder $holder */
+        $holder = $this->container->{$definition['holderMethod']}();
+        $holder->inferEvent($event);
+        return $holder;
     }
 
     /**

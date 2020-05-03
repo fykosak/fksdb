@@ -5,8 +5,8 @@ namespace FKSDB\Components\Controls\Breadcrumbs;
 use FKSDB\Components\Controls\Breadcrumbs\Request as NaviRequest;
 use FKSDB\Components\Controls\Navigation\INavigablePresenter;
 use FKSDB\Exceptions\BadTypeException;
+use Nette\Application\IPresenterFactory;
 use Nette\Application\IRouter;
-use Nette\Application\PresenterFactory;
 use Nette\Application\Request as AppRequest;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Presenter;
@@ -54,7 +54,7 @@ class Breadcrumbs extends Control {
     private $httpRequest;
 
     /**
-     * @var PresenterFactory
+     * @var IPresenterFactory
      */
     private $presenterFactory;
 
@@ -71,9 +71,9 @@ class Breadcrumbs extends Control {
      * @param Session $session
      * @param IRouter $router
      * @param HttpRequest $httpRequest
-     * @param PresenterFactory $presenterFactory
+     * @param IPresenterFactory $presenterFactory
      */
-    function __construct($expiration, Session $session, IRouter $router, HttpRequest $httpRequest, PresenterFactory $presenterFactory) {
+    function __construct($expiration, Session $session, IRouter $router, HttpRequest $httpRequest, IPresenterFactory $presenterFactory) {
         parent::__construct();
         $this->session = $session;
         $this->router = $router;

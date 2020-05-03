@@ -45,7 +45,7 @@ class PersonLink extends AbstractValuePrinter {
             throw new BadTypeException(ModelPerson::class, $person);
         }
         return Html::el('a')
-            ->addAttributes(['href' => $this->presenterComponent->link(':Common:Person:detail', [
+            ->addAttributes(['href' => $this->presenterComponent->link('Common:Person:detail', [
                 'id' => $person->person_id,
             ])])
             ->addText($person->getFullName());

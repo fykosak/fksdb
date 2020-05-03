@@ -8,7 +8,6 @@ use FKSDB\Components\Events\ApplicationComponent;
 use FKSDB\Components\Events\MassTransitionsControl;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
 use FKSDB\Components\Grids\Schedule\PersonGrid;
-use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Services\ServiceEventParticipant;
@@ -17,7 +16,6 @@ use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\InvalidStateException;
-use Tracy\Debugger;
 
 /**
  * Class ApplicationPresenter

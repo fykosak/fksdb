@@ -121,9 +121,14 @@ class ApplicationComponent extends Control {
         $this->template->mode = $mode;
         $this->template->holder = $this->holder;
         $this->template->primaryModel = $this->holder->getPrimaryHolder()->getModel();
-        $this->template->primaryMachine = $this->getMachine()->getPrimaryMachine();
+
+        $primaryMachine= $this->getMachine()->getPrimaryMachine();
+        $this->template->primaryMachine = $primaryMachine;
         $this->template->canEdit = $this->canEdit();
 
+        $state = $this->holder->getPrimaryHolder()->getModelState();
+        $this->template->state = $state;
+        $this->template->transitions = $transactions = $primaryMachine->getAvailableTransitions($this->holder, $state, \FKSDB\Events\Machine\BaseMachine::EXECUTABLE | \FKSDB\Events\Machine\BaseMachine::VISIBLE);
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ApplicationComponent.inline.latte');
         $this->template->render();
     }

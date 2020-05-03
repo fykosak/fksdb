@@ -8,7 +8,6 @@ use FKSDB\Components\Forms\Factories\TeacherFactory;
 use FKSDB\Components\Grids\TeachersGrid;
 use FKSDB\ORM\Models\ModelTeacher;
 use FKSDB\ORM\Services\ServiceTeacher;
-use Nette;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Persons\ExtendedPersonHandler;

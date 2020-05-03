@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Controls\Entity\Event;
 
-use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\Config\NeonScheme;
 use FKSDB\Events\EventDispatchFactory;

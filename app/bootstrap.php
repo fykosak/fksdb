@@ -10,7 +10,6 @@ use FKSDB\Config\Extensions\StalkingExtension;
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Configurator;
 use Nette\DI\Compiler;
-use Nette\Forms\Container;
 use Nette\Utils\Finder;
 
 // Load Nette Framework

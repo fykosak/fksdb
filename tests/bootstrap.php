@@ -11,8 +11,6 @@ use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Application\Responses\TextResponse;
 use Nette\Configurator;
 use Nette\DI\Compiler;
-use Nette\Config\Compiler;
-use Nette\Config\Configurator;
 use Nette\Utils\Finder;
 use Tester\Assert;
 use Tracy\Debugger;

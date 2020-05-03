@@ -4,12 +4,8 @@ namespace FKSDB\Components\Controls\Choosers;
 
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\LangPresenterTrait;
-use Nette\Application\AbortException;
-use Nette\Application\UI\Control;
-use Nette\Http\Session;
 use FKSDB\UI\Title;
 use Nette\Application\UI\InvalidLinkException;
-use Nette\DI\Container;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

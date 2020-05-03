@@ -13,7 +13,6 @@ use InvalidArgumentException;
 use Nette\Utils\DateTime;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
-use Tracy\Debugger;
 use Traversable;
 
 /**

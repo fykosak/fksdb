@@ -14,7 +14,6 @@ use FKSDB\UI\PageStyleContainer;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Security\IResource;
-use Tracy\Debugger;
 
 /**
  *

@@ -2,21 +2,15 @@
 
 namespace OrgModule;
 
-use Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\Entity\Event\CreateForm;
 use FKSDB\Components\Controls\Entity\Event\EditForm;
-use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\Events\EventsGrid;
-use FKSDB\Config\NeonScheme;
 use FKSDB\EntityTrait;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEvent;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use FKSDB\Exceptions\NotImplementedException;
-use Nette\Forms\Controls\BaseControl;
-use Nette\Neon\Exception;
-use Nette\Neon\Neon;
 use Nette\Utils\Html;
 
 /**

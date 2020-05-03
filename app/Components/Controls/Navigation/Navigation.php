@@ -8,10 +8,8 @@ use FKSDB\Exceptions\BadTypeException;
 use FKSDB\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
-use Nette\Application\UI\ITemplate;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
-use Nette\InvalidArgumentException;
 use ReflectionClass;
 use ReflectionMethod;
 

@@ -2,11 +2,6 @@
 
 namespace FKSDB\Events\Machine;
 
-use ArrayAccess;
-use ArrayIterator;
-use FKSDB\Events\Model\Holder\Holder;
-use IteratorAggregate;
-use LogicException;
 use Nette\InvalidArgumentException;
 
 /**

@@ -37,11 +37,10 @@
 {define checkbox}
     <div n:class="form-group, $field->hasErrors() ? has-error" id="{$field->getHtmlId()}-pair">
         <div class="form-check">
-            {var $field->getControlPrototype()->addAttributes(['class'=>'form-check-input'])}
+            {? $field->getControlPrototype()->addAttributes(['class'=>'form-check-input'])}
             {$field->getControlPart()}
-            {var $field->getLabelPrototype()->addAttributes(['class'=>'form-check-label'])}
+            {? $field->getLabelPrototype()->addAttributes(['class'=>'form-check-label'])}
             {$field->getLabelPart()}
-
         </div>
         {include #metadata field => $field}
     </div>
