@@ -23,7 +23,6 @@ use FKSDB\Components\Grids\Events\LayoutResolver;
 use FKSDB\Config\Expressions\Helpers;
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\Config\NeonScheme;
-use FKSDB\Events\EventDispatchFactory;
 use Nette\Config\CompilerExtension;
 use Nette\Config\Helpers as ConfigHelpers;
 use Nette\Config\Loader;
@@ -53,7 +52,6 @@ class EventsExtension extends CompilerExtension {
     const BASE_HOLDER_PREFIX = 'BaseHolder_';
     const CLASS_MACHINE = Machine::class;
     const CLASS_BASE_MACHINE = BaseMachine::class;
-    const CLASS_TRANSITION = Transition::class;
     const CLASS_FIELD = Field::class;
     const CLASS_BASE_HOLDER = BaseHolder::class;
     const CLASS_HOLDER = Holder::class;
@@ -271,6 +269,7 @@ class EventsExtension extends CompilerExtension {
             switch ($parameter) {
                 case 'label':
                 case 'onExecuted':
+                case 'type':
                     break;
                 default:
                     if (isset($definition[$parameter])) {
@@ -393,9 +392,6 @@ class EventsExtension extends CompilerExtension {
             if (!$transitionDef['label'] && $transitionDef['visible'] !== false) {
                 throw new MachineDefinitionException("Transition $mask with non-false visibility must have label defined.");
             }
-
-            array_unshift($transitionDef, $mask);
-            //   $defka = $this->transtionFactory;
             $factory->addSetup('addTransition', $this->createTransitionService($factoryName, $mask, $transitionDef));
         }
 
