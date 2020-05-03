@@ -28,14 +28,14 @@ class EventDispatchFactory {
 
     /**
      * @param array $key
+     * @param string $machineName
      * @param string $holderMethodName
-     * @param Machine $machine
      */
-    public function addEvent(array $key, string $holderMethodName, Machine $machine) {
+    public function addEvent(array $key, string $holderMethodName, string $machineName) {
         $this->definitions[] = [
             'keys' => $key,
             'holderMethod' => $holderMethodName,
-            'machine' => $machine,
+            'machineName' => $machineName,
         ];
     }
 
@@ -47,7 +47,7 @@ class EventDispatchFactory {
      */
     public function getEventMachine(ModelEvent $event): Machine {
         $definition = $this->findDefinition($event);
-        return $definition['machine'];
+        return $this->container->getService($definition['machineName']);
     }
 
     /**

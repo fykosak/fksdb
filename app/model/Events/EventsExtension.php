@@ -142,12 +142,12 @@ class EventsExtension extends CompilerExtension {
                 $this->baseDefinitions['holders'][$baseName] = $this->createBaseHolderFactory($definitionName, $baseName, $baseMachineDef);
             }
             $keys = $this->createAccessKeys($eventTypeIds, $definition);
-            $machineService = $this->createMachineFactory($definitionName, $definition);
+            $this->createMachineFactory($definitionName, $definition);
             $this->createHolderFactory($definitionName, $definition);
             $holderName = $this->getHolderName($definitionName);
+            $machineName = $this->getMachineName($definitionName);
             $holderMethodName = Container::getMethodName($holderName, false);
-
-            $eventDispatchFactory->addSetup('addEvent', [$keys, $holderMethodName, $machineService]);
+            $eventDispatchFactory->addSetup('addEvent', [$keys, $holderMethodName, $machineName]);
         }
 
         $this->createLayoutResolverFactory();
