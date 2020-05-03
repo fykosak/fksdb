@@ -3,6 +3,7 @@
 namespace FKSDB\Events;
 
 use FKSDB\Events\Model\Holder\Holder;
+use FKSDB\Events\Machine\Machine;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
@@ -39,7 +40,7 @@ class EventDispatchFactory {
      * @return mixed
      * @throws BadRequestException
      */
-    public function getEventMachine(ModelEvent $event) {
+    public function getEventMachine(ModelEvent $event): Machine {
         $definition = $this->findDefinition($event);
         return $this->container->{$definition['machineMethod']}($event);
     }
