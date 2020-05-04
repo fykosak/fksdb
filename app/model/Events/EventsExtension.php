@@ -68,7 +68,7 @@ class EventsExtension extends CompilerExtension {
         'parameter' => Parameter::class,
         'count' => Count::class,
     ];
-    /** @var */
+    /** @var array */
     private $scheme;
 
     /**
@@ -82,14 +82,14 @@ class EventsExtension extends CompilerExtension {
      * @var array[baseMachineFullName] => expanded configuration
      */
     private $baseMachineConfig = [];
-    /** @var */
+    /** @var string */
     private $schemeFile;
 
     /**
      * EventsExtension constructor.
-     * @param $schemaFile
+     * @param string $schemaFile
      */
-    function __construct($schemaFile) {
+    function __construct(string $schemaFile) {
         $this->schemeFile = $schemaFile;
         Helpers::registerSemantic(self::$semanticMap);
     }
@@ -182,7 +182,8 @@ class EventsExtension extends CompilerExtension {
     }
 
     /**
-     * @param $name
+     * @param string $name
+     * @throws InvalidArgumentException
      */
     private function validateConfigName(string $name) {
         if (!preg_match(self::NAME_PATTERN, $name)) {
@@ -281,8 +282,8 @@ class EventsExtension extends CompilerExtension {
      */
 
     /**
-     * @param $name
-     * @param $definition
+     * @param string $name
+     * @param array $definition
      * @return ServiceDefinition
      * @throws NeonSchemaException
      */
@@ -327,9 +328,9 @@ class EventsExtension extends CompilerExtension {
     }
 
     /**
-     * @param $eventName
-     * @param $baseName
-     * @param $instanceName
+     * @param string $eventName
+     * @param string $baseName
+     * @param string $instanceName
      * @return ServiceDefinition
      * @throws NeonSchemaException
      */
@@ -375,8 +376,8 @@ class EventsExtension extends CompilerExtension {
 
 
     /**
-     * @param $name
-     * @param $definition
+     * @param string $name
+     * @param array $definition
      * @throws NeonSchemaException
      */
     private function createHolderFactory(string $name, array $definition) {
@@ -463,18 +464,18 @@ class EventsExtension extends CompilerExtension {
         $factory->addSetup('setParamScheme', [$paramScheme]);
 
 
-        $hasNondetermining = false;
+        $hasNonDetermining = false;
         foreach ($definition['fields'] as $name => $fieldDef) {
             $fieldDef = NeonScheme::readSection($fieldDef, $this->scheme['field']);
             if ($fieldDef['determining']) {
                 if ($fieldDef['required']) {
                     throw new MachineDefinitionException("Field '$name' cannot be both required and determining. Set required on the base holder.");
                 }
-                if ($hasNondetermining) {
+                if ($hasNonDetermining) {
                     throw new MachineDefinitionException("Field '$name' cannot be preceded by non-determining fields. Reorder the fields.");
                 }
             } else {
-                $hasNondetermining = true;
+                $hasNonDetermining = true;
             }
             array_unshift($fieldDef, $name);
             $factory->addSetup('addField', [new Statement($this->createFieldService($fieldDef))]);
@@ -487,7 +488,7 @@ class EventsExtension extends CompilerExtension {
      */
 
     /**
-     * @param $name
+     * @param string $name
      * @return string
      */
     private function getMachineName(string $name): string {
@@ -495,7 +496,7 @@ class EventsExtension extends CompilerExtension {
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return string
      */
     private function getHolderName(string $name): string {
@@ -503,8 +504,8 @@ class EventsExtension extends CompilerExtension {
     }
 
     /**
-     * @param $name
-     * @param $baseName
+     * @param string $name
+     * @param string $baseName
      * @return string
      */
     private function getBaseMachineName(string $name, string $baseName): string {
@@ -512,8 +513,8 @@ class EventsExtension extends CompilerExtension {
     }
 
     /**
-     * @param $name
-     * @param $baseName
+     * @param string $name
+     * @param string $baseName
      * @return string
      */
     private function getBaseHolderName(string $name, string $baseName): string {
