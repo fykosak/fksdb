@@ -49,9 +49,6 @@ class EventsExtension extends CompilerExtension {
     const BASE_HOLDER_PREFIX = 'BaseHolder_';
     const CLASS_BASE_MACHINE = BaseMachine::class;
     const CLASS_TRANSITION = Transition::class;
-    const CLASS_FIELD = Field::class;
-    const CLASS_BASE_HOLDER = BaseHolder::class;
-    const CLASS_HOLDER = Holder::class;
     const CLASS_RESOLVER = LayoutResolver::class;
 
     /** @const Maximum length of state identifier. */
@@ -73,7 +70,7 @@ class EventsExtension extends CompilerExtension {
         'parameter' => Parameter::class,
         'count' => Count::class,
     ];
-    /** @var  */
+    /** @var */
     private $scheme;
 
     /**
@@ -88,9 +85,8 @@ class EventsExtension extends CompilerExtension {
      */
     private $baseMachineConfig = [];
     private $transtionFactory;
-    private $fieldFactory;
     private $schemeFile;
-    private $baseDefinitions = ['machines' => [], 'holders' => []];
+    private $baseDefinitions = ['machines' => []];
 
     /**
      * EventsExtension constructor.
@@ -115,7 +111,6 @@ class EventsExtension extends CompilerExtension {
         $config = $this->getConfig();
 
         $this->createTransitionFactory();
-        $this->createFieldFactory();
         $eventDispatchFactory = $this->getContainerBuilder()
             ->addDefinition('event.dispatch')->setFactory(EventDispatchFactory::class);
 
@@ -130,8 +125,6 @@ class EventsExtension extends CompilerExtension {
                 'tableLayout' => $definition['tableLayout'],
                 'formLayout' => $definition['formLayout'],
             ];
-
-
             /*
              * Create base machine factories.
              */
@@ -139,14 +132,13 @@ class EventsExtension extends CompilerExtension {
                 $this->validateConfigName($baseName);
                 $baseMachineDef = $this->getBaseMachineConfig($definitionName, $baseName);
                 $this->baseDefinitions['machines'][$baseName] = $this->createBaseMachineFactory($definitionName, $baseName, $baseMachineDef);
-                $this->baseDefinitions['holders'][$baseName] = $this->createBaseHolderFactory($definitionName, $baseName, $baseMachineDef);
             }
             $keys = $this->createAccessKeys($eventTypeIds, $definition);
             $this->createMachineFactory($definitionName, $definition);
             $this->createHolderFactory($definitionName, $definition);
             $holderName = $this->getHolderName($definitionName);
             $machineName = $this->getMachineName($definitionName);
-            $holderMethodName = Container::getMethodName($holderName, false);
+            $holderMethodName = Container::getMethodName($holderName);
             $eventDispatchFactory->addSetup('addEvent', [$keys, $holderMethodName, $machineName]);
         }
 
@@ -237,24 +229,26 @@ class EventsExtension extends CompilerExtension {
         $this->transtionFactory = $factory;
     }
 
-    private function createFieldFactory() {
-        $factory = $this->getContainerBuilder()->addDefinition($this->getFieldName());
-        $factory->setClass(self::CLASS_FIELD, ['%name%', '%label%']);
+    /**
+     * @param array $fieldDefinition
+     * @return ServiceDefinition
+     */
+    private function createFieldService(array $fieldDefinition): ServiceDefinition {
+        $field = $this->getContainerBuilder()
+            ->addDefinition($this->getFieldName())
+            ->setFactory(Field::class, [$fieldDefinition['0'], $fieldDefinition['label']]);
 
-        $parameters = array_keys($this->scheme['field']);
-        array_unshift($parameters, 'name');
-        $factory->setParameters($parameters);
-        $factory->addSetup('setEvaluator', '@events.expressionEvaluator');
-        foreach ($parameters as $parameter) {
-            switch ($parameter) {
+        $field->addSetup('setEvaluator', ['@events.expressionEvaluator']);
+        foreach ($fieldDefinition as $key => $parameter) {
+            switch ($key) {
                 case 'name':
                 case 'label':
                     break;
                 default:
-                    $factory->addSetup('set' . ucfirst($parameter), "%$parameter%");
+                    $field->addSetup('set' . ucfirst($key), [$parameter]);
             }
         }
-        $this->fieldFactory = $factory;
+        return $field;
     }
 
     /**
@@ -381,6 +375,7 @@ class EventsExtension extends CompilerExtension {
      * Specialized data factories
      */
 
+
     /**
      * @param $name
      * @param $definition
@@ -388,22 +383,16 @@ class EventsExtension extends CompilerExtension {
      */
     private function createHolderFactory($name, $definition) {
         $machineDef = NeonScheme::readSection($definition['machine'], $this->scheme['machine']);
-
-        /*
-         * Create factory definition.
-         */
+        // Create factory definition.
         $factoryName = $this->getHolderName($name);
         $factory = $this->getContainerBuilder()->addDefinition($factoryName);
-        $factory->setClass(self::CLASS_HOLDER);
-        $factory->setParameters(['FKSDB\ORM\Models\ModelEvent event']);
+        $factory->setFactory(Holder::class);
+        //  $factory->setParameters(['FKSDB\ORM\Models\ModelEvent event']);
 
-        /*
-         * Create and add base machines into the machine (i.e. creating instances).
-         */
+        // Create and add base machines into the machine (i.e. creating instances).
         $primaryName = null;
         foreach ($machineDef['baseMachines'] as $instanceName => $instanceDef) {
             $instanceDef = NeonScheme::readSection($instanceDef, $this->scheme['bmInstance']);
-
             if ($instanceDef['primary']) {
                 if (!$primaryName) {
                     $primaryName = $instanceName;
@@ -411,71 +400,75 @@ class EventsExtension extends CompilerExtension {
                     throw new MachineDefinitionException('Multiple primary machines defined.');
                 }
             }
-
-            $defka = $this->baseDefinitions['holders'][$instanceDef['bmName']];
-            $instanceDef['name'] = $instanceName;
-            $instanceDef['event'] = '%event%';
-            $stmt = new Statement($defka, $instanceDef);
-            $factory->addSetup('addBaseHolder', $stmt);
+            $baseHolderFactory = $this->createBaseHolderFactory($name, $instanceDef['bmName'], $instanceName, $instanceDef);
+            $factory->addSetup('addBaseHolder', [new Statement($baseHolderFactory)]);
         }
         if (!$primaryName) {
             throw new MachineDefinitionException('No primary machine defined.');
         }
-        $factory->addSetup('setPrimaryHolder', $primaryName);
+        $factory->addSetup('setPrimaryHolder', [$primaryName]);
         $factory->addSetup('setSecondaryModelStrategy', [$machineDef['secondaryModelStrategy']]);
 
         foreach ($machineDef['processings'] as $processing) {
-            $factory->addSetup('addProcessing', $processing);
+            $factory->addSetup('addProcessing', [$processing]);
         }
 
         foreach ($machineDef['formAdjustments'] as $formAdjustment) {
-            $factory->addSetup('addFormAdjustment', $formAdjustment);
+            $factory->addSetup('addFormAdjustment', [$formAdjustment]);
         }
     }
 
     /**
-     * @param $definitionName
-     * @param $baseName
-     * @param $definition
+     * @param string $eventName
+     * @param string $baseName
+     * @param string $instanceName
+     * @param array $instanceDefinition
      * @return ServiceDefinition
      * @throws NeonSchemaException
      */
-    private function createBaseHolderFactory($definitionName, $baseName, $definition) {
-        $factoryName = $this->getBaseHolderName($definitionName, $baseName);
-        $factory = $this->getContainerBuilder()->addDefinition($factoryName);
-        $factory->setFactory(self::CLASS_BASE_HOLDER, ['%name%']);
+    private function createBaseHolderFactory(string $eventName, string $baseName, string $instanceName, array $instanceDefinition) {
+        $definition = $this->getBaseMachineConfig($eventName, $baseName);
+        $factoryName = $this->getBaseHolderName($eventName, $baseName);
+        $factory = $this->getContainerBuilder()->addDefinition(uniqid($factoryName));
+        $factory->setFactory(BaseHolder::class, [$instanceName]);
 
         $parameters = array_keys($this->scheme['bmInstance']);
-        array_unshift($parameters, 'event');
-        array_unshift($parameters, 'name');
-        $factory->setParameters($parameters);
+
+        foreach ($parameters as $parameter) {
+            switch ($parameter) {
+                case 'modifiable':
+                case 'visible':
+                case 'label':
+                case 'description':
+                    $factory->addSetup('set' . ucfirst($parameter), [$instanceDefinition[$parameter]]);
+                    break;
+                default:
+                    break;
+            }
+        }
 
         $definition = NeonScheme::readSection($definition, $this->scheme['baseMachine']);
-        $factory->addSetup('setService', $definition['service']);
-        $factory->addSetup('setJoinOn', $definition['joinOn']);
-        $factory->addSetup('setJoinTo', $definition['joinTo']);
+
+        $factory->addSetup('setService', [$definition['service']]);
+        $factory->addSetup('setJoinOn', [$definition['joinOn']]);
+        $factory->addSetup('setJoinTo', [$definition['joinTo']]);
         $factory->addSetup('setPersonIds', [$definition['personIds']]); // must be set after setService
         $factory->addSetup('setEventId', [$definition['eventId']]); // must be set after setService
-        $factory->addSetup('setEvaluator', '@events.expressionEvaluator');
-        $factory->addSetup('setValidator', '@events.dataValidator');
+        $factory->addSetup('setEvaluator', ['@events.expressionEvaluator']);
+        $factory->addSetup('setValidator', ['@events.dataValidator']);
         $factory->addSetup('setEventRelation', [$definition['eventRelation']]);
 
         $config = $this->getConfig();
-        $paramScheme = isset($definition['paramScheme']) ? $definition['paramScheme'] : $config[$definitionName]['paramScheme'];
+        $paramScheme = isset($definition['paramScheme']) ? $definition['paramScheme'] : $config[$eventName]['paramScheme'];
         foreach (array_keys($paramScheme) as $paramKey) {
             $this->validateConfigName($paramKey);
         }
         $factory->addSetup('setParamScheme', [$paramScheme]);
 
 
-        foreach (Arrays::grep($parameters, '/^modifiable|visible|label|description$/') as $parameter) {
-            $factory->addSetup('set' . ucfirst($parameter), "%$parameter%");
-        }
-
         $hasNondetermining = false;
         foreach ($definition['fields'] as $name => $fieldDef) {
             $fieldDef = NeonScheme::readSection($fieldDef, $this->scheme['field']);
-
             if ($fieldDef['determining']) {
                 if ($fieldDef['required']) {
                     throw new MachineDefinitionException("Field '$name' cannot be both required and determining. Set required on the base holder.");
@@ -483,19 +476,12 @@ class EventsExtension extends CompilerExtension {
                 if ($hasNondetermining) {
                     throw new MachineDefinitionException("Field '$name' cannot be preceded by non-determining fields. Reorder the fields.");
                 }
-                $fieldDef['required'] = '%required%';
             } else {
                 $hasNondetermining = true;
             }
-
-
             array_unshift($fieldDef, $name);
-
-            $factory->addSetup('addField', new Statement($this->fieldFactory, $fieldDef));
+            $factory->addSetup('addField', [new Statement($this->createFieldService($fieldDef))]);
         }
-
-        $factory->addSetup('inferEvent', '%event%'); // must be after setParamScheme
-
         return $factory;
     }
 
@@ -548,7 +534,7 @@ class EventsExtension extends CompilerExtension {
      * @return string
      */
     private function getFieldName() {
-        return $this->prefix(self::FIELD_FACTORY);
+        return $this->prefix(uniqid(self::FIELD_FACTORY));
     }
 
 }
