@@ -80,9 +80,7 @@ class EventsExtension extends CompilerExtension {
      * @var array[baseMachineFullName] => expanded configuration
      */
     private $baseMachineConfig = [];
-
     /** @var */
-
     private $schemeFile;
 
     /**
@@ -118,13 +116,11 @@ class EventsExtension extends CompilerExtension {
                 'tableLayout' => $definition['tableLayout'],
                 'formLayout' => $definition['formLayout'],
             ];
-
             /*
              * Create base machine factories.
              */
             foreach ($definition['baseMachines'] as $baseName => $baseMachineDef) {
                 $this->validateConfigName($baseName);
-                //  $this->baseDefinitions['holders'][$baseName] = $this->createBaseHolderFactory($definitionName, $baseName, $this->getBaseMachineConfig($definitionName, $baseName));
             }
             $keys = $this->createAccessKeys($eventTypeIds, $definition);
             $this->createMachineFactory($definitionName, $definition);
@@ -235,7 +231,6 @@ class EventsExtension extends CompilerExtension {
         $factory->addSetup('$service->onExecuted = array_merge($service->onExecuted, ?)', [$definition['onExecuted']]);
         return $factory;
     }
-
 
     /**
      * @param array $fieldDefinition
@@ -375,6 +370,7 @@ class EventsExtension extends CompilerExtension {
      * Specialized data factories
      */
 
+
     /**
      * @param $name
      * @param $definition
@@ -443,9 +439,7 @@ class EventsExtension extends CompilerExtension {
                     break;
                 default:
                     break;
-
             }
-
         }
 
         $definition = NeonScheme::readSection($definition, $this->scheme['baseMachine']);
@@ -477,7 +471,6 @@ class EventsExtension extends CompilerExtension {
                 if ($hasNondetermining) {
                     throw new MachineDefinitionException("Field '$name' cannot be preceded by non-determining fields. Reorder the fields.");
                 }
-                $fieldDef['required'] = '%required%';
             } else {
                 $hasNondetermining = true;
             }
