@@ -75,11 +75,7 @@ class EventDispatchFactory {
      * @param ModelEvent $event
      * @return Holder
      * @throws BadRequestException
-<<<<<<< HEAD
-     * @throws \FKSDB\Config\NeonSchemaException
-=======
      * @throws NeonSchemaException
->>>>>>> dev-update-nette-22-8
      */
     public function getDummyHolder(ModelEvent $event): Holder {
         $definition = $this->findDefinition($event);
