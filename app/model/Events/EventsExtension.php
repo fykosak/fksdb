@@ -91,6 +91,7 @@ class EventsExtension extends CompilerExtension {
         $this->schemeFile = $schemaFile;
         Helpers::registerSemantic(self::$semanticMap);
     }
+
     /**
      * @throws NeonSchemaException
      */
@@ -141,11 +142,11 @@ class EventsExtension extends CompilerExtension {
     }
 
     /**
-     * @param $definitionName
-     * @param $baseName
-     * @return mixed
+     * @param string $definitionName
+     * @param string $baseName
+     * @return array
      */
-    private function getBaseMachineConfig($definitionName, $baseName) {
+    private function getBaseMachineConfig(string $definitionName, string $baseName): array {
         $key = "$definitionName.$baseName";
         while (!isset($this->baseMachineConfig[$key])) { // 'while' instead of 'if' so that 'break' can be used instead of return
             $config = $this->getConfig();
@@ -181,7 +182,7 @@ class EventsExtension extends CompilerExtension {
     /**
      * @param $name
      */
-    private function validateConfigName($name) {
+    private function validateConfigName(string $name) {
         if (!preg_match(self::NAME_PATTERN, $name)) {
             throw new InvalidArgumentException("Section name '$name' in events configuration is invalid.");
         }
@@ -255,11 +256,11 @@ class EventsExtension extends CompilerExtension {
     }
 
     /**
-     * @param $eventTypeIds
-     * @param $definition
-     * @return array
+     * @param int[] $eventTypeIds
+     * @param string[][] $definition
+     * @return string[]
      */
-    private function createAccessKeys($eventTypeIds, $definition): array {
+    private function createAccessKeys(array $eventTypeIds, array $definition): array {
         $keys = [];
         foreach ($eventTypeIds as $eventTypeId) {
             if ($definition['eventYears'] === true) {
@@ -283,7 +284,7 @@ class EventsExtension extends CompilerExtension {
      * @return ServiceDefinition
      * @throws NeonSchemaException
      */
-    private function createMachineFactory($name, $definition): ServiceDefinition {
+    private function createMachineFactory(string $name, array $definition): ServiceDefinition {
         $machinesDef = NeonScheme::readSection($definition['machine'], $this->scheme['machine']);
         // Create factory definition.
         $factoryName = $this->getMachineName($name);
@@ -376,13 +377,12 @@ class EventsExtension extends CompilerExtension {
      * @param $definition
      * @throws NeonSchemaException
      */
-    private function createHolderFactory($name, $definition) {
+    private function createHolderFactory(string $name, array $definition) {
         $machineDef = NeonScheme::readSection($definition['machine'], $this->scheme['machine']);
         // Create factory definition.
         $factoryName = $this->getHolderName($name);
         $factory = $this->getContainerBuilder()->addDefinition($factoryName);
         $factory->setFactory(Holder::class);
-        //  $factory->setParameters(['FKSDB\ORM\Models\ModelEvent event']);
 
         // Create and add base machines into the machine (i.e. creating instances).
         $primaryName = null;
@@ -488,7 +488,7 @@ class EventsExtension extends CompilerExtension {
      * @param $name
      * @return string
      */
-    private function getMachineName($name) {
+    private function getMachineName(string $name): string {
         return $this->prefix(self::MACHINE_PREFIX . $name);
     }
 
@@ -496,7 +496,7 @@ class EventsExtension extends CompilerExtension {
      * @param $name
      * @return string
      */
-    private function getHolderName($name) {
+    private function getHolderName(string $name): string {
         return $this->prefix(self::HOLDER_PREFIX . $name);
     }
 
@@ -505,7 +505,7 @@ class EventsExtension extends CompilerExtension {
      * @param $baseName
      * @return string
      */
-    private function getBaseMachineName($name, $baseName) {
+    private function getBaseMachineName(string $name, string $baseName): string {
         return $this->prefix(self::BASE_MACHINE_PREFIX . $name . '_' . $baseName);
     }
 
@@ -514,7 +514,7 @@ class EventsExtension extends CompilerExtension {
      * @param $baseName
      * @return string
      */
-    private function getBaseHolderName($name, $baseName) {
+    private function getBaseHolderName(string $name, string $baseName): string {
         return $this->prefix(self::BASE_HOLDER_PREFIX . $name . '_' . $baseName);
     }
 
@@ -530,7 +530,7 @@ class EventsExtension extends CompilerExtension {
     /**
      * @return string
      */
-    private function getFieldName() {
+    private function getFieldName(): string {
         return $this->prefix(uniqid(self::FIELD_FACTORY));
     }
 }
