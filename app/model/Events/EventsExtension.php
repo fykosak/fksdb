@@ -30,7 +30,6 @@ use Nette\DI\Container;
 use Nette\DI\ServiceDefinition;
 use Nette\DI\Statement;
 use Nette\InvalidArgumentException;
-use Nette\InvalidStateException;
 use Nette\Utils\Arrays;
 use Nette\Utils\Strings;
 
@@ -94,10 +93,6 @@ class EventsExtension extends CompilerExtension {
         $this->schemeFile = $schemaFile;
         Helpers::registerSemantic(self::$semanticMap);
     }
-
-    /*
-     * Configuration loading
-     */
     /**
      * @throws NeonSchemaException
      */
@@ -545,12 +540,4 @@ class EventsExtension extends CompilerExtension {
     private function getFieldName() {
         return $this->prefix(uniqid(self::FIELD_FACTORY));
     }
-}
-
-/**
- * Class MachineDefinitionException
- * @package Events
- */
-class MachineDefinitionException extends InvalidStateException {
-
 }
