@@ -68,7 +68,7 @@ class PhoneRow extends DefaultRow implements ITestedRowFactory {
                 if ($control->getValue() === WriteOnlyInput::VALUE_ORIGINAL) {
                     return true;
                 }
-                return $this->phoneNumberFactory->getFormValidationCallback()($control);
+                return $this->phoneNumberFactory->isValid($control->getValue());
             }, _('Phone number is not valid. Please insert a valid number.'));
         return $control;
     }
