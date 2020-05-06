@@ -100,8 +100,6 @@ class AccountManager {
      */
     public function createLoginWithInvitation(ModelPerson $person, string $email) {
         $login = $this->createLogin($person);
-        //TODO email
-        $this->serviceLogin->save($login);
 
         $until = DateTime::from($this->getInvitationExpiration());
         $token = $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_INITIAL_LOGIN, $until);
@@ -174,18 +172,17 @@ class AccountManager {
      * @return AbstractModelSingle|ModelLogin
      */
     public final function createLogin(ModelPerson $person, string $login = null, string $password = null) {
-        $login = $this->serviceLogin->createNew([
+        /** @var ModelLogin $login */
+        $login = $this->serviceLogin->createNewModel([
             'person_id' => $person->person_id,
             'login' => $login,
             'active' => 1,
         ]);
 
-        $this->serviceLogin->save($login);
-
         /* Must be done after login_id is allocated. */
         if ($password) {
-            $login->setHash($password);
-            $this->serviceLogin->save($login);
+            $hash = $login->createHash($password);
+            $this->serviceLogin->updateModel2($login, ['hash' => $hash]);
         }
         return $login;
     }

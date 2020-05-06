@@ -90,5 +90,4 @@ class Message {
             'level' => $this->level,
         ];
     }
-
 }

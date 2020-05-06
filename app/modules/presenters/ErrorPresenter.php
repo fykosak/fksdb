@@ -1,5 +1,6 @@
 <?php
 
+use FKSDB\UI\PageStyleContainer;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Http\Response;
@@ -9,12 +10,14 @@ use Tracy\Debugger;
  * Error presenter.
  */
 class ErrorPresenter extends BasePresenter {
-
     /**
-     * @return array
+     * @return PageStyleContainer
      */
-    public function getNavBarVariant(): array {
-        return ['error', 'bg-error navbar-dark'];
+    protected function getPageStyleContainer(): PageStyleContainer {
+        $container = parent::getPageStyleContainer();
+        $container->styleId = 'error';
+        $container->navBarClassName = 'bg-error navbar-dark';
+        return $container;
     }
 
     protected function putIntoBreadcrumbs() {

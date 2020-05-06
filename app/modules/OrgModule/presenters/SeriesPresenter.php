@@ -72,13 +72,13 @@ abstract class SeriesPresenter extends BasePresenter implements ISeriesPresenter
     public function createComponentSeriesChooser(): SeriesChooser {
         return new SeriesChooser($this->session, $this->seriesCalculator, $this->getServiceContest(), $this->getTranslator());
     }
-
     /**
-     * @return string
+     * @param string $title
+     * @param string $icon
+     * @param string $subTitle
      * @throws BadRequestException
      */
-    public function getSubTitle(): string {
-        return parent::getSubTitle() . ' ' . sprintf(_('%d. series'), $this->getSelectedSeries());
+    protected function setTitle(string $title, string $icon = '', string $subTitle = '') {
+        parent::setTitle($title, $icon, $subTitle . ' ' . sprintf(_('%d. series'), $this->getSelectedSeries()));
     }
-
 }

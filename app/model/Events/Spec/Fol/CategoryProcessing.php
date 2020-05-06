@@ -9,6 +9,7 @@ use Events\Model\Holder\Holder;
 use Events\Processings\AbstractProcessing;
 use FKSDB\Components\Forms\Factories\Events\IOptionsProvider;
 use FKSDB\Logging\ILogger;
+use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelRegion;
 use FKSDB\ORM\Services\ServiceSchool;
 use FKSDB\YearCalculator;
@@ -128,7 +129,7 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
 
         $original = $holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
         if ($original != $result) {
-            $logger->log(sprintf(_('Tým zařazen do kategorie %s.'), $this->categoryNames[$result]), ILogger::INFO);
+            $logger->log(new Message(sprintf(_('Tým zařazen do kategorie %s.'), $this->categoryNames[$result]), ILogger::INFO));
         }
     }
 

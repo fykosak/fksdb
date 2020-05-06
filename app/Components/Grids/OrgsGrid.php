@@ -63,10 +63,10 @@ class OrgsGrid extends BaseGrid {
         $this->setDefaultOrder('since DESC');
 
         $this->addColumns([
+            'referenced.person_name',
             DbNames::TAB_ORG . '.since',
             DbNames::TAB_ORG . '.until',
             DbNames::TAB_ORG . '.role',
-            'referenced.person_name'
         ]);
 
         $this->addLink('org.edit', true);
