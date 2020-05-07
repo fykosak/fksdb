@@ -16,7 +16,7 @@ use Nette\DI\Container;
  */
 class LanguageChooser extends Chooser {
     /** @var array */
-    private $supportedLanguages;
+    private $supportedLanguages = [];
 
     /** @var string */
     private $language;

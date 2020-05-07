@@ -9,6 +9,13 @@ addons:
 php:
   - 7.0
   - 7.1
+  - 7.2
+  - 7.3
+  - 7.4
+allow_failures:
+  - php: 7.2
+  - php: 7.3
+  - php: 7.4
 
 before_install:
   - phpenv config-add tests/php.ini
