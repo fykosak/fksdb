@@ -15,7 +15,7 @@ use Nette\Application\UI\InvalidLinkException;
  */
 class LanguageChooser extends Chooser {
     /** @var array */
-    private $supportedLanguages;
+    private $supportedLanguages = [];
 
     /** @var string */
     private $language;
