@@ -9,9 +9,6 @@ use FKSDB\ORM\Services\ServiceRole;
  */
 class ServiceMGrant extends AbstractServiceMulti {
 
-    protected $modelClassName = 'ModelMGrant';
-    protected $joiningColumn = 'role_id';
-
     /**
      * ServiceMGrant constructor.
      * @param ServiceRole $mainService
@@ -21,6 +18,13 @@ class ServiceMGrant extends AbstractServiceMulti {
         parent::__construct($mainService, $joinedService);
     }
 
+    public function getJoiningColumn(): string {
+        return 'role_id';
+    }
+
+    public function getModelClassName(): string {
+        return ModelMGrant::class;
+    }
 }
 
 

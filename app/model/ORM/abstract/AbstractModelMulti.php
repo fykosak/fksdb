@@ -3,6 +3,8 @@
 namespace FKSDB\ORM;
 
 use LogicException;
+use Nette\Database\Table\ActiveRow;
+use Nette\Database\Table\Selection;
 use Nette\InvalidStateException;
 use Nette\SmartObject;
 
@@ -11,6 +13,7 @@ use Nette\SmartObject;
  */
 abstract class AbstractModelMulti implements IModel {
     use SmartObject;
+
     /**
      * @var AbstractModelSingle
      */
@@ -77,12 +80,12 @@ abstract class AbstractModelMulti implements IModel {
         $this->mainModel = $mainModel;
         if (!$mainModel->isNew() && $this->getJoinedModel()) { // bind via foreign key
             $joiningColumn = $this->service->getJoiningColumn();
-            $this->getJoinedModel()->$joiningColumn = $mainModel->getPrimary();
+            $this->getJoinedModel()->{$joiningColumn} = $mainModel->getPrimary();
         }
     }
 
     /**
-     * @return AbstractModelSingle|\FKSDB\ORM\IModel
+     * @return AbstractModelSingle|IModel
      */
     public function getJoinedModel() {
         return $this->joinedModel;
@@ -111,7 +114,7 @@ abstract class AbstractModelMulti implements IModel {
 
     /**
      * @param $name
-     * @return bool|mixed|\Nette\Database\Table\ActiveRow|\Nette\Database\Table\Selection|null
+     * @return bool|mixed|ActiveRow|Selection|null
      */
     public function &__get($name) {
         if ($this->getMainModel()->__isset($name)) {
@@ -181,7 +184,7 @@ abstract class AbstractModelMulti implements IModel {
 
     /**
      * @param mixed $offset
-     * @return bool|mixed|\Nette\Database\Table\ActiveRow|\Nette\Database\Table\Selection|null
+     * @return bool|mixed|ActiveRow|Selection|null
      */
     public function &offsetGet($offset) {
         return $this->__get($offset);

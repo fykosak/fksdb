@@ -100,11 +100,6 @@ abstract class AbstractServiceSingle extends Selection implements IService {
     }
 
     /**
-     * @return string|AbstractModelSingle|AbstractModelMulti
-     */
-    abstract public function getModelClassName(): string;
-
-    /**
      * @return string
      */
     abstract protected function getTableName(): string;
@@ -116,6 +111,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
      * @return AbstractModelSingle|null
      */
     public function findByPrimary($key) {
+        /** @var AbstractModelSingle|null $result */
         $result = $this->getTable()->get($key);
         if ($result !== false) {
             return $result;
@@ -155,10 +151,9 @@ abstract class AbstractServiceSingle extends Selection implements IService {
     /**
      * @param AbstractModelSingle|IModel $model
      * @param Traversable|array $data
-     * @param bool $alive
      * @return int
      */
-    public function updateModel2(AbstractModelSingle $model, $data = null, $alive = true) {
+    public function updateModel2(AbstractModelSingle $model, $data = null) {
         $this->checkType($model);
         $data = $this->filterData($data);
         return $model->update($data);

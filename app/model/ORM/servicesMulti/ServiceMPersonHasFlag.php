@@ -10,11 +10,6 @@ use FKSDB\ORM\Services\ServicePersonHasFlag;
  * @method ServicePersonHasFlag getJoinedService()
  */
 class ServiceMPersonHasFlag extends AbstractServiceMulti {
-    /** @var string */
-    protected $modelClassName = 'ModelMPersonHasFlag';
-    /** @var string */
-    protected $joiningColumn = 'flag_id';
-
     /**
      * ServiceMPersonHasFlag constructor.
      * @param ServiceFlag $mainService
@@ -37,5 +32,13 @@ class ServiceMPersonHasFlag extends AbstractServiceMulti {
         $joinedModel = $this->getJoinedService()->createNew($data);
 
         return new ModelMPersonHasFlag($this, $mainModel, $joinedModel);
+    }
+
+    public function getJoiningColumn(): string {
+        return 'flag_id';
+    }
+
+    public function getModelClassName(): string {
+        return ModelMPersonHasFlag::class;
     }
 }
