@@ -31,9 +31,6 @@ class ServiceFyziklaniRoom extends AbstractServiceSingle {
     public function getRoomsByIds(array $ids): array {
         $rooms = [];
         foreach ($ids as $roomId) {
-            /**
-             * @var ModelFyziklaniRoom $room
-             */
             $room = ModelFyziklaniRoom::createFromActiveRow($this->findByPrimary($roomId));
             if ($room) {
                 $rooms[] = $room->__toArray();

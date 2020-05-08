@@ -71,7 +71,7 @@ abstract class AbstractServiceMulti implements IService {
      * @param AbstractModelSingle $joinedModel
      * @return AbstractModelMulti
      */
-    public function composeModel(AbstractModelSingle $mainModel, AbstractModelSingle $joinedModel) {
+    public function composeModel(AbstractModelSingle $mainModel, AbstractModelSingle $joinedModel): AbstractModelMulti {
         $className = $this->getModelClassName();
         return new $className($this, $mainModel, $joinedModel);
     }
@@ -129,24 +129,13 @@ abstract class AbstractServiceMulti implements IService {
         //TODO here should be deletion of mainModel as well, consider parametrizing this
     }
 
-    /**
-     * @return AbstractServiceSingle
-     */
-    public function getMainService() {
+    public function getMainService(): AbstractServiceSingle {
         return $this->mainService;
     }
 
-    /**
-     * @return AbstractServiceSingle
-     */
-    public function getJoinedService() {
+    public function getJoinedService(): AbstractServiceSingle {
         return $this->joinedService;
     }
-
-    /**
-     * @return string
-     */
-    abstract public function getJoiningColumn(): string;
 
     /**
      *
@@ -190,6 +179,6 @@ abstract class AbstractServiceMulti implements IService {
             throw new InvalidArgumentException('Service for class ' . $this->getModelClassName() . ' cannot store ' . get_class($model));
         }
     }
+
+    abstract public function getJoiningColumn(): string;
 }
-
-

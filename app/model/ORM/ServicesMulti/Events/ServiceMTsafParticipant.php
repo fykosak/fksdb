@@ -1,30 +1,28 @@
 <?php
 
-namespace ORM\ServicesMulti\Events;
+namespace FKSDB\ORM\ServicesMulti\Events;
 
 use FKSDB\ORM\AbstractModelMulti;
 use FKSDB\ORM\AbstractServiceMulti;
 use FKSDB\ORM\IModel;
-use FKSDB\ORM\Services\Events\ServiceDsefParticipant;
+use FKSDB\ORM\Services\Events\ServiceTsafParticipant;
 use FKSDB\ORM\Services\ServiceEventParticipant;
-use ORM\ModelsMulti\Events\ModelMDsefParticipant;
+use FKSDB\ORM\ModelsMulti\Events\ModelMTsafParticipant;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class ServiceMDsefParticipant extends AbstractServiceMulti {
-
+class ServiceMTsafParticipant extends AbstractServiceMulti {
     /**
-     * ServiceMDsefParticipant constructor.
+     * ServiceMTsafParticipant constructor.
      * @param ServiceEventParticipant $mainService
-     * @param ServiceDsefParticipant $joinedService
+     * @param ServiceTsafParticipant $joinedService
      */
-    public function __construct(ServiceEventParticipant $mainService, ServiceDsefParticipant $joinedService) {
+    public function __construct(ServiceEventParticipant $mainService, ServiceTsafParticipant $joinedService) {
         parent::__construct($mainService, $joinedService);
     }
 
     /**
-     * Delete post contact including the address.
      * @param IModel|AbstractModelMulti $model
      */
     public function dispose(IModel $model) {
@@ -37,6 +35,7 @@ class ServiceMDsefParticipant extends AbstractServiceMulti {
     }
 
     public function getModelClassName(): string {
-        return ModelMDsefParticipant::class;
+        return ModelMTsafParticipant::class;
     }
 }
+

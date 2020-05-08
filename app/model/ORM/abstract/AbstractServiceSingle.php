@@ -22,18 +22,9 @@ use Traversable;
  *       duplicated in all descedant classes.
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @author Michal Červeňak <miso@fykos.cz>
  */
 abstract class AbstractServiceSingle extends Selection implements IService {
-    /**
-     * @var string
-     */
-    protected $modelClassName;
-
-    /**
-     * @var string
-     */
-    protected $tableName;
-
     /**
      * AbstractServiceSingle constructor.
      * @param Context $connection
@@ -55,9 +46,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
         try {
             $result = $this->getTable()->insert($data);
             if ($result !== false) {
-                /**
-                 * @var AbstractModelSingle $model
-                 */
+                /** @var AbstractModelSingle $model */
                 $model = ($modelClassName)::createFromActiveRow($result);
                 $model->setNew(false); // only for old compatibility
                 return $model;
@@ -98,11 +87,6 @@ abstract class AbstractServiceSingle extends Selection implements IService {
         $data = $this->filterData($data);
         return new $className($data, $this);
     }
-
-    /**
-     * @return string
-     */
-    abstract protected function getTableName(): string;
 
     /**
      * Syntactic sugar.
@@ -169,9 +153,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
      */
     public function save(IModel &$model) {
         $modelClassName = $this->getModelClassName();
-        /**
-         * @var AbstractModelSingle $model
-         */
+        /** @var AbstractModelSingle $model */
         if (!$model instanceof $modelClassName) {
             throw new InvalidArgumentException('Service for class ' . $this->getModelClassName() . ' cannot store ' . get_class($model));
         }
@@ -212,30 +194,18 @@ abstract class AbstractServiceSingle extends Selection implements IService {
         }
     }
 
-    /**
-     * @return TypedTableSelection
-     */
     public function getTable(): TypedTableSelection {
         return new TypedTableSelection($this->getModelClassName(), $this->getTableName(), $this->context, $this->conventions);
     }
 
-    /**
-     * @return Connection
-     */
     public function getConnection(): Connection {
         return $this->context->getConnection();
     }
 
-    /**
-     * @return Context
-     */
     public function getContext(): Context {
         return $this->context;
     }
 
-    /**
-     * @return IConventions
-     */
     public function getConventions(): IConventions {
         return $this->conventions;
     }
@@ -251,6 +221,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
         }
     }
 
+    /** @var array|null */
     protected $defaults = null;
 
     /**
@@ -292,15 +263,15 @@ abstract class AbstractServiceSingle extends Selection implements IService {
         return $result;
     }
 
+    /** @var array */
     private $columns;
 
-    /**
-     * @return array
-     */
-    private function getColumnMetadata() {
+    private function getColumnMetadata(): array {
         if ($this->columns === null) {
             $this->columns = $this->context->getConnection()->getSupplementalDriver()->getColumns($this->getTableName());
         }
         return $this->columns;
     }
+
+    abstract protected function getTableName(): string;
 }

@@ -1,5 +1,7 @@
 <?php
 
+namespace FKSDB\ORM\ModelsMulti;
+
 use FKSDB\ORM\AbstractModelMulti;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelContest;

@@ -1,26 +1,24 @@
 <?php
 
-namespace ORM\ModelsMulti\Events;
+namespace FKSDB\ORM\ModelsMulti\Events;
 
 use FKSDB\ORM\AbstractModelMulti;
 use FKSDB\ORM\Models\IEventReferencedModel;
 use FKSDB\ORM\Models\ModelEvent;
 
-
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class ModelMDsefParticipant extends AbstractModelMulti implements IEventReferencedModel {
+class ModelMSousParticipant extends AbstractModelMulti implements IEventReferencedModel {
+
+    const STATE_AUTO_INVITED = 'auto.invited';
+    const STATE_AUTO_SPARE = 'auto.spare';
 
     /**
      * @return mixed
      */
     public function __toString() {
-        if (!$this->getMainModel()->getPerson()) {
-            trigger_error("Missing person in '" . $this->getMainModel() . "'.");
-            //throw new InvalidStateException("Missing person in '" . $this->getMainModel() . "'.");
-        }
         return $this->getMainModel()->getPerson()->getFullname();
     }
 
@@ -30,4 +28,5 @@ class ModelMDsefParticipant extends AbstractModelMulti implements IEventReferenc
     public function getEvent(): ModelEvent {
         return $this->getMainModel()->getEvent();
     }
+
 }

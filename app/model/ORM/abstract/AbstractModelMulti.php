@@ -48,11 +48,11 @@ abstract class AbstractModelMulti implements IModel {
     }
 
     /**
-     * @param $mainModel
-     * @param $joinedModel
+     * @param AbstractModelSingle $mainModel
+     * @param AbstractModelSingle $joinedModel
      * @return AbstractModelMulti
      */
-    public static function createFromExistingModels($mainModel, $joinedModel) {
+    public static function createFromExistingModels(AbstractModelSingle $mainModel, AbstractModelSingle $joinedModel) {
         return new static(null, $mainModel, $joinedModel);
     }
 
@@ -101,7 +101,7 @@ abstract class AbstractModelMulti implements IModel {
     /**
      * @return AbstractServiceMulti
      */
-    public function getService() {
+    public function getService(): AbstractServiceMulti {
         return $this->service;
     }
 

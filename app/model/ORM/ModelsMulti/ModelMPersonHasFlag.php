@@ -1,6 +1,10 @@
 <?php
+namespace FKSDB\ORM\ModelsMulti;
 
 use FKSDB\ORM\AbstractModelMulti;
+use FKSDB\ORM\IModel;
+use FKSDB\ORM\Models\ModelFlag;
+use FKSDB\ORM\Models\ModelPersonHasFlag;
 
 /**
  *
@@ -9,14 +13,14 @@ use FKSDB\ORM\AbstractModelMulti;
 class ModelMPersonHasFlag extends AbstractModelMulti {
 
     /**
-     * @return \FKSDB\ORM\IModel|\FKSDB\ORM\Models\ModelFlag
+     * @return IModel|ModelFlag
      */
     public function getFlag() {
         return $this->getMainModel();
     }
 
     /**
-     * @return \FKSDB\ORM\IModel|\FKSDB\ORM\Models\ModelPersonHasFlag
+     * @return IModel|ModelPersonHasFlag
      */
     public function getPersonHasFlag() {
         return $this->getJoinedModel();

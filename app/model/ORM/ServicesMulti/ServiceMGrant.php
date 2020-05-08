@@ -1,8 +1,11 @@
 <?php
 
+namespace FKSDB\ORM\ServicesMulti;
+
 use FKSDB\ORM\AbstractServiceMulti;
 use FKSDB\ORM\Services\ServiceGrant;
 use FKSDB\ORM\Services\ServiceRole;
+use FKSDB\ORM\ModelsMulti\ModelMGrant;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>

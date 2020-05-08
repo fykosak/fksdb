@@ -45,7 +45,7 @@ class Pipeline {
     }
 
     /**
-     * @return MemoryLogger|MemoryLogger
+     * @return MemoryLogger
      */
     public function getLogger(): ILogger {
         return $this->logger;

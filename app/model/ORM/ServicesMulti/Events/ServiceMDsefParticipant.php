@@ -1,22 +1,25 @@
 <?php
 
+namespace FKSDB\ORM\ServicesMulti\Events;
+
 use FKSDB\ORM\AbstractModelMulti;
 use FKSDB\ORM\AbstractServiceMulti;
 use FKSDB\ORM\IModel;
-use FKSDB\ORM\Services\ServiceAddress;
-use FKSDB\ORM\Services\ServicePostContact;
+use FKSDB\ORM\Services\Events\ServiceDsefParticipant;
+use FKSDB\ORM\Services\ServiceEventParticipant;
+use FKSDB\ORM\ModelsMulti\Events\ModelMDsefParticipant;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class ServiceMPostContact extends AbstractServiceMulti {
+class ServiceMDsefParticipant extends AbstractServiceMulti {
 
     /**
-     * ServiceMPostContact constructor.
-     * @param ServiceAddress $mainService
-     * @param ServicePostContact $joinedService
+     * ServiceMDsefParticipant constructor.
+     * @param ServiceEventParticipant $mainService
+     * @param ServiceDsefParticipant $joinedService
      */
-    public function __construct(ServiceAddress $mainService, ServicePostContact $joinedService) {
+    public function __construct(ServiceEventParticipant $mainService, ServiceDsefParticipant $joinedService) {
         parent::__construct($mainService, $joinedService);
     }
 
@@ -30,12 +33,10 @@ class ServiceMPostContact extends AbstractServiceMulti {
     }
 
     public function getJoiningColumn(): string {
-        return 'address_id';
+        return 'event_participant_id';
     }
 
     public function getModelClassName(): string {
-        return ModelMPostContact::class;
+        return ModelMDsefParticipant::class;
     }
 }
-
-

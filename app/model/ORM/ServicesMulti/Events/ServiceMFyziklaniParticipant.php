@@ -1,13 +1,13 @@
 <?php
 
-namespace ORM\ServicesMulti\Events;
+namespace FKSDB\ORM\ServicesMulti\Events;
 
 use FKSDB\ORM\AbstractModelMulti;
 use FKSDB\ORM\AbstractServiceMulti;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Services\Events\ServiceFyziklaniParticipant;
 use FKSDB\ORM\Services\ServiceEventParticipant;
-use ORM\ModelsMulti\Events\ModelMFyziklaniParticipant;
+use FKSDB\ORM\ModelsMulti\Events\ModelMFyziklaniParticipant;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>

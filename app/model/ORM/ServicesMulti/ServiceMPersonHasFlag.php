@@ -1,6 +1,9 @@
 <?php
 
+namespace FKSDB\ORM\ServicesMulti;
+
 use FKSDB\ORM\AbstractServiceMulti;
+use FKSDB\ORM\ModelsMulti\ModelMPersonHasFlag;
 use FKSDB\ORM\Services\ServiceFlag;
 use FKSDB\ORM\Services\ServicePersonHasFlag;
 
@@ -22,7 +25,7 @@ class ServiceMPersonHasFlag extends AbstractServiceMulti {
     /**
      * @param null $data
      * @return ModelMPersonHasFlag
-     * @throws Exception
+     * @throws \Exception
      */
     public function createNew($data = null) {
         $mainModel = $this->getMainService()->findByFid($data['fid']);

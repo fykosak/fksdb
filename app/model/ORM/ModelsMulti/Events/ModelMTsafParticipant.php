@@ -1,6 +1,6 @@
 <?php
 
-namespace ORM\ModelsMulti\Events;
+namespace FKSDB\ORM\ModelsMulti\Events;
 
 use FKSDB\ORM\AbstractModelMulti;
 use FKSDB\ORM\Models\IEventReferencedModel;
