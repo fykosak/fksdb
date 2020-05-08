@@ -26,6 +26,7 @@ use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Services\ServiceEvent;
+use FKSDB\UI\PageStyleContainer;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -415,17 +416,16 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @return array
+     * @return PageStyleContainer
      */
-    public function getNavBarVariant(): array {
+    protected function getPageStyleContainer(): PageStyleContainer {
+        $container = parent::getPageStyleContainer();
         $event = $this->getEvent();
-        $parent = parent::getNavBarVariant();
         if (!$event) {
-            return $parent;
+            return $container;
         }
-        $parent[0] .= ' event-type-' . $event->event_type_id;
-        return $parent;
+        $container->styleId = ' event-type-' . $event->event_type_id;
+        return $container;
     }
-
 }
 

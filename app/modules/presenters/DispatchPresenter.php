@@ -3,6 +3,7 @@
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelRole;
+use FKSDB\UI\PageStyleContainer;
 use Nette\Application\UI\InvalidLinkException;
 
 /**
@@ -98,9 +99,11 @@ class DispatchPresenter extends AuthenticatedPresenter {
     }
 
     /**
-     * @return array
+     * @return PageStyleContainer
      */
-    public function getNavBarVariant(): array {
-        return [null, 'bg-dark navbar-dark'];
+    protected function getPageStyleContainer(): PageStyleContainer {
+        $container = parent::getPageStyleContainer();
+        $container->navBarClassName = 'bg-dark navbar-dark';
+        return $container;
     }
 }

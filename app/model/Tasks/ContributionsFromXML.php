@@ -2,6 +2,8 @@
 
 namespace FKSDB\Tasks;
 
+use FKSDB\Logging\ILogger;
+use FKSDB\Messages\Message;
 use FKSDB\ORM\Services\ServiceOrg;
 use FKSDB\ORM\Services\ServiceTaskContribution;
 use Pipeline\Stage;
@@ -74,7 +76,7 @@ class ContributionsFromXML extends Stage {
      */
     private function processTask(SimpleXMLElement $XMLTask) {
         $tasks = $this->data->getTasks();
-        $tasknr = (int) (string) $XMLTask->number;
+        $tasknr = (int)(string)$XMLTask->number;
 
         $task = $tasks[$tasknr];
         $this->taskContributionService->getConnection()->beginTransaction();
@@ -88,7 +90,7 @@ class ContributionsFromXML extends Stage {
                 continue;
             }
             foreach ($parentEl->{$child} as $element) {
-                $signature = (string) $element;
+                $signature = (string)$element;
                 $signature = trim($signature);
                 if (!$signature) {
                     continue;
@@ -98,7 +100,7 @@ class ContributionsFromXML extends Stage {
                 $org = $this->serviceOrg->findByTeXSignature($signature, $this->data->getContest()->contest_id);
 
                 if (!$org) {
-                    $this->log(sprintf(_("Neznámý TeX identifikátor '%s'."), $signature));
+                    $this->log(new Message(sprintf(_("Neznámý TeX identifikátor '%s'."), $signature), ILogger::INFO));
                     continue;
                 }
                 $contributors[] = $org;
@@ -111,7 +113,7 @@ class ContributionsFromXML extends Stage {
 
             // store new contributions
             foreach ($contributors as $contributor) {
-               $this->taskContributionService->createNewModel([
+                $this->taskContributionService->createNewModel([
                     'person_id' => $contributor->person_id,
                     'task_id' => $task->task_id,
                     'type' => $type,
