@@ -1,16 +1,18 @@
 <?php
 
-use FKSDB\ORM\AbstractModelMulti;
 use FKSDB\ORM\AbstractServiceMulti;
 use FKSDB\ORM\Services\ServiceFlag;
 use FKSDB\ORM\Services\ServicePersonHasFlag;
 
 /**
  * @author Lukáš Timko <lukast@fykos.cz>
+ * @method ServiceFlag getMainService()
+ * @method ServicePersonHasFlag getJoinedService()
  */
 class ServiceMPersonHasFlag extends AbstractServiceMulti {
-
+    /** @var string */
     protected $modelClassName = 'ModelMPersonHasFlag';
+    /** @var string */
     protected $joiningColumn = 'flag_id';
 
     /**
@@ -24,7 +26,8 @@ class ServiceMPersonHasFlag extends AbstractServiceMulti {
 
     /**
      * @param null $data
-     * @return AbstractModelMulti|ModelMPersonHasFlag
+     * @return ModelMPersonHasFlag
+     * @throws Exception
      */
     public function createNew($data = null) {
         $mainModel = $this->getMainService()->findByFid($data['fid']);
