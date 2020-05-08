@@ -27,10 +27,10 @@ class ServiceFlag extends AbstractServiceSingle {
     /**
      * Syntactic sugar.
      *
-     * @param int $fid
+     * @param string $fid
      * @return ModelFlag|null
      */
-    public function findByFid(int $fid) {
+    public function findByFid(string $fid) {
         if (!$fid) {
             return null;
         }

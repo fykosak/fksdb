@@ -32,6 +32,7 @@ class ServicePersonHasFlag extends AbstractServiceSingle {
      * @param null $data
      * @return AbstractModelSingle
      * @throws \Exception
+     * @deprecated
      */
     public function createNew($data = null) {
         if ($data === null) {
