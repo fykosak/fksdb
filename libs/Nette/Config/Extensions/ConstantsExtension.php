@@ -11,8 +11,7 @@
 
 namespace Nette\Config\Extensions;
 
-use Nette,
-	Nette\DI\ContainerBuilder;
+use Nette;
 
 
 /**
@@ -20,10 +19,10 @@ use Nette,
  *
  * @author     David Grudl
  */
-class ConstantsExtension extends Nette\Config\CompilerExtension
+class ConstantsExtension extends Nette\DI\CompilerExtension
 {
 
-	public function afterCompile(Nette\Utils\PhpGenerator\ClassType $class)
+	public function afterCompile(Nette\PhpGenerator\ClassType $class)
 	{
 		foreach ($this->getConfig() as $name => $value) {
 			$class->methods['initialize']->addBody('define(?, ?);', array($name, $value));

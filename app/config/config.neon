@@ -194,7 +194,14 @@ nette:
     session:
         expiration: 14 days
         autoStart: true
-
+extensions:
+    fksrouter: FKSDB\Config\Extensions\RouterExtension
+    acl: Authorization\ACLExtension
+    navigation: FKSDB\Config\Extensions\NavigationExtension
+    events: FKSDB\Events\EventsExtension(%appDir%/../app/config/events.neon)
+    stalking: FKSDB\Config\Extensions\StalkingExtension
+    payment: FKSDB\Config\Extensions\PaymentExtension
+    DBReflection: FKSDB\Config\Extensions\DBReflectionExtension
 
 includes:
     - router.neon

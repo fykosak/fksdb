@@ -9,7 +9,7 @@ use FKSDB\Config\Extensions\RouterExtension;
 use FKSDB\Config\Extensions\StalkingExtension;
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Application\Responses\TextResponse;
-use Nette\Config\Compiler;
+use Nette\DI\Compiler;
 use Nette\Config\Configurator;
 use Nette\Utils\Finder;
 use Tester\Assert;
@@ -40,15 +40,6 @@ define('CONFIG_DIR', APP_DIR . DIRECTORY_SEPARATOR . 'config');
 
 // Configure application
 $configurator = new Configurator();
-$configurator->onCompile[] = function (Configurator $configurator, Compiler $compiler) {
-    $compiler->addExtension('fksrouter', new RouterExtension());
-    $compiler->addExtension('acl', new ACLExtension());
-    $compiler->addExtension('navigation', new NavigationExtension());
-    $compiler->addExtension('stalking', new StalkingExtension());
-    $compiler->addExtension('events', new EventsExtension(CONFIG_DIR . '/events.neon'));
-    $compiler->addExtension('payment', new PaymentExtension());
-    $compiler->addExtension('DBReflection', new DBReflectionExtension());
-};
 
 $configurator->setDebugMode(false);
 Debugger::$logDirectory = LOG_DIR;

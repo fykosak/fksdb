@@ -11,6 +11,7 @@
 
 namespace Nette\Config;
 
+use Nette\DI\Compiler;
 use Nette,
 	Nette\Caching\Cache;
 
@@ -254,11 +255,11 @@ class Configurator
 
 
 	/**
-	 * @return Compiler
+	 * @return Nette\DI\Compiler
 	 */
 	protected function createCompiler()
 	{
-		$compiler = new Compiler;
+		$compiler = new Nette\DI\Compiler();
 		$compiler->addExtension('php', new Extensions\PhpExtension)
 			->addExtension('constants', new Extensions\ConstantsExtension)
 			->addExtension('nette', new Extensions\NetteExtension);

@@ -3,7 +3,7 @@
 namespace FKSDB\Config\Extensions;
 
 use Nette\Application\Routers\Route;
-use Nette\Config\CompilerExtension;
+use Nette\DI\CompilerExtension;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

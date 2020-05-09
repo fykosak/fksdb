@@ -8,8 +8,9 @@ use Authorization\Assertions\EventOrgByYearAssertion;
 use Authorization\Assertions\QIDAssertion;
 use Authorization\Assertions\StoredQueryTagAssertion;
 use FKSDB\Config\Expressions\Helpers;
-use Nette\Config\CompilerExtension;
+use Nette\DI\CompilerExtension;
 use Nette\Security\Permission;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -41,6 +42,7 @@ class ACLExtension extends CompilerExtension {
 
         foreach ($config as $setup) {
             $stmt = Helpers::statementFromExpression($setup);
+            Debugger::barDump($stmt);
             $definition->addSetup($stmt->entity, $stmt->arguments);
         }
     }

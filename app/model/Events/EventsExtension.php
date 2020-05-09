@@ -23,7 +23,7 @@ use FKSDB\Components\Grids\Events\LayoutResolver;
 use FKSDB\Config\Expressions\Helpers;
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\Config\NeonScheme;
-use Nette\Config\CompilerExtension;
+use Nette\DI\CompilerExtension;
 use Nette\Config\Helpers as ConfigHelpers;
 use Nette\Config\Loader;
 use Nette\DI\Container;
@@ -312,12 +312,12 @@ class EventsExtension extends CompilerExtension {
                 }
             }
             $baseMachineFactory = $this->createBaseMachineFactory($name, $instanceDef['bmName'], $instanceName);
-            $factory->addSetup('addBaseMachine', $baseMachineFactory);
+            $factory->addSetup('addBaseMachine', [$baseMachineFactory]);
         }
         if (!$primaryName) {
             throw new MachineDefinitionException('No primary machine defined.');
         }
-        $factory->addSetup('setPrimaryMachine', $primaryName);
+        $factory->addSetup('setPrimaryMachine', [$primaryName]);
 
 
         /*
@@ -364,13 +364,13 @@ class EventsExtension extends CompilerExtension {
             if (strlen($state) > self::STATE_SIZE) {
                 throw new MachineDefinitionException("State name '$state' is too long. Use " . self::STATE_SIZE . " characters at most.");
             }
-            $factory->addSetup('addState', $state, $label);
+            $factory->addSetup('addState', [$state, $label]);
         }
         $states = array_keys($definition['states']);
 
         foreach ($definition['transitions'] as $mask => $transitionRawDef) {
             $transitionDef = NeonScheme::readSection($transitionRawDef, $this->scheme['transition']);
-            $factory->addSetup('addTransition', $this->createTransitionService($factoryName, $states, $mask, $transitionDef));
+            $factory->addSetup('addTransition', [$this->createTransitionService($factoryName, $states, $mask, $transitionDef)]);
         }
 
         return $factory;

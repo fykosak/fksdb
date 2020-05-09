@@ -20,10 +20,10 @@ use Nette,
  *
  * @author     David Grudl
  */
-class PhpExtension extends Nette\Config\CompilerExtension
+class PhpExtension extends Nette\DI\CompilerExtension
 {
 
-	public function afterCompile(Nette\Utils\PhpGenerator\ClassType $class)
+	public function afterCompile(Nette\PhpGenerator\ClassType $class)
 	{
 		$initialize = $class->methods['initialize'];
 		foreach ($this->getConfig() as $name => $value) {

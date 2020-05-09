@@ -20,7 +20,7 @@ use Tracy\Debugger;
  *
  * @author     David Grudl
  */
-class NetteExtension extends Nette\Config\CompilerExtension {
+class NetteExtension extends Nette\DI\CompilerExtension {
     public $defaults = array(
         'xhtml' => TRUE,
         'session' => array(
@@ -98,8 +98,7 @@ class NetteExtension extends Nette\Config\CompilerExtension {
 
         // http
         $container->addDefinition($this->prefix('httpRequestFactory'))
-            ->setClass('Nette\Http\RequestFactory')
-            ->setInternal(TRUE);
+            ->setClass('Nette\Http\RequestFactory');
 
         $container->addDefinition('httpRequest')// no namespace for back compatibility
         ->setClass('Nette\Http\Request')
@@ -161,8 +160,8 @@ class NetteExtension extends Nette\Config\CompilerExtension {
         // application
         $application = $container->addDefinition('application')// no namespace for back compatibility
         ->setClass('Nette\Application\Application')
-            ->addSetup('$catchExceptions', $config['application']['catchExceptions'])
-            ->addSetup('$errorPresenter', $config['application']['errorPresenter']);
+            ->addSetup('$catchExceptions', [$config['application']['catchExceptions']])
+            ->addSetup('$errorPresenter', [$config['application']['errorPresenter']]);
 
         if ($config['application']['debugger']) {
             $application->addSetup('Nette\Application\Diagnostics\RoutingPanel::initializePanel');
@@ -200,20 +199,17 @@ class NetteExtension extends Nette\Config\CompilerExtension {
 
         $container->addDefinition($this->prefix('mail'))
             ->setClass('Nette\Mail\Message')
-            ->addSetup('setMailer')
-            ->setShared(FALSE);
+            ->addSetup('setMailer');
 
 
         // forms
         $container->addDefinition($this->prefix('basicForm'))
-            ->setClass('Nette\Forms\Form')
-            ->setShared(FALSE);
+            ->setClass('Nette\Forms\Form');
 
 
         // templating
         $latte = $container->addDefinition($this->prefix('latte'))
-            ->setClass('Nette\Latte\Engine')
-            ->setShared(FALSE);
+            ->setClass('Nette\Latte\Engine');
 
         if (empty($config['xhtml'])) {
             $latte->addSetup('$service->getCompiler()->defaultContentType = ?', Nette\Latte\Compiler::CONTENT_HTML);
@@ -222,8 +218,7 @@ class NetteExtension extends Nette\Config\CompilerExtension {
         $container->addDefinition($this->prefix('template'))
             ->setClass('Nette\Templating\FileTemplate')
             ->addSetup('registerFilter', array($latte))
-            ->addSetup('registerHelperLoader', array('Nette\Templating\Helpers::loader'))
-            ->setShared(FALSE);
+            ->addSetup('registerHelperLoader', array('Nette\Templating\Helpers::loader'));
 
 
         // database
@@ -277,7 +272,7 @@ class NetteExtension extends Nette\Config\CompilerExtension {
     }
 
 
-    public function afterCompile(Nette\Utils\PhpGenerator\ClassType $class) {
+    public function afterCompile(Nette\PhpGenerator\ClassType $class) {
         $initialize = $class->methods['initialize'];
         $container = $this->getContainerBuilder();
         $config = $this->getConfig($this->defaults);
@@ -297,14 +292,14 @@ class NetteExtension extends Nette\Config\CompilerExtension {
             foreach ((array)$config['debugger']['bar'] as $item) {
                 $initialize->addBody($container->formatPhp(
                     '\Tracy\Debugger::getBar()->addPanel(?);',
-                    Nette\Config\Compiler::filterArguments(array(is_string($item) ? new Nette\DI\Statement($item) : $item))
+                    Nette\DI\Compiler::filterArguments(array(is_string($item) ? new Nette\DI\Statement($item) : $item))
                 ));
             }
 
             foreach ((array)$config['debugger']['blueScreen'] as $item) {
                 $initialize->addBody($container->formatPhp(
                     '\Tracy\Debugger::$blueScreen->addPanel(?);',
-                    Nette\Config\Compiler::filterArguments(array($item))
+                    Nette\DI\Compiler::filterArguments(array($item))
                 ));
             }
         }
