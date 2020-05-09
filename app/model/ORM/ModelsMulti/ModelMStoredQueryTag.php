@@ -16,15 +16,14 @@ class ModelMStoredQueryTag extends AbstractModelMulti {
     /**
      * @return IModel|ModelStoredQueryTagType
      */
-    public function getStoredQueryTagType() {
+    public function getStoredQueryTagType(): ModelStoredQueryTagType {
         return $this->getMainModel();
     }
 
     /**
      * @return IModel|ModelStoredQueryTag
      */
-    public function getStoredQueryTag() {
+    public function getStoredQueryTag(): ModelStoredQueryTag {
         return $this->getJoinedModel();
     }
-
 }

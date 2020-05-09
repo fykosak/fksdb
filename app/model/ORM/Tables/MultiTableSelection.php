@@ -41,6 +41,4 @@ class MultiTableSelection extends Selection {
         $joinedModel = $this->service->getJoinedService()->createFromArray($row);
         return $this->service->composeModel($mainModel, $joinedModel);
     }
-
 }
-

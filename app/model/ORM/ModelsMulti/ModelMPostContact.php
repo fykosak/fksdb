@@ -16,15 +16,14 @@ class ModelMPostContact extends AbstractModelMulti {
     /**
      * @return IModel|ModelAddress
      */
-    public function getAddress() {
+    public function getAddress(): ModelAddress {
         return $this->getMainModel();
     }
 
     /**
      * @return IModel|ModelPostContact
      */
-    public function getPostContact() {
+    public function getPostContact(): ModelPostContact {
         return $this->getJoinedModel();
     }
-
 }

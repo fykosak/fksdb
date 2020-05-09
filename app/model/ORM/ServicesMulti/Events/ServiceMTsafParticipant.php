@@ -38,4 +38,3 @@ class ServiceMTsafParticipant extends AbstractServiceMulti {
         return ModelMTsafParticipant::class;
     }
 }
-
