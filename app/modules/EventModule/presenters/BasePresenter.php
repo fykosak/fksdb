@@ -3,9 +3,10 @@
 namespace EventModule;
 
 use AuthenticatedPresenter;
-use FKSDB\Events\Model\Holder\Holder;
+use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Exceptions\NotFoundException;
 use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEvent;
@@ -88,10 +89,13 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     /**
      * @return Holder
      * @throws BadRequestException
+     * @throws \FKSDB\Config\NeonSchemaException
      */
     protected function getHolder(): Holder {
         if (!$this->holder) {
-            $this->holder = $this->getContext()->createEventHolder($this->getEvent());
+            /** @var EventDispatchFactory $factory */
+            $factory = $this->getContext()->getByType(EventDispatchFactory::class);
+            $this->holder = $factory->getDummyHolder($this->getEvent());
         }
         return $this->holder;
     }

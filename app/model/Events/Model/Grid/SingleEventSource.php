@@ -2,11 +2,13 @@
 
 namespace FKSDB\Events\Model\Grid;
 
-use FKSDB\Events\Model\Holder\BaseHolder;
-use FKSDB\Events\Model\Holder\Holder;
+use ArrayIterator;
+use FKSDB\Events\EventDispatchFactory;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Tables\TypedTableSelection;
+use FKSDB\Events\Model\Holder\BaseHolder;
+use FKSDB\Events\Model\Holder\Holder;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
@@ -66,12 +68,16 @@ class SingleEventSource implements IHolderSource {
      * SingleEventSource constructor.
      * @param ModelEvent $event
      * @param Container $container
+     * @throws \FKSDB\Config\NeonSchemaException
+     * @throws \Nette\Application\BadRequestException
      */
     function __construct(ModelEvent $event, Container $container) {
         $this->event = $event;
         $this->container = $container;
+        /** @var EventDispatchFactory $factory */
+        $factory = $this->container->getByType(EventDispatchFactory::class);
+        $this->dummyHolder = $factory->getDummyHolder($this->event);
 
-        $this->dummyHolder = $this->container->createEventHolder($this->event);
         $primaryHolder = $this->dummyHolder->getPrimaryHolder();
         $eventIdColumn = $primaryHolder->getEventId();
         $this->primarySelection = $primaryHolder->getService()->getTable()->where($eventIdColumn, $this->event->getPrimary());
@@ -142,8 +148,9 @@ class SingleEventSource implements IHolderSource {
             }
         }
         foreach ($this->primaryModels as $primaryPK => $primaryModel) {
-            /** @var Holder $holder */
-            $holder = $this->container->createEventHolder($this->event);
+            /** @var EventDispatchFactory $factory */
+            $factory = $this->container->getByType(EventDispatchFactory::class);
+            $holder = $factory->getDummyHolder($this->event);
             $holder->setModel($primaryModel, isset($cache[$primaryPK]) ? $cache[$primaryPK] : []);
             $this->holders[$primaryPK] = $holder;
         }

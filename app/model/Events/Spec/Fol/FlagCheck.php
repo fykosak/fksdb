@@ -2,11 +2,11 @@
 
 namespace FKSDB\Events\Spec\Fol;
 
+use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\Events\FormAdjustments\AbstractAdjustment;
 use FKSDB\Events\FormAdjustments\IFormAdjustment;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\Holder\Holder;
-use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServicePersonHistory;
 use FKSDB\ORM\Services\ServiceSchool;
 use Nette\Forms\Form;

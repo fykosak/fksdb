@@ -5,6 +5,7 @@ namespace FKSDB\Components\Controls\Entity\Event;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\Config\NeonScheme;
+use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelContest;
@@ -61,8 +62,9 @@ class EditForm extends AbstractForm implements IEditEntityForm {
         $paramControl = $this->getForm()->getComponent(self::CONT_EVENT)->getComponent('parameters');
         $paramControl->setOption('description', $this->createParamDescription());
         $paramControl->addRule(function (BaseControl $control) {
-            /** @var Holder $holder */
-            $holder = $this->container->createEventHolder($this->model);
+            /** @var EventDispatchFactory $factory */
+            $factory = $this->container->getByType(EventDispatchFactory::class);
+            $holder = $factory->getDummyHolder($this->model);
             $scheme = $holder->getPrimaryHolder()->getParamScheme();
             $parameters = $control->getValue();
             try {
@@ -102,10 +104,14 @@ class EditForm extends AbstractForm implements IEditEntityForm {
 
     /**
      * @return Html
+     * @throws BadRequestException
+     * @throws \FKSDB\Config\NeonSchemaException
      */
     private function createParamDescription() {
-        /** @var Holder $holder */
-        $holder = $this->container->createEventHolder($this->model);
+        /** @var EventDispatchFactory $factory */
+        $factory = $this->container->getByType(EventDispatchFactory::class);
+
+        $holder = $factory->getDummyHolder($this->model);
         $scheme = $holder->getPrimaryHolder()->getParamScheme();
         $result = Html::el('ul');
         foreach ($scheme as $key => $meta) {

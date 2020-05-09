@@ -13,6 +13,7 @@ use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\Components\Events\ApplicationComponent;
 use FKSDB\Components\Events\ApplicationsGrid;
 use FKSDB\Components\Grids\Events\LayoutResolver;
+use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\GoneException;
 use FKSDB\Exceptions\NotFoundException;
@@ -378,20 +379,27 @@ class ApplicationPresenter extends BasePresenter {
 
     /**
      * @return Holder
+     * @throws BadRequestException
+     * @throws \FKSDB\Config\NeonSchemaException
      */
     private function getHolder() {
         if (!$this->holder) {
-            $this->holder = $this->container->createEventHolder($this->getEvent());
+            /** @var EventDispatchFactory $factory */
+            $factory = $this->container->getByType(EventDispatchFactory::class);
+            $this->holder = $factory->getDummyHolder($this->getEvent());
         }
         return $this->holder;
     }
 
     /**
      * @return Machine
+     * @throws BadRequestException
      */
     private function getMachine() {
         if (!$this->machine) {
-            $this->machine = $this->container->createEventMachine($this->getEvent());
+            /** @var EventDispatchFactory $factory */
+            $factory = $this->getContext()->getByType(EventDispatchFactory::class);
+            $this->machine = $factory->getEventMachine($this->getEvent());
         }
         return $this->machine;
     }
