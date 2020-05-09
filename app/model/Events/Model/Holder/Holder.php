@@ -2,6 +2,7 @@
 
 namespace FKSDB\Events\Model\Holder;
 
+use FKSDB\Config\NeonSchemaException;
 use FKSDB\Events\FormAdjustments\IFormAdjustment;
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;
@@ -11,6 +12,7 @@ use FKSDB\Events\Processings\GenKillProcessing;
 use FKSDB\Events\Processings\IProcessing;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\IModel;
+use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\UI\Form;
 use Nette\Database\Connection;
 use Nette\InvalidArgumentException;
@@ -147,6 +149,7 @@ class Holder {
     public function hasBaseHolder($name): bool {
         return isset($this->baseHolders[$name]);
     }
+
     /**
      * @return SecondaryModelStrategy
      */
@@ -159,6 +162,16 @@ class Holder {
      */
     public function setSecondaryModelStrategy(SecondaryModelStrategy $secondaryModelStrategy) {
         $this->secondaryModelStrategy = $secondaryModelStrategy;
+    }
+
+    /**
+     * @param ModelEvent $event
+     * @throws NeonSchemaException
+     */
+    public function inferEvent(ModelEvent $event) {
+        foreach ($this->getBaseHolders() as $baseHolder) {
+            $baseHolder->inferEvent($event);
+        }
     }
 
     /**
