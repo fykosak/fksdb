@@ -7,16 +7,17 @@ use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
 use Events\Machine\Transition;
 use Events\Model\Holder\BaseHolder;
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelAuthToken;
+use FKSDB\ORM\Models\ModelEmailMessage;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceAuthToken;
+use FKSDB\ORM\Services\ServiceEmailMessage;
 use FKSDB\ORM\Services\ServicePerson;
 use Mail\MailTemplateFactory;
-use Nette\Mail\IMailer;
-use Nette\Mail\Message;
 use Nette\SmartObject;
 use Nette\Utils\DateTime;
 use Nette\Utils\Strings;
@@ -53,11 +54,6 @@ class MailSender {
     private $addressees;
 
     /**
-     * @var IMailer
-     */
-    private $mailer;
-
-    /**
      * @var MailTemplateFactory
      */
     private $mailTemplateFactory;
@@ -76,25 +72,35 @@ class MailSender {
      * @var ServicePerson
      */
     private $servicePerson;
+    /**
+     * @var ServiceEmailMessage
+     */
+    private $serviceEmailMessage;
 
     /**
      * MailSender constructor.
      * @param $filename
      * @param array|string $addresees
-     * @param IMailer $mailer
      * @param MailTemplateFactory $mailTemplateFactory
      * @param AccountManager $accountManager
      * @param ServiceAuthToken $serviceAuthToken
      * @param ServicePerson $servicePerson
+     * @param ServiceEmailMessage $serviceEmailMessage
      */
-    function __construct($filename, $addresees, IMailer $mailer, MailTemplateFactory $mailTemplateFactory, AccountManager $accountManager, ServiceAuthToken $serviceAuthToken, ServicePerson $servicePerson) {
+    function __construct($filename,
+                         $addresees,
+                         MailTemplateFactory $mailTemplateFactory,
+                         AccountManager $accountManager,
+                         ServiceAuthToken $serviceAuthToken,
+                         ServicePerson $servicePerson,
+                         ServiceEmailMessage $serviceEmailMessage) {
         $this->filename = $filename;
         $this->addressees = $addresees;
-        $this->mailer = $mailer;
         $this->mailTemplateFactory = $mailTemplateFactory;
         $this->accountManager = $accountManager;
         $this->serviceAuthToken = $serviceAuthToken;
         $this->servicePerson = $servicePerson;
+        $this->serviceEmailMessage = $serviceEmailMessage;
     }
 
     /**
@@ -127,8 +133,7 @@ class MailSender {
         }
 
         foreach ($logins as $login) {
-            $message = $this->composeMessage($this->filename, $login, $transition->getBaseMachine());
-            $this->mailer->send($message);
+            $this->createMessage($this->filename, $login, $transition->getBaseMachine());
         }
     }
 
@@ -136,10 +141,10 @@ class MailSender {
      * @param $filename
      * @param ModelLogin $login
      * @param BaseMachine $baseMachine
-     * @return Message
+     * @return ModelEmailMessage|AbstractModelSingle
      * @throws \Exception
      */
-    private function composeMessage($filename, ModelLogin $login, BaseMachine $baseMachine) {
+    private function createMessage(string $filename, ModelLogin $login, BaseMachine $baseMachine): ModelEmailMessage {
         $machine = $baseMachine->getMachine();
         $holder = $machine->getHolder();
         $baseHolder = $holder[$baseMachine->getName()];
@@ -149,31 +154,33 @@ class MailSender {
         $application = $holder->getPrimaryHolder()->getModel();
 
         $token = $this->createToken($login, $event, $application);
-        $until = $token->until;
 
         // prepare and send email
-        $template = $this->mailTemplateFactory->createFromFile($filename);
-        $template->token = $token->token;
-        $template->person = $person;
-        $template->until = $until;
-        $template->event = $event;
-        $template->application = $application;
-        $template->holder = $holder;
-        $template->machine = $machine;
-        $template->baseMachine = $baseMachine;
-        $template->baseHolder = $baseHolder;
+        $templateParams = [
+            'token' => $token->token,
+            'person' => $person,
+            'until' =>  $token->until,
+            'event' => $event,
+            'application' => $application,
+            'holder' => $holder,
+            'machine' => $machine,
+            'baseMachine' => $baseMachine,
+            'baseHolder' => $baseHolder,
+        ];
+        $template = $this->mailTemplateFactory->createWithParameters($filename, null, $templateParams);
 
-        $message = new Message();
-        $message->setHtmlBody($template);
-        $message->setSubject($this->getSubject($event, $application, $machine));
-
-        $message->setFrom($holder->getParameter(self::FROM_PARAM));
+        $data = [];
+        $data['text'] = (string)$template;
+        $data['subject'] = $this->getSubject($event, $application, $machine);
+        $data['sender'] = $holder->getParameter(self::FROM_PARAM);
+        $data['reply_to'] = $holder->getParameter(self::FROM_PARAM);
         if ($this->hasBcc()) {
-            $message->addBcc($holder->getParameter(self::BCC_PARAM));
+            $data['blind_carbon_copy'] = $holder->getParameter(self::BCC_PARAM);
         }
-        $message->addTo($email, $person->getFullName());
+        $data['recipient'] = $email;
+        $data['state'] = ModelEmailMessage::STATE_WAITING;
+        return $this->serviceEmailMessage->createNewModel($data);
 
-        return $message;
     }
 
     /**
