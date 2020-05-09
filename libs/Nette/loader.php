@@ -46,9 +46,6 @@ Nette\Loaders\NetteLoader::getInstance()->register();
 
 Nette\Utils\SafeStream::register();
 
-class_alias('Nette\Config\Configurator', 'Nette\Configurator');
-
-
 /**
  * Nette\Callback factory.
  * @param  mixed   class, object, callable

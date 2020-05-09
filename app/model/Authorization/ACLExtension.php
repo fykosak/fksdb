@@ -42,7 +42,6 @@ class ACLExtension extends CompilerExtension {
 
         foreach ($config as $setup) {
             $stmt = Helpers::statementFromExpression($setup);
-            Debugger::barDump($stmt);
             $definition->addSetup($stmt->entity, $stmt->arguments);
         }
     }

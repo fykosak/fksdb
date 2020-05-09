@@ -24,8 +24,8 @@ use FKSDB\Config\Expressions\Helpers;
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\Config\NeonScheme;
 use Nette\DI\CompilerExtension;
-use Nette\Config\Helpers as ConfigHelpers;
-use Nette\Config\Loader;
+use Nette\DI\Config\Loader;
+use Nette\DI\Config\Helpers as ConfigHelpers;
 use Nette\DI\Container;
 use Nette\DI\ServiceDefinition;
 use Nette\DI\Statement;
@@ -42,14 +42,11 @@ use Nette\Utils\Strings;
 class EventsExtension extends CompilerExtension {
 
     const MAIN_RESOLVER = 'eventLayoutResolver';
-    const FIELD_FACTORY = 'Field';
+    const FIELD_FACTORY = 'Field_';
     const MACHINE_PREFIX = 'Machine_';
     const HOLDER_PREFIX = 'Holder_';
     const BASE_MACHINE_PREFIX = 'BaseMachine_';
     const BASE_HOLDER_PREFIX = 'BaseHolder_';
-
-    const CLASS_RESOLVER = LayoutResolver::class;
-
     /** @const Maximum length of state identifier. */
     const STATE_SIZE = 20;
 
@@ -195,7 +192,7 @@ class EventsExtension extends CompilerExtension {
 
     private function createLayoutResolverFactory() {
         $def = $this->getContainerBuilder()->addDefinition(self::MAIN_RESOLVER);
-        $def->setClass(self::CLASS_RESOLVER);
+        $def->setFactory(LayoutResolver::class);
 
         $parameters = $this->getContainerBuilder()->parameters;
         $templateDir = $parameters['events']['templateDir'];

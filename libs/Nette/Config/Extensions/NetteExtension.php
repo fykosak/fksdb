@@ -12,6 +12,7 @@
 namespace Nette\Config\Extensions;
 
 use Nette;
+use Nette\Caching\Storages\PhpFileStorage;
 use Tracy\Debugger;
 
 
@@ -71,7 +72,7 @@ class NetteExtension extends Nette\DI\CompilerExtension {
         'options' => NULL,
         'debugger' => TRUE,
         'explain' => TRUE,
-        'reflection' => Nette\Database\Reflection\DiscoveredReflection::class,
+        'reflection' => Nette\Database\Conventions\DiscoveredConventions::class,
     );
 
 
@@ -80,65 +81,67 @@ class NetteExtension extends Nette\DI\CompilerExtension {
         $config = $this->getConfig($this->defaults);
 
 
-        // cache
-        $container->addDefinition($this->prefix('cacheJournal'))
-            ->setClass('Nette\Caching\Storages\FileJournal', array('%tempDir%'));
+        /*  // cache
+          $container->addDefinition($this->prefix('cacheJournal'))
+              ->setClass('Nette\Caching\Storages\FileJournal', array('%tempDir%'));
 
-        $container->addDefinition('cacheStorage')// no namespace for back compatibility
-        ->setClass('Nette\Caching\Storages\FileStorage', array('%tempDir%/cache'));
-
-        $container->addDefinition($this->prefix('templateCacheStorage'))
-            ->setClass('Nette\Caching\Storages\PhpFileStorage', array('%tempDir%/cache'))
-            ->setAutowired(FALSE);
-
-        $container->addDefinition($this->prefix('cache'))
-            ->setClass('Nette\Caching\Cache', array(1 => '%namespace%'))
-            ->setParameters(array('namespace' => NULL));
-
-
-        // http
-        $container->addDefinition($this->prefix('httpRequestFactory'))
-            ->setClass('Nette\Http\RequestFactory');
-
-        $container->addDefinition('httpRequest')// no namespace for back compatibility
-        ->setClass('Nette\Http\Request')
-            ->setFactory('@Nette\Http\RequestFactory::createHttpRequest');
-
-        $container->addDefinition('httpResponse')// no namespace for back compatibility
-        ->setClass('Nette\Http\Response');
-
-        $container->addDefinition($this->prefix('httpContext'))
-            ->setClass('Nette\Http\Context');
-
-
-        // session
-        $session = $container->addDefinition('session')// no namespace for back compatibility
-        ->setClass('Nette\Http\Session');
-
-        if (isset($config['session']['expiration'])) {
-            $session->addSetup('setExpiration', array($config['session']['expiration']));
-        }
-        if (isset($config['session']['iAmUsingBadHost'])) {
-            $session->addSetup('Nette\Framework::$iAmUsingBadHost = ?;', array((bool)$config['session']['iAmUsingBadHost']));
-        }
-        unset($config['session']['expiration'], $config['session']['autoStart'], $config['session']['iAmUsingBadHost']);
-        if (!empty($config['session'])) {
-            $session->addSetup('setOptions', array($config['session']));
-        }
-
-
-        // security
-        $container->addDefinition($this->prefix('userStorage'))
-            ->setClass('Nette\Http\UserStorage');
-
-        $user = $container->addDefinition('user')// no namespace for back compatibility
-        ->setClass('Nette\Security\User');
+          $container->addDefinition('cacheStorage')// no namespace for back compatibility
+          ->setClass('Nette\Caching\Storages\FileStorage', array('%tempDir%/cache'));
+*/
+          $container->addDefinition($this->prefix('templateCacheStorage'))
+              ->setFactory(PhpFileStorage::class, [$container->parameters['tempDir'].'/cache'])
+              ->setAutowired(FALSE);
+          $container->addAlias('nette.templateCacheStorage','application.templateCacheStorage');
+          Debugger::barDump($container);
 /*
-        if (!$container->parameters['productionMode'] && $config['security']['debugger']) {
-            $user->addSetup('\Tracy\Debugger::getBar()->addPanel(?)', array(
-                new Nette\DI\Statement('Nette\Security\Diagnostics\UserPanel')
-            ));
-        }*/
+          $container->addDefinition($this->prefix('cache'))
+              ->setClass('Nette\Caching\Cache', array(1 => '%namespace%'))
+              ->setParameters(array('namespace' => NULL));
+
+
+          // http
+          $container->addDefinition($this->prefix('httpRequestFactory'))
+              ->setClass('Nette\Http\RequestFactory');
+
+          $container->addDefinition('httpRequest')// no namespace for back compatibility
+          ->setClass('Nette\Http\Request')
+              ->setFactory('@Nette\Http\RequestFactory::createHttpRequest');
+
+          $container->addDefinition('httpResponse')// no namespace for back compatibility
+          ->setClass('Nette\Http\Response');
+
+          $container->addDefinition($this->prefix('httpContext'))
+              ->setClass('Nette\Http\Context');
+
+
+          // session
+          $session = $container->addDefinition('session')// no namespace for back compatibility
+          ->setClass('Nette\Http\Session');
+
+          if (isset($config['session']['expiration'])) {
+              $session->addSetup('setExpiration', array($config['session']['expiration']));
+          }
+          if (isset($config['session']['iAmUsingBadHost'])) {
+              $session->addSetup('Nette\Framework::$iAmUsingBadHost = ?;', array((bool)$config['session']['iAmUsingBadHost']));
+          }
+          unset($config['session']['expiration'], $config['session']['autoStart'], $config['session']['iAmUsingBadHost']);
+          if (!empty($config['session'])) {
+              $session->addSetup('setOptions', array($config['session']));
+          }
+
+
+          // security
+          $container->addDefinition($this->prefix('userStorage'))
+              ->setClass('Nette\Http\UserStorage');
+
+          $user = $container->addDefinition('user')// no namespace for back compatibility
+          ->setClass('Nette\Security\User');*/
+        /*
+                if (!$container->parameters['productionMode'] && $config['security']['debugger']) {
+                    $user->addSetup('\Tracy\Debugger::getBar()->addPanel(?)', array(
+                        new Nette\DI\Statement('Nette\Security\Diagnostics\UserPanel')
+                    ));
+                }*/
 
         if ($config['security']['users']) {
             $container->addDefinition($this->prefix('authenticator'))
@@ -175,7 +178,7 @@ class NetteExtension extends Nette\DI\CompilerExtension {
 
         // routing
         $router = $container->addDefinition('router')// no namespace for back compatibility
-        ->setClass('Nette\Application\Routers\RouteList');
+        ->setClass(Nette\Application\Routers\RouteList::class);
 
         foreach ($config['routing']['routes'] as $mask => $action) {
             $router->addSetup('$service[] = new Nette\Application\Routers\Route(?, ?);', array($mask, $action));
@@ -189,7 +192,7 @@ class NetteExtension extends Nette\DI\CompilerExtension {
 
 
         // mailer
-        if (empty($config['mailer']['smtp'])) {
+     /*   if (empty($config['mailer']['smtp'])) {
             $container->addDefinition($this->prefix('mailer'))
                 ->setClass('Nette\Mail\SendmailMailer');
         } else {
@@ -200,7 +203,7 @@ class NetteExtension extends Nette\DI\CompilerExtension {
         $container->addDefinition($this->prefix('mail'))
             ->setClass('Nette\Mail\Message')
             ->addSetup('setMailer');
-
+*/
 
         // forms
         $container->addDefinition($this->prefix('basicForm'))
@@ -212,7 +215,7 @@ class NetteExtension extends Nette\DI\CompilerExtension {
             ->setClass('Nette\Latte\Engine');
 
         if (empty($config['xhtml'])) {
-            $latte->addSetup('$service->getCompiler()->defaultContentType = ?', Nette\Latte\Compiler::CONTENT_HTML);
+            $latte->addSetup('$service->getCompiler()->defaultContentType = ?', [Nette\Latte\Compiler::CONTENT_HTML]);
         }
 
         $container->addDefinition($this->prefix('template'))

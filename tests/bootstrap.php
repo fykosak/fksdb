@@ -1,16 +1,8 @@
 <?php
 
-use Authorization\ACLExtension;
-use FKSDB\Events\EventsExtension;
-use FKSDB\Config\Extensions\DBReflectionExtension;
-use FKSDB\Config\Extensions\NavigationExtension;
-use FKSDB\Config\Extensions\PaymentExtension;
-use FKSDB\Config\Extensions\RouterExtension;
-use FKSDB\Config\Extensions\StalkingExtension;
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Application\Responses\TextResponse;
-use Nette\DI\Compiler;
-use Nette\Config\Configurator;
+use Nette\Configurator;
 use Nette\Utils\Finder;
 use Tester\Assert;
 use Tracy\Debugger;
@@ -39,7 +31,7 @@ require LIBS_DIR . '/autoload.php';
 define('CONFIG_DIR', APP_DIR . DIRECTORY_SEPARATOR . 'config');
 
 // Configure application
-$configurator = new Configurator();
+$configurator = new \Nette\Configurator();
 
 $configurator->setDebugMode(false);
 Debugger::$logDirectory = LOG_DIR;

@@ -1,14 +1,6 @@
 <?php
 
-use Authorization\ACLExtension;
-use FKSDB\Events\EventsExtension;
-use FKSDB\Config\Extensions\DBReflectionExtension;
-use FKSDB\Config\Extensions\NavigationExtension;
-use FKSDB\Config\Extensions\PaymentExtension;
-use FKSDB\Config\Extensions\RouterExtension;
-use FKSDB\Config\Extensions\StalkingExtension;
-use Nette\DI\Compiler;
-use Nette\Config\Configurator;
+use Nette\Configurator;
 use Nette\Utils\Finder;
 
 define('LIBS_DIR', __DIR__ . '/../libs');
@@ -20,7 +12,7 @@ require LIBS_DIR . '/../vendor/autoload.php';
 require LIBS_DIR . '/autoload.php';
 
 // Configure application
-$configurator = new Configurator();
+$configurator = new \Nette\Configurator();
 
 // Enable Nette Debugger for error visualisation & logging
 $configurator->enableDebugger(dirname(__FILE__) . '/../log');

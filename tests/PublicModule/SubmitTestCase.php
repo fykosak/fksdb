@@ -5,7 +5,7 @@ namespace PublicModule;
 use DatabaseTestCase;
 use MockEnvironment\MockApplicationTrait;
 use Nette\Application\Request;
-use Nette\Config\Helpers;
+use Nette\DI\Helpers;
 use Nette\Http\FileUpload;
 use Nette\Utils\Finder;
 use Tester\Assert;

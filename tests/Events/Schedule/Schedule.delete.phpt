@@ -5,7 +5,7 @@ namespace FKSDB\Events\Accommodation;
 use FKSDB\ORM\DbNames;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
-use Nette\Config\Helpers;
+use Nette\DI\Helpers;
 use Nette\Utils\DateTime;
 use Tester\Assert;
 

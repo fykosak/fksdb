@@ -14,6 +14,7 @@ use Nette\DI\CompilerExtension;
 use Nette\DI\ContainerBuilder;
 use Nette\DI\ServiceDefinition;
 use FKSDB\Exceptions\NotImplementedException;
+use Nette\DI\Statement;
 use stdClass;
 
 /**
@@ -189,8 +190,8 @@ class DBReflectionExtension extends CompilerExtension {
         if (is_string($value)) {
             return $value;
         }
-        if ($value instanceof stdClass) {
-            return ($value->value)(...$value->attributes);
+        if ($value instanceof Statement) {
+            return ($value->entity)(...$value->arguments);
         }
         throw new NotImplementedException;
     }
