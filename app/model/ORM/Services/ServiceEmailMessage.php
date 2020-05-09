@@ -21,16 +21,10 @@ class ServiceEmailMessage extends AbstractServiceSingle {
         return $this->getTable()->where('state', ModelEmailMessage::STATE_WAITING)->limit($limit);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getModelClassName(): string {
         return ModelEmailMessage::class;
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function getTableName(): string {
         return DbNames::TAB_EMAIL_MESSAGE;
     }

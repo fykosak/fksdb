@@ -26,7 +26,7 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Strings;
-use ServiceMStoredQueryTag;
+use FKSDB\ORM\ServicesMulti\ServiceMStoredQueryTag;
 use Tracy\Debugger;
 use Traversable;
 

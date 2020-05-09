@@ -1,7 +1,11 @@
 <?php
 
+namespace FKSDB\ORM\ServicesMulti;
+
+use FKSDB\ORM\AbstractModelMulti;
 use FKSDB\ORM\AbstractServiceMulti;
 use FKSDB\ORM\IModel;
+use FKSDB\ORM\ModelsMulti\ModelMPostContact;
 use FKSDB\ORM\Services\ServiceAddress;
 use FKSDB\ORM\Services\ServicePostContact;
 
@@ -9,9 +13,6 @@ use FKSDB\ORM\Services\ServicePostContact;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceMPostContact extends AbstractServiceMulti {
-
-    protected $modelClassName = 'ModelMPostContact';
-    protected $joiningColumn = 'address_id';
 
     /**
      * ServiceMPostContact constructor.
@@ -24,13 +25,18 @@ class ServiceMPostContact extends AbstractServiceMulti {
 
     /**
      * Delete post contact including the address.
-     * @param \FKSDB\ORM\IModel $model
+     * @param IModel|AbstractModelMulti $model
      */
     public function dispose(IModel $model) {
         parent::dispose($model);
         $this->getMainService()->dispose($model->getMainModel());
     }
 
+    public function getJoiningColumn(): string {
+        return 'address_id';
+    }
+
+    public function getModelClassName(): string {
+        return ModelMPostContact::class;
+    }
 }
-
-

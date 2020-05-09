@@ -1,20 +1,18 @@
 <?php
 
-namespace ORM\ServicesMulti\Events;
+namespace FKSDB\ORM\ServicesMulti\Events;
 
+use FKSDB\ORM\AbstractModelMulti;
 use FKSDB\ORM\AbstractServiceMulti;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Services\Events\ServiceVikendParticipant;
 use FKSDB\ORM\Services\ServiceEventParticipant;
+use FKSDB\ORM\ModelsMulti\Events\ModelMVikendParticipant;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceMVikendParticipant extends AbstractServiceMulti {
-
-    protected $modelClassName = 'ORM\ModelsMulti\Events\ModelMVikendParticipant';
-    protected $joiningColumn = 'event_participant_id';
-
     /**
      * ServiceMVikendParticipant constructor.
      * @param ServiceEventParticipant $mainService
@@ -26,11 +24,18 @@ class ServiceMVikendParticipant extends AbstractServiceMulti {
 
     /**
      * Delete post contact including the address.
-     * @param IModel $model
+     * @param IModel|AbstractModelMulti $model
      */
     public function dispose(IModel $model) {
         parent::dispose($model);
         $this->getMainService()->dispose($model->getMainModel());
     }
 
+    public function getJoiningColumn(): string {
+        return 'event_participant_id';
+    }
+
+    public function getModelClassName(): string {
+        return ModelMVikendParticipant::class;
+    }
 }

@@ -8,7 +8,7 @@ use FKSDB\Components\Forms\Factories\Events\IOptionsProvider;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Services\Events\ServiceDsefGroup;
 use Nette\SmartObject;
-use ORM\ServicesMulti\Events\ServiceMDsefParticipant;
+use FKSDB\ORM\ServicesMulti\Events\ServiceMDsefParticipant;
 
 /**
  *
