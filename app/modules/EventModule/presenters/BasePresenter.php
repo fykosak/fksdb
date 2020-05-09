@@ -197,6 +197,6 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @return array|string[]
      */
     protected function getNavRoots(): array {
-        return ['event.dashboard.default'];
+        return ['Event.Dashboard.default'];
     }
 }

@@ -54,6 +54,6 @@ abstract class BasePresenter extends \ContestPresenter {
      * @return string[]
      */
     public function getNavRoots(): array {
-        return ['public.dashboard.default'];
+        return ['Public.Dashboard.default'];
     }
 }
