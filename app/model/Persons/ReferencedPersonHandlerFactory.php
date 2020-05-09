@@ -7,8 +7,8 @@ use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServicePersonHistory;
 use FKSDB\ORM\Services\ServicePersonInfo;
 use Nette\SmartObject;
-use ServiceMPersonHasFlag;
-use ServiceMPostContact;
+use FKSDB\ORM\ServicesMulti\ServiceMPersonHasFlag;
+use FKSDB\ORM\ServicesMulti\ServiceMPostContact;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -17,6 +17,7 @@ use ServiceMPostContact;
  */
 class ReferencedPersonHandlerFactory {
     use SmartObject;
+
     /**
      * @var ServicePerson
      */

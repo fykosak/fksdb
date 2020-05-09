@@ -15,9 +15,6 @@ use Nette\Application\UI\Form;
  */
 class CorrectedControl extends SeriesTableControl {
 
-    /**
-     * @inheritDoc
-     */
     public function render() {
         $correctedSubmitStorage = $this->getContext()->getByType(FilesystemCorrectedSubmitStorage::class);
         $this->template->correctedSubmitStorage = $correctedSubmitStorage;

@@ -4,6 +4,7 @@ namespace Mail;
 
 use BasePresenter;
 use Nette\Application\Application;
+use Nette\Application\BadRequestException;
 use Nette\Http\IRequest;
 use Nette\InvalidArgumentException;
 use Nette\Latte\Engine;
@@ -81,9 +82,10 @@ class MailTemplateFactory {
     }
 
     /**
-     * @param $filename
+     * @param string $filename
      * @param string $lang ISO 639-1
      * @return FileTemplate
+     * @throws BadRequestException
      */
     public final function createFromFile(string $filename, string $lang = null): FileTemplate {
         $presenter = $this->application->getPresenter();

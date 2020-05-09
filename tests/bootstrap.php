@@ -33,7 +33,6 @@ define('LOG_DIR', TESTS_DIR . '/../temp/tester/log');
 // Load Nette Framework
 require LIBS_DIR . '/../vendor/autoload.php';
 require LIBS_DIR . '/autoload.php';
-error_reporting(~E_USER_DEPRECATED & ~E_USER_WARNING);
 
 //require __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'tester/Tester/bootstrap.php';
 
@@ -41,7 +40,7 @@ define('CONFIG_DIR', APP_DIR . DIRECTORY_SEPARATOR . 'config');
 
 // Configure application
 $configurator = new Configurator();
-$configurator->onCompile[] = function ($configurator, Compiler $compiler) {
+$configurator->onCompile[] = function (Configurator $configurator, Compiler $compiler) {
     $compiler->addExtension('fksrouter', new RouterExtension());
     $compiler->addExtension('acl', new ACLExtension());
     $compiler->addExtension('navigation', new NavigationExtension());
@@ -57,7 +56,7 @@ Debugger::$logDirectory = LOG_DIR;
 
 // Enable RobotLoader - this will load all classes automatically
 $configurator->setTempDirectory(TEMP_DIR);
-error_reporting(~E_USER_DEPRECATED & ~E_USER_WARNING);
+error_reporting(~E_USER_DEPRECATED & ~E_USER_WARNING & ~E_WARNING & ~E_NOTICE & ~E_DEPRECATED);
 $configurator->createRobotLoader()
     ->addDirectory(APP_DIR)
     ->addDirectory(LIBS_DIR)
@@ -85,7 +84,6 @@ $container = $configurator->createContainer();
 //
 // Register addons
 //
-error_reporting(~E_USER_DEPRECATED & ~E_USER_WARNING);
 Replicator::register();
 
 function dumpResponse(TextResponse $response) {
