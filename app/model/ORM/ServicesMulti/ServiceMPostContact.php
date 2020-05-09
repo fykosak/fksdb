@@ -40,5 +40,3 @@ class ServiceMPostContact extends AbstractServiceMulti {
         return ModelMPostContact::class;
     }
 }
-
-

@@ -23,7 +23,7 @@ class ServiceMPersonHasFlag extends AbstractServiceMulti {
     }
 
     /**
-     * @param null $data
+     * @param null|array $data
      * @return ModelMPersonHasFlag
      * @throws \Exception
      */

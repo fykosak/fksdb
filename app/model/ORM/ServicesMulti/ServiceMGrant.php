@@ -29,5 +29,3 @@ class ServiceMGrant extends AbstractServiceMulti {
         return ModelMGrant::class;
     }
 }
-
-
