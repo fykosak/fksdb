@@ -1,18 +1,18 @@
 <?php
 
+namespace FKSDB\ORM\ServicesMulti;
+
 use FKSDB\ORM\AbstractModelMulti;
 use FKSDB\ORM\AbstractServiceMulti;
+use FKSDB\ORM\ModelsMulti\ModelMStoredQueryTag;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryTag;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
+use Nette\InvalidArgumentException;
 
 /**
  * @author Lukáš Timko <lukast@fykos.cz>
  */
 class ServiceMStoredQueryTag extends AbstractServiceMulti {
-
-    protected $modelClassName = 'ModelMStoredQueryTag';
-    protected $joiningColumn = 'tag_type_id';
-
     /**
      * ServiceMStoredQueryTag constructor.
      * @param ServiceStoredQueryTagType $mainService
@@ -29,10 +29,18 @@ class ServiceMStoredQueryTag extends AbstractServiceMulti {
     public function createNew($data = null) {
         $mainModel = $this->getMainService()->findByPrimary($data['tag_type_id']);
         if ($mainModel === null) {
-            throw new \Nette\InvalidArgumentException;
+            throw new InvalidArgumentException;
         }
         $joinedModel = $this->getJoinedService()->createNew($data);
 
         return new ModelMStoredQueryTag($this, $mainModel, $joinedModel);
+    }
+
+    public function getJoiningColumn(): string {
+        return 'tag_type_id';
+    }
+
+    public function getModelClassName(): string {
+        return ModelMStoredQueryTag::class;
     }
 }

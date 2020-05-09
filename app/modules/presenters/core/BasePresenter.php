@@ -16,6 +16,7 @@ use FKSDB\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\IFilteredDataProvider;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Config\GlobalParameters;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\LangPresenterTrait;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Services\ServiceContest;
@@ -291,6 +292,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     /**
      *
+     * @throws BadRequestException
      * @throws ReflectionException
      */
     protected function beforeRender() {
@@ -322,6 +324,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     /**
      * @throws ReflectionException
+     * @throws BadTypeException
      */
     protected function putIntoBreadcrumbs() {
         /** @var Breadcrumbs $component */
@@ -353,8 +356,9 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     /**
      * @param bool $need
-     * @throws ReflectionException
      * @throws AbortException
+     * @throws BadTypeException
+     * @throws ReflectionException
      */
     public final function backLinkRedirect($need = false) {
         $this->putIntoBreadcrumbs();

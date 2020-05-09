@@ -6,6 +6,7 @@ use BasePresenter;
 use Nette\Application\Application;
 use Nette\Application\UI\ITemplate;
 use Nette\Bridges\ApplicationLatte\Template;
+use Nette\Application\BadRequestException;
 use Nette\Http\IRequest;
 use Nette\InvalidArgumentException;
 use Latte\Engine;
@@ -52,6 +53,7 @@ class MailTemplateFactory {
      * @param string $lang ISO 639-1
      * @param array $data
      * @return ITemplate
+     * @throws BadRequestException
      */
     public function createLoginInvitation(string $lang = null, array $data = []): ITemplate {
         return $this->createWithParameters('loginInvitation', $lang, $data);
@@ -61,6 +63,7 @@ class MailTemplateFactory {
      * @param string $lang ISO 639-1
      * @param array $data
      * @return ITemplate
+     * @throws BadRequestException
      */
     public function createPasswordRecovery(string $lang = null, array $data = []): ITemplate {
         return $this->createWithParameters('passwordRecovery', $lang, $data);
@@ -71,6 +74,7 @@ class MailTemplateFactory {
      * @param string $lang ISO 639-1
      * @param array $data
      * @return ITemplate
+     * @throws BadRequestException
      */
     public function createWithParameters(string $templateFile, string $lang = null, array $data = []): ITemplate {
         $template = $this->createFromFile($templateFile, $lang);
@@ -82,9 +86,10 @@ class MailTemplateFactory {
     }
 
     /**
-     * @param $filename
+     * @param string $filename
      * @param string $lang ISO 639-1
      * @return ITemplate
+     * @throws BadRequestException
      */
     public final function createFromFile(string $filename, string $lang = null): ITemplate {
         $presenter = $this->application->getPresenter();

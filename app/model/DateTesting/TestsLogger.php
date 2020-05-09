@@ -13,7 +13,7 @@ class TestsLogger {
     private $logs = [];
 
     /**
-     * @inheritDoc
+     * @param TestLog $log
      */
     public function log(TestLog $log) {
         $this->logs[] = $log;

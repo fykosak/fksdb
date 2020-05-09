@@ -2,7 +2,7 @@
 
 namespace FKSDB\Events\Spec\Sous;
 
-use ORM\ModelsMulti\Events\ModelMSousParticipant;
+use FKSDB\ORM\ModelsMulti\Events\ModelMSousParticipant;
 use Exports\StoredQueryPostProcessing;
 
 /**

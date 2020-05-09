@@ -314,9 +314,6 @@ final class AuthenticationPresenter extends BasePresenter {
             $values = $form->getValues();
 
             $connection->beginTransaction();
-            /**
-             * @var ModelLogin $login
-             */
             $login = $this->passwordAuthenticator->findLogin($values['id']);
             $this->accountManager->sendRecovery($login, $login->getPerson()->getPreferredLang() ?: $this->getLang());
             $email = Utils::cryptEmail($login->getPerson()->getInfo()->email);

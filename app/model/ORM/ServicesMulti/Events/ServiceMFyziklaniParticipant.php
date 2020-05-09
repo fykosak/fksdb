@@ -1,23 +1,22 @@
 <?php
 
-namespace ORM\ServicesMulti\Events;
+namespace FKSDB\ORM\ServicesMulti\Events;
 
+use FKSDB\ORM\AbstractModelMulti;
 use FKSDB\ORM\AbstractServiceMulti;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Services\Events\ServiceFyziklaniParticipant;
 use FKSDB\ORM\Services\ServiceEventParticipant;
+use FKSDB\ORM\ModelsMulti\Events\ModelMFyziklaniParticipant;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceMFyziklaniParticipant extends AbstractServiceMulti {
 
-    protected $modelClassName = 'ORM\ModelsMulti\Events\ModelMFyziklaniParticipant';
-    protected $joiningColumn = 'event_participant_id';
-
     /**
      * ServiceMFyziklaniParticipant constructor.
-     * @param \FKSDB\ORM\Services\ServiceEventParticipant $mainService
+     * @param ServiceEventParticipant $mainService
      * @param ServiceFyziklaniParticipant $joinedService
      */
     public function __construct(ServiceEventParticipant $mainService, ServiceFyziklaniParticipant $joinedService) {
@@ -26,11 +25,18 @@ class ServiceMFyziklaniParticipant extends AbstractServiceMulti {
 
     /**
      * Delete post contact including the address.
-     * @param \FKSDB\ORM\IModel $model
+     * @param IModel|AbstractModelMulti $model
      */
     public function dispose(IModel $model) {
         parent::dispose($model);
         $this->getMainService()->dispose($model->getMainModel());
     }
 
+    public function getJoiningColumn(): string {
+        return 'event_participant_id';
+    }
+
+    public function getModelClassName(): string {
+        return ModelMFyziklaniParticipant::class;
+    }
 }
