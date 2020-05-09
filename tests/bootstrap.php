@@ -7,11 +7,10 @@ use FKSDB\Config\Extensions\NavigationExtension;
 use FKSDB\Config\Extensions\PaymentExtension;
 use FKSDB\Config\Extensions\RouterExtension;
 use FKSDB\Config\Extensions\StalkingExtension;
-use JanTvrdik\Components\DatePicker;
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Application\Responses\TextResponse;
+use Nette\Config\Compiler;
 use Nette\Config\Configurator;
-use Nette\Forms\Container;
 use Nette\Utils\Finder;
 use Tester\Assert;
 use Tracy\Debugger;
@@ -34,7 +33,6 @@ define('LOG_DIR', TESTS_DIR . '/../temp/tester/log');
 // Load Nette Framework
 require LIBS_DIR . '/../vendor/autoload.php';
 require LIBS_DIR . '/autoload.php';
-error_reporting(~E_USER_DEPRECATED & ~E_USER_WARNING);
 
 //require __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'tester/Tester/bootstrap.php';
 
@@ -42,7 +40,7 @@ define('CONFIG_DIR', APP_DIR . DIRECTORY_SEPARATOR . 'config');
 
 // Configure application
 $configurator = new Configurator();
-$configurator->onCompile[] = function ($configurator, $compiler) {
+$configurator->onCompile[] = function (Configurator $configurator, Compiler $compiler) {
     $compiler->addExtension('fksrouter', new RouterExtension());
     $compiler->addExtension('acl', new ACLExtension());
     $compiler->addExtension('navigation', new NavigationExtension());
@@ -58,7 +56,7 @@ Debugger::$logDirectory = LOG_DIR;
 
 // Enable RobotLoader - this will load all classes automatically
 $configurator->setTempDirectory(TEMP_DIR);
-error_reporting(~E_USER_DEPRECATED & ~E_USER_WARNING);
+error_reporting(~E_USER_DEPRECATED & ~E_USER_WARNING & ~E_WARNING & ~E_NOTICE & ~E_DEPRECATED);
 $configurator->createRobotLoader()
     ->addDirectory(APP_DIR)
     ->addDirectory(LIBS_DIR)
@@ -86,7 +84,6 @@ $container = $configurator->createContainer();
 //
 // Register addons
 //
-error_reporting(~E_USER_DEPRECATED & ~E_USER_WARNING);
 Replicator::register();
 
 function dumpResponse(TextResponse $response) {
@@ -96,10 +93,6 @@ function dumpResponse(TextResponse $response) {
     /* Use assert so that expected is dumped as a string to file. */
     Assert::equal('', $html);
 }
-
-Container::extensionMethod('addDatePicker', function (Container $container, $name, $label = NULL) {
-    return $container[$name] = new DatePicker($label);
-});
 
 /* Always acquire locks in the order as below! */
 define('LOCK_DB', __DIR__ . '/tmp/database.lock');

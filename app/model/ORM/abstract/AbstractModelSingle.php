@@ -9,7 +9,7 @@ use Nette\Database\Table\Selection;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 abstract class AbstractModelSingle extends ActiveRow implements IModel {
-
+    /** @var array */
     private $tmpData = [];
 
     /**
@@ -70,7 +70,7 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
 
     /**
      * @param $key
-     * @return bool|mixed|ActiveRow|\Nette\Database\Table\Selection|null
+     * @return bool|mixed|ActiveRow|Selection|null
      */
     public function &__get($key) {
         if (array_key_exists($key, $this->tmpData)) {
@@ -90,10 +90,7 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
         return parent::__isset($key);
     }
 
-    /**
-     * @return array
-     */
-    public function getTmpData() {
+    public function getTmpData(): array {
         return $this->tmpData;
     }
 

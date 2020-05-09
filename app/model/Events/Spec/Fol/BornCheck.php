@@ -6,8 +6,11 @@ use Events\FormAdjustments\AbstractAdjustment;
 use Events\FormAdjustments\IFormAdjustment;
 use Events\Machine\Machine;
 use Events\Model\Holder\Holder;
+use FKSDB\ORM\Models\ModelPersonHistory;
+use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServicePersonHistory;
 use FKSDB\ORM\Services\ServiceSchool;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 
@@ -77,18 +80,18 @@ class BornCheck extends AbstractAdjustment implements IFormAdjustment {
             $personControl = $personControls[$i];
             $studyYearControl = $studyYearControls[$i];
             $control->addCondition(~$form::FILLED)
-                    ->addRule(function(IControl $control) use ($schoolControl, $personControl, $studyYearControl, $form, $msg) {
-                        if(!$personControl->getValue(false)) {
-                            return true;
-                        }
-                        $schoolId = $this->getSchoolId($schoolControl, $personControl);
-                        $studyYear = $this->getStudyYear($studyYearControl, $personControl);
-                        if ($this->isCzSkSchool($schoolId) && $this->isStudent($studyYear)) {
-                            $form->addError($msg);
-                            return false;
-                        }
+                ->addRule(function (IControl $control) use ($schoolControl, $personControl, $studyYearControl, $form, $msg) {
+                    if (!$personControl->getValue(false)) {
                         return true;
-                    }, $msg);
+                    }
+                    $schoolId = $this->getSchoolId($schoolControl, $personControl);
+                    $studyYear = $this->getStudyYear($studyYearControl, $personControl);
+                    if ($this->serviceSchool->isCzSkSchool($schoolId) && $this->isStudent($studyYear)) {
+                        $form->addError($msg);
+                        return false;
+                    }
+                    return true;
+                }, $msg);
         }
 //        $form->onValidate[] = function(Form $form) use($schoolControls, $spamControls, $studyYearControls, $message) {
 //                    if ($form->isValid()) { // it means that all schools may have been disabled
@@ -105,49 +108,38 @@ class BornCheck extends AbstractAdjustment implements IFormAdjustment {
     }
 
     /**
-     * @param $studyYearControl
-     * @param $personControl
-     * @return bool|mixed|\Nette\Database\Table\ActiveRow|\Nette\Database\Table\Selection|null
+     * @param BaseControl $studyYearControl
+     * @param BaseControl $personControl
+     * @return int|null
      */
     private function getStudyYear($studyYearControl, $personControl) {
-        if($studyYearControl->getValue()) {
+        if ($studyYearControl->getValue()) {
             return $studyYearControl->getValue();
         }
 
-        $personId = $personControl->getValue(false);
+        $personId = $personControl->getValue();
+        /** @var ModelPersonHistory|false $personHistory */
         $personHistory = $this->servicePersonHistory->getTable()
-                ->where('person_id', $personId)
-                ->where('ac_year', $this->getHolder()->getEvent()->getAcYear())->fetch();
+            ->where('person_id', $personId)
+            ->where('ac_year', $this->getHolder()->getEvent()->getAcYear())->fetch();
         return $personHistory ? $personHistory->study_year : null;
     }
 
     /**
-     * @param $schoolControl
-     * @param $personControl
-     * @return bool|mixed|\Nette\Database\Table\ActiveRow|\Nette\Database\Table\Selection|null
+     * @param BaseControl $schoolControl
+     * @param BaseControl $personControl
+     * @return int
      */
     private function getSchoolId($schoolControl, $personControl) {
-        if($schoolControl->getValue()) {
+        if ($schoolControl->getValue()) {
             return $schoolControl->getValue();
         }
-
-        $personId = $personControl->getValue(false);
+        $personId = $personControl->getValue();
+        /** @var ModelSchool|false $school */
         $school = $this->servicePersonHistory->getTable()
-                ->where('person_id', $personId)
-                ->where('ac_year', $this->getHolder()->getEvent()->getAcYear())->fetch();
+            ->where('person_id', $personId)
+            ->where('ac_year', $this->getHolder()->getEvent()->getAcYear())->fetch();
         return $school->school_id;
-    }
-
-    /**
-     * @param $schoolId
-     * @return bool
-     */
-    private function isCzSkSchool($schoolId) {
-        $country = $this->serviceSchool->getTable()->select('address.region.country_iso')->where(['school_id' => $schoolId])->fetch();
-        if (in_array($country->country_iso, ['CZ', 'SK'])) {
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -157,6 +149,4 @@ class BornCheck extends AbstractAdjustment implements IFormAdjustment {
     private function isStudent($studyYear) {
         return ($studyYear === null) ? false : true;
     }
-
 }
-

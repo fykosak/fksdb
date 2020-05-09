@@ -125,9 +125,8 @@ class WebServiceModel {
         if (!isset($this->inverseContestMap[$args->contest])) {
             throw new SoapFault('Sender', 'Unknown contest.');
         }
-
-        $row = $this->serviceContest->findByPrimary($this->inverseContestMap[$args->contest]);
-        $contest = ModelContest::createFromActiveRow($row);
+        /** @var ModelContest $contest */
+        $contest = $this->serviceContest->findByPrimary($this->inverseContestMap[$args->contest]);
         $doc = new DOMDocument();
         $resultsNode = $doc->createElement('results');
         $doc->appendChild($resultsNode);
@@ -213,9 +212,8 @@ class WebServiceModel {
         if (!isset($this->inverseContestMap[$args->contest])) {
             throw new SoapFault('Sender', 'Unknown contest.');
         }
-
-        $row = $this->serviceContest->findByPrimary($this->inverseContestMap[$args->contest]);
-        $contest = ModelContest::createFromActiveRow($row);
+        /** @var ModelContest $contest */
+        $contest = $this->serviceContest->findByPrimary($this->inverseContestMap[$args->contest]);
         $year = (string)$args->year;
 
         $doc = new DOMDocument();

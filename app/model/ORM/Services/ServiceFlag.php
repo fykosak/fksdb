@@ -27,14 +27,15 @@ class ServiceFlag extends AbstractServiceSingle {
     /**
      * Syntactic sugar.
      *
-     * @param integer $fid
-     * @return \FKSDB\ORM\Models\ModelFlag|null
+     * @param string $fid
+     * @return ModelFlag|null
      */
-    public function findByFid($fid) {
+    public function findByFid(string $fid) {
         if (!$fid) {
             return null;
         }
+        /** @var ModelFlag $result */
         $result = $this->getTable()->where('fid', $fid)->fetch();
-        return $result ? ModelFlag::createFromActiveRow($result) : null;
+        return $result ?: null;
     }
 }

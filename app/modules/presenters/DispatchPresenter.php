@@ -3,6 +3,8 @@
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelRole;
+use FKSDB\UI\PageStyleContainer;
+use Nette\Application\UI\InvalidLinkException;
 
 /**
  * Class DispatchPresenter
@@ -10,17 +12,17 @@ use FKSDB\ORM\Models\ModelRole;
 class DispatchPresenter extends AuthenticatedPresenter {
 
     /**
-     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws InvalidLinkException
      */
     public function renderDefault() {
         /**
-         * @var \FKSDB\ORM\Models\ModelLogin $login
+         * @var ModelLogin $login
          */
         $login = $this->getUser()->getIdentity();
         $query = $this->getServiceContest()->getTable();
         $result = [];
-        foreach ($query as $row) {
-            $contest = ModelContest::createFromActiveRow($row);
+        /** @var ModelContest $contest */
+        foreach ($query as $contest) {
             $symbol = $contest->getContestSymbol();
             $allowed = [];
             foreach ([ModelRole::ORG, ModelRole::CONTESTANT] as $role) {
@@ -32,11 +34,11 @@ class DispatchPresenter extends AuthenticatedPresenter {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelLogin $login
+     * @param ModelLogin $login
      * @param ModelContest $contest
      * @param $role
      * @return array
-     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws InvalidLinkException
      */
     private function check(ModelLogin $login, ModelContest $contest, $role) {
         switch ($role) {
@@ -97,9 +99,11 @@ class DispatchPresenter extends AuthenticatedPresenter {
     }
 
     /**
-     * @return array
+     * @return PageStyleContainer
      */
-    public function getNavBarVariant(): array {
-        return [null, 'bg-dark navbar-dark'];
+    protected function getPageStyleContainer(): PageStyleContainer {
+        $container = parent::getPageStyleContainer();
+        $container->navBarClassName = 'bg-dark navbar-dark';
+        return $container;
     }
 }

@@ -7,6 +7,7 @@ use FKSDB\Config\Extensions\NavigationExtension;
 use FKSDB\Config\Extensions\PaymentExtension;
 use FKSDB\Config\Extensions\RouterExtension;
 use FKSDB\Config\Extensions\StalkingExtension;
+use Nette\Config\Compiler;
 use Nette\Config\Configurator;
 use Nette\Utils\Finder;
 
@@ -20,7 +21,7 @@ require LIBS_DIR . '/autoload.php';
 
 // Configure application
 $configurator = new Configurator();
-$configurator->onCompile[] = function ($configurator, $compiler) {
+$configurator->onCompile[] = function ($configurator, Compiler $compiler) {
     $compiler->addExtension('fksrouter', new RouterExtension());
     $compiler->addExtension('acl', new ACLExtension());
     $compiler->addExtension('navigation', new NavigationExtension());
@@ -32,7 +33,7 @@ $configurator->onCompile[] = function ($configurator, $compiler) {
 
 // Enable Nette Debugger for error visualisation & logging
 $configurator->enableDebugger(dirname(__FILE__) . '/../log');
-error_reporting(~E_USER_DEPRECATED & ~E_USER_WARNING);
+error_reporting(~E_USER_DEPRECATED & ~E_USER_WARNING & ~E_WARNING & ~E_NOTICE & ~E_DEPRECATED);
 
 // Enable RobotLoader - this will load all classes automatically
 $configurator->setTempDirectory(dirname(__FILE__) . '/../temp');
@@ -50,6 +51,4 @@ foreach (Finder::findFiles('*.neon')->from(dirname(__FILE__) . '/../data/events'
     $configurator->addConfig($filename, Configurator::NONE);
 }
 
-$container = $configurator->createContainer();
-
-return $container;
+return $configurator->createContainer();

@@ -8,7 +8,6 @@ use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventType;
 use FKSDB\ORM\Tables\TypedTableSelection;
-use Nette\Database\Table\ActiveRow;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -45,10 +44,13 @@ class ServiceEvent extends AbstractServiceSingle {
      * @param ModelContest $contest
      * @param int $year
      * @param int $eventTypeId
-     * @return ActiveRow
+     * @return ModelEvent|null
+     * TODO
      */
-    public function getByEventTypeId(ModelContest $contest, int $year, int $eventTypeId): ActiveRow {
-        return $this->getEvents($contest, $year)->where(DbNames::TAB_EVENT . '.event_type_id', $eventTypeId)->fetch();
+    public function getByEventTypeId(ModelContest $contest, int $year, int $eventTypeId) {
+        /** @var ModelEvent $event */
+        $event = $this->getEvents($contest, $year)->where(DbNames::TAB_EVENT . '.event_type_id', $eventTypeId)->fetch();
+        return $event ?: null;
     }
 
     /**

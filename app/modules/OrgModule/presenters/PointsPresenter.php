@@ -10,6 +10,7 @@ use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Models\ModelTaskContribution;
 use FKSDB\ORM\Services\ServiceTask;
 use FKSDB\ORM\Services\ServiceTaskContribution;
+use FKSDB\UI\PageStyleContainer;
 use FKSDB\Results\SQLResultsCache;
 use FKSDB\Submits\SeriesTable;
 use Nette\Application\AbortException;
@@ -202,9 +203,11 @@ class PointsPresenter extends SeriesPresenter {
     }
 
     /**
-     * @return string
+     * @return PageStyleContainer
      */
-    protected function getContainerClassNames(): string {
-        return str_replace('container ', 'container-fluid ', parent::getContainerClassNames());
+    protected function getPageStyleContainer(): PageStyleContainer {
+        $container = parent::getPageStyleContainer();
+        $container->mainContainerClassName = str_replace('container ', 'container-fluid ', $container->mainContainerClassName) . ' px-3';
+        return $container;
     }
 }

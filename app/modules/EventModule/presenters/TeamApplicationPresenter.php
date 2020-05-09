@@ -40,11 +40,13 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @throws BadRequestException
+     * @param int $id
      * @throws AbortException
+     * @throws BadRequestException
+     * @throws \Nette\Application\ForbiddenRequestException
      */
-    public function renderDetail() {
-        parent::renderDetail();
+    public function renderDetail(int $id) {
+        parent::renderDetail($id);
         $this->template->acYear = $this->getAcYear();
         try {
             $setup = $this->getEvent()->getFyziklaniGameSetup();
@@ -53,7 +55,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
             $rankVisible = false;
         }
         $this->template->rankVisible = $rankVisible;
-        $this->template->model = $this->getEntity();
+        $this->template->model = $this->loadEntity($id);
     }
 
     /**

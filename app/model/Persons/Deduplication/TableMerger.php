@@ -3,7 +3,9 @@
 namespace Persons\Deduplication;
 
 use FKSDB\Logging\ILogger;
+use FKSDB\Messages\Message;
 use Nette\Database\Connection;
+use Nette\Database\Context;
 use Nette\Database\Reflection\AmbiguousReferenceKeyException;
 use Nette\Database\Reflection\MissingReferenceException;
 use Nette\Database\Table\ActiveRow;
@@ -35,6 +37,10 @@ class TableMerger {
      * @var Connection
      */
     private $connection;
+    /**
+     * @var Context
+     */
+    private $context;
 
     /**
      * @var ActiveRow
@@ -65,14 +71,15 @@ class TableMerger {
      * TableMerger constructor.
      * @param $table
      * @param Merger $merger
-     * @param Connection $connection
+     * @param Context $context
      * @param IMergeStrategy $globalMergeStrategy
      * @param ILogger $logger
      */
-    function __construct($table, Merger $merger, Connection $connection, IMergeStrategy $globalMergeStrategy, ILogger $logger) {
+    function __construct($table, Merger $merger, Context $context, IMergeStrategy $globalMergeStrategy, ILogger $logger) {
         $this->table = $table;
         $this->merger = $merger;
-        $this->connection = $connection;
+        $this->connection = $context->getConnection();
+        $this->context = $context;
         $this->globalMergeStrategy = $globalMergeStrategy;
         $this->logger = $logger;
     }
@@ -152,15 +159,13 @@ class TableMerger {
          * We merge child-rows (referencing rows) of the merged rows.
          * We get the list of possible referncing tables from the database reflection.
          */
-        foreach ($this->getReferencingTables() as $referencingTable => $FKcolumn) {
+        foreach ($this->getReferencingTables() as $referencingTable => $fKColumn) {
             $referencingMerger = $this->getMerger()->getMerger($referencingTable);
 
             $trunkDependants = $this->trunkRow->related($referencingTable);
             $mergedDependants = $this->mergedRow->related($referencingTable);
 
-            $newParent = [
-                $FKcolumn => $this->trunkRow->getPrimary()
-            ];
+            $newParent = [$fKColumn => $this->trunkRow->getPrimary()];
             /*
              * If simply changing the parent would violate some constraints (i.e. parent
              * can have only one child with certain properties -- that's the secondary key),
@@ -168,8 +173,8 @@ class TableMerger {
              */
             if ($referencingMerger->getSecondaryKey()) {
                 /* Group by ignores the FKcolumn value, as it's being changed. */
-                $groupedTrunks = $referencingMerger->groupBySecondaryKey($trunkDependants, $FKcolumn);
-                $groupedMerged = $referencingMerger->groupBySecondaryKey($mergedDependants, $FKcolumn);
+                $groupedTrunks = $referencingMerger->groupBySecondaryKey($trunkDependants, $fKColumn);
+                $groupedMerged = $referencingMerger->groupBySecondaryKey($mergedDependants, $fKColumn);
                 $secondaryKeys = array_merge(array_keys($groupedTrunks), array_keys($groupedMerged));
                 $secondaryKeys = array_unique($secondaryKeys);
                 foreach ($secondaryKeys as $secondaryKey) {
@@ -277,7 +282,7 @@ class TableMerger {
             }
         }
         if ($msg) {
-            $this->logger->log(sprintf(_('%s(%s) nové hodnoty: %s'), $row->getTable()->getName(), $row->getPrimary(), implode(', ', $msg)));
+            $this->logger->log(new Message(sprintf(_('%s(%s) nové hodnoty: %s'), $row->getTable()->getName(), $row->getPrimary(), implode(', ', $msg)), ILogger::INFO));
         }
     }
 
@@ -285,14 +290,14 @@ class TableMerger {
      * @param ActiveRow $row
      */
     private function logDelete(ActiveRow $row) {
-        $this->logger->log(sprintf(_('%s(%s) sloučen a smazán.'), $row->getTable()->getName(), $row->getPrimary()));
+        $this->logger->log(new Message(sprintf(_('%s(%s) sloučen a smazán.'), $row->getTable()->getName(), $row->getPrimary()), ILogger::INFO));
     }
 
     /**
      * @param ActiveRow $row
      */
     private function logTrunk(ActiveRow $row) {
-        $this->logger->log(sprintf(_('%s(%s) rozšířen sloučením.'), $row->getTable()->getName(), $row->getPrimary()));
+        $this->logger->log(new Message(sprintf(_('%s(%s) rozšířen sloučením.'), $row->getTable()->getName(), $row->getPrimary()), ILogger::INFO));
     }
 
     /*     * ******************************
@@ -346,7 +351,7 @@ class TableMerger {
      */
     private function isPrimaryKey($column) {
         if ($this->primaryKey === null) {
-            $this->primaryKey = $this->connection->getDatabaseReflection()->getPrimary($this->table);
+            $this->primaryKey = $this->context->getDatabaseReflection()->getPrimary($this->table);
         }
         return $column == $this->primaryKey;
     }
@@ -361,7 +366,7 @@ class TableMerger {
     private function getReferencedTable($column) {
         if (!array_key_exists($column, $this->referencedTables)) {
             try {
-                list($table, $refColumn) = $this->connection->getDatabaseReflection()->getBelongsToReference($this->table, $column, self::$refreshReferenced);
+                list($table, $refColumn) = $this->context->getDatabaseReflection()->getBelongsToReference($this->table, $column, self::$refreshReferenced);
                 self::$refreshReferenced = false;
                 $this->referencedTables[$column] = $table;
             } catch (MissingReferenceException$exception) {

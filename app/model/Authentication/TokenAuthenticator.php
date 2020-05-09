@@ -54,7 +54,7 @@ class TokenAuthenticator extends AbstractAuthenticator {
         // login by the identity
         $login = $token->getLogin();
         if (!$login->active) {
-            throw new InactiveLoginException();
+            throw new InactiveLoginException;
         }
 
         $this->logAuthentication($login);

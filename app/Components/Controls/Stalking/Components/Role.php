@@ -4,19 +4,25 @@ namespace FKSDB\Components\Controls\Stalking;
 
 use Authorization\Grant;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\ModelGrant;
+use FKSDB\ORM\Models\ModelPerson;
 
 /**
  * Class Role
  * @package FKSDB\Components\Controls\Stalking
  */
 class Role extends AbstractStalkingComponent {
-
-    public function render() {
-        $this->beforeRender();
+    /**
+     * @param ModelPerson $person
+     * @param int $userPermissions
+     */
+    public function render(ModelPerson $person, int $userPermissions) {
+        $this->beforeRender($person, $userPermissions);
         $template = $this->template;
-        $login = $this->modelPerson->getLogin();
+        $login = $person->getLogin();
         $roles = [];
         if ($login) {
+            /** @var ModelGrant $grant */
             foreach ($login->related(DbNames::TAB_GRANT, 'login_id') as $grant) {
                 $roles[] = new Grant($grant->contest_id, $grant->ref(DbNames::TAB_ROLE, 'role_id')->name);
             }

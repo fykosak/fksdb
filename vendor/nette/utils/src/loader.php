@@ -1,7 +1,7 @@
 <?php
 
 spl_autoload_register(function ($type) {
-	if (strtolower(ltrim($type, '\\')) === 'nette\object') {
+	if (strtolower(ltrim($type, '\\')) === 'nette\NetteObject') {
 		$trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 		$message = 'Replace deprecated Nette\Object with trait Nette\SmartObject'
 			. (isset($trace[1]['file']) ? ' in ' . $trace[1]['file'] . ':' . $trace[1]['line'] : '');

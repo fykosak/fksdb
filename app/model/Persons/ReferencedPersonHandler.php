@@ -16,14 +16,14 @@ use FKSDB\ORM\Services\ServicePersonHistory;
 use FKSDB\ORM\Services\ServicePersonInfo;
 use FKSDB\Submits\StorageException;
 use FormUtils;
-use ModelException;
-use ModelMPostContact;
+use FKSDB\Exceptions\ModelException;
+use FKSDB\ORM\ModelsMulti\ModelMPostContact;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\JsonException;
-use ServiceMPersonHasFlag;
-use ServiceMPostContact;
+use FKSDB\ORM\ServicesMulti\ServiceMPersonHasFlag;
+use FKSDB\ORM\ServicesMulti\ServiceMPostContact;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -32,6 +32,7 @@ use ServiceMPostContact;
  */
 class ReferencedPersonHandler implements IReferencedHandler {
     use SmartObject;
+
     const POST_CONTACT_DELIVERY = 'post_contact_d';
     const POST_CONTACT_PERMANENT = 'post_contact_p';
 
@@ -236,12 +237,12 @@ class ReferencedPersonHandler implements IReferencedHandler {
                     continue;
                 }
                 $data[$t]['person_id'] = $models['person']->person_id; // this works even for person itself
-               // if ($services[$t] instanceof AbstractServiceSingle) {
-               //     $services[$t]->updateModel2($model, $data[$t]);
-              //  } else {
-                    $services[$t]->updateModel($model, $data[$t]);
-                    $services[$t]->save($model);
-              //  }
+                // if ($services[$t] instanceof AbstractServiceSingle) {
+                //     $services[$t]->updateModel2($model, $data[$t]);
+                //  } else {
+                $services[$t]->updateModel($model, $data[$t]);
+                $services[$t]->save($model);
+                //  }
             }
 
             $this->commit();
@@ -346,6 +347,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @param ModelPerson $person
      * @param ArrayHash $data
      * @param $models
+     * @throws \Exception
      */
     private function prepareFlagModels(ModelPerson &$person, ArrayHash &$data, &$models) {
         if (!isset($data['person_has_flag'])) {

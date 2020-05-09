@@ -59,7 +59,7 @@ abstract class BasePresenter extends EventBasePresenter {
      * @throws BadRequestException
      */
     protected function createComponentFyziklaniChooser(): FyziklaniChooser {
-        return new FyziklaniChooser($this->getServiceEvent(), $this->getEvent());
+        return new FyziklaniChooser($this->getContext(), $this->getEvent());
     }
 
     /**

@@ -8,10 +8,9 @@ use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\ORM\Models\Schedule\ModelSchedulePayment;
 use FKSDB\YearCalculator;
-use ModelMPersonHasFlag;
-use ModelMPostContact;
+use FKSDB\ORM\ModelsMulti\ModelMPersonHasFlag;
+use FKSDB\ORM\ModelsMulti\ModelMPostContact;
 use Nette\Database\Table\GroupedSelection;
-use Nette\Database\Table\Selection;
 use Nette\Security\IResource;
 use Nette\Utils\DateTime;
 use Nette\Utils\Json;
@@ -77,9 +76,8 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
      * @return ModelPersonHistory|null
      */
     public function getHistory($acYear, $extrapolated = false) {
-        $histories = $this->related(DbNames::TAB_PERSON_HISTORY, 'person_id')
-            ->where('ac_year', $acYear);
-        $history = $histories->fetch();
+        $history = $this->related(DbNames::TAB_PERSON_HISTORY, 'person_id')
+            ->where('ac_year', $acYear)->fetch();
         if ($history) {
             return ModelPersonHistory::createFromActiveRow($history);
         }
@@ -234,7 +232,7 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
     /**
      * @return GroupedSelection
      */
-    public function getEventParticipant(): Selection {
+    public function getEventParticipant(): GroupedSelection {
         //return (new Selection($this->getTable()->data,bNames::TAB_EVENT_PARTICIPANT, $this->getTable()->getConnection()))->where('person_id', $this->person_id);
         return $this->related(DbNames::TAB_EVENT_PARTICIPANT, 'person_id');
     }
@@ -407,11 +405,9 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
      * @param $eventId
      * Definitely ugly but, there is only this way... Mišo
      */
-    public function removeScheduleForEvent($eventId) {
+    public function removeScheduleForEvent(int $eventId) {
         $query = $this->related(DbNames::TAB_PERSON_SCHEDULE, 'person_id')->where('schedule_item.schedule_group.event_id=?', $eventId);
-        /**
-         * @var ModelPersonSchedule $row
-         */
+        /** @var ModelPersonSchedule $row */
         foreach ($query as $row) {
             $row->delete();
         }
@@ -426,17 +422,17 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
 
     /**
      * @param ModelEvent $event
-     * @return Selection
+     * @return GroupedSelection
      */
-    public function getPaymentsForEvent(ModelEvent $event): Selection {
+    public function getPaymentsForEvent(ModelEvent $event): GroupedSelection {
         return $this->getPayments()->where('event_id', $event->event_id);
     }
 
     /**
      * @param ModelEvent $event
-     * @return Selection
+     * @return GroupedSelection
      */
-    public function getScheduleForEvent(ModelEvent $event): Selection {
+    public function getScheduleForEvent(ModelEvent $event): GroupedSelection {
         return $this->getSchedule()->where('schedule_item.schedule_group.event_id', $event->event_id);
     }
 

@@ -3,12 +3,11 @@
 namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
-use Nette\Application\BadRequestException;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\GridException;
@@ -32,12 +31,12 @@ class PersonGrid extends BaseGrid {
     /**
      * @param ModelPerson|null $person
      * @param ModelEvent|null $event
-     * @throws BadRequestException
+     * @throws \InvalidArgumentException
      * @throws GridException
      */
     public function render(ModelPerson $person = null, ModelEvent $event = null) {
         if (!$event || !$person) {
-            throw new BadRequestException();
+            throw new \InvalidArgumentException;
         }
         $this->setData($event, $person);
         parent::render();

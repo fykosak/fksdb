@@ -2,7 +2,7 @@
 
 namespace FKSDB\Submits;
 
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelSubmit;
 use Nette\InvalidStateException;
 use Nette\Utils\Finder;
@@ -76,21 +76,21 @@ class FilesystemCorrectedSubmitStorage implements ISubmitStorage {
      * @throws NotImplementedException
      */
     public function beginTransaction() {
-        throw new NotImplementedException();
+        throw new NotImplementedException;
     }
 
     /**
      * @throws NotImplementedException
      */
     public function commit() {
-        throw new NotImplementedException();
+        throw new NotImplementedException;
     }
 
     /**
      * @throws NotImplementedException
      */
     public function rollback() {
-        throw new NotImplementedException();
+        throw new NotImplementedException;
     }
 
     /**
@@ -99,7 +99,7 @@ class FilesystemCorrectedSubmitStorage implements ISubmitStorage {
      * @throws NotImplementedException
      */
     public function storeFile($filename, ModelSubmit $submit) {
-        throw new NotImplementedException();
+        throw new NotImplementedException;
     }
 
     /**
@@ -142,7 +142,7 @@ class FilesystemCorrectedSubmitStorage implements ISubmitStorage {
      * @throws NotImplementedException
      */
     public function deleteFile(ModelSubmit $submit) {
-        throw new NotImplementedException();
+        throw new NotImplementedException;
     }
 
     /**

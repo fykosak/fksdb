@@ -6,7 +6,7 @@ use Exports\StoredQueryPostProcessing;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use InvalidArgumentException;
-use ModelMStoredQueryTag;
+use FKSDB\ORM\ModelsMulti\ModelMStoredQueryTag;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Security\IResource;
 
@@ -85,6 +85,7 @@ class ModelStoredQuery extends AbstractModelSingle implements IResource {
             return [];
         }
         $result = [];
+        /** @var ModelStoredQueryTag $tag */
         foreach ($tags as $tag) {
             $tag->tag_type_id; // stupid touch
             $tagType = $tag->ref(DbNames::TAB_STORED_QUERY_TAG_TYPE, 'tag_type_id');
