@@ -23,9 +23,9 @@ use FKSDB\Components\Grids\Events\LayoutResolver;
 use FKSDB\Config\Expressions\Helpers;
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\Config\NeonScheme;
-use Nette\Config\CompilerExtension;
-use Nette\Config\Helpers as ConfigHelpers;
-use Nette\Config\Loader;
+use Nette\DI\CompilerExtension;
+use Nette\DI\Config\Loader;
+use Nette\DI\Config\Helpers as ConfigHelpers;
 use Nette\DI\Container;
 use Nette\DI\ServiceDefinition;
 use Nette\DI\Statement;
@@ -42,13 +42,11 @@ use Nette\Utils\Strings;
 class EventsExtension extends CompilerExtension {
 
     const MAIN_RESOLVER = 'eventLayoutResolver';
-    const FIELD_FACTORY = 'Field';
+    const FIELD_FACTORY = 'Field_';
     const MACHINE_PREFIX = 'Machine_';
     const HOLDER_PREFIX = 'Holder_';
     const BASE_MACHINE_PREFIX = 'BaseMachine_';
     const BASE_HOLDER_PREFIX = 'BaseHolder_';
-
-    const CLASS_RESOLVER = LayoutResolver::class;
 
     /** @const Maximum length of state identifier. */
     const STATE_SIZE = 20;
@@ -83,7 +81,6 @@ class EventsExtension extends CompilerExtension {
      * @var array[baseMachineFullName] => expanded configuration
      */
     private $baseMachineConfig = [];
-
     /** @var string */
     private $schemeFile;
 
@@ -128,7 +125,6 @@ class EventsExtension extends CompilerExtension {
              */
             foreach ($definition['baseMachines'] as $baseName => $baseMachineDef) {
                 $this->validateConfigName($baseName);
-                $baseMachineDef = $this->getBaseMachineConfig($definitionName, $baseName);
             }
             $keys = $this->createAccessKeys($eventTypeIds, $definition);
             $this->createMachineFactory($definitionName, $definition);
@@ -197,7 +193,7 @@ class EventsExtension extends CompilerExtension {
 
     private function createLayoutResolverFactory() {
         $def = $this->getContainerBuilder()->addDefinition(self::MAIN_RESOLVER);
-        $def->setClass(self::CLASS_RESOLVER);
+        $def->setFactory(LayoutResolver::class);
 
         $parameters = $this->getContainerBuilder()->parameters;
         $templateDir = $parameters['events']['templateDir'];
@@ -314,12 +310,12 @@ class EventsExtension extends CompilerExtension {
                 }
             }
             $baseMachineFactory = $this->createBaseMachineFactory($name, $instanceDef['bmName'], $instanceName);
-            $factory->addSetup('addBaseMachine', $baseMachineFactory);
+            $factory->addSetup('addBaseMachine', [$baseMachineFactory]);
         }
         if (!$primaryName) {
             throw new MachineDefinitionException('No primary machine defined.');
         }
-        $factory->addSetup('setPrimaryMachine', $primaryName);
+        $factory->addSetup('setPrimaryMachine', [$primaryName]);
 
 
         /*
@@ -366,13 +362,13 @@ class EventsExtension extends CompilerExtension {
             if (strlen($state) > self::STATE_SIZE) {
                 throw new MachineDefinitionException("State name '$state' is too long. Use " . self::STATE_SIZE . " characters at most.");
             }
-            $factory->addSetup('addState', $state, $label);
+            $factory->addSetup('addState', [$state, $label]);
         }
         $states = array_keys($definition['states']);
 
         foreach ($definition['transitions'] as $mask => $transitionRawDef) {
             $transitionDef = NeonScheme::readSection($transitionRawDef, $this->scheme['transition']);
-            $factory->addSetup('addTransition', $this->createTransitionService($factoryName, $states, $mask, $transitionDef));
+            $factory->addSetup('addTransition', [$this->createTransitionService($factoryName, $states, $mask, $transitionDef)]);
         }
 
         return $factory;

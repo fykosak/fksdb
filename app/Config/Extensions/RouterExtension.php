@@ -2,8 +2,11 @@
 
 namespace FKSDB\Config\Extensions;
 
+use Nette\Application\IRouter;
 use Nette\Application\Routers\Route;
-use Nette\Config\CompilerExtension;
+use Nette\DI\CompilerExtension;
+use Nette\DI\ServiceDefinition;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -22,6 +25,7 @@ class RouterExtension extends CompilerExtension {
         ]);
 
         $router = $container->getDefinition('router');
+        Debugger::barDump($router);
         $disableSecured = $config['disableSecured'];
 
         foreach ($config['routes'] as $action) {

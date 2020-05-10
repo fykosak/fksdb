@@ -15,11 +15,6 @@ abstract class ResourceAvailabilityTestCase extends EventTestCase {
     protected $fixture;
     protected $persons;
 
-    function __construct(Container $container) {
-        parent::__construct($container);
-        $this->setContainer($container);
-    }
-
     abstract function getCapacity();
 
     protected function setUp() {

@@ -26,9 +26,3 @@ services:
         class: FKSDB\Components\Forms\Factories\Events\DBReflectionFactory
 #transition
     transitionsFactory: FKSDB\Transitions\TransitionsFactory
-
-
-
-factories:
-# (so far unused)
-
