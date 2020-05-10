@@ -75,6 +75,6 @@ abstract class BasePresenter extends EventBasePresenter {
      * @return string[]
      */
     protected function getNavRoots(): array {
-        return ['fyziklani.dashboard.default'];
+        return ['Fyziklani.Dashboard.default'];
     }
 }

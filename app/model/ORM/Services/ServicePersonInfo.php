@@ -62,11 +62,10 @@ class ServicePersonInfo extends AbstractServiceSingle {
     /**
      * @param IModel|AbstractModelSingle|ModelPersonInfo $model
      * @param array $data
-     * @param bool $alive
      * @return mixed|void
      * @throws \Exception
      */
-    public function updateModel2(AbstractModelSingle $model, $data = null, $alive = true) {
+    public function updateModel2(AbstractModelSingle $model, $data = null) {
         if (isset($data['agreed'])) {
             if ($data['agreed'] == '1') {
                 $data['agreed'] = new DateTime();

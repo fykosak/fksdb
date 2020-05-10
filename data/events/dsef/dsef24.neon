@@ -49,18 +49,18 @@ events:
                         condition: %events.dsef24.appCond%
                         label: _('Přihlásit účastníka')
                         onExecuted:
-                            - Events\Transitions\MailSender(confirmation, .self)
+                            - FKSDB\Events\Transitions\MailSender(confirmation, .self)
                     applied->participated:
                         condition: and(role('admin'),eventWas())
                         label: _('Prezentovat')
                     applied->missed:
                         condition: and(role('admin'),eventWas())
                         label: _('Nepřijel')
-                        dangerous: true
+                        behaviorType: danger
                     applied->cancelled:
                         condition: role('admin')
                         label: _('Zrušit přihlášku')
-                        dangerous: true
+                        behaviorType: danger
                     cancelled->__terminated:
                         condition: role('admin')
                         label: _('Smazat přihlášku')
@@ -76,7 +76,7 @@ events:
                         label: _('Preferovaná skupina')
                         required: true
                         modifiable: %events.dsef24.appCond%
-                        factory: Chooser(_('Zvolit skupinu'), Events\Spec\Dsef\GroupOptions())
+                        factory: Chooser(_('Zvolit skupinu'), FKSDB\Events\Spec\Dsef\GroupOptions())
                     lunch_count:
                         label:  _('Počet baget k obědu')
                         modifiable: %events.dsef24.appCond%
@@ -95,7 +95,7 @@ events:
                     required: true # default false, it's conjuction with fields requirement
                     primary: true # base machine states are propagated to the machine
             formAdjustments:
-                - Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
+                - FKSDB\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 - @events.privacyPolicy
                 - @events.captcha
 

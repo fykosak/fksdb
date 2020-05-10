@@ -1,6 +1,6 @@
 <?php
 
-namespace Events\Accommodation;
+namespace FKSDB\Events\Accommodation;
 
 use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
@@ -18,7 +18,7 @@ class ScheduleTest extends ScheduleTestCase {
         Assert::equal(3, (int)$this->connection->fetchField('SELECT count(*) FROM person_schedule WHERE schedule_item_id = ?', $this->itemId));
     }
 
-    public function getAccommodationCapacity() {
+    public function getAccommodationCapacity(): int {
         return 3;
     }
 

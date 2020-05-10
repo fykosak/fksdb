@@ -1,6 +1,6 @@
 <?php
 
-namespace Events\Semantics;
+namespace FKSDB\Events\Semantics;
 
 use FKSDB\Expressions\EvaluatedExpression;
 use Nette\SmartObject;
@@ -29,7 +29,7 @@ class State extends EvaluatedExpression {
      * @return bool
      */
     public function __invoke(...$args): bool {
-        return $this->getHolder($args[0])->getMachine()->getPrimaryMachine()->getState() == $this->state;
+        return $this->getHolder($args[0])->getPrimaryHolder()->getModelState() == $this->state;
     }
 
     /**

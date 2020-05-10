@@ -1,13 +1,17 @@
 <?php
 
-namespace Events\Model\Grid;
+namespace FKSDB\Events\Model\Grid;
 
-use IteratorAggregate;
+use FKSDB\Events\Model\Holder\Holder;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-interface IHolderSource extends IteratorAggregate {
+interface IHolderSource {
+    /**
+     * @return Holder[]
+     */
+    public function getHolders(): array;
 }

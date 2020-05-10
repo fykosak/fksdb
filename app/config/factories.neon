@@ -5,7 +5,7 @@ services:
     mailTemplateFactory:
         class: Mail\MailTemplateFactory(%email.templatesDir%)
 
-    - Events\Model\ApplicationHandlerFactory
+    - FKSDB\Events\Model\ApplicationHandlerFactory
     - Exports\ExportFormatFactory
     - FKSDB\Components\Forms\Factories\StoredQueryFactory
     referencedEventPersonFactory:
@@ -26,9 +26,3 @@ services:
         class: FKSDB\Components\Forms\Factories\Events\DBReflectionFactory
 #transition
     transitionsFactory: FKSDB\Transitions\TransitionsFactory
-
-
-
-factories:
-# (so far unused)
-

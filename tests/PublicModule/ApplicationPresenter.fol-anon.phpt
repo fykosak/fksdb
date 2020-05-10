@@ -2,7 +2,7 @@
 
 $container = require '../bootstrap.php';
 
-use Events\Spec\Fol\CategoryProcessing;
+use FKSDB\Events\Spec\Fol\CategoryProcessing;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Application\Responses\TextResponse;

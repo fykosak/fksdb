@@ -36,5 +36,3 @@ require_once __DIR__ . '/Loaders/NetteLoader.php';
 Nette\Loaders\NetteLoader::getInstance()->register();
 
 Nette\Utils\SafeStream::register();
-
-class_alias('Nette\Config\Configurator', 'Nette\Configurator');

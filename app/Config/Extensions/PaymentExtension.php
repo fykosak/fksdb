@@ -5,7 +5,7 @@ namespace FKSDB\Config\Extensions;
 use FKSDB\Payment\PriceCalculator\PriceCalculator;
 use FKSDB\Payment\SymbolGenerator\Generators\Generators\DefaultGenerator;
 use FKSDB\Payment\Transition\PaymentMachine;
-use Nette\Config\CompilerExtension;
+use Nette\DI\CompilerExtension;
 
 /**
  * Class PaymentExtension
