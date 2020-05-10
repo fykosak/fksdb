@@ -61,111 +61,103 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
         parent::tearDown();
     }
 
-    /**
-     * @skip
-     */
-    public function testNewPerson() {
-        Environment::skip(); // TODO
-        $presenter = new PersonPresenter();
-        /*
-         * Define a form
-         */
-        $form = $this->createForm([
-            'person' => [
-                'other_name' => [
-                    'required' => true,
-                ],
-                'family_name' => [
-                    'required' => true,
-                ],
-            ],
-            'person_history' => [
-                'school_id' => [
-                    'required' => true,
-                ],
-                'study_year' => [
-                    'required' => true,
-                ],
-                'class' => [
-                    'required' => false,
-                ],
-            ],
-            'post_contact_p' => [
-                'address' => [
-                    'required' => true,
-                ],
-            ],
-            'person_info' => [
-                'email' => [
-                    'required' => true,
-                ],
-                'origin' => [
-                    'required' => false,
-                ],
-                'agreed' => [
-                    'required' => true,
-                ],
-            ],
-        ], 2000);
+    /*
+        public function testNewPerson() {
+            $presenter = new PersonPresenter();
+            // Define a form
 
-        /*
-         * Fill user data
-         */
-        $form->setValues([
-            ExtendedPersonHandler::CONT_AGGR => [
-                ExtendedPersonHandler::EL_PERSON => "__promise",
-                ExtendedPersonHandler::CONT_PERSON => [
-                    '_c_compact' => " ",
-                    'person' => [
-                        'other_name' => "Jana",
-                        'family_name' => "Triková",
+            $form = $this->createForm([
+                'person' => [
+                    'other_name' => [
+                        'required' => true,
                     ],
-                    'person_history' => [
-                        'school_id__meta' => "JS",
-                        'school_id' => "1",
-                        'study_year' => "2",
-                        'class' => "2.F",
+                    'family_name' => [
+                        'required' => true,
                     ],
-                    'post_contact_p' => [
-                        'address' => [
-                            'target' => "Krtkova 12",
-                            'city' => "Pohádky",
-                            'postal_code' => "43243",
-                            'country_iso' => "",
+                ],
+                'person_history' => [
+                    'school_id' => [
+                        'required' => true,
+                    ],
+                    'study_year' => [
+                        'required' => true,
+                    ],
+                    'class' => [
+                        'required' => false,
+                    ],
+                ],
+                'post_contact_p' => [
+                    'address' => [
+                        'required' => true,
+                    ],
+                ],
+                'person_info' => [
+                    'email' => [
+                        'required' => true,
+                    ],
+                    'origin' => [
+                        'required' => false,
+                    ],
+                    'agreed' => [
+                        'required' => true,
+                    ],
+                ],
+            ], 2000);
+
+            // Fill user data
+            $form->setValues([
+                ExtendedPersonHandler::CONT_AGGR => [
+                    ExtendedPersonHandler::EL_PERSON => "__promise",
+                    ExtendedPersonHandler::CONT_PERSON => [
+                        '_c_compact' => " ",
+                        'person' => [
+                            'other_name' => "Jana",
+                            'family_name' => "Triková",
+                        ],
+                        'person_history' => [
+                            'school_id__meta' => "JS",
+                            'school_id' => "1",
+                            'study_year' => "2",
+                            'class' => "2.F",
+                        ],
+                        'post_contact_p' => [
+                            'address' => [
+                                'target' => "Krtkova 12",
+                                'city' => "Pohádky",
+                                'postal_code' => "43243",
+                                'country_iso' => "",
+                            ],
+                        ],
+                        'person_info' => [
+                            'email' => "jana@sfsd.com",
+                            'origin' => "dfsd",
+                            'agreed' => "on",
                         ],
                     ],
-                    'person_info' => [
-                        'email' => "jana@sfsd.com",
-                        'origin' => "dfsd",
-                        'agreed' => "on",
-                    ],
-                ],
-            ]
-        ]);
-        $form->validate();
+                ]
+            ]);
+            $form->validate();
 
-        /*
-         * Check
-         */
-        $result = $this->fixture->handleForm($form, $presenter, true);
-        Assert::same(ExtendedPersonHandler::RESULT_OK_NEW_LOGIN, $result);
+            // Check
+            $result = $this->fixture->handleForm($form, $presenter, true);
+            Assert::same(ExtendedPersonHandler::RESULT_OK_NEW_LOGIN, $result);
 
-        $person = $this->fixture->getPerson();
-        Assert::same('Jana', $person->other_name);
-        Assert::same('Triková', $person->family_name);
+            $person = $this->fixture->getPerson();
+            Assert::same('Jana', $person->other_name);
+            Assert::same('Triková', $person->family_name);
 
-        $contestants = $person->getContestants(ModelContest::ID_FYKOS);
-        Assert::same(1, count($contestants));
+            $contestants = $person->getContestants(ModelContest::ID_FYKOS);
+            Assert::same(1, count($contestants));
 
-        $info = $person->getInfo();
-        Assert::same('jana@sfsd.com', $info->email);
-
-        $address = $person->getPermanentAddress();
-        Assert::same('Krtkova 12', $address->target);
-        Assert::same('43243', $address->postal_code);
-        Assert::notEqual(null, $address->region_id);
-    }
-
+            $info = $person->getInfo();
+            Assert::same('jana@sfsd.com', $info->email);
+    
+            $address = $person->getPermanentAddress();
+            Assert::same('Krtkova 12', $address->target);
+            Assert::same('43243', $address->postal_code);
+            Assert::notEqual(null, $address->region_id);
+        }
+    */
     private function createForm($fieldsDefinition, $acYear) {
         $form = new Form();
         $container = new ContainerWithOptions();
