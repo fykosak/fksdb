@@ -2,12 +2,15 @@
 
 use Authentication\PasswordAuthenticator;
 use Nette\Database\Connection;
+use Nette\Database\Context;
 use Nette\DI\Container;
 use Tester\Assert;
 use Tester\Environment;
 use Tester\TestCase;
 
 abstract class DatabaseTestCase extends TestCase {
+    /** @var Container */
+    private $container;
 
     /**
      * @var Connection
@@ -19,12 +22,17 @@ abstract class DatabaseTestCase extends TestCase {
     private $instanceNo;
 
     function __construct(Container $container) {
-        /** @var \Nette\Database\Context $context */
-        $context = $container->getService('database.database.context');
+        $this->container = $container;
+        /** @var Context $context */
+        $context = $container->getByType(Context::class);
         $this->connection = $context->getConnection();
         $max = $container->parameters['tester']['dbInstances'];
         $this->instanceNo = (getmypid() % $max) + 1;
         $this->connection->query('USE fksdb_test' . $this->instanceNo);
+    }
+
+    protected function getContext(): Container {
+        return $this->container;
     }
 
     protected function setUp() {

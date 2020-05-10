@@ -14,26 +14,16 @@ use Tester\Assert;
 class AESOPFormatTest extends DatabaseTestCase {
 
     /**
-     * @var Container
-     */
-    private $container;
-
-    /**
      * @var AESOPFormat
      */
     private $fixture;
 
-    function __construct(Container $container) {
-        parent::__construct($container);
-        $this->container = $container;
-    }
-
     protected function setUp() {
         parent::setUp();
         /** @var ExportFormatFactory $exportFactory */
-        $exportFactory = $this->container->getByType(ExportFormatFactory::class);
+        $exportFactory = $this->getContext()->getByType(ExportFormatFactory::class);
         /** @var StoredQueryFactory $queryFactory */
-        $queryFactory = $this->container->getByType(StoredQueryFactory::class);
+        $queryFactory = $this->getContext()->getByType(StoredQueryFactory::class);
         //$queryFactory->setPresenter(new MockSeriesPresenter());
 
         $parameters = [

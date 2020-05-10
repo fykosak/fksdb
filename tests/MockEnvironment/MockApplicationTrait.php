@@ -6,7 +6,9 @@ use Authentication\LoginUserStorage;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceLogin;
 use Mail\MailTemplateFactory;
+use Nette\Application\IPresenter;
 use Nette\Application\IPresenterFactory;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use Tester\Assert;
 
@@ -59,7 +61,11 @@ trait MockApplicationTrait {
         $storage->setAuthenticated(true);
     }
 
-    protected function createPresenter($presenterName) {
+    /**
+     * @param $presenterName
+     * @return IPresenter
+     */
+    protected function createPresenter($presenterName): IPresenter {
         $presenterFactory = $this->getContainer()->getByType(IPresenterFactory::class);
         $presenter = $presenterFactory->createPresenter($presenterName);
         $presenter->autoCanonicalize = false;

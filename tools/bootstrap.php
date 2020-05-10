@@ -12,7 +12,7 @@ require LIBS_DIR . '/../vendor/autoload.php';
 require LIBS_DIR . '/autoload.php';
 
 // Configure application
-$configurator = new \Nette\Configurator();
+$configurator = new Configurator();
 
 // Enable Nette Debugger for error visualisation & logging
 $configurator->enableDebugger(dirname(__FILE__) . '/../log');

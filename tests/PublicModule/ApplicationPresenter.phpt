@@ -19,11 +19,6 @@ class ApplicationPresenterTest extends EventTestCase {
      */
     private $fixture;
 
-    function __construct(Container $container) {
-        parent::__construct($container);
-        $this->setContainer($container);
-    }
-
     protected function setUp() {
         parent::setUp();
         $this->fixture = $this->createPresenter('Public:Application');

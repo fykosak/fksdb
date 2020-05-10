@@ -15,6 +15,7 @@ use FKSDB\ORM\Services\ServiceContestant;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Tester\Assert;
+use Tester\Environment;
 
 class ExtendedPersonHandlerTest extends DatabaseTestCase {
 
@@ -60,9 +61,11 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
         parent::tearDown();
     }
 
+    /**
+     * @skip
+     */
     public function testNewPerson() {
-        Assert::notEqual('pojeb sa', 'vyprcany test');
-        return;
+        Environment::skip(); // TODO
         $presenter = new PersonPresenter();
         /*
          * Define a form
@@ -144,7 +147,7 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
         /*
          * Check
          */
-        $result = $this->fixture->handleForm($form, $presenter);
+        $result = $this->fixture->handleForm($form, $presenter, true);
         Assert::same(ExtendedPersonHandler::RESULT_OK_NEW_LOGIN, $result);
 
         $person = $this->fixture->getPerson();
