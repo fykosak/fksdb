@@ -36,7 +36,7 @@ abstract class Stalking extends DatabaseTestCase {
             'family_name' => 'Testerovič',
             'other_name' => 'Tester',
             'born_family_name' => 'Travisový',
-            'display_name' => 'Tester Gihubový',
+            'display_name' => 'Tester Githubový',
             'gender' => 'M',
         ]);
         $this->insert(DbNames::TAB_PERSON_INFO, [
