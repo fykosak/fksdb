@@ -47,6 +47,7 @@ class EventsExtension extends CompilerExtension {
     const HOLDER_PREFIX = 'Holder_';
     const BASE_MACHINE_PREFIX = 'BaseMachine_';
     const BASE_HOLDER_PREFIX = 'BaseHolder_';
+
     /** @const Maximum length of state identifier. */
     const STATE_SIZE = 20;
 
@@ -80,7 +81,7 @@ class EventsExtension extends CompilerExtension {
      * @var array[baseMachineFullName] => expanded configuration
      */
     private $baseMachineConfig = [];
-    /** @var */
+    /** @var string */
     private $schemeFile;
 
     /**
