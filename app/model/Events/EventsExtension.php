@@ -32,6 +32,7 @@ use Nette\DI\Statement;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use Nette\Utils\Arrays;
+use Nette\Utils\Strings;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -41,13 +42,12 @@ use Nette\Utils\Arrays;
 class EventsExtension extends CompilerExtension {
 
     const MAIN_RESOLVER = 'eventLayoutResolver';
-    const TRANSITION_FACTORY = 'Transition';
     const FIELD_FACTORY = 'Field';
     const MACHINE_PREFIX = 'Machine_';
     const HOLDER_PREFIX = 'Holder_';
     const BASE_MACHINE_PREFIX = 'BaseMachine_';
     const BASE_HOLDER_PREFIX = 'BaseHolder_';
-    const CLASS_TRANSITION = Transition::class;
+
     const CLASS_RESOLVER = LayoutResolver::class;
 
     /** @const Maximum length of state identifier. */
@@ -55,7 +55,7 @@ class EventsExtension extends CompilerExtension {
 
     /** @const Regexp for configuration section names */
     const NAME_PATTERN = '/[a-z0-9_]/i';
-
+    /** @var string[] */
     public static $semanticMap = [
         'RefPerson' => PersonFactory::class,
         'Chooser' => ChooserFactory::class,
@@ -83,7 +83,8 @@ class EventsExtension extends CompilerExtension {
      * @var array[baseMachineFullName] => expanded configuration
      */
     private $baseMachineConfig = [];
-    private $transtionFactory;
+
+    /** @var string */
     private $schemeFile;
 
     /**
@@ -108,7 +109,6 @@ class EventsExtension extends CompilerExtension {
 
         $config = $this->getConfig();
 
-        $this->createTransitionFactory();
         $eventDispatchFactory = $this->getContainerBuilder()
             ->addDefinition('event.dispatch')->setFactory(EventDispatchFactory::class);
 
@@ -204,26 +204,40 @@ class EventsExtension extends CompilerExtension {
         $def->setArguments([$templateDir, $this->definitionsMap]); //TODO!!
     }
 
-    /*
-     * Shared factories
+    /**
+     * @param string $baseName
+     * @param array $states
+     * @param string $mask
+     * @param array $definition
+     * @return ServiceDefinition
      */
+    private function createTransitionService(string $baseName, array $states, string $mask, array $definition): ServiceDefinition {
+        if (!Transition::validateTransition($mask, $states)) {
+            throw new MachineDefinitionException("Invalid transition $mask for base machine $baseName.");
+        }
 
-    private function createTransitionFactory() {
-        $factory = $this->getContainerBuilder()->addDefinition($this->getTransitionName());
-        $factory->setShared(false);
-        $factory->setClass(self::CLASS_TRANSITION, ['%mask%', '%label%', '%behaviorType%']);
-        $factory->setInternal(true);
+        if (!$definition['label'] && $definition['visible'] !== false) {
+            throw new MachineDefinitionException("Transition $mask with non-false visibility must have label defined.");
+        }
 
+        $factory = $this->getContainerBuilder()->addDefinition($this->getTransitionName($baseName, $mask));
+        $factory->setFactory(Transition::class, [$mask, $definition['label'], $definition['behaviorType']]);
         $parameters = array_keys($this->scheme['transition']);
-        array_unshift($parameters, 'mask');
-        $factory->setParameters($parameters);
-
-        $factory->addSetup('setCondition', '%condition%');
-        $factory->addSetup('setEvaluator', '@events.expressionEvaluator');
-        $factory->addSetup('$service->onExecuted = array_merge($service->onExecuted, ?)', '%onExecuted%');
-        $factory->addSetup('setVisible', '%visible%');
-
-        $this->transtionFactory = $factory;
+        foreach ($parameters as $parameter) {
+            switch ($parameter) {
+                case 'label':
+                case 'onExecuted':
+                case 'behaviorType':
+                    break;
+                default:
+                    if (isset($definition[$parameter])) {
+                        $factory->addSetup('set' . ucfirst($parameter), [$definition[$parameter]]);
+                    }
+            }
+        }
+        $factory->addSetup('setEvaluator', ['@events.expressionEvaluator']);
+        $factory->addSetup('$service->onExecuted = array_merge($service->onExecuted, ?)', [$definition['onExecuted']]);
+        return $factory;
     }
 
     /**
@@ -328,7 +342,7 @@ class EventsExtension extends CompilerExtension {
      * @return ServiceDefinition
      * @throws NeonSchemaException
      */
-    private function createBaseMachineFactory($eventName, $baseName, $instanceName) {
+    private function createBaseMachineFactory(string $eventName, string $baseName, string $instanceName): ServiceDefinition {
         $definition = $this->getBaseMachineConfig($eventName, $baseName);
         $factoryName = $this->getBaseMachineName($eventName, $baseName);
         $factory = $this->getContainerBuilder()->addDefinition(uniqid($factoryName));
@@ -356,19 +370,9 @@ class EventsExtension extends CompilerExtension {
         }
         $states = array_keys($definition['states']);
 
-        foreach ($definition['transitions'] as $mask => $transitionDef) {
-            if (!Transition::validateTransition($mask, $states)) {
-                throw new MachineDefinitionException("Invalid transition $mask for base machine $eventName.$baseName.");
-            }
-            $transitionDef = NeonScheme::readSection($transitionDef, $this->scheme['transition']);
-            if (!$transitionDef['label'] && $transitionDef['visible'] !== false) {
-                throw new MachineDefinitionException("Transition $mask with non-false visibility must have label defined.");
-            }
-
-            array_unshift($transitionDef, $mask);
-            $defka = $this->transtionFactory;
-            $stmt = new Statement($defka, $transitionDef);
-            $factory->addSetup('addTransition', $stmt);
+        foreach ($definition['transitions'] as $mask => $transitionRawDef) {
+            $transitionDef = NeonScheme::readSection($transitionRawDef, $this->scheme['transition']);
+            $factory->addSetup('addTransition', $this->createTransitionService($factoryName, $states, $mask, $transitionDef));
         }
 
         return $factory;
@@ -527,10 +531,12 @@ class EventsExtension extends CompilerExtension {
     }
 
     /**
+     * @param string $baseName
+     * @param string $mask
      * @return string
      */
-    private function getTransitionName() {
-        return $this->prefix(self::TRANSITION_FACTORY);
+    private function getTransitionName(string $baseName, string $mask): string {
+        return $id = uniqid($baseName . '_transition_' . str_replace('-', '_', Strings::webalize($mask)) . '__');
     }
 
     /**
