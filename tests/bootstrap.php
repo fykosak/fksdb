@@ -2,6 +2,7 @@
 
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Configurator;
+use Nette\Database\Context;
 use Nette\Utils\Finder;
 use Tracy\Debugger;
 
@@ -26,12 +27,13 @@ require LIBS_DIR . '/autoload.php';
 
 define('CONFIG_DIR', APP_DIR . DIRECTORY_SEPARATOR . 'config');
 
+
 // Configure application
 $configurator = new Configurator();
 
 $configurator->setDebugMode(false);
 Debugger::$logDirectory = LOG_DIR;
-
+Tester\Environment::setup();
 
 // Enable RobotLoader - this will load all classes automatically
 $configurator->setTempDirectory(TEMP_DIR);
@@ -58,13 +60,10 @@ foreach (Finder::findFiles('*.neon')->from(dirname(__FILE__) . '/neon') as $file
 }
 $container = $configurator->createContainer();
 
-//
 // Register addons
-//
 Replicator::register();
 
 /* Always acquire locks in the order as below! */
 define('LOCK_DB', __DIR__ . '/tmp/database.lock');
 define('LOCK_UPLOAD', __DIR__ . '/tmp/upload.lock');
 return $container;
-

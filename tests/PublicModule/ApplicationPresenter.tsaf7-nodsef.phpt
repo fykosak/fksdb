@@ -2,6 +2,7 @@
 
 $container = require '../bootstrap.php';
 
+use FKSDB\ORM\Services\ServiceEmailMessage;
 use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
 
@@ -64,9 +65,9 @@ class ApplicationPresenterTest extends ApplicationPresenterTsafTestCase {
             'eventId' => $this->tsafEventId,
             'id' => $this->tsafAppId,
         ]);
-
-        $mailer = $this->getContainer()->getService('nette.mailer');
-        $before = $mailer->getSentMessages();
+        /** @var ServiceEmailMessage $serviceEmail */
+        $serviceEmail = $this->getContainer()->getByType(ServiceEmailMessage::class);
+        $before = $serviceEmail->getTable()->count();
         $response = $this->fixture->run($request);
 
         Assert::type(RedirectResponse::class, $response);
@@ -85,7 +86,7 @@ class ApplicationPresenterTest extends ApplicationPresenterTsafTestCase {
         Assert::equal(1, $eApplication->e_dsef_group_id);
         Assert::equal(3, $eApplication->lunch_count);
 
-        Assert::equal($before + 2, $mailer->getSentMessages());
+        Assert::equal($before + 2, $serviceEmail->getTable()->count());
     }
 
 }

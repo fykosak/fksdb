@@ -13,11 +13,6 @@ abstract class ApplicationPresenterDsefTestCase extends EventTestCase {
     protected $fixture;
     protected $personId;
 
-    function __construct(Container $container) {
-        parent::__construct($container);
-        $this->setContainer($container);
-    }
-
     protected function setUp() {
         parent::setUp();
 

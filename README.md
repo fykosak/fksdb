@@ -47,3 +47,5 @@ Run
 ===
 
 1) Register yourself and then add superuser role to the created login.
+
+<img src="https://img.shields.io/badge/coverage-3%25-red" />

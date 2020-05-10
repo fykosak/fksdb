@@ -6,6 +6,7 @@ use DatabaseTestCase;
 use MockEnvironment\MockApplicationTrait;
 use Nette\Application\Request;
 use Nette\DI\Config\Helpers;
+use Nette\DI\Container;
 use Nette\Http\FileUpload;
 use Nette\Utils\Finder;
 use Tester\Assert;
@@ -27,6 +28,15 @@ abstract class SubmitTestCase extends DatabaseTestCase {
      * @var SubmitPresenter
      */
     protected $fixture;
+
+    /**
+     * SubmitTestCase constructor.
+     * @param Container $container
+     */
+    public function __construct(Container $container) {
+        parent::__construct($container);
+        $this->setContainer($container);
+    }
 
     protected function setUp() {
         parent::setUp();
@@ -109,9 +119,8 @@ abstract class SubmitTestCase extends DatabaseTestCase {
                     'do' => 'uploadForm-form-submit',
         ]);
 
-        $request = new Request('Public:Submit', 'POST', $post, $postData);
         //$request->setFlag(Request::SECURED);
-        return $request;
+        return new Request('Public:Submit', 'POST', $post, $postData);
     }
 
     protected function createFileUpload() {

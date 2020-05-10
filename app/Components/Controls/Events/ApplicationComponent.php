@@ -8,6 +8,7 @@ use FKSDB\Events\Model\ApplicationHandler;
 use FKSDB\Events\Model\ApplicationHandlerException;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Logging\FlashMessageDump;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -21,6 +22,7 @@ use Nette\Utils\JsonException;
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
+ *
  */
 class ApplicationComponent extends Control {
 
@@ -279,6 +281,5 @@ class ApplicationComponent extends Control {
             $this->redirect('this');
         }
     }
-
 }
 

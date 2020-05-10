@@ -34,11 +34,9 @@ foreach (Finder::findFiles('*.neon')->from(dirname(__FILE__) . '/../data/events'
 
 $container = $configurator->createContainer();
 
-//
 // Register addons
-//
 Replicator::register();
-//
+
 // Configure and run the application!
 $container->application->run();
 

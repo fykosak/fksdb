@@ -26,6 +26,9 @@ use FKSDB\Config\NeonScheme;
 use Nette\DI\Config\Helpers as ConfigHelpers;
 use Nette\DI\Config\Loader;
 use Nette\DI\CompilerExtension;
+use Nette\DI\CompilerExtension;
+use Nette\DI\Config\Loader;
+use Nette\DI\Config\Helpers as ConfigHelpers;
 use Nette\DI\Container;
 use Nette\DI\ServiceDefinition;
 use Nette\DI\Statement;
@@ -43,12 +46,11 @@ use Nette\Utils\Strings;
 class EventsExtension extends CompilerExtension {
 
     const MAIN_RESOLVER = 'eventLayoutResolver';
-    const FIELD_FACTORY = 'Field';
+    const FIELD_FACTORY = 'Field_';
     const MACHINE_PREFIX = 'Machine_';
     const HOLDER_PREFIX = 'Holder_';
     const BASE_MACHINE_PREFIX = 'BaseMachine_';
     const BASE_HOLDER_PREFIX = 'BaseHolder_';
-
     /** @const Maximum length of state identifier. */
     const STATE_SIZE = 20;
 
@@ -82,6 +84,7 @@ class EventsExtension extends CompilerExtension {
      * @var array[baseMachineFullName] => expanded configuration
      */
     private $baseMachineConfig = [];
+
     /** @var string */
     private $schemeFile;
 

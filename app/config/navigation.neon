@@ -1,11 +1,5 @@
 navigation:
     nodes:
-        Org.dashboard.default:
-            # title: Organizátorský pultík
-            # params:
-            # link:
-            # visible:
-
         vyfuk:
             title: Web Výfuku
             link: http://vyfuk.mff.cuni.cz/
@@ -18,11 +12,11 @@ navigation:
             title: Web Fyziklani
             link: http://Fyziklani.cz/
             icon: 'fa fa-external-link'
-        Public.submit.default:
+        Public.Submit.default:
             visible: true
 
     structure:
-        org.dashboard.default:
+        Org.Dashboard.default:
             - Dispatch.default
             - Org.Inbox.default
             - Org.Points.default
@@ -37,24 +31,24 @@ navigation:
             - Common.Person.search
             - Common.Dashboard.default
             - Org.Dashboard.default
-        common.dashboard.default:
+        Common.Dashboard.default:
             - Common.Dashboard.default
             - Common.Validation.default
             - Common.Person.search
             - Common.Spam.list
             - Common.Chart.list
             - Common.School.list
-        common.validation.default:
+        Common.Validation.default:
             - Common.Validation.preview
             - Common.Validation.list
-        public.dashboard.default:
+        Public.Dashboard.default:
             - Dispatch.Default
             - Public.Submit.default
             - Public.Application.list
             - fykos
             - vyfuk
             - Fyziklani
-        fyziklani.dashboard.default:
+        Fyziklani.Dashboard.default:
             - Fyziklani.Submit.create
             - Fyziklani.Submit.list
             - Fyziklani.Close.list
@@ -64,12 +58,12 @@ navigation:
             - Fyziklani.Task.import
             - Fyziklani.GameSetup.default
 
-        event.seating.default:
+        Event.Seating.default:
             - Event.Seating.edit
             - Event.Seating.download
             - Event.Seating.preview
             - Event.Seating.list
-        fyziklani.results.default:
+        Fyziklani.Results.default:
             - Fyziklani.Dashboard.default
             - Fyziklani.Diplomas.results
             - Fyziklani.Results.presentation
@@ -77,20 +71,20 @@ navigation:
             - Fyziklani.Results.teamStatistics
             - Fyziklani.Results.taskStatistics
             - Fyziklani.Results.correlationStatistics
-        event.dashboard.default:
+        Event.Dashboard.default:
             - Event.TeamApplication.list
             - Event.Application.list
             - Event.EventOrg.list
             - Event.Payment.create
             - Event.Payment.list
             - Fyziklani.Dashboard.default
-            - Event.ScheduleGroup.groups
+            - Event.ScheduleGroup.list
             - Event.Seating.default
             - Event.Model.default
             - Event.Chart.list
             - Event.Dispatch.default
             - Event.Dashboard.default
-        org.inbox.default:
+        Org.Inbox.default:
             - Org.Inbox.list
             - Org.Inbox.inbox
             - Org.Inbox.handout
