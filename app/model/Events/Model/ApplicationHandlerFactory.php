@@ -1,6 +1,6 @@
 <?php
 
-namespace Events\Model;
+namespace FKSDB\Events\Model;
 
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Models\ModelEvent;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Events\Model;
+namespace FKSDB\Events\Model;
 
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;

@@ -2,12 +2,12 @@
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
-use Events\EventsExtension;
-use Events\Machine\BaseMachine;
-use Events\Model\ExpressionEvaluator;
-use Events\Model\Holder\DataValidator;
-use Events\Model\Holder\Field;
-use Events\Model\PersonContainerResolver;
+use FKSDB\Events\EventsExtension;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Model\ExpressionEvaluator;
+use FKSDB\Events\Model\Holder\DataValidator;
+use FKSDB\Events\Model\Holder\Field;
+use FKSDB\Events\Model\PersonContainerResolver;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedEventPersonFactory;
 use FKSDB\Config\Expressions\Helpers;
 use FKSDB\ORM\Services\ServicePerson;

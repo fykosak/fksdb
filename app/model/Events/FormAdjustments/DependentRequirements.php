@@ -1,6 +1,6 @@
 <?php
 
-namespace Events\FormAdjustments;
+namespace FKSDB\Events\FormAdjustments;
 
 use Nette\Forms\Form;
 use Nette\Forms\IControl;

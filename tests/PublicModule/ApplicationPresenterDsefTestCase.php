@@ -1,6 +1,6 @@
 <?php
 
-use Events\EventTestCase;
+use FKSDB\Events\EventTestCase;
 use Nette\Utils\DateTime;
 use Nette\DI\Container;
 use PublicModule\ApplicationPresenter;

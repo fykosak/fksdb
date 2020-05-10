@@ -1,6 +1,6 @@
 <?php
 
-namespace Events;
+namespace FKSDB\Events;
 
 use DatabaseTestCase;
 use MockEnvironment\MockApplicationTrait;

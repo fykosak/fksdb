@@ -1,8 +1,8 @@
 <?php
 
-namespace Events\Model;
+namespace FKSDB\Events\Model;
 
-use Events\EventTestCase;
+use FKSDB\Events\EventTestCase;
 use Nette\DI\Container;
 use Nette\Utils\DateTime;
 use PublicModule\ApplicationPresenter;

@@ -1,10 +1,10 @@
 <?php
 
-namespace Events\FormAdjustments;
+namespace FKSDB\Events\FormAdjustments;
 
-use Events\Machine\BaseMachine;
-use Events\Machine\Machine;
-use Events\Model\Holder\Holder;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FormUtils;
 use Nette\Forms\Form;
@@ -42,7 +42,7 @@ class Captcha implements IFormAdjustment {
      * @param Holder $holder
      */
     public function adjust(Form $form, Machine $machine, Holder $holder) {
-        if ($machine->getPrimaryMachine()->getState() != BaseMachine::STATE_INIT || $this->user->isLoggedIn()) {
+        if ($holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT || $this->user->isLoggedIn()) {
             return;
         }
 
