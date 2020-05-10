@@ -25,6 +25,6 @@ abstract class BasePresenter extends \ContestPresenter {
      * @return string[]
      */
     public function getNavRoots(): array {
-        return ['org.dashboard.default'];
+        return ['Org.Dashboard.default'];
     }
 }
