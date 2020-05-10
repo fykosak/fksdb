@@ -6,8 +6,6 @@ use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
 use Nette\Database\Connection;
 use Nette\Database\Context;
-use Nette\Database\Reflection\AmbiguousReferenceKeyException;
-use Nette\Database\Reflection\MissingReferenceException;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 use Persons\Deduplication\MergeStrategy\CannotMergeException;
@@ -315,12 +313,10 @@ class TableMerger {
             $this->refTables = [];
             foreach ($this->connection->getSupplementalDriver()->getTables() as $otherTable) {
                 try {
-                    list($table, $refColumn) = $this->connection->getDatabaseReflection()->getHasManyReference($this->table, $otherTable['name'], self::$refreshReferencing);
+                    list($table, $refColumn) = $this->context->getConventions()->getHasManyReference($this->table, $otherTable['name'], self::$refreshReferencing);
                     self::$refreshReferencing = false;
                     $this->refTables[$table] = $refColumn;
-                } catch (MissingReferenceException $exception) {
-                    /* empty */
-                } catch (AmbiguousReferenceKeyException $exception) {
+                } catch (\Nette\Database\Conventions\AmbiguousReferenceKeyException $exception) {
                     /* empty */
                 }
             }
@@ -366,10 +362,10 @@ class TableMerger {
     private function getReferencedTable($column) {
         if (!array_key_exists($column, $this->referencedTables)) {
             try {
-                list($table, $refColumn) = $this->context->getDatabaseReflection()->getBelongsToReference($this->table, $column, self::$refreshReferenced);
+                list($table, $refColumn) = $this->context->getConventions()->getBelongsToReference($this->table, $column, self::$refreshReferenced);
                 self::$refreshReferenced = false;
                 $this->referencedTables[$column] = $table;
-            } catch (MissingReferenceException$exception) {
+            } catch (\Exception $exception) {
                 $this->referencedTables[$column] = null;
             }
         }
