@@ -4,10 +4,12 @@ namespace FKSDB\Events\Model;
 
 $container = require '../../bootstrap.php';
 
+use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Events\EventTestCase;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Logging\DevNullLogger;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\ORM\Services\ServiceEvent;
 use MockEnvironment\MockApplicationTrait;
@@ -55,8 +57,11 @@ class ApplicationHandlerTest extends EventTestCase {
 
 
         $handlerFactory = $this->getContainer()->getByType(ApplicationHandlerFactory::class);
+        /** @var ModelEvent $event */
         $event = $this->serviceEvent->findByPrimary(1);
-        $this->holder = $this->getContainer()->createEventHolder($event);
+        /** @var EventDispatchFactory $factory */
+        $factory =  $this->getContainer()->getByType(EventDispatchFactory::class);
+        $this->holder =$factory->getDummyHolder($event);
         $this->fixture = $handlerFactory->create($event, new DevNullLogger());
 
         $this->mockApplication();
