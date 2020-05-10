@@ -83,14 +83,9 @@ class EventsExtension extends CompilerExtension {
      * @var array[baseMachineFullName] => expanded configuration
      */
     private $baseMachineConfig = [];
-    /** @var ServiceDefinition */
-    private $fieldFactory;
+
     /** @var string */
     private $schemeFile;
-    /** @var array[] */
-    private $baseDefinitions = ['holders' => []];
-    private $transtionFactory;
-
 
     /**
      * EventsExtension constructor.
