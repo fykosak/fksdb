@@ -25,59 +25,28 @@ class NetteLoader extends AutoLoader
 	private static $instance;
 
 	/** @var array */
-	public $renamed = array(
-		'Nette\Http\User' => 'Nette\Security\User',
+	public $renamed = [
 		'Nette\Templating\DefaultHelpers' => 'Nette\Templating\Helpers',
 		'Nette\Latte\ParseException' => 'Nette\Latte\CompileException',
-	);
+    ];
 
 	/** @var array */
-	public $list = array(
+	public $list = [
 		'NetteModule\MicroPresenter' => '/Application/MicroPresenter',
 		'Nette\Application\AbortException' => '/Application/exceptions',
 		'Nette\Application\ApplicationException' => '/Application/exceptions',
 		'Nette\Application\BadRequestException' => '/Application/exceptions',
 		'Nette\Application\ForbiddenRequestException' => '/Application/exceptions',
 		'Nette\Application\InvalidPresenterException' => '/Application/exceptions',
-		'Nette\ArgumentOutOfRangeException' => '/common/exceptions',
-		//'Nette\ArrayHash' => '/common/ArrayHash',
-		//'Nette\ArrayList' => '/common/ArrayList',
 		'Nette\Callback' => '/common/Callback',
-		'Nette\DI\MissingServiceException' => '/DI/exceptions',
-		'Nette\DI\ServiceCreationException' => '/DI/exceptions',
-		'Nette\Database\Reflection\AmbiguousReferenceKeyException' => '/Database/Reflection/exceptions',
-		'Nette\Database\Reflection\MissingReferenceException' => '/Database/Reflection/exceptions',
-		//'Nette\DateTime' => '/common/DateTime',
-		'Nette\DeprecatedException' => '/common/exceptions',
-		'Nette\DirectoryNotFoundException' => '/common/exceptions',
 		'Nette\Environment' => '/common/Environment',
 		'Nette\FatalErrorException' => '/common/exceptions',
-		'Nette\FileNotFoundException' => '/common/exceptions',
 		'Nette\Framework' => '/common/Framework',
 		'Nette\FreezableObject' => '/common/FreezableObject',
 		'Nette\IFreezable' => '/common/IFreezable',
-		'Nette\IOException' => '/common/exceptions',
-		'Nette\Image' => '/common/Image',
-		'Nette\InvalidArgumentException' => '/common/exceptions',
-		'Nette\InvalidStateException' => '/common/exceptions',
 		'Nette\Latte\CompileException' => '/Latte/exceptions',
-		'Nette\Mail\SmtpException' => '/Mail/SmtpMailer',
-		'Nette\MemberAccessException' => '/common/exceptions',
-		'Nette\NotImplementedException' => '/common/exceptions',
-		'Nette\NotSupportedException' => '/common/exceptions',
-		'Nette\NetteObject' => '/common/Object',
-		'Nette\ObjectMixin' => '/common/ObjectMixin',
-		'Nette\OutOfRangeException' => '/common/exceptions',
-		'Nette\StaticClassException' => '/common/exceptions',
-		'Nette\UnexpectedValueException' => '/common/exceptions',
-		'Nette\UnknownImageFileException' => '/common/Image',
-		'Nette\Utils\AssertionException' => '/Utils/Validators',
-		'Nette\Utils\JsonException' => '/Utils/Json',
-		'Nette\Utils\NeonEntity' => '/Utils/Neon',
-		'Nette\Utils\NeonException' => '/Utils/Neon',
-		'Nette\Utils\RegexpException' => '/Utils/Strings',
 		'Nette\Utils\TokenizerException' => '/Utils/Tokenizer',
-	);
+    ];
 
 
 	/**
@@ -114,5 +83,4 @@ class NetteLoader extends AutoLoader
 			self::$count++;
 		}
 	}
-
 }
