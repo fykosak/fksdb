@@ -1973,6 +1973,10 @@ msgstr "Points have been stored. %d points, team: \"%s\" (%d), task: %s \"%s\""
 msgid "Herné parametre niesu nastavené"
 msgstr "Game parameters not set"
 
+#: i18n/../app/model/ORM/Models/ModelQuizQuestion.php:19
+msgid "otázka"
+msgstr "question"
+
 #: i18n/../app/model/ORM/Models/Schedule/ModelScheduleItem.php:103
 msgid "Unlimited capacity"
 msgstr ""

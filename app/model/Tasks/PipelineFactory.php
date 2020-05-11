@@ -8,6 +8,7 @@ use FKSDB\ORM\Services\ServiceStudyYear;
 use FKSDB\ORM\Services\ServiceTask;
 use FKSDB\ORM\Services\ServiceTaskContribution;
 use FKSDB\ORM\Services\ServiceTaskStudyYear;
+use FKSDB\ORM\Services\ServiceQuizQuestion;
 use Pipeline\Pipeline;
 
 /**
@@ -29,6 +30,11 @@ class PipelineFactory {
      * @var array
      */
     private $contributionMappings;
+    
+    /**
+     * @var ServiceQuizQuestion
+     */
+    private $serviceQuizQuestion;
 
     /**
      * @see StudyYearsFromXML
@@ -66,16 +72,18 @@ class PipelineFactory {
      * @param $columnMappings
      * @param $contributionMappings
      * @param $defaultStudyYears
+     * @param ServiceQuizQuestion $serviceQuizQuestion
      * @param ServiceTask $serviceTask
      * @param ServiceTaskContribution $serviceTaskContribution
      * @param ServiceTaskStudyYear $serviceTaskStudyYear
      * @param ServiceStudyYear $serviceStudyYear
      * @param ServiceOrg $serviceOrg
      */
-    function __construct($columnMappings, $contributionMappings, $defaultStudyYears, ServiceTask $serviceTask, ServiceTaskContribution $serviceTaskContribution, ServiceTaskStudyYear $serviceTaskStudyYear, ServiceStudyYear $serviceStudyYear, ServiceOrg $serviceOrg) {
+    function __construct($columnMappings, $contributionMappings, $defaultStudyYears, ServiceQuizQuestion $serviceQuizQuestion, ServiceTask $serviceTask, ServiceTaskContribution $serviceTaskContribution, ServiceTaskStudyYear $serviceTaskStudyYear, ServiceStudyYear $serviceStudyYear, ServiceOrg $serviceOrg) {
         $this->columnMappings = $columnMappings;
         $this->contributionMappings = $contributionMappings;
         $this->defaultStudyYears = $defaultStudyYears;
+        $this->serviceQuizQuestion = $serviceQuizQuestion;
         $this->serviceTask = $serviceTask;
         $this->serviceTaskContribution = $serviceTaskContribution;
         $this->serviceTaskStudyYear = $serviceTaskStudyYear;
@@ -92,7 +100,7 @@ class PipelineFactory {
         $pipeline->setLogger(new MemoryLogger());
 
         // common stages
-        $pipeline->addStage(new TasksFromXML($this->serviceTask));
+        $pipeline->addStage(new TasksFromXML($this->serviceTask, $this->serviceQuizQuestion));
         $pipeline->addStage(new DeadlineFromXML($this->serviceTask));
         $pipeline->addStage(new ContributionsFromXML($this->serviceTaskContribution, $this->serviceOrg));
         $pipeline->addStage(new StudyYearsFromXML($this->defaultStudyYears, $this->serviceTaskStudyYear, $this->serviceStudyYear));

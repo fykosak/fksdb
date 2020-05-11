@@ -29,6 +29,8 @@ class DbNames {
     const TAB_PERSON_INFO = 'person_info';
     const TAB_POST_CONTACT = 'post_contact';
     const TAB_PSC_REGION = 'psc_region';
+    const TAB_QUIZ = 'quiz';
+    const TAB_QUIZ_SUBMIT = 'quiz_submit';
     const TAB_REGION = 'region';
     const TAB_ROLE = 'role';
     const TAB_SCHOOL = 'school';
@@ -38,6 +40,7 @@ class DbNames {
     const TAB_STORED_QUERY_TAG_TYPE = 'stored_query_tag_type';
     const TAB_STUDY_YEAR = 'study_year';
     const TAB_SUBMIT = 'submit';
+    const TAB_SUBMIT_QUIZ = 'submit_quiz';
     const TAB_TASK = 'task';
     const TAB_TASK_CONTRIBUTION = 'task_contribution';
     const TAB_TASK_STUDY_YEAR = 'task_study_year';

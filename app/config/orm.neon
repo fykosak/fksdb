@@ -2,38 +2,40 @@
 # ORM services definitions
 #
 services:
-    ServiceAuthToken:        FKSDB\ORM\Services\ServiceAuthToken
-    ServiceAddress:          FKSDB\ORM\Services\ServiceAddress
+    ServiceAuthToken:           FKSDB\ORM\Services\ServiceAuthToken
+    ServiceAddress:             FKSDB\ORM\Services\ServiceAddress
 
-    ServiceContestant:       FKSDB\ORM\Services\ServiceContestant
-    ServiceContest:          FKSDB\ORM\Services\ServiceContest
-    ServiceContestYear:      FKSDB\ORM\Services\ServiceContestYear
-    ServiceEvent:            FKSDB\ORM\Services\ServiceEvent
-    ServiceEventOrg:         FKSDB\ORM\Services\ServiceEventOrg
-    ServiceEventType:        FKSDB\ORM\Services\ServiceEventType
-    ServiceFlag:             FKSDB\ORM\Services\ServiceFlag
-    ServiceGlobalSession:    FKSDB\ORM\Services\ServiceGlobalSession
-    ServiceLogin:            FKSDB\ORM\Services\ServiceLogin
-    ServiceMPersonHasFlag:   ServiceMPersonHasFlag
-    ServiceMPostContact:     ServiceMPostContact
-    ServiceMStoredQueryTag:  ServiceMStoredQueryTag
-    ServiceOrg:              FKSDB\ORM\Services\ServiceOrg
-    ServiceEmailMessage:     FKSDB\ORM\Services\ServiceEmailMessage
-    ServicePerson:           FKSDB\ORM\Services\ServicePerson
-    ServicePersonHasFlag:    FKSDB\ORM\Services\ServicePersonHasFlag
-    ServicePersonHistory:    FKSDB\ORM\Services\ServicePersonHistory
-    ServicePersonInfo:       FKSDB\ORM\Services\ServicePersonInfo
-    ServicePostContact:      FKSDB\ORM\Services\ServicePostContact
-    ServiceRegion:           FKSDB\ORM\Services\ServiceRegion
-    ServiceSubmit:           FKSDB\ORM\Services\ServiceSubmit
-    ServiceSchool:           FKSDB\ORM\Services\ServiceSchool
+    ServiceContestant:          FKSDB\ORM\Services\ServiceContestant
+    ServiceContest:             FKSDB\ORM\Services\ServiceContest
+    ServiceContestYear:         FKSDB\ORM\Services\ServiceContestYear
+    ServiceEvent:               FKSDB\ORM\Services\ServiceEvent
+    ServiceEventOrg:            FKSDB\ORM\Services\ServiceEventOrg
+    ServiceEventType:           FKSDB\ORM\Services\ServiceEventType
+    ServiceFlag:                FKSDB\ORM\Services\ServiceFlag
+    ServiceGlobalSession:       FKSDB\ORM\Services\ServiceGlobalSession
+    ServiceLogin:               FKSDB\ORM\Services\ServiceLogin
+    ServiceMPersonHasFlag:      ServiceMPersonHasFlag
+    ServiceMPostContact:        ServiceMPostContact
+    ServiceMStoredQueryTag:     ServiceMStoredQueryTag
+    ServiceOrg:                 FKSDB\ORM\Services\ServiceOrg
+    ServiceEmailMessage:        FKSDB\ORM\Services\ServiceEmailMessage
+    ServicePerson:              FKSDB\ORM\Services\ServicePerson
+    ServicePersonHasFlag:       FKSDB\ORM\Services\ServicePersonHasFlag
+    ServicePersonHistory:       FKSDB\ORM\Services\ServicePersonHistory
+    ServicePersonInfo:          FKSDB\ORM\Services\ServicePersonInfo
+    ServicePostContact:         FKSDB\ORM\Services\ServicePostContact
+    ServiceQuizQuestion:        FKSDB\ORM\Services\ServiceQuizQuestion
+    ServiceRegion:              FKSDB\ORM\Services\ServiceRegion
+    ServiceSubmit:              FKSDB\ORM\Services\ServiceSubmit
+    ServiceSubmitQuizQuestion:  FKSDB\ORM\Services\ServiceSubmitQuizQuestion
+    ServiceSchool:              FKSDB\ORM\Services\ServiceSchool
 
-    ServiceStudyYear:        FKSDB\ORM\Services\ServiceStudyYear
-    ServiceTask:             FKSDB\ORM\Services\ServiceTask
-    ServiceTaskContribution: FKSDB\ORM\Services\ServiceTaskContribution
-    ServiceTaskStudyYear:    FKSDB\ORM\Services\ServiceTaskStudyYear
-    ServiceTeacher:          FKSDB\ORM\Services\ServiceTeacher
-    ServicePayment:          FKSDB\ORM\Services\ServicePayment
+    ServiceStudyYear:           FKSDB\ORM\Services\ServiceStudyYear
+    ServiceTask:                FKSDB\ORM\Services\ServiceTask
+    ServiceTaskContribution:    FKSDB\ORM\Services\ServiceTaskContribution
+    ServiceTaskStudyYear:       FKSDB\ORM\Services\ServiceTaskStudyYear
+    ServiceTeacher:             FKSDB\ORM\Services\ServiceTeacher
+    ServicePayment:             FKSDB\ORM\Services\ServicePayment
 
     ServiceStoredQuery:      FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery
     ServiceStoredQueryParameter: FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryParameter

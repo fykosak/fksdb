@@ -1460,6 +1460,47 @@ CREATE TABLE IF NOT EXISTS `email_message`
     `sent`             DATETIME     NULL DEFAULT NULL
 )
     ENGINE = 'InnoDB';
+-- -----------------------------------------------------
+-- Table `quiz`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `quiz` (
+	`question_id`   INT(11)     NOT NULL  AUTO_INCREMENT,
+	`task_id`       INT(11)     NOT NULL,
+	`questionnr`    TINYINT(4)  NULL      DEFAULT NULL
+	COMMENT 'Cislo otazky',
+	`points`        TINYINT(4)  NULL      DEFAULT NULL
+	COMMENT 'Pocet bodu',
+	`answer`        VARCHAR(1)  NULL      DEFAULT NULL
+	COMMENT 'Spravna odpoved',
+	PRIMARY KEY (`question_id`),
+	INDEX `quiz_task_ui` (`task_id` ASC),
+	CONSTRAINT `quiz_ibfk_1`
+	FOREIGN KEY (`task_id`)
+	REFERENCES `task` (`task_id`)
+)
+	ENGINE = InnoDB;
+-- -----------------------------------------------------
+-- Table `submit_quiz`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `submit_quiz` (
+	`submit_question_id`  INT(11)    NOT NULL AUTO_INCREMENT,
+	`ct_id`               INT(11)    NOT NULL
+	COMMENT 'Resitel',
+	`question_id`         INT(11)    NOT NULL
+	COMMENT 'Otazka',
+	`submitted_on`        DATETIME   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`answer`              VARCHAR(1) NULL,
+	PRIMARY KEY (`submit_question_id`),
+	UNIQUE INDEX `submit_qstn` (`ct_id` ASC, `question_id` ASC),
+	INDEX `question_id` (`question_id` ASC),
+	CONSTRAINT `submit_qstn_ibfk_1`
+	FOREIGN KEY (`ct_id`)
+	REFERENCES `contestant_base` (`ct_id`),
+	CONSTRAINT `submit_qstn_ibfk_2`
+	FOREIGN KEY (`question_id`)
+	REFERENCES `quiz` (`question_id`)
+)
+	ENGINE = InnoDB;
 
 SET SQL_MODE = @OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS = @OLD_FOREIGN_KEY_CHECKS;

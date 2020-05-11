@@ -21,6 +21,8 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Tracy\Debugger;
+use FKSDB\ORM\Services\ServiceQuizQuestion;
+use FKSDB\ORM\Services\ServiceSubmitQuizQuestion;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -40,6 +42,14 @@ class SubmitPresenter extends BasePresenter {
     public function injectSubmitService(ServiceSubmit $submitService) {
         $this->submitService = $submitService;
     }
+    
+    /** @var ServiceSubmitQuizQuestion */
+    private $submitQuizQuestionService;
+
+    /** @param ServiceSubmitQuizQuestion $submitQuizQuestionService */
+    public function injectSubmitQuizQuestionService(ServiceSubmitQuizQuestion $submitQuizQuestionService) {
+        $this->submitQuizQuestionService = $submitQuizQuestionService;
+    }
 
     /** @var FilesystemUploadedSubmitStorage */
     private $uploadedSubmitStorage;
@@ -56,6 +66,15 @@ class SubmitPresenter extends BasePresenter {
     public function injectTaskService(ServiceTask $taskService) {
         $this->taskService = $taskService;
     }
+    
+    /** @var ServiceQuizQuestion */
+    private $quizQuestionService;
+    
+    /** @param ServiceQuizQuestion $quizQuestionService */
+    public function injectQuizQuestionService(ServiceQuizQuestion $quizQuestionService) {
+        $this->quizQuestionService = $quizQuestionService;
+    }
+    
     /* ******************* AUTH ************************/
     /**
      * @throws BadRequestException
@@ -126,6 +145,9 @@ class SubmitPresenter extends BasePresenter {
         }
         /** @var ModelTask $task */
         foreach ($this->getAvailableTasks() as $task) {
+            $questions = $this->quizQuestionService->getTable();
+            $questions->where('task_id', $task->task_id);
+            
             if ($task->submit_deadline != $prevDeadline) {
                 $form->addGroup(sprintf(_('Termín %s'), $task->submit_deadline));
             }
@@ -136,19 +158,36 @@ class SubmitPresenter extends BasePresenter {
             $container = new ModelContainer();
             $form->addComponent($container, 'task' . $task->task_id);
             //$container = $form->addContainer();
-            $upload = $container->addUpload('file', $task->getFQName());
-            $conditionedUpload = $upload
-                ->addCondition(Form::FILLED)
-                ->addRule(Form::MIME_TYPE, _('Lze nahrávat pouze PDF soubory.'), 'application/pdf'); //TODO verify this check at production server
+            if (!count($questions)) {
+                $upload = $container->addUpload('file', $task->getFQName());
+                $conditionedUpload = $upload
+                    ->addCondition(Form::FILLED)
+                    ->addRule(Form::MIME_TYPE, _('Lze nahrávat pouze PDF soubory.'), 'application/pdf'); //TODO verify this check at production server
 
-            if (!in_array($studyYear, array_keys($task->getStudyYears()))) {
-                $upload->setOption('description', _('Úloha není určena pro Tvou kategorii.'));
-                $upload->setDisabled();
-            }
-
-            if ($submit && $this->uploadedSubmitStorage->fileExists($submit)) {
-                $overwrite = $container->addCheckbox('overwrite', _('Přepsat odeslané řešení.'));
-                $conditionedUpload->addConditionOn($overwrite, Form::EQUAL, false)->addRule(~Form::FILLED, _('Buď zvolte přepsání odeslaného řešení anebo jej neposílejte.'));
+                if (!in_array($studyYear, array_keys($task->getStudyYears()))) {
+                    $upload->setOption('description', _('Úloha není určena pro Tvou kategorii.'));
+                    $upload->setDisabled();
+              }
+   
+              if ($submit && $this->uploadedSubmitStorage->fileExists($submit)) {
+                  $overwrite = $container->addCheckbox('overwrite', _('Přepsat odeslané řešení.'));
+                    $conditionedUpload->addConditionOn($overwrite, Form::EQUAL, false)->addRule(~Form::FILLED, _('Buď zvolte přepsání odeslaného řešení anebo jej neposílejte.'));
+                }
+            } else {
+                //Implementaton of quiz questions
+                $options = ['A' => 'A', 'B' => 'B', 'C' => 'C', 'D' => 'D']; //TODO add variability of options
+                foreach ($questions as $question) {
+                    $select = $container->addRadioList('question' . $question->question_id, $question->getFQName(), $options);
+                    foreach ($options as $option) {
+                        $select->setValue($option);
+                    }
+                    
+                    $existingEntry = $this->submitQuizQuestionService->findByContestant($this->getContestant()->ct_id, $question->question_id);
+                    if ($existingEntry) {
+                        $existingAnswer = $existingEntry->answer;
+                        $select->setValue($existingAnswer);
+                    }
+                }
             }
 
 
@@ -208,6 +247,7 @@ class SubmitPresenter extends BasePresenter {
 
             foreach ($taskIds as $taskId) {
                 /** @var ModelTask $task */
+                $questions = $this->quizQuestionService->getTable()->where('task_id', $taskId);
                 $task = $this->taskService->findByPrimary($taskId);
 
                 if (!isset($validIds[$taskId])) {
@@ -216,6 +256,13 @@ class SubmitPresenter extends BasePresenter {
                 }
 
                 $taskValues = $values['task' . $task->task_id];
+                
+                //Implemetation of quiz questions
+                foreach ($questions as $question) {
+                    $name = "question" . $question->question_id;
+                    $answer = $taskValues[$name];
+                    $this->submitQuizQuestionService->saveSubmitedQuestion($question, $this->getContestant(), $answer);
+                }
 
                 if (!isset($taskValues['file'])) { // upload field was disabled
                     continue;
