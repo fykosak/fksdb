@@ -6,11 +6,9 @@ use BasePresenter;
 use Nette\Application\Application;
 use Nette\Application\UI\ITemplate;
 use Nette\Application\UI\Presenter;
-use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Application\BadRequestException;
 use Nette\Http\IRequest;
 use Nette\InvalidArgumentException;
-use Latte\Engine;
 use Nette\Localization\ITranslator;
 
 /**
@@ -112,11 +110,7 @@ class MailTemplateFactory {
             throw new InvalidArgumentException("Cannot find template '$filename.$lang'.");
         }
         $template = $presenter->getTemplateFactory()->createTemplate();
-        //$template = new Template(new Engine());
         $template->setFile($file);
-
-        //    $template->registerHelperLoader('Nette\Templating\Helpers::loader');
-        //    $template->registerFilter(new Engine());
         $template->control = $template->_control = $control;
         if ($presenter instanceof BasePresenter) {
             $template->baseUri = $this->request->getUrl()->getBaseUrl();
@@ -124,5 +118,4 @@ class MailTemplateFactory {
 
         return $template;
     }
-
 }
