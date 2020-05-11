@@ -69,7 +69,11 @@ class SeriesCalculator {
      */
     public function getTotalSeries(ModelContest $contest, $year): int {
         //TODO allow variance?
-        return 6;
+        if ($contest->contest_id = 2 && $year >= 9) { //TODO Think of better solution of deciding
+            return 8;
+        } else {
+            return 6;
+        }
     }
 
 }
