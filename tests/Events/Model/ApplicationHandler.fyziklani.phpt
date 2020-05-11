@@ -1,13 +1,15 @@
 <?php
 
-namespace Events\Model;
+namespace FKSDB\Events\Model;
 
 $container = require '../../bootstrap.php';
 
-use Events\EventTestCase;
-use Events\Model\Holder\Holder;
+use FKSDB\Events\EventDispatchFactory;
+use FKSDB\Events\EventTestCase;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Logging\DevNullLogger;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\ORM\Services\ServiceEvent;
 use MockEnvironment\MockApplicationTrait;
@@ -23,11 +25,6 @@ class ApplicationHandlerTest extends EventTestCase {
      * @var ApplicationHandler
      */
     private $fixture;
-
-    /**
-     * @var ServiceEvent
-     */
-    private $serviceEvent;
 
     /**
      * @var ServiceFyziklaniTeam
@@ -51,12 +48,16 @@ class ApplicationHandlerTest extends EventTestCase {
             . "                          VALUES (1, 1, 1, 1, '2001-01-02', '2001-01-02', 'Testovací Fyziklání')");
 
         $this->serviceTeam = $this->getContainer()->getByType(ServiceFyziklaniTeam::class);
-        $this->serviceEvent = $this->getContainer()->getByType(ServiceEvent::class);
+        /** @var ServiceEvent $serviceEvent */
+        $serviceEvent = $this->getContainer()->getByType(ServiceEvent::class);
 
 
         $handlerFactory = $this->getContainer()->getByType(ApplicationHandlerFactory::class);
-        $event = $this->serviceEvent->findByPrimary(1);
-        $this->holder = $this->getContainer()->createEventHolder($event);
+        /** @var ModelEvent $event */
+        $event = $serviceEvent->findByPrimary(1);
+        /** @var EventDispatchFactory $factory */
+        $factory = $this->getContainer()->getByType(EventDispatchFactory::class);
+        $this->holder = $factory->getDummyHolder($event);
         $this->fixture = $handlerFactory->create($event, new DevNullLogger());
 
         $this->mockApplication();
@@ -71,7 +72,7 @@ class ApplicationHandlerTest extends EventTestCase {
 
     /**
      * This test doesn't test much, at least it detects weird data passing in CategoryProcessing.
-     * @throws Events\Model\ApplicationHandlerException
+     * @throws \FKSDB\Events\Model\ApplicationHandlerException
      */
     public function testNewApplication() {
         $id1 = $this->createPerson('Karel', 'Kolář', ['email' => 'k.kolar@email.cz']);
@@ -203,11 +204,10 @@ class ApplicationHandlerTest extends EventTestCase {
         $data = ArrayHash::from($data);
         $this->fixture->storeAndExecute($this->holder, $data);
 
+        /** @var ModelFyziklaniTeam $team */
+        $team = $this->serviceTeam->getTable()->where('name', $teamName)->fetch();
+        Assert::notEqual(false, $team);
 
-        $result = $this->serviceTeam->getTable()->where('name', $teamName)->fetch();
-        Assert::notEqual(false, $result);
-
-        $team = ModelFyziklaniTeam::createFromActiveRow($result);
         Assert::equal($teamName, $team->name);
 
         $count = $this->connection->fetchField('SELECT COUNT(1) FROM e_fyziklani_participant WHERE e_fyziklani_team_id = ?', $this->holder->getPrimaryHolder()->getModel()->getPrimary());

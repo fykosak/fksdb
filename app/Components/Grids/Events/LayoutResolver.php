@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Grids\Events;
 
+use FKSDB\NotImplementedException;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\SmartObject;
 
@@ -28,10 +29,10 @@ class LayoutResolver {
 
     /**
      * LayoutResolver constructor.
-     * @param $templateDir
-     * @param $definitions
+     * @param string $templateDir
+     * @param array $definitions
      */
-    function __construct($templateDir, $definitions) {
+    function __construct(string $templateDir, array $definitions) {
         $this->templateDir = $templateDir;
         $this->definitions = $definitions;
     }
@@ -39,16 +40,9 @@ class LayoutResolver {
     /**
      * @param ModelEvent $event
      * @return string
+     * @throws NotImplementedException
      */
-    public function getTableLayout(ModelEvent $event) {
-        return $this->getTemplate($event, 'tableLayout');
-    }
-
-    /**
-     * @param ModelEvent $event
-     * @return string
-     */
-    public function getFormLayout(ModelEvent $event) {
+    public function getFormLayout(ModelEvent $event): string {
         return $this->getTemplate($event, 'formLayout');
     }
 
@@ -56,8 +50,9 @@ class LayoutResolver {
      * @param ModelEvent $event
      * @param $type
      * @return string
+     * @throws NotImplementedException
      */
-    private function getTemplate(ModelEvent $event, $type) {
+    private function getTemplate(ModelEvent $event, string $type): string {
         $eventTypeId = $event->event_type_id;
         $eventYear = $event->event_year;
         $result = null;
@@ -72,6 +67,7 @@ class LayoutResolver {
         if ($result) {
             return $this->templateDir . DIRECTORY_SEPARATOR . $result . self::TEMPLATE_EXT;
         }
+        throw new NotImplementedException();
     }
 
 }

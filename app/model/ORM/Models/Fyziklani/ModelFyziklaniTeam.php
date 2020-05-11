@@ -145,7 +145,6 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
      */
     public function getScheduleRest(array $types = ['accommodation', 'weekend']): array {
         $toPay = [];
-        /** @var ModelPerson $person */
         foreach ($this->getPersons() as $person) {
             $toPay[] = $person->getScheduleRests($this->getEvent(), $types);
         }

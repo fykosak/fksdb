@@ -5,6 +5,7 @@ namespace FyziklaniModule;
 use DatabaseTestCase;
 use FKSDB\ORM\DbNames;
 use MockEnvironment\MockApplicationTrait;
+use Nette\DI\Container;
 use Nette\Utils\DateTime;
 
 abstract class FyziklaniTestCase extends DatabaseTestCase {
@@ -14,6 +15,11 @@ abstract class FyziklaniTestCase extends DatabaseTestCase {
     protected $eventId;
 
     protected $userPersonId;
+
+    public function __construct(Container $container) {
+        parent::__construct($container);
+        $this->setContainer($container);
+    }
 
     protected function setUp() {
         parent::setUp();

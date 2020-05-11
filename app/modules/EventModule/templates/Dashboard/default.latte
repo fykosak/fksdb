@@ -11,7 +11,7 @@
         </li>
     </ul>
     <h2>{_'Actions'}</h2>
-    {control navigation, "event.dashboard.default"}
+    {control navigation 'Event.Dashboard.default'}
     <h2>{_'Old system "fast" links'}</h2>
     <a class="btn btn-secondary"
        href="{plink :Org:EventOrg:list eventId=>$event->event_id ,contestId => $event->getEventType()->contest_id, year=>$event->year}">{_'Organizers'}</a>

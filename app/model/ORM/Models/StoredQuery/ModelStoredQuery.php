@@ -6,7 +6,7 @@ use Exports\StoredQueryPostProcessing;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use InvalidArgumentException;
-use ModelMStoredQueryTag;
+use FKSDB\ORM\ModelsMulti\ModelMStoredQueryTag;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Security\IResource;
 

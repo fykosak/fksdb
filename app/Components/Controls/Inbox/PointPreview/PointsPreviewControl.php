@@ -20,9 +20,6 @@ class PointsPreviewControl extends SeriesTableControl {
         parent::__construct($context, $seriesTable);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function render() {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR.'layout.latte');
         $this->template->render();

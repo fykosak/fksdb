@@ -11,6 +11,7 @@ use Nette\Utils\Html;
  * @package FKSDB\Components\DatabaseReflection\ValuePrinters
  */
 class DatePrinter extends AbstractValuePrinter {
+    /** @var string|null */
     protected $format = 'c';
 
     /**

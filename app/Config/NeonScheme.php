@@ -5,7 +5,6 @@ namespace FKSDB\Config;
 use FKSDB\Config\Expressions\Helpers;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Arrays;
-use Nette\Utils\NeonException;
 
 /**
  * So far only helper methods to "checked" laoding of Neon configuration.
@@ -71,12 +70,3 @@ class NeonScheme {
     }
 
 }
-
-/**
- * Class NeonSchemaException
- * @package FKSDB\Config
- */
-class NeonSchemaException extends NeonException {
-
-}
-

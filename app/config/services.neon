@@ -3,9 +3,6 @@
 #
 
 services:
-    database.database.context: Nette\Database\Context
-    database.database.conventions: Nette\Database\Conventions\DiscoveredConventions
-    database.database.structure: Nette\Database\Structure
     accountManager:
         class: FKSDB\Authentication\AccountManager
         setup:
@@ -21,7 +18,8 @@ services:
     - Authorization\RelatedPersonAuthorizator
     - FKSDB\Components\Events\ExpressionPrinter
     downloader: FKSDB\Astrid\Downloader(%astrid.user%, %astrid.password%, %astrid.host%, %tempDir%, %contestMapping%, ...)
-    Facebook: self({appId: %facebook.appId%, secret: %facebook.secret%})
+    Facebook:
+        class: Facebook({appId: %facebook.appId%, secret: %facebook.secret%})
     globalParameters: FKSDB\Config\GlobalParameters
     yearCalculator: FKSDB\YearCalculator
     news: News
@@ -74,10 +72,10 @@ services:
     #
     # Events
     #
-    events.dataValidator: Events\Model\Holder\DataValidator
-    events.expressionEvaluator: Events\Model\ExpressionEvaluator
-    events.privacyPolicy: Events\FormAdjustments\PrivacyPolicy
-    events.captcha: Events\FormAdjustments\Captcha
+    events.dataValidator: FKSDB\Events\Model\Holder\DataValidator
+    events.expressionEvaluator: FKSDB\Events\Model\ExpressionEvaluator
+    events.privacyPolicy: FKSDB\Events\FormAdjustments\PrivacyPolicy
+    events.captcha: FKSDB\Events\FormAdjustments\Captcha
 
     #
     # Fyziklani

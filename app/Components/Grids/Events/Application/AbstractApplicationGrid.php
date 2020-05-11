@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Grids\Events\Application;
 
 use Closure;
-use Events\Model\Holder\Holder;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Grids\BaseGrid;

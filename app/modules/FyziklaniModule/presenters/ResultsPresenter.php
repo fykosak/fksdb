@@ -122,7 +122,7 @@ class ResultsPresenter extends BasePresenter {
      */
     protected function getNavRoots(): array {
         $roots = parent::getNavRoots();
-        $roots[] = 'fyziklani.results.default';
+        $roots[] = 'Fyziklani.Results.default';
         return $roots;
     }
 }
