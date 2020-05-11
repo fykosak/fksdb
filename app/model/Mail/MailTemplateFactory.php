@@ -5,6 +5,7 @@ namespace Mail;
 use BasePresenter;
 use Nette\Application\Application;
 use Nette\Application\UI\ITemplate;
+use Nette\Application\UI\Presenter;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Application\BadRequestException;
 use Nette\Http\IRequest;
@@ -26,17 +27,21 @@ class MailTemplateFactory {
     private $application;
     /** @var ITranslator */
     private $translator;
+    /** @var IRequest */
+    private $request;
 
     /**
      * MailTemplateFactory constructor.
-     * @param $templateDir
+     * @param string $templateDir
      * @param Application $application
      * @param ITranslator $translator
+     * @param IRequest $request
      */
-    function __construct(string $templateDir, Application $application, ITranslator $translator) {
+    function __construct(string $templateDir, Application $application, ITranslator $translator, IRequest $request) {
         $this->templateDir = $templateDir;
         $this->application = $application;
         $this->translator = $translator;
+        $this->request = $request;
     }
 
     /**
@@ -92,6 +97,7 @@ class MailTemplateFactory {
      * @throws BadRequestException
      */
     public final function createFromFile(string $filename, string $lang = null): ITemplate {
+        /** @var Presenter $presenter */
         $presenter = $this->application->getPresenter();
         if (($lang === null) && !$presenter instanceof BasePresenter) {
             throw new InvalidArgumentException("Expecting BasePresenter, got " . ($presenter ? get_class($presenter) : (string)$presenter));
@@ -105,14 +111,15 @@ class MailTemplateFactory {
         if (!file_exists($file)) {
             throw new InvalidArgumentException("Cannot find template '$filename.$lang'.");
         }
-        $template = new Template(new Engine());
+        $template = $presenter->getTemplateFactory()->createTemplate();
+        //$template = new Template(new Engine());
         $template->setFile($file);
 
         //    $template->registerHelperLoader('Nette\Templating\Helpers::loader');
         //    $template->registerFilter(new Engine());
         $template->control = $template->_control = $control;
         if ($presenter instanceof BasePresenter) {
-            $template->baseUri = $presenter->getContext()->getByType(IRequest::class)->getUrl()->getBaseUrl();
+            $template->baseUri = $this->request->getUrl()->getBaseUrl();
         }
 
         return $template;
