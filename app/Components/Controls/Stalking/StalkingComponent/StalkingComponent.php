@@ -9,12 +9,10 @@ use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use FKSDB\Exceptions\NotImplementedException;
 use Nette\InvalidStateException;
-use Nette\Templating\FileTemplate;
 
 /**
  * Class StalkingComponent
  * @package FKSDB\Components\Controls\Stalking
- * @property-read FileTemplate $template
  */
 class StalkingComponent extends StalkingControl {
     /**

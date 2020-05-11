@@ -2,7 +2,6 @@
 
 namespace EventModule;
 
-use FKSDB\Events\Machine\Machine;
 use FKSDB\Components\Events\ExpressionPrinter;
 use FKSDB\Components\Events\GraphComponent;
 use FKSDB\Events\EventDispatchFactory;

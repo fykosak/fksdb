@@ -10,7 +10,6 @@ use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
-use Nette\InvalidArgumentException;
 use ReflectionClass;
 use ReflectionMethod;
 
@@ -255,7 +254,7 @@ class Navigation extends BaseControl {
      */
     public function preparePresenter(string $presenterName, string $action, $providedParams): Presenter {
         $ownPresenter = $this->getPresenter();
-        $presenter = $this->presenterBuilder->preparePresenter($presenterName, $action, $providedParams, $ownPresenter->getParameter());
+        $presenter = $this->presenterBuilder->preparePresenter($presenterName, $action, $providedParams, $ownPresenter->getParameters());
         if (!$presenter instanceof INavigablePresenter) {
             throw new BadTypeException(INavigablePresenter::class, $presenter);
         }

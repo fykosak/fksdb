@@ -3,8 +3,6 @@
 namespace FKSDB\Components\DatabaseReflection\EventParticipant;
 
 use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
-use Nette\Application\UI\PresenterComponent;
-use Nette\Localization\ITranslator;
 
 /**
  * Class PersonIdRow
@@ -12,16 +10,6 @@ use Nette\Localization\ITranslator;
  */
 class PersonIdRow extends AbstractParticipantRow {
     use DefaultPrinterTrait;
-
-    /**
-     * PersonIdRow constructor.
-     * @param ITranslator $translator
-     * @param PresenterComponent $presenterComponent
-     */
-    public function __construct(ITranslator $translator, PresenterComponent $presenterComponent) {
-        parent::__construct($translator);
-        $this->presenterComponent = $presenterComponent;
-    }
 
     /**
      * @return string

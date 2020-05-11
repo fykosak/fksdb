@@ -34,8 +34,8 @@ trait MockApplicationTrait {
 
     protected function mockApplication() {
         $container = $this->getContainer();
-        $mockPresenter = new MockPresenter($container);
-        $container->callMethod([$mockPresenter, 'injectTranslator']);
+        $mockPresenter = new MockPresenter();
+        $container->callInjects($mockPresenter);
         $application = new MockApplication($mockPresenter);
 
         $mailFactory = $container->getByType(MailTemplateFactory::class);

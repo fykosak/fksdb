@@ -12,12 +12,10 @@ use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\DI\Container;
 use Nette\Localization\ITranslator;
-use Nette\Templating\FileTemplate;
 
 /**
  * Class CloseTeamControl
  * @package FKSDB\Components\Controls\Fyziklani
- * @property FileTemplate $template
  */
 class CloseTeamControl extends Control {
     /**

@@ -8,7 +8,7 @@ use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\IPersonReferencedModel;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\PresenterComponent;
+use Nette\Application\LinkGenerator;
 use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
 
@@ -19,16 +19,16 @@ use Nette\Utils\Html;
 class PersonLinkRow extends AbstractRow {
 
     /**
-     * @var PresenterComponent
+     * @var LinkGenerator
      */
     private $presenterComponent;
 
     /**
      * PersonLinkRow constructor.
      * @param ITranslator $translator
-     * @param PresenterComponent $presenterComponent
+     * @param LinkGenerator $presenterComponent
      */
-    public function __construct(ITranslator $translator, PresenterComponent $presenterComponent) {
+    public function __construct(ITranslator $translator, LinkGenerator $presenterComponent) {
         parent::__construct($translator);
         $this->presenterComponent = $presenterComponent;
     }

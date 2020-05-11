@@ -58,7 +58,6 @@ foreach (Finder::findFiles('*.neon')->from(dirname(__FILE__) . '/../data/events'
 foreach (Finder::findFiles('*.neon')->from(dirname(__FILE__) . '/neon') as $filename => $file) {
     $configurator->addConfig($filename, Configurator::NONE);
 }
-
 $container = $configurator->createContainer();
 
 // Register addons

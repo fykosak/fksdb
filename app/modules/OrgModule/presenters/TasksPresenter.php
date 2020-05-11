@@ -100,8 +100,9 @@ class TasksPresenter extends BasePresenter {
         $form->addSubmit('submit', _('Importovat'));
 
         $form->onSuccess[] = function (Form $seriesForm) {
-            return $this->validSubmitSeriesForm($seriesForm);
+            $this->validSubmitSeriesForm($seriesForm);
         };
+
         return $control;
     }
 

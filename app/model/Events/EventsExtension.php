@@ -23,21 +23,22 @@ use FKSDB\Components\Grids\Events\LayoutResolver;
 use FKSDB\Config\Expressions\Helpers;
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\Config\NeonScheme;
-use Nette\DI\CompilerExtension;
-use Nette\DI\Config\Loader;
 use Nette\DI\Config\Helpers as ConfigHelpers;
+use Nette\DI\Config\Loader;
+use Nette\DI\CompilerExtension;
 use Nette\DI\Container;
 use Nette\DI\ServiceDefinition;
 use Nette\DI\Statement;
 use Nette\InvalidArgumentException;
-use Nette\InvalidStateException;
 use Nette\Utils\Arrays;
 use Nette\Utils\Strings;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
+ * It's a f**** magic!
  *
  * @author Michal Koutný <michal@fykos.cz>
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class EventsExtension extends CompilerExtension {
 
@@ -67,7 +68,7 @@ class EventsExtension extends CompilerExtension {
         'parameter' => Parameter::class,
         'count' => Count::class,
     ];
-    /** @var */
+    /** @var array */
     private $scheme;
 
     /**
@@ -86,16 +87,13 @@ class EventsExtension extends CompilerExtension {
 
     /**
      * EventsExtension constructor.
-     * @param $schemaFile
+     * @param string $schemaFile
      */
-    function __construct($schemaFile) {
+    function __construct(string $schemaFile) {
         $this->schemeFile = $schemaFile;
         Helpers::registerSemantic(self::$semanticMap);
     }
 
-    /*
-     * Configuration loading
-     */
     /**
      * @throws NeonSchemaException
      */
@@ -108,6 +106,7 @@ class EventsExtension extends CompilerExtension {
 
         $eventDispatchFactory = $this->getContainerBuilder()
             ->addDefinition('event.dispatch')->setFactory(EventDispatchFactory::class);
+
 
         foreach ($config as $definitionName => $definition) {
             $this->validateConfigName($definitionName);
@@ -145,11 +144,11 @@ class EventsExtension extends CompilerExtension {
     }
 
     /**
-     * @param $definitionName
-     * @param $baseName
-     * @return mixed
+     * @param string $definitionName
+     * @param string $baseName
+     * @return array
      */
-    private function getBaseMachineConfig($definitionName, $baseName) {
+    private function getBaseMachineConfig(string $definitionName, string $baseName): array {
         $key = "$definitionName.$baseName";
         while (!isset($this->baseMachineConfig[$key])) { // 'while' instead of 'if' so that 'break' can be used instead of return
             $config = $this->getConfig();
@@ -183,9 +182,10 @@ class EventsExtension extends CompilerExtension {
     }
 
     /**
-     * @param $name
+     * @param string $name
+     * @throws InvalidArgumentException
      */
-    private function validateConfigName($name) {
+    private function validateConfigName(string $name) {
         if (!preg_match(self::NAME_PATTERN, $name)) {
             throw new InvalidArgumentException("Section name '$name' in events configuration is invalid.");
         }
@@ -259,11 +259,11 @@ class EventsExtension extends CompilerExtension {
     }
 
     /**
-     * @param $eventTypeIds
-     * @param $definition
-     * @return array
+     * @param int[] $eventTypeIds
+     * @param string[][] $definition
+     * @return string[]
      */
-    private function createAccessKeys($eventTypeIds, $definition): array {
+    private function createAccessKeys(array $eventTypeIds, array $definition): array {
         $keys = [];
         foreach ($eventTypeIds as $eventTypeId) {
             if ($definition['eventYears'] === true) {
@@ -282,23 +282,19 @@ class EventsExtension extends CompilerExtension {
      */
 
     /**
-     * @param $name
-     * @param $definition
+     * @param string $name
+     * @param array $definition
      * @return ServiceDefinition
      * @throws NeonSchemaException
      */
-    private function createMachineFactory($name, $definition): ServiceDefinition {
+    private function createMachineFactory(string $name, array $definition): ServiceDefinition {
         $machinesDef = NeonScheme::readSection($definition['machine'], $this->scheme['machine']);
-
-        /*
-         * Create factory definition.
-         */
+        // Create factory definition.
         $factoryName = $this->getMachineName($name);
         $factory = $this->getContainerBuilder()->addDefinition($factoryName);
         $factory->setFactory(Machine::class);
-        /*
-         * Create and add base machines into the machine (i.e. creating instances).
-         */
+
+        // Create and add base machines into the machine (i.e. creating instances).
         $primaryName = null;
         foreach ($machinesDef['baseMachines'] as $instanceName => $instanceDef) {
             $instanceDef = NeonScheme::readSection($instanceDef, $this->scheme['bmInstance']);
@@ -332,9 +328,9 @@ class EventsExtension extends CompilerExtension {
     }
 
     /**
-     * @param $eventName
-     * @param $baseName
-     * @param $instanceName
+     * @param string $eventName
+     * @param string $baseName
+     * @param string $instanceName
      * @return ServiceDefinition
      * @throws NeonSchemaException
      */
@@ -380,17 +376,16 @@ class EventsExtension extends CompilerExtension {
 
 
     /**
-     * @param $name
-     * @param $definition
+     * @param string $name
+     * @param array $definition
      * @throws NeonSchemaException
      */
-    private function createHolderFactory($name, $definition) {
+    private function createHolderFactory(string $name, array $definition) {
         $machineDef = NeonScheme::readSection($definition['machine'], $this->scheme['machine']);
         // Create factory definition.
         $factoryName = $this->getHolderName($name);
         $factory = $this->getContainerBuilder()->addDefinition($factoryName);
         $factory->setFactory(Holder::class);
-        //  $factory->setParameters(['FKSDB\ORM\Models\ModelEvent event']);
 
         // Create and add base machines into the machine (i.e. creating instances).
         $primaryName = null;
@@ -469,18 +464,18 @@ class EventsExtension extends CompilerExtension {
         $factory->addSetup('setParamScheme', [$paramScheme]);
 
 
-        $hasNondetermining = false;
+        $hasNonDetermining = false;
         foreach ($definition['fields'] as $name => $fieldDef) {
             $fieldDef = NeonScheme::readSection($fieldDef, $this->scheme['field']);
             if ($fieldDef['determining']) {
                 if ($fieldDef['required']) {
                     throw new MachineDefinitionException("Field '$name' cannot be both required and determining. Set required on the base holder.");
                 }
-                if ($hasNondetermining) {
+                if ($hasNonDetermining) {
                     throw new MachineDefinitionException("Field '$name' cannot be preceded by non-determining fields. Reorder the fields.");
                 }
             } else {
-                $hasNondetermining = true;
+                $hasNonDetermining = true;
             }
             array_unshift($fieldDef, $name);
             $factory->addSetup('addField', [new Statement($this->createFieldService($fieldDef))]);
@@ -493,36 +488,36 @@ class EventsExtension extends CompilerExtension {
      */
 
     /**
-     * @param $name
+     * @param string $name
      * @return string
      */
-    private function getMachineName($name) {
+    private function getMachineName(string $name): string {
         return $this->prefix(self::MACHINE_PREFIX . $name);
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return string
      */
-    private function getHolderName($name) {
+    private function getHolderName(string $name): string {
         return $this->prefix(self::HOLDER_PREFIX . $name);
     }
 
     /**
-     * @param $name
-     * @param $baseName
+     * @param string $name
+     * @param string $baseName
      * @return string
      */
-    private function getBaseMachineName($name, $baseName) {
+    private function getBaseMachineName(string $name, string $baseName): string {
         return $this->prefix(self::BASE_MACHINE_PREFIX . $name . '_' . $baseName);
     }
 
     /**
-     * @param $name
-     * @param $baseName
+     * @param string $name
+     * @param string $baseName
      * @return string
      */
-    private function getBaseHolderName($name, $baseName) {
+    private function getBaseHolderName(string $name, string $baseName): string {
         return $this->prefix(self::BASE_HOLDER_PREFIX . $name . '_' . $baseName);
     }
 
@@ -532,22 +527,13 @@ class EventsExtension extends CompilerExtension {
      * @return string
      */
     private function getTransitionName(string $baseName, string $mask): string {
-        return $id = uniqid($baseName . '_transition_' . str_replace('-', '_', Strings::webalize($mask)) . '__');
+        return uniqid($baseName . '_transition_' . str_replace('-', '_', Strings::webalize($mask)) . '__');
     }
 
     /**
      * @return string
      */
-    private function getFieldName() {
+    private function getFieldName(): string {
         return $this->prefix(uniqid(self::FIELD_FACTORY));
     }
-
-}
-
-/**
- * Class MachineDefinitionException
- * @package Events
- */
-class MachineDefinitionException extends InvalidStateException {
-
 }

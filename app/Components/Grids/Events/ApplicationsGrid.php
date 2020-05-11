@@ -16,7 +16,6 @@ use Nette\Application\UI\Presenter;
 use Nette\ComponentModel\IComponent;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
-use Nette\Templating\ITemplate;
 use Nette\Utils\Strings;
 
 
@@ -159,12 +158,11 @@ class ApplicationsGrid extends Control {
     }
 
     /**
-     * @param null $class
-     * @return ITemplate
+     * @return \Nette\Application\UI\ITemplate
      */
-    protected function createTemplate($class = NULL) {
-        $template = parent::createTemplate($class);
-        $template->setTranslator($this->getPresenter()->getTranslator());
+    protected function createTemplate() {
+        $template = parent::createTemplate();
+        $template->setTranslator($this->presenter->getTranslator());
         return $template;
     }
 

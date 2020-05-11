@@ -91,5 +91,4 @@ class EventDispatchFactory {
     private function createKey(ModelEvent $event): string {
         return $event->event_type_id . '-' . $event->event_year;
     }
-
 }

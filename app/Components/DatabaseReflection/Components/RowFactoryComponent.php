@@ -6,12 +6,11 @@ use FKSDB\Components\Forms\Factories\ITestedRowFactory;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
-use Nette\Templating\FileTemplate;
 
 /**
  * Class AbstractRowComponent
  * @package FKSDB\Components\DatabaseReflection
- * @property FileTemplate $template
+ *
  */
 class RowFactoryComponent extends Control {
     const LAYOUT_LIST_ITEM = 'list-item';

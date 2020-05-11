@@ -2,13 +2,11 @@
 
 namespace FKSDB\Components\Controls\Badges;
 
-use Nette\Templating\FileTemplate;
 use Nette\Utils\Html;
 
 /**
  * Class ContestBadge
  * @package FKSDB\Components\Controls\Stalking\Helpers
- * @property FileTemplate $template
  */
 class PermissionDeniedBadge extends Badge {
     /**

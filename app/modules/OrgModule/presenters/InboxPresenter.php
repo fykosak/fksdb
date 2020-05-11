@@ -280,7 +280,7 @@ class InboxPresenter extends SeriesPresenter {
         $container = parent::getPageStyleContainer();
         switch ($this->getAction()) {
             case 'inbox':
-                $container->mainContainerClassName = str_replace('container ', 'container-fluid ', $container->mainContainerClassName).' px-3';
+                $container->mainContainerClassName = str_replace('container ', 'container-fluid ', $container->mainContainerClassName) . ' px-3';
         }
         return $container;
     }

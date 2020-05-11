@@ -16,6 +16,7 @@ use Nette\SmartObject;
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
+ * @property array onExecuted
  */
 class Transition {
     use SmartObject;
@@ -353,7 +354,9 @@ class Transition {
             $inducedTransition->executed($holder, []);
         }
         try {
-            $this->onExecuted($this, $holder);
+            foreach ($this->onExecuted as $cb) {
+                $cb($this, $holder);
+            }
         } catch (\Exception $exception) {
             throw new TransitionOnExecutedException($this->getName(), null, $exception);
         }

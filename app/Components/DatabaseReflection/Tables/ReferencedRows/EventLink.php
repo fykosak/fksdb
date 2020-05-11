@@ -7,8 +7,8 @@ use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\IEventReferencedModel;
 use Nette\Application\BadRequestException;
+use Nette\Application\LinkGenerator;
 use Nette\Application\UI\InvalidLinkException;
-use Nette\Application\UI\PresenterComponent;
 use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
 
@@ -19,16 +19,16 @@ use Nette\Utils\Html;
 class EventLink extends AbstractRow {
 
     /**
-     * @var PresenterComponent
+     * @var LinkGenerator
      */
     private $presenterComponent;
 
     /**
      * PersonLinkRow constructor.
      * @param ITranslator $translator
-     * @param PresenterComponent $presenterComponent
+     * @param LinkGenerator $presenterComponent
      */
-    public function __construct(ITranslator $translator, PresenterComponent $presenterComponent) {
+    public function __construct(ITranslator $translator, LinkGenerator $presenterComponent) {
         parent::__construct($translator);
         $this->presenterComponent = $presenterComponent;
     }
@@ -57,7 +57,7 @@ class EventLink extends AbstractRow {
         if (!$model instanceof IEventReferencedModel) {
             throw new BadTypeException(IEventReferencedModel::class, $model);
         }
-        return Html::el('a')->addAttributes(['href' => $this->presenterComponent->getPresenter()->link(
+        return Html::el('a')->addAttributes(['href' => $this->presenterComponent->link(
             ':Event:Dashboard:default', ['eventId' => $model->getEvent()->event_id]
         )])->addText($model->getEvent()->name);
     }

@@ -16,12 +16,10 @@ use Nette\DI\Container;
 use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Form;
 use Nette\Localization\ITranslator;
-use Nette\Templating\FileTemplate;
 
 /**
  * Class EditSubmitControl
  * @package FKSDB\Components\Controls\Fyziklani
- * @property FileTemplate $template
  */
 class EditControl extends FormControl implements IEditEntityForm {
     /**

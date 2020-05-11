@@ -13,9 +13,8 @@ use Nette\Application\BadRequestException;
 use Nette\DI\CompilerExtension;
 use Nette\DI\ContainerBuilder;
 use Nette\DI\ServiceDefinition;
-use FKSDB\Exceptions\NotImplementedException;
 use Nette\DI\Statement;
-use stdClass;
+use FKSDB\Exceptions\NotImplementedException;
 
 /**
  * Class StalkingExtension

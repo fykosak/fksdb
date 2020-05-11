@@ -4,13 +4,11 @@ namespace FKSDB\Components\Controls\Badges;
 
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
-use Nette\Templating\FileTemplate;
 use Nette\Utils\Html;
 
 /**
  * Class Badge
  * @package FKSDB\Components\Controls\Badges
- * @property-read FileTemplate $template
  */
 abstract class Badge extends Control {
     /**

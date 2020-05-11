@@ -11,12 +11,11 @@ use FKSDB\ORM\Models\ModelPerson;
 use Nette\Application\UI\Control;
 use Nette\DI\Container;
 use Nette\Localization\ITranslator;
-use Nette\Templating\FileTemplate;
 
 /**
  * Class StalkingControl
  * @package FKSDB\Components\Controls\Stalking
- * @property FileTemplate $template
+ *
  */
 abstract class StalkingControl extends Control {
 

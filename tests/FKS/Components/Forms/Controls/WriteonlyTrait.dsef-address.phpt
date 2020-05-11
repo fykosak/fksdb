@@ -6,7 +6,7 @@ use FKSDB\ORM\Models\ModelPostContact;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Application\Responses\TextResponse;
-use Nette\Templating\ITemplate;
+use Nette\Application\UI\ITemplate;
 use Nette\Utils\DateTime;
 use Tester\Assert;
 

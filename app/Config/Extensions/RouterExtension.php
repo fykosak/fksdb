@@ -23,9 +23,8 @@ class RouterExtension extends CompilerExtension {
             'routes' => [],
             'disableSecured' => false,
         ]);
-
         $router = $container->getDefinition('router');
-        Debugger::barDump($router);
+
         $disableSecured = $config['disableSecured'];
 
         foreach ($config['routes'] as $action) {
@@ -46,7 +45,6 @@ class RouterExtension extends CompilerExtension {
                 }
                 unset($action['flags']);
             }
-
             $router->addSetup('$service[] = new Nette\Application\Routers\Route(?, ?, ?);', [$mask, $action, $flagsBin]);
         }
     }

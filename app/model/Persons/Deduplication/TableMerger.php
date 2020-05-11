@@ -369,7 +369,7 @@ class TableMerger {
                 list($table, $refColumn) = $this->context->getDatabaseReflection()->getBelongsToReference($this->table, $column, self::$refreshReferenced);
                 self::$refreshReferenced = false;
                 $this->referencedTables[$column] = $table;
-            } catch (MissingReferenceException$exception) {
+            } catch (MissingReferenceException $exception) {
                 $this->referencedTables[$column] = null;
             }
         }

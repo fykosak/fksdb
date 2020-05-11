@@ -3,7 +3,6 @@
 namespace FKSDB\Events\Model\Grid;
 
 use FKSDB\Events\EventDispatchFactory;
-use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Tables\TypedTableSelection;
 use Nette\DI\Container;
@@ -38,9 +37,7 @@ class InitSource extends AggregatedPersonSource implements IHolderSource {
     public function processEvent(ModelEvent $event) {
         /** @var EventDispatchFactory $factory */
         $factory = $this->container->getByType(EventDispatchFactory::class);
-
         $holder = $factory->getDummyHolder($event);
-
         $holder->setModel();
         return $holder;
     }

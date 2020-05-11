@@ -6,14 +6,12 @@ use FKSDB\Exceptions\BadTypeException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Templating\FileTemplate;
 
 /**
  * Bootstrap compatible form control with support for AJAX in terms
  * of form/container groups.
  *
  * @author Michal Koutný <michal@fykos.cz>
- * @property FileTemplate $template
  */
 class FormControl extends Control {
 

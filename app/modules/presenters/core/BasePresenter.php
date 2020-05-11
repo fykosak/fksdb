@@ -29,12 +29,10 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Responses\JsonResponse;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
-use Nette\Templating\FileTemplate;
-use Nette\Templating\ITemplate;
 
 /**
  * Base presenter for all application presenters.
- * @property FileTemplate $template
+ *
  */
 abstract class BasePresenter extends Presenter implements IJavaScriptCollector, IStylesheetCollector, IAutocompleteJSONProvider, INavigablePresenter {
 
@@ -188,12 +186,10 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     }
 
     /**
-     * @param null $class
-     * @return FileTemplate|ITemplate
+     * @return \Nette\Application\UI\ITemplate
      */
-    protected function createTemplate($class = NULL) {
-        /** @var FileTemplate $template */
-        $template = parent::createTemplate($class);
+    protected function createTemplate() {
+        $template = parent::createTemplate();
         $template->setTranslator($this->getTranslator());
         return $template;
     }
@@ -248,7 +244,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     public function setView($view) {
         parent::setView($view);
         $method = $this->formatTitleMethod($this->getView());
-        if (!$this->tryCall($method, $this->getParameter())) {
+        if (!$this->tryCall($method, $this->getParameters())) {
             $this->pageTitle = null;
         }
     }
@@ -447,7 +443,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
             /*
              * Now create a mock presenter and evaluate accessibility.
              */
-            $baseParams = $this->getParameter();
+            $baseParams = $this->getParameters();
             /** @var BasePresenter $testedPresenter */
             $testedPresenter = $this->presenterBuilder->preparePresenter($presenter, $action, $args, $baseParams);
 

@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls;
 
-use Nette\Application\PresenterFactory;
+use Nette\Application\IPresenterFactory;
 use Nette\Application\UI\Presenter;
 
 /**
@@ -13,16 +13,16 @@ use Nette\Application\UI\Presenter;
 class PresenterBuilder {
 
     /**
-     * @var PresenterFactory
+     * @var IPresenterFactory
      */
     private $presenterFactory;
     private $presenterCache = [];
 
     /**
      * PresenterBuilder constructor.
-     * @param PresenterFactory $presenterFactory
+     * @param IPresenterFactory $presenterFactory
      */
-    function __construct(PresenterFactory $presenterFactory) {
+    function __construct(IPresenterFactory $presenterFactory) {
         $this->presenterFactory = $presenterFactory;
     }
 

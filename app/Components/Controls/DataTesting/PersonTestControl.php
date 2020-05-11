@@ -13,12 +13,10 @@ use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Forms\Form;
 use Nette\Localization\ITranslator;
-use Nette\Templating\FileTemplate;
 
 /**
  * Class PersonTestControl
  * @package FKSDB\Components\Controls\DataTesting
- * @property-read FileTemplate $template
  */
 class PersonTestControl extends Control {
 

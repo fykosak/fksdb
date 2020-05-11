@@ -9,12 +9,11 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\UI\Control;
 use Nette\DI\Container;
 use Nette\Localization\ITranslator;
-use Nette\Templating\FileTemplate;
 
 /**
  * Class OrgResults
  * @package FKSDB\Components\Controls\Fyziklani
- * @property FileTemplate $template
+ *
  */
 class FinalResults extends Control {
     /**

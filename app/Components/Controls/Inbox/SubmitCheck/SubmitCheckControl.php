@@ -10,12 +10,11 @@ use FKSDB\Submits\FilesystemUploadedSubmitStorage;
 use FKSDB\Submits\SeriesTable;
 use Nette\Application\AbortException;
 use Nette\DI\Container;
-use Nette\Templating\FileTemplate;
 
 /**
  * Class CheckSubmitsControl
  * @package FKSDB\Components\Controls\Upload
- * @property FileTemplate $template
+ *
  */
 class SubmitCheckControl extends BaseControl {
     /**

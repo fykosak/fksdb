@@ -5,7 +5,7 @@ $container = require '../bootstrap.php';
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Application\Responses\TextResponse;
-use Nette\Templating\ITemplate;
+use Nette\Application\UI\ITemplate;
 use Nette\Utils\DateTime;
 use Tester\Assert;
 
@@ -34,7 +34,7 @@ class ApplicationPresenterTest extends ApplicationPresenterDsefTestCase {
         $source = $response->getSource();
         Assert::type(ITemplate::class, $source);
 
-        $html = (string) $source;
+        $html = (string)$source;
         Assert::contains('Účastník', $html);
 
         Assert::contains('Paní Bílá', $html);
@@ -80,7 +80,7 @@ class ApplicationPresenterTest extends ApplicationPresenterDsefTestCase {
 
         $application = $this->assertApplication($this->eventId, 'bila@hrad.cz');
         Assert::equal('applied', $application->status);
-        Assert::equal((int) $this->personId, $application->person_id);
+        Assert::equal((int)$this->personId, $application->person_id);
 
         $info = $this->assertPersonInfo($this->personId);
         Assert::equal('1231354', $info->id_number);

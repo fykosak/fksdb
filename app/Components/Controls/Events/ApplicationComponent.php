@@ -16,8 +16,6 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
-use Nette\Templating\FileTemplate;
-use Nette\Templating\ITemplate;
 use Nette\Utils\JsonException;
 
 /**
@@ -93,14 +91,10 @@ class ApplicationComponent extends Control {
     }
 
     /**
-     * @param null $class
-     * @return FileTemplate|ITemplate
+     * @return \Nette\Application\UI\ITemplate
      */
-    protected function createTemplate($class = NULL) {
-        /**
-         * @var FileTemplate $template
-         */
-        $template = parent::createTemplate($class);
+    protected function createTemplate() {
+        $template = parent::createTemplate();
         $template->setTranslator($this->presenter->getTranslator());
         return $template;
     }
@@ -129,9 +123,14 @@ class ApplicationComponent extends Control {
         $this->template->mode = $mode;
         $this->template->holder = $this->holder;
         $this->template->primaryModel = $this->holder->getPrimaryHolder()->getModel();
-        $this->template->primaryMachine = $this->getMachine()->getPrimaryMachine();
+
+        $primaryMachine= $this->getMachine()->getPrimaryMachine();
+        $this->template->primaryMachine = $primaryMachine;
         $this->template->canEdit = $this->canEdit();
 
+        $state = $this->holder->getPrimaryHolder()->getModelState();
+        $this->template->state = $state;
+        $this->template->transitions = $transactions = $primaryMachine->getAvailableTransitions($this->holder, $state, \FKSDB\Events\Machine\BaseMachine::EXECUTABLE | \FKSDB\Events\Machine\BaseMachine::VISIBLE);
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ApplicationComponent.inline.latte');
         $this->template->render();
     }
@@ -173,8 +172,8 @@ class ApplicationComponent extends Control {
          */
         $primaryMachine = $this->getMachine()->getPrimaryMachine();
         $transitionSubmit = null;
-        foreach ($primaryMachine->getAvailableTransitions($this->holder, $this->holder->getPrimaryHolder()->getModelState(), BaseMachine::EXECUTABLE | BaseMachine::VISIBLE) as $transition) {
 
+        foreach ($primaryMachine->getAvailableTransitions($this->holder, $this->holder->getPrimaryHolder()->getModelState(), BaseMachine::EXECUTABLE | BaseMachine::VISIBLE) as $transition) {
             $transitionName = $transition->getName();
             $submit = $form->addSubmit($transitionName, $transition->getLabel());
 

@@ -47,7 +47,7 @@ class ArrayProvider implements IFilteredDataProvider {
     /**
      * @inheritDoc
      */
-    public function getItemLabel(int $id): array {
+    public function getItemLabel(int $id): string {
         return $this->labelById[$id];
     }
 

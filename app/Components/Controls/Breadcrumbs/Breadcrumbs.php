@@ -5,18 +5,17 @@ namespace FKSDB\Components\Controls\Breadcrumbs;
 use FKSDB\Components\Controls\Breadcrumbs\Request as NaviRequest;
 use FKSDB\Components\Controls\Navigation\INavigablePresenter;
 use FKSDB\Exceptions\BadTypeException;
+use Nette\Application\IPresenterFactory;
 use Nette\Application\IRouter;
-use Nette\Application\PresenterFactory;
 use Nette\Application\Request as AppRequest;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Presenter;
-use Nette\Application\UI\PresenterComponentReflection;
+use Nette\Application\UI\ComponentReflection;
 use Tracy\Debugger;
 use Nette\Http\Request as HttpRequest;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Nette\InvalidArgumentException;
-use Nette\Templating\FileTemplate;
 use Nette\Utils\Random;
 use Utils;
 
@@ -30,7 +29,6 @@ use Utils;
  * @note Page titles of visited pages are cached in the session.
  *
  * @author Michal Koutný <michal@fykos.cz>
- * @property-read FileTemplate $template
  */
 class Breadcrumbs extends Control {
 
@@ -56,7 +54,7 @@ class Breadcrumbs extends Control {
     private $httpRequest;
 
     /**
-     * @var PresenterFactory
+     * @var IPresenterFactory
      */
     private $presenterFactory;
 
@@ -73,9 +71,9 @@ class Breadcrumbs extends Control {
      * @param Session $session
      * @param IRouter $router
      * @param HttpRequest $httpRequest
-     * @param PresenterFactory $presenterFactory
+     * @param IPresenterFactory $presenterFactory
      */
-    function __construct($expiration, Session $session, IRouter $router, HttpRequest $httpRequest, PresenterFactory $presenterFactory) {
+    function __construct($expiration, Session $session, IRouter $router, HttpRequest $httpRequest, IPresenterFactory $presenterFactory) {
         parent::__construct();
         $this->session = $session;
         $this->router = $router;
@@ -232,7 +230,7 @@ class Breadcrumbs extends Control {
                     $identifyingParameters[] = $param->name;
                 }
             }
-            $reflection = new PresenterComponentReflection($presenterClassName);
+            $reflection = new ComponentReflection($presenterClassName);
             $identifyingParameters += array_keys($reflection->getPersistentParams());
 
             $filteredParameters = [];

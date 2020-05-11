@@ -11,7 +11,7 @@ use Nette\DI\ServiceDefinition;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class NavigationExtension extends CompilerExtension {
+class NavigationExtension extends \Nette\DI\CompilerExtension {
 
     private $createdNodes = [];
 

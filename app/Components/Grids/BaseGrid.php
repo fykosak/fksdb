@@ -14,8 +14,6 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
 use FKSDB\Exceptions\NotImplementedException;
-use Nette\Templating\FileTemplate;
-use Nette\Templating\ITemplate;
 use Nette\Utils\Html;
 use NiftyGrid\Components\Button;
 use NiftyGrid\Components\Column;
@@ -71,22 +69,18 @@ abstract class BaseGrid extends Grid {
     }
 
     /**
-     * @param null $class
-     * @return ITemplate
-     * @throws BadTypeException
+     * @return \Nette\Application\UI\ITemplate
      */
-    protected function createTemplate($class = NULL): ITemplate {
+    protected function createTemplate() {
         $presenter = $this->getPresenter();
         if (!$presenter instanceof \BasePresenter) {
             throw new BadTypeException(\BasePresenter::class, $presenter);
         }
-        /**
-         * @var GridPaginator $paginator
-         * @var FileTemplate $template
-         */
+
+        /** @var GridPaginator $paginator */
         $paginator = $this->getComponent('paginator');
         $paginator->getTemplate()->setTranslator($presenter->getTranslator());
-        $template = parent::createTemplate($class);
+        $template = parent::createTemplate();
         $template->setTranslator($presenter->getTranslator());
         return $template;
     }

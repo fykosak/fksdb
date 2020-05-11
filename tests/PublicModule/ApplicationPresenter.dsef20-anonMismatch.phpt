@@ -4,7 +4,7 @@ $container = require '../bootstrap.php';
 
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use Nette\Application\Responses\TextResponse;
-use Nette\Templating\ITemplate;
+use Nette\Application\UI\ITemplate;
 use Nette\Utils\DateTime;
 use Tester\Assert;
 
