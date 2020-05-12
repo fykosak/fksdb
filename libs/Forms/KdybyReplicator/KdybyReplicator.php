@@ -64,7 +64,9 @@ class Replicator extends Container
 		$this->monitor('Nette\Application\UI\Presenter');
 
 		try {
-			$this->factoryCallback = callback($factory);
+			$this->factoryCallback = function (...$args)use ($factory){
+			    return ($factory)(...$args);
+			};
 		} catch (Nette\InvalidArgumentException $e) {
 			$type = is_object($factory) ? 'instanceof ' . get_class($factory) : gettype($factory);
 			throw new Nette\InvalidArgumentException(
@@ -81,9 +83,11 @@ class Replicator extends Container
 	/**
 	 * @param callable $factory
 	 */
-	public function setFactory($factory)
+	public function setFactory(callable $factory)
 	{
-		$this->factoryCallback = callback($factory);
+		$this->factoryCallback = function (...$args)use ($factory){
+            return ($factory)(...$args);
+        };
 	}
 
 
@@ -141,7 +145,7 @@ class Replicator extends Container
 		$container->currentGroup = $this->currentGroup;
 		$this->addComponent($container, $name, $this->getFirstControlName());
 
-		$this->factoryCallback->invoke($container);
+        ($this->factoryCallback)($container);
 
 		return $this->created[$container->name] = $container;
 	}

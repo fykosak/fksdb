@@ -1,9 +1,8 @@
 <?php
 
-namespace Events\Model\Grid;
+namespace FKSDB\Events\Model\Grid;
 
-use ArrayIterator;
-use Events\Model\Holder\Holder;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Tables\TypedTableSelection;
 use Nette\DI\Container;
@@ -32,7 +31,6 @@ abstract class AggregatedPersonSource implements IHolderSource {
     protected $container;
 
     /**
-     *
      * @var Holder[]
      */
     private $holders = null;
@@ -97,13 +95,13 @@ abstract class AggregatedPersonSource implements IHolderSource {
     }
 
     /**
-     * @return ArrayIterator|\Traversable
+     * @return Holder[]
      */
-    public final function getIterator() {
+    public function getHolders(): array {
         if ($this->holders === null) {
             $this->loadData();
         }
-        return new ArrayIterator($this->holders);
+        return $this->holders;
     }
 
 }

@@ -46,9 +46,6 @@ class ChartPresenter extends BasePresenter {
         ];
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function getModelResource(): string {
         return 'event.chart';
     }

@@ -3,7 +3,8 @@
 namespace FKSDB\Config\Extensions;
 
 use FKSDB\Components\Controls\Navigation\Navigation;
-use Nette\Config\CompilerExtension;
+use Nette\DI\CompilerExtension;
+use Nette\DI\ServiceDefinition;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -24,7 +25,7 @@ class NavigationExtension extends CompilerExtension {
         ]);
         $navbar = $builder->addDefinition('navbar')
             ->setClass(Navigation::class);
-        $navbar->setShared(true)->setAutowired(true);
+        $navbar->setAutowired(true);
 
 
         foreach ($config['nodes'] as $nodeId => $arguments) {
@@ -42,7 +43,7 @@ class NavigationExtension extends CompilerExtension {
      * @param $nodeId
      * @param array $arguments
      */
-    private function createNode($navbar, $nodeId, $arguments = []) {
+    private function createNode(ServiceDefinition $navbar, $nodeId, $arguments = []) {
         if (!isset($arguments['link'])) {
             $this->parseIdAsLink($nodeId, $arguments);
         }
@@ -56,7 +57,7 @@ class NavigationExtension extends CompilerExtension {
      * @param $navbar
      * @param null $parent
      */
-    private function createFromStructure($structure, $navbar, $parent = null) {
+    private function createFromStructure($structure, ServiceDefinition $navbar, $parent = null) {
         foreach ($structure as $nodeId => $children) {
             if (is_array($children)) {
                 if (!isset($this->createdNodes[$nodeId])) {

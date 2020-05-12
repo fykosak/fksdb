@@ -1,9 +1,10 @@
 <?php
 
-namespace Events\Model;
+namespace FKSDB\Events\Model;
 
-use Events\Model\Grid\SingleEventSource;
-use Events\Model\Holder\BaseHolder;
+use FKSDB\Events\EventDispatchFactory;
+use FKSDB\Events\Model\Grid\SingleEventSource;
+use FKSDB\Events\Model\Holder\BaseHolder;
 use FKSDB\Utils\CSVParser;
 use Nette\DI\Container;
 use Nette\SmartObject;
@@ -72,6 +73,8 @@ class ImportHandler {
      * @param $errorMode
      * @param $stateless
      * @return bool
+     * @throws \FKSDB\Config\NeonSchemaException
+     * @throws \Nette\Application\BadRequestException
      * @throws \Nette\Utils\JsonException
      */
     public function import(ApplicationHandler $handler, $transitions, $errorMode, $stateless) {
@@ -94,8 +97,9 @@ class ImportHandler {
                     unset($values[$baseHolderName][BaseHolder::STATE_COLUMN]);
                 }
             }
-
-            $holder = isset($holdersMap[$keyValue]) ? $holdersMap[$keyValue] : $this->container->createEventHolder($this->source->getEvent());
+            /** @var EventDispatchFactory $factory */
+            $factory = $this->container->getByType(EventDispatchFactory::class);
+            $holder = isset($holdersMap[$keyValue]) ? $holdersMap[$keyValue] : $factory->getDummyHolder($this->source->getEvent());
             try {
                 if ($transitions == ApplicationHandler::STATE_OVERWRITE) {
                     $handler->store($holder, $values);

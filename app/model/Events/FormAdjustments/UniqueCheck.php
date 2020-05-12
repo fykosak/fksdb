@@ -1,10 +1,10 @@
 <?php
 
-namespace Events\FormAdjustments;
+namespace FKSDB\Events\FormAdjustments;
 
-use Events\Machine\Machine;
-use Events\Model\Holder\BaseHolder;
-use Events\Model\Holder\Holder;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\Holder\BaseHolder;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
@@ -62,7 +62,7 @@ class UniqueCheck extends AbstractAdjustment {
                         $pk = $table->getName() . '.' . $table->getPrimary();
 
                         $table->where($column, $value);
-                        $table->where($baseHolder->getEventId(), $baseHolder->getHolder()->getEvent()->getPrimary());
+                        $table->where($baseHolder->getEventId(), $baseHolder->getHolder()->getPrimaryHolder()->getEvent()->getPrimary());
                         if ($model && !$model->isNew()) {
                             $table->where("NOT $pk = ?", $model->getPrimary());
                         }

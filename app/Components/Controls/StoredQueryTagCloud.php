@@ -6,7 +6,7 @@ use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryTag;
 use Nette\Application\UI\Control;
 use Nette\InvalidArgumentException;
-use ServiceMStoredQueryTag;
+use FKSDB\ORM\ServicesMulti\ServiceMStoredQueryTag;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -59,7 +59,7 @@ class StoredQueryTagCloud extends Control {
      * @param callable $callback
      * @return $this
      */
-    public function registerOnClick(callable $callback){
+    public function registerOnClick(callable $callback) {
         $this->onClick[] = $callback;
         return $this;
     }
@@ -67,15 +67,15 @@ class StoredQueryTagCloud extends Control {
     /**
      * @param array $activeTagIds
      */
-    public function handleOnClick(array $activeTagIds){
+    public function handleOnClick(array $activeTagIds) {
         $this->activeTagIds = $activeTagIds;
-        foreach($this->onClick as $callback){
+        foreach ($this->onClick as $callback) {
             call_user_func($callback, $activeTagIds);
         }
     }
 
     public function render() {
-        switch ($this->mode){
+        switch ($this->mode) {
             case self::MODE_LIST:
                 $this->template->tags = $this->serviceMStoredQueryTag->getMainService();
                 $this->template->activeTagIds = $this->activeTagIds;
@@ -96,16 +96,15 @@ class StoredQueryTagCloud extends Control {
     /**
      * @return array
      */
-    private function createNextActiveTagIds(){
+    private function createNextActiveTagIds() {
         $tags = $this->serviceMStoredQueryTag->getMainService();
         $nextActiveTagIds = [];
         /** @var ModelStoredQueryTag $tag */
-        foreach($tags as $tag) {
+        foreach ($tags as $tag) {
             $activeTagIds = $this->activeTagIds;
-            if(array_key_exists($tag->tag_type_id, $activeTagIds)) {
+            if (array_key_exists($tag->tag_type_id, $activeTagIds)) {
                 unset($activeTagIds[$tag->tag_type_id]);
-            }
-            else {
+            } else {
                 $activeTagIds[$tag->tag_type_id] = $tag->tag_type_id;
             }
             $nextActiveTagIds[$tag->tag_type_id] = $activeTagIds;

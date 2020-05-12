@@ -1,25 +1,18 @@
 <?php
 
-namespace Events\Accommodation;
+namespace FKSDB\Events\Accommodation;
 
 
-use Events\EventTestCase;
+use FKSDB\Events\EventTestCase;
+use Nette\Application\IPresenter;
 use Nette\DI\Container;
 use Nette\Utils\DateTime;
 
 abstract class ScheduleTestCase extends EventTestCase {
     protected $itemId;
+    /** @var IPresenter */
     protected $fixture;
     protected $groupId;
-
-    /**
-     * AccommodationTestCase constructor.
-     * @param Container $container
-     */
-    function __construct(Container $container) {
-        parent::__construct($container);
-        $this->setContainer($container);
-    }
 
     //protected $persons = [];
 
@@ -131,7 +124,7 @@ EOT
         return $request;
     }
 
-    abstract public function getAccommodationCapacity();
+    abstract public function getAccommodationCapacity():int;
 
     protected function tearDown() {
         $this->connection->query("DELETE FROM e_dsef_participant");

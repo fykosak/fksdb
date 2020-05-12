@@ -36,11 +36,9 @@ class MultiTableSelection extends Selection {
      * @param array $row
      * @return AbstractModelMulti
      */
-    protected function createRow(array $row) {
+    protected function createRow(array $row): AbstractModelMulti {
         $mainModel = $this->service->getMainService()->createFromArray($row);
         $joinedModel = $this->service->getJoinedService()->createFromArray($row);
         return $this->service->composeModel($mainModel, $joinedModel);
     }
-
 }
-

@@ -2,9 +2,10 @@
 
 namespace EventModule;
 
-use Events\Machine\Machine;
+use FKSDB\Events\Machine\Machine;
 use FKSDB\Components\Events\ExpressionPrinter;
 use FKSDB\Components\Events\GraphComponent;
+use FKSDB\Events\EventDispatchFactory;
 use Nette\Application\BadRequestException;
 
 /**
@@ -41,8 +42,10 @@ class ModelPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     protected function createComponentGraphComponent(): GraphComponent {
-        /** @var Machine $machine */
-        $machine = $this->getContext()->createEventMachine($this->getEvent());
+        /** @var EventDispatchFactory $factory */
+        $factory = $this->getContext()->getByType(EventDispatchFactory::class);
+        $machine = $factory->getEventMachine($this->getEvent());
+
         return new GraphComponent($machine->getPrimaryMachine(), $this->expressionPrinter);
     }
 }

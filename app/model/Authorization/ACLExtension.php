@@ -8,8 +8,9 @@ use Authorization\Assertions\EventOrgByYearAssertion;
 use Authorization\Assertions\QIDAssertion;
 use Authorization\Assertions\StoredQueryTagAssertion;
 use FKSDB\Config\Expressions\Helpers;
-use Nette\Config\CompilerExtension;
+use Nette\DI\CompilerExtension;
 use Nette\Security\Permission;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -17,7 +18,7 @@ use Nette\Security\Permission;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ACLExtension extends CompilerExtension {
-
+    /** @var string[] */
     public static $semanticMap = [
         'qid' => QIDAssertion::class,
         'queryTag' => StoredQueryTagAssertion::class,
@@ -41,8 +42,7 @@ class ACLExtension extends CompilerExtension {
 
         foreach ($config as $setup) {
             $stmt = Helpers::statementFromExpression($setup);
-            $definition->setup[] = $stmt;
+            $definition->addSetup($stmt->entity, $stmt->arguments);
         }
     }
-
 }

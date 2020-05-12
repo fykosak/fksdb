@@ -41,7 +41,7 @@ class SchoolCheckControl extends BaseControl {
     }
 
     /**
-     * @inheritDoc
+     * @param ModelFyziklaniTeam $currentTeam
      */
     public function render(ModelFyziklaniTeam $currentTeam) {
         $schools = [];

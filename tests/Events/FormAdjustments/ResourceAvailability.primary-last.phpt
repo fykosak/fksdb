@@ -1,14 +1,16 @@
 <?php
 
-namespace Events\Model;
+namespace FKSDB\Events\Model;
 
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
+use Nette\DI\Container;
 use Nette\Templating\ITemplate;
 use Nette\Utils\DateTime;
 use Tester\Assert;
 use Tester\DomQuery;
 
+/** @var Container $container */
 $container = require '../../bootstrap.php';
 
 class ResourceAvailabilityTest extends ResourceAvailabilityTestCase {
