@@ -36,11 +36,10 @@ class StoredQueryFactory {
     }
 
     /**
-     * @param int $options
      * @param ControlGroup|null $group
      * @return ModelContainer
      */
-    public function createConsole($options = 0, ControlGroup $group = null) {
+    public function createConsole(ControlGroup $group = null): ModelContainer {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
 
@@ -51,11 +50,10 @@ class StoredQueryFactory {
     }
 
     /**
-     * @param int $options
      * @param ControlGroup|null $group
      * @return ModelContainer
      */
-    public function createMetadata($options = 0, ControlGroup $group = null) {
+    public function createMetadata(ControlGroup $group = null): ModelContainer {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
 
@@ -66,9 +64,8 @@ class StoredQueryFactory {
         $container->addText('qid', _('QID'))
             ->setOption('description', _('Dotazy s QIDem nelze smazat a QID lze použít pro práva a trvalé odkazování.'))
             ->addCondition(Form::FILLED)
-            ->addRule(Form::MAX_LENGTH, _('Název dotazu je moc dlouhý.'), 16)
-            ->addRule(Form::PATTERN, _('QID může být jen z písmen anglické abecedy a číslic a tečky.'), '/^[a-z][a-z0-9.]*$/i');
-
+            ->addRule(Form::MAX_LENGTH, _('Název dotazu je moc dlouhý.'), 64)
+            ->addRule(Form::PATTERN, _('QID může být jen z písmen anglické abecedy a číslic a tečky.'), '[a-z][a-z0-9.]*');
 
         $container->addComponent($this->createTagSelect(false, _('Štítky'), new StoredQueryTagTypeProvider($this->serviceStoredQueryTagType)), 'tags');
 
@@ -83,23 +80,21 @@ class StoredQueryFactory {
     }
 
     /**
-     * @param int $options
      * @param ControlGroup|null $group
      * @return Replicator
      */
-    public function createParametersMetadata($options = 0, ControlGroup $group = null) {
-        $replicator = new Replicator(function ($replContainer) use ($group) {
+    public function createParametersMetadata(ControlGroup $group = null): Replicator {
+        $replicator = new Replicator(function (Container $replContainer) use ($group) {
             $this->buildParameterMetadata($replContainer, $group);
 
-            $submit = $replContainer->addSubmit('remove', _('Odebrat parametr'));
-            $submit->getControlPrototype()->addClass('btn-danger');
-            $submit->getControlPrototype()->addClass('btn-sm'); // TODO doesn't work
+            $submit = $replContainer->addSubmit('remove', _('Remove parameter'));
+            $submit->getControlPrototype()->addAttributes(['class' => 'btn-danger btn-sm']);
             $submit->addRemoveOnClick();
         }, 0, true);
         $replicator->containerClass = ModelContainer::class;
         $replicator->setCurrentGroup($group);
-        $submit = $replicator->addSubmit('addParam', _('Přidat parametr'));
-        $submit->getControlPrototype()->addClass('btn-sm btn-success');
+        $submit = $replicator->addSubmit('addParam', _('Add parameter'));
+        $submit->getControlPrototype()->addAttributes(['class' => 'btn-sm btn-success']);
 
         $submit->setValidationScope(false)
             ->addCreateOnClick();
@@ -108,17 +103,17 @@ class StoredQueryFactory {
     }
 
     /**
-     * @internal
      * @param Container $container
      * @param mixed $group
+     * @internal
      */
-    public function buildParameterMetadata(Container $container, $group) {
+    public function buildParameterMetadata(Container $container, ControlGroup $group) {
         $container->setCurrentGroup($group);
 
         $container->addText('name', _('Název'))
             ->addRule(Form::FILLED, _('Název parametru musí být vyplněn.'))
             ->addRule(Form::MAX_LENGTH, _('Název parametru je moc dlouhý.'), 16)
-            ->addRule(Form::PATTERN, _('Název parametru může být jen z malých písmen anglické abecedy, číslic nebo podtržítka.'), '/^[a-z][a-z0-9_]*$/');
+            ->addRule(Form::PATTERN, _('Název parametru může být jen z malých písmen anglické abecedy, číslic nebo podtržítka.'), '[a-z][a-z0-9_]*');
 
 
         $container->addText('description', _('Popis'));
@@ -126,7 +121,7 @@ class StoredQueryFactory {
         $container->addSelect('type', _('Datový typ'))
             ->setItems([
                 ModelStoredQueryParameter::TYPE_INT => 'integer',
-                ModelStoredQueryParameter::TYPE_STR => 'string',
+                ModelStoredQueryParameter::TYPE_STRING => 'string',
                 ModelStoredQueryParameter::TYPE_BOOL => 'bool',
             ]);
 
@@ -135,11 +130,10 @@ class StoredQueryFactory {
 
     /**
      * @param ModelStoredQuery $queryPattern
-     * @param int $options
      * @param ControlGroup|null $group
      * @return ModelContainer
      */
-    public function createParametersValues(ModelStoredQuery $queryPattern, $options = 0, ControlGroup $group = null) {
+    public function createParametersValues(ModelStoredQuery $queryPattern, ControlGroup $group = null): ModelContainer {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
 
@@ -151,7 +145,7 @@ class StoredQueryFactory {
 
             switch ($parameter->type) {
                 case ModelStoredQueryParameter::TYPE_INT:
-                case ModelStoredQueryParameter::TYPE_STR:
+                case ModelStoredQueryParameter::TYPE_STRING:
                     $valueElement = $subcontainer->addText('value', $name);
                     $valueElement->setOption('description', $parameter->description);
                     if ($parameter->type == ModelStoredQueryParameter::TYPE_INT) {
@@ -172,13 +166,13 @@ class StoredQueryFactory {
     }
 
     /**
-     * @param $ajax
-     * @param $label
+     * @param bool $ajax
+     * @param string $label
      * @param IDataProvider $dataProvider
-     * @param null $renderMethod
+     * @param string $renderMethod
      * @return AutocompleteSelectBox
      */
-    private function createTagSelect($ajax, $label, IDataProvider $dataProvider, $renderMethod = null) {
+    private function createTagSelect(bool $ajax, string $label, IDataProvider $dataProvider, string $renderMethod = null): AutocompleteSelectBox {
         if ($renderMethod === null) {
             $renderMethod = '$("<li>")
                         .append("<a>" + item.label + "<br>" + item.description + ", ID: " + item.value + "</a>")
@@ -189,5 +183,4 @@ class StoredQueryFactory {
         $select->setMultiSelect(true);
         return $select;
     }
-
 }

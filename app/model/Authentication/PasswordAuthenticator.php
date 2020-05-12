@@ -46,7 +46,7 @@ class PasswordAuthenticator extends AbstractAuthenticator implements IAuthentica
         $login = $this->findLogin($id);
 
         if ($login->hash !== $this->calculateHash($password, $login)) {
-            throw new InvalidCredentialsException();
+            throw new InvalidCredentialsException;
         }
 
         $this->logAuthentication($login);
@@ -57,34 +57,33 @@ class PasswordAuthenticator extends AbstractAuthenticator implements IAuthentica
     }
 
     /**
-     * @param $id
+     * @param string $id
      * @return ModelLogin
      * @throws InactiveLoginException
      * @throws NoLoginException
      * @throws UnknownLoginException
      */
     public function findLogin($id) {
-        $row = $this->servicePerson->getTable()->where('person_info:email = ?', $id)->fetch();
+        /** @var ModelPerson $person */
+        $person = $this->servicePerson->getTable()->where(':person_info.email = ?', $id)->fetch();
         $login = null;
 
-        if ($row) {
-            $person = ModelPerson::createFromTableRow($row);
+        if ($person) {
             $login = $person->getLogin();
             if (!$login) {
-                throw new NoLoginException();
+                throw new NoLoginException;
             }
         }
         if (!$login) {
             $login = $this->serviceLogin->getTable()->where('login = ?', $id)->fetch();
         }
 
-
         if (!$login) {
-            throw new UnknownLoginException();
+            throw new UnknownLoginException;
         }
 
         if (!$login->active) {
-            throw new InactiveLoginException();
+            throw new InactiveLoginException;
         }
         return $login;
     }

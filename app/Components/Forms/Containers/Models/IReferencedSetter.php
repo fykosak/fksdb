@@ -17,7 +17,7 @@ interface IReferencedSetter {
 
     /**
      * @param ReferencedContainer $container
-     * @param \FKSDB\ORM\IModel|null $model
+     * @param IModel|null $model
      * @param string $mode
      * @return mixed
      */

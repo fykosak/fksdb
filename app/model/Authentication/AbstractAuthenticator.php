@@ -5,7 +5,7 @@ namespace Authentication;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceLogin;
 use FKSDB\YearCalculator;
-use Nette\DateTime;
+use Nette\Utils\DateTime;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -15,7 +15,8 @@ use Nette\DateTime;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-abstract class AbstractAuthenticator /* implements IAuthenticator */ {
+abstract class AbstractAuthenticator /* implements IAuthenticator */
+{
 
     /** @var \FKSDB\ORM\Services\ServiceLogin */
     protected $serviceLogin;
@@ -39,8 +40,7 @@ abstract class AbstractAuthenticator /* implements IAuthenticator */ {
      * @param \FKSDB\ORM\Models\ModelLogin $login
      */
     protected function logAuthentication(ModelLogin $login) {
-        $login->last_login = DateTime::from(time());
-        $this->serviceLogin->save($login);
+        $this->serviceLogin->updateModel2($login, ['last_login' => DateTime::from(time())]);
     }
 
 }

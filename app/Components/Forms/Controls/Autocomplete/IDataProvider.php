@@ -14,17 +14,18 @@ interface IDataProvider {
     /**
      * @return array array of associative arrays with at least LABEL and VALUE keys
      */
-    public function getItems();
+    public function getItems(): array;
 
     /**
-     * @param mixed $id
+     * @param int $id
+     * @return string
      */
-    public function getItemLabel($id);
+    public function getItemLabel(int $id): string;
 
     /**
      * Provider may or may not use knowledge of this update.
      *
-     * @param mixed id
+     * @param int id
      */
     public function setDefaultValue($id);
 }

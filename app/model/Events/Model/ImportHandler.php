@@ -1,20 +1,24 @@
 <?php
 
-namespace Events\Model;
+namespace FKSDB\Events\Model;
 
-use Events\Model\Grid\SingleEventSource;
-use Events\Model\Holder\BaseHolder;
+use FKSDB\Events\EventDispatchFactory;
+use FKSDB\Events\Model\Grid\SingleEventSource;
+use FKSDB\Events\Model\Holder\BaseHolder;
 use FKSDB\Utils\CSVParser;
 use Nette\Utils\ArrayHash;
 use Nette\DI\Container;
-use Nette\Object;
+use Nette\SmartObject;
+use Nette\Utils\ArrayHash;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class ImportHandler extends Object {
+class ImportHandler {
+
+    use SmartObject;
 
     const STATELESS_IGNORE = 'ignore';
     const STATELESS_KEEP = 'keep';
@@ -70,6 +74,9 @@ class ImportHandler extends Object {
      * @param $errorMode
      * @param $stateless
      * @return bool
+     * @throws \FKSDB\Config\NeonSchemaException
+     * @throws \Nette\Application\BadRequestException
+     * @throws \Nette\Utils\JsonException
      */
     public function import(ApplicationHandler $handler, $transitions, $errorMode, $stateless) {
         set_time_limit(0);
@@ -87,12 +94,13 @@ class ImportHandler extends Object {
             if (!isset($values[$baseHolderName][BaseHolder::STATE_COLUMN]) || !$values[$baseHolderName][BaseHolder::STATE_COLUMN]) {
                 if ($stateless == self::STATELESS_IGNORE) {
                     continue;
-                } else if ($stateless == self::STATELESS_KEEP) {
+                } elseif ($stateless == self::STATELESS_KEEP) {
                     unset($values[$baseHolderName][BaseHolder::STATE_COLUMN]);
                 }
             }
-
-            $holder = isset($holdersMap[$keyValue]) ? $holdersMap[$keyValue] : $this->container->createEventHolder($this->source->getEvent());
+            /** @var EventDispatchFactory $factory */
+            $factory = $this->container->getByType(EventDispatchFactory::class);
+            $holder = isset($holdersMap[$keyValue]) ? $holdersMap[$keyValue] : $factory->getDummyHolder($this->source->getEvent());
             try {
                 if ($transitions == ApplicationHandler::STATE_OVERWRITE) {
                     $handler->store($holder, $values);

@@ -4,11 +4,13 @@ namespace FKSDB\Components\Forms\Controls;
 
 use FKSDB\Components\Forms\Containers\Models\IReferencedSetter;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
-use FKSDB\Components\Forms\Controls\PersonAccommodation\ExistingPaymentException;
+use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
+use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\Utils\Promise;
-use Nette\Diagnostics\Debugger;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
 
@@ -53,7 +55,7 @@ class ReferencedId extends HiddenField {
     private $modelCreated;
 
     /**
-     * @var \FKSDB\ORM\IModel
+     * @var IModel
      */
     private $model;
 
@@ -64,14 +66,11 @@ class ReferencedId extends HiddenField {
      * @param IReferencedSetter $referencedSetter
      */
     function __construct(IService $service, IReferencedHandler $handler, IReferencedSetter $referencedSetter) {
-        parent::__construct();
-        $this->monitor(Form::class);
         $this->service = $service;
         $this->handler = $handler;
         $this->referencedSetter = $referencedSetter;
-        $this->monitor('Nette\Forms\Form');
-
-
+        parent::__construct();
+        $this->monitor(Form::class);
     }
 
     /**
@@ -138,40 +137,39 @@ class ReferencedId extends HiddenField {
     }
 
     /**
-     * @param $pvalue
+     * @param string|int|IModel|AbstractModelSingle|ModelPerson $pValue
      * @param bool $force
-     * @return HiddenField|void
-     * @throws \Nette\Utils\RegexpException
+     * @return HiddenField
      */
-    public function setValue($pvalue, $force = false) {
-        $isPromise = ($pvalue === self::VALUE_PROMISE);
-        if($this->service&&$this->referencedContainer){
-            if (!($pvalue instanceof IModel) && !$isPromise) {
-                $pvalue = $this->service->findByPrimary($pvalue);
-            } else if ($isPromise) {
-                $pvalue = $this->service->createNew();
-            } else if ($pvalue instanceof IModel) {
-                $this->model = $pvalue;
-            }
+    public function setValue($pValue, bool $force = false) {
+        $isPromise = ($pValue === self::VALUE_PROMISE);
+        if (!($pValue instanceof IModel) && !$isPromise) {
+            $pValue = $this->service->findByPrimary($pValue);
+        } elseif ($isPromise) {
+            $pValue = $this->service->createNew();
+        } elseif ($pValue instanceof IModel) {
+            $this->model = $pValue;
+        }
+        if ($this->referencedContainer) {
             $container = $this->referencedContainer;
-            if (!$pvalue) {
+            if (!$pValue) {
                 $container->setSearchButton(true);
                 $container->setClearButton(false);
             } else {
                 $container->setSearchButton(false);
                 $container->setClearButton(true);
             }
-            $this->referencedSetter->setModel($container, $pvalue, $force);
-        }
-        if ($isPromise) {
-            $value = self::VALUE_PROMISE;
-        } else if ($pvalue instanceof IModel) {
-            $value = $pvalue->getPrimary();
-        } else {
-            $value = $pvalue;
+            $this->referencedSetter->setModel($container, $pValue, $force);
         }
 
-        parent::setValue($value);
+        if ($isPromise) {
+            $value = self::VALUE_PROMISE;
+        } elseif ($pValue instanceof IModel) {
+            $value = $pValue->getPrimary();
+        } else {
+            $value = $pValue;
+        }
+        return parent::setValue($value);
     }
 
     /**
@@ -201,15 +199,12 @@ class ReferencedId extends HiddenField {
 
     /**
      * @param bool $value
-     * @return \Nette\Forms\Controls\BaseControl|void
+     * @return BaseControl|void
      */
     public function setDisabled($value = TRUE) {
         $this->referencedContainer->setDisabled($value);
     }
 
-    /**
-     * @throws \Nette\Utils\RegexpException
-     */
     private function createPromise() {
         $referencedId = $this->getValue();
         $values = $this->referencedContainer->getValues();
@@ -221,7 +216,7 @@ class ReferencedId extends HiddenField {
                     $this->setValue($model, IReferencedSetter::MODE_FORCE);
                     $this->setModelCreated(true);
                     return $model->getPrimary();
-                } else if ($referencedId) {
+                } elseif ($referencedId) {
                     $model = $this->getService()->findByPrimary($referencedId);
                     $this->handler->update($model, $values);
                     // reload the model (this is workaround to avoid caching of empty but newly created referenced/related models)

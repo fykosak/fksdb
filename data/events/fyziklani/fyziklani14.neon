@@ -1,0 +1,289 @@
+parameters:
+    events:
+        fyziklani14:
+            appCond: or(regOpen(), role('admin'))
+
+            gameLangs:
+                en: English
+                cs: Česky
+            teacher:
+                person:
+                    other_name:
+                        required: true
+                    family_name:
+                        required: true
+                person_info:
+                    email:
+                        required: true
+                    id_number:
+                        required: false
+                    academic_degree_prefix:
+                        required: false
+                    academic_degree_suffix:
+                        required: false
+                person_has_flag:
+                    spam_mff:
+                        required: true
+                person_schedule:
+                    accommodation:
+                        required: false
+                    accommodation_teacher:
+                        required: false
+                    visa:
+                        required: false
+                    teacher_present:
+                        required: false
+                    weekend:
+                        required: false
+            participant:
+                person:
+                    other_name:
+                        required: true
+                    family_name:
+                        required: true
+                person_info:
+                    email:
+                        required: true
+                    id_number:
+                        required: false
+                person_history:
+                    school_id:
+                        required: true
+                    study_year:
+                        required: true
+                person_has_flag:
+                    spam_mff:
+                        required: true
+                person_schedule:
+                    accommodation:
+                        required: false
+                    accommodation_gender:
+                        required: false
+                    visa:
+                        required: false
+                    weekend:
+                        required: false
+            dep:
+                require:
+                    team.teacher_id.person_info.id_number: team.teacher_id.person_schedule.accommodation
+                    p*.person_id.person_info.id_number: p*.person_id.person_schedule.accommodation
+                visible:
+                    team.teacher_id.person_info.id_number: team.teacher_id.person_schedule.accommodation
+                    p*.person_id.person_info.id_number: p*.person_id.person_schedule.accommodation
+                    team.teacher_id.person_schedule.accommodation_teacher: team.teacher_id.person_schedule.accommodation
+                    p*.person_id.person_schedule.accommodation_gender: p*.person_id.person_schedule.accommodation
+
+
+events:
+    fyziklani14:
+        event_type_id: 1
+        eventYears: [14] # specify for which years this machine is valid, by default all years
+        tableLayout: fyziklani.grid
+        formLayout: fyziklani/fyziklani13.form
+        paramScheme:
+            notifyBcc:
+                default: fyziklani@fykos.cz
+            notifyFrom:
+                default: FYKOSí Fyziklání <fyziklani@fykos.cz>
+
+            schoolsInTeam:
+                default: 2
+            teamsPerSchool:
+                default: 2
+            rooms:
+                default: [10,11,12,13,14]
+
+        baseMachines:
+            #
+            #   TEAM
+            #
+            TEAM:
+                service: @fyziklani.ServiceFyziklaniTeam
+                personIds: [teacher_id]
+                eventId: e_fyziklani_team.event_id
+
+                states:
+                    pending: _('Čeká na schválení')
+                    spare: _('Náhradník')
+                    approved: _('Potvrzen')
+                    participated: _('Účastnil se')
+                    cancelled: _('Zrušen')
+                    missed: _('Nepřijel')
+                    disqualified: _('Diskvalifikován')
+
+                transitions:
+                    __init->pending:
+                        condition: %events.fyziklani14.appCond%
+                        label: _('Přihlásit tým')
+                        onExecuted:
+                            - FKSDB\Events\Transitions\MailSender(fyziklani/fyziklani2020/teacher,.primary)
+                            - FKSDB\Events\Transitions\MailSender(fyziklani/fyziklani2020/participant,.secondary)
+                    pending->approved:
+                        condition: role('admin')
+                        label: _('Schválit účast')
+                        onExecuted:
+                            - FKSDB\Events\Transitions\MailSender(team, *)
+                    pending->spare:
+                        condition: role('admin')
+                        label: _('Potvrdit jako náhradníka')
+                    approved|spare->participated:
+                        condition: and(role('admin'),eventWas())
+                        label: _('Prezentovat')
+                    approved|spare->missed:
+                        condition: and(role('admin'),eventWas())
+                        label: _('Nepřijel')
+                        behaviorType: danger
+                    pending|spare|approved->cancelled:
+                        condition: role('admin')
+                        label: _('Zrušit tým')
+                        behaviorType: danger
+                    cancelled->__terminated:
+                        condition: role('admin')
+                        label: _('Smazat tým')
+
+                fields:
+                    name:
+                        label: _('Název týmu')
+                        required: true
+                        visible: true
+                        modifiable: %events.fyziklani14.appCond%
+                    game_lang:
+                        label: _('Jazyk, ve kterém chcete soutěžit.')
+                        required: true
+                        visible: true
+                        modifiable: %events.fyziklani14.appCond%
+                        factory: Chooser('Select language/Vyberte jazyk',Options(%events.fyziklani14.gameLangs%))
+                    category:
+                        label: _('Kategorie')
+                        required: true
+                        visible: neg(state('__init'))
+                        modifiable: false
+                    force_a:
+                        label: _('Chceme soutěžit v kategorii A')
+                        visible: true
+                        description: _('Po zaškrtnutí této možnosti budete zařazeni do nejvyšší kategorie (s nejstaršími účastníky) bez ohledu na ročníky členů vašeho týmu. Tato kategorie je také jediná, která je součástí programu MŠMT Excelence SŠ.')
+
+                    phone:
+                        label: _('Kontaktní telefon')
+                        required: true
+                        visible: true
+                        modifiable: %events.fyziklani14.appCond%
+                    teacher_id:
+                        label: _('Učitel/doprovod')
+                        required: false
+                        visible: true
+                        modifiable: %events.fyziklani14.appCond%
+                        factory: RefPerson(%events.fyziklani14.teacher%, email, true, role('admin'), false)
+                    note:
+                        label: _('Note')
+                        modifiable: %events.fyziklani14.appCond%
+                        required: false
+                        visible: true
+            #   PARTICIPANT
+            #
+            PARTICIPANT:
+                service: @event.ServiceMFyziklaniParticipant
+                joinOn: e_fyziklani_team_id
+                personIds: [:e_fyziklani_participant.event_participant.person_id]
+
+                states:
+                    applied: _('Přihlášen')
+                    participated: _('Účastnil se')
+                    missed: _('Nepřijel')
+                    cancelled: _('Zrušen')
+
+                transitions:
+                    __init->applied:
+                        condition: %events.fyziklani14.appCond%
+                        label: _('Přihlásit člena')
+                    applied->__terminated:
+                        condition: %events.fyziklani14.appCond%
+                        label: _('Odebrat člena')
+                    applied->participated:
+                        condition: role('admin')
+                        visible: false
+                    applied->missed:
+                        condition: role('admin')
+                        visible: false
+                    *->cancelled:
+                        condition: role('admin')
+                        visible: false
+
+                fields:
+                    person_id:
+                        label: _('Osoba')
+                        visible: true
+                        modifiable: %events.fyziklani14.appCond%
+                        determining: true
+                        factory: RefPerson(%events.fyziklani14.participant%, email, true, role('admin'), false)
+
+
+        #
+        #   MACHINE
+        #   explanation: machine consists of several instances of base machines
+        #
+        machine:
+            baseMachines:
+                team:
+                    bmName: TEAM
+                    label: _('Tým')
+                    required: true # default false, it's conjuction with fields requirement
+                    primary: true # base machine states are propagated to the machine
+                p1:
+                    bmName: PARTICIPANT
+                    label: _('1. člen')
+                    required: true
+                p2:
+                    bmName: PARTICIPANT
+                    label: _('2. člen')
+                p3:
+                    bmName: PARTICIPANT
+                    label: _('3. člen')
+                p4:
+                    bmName: PARTICIPANT
+                    label: _('4. člen')
+                p5:
+                    bmName: PARTICIPANT
+                    label: _('5. člen')
+            formAdjustments:
+                - @events.privacyPolicy
+                - @events.captcha
+                - FKSDB\Events\FormAdjustments\DependentRequirements(%events.fyziklani14.dep.require%)
+                - FKSDB\Events\FormAdjustments\DependentVisibility(%events.fyziklani14.dep.visible%)
+                - FKSDB\Events\FormAdjustments\UniqueCheck('team.name', "Tým s názvem '%value' již existuje.")
+                - FKSDB\Events\FormAdjustments\UniqueCheck('*.person_id', "Osoba je již na Fyziklání přihlášena.")
+                - FKSDB\Events\Spec\Fyziklani\SchoolsInTeam(param('schoolsInTeam'))
+                - FKSDB\Events\FormAdjustments\RegexpCheck('team.name', "Název týmu smí obsahovat pouze latinku, řečtinu, cyrilici a ASCII znaky.", '/^[\p{Latin}\p{Greek}\p{Cyrillic}\x{0020}-\x{00FF}]+$/u')
+                # Needs testing, may not work correctly when school field is disabled (i.e. not sent by browser).
+                #- FKSDB\Events\Spec\Fyziklani\TeamsPerSchool(param('teamsPerSchool'))
+
+            processings:
+                - FKSDB\Events\Spec\Fyziklani\CategoryProcessing()
+                - @events.privacyPolicy
+
+            joins:
+                team:
+                    *->participated:
+                        p1: participated
+                        p2: participated
+                        p3: participated
+                        p4: participated
+                        p5: participated
+                    *->missed:
+                        p1: missed
+                        p2: missed
+                        p3: missed
+                        p4: missed
+                        p5: missed
+                    *->cancelled:
+                        p1: cancelled
+                        p2: cancelled
+                        p3: cancelled
+                        p4: cancelled
+                        p5: cancelled
+                    *->__terminated:
+                        p1: __terminated
+                        p2: __terminated
+                        p3: __terminated
+                        p4: __terminated
+                        p5: __terminated

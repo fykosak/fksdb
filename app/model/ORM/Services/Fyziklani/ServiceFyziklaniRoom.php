@@ -13,7 +13,7 @@ class ServiceFyziklaniRoom extends AbstractServiceSingle {
     /**
      * @return string
      */
-    protected function getModelClassName(): string {
+    public function getModelClassName(): string {
         return ModelFyziklaniRoom::class;
     }
 
@@ -31,10 +31,7 @@ class ServiceFyziklaniRoom extends AbstractServiceSingle {
     public function getRoomsByIds(array $ids): array {
         $rooms = [];
         foreach ($ids as $roomId) {
-            /**
-             * @var \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniRoom $room
-             */
-            $room = ModelFyziklaniRoom::createFromTableRow($this->findByPrimary($roomId));
+            $room = ModelFyziklaniRoom::createFromActiveRow($this->findByPrimary($roomId));
             if ($room) {
                 $rooms[] = $room->__toArray();
             }

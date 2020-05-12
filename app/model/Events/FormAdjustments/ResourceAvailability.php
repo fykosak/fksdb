@@ -1,11 +1,11 @@
 <?php
 
-namespace Events\FormAdjustments;
+namespace FKSDB\Events\FormAdjustments;
 
-use Events\Machine\BaseMachine;
-use Events\Machine\Machine;
-use Events\Model\Holder\BaseHolder;
-use Events\Model\Holder\Holder;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\Holder\BaseHolder;
+use FKSDB\Events\Model\Holder\Holder;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Forms\Form;
 
@@ -34,7 +34,7 @@ class ResourceAvailability extends AbstractAdjustment {
      */
     private function setFields($fields) {
         if (!is_array($fields)) {
-            $fields = array($fields);
+            $fields = [$fields];
         }
         $this->fields = $fields;
     }
@@ -47,7 +47,7 @@ class ResourceAvailability extends AbstractAdjustment {
      * @param string|array $includeStates any state or array of state
      * @param string|array $excludeStates any state or array of state
      */
-    function __construct($fields, $paramCapacity, $message, $includeStates = BaseMachine::STATE_ANY, $excludeStates = array('cancelled')) {
+    function __construct($fields, $paramCapacity, $message, $includeStates = BaseMachine::STATE_ANY, $excludeStates = ['cancelled']) {
         $this->setFields($fields);
         $this->paramCapacity = $paramCapacity;
         $this->message = $message;
@@ -62,10 +62,10 @@ class ResourceAvailability extends AbstractAdjustment {
      */
     protected function _adjust(Form $form, Machine $machine, Holder $holder) {
         $groups = $holder->getGroupedSecondaryHolders();
-        $groups[] = array(
+        $groups[] = [
             'service' => $holder->getPrimaryHolder()->getService(),
-            'holders' => array($holder->getPrimaryHolder()),
-        );
+            'holders' => [$holder->getPrimaryHolder()],
+        ];
 
         $services = [];
         $controls = [];
@@ -87,7 +87,7 @@ class ResourceAvailability extends AbstractAdjustment {
                         $holders[] = $baseHolder;
                         $controls[] = $foundControls[$name];
                         $field = $fieldMask;
-                    } else if ($name == substr($fieldMask, 0, strpos($fieldMask, self::DELIMITER))) {
+                    } elseif ($name == substr($fieldMask, 0, strpos($fieldMask, self::DELIMITER))) {
                         $holders[] = $baseHolder;
                         $controls[] = reset($foundControls); // assume single result;
                         $field = $fieldMask;
@@ -95,11 +95,11 @@ class ResourceAvailability extends AbstractAdjustment {
                 }
             }
             if ($holders) {
-                $services[] = array(
+                $services[] = [
                     'service' => $group['service'],
                     'holders' => $holders,
                     'field' => $field,
-                );
+                ];
             }
         }
 

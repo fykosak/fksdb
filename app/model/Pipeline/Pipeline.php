@@ -3,6 +3,8 @@
 namespace Pipeline;
 
 use FKSDB\Logging\ILogger;
+use FKSDB\Logging\MemoryLogger;
+use FKSDB\Messages\Message;
 use Nette\InvalidStateException;
 
 /**
@@ -43,9 +45,9 @@ class Pipeline {
     }
 
     /**
-     * @return ILogger
+     * @return MemoryLogger
      */
-    public function getLogger() {
+    public function getLogger(): ILogger {
         return $this->logger;
     }
 
@@ -90,13 +92,11 @@ class Pipeline {
     }
 
     /**
-     * @param $message
-     * @param int $level
+     * @param Message $message
      */
-    public function log($message, $level = ILogger::INFO) {
+    public function log(Message $message) {
         if ($this->logger) {
-            $this->logger->log($message, $level);
+            $this->logger->log($message);
         }
     }
-
 }

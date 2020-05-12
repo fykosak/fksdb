@@ -1,0 +1,41 @@
+{block #content}
+    <div class="container">
+        <div class="row">
+            {foreach $contests as $contest}
+                <div class="col-lg-4 col-md-6 col-sm-12 row text-center">
+
+                    <div class="col-12 my-3">
+                        <img class="dispatch-logo" n:attr="src => '/images/contests/'.$contest['contest']->getContestSymbol().'.svg'"
+                             alt=""/>
+                    </div>
+                    <div class="col-12">
+                        {foreach $contest['data'] as $role=>$data}
+                            {if $data['active']}
+                                <a n:class="'btn-block btn btn-lg','btn-'.$contest['contest']->getContestSymbol()"
+                                        href="{$data['link']}"
+                                >{$data['label']}</a>
+                            {else}
+                                <span n:class="'btn-block disabled btn btn-lg','btn-'.$contest['contest']->getContestSymbol()">
+                                    {$data['label']}
+                                </span>
+                            {/if}
+                        {/foreach}
+                    </div>
+
+                </div>
+            {/foreach}
+            <div class="col-lg-4 col-md-6 col-sm-12 row text-center">
+                <div class="col-12 my-3">
+                    <img class="dispatch-logo" src="/images/contests/event.gif" alt=""/>
+                </div>
+                <div class="col-12">
+                    <a href="{link :Event:Dispatch:default }"
+                       class="col-12 btn btn-secondary btn-lg btn-block">{_'Events'}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr/>
+    {*<h2>{_'Common activities'}</h2>*}
+    {*control navigation "common.dashboard.default"*}
+{/block}

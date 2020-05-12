@@ -1,15 +1,15 @@
 <?php
 
-namespace Events\FormAdjustments;
+namespace FKSDB\Events\FormAdjustments;
 
-use Events\Machine\BaseMachine;
-use Events\Machine\Machine;
-use Events\Model\Holder\Holder;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FormUtils;
 use Nette\Forms\Form;
-use Nette\Object;
 use Nette\Security\User;
+use Nette\SmartObject;
 
 /**
  * Creates required checkbox for whole application and then
@@ -17,7 +17,9 @@ use Nette\Security\User;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class Captcha extends Object implements IFormAdjustment {
+class Captcha implements IFormAdjustment {
+
+    use SmartObject;
 
     const CONTROL_NAME = 'c_a_p_t_cha';
 
@@ -40,7 +42,7 @@ class Captcha extends Object implements IFormAdjustment {
      * @param Holder $holder
      */
     public function adjust(Form $form, Machine $machine, Holder $holder) {
-        if ($machine->getPrimaryMachine()->getState() != BaseMachine::STATE_INIT || $this->user->isLoggedIn()) {
+        if ($holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT || $this->user->isLoggedIn()) {
             return;
         }
 

@@ -7,17 +7,17 @@ use FKSDB\Components\Grids\Fyziklani\ResultsTotalGrid;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\UI\Control;
+use Nette\DI\Container;
 use Nette\Localization\ITranslator;
-use Nette\Templating\FileTemplate;
 
 /**
  * Class OrgResults
  * @package FKSDB\Components\Controls\Fyziklani
- * @property FileTemplate $template
+ *
  */
 class FinalResults extends Control {
     /**
-     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam
+     * @var ServiceFyziklaniTeam
      */
     private $serviceFyziklaniTeam;
     /**
@@ -28,18 +28,22 @@ class FinalResults extends Control {
      * @var ITranslator
      */
     private $translator;
+    /**
+     * @var Container
+     */
+    private $container;
 
     /**
      * FinalResults constructor.
      * @param ModelEvent $event
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @param ITranslator $translator
+     * @param Container $container
      */
-    public function __construct(ModelEvent $event, ServiceFyziklaniTeam $serviceFyziklaniTeam, ITranslator $translator) {
+    public function __construct(Container $container, ModelEvent $event) {
         parent::__construct();
-        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+        $this->serviceFyziklaniTeam = $container->getByType(ServiceFyziklaniTeam::class);
         $this->event = $event;
-        $this->translator = $translator;
+        $this->translator = $container->getByType(ITranslator::class);
+        $this->container = $container;
     }
 
     /**
@@ -47,48 +51,49 @@ class FinalResults extends Control {
      * @return bool
      */
     public function isClosedCategory(string $category): bool {
-        $query = $this->serviceFyziklaniTeam->findParticipating($this->event);
-        $query->where('category', $category)->where('rank_category', null);
-        $count = $query->count();
-        return $count == 0;
+        $count = (int)$this->serviceFyziklaniTeam->findParticipating($this->event)
+            ->where('category', $category)
+            ->where('rank_category IS NULL')
+            ->count();
+        return $count === 0;
     }
 
     /**
      * @return bool
      */
     public function isClosedTotal(): bool {
-        $query = $this->serviceFyziklaniTeam->findParticipating($this->event);
-        $query->where('rank_total', null);
-        $count = $query->count();
-        return $count == 0;
+        $count = (int)$this->serviceFyziklaniTeam->findParticipating($this->event)
+            ->where('rank_total IS NULL')
+            ->count();
+        return $count === 0;
     }
 
     /**
      * @return ResultsCategoryGrid
      */
     public function createComponentResultsCategoryAGrid(): ResultsCategoryGrid {
-        return new ResultsCategoryGrid($this->event, $this->serviceFyziklaniTeam, 'A');
+        return new ResultsCategoryGrid($this->event, 'A', $this->container);
     }
 
     /**
      * @return ResultsCategoryGrid
      */
     public function createComponentResultsCategoryBGrid(): ResultsCategoryGrid {
-        return new ResultsCategoryGrid($this->event, $this->serviceFyziklaniTeam, 'B');
+        return new ResultsCategoryGrid($this->event, 'B', $this->container);
     }
 
     /**
      * @return ResultsCategoryGrid
      */
     public function createComponentResultsCategoryCGrid(): ResultsCategoryGrid {
-        return new ResultsCategoryGrid($this->event, $this->serviceFyziklaniTeam, 'C');
+        return new ResultsCategoryGrid($this->event, 'C', $this->container);
     }
 
     /**
      * @return ResultsTotalGrid
      */
     public function createComponentResultsTotalGrid(): ResultsTotalGrid {
-        return new ResultsTotalGrid($this->event, $this->serviceFyziklaniTeam);
+        return new ResultsTotalGrid($this->event, $this->container);
     }
 
     /**

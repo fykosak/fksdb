@@ -3,10 +3,17 @@
 namespace FKSDB\Components\Grids;
 
 use Authorization\ContestAuthorizator;
+use Closure;
+use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
-use Nette\Utils\Html;
+use Nette\Application\BadRequestException;
+use Nette\Application\UI\InvalidLinkException;
+use Nette\DI\Container;
 use NiftyGrid\DataSource\NDataSource;
+use NiftyGrid\DuplicateButtonException;
+use NiftyGrid\DuplicateColumnException;
+use NiftyGrid\DuplicateGlobalButtonException;
 use OrgModule\ExportPresenter;
 
 /**
@@ -19,7 +26,7 @@ class StoredQueriesGrid extends BaseGrid {
     const DESCRIPTION_TRUNC = 80;
 
     /**
-     * @var \FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery
+     * @var ServiceStoredQuery
      */
     private $serviceStoredQuery;
 
@@ -32,19 +39,18 @@ class StoredQueriesGrid extends BaseGrid {
 
     /**
      * StoredQueriesGrid constructor.
-     * @param \FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery $serviceStoredQuery
-     * @param ContestAuthorizator $contestAuthorizator
+     * @param Container $container
      */
-    function __construct(ServiceStoredQuery $serviceStoredQuery, ContestAuthorizator $contestAuthorizator) {
-        parent::__construct();
-        $this->serviceStoredQuery = $serviceStoredQuery;
-        $this->contestAuthorizator = $contestAuthorizator;
+    function __construct(Container $container) {
+        parent::__construct($container);
+        $this->serviceStoredQuery = $container->getByType(ServiceStoredQuery::class);
+        $this->contestAuthorizator = $container->getByType(ContestAuthorizator::class);
     }
 
     /**
-     * @return \Closure
+     * @return Closure
      */
-    public function getFilterByTagCallback() {
+    public function getFilterByTagCallback(): Closure {
         return function (array $tagTypeId) {
             if (empty($tagTypeId)) {
                 $this->isFilteredByTag = false;
@@ -58,11 +64,11 @@ class StoredQueriesGrid extends BaseGrid {
 
     /**
      * @param ExportPresenter $presenter
-     * @throws \Nette\Application\BadRequestException
-     * @throws \Nette\Application\UI\InvalidLinkException
-     * @throws \NiftyGrid\DuplicateButtonException
-     * @throws \NiftyGrid\DuplicateColumnException
-     * @throws \NiftyGrid\DuplicateGlobalButtonException
+     * @throws BadRequestException
+     * @throws InvalidLinkException
+     * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
+     * @throws DuplicateGlobalButtonException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -77,21 +83,12 @@ class StoredQueriesGrid extends BaseGrid {
         //
         // columns
         //
-        $this->addColumn('name', _('Název'));
-        $this->addColumn('description', _('Popis'))->setTruncate(self::DESCRIPTION_TRUNC);
-        $this->addColumn('tags', _('Štítky'))->setRenderer(function (ModelStoredQuery $row) {
-            $baseEl = Html::el('div')->addAttributes(['class' => 'stored-query-tags']);
-            foreach ($row->getMStoredQueryTags() as $tag) {
-                $baseEl->addHtml(Html::el('span')
-                    ->addAttributes([
-                        'class' => 'badge stored-query-tag stored-query-tag-' . $tag->color,
-                        'title' => $tag->description
-                    ])
-                    ->addText($tag->name));
-            }
-            return $baseEl;
-        })->setSortable(false);
-
+        $this->addColumn('name', _('Export name'));
+        $this->addColumn('description', _('Description'))->setTruncate(self::DESCRIPTION_TRUNC);
+        $this->addColumns([
+            DbNames::TAB_STORED_QUERY . '.qid',
+            DbNames::TAB_STORED_QUERY . '.tags',
+        ]);
         //
         // operations
         //
@@ -113,20 +110,27 @@ class StoredQueriesGrid extends BaseGrid {
                 return $this->contestAuthorizator->isAllowed($row, 'show', $contest);
             });
 
-        $this->addButton('execute', _('Spustit'))
+        $this->addButton('execute', _('Execute'))
             ->setClass('btn btn-sm btn-primary')
             ->setText(_('Spustit'))
             ->setLink(function ($row) {
                 return $this->getPresenter()->link('execute', $row->query_id);
             })
             ->setShow(function ($row) use ($contest) {
-                return $this->contestAuthorizator->isAllowed($row, 'show', $contest);
+                return $this->contestAuthorizator->isAllowed($row, 'execute', $contest);
             });
 
         if ($presenter->authorized('compose')) {
             $this->addGlobalButton('compose', _('Napsat dotaz'))
                 ->setLink($this->getPresenter()->link('compose'));
         }
+    }
+
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        return ModelStoredQuery::class;
     }
 
 }

@@ -5,7 +5,8 @@ namespace PublicModule;
 use DatabaseTestCase;
 use MockEnvironment\MockApplicationTrait;
 use Nette\Application\Request;
-use Nette\Config\Helpers;
+use Nette\DI\Config\Helpers;
+use Nette\DI\Container;
 use Nette\Http\FileUpload;
 use Nette\Utils\Finder;
 use Tester\Assert;
@@ -28,54 +29,63 @@ abstract class SubmitTestCase extends DatabaseTestCase {
      */
     protected $fixture;
 
+    /**
+     * SubmitTestCase constructor.
+     * @param Container $container
+     */
+    public function __construct(Container $container) {
+        parent::__construct($container);
+        $this->setContainer($container);
+    }
+
     protected function setUp() {
         parent::setUp();
         Environment::lock(LOCK_UPLOAD, TEMP_DIR);
 
-        $this->taskAll = $this->insert('task', array(
+        $this->taskAll = $this->insert('task', [
             'label' => '1',
             'series' => '1',
             'year' => '1',
             'contest_id' => '1',
-        ));
-        $this->insert('task_study_year', array(
+        ]);
+        $this->insert('task_study_year', [
             'task_id' => $this->taskAll,
             'study_year' => '6',
-        ));
-        $this->insert('task_study_year', array(
+        ]);
+        $this->insert('task_study_year', [
             'task_id' => $this->taskAll,
             'study_year' => '7',
-        ));
-        $this->insert('task_study_year', array(
+        ]);
+        $this->insert('task_study_year', [
             'task_id' => $this->taskAll,
             'study_year' => '8',
-        ));
-        $this->insert('task_study_year', array(
+        ]);
+        $this->insert('task_study_year', [
             'task_id' => $this->taskAll,
             'study_year' => '9',
-        ));
+        ]);
 
-        $this->taskRestricted = $this->insert('task', array(
+        $this->taskRestricted = $this->insert('task', [
             'label' => '2',
             'series' => '1',
             'year' => '1',
             'contest_id' => '1',
-        ));
-        $this->insert('task_study_year', array(
+        ]);
+        $this->insert('task_study_year', [
             'task_id' => $this->taskRestricted,
             'study_year' => '6',
-        ));
-        $this->insert('task_study_year', array(
+        ]);
+        $this->insert('task_study_year', [
             'task_id' => $this->taskRestricted,
             'study_year' => '7',
-        ));
+        ]);
 
-        $this->personId = $this->createPerson('Matyáš', 'Korvín', array(), true);
-        $this->contestantId = $this->insert('contestant_base', array(
+        $this->personId = $this->createPerson('Matyáš', 'Korvín', [], true);
+        $this->contestantId = $this->insert('contestant_base', [
             'contest_id' => 1,
             'year' => 1,
             'person_id' => $this->personId,
-        ));
+        ]);
 
 
         $this->fixture = $this->createPresenter('Public:Submit');
@@ -100,31 +110,30 @@ abstract class SubmitTestCase extends DatabaseTestCase {
         parent::tearDown();
     }
 
-    protected function createPostRequest($postData, $post = array()) {
-        $post = Helpers::merge($post, array(
+    protected function createPostRequest($postData, $post = []) {
+        $post = Helpers::merge($post, [
                     'action' => 'default',
                     'lang' => 'cs',
                     'contestId' => 1,
                     'year' => 1,
                     'do' => 'uploadForm-form-submit',
-        ));
+        ]);
 
-        $request = new Request('Public:Submit', 'POST', $post, $postData);
         //$request->setFlag(Request::SECURED);
-        return $request;
+        return new Request('Public:Submit', 'POST', $post, $postData);
     }
 
     protected function createFileUpload() {
         $file = tempnam(TEMP_DIR, 'upload');
         copy(__DIR__ . DIRECTORY_SEPARATOR . self::FILE_01, $file);
 
-        return array('file' => new FileUpload(array(
+        return ['file' => new FileUpload([
                 'name' => 'reseni2-8.pdf',
                 'type' => 'application/pdf',
                 'size' => filesize($file),
                 'tmp_name' => $file,
                 'error' => 0
-        )));
+        ])];
     }
 
     protected function assertSubmit($contestantId, $taskId) {

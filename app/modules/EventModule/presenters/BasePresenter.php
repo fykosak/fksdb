@@ -3,12 +3,17 @@
 namespace EventModule;
 
 use AuthenticatedPresenter;
-use FKSDB\Components\Controls\LanguageChooser;
+use FKSDB\Events\EventDispatchFactory;
+use FKSDB\Exceptions\NotFoundException;
+use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEvent;
+use FKSDB\UI\PageStyleContainer;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\DI\Container;
+use Nette\Security\IResource;
 
 /**
  *
@@ -17,34 +22,25 @@ use Nette\DI\Container;
  */
 abstract class BasePresenter extends AuthenticatedPresenter {
 
-    /**
-     *
-     * @var \FKSDB\ORM\Models\ModelEvent
-     */
+    const TEAM_EVENTS = [1, 9, 13];
+
+    /** @var ModelEvent */
     private $event;
+    /** @var Holder */
+    private $holder;
 
     /**
      * @var int
      * @persistent
      */
     public $eventId;
-    /**
-     *
-     * @var Container
-     */
-    protected $container;
 
-    /**
-     * @var \FKSDB\ORM\Services\ServiceEvent
-     */
+    /** @var ServiceEvent */
     protected $serviceEvent;
-
     /**
-     * @param Container $container
+     * @var EventDispatchFactory
      */
-    public function injectContainer(Container $container) {
-        $this->container = $container;
-    }
+    private $eventDispatchFactory;
 
     /**
      * @param ServiceEvent $serviceEvent
@@ -53,132 +49,169 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         $this->serviceEvent = $serviceEvent;
     }
 
-    /**+
-     * @return LanguageChooser
+    protected function getServiceEvent(): ServiceEvent {
+        return $this->serviceEvent;
+    }
+
+    /**
+     * @param EventDispatchFactory $eventDispatchFactory
      */
-    protected function createComponentLanguageChooser(): LanguageChooser {
-        return new LanguageChooser($this->session);
+    public function injectEventDispatch(EventDispatchFactory $eventDispatchFactory) {
+        $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
     /**
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
+     * @throws \Exception
      */
     protected function startup() {
-        /**
-         * @var LanguageChooser $languageChooser
-         */
-        $languageChooser = $this->getComponent('languageChooser');
-        $languageChooser->syncRedirect();
-
-        if (!$this->eventExist()) {
-            throw new BadRequestException('Event not found.', 404);
+        if (!$this->isEnabled()) {
+            throw new NotImplementedException;
         }
         parent::startup();
     }
 
     /**
      * @return bool
-     * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
      */
-    protected function eventExist(): bool {
-        return !!$this->getEvent();
-    }
-
-    /**
-     * @return string
-     * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
-     */
-    public function getSubTitle(): string {
-        return $this->getEvent()->__toString();
-    }
-
-    /**
-     * @return int
-     * @throws \Nette\Application\AbortException
-     */
-    protected function getEventId(): int {
-        if (!$this->eventId) {
-            $this->redirect('Dispatch:default');
+    public function isAuthorized(): bool {
+        if (!$this->isEnabled()) {
+            return false;
         }
-        return +$this->eventId;
+        return parent::isAuthorized();
     }
 
     /**
-     * @return \FKSDB\ORM\Models\ModelEvent
+     * @return ModelEvent
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
      */
     protected function getEvent(): ModelEvent {
         if (!$this->event) {
-            $row = $this->serviceEvent->findByPrimary($this->getEventId());
-            if (!$row) {
-                throw new BadRequestException('Event not found');
+            $model = $this->getServiceEvent()->findByPrimary($this->eventId);
+            if (!$model) {
+                throw new NotFoundException('Event not found.');
             }
-            $this->event = ModelEvent::createFromTableRow($row);
-            if ($this->event) {
-                $holder = $this->container->createEventHolder($this->getEvent());
-                $this->event->setHolder($holder);
-            }
+            $this->event = $model;
         }
         return $this->event;
     }
 
     /**
-     * @param $resource
-     * @param $privilege
-     * @return bool
+     * @return Holder
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws \FKSDB\Config\NeonSchemaException
      */
-    protected function eventIsAllowed($resource, $privilege): bool {
-        $event = $this->getEvent();
-        if (!$event) {
-            return false;
+    protected function getHolder(): Holder {
+        if (!$this->holder) {
+            /** @var EventDispatchFactory $factory */
+            $factory = $this->getContext()->getByType(EventDispatchFactory::class);
+            $this->holder = $factory->getDummyHolder($this->getEvent());
         }
-        return $this->getEventAuthorizator()->isAllowed($resource, $privilege, $event);
+        return $this->holder;
     }
 
     /**
-     * @param $resource
-     * @param $privilege
-     * @return bool
+     * @return int
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
      */
-    protected function isContestsOrgAllowed($resource, $privilege): bool {
-        $contest = $this->getContest();
-        if (!$contest) {
-            return false;
-        }
-        return $this->getContestAuthorizator()->isAllowed($resource, $privilege, $contest);
+    protected function getAcYear(): int {
+        return $this->yearCalculator->getAcademicYear($this->getContest(), $this->getEvent()->year);
     }
 
     /**
-     * @return array
+     * @return ModelContest
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
-     */
-    protected function getNavBarVariant(): array {
-        return ['event event-type-' . $this->getEvent()->event_type_id, ($this->getEvent()->event_type_id == 1) ? 'bg-fyziklani navbar-dark' : 'bg-light navbar-light'];
-    }
-
-    /**
-     * @return array
-     */
-    protected function getNavRoots(): array {
-        return ['event.dashboard.default'];
-    }
-
-    /**
-     * @return \FKSDB\ORM\Models\ModelContest
-     * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
      */
     protected final function getContest(): ModelContest {
         return $this->getEvent()->getContest();
     }
 
+    /**
+     * @return bool
+     */
+    protected function isEnabled(): bool {
+        return true;
+    }
+
+    /**
+     * @return bool
+     * @throws BadRequestException
+     */
+    protected function isTeamEvent(): bool {
+        return (bool)in_array($this->getEvent()->event_type_id, self::TEAM_EVENTS);
+    }
+
+    /* **************** ACL *********************** */
+    /**
+     * @param IResource|string $resource
+     * @param string $privilege
+     * @return bool
+     * Standard ACL from acl.neon
+     * @throws BadRequestException
+     */
+    protected function isContestsOrgAuthorized($resource, string $privilege): bool {
+        return $this->getEventAuthorizator()->isContestOrgAllowed($resource, $privilege, $this->getEvent());
+    }
+
+    /**
+     * @param $resource
+     * @param string $privilege
+     * @return bool
+     * @throws BadRequestException
+     * Check if is contest and event org
+     * TODO vyfakuje to aj cartesianov
+     */
+    protected function isEventAndContestOrgAuthorized($resource, string $privilege): bool {
+        return $this->getEventAuthorizator()->isEventAndContestOrgAllowed($resource, $privilege, $this->getEvent());
+    }
+
+    /**
+     * @param $resource
+     * @param $privilege
+     * @return bool
+     * @throws BadRequestException
+     * Check if has contest permission or is Event org
+     */
+    public function isEventOrContestOrgAuthorized($resource, $privilege): bool {
+        return $this->getEventAuthorizator()->isEventOrContestOrgAllowed($resource, $privilege, $this->getEvent());
+    }
+
+    /* ********************** GUI ************************ */
+    /**
+     * @param string $title
+     * @param string $icon
+     * @param string $subTitle
+     * @throws BadRequestException
+     */
+    protected function setTitle(string $title, string $icon = '', string $subTitle = '') {
+        parent::setTitle($title, $icon, $subTitle ?: $this->getEvent()->__toString());
+    }
+
+    /**
+     * @return PageStyleContainer
+     * @throws BadRequestException
+     */
+    protected function getPageStyleContainer(): PageStyleContainer {
+        $container = parent::getPageStyleContainer();
+        $container->styleId = 'event event-type-' . $this->getEvent()->event_type_id;
+        switch ($this->getEvent()->event_type_id) {
+            case 1:
+                $container->navBarClassName = 'bg-fyziklani navbar-dark';
+                break;
+            case 9:
+                $container->navBarClassName = 'bg-fol navbar-light';
+                break;
+            default:
+                $container->navBarClassName = 'bg-light navbar-light';
+        }
+        return $container;
+    }
+
+    /**
+     * @return array|string[]
+     */
+    protected function getNavRoots(): array {
+        return ['Event.Dashboard.default'];
+    }
 }

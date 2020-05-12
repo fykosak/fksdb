@@ -2,15 +2,18 @@
 
 namespace FKSDB\Components\Grids\Events;
 
+use FKSDB\NotImplementedException;
 use FKSDB\ORM\Models\ModelEvent;
-use Nette\Object;
+use Nette\SmartObject;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class LayoutResolver extends Object {
+class LayoutResolver {
+
+    use SmartObject;
 
     const TEMPLATE_EXT = '.latte';
 
@@ -26,10 +29,10 @@ class LayoutResolver extends Object {
 
     /**
      * LayoutResolver constructor.
-     * @param $templateDir
-     * @param $definitions
+     * @param string $templateDir
+     * @param array $definitions
      */
-    function __construct($templateDir, $definitions) {
+    function __construct(string $templateDir, array $definitions) {
         $this->templateDir = $templateDir;
         $this->definitions = $definitions;
     }
@@ -37,16 +40,9 @@ class LayoutResolver extends Object {
     /**
      * @param ModelEvent $event
      * @return string
+     * @throws NotImplementedException
      */
-    public function getTableLayout(ModelEvent $event) {
-        return $this->getTemplate($event, 'tableLayout');
-    }
-
-    /**
-     * @param \FKSDB\ORM\Models\ModelEvent $event
-     * @return string
-     */
-    public function getFormLayout(ModelEvent $event) {
+    public function getFormLayout(ModelEvent $event): string {
         return $this->getTemplate($event, 'formLayout');
     }
 
@@ -54,8 +50,9 @@ class LayoutResolver extends Object {
      * @param ModelEvent $event
      * @param $type
      * @return string
+     * @throws NotImplementedException
      */
-    private function getTemplate(ModelEvent $event, $type) {
+    private function getTemplate(ModelEvent $event, string $type): string {
         $eventTypeId = $event->event_type_id;
         $eventYear = $event->event_year;
         $result = null;
@@ -70,6 +67,7 @@ class LayoutResolver extends Object {
         if ($result) {
             return $this->templateDir . DIRECTORY_SEPARATOR . $result . self::TEMPLATE_EXT;
         }
+        throw new NotImplementedException();
     }
 
 }

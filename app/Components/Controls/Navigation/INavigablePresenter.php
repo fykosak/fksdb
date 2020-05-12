@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Controls\Navigation;
 
+use FKSDB\UI\PageTitle;
 use Nette\Application\IPresenter;
 
 /**
@@ -26,9 +27,9 @@ interface INavigablePresenter extends IPresenter {
     /**
      * Returns title of the current view.
      *
-     * @return string
+     * @return PageTitle
      */
-    public function getTitle();
+    public function getTitle(): PageTitle;
 
     /**
      * Publish access of the protecetd static method.
@@ -36,12 +37,12 @@ interface INavigablePresenter extends IPresenter {
      * @param string $action
      * @return string
      */
-    public static function publicFormatActionMethod($action);
+    public static function publicFormatActionMethod(string $action): string;
 
     /**
      * @return string
      */
-    public static function getBacklinkParamName();
+    public static function getBackLinkParamName(): string;
 }
 
 

@@ -63,7 +63,7 @@ class LoginUserStorage extends UserStorage {
      * LoginUserStorage constructor.
      * @param Session $sessionHandler
      * @param ServiceLogin $loginService
-     * @param YearCalculator $yearCalculator
+     * @param \FKSDB\YearCalculator $yearCalculator
      * @param GlobalSession $globalSession
      * @param Application $application
      * @param Request $request
@@ -148,11 +148,11 @@ class LoginUserStorage extends UserStorage {
                 $allowedNonlogin = ($presenter->getAllowedAuthMethods() &
                     (AuthenticatedPresenter::AUTH_ALLOW_HTTP | AuthenticatedPresenter::AUTH_ALLOW_GITHUB));
                 if ($presenter->requiresLogin() && !$allowedNonlogin) {
-                    $params = array(
+                    $params = [
                         'backlink' => (string)$this->request->getUrl(),
                         AuthenticationPresenter::PARAM_FLAG => AuthenticationPresenter::FLAG_SSO_PROBE,
                         AuthenticationPresenter::PARAM_REASON => AuthenticationPresenter::REASON_AUTH,
-                    );
+                    ];
 
                     $presenter->redirect(':Authentication:login', $params);
                 }
@@ -189,12 +189,12 @@ class LoginUserStorage extends UserStorage {
         }
 
         // Find login
-        $row = $this->loginService->findByPrimary($local->getId());
+        /** @var ModelLogin $login */
+        $login = $this->loginService->findByPrimary($local->getId());
 
-        if (!$row) {
+        if (!$login) {
             return null;
         }
-        $login = ModelLogin::createFromTableRow($row);
         $login->person_id; // stupid... touch the field in order to have it loaded via ActiveRow
         $login->injectYearCalculator($this->yearCalculator);
         return $login;

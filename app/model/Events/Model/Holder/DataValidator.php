@@ -1,35 +1,32 @@
 <?php
 
-namespace Events\Model\Holder;
+namespace FKSDB\Events\Model\Holder;
 
-use Nette\Object;
+use Nette\SmartObject;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class DataValidator extends Object {
-
+class DataValidator {
+    use SmartObject;
+    /**
+     * @var string[]
+     */
     private $validationErrors;
-    private $stateStack = [];
 
     /**
      * @param BaseHolder $baseHolder
-     * @param $state
      */
-    public function validate(BaseHolder $baseHolder, $state) {
-        $this->pushState($baseHolder, $state);
-
+    public function validate(BaseHolder $baseHolder) {
         // validate
         $this->validationErrors = [];
         $this->validateFields($baseHolder);
-
-        $this->popState($baseHolder);
     }
 
     /**
-     * @return bool
+     * @return bool|string[]
      */
     public function getValidationResult() {
         return count($this->validationErrors) ? $this->validationErrors : true;
@@ -45,31 +42,9 @@ class DataValidator extends Object {
     }
 
     /**
-     * @param $error
+     * @param string $error
      */
     public function addError($error) {
         $this->validationErrors[] = $error;
     }
-
-    /**
-     * @param BaseHolder $baseHolder
-     * @param $state
-     */
-    private function pushState(BaseHolder $baseHolder, $state) {
-        $baseMachine = $baseHolder->getHolder()->getMachine()->getBaseMachine($baseHolder->getName());
-
-        $this->stateStack[] = $baseMachine->getState();
-        $baseMachine->setState($state);
-    }
-
-    /**
-     * @param BaseHolder $baseHolder
-     */
-    private function popState(BaseHolder $baseHolder) {
-        $baseMachine = $baseHolder->getHolder()->getMachine()->getBaseMachine($baseHolder->getName());
-
-        $state = array_pop($this->stateStack);
-        $baseMachine->setState($state);
-    }
-
 }

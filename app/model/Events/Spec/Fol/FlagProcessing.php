@@ -1,15 +1,16 @@
 <?php
 
-namespace Events\Spec\Fol;
+namespace FKSDB\Events\Spec\Fol;
 
-use Events\Machine\Machine;
-use Events\Model\Holder\Holder;
-use Events\Processings\AbstractProcessing;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\Holder\Holder;
+use FKSDB\Events\Processings\AbstractProcessing;
 use FKSDB\Logging\ILogger;
 use Nette\Utils\ArrayHash;
 use FKSDB\ORM\Services\ServiceSchool;
 use FKSDB\YearCalculator;
 use Nette\Forms\Form;
+use Nette\Utils\ArrayHash;
 
 /**
  * Class FlagProcessing
@@ -51,12 +52,12 @@ class FlagProcessing extends AbstractProcessing {
             return;
         }
 
-        $event = $holder->getEvent();
+        $event = $holder->getPrimaryHolder()->getEvent();
         $contest = $event->getEventType()->contest;
         $year = $event->year;
         $acYear = $this->yearCalculator->getAcademicYear($contest, $year);
 
-        foreach ($holder as $name => $baseHolder) {
+        foreach ($holder->getBaseHolders() as $name => $baseHolder) {
             if ($name == 'team') {
                 continue;
             }
@@ -85,7 +86,7 @@ class FlagProcessing extends AbstractProcessing {
             } else {
                 $participantData = $formValues;
             }
-            if (!($this->isCzSkSchool($participantData['school_id']) && $this->isStudent($participantData['study_year']))) {
+            if (!($this->serviceSchool->isCzSkSchool($participantData['school_id']) && $this->isStudent($participantData['study_year']))) {
                 $personHasFlag = $values[$name]['person_id_1']['person_has_flag'];
                 $personHasFlag->offsetUnset('spam_mff');
 //                $a=$c;
@@ -97,22 +98,10 @@ class FlagProcessing extends AbstractProcessing {
     }
 
     /**
-     * @param $school_id
+     * @param $studyYear
      * @return bool
      */
-    private function isCzSkSchool($school_id) {
-        $country = $this->serviceSchool->getTable()->select('address.region.country_iso')->where(['school_id' => $school_id])->fetch();
-        if (in_array($country->country_iso, ['CZ', 'SK'])) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * @param $study_year
-     * @return bool
-     */
-    private function isStudent($study_year) {
-        return ($study_year === null) ? false : true;
+    private function isStudent($studyYear) {
+        return ($studyYear === null) ? false : true;
     }
 }

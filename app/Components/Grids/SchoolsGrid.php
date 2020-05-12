@@ -2,10 +2,16 @@
 
 namespace FKSDB\Components\Grids;
 
-
+use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServiceSchool;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Database\Table\Selection;
+use Nette\DI\Container;
 use Nette\Utils\Html;
+use NiftyGrid\DuplicateButtonException;
+use NiftyGrid\DuplicateColumnException;
+use NiftyGrid\DuplicateGlobalButtonException;
 use SQL\SearchableDataSource;
 
 /**
@@ -15,25 +21,26 @@ use SQL\SearchableDataSource;
 class SchoolsGrid extends BaseGrid {
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceSchool
+     * @var ServiceSchool
      */
     private $serviceSchool;
 
     /**
      * SchoolsGrid constructor.
-     * @param \FKSDB\ORM\Services\ServiceSchool $serviceSchool
+     * @param Container $container
      */
-    public function __construct(ServiceSchool $serviceSchool) {
-        parent::__construct();
-        $this->serviceSchool = $serviceSchool;
+    public function __construct(Container $container) {
+        parent::__construct($container);
+        $this->serviceSchool = $container->getByType(ServiceSchool::class);
     }
 
     /**
      * @param $presenter
-     * @throws \Nette\Application\UI\InvalidLinkException
-     * @throws \NiftyGrid\DuplicateButtonException
-     * @throws \NiftyGrid\DuplicateColumnException
-     * @throws \NiftyGrid\DuplicateGlobalButtonException
+     * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
+     * @throws DuplicateGlobalButtonException
+     * @throws InvalidLinkException
+     * @throws NotImplementedException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -60,23 +67,20 @@ class SchoolsGrid extends BaseGrid {
             return Html::el('span')->addAttributes(['class' => ('badge ' . ($row->active ? 'badge-success' : 'badge-danger'))])->addText(($row->active));
         });
 
-        //
-        // operations
-        //
-        $this->addButton('edit', _('Edit'))
-            ->setText(_('Edit'))
-            ->setLink(function ($row) {
-                return $this->getPresenter()->link('edit', $row->school_id);
-            });
+        $this->addLinkButton( 'edit', 'edit', _('Edit'), false, ['id' => 'school_id']);
+        $this->addLinkButton( 'detail', 'detail', _('Detail'), false, ['id' => 'school_id']);
+
         $this->addGlobalButton('add')
             ->setLink($this->getPresenter()->link('create'))
             ->setLabel(_('CreateSchool'))
             ->setClass('btn btn-sm btn-primary');
+    }
 
-        //
-        // appeareance
-        //
-
+    /**
+     * @return string
+     */
+    protected function getModelClassName(): string {
+        return ModelSchool::class;
     }
 
 }

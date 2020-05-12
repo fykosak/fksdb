@@ -3,9 +3,11 @@
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
 use FKSDB\Application\IJavaScriptCollector;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextBase;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Arrays;
+use Nette\Utils\Html;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -17,7 +19,7 @@ use Nette\Utils\Arrays;
  */
 class AutocompleteSelectBox extends TextBase {
 
-    const SELECTOR_CLASS = 'autocompleteSelect';
+    const SELECTOR_CLASS = 'autocomplete-select';
     const PARAM_SEARCH = 'acQ';
     const PARAM_NAME = 'acName';
     const INTERNAL_DELIMITER = ',';
@@ -55,10 +57,10 @@ class AutocompleteSelectBox extends TextBase {
     /**
      * AutocompleteSelectBox constructor.
      * @param $ajax
-     * @param null $label
-     * @param null $renderMethod
+     * @param string $label
+     * @param string $renderMethod
      */
-    function __construct($ajax, $label = null, $renderMethod = null) {
+    function __construct(bool $ajax, string $label = null, string $renderMethod = null) {
         parent::__construct($label);
 
         $this->monitor(IAutocompleteJSONProvider::class);
@@ -79,9 +81,9 @@ class AutocompleteSelectBox extends TextBase {
             $this->attachedJSON = true;
             $name = $this->lookupPath(IAutocompleteJSONProvider::class);
 
-            $this->ajaxUrl = $obj->link('autocomplete!', array(
+            $this->ajaxUrl = $obj->link('autocomplete!', [
                 self::PARAM_NAME => $name,
-            ));
+            ]);
         }
         if (!$this->attachedJS && $obj instanceof IJavaScriptCollector) {
             $this->attachedJS = true;
@@ -129,7 +131,7 @@ class AutocompleteSelectBox extends TextBase {
     }
 
     /**
-     * @return \Nette\Utils\Html
+     * @return Html
      */
     public function getControl() {
         $control = parent::getControl();
@@ -138,15 +140,9 @@ class AutocompleteSelectBox extends TextBase {
             'data-ac-ajax' => (int)$this->isAjax(),
             'data-ac-multiselect' => (int)$this->isMultiSelect(),
             'data-ac-ajax-url' => $this->ajaxUrl,
-            'data-ac-render-method' => $this->renderMethod,
+            'data-ac-render-method' => $this->getRenderMethod(),
+            'class' => self::SELECTOR_CLASS . ' form-control',
         ]);
-        /*     $control->data['ac'] = (int)true;
-             $control->data['ac-ajax'] = (int)$this->isAjax();
-             $control->data['ac-multiselect'] = (int)$this->isMultiSelect();
-             $control->data['ac-ajax-url'] = $this->ajaxUrl;
-             $control->data['ac-render-method'] = $this->renderMethod;
-     */
-        $control->addClass(self::SELECTOR_CLASS);
 
         $defaultValue = $this->getValue();
         if ($defaultValue) {
@@ -156,10 +152,14 @@ class AutocompleteSelectBox extends TextBase {
                     $defaultTextValue[] = $this->getDataProvider()->getItemLabel($id);
                 }
                 $defaultTextValue = json_encode($defaultTextValue);
-                $control->addAttributes(['value' => implode(self::INTERNAL_DELIMITER, $defaultValue)]);
+                $control->addAttributes([
+                    'value' => implode(self::INTERNAL_DELIMITER, $defaultValue),
+                ]);
             } else {
                 $defaultTextValue = $this->getDataProvider()->getItemLabel($defaultValue);
-                $control->addAttributes(['value' => $defaultValue]);
+                $control->addAttributes([
+                    'value' => $defaultValue,
+                ]);
             }
             $control->addAttributes([
                 'data-ac-default-value' => $defaultTextValue,
@@ -176,7 +176,7 @@ class AutocompleteSelectBox extends TextBase {
     }
 
     public function loadHttpData() {
-        $path = explode('[', strtr(str_replace(array('[]', ']'), '', $this->getHtmlName()), '.', '_'));
+        $path = explode('[', strtr(str_replace(['[]', ']'], '', $this->getHtmlName()), '.', '_'));
         $metaPath = $path;
         $metaPath[count($metaPath) - 1] .= self::META_ELEMENT_SUFFIX;
         try {
@@ -194,13 +194,13 @@ class AutocompleteSelectBox extends TextBase {
 
     /**
      * @param $value
-     * @return TextBase|void
+     * @return TextBase
      */
     public function setValue($value) {
         if ($this->isMultiSelect()) {
             if (is_array($value)) {
                 $this->value = $value;
-            } else if ($value === '') {
+            } elseif ($value === '') {
                 $this->value = [];
             } else {
                 $this->value = explode(self::INTERNAL_DELIMITER, $value);
@@ -215,11 +215,12 @@ class AutocompleteSelectBox extends TextBase {
         if ($this->dataProvider) {
             $this->dataProvider->setDefaultValue($this->value);
         }
+        return $this;
     }
 
     /**
      * @param $value
-     * @return \Nette\Forms\Controls\BaseControl
+     * @return BaseControl
      */
     public function setDefaultValue($value) {
         if ($this->dataProvider) {

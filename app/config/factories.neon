@@ -5,7 +5,7 @@ services:
     mailTemplateFactory:
         class: Mail\MailTemplateFactory(%email.templatesDir%)
 
-    - Events\Model\ApplicationHandlerFactory
+    - FKSDB\Events\Model\ApplicationHandlerFactory
     - Exports\ExportFormatFactory
     - FKSDB\Components\Forms\Factories\StoredQueryFactory
     referencedEventPersonFactory:
@@ -21,22 +21,8 @@ services:
     resultsModelFactory: FKSDB\Results\ResultsModelFactory
     statsModelFactory: StatsModelFactory
     pipelineFactory:
-        class: Tasks\PipelineFactory(%tasks.columnMapping%, %tasks.contributionMapping%, %tasks.defaultStudyYears%, ...)
-    flashDumpFactory:
-        class: FKSDB\Logging\FlashDumpFactory(%logToFlash%)
+        class: FKSDB\Tasks\PipelineFactory(%tasks.columnMapping%, %tasks.contributionMapping%, %tasks.defaultStudyYears%, ...)
     event.DBReflectionFactory:
         class: FKSDB\Components\Forms\Factories\Events\DBReflectionFactory
 #transition
-    machineFactory: FKSDB\Transitions\MachineFactory
     transitionsFactory: FKSDB\Transitions\TransitionsFactory
-    #payment
-    priceCalculatorFactory: FKSDB\Payment\PriceCalculator\PriceCalculatorFactory
-    symbolGeneratorFactory: FKSDB\Payment\SymbolGenerator\SymbolGeneratorFactory
-
-
-
-factories:
-# (so far unused)
-
-includes:
-    - logToFlash.neon

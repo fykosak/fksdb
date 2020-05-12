@@ -2,21 +2,18 @@
 
 use FKSDB\Config\GlobalParameters;
 use FKSDB\ORM\Models\ModelContest;
-use FKSDB\ORM\Services\ServiceContest;
-use Nette\Object;
+use Nette\SmartObject;
 
 /**
  * Class News
  */
-class News extends Object {
-    /**
-     * @var ServiceContest
-     */
+class News {
+    use SmartObject;
+
     /**
      * @var GlobalParameters
      */
     private $globalParameters;
-
 
     /**
      * News constructor.
@@ -33,15 +30,15 @@ class News extends Object {
      */
     public function getNews(ModelContest $contest, $lang) {
         $contestName = $this->globalParameters['contestMapping'][$contest->contest_id];
-	if (!isset($this->globalParameters[$contestName]['news'][$lang])) {
+        if (!isset($this->globalParameters[$contestName]['news'][$lang])) {
             return [];
-	}
+        }
         $news = $this->globalParameters[$contestName]['news'][$lang];
-	if ($news) {
+        if ($news) {
             return $news;
-	} else {
+        } else {
             return [];
-	}
+        }
     }
 
 }

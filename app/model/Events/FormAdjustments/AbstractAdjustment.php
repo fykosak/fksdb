@@ -1,20 +1,22 @@
 <?php
 
-namespace Events\FormAdjustments;
+namespace FKSDB\Events\FormAdjustments;
 
-use Events\Machine\Machine;
-use Events\Model\Holder\Holder;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\Holder\Holder;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
-use Nette\Object;
+use Nette\SmartObject;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-abstract class AbstractAdjustment extends Object implements IFormAdjustment {
+abstract class AbstractAdjustment implements IFormAdjustment {
+
+    use SmartObject;
 
     const DELIMITER = '.';
     const WILDCART = '*';

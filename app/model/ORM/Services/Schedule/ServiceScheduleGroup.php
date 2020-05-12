@@ -1,6 +1,5 @@
 <?php
 
-
 namespace FKSDB\ORM\Services\Schedule;
 
 use FKSDB\ORM\AbstractServiceSingle;
@@ -15,7 +14,7 @@ class ServiceScheduleGroup extends AbstractServiceSingle {
     /**
      * @return string
      */
-    protected function getModelClassName(): string {
+    public function getModelClassName(): string {
         return ModelScheduleGroup::class;
     }
 

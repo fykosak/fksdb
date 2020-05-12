@@ -2,6 +2,8 @@
 
 namespace FyziklaniModule;
 
+use Nette\Application\BadRequestException;
+
 /**
  * Class DashboardPresenter
  * @package FyziklaniModule
@@ -9,20 +11,16 @@ namespace FyziklaniModule;
 class DashboardPresenter extends BasePresenter {
     /**
      * @return void
+     * @throws BadRequestException
      */
     public function titleDefault() {
-        $this->setTitle(_('Herní systém Fyziklání'));
-        $this->setIcon('fa fa-dashboard');
+        $this->setTitle(_('Fyziklani game app'), 'fa fa-dashboard');
     }
 
     /**
-     * @throws \Nette\Application\BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws BadRequestException
      */
     public function authorizedDefault() {
-        if (!$this->isEventFyziklani()) {
-            return $this->setAuthorized(false);
-        }
-        return $this->setAuthorized($this->eventIsAllowed('fyziklani.dashboard', 'default'));
+        return $this->setAuthorized($this->isEventOrContestOrgAuthorized('fyziklani.dashboard', 'default'));
     }
 }

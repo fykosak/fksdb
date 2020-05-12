@@ -1,19 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: miso
- * Date: 12.11.2016
- * Time: 14:03
- */
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
-use Events\Machine\BaseMachine;
-use Events\Model\Holder\Field;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Model\Holder\Field;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\Checkbox;
-
 
 /**
  * Class CheckboxFactory

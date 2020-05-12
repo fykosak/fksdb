@@ -4,24 +4,30 @@ addons:
   hosts:
   - db.fykos.local
   - auth.fykos.local
+  mariadb: '10.4'
 
 php:
   - 7.0
   - 7.1
-
-services:
-  - mysql
+  - 7.2
+  - 7.3
+  - 7.4
+allow_failures:
+  - php: 7.2
+  - php: 7.3
+  - php: 7.4
 
 before_install:
-#  - composer self-update
-  - echo $'\n[client]\nuser=root' >> ~/.my.cnf
+  - phpenv config-add tests/php.ini
+  - composer self-update
 
 install:
-#  - composer install --no-interaction --prefer-source
+  - composer install --no-interaction --prefer-source
   - "sed -e 's/user:/user: root/' app/config/config.local.neon.sample > app/config/config.local.neon"
   - ./i18n/compile.sh
 
 before_script:
+  - sudo mysql -e "ALTER USER root@localhost IDENTIFIED VIA mysql_native_password; SET PASSWORD = PASSWORD('');"
   - ./tests/init-database.sh
   - ./tests/clear-database.sh
   - rm -rf temp/* tmp

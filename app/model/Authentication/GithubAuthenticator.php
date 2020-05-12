@@ -31,7 +31,7 @@ class GithubAuthenticator extends AbstractAuthenticator {
      * GithubAuthenticator constructor.
      * @param GlobalParameters $globalParameters
      * @param ServiceLogin $serviceLogin
-     * @param \FKSDB\YearCalculator $yearCalculator
+     * @param YearCalculator $yearCalculator
      */
     function __construct(GlobalParameters $globalParameters, ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
         parent::__construct($serviceLogin, $yearCalculator);
@@ -40,7 +40,7 @@ class GithubAuthenticator extends AbstractAuthenticator {
 
     /**
      * @param FullHttpRequest $request
-     * @return \FKSDB\ORM\Models\ModelLogin
+     * @return ModelLogin
      * @throws AuthenticationException
      * @throws InactiveLoginException
      * @throws NoLoginException
@@ -63,15 +63,13 @@ class GithubAuthenticator extends AbstractAuthenticator {
         if ($signature !== $expectedHash) {
             //throw new AuthenticationException(_('Nesprávný hash požadavku.'));
         }
-
-        $row = $this->serviceLogin->getTable()->where('login = ?', $loginName)->fetch();
-
-        if (!$row) {
+        /** @var ModelLogin $login */
+        $login = $this->serviceLogin->getTable()->where('login = ?', $loginName)->fetch();
+        if (!$login) {
             throw new NoLoginException();
         }
-        $login = ModelLogin::createFromTableRow($row);
         if (!$login->active) {
-            throw new InactiveLoginException();
+            throw new InactiveLoginException;
         }
 
         $this->logAuthentication($login);

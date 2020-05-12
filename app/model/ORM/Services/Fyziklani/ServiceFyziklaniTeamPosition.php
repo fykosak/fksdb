@@ -5,6 +5,7 @@ namespace FKSDB\ORM\Services\Fyziklani;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition;
+use FKSDB\ORM\Tables\TypedTableSelection;
 use Traversable;
 
 /**
@@ -15,7 +16,7 @@ class ServiceFyziklaniTeamPosition extends AbstractServiceSingle {
     /**
      * @return string
      */
-    protected function getModelClassName(): string {
+    public function getModelClassName(): string {
         return ModelFyziklaniTeamPosition::class;
     }
 
@@ -28,14 +29,12 @@ class ServiceFyziklaniTeamPosition extends AbstractServiceSingle {
 
     /**
      * @param int $teamId
-     * @return ModelFyziklaniTeamPosition
+     * @return ModelFyziklaniTeamPosition|null
      */
     public function findByTeamId(int $teamId) {
+        /** @var ModelFyziklaniTeamPosition $row */
         $row = $this->getTable()->where('e_fyziklani_team_id', $teamId)->fetch();
-        if ($row) {
-            return ModelFyziklaniTeamPosition::createFromTableRow($row);
-        }
-        return null;
+        return $row ? $row : null;
     }
 
     /**
@@ -47,9 +46,7 @@ class ServiceFyziklaniTeamPosition extends AbstractServiceSingle {
         foreach ($data as $teamData) {
             $teamData = (object)$teamData;
             try {
-                /**
-                 * @var \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition $model
-                 */
+                /** @var ModelFyziklaniTeamPosition $model */
                 $model = $this->findByTeamId($teamData->teamId);
                 if (is_numeric($teamData->x) && is_numeric($teamData->y)) {
 
@@ -60,11 +57,10 @@ class ServiceFyziklaniTeamPosition extends AbstractServiceSingle {
                         'room_id' => $teamData->roomId,
                     ];
                     if (!$model) {
-                        $model = $this->createNew($data);
+                        $this->createNewModel($data);
                     } else {
-                        $this->updateModel($model, $data);
+                        $model->update($data);
                     }
-                    $this->save($model);
                     $updatedTeams[] = $teamData->teamId;
                 } else {
                     if ($model) {
@@ -77,5 +73,21 @@ class ServiceFyziklaniTeamPosition extends AbstractServiceSingle {
 
         }
         return $updatedTeams;
+    }
+
+    /**
+     * @param array $roomIds
+     * @return TypedTableSelection
+     */
+    public function getAllPlaces(array $roomIds): TypedTableSelection {
+        return $this->getTable()->where('room_id', $roomIds);
+    }
+
+    /**
+     * @param array $roomIds
+     * @return TypedTableSelection
+     */
+    public function getFreePlaces(array $roomIds): TypedTableSelection {
+        return $this->getAllPlaces($roomIds)->where('e_fyziklani_team IS NULL');
     }
 }

@@ -1,8 +1,10 @@
 <?php
 
-namespace Events\Model;
+namespace FKSDB\Events\Model;
 
 use Nette\Application\Request;
+use Nette\Application\Responses\TextResponse;
+use Nette\Application\UI\ITemplate;
 use Tester\Assert;
 use Tester\DomQuery;
 
@@ -11,19 +13,19 @@ $container = require '../../bootstrap.php';
 class ResourceAvailabilityTest extends ResourceAvailabilityTestCase {
 
     public function testDisplay() {
-        $request = new Request('Public:Application', 'GET', array(
+        $request = new Request('Public:Application', 'GET', [
             'action' => 'default',
             'lang' => 'cs',
             'contestId' => 1,
             'year' => 1,
             'eventId' => $this->eventId,
-        ));
+        ]);
 
         $response = $this->fixture->run($request);
-        Assert::type('Nette\Application\Responses\TextResponse', $response);
+        Assert::type(TextResponse::class, $response);
 
         $source = $response->getSource();
-        Assert::type('Nette\Templating\ITemplate', $source);
+        Assert::type(ITemplate::class, $source);
 
         $html = (string) $source;
         $dom = DomQuery::fromHtml($html);
@@ -31,7 +33,7 @@ class ResourceAvailabilityTest extends ResourceAvailabilityTestCase {
         Assert::false((bool) $dom->xpath('//input[@name="participant[accomodation]"][@disabled="disabled"]'));
     }
 
-    
+
 
     public function getCapacity() {
         return 3;

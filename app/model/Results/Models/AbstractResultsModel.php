@@ -4,10 +4,10 @@ namespace FKSDB\Results\Models;
 
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Services\ServiceTask;
+use FKSDB\ORM\Tables\TypedTableSelection;
 use FKSDB\Results\EvaluationStrategies\EvaluationStrategy;
 use FKSDB\Results\ModelCategory;
 use Nette\Database\Connection;
-use Nette\Database\Table\Selection;
 use Nette\InvalidStateException;
 
 /**
@@ -28,6 +28,8 @@ abstract class AbstractResultsModel {
     const ALIAS_SUM = 'sum';
     const LABEL_PERCETAGE = 'percent';
     const ALIAS_PERCENTAGE = 'percent';
+    const LABEL_TOTAL_PERCENTAGE = 'total-percent';
+    const ALIAS_TOTAL_PERCENTAGE = 'total-percent';
 
     /* for use in School Results */
     const LABEL_UNWEIGHTED_SUM = 'unweighted-sum';
@@ -83,7 +85,7 @@ abstract class AbstractResultsModel {
      * @param ModelCategory $category
      * @return array of Nette\Database\Row
      */
-    public function getData($category) {
+    public function getData(ModelCategory $category) {
         $sql = $this->composeQuery($category);
 
         $stmt = $this->connection->query($sql);
@@ -117,10 +119,10 @@ abstract class AbstractResultsModel {
     }
 
     /**
-     * @param $category
+     * @param ModelCategory $category
      * @return mixed
      */
-    abstract protected function composeQuery($category);
+    abstract protected function composeQuery(ModelCategory $category);
 
     /**
      * @note Work only with numeric types.
@@ -146,7 +148,7 @@ abstract class AbstractResultsModel {
                 } else {
                     $where[] = $inClause;
                 }
-            } else if ($value === null) {
+            } elseif ($value === null) {
                 $where[] = "$col IS NULL";
             } else {
                 $where[] = "$col = $value";
@@ -157,9 +159,9 @@ abstract class AbstractResultsModel {
 
     /**
      * @param $series
-     * @return Selection
+     * @return TypedTableSelection
      */
-    protected function getTasks($series) {
+    protected function getTasks($series): TypedTableSelection {
         return $this->serviceTask->getTable()
             ->select('task_id, label, points,series')
             ->where([
@@ -187,7 +189,7 @@ abstract class AbstractResultsModel {
      * @param ModelCategory $category
      * @throws InvalidStateException
      */
-    abstract public function getDataColumns($category);
+    abstract public function getDataColumns(ModelCategory $category);
 
 }
 

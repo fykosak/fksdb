@@ -3,37 +3,39 @@
 namespace FKSDB\ORM\Models;
 
 use FKSDB\ORM\AbstractModelSingle;
-use FKSDB\Transitions\IEventReferencedModel;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 use Nette\Security\IResource;
 
 /**
  * Class FKSDB\ORM\Models\ModelEventOrg
- * @property ActiveRow person
- * @property ActiveRow event
- * @property string note
+ * @property-read ActiveRow person
+ * @property-read ActiveRow event
+ * @property-read string note
+ * @property-read int e_org_id
  */
-class ModelEventOrg extends AbstractModelSingle implements IResource, IEventReferencedModel {
+class ModelEventOrg extends AbstractModelSingle implements IResource, IEventReferencedModel, IPersonReferencedModel {
+    const RESOURCE_ID = 'eventOrg';
+
     /**
      * @return ModelPerson
      */
     public function getPerson(): ModelPerson {
-        return ModelPerson::createFromTableRow($this->person);
+        return ModelPerson::createFromActiveRow($this->person);
     }
 
     /**
      * @return ModelEvent
      */
     public function getEvent(): ModelEvent {
-        return ModelEvent::createFromTableRow($this->event);
+        return ModelEvent::createFromActiveRow($this->event);
     }
 
     /**
      * @return string
      */
     public function getResourceId(): string {
-        return 'eventOrg';
+        return self::RESOURCE_ID;
     }
 
     /**

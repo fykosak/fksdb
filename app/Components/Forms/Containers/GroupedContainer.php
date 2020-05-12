@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Forms\Containers;
 
-
 use Nette\Forms\Container;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Form;

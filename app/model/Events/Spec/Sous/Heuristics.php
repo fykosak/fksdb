@@ -1,8 +1,8 @@
 <?php
 
-namespace Events\Spec\Sous;
+namespace FKSDB\Events\Spec\Sous;
 
-use ORM\ModelsMulti\Events\ModelMSousParticipant;
+use FKSDB\ORM\ModelsMulti\Events\ModelMSousParticipant;
 use Exports\StoredQueryPostProcessing;
 
 /**
@@ -91,7 +91,7 @@ class Heuristics extends StoredQueryPostProcessing {
             if ($K / $H > 2) { // too many boys
                 $searchFor = 'F';
                 $rule = self::RULE_3F;
-            } else if ($K / ($H - 1) < 1) { // too many girls
+            } elseif ($K / ($H - 1) < 1) { // too many girls
                 $searchFor = 'M';
                 $rule = self::RULE_3M;
             } else {
@@ -177,7 +177,7 @@ class Heuristics extends StoredQueryPostProcessing {
                 if ($row['gender'] == 'M' && $spareK < $NK) {
                     $row['spare'] = self::RULE4M2;
                     $spareK+=1;
-                } else if ($row['gender'] == 'F' && $spareH < $NH) {
+                } elseif ($row['gender'] == 'F' && $spareH < $NH) {
                     $row['spare'] = self::RULE4F2;
                     $spareH+=1;
                 }
@@ -193,7 +193,7 @@ class Heuristics extends StoredQueryPostProcessing {
         foreach ($result as $row) {
             if ($row['invited']) {
                 $row['status'] = ModelMSousParticipant::STATE_AUTO_INVITED;
-            } else if ($row['spare']) {
+            } elseif ($row['spare']) {
                 $row['status'] = ModelMSousParticipant::STATE_AUTO_SPARE;
             }
         }

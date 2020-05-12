@@ -2,13 +2,18 @@
 
 namespace FKSDB\Components\Grids\Fyziklani;
 
-
+use FKSDB\Components\Controls\Badges\NotSetBadge;
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FyziklaniModule\BasePresenter;
+use Nette\DI\Container;
 use NiftyGrid\DataSource\NDataSource;
+use NiftyGrid\DuplicateButtonException;
+use NiftyGrid\DuplicateColumnException;
 
 /**
  *
@@ -17,61 +22,69 @@ use NiftyGrid\DataSource\NDataSource;
  */
 class CloseTeamsGrid extends BaseGrid {
     /**
-     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam
+     * @var ServiceFyziklaniTeam
      */
     private $serviceFyziklaniTeam;
     /**
-     * @var \FKSDB\ORM\Models\ModelEvent
+     * @var ModelEvent
      */
     private $event;
 
     /**
      * FyziklaniTeamsGrid constructor.
-     * @param \FKSDB\ORM\Models\ModelEvent $event
-     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @param ModelEvent $event
+     * @param Container $container
      */
-    public function __construct(ModelEvent $event, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
-        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+    public function __construct(ModelEvent $event, Container $container) {
+        parent::__construct($container);
+        $this->serviceFyziklaniTeam = $container->getByType(ServiceFyziklaniTeam::class);
         $this->event = $event;
-        parent::__construct();
     }
+
     /**
-     * @param  BasePresenter $presenter
-     * @throws \NiftyGrid\DuplicateButtonException
-     * @throws \NiftyGrid\DuplicateColumnException
+     * @param BasePresenter $presenter
+     * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
+     * @throws NotImplementedException
      */
-    protected function configure($presenter) {
+    protected
+    function configure($presenter) {
         parent::configure($presenter);
 
         $this->paginate = false;
-        $this->addColumn('name', _('Název týmu'));
-        $this->addColumn('e_fyziklani_team_id', _('ID týmu'));
-        $this->addColumn('points', _('Počet bodů'));
 
-        $this->addColumn('room', _('Místnost'))->setRenderer(function ($row) {
-            /**
-             * @var \FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam $row
-             */
+        $this->addColumns([
+            DbNames::TAB_E_FYZIKLANI_TEAM . '.name',
+            DbNames::TAB_E_FYZIKLANI_TEAM . '.e_fyziklani_team_id',
+            DbNames::TAB_E_FYZIKLANI_TEAM . '.points',
+            DbNames::TAB_E_FYZIKLANI_TEAM . '.category',
+            DbNames::TAB_E_FYZIKLANI_TEAM . '.opened_submitting'
+        ]);
+        $this->addColumn('room', _('Room'))->setRenderer(function (ModelFyziklaniTeam $row) {
             $position = $row->getPosition();
-            if (!$position) {
-                return '-';
+            if (is_null($position)) {
+                return NotSetBadge::getHtml();
             }
-            $room = $position->getRoom();
-            return $room->name;
+            return $position->getRoom()->name;
         });
-        $this->addColumn('category', _('Kategorie'));
-        $this->addButton('edit', null)->setClass('btn btn-sm btn-success')->setLink(function ($row) use ($presenter) {
-            return $presenter->link(':Fyziklani:Close:team', [
-                'id' => $row->e_fyziklani_team_id,
-                'eventId' => $this->event->event_id
-            ]);
-        })->setText(_('Uzavřít bodování'))->setShow(function ($row) {
+        $this->addLinkButton( ':Fyziklani:Close:team', 'close', _('Close submitting'), false, [
+            'id' => 'e_fyziklani_team_id',
+            'eventId' => 'event_id',
+        ])->setShow(function ($row) {
             /**
              * @var ModelFyziklaniTeam $row
              */
-            return $row->hasOpenSubmitting();
+            return $row->isReadyForClosing();
         });
         $teams = $this->serviceFyziklaniTeam->findParticipating($this->event);//->where('points',NULL);
         $this->setDataSource(new NDataSource($teams));
+    }
+
+    /**
+     * @return string
+     */
+    protected
+    function getModelClassName(): string {
+        return ModelFyziklaniTeam::class;
     }
 }

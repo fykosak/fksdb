@@ -2,7 +2,13 @@
 
 namespace MockEnvironment;
 
+use Authentication\LoginUserStorage;
 use FKSDB\ORM\Models\ModelLogin;
+use FKSDB\ORM\Services\ServiceLogin;
+use Mail\MailTemplateFactory;
+use Nette\Application\IPresenter;
+use Nette\Application\IPresenterFactory;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use Tester\Assert;
 
@@ -19,17 +25,20 @@ trait MockApplicationTrait {
         $this->container = $container;
     }
 
+    /**
+     * @return Container
+     */
     protected function getContainer() {
         return $this->container;
     }
 
     protected function mockApplication() {
         $container = $this->getContainer();
-        $mockPresenter = new MockPresenter($container);
-        $container->callMethod(array($mockPresenter, 'injectTranslator'));
+        $mockPresenter = new MockPresenter();
+        $container->callInjects($mockPresenter);
         $application = new MockApplication($mockPresenter);
 
-        $mailFactory = $container->getByType('Mail\MailTemplateFactory');
+        $mailFactory = $container->getByType(MailTemplateFactory::class);
         $mailFactory->injectApplication($application);
     }
 
@@ -44,20 +53,24 @@ trait MockApplicationTrait {
     protected function authenticate($login) {
         $container = $this->getContainer();
         if (!$login instanceof ModelLogin) {
-            $login = $container->getService('ServiceLogin')->findByPrimary($login);
-            Assert::type('FKSDB\ORM\Models\ModelLogin', $login);
+            $login = $container->getByType(ServiceLogin::class)->findByPrimary($login);
+            Assert::type(ModelLogin::class, $login);
         }
-        $storage = $container->getByType('Authentication\LoginUserStorage');
+        $storage = $container->getByType(LoginUserStorage::class);
         $storage->setIdentity($login);
         $storage->setAuthenticated(true);
     }
 
-    protected function createPresenter($presenterName) {
-        $presenterFactory = $this->getContainer()->getByType('Nette\Application\IPresenterFactory');
+    /**
+     * @param $presenterName
+     * @return IPresenter
+     */
+    protected function createPresenter($presenterName): IPresenter {
+        $presenterFactory = $this->getContainer()->getByType(IPresenterFactory::class);
         $presenter = $presenterFactory->createPresenter($presenterName);
         $presenter->autoCanonicalize = false;
 
-        $this->getContainer()->getByType('Authentication\LoginUserStorage')->setPresenter($presenter);
+        $this->getContainer()->getByType(LoginUserStorage::class)->setPresenter($presenter);
         return $presenter;
     }
 

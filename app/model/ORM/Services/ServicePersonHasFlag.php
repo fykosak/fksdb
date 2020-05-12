@@ -3,6 +3,7 @@
 namespace FKSDB\ORM\Services;
 
 use DateTime;
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\IModel;
@@ -16,7 +17,7 @@ class ServicePersonHasFlag extends AbstractServiceSingle {
     /**
      * @return string
      */
-    protected function getModelClassName(): string {
+    public function getModelClassName(): string {
         return ModelPersonHasFlag::class;
     }
 
@@ -29,7 +30,9 @@ class ServicePersonHasFlag extends AbstractServiceSingle {
 
     /**
      * @param null $data
-     * @return \FKSDB\ORM\AbstractModelSingle
+     * @return AbstractModelSingle
+     * @throws \Exception
+     * @deprecated
      */
     public function createNew($data = null) {
         if ($data === null) {
@@ -44,6 +47,7 @@ class ServicePersonHasFlag extends AbstractServiceSingle {
      * @param array $data
      * @param bool $alive
      * @return mixed|void
+     * @throws \Exception
      */
     public function updateModel(IModel $model, $data, $alive = true) {
         if ($data === null) {

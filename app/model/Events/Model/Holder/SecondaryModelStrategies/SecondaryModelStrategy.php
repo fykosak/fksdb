@@ -1,8 +1,8 @@
 <?php
 
-namespace Events\Model\Holder\SecondaryModelStrategies;
+namespace FKSDB\Events\Model\Holder\SecondaryModelStrategies;
 
-use Events\Model\Holder\BaseHolder;
+use FKSDB\Events\Model\Holder\BaseHolder;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
 use Nette\InvalidStateException;
@@ -63,7 +63,7 @@ abstract class SecondaryModelStrategy {
     public function updateSecondaryModels(IService $service, $joinOn, $joinTo, $holders, IModel $primaryModel) {
         $joinValue = $joinTo ? $primaryModel[$joinTo] : $primaryModel->getPrimary();
         foreach ($holders as $baseHolder) {
-            $joinData = array($joinOn => $joinValue);
+            $joinData = [$joinOn => $joinValue];
             if ($joinTo) {
                 $existing = $service->getTable()->where($joinData)->where(BaseHolder::EVENT_COLUMN, $baseHolder->getEvent()->getPrimary());
                 $conflicts = [];

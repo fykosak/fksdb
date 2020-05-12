@@ -2,35 +2,36 @@
 
 namespace Authorization;
 
-use Events\Machine\BaseMachine;
-use Events\Model\Holder\Holder;
-use Nette\Object;
-use Nette\Security\User;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Model\Holder\Holder;
+use Nette\Security\IUserStorage;
+use Nette\SmartObject;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class RelatedPersonAuthorizator extends Object {
+class RelatedPersonAuthorizator {
 
+    use SmartObject;
     /**
-     * @var User
+     * @var IUserStorage
      */
     private $user;
 
     /**
      * RelatedPersonAuthorizator constructor.
-     * @param User $user
+     * @param IUserStorage $user
      */
-    function __construct(User $user) {
+    function __construct(IUserStorage $user) {
         $this->user = $user;
     }
 
     /**
-     * @return User
+     * @return IUserStorage
      */
-    public function getUser() {
+    public function getUser(): IUserStorage {
         return $this->user;
     }
 
@@ -48,7 +49,7 @@ class RelatedPersonAuthorizator extends Object {
         }
 
         // further on only logged users can be related person
-        if (!$this->getUser()->isLoggedIn()) {
+        if (!$this->getUser()->isAuthenticated()) {
             return false;
         }
 
@@ -57,7 +58,7 @@ class RelatedPersonAuthorizator extends Object {
             return false;
         }
 
-        foreach ($holder as $baseHolder) {
+        foreach ($holder->getBaseHolders() as $baseHolder) {
             if ($baseHolder->getPersonId() == $person->person_id) {
                 return true;
             }

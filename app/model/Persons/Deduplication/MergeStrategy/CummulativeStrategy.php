@@ -2,8 +2,6 @@
 
 namespace Persons\Deduplication\MergeStrategy;
 
-
-
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
@@ -39,11 +37,11 @@ class CummulativeStrategy implements IMergeStrategy {
 
         if ($this->precedence == 'trunk') {
             return $trunk;
-        } else if ($this->precedence == 'merged') {
+        } elseif ($this->precedence == 'merged') {
             return $merged;
         }
 
-        throw new CannotMergeException();
+        throw new CannotMergeException;
     }
 
     /**

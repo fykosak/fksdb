@@ -8,24 +8,24 @@ use FKSDB\ORM\DbNames;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property integer ac_year
- * @property integer school_id
- * @property string class
- * @property integer study_year
+ * @property-read integer ac_year
+ * @property-read integer school_id
+ * @property-read string class
+ * @property-read integer study_year
  */
 class ModelPersonHistory extends AbstractModelSingle {
     /**
      * @return ModelPerson
      */
     public function getPerson(): ModelPerson {
-        return ModelPerson::createFromTableRow($this->ref(DbNames::TAB_PERSON, 'person_id'));
+        return ModelPerson::createFromActiveRow($this->ref(DbNames::TAB_PERSON, 'person_id'));
     }
 
     /**
      * @return ModelSchool
      */
     public function getSchool(): ModelSchool {
-        return ModelSchool::createFromTableRow($this->ref(DbNames::TAB_SCHOOL, 'school_id'));
+        return ModelSchool::createFromActiveRow($this->ref(DbNames::TAB_SCHOOL, 'school_id'));
     }
 
     /**
@@ -61,7 +61,7 @@ class ModelPersonHistory extends AbstractModelSingle {
      * @param $diff
      * @return null|string|string[]
      */
-    private function extrapolateClass($class, $diff) {
+    private function extrapolateClass(string $class = null, int $diff = 0) {
         if (!$class) {
             return null;
         }
@@ -85,7 +85,7 @@ class ModelPersonHistory extends AbstractModelSingle {
      * @param $diff
      * @return int|null
      */
-    private function extrapolateStudyYear($studyYear, $diff) {
+    private function extrapolateStudyYear(int $studyYear = null, int $diff = 0) {
         if (!$studyYear) {
             return null;
         }
@@ -98,7 +98,7 @@ class ModelPersonHistory extends AbstractModelSingle {
                     $result = null;
                 }
             }
-        } else if ($studyYear >= 1 && $studyYear <= 4) {
+        } elseif ($studyYear >= 1 && $studyYear <= 4) {
             $result = $studyYear + $diff;
             if ($result > 4) {
                 $result = null;

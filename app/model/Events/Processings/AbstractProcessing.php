@@ -1,30 +1,33 @@
 <?php
 
-namespace Events\Processings;
+namespace FKSDB\Events\Processings;
 
-use Events\Machine\BaseMachine;
-use Events\Machine\Machine;
-use Events\Model\Holder\Holder;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Logging\ILogger;
 use Nette\Utils\ArrayHash;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
-use Nette\Object;
+use Nette\SmartObject;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-abstract class AbstractProcessing extends Object implements IProcessing {
-
+abstract class AbstractProcessing implements IProcessing {
+    use SmartObject;
     const DELIMITER = '.';
     const WILDCART = '*';
 
     private $valuesPathCache;
     private $formPathCache;
     private $states;
+    /**
+     * @var Holder
+     */
     private $holder;
     private $values;
 
@@ -113,7 +116,7 @@ abstract class AbstractProcessing extends Object implements IProcessing {
      * @return boolean
      */
     protected final function isBaseReallyEmpty($name) {
-        $baseHolder = $this->holder[$name];
+        $baseHolder = $this->holder->getBaseHolder($name);
         if ($baseHolder->getModelState() == BaseMachine::STATE_INIT) {
             return true; // it was empty since begining
         }

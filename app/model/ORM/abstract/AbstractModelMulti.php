@@ -3,13 +3,16 @@
 namespace FKSDB\ORM;
 
 use LogicException;
+use Nette\Database\Table\ActiveRow;
+use Nette\Database\Table\Selection;
 use Nette\InvalidStateException;
-use Nette\Object;
+use Nette\SmartObject;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-abstract class AbstractModelMulti extends Object implements IModel {
+abstract class AbstractModelMulti implements IModel {
+    use SmartObject;
 
     /**
      * @var AbstractModelSingle
@@ -30,10 +33,10 @@ abstract class AbstractModelMulti extends Object implements IModel {
      * @note DO NOT use directly, use AbstracServiceMulti::composeModel or FKSDB\ORM\AbstractModelMulti::createFromExistingModels.
      *
      * @param AbstractServiceMulti $service
-     * @param IModel $mainModel
-     * @param \FKSDB\ORM\IModel $joinedModel
+     * @param AbstractModelSingle $mainModel
+     * @param AbstractModelSingle $joinedModel
      */
-    public function __construct($service, $mainModel, $joinedModel) {
+    public function __construct($service, AbstractModelSingle $mainModel, AbstractModelSingle $joinedModel) {
         if ($service == null) {
             $this->joinedModel = $joinedModel;
             $this->mainModel = $mainModel;
@@ -45,11 +48,11 @@ abstract class AbstractModelMulti extends Object implements IModel {
     }
 
     /**
-     * @param $mainModel
-     * @param $joinedModel
+     * @param AbstractModelSingle $mainModel
+     * @param AbstractModelSingle $joinedModel
      * @return AbstractModelMulti
      */
-    public static function createFromExistingModels($mainModel, $joinedModel) {
+    public static function createFromExistingModels(AbstractModelSingle $mainModel, AbstractModelSingle $joinedModel) {
         return new static(null, $mainModel, $joinedModel);
     }
 
@@ -77,12 +80,12 @@ abstract class AbstractModelMulti extends Object implements IModel {
         $this->mainModel = $mainModel;
         if (!$mainModel->isNew() && $this->getJoinedModel()) { // bind via foreign key
             $joiningColumn = $this->service->getJoiningColumn();
-            $this->getJoinedModel()->$joiningColumn = $mainModel->getPrimary();
+            $this->getJoinedModel()->{$joiningColumn} = $mainModel->getPrimary();
         }
     }
 
     /**
-     * @return AbstractModelSingle|\FKSDB\ORM\IModel
+     * @return AbstractModelSingle|IModel
      */
     public function getJoinedModel() {
         return $this->joinedModel;
@@ -98,7 +101,7 @@ abstract class AbstractModelMulti extends Object implements IModel {
     /**
      * @return AbstractServiceMulti
      */
-    public function getService() {
+    public function getService(): AbstractServiceMulti {
         return $this->service;
     }
 
@@ -111,7 +114,7 @@ abstract class AbstractModelMulti extends Object implements IModel {
 
     /**
      * @param $name
-     * @return bool|mixed|\Nette\Database\Table\ActiveRow|\Nette\Database\Table\Selection|null
+     * @return bool|mixed|ActiveRow|Selection|null
      */
     public function &__get($name) {
         if ($this->getMainModel()->__isset($name)) {
@@ -181,7 +184,7 @@ abstract class AbstractModelMulti extends Object implements IModel {
 
     /**
      * @param mixed $offset
-     * @return bool|mixed|\Nette\Database\Table\ActiveRow|\Nette\Database\Table\Selection|null
+     * @return bool|mixed|ActiveRow|Selection|null
      */
     public function &offsetGet($offset) {
         return $this->__get($offset);

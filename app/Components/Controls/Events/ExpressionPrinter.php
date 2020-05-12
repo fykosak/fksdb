@@ -3,13 +3,14 @@
 namespace FKSDB\Components\Events;
 
 use Nette\InvalidArgumentException;
-use Nette\Object;
+use Nette\SmartObject;
 
 /**
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class ExpressionPrinter extends Object {
+class ExpressionPrinter {
+    use SmartObject;
 
     /**
      * @param $expression
@@ -17,9 +18,9 @@ class ExpressionPrinter extends Object {
      */
     public function printExpression($expression) {
         if (is_scalar($expression)) {
-            return (string) $expression;
-        } else if (is_callable($expression)) {
-            return (string) $expression;
+            return (string)$expression;
+        } elseif (is_callable($expression)) {
+            return (string)$expression;
         } else {
             throw new InvalidArgumentException("Cannot evaluate condition $expression.");
         }

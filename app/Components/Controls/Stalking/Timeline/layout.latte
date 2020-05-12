@@ -1,0 +1,50 @@
+{var $width = 1000}
+{var $lineHeight = 30}
+{var $rowNumber = 0}
+<div class="row-12">
+    <svg class="w-100" viewBox="0,0,1000,400">
+        <g transform="translate(0,15)">
+            <g class="events">
+                {foreach $events as $type=>$rows}
+                    {? $rowNumber++}
+                    {var $transform = 'translate(0,'.($rowNumber*$lineHeight).')'}
+                    <g transform="{$transform}">
+                        {foreach $rows as $row}
+                            {var $x = $scale($row['event']->begin)*$width}
+                            {var $fill = $row['event']->getContest()->contest_id===1?'#1175da':'#ff4800' }
+                            <circle r="7.5" cx="{$x}" fill="{$fill}" stroke="black" stroke-width="1">
+                                <title>{sprintf(_('%s at event %s'),$type,$row['event'])}</title>
+                            </circle>
+                        {/foreach}
+                    </g>
+                {/foreach}
+            </g>
+            <g class="long-time-events">
+                {foreach $longTimeEvents as  $type=>$rows}
+                    {dump $rows}
+                    {var $contestntsContests = []}
+                    {foreach $rows as $row}
+                        {var $contest =  $row['model']->getContest()}
+                        {if $type=='orgs'}
+                            {? $rowNumber++}
+                        {else}
+                            {if in_array($contest->contest_id,$contestntsContests)}
+                            {else}
+                                {? $rowNumber++}
+                                {var $contestntsContests[]=$contest->contest_id}
+                            {/if}
+                        {/if}
+                        {var $x1 = $scale($row['since'])*$width}
+                        {var $x2 = $scale($row['until'])*$width}
+                        {var $fill = $row['model']->getContest()->contest_id===1?'#1175da':'#ff4800' }
+                        <rect x="{$x1}" y="{$rowNumber*$lineHeight}" width="{$x2-$x1}"
+                              height="{$lineHeight}" fill="{$fill}">
+                            <title>{sprintf(_('%s at event %s'),$type,$row['model']->getContest())}</title>
+                        </rect>
+
+                    {/foreach}
+                {/foreach}
+            </g>
+        </g>
+    </svg>
+</div>

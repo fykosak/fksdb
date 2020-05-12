@@ -20,10 +20,10 @@ class ArrayProvider implements IFilteredDataProvider {
         $this->data = [];
         $this->labelById = $data;
         foreach ($data as $id => $label) {
-            $this->data[] = array(
+            $this->data[] = [
                 self::VALUE => $id,
                 self::LABEL => $label,
-            );
+            ];
         }
     }
 
@@ -45,27 +45,23 @@ class ArrayProvider implements IFilteredDataProvider {
     }
 
     /**
-     * @param mixed $id
-     * @return mixed
+     * @inheritDoc
      */
-    public function getItemLabel($id) {
+    public function getItemLabel(int $id): string {
         return $this->labelById[$id];
     }
 
     /**
-     * @return array
+     * @inheritDoc
      */
-    public function getItems() {
+    public function getItems(): array {
         return $this->data;
     }
 
     /**
-     * @param $id
+     * @inheritDoc
      */
     public function setDefaultValue($id) {
         /* intentionally blank */
     }
-
-
-//put your code here
 }

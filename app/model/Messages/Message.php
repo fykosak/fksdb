@@ -1,15 +1,25 @@
 <?php
+
 namespace FKSDB\Messages;
+
+use FKSDB\Logging\ILogger;
+use Nette\SmartObject;
 
 /**
  * Class Message
  * @package FKSDB\Messages
  */
 class Message {
+    use SmartObject;
+
+    const LVL_DANGER = ILogger::ERROR;
+    const LVL_SUCCESS = ILogger::SUCCESS;
+    const LVL_WARNING = ILogger::WARNING;
+    const LVL_INFO = ILogger::INFO;
     /**
      * @var string
      */
-    private $text;
+    private $message;
 
     /**
      * @var string
@@ -18,32 +28,48 @@ class Message {
 
     /**
      * Message constructor.
-     * @param $text
-     * @param $level
+     * @param string $message
+     * @param string $level
      */
-    public function __construct($text, $level) {
-        $this->text = $text;
+    public function __construct(string $message, string $level) {
+        $this->message = $message;
         $this->level = $level;
     }
 
     /**
      * @return string
+     * @deprecated
      */
-    public function getText() {
-        return $this->text;
+    public function getText(): string {
+        return $this->message;
     }
 
     /**
-     * @param string $text
+     * @param string $message
+     * @deprecated
      */
-    public function setText(string $text) {
-        $this->text = $text;
+    public function setText(string $message) {
+        $this->message = $message;
+    }
+
+    /**
+     * @param string $message
+     */
+    public function setMessage(string $message) {
+        $this->message = $message;
     }
 
     /**
      * @return string
      */
-    public function getLevel() {
+    public function getMessage(): string {
+        return $this->message;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLevel(): string {
         return $this->level;
     }
 
@@ -57,11 +83,11 @@ class Message {
     /**
      * @return array
      */
-    public function __toArray() {
+    public function __toArray(): array {
         return [
-            'text' => $this->text,
+            'text' => $this->message,
+            'message' => $this->message,
             'level' => $this->level,
         ];
     }
-
 }

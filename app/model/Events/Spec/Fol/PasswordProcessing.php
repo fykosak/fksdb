@@ -1,13 +1,14 @@
 <?php
 
-namespace Events\Spec\Fol;
+namespace FKSDB\Events\Spec\Fol;
 
-use Events\Machine\BaseMachine;
-use Events\Machine\Machine;
-use Events\Model\Holder\Holder;
-use Events\Processings\AbstractProcessing;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\Holder\Holder;
+use FKSDB\Events\Processings\AbstractProcessing;
 use FKSDB\Logging\ILogger;
 use Nette\Utils\ArrayHash;
+use FKSDB\Messages\Message;
 use Nette\Forms\Form;
 
 /**
@@ -39,7 +40,7 @@ class PasswordProcessing extends AbstractProcessing {
         }
 
         if ($original !== null && $original != $result) {
-            $logger->log(_('Nastaveno nové herní heslo.'), ILogger::INFO);
+            $logger->log(new Message(_('Nastaveno nové herní heslo.'), ILogger::INFO));
         }
     }
 

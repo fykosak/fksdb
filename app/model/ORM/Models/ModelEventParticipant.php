@@ -7,40 +7,41 @@ use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Payment\IPaymentModel;
 use FKSDB\Payment\Price;
-use FKSDB\Transitions\IEventReferencedModel;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
-use Nette\DateTime;
-use Nette\InvalidStateException;
+use Nette\Security\IResource;
+use Nette\Utils\DateTime;
 
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property ActiveRow person
- * @property integer event_participant_id
- * @property integer event_id
- * @property ActiveRow event
- * @property integer person_id
- * @property string note poznámka
- * @property string status
- * @property DateTime created čas vytvoření přihlášky
- * @property integer accomodation
- * @property string diet speciální stravování
- * @property string health_restrictions alergie, léky, úrazy
- * @property string tshirt_size
- * @property string tshirt_color
- * @property float price DECIMAL(6,2) vypočtená cena
- * @property string arrival_time Čas příjezdu
- * @property string arrival_destination Místo prijezdu
- * @property boolean arrival_ticket společný lístek na cestu tam
- * @property string departure_time Čas odjezdu
- * @property string departure_destination Místo odjezdu
- * @property boolean departure_ticket společný lístek na cestu zpět
- * @property boolean swimmer plavec?
- * @property string used_drugs užívané léky
- * @property string schedule
+ * @property-read ActiveRow person
+ * @property-read integer event_participant_id
+ * @property-read integer event_id
+ * @property-read ActiveRow event
+ * @property-read integer person_id
+ * @property-read string note poznámka
+ * @property-read string status
+ * @property-read DateTime created čas vytvoření přihlášky
+ * @property-read integer accomodation
+ * @property-read string diet speciální stravování
+ * @property-read string health_restrictions alergie, léky, úrazy
+ * @property-read string tshirt_size
+ * @property-read string tshirt_color
+ * @property-read float price DECIMAL(6,2) vypočtená cena
+ * @property-read string arrival_time Čas příjezdu
+ * @property-read string arrival_destination Místo prijezdu
+ * @property-read boolean arrival_ticket společný lístek na cestu tam
+ * @property-read string departure_time Čas odjezdu
+ * @property-read string departure_destination Místo odjezdu
+ * @property-read boolean departure_ticket společný lístek na cestu zpět
+ * @property-read boolean swimmer plavec?
+ * @property-read string used_drugs užívané léky
+ * @property-read string schedule
  */
-class ModelEventParticipant extends AbstractModelSingle implements IEventReferencedModel, IPaymentModel {
+class ModelEventParticipant extends AbstractModelSingle implements IEventReferencedModel, IPaymentModel, IPersonReferencedModel, IResource {
+    const RESOURCE_ID = 'event.participant';
+
     /**
      * @return ModelPerson|null
      */
@@ -48,7 +49,7 @@ class ModelEventParticipant extends AbstractModelSingle implements IEventReferen
         if (!$this->person) {
             return null;
         }
-        return ModelPerson::createFromTableRow($this->person);
+        return ModelPerson::createFromActiveRow($this->person);
     }
 
     /**
@@ -56,7 +57,7 @@ class ModelEventParticipant extends AbstractModelSingle implements IEventReferen
      */
     public function __toString(): string {
         if (!$this->getPerson()) {
-            throw new InvalidStateException(\sprintf(_('Missing person in application Id %s.'), $this->getPrimary(false)));
+            // throw new InvalidStateException(\sprintf(_('Missing person in application Id %s.'), $this->getPrimary(false)));
         }
         return $this->getPerson()->__toString();
     }
@@ -65,7 +66,7 @@ class ModelEventParticipant extends AbstractModelSingle implements IEventReferen
      * @return ModelEvent
      */
     public function getEvent(): ModelEvent {
-        return ModelEvent::createFromTableRow($this->event);
+        return ModelEvent::createFromActiveRow($this->event);
     }
 
     /**
@@ -84,6 +85,13 @@ class ModelEventParticipant extends AbstractModelSingle implements IEventReferen
         if (!$row) {
             throw new BadRequestException('Event is not fyziklani');
         }
-        return ModelFyziklaniTeam::createFromTableRow($row);
+        return ModelFyziklaniTeam::createFromActiveRow($row);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    function getResourceId() {
+        return self::RESOURCE_ID;
     }
 }

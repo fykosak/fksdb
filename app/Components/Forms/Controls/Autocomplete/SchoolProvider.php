@@ -5,7 +5,7 @@ namespace FKSDB\Components\Forms\Controls\Autocomplete;
 use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServiceSchool;
 use Nette\InvalidStateException;
-use Nette\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -51,12 +51,12 @@ class SchoolProvider implements IFilteredDataProvider {
         foreach ($tokens as $token) {
             $schools->where('name_full LIKE concat(\'%\', ?, \'%\') OR name_abbrev LIKE concat(\'%\', ?, \'%\')', $token, $token);
         }
-	// For backwards compatibility consider NULLs active
-	if ($this->defaultValue != null) {
-	    $schools->where('(active IS NULL OR active = 1) OR school_id = ?', $this->defaultValue);
-	} else {
-	    $schools->where('active IS NULL OR active = 1');
-	}
+        // For backwards compatibility consider NULLs active
+        if ($this->defaultValue != null) {
+            $schools->where('(active IS NULL OR active = 1) OR school_id = ?', $this->defaultValue);
+        } else {
+            $schools->where('active IS NULL OR active = 1');
+        }
         $schools->order('name_abbrev');
 
         if (count($schools) > self::LIMIT) {
@@ -64,6 +64,7 @@ class SchoolProvider implements IFilteredDataProvider {
         }
 
         $result = [];
+        /** @var ModelSchool $school */
         foreach ($schools as $school) {
             $result[] = $this->getItem($school);
         }
@@ -71,10 +72,11 @@ class SchoolProvider implements IFilteredDataProvider {
     }
 
     /**
-     * @param mixed $id
-     * @return bool|mixed|\Nette\Database\Table\ActiveRow|\Nette\Database\Table\Selection|null
+     * @param int $id
+     * @return string
      */
-    public function getItemLabel($id) {
+    public function getItemLabel(int $id): string {
+        /** @var ModelSchool $school */
         $school = $this->serviceSchool->findByPrimary($id);
         if (!$school) {
             throw new InvalidStateException("Cannot find school with ID '$id'.");
@@ -83,17 +85,18 @@ class SchoolProvider implements IFilteredDataProvider {
     }
 
     /**
-     * @return array|void
+     * @return array
+     * @throws NotImplementedException
      */
-    public function getItems() {
-        throw new NotImplementedException();
+    public function getItems(): array {
+        throw new NotImplementedException;
     }
 
     /**
      * @param ModelSchool $school
      * @return array
      */
-    private function getItem(ModelSchool $school) {
+    private function getItem(ModelSchool $school): array {
         return [
             self::LABEL => $school->name_abbrev,
             self::VALUE => $school->school_id,

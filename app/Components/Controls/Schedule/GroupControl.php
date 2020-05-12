@@ -2,15 +2,16 @@
 
 namespace FKSDB\Components\Controls\Schedule;
 
+use FKSDB\Components\DatabaseReflection\ValuePrinterComponent;
+use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
-use Nette\Templating\FileTemplate;
 
 /**
  * Class DetailControl
  * @package FKSDB\Components\Forms\Controls\Payment
- * @property FileTemplate $template
+ *
  */
 class GroupControl extends Control {
     /**
@@ -21,14 +22,20 @@ class GroupControl extends Control {
      * @var ITranslator
      */
     private $translator;
+    /**
+     * @var TableReflectionFactory
+     */
+    private $tableReflectionFactory;
 
     /**
      * DetailControl constructor.
      * @param ITranslator $translator
+     * @param TableReflectionFactory $tableReflectionFactory
      */
-    public function __construct(ITranslator $translator) {
+    public function __construct(ITranslator $translator, TableReflectionFactory $tableReflectionFactory) {
         parent::__construct();
         $this->translator = $translator;
+        $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
     /**
@@ -43,5 +50,12 @@ class GroupControl extends Control {
         $this->template->setTranslator($this->translator);
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'GroupControl.latte');
         $this->template->render();
+    }
+
+    /**
+     * @return ValuePrinterComponent
+     */
+    public function createComponentValuePrinter(): ValuePrinterComponent {
+        return new ValuePrinterComponent($this->translator, $this->tableReflectionFactory);
     }
 }

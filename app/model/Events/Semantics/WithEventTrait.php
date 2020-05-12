@@ -1,11 +1,11 @@
 <?php
 
-namespace Events\Semantics;
+namespace FKSDB\Events\Semantics;
 
-use Events\Machine\Transition;
-use Events\Model\Holder\BaseHolder;
-use Events\Model\Holder\Field;
-use Events\Model\Holder\Holder;
+use FKSDB\Events\Model\Holder\BaseHolder;
+use FKSDB\Events\Model\Holder\Field;
+use FKSDB\Events\Model\Holder\Holder;
+use FKSDB\ORM\Models\ModelEvent;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -16,28 +16,30 @@ trait WithEventTrait {
 
     /**
      * @param mixed $obj
-     * @return \FKSDB\ORM\Models\ModelEvent
+     * @return ModelEvent
+     * @throws \InvalidArgumentException
      */
-    protected function getEvent($obj) {
-        return ($holder = $this->getHolder($obj)) ? $holder->getEvent() : null;
+    protected function getEvent($obj): ModelEvent {
+        return $this->getHolder($obj)->getPrimaryHolder()->getEvent();
     }
 
     /**
      * @param mixed $obj
      * @return Holder
+     * @throws \InvalidArgumentException
      */
-    protected function getHolder($obj) {
-        if ($obj instanceof Holder)
+    protected function getHolder($obj): Holder {
+        if ($obj instanceof Holder) {
             return $obj;
-
-        if ($obj instanceof Transition)
-            return $obj->getBaseMachine()->getMachine()->getHolder();
-
-        if ($obj instanceof Field)
+        }
+        if ($obj instanceof Field) {
             return $obj->getBaseHolder()->getHolder();
-
-        if ($obj instanceof BaseHolder)
+        }
+        if ($obj instanceof BaseHolder) {
             return $obj->getHolder();
+        }
+        throw new \InvalidArgumentException;
+
     }
 
 }

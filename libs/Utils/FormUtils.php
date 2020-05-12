@@ -15,7 +15,7 @@ class FormUtils {
      *
      * @todo Move to general utils.
      * @param string|array|Traversable $values
-     * @return array
+     * @return ArrayHash
      */
     public static function emptyStrToNull($values) {
         if ($values instanceof Traversable || is_array($values)) {

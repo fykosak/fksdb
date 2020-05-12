@@ -18,9 +18,9 @@ trait ClientDataTrait {
     public function setClientData($key, $value) {
         if ($value === null) {
             unset($this->clientData[$key]);
-        } else if (is_array($value)) {
+        } elseif (is_array($value)) {
             $this->clientData[$key] = json_encode($value);
-        } else if (is_object($value)) {
+        } elseif (is_object($value)) {
             $this->clientData[$key] = json_encode($value);
         } else {
             $this->clientData[$key] = $value;

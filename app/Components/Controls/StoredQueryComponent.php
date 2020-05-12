@@ -9,10 +9,12 @@ use Exports\StoredQueryFactory as StoredQueryFactorySQL;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory;
 use FKSDB\Components\Grids\StoredQueryGrid;
+use FKSDB\Exceptions\NotFoundException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
+use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use PDOException;
 
@@ -62,6 +64,10 @@ class StoredQueryComponent extends Control {
      * @var bool
      */
     private $showParametrize = true;
+    /**
+     * @var Container
+     */
+    private $container;
 
     /**
      * StoredQueryComponent constructor.
@@ -69,13 +75,15 @@ class StoredQueryComponent extends Control {
      * @param ContestAuthorizator $contestAuthorizator
      * @param StoredQueryFactory $storedQueryFormFactory
      * @param ExportFormatFactory $exportFormatFactory
+     * @param Container $container
      */
-    function __construct(StoredQuery $storedQuery, ContestAuthorizator $contestAuthorizator, StoredQueryFactory $storedQueryFormFactory, ExportFormatFactory $exportFormatFactory) {
+    function __construct(StoredQuery $storedQuery, ContestAuthorizator $contestAuthorizator, StoredQueryFactory $storedQueryFormFactory, ExportFormatFactory $exportFormatFactory, Container $container) {
         parent::__construct();
         $this->storedQuery = $storedQuery;
         $this->contestAuthorizator = $contestAuthorizator;
         $this->storedQueryFormFactory = $storedQueryFormFactory;
         $this->exportFormatFactory = $exportFormatFactory;
+        $this->container = $container;
     }
 
     /**
@@ -110,20 +118,17 @@ class StoredQueryComponent extends Control {
     }
 
     /**
-     * @param $name
      * @return StoredQueryGrid
      */
-    protected function createComponentGrid($name) {
-        $grid = new StoredQueryGrid($this->storedQuery, $this->exportFormatFactory);
-        return $grid;
+    protected function createComponentGrid() {
+        return new StoredQueryGrid($this->storedQuery, $this->container);
     }
 
     /**
-     * @param $name
      * @return FormControl
      * @throws BadRequestException
      */
-    protected function createComponentParametrizeForm($name) {
+    protected function createComponentParametrizeForm() {
         $control = new FormControl();
         $form = $control->getForm();
 
@@ -162,9 +167,9 @@ class StoredQueryComponent extends Control {
             $this->storedQuery->setParameters($this->parameters);
             $defaults = [];
             foreach ($this->parameters as $key => $value) {
-                $defaults[$key] = array('value' => $value);
+                $defaults[$key] = ['value' => $value];
             }
-            $defaults = array(self::CONT_PARAMS => $defaults);
+            $defaults = [self::CONT_PARAMS => $defaults];
             $this->getComponent('parametrizeForm')->getForm()->setDefaults($defaults);
         }
         if (!$this->isAuthorized()) {
@@ -189,14 +194,15 @@ class StoredQueryComponent extends Control {
             $this->storedQuery->setParameters($this->parameters);
         }
         if (!$this->isAuthorized()) {
-            throw new ForbiddenRequestException();
+            throw new ForbiddenRequestException;
         }
         try {
             $exportFormat = $this->exportFormatFactory->createFormat($format, $this->storedQuery);
             $response = $exportFormat->getResponse();
             $this->presenter->sendResponse($response);
         } catch (InvalidArgumentException $exception) {
-            throw new BadRequestException(sprintf('Neznámý formát \'%s\'.', $format), 404, $exception);
+
+            throw new NotFoundException(sprintf('Neznámý formát \'%s\'.', $format), $exception);
         }
     }
 

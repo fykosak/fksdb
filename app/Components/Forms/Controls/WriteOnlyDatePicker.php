@@ -3,7 +3,8 @@
 namespace FKSDB\Components\Forms\Controls;
 
 use FKSDB\Components\Forms\Containers\IWriteOnly;
-use JanTvrdik\Components\DatePicker;
+use FKSDB\Components\Forms\Controls\DateInputs\DateInput;
+use Nette\Utils\Html;
 
 /**
  * When user doesn't fill it (i.e. desires original value), it behaves like disabled.
@@ -11,7 +12,7 @@ use JanTvrdik\Components\DatePicker;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class WriteOnlyDatePicker extends DatePicker implements IWriteOnly {
+class WriteOnlyDatePicker extends DateInput implements IWriteOnly {
 
     use WriteOnlyTrait;
 
@@ -25,7 +26,7 @@ class WriteOnlyDatePicker extends DatePicker implements IWriteOnly {
     }
 
     /**
-     * @return \Nette\Utils\Html
+     * @return Html
      */
     public function getControl() {
         $control = parent::getControl();
@@ -35,15 +36,15 @@ class WriteOnlyDatePicker extends DatePicker implements IWriteOnly {
 
     /**
      * @param $value
-     * @return DatePicker|void
+     * @return static
      */
     public function setValue($value) {
         if ($value == self::VALUE_ORIGINAL) {
             $this->value = $value;
-            $this->rawValue = $value;
         } else {
             parent::setValue($value);
         }
+        return $this;
     }
 
     public function loadHttpData() {

@@ -1,11 +1,22 @@
 <?php
 
+namespace FKSDB\React;
+
+use FKSDB\Messages\Message;
+use Nette;
+use Nette\Http\IRequest;
+use Nette\Http\IResponse;
+use Nette\SmartObject;
+use Nette\Utils\JsonException;
+
 /**
- * Class ReactResponse
+ * Class FKSDB\React\ReactResponse
  */
-final class ReactResponse extends Nette\Object implements Nette\Application\IResponse {
+final class ReactResponse implements Nette\Application\IResponse {
+
+    use SmartObject;
     /**
-     * @var ReactMessage[]
+     * @var Message[]
      */
     private $messages = [];
 
@@ -18,12 +29,23 @@ final class ReactResponse extends Nette\Object implements Nette\Application\IRes
      * @var string
      */
     private $act;
+    /**
+     * @var int
+     */
+    private $code = 200;
 
     /**
      * @return string
      */
     final public function getContentType(): string {
         return 'application/json';
+    }
+
+    /**
+     * @param int $code
+     */
+    public function setCode(int $code) {
+        $this->code = $code;
     }
 
     /**
@@ -34,16 +56,16 @@ final class ReactResponse extends Nette\Object implements Nette\Application\IRes
     }
 
     /**
-     * @param ReactMessage[] $messages
+     * @param Message[] $messages
      */
     public function setMessages(array $messages) {
         $this->messages = $messages;
     }
 
     /**
-     * @param ReactMessage $message
+     * @param Message $message
      */
-    public function addMessage(\ReactMessage $message) {
+    public function addMessage(Message $message) {
         $this->messages[] = $message;
     }
 
@@ -55,15 +77,16 @@ final class ReactResponse extends Nette\Object implements Nette\Application\IRes
     }
 
     /**
-     * @param \Nette\Http\IRequest $httpRequest
-     * @param \Nette\Http\IResponse $httpResponse
-     * @throws \Nette\Utils\JsonException
+     * @param IRequest $httpRequest
+     * @param IResponse $httpResponse
+     * @throws JsonException
      */
-    public function send(Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse) {
+    public function send(IRequest $httpRequest, IResponse $httpResponse) {
+        $httpResponse->setCode($this->code);
         $httpResponse->setContentType($this->getContentType());
         $httpResponse->setExpiration(FALSE);
         $response = [
-            'messages' => array_map(function (ReactMessage $value) {
+            'messages' => array_map(function (Message $value) {
                 return $value->__toArray();
             }, $this->messages),
             'act' => $this->act,

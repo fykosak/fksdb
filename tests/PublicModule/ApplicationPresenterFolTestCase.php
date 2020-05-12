@@ -1,8 +1,8 @@
 <?php
 
-use Events\EventTestCase;
-use Nette\DateTime;
+use FKSDB\Events\EventTestCase;
 use Nette\DI\Container;
+use Nette\Utils\DateTime;
 use PublicModule\ApplicationPresenter;
 use Tester\Assert;
 
@@ -14,28 +14,23 @@ abstract class ApplicationPresenterFolTestCase extends EventTestCase {
     protected $fixture;
     protected $personId;
 
-    function __construct(Container $container) {
-        parent::__construct($container);
-        $this->setContainer($container);
-    }
-
     protected function setUp() {
         parent::setUp();
 
         $future = DateTime::from(time() + DateTime::DAY);
-        $this->eventId = $this->createEvent(array(
+        $this->eventId = $this->createEvent([
             'event_type_id' => 9,
             'event_year' => 4,
             'begin' => $future,
             'end' => $future,
             'parameters' => <<<EOT
 EOT
-        ));
+        ]);
 
         $this->fixture = $this->createPresenter('Public:Application');
         $this->mockApplication();
 
-        $this->personId = $this->createPerson('Paní', 'Bílá', array('email' => 'bila@hrad.cz', 'born' => DateTime::from('2000-01-01')), true);
+        $this->personId = $this->createPerson('Paní', 'Bílá', ['email' => 'bila@hrad.cz', 'born' => DateTime::from('2000-01-01')], true);
     }
 
     protected function tearDown() {

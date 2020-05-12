@@ -1,7 +1,6 @@
 <?php
 
-
-namespace Events\Model;
+namespace FKSDB\Events\Model;
 
 use RuntimeException;
 

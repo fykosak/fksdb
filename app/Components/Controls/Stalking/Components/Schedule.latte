@@ -1,0 +1,23 @@
+{layout '../@layout.latte'}
+{block content}
+    {if count($schedule)}
+        <ul class="list-group list-group-flush">
+            {foreach $schedule as $row}
+                <li class="list-group-item">
+                     <span class="row">
+                         {var $model = \FKSDB\ORM\Models\Schedule\ModelPersonSchedule::createFromActiveRow($row)}
+                         {var $item = $model->getScheduleItem()}
+                         <span class="col-4">{$item->getScheduleGroup()->schedule_group_type}</span>
+                         {control valuePrinter:onlyValue 'referenced.event_link', $item}
+                         <span class="col-5">{$item->getLabel()}</span>
+                     </span>
+                </li>
+            {/foreach}
+        </ul>
+    {else}
+        <div class="card-body">
+            {control noRecords}
+        </div>
+    {/if}
+
+{/block}

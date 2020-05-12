@@ -1,9 +1,9 @@
 <?php
 
-namespace Events\FormAdjustments;
+namespace FKSDB\Events\FormAdjustments;
 
-use Events\Machine\Machine;
-use Events\Model\Holder\Holder;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\Holder\Holder;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 use Nette\InvalidArgumentException;
@@ -37,7 +37,7 @@ abstract class PairwiseAdjustment extends AbstractAdjustment implements IFormAdj
     protected function _adjust(Form $form, Machine $machine, Holder $holder) {
         foreach ($this->rules as $target => $prerequisities) {
             if (is_scalar($prerequisities)) {
-                $prerequisities = array($prerequisities);
+                $prerequisities = [$prerequisities];
             }
 
             foreach ($prerequisities as $prerequisity) {
@@ -53,11 +53,11 @@ abstract class PairwiseAdjustment extends AbstractAdjustment implements IFormAdj
                             $this->processPair($control, $cPrerequisity[$key]);
                         }
                     }
-                } else if (count($cTarget) == 1) {
+                } elseif (count($cTarget) == 1) {
                     foreach ($cPrerequisity as $control) {
                         $this->processPair(reset($cTarget), $control);
                     }
-                } else if (count($cPrerequisity) == 1) {
+                } elseif (count($cPrerequisity) == 1) {
                     foreach ($cTarget as $control) {
                         $this->processPair($control, reset($cPrerequisity));
                     }
