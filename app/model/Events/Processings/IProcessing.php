@@ -5,8 +5,8 @@ namespace FKSDB\Events\Processings;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Logging\ILogger;
-use Nette\Utils\ArrayHash;
 use Nette\Forms\Form;
+use Nette\Utils\ArrayHash;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

@@ -22,7 +22,6 @@ use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\Transitions\UnavailableTransitionException;
 use FormUtils;
-use Nette\Utils\ArrayHash;
 use Nette\Database\Connection;
 use Nette\DI\Container;
 use Nette\Forms\Form;

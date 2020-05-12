@@ -22,6 +22,7 @@ class TimeBox extends TextInput {
      */
     public function __construct($label = NULL, $maxLength = NULL) {
         parent::__construct($label, $maxLength);
+
         $this->addCondition(Form::FILLED)
                 ->addRule(Form::PATTERN, _('%label očekává hh:mm[:ss].'), '/^[0-2]?\d:[0-5]\d(:[0-5]\d)?$/');
     }

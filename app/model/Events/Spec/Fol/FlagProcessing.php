@@ -6,7 +6,6 @@ use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Events\Processings\AbstractProcessing;
 use FKSDB\Logging\ILogger;
-use Nette\Utils\ArrayHash;
 use FKSDB\ORM\Services\ServiceSchool;
 use FKSDB\YearCalculator;
 use Nette\Forms\Form;

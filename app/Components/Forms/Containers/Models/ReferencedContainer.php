@@ -5,7 +5,6 @@ namespace FKSDB\Components\Forms\Containers\Models;
 use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\ReferencedId;
-use Nette\Utils\ArrayHash;
 use Nette\Application\UI\Presenter;
 use Nette\ComponentModel\Component;
 use Nette\ComponentModel\IComponent;
@@ -14,6 +13,7 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 use Nette\InvalidStateException;
+use Nette\Utils\ArrayHash;
 use Nette\Utils\Arrays;
 
 /**

@@ -115,7 +115,6 @@ class StoredQueryFactory {
             ->addRule(Form::MAX_LENGTH, _('Název parametru je moc dlouhý.'), 16)
             ->addRule(Form::PATTERN, _('Název parametru může být jen z malých písmen anglické abecedy, číslic nebo podtržítka.'), '[a-z][a-z0-9_]*');
 
-
         $container->addText('description', _('Popis'));
 
         $container->addSelect('type', _('Datový typ'))

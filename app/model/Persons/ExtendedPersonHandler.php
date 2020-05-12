@@ -20,7 +20,6 @@ use Nette\Forms\Form;
 use Nette\InvalidStateException;
 use Nette\SmartObject;
 use OrgModule\ContestantPresenter;
-use OrgModule\ExtendedPersonPresenter;
 use Tracy\Debugger;
 use Traversable;
 
@@ -188,8 +187,7 @@ class ExtendedPersonHandler {
                 }
             }
             // reload the model (this is workaround to avoid caching of empty but newly created referenced/related models)
-            $row = $this->servicePerson->findByPrimary($this->getReferencedPerson($form)->getPrimary());
-            $person = $this->person = ModelPerson::createFromTableRow($row);
+            $person = $this->person = $this->servicePerson->findByPrimary($this->getReferencedPerson($form)->getPrimary());
 
             /*
              * Finalize

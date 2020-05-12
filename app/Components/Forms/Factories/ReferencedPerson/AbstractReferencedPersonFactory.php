@@ -132,7 +132,9 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
      */
     public function createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, IModifiabilityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver, $evenId = 0) {
         $handler = $this->referencedPersonHandlerFactory->create($acYear, null, $evenId);
+
         $hiddenField = new ReferencedId($this->servicePerson, $handler, $this);
+
         $container = new ReferencedContainer($hiddenField);
         if ($searchType == self::SEARCH_NONE) {
             $container->setSearch();

@@ -73,7 +73,6 @@ class AddressContainer extends ModelContainer {
 
     /**
      * @param bool $asArray
-     * @return array|\Nette\Utils\ArrayHash
      * @return array|ArrayHash
      */
     public function getValues($asArray = FALSE) {

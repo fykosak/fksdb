@@ -52,6 +52,7 @@ class OrgFactory extends SingleReflectionFactory {
         }
         return $container;
     }
+
     /**
      * @return string
      */

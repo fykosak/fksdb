@@ -15,6 +15,7 @@ use FKSDB\YearCalculator;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 
+
 /**
  * Na Fyziklani 2013 jsme se rozhodli pocitat tymum automaticky kategorii ve ktere soutezi podle pravidel.
  *

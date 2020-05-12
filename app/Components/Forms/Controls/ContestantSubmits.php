@@ -37,7 +37,7 @@ class ContestantSubmits extends BaseControl {
     /**
      * @var ServiceSubmit
      */
-    private $serviceSubmit;
+    private $submitService;
     /**
      * @var ModelContestant
      */
@@ -68,6 +68,7 @@ class ContestantSubmits extends BaseControl {
         $this->setTasks($tasks);
         parent::__construct($label);
         $this->monitor(IJavaScriptCollector::class);
+
     }
 
     /**
@@ -193,7 +194,6 @@ class ContestantSubmits extends BaseControl {
         }
         $dummySubmit = $this->submitService->createNew();
         $data = $dummySubmit->toArray();
-
         foreach ($this->tasks as $tasknr => $task) {
             if (isset($result[$tasknr])) {
                 continue;
@@ -269,12 +269,13 @@ class ContestantSubmits extends BaseControl {
         $ctId = $data['ct_id'];
         $taskId = $data['task_id'];
 
-        $submit = $this->serviceSubmit->findByContestant($ctId, $taskId);
+        $submit = $this->submitService->findByContestant($ctId, $taskId);
         if (!$submit) {
             $this->submitService->createNewModel($data);
         } else {
             $this->submitService->updateModel2($submit, $data);
         }
+
         return $submit;
     }
 

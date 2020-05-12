@@ -6,7 +6,6 @@ use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Events\Model\Grid\SingleEventSource;
 use FKSDB\Events\Model\Holder\BaseHolder;
 use FKSDB\Utils\CSVParser;
-use Nette\Utils\ArrayHash;
 use Nette\DI\Container;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;

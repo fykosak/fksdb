@@ -71,6 +71,7 @@ class ReferencedId extends HiddenField {
         $this->referencedSetter = $referencedSetter;
         parent::__construct();
         $this->monitor(Form::class);
+
     }
 
     /**

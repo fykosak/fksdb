@@ -8,7 +8,6 @@ use FKSDB\Events\Model\Holder\Field;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Events\Processings\AbstractProcessing;
 use FKSDB\Components\Forms\Factories\Events\IOptionsProvider;
-use Nette\Utils\ArrayHash;
 use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelRegion;

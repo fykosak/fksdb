@@ -18,7 +18,8 @@ class URLTextBox extends TextInput {
      * @param null $maxLength
      */
     public function __construct($label = NULL, $maxLength = NULL) {
-        parent::__construct($label, $maxLength);
+        parent::__construct($label,  $maxLength);
+
         $this->addCondition(Form::FILLED)
                 ->addRule(Form::URL, _('%label není platná URL.'));
     }

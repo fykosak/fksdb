@@ -7,9 +7,9 @@ use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Events\Processings\AbstractProcessing;
 use FKSDB\Logging\ILogger;
-use Nette\Utils\ArrayHash;
 use FKSDB\Messages\Message;
 use Nette\Forms\Form;
+use Nette\Utils\ArrayHash;
 
 /**
  * Class PasswordProcessing
