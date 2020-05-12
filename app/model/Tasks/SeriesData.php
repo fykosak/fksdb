@@ -3,7 +3,6 @@
 namespace FKSDB\Tasks;
 
 use FKSDB\ORM\Models\ModelContest;
-use FKSDB\ORM\Models\ModelQuizQuestion;
 
 /**
  * "POD" to hold series pipeline processing data.
@@ -36,11 +35,6 @@ class SeriesData {
      * @var array[tasknr] of FKSDB\ORM\Models\ModelTask
      */
     private $tasks = [];
-    
-    /**
-     * @var array[questionnr] of FKSDB\ORM\Models\ModelQuizQuestion
-     */
-    private $questions = [];
 
     /**
      * SeriesData constructor.
@@ -97,10 +91,6 @@ class SeriesData {
      */
     public function addTask($tasknr, $task) {
         $this->tasks[$tasknr] = $task;
-    }
-    
-    public function addQuizQuestion(int $questionnr, ModelQuizQuestion $question) {
-        $this->$questions[$questionnr] = $question;
     }
 
 }

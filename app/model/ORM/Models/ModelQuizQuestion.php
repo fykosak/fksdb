@@ -17,7 +17,7 @@ class ModelQuizQuestion extends AbstractModelSingle implements IContestReference
      * @return string
      */
     public function getFQName(): string {
-        return sprintf('%s. %s', $this->questionnr, _('otázka'));
+        return sprintf(_('%s. otázka'), $this->question_nr);
     }
     
     /**

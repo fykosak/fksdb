@@ -7,6 +7,9 @@ use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelQuizQuestion;
 use FKSDB\ORM\Models\ModelTask;
 
+/**
+ * @author Miroslav Jarý <mira.jary@gmail.com>
+ */
 class ServiceQuizQuestion extends AbstractServiceSingle {
     
     /**
@@ -31,10 +34,10 @@ class ServiceQuizQuestion extends AbstractServiceSingle {
      * @param int $questionNr
      * @return ModelQuizQuestion|NULL
      */
-    public function findByTask(ModelTask $task, int $questionnr) {
+    public function findByTask(ModelTask $task, int $questionNr) {
         $result = $this->getTable()->where([
             'task_id' => $task->task_id,
-            'question_nr' =>$questionnr,
+            'question_nr' =>$questionNr,
         ])->fetch();
         
         if ($result !== false) {

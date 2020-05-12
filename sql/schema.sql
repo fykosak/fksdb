@@ -1466,7 +1466,7 @@ CREATE TABLE IF NOT EXISTS `email_message`
 CREATE TABLE IF NOT EXISTS `quiz` (
 	`question_id`   INT(11)     NOT NULL  AUTO_INCREMENT,
 	`task_id`       INT(11)     NOT NULL,
-	`questionnr`    TINYINT(4)  NULL      DEFAULT NULL
+	`question_nr`   TINYINT(4)  NULL      DEFAULT NULL
 	COMMENT 'Cislo otazky',
 	`points`        TINYINT(4)  NULL      DEFAULT NULL
 	COMMENT 'Pocet bodu',

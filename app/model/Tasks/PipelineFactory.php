@@ -100,7 +100,7 @@ class PipelineFactory {
         $pipeline->setLogger(new MemoryLogger());
 
         // common stages
-        $pipeline->addStage(new TasksFromXML($this->serviceTask, $this->serviceQuizQuestion));
+        $pipeline->addStage(new TasksFromXML($this->serviceTask));
         $pipeline->addStage(new DeadlineFromXML($this->serviceTask));
         $pipeline->addStage(new ContributionsFromXML($this->serviceTaskContribution, $this->serviceOrg));
         $pipeline->addStage(new StudyYearsFromXML($this->defaultStudyYears, $this->serviceTaskStudyYear, $this->serviceStudyYear));
