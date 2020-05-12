@@ -8,7 +8,9 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Grids\SubmitsGrid;
 use FKSDB\Exceptions\GoneException;
+use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Models\ModelQuizQuestion;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceSubmit;
@@ -42,7 +44,7 @@ class SubmitPresenter extends BasePresenter {
     public function injectSubmitService(ServiceSubmit $submitService) {
         $this->submitService = $submitService;
     }
-    
+
     /** @var ServiceSubmitQuizQuestion */
     private $submitQuizQuestionService;
 
@@ -66,15 +68,15 @@ class SubmitPresenter extends BasePresenter {
     public function injectTaskService(ServiceTask $taskService) {
         $this->taskService = $taskService;
     }
-    
+
     /** @var ServiceQuizQuestion */
     private $quizQuestionService;
-    
+
     /** @param ServiceQuizQuestion $quizQuestionService */
     public function injectQuizQuestionService(ServiceQuizQuestion $quizQuestionService) {
         $this->quizQuestionService = $quizQuestionService;
     }
-    
+
     /* ******************* AUTH ************************/
     /**
      * @throws BadRequestException
@@ -138,7 +140,9 @@ class SubmitPresenter extends BasePresenter {
 
         $prevDeadline = null;
         $taskIds = [];
-        $personHistory = $this->getUser()->getIdentity()->getPerson()->getHistory($this->getSelectedAcademicYear());
+        /** @var ModelLogin $login */
+        $login = $this->getUser()->getIdentity();
+        $personHistory = $login->getPerson()->getHistory($this->getSelectedAcademicYear());
         $studyYear = ($personHistory && isset($personHistory->study_year)) ? $personHistory->study_year : null;
         if ($studyYear === null) {
             $this->flashMessage(_('Řešitel nemá vyplněn ročník, nebudou dostupné všechny úlohy.'));
@@ -147,7 +151,7 @@ class SubmitPresenter extends BasePresenter {
         foreach ($this->getAvailableTasks() as $task) {
             $questions = $this->quizQuestionService->getTable();
             $questions->where('task_id', $task->task_id);
-            
+
             if ($task->submit_deadline != $prevDeadline) {
                 $form->addGroup(sprintf(_('Termín %s'), $task->submit_deadline));
             }
@@ -167,10 +171,10 @@ class SubmitPresenter extends BasePresenter {
                 if (!in_array($studyYear, array_keys($task->getStudyYears()))) {
                     $upload->setOption('description', _('Úloha není určena pro Tvou kategorii.'));
                     $upload->setDisabled();
-              }
-   
-              if ($submit && $this->uploadedSubmitStorage->fileExists($submit)) {
-                  $overwrite = $container->addCheckbox('overwrite', _('Přepsat odeslané řešení.'));
+                }
+
+                if ($submit && $this->uploadedSubmitStorage->fileExists($submit)) {
+                    $overwrite = $container->addCheckbox('overwrite', _('Přepsat odeslané řešení.'));
                     $conditionedUpload->addConditionOn($overwrite, Form::EQUAL, false)->addRule(~Form::FILLED, _('Buď zvolte přepsání odeslaného řešení anebo jej neposílejte.'));
                 }
             } else {
@@ -181,7 +185,7 @@ class SubmitPresenter extends BasePresenter {
                     foreach ($options as $option) {
                         $select->setValue($option);
                     }
-                    
+
                     $existingEntry = $this->submitQuizQuestionService->findByContestant($this->getContestant()->ct_id, $question->question_id);
                     if ($existingEntry) {
                         $existingAnswer = $existingEntry->answer;
@@ -235,7 +239,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws \Exception
      * @internal
      */
-    public function handleUploadFormSuccess($form) {
+    public function handleUploadFormSuccess(Form $form) {
         $values = $form->getValues();
 
         $taskIds = explode(',', $values['tasks']);
@@ -246,8 +250,9 @@ class SubmitPresenter extends BasePresenter {
             $this->uploadedSubmitStorage->beginTransaction();
 
             foreach ($taskIds as $taskId) {
-                /** @var ModelTask $task */
+
                 $questions = $this->quizQuestionService->getTable()->where('task_id', $taskId);
+                /** @var ModelTask $task */
                 $task = $this->taskService->findByPrimary($taskId);
 
                 if (!isset($validIds[$taskId])) {
@@ -256,10 +261,11 @@ class SubmitPresenter extends BasePresenter {
                 }
 
                 $taskValues = $values['task' . $task->task_id];
-                
+
                 //Implemetation of quiz questions
+                /** @var ModelQuizQuestion $question */
                 foreach ($questions as $question) {
-                    $name = "question" . $question->question_id;
+                    $name = 'question' . $question->question_id;
                     $answer = $taskValues[$name];
                     $this->submitQuizQuestionService->saveSubmitedQuestion($question, $this->getContestant(), $answer);
                 }
@@ -310,7 +316,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @param integer $taskId
+     * @param int $taskId
      * @return ModelTask|null
      *
      * @throws BadRequestException

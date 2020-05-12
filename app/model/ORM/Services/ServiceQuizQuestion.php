@@ -11,23 +11,23 @@ use FKSDB\ORM\Models\ModelTask;
  * @author Miroslav Jarý <mira.jary@gmail.com>
  */
 class ServiceQuizQuestion extends AbstractServiceSingle {
-    
+
     /**
-     * 
+     *
      * @return string
      */
     public function getModelClassName(): string {
         return ModelQuizQuestion::class;
     }
-    
+
     /**
-     * 
+     *
      * @return string
      */
     protected function getTableName(): string {
         return DbNames::TAB_QUIZ;
     }
-    
+
     /**
      * Find question from quiz by task
      * @param ModelTask $task
@@ -37,9 +37,9 @@ class ServiceQuizQuestion extends AbstractServiceSingle {
     public function findByTask(ModelTask $task, int $questionNr) {
         $result = $this->getTable()->where([
             'task_id' => $task->task_id,
-            'question_nr' =>$questionNr,
+            'question_nr' => $questionNr,
         ])->fetch();
-        
+
         if ($result !== false) {
             return ModelQuizQuestion::createFromActiveRow($result);
         } else {

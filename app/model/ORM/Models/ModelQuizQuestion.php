@@ -10,6 +10,7 @@ use Nette\Database\Table\ActiveRow;
  * @author Miroslav Jarý <mira.jary@gmail.com>
  * @property-read ActiveRow task
  * @property-read int task_id
+ * @property-read int question_id
  */
 class ModelQuizQuestion extends AbstractModelSingle implements IContestReferencedModel {
 

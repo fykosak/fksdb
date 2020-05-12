@@ -30,11 +30,6 @@ class PipelineFactory {
      * @var array
      */
     private $contributionMappings;
-    
-    /**
-     * @var ServiceQuizQuestion
-     */
-    private $serviceQuizQuestion;
 
     /**
      * @see StudyYearsFromXML
@@ -72,18 +67,16 @@ class PipelineFactory {
      * @param $columnMappings
      * @param $contributionMappings
      * @param $defaultStudyYears
-     * @param ServiceQuizQuestion $serviceQuizQuestion
      * @param ServiceTask $serviceTask
      * @param ServiceTaskContribution $serviceTaskContribution
      * @param ServiceTaskStudyYear $serviceTaskStudyYear
      * @param ServiceStudyYear $serviceStudyYear
      * @param ServiceOrg $serviceOrg
      */
-    function __construct($columnMappings, $contributionMappings, $defaultStudyYears, ServiceQuizQuestion $serviceQuizQuestion, ServiceTask $serviceTask, ServiceTaskContribution $serviceTaskContribution, ServiceTaskStudyYear $serviceTaskStudyYear, ServiceStudyYear $serviceStudyYear, ServiceOrg $serviceOrg) {
+    public function __construct($columnMappings, $contributionMappings, $defaultStudyYears, ServiceTask $serviceTask, ServiceTaskContribution $serviceTaskContribution, ServiceTaskStudyYear $serviceTaskStudyYear, ServiceStudyYear $serviceStudyYear, ServiceOrg $serviceOrg) {
         $this->columnMappings = $columnMappings;
         $this->contributionMappings = $contributionMappings;
         $this->defaultStudyYears = $defaultStudyYears;
-        $this->serviceQuizQuestion = $serviceQuizQuestion;
         $this->serviceTask = $serviceTask;
         $this->serviceTaskContribution = $serviceTaskContribution;
         $this->serviceTaskStudyYear = $serviceTaskStudyYear;

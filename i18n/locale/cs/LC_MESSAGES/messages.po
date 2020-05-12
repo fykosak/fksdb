@@ -1961,10 +1961,6 @@ msgstr ""
 msgid "Herné parametre niesu nastavené"
 msgstr "Herní parametry nejsou nastavené"
 
-#: i18n/../app/model/ORM/Models/ModelQuizQuestion.php:19
-msgid "otázka"
-msgstr "otázka"
-
 #: i18n/../app/model/ORM/Models/Schedule/ModelScheduleItem.php:103
 #, fuzzy
 msgid "Unlimited capacity"
