@@ -177,7 +177,7 @@ class SubmitPresenter extends BasePresenter {
                 //Implementaton of quiz questions
                 $options = ['A' => 'A', 'B' => 'B', 'C' => 'C', 'D' => 'D']; //TODO add variability of options
                 foreach ($questions as $question) {
-                    $select = $container->addRadioList('question' . $question->question_id, $question->getFQName(), $options);
+                    $select = $container->addRadioList('question' . $question->question_id, $task->getFQName() . ' - ' . $question->getFQName(), $options);
                     foreach ($options as $option) {
                         $select->setValue($option);
                     }
