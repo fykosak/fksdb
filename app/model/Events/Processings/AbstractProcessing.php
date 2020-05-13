@@ -113,7 +113,7 @@ abstract class AbstractProcessing implements IProcessing {
      * (which is not updated yet).
      *
      * @param $name
-     * @return boolean
+     * @return bool
      */
     protected final function isBaseReallyEmpty($name) {
         $baseHolder = $this->holder->getBaseHolder($name);

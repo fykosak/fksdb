@@ -13,8 +13,8 @@ use Nette\Security\IResource;
  * @author Michal Červeňák <miso@fykos.cz>
  * @property-read DateTime until
  * @property-read DateTime since
- * @property-read integer school_id
- * @property-read integer person_id
+ * @property-read int school_id
+ * @property-read int person_id
  * @property-read ActiveRow person
  * @property-read ActiveRow school
  * @property-read string state

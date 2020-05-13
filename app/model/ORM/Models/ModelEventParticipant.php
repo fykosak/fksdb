@@ -16,14 +16,14 @@ use Nette\Utils\DateTime;
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @property-read ActiveRow person
- * @property-read integer event_participant_id
- * @property-read integer event_id
+ * @property-read int event_participant_id
+ * @property-read int event_id
  * @property-read ActiveRow event
- * @property-read integer person_id
+ * @property-read int person_id
  * @property-read string note poznámka
  * @property-read string status
  * @property-read DateTime created čas vytvoření přihlášky
- * @property-read integer accomodation
+ * @property-read int accomodation
  * @property-read string diet speciální stravování
  * @property-read string health_restrictions alergie, léky, úrazy
  * @property-read string tshirt_size
@@ -31,11 +31,11 @@ use Nette\Utils\DateTime;
  * @property-read float price DECIMAL(6,2) vypočtená cena
  * @property-read string arrival_time Čas příjezdu
  * @property-read string arrival_destination Místo prijezdu
- * @property-read boolean arrival_ticket společný lístek na cestu tam
+ * @property-read bool arrival_ticket společný lístek na cestu tam
  * @property-read string departure_time Čas odjezdu
  * @property-read string departure_destination Místo odjezdu
- * @property-read boolean departure_ticket společný lístek na cestu zpět
- * @property-read boolean swimmer plavec?
+ * @property-read bool departure_ticket společný lístek na cestu zpět
+ * @property-read bool swimmer plavec?
  * @property-read string used_drugs užívané léky
  * @property-read string schedule
  */

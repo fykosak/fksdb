@@ -112,7 +112,7 @@ class Handler {
 
     /**
      * @param ArrayHash $data
-     * @return integer[]
+     * @return int
      */
     private function prepareData(ArrayHash $data): array {
         $newData = [];

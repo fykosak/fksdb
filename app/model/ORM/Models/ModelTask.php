@@ -11,7 +11,7 @@ use Utils;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property-read integer series
+ * @property-read int series
  * @property-read string label
  * @property-read string name_cs
  * @property-read int task_id

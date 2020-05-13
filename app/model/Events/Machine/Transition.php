@@ -46,10 +46,10 @@ class Transition {
     /** @var string */
     private $label;
 
-    /** @var boolean|callable */
+    /** @var bool|callable */
     private $condition;
 
-    /** @var boolean|callable */
+    /** @var bool|callable */
     private $visible;
 
     /**
@@ -369,7 +369,7 @@ class Transition {
 
     /**
      * @param string $mask It may be either mask of initial state or mask of whole transition.
-     * @return boolean
+     * @return bool
      */
     public function matches($mask) {
         $parts = self::parseMask($mask);

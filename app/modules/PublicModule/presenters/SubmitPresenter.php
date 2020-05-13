@@ -263,7 +263,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @param integer $taskId
+     * @param int $taskId
      * @return ModelTask|null
      *
      * @throws BadRequestException

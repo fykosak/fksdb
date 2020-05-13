@@ -70,7 +70,7 @@ class ModelScheduleItem extends AbstractModelSingle implements IScheduleGroupRef
     }
     /* ****** CAPACITY CALCULATION *******/
     /**
-     * @return integer|null
+     * @return int|null
      */
     public function getCapacity() {
         return $this->capacity;
