@@ -47,7 +47,7 @@ function update_files {
 		echo "Merged data from $remote/$branch into $branch"
 		rev=`git rev-parse HEAD`
 		echo "Installed revision $rev"
-    composer install --no-interaction --prefer-source
+		composer install --no-interaction --prefer-source
 		cd -
 		return 0
 	fi
