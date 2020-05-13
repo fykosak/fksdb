@@ -51,5 +51,5 @@ trait SubmitSaveTrait {
     /**
      * @return Container
      */
-    abstract function getContext();
+    public abstract function getContext();
 }

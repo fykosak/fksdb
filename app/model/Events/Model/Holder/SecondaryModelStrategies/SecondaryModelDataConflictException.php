@@ -20,7 +20,7 @@ class SecondaryModelDataConflictException extends SecondaryModelConflictExceptio
      * @param null $code
      * @param null $previous
      */
-    function __construct($conflictData, BaseHolder $baseHolder, $conflicts, $code = null, $previous = null) {
+    public function __construct($conflictData, BaseHolder $baseHolder, $conflicts, $code = null, $previous = null) {
         parent::__construct($baseHolder, $conflicts, $code, $previous);
         $this->conflictData = $conflictData;
         $this->message .= sprintf(' (%s)', implode(', ', $this->conflictData));

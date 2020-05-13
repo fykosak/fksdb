@@ -32,7 +32,7 @@ class StoredQueryGrid extends BaseGrid {
      * @param StoredQuery $storedQuery
      * @param Container $container
      */
-    function __construct(StoredQuery $storedQuery, Container $container) {
+    public function __construct(StoredQuery $storedQuery, Container $container) {
         parent::__construct($container);
         $this->storedQuery = $storedQuery;
         $this->exportFormatFactory = $container->getByType(ExportFormatFactory::class);

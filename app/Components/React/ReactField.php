@@ -67,5 +67,5 @@ trait ReactField {
     /**
      * @return string
      */
-    abstract function getData(): string;
+    public abstract function getData(): string;
 }

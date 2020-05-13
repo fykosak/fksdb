@@ -25,7 +25,7 @@ class GlobalParameters implements ArrayAccess {
      * GlobalParameters constructor.
      * @param Container $container
      */
-    function __construct(Container $container) {
+    public function __construct(Container $container) {
         $this->parameters = $container->getParameters();
     }
 

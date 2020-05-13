@@ -25,7 +25,7 @@ class RegexpCheck extends AbstractAdjustment implements IFormAdjustment {
      * @param $message
      * @param $pattern
      */
-    function __construct($field, $message, $pattern) {
+    public function __construct($field, $message, $pattern) {
         $this->field = $field;
         $this->message = $message;
         $this->pattern = $pattern;

@@ -30,7 +30,7 @@ class TeachersGrid extends BaseGrid {
      * TeachersGrid constructor.
      * @param Container $container
      */
-    function __construct(Container $container) {
+    public function __construct(Container $container) {
         parent::__construct($container);
         $this->serviceTeacher = $container->getByType(ServiceTeacher::class);
     }

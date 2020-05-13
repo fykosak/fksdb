@@ -53,7 +53,7 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
      * @param ServiceSchool $serviceSchool
      * @param ServicePersonHistory $servicePersonHistory
      */
-    function __construct(ServiceSchool $serviceSchool, ServicePersonHistory $servicePersonHistory) {
+    public function __construct(ServiceSchool $serviceSchool, ServicePersonHistory $servicePersonHistory) {
         $this->serviceSchool = $serviceSchool;
         $this->servicePersonHistory = $servicePersonHistory;
     }
@@ -122,8 +122,8 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
 
         $personId = $personControl->getValue(false);
         $personHistory = $this->servicePersonHistory->getTable()
-                ->where('person_id', $personId)
-                ->where('ac_year', $this->getHolder()->getPrimaryHolder()->getEvent()->getAcYear())->fetch();
+            ->where('person_id', $personId)
+            ->where('ac_year', $this->getHolder()->getPrimaryHolder()->getEvent()->getAcYear())->fetch();
         return $personHistory->study_year;
     }
 
@@ -140,8 +140,8 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
         $personId = $personControl->getValue(false);
         /** @var ModelSchool|false $school */
         $school = $this->servicePersonHistory->getTable()
-                ->where('person_id', $personId)
-                ->where('ac_year', $this->getHolder()->getPrimaryHolder()->getEvent()->getAcYear())->fetch();
+            ->where('person_id', $personId)
+            ->where('ac_year', $this->getHolder()->getPrimaryHolder()->getEvent()->getAcYear())->fetch();
         return $school->school_id;
     }
 

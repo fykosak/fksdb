@@ -19,6 +19,7 @@ use Nette\SmartObject;
 class ContestAuthorizator {
 
     use SmartObject;
+
     /**
      * @var User
      */
@@ -34,7 +35,7 @@ class ContestAuthorizator {
      * @param User $identity
      * @param Permission $acl
      */
-    function __construct(User $identity, Permission $acl) {
+    public function __construct(User $identity, Permission $acl) {
         $this->user = $identity;
         $this->acl = $acl;
     }

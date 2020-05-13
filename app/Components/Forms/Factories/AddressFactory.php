@@ -36,7 +36,7 @@ class AddressFactory {
      * @param \FKSDB\ORM\Services\ServiceAddress $serviceAddress
      * @param ServiceRegion $serviceRegion
      */
-    function __construct(ServiceAddress $serviceAddress, ServiceRegion $serviceRegion) {
+    public function __construct(ServiceAddress $serviceAddress, ServiceRegion $serviceRegion) {
         $this->serviceAddress = $serviceAddress;
         $this->serviceRegion = $serviceRegion;
     }

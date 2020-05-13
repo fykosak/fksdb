@@ -19,7 +19,7 @@ class After extends EvaluatedExpression {
      * After constructor.
      * @param \DateTimeInterface|callable $datetime
      */
-    function __construct($datetime) {
+    public function __construct($datetime) {
         $this->datetime = $datetime;
     }
 

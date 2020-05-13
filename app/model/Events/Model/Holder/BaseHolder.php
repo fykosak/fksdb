@@ -132,7 +132,7 @@ class BaseHolder {
      * BaseHolder constructor.
      * @param $name
      */
-    function __construct(string $name) {
+    public function __construct(string $name) {
         $this->name = $name;
     }
 

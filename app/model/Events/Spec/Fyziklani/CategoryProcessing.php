@@ -39,7 +39,7 @@ class CategoryProcessing extends AbstractProcessing {
      * @param \FKSDB\YearCalculator $yearCalculator
      * @param ServiceSchool $serviceSchool
      */
-    function __construct(YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
+    public function __construct(YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
         $this->yearCalculator = $yearCalculator;
         $this->serviceSchool = $serviceSchool;
     }

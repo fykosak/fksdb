@@ -36,7 +36,7 @@ class TaskStatsModel {
      * @param $year
      * @param Connection $connection
      */
-    function __construct(ModelContest $contest, $year, Connection $connection) {
+    public function __construct(ModelContest $contest, $year, Connection $connection) {
         $this->contest = $contest;
         $this->connection = $connection;
         $this->year = $year;
@@ -62,8 +62,8 @@ class TaskStatsModel {
      */
     public function getData($labels) {
         $sql = "SELECT * FROM `v_task_stats` WHERE " .
-                "contest_id = ? AND year = ? " .
-                "AND series = ? AND label IN ('" . implode("','", $labels) . "')";
+            "contest_id = ? AND year = ? " .
+            "AND series = ? AND label IN ('" . implode("','", $labels) . "')";
 
         $stmt = $this->connection->query($sql, $this->contest->contest_id, $this->year, $this->series);
         return $stmt->fetchAll();

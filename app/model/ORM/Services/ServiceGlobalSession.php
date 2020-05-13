@@ -43,7 +43,7 @@ class ServiceGlobalSession extends AbstractServiceSingle {
      * @param Context $context
      * @param IConventions $conventions
      */
-    function __construct(Request $request, Context $context, IConventions $conventions) {
+    public function __construct(Request $request, Context $context, IConventions $conventions) {
         parent::__construct($context, $conventions);
         $this->request = $request;
     }

@@ -22,7 +22,7 @@ class StoredQueryTagAssertion {
      * StoredQueryTagAssertion constructor.
      * @param $tagNames
      */
-    function __construct($tagNames) {
+    public function __construct($tagNames) {
         if (!is_array($tagNames)) {
             $tagNames = [$tagNames];
         }

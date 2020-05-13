@@ -71,7 +71,7 @@ class SingleEventSource implements IHolderSource {
      * @throws \FKSDB\Config\NeonSchemaException
      * @throws \Nette\Application\BadRequestException
      */
-    function __construct(ModelEvent $event, Container $container) {
+    public function __construct(ModelEvent $event, Container $container) {
         $this->event = $event;
         $this->container = $container;
         /** @var EventDispatchFactory $factory */

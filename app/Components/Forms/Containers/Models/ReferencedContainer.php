@@ -65,7 +65,7 @@ class ReferencedContainer extends ContainerWithOptions {
      * ReferencedContainer constructor.
      * @param ReferencedId $referencedId
      */
-    function __construct(ReferencedId $referencedId) {
+    public function __construct(ReferencedId $referencedId) {
         parent::__construct();
         $this->monitor(IJavaScriptCollector::class);
         $this->monitor(Form::class);

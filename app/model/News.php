@@ -19,7 +19,7 @@ class News {
      * News constructor.
      * @param GlobalParameters $globalParameters
      */
-    function __construct(GlobalParameters $globalParameters) {
+    public function __construct(GlobalParameters $globalParameters) {
         $this->globalParameters = $globalParameters;
     }
 

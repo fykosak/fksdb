@@ -58,7 +58,7 @@ class AutocompleteSelectBox extends TextBase {
      * @param null $label
      * @param null $renderMethod
      */
-    function __construct($ajax, $label = null, $renderMethod = null) {
+    public function __construct($ajax, $label = null, $renderMethod = null) {
         parent::__construct($label);
 
         $this->monitor(IAutocompleteJSONProvider::class);

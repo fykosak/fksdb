@@ -72,7 +72,7 @@ class Transition {
      * @param string $label
      * @param string $type
      */
-    function __construct(string $mask, $label = null, string $type = self::TYPE_DEFAULT) {
+    public function __construct(string $mask, $label = null, string $type = self::TYPE_DEFAULT) {
         $this->setMask($mask);
         $this->label = $label;
         if (!in_array($type, $this->getAllowedBehaviorTypes())) {

@@ -35,7 +35,7 @@ class PersonsGrid extends BaseGrid {
      * @param $pairs
      * @param Container $container
      */
-    function __construct(TypedTableSelection $trunkPersons, $pairs, Container $container) {
+    public function __construct(TypedTableSelection $trunkPersons, $pairs, Container $container) {
         parent::__construct($container);
         $this->trunkPersons = $trunkPersons;
         $this->pairs = $pairs;

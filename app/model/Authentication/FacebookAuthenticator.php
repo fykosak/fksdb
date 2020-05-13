@@ -42,7 +42,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
      * @param \FKSDB\ORM\Services\ServiceLogin $serviceLogin
      * @param \FKSDB\YearCalculator $yearCalculator
      */
-    function __construct(ServicePerson $servicePerson, ServicePersonInfo $servicePersonInfo, AccountManager $accountManager, ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
+    public function __construct(ServicePerson $servicePerson, ServicePersonInfo $servicePersonInfo, AccountManager $accountManager, ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
         parent::__construct($serviceLogin, $yearCalculator);
         $this->servicePerson = $servicePerson;
         $this->servicePersonInfo = $servicePersonInfo;

@@ -43,7 +43,7 @@ class SeriesData {
      * @param $series
      * @param $data
      */
-    function __construct(ModelContest $contest, $year, $series, $data) {
+    public function __construct(ModelContest $contest, $year, $series, $data) {
         $this->contest = $contest;
         $this->year = $year;
         $this->series = $series;

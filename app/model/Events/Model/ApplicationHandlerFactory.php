@@ -29,7 +29,7 @@ class ApplicationHandlerFactory {
      * @param Connection $connection
      * @param Container $container
      */
-    function __construct(Connection $connection, Container $container) {
+    public function __construct(Connection $connection, Container $container) {
         $this->connection = $connection;
         $this->container = $container;
     }

@@ -38,7 +38,7 @@ class DispatchGrid extends BaseGrid {
      * @param ModelPerson $person
      * @param Container $container
      */
-    function __construct(ModelPerson $person, Container $container) {
+    public function __construct(ModelPerson $person, Container $container) {
         parent::__construct($container);
         $this->person = $person;
         $this->serviceEvent = $container->getByType(ServiceEvent::class);
