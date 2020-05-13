@@ -15,6 +15,7 @@ use Nette\ComponentModel\Component;
 use Nette\DI\Container as DIContainer;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\HiddenField;
+use Nette\Forms\IControl;
 use Nette\Security\User;
 use Persons\SelfResolver;
 
@@ -149,7 +150,7 @@ class PersonFactory extends AbstractFactory {
 
     /**
      * @param Component $component
-     * @return Component|\Nette\Forms\IControl
+     * @return Component|IControl
      */
     public function getMainControl(Component $component) {
         return $component;

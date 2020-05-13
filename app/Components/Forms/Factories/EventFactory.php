@@ -16,7 +16,7 @@ use Nette\Forms\Controls\BaseControl;
 class EventFactory extends SingleReflectionFactory {
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceEventType
+     * @var ServiceEventType
      */
     private $serviceEventType;
 

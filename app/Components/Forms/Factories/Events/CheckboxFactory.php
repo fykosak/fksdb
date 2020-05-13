@@ -13,6 +13,7 @@ use FKSDB\Events\Model\Holder\Field;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\Checkbox;
+use Nette\Forms\IControl;
 
 
 /**
@@ -62,7 +63,7 @@ class CheckboxFactory extends AbstractFactory {
 
     /**
      * @param Component $component
-     * @return Component|\Nette\Forms\IControl
+     * @return Component|IControl
      */
     public function getMainControl(Component $component) {
         return $component;

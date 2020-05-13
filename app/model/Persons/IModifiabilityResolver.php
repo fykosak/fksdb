@@ -12,13 +12,13 @@ use FKSDB\ORM\Models\ModelPerson;
 interface IModifiabilityResolver {
 
     /**
-     * @param \FKSDB\ORM\Models\ModelPerson $person
+     * @param ModelPerson $person
      * @return mixed
      */
     public function isModifiable(ModelPerson $person);
 
     /**
-     * @param \FKSDB\ORM\Models\ModelPerson $person
+     * @param ModelPerson $person
      * @return mixed
      */
     public function getResolutionMode(ModelPerson $person);

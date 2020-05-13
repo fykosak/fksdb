@@ -73,7 +73,7 @@ class CarefulRewrite extends SecondaryModelStrategy {
     }
 
     /**
-     * @param \FKSDB\ORM\IModel $currentModel
+     * @param IModel $currentModel
      * @param IModel $foundModel
      * @param $joinData
      * @param IService $service

@@ -87,7 +87,7 @@ class PDFStamper implements IStorageProcessing {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelSubmit $submit
+     * @param ModelSubmit $submit
      * @throws ProcessingException
      * @throws InvalidStateException
      */

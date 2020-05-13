@@ -2,6 +2,7 @@
 
 namespace EventModule;
 
+use FKSDB\Config\NeonSchemaException;
 use FKSDB\Events\Model\Grid\SingleEventSource;
 use FKSDB\Components\Events\ImportComponent;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
@@ -53,7 +54,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @return ImportComponent
      * @throws AbortException
      * @throws BadRequestException
-     * @throws \FKSDB\Config\NeonSchemaException
+     * @throws NeonSchemaException
      */
     protected function createComponentImport(): ImportComponent {
         $source = new SingleEventSource($this->getEvent(), $this->getContext());

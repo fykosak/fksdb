@@ -23,7 +23,7 @@ interface IStorageProcessing {
     public function setOutputFile(string $filename);
 
     /**
-     * @param \FKSDB\ORM\Models\ModelSubmit $submit
+     * @param ModelSubmit $submit
      * @return mixed
      */
     public function process(ModelSubmit $submit);

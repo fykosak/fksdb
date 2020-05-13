@@ -12,7 +12,7 @@ use FKSDB\ORM\Models\ModelPerson;
 interface IVisibilityResolver {
 
     /**
-     * @param \FKSDB\ORM\Models\ModelPerson $person
+     * @param ModelPerson $person
      * @return mixed
      */
     public function isVisible(ModelPerson $person);

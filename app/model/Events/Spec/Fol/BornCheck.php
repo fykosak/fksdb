@@ -22,12 +22,12 @@ use Nette\Forms\IControl;
 class BornCheck extends AbstractAdjustment implements IFormAdjustment {
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceSchool
+     * @var ServiceSchool
      */
     private $serviceSchool;
 
     /**
-     * @var \FKSDB\ORM\Services\ServicePersonHistory
+     * @var ServicePersonHistory
      */
     private $servicePersonHistory;
 
@@ -52,8 +52,8 @@ class BornCheck extends AbstractAdjustment implements IFormAdjustment {
 
     /**
      * BornCheck constructor.
-     * @param \FKSDB\ORM\Services\ServiceSchool $serviceSchool
-     * @param \FKSDB\ORM\Services\ServicePersonHistory $servicePersonHistory
+     * @param ServiceSchool $serviceSchool
+     * @param ServicePersonHistory $servicePersonHistory
      */
     public function __construct(ServiceSchool $serviceSchool, ServicePersonHistory $servicePersonHistory) {
         $this->serviceSchool = $serviceSchool;

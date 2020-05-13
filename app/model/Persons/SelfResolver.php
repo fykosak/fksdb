@@ -27,7 +27,7 @@ class SelfResolver implements IVisibilityResolver, IModifiabilityResolver {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelPerson $person
+     * @param ModelPerson $person
      * @return bool
      */
     public function isVisible(ModelPerson $person) {

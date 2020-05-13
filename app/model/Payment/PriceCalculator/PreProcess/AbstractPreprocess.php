@@ -18,7 +18,7 @@ abstract class AbstractPreProcess {
     abstract public static function calculate(ModelPayment $modelPayment): Price;
 
     /**
-     * @param \FKSDB\ORM\Models\ModelPayment $modelPayment
+     * @param ModelPayment $modelPayment
      * @return array
      */
     abstract public static function getGridItems(ModelPayment $modelPayment): array;

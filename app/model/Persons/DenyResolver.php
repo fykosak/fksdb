@@ -23,7 +23,7 @@ class DenyResolver implements IVisibilityResolver, IModifiabilityResolver {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelPerson $person
+     * @param ModelPerson $person
      * @return mixed|string
      */
     public function getResolutionMode(ModelPerson $person) {
@@ -31,7 +31,7 @@ class DenyResolver implements IVisibilityResolver, IModifiabilityResolver {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelPerson $person
+     * @param ModelPerson $person
      * @return bool|mixed
      */
     public function isModifiable(ModelPerson $person) {

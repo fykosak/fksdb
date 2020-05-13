@@ -9,6 +9,8 @@ use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\ORM\Services\ServicePersonHistory;
 use FKSDB\ORM\Services\ServiceSchool;
+use Nette\Database\Table\ActiveRow;
+use Nette\Database\Table\Selection;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 
@@ -20,7 +22,7 @@ use Nette\Forms\IControl;
 class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceSchool
+     * @var ServiceSchool
      */
     private $serviceSchool;
 
@@ -113,7 +115,7 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
     /**
      * @param $studyYearControl
      * @param $personControl
-     * @return bool|mixed|\Nette\Database\Table\ActiveRow|\Nette\Database\Table\Selection|null
+     * @return bool|mixed|ActiveRow|Selection|null
      */
     private function getStudyYear($studyYearControl, $personControl) {
         if ($studyYearControl->getValue()) {
@@ -130,7 +132,7 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
     /**
      * @param $schoolControl
      * @param $personControl
-     * @return bool|mixed|\Nette\Database\Table\ActiveRow|\Nette\Database\Table\Selection|null
+     * @return bool|mixed|ActiveRow|Selection|null
      */
     private function getSchoolId($schoolControl, $personControl) {
         if ($schoolControl->getValue()) {

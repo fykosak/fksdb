@@ -32,12 +32,12 @@ class ServiceAuthToken extends AbstractServiceSingle {
 
     /**
      *
-     * @param \FKSDB\ORM\Models\ModelLogin $login
+     * @param ModelLogin $login
      * @param string $type
-     * @param \Nette\Utils\DateTime $until
+     * @param DateTime $until
      * @param null $data
      * @param bool $refresh
-     * @param \Nette\Utils\DateTime $since
+     * @param DateTime $since
      * @return ModelAuthToken
      * @throws \Exception
      */

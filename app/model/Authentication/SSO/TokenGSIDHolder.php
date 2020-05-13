@@ -25,7 +25,7 @@ class TokenGSIDHolder implements IGSIDHolder {
     private $session;
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceAuthToken
+     * @var ServiceAuthToken
      */
     private $serviceAuthToken;
 

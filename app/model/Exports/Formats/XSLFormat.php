@@ -5,6 +5,7 @@ namespace Exports\Formats;
 use DOMDocument;
 use Exports\IExportFormat;
 use Exports\StoredQuery;
+use Nette\Application\IResponse;
 use Nette\SmartObject;
 use WebService\IXMLNodeSerializer;
 use XSLTProcessor;
@@ -71,7 +72,7 @@ class XSLFormat implements IExportFormat {
     }
 
     /**
-     * @return PlainTextResponse|\Nette\Application\IResponse
+     * @return PlainTextResponse|IResponse
      */
     public function getResponse() {
         // Prepare XSLT processor

@@ -14,6 +14,7 @@ use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 
 /**
  * Class ApplicationPresenter
@@ -43,7 +44,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
      * @param int $id
      * @throws AbortException
      * @throws BadRequestException
-     * @throws \Nette\Application\ForbiddenRequestException
+     * @throws ForbiddenRequestException
      */
     public function renderDetail(int $id) {
         parent::renderDetail($id);

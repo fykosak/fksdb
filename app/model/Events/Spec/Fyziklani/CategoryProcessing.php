@@ -25,7 +25,7 @@ use Nette\Utils\ArrayHash;
 class CategoryProcessing extends AbstractProcessing {
 
     /**
-     * @var \FKSDB\YearCalculator
+     * @var YearCalculator
      */
     private $yearCalculator;
 
@@ -36,7 +36,7 @@ class CategoryProcessing extends AbstractProcessing {
 
     /**
      * CategoryProcessing constructor.
-     * @param \FKSDB\YearCalculator $yearCalculator
+     * @param YearCalculator $yearCalculator
      * @param ServiceSchool $serviceSchool
      */
     public function __construct(YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {

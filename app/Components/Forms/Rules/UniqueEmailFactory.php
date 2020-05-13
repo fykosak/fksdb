@@ -19,7 +19,7 @@ class UniqueEmailFactory {
 
     /**
      * UniqueEmailFactory constructor.
-     * @param \FKSDB\ORM\Services\ServicePersonInfo $servicePersonInfo
+     * @param ServicePersonInfo $servicePersonInfo
      */
     public function __construct(ServicePersonInfo $servicePersonInfo) {
         $this->servicePersonInfo = $servicePersonInfo;

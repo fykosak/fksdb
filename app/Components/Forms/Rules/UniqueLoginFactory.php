@@ -26,7 +26,7 @@ class UniqueLoginFactory {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelLogin|null $login
+     * @param ModelLogin|null $login
      * @return UniqueLogin
      */
     public function create(ModelLogin $login = null) {

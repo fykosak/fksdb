@@ -21,7 +21,7 @@ class AclResolver implements IVisibilityResolver, IModifiabilityResolver {
     private $contestAuthorizator;
 
     /**
-     * @var \FKSDB\ORM\Models\ModelContest
+     * @var ModelContest
      */
     private $contest;
 
@@ -29,7 +29,7 @@ class AclResolver implements IVisibilityResolver, IModifiabilityResolver {
     /**
      * AclResolver constructor.
      * @param ContestAuthorizator $contestAuthorizator
-     * @param \FKSDB\ORM\Models\ModelContest $contest
+     * @param ModelContest $contest
      */
     public function __construct(ContestAuthorizator $contestAuthorizator, ModelContest $contest) {
         $this->contestAuthorizator = $contestAuthorizator;
@@ -45,7 +45,7 @@ class AclResolver implements IVisibilityResolver, IModifiabilityResolver {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelPerson $person
+     * @param ModelPerson $person
      * @return mixed|string
      */
     public function getResolutionMode(ModelPerson $person) {
@@ -53,7 +53,7 @@ class AclResolver implements IVisibilityResolver, IModifiabilityResolver {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelPerson $person
+     * @param ModelPerson $person
      * @return bool|mixed
      */
     public function isModifiable(ModelPerson $person) {

@@ -3,6 +3,7 @@
 namespace PublicModule;
 
 use Authorization\RelatedPersonAuthorizator;
+use FKSDB\Config\NeonSchemaException;
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\ApplicationHandlerFactory;
@@ -380,7 +381,7 @@ class ApplicationPresenter extends BasePresenter {
     /**
      * @return Holder
      * @throws BadRequestException
-     * @throws \FKSDB\Config\NeonSchemaException
+     * @throws NeonSchemaException
      */
     private function getHolder() {
         if (!$this->holder) {

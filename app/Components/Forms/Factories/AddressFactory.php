@@ -22,7 +22,7 @@ class AddressFactory {
     const NOT_WRITEONLY = 0x4;
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceAddress
+     * @var ServiceAddress
      */
     private $serviceAddress;
 
@@ -33,7 +33,7 @@ class AddressFactory {
 
     /**
      * AddressFactory constructor.
-     * @param \FKSDB\ORM\Services\ServiceAddress $serviceAddress
+     * @param ServiceAddress $serviceAddress
      * @param ServiceRegion $serviceRegion
      */
     public function __construct(ServiceAddress $serviceAddress, ServiceRegion $serviceRegion) {

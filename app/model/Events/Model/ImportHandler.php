@@ -2,13 +2,16 @@
 
 namespace FKSDB\Events\Model;
 
+use FKSDB\Config\NeonSchemaException;
 use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Events\Model\Grid\SingleEventSource;
 use FKSDB\Events\Model\Holder\BaseHolder;
 use FKSDB\Utils\CSVParser;
+use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
+use Nette\Utils\JsonException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -73,9 +76,9 @@ class ImportHandler {
      * @param $errorMode
      * @param $stateless
      * @return bool
-     * @throws \FKSDB\Config\NeonSchemaException
-     * @throws \Nette\Application\BadRequestException
-     * @throws \Nette\Utils\JsonException
+     * @throws NeonSchemaException
+     * @throws BadRequestException
+     * @throws JsonException
      */
     public function import(ApplicationHandler $handler, $transitions, $errorMode, $stateless) {
         set_time_limit(0);

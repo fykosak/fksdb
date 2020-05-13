@@ -40,12 +40,12 @@ class ExtendedPersonHandler {
     const RESULT_ERROR = 0;
 
     /**
-     * @var \FKSDB\ORM\IService|AbstractServiceMulti|AbstractServiceSingle
+     * @var IService|AbstractServiceMulti|AbstractServiceSingle
      */
     protected $service;
 
     /**
-     * @var \FKSDB\ORM\Services\ServicePerson
+     * @var ServicePerson
      */
     protected $servicePerson;
 
@@ -65,7 +65,7 @@ class ExtendedPersonHandler {
     private $accountManager;
 
     /**
-     * @var \FKSDB\ORM\Models\ModelContest
+     * @var ModelContest
      */
     private $contest;
 
@@ -86,8 +86,8 @@ class ExtendedPersonHandler {
 
     /**
      * ExtendedPersonHandler constructor.
-     * @param \FKSDB\ORM\IService $service
-     * @param \FKSDB\ORM\Services\ServicePerson $servicePerson
+     * @param IService $service
+     * @param ServicePerson $servicePerson
      * @param Connection $connection
      * @param MailTemplateFactory $mailTemplateFactory
      * @param AccountManager $accountManager
@@ -101,14 +101,14 @@ class ExtendedPersonHandler {
     }
 
     /**
-     * @return \FKSDB\ORM\Models\ModelContest
+     * @return ModelContest
      */
     public function getContest() {
         return $this->contest;
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelContest $contest
+     * @param ModelContest $contest
      */
     public function setContest(ModelContest $contest) {
         $this->contest = $contest;
@@ -143,7 +143,7 @@ class ExtendedPersonHandler {
     }
 
     /**
-     * @return \FKSDB\ORM\Models\ModelPerson
+     * @return ModelPerson
      */
     public function getPerson() {
         return $this->person;

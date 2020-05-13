@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Controls\Choosers;
 
+use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
@@ -40,7 +41,7 @@ class ThemeSwitcher extends Control {
     }
 
     /**
-     * @return \Nette\Http\SessionSection
+     * @return SessionSection
      */
     private function getSession(): SessionSection {
         return $this->session->getSection('theme');
@@ -65,7 +66,7 @@ class ThemeSwitcher extends Control {
 
     /**
      * @param string $theme
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function handleChangeTheme(string $theme) {
         $session = $this->getSession();

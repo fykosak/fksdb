@@ -3,6 +3,7 @@
 namespace EventModule;
 
 use AuthenticatedPresenter;
+use FKSDB\Config\NeonSchemaException;
 use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Exceptions\NotFoundException;
 use FKSDB\Exceptions\NotImplementedException;
@@ -89,7 +90,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     /**
      * @return Holder
      * @throws BadRequestException
-     * @throws \FKSDB\Config\NeonSchemaException
+     * @throws NeonSchemaException
      */
     protected function getHolder(): Holder {
         if (!$this->holder) {

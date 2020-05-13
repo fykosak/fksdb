@@ -27,7 +27,7 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
     const CONTROL_NAME = 'privacy';
 
     /**
-     * @var \FKSDB\ORM\Services\ServicePersonInfo
+     * @var ServicePersonInfo
      */
     private $servicePersonInfo;
     /**

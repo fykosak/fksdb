@@ -36,7 +36,7 @@ abstract class SecondaryModelStrategy {
      * @param $joinOn
      * @param $joinTo
      * @param $holders
-     * @param \FKSDB\ORM\IModel|null $primaryModel
+     * @param IModel|null $primaryModel
      */
     public function loadSecondaryModels(IService $service, $joinOn, $joinTo, $holders, IModel $primaryModel = null) {
         $table = $service->getTable();
