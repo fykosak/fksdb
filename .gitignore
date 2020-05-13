@@ -9,5 +9,6 @@ upload/*
 !upload/corrected/.htaccess
 !upload/.htaccess
 /app/config/config.local.neon
+vendor/*
 .idea/*
 *.map
