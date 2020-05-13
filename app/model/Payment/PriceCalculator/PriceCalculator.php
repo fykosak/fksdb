@@ -27,7 +27,7 @@ class PriceCalculator {
      * @param ModelPayment $modelPayment
      * @return void
      */
-    public final function __invoke(ModelPayment $modelPayment) {
+    final public function __invoke(ModelPayment $modelPayment) {
         $price = new Price(0, $modelPayment->currency);
         foreach ($this->preProcess as $preProcess) {
             $subPrice = $preProcess->calculate($modelPayment);

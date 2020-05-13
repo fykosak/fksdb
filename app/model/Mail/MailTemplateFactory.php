@@ -87,7 +87,7 @@ class MailTemplateFactory {
      * @return FileTemplate
      * @throws BadRequestException
      */
-    public final function createFromFile(string $filename, string $lang = null): FileTemplate {
+    final public function createFromFile(string $filename, string $lang = null): FileTemplate {
         $presenter = $this->application->getPresenter();
         if (($lang === null) && !$presenter instanceof BasePresenter) {
             throw new InvalidArgumentException("Expecting BasePresenter, got " . ($presenter ? get_class($presenter) : (string)$presenter));

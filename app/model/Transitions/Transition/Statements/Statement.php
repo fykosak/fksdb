@@ -17,7 +17,7 @@ abstract class Statement {
      * @param array $args
      * @return bool
      */
-    public final function __invoke(...$args): bool {
+    final public function __invoke(...$args): bool {
         return $this->evaluate(...$args);
     }
 }

@@ -129,11 +129,11 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     /**
      * @param TableReflectionFactory $tableReflectionFactory
      */
-    public final function injectTableReflectionFactory(TableReflectionFactory $tableReflectionFactory) {
+    final public function injectTableReflectionFactory(TableReflectionFactory $tableReflectionFactory) {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
-    public final function getTableReflectionFactory(): TableReflectionFactory {
+    final public function getTableReflectionFactory(): TableReflectionFactory {
         return $this->tableReflectionFactory;
     }
 
@@ -364,7 +364,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @throws BadTypeException
      * @throws ReflectionException
      */
-    public final function backLinkRedirect($need = false) {
+    final public function backLinkRedirect($need = false) {
         $this->putIntoBreadcrumbs();
         /**
          * @var Breadcrumbs $component

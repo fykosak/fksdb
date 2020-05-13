@@ -449,7 +449,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
      * @param $acYear
      * @return bool
      */
-    public final function isFilled(ModelPerson $person, $sub, $field, $acYear) {
+    final public function isFilled(ModelPerson $person, $sub, $field, $acYear) {
         $value = $this->getPersonValue($person, $sub, $field, $acYear, self::TARGET_VALIDATION);
         return !($value === null || $value === '');
     }

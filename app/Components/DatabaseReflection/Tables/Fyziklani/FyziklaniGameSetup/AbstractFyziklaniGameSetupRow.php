@@ -14,7 +14,7 @@ abstract class AbstractFyziklaniGameSetupRow extends AbstractRow {
     /**
      * @return int
      */
-    public final function getPermissionsValue(): int {
+    final public function getPermissionsValue(): int {
         return self::PERMISSION_USE_GLOBAL_ACL;
     }
 

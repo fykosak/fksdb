@@ -302,7 +302,7 @@ class Transition {
      * @param Holder $holder
      * @return bool
      */
-    public final function canExecute(Holder $holder) {
+    final public function canExecute(Holder $holder) {
         return !$this->getBlockingTransition($holder);
     }
 
@@ -320,7 +320,7 @@ class Transition {
      * @return array
      * @todo Induction work only for one level.
      */
-    public final function execute(Holder $holder) {
+    final public function execute(Holder $holder) {
         $blockingTransition = $this->getBlockingTransition($holder);
         if ($blockingTransition) {
             throw new TransitionConditionFailedException($blockingTransition);
@@ -348,7 +348,7 @@ class Transition {
      * @param Holder $holder
      * @param Transition[] $inducedTransitions
      */
-    public final function executed(Holder $holder, $inducedTransitions) {
+    final public function executed(Holder $holder, $inducedTransitions) {
         foreach ($inducedTransitions as $inducedTransition) {
             $inducedTransition->executed($holder, []);
         }

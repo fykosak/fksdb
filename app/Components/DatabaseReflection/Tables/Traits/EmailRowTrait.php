@@ -39,11 +39,11 @@ trait EmailRowTrait {
      * @return string
      * only must exists
      */
-    public abstract function getTitle(): string;
+    abstract public function getTitle(): string;
 
     /**
      * @return string
      * only must exists
      */
-    public abstract function getModelAccessKey(): string;
+    abstract public function getModelAccessKey(): string;
 }

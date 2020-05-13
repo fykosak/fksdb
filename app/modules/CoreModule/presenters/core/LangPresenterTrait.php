@@ -32,14 +32,14 @@ trait LangPresenterTrait {
     /**
      * @param GettextTranslator $translator
      */
-    public final function injectTranslator(GettextTranslator $translator) {
+    final public function injectTranslator(GettextTranslator $translator) {
         $this->translator = $translator;
     }
 
     /**
      * @throws \Exception
      */
-    protected final function langTraitStartup() {
+    final protected function langTraitStartup() {
         $this->translator->setLang($this->getLang());
         /** @var LanguageChooser $languageChooser */
         $languageChooser = $this->getComponent('languageChooser');
@@ -49,14 +49,14 @@ trait LangPresenterTrait {
     /**
      * @return LanguageChooser
      */
-    protected final function createComponentLanguageChooser(): LanguageChooser {
+    final protected function createComponentLanguageChooser(): LanguageChooser {
         return new LanguageChooser($this->getContext());
     }
 
     /**
      * @return string|null
      */
-    private final function getUserPreferredLang() {
+    final private function getUserPreferredLang() {
         /**@var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
         if ($login && $login->getPerson()) {
@@ -96,17 +96,17 @@ trait LangPresenterTrait {
     /**
      * @return GettextTranslator
      */
-    public final function getTranslator(): GettextTranslator {
+    final public function getTranslator(): GettextTranslator {
         return $this->translator;
     }
 
     /**
      * @return User
      */
-    public abstract function getUser();
+    abstract public function getUser();
 
     /**
      * @return Request
      */
-    public abstract function getHttpRequest();
+    abstract public function getHttpRequest();
 }
