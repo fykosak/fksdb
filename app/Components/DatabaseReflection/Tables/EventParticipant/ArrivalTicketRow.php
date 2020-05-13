@@ -24,6 +24,6 @@ class ArrivalTicketRow extends AbstractParticipantRow {
      * @return Html
      */
     public function createHtmlValue(AbstractModelSingle $model): Html {
-        return (new BinaryPrinter)($model->arrival_ticket);
+        return (new BinaryPrinter())($model->arrival_ticket);
     }
 }

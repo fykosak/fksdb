@@ -87,7 +87,7 @@ class ResultsAndStatistics extends FyziklaniReactControl {
             throw new BadRequestException('',Response::S405_METHOD_NOT_ALLOWED);
         }
         if (!$presenter instanceof BasePresenter) {
-            throw new ArgumentOutOfRangeException;
+            throw new ArgumentOutOfRangeException();
         }
         $isOrg = $presenter->getEventAuthorizator()->isContestOrgAllowed('fyziklani.results', 'presentation', $this->getEvent());
 

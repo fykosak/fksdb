@@ -26,7 +26,7 @@ class PriceRow extends AbstractPaymentRow {
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         if ($model->price) {
-            return (new PricePrinter)($model->getPrice());
+            return (new PricePrinter())($model->getPrice());
         }
         return NotSetBadge::getHtml();
     }

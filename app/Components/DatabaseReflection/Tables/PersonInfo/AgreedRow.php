@@ -49,7 +49,7 @@ class AgreedRow extends AbstractRow {
      * @return Html
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        return (new DatePrinter)($model->agreed);
+        return (new DatePrinter())($model->agreed);
     }
 
 }

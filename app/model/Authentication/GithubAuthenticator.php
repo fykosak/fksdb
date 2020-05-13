@@ -69,7 +69,7 @@ class GithubAuthenticator extends AbstractAuthenticator {
             throw new NoLoginException();
         }
         if (!$login->active) {
-            throw new InactiveLoginException;
+            throw new InactiveLoginException();
         }
 
         $this->logAuthentication($login);

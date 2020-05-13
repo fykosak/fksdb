@@ -231,7 +231,7 @@ abstract class BaseGrid extends Grid {
      * @throws NotImplementedException
      */
     protected function getModelClassName(): string {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**

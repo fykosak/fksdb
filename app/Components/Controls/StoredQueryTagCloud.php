@@ -85,7 +85,7 @@ class StoredQueryTagCloud extends Control {
                 $this->template->tags = $this->modelStoredQuery->getMStoredQueryTags();
                 break;
             default :
-                throw new InvalidArgumentException;
+                throw new InvalidArgumentException();
         }
 
         $this->template->mode = $this->mode;

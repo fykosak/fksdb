@@ -204,12 +204,10 @@ class AutocompleteSelectBox extends TextBase {
             } else {
                 $this->value = explode(self::INTERNAL_DELIMITER, $value);
             }
+        } elseif ($value === '') {
+            $this->value = null;
         } else {
-            if ($value === '') {
-                $this->value = null;
-            } else {
-                $this->value = $value;
-            }
+            $this->value = $value;
         }
         if ($this->dataProvider) {
             $this->dataProvider->setDefaultValue($this->value);

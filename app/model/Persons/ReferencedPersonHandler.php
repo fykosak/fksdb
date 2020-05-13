@@ -274,10 +274,8 @@ class ReferencedPersonHandler implements IReferencedHandler {
                     if (count($subConflicts)) {
                         $conflicts[$key] = $subConflicts;
                     }
-                } else {
-                    if (!is_null($model[$key]) && $model[$key] != $value) {
-                        $conflicts[$key] = $value;
-                    }
+                } elseif (!is_null($model[$key]) && $model[$key] != $value) {
+                    $conflicts[$key] = $value;
                 }
             }
         }

@@ -24,6 +24,6 @@ class HashRow extends AbstractLoginRow {
      * @return Html
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        return (new HashPrinter)($model->hash);
+        return (new HashPrinter())($model->hash);
     }
 }

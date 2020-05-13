@@ -14,7 +14,7 @@ class FailStrategy implements IMergeStrategy {
      * @param mixed $merged
      */
     public function mergeValues($trunk, $merged) {
-        throw new CannotMergeException;
+        throw new CannotMergeException();
     }
 
 }

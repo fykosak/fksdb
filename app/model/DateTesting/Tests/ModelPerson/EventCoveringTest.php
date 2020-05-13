@@ -73,10 +73,8 @@ class EventCoveringTest extends PersonTest {
                         if ($org->until >= $year && $org->since <= $year) {
                             $logger->log($this->createLog($year, $contestId, $type, 'org'));
                         }
-                    } else {
-                        if ($org->since <= $year) {
-                            $logger->log($this->createLog($year, $contestId, $type, 'org'));
-                        }
+                    } elseif ($org->since <= $year) {
+                        $logger->log($this->createLog($year, $contestId, $type, 'org'));
                     }
                 }
             }

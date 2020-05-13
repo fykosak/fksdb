@@ -56,7 +56,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      */
     protected function startup() {
         if (!$this->isEnabled()) {
-            throw new NotImplementedException;
+            throw new NotImplementedException();
         }
         parent::startup();
     }

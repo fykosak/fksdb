@@ -119,7 +119,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
                 return new ApplicationComponent($this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger()), $holder);
             }
         }
-        throw new InvalidStateException;
+        throw new InvalidStateException();
     }
 
     /**
@@ -142,13 +142,13 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @inheritDoc
      */
     public function createComponentCreateForm(): Control {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**
      * @inheritDoc
      */
     public function createComponentEditForm(): Control {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 }

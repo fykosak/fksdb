@@ -69,7 +69,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
         }
 
         if ($login->active == 0) {
-            throw new InactiveLoginException;
+            throw new InactiveLoginException();
         }
 
         $this->logAuthentication($login);

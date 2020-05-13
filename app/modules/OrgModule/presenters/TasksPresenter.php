@@ -129,7 +129,7 @@ class TasksPresenter extends BasePresenter {
                 break;
             case self::SOURCE_FILE:
                 if (!$values['file']->isOk()) {
-                    throw new UploadException;
+                    throw new UploadException();
                 }
                 $file = $values['file']->getTemporaryFile();
                 break;

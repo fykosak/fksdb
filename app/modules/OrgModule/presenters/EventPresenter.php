@@ -52,7 +52,7 @@ class EventPresenter extends BasePresenter {
      * @throws NotImplementedException
      */
     public function actionDelete() {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**
