@@ -25,7 +25,7 @@ class ModelCategory {
      * FKSDB\Results\ModelCategory constructor.
      * @param $id
      */
-    function __construct($id) {
+    public function __construct($id) {
         $this->id = $id;
     }
 

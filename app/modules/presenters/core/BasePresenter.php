@@ -468,7 +468,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     /**
      * @return FullHttpRequest
      */
-    function getFullHttpRequest(): FullHttpRequest {
+    public function getFullHttpRequest(): FullHttpRequest {
         if ($this->fullRequest === null) {
             $payload = file_get_contents('php://input');
             $this->fullRequest = new FullHttpRequest($this->getHttpRequest(), $payload);

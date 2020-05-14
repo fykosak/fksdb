@@ -67,7 +67,7 @@ class Holder {
      * Holder constructor.
      * @param Connection $connection
      */
-    function __construct(Connection $connection) {
+    public function __construct(Connection $connection) {
         $this->connection = $connection;
 
         /*

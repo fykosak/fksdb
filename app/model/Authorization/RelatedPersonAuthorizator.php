@@ -15,6 +15,7 @@ use Nette\SmartObject;
 class RelatedPersonAuthorizator {
 
     use SmartObject;
+
     /**
      * @var IUserStorage
      */
@@ -24,7 +25,7 @@ class RelatedPersonAuthorizator {
      * RelatedPersonAuthorizator constructor.
      * @param IUserStorage $user
      */
-    function __construct(IUserStorage $user) {
+    public function __construct(IUserStorage $user) {
         $this->user = $user;
     }
 

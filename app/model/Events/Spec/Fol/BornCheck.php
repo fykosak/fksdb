@@ -55,7 +55,7 @@ class BornCheck extends AbstractAdjustment implements IFormAdjustment {
      * @param \FKSDB\ORM\Services\ServiceSchool $serviceSchool
      * @param \FKSDB\ORM\Services\ServicePersonHistory $servicePersonHistory
      */
-    function __construct(ServiceSchool $serviceSchool, ServicePersonHistory $servicePersonHistory) {
+    public function __construct(ServiceSchool $serviceSchool, ServicePersonHistory $servicePersonHistory) {
         $this->serviceSchool = $serviceSchool;
         $this->servicePersonHistory = $servicePersonHistory;
     }
@@ -120,8 +120,8 @@ class BornCheck extends AbstractAdjustment implements IFormAdjustment {
         $personId = $personControl->getValue();
         /** @var ModelPersonHistory|false $personHistory */
         $personHistory = $this->servicePersonHistory->getTable()
-                ->where('person_id', $personId)
-                ->where('ac_year', $this->getHolder()->getPrimaryHolder()->getEvent()->getAcYear())->fetch();
+            ->where('person_id', $personId)
+            ->where('ac_year', $this->getHolder()->getPrimaryHolder()->getEvent()->getAcYear())->fetch();
         return $personHistory ? $personHistory->study_year : null;
     }
 
@@ -137,8 +137,8 @@ class BornCheck extends AbstractAdjustment implements IFormAdjustment {
         $personId = $personControl->getValue();
         /** @var ModelSchool|false $school */
         $school = $this->servicePersonHistory->getTable()
-                ->where('person_id', $personId)
-                ->where('ac_year', $this->getHolder()->getPrimaryHolder()->getEvent()->getAcYear())->fetch();
+            ->where('person_id', $personId)
+            ->where('ac_year', $this->getHolder()->getPrimaryHolder()->getEvent()->getAcYear())->fetch();
         return $school->school_id;
     }
 

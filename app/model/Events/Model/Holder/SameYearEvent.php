@@ -25,7 +25,7 @@ class SameYearEvent implements IEventRelation {
      * @param $eventTypeId
      * @param ServiceEvent $serviceEvent
      */
-    function __construct($eventTypeId, ServiceEvent $serviceEvent) {
+    public function __construct($eventTypeId, ServiceEvent $serviceEvent) {
         $this->eventTypeId = $eventTypeId;
         $this->serviceEvent = $serviceEvent;
     }

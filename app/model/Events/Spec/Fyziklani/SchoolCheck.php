@@ -30,7 +30,7 @@ abstract class SchoolCheck extends AbstractAdjustment implements IFormAdjustment
      * SchoolCheck constructor.
      * @param ServicePersonHistory $servicePersonHistory
      */
-    function __construct(ServicePersonHistory $servicePersonHistory) {
+    public function __construct(ServicePersonHistory $servicePersonHistory) {
         $this->servicePersonHistory = $servicePersonHistory;
     }
 

@@ -91,7 +91,7 @@ class ModelEventParticipant extends AbstractModelSingle implements IEventReferen
     /**
      * @inheritDoc
      */
-    function getResourceId() {
+    public function getResourceId() {
         return self::RESOURCE_ID;
     }
 }

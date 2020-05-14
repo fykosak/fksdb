@@ -48,7 +48,7 @@ class ParticipantAcquaintanceChartControl extends ReactComponent implements ICha
      * @return string
      * @throws JsonException
      */
-    function getData(): string {
+    public function getData(): string {
         $data = [];
         foreach ($this->event->getParticipants()->where('status', ['participated', 'applied']) as $row) {
 

@@ -32,7 +32,7 @@ class MailTemplateFactory {
      * @param Application $application
      * @param ITranslator $translator
      */
-    function __construct(string $templateDir, Application $application, ITranslator $translator) {
+    public function __construct(string $templateDir, Application $application, ITranslator $translator) {
         $this->templateDir = $templateDir;
         $this->application = $application;
         $this->translator = $translator;

@@ -26,7 +26,7 @@ class PasswordAuthenticator extends AbstractAuthenticator implements IAuthentica
      * @param \FKSDB\YearCalculator $yearCalculator
      * @param ServicePerson $servicePerson
      */
-    function __construct(ServiceLogin $serviceLogin, YearCalculator $yearCalculator, ServicePerson $servicePerson) {
+    public function __construct(ServiceLogin $serviceLogin, YearCalculator $yearCalculator, ServicePerson $servicePerson) {
         parent::__construct($serviceLogin, $yearCalculator);
         $this->servicePerson = $servicePerson;
     }

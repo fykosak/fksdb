@@ -30,7 +30,7 @@ class OrgsGrid extends BaseGrid {
      * OrgsGrid constructor.
      * @param Container $container
      */
-    function __construct(Container $container) {
+    public function __construct(Container $container) {
         parent::__construct($container);
         $this->serviceOrg = $container->getByType(ServiceOrg::class);
     }

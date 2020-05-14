@@ -30,6 +30,7 @@ use Traversable;
  */
 class ExtendedPersonHandler {
     use SmartObject;
+
     const CONT_AGGR = 'aggr';
     const CONT_PERSON = 'person';
     const CONT_MODEL = 'model';
@@ -91,7 +92,7 @@ class ExtendedPersonHandler {
      * @param MailTemplateFactory $mailTemplateFactory
      * @param AccountManager $accountManager
      */
-    function __construct(IService $service, ServicePerson $servicePerson, Connection $connection, MailTemplateFactory $mailTemplateFactory, AccountManager $accountManager) {
+    public function __construct(IService $service, ServicePerson $servicePerson, Connection $connection, MailTemplateFactory $mailTemplateFactory, AccountManager $accountManager) {
         $this->service = $service;
         $this->servicePerson = $servicePerson;
         $this->connection = $connection;

@@ -43,7 +43,7 @@ class Navigation extends BaseControl {
      * @param PresenterBuilder $presenterBuilder
      * @param Container $container
      */
-    function __construct(PresenterBuilder $presenterBuilder, Container $container) {
+    public function __construct(PresenterBuilder $presenterBuilder, Container $container) {
         parent::__construct($container);
         $this->presenterBuilder = $presenterBuilder;
     }

@@ -103,10 +103,10 @@ trait LangPresenterTrait {
     /**
      * @return User
      */
-    abstract function getUser();
+    public abstract function getUser();
 
     /**
      * @return Request
      */
-    abstract function getHttpRequest();
+    public abstract function getHttpRequest();
 }

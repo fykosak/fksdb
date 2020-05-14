@@ -36,7 +36,7 @@ class SubmitsGrid extends BaseGrid {
      * @param Container $container
      * @param ModelContestant $contestant
      */
-    function __construct(Container $container, ModelContestant $contestant) {
+    public function __construct(Container $container, ModelContestant $contestant) {
         parent::__construct($container);
         $this->submitService = $container->getByType(ServiceSubmit::class);
         $this->contestant = $contestant;

@@ -16,7 +16,7 @@ class ArrayProvider implements IFilteredDataProvider {
      * ArrayProvider constructor.
      * @param array $data
      */
-    function __construct(array $data) {
+    public function __construct(array $data) {
         $this->data = [];
         $this->labelById = $data;
         foreach ($data as $id => $label) {

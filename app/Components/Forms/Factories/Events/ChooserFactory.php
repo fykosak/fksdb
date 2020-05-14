@@ -34,7 +34,7 @@ class ChooserFactory extends AbstractFactory {
      * @param $prompt
      * @param IOptionsProvider $optionsProvider
      */
-    function __construct($prompt, IOptionsProvider $optionsProvider) {
+    public function __construct($prompt, IOptionsProvider $optionsProvider) {
         $this->prompt = $prompt;
         $this->optionsProvider = $optionsProvider;
     }
@@ -48,16 +48,16 @@ class ChooserFactory extends AbstractFactory {
     protected function createComponent(Field $field, BaseMachine $machine, Container $container) {
 
         $component = new SelectBox($field->getLabel());
-        $component->setOption('description',$field->getDescription());
+        $component->setOption('description', $field->getDescription());
 
         $component->setPrompt($this->prompt);
 
         $options = $this->optionsProvider->getOptions($field);
         $opts = [];
         foreach ($options as $key => $option) {
-            if(is_array($option)){
+            if (is_array($option)) {
                 $opts[$option['value']] = $option['label'];
-            }else{
+            } else {
                 $opts[$key] = $option;
             }
         }

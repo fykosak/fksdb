@@ -18,7 +18,7 @@ class CompareStrategy implements IMergeStrategy {
      *
      * @param mixed $compare greater|less
      */
-    function __construct($compare) {
+    public function __construct($compare) {
         if ($compare == 'greater') {
             $this->sign = 1;
         } elseif ($compare == 'less') {

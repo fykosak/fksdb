@@ -45,7 +45,7 @@ class ExtendedPersonHandlerFactory {
      * @param AccountManager $accountManager
      * @param GlobalParameters $globalParameters
      */
-    function __construct(ServicePerson $servicePerson, Connection $connection, MailTemplateFactory $mailTemplateFactory, AccountManager $accountManager, GlobalParameters $globalParameters) {
+    public function __construct(ServicePerson $servicePerson, Connection $connection, MailTemplateFactory $mailTemplateFactory, AccountManager $accountManager, GlobalParameters $globalParameters) {
         $this->servicePerson = $servicePerson;
         $this->connection = $connection;
         $this->mailTemplateFactory = $mailTemplateFactory;

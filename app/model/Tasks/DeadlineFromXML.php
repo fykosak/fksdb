@@ -31,7 +31,7 @@ class DeadlineFromXML extends Stage {
      * DeadlineFromXML2 constructor.
      * @param ServiceTask $taskService
      */
-    function __construct(ServiceTask $taskService) {
+    public function __construct(ServiceTask $taskService) {
         $this->taskService = $taskService;
     }
 

@@ -19,7 +19,7 @@ class CarefulRewrite extends SecondaryModelStrategy {
      * CarefulRewrite constructor.
      * @param array $safeKeys
      */
-    function __construct($safeKeys = []) {
+    public function __construct($safeKeys = []) {
         $this->safeKeys = $safeKeys;
     }
 

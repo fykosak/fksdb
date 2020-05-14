@@ -56,7 +56,7 @@ class ReferencedPersonHandlerFactory {
      * @param ServiceMPersonHasFlag $serviceMPersonHasFlag
      * @param Handler $eventScheduleHandler
      */
-    function __construct(
+    public function __construct(
         ServicePerson $servicePerson,
         ServicePersonInfo $servicePersonInfo,
         ServicePersonHistory $servicePersonHistory,

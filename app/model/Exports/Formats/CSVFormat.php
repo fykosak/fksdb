@@ -12,6 +12,7 @@ use PePa\CSVResponse;
  */
 class CSVFormat implements IExportFormat {
     use SmartObject;
+
     const DEFAULT_DELIMITER = ';';
     const DEFAULT_QUOTE = false;
 
@@ -30,7 +31,7 @@ class CSVFormat implements IExportFormat {
      * @param string $delimiter
      * @param bool $quote
      */
-    function __construct(StoredQuery $storedQuery, $header, $delimiter = self::DEFAULT_DELIMITER, $quote = self::DEFAULT_QUOTE) {
+    public function __construct(StoredQuery $storedQuery, $header, $delimiter = self::DEFAULT_DELIMITER, $quote = self::DEFAULT_QUOTE) {
         $this->storedQuery = $storedQuery;
         $this->delimiter = $delimiter;
         $this->quote = $quote;

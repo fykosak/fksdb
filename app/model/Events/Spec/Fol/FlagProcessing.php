@@ -32,7 +32,7 @@ class FlagProcessing extends AbstractProcessing {
      * @param \FKSDB\YearCalculator $yearCalculator
      * @param \FKSDB\ORM\Services\ServiceSchool $serviceSchool
      */
-    function __construct(YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
+    public function __construct(YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
         $this->yearCalculator = $yearCalculator;
         $this->serviceSchool = $serviceSchool;
     }

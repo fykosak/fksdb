@@ -79,7 +79,7 @@ class ApplicationHandler {
      * @param Connection $connection
      * @param Container $container
      */
-    function __construct(ModelEvent $event, ILogger $logger, Connection $connection, Container $container) {
+    public function __construct(ModelEvent $event, ILogger $logger, Connection $connection, Container $container) {
         $this->event = $event;
         $this->logger = $logger;
         $this->connection = $connection;

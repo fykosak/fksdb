@@ -58,7 +58,7 @@ class FilesystemCorrectedSubmitStorage implements ISubmitStorage {
      * @param $filenameMask
      * @param $contestMap
      */
-    function __construct($root, $directoryMask, $filenameMask, $contestMap) {
+    public function __construct($root, $directoryMask, $filenameMask, $contestMap) {
         $this->root = $root;
         $this->directoryMask = $directoryMask;
         $this->filenameMask = $filenameMask;

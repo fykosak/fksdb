@@ -15,7 +15,7 @@ class ConstantStrategy implements IMergeStrategy {
      * ConstantStrategy constructor.
      * @param $constant
      */
-    function __construct($constant) {
+    public function __construct($constant) {
         $this->constant = $constant;
     }
 

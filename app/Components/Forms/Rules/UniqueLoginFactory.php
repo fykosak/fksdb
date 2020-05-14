@@ -21,7 +21,7 @@ class UniqueLoginFactory {
      * UniqueLoginFactory constructor.
      * @param ServiceLogin $serviceLogin
      */
-    function __construct(ServiceLogin $serviceLogin) {
+    public function __construct(ServiceLogin $serviceLogin) {
         $this->serviceLogin = $serviceLogin;
     }
 
