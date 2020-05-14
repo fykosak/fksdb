@@ -180,7 +180,7 @@ class TimelineControl extends ReactComponent {
      * @inheritDoc
      * @throws \Exception
      */
-    function getData(): string {
+    public function getData(): string {
         list($events, $calculatedEvents) = $this->calculateEvents();
         list($dates, $longTimeEvents) = $this->calculateData();
         list($first, $last) = $this->calculateFirstAndLast($events, $dates);

@@ -56,7 +56,7 @@ class TeamApplicationsTimeProgress extends ReactComponent implements IChart {
      * @return string
      * @throws JsonException
      */
-    function getData(): string {
+    public function getData(): string {
         $data = [
             'teams' => [],
             'events' => [],

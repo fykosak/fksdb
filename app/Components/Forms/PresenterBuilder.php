@@ -22,7 +22,7 @@ class PresenterBuilder {
      * PresenterBuilder constructor.
      * @param PresenterFactory $presenterFactory
      */
-    function __construct(PresenterFactory $presenterFactory) {
+    public function __construct(PresenterFactory $presenterFactory) {
         $this->presenterFactory = $presenterFactory;
     }
 
@@ -44,7 +44,7 @@ class PresenterBuilder {
             $presenter = $this->getCachePresenter($presenterName);
         }
 
-        $params = $params ? : [];
+        $params = $params ?: [];
 
         unset($baseParams[Presenter::ACTION_KEY]);
         foreach ($params as $key => $value) {
@@ -55,6 +55,7 @@ class PresenterBuilder {
 
         return $presenter;
     }
+
     /**
      * @param string $presenterName
      * @return Presenter

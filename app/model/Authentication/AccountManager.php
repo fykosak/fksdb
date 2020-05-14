@@ -40,10 +40,10 @@ class AccountManager {
      * @param ServiceAuthToken $serviceAuthToken
      * @param ServiceEmailMessage $serviceEmailMessage
      */
-    function __construct(MailTemplateFactory $mailTemplateFactory,
-                         ServiceLogin $serviceLogin,
-                         ServiceAuthToken $serviceAuthToken,
-                         ServiceEmailMessage $serviceEmailMessage) {
+    public function __construct(MailTemplateFactory $mailTemplateFactory,
+                                ServiceLogin $serviceLogin,
+                                ServiceAuthToken $serviceAuthToken,
+                                ServiceEmailMessage $serviceEmailMessage) {
         $this->serviceLogin = $serviceLogin;
         $this->serviceAuthToken = $serviceAuthToken;
         $this->serviceEmailMessage = $serviceEmailMessage;

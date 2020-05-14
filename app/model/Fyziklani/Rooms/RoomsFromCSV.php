@@ -37,7 +37,7 @@ class RoomsFromCSV extends Stage {
      * @param \FKSDB\ORM\Models\ModelEvent $event
      * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam $serviceTeam
      */
-    function __construct(ModelEvent $event, ServiceFyziklaniTeam $serviceTeam) {
+    public function __construct(ModelEvent $event, ServiceFyziklaniTeam $serviceTeam) {
         $this->event = $event;
         $this->serviceTeam = $serviceTeam;
     }
@@ -55,9 +55,9 @@ class RoomsFromCSV extends Stage {
         }
 
         $teams = $this->serviceTeam->getTable()
-                ->where('event_id', $this->event->event_id)
-                ->where('status!=?', 'cancelled')
-                ->fetchPairs('e_fyziklani_team_id');
+            ->where('event_id', $this->event->event_id)
+            ->where('status!=?', 'cancelled')
+            ->fetchPairs('e_fyziklani_team_id');
         $updatedTeams = [];
 
         $this->serviceTeam->getConnection()->beginTransaction();
@@ -74,7 +74,7 @@ class RoomsFromCSV extends Stage {
             $this->serviceTeam->updateModel2($team, [
                 'room' => $room,
             ]);
-          //  $this->serviceTeam->save($team);
+            //  $this->serviceTeam->save($team);
             $updatedTeams[$teamId] = $team;
             if ($room) {
                 unset($teams[$teamId]);

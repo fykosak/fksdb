@@ -20,6 +20,7 @@ use Nette\SmartObject;
  */
 abstract class AggregatedPersonSource implements IHolderSource {
     use SmartObject;
+
     /**
      * @var TypedTableSelection
      */
@@ -40,7 +41,7 @@ abstract class AggregatedPersonSource implements IHolderSource {
      * @param TypedTableSelection $events
      * @param Container $container
      */
-    function __construct(TypedTableSelection $events, Container $container) {
+    public function __construct(TypedTableSelection $events, Container $container) {
         $this->events = $events;
         $this->container = $container;
     }
@@ -67,7 +68,7 @@ abstract class AggregatedPersonSource implements IHolderSource {
      * @param ModelEvent $event
      * @return mixed
      */
-    abstract function processEvent(ModelEvent $event);
+    public abstract function processEvent(ModelEvent $event);
 
     /**
      * Method propagates selected calls to internal primary models selection.

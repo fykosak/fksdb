@@ -40,7 +40,7 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
      * @param ServicePersonInfo $servicePersonInfo
      * @param PersonInfoFactory $personInfoFactory
      */
-    function __construct(ServicePersonInfo $servicePersonInfo, PersonInfoFactory $personInfoFactory) {
+    public function __construct(ServicePersonInfo $servicePersonInfo, PersonInfoFactory $personInfoFactory) {
         $this->servicePersonInfo = $servicePersonInfo;
         $this->personInfoFactory = $personInfoFactory;
     }

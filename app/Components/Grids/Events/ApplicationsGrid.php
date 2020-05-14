@@ -81,7 +81,7 @@ class ApplicationsGrid extends Control {
      * @param IHolderSource $source
      * @param ApplicationHandlerFactory $handlerFactory
      */
-    function __construct(Container $container, IHolderSource $source, ApplicationHandlerFactory $handlerFactory) {
+    public function __construct(Container $container, IHolderSource $source, ApplicationHandlerFactory $handlerFactory) {
         parent::__construct();
         $this->monitor(IJavaScriptCollector::class);
         $this->container = $container;

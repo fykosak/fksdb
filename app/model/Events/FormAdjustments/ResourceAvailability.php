@@ -47,7 +47,7 @@ class ResourceAvailability extends AbstractAdjustment {
      * @param string|array $includeStates any state or array of state
      * @param string|array $excludeStates any state or array of state
      */
-    function __construct($fields, $paramCapacity, $message, $includeStates = BaseMachine::STATE_ANY, $excludeStates = ['cancelled']) {
+    public function __construct($fields, $paramCapacity, $message, $includeStates = BaseMachine::STATE_ANY, $excludeStates = ['cancelled']) {
         $this->setFields($fields);
         $this->paramCapacity = $paramCapacity;
         $this->message = $message;
@@ -125,12 +125,12 @@ class ResourceAvailability extends AbstractAdjustment {
             }
 
 
-            $primaries = array_map(function(BaseHolder $baseHolder) {
-                        return $baseHolder->getModel()->getPrimary(false);
-                    }, $serviceData['holders']);
-            $primaries = array_filter($primaries, function($primary) {
-                        return (bool) $primary;
-                    });
+            $primaries = array_map(function (BaseHolder $baseHolder) {
+                return $baseHolder->getModel()->getPrimary(false);
+            }, $serviceData['holders']);
+            $primaries = array_filter($primaries, function ($primary) {
+                return (bool)$primary;
+            });
 
             $column = BaseHolder::getBareColumn($serviceData['field']);
             $pk = $table->getName() . '.' . $table->getPrimary();
@@ -148,16 +148,16 @@ class ResourceAvailability extends AbstractAdjustment {
             }
         }
 
-        $form->onValidate[] = function(Form $form) use($capacity, $usage, $controls) {
-                    $controlsUsage = 0;
-                    foreach ($controls as $control) {
-                        $controlsUsage += (int) $control->getValue();
-                    }
-                    if ($capacity < $usage + $controlsUsage) {
-                        $message = str_replace('%avail', $capacity - $usage, $this->message);
-                        $form->addError($message);
-                    }
-                };
+        $form->onValidate[] = function (Form $form) use ($capacity, $usage, $controls) {
+            $controlsUsage = 0;
+            foreach ($controls as $control) {
+                $controlsUsage += (int)$control->getValue();
+            }
+            if ($capacity < $usage + $controlsUsage) {
+                $message = str_replace('%avail', $capacity - $usage, $this->message);
+                $form->addError($message);
+            }
+        };
     }
 
 }

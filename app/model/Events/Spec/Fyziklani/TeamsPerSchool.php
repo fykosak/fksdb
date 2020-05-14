@@ -63,7 +63,7 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
      * @param Context $context
      * @param ServicePersonHistory $servicePersonHistory
      */
-    function __construct($teamsPerSchool, ExpressionEvaluator $evaluator, Context $context, ServicePersonHistory $servicePersonHistory) {
+    public function __construct($teamsPerSchool, ExpressionEvaluator $evaluator, Context $context, ServicePersonHistory $servicePersonHistory) {
         parent::__construct($servicePersonHistory);
         $this->context = $context;
         $this->evaluator = $evaluator;

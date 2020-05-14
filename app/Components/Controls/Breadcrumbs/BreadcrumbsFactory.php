@@ -45,7 +45,7 @@ class BreadcrumbsFactory {
      * @param Request $httpRequest
      * @param PresenterFactory $presenterFactory
      */
-    function __construct($expiration, Session $session, IRouter $router, Request $httpRequest, PresenterFactory $presenterFactory) {
+    public function __construct($expiration, Session $session, IRouter $router, Request $httpRequest, PresenterFactory $presenterFactory) {
         $this->expiration = $expiration;
         $this->session = $session;
         $this->router = $router;

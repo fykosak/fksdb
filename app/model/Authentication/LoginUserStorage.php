@@ -68,7 +68,7 @@ class LoginUserStorage extends UserStorage {
      * @param Application $application
      * @param Request $request
      */
-    function __construct(Session $sessionHandler, ServiceLogin $loginService, YearCalculator $yearCalculator, GlobalSession $globalSession, Application $application, Request $request) {
+    public function __construct(Session $sessionHandler, ServiceLogin $loginService, YearCalculator $yearCalculator, GlobalSession $globalSession, Application $application, Request $request) {
         parent::__construct($sessionHandler);
         $this->loginService = $loginService;
         $this->yearCalculator = $yearCalculator;
@@ -89,9 +89,9 @@ class LoginUserStorage extends UserStorage {
     }
 
     /**
+     * @param IPresenter $presenter
      * @internal Used internally or for testing purposes only.
      *
-     * @param IPresenter $presenter
      */
     public function setPresenter(IPresenter $presenter) {
         $this->presenter = $presenter;

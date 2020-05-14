@@ -60,7 +60,7 @@ class YearCalculator {
      * @param ServiceContest $serviceContest
      * @param GlobalParameters $globalParameters
      */
-    function __construct(ServiceContestYear $serviceContestYear, ServiceContest $serviceContest, GlobalParameters $globalParameters) {
+    public function __construct(ServiceContestYear $serviceContestYear, ServiceContest $serviceContest, GlobalParameters $globalParameters) {
         $this->serviceContestYear = $serviceContestYear;
         $this->serviceContest = $serviceContest;
         $this->globalParameters = $globalParameters;

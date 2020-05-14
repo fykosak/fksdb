@@ -52,7 +52,7 @@ class ImportComponent extends Control {
      * @param ApplicationHandler $handler
      * @param Container $container
      */
-    function __construct(Machine $machine, SingleEventSource $source, ApplicationHandler $handler, Container $container) {
+    public function __construct(Machine $machine, SingleEventSource $source, ApplicationHandler $handler, Container $container) {
         parent::__construct();
         $this->machine = $machine;
         $this->source = $source;

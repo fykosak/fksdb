@@ -60,7 +60,7 @@ class TasksPresenter extends BasePresenter {
     /**
      * @param Downloader $downloader
      */
-    function injectDownloader(Downloader $downloader) {
+    public function injectDownloader(Downloader $downloader) {
         $this->downloader = $downloader;
     }
 

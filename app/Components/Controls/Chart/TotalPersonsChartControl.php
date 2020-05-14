@@ -40,7 +40,7 @@ class TotalPersonsChartControl extends ReactComponent implements IChart {
      * @return string
      * @throws JsonException
      */
-    function getData(): string {
+    public function getData(): string {
         $query = $this->servicePerson->getTable()->order('created');
         $data = [];
         /** @var ModelPerson $person */

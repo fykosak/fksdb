@@ -32,7 +32,7 @@ class OrgFactory extends SingleReflectionFactory {
      * @param \FKSDB\YearCalculator $yearCalculator
      * @param TableReflectionFactory $tableReflectionFactory
      */
-    function __construct(ServicePerson $servicePerson, YearCalculator $yearCalculator, TableReflectionFactory $tableReflectionFactory) {
+    public function __construct(ServicePerson $servicePerson, YearCalculator $yearCalculator, TableReflectionFactory $tableReflectionFactory) {
         parent::__construct($tableReflectionFactory);
         $this->servicePerson = $servicePerson;
         $this->yearCalculator = $yearCalculator;

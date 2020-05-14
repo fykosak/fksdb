@@ -30,7 +30,7 @@ class SQLResultsCache {
      * @param Connection $connection
      * @param ServiceTask $serviceTask
      */
-    function __construct(Connection $connection, ServiceTask $serviceTask) {
+    public function __construct(Connection $connection, ServiceTask $serviceTask) {
         $this->connection = $connection;
         $this->serviceTask = $serviceTask;
     }

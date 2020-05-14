@@ -33,7 +33,7 @@ class SchoolProvider implements IFilteredDataProvider {
      * SchoolProvider constructor.
      * @param ServiceSchool $serviceSchool
      */
-    function __construct(ServiceSchool $serviceSchool) {
+    public function __construct(ServiceSchool $serviceSchool) {
         $this->serviceSchool = $serviceSchool;
     }
 
@@ -51,12 +51,12 @@ class SchoolProvider implements IFilteredDataProvider {
         foreach ($tokens as $token) {
             $schools->where('name_full LIKE concat(\'%\', ?, \'%\') OR name_abbrev LIKE concat(\'%\', ?, \'%\')', $token, $token);
         }
-	// For backwards compatibility consider NULLs active
-	if ($this->defaultValue != null) {
-	    $schools->where('(active IS NULL OR active = 1) OR school_id = ?', $this->defaultValue);
-	} else {
-	    $schools->where('active IS NULL OR active = 1');
-	}
+        // For backwards compatibility consider NULLs active
+        if ($this->defaultValue != null) {
+            $schools->where('(active IS NULL OR active = 1) OR school_id = ?', $this->defaultValue);
+        } else {
+            $schools->where('active IS NULL OR active = 1');
+        }
         $schools->order('name_abbrev');
 
         if (count($schools) > self::LIMIT) {

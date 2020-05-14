@@ -106,7 +106,7 @@ class ModelFyziklaniSubmit extends AbstractModelSingle implements IFyziklaniTeam
     /**
      * @inheritDoc
      */
-    function getResourceId() {
+    public function getResourceId() {
         return self::RESOURCE_ID;
     }
 }

@@ -73,7 +73,7 @@ class TableMerger {
      * @param IMergeStrategy $globalMergeStrategy
      * @param ILogger $logger
      */
-    function __construct($table, Merger $merger, Context $context, IMergeStrategy $globalMergeStrategy, ILogger $logger) {
+    public function __construct($table, Merger $merger, Context $context, IMergeStrategy $globalMergeStrategy, ILogger $logger) {
         $this->table = $table;
         $this->merger = $merger;
         $this->connection = $context->getConnection();

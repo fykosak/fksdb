@@ -83,7 +83,7 @@ class StoredQuery implements IDataSource, IResource {
      * @param ModelStoredQuery $queryPattern
      * @param Connection $connection
      */
-    function __construct(ModelStoredQuery $queryPattern, Connection $connection) {
+    public function __construct(ModelStoredQuery $queryPattern, Connection $connection) {
         $this->setQueryPattern($queryPattern);
         $this->connection = $connection;
     }

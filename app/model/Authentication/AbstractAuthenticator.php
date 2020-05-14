@@ -31,7 +31,7 @@ abstract class AbstractAuthenticator /* implements IAuthenticator */
      * @param ServiceLogin $serviceLogin
      * @param YearCalculator $yearCalculator
      */
-    function __construct(ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
+    public function __construct(ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
         $this->serviceLogin = $serviceLogin;
         $this->yearCalculator = $yearCalculator;
     }

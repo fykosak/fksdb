@@ -35,7 +35,7 @@ class DuplicateFinder {
      * @param ServicePerson $servicePerson
      * @param GlobalParameters $parameters
      */
-    function __construct(ServicePerson $servicePerson, GlobalParameters $parameters) {
+    public function __construct(ServicePerson $servicePerson, GlobalParameters $parameters) {
         $this->servicePerson = $servicePerson;
         $this->parameters = $parameters['deduplication']['finder'];
     }

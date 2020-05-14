@@ -16,6 +16,7 @@ use XSLTProcessor;
  */
 class XSLFormat implements IExportFormat {
     use SmartObject;
+
     /**
      * @var StoredQuery
      */
@@ -42,7 +43,7 @@ class XSLFormat implements IExportFormat {
      * @param $xslFile
      * @param IXMLNodeSerializer $xmlSerializer
      */
-    function __construct(StoredQuery $storedQuery, $xslFile, IXMLNodeSerializer $xmlSerializer) {
+    public function __construct(StoredQuery $storedQuery, $xslFile, IXMLNodeSerializer $xmlSerializer) {
         $this->storedQuery = $storedQuery;
         $this->xslFile = $xslFile;
         $this->xmlSerializer = $xmlSerializer;

@@ -63,7 +63,7 @@ final class Transition {
      * @param string $toState
      * @param string $label
      */
-    function __construct(string $fromState, string $toState, string $label) {
+    public function __construct(string $fromState, string $toState, string $label) {
         $this->fromState = $fromState;
         $this->toState = $toState;
         $this->label = $label;

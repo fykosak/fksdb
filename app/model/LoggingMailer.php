@@ -32,7 +32,7 @@ class LoggingMailer implements IMailer {
      * @param IMailer $mailer
      * @param GlobalParameters $parameters
      */
-    function __construct(IMailer $mailer, GlobalParameters $parameters) {
+    public function __construct(IMailer $mailer, GlobalParameters $parameters) {
         $this->mailer = $mailer;
         $this->parameters = $parameters;
     }

@@ -63,7 +63,7 @@ class ReferencedId extends HiddenField {
      * @param IReferencedHandler $handler
      * @param IReferencedSetter $referencedSetter
      */
-    function __construct(IService $service, IReferencedHandler $handler, IReferencedSetter $referencedSetter) {
+    public function __construct(IService $service, IReferencedHandler $handler, IReferencedSetter $referencedSetter) {
         parent::__construct();
         $this->monitor(Form::class);
 

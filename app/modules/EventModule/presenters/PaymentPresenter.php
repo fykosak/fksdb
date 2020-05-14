@@ -26,6 +26,7 @@ use Nette\Application\UI\Control;
  */
 class PaymentPresenter extends BasePresenter {
     use EventEntityTrait;
+
     /**
      * @var Machine
      */
@@ -248,7 +249,7 @@ class PaymentPresenter extends BasePresenter {
     /**
      * @return ServicePayment
      */
-    function getORMService() {
+    public function getORMService() {
         return $this->servicePayment;
     }
 

@@ -89,13 +89,13 @@ class MailSender {
      * @param ServicePerson $servicePerson
      * @param ServiceEmailMessage $serviceEmailMessage
      */
-    function __construct($filename,
-                         $addresees,
-                         MailTemplateFactory $mailTemplateFactory,
-                         AccountManager $accountManager,
-                         ServiceAuthToken $serviceAuthToken,
-                         ServicePerson $servicePerson,
-                         ServiceEmailMessage $serviceEmailMessage) {
+    public function __construct($filename,
+                                $addresees,
+                                MailTemplateFactory $mailTemplateFactory,
+                                AccountManager $accountManager,
+                                ServiceAuthToken $serviceAuthToken,
+                                ServicePerson $servicePerson,
+                                ServiceEmailMessage $serviceEmailMessage) {
         $this->filename = $filename;
         $this->addressees = $addresees;
         $this->mailTemplateFactory = $mailTemplateFactory;

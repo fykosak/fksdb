@@ -92,7 +92,7 @@ class ContestChooser extends Control {
      * @param \FKSDB\YearCalculator $yearCalculator
      * @param ServiceContest $serviceContest
      */
-    function __construct(Session $session, YearCalculator $yearCalculator, ServiceContest $serviceContest) {
+    public function __construct(Session $session, YearCalculator $yearCalculator, ServiceContest $serviceContest) {
         parent::__construct();
         $this->session = $session;
         $this->yearCalculator = $yearCalculator;
