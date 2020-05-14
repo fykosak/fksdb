@@ -39,7 +39,7 @@ abstract class AbstractProcessing implements IProcessing {
      * @param ILogger $logger
      * @param Form|null $form
      */
-    public final function process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
+    final public function process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
         $this->states = $states;
         $this->holder = $holder;
         $this->setValues($values);
@@ -62,7 +62,7 @@ abstract class AbstractProcessing implements IProcessing {
      * @param $mask
      * @return bool
      */
-    protected final function hasWildcart($mask) {
+    final protected function hasWildcart($mask) {
         return strpos($mask, self::WILDCART) !== false;
     }
 
@@ -71,7 +71,7 @@ abstract class AbstractProcessing implements IProcessing {
      * @param string $mask
      * @return IControl[]
      */
-    protected final function getValue($mask) {
+    final protected function getValue($mask) {
         $keys = array_keys($this->valuesPathCache);
         $pMask = str_replace(self::WILDCART, '__WC__', $mask);
         $pMask = preg_quote($pMask);
@@ -91,7 +91,7 @@ abstract class AbstractProcessing implements IProcessing {
      * @param string $mask
      * @return IControl[]
      */
-    protected final function getControl($mask) {
+    final protected function getControl($mask) {
         $keys = array_keys($this->formPathCache);
         $pMask = str_replace(self::WILDCART, '__WC__', $mask);
         $pMask = preg_quote($pMask);
@@ -115,7 +115,7 @@ abstract class AbstractProcessing implements IProcessing {
      * @param $name
      * @return boolean
      */
-    protected final function isBaseReallyEmpty($name) {
+    final protected function isBaseReallyEmpty($name) {
         $baseHolder = $this->holder->getBaseHolder($name);
         if ($baseHolder->getModelState() == BaseMachine::STATE_INIT) {
             return true; // it was empty since begining

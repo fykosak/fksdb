@@ -65,7 +65,7 @@ class ResultsAndStatistics extends FyziklaniReactControl {
     /**
      * @return string
      */
-    public final function getData(): string {
+    final public function getData(): string {
         return '';
     }
 

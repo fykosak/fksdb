@@ -66,7 +66,7 @@ abstract class BaseGrid extends Grid {
     /**
      * @return Container
      */
-    public final function getContext() {
+    final public function getContext() {
         return $this->context;
     }
 

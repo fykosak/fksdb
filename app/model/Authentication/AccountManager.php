@@ -171,7 +171,7 @@ class AccountManager {
      * @param string $password
      * @return AbstractModelSingle|ModelLogin
      */
-    public final function createLogin(ModelPerson $person, string $login = null, string $password = null) {
+    final public function createLogin(ModelPerson $person, string $login = null, string $password = null) {
         /** @var ModelLogin $login */
         $login = $this->serviceLogin->createNewModel([
             'person_id' => $person->person_id,

@@ -16,7 +16,7 @@ abstract class StoredQueryPostProcessing {
      */
     protected $parameters;
 
-    public final function resetParameters() {
+    final public function resetParameters() {
         $this->parameters = [];
     }
 
@@ -25,7 +25,7 @@ abstract class StoredQueryPostProcessing {
      * @param $value
      * @param null $type
      */
-    public final function bindValue($key, $value, $type = null) {
+    final public function bindValue($key, $value, $type = null) {
         $this->parameters[$key] = $value; // type is ignored so far
     }
 

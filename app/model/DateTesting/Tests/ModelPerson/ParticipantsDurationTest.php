@@ -55,7 +55,7 @@ class ParticipantsDurationTest extends PersonTest {
      * @param array $thresholds
      * @return string
      */
-    private final function evaluateThresholds(int $delta, array $thresholds): string {
+    final private function evaluateThresholds(int $delta, array $thresholds): string {
         if ($delta < $thresholds[0]) {
             return TestLog::LVL_SUCCESS;
         }
