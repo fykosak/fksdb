@@ -82,7 +82,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
         ServiceMPersonHasFlag $serviceMPersonHasFlag,
         Handler $eventScheduleHandler,
         int $acYear,
-        string $resolution
+        $resolution
     ) {
         $this->servicePerson = $servicePerson;
         $this->servicePersonInfo = $servicePersonInfo;
