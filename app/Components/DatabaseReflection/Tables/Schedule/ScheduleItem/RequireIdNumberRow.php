@@ -25,6 +25,6 @@ class RequireIdNumberRow extends AbstractScheduleItemRow {
      * @return Html
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        return (new BinaryPrinter)($model->require_id_number);
+        return (new BinaryPrinter())($model->require_id_number);
     }
 }

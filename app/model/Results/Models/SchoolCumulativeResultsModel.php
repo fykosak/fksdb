@@ -123,7 +123,7 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
      * @return mixed|void
      */
     protected function composeQuery(ModelCategory $category) {
-        throw new NotSupportedException;
+        throw new NotSupportedException();
     }
 
     /**

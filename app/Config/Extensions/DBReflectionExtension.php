@@ -104,7 +104,7 @@ class DBReflectionExtension extends CompilerExtension {
                 case 'state':
                     return $this->registerStateRow($builder, $tableName, $fieldName, $field);
                 default:
-                    throw new NotImplementedException;
+                    throw new NotImplementedException();
             }
         }
         if (is_string($field) && preg_match('/([A-Za-z0-9]+\\\\)*/', $field)) {
@@ -193,7 +193,7 @@ class DBReflectionExtension extends CompilerExtension {
         if ($value instanceof Statement) {
             return ($value->entity)(...$value->arguments);
         }
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**

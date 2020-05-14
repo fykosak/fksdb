@@ -24,6 +24,6 @@ class PasswordRow extends AbstractFyziklaniTeamRow {
      * @return Html
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        return (new HashPrinter)($model->password);
+        return (new HashPrinter())($model->password);
     }
 }

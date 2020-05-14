@@ -24,6 +24,6 @@ class SwimmerRow extends AbstractParticipantRow {
      * @return Html
      */
     public function createHtmlValue(AbstractModelSingle $model): Html {
-        return (new BinaryPrinter)($model->swimmer);
+        return (new BinaryPrinter())($model->swimmer);
     }
 }

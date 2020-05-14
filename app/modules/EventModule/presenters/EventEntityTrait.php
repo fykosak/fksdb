@@ -33,7 +33,7 @@ trait EventEntityTrait {
             throw new BadTypeException(IEventReferencedModel::class, $this->model);
         }
         if ($this->model->getEvent()->event_id !== $this->getEvent()->event_id) {
-            throw new ForbiddenRequestException;
+            throw new ForbiddenRequestException();
         }
 
         return $this->model;

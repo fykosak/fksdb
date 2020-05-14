@@ -220,7 +220,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     protected function unauthorizedAccess() {
-        throw new ForbiddenRequestException;
+        throw new ForbiddenRequestException();
     }
 
     /**

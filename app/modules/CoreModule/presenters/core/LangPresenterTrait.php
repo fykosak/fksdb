@@ -87,7 +87,7 @@ trait LangPresenterTrait {
             }
             // final check
             if (!in_array($this->cacheLang, $supportedLanguages)) {
-                throw new BadRequestException;
+                throw new BadRequestException();
             }
         }
         return $this->cacheLang;

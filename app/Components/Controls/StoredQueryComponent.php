@@ -194,7 +194,7 @@ class StoredQueryComponent extends Control {
             $this->storedQuery->setParameters($this->parameters);
         }
         if (!$this->isAuthorized()) {
-            throw new ForbiddenRequestException;
+            throw new ForbiddenRequestException();
         }
         try {
             $exportFormat = $this->exportFormatFactory->createFormat($format, $this->storedQuery);

@@ -39,7 +39,7 @@ class InboxControl extends SeriesTableFormControl {
             foreach ($tasks as $taskNo => $submittedOn) {
                 if (!$this->getSeriesTable()->getContestants()->where('ct_id', $ctId)->fetch()) {
                     // secure check for rewrite ct_id.
-                    throw new ForbiddenRequestException;
+                    throw new ForbiddenRequestException();
                 }
                 $submit = $serviceSubmit->findByContestant($ctId, $taskNo);
                 if ($submittedOn && $submit) {

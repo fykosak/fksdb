@@ -17,7 +17,7 @@ abstract class AbstractPaymentRow extends AbstractRow {
      * @throws NotImplementedException
      */
     public function createField(...$args): BaseControl {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**

@@ -19,7 +19,7 @@ class PrimaryKeyRow extends DefaultRow {
      * @return Html
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        return (new StringPrinter)('#' . $model->getPrimary());
+        return (new StringPrinter())('#' . $model->getPrimary());
     }
 
     /**
@@ -28,6 +28,6 @@ class PrimaryKeyRow extends DefaultRow {
      * @throws BadRequestException
      */
     public function createField(...$args): BaseControl {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 }

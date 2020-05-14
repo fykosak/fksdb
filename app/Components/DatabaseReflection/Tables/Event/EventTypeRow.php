@@ -45,7 +45,7 @@ class EventTypeRow extends AbstractEventRowFactory {
     public function createField(...$args): BaseControl {
         list($contest) = $args;
         if (\is_null($contest)) {
-            throw new \InvalidArgumentException;
+            throw new \InvalidArgumentException();
         }
 
         $element = new SelectBox($this->getTitle());

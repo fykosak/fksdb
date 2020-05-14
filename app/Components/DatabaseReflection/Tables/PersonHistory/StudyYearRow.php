@@ -60,7 +60,7 @@ class StudyYearRow extends AbstractRow {
     public function createField(...$args): BaseControl {
         list ($acYear) = $args;
         if (\is_null($acYear)) {
-            throw new \InvalidArgumentException;
+            throw new \InvalidArgumentException();
         }
         $control = new SelectBox($this->getTitle());
         $control->setItems($this->createOptions($acYear));

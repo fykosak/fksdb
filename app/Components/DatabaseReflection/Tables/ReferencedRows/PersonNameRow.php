@@ -39,6 +39,6 @@ class PersonNameRow extends AbstractRow {
         if (!$model instanceof IPersonReferencedModel) {
             throw new BadTypeException(IPersonReferencedModel::class, $model);
         }
-        return (new StringPrinter)($model->getPerson()->getFullName());
+        return (new StringPrinter())($model->getPerson()->getFullName());
     }
 }
