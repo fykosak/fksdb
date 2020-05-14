@@ -71,8 +71,8 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @param ServiceMPostContact $serviceMPostContact
      * @param ServiceMPersonHasFlag $serviceMPersonHasFlag
      * @param Handler $eventScheduleHandler
-     * @param $acYear
-     * @param $resolution
+     * @param int $acYear
+     * @param string $resolution
      */
     public function __construct(
         ServicePerson $servicePerson,
@@ -94,15 +94,12 @@ class ReferencedPersonHandler implements IReferencedHandler {
         $this->eventScheduleHandler = $eventScheduleHandler;
     }
 
-    /**
-     * @return mixed
-     */
     public function getResolution(): string {
         return $this->resolution;
     }
 
     /**
-     * @param $resolution
+     * @param string $resolution
      * @return void
      */
     public function setResolution(string $resolution) {
