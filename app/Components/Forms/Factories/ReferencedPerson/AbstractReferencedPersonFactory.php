@@ -121,9 +121,9 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
 
     /**
      * @param array $fieldsDefinition
-     * @param integer $acYear
+     * @param int $acYear
      * @param string $searchType
-     * @param boolean $allowClear
+     * @param bool $allowClear
      * @param IModifiabilityResolver $modifiabilityResolver is person's filled field modifiable?
      * @param IVisibilityResolver $visibilityResolver is person's writeOnly field visible? (i.e. not writeOnly then)
      * @param int $evenId

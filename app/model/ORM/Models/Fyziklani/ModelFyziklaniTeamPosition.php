@@ -7,10 +7,10 @@ use Nette\Database\Table\ActiveRow;
 
 /**
  * Class FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition
- * @property-read integer room_id
- * @property-read integer e_fyziklani_team_id
- * @property-read integer row
- * @property-read integer col
+ * @property-read int room_id
+ * @property-read int e_fyziklani_team_id
+ * @property-read int row
+ * @property-read int col
  * @property-read ActiveRow e_fyziklani_team
  * @property-read ActiveRow room
  * @property-read double x_coordinate

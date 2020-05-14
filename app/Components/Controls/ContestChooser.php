@@ -71,7 +71,7 @@ class ContestChooser extends Control {
     private $year;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $valid;
     private $initialized = false;

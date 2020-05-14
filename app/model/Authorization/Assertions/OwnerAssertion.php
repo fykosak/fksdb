@@ -37,7 +37,7 @@ class OwnerAssertion {
      * @param string $role
      * @param string $resourceId
      * @param string $privilege
-     * @return boolean
+     * @return bool
      * @throws InvalidStateException
      */
     public function isSubmitUploader(Permission $acl, $role, $resourceId, $privilege) {
@@ -62,7 +62,7 @@ class OwnerAssertion {
      * @param string $role
      * @param string $resourceId
      * @param string $privilege
-     * @return boolean
+     * @return bool
      * @throws InvalidStateException
      */
     public function isOwnContestant(Permission $acl, $role, $resourceId, $privilege) {
@@ -82,7 +82,7 @@ class OwnerAssertion {
      * @param string $role
      * @param string $resourceId
      * @param string $privilege
-     * @return boolean
+     * @return bool
      * @throws InvalidStateException
      */
     public function existsOwnContestant(Permission $acl, $role, $resourceId, $privilege) {

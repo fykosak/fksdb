@@ -116,7 +116,7 @@ class Merger {
 
     /**
      * @param bool $commit
-     * @return boolean
+     * @return bool
      */
     public function merge($commit = null) {
         // This workaround fixes inproper caching of referenced tables.

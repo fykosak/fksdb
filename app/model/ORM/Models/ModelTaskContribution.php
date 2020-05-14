@@ -9,7 +9,7 @@ use Nette\Database\Table\ActiveRow;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property-read integer contribution_id
+ * @property-read int contribution_id
  * @property-read int task_id
  * @property-read int person_id
  * @property-read ActiveRow person

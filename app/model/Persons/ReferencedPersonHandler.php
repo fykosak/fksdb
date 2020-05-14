@@ -66,7 +66,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
      */
     private $acYear;
     /**
-     * @var integer
+     * @var int
      */
     private $eventId;
 

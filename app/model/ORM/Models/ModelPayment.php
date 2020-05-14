@@ -21,11 +21,11 @@ use Nette\Utils\DateTime;
 /**
  *
  * @author Michal Červeňák <miso@fykos.cz>
- * @property-read integer person_id
+ * @property-read int person_id
  * @property-read ActiveRow person
- * @property-read integer payment_id
+ * @property-read int payment_id
  * @property-read ActiveRow event
- * @property-read integer event_id
+ * @property-read int event_id
  * @property-read string state
  * @property-read float price
  * @property-read string currency

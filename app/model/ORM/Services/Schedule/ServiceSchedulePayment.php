@@ -77,7 +77,7 @@ class ServiceSchedulePayment extends AbstractServiceSingle {
 
     /**
      * @param ArrayHash $data
-     * @return integer[]
+     * @return int
      */
     private function prepareData($data): array {
         $data = (array)json_decode($data);

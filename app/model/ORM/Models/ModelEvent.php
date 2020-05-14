@@ -16,12 +16,12 @@ use Nette\Utils\DateTime;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property-read integer event_year
- * @property-read integer year
+ * @property-read int event_year
+ * @property-read int year
  * @property-read string name
- * @property-read integer event_id
+ * @property-read int event_id
  * @property-read ActiveRow event_type
- * @property-read integer event_type_id
+ * @property-read int event_type_id
  * @property-read DateTime begin
  * @property-read DateTime end
  * @property-read DateTime registration_begin

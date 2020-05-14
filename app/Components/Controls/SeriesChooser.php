@@ -45,12 +45,12 @@ class SeriesChooser extends Control {
     private $series;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $initialized = false;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $valid;
 
