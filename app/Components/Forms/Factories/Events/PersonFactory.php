@@ -141,7 +141,7 @@ class PersonFactory extends AbstractFactory {
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
-     * @return mixed|void
+     * @return void
      */
     protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container) {
         $hiddenField = reset($component);

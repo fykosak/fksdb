@@ -28,7 +28,7 @@ class CheckboxFactory extends AbstractFactory {
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
-     * @return mixed|Checkbox
+     * @return Checkbox
      */
     protected function createComponent(Field $field, BaseMachine $machine, Container $container) {
 
@@ -44,7 +44,7 @@ class CheckboxFactory extends AbstractFactory {
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
-     * @return mixed|void
+     * @return void
      */
     protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container) {
         $component->setDefaultValue($field->getValue());
@@ -55,7 +55,7 @@ class CheckboxFactory extends AbstractFactory {
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
-     * @return mixed|void
+     * @return void
      */
     protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container) {
         $component->setDisabled();

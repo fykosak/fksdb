@@ -45,7 +45,7 @@ class ServicePersonInfo extends AbstractServiceSingle {
      * @param IModel $model
      * @param array $data
      * @param bool $alive
-     * @return mixed|void
+     * @return void
      * @throws \Exception
      */
     public function updateModel(IModel $model, $data, $alive = true) {
@@ -56,16 +56,16 @@ class ServicePersonInfo extends AbstractServiceSingle {
                 unset($data['agreed']);
             }
         }
-        return parent::updateModel($model, $data);
+        parent::updateModel($model, $data);
     }
 
     /**
      * @param IModel|AbstractModelSingle|ModelPersonInfo $model
      * @param array $data
-     * @return mixed|void
+     * @return bool
      * @throws \Exception
      */
-    public function updateModel2(AbstractModelSingle $model, $data = null) {
+    public function updateModel2(AbstractModelSingle $model, $data = null): bool {
         if (isset($data['agreed'])) {
             if ($data['agreed'] == '1') {
                 $data['agreed'] = new DateTime();

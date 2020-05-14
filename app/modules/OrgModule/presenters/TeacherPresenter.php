@@ -96,7 +96,7 @@ class TeacherPresenter extends ExtendedPersonPresenter {
 
     /**
      * @param Form $form
-     * @return mixed|void
+     * @return void
      * @throws Exception
      */
     protected function appendExtendedContainer(Form $form) {
@@ -114,7 +114,7 @@ class TeacherPresenter extends ExtendedPersonPresenter {
     }
 
     /**
-     * @return mixed|ServiceTeacher
+     * @return ServiceTeacher
      */
     protected function getORMService() {
         return $this->serviceTeacher;

@@ -32,14 +32,14 @@ trait WriteOnlyTrait {
     /**
      * @return bool
      */
-    public function getWriteOnly() {
+    public function getWriteOnly(): bool {
         return $this->writeOnly;
     }
 
     /**
      * @param bool $writeOnly
      */
-    public function setWriteOnly($writeOnly = true) {
+    public function setWriteOnly(bool $writeOnly = true) {
         $this->writeOnly = $writeOnly;
     }
 

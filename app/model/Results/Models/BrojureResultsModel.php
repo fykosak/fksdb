@@ -129,7 +129,7 @@ class BrojureResultsModel extends AbstractResultsModel {
 
     /**
      * @param ModelCategory $category
-     * @return mixed|string
+     * @return string
      */
     protected function composeQuery(ModelCategory $category): string {
         if (!$this->series) {

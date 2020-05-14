@@ -147,7 +147,7 @@ class ResultsModelFactory implements IXMLNodeSerializer {
      * @param DOMNode $node
      * @param DOMDocument $doc
      * @param int $format
-     * @return mixed|void
+     * @return void
      * @throws SoapFault
      * @throws InvalidArgumentException
      */

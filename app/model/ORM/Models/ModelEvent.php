@@ -9,6 +9,7 @@ use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
+use Nette\DeprecatedException;
 use Nette\InvalidStateException;
 use Nette\Security\IResource;
 use Nette\Utils\DateTime;
@@ -30,28 +31,6 @@ use Nette\Utils\DateTime;
  */
 class ModelEvent extends AbstractModelSingle implements IResource, IContestReferencedModel {
     const RESOURCE_ID = 'event';
-    /**
-     * Event can have a holder assigned for purposes of parameter parsing.
-     * Nothing else (currently).
-     * @var Holder
-     */
-    private $holder;
-
-    /**
-     * @param Holder $holder
-     * @deprecated
-     */
-    public function setHolder(Holder $holder) {
-        $this->holder = $holder;
-    }
-
-    /**
-     * @return Holder
-     * @deprecated
-     */
-    public function getHolder(): Holder {
-        return $this->holder;
-    }
 
     /**
      * @return ModelEventType
@@ -77,14 +56,16 @@ class ModelEvent extends AbstractModelSingle implements IResource, IContestRefer
     }
 
     /**
-     * @param $name
+     * @param Holder $holder
+     * @param string $name
      * @return mixed
      */
-    public function getParameter($name) {
-        if (!$this->holder) {
+    public function getParameter(Holder $holder, string $name) {
+        throw new DeprecatedException();
+      /*  if (!$this->holder) {
             throw new InvalidStateException('Event does not have any holder assigned.');
         }
-        return $this->holder->getParameter($name);
+        return $holder->getParameter($name);*/
     }
 
     /**

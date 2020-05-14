@@ -85,7 +85,7 @@ abstract class SecondaryModelStrategy {
      * @param BaseHolder $holder
      * @param $secondaries
      * @param $joinData
-     * @return mixed
+     * @return void
      */
     abstract protected function resolveMultipleSecondaries(BaseHolder $holder, $secondaries, $joinData);
 }

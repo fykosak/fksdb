@@ -27,7 +27,7 @@ class CarefulRewrite extends SecondaryModelStrategy {
      * @param BaseHolder $holder
      * @param $secondaries
      * @param $joinData
-     * @return mixed|void
+     * @return void
      */
     protected function resolveMultipleSecondaries(BaseHolder $holder, $secondaries, $joinData) {
         if (count($secondaries) > 1) {
@@ -53,7 +53,7 @@ class CarefulRewrite extends SecondaryModelStrategy {
      * @param IService $service
      * @return array
      */
-    private function getConflicts(IModel $currentModel, IModel $foundModel, $joinData, IService $service) {
+    private function getConflicts(IModel $currentModel, IModel $foundModel, $joinData, IService $service): array {
         $currentArray = $currentModel->toArray();
         $foundArray = $foundModel->toArray();
         $result = [];

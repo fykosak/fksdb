@@ -41,7 +41,7 @@ abstract class StackedLogger implements ILogger {
     }
 
     /**
-     * @param $message
+     * @param Message $message
      * @return void
      */
     abstract protected function doLog(Message $message);

@@ -97,7 +97,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
 
     /**
      * @param Form $form
-     * @return mixed|void
+     * @return void
      */
     protected function appendExtendedContainer(Form $form) {
         $container = new ModelContainer();

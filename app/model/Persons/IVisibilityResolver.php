@@ -13,7 +13,7 @@ interface IVisibilityResolver {
 
     /**
      * @param ModelPerson $person
-     * @return mixed
+     * @return bool
      */
     public function isVisible(ModelPerson $person): bool;
 }

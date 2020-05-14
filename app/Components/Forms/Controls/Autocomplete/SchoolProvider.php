@@ -76,7 +76,7 @@ class SchoolProvider implements IFilteredDataProvider {
      * @param mixed $id
      * @return bool|mixed|ActiveRow|Selection|null
      */
-    public function getItemLabel($id) {
+    public function getItemLabel($id): string {
         $school = $this->serviceSchool->findByPrimary($id);
         if (!$school) {
             throw new InvalidStateException("Cannot find school with ID '$id'.");
@@ -85,10 +85,10 @@ class SchoolProvider implements IFilteredDataProvider {
     }
 
     /**
-     * @return array|void
+     * @return array
      * @throws NotImplementedException
      */
-    public function getItems() {
+    public function getItems(): array {
         throw new NotImplementedException();
     }
 

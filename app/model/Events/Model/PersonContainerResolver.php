@@ -55,7 +55,7 @@ class PersonContainerResolver implements IVisibilityResolver, IModifiabilityReso
 
     /**
      * @param ModelPerson $person
-     * @return mixed|string
+     * @return string
      */
     public function getResolutionMode(ModelPerson $person): string {
         return (!$person->isNew() && $this->isModifiable($person)) ? ReferencedPersonHandler::RESOLUTION_OVERWRITE : ReferencedPersonHandler::RESOLUTION_EXCEPTION;

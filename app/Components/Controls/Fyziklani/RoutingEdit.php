@@ -92,6 +92,6 @@ class RoutingEdit extends FyziklaniReactControl {
      * @return ModelFyziklaniRoom[]
      */
     protected function getRooms() {
-        return $this->serviceFyziklaniRoom->getRoomsByIds($this->getEvent()->getParameter('gameSetup')['rooms']);
+        return $this->serviceFyziklaniRoom->getRoomsByIds($this->getEvent()->getParameter(null, 'gameSetup')['rooms']);
     }
 }

@@ -80,7 +80,7 @@ abstract class AbstractServiceMulti implements IService {
      * @param IModel|AbstractModelMulti $model
      * @param $data
      * @param bool $alive
-     * @return mixed|void
+     * @return void
      */
     public function updateModel(IModel $model, $data, $alive = true) {
         $this->checkType($model);

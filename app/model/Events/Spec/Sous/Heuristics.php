@@ -27,7 +27,7 @@ class Heuristics extends StoredQueryPostProcessing {
     const RULE4FW = '4WF';
 
     /**
-     * @return mixed|string
+     * @return string
      */
     public function getDescription(): string {
         return 'Z výsledkovky vybere zvance a náhradníky na soustředění (http://wiki.fykos.cz/fykos:soustredeni:zasady:heuristikazvani).
@@ -227,7 +227,7 @@ class Heuristics extends StoredQueryPostProcessing {
      * @param $P
      * @return bool
      */
-    private function inviting($row, $P) {
+    private function inviting($row, $P): bool {
         return $row['category'] == 4 ? ($row['cat_rank'] <= $P - self::P_4) : ($row['cat_rank'] <= $P);
     }
 
@@ -235,7 +235,7 @@ class Heuristics extends StoredQueryPostProcessing {
      * @param $row
      * @return bool
      */
-    private function checkInvMin($row) {
+    private function checkInvMin($row): bool {
         return $row['points'] >= $this->parameters['min_z'];
     }
 
@@ -243,8 +243,7 @@ class Heuristics extends StoredQueryPostProcessing {
      * @param $row
      * @return bool
      */
-    private function checkSpMin($row) {
+    private function checkSpMin($row): bool {
         return $row['points'] >= $this->parameters['min_n'];
     }
-
 }

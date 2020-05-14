@@ -103,7 +103,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
 
     /**
      * @param $resolution
-     * @return mixed|void
+     * @return void
      */
     public function setResolution(string $resolution) {
         $this->resolution = $resolution;
@@ -388,10 +388,10 @@ class ReferencedPersonHandler implements IReferencedHandler {
     }
 
     /**
-     * @param $field
-     * @return bool|mixed
+     * @param string $field
+     * @return bool
      */
-    public function isSecondaryKey($field) {
+    public function isSecondaryKey(string $field): bool {
         return $field == 'person_info.email';
     }
 
@@ -400,7 +400,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @param mixed $key
      * @return ModelPerson|null|IModel
      */
-    public function findBySecondaryKey($field, $key) {
+    public function findBySecondaryKey(string $field, string $key) {
         if (!$this->isSecondaryKey($field)) {
             throw new InvalidArgumentException("'$field' is not a secondary key.");
         }

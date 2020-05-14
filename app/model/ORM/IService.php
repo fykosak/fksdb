@@ -38,7 +38,7 @@ interface IService {
 
     /**
      * @param IModel $model
-     * @return mixed
+     * @return void
      */
     public function dispose(IModel $model);
 

@@ -78,7 +78,7 @@ abstract class AbstractFactory implements IFieldFactory {
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
-     * @return mixed
+     * @return void
      */
     abstract protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container);
 
@@ -87,7 +87,7 @@ abstract class AbstractFactory implements IFieldFactory {
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
-     * @return mixed
+     * @return void
      */
     abstract protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container);
 
