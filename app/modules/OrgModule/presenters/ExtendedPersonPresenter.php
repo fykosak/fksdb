@@ -7,6 +7,8 @@ use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Config\Expressions\Helpers;
 use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\AbstractServiceMulti;
+use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\IModel;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
@@ -78,7 +80,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     }
 
     /**
-     * @return array|mixed
+     * @return array
      * @throws BadRequestException
      */
     private function getFieldsDefinition() {
@@ -89,12 +91,12 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
 
     /**
      * @param Form $form
-     * @return mixed
+     * @return void
      */
     abstract protected function appendExtendedContainer(Form $form);
 
     /**
-     * @return mixed
+     * @return AbstractServiceMulti|AbstractServiceSingle
      */
     abstract protected function getORMService();
 

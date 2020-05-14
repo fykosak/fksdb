@@ -123,7 +123,7 @@ class BrojureResultsModel extends AbstractResultsModel {
     /**
      * @return array
      */
-    public function getCategories() {
+    public function getCategories(): array {
         return $this->evaluationStrategy->getCategories();
     }
 

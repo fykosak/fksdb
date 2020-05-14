@@ -20,7 +20,7 @@ interface IContestPresenter {
     public function getSelectedYear();
 
     /** @return int */
-    public function getSelectedAcademicYear();
+    public function getSelectedAcademicYear(): int;
 
     /**
      * @param string $message

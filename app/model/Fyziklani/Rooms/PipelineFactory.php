@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\model\Fyziklani\Rooms;
+namespace FKSDB\Fyziklani\Rooms;
 
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelEvent;

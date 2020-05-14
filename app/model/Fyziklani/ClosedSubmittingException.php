@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\model\Fyziklani;
+namespace FKSDB\Fyziklani;
 
 use Exception;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;

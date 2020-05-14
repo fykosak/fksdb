@@ -76,6 +76,7 @@ class ContestChooser extends Control {
      * @var bool
      */
     private $valid;
+    /** @var bool  */
     private $initialized = false;
 
     /**

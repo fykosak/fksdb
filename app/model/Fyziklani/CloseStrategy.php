@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\model\Fyziklani;
+namespace FKSDB\Fyziklani;
 
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
@@ -77,9 +77,7 @@ class CloseStrategy {
     private function saveResults(array $data, bool $total): Html {
         $log = Html::el('ul');
         foreach ($data as $index => $teamData) {
-            /**
-             * @var ModelFyziklaniTeam $team
-             */
+            /** @var ModelFyziklaniTeam $team */
             $team = $teamData['team'];
             if ($total) {
                 $this->serviceFyziklaniTeam->updateModel2($team, ['rank_total' => $index + 1]);

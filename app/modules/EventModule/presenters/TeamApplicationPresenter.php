@@ -8,7 +8,7 @@ use FKSDB\Components\Controls\Schedule\Rests\TeamRestsControl;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
 use FKSDB\Components\Grids\Events\Application\ApplicationGrid;
 use FKSDB\Components\Grids\Events\Application\TeamApplicationGrid;
-use FKSDB\model\Fyziklani\NotSetGameParametersException;
+use FKSDB\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;

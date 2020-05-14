@@ -52,14 +52,14 @@ class ContestantPresenter extends ExtendedPersonPresenter {
 
     /**
      * @param Form $form
-     * @return mixed|void
+     * @return void
      */
     protected function appendExtendedContainer(Form $form) {
         // no container for contestant
     }
 
     /**
-     * @return mixed|ServiceContestant
+     * @return ServiceContestant
      */
     protected function getORMService() {
         return $this->serviceContestant;

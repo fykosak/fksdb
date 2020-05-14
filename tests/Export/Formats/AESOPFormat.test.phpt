@@ -51,7 +51,7 @@ class AESOPFormatTest extends DatabaseTestCase {
 
 class MockSeriesPresenter implements ISeriesPresenter {
 
-    public function getSelectedAcademicYear() {
+    public function getSelectedAcademicYear(): int {
         return 2000;
     }
 

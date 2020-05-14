@@ -51,7 +51,7 @@ class ContributionsFromXML extends Stage {
     }
 
     /**
-     * @param mixed $data
+     * @param SeriesData $data
      */
     public function setInput($data) {
         $this->data = $data;
@@ -65,7 +65,7 @@ class ContributionsFromXML extends Stage {
     }
 
     /**
-     * @return mixed|SeriesData
+     * @return SeriesData
      */
     public function getOutput() {
         return $this->data;

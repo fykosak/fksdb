@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\model\Fyziklani;
+namespace FKSDB\Fyziklani;
 
 use Nette\Application\BadRequestException;
 
@@ -11,11 +11,10 @@ use Nette\Application\BadRequestException;
 class NotCheckedSubmitsException extends BadRequestException {
     /**
      * NotCheckedSubmitsException constructor.
-     * @param string $message
      * @param int $code
      * @param \Exception|NULL $previous
      */
-    public function __construct($message = '', $code = 0, \Exception $previous = NULL) {
+    public function __construct($code = 0, \Exception $previous = NULL) {
         parent::__construct(_('Team has non checked submits'), $code, $previous);
     }
 }

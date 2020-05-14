@@ -243,7 +243,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     /**
      * @param $view
-     * @return Presenter|void
+     * @return static
      */
     public function setView($view) {
         parent::setView($view);
@@ -251,6 +251,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         if (!$this->tryCall($method, $this->getParameter())) {
             $this->pageTitle = null;
         }
+        return $this;
     }
 
     /**
@@ -408,7 +409,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     /**
      * @param $destination
      * @param null $args
-     * @return mixed
+     * @return bool|mixed
      * @throws BadRequestException
      * @throws InvalidLinkException
      */

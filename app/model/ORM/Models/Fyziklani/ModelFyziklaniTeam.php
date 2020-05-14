@@ -2,8 +2,8 @@
 
 namespace FKSDB\ORM\Models\Fyziklani;
 
-use FKSDB\model\Fyziklani\ClosedSubmittingException;
-use FKSDB\model\Fyziklani\NotCheckedSubmitsException;
+use FKSDB\Fyziklani\ClosedSubmittingException;
+use FKSDB\Fyziklani\NotCheckedSubmitsException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\IEventReferencedModel;

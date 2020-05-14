@@ -162,9 +162,9 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
     /**
-     * @return int|mixed
+     * @return int
      */
-    public function getSelectedAcademicYear() {
+    public function getSelectedAcademicYear(): int {
         if (!$this->getSelectedContest()) {
             throw new InvalidStateException("Cannot get acadamic year without selected contest.");
         }
@@ -328,6 +328,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
          * @var Form $contestantForm
          */
         $contestantForm = $this->getComponent('contestantForm');
+        /** @var ReferencedId $referencedId */
         $referencedId = $contestantForm->getForm()->getComponent(ExtendedPersonHandler::CONT_AGGR)->getComponent(ExtendedPersonHandler::EL_PERSON);
         if ($person) {
             $referencedId->setDefaultValue($person);
@@ -337,7 +338,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
     /**
-     * @return array|mixed
+     * @return array
      */
     private function getFieldsDefinition() {
         $contestId = $this->getSelectedContest()->contest_id;

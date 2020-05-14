@@ -4,8 +4,8 @@ namespace FKSDB\ORM\Services\Fyziklani;
 
 use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
-use FKSDB\model\Fyziklani\ClosedSubmittingException;
-use FKSDB\model\Fyziklani\PointsMismatchException;
+use FKSDB\Fyziklani\ClosedSubmittingException;
+use FKSDB\Fyziklani\PointsMismatchException;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
