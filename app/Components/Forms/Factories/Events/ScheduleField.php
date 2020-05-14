@@ -36,7 +36,7 @@ class ScheduleField extends TextInput {
      * @return string
      */
     protected function getReactId(): string {
-        throw new DeprecatedException;
+        throw new DeprecatedException();
     }
 
     /**

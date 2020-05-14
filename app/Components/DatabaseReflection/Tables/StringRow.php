@@ -19,7 +19,7 @@ class StringRow extends DefaultRow {
      * @return Html
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        return (new StringPrinter)($model->{$this->getModelAccessKey()});
+        return (new StringPrinter())($model->{$this->getModelAccessKey()});
     }
 
     /**

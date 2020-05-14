@@ -140,7 +140,7 @@ class ApplicationPresenter extends BasePresenter {
             return;
         }
         if (strtotime($event->registration_begin) > time() || strtotime($event->registration_end) < time()) {
-            throw new GoneException;
+            throw new GoneException();
         }
     }
 
@@ -208,7 +208,7 @@ class ApplicationPresenter extends BasePresenter {
                 throw new BadTypeException(IEventReferencedModel::class, $eventApplication);
             }
             if ($this->getEvent()->event_id !== $eventApplication->getEvent()->event_id) {
-                throw new ForbiddenRequestException;
+                throw new ForbiddenRequestException();
             }
         }
 

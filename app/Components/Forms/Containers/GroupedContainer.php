@@ -38,7 +38,7 @@ class GroupedContainer extends Container {
      * @return ControlGroup
      */
     public function addGroup($caption, $setAsCurrent = true): ControlGroup {
-        $group = new ControlGroup;
+        $group = new ControlGroup();
         $group->setOption('label', $caption);
         $group->setOption('visual', TRUE);
 

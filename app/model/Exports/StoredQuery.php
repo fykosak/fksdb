@@ -260,7 +260,7 @@ class StoredQuery implements IDataSource, IResource {
      * @throws NotImplementedException
      */
     public function filterData(array $filters) {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**

@@ -135,14 +135,14 @@ class SeatingPresenter extends BasePresenter {
      * @return RoutingDownload
      */
     public function createComponentDownload(): RoutingDownload {
-        throw new DeprecatedException;
+        throw new DeprecatedException();
     }
 
     /**
      * @return RoutingEdit
      */
     public function createComponentRouting(): RoutingEdit {
-        throw new DeprecatedException;
+        throw new DeprecatedException();
     }
 
     /**

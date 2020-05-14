@@ -468,21 +468,21 @@ class PersonPresenter extends BasePresenter {
      * @inheritDoc
      */
     public function createComponentCreateForm(): Control {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**
      * @inheritDoc
      */
     public function createComponentEditForm(): Control {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**
      * @inheritDoc
      */
     protected function createComponentGrid(): BaseGrid {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**

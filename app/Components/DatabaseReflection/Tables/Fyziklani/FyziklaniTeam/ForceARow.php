@@ -24,6 +24,6 @@ class ForceARow extends AbstractFyziklaniTeamRow {
      * @return Html
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        return (new BinaryPrinter)($model->force_a);
+        return (new BinaryPrinter())($model->force_a);
     }
 }

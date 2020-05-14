@@ -87,7 +87,7 @@ class SchoolProvider implements IFilteredDataProvider {
      * @throws NotImplementedException
      */
     public function getItems() {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**

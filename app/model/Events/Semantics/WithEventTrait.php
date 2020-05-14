@@ -38,7 +38,7 @@ trait WithEventTrait {
         if ($obj instanceof BaseHolder) {
             return $obj->getHolder();
         }
-        throw new \InvalidArgumentException;
+        throw new \InvalidArgumentException();
 
     }
 

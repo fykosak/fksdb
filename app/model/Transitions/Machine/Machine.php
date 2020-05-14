@@ -118,10 +118,10 @@ abstract class Machine {
     private function selectTransition(array $transitions): Transition {
         $length = \count($transitions);
         if ($length > 1) {
-            throw new UnavailableTransitionsException;
+            throw new UnavailableTransitionsException();
         }
         if (!$length) {
-            throw new UnavailableTransitionsException;
+            throw new UnavailableTransitionsException();
         }
         return \array_values($transitions)[0];
     }
