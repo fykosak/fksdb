@@ -38,25 +38,25 @@ class AclResolver implements IVisibilityResolver, IModifiabilityResolver {
 
     /**
      * @param ModelPerson $person
-     * @return bool|mixed
+     * @return bool
      */
-    public function isVisible(ModelPerson $person) {
+    public function isVisible(ModelPerson $person): bool {
         return $person->isNew() || $this->isAllowed($person, 'edit');
     }
 
     /**
      * @param ModelPerson $person
-     * @return mixed|string
+     * @return string
      */
-    public function getResolutionMode(ModelPerson $person) {
+    public function getResolutionMode(ModelPerson $person): string {
         return $this->isAllowed($person, 'edit') ? ReferencedPersonHandler::RESOLUTION_OVERWRITE : ReferencedPersonHandler::RESOLUTION_EXCEPTION;
     }
 
     /**
      * @param ModelPerson $person
-     * @return bool|mixed
+     * @return bool
      */
-    public function isModifiable(ModelPerson $person) {
+    public function isModifiable(ModelPerson $person): bool {
         return $person->isNew() || $this->isAllowed($person, 'edit');
     }
 
@@ -65,8 +65,7 @@ class AclResolver implements IVisibilityResolver, IModifiabilityResolver {
      * @param $privilege
      * @return bool
      */
-    private function isAllowed(ModelPerson $person, $privilege) {
+    private function isAllowed(ModelPerson $person, $privilege): bool {
         return $this->contestAuthorizator->isAllowed($person, $privilege, $this->contest);
     }
-
 }

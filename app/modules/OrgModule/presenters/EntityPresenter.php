@@ -140,8 +140,5 @@ abstract class EntityPresenter extends BasePresenter {
      */
     abstract protected function createComponentGrid();
 
-    /**
-     * @return string
-     */
     abstract protected function getModelResource(): string;
 }

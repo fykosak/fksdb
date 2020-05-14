@@ -36,47 +36,31 @@ class ReferencedPersonHandler implements IReferencedHandler {
     const POST_CONTACT_DELIVERY = 'post_contact_d';
     const POST_CONTACT_PERMANENT = 'post_contact_p';
 
-    /**
-     * @var ServicePerson
-     */
+    /** @var ServicePerson */
     private $servicePerson;
 
-    /**
-     * @var ServicePersonInfo
-     */
+    /** @var ServicePersonInfo */
     private $servicePersonInfo;
 
-    /**
-     * @var ServicePersonHistory
-     */
+    /** @var ServicePersonHistory */
     private $servicePersonHistory;
 
-    /**
-     * @var ServiceMPostContact
-     */
+    /** @var ServiceMPostContact */
     private $serviceMPostContact;
 
-    /**
-     * @var ServiceMPersonHasFlag
-     */
+    /** @var ServiceMPersonHasFlag */
     private $serviceMPersonHasFlag;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $acYear;
-    /**
-     * @var int
-     */
+
+    /** @var int */
     private $eventId;
 
-    /**
-     * @var mixed
-     */
+    /** @var string */
     private $resolution;
-    /**
-     * @var Handler
-     */
+
+    /** @var Handler */
     private $eventScheduleHandler;
 
     /**
@@ -97,8 +81,8 @@ class ReferencedPersonHandler implements IReferencedHandler {
         ServiceMPostContact $serviceMPostContact,
         ServiceMPersonHasFlag $serviceMPersonHasFlag,
         Handler $eventScheduleHandler,
-        $acYear,
-        $resolution
+        int $acYear,
+        string $resolution
     ) {
         $this->servicePerson = $servicePerson;
         $this->servicePersonInfo = $servicePersonInfo;
@@ -113,7 +97,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
     /**
      * @return mixed
      */
-    public function getResolution() {
+    public function getResolution(): string {
         return $this->resolution;
     }
 
@@ -121,17 +105,17 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @param $resolution
      * @return mixed|void
      */
-    public function setResolution($resolution) {
+    public function setResolution(string $resolution) {
         $this->resolution = $resolution;
     }
 
     /**
      * @param ArrayHash $values
-     * @return AbstractModelSingle|ModelPerson|null
+     * @return ModelPerson
      * @throws JsonException
      * @throws ExistingPaymentException
      */
-    public function createFromValues(ArrayHash $values) {
+    public function createFromValues(ArrayHash $values): ModelPerson {
         $email = isset($values['person_info']['email']) ? $values['person_info']['email'] : null;
         $person = $this->servicePerson->findByEmail($email);
         if (!$person) {
@@ -153,9 +137,9 @@ class ReferencedPersonHandler implements IReferencedHandler {
     }
 
     /**
-     * @param $eventId
+     * @param int $eventId
      */
-    public function setEventId($eventId) {
+    public function setEventId(int $eventId) {
         $this->eventId = $eventId;
     }
 
@@ -285,7 +269,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
 
     /**
      * @param ArrayHash $data
-     * @param ArrayHash $conflicts
+     * @param ArrayHash|array $conflicts
      * @return ArrayHash
      */
     private function removeConflicts($data, $conflicts) {

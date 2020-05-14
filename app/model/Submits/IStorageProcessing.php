@@ -12,19 +12,19 @@ interface IStorageProcessing {
 
     /**
      * @param string $filename
-     * @return mixed
+     * @return void
      */
     public function setInputFile(string $filename);
 
     /**
      * @param string $filename
-     * @return mixed
+     * @return void
      */
     public function setOutputFile(string $filename);
 
     /**
      * @param ModelSubmit $submit
-     * @return mixed
+     * @return void
      */
     public function process(ModelSubmit $submit);
 }

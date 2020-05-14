@@ -22,16 +22,16 @@ class AESOPContestant extends StoredQueryPostProcessing {
     const SPAM_DATE = 'spam-date';
 
     /**
-     * @return mixed|string
+     * @return string
      */
-    public function getDescription() {
+    public function getDescription(): string {
         return 'Profiltruje jenom na kategorii zadanou v parametru "category" a spočítá rank v rámci kategorie.';
     }
 
     /**
      * @return bool
      */
-    public function keepsCount() {
+    public function keepsCount(): bool {
         return false;
     }
 
@@ -60,9 +60,9 @@ class AESOPContestant extends StoredQueryPostProcessing {
             return null;
         }
         $tasks = $serviceTask->getTable()
-                ->where('contest_id', $this->parameters['contest'])
-                ->where('year', $this->parameters['year'])
-                ->where('series BETWEEN 1 AND 6');
+            ->where('contest_id', $this->parameters['contest'])
+            ->where('year', $this->parameters['year'])
+            ->where('series BETWEEN 1 AND 6');
         $sum = 0;
         foreach ($tasks as $task) {
             $sum += $evalutationStrategy->getTaskPoints($task, $category);
@@ -101,8 +101,8 @@ class AESOPContestant extends StoredQueryPostProcessing {
     }
 
     /**
-     * @param $data
-     * @return mixed
+     * @param array|\Traversable $data
+     * @return array|\Traversable
      */
     private function calculateRank($data) {
         $points = [];

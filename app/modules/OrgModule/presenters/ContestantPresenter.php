@@ -13,7 +13,7 @@ use Nette\Application\UI\Form;
  * @method ModelContestant getModel()
  */
 class ContestantPresenter extends ExtendedPersonPresenter {
-
+    /** @var string */
     protected $fieldsDefinition = 'adminContestant';
 
     /**
@@ -77,38 +77,22 @@ class ContestantPresenter extends ExtendedPersonPresenter {
         return $this->yearCalculator->getAcademicYear($this->getServiceContest()->findByPrimary($model->contest_id), $model->year);
     }
 
-    /**
-     * @return string
-     */
-    public function messageCreate() {
+    public function messageCreate(): string {
         return _('Řešitel %s založen.');
     }
 
-    /**
-     * @return string
-     */
-    public function messageEdit() {
+    public function messageEdit(): string {
         return _('Řešitel %s upraven.');
     }
 
-    /**
-     * @return string
-     */
-    public function messageError() {
+    public function messageError(): string {
         return _('Chyba při zakládání řešitele.');
     }
 
-    /**
-     * @return string
-     */
-    public function messageExists() {
+    public function messageExists(): string {
         return _('Řešitel už existuje.');
     }
 
-
-    /**
-     * @inheritDoc
-     */
     protected function getModelResource(): string {
         return ModelContestant::RESOURCE_ID;
     }

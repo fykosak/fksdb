@@ -18,7 +18,7 @@ class DenyResolver implements IVisibilityResolver, IModifiabilityResolver {
      * @param ModelPerson $person
      * @return bool
      */
-    public function isVisible(ModelPerson $person) {
+    public function isVisible(ModelPerson $person): bool {
         return false;
     }
 
@@ -26,7 +26,7 @@ class DenyResolver implements IVisibilityResolver, IModifiabilityResolver {
      * @param ModelPerson $person
      * @return mixed|string
      */
-    public function getResolutionMode(ModelPerson $person) {
+    public function getResolutionMode(ModelPerson $person): string {
         return ReferencedPersonHandler::RESOLUTION_EXCEPTION;
     }
 
@@ -34,7 +34,7 @@ class DenyResolver implements IVisibilityResolver, IModifiabilityResolver {
      * @param ModelPerson $person
      * @return bool|mixed
      */
-    public function isModifiable(ModelPerson $person) {
+    public function isModifiable(ModelPerson $person): bool {
         return false;
     }
 

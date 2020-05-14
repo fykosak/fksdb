@@ -295,7 +295,6 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         $this->redirect('this', ['year' => $year,]);
     }
 
-
     /**
      * @return FormControl
      * @throws BadRequestException
@@ -317,16 +316,15 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      */
     private function emailFormSucceeded(Form $form) {
         $values = $form->getValues();
-
         $this->redirect('this', ['email' => $values->email,]);
     }
 
+    /**
+     * @throws BadRequestException
+     */
     public function renderContestant() {
-
         $person = $this->getPerson();
-        /**
-         * @var Form $contestantForm
-         */
+        /** @var FormControl $contestantForm */
         $contestantForm = $this->getComponent('contestantForm');
         /** @var ReferencedId $referencedId */
         $referencedId = $contestantForm->getForm()->getComponent(ExtendedPersonHandler::CONT_AGGR)->getComponent(ExtendedPersonHandler::EL_PERSON);
@@ -381,7 +379,8 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         $submit = $form->addSubmit('register', _('Registrovat'));
         $submit->onClick[] = function (SubmitButton $button) use ($handler) {
             $form = $button->getForm();
-            if ($result = $handler->handleForm($form, $this, true)) { // intentionally =
+            $result = $handler->handleForm($form, $this, true);
+            if ($result) { // intentionally =
                 /*
                  * Do not automatically log in user with existing logins for security reasons.
                  * (If someone was able to fill the form without conflicts, he might gain escalated privileges.)
@@ -406,31 +405,19 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         return null; //we always create new contestant
     }
 
-    /**
-     * @return string
-     */
-    public function messageCreate() {
+    public function messageCreate(): string {
         return _('Řešitel %s zaregistrován.');
     }
 
-    /**
-     * @return string
-     */
-    public function messageEdit() {
+    public function messageEdit(): string {
         return _('Řešitel %s upraven.');
     }
 
-    /**
-     * @return string
-     */
-    public function messageError() {
+    public function messageError(): string {
         return _('Chyba při registraci.');
     }
 
-    /**
-     * @return string
-     */
-    public function messageExists() {
+    public function messageExists(): string {
         return _('Řešitel je již registrován.');
     }
 

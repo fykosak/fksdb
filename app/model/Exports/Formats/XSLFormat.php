@@ -72,9 +72,9 @@ class XSLFormat implements IExportFormat {
     }
 
     /**
-     * @return PlainTextResponse|IResponse
+     * @return PlainTextResponse
      */
-    public function getResponse() {
+    public function getResponse(): IResponse {
         // Prepare XSLT processor
         $xsl = new DOMDocument();
         $xsl->load($this->xslFile);
@@ -95,5 +95,4 @@ class XSLFormat implements IExportFormat {
         // Prepare response
         return new PlainTextResponse($proc->transformToXml($doc));
     }
-
 }

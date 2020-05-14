@@ -13,7 +13,6 @@ services:
     referencedPersonFactory:
         class: FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory
     - Persons\ReferencedPersonHandlerFactory
-    - FKSDB\Model\Fyziklani\Rooms\PipelineFactory
     breadcrumbFactory:
         class: FKSDB\Components\Controls\Breadcrumbs\BreadcrumbsFactory(%navigation.expiration%, ...)
     storedQueryFactory:

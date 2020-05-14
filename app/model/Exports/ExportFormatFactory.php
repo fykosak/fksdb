@@ -162,11 +162,11 @@ class ExportFormatFactory {
 
     /**
      * @param StoredQuery $storedQuery
-     * @param $header
+     * @param bool $header
      * @param bool $quote
      * @return CSVFormat
      */
-    private function createCSV(StoredQuery $storedQuery, $header, $quote = CSVFormat::DEFAULT_QUOTE): CSVFormat {
+    private function createCSV(StoredQuery $storedQuery, bool $header, bool $quote = CSVFormat::DEFAULT_QUOTE): CSVFormat {
         return new CSVFormat($storedQuery, $header, CSVFormat::DEFAULT_DELIMITER, $quote);
     }
 

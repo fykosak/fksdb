@@ -15,5 +15,5 @@ interface IVisibilityResolver {
      * @param ModelPerson $person
      * @return mixed
      */
-    public function isVisible(ModelPerson $person);
+    public function isVisible(ModelPerson $person): bool;
 }

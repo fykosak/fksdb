@@ -17,22 +17,23 @@ class CSVFormat implements IExportFormat {
     const DEFAULT_DELIMITER = ';';
     const DEFAULT_QUOTE = false;
 
-    /**
-     * @var StoredQuery
-     */
+    /** @var StoredQuery */
     private $storedQuery;
+    /** @var string */
     private $delimiter;
+    /** @var bool */
     private $quote;
+    /** @var bool */
     private $header;
 
     /**
      * CSVFormat constructor.
      * @param StoredQuery $storedQuery
-     * @param $header
+     * @param bool $header
      * @param string $delimiter
      * @param bool $quote
      */
-    public function __construct(StoredQuery $storedQuery, $header, $delimiter = self::DEFAULT_DELIMITER, $quote = self::DEFAULT_QUOTE) {
+    public function __construct(StoredQuery $storedQuery, bool $header, string $delimiter = self::DEFAULT_DELIMITER, bool $quote = self::DEFAULT_QUOTE) {
         $this->storedQuery = $storedQuery;
         $this->delimiter = $delimiter;
         $this->quote = $quote;
@@ -40,19 +41,16 @@ class CSVFormat implements IExportFormat {
     }
 
     /**
-     * @return IResponse|CSVResponse
+     * @return CSVResponse
      */
-    public function getResponse() {
+    public function getResponse(): IResponse {
         $data = $this->storedQuery->getData();
         $name = isset($this->storedQuery->getQueryPattern()->name) ? $this->storedQuery->getQueryPattern()->name : 'adhoc';
         $name .= '.csv';
-
         $response = new CSVResponse($data, $name);
         $response->setAddHeading($this->header);
         $response->setQuotes($this->quote);
         $response->setGlue($this->delimiter);
-
         return $response;
     }
-
 }

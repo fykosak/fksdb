@@ -78,7 +78,7 @@ class ReferencedPersonHandlerFactory {
      * @param $eventId
      * @return ReferencedPersonHandler
      */
-    public function create($acYear, $resolution = ReferencedPersonHandler::RESOLUTION_EXCEPTION, $eventId) {
+    public function create(int $acYear, string $resolution = ReferencedPersonHandler::RESOLUTION_EXCEPTION, int $eventId) {
         $handler = new ReferencedPersonHandler(
             $this->servicePerson,
             $this->servicePersonInfo,

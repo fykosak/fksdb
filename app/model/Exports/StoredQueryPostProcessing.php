@@ -11,6 +11,7 @@ use Nette\SmartObject;
  */
 abstract class StoredQueryPostProcessing {
     use SmartObject;
+
     /**
      * @var array
      */
@@ -23,16 +24,15 @@ abstract class StoredQueryPostProcessing {
     /**
      * @param $key
      * @param $value
-     * @param null $type
      */
-    final public function bindValue($key, $value, $type = null) {
+    final public function bindValue($key, $value) {
         $this->parameters[$key] = $value; // type is ignored so far
     }
 
     /**
      * @return bool
      */
-    public function keepsCount() {
+    public function keepsCount(): bool {
         return true;
     }
 
@@ -45,5 +45,5 @@ abstract class StoredQueryPostProcessing {
     /**
      * @return mixed
      */
-    abstract public function getDescription();
+    abstract public function getDescription(): string;
 }

@@ -29,7 +29,7 @@ class Heuristics extends StoredQueryPostProcessing {
     /**
      * @return mixed|string
      */
-    public function getDescription() {
+    public function getDescription(): string {
         return 'Z výsledkovky vybere zvance a náhradníky na soustředění (http://wiki.fykos.cz/fykos:soustredeni:zasady:heuristikazvani).
             Hierarchický kód určuje pravidlo a případně podpravidlo, dle nějž je osoba zvaná/náhradníkovaná.
 ';
@@ -126,7 +126,7 @@ class Heuristics extends StoredQueryPostProcessing {
                 continue;
             }
             if ($row['gender'] == 'F') {
-                $W+=1;
+                $W += 1;
             }
         }
         if ($W < ceil($N / 2)) { // not enough girls (the code assumes reverse is never true)
@@ -140,7 +140,7 @@ class Heuristics extends StoredQueryPostProcessing {
                 }
                 if ($row['gender'] == 'F') {
                     $row['spare'] = self::RULE4FW;
-                    $spareGirls+=1;
+                    $spareGirls += 1;
                 }
                 if ($spareGirls >= $W) {
                     break;
@@ -157,7 +157,7 @@ class Heuristics extends StoredQueryPostProcessing {
                 }
                 if ($row['gender'] == 'M') {
                     $row['spare'] = self::RULE4MW;
-                    $spareAll+=1;
+                    $spareAll += 1;
                 }
                 if ($spareAll >= $N) {
                     break;
@@ -176,10 +176,10 @@ class Heuristics extends StoredQueryPostProcessing {
                 }
                 if ($row['gender'] == 'M' && $spareK < $NK) {
                     $row['spare'] = self::RULE4M2;
-                    $spareK+=1;
+                    $spareK += 1;
                 } elseif ($row['gender'] == 'F' && $spareH < $NH) {
                     $row['spare'] = self::RULE4F2;
-                    $spareH+=1;
+                    $spareH += 1;
                 }
                 if ($spareH + $spareK >= $N) {
                     break;

@@ -13,13 +13,13 @@ interface IModifiabilityResolver {
 
     /**
      * @param ModelPerson $person
-     * @return mixed
+     * @return bool
      */
-    public function isModifiable(ModelPerson $person);
+    public function isModifiable(ModelPerson $person): bool;
 
     /**
      * @param ModelPerson $person
-     * @return mixed
+     * @return string
      */
-    public function getResolutionMode(ModelPerson $person);
+    public function getResolutionMode(ModelPerson $person): string;
 }

@@ -2,6 +2,7 @@
 
 namespace Persons;
 
+use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelPerson;
 use Nette\Security\User;
 use Nette\SmartObject;
@@ -13,6 +14,7 @@ use Nette\SmartObject;
  */
 class SelfResolver implements IVisibilityResolver, IModifiabilityResolver {
     use SmartObject;
+
     /**
      * @var User
      */
@@ -30,15 +32,15 @@ class SelfResolver implements IVisibilityResolver, IModifiabilityResolver {
      * @param ModelPerson $person
      * @return bool
      */
-    public function isVisible(ModelPerson $person) {
+    public function isVisible(ModelPerson $person): bool {
         return $person->isNew() || $this->isSelf($person);
     }
 
     /**
      * @param ModelPerson $person
-     * @return mixed|string
+     * @return string
      */
-    public function getResolutionMode(ModelPerson $person) {
+    public function getResolutionMode(ModelPerson $person): string {
         return $this->isSelf($person) ? ReferencedPersonHandler::RESOLUTION_OVERWRITE : ReferencedPersonHandler::RESOLUTION_EXCEPTION;
     }
 
@@ -46,7 +48,7 @@ class SelfResolver implements IVisibilityResolver, IModifiabilityResolver {
      * @param ModelPerson $person
      * @return bool|mixed
      */
-    public function isModifiable(ModelPerson $person) {
+    public function isModifiable(ModelPerson $person): bool {
         return $person->isNew() || $this->isSelf($person);
     }
 
@@ -54,12 +56,13 @@ class SelfResolver implements IVisibilityResolver, IModifiabilityResolver {
      * @param ModelPerson $person
      * @return bool
      */
-    protected function isSelf(ModelPerson $person) {
+    protected function isSelf(ModelPerson $person): bool {
         if (!$this->user->isLoggedIn()) {
             return false;
         }
-
-        $loggedPerson = $this->user->getIdentity()->getPerson();
+        /** @var ModelLogin $login */
+        $login = $this->user->getIdentity();
+        $loggedPerson = $login->getPerson();
         return $loggedPerson && $loggedPerson->person_id == $person->person_id;
     }
 

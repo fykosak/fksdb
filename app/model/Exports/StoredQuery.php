@@ -236,7 +236,7 @@ class StoredQuery implements IDataSource, IResource {
 
             $statement->bindValue($key, $value, $type);
             if ($this->postProcessing) {
-                $this->postProcessing->bindValue($key, $value, $type);
+                $this->postProcessing->bindValue($key, $value);
             }
         }
         return $statement;

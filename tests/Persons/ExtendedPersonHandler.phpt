@@ -188,20 +188,20 @@ class PersonPresenter extends BasePresenter implements IExtendedPersonPresenter 
 
     }
 
-    public function messageCreate() {
-
+    public function messageCreate(): string {
+        return '';
     }
 
-    public function messageEdit() {
-
+    public function messageEdit(): string {
+        return '';
     }
 
-    public function messageError() {
-
+    public function messageError(): string {
+        return '';
     }
 
-    public function messageExists() {
-
+    public function messageExists(): string {
+        return '';
     }
 
     public function flashMessage($message, $type = 'info') {
@@ -212,15 +212,15 @@ class PersonPresenter extends BasePresenter implements IExtendedPersonPresenter 
 
 class TestResolver implements IVisibilityResolver, IModifiabilityResolver {
 
-    public function getResolutionMode(ModelPerson $person) {
+    public function getResolutionMode(ModelPerson $person): string {
         return ReferencedPersonHandler::RESOLUTION_EXCEPTION;
     }
 
-    public function isModifiable(ModelPerson $person) {
+    public function isModifiable(ModelPerson $person): bool {
         return true;
     }
 
-    public function isVisible(ModelPerson $person) {
+    public function isVisible(ModelPerson $person): bool {
         return true;
     }
 

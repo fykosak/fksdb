@@ -32,9 +32,9 @@ class AESOPFormat extends XSLFormat {
     }
 
     /**
-     * @return PlainTextResponse|IResponse
+     * @return PlainTextResponse
      */
-    public function getResponse() {
+    public function getResponse(): IResponse {
         $response = parent::getResponse();
 
         $parameters = $this->getParameters();
@@ -43,5 +43,4 @@ class AESOPFormat extends XSLFormat {
         }
         return $response;
     }
-
 }

@@ -16,13 +16,13 @@ interface IReferencedHandler {
     const RESOLUTION_KEEP = 'keep';
     const RESOLUTION_EXCEPTION = 'exception';
 
-    public function getResolution();
+    public function getResolution(): string;
 
     /**
-     * @param $resolution
-     * @return mixed
+     * @param string $resolution
+     * @return void
      */
-    public function setResolution($resolution);
+    public function setResolution(string $resolution);
 
     /**
      * @param IModel $model

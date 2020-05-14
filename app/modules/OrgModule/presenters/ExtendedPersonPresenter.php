@@ -170,5 +170,4 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     protected function loadModel($id) {
         return $this->getORMService()->findByPrimary($id);
     }
-
 }
