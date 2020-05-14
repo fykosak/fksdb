@@ -25,4 +25,3 @@ class ServiceFyziklaniParticipant extends AbstractServiceSingle {
         return DbNames::TAB_E_FYZIKLANI_PARTICIPANT;
     }
 }
-

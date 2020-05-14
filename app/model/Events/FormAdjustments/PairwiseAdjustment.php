@@ -77,4 +77,3 @@ abstract class PairwiseAdjustment extends AbstractAdjustment implements IFormAdj
      */
     abstract protected function processPair(IControl $target, IControl $prerequisity);
 }
-

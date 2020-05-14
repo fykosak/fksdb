@@ -442,4 +442,3 @@ class ApplicationPresenter extends BasePresenter {
         return $container;
     }
 }
-

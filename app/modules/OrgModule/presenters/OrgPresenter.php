@@ -169,4 +169,3 @@ class OrgPresenter extends ExtendedPersonPresenter {
         return ModelOrg::RESOURCE_ID;
     }
 }
-

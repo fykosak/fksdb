@@ -29,4 +29,3 @@ interface IContestPresenter {
      */
     public function flashMessage($message, $type = 'info');
 }
-

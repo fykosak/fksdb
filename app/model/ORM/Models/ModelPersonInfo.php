@@ -46,4 +46,3 @@ class ModelPersonInfo extends AbstractModelSingle {
         return ModelPerson::createFromActiveRow($this->ref(DbNames::TAB_PERSON, 'person_id'));
     }
 }
-

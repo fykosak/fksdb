@@ -1,8 +1,11 @@
 <?php
 
+namespace FKSDB\Stats;
+
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Services\ServiceTask;
 use Nette\Database\Connection;
+use FKSDB\Stats\TaskStatsModel;
 
 /**
  * Description of ResultsModelFactory
@@ -37,10 +40,7 @@ class StatsModelFactory {
      * @param int $year
      * @return TaskStatsModel
      */
-    public function createTaskStatsModel(ModelContest $contest, $year) {
+    public function createTaskStatsModel(ModelContest $contest, int $year): TaskStatsModel {
         return new TaskStatsModel($contest, $year, $this->connection);
     }
-
 }
-
-

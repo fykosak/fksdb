@@ -25,4 +25,3 @@ class ServiceVikendParticipant extends AbstractServiceSingle {
         return DbNames::TAB_E_VIKEND_PARTICIPANT;
     }
 }
-

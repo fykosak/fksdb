@@ -33,6 +33,7 @@ use WebService\IXMLNodeSerializer;
  */
 class ResultsModelFactory implements IXMLNodeSerializer {
     use SmartObject;
+
     /**
      * @var Connection
      */
@@ -209,7 +210,4 @@ class ResultsModelFactory implements IXMLNodeSerializer {
             throw new SoapFault('Receiver', 'Internal error.');
         }
     }
-
 }
-
-

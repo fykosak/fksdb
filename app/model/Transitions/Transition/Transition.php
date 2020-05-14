@@ -137,4 +137,3 @@ final class Transition {
         }
     }
 }
-

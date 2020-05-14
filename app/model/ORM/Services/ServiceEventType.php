@@ -24,4 +24,3 @@ class ServiceEventType extends AbstractServiceSingle {
         return DbNames::TAB_EVENT_TYPE;
     }
 }
-

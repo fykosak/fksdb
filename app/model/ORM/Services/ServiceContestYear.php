@@ -25,4 +25,3 @@ class ServiceContestYear extends AbstractServiceSingle {
         return DbNames::TAB_CONTEST_YEAR;
     }
 }
-

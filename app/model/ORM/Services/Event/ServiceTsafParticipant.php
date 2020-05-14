@@ -25,4 +25,3 @@ class ServiceTsafParticipant extends AbstractServiceSingle {
         return DbNames::TAB_E_TSAF_PARTICIPANT;
     }
 }
-

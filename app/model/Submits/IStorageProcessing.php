@@ -28,5 +28,3 @@ interface IStorageProcessing {
      */
     public function process(ModelSubmit $submit);
 }
-
-

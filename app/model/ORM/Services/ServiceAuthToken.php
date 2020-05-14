@@ -140,4 +140,3 @@ class ServiceAuthToken extends AbstractServiceSingle {
         return $tokens;
     }
 }
-

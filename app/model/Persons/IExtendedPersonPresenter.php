@@ -46,4 +46,3 @@ interface IExtendedPersonPresenter {
      */
     public function flashMessage($message, $type = 'info');
 }
-

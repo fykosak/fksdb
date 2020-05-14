@@ -87,4 +87,3 @@ class Downloader {
         return $dst;
     }
 }
-

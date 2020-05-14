@@ -19,16 +19,14 @@ class ModelCategory {
     const CAT_UNK = 'UNK';
     const CAT_ALL = 'ALL';
 
-    public $id = null;
+    /** @var string */
+    public $id;
 
     /**
      * FKSDB\Results\ModelCategory constructor.
      * @param $id
      */
-    public function __construct($id) {
+    public function __construct(string $id) {
         $this->id = $id;
     }
-
 }
-
-

@@ -102,4 +102,3 @@ class SchoolsInTeam extends SchoolCheck implements IFormAdjustment {
     }
 
 }
-

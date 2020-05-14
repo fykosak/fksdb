@@ -148,4 +148,3 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
     }
 
 }
-

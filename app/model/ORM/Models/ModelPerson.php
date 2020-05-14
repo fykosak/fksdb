@@ -504,4 +504,3 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
     }
 
 }
-

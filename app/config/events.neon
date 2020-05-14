@@ -127,4 +127,3 @@ bmInstance:
     visible:
         default: true
         type: expression
-

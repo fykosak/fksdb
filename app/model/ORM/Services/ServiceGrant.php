@@ -24,4 +24,3 @@ class ServiceGrant extends AbstractServiceSingle {
         return DbNames::TAB_GRANT;
     }
 }
-

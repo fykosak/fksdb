@@ -113,4 +113,3 @@ class ContestantPresenter extends ExtendedPersonPresenter {
         return ModelContestant::RESOURCE_ID;
     }
 }
-

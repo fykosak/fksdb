@@ -163,4 +163,3 @@ abstract class AbstractProcessing implements IProcessing {
     }
 
 }
-

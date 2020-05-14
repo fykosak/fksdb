@@ -283,4 +283,3 @@ class ApplicationComponent extends Control {
         }
     }
 }
-

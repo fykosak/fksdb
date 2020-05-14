@@ -20,7 +20,7 @@ use Nette\Security\AuthenticationException;
 use Nette\Security\IAuthenticator;
 use SoapFault;
 use SoapVar;
-use StatsModelFactory;
+use FKSDB\Stats\StatsModelFactory;
 use stdClass;
 use WebService\IXMLNodeSerializer;
 
@@ -222,7 +222,7 @@ class WebServiceModel {
         $statsNode = $doc->createElement('stats');
         $doc->appendChild($statsNode);
 
-        $model = $this->statsModelFactory->createTaskStatsModel($contest, $year);
+        $model = $this->statsModelFactory->createTaskStatsModel($contest,(int) $year);
 
         if (isset($args->series)) {
             if (!is_array($args->series)) {

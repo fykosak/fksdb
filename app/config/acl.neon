@@ -177,4 +177,3 @@ acl:
     - allow(org, event.payment, ::constant(Nette\Security\Permission::ALL))
 
     - allow(cartesian, ::constant(Nette\Security\Permission::ALL), ::constant(Nette\Security\Permission::ALL))
-

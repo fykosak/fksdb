@@ -154,4 +154,3 @@ class TeacherPresenter extends ExtendedPersonPresenter {
         return ModelTeacher::RESOURCE_ID;
     }
 }
-

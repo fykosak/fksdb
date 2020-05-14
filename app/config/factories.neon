@@ -19,7 +19,7 @@ services:
     storedQueryFactory:
         class: Exports\StoredQueryFactory(@readOnlyConnection,...)
     resultsModelFactory: FKSDB\Results\ResultsModelFactory
-    statsModelFactory: StatsModelFactory
+    - FKSDB\Stats\StatsModelFactory
     pipelineFactory:
         class: FKSDB\Tasks\PipelineFactory(%tasks.columnMapping%, %tasks.contributionMapping%, %tasks.defaultStudyYears%, ...)
     event.DBReflectionFactory:

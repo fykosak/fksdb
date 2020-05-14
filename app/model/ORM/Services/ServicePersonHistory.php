@@ -25,4 +25,3 @@ class ServicePersonHistory extends AbstractServiceSingle {
         return DbNames::TAB_PERSON_HISTORY;
     }
 }
-

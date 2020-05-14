@@ -88,4 +88,3 @@ abstract class AbstractAdjustment implements IFormAdjustment {
     }
 
 }
-

@@ -16,5 +16,3 @@ interface IOptionsProvider {
      */
     public function getOptions(Field $field);
 }
-
-
