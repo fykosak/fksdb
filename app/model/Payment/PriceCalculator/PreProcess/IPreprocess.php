@@ -9,17 +9,17 @@ use FKSDB\Payment\Price;
  * Class AbstractPreProcess
  * @package FKSDB\Payment\PriceCalculator\PreProcess
  */
-abstract class AbstractPreProcess {
+interface IPreprocess {
 
     /**
      * @param ModelPayment $modelPayment
      * @return Price
      */
-    abstract public static function calculate(ModelPayment $modelPayment): Price;
+    public static function calculate(ModelPayment $modelPayment): Price;
 
     /**
      * @param ModelPayment $modelPayment
      * @return array
      */
-    abstract public static function getGridItems(ModelPayment $modelPayment): array;
+    public static function getGridItems(ModelPayment $modelPayment): array;
 }

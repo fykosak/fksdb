@@ -33,7 +33,7 @@ use Tracy\Debugger;
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
- * @deprecated Do not use this presenter to create/modify persons.
+ * Do not use this presenter to create/modify persons.
  *             It's better to use ReferencedId and ReferencedContainer
  *             inside the particular form.
  * @author Michal Koutný <michal@fykos.cz>
