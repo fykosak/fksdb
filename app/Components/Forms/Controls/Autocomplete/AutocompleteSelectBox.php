@@ -30,12 +30,12 @@ class AutocompleteSelectBox extends TextBase {
     private $dataProvider;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $ajax;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $multiSelect;
 

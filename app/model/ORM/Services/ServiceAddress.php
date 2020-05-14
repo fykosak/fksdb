@@ -98,7 +98,7 @@ class ServiceAddress extends AbstractServiceSingle {
     /**
      *
      * @param string $postalCode
-     * @return boolean
+     * @return bool
      */
     public function tryInferRegion($postalCode): bool {
         try {

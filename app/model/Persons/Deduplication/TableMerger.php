@@ -110,7 +110,7 @@ class TableMerger {
     /**
      *
      * @param mixed $column
-     * @return boolean
+     * @return bool
      */
     private function tryColumnMerge($column) {
         if ($this->getMerger()->hasResolution($this->trunkRow, $this->mergedRow, $column)) {

@@ -41,7 +41,7 @@ class RelatedPersonAuthorizator {
      * of the queried contest.
      *
      * @param Holder $holder
-     * @return boolean
+     * @return bool
      */
     public function isRelatedPerson(Holder $holder) {
         // everyone is related

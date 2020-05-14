@@ -19,7 +19,7 @@ use Nette\Utils\JsonException;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property-read integer person_id
+ * @property-read int person_id
  * @property-read string other_name
  * @property-read string family_name
  * @property-read string display_name
@@ -376,7 +376,7 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
     }
 
     /**
-     * @param integer eventId
+     * @param int eventId
      * @param string $type
      * @return string
      * @throws JsonException

@@ -61,7 +61,7 @@ class ContestAuthorizator {
      * @param IResource|string $resource
      * @param string $privilege
      * @param int|ModelContest $contest queried contest
-     * @return boolean
+     * @return bool
      */
     public function isAllowed($resource, string $privilege = null, $contest): bool {
         if (!$this->getUser()->isLoggedIn()) {

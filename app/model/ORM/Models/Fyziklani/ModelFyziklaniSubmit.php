@@ -17,11 +17,11 @@ use Nette\Utils\DateTime;
  * @author Michal Červeňák <miso@fykos.cz>
  *
  * @property-read string state
- * @property-read integer e_fyziklani_team_id
- * @property-read integer points
- * @property-read integer fyziklani_task_id
- * @property-read integer fyziklani_submit_id
- * @property-read integer task_id
+ * @property-read int e_fyziklani_team_id
+ * @property-read int points
+ * @property-read int fyziklani_task_id
+ * @property-read int fyziklani_submit_id
+ * @property-read int task_id
  * @property-read ActiveRow e_fyziklani_team
  * @property-read ActiveRow fyziklani_task
  * @property-read DateTime created

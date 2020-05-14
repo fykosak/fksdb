@@ -15,8 +15,8 @@ use Nette\Security\IIdentity;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property-read boolean active
- * @property-read integer login_id
+ * @property-read bool active
+ * @property-read int login_id
  * @property-read DateTime last_login
  * @property-read string hash
  * @property-read ActiveRow person

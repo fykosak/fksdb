@@ -195,7 +195,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
      * can be checked there -- user session is not prepared at the
      * moment of the call.
      *
-     * @return boolean
+     * @return bool
      */
     public function requiresLogin() {
         return true;
@@ -203,7 +203,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
 
     /**
      * It may be overriden (should return realm).
-     * @return boolean|string
+     * @return bool|string
      */
     public function getAllowedAuthMethods() {
         return self::AUTH_ALLOW_LOGIN | self::AUTH_ALLOW_TOKEN;

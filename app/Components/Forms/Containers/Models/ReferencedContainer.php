@@ -42,12 +42,12 @@ class ReferencedContainer extends ContainerWithOptions {
     private $referencedId;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $hasSearch;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $allowClear = true;
 
@@ -162,7 +162,7 @@ class ReferencedContainer extends ContainerWithOptions {
      * Swaps hidden and attached components from/to the container.
      *
      * @staticvar array $searchComponents
-     * @param boolean $value
+     * @param bool $value
      */
     public function setSearchButton($value) {
         static $searchComponents = [
@@ -189,7 +189,7 @@ class ReferencedContainer extends ContainerWithOptions {
     /**
      * Toggles button used for clearing the element.
      *
-     * @param boolean $value
+     * @param bool $value
      */
     public function setClearButton($value) {
         if (!$this->getAllowClear()) {

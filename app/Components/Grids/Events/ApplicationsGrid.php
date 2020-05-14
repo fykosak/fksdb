@@ -71,7 +71,7 @@ class ApplicationsGrid extends Control {
     private $templateFile;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $searchable = false;
 

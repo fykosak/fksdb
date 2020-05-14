@@ -18,9 +18,9 @@ use Nette\Utils\DateTime;
 /**
  * @property-read  string category
  * @property-read  string name
- * @property-read  integer e_fyziklani_team_id
- * @property-read  integer event_id
- * @property-read  integer points
+ * @property-read  int e_fyziklani_team_id
+ * @property-read  int event_id
+ * @property-read  int points
  * @property-read  string status
  * @property-read  DateTime created
  * @property-read  DateTime modified

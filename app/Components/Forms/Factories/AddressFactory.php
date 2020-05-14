@@ -58,7 +58,7 @@ class AddressFactory {
      *
      * @param AddressContainer $container
      * @param IControl $conditioningField
-     * @param integer $options
+     * @param int $options
      */
     public function buildAddress(AddressContainer $container, $options = 0, IControl $conditioningField = null) {
         $container->setServiceRegion($this->serviceRegion);
