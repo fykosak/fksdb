@@ -1,46 +1,7 @@
-parameters:
-    events:
-        soustredeni:
-            appCond: or(regOpen(), role('admin'))
-            requiredCond: or(and(neg(role('admin')),or(state('applied'),state('interested'))), state('participated')) # povinné pro účastníka nebo pro všechny, když jsou účastnivší se
-            person:
-                person:
-                    other_name:
-                        required: true
-                    family_name:
-                        required: true
-                person_info:
-                    born_id:
-                        required: %events.soustredeni.requiredCond%
-                        description: "Kvůli pojišťovně."
-                    birthplace:
-                        required: state('participated')
-                    phone:
-                        required: %events.soustredeni.requiredCond%
-                        description: "Telefon (i s předvolbou státu), jenž budeš mít s sebou."
-                post_contact_p:
-                    address:
-                        required: %events.soustredeni.requiredCond%
-                person_history:
-                    school_id:
-                        required: state('participated')
-                        description: "Pokud nelze školu nalézt, napiš správci."
-            tshirt:
-                M_S: S pánské
-                M_M: M pánské
-                M_L: L pánské
-                M_XL: XL pánské
-                M_XXL: XXL pánské
-                F_S: S dámské
-                F_M: M dámské
-                F_L: L dámské
-                F_XL: XL dámské
-
-
 events:
-    soustredeni:
+    soustredeni34p:
         event_type_id: [4, 5] # jarní i podzimní sous. nejsou různá
-        #eventYears: [1,2,3,4] # specify for which years this machine is valid, by default all years
+        eventYears: [34]
         tableLayout: event.grid
         formLayout: soustredeni.form
         paramScheme:
