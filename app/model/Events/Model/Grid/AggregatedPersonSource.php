@@ -68,7 +68,7 @@ abstract class AggregatedPersonSource implements IHolderSource {
      * @param ModelEvent $event
      * @return mixed
      */
-    public abstract function processEvent(ModelEvent $event);
+    abstract public function processEvent(ModelEvent $event);
 
     /**
      * Method propagates selected calls to internal primary models selection.

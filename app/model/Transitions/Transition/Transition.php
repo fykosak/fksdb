@@ -122,7 +122,7 @@ final class Transition {
     /**
      * @param IStateModel $model
      */
-    public final function beforeExecute(IStateModel &$model) {
+    final public function beforeExecute(IStateModel &$model) {
         foreach ($this->beforeExecuteCallbacks as $callback) {
             $callback($model);
         }
@@ -131,7 +131,7 @@ final class Transition {
     /**
      * @param IStateModel $model
      */
-    public final function afterExecute(IStateModel &$model) {
+    final public function afterExecute(IStateModel &$model) {
         foreach ($this->afterExecuteCallbacks as $callback) {
             $callback($model);
         }

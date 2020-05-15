@@ -64,7 +64,7 @@ abstract class AbstractRow {
      * @return Html
      * @throws BadRequestException
      */
-    public final function renderValue(AbstractModelSingle $model, int $userPermissionsLevel): Html {
+    final public function renderValue(AbstractModelSingle $model, int $userPermissionsLevel): Html {
         if (!$this->hasPermissions($userPermissionsLevel)) {
             return PermissionDeniedBadge::getHtml();
         }
@@ -75,7 +75,7 @@ abstract class AbstractRow {
      * @param string $modelClassName
      * @param array $referencedAccess
      */
-    public final function setReferencedParams(string $modelClassName, array $referencedAccess) {
+    final public function setReferencedParams(string $modelClassName, array $referencedAccess) {
         $this->modelClassName = $modelClassName;
         $this->referencedAccess = $referencedAccess;
     }
@@ -118,14 +118,14 @@ abstract class AbstractRow {
      * @param int $userValue
      * @return bool
      */
-    protected final function hasPermissions(int $userValue): bool {
+    final protected function hasPermissions(int $userValue): bool {
         return $userValue >= $this->getPermissionsValue();
     }
 
     /**
      * @return string
      */
-    protected final function getModelClassName() {
+    final protected function getModelClassName() {
         return $this->modelClassName;
     }
 

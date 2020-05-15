@@ -85,7 +85,7 @@ abstract class EntityPresenter extends BasePresenter {
      * @return AbstractModelSingle|null|IModel
      * @deprecated
      */
-    public final function getModel() {
+    final public function getModel() {
         if (!$this->model) {
             $this->model = $this->getParameter('id') ? $this->loadModel($this->getParameter('id')) : null;
         }

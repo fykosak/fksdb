@@ -121,7 +121,7 @@ class ApplicationHandler {
      * @param $data
      * @throws JsonException
      */
-    public final function store(Holder $holder, $data) {
+    final public function store(Holder $holder, $data) {
         $this->_storeAndExecute($holder, $data, null, self::STATE_OVERWRITE);
     }
 

@@ -153,7 +153,7 @@ class ExtendedPersonHandler {
      * @param Form $form
      * @return mixed
      */
-    protected final function getReferencedPerson(Form $form) {
+    final protected function getReferencedPerson(Form $form) {
         return $form[self::CONT_AGGR][self::EL_PERSON]->getModel();
     }
 
@@ -164,7 +164,7 @@ class ExtendedPersonHandler {
      * @return int
      * @throws \Exception
      */
-    public final function handleForm(Form $form, IExtendedPersonPresenter $presenter, bool $sendEmail) {
+    final public function handleForm(Form $form, IExtendedPersonPresenter $presenter, bool $sendEmail) {
 
         try {
             $this->connection->beginTransaction();

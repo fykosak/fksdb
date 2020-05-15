@@ -32,7 +32,7 @@ class FormControl extends Control {
      * @return Form
      * @throws BadRequestException
      */
-    public final function getForm(): Form {
+    final public function getForm(): Form {
         $component = $this->getComponent('form');
         if (!$component instanceof Form) {
             throw new BadTypeException(Form::class, $component);

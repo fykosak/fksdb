@@ -31,21 +31,21 @@ abstract class Stage {
     /**
      * @return Pipeline
      */
-    protected final function getPipeline(): Pipeline {
+    final protected function getPipeline(): Pipeline {
         return $this->pipeline;
     }
 
     /**
      * @param Pipeline $pipeline
      */
-    public final function setPipeline(Pipeline $pipeline) {
+    final public function setPipeline(Pipeline $pipeline) {
         $this->pipeline = $pipeline;
     }
 
     /**
      * @param Message $message
      */
-    protected final function log(Message $message) {
+    final protected function log(Message $message) {
         $this->getPipeline()->log($message);
     }
 }

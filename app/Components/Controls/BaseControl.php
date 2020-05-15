@@ -43,7 +43,7 @@ abstract class BaseControl extends Control {
     /**
      * @return Container
      */
-    protected final function getContext() {
+    final protected function getContext() {
         return $this->context;
     }
 }

@@ -18,7 +18,7 @@ trait ReactField {
     /**
      * @var bool
      */
-    static private $attachedJS = false;
+    private static $attachedJS = false;
 
     /**
      * @throws JsonException
@@ -67,5 +67,5 @@ trait ReactField {
     /**
      * @return string
      */
-    public abstract function getData(): string;
+    abstract public function getData(): string;
 }
