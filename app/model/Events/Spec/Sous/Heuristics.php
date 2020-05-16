@@ -9,6 +9,7 @@ use Exports\StoredQueryPostProcessing;
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
+ * @deprecated since 34 year is not supported
  */
 class Heuristics extends StoredQueryPostProcessing {
 
@@ -35,17 +36,17 @@ class Heuristics extends StoredQueryPostProcessing {
     }
 
     /**
-     * @param $data
-     * @return array|mixed
+     * @param \PDOStatement $data
+     * @return \Traversable|array|\ArrayIterator
      */
-    public function processData($data) {
+    public function processData(\PDOStatement $data) {
+
         $result = iterator_to_array($data);
         $p = $this->findP($result);
 
         $y = $k = $h = 0;
         $z = $this->parameters['par_z'];
         $n = $this->parameters['par_n'];
-
         /*
          * Rule no. 1
          */
@@ -55,9 +56,8 @@ class Heuristics extends StoredQueryPostProcessing {
             }
             if ($this->inviting($row, $p)) {
                 $row['invited'] = self::RULE_1;
-                $y += 1;
-                $k += ($row['gender'] == 'M') ? 1 : 0;
-                $h += ($row['gender'] == 'F') ? 1 : 0;
+                $y++;
+                ($row['gender'] == 'M') ? $k++ : $h++;
             }
         }
 
@@ -185,7 +185,6 @@ class Heuristics extends StoredQueryPostProcessing {
                 }
             }
         }
-
         /*
          * Prepare application states
          */
@@ -203,7 +202,6 @@ class Heuristics extends StoredQueryPostProcessing {
     private function findP(array $data): float {
         $parameterZ = $this->parameters['par_z'];
         $parameterP = ceil(($parameterZ - self::RESERVE_1) / self::CAT_COUNT) + 1;
-
         do {
             $parameterY = 0;
             $parameterP -= 1;
