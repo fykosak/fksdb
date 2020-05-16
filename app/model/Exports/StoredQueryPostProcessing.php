@@ -11,6 +11,7 @@ use Nette\SmartObject;
  */
 abstract class StoredQueryPostProcessing {
     use SmartObject;
+
     /**
      * @var array
      */
@@ -32,7 +33,7 @@ abstract class StoredQueryPostProcessing {
     /**
      * @return bool
      */
-    public function keepsCount() {
+    public function keepsCount(): bool {
         return true;
     }
 
@@ -45,5 +46,5 @@ abstract class StoredQueryPostProcessing {
     /**
      * @return mixed
      */
-    abstract public function getDescription();
+    abstract public function getDescription(): string;
 }
