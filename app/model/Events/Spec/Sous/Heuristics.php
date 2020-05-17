@@ -11,7 +11,7 @@ use Exports\StoredQueryPostProcessing;
  * @author Michal Koutný <michal@fykos.cz>
  * @deprecated since 34 year is not supported
  */
-class Heuristics extends StoredQueryPostProcessing {
+class Heuristics /*extends StoredQueryPostProcessing */{ /* uncomment to use */
 
     const RESERVE_1 = 8;
     const ABS_INV = 3;
