@@ -84,7 +84,7 @@ class StoredQueryGrid extends BaseGrid {
                 ->setClass('btn btn-sm btn-secondary')
                 ->setLink($this->getPresenter()->link('Export:show', $this->storedQuery->getQueryPattern()->getPrimary()));
             $qid = $this->storedQuery->getQueryPattern()->qid;
-            if ($qid) { // intentionally =
+            if ($qid) {
                 $parameters = ['qid' => $qid, 'bc' => null];
                 $queryParameters = $this->storedQuery->getParameters();
                 foreach ($this->storedQuery->getParameterNames() as $key) {
