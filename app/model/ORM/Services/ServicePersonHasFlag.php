@@ -14,16 +14,11 @@ use Nette\Utils\ArrayHash;
  * @author Lukáš Timko <lukast@fykos.cz>
  */
 class ServicePersonHasFlag extends AbstractServiceSingle {
-    /**
-     * @return string
-     */
+
     public function getModelClassName(): string {
         return ModelPersonHasFlag::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_PERSON_HAS_FLAG;
     }

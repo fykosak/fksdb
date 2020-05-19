@@ -21,23 +21,14 @@ class ModelTaskContribution extends AbstractModelSingle implements IPersonRefere
     const TYPE_SOLUTION = 'solution';
     const TYPE_GRADE = 'grade';
 
-    /**
-     * @inheritDoc
-     */
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromActiveRow($this->ref(DbNames::TAB_PERSON, 'person_id'));
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getTask(): ModelTask {
         return ModelTask::createFromActiveRow($this->ref(DbNames::TAB_TASK, 'task_id'));
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getContest(): ModelContest {
         return $this->getTask()->getContest();
     }

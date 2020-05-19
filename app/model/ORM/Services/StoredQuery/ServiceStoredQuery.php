@@ -14,16 +14,10 @@ use Nette\Database\IConventions;
  */
 class ServiceStoredQuery extends AbstractServiceSingle {
 
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelStoredQuery::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_STORED_QUERY;
     }
@@ -64,7 +58,7 @@ class ServiceStoredQuery extends AbstractServiceSingle {
      * @param int|array|null $tagTypeId
      * @return TypedTableSelection
      */
-    public function findByTagType($tagTypeId): TypedTableSelection {
+    public function findByTagType($tagTypeId) {
         if (!$tagTypeId) {
             return null;
         }

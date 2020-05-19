@@ -56,10 +56,7 @@ abstract class AbstractModelMulti implements IModel {
         return new static(null, $mainModel, $joinedModel);
     }
 
-    /**
-     * @return array|mixed
-     */
-    public function toArray() {
+    public function toArray(): array {
         return $this->getMainModel()->toArray() + $this->getJoinedModel()->toArray();
     }
 
@@ -167,10 +164,7 @@ abstract class AbstractModelMulti implements IModel {
         return implode('|', (array)$this->getPrimary($need));
     }
 
-    /**
-     * @return bool|mixed
-     */
-    public function isNew() {
+    public function isNew(): bool {
         return $this->getJoinedModel()->isNew();
     }
 

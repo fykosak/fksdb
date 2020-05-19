@@ -10,18 +10,12 @@ use FKSDB\ORM\Models\ModelEventType;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceEventType extends AbstractServiceSingle {
-    /**
-     * @return string
-     */
+
     public function getModelClassName(): string {
         return ModelEventType::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_EVENT_TYPE;
     }
 }
-

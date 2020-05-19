@@ -102,10 +102,7 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
         return parent::__unset($key);
     }
 
-    /**
-     * @return array|mixed
-     */
-    public function toArray() {
+    public function toArray(): array {
         $data = parent::toArray();
         return array_merge($data, $this->tmpData);
     }

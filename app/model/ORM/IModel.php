@@ -11,15 +11,9 @@ use ArrayAccess;
  */
 interface IModel extends ArrayAccess {
 
-    /**
-     * @return mixed
-     */
-    public function isNew();
+    public function isNew(): bool;
 
-    /**
-     * @return mixed
-     */
-    public function toArray();
+    public function toArray(): array;
 
     /**
      * @param bool $need
@@ -31,7 +25,7 @@ interface IModel extends ArrayAccess {
      * @note This is here to straddle duck-typing of ActiveRow.
      *
      * Returns row signature (composition of primary keys)
-     * @param  bool
+     * @param bool
      * @return string
      */
     public function getSignature($need = TRUE);

@@ -13,9 +13,6 @@ use FKSDB\ORM\AbstractModelSingle;
  */
 class ModelFyziklaniRoom extends AbstractModelSingle {
 
-    /**
-     * @return array
-     */
     public function __toArray(): array {
         return [
             'roomId' => $this->room_id,
@@ -23,6 +20,5 @@ class ModelFyziklaniRoom extends AbstractModelSingle {
             'x' => $this->columns,
             'y' => $this->rows,
         ];
-
     }
 }

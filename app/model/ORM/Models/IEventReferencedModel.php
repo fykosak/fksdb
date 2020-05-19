@@ -7,9 +7,5 @@ namespace FKSDB\ORM\Models;
  * @package FKSDB\Transitions
  */
 interface IEventReferencedModel {
-
-    /**
-     * @return ModelEvent
-     */
     public function getEvent(): ModelEvent;
 }

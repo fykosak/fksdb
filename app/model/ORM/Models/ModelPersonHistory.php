@@ -14,24 +14,15 @@ use FKSDB\ORM\DbNames;
  * @property-read int study_year
  */
 class ModelPersonHistory extends AbstractModelSingle {
-    /**
-     * @return ModelPerson
-     */
+
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromActiveRow($this->ref(DbNames::TAB_PERSON, 'person_id'));
     }
 
-    /**
-     * @return ModelSchool
-     */
     public function getSchool(): ModelSchool {
         return ModelSchool::createFromActiveRow($this->ref(DbNames::TAB_SCHOOL, 'school_id'));
     }
 
-    /**
-     * @param int $acYear
-     * @return ModelPersonHistory
-     */
     public function extrapolate(int $acYear): ModelPersonHistory {
         $diff = $acYear - $this->ac_year;
         $data = [

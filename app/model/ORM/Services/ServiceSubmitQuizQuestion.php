@@ -14,12 +14,10 @@ use Nette\Utils\DateTime;
  */
 class ServiceSubmitQuizQuestion extends AbstractServiceSingle {
 
-    /** @return string */
     public function getModelClassName(): string {
         return ModelSubmitQuizQuestion::class;
     }
 
-    /** @return string */
     protected function getTableName(): string {
         return DbNames::TAB_SUBMIT_QUIZ;
     }
@@ -39,6 +37,11 @@ class ServiceSubmitQuizQuestion extends AbstractServiceSingle {
         return $result ?: null;
     }
 
+    /**
+     * @param ModelQuizQuestion $question
+     * @param ModelContestant $contestant
+     * @param string $answer
+     */
     public function saveSubmitedQuestion(ModelQuizQuestion $question, ModelContestant $contestant, string $answer) {
         $submit = $this->findByContestant($contestant->ct_id, $question->question_id);
         if ($submit) {

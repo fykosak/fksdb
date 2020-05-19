@@ -17,9 +17,7 @@ use Nette\Database\Table\ActiveRow;
  * @property-read double y_coordinate
  */
 class ModelFyziklaniTeamPosition extends AbstractModelSingle {
-    /**
-     * @return ModelFyziklaniRoom
-     */
+
     public function getRoom(): ModelFyziklaniRoom {
         return ModelFyziklaniRoom::createFromActiveRow($this->room);
     }

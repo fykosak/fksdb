@@ -11,16 +11,10 @@ use FKSDB\ORM\Models\ModelTaskStudyYear;
  */
 class ServiceTaskStudyYear extends AbstractServiceSingle {
 
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelTaskStudyYear::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_TASK_STUDY_YEAR;
     }

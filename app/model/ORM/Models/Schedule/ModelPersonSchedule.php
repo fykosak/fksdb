@@ -26,23 +26,15 @@ use FKSDB\Exceptions\NotImplementedException;
  * @property-read int person_schedule_id
  */
 class ModelPersonSchedule extends AbstractModelSingle implements IStateModel, IPersonReferencedModel, IScheduleGroupReferencedModel, IPaymentReferencedModel {
-    /**
-     * @return ModelPerson
-     */
+
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromActiveRow($this->person);
     }
 
-    /**
-     * @return ModelScheduleItem
-     */
     public function getScheduleItem(): ModelScheduleItem {
         return ModelScheduleItem::createFromActiveRow($this->schedule_item);
     }
 
-    /**
-     * @return ModelScheduleGroup
-     */
     public function getScheduleGroup(): ModelScheduleGroup {
         return $this->getScheduleItem()->getScheduleGroup();
     }
@@ -58,9 +50,6 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel, IP
         return ModelPayment::createFromActiveRow($data);
     }
 
-    /**
-     * @return bool
-     */
     public function hasActivePayment(): bool {
         $payment = $this->getPayment();
         if (!$payment) {

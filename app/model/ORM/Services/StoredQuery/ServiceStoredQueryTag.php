@@ -12,16 +12,10 @@ use FKSDB\ORM\Tables\TypedTableSelection;
  */
 class ServiceStoredQueryTag extends AbstractServiceSingle {
 
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelStoredQueryTag::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_STORED_QUERY_TAG;
     }

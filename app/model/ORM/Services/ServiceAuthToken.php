@@ -16,16 +16,10 @@ class ServiceAuthToken extends AbstractServiceSingle {
 
     const TOKEN_LENGTH = 32; // for 62 characters ~ 128 bit
 
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelAuthToken::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_AUTH_TOKEN;
     }

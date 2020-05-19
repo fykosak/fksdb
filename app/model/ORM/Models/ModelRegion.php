@@ -20,10 +20,6 @@ class ModelRegion extends AbstractModelSingle {
     const CZECH_REPUBLIC = 3;
     const SLOVAKIA = 2;
 
-    /**
-     * @param string $number
-     * @return bool
-     */
     public function matchPhone(string $number): bool {
         if (\is_null($this->phone_nsn) || \is_null($this->phone_prefix)) {
             return false;
