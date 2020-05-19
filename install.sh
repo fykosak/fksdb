@@ -47,13 +47,13 @@ function update_files {
 		echo "Merged data from $remote/$branch into $branch"
 		rev=`git rev-parse HEAD`
 		echo "Installed revision $rev"
-		composer install --no-interaction --prefer-source
 		cd -
 		return 0
 	fi
 }
 
 function post_update {
+  composer install --no-interaction --prefer-source
 	rm -rf "$fksdb_dir"/temp/*
 	"$fksdb_dir/i18n/compile.sh"
 }
