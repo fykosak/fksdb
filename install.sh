@@ -53,7 +53,7 @@ function update_files {
 }
 
 function post_update {
-  composer install --no-interaction --prefer-source
+	composer install --no-interaction --prefer-source
 	rm -rf "$fksdb_dir"/temp/*
 	"$fksdb_dir/i18n/compile.sh"
 }
