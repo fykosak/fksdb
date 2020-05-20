@@ -17,14 +17,14 @@ abstract class AbstractLink {
     /**
      * @var LinkGenerator
      */
-    protected $presenterComponent;
+    protected $linkGenerator;
 
     /**
      * AbstractLink constructor.
-     * @param LinkGenerator $presenterComponent
+     * @param LinkGenerator $linkGenerator
      */
-    public function __construct(LinkGenerator $presenterComponent) {
-        $this->presenterComponent = $presenterComponent;
+    public function __construct(LinkGenerator $linkGenerator) {
+        $this->linkGenerator = $linkGenerator;
     }
 
     /**
@@ -73,7 +73,7 @@ abstract class AbstractLink {
         if (!$model instanceof $modelClassName) {
             throw new BadTypeException($modelClassName, $model);
         }
-        return $this->presenterComponent->link(
+        return $this->linkGenerator->link(
             $this->getDestination($model),
             $this->prepareParams($model)
         );
