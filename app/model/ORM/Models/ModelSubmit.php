@@ -25,37 +25,22 @@ class ModelSubmit extends AbstractModelSingle implements IResource, ITaskReferen
     const SOURCE_UPLOAD = 'upload';
     const SOURCE_POST = 'post';
 
-    /**
-     * @return bool
-     */
     public function isEmpty(): bool {
         return !($this->submitted_on || $this->note);
     }
 
-    /**
-     * @return ModelTask
-     */
     public function getTask(): ModelTask {
         return ModelTask::createFromActiveRow($this->ref(DbNames::TAB_TASK, 'task_id'));
     }
 
-    /**
-     * @return ModelContestant
-     */
     public function getContestant(): ModelContestant {
         return ModelContestant::createFromActiveRow($this->ref(DbNames::TAB_CONTESTANT_BASE, 'ct_id'));
     }
 
-    /**
-     * @return string
-     */
     public function getResourceId(): string {
         return 'submit';
     }
 
-    /**
-     * @return string
-     */
     public function getFingerprint(): string {
         return md5(implode(':', [
             $this->submit_id,
@@ -65,5 +50,4 @@ class ModelSubmit extends AbstractModelSingle implements IResource, ITaskReferen
             $this->raw_points,
         ]));
     }
-
 }

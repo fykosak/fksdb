@@ -10,16 +10,11 @@ use FKSDB\ORM\Models\ModelPayment;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class ServicePayment extends AbstractServiceSingle {
-    /**
-     * @return string
-     */
+
     public function getModelClassName(): string {
         return ModelPayment::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_PAYMENT;
     }

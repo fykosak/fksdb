@@ -11,16 +11,10 @@ use FKSDB\ORM\Models\Events\ModelSousParticipant;
  */
 class ServiceSousParticipant extends AbstractServiceSingle {
 
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelSousParticipant::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_E_SOUS_PARTICIPANT;
     }

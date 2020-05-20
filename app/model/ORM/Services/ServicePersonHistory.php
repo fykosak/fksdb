@@ -11,18 +11,11 @@ use FKSDB\ORM\Models\ModelPersonHistory;
  */
 class ServicePersonHistory extends AbstractServiceSingle {
 
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelPersonHistory::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_PERSON_HISTORY;
     }
 }
-

@@ -39,9 +39,7 @@ use Nette\Utils\DateTime;
  * @property-read string preferred_lang
  */
 class ModelPersonInfo extends AbstractModelSingle {
-    /**
-     * @return ModelPerson
-     */
+
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromActiveRow($this->ref(DbNames::TAB_PERSON, 'person_id'));
     }

@@ -76,27 +76,16 @@ class ModelLogin extends AbstractModelSingle implements IIdentity, IPersonRefere
         }
     }
 
-    /**
-     * @param YearCalculator $yearCalculator
-     * @return bool
-     */
     public function isOrg(YearCalculator $yearCalculator): bool {
         return count($this->getActiveOrgs($yearCalculator)) > 0;
     }
 
-    /**
-     * @param YearCalculator $yearCalculator
-     * @return bool
-     */
     public function isContestant(YearCalculator $yearCalculator): bool {
         $person = $this->getPerson();
         return $person && count($person->getActiveContestants($yearCalculator)) > 0;
     }
 
-    /**
-     * @return string
-     */
-    public function __toString() {
+    public function __toString(): string {
         $person = $this->getPerson();
         if ($person) {
             return $person->__toString();

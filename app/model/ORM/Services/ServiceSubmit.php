@@ -19,16 +19,10 @@ class ServiceSubmit extends AbstractServiceSingle {
      */
     private $submitCache = [];
 
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelSubmit::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_SUBMIT;
     }
@@ -57,10 +51,6 @@ class ServiceSubmit extends AbstractServiceSingle {
         return $this->submitCache[$key];
     }
 
-    /**
-     *
-     * @return TypedTableSelection
-     */
     public function getSubmits(): TypedTableSelection {
         return $this->getTable()
             ->select(DbNames::TAB_SUBMIT . '.*')

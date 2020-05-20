@@ -14,5 +14,4 @@ class ModelRole extends AbstractModelSingle {
     const ORG = 'org';
     const REGISTERED = 'registered';
     const GUEST = 'guest';
-
 }

@@ -15,16 +15,11 @@ use Nette\Database\Table\ActiveRow;
  * @property-read int person_schedule_id
  */
 class ModelSchedulePayment extends AbstractModelSingle implements IPaymentReferencedModel {
-    /**
-     * @return ModelPayment
-     */
+
     public function getPayment(): ModelPayment {
         return ModelPayment::createFromActiveRow($this->payment);
     }
 
-    /**
-     * @return ModelPersonSchedule
-     */
     public function getPersonSchedule(): ModelPersonSchedule {
         return ModelPersonSchedule::createFromActiveRow($this->person_schedule);
     }

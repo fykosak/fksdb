@@ -13,10 +13,7 @@ use Nette\Database\Table\ActiveRow;
  * @package FKSDB\ORM\Services
  */
 class ServiceEmailMessage extends AbstractServiceSingle {
-    /**
-     * @param int $limit
-     * @return TypedTableSelection
-     */
+
     public function getMessagesToSend(int $limit): TypedTableSelection {
         return $this->getTable()->where('state', ModelEmailMessage::STATE_WAITING)->limit($limit);
     }

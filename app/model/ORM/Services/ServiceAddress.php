@@ -19,23 +19,17 @@ class ServiceAddress extends AbstractServiceSingle {
 
     const PATTERN = '/[0-9]{5}/';
 
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelAddress::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_ADDRESS;
     }
 
     /**
      * @param array|iterable|\ArrayAccess $data
-     * @return AbstractModelSingle
+     * @return ModelAddress
      */
     public function createNewModel($data = null): AbstractModelSingle {
         if (!isset($data['region_id'])) {
