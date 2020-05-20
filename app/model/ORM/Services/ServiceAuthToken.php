@@ -32,16 +32,16 @@ class ServiceAuthToken extends AbstractServiceSingle {
 
     /**
      *
-     * @param \FKSDB\ORM\Models\ModelLogin $login
+     * @param ModelLogin $login
      * @param string $type
-     * @param \Nette\Utils\DateTime $until
+     * @param \DateTimeInterface $until
      * @param null $data
      * @param bool $refresh
-     * @param \Nette\Utils\DateTime $since
+     * @param DateTime $since
      * @return ModelAuthToken
      * @throws \Exception
      */
-    public function createToken(ModelLogin $login, $type, DateTime $until = null, $data = null, $refresh = false, DateTime $since = null) {
+    public function createToken(ModelLogin $login, $type, \DateTimeInterface $until = null, $data = null, $refresh = false, DateTime $since = null) {
         if ($since === null) {
             $since = new DateTime();
         }

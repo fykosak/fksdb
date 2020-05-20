@@ -57,7 +57,7 @@ class SeriesCalculator {
         return $this->serviceTask->getTable()->where([
             'contest_id' => $contest->contest_id,
             'year' => $year
-        ])->max('series');
+        ])->max('series') ?: 1;
     }
 
     /**

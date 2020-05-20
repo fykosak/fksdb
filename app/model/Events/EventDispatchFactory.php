@@ -84,6 +84,7 @@ class EventDispatchFactory {
         $holder->inferEvent($event);
         return $holder;
     }
+
     /**
      * @param ModelEvent $event
      * @return string

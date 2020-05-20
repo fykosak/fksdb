@@ -92,7 +92,6 @@ class NetteExtension extends Nette\DI\CompilerExtension {
               ->setFactory(PhpFileStorage::class, [$container->parameters['tempDir'].'/cache'])
               ->setAutowired(FALSE);
           $container->addAlias('nette.templateCacheStorage','application.templateCacheStorage');
-          Debugger::barDump($container);
 /*
           $container->addDefinition($this->prefix('cache'))
               ->setClass('Nette\Caching\Cache', array(1 => '%namespace%'))

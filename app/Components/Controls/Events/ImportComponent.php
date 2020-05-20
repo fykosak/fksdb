@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Events;
 
 use BasePresenter;
+use FKSDB\Config\NeonSchemaException;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\ApplicationHandler;
 use FKSDB\Events\Model\Grid\SingleEventSource;
@@ -11,9 +12,12 @@ use FKSDB\Events\Model\ImportHandlerException;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Utils\CSVParser;
+use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
+use Nette\Utils\JsonException;
 use Tracy\Debugger;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\SubmitButton;
@@ -63,7 +67,7 @@ class ImportComponent extends Control {
     /**
      * @param $name
      * @return FormControl
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     protected function createComponentFormImport($name) {
         $control = new FormControl();
@@ -97,8 +101,10 @@ class ImportComponent extends Control {
 
         $form->addComponent($this->createKeyElement(), 'key');
 
-        $form->addSubmit('import', _('Importovat'))->onClick[] = function (SubmitButton $submit) {
-            $this->handleFormImport($submit->getForm());
+        $form->addSubmit('import', _('Importovat'));
+
+        $form->onSuccess[] = function (Form $form) {
+            $this->handleFormImport($form);
         };
 
         return $control;
@@ -111,8 +117,10 @@ class ImportComponent extends Control {
 
     /**
      * @param Form $form
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Utils\JsonException
+     * @throws NeonSchemaException
+     * @throws AbortException
+     * @throws BadRequestException
+     * @throws JsonException
      */
     private function handleFormImport(Form $form) {
         $values = $form->getValues();
