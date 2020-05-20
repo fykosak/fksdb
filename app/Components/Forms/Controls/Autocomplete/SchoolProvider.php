@@ -33,7 +33,7 @@ class SchoolProvider implements IFilteredDataProvider {
      * SchoolProvider constructor.
      * @param ServiceSchool $serviceSchool
      */
-    function __construct(ServiceSchool $serviceSchool) {
+    public function __construct(ServiceSchool $serviceSchool) {
         $this->serviceSchool = $serviceSchool;
     }
 
@@ -89,7 +89,7 @@ class SchoolProvider implements IFilteredDataProvider {
      * @throws NotImplementedException
      */
     public function getItems(): array {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**

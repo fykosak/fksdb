@@ -73,12 +73,12 @@ class BaseHolder {
     private $holder;
 
     /**
-     * @var boolean|callable
+     * @var bool|callable
      */
     private $modifiable;
 
     /**
-     * @var boolean|callable
+     * @var bool|callable
      */
     private $visible;
 
@@ -128,7 +128,7 @@ class BaseHolder {
      * BaseHolder constructor.
      * @param $name
      */
-    function __construct(string $name) {
+    public function __construct(string $name) {
         $this->name = $name;
     }
 

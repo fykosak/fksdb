@@ -67,7 +67,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      */
     protected function startup() {
         if (!$this->isEnabled()) {
-            throw new NotImplementedException;
+            throw new NotImplementedException();
         }
         parent::startup();
     }
@@ -123,7 +123,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @return ModelContest
      * @throws BadRequestException
      */
-    protected final function getContest(): ModelContest {
+    final protected function getContest(): ModelContest {
         return $this->getEvent()->getContest();
     }
 

@@ -22,7 +22,7 @@ class QIDAssertion {
      * QIDAssertion constructor.
      * @param $qids
      */
-    function __construct($qids) {
+    public function __construct($qids) {
         if (!is_array($qids)) {
             $qids = [$qids];
         }

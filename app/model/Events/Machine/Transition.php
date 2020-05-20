@@ -47,10 +47,10 @@ class Transition {
     /** @var string */
     private $label;
 
-    /** @var boolean|callable */
+    /** @var bool|callable */
     private $condition;
 
-    /** @var boolean|callable */
+    /** @var bool|callable */
     private $visible;
 
     /**
@@ -73,7 +73,7 @@ class Transition {
      * @param string $label
      * @param string $type
      */
-    function __construct(string $mask, $label = null, string $type = self::TYPE_DEFAULT) {
+    public function __construct(string $mask, $label = null, string $type = self::TYPE_DEFAULT) {
         $this->setMask($mask);
         $this->label = $label;
         if (!in_array($type, $this->getAllowedBehaviorTypes())) {
@@ -303,7 +303,7 @@ class Transition {
      * @param Holder $holder
      * @return bool
      */
-    public final function canExecute(Holder $holder) {
+    final public function canExecute(Holder $holder) {
         return !$this->getBlockingTransition($holder);
     }
 
@@ -321,7 +321,7 @@ class Transition {
      * @return array
      * @todo Induction work only for one level.
      */
-    public final function execute(Holder $holder) {
+    final public function execute(Holder $holder) {
         $blockingTransition = $this->getBlockingTransition($holder);
         if ($blockingTransition) {
             throw new TransitionConditionFailedException($blockingTransition);
@@ -349,7 +349,7 @@ class Transition {
      * @param Holder $holder
      * @param Transition[] $inducedTransitions
      */
-    public final function executed(Holder $holder, $inducedTransitions) {
+    final public function executed(Holder $holder, $inducedTransitions) {
         foreach ($inducedTransitions as $inducedTransition) {
             $inducedTransition->executed($holder, []);
         }
@@ -372,7 +372,7 @@ class Transition {
 
     /**
      * @param string $mask It may be either mask of initial state or mask of whole transition.
-     * @return boolean
+     * @return bool
      */
     public function matches($mask) {
         $parts = self::parseMask($mask);

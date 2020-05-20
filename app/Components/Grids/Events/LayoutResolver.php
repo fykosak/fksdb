@@ -32,7 +32,7 @@ class LayoutResolver {
      * @param string $templateDir
      * @param array $definitions
      */
-    function __construct(string $templateDir, array $definitions) {
+    public function __construct(string $templateDir, array $definitions) {
         $this->templateDir = $templateDir;
         $this->definitions = $definitions;
     }

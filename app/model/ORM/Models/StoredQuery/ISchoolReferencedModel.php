@@ -9,8 +9,5 @@ use FKSDB\ORM\Models\ModelSchool;
  * @package FKSDB\ORM\Models\StoredQuery
  */
 interface ISchoolReferencedModel {
-    /**
-     * @return ModelSchool
-     */
     public function getSchool(): ModelSchool;
 }

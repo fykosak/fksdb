@@ -35,7 +35,7 @@ class MailTemplateFactory {
      * @param ITranslator $translator
      * @param IRequest $request
      */
-    function __construct(string $templateDir, Application $application, ITranslator $translator, IRequest $request) {
+    public function __construct(string $templateDir, Application $application, ITranslator $translator, IRequest $request) {
         $this->templateDir = $templateDir;
         $this->application = $application;
         $this->translator = $translator;
@@ -94,7 +94,7 @@ class MailTemplateFactory {
      * @return ITemplate
      * @throws BadRequestException
      */
-    public final function createFromFile(string $filename, string $lang = null): ITemplate {
+    final public function createFromFile(string $filename, string $lang = null): ITemplate {
         /** @var Presenter $presenter */
         $presenter = $this->application->getPresenter();
         if (($lang === null) && !$presenter instanceof BasePresenter) {

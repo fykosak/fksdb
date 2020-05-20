@@ -89,12 +89,13 @@ class EventsExtension extends CompilerExtension {
      * EventsExtension constructor.
      * @param string $schemaFile
      */
-    function __construct(string $schemaFile) {
+    public function __construct(string $schemaFile) {
         $this->schemeFile = $schemaFile;
         Helpers::registerSemantic(self::$semanticMap);
     }
 
     /**
+     * Configuration loading
      * @throws NeonSchemaException
      */
     public function loadConfiguration() {
@@ -463,7 +464,6 @@ class EventsExtension extends CompilerExtension {
         }
         $factory->addSetup('setParamScheme', [$paramScheme]);
 
-
         $hasNonDetermining = false;
         foreach ($definition['fields'] as $name => $fieldDef) {
             $fieldDef = NeonScheme::readSection($fieldDef, $this->scheme['field']);
@@ -483,9 +483,7 @@ class EventsExtension extends CompilerExtension {
         return $factory;
     }
 
-    /*
-     * Naming
-     */
+    /* **************** Naming **************** */
 
     /**
      * @param string $name

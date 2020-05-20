@@ -45,7 +45,7 @@ class DBReflectionFactory extends AbstractFactory {
      * @param Connection $connection
      * @param TableReflectionFactory $tableReflectionFactory
      */
-    function __construct(Connection $connection, TableReflectionFactory $tableReflectionFactory) {
+    public function __construct(Connection $connection, TableReflectionFactory $tableReflectionFactory) {
         $this->connection = $connection;
         $this->tableReflectionFactory = $tableReflectionFactory;
     }

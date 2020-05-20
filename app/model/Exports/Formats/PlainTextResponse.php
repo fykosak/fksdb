@@ -13,6 +13,7 @@ use Nette\SmartObject;
  */
 class PlainTextResponse implements IResponse {
     use SmartObject;
+
     private $content;
     private $name;
 
@@ -21,7 +22,7 @@ class PlainTextResponse implements IResponse {
      * @param $content
      * @param null $name
      */
-    function __construct($content, $name = null) {
+    public function __construct($content, $name = null) {
         $this->content = $content;
         $this->name = $name;
     }

@@ -44,7 +44,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
         $this->serviceEventParticipant = $serviceEventParticipant;
     }
 
-    public final function titleList() {
+    final public function titleList() {
         $this->setTitle(_('List of applications'), 'fa fa-users');
     }
 
@@ -54,11 +54,11 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public final function titleDetail(int $id) {
+    final public function titleDetail(int $id) {
         $this->setTitle(sprintf(_('Application detail "%s"'), $this->loadEntity($id)->__toString()), 'fa fa-user');
     }
 
-    public final function titleTransitions() {
+    final public function titleTransitions() {
         $this->setTitle(_('Group transitions'), 'fa fa-user');
     }
 
@@ -119,7 +119,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
                 return new ApplicationComponent($this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger()), $holder);
             }
         }
-        throw new InvalidStateException;
+        throw new InvalidStateException();
     }
 
     /**
@@ -127,7 +127,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    protected final function createComponentMassTransitions(): MassTransitionsControl {
+    final protected function createComponentMassTransitions(): MassTransitionsControl {
         return new MassTransitionsControl($this->getContext(), $this->getEvent());
     }
 
@@ -142,13 +142,13 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @inheritDoc
      */
     public function createComponentCreateForm(): Control {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**
      * @inheritDoc
      */
     public function createComponentEditForm(): Control {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 }

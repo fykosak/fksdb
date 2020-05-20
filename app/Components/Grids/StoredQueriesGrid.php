@@ -41,7 +41,7 @@ class StoredQueriesGrid extends BaseGrid {
      * StoredQueriesGrid constructor.
      * @param Container $container
      */
-    function __construct(Container $container) {
+    public function __construct(Container $container) {
         parent::__construct($container);
         $this->serviceStoredQuery = $container->getByType(ServiceStoredQuery::class);
         $this->contestAuthorizator = $container->getByType(ContestAuthorizator::class);

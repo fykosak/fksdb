@@ -56,7 +56,7 @@ class DeduplicatePresenter extends BasePresenter {
      */
     public function handleBatchMerge() {
         if (!$this->getContestAuthorizator()->isAllowedForAnyContest('person', 'merge')) { //TODO generic authorizator
-            throw new ForbiddenRequestException;
+            throw new ForbiddenRequestException();
         }
         //TODO later specialize for each entinty type
         $finder = $this->createPersonDuplicateFinder();

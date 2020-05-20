@@ -42,7 +42,7 @@ class StoredQueryTagCloud extends Control {
      * @param $mode
      * @param ServiceMStoredQueryTag $serviceMStoredQueryTag
      */
-    function __construct($mode, ServiceMStoredQueryTag $serviceMStoredQueryTag) {
+    public function __construct($mode, ServiceMStoredQueryTag $serviceMStoredQueryTag) {
         parent::__construct();
         $this->serviceMStoredQueryTag = $serviceMStoredQueryTag;
         $this->mode = $mode;
@@ -85,7 +85,7 @@ class StoredQueryTagCloud extends Control {
                 $this->template->tags = $this->modelStoredQuery->getMStoredQueryTags();
                 break;
             default :
-                throw new InvalidArgumentException;
+                throw new InvalidArgumentException();
         }
 
         $this->template->mode = $this->mode;

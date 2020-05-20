@@ -25,7 +25,7 @@ class EventFactory extends SingleReflectionFactory {
      * @param ServiceEventType $serviceEventType
      * @param TableReflectionFactory $tableReflectionFactory
      */
-    function __construct(ServiceEventType $serviceEventType, TableReflectionFactory $tableReflectionFactory) {
+    public function __construct(ServiceEventType $serviceEventType, TableReflectionFactory $tableReflectionFactory) {
         parent::__construct($tableReflectionFactory);
         $this->serviceEventType = $serviceEventType;
     }

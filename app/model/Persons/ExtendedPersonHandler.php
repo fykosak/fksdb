@@ -30,6 +30,7 @@ use Traversable;
  */
 class ExtendedPersonHandler {
     use SmartObject;
+
     const CONT_AGGR = 'aggr';
     const CONT_PERSON = 'person';
     const CONT_MODEL = 'model';
@@ -91,7 +92,7 @@ class ExtendedPersonHandler {
      * @param MailTemplateFactory $mailTemplateFactory
      * @param AccountManager $accountManager
      */
-    function __construct(IService $service, ServicePerson $servicePerson, Connection $connection, MailTemplateFactory $mailTemplateFactory, AccountManager $accountManager) {
+    public function __construct(IService $service, ServicePerson $servicePerson, Connection $connection, MailTemplateFactory $mailTemplateFactory, AccountManager $accountManager) {
         $this->service = $service;
         $this->servicePerson = $servicePerson;
         $this->connection = $connection;
@@ -152,7 +153,7 @@ class ExtendedPersonHandler {
      * @param Form $form
      * @return mixed
      */
-    protected final function getReferencedPerson(Form $form) {
+    final protected function getReferencedPerson(Form $form) {
         return $form[self::CONT_AGGR][self::EL_PERSON]->getModel();
     }
 
@@ -163,7 +164,7 @@ class ExtendedPersonHandler {
      * @return int
      * @throws \Exception
      */
-    public final function handleForm(Form $form, IExtendedPersonPresenter $presenter, bool $sendEmail) {
+    final public function handleForm(Form $form, IExtendedPersonPresenter $presenter, bool $sendEmail) {
 
         try {
             $this->connection->beginTransaction();

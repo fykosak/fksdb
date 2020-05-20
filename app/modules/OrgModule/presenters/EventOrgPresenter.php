@@ -157,7 +157,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
      * @throws NotImplementedException
      */
     protected function createComponentGrid() {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**

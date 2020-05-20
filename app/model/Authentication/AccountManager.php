@@ -40,10 +40,10 @@ class AccountManager {
      * @param ServiceAuthToken $serviceAuthToken
      * @param ServiceEmailMessage $serviceEmailMessage
      */
-    function __construct(MailTemplateFactory $mailTemplateFactory,
-                         ServiceLogin $serviceLogin,
-                         ServiceAuthToken $serviceAuthToken,
-                         ServiceEmailMessage $serviceEmailMessage) {
+    public function __construct(MailTemplateFactory $mailTemplateFactory,
+                                ServiceLogin $serviceLogin,
+                                ServiceAuthToken $serviceAuthToken,
+                                ServiceEmailMessage $serviceEmailMessage) {
         $this->serviceLogin = $serviceLogin;
         $this->serviceAuthToken = $serviceAuthToken;
         $this->serviceEmailMessage = $serviceEmailMessage;
@@ -128,7 +128,7 @@ class AccountManager {
         $person = $login->getPerson();
         $recoveryAddress = $person ? $person->getInfo()->email : null;
         if (!$recoveryAddress) {
-            throw new RecoveryNotImplementedException;
+            throw new RecoveryNotImplementedException();
         }
         $token = $this->serviceAuthToken->getTable()->where([
             'login_id' => $login->login_id,
@@ -136,7 +136,7 @@ class AccountManager {
         ])
             ->where('until > ?', new DateTime())->fetch();
         if ($token) {
-            throw new RecoveryExistsException;
+            throw new RecoveryExistsException();
         }
 
         $until = DateTime::from($this->getRecoveryExpiration());
@@ -171,7 +171,7 @@ class AccountManager {
      * @param string $password
      * @return AbstractModelSingle|ModelLogin
      */
-    public final function createLogin(ModelPerson $person, string $login = null, string $password = null) {
+    final public function createLogin(ModelPerson $person, string $login = null, string $password = null) {
         /** @var ModelLogin $login */
         $login = $this->serviceLogin->createNewModel([
             'person_id' => $person->person_id,

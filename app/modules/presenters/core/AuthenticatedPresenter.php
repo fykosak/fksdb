@@ -177,7 +177,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     /**
      * @throws AbortException
      */
-    protected final function loginRedirect() {
+    final protected function loginRedirect() {
         if ($this->user->logoutReason === UserStorage::INACTIVITY) {
             $reason = AuthenticationPresenter::REASON_TIMEOUT;
         } else {
@@ -195,7 +195,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
      * can be checked there -- user session is not prepared at the
      * moment of the call.
      *
-     * @return boolean
+     * @return bool
      */
     public function requiresLogin() {
         return true;
@@ -203,7 +203,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
 
     /**
      * It may be overriden (should return realm).
-     * @return boolean|string
+     * @return bool|string
      */
     public function getAllowedAuthMethods() {
         return self::AUTH_ALLOW_LOGIN | self::AUTH_ALLOW_TOKEN;
@@ -220,7 +220,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     protected function unauthorizedAccess() {
-        throw new ForbiddenRequestException;
+        throw new ForbiddenRequestException();
     }
 
     /**

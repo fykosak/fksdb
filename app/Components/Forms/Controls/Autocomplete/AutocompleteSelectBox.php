@@ -32,12 +32,12 @@ class AutocompleteSelectBox extends TextBase {
     private $dataProvider;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $ajax;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $multiSelect;
 
@@ -60,7 +60,7 @@ class AutocompleteSelectBox extends TextBase {
      * @param string $label
      * @param string $renderMethod
      */
-    function __construct(bool $ajax, string $label = null, string $renderMethod = null) {
+    public function __construct(bool $ajax, $label = null, $renderMethod = null) {
         parent::__construct($label);
 
         $this->monitor(IAutocompleteJSONProvider::class);

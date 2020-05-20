@@ -20,7 +20,7 @@ class Count {
      * Count constructor.
      * @param $state
      */
-    function __construct($state) {
+    public function __construct($state) {
         $this->state = $state;
     }
 

@@ -19,14 +19,14 @@ use Nette\Utils\JsonException;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property-read integer person_id
+ * @property-read int person_id
  * @property-read string other_name
  * @property-read string family_name
  * @property-read string display_name
  * @property-read string gender
  * @property-read DateTime created
  */
-class ModelPerson extends AbstractModelSingle implements IResource, IPersonReferencedModel {
+class ModelPerson extends AbstractModelSingle implements IResource {
     /**
      * Returns first of the person's logins.
      * (so far, there's not support for multiple login in DB schema)
@@ -41,13 +41,6 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
         }
 
         return ModelLogin::createFromActiveRow($logins->current());
-    }
-
-    /**
-     * @return ModelPerson
-     */
-    public function getPerson(): ModelPerson {
-        return $this;
     }
 
     /**
@@ -71,7 +64,7 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
     }
 
     /**
-     * @param $acYear
+     * @param int $acYear
      * @param bool $extrapolated
      * @return ModelPersonHistory|null
      */
@@ -123,9 +116,6 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
         return $related;
     }
 
-    /**
-     * @return GroupedSelection
-     */
     public function getFlags(): GroupedSelection {
         return $this->related(DbNames::TAB_PERSON_HAS_FLAG, 'person_id');
     }
@@ -169,10 +159,7 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
         return null;
     }
 
-    /**
-     * @return GroupedSelection
-     */
-    public function getPostContacts() {
+    public function getPostContacts(): GroupedSelection {
         return $this->related(DbNames::TAB_POST_CONTACT, 'person_id');
     }
 
@@ -229,17 +216,11 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
         }
     }
 
-    /**
-     * @return GroupedSelection
-     */
     public function getEventParticipant(): GroupedSelection {
         //return (new Selection($this->getTable()->data,bNames::TAB_EVENT_PARTICIPANT, $this->getTable()->getConnection()))->where('person_id', $this->person_id);
         return $this->related(DbNames::TAB_EVENT_PARTICIPANT, 'person_id');
     }
 
-    /**
-     * @return GroupedSelection
-     */
     public function getEventTeacher(): GroupedSelection {
         return $this->related(DbNames::TAB_E_FYZIKLANI_TEAM, 'teacher_id');
     }
@@ -261,10 +242,7 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
         }
     }
 
-    /**
-     * @return GroupedSelection
-     */
-    public function getEventOrg() {
+    public function getEventOrg(): GroupedSelection {
         return $this->related(DbNames::TAB_EVENT_ORG, 'person_id');
     }
 
@@ -281,16 +259,10 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
         }
     }
 
-    /**
-     * @return string
-     */
     public function getFullName(): string {
         return $this->display_name ?: $this->other_name . ' ' . $this->family_name;
     }
 
-    /**
-     * @return string
-     */
     public function __toString(): string {
         return $this->getFullName();
     }
@@ -368,15 +340,12 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
         }
     }
 
-    /**
-     * @return string
-     */
     public function getResourceId(): string {
         return 'person';
     }
 
     /**
-     * @param integer eventId
+     * @param int eventId
      * @param string $type
      * @return string
      * @throws JsonException
@@ -413,9 +382,6 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
         }
     }
 
-    /**
-     * @return GroupedSelection
-     */
     public function getPayments(): GroupedSelection {
         return $this->related(DbNames::TAB_PAYMENT, 'person_id');
     }
@@ -436,9 +402,6 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
         return $this->getSchedule()->where('schedule_item.schedule_group.event_id', $event->event_id);
     }
 
-    /**
-     * @return GroupedSelection
-     */
     public function getSchedule(): GroupedSelection {
         return $this->related(DbNames::TAB_PERSON_SCHEDULE, 'person_id');
     }

@@ -42,7 +42,7 @@ abstract class ReactComponent extends Control {
     /**
      * @throws JsonException
      */
-    public final function render() {
+    final public function render() {
         $this->configure();
         $this->template->reactId = $this->getReactId();
         $this->template->actions = Json::encode($this->actions);
@@ -78,7 +78,7 @@ abstract class ReactComponent extends Control {
     /**
      * @return Container
      */
-    public final function getContext() {
+    final public function getContext() {
         return $this->container;
     }
 }

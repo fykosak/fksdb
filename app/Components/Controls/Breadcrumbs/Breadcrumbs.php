@@ -73,7 +73,7 @@ class Breadcrumbs extends Control {
      * @param HttpRequest $httpRequest
      * @param IPresenterFactory $presenterFactory
      */
-    function __construct($expiration, Session $session, IRouter $router, HttpRequest $httpRequest, IPresenterFactory $presenterFactory) {
+    public function __construct($expiration, Session $session, IRouter $router, HttpRequest $httpRequest, IPresenterFactory $presenterFactory) {
         parent::__construct();
         $this->session = $session;
         $this->router = $router;
@@ -98,7 +98,7 @@ class Breadcrumbs extends Control {
     public function setBackLink(AppRequest $request) {
         $presenter = $this->getPresenter();
         if (!$presenter instanceof INavigablePresenter) {
-            throw new BadTypeException(INavigablePresenter::class,$presenter);
+            throw new BadTypeException(INavigablePresenter::class, $presenter);
         }
 
         $requestKey = $this->getRequestKey($request);

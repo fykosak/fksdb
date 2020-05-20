@@ -21,6 +21,7 @@ use Nette\Utils\Arrays;
  */
 class ExportFormatFactory {
     use SmartObject;
+
     const AESOP = 'aesop';
     const CSV_HEADLESS = 'csv';
     const CSV_HEAD = 'csvh';
@@ -60,7 +61,7 @@ class ExportFormatFactory {
      * @param ServiceEvent $serviceEvent
      * @param ServiceContest $serviceContest
      */
-    function __construct(GlobalParameters $globalParameters, Container $container, StoredQueryFactory $storedQueryFactory, ServiceEvent $serviceEvent, ServiceContest $serviceContest) {
+    public function __construct(GlobalParameters $globalParameters, Container $container, StoredQueryFactory $storedQueryFactory, ServiceEvent $serviceEvent, ServiceContest $serviceContest) {
         $this->globalParameters = $globalParameters;
         $this->container = $container;
         $this->storedQueryFactory = $storedQueryFactory;

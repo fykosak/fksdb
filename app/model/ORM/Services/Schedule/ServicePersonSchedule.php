@@ -12,16 +12,10 @@ use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
  */
 class ServicePersonSchedule extends AbstractServiceSingle {
 
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelPersonSchedule::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_PERSON_SCHEDULE;
     }

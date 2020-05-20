@@ -46,7 +46,7 @@ class PersonContainerResolver implements IVisibilityResolver, IModifiabilityReso
      * @param SelfResolver $selfResolver
      * @param ExpressionEvaluator $evaluator
      */
-    function __construct(Field $field, $condition, SelfResolver $selfResolver, ExpressionEvaluator $evaluator) {
+    public function __construct(Field $field, $condition, SelfResolver $selfResolver, ExpressionEvaluator $evaluator) {
         $this->field = $field;
         $this->condition = $condition;
         $this->selfResolver = $selfResolver;

@@ -84,5 +84,5 @@ trait SubmitRevokeTrait {
     /**
      * @return Container
      */
-    abstract function getContext();
+    abstract public function getContext();
 }

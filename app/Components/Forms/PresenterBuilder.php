@@ -16,13 +16,14 @@ class PresenterBuilder {
      * @var IPresenterFactory
      */
     private $presenterFactory;
+    /** @var array */
     private $presenterCache = [];
 
     /**
      * PresenterBuilder constructor.
      * @param IPresenterFactory $presenterFactory
      */
-    function __construct(IPresenterFactory $presenterFactory) {
+    public function __construct(IPresenterFactory $presenterFactory) {
         $this->presenterFactory = $presenterFactory;
     }
 
@@ -33,7 +34,7 @@ class PresenterBuilder {
      * @param string $action
      * @param string $params
      * @param array $baseParams
-     * @param boolean $newInstance when false all instances of the same class will be the same and only initilization methods are called
+     * @param bool $newInstance when false all instances of the same class will be the same and only initilization methods are called
      * @return Presenter
      * @throws \Nette\Application\BadRequestException
      */
@@ -44,7 +45,7 @@ class PresenterBuilder {
             $presenter = $this->getCachePresenter($presenterName);
         }
 
-        $params = $params ? : [];
+        $params = $params ?: [];
 
         unset($baseParams[Presenter::ACTION_KEY]);
         foreach ($params as $key => $value) {
@@ -55,6 +56,7 @@ class PresenterBuilder {
 
         return $presenter;
     }
+
     /**
      * @param string $presenterName
      * @return Presenter

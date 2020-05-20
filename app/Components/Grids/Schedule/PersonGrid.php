@@ -36,7 +36,7 @@ class PersonGrid extends BaseGrid {
      */
     public function render(ModelPerson $person = null, ModelEvent $event = null) {
         if (!$event || !$person) {
-            throw new \InvalidArgumentException;
+            throw new \InvalidArgumentException();
         }
         $this->setData($event, $person);
         parent::render();

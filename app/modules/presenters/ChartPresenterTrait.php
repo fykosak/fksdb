@@ -73,11 +73,11 @@ trait ChartPresenterTrait {
      * @param bool $fullyQualified
      * @return string
      */
-    abstract function getAction($fullyQualified = false);
+    abstract public function getAction($fullyQualified = false);
 
     /**
      * @param $id
      * @return mixed
      */
-    abstract function setView($id);
+    abstract public function setView($id);
 }

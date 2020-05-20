@@ -55,7 +55,7 @@ class ModelStoredQuery extends AbstractModelSingle implements IResource {
     }
 
     /**
-     * @return StoredQueryPostProcessing
+     * @return StoredQueryPostProcessing|null
      */
     public function getPostProcessing() {
         if ($this->postProcessing == null && $this->php_post_proc) {
@@ -68,9 +68,6 @@ class ModelStoredQuery extends AbstractModelSingle implements IResource {
         return $this->postProcessing;
     }
 
-    /**
-     * @return \Nette\Database\Table\GroupedSelection
-     */
     public function getTags(): GroupedSelection {
         return $this->related(DbNames::TAB_STORED_QUERY_TAG, 'query_id');
     }
@@ -96,11 +93,7 @@ class ModelStoredQuery extends AbstractModelSingle implements IResource {
         return $result;
     }
 
-    /**
-     * @return string
-     */
     public function getResourceId(): string {
         return 'storedQuery';
     }
-
 }

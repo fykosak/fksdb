@@ -19,7 +19,7 @@ navigation:
         Org.Dashboard.default:
             - Dispatch.default
             - Org.Inbox.default
-            - Org.Points.default
+            - Org.Points.entry
             - Org.Tasks.import
             - Org.Contestant.list
             - Common.School.list
@@ -88,6 +88,6 @@ navigation:
             - Org.Inbox.list
             - Org.Inbox.inbox
             - Org.Inbox.handout
-            - Org.Inbox.preview
+            - Org.Points.preview
             - Org.Points.entry
             - Org.Inbox.corrected

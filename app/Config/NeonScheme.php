@@ -7,7 +7,6 @@ use Nette\InvalidArgumentException;
 use Nette\Neon\Exception;
 use Nette\Utils\Arrays;
 
-
 /**
  * So far only helper methods to "checked" laoding of Neon configuration.
  * The scheme (metamodel) for the configuration is Neon-encoded as well.
@@ -74,12 +73,3 @@ class NeonScheme {
     }
 
 }
-
-/**
- * Class NeonSchemaException
- * @package FKSDB\Config
- */
-class NeonSchemaException extends Exception {
-
-}
-

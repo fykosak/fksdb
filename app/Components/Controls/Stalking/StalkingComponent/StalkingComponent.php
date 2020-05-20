@@ -49,7 +49,7 @@ class StalkingComponent extends StalkingControl {
             case 'multi':
                 return $this->renderMulti($definition, $person);
             default:
-                throw new InvalidStateException;
+                throw new InvalidStateException();
         }
     }
 
@@ -72,7 +72,7 @@ class StalkingComponent extends StalkingControl {
                 $model = $person->getLogin();
                 break;
             default:
-                throw new NotImplementedException;
+                throw new NotImplementedException();
         }
 
         $this->template->model = $model;

@@ -6,8 +6,5 @@ namespace FKSDB\ORM\Models;
  * @package FKSDB\ORM\Models
  */
 interface ITaskReferencedModel {
-    /**
-     * @return ModelTask
-     */
-    public function getTask();
+    public function getTask(): ModelTask;
 }

@@ -60,7 +60,7 @@ class TasksPresenter extends BasePresenter {
     /**
      * @param Downloader $downloader
      */
-    function injectDownloader(Downloader $downloader) {
+    public function injectDownloader(Downloader $downloader) {
         $this->downloader = $downloader;
     }
 
@@ -130,7 +130,7 @@ class TasksPresenter extends BasePresenter {
                 break;
             case self::SOURCE_FILE:
                 if (!$values['file']->isOk()) {
-                    throw new UploadException;
+                    throw new UploadException();
                 }
                 $file = $values['file']->getTemporaryFile();
                 break;

@@ -169,7 +169,7 @@ class Field {
         $this->modifiable = $modifiable;
     }
     /* ** VISIBLE ** */
-    /** @var boolean|callable */
+    /** @var bool|callable */
     private $visible;
 
     /** @return bool */

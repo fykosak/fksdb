@@ -17,11 +17,11 @@ use Nette\Utils\DateTime;
  * @author Michal Červeňák <miso@fykos.cz>
  *
  * @property-read string state
- * @property-read integer e_fyziklani_team_id
- * @property-read integer points
- * @property-read integer fyziklani_task_id
- * @property-read integer fyziklani_submit_id
- * @property-read integer task_id
+ * @property-read int e_fyziklani_team_id
+ * @property-read int points
+ * @property-read int fyziklani_task_id
+ * @property-read int fyziklani_submit_id
+ * @property-read int task_id
  * @property-read ActiveRow e_fyziklani_team
  * @property-read ActiveRow fyziklani_task
  * @property-read DateTime created
@@ -41,45 +41,22 @@ class ModelFyziklaniSubmit extends AbstractModelSingle implements IFyziklaniTeam
         return $this->getFyziklaniTask();
     }
 
-    /**
-     * @return ModelFyziklaniTask
-     */
     public function getFyziklaniTask(): ModelFyziklaniTask {
         return ModelFyziklaniTask::createFromActiveRow($this->fyziklani_task);
     }
 
-    /**
-     * @return ModelEvent
-     */
     public function getEvent(): ModelEvent {
         return $this->getFyziklaniTeam()->getEvent();
     }
 
-    /**
-     * @return ModelFyziklaniTeam
-     * @deprecated
-     */
-    public function getTeam(): ModelFyziklaniTeam {
-        return $this->getFyziklaniTeam();
-    }
-
-    /**
-     * @return ModelFyziklaniTeam
-     */
     public function getFyziklaniTeam(): ModelFyziklaniTeam {
         return ModelFyziklaniTeam::createFromActiveRow($this->e_fyziklani_team);
     }
 
-    /**
-     * @return bool
-     */
     public function isChecked(): bool {
         return $this->state === self::STATE_CHECKED;
     }
 
-    /**
-     * @return array
-     */
     public function __toArray(): array {
         return [
             'points' => $this->points,
@@ -89,24 +66,15 @@ class ModelFyziklaniSubmit extends AbstractModelSingle implements IFyziklaniTeam
         ];
     }
 
-    /**
-     * @return bool
-     */
     public function canRevoke(): bool {
         return $this->canChange() && !is_null($this->points);
     }
 
-    /**
-     * @return bool
-     */
     public function canChange(): bool {
         return $this->getFyziklaniTeam()->hasOpenSubmitting();
     }
 
-    /**
-     * @inheritDoc
-     */
-    function getResourceId() {
+    public function getResourceId(): string {
         return self::RESOURCE_ID;
     }
 }

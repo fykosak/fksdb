@@ -94,7 +94,7 @@ trait SubmitDownloadTrait {
     /**
      * @return Container
      */
-    abstract function getContext();
+    abstract public function getContext();
 
     /**
      * @param bool $need

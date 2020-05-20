@@ -31,7 +31,7 @@ class PersonProvider implements IFilteredDataProvider {
      * PersonProvider constructor.
      * @param ServicePerson $servicePerson
      */
-    function __construct(ServicePerson $servicePerson) {
+    public function __construct(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
         $this->searchTable = $this->servicePerson->getTable();
     }

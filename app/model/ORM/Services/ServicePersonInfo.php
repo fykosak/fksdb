@@ -14,16 +14,10 @@ use FKSDB\ORM\Models\ModelPersonInfo;
  */
 class ServicePersonInfo extends AbstractServiceSingle {
 
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelPersonInfo::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_PERSON_INFO;
     }

@@ -29,7 +29,7 @@ class ServiceMStoredQueryTag extends AbstractServiceMulti {
     public function createNew($data = null) {
         $mainModel = $this->getMainService()->findByPrimary($data['tag_type_id']);
         if ($mainModel === null) {
-            throw new InvalidArgumentException;
+            throw new InvalidArgumentException();
         }
         $joinedModel = $this->getJoinedService()->createNew($data);
 

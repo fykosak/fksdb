@@ -14,6 +14,7 @@ use Nette\SmartObject;
  */
 class AclResolver implements IVisibilityResolver, IModifiabilityResolver {
     use SmartObject;
+
     /**
      * @var ContestAuthorizator
      */
@@ -30,7 +31,7 @@ class AclResolver implements IVisibilityResolver, IModifiabilityResolver {
      * @param ContestAuthorizator $contestAuthorizator
      * @param \FKSDB\ORM\Models\ModelContest $contest
      */
-    function __construct(ContestAuthorizator $contestAuthorizator, ModelContest $contest) {
+    public function __construct(ContestAuthorizator $contestAuthorizator, ModelContest $contest) {
         $this->contestAuthorizator = $contestAuthorizator;
         $this->contest = $contest;
     }

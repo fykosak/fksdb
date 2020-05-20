@@ -109,7 +109,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
      *
      * @param IModel $model
      * @param array $data
-     * @param boolean $alive
+     * @param bool $alive
      * @deprecated
      */
     public function updateModel(IModel $model, $data, $alive = true) {

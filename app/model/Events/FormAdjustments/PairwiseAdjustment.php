@@ -24,7 +24,7 @@ abstract class PairwiseAdjustment extends AbstractAdjustment implements IFormAdj
      * PairwiseAdjustment constructor.
      * @param $rules
      */
-    function __construct($rules) {
+    public function __construct($rules) {
         $this->rules = $rules;
     }
 

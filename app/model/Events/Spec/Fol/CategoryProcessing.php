@@ -48,7 +48,7 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
      * @param YearCalculator $yearCalculator
      * @param ServiceSchool $serviceSchool
      */
-    function __construct($rulesVersion, YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
+    public function __construct($rulesVersion, YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
         $this->yearCalculator = $yearCalculator;
         $this->serviceSchool = $serviceSchool;
 

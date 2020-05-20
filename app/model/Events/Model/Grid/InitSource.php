@@ -24,7 +24,7 @@ class InitSource extends AggregatedPersonSource implements IHolderSource {
      * @param TypedTableSelection $events
      * @param Container $container
      */
-    function __construct(TypedTableSelection $events, Container $container) {
+    public function __construct(TypedTableSelection $events, Container $container) {
         parent::__construct($events, $container);
     }
 

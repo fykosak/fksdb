@@ -18,7 +18,7 @@ class EvaluationNullObject extends EvaluationStrategy {
      * @throws NotImplementedException
      */
     public function getCategories(): array {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**
@@ -27,7 +27,7 @@ class EvaluationNullObject extends EvaluationStrategy {
      * @throws NotImplementedException
      */
     public function categoryToStudyYears(ModelCategory $category): array {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**
@@ -36,7 +36,7 @@ class EvaluationNullObject extends EvaluationStrategy {
      * @throws NotImplementedException
      */
     public function getPointsColumn(ActiveRow $task) {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**
@@ -44,7 +44,7 @@ class EvaluationNullObject extends EvaluationStrategy {
      * @throws NotImplementedException
      */
     public function getSumColumn() {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**
@@ -54,7 +54,7 @@ class EvaluationNullObject extends EvaluationStrategy {
      * @throws NotImplementedException
      */
     public function getTaskPoints(ActiveRow $task, ModelCategory $category) {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**
@@ -63,7 +63,7 @@ class EvaluationNullObject extends EvaluationStrategy {
      * @throws NotImplementedException
      */
     public function getTaskPointsColumn(ModelCategory $category): string {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
 }

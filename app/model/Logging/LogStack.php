@@ -33,7 +33,7 @@ abstract class StackedLogger implements ILogger {
     /**
      * @param Message $message
      */
-    public final function log(Message $message) {
+    final public function log(Message $message) {
         $this->doLog($message);
         if ($this->getChild()) {
             $this->getChild()->log($message);

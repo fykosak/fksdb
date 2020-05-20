@@ -8,7 +8,6 @@ use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\ITemplate;
 use Nette\Utils\DateTime;
-use Nette\DI\Container;
 use PublicModule\ApplicationPresenter;
 use Tester\Assert;
 

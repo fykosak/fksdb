@@ -42,12 +42,12 @@ class ReferencedContainer extends ContainerWithOptions {
     private $referencedId;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $hasSearch;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $allowClear = true;
 
@@ -65,7 +65,7 @@ class ReferencedContainer extends ContainerWithOptions {
      * ReferencedContainer constructor.
      * @param ReferencedId $referencedId
      */
-    function __construct(ReferencedId $referencedId) {
+    public function __construct(ReferencedId $referencedId) {
         parent::__construct();
         $this->monitor(IJavaScriptCollector::class);
         $this->monitor(Form::class);
@@ -162,7 +162,7 @@ class ReferencedContainer extends ContainerWithOptions {
      * Swaps hidden and attached components from/to the container.
      *
      * @staticvar array $searchComponents
-     * @param boolean $value
+     * @param bool $value
      */
     public function setSearchButton($value) {
         static $searchComponents = [
@@ -189,7 +189,7 @@ class ReferencedContainer extends ContainerWithOptions {
     /**
      * Toggles button used for clearing the element.
      *
-     * @param boolean $value
+     * @param bool $value
      */
     public function setClearButton($value) {
         if (!$this->getAllowClear()) {

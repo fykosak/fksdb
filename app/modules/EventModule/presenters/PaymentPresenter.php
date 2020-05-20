@@ -26,6 +26,7 @@ use Nette\Application\UI\Control;
  */
 class PaymentPresenter extends BasePresenter {
     use EventEntityTrait;
+
     /**
      * @var Machine
      */
@@ -248,7 +249,7 @@ class PaymentPresenter extends BasePresenter {
     /**
      * @return ServicePayment
      */
-    function getORMService() {
+    public function getORMService() {
         return $this->servicePayment;
     }
 
@@ -256,20 +257,20 @@ class PaymentPresenter extends BasePresenter {
      * @inheritDoc
      */
     public function createComponentGrid(): BaseGrid {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**
      * @inheritDoc
      */
     public function createComponentCreateForm(): Control {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**
      * @inheritDoc
      */
     public function createComponentEditForm(): Control {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 }

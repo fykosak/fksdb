@@ -55,17 +55,17 @@ use Persons\SelfResolver;
  */
 class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, IExtendedPersonPresenter {
     /**
-     * @var integer
+     * @var int
      * @persistent
      */
     public $contestId;
     /**
-     * @var integer
+     * @var int
      * @persistent
      */
     public $year;
     /**
-     * @var integer
+     * @var int
      * @persistent
      */
     public $personId;

@@ -18,13 +18,13 @@ class CompareStrategy implements IMergeStrategy {
      *
      * @param mixed $compare greater|less
      */
-    function __construct($compare) {
+    public function __construct($compare) {
         if ($compare == 'greater') {
             $this->sign = 1;
         } elseif ($compare == 'less') {
             $this->sign = -1;
         } else {
-            throw new InvalidArgumentException;
+            throw new InvalidArgumentException();
         }
     }
 
@@ -60,7 +60,7 @@ class CompareStrategy implements IMergeStrategy {
         } elseif (is_numeric($trunk) && is_numeric($merged)) {
             return $trunk - $merged;
         } else {
-            throw new CannotMergeException;
+            throw new CannotMergeException();
         }
     }
 

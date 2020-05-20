@@ -42,5 +42,5 @@ abstract class SeriesTableFormControl extends SeriesTableControl {
      * @throws AbortException
      * @throws ForbiddenRequestException
      */
-    protected abstract function handleFormSuccess(Form $form);
+    abstract protected function handleFormSuccess(Form $form);
 }

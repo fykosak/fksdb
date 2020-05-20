@@ -13,6 +13,7 @@ use Nette\SmartObject;
  */
 class CSVParser implements Iterator {
     use SmartObject;
+
     const INDEX_NUMERIC = 0;
     const INDEX_FROM_HEADER = 1;
     const BOM = '\xEF\xBB\xBF';
@@ -47,7 +48,7 @@ class CSVParser implements Iterator {
      * @param int $indexType
      * @param string $delimiter
      */
-    function __construct($filename, $indexType = self::INDEX_NUMERIC, $delimiter = ';') {
+    public function __construct($filename, $indexType = self::INDEX_NUMERIC, $delimiter = ';') {
         $this->indexType = $indexType;
         $this->delimiter = $delimiter;
         $this->file = fopen($filename, 'r');

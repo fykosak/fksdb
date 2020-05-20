@@ -58,7 +58,7 @@ class FilesystemCorrectedSubmitStorage implements ISubmitStorage {
      * @param $filenameMask
      * @param $contestMap
      */
-    function __construct($root, $directoryMask, $filenameMask, $contestMap) {
+    public function __construct($root, $directoryMask, $filenameMask, $contestMap) {
         $this->root = $root;
         $this->directoryMask = $directoryMask;
         $this->filenameMask = $filenameMask;
@@ -76,21 +76,21 @@ class FilesystemCorrectedSubmitStorage implements ISubmitStorage {
      * @throws NotImplementedException
      */
     public function beginTransaction() {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**
      * @throws NotImplementedException
      */
     public function commit() {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**
      * @throws NotImplementedException
      */
     public function rollback() {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**
@@ -99,7 +99,7 @@ class FilesystemCorrectedSubmitStorage implements ISubmitStorage {
      * @throws NotImplementedException
      */
     public function storeFile($filename, ModelSubmit $submit) {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**
@@ -142,7 +142,7 @@ class FilesystemCorrectedSubmitStorage implements ISubmitStorage {
      * @throws NotImplementedException
      */
     public function deleteFile(ModelSubmit $submit) {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**

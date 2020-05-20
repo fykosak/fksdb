@@ -15,8 +15,8 @@ use Nette\Security\IIdentity;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property-read boolean active
- * @property-read integer login_id
+ * @property-read bool active
+ * @property-read int login_id
  * @property-read DateTime last_login
  * @property-read string hash
  * @property-read ActiveRow person
@@ -76,27 +76,16 @@ class ModelLogin extends AbstractModelSingle implements IIdentity, IPersonRefere
         }
     }
 
-    /**
-     * @param YearCalculator $yearCalculator
-     * @return bool
-     */
     public function isOrg(YearCalculator $yearCalculator): bool {
         return count($this->getActiveOrgs($yearCalculator)) > 0;
     }
 
-    /**
-     * @param YearCalculator $yearCalculator
-     * @return bool
-     */
     public function isContestant(YearCalculator $yearCalculator): bool {
         $person = $this->getPerson();
         return $person && count($person->getActiveContestants($yearCalculator)) > 0;
     }
 
-    /**
-     * @return string
-     */
-    public function __toString() {
+    public function __toString(): string {
         $person = $this->getPerson();
         if ($person) {
             return $person->__toString();

@@ -45,12 +45,12 @@ class SeriesChooser extends Control {
     private $series;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $initialized = false;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $valid;
 
@@ -61,7 +61,7 @@ class SeriesChooser extends Control {
      * @param ServiceContest $serviceContest
      * @param ITranslator $translator
      */
-    function __construct(Session $session, SeriesCalculator $seriesCalculator, ServiceContest $serviceContest, ITranslator $translator) {
+    public function __construct(Session $session, SeriesCalculator $seriesCalculator, ServiceContest $serviceContest, ITranslator $translator) {
         parent::__construct();
         $this->session = $session;
         $this->seriesCalculator = $seriesCalculator;
@@ -105,7 +105,7 @@ class SeriesChooser extends Control {
         $session = $this->session->getSection(self::SESSION_SECTION);
         $presenter = $this->getPresenter();
         $contest = $presenter->getSelectedContest();
-      //  $year = $presenter->getSelectedYear();
+        //  $year = $presenter->getSelectedYear();
         $series = null;
 
         // 1) URL (overrides)

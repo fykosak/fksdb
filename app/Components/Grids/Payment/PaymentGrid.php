@@ -21,7 +21,7 @@ abstract class PaymentGrid extends BaseGrid {
      * PaymentGrid constructor.
      * @param Container $container
      */
-    function __construct(Container $container) {
+    public function __construct(Container $container) {
         parent::__construct($container);
         $this->servicePayment = $container->getByType(ServicePayment::class);
     }

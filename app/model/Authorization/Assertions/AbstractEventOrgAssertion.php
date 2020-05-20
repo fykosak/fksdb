@@ -17,6 +17,7 @@ use Nette\SmartObject;
 abstract class AbstractEventOrgAssertion {
 
     use SmartObject;
+
     /**
      * @var string
      */
@@ -39,7 +40,7 @@ abstract class AbstractEventOrgAssertion {
      * @param IUserStorage $user
      * @param Context $connection
      */
-    function __construct($eventTypeId, string $parameterName, IUserStorage $user, Context $connection) {
+    public function __construct($eventTypeId, string $parameterName, IUserStorage $user, Context $connection) {
         $this->parameterName = $parameterName;
         $this->user = $user;
         $this->connection = $connection;

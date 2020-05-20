@@ -121,9 +121,9 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
 
     /**
      * @param array $fieldsDefinition
-     * @param integer $acYear
+     * @param int $acYear
      * @param string $searchType
-     * @param boolean $allowClear
+     * @param bool $allowClear
      * @param IModifiabilityResolver $modifiabilityResolver is person's filled field modifiable?
      * @param IVisibilityResolver $visibilityResolver is person's writeOnly field visible? (i.e. not writeOnly then)
      * @param int $evenId
@@ -300,7 +300,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
                     $control = $this->personFactory->createField($fieldName);
                     break;
                 default:
-                    throw new InvalidArgumentException;
+                    throw new InvalidArgumentException();
 
             }
             $this->appendMetadata($control, $hiddenField, $fieldName, $metadata);
@@ -449,7 +449,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
      * @param $acYear
      * @return bool
      */
-    public final function isFilled(ModelPerson $person, $sub, $field, $acYear) {
+    final public function isFilled(ModelPerson $person, $sub, $field, $acYear) {
         $value = $this->getPersonValue($person, $sub, $field, $acYear, self::TARGET_VALIDATION);
         return !($value === null || $value === '');
     }

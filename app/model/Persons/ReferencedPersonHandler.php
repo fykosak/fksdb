@@ -66,7 +66,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
      */
     private $acYear;
     /**
-     * @var integer
+     * @var int
      */
     private $eventId;
 
@@ -90,7 +90,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @param $acYear
      * @param $resolution
      */
-    function __construct(
+    public function __construct(
         ServicePerson $servicePerson,
         ServicePersonInfo $servicePersonInfo,
         ServicePersonHistory $servicePersonHistory,

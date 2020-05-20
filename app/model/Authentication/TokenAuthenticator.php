@@ -35,7 +35,7 @@ class TokenAuthenticator extends AbstractAuthenticator {
      * @param ServiceLogin $serviceLogin
      * @param YearCalculator $yearCalculator
      */
-    function __construct(ServiceAuthToken $authTokenService, Session $session, ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
+    public function __construct(ServiceAuthToken $authTokenService, Session $session, ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
         parent::__construct($serviceLogin, $yearCalculator);
         $this->authTokenService = $authTokenService;
         $this->session = $session;
@@ -54,7 +54,7 @@ class TokenAuthenticator extends AbstractAuthenticator {
         // login by the identity
         $login = $token->getLogin();
         if (!$login->active) {
-            throw new InactiveLoginException;
+            throw new InactiveLoginException();
         }
 
         $this->logAuthentication($login);
@@ -78,7 +78,7 @@ class TokenAuthenticator extends AbstractAuthenticator {
     }
 
     /**
-     * @param string $tokenType  require specific token type
+     * @param string $tokenType require specific token type
      * @return bool true iff user has been authenticated by the authentication token
      */
     public function isAuthenticatedByToken($tokenType = null) {

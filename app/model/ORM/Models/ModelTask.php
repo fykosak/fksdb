@@ -11,7 +11,7 @@ use Utils;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property-read integer series
+ * @property-read int series
  * @property-read string label
  * @property-read string name_cs
  * @property-read int task_id
@@ -23,11 +23,6 @@ use Utils;
  */
 class ModelTask extends AbstractModelSingle implements IContestReferencedModel {
 
-    /**
-     * (Fully qualified) task name for use in GUI.
-     *
-     * @return string
-     */
     public function getFQName(): string {
         return sprintf('%s.%s %s', Utils::toRoman($this->series), $this->label, $this->name_cs);
     }
@@ -64,16 +59,10 @@ class ModelTask extends AbstractModelSingle implements IContestReferencedModel {
         return $result;
     }
 
-    /**
-     * @return string
-     */
     public function webalizeLabel(): string {
         return Strings::webalize($this->label, null, false);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getContest(): ModelContest {
         return ModelContest::createFromActiveRow($this->ref(DbNames::TAB_CONTEST, 'contest_id'));
     }

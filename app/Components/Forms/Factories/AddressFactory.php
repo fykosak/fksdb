@@ -36,7 +36,7 @@ class AddressFactory {
      * @param \FKSDB\ORM\Services\ServiceAddress $serviceAddress
      * @param ServiceRegion $serviceRegion
      */
-    function __construct(ServiceAddress $serviceAddress, ServiceRegion $serviceRegion) {
+    public function __construct(ServiceAddress $serviceAddress, ServiceRegion $serviceRegion) {
         $this->serviceAddress = $serviceAddress;
         $this->serviceRegion = $serviceRegion;
     }
@@ -58,7 +58,7 @@ class AddressFactory {
      *
      * @param AddressContainer $container
      * @param IControl $conditioningField
-     * @param integer $options
+     * @param int $options
      */
     public function buildAddress(AddressContainer $container, $options = 0, IControl $conditioningField = null) {
         $container->setServiceRegion($this->serviceRegion);

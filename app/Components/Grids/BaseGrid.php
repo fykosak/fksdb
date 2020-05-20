@@ -64,7 +64,7 @@ abstract class BaseGrid extends Grid {
     /**
      * @return Container
      */
-    public final function getContext() {
+    final public function getContext() {
         return $this->context;
     }
 
@@ -225,7 +225,7 @@ abstract class BaseGrid extends Grid {
      * @throws NotImplementedException
      */
     protected function getModelClassName(): string {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**

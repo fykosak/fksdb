@@ -42,7 +42,7 @@ abstract class AbstractFactory implements IFieldFactory {
      * @param BaseMachine $machine
      * @param Container $container
      */
-    protected final function appendRequiredRule(IControl $element, Field $field, BaseMachine $machine, Container $container) {
+    final protected function appendRequiredRule(IControl $element, Field $field, BaseMachine $machine, Container $container) {
         if ($field->isRequired()) {
             $conditioned = $element;
             foreach ($field->getBaseHolder()->getDeterminingFields() as $name => $determiningField) {

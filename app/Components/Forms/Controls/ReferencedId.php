@@ -50,7 +50,7 @@ class ReferencedId extends HiddenField {
     private $referencedSetter;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $modelCreated;
 
@@ -65,13 +65,12 @@ class ReferencedId extends HiddenField {
      * @param IReferencedHandler $handler
      * @param IReferencedSetter $referencedSetter
      */
-    function __construct(IService $service, IReferencedHandler $handler, IReferencedSetter $referencedSetter) {
+    public function __construct(IService $service, IReferencedHandler $handler, IReferencedSetter $referencedSetter) {
         $this->service = $service;
         $this->handler = $handler;
         $this->referencedSetter = $referencedSetter;
         parent::__construct();
         $this->monitor(Form::class);
-
     }
 
     /**
@@ -177,7 +176,7 @@ class ReferencedId extends HiddenField {
      * If you are calling this method out of transaction, set $fullfilPromise to
      * false. This is the case for event form adjustments.
      *
-     * @param boolean $fullfilPromise
+     * @param bool $fullfilPromise
      * @return mixed
      */
     public function getValue($fullfilPromise = true) {

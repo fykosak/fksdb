@@ -33,18 +33,12 @@ class ModelScheduleGroup extends AbstractModelSingle implements IEventReferenced
     const TYPE_ACCOMMODATION_TEACHER = 'accommodation_teacher';
     const TYPE_TEACHER_PRESENT = 'teacher_present';
     const TYPE_WEEKEND = 'weekend';
-    CONST TYPE_WEEKEND_INFO = 'weekend_info';
+    const TYPE_WEEKEND_INFO = 'weekend_info';
 
-    /**
-     * @return GroupedSelection
-     */
     public function getItems(): GroupedSelection {
         return $this->related(DbNames::TAB_SCHEDULE_ITEM);
     }
 
-    /**
-     * @return ModelEvent
-     */
     public function getEvent(): ModelEvent {
         return ModelEvent::createFromActiveRow($this->event);
     }
@@ -57,9 +51,6 @@ class ModelScheduleGroup extends AbstractModelSingle implements IEventReferenced
         return $this->name_cs . '/' . $this->name_en;
     }
 
-    /**
-     * @return array
-     */
     public function __toArray(): array {
         return [
             'scheduleGroupId' => $this->schedule_group_id,
@@ -74,10 +65,7 @@ class ModelScheduleGroup extends AbstractModelSingle implements IEventReferenced
         ];
     }
 
-    /**
-     * @inheritDoc
-     */
-    function getResourceId() {
+    public function getResourceId(): string {
         return self::RESOURCE_ID;
     }
 }

@@ -51,7 +51,7 @@ class ApplicationComponent extends Control {
      * @param ApplicationHandler $handler
      * @param Holder $holder
      */
-    function __construct(ApplicationHandler $handler, Holder $holder) {
+    public function __construct(ApplicationHandler $handler, Holder $holder) {
         parent::__construct();
         $this->handler = $handler;
         $this->holder = $holder;

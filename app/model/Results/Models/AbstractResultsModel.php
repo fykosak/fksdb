@@ -73,7 +73,7 @@ abstract class AbstractResultsModel {
      * @param $year
      * @param EvaluationStrategy $evaluationStrategy
      */
-    function __construct(ModelContest $contest, ServiceTask $serviceTask, Connection $connection, $year, EvaluationStrategy $evaluationStrategy) {
+    public function __construct(ModelContest $contest, ServiceTask $serviceTask, Connection $connection, $year, EvaluationStrategy $evaluationStrategy) {
         $this->contest = $contest;
         $this->serviceTask = $serviceTask;
         $this->connection = $connection;

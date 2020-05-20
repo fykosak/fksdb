@@ -27,7 +27,7 @@ class GraphComponent extends BaseControl {
      * @param BaseMachine $baseMachine
      * @param ExpressionPrinter $expressionPrinter
      */
-    function __construct(Container $container, BaseMachine $baseMachine, ExpressionPrinter $expressionPrinter) {
+    public function __construct(Container $container, BaseMachine $baseMachine, ExpressionPrinter $expressionPrinter) {
         parent::__construct($container);
         $this->monitor(IJavaScriptCollector::class);
         $this->baseMachine = $baseMachine;

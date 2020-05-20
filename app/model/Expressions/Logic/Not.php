@@ -17,7 +17,7 @@ class Not extends EvaluatedExpression {
      * Not constructor.
      * @param $expression
      */
-    function __construct($expression) {
+    public function __construct($expression) {
         $this->expression = $expression;
     }
 
@@ -25,7 +25,7 @@ class Not extends EvaluatedExpression {
      * @param array $args
      * @return bool
      */
-    public final function __invoke(...$args): bool {
+    final public function __invoke(...$args): bool {
         return !$this->evaluateArgument($this->expression, ...$args);
     }
 

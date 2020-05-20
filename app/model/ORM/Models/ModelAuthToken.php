@@ -27,12 +27,8 @@ class ModelAuthToken extends AbstractModelSingle {
     /** @const Notification about an event application. */
     const TYPE_EVENT_NOTIFY = 'event_notify';
 
-    /**
-     * @return ModelLogin
-     */
     public function getLogin(): ModelLogin {
         $data = $this->login;
         return ModelLogin::createFromActiveRow($data);
     }
-
 }

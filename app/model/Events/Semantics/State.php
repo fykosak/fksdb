@@ -13,6 +13,7 @@ use Nette\SmartObject;
 class State extends EvaluatedExpression {
     use SmartObject;
     use WithEventTrait;
+
     /** @var string */
     private $state;
 
@@ -20,7 +21,7 @@ class State extends EvaluatedExpression {
      * State constructor.
      * @param string $state
      */
-    function __construct(string $state) {
+    public function __construct(string $state) {
         $this->state = $state;
     }
 
