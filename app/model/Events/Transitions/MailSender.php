@@ -20,7 +20,6 @@ use FKSDB\ORM\Services\ServiceEmailMessage;
 use FKSDB\ORM\Services\ServicePerson;
 use Mail\MailTemplateFactory;
 use Nette\SmartObject;
-use Nette\Utils\DateTime;
 use Nette\Utils\Strings;
 use PublicModule\ApplicationPresenter;
 
@@ -108,6 +107,7 @@ class MailSender {
     /**
      * @param Transition $transition
      * @param Holder $holder
+     * @return void
      * @throws \Exception
      */
     public function __invoke(Transition $transition, Holder $holder) {
@@ -117,6 +117,7 @@ class MailSender {
     /**
      * @param Transition $transition
      * @param Holder $holder
+     * @return void
      * @throws \Exception
      */
     private function send(Transition $transition, Holder $holder) {
@@ -195,7 +196,7 @@ class MailSender {
      * @return ModelAuthToken
      * @throws \Exception
      */
-    private function createToken(ModelLogin $login, ModelEvent $event, IModel $application) {
+    private function createToken(ModelLogin $login, ModelEvent $event, IModel $application): ModelAuthToken {
         $until = $this->getUntil($event);
         $data = ApplicationPresenter::encodeParameters($event->getPrimary(), $application->getPrimary());
         return $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_EVENT_NOTIFY, $until, $data, true);
@@ -207,24 +208,29 @@ class MailSender {
      * @param Holder $holder
      * @param Machine $machine
      * @return string
+     * TODO extension point
      */
-    private function getSubject(ModelEvent $event, IModel $application, Holder $holder, Machine $machine) {
-        $application = Strings::truncate((string)$application, 20); //TODO extension point
+    private function getSubject(ModelEvent $event, IModel $application, Holder $holder, Machine $machine): string {
+        if (in_array($event->event_type_id, [4, 5])) {
+            return _('Pozvánka na soustředění');
+        }
+        $application = Strings::truncate((string)$application, 20);
         return $event->name . ': ' . $application . ' ' . mb_strtolower($machine->getPrimaryMachine()->getStateName($holder->getPrimaryHolder()->getModelState()));
     }
 
     /**
      * @param ModelEvent $event
-     * @return DateTime
+     * @return \DateTimeInterface
+     * TODO extension point
      */
-    private function getUntil(ModelEvent $event) {
-        return $event->registration_end ?: $event->end; //TODO extension point
+    private function getUntil(ModelEvent $event): \DateTimeInterface {
+        return $event->registration_end ?: $event->end;
     }
 
     /**
      * @return bool
      */
-    private function hasBcc() {
+    private function hasBcc(): bool {
         return !is_array($this->addressees) && substr($this->addressees, 0, strlen(self::BCC_PREFIX)) == self::BCC_PREFIX;
     }
 
@@ -233,7 +239,7 @@ class MailSender {
      * @param Holder $holder
      * @return array
      */
-    private function resolveAdressees(Transition $transition, Holder $holder) {
+    private function resolveAdressees(Transition $transition, Holder $holder): array {
         if (is_array($this->addressees)) {
             $names = $this->addressees;
         } else {
@@ -255,7 +261,6 @@ class MailSender {
                         $names = array_merge($names, array_map(function (BaseHolder $it) {
                             return $it->getName();
                         }, $group['holders']));
-
                     }
                     break;
                 case self::ADDR_ALL:
@@ -266,7 +271,6 @@ class MailSender {
             }
         }
 
-
         $persons = [];
         foreach ($names as $name) {
             $personId = $holder->getBaseHolder($name)->getPersonId();
@@ -274,8 +278,6 @@ class MailSender {
                 $persons[] = $personId;
             }
         }
-
         return $persons;
     }
-
 }

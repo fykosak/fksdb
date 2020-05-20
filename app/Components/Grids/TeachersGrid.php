@@ -77,12 +77,12 @@ class TeachersGrid extends BaseGrid {
         //
         $this->addButton('edit', _('Edit'))
             ->setText(_('Edit'))
-            ->setLink(function ($row) {
+            ->setLink(function (ModelTeacher $row) {
                 return $this->getPresenter()->link('edit', $row->teacher_id);
             });
         $this->addButton('detail', _('Detail'))
             ->setText(_('Detail'))
-            ->setLink(function ($row) {
+            ->setLink(function (ModelTeacher $row) {
                 return $this->getPresenter()->link('detail', ['id' => $row->teacher_id]);
             });
 

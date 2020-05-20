@@ -25,7 +25,6 @@ class RouterExtension extends CompilerExtension {
         ]);
 
         $router = $container->getDefinition('router');
-        Debugger::barDump($router);
         $disableSecured = $config['disableSecured'];
 
         foreach ($config['routes'] as $action) {

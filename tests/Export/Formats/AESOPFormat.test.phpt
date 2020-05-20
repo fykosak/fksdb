@@ -98,11 +98,11 @@ class MockProcessing extends StoredQueryPostProcessing {
         return 0;
     }
 
-    public function getDescription() {
+    public function getDescription(): string {
 
     }
 
-    public function processData($data) {
+    public function processData(PDOStatement $data) {
         return $data;
     }
 

@@ -20,6 +20,7 @@ use Nette\Security\IResource;
  * @property-read string state
  * @property-read int number_brochures
  * @property-read string note
+ * @property-read int teacher_id
  */
 class ModelTeacher extends AbstractModelSingle implements IResource, IPersonReferencedModel, ISchoolReferencedModel {
     const RESOURCE_ID = 'teacher';

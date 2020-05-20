@@ -298,6 +298,7 @@ class ExportPresenter extends SeriesPresenter {
                     $parameters[substr($key, strlen(StoredQueryComponent::PARAMETER_URL_PREFIX))] = $value;
                 }
             }
+            /** @var StoredQueryComponent $storedQueryComponent */
             $storedQueryComponent = $this->getComponent('resultsComponent');
             $storedQueryComponent->updateParameters($parameters);
 
@@ -365,7 +366,7 @@ class ExportPresenter extends SeriesPresenter {
     public function titleShow($id) {
         $title = sprintf(_('Detail dotazu %s'), $this->getPatternQuery()->name);
         $qid = $this->getPatternQuery()->qid;
-        if ($qid) { // intentionally =
+        if ($qid) {
             $title .= " ($qid)";
         }
 
