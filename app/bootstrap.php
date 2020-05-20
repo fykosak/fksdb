@@ -14,7 +14,7 @@ $configurator = new Configurator();
 
 // Enable Nette Debugger for error visualisation & logging
 $configurator->enableDebugger(dirname(__FILE__) . '/../log');
-error_reporting(~E_USER_DEPRECATED & ~E_USER_WARNING & ~E_WARNING & ~E_NOTICE & ~E_DEPRECATED);
+error_reporting(~E_USER_DEPRECATED & ~E_USER_WARNING & ~E_USER_NOTICE & ~E_WARNING & ~E_NOTICE & ~E_DEPRECATED);
 
 // Enable RobotLoader - this will load all classes automatically
 $configurator->setTempDirectory(dirname(__FILE__) . '/../temp');
