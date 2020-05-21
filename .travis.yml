@@ -2,8 +2,8 @@ language: php
 
 addons:
   hosts:
-  - db.fykos.local
-  - auth.fykos.local
+    - db.fykos.local
+    - auth.fykos.local
   mariadb: '10.4'
 
 php:
@@ -12,10 +12,6 @@ php:
   - 7.2
   - 7.3
   - 7.4
-allow_failures:
-  - php: 7.2
-  - php: 7.3
-  - php: 7.4
 
 before_install:
   - phpenv config-add tests/php.ini
