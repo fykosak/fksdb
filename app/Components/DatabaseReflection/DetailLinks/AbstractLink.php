@@ -5,7 +5,7 @@ namespace FKSDB\Components\DatabaseReflection\Links;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Application\BadRequestException;
-use Nette\Application\LinkGenerator;
+use Nette\Application\UI\Component;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Utils\Html;
 
@@ -15,25 +15,24 @@ use Nette\Utils\Html;
  */
 abstract class AbstractLink {
     /**
-     * @var LinkGenerator
+     * @var Component
      */
-    protected $linkGenerator;
+    protected $component;
 
     /**
-     * AbstractLink constructor.
-     * @param LinkGenerator $linkGenerator
+     * @param Component $component
      */
-    public function __construct(LinkGenerator $linkGenerator) {
-        $this->linkGenerator = $linkGenerator;
+    public function setComponent(Component $component) {
+        $this->component = $component;
     }
 
     /**
-     * @param $model
+     * @param AbstractModelSingle $model
      * @return Html
      * @throws BadRequestException
      * @throws InvalidLinkException
      */
-    final public function __invoke($model): Html {
+    final public function __invoke(AbstractModelSingle $model): Html {
         return Html::el('a')->addAttributes([
             'class' => 'btn btn-outline-primary btn-sm',
             'href' => $this->createLink($model),
@@ -63,17 +62,17 @@ abstract class AbstractLink {
     abstract public function getModelClassName(): string;
 
     /**
-     * @param $model
+     * @param AbstractModelSingle $model
      * @return string
-     * @throws BadRequestException
+     * @throws BadTypeException
      * @throws InvalidLinkException
      */
-    public function createLink($model): string {
+    private function createLink(AbstractModelSingle $model): string {
         $modelClassName = $this->getModelClassName();
         if (!$model instanceof $modelClassName) {
             throw new BadTypeException($modelClassName, $model);
         }
-        return $this->linkGenerator->link(
+        return $this->component->getPresenter()->link(
             $this->getDestination($model),
             $this->prepareParams($model)
         );

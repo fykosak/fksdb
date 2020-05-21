@@ -58,7 +58,7 @@ class EventLink extends AbstractRow {
             throw new BadTypeException(IEventReferencedModel::class, $model);
         }
         return Html::el('a')->addAttributes(['href' => $this->presenterComponent->link(
-            ':Event:Dashboard:default', ['eventId' => $model->getEvent()->event_id]
+            'Event:Dashboard:default', ['eventId' => $model->getEvent()->event_id]
         )])->addText($model->getEvent()->name);
     }
 }
