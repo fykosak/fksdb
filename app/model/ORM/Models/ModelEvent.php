@@ -9,7 +9,6 @@ use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Security\IResource;
-use Nette\Utils\DateTime;
 
 /**
  *
@@ -20,10 +19,10 @@ use Nette\Utils\DateTime;
  * @property-read int event_id
  * @property-read ActiveRow event_type
  * @property-read int event_type_id
- * @property-read DateTime begin
- * @property-read DateTime end
- * @property-read DateTime registration_begin
- * @property-read DateTime registration_end
+ * @property-read \DateTimeInterface begin
+ * @property-read \DateTimeInterface end
+ * @property-read \DateTimeInterface registration_begin
+ * @property-read \DateTimeInterface registration_end
  * @property-read string parameters
  */
 class ModelEvent extends AbstractModelSingle implements IResource, IContestReferencedModel {
@@ -34,7 +33,7 @@ class ModelEvent extends AbstractModelSingle implements IResource, IContestRefer
     }
 
     public function getContest(): ModelContest {
-        return ModelContest::createFromActiveRow($this->getEventType()->ref(DbNames::TAB_CONTEST, 'contest_id'));
+        return $this->getEventType()->getContest();
     }
 
     public function getAcYear(): int {

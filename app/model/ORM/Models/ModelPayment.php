@@ -16,7 +16,6 @@ use Nette\Database\Context;
 use Nette\Database\IConventions;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\IResource;
-use Nette\Utils\DateTime;
 
 /**
  *
@@ -29,8 +28,8 @@ use Nette\Utils\DateTime;
  * @property-read string state
  * @property-read float price
  * @property-read string currency
- * @property-read DateTime created
- * @property-read DateTime received
+ * @property-read \DateTimeInterface created
+ * @property-read \DateTimeInterface received
  * @property-read string constant_symbol
  * @property-read string variable_symbol
  * @property-read string specific_symbol

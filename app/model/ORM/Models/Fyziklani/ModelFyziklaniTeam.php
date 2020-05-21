@@ -13,7 +13,6 @@ use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Security\IResource;
-use Nette\Utils\DateTime;
 
 /**
  * @property-read  string category
@@ -22,8 +21,8 @@ use Nette\Utils\DateTime;
  * @property-read  int event_id
  * @property-read  int points
  * @property-read  string status
- * @property-read  DateTime created
- * @property-read  DateTime modified
+ * @property-read  \DateTimeInterface created
+ * @property-read  \DateTimeInterface modified
  * @property-read  string phone
  * @property-read  bool force_a
  * @property-read  string password
