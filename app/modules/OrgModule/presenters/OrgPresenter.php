@@ -18,7 +18,7 @@ use Persons\ExtendedPersonHandler;
  * @method ModelOrg getModel2(int $id = null)
  */
 class OrgPresenter extends ExtendedPersonPresenter {
-
+    /** @var string */
     protected $fieldsDefinition = 'adminOrg';
     /**
      * @var int
@@ -109,9 +109,6 @@ class OrgPresenter extends ExtendedPersonPresenter {
         $form[ExtendedPersonHandler::CONT_MODEL]->setDefaults($defaults);
     }
 
-    /**
-     * @return OrgsGrid
-     */
     protected function createComponentGrid(): OrgsGrid {
         return new OrgsGrid($this->getContext());
     }
@@ -127,46 +124,27 @@ class OrgPresenter extends ExtendedPersonPresenter {
         $form->addComponent($container, ExtendedPersonHandler::CONT_MODEL);
     }
 
-    /**
-     * @return ServiceOrg
-     */
     protected function getORMService(): ServiceOrg {
         return $this->serviceOrg;
     }
 
-    /**
-     * @return string
-     */
     public function messageCreate(): string {
         return _('Organizátor %s založen.');
     }
 
-    /**
-     * @return string
-     */
     public function messageEdit(): string {
         return _('Organizátor %s upraven.');
     }
 
-    /**
-     * @return string
-     */
     public function messageError(): string {
         return _('Chyba při zakládání organizátora.');
     }
 
-    /**
-     * @return string
-     */
     public function messageExists(): string {
         return _('Organizátor již existuje.');
     }
 
-    /**
-     * @return string
-     */
     protected function getModelResource(): string {
         return ModelOrg::RESOURCE_ID;
     }
 }
-

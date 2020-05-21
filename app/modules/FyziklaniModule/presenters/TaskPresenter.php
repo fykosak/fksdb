@@ -4,7 +4,9 @@ namespace FyziklaniModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\Fyziklani\TaskGrid;
-use FKSDB\model\Fyziklani\FyziklaniTaskImportProcessor;
+use FKSDB\Fyziklani\FyziklaniTaskImportProcessor;
+use FKSDB\Logging\FlashMessageDump;
+use FKSDB\Logging\MemoryLogger;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
@@ -70,11 +72,9 @@ class TaskPresenter extends BasePresenter {
     public function taskImportFormSucceeded(Form $form) {
         $values = $form->getValues();
         $taskImportProcessor = new FyziklaniTaskImportProcessor($this->getContext(), $this->getEvent());
-        $messages = [];
-        $taskImportProcessor($values, $messages);
-        foreach ($messages as $message) {
-            $this->flashMessage($message[0], $message[1]);
-        }
+        $logger = new MemoryLogger();
+        $taskImportProcessor($values, $logger);
+        FlashMessageDump::dump($logger, $this);
         $this->redirect('this');
     }
 

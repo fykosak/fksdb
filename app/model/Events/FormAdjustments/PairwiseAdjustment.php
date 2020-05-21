@@ -32,7 +32,7 @@ abstract class PairwiseAdjustment extends AbstractAdjustment implements IFormAdj
      * @param Form $form
      * @param Machine $machine
      * @param Holder $holder
-     * @return mixed|void
+     * @return void
      */
     protected function _adjust(Form $form, Machine $machine, Holder $holder) {
         foreach ($this->rules as $target => $prerequisities) {
@@ -77,4 +77,3 @@ abstract class PairwiseAdjustment extends AbstractAdjustment implements IFormAdj
      */
     abstract protected function processPair(IControl $target, IControl $prerequisity);
 }
-

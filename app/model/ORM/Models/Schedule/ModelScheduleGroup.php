@@ -2,7 +2,6 @@
 
 namespace FKSDB\ORM\Models\Schedule;
 
-use DateTime;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\IEventReferencedModel;
@@ -18,8 +17,8 @@ use Nette\Security\IResource;
  * @property-read string schedule_group_type
  * @property-read int event_id
  * @property-read ActiveRow event
- * @property-read DateTime start
- * @property-read DateTime end
+ * @property-read \DateTimeInterface start
+ * @property-read \DateTimeInterface end
  * @property-read string name_cs
  * @property-read string name_en
  */

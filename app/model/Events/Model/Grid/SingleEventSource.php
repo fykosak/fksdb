@@ -3,12 +3,14 @@
 namespace FKSDB\Events\Model\Grid;
 
 use ArrayIterator;
+use FKSDB\Config\NeonSchemaException;
 use FKSDB\Events\EventDispatchFactory;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Tables\TypedTableSelection;
 use FKSDB\Events\Model\Holder\BaseHolder;
 use FKSDB\Events\Model\Holder\Holder;
+use Nette\Application\BadRequestException;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
@@ -68,8 +70,8 @@ class SingleEventSource implements IHolderSource {
      * SingleEventSource constructor.
      * @param ModelEvent $event
      * @param Container $container
-     * @throws \FKSDB\Config\NeonSchemaException
-     * @throws \Nette\Application\BadRequestException
+     * @throws NeonSchemaException
+     * @throws BadRequestException
      */
     public function __construct(ModelEvent $event, Container $container) {
         $this->event = $event;

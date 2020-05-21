@@ -34,4 +34,3 @@ class ContestBadge extends Badge {
         throw new ContestNotFoundException($contestId);
     }
 }
-

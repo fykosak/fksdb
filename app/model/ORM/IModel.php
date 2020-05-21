@@ -17,7 +17,7 @@ interface IModel extends ArrayAccess {
 
     /**
      * @param bool $need
-     * @return mixed
+     * @return string|int
      */
     public function getPrimary($need = TRUE);
 

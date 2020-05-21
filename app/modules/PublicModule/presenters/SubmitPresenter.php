@@ -233,7 +233,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @param mixed $form
+     * @param Form $form
      * @throws BadRequestException
      * @throws AbortException
      * @throws \Exception

@@ -322,7 +322,7 @@ class Breadcrumbs extends Control {
 
     /**
      * @param $requestKey
-     * @return mixed|string
+     * @return string
      */
     private function getBackLinkId($requestKey) {
         $reverseBackLinkMap = $this->getReverseBackLinkMap();

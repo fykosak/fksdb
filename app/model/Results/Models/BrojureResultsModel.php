@@ -38,7 +38,7 @@ class BrojureResultsModel extends AbstractResultsModel {
      * @param ModelCategory $category
      * @return array
      */
-    public function getDataColumns(ModelCategory $category) {
+    public function getDataColumns(ModelCategory $category): array {
         if ($this->series === null) {
             throw new InvalidStateException('Series not specified.');
         }
@@ -123,15 +123,15 @@ class BrojureResultsModel extends AbstractResultsModel {
     /**
      * @return array
      */
-    public function getCategories() {
+    public function getCategories(): array {
         return $this->evaluationStrategy->getCategories();
     }
 
     /**
      * @param ModelCategory $category
-     * @return mixed|string
+     * @return string
      */
-    protected function composeQuery(ModelCategory $category) {
+    protected function composeQuery(ModelCategory $category): string {
         if (!$this->series) {
             throw new InvalidStateException('Series not set.');
         }

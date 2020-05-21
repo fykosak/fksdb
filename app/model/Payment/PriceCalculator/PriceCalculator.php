@@ -4,7 +4,7 @@ namespace FKSDB\Payment\PriceCalculator;
 
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\Payment\Price;
-use FKSDB\Payment\PriceCalculator\PreProcess\AbstractPreProcess;
+use FKSDB\Payment\PriceCalculator\PreProcess\IPreprocess;
 
 /**
  * Class PriceCalculator
@@ -12,14 +12,14 @@ use FKSDB\Payment\PriceCalculator\PreProcess\AbstractPreProcess;
  */
 class PriceCalculator {
     /**
-     * @var AbstractPreProcess[]
+     * @var IPreprocess[]
      */
     private $preProcess = [];
 
     /**
-     * @param AbstractPreProcess $preProcess
+     * @param IPreprocess $preProcess
      */
-    public function addPreProcess(AbstractPreProcess $preProcess) {
+    public function addPreProcess(IPreprocess $preProcess) {
         $this->preProcess[] = $preProcess;
     }
 
@@ -33,6 +33,7 @@ class PriceCalculator {
             $subPrice = $preProcess->calculate($modelPayment);
             $price->add($subPrice);
         }
+        // TODO to service
         $modelPayment->update(['price' => $price->getAmount(), 'currency' => $price->getCurrency()]);
     }
 

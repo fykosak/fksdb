@@ -302,10 +302,10 @@ class Holder {
      */
 
     /**
-     * @param $name
+     * @param string $name
      * @return mixed
      */
-    public function getParameter($name) {
+    public function getParameter(string $name) {
         $parts = explode('.', $name, 2);
         if (count($parts) == 1) {
             return $this->primaryHolder->getParameter($name);

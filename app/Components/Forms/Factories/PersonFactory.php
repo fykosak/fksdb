@@ -37,4 +37,3 @@ class PersonFactory extends SingleReflectionFactory {
         return $select;
     }
 }
-

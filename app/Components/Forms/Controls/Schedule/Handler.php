@@ -122,4 +122,3 @@ class Handler {
         return $newData;
     }
 }
-

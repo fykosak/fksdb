@@ -4,7 +4,6 @@ namespace FKSDB\ORM\Models;
 
 use Authentication\PasswordAuthenticator;
 use Authorization\Grant;
-use DateTime;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\YearCalculator;
@@ -17,7 +16,7 @@ use Nette\Security\IIdentity;
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @property-read bool active
  * @property-read int login_id
- * @property-read DateTime last_login
+ * @property-read \DateTimeInterface last_login
  * @property-read string hash
  * @property-read ActiveRow person
  * @property-read string login

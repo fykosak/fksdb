@@ -1,7 +1,10 @@
 <?php
 
+namespace FKSDB\Stats;
+
 use FKSDB\ORM\Models\ModelContest;
 use Nette\Database\Connection;
+use Nette\Database\Row;
 
 /**
  * General results sheet with contestants and their ranks.
@@ -36,31 +39,28 @@ class TaskStatsModel {
      * @param $year
      * @param Connection $connection
      */
-    public function __construct(ModelContest $contest, $year, Connection $connection) {
+    public function __construct(ModelContest $contest, int $year, Connection $connection) {
         $this->contest = $contest;
         $this->connection = $connection;
         $this->year = $year;
     }
 
-    /**
-     * @return int
-     */
-    public function getSeries() {
+    public function getSeries(): int {
         return $this->series;
     }
 
     /**
      * @param $series
      */
-    public function setSeries($series) {
+    public function setSeries(int $series) {
         $this->series = $series;
     }
 
     /**
-     * @param array $labels of string
-     * @return array of Nette\Database\Row (rows from view_task_stats)
+     * @param string[] $labels
+     * @return Row[]
      */
-    public function getData($labels) {
+    public function getData(array $labels): array {
         $sql = "SELECT * FROM `v_task_stats` WHERE " .
             "contest_id = ? AND year = ? " .
             "AND series = ? AND label IN ('" . implode("','", $labels) . "')";
@@ -68,7 +68,4 @@ class TaskStatsModel {
         $stmt = $this->connection->query($sql, $this->contest->contest_id, $this->year, $this->series);
         return $stmt->fetchAll();
     }
-
 }
-
-

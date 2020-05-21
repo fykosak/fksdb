@@ -4,6 +4,8 @@ namespace CommonModule;
 
 use FKSDB\Components\Grids\Deduplicate\PersonsGrid;
 use FKSDB\ORM\Services\ServicePerson;
+use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Persons\Deduplication\DuplicateFinder;
 use Persons\Deduplication\Merger;
@@ -16,7 +18,7 @@ use Persons\Deduplication\Merger;
 class DeduplicatePresenter extends BasePresenter {
 
     /**
-     * @var \FKSDB\ORM\Services\ServicePerson
+     * @var ServicePerson
      */
     private $servicePerson;
 
@@ -51,8 +53,8 @@ class DeduplicatePresenter extends BasePresenter {
 
     /**
      * @throws ForbiddenRequestException
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function handleBatchMerge() {
         if (!$this->getContestAuthorizator()->isAllowedForAnyContest('person', 'merge')) { //TODO generic authorizator

@@ -11,7 +11,6 @@ use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 use Nette\Security\IResource;
-use Nette\Utils\DateTime;
 
 /**
  *
@@ -23,7 +22,7 @@ use Nette\Utils\DateTime;
  * @property-read int person_id
  * @property-read string note poznámka
  * @property-read string status
- * @property-read DateTime created čas vytvoření přihlášky
+ * @property-read \DateTimeInterface created čas vytvoření přihlášky
  * @property-read int accomodation
  * @property-read string diet speciální stravování
  * @property-read string health_restrictions alergie, léky, úrazy

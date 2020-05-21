@@ -20,7 +20,7 @@ abstract class AbstractAdjustment implements IFormAdjustment {
 
     const DELIMITER = '.';
     const WILDCART = '*';
-
+    /** @var */
     private $pathCache;
 
     /**
@@ -37,7 +37,7 @@ abstract class AbstractAdjustment implements IFormAdjustment {
      * @param Form $form
      * @param Machine $machine
      * @param Holder $holder
-     * @return mixed
+     * @return void
      */
     abstract protected function _adjust(Form $form, Machine $machine, Holder $holder);
 
@@ -86,6 +86,4 @@ abstract class AbstractAdjustment implements IFormAdjustment {
             $this->pathCache[$path] = $control;
         }
     }
-
 }
-

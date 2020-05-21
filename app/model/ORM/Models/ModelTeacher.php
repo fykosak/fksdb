@@ -2,7 +2,6 @@
 
 namespace FKSDB\ORM\Models;
 
-use DateTime;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\StoredQuery\ISchoolReferencedModel;
 use Nette\Database\Table\ActiveRow;
@@ -11,8 +10,8 @@ use Nette\Security\IResource;
 /**
  *
  * @author Michal Červeňák <miso@fykos.cz>
- * @property-read DateTime until
- * @property-read DateTime since
+ * @property-read \DateTimeInterface until
+ * @property-read \DateTimeInterface since
  * @property-read int school_id
  * @property-read int person_id
  * @property-read ActiveRow person

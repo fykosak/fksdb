@@ -22,6 +22,7 @@ use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\Transitions\UnavailableTransitionException;
 use FormUtils;
+use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -334,7 +335,7 @@ class ApplicationHandler {
 
     /**
      * @param Holder $holder
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     private function initializeMachine(Holder $holder) {
         if (!$this->machine) {

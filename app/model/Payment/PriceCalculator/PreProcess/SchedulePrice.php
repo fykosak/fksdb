@@ -11,7 +11,7 @@ use FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException;
  * Class SchedulePrice
  * @package FKSDB\Payment\PriceCalculator\PreProcess
  */
-class SchedulePrice extends AbstractPreProcess {
+class SchedulePrice implements IPreprocess {
     /**
      * @param ModelPayment $modelPayment
      * @return Price

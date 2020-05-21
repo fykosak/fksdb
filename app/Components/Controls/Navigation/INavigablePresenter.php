@@ -44,5 +44,3 @@ interface INavigablePresenter extends IPresenter {
      */
     public static function getBackLinkParamName(): string;
 }
-
-

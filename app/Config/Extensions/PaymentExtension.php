@@ -43,4 +43,3 @@ class PaymentExtension extends CompilerExtension {
         }
     }
 }
-

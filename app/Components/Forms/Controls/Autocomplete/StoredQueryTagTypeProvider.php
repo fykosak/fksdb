@@ -59,9 +59,9 @@ class StoredQueryTagTypeProvider implements IFilteredDataProvider {
     }
 
     /**
-     * @return array
+     * @return ModelStoredQueryTagType[]
      */
-    public function getItems() {
+    public function getItems(): array {
         $tagTypes = $this->searchTable
             ->order('name');
 

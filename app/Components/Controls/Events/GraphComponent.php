@@ -119,4 +119,3 @@ class GraphComponent extends Control {
         return $edges;
     }
 }
-

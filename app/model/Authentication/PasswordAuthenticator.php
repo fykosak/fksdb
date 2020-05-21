@@ -22,8 +22,8 @@ class PasswordAuthenticator extends AbstractAuthenticator implements IAuthentica
 
     /**
      * PasswordAuthenticator constructor.
-     * @param \FKSDB\ORM\Services\ServiceLogin $serviceLogin
-     * @param \FKSDB\YearCalculator $yearCalculator
+     * @param ServiceLogin $serviceLogin
+     * @param YearCalculator $yearCalculator
      * @param ServicePerson $servicePerson
      */
     public function __construct(ServiceLogin $serviceLogin, YearCalculator $yearCalculator, ServicePerson $servicePerson) {
@@ -90,7 +90,7 @@ class PasswordAuthenticator extends AbstractAuthenticator implements IAuthentica
 
     /**
      * @param string $password
-     * @param \FKSDB\ORM\Models\ModelLogin $login
+     * @param ModelLogin $login
      * @return string
      */
     public static function calculateHash($password, $login) {

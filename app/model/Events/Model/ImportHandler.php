@@ -13,7 +13,6 @@ use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 use Nette\Utils\JsonException;
-use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -78,9 +77,9 @@ class ImportHandler {
      * @param string $errorMode
      * @param string $stateless
      * @return bool
+     * @throws NeonSchemaException
      * @throws BadRequestException
      * @throws JsonException
-     * @throws NeonSchemaException
      */
     public function import(ApplicationHandler $handler, string $transitions, string $errorMode, string $stateless): bool {
         set_time_limit(0);

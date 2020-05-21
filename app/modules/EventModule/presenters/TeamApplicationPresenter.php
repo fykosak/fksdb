@@ -8,12 +8,13 @@ use FKSDB\Components\Controls\Schedule\Rests\TeamRestsControl;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
 use FKSDB\Components\Grids\Events\Application\ApplicationGrid;
 use FKSDB\Components\Grids\Events\Application\TeamApplicationGrid;
-use FKSDB\model\Fyziklani\NotSetGameParametersException;
+use FKSDB\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 
 /**
  * Class ApplicationPresenter
@@ -43,7 +44,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
      * @param int $id
      * @throws AbortException
      * @throws BadRequestException
-     * @throws \Nette\Application\ForbiddenRequestException
+     * @throws ForbiddenRequestException
      */
     public function renderDetail(int $id) {
         parent::renderDetail($id);

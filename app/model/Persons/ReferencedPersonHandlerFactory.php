@@ -73,12 +73,12 @@ class ReferencedPersonHandlerFactory {
     }
 
     /**
-     * @param $acYear
+     * @param int $acYear
      * @param string $resolution
-     * @param $eventId
+     * @param int $eventId
      * @return ReferencedPersonHandler
      */
-    public function create($acYear, $resolution = ReferencedPersonHandler::RESOLUTION_EXCEPTION, $eventId) {
+    public function create(int $acYear, $resolution = ReferencedPersonHandler::RESOLUTION_EXCEPTION, int $eventId): ReferencedPersonHandler {
         $handler = new ReferencedPersonHandler(
             $this->servicePerson,
             $this->servicePersonInfo,
@@ -94,4 +94,3 @@ class ReferencedPersonHandlerFactory {
     }
 
 }
-

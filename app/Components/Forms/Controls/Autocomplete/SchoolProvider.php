@@ -4,6 +4,8 @@ namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
 use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServiceSchool;
+use Nette\Database\Table\ActiveRow;
+use Nette\Database\Table\Selection;
 use Nette\InvalidStateException;
 use FKSDB\Exceptions\NotImplementedException;
 
@@ -72,9 +74,9 @@ class SchoolProvider implements IFilteredDataProvider {
 
     /**
      * @param mixed $id
-     * @return bool|mixed|\Nette\Database\Table\ActiveRow|\Nette\Database\Table\Selection|null
+     * @return bool|mixed|ActiveRow|Selection|null
      */
-    public function getItemLabel($id) {
+    public function getItemLabel($id): string {
         $school = $this->serviceSchool->findByPrimary($id);
         if (!$school) {
             throw new InvalidStateException("Cannot find school with ID '$id'.");
@@ -83,10 +85,10 @@ class SchoolProvider implements IFilteredDataProvider {
     }
 
     /**
-     * @return array|void
+     * @return array
      * @throws NotImplementedException
      */
-    public function getItems() {
+    public function getItems(): array {
         throw new NotImplementedException();
     }
 

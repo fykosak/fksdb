@@ -12,7 +12,7 @@ use Nette\Database\IConventions;
 interface IStateModel {
     /**
      * @param $newState
-     * @return mixed
+     * @return void
      */
     public function updateState($newState);
 

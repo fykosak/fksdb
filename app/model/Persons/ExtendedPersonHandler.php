@@ -5,8 +5,11 @@ namespace Persons;
 use FKSDB\Authentication\AccountManager;
 use BasePresenter;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
+use FKSDB\Components\Forms\Controls\ReferencedId;
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\AbstractServiceMulti;
 use FKSDB\ORM\AbstractServiceSingle;
+use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelPerson;
@@ -40,12 +43,12 @@ class ExtendedPersonHandler {
     const RESULT_ERROR = 0;
 
     /**
-     * @var \FKSDB\ORM\IService|AbstractServiceMulti|AbstractServiceSingle
+     * @var IService|AbstractServiceMulti|AbstractServiceSingle
      */
     protected $service;
 
     /**
-     * @var \FKSDB\ORM\Services\ServicePerson
+     * @var ServicePerson
      */
     protected $servicePerson;
 
@@ -65,7 +68,7 @@ class ExtendedPersonHandler {
     private $accountManager;
 
     /**
-     * @var \FKSDB\ORM\Models\ModelContest
+     * @var ModelContest
      */
     private $contest;
 
@@ -86,8 +89,8 @@ class ExtendedPersonHandler {
 
     /**
      * ExtendedPersonHandler constructor.
-     * @param \FKSDB\ORM\IService $service
-     * @param \FKSDB\ORM\Services\ServicePerson $servicePerson
+     * @param IService $service
+     * @param ServicePerson $servicePerson
      * @param Connection $connection
      * @param MailTemplateFactory $mailTemplateFactory
      * @param AccountManager $accountManager
@@ -100,61 +103,51 @@ class ExtendedPersonHandler {
         $this->accountManager = $accountManager;
     }
 
-    /**
-     * @return \FKSDB\ORM\Models\ModelContest
-     */
-    public function getContest() {
+    public function getContest(): ModelContest {
         return $this->contest;
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelContest $contest
+     * @param ModelContest $contest
      */
     public function setContest(ModelContest $contest) {
         $this->contest = $contest;
     }
 
-    /**
-     * @return int
-     */
-    public function getYear() {
+    public function getYear(): int {
         return $this->year;
     }
 
     /**
-     * @param $year
+     * @param int $year
      */
-    public function setYear($year) {
+    public function setYear(int $year) {
         $this->year = $year;
     }
 
-    /**
-     * @return string
-     */
-    public function getInvitationLang() {
+    public function getInvitationLang(): string {
         return $this->invitationLang;
     }
 
     /**
-     * @param $invitationLang
+     * @param string $invitationLang
      */
-    public function setInvitationLang($invitationLang) {
+    public function setInvitationLang(string $invitationLang) {
         $this->invitationLang = $invitationLang;
     }
 
-    /**
-     * @return \FKSDB\ORM\Models\ModelPerson
-     */
-    public function getPerson() {
+    public function getPerson(): ModelPerson {
         return $this->person;
     }
 
     /**
      * @param Form $form
-     * @return mixed
+     * @return ModelPerson|null|AbstractModelSingle|IModel
      */
     final protected function getReferencedPerson(Form $form) {
-        return $form[self::CONT_AGGR][self::EL_PERSON]->getModel();
+        /** @var ReferencedId $input */
+        $input = $form[self::CONT_AGGR][self::EL_PERSON];
+        return $input->getModel();
     }
 
     /**
@@ -164,13 +157,12 @@ class ExtendedPersonHandler {
      * @return int
      * @throws \Exception
      */
-    final public function handleForm(Form $form, IExtendedPersonPresenter $presenter, bool $sendEmail) {
+    final public function handleForm(Form $form, IExtendedPersonPresenter $presenter, bool $sendEmail): int {
 
         try {
             $this->connection->beginTransaction();
             $values = $form->getValues();
             $create = !$presenter->getModel();
-
             $person = $this->person = $this->getReferencedPerson($form);
             $this->storeExtendedModel($person, $values, $presenter);
 

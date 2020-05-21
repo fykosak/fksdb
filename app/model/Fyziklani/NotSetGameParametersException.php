@@ -1,7 +1,7 @@
 <?php
 
 
-namespace FKSDB\model\Fyziklani;
+namespace FKSDB\Fyziklani;
 
 
 use FKSDB\Exceptions\NotImplementedException;

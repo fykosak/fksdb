@@ -199,7 +199,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
      * @param ReferencedContainer $container
      * @param IModel|null $model
      * @param string $mode
-     * @return mixed|void
+     * @return void
      */
     public function setModel(ReferencedContainer $container, IModel $model = null, $mode = self::MODE_NORMAL) {
         $acYear = $container->getOption('acYear');

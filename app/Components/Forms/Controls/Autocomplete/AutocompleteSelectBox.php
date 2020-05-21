@@ -3,9 +3,11 @@
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
 use FKSDB\Application\IJavaScriptCollector;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextBase;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Arrays;
+use Nette\Utils\Html;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -129,7 +131,7 @@ class AutocompleteSelectBox extends TextBase {
     }
 
     /**
-     * @return \Nette\Utils\Html
+     * @return Html
      */
     public function getControl() {
         $control = parent::getControl();
@@ -204,12 +206,10 @@ class AutocompleteSelectBox extends TextBase {
             } else {
                 $this->value = explode(self::INTERNAL_DELIMITER, $value);
             }
+        } elseif ($value === '') {
+            $this->value = null;
         } else {
-            if ($value === '') {
-                $this->value = null;
-            } else {
-                $this->value = $value;
-            }
+            $this->value = $value;
         }
         if ($this->dataProvider) {
             $this->dataProvider->setDefaultValue($this->value);
@@ -218,7 +218,7 @@ class AutocompleteSelectBox extends TextBase {
 
     /**
      * @param $value
-     * @return \Nette\Forms\Controls\BaseControl
+     * @return BaseControl
      */
     public function setDefaultValue($value) {
         if ($this->dataProvider) {

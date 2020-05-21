@@ -53,7 +53,7 @@ class SchoolsInTeam extends SchoolCheck implements IFormAdjustment {
      * SchoolsInTeam constructor.
      * @param $schoolsInTeam
      * @param ExpressionEvaluator $evaluator
-     * @param \FKSDB\ORM\Services\ServicePersonHistory $servicePersonHistory
+     * @param ServicePersonHistory $servicePersonHistory
      */
     public function __construct($schoolsInTeam, ExpressionEvaluator $evaluator, ServicePersonHistory $servicePersonHistory) {
         parent::__construct($servicePersonHistory);
@@ -65,7 +65,7 @@ class SchoolsInTeam extends SchoolCheck implements IFormAdjustment {
      * @param Form $form
      * @param Machine $machine
      * @param Holder $holder
-     * @return mixed|void
+     * @return void
      */
     protected function _adjust(Form $form, Machine $machine, Holder $holder) {
         $this->setHolder($holder);
@@ -102,4 +102,3 @@ class SchoolsInTeam extends SchoolCheck implements IFormAdjustment {
     }
 
 }
-

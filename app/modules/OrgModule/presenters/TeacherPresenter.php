@@ -29,6 +29,7 @@ class TeacherPresenter extends ExtendedPersonPresenter {
         parent::__construct($context);
     }
 
+    /** @var string */
     protected $fieldsDefinition = 'adminTeacher';
 
     /**
@@ -95,7 +96,7 @@ class TeacherPresenter extends ExtendedPersonPresenter {
 
     /**
      * @param Form $form
-     * @return mixed|void
+     * @return void
      * @throws Exception
      */
     protected function appendExtendedContainer(Form $form) {
@@ -113,37 +114,25 @@ class TeacherPresenter extends ExtendedPersonPresenter {
     }
 
     /**
-     * @return mixed|ServiceTeacher
+     * @return ServiceTeacher
      */
     protected function getORMService() {
         return $this->serviceTeacher;
     }
 
-    /**
-     * @return string
-     */
-    public function messageCreate() {
+    public function messageCreate(): string {
         return _('Teacher %s has been created.');
     }
 
-    /**
-     * @return string
-     */
-    public function messageEdit() {
+    public function messageEdit(): string {
         return _('Teacher has been edited');
     }
 
-    /**
-     * @return string
-     */
-    public function messageError() {
+    public function messageError(): string {
         return _('Error during creating new teacher.');
     }
 
-    /**
-     * @return string
-     */
-    public function messageExists() {
+    public function messageExists(): string {
         return _('Teacher already exist');
     }
 
@@ -154,4 +143,3 @@ class TeacherPresenter extends ExtendedPersonPresenter {
         return ModelTeacher::RESOURCE_ID;
     }
 }
-

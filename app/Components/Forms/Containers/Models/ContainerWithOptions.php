@@ -12,4 +12,3 @@ class ContainerWithOptions extends Container {
 
     use OptionsTrait;
 }
-

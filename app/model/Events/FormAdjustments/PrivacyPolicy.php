@@ -27,7 +27,7 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
     const CONTROL_NAME = 'privacy';
 
     /**
-     * @var \FKSDB\ORM\Services\ServicePersonInfo
+     * @var ServicePersonInfo
      */
     private $servicePersonInfo;
     /**
@@ -84,18 +84,16 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
         foreach ($values as $key => $value) {
             if ($value instanceof ArrayHash) {
                 $this->trySetAgreed($value);
-            } else {
-                if (isset($values[$key . '_1']) && isset($values[$key . '_1']['person_info'])) {
-                    $personId = $value;
-                    $personInfo = $this->servicePersonInfo->findByPrimary($personId);
-                    if ($personInfo) {
+            } elseif (isset($values[$key . '_1']) && isset($values[$key . '_1']['person_info'])) {
+                $personId = $value;
+                $personInfo = $this->servicePersonInfo->findByPrimary($personId);
+                if ($personInfo) {
 
-                        $this->servicePersonInfo->updateModel($personInfo, ['agreed' => 1]);
+                    $this->servicePersonInfo->updateModel($personInfo, ['agreed' => 1]);
 
-                        // This is done in ApplicationHandler transaction, still can be rolled back.
-                        $this->servicePersonInfo->save($personInfo);
-                        $values[$key . '_1']['person_info']['agreed'] = 1;
-                    }
+                    // This is done in ApplicationHandler transaction, still can be rolled back.
+                    $this->servicePersonInfo->save($personInfo);
+                    $values[$key . '_1']['person_info']['agreed'] = 1;
                 }
             }
         }

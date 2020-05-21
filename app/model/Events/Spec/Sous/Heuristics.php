@@ -177,6 +177,7 @@ class Heuristics /*extends StoredQueryPostProcessing */{ /* uncomment to use */
                     $row['spare'] = self::RULE4M2;
                     $spareK += 1;
                 } elseif ($row['gender'] == 'F' && $spareH < $nH) {
+
                     $row['spare'] = self::RULE4F2;
                     $spareH += 1;
                 }

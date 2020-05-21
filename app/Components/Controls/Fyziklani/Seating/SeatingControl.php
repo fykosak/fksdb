@@ -78,7 +78,7 @@ class SeatingControl extends Control {
      */
     private function getRooms(ModelEvent $event): array {
         try {
-            return $event->getParameter('rooms');
+            return $event->getParameter(null, 'rooms');
         } catch (\Exception $exception) {
             return [];
         }
