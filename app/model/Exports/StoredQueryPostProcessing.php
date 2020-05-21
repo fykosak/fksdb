@@ -40,7 +40,7 @@ abstract class StoredQueryPostProcessing {
      * @param $data
      * @return mixed
      */
-    abstract public function processData($data);
+    abstract public function processData(\PDOStatement $data);
 
     /**
      * @return mixed

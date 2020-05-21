@@ -48,16 +48,10 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
 
     const RESOURCE_ID = 'event.payment';
 
-    /**
-     * @return ModelPerson
-     */
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromActiveRow($this->person);
     }
 
-    /**
-     * @return ModelEvent
-     */
     public function getEvent(): ModelEvent {
         return ModelEvent::createFromActiveRow($this->event);
     }
@@ -75,37 +69,22 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
         return $items;
     }
 
-    /**
-     * @return string
-     */
     public function getResourceId(): string {
         return self::RESOURCE_ID;
     }
 
-    /**
-     * @return string
-     */
     public function getPaymentId(): string {
         return \sprintf('%d%04d', $this->event_id, $this->payment_id);
     }
 
-    /**
-     * @return bool
-     */
     public function canEdit(): bool {
         return \in_array($this->getState(), [Machine::STATE_INIT, self::STATE_NEW]);
     }
 
-    /**
-     * @return Price
-     */
     public function getPrice(): Price {
         return new Price($this->price, $this->currency);
     }
 
-    /**
-     * @return bool
-     */
     public function hasGeneratedSymbols(): bool {
         return $this->constant_symbol || $this->variable_symbol || $this->specific_symbol || $this->bank_account || $this->bank_name || $this->recipient;
     }

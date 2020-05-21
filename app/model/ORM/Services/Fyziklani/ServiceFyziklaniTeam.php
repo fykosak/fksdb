@@ -12,34 +12,19 @@ use FKSDB\ORM\Tables\TypedTableSelection;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class ServiceFyziklaniTeam extends AbstractServiceSingle {
-    /**
-     * @return string
-     */
+
     public function getModelClassName(): string {
         return ModelFyziklaniTeam::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_E_FYZIKLANI_TEAM;
     }
 
-    /**
-     * Syntactic sugar.
-     * @param ModelEvent $event
-     * @return TypedTableSelection|null
-     */
     public function findParticipating(ModelEvent $event): TypedTableSelection {
         return $this->getTable()->where('status', 'participated')->where('event_id', $event->event_id);
     }
 
-    /**
-     * @param int $teamId
-     * @param ModelEvent $event
-     * @return bool
-     */
     public function teamExist(int $teamId, ModelEvent $event): bool {
         $row = $this->findByPrimary($teamId);
         if (!$row) {
@@ -49,18 +34,13 @@ class ServiceFyziklaniTeam extends AbstractServiceSingle {
         return $team && $team->event_id == $event->event_id;
     }
 
-    /**
-     * Syntactic sugar.
-     * @param ModelEvent $event
-     * @return TypedTableSelection
-     */
     public function findPossiblyAttending(ModelEvent $event): TypedTableSelection {
         return $this->getTable()->where('status', ['participated', 'approved', 'spare', 'applied'])->where('event_id', $event->event_id);
     }
 
     /**
      * @param ModelEvent $event
-     * @return array
+     * @return ModelFyziklaniTeam[]
      */
     public function getTeamsAsArray(ModelEvent $event): array {
         $teams = [];
@@ -71,11 +51,6 @@ class ServiceFyziklaniTeam extends AbstractServiceSingle {
         return $teams;
     }
 
-    /**
-     * @param ModelEvent $event
-     * @param string|null $category
-     * @return bool
-     */
     public function isCategoryReadyForClosing(ModelEvent $event, string $category = null): bool {
         $query = $this->findParticipating($event);
         if ($category) {

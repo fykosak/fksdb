@@ -9,8 +9,5 @@ use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
  * @package FKSDB\ORM\Models
  */
 interface IScheduleGroupReferencedModel {
-    /**
-     * @return ModelScheduleGroup
-     */
     public function getScheduleGroup(): ModelScheduleGroup;
 }

@@ -13,25 +13,15 @@ use FKSDB\ORM\Tables\TypedTableSelection;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceEvent extends AbstractServiceSingle {
-    /**
-     * @return string
-     */
+
     public function getModelClassName(): string {
         return ModelEvent::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_EVENT;
     }
 
-    /**
-     * @param ModelContest $contest
-     * @param $year
-     * @return TypedTableSelection
-     */
     public function getEvents(ModelContest $contest, int $year): TypedTableSelection {
         return $this->getTable()
             ->select(DbNames::TAB_EVENT . '.*')
@@ -53,10 +43,6 @@ class ServiceEvent extends AbstractServiceSingle {
         return $event ?: null;
     }
 
-    /**
-     * @param ModelEventType $eventType
-     * @return TypedTableSelection
-     */
     public function getEventsByType(ModelEventType $eventType): TypedTableSelection {
         return $this->getTable()->where('event_type_id', $eventType->event_type_id);
     }

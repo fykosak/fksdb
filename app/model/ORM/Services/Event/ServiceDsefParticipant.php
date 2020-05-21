@@ -11,16 +11,10 @@ use FKSDB\ORM\Models\Events\ModelDsefParticipant;
  */
 class ServiceDsefParticipant extends AbstractServiceSingle {
 
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelDsefParticipant::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_E_DSEF_PARTICIPANT;
     }

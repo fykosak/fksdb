@@ -9,6 +9,7 @@ use FKSDB\Payment\IPaymentModel;
 use FKSDB\Payment\Price;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
+use Nette\InvalidStateException;
 use Nette\Security\IResource;
 use Nette\Utils\DateTime;
 
@@ -54,24 +55,19 @@ class ModelEventParticipant extends AbstractModelSingle implements IEventReferen
 
     /**
      * @return string
+     * @throws InvalidStateException
      */
     public function __toString(): string {
         if (!$this->getPerson()) {
-            // throw new InvalidStateException(\sprintf(_('Missing person in application Id %s.'), $this->getPrimary(false)));
+            throw new InvalidStateException(\sprintf(_('Missing person in application Id %s.'), $this->getPrimary(false)));
         }
         return $this->getPerson()->__toString();
     }
 
-    /**
-     * @return ModelEvent
-     */
     public function getEvent(): ModelEvent {
         return ModelEvent::createFromActiveRow($this->event);
     }
 
-    /**
-     * @return Price
-     */
     public function getPrice(): Price {
         return new Price($this->price, Price::CURRENCY_CZK);
     }
@@ -88,10 +84,7 @@ class ModelEventParticipant extends AbstractModelSingle implements IEventReferen
         return ModelFyziklaniTeam::createFromActiveRow($row);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function getResourceId() {
+    public function getResourceId(): string {
         return self::RESOURCE_ID;
     }
 }

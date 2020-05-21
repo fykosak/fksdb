@@ -31,9 +31,6 @@ class ModelEmailMessage extends AbstractModelSingle implements IResource {
 
     const RESOURCE_ID = 'email_message';
 
-    /**
-     * @return Message
-     */
     public function toMessage(): Message {
         $message = new Message();
         $message->setSubject($this->subject);
@@ -51,10 +48,7 @@ class ModelEmailMessage extends AbstractModelSingle implements IResource {
         return $message;
     }
 
-    /**
-     * @return string
-     */
-    public function getResourceId() {
+    public function getResourceId(): string {
         return static::RESOURCE_ID;
     }
 }

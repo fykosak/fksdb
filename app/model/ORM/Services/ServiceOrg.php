@@ -11,16 +11,10 @@ use FKSDB\ORM\Models\ModelOrg;
  */
 class ServiceOrg extends AbstractServiceSingle {
 
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelOrg::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_ORG;
     }

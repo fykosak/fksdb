@@ -12,18 +12,10 @@ use FKSDB\ORM\Models\ModelTask;
  */
 class ServiceQuizQuestion extends AbstractServiceSingle {
 
-    /**
-     *
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelQuizQuestion::class;
     }
 
-    /**
-     *
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_QUIZ;
     }

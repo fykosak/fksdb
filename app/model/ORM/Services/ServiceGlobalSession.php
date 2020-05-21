@@ -18,16 +18,10 @@ class ServiceGlobalSession extends AbstractServiceSingle {
 
     const SESSION_ID_LENGTH = 32;
 
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelGlobalSession::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_GLOBAL_SESSION;
     }

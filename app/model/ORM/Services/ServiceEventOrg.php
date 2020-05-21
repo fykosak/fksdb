@@ -17,16 +17,10 @@ use FKSDB\ORM\Tables\TypedTableSelection;
  */
 class ServiceEventOrg extends AbstractServiceSingle {
 
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelEventOrg::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_EVENT_ORG;
     }
@@ -47,10 +41,6 @@ class ServiceEventOrg extends AbstractServiceSingle {
         }
     }
 
-    /**
-     * @param ModelEvent $event
-     * @return TypedTableSelection
-     */
     public function findByEvent(ModelEvent $event): TypedTableSelection {
         return $this->getTable()->where('event_id', $event->event_id);
     }

@@ -21,16 +21,10 @@ class AESOPContestant extends StoredQueryPostProcessing {
     const POINTS = 'points';
     const SPAM_DATE = 'spam-date';
 
-    /**
-     * @return string
-     */
     public function getDescription(): string {
         return 'Profiltruje jenom na kategorii zadanou v parametru "category" a spočítá rank v rámci kategorie.';
     }
 
-    /**
-     * @return bool
-     */
     public function keepsCount(): bool {
         return false;
     }
@@ -40,7 +34,7 @@ class AESOPContestant extends StoredQueryPostProcessing {
      * @return mixed
      * @throws BadRequestException
      */
-    public function processData($data) {
+    public function processData(\PDOStatement $data) {
         $filtered = $this->filterCategory($data);
         //$formated = $this->formatDate($ranked); //implemented in SQL
         return $this->calculateRank($filtered);
@@ -180,5 +174,4 @@ class AESOPContestant extends StoredQueryPostProcessing {
         }
         return null;
     }
-
 }

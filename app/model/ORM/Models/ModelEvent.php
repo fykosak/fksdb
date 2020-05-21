@@ -2,15 +2,12 @@
 
 namespace FKSDB\ORM\Models;
 
-use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
-use Nette\DeprecatedException;
-use Nette\InvalidStateException;
 use Nette\Security\IResource;
 use Nette\Utils\DateTime;
 
@@ -32,52 +29,22 @@ use Nette\Utils\DateTime;
 class ModelEvent extends AbstractModelSingle implements IResource, IContestReferencedModel {
     const RESOURCE_ID = 'event';
 
-    /**
-     * @return ModelEventType
-     */
     public function getEventType(): ModelEventType {
         return ModelEventType::createFromActiveRow($this->event_type);
     }
 
-    /**
-     * @return ModelContest
-     */
     public function getContest(): ModelContest {
         return ModelContest::createFromActiveRow($this->getEventType()->ref(DbNames::TAB_CONTEST, 'contest_id'));
     }
 
-    /**
-     * Syntactic sugar.
-     *
-     * @return int
-     */
     public function getAcYear(): int {
         return $this->getContest()->related('contest_year')->where('year', $this->year)->fetch()->ac_year;
     }
 
-    /**
-     * @param Holder $holder
-     * @param string $name
-     * @return mixed
-     */
-    public function getParameter(Holder $holder, string $name) {
-        throw new DeprecatedException();
-      /*  if (!$this->holder) {
-            throw new InvalidStateException('Event does not have any holder assigned.');
-        }
-        return $holder->getParameter($name);*/
-    }
-
-    /**
-     * @return string
-     */
     public function getResourceId(): string {
         return self::RESOURCE_ID;
     }
 
-    /**
-     * @return string
-     */
     public function __toString(): string {
         return $this->name;
     }
@@ -94,30 +61,18 @@ class ModelEvent extends AbstractModelSingle implements IResource, IContestRefer
         return ModelFyziklaniGameSetup::createFromActiveRow($gameSetupRow);
     }
 
-    /**
-     * @return GroupedSelection
-     */
     public function getScheduleGroups(): GroupedSelection {
         return $this->related(DbNames::TAB_SCHEDULE_GROUP, 'event_id');
     }
 
-    /**
-     * @return GroupedSelection
-     */
     public function getParticipants(): GroupedSelection {
         return $this->related(DbNames::TAB_EVENT_PARTICIPANT, 'event_id');
     }
 
-    /**
-     * @return GroupedSelection
-     */
     public function getTeams(): GroupedSelection {
         return $this->related(DbNames::TAB_E_FYZIKLANI_TEAM, 'event_id');
     }
 
-    /**
-     * @return array
-     */
     public function __toArray(): array {
         return [
             'eventId' => $this->event_id,

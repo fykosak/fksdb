@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Events;
 
 use BasePresenter;
+use FKSDB\Config\NeonSchemaException;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\ApplicationHandler;
 use FKSDB\Events\Model\Grid\SingleEventSource;
@@ -100,8 +101,10 @@ class ImportComponent extends Control {
 
         $form->addComponent($this->createKeyElement(), 'key');
 
-        $form->addSubmit('import', _('Importovat'))->onClick[] = function (SubmitButton $submit) {
-            $this->handleFormImport($submit->getForm());
+        $form->addSubmit('import', _('Importovat'));
+
+        $form->onSuccess[] = function (Form $form) {
+            $this->handleFormImport($form);
         };
 
         return $control;
@@ -115,6 +118,8 @@ class ImportComponent extends Control {
     /**
      * @param Form $form
      * @throws AbortException
+     * @throws NeonSchemaException
+     * @throws BadRequestException
      * @throws JsonException
      */
     private function handleFormImport(Form $form) {

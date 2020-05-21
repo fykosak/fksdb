@@ -16,16 +16,10 @@ use FKSDB\ORM\Tables\TypedTableSelection;
  */
 class ServiceEventParticipant extends AbstractServiceSingle {
 
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelEventParticipant::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_EVENT_PARTICIPANT;
     }
@@ -61,11 +55,6 @@ class ServiceEventParticipant extends AbstractServiceSingle {
         }
     }
 
-    /**
-     * Syntactic sugar.
-     * @param ModelEvent $event
-     * @return TypedTableSelection
-     */
     public function findPossiblyAttending(ModelEvent $event): TypedTableSelection {
         return $this->getTable()->where('status', ['participated', 'approved', 'spare', 'applied'])->where('event_id', $event->event_id);
     }

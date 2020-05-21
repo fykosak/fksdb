@@ -118,10 +118,7 @@ class StoredQueryComponent extends Control {
         $this->parameters = array_merge($this->parameters, $parameters);
     }
 
-    /**
-     * @return StoredQueryGrid
-     */
-    protected function createComponentGrid() {
+    protected function createComponentGrid(): StoredQueryGrid {
         return new StoredQueryGrid($this->storedQuery, $this->container);
     }
 
@@ -129,7 +126,7 @@ class StoredQueryComponent extends Control {
      * @return FormControl
      * @throws BadRequestException
      */
-    protected function createComponentParametrizeForm() {
+    protected function createComponentParametrizeForm(): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
 
@@ -163,6 +160,9 @@ class StoredQueryComponent extends Control {
         return $this->error;
     }
 
+    /**
+     * @throws BadRequestException
+     */
     public function render() {
         if ($this->parameters) {
             $this->storedQuery->setParameters($this->parameters);
@@ -171,7 +171,9 @@ class StoredQueryComponent extends Control {
                 $defaults[$key] = ['value' => $value];
             }
             $defaults = [self::CONT_PARAMS => $defaults];
-            $this->getComponent('parametrizeForm')->getForm()->setDefaults($defaults);
+            /** @var FormControl $formControl */
+            $formControl = $this->getComponent('parametrizeForm');
+            $formControl->getForm()->setDefaults($defaults);
         }
         if (!$this->isAuthorized()) {
             $this->template->error = _('Nedostatečné oprávnění.');
@@ -202,15 +204,11 @@ class StoredQueryComponent extends Control {
             $response = $exportFormat->getResponse();
             $this->presenter->sendResponse($response);
         } catch (InvalidArgumentException $exception) {
-
             throw new NotFoundException(sprintf('Neznámý formát \'%s\'.', $format), $exception);
         }
     }
 
-    /**
-     * @return bool
-     */
-    private function isAuthorized() {
+    private function isAuthorized(): bool {
         $implicitParameters = $this->storedQuery->getImplicitParameters();
         /*
          * Beware, that when export doesn't depend on contest_id directly further checks has to be done!
@@ -220,5 +218,4 @@ class StoredQueryComponent extends Control {
         }
         return $this->contestAuthorizator->isAllowed($this->storedQuery, 'execute', $implicitParameters[StoredQueryFactorySQL::PARAM_CONTEST]);
     }
-
 }

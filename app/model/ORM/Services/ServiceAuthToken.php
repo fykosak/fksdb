@@ -16,16 +16,10 @@ class ServiceAuthToken extends AbstractServiceSingle {
 
     const TOKEN_LENGTH = 32; // for 62 characters ~ 128 bit
 
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelAuthToken::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_AUTH_TOKEN;
     }
@@ -34,14 +28,14 @@ class ServiceAuthToken extends AbstractServiceSingle {
      *
      * @param ModelLogin $login
      * @param string $type
-     * @param DateTime $until
+     * @param \DateTimeInterface $until
      * @param null $data
      * @param bool $refresh
      * @param DateTime $since
      * @return ModelAuthToken
      * @throws \Exception
      */
-    public function createToken(ModelLogin $login, $type, DateTime $until = null, $data = null, $refresh = false, DateTime $since = null) {
+    public function createToken(ModelLogin $login, $type, \DateTimeInterface $until = null, $data = null, $refresh = false, DateTime $since = null) {
         if ($since === null) {
             $since = new DateTime();
         }

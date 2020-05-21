@@ -15,7 +15,7 @@
 </p>
 <p>
     Každé soustředění má nějaké téma, kterému říkáme legenda. V minulých letech jsme například cestovali do Bradavic,
-    přežívali v Černobylu, řídili velkou korporaci, nebo jsme se stali agenty 007. Pokud bys chtěl vidět fotky z
+    přežívali v Černobylu, řídili velkou korporaci, nebo jsme se stali agenty 007. Pokud bys chtěl{if $person->gender == 'F'}a{/if} vidět fotky z
     předešlých soustředění, najdeš je na <a href="https://fykos.cz/akce/soustredeni/start">našem webu</a>.
 </p>
 {include inc/price.cs.latte} {* vloží odstavec s cenou a odkazem na pravidla *}
@@ -23,7 +23,7 @@
     Své rozhodnutí, zdali bys chtěl{if $person->gender == 'F'}a{/if} přijet, nám co nejrychleji oznam prostřednictvím
     aplikace FKSDB po přihlášení nebo pomocí odkazu<br/>
     <a n:href="//:Public:Application:, at => $token">{link //:Public:Application:, at => $token}</a><br/>
-    Nejlépe ihned, nejpozději však do {$holder->getParameter('deadline1')|date:'j.n. Y'}. (Prosím, pokud víš, že se nebudeš moci zúčastnit, oznam nám i to.)
+    Nejlépe ihned, nejpozději však do {$holder->getParameter('deadline')|date:'j.n. Y'}. (Prosím, pokud víš, že se nebudeš moci zúčastnit, oznam nám i to.)
 </p>
 <p>
     V případě, že se na soustředění dostaneš, pošleme ti mail. Rozhodnutí můžeš očekávat {$holder->getParameter('letterResolutionTime')}).
