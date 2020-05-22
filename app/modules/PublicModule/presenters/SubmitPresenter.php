@@ -183,10 +183,8 @@ class SubmitPresenter extends BasePresenter {
                     }
                     
                     $existingEntry = $this->submitQuizQuestionService->findByContestant($this->getContestant()->ct_id, $question->question_id);
-                    if ($existingEntry) {
-                        $existingAnswer = $existingEntry->answer;
-                        $select->setValue($existingAnswer);
-                    }
+                    $existingAnswer = $existingEntry->answer;
+                    $select->setValue($existingAnswer);
                 }
             }
 
