@@ -54,8 +54,6 @@ class ResourceAvailabilityTest extends ResourceAvailabilityTestCase {
         $dom = DomQuery::fromHtml($html);
         Assert::true((bool)$dom->xpath('//input[@name="participant[accomodation]"]'));
         Assert::false((bool)$dom->xpath('//input[@name="participant[accomodation]"][@disabled="disabled"]'));
-
-        Assert::true(false); // only for test if travis will fail test
     }
 
     public function getCapacity() {
