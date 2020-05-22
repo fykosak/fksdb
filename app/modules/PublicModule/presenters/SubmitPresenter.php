@@ -190,6 +190,8 @@ class SubmitPresenter extends BasePresenter {
                     if ($existingEntry) {
                         $existingAnswer = $existingEntry->answer;
                         $select->setValue($existingAnswer);
+                    } else {
+                        $select->setValue(null);
                     }
                 }
             }
