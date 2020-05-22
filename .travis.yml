@@ -24,12 +24,12 @@ install:
 
 before_script:
   - sudo mysql -e "ALTER USER root@localhost IDENTIFIED VIA mysql_native_password; SET PASSWORD = PASSWORD('');"
-  - ./tests/init-database.sh
-  - ./tests/clear-database.sh
-  - rm -rf temp/* tmp
+  - composer run-script initTestDatabase
+  #- composer run-script clearDatabase - already run in test
+  #- rm -rf temp/* tmp - already run in test
 
 script:
-  - ./tests/run.sh -j 1
+  - composer run-script test
 
 after_failure:
   # Vytiskne obsah souborů *.actual
