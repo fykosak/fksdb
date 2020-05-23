@@ -194,9 +194,11 @@ class PaymentPresenter extends BasePresenter {
 
     /**
      * @return TransitionButtonsControl
+     * @throws AbortException
+     * @throws BadRequestException
      */
     protected function createComponentTransitionButtons(): TransitionButtonsControl {
-        return $this->machine->createComponentTransitionButtons($this->getEntity());
+        return new TransitionButtonsControl($this->getMachine(), $this->getContext(), $this->getEntity());
     }
 
 

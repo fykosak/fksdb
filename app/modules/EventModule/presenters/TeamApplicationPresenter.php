@@ -2,9 +2,9 @@
 
 namespace EventModule;
 
-use FKSDB\Components\Controls\Fyziklani\SchoolCheckControl;
+use FKSDB\Components\Controls\Fyziklani\SchoolCheckComponent;
 use FKSDB\Components\Controls\Fyziklani\SeatingControl;
-use FKSDB\Components\Controls\Schedule\Rests\TeamRestsControl;
+use FKSDB\Components\Controls\Schedule\Rests\TeamRestsComponent;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
 use FKSDB\Components\Grids\Events\Application\ApplicationGrid;
 use FKSDB\Components\Grids\Events\Application\TeamApplicationGrid;
@@ -67,12 +67,12 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @return SchoolCheckControl
+     * @return SchoolCheckComponent
      * @throws AbortException
      * @throws BadRequestException
      */
-    protected function createComponentSchoolCheck(): SchoolCheckControl {
-        return new SchoolCheckControl($this->getEvent(), $this->getAcYear(), $this->getContext());
+    protected function createComponentSchoolCheck(): SchoolCheckComponent {
+        return new SchoolCheckComponent($this->getEvent(), $this->getAcYear(), $this->getContext());
     }
 
     /**
@@ -85,10 +85,10 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @return TeamRestsControl
+     * @return TeamRestsComponent
      */
-    protected function createComponentTeamRestsControl(): TeamRestsControl {
-        return new TeamRestsControl($this->getContext());
+    protected function createComponentTeamRestsControl(): TeamRestsComponent {
+        return new TeamRestsComponent($this->getContext());
     }
 
     /**

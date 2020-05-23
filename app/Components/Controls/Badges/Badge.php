@@ -2,8 +2,7 @@
 
 namespace FKSDB\Components\Controls\Badges;
 
-use Nette\Application\UI\Control;
-use Nette\Localization\ITranslator;
+use FKSDB\Components\Controls\BaseComponent;
 use Nette\Templating\FileTemplate;
 use Nette\Utils\Html;
 
@@ -12,20 +11,7 @@ use Nette\Utils\Html;
  * @package FKSDB\Components\Controls\Badges
  * @property-read FileTemplate $template
  */
-abstract class Badge extends Control {
-    /**
-     * @var ITranslator
-     */
-    private $translator;
-
-    /**
-     * Badge constructor.
-     * @param ITranslator $translator
-     */
-    public function __construct(ITranslator $translator) {
-        parent::__construct();
-        $this->translator = $translator;
-    }
+abstract class Badge extends BaseComponent {
 
     /**
      * @param mixed ...$args
@@ -38,7 +24,6 @@ abstract class Badge extends Control {
      */
     public function render(...$args) {
         $this->template->html = static::getHtml(...$args);
-        $this->template->setTranslator($this->translator);
         $this->template->setFile(__DIR__ . '/layout.latte');
         $this->template->render();
     }

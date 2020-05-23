@@ -4,7 +4,7 @@ namespace FKSDB\Components\Controls\Inbox;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Logging\ILogger;
-use FKSDB\Submits\FilesystemCorrectedSubmitStorage;
+use FKSDB\Submits\FileSystemStorage\CorrectedStorage;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
@@ -13,10 +13,10 @@ use Nette\Application\UI\Form;
  * Class CorrectedFormControl
  * @package FKSDB\Components\Controls\Upload
  */
-class CorrectedControl extends SeriesTableControl {
+class CorrectedControl extends SeriesTableComponent {
 
     public function render() {
-        $correctedSubmitStorage = $this->getContext()->getByType(FilesystemCorrectedSubmitStorage::class);
+        $correctedSubmitStorage = $this->getContext()->getByType(CorrectedStorage::class);
         $this->template->correctedSubmitStorage = $correctedSubmitStorage;
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
         $this->template->render();

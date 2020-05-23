@@ -4,9 +4,13 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\Components\Control\AjaxUpload\SubmitDownloadTrait;
 use FKSDB\Components\Control\AjaxUpload\SubmitRevokeTrait;
+use FKSDB\Logging\FlashMessageDump;
+use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Services\ServiceSubmit;
+use FKSDB\Submits\FileSystemStorage\CorrectedStorage;
+use FKSDB\Submits\FileSystemStorage\UploadedStorage;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
@@ -103,8 +107,9 @@ class SubmitsGrid extends BaseGrid {
      * @throws InvalidLinkException
      */
     public function handleRevoke(int $id) {
-        list($message) = $this->traitHandleRevoke($id);
-        $this->flashMessage($message->getMessage(), $message->getLevel());
+        $logger = new MemoryLogger();
+        $this->traitHandleRevoke($logger, $id);
+        FlashMessageDump::dump($logger, $this);
     }
 
     /**
@@ -113,8 +118,9 @@ class SubmitsGrid extends BaseGrid {
      * @throws BadRequestException
      */
     public function handleDownloadUploaded(int $id) {
-        list($message) = $this->traitHandleDownloadUploaded($id);
-        $this->flashMessage($message->getMessage(), $message->getLevel());
+        $logger = new MemoryLogger();
+        $this->traitHandleDownloadUploaded($logger, $id);
+        FlashMessageDump::dump($logger, $this);
     }
 
     /**
@@ -123,7 +129,26 @@ class SubmitsGrid extends BaseGrid {
      * @throws BadRequestException
      */
     public function handleDownloadCorrected(int $id) {
-        list($message) = $this->traitHandleDownloadCorrected($id);
-        $this->flashMessage($message->getMessage(), $message->getLevel());
+        $logger = new MemoryLogger();
+        $this->traitHandleDownloadCorrected($logger, $id);
+        FlashMessageDump::dump($logger, $this);
+    }
+
+    protected function getCorrectedStorage(): CorrectedStorage {
+        /** @var CorrectedStorage $service */
+        $service = $this->getContext()->getByType(CorrectedStorage::class);
+        return $service;
+    }
+
+    protected function getUploadedStorage(): UploadedStorage {
+        /** @var UploadedStorage $service */
+        $service = $this->getContext()->getByType(UploadedStorage::class);
+        return $service;
+    }
+
+    protected function getServiceSubmit(): ServiceSubmit {
+        /** @var ServiceSubmit $service */
+        $service = $this->getContext()->getByType(ServiceSubmit::class);
+        return $service;
     }
 }

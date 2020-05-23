@@ -22,11 +22,6 @@ class ParticipantAcquaintanceChartControl extends ReactComponent implements ICha
      */
     private $event;
     /**
-     * @var ServiceEvent
-     */
-    private $serviceEvent;
-
-    /**
      * ParticipantAcquaintanceChartControl constructor.
      * @param Container $context
      * @param ModelEvent $event
@@ -34,12 +29,8 @@ class ParticipantAcquaintanceChartControl extends ReactComponent implements ICha
     public function __construct(Container $context, ModelEvent $event) {
         parent::__construct($context);
         $this->event = $event;
-        $this->serviceEvent = $context->getByType(ServiceEvent::class);
     }
 
-    /**
-     * @return string
-     */
     public function getAction(): string {
         return 'participantAcquaintance';
     }
@@ -72,23 +63,14 @@ class ParticipantAcquaintanceChartControl extends ReactComponent implements ICha
         return Json::encode($data);
     }
 
-    /**
-     * @return string
-     */
     protected function getReactId(): string {
         return 'chart.participant-acquaintance';
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Participant acquaintance');
     }
 
-    /**
-     * @return Control
-     */
     public function getControl(): Control {
         return $this;
     }

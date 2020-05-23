@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\React;
 
+use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Exceptions\BadTypeException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
@@ -17,23 +18,9 @@ use Nette\Utils\JsonException;
  * @property FileTemplate template
  *
  */
-abstract class ReactComponent extends Control {
+abstract class ReactComponent extends BaseComponent {
 
     use ReactField;
-    /**
-     * @var Container
-     */
-    protected $container;
-
-    /**
-     * ReactComponent constructor.
-     * @param Container $context
-     */
-    public function __construct(Container $context) {
-        parent::__construct();
-        $this->container = $context;
-    }
-
     /**
      * @param IComponent $obj
      */
@@ -76,12 +63,5 @@ abstract class ReactComponent extends Control {
         $requestData = $this->getHttpRequest()->getPost('requestData');
         $act = $this->getHttpRequest()->getPost('act');
         return (object)['requestData' => $requestData, 'act' => $act];
-    }
-
-    /**
-     * @return Container
-     */
-    final public function getContext() {
-        return $this->container;
     }
 }

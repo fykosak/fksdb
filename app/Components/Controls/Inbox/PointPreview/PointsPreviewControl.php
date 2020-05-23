@@ -9,7 +9,7 @@ use Nette\DI\Container;
  * Class PointsTableControl
  * @package FKSDB\Components\Controls\Upload
  */
-class PointsPreviewControl extends SeriesTableControl {
+class PointsPreviewControl extends SeriesTableComponent {
 
     /**
      * CheckSubmitsControl constructor.

@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Controls\Fyziklani;
 
+use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use Nette\Application\UI\Control;
@@ -12,24 +13,19 @@ use Nette\Localization\ITranslator;
  * Class SittingControl
  * @package FKSDB\Components\Controls\Fyziklani
  */
-class SeatingControl extends Control {
+class SeatingControl extends BaseComponent {
     /**
      * @var ServiceFyziklaniTeamPosition
      */
     private $serviceFyziklaniTeamPosition;
-    /**
-     * @var ITranslator
-     */
-    private $translator;
 
     /**
      * SeatingControl constructor.
      * @param Container $container
      */
     public function __construct(Container $container) {
-        parent::__construct();
+        parent::__construct($container);
         $this->serviceFyziklaniTeamPosition = $container->getByType(ServiceFyziklaniTeamPosition::class);
-        $this->translator = $container->getByType(ITranslator::class);
     }
 
     /**
@@ -68,7 +64,6 @@ class SeatingControl extends Control {
         $this->template->mode = $mode;
         $this->template->lang = $lang;
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Seating.' . $mode . '.latte');
-        $this->template->setTranslator($this->translator);
         $this->template->render();
     }
 
@@ -77,6 +72,7 @@ class SeatingControl extends Control {
      * @return int[]
      */
     private function getRooms(ModelEvent $event): array {
+        // TODO FIX getParameter
         try {
             return $event->getParameter(null, 'rooms');
         } catch (\Exception $exception) {

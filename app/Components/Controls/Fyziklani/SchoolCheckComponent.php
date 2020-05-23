@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Fyziklani;
 
-use FKSDB\Components\Controls\BaseControl;
+use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\DatabaseReflection\ValuePrinterComponent;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
@@ -18,7 +18,7 @@ use Nette\Localization\ITranslator;
  * Class SchoolCheckControl
  * @package FKSDB\Components\Controls\Fyziklani
  */
-class SchoolCheckControl extends BaseControl {
+class SchoolCheckComponent extends BaseComponent {
     /**
      * @var ModelEvent
      */
@@ -89,7 +89,7 @@ group by school_id', [$this->acYear, array_keys($this->getSchoolsFromTeam($curre
      * @throws \Exception
      */
     public function createComponentValuePrinter(): ValuePrinterComponent {
-        return new ValuePrinterComponent($this->getContext()->getByType(ITranslator::class), $this->getContext()->getByType(TableReflectionFactory::class));
+        return new ValuePrinterComponent($this->getContext());
     }
 }
 // there are very nice nette workaround, but very slow

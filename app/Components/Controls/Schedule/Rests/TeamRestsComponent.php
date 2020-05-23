@@ -2,14 +2,14 @@
 
 namespace FKSDB\Components\Controls\Schedule\Rests;
 
-use FKSDB\Components\Controls\BaseControl;
+use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 
 /**
  * Class TeamRestsControl
  * @package FKSDB\Components\Controls\Fyziklani
  */
-class TeamRestsControl extends BaseControl {
+class TeamRestsComponent extends BaseComponent {
     /**
      * @param ModelFyziklaniTeam $team
      */
@@ -21,9 +21,9 @@ class TeamRestsControl extends BaseControl {
     }
 
     /**
-     * @return SingleRestControl
+     * @return SingleRestComponent
      */
-    public function createComponentSingleRestControl(): SingleRestControl {
-        return new SingleRestControl($this->getContext());
+    public function createComponentSingleRestControl(): SingleRestComponent {
+        return new SingleRestComponent($this->getContext());
     }
 }

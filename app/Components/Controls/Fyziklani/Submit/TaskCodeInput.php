@@ -43,9 +43,10 @@ class TaskCodeInput extends FyziklaniReactControl {
      * @param ModelEvent $event
      */
     public function __construct(Container $container, ModelEvent $event) {
+        parent::__construct($container, $event);
         $this->serviceFyziklaniTask = $container->getByType(ServiceFyziklaniTask::class);
         $this->serviceFyziklaniTeam = $container->getByType(ServiceFyziklaniTeam::class);
-        parent::__construct($container, $event);
+
         $this->monitor(IJavaScriptCollector::class);
     }
 

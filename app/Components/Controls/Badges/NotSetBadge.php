@@ -11,10 +11,7 @@ use Nette\Utils\Html;
  * @property FileTemplate $template
  */
 class NotSetBadge extends Badge {
-    /**
-     * @param array $args
-     * @return Html
-     */
+
     public static function getHtml(...$args): Html {
         return Html::el('span')->addAttributes(['class' => 'badge badge-warning'])->addText(_('Not set'));
     }

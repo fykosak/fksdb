@@ -6,11 +6,10 @@ use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Services\ServiceSubmit;
-use FKSDB\Submits\FilesystemUploadedSubmitStorage;
+use FKSDB\Submits\FileSystemStorage\UploadedStorage;
 use FKSDB\Submits\StorageException;
 use FKSDB\Exceptions\ModelException;
 use Nette\Application\UI\InvalidLinkException;
-use Nette\DI\Container;
 use PublicModule\SubmitPresenter;
 use Tracy\Debugger;
 
@@ -21,40 +20,41 @@ use Tracy\Debugger;
 trait SubmitRevokeTrait {
 
     /**
+     * @param ILogger $logger
      * @param int $submitId
-     * @return array
+     * @return array|null
      * @throws InvalidLinkException
      */
-    public function traitHandleRevoke(int $submitId): array {
-        /** @var ServiceSubmit $serviceSubmit */
-        $serviceSubmit = $this->getContext()->getByType(ServiceSubmit::class);
-        /** @var FilesystemUploadedSubmitStorage $submitUploadedStorage */
-        $submitUploadedStorage = $this->getContext()->getByType(FilesystemUploadedSubmitStorage::class);
+    public function traitHandleRevoke(ILogger $logger, int $submitId) {
         /** @var ModelSubmit $submit */
-        $submit = $serviceSubmit->findByPrimary($submitId);
+        $submit = $this->getServiceSubmit()->findByPrimary($submitId);
         if (!$submit) {
             return [new Message(_('Neexistující submit.'), ILogger::ERROR), null];
         }
         $contest = $submit->getContestant()->getContest();
         if (!$this->getPresenter()->getContestAuthorizator()->isAllowed($submit, 'revoke', $contest)) {
-            return [new Message(_('Nedostatečné oprávnění.'), ILogger::ERROR), null];
+            $logger->log(new Message(_('Nedostatečné oprávnění.'), ILogger::ERROR));
+            return null;
         }
         if (!$this->canRevoke($submit)) {
-            return [new Message(_('Nelze zrušit submit.'), ILogger::ERROR), null];
+            $logger->log(new Message(_('Nelze zrušit submit.'), ILogger::ERROR));
+            return null;
         }
         try {
-            $submitUploadedStorage->deleteFile($submit);
-            $serviceSubmit->dispose($submit);
-            $data = $serviceSubmit->serializeSubmit(null, $submit->getTask(), $this->getPresenter());
-
-            return [new Message(\sprintf('Odevzdání úlohy %s zrušeno.', $submit->getTask()->getFQName()), ILogger::WARNING), $data];
+            $this->getUploadedStorage()->deleteFile($submit);
+            $this->getServiceSubmit()->dispose($submit);
+            $data = $this->getServiceSubmit()->serializeSubmit(null, $submit->getTask(), $this->getPresenter());
+            $logger->log(new Message(\sprintf('Odevzdání úlohy %s zrušeno.', $submit->getTask()->getFQName()), ILogger::WARNING));
+            return $data;
 
         } catch (StorageException $exception) {
             Debugger::log($exception);
-            return [new Message(_('Během mazání úlohy %s došlo k chybě.'), ILogger::ERROR), null];
+            $logger->log(new Message(_('Během mazání úlohy %s došlo k chybě.'), ILogger::ERROR));
+            return null;
         } catch (ModelException $exception) {
             Debugger::log($exception);
-            return [new Message(_('Během mazání úlohy %s došlo k chybě.'), ILogger::ERROR), null];
+            $logger->log(new Message(_('Během mazání úlohy %s došlo k chybě.'), ILogger::ERROR));
+            return null;
         }
     }
 
@@ -81,8 +81,7 @@ trait SubmitRevokeTrait {
      */
     abstract protected function getPresenter($need = true);
 
-    /**
-     * @return Container
-     */
-    abstract public function getContext();
+    abstract protected function getUploadedStorage(): UploadedStorage;
+
+    abstract protected function getServiceSubmit(): ServiceSubmit;
 }

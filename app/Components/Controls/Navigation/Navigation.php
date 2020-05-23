@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Navigation;
 
-use FKSDB\Components\Controls\BaseControl;
+use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\PresenterBuilder;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\UI\PageTitle;
@@ -19,7 +19,7 @@ use ReflectionMethod;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class Navigation extends BaseControl {
+class Navigation extends BaseComponent {
     /**
      * @var array
      */

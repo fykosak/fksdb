@@ -2,13 +2,12 @@
 
 namespace FKSDB\Components\Controls\Fyziklani;
 
+use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Grids\Fyziklani\ResultsCategoryGrid;
 use FKSDB\Components\Grids\Fyziklani\ResultsTotalGrid;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use Nette\Application\UI\Control;
 use Nette\DI\Container;
-use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 
 /**
@@ -16,7 +15,7 @@ use Nette\Templating\FileTemplate;
  * @package FKSDB\Components\Controls\Fyziklani
  * @property FileTemplate $template
  */
-class FinalResults extends Control {
+class FinalResults extends BaseComponent {
     /**
      * @var ServiceFyziklaniTeam
      */
@@ -25,14 +24,6 @@ class FinalResults extends Control {
      * @var ModelEvent
      */
     private $event;
-    /**
-     * @var ITranslator
-     */
-    private $translator;
-    /**
-     * @var Container
-     */
-    private $container;
 
     /**
      * FinalResults constructor.
@@ -40,11 +31,16 @@ class FinalResults extends Control {
      * @param Container $container
      */
     public function __construct(Container $container, ModelEvent $event) {
-        parent::__construct();
-        $this->serviceFyziklaniTeam = $container->getByType(ServiceFyziklaniTeam::class);
+        parent::__construct($container);
         $this->event = $event;
-        $this->translator = $container->getByType(ITranslator::class);
-        $this->container = $container;
+    }
+
+    /**
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @return void
+     */
+    public function injectPrimary(ServiceFyziklaniTeam $serviceFyziklaniTeam) {
+        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 
     /**
@@ -102,9 +98,7 @@ class FinalResults extends Control {
      */
     public function render() {
         $this->template->that = $this;
-
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'FinalResults.latte');
-        $this->template->setTranslator($this->translator);
         $this->template->render();
     }
 }

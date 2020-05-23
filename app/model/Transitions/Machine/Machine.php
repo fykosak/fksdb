@@ -11,7 +11,7 @@ use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Database\Context;
 use Nette\Database\Table\ActiveRow;
-use Nette\Localization\ITranslator;
+use Nette\DI\Container;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -40,22 +40,15 @@ abstract class Machine {
      * if callback return true, transition is allowed explicit, independently of transition's condition
      */
     private $explicitCondition;
-    /**
-     * @var ITranslator
-     */
-    private $translator;
 
     /**
      * Machine constructor.
      * @param Context $context
      * @param IService $service
-     * @param ITranslator $translator
      */
-    public function __construct(Context $context, IService $service, ITranslator $translator) {
+    public function __construct(Context $context, IService $service) {
         $this->context = $context;
-
         $this->service = $service;
-        $this->translator = $translator;
     }
 
     /**
@@ -85,15 +78,6 @@ abstract class Machine {
             return ($transition->getFromState() === $state) && $this->canExecute($transition, $model);
         });
     }
-
-    /**
-     * @param IStateModel $model
-     * @return TransitionButtonsControl
-     */
-    public function createComponentTransitionButtons(IStateModel $model): TransitionButtonsControl {
-        return new TransitionButtonsControl($this, $this->translator, $model);
-    }
-
     /**
      * @param string $id
      * @param IStateModel $model
@@ -190,7 +174,7 @@ abstract class Machine {
         /* select from DB new (updated) model */
 
         // $newModel = $model;
-        $newModel = $model->refresh($this->context,$this->context->getConventions());
+        $newModel = $model->refresh($this->context, $this->context->getConventions());
         $transition->afterExecute($newModel);
         return $newModel;
     }

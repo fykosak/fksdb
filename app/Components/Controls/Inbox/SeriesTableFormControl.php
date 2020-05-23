@@ -12,7 +12,7 @@ use Nette\Application\UI\Form;
  * Class SeriesTableFormControl
  * @package FKSDB\Components\Controls\Inbox
  */
-abstract class SeriesTableFormControl extends SeriesTableControl {
+abstract class SeriesTableFormControl extends SeriesTableComponent {
     /**
      * @return OptimisticForm
      */

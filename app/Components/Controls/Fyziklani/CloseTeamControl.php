@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Controls\Fyziklani;
 
 use BasePresenter;
+use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
@@ -19,15 +20,11 @@ use Nette\Templating\FileTemplate;
  * @package FKSDB\Components\Controls\Fyziklani
  * @property FileTemplate $template
  */
-class CloseTeamControl extends Control {
+class CloseTeamControl extends BaseComponent {
     /**
      * @var ModelEvent
      */
     private $event;
-    /**
-     * @var ITranslator
-     */
-    private $translator;
     /**
      * @var ModelFyziklaniTeam
      */
@@ -42,14 +39,17 @@ class CloseTeamControl extends Control {
      * @param Container $container
      * @param ModelEvent $event
      */
-    public function __construct(
-        Container $container,
-        ModelEvent $event
-    ) {
-        parent::__construct();
+    public function __construct(Container $container, ModelEvent $event) {
+        parent::__construct($container);
         $this->event = $event;
-        $this->translator = $container->getByType(ITranslator::class);
-        $this->serviceFyziklaniTask = $container->getByType(ServiceFyziklaniTask::class);
+    }
+
+    /**
+     * @param ServiceFyziklaniTask $serviceFyziklaniTask
+     * @return void
+     */
+    public function callInject(ServiceFyziklaniTask $serviceFyziklaniTask) {
+        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
     }
 
     /**
@@ -79,7 +79,6 @@ class CloseTeamControl extends Control {
      */
     public function render() {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'CloseTeamControl.latte');
-        $this->template->setTranslator($this->translator);
         $this->template->task = $this->getNextTask();
         $this->template->render();
     }

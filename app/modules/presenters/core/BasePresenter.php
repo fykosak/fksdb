@@ -356,7 +356,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @return DetailComponent
      */
     protected function createComponentDetail(): DetailComponent {
-        return new DetailComponent($this->detailFactory, $this->getTableReflectionFactory(), $this->getTranslator());
+        return new DetailComponent($this->getContext(), $this->detailFactory);
     }
 
     /**
@@ -482,6 +482,6 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @throws \Exception
      */
     public function createComponentValuePrinter(): ValuePrinterComponent {
-        return new ValuePrinterComponent($this->getTranslator(), $this->getTableReflectionFactory());
+        return new ValuePrinterComponent($this->getContext());
     }
 }

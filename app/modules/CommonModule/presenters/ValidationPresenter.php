@@ -74,6 +74,6 @@ class ValidationPresenter extends BasePresenter {
      * @return PersonTestControl
      */
     public function createComponentValidationControl(): PersonTestControl {
-        return new PersonTestControl($this->servicePerson, $this->getTranslator(), $this->validationFactory->getTests('person'));
+        return new PersonTestControl($this->getContext(), $this->validationFactory->getTests('person'));
     }
 }

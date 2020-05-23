@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Schedule\Rests;
 
-use FKSDB\Components\Controls\BaseControl;
+use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
 
@@ -10,7 +10,7 @@ use FKSDB\ORM\Models\ModelPerson;
  * Class SingleRestControl
  * @package FKSDB\Components\Controls\Fyziklani
  */
-class SingleRestControl extends BaseControl {
+class SingleRestComponent extends BaseComponent {
     /**
      * @param ModelPerson $person
      * @param ModelEvent $event

@@ -55,16 +55,10 @@ class ResultsAndStatistics extends FyziklaniReactControl {
         $this->serviceFyziklaniTeam = $this->container->getByType(ServiceFyziklaniTeam::class);
     }
 
-    /**
-     * @return string
-     */
     protected function getReactId(): string {
         return $this->reactId;
     }
 
-    /**
-     * @return string
-     */
     final public function getData(): string {
         return '';
     }

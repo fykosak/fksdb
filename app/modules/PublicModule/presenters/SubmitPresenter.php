@@ -16,7 +16,7 @@ use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\ORM\Services\ServiceTask;
 use FKSDB\ORM\Tables\TypedTableSelection;
-use FKSDB\Submits\FilesystemUploadedSubmitStorage;
+use FKSDB\Submits\FileSystemStorage\UploadedStorage;
 use FKSDB\Submits\ProcessingException;
 use FKSDB\Exceptions\ModelException;
 use Nette\Application\AbortException;
@@ -53,11 +53,11 @@ class SubmitPresenter extends BasePresenter {
         $this->submitQuizQuestionService = $submitQuizQuestionService;
     }
 
-    /** @var FilesystemUploadedSubmitStorage */
+    /** @var UploadedStorage */
     private $uploadedSubmitStorage;
 
-    /** @param FilesystemUploadedSubmitStorage $filesystemUploadedSubmitStorage */
-    public function injectSubmitUploadedStorage(FilesystemUploadedSubmitStorage $filesystemUploadedSubmitStorage) {
+    /** @param UploadedStorage $filesystemUploadedSubmitStorage */
+    public function injectSubmitUploadedStorage(UploadedStorage $filesystemUploadedSubmitStorage) {
         $this->uploadedSubmitStorage = $filesystemUploadedSubmitStorage;
     }
 

@@ -5,15 +5,15 @@ namespace FKSDB\Components\Control\AjaxUpload;
 use FKSDB\Components\React\ReactComponent;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Logging\ILogger;
-use FKSDB\Messages\Message;
+use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\React\ReactResponse;
-use FKSDB\Submits\FilesystemUploadedSubmitStorage;
+use FKSDB\Submits\FileSystemStorage\CorrectedStorage;
+use FKSDB\Submits\FileSystemStorage\UploadedStorage;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
-use Nette\DI\Container;
 use Nette\Http\FileUpload;
 use Nette\Http\Response;
 use PublicModule\SubmitPresenter;
@@ -28,18 +28,18 @@ class AjaxUpload extends ReactComponent {
     use SubmitRevokeTrait;
     use SubmitSaveTrait;
     use SubmitDownloadTrait;
+
     /**
      * @var ServiceSubmit
      */
     private $serviceSubmit;
 
     /**
-     * AjaxUpload constructor.
-     * @param Container $context
+     * @param ServiceSubmit $serviceSubmit
+     * @return void
      */
-    public function __construct(Container $context) {
-        parent::__construct($context);
-        $this->serviceSubmit = $this->container->getByType(ServiceSubmit::class);
+    public function injectServiceSubmit(ServiceSubmit $serviceSubmit) {
+        $this->serviceSubmit = $serviceSubmit;
     }
 
     /**
@@ -90,8 +90,8 @@ class AjaxUpload extends ReactComponent {
      */
     public function handleUpload() {
         $response = new ReactResponse();
-        /** @var FilesystemUploadedSubmitStorage $filesystemUploadedSubmitStorage */
-        $filesystemUploadedSubmitStorage = $this->getContext()->getByType(FilesystemUploadedSubmitStorage::class);
+        /** @var UploadedStorage $filesystemUploadedSubmitStorage */
+        $filesystemUploadedSubmitStorage = $this->getContext()->getByType(UploadedStorage::class);
         $contestant = $this->getPresenter()->getContestant();
         $files = $this->getHttpRequest()->getFiles();
         foreach ($files as $name => $fileContainer) {
@@ -108,9 +108,7 @@ class AjaxUpload extends ReactComponent {
                 $response->addMessage(new ReactMessage(_('Upload not allowed'), ILogger::ERROR));
                 $this->getPresenter()->sendResponse($response);
             }
-            /**
-             * @var FileUpload $file
-             */
+            /** @var FileUpload $file */
             $file = $fileContainer;
             if (!$file->isOk()) {
                 $response->setCode(Response::S500_INTERNAL_SERVER_ERROR);
@@ -136,15 +134,13 @@ class AjaxUpload extends ReactComponent {
      */
     public function handleRevoke() {
         $submitId = $this->getReactRequest()->requestData['submitId'];
-        /**
-         * @var Message $message
-         */
-        list($message, $data) = $this->traitHandleRevoke($submitId);
+        $logger = new MemoryLogger();
+        $data = $this->traitHandleRevoke($logger, $submitId);
         $response = new ReactResponse();
         if ($data) {
             $response->setData($data);
         }
-        $response->addMessage(new ReactMessage($message->getMessage(), $message->getLevel()));
+        $response->setMessages($logger->getMessages());
         $this->getPresenter()->sendResponse($response);
         die();
     }
@@ -155,14 +151,31 @@ class AjaxUpload extends ReactComponent {
      */
     public function handleDownload() {
         $submitId = $this->getReactRequest()->requestData['submitId'];
-        $this->traitHandleDownloadUploaded($submitId);
+        $logger = new MemoryLogger();
+        $this->traitHandleDownloadUploaded($logger, $submitId);
         die();
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function getReactId(): string {
         return 'public.ajax-upload';
+    }
+
+
+    protected function getCorrectedStorage(): CorrectedStorage {
+        /** @var CorrectedStorage $service */
+        $service = $this->getContext()->getByType(CorrectedStorage::class);
+        return $service;
+    }
+
+    protected function getUploadedStorage(): UploadedStorage {
+        /** @var UploadedStorage $service */
+        $service = $this->getContext()->getByType(UploadedStorage::class);
+        return $service;
+    }
+
+    protected function getServiceSubmit(): ServiceSubmit {
+        /** @var ServiceSubmit $service */
+        $service = $this->getContext()->getByType(ServiceSubmit::class);
+        return $service;
     }
 }

@@ -9,19 +9,11 @@ use Nette\Application\UI\Control;
  * @package FKSDB\Components\Controls\Chart
  */
 interface IChart {
-    /**
-     * @return string
-     */
+
     public function getAction(): string;
 
-    /**
-     * @return string
-     */
     public function getTitle(): string;
 
-    /**
-     * @return Control
-     */
     public function getControl(): Control;
 
     /**

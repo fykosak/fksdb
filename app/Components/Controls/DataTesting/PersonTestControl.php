@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Controls\DataTesting;
 
+use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\DataTesting\Tests\Person\PersonTest;
@@ -10,9 +11,8 @@ use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\DataTesting\TestsLogger;
 use FKSDB\DataTesting\TestLog;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\Control;
+use Nette\DI\Container;
 use Nette\Forms\Form;
-use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 
 /**
@@ -20,7 +20,7 @@ use Nette\Templating\FileTemplate;
  * @package FKSDB\Components\Controls\DataTesting
  * @property-read FileTemplate $template
  */
-class PersonTestControl extends Control {
+class PersonTestControl extends BaseComponent {
 
     /**
      * @var int
@@ -44,31 +44,31 @@ class PersonTestControl extends Control {
      * @persistent
      */
     public $levels = [];
-
-    /**
-     * @var ITranslator
-     */
-    private $translator;
     /**
      * @var ServicePerson
      */
     private $servicePerson;
     /**
-     * @var array
+     * @var PersonTest[]
      */
     private $availableTests = [];
 
     /**
      * ValidationControl constructor.
-     * @param ServicePerson $servicePerson
-     * @param ITranslator $translator
-     * @param array $availableTests
+     * @param Container $container
+     * @param PersonTest[] $availableTests
      */
-    public function __construct(ServicePerson $servicePerson, ITranslator $translator, array $availableTests) {
-        parent::__construct();
-        $this->servicePerson = $servicePerson;
-        $this->translator = $translator;
+    public function __construct(Container $container, array $availableTests) {
+        parent::__construct($container);
         $this->availableTests = $availableTests;
+    }
+
+    /**
+     * @param ServicePerson $servicePerson
+     * @return void
+     */
+    public function injectPrimary(ServicePerson $servicePerson) {
+        $this->servicePerson = $servicePerson;
     }
 
     /**
@@ -154,7 +154,6 @@ class PersonTestControl extends Control {
 
     public function render() {
         $this->template->logs = $this->calculateProblems();
-        $this->template->setTranslator($this->translator);
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
         $this->template->render();
     }

@@ -5,7 +5,7 @@ namespace OrgModule;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Inbox\CorrectedControl;
 use FKSDB\Components\Controls\Inbox\SubmitsPreviewControl;
-use FKSDB\Components\Controls\Inbox\SubmitCheckControl;
+use FKSDB\Components\Controls\Inbox\SubmitCheckComponent;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Controls\Inbox\InboxControl;
 use FKSDB\Components\Forms\Factories\PersonFactory;
@@ -226,10 +226,10 @@ class InboxPresenter extends SeriesPresenter {
     }
 
     /**
-     * @return SubmitCheckControl
+     * @return SubmitCheckComponent
      */
-    protected function createComponentCheckControl(): SubmitCheckControl {
-        return new SubmitCheckControl($this->getContext(), $this->seriesTable);
+    protected function createComponentCheckControl(): SubmitCheckComponent {
+        return new SubmitCheckComponent($this->getContext(), $this->seriesTable);
     }
 
     /**

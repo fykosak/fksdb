@@ -5,6 +5,7 @@ namespace FKSDB\Components\Controls\Stalking;
 use FKSDB\Components\Controls\Badges\ContestBadge;
 use FKSDB\Components\Controls\Badges\NoRecordsBadge;
 use FKSDB\Components\Controls\Badges\PermissionDeniedBadge;
+use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\DatabaseReflection\ValuePrinterComponent;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\Models\ModelPerson;
@@ -18,7 +19,7 @@ use Nette\Templating\FileTemplate;
  * @package FKSDB\Components\Controls\Stalking
  * @property FileTemplate $template
  */
-abstract class StalkingControl extends Control {
+abstract class StalkingControl extends BaseComponent {
 
     const PERMISSION_FULL = 1024;
     const PERMISSION_RESTRICT = 128;
@@ -36,14 +37,13 @@ abstract class StalkingControl extends Control {
     protected $tableReflectionFactory;
 
     /**
-     * StalkingComponent constructor.
-     * @param Container $container
+     * @param ITranslator $translator
+     * @param TableReflectionFactory $tableReflectionFactory
+     * @return void
      */
-    public function __construct(Container $container) {
-        parent::__construct();
-
-        $this->translator = $container->getByType(ITranslator::class);
-        $this->tableReflectionFactory = $container->getByType(TableReflectionFactory::class);
+    public function injectPrimary(ITranslator $translator, TableReflectionFactory $tableReflectionFactory) {
+        $this->translator = $translator;
+        $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
     /**
@@ -51,7 +51,6 @@ abstract class StalkingControl extends Control {
      * @param int $userPermissions
      */
     public function beforeRender(ModelPerson $person, int $userPermissions) {
-        $this->template->setTranslator($this->translator);
         $this->template->userPermissions = $userPermissions;
         $this->template->gender = $person->gender;
     }
@@ -60,27 +59,27 @@ abstract class StalkingControl extends Control {
      * @return ContestBadge
      */
     public function createComponentContestBadge(): ContestBadge {
-        return new ContestBadge($this->translator);
+        return new ContestBadge($this->getContext());
     }
 
     /**
      * @return PermissionDeniedBadge
      */
     public function createComponentPermissionDenied(): PermissionDeniedBadge {
-        return new PermissionDeniedBadge($this->translator);
+        return new PermissionDeniedBadge($this->getContext());
     }
 
     /**
      * @return NoRecordsBadge
      */
     public function createComponentNoRecords(): NoRecordsBadge {
-        return new NoRecordsBadge($this->translator);
+        return new NoRecordsBadge($this->getContext());
     }
 
     /**
      * @return ValuePrinterComponent
      */
     public function createComponentValuePrinter(): ValuePrinterComponent {
-        return new ValuePrinterComponent($this->translator, $this->tableReflectionFactory);
+        return new ValuePrinterComponent($this->getContext());
     }
 }

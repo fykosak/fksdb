@@ -29,9 +29,6 @@ class TotalPersonsChartControl extends ReactComponent implements IChart {
         $this->servicePerson = $context->getByType(ServicePerson::class);
     }
 
-    /**
-     * @return string
-     */
     public function getAction(): string {
         return 'totalPersons';
     }
@@ -54,23 +51,14 @@ class TotalPersonsChartControl extends ReactComponent implements IChart {
         return Json::encode($data);
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Total persons in FKSDB');
     }
 
-    /**
-     * @return Control
-     */
     public function getControl(): Control {
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function getReactId(): string {
         return 'chart.total-person';
     }
