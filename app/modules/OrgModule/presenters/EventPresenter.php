@@ -27,6 +27,7 @@ class EventPresenter extends BasePresenter {
 
     /**
      * @param ServiceEvent $serviceEvent
+     * @return void
      */
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;
@@ -63,9 +64,6 @@ class EventPresenter extends BasePresenter {
         $this->traitActionEdit($id);
     }
 
-    /**
-     * @return EventsGrid
-     */
     protected function createComponentGrid(): EventsGrid {
         return new EventsGrid($this->getContext());
     }

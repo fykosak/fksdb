@@ -26,10 +26,7 @@ abstract class FyziklaniReactControl extends ReactComponent {
         $this->event = $event;
     }
 
-    /**
-     * @return ModelEvent
-     */
-    final protected function getEvent() {
+    final protected function getEvent(): ModelEvent {
         return $this->event;
     }
 }

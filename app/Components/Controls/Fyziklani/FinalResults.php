@@ -17,7 +17,7 @@ use Nette\Templating\FileTemplate;
  */
 class FinalResults extends BaseComponent {
     /**
-     * @var ServiceFyziklaniTeam
+     * @var ServiceFyziklaniTeam|null
      */
     private $serviceFyziklaniTeam;
     /**
@@ -43,10 +43,6 @@ class FinalResults extends BaseComponent {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 
-    /**
-     * @param string $category
-     * @return bool
-     */
     public function isClosedCategory(string $category): bool {
         $count = (int)$this->serviceFyziklaniTeam->findParticipating($this->event)
             ->where('category', $category)
@@ -55,9 +51,6 @@ class FinalResults extends BaseComponent {
         return $count === 0;
     }
 
-    /**
-     * @return bool
-     */
     public function isClosedTotal(): bool {
         $count = (int)$this->serviceFyziklaniTeam->findParticipating($this->event)
             ->where('rank_total IS NULL')
@@ -65,32 +58,20 @@ class FinalResults extends BaseComponent {
         return $count === 0;
     }
 
-    /**
-     * @return ResultsCategoryGrid
-     */
     public function createComponentResultsCategoryAGrid(): ResultsCategoryGrid {
-        return new ResultsCategoryGrid($this->event, 'A', $this->container);
+        return new ResultsCategoryGrid($this->event, 'A', $this->getContext());
     }
 
-    /**
-     * @return ResultsCategoryGrid
-     */
     public function createComponentResultsCategoryBGrid(): ResultsCategoryGrid {
-        return new ResultsCategoryGrid($this->event, 'B', $this->container);
+        return new ResultsCategoryGrid($this->event, 'B', $this->getContext());
     }
 
-    /**
-     * @return ResultsCategoryGrid
-     */
     public function createComponentResultsCategoryCGrid(): ResultsCategoryGrid {
-        return new ResultsCategoryGrid($this->event, 'C', $this->container);
+        return new ResultsCategoryGrid($this->event, 'C', $this->getContext());
     }
 
-    /**
-     * @return ResultsTotalGrid
-     */
     public function createComponentResultsTotalGrid(): ResultsTotalGrid {
-        return new ResultsTotalGrid($this->event, $this->container);
+        return new ResultsTotalGrid($this->event, $this->getContext());
     }
 
     /**

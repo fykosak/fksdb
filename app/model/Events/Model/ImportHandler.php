@@ -58,6 +58,7 @@ class ImportHandler {
     /**
      * @param CSVParser $parser
      * @param string $keyName
+     * @return void
      */
     public function setInput(CSVParser $parser, string $keyName) {
         $this->parser = $parser;
@@ -66,6 +67,7 @@ class ImportHandler {
 
     /**
      * @param SingleEventSource $source
+     * @return void
      */
     public function setSource(SingleEventSource $source) {
         $this->source = $source;
@@ -135,7 +137,7 @@ class ImportHandler {
     }
 
     /**
-     * @param $row
+     * @param mixed $row
      * @return array
      */
     private function rowToValues($row): array {

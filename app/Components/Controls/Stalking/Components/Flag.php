@@ -12,6 +12,7 @@ class Flag extends AbstractStalkingComponent {
     /**
      * @param ModelPerson $person
      * @param int $userPermissions
+     * @return void
      */
     public function render(ModelPerson $person, int $userPermissions) {
         $this->beforeRender($person, $userPermissions);
@@ -20,9 +21,6 @@ class Flag extends AbstractStalkingComponent {
         $this->template->render();
     }
 
-    /**
-     * @return string
-     */
     protected function getHeadline(): string {
         return _('Flags');
     }

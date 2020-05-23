@@ -2,8 +2,6 @@
 
 namespace EventModule;
 
-use FKSDB\Events\Machine\Machine;
-use FKSDB\Components\Events\ExpressionPrinter;
 use FKSDB\Components\Events\GraphComponent;
 use FKSDB\Events\EventDispatchFactory;
 use Nette\Application\BadRequestException;
@@ -15,24 +13,17 @@ use Nette\Application\BadRequestException;
 class ModelPresenter extends BasePresenter {
 
     /**
-     * @var ExpressionPrinter
-     */
-    private $expressionPrinter;
-
-    /**
-     * @param ExpressionPrinter $expressionPrinter
-     */
-    public function injectExpressionPrinter(ExpressionPrinter $expressionPrinter) {
-        $this->expressionPrinter = $expressionPrinter;
-    }
-
-    /**
+     * @return void
      * @throws BadRequestException
      */
     public function authorizedDefault() {
         $this->setAuthorized($this->isContestsOrgAuthorized('event.model', 'default'));
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleDefault() {
         $this->setTitle(_('Model of event'), 'fa fa-cubes');
     }
@@ -45,7 +36,6 @@ class ModelPresenter extends BasePresenter {
         /** @var EventDispatchFactory $factory */
         $factory = $this->getContext()->getByType(EventDispatchFactory::class);
         $machine = $factory->getEventMachine($this->getEvent());
-
-        return new GraphComponent($machine->getPrimaryMachine(), $this->expressionPrinter);
+        return new GraphComponent($this->getContext(), $machine->getPrimaryMachine());
     }
 }

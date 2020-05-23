@@ -5,13 +5,13 @@ namespace FKSDB\Components\Controls\DataTesting;
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
+use FKSDB\DataTesting\DataTestingFactory;
 use FKSDB\DataTesting\Tests\Person\PersonTest;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\DataTesting\TestsLogger;
 use FKSDB\DataTesting\TestLog;
 use Nette\Application\BadRequestException;
-use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Templating\FileTemplate;
 
@@ -49,26 +49,18 @@ class PersonTestControl extends BaseComponent {
      */
     private $servicePerson;
     /**
-     * @var PersonTest[]
+     * @var DataTestingFactory
      */
-    private $availableTests = [];
-
-    /**
-     * ValidationControl constructor.
-     * @param Container $container
-     * @param PersonTest[] $availableTests
-     */
-    public function __construct(Container $container, array $availableTests) {
-        parent::__construct($container);
-        $this->availableTests = $availableTests;
-    }
+    private $dataTestingFactory;
 
     /**
      * @param ServicePerson $servicePerson
+     * @param DataTestingFactory $dataTestingFactory
      * @return void
      */
-    public function injectPrimary(ServicePerson $servicePerson) {
+    public function injectPrimary(ServicePerson $servicePerson, DataTestingFactory $dataTestingFactory) {
         $this->servicePerson = $servicePerson;
+        $this->dataTestingFactory = $dataTestingFactory;
     }
 
     /**
@@ -97,7 +89,7 @@ class PersonTestControl extends BaseComponent {
 
         $testsContainer = new ContainerWithOptions();
         $testsContainer->setOption('label', _('Tests'));
-        foreach ($this->availableTests as $key => $test) {
+        foreach ($this->dataTestingFactory->getTests('person') as $key => $test) {
             $field = $testsContainer->addCheckbox($key, $test->getTitle());
             if (\in_array($test, $this->tests)) {
                 $field->setDefaultValue(true);
@@ -129,7 +121,7 @@ class PersonTestControl extends BaseComponent {
     }
 
     /**
-     * @return array
+     * @return array[]
      */
     private function calculateProblems(): array {
         $query = $this->servicePerson->getTable()->where('person_id BETWEEN ? AND ?', $this->startId, $this->endId);
@@ -152,6 +144,9 @@ class PersonTestControl extends BaseComponent {
         return $logs;
     }
 
+    /**
+     * @return void
+     */
     public function render() {
         $this->template->logs = $this->calculateProblems();
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
@@ -160,6 +155,7 @@ class PersonTestControl extends BaseComponent {
 
     /**
      * @param $page
+     * @return void
      */
     public function handleChangePage($page) {
         $this->page = $page;

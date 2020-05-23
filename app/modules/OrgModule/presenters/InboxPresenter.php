@@ -51,6 +51,7 @@ class InboxPresenter extends SeriesPresenter {
 
     /**
      * @param ServiceTaskContribution $serviceTaskContribution
+     * @return void
      */
     public function injectServiceTaskContribution(ServiceTaskContribution $serviceTaskContribution) {
         $this->serviceTaskContribution = $serviceTaskContribution;
@@ -58,6 +59,7 @@ class InboxPresenter extends SeriesPresenter {
 
     /**
      * @param ServicePerson $servicePerson
+     * @return void
      */
     public function injectServicePerson(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
@@ -65,6 +67,7 @@ class InboxPresenter extends SeriesPresenter {
 
     /**
      * @param SeriesTable $seriesTable
+     * @return void
      */
     public function injectSeriesTable(SeriesTable $seriesTable) {
         $this->seriesTable = $seriesTable;
@@ -72,6 +75,7 @@ class InboxPresenter extends SeriesPresenter {
 
     /**
      * @param PersonFactory $personFactory
+     * @return void
      */
     public function injectPersonFactory(PersonFactory $personFactory) {
         $this->personFactory = $personFactory;
@@ -273,9 +277,6 @@ class InboxPresenter extends SeriesPresenter {
         $this->redirect('this');
     }
 
-    /**
-     * @return PageStyleContainer
-     */
     protected function getPageStyleContainer(): PageStyleContainer {
         $container = parent::getPageStyleContainer();
         switch ($this->getAction()) {

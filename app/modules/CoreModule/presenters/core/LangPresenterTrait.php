@@ -31,6 +31,7 @@ trait LangPresenterTrait {
 
     /**
      * @param GettextTranslator $translator
+     * @return void
      */
     final public function injectTranslator(GettextTranslator $translator) {
         $this->translator = $translator;
@@ -46,9 +47,6 @@ trait LangPresenterTrait {
         $languageChooser->setLang($this->getLang(), !$this->getUserPreferredLang());
     }
 
-    /**
-     * @return LanguageChooser
-     */
     final protected function createComponentLanguageChooser(): LanguageChooser {
         return new LanguageChooser($this->getContext());
     }
@@ -93,9 +91,6 @@ trait LangPresenterTrait {
         return $this->cacheLang;
     }
 
-    /**
-     * @return GettextTranslator
-     */
     final public function getTranslator(): GettextTranslator {
         return $this->translator;
     }

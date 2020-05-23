@@ -12,9 +12,6 @@ use Nette\Security\IResource;
  */
 abstract class BasePresenter extends AuthenticatedPresenter {
 
-    /**
-     * @return PageStyleContainer
-     */
     protected function getPageStyleContainer(): PageStyleContainer {
         $container = parent::getPageStyleContainer();
         $container->styleId = 'theme-light common';
@@ -27,7 +24,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     protected function getNavRoots(): array {
         $roots = parent::getNavRoots();

@@ -7,9 +7,7 @@ use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use Nette\Application\UI\Control;
 use Nette\DI\Container;
-use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 
 /**
@@ -56,10 +54,10 @@ class RoutingDownload extends BaseComponent {
     }
 
     /**
-     *
+     * @return void
      */
     public function render() {
-        $rooms = $this->serviceFyziklaniRoom->getRoomsByIds($this->event->getParameter(null, 'rooms'));
+        $rooms = [];// $this->serviceFyziklaniRoom->getRoomsByIds($this->event->getParameter(null, 'rooms'));
 
         $this->template->rooms = $rooms;
         // $this->template->buildings = $this->event->getParameter('gameSetup')['buildings'];
@@ -70,6 +68,7 @@ class RoutingDownload extends BaseComponent {
 
     /**
      * @param $obj
+     * @return void
      */
     protected function attached($obj) {
         parent::attached($obj);

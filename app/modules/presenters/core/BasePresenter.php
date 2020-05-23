@@ -9,12 +9,10 @@ use FKSDB\Components\Controls\Navigation\INavigablePresenter;
 use FKSDB\Components\Controls\Navigation\Navigation;
 use FKSDB\Components\Controls\PresenterBuilder;
 use FKSDB\Components\DatabaseReflection\DetailComponent;
-use FKSDB\Components\DatabaseReflection\DetailFactory;
 use FKSDB\Components\DatabaseReflection\ValuePrinterComponent;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\IFilteredDataProvider;
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Config\GlobalParameters;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\LangPresenterTrait;
@@ -96,56 +94,26 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @var FullHttpRequest
      */
     private $fullRequest;
-    /**
-     * @var TableReflectionFactory
-     */
-    private $tableReflectionFactory;
-    /**
-     * @var
-     */
-    private $detailFactory;
 
-    /**
-     * @return YearCalculator
-     */
     public function getYearCalculator(): YearCalculator {
         return $this->yearCalculator;
     }
 
     /**
      * @param YearCalculator $yearCalculator
+     * @return void
      */
     public function injectYearCalculator(YearCalculator $yearCalculator) {
         $this->yearCalculator = $yearCalculator;
     }
 
-    /**
-     * @param DetailFactory $detailFactory
-     */
-    public function injectDetailFactory(DetailFactory $detailFactory) {
-        $this->detailFactory = $detailFactory;
-    }
-
-    /**
-     * @param TableReflectionFactory $tableReflectionFactory
-     */
-    final public function injectTableReflectionFactory(TableReflectionFactory $tableReflectionFactory) {
-        $this->tableReflectionFactory = $tableReflectionFactory;
-    }
-
-    final public function getTableReflectionFactory(): TableReflectionFactory {
-        return $this->tableReflectionFactory;
-    }
-
-    /**
-     * @return ServiceContest
-     */
     public function getServiceContest(): ServiceContest {
         return $this->serviceContest;
     }
 
     /**
      * @param ServiceContest $serviceContest
+     * @return void
      */
     public function injectServiceContest(ServiceContest $serviceContest) {
         $this->serviceContest = $serviceContest;
@@ -153,6 +121,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     /**
      * @param GlobalParameters $globalParameters
+     * @return void
      */
     public function injectGlobalParameters(GlobalParameters $globalParameters) {
         $this->globalParameters = $globalParameters;
@@ -160,6 +129,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     /**
      * @param BreadcrumbsFactory $breadcrumbsFactory
+     * @return void
      */
     public function injectBreadcrumbsFactory(BreadcrumbsFactory $breadcrumbsFactory) {
         $this->breadcrumbsFactory = $breadcrumbsFactory;
@@ -167,6 +137,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     /**
      * @param Navigation $navigationControl
+     * @return void
      */
     public function injectNavigationControl(Navigation $navigationControl) {
         $this->navigationControl = $navigationControl;
@@ -174,12 +145,14 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     /**
      * @param PresenterBuilder $presenterBuilder
+     * @return void
      */
     public function injectPresenterBuilder(PresenterBuilder $presenterBuilder) {
         $this->presenterBuilder = $presenterBuilder;
     }
 
     /**
+     * @return void
      * @throws Exception
      */
     protected function startup() {
@@ -254,9 +227,6 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return $this;
     }
 
-    /**
-     * @return PageTitle
-     */
     public function getTitle(): PageTitle {
         return $this->pageTitle ?: new PageTitle();
     }
@@ -265,6 +235,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @param string $title
      * @param string $icon
      * @param string $subTitle
+     * @return void
      */
     protected function setTitle(string $title, string $icon = '', string $subTitle = '') {
         $this->pageTitle = new PageTitle($title, $icon, $subTitle);
@@ -280,17 +251,10 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return $old;
     }
 
-    /**
-     * @param string $action
-     * @return string
-     */
     public static function publicFormatActionMethod(string $action): string {
         return static::formatActionMethod($action);
     }
 
-    /**
-     * @return string
-     */
     public static function getBackLinkParamName(): string {
         return 'bc';
     }
@@ -314,7 +278,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     protected function getNavRoots(): array {
         return [];
@@ -337,26 +301,17 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         $component->setBackLink($this->getRequest());
     }
 
-    /**
-     * @return Breadcrumbs
-     */
     protected function createComponentBreadcrumbs(): Breadcrumbs {
         return $this->breadcrumbsFactory->create();
     }
 
-    /**
-     * @return Navigation
-     */
     protected function createComponentNavigation(): Navigation {
         $this->navigationControl->setParent();
         return $this->navigationControl;
     }
 
-    /**
-     * @return DetailComponent
-     */
     protected function createComponentDetail(): DetailComponent {
-        return new DetailComponent($this->getContext(), $this->detailFactory);
+        return new DetailComponent($this->getContext());
     }
 
     /**
@@ -383,15 +338,13 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * Extension of Nette ACL
      *      * ****************************** */
 
-    /**
-     * @return bool
-     */
     public function isAuthorized(): bool {
         return $this->authorized;
     }
 
     /**
      * @param bool $access
+     * @return void
      */
     public function setAuthorized(bool $access) {
         $this->authorized = $access;
@@ -466,9 +419,6 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     /*	 * *******************************
      * Nette workaround
      *      * ****************************** */
-    /**
-     * @return FullHttpRequest
-     */
     public function getFullHttpRequest(): FullHttpRequest {
         if ($this->fullRequest === null) {
             $payload = file_get_contents('php://input');
@@ -477,10 +427,6 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return $this->fullRequest;
     }
 
-    /**
-     * @return ValuePrinterComponent
-     * @throws \Exception
-     */
     public function createComponentValuePrinter(): ValuePrinterComponent {
         return new ValuePrinterComponent($this->getContext());
     }

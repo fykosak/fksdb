@@ -37,6 +37,7 @@ class OrgPresenter extends ExtendedPersonPresenter {
 
     /**
      * @param ServiceOrg $serviceOrg
+     * @return void
      */
     public function injectServiceOrg(ServiceOrg $serviceOrg) {
         $this->serviceOrg = $serviceOrg;
@@ -44,6 +45,7 @@ class OrgPresenter extends ExtendedPersonPresenter {
 
     /**
      * @param OrgFactory $orgFactory
+     * @return void
      */
     public function injectOrgFactory(OrgFactory $orgFactory) {
         $this->orgFactory = $orgFactory;

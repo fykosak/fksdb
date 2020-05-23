@@ -77,7 +77,8 @@ class ApplicationComponent extends Control {
     }
 
     /**
-     * @param $redirectCallback
+     * @param callable $redirectCallback
+     * @return void
      */
     public function setRedirectCallback(callable $redirectCallback) {
         $this->redirectCallback = $redirectCallback;
@@ -123,6 +124,7 @@ class ApplicationComponent extends Control {
 
     /**
      * @param $mode
+     * @return void
      */
     public function renderInline($mode) {
         $this->template->mode = $mode;

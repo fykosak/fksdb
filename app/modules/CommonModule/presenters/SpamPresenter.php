@@ -22,6 +22,7 @@ class SpamPresenter extends BasePresenter {
 
     /**
      * @param ServiceEmailMessage $serviceEmailMessage
+     * @return void
      */
     public function injectServiceEmailMessage(ServiceEmailMessage $serviceEmailMessage) {
         $this->serviceEmailMessage = $serviceEmailMessage;
@@ -71,11 +72,7 @@ class SpamPresenter extends BasePresenter {
         throw new NotImplementedException();
     }
 
-    /**
-     * @return EmailsGrid
-     */
     protected function createComponentGrid(): EmailsGrid {
         return new EmailsGrid($this->getContext());
     }
-
 }

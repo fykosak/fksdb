@@ -15,16 +15,10 @@ trait CollectorPresenterTrait {
      * Loading assets
      * ****************************** */
 
-    /**
-     * @return JavaScriptLoader
-     */
     protected function createComponentJsLoader(): JavaScriptLoader {
         return new JavaScriptLoader();
     }
 
-    /**
-     * @return StylesheetLoader
-     */
     protected function createComponentCssLoader(): StylesheetLoader {
         return new StylesheetLoader();
     }
@@ -34,6 +28,7 @@ trait CollectorPresenterTrait {
      * ****************************** */
     /**
      * @param string $file
+     * @return void
      */
     public function registerJSFile(string $file) {
         /** @var JavaScriptLoader $component */
@@ -43,7 +38,8 @@ trait CollectorPresenterTrait {
 
     /**
      * @param string $code
-     * @param string $tag
+     * @param string|null $tag
+     * @return void
      */
     public function registerJSCode(string $code, string $tag = null) {
         /** @var JavaScriptLoader $component */
@@ -53,6 +49,7 @@ trait CollectorPresenterTrait {
 
     /**
      * @param string $tag
+     * @return void
      */
     public function unregisterJSCode(string $tag) {
         /** @var JavaScriptLoader $component */
@@ -62,6 +59,7 @@ trait CollectorPresenterTrait {
 
     /**
      * @param string $file
+     * @return void
      */
     public function unregisterJSFile(string $file) {
         /** @var JavaScriptLoader $component */
@@ -75,6 +73,7 @@ trait CollectorPresenterTrait {
     /**
      * @param string $file
      * @param array $media
+     * @return void
      */
     public function registerStylesheetFile(string $file, array $media = []) {
         /** @var StylesheetLoader $component */
@@ -85,6 +84,7 @@ trait CollectorPresenterTrait {
     /**
      * @param string $file
      * @param array $media
+     * @return void
      */
     public function unregisterStylesheetFile(string $file, array $media = []) {
         /** @var StylesheetLoader $component */

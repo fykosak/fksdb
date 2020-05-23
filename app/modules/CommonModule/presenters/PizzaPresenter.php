@@ -30,6 +30,7 @@ class PizzaPresenter extends BasePresenter {
 
     /**
      * @param PersonFactory $personFactory
+     * @return void
      */
     public function injectPersonFactory(PersonFactory $personFactory) {
         $this->personFactory = $personFactory;
@@ -37,6 +38,7 @@ class PizzaPresenter extends BasePresenter {
 
     /**
      * @param ServicePerson $servicePerson
+     * @return void
      */
     public function injectServicePerson(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;

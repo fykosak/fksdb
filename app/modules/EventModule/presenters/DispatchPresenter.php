@@ -14,16 +14,10 @@ use FKSDB\UI\PageStyleContainer;
  */
 class DispatchPresenter extends AuthenticatedPresenter {
 
-    /**
-     * @return ContestBadge
-     */
     public function createComponentContestBadge(): ContestBadge {
         return new ContestBadge($this->getContext());
     }
 
-    /**
-     * @return DispatchGrid
-     */
     public function createComponentDispatchGrid(): DispatchGrid {
         /** @var ModelLogin $login */
         $login = $this->user->getIdentity();
@@ -34,10 +28,6 @@ class DispatchPresenter extends AuthenticatedPresenter {
         $this->setTitle(_('List of events'), 'fa fa-calendar');
     }
 
-
-    /**
-     * @return PageStyleContainer
-     */
     protected function getPageStyleContainer(): PageStyleContainer {
         $container = parent::getPageStyleContainer();
         $container->styleId = 'event';

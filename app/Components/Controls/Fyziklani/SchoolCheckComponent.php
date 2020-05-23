@@ -42,6 +42,7 @@ class SchoolCheckComponent extends BaseComponent {
 
     /**
      * @param ModelFyziklaniTeam $currentTeam
+     * @return void
      */
     public function render(ModelFyziklaniTeam $currentTeam) {
         $schools = [];

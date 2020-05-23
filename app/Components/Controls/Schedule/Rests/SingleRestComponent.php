@@ -14,6 +14,7 @@ class SingleRestComponent extends BaseComponent {
     /**
      * @param ModelPerson $person
      * @param ModelEvent $event
+     * @return void
      */
     public function render(ModelPerson $person, ModelEvent $event) {
         $this->template->rests = $person->getScheduleRests($event);

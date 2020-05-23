@@ -13,11 +13,18 @@ use Nette\Utils\Html;
  * @package FyziklaniModule
  */
 class DiplomasPresenter extends BasePresenter {
-
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleResults() {
         $this->setTitle(_('Final results'), 'fa fa-trophy');
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleDefault() {
         $this->setTitle(_('Calculate ranking'), 'fa fa-check');
     }

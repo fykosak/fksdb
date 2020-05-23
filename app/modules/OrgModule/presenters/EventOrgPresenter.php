@@ -44,6 +44,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
 
     /**
      * @param ServiceEventOrg $serviceEventOrg
+     * @return void
      */
     public function injectServiceEventOrg(ServiceEventOrg $serviceEventOrg) {
         $this->serviceEventOrg = $serviceEventOrg;
@@ -51,6 +52,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
 
     /**
      * @param ServiceEvent $serviceEvent
+     * @return void
      */
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;
@@ -107,9 +109,6 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
         $form->addComponent($container, ExtendedPersonHandler::CONT_MODEL);
     }
 
-    /**
-     * @return ServiceEventOrg
-     */
     protected function getORMService(): ServiceEventOrg {
         return $this->serviceEventOrg;
     }

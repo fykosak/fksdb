@@ -25,7 +25,7 @@ interface INavigablePresenter extends IPresenter {
     public function setBackLink($backLink);
 
     /**
-     * Returns title of the current view.
+     * Returns title object of the current view.
      *
      * @return PageTitle
      */
@@ -39,8 +39,5 @@ interface INavigablePresenter extends IPresenter {
      */
     public static function publicFormatActionMethod(string $action): string;
 
-    /**
-     * @return string
-     */
     public static function getBackLinkParamName(): string;
 }

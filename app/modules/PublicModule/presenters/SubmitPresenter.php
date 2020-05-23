@@ -34,12 +34,12 @@ use FKSDB\ORM\Services\ServiceSubmitQuizQuestion;
 class SubmitPresenter extends BasePresenter {
     use SubmitSaveTrait;
 
-
     /** @var ServiceSubmit */
     private $submitService;
 
     /**
      * @param ServiceSubmit $submitService
+     * @return void
      */
     public function injectSubmitService(ServiceSubmit $submitService) {
         $this->submitService = $submitService;
@@ -48,7 +48,10 @@ class SubmitPresenter extends BasePresenter {
     /** @var ServiceSubmitQuizQuestion */
     private $submitQuizQuestionService;
 
-    /** @param ServiceSubmitQuizQuestion $submitQuizQuestionService */
+    /**
+     * @param ServiceSubmitQuizQuestion $submitQuizQuestionService
+     * @return void
+     */
     public function injectSubmitQuizQuestionService(ServiceSubmitQuizQuestion $submitQuizQuestionService) {
         $this->submitQuizQuestionService = $submitQuizQuestionService;
     }
@@ -56,7 +59,10 @@ class SubmitPresenter extends BasePresenter {
     /** @var UploadedStorage */
     private $uploadedSubmitStorage;
 
-    /** @param UploadedStorage $filesystemUploadedSubmitStorage */
+    /**
+     * @param UploadedStorage $filesystemUploadedSubmitStorage
+     * @return void
+     */
     public function injectSubmitUploadedStorage(UploadedStorage $filesystemUploadedSubmitStorage) {
         $this->uploadedSubmitStorage = $filesystemUploadedSubmitStorage;
     }
@@ -64,7 +70,10 @@ class SubmitPresenter extends BasePresenter {
     /** @var ServiceTask */
     private $taskService;
 
-    /** @param ServiceTask $taskService */
+    /**
+     * @param ServiceTask $taskService
+     * @return void
+     */
     public function injectTaskService(ServiceTask $taskService) {
         $this->taskService = $taskService;
     }
@@ -72,7 +81,10 @@ class SubmitPresenter extends BasePresenter {
     /** @var ServiceQuizQuestion */
     private $quizQuestionService;
 
-    /** @param ServiceQuizQuestion $quizQuestionService */
+    /**
+     * @param ServiceQuizQuestion $quizQuestionService
+     * @return void
+     */
     public function injectQuizQuestionService(ServiceQuizQuestion $quizQuestionService) {
         $this->quizQuestionService = $quizQuestionService;
     }
@@ -216,11 +228,8 @@ class SubmitPresenter extends BasePresenter {
         return $control;
     }
 
-    /**
-     * @return AjaxUpload
-     */
     public function createComponentAjaxUpload(): AjaxUpload {
-        return new AjaxUpload($this->context);
+        return new AjaxUpload($this->getContext());
     }
 
     /**

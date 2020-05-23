@@ -23,13 +23,14 @@ class ContestantPresenter extends ExtendedPersonPresenter {
 
     /**
      * @param ServiceContestant $serviceContestant
+     * @return void
      */
     public function injectServiceContestant(ServiceContestant $serviceContestant) {
         $this->serviceContestant = $serviceContestant;
     }
 
     /**
-     * @param $id
+     * @param int $id
      */
     public function titleEdit($id) {
         $this->setTitle(sprintf(_('Úprava řešitele %s'), $this->getModel()->getPerson()->getFullName()), 'fa fa-user');
@@ -43,10 +44,7 @@ class ContestantPresenter extends ExtendedPersonPresenter {
         $this->setTitle(_('Řešitelé'), 'fa fa-users');
     }
 
-    /**
-     * @return ContestantsGrid
-     */
-    protected function createComponentGrid() {
+    protected function createComponentGrid(): ContestantsGrid {
         return new ContestantsGrid($this->getContext());
     }
 

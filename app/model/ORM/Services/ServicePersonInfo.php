@@ -3,6 +3,7 @@
 namespace FKSDB\ORM\Services;
 
 use DateTime;
+use FKSDB\Exceptions\ModelException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
@@ -25,7 +26,7 @@ class ServicePersonInfo extends AbstractServiceSingle {
     /**
      * @param null $data
      * @return AbstractModelSingle
-     * @throws \Exception
+     * @throws ModelException
      */
     public function createNew($data = null) {
         if ($data && isset($data['agreed']) && $data['agreed'] == '1') {

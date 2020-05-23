@@ -37,9 +37,9 @@ class PaymentPresenter extends BasePresenter {
      */
     private $servicePayment;
 
-
     /**
      * @param ServicePayment $servicePayment
+     * @return void
      */
     public function injectServicePayment(ServicePayment $servicePayment) {
         $this->servicePayment = $servicePayment;
@@ -74,9 +74,6 @@ class PaymentPresenter extends BasePresenter {
         $this->setTitle(_('List of payments'), 'fa fa-credit-card');
     }
 
-    /**
-     * @return bool
-     */
     protected function isEnabled(): bool {
         return $this->hasApi();
     }
@@ -236,9 +233,6 @@ class PaymentPresenter extends BasePresenter {
         return $this->machine;
     }
 
-    /**
-     * @return bool
-     */
     private function hasApi(): bool {
         try {
             $this->getMachine();

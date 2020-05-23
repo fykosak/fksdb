@@ -35,9 +35,16 @@ class ResultsTotalGrid extends BaseGrid {
      * @param Container $container
      */
     public function __construct(ModelEvent $event, Container $container) {
-        $this->serviceFyziklaniTeam = $container->getByType(ServiceFyziklaniTeam::class);
-        $this->event = $event;
         parent::__construct($container);
+        $this->event = $event;
+    }
+
+    /**
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @return void
+     */
+    public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam) {
+        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 
     /**
@@ -60,9 +67,6 @@ class ResultsTotalGrid extends BaseGrid {
         $this->setDataSource($dataSource);
     }
 
-    /**
-     * @return string
-     */
     protected function getModelClassName(): string {
         return ModelFyziklaniTeam::class;
     }

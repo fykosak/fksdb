@@ -26,7 +26,7 @@ class ChartPresenter extends BasePresenter {
     }
 
     /**
-     * @inheritDoc
+     * @return array|TotalPersonsChartControl[]
      */
     protected function registerCharts(): array {
         return [

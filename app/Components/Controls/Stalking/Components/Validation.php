@@ -26,15 +26,12 @@ class Validation extends AbstractStalkingComponent {
         $this->validationFactory = $container->getByType(DataTestingFactory::class);
     }
 
-    /**
-     * @return string
-     */
     protected function getHeadline(): string {
         return _('Validation');
     }
 
     /**
-     * @return array
+     * @return int[]
      */
     protected function getAllowedPermissions(): array {
         return [self::PERMISSION_RESTRICT, self::PERMISSION_FULL, self::PERMISSION_FULL];
@@ -43,6 +40,7 @@ class Validation extends AbstractStalkingComponent {
     /**
      * @param ModelPerson $person
      * @param int $userPermissions
+     * @return void
      */
     public function render(ModelPerson $person, int $userPermissions) {
         $this->beforeRender($person, $userPermissions);

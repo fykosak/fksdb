@@ -10,7 +10,6 @@ use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
-use Nette\InvalidArgumentException;
 use ReflectionClass;
 use ReflectionMethod;
 
@@ -57,7 +56,7 @@ class Navigation extends BaseComponent {
     }
 
     /**
-     * @param $node
+     * @param mixed $node
      * @return bool
      */
     public function isActive(\stdClass $node): bool {
@@ -147,6 +146,7 @@ class Navigation extends BaseComponent {
 
     /**
      * @param $structure
+     * @return void
      */
     public function setStructure($structure) {
         $this->structure = $structure;
@@ -155,6 +155,7 @@ class Navigation extends BaseComponent {
     /**
      * @param $nodeId
      * @param $arguments
+     * @return void
      */
     public function createNode($nodeId, $arguments) {
         $node = (object)$arguments;
@@ -164,6 +165,7 @@ class Navigation extends BaseComponent {
     /**
      * @param $idChild
      * @param $idParent
+     * @return void
      */
     public function addParent($idChild, $idParent) {
         if (!isset($this->nodeChildren)) {
@@ -174,6 +176,7 @@ class Navigation extends BaseComponent {
 
     /**
      * @param string $root
+     * @return void
      */
     public function renderNavbar(string $root) {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Navigation.navbar.latte');
@@ -182,6 +185,7 @@ class Navigation extends BaseComponent {
 
     /**
      * @param string $root
+     * @return void
      */
     public function render(string $root) {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Navigation.latte');
@@ -190,6 +194,7 @@ class Navigation extends BaseComponent {
 
     /**
      * @param array $nodes
+     * @return void
      */
     private function renderFromRoot(array $nodes) {
         $this->template->nodes = $nodes;

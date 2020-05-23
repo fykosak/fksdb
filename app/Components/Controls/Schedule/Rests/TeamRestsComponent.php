@@ -12,6 +12,7 @@ use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 class TeamRestsComponent extends BaseComponent {
     /**
      * @param ModelFyziklaniTeam $team
+     * @return void
      */
     public function render(ModelFyziklaniTeam $team) {
         $this->template->event = $team->getEvent();
@@ -20,9 +21,6 @@ class TeamRestsComponent extends BaseComponent {
         $this->template->render();
     }
 
-    /**
-     * @return SingleRestComponent
-     */
     public function createComponentSingleRestControl(): SingleRestComponent {
         return new SingleRestComponent($this->getContext());
     }

@@ -15,6 +15,7 @@ class Role extends AbstractStalkingComponent {
     /**
      * @param ModelPerson $person
      * @param int $userPermissions
+     * @return void
      */
     public function render(ModelPerson $person, int $userPermissions) {
         $this->beforeRender($person, $userPermissions);
@@ -33,15 +34,12 @@ class Role extends AbstractStalkingComponent {
     }
 
     /**
-     * @return array
+     * @return int[]
      */
     protected function getAllowedPermissions(): array {
-        return [AbstractStalkingComponent::PERMISSION_FULL, AbstractStalkingComponent::PERMISSION_RESTRICT];
+        return [self::PERMISSION_FULL, self::PERMISSION_RESTRICT];
     }
 
-    /**
-     * @return string
-     */
     protected function getHeadline(): string {
         return _('Roles');
     }

@@ -47,6 +47,7 @@ class ScheduleItemPresenter extends BasePresenter {
 
     /**
      * @param ServiceScheduleItem $serviceScheduleItem
+     * @return void
      */
     public function injectServiceScheduleItem(ServiceScheduleItem $serviceScheduleItem) {
         $this->serviceScheduleItem = $serviceScheduleItem;
@@ -54,6 +55,7 @@ class ScheduleItemPresenter extends BasePresenter {
 
     /**
      * @param ServiceScheduleGroup $serviceScheduleGroup
+     * @return void
      */
     public function injectServiceScheduleGroup(ServiceScheduleGroup $serviceScheduleGroup) {
         $this->serviceScheduleGroup = $serviceScheduleGroup;
@@ -158,9 +160,6 @@ class ScheduleItemPresenter extends BasePresenter {
         return new ItemsGrid($this->getContext(), $this->getGroup());
     }
 
-    /**
-     * @return PersonsGrid
-     */
     public function createComponentPersonsGrid(): PersonsGrid {
         return new PersonsGrid($this->getContext());
     }

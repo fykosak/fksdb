@@ -16,6 +16,7 @@ class StalkingService {
 
     /**
      * @param array $definition
+     * @return void
      */
     public function setSections(array $definition) {
         $this->definition = $definition;

@@ -42,10 +42,10 @@ class RoutingEdit extends FyziklaniReactControl {
      * @param ModelEvent $event
      */
     public function __construct(Container $container, ModelEvent $event) {
+        parent::__construct($container, $event);
         $this->serviceFyziklaniTeam = $container->getByType(ServiceFyziklaniTeam::class);
         $this->serviceFyziklaniTeamPosition = $container->getByType(ServiceFyziklaniTeamPosition::class);
         $this->serviceFyziklaniRoom = $container->getByType(ServiceFyziklaniRoom::class);
-        parent::__construct($container, $event);
     }
 
     /**
@@ -59,9 +59,6 @@ class RoutingEdit extends FyziklaniReactControl {
         ]);
     }
 
-    /**
-     * @return string
-     */
     protected function getReactId(): string {
         return 'fyziklani.routing';
     }
@@ -90,8 +87,9 @@ class RoutingEdit extends FyziklaniReactControl {
 
     /**
      * @return ModelFyziklaniRoom[]
+     * TODO fix getParameter
      */
     protected function getRooms() {
-        return $this->serviceFyziklaniRoom->getRoomsByIds($this->getEvent()->getParameter(null, 'gameSetup')['rooms']);
+        return $this->serviceFyziklaniRoom->getRoomsByIds([]/*$this->getEvent()->getParameter(null, 'gameSetup')['rooms']*/);
     }
 }

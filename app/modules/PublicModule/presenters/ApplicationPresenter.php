@@ -19,7 +19,6 @@ use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\GoneException;
 use FKSDB\Exceptions\NotFoundException;
 use FKSDB\Logging\MemoryLogger;
-use FKSDB\NotImplementedException;
 use FKSDB\ORM\AbstractModelMulti;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
@@ -92,6 +91,7 @@ class ApplicationPresenter extends BasePresenter {
 
     /**
      * @param ServiceEvent $serviceEvent
+     * @return void
      */
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;
@@ -99,6 +99,7 @@ class ApplicationPresenter extends BasePresenter {
 
     /**
      * @param Container $container
+     * @return void
      */
     public function injectContainer(Container $container) {
         $this->container = $container;
@@ -106,6 +107,7 @@ class ApplicationPresenter extends BasePresenter {
 
     /**
      * @param RelatedPersonAuthorizator $relatedPersonAuthorizator
+     * @return void
      */
     public function injectRelatedPersonAuthorizator(RelatedPersonAuthorizator $relatedPersonAuthorizator) {
         $this->relatedPersonAuthorizator = $relatedPersonAuthorizator;
@@ -113,6 +115,7 @@ class ApplicationPresenter extends BasePresenter {
 
     /**
      * @param LayoutResolver $layoutResolver
+     * @return void
      */
     public function injectLayoutResolver(LayoutResolver $layoutResolver) {
         $this->layoutResolver = $layoutResolver;
@@ -120,6 +123,7 @@ class ApplicationPresenter extends BasePresenter {
 
     /**
      * @param ApplicationHandlerFactory $handlerFactory
+     * @return void
      */
     public function injectHandlerFactory(ApplicationHandlerFactory $handlerFactory) {
         $this->handlerFactory = $handlerFactory;
@@ -195,6 +199,7 @@ class ApplicationPresenter extends BasePresenter {
      * @param $id
      * @throws BadRequestException
      * @throws AbortException
+     * @throws NeonSchemaException
      */
     public function actionDefault($eventId, $id) {
         if (!$this->getEvent()) {
@@ -277,7 +282,8 @@ class ApplicationPresenter extends BasePresenter {
 
     /**
      * @return ApplicationComponent
-     * @throws NotImplementedException
+     * @throws BadRequestException
+     * @throws NeonSchemaException
      */
     protected function createComponentApplication() {
         $logger = new MemoryLogger();
@@ -355,6 +361,8 @@ class ApplicationPresenter extends BasePresenter {
 
     /**
      * @return AbstractModelMulti|AbstractModelSingle|IModel|ModelFyziklaniTeam|ModelEventParticipant|IEventReferencedModel
+     * @throws BadRequestException
+     * @throws NeonSchemaException
      */
     private function getEventApplication() {
         if (!$this->eventApplication) {
@@ -429,9 +437,6 @@ class ApplicationPresenter extends BasePresenter {
         ];
     }
 
-    /**
-     * @return PageStyleContainer
-     */
     protected function getPageStyleContainer(): PageStyleContainer {
         $container = parent::getPageStyleContainer();
         $event = $this->getEvent();

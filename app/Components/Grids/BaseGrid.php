@@ -49,6 +49,7 @@ abstract class BaseGrid extends Grid {
      */
     public function __construct(Container $container) {
         parent::__construct();
+        $container->callInjects($this);
         $this->context = $container;
         $this->tableReflectionFactory = $container->getByType(TableReflectionFactory::class);
     }

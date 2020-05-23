@@ -2,19 +2,18 @@
 
 namespace FKSDB\Components\Controls;
 
-use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\SeriesCalculator;
-use Nette\Application\UI\Control;
+use Nette\Application\BadRequestException;
 use Nette\Http\Session;
-use Nette\Localization\ITranslator;
-use Nette\Templating\ITemplate;
+use OrgModule\SeriesPresenter;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
+ * @method SeriesPresenter getPresenter($need = TRUE)
  */
-class SeriesChooser extends Control {
+class SeriesChooser extends BaseComponent {
 
     const SESSION_SECTION = 'seriesPreset';
     const SESSION_KEY = 'series';
@@ -28,16 +27,6 @@ class SeriesChooser extends Control {
      * @var SeriesCalculator
      */
     private $seriesCalculator;
-
-    /**
-     * @var ServiceContest
-     */
-    private $serviceContest;
-
-    /**
-     * @var ITranslator
-     */
-    private $translator;
 
     /**
      * @var int
@@ -55,18 +44,13 @@ class SeriesChooser extends Control {
     private $valid;
 
     /**
-     * SeriesChooser constructor.
      * @param Session $session
      * @param SeriesCalculator $seriesCalculator
-     * @param ServiceContest $serviceContest
-     * @param ITranslator $translator
+     * @return void
      */
-    public function __construct(Session $session, SeriesCalculator $seriesCalculator, ServiceContest $serviceContest, ITranslator $translator) {
-        parent::__construct();
+    public function injectPrimary(Session $session, SeriesCalculator $seriesCalculator) {
         $this->session = $session;
         $this->seriesCalculator = $seriesCalculator;
-        $this->serviceContest = $serviceContest;
-        $this->translator = $translator;
     }
 
     /**
@@ -149,6 +133,7 @@ class SeriesChooser extends Control {
 
     /**
      * @return array of int of allowed series
+     * @throws BadRequestException
      */
     private function getAllowedSeries() {
         $presenter = $this->getPresenter();
@@ -166,19 +151,9 @@ class SeriesChooser extends Control {
     /**
      * @param $series
      * @return bool
+     * @throws BadRequestException
      */
     private function isValidSeries($series) {
         return in_array($series, $this->getAllowedSeries());
     }
-
-    /**
-     * @param null $class
-     * @return ITemplate
-     */
-    protected function createTemplate($class = NULL) {
-        $template = parent::createTemplate($class);
-        $template->setTranslator($this->translator);
-        return $template;
-    }
-
 }

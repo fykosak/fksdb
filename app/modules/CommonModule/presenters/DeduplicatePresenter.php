@@ -29,6 +29,7 @@ class DeduplicatePresenter extends BasePresenter {
 
     /**
      * @param ServicePerson $servicePerson
+     * @return void
      */
     public function injectServicePerson(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
@@ -36,17 +37,22 @@ class DeduplicatePresenter extends BasePresenter {
 
     /**
      * @param Merger $merger
+     * @return void
      */
     public function injectMerger(Merger $merger) {
         $this->merger = $merger;
     }
 
     /**
+     * @return void
      */
     public function authorizedPerson() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowedForAnyContest('person', 'list'));
     }
 
+    /**
+     * @return void
+     */
     public function titlePerson() {
         $this->setTitle(_('Duplicitní osoby'), 'fa fa-exchange');
     }
@@ -84,9 +90,6 @@ class DeduplicatePresenter extends BasePresenter {
         $this->redirect('this');
     }
 
-    /**
-     * @return PersonsGrid
-     */
     protected function createComponentPersonsGrid(): PersonsGrid {
         $duplicateFinder = $this->createPersonDuplicateFinder();
         $pairs = $duplicateFinder->getPairs();
@@ -95,12 +98,7 @@ class DeduplicatePresenter extends BasePresenter {
         return new PersonsGrid($trunkPersons, $pairs, $this->getContext());
     }
 
-
-    /**
-     * @return DuplicateFinder
-     */
-    protected function createPersonDuplicateFinder() {
+    protected function createPersonDuplicateFinder(): DuplicateFinder {
         return new DuplicateFinder($this->servicePerson, $this->globalParameters);
     }
-
 }

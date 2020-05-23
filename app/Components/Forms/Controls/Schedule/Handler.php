@@ -110,10 +110,6 @@ class Handler {
         }
     }
 
-    /**
-     * @param ArrayHash $data
-     * @return int
-     */
     private function prepareData(ArrayHash $data): array {
         $newData = [];
         foreach ($data as $type => $datum) {

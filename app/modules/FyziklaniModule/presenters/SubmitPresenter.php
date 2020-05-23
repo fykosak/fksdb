@@ -25,10 +25,18 @@ class SubmitPresenter extends BasePresenter {
     use EventEntityTrait;
 
     /* ***** Title methods *****/
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleCreate() {
         $this->setTitle(_('Zadávání bodů'), 'fa fa-pencil-square-o');
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleList() {
         $this->setTitle(_('Submits'), 'fa fa-table');
     }

@@ -14,7 +14,7 @@ use Nette\Utils\DateTime;
 
 /**
  * Trait SubmitSaveTrait
- * @package FKSDB\Components\Control\AjaxUpload
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 trait SubmitSaveTrait {
     /**

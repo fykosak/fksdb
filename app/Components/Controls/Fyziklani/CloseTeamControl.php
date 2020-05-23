@@ -60,6 +60,7 @@ class CloseTeamControl extends BaseComponent {
 
     /**
      * @throws AbortException
+     * @return void
      */
     public function handleClose() {
         $connection = $this->serviceFyziklaniTask->getConnection();
@@ -75,6 +76,7 @@ class CloseTeamControl extends BaseComponent {
 
     /**
      * @throws NotSetGameParametersException
+     * @return void
      */
     public function render() {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'CloseTeamControl.latte');

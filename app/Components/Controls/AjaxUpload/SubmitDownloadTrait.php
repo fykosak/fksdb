@@ -18,8 +18,8 @@ use OrgModule\InboxPresenter;
 use PublicModule\SubmitPresenter;
 
 /**
- * Class SubmitDownloadTrait
- * @package FKSDB\Components\Control\AjaxUpload
+ * Trait SubmitDownloadTrait
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 trait SubmitDownloadTrait {
     /**

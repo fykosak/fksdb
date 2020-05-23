@@ -13,9 +13,7 @@ use Nette\Application\UI\Form;
  * @package FKSDB\Components\Controls\Inbox
  */
 abstract class SeriesTableFormControl extends SeriesTableComponent {
-    /**
-     * @return OptimisticForm
-     */
+
     public function createComponentForm(): OptimisticForm {
         $form = new OptimisticForm(
             function () {

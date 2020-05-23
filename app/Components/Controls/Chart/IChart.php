@@ -17,7 +17,7 @@ interface IChart {
     public function getControl(): Control;
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getDescription();
 }

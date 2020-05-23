@@ -18,6 +18,7 @@ use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
 use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
 use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Logging\ILogger;
+use FKSDB\Logging\MemoryLogger;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\Transitions\UnavailableTransitionException;
@@ -49,12 +50,12 @@ class ApplicationHandler {
     private $event;
 
     /**
-     * @var ILogger
+     * @var ILogger|MemoryLogger
      */
     private $logger;
 
     /**
-     * @var int
+     * @var string
      */
     private $errorMode = self::ERROR_ROLLBACK;
 
@@ -88,14 +89,15 @@ class ApplicationHandler {
     }
 
     /**
-     * @return int
+     * @return string
      */
     public function getErrorMode() {
         return $this->errorMode;
     }
 
     /**
-     * @param $errorMode
+     * @param string $errorMode
+     * @return void
      */
     public function setErrorMode($errorMode) {
         $this->errorMode = $errorMode;
@@ -104,6 +106,7 @@ class ApplicationHandler {
     /**
      * @param Holder $holder
      * @return Machine
+     * @throws BadRequestException
      */
     public function getMachine(Holder $holder) {
         $this->initializeMachine($holder);
@@ -111,15 +114,16 @@ class ApplicationHandler {
     }
 
     /**
-     * @return ILogger
+     * @return MemoryLogger
      */
-    public function getLogger() {
+    public function getLogger(): ILogger {
         return $this->logger;
     }
 
     /**
      * @param Holder $holder
      * @param $data
+     * @throws BadRequestException
      * @throws JsonException
      */
     final public function store(Holder $holder, $data) {
@@ -130,6 +134,7 @@ class ApplicationHandler {
      * @param Holder $holder
      * @param Form|ArrayHash|null $data
      * @param mixed $explicitTransitionName
+     * @throws BadRequestException
      * @throws JsonException
      */
     public function storeAndExecute(Holder $holder, $data = null, $explicitTransitionName = null) {
@@ -139,6 +144,7 @@ class ApplicationHandler {
     /**
      * @param Holder $holder
      * @param string $explicitTransitionName
+     * @throws BadRequestException
      */
     public function onlyExecute(Holder $holder, string $explicitTransitionName) {
         $this->initializeMachine($holder);
@@ -203,6 +209,7 @@ class ApplicationHandler {
      * @param $data
      * @param $explicitTransitionName
      * @param $execute
+     * @throws BadRequestException
      * @throws JsonException
      */
     private function _storeAndExecute(Holder $holder, $data, $explicitTransitionName, $execute) {
@@ -297,7 +304,7 @@ class ApplicationHandler {
      * @param $data
      * @param $transitions
      * @param Holder $holder
-     * @param $execute
+     * @param string $execute
      * @return mixed
      * @throws MachineExecutionException
      * @throws JsonException
@@ -347,9 +354,11 @@ class ApplicationHandler {
 
     /**
      * @param $data
+     * @return void
      */
     private function formRollback($data) {
         if ($data instanceof Form) {
+            /** @var ReferencedId $referencedId */
             foreach ($data->getComponents(true, ReferencedId::class) as $referencedId) {
                 $referencedId->rollback();
             }
@@ -357,12 +366,18 @@ class ApplicationHandler {
         $this->rollback();
     }
 
+    /**
+     * @return void
+     */
     public function beginTransaction() {
         if (!$this->connection->getPdo()->inTransaction()) {
             $this->connection->beginTransaction();
         }
     }
 
+    /**
+     * @return void
+     */
     private function rollback() {
         if ($this->errorMode == self::ERROR_ROLLBACK) {
             $this->connection->rollBack();
@@ -371,6 +386,7 @@ class ApplicationHandler {
 
     /**
      * @param bool $final
+     * @return void
      */
     public function commit($final = false) {
         if ($this->connection->getPdo()->inTransaction() && ($this->errorMode == self::ERROR_ROLLBACK || $final)) {
@@ -380,6 +396,7 @@ class ApplicationHandler {
 
     /**
      * @param Exception $e
+     * @return void
      */
     private function reRaise(Exception $e) {
         throw new ApplicationHandlerException(_('Chyba při ukládání přihlášky.'), null, $e);

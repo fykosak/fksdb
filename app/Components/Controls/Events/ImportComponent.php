@@ -110,6 +110,9 @@ class ImportComponent extends Control {
         return $control;
     }
 
+    /**
+     * @return void
+     */
     public function render() {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ImportComponent.latte');
         $this->template->render();
@@ -157,10 +160,7 @@ class ImportComponent extends Control {
         }
     }
 
-    /**
-     * @return SelectBox
-     */
-    private function createKeyElement() {
+    private function createKeyElement(): SelectBox {
         $baseHolder = $this->source->getDummyHolder()->getPrimaryHolder();
         $options = [];
         foreach ($baseHolder->getFields() as $field) {

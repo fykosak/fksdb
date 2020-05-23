@@ -8,6 +8,7 @@ use FKSDB\Components\Controls\Schedule\Rests\TeamRestsComponent;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
 use FKSDB\Components\Grids\Events\Application\ApplicationGrid;
 use FKSDB\Components\Grids\Events\Application\TeamApplicationGrid;
+use FKSDB\Config\NeonSchemaException;
 use FKSDB\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
@@ -27,6 +28,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
 
     /**
      * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @return void
      */
     public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam) {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
@@ -59,9 +61,6 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
         $this->template->model = $this->loadEntity($id);
     }
 
-    /**
-     * @return SeatingControl
-     */
     protected function createComponentSeating(): SeatingControl {
         return new SeatingControl($this->getContext());
     }
@@ -79,14 +78,12 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
      * @return ApplicationGrid
      * @throws AbortException
      * @throws BadRequestException
+     * @throws NeonSchemaException
      */
     protected function createComponentGrid(): AbstractApplicationGrid {
         return new TeamApplicationGrid($this->getEvent(), $this->getHolder(), $this->getContext());
     }
 
-    /**
-     * @return TeamRestsComponent
-     */
     protected function createComponentTeamRestsControl(): TeamRestsComponent {
         return new TeamRestsComponent($this->getContext());
     }

@@ -3,7 +3,6 @@
 namespace FKSDB\Components\DatabaseReflection;
 
 use FKSDB\Components\Controls\BaseComponent;
-use Nette\DI\Container;
 use Nette\Templating\FileTemplate;
 
 /**
@@ -18,18 +17,13 @@ class DetailComponent extends BaseComponent {
     private $detailFactory;
 
     /**
-     * DetailComponent constructor.
-     * @param Container $container
      * @param DetailFactory $detailFactory
+     * @return void
      */
-    public function __construct(Container $container, DetailFactory $detailFactory) {
-        parent::__construct($container);
+    public function injectDetailFactory(DetailFactory $detailFactory) {
         $this->detailFactory = $detailFactory;
     }
 
-    /**
-     * @return ValuePrinterComponent
-     */
     public function createComponentValuePrinter(): ValuePrinterComponent {
         return new ValuePrinterComponent($this->getContext());
     }
@@ -37,6 +31,7 @@ class DetailComponent extends BaseComponent {
     /**
      * @param $section
      * @param $model
+     * @return void
      */
     public function render($section, $model) {
         $this->template->data = $this->detailFactory->getSection($section);

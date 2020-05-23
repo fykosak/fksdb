@@ -21,10 +21,18 @@ class TaskPresenter extends BasePresenter {
     const IMPORT_STATE_REMOVE_N_INSERT = 2;
     const IMPORT_STATE_INSERT = 3;
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleList() {
         $this->setTitle(_('Tasks'), 'fa fa-tasks');
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleImport() {
         $this->setTitle(_('Tasks Import'), 'fa fa-upload');
     }

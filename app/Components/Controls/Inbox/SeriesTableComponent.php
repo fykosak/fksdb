@@ -40,9 +40,6 @@ abstract class SeriesTableComponent extends BaseComponent {
         return $template;
     }
 
-    /**
-     * @return SeriesTable
-     */
     protected function getSeriesTable(): SeriesTable {
         return $this->seriesTable;
     }

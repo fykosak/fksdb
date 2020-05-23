@@ -8,19 +8,16 @@ use Nette\Utils\Html;
 
 /**
  * Class Badge
- * @package FKSDB\Components\Controls\Badges
+ * @author Michal Červeňák <miso@fykos.cz>
  * @property-read FileTemplate $template
  */
 abstract class Badge extends BaseComponent {
 
-    /**
-     * @param mixed ...$args
-     * @return Html
-     */
     abstract public static function getHtml(...$args): Html;
 
     /**
      * @param mixed ...$args
+     * @return void
      */
     public function render(...$args) {
         $this->template->html = static::getHtml(...$args);

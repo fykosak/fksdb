@@ -32,17 +32,10 @@ class PhoneNumberFactory {
         $this->table = $this->serviceRegion->getTable();
     }
 
-    /**
-     * @return TypedTableSelection
-     */
     private function getAllRegions(): TypedTableSelection {
         return $this->table;
     }
 
-    /**
-     * @param string $number
-     * @return Html
-     */
     public function formatPhone(string $number): Html {
         try {
             $region = $this->getRegion($number);
@@ -74,17 +67,10 @@ class PhoneNumberFactory {
         return null;
     }
 
-    /**
-     * @param string $number
-     * @return bool
-     */
     public function isValid(string $number): bool {
         return !!$this->getRegion($number);
     }
 
-    /**
-     * @return Closure
-     */
     public function getFormValidationCallback(): Closure {
         return function (BaseControl $control): bool {
             $value = $control->getValue();

@@ -15,7 +15,7 @@ use Tracy\Debugger;
 
 /**
  * Trait SubmitRevokeTrait
- * @package FKSDB\Components\Control\AjaxUpload
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 trait SubmitRevokeTrait {
 

@@ -14,6 +14,7 @@ abstract class AbstractStalkingComponent extends StalkingControl {
     /**
      * @param ModelPerson $person
      * @param int $userPermissions
+     * @return void
      */
     public function beforeRender(ModelPerson $person, int $userPermissions) {
         parent::beforeRender($person, $userPermissions);
@@ -21,9 +22,6 @@ abstract class AbstractStalkingComponent extends StalkingControl {
         $this->template->minimalPermissions = min($this->getAllowedPermissions());
     }
 
-    /**
-     * @return string
-     */
     abstract protected function getHeadline(): string;
 
     /**

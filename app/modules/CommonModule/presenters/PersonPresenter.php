@@ -8,6 +8,7 @@ use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\EntityTrait;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotFoundException;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Logging\ILogger;
@@ -82,6 +83,7 @@ class PersonPresenter extends BasePresenter {
 
     /**
      * @param ServicePerson $servicePerson
+     * @return void
      */
     public function injectServicePerson(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
@@ -89,6 +91,7 @@ class PersonPresenter extends BasePresenter {
 
     /**
      * @param ServicePersonInfo $servicePersonInfo
+     * @return void
      */
     public function injectServicePersonInfo(ServicePersonInfo $servicePersonInfo) {
         $this->servicePersonInfo = $servicePersonInfo;
@@ -96,6 +99,7 @@ class PersonPresenter extends BasePresenter {
 
     /**
      * @param Merger $personMerger
+     * @return void
      */
     public function injectPersonMerger(Merger $personMerger) {
         $this->personMerger = $personMerger;
@@ -103,6 +107,7 @@ class PersonPresenter extends BasePresenter {
 
     /**
      * @param ReferencedPersonFactory $referencedPersonFactory
+     * @return void
      */
     public function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory) {
         $this->referencedPersonFactory = $referencedPersonFactory;
@@ -301,10 +306,6 @@ class PersonPresenter extends BasePresenter {
         return $control;
     }
 
-    /**
-     * @param ModelPerson $person
-     * @return int
-     */
     private function getUserPermissions(ModelPerson $person): int {
         if (!$this->mode) {
             if ($this->isAnyContestAuthorized($person, 'stalk.basic')) {
@@ -340,6 +341,7 @@ class PersonPresenter extends BasePresenter {
 
     /**
      * @param Form $form
+     * @return void
      */
     private function updateMergeForm(Form $form) {
         if (false && !$form->isSubmitted()) { // new form is without any conflict, we use it to clear the session
@@ -410,6 +412,7 @@ class PersonPresenter extends BasePresenter {
      * @param Form $form
      * @throws AbortException
      * @throws ReflectionException
+     * @throws BadTypeException
      */
     public function handleMergeFormSuccess(Form $form) {
         if ($form['cancel']->isSubmittedBy()) {
@@ -442,6 +445,7 @@ class PersonPresenter extends BasePresenter {
 
     /**
      * @param $conflicts
+     * @return void
      */
     private function setMergeConflicts($conflicts) {
         $section = $this->session->getSection('conflicts');

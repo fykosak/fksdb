@@ -24,7 +24,10 @@ class SchoolPresenter extends BasePresenter {
     /** @var ServiceSchool */
     private $serviceSchool;
 
-    /** @param ServiceSchool $serviceSchool */
+    /**
+     * @param ServiceSchool $serviceSchool
+     * @return void
+     */
     public function injectServiceSchool(ServiceSchool $serviceSchool) {
         $this->serviceSchool = $serviceSchool;
     }
@@ -83,7 +86,6 @@ class SchoolPresenter extends BasePresenter {
         return $this->serviceSchool;
     }
 
-    /** @return SchoolsGrid */
     protected function createComponentGrid(): SchoolsGrid {
         return new SchoolsGrid($this->getContext());
     }

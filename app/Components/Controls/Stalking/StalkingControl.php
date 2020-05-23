@@ -49,36 +49,25 @@ abstract class StalkingControl extends BaseComponent {
     /**
      * @param ModelPerson $person
      * @param int $userPermissions
+     * @return void
      */
     public function beforeRender(ModelPerson $person, int $userPermissions) {
         $this->template->userPermissions = $userPermissions;
         $this->template->gender = $person->gender;
     }
 
-    /**
-     * @return ContestBadge
-     */
     public function createComponentContestBadge(): ContestBadge {
         return new ContestBadge($this->getContext());
     }
 
-    /**
-     * @return PermissionDeniedBadge
-     */
     public function createComponentPermissionDenied(): PermissionDeniedBadge {
         return new PermissionDeniedBadge($this->getContext());
     }
 
-    /**
-     * @return NoRecordsBadge
-     */
     public function createComponentNoRecords(): NoRecordsBadge {
         return new NoRecordsBadge($this->getContext());
     }
 
-    /**
-     * @return ValuePrinterComponent
-     */
     public function createComponentValuePrinter(): ValuePrinterComponent {
         return new ValuePrinterComponent($this->getContext());
     }

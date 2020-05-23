@@ -37,8 +37,15 @@ class CloseTeamsGrid extends BaseGrid {
      */
     public function __construct(ModelEvent $event, Container $container) {
         parent::__construct($container);
-        $this->serviceFyziklaniTeam = $container->getByType(ServiceFyziklaniTeam::class);
         $this->event = $event;
+    }
+
+    /**
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @return void
+     */
+    public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam) {
+        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 
     /**
@@ -47,8 +54,7 @@ class CloseTeamsGrid extends BaseGrid {
      * @throws DuplicateColumnException
      * @throws NotImplementedException
      */
-    protected
-    function configure($presenter) {
+    protected function configure($presenter) {
         parent::configure($presenter);
 
         $this->paginate = false;
@@ -67,7 +73,7 @@ class CloseTeamsGrid extends BaseGrid {
             }
             return $position->getRoom()->name;
         });
-        $this->addLinkButton( ':Fyziklani:Close:team', 'close', _('Close submitting'), false, [
+        $this->addLinkButton(':Fyziklani:Close:team', 'close', _('Close submitting'), false, [
             'id' => 'e_fyziklani_team_id',
             'eventId' => 'event_id',
         ])->setShow(function ($row) {
@@ -80,11 +86,7 @@ class CloseTeamsGrid extends BaseGrid {
         $this->setDataSource(new NDataSource($teams));
     }
 
-    /**
-     * @return string
-     */
-    protected
-    function getModelClassName(): string {
+    protected function getModelClassName(): string {
         return ModelFyziklaniTeam::class;
     }
 }

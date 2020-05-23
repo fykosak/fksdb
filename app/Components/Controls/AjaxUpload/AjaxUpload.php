@@ -29,20 +29,27 @@ class AjaxUpload extends ReactComponent {
     use SubmitSaveTrait;
     use SubmitDownloadTrait;
 
-    /**
-     * @var ServiceSubmit
-     */
+    /** @var ServiceSubmit */
     private $serviceSubmit;
+    /** @var CorrectedStorage */
+    private $correctedStorage;
+    /** @var UploadedStorage */
+    private $uploadedStorage;
 
     /**
      * @param ServiceSubmit $serviceSubmit
+     * @param CorrectedStorage $correctedStorage
+     * @param UploadedStorage $uploadedStorage
      * @return void
      */
-    public function injectServiceSubmit(ServiceSubmit $serviceSubmit) {
+    public function injectPrimary(ServiceSubmit $serviceSubmit, CorrectedStorage $correctedStorage, UploadedStorage $uploadedStorage) {
         $this->serviceSubmit = $serviceSubmit;
+        $this->correctedStorage = $correctedStorage;
+        $this->uploadedStorage = $uploadedStorage;
     }
 
     /**
+     * @return void
      * @throws InvalidLinkException
      */
     protected function configure() {
@@ -83,20 +90,20 @@ class AjaxUpload extends ReactComponent {
     }
 
     /**
-     * @throws InvalidLinkException
+     * @return void
      * @throws BadRequestException
      * @throws AbortException
      * @throws \Exception
+     * @throws InvalidLinkException
      */
     public function handleUpload() {
         $response = new ReactResponse();
-        /** @var UploadedStorage $filesystemUploadedSubmitStorage */
-        $filesystemUploadedSubmitStorage = $this->getContext()->getByType(UploadedStorage::class);
+
         $contestant = $this->getPresenter()->getContestant();
         $files = $this->getHttpRequest()->getFiles();
         foreach ($files as $name => $fileContainer) {
             $this->serviceSubmit->getConnection()->beginTransaction();
-            $filesystemUploadedSubmitStorage->beginTransaction();
+            $this->getUploadedStorage()->beginTransaction();
             if (!preg_match('/task([0-9]+)/', $name, $matches)) {
                 $response->addMessage(new ReactMessage(_('Task not found'), ILogger::WARNING));
                 continue;
@@ -118,7 +125,7 @@ class AjaxUpload extends ReactComponent {
             }
             // store submit
             $submit = $this->saveSubmitTrait($file, $task, $contestant);
-            $filesystemUploadedSubmitStorage->commit();
+            $this->getUploadedStorage()->commit();
             $this->serviceSubmit->getConnection()->commit();
             $response->addMessage(new ReactMessage(_('Upload successful'), ILogger::SUCCESS));
             $response->setAct('upload');
@@ -128,9 +135,10 @@ class AjaxUpload extends ReactComponent {
     }
 
     /**
-     * @throws AbortException
+     * @return void
      * @throws InvalidLinkException
      * @throws BadRequestException
+     * @throws AbortException
      */
     public function handleRevoke() {
         $submitId = $this->getReactRequest()->requestData['submitId'];
@@ -146,8 +154,9 @@ class AjaxUpload extends ReactComponent {
     }
 
     /**
-     * @throws BadRequestException
+     * @return void
      * @throws AbortException
+     * @throws BadRequestException
      */
     public function handleDownload() {
         $submitId = $this->getReactRequest()->requestData['submitId'];
@@ -160,22 +169,15 @@ class AjaxUpload extends ReactComponent {
         return 'public.ajax-upload';
     }
 
-
     protected function getCorrectedStorage(): CorrectedStorage {
-        /** @var CorrectedStorage $service */
-        $service = $this->getContext()->getByType(CorrectedStorage::class);
-        return $service;
+        return $this->correctedStorage;
     }
 
     protected function getUploadedStorage(): UploadedStorage {
-        /** @var UploadedStorage $service */
-        $service = $this->getContext()->getByType(UploadedStorage::class);
-        return $service;
+        return $this->uploadedStorage;
     }
 
     protected function getServiceSubmit(): ServiceSubmit {
-        /** @var ServiceSubmit $service */
-        $service = $this->getContext()->getByType(ServiceSubmit::class);
-        return $service;
+        return $this->serviceSubmit;
     }
 }

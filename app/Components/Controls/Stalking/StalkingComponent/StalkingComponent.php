@@ -86,6 +86,7 @@ class StalkingComponent extends StalkingControl {
     /**
      * @param array $definition
      * @param ModelPerson $person
+     * @return void
      */
     private function renderMulti(array $definition, ModelPerson $person) {
         $models = [];
