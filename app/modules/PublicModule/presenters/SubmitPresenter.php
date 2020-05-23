@@ -332,4 +332,12 @@ class SubmitPresenter extends BasePresenter {
         }
         return null;
     }
+
+    protected function getUploadedStorage(): UploadedStorage {
+        return $this->getContext()->getByType(UploadedStorage::class);
+    }
+
+    protected function getServiceSubmit(): ServiceSubmit {
+        return $this->submitService;
+    }
 }
