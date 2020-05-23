@@ -2,15 +2,12 @@
 
 namespace FKSDB\Components\DatabaseReflection\PersonInfo;
 
-
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 use FKSDB\ORM\Models\ModelRegion;
 use FKSDB\ORM\Services\ServiceRegion;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
-use Nette\Localization\ITranslator;
-
 
 /**
  * Class CitizenshipField
@@ -25,17 +22,12 @@ class CitizenshipRow extends AbstractRow {
 
     /**
      * CitizenshipField constructor.
-     * @param ITranslator $translator
      * @param ServiceRegion $serviceRegion
      */
-    public function __construct(ITranslator $translator, ServiceRegion $serviceRegion) {
+    public function __construct(ServiceRegion $serviceRegion) {
         $this->serviceRegion = $serviceRegion;
-        parent::__construct($translator);
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Státní příslušnost');
     }

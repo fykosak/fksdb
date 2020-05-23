@@ -31,6 +31,7 @@ class DefaultGenerator extends AbstractSymbolGenerator {
      * @param int $variableSymbolStart
      * @param int $variableSymbolEnd
      * @param array $info
+     * @return void
      */
     public function setUp(int $variableSymbolStart, int $variableSymbolEnd, array $info) {
         $this->variableSymbolEnd = $variableSymbolEnd;
@@ -38,16 +39,10 @@ class DefaultGenerator extends AbstractSymbolGenerator {
         $this->info = $info;
     }
 
-    /**
-     * @return int
-     */
     protected function getVariableSymbolStart(): int {
         return $this->variableSymbolStart;
     }
 
-    /**
-     * @return int
-     */
     protected function getVariableSymbolEnd(): int {
         return $this->variableSymbolEnd;
     }

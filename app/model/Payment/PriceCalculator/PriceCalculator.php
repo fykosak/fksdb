@@ -18,6 +18,7 @@ class PriceCalculator {
 
     /**
      * @param IPreprocess $preProcess
+     * @return void
      */
     public function addPreProcess(IPreprocess $preProcess) {
         $this->preProcess[] = $preProcess;

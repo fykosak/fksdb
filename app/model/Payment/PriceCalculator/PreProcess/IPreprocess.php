@@ -11,15 +11,7 @@ use FKSDB\Payment\Price;
  */
 interface IPreprocess {
 
-    /**
-     * @param ModelPayment $modelPayment
-     * @return Price
-     */
     public static function calculate(ModelPayment $modelPayment): Price;
 
-    /**
-     * @param ModelPayment $modelPayment
-     * @return array
-     */
     public static function getGridItems(ModelPayment $modelPayment): array;
 }

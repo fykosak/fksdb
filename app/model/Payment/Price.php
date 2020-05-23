@@ -20,14 +20,14 @@ class Price {
     /**
      * @var float
      */
-    private $amount = 0;
+    private $amount;
 
     /**
      * Price constructor.
-     * @param float|null $amount
-     * @param string|null $currency
+     * @param float $amount
+     * @param string $currency
      */
-    public function __construct(float $amount = null, string $currency = null) {
+    public function __construct(float $amount, string $currency) {
         $this->amount = $amount;
         $this->currency = $currency;
     }
@@ -43,36 +43,24 @@ class Price {
         $this->amount += $price->getAmount();
     }
 
-    /**
-     * @param string $currency
-     */
-    public function setCurrency(string $currency) {
-        $this->currency = $currency;
-    }
-
-    /**
-     * @return string
-     */
     public function getCurrency(): string {
         return $this->currency;
     }
 
-    /**
-     * @return float
-     */
     public function getAmount(): float {
         return $this->amount;
     }
 
     /**
      * @param float $amount
+     * @return void
      */
     public function addAmount(float $amount) {
         $this->amount += $amount;
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public static function getAllCurrencies(): array {
         return [self::CURRENCY_CZK, self::CURRENCY_EUR];

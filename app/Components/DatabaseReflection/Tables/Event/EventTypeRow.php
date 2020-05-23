@@ -7,7 +7,6 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEventType;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
-use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
 
 /**
@@ -22,17 +21,12 @@ class EventTypeRow extends AbstractEventRowFactory {
 
     /**
      * EventTypeRow constructor.
-     * @param ITranslator $translator
      * @param ServiceEventType $serviceEventType
      */
-    public function __construct(ITranslator $translator, ServiceEventType $serviceEventType) {
-        parent::__construct($translator);
+    public function __construct(ServiceEventType $serviceEventType) {
         $this->serviceEventType = $serviceEventType;
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Event type');
     }

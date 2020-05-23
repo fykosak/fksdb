@@ -3,7 +3,6 @@
 namespace FKSDB\Transitions;
 
 use Exception;
-use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
 use LogicException;
@@ -11,7 +10,6 @@ use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Database\Context;
 use Nette\Database\Table\ActiveRow;
-use Nette\DI\Container;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -53,6 +51,7 @@ abstract class Machine {
 
     /**
      * @param Transition $transition
+     * @return void
      */
     public function addTransition(Transition $transition) {
         $this->transitions[] = $transition;
@@ -113,6 +112,7 @@ abstract class Machine {
     /* ********** CONDITION ******** */
     /**
      * @param callable $condition
+     * @return void
      */
     public function setExplicitCondition(callable $condition) {
         $this->explicitCondition = $condition;
@@ -181,9 +181,6 @@ abstract class Machine {
 
     /* ********** MODEL CREATING ******** */
 
-    /**
-     * @return string
-     */
     abstract public function getCreatingState(): string;
 
     /**

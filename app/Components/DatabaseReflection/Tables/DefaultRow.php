@@ -2,8 +2,6 @@
 
 namespace FKSDB\Components\DatabaseReflection;
 
-use Nette\Localization\ITranslator;
-
 /**
  * Class DefaultRow
  * @package FKSDB\Components\DatabaseReflection
@@ -40,12 +38,10 @@ abstract class DefaultRow extends AbstractRow {
 
     /**
      * StringRow constructor.
-     * @param ITranslator $translator
      * @param MetaDataFactory $metaDataFactory
      */
-    public function __construct(ITranslator $translator, MetaDataFactory $metaDataFactory) {
+    public function __construct(MetaDataFactory $metaDataFactory) {
         $this->metaDataFactory = $metaDataFactory;
-        parent::__construct($translator);
     }
 
     /**
@@ -64,50 +60,33 @@ abstract class DefaultRow extends AbstractRow {
     }
 
     /**
-     * @param $value
+     * @param string $value
+     * @return void
      */
     final public function setPermissionValue(string $value) {
         $this->permissionValue = constant(self::class . '::' . $value);
     }
 
-    /**
-     * @inheritDoc
-     */
     final public function getPermissionsValue(): int {
         return $this->permissionValue;
     }
 
-    /**
-     * @inheritDoc
-     */
     final public function getTitle(): string {
         return _($this->title);
     }
 
-    /**
-     * @return string
-     */
     final public function getDescription(): string {
         return $this->description ? _($this->description) : '';
     }
 
-    /**
-     * @return string
-     */
     final protected function getModelAccessKey(): string {
         return $this->modelAccessKey;
     }
 
-    /**
-     * @return string
-     */
     final protected function getTableName(): string {
         return $this->tableName;
     }
 
-    /**
-     * @return array
-     */
     final protected function getMetaData(): array {
         return $this->metaData;
     }

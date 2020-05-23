@@ -82,11 +82,6 @@ final class TableReflectionFactory {
         };
     }
 
-
-    /**
-     * @param array $rows
-     * @return array
-     */
     public static function parseRows(array $rows): array {
         $items = [];
         foreach ($rows as $item) {
@@ -95,10 +90,6 @@ final class TableReflectionFactory {
         return $items;
     }
 
-    /**
-     * @param string $row
-     * @return array
-     */
     public static function parseRow(string $row): array {
         return explode('.', $row);
     }

@@ -19,7 +19,6 @@ use FKSDB\Transitions\Transition;
 use Mail\MailTemplateFactory;
 use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
-use Nette\Localization\ITranslator;
 use Tracy\Debugger;
 
 /**
@@ -41,10 +40,6 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
      */
     private $eventAuthorizator;
     /**
-     * @var ITranslator
-     */
-    private $translator;
-    /**
      * @var ServiceEmailMessage
      */
     private $serviceEmailMessage;
@@ -58,7 +53,6 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
      * @param ServicePayment $servicePayment
      * @param Connection $connection
      * @param EventAuthorizator $eventAuthorizator
-     * @param ITranslator $translator
      * @param ServiceEmailMessage $serviceEmailMessage
      * @param MailTemplateFactory $mailTemplateFactory
      */
@@ -66,14 +60,12 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
         ServicePayment $servicePayment,
         Connection $connection,
         EventAuthorizator $eventAuthorizator,
-        ITranslator $translator,
         ServiceEmailMessage $serviceEmailMessage,
         MailTemplateFactory $mailTemplateFactory
     ) {
         $this->connection = $connection;
         $this->servicePayment = $servicePayment;
         $this->eventAuthorizator = $eventAuthorizator;
-        $this->translator = $translator;
         $this->serviceEmailMessage = $serviceEmailMessage;
         $this->mailTemplateFactory = $mailTemplateFactory;
     }
@@ -145,6 +137,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
 
     /**
      * @param PaymentMachine $machine
+     * @return void
      */
     private function addTransitionAllToCanceled(PaymentMachine &$machine) {
         foreach ([ModelPayment::STATE_NEW, ModelPayment::STATE_WAITING] as $state) {
@@ -164,6 +157,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
 
     /**
      * @param PaymentMachine $machine
+     * @return void
      */
     private function addTransitionWaitingToReceived(PaymentMachine &$machine) {
         $transition = new Transition(ModelPayment::STATE_WAITING, ModelPayment::STATE_RECEIVED, _('Paid'));
@@ -194,9 +188,6 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
         $machine->addTransition($transition);
     }
 
-    /**
-     * @return Closure
-     */
     private function getClosureDeleteRows(): Closure {
         return function (ModelPayment $modelPayment) {
             Debugger::log('payment-deleted--' . \json_encode($modelPayment->toArray()), 'payment-info');

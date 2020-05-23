@@ -8,8 +8,5 @@ namespace FKSDB\Payment;
  * @package FKSDB\Payment
  */
 interface IPaymentModel {
-    /**
-     * @return Price
-     */
     public function getPrice(): Price;
 }

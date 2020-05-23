@@ -19,6 +19,7 @@ class ValuePrinterComponent extends BaseComponent {
      * @var TableReflectionFactory
      */
     private $tableReflectionFactory;
+
     /**
      * @param TableReflectionFactory $tableReflectionFactory
      * @return void
@@ -40,9 +41,9 @@ class ValuePrinterComponent extends BaseComponent {
         $this->template->title = $factory->getTitle();
         $this->template->description = $factory->getDescription();
         $this->template->testLog = null;
-        if ($factory instanceof ITestedRowFactory && $tested) {
-            //  $this->template->testLog = $factory->runTest($model); TODO FIX
-        }
+        // if ($factory instanceof ITestedRowFactory && $tested) {
+        //  $this->template->testLog = $factory->runTest($model); TODO FIX
+        // }
         $this->template->html = $factory->renderValue($model, $userPermission);
         $this->template->setFile(__DIR__ . '/layout.latte');
         $this->template->render();

@@ -11,7 +11,7 @@ use Nette\Utils\Html;
  */
 class HashPrinter extends AbstractValuePrinter {
     /**
-     * @param $value
+     * @param string $value
      * @return Html
      */
     protected function getHtml($value): Html {

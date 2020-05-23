@@ -40,9 +40,6 @@ abstract class AbstractLink {
         ])->addText($this->getText());
     }
 
-    /**
-     * @return string
-     */
     abstract public function getText(): string;
 
     /**
@@ -57,9 +54,6 @@ abstract class AbstractLink {
      */
     abstract public function prepareParams($model): array;
 
-    /**
-     * @return string
-     */
     abstract public function getModelClassName(): string;
 
     /**

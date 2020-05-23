@@ -50,9 +50,6 @@ class ParticipantDetailLink extends AbstractLink {
         }
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getModelClassName(): string {
         return ModelEventParticipant::class;
     }
