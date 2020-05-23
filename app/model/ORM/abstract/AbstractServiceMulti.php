@@ -27,7 +27,7 @@ abstract class AbstractServiceMulti implements IService {
     protected $joinedService;
 
     /**
-     *
+     * AbstractServiceMulti constructor.
      * @param AbstractServiceSingle $mainService
      * @param AbstractServiceSingle $joinedService
      */
@@ -65,12 +65,6 @@ abstract class AbstractServiceMulti implements IService {
         return new $className($this, $mainModel, $joinedModel);
     }
 
-    /**
-     *
-     * @param AbstractModelSingle $mainModel
-     * @param AbstractModelSingle $joinedModel
-     * @return AbstractModelMulti
-     */
     public function composeModel(AbstractModelSingle $mainModel, AbstractModelSingle $joinedModel): AbstractModelMulti {
         $className = $this->getModelClassName();
         return new $className($this, $mainModel, $joinedModel);
@@ -155,9 +149,6 @@ abstract class AbstractServiceMulti implements IService {
         return $this->composeModel($mainModel, $joinedModel);
     }
 
-    /**
-     * @return MultiTableSelection
-     */
     public function getTable(): MultiTableSelection {
         $joinedTable = $this->getJoinedService()->getTable()->getName();
         $mainTable = $this->getMainService()->getTable()->getName();

@@ -15,16 +15,10 @@ use Nette\Forms\Controls\BaseControl;
 class AcYearRow extends AbstractRow {
     use DefaultPrinterTrait;
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Academic year');
     }
 
-    /**
-     * @return int
-     */
     public function getPermissionsValue(): int {
         return self::PERMISSION_ALLOW_BASIC;
     }
@@ -38,9 +32,6 @@ class AcYearRow extends AbstractRow {
         throw new NotImplementedException();
     }
 
-    /**
-     * @return string
-     */
     protected function getModelAccessKey(): string {
         return 'ac_year';
     }

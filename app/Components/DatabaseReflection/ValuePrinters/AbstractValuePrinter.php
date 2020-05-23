@@ -16,7 +16,7 @@ abstract class AbstractValuePrinter {
     abstract protected function getHtml($value): Html;
 
     /**
-     * @param $value
+     * @param mixed $value
      * @return Html
      */
     public function __invoke($value): Html {

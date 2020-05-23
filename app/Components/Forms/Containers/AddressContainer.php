@@ -24,6 +24,7 @@ class AddressContainer extends ModelContainer {
 
     /**
      * @param ServiceRegion $serviceRegion
+     * @return void
      */
     public function setServiceRegion(ServiceRegion $serviceRegion) {
         $this->serviceRegion = $serviceRegion;

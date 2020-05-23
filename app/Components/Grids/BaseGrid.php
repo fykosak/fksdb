@@ -51,7 +51,15 @@ abstract class BaseGrid extends Grid {
         parent::__construct();
         $container->callInjects($this);
         $this->context = $container;
-        $this->tableReflectionFactory = $container->getByType(TableReflectionFactory::class);
+        $container->callInjects($this);
+    }
+
+    /**
+     * @param TableReflectionFactory $tableReflectionFactory
+     * @return void
+     */
+    public function injectTableReflectionFactory(TableReflectionFactory $tableReflectionFactory) {
+        $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
     /**
@@ -64,10 +72,7 @@ abstract class BaseGrid extends Grid {
         $paginator->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.paginator.latte');
     }
 
-    /**
-     * @return Container
-     */
-    final public function getContext() {
+    final public function getContext(): Container {
         return $this->context;
     }
 
@@ -133,9 +138,6 @@ abstract class BaseGrid extends Grid {
      * Search
      * ****************************** */
 
-    /**
-     * @return bool
-     */
     public function isSearchable(): bool {
         return $this->dataSource instanceof SearchableDataSource;
     }

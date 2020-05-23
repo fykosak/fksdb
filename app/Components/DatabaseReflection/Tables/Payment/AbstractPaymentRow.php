@@ -20,9 +20,6 @@ abstract class AbstractPaymentRow extends AbstractRow {
         throw new NotImplementedException();
     }
 
-    /**
-     * @return int
-     */
     public function getPermissionsValue(): int {
         return self::PERMISSION_USE_GLOBAL_ACL;
     }

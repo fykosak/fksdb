@@ -2,11 +2,11 @@
 
 namespace FKSDB\Components\Controls\Choosers;
 
+use FKSDB\Components\Controls\BaseComponent;
 use Nette\Application\AbortException;
-use Nette\Application\UI\Control;
+use Nette\DI\Container;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
-use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 
 /**
@@ -15,7 +15,7 @@ use Nette\Templating\FileTemplate;
  * @author Michal Červeňák <miso@fykos.cz>
  * @property FileTemplate $template
  */
-class ThemeSwitcher extends Control {
+class ThemeSwitcher extends BaseComponent {
     /**
      * @var array
      */
@@ -24,32 +24,21 @@ class ThemeSwitcher extends Control {
      * @var Session
      */
     private $session;
-    /**
-     * @var ITranslator
-     */
-    private $translator;
 
     /**
      * ThemeSwitcher constructor.
+     * @param Container $container
      * @param Session $session
-     * @param ITranslator $translator
      */
-    public function __construct(Session $session, ITranslator $translator) {
-        parent::__construct();
+    public function __construct(Container $container, Session $session) {
+        parent::__construct($container);
         $this->session = $session;
-        $this->translator = $translator;
     }
 
-    /**
-     * @return SessionSection
-     */
     private function getSession(): SessionSection {
         return $this->session->getSection('theme');
     }
 
-    /**
-     * @return string
-     */
     public function getSelectedTheme(): string {
         $session = $this->getSession();
         return $session->theme ?: $this->availableThemes[0];
@@ -57,7 +46,6 @@ class ThemeSwitcher extends Control {
 
 
     public function render() {
-        $this->template->setTranslator($this->translator);
         $this->template->availableThemes = $this->availableThemes;
         $this->template->theme = $this->getSelectedTheme();
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ThemeSwitcher.latte');

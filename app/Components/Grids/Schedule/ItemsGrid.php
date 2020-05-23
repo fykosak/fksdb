@@ -33,9 +33,6 @@ class ItemsGrid extends BaseGrid {
         $this->group = $group;
     }
 
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelScheduleItem::class;
     }

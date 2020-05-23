@@ -94,9 +94,6 @@ class AllPersonsGrid extends BaseGrid {
         $this->addColumns(['referenced.payment_id']);
     }
 
-    /**
-     * @return string
-     */
     protected function getModelClassName(): string {
         return ModelPersonSchedule::class;
     }

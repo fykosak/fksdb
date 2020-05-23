@@ -11,16 +11,10 @@ use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 class DepartureTimeRow extends AbstractParticipantRow {
     use DefaultPrinterTrait;
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Departure time');
     }
 
-    /**
-     * @return string
-     */
     protected function getModelAccessKey(): string {
         return 'departure_time';
     }

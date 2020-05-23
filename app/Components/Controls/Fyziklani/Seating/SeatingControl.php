@@ -8,7 +8,6 @@ use FKSDB\Events\EventDispatchFactory;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use Nette\Application\BadRequestException;
-use Nette\DI\Container;
 
 /**
  * Class SittingControl

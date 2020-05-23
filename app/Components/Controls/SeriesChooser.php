@@ -57,7 +57,7 @@ class SeriesChooser extends BaseComponent {
      * @return bool
      * @throws \Exception
      */
-    public function isValid() {
+    public function isValid(): bool {
         $this->init();
         return $this->valid;
     }
@@ -66,7 +66,7 @@ class SeriesChooser extends BaseComponent {
      * @return int
      * @throws \Exception
      */
-    public function getSeries() {
+    public function getSeries(): int {
         $this->init();
         return $this->series;
     }
@@ -132,10 +132,10 @@ class SeriesChooser extends BaseComponent {
     }
 
     /**
-     * @return array of int of allowed series
+     * @return int[] of allowed series
      * @throws BadRequestException
      */
-    private function getAllowedSeries() {
+    private function getAllowedSeries(): array {
         $presenter = $this->getPresenter();
         $contest = $presenter->getSelectedContest();
         $year = $presenter->getSelectedYear();
@@ -149,11 +149,11 @@ class SeriesChooser extends BaseComponent {
     }
 
     /**
-     * @param $series
+     * @param int $series
      * @return bool
      * @throws BadRequestException
      */
-    private function isValidSeries($series) {
+    private function isValidSeries(int $series): bool {
         return in_array($series, $this->getAllowedSeries());
     }
 }

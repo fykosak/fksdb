@@ -11,16 +11,10 @@ use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 class ArrivalDestinationRow extends AbstractParticipantRow {
     use DefaultPrinterTrait;
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Arrival destination');
     }
 
-    /**
-     * @return string
-     */
     protected function getModelAccessKey(): string {
         return 'arrival_destination';
     }

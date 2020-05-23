@@ -13,9 +13,6 @@ use Nette\Forms\Controls\BaseControl;
  */
 abstract class AbstractFyziklaniTeamRow extends AbstractRow {
 
-    /**
-     * @return int
-     */
     public function getPermissionsValue(): int {
         return self::PERMISSION_USE_GLOBAL_ACL;
     }

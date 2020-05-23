@@ -91,9 +91,6 @@ class AutocompleteSelectBox extends TextBase {
         }
     }
 
-    /**
-     * @return IDataProvider
-     */
     public function getDataProvider(): IDataProvider {
         return $this->dataProvider;
     }
@@ -121,6 +118,7 @@ class AutocompleteSelectBox extends TextBase {
 
     /**
      * @param IDataProvider $dataProvider
+     * @return void
      */
     public function setDataProvider(IDataProvider $dataProvider) {
         if ($this->ajax && !($dataProvider instanceof IFilteredDataProvider)) {
@@ -236,6 +234,7 @@ class AutocompleteSelectBox extends TextBase {
 
     /**
      * @param $multiSelect
+     * @return void
      */
     public function setMultiSelect($multiSelect) {
         $this->multiSelect = $multiSelect;

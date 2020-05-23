@@ -13,16 +13,11 @@ use Nette\Utils\Html;
  * @package FKSDB\Components\DatabaseReflection\Person
  */
 class CreatedRow extends AbstractRow {
-    /**
-     * @return string
-     */
+
     public function getTitle(): string {
         return _('Created');
     }
 
-    /**
-     * @return int
-     */
     public function getPermissionsValue(): int {
         return self::PERMISSION_ALLOW_RESTRICT;
     }

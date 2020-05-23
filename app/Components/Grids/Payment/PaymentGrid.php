@@ -26,9 +26,6 @@ abstract class PaymentGrid extends BaseGrid {
         $this->servicePayment = $container->getByType(ServicePayment::class);
     }
 
-    /**
-     * @return string
-     */
     protected function getModelClassName(): string {
         return ModelPayment::class;
     }

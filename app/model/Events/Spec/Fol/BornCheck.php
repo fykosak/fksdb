@@ -45,6 +45,7 @@ class BornCheck extends AbstractAdjustment implements IFormAdjustment {
 
     /**
      * @param Holder $holder
+     * @return void
      */
     public function setHolder(Holder $holder) {
         $this->holder = $holder;

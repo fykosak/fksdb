@@ -16,9 +16,6 @@ use Nette\Utils\Html;
  */
 class EndRow extends AbstractEventRowFactory {
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Event end');
     }

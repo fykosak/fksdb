@@ -76,10 +76,7 @@ class CloseTeamsGrid extends BaseGrid {
         $this->addLinkButton(':Fyziklani:Close:team', 'close', _('Close submitting'), false, [
             'id' => 'e_fyziklani_team_id',
             'eventId' => 'event_id',
-        ])->setShow(function ($row) {
-            /**
-             * @var ModelFyziklaniTeam $row
-             */
+        ])->setShow(function (ModelFyziklaniTeam $row) {
             return $row->isReadyForClosing();
         });
         $teams = $this->serviceFyziklaniTeam->findParticipating($this->event);//->where('points',NULL);

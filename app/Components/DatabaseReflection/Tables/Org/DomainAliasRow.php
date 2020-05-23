@@ -17,9 +17,6 @@ use Nette\Utils\Html;
  * @package FKSDB\Components\DatabaseReflection\Org
  */
 class DomainAliasRow extends AbstractOrgRowFactory {
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Domain alias');
     }

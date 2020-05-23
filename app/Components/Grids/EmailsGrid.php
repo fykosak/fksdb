@@ -51,9 +51,6 @@ class EmailsGrid extends BaseGrid {
         $this->paginate = true;
     }
 
-    /**
-     * @return string
-     */
     protected function getModelClassName(): string {
         return ModelEmailMessage::class;
     }

@@ -26,10 +26,6 @@ class EmailRow extends DefaultRow {
         return $control;
     }
 
-    /**
-     * @param AbstractModelSingle $model
-     * @return Html
-     */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         return (new EmailPrinter())($model->{$this->getModelAccessKey()});
     }

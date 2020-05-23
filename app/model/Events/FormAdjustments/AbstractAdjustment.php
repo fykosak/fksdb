@@ -20,13 +20,14 @@ abstract class AbstractAdjustment implements IFormAdjustment {
 
     const DELIMITER = '.';
     const WILDCART = '*';
-    /** @var */
+    /** @var string */
     private $pathCache;
 
     /**
      * @param Form $form
      * @param Machine $machine
      * @param Holder $holder
+     * @return void
      */
     final public function adjust(Form $form, Machine $machine, Holder $holder) {
         $this->setForm($form);

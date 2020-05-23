@@ -16,9 +16,6 @@ use Nette\Forms\Form;
 class BornIdRow extends AbstractRow {
     use DefaultPrinterTrait;
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Rodné číslo');
     }
@@ -42,16 +39,10 @@ class BornIdRow extends AbstractRow {
         return $control;
     }
 
-    /**
-     * @return int
-     */
     public function getPermissionsValue(): int {
         return self::PERMISSION_ALLOW_FULL;
     }
 
-    /**
-     * @return string
-     */
     protected function getModelAccessKey(): string {
         return 'born_id';
     }

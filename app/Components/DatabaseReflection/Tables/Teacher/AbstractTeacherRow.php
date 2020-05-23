@@ -9,9 +9,6 @@ use FKSDB\Components\DatabaseReflection\AbstractRow;
  * @package FKSDB\Components\DatabaseReflection\Tables\Teacher
  */
 abstract class AbstractTeacherRow extends AbstractRow {
-    /**
-     * @return int
-     */
     public function getPermissionsValue(): int {
         return self::PERMISSION_USE_GLOBAL_ACL;
     }

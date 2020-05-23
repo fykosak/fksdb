@@ -7,25 +7,22 @@ namespace FKSDB\Components\DatabaseReflection;
  */
 abstract class BaseRow extends AbstractRow {
     use DefaultPrinterTrait;
+
+    /** @var string */
     private $title;
 
     /**
      * @param string $title
+     * @return void
      */
     public function setTitle(string $title) {
         $this->title = $title;
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _($this->title);
     }
 
-    /**
-     * @return int
-     */
     public function getPermissionsValue(): int {
         return self::PERMISSION_USE_GLOBAL_ACL;
     }

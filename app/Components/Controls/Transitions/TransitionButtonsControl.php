@@ -8,10 +8,8 @@ use FKSDB\Transitions\Machine;
 use FKSDB\Transitions\UnavailableTransitionsException;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\UI\Control;
 use Nette\DI\Container;
 use Tracy\Debugger;
-use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 
 /**

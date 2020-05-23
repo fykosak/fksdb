@@ -9,9 +9,6 @@ use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\DatabaseReflection\ValuePrinterComponent;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\Models\ModelPerson;
-use Nette\Application\UI\Control;
-use Nette\DI\Container;
-use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 
 /**
@@ -27,22 +24,15 @@ abstract class StalkingControl extends BaseComponent {
     const PERMISSION_USE_FIELD_LEVEL = 2048;
 
     /**
-     * @var ITranslator
-     */
-    protected $translator;
-
-    /**
      * @var TableReflectionFactory
      */
     protected $tableReflectionFactory;
 
     /**
-     * @param ITranslator $translator
      * @param TableReflectionFactory $tableReflectionFactory
      * @return void
      */
-    public function injectPrimary(ITranslator $translator, TableReflectionFactory $tableReflectionFactory) {
-        $this->translator = $translator;
+    public function injectPrimary(TableReflectionFactory $tableReflectionFactory) {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 

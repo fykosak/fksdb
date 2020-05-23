@@ -112,5 +112,4 @@ abstract class AbstractRow {
     abstract public function getPermissionsValue(): int;
 
     abstract public function getTitle(): string;
-
 }

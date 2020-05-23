@@ -16,9 +16,6 @@ use Nette\Utils\Html;
  */
 class AgreedRow extends AbstractRow {
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Souhlasím se zpracováním osobních údajů');
     }
@@ -37,9 +34,6 @@ class AgreedRow extends AbstractRow {
         return $control;
     }
 
-    /**
-     * @return int
-     */
     public function getPermissionsValue(): int {
         return self::PERMISSION_ALLOW_BASIC;
     }

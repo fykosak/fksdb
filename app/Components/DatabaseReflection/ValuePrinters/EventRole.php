@@ -14,12 +14,7 @@ use Nette\Utils\Html;
  * @package FKSDB\Components\DatabaseReflection\ValuePrinters
  */
 class EventRole {
-    /**
-     * @param ModelPerson $person
-     * @param ModelEvent $event
-     * @param YearCalculator $yearCalculator
-     * @return Html
-     */
+
     public static function calculateRoles(ModelPerson $person, ModelEvent $event, YearCalculator $yearCalculator): Html {
         $container = Html::el('span');
         $roles = $person->getRolesForEvent($event, $yearCalculator);

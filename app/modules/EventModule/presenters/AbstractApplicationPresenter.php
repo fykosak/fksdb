@@ -47,6 +47,9 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
         $this->serviceEventParticipant = $serviceEventParticipant;
     }
 
+    /**
+     * @throws BadRequestException
+     */
     final public function titleList() {
         $this->setTitle(_('List of applications'), 'fa fa-users');
     }

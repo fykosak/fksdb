@@ -52,8 +52,5 @@ abstract class AbstractDateInput extends TextInput {
      */
     abstract protected function getType(): string;
 
-    /**
-     * @return string
-     */
     abstract protected function getFormat(): string;
 }

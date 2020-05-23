@@ -77,9 +77,6 @@ class PersonGrid extends BaseGrid {
         });
     }
 
-    /**
-     * @return string
-     */
     protected function getModelClassName(): string {
         return ModelPersonSchedule::class;
     }

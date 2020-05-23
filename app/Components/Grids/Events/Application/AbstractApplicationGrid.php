@@ -38,9 +38,6 @@ abstract class AbstractApplicationGrid extends BaseGrid {
         $this->holder = $holder;
     }
 
-    /**
-     * @return Selection
-     */
     abstract protected function getSource(): Selection;
 
     /**
@@ -83,9 +80,6 @@ abstract class AbstractApplicationGrid extends BaseGrid {
         return $control;
     }
 
-    /**
-     * @return Closure
-     */
     public function getFilterCallBack(): Closure {
         return function (Selection $table, $value) {
             $states = [];
@@ -100,9 +94,6 @@ abstract class AbstractApplicationGrid extends BaseGrid {
         };
     }
 
-    /**
-     * @return array
-     */
     abstract protected function getHoldersColumns(): array;
 
     /**
@@ -122,8 +113,5 @@ abstract class AbstractApplicationGrid extends BaseGrid {
         }
     }
 
-    /**
-     * @return string
-     */
     abstract protected function getTableName(): string;
 }

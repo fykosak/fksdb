@@ -12,16 +12,10 @@ use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 class CapacityRow extends AbstractScheduleItemRow {
     use DefaultPrinterTrait;
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Total capacity');
     }
 
-    /**
-     * @return string
-     */
     protected function getModelAccessKey(): string {
         return 'capacity';
     }

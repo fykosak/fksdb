@@ -312,10 +312,11 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
     /**
      * @param BaseControl $control
      * @param HiddenField $hiddenField
-     * @param $fieldName
+     * @param string $fieldName
      * @param array $metadata
+     * @return void
      */
-    protected function appendMetadata(BaseControl &$control, HiddenField $hiddenField, $fieldName, array $metadata) {
+    protected function appendMetadata(BaseControl &$control, HiddenField $hiddenField, string $fieldName, array $metadata) {
         foreach ($metadata as $key => $value) {
             switch ($key) {
                 case 'required':
@@ -347,6 +348,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
     /**
      * @param $component
      * @param $value
+     * @return void
      */
     protected function setWriteOnly($component, $value) {
         if ($component instanceof IWriteOnly) {

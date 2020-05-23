@@ -4,13 +4,11 @@ namespace FKSDB\Components\Grids\DataTesting;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\DataTesting\DataTestingFactory;
-use FKSDB\DataTesting\Tests\Person\PersonTest;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\DataTesting\TestsLogger;
 use FKSDB\DataTesting\TestLog;
 use FKSDB\Exceptions\NotImplementedException;
-use Nette\DI\Container;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;

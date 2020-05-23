@@ -397,6 +397,7 @@ class ApplicationHandler {
     /**
      * @param Exception $e
      * @return void
+     * @throws ApplicationHandlerException
      */
     private function reRaise(Exception $e) {
         throw new ApplicationHandlerException(_('Chyba při ukládání přihlášky.'), null, $e);

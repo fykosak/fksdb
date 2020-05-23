@@ -40,6 +40,7 @@ class Captcha implements IFormAdjustment {
      * @param Form $form
      * @param Machine $machine
      * @param Holder $holder
+     * @return void
      */
     public function adjust(Form $form, Machine $machine, Holder $holder) {
         if ($holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT || $this->user->isLoggedIn()) {

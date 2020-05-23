@@ -12,9 +12,7 @@ use Nette\Utils\Html;
  * @package FKSDB\Components\DatabaseReflection\EventParticipant
  */
 class ArrivalTicketRow extends AbstractParticipantRow {
-    /**
-     * @return string
-     */
+
     public function getTitle(): string {
         return _('Arrival ticket');
     }

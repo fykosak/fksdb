@@ -123,6 +123,7 @@ class ApplicationsGrid extends Control {
 
     /**
      * @param $searchable
+     * @return void
      */
     public function setSearchable($searchable) {
         $this->searchable = $searchable;

@@ -11,9 +11,7 @@ use Nette\Utils\Html;
  * @package FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniGameSetup
  */
 class AvailablePointsRow extends AbstractFyziklaniGameSetupRow {
-    /**
-     * @return string
-     */
+
     public function getTitle(): string {
         return _('Available points');
     }

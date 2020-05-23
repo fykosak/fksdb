@@ -12,9 +12,7 @@ use Nette\Utils\Html;
  * @package FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniSubmit
  */
 class CreatedRow extends AbstractFyziklaniSubmitRow {
-    /**
-     * @return string
-     */
+
     public function getTitle(): string {
         return _('Created');
     }

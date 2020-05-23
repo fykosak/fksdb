@@ -11,16 +11,10 @@ use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 class DescriptionCSRow extends AbstractScheduleItemRow {
     use DefaultPrinterTrait;
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Description cs');
     }
 
-    /**
-     * @return string
-     */
     protected function getModelAccessKey(): string {
         return 'description_cs';
     }

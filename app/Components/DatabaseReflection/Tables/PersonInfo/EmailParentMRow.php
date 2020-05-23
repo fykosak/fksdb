@@ -12,23 +12,14 @@ use FKSDB\Components\DatabaseReflection\EmailRowTrait;
 class EmailParentMRow extends AbstractRow {
     use EmailRowTrait;
 
-    /**
-     * @return int
-     */
     public function getPermissionsValue(): int {
         return self::PERMISSION_ALLOW_RESTRICT;
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('E-mail (matka)');
     }
 
-    /**
-     * @return string
-     */
     public function getModelAccessKey(): string {
         return 'email_parent_m';
     }

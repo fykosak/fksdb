@@ -58,11 +58,9 @@ class ArrayProvider implements IFilteredDataProvider {
 
     /**
      * @param $id
+     * @return void
      */
     public function setDefaultValue($id) {
         /* intentionally blank */
     }
-
-
-//put your code here
 }
