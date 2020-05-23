@@ -10,9 +10,7 @@ use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use Nette\Application\AbortException;
-use Nette\Application\UI\Control;
 use Nette\DI\Container;
-use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 
 /**
@@ -48,12 +46,13 @@ class CloseTeamControl extends BaseComponent {
      * @param ServiceFyziklaniTask $serviceFyziklaniTask
      * @return void
      */
-    public function callInject(ServiceFyziklaniTask $serviceFyziklaniTask) {
+    public function injectServiceFyziklaniTask(ServiceFyziklaniTask $serviceFyziklaniTask) {
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
     }
 
     /**
      * @param ModelFyziklaniTeam $team
+     * @return void
      */
     public function setTeam(ModelFyziklaniTeam $team) {
         $this->team = $team;
