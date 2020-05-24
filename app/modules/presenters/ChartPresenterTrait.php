@@ -77,7 +77,7 @@ trait ChartPresenterTrait {
 
     /**
      * @param $id
-     * @return mixed
+     * @return static
      */
     abstract public function setView($id);
 }

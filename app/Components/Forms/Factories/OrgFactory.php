@@ -17,19 +17,19 @@ use Nette\Forms\Controls\BaseControl;
 class OrgFactory extends SingleReflectionFactory {
 
     /**
-     * @var \FKSDB\ORM\Services\ServicePerson
+     * @var ServicePerson
      */
     private $servicePerson;
 
     /**
-     * @var \FKSDB\YearCalculator
+     * @var YearCalculator
      */
     private $yearCalculator;
 
     /**
      * OrgFactory constructor.
      * @param ServicePerson $servicePerson
-     * @param \FKSDB\YearCalculator $yearCalculator
+     * @param YearCalculator $yearCalculator
      * @param TableReflectionFactory $tableReflectionFactory
      */
     public function __construct(ServicePerson $servicePerson, YearCalculator $yearCalculator, TableReflectionFactory $tableReflectionFactory) {

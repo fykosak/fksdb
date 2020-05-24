@@ -16,10 +16,6 @@ interface IDataProvider {
      */
     public function getItems(): array;
 
-    /**
-     * @param int $id
-     * @return string
-     */
     public function getItemLabel(int $id): string;
 
     /**
@@ -29,5 +25,3 @@ interface IDataProvider {
      */
     public function setDefaultValue($id);
 }
-
-

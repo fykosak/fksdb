@@ -27,7 +27,7 @@ class ServiceEventOrg extends AbstractServiceSingle {
 
     /**
      * @param IModel|ModelEventOrg $model
-     * @return mixed|void
+     * @return void
      * @deprecated
      */
     public function save(IModel &$model) {

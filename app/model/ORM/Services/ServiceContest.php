@@ -19,4 +19,3 @@ class ServiceContest extends AbstractServiceSingle {
         return DbNames::TAB_CONTEST;
     }
 }
-

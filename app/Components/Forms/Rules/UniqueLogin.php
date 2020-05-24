@@ -20,7 +20,7 @@ class UniqueLogin {
     private $serviceLogin;
 
     /**
-     * @var \FKSDB\ORM\Models\ModelLogin
+     * @var ModelLogin
      */
     private $ignoredLogin;
 
@@ -33,14 +33,14 @@ class UniqueLogin {
     }
 
     /**
-     * @return \FKSDB\ORM\Models\ModelLogin
+     * @return ModelLogin
      */
     public function getIgnoredLogin() {
         return $this->ignoredLogin;
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelLogin|null $ignoredLogin
+     * @param ModelLogin|null $ignoredLogin
      */
     public function setIgnoredLogin(ModelLogin $ignoredLogin = null) {
         $this->ignoredLogin = $ignoredLogin;

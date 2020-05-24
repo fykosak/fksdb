@@ -4,7 +4,6 @@ namespace FKSDB\ORM\Models;
 
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
-use Nette\Utils\DateTime;
 use Nette\Utils\Strings;
 use Utils;
 
@@ -18,8 +17,8 @@ use Utils;
  * @property-read int points
  * @property-read int year
  * @property-read int contest_id
- * @property-read DateTime submit_deadline
- * @property-read DateTime submit_start
+ * @property-read \DateTimeInterface submit_deadline
+ * @property-read \DateTimeInterface submit_start
  */
 class ModelTask extends AbstractModelSingle implements IContestReferencedModel {
 

@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Controls\Entity\School;
 
 use FKSDB\Components\Controls\Entity\IEditEntityForm;
+use FKSDB\Exceptions\ModelException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelSchool;
 use Nette\Application\AbortException;
@@ -73,7 +74,7 @@ class EditForm extends AbstractForm implements IEditEntityForm {
 
             $this->getPresenter()->flashMessage(_('Škola upravena'), \BasePresenter::FLASH_SUCCESS);
             $this->getPresenter()->redirect('list');
-        } catch (\FKSDB\Exceptions\ModelException $exception) {
+        } catch (ModelException $exception) {
             $connection->rollBack();
             Debugger::log($exception, Debugger::ERROR);
             $this->getPresenter()->flashMessage(_('Chyba při úpravě školy.'), \BasePresenter::FLASH_ERROR);

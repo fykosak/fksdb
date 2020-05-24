@@ -77,5 +77,3 @@ class ValidationPresenter extends BasePresenter {
         return new PersonTestControl($this->servicePerson, $this->getTranslator(), $this->validationFactory->getTests('person'));
     }
 }
-
-

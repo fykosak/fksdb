@@ -36,47 +36,31 @@ class ReferencedPersonHandler implements IReferencedHandler {
     const POST_CONTACT_DELIVERY = 'post_contact_d';
     const POST_CONTACT_PERMANENT = 'post_contact_p';
 
-    /**
-     * @var ServicePerson
-     */
+    /** @var ServicePerson */
     private $servicePerson;
 
-    /**
-     * @var ServicePersonInfo
-     */
+    /** @var ServicePersonInfo */
     private $servicePersonInfo;
 
-    /**
-     * @var ServicePersonHistory
-     */
+    /** @var ServicePersonHistory */
     private $servicePersonHistory;
 
-    /**
-     * @var ServiceMPostContact
-     */
+    /** @var ServiceMPostContact */
     private $serviceMPostContact;
 
-    /**
-     * @var ServiceMPersonHasFlag
-     */
+    /** @var ServiceMPersonHasFlag */
     private $serviceMPersonHasFlag;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $acYear;
-    /**
-     * @var int
-     */
+
+    /** @var int */
     private $eventId;
 
-    /**
-     * @var mixed
-     */
+    /** @var string */
     private $resolution;
-    /**
-     * @var Handler
-     */
+
+    /** @var Handler */
     private $eventScheduleHandler;
 
     /**
@@ -87,8 +71,8 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @param ServiceMPostContact $serviceMPostContact
      * @param ServiceMPersonHasFlag $serviceMPersonHasFlag
      * @param Handler $eventScheduleHandler
-     * @param $acYear
-     * @param $resolution
+     * @param int $acYear
+     * @param string $resolution
      */
     public function __construct(
         ServicePerson $servicePerson,
@@ -97,7 +81,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
         ServiceMPostContact $serviceMPostContact,
         ServiceMPersonHasFlag $serviceMPersonHasFlag,
         Handler $eventScheduleHandler,
-        $acYear,
+        int $acYear,
         $resolution
     ) {
         $this->servicePerson = $servicePerson;
@@ -110,28 +94,25 @@ class ReferencedPersonHandler implements IReferencedHandler {
         $this->eventScheduleHandler = $eventScheduleHandler;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getResolution() {
+    public function getResolution(): string {
         return $this->resolution;
     }
 
     /**
-     * @param $resolution
-     * @return mixed|void
+     * @param string $resolution
+     * @return void
      */
-    public function setResolution($resolution) {
+    public function setResolution(string $resolution) {
         $this->resolution = $resolution;
     }
 
     /**
      * @param ArrayHash $values
-     * @return AbstractModelSingle|ModelPerson|null
+     * @return ModelPerson
      * @throws JsonException
      * @throws ExistingPaymentException
      */
-    public function createFromValues(ArrayHash $values) {
+    public function createFromValues(ArrayHash $values): ModelPerson {
         $email = isset($values['person_info']['email']) ? $values['person_info']['email'] : null;
         $person = $this->servicePerson->findByEmail($email);
         if (!$person) {
@@ -153,9 +134,9 @@ class ReferencedPersonHandler implements IReferencedHandler {
     }
 
     /**
-     * @param $eventId
+     * @param int $eventId
      */
-    public function setEventId($eventId) {
+    public function setEventId(int $eventId) {
         $this->eventId = $eventId;
     }
 
@@ -274,10 +255,8 @@ class ReferencedPersonHandler implements IReferencedHandler {
                     if (count($subConflicts)) {
                         $conflicts[$key] = $subConflicts;
                     }
-                } else {
-                    if (!is_null($model[$key]) && $model[$key] != $value) {
-                        $conflicts[$key] = $value;
-                    }
+                } elseif (!is_null($model[$key]) && $model[$key] != $value) {
+                    $conflicts[$key] = $value;
                 }
             }
         }
@@ -287,7 +266,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
 
     /**
      * @param ArrayHash $data
-     * @param ArrayHash $conflicts
+     * @param ArrayHash|array $conflicts
      * @return ArrayHash
      */
     private function removeConflicts($data, $conflicts) {
@@ -406,10 +385,10 @@ class ReferencedPersonHandler implements IReferencedHandler {
     }
 
     /**
-     * @param $field
-     * @return bool|mixed
+     * @param string $field
+     * @return bool
      */
-    public function isSecondaryKey($field) {
+    public function isSecondaryKey(string $field): bool {
         return $field == 'person_info.email';
     }
 
@@ -418,7 +397,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @param mixed $key
      * @return ModelPerson|null|IModel
      */
-    public function findBySecondaryKey($field, $key) {
+    public function findBySecondaryKey(string $field, string $key) {
         if (!$this->isSecondaryKey($field)) {
             throw new InvalidArgumentException("'$field' is not a secondary key.");
         }

@@ -6,6 +6,7 @@ use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
 use Nette\Database\Connection;
 use Nette\Database\Context;
+use Nette\Database\Conventions\AmbiguousReferenceKeyException;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 use Persons\Deduplication\MergeStrategy\CannotMergeException;
@@ -316,7 +317,7 @@ class TableMerger {
                     list($table, $refColumn) = $this->context->getConventions()->getHasManyReference($this->table, $otherTable['name'], self::$refreshReferencing);
                     self::$refreshReferencing = false;
                     $this->refTables[$table] = $refColumn;
-                } catch (\Nette\Database\Conventions\AmbiguousReferenceKeyException $exception) {
+                } catch (AmbiguousReferenceKeyException $exception) {
                     /* empty */
                 }
             }

@@ -21,29 +21,28 @@ interface IExtendedPersonPresenter {
      * @note First '%s' is replaced with referenced person's name.
      * @return string
      */
-    public function messageCreate();
+    public function messageCreate(): string;
 
     /**
      * @note First '%s' is replaced with referenced person's name.
      * @return string
      */
-    public function messageEdit();
+    public function messageEdit(): string;
 
     /**
      * @return string
      */
-    public function messageError();
+    public function messageError(): string;
 
     /**
      * @return string
      */
-    public function messageExists();
+    public function messageExists(): string;
 
     /**
      * @param $message
      * @param string $type
-     * @return mixed
+     * @return void
      */
     public function flashMessage($message, $type = 'info');
 }
-

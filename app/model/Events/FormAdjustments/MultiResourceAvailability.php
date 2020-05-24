@@ -5,7 +5,10 @@ namespace FKSDB\Events\FormAdjustments;
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\Holder\BaseHolder;
+use FKSDB\Events\Model\Holder\Field;
 use FKSDB\Events\Model\Holder\Holder;
+use FKSDB\ORM\AbstractServiceMulti;
+use FKSDB\ORM\AbstractServiceSingle;
 use Nette\Database\Context;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
@@ -73,7 +76,7 @@ class MultiResourceAvailability extends AbstractAdjustment {
             'service' => $holder->getPrimaryHolder()->getService(),
             'holders' => [$holder->getPrimaryHolder()],
         ];
-
+        /** @var BaseHolder[][]|Field[][]|AbstractServiceSingle[]|AbstractServiceMulti[] $services */
         $services = [];
         $controls = [];
         foreach ($groups as $group) {
@@ -108,6 +111,7 @@ class MultiResourceAvailability extends AbstractAdjustment {
 
         $usage = [];
         foreach ($services as $serviceData) {
+            /** @var BaseHolder $firstHolder */
             $firstHolder = reset($serviceData['holders']);
             $event = $firstHolder->getEvent();
             $tableName = $serviceData['service']->getTable()->getName();

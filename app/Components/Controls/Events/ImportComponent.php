@@ -117,8 +117,8 @@ class ImportComponent extends Control {
 
     /**
      * @param Form $form
-     * @throws NeonSchemaException
      * @throws AbortException
+     * @throws NeonSchemaException
      * @throws BadRequestException
      * @throws JsonException
      */

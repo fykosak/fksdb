@@ -19,7 +19,7 @@ interface IReferencedSetter {
      * @param ReferencedContainer $container
      * @param IModel|null $model
      * @param string $mode
-     * @return mixed
+     * @return void
      */
     public function setModel(ReferencedContainer $container, IModel $model = null, $mode = self::MODE_NORMAL);
 }

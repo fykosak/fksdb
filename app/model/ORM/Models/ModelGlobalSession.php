@@ -2,14 +2,13 @@
 
 namespace FKSDB\ORM\Models;
 
-use DateTime;
 use FKSDB\ORM\AbstractModelSingle;
 
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property-read DateTime until
- * @property-read DateTime since
+ * @property-read \DateTimeInterface until
+ * @property-read \DateTimeInterface since
  * @property-read int login_id
  * @property-read int session_id
  *

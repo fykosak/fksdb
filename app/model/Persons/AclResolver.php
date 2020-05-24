@@ -21,7 +21,7 @@ class AclResolver implements IVisibilityResolver, IModifiabilityResolver {
     private $contestAuthorizator;
 
     /**
-     * @var \FKSDB\ORM\Models\ModelContest
+     * @var ModelContest
      */
     private $contest;
 
@@ -29,7 +29,7 @@ class AclResolver implements IVisibilityResolver, IModifiabilityResolver {
     /**
      * AclResolver constructor.
      * @param ContestAuthorizator $contestAuthorizator
-     * @param \FKSDB\ORM\Models\ModelContest $contest
+     * @param ModelContest $contest
      */
     public function __construct(ContestAuthorizator $contestAuthorizator, ModelContest $contest) {
         $this->contestAuthorizator = $contestAuthorizator;
@@ -38,25 +38,25 @@ class AclResolver implements IVisibilityResolver, IModifiabilityResolver {
 
     /**
      * @param ModelPerson $person
-     * @return bool|mixed
+     * @return bool
      */
-    public function isVisible(ModelPerson $person) {
+    public function isVisible(ModelPerson $person): bool {
         return $person->isNew() || $this->isAllowed($person, 'edit');
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelPerson $person
-     * @return mixed|string
+     * @param ModelPerson $person
+     * @return string
      */
-    public function getResolutionMode(ModelPerson $person) {
+    public function getResolutionMode(ModelPerson $person): string {
         return $this->isAllowed($person, 'edit') ? ReferencedPersonHandler::RESOLUTION_OVERWRITE : ReferencedPersonHandler::RESOLUTION_EXCEPTION;
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelPerson $person
-     * @return bool|mixed
+     * @param ModelPerson $person
+     * @return bool
      */
-    public function isModifiable(ModelPerson $person) {
+    public function isModifiable(ModelPerson $person): bool {
         return $person->isNew() || $this->isAllowed($person, 'edit');
     }
 
@@ -65,8 +65,7 @@ class AclResolver implements IVisibilityResolver, IModifiabilityResolver {
      * @param $privilege
      * @return bool
      */
-    private function isAllowed(ModelPerson $person, $privilege) {
+    private function isAllowed(ModelPerson $person, $privilege): bool {
         return $this->contestAuthorizator->isAllowed($person, $privilege, $this->contest);
     }
-
 }

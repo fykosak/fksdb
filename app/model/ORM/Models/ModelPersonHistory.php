@@ -100,4 +100,3 @@ class ModelPersonHistory extends AbstractModelSingle {
     }
 
 }
-

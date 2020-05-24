@@ -9,6 +9,7 @@ use FKSDB\ORM\Models\ModelAuthToken;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
+use Nette\Http\Response;
 use Tracy\Debugger;
 use Nette\Http\UserStorage;
 use Nette\Security\AuthenticationException;
@@ -306,7 +307,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
             $method = $this->formatAuthorizedMethod($this->getAction());
             $this->tryCall($method, $this->getParameter());
         } catch (AuthenticationException $exception) {
-            throw new ForbiddenRequestException(_('Chyba autentizace.'), \Nette\Http\Response::S403_FORBIDDEN, $exception);
+            throw new ForbiddenRequestException(_('Chyba autentizace.'), Response::S403_FORBIDDEN, $exception);
         }
     }
 

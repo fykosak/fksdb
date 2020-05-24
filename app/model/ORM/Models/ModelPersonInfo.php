@@ -4,7 +4,6 @@ namespace FKSDB\ORM\Models;
 
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
-use Nette\Utils\DateTime;
 
 /**
  *
@@ -17,8 +16,8 @@ use Nette\Utils\DateTime;
  * @property-read string email_parent_d
  * @property-read string born_id
  * @property-read int health_insurance
- * @property-read DateTime agreed
- * @property-read DateTime born
+ * @property-read \DateTimeInterface agreed
+ * @property-read \DateTimeInterface born
  * @property-read int person_id
  * @property-read string id_number
  * @property-read string im
@@ -44,4 +43,3 @@ class ModelPersonInfo extends AbstractModelSingle {
         return ModelPerson::createFromActiveRow($this->ref(DbNames::TAB_PERSON, 'person_id'));
     }
 }
-

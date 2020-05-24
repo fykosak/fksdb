@@ -55,7 +55,7 @@ class RoutingDownload extends Control {
      *
      */
     public function render() {
-        $rooms = $this->serviceFyziklaniRoom->getRoomsByIds($this->event->getParameter('rooms'));
+        $rooms = $this->serviceFyziklaniRoom->getRoomsByIds($this->event->getParameter(null, 'rooms'));
 
         $this->template->rooms = $rooms;
         // $this->template->buildings = $this->event->getParameter('gameSetup')['buildings'];

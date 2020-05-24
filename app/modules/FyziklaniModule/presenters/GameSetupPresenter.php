@@ -3,7 +3,7 @@
 namespace FyziklaniModule;
 
 use FKSDB\Exceptions\NotFoundException;
-use FKSDB\model\Fyziklani\NotSetGameParametersException;
+use FKSDB\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
 use Nette\Application\BadRequestException;
 

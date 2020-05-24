@@ -76,4 +76,3 @@ class ServiceGlobalSession extends AbstractServiceSingle {
 
     //TODO garbage collection
 }
-

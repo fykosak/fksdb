@@ -19,7 +19,7 @@ use Persons\ExtendedPersonHandler;
  * @method ModelEventOrg getModel()
  */
 class EventOrgPresenter extends ExtendedPersonPresenter {
-
+    /** @var string */
     protected $fieldsDefinition = 'adminEventOrg';
 
     /**
@@ -97,7 +97,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
 
     /**
      * @param Form $form
-     * @return mixed|void
+     * @return void
      */
     protected function appendExtendedContainer(Form $form) {
         $container = new ModelContainer();
@@ -114,37 +114,22 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
         return $this->serviceEventOrg;
     }
 
-    /**
-     * @return string
-     */
-    public function messageCreate() {
+    public function messageCreate(): string {
         return _('Organizátor akce %s založen.');
     }
 
-    /**
-     * @return string
-     */
-    public function messageEdit() {
+    public function messageEdit(): string {
         return _('Organizátor akce %s upraven.');
     }
 
-    /**
-     * @return string
-     */
-    public function messageError() {
+    public function messageError(): string {
         return _('Chyba při zakládání organizátora akce.');
     }
 
-    /**
-     * @return string
-     */
-    public function messageExists() {
+    public function messageExists(): string {
         return _('Organizátor akce již existuje.');
     }
 
-    /**
-     * @return ModelEvent
-     */
     private function getEvent(): ModelEvent {
         if (!$this->modelEvent) {
             $this->modelEvent = $this->serviceEvent->findByPrimary($this->eventId);
@@ -160,11 +145,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
         throw new NotImplementedException();
     }
 
-    /**
-     * @return string
-     */
     protected function getModelResource(): string {
         return 'eventOrg';
     }
-
 }

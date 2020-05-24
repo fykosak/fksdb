@@ -25,4 +25,3 @@ interface IProcessing {
      */
     public function process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null);
 }
-

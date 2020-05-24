@@ -9,7 +9,6 @@ use FKSDB\ORM\Models\IFyziklaniTeamReferencedModel;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\IResource;
-use Nette\Utils\DateTime;
 
 /**
  *
@@ -24,8 +23,8 @@ use Nette\Utils\DateTime;
  * @property-read int task_id
  * @property-read ActiveRow e_fyziklani_team
  * @property-read ActiveRow fyziklani_task
- * @property-read DateTime created
- * @property-read DateTime modified
+ * @property-read \DateTimeInterface created
+ * @property-read \DateTimeInterface modified
  */
 class ModelFyziklaniSubmit extends AbstractModelSingle implements IFyziklaniTeamReferencedModel, IEventReferencedModel, IFyziklaniTaskReferencedModel, IResource {
     const STATE_NOT_CHECKED = 'not_checked';

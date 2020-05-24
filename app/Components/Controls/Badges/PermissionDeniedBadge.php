@@ -17,4 +17,3 @@ class PermissionDeniedBadge extends Badge {
         return Html::el('span')->addAttributes(['class' => 'badge badge-danger'])->addText(_('Permissions denied'));
     }
 }
-

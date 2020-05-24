@@ -18,4 +18,3 @@ interface IAutocompleteJSONProvider extends IPresenter {
      */
     public function handleAutocomplete($acName, $acQ);
 }
-

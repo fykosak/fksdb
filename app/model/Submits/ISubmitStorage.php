@@ -66,5 +66,3 @@ interface ISubmitStorage {
      */
     public function deleteFile(ModelSubmit $submit);
 }
-
-

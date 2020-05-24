@@ -22,7 +22,7 @@ use Traversable;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class Helpers {
-
+    /** @var string[] */
     private static $semanticMap = [
         'and' => LogicAnd::class,
         'or' => LogicOr::class,
@@ -34,9 +34,9 @@ class Helpers {
     ];
 
     /**
-     * @param $semanticMap
+     * @param array $semanticMap
      */
-    public static function registerSemantic($semanticMap) {
+    public static function registerSemantic(array $semanticMap) {
         self::$semanticMap += $semanticMap;
     }
 
@@ -44,7 +44,7 @@ class Helpers {
      * Transforms into dynamic expression tree built from FKSDB\Expressions\*.
      *
      * @param Statement|mixed $expression
-     * @return mixed|Statement
+     * @return array|Statement|mixed
      */
     public static function statementFromExpression($expression) {
         if ($expression instanceof Statement) {
@@ -75,7 +75,7 @@ class Helpers {
      * @return mixed
      */
     public static function evalExpression($expression, Container $container) {
-       if ($expression instanceof Statement) {
+        if ($expression instanceof Statement) {
             $arguments = [];
             foreach ($expression->arguments as $attribute) {
                 if ($attribute === '...') {

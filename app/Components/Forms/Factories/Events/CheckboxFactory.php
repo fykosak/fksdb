@@ -7,6 +7,7 @@ use FKSDB\Events\Model\Holder\Field;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\Checkbox;
+use Nette\Forms\IControl;
 
 /**
  * Class CheckboxFactory
@@ -20,7 +21,7 @@ class CheckboxFactory extends AbstractFactory {
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
-     * @return mixed|Checkbox
+     * @return Checkbox
      */
     protected function createComponent(Field $field, BaseMachine $machine, Container $container) {
 
@@ -36,7 +37,7 @@ class CheckboxFactory extends AbstractFactory {
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
-     * @return mixed|void
+     * @return void
      */
     protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container) {
         $component->setDefaultValue($field->getValue());
@@ -47,7 +48,7 @@ class CheckboxFactory extends AbstractFactory {
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
-     * @return mixed|void
+     * @return void
      */
     protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container) {
         $component->setDisabled();
@@ -55,7 +56,7 @@ class CheckboxFactory extends AbstractFactory {
 
     /**
      * @param Component $component
-     * @return Component|\Nette\Forms\IControl
+     * @return Component|IControl
      */
     public function getMainControl(Component $component) {
         return $component;

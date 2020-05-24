@@ -18,7 +18,7 @@ use Nette\Utils\ArrayHash;
 class FlagProcessing extends AbstractProcessing {
 
     /**
-     * @var \FKSDB\YearCalculator
+     * @var YearCalculator
      */
     private $yearCalculator;
 
@@ -29,8 +29,8 @@ class FlagProcessing extends AbstractProcessing {
 
     /**
      * FlagProcessing constructor.
-     * @param \FKSDB\YearCalculator $yearCalculator
-     * @param \FKSDB\ORM\Services\ServiceSchool $serviceSchool
+     * @param YearCalculator $yearCalculator
+     * @param ServiceSchool $serviceSchool
      */
     public function __construct(YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
         $this->yearCalculator = $yearCalculator;
@@ -44,7 +44,7 @@ class FlagProcessing extends AbstractProcessing {
      * @param Holder $holder
      * @param ILogger $logger
      * @param Form|null $form
-     * @return mixed|void
+     * @return void
      */
     protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
         if (!isset($values['team'])) {

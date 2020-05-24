@@ -71,10 +71,6 @@ class SchoolProvider implements IFilteredDataProvider {
         return $result;
     }
 
-    /**
-     * @param int $id
-     * @return string
-     */
     public function getItemLabel(int $id): string {
         /** @var ModelSchool $school */
         $school = $this->serviceSchool->findByPrimary($id);
@@ -92,10 +88,6 @@ class SchoolProvider implements IFilteredDataProvider {
         throw new NotImplementedException();
     }
 
-    /**
-     * @param ModelSchool $school
-     * @return array
-     */
     private function getItem(ModelSchool $school): array {
         return [
             self::LABEL => $school->name_abbrev,
@@ -104,10 +96,9 @@ class SchoolProvider implements IFilteredDataProvider {
     }
 
     /**
-     * @param $id
+     * @param mixed $id
      */
     public function setDefaultValue($id) {
         $this->defaultValue = $id;
     }
-
 }

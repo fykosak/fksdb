@@ -4,6 +4,7 @@ namespace FKSDB\Components\DatabaseReflection;
 
 use FKSDB\Components\Forms\Factories\ITestedRowFactory;
 use FKSDB\ORM\AbstractModelSingle;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
 
@@ -45,7 +46,7 @@ class RowFactoryComponent extends Control {
     /**
      * @param AbstractModelSingle $model
      * @param bool $tested
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     public function render(AbstractModelSingle $model, bool $tested = false) {
         $this->template->setTranslator($this->translator);
@@ -63,7 +64,7 @@ class RowFactoryComponent extends Control {
     /**
      * @param AbstractModelSingle $model
      * @param bool $tested
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     public function renderRow(AbstractModelSingle $model, bool $tested = false) {
         $this->template->layout = self::LAYOUT_ROW;
@@ -73,7 +74,7 @@ class RowFactoryComponent extends Control {
     /**
      * @param AbstractModelSingle $model
      * @param bool $tested
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     public function renderListItem(AbstractModelSingle $model, bool $tested = false) {
         $this->template->layout = self::LAYOUT_LIST_ITEM;
@@ -83,7 +84,7 @@ class RowFactoryComponent extends Control {
     /**
      * @param AbstractModelSingle $model
      * @param bool $tested
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     public function renderOnlyValue(AbstractModelSingle $model, bool $tested = false) {
         $this->template->layout = self::LAYOUT_ONLY_VALUE;

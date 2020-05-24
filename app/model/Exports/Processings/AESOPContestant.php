@@ -95,8 +95,8 @@ class AESOPContestant extends StoredQueryPostProcessing {
     }
 
     /**
-     * @param $data
-     * @return mixed
+     * @param array|\Traversable $data
+     * @return array|\Traversable
      */
     private function calculateRank($data) {
         $points = [];
@@ -174,5 +174,4 @@ class AESOPContestant extends StoredQueryPostProcessing {
         }
         return null;
     }
-
 }

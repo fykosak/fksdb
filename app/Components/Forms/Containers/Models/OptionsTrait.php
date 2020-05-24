@@ -17,7 +17,7 @@ trait OptionsTrait {
      * - 'description' - textual or Html object description
      *
      * @param string key
-     * @param mixed  value
+     * @param string value
      * @return static
      */
     public function setOption($key, $value) {

@@ -9,7 +9,7 @@ use FKSDB\Events\Model\Holder\BaseHolder;
  * @package Events\Model\Holder\SecondaryModelStrategies
  */
 class SecondaryModelDataConflictException extends SecondaryModelConflictException {
-
+    /** @var array */
     private $conflictData;
 
     /**
@@ -20,17 +20,16 @@ class SecondaryModelDataConflictException extends SecondaryModelConflictExceptio
      * @param null $code
      * @param null $previous
      */
-    public function __construct($conflictData, BaseHolder $baseHolder, $conflicts, $code = null, $previous = null) {
+    public function __construct(array $conflictData, BaseHolder $baseHolder, $conflicts, $code = null, $previous = null) {
         parent::__construct($baseHolder, $conflicts, $code, $previous);
         $this->conflictData = $conflictData;
         $this->message .= sprintf(' (%s)', implode(', ', $this->conflictData));
     }
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function getConflictData() {
-        return $this->getConflictData();
+    public function getConflictData(): array {
+        return $this->conflictData;
     }
-
 }

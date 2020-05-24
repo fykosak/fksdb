@@ -135,9 +135,9 @@ abstract class AbstractServiceSingle extends Selection implements IService {
     /**
      * @param AbstractModelSingle|IModel $model
      * @param Traversable|array $data
-     * @return int
+     * @return bool
      */
-    public function updateModel2(AbstractModelSingle $model, $data = null) {
+    public function updateModel2(AbstractModelSingle $model, $data = null): bool {
         $this->checkType($model);
         $data = $this->filterData($data);
         return $model->update($data);

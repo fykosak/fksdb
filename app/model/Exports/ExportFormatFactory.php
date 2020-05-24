@@ -43,12 +43,12 @@ class ExportFormatFactory {
     private $storedQueryFactory;
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceEvent
+     * @var ServiceEvent
      */
     private $serviceEvent;
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceContest
+     * @var ServiceContest
      */
     private $serviceContest;
     private $defaultFormats;
@@ -77,7 +77,7 @@ class ExportFormatFactory {
     /**
      *
      * @param mixed $name
-     * @param \Exports\StoredQuery $storedQuery
+     * @param StoredQuery $storedQuery
      * @return IExportFormat
      */
     public function createFormat($name, StoredQuery $storedQuery) {
@@ -162,13 +162,12 @@ class ExportFormatFactory {
 
     /**
      * @param StoredQuery $storedQuery
-     * @param $header
+     * @param bool $header
      * @param bool $quote
      * @return CSVFormat
      */
-    private function createCSV(StoredQuery $storedQuery, $header, $quote = CSVFormat::DEFAULT_QUOTE): CSVFormat {
+    private function createCSV(StoredQuery $storedQuery, bool $header, bool $quote = CSVFormat::DEFAULT_QUOTE): CSVFormat {
         return new CSVFormat($storedQuery, $header, CSVFormat::DEFAULT_DELIMITER, $quote);
     }
 
 }
-

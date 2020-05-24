@@ -54,7 +54,7 @@ abstract class AbstractProcessing implements IProcessing {
      * @param Holder $holder
      * @param ILogger $logger
      * @param Form|null $form
-     * @return mixed
+     * @return void
      */
     abstract protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null);
 
@@ -163,4 +163,3 @@ abstract class AbstractProcessing implements IProcessing {
     }
 
 }
-

@@ -3,7 +3,7 @@
 namespace FyziklaniModule;
 
 use FKSDB\Components\Controls\Fyziklani\FinalResults;
-use FKSDB\model\Fyziklani\CloseStrategy;
+use FKSDB\Fyziklani\CloseStrategy;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Utils\Html;

@@ -12,7 +12,6 @@ use FKSDB\ORM\ModelsMulti\ModelMPersonHasFlag;
 use FKSDB\ORM\ModelsMulti\ModelMPostContact;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Security\IResource;
-use Nette\Utils\DateTime;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 
@@ -24,9 +23,11 @@ use Nette\Utils\JsonException;
  * @property-read string family_name
  * @property-read string display_name
  * @property-read string gender
- * @property-read DateTime created
+ * @property-read \DateTimeInterface created
  */
 class ModelPerson extends AbstractModelSingle implements IResource {
+    const RESOURCE_ID = 'person';
+
     /**
      * Returns first of the person's logins.
      * (so far, there's not support for multiple login in DB schema)
@@ -44,7 +45,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getPreferredLang() {
         return $this->getInfo() ? $this->getInfo()->preferred_lang : null;
@@ -105,7 +106,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     }
 
     /**
-     * @param null $contestId
+     * @param int|null $contestId
      * @return GroupedSelection
      */
     public function getOrgs($contestId = null): GroupedSelection {
@@ -121,7 +122,8 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     }
 
     /**
-     * @return ModelMPersonHasFlag[]
+     * @return ModelMPersonHasFlag[]|null
+     * TODO wtf array|null? -- mišo 2020-05-22
      */
     public function getMPersonHasFlags() {
         $personFlags = $this->getFlags();
@@ -203,7 +205,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
 
     /**
      * @param bool $noFallback
-     * @return mixed|ModelPostContact|null
+     * @return ModelPostContact|null
      */
     public function getPermanentAddress($noFallback = false) {
         $pAddresses = $this->getMPostContacts(ModelPostContact::TYPE_PERMANENT);
@@ -341,13 +343,13 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     }
 
     public function getResourceId(): string {
-        return 'person';
+        return self::RESOURCE_ID;
     }
 
     /**
      * @param int eventId
      * @param string $type
-     * @return string
+     * @return string|null
      * @throws JsonException
      */
     public function getSerializedSchedule(int $eventId, string $type) {
@@ -371,8 +373,9 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     }
 
     /**
-     * @param $eventId
+     * @param int $eventId
      * Definitely ugly but, there is only this way... Mišo
+     * TODO refactoring
      */
     public function removeScheduleForEvent(int $eventId) {
         $query = $this->related(DbNames::TAB_PERSON_SCHEDULE, 'person_id')->where('schedule_item.schedule_group.event_id=?', $eventId);
@@ -394,10 +397,6 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         return $this->getPayments()->where('event_id', $event->event_id);
     }
 
-    /**
-     * @param ModelEvent $event
-     * @return GroupedSelection
-     */
     public function getScheduleForEvent(ModelEvent $event): GroupedSelection {
         return $this->getSchedule()->where('schedule_item.schedule_group.event_id', $event->event_id);
     }
@@ -408,7 +407,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
 
     /**
      * @param ModelEvent $event
-     * @param array $types
+     * @param string[] $types
      * @return ModelSchedulePayment[]
      */
     public function getScheduleRests(ModelEvent $event, array $types = ['accommodation', 'weekend']): array {
@@ -428,10 +427,10 @@ class ModelPerson extends AbstractModelSingle implements IResource {
 
     /**
      * @param ModelEvent $event
-     * @param $yearCalculator
-     * @return array
+     * @param YearCalculator $yearCalculator
+     * @return array[]
      */
-    public function getRolesForEvent(ModelEvent $event, $yearCalculator): array {
+    public function getRolesForEvent(ModelEvent $event, YearCalculator $yearCalculator): array {
         $roles = [];
         $eventId = $event->event_id;
         $teachers = $this->getEventTeacher()->where('event_id', $eventId);
@@ -467,4 +466,3 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     }
 
 }
-

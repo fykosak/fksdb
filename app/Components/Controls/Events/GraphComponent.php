@@ -112,4 +112,3 @@ class GraphComponent extends BaseControl {
         return $edges;
     }
 }
-

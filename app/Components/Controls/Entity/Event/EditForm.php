@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Controls\Entity\Event;
 
+use FKSDB\Config\NeonSchemaException;
 use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\Config\NeonScheme;
 use FKSDB\Events\EventDispatchFactory;
@@ -104,7 +105,7 @@ class EditForm extends AbstractForm implements IEditEntityForm {
     /**
      * @return Html
      * @throws BadRequestException
-     * @throws \FKSDB\Config\NeonSchemaException
+     * @throws NeonSchemaException
      */
     private function createParamDescription() {
         /** @var EventDispatchFactory $factory */

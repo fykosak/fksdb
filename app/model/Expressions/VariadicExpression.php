@@ -35,10 +35,7 @@ abstract class VariadicExpression extends EvaluatedExpression {
      */
     abstract protected function evaluate(...$args);
 
-    /**
-     * @return mixed
-     */
-    abstract protected function getInfix();
+    abstract protected function getInfix(): string;
 
     /**
      * @return string

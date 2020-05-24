@@ -56,11 +56,9 @@ class ServiceFyziklaniTeamPosition extends AbstractServiceSingle {
                         $model->update($data);
                     }
                     $updatedTeams[] = $teamData->teamId;
-                } else {
-                    if ($model) {
-                        $model->delete();
-                        $updatedTeams[] = $teamData->teamId;
-                    }
+                } elseif ($model) {
+                    $model->delete();
+                    $updatedTeams[] = $teamData->teamId;
                 }
             } catch (\Exception $exception) {
             }

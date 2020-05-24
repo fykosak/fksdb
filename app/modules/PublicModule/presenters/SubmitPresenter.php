@@ -190,6 +190,8 @@ class SubmitPresenter extends BasePresenter {
                     if ($existingEntry) {
                         $existingAnswer = $existingEntry->answer;
                         $select->setValue($existingAnswer);
+                    } else {
+                        $select->setValue(null);
                     }
                 }
             }
@@ -233,7 +235,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @param mixed $form
+     * @param Form $form
      * @throws BadRequestException
      * @throws AbortException
      * @throws \Exception

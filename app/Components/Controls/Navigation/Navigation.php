@@ -49,7 +49,7 @@ class Navigation extends BaseControl {
 
     /**
      * @param $nodeId
-     * @return mixed
+     * @return int|string
      */
     public function getNode($nodeId) {
         return $this->nodes[$nodeId];

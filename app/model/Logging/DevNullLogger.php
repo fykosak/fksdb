@@ -13,7 +13,7 @@ class DevNullLogger extends StackedLogger {
 
     /**
      * @param $message
-     * @return mixed|void
+     * @return void
      */
     protected function doLog(Message $message) {
         /* empty */

@@ -19,4 +19,3 @@ class ServiceSousParticipant extends AbstractServiceSingle {
         return DbNames::TAB_E_SOUS_PARTICIPANT;
     }
 }
-

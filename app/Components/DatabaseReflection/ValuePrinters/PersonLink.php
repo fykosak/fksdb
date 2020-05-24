@@ -31,8 +31,8 @@ class PersonLink extends AbstractValuePrinter {
     /**
      * @param null $model
      * @return Html
-     * @throws BadRequestException
      * @throws InvalidLinkException
+     * @throws BadRequestException
      */
     public function getHtml($model): Html {
         $person = null;

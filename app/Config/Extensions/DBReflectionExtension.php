@@ -181,8 +181,8 @@ class DBReflectionExtension extends CompilerExtension {
     }
 
     /**
-     * @param $value
-     * @return mixed
+     * @param string|Statement $value
+     * @return string
      * @throws NotImplementedException
      */
     private function translate($value): string {

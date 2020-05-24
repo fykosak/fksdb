@@ -25,7 +25,7 @@ use Nette\Utils\ArrayHash;
 class CategoryProcessing extends AbstractProcessing {
 
     /**
-     * @var \FKSDB\YearCalculator
+     * @var YearCalculator
      */
     private $yearCalculator;
 
@@ -36,7 +36,7 @@ class CategoryProcessing extends AbstractProcessing {
 
     /**
      * CategoryProcessing constructor.
-     * @param \FKSDB\YearCalculator $yearCalculator
+     * @param YearCalculator $yearCalculator
      * @param ServiceSchool $serviceSchool
      */
     public function __construct(YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
@@ -51,14 +51,13 @@ class CategoryProcessing extends AbstractProcessing {
      * @param Holder $holder
      * @param ILogger $logger
      * @param Form|null $form
-     * @return mixed|void
+     * @return void
      */
     protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
 
         if (!isset($values['team'])) {
             return;
         }
-
 
         $event = $holder->getPrimaryHolder()->getEvent();
         $contest = $event->getEventType()->contest;
