@@ -50,7 +50,8 @@ class TaskStatsModel {
     }
 
     /**
-     * @param $series
+     * @param int $series
+     * @return void
      */
     public function setSeries(int $series) {
         $this->series = $series;

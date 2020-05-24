@@ -222,51 +222,31 @@ class PersonPresenter extends BasePresenter {
             $person->getFullName(), $person->person_id), 'stalking-log');
     }
     /* ******************* COMPONENTS *******************/
-    /**
-     * @return StalkingComponent
-     */
+
     public function createComponentStalkingComponent(): StalkingComponent {
         return new StalkingComponent($this->getContext());
     }
 
-    /**
-     * @return Stalking\Address
-     */
     public function createComponentAddress(): Stalking\Address {
         return new Stalking\Address($this->getContext());
     }
 
-    /**
-     * @return Stalking\Role
-     */
     public function createComponentRole(): Stalking\Role {
         return new Stalking\Role($this->getContext());
     }
 
-    /**
-     * @return Stalking\Flag
-     */
     public function createComponentFlag(): Stalking\Flag {
         return new Stalking\Flag($this->getContext());
     }
 
-    /**
-     * @return Stalking\Schedule
-     */
     public function createComponentSchedule(): Stalking\Schedule {
         return new Stalking\Schedule($this->getContext());
     }
 
-    /**
-     * @return Stalking\Validation
-     */
     public function createComponentValidation(): Stalking\Validation {
         return new Stalking\Validation($this->getContext());
     }
 
-    /**
-     * @return Stalking\Timeline\TimelineControl
-     */
     public function createComponentTimeline(): Stalking\Timeline\TimelineControl {
         return new Stalking\Timeline\TimelineControl($this->getContext(), $this->getEntity());
     }

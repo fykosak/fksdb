@@ -110,7 +110,7 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
     }
 
     /**
-     * @return array
+     * @return ModelCategory[]
      */
     public function getCategories(): array {
         //return $this->evaluationStrategy->getCategories();
@@ -119,10 +119,6 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
         ];
     }
 
-    /**
-     * @param ModelCategory $category
-     * @return string
-     */
     protected function composeQuery(ModelCategory $category): string {
         throw new NotSupportedException();
     }

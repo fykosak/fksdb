@@ -50,11 +50,6 @@ class ParticipantsDurationTest extends PersonTest {
 
     }
 
-    /**
-     * @param int $delta
-     * @param array $thresholds
-     * @return string
-     */
     final private function evaluateThresholds(int $delta, array $thresholds): string {
         if ($delta < $thresholds[0]) {
             return TestLog::LVL_SUCCESS;
@@ -65,16 +60,10 @@ class ParticipantsDurationTest extends PersonTest {
         return TestLog::LVL_DANGER;
     }
 
-    /**
-     * @return string
-     */
     public function getAction(): string {
         return 'participants_duration';
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Participate events');
     }

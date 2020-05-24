@@ -8,6 +8,7 @@ use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Services\ServiceEmailMessage;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
+use Nette\Security\IResource;
 
 /**
  * Class MailSenderPresenter
@@ -15,6 +16,7 @@ use Nette\Application\UI\Control;
  */
 class SpamPresenter extends BasePresenter {
     use EntityTrait;
+
     /**
      * @var ServiceEmailMessage
      */
@@ -41,7 +43,9 @@ class SpamPresenter extends BasePresenter {
     }
 
     /**
-     * @inheritDoc
+     * @param IResource|string $resource
+     * @param string $privilege
+     * @return bool
      */
     protected function traitIsAuthorized($resource, string $privilege): bool {
         return $this->isAnyContestAuthorized($resource, $privilege);
@@ -56,18 +60,16 @@ class SpamPresenter extends BasePresenter {
     }
 
     /**
-     * @inheritDoc
+     * @return ServiceEmailMessage
      */
     protected function getORMService() {
         return $this->serviceEmailMessage;
     }
 
-    /** @inheritDoc */
     public function createComponentEditForm(): Control {
         throw new NotImplementedException();
     }
 
-    /** @inheritDoc */
     public function createComponentCreateForm(): Control {
         throw new NotImplementedException();
     }

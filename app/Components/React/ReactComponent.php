@@ -53,7 +53,7 @@ abstract class ReactComponent extends BaseComponent {
      * @throws BadRequestException
      */
     protected function getHttpRequest(): IRequest {
-        $service = $this->container->getByType(IRequest::class);
+        $service = $this->getContext()->getByType(IRequest::class);
         if ($service instanceof IRequest) {
             return $service;
         }

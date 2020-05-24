@@ -6,7 +6,6 @@ use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\DatabaseReflection\Links\AbstractLink;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
-use Nette\Localization\ITranslator;
 use Nette\SmartObject;
 use Nette\Utils\Html;
 
@@ -20,19 +19,13 @@ final class TableReflectionFactory {
      * @var Container
      */
     private $container;
-    /**
-     * @var ITranslator
-     */
-    private $translator;
 
     /**
      * PersonInfoFactory constructor.
      * @param Container $container
-     * @param ITranslator $translator
      */
-    public function __construct(Container $container, ITranslator $translator) {
+    public function __construct(Container $container) {
         $this->container = $container;
-        $this->translator = $translator;
     }
 
     /**

@@ -83,10 +83,6 @@ class PipelineFactory {
         $this->serviceOrg = $serviceOrg;
     }
 
-    /**
-     *
-     * @return Pipeline
-     */
     public function create(): Pipeline {
         $pipeline = new Pipeline();
         $pipeline->setLogger(new MemoryLogger());

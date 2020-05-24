@@ -125,7 +125,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
         $source = new SingleEventSource($this->getEvent(), $this->getContext());
         foreach ($source->getHolders() as $key => $holder) {
             if ($key === $this->getEntity()->getPrimary()) {
-                return new ApplicationComponent($this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger()), $holder);
+                return new ApplicationComponent($this->getContext(), $this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger()), $holder);
             }
         }
         throw new InvalidStateException();

@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Events;
 
+use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\ApplicationHandler;
@@ -11,12 +12,10 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Logging\FlashMessageDump;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\Control;
+use Nette\DI\Container;
 use \Nette\Forms\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
-use Nette\Templating\FileTemplate;
-use Nette\Templating\ITemplate;
 use Nette\Utils\JsonException;
 
 /**
@@ -24,9 +23,8 @@ use Nette\Utils\JsonException;
  *
  * @author Michal Koutný <michal@fykos.cz>
  * @method \AuthenticatedPresenter|\BasePresenter getPresenter($need = TRUE)
- * @property-read FileTemplate $template
  */
-class ApplicationComponent extends Control {
+class ApplicationComponent extends BaseComponent {
 
     /**
      * @var ApplicationHandler
@@ -50,11 +48,12 @@ class ApplicationComponent extends Control {
 
     /**
      * ApplicationComponent constructor.
+     * @param Container $container
      * @param ApplicationHandler $handler
      * @param Holder $holder
      */
-    public function __construct(ApplicationHandler $handler, Holder $holder) {
-        parent::__construct();
+    public function __construct(Container $container, ApplicationHandler $handler, Holder $holder) {
+        parent::__construct($container);
         $this->handler = $handler;
         $this->holder = $holder;
     }
@@ -88,22 +87,9 @@ class ApplicationComponent extends Control {
     /**
      * Syntactic sugar for the template.
      */
-    public function isEventAdmin() {
+    public function isEventAdmin(): bool {
         $event = $this->holder->getPrimaryHolder()->getEvent();
         return $this->getPresenter()->getContestAuthorizator()->isAllowed($event, 'application', $event->getContest());
-    }
-
-    /**
-     * @param null $class
-     * @return FileTemplate|ITemplate
-     */
-    protected function createTemplate($class = NULL) {
-        /**
-         * @var FileTemplate $template
-         */
-        $template = parent::createTemplate($class);
-        $template->setTranslator($this->getPresenter()->getTranslator());
-        return $template;
     }
 
     /**
