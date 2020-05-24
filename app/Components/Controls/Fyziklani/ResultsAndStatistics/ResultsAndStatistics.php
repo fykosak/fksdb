@@ -50,9 +50,9 @@ class ResultsAndStatistics extends FyziklaniReactControl {
     public function __construct(Container $container, ModelEvent $event, string $reactId) {
         parent::__construct($container, $event);
         $this->reactId = $reactId;
-        $this->serviceFyziklaniSubmit = $this->container->getByType(ServiceFyziklaniSubmit::class);
-        $this->serviceFyziklaniTask = $this->container->getByType(ServiceFyziklaniTask::class);
-        $this->serviceFyziklaniTeam = $this->container->getByType(ServiceFyziklaniTeam::class);
+        $this->serviceFyziklaniSubmit = $this->getContext()->getByType(ServiceFyziklaniSubmit::class);
+        $this->serviceFyziklaniTask = $this->getContext()->getByType(ServiceFyziklaniTask::class);
+        $this->serviceFyziklaniTeam = $this->getContext()->getByType(ServiceFyziklaniTeam::class);
     }
 
     protected function getReactId(): string {
@@ -81,7 +81,7 @@ class ResultsAndStatistics extends FyziklaniReactControl {
     public function handleRefresh() {
         $presenter = $this->getPresenter();
         if (!$presenter->isAjax()) {
-            throw new BadRequestException('',Response::S405_METHOD_NOT_ALLOWED);
+            throw new BadRequestException('', Response::S405_METHOD_NOT_ALLOWED);
         }
         if (!$presenter instanceof BasePresenter) {
             throw new ArgumentOutOfRangeException();

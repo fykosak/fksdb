@@ -89,11 +89,6 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @var ExtendedPersonHandlerFactory
      */
     private $handlerFactory;
-
-    /**
-     * @var Container
-     */
-    private $container;
     /**
      * @var ServicePerson
      */
@@ -143,15 +138,6 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     public function injectHandlerFactory(ExtendedPersonHandlerFactory $handlerFactory) {
         $this->handlerFactory = $handlerFactory;
     }
-
-    /**
-     * @param Container $container
-     * @return void
-     */
-    public function injectContainer(Container $container) {
-        $this->container = $container;
-    }
-
 
     /**
      * @return ModelContest|ActiveRow|null
@@ -344,7 +330,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     private function getFieldsDefinition() {
         $contestId = $this->getSelectedContest()->contest_id;
         $contestName = $this->globalParameters['contestMapping'][$contestId];
-        return Helpers::evalExpressionArray($this->globalParameters[$contestName]['registerContestant'], $this->container);
+        return Helpers::evalExpressionArray($this->globalParameters[$contestName]['registerContestant'], $this->getContext());
     }
 
     /**

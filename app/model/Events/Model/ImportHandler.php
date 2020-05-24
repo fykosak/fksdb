@@ -10,8 +10,8 @@ use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Utils\CSVParser;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
-use Nette\InvalidArgumentException;
 use Nette\SmartObject;
+use Nette\Utils\ArrayHash;
 use Nette\Utils\JsonException;
 
 /**
@@ -25,6 +25,8 @@ class ImportHandler {
 
     const STATELESS_IGNORE = 'ignore';
     const STATELESS_KEEP = 'keep';
+
+    const KEY_NAME = 'person_id';
 
     /**
      * @var Container
@@ -42,12 +44,6 @@ class ImportHandler {
     private $parser;
 
     /**
-     *
-     * @var string
-     */
-    private $keyName;
-
-    /**
      * ImportHandler constructor.
      * @param Container $container
      */
@@ -57,12 +53,10 @@ class ImportHandler {
 
     /**
      * @param CSVParser $parser
-     * @param string $keyName
      * @return void
      */
-    public function setInput(CSVParser $parser, string $keyName) {
+    public function setInput(CSVParser $parser) {
         $this->parser = $parser;
-        $this->keyName = $keyName;
     }
 
     /**
@@ -75,7 +69,6 @@ class ImportHandler {
 
     /**
      * @param ApplicationHandler $handler
-     * @param string $transitions
      * @param string $errorMode
      * @param string $stateless
      * @return bool
@@ -83,7 +76,7 @@ class ImportHandler {
      * @throws BadRequestException
      * @throws JsonException
      */
-    public function import(ApplicationHandler $handler, string $transitions, string $errorMode, string $stateless): bool {
+    public function import(ApplicationHandler $handler, string $errorMode, string $stateless): bool {
         set_time_limit(0);
         $holdersMap = $this->createHoldersMap();
         $primaryBaseHolder = $this->source->getDummyHolder()->getPrimaryHolder();
@@ -93,8 +86,8 @@ class ImportHandler {
         $handler->beginTransaction();
         $hasError = false;
         foreach ($this->parser as $row) {
-            $values = $this->rowToValues($row);
-            $keyValue = $values[$baseHolderName][$this->keyName];
+            $values = ArrayHash::from($this->rowToValues($row));
+            $keyValue = $values[$baseHolderName][self::KEY_NAME];
             if (!isset($values[$baseHolderName][BaseHolder::STATE_COLUMN]) || !$values[$baseHolderName][BaseHolder::STATE_COLUMN]) {
                 if ($stateless == self::STATELESS_IGNORE) {
                     continue;
@@ -106,16 +99,7 @@ class ImportHandler {
             $factory = $this->container->getByType(EventDispatchFactory::class);
             $holder = isset($holdersMap[$keyValue]) ? $holdersMap[$keyValue] : $factory->getDummyHolder($this->source->getEvent());
             try {
-                switch ($transitions) {
-                    case ApplicationHandler::STATE_OVERWRITE:
-                        $handler->store($holder, $values);
-                        break;
-                    case ApplicationHandler::STATE_TRANSITION:
-                        $handler->storeAndExecute($holder, $values);
-                        break;
-                    default:
-                        throw new InvalidArgumentException();
-                }
+                $handler->store($holder, $values);
             } catch (ApplicationHandlerException $exception) {
                 $hasError = true;
                 if ($errorMode == ApplicationHandler::ERROR_ROLLBACK) {
@@ -176,11 +160,11 @@ class ImportHandler {
 
         $result = [];
         foreach ($this->source->getHolders() as $pkValue => $holder) {
-            if ($this->keyName == $pkName) {
+            if (self::KEY_NAME == $pkName) {
                 $keyValue = $pkValue;
             } else {
                 $fields = $holder->getPrimaryHolder()->getFields();
-                $keyValue = $fields[$this->keyName]->getValue();
+                $keyValue = $fields[self::KEY_NAME]->getValue();
             }
             $result[$keyValue] = $holder;
         }

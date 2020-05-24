@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Events;
 
 use BasePresenter;
+use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\ApplicationHandler;
@@ -14,19 +15,17 @@ use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Utils\CSVParser;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 use Nette\Utils\JsonException;
 use Tracy\Debugger;
-use Nette\Forms\Controls\SelectBox;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class ImportComponent extends Control {
+class ImportComponent extends BaseComponent {
 
     /**
      * @var Machine
@@ -44,11 +43,6 @@ class ImportComponent extends Control {
     private $handler;
 
     /**
-     * @var Container
-     */
-    private $container;
-
-    /**
      * ImportComponent constructor.
      * @param Machine $machine
      * @param SingleEventSource $source
@@ -56,19 +50,17 @@ class ImportComponent extends Control {
      * @param Container $container
      */
     public function __construct(Machine $machine, SingleEventSource $source, ApplicationHandler $handler, Container $container) {
-        parent::__construct();
+        parent::__construct($container);
         $this->machine = $machine;
         $this->source = $source;
         $this->handler = $handler;
-        $this->container = $container;
     }
 
     /**
-     * @param $name
      * @return FormControl
      * @throws BadRequestException
      */
-    protected function createComponentFormImport($name) {
+    protected function createComponentFormImport() {
         $control = new FormControl();
         $form = $control->getForm();
 
@@ -83,14 +75,6 @@ class ImportComponent extends Control {
             ])
             ->setDefaultValue(ApplicationHandler::ERROR_SKIP);
 
-
-        $form->addRadioList('transitions', _('Přechody přihlášek'))
-            ->setItems([
-                ApplicationHandler::STATE_TRANSITION => _('Vykonat přechod, pokud je možný (jinak chyba).'),
-                ApplicationHandler::STATE_OVERWRITE => _('Pouze nastavit stav.'),
-            ])
-            ->setDefaultValue(ApplicationHandler::STATE_TRANSITION);
-
         $form->addRadioList('stateless', _('Přihlášky bez uvedeného stavu'))
             ->setItems([
                 ImportHandler::STATELESS_IGNORE => _('Ignorovat.'),
@@ -98,7 +82,6 @@ class ImportComponent extends Control {
             ])
             ->setDefaultValue(ImportHandler::STATELESS_IGNORE);
 
-        $form->addComponent($this->createKeyElement(), 'key');
 
         $form->addSubmit('import', _('Importovat'));
 
@@ -131,18 +114,17 @@ class ImportComponent extends Control {
             $filename = $values['file']->getTemporaryFile();
             $parser = new CSVParser($filename, CSVParser::INDEX_FROM_HEADER);
 
-            $keyName = $values['key'];
-            $transitions = $values['transitions'];
+
             $errorMode = $values['errorMode'];
             $stateless = $values['stateless'];
 
             // initialize import handler
-            $importHandler = new ImportHandler($this->container);
-            $importHandler->setInput($parser, $keyName);
+            $importHandler = new ImportHandler($this->getContext());
+            $importHandler->setInput($parser);
             $importHandler->setSource($this->source);
 
             Debugger::timer();
-            $result = $importHandler->import($this->handler, $transitions, $errorMode, $stateless);
+            $result = $importHandler->import($this->handler, $errorMode, $stateless);
             $elapsedTime = Debugger::timer();
 
             FlashMessageDump::dump($this->handler->getLogger(), $this->getPresenter());
@@ -158,23 +140,4 @@ class ImportComponent extends Control {
             $this->getPresenter()->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
         }
     }
-
-    private function createKeyElement(): SelectBox {
-        $baseHolder = $this->source->getDummyHolder()->getPrimaryHolder();
-        $options = [];
-        foreach ($baseHolder->getFields() as $field) {
-            $options[$field->getName()] = $baseHolder->getName() . '.' . $field->getName();
-        }
-        $primaryKey = $baseHolder->getService()->getTable()->getPrimary();
-        $options[$primaryKey] = $baseHolder->getName() . '.' . $primaryKey;
-
-        asort($options);
-
-        $element = new SelectBox(_('Klíčový atribut'), $options);
-        $default = isset($options['person_id']) ? 'person_id' : $primaryKey;
-        $element->setDefaultValue($default);
-
-        return $element;
-    }
-
 }

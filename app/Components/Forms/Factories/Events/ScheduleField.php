@@ -32,16 +32,10 @@ class ScheduleField extends TextInput {
         $this->registerMonitor();
     }
 
-    /**
-     * @return string
-     */
     protected function getReactId(): string {
         throw new DeprecatedException();
     }
 
-    /**
-     * @return string
-     */
     public function getData(): string {
         return json_encode($this->data);
     }
