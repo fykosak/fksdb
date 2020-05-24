@@ -104,7 +104,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @throws BadRequestException
      */
     protected function getAcYear(): int {
-        return $this->yearCalculator->getAcademicYear($this->getContest(), $this->getEvent()->year);
+        return $this->getYearCalculator()->getAcademicYear($this->getContest(), $this->getEvent()->year);
     }
 
     /**
