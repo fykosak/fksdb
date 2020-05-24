@@ -77,10 +77,6 @@ class DetailResultsModel extends AbstractResultsModel {
         return $this->evaluationStrategy->getCategories();
     }
 
-    /**
-     * @param ModelCategory $category
-     * @return string
-     */
     protected function composeQuery(ModelCategory $category): string {
         if (!$this->series) {
             throw new InvalidStateException('Series not set.');

@@ -17,6 +17,7 @@ class FlashMessageDump {
      * @param MemoryLogger $logger
      * @param Control $control
      * @param bool $clear
+     * @return void
      */
     public static function dump(MemoryLogger $logger, Control $control, bool $clear = true) {
         foreach ($logger->getMessages() as $message) {

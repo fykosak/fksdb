@@ -157,7 +157,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         if (!$this->getSelectedContest()) {
             throw new InvalidStateException("Cannot get acadamic year without selected contest.");
         }
-        return $this->yearCalculator->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
+        return $this->getYearCalculator()->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
     }
 
     /**
@@ -206,7 +206,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         }
 
         if ($this->getSelectedContest() && $person) {
-            $contestants = $person->getActiveContestants($this->yearCalculator);
+            $contestants = $person->getActiveContestants($this->getYearCalculator());
             $contest = $this->getSelectedContest();
             $contestant = isset($contestants[$contest->contest_id]) ? $contestants[$contest->contest_id] : null;
             if ($contestant && $contestant->year == $this->getSelectedYear()) {
@@ -265,7 +265,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         /** @var ModelContest $contest */
         $contest = $this->getServiceContest()->findByPrimary($this->contestId);
         $this->template->years = [];
-        $this->template->years[] = $this->yearCalculator->getCurrentYear($contest) + $this->yearCalculator->getForwardShift($contest);
+        $this->template->years[] = $this->getYearCalculator()->getCurrentYear($contest) + $this->getYearCalculator()->getForwardShift($contest);
     }
 
     /**

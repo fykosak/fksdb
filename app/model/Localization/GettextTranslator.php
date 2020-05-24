@@ -21,7 +21,7 @@ class GettextTranslator implements ITranslator {
      */
     private $localeDir;
     /**
-     * @var
+     * @var string
      */
     private $lang;
 
@@ -30,13 +30,13 @@ class GettextTranslator implements ITranslator {
      * @param array $locales
      * @param $localeDir
      */
-    public function __construct(array $locales, $localeDir) {
+    public function __construct(array $locales, string $localeDir) {
         $this->locales = $locales;
         $this->localeDir = $localeDir;
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getLang() {
         return $this->lang;
@@ -46,7 +46,7 @@ class GettextTranslator implements ITranslator {
      *
      * @param string $lang ISO 639-1
      */
-    public function setLang($lang) {
+    public function setLang(string $lang) {
         if (!isset($this->locales[$lang])) {
             throw new InvalidArgumentException("Language $lang not supported");
         }
@@ -61,9 +61,9 @@ class GettextTranslator implements ITranslator {
     }
 
     /**
-     * @return array
+     * @return string[]
      */
-    public function getSupportedLanguages() {
+    public function getSupportedLanguages(): array {
         return array_keys($this->locales);
     }
 

@@ -5,7 +5,6 @@ namespace FKSDB\Components\Events;
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\Events\EventDispatchFactory;
-use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\ApplicationHandlerFactory;
 use FKSDB\Events\Model\Grid\SingleEventSource;
 use FKSDB\Logging\FlashMessageDump;
@@ -59,9 +58,10 @@ class MassTransitionsControl extends BaseComponent {
 
     /**
      * @param string $name
-     * @throws AbortException
+     * @return void
      * @throws NeonSchemaException
      * @throws BadRequestException
+     * @throws AbortException
      */
     public function handleTransition(string $name) {
         $source = new SingleEventSource($this->event, $this->getContext());

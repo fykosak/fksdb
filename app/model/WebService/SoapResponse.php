@@ -28,6 +28,7 @@ class SoapResponse implements \Nette\Application\IResponse {
     /**
      * @param IRequest $httpRequest
      * @param IResponse $httpResponse
+     * @return void
      */
     public function send(IRequest $httpRequest, IResponse $httpResponse) {
         try {

@@ -286,7 +286,7 @@ class ApplicationPresenter extends BasePresenter {
     protected function createComponentApplication() {
         $logger = new MemoryLogger();
         $handler = $this->handlerFactory->create($this->getEvent(), $logger);
-        $component = new ApplicationComponent($handler, $this->getHolder());
+        $component = new ApplicationComponent($this->getContext(), $handler, $this->getHolder());
         $component->setRedirectCallback(function ($modelId, $eventId) {
             $this->backLinkRedirect();
             $this->redirect('this', [

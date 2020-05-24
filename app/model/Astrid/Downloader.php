@@ -74,10 +74,6 @@ class Downloader {
         return $this->download($path);
     }
 
-    /**
-     * @param $path
-     * @return string
-     */
     private function download(string $path): string {
         $src = "https://{$this->httpUser}:{$this->httpPassword}@{$this->host}{$path}";
         $dst = tempnam($this->tmpDir, 'task');

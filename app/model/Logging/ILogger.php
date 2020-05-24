@@ -22,7 +22,7 @@ interface ILogger {
 
     /**
      * @param Message $message
-     * @return mixed
+     * @return void
      */
     public function log(Message $message);
 }

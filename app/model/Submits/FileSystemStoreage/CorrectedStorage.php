@@ -69,6 +69,7 @@ class CorrectedStorage implements ISubmitStorage {
 
     /**
      * @param IStorageProcessing $processing
+     * @return void
      */
     public function addProcessing(IStorageProcessing $processing) {
         $this->processings[] = $processing;

@@ -58,7 +58,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     public $bc;
 
     /** @var YearCalculator */
-    protected $yearCalculator;
+    private $yearCalculator;
 
     /** @var ServiceContest */
     private $serviceContest;
@@ -76,9 +76,9 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     private $presenterBuilder;
 
     /**
-     * @var PageTitle
+     * @var PageTitle|null
      */
-    protected $pageTitle;
+    private $pageTitle;
 
     /**
      * @var bool

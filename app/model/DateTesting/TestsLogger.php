@@ -14,13 +14,14 @@ class TestsLogger {
 
     /**
      * @param TestLog $log
+     * @return void
      */
     public function log(TestLog $log) {
         $this->logs[] = $log;
     }
 
     /**
-     * @return array
+     * @return TestLog[]
      */
     public function getLogs(): array {
         return $this->logs;

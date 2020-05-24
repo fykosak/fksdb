@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Events;
 
+use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\ApplicationHandler;
 use FKSDB\Events\Model\ApplicationHandlerFactory;
@@ -12,14 +13,11 @@ use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\Control;
 use Nette\Application\UI\Presenter;
 use Nette\ComponentModel\IComponent;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
-use Nette\Templating\ITemplate;
 use Nette\Utils\Strings;
-
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -27,16 +25,9 @@ use Nette\Utils\Strings;
  * @author Michal Koutný <michal@fykos.cz>
  * @method \BasePresenter getPresenter($need = TRUE)
  */
-class ApplicationsGrid extends Control {
+class ApplicationsGrid extends BaseComponent {
 
     const NAME_PREFIX = 'application_';
-
-    /**
-     *
-     * @var Container
-     */
-    private $container;
-
     /**
      * @var IHolderSource
      */
@@ -85,9 +76,8 @@ class ApplicationsGrid extends Control {
      * @throws BadRequestException
      */
     public function __construct(Container $container, IHolderSource $source, ApplicationHandlerFactory $handlerFactory) {
-        parent::__construct();
+        parent::__construct($container);
         $this->monitor(IJavaScriptCollector::class);
-        $this->container = $container;
         $this->source = $source;
         $this->handlerFactory = $handlerFactory;
         $this->processSource();
@@ -146,7 +136,7 @@ class ApplicationsGrid extends Control {
             $this->eventApplications[$key] = $event;
             $this->holders[$key] = $holder;
             /** @var EventDispatchFactory $factory */
-            $factory = $this->container->getByType(EventDispatchFactory::class);
+            $factory = $this->getContext()->getByType(EventDispatchFactory::class);
             $this->machines[$key] = $factory->getEventMachine($event);
             $this->handlers[$key] = $this->handlerFactory->create($event, new MemoryLogger()); //TODO it's a bit weird to create new logger for each handler
         }
@@ -165,17 +155,7 @@ class ApplicationsGrid extends Control {
         if (!$key) {
             parent::createComponent($name);
         }
-        return new ApplicationComponent($this->handlers[$key], $this->holders[$key]);
-    }
-
-    /**
-     * @param null $class
-     * @return ITemplate
-     */
-    protected function createTemplate($class = NULL) {
-        $template = parent::createTemplate($class);
-        $template->setTranslator($this->getPresenter()->getTranslator());
-        return $template;
+        return new ApplicationComponent($this->getContext(), $this->handlers[$key], $this->holders[$key]);
     }
 
     public function render() {

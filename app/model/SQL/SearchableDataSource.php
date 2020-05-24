@@ -26,16 +26,17 @@ class SearchableDataSource extends NDataSource {
 
     /**
      * @param $filterCallback
+     * @return void
      */
-    public function setFilterCallback($filterCallback) {
+    public function setFilterCallback(callable $filterCallback) {
         $this->filterCallback = $filterCallback;
     }
 
     /**
      * @param $value
+     * @return void
      */
     public function applyFilter($value) {
-
         call_user_func_array($this->filterCallback, [
             $this->getData(),
             $value

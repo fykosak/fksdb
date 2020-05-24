@@ -29,9 +29,6 @@ class FullHttpRequest {
         $this->payload = $payload;
     }
 
-    /**
-     * @return Request
-     */
     public function getRequest(): Request {
         return $this->request;
     }
@@ -42,5 +39,4 @@ class FullHttpRequest {
     public function getPayload() {
         return $this->payload;
     }
-
 }
