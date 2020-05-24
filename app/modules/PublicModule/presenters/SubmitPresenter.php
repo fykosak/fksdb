@@ -237,10 +237,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentSubmitsGrid(): SubmitsGrid {
-        return new SubmitsGrid(
-            $this->context,
-            $this->getContestant()
-        );
+        return new SubmitsGrid($this->getContext(), $this->getContestant());
     }
 
     /**
