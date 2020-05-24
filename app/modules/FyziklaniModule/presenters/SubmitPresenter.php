@@ -115,7 +115,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentCreateForm(): Control {
-        return new TaskCodeInput($this->context, $this->getEvent());
+        return new TaskCodeInput($this->getContext(), $this->getEvent());
     }
 
     /**
