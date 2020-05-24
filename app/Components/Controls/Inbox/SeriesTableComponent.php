@@ -31,11 +31,10 @@ abstract class SeriesTableComponent extends BaseComponent {
     }
 
     /**
-     * @param null $class
      * @return ITemplate
      */
-    protected function createTemplate($class = NULL) {
-        $template = parent::createTemplate($class);
+    protected function createTemplate() {
+        $template = parent::createTemplate();
         $template->seriesTable = $this->getSeriesTable();
         $template->displayAll = $this->displayAll;
         return $template;

@@ -12,6 +12,7 @@ use FKSDB\Logging\FlashMessageDump;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
+use Nette\Application\UI\ITemplate;
 use \Nette\Forms\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
@@ -91,7 +92,7 @@ class ApplicationComponent extends Control {
     }
 
     /**
-     * @return \Nette\Application\UI\ITemplate
+     * @return ITemplate
      */
     protected function createTemplate() {
         $template = parent::createTemplate();
@@ -140,7 +141,7 @@ class ApplicationComponent extends Control {
 
         $state = $this->holder->getPrimaryHolder()->getModelState();
         $this->template->state = $state;
-        $this->template->transitions = $transactions = $primaryMachine->getAvailableTransitions($this->holder, $state, \FKSDB\Events\Machine\BaseMachine::EXECUTABLE | \FKSDB\Events\Machine\BaseMachine::VISIBLE);
+        $this->template->transitions = $transactions = $primaryMachine->getAvailableTransitions($this->holder, $state, BaseMachine::EXECUTABLE | BaseMachine::VISIBLE);
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ApplicationComponent.inline.latte');
         $this->template->render();
     }
