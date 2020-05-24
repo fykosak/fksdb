@@ -30,7 +30,7 @@ class ChartPresenter extends BasePresenter {
      */
     protected function registerCharts(): array {
         return [
-            new TotalPersonsChartControl($this->context),
+            new TotalPersonsChartControl($this->getContext()),
         ];
     }
 }

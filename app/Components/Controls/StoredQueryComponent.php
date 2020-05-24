@@ -24,7 +24,7 @@ use PDOException;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class StoredQueryComponent extends Control {
+class StoredQueryComponent extends BaseComponent {
 
     const CONT_PARAMS = 'params';
     const PARAMETER_URL_PREFIX = 'p_';
@@ -65,10 +65,6 @@ class StoredQueryComponent extends Control {
      * @var bool
      */
     private $showParametrize = true;
-    /**
-     * @var Container
-     */
-    private $container;
 
     /**
      * StoredQueryComponent constructor.
@@ -79,12 +75,11 @@ class StoredQueryComponent extends Control {
      * @param Container $container
      */
     public function __construct(StoredQuery $storedQuery, ContestAuthorizator $contestAuthorizator, StoredQueryFactory $storedQueryFormFactory, ExportFormatFactory $exportFormatFactory, Container $container) {
-        parent::__construct();
+        parent::__construct($container);
         $this->storedQuery = $storedQuery;
         $this->contestAuthorizator = $contestAuthorizator;
         $this->storedQueryFormFactory = $storedQueryFormFactory;
         $this->exportFormatFactory = $exportFormatFactory;
-        $this->container = $container;
     }
 
     /**
@@ -122,7 +117,7 @@ class StoredQueryComponent extends Control {
     }
 
     protected function createComponentGrid(): StoredQueryGrid {
-        return new StoredQueryGrid($this->storedQuery, $this->container);
+        return new StoredQueryGrid($this->storedQuery, $this->getContext());
     }
 
     /**
