@@ -8,7 +8,8 @@ use Nette\Utils\Html;
 
 /**
  * Class AbstractDateInput
- * @package FKSDB\Components\Forms\Controls\DateInputs
+ * @author Michal Červeňák <miso@fykos.cz>
+ * @property \DateTimeInterface $value
  */
 abstract class AbstractDateInput extends TextInput {
 
@@ -52,8 +53,5 @@ abstract class AbstractDateInput extends TextInput {
      */
     abstract protected function getType(): string;
 
-    /**
-     * @return string
-     */
     abstract protected function getFormat(): string;
 }

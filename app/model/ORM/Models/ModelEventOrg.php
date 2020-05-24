@@ -17,29 +17,21 @@ use Nette\Security\IResource;
 class ModelEventOrg extends AbstractModelSingle implements IResource, IEventReferencedModel, IPersonReferencedModel {
     const RESOURCE_ID = 'eventOrg';
 
-    /**
-     * @return ModelPerson
-     */
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromActiveRow($this->person);
     }
 
-    /**
-     * @return ModelEvent
-     */
     public function getEvent(): ModelEvent {
         return ModelEvent::createFromActiveRow($this->event);
     }
 
-    /**
-     * @return string
-     */
     public function getResourceId(): string {
         return self::RESOURCE_ID;
     }
 
     /**
      * @return string
+     * @throws InvalidStateException
      */
     public function __toString(): string {
         if (!$this->getPerson()) {

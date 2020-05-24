@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
-use Events\Model\Holder\Field;
+use FKSDB\Events\Model\Holder\Field;
 use Nette\SmartObject;
 
 /**
@@ -13,6 +13,7 @@ use Nette\SmartObject;
 class ArrayOptions implements IOptionsProvider {
 
     use SmartObject;
+
     /**
      * @var mixed
      */
@@ -23,7 +24,7 @@ class ArrayOptions implements IOptionsProvider {
      * @param $options
      * @param bool $useKeys
      */
-    function __construct($options, $useKeys = true) {
+    public function __construct($options, $useKeys = true) {
         if (!$useKeys) {
             $this->options = array_combine($options, $options);
         } else {

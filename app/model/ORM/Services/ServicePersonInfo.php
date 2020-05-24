@@ -3,6 +3,7 @@
 namespace FKSDB\ORM\Services;
 
 use DateTime;
+use FKSDB\Exceptions\ModelException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
@@ -14,16 +15,10 @@ use FKSDB\ORM\Models\ModelPersonInfo;
  */
 class ServicePersonInfo extends AbstractServiceSingle {
 
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelPersonInfo::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_PERSON_INFO;
     }
@@ -31,7 +26,7 @@ class ServicePersonInfo extends AbstractServiceSingle {
     /**
      * @param null $data
      * @return AbstractModelSingle
-     * @throws \Exception
+     * @throws ModelException
      */
     public function createNew($data = null) {
         if ($data && isset($data['agreed']) && $data['agreed'] == '1') {
@@ -45,7 +40,7 @@ class ServicePersonInfo extends AbstractServiceSingle {
      * @param IModel $model
      * @param array $data
      * @param bool $alive
-     * @return mixed|void
+     * @return void
      * @throws \Exception
      */
     public function updateModel(IModel $model, $data, $alive = true) {
@@ -56,17 +51,16 @@ class ServicePersonInfo extends AbstractServiceSingle {
                 unset($data['agreed']);
             }
         }
-        return parent::updateModel($model, $data);
+        parent::updateModel($model, $data);
     }
 
     /**
      * @param IModel|AbstractModelSingle|ModelPersonInfo $model
      * @param array $data
-     * @param bool $alive
-     * @return mixed|void
+     * @return bool
      * @throws \Exception
      */
-    public function updateModel2(AbstractModelSingle $model, $data = null, $alive = true) {
+    public function updateModel2(AbstractModelSingle $model, $data = null): bool {
         if (isset($data['agreed'])) {
             if ($data['agreed'] == '1') {
                 $data['agreed'] = new DateTime();

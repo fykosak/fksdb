@@ -9,7 +9,7 @@ use Nette\Utils\JsonException;
 
 /**
  * Class ScheduleField
- * @package FKSDB\Components\Forms\Factories\Events
+ * *
  * @deprecated
  */
 class ScheduleField extends TextInput {
@@ -36,7 +36,7 @@ class ScheduleField extends TextInput {
      * @return string
      */
     protected function getReactId(): string {
-        throw new DeprecatedException;
+        throw new DeprecatedException();
     }
 
     /**

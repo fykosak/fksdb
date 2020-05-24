@@ -9,11 +9,6 @@ use Tester\Assert;
 
 class SubmitPresenterTest extends SubmitTestCase {
 
-    function __construct(Container $container) {
-        parent::__construct($container);
-        $this->setContainer($container);
-    }
-
     protected function setUp() {
         parent::setUp();
         $this->createPersonHistory($this->personId, 2000, 1, 9);

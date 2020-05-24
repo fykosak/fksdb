@@ -98,9 +98,6 @@ class DispatchPresenter extends AuthenticatedPresenter {
         $this->setTitle(_('Rozcestník'), 'fa fa-home');
     }
 
-    /**
-     * @return PageStyleContainer
-     */
     protected function getPageStyleContainer(): PageStyleContainer {
         $container = parent::getPageStyleContainer();
         $container->navBarClassName = 'bg-dark navbar-dark';

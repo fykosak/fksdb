@@ -19,8 +19,7 @@ interface IContestPresenter {
     /** @return int */
     public function getSelectedYear();
 
-    /** @return int */
-    public function getSelectedAcademicYear();
+    public function getSelectedAcademicYear(): int;
 
     /**
      * @param string $message
@@ -29,4 +28,3 @@ interface IContestPresenter {
      */
     public function flashMessage($message, $type = 'info');
 }
-

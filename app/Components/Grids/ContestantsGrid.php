@@ -27,7 +27,7 @@ class ContestantsGrid extends BaseGrid {
      * ContestantsGrid constructor.
      * @param Container $container
      */
-    function __construct(Container $container) {
+    public function __construct(Container $container) {
         parent::__construct($container);
         $this->serviceContestant = $container->getByType(ServiceContestant::class);
     }
@@ -79,5 +79,4 @@ class ContestantsGrid extends BaseGrid {
         //
         $this->paginate = false;
     }
-
 }

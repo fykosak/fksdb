@@ -1,9 +1,9 @@
 <?php
 
-namespace Events\FormAdjustments;
+namespace FKSDB\Events\FormAdjustments;
 
-use Events\Machine\Machine;
-use Events\Model\Holder\Holder;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\Holder\Holder;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 use Nette\InvalidArgumentException;
@@ -18,13 +18,16 @@ abstract class PairwiseAdjustment extends AbstractAdjustment implements IFormAdj
     const DELIMITER = '.';
     const WILDCART = '*';
 
+    /**
+     * @var
+     */
     private $rules;
 
     /**
      * PairwiseAdjustment constructor.
      * @param $rules
      */
-    function __construct($rules) {
+    public function __construct($rules) {
         $this->rules = $rules;
     }
 
@@ -32,7 +35,7 @@ abstract class PairwiseAdjustment extends AbstractAdjustment implements IFormAdj
      * @param Form $form
      * @param Machine $machine
      * @param Holder $holder
-     * @return mixed|void
+     * @return void
      */
     protected function _adjust(Form $form, Machine $machine, Holder $holder) {
         foreach ($this->rules as $target => $prerequisities) {
@@ -73,8 +76,7 @@ abstract class PairwiseAdjustment extends AbstractAdjustment implements IFormAdj
     /**
      * @param IControl $target
      * @param IControl $prerequisity
-     * @return mixed
+     * @return void
      */
     abstract protected function processPair(IControl $target, IControl $prerequisity);
 }
-

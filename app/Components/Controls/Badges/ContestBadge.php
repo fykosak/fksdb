@@ -4,13 +4,11 @@ namespace FKSDB\Components\Controls\Badges;
 
 use FKSDB\Exceptions\ContestNotFoundException;
 use FKSDB\ORM\Models\ModelContest;
-use Nette\Templating\FileTemplate;
 use Nette\Utils\Html;
 
 /**
  * Class ContestBadge
- * @package FKSDB\Components\Controls\Stalking\Helpers
- * @property FileTemplate $template
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ContestBadge extends Badge {
     /**
@@ -34,4 +32,3 @@ class ContestBadge extends Badge {
         throw new ContestNotFoundException($contestId);
     }
 }
-

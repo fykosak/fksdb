@@ -9,13 +9,10 @@ use Nette\Forms\Controls\BaseControl;
 
 /**
  * Class AbstractFyziklaniRow
- * @package FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam
+ * *
  */
 abstract class AbstractFyziklaniTeamRow extends AbstractRow {
 
-    /**
-     * @return int
-     */
     public function getPermissionsValue(): int {
         return self::PERMISSION_USE_GLOBAL_ACL;
     }
@@ -26,6 +23,6 @@ abstract class AbstractFyziklaniTeamRow extends AbstractRow {
      * @throws BadRequestException
      */
     public function createField(...$args): BaseControl {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 }

@@ -16,7 +16,7 @@ use Nette\Forms\Controls\BaseControl;
 class EventFactory extends SingleReflectionFactory {
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceEventType
+     * @var ServiceEventType
      */
     private $serviceEventType;
 
@@ -25,7 +25,7 @@ class EventFactory extends SingleReflectionFactory {
      * @param ServiceEventType $serviceEventType
      * @param TableReflectionFactory $tableReflectionFactory
      */
-    function __construct(ServiceEventType $serviceEventType, TableReflectionFactory $tableReflectionFactory) {
+    public function __construct(ServiceEventType $serviceEventType, TableReflectionFactory $tableReflectionFactory) {
         parent::__construct($tableReflectionFactory);
         $this->serviceEventType = $serviceEventType;
     }

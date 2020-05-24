@@ -36,7 +36,7 @@ class TypedTableSelection extends Selection {
      * @param array $row
      * @return AbstractModelSingle
      */
-    protected function createRow(array $row) {
+    protected function createRow(array $row): AbstractModelSingle {
         $className = $this->modelClassName;
         return new $className($row, $this);
     }

@@ -46,7 +46,7 @@ class StudyYearsFromXML extends Stage {
      * @param ServiceTaskStudyYear $serviceTaskStudyYear
      * @param ServiceStudyYear $serviceStudyYear
      */
-    function __construct($defaultStudyYears, ServiceTaskStudyYear $serviceTaskStudyYear, ServiceStudyYear $serviceStudyYear) {
+    public function __construct($defaultStudyYears, ServiceTaskStudyYear $serviceTaskStudyYear, ServiceStudyYear $serviceStudyYear) {
         $this->defaultStudyYears = $defaultStudyYears;
         $this->serviceTaskStudyYear = $serviceTaskStudyYear;
         $this->serviceStudyYear = $serviceStudyYear;
@@ -67,7 +67,7 @@ class StudyYearsFromXML extends Stage {
     }
 
     /**
-     * @return mixed|SeriesData
+     * @return SeriesData
      */
     public function getOutput() {
         return $this->data;

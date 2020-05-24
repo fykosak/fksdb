@@ -11,16 +11,10 @@ use FKSDB\ORM\Models\ModelTeacher;
  */
 class ServiceTeacher extends AbstractServiceSingle {
 
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelTeacher::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_TEACHER;
     }

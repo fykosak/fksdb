@@ -20,6 +20,9 @@ class GettextTranslator implements ITranslator {
      * @var string
      */
     private $localeDir;
+    /**
+     * @var
+     */
     private $lang;
 
     /**
@@ -27,7 +30,7 @@ class GettextTranslator implements ITranslator {
      * @param array $locales
      * @param $localeDir
      */
-    function __construct(array $locales, $localeDir) {
+    public function __construct(array $locales, $localeDir) {
         $this->locales = $locales;
         $this->localeDir = $localeDir;
     }
@@ -74,7 +77,7 @@ class GettextTranslator implements ITranslator {
             return "";
         }
         if ($count !== null) {
-            return ngettext($message, $message, (int) $count);
+            return ngettext($message, $message, (int)$count);
         } else {
             return gettext($message);
         }

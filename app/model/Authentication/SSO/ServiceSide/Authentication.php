@@ -37,7 +37,7 @@ class Authentication {
      * @param $loginURL
      * @param $logoutURL
      */
-    function __construct(IGlobalSession $globalSession, $loginURL, $logoutURL) {
+    public function __construct(IGlobalSession $globalSession, $loginURL, $logoutURL) {
         $this->globalSession = $globalSession;
         $this->loginURL = $loginURL;
         $this->logoutURL = $logoutURL;
@@ -61,7 +61,7 @@ class Authentication {
      * @param null $backlink
      */
     public function login($backlink = null) {
-        $backlink = $backlink ? : $this->getDefaultBacklink();
+        $backlink = $backlink ?: $this->getDefaultBacklink();
 
         $data = [
             self::PARAM_BACKLINK => $backlink,
@@ -79,7 +79,7 @@ class Authentication {
      * @param null $backlink
      */
     public function logout($backlink = null) {
-        $backlink = $backlink ? : $this->getDefaultBacklink();
+        $backlink = $backlink ?: $this->getDefaultBacklink();
 
         $data = [
             self::PARAM_BACKLINK => $backlink,

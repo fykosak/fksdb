@@ -4,7 +4,7 @@ namespace FKSDB\Components\Grids\Fyziklani;
 
 use Closure;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\model\Fyziklani\TaskCodePreprocessor;
+use FKSDB\Fyziklani\TaskCodePreprocessor;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
@@ -25,7 +25,6 @@ use NiftyGrid\DuplicateColumnException;
 use SQL\SearchableDataSource;
 
 /**
- *
  * @author Michal Červeňák
  * @author Lukáš Timko
  */
@@ -78,7 +77,7 @@ class AllSubmitsGrid extends SubmitsGrid {
 
         $this->addButton('delete', null)
             ->setClass('btn btn-sm btn-danger')
-            ->setLink(function ($row) {
+            ->setLink(function (ModelFyziklaniSubmit $row) {
                 return $this->link('delete!', $row->fyziklani_submit_id);
             })->setConfirmationDialog(function () {
                 return _('Opravdu vzít submit úlohy zpět?');

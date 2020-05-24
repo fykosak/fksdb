@@ -9,7 +9,7 @@ use Nette\Utils\Html;
 
 /**
  * Class CreatedRow
- * @package FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniSubmit
+ * *
  */
 class ModifiedRow extends AbstractFyziklaniSubmitRow {
     /**

@@ -7,10 +7,11 @@ use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Config\Expressions\Helpers;
 use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\AbstractServiceMulti;
+use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\IModel;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
-use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Persons\AclResolver;
 use Persons\ExtendedPersonHandler;
@@ -19,7 +20,7 @@ use Persons\IExtendedPersonPresenter;
 
 /**
  * Class ExtendedPersonPresenter
- * @package OrgModule
+ * *
  */
 abstract class ExtendedPersonPresenter extends EntityPresenter implements IExtendedPersonPresenter {
     /**
@@ -38,12 +39,8 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     private $handlerFactory;
 
     /**
-     * @var Container
-     */
-    private $container;
-
-    /**
      * @param ReferencedPersonFactory $referencedPersonFactory
+     * @return void
      */
     public function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory) {
         $this->referencedPersonFactory = $referencedPersonFactory;
@@ -51,16 +48,10 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
 
     /**
      * @param ExtendedPersonHandlerFactory $handlerFactory
+     * @return void
      */
     public function injectHandlerFactory(ExtendedPersonHandlerFactory $handlerFactory) {
         $this->handlerFactory = $handlerFactory;
-    }
-
-    /**
-     * @param Container $container
-     */
-    public function injectContainer(Container $container) {
-        $this->container = $container;
     }
 
     /**
@@ -78,23 +69,23 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     }
 
     /**
-     * @return array|mixed
+     * @return array
      * @throws BadRequestException
      */
     private function getFieldsDefinition() {
         $contestId = $this->getSelectedContest()->contest_id;
         $contestName = $this->globalParameters['contestMapping'][$contestId];
-        return Helpers::evalExpressionArray($this->globalParameters[$contestName][$this->fieldsDefinition], $this->container);
+        return Helpers::evalExpressionArray($this->globalParameters[$contestName][$this->fieldsDefinition], $this->getContext());
     }
 
     /**
      * @param Form $form
-     * @return mixed
+     * @return void
      */
     abstract protected function appendExtendedContainer(Form $form);
 
     /**
-     * @return mixed
+     * @return AbstractServiceMulti|AbstractServiceSingle
      */
     abstract protected function getORMService();
 
@@ -149,7 +140,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
      * @return FormControl
      * @throws BadRequestException
      */
-    protected final function createComponentCreateComponent() {
+    final protected function createComponentCreateComponent() {
         return $this->createComponentFormControl(true);
     }
 
@@ -157,7 +148,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
      * @return FormControl
      * @throws BadRequestException
      */
-    protected final function createComponentEditComponent() {
+    final protected function createComponentEditComponent() {
         return $this->createComponentFormControl(false);
     }
 
@@ -168,5 +159,4 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     protected function loadModel($id) {
         return $this->getORMService()->findByPrimary($id);
     }
-
 }

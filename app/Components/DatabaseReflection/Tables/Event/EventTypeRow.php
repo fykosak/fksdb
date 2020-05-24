@@ -7,12 +7,11 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEventType;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
-use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
 
 /**
  * Class EventTypeRow
- * @package FKSDB\Components\DatabaseReflection\Event
+ * *
  */
 class EventTypeRow extends AbstractEventRowFactory {
     /**
@@ -22,17 +21,12 @@ class EventTypeRow extends AbstractEventRowFactory {
 
     /**
      * EventTypeRow constructor.
-     * @param ITranslator $translator
      * @param ServiceEventType $serviceEventType
      */
-    public function __construct(ITranslator $translator, ServiceEventType $serviceEventType) {
-        parent::__construct($translator);
+    public function __construct(ServiceEventType $serviceEventType) {
         $this->serviceEventType = $serviceEventType;
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Event type');
     }
@@ -45,7 +39,7 @@ class EventTypeRow extends AbstractEventRowFactory {
     public function createField(...$args): BaseControl {
         list($contest) = $args;
         if (\is_null($contest)) {
-            throw new \InvalidArgumentException;
+            throw new \InvalidArgumentException();
         }
 
         $element = new SelectBox($this->getTitle());

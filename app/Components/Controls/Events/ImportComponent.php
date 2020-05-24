@@ -3,20 +3,23 @@
 namespace FKSDB\Components\Events;
 
 use BasePresenter;
-use Events\Machine\Machine;
-use Events\Model\ApplicationHandler;
-use Events\Model\Grid\SingleEventSource;
-use Events\Model\ImportHandler;
-use Events\Model\ImportHandlerException;
+use FKSDB\Config\NeonSchemaException;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\ApplicationHandler;
+use FKSDB\Events\Model\Grid\SingleEventSource;
+use FKSDB\Events\Model\ImportHandler;
+use FKSDB\Events\Model\ImportHandlerException;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Utils\CSVParser;
+use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
+use Nette\Utils\JsonException;
 use Tracy\Debugger;
 use Nette\Forms\Controls\SelectBox;
-use Nette\Forms\Controls\SubmitButton;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -52,7 +55,7 @@ class ImportComponent extends Control {
      * @param ApplicationHandler $handler
      * @param Container $container
      */
-    function __construct(Machine $machine, SingleEventSource $source, ApplicationHandler $handler, Container $container) {
+    public function __construct(Machine $machine, SingleEventSource $source, ApplicationHandler $handler, Container $container) {
         parent::__construct();
         $this->machine = $machine;
         $this->source = $source;
@@ -63,7 +66,7 @@ class ImportComponent extends Control {
     /**
      * @param $name
      * @return FormControl
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     protected function createComponentFormImport($name) {
         $control = new FormControl();
@@ -97,13 +100,18 @@ class ImportComponent extends Control {
 
         $form->addComponent($this->createKeyElement(), 'key');
 
-        $form->addSubmit('import', _('Importovat'))->onClick[] = function (SubmitButton $submit) {
-            $this->handleFormImport($submit->getForm());
+        $form->addSubmit('import', _('Importovat'));
+
+        $form->onSuccess[] = function (Form $form) {
+            $this->handleFormImport($form);
         };
 
         return $control;
     }
 
+    /**
+     * @return void
+     */
     public function render() {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ImportComponent.latte');
         $this->template->render();
@@ -111,8 +119,10 @@ class ImportComponent extends Control {
 
     /**
      * @param Form $form
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Utils\JsonException
+     * @throws AbortException
+     * @throws NeonSchemaException
+     * @throws BadRequestException
+     * @throws JsonException
      */
     private function handleFormImport(Form $form) {
         $values = $form->getValues();
@@ -149,10 +159,7 @@ class ImportComponent extends Control {
         }
     }
 
-    /**
-     * @return SelectBox
-     */
-    private function createKeyElement() {
+    private function createKeyElement(): SelectBox {
         $baseHolder = $this->source->getDummyHolder()->getPrimaryHolder();
         $options = [];
         foreach ($baseHolder->getFields() as $field) {

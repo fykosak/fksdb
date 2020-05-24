@@ -13,7 +13,7 @@ use Nette\DI\Container;
 
 /**
  * Class PointsFormControl
- * @package FKSDB\Components\Controls\Inbox
+ * *
  */
 class PointsFormControl extends SeriesTableFormControl {
     /**
@@ -44,7 +44,7 @@ class PointsFormControl extends SeriesTableFormControl {
         foreach ($form->getHttpData()['submits'] as $submitId => $points) {
             if (!$this->getSeriesTable()->getSubmits()->where('submit_id', $submitId)->fetch()) {
                 // secure check for rewrite submitId.
-                throw new ForbiddenRequestException;
+                throw new ForbiddenRequestException();
             }
             /** @var ModelSubmit $submit */
             $submit = $serviceSubmit->findByPrimary($submitId);

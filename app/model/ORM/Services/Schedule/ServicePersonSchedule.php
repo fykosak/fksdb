@@ -8,20 +8,14 @@ use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 
 /**
  * Class ServicePersonSchedule
- * @package FKSDB\ORM\Services\Schedule
+ * *
  */
 class ServicePersonSchedule extends AbstractServiceSingle {
 
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelPersonSchedule::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_PERSON_SCHEDULE;
     }

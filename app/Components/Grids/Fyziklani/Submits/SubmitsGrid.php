@@ -6,7 +6,6 @@ use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
-use Nette\DI\Container;
 use NiftyGrid\DuplicateColumnException;
 
 /**
@@ -17,18 +16,16 @@ use NiftyGrid\DuplicateColumnException;
 abstract class SubmitsGrid extends BaseGrid {
 
     /**
-     *
      * @var ServiceFyziklaniSubmit
      */
     protected $serviceFyziklaniSubmit;
 
     /**
-     * FyziklaniSubmitsGrid constructor.
-     * @param Container $container
+     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
+     * @return void
      */
-    public function __construct(Container $container) {
-        $this->serviceFyziklaniSubmit = $container->getByType(ServiceFyziklaniSubmit::class);
-        parent::__construct($container);
+    public function injectServiceFyziklaniSubmit(ServiceFyziklaniSubmit $serviceFyziklaniSubmit) {
+        $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
     }
 
     /**
@@ -53,9 +50,6 @@ abstract class SubmitsGrid extends BaseGrid {
         });
     }
 
-    /**
-     * @return string
-     */
     protected function getModelClassName(): string {
         return ModelFyziklaniSubmit::class;
     }

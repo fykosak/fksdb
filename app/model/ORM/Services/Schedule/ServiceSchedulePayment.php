@@ -13,20 +13,14 @@ use Nette\Utils\ArrayHash;
 
 /**
  * Class ServiceSchedulePayment
- * @package FKSDB\ORM\Services\Schedule
+ * *
  */
 class ServiceSchedulePayment extends AbstractServiceSingle {
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_SCHEDULE_PAYMENT;
     }
 
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelSchedulePayment::class;
     }
@@ -77,7 +71,7 @@ class ServiceSchedulePayment extends AbstractServiceSingle {
 
     /**
      * @param ArrayHash $data
-     * @return integer[]
+     * @return array
      */
     private function prepareData($data): array {
         $data = (array)json_decode($data);

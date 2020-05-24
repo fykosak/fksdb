@@ -8,25 +8,26 @@ use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\ORM\Models\Schedule\ModelSchedulePayment;
 use FKSDB\YearCalculator;
-use ModelMPersonHasFlag;
-use ModelMPostContact;
+use FKSDB\ORM\ModelsMulti\ModelMPersonHasFlag;
+use FKSDB\ORM\ModelsMulti\ModelMPostContact;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Security\IResource;
-use Nette\Utils\DateTime;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property-read integer person_id
+ * @property-read int person_id
  * @property-read string other_name
  * @property-read string family_name
  * @property-read string display_name
  * @property-read string gender
- * @property-read DateTime created
+ * @property-read \DateTimeInterface created
  */
-class ModelPerson extends AbstractModelSingle implements IResource, IPersonReferencedModel {
+class ModelPerson extends AbstractModelSingle implements IResource {
+    const RESOURCE_ID = 'person';
+
     /**
      * Returns first of the person's logins.
      * (so far, there's not support for multiple login in DB schema)
@@ -44,14 +45,7 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
     }
 
     /**
-     * @return ModelPerson
-     */
-    public function getPerson(): ModelPerson {
-        return $this;
-    }
-
-    /**
-     * @return string
+     * @return string|null
      */
     public function getPreferredLang() {
         return $this->getInfo() ? $this->getInfo()->preferred_lang : null;
@@ -71,7 +65,7 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
     }
 
     /**
-     * @param $acYear
+     * @param int $acYear
      * @param bool $extrapolated
      * @return ModelPersonHistory|null
      */
@@ -112,7 +106,7 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
     }
 
     /**
-     * @param null $contestId
+     * @param int|null $contestId
      * @return GroupedSelection
      */
     public function getOrgs($contestId = null): GroupedSelection {
@@ -123,15 +117,13 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
         return $related;
     }
 
-    /**
-     * @return GroupedSelection
-     */
     public function getFlags(): GroupedSelection {
         return $this->related(DbNames::TAB_PERSON_HAS_FLAG, 'person_id');
     }
 
     /**
-     * @return ModelMPersonHasFlag[]
+     * @return ModelMPersonHasFlag[]|null
+     * TODO wtf array|null? -- mišo 2020-05-22
      */
     public function getMPersonHasFlags() {
         $personFlags = $this->getFlags();
@@ -169,10 +161,7 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
         return null;
     }
 
-    /**
-     * @return GroupedSelection
-     */
-    public function getPostContacts() {
+    public function getPostContacts(): GroupedSelection {
         return $this->related(DbNames::TAB_POST_CONTACT, 'person_id');
     }
 
@@ -216,7 +205,7 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
 
     /**
      * @param bool $noFallback
-     * @return mixed|ModelPostContact|null
+     * @return ModelPostContact|null
      */
     public function getPermanentAddress($noFallback = false) {
         $pAddresses = $this->getMPostContacts(ModelPostContact::TYPE_PERMANENT);
@@ -229,17 +218,11 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
         }
     }
 
-    /**
-     * @return GroupedSelection
-     */
     public function getEventParticipant(): GroupedSelection {
         //return (new Selection($this->getTable()->data,bNames::TAB_EVENT_PARTICIPANT, $this->getTable()->getConnection()))->where('person_id', $this->person_id);
         return $this->related(DbNames::TAB_EVENT_PARTICIPANT, 'person_id');
     }
 
-    /**
-     * @return GroupedSelection
-     */
     public function getEventTeacher(): GroupedSelection {
         return $this->related(DbNames::TAB_E_FYZIKLANI_TEAM, 'teacher_id');
     }
@@ -261,10 +244,7 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
         }
     }
 
-    /**
-     * @return GroupedSelection
-     */
-    public function getEventOrg() {
+    public function getEventOrg(): GroupedSelection {
         return $this->related(DbNames::TAB_EVENT_ORG, 'person_id');
     }
 
@@ -281,16 +261,10 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
         }
     }
 
-    /**
-     * @return string
-     */
     public function getFullName(): string {
         return $this->display_name ?: $this->other_name . ' ' . $this->family_name;
     }
 
-    /**
-     * @return string
-     */
     public function __toString(): string {
         return $this->getFullName();
     }
@@ -368,17 +342,14 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
         }
     }
 
-    /**
-     * @return string
-     */
     public function getResourceId(): string {
-        return 'person';
+        return self::RESOURCE_ID;
     }
 
     /**
-     * @param integer eventId
+     * @param int eventId
      * @param string $type
-     * @return string
+     * @return string|null
      * @throws JsonException
      */
     public function getSerializedSchedule(int $eventId, string $type) {
@@ -402,8 +373,9 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
     }
 
     /**
-     * @param $eventId
+     * @param int $eventId
      * Definitely ugly but, there is only this way... Mišo
+     * TODO refactoring
      */
     public function removeScheduleForEvent(int $eventId) {
         $query = $this->related(DbNames::TAB_PERSON_SCHEDULE, 'person_id')->where('schedule_item.schedule_group.event_id=?', $eventId);
@@ -413,9 +385,6 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
         }
     }
 
-    /**
-     * @return GroupedSelection
-     */
     public function getPayments(): GroupedSelection {
         return $this->related(DbNames::TAB_PAYMENT, 'person_id');
     }
@@ -428,24 +397,17 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
         return $this->getPayments()->where('event_id', $event->event_id);
     }
 
-    /**
-     * @param ModelEvent $event
-     * @return GroupedSelection
-     */
     public function getScheduleForEvent(ModelEvent $event): GroupedSelection {
         return $this->getSchedule()->where('schedule_item.schedule_group.event_id', $event->event_id);
     }
 
-    /**
-     * @return GroupedSelection
-     */
     public function getSchedule(): GroupedSelection {
         return $this->related(DbNames::TAB_PERSON_SCHEDULE, 'person_id');
     }
 
     /**
      * @param ModelEvent $event
-     * @param array $types
+     * @param string[] $types
      * @return ModelSchedulePayment[]
      */
     public function getScheduleRests(ModelEvent $event, array $types = ['accommodation', 'weekend']): array {
@@ -465,10 +427,10 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
 
     /**
      * @param ModelEvent $event
-     * @param $yearCalculator
-     * @return array
+     * @param YearCalculator $yearCalculator
+     * @return array[]
      */
-    public function getRolesForEvent(ModelEvent $event, $yearCalculator): array {
+    public function getRolesForEvent(ModelEvent $event, YearCalculator $yearCalculator): array {
         $roles = [];
         $eventId = $event->event_id;
         $teachers = $this->getEventTeacher()->where('event_id', $eventId);
@@ -504,4 +466,3 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
     }
 
 }
-

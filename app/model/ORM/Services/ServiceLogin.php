@@ -11,16 +11,10 @@ use FKSDB\ORM\Models\ModelLogin;
  */
 class ServiceLogin extends AbstractServiceSingle {
 
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelLogin::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_LOGIN;
     }

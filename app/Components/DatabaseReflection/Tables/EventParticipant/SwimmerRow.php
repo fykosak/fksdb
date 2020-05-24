@@ -9,7 +9,7 @@ use Nette\Utils\Html;
 
 /**
  * Class SwimmerRow
- * @package FKSDB\Components\DatabaseReflection\EventParticipant
+ * *
  */
 class SwimmerRow extends AbstractParticipantRow {
     /**
@@ -24,6 +24,6 @@ class SwimmerRow extends AbstractParticipantRow {
      * @return Html
      */
     public function createHtmlValue(AbstractModelSingle $model): Html {
-        return (new BinaryPrinter)($model->swimmer);
+        return (new BinaryPrinter())($model->swimmer);
     }
 }

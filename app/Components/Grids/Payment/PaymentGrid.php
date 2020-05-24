@@ -9,7 +9,7 @@ use Nette\DI\Container;
 
 /**
  * Class PaymentGrid
- * @package FKSDB\Components\Grids\Payment
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class PaymentGrid extends BaseGrid {
     /**
@@ -21,14 +21,11 @@ abstract class PaymentGrid extends BaseGrid {
      * PaymentGrid constructor.
      * @param Container $container
      */
-    function __construct(Container $container) {
+    public function __construct(Container $container) {
         parent::__construct($container);
         $this->servicePayment = $container->getByType(ServicePayment::class);
     }
 
-    /**
-     * @return string
-     */
     protected function getModelClassName(): string {
         return ModelPayment::class;
     }

@@ -8,19 +8,23 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Grids\SubmitsGrid;
 use FKSDB\Exceptions\GoneException;
+use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Models\ModelQuizQuestion;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\ORM\Services\ServiceTask;
 use FKSDB\ORM\Tables\TypedTableSelection;
-use FKSDB\Submits\FilesystemUploadedSubmitStorage;
+use FKSDB\Submits\FileSystemStorage\UploadedStorage;
 use FKSDB\Submits\ProcessingException;
 use FKSDB\Exceptions\ModelException;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Tracy\Debugger;
+use FKSDB\ORM\Services\ServiceQuizQuestion;
+use FKSDB\ORM\Services\ServiceSubmitQuizQuestion;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -30,32 +34,61 @@ use Tracy\Debugger;
 class SubmitPresenter extends BasePresenter {
     use SubmitSaveTrait;
 
-
     /** @var ServiceSubmit */
     private $submitService;
 
     /**
      * @param ServiceSubmit $submitService
+     * @return void
      */
     public function injectSubmitService(ServiceSubmit $submitService) {
         $this->submitService = $submitService;
     }
 
-    /** @var FilesystemUploadedSubmitStorage */
+    /** @var ServiceSubmitQuizQuestion */
+    private $submitQuizQuestionService;
+
+    /**
+     * @param ServiceSubmitQuizQuestion $submitQuizQuestionService
+     * @return void
+     */
+    public function injectSubmitQuizQuestionService(ServiceSubmitQuizQuestion $submitQuizQuestionService) {
+        $this->submitQuizQuestionService = $submitQuizQuestionService;
+    }
+
+    /** @var UploadedStorage */
     private $uploadedSubmitStorage;
 
-    /** @param FilesystemUploadedSubmitStorage $filesystemUploadedSubmitStorage */
-    public function injectSubmitUploadedStorage(FilesystemUploadedSubmitStorage $filesystemUploadedSubmitStorage) {
+    /**
+     * @param UploadedStorage $filesystemUploadedSubmitStorage
+     * @return void
+     */
+    public function injectSubmitUploadedStorage(UploadedStorage $filesystemUploadedSubmitStorage) {
         $this->uploadedSubmitStorage = $filesystemUploadedSubmitStorage;
     }
 
     /** @var ServiceTask */
     private $taskService;
 
-    /** @param ServiceTask $taskService */
+    /**
+     * @param ServiceTask $taskService
+     * @return void
+     */
     public function injectTaskService(ServiceTask $taskService) {
         $this->taskService = $taskService;
     }
+
+    /** @var ServiceQuizQuestion */
+    private $quizQuestionService;
+
+    /**
+     * @param ServiceQuizQuestion $quizQuestionService
+     * @return void
+     */
+    public function injectQuizQuestionService(ServiceQuizQuestion $quizQuestionService) {
+        $this->quizQuestionService = $quizQuestionService;
+    }
+
     /* ******************* AUTH ************************/
     /**
      * @throws BadRequestException
@@ -119,13 +152,18 @@ class SubmitPresenter extends BasePresenter {
 
         $prevDeadline = null;
         $taskIds = [];
-        $personHistory = $this->getUser()->getIdentity()->getPerson()->getHistory($this->getSelectedAcademicYear());
+        /** @var ModelLogin $login */
+        $login = $this->getUser()->getIdentity();
+        $personHistory = $login->getPerson()->getHistory($this->getSelectedAcademicYear());
         $studyYear = ($personHistory && isset($personHistory->study_year)) ? $personHistory->study_year : null;
         if ($studyYear === null) {
             $this->flashMessage(_('Řešitel nemá vyplněn ročník, nebudou dostupné všechny úlohy.'));
         }
         /** @var ModelTask $task */
         foreach ($this->getAvailableTasks() as $task) {
+            $questions = $this->quizQuestionService->getTable();
+            $questions->where('task_id', $task->task_id);
+
             if ($task->submit_deadline != $prevDeadline) {
                 $form->addGroup(sprintf(_('Termín %s'), $task->submit_deadline));
             }
@@ -136,19 +174,38 @@ class SubmitPresenter extends BasePresenter {
             $container = new ModelContainer();
             $form->addComponent($container, 'task' . $task->task_id);
             //$container = $form->addContainer();
-            $upload = $container->addUpload('file', $task->getFQName());
-            $conditionedUpload = $upload
-                ->addCondition(Form::FILLED)
-                ->addRule(Form::MIME_TYPE, _('Lze nahrávat pouze PDF soubory.'), 'application/pdf'); //TODO verify this check at production server
+            if (!count($questions)) {
+                $upload = $container->addUpload('file', $task->getFQName());
+                $conditionedUpload = $upload
+                    ->addCondition(Form::FILLED)
+                    ->addRule(Form::MIME_TYPE, _('Lze nahrávat pouze PDF soubory.'), 'application/pdf'); //TODO verify this check at production server
 
-            if (!in_array($studyYear, array_keys($task->getStudyYears()))) {
-                $upload->setOption('description', _('Úloha není určena pro Tvou kategorii.'));
-                $upload->setDisabled();
-            }
+                if (!in_array($studyYear, array_keys($task->getStudyYears()))) {
+                    $upload->setOption('description', _('Úloha není určena pro Tvou kategorii.'));
+                    $upload->setDisabled();
+                }
 
-            if ($submit && $this->uploadedSubmitStorage->fileExists($submit)) {
-                $overwrite = $container->addCheckbox('overwrite', _('Přepsat odeslané řešení.'));
-                $conditionedUpload->addConditionOn($overwrite, Form::EQUAL, false)->addRule(~Form::FILLED, _('Buď zvolte přepsání odeslaného řešení anebo jej neposílejte.'));
+                if ($submit && $this->uploadedSubmitStorage->fileExists($submit)) {
+                    $overwrite = $container->addCheckbox('overwrite', _('Přepsat odeslané řešení.'));
+                    $conditionedUpload->addConditionOn($overwrite, Form::EQUAL, false)->addRule(~Form::FILLED, _('Buď zvolte přepsání odeslaného řešení anebo jej neposílejte.'));
+                }
+            } else {
+                //Implementaton of quiz questions
+                $options = ['A' => 'A', 'B' => 'B', 'C' => 'C', 'D' => 'D']; //TODO add variability of options
+                foreach ($questions as $question) {
+                    $select = $container->addRadioList('question' . $question->question_id, $task->getFQName() . ' - ' . $question->getFQName(), $options);
+                    foreach ($options as $option) {
+                        $select->setValue($option);
+                    }
+
+                    $existingEntry = $this->submitQuizQuestionService->findByContestant($this->getContestant()->ct_id, $question->question_id);
+                    if ($existingEntry) {
+                        $existingAnswer = $existingEntry->answer;
+                        $select->setValue($existingAnswer);
+                    } else {
+                        $select->setValue(null);
+                    }
+                }
             }
 
 
@@ -171,11 +228,8 @@ class SubmitPresenter extends BasePresenter {
         return $control;
     }
 
-    /**
-     * @return AjaxUpload
-     */
     public function createComponentAjaxUpload(): AjaxUpload {
-        return new AjaxUpload($this->context);
+        return new AjaxUpload($this->getContext());
     }
 
     /**
@@ -190,13 +244,13 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @param mixed $form
+     * @param Form $form
      * @throws BadRequestException
      * @throws AbortException
      * @throws \Exception
      * @internal
      */
-    public function handleUploadFormSuccess($form) {
+    public function handleUploadFormSuccess(Form $form) {
         $values = $form->getValues();
 
         $taskIds = explode(',', $values['tasks']);
@@ -207,6 +261,8 @@ class SubmitPresenter extends BasePresenter {
             $this->uploadedSubmitStorage->beginTransaction();
 
             foreach ($taskIds as $taskId) {
+
+                $questions = $this->quizQuestionService->getTable()->where('task_id', $taskId);
                 /** @var ModelTask $task */
                 $task = $this->taskService->findByPrimary($taskId);
 
@@ -216,6 +272,14 @@ class SubmitPresenter extends BasePresenter {
                 }
 
                 $taskValues = $values['task' . $task->task_id];
+
+                //Implemetation of quiz questions
+                /** @var ModelQuizQuestion $question */
+                foreach ($questions as $question) {
+                    $name = 'question' . $question->question_id;
+                    $answer = $taskValues[$name];
+                    $this->submitQuizQuestionService->saveSubmitedQuestion($question, $this->getContestant(), $answer);
+                }
 
                 if (!isset($taskValues['file'])) { // upload field was disabled
                     continue;
@@ -263,7 +327,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @param integer $taskId
+     * @param int $taskId
      * @return ModelTask|null
      *
      * @throws BadRequestException
@@ -276,5 +340,13 @@ class SubmitPresenter extends BasePresenter {
             }
         }
         return null;
+    }
+
+    protected function getUploadedStorage(): UploadedStorage {
+        return $this->getContext()->getByType(UploadedStorage::class);
+    }
+
+    protected function getServiceSubmit(): ServiceSubmit {
+        return $this->submitService;
     }
 }

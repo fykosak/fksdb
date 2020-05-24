@@ -1,11 +1,12 @@
 <?php
 
-namespace Events\Spec\Fyziklani;
+namespace FKSDB\Events\Spec\Fyziklani;
 
-use Events\FormAdjustments\IFormAdjustment;
-use Events\Machine\Machine;
-use Events\Model\ExpressionEvaluator;
-use Events\Model\Holder\Holder;
+use FKSDB\Events\FormAdjustments\IFormAdjustment;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\ExpressionEvaluator;
+use FKSDB\Events\Model\Holder\BaseHolder;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Services\ServicePersonHistory;
 use Nette\Database\Context;
@@ -63,7 +64,7 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
      * @param Context $context
      * @param ServicePersonHistory $servicePersonHistory
      */
-    function __construct($teamsPerSchool, ExpressionEvaluator $evaluator, Context $context, ServicePersonHistory $servicePersonHistory) {
+    public function __construct($teamsPerSchool, ExpressionEvaluator $evaluator, Context $context, ServicePersonHistory $servicePersonHistory) {
         parent::__construct($servicePersonHistory);
         $this->context = $context;
         $this->evaluator = $evaluator;
@@ -74,7 +75,7 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
      * @param Form $form
      * @param Machine $machine
      * @param Holder $holder
-     * @return mixed|void
+     * @return void
      */
     protected function _adjust(Form $form, Machine $machine, Holder $holder) {
         $this->setHolder($holder);
@@ -100,11 +101,14 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
         };
     }
 
+    /**
+     * @var
+     */
     private $cache;
 
     /**
      * @param $first
-     * @param $control
+     * @param IControl $control
      * @param $schools
      * @return bool
      */
@@ -115,6 +119,7 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
         $secondaryGroups = $this->getHolder()->getGroupedSecondaryHolders();
         $group = reset($secondaryGroups);
         $baseHolders = $group['holders'];
+        /** @var BaseHolder $baseHolder */
         $baseHolder = reset($baseHolders);
 
         if (!$this->cache || $first) {
@@ -148,4 +153,3 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
     }
 
 }
-

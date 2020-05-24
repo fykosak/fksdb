@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Navigation;
 
-use FKSDB\Components\Controls\BaseControl;
+use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\PresenterBuilder;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\UI\PageTitle;
@@ -10,7 +10,6 @@ use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
-use Nette\InvalidArgumentException;
 use ReflectionClass;
 use ReflectionMethod;
 
@@ -19,7 +18,7 @@ use ReflectionMethod;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class Navigation extends BaseControl {
+class Navigation extends BaseComponent {
     /**
      * @var array
      */
@@ -43,21 +42,21 @@ class Navigation extends BaseControl {
      * @param PresenterBuilder $presenterBuilder
      * @param Container $container
      */
-    function __construct(PresenterBuilder $presenterBuilder, Container $container) {
+    public function __construct(PresenterBuilder $presenterBuilder, Container $container) {
         parent::__construct($container);
         $this->presenterBuilder = $presenterBuilder;
     }
 
     /**
      * @param $nodeId
-     * @return mixed
+     * @return int|string
      */
     public function getNode($nodeId) {
         return $this->nodes[$nodeId];
     }
 
     /**
-     * @param $node
+     * @param mixed $node
      * @return bool
      */
     public function isActive(\stdClass $node): bool {
@@ -147,6 +146,7 @@ class Navigation extends BaseControl {
 
     /**
      * @param $structure
+     * @return void
      */
     public function setStructure($structure) {
         $this->structure = $structure;
@@ -155,6 +155,7 @@ class Navigation extends BaseControl {
     /**
      * @param $nodeId
      * @param $arguments
+     * @return void
      */
     public function createNode($nodeId, $arguments) {
         $node = (object)$arguments;
@@ -164,6 +165,7 @@ class Navigation extends BaseControl {
     /**
      * @param $idChild
      * @param $idParent
+     * @return void
      */
     public function addParent($idChild, $idParent) {
         if (!isset($this->nodeChildren)) {
@@ -174,6 +176,7 @@ class Navigation extends BaseControl {
 
     /**
      * @param string $root
+     * @return void
      */
     public function renderNavbar(string $root) {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Navigation.navbar.latte');
@@ -182,6 +185,7 @@ class Navigation extends BaseControl {
 
     /**
      * @param string $root
+     * @return void
      */
     public function render(string $root) {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Navigation.latte');
@@ -190,6 +194,7 @@ class Navigation extends BaseControl {
 
     /**
      * @param array $nodes
+     * @return void
      */
     private function renderFromRoot(array $nodes) {
         $this->template->nodes = $nodes;

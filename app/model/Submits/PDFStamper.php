@@ -40,7 +40,7 @@ class PDFStamper implements IStorageProcessing {
      * PDFStamper constructor.
      * @param int $fontSize
      */
-    function __construct(int $fontSize) {
+    public function __construct(int $fontSize) {
         $this->fontSize = $fontSize;
     }
 
@@ -87,7 +87,7 @@ class PDFStamper implements IStorageProcessing {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelSubmit $submit
+     * @param ModelSubmit $submit
      * @throws ProcessingException
      * @throws InvalidStateException
      */

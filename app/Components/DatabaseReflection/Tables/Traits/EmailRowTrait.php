@@ -12,7 +12,7 @@ use Nette\Utils\Html;
 
 /**
  * Trait EmailRowTrait
- * @package FKSDB\Components\DatabaseReflection
+ * *
  */
 trait EmailRowTrait {
 
@@ -27,23 +27,19 @@ trait EmailRowTrait {
         return $control;
     }
 
-    /**
-     * @param AbstractModelSingle $model
-     * @return Html
-     */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        return (new EmailPrinter)($model->{$this->getModelAccessKey()});
+        return (new EmailPrinter())($model->{$this->getModelAccessKey()});
     }
 
     /**
      * @return string
      * only must exists
      */
-    abstract function getTitle(): string;
+    abstract public function getTitle(): string;
 
     /**
      * @return string
      * only must exists
      */
-    abstract function getModelAccessKey(): string;
+    abstract public function getModelAccessKey(): string;
 }

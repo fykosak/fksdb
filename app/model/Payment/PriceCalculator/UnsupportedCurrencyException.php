@@ -6,7 +6,7 @@ use Throwable;
 
 /**
  * Class UnsupportedCurrencyException
- * @package FKSDB\Payment\PriceCalculator
+ * *
  */
 class UnsupportedCurrencyException extends \Exception {
     /**

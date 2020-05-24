@@ -12,16 +12,11 @@ use FKSDB\ORM\Tables\TypedTableSelection;
  * @author Lukáš Timko <lukast@fykos.cz>
  */
 class ServiceFyziklaniTask extends AbstractServiceSingle {
-    /**
-     * @return string
-     */
+
     public function getModelClassName(): string {
         return ModelFyziklaniTask::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_FYZIKLANI_TASK;
     }
@@ -41,11 +36,6 @@ class ServiceFyziklaniTask extends AbstractServiceSingle {
         return $result ?: null;
     }
 
-    /**
-     * Syntactic sugar.
-     * @param ModelEvent $event
-     * @return TypedTableSelection
-     */
     public function findAll(ModelEvent $event): TypedTableSelection {
         return $this->getTable()->where('event_id', $event->event_id);
     }
@@ -64,5 +54,4 @@ class ServiceFyziklaniTask extends AbstractServiceSingle {
         }
         return $tasks;
     }
-
 }

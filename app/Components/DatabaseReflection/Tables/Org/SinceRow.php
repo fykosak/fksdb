@@ -8,7 +8,7 @@ use Nette\Forms\Form;
 
 /**
  * Class SinceRow
- * @package FKSDB\Components\DatabaseReflection\Org
+ * *
  */
 class SinceRow extends AbstractOrgRowFactory {
     use DefaultPrinterTrait;
@@ -28,7 +28,7 @@ class SinceRow extends AbstractOrgRowFactory {
     public function createField(...$args): BaseControl {
         list($min, $max) = $args;
         if (\is_null($max) || \is_null($min)) {
-            throw new \InvalidArgumentException;
+            throw new \InvalidArgumentException();
         }
         $control = parent::createField($args);
         $control->addRule(Form::NUMERIC);

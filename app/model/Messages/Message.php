@@ -7,7 +7,7 @@ use Nette\SmartObject;
 
 /**
  * Class Message
- * @package FKSDB\Messages
+ * *
  */
 class Message {
     use SmartObject;

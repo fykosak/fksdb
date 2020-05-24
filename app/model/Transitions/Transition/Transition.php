@@ -20,6 +20,9 @@ final class Transition {
      */
     private $condition;
 
+    /**
+     * @var string
+     */
     private $type = self::TYPE_PRIMARY;
     /**
      * @var string
@@ -63,7 +66,7 @@ final class Transition {
      * @param string $toState
      * @param string $label
      */
-    function __construct(string $fromState, string $toState, string $label) {
+    public function __construct(string $fromState, string $toState, string $label) {
         $this->fromState = $fromState;
         $this->toState = $toState;
         $this->label = $label;
@@ -122,7 +125,7 @@ final class Transition {
     /**
      * @param IStateModel $model
      */
-    public final function beforeExecute(IStateModel &$model) {
+    final public function beforeExecute(IStateModel &$model) {
         foreach ($this->beforeExecuteCallbacks as $callback) {
             $callback($model);
         }
@@ -131,10 +134,9 @@ final class Transition {
     /**
      * @param IStateModel $model
      */
-    public final function afterExecute(IStateModel &$model) {
+    final public function afterExecute(IStateModel &$model) {
         foreach ($this->afterExecuteCallbacks as $callback) {
             $callback($model);
         }
     }
 }
-

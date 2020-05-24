@@ -1,9 +1,9 @@
 <?php
 
-namespace Events\Model\Holder;
+namespace FKSDB\Events\Model\Holder;
 
-use Events\Machine\BaseMachine;
-use Events\Model\ExpressionEvaluator;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Model\ExpressionEvaluator;
 use FKSDB\Components\Forms\Factories\Events\IFieldFactory;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Container;
@@ -169,7 +169,7 @@ class Field {
         $this->modifiable = $modifiable;
     }
     /* ** VISIBLE ** */
-    /** @var boolean|callable */
+    /** @var bool|callable */
     private $visible;
 
     /** @return bool */

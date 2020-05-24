@@ -27,7 +27,7 @@
                 <td>{$holder->getPrimaryHolder()->getModel()->__toString()}</td>
                 {block menuRow}
                     <td>
-            <span n:tag-if="$holder->getPrimaryHolder()->getModelState() != Events\Machine\BaseMachine::STATE_INIT"
+            <span n:tag-if="$holder->getPrimaryHolder()->getModelState() != FKSDB\Events\Machine\BaseMachine::STATE_INIT"
                     title="Vytvořeno: {$holder->getPrimaryHolder()->getModel()->created}">
             {control 'application_'.$key:inline state}
             </span>

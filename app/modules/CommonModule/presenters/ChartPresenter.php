@@ -7,7 +7,7 @@ use FKSDB\Components\Controls\Chart\TotalPersonsChartControl;
 
 /**
  * Class ChartPresenter
- * @package CommonModule
+ * *
  */
 class ChartPresenter extends BasePresenter {
     use ChartPresenterTrait;
@@ -26,7 +26,7 @@ class ChartPresenter extends BasePresenter {
     }
 
     /**
-     * @inheritDoc
+     * @return array|TotalPersonsChartControl[]
      */
     protected function registerCharts(): array {
         return [

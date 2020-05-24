@@ -3,7 +3,7 @@
 namespace FKSDB\UI;
 /**
  * Class PageStyleContainer
- * @package FKSDB
+ * *
  */
 class PageStyleContainer {
     /** @var string */

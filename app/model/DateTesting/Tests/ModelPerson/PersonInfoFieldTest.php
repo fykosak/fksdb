@@ -11,7 +11,7 @@ use Nette\Application\BadRequestException;
 
 /**
  * Class PersonInfoFieldTest
- * @package FKSDB\DataTesting\Tests\Person
+ * *
  */
 class PersonInfoFieldTest extends PersonFileLevelTest {
     /**
@@ -29,7 +29,7 @@ class PersonInfoFieldTest extends PersonFileLevelTest {
      * @param ModelPerson $person
      * @return TestLog
      */
-    public final function run(TestsLogger $logger, ModelPerson $person) {
+    final public function run(TestsLogger $logger, ModelPerson $person) {
         $info = $person->getInfo();
         if (!$info) {
             $logger->log(new TestLog($this->getTitle(), 'Person info is not set', TestLog::LVL_INFO));

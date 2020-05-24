@@ -65,7 +65,7 @@ class TasksFromXML extends Stage {
     }
 
     /**
-     * @return mixed|SeriesData
+     * @return SeriesData
      */
     public function getOutput() {
         return $this->data;

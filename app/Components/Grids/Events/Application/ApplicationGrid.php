@@ -14,7 +14,7 @@ use SQL\SearchableDataSource;
 
 /**
  * Class ParticipantGrid
- * @package FKSDB\Components\Grids\Events
+ * *
  */
 class ApplicationGrid extends AbstractApplicationGrid {
 
@@ -70,16 +70,10 @@ class ApplicationGrid extends AbstractApplicationGrid {
         ];
     }
 
-    /**
-     * @return string
-     */
     protected function getModelClassName(): string {
         return ModelEventParticipant::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_EVENT_PARTICIPANT;
     }

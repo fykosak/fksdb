@@ -7,7 +7,7 @@ use Nette\Http\Response;
 
 /**
  * Class NotImplementedException
- * @package FKSDB
+ * *
  */
 class NotImplementedException extends BadRequestException {
     /**

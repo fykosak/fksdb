@@ -13,8 +13,8 @@ use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
 
 /**
- *
- * @author Mišo <miso@fykos.cz>
+ * Class OrgPaymentGrid
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class OrgPaymentGrid extends PaymentGrid {
     /**

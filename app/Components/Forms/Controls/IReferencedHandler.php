@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Forms\Controls;
 
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
 use Nette\Utils\ArrayHash;
 
@@ -16,37 +17,37 @@ interface IReferencedHandler {
     const RESOLUTION_KEEP = 'keep';
     const RESOLUTION_EXCEPTION = 'exception';
 
-    public function getResolution();
+    public function getResolution(): string;
 
     /**
-     * @param $resolution
-     * @return mixed
+     * @param string $resolution
+     * @return void
      */
-    public function setResolution($resolution);
+    public function setResolution(string $resolution);
 
     /**
      * @param IModel $model
      * @param ArrayHash $values
-     * @return mixed
+     * @return void
      */
     public function update(IModel $model, ArrayHash $values);
 
     /**
      * @param ArrayHash $values
-     * @return mixed
+     * @return AbstractModelSingle
      */
     public function createFromValues(ArrayHash $values);
 
     /**
-     * @param $field
-     * @return mixed
+     * @param string $field
+     * @return bool
      */
-    public function isSecondaryKey($field);
+    public function isSecondaryKey(string $field): bool;
 
     /**
      * @param string $field
-     * @param mixed $key
+     * @param string $key
      * @return IModel
      */
-    public function findBySecondaryKey($field, $key);
+    public function findBySecondaryKey(string $field, string $key);
 }

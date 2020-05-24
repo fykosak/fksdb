@@ -30,7 +30,7 @@ class DetailResultsModel extends AbstractResultsModel {
      * @param ModelCategory $category
      * @return array
      */
-    public function getDataColumns(ModelCategory $category) {
+    public function getDataColumns(ModelCategory $category): array {
         if (!isset($this->dataColumns[$category->id])) {
             $dataColumns = [];
             $sum = 0;
@@ -71,17 +71,17 @@ class DetailResultsModel extends AbstractResultsModel {
     }
 
     /**
-     * @return array
+     * @return ModelCategory[]
      */
-    public function getCategories() {
+    public function getCategories(): array {
         return $this->evaluationStrategy->getCategories();
     }
 
     /**
      * @param ModelCategory $category
-     * @return mixed|string
+     * @return string
      */
-    protected function composeQuery(ModelCategory $category) {
+    protected function composeQuery(ModelCategory $category): string {
         if (!$this->series) {
             throw new InvalidStateException('Series not set.');
         }
@@ -129,5 +129,3 @@ left join submit s ON s.task_id = t.task_id AND s.ct_id = ct.ct_id";
     }
 
 }
-
-

@@ -17,7 +17,7 @@ use FKSDB\Exceptions\NotImplementedException;
 
 /**
  * Class ModelPersonSchedule
- * @package FKSDB\ORM\Models\Schedule
+ * *
  * @property-read ActiveRow person
  * @property-read ActiveRow schedule_item
  * @property-read int person_id
@@ -26,23 +26,15 @@ use FKSDB\Exceptions\NotImplementedException;
  * @property-read int person_schedule_id
  */
 class ModelPersonSchedule extends AbstractModelSingle implements IStateModel, IPersonReferencedModel, IScheduleGroupReferencedModel, IPaymentReferencedModel {
-    /**
-     * @return ModelPerson
-     */
+
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromActiveRow($this->person);
     }
 
-    /**
-     * @return ModelScheduleItem
-     */
     public function getScheduleItem(): ModelScheduleItem {
         return ModelScheduleItem::createFromActiveRow($this->schedule_item);
     }
 
-    /**
-     * @return ModelScheduleGroup
-     */
     public function getScheduleGroup(): ModelScheduleGroup {
         return $this->getScheduleItem()->getScheduleGroup();
     }
@@ -58,9 +50,6 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel, IP
         return ModelPayment::createFromActiveRow($data);
     }
 
-    /**
-     * @return bool
-     */
     public function hasActivePayment(): bool {
         $payment = $this->getPayment();
         if (!$payment) {
@@ -89,7 +78,7 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel, IP
             case ModelScheduleGroup::TYPE_WEEKEND:
                 return $item->getLabel();
             default:
-                throw new NotImplementedException;
+                throw new NotImplementedException();
         }
     }
 
@@ -115,6 +104,6 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel, IP
      * @throws NotImplementedException
      */
     public function refresh(Context $connection, IConventions $conventions): IStateModel {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 }

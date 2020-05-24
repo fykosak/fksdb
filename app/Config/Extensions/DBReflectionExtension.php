@@ -10,15 +10,15 @@ use FKSDB\Components\DatabaseReflection\StateRow;
 use FKSDB\Components\DatabaseReflection\StringRow;
 use FKSDB\Components\DatabaseReflection\Tables\PhoneRow;
 use Nette\Application\BadRequestException;
-use Nette\Config\CompilerExtension;
+use Nette\DI\CompilerExtension;
 use Nette\DI\ContainerBuilder;
 use Nette\DI\ServiceDefinition;
 use FKSDB\Exceptions\NotImplementedException;
-use stdClass;
+use Nette\DI\Statement;
 
 /**
  * Class StalkingExtension
- * @package FKSDB\Config\Extensions
+ * *
  */
 class DBReflectionExtension extends CompilerExtension {
     /**
@@ -103,7 +103,7 @@ class DBReflectionExtension extends CompilerExtension {
                 case 'state':
                     return $this->registerStateRow($builder, $tableName, $fieldName, $field);
                 default:
-                    throw new NotImplementedException;
+                    throw new NotImplementedException();
             }
         }
         if (is_string($field) && preg_match('/([A-Za-z0-9]+\\\\)*/', $field)) {
@@ -163,7 +163,7 @@ class DBReflectionExtension extends CompilerExtension {
     private function registerPhoneRow(ContainerBuilder $builder, string $tableName, string $fieldName, array $field): ServiceDefinition {
         $factory = $this->setUpDefaultFactory($builder, $tableName, $fieldName, PhoneRow::class, $field);
         if (isset($field['writeOnly'])) {
-            $factory->addSetup('setWriteOnly', $field['writeOnly']);
+            $factory->addSetup('setWriteOnly', [$field['writeOnly']]);
         }
         return $factory;
     }
@@ -181,18 +181,18 @@ class DBReflectionExtension extends CompilerExtension {
     }
 
     /**
-     * @param $value
-     * @return mixed
+     * @param string|Statement $value
+     * @return string
      * @throws NotImplementedException
      */
     private function translate($value): string {
         if (is_string($value)) {
             return $value;
         }
-        if ($value instanceof stdClass) {
-            return ($value->value)(...$value->attributes);
+        if ($value instanceof Statement) {
+            return ($value->entity)(...$value->arguments);
         }
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**
@@ -215,7 +215,7 @@ class DBReflectionExtension extends CompilerExtension {
                 isset($field['description']) ? $this->translate($field['description']) : null
             ]);
         if (isset($field['permission'])) {
-            $factory->addSetup('setPermissionValue', $field['permission']);
+            $factory->addSetup('setPermissionValue', [$field['permission']]);
         }
         return $factory;
     }

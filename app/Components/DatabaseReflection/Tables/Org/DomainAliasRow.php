@@ -14,12 +14,9 @@ use Nette\Utils\Html;
 
 /**
  * Class DomainAliasRow
- * @package FKSDB\Components\DatabaseReflection\Org
+ * *
  */
 class DomainAliasRow extends AbstractOrgRowFactory {
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Domain alias');
     }
@@ -32,9 +29,9 @@ class DomainAliasRow extends AbstractOrgRowFactory {
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         switch ($model->contest_id) {
             case ModelContest::ID_FYKOS:
-                return (new EmailPrinter)($model->domain_alias . '@fykos.cz');
+                return (new EmailPrinter())($model->domain_alias . '@fykos.cz');
             case ModelContest::ID_VYFUK:
-                return (new EmailPrinter)($model->domain_alias . '@vyfuk.mff.cuni.cz');
+                return (new EmailPrinter())($model->domain_alias . '@vyfuk.mff.cuni.cz');
             default:
                 throw new ContestNotFoundException($model->contest_id);
         }

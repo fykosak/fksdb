@@ -3,9 +3,11 @@
 namespace EventModule;
 
 use AuthenticatedPresenter;
-use Events\Model\Holder\Holder;
+use FKSDB\Config\NeonSchemaException;
+use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Exceptions\NotFoundException;
 use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEvent;
@@ -39,6 +41,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /**
      * @param ServiceEvent $serviceEvent
+     * @return void
      */
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;
@@ -55,14 +58,11 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      */
     protected function startup() {
         if (!$this->isEnabled()) {
-            throw new NotImplementedException;
+            throw new NotImplementedException();
         }
         parent::startup();
     }
 
-    /**
-     * @return bool
-     */
     public function isAuthorized(): bool {
         if (!$this->isEnabled()) {
             return false;
@@ -88,10 +88,13 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     /**
      * @return Holder
      * @throws BadRequestException
+     * @throws NeonSchemaException
      */
     protected function getHolder(): Holder {
         if (!$this->holder) {
-            $this->holder = $this->getContext()->createEventHolder($this->getEvent());
+            /** @var EventDispatchFactory $factory */
+            $factory = $this->getContext()->getByType(EventDispatchFactory::class);
+            $this->holder = $factory->getDummyHolder($this->getEvent());
         }
         return $this->holder;
     }
@@ -108,13 +111,10 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @return ModelContest
      * @throws BadRequestException
      */
-    protected final function getContest(): ModelContest {
+    final protected function getContest(): ModelContest {
         return $this->getEvent()->getContest();
     }
 
-    /**
-     * @return bool
-     */
     protected function isEnabled(): bool {
         return true;
     }
@@ -197,6 +197,6 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @return array|string[]
      */
     protected function getNavRoots(): array {
-        return ['event.dashboard.default'];
+        return ['Event.Dashboard.default'];
     }
 }

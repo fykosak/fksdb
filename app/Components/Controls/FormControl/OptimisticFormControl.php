@@ -7,7 +7,7 @@ use Nette\Application\UI\Form;
 
 /**
  * Class OptimisticFormControl
- * @package FKSDB\Components\Controls\FormControl
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class OptimisticFormControl extends FormControl {
 

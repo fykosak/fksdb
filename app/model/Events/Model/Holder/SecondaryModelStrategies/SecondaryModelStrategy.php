@@ -1,8 +1,8 @@
 <?php
 
-namespace Events\Model\Holder\SecondaryModelStrategies;
+namespace FKSDB\Events\Model\Holder\SecondaryModelStrategies;
 
-use Events\Model\Holder\BaseHolder;
+use FKSDB\Events\Model\Holder\BaseHolder;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
 use Nette\InvalidStateException;
@@ -36,7 +36,7 @@ abstract class SecondaryModelStrategy {
      * @param $joinOn
      * @param $joinTo
      * @param $holders
-     * @param \FKSDB\ORM\IModel|null $primaryModel
+     * @param IModel|null $primaryModel
      */
     public function loadSecondaryModels(IService $service, $joinOn, $joinTo, $holders, IModel $primaryModel = null) {
         $table = $service->getTable();
@@ -85,7 +85,7 @@ abstract class SecondaryModelStrategy {
      * @param BaseHolder $holder
      * @param $secondaries
      * @param $joinData
-     * @return mixed
+     * @return void
      */
     abstract protected function resolveMultipleSecondaries(BaseHolder $holder, $secondaries, $joinData);
 }

@@ -1,11 +1,12 @@
 <?php
 
-namespace Events\Model\Grid;
+namespace FKSDB\Events\Model\Grid;
 
-use ArrayIterator;
-use Events\Model\Holder\Holder;
+use FKSDB\Config\NeonSchemaException;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Tables\TypedTableSelection;
+use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use Nette\SmartObject;
 
@@ -21,6 +22,7 @@ use Nette\SmartObject;
  */
 abstract class AggregatedPersonSource implements IHolderSource {
     use SmartObject;
+
     /**
      * @var TypedTableSelection
      */
@@ -32,7 +34,6 @@ abstract class AggregatedPersonSource implements IHolderSource {
     protected $container;
 
     /**
-     *
      * @var Holder[]
      */
     private $holders = null;
@@ -42,11 +43,16 @@ abstract class AggregatedPersonSource implements IHolderSource {
      * @param TypedTableSelection $events
      * @param Container $container
      */
-    function __construct(TypedTableSelection $events, Container $container) {
+    public function __construct(TypedTableSelection $events, Container $container) {
         $this->events = $events;
         $this->container = $container;
     }
 
+    /**
+     * @return void
+     * @throws NeonSchemaException
+     * @throws BadRequestException
+     */
     private function loadData() {
         $this->holders = [];
         /** @var ModelEvent $event */
@@ -69,7 +75,7 @@ abstract class AggregatedPersonSource implements IHolderSource {
      * @param ModelEvent $event
      * @return mixed
      */
-    abstract function processEvent(ModelEvent $event);
+    abstract public function processEvent(ModelEvent $event);
 
     /**
      * Method propagates selected calls to internal primary models selection.
@@ -97,13 +103,15 @@ abstract class AggregatedPersonSource implements IHolderSource {
     }
 
     /**
-     * @return ArrayIterator|\Traversable
+     * @return Holder[]
+     * @throws BadRequestException
+     * @throws NeonSchemaException
      */
-    public final function getIterator() {
+    public function getHolders(): array {
         if ($this->holders === null) {
             $this->loadData();
         }
-        return new ArrayIterator($this->holders);
+        return $this->holders;
     }
 
 }

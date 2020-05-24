@@ -63,18 +63,18 @@ events:
                         condition: %events.fol1.appCond%
                         label: _('Přihlásit tým')
                         onExecuted:
-                            - Events\Transitions\MailSender(team, *)
+                            - FKSDB\Events\Transitions\MailSender(team, *)
                     applied->participated:
                         condition: and(role('admin'),eventWas())
                         label: Zúčastnil se
                     applied->missed:
                         condition: and(role('admin'),eventWas())
                         label: Nezúčastnil se
-                        dangerous: true
+                        behaviorType: danger
                     applied->cancelled:
                         condition: role('admin')
                         label: Zrušit tým
-                        dangerous: true
+                        behaviorType: danger
                     cancelled->__terminated:
                         condition: role('admin')
                         label: Smazat tým
@@ -90,7 +90,7 @@ events:
                         required: true
                         visible: neg(state('__init'))
                         modifiable: false
-                        factory: Chooser(_('Category'), Events\Spec\Fol\CategoryProcessing(%events.fol1.rulesVersion%))
+                        factory: Chooser(_('Category'), FKSDB\Events\Spec\Fol\CategoryProcessing(%events.fol1.rulesVersion%))
                     note:
                         label: _('Kontaktní adresa')
                         required: false
@@ -124,7 +124,7 @@ events:
                         visible: false
                         label: _('Přidat člena')
                         onExecuted:
-                            - Events\Transitions\MailSender(member,self)
+                            - FKSDB\Events\Transitions\MailSender(member,self)
                     applied->participated:
                         condition: role('admin')
                         visible: false
@@ -176,15 +176,15 @@ events:
             formAdjustments:
                 - @events.privacyPolicy
                 - @events.captcha
-                - Events\FormAdjustments\UniqueCheck('team.name', _("Tým s názvem '%value' již existuje."))
-                - Events\FormAdjustments\UniqueCheck('*.person_id', _("Osoba je již na Fyziklání online přihlášena."))
-                - Events\Spec\Fol\FlagCheck()
-                - Events\Spec\Fol\BornCheck()
+                - FKSDB\Events\FormAdjustments\UniqueCheck('team.name', _("Tým s názvem '%value' již existuje."))
+                - FKSDB\Events\FormAdjustments\UniqueCheck('*.person_id', _("Osoba je již na Fyziklání online přihlášena."))
+                - FKSDB\Events\Spec\Fol\FlagCheck()
+                - FKSDB\Events\Spec\Fol\BornCheck()
 
 
             processings:
-                - Events\Spec\Fol\CategoryProcessing(%events.fol1.rulesVersion%)
-                - Events\Spec\Fol\PasswordProcessing()
+                - FKSDB\Events\Spec\Fol\CategoryProcessing(%events.fol1.rulesVersion%)
+                - FKSDB\Events\Spec\Fol\PasswordProcessing()
                 - @events.privacyPolicy
 
             joins:

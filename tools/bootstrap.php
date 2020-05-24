@@ -1,14 +1,6 @@
 <?php
 
-use Authorization\ACLExtension;
-use Events\EventsExtension;
-use FKSDB\Config\Extensions\DBReflectionExtension;
-use FKSDB\Config\Extensions\NavigationExtension;
-use FKSDB\Config\Extensions\PaymentExtension;
-use FKSDB\Config\Extensions\RouterExtension;
-use FKSDB\Config\Extensions\StalkingExtension;
-use Nette\Config\Compiler;
-use Nette\Config\Configurator;
+use Nette\Configurator;
 use Nette\Utils\Finder;
 
 define('LIBS_DIR', __DIR__ . '/../libs');
@@ -21,15 +13,6 @@ require LIBS_DIR . '/autoload.php';
 
 // Configure application
 $configurator = new Configurator();
-$configurator->onCompile[] = function ($configurator, Compiler $compiler) {
-    $compiler->addExtension('fksrouter', new RouterExtension());
-    $compiler->addExtension('acl', new ACLExtension());
-    $compiler->addExtension('navigation', new NavigationExtension());
-    $compiler->addExtension('stalking', new StalkingExtension());
-    $compiler->addExtension('events', new EventsExtension(CONFIG_DIR . '/events.neon'));
-    $compiler->addExtension('payment', new PaymentExtension());
-    $compiler->addExtension('DBReflection', new DBReflectionExtension());
-};
 
 // Enable Nette Debugger for error visualisation & logging
 $configurator->enableDebugger(dirname(__FILE__) . '/../log');

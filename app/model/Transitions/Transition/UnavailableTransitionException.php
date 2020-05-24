@@ -2,12 +2,12 @@
 
 namespace FKSDB\Transitions;
 
-use Events\Machine\Transition as EventTransition;
+use FKSDB\Events\Machine\Transition as EventTransition;
 use Nette\InvalidStateException;
 
 /**
  * Class UnavailableTransitionException
- * @package FKSDB\Transitions
+ * *
  */
 class UnavailableTransitionException extends \Exception {
     /**
@@ -23,7 +23,7 @@ class UnavailableTransitionException extends \Exception {
             $source = $transition->getFromState();
             $target = $transition->getToState();
         } else {
-            throw new InvalidStateException;
+            throw new InvalidStateException();
         }
         parent::__construct(sprintf(
             _('Transition from %s to %s is unavailable for %s'),

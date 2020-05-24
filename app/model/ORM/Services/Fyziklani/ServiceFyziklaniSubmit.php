@@ -4,8 +4,8 @@ namespace FKSDB\ORM\Services\Fyziklani;
 
 use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
-use FKSDB\model\Fyziklani\ClosedSubmittingException;
-use FKSDB\model\Fyziklani\PointsMismatchException;
+use FKSDB\Fyziklani\ClosedSubmittingException;
+use FKSDB\Fyziklani\PointsMismatchException;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
@@ -26,16 +26,10 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
 
     const LOG_FORMAT = 'Submit %d was %s by %s';
 
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelFyziklaniSubmit::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_FYZIKLANI_SUBMIT;
     }
@@ -54,11 +48,6 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
         return $row ?: null;
     }
 
-    /**
-     * Syntactic sugar.
-     * @param ModelEvent $event
-     * @return TypedTableSelection
-     */
     public function findAll(ModelEvent $event): TypedTableSelection {
         return $this->getTable()->where('e_fyziklani_team_id.event_id', $event->event_id);
     }
@@ -81,13 +70,6 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
         return $submits;
     }
 
-    /**
-     * @param ModelFyziklaniTask $task
-     * @param ModelFyziklaniTeam $team
-     * @param int $points
-     * @param User $user
-     * @return Message
-     */
     public function createSubmit(ModelFyziklaniTask $task, ModelFyziklaniTeam $team, int $points, User $user): Message {
         $submit = $this->createNewModel([
             'points' => $points,
@@ -178,7 +160,7 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
             throw new ClosedSubmittingException($submit->getFyziklaniTeam());
         }
         if ($submit->points != $points) {
-            throw new PointsMismatchException;
+            throw new PointsMismatchException();
         }
         $submit->update([
             'state' => ModelFyziklaniSubmit::STATE_CHECKED,

@@ -8,7 +8,7 @@ use FKSDB\Exceptions\NotImplementedException;
 
 /**
  * Class AbstractPaymentRow
- * @package FKSDB\Components\DatabaseReflection\Payment
+ * *
  */
 abstract class AbstractPaymentRow extends AbstractRow {
     /**
@@ -17,12 +17,9 @@ abstract class AbstractPaymentRow extends AbstractRow {
      * @throws NotImplementedException
      */
     public function createField(...$args): BaseControl {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
-    /**
-     * @return int
-     */
     public function getPermissionsValue(): int {
         return self::PERMISSION_USE_GLOBAL_ACL;
     }

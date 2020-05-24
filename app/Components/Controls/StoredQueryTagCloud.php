@@ -6,7 +6,7 @@ use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryTag;
 use Nette\Application\UI\Control;
 use Nette\InvalidArgumentException;
-use ServiceMStoredQueryTag;
+use FKSDB\ORM\ServicesMulti\ServiceMStoredQueryTag;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -32,17 +32,17 @@ class StoredQueryTagCloud extends Control {
      * @var callable[]
      */
     private $onClick;
-
+    /** @var string */
     private $mode;
-
+    /** @var int[] */
     private $activeTagIds = [];
 
     /**
      * StoredQueryTagCloud constructor.
-     * @param $mode
+     * @param string $mode
      * @param ServiceMStoredQueryTag $serviceMStoredQueryTag
      */
-    function __construct($mode, ServiceMStoredQueryTag $serviceMStoredQueryTag) {
+    public function __construct(string $mode, ServiceMStoredQueryTag $serviceMStoredQueryTag) {
         parent::__construct();
         $this->serviceMStoredQueryTag = $serviceMStoredQueryTag;
         $this->mode = $mode;
@@ -50,6 +50,7 @@ class StoredQueryTagCloud extends Control {
 
     /**
      * @param ModelStoredQuery $modelStoredQuery
+     * @return void
      */
     public function setModelStoredQuery(ModelStoredQuery $modelStoredQuery) {
         $this->modelStoredQuery = $modelStoredQuery;
@@ -57,25 +58,26 @@ class StoredQueryTagCloud extends Control {
 
     /**
      * @param callable $callback
-     * @return $this
+     * @return static
      */
-    public function registerOnClick(callable $callback){
+    public function registerOnClick(callable $callback) {
         $this->onClick[] = $callback;
         return $this;
     }
 
     /**
      * @param array $activeTagIds
+     * @return void
      */
-    public function handleOnClick(array $activeTagIds){
+    public function handleOnClick(array $activeTagIds) {
         $this->activeTagIds = $activeTagIds;
-        foreach($this->onClick as $callback){
+        foreach ($this->onClick as $callback) {
             call_user_func($callback, $activeTagIds);
         }
     }
 
     public function render() {
-        switch ($this->mode){
+        switch ($this->mode) {
             case self::MODE_LIST:
                 $this->template->tags = $this->serviceMStoredQueryTag->getMainService();
                 $this->template->activeTagIds = $this->activeTagIds;
@@ -85,7 +87,7 @@ class StoredQueryTagCloud extends Control {
                 $this->template->tags = $this->modelStoredQuery->getMStoredQueryTags();
                 break;
             default :
-                throw new InvalidArgumentException;
+                throw new InvalidArgumentException();
         }
 
         $this->template->mode = $this->mode;
@@ -96,21 +98,19 @@ class StoredQueryTagCloud extends Control {
     /**
      * @return array
      */
-    private function createNextActiveTagIds(){
+    private function createNextActiveTagIds() {
         $tags = $this->serviceMStoredQueryTag->getMainService();
         $nextActiveTagIds = [];
         /** @var ModelStoredQueryTag $tag */
-        foreach($tags as $tag) {
+        foreach ($tags as $tag) {
             $activeTagIds = $this->activeTagIds;
-            if(array_key_exists($tag->tag_type_id, $activeTagIds)) {
+            if (array_key_exists($tag->tag_type_id, $activeTagIds)) {
                 unset($activeTagIds[$tag->tag_type_id]);
-            }
-            else {
+            } else {
                 $activeTagIds[$tag->tag_type_id] = $tag->tag_type_id;
             }
             $nextActiveTagIds[$tag->tag_type_id] = $activeTagIds;
         }
         return $nextActiveTagIds;
     }
-
 }

@@ -1,14 +1,17 @@
 <?php
 
-namespace Events\Spec\Fol;
+namespace FKSDB\Events\Spec\Fol;
 
-use Events\FormAdjustments\AbstractAdjustment;
-use Events\FormAdjustments\IFormAdjustment;
-use Events\Machine\Machine;
-use Events\Model\Holder\Holder;
 use FKSDB\ORM\Models\ModelSchool;
+use FKSDB\Events\FormAdjustments\AbstractAdjustment;
+use FKSDB\Events\FormAdjustments\IFormAdjustment;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\ORM\Services\ServicePersonHistory;
 use FKSDB\ORM\Services\ServiceSchool;
+use Nette\Database\Table\ActiveRow;
+use Nette\Database\Table\Selection;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 
@@ -20,7 +23,7 @@ use Nette\Forms\IControl;
 class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceSchool
+     * @var ServiceSchool
      */
     private $serviceSchool;
 
@@ -53,7 +56,7 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
      * @param ServiceSchool $serviceSchool
      * @param ServicePersonHistory $servicePersonHistory
      */
-    function __construct(ServiceSchool $serviceSchool, ServicePersonHistory $servicePersonHistory) {
+    public function __construct(ServiceSchool $serviceSchool, ServicePersonHistory $servicePersonHistory) {
         $this->serviceSchool = $serviceSchool;
         $this->servicePersonHistory = $servicePersonHistory;
     }
@@ -62,7 +65,7 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
      * @param Form $form
      * @param Machine $machine
      * @param Holder $holder
-     * @return mixed|void
+     * @return void
      */
     protected function _adjust(Form $form, Machine $machine, Holder $holder) {
         $this->setHolder($holder);
@@ -73,7 +76,10 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
 
         $msgForeign = _('Zasílání informačních materiálů je dostupné pouze českým a slovenským studentům.');
         $msgOld = _('Zasílání informačních materiálů je dostupné pouze SŠ studentům.');
-
+        /**
+         * @var  $i
+         * @var BaseControl $control
+         */
         foreach ($spamControls as $i => $control) {
             $schoolControl = $schoolControls[$i];
             $personControl = $personControls[$i];
@@ -113,7 +119,7 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
     /**
      * @param $studyYearControl
      * @param $personControl
-     * @return bool|mixed|\Nette\Database\Table\ActiveRow|\Nette\Database\Table\Selection|null
+     * @return bool|mixed|ActiveRow|Selection|null
      */
     private function getStudyYear($studyYearControl, $personControl) {
         if ($studyYearControl->getValue()) {
@@ -123,14 +129,14 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
         $personId = $personControl->getValue(false);
         $personHistory = $this->servicePersonHistory->getTable()
             ->where('person_id', $personId)
-            ->where('ac_year', $this->getHolder()->getEvent()->getAcYear())->fetch();
+            ->where('ac_year', $this->getHolder()->getPrimaryHolder()->getEvent()->getAcYear())->fetch();
         return $personHistory->study_year;
     }
 
     /**
      * @param $schoolControl
      * @param $personControl
-     * @return bool|mixed|\Nette\Database\Table\ActiveRow|\Nette\Database\Table\Selection|null
+     * @return bool|mixed|ActiveRow|Selection|null
      */
     private function getSchoolId($schoolControl, $personControl) {
         if ($schoolControl->getValue()) {
@@ -141,7 +147,7 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
         /** @var ModelSchool|false $school */
         $school = $this->servicePersonHistory->getTable()
             ->where('person_id', $personId)
-            ->where('ac_year', $this->getHolder()->getEvent()->getAcYear())->fetch();
+            ->where('ac_year', $this->getHolder()->getPrimaryHolder()->getEvent()->getAcYear())->fetch();
         return $school->school_id;
     }
 

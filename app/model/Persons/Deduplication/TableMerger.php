@@ -6,8 +6,7 @@ use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
 use Nette\Database\Connection;
 use Nette\Database\Context;
-use Nette\Database\Reflection\AmbiguousReferenceKeyException;
-use Nette\Database\Reflection\MissingReferenceException;
+use Nette\Database\Conventions\AmbiguousReferenceKeyException;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 use Persons\Deduplication\MergeStrategy\CannotMergeException;
@@ -75,7 +74,7 @@ class TableMerger {
      * @param IMergeStrategy $globalMergeStrategy
      * @param ILogger $logger
      */
-    function __construct($table, Merger $merger, Context $context, IMergeStrategy $globalMergeStrategy, ILogger $logger) {
+    public function __construct($table, Merger $merger, Context $context, IMergeStrategy $globalMergeStrategy, ILogger $logger) {
         $this->table = $table;
         $this->merger = $merger;
         $this->connection = $context->getConnection();
@@ -112,7 +111,7 @@ class TableMerger {
     /**
      *
      * @param mixed $column
-     * @return boolean
+     * @return bool
      */
     private function tryColumnMerge($column) {
         if ($this->getMerger()->hasResolution($this->trunkRow, $this->mergedRow, $column)) {
@@ -304,7 +303,13 @@ class TableMerger {
      * DB reflection
      * ****************************** */
 
+    /**
+     * @var null
+     */
     private $refTables = null;
+    /**
+     * @var bool
+     */
     private static $refreshReferencing = true;
 
     /**
@@ -315,11 +320,9 @@ class TableMerger {
             $this->refTables = [];
             foreach ($this->connection->getSupplementalDriver()->getTables() as $otherTable) {
                 try {
-                    list($table, $refColumn) = $this->connection->getDatabaseReflection()->getHasManyReference($this->table, $otherTable['name'], self::$refreshReferencing);
+                    list($table, $refColumn) = $this->context->getConventions()->getHasManyReference($this->table, $otherTable['name'], self::$refreshReferencing);
                     self::$refreshReferencing = false;
                     $this->refTables[$table] = $refColumn;
-                } catch (MissingReferenceException $exception) {
-                    /* empty */
                 } catch (AmbiguousReferenceKeyException $exception) {
                     /* empty */
                 }
@@ -328,6 +331,9 @@ class TableMerger {
         return $this->refTables;
     }
 
+    /**
+     * @var null
+     */
     private $columns = null;
 
     /**
@@ -343,6 +349,9 @@ class TableMerger {
         return $this->columns;
     }
 
+    /**
+     * @var
+     */
     private $primaryKey;
 
     /**
@@ -356,7 +365,13 @@ class TableMerger {
         return $column == $this->primaryKey;
     }
 
+    /**
+     * @var array
+     */
     private $referencedTables = [];
+    /**
+     * @var bool
+     */
     private static $refreshReferenced = true;
 
     /**
@@ -366,16 +381,19 @@ class TableMerger {
     private function getReferencedTable($column) {
         if (!array_key_exists($column, $this->referencedTables)) {
             try {
-                list($table, $refColumn) = $this->context->getDatabaseReflection()->getBelongsToReference($this->table, $column, self::$refreshReferenced);
+                list($table, $refColumn) = $this->context->getConventions()->getBelongsToReference($this->table, $column, self::$refreshReferenced);
                 self::$refreshReferenced = false;
                 $this->referencedTables[$column] = $table;
-            } catch (MissingReferenceException$exception) {
+            } catch (\Exception $exception) {
                 $this->referencedTables[$column] = null;
             }
         }
         return $this->referencedTables[$column];
     }
 
+    /**
+     * @var
+     */
     private $secondaryKey;
 
     /**

@@ -35,17 +35,15 @@ class DuplicateFinder {
      * @param ServicePerson $servicePerson
      * @param GlobalParameters $parameters
      */
-    function __construct(ServicePerson $servicePerson, GlobalParameters $parameters) {
+    public function __construct(ServicePerson $servicePerson, GlobalParameters $parameters) {
         $this->servicePerson = $servicePerson;
         $this->parameters = $parameters['deduplication']['finder'];
     }
 
-    /**
-     * @return array
-     */
-    public function getPairs() {
+    public function getPairs(): array {
         $buckets = [];
         /* Create buckets for quadratic search. */
+        /** @var ModelPerson $person */
         foreach ($this->servicePerson->getTable()->select("person.*, :person_info.email, :person_info.duplicates, :person_info.person_id AS 'PI'") as $person) {
             $bucketKey = $this->getBucketKey($person);
             if (!isset($buckets[$bucketKey])) {
@@ -162,4 +160,3 @@ class DuplicateFinder {
     }
 
 }
-

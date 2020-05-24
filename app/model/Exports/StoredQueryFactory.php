@@ -42,7 +42,7 @@ class StoredQueryFactory implements IXMLNodeSerializer {
      * @param Connection $connection
      * @param ServiceStoredQuery $serviceStoredQuery
      */
-    function __construct(Connection $connection, ServiceStoredQuery $serviceStoredQuery) {
+    public function __construct(Connection $connection, ServiceStoredQuery $serviceStoredQuery) {
         $this->connection = $connection;
         $this->serviceStoredQuery = $serviceStoredQuery;
     }

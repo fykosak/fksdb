@@ -2,14 +2,13 @@
 
 namespace FKSDB\ORM\Models;
 
-use DateTime;
 use \Nette\Mail\Message;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Security\IResource;
 
 /**
  * Class ModelEmailMessage
- * @package FKSDB\ORM\Models
+ * *
  * @property-read int email_message_id`
  * @property-read string recipient
  * @property-read string sender
@@ -19,8 +18,8 @@ use Nette\Security\IResource;
  * @property-read string|null blind_carbon_copy
  * @property-read string text
  * @property-read string state
- * @property-read DateTime created
- * @property-read DateTime sent
+ * @property-read \DateTimeInterface created
+ * @property-read \DateTimeInterface sent
  */
 class ModelEmailMessage extends AbstractModelSingle implements IResource {
     const STATE_SAVED = 'saved'; // uložená, na ďalšiu úpravu
@@ -31,9 +30,6 @@ class ModelEmailMessage extends AbstractModelSingle implements IResource {
 
     const RESOURCE_ID = 'email_message';
 
-    /**
-     * @return Message
-     */
     public function toMessage(): Message {
         $message = new Message();
         $message->setSubject($this->subject);
@@ -51,10 +47,7 @@ class ModelEmailMessage extends AbstractModelSingle implements IResource {
         return $message;
     }
 
-    /**
-     * @return string
-     */
-    public function getResourceId() {
+    public function getResourceId(): string {
         return static::RESOURCE_ID;
     }
 }

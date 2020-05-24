@@ -9,7 +9,7 @@ use Nette\Utils\Html;
 
 /**
  * Class TShirtColor
- * @package FKSDB\Components\DatabaseReflection\EventParticipant
+ * *
  */
 class TShirtColorRow extends AbstractParticipantRow {
     /**

@@ -22,7 +22,7 @@ interface IMergeStrategy {
 
 /**
  * Class CannotMergeException
- * @package Persons\Deduplication\MergeStrategy
+ * *
  */
 class CannotMergeException extends InvalidArgumentException {
 

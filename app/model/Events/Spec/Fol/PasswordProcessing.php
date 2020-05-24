@@ -1,11 +1,11 @@
 <?php
 
-namespace Events\Spec\Fol;
+namespace FKSDB\Events\Spec\Fol;
 
-use Events\Machine\BaseMachine;
-use Events\Machine\Machine;
-use Events\Model\Holder\Holder;
-use Events\Processings\AbstractProcessing;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\Holder\Holder;
+use FKSDB\Events\Processings\AbstractProcessing;
 use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
 use Nette\Forms\Form;
@@ -13,7 +13,7 @@ use Nette\Utils\ArrayHash;
 
 /**
  * Class PasswordProcessing
- * @package Events\Spec\Fol
+ * *
  */
 class PasswordProcessing extends AbstractProcessing {
 
@@ -24,7 +24,7 @@ class PasswordProcessing extends AbstractProcessing {
      * @param Holder $holder
      * @param ILogger $logger
      * @param Form|null $form
-     * @return mixed|void
+     * @return void
      */
     protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
         if (!isset($values['team'])) {

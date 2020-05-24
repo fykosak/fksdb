@@ -11,7 +11,7 @@ use Nette\Utils\Html;
 
 /**
  * Class SinceRow
- * @package FKSDB\Components\DatabaseReflection\Tables\Teacher
+ * *
  */
 class SinceRow extends AbstractTeacherRow {
 

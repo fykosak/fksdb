@@ -3,6 +3,8 @@
 namespace FKSDB\ORM;
 
 use LogicException;
+use Nette\Database\Table\ActiveRow;
+use Nette\Database\Table\Selection;
 use Nette\InvalidStateException;
 use Nette\SmartObject;
 
@@ -11,6 +13,7 @@ use Nette\SmartObject;
  */
 abstract class AbstractModelMulti implements IModel {
     use SmartObject;
+
     /**
      * @var AbstractModelSingle
      */
@@ -45,18 +48,15 @@ abstract class AbstractModelMulti implements IModel {
     }
 
     /**
-     * @param $mainModel
-     * @param $joinedModel
+     * @param AbstractModelSingle $mainModel
+     * @param AbstractModelSingle $joinedModel
      * @return AbstractModelMulti
      */
-    public static function createFromExistingModels($mainModel, $joinedModel) {
+    public static function createFromExistingModels(AbstractModelSingle $mainModel, AbstractModelSingle $joinedModel) {
         return new static(null, $mainModel, $joinedModel);
     }
 
-    /**
-     * @return array|mixed
-     */
-    public function toArray() {
+    public function toArray(): array {
         return $this->getMainModel()->toArray() + $this->getJoinedModel()->toArray();
     }
 
@@ -69,6 +69,7 @@ abstract class AbstractModelMulti implements IModel {
 
     /**
      * @param AbstractModelSingle $mainModel
+     * @return void
      */
     public function setMainModel(AbstractModelSingle $mainModel) {
         if (!$this->service) {
@@ -77,12 +78,12 @@ abstract class AbstractModelMulti implements IModel {
         $this->mainModel = $mainModel;
         if (!$mainModel->isNew() && $this->getJoinedModel()) { // bind via foreign key
             $joiningColumn = $this->service->getJoiningColumn();
-            $this->getJoinedModel()->$joiningColumn = $mainModel->getPrimary();
+            $this->getJoinedModel()->{$joiningColumn} = $mainModel->getPrimary();
         }
     }
 
     /**
-     * @return AbstractModelSingle|\FKSDB\ORM\IModel
+     * @return AbstractModelSingle|IModel
      */
     public function getJoinedModel() {
         return $this->joinedModel;
@@ -90,20 +91,19 @@ abstract class AbstractModelMulti implements IModel {
 
     /**
      * @param AbstractModelSingle $joinedModel
+     * @return void
      */
     public function setJoinedModel(AbstractModelSingle $joinedModel) {
         $this->joinedModel = $joinedModel;
     }
 
-    /**
-     * @return AbstractServiceMulti
-     */
-    public function getService() {
+    public function getService(): AbstractServiceMulti {
         return $this->service;
     }
 
     /**
      * @param AbstractServiceMulti $service
+     * @return void
      */
     public function setService(AbstractServiceMulti $service) {
         $this->service = $service;
@@ -111,7 +111,7 @@ abstract class AbstractModelMulti implements IModel {
 
     /**
      * @param $name
-     * @return bool|mixed|\Nette\Database\Table\ActiveRow|\Nette\Database\Table\Selection|null
+     * @return bool|mixed|ActiveRow|Selection|null
      */
     public function &__get($name) {
         if ($this->getMainModel()->__isset($name)) {
@@ -164,10 +164,7 @@ abstract class AbstractModelMulti implements IModel {
         return implode('|', (array)$this->getPrimary($need));
     }
 
-    /**
-     * @return bool|mixed
-     */
-    public function isNew() {
+    public function isNew(): bool {
         return $this->getJoinedModel()->isNew();
     }
 
@@ -181,7 +178,7 @@ abstract class AbstractModelMulti implements IModel {
 
     /**
      * @param mixed $offset
-     * @return bool|mixed|\Nette\Database\Table\ActiveRow|\Nette\Database\Table\Selection|null
+     * @return bool|mixed|ActiveRow|Selection|null
      */
     public function &offsetGet($offset) {
         return $this->__get($offset);

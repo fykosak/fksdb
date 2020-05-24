@@ -48,7 +48,7 @@ class ReferencedId extends HiddenField {
     private $referencedSetter;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $modelCreated;
 
@@ -63,7 +63,7 @@ class ReferencedId extends HiddenField {
      * @param IReferencedHandler $handler
      * @param IReferencedSetter $referencedSetter
      */
-    function __construct(IService $service, IReferencedHandler $handler, IReferencedSetter $referencedSetter) {
+    public function __construct(IService $service, IReferencedHandler $handler, IReferencedSetter $referencedSetter) {
         parent::__construct();
         $this->monitor(Form::class);
 
@@ -95,6 +95,7 @@ class ReferencedId extends HiddenField {
 
     /**
      * @param Promise $promise
+     * @return void
      */
     private function setPromise(Promise $promise) {
         $this->promise = $promise;
@@ -173,7 +174,7 @@ class ReferencedId extends HiddenField {
      * If you are calling this method out of transaction, set $fullfilPromise to
      * false. This is the case for event form adjustments.
      *
-     * @param boolean $fullfilPromise
+     * @param bool $fullfilPromise
      * @return mixed
      */
     public function getValue($fullfilPromise = true) {
@@ -202,6 +203,9 @@ class ReferencedId extends HiddenField {
         $this->referencedContainer->setDisabled($value);
     }
 
+    /**
+     * @return void
+     */
     private function createPromise() {
         $referencedId = $this->getValue();
         $values = $this->referencedContainer->getValues();
@@ -235,10 +239,12 @@ class ReferencedId extends HiddenField {
         $this->setPromise($promise);
     }
 
+    /** @var bool */
     private $attachedOnValidate = false;
 
     /**
-     * @param $obj
+     * @param mixed $obj
+     * @return void
      */
     protected function attached($obj) {
         parent::attached($obj);

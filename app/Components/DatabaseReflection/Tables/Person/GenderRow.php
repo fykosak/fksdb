@@ -11,7 +11,7 @@ use Nette\Utils\Html;
 
 /**
  * Class GenderRow
- * @package FKSDB\Components\DatabaseReflection\Person
+ * *
  */
 class GenderRow extends AbstractRow {
     /**

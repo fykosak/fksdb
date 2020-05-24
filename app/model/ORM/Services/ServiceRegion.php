@@ -12,23 +12,14 @@ use FKSDB\ORM\Tables\TypedTableSelection;
  */
 class ServiceRegion extends AbstractServiceSingle {
 
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelRegion::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_REGION;
     }
 
-    /**
-     * @return TypedTableSelection
-     */
     public function getCountries(): TypedTableSelection {
         return $this->getTable()->where('country_iso = nuts');
     }

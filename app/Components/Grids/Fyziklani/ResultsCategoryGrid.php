@@ -14,7 +14,7 @@ use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class ResultsCategoryGrid
- * @package FKSDB\Components\Grids\Fyziklani
+ * *
  */
 class ResultsCategoryGrid extends BaseGrid {
 
@@ -38,10 +38,17 @@ class ResultsCategoryGrid extends BaseGrid {
      * @param Container $container
      */
     public function __construct(ModelEvent $event, string $category, Container $container) {
-        $this->serviceFyziklaniTeam = $container->getByType(ServiceFyziklaniTeam::class);
+        parent::__construct($container);
         $this->event = $event;
         $this->category = $category;
-        parent::__construct($container);
+    }
+
+    /**
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @return void
+     */
+    public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam) {
+        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 
     /**
@@ -68,9 +75,6 @@ class ResultsCategoryGrid extends BaseGrid {
 
     }
 
-    /**
-     * @return string
-     */
     protected function getModelClassName(): string {
         return ModelFyziklaniTeam::class;
     }

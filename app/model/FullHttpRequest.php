@@ -24,7 +24,7 @@ class FullHttpRequest {
      * @param Request $request
      * @param $payload
      */
-    function __construct(Request $request, $payload) {
+    public function __construct(Request $request, $payload) {
         $this->request = $request;
         $this->payload = $payload;
     }
@@ -32,14 +32,14 @@ class FullHttpRequest {
     /**
      * @return Request
      */
-    function getRequest(): Request {
+    public function getRequest(): Request {
         return $this->request;
     }
 
     /**
      * @return string
      */
-    function getPayload() {
+    public function getPayload() {
         return $this->payload;
     }
 

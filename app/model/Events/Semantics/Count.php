@@ -1,8 +1,8 @@
 <?php
 
-namespace Events\Semantics;
+namespace FKSDB\Events\Semantics;
 
-use Events\Model\Holder\BaseHolder;
+use FKSDB\Events\Model\Holder\BaseHolder;
 use Nette\SmartObject;
 
 /**
@@ -14,13 +14,16 @@ class Count {
     use SmartObject;
     use WithEventTrait;
 
+    /**
+     * @var
+     */
     private $state;
 
     /**
      * Count constructor.
      * @param $state
      */
-    function __construct($state) {
+    public function __construct($state) {
         $this->state = $state;
     }
 

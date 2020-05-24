@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
-use Events\Model\Holder\Field;
+use FKSDB\Events\Model\Holder\Field;
 
 /**
  *
@@ -16,5 +16,3 @@ interface IOptionsProvider {
      */
     public function getOptions(Field $field);
 }
-
-

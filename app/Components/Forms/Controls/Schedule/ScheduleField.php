@@ -14,7 +14,7 @@ use Nette\Utils\JsonException;
 
 /**
  * Class ScheduleField
- * @package FKSDB\Components\Forms\Controls\Schedule
+ * *
  */
 class ScheduleField extends TextInput {
 
@@ -77,7 +77,7 @@ class ScheduleField extends TextInput {
             case ModelScheduleGroup::TYPE_TEACHER_PRESENT:
                 return _('Program during competition');
             default:
-                throw new NotImplementedException;
+                throw new NotImplementedException();
         }
     }
 

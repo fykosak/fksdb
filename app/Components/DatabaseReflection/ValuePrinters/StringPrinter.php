@@ -7,7 +7,7 @@ use Nette\Utils\Html;
 
 /**
  * Class StringPrinter
- * @package FKSDB\Components\DatabaseReflection\ValuePrinters
+ * *
  */
 class StringPrinter extends AbstractValuePrinter {
     /**

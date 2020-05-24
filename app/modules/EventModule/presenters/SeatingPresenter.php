@@ -2,15 +2,12 @@
 
 namespace EventModule;
 
-use FKSDB\Components\Controls\Fyziklani\RoutingDownload;
-use FKSDB\Components\Controls\Fyziklani\RoutingEdit;
 use FKSDB\Components\Controls\Fyziklani\SeatingControl;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use FKSDB\React\ReactResponse;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\DeprecatedException;
 use ReactMessage;
 
 /**
@@ -26,27 +23,48 @@ class SeatingPresenter extends BasePresenter {
 
     /**
      * @param ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
+     * @return void
      */
     public function injectServiceFyziklaniTeamPosition(ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition) {
         $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleDefault() {
         $this->setTitle(_('Rooming'), 'fa fa-arrows');
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleEdit() {
         $this->setTitle(_('Edit routing'), 'fa fa-pencil');
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleDownload() {
         $this->setTitle(_('Download routing'), 'fa fa-download');
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleList() {
         $this->setTitle(_('List of all teams'), 'fa fa-print');
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titlePreview() {
         $this->setTitle(_('Preview'), 'fa fa-search');
     }
@@ -131,23 +149,6 @@ class SeatingPresenter extends BasePresenter {
         $this->template->event = $this->getEvent();
     }
 
-    /**
-     * @return RoutingDownload
-     */
-    public function createComponentDownload(): RoutingDownload {
-        throw new DeprecatedException;
-    }
-
-    /**
-     * @return RoutingEdit
-     */
-    public function createComponentRouting(): RoutingEdit {
-        throw new DeprecatedException;
-    }
-
-    /**
-     * @return SeatingControl
-     */
     public function createComponentSeating(): SeatingControl {
         return new SeatingControl($this->getContext());
     }

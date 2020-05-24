@@ -13,16 +13,10 @@ use Traversable;
  */
 class ServiceFyziklaniTeamPosition extends AbstractServiceSingle {
 
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelFyziklaniTeamPosition::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_FYZIKLANI_TEAM_POSITION;
     }
@@ -41,7 +35,7 @@ class ServiceFyziklaniTeamPosition extends AbstractServiceSingle {
      * @param Traversable $data
      * @return string[]
      */
-    public function updateRouting(Traversable $data) {
+    public function updateRouting(Traversable $data): array {
         $updatedTeams = [];
         foreach ($data as $teamData) {
             $teamData = (object)$teamData;
@@ -62,11 +56,9 @@ class ServiceFyziklaniTeamPosition extends AbstractServiceSingle {
                         $model->update($data);
                     }
                     $updatedTeams[] = $teamData->teamId;
-                } else {
-                    if ($model) {
-                        $model->delete();
-                        $updatedTeams[] = $teamData->teamId;
-                    }
+                } elseif ($model) {
+                    $model->delete();
+                    $updatedTeams[] = $teamData->teamId;
                 }
             } catch (\Exception $exception) {
             }
@@ -75,18 +67,10 @@ class ServiceFyziklaniTeamPosition extends AbstractServiceSingle {
         return $updatedTeams;
     }
 
-    /**
-     * @param array $roomIds
-     * @return TypedTableSelection
-     */
     public function getAllPlaces(array $roomIds): TypedTableSelection {
         return $this->getTable()->where('room_id', $roomIds);
     }
 
-    /**
-     * @param array $roomIds
-     * @return TypedTableSelection
-     */
     public function getFreePlaces(array $roomIds): TypedTableSelection {
         return $this->getAllPlaces($roomIds)->where('e_fyziklani_team IS NULL');
     }
