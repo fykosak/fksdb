@@ -7,7 +7,7 @@ use FKSDB\Transitions\Statements\Statement;
 
 /**
  * Class DateFrom
- * @package FKSDB\Transitions\Statements\Conditions
+ * *
  */
 class AfterDate extends Statement {
     /**

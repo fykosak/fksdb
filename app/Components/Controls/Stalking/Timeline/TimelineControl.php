@@ -15,7 +15,7 @@ use Nette\DI\Container;
 
 /**
  * Class TimelineControl
- * @package FKSDB\Components\Controls\Stalking\Timeline
+ * *
  */
 class TimelineControl extends ReactComponent {
     /**
@@ -38,10 +38,6 @@ class TimelineControl extends ReactComponent {
         $this->yearCalculator = $container->getByType(YearCalculator::class);
     }
 
-    /**
-     * @param ModelEvent $event
-     * @return array
-     */
     private function eventToArray(ModelEvent $event): array {
         return [
             'eventId' => $event->event_id,
@@ -102,6 +98,7 @@ class TimelineControl extends ReactComponent {
 
     /**
      * @return array
+     * TODO better PHPDoc
      */
     private function calculateEvents(): array {
         $events = [];

@@ -8,7 +8,7 @@ use Nette\DI\Container;
 
 /**
  * Class FyziklaniReactControl
- * @package FKSDB\Components\Controls\Fyziklani
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class FyziklaniReactControl extends ReactComponent {
     /**
@@ -26,10 +26,7 @@ abstract class FyziklaniReactControl extends ReactComponent {
         $this->event = $event;
     }
 
-    /**
-     * @return ModelEvent
-     */
-    final protected function getEvent() {
+    final protected function getEvent(): ModelEvent {
         return $this->event;
     }
 }

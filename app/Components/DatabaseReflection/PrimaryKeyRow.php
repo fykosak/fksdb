@@ -11,13 +11,10 @@ use Nette\Utils\Html;
 
 /**
  * Class PrimaryKeyRow
- * @package FKSDB\Components\DatabaseReflection
+ * *
  */
 class PrimaryKeyRow extends DefaultRow {
-    /**
-     * @param AbstractModelSingle $model
-     * @return Html
-     */
+
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         return (new StringPrinter())('#' . $model->getPrimary());
     }

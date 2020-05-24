@@ -11,7 +11,7 @@ use Nette\Application\UI\Control;
 
 /**
  * Class EventOrgPresenter
- * @package EventModule
+ * *
  */
 class EventOrgPresenter extends BasePresenter {
     use EventEntityTrait;
@@ -22,11 +22,16 @@ class EventOrgPresenter extends BasePresenter {
 
     /**
      * @param ServiceEventOrg $serviceEventOrg
+     * @return void
      */
     public function injectServiceEventOrg(ServiceEventOrg $serviceEventOrg) {
         $this->serviceEventOrg = $serviceEventOrg;
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleList() {
         $this->setTitle(sprintf(_('Organisers of event')), 'fa fa-users');
     }

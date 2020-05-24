@@ -45,6 +45,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /**
      * @param ServiceEvent $serviceEvent
+     * @return void
      */
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;
@@ -73,9 +74,6 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         parent::startup();
     }
 
-    /**
-     * @return bool
-     */
     public function isAuthorized(): bool {
         if (!$this->isEnabled()) {
             return false;
@@ -128,9 +126,6 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         return $this->getEvent()->getContest();
     }
 
-    /**
-     * @return bool
-     */
     protected function isEnabled(): bool {
         return true;
     }

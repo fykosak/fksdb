@@ -27,7 +27,13 @@ class SQLConsole extends TextArea {
         $this->monitor(IStylesheetCollector::class);
     }
 
+    /**
+     * @var bool
+     */
     private $attachedJS = false;
+    /**
+     * @var bool
+     */
     private $attachedCSS = false;
 
     /**

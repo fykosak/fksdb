@@ -20,6 +20,9 @@ final class Transition {
      */
     private $condition;
 
+    /**
+     * @var string
+     */
     private $type = self::TYPE_PRIMARY;
     /**
      * @var string

@@ -8,7 +8,7 @@ use Throwable;
 
 /**
  * Class ContestNotFoundException
- * @package FKSDB\Exceptions
+ * *
  */
 class ContestNotFoundException extends InvalidStateException {
     /**

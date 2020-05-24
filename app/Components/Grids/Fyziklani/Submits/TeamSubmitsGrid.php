@@ -13,7 +13,8 @@ use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class TeamSubmitsGrid
- * @package FKSDB\Components\Grids\Fyziklani
+ * @author Michal Červeňák <miso@fykos.cz>
+ * @author Lukáš Timko
  */
 class TeamSubmitsGrid extends SubmitsGrid {
 

@@ -98,5 +98,4 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
             }
         }
     }
-
 }

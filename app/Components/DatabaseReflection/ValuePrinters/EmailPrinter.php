@@ -8,7 +8,7 @@ use Nette\Utils\Html;
 
 /**
  * Class EmailPrinter
- * @package FKSDB\Components\DatabaseReflection\ValuePrinters
+ * *
  */
 class EmailPrinter extends AbstractValuePrinter {
     /**

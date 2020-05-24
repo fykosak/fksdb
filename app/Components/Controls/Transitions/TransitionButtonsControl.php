@@ -2,29 +2,25 @@
 
 namespace FKSDB\Components\Controls\Transitions;
 
+use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Transitions\IStateModel;
 use FKSDB\Transitions\Machine;
 use FKSDB\Transitions\UnavailableTransitionsException;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\UI\Control;
+use Nette\DI\Container;
 use Tracy\Debugger;
-use Nette\Localization\ITranslator;
 
 /**
  * Class TransitionButtonsControl
- * @package FKSDB\Components\Controls\Transitions
- *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
-class TransitionButtonsControl extends Control {
+class TransitionButtonsControl extends BaseComponent {
+
     /**
      * @var Machine
      */
     private $machine;
-    /**
-     * @var ITranslator
-     */
-    private $translator;
     /**
      * @var IStateModel
      */
@@ -33,19 +29,17 @@ class TransitionButtonsControl extends Control {
     /**
      * TransitionButtonsControl constructor.
      * @param Machine $machine
-     * @param ITranslator $translator
+     * @param Container $container
      * @param IStateModel $model
      */
-    public function __construct(Machine $machine, ITranslator $translator, IStateModel $model) {
-        parent::__construct();
+    public function __construct(Machine $machine, Container $container, IStateModel $model) {
+        parent::__construct($container);
         $this->machine = $machine;
-        $this->translator = $translator;
         $this->model = $model;
     }
 
     public function render() {
         $this->template->buttons = $this->machine->getAvailableTransitions($this->model);
-        $this->template->setTranslator($this->translator);
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'TransitionButtonsControl.latte');
         $this->template->render();
     }

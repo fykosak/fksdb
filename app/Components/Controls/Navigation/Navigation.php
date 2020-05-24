@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Navigation;
 
-use FKSDB\Components\Controls\BaseControl;
+use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\PresenterBuilder;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\UI\PageTitle;
@@ -18,7 +18,7 @@ use ReflectionMethod;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class Navigation extends BaseControl {
+class Navigation extends BaseComponent {
     /**
      * @var array
      */
@@ -56,7 +56,7 @@ class Navigation extends BaseControl {
     }
 
     /**
-     * @param $node
+     * @param mixed $node
      * @return bool
      */
     public function isActive(\stdClass $node): bool {
@@ -146,6 +146,7 @@ class Navigation extends BaseControl {
 
     /**
      * @param $structure
+     * @return void
      */
     public function setStructure($structure) {
         $this->structure = $structure;
@@ -154,6 +155,7 @@ class Navigation extends BaseControl {
     /**
      * @param $nodeId
      * @param $arguments
+     * @return void
      */
     public function createNode($nodeId, $arguments) {
         $node = (object)$arguments;
@@ -163,6 +165,7 @@ class Navigation extends BaseControl {
     /**
      * @param $idChild
      * @param $idParent
+     * @return void
      */
     public function addParent($idChild, $idParent) {
         if (!isset($this->nodeChildren)) {
@@ -173,6 +176,7 @@ class Navigation extends BaseControl {
 
     /**
      * @param string $root
+     * @return void
      */
     public function renderNavbar(string $root) {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Navigation.navbar.latte');
@@ -181,6 +185,7 @@ class Navigation extends BaseControl {
 
     /**
      * @param string $root
+     * @return void
      */
     public function render(string $root) {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Navigation.latte');
@@ -189,6 +194,7 @@ class Navigation extends BaseControl {
 
     /**
      * @param array $nodes
+     * @return void
      */
     private function renderFromRoot(array $nodes) {
         $this->template->nodes = $nodes;

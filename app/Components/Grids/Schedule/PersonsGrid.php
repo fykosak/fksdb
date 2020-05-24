@@ -13,9 +13,8 @@ use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 
 /**
- * @author Michal Červeňák <miso@fykos.cz>
  * Class PersonsGrid
- * @package FKSDB\Components\Grids\Schedule
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PersonsGrid extends BaseGrid {
     /**
@@ -34,6 +33,7 @@ class PersonsGrid extends BaseGrid {
 
     /**
      * @param ModelScheduleItem $item
+     * @return void
      */
     public function setItem(ModelScheduleItem $item) {
         $dataSource = new NDataSource($item->getInterested());
@@ -66,9 +66,6 @@ class PersonsGrid extends BaseGrid {
         });
     }
 
-    /**
-     * @return string
-     */
     protected function getModelClassName(): string {
         return ModelPersonSchedule::class;
     }

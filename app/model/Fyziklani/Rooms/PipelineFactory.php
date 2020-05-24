@@ -14,7 +14,7 @@ use Pipeline\Pipeline;
 class PipelineFactory {
 
     /**
-     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam
+     * @var ServiceFyziklaniTeam
      */
     private $serviceTeam;
 

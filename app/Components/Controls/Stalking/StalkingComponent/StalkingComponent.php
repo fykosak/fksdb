@@ -12,7 +12,7 @@ use Nette\InvalidStateException;
 
 /**
  * Class StalkingComponent
- * @package FKSDB\Components\Controls\Stalking
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class StalkingComponent extends StalkingControl {
     /**
@@ -45,9 +45,11 @@ class StalkingComponent extends StalkingControl {
 
         switch ($definition['layout']) {
             case 'single':
-                return $this->renderSingle($definition, $person);
+                $this->renderSingle($definition, $person);
+                return;
             case 'multi':
-                return $this->renderMulti($definition, $person);
+                $this->renderMulti($definition, $person);
+                return;
             default:
                 throw new InvalidStateException();
         }
@@ -56,6 +58,7 @@ class StalkingComponent extends StalkingControl {
     /**
      * @param array $definition
      * @param ModelPerson $person
+     * @return void
      * @throws NotImplementedException
      */
     private function renderSingle(array $definition, ModelPerson $person) {
@@ -84,6 +87,7 @@ class StalkingComponent extends StalkingControl {
     /**
      * @param array $definition
      * @param ModelPerson $person
+     * @return void
      */
     private function renderMulti(array $definition, ModelPerson $person) {
         $models = [];

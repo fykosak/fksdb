@@ -9,7 +9,7 @@ use Nette\Utils\Html;
 
 /**
  * Class PhoneNumberFactory
- * @package FKSDB\Components\Controls
+ * *
  */
 class PhoneNumberFactory {
     /**
@@ -30,17 +30,10 @@ class PhoneNumberFactory {
         $this->table = $this->serviceRegion->getTable();
     }
 
-    /**
-     * @return TypedTableSelection
-     */
     private function getAllRegions(): TypedTableSelection {
         return $this->table;
     }
 
-    /**
-     * @param string $number
-     * @return Html
-     */
     public function formatPhone(string $number): Html {
         try {
             $region = $this->getRegion($number);
@@ -72,10 +65,6 @@ class PhoneNumberFactory {
         return null;
     }
 
-    /**
-     * @param string $number
-     * @return bool
-     */
     public function isValid(string $number): bool {
         return !!$this->getRegion($number);
     }

@@ -25,8 +25,17 @@ class AccountManager {
 
     /** @var ServiceAuthToken */
     private $serviceAuthToken;
+    /**
+     * @var string
+     */
     private $invitationExpiration = '+1 month';
+    /**
+     * @var string
+     */
     private $recoveryExpiration = '+1 day';
+    /**
+     * @var
+     */
     private $emailFrom;
     /** @var ServiceEmailMessage */
     private $serviceEmailMessage;

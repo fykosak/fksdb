@@ -2,9 +2,9 @@
 
 namespace FKSDB\Components\Events;
 
+use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Application\IJavaScriptCollector;
-use FKSDB\Components\Controls\BaseControl;
 use Nette\DI\Container;
 
 /**
@@ -12,7 +12,7 @@ use Nette\DI\Container;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class GraphComponent extends BaseControl {
+class GraphComponent extends BaseComponent {
 
     /**
      * @var BaseMachine
@@ -25,12 +25,19 @@ class GraphComponent extends BaseControl {
      * GraphComponent constructor.
      * @param Container $container
      * @param BaseMachine $baseMachine
-     * @param ExpressionPrinter $expressionPrinter
      */
-    public function __construct(Container $container, BaseMachine $baseMachine, ExpressionPrinter $expressionPrinter) {
+    public function __construct(Container $container, BaseMachine $baseMachine) {
         parent::__construct($container);
         $this->monitor(IJavaScriptCollector::class);
         $this->baseMachine = $baseMachine;
+
+    }
+
+    /**
+     * @param ExpressionPrinter $expressionPrinter
+     * @return void
+     */
+    public function injectExpressionPrinter(ExpressionPrinter $expressionPrinter) {
         $this->expressionPrinter = $expressionPrinter;
     }
 
@@ -39,6 +46,7 @@ class GraphComponent extends BaseControl {
 
     /**
      * @param $obj
+     * @return void
      */
     protected function attached($obj) {
         parent::attached($obj);
@@ -59,22 +67,19 @@ class GraphComponent extends BaseControl {
         $this->template->render();
     }
 
-    /**
-     * @return string
-     */
-    private function getHtmlId() {
+    private function getHtmlId(): string {
         return 'graph-' . $this->getUniqueId();
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     private function getAllStates(): array {
         return array_merge(array_keys($this->baseMachine->getStates()), [BaseMachine::STATE_INIT, BaseMachine::STATE_TERMINATED]);
     }
 
     /**
-     * @return array
+     * @return array[]
      */
     private function prepareNodes(): array {
         $states = $this->getAllStates();
@@ -91,7 +96,7 @@ class GraphComponent extends BaseControl {
     }
 
     /**
-     * @return array
+     * @return array[]
      */
     private function prepareTransitions(): array {
         $states = $this->getAllStates();
@@ -105,7 +110,6 @@ class GraphComponent extends BaseControl {
                         'condition' => $this->expressionPrinter->printExpression($transition->getCondition()),
                         'label' => $transition->getLabel(),
                     ];
-
                 }
             }
         }

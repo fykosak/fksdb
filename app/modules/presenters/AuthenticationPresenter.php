@@ -92,9 +92,9 @@ final class AuthenticationPresenter extends BasePresenter {
      */
     private $login;
 
-
     /**
      * @param FacebookAuthenticator $facebookAuthenticator
+     * @return void
      */
     public function injectFacebookAuthenticator(FacebookAuthenticator $facebookAuthenticator) {
         $this->facebookAuthenticator = $facebookAuthenticator;
@@ -102,18 +102,23 @@ final class AuthenticationPresenter extends BasePresenter {
 
     /**
      * @param ServiceAuthToken $serviceAuthToken
+     * @return void
      */
     public function injectServiceAuthToken(ServiceAuthToken $serviceAuthToken) {
         $this->serviceAuthToken = $serviceAuthToken;
     }
+
     /**
      * @param IGlobalSession $globalSession
+     * @return void
      */
     public function injectGlobalSession(IGlobalSession $globalSession) {
         $this->globalSession = $globalSession;
     }
+
     /**
      * @param PasswordAuthenticator $passwordAuthenticator
+     * @return void
      */
     public function injectPasswordAuthenticator(PasswordAuthenticator $passwordAuthenticator) {
         $this->passwordAuthenticator = $passwordAuthenticator;
@@ -121,18 +126,23 @@ final class AuthenticationPresenter extends BasePresenter {
 
     /**
      * @param AccountManager $accountManager
+     * @return void
      */
     public function injectAccountManager(AccountManager $accountManager) {
         $this->accountManager = $accountManager;
     }
+
     /**
      * @param MailTemplateFactory $mailTemplateFactory
+     * @return void
      */
     public function injectMailTemplateFactory(MailTemplateFactory $mailTemplateFactory) {
         $this->mailTemplateFactory = $mailTemplateFactory;
     }
+
     /**
      * @param ServicePerson $servicePerson
+     * @return void
      */
     public function injectServicePerson(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;

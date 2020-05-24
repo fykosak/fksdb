@@ -2,6 +2,7 @@
 
 namespace EventModule;
 
+use FKSDB\Config\NeonSchemaException;
 use FKSDB\Events\Model\ApplicationHandlerFactory;
 use FKSDB\Events\Model\Grid\SingleEventSource;
 use FKSDB\Components\Events\ApplicationComponent;
@@ -19,7 +20,7 @@ use Nette\InvalidStateException;
 
 /**
  * Class ApplicationPresenter
- * @package EventModule
+ * *
  */
 abstract class AbstractApplicationPresenter extends BasePresenter {
     use EventEntityTrait;
@@ -32,6 +33,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
 
     /**
      * @param ApplicationHandlerFactory $applicationHandlerFactory
+     * @return void
      */
     public function injectHandlerFactory(ApplicationHandlerFactory $applicationHandlerFactory) {
         $this->applicationHandlerFactory = $applicationHandlerFactory;
@@ -39,11 +41,15 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
 
     /**
      * @param ServiceEventParticipant $serviceEventParticipant
+     * @return void
      */
     public function injectServiceEventParticipant(ServiceEventParticipant $serviceEventParticipant) {
         $this->serviceEventParticipant = $serviceEventParticipant;
     }
 
+    /**
+     * @throws BadRequestException
+     */
     final public function titleList() {
         $this->setTitle(_('List of applications'), 'fa fa-users');
     }
@@ -53,11 +59,16 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      * @throws ForbiddenRequestException
+     * @throws \Throwable
      */
     final public function titleDetail(int $id) {
         $this->setTitle(sprintf(_('Application detail "%s"'), $this->loadEntity($id)->__toString()), 'fa fa-user');
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     final public function titleTransitions() {
         $this->setTitle(_('Group transitions'), 'fa fa-user');
     }
@@ -100,9 +111,6 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
         $this->template->event = $this->getEvent();
     }
 
-    /**
-     * @return PersonGrid
-     */
     protected function createComponentPersonScheduleGrid(): PersonGrid {
         return new PersonGrid($this->getContext());
     }
@@ -111,6 +119,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @return ApplicationComponent
      * @throws BadRequestException
      * @throws AbortException
+     * @throws NeonSchemaException
      */
     protected function createComponentApplicationComponent(): ApplicationComponent {
         $source = new SingleEventSource($this->getEvent(), $this->getContext());

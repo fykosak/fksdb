@@ -12,7 +12,7 @@ use Nette\Utils\Html;
 
 /**
  * Class OrderRow
- * @package FKSDB\Components\DatabaseReflection\Org
+ * *
  */
 class OrderRow extends AbstractOrgRowFactory {
     const ORDER_MAPPING = [

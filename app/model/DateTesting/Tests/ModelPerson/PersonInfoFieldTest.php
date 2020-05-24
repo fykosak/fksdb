@@ -11,7 +11,7 @@ use Nette\Application\BadRequestException;
 
 /**
  * Class PersonInfoFieldTest
- * @package FKSDB\DataTesting\Tests\Person
+ * *
  */
 class PersonInfoFieldTest extends PersonFileLevelTest {
     /**

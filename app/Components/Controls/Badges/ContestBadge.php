@@ -8,8 +8,7 @@ use Nette\Utils\Html;
 
 /**
  * Class ContestBadge
- * @package FKSDB\Components\Controls\Stalking\Helpers
- *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ContestBadge extends Badge {
     /**

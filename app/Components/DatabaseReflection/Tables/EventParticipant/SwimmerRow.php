@@ -9,7 +9,7 @@ use Nette\Utils\Html;
 
 /**
  * Class SwimmerRow
- * @package FKSDB\Components\DatabaseReflection\EventParticipant
+ * *
  */
 class SwimmerRow extends AbstractParticipantRow {
     /**

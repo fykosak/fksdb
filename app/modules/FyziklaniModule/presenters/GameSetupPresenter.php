@@ -9,7 +9,7 @@ use Nette\Application\BadRequestException;
 
 /**
  * Class GameSetupPresenter
- * @package FyziklaniModule
+ * *
  */
 class GameSetupPresenter extends BasePresenter {
     /**
@@ -38,7 +38,7 @@ class GameSetupPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function authorizedDefault() {
-        return $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.gameSetup', 'default'));
+        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.gameSetup', 'default'));
     }
 
     /**

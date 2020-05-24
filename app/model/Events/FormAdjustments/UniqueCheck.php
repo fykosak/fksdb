@@ -18,7 +18,13 @@ use Nette\Forms\IControl;
  */
 class UniqueCheck extends AbstractAdjustment {
 
+    /**
+     * @var
+     */
     private $field;
+    /**
+     * @var
+     */
     private $message;
 
     /**

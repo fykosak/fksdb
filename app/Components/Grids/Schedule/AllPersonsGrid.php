@@ -15,8 +15,8 @@ use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 
 /**
- * Class PersonsGrid
- * @package FKSDB\Components\Grids\Schedule
+ * Class AllPersonsGrid
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class AllPersonsGrid extends BaseGrid {
     /**
@@ -38,10 +38,10 @@ class AllPersonsGrid extends BaseGrid {
      * @param ModelEvent $event
      */
     public function __construct(Container $container, ModelEvent $event) {
+        parent::__construct($container);
         $this->yearCalculator = $container->getByType(YearCalculator::class);
         $this->servicePersonSchedule = $container->getByType(ServicePersonSchedule::class);
         $this->event = $event;
-        parent::__construct($container);
     }
 
     /**
@@ -87,16 +87,11 @@ class AllPersonsGrid extends BaseGrid {
 
     /**
      * @throws DuplicateColumnException
-     * @throws NotImplementedException
-     * @throws NotImplementedException
      */
     protected function addColumnPayment() {
         $this->addColumns(['referenced.payment_id']);
     }
 
-    /**
-     * @return string
-     */
     protected function getModelClassName(): string {
         return ModelPersonSchedule::class;
     }

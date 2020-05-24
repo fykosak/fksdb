@@ -2,15 +2,16 @@
 
 namespace FKSDB\Components\Controls\Breadcrumbs;
 
+use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\Breadcrumbs\Request as NaviRequest;
 use FKSDB\Components\Controls\Navigation\INavigablePresenter;
 use FKSDB\Exceptions\BadTypeException;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\IRouter;
 use Nette\Application\Request as AppRequest;
-use Nette\Application\UI\Control;
 use Nette\Application\UI\Presenter;
 use Nette\Application\UI\ComponentReflection;
+use Nette\DI\Container;
 use Tracy\Debugger;
 use Nette\Http\Request as HttpRequest;
 use Nette\Http\Session;
@@ -30,13 +31,13 @@ use Utils;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class Breadcrumbs extends Control {
+class Breadcrumbs extends BaseComponent {
 
     const SECTION_REQUESTS = 'FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs.main';
     const SECTION_BACKIDS = 'FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs.backids';
     const SECTION_REVERSE = 'FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs.reverse';
     const SECTION_PATH_REVERSE = 'FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs.pathReverse';
-    const EXPIRATION = '+ 10 minutes';
+    // const EXPIRATION = '+ 10 minutes';
     const BACKID_LEN = 4;
     const BACKID_DOMAIN = '0-9a-zA-Z';
 
@@ -68,22 +69,28 @@ class Breadcrumbs extends Control {
     /**
      * Breadcrumbs constructor.
      * @param $expiration
-     * @param Session $session
-     * @param IRouter $router
-     * @param HttpRequest $httpRequest
-     * @param IPresenterFactory $presenterFactory
+     * @param Container $container
      */
-    public function __construct($expiration, Session $session, IRouter $router, HttpRequest $httpRequest, IPresenterFactory $presenterFactory) {
-        parent::__construct();
-        $this->session = $session;
-        $this->router = $router;
-        $this->httpRequest = $httpRequest;
-        $this->presenterFactory = $presenterFactory;
-
+    public function __construct($expiration, Container $container) {
+        parent::__construct($container);
         $this->getRequests()->setExpiration($expiration);
         $this->getPathKeyCache()->setExpiration($expiration);
         $this->getBackLinkMap()->setExpiration($expiration);
         $this->getReverseBackLinkMap()->setExpiration($expiration);
+    }
+
+    /**
+     * @param Session $session
+     * @param IRouter $router
+     * @param HttpRequest $httpRequest
+     * @param IPresenterFactory $presenterFactory
+     * @return void
+     */
+    public function injectPrimary(Session $session, IRouter $router, HttpRequest $httpRequest, IPresenterFactory $presenterFactory) {
+        $this->session = $session;
+        $this->router = $router;
+        $this->httpRequest = $httpRequest;
+        $this->presenterFactory = $presenterFactory;
     }
 
     /*     * **********************
@@ -183,6 +190,7 @@ class Breadcrumbs extends Control {
         if (!isset($requests[$requestKey])) {
             return [];
         }
+        /** @var NaviRequest $naviRequest */
         $naviRequest = $requests[$requestKey];
 
         $prevPathKey = null;
@@ -222,7 +230,7 @@ class Breadcrumbs extends Control {
             $action = $parameters[Presenter::ACTION_KEY];
             $methodName = call_user_func("$presenterClassName::publicFormatActionMethod", $action);
             $identifyingParameters = [Presenter::ACTION_KEY];
-
+            /** @var \ReflectionClass $rc */
             $rc = call_user_func("$presenterClassName::getReflection");
             if ($rc->hasMethod($methodName)) {
                 $rm = $rc->getMethod($methodName);
@@ -307,11 +315,7 @@ class Breadcrumbs extends Control {
         return new NaviRequest($presenter->getUser()->getId(), $request, $presenter->getTitle(), $backLink, $pathKey);
     }
 
-    /**
-     * @param AppRequest $request
-     * @return string
-     */
-    protected function getRequestKey(AppRequest $request) {
+    protected function getRequestKey(AppRequest $request): string {
         $presenterName = $request->getPresenterName();
         $parameters = $this->filterParameters($request->getParameters());
         $paramKey = Utils::getFingerprint($parameters);
@@ -346,7 +350,7 @@ class Breadcrumbs extends Control {
      * @param array $parameters
      * @return array
      */
-    protected function filterParameters($parameters) {
+    protected function filterParameters($parameters): array {
         $result = [];
         foreach ($parameters as $key => $value) {
             if ($key == Presenter::FLASH_KEY) {
@@ -361,31 +365,19 @@ class Breadcrumbs extends Control {
      * Cache stored in session    *
      * ********************** */
 
-    /**
-     * @return SessionSection
-     */
-    protected function getRequests() {
+    protected function getRequests(): SessionSection {
         return $this->session->getSection(self::SECTION_REQUESTS);
     }
 
-    /**
-     * @return SessionSection
-     */
-    protected function getPathKeyCache() {
+    protected function getPathKeyCache(): SessionSection {
         return $this->session->getSection(self::SECTION_PATH_REVERSE);
     }
 
-    /**
-     * @return SessionSection
-     */
-    protected function getBackLinkMap() {
+    protected function getBackLinkMap(): SessionSection {
         return $this->session->getSection(self::SECTION_BACKIDS);
     }
 
-    /**
-     * @return SessionSection
-     */
-    protected function getReverseBackLinkMap() {
+    protected function getReverseBackLinkMap(): SessionSection {
         return $this->session->getSection(self::SECTION_REVERSE);
     }
 

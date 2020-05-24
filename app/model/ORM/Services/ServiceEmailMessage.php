@@ -10,7 +10,7 @@ use Nette\Database\Table\ActiveRow;
 
 /**
  * Class ServiceEmailMessage
- * @package FKSDB\ORM\Services
+ * *
  */
 class ServiceEmailMessage extends AbstractServiceSingle {
 

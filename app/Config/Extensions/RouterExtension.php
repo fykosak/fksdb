@@ -2,11 +2,8 @@
 
 namespace FKSDB\Config\Extensions;
 
-use Nette\Application\IRouter;
 use Nette\Application\Routers\Route;
 use Nette\DI\CompilerExtension;
-use Nette\DI\ServiceDefinition;
-use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

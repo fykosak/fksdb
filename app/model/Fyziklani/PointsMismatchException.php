@@ -8,7 +8,7 @@ use Throwable;
 
 /**
  * Class PointsMismatchException
- * @package FKSDB\model\Fyziklani
+ * *
  */
 class PointsMismatchException extends TaskCodeException {
     /**

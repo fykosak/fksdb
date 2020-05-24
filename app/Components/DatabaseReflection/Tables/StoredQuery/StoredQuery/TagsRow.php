@@ -12,7 +12,7 @@ use Nette\Utils\Html;
 
 /**
  * Class TagsRow
- * @package FKSDB\Components\DatabaseReflection\StoredQuery\StoredQuery
+ * *
  */
 class TagsRow extends AbstractRow {
     /**

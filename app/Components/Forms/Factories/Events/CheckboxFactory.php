@@ -6,12 +6,13 @@ use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Model\Holder\Field;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Container;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\Checkbox;
 use Nette\Forms\IControl;
 
 /**
  * Class CheckboxFactory
- * @package FKSDB\Components\Forms\Factories\Events
+ * *
  */
 class CheckboxFactory extends AbstractFactory {
     public function __construct() {
@@ -33,7 +34,7 @@ class CheckboxFactory extends AbstractFactory {
 
 
     /**
-     * @param $component
+     * @param BaseControl $component
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
@@ -44,7 +45,7 @@ class CheckboxFactory extends AbstractFactory {
     }
 
     /**
-     * @param $component
+     * @param BaseControl $component
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container

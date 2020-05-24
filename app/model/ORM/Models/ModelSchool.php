@@ -12,6 +12,7 @@ use Nette\Security\IResource;
  * @property-read ActiveRow address
  * @property-read string name_abbrev
  * @property-read int school_id
+ * @property-read bool|int active
  */
 class ModelSchool extends AbstractModelSingle implements IResource {
     const RESOURCE_ID = 'school';

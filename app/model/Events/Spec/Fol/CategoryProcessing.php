@@ -10,6 +10,8 @@ use FKSDB\Events\Processings\AbstractProcessing;
 use FKSDB\Components\Forms\Factories\Events\IOptionsProvider;
 use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Models\ModelPersonHistory;
 use FKSDB\ORM\Models\ModelRegion;
 use FKSDB\ORM\Services\ServiceSchool;
 use FKSDB\YearCalculator;
@@ -19,7 +21,7 @@ use Nette\Utils\ArrayHash;
 
 /**
  * Class CategoryProcessing
- * @package Events\Spec\Fol
+ * *
  */
 class CategoryProcessing extends AbstractProcessing implements IOptionsProvider {
 
@@ -38,8 +40,14 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
      * @var ServiceSchool
      */
     private $serviceSchool;
+    /**
+     * @var array
+     */
     private $categoryNames;
 
+    /**
+     * @var int
+     */
     private $rulesVersion;
 
     /**
@@ -113,7 +121,9 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
                 if ($this->isBaseReallyEmpty($name)) {
                     continue;
                 }
+                /** @var ModelPerson $person */
                 $person = $baseHolder->getModel()->getMainModel()->person;
+                /** @var ModelPersonHistory $history TODO type safe */
                 $history = $person->related('person_history')->where('ac_year', $acYear)->fetch();
                 $participantData = [
                     'school_id' => $history->school_id,

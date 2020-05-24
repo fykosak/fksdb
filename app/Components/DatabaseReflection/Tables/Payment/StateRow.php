@@ -8,7 +8,7 @@ use Nette\Utils\Html;
 
 /**
  * Class StateRow
- * @package FKSDB\Components\DatabaseReflection\Payment
+ * *
  */
 class StateRow extends AbstractPaymentRow {
     /**

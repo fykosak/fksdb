@@ -14,7 +14,7 @@ use Persons\ExtendedPersonHandler;
 
 /**
  * Class TeacherPresenter
- * @package OrgModule
+ * *
  * @method ModelTeacher getModel2()
  * @method ModelTeacher getModel()
  */
@@ -46,6 +46,7 @@ class TeacherPresenter extends ExtendedPersonPresenter {
 
     /**
      * @param ServiceTeacher $serviceTeacher
+     * @return void
      */
     public function injectServiceTeacher(ServiceTeacher $serviceTeacher) {
         $this->serviceTeacher = $serviceTeacher;
@@ -53,6 +54,7 @@ class TeacherPresenter extends ExtendedPersonPresenter {
 
     /**
      * @param TeacherFactory $teacherFactory
+     * @return void
      */
     public function injectTeacherFactory(TeacherFactory $teacherFactory) {
         $this->teacherFactory = $teacherFactory;
@@ -60,6 +62,7 @@ class TeacherPresenter extends ExtendedPersonPresenter {
 
     /**
      * @param SchoolFactory $schoolFactory
+     * @return void
      */
     public function injectSchoolFactory(SchoolFactory $schoolFactory) {
         $this->schoolFactory = $schoolFactory;
@@ -85,9 +88,6 @@ class TeacherPresenter extends ExtendedPersonPresenter {
         $this->setTitle(_('Teacher detail'), 'fa fa-graduation-cap');
     }
 
-    /**
-     * @return TeachersGrid
-     */
     protected function createComponentGrid(): TeachersGrid {
         return new TeachersGrid($this->getContext());
     }

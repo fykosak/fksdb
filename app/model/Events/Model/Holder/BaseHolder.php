@@ -134,6 +134,7 @@ class BaseHolder {
 
     /**
      * @param Field $field
+     * @return void
      */
     public function addField(Field $field) {
         $field->setBaseHolder($this);
@@ -148,15 +149,13 @@ class BaseHolder {
         return $this->fields;
     }
 
-    /**
-     * @return Holder
-     */
     public function getHolder(): Holder {
         return $this->holder;
     }
 
     /**
      * @param Holder $holder
+     * @return void
      */
     public function setHolder(Holder $holder) {
         $this->holder = $holder;
@@ -183,9 +182,6 @@ class BaseHolder {
         $this->eventRelation = $eventRelation;
     }
 
-    /**
-     * @return ModelEvent
-     */
     public function getEvent(): ModelEvent {
         return $this->event;
     }
@@ -220,6 +216,7 @@ class BaseHolder {
 
     /**
      * @param $paramScheme
+     * @return void
      */
     public function setParamScheme($paramScheme) {
         $this->paramScheme = $paramScheme;
@@ -234,35 +231,28 @@ class BaseHolder {
 
     /**
      * @param ExpressionEvaluator $evaluator
+     * @return void
      */
     public function setEvaluator(ExpressionEvaluator $evaluator) {
         $this->evaluator = $evaluator;
     }
 
-    /**
-     * @return DataValidator
-     */
     public function getValidator(): DataValidator {
         return $this->validator;
     }
 
     /**
      * @param DataValidator $validator
+     * @return void
      */
     public function setValidator(DataValidator $validator) {
         $this->validator = $validator;
     }
 
-    /**
-     * @return bool
-     */
     public function isVisible(): bool {
         return $this->getEvaluator()->evaluate($this->visible, $this);
     }
 
-    /**
-     * @return bool
-     */
     public function isModifiable(): bool {
         return $this->getEvaluator()->evaluate($this->modifiable, $this);
     }
@@ -290,6 +280,9 @@ class BaseHolder {
         }
     }
 
+    /**
+     * @return void
+     */
     public function saveModel() {
         if ($this->getModelState() == BaseMachine::STATE_TERMINATED) {
             $this->service->dispose($this->getModel());
@@ -298,9 +291,6 @@ class BaseHolder {
         }
     }
 
-    /**
-     * @return string
-     */
     public function getModelState(): string {
         $model = $this->getModel();
         if ($model->isNew() && !$model[self::STATE_COLUMN]) {
@@ -312,6 +302,7 @@ class BaseHolder {
 
     /**
      * @param string $state
+     * @return void
      */
     public function setModelState(string $state) {
         $this->getService()->updateModel($this->getModel(), [self::STATE_COLUMN => $state]);
@@ -326,9 +317,6 @@ class BaseHolder {
         $this->getService()->updateModel($this->getModel(), $values, $alive);
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string {
         return $this->name;
     }
@@ -342,6 +330,7 @@ class BaseHolder {
 
     /**
      * @param IService $service
+     * @return void
      */
     public function setService(IService $service) {
         $this->service = $service;
@@ -412,6 +401,7 @@ class BaseHolder {
 
     /**
      * @param $personIds
+     * @return void
      */
     public function setPersonIds($personIds) {
         if (!$this->getService()) {
@@ -433,15 +423,12 @@ class BaseHolder {
 
     /**
      * @param $eventId
+     * @return void
      */
     public function setEventId($eventId) {
         $this->eventId = $this->resolveColumnJoins($eventId);
     }
 
-    /**
-     * @param string $column
-     * @return string
-     */
     private function resolveColumnJoins(string $column): string {
         if (strpos($column, '.') === false && strpos($column, ':') === false) {
             $column = $this->getService()->getTable()->getName() . '.' . $column;
@@ -468,10 +455,6 @@ class BaseHolder {
         });
     }
 
-    /**
-     * @param BaseMachine $machine
-     * @return ContainerWithOptions
-     */
     public function createFormContainer(BaseMachine $machine): ContainerWithOptions {
         $container = new ContainerWithOptions();
         $container->setOption('label', $this->getLabel());

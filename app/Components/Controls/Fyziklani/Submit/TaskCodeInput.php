@@ -17,14 +17,13 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\React\ReactResponse;
 use Nette\Application\AbortException;
 use Nette\Application\UI\InvalidLinkException;
-use Nette\ComponentModel\IComponent;
 use Nette\DI\Container;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 
 /**
  * Class TaskCodeInput
- * @package FKSDB\Components\Controls\Fyziklani
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class TaskCodeInput extends FyziklaniReactControl {
     /**
@@ -43,10 +42,18 @@ class TaskCodeInput extends FyziklaniReactControl {
      * @param ModelEvent $event
      */
     public function __construct(Container $container, ModelEvent $event) {
-        $this->serviceFyziklaniTask = $container->getByType(ServiceFyziklaniTask::class);
-        $this->serviceFyziklaniTeam = $container->getByType(ServiceFyziklaniTeam::class);
         parent::__construct($container, $event);
         $this->monitor(IJavaScriptCollector::class);
+    }
+
+    /**
+     * @param ServiceFyziklaniTask $serviceFyziklaniTask
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @return void
+     */
+    public function injectPrimary(ServiceFyziklaniTask $serviceFyziklaniTask, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
+        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
+        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 
     /**
@@ -63,7 +70,8 @@ class TaskCodeInput extends FyziklaniReactControl {
     }
 
     /**
-     * @param IComponent $obj
+     * @param $obj
+     * @return void
      */
     protected function attached($obj) {
         if ($obj instanceof IJavaScriptCollector) {
@@ -73,6 +81,7 @@ class TaskCodeInput extends FyziklaniReactControl {
     }
 
     /**
+     * @return void
      * @throws InvalidLinkException
      */
     protected function configure() {
@@ -81,8 +90,9 @@ class TaskCodeInput extends FyziklaniReactControl {
     }
 
     /**
-     * @throws AbortException
+     * @return void
      * @throws Exception
+     * @throws AbortException
      */
     public function handleSave() {
         $request = $this->getReactRequest();
@@ -101,9 +111,6 @@ class TaskCodeInput extends FyziklaniReactControl {
 
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function getReactId(): string {
         return 'fyziklani.submit-form';
     }

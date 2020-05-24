@@ -12,7 +12,7 @@ use Nette\Utils\JsonException;
 
 /**
  * Class ScheduleFactory
- * @package FKSDB\Components\Forms\Factories\Events
+ * *
  */
 class ScheduleFactory extends AbstractFactory {
     /**

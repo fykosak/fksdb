@@ -8,7 +8,7 @@ use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
 
 /**
  * Class ServiceFyziklaniGameSetup
- * @package FKSDB\ORM\Services\Fyziklani
+ * *
  */
 class ServiceFyziklaniGameSetup extends AbstractServiceSingle {
 

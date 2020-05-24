@@ -9,7 +9,7 @@ use RuntimeException;
 
 /**
  * Class SecondaryModelConflictException
- * @package Events\Model\Holder\SecondaryModelStrategies
+ * *
  */
 class SecondaryModelConflictException extends RuntimeException {
 

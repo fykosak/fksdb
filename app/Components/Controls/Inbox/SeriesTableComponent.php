@@ -2,16 +2,17 @@
 
 namespace FKSDB\Components\Controls\Inbox;
 
-use FKSDB\Components\Controls\BaseControl;
+use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Submits\SeriesTable;
 use Nette\DI\Container;
 use Nette\Application\UI\ITemplate;
 
 /**
- * Class SeriesTableControl
- * @package FKSDB\Components\Controls\Upload
+ * Class SeriesTableComponent
+ * @author Michal Červeňák <miso@fykos.cz>
+ * @author Michal Koutny
  */
-abstract class SeriesTableControl extends BaseControl {
+abstract class SeriesTableComponent extends BaseComponent {
     /** @var SeriesTable */
     private $seriesTable;
     /** @var bool */
@@ -40,9 +41,6 @@ abstract class SeriesTableControl extends BaseControl {
         return $template;
     }
 
-    /**
-     * @return SeriesTable
-     */
     protected function getSeriesTable(): SeriesTable {
         return $this->seriesTable;
     }

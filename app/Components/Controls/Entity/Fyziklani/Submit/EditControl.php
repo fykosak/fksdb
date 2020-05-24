@@ -18,8 +18,8 @@ use Nette\Forms\Form;
 use Nette\Localization\ITranslator;
 
 /**
- * Class EditSubmitControl
- * @package FKSDB\Components\Controls\Fyziklani
+ * Class EditControl
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class EditControl extends FormControl implements IEditEntityForm {
     /**

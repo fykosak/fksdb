@@ -1,8 +1,12 @@
 <?php
 
-namespace FKSDB\Submits;
+namespace FKSDB\Submits\FileSystemStorage;
 
 use FKSDB\ORM\Models\ModelSubmit;
+use FKSDB\Submits\IStorageProcessing;
+use FKSDB\Submits\ISubmitStorage;
+use FKSDB\Submits\ProcessingException;
+use FKSDB\Submits\StorageException;
 use Tracy\Debugger;
 use Nette\InvalidStateException;
 use Nette\Utils\Finder;
@@ -14,7 +18,7 @@ use UnexpectedValueException;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class FilesystemUploadedSubmitStorage implements ISubmitStorage {
+class UploadedStorage implements ISubmitStorage {
     /** Characters delimiting name and metadata in filename. */
     const DELIMITER = '__';
 
@@ -29,6 +33,9 @@ class FilesystemUploadedSubmitStorage implements ISubmitStorage {
      */
     const FINAL_EXT = '.pdf';
 
+    /**
+     * @var null
+     */
     private $todo = null;
 
     /**

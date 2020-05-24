@@ -8,14 +8,18 @@ use Nette\DI\Container;
 use Nette\Localization\ITranslator;
 
 /**
- * Class BaseControl
- * @package FKSDB\Components\Controls
+ * Class BaseComponent
+ * @author Michal Červeňák <miso@fykos.cz>
  */
-abstract class BaseControl extends Control {
+abstract class BaseComponent extends Control {
     /**
      * @var Container
      */
     private $context;
+    /**
+     * @var ITranslator
+     */
+    private $translator;
 
     /**
      * SubmitsTableControl constructor.
@@ -23,7 +27,16 @@ abstract class BaseControl extends Control {
      */
     public function __construct(Container $container) {
         parent::__construct();
+        $container->callInjects($this);
         $this->context = $container;
+    }
+
+    /**
+     * @param ITranslator $translator
+     * @return void
+     */
+    public function injectTranslator(ITranslator $translator) {
+        $this->translator = $translator;
     }
 
     /**
@@ -31,9 +44,7 @@ abstract class BaseControl extends Control {
      */
     protected function createTemplate() {
         $template = parent::createTemplate();
-        /** @var ITranslator $translator */
-        $translator = $this->getContext()->getByType(ITranslator::class);
-        $template->setTranslator($translator);
+        $template->setTranslator($this->translator);
         return $template;
     }
 

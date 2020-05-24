@@ -9,7 +9,7 @@ use FKSDB\Payment\SymbolGenerator\AlreadyGeneratedSymbolsException;
 
 /**
  * Class AbstractSymbolGenerator
- * @package FKSDB\Payment\SymbolGenerator
+ * *
  */
 abstract class AbstractSymbolGenerator {
     /**

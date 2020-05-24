@@ -20,7 +20,6 @@ use Nette\DI\Container;
 use Nette\Utils\JsonException;
 use Tracy\Debugger;
 use Nette\Forms\Controls\SelectBox;
-use Nette\Forms\Controls\SubmitButton;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -110,6 +109,9 @@ class ImportComponent extends Control {
         return $control;
     }
 
+    /**
+     * @return void
+     */
     public function render() {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ImportComponent.latte');
         $this->template->render();
@@ -157,10 +159,7 @@ class ImportComponent extends Control {
         }
     }
 
-    /**
-     * @return SelectBox
-     */
-    private function createKeyElement() {
+    private function createKeyElement(): SelectBox {
         $baseHolder = $this->source->getDummyHolder()->getPrimaryHolder();
         $options = [];
         foreach ($baseHolder->getFields() as $field) {

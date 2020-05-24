@@ -10,7 +10,7 @@ use Nette\Utils\Html;
 
 /**
  * Class PriceCZKRow
- * @package FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem
+ * *
  */
 class PriceCZKRow extends AbstractScheduleItemRow {
     /**

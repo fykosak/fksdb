@@ -14,11 +14,17 @@ class EventFactory {
     use SmartObject;
     const HTTP_HEADER = 'X-GitHub-Event';
 
+    /**
+     * @var string[]
+     */
     private static $typeMap = [
         'ping' => 'createPing',
         'push' => 'createPush',
     ];
 
+    /**
+     * @var array
+     */
     private $repositoryCache = [];
 
     /**
@@ -144,7 +150,7 @@ class EventFactory {
 
 /**
  * Class UnsupportedEventException
- * @package Github
+ * *
  */
 class UnsupportedEventException extends InvalidArgumentException {
 
@@ -152,7 +158,7 @@ class UnsupportedEventException extends InvalidArgumentException {
 
 /**
  * Class MissingEventFieldException
- * @package Github
+ * *
  */
 class MissingEventFieldException extends InvalidArgumentException {
 

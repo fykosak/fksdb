@@ -11,7 +11,6 @@ use FKSDB\YearCalculator;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\UI\Control;
 use Nette\Http\Session;
 use Nette\Security\IIdentity;
 
@@ -19,8 +18,9 @@ use Nette\Security\IIdentity;
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
+ * @method \ContestPresenter getPresenter($need = TRUE)
  */
-class ContestChooser extends Control {
+class ContestChooser extends BaseComponent {
 
     const SOURCE_SESSION = 0x1;
     const SOURCE_URL = 0x2;
@@ -76,7 +76,7 @@ class ContestChooser extends Control {
      * @var bool
      */
     private $valid;
-    /** @var bool  */
+    /** @var bool */
     private $initialized = false;
 
     /**
@@ -90,13 +90,12 @@ class ContestChooser extends Control {
     private $contestSource = 0xffffffff;
 
     /**
-     *
      * @param Session $session
      * @param YearCalculator $yearCalculator
      * @param ServiceContest $serviceContest
+     * @return void
      */
-    public function __construct(Session $session, YearCalculator $yearCalculator, ServiceContest $serviceContest) {
-        parent::__construct();
+    public function injectPrimary(Session $session, YearCalculator $yearCalculator, ServiceContest $serviceContest) {
         $this->session = $session;
         $this->yearCalculator = $yearCalculator;
         $this->serviceContest = $serviceContest;
@@ -126,6 +125,7 @@ class ContestChooser extends Control {
 
     /**
      * @param $defaultContest
+     * @return void
      */
     public function setDefaultContest($defaultContest) {
         $this->defaultContest = $defaultContest;
@@ -140,6 +140,7 @@ class ContestChooser extends Control {
 
     /**
      * @param $contestSource
+     * @return void
      */
     public function setContestSource($contestSource) {
         $this->contestSource = $contestSource;
@@ -327,7 +328,7 @@ class ContestChooser extends Control {
     }
 
     /**
-     * @return IIdentity|NULL
+     * @return IIdentity|ModelLogin|NULL
      */
     private function getLogin() {
         return $this->getPresenter()->getUser()->getIdentity();
@@ -422,5 +423,4 @@ class ContestChooser extends Control {
         }
         return $year;
     }
-
 }

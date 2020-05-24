@@ -144,11 +144,6 @@ class EventsExtension extends CompilerExtension {
         $this->scheme = $loader->load($this->schemeFile);
     }
 
-    /**
-     * @param string $definitionName
-     * @param string $baseName
-     * @return array
-     */
     private function getBaseMachineConfig(string $definitionName, string $baseName): array {
         $key = "$definitionName.$baseName";
         while (!isset($this->baseMachineConfig[$key])) { // 'while' instead of 'if' so that 'break' can be used instead of return
@@ -201,13 +196,6 @@ class EventsExtension extends CompilerExtension {
         $def->setArguments([$templateDir, $this->definitionsMap]); //TODO!!
     }
 
-    /**
-     * @param string $baseName
-     * @param array $states
-     * @param string $mask
-     * @param array $definition
-     * @return ServiceDefinition
-     */
     private function createTransitionService(string $baseName, array $states, string $mask, array $definition): ServiceDefinition {
         if (!Transition::validateTransition($mask, $states)) {
             throw new MachineDefinitionException("Invalid transition $mask for base machine $baseName.");
@@ -237,10 +225,6 @@ class EventsExtension extends CompilerExtension {
         return $factory;
     }
 
-    /**
-     * @param array $fieldDefinition
-     * @return ServiceDefinition
-     */
     private function createFieldService(array $fieldDefinition): ServiceDefinition {
         $field = $this->getContainerBuilder()
             ->addDefinition($this->getFieldName())
@@ -485,52 +469,26 @@ class EventsExtension extends CompilerExtension {
 
     /* **************** Naming **************** */
 
-    /**
-     * @param string $name
-     * @return string
-     */
     private function getMachineName(string $name): string {
         return $this->prefix(self::MACHINE_PREFIX . $name);
     }
 
-    /**
-     * @param string $name
-     * @return string
-     */
     private function getHolderName(string $name): string {
         return $this->prefix(self::HOLDER_PREFIX . $name);
     }
 
-    /**
-     * @param string $name
-     * @param string $baseName
-     * @return string
-     */
     private function getBaseMachineName(string $name, string $baseName): string {
         return $this->prefix(self::BASE_MACHINE_PREFIX . $name . '_' . $baseName);
     }
 
-    /**
-     * @param string $name
-     * @param string $baseName
-     * @return string
-     */
     private function getBaseHolderName(string $name, string $baseName): string {
         return $this->prefix(self::BASE_HOLDER_PREFIX . $name . '_' . $baseName);
     }
 
-    /**
-     * @param string $baseName
-     * @param string $mask
-     * @return string
-     */
     private function getTransitionName(string $baseName, string $mask): string {
         return uniqid($baseName . '_transition_' . str_replace('-', '_', Strings::webalize($mask)) . '__');
     }
 
-    /**
-     * @return string
-     */
     private function getFieldName(): string {
         return $this->prefix(uniqid(self::FIELD_FACTORY));
     }

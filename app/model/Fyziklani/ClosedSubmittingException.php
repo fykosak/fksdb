@@ -8,7 +8,7 @@ use Nette\Application\BadRequestException;
 
 /**
  * Class ClosedSubmittingException
- * @package FKSDB\model\Fyziklani
+ * *
  */
 class ClosedSubmittingException extends BadRequestException {
     /**

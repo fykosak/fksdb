@@ -11,6 +11,7 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\Application\UI\ITemplate;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
 use FKSDB\Exceptions\NotImplementedException;
@@ -32,8 +33,6 @@ use SQL\SearchableDataSource;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 abstract class BaseGrid extends Grid {
-    /** @var Container */
-    private $context;
     /** @persistent string */
     public $searchTerm;
     /**
@@ -47,12 +46,20 @@ abstract class BaseGrid extends Grid {
      */
     public function __construct(Container $container) {
         parent::__construct();
-        $this->context = $container;
-        $this->tableReflectionFactory = $container->getByType(TableReflectionFactory::class);
+        $container->callInjects($this);
+    }
+
+    /**
+     * @param TableReflectionFactory $tableReflectionFactory
+     * @return void
+     */
+    public function injectTableReflectionFactory(TableReflectionFactory $tableReflectionFactory) {
+        $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
     /**
      * @param $presenter
+     * @return void
      */
     protected function configure($presenter) {
         $this->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.latte');
@@ -62,14 +69,8 @@ abstract class BaseGrid extends Grid {
     }
 
     /**
-     * @return Container
-     */
-    final public function getContext() {
-        return $this->context;
-    }
-
-    /**
-     * @return \Nette\Application\UI\ITemplate
+     * @return ITemplate
+     * @throws BadTypeException
      */
     protected function createTemplate() {
         $presenter = $this->getPresenter();
@@ -126,9 +127,6 @@ abstract class BaseGrid extends Grid {
      * Search
      * ****************************** */
 
-    /**
-     * @return bool
-     */
     public function isSearchable(): bool {
         return $this->dataSource instanceof SearchableDataSource;
     }
@@ -190,11 +188,11 @@ abstract class BaseGrid extends Grid {
     /**
      * @param string $tableName
      * @param string $fieldName
-     * @param string|AbstractModelSingle $modelClassName
      * @throws DuplicateColumnException
      * @throws Exception
      */
-    protected function addReflectionColumn(string $tableName, string $fieldName, string $modelClassName) {
+    private function addReflectionColumn(string $tableName, string $fieldName) {
+        $modelClassName = $this->getModelClassName();
         $factory = $this->tableReflectionFactory->loadService($tableName, $fieldName);
 
         $this->addColumn($fieldName, $factory->getTitle())->setRenderer(function ($model) use ($factory, $fieldName, $modelClassName) {
@@ -211,6 +209,7 @@ abstract class BaseGrid extends Grid {
      * @param callable $accessCallback ActiveRow=>AbstractModelSingle
      * @throws DuplicateColumnException
      * @throws Exception
+     * @deprecated this functionality is moved to getModel in DBReflection AbstractRow
      */
     protected function addJoinedColumn(string $tableName, string $fieldName, callable $accessCallback) {
         $factory = $this->tableReflectionFactory->loadService($tableName, $fieldName);
@@ -231,12 +230,11 @@ abstract class BaseGrid extends Grid {
     /**
      * @param array $fields
      * @throws DuplicateColumnException
-     * @throws NotImplementedException
      */
     protected function addColumns(array $fields) {
         foreach ($fields as $name) {
             list($table, $field) = TableReflectionFactory::parseRow($name);
-            $this->addReflectionColumn($table, $field, $this->getModelClassName());
+            $this->addReflectionColumn($table, $field);
         }
     }
 
@@ -345,5 +343,4 @@ abstract class BaseGrid extends Grid {
         $response->setGlue(',');
         $this->getPresenter()->sendResponse($response);
     }
-
 }

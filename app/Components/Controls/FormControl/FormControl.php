@@ -17,9 +17,6 @@ class FormControl extends Control {
 
     const SNIPPET_MAIN = 'groupContainer';
 
-    /**
-     * @return Form
-     */
     protected function createComponentForm(): Form {
         return new Form();
     }

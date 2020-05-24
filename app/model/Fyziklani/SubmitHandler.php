@@ -15,7 +15,7 @@ use Nette\Security\User;
 
 /**
  * Class TaskCodeHandler
- * @package FKSDB\model\Fyziklani
+ * *
  */
 class SubmitHandler {
 

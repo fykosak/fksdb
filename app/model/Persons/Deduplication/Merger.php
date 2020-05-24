@@ -21,6 +21,9 @@ class Merger {
     const IDX_MERGED = 'merged';
     const IDX_RESOLUTION = 'resolution';
 
+    /**
+     * @var array
+     */
     private $conflicts = [];
 
     /**

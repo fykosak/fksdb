@@ -4,11 +4,14 @@ namespace Persons;
 
 use FKSDB\Components\Forms\Controls\IReferencedHandler;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
+use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
+use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\ORM\AbstractServiceMulti;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
 use FKSDB\Components\Forms\Controls\Schedule\Handler;
-use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
+use FKSDB\ORM\IService;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelPostContact;
 use FKSDB\ORM\Services\ServicePerson;
@@ -109,8 +112,10 @@ class ReferencedPersonHandler implements IReferencedHandler {
     /**
      * @param ArrayHash $values
      * @return ModelPerson
-     * @throws JsonException
      * @throws ExistingPaymentException
+     * @throws FullCapacityException
+     * @throws JsonException
+     * @throws NotImplementedException
      */
     public function createFromValues(ArrayHash $values): ModelPerson {
         $email = isset($values['person_info']['email']) ? $values['person_info']['email'] : null;
@@ -125,8 +130,11 @@ class ReferencedPersonHandler implements IReferencedHandler {
     /**
      * @param IModel $model
      * @param ArrayHash $values
-     * @throws JsonException
+     * @return void
      * @throws ExistingPaymentException
+     * @throws FullCapacityException
+     * @throws JsonException
+     * @throws NotImplementedException
      */
     public function update(IModel $model, ArrayHash $values) {
         /** @var ModelPerson $model */
@@ -135,6 +143,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
 
     /**
      * @param int $eventId
+     * @return void
      */
     public function setEventId(int $eventId) {
         $this->eventId = $eventId;
@@ -149,7 +158,8 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @throws JsonException
      * @throws ExistingPaymentException
      * @throws StorageException
-     * @throws \Exception
+     * @throws FullCapacityException
+     * @throws NotImplementedException
      */
     private function store(ModelPerson &$person, ArrayHash $data) {
         /*
@@ -239,10 +249,11 @@ class ReferencedPersonHandler implements IReferencedHandler {
         }
     }
 
+    /** @var bool */
     private $outerTransaction = false;
 
     /**
-     * @param $model
+     * @param mixed $model
      * @param ArrayHash $values
      * @return array
      */
@@ -299,6 +310,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
 
     /**
      * @param ArrayHash $data
+     * @return void
      */
     private function resolvePostContacts(ArrayHash $data) {
         foreach ([self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT] as $type) {
@@ -326,7 +338,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @param ModelPerson $person
      * @param ArrayHash $data
      * @param $models
-     * @throws \Exception
+     * @throws ModelException
      */
     private function prepareFlagModels(ModelPerson &$person, ArrayHash &$data, &$models) {
         if (!isset($data['person_has_flag'])) {
@@ -348,7 +360,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
 
     /**
      * @param ArrayHash $data
-     * @param $services
+     * @param IService[]|AbstractServiceSingle[]|AbstractServiceMulti[] $services
      */
     private function prepareFlagServices(ArrayHash &$data, &$services) {
         if (!isset($data['person_has_flag'])) {
@@ -384,10 +396,6 @@ class ReferencedPersonHandler implements IReferencedHandler {
         //else: TODO ? throw an exception?
     }
 
-    /**
-     * @param string $field
-     * @return bool
-     */
     public function isSecondaryKey(string $field): bool {
         return $field == 'person_info.email';
     }

@@ -10,12 +10,11 @@ use FKSDB\ORM\Models\IPersonReferencedModel;
 use FKSDB\ORM\Models\ModelPerson;
 use Nette\Application\BadRequestException;
 use Nette\Application\LinkGenerator;
-use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
 
 /**
  * Class PersonLinkRow
- * @package FKSDB\Components\DatabaseReflection\VirtualRows
+ * *
  */
 class PersonLinkRow extends AbstractRow {
 
@@ -26,24 +25,16 @@ class PersonLinkRow extends AbstractRow {
 
     /**
      * PersonLinkRow constructor.
-     * @param ITranslator $translator
      * @param LinkGenerator $presenterComponent
      */
-    public function __construct(ITranslator $translator, LinkGenerator $presenterComponent) {
-        parent::__construct($translator);
+    public function __construct(LinkGenerator $presenterComponent) {
         $this->presenterComponent = $presenterComponent;
     }
 
-    /**
-     * @return int
-     */
     public function getPermissionsValue(): int {
         return self::PERMISSION_USE_GLOBAL_ACL;
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Person');
     }

@@ -18,7 +18,7 @@ use FKSDB\Exceptions\NotImplementedException;
 
 /**
  * Class StalkingExtension
- * @package FKSDB\Config\Extensions
+ * *
  */
 class DBReflectionExtension extends CompilerExtension {
     /**
@@ -55,6 +55,7 @@ class DBReflectionExtension extends CompilerExtension {
 
     /**
      * @param array $links
+     * @return void
      */
     private function registerLinks(array $links) {
         $builder = $this->getContainerBuilder();
@@ -72,6 +73,7 @@ class DBReflectionExtension extends CompilerExtension {
 
     /**
      * @param array $details
+     * @return void
      */
     private function registerDetails(array $details) {
         $builder = $this->getContainerBuilder();

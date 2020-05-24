@@ -28,8 +28,6 @@ use Nette\Utils\JsonException;
 
 /**
  * Class SelectForm
- * @package FKSDB\Components\Forms\Factories\Payment
- *
  */
 class SelectForm extends Control {
     /**

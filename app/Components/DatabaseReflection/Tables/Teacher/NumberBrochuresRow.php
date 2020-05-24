@@ -11,7 +11,7 @@ use Nette\Utils\Html;
 
 /**
  * Class NumberBrochuresRow
- * @package FKSDB\Components\DatabaseReflection\Tables\Teacher
+ * *
  */
 class NumberBrochuresRow extends AbstractTeacherRow {
 

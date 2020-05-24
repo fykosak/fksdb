@@ -113,6 +113,7 @@ class BrojureResultsModel extends AbstractResultsModel {
 
     /**
      * @param $listedSeries
+     * @return void
      */
     public function setListedSeries($listedSeries) {
         $this->listedSeries = $listedSeries;
@@ -121,16 +122,12 @@ class BrojureResultsModel extends AbstractResultsModel {
     }
 
     /**
-     * @return array
+     * @return ModelCategory[]
      */
     public function getCategories(): array {
         return $this->evaluationStrategy->getCategories();
     }
 
-    /**
-     * @param ModelCategory $category
-     * @return string
-     */
     protected function composeQuery(ModelCategory $category): string {
         if (!$this->series) {
             throw new InvalidStateException('Series not set.');

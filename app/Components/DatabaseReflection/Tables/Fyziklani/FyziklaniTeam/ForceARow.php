@@ -9,7 +9,7 @@ use Nette\Utils\Html;
 
 /**
  * Class ForceARow
- * @package FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam
+ * *
  */
 class ForceARow extends AbstractFyziklaniTeamRow {
     /**

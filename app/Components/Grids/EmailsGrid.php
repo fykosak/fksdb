@@ -12,7 +12,7 @@ use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class EmailsGrid
- * @package FKSDB\Components\Grids
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class EmailsGrid extends BaseGrid {
 
@@ -51,9 +51,6 @@ class EmailsGrid extends BaseGrid {
         $this->paginate = true;
     }
 
-    /**
-     * @return string
-     */
     protected function getModelClassName(): string {
         return ModelEmailMessage::class;
     }

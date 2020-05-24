@@ -9,12 +9,11 @@ use FKSDB\ORM\Models\IEventReferencedModel;
 use Nette\Application\BadRequestException;
 use Nette\Application\LinkGenerator;
 use Nette\Application\UI\InvalidLinkException;
-use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
 
 /**
  * Class PersonLinkRow
- * @package FKSDB\Components\DatabaseReflection\VirtualRows
+ * *
  */
 class EventLink extends AbstractRow {
 
@@ -25,24 +24,16 @@ class EventLink extends AbstractRow {
 
     /**
      * PersonLinkRow constructor.
-     * @param ITranslator $translator
      * @param LinkGenerator $presenterComponent
      */
-    public function __construct(ITranslator $translator, LinkGenerator $presenterComponent) {
-        parent::__construct($translator);
+    public function __construct(LinkGenerator $presenterComponent) {
         $this->presenterComponent = $presenterComponent;
     }
 
-    /**
-     * @return int
-     */
     public function getPermissionsValue(): int {
         return self::PERMISSION_USE_GLOBAL_ACL;
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Event');
     }

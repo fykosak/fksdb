@@ -7,7 +7,7 @@ use Nette\Http\Response;
 
 /**
  * Class GoneException
- * @package FKSDB\Exceptions
+ * *
  */
 class GoneException extends BadRequestException {
     /**

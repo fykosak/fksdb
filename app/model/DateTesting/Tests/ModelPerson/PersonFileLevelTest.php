@@ -10,7 +10,7 @@ use Nette\Application\BadRequestException;
 
 /**
  * Class PersonFileLevelTest
- * @package FKSDB\DataTesting\Tests\Person
+ * *
  */
 abstract class PersonFileLevelTest extends PersonTest {
     /**

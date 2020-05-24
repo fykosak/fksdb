@@ -13,7 +13,7 @@ use Nette\Utils\ArrayHash;
 
 /**
  * Class PasswordProcessing
- * @package Events\Spec\Fol
+ * *
  */
 class PasswordProcessing extends AbstractProcessing {
 

@@ -16,7 +16,7 @@ use Nette\Security\IResource;
 
 /**
  * Class ModelScheduleItem
- * @package FKSDB\ORM\Models\Schedule
+ * *
  * @property-read ActiveRow schedule_group
  * @property-read float price_eur
  * @property-read float price_czk

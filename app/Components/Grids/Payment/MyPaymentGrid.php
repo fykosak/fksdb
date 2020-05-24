@@ -12,7 +12,7 @@ use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class MyPaymentGrid
- * @package FKSDB\Components\Grids\Payment
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class MyPaymentGrid extends PaymentGrid {
 

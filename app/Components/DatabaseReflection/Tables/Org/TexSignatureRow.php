@@ -9,7 +9,7 @@ use Nette\Forms\Form;
 
 /**
  * Class TexSignatureRow
- * @package FKSDB\Components\DatabaseReflection\Org
+ * *
  */
 class TexSignatureRow extends AbstractOrgRowFactory {
     use DefaultPrinterTrait;

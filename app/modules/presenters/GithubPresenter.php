@@ -22,6 +22,7 @@ class GithubPresenter extends AuthenticatedPresenter {
 
     /**
      * @param EventFactory $eventFactory
+     * @return void
      */
     public function injectEventFactory(EventFactory $eventFactory) {
 		$this->eventFactory = $eventFactory;
@@ -29,6 +30,7 @@ class GithubPresenter extends AuthenticatedPresenter {
 
     /**
      * @param Updater $updater
+     * @return void
      */
     public function injectUpdater(Updater $updater) {
 		$this->updater = $updater;

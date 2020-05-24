@@ -10,7 +10,7 @@ use Nette\Utils\Html;
 
 /**
  * Class RequireIdNumberRow
- * @package FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem
+ * *
  */
 class RequireIdNumberRow extends AbstractScheduleItemRow {
     /**

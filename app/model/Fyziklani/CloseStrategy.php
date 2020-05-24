@@ -113,9 +113,6 @@ class CloseStrategy {
         return $teamsData;
     }
 
-    /**
-     * @return callable
-     */
     private static function getSortFunction(): callable {
         return function (array $b, array $a): int {
             if ($a['points'] > $b['points']) {
@@ -147,7 +144,7 @@ class CloseStrategy {
 
     /**
      * @param ModelFyziklaniTeam $team
-     * @return array
+     * @return array[]|int[]
      */
     protected function getAllSubmits(ModelFyziklaniTeam $team): array {
         $arraySubmits = [];

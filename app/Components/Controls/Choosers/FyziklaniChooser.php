@@ -37,9 +37,6 @@ class FyziklaniChooser extends Chooser {
         $this->event = $event;
     }
 
-    /**
-     * @return TypedTableSelection
-     */
     protected function getItems(): TypedTableSelection {
         return $this->serviceEvent->getTable()->where('event_type_id=?', ModelEventType::FYZIKLANI)->order('event_year DESC');
     }

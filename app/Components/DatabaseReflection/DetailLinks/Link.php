@@ -6,7 +6,7 @@ use FKSDB\ORM\AbstractModelSingle;
 
 /**
  * Class Link
- * @package FKSDB\Components\DatabaseReflection\Links
+ * *
  */
 class Link extends AbstractLink {
     /**
@@ -31,6 +31,7 @@ class Link extends AbstractLink {
      * @param array $params
      * @param string $title
      * @param string $modelClassName
+     * @return void
      */
     public function setParams(string $destination, array $params, string $title, string $modelClassName) {
         $this->destination = $destination;

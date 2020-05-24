@@ -13,7 +13,7 @@ use FKSDB\Events\Processings\IProcessing;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelEvent;
-use Nette\Application\UI\Form;
+use Nette\Forms\Form;
 use Nette\Database\Connection;
 use Nette\InvalidArgumentException;
 use Nette\Utils\ArrayHash;
@@ -76,15 +76,13 @@ class Holder {
         $this->processings[] = new GenKillProcessing();
     }
 
-    /**
-     * @return Connection
-     */
     public function getConnection(): Connection {
         return $this->connection;
     }
 
     /**
-     * @param $name
+     * @param string $name
+     * @return void
      */
     public function setPrimaryHolder(string $name) {
         $primaryHolder = $this->primaryHolder = $this->getBaseHolder($name);
@@ -93,15 +91,13 @@ class Holder {
         });
     }
 
-    /**
-     * @return BaseHolder
-     */
     public function getPrimaryHolder(): BaseHolder {
         return $this->primaryHolder;
     }
 
     /**
      * @param BaseHolder $baseHolder
+     * @return void
      */
     public function addBaseHolder(BaseHolder $baseHolder) {
         $baseHolder->setHolder($this);
@@ -111,6 +107,7 @@ class Holder {
 
     /**
      * @param IFormAdjustment $formAdjusment
+     * @return void
      */
     public function addFormAdjustment(IFormAdjustment $formAdjusment) {
         $this->formAdjustments[] = $formAdjusment;
@@ -118,15 +115,12 @@ class Holder {
 
     /**
      * @param IProcessing $processing
+     * @return void
      */
     public function addProcessing(IProcessing $processing) {
         $this->processings[] = $processing;
     }
 
-    /**
-     * @param string $name
-     * @return BaseHolder
-     */
     public function getBaseHolder(string $name): BaseHolder {
         if (!array_key_exists($name, $this->baseHolders)) {
             throw new InvalidArgumentException("Unknown base holder '$name'.");
@@ -142,22 +136,20 @@ class Holder {
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return bool
      */
     public function hasBaseHolder($name): bool {
         return isset($this->baseHolders[$name]);
     }
 
-    /**
-     * @return SecondaryModelStrategy
-     */
     public function getSecondaryModelStrategy(): SecondaryModelStrategy {
         return $this->secondaryModelStrategy;
     }
 
     /**
      * @param SecondaryModelStrategy $secondaryModelStrategy
+     * @return void
      */
     public function setSecondaryModelStrategy(SecondaryModelStrategy $secondaryModelStrategy) {
         $this->secondaryModelStrategy = $secondaryModelStrategy;
@@ -255,6 +247,7 @@ class Holder {
     /**
      * @param Form $form
      * @param Machine $machine
+     * @return void
      */
     public function adjustForm(Form $form, Machine $machine) {
         foreach ($this->formAdjustments as $adjustment) {
@@ -265,12 +258,14 @@ class Holder {
     /*
      * Joined data manipulation
      */
-
+    /**
+     * @var
+     */
     private $groupedHolders;
 
     /**
      * Group secondary by service
-     * @return array[] items: joinOn, service, holders
+     * @return BaseHolder[][]|array[] items: joinOn, service, holders
      */
     public function getGroupedSecondaryHolders(): array {
         if ($this->groupedHolders == null) {

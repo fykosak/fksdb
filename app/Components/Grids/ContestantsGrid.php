@@ -79,5 +79,4 @@ class ContestantsGrid extends BaseGrid {
         //
         $this->paginate = false;
     }
-
 }

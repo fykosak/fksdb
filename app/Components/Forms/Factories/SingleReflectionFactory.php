@@ -9,7 +9,7 @@ use Nette\InvalidStateException;
 
 /**
  * Class SingleReflectionFactory
- * @package FKSDB\Components\Forms\Factories
+ * *
  */
 abstract class SingleReflectionFactory {
     /**

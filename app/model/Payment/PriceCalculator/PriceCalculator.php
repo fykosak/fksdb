@@ -8,7 +8,7 @@ use FKSDB\Payment\PriceCalculator\PreProcess\IPreprocess;
 
 /**
  * Class PriceCalculator
- * @package FKSDB\Payment\PriceCalculator
+ * *
  */
 class PriceCalculator {
     /**
@@ -18,6 +18,7 @@ class PriceCalculator {
 
     /**
      * @param IPreprocess $preProcess
+     * @return void
      */
     public function addPreProcess(IPreprocess $preProcess) {
         $this->preProcess[] = $preProcess;

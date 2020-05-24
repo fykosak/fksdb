@@ -8,7 +8,6 @@ use FKSDB\ORM\Services\ServiceStudyYear;
 use FKSDB\ORM\Services\ServiceTask;
 use FKSDB\ORM\Services\ServiceTaskContribution;
 use FKSDB\ORM\Services\ServiceTaskStudyYear;
-use FKSDB\ORM\Services\ServiceQuizQuestion;
 use Pipeline\Pipeline;
 
 /**

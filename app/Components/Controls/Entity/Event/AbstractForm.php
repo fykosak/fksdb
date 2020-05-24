@@ -17,7 +17,7 @@ use Tracy\Debugger;
 
 /**
  * Class AbstractForm
- * @package FKSDB\Components\Controls\Entity\Event
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractForm extends FormControl {
     const CONT_EVENT = 'event';

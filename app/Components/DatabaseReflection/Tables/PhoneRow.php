@@ -14,12 +14,11 @@ use FKSDB\DataTesting\TestLog;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
-use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
 
 /**
  * Class PhoneRow
- * @package FKSDB\Components\DatabaseReflection\Tables
+ * *
  */
 class PhoneRow extends DefaultRow implements ITestedRowFactory {
     /**
@@ -34,16 +33,16 @@ class PhoneRow extends DefaultRow implements ITestedRowFactory {
     /**
      * PhoneRow constructor.
      * @param PhoneNumberFactory $phoneNumberFactory
-     * @param ITranslator $translator
      * @param MetaDataFactory $metaDataFactory
      */
-    public function __construct(PhoneNumberFactory $phoneNumberFactory, ITranslator $translator, MetaDataFactory $metaDataFactory) {
+    public function __construct(PhoneNumberFactory $phoneNumberFactory, MetaDataFactory $metaDataFactory) {
         $this->phoneNumberFactory = $phoneNumberFactory;
-        parent::__construct($translator, $metaDataFactory);
+        parent::__construct($metaDataFactory);
     }
 
     /**
      * @param bool $isWriteOnly
+     * @return void
      */
     public function setWriteOnly(bool $isWriteOnly) {
         $this->isWriteOnly = $isWriteOnly;
@@ -91,10 +90,6 @@ class PhoneRow extends DefaultRow implements ITestedRowFactory {
         }
     }
 
-    /**
-     * @param AbstractModelSingle $model
-     * @return Html
-     */
     public function createHtmlValue(AbstractModelSingle $model): Html {
         $value = $model->{$this->getModelAccessKey()};
         if (\is_null($value)) {

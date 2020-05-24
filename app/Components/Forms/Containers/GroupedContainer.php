@@ -18,6 +18,9 @@ class GroupedContainer extends Container {
      * @var ControlGroup[]
      */
     private $groups = [];
+    /**
+     * @var
+     */
     private $prefix;
 
     /**

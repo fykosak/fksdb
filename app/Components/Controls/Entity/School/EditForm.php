@@ -14,7 +14,7 @@ use Tracy\Debugger;
 
 /**
  * Class EditForm
- * @package FKSDB\Components\Controls\Entity\School
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class EditForm extends AbstractForm implements IEditEntityForm {
     /**

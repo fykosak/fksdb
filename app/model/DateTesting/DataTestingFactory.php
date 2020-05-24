@@ -9,7 +9,7 @@ use Nette\Application\BadRequestException;
 
 /**
  * Class DataTestingFactory
- * @package FKSDB\DataTesting
+ * *
  */
 class DataTestingFactory {
     /**

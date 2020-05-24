@@ -5,6 +5,7 @@ namespace FKSDB\Events\Spec\Fyziklani;
 use FKSDB\Events\FormAdjustments\IFormAdjustment;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\ExpressionEvaluator;
+use FKSDB\Events\Model\Holder\BaseHolder;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Services\ServicePersonHistory;
@@ -100,11 +101,14 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
         };
     }
 
+    /**
+     * @var
+     */
     private $cache;
 
     /**
      * @param $first
-     * @param $control
+     * @param IControl $control
      * @param $schools
      * @return bool
      */
@@ -115,6 +119,7 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
         $secondaryGroups = $this->getHolder()->getGroupedSecondaryHolders();
         $group = reset($secondaryGroups);
         $baseHolders = $group['holders'];
+        /** @var BaseHolder $baseHolder */
         $baseHolder = reset($baseHolders);
 
         if (!$this->cache || $first) {
