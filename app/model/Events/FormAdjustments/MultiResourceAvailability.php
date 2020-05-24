@@ -21,7 +21,7 @@ use Nette\Utils\Html;
 class MultiResourceAvailability extends AbstractAdjustment {
 
     /**
-     * @var array[] fields that specifies amount used (string masks)
+     * @var array fields that specifies amount used (string masks)
      */
     private $fields;
 
@@ -29,8 +29,17 @@ class MultiResourceAvailability extends AbstractAdjustment {
      * @var string Name of event parameter that hold overall capacity.
      */
     private $paramCapacity;
+    /**
+     * @var array|string
+     */
     private $includeStates;
+    /**
+     * @var array|string|string[]
+     */
     private $excludeStates;
+    /**
+     * @var string
+     */
     private $message;
     /**
      * @var Context
@@ -39,6 +48,7 @@ class MultiResourceAvailability extends AbstractAdjustment {
 
     /**
      * @param $fields
+     * @return void
      */
     private function setFields($fields) {
         if (!is_array($fields)) {
@@ -69,6 +79,7 @@ class MultiResourceAvailability extends AbstractAdjustment {
      * @param Form $form
      * @param Machine $machine
      * @param Holder $holder
+     * @return void
      */
     protected function _adjust(Form $form, Machine $machine, Holder $holder) {
         $groups = $holder->getGroupedSecondaryHolders();
@@ -82,6 +93,7 @@ class MultiResourceAvailability extends AbstractAdjustment {
         foreach ($groups as $group) {
             $holders = [];
             $field = null;
+            /** @var BaseHolder $baseHolder */
             foreach ($group['holders'] as $baseHolder) {
                 $name = $baseHolder->getName();
                 foreach ($this->fields as $fieldMask) {

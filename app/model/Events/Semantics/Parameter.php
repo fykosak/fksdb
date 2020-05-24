@@ -13,6 +13,9 @@ class Parameter {
     use SmartObject;
     use WithEventTrait;
 
+    /**
+     * @var
+     */
     private $parameter;
 
     /**

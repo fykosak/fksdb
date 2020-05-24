@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
@@ -64,6 +63,7 @@ class GroupsGrid extends BaseGrid {
 
         $this->addButton('detail', _('Detail'))->setText(_('Detail'))
             ->setLink(function ($row) {
+                /** @var ModelScheduleGroup $row */
                 return $this->getPresenter()->link('ScheduleItem:list', ['groupId' => $row->schedule_group_id]);
             });
     }

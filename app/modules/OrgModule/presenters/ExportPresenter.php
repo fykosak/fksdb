@@ -352,6 +352,10 @@ class ExportPresenter extends SeriesPresenter {
         $this->getComponent('editForm')->getForm()->setDefaults($values);
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleCompose() {
         $this->setTitle(sprintf(_('Napsat dotaz')), 'fa fa-pencil');
     }
@@ -363,6 +367,10 @@ class ExportPresenter extends SeriesPresenter {
         }
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleList() {
         $this->setTitle(_('Exports'), 'fa fa-database');
     }

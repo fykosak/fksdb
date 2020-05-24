@@ -114,6 +114,7 @@ class CorrectedStorage implements ISubmitStorage {
 
         try {
             $it = Finder::findFiles('*' . self::DELIMITER . $submit->submit_id . '*')->in($dir);
+            /** @var \SplFileInfo[] $files */
             $files = iterator_to_array($it, false);
         } catch (UnexpectedValueException $exception) {
             return null;

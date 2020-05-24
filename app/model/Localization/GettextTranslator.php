@@ -20,6 +20,9 @@ class GettextTranslator implements ITranslator {
      * @var string
      */
     private $localeDir;
+    /**
+     * @var
+     */
     private $lang;
 
     /**

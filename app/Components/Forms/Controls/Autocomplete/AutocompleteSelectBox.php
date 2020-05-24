@@ -69,7 +69,13 @@ class AutocompleteSelectBox extends TextBase {
         $this->renderMethod = $renderMethod;
     }
 
+    /**
+     * @var bool
+     */
     private $attachedJSON = false;
+    /**
+     * @var bool
+     */
     private $attachedJS = false;
 
     /**

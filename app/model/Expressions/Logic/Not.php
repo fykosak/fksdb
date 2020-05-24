@@ -11,6 +11,9 @@ use FKSDB\Expressions\EvaluatedExpression;
  */
 class Not extends EvaluatedExpression {
 
+    /**
+     * @var
+     */
     private $expression;
 
     /**

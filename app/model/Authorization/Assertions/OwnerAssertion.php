@@ -2,8 +2,10 @@
 
 namespace Authorization\Assertions;
 
+use Authorization\Grant;
 use FKSDB\ORM\Models\IContestReferencedModel;
 use FKSDB\ORM\Models\IPersonReferencedModel;
+use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelSubmit;
 use Nette\InvalidStateException;
@@ -69,7 +71,9 @@ class OwnerAssertion {
         if (!$this->user->isAuthenticated()) {
             throw new InvalidStateException('Expecting logged user.');
         }
+        /** @var ModelContestant $contestant */
         $contestant = $acl->getQueriedResource();
+        /** @var Grant $grant */
         $grant = $acl->getQueriedRole();
 
         return $contestant->contest_id == $grant->getContestId();
@@ -89,8 +93,9 @@ class OwnerAssertion {
         if (!$this->user->isAuthenticated()) {
             throw new InvalidStateException('Expecting logged user.');
         }
-
+        /** @var ModelPerson $person */
         $person = $acl->getQueriedResource();
+        /** @var Grant $grant */
         $grant = $acl->getQueriedRole();
 
         //TODO restrict also to the current year? Probably another assertion.

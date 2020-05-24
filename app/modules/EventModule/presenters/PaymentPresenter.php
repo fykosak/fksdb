@@ -46,6 +46,10 @@ class PaymentPresenter extends BasePresenter {
     }
 
     /* ********* titles *****************/
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleCreate() {
         $this->setTitle(_('New payment'), 'fa fa-credit-card');
     }
@@ -70,6 +74,10 @@ class PaymentPresenter extends BasePresenter {
         $this->setTitle(\sprintf(_('Payment detail #%s'), $this->loadEntity($id)->getPaymentId()), 'fa fa-credit-card');
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleList() {
         $this->setTitle(_('List of payments'), 'fa fa-credit-card');
     }

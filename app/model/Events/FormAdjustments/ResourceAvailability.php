@@ -25,8 +25,17 @@ class ResourceAvailability extends AbstractAdjustment {
      * @var string Name of event parameter that hold overall capacity.
      */
     private $paramCapacity;
+    /**
+     * @var array|string
+     */
     private $includeStates;
+    /**
+     * @var array|string|string[]
+     */
     private $excludeStates;
+    /**
+     * @var string
+     */
     private $message;
 
     /**
@@ -59,6 +68,7 @@ class ResourceAvailability extends AbstractAdjustment {
      * @param Form $form
      * @param Machine $machine
      * @param Holder $holder
+     * @return void
      */
     protected function _adjust(Form $form, Machine $machine, Holder $holder) {
         $groups = $holder->getGroupedSecondaryHolders();

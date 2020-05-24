@@ -167,6 +167,8 @@ class ImportHandler {
 
     /**
      * @return Holder[]
+     * @throws BadRequestException
+     * @throws NeonSchemaException
      */
     private function createHoldersMap(): array {
         $primaryBaseHolder = $this->source->getDummyHolder()->getPrimaryHolder();

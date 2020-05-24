@@ -33,6 +33,9 @@ class UploadedStorage implements ISubmitStorage {
      */
     const FINAL_EXT = '.pdf';
 
+    /**
+     * @var null
+     */
     private $todo = null;
 
     /**

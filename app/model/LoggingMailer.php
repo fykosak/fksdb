@@ -23,8 +23,17 @@ class LoggingMailer implements IMailer {
      * @var GlobalParameters
      */
     private $parameters;
+    /**
+     * @var
+     */
     private $logPath;
+    /**
+     * @var bool
+     */
     private $logging = true;
+    /**
+     * @var int
+     */
     private $sentMessages = 0;
 
     /**

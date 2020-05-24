@@ -11,7 +11,13 @@ use FKSDB\Expressions\EvaluatedExpression;
  */
 class Leq extends EvaluatedExpression {
 
+    /**
+     * @var
+     */
     private $aValue;
+    /**
+     * @var
+     */
     private $bValue;
 
     /**

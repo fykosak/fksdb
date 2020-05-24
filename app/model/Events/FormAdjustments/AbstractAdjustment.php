@@ -4,6 +4,7 @@ namespace FKSDB\Events\FormAdjustments;
 
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\Holder\Holder;
+use Nette\Application\UI\Control;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
@@ -20,7 +21,7 @@ abstract class AbstractAdjustment implements IFormAdjustment {
 
     const DELIMITER = '.';
     const WILDCART = '*';
-    /** @var string */
+    /** @var array */
     private $pathCache;
 
     /**
@@ -80,6 +81,8 @@ abstract class AbstractAdjustment implements IFormAdjustment {
      */
     private function setForm($form) {
         $this->pathCache = [];
+        /** @var Control $control */
+        // TODO not type safe
         foreach ($form->getComponents(true, IControl::class) as $control) {
             $path = $control->lookupPath(Form::class);
             $path = str_replace('_1', '', $path);

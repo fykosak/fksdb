@@ -6,6 +6,7 @@ use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Model\Holder\Field;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Container;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\IControl;
 
@@ -69,7 +70,7 @@ class ChooserFactory extends AbstractFactory {
     }
 
     /**
-     * @param $component
+     * @param BaseControl $component
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
@@ -80,7 +81,7 @@ class ChooserFactory extends AbstractFactory {
     }
 
     /**
-     * @param $component
+     * @param BaseControl $component
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container

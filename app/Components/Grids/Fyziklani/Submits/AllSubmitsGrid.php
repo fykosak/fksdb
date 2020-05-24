@@ -77,7 +77,7 @@ class AllSubmitsGrid extends SubmitsGrid {
 
         $this->addButton('delete', null)
             ->setClass('btn btn-sm btn-danger')
-            ->setLink(function ($row) {
+            ->setLink(function (ModelFyziklaniSubmit $row) {
                 return $this->link('delete!', $row->fyziklani_submit_id);
             })->setConfirmationDialog(function () {
                 return _('Opravdu vzít submit úlohy zpět?');

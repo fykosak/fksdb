@@ -118,22 +118,42 @@ class InboxPresenter extends SeriesPresenter {
     }
 
     /* ***************** TITLES ***********************/
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleInbox() {
         $this->setTitle(_('Inbox'), 'fa fa-envelope-open');
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleDefault() {
         $this->setTitle(_('Inbox dashboard'), 'fa fa-envelope-open');
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleHandout() {
         $this->setTitle(_('Rozdělení úloh opravovatelům'), 'fa fa-inbox');
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleList() {
         $this->setTitle(_('List of submits'), 'fa fa-cloud-download');
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleCorrected() {
         $this->setTitle(_('Corrected'), 'fa fa-inbox');
     }
@@ -191,9 +211,7 @@ class InboxPresenter extends SeriesPresenter {
 
     }
     /* ******************* COMPONENTS ******************/
-    /**
-     * @return InboxControl
-     */
+
     protected function createComponentInboxForm(): InboxControl {
         return new InboxControl($this->getContext(), $this->seriesTable);
     }

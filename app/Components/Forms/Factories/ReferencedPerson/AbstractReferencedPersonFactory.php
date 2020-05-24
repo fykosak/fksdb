@@ -197,15 +197,19 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
 
     /**
      * @param ReferencedContainer $container
-     * @param IModel|null $model
+     * @param IModel|ModelPerson|null $model
      * @param string $mode
      * @return void
      */
     public function setModel(ReferencedContainer $container, IModel $model = null, $mode = self::MODE_NORMAL) {
         $acYear = $container->getOption('acYear');
-        $modifiable = $model ? $container->getOption('modifiabilityResolver')->isModifiable($model) : true;
-        $resolution = $model ? $container->getOption('modifiabilityResolver')->getResolutionMode($model) : ReferencedPersonHandler::RESOLUTION_OVERWRITE;
-        $visible = $model ? $container->getOption('visibilityResolver')->isVisible($model) : true;
+        /** @var IModifiabilityResolver $modifiabilityResolver */
+        $modifiabilityResolver = $container->getOption('modifiabilityResolver');
+        /** @var IVisibilityResolver $visibilityResolver */
+        $visibilityResolver = $container->getOption('visibilityResolver');
+        $modifiable = $model ? $modifiabilityResolver->isModifiable($model) : true;
+        $resolution = $model ? $modifiabilityResolver->getResolutionMode($model) : ReferencedPersonHandler::RESOLUTION_OVERWRITE;
+        $visible = $model ? $visibilityResolver->isVisible($model) : true;
         $submittedBySearch = $container->isSearchSubmitted();
         $force = ($mode == self::MODE_FORCE);
         if ($mode == self::MODE_ROLLBACK) {
@@ -218,7 +222,11 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
             if (!$subcontainer instanceof Container) {
                 continue;
             }
-
+            /**
+             * @var string $fieldName
+             * @var BaseControl $component
+             * TODO type safe
+             */
             foreach ($subcontainer->getComponents() as $fieldName => $component) {
                 if (isset($container[ReferencedPersonHandler::POST_CONTACT_DELIVERY])) {
                     $options = self::TARGET_FORM | self::HAS_DELIVERY;

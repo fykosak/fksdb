@@ -176,6 +176,12 @@ class ApplicationPresenter extends BasePresenter {
         }
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws NeonSchemaException
+     */
     protected function unauthorizedAccess() {
         if ($this->getAction() == 'default') {
             $this->initializeMachine();
@@ -257,6 +263,11 @@ class ApplicationPresenter extends BasePresenter {
         }
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     * @throws NeonSchemaException
+     */
     private function initializeMachine() {
         $this->getHolder()->setModel($this->getEventApplication());
     }

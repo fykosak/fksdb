@@ -52,6 +52,7 @@ class MailTemplateFactory {
      * @param string $lang ISO 639-1
      * @param array $data
      * @return FileTemplate
+     * @throws BadRequestException
      */
     public function createLoginInvitation(string $lang = null, array $data = []): FileTemplate {
         return $this->createWithParameters('loginInvitation', $lang, $data);
@@ -61,6 +62,7 @@ class MailTemplateFactory {
      * @param string $lang ISO 639-1
      * @param array $data
      * @return FileTemplate
+     * @throws BadRequestException
      */
     public function createPasswordRecovery(string $lang = null, array $data = []): FileTemplate {
         return $this->createWithParameters('passwordRecovery', $lang, $data);
@@ -71,6 +73,7 @@ class MailTemplateFactory {
      * @param string $lang ISO 639-1
      * @param array $data
      * @return FileTemplate
+     * @throws BadRequestException
      */
     public function createWithParameters(string $templateFile, string $lang = null, array $data = []): FileTemplate {
         $template = $this->createFromFile($templateFile, $lang);

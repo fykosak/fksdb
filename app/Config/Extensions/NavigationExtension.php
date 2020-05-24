@@ -13,6 +13,9 @@ use Nette\DI\ServiceDefinition;
  */
 class NavigationExtension extends CompilerExtension {
 
+    /**
+     * @var array
+     */
     private $createdNodes = [];
 
     public function loadConfiguration() {

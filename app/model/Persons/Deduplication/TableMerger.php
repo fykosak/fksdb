@@ -303,7 +303,13 @@ class TableMerger {
      * DB reflection
      * ****************************** */
 
+    /**
+     * @var null
+     */
     private $refTables = null;
+    /**
+     * @var bool
+     */
     private static $refreshReferencing = true;
 
     /**
@@ -325,6 +331,9 @@ class TableMerger {
         return $this->refTables;
     }
 
+    /**
+     * @var null
+     */
     private $columns = null;
 
     /**
@@ -340,6 +349,9 @@ class TableMerger {
         return $this->columns;
     }
 
+    /**
+     * @var
+     */
     private $primaryKey;
 
     /**
@@ -353,7 +365,13 @@ class TableMerger {
         return $column == $this->primaryKey;
     }
 
+    /**
+     * @var array
+     */
     private $referencedTables = [];
+    /**
+     * @var bool
+     */
     private static $refreshReferenced = true;
 
     /**
@@ -373,6 +391,9 @@ class TableMerger {
         return $this->referencedTables[$column];
     }
 
+    /**
+     * @var
+     */
     private $secondaryKey;
 
     /**

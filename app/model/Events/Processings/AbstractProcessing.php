@@ -6,6 +6,7 @@ use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Logging\ILogger;
+use Nette\Application\UI\Control;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
@@ -19,16 +20,29 @@ use Nette\Utils\ArrayHash;
  */
 abstract class AbstractProcessing implements IProcessing {
     use SmartObject;
+
     const DELIMITER = '.';
     const WILDCART = '*';
 
+    /**
+     * @var
+     */
     private $valuesPathCache;
+    /**
+     * @var
+     */
     private $formPathCache;
+    /**
+     * @var
+     */
     private $states;
     /**
      * @var Holder
      */
     private $holder;
+    /**
+     * @var
+     */
     private $values;
 
     /**
@@ -154,6 +168,8 @@ abstract class AbstractProcessing implements IProcessing {
         if (!$form) {
             return;
         }
+        /** @var Control $control */
+        // TODO not type safe
         foreach ($form->getComponents(true, IControl::class) as $control) {
             $path = $control->lookupPath(Form::class);
             $path = str_replace('_1', '', $path);

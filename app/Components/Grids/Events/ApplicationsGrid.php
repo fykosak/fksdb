@@ -11,6 +11,7 @@ use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelEvent;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Presenter;
 use Nette\ComponentModel\IComponent;
@@ -24,6 +25,7 @@ use Nette\Utils\Strings;
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
+ * @method \BasePresenter getPresenter($need = TRUE)
  */
 class ApplicationsGrid extends Control {
 
@@ -80,6 +82,7 @@ class ApplicationsGrid extends Control {
      * @param Container $container
      * @param IHolderSource $source
      * @param ApplicationHandlerFactory $handlerFactory
+     * @throws BadRequestException
      */
     public function __construct(Container $container, IHolderSource $source, ApplicationHandlerFactory $handlerFactory) {
         parent::__construct();
@@ -131,6 +134,10 @@ class ApplicationsGrid extends Control {
         $this->searchable = $searchable;
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     private function processSource() {
         $this->eventApplications = [];
 

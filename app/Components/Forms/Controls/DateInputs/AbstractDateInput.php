@@ -8,7 +8,8 @@ use Nette\Utils\Html;
 
 /**
  * Class AbstractDateInput
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
+ * @property \DateTimeInterface $value
  */
 abstract class AbstractDateInput extends TextInput {
 

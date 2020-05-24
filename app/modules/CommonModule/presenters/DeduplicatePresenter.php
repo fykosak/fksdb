@@ -7,6 +7,7 @@ use FKSDB\ORM\Services\ServicePerson;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
+use Nette\Database\Table\ActiveRow;
 use Persons\Deduplication\DuplicateFinder;
 use Persons\Deduplication\Merger;
 
@@ -77,6 +78,7 @@ class DeduplicatePresenter extends BasePresenter {
                 continue; // the trunk can be already merged somewhere else as merged
             }
             $trunkRow = $trunkPersons[$trunkId];
+            /** @var ActiveRow $mergedRow */
             $mergedRow = $mergedData[DuplicateFinder::IDX_PERSON];
             $this->merger->setMergedPair($trunkRow, $mergedRow);
 

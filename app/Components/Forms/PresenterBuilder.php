@@ -17,6 +17,9 @@ class PresenterBuilder {
      * @var PresenterFactory
      */
     private $presenterFactory;
+    /**
+     * @var array
+     */
     private $presenterCache = [];
 
     /**

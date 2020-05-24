@@ -61,6 +61,10 @@ class ScheduleItemPresenter extends BasePresenter {
         $this->serviceScheduleGroup = $serviceScheduleGroup;
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleList() {
         $this->setTitle(\sprintf(_('Schedule items')), 'fa fa-calendar-check-o');
     }

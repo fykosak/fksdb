@@ -75,14 +75,14 @@ class BornCheck extends AbstractAdjustment implements IFormAdjustment {
         $bornControls = $this->getControl('p*.person_id.person_info.born');
 
         $msg = _('Datum narození je povinné.');
-
+        /** @var BaseControl $control */
         foreach ($bornControls as $i => $control) {
             $schoolControl = $schoolControls[$i];
             $personControl = $personControls[$i];
             $studyYearControl = $studyYearControls[$i];
             $control->addCondition(~$form::FILLED)
                 ->addRule(function (IControl $control) use ($schoolControl, $personControl, $studyYearControl, $form, $msg) {
-                    if (!$personControl->getValue(false)) {
+                    if (!$personControl->getValue()) {
                         return true;
                     }
                     $schoolId = $this->getSchoolId($schoolControl, $personControl);
@@ -109,8 +109,8 @@ class BornCheck extends AbstractAdjustment implements IFormAdjustment {
     }
 
     /**
-     * @param BaseControl $studyYearControl
-     * @param BaseControl $personControl
+     * @param IControl $studyYearControl
+     * @param IControl $personControl
      * @return int|null
      */
     private function getStudyYear($studyYearControl, $personControl) {
@@ -127,8 +127,8 @@ class BornCheck extends AbstractAdjustment implements IFormAdjustment {
     }
 
     /**
-     * @param BaseControl $schoolControl
-     * @param BaseControl $personControl
+     * @param IControl $schoolControl
+     * @param IControl $personControl
      * @return int
      */
     private function getSchoolId($schoolControl, $personControl) {

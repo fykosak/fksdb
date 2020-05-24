@@ -23,6 +23,9 @@ class TokenGSIDHolder implements IGSIDHolder {
      * @var Connection
      */
     private $connection;
+    /**
+     * @var bool
+     */
     private $cachedGSID = false;
 
     /**

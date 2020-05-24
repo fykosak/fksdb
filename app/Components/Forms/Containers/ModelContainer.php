@@ -6,6 +6,7 @@ use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\ORM\AbstractModelMulti;
 use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Container;
+use Nette\Forms\Controls\BaseControl;
 
 /**
  * Formulářový kontejder reprezentující záznam z DB tabulky.
@@ -30,6 +31,7 @@ class ModelContainer extends ContainerWithOptions {
      * @param bool $value
      */
     public function setDisabled($value = true) {
+        /** @var BaseControl $component */
         foreach ($this->getComponents() as $component) {
             $component->setDisabled($value);
         }

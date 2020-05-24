@@ -12,7 +12,7 @@ use FKSDB\Logging\FlashMessageDump;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
-use Nette\Application\UI\Form;
+use \Nette\Forms\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
 use Nette\Templating\FileTemplate;
@@ -23,7 +23,8 @@ use Nette\Utils\JsonException;
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
- *
+ * @method \AuthenticatedPresenter|\BasePresenter getPresenter($need = TRUE)
+ * @property-read FileTemplate $template
  */
 class ApplicationComponent extends Control {
 
@@ -101,14 +102,22 @@ class ApplicationComponent extends Control {
          * @var FileTemplate $template
          */
         $template = parent::createTemplate($class);
-        $template->setTranslator($this->presenter->getTranslator());
+        $template->setTranslator($this->getPresenter()->getTranslator());
         return $template;
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function render() {
         $this->renderForm();
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function renderForm() {
         if (!$this->templateFile) {
             throw new InvalidStateException('Must set template for the application form.');
@@ -125,6 +134,7 @@ class ApplicationComponent extends Control {
     /**
      * @param $mode
      * @return void
+     * @throws BadRequestException
      */
     public function renderInline($mode) {
         $this->template->mode = $mode;
@@ -200,7 +210,7 @@ class ApplicationComponent extends Control {
         $submit = $form->addSubmit('cancel', _('Storno'));
         $submit->setOption('row', 1);
         $submit->setValidationScope(false);
-        $submit->getControlPrototype()->addClass('btn-warning');
+        $submit->getControlPrototype()->addAttributes(['class' => 'btn-warning']);
         $submit->onClick[] = function (SubmitButton $button) {
             $this->finalRedirect();
         };
@@ -224,6 +234,7 @@ class ApplicationComponent extends Control {
      * @param null $explicitTransitionName
      * @throws AbortException
      * @throws JsonException
+     * @throws BadRequestException
      */
     public function handleSubmit(Form $form, $explicitTransitionName = null) {
         $this->execute($form, $explicitTransitionName);
@@ -233,6 +244,7 @@ class ApplicationComponent extends Control {
      * @param $transitionName
      * @throws AbortException
      * @throws JsonException
+     * @throws BadRequestException
      */
     public function handleTransition($transitionName) {
         $this->execute(null, $transitionName);
@@ -243,6 +255,7 @@ class ApplicationComponent extends Control {
      * @param null $explicitTransitionName
      * @throws AbortException
      * @throws JsonException
+     * @throws BadRequestException
      */
     private function execute(Form $form = null, $explicitTransitionName = null) {
         try {
@@ -260,6 +273,7 @@ class ApplicationComponent extends Control {
 
     /**
      * @return Machine
+     * @throws BadRequestException
      */
     private function getMachine() {
         return $this->handler->getMachine($this->holder);

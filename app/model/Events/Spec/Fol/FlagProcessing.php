@@ -8,6 +8,7 @@ use FKSDB\Events\Processings\AbstractProcessing;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Services\ServiceSchool;
 use FKSDB\YearCalculator;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 
@@ -60,6 +61,7 @@ class FlagProcessing extends AbstractProcessing {
             if ($name == 'team') {
                 continue;
             }
+            /** @var BaseControl[] $formControls */
             $formControls = [
                 'school_id' => $this->getControl("$name.person_id.person_history.school_id"),
                 'study_year' => $this->getControl("$name.person_id.person_history.study_year"),

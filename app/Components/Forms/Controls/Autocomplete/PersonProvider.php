@@ -80,6 +80,7 @@ class PersonProvider implements IFilteredDataProvider {
 
 
         $result = [];
+        /** @var ModelPerson $person */
         foreach ($persons as $person) {
             $result[] = $this->getItem($person);
         }
