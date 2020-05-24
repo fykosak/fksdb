@@ -7,7 +7,7 @@ use FKSDB\Transitions\Statements\Statement;
 
 /**
  * Class EventRole
- * @package FKSDB\Transitions\Statements\Conditions
+ * *
  */
 abstract class EventRole extends Statement {
     /**

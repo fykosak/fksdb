@@ -1,9 +1,11 @@
 <?php
 
-namespace FKSDB\Submits;
+namespace FKSDB\Submits\FileSystemStorage;
 
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelSubmit;
+use FKSDB\Submits\IStorageProcessing;
+use FKSDB\Submits\ISubmitStorage;
 use Nette\InvalidStateException;
 use Nette\Utils\Finder;
 use UnexpectedValueException;
@@ -13,7 +15,7 @@ use UnexpectedValueException;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class FilesystemCorrectedSubmitStorage implements ISubmitStorage {
+class CorrectedStorage implements ISubmitStorage {
     /** Characters delimiting name and metadata in filename. */
     const DELIMITER = '__';
 
@@ -112,6 +114,7 @@ class FilesystemCorrectedSubmitStorage implements ISubmitStorage {
 
         try {
             $it = Finder::findFiles('*' . self::DELIMITER . $submit->submit_id . '*')->in($dir);
+            /** @var \SplFileInfo[] $files */
             $files = iterator_to_array($it, false);
         } catch (UnexpectedValueException $exception) {
             return null;

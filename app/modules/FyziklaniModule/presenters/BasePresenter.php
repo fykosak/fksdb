@@ -28,28 +28,24 @@ abstract class BasePresenter extends EventBasePresenter {
 
     /**
      * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
+     * @return void
      */
     public function injectServiceFyziklaniSubmit(ServiceFyziklaniSubmit $serviceFyziklaniSubmit) {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
     }
 
-    /**
-     * @return ServiceFyziklaniSubmit
-     */
     protected function getServiceFyziklaniSubmit(): ServiceFyziklaniSubmit {
         return $this->serviceFyziklaniSubmit;
     }
 
     /**
      * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @return void
      */
     public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam) {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 
-    /**
-     * @return ServiceFyziklaniTeam
-     */
     protected function getServiceFyziklaniTeam(): ServiceFyziklaniTeam {
         return $this->serviceFyziklaniTeam;
     }

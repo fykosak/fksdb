@@ -11,7 +11,7 @@ use Nette\Utils\Html;
 
 /**
  * Class TeamRow
- * @package FKSDB\Components\DatabaseReflection\EventParticipant
+ * *
  */
 class TeamRow extends AbstractParticipantRow {
 

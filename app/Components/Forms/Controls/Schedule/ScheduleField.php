@@ -14,7 +14,7 @@ use Nette\Utils\JsonException;
 
 /**
  * Class ScheduleField
- * @package FKSDB\Components\Forms\Controls\Schedule
+ * *
  */
 class ScheduleField extends TextInput {
 

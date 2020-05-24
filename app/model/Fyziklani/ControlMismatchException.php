@@ -7,7 +7,7 @@ use Throwable;
 
 /**
  * Class ControlMismatchException
- * @package FKSDB\model\Fyziklani
+ * *
  */
 class ControlMismatchException extends TaskCodeException {
     /**

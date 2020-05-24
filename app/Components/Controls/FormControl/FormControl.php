@@ -21,9 +21,6 @@ class FormControl extends Control {
 
     const TEMPLATE_PATH = 'FormControl.containers.latte';
 
-    /**
-     * @return Form
-     */
     protected function createComponentForm(): Form {
         return new Form();
     }
@@ -40,9 +37,6 @@ class FormControl extends Control {
         return $component;
     }
 
-    /**
-     * @return string
-     */
     private function getTemplateFile(): string {
         return __DIR__ . DIRECTORY_SEPARATOR . self::TEMPLATE_PATH;
     }

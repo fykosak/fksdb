@@ -14,7 +14,7 @@ use Nette\Application\ForbiddenRequestException;
 
 /**
  * Trait EventEntityTrait
- * @package EventModule
+ * *
  */
 trait EventEntityTrait {
     use EntityTrait {

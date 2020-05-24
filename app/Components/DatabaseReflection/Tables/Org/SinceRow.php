@@ -8,7 +8,7 @@ use Nette\Forms\Form;
 
 /**
  * Class SinceRow
- * @package FKSDB\Components\DatabaseReflection\Org
+ * *
  */
 class SinceRow extends AbstractOrgRowFactory {
     use DefaultPrinterTrait;

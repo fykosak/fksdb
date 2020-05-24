@@ -11,6 +11,7 @@ use FKSDB\ORM\Services\ServicePersonHistory;
 use FKSDB\ORM\Services\ServiceSchool;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 
@@ -75,7 +76,10 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
 
         $msgForeign = _('Zasílání informačních materiálů je dostupné pouze českým a slovenským studentům.');
         $msgOld = _('Zasílání informačních materiálů je dostupné pouze SŠ studentům.');
-
+        /**
+         * @var  $i
+         * @var BaseControl $control
+         */
         foreach ($spamControls as $i => $control) {
             $schoolControl = $schoolControls[$i];
             $personControl = $personControls[$i];

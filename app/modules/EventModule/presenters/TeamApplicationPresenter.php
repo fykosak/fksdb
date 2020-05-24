@@ -2,12 +2,13 @@
 
 namespace EventModule;
 
-use FKSDB\Components\Controls\Fyziklani\SchoolCheckControl;
+use FKSDB\Components\Controls\Fyziklani\SchoolCheckComponent;
 use FKSDB\Components\Controls\Fyziklani\SeatingControl;
-use FKSDB\Components\Controls\Schedule\Rests\TeamRestsControl;
+use FKSDB\Components\Controls\Schedule\Rests\TeamRestsComponent;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
 use FKSDB\Components\Grids\Events\Application\ApplicationGrid;
 use FKSDB\Components\Grids\Events\Application\TeamApplicationGrid;
+use FKSDB\Config\NeonSchemaException;
 use FKSDB\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
@@ -18,7 +19,7 @@ use Nette\Application\ForbiddenRequestException;
 
 /**
  * Class ApplicationPresenter
- * @package EventModule
+ * *
  * @method ModelFyziklaniTeam getEntity()
  */
 class TeamApplicationPresenter extends AbstractApplicationPresenter {
@@ -27,6 +28,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
 
     /**
      * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @return void
      */
     public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam) {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
@@ -59,36 +61,31 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
         $this->template->model = $this->loadEntity($id);
     }
 
-    /**
-     * @return SeatingControl
-     */
     protected function createComponentSeating(): SeatingControl {
         return new SeatingControl($this->getContext());
     }
 
     /**
-     * @return SchoolCheckControl
+     * @return SchoolCheckComponent
      * @throws AbortException
      * @throws BadRequestException
      */
-    protected function createComponentSchoolCheck(): SchoolCheckControl {
-        return new SchoolCheckControl($this->getEvent(), $this->getAcYear(), $this->getContext());
+    protected function createComponentSchoolCheck(): SchoolCheckComponent {
+        return new SchoolCheckComponent($this->getEvent(), $this->getAcYear(), $this->getContext());
     }
 
     /**
      * @return ApplicationGrid
      * @throws AbortException
      * @throws BadRequestException
+     * @throws NeonSchemaException
      */
     protected function createComponentGrid(): AbstractApplicationGrid {
         return new TeamApplicationGrid($this->getEvent(), $this->getHolder(), $this->getContext());
     }
 
-    /**
-     * @return TeamRestsControl
-     */
-    protected function createComponentTeamRestsControl(): TeamRestsControl {
-        return new TeamRestsControl($this->getContext());
+    protected function createComponentTeamRestsControl(): TeamRestsComponent {
+        return new TeamRestsComponent($this->getContext());
     }
 
     /**

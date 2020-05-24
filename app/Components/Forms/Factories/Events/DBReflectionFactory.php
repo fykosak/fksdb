@@ -111,7 +111,7 @@ class DBReflectionFactory extends AbstractFactory {
     }
 
     /**
-     * @param $component
+     * @param BaseControl $component
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
@@ -128,7 +128,7 @@ class DBReflectionFactory extends AbstractFactory {
     }
 
     /**
-     * @param $component
+     * @param BaseControl $component
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container

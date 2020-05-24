@@ -11,7 +11,7 @@ use Nette\Utils\Html;
 
 /**
  * Class RegistrationEndRow
- * @package FKSDB\Components\DatabaseReflection\Event
+ * *
  */
 class RegistrationEndRow extends AbstractEventRowFactory {
     /**

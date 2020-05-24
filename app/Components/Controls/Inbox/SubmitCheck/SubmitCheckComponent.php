@@ -2,22 +2,16 @@
 
 namespace FKSDB\Components\Controls\Inbox;
 
-use FKSDB\Components\Controls\BaseControl;
+use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Models\ModelSubmit;
-use FKSDB\Submits\FilesystemCorrectedSubmitStorage;
-use FKSDB\Submits\FilesystemUploadedSubmitStorage;
+use FKSDB\Submits\FileSystemStorage\CorrectedStorage;
+use FKSDB\Submits\FileSystemStorage\UploadedStorage;
 use FKSDB\Submits\SeriesTable;
 use Nette\Application\AbortException;
 use Nette\DI\Container;
-use Nette\Templating\FileTemplate;
 
-/**
- * Class CheckSubmitsControl
- * @package FKSDB\Components\Controls\Upload
- * @property FileTemplate $template
- */
-class SubmitCheckControl extends BaseControl {
+class SubmitCheckComponent extends BaseComponent {
     /**
      * @var SeriesTable
      */
@@ -42,10 +36,10 @@ class SubmitCheckControl extends BaseControl {
      * @throws AbortException
      */
     public function handleCheck() {
-        /** @var FilesystemUploadedSubmitStorage $submitUploadedStorage */
-        $submitUploadedStorage = $this->getContext()->getByType(FilesystemUploadedSubmitStorage::class);
-        /** @var FilesystemCorrectedSubmitStorage $submitCorrectedStorage */
-        $submitCorrectedStorage = $this->getContext()->getByType(FilesystemCorrectedSubmitStorage::class);
+        /** @var UploadedStorage $submitUploadedStorage */
+        $submitUploadedStorage = $this->getContext()->getByType(UploadedStorage::class);
+        /** @var CorrectedStorage $submitCorrectedStorage */
+        $submitCorrectedStorage = $this->getContext()->getByType(CorrectedStorage::class);
         /** @var ModelSubmit $submit */
         $errors = 0;
         foreach ($this->seriesTable->getSubmits() as $submit) {

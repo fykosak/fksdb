@@ -8,12 +8,10 @@ use FKSDB\Exceptions\NotImplementedException;
 
 /**
  * Class AbstractFyziklaniGameSetupRow
- * @package FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniGameSetup
+ * *
  */
 abstract class AbstractFyziklaniGameSetupRow extends AbstractRow {
-    /**
-     * @return int
-     */
+
     final public function getPermissionsValue(): int {
         return self::PERMISSION_USE_GLOBAL_ACL;
     }

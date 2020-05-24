@@ -5,7 +5,7 @@ namespace OrgModule;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Inbox\CorrectedControl;
 use FKSDB\Components\Controls\Inbox\SubmitsPreviewControl;
-use FKSDB\Components\Controls\Inbox\SubmitCheckControl;
+use FKSDB\Components\Controls\Inbox\SubmitCheckComponent;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Controls\Inbox\InboxControl;
 use FKSDB\Components\Forms\Factories\PersonFactory;
@@ -23,7 +23,7 @@ use Nette\Security\Permission;
 
 /**
  * Class InboxPresenter
- * @package OrgModule
+ * *
  */
 class InboxPresenter extends SeriesPresenter {
 
@@ -51,6 +51,7 @@ class InboxPresenter extends SeriesPresenter {
 
     /**
      * @param ServiceTaskContribution $serviceTaskContribution
+     * @return void
      */
     public function injectServiceTaskContribution(ServiceTaskContribution $serviceTaskContribution) {
         $this->serviceTaskContribution = $serviceTaskContribution;
@@ -58,6 +59,7 @@ class InboxPresenter extends SeriesPresenter {
 
     /**
      * @param ServicePerson $servicePerson
+     * @return void
      */
     public function injectServicePerson(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
@@ -65,6 +67,7 @@ class InboxPresenter extends SeriesPresenter {
 
     /**
      * @param SeriesTable $seriesTable
+     * @return void
      */
     public function injectSeriesTable(SeriesTable $seriesTable) {
         $this->seriesTable = $seriesTable;
@@ -72,6 +75,7 @@ class InboxPresenter extends SeriesPresenter {
 
     /**
      * @param PersonFactory $personFactory
+     * @return void
      */
     public function injectPersonFactory(PersonFactory $personFactory) {
         $this->personFactory = $personFactory;
@@ -114,22 +118,42 @@ class InboxPresenter extends SeriesPresenter {
     }
 
     /* ***************** TITLES ***********************/
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleInbox() {
         $this->setTitle(_('Inbox'), 'fa fa-envelope-open');
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleDefault() {
         $this->setTitle(_('Inbox dashboard'), 'fa fa-envelope-open');
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleHandout() {
         $this->setTitle(_('Rozdělení úloh opravovatelům'), 'fa fa-inbox');
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleList() {
         $this->setTitle(_('List of submits'), 'fa fa-cloud-download');
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleCorrected() {
         $this->setTitle(_('Corrected'), 'fa fa-inbox');
     }
@@ -187,9 +211,7 @@ class InboxPresenter extends SeriesPresenter {
 
     }
     /* ******************* COMPONENTS ******************/
-    /**
-     * @return InboxControl
-     */
+
     protected function createComponentInboxForm(): InboxControl {
         return new InboxControl($this->getContext(), $this->seriesTable);
     }
@@ -226,10 +248,10 @@ class InboxPresenter extends SeriesPresenter {
     }
 
     /**
-     * @return SubmitCheckControl
+     * @return SubmitCheckComponent
      */
-    protected function createComponentCheckControl(): SubmitCheckControl {
-        return new SubmitCheckControl($this->getContext(), $this->seriesTable);
+    protected function createComponentCheckControl(): SubmitCheckComponent {
+        return new SubmitCheckComponent($this->getContext(), $this->seriesTable);
     }
 
     /**
@@ -273,9 +295,6 @@ class InboxPresenter extends SeriesPresenter {
         $this->redirect('this');
     }
 
-    /**
-     * @return PageStyleContainer
-     */
     protected function getPageStyleContainer(): PageStyleContainer {
         $container = parent::getPageStyleContainer();
         switch ($this->getAction()) {

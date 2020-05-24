@@ -26,7 +26,7 @@ class InactiveLoginException extends AuthenticationException {
 
 /**
  * Class UnknownLoginException
- * @package Authentication
+ * *
  */
 class UnknownLoginException extends AuthenticationException {
 
@@ -44,7 +44,7 @@ class UnknownLoginException extends AuthenticationException {
 
 /**
  * Class NoLoginException
- * @package Authentication
+ * *
  */
 class NoLoginException extends AuthenticationException {
 
@@ -62,7 +62,7 @@ class NoLoginException extends AuthenticationException {
 
 /**
  * Class InvalidCredentialsException
- * @package Authentication
+ * *
  */
 class InvalidCredentialsException extends AuthenticationException {
 

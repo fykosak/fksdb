@@ -11,7 +11,7 @@ use Nette\Utils\Html;
 
 /**
  * Class HealthInsuranceField
- * @package FKSDB\Components\Forms\Factories\PersonInfo
+ * *
  */
 class HealthInsuranceRow extends AbstractRow {
     const ID_MAPPING = [

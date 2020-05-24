@@ -2,14 +2,14 @@
 
 namespace FKSDB\Components\Controls\Choosers;
 
-use FKSDB\Components\Controls\BaseControl;
+use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\UI\Title;
 
 /**
  * Class Chooser
- * @package FKSDB\Components\Controls\Choosers
+ * @author Michal Červeňák <miso@fykos.cz>
  */
-abstract class Chooser extends BaseControl {
+abstract class Chooser extends BaseComponent {
 
     protected function beforeRender() {
         $this->template->items = $this->getItems();
@@ -22,9 +22,6 @@ abstract class Chooser extends BaseControl {
         $this->template->render();
     }
 
-    /**
-     * @return Title
-     */
     abstract protected function getTitle(): Title;
 
     /**
@@ -33,19 +30,19 @@ abstract class Chooser extends BaseControl {
     abstract protected function getItems();
 
     /**
-     * @param $item
+     * @param mixed $item
      * @return bool
      */
     abstract public function isItemActive($item): bool;
 
     /**
-     * @param $item
+     * @param mixed $item
      * @return string
      */
     abstract public function getItemLabel($item): string;
 
     /**
-     * @param $item
+     * @param mixed $item
      * @return string
      */
     abstract public function getItemLink($item): string;

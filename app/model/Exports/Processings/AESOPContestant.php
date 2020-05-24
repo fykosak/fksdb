@@ -124,7 +124,8 @@ class AESOPContestant extends StoredQueryPostProcessing {
     }
 
     /**
-     * @param $data
+     * TODO typesafe
+     * @param mixed[]|\DateTimeInterface[][] $data
      * @return mixed
      */
     private function formatDate($data) {

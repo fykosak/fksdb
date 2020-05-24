@@ -23,19 +23,19 @@ class RoomsFromCSV extends Stage {
     private $data;
 
     /**
-     * @var \FKSDB\ORM\Models\ModelEvent
+     * @var ModelEvent
      */
     private $event;
 
     /**
-     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam
+     * @var ServiceFyziklaniTeam
      */
     private $serviceTeam;
 
     /**
      * RoomsFromCSV constructor.
-     * @param \FKSDB\ORM\Models\ModelEvent $event
-     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam $serviceTeam
+     * @param ModelEvent $event
+     * @param ServiceFyziklaniTeam $serviceTeam
      */
     public function __construct(ModelEvent $event, ServiceFyziklaniTeam $serviceTeam) {
         $this->event = $event;

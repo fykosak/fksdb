@@ -9,7 +9,7 @@ use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 
 /**
  * Class ServiceScheduleItem
- * @package FKSDB\ORM\Services\Schedule
+ * *
  */
 class ServiceScheduleItem extends AbstractServiceSingle {
 

@@ -10,7 +10,7 @@ use Nette\Application\BadRequestException;
 
 /**
  * Class ChartPresenter
- * @package EventModule
+ * *
  */
 class ChartPresenter extends BasePresenter {
     use ChartPresenterTrait;

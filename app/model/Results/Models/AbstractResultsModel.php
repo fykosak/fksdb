@@ -119,10 +119,6 @@ abstract class AbstractResultsModel {
         ];
     }
 
-    /**
-     * @param ModelCategory $category
-     * @return string
-     */
     abstract protected function composeQuery(ModelCategory $category): string;
 
     /**
@@ -158,10 +154,6 @@ abstract class AbstractResultsModel {
         return "(" . implode(') and (', $where) . ")";
     }
 
-    /**
-     * @param int $series
-     * @return TypedTableSelection
-     */
     protected function getTasks(int $series): TypedTableSelection {
         return $this->serviceTask->getTable()
             ->select('task_id, label, points,series')

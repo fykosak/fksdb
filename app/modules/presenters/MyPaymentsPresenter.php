@@ -11,9 +11,6 @@ class MyPaymentsPresenter extends AuthenticatedPresenter {
         $this->setTitle(_('My payments'), 'fa fa-credit-card');
     }
 
-    /**
-     * @return MyPaymentGrid
-     */
     public function createComponentMyPaymentGrid(): MyPaymentGrid {
         return new MyPaymentGrid($this->getContext());
     }

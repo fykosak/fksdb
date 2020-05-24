@@ -74,5 +74,4 @@ class ContestantsFromSchoolGrid extends BaseGrid {
             });
         $this->paginate = false;
     }
-
 }

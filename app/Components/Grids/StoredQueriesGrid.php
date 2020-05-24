@@ -34,7 +34,7 @@ class StoredQueriesGrid extends BaseGrid {
      * @var ContestAuthorizator
      */
     private $contestAuthorizator;
-
+    /** @var bool */
     private $isFilteredByTag = false;
 
     /**
@@ -47,9 +47,6 @@ class StoredQueriesGrid extends BaseGrid {
         $this->contestAuthorizator = $container->getByType(ContestAuthorizator::class);
     }
 
-    /**
-     * @return Closure
-     */
     public function getFilterByTagCallback(): Closure {
         return function (array $tagTypeId) {
             if (empty($tagTypeId)) {
@@ -95,28 +92,28 @@ class StoredQueriesGrid extends BaseGrid {
         $contest = $presenter->getSelectedContest();
         $this->addButton('edit', _('Edit'))
             ->setText(_('Edit'))
-            ->setLink(function ($row) {
+            ->setLink(function (ModelStoredQuery $row) {
                 return $this->getPresenter()->link('edit', $row->query_id);
             })
-            ->setShow(function ($row) use ($contest) {
+            ->setShow(function (ModelStoredQuery $row) use ($contest) {
                 return $this->contestAuthorizator->isAllowed($row, 'edit', $contest);
             });
         $this->addButton('show', _('Podrobnosti'))
             ->setText(_('Podrobnosti'))
-            ->setLink(function ($row) {
+            ->setLink(function (ModelStoredQuery $row) {
                 return $this->getPresenter()->link('show', $row->query_id);
             })
-            ->setShow(function ($row) use ($contest) {
+            ->setShow(function (ModelStoredQuery $row) use ($contest) {
                 return $this->contestAuthorizator->isAllowed($row, 'show', $contest);
             });
 
         $this->addButton('execute', _('Execute'))
             ->setClass('btn btn-sm btn-primary')
             ->setText(_('Spustit'))
-            ->setLink(function ($row) {
+            ->setLink(function (ModelStoredQuery $row) {
                 return $this->getPresenter()->link('execute', $row->query_id);
             })
-            ->setShow(function ($row) use ($contest) {
+            ->setShow(function (ModelStoredQuery $row) use ($contest) {
                 return $this->contestAuthorizator->isAllowed($row, 'execute', $contest);
             });
 
@@ -126,9 +123,6 @@ class StoredQueriesGrid extends BaseGrid {
         }
     }
 
-    /**
-     * @return string
-     */
     protected function getModelClassName(): string {
         return ModelStoredQuery::class;
     }

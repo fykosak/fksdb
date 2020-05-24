@@ -11,7 +11,7 @@ use Nette\DI\Container;
 
 /**
  * Class EventDispatchFactory
- * @package Events
+ * *
  */
 class EventDispatchFactory {
     /** @var array */
@@ -85,12 +85,7 @@ class EventDispatchFactory {
         return $holder;
     }
 
-    /**
-     * @param ModelEvent $event
-     * @return string
-     */
     private function createKey(ModelEvent $event): string {
         return $event->event_type_id . '-' . $event->event_year;
     }
-
 }

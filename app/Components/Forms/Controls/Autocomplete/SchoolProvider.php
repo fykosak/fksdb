@@ -66,6 +66,7 @@ class SchoolProvider implements IFilteredDataProvider {
         }
 
         $result = [];
+        /** @var ModelSchool $school */
         foreach ($schools as $school) {
             $result[] = $this->getItem($school);
         }

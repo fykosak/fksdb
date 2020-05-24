@@ -6,12 +6,9 @@ use FKSDB\Components\DatabaseReflection\AbstractRow;
 
 /**
  * Class AbstractOrgRowFactory
- * @package FKSDB\Components\DatabaseReflection\Org
+ * *
  */
 abstract class AbstractOrgRowFactory extends AbstractRow {
-    /**
-     * @return int
-     */
     public function getPermissionsValue(): int {
         return self::PERMISSION_USE_GLOBAL_ACL;
     }

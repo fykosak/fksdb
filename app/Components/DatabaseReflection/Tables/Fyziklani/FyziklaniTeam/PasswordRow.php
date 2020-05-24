@@ -9,7 +9,7 @@ use Nette\Utils\Html;
 
 /**
  * Class PasswordRow
- * @package FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam
+ * *
  */
 class PasswordRow extends AbstractFyziklaniTeamRow {
     /**

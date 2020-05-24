@@ -18,6 +18,9 @@ abstract class PairwiseAdjustment extends AbstractAdjustment implements IFormAdj
     const DELIMITER = '.';
     const WILDCART = '*';
 
+    /**
+     * @var
+     */
     private $rules;
 
     /**
@@ -73,7 +76,7 @@ abstract class PairwiseAdjustment extends AbstractAdjustment implements IFormAdj
     /**
      * @param IControl $target
      * @param IControl $prerequisity
-     * @return mixed
+     * @return void
      */
     abstract protected function processPair(IControl $target, IControl $prerequisity);
 }

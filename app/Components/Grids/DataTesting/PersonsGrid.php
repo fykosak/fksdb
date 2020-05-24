@@ -3,20 +3,19 @@
 namespace FKSDB\Components\Grids\DataTesting;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\DataTesting\Tests\Person\PersonTest;
+use FKSDB\DataTesting\DataTestingFactory;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\DataTesting\TestsLogger;
 use FKSDB\DataTesting\TestLog;
 use FKSDB\Exceptions\NotImplementedException;
-use Nette\DI\Container;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 
 /***
  * Class PersonsGrid
- * @package FKSDB\Components\Grids\DataTesting
+ * *
  */
 class PersonsGrid extends BaseGrid {
     /**
@@ -24,19 +23,18 @@ class PersonsGrid extends BaseGrid {
      */
     private $servicePerson;
     /**
-     * @var PersonTest[]
+     * @var DataTestingFactory
      */
-    private $tests;
+    private $dataTestingFactory;
 
     /**
-     * PersonsGrid constructor.
-     * @param PersonTest[] $tests
-     * @param Container $container
+     * @param ServicePerson $servicePerson
+     * @param DataTestingFactory $dataTestingFactory
+     * @return void
      */
-    public function __construct(array $tests, Container $container) {
-        parent::__construct($container);
-        $this->servicePerson = $container->getByType(ServicePerson::class);
-        $this->tests = $tests;
+    public function injectPrimary(ServicePerson $servicePerson, DataTestingFactory $dataTestingFactory) {
+        $this->servicePerson = $servicePerson;
+        $this->dataTestingFactory = $dataTestingFactory;
     }
 
     /**
@@ -53,7 +51,7 @@ class PersonsGrid extends BaseGrid {
 
         $this->addColumns(['referenced.person_link']);
 
-        foreach ($this->tests as $test) {
+        foreach ($this->dataTestingFactory->getTests('person') as $test) {
             $this->addColumn($test->getAction(), $test->getTitle())->setRenderer(function ($person) use ($test) {
                 $logger = new TestsLogger();
                 $test->run($logger, $person);
@@ -62,9 +60,6 @@ class PersonsGrid extends BaseGrid {
         }
     }
 
-    /**
-     * @return string
-     */
     protected function getModelClassName(): string {
         return ModelPerson::class;
     }

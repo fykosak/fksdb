@@ -18,7 +18,7 @@ use Nette\Application\UI\Control;
 
 /**
  * Class ClosePresenter
- * @package FyziklaniModule
+ * *
  * @property FormControl closeCategoryAForm
  * @method ModelFyziklaniTeam getEntity()
  * @method ModelFyziklaniTeam loadEntity(int $id)
@@ -28,6 +28,10 @@ class ClosePresenter extends BasePresenter {
     use EventEntityTrait;
 
     /* ******* TITLE ***********/
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleList() {
         $this->setTitle(_('Uzavírání bodování'), 'fa fa-check');
     }
@@ -120,9 +124,6 @@ class ClosePresenter extends BasePresenter {
         return new CloseTeamControl($this->getContext(), $this->getEvent());
     }
 
-    /**
-     * @return TeamSubmitsGrid
-     */
     protected function createComponentTeamSubmitsGrid(): TeamSubmitsGrid {
         return new TeamSubmitsGrid($this->getEntity(), $this->getContext());
     }
@@ -134,9 +135,6 @@ class ClosePresenter extends BasePresenter {
         return $this->getServiceFyziklaniTeam();
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function getModelResource(): string {
         return 'fyziklani.close';
     }

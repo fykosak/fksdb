@@ -6,10 +6,10 @@ use FKSDB\Submits\SeriesTable;
 use Nette\DI\Container;
 
 /**
- * Class PointsTableControl
- * @package FKSDB\Components\Controls\Upload
+ * Class PointsPreviewControl
+ * @author Michal Červeňák <miso@fykos.cz>
  */
-class PointsPreviewControl extends SeriesTableControl {
+class PointsPreviewControl extends SeriesTableComponent {
 
     /**
      * CheckSubmitsControl constructor.

@@ -2,16 +2,15 @@
 
 namespace FKSDB\Events\Model\Grid;
 
-use ArrayIterator;
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\Events\EventDispatchFactory;
 use FKSDB\ORM\IModel;
+use FKSDB\ORM\IService;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Tables\TypedTableSelection;
 use FKSDB\Events\Model\Holder\BaseHolder;
 use FKSDB\Events\Model\Holder\Holder;
 use Nette\Application\BadRequestException;
-use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
 use Nette\SmartObject;
@@ -115,6 +114,7 @@ class SingleEventSource implements IHolderSource {
         $joinValues = array_keys($this->primaryModels);
 
         // load secondaries
+        /** @var IService[]|BaseHolder[] $group */
         foreach ($this->dummyHolder->getGroupedSecondaryHolders() as $key => $group) {
             /** @var TypedTableSelection $secondarySelection */
             $secondarySelection = $group['service']->getTable()->where($group['joinOn'], $joinValues);
@@ -135,6 +135,11 @@ class SingleEventSource implements IHolderSource {
         $this->holders = [];
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     * @throws NeonSchemaException
+     */
     private function createHolders() {
         $cache = [];
         foreach ($this->dummyHolder->getGroupedSecondaryHolders() as $key => $group) {
@@ -185,6 +190,8 @@ class SingleEventSource implements IHolderSource {
 
     /**
      * @return Holder[]
+     * @throws BadRequestException
+     * @throws NeonSchemaException
      */
     public function getHolders(): array {
         if ($this->primaryModels === null) {

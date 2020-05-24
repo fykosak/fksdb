@@ -4,7 +4,7 @@ namespace FKSDB\Transitions\Callbacks;
 
 /**
  * Class AbstractCallback
- * @package FKSDB\Transitions\Callbacks
+ * *
  */
 abstract class AbstractCallback {
 

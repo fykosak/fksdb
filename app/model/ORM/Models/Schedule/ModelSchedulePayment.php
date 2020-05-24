@@ -9,7 +9,7 @@ use Nette\Database\Table\ActiveRow;
 
 /**
  * Class ModelSchedulePayment
- * @package FKSDB\ORM\Models\Schedule
+ * *
  * @property-read ActiveRow payment
  * @property-read ActiveRow person_schedule
  * @property-read int person_schedule_id

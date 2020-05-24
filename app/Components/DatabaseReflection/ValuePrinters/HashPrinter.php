@@ -7,11 +7,11 @@ use Nette\Utils\Html;
 
 /**
  * Class HashPrinter
- * @package FKSDB\Components\DatabaseReflection\ValuePrinters
+ * *
  */
 class HashPrinter extends AbstractValuePrinter {
     /**
-     * @param $value
+     * @param string $value
      * @return Html
      */
     protected function getHtml($value): Html {

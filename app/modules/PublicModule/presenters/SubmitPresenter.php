@@ -16,7 +16,7 @@ use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\ORM\Services\ServiceTask;
 use FKSDB\ORM\Tables\TypedTableSelection;
-use FKSDB\Submits\FilesystemUploadedSubmitStorage;
+use FKSDB\Submits\FileSystemStorage\UploadedStorage;
 use FKSDB\Submits\ProcessingException;
 use FKSDB\Exceptions\ModelException;
 use Nette\Application\AbortException;
@@ -34,12 +34,12 @@ use FKSDB\ORM\Services\ServiceSubmitQuizQuestion;
 class SubmitPresenter extends BasePresenter {
     use SubmitSaveTrait;
 
-
     /** @var ServiceSubmit */
     private $submitService;
 
     /**
      * @param ServiceSubmit $submitService
+     * @return void
      */
     public function injectSubmitService(ServiceSubmit $submitService) {
         $this->submitService = $submitService;
@@ -48,23 +48,32 @@ class SubmitPresenter extends BasePresenter {
     /** @var ServiceSubmitQuizQuestion */
     private $submitQuizQuestionService;
 
-    /** @param ServiceSubmitQuizQuestion $submitQuizQuestionService */
+    /**
+     * @param ServiceSubmitQuizQuestion $submitQuizQuestionService
+     * @return void
+     */
     public function injectSubmitQuizQuestionService(ServiceSubmitQuizQuestion $submitQuizQuestionService) {
         $this->submitQuizQuestionService = $submitQuizQuestionService;
     }
 
-    /** @var FilesystemUploadedSubmitStorage */
+    /** @var UploadedStorage */
     private $uploadedSubmitStorage;
 
-    /** @param FilesystemUploadedSubmitStorage $filesystemUploadedSubmitStorage */
-    public function injectSubmitUploadedStorage(FilesystemUploadedSubmitStorage $filesystemUploadedSubmitStorage) {
+    /**
+     * @param UploadedStorage $filesystemUploadedSubmitStorage
+     * @return void
+     */
+    public function injectSubmitUploadedStorage(UploadedStorage $filesystemUploadedSubmitStorage) {
         $this->uploadedSubmitStorage = $filesystemUploadedSubmitStorage;
     }
 
     /** @var ServiceTask */
     private $taskService;
 
-    /** @param ServiceTask $taskService */
+    /**
+     * @param ServiceTask $taskService
+     * @return void
+     */
     public function injectTaskService(ServiceTask $taskService) {
         $this->taskService = $taskService;
     }
@@ -72,7 +81,10 @@ class SubmitPresenter extends BasePresenter {
     /** @var ServiceQuizQuestion */
     private $quizQuestionService;
 
-    /** @param ServiceQuizQuestion $quizQuestionService */
+    /**
+     * @param ServiceQuizQuestion $quizQuestionService
+     * @return void
+     */
     public function injectQuizQuestionService(ServiceQuizQuestion $quizQuestionService) {
         $this->quizQuestionService = $quizQuestionService;
     }
@@ -216,11 +228,8 @@ class SubmitPresenter extends BasePresenter {
         return $control;
     }
 
-    /**
-     * @return AjaxUpload
-     */
     public function createComponentAjaxUpload(): AjaxUpload {
-        return new AjaxUpload($this->context);
+        return new AjaxUpload($this->getContext());
     }
 
     /**
@@ -331,5 +340,13 @@ class SubmitPresenter extends BasePresenter {
             }
         }
         return null;
+    }
+
+    protected function getUploadedStorage(): UploadedStorage {
+        return $this->getContext()->getByType(UploadedStorage::class);
+    }
+
+    protected function getServiceSubmit(): ServiceSubmit {
+        return $this->submitService;
     }
 }

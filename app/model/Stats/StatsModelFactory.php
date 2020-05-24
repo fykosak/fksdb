@@ -5,7 +5,6 @@ namespace FKSDB\Stats;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Services\ServiceTask;
 use Nette\Database\Connection;
-use FKSDB\Stats\TaskStatsModel;
 
 /**
  * Description of ResultsModelFactory

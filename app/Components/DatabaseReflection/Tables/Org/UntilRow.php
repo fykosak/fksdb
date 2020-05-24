@@ -12,7 +12,7 @@ use Nette\Utils\Html;
 
 /**
  * Class UntilRow
- * @package FKSDB\Components\DatabaseReflection\Org
+ * *
  */
 class UntilRow extends AbstractOrgRowFactory {
     /**

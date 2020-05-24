@@ -7,7 +7,7 @@ use Nette\Database\IConventions;
 
 /**
  * Interface IStateModel
- * @package FKSDB\Transitions
+ * *
  */
 interface IStateModel {
     /**

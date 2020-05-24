@@ -8,7 +8,7 @@ use Nette\Utils\Html;
 
 /**
  * Class TestLog
- * @package FKSDB\DataTesting
+ * *
  */
 class TestLog extends Message {
     /**

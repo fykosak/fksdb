@@ -95,6 +95,7 @@ class ReferencedId extends HiddenField {
 
     /**
      * @param Promise $promise
+     * @return void
      */
     private function setPromise(Promise $promise) {
         $this->promise = $promise;
@@ -202,6 +203,9 @@ class ReferencedId extends HiddenField {
         $this->referencedContainer->setDisabled($value);
     }
 
+    /**
+     * @return void
+     */
     private function createPromise() {
         $referencedId = $this->getValue();
         $values = $this->referencedContainer->getValues();
@@ -235,10 +239,12 @@ class ReferencedId extends HiddenField {
         $this->setPromise($promise);
     }
 
+    /** @var bool */
     private $attachedOnValidate = false;
 
     /**
-     * @param $obj
+     * @param mixed $obj
+     * @return void
      */
     protected function attached($obj) {
         parent::attached($obj);

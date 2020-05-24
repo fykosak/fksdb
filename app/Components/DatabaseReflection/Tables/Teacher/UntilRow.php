@@ -11,7 +11,7 @@ use Nette\Utils\Html;
 
 /**
  * Class UntilRow
- * @package FKSDB\Components\DatabaseReflection\Tables\Teacher
+ * *
  */
 class UntilRow extends AbstractTeacherRow {
 

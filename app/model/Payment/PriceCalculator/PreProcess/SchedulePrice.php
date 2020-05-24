@@ -9,7 +9,7 @@ use FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException;
 
 /**
  * Class SchedulePrice
- * @package FKSDB\Payment\PriceCalculator\PreProcess
+ * *
  */
 class SchedulePrice implements IPreprocess {
     /**

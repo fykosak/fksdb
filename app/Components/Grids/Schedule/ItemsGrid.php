@@ -15,7 +15,7 @@ use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class ItemsGrid
- * @package FKSDB\Components\Grids\Schedule
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ItemsGrid extends BaseGrid {
     /**
@@ -33,9 +33,6 @@ class ItemsGrid extends BaseGrid {
         $this->group = $group;
     }
 
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelScheduleItem::class;
     }

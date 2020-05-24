@@ -8,11 +8,10 @@ use FKSDB\YearCalculator;
 use http\Exception\InvalidArgumentException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
-use Nette\Localization\ITranslator;
 
 /**
  * Class StudyYearRow
- * @package FKSDB\Components\DatabaseReflection\PersonHistory
+ * *
  */
 class StudyYearRow extends AbstractRow {
     use DefaultPrinterTrait;
@@ -23,11 +22,9 @@ class StudyYearRow extends AbstractRow {
 
     /**
      * StudyYearRow constructor.
-     * @param ITranslator $translator
      * @param YearCalculator $yearCalculator
      */
-    public function __construct(ITranslator $translator, YearCalculator $yearCalculator) {
-        parent::__construct($translator);
+    public function __construct(YearCalculator $yearCalculator) {
         $this->yearCalculator = $yearCalculator;
     }
 

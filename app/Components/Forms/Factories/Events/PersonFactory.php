@@ -28,10 +28,25 @@ class PersonFactory extends AbstractFactory {
 
     const VALUE_LOGIN = 'fromLogin';
 
+    /**
+     * @var
+     */
     private $fieldsDefinition;
+    /**
+     * @var
+     */
     private $searchType;
+    /**
+     * @var
+     */
     private $allowClear;
+    /**
+     * @var
+     */
     private $modifiable;
+    /**
+     * @var
+     */
     private $visible;
 
     /**

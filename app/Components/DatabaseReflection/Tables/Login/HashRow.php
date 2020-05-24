@@ -9,7 +9,7 @@ use Nette\Utils\Html;
 
 /**
  * Class HashRow
- * @package FKSDB\Components\DatabaseReflection\Login
+ * *
  */
 class HashRow extends AbstractLoginRow {
     /**

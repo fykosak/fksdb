@@ -4,7 +4,7 @@ namespace CommonModule;
 
 /**
  * Class DashboardPresenter
- * @package CoreModule
+ * *
  */
 class DashboardPresenter extends BasePresenter {
 

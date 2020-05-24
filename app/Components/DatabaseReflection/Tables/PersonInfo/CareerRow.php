@@ -9,14 +9,11 @@ use Nette\Forms\Controls\TextArea;
 
 /**
  * Class CareerField
- * @package FKSDB\Components\Forms\Factories\PersonInfo
+ * *
  */
 class CareerRow extends AbstractRow {
     use DefaultPrinterTrait;
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Co právě dělá');
     }
@@ -38,16 +35,10 @@ class CareerRow extends AbstractRow {
         return $control;
     }
 
-    /**
-     * @return int
-     */
     public function getPermissionsValue(): int {
         return self::PERMISSION_ALLOW_BASIC;
     }
 
-    /**
-     * @return string
-     */
     protected function getModelAccessKey(): string {
         return 'career';
     }

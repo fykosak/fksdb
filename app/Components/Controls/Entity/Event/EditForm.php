@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Controls\Entity\Event;
 
 use FKSDB\Config\NeonSchemaException;
-use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\Config\NeonScheme;
 use FKSDB\Events\EventDispatchFactory;
@@ -20,11 +19,10 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextArea;
 use Nette\Neon\Neon;
 use Nette\Utils\Html;
-use Nette\Utils\NeonException;
 
 /**
- * Class EditControl
- * @package FKSDB\Components\Controls\Entity\Event
+ * Class EditForm
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class EditForm extends AbstractForm implements IEditEntityForm {
 
@@ -53,6 +51,7 @@ class EditForm extends AbstractForm implements IEditEntityForm {
     /**
      * @param AbstractModelSingle|ModelEvent $model
      * @throws BadRequestException
+     * @throws NeonSchemaException
      */
     public function setModel(AbstractModelSingle $model) {
         $this->model = $model;
@@ -76,7 +75,7 @@ class EditForm extends AbstractForm implements IEditEntityForm {
                 }
                 NeonScheme::readSection($parameters, $scheme);
                 return true;
-            } catch (NeonException $exception) {
+            } catch (NeonSchemaException $exception) {
                 $control->addError($exception->getMessage());
                 return false;
             }

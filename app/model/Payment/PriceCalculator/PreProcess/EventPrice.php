@@ -8,7 +8,7 @@ use FKSDB\Payment\Price;
 
 /**
  * Class EventPrice
- * @package FKSDB\Payment\PriceCalculator\PreProcess
+ * *
  */
 class EventPrice implements IPreprocess {
     /**

@@ -2,9 +2,8 @@
 
 namespace FKSDB\Components\Controls\Fyziklani;
 
-use FKSDB\Components\Controls\BaseControl;
+use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\DatabaseReflection\ValuePrinterComponent;
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventParticipant;
@@ -12,13 +11,12 @@ use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\ORM\Services\ServiceSchool;
 use Nette\DI\Container;
-use Nette\Localization\ITranslator;
 
 /**
- * Class SchoolCheckControl
- * @package FKSDB\Components\Controls\Fyziklani
+ * Class SchoolCheckComponent
+ * @author Michal Červeňák <miso@fykos.cz>
  */
-class SchoolCheckControl extends BaseControl {
+class SchoolCheckComponent extends BaseComponent {
     /**
      * @var ModelEvent
      */
@@ -42,6 +40,7 @@ class SchoolCheckControl extends BaseControl {
 
     /**
      * @param ModelFyziklaniTeam $currentTeam
+     * @return void
      */
     public function render(ModelFyziklaniTeam $currentTeam) {
         $schools = [];
@@ -89,7 +88,7 @@ group by school_id', [$this->acYear, array_keys($this->getSchoolsFromTeam($curre
      * @throws \Exception
      */
     public function createComponentValuePrinter(): ValuePrinterComponent {
-        return new ValuePrinterComponent($this->getContext()->getByType(ITranslator::class), $this->getContext()->getByType(TableReflectionFactory::class));
+        return new ValuePrinterComponent($this->getContext());
     }
 }
 // there are very nice nette workaround, but very slow

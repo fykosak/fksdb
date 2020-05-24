@@ -56,6 +56,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
 
     /**
      * @param TokenAuthenticator $tokenAuthenticator
+     * @return void
      */
     public function injectTokenAuthenticator(TokenAuthenticator $tokenAuthenticator) {
         $this->tokenAuthenticator = $tokenAuthenticator;
@@ -63,6 +64,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
 
     /**
      * @param PasswordAuthenticator $passwordAuthenticator
+     * @return void
      */
     public function injectPasswordAuthenticator(PasswordAuthenticator $passwordAuthenticator) {
         $this->passwordAuthenticator = $passwordAuthenticator;
@@ -70,6 +72,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
 
     /**
      * @param GithubAuthenticator $githubAuthenticator
+     * @return void
      */
     public function injectGithubAuthenticator(GithubAuthenticator $githubAuthenticator) {
         $this->githubAuthenticator = $githubAuthenticator;
@@ -77,28 +80,24 @@ abstract class AuthenticatedPresenter extends BasePresenter {
 
     /**
      * @param ContestAuthorizator $contestAuthorizator
+     * @return void
      */
     public function injectContestAuthorizator(ContestAuthorizator $contestAuthorizator) {
         $this->contestAuthorizator = $contestAuthorizator;
     }
 
-    /**
-     * @return ContestAuthorizator
-     */
     public function getContestAuthorizator(): ContestAuthorizator {
         return $this->contestAuthorizator;
     }
 
     /**
      * @param EventAuthorizator $eventAuthorizator
+     * @return void
      */
     public function injectEventAuthorizator(EventAuthorizator $eventAuthorizator) {
         $this->eventAuthorizator = $eventAuthorizator;
     }
 
-    /**
-     * @return EventAuthorizator
-     */
     public function getEventAuthorizator(): EventAuthorizator {
         return $this->eventAuthorizator;
     }
@@ -251,7 +250,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     }
 
     /**
-     *
+     * @return void
      */
     private function tryHttpAuth() {
         if (!isset($_SERVER['PHP_AUTH_USER'])) {
@@ -277,7 +276,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     }
 
     /**
-     *
+     * @return void
      */
     private function httpAuthPrompt() {
         $realm = $this->getHttpRealm();

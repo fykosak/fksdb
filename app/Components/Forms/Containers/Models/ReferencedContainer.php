@@ -260,7 +260,13 @@ class ReferencedContainer extends ContainerWithOptions {
         }
     }
 
+    /**
+     * @var bool
+     */
     private $attachedJS = false;
+    /**
+     * @var bool
+     */
     private $attachedAjax = false;
 
     /**

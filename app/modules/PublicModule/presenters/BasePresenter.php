@@ -23,11 +23,8 @@ abstract class BasePresenter extends \ContestPresenter {
      */
     private $contestant = false;
 
-    /**
-     * @return ContestChooser
-     */
     protected function createComponentContestChooser(): ContestChooser {
-        $control = new ContestChooser($this->session, $this->yearCalculator, $this->getServiceContest());
+        $control = new ContestChooser($this->getContext());
         $control->setContests(ModelRole::CONTESTANT);
         return $control;
     }

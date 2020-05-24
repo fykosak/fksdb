@@ -20,7 +20,7 @@ use Nette\Utils\DateTime;
 
 /**
  * Class ResultsAndStatistics
- * @package FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ResultsAndStatistics extends FyziklaniReactControl {
     /**
@@ -55,21 +55,16 @@ class ResultsAndStatistics extends FyziklaniReactControl {
         $this->serviceFyziklaniTeam = $this->container->getByType(ServiceFyziklaniTeam::class);
     }
 
-    /**
-     * @return string
-     */
     protected function getReactId(): string {
         return $this->reactId;
     }
 
-    /**
-     * @return string
-     */
     final public function getData(): string {
         return '';
     }
 
     /**
+     * @return void
      * @throws InvalidLinkException
      */
     protected function configure() {
@@ -78,8 +73,10 @@ class ResultsAndStatistics extends FyziklaniReactControl {
     }
 
     /**
+     * @return void
      * @throws AbortException
      * @throws BadRequestException
+     * @throws NotSetGameParametersException
      */
     public function handleRefresh() {
         $presenter = $this->getPresenter();

@@ -7,7 +7,7 @@ use FKSDB\ORM\Models\ModelPerson;
 
 /**
  * Class PersonTest
- * @package FKSDB\DataTesting\Tests\Person
+ * *
  */
 abstract class PersonTest {
     /**

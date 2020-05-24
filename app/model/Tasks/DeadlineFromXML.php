@@ -4,7 +4,6 @@ namespace FKSDB\Tasks;
 
 use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
-use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceTask;
 use Nette\Utils\DateTime;
 use Pipeline\Stage;

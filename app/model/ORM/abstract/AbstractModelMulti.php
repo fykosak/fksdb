@@ -69,6 +69,7 @@ abstract class AbstractModelMulti implements IModel {
 
     /**
      * @param AbstractModelSingle $mainModel
+     * @return void
      */
     public function setMainModel(AbstractModelSingle $mainModel) {
         if (!$this->service) {
@@ -90,20 +91,19 @@ abstract class AbstractModelMulti implements IModel {
 
     /**
      * @param AbstractModelSingle $joinedModel
+     * @return void
      */
     public function setJoinedModel(AbstractModelSingle $joinedModel) {
         $this->joinedModel = $joinedModel;
     }
 
-    /**
-     * @return AbstractServiceMulti
-     */
     public function getService(): AbstractServiceMulti {
         return $this->service;
     }
 
     /**
      * @param AbstractServiceMulti $service
+     * @return void
      */
     public function setService(AbstractServiceMulti $service) {
         $this->service = $service;

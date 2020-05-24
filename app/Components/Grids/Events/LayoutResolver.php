@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Grids\Events;
 
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\SmartObject;
 

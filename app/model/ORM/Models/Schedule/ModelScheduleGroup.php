@@ -12,7 +12,7 @@ use Nette\Security\IResource;
 
 /**
  * Class ModelScheduleGroup
- * @package FKSDB\ORM\Models\Schedule
+ * *
  * @property-read int schedule_group_id
  * @property-read string schedule_group_type
  * @property-read int event_id

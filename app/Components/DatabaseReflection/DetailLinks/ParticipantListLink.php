@@ -7,13 +7,10 @@ use FKSDB\ORM\Models\ModelEvent;
 
 /**
  * Class ParticipantListLink
- * @package FKSDB\Components\DatabaseReflection\Links
+ * *
  */
 class ParticipantListLink extends AbstractLink {
 
-    /**
-     * @inheritDoc
-     */
     public function getText(): string {
         return _('List of applications');
     }
@@ -40,9 +37,6 @@ class ParticipantListLink extends AbstractLink {
         ];
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getModelClassName(): string {
         return ModelEvent::class;
     }

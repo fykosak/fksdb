@@ -10,7 +10,7 @@ use Nette\Utils\Html;
 
 /**
  * Class PriceRow
- * @package FKSDB\Components\DatabaseReflection\Payment
+ * *
  */
 class PriceRow extends AbstractPaymentRow {
     /**

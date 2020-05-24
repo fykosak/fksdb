@@ -7,7 +7,7 @@ use Nette\DI\CompilerExtension;
 
 /**
  * Class StalkingExtension
- * @package FKSDB\Config\Extensions
+ * *
  */
 class StalkingExtension extends CompilerExtension {
 

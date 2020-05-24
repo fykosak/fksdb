@@ -9,7 +9,7 @@ use Nette\Utils\Html;
 
 /**
  * Class EndRow
- * @package FKSDB\Components\DatabaseReflection\Tables\Schedule
+ * *
  */
 class StartRow extends AbstractScheduleGroupRow {
     /**

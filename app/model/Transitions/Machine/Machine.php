@@ -3,7 +3,6 @@
 namespace FKSDB\Transitions;
 
 use Exception;
-use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
 use LogicException;
@@ -11,7 +10,6 @@ use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Database\Context;
 use Nette\Database\Table\ActiveRow;
-use Nette\Localization\ITranslator;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -40,26 +38,20 @@ abstract class Machine {
      * if callback return true, transition is allowed explicit, independently of transition's condition
      */
     private $explicitCondition;
-    /**
-     * @var ITranslator
-     */
-    private $translator;
 
     /**
      * Machine constructor.
      * @param Context $context
      * @param IService $service
-     * @param ITranslator $translator
      */
-    public function __construct(Context $context, IService $service, ITranslator $translator) {
+    public function __construct(Context $context, IService $service) {
         $this->context = $context;
-
         $this->service = $service;
-        $this->translator = $translator;
     }
 
     /**
      * @param Transition $transition
+     * @return void
      */
     public function addTransition(Transition $transition) {
         $this->transitions[] = $transition;
@@ -85,15 +77,6 @@ abstract class Machine {
             return ($transition->getFromState() === $state) && $this->canExecute($transition, $model);
         });
     }
-
-    /**
-     * @param IStateModel $model
-     * @return TransitionButtonsControl
-     */
-    public function createComponentTransitionButtons(IStateModel $model): TransitionButtonsControl {
-        return new TransitionButtonsControl($this, $this->translator, $model);
-    }
-
     /**
      * @param string $id
      * @param IStateModel $model
@@ -129,6 +112,7 @@ abstract class Machine {
     /* ********** CONDITION ******** */
     /**
      * @param callable $condition
+     * @return void
      */
     public function setExplicitCondition(callable $condition) {
         $this->explicitCondition = $condition;
@@ -190,16 +174,13 @@ abstract class Machine {
         /* select from DB new (updated) model */
 
         // $newModel = $model;
-        $newModel = $model->refresh($this->context,$this->context->getConventions());
+        $newModel = $model->refresh($this->context, $this->context->getConventions());
         $transition->afterExecute($newModel);
         return $newModel;
     }
 
     /* ********** MODEL CREATING ******** */
 
-    /**
-     * @return string
-     */
     abstract public function getCreatingState(): string;
 
     /**

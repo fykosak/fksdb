@@ -6,7 +6,7 @@ use FKSDB\ORM\AbstractModelSingle;
 
 /**
  * Class ModelFyziklaniGameSetup
- * @package FKSDB\ORM\Models\Fyziklani
+ * *
  * @property-read int event_id
  * @property-read \DateTimeInterface game_start
  * @property-read \DateTimeInterface game_end

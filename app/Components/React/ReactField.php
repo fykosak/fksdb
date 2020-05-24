@@ -8,7 +8,7 @@ use Nette\Utils\JsonException;
 
 /**
  * Trait ReactField
- * @package FKSDB\Components\React
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 trait ReactField {
     /**

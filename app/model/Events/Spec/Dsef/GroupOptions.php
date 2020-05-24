@@ -26,7 +26,13 @@ class GroupOptions implements IOptionsProvider {
      * @var ServiceDsefGroup
      */
     private $serviceDsefGroup;
+    /**
+     * @var array|string
+     */
     private $includeStates;
+    /**
+     * @var array|string|string[]
+     */
     private $excludeStates;
 
     /**

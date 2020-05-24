@@ -85,9 +85,6 @@ class EventsGrid extends BaseGrid {
             ->setClass('btn btn-sm btn-primary');
     }
 
-    /**
-     * @return string
-     */
     protected function getModelClassName(): string {
         return ModelEvent::class;
     }

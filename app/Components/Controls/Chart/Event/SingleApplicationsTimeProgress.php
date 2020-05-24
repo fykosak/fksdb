@@ -15,8 +15,8 @@ use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 
 /**
- * Class TeamApplicationsTimeProgress
- * @package FKSDB\Components\React\ReactComponent\Events
+ * Class SingleApplicationsTimeProgress
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class SingleApplicationsTimeProgress extends ReactComponent implements IChart {
     /**
@@ -45,9 +45,6 @@ class SingleApplicationsTimeProgress extends ReactComponent implements IChart {
         $this->serviceEvent = $context->getByType(ServiceEvent::class);
     }
 
-    /**
-     * @return string
-     */
     protected function getReactId(): string {
         return 'events.applications-time-progress.participants';
     }
@@ -80,23 +77,14 @@ class SingleApplicationsTimeProgress extends ReactComponent implements IChart {
         return Json::encode($data);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getAction(): string {
         return 'singleApplicationProgress';
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getTitle(): string {
         return 'Applications time progress';
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getControl(): Control {
         return $this;
     }

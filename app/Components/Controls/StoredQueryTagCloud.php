@@ -32,17 +32,17 @@ class StoredQueryTagCloud extends Control {
      * @var callable[]
      */
     private $onClick;
-
+    /** @var string */
     private $mode;
-
+    /** @var int[] */
     private $activeTagIds = [];
 
     /**
      * StoredQueryTagCloud constructor.
-     * @param $mode
+     * @param string $mode
      * @param ServiceMStoredQueryTag $serviceMStoredQueryTag
      */
-    public function __construct($mode, ServiceMStoredQueryTag $serviceMStoredQueryTag) {
+    public function __construct(string $mode, ServiceMStoredQueryTag $serviceMStoredQueryTag) {
         parent::__construct();
         $this->serviceMStoredQueryTag = $serviceMStoredQueryTag;
         $this->mode = $mode;
@@ -50,6 +50,7 @@ class StoredQueryTagCloud extends Control {
 
     /**
      * @param ModelStoredQuery $modelStoredQuery
+     * @return void
      */
     public function setModelStoredQuery(ModelStoredQuery $modelStoredQuery) {
         $this->modelStoredQuery = $modelStoredQuery;
@@ -57,7 +58,7 @@ class StoredQueryTagCloud extends Control {
 
     /**
      * @param callable $callback
-     * @return $this
+     * @return static
      */
     public function registerOnClick(callable $callback) {
         $this->onClick[] = $callback;
@@ -66,6 +67,7 @@ class StoredQueryTagCloud extends Control {
 
     /**
      * @param array $activeTagIds
+     * @return void
      */
     public function handleOnClick(array $activeTagIds) {
         $this->activeTagIds = $activeTagIds;
@@ -111,5 +113,4 @@ class StoredQueryTagCloud extends Control {
         }
         return $nextActiveTagIds;
     }
-
 }

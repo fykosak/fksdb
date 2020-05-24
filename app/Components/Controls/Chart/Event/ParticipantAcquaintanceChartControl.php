@@ -6,7 +6,6 @@ use FKSDB\Components\Controls\Chart\IChart;
 use FKSDB\Components\React\ReactComponent;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventParticipant;
-use FKSDB\ORM\Services\ServiceEvent;
 use Nette\Application\UI\Control;
 use Nette\DI\Container;
 use Nette\Utils\Json;
@@ -14,18 +13,13 @@ use Nette\Utils\JsonException;
 
 /**
  * Class ParticipantAcquaintanceChartControl
- * @package FKSDB\Components\Controls\Chart
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ParticipantAcquaintanceChartControl extends ReactComponent implements IChart {
     /**
      * @var int
      */
     private $event;
-    /**
-     * @var ServiceEvent
-     */
-    private $serviceEvent;
-
     /**
      * ParticipantAcquaintanceChartControl constructor.
      * @param Container $context
@@ -34,12 +28,8 @@ class ParticipantAcquaintanceChartControl extends ReactComponent implements ICha
     public function __construct(Container $context, ModelEvent $event) {
         parent::__construct($context);
         $this->event = $event;
-        $this->serviceEvent = $context->getByType(ServiceEvent::class);
     }
 
-    /**
-     * @return string
-     */
     public function getAction(): string {
         return 'participantAcquaintance';
     }
@@ -72,23 +62,14 @@ class ParticipantAcquaintanceChartControl extends ReactComponent implements ICha
         return Json::encode($data);
     }
 
-    /**
-     * @return string
-     */
     protected function getReactId(): string {
         return 'chart.participant-acquaintance';
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Participant acquaintance');
     }
 
-    /**
-     * @return Control
-     */
     public function getControl(): Control {
         return $this;
     }

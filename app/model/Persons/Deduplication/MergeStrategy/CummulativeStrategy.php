@@ -9,6 +9,9 @@ namespace Persons\Deduplication\MergeStrategy;
  */
 class CummulativeStrategy implements IMergeStrategy {
 
+    /**
+     * @var mixed|null
+     */
     private $precedence;
 
     /**

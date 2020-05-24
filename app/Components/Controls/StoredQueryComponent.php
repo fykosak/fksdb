@@ -96,6 +96,7 @@ class StoredQueryComponent extends Control {
 
     /**
      * @param $showParametrize
+     * @return void
      */
     public function setShowParametrize($showParametrize) {
         $this->showParametrize = $showParametrize;
@@ -103,6 +104,7 @@ class StoredQueryComponent extends Control {
 
     /**
      * @param $parameters
+     * @return void
      */
     public function setParameters($parameters) {
         $this->parameters = $parameters;
@@ -110,6 +112,7 @@ class StoredQueryComponent extends Control {
 
     /**
      * @param $parameters
+     * @return void
      */
     public function updateParameters($parameters) {
         if (!$this->parameters) {

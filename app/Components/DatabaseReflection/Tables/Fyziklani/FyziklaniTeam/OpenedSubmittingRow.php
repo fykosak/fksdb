@@ -8,7 +8,7 @@ use Nette\Utils\Html;
 
 /**
  * Class OpenSubmitRow
- * @package FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam
+ * *
  */
 class OpenedSubmittingRow extends AbstractFyziklaniTeamRow {
 

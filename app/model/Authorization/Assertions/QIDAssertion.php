@@ -16,6 +16,9 @@ class QIDAssertion {
 
     use SmartObject;
 
+    /**
+     * @var array
+     */
     private $qids;
 
     /**

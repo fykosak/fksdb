@@ -18,7 +18,7 @@ use Nette\InvalidStateException;
 class Pipeline {
 
     /**
-     * @var array of IStage
+     * @var Stage[]
      */
     private $stages = [];
 
@@ -39,6 +39,7 @@ class Pipeline {
 
     /**
      * @param ILogger $logger
+     * @return void
      */
     public function setLogger(ILogger $logger) {
         $this->logger = $logger;
@@ -93,6 +94,7 @@ class Pipeline {
 
     /**
      * @param Message $message
+     * @return void
      */
     public function log(Message $message) {
         if ($this->logger) {

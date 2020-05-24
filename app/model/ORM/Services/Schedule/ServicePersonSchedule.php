@@ -8,7 +8,7 @@ use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 
 /**
  * Class ServicePersonSchedule
- * @package FKSDB\ORM\Services\Schedule
+ * *
  */
 class ServicePersonSchedule extends AbstractServiceSingle {
 

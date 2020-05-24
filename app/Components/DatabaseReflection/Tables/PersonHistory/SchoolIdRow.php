@@ -13,7 +13,7 @@ use Nette\Utils\Html;
 
 /**
  * Class SchoolIdRow
- * @package FKSDB\Components\DatabaseReflection\PersonHistory
+ * *
  */
 class SchoolIdRow extends AbstractRow {
     /**

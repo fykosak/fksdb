@@ -7,7 +7,7 @@ use FKSDB\ORM\Models\ModelEvent;
 
 /**
  * Class ExplicitEventRole
- * @package FKSDB\Transitions\Statements\Conditions
+ * *
  */
 class ExplicitEventRole extends EventRole {
     /**

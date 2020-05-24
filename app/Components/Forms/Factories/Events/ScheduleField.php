@@ -9,7 +9,7 @@ use Nette\Utils\JsonException;
 
 /**
  * Class ScheduleField
- * @package FKSDB\Components\Forms\Factories\Events
+ * *
  * @deprecated
  */
 class ScheduleField extends TextInput {

@@ -7,7 +7,7 @@ use Nette\InvalidStateException;
 
 /**
  * Class UnavailableTransitionException
- * @package FKSDB\Transitions
+ * *
  */
 class UnavailableTransitionException extends \Exception {
     /**

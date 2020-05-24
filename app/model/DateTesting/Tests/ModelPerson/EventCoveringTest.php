@@ -13,7 +13,7 @@ use FKSDB\DataTesting\TestsLogger;
 
 /**
  * Class EventCoveringTest
- * @package FKSDB\DataTesting\Tests\Person
+ * *
  */
 class EventCoveringTest extends PersonTest {
 

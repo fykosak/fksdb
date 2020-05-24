@@ -106,6 +106,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     /**
      * @param SeriesCalculator $seriesCalculator
+     * @return void
      */
     public function injectSeriesCalculator(SeriesCalculator $seriesCalculator) {
         $this->seriesCalculator = $seriesCalculator;
@@ -113,6 +114,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     /**
      * @param ServiceContestant $serviceContestant
+     * @return void
      */
     public function injectServiceContestant(ServiceContestant $serviceContestant) {
         $this->serviceContestant = $serviceContestant;
@@ -120,6 +122,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     /**
      * @param ServicePerson $servicePerson
+     * @return void
      */
     public function injectServicePerson(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
@@ -127,6 +130,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     /**
      * @param ReferencedPersonFactory $referencedPersonFactory
+     * @return void
      */
     public function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory) {
         $this->referencedPersonFactory = $referencedPersonFactory;
@@ -134,6 +138,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     /**
      * @param ExtendedPersonHandlerFactory $handlerFactory
+     * @return void
      */
     public function injectHandlerFactory(ExtendedPersonHandlerFactory $handlerFactory) {
         $this->handlerFactory = $handlerFactory;
@@ -141,6 +146,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     /**
      * @param Container $container
+     * @return void
      */
     public function injectContainer(Container $container) {
         $this->container = $container;
@@ -161,9 +167,6 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         return $this->year;
     }
 
-    /**
-     * @return int
-     */
     public function getSelectedAcademicYear(): int {
         if (!$this->getSelectedContest()) {
             throw new InvalidStateException("Cannot get acadamic year without selected contest.");
@@ -428,10 +431,6 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         return null;
     }
 
-
-    /**
-     * @return PageStyleContainer
-     */
     protected function getPageStyleContainer(): PageStyleContainer {
         $container = parent::getPageStyleContainer();
         $contest = $this->getSelectedContest();

@@ -6,7 +6,7 @@ use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 
 /**
  * Class PointsRow
- * @package FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam
+ * *
  */
 class PointsRow extends AbstractFyziklaniTeamRow {
     use DefaultPrinterTrait;

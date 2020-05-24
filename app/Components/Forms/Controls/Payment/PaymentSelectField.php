@@ -12,7 +12,7 @@ use Nette\Utils\JsonException;
 
 /**
  * Class PaymentSelectField
- * @package FKSDB\Components\Forms\Controls\Payment
+ * *
  */
 class PaymentSelectField extends TextInput {
 

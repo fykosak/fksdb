@@ -6,7 +6,7 @@ use FKSDB\Events\Model\Holder\BaseHolder;
 
 /**
  * Class SecondaryModelDataConflictException
- * @package Events\Model\Holder\SecondaryModelStrategies
+ * *
  */
 class SecondaryModelDataConflictException extends SecondaryModelConflictException {
     /** @var array */
