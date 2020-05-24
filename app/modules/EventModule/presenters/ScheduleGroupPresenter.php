@@ -13,7 +13,7 @@ use Nette\Application\UI\Control;
 
 /**
  * Class ScheduleGroupPresenter
- * @package EventModule
+ * *
  */
 class ScheduleGroupPresenter extends BasePresenter {
     use EventEntityTrait;

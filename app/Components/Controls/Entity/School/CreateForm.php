@@ -11,7 +11,7 @@ use Tracy\Debugger;
 
 /**
  * Class CreateForm
- * @package FKSDB\Components\Controls\Entity\School
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class CreateForm extends AbstractForm {
 

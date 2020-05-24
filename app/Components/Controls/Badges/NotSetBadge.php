@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Controls\Badges;
 
-use Nette\Templating\FileTemplate;
 use Nette\Utils\Html;
 
 /**

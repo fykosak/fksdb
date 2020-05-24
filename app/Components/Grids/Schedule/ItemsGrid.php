@@ -15,7 +15,7 @@ use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class ItemsGrid
- * @package FKSDB\Components\Grids\Schedule
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ItemsGrid extends BaseGrid {
     /**

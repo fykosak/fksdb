@@ -17,7 +17,6 @@ use Nette\Http\Request as HttpRequest;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Nette\InvalidArgumentException;
-use Nette\Templating\FileTemplate;
 use Nette\Utils\Random;
 use Utils;
 
@@ -31,7 +30,6 @@ use Utils;
  * @note Page titles of visited pages are cached in the session.
  *
  * @author Michal Koutný <michal@fykos.cz>
- * @property-read FileTemplate $template
  */
 class Breadcrumbs extends BaseComponent {
 

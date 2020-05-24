@@ -10,8 +10,8 @@ use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 
 /**
- * Class CorrectedFormControl
- * @package FKSDB\Components\Controls\Upload
+ * Class CorrectedControl
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class CorrectedControl extends SeriesTableComponent {
 

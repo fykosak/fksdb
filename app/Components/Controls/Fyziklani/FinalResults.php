@@ -8,13 +8,7 @@ use FKSDB\Components\Grids\Fyziklani\ResultsTotalGrid;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\DI\Container;
-use Nette\Templating\FileTemplate;
 
-/**
- * Class OrgResults
- * @package FKSDB\Components\Controls\Fyziklani
- * @property FileTemplate $template
- */
 class FinalResults extends BaseComponent {
     /**
      * @var ServiceFyziklaniTeam|null

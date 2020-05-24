@@ -6,7 +6,7 @@ use FKSDB\Components\DatabaseReflection\AbstractRow;
 
 /**
  * Class AbstractFyziklaniSubmitRow
- * @package FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniSubmit
+ * *
  */
 abstract class AbstractFyziklaniSubmitRow extends AbstractRow {
     public function getPermissionsValue(): int {

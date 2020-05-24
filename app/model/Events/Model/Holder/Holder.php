@@ -17,7 +17,6 @@ use Nette\Application\UI\Form;
 use Nette\Database\Connection;
 use Nette\InvalidArgumentException;
 use Nette\Utils\ArrayHash;
-use Tracy\Debugger;
 
 /**
  * A bit bloated class.

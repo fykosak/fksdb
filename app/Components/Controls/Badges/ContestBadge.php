@@ -4,7 +4,6 @@ namespace FKSDB\Components\Controls\Badges;
 
 use FKSDB\Exceptions\ContestNotFoundException;
 use FKSDB\ORM\Models\ModelContest;
-use Nette\Templating\FileTemplate;
 use Nette\Utils\Html;
 
 /**

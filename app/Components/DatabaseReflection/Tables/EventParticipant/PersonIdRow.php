@@ -7,7 +7,7 @@ use Nette\Application\UI\PresenterComponent;
 
 /**
  * Class PersonIdRow
- * @package FKSDB\Components\DatabaseReflection\EventParticipant
+ * *
  */
 class PersonIdRow extends AbstractParticipantRow {
     use DefaultPrinterTrait;

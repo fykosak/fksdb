@@ -7,7 +7,7 @@ use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 
 /**
  * Class QIDRow
- * @package FKSDB\Components\DatabaseReflection\StoredQuery\StoredQuery
+ * *
  */
 class QIDRow extends AbstractRow {
     use DefaultPrinterTrait;

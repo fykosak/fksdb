@@ -15,7 +15,7 @@ use Persons\ExtendedPersonHandler;
 
 /**
  * Class EventOrgPresenter
- * @package OrgModule
+ * *
  * @method ModelEventOrg getModel()
  */
 class EventOrgPresenter extends ExtendedPersonPresenter {

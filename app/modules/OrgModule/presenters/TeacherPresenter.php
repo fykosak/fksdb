@@ -15,7 +15,7 @@ use Persons\ExtendedPersonHandler;
 
 /**
  * Class TeacherPresenter
- * @package OrgModule
+ * *
  * @method ModelTeacher getModel2()
  * @method ModelTeacher getModel()
  */

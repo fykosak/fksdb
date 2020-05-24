@@ -6,7 +6,7 @@ use FKSDB\Components\DatabaseReflection\AbstractRow;
 
 /**
  * Class AbstractEventRowFactory
- * @package FKSDB\Components\DatabaseReflection\Event
+ * *
  */
 abstract class AbstractEventRowFactory extends AbstractRow {
     public function getPermissionsValue(): int {

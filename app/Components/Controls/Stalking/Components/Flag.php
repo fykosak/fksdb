@@ -6,7 +6,7 @@ use FKSDB\ORM\Models\ModelPerson;
 
 /**
  * Class Flag
- * @package FKSDB\Components\Controls\Stalking
+ * *
  */
 class Flag extends AbstractStalkingComponent {
     /**

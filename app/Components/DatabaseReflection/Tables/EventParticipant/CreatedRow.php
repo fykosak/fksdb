@@ -9,7 +9,7 @@ use Nette\Utils\Html;
 
 /**
  * Class CreatedRow
- * @package FKSDB\Components\DatabaseReflection\EventParticipant
+ * *
  */
 class CreatedRow extends AbstractParticipantRow {
     public function getTitle(): string {

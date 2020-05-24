@@ -34,8 +34,6 @@ use SQL\SearchableDataSource;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 abstract class BaseGrid extends Grid {
-    /** @var Container */
-    private $context;
     /** @persistent string */
     public $searchTerm;
     /**
@@ -50,8 +48,6 @@ abstract class BaseGrid extends Grid {
     public function __construct(Container $container) {
         parent::__construct();
         $container->callInjects($this);
-        $this->context = $container;
-        $container->callInjects($this);
     }
 
     /**
@@ -64,16 +60,13 @@ abstract class BaseGrid extends Grid {
 
     /**
      * @param $presenter
+     * @return void
      */
     protected function configure($presenter) {
         $this->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.latte');
         /** @var GridPaginator $paginator */
         $paginator = $this->getComponent('paginator');
         $paginator->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.paginator.latte');
-    }
-
-    final public function getContext(): Container {
-        return $this->context;
     }
 
     /**
@@ -199,11 +192,11 @@ abstract class BaseGrid extends Grid {
     /**
      * @param string $tableName
      * @param string $fieldName
-     * @param string|AbstractModelSingle $modelClassName
      * @throws DuplicateColumnException
      * @throws Exception
      */
-    protected function addReflectionColumn(string $tableName, string $fieldName, string $modelClassName) {
+    private function addReflectionColumn(string $tableName, string $fieldName) {
+        $modelClassName = $this->getModelClassName();
         $factory = $this->tableReflectionFactory->loadService($tableName, $fieldName);
 
         $this->addColumn($fieldName, $factory->getTitle())->setRenderer(function ($model) use ($factory, $fieldName, $modelClassName) {
@@ -220,6 +213,7 @@ abstract class BaseGrid extends Grid {
      * @param callable $accessCallback ActiveRow=>AbstractModelSingle
      * @throws DuplicateColumnException
      * @throws Exception
+     * @deprecated this functionality is moved to getModel in DBReflection AbstractRow
      */
     protected function addJoinedColumn(string $tableName, string $fieldName, callable $accessCallback) {
         $factory = $this->tableReflectionFactory->loadService($tableName, $fieldName);
@@ -240,12 +234,11 @@ abstract class BaseGrid extends Grid {
     /**
      * @param array $fields
      * @throws DuplicateColumnException
-     * @throws NotImplementedException
      */
     protected function addColumns(array $fields) {
         foreach ($fields as $name) {
             list($table, $field) = TableReflectionFactory::parseRow($name);
-            $this->addReflectionColumn($table, $field, $this->getModelClassName());
+            $this->addReflectionColumn($table, $field);
         }
     }
 
@@ -354,5 +347,4 @@ abstract class BaseGrid extends Grid {
         $response->setGlue(',');
         $this->getPresenter()->sendResponse($response);
     }
-
 }

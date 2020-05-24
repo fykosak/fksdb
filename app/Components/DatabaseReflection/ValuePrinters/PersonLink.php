@@ -13,7 +13,7 @@ use Nette\Utils\Html;
 
 /**
  * Class PersonLink
- * @package FKSDB\Components\DatabaseReflection\ValuePrinters
+ * *
  */
 class PersonLink extends AbstractValuePrinter {
     /**

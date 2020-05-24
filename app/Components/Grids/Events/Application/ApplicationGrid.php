@@ -14,7 +14,7 @@ use SQL\SearchableDataSource;
 
 /**
  * Class ParticipantGrid
- * @package FKSDB\Components\Grids\Events
+ * *
  */
 class ApplicationGrid extends AbstractApplicationGrid {
 

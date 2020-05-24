@@ -10,7 +10,7 @@ use FKSDB\DataTesting\TestLog;
 
 /**
  * Class ParticipantsDurationTest
- * @package FKSDB\DataTesting\Tests\Person
+ * *
  */
 class ParticipantsDurationTest extends PersonTest {
 

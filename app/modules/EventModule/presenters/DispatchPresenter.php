@@ -10,7 +10,7 @@ use FKSDB\UI\PageStyleContainer;
 
 /**
  * Class DispatchPresenter
- * @package EventModule
+ * *
  */
 class DispatchPresenter extends AuthenticatedPresenter {
 

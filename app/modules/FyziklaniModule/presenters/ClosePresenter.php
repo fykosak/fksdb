@@ -18,7 +18,7 @@ use Nette\Application\UI\Control;
 
 /**
  * Class ClosePresenter
- * @package FyziklaniModule
+ * *
  * @property FormControl closeCategoryAForm
  * @method ModelFyziklaniTeam getEntity()
  * @method ModelFyziklaniTeam loadEntity(int $id)

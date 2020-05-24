@@ -4,7 +4,7 @@ namespace FKSDB\Components\DatabaseReflection;
 
 /**
  * Class DefaultRow
- * @package FKSDB\Components\DatabaseReflection
+ * *
  */
 abstract class DefaultRow extends AbstractRow {
     /**

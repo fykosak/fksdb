@@ -15,11 +15,10 @@ use Nette\DI\ContainerBuilder;
 use Nette\DI\ServiceDefinition;
 use FKSDB\Exceptions\NotImplementedException;
 use Nette\DI\Statement;
-use stdClass;
 
 /**
  * Class StalkingExtension
- * @package FKSDB\Config\Extensions
+ * *
  */
 class DBReflectionExtension extends CompilerExtension {
     /**

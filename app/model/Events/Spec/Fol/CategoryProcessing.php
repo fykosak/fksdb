@@ -19,7 +19,7 @@ use Nette\Utils\ArrayHash;
 
 /**
  * Class CategoryProcessing
- * @package Events\Spec\Fol
+ * *
  */
 class CategoryProcessing extends AbstractProcessing implements IOptionsProvider {
 

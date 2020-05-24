@@ -9,7 +9,7 @@ use Nette\Forms\Controls\TextArea;
 
 /**
  * Class CareerField
- * @package FKSDB\Components\Forms\Factories\PersonInfo
+ * *
  */
 class CareerRow extends AbstractRow {
     use DefaultPrinterTrait;

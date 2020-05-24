@@ -11,7 +11,7 @@ use Nette\Utils\Html;
 
 /**
  * Class PrimaryKeyRow
- * @package FKSDB\Components\DatabaseReflection
+ * *
  */
 class PrimaryKeyRow extends DefaultRow {
 

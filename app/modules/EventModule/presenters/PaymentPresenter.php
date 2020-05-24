@@ -20,7 +20,7 @@ use Nette\Application\UI\Control;
 
 /**
  * Class PaymentPresenter
- * @package EventModule
+ * *
  * @method ModelPayment getEntity
  * @method ModelPayment loadEntity(int $id)
  */

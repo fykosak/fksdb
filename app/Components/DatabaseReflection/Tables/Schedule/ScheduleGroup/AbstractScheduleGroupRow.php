@@ -8,7 +8,7 @@ use FKSDB\Exceptions\NotImplementedException;
 
 /**
  * Class AbstractScheduleGroupRow
- * @package FKSDB\Components\DatabaseReflection\Tables\Schedule
+ * *
  */
 abstract class AbstractScheduleGroupRow extends AbstractRow {
 

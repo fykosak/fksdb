@@ -11,7 +11,7 @@ use Nette\Utils\Html;
 
 /**
  * Class AbstractLink
- * @package FKSDB\Components\DatabaseReflection\Links
+ * *
  */
 abstract class AbstractLink {
     /**

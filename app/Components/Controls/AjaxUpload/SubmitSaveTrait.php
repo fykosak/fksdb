@@ -8,7 +8,6 @@ use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\Submits\FileSystemStorage\UploadedStorage;
-use Nette\DI\Container;
 use Nette\Http\FileUpload;
 use Nette\Utils\DateTime;
 

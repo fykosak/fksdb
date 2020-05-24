@@ -12,7 +12,7 @@ use Nette\Utils\Html;
 
 /**
  * Class PersonNameRowFactory
- * @package FKSDB\Components\DatabaseReflection\ReferencedRows
+ * *
  */
 class PersonNameRow extends AbstractRow {
 

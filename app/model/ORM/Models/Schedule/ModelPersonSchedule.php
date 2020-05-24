@@ -17,7 +17,7 @@ use FKSDB\Exceptions\NotImplementedException;
 
 /**
  * Class ModelPersonSchedule
- * @package FKSDB\ORM\Models\Schedule
+ * *
  * @property-read ActiveRow person
  * @property-read ActiveRow schedule_item
  * @property-read int person_id

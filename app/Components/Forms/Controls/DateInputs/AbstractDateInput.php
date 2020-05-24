@@ -8,7 +8,7 @@ use Nette\Utils\Html;
 
 /**
  * Class AbstractDateInput
- * @package FKSDB\Components\Forms\Controls\DateInputs
+ * *
  */
 abstract class AbstractDateInput extends TextInput {
 

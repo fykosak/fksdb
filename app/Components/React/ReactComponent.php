@@ -5,18 +5,14 @@ namespace FKSDB\Components\React;
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Exceptions\BadTypeException;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\Control;
 use Nette\ComponentModel\IComponent;
-use Nette\DI\Container;
 use Nette\Http\IRequest;
-use Nette\Templating\FileTemplate;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 
 /**
  * Class ReactComponent
- * @property FileTemplate template
- *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class ReactComponent extends BaseComponent {
 

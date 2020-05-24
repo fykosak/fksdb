@@ -11,7 +11,7 @@ use Nette\Utils\Html;
 
 /**
  * Class EmailRow
- * @package FKSDB\Components\DatabaseReflection
+ * *
  */
 class EmailRow extends DefaultRow {
 

@@ -8,7 +8,7 @@ use Nette\Utils\Html;
 
 /**
  * Trait DefaultPrinterTrait
- * @package FKSDB\Components\DatabaseReflection
+ * *
  */
 trait DefaultPrinterTrait {
 

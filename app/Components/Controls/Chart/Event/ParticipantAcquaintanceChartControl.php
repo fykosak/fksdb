@@ -6,7 +6,6 @@ use FKSDB\Components\Controls\Chart\IChart;
 use FKSDB\Components\React\ReactComponent;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventParticipant;
-use FKSDB\ORM\Services\ServiceEvent;
 use Nette\Application\UI\Control;
 use Nette\DI\Container;
 use Nette\Utils\Json;
@@ -14,7 +13,7 @@ use Nette\Utils\JsonException;
 
 /**
  * Class ParticipantAcquaintanceChartControl
- * @package FKSDB\Components\Controls\Chart
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ParticipantAcquaintanceChartControl extends ReactComponent implements IChart {
     /**

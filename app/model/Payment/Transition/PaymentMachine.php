@@ -14,7 +14,7 @@ use Nette\Database\Context;
 
 /**
  * Class PaymentMachine
- * @package FKSDB\Payment\Transition
+ * *
  */
 class PaymentMachine extends Machine {
     /**

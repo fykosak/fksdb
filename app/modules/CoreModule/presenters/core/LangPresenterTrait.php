@@ -11,7 +11,7 @@ use Nette\Security\User;
 
 /**
  * Class LangPresenter
- * @package FKSDB
+ * *
  */
 trait LangPresenterTrait {
     /** @var string[] */

@@ -4,7 +4,7 @@ namespace FKSDB\Components\DatabaseReflection;
 
 /**
  * Class DetailFactory
- * @package FKSDB\Components\DatabaseReflection
+ * *
  */
 class DetailFactory {
     /**

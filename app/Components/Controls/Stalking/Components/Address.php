@@ -6,7 +6,7 @@ use FKSDB\ORM\Models\ModelPerson;
 
 /**
  * Class Address
- * @package FKSDB\Components\Controls\Stalking
+ * *
  */
 class Address extends AbstractStalkingComponent {
     /**

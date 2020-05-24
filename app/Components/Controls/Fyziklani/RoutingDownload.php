@@ -8,13 +8,7 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\DI\Container;
-use Nette\Templating\FileTemplate;
 
-/**
- * Class Routing
- * @property FileTemplate $template
- *
- */
 class RoutingDownload extends BaseComponent {
     /**
      * @var bool

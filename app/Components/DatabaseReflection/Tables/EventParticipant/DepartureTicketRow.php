@@ -10,7 +10,7 @@ use Nette\Utils\Html;
 
 /**
  * Class DepartureTicketRow
- * @package FKSDB\Components\DatabaseReflection\EventParticipant
+ * *
  */
 class DepartureTicketRow extends AbstractParticipantRow {
 

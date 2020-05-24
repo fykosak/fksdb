@@ -3,13 +3,11 @@
 namespace FKSDB\Components\Controls\Badges;
 
 use FKSDB\Components\Controls\BaseComponent;
-use Nette\Templating\FileTemplate;
 use Nette\Utils\Html;
 
 /**
  * Class Badge
  * @author Michal Červeňák <miso@fykos.cz>
- * @property-read FileTemplate $template
  */
 abstract class Badge extends BaseComponent {
 

@@ -13,12 +13,10 @@ use FKSDB\DataTesting\TestsLogger;
 use FKSDB\DataTesting\TestLog;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Form;
-use Nette\Templating\FileTemplate;
 
 /**
  * Class PersonTestControl
- * @package FKSDB\Components\Controls\DataTesting
- * @property-read FileTemplate $template
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PersonTestControl extends BaseComponent {
 

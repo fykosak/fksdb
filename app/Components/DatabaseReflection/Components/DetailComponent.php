@@ -3,13 +3,7 @@
 namespace FKSDB\Components\DatabaseReflection;
 
 use FKSDB\Components\Controls\BaseComponent;
-use Nette\Templating\FileTemplate;
 
-/**
- * Class DetailComponent
- * @package FKSDB\Components\DatabaseReflection
- * @property FileTemplate $template
- */
 class DetailComponent extends BaseComponent {
     /**
      * @var DetailFactory

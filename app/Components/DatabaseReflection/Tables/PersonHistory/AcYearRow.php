@@ -10,7 +10,7 @@ use Nette\Forms\Controls\BaseControl;
 
 /**
  * Class AcYearRow
- * @package FKSDB\Components\DatabaseReflection\PersonHistory
+ * *
  */
 class AcYearRow extends AbstractRow {
     use DefaultPrinterTrait;

@@ -20,7 +20,7 @@ use Nette\InvalidArgumentException;
 
 /**
  * Class PointsPresenter
- * @package OrgModule
+ * *
  */
 class PointsPresenter extends SeriesPresenter {
 

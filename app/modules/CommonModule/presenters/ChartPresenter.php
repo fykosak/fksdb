@@ -7,7 +7,7 @@ use FKSDB\Components\Controls\Chart\TotalPersonsChartControl;
 
 /**
  * Class ChartPresenter
- * @package CommonModule
+ * *
  */
 class ChartPresenter extends BasePresenter {
     use ChartPresenterTrait;

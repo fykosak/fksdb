@@ -19,7 +19,7 @@ use Nette\InvalidStateException;
 
 /**
  * Class ScheduleItemPresenter
- * @package EventModule
+ * *
  * @method ModelScheduleItem traitLoadEntity(int $id)
  */
 class ScheduleItemPresenter extends BasePresenter {

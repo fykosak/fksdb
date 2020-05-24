@@ -6,7 +6,7 @@ use Nette\Database\Connection;
 
 /**
  * Class MetaDataFactory
- * @package FKSDB\Components\Forms\Factories
+ * *
  */
 class MetaDataFactory {
     /**

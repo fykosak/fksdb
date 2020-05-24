@@ -4,7 +4,7 @@ namespace FKSDB\DataTesting;
 
 /**
  * Class TestsLogger
- * @package FKSDB\DataTesting
+ * *
  */
 class TestsLogger {
     /**

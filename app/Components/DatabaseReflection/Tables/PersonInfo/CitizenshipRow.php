@@ -11,7 +11,7 @@ use Nette\Forms\Controls\SelectBox;
 
 /**
  * Class CitizenshipField
- * @package FKSDB\Components\Forms\Factories\PersonInfo
+ * *
  */
 class CitizenshipRow extends AbstractRow {
     use DefaultPrinterTrait;

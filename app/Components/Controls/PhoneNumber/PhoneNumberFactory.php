@@ -11,7 +11,7 @@ use Nette\Utils\Html;
 
 /**
  * Class PhoneNumberFactory
- * @package FKSDB\Components\Controls
+ * *
  */
 class PhoneNumberFactory {
     /**

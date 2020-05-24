@@ -19,7 +19,7 @@ use Nette\Application\ForbiddenRequestException;
 
 /**
  * Class ApplicationPresenter
- * @package EventModule
+ * *
  * @method ModelFyziklaniTeam getEntity()
  */
 class TeamApplicationPresenter extends AbstractApplicationPresenter {

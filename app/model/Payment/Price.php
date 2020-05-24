@@ -7,7 +7,7 @@ use LogicException;
 
 /**
  * Class Price
- * @package FKSDB\Payment\PriceCalculator
+ * *
  */
 class Price {
 

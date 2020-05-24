@@ -10,7 +10,7 @@ use Nette\Utils\Html;
 
 /**
  * Class CreatedRow
- * @package FKSDB\Components\DatabaseReflection\Person
+ * *
  */
 class CreatedRow extends AbstractRow {
 

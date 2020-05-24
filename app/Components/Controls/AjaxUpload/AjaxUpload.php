@@ -21,7 +21,7 @@ use ReactMessage;
 
 /**
  * Class AjaxUpload
- * @package FKSDB\Components\Control\AjaxUpload
+ * @author Michal Červeňák <miso@fykos.cz>
  * @property-read SubmitPresenter $presenter
  */
 class AjaxUpload extends ReactComponent {

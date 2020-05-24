@@ -28,7 +28,11 @@ class SubmitsGrid extends BaseGrid {
     use SubmitDownloadTrait;
 
     /** @var ServiceSubmit */
-    private $submitService;
+    private $serviceSubmit;
+    /** @var CorrectedStorage */
+    private $correctedStorage;
+    /** @var UploadedStorage */
+    private $uploadedStorage;
 
     /**
      * @var ModelContestant
@@ -42,8 +46,19 @@ class SubmitsGrid extends BaseGrid {
      */
     public function __construct(Container $container, ModelContestant $contestant) {
         parent::__construct($container);
-        $this->submitService = $container->getByType(ServiceSubmit::class);
         $this->contestant = $contestant;
+    }
+
+    /**
+     * @param ServiceSubmit $serviceSubmit
+     * @param CorrectedStorage $correctedStorage
+     * @param UploadedStorage $uploadedStorage
+     * @return void
+     */
+    public function injectPrimary(ServiceSubmit $serviceSubmit, CorrectedStorage $correctedStorage, UploadedStorage $uploadedStorage) {
+        $this->serviceSubmit = $serviceSubmit;
+        $this->correctedStorage = $correctedStorage;
+        $this->uploadedStorage = $uploadedStorage;
     }
 
     /**
@@ -56,7 +71,7 @@ class SubmitsGrid extends BaseGrid {
         //
         // data
         //
-        $submits = $this->submitService->getSubmits();
+        $submits = $this->serviceSubmit->getSubmits();
         $submits->where('ct_id = ?', $this->contestant->ct_id); //TODO year + contest?
 
         $this->setDataSource(new NDataSource($submits));
@@ -78,21 +93,21 @@ class SubmitsGrid extends BaseGrid {
         $this->addButton('revoke', _('Cancel'))
             ->setClass('btn btn-sm btn-warning')
             ->setText(_('Cancel'))
-            ->setShow(function ($row) {
+            ->setShow(function (ModelSubmit $row) {
                 return $this->canRevoke($row);
             })
-            ->setLink(function ($row) {
+            ->setLink(function (ModelSubmit $row) {
                 return $this->link('revoke!', $row->submit_id);
             })
             ->setConfirmationDialog(function (ModelSubmit $row) {
                 return \sprintf(_('Opravdu vzít řešení úlohy %s zpět?'), $row->getTask()->getFQName());
             });
         $this->addButton('download_uploaded')
-            ->setText(_('Download original'))->setLink(function ($row) {
+            ->setText(_('Download original'))->setLink(function (ModelSubmit $row) {
                 return $this->link('downloadUploaded!', $row->submit_id);
             });
         $this->addButton('download_corrected')
-            ->setText(_('Download corrected'))->setLink(function ($row) {
+            ->setText(_('Download corrected'))->setLink(function (ModelSubmit $row) {
                 return $this->link('downloadCorrected!', $row->submit_id);
             })->setShow(function (ModelSubmit $row) {
                 return $row->corrected;
@@ -135,20 +150,14 @@ class SubmitsGrid extends BaseGrid {
     }
 
     protected function getCorrectedStorage(): CorrectedStorage {
-        /** @var CorrectedStorage $service */
-        $service = $this->getContext()->getByType(CorrectedStorage::class);
-        return $service;
+        return $this->correctedStorage;
     }
 
     protected function getUploadedStorage(): UploadedStorage {
-        /** @var UploadedStorage $service */
-        $service = $this->getContext()->getByType(UploadedStorage::class);
-        return $service;
+        return $this->uploadedStorage;
     }
 
     protected function getServiceSubmit(): ServiceSubmit {
-        /** @var ServiceSubmit $service */
-        $service = $this->getContext()->getByType(ServiceSubmit::class);
-        return $service;
+        return $this->serviceSubmit;
     }
 }

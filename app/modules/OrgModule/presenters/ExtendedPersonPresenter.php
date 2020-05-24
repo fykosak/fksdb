@@ -12,7 +12,6 @@ use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\IModel;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
-use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Persons\AclResolver;
 use Persons\ExtendedPersonHandler;
@@ -21,7 +20,7 @@ use Persons\IExtendedPersonPresenter;
 
 /**
  * Class ExtendedPersonPresenter
- * @package OrgModule
+ * *
  */
 abstract class ExtendedPersonPresenter extends EntityPresenter implements IExtendedPersonPresenter {
     /**

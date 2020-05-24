@@ -13,7 +13,7 @@ use Nette\Application\UI\Form;
 
 /**
  * Class TaskPresenter
- * @package FyziklaniModule
+ * *
  */
 class TaskPresenter extends BasePresenter {
 

@@ -7,7 +7,7 @@ use FKSDB\Components\Controls\Loaders\Stylesheet\StylesheetLoader;
 
 /**
  * Class CollectorPresenter
- * @package FKSDB
+ * *
  */
 trait CollectorPresenterTrait {
 

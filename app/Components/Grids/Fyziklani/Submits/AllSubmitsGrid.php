@@ -25,7 +25,6 @@ use NiftyGrid\DuplicateColumnException;
 use SQL\SearchableDataSource;
 
 /**
- *
  * @author Michal Červeňák
  * @author Lukáš Timko
  */

@@ -9,8 +9,8 @@ use Nette\Templating\FileTemplate;
 use Nette\Templating\ITemplate;
 
 /**
- * Class BaseControl
- * @package FKSDB\Components\Controls
+ * Class BaseComponent
+ * @author Michal Červeňák <miso@fykos.cz>
  * @property FileTemplate $template
  */
 abstract class BaseComponent extends Control {

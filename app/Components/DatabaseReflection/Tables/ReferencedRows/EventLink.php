@@ -13,7 +13,7 @@ use Nette\Utils\Html;
 
 /**
  * Class PersonLinkRow
- * @package FKSDB\Components\DatabaseReflection\VirtualRows
+ * *
  */
 class EventLink extends AbstractRow {
 

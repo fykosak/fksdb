@@ -12,7 +12,7 @@ use Nette\Utils\Html;
 
 /**
  * Class AbstractField
- * @package FKSDB\Components\Forms\Factories
+ * *
  */
 abstract class AbstractRow {
     use SmartObject;

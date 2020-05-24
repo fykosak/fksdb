@@ -7,7 +7,7 @@ use Nette\Application\BadRequestException;
 
 /**
  * Class ParticipantDetailLink
- * @package FKSDB\Components\DatabaseReflection\Links
+ * *
  */
 class ParticipantDetailLink extends AbstractLink {
 

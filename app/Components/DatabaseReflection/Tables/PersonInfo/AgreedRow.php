@@ -12,7 +12,7 @@ use Nette\Utils\Html;
 
 /**
  * Class AgreedField
- * @package FKSDB\Components\Forms\Factories\PersonInfo
+ * *
  */
 class AgreedRow extends AbstractRow {
 

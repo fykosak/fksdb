@@ -12,7 +12,7 @@ use Nette\Utils\Html;
 
 /**
  * Class BornField
- * @package FKSDB\Components\Forms\Factories\PersonInfo
+ * *
  */
 class BornRow extends AbstractRow {
 

@@ -2,7 +2,6 @@
 
 namespace FKSDB\Events\Model\Grid;
 
-use ArrayIterator;
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\Events\EventDispatchFactory;
 use FKSDB\ORM\IModel;
@@ -11,7 +10,6 @@ use FKSDB\ORM\Tables\TypedTableSelection;
 use FKSDB\Events\Model\Holder\BaseHolder;
 use FKSDB\Events\Model\Holder\Holder;
 use Nette\Application\BadRequestException;
-use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
 use Nette\SmartObject;

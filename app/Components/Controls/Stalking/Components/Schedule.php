@@ -7,7 +7,7 @@ use FKSDB\ORM\Models\ModelPerson;
 
 /**
  * Class Schedule
- * @package FKSDB\Components\Controls\Stalking
+ * *
  */
 class Schedule extends AbstractStalkingComponent {
     /**

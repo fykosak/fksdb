@@ -6,7 +6,7 @@ use Nette\Application\UI\Control;
 
 /**
  * Interface IChart
- * @package FKSDB\Components\Controls\Chart
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 interface IChart {
 

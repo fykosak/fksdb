@@ -12,7 +12,7 @@ use Nette\DI\Container;
 
 /**
  * Class CreateForm
- * @package FKSDB\Components\Controls\Entity\Event
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class CreateForm extends AbstractForm {
     /**

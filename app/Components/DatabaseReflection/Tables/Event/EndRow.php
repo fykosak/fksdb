@@ -12,7 +12,7 @@ use Nette\Utils\Html;
 
 /**
  * Class EndRow
- * @package FKSDB\Components\DatabaseReflection\Event
+ * *
  */
 class EndRow extends AbstractEventRowFactory {
 

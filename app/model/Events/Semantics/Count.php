@@ -3,7 +3,6 @@
 namespace FKSDB\Events\Semantics;
 
 use FKSDB\Events\Model\Holder\BaseHolder;
-use Nette\Application\BadRequestException;
 use Nette\SmartObject;
 
 /**

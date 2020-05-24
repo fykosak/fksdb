@@ -8,8 +8,9 @@ use Nette\DI\Container;
 use Nette\Templating\ITemplate;
 
 /**
- * Class SeriesTableControl
- * @package FKSDB\Components\Controls\Upload
+ * Class SeriesTableComponent
+ * @author Michal Červeňák <miso@fykos.cz>
+ * @author Michal Koutny
  */
 abstract class SeriesTableComponent extends BaseComponent {
     /** @var SeriesTable */

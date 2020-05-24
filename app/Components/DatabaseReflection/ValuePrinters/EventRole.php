@@ -11,7 +11,7 @@ use Nette\Utils\Html;
 
 /**
  * Class EventRole
- * @package FKSDB\Components\DatabaseReflection\ValuePrinters
+ * *
  */
 class EventRole {
 

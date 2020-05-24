@@ -12,7 +12,7 @@ use Nette\Application\UI\Form;
 
 /**
  * Class PizzaPresenter
- * @package CommonModule
+ * *
  */
 class PizzaPresenter extends BasePresenter {
     /**

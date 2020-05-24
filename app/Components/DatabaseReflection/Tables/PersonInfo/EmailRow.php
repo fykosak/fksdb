@@ -7,7 +7,7 @@ use FKSDB\Components\DatabaseReflection\EmailRowTrait;
 
 /**
  * Class EmailField
- * @package FKSDB\Components\Forms\Factories\PersonInfo
+ * *
  */
 class EmailRow extends AbstractRow {
     use EmailRowTrait;

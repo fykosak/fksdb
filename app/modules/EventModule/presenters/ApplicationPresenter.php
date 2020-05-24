@@ -17,7 +17,7 @@ use Nette\Application\ForbiddenRequestException;
 
 /**
  * Class ApplicationPresenter
- * @package EventModule
+ * *
  */
 class ApplicationPresenter extends AbstractApplicationPresenter {
     /**

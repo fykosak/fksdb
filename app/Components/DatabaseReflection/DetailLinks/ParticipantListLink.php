@@ -7,7 +7,7 @@ use FKSDB\ORM\Models\ModelEvent;
 
 /**
  * Class ParticipantListLink
- * @package FKSDB\Components\DatabaseReflection\Links
+ * *
  */
 class ParticipantListLink extends AbstractLink {
 

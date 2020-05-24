@@ -18,7 +18,7 @@ use Nette\Utils\Html;
 
 /**
  * Class PhoneRow
- * @package FKSDB\Components\DatabaseReflection\Tables
+ * *
  */
 class PhoneRow extends DefaultRow implements ITestedRowFactory {
     /**

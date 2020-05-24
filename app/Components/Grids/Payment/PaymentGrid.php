@@ -9,7 +9,7 @@ use Nette\DI\Container;
 
 /**
  * Class PaymentGrid
- * @package FKSDB\Components\Grids\Payment
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class PaymentGrid extends BaseGrid {
     /**

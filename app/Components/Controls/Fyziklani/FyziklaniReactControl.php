@@ -8,7 +8,7 @@ use Nette\DI\Container;
 
 /**
  * Class FyziklaniReactControl
- * @package FKSDB\Components\Controls\Fyziklani
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class FyziklaniReactControl extends ReactComponent {
     /**

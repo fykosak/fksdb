@@ -11,7 +11,7 @@ use Nette\Utils\JsonException;
 
 /**
  * Class PersonScheduleFactory
- * @package FKSDB\Components\Forms\Factories
+ * *
  */
 class PersonScheduleFactory {
     /**

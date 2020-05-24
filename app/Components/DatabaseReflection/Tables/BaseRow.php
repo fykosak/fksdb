@@ -3,7 +3,7 @@
 namespace FKSDB\Components\DatabaseReflection;
 /**
  * Class BaseRow
- * @package FKSDB\Components\DatabaseReflection
+ * *
  */
 abstract class BaseRow extends AbstractRow {
     use DefaultPrinterTrait;

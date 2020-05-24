@@ -6,7 +6,7 @@ use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 
 /**
  * Class YearRow
- * @package FKSDB\Components\DatabaseReflection\Event
+ * *
  */
 class YearRow extends AbstractEventRowFactory {
     use DefaultPrinterTrait;

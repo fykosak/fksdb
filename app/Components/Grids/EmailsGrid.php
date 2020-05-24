@@ -12,7 +12,7 @@ use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class EmailsGrid
- * @package FKSDB\Components\Grids
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class EmailsGrid extends BaseGrid {
 

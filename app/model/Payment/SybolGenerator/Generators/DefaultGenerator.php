@@ -11,7 +11,7 @@ use Nette\OutOfRangeException;
 
 /**
  * Class Fyziklani13Generator
- * @package FKSDB\Payment\SymbolGenerator\Generators
+ * *
  */
 class DefaultGenerator extends AbstractSymbolGenerator {
     /**

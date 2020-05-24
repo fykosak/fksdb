@@ -10,8 +10,8 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use Nette\Application\BadRequestException;
 
 /**
- * Class SittingControl
- * @package FKSDB\Components\Controls\Fyziklani
+ * Class SeatingControl
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class SeatingControl extends BaseComponent {
     /**

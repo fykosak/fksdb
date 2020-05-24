@@ -23,7 +23,7 @@ use Nette\Utils\JsonException;
 
 /**
  * Class TaskCodeInput
- * @package FKSDB\Components\Controls\Fyziklani
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class TaskCodeInput extends FyziklaniReactControl {
     /**

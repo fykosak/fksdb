@@ -11,7 +11,7 @@ use Nette\SmartObject;
 
 /**
  * Class EventAuthorizator
- * @package Authorization
+ * *
  */
 class EventAuthorizator {
     use SmartObject;

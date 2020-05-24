@@ -9,7 +9,7 @@ use Nette\Forms\Controls\BaseControl;
 
 /**
  * Class AbstractFyziklaniRow
- * @package FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam
+ * *
  */
 abstract class AbstractFyziklaniTeamRow extends AbstractRow {
 

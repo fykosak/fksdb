@@ -17,7 +17,7 @@ use Nette\Application\UI\Control;
 
 /**
  * Class SubmitPresenter
- * @package FyziklaniModule
+ * *
  * @method ModelFyziklaniSubmit getEntity()
  * @method ModelFyziklaniSubmit loadEntity(int $id)
  */

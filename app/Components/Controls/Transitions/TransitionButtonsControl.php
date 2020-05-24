@@ -10,13 +10,7 @@ use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Tracy\Debugger;
-use Nette\Templating\FileTemplate;
 
-/**
- * Class TransitionButtonsControl
- * @package FKSDB\Components\Controls\Transitions
- * @property FileTemplate $template
- */
 class TransitionButtonsControl extends BaseComponent {
     /**
      * @var Machine

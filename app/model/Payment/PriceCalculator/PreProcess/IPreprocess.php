@@ -7,7 +7,7 @@ use FKSDB\Payment\Price;
 
 /**
  * Class AbstractPreProcess
- * @package FKSDB\Payment\PriceCalculator\PreProcess
+ * *
  */
 interface IPreprocess {
 

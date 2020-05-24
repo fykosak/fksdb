@@ -9,7 +9,7 @@ use Nette\Application\BadRequestException;
 
 /**
  * Class GameSetupPresenter
- * @package FyziklaniModule
+ * *
  */
 class GameSetupPresenter extends BasePresenter {
     /**

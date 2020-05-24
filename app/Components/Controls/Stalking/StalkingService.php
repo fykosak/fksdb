@@ -6,7 +6,7 @@ use Nette\Application\BadRequestException;
 
 /**
  * Class StalkingService
- * @package FKSDB\Components\Controls\Stalking
+ * *
  */
 class StalkingService {
     /**

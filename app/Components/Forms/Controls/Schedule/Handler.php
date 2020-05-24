@@ -14,7 +14,7 @@ use PDOException;
 
 /**
  * Class Handler
- * @package FKSDB\Components\Forms\Controls\Schedule
+ * *
  */
 class Handler {
     /**

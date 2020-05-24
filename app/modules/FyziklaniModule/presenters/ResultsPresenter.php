@@ -7,7 +7,7 @@ use Nette\Application\BadRequestException;
 
 /**
  * Class ResultsPresenter
- * @package FyziklaniModule
+ * *
  */
 class ResultsPresenter extends BasePresenter {
     /**

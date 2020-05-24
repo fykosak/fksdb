@@ -12,7 +12,7 @@ use Nette\Utils\Html;
 
 /**
  * Trait EmailRowTrait
- * @package FKSDB\Components\DatabaseReflection
+ * *
  */
 trait EmailRowTrait {
 

@@ -9,7 +9,7 @@ use Nette\Security\IResource;
 
 /**
  * Class ImplicitEventRole
- * @package FKSDB\Transitions\Statements\Conditions
+ * *
  */
 class ImplicitEventRole extends EventRole {
 

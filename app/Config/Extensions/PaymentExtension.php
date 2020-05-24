@@ -9,7 +9,7 @@ use Nette\DI\CompilerExtension;
 
 /**
  * Class PaymentExtension
- * @package FKSDB\Config\Extensions
+ * *
  */
 class PaymentExtension extends CompilerExtension {
     const MACHINE_PREFIX = 'machine.';

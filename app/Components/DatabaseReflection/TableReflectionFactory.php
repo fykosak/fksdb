@@ -12,7 +12,7 @@ use Nette\Utils\Html;
 
 /**
  * Class TableReflectionFactory
- * @package FKSDB\Components\Forms\Factories\PersonInfo
+ * *
  */
 final class TableReflectionFactory {
     use SmartObject;

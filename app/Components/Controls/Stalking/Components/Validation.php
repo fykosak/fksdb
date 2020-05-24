@@ -9,7 +9,7 @@ use Nette\DI\Container;
 
 /**
  * Class StalkingValidation
- * @package FKSDB\ValidationTest
+ * *
  */
 class Validation extends AbstractStalkingComponent {
     /**

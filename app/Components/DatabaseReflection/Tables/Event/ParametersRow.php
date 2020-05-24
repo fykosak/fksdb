@@ -8,7 +8,7 @@ use Nette\Forms\Controls\TextArea;
 
 /**
  * Class ParametersRow
- * @package FKSDB\Components\DatabaseReflection\Event
+ * *
  */
 class ParametersRow extends AbstractEventRowFactory {
     use DefaultPrinterTrait;

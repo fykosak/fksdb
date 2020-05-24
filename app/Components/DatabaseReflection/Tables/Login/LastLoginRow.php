@@ -10,7 +10,7 @@ use Nette\Utils\Html;
 
 /**
  * Class LastLoginRow
- * @package FKSDB\Components\DatabaseReflection\Login
+ * *
  */
 class LastLoginRow extends AbstractLoginRow {
     /**

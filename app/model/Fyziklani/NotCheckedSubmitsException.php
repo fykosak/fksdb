@@ -6,7 +6,7 @@ use Nette\Application\BadRequestException;
 
 /**
  * Class NotCheckedSubmitsException
- * @package FKSDB\model\Fyziklani
+ * *
  */
 class NotCheckedSubmitsException extends BadRequestException {
     /**

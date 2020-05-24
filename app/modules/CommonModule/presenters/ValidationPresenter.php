@@ -7,7 +7,7 @@ use FKSDB\Components\Grids\DataTesting\PersonsGrid;
 
 /**
  * Class ValidationPresenter
- * @package OrgModule
+ * *
  */
 class ValidationPresenter extends BasePresenter {
     public function titleDefault() {

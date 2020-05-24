@@ -13,11 +13,10 @@ use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
-use Nette\Templating\FileTemplate;
+
 /**
  * Class MassTransitionsControl
- * @package FKSDB\Components\Events
- * @property FileTemplate $template
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class MassTransitionsControl extends BaseComponent {
     /**

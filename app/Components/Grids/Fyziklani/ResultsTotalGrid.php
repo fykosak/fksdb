@@ -15,7 +15,7 @@ use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class ResultsTotalGrid
- * @package FKSDB\Components\Grids\Fyziklani
+ * *
  */
 class ResultsTotalGrid extends BaseGrid {
 

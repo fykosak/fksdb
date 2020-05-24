@@ -15,8 +15,8 @@ use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 
 /**
- * Class TeamApplicationsTimeProgress
- * @package FKSDB\Components\React\ReactComponent\Events
+ * Class SingleApplicationsTimeProgress
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class SingleApplicationsTimeProgress extends ReactComponent implements IChart {
     /**

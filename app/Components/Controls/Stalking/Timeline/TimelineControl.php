@@ -15,7 +15,7 @@ use Nette\DI\Container;
 
 /**
  * Class TimelineControl
- * @package FKSDB\Components\Controls\Stalking\Timeline
+ * *
  */
 class TimelineControl extends ReactComponent {
     /**

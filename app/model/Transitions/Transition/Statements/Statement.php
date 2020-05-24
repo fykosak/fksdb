@@ -4,7 +4,7 @@ namespace FKSDB\Transitions\Statements;
 
 /**
  * Class Statement
- * @package FKSDB\Transitions\Statements
+ * *
  */
 abstract class Statement {
     /**

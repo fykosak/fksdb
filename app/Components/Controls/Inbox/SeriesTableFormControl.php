@@ -10,7 +10,8 @@ use Nette\Application\UI\Form;
 
 /**
  * Class SeriesTableFormControl
- * @package FKSDB\Components\Controls\Inbox
+ * @author Michal Červeňák <miso@fykos.cz>
+ * @author Michal Koutny
  */
 abstract class SeriesTableFormControl extends SeriesTableComponent {
 

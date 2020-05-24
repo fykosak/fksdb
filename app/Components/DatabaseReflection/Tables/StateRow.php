@@ -9,7 +9,7 @@ use Nette\Utils\Html;
 
 /**
  * Class StateRow
- * @package FKSDB\Components\DatabaseReflection
+ * *
  */
 class StateRow extends DefaultRow {
     /**

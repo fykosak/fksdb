@@ -10,7 +10,7 @@ use Nette\Forms\Form;
 
 /**
  * Class BirthplaceField
- * @package FKSDB\Components\Forms\Factories\PersonInfo
+ * *
  */
 class BirthplaceRow extends AbstractRow {
     use DefaultPrinterTrait;

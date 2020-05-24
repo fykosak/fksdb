@@ -9,7 +9,7 @@ use Nette\Utils\Html;
 
 /**
  * Class PricePrinter
- * @package FKSDB\Components\DatabaseReflection\ValuePrinters
+ * *
  */
 class PricePrinter extends AbstractValuePrinter {
     /**

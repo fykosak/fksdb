@@ -20,7 +20,7 @@ use Nette\InvalidStateException;
 
 /**
  * Class ApplicationPresenter
- * @package EventModule
+ * *
  */
 abstract class AbstractApplicationPresenter extends BasePresenter {
     use EventEntityTrait;

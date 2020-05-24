@@ -14,7 +14,7 @@ use Nette\Application\UI\Control;
 
 /**
  * Class SchoolPresenter
- * @package CommonModule
+ * *
  * @method ModelSchool getEntity()
  * @method ModelSchool loadEntity(int $id)
  */

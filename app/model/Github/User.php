@@ -6,7 +6,7 @@ use Nette\SmartObject;
 
 /**
  * Class User
- * @package Github
+ * *
  */
 class User {
     use SmartObject;

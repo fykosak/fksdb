@@ -8,7 +8,7 @@ use FKSDB\Exceptions\NotImplementedException;
 
 /**
  * Class AbstractPaymentRow
- * @package FKSDB\Components\DatabaseReflection\Payment
+ * *
  */
 abstract class AbstractPaymentRow extends AbstractRow {
     /**

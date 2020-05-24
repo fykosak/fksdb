@@ -7,7 +7,7 @@ use FKSDB\UI\Title;
 
 /**
  * Class Chooser
- * @package FKSDB\Components\Controls\Choosers
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class Chooser extends BaseComponent {
 

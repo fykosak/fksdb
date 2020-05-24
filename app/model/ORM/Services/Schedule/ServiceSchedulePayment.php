@@ -13,7 +13,7 @@ use Nette\Utils\ArrayHash;
 
 /**
  * Class ServiceSchedulePayment
- * @package FKSDB\ORM\Services\Schedule
+ * *
  */
 class ServiceSchedulePayment extends AbstractServiceSingle {
 

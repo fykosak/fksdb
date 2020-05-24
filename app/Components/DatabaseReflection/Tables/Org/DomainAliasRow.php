@@ -14,7 +14,7 @@ use Nette\Utils\Html;
 
 /**
  * Class DomainAliasRow
- * @package FKSDB\Components\DatabaseReflection\Org
+ * *
  */
 class DomainAliasRow extends AbstractOrgRowFactory {
     public function getTitle(): string {

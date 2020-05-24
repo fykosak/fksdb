@@ -8,7 +8,7 @@ use Nette\Application\BadRequestException;
 
 /**
  * Class ModelPresenter
- * @package EventModule
+ * *
  */
 class ModelPresenter extends BasePresenter {
 

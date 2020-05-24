@@ -13,7 +13,6 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Responses\FileResponse;
-use Nette\DI\Container;
 use OrgModule\InboxPresenter;
 use PublicModule\SubmitPresenter;
 

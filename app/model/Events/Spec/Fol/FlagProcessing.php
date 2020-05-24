@@ -13,7 +13,7 @@ use Nette\Utils\ArrayHash;
 
 /**
  * Class FlagProcessing
- * @package Events\Spec\Fol
+ * *
  */
 class FlagProcessing extends AbstractProcessing {
 

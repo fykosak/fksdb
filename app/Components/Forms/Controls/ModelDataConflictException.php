@@ -8,7 +8,7 @@ use RuntimeException;
 
 /**
  * Class ModelDataConflictException
- * @package FKSDB\Components\Forms\Controls
+ * *
  */
 class ModelDataConflictException extends RuntimeException {
 

@@ -11,7 +11,7 @@ use Nette\Forms\Form;
 
 /**
  * Class BornIdField
- * @package FKSDB\Components\Forms\Factories\PersonInfo
+ * *
  */
 class BornIdRow extends AbstractRow {
     use DefaultPrinterTrait;

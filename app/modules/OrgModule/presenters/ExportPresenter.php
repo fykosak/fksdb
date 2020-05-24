@@ -32,7 +32,7 @@ use Traversable;
 
 /**
  * Class ExportPresenter
- * @package OrgModule
+ * *
  */
 class ExportPresenter extends SeriesPresenter {
 

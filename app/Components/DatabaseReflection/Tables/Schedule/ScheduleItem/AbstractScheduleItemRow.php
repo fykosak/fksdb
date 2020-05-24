@@ -8,7 +8,7 @@ use FKSDB\Exceptions\NotImplementedException;
 
 /**
  * Class AbstractScheduleItemRow
- * @package FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem
+ * *
  */
 abstract class AbstractScheduleItemRow extends AbstractRow {
     public function getPermissionsValue(): int {

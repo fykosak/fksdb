@@ -8,7 +8,7 @@ use FKSDB\Exceptions\NotImplementedException;
 
 /**
  * Class AbstractParticipantRow
- * @package FKSDB\Components\DatabaseReflection\PersonInfo
+ * *
  */
 abstract class AbstractParticipantRow extends AbstractRow {
 

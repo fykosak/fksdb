@@ -541,7 +541,7 @@ class EventsExtension extends CompilerExtension {
 
 /**
  * Class MachineDefinitionException
- * @package Events
+ * *
  */
 class MachineDefinitionException extends InvalidStateException {
 

@@ -10,7 +10,7 @@ use Nette\Forms\Form;
 
 /**
  * Class ImField
- * @package FKSDB\Components\Forms\Factories\PersonInfo
+ * *
  */
 class ImRow extends AbstractRow {
     use DefaultPrinterTrait;

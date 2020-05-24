@@ -15,7 +15,7 @@ use NiftyGrid\DuplicateColumnException;
 
 /***
  * Class PersonsGrid
- * @package FKSDB\Components\Grids\DataTesting
+ * *
  */
 class PersonsGrid extends BaseGrid {
     /**

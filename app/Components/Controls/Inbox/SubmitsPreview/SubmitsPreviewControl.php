@@ -13,7 +13,7 @@ use Nette\Application\BadRequestException;
 
 /**
  * Class SubmitsTableControl
- * @package FKSDB\Components\Controls\Upload
+ * *
  */
 class SubmitsPreviewControl extends SeriesTableComponent {
     use SubmitDownloadTrait;

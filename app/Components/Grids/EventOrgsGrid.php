@@ -15,7 +15,7 @@ use NiftyGrid\DuplicateGlobalButtonException;
 
 /**
  * Class EventOrgsGrid
- * @package FKSDB\Components\Grids
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class EventOrgsGrid extends BaseGrid {
 

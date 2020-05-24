@@ -18,7 +18,7 @@ use Nette\Forms\IControl;
 
 /**
  * Class CheckboxFactory
- * @package FKSDB\Components\Forms\Factories\Events
+ * *
  */
 class CheckboxFactory extends AbstractFactory {
     public function __construct() {

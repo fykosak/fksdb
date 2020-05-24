@@ -13,8 +13,8 @@ use FKSDB\ORM\Services\ServiceSchool;
 use Nette\DI\Container;
 
 /**
- * Class SchoolCheckControl
- * @package FKSDB\Components\Controls\Fyziklani
+ * Class SchoolCheckComponent
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class SchoolCheckComponent extends BaseComponent {
     /**

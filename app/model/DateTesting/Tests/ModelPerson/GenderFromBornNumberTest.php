@@ -9,7 +9,7 @@ use FKSDB\DataTesting\TestLog;
 
 /**
  * Class GenderFromBornNumberTest
- * @package FKSDB\DataTesting\Tests\Person
+ * *
  */
 class GenderFromBornNumberTest extends PersonTest {
     /**

@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Controls\Entity\Event;
 
 use FKSDB\Config\NeonSchemaException;
-use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\Config\NeonScheme;
 use FKSDB\Events\EventDispatchFactory;
@@ -23,8 +22,8 @@ use Nette\Utils\Html;
 use Nette\Utils\NeonException;
 
 /**
- * Class EditControl
- * @package FKSDB\Components\Controls\Entity\Event
+ * Class EditForm
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class EditForm extends AbstractForm implements IEditEntityForm {
 

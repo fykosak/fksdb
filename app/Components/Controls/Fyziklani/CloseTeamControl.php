@@ -11,13 +11,7 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use Nette\Application\AbortException;
 use Nette\DI\Container;
-use Nette\Templating\FileTemplate;
 
-/**
- * Class CloseTeamControl
- * @package FKSDB\Components\Controls\Fyziklani
- * @property FileTemplate $template
- */
 class CloseTeamControl extends BaseComponent {
     /**
      * @var ModelEvent

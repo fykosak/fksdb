@@ -6,7 +6,7 @@ use Nette\Application\BadRequestException;
 
 /**
  * Class DashboardPresenter
- * @package FyziklaniModule
+ * *
  */
 class DashboardPresenter extends BasePresenter {
     /**

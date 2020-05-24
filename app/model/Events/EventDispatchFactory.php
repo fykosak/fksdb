@@ -11,7 +11,7 @@ use Nette\DI\Container;
 
 /**
  * Class EventDispatchFactory
- * @package Events
+ * *
  */
 class EventDispatchFactory {
     /** @var array */

@@ -11,7 +11,7 @@ use Nette\Forms\Controls\SelectBox;
 
 /**
  * Class StudyYearRow
- * @package FKSDB\Components\DatabaseReflection\PersonHistory
+ * *
  */
 class StudyYearRow extends AbstractRow {
     use DefaultPrinterTrait;

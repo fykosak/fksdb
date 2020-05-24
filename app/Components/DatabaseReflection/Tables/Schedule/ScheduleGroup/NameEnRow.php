@@ -6,7 +6,7 @@ use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 
 /**
  * Class NameEnRow
- * @package FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleGroup
+ * *
  */
 class NameEnRow extends AbstractScheduleGroupRow {
     use DefaultPrinterTrait;

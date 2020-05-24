@@ -23,7 +23,7 @@ use Tracy\Debugger;
 
 /**
  * Class Fyziklani13Payment
- * @package FKSDB\Payment\Transition\Transitions
+ * *
  */
 class Fyziklani14Payment extends AbstractTransitionsGenerator {
     /**

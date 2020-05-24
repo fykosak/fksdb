@@ -14,7 +14,7 @@ use Persons\ExtendedPersonHandler;
 
 /**
  * Class OrgPresenter
- * @package OrgModule
+ * *
  * @method ModelOrg getModel2(int $id = null)
  */
 class OrgPresenter extends ExtendedPersonPresenter {

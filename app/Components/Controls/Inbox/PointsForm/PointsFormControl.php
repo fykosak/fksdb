@@ -13,7 +13,7 @@ use Nette\DI\Container;
 
 /**
  * Class PointsFormControl
- * @package FKSDB\Components\Controls\Inbox
+ * *
  */
 class PointsFormControl extends SeriesTableFormControl {
     /**

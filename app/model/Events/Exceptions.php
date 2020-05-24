@@ -9,7 +9,7 @@ use Traversable;
 
 /**
  * Class MachineExecutionException
- * @package Events
+ * *
  */
 class MachineExecutionException extends RuntimeException {
 
@@ -17,7 +17,7 @@ class MachineExecutionException extends RuntimeException {
 
 /**
  * Class TransitionConditionFailedException
- * @package Events
+ * *
  */
 class TransitionConditionFailedException extends MachineExecutionException {
 
@@ -49,7 +49,7 @@ class TransitionConditionFailedException extends MachineExecutionException {
 
 /**
  * Class TransitionUnsatisfiedTargetException
- * @package Events
+ * *
  */
 class TransitionUnsatisfiedTargetException extends MachineExecutionException {
 
@@ -84,7 +84,7 @@ class TransitionUnsatisfiedTargetException extends MachineExecutionException {
 
 /**
  * Class SubmitProcessingException
- * @package Events
+ * *
  */
 class SubmitProcessingException extends RuntimeException {
 
@@ -92,7 +92,7 @@ class SubmitProcessingException extends RuntimeException {
 
 /**
  * Class TransitionOnExecutedException
- * @package Events
+ * *
  */
 class TransitionOnExecutedException extends MachineExecutionException {
 
@@ -100,7 +100,7 @@ class TransitionOnExecutedException extends MachineExecutionException {
 
 /**
  * Class UndeclaredEventException
- * @package Events
+ * *
  */
 class UndeclaredEventException extends InvalidArgumentException {
 

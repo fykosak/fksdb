@@ -14,7 +14,7 @@ use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class GroupsGrid
- * @package FKSDB\Components\Grids\Schedule
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class GroupsGrid extends BaseGrid {
     /**
@@ -40,7 +40,6 @@ class GroupsGrid extends BaseGrid {
      * @param $presenter
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
-     * @throws NotImplementedException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

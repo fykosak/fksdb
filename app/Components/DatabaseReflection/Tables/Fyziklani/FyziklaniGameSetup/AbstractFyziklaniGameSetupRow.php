@@ -8,7 +8,7 @@ use FKSDB\Exceptions\NotImplementedException;
 
 /**
  * Class AbstractFyziklaniGameSetupRow
- * @package FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniGameSetup
+ * *
  */
 abstract class AbstractFyziklaniGameSetupRow extends AbstractRow {
 

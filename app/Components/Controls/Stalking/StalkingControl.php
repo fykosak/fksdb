@@ -9,13 +9,7 @@ use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\DatabaseReflection\ValuePrinterComponent;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\Models\ModelPerson;
-use Nette\Templating\FileTemplate;
 
-/**
- * Class StalkingControl
- * @package FKSDB\Components\Controls\Stalking
- * @property FileTemplate $template
- */
 abstract class StalkingControl extends BaseComponent {
 
     const PERMISSION_FULL = 1024;

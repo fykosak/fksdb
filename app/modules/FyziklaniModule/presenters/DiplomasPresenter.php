@@ -10,7 +10,7 @@ use Nette\Utils\Html;
 
 /**
  * Class DiplomasPresenter
- * @package FyziklaniModule
+ * *
  */
 class DiplomasPresenter extends BasePresenter {
     /**

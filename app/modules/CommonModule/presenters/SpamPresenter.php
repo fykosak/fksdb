@@ -11,7 +11,7 @@ use Nette\Application\UI\Control;
 
 /**
  * Class MailSenderPresenter
- * @package OrgModule
+ * *
  */
 class SpamPresenter extends BasePresenter {
     use EntityTrait;

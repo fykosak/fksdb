@@ -90,10 +90,12 @@ class ApplicationsGrid extends Control {
         $this->processSource();
     }
 
+    /** @var bool */
     private $attachedJS = false;
 
     /**
      * @param $obj
+     * @return void
      */
     protected function attached($obj) {
         parent::attached($obj);

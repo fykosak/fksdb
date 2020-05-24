@@ -7,7 +7,7 @@ use Nette\Application\UI\Control;
 
 /**
  * Trait ChartPresenterTrait
- * @package FKSDB
+ * *
  */
 trait ChartPresenterTrait {
     /**

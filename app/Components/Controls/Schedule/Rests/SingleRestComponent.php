@@ -7,8 +7,8 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
 
 /**
- * Class SingleRestControl
- * @package FKSDB\Components\Controls\Fyziklani
+ * Class SingleRestComponent
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class SingleRestComponent extends BaseComponent {
     /**

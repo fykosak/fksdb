@@ -9,7 +9,7 @@ use FKSDB\ORM\Models\ModelPerson;
 
 /**
  * Class Role
- * @package FKSDB\Components\Controls\Stalking
+ * *
  */
 class Role extends AbstractStalkingComponent {
     /**

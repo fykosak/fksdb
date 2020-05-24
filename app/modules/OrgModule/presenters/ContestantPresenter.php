@@ -9,7 +9,7 @@ use Nette\Application\UI\Form;
 
 /**
  * Class ContestantPresenter
- * @package OrgModule
+ * *
  * @method ModelContestant getModel()
  */
 class ContestantPresenter extends ExtendedPersonPresenter {

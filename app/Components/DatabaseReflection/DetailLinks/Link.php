@@ -6,7 +6,7 @@ use FKSDB\ORM\AbstractModelSingle;
 
 /**
  * Class Link
- * @package FKSDB\Components\DatabaseReflection\Links
+ * *
  */
 class Link extends AbstractLink {
     /**

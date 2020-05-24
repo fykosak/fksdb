@@ -23,7 +23,7 @@ use Nette\Security\Permission;
 
 /**
  * Class InboxPresenter
- * @package OrgModule
+ * *
  */
 class InboxPresenter extends SeriesPresenter {
 

@@ -6,8 +6,8 @@ use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 
 /**
- * Class TeamRestsControl
- * @package FKSDB\Components\Controls\Fyziklani
+ * Class TeamRestsComponent
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class TeamRestsComponent extends BaseComponent {
     /**

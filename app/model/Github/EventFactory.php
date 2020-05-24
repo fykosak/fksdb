@@ -144,7 +144,7 @@ class EventFactory {
 
 /**
  * Class UnsupportedEventException
- * @package Github
+ * *
  */
 class UnsupportedEventException extends InvalidArgumentException {
 
@@ -152,7 +152,7 @@ class UnsupportedEventException extends InvalidArgumentException {
 
 /**
  * Class MissingEventFieldException
- * @package Github
+ * *
  */
 class MissingEventFieldException extends InvalidArgumentException {
 

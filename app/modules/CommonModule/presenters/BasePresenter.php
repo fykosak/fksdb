@@ -8,7 +8,7 @@ use Nette\Security\IResource;
 
 /**
  * Class BasePresenter
- * @package CoreModule
+ * *
  */
 abstract class BasePresenter extends AuthenticatedPresenter {
 
