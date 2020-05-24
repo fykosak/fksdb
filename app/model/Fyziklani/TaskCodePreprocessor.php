@@ -7,10 +7,7 @@ namespace FKSDB\Fyziklani;
  * @author Lukáš Timko
  */
 class TaskCodePreprocessor {
-    /**
-     * @param string $code
-     * @return bool
-     */
+
     public static function checkControlNumber(string $code): bool {
         if (strlen($code) != 9) {
             return false;
@@ -20,26 +17,14 @@ class TaskCodePreprocessor {
         return $sum % 10 == 0;
     }
 
-    /**
-     * @param string $code
-     * @return int
-     */
     public static function extractTeamId(string $code): int {
         return (int)substr($code, 0, 6);
     }
 
-    /**
-     * @param string $code
-     * @return string
-     */
     public static function extractTaskLabel(string $code): string {
         return (string)substr($code, 6, 2);
     }
 
-    /**
-     * @param string $code
-     * @return string
-     */
     public static function getNumLabel(string $code): string {
         return str_replace(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'], [1, 2, 3, 4, 5, 6, 7, 8], $code);
     }

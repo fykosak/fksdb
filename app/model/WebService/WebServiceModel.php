@@ -329,10 +329,6 @@ class WebServiceModel {
         }
     }
 
-    /**
-     * @param StoredQuery $query
-     * @return bool
-     */
     private function isAuthorizedExport(StoredQuery $query): bool {
         $implicitParameters = $query->getImplicitParameters();
         if (!isset($implicitParameters[StoredQueryFactory::PARAM_CONTEST])) {
@@ -343,6 +339,7 @@ class WebServiceModel {
 
     /**
      * @param $msg
+     * @return void
      */
     private function log($msg) {
         if (!$this->authenticatedLogin) {

@@ -75,6 +75,7 @@ class StudyYearsFromXML extends Stage {
 
     /**
      * @param SimpleXMLElement $XMLTask
+     * @return void
      */
     private function processTask(SimpleXMLElement $XMLTask) {
         $tasks = $this->data->getTasks();

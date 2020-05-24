@@ -26,10 +26,6 @@ class PipelineFactory {
         $this->serviceTeam = $serviceTeam;
     }
 
-    /**
-     * @param ModelEvent $event
-     * @return Pipeline
-     */
     public function create(ModelEvent $event): Pipeline {
         $pipeline = new Pipeline();
         $pipeline->setLogger(new MemoryLogger());

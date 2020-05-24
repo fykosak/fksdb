@@ -33,12 +33,6 @@ class StatsModelFactory {
         $this->serviceTask = $serviceTask;
     }
 
-    /**
-     *
-     * @param ModelContest $contest
-     * @param int $year
-     * @return TaskStatsModel
-     */
     public function createTaskStatsModel(ModelContest $contest, int $year): TaskStatsModel {
         return new TaskStatsModel($contest, $year, $this->connection);
     }

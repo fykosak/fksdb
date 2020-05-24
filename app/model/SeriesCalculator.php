@@ -47,12 +47,6 @@ class SeriesCalculator {
         return ($currentSeries === null) ? 1 : $currentSeries;
     }
 
-    /**
-     *
-     * @param ModelContest $contest
-     * @param int $year
-     * @return int
-     */
     public function getLastSeries(ModelContest $contest, int $year): int {
         return $this->serviceTask->getTable()->where([
             'contest_id' => $contest->contest_id,

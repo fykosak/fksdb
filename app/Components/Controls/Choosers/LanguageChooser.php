@@ -26,13 +26,17 @@ class LanguageChooser extends Chooser {
     /**
      * @param string $lang
      * @param bool $modifiable
+     * @return void
      * @throws \Exception
      */
-    public function setLang(string $lang , bool $modifiable) {
+    public function setLang(string $lang, bool $modifiable) {
         $this->language = $lang;
         $this->modifiable = $modifiable;
     }
 
+    /**
+     * @return void
+     */
     public function render() {
         $this->beforeRender();
         $this->template->modifiable = $this->modifiable;
@@ -46,7 +50,7 @@ class LanguageChooser extends Chooser {
     }
 
     /**
-     * @return array|iterable|void
+     * @return array|iterable
      * @throws BadTypeException
      */
     public function getItems() {
