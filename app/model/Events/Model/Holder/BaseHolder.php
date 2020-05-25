@@ -163,6 +163,7 @@ class BaseHolder {
 
     /**
      * @param $modifiable
+     * @return void
      */
     public function setModifiable($modifiable) {
         $this->modifiable = $modifiable;
@@ -170,6 +171,7 @@ class BaseHolder {
 
     /**
      * @param $visible
+     * @return void
      */
     public function setVisible($visible) {
         $this->visible = $visible;
@@ -364,31 +366,27 @@ class BaseHolder {
         $this->description = $description;
     }
 
-    /**
-     * @return string
-     */
-    public function getJoinOn() {
+    public function getJoinOn(): string {
         return $this->joinOn;
     }
 
     /**
      * @param string $joinOn
+     * @return void
      */
-    public function setJoinOn($joinOn) {
+    public function setJoinOn(string $joinOn) {
         $this->joinOn = $joinOn;
     }
 
-    /**
-     * @return string
-     */
-    public function getJoinTo() {
+    public function getJoinTo(): string {
         return $this->joinTo;
     }
 
     /**
      * @param string $joinTo
+     * @return void
      */
-    public function setJoinTo($joinTo) {
+    public function setJoinTo(string $joinTo) {
         $this->joinTo = $joinTo;
     }
 
@@ -450,12 +448,12 @@ class BaseHolder {
      * @return Field[]
      */
     public function getDeterminingFields(): array {
-        return array_filter($this->fields, function (Field $field) {
+        return array_filter($this->getFields(), function (Field $field) {
             return $field->isDetermining();
         });
     }
 
-    public function createFormContainer(BaseMachine $machine): ContainerWithOptions {
+    public function createFormContainer(): ContainerWithOptions {
         $container = new ContainerWithOptions();
         $container->setOption('label', $this->getLabel());
         $container->setOption('description', $this->getDescription());
@@ -464,7 +462,7 @@ class BaseHolder {
             if (!$field->isVisible()) {
                 continue;
             }
-            $components = $field->createFormComponent($machine, $container);
+            $components = $field->createFormComponent($container);
             if (!is_array($components)) {
                 $components = [$components];
             }
@@ -524,5 +522,4 @@ class BaseHolder {
             throw new InvalidArgumentException("No parameter '$name' for event " . $this->getEvent() . ".", null, $exception);
         }
     }
-
 }

@@ -25,7 +25,7 @@ class PersonContainerResolver implements IVisibilityResolver, IModifiabilityReso
     private $field;
 
     /**
-     * @var mixed
+     * @var callable|bool|mixed
      */
     private $condition;
 
@@ -42,7 +42,7 @@ class PersonContainerResolver implements IVisibilityResolver, IModifiabilityReso
     /**
      * PersonContainerResolver constructor.
      * @param Field $field
-     * @param $condition
+     * @param callable|bool|mixed $condition
      * @param SelfResolver $selfResolver
      * @param ExpressionEvaluator $evaluator
      */
@@ -53,26 +53,14 @@ class PersonContainerResolver implements IVisibilityResolver, IModifiabilityReso
         $this->evaluator = $evaluator;
     }
 
-    /**
-     * @param ModelPerson $person
-     * @return string
-     */
     public function getResolutionMode(ModelPerson $person): string {
         return (!$person->isNew() && $this->isModifiable($person)) ? ReferencedPersonHandler::RESOLUTION_OVERWRITE : ReferencedPersonHandler::RESOLUTION_EXCEPTION;
     }
 
-    /**
-     * @param ModelPerson $person
-     * @return bool|mixed
-     */
     public function isModifiable(ModelPerson $person): bool {
         return $this->selfResolver->isModifiable($person) || $this->evaluator->evaluate($this->condition, $this->field);
     }
 
-    /**
-     * @param ModelPerson $person
-     * @return bool|mixed
-     */
     public function isVisible(ModelPerson $person): bool {
         return $this->selfResolver->isVisible($person) || $this->evaluator->evaluate($this->condition, $this->field);
     }

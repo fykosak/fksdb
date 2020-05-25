@@ -34,34 +34,31 @@ class ScheduleFactory extends AbstractFactory {
 
     /**
      * @param Field $field
-     * @param BaseMachine $machine
      * @param Container $container
      * @return ScheduleField
      * @throws JsonException
      */
-    protected function createComponent(Field $field, BaseMachine $machine, Container $container) {
+    protected function createComponent(Field $field, Container $container) {
         $component = new ScheduleField($this->data);
         $component->setOption('description', $field->getDescription());
         return $component;
     }
 
     /**
-     * @param ScheduleField $component
+     * @param IControl $component
      * @param Field $field
-     * @param BaseMachine $machine
      * @param Container $container
      */
-    protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container) {
+    protected function setDefaultValue($component, Field $field, Container $container) {
         $component->setDefaultValue($field->getValue());
     }
 
     /**
-     * @param ScheduleField $component
+     * @param IControl $component
      * @param Field $field
-     * @param BaseMachine $machine
      * @param Container $container
      */
-    protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container) {
+    protected function setDisabled($component, Field $field, Container $container) {
         $component->setDisabled();
     }
 

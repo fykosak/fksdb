@@ -28,18 +28,10 @@ class SelfResolver implements IVisibilityResolver, IModifiabilityResolver {
         $this->user = $user;
     }
 
-    /**
-     * @param ModelPerson $person
-     * @return bool
-     */
     public function isVisible(ModelPerson $person): bool {
         return $person->isNew() || $this->isSelf($person);
     }
 
-    /**
-     * @param ModelPerson $person
-     * @return string
-     */
     public function getResolutionMode(ModelPerson $person): string {
         return $this->isSelf($person) ? ReferencedPersonHandler::RESOLUTION_OVERWRITE : ReferencedPersonHandler::RESOLUTION_EXCEPTION;
     }
@@ -52,10 +44,6 @@ class SelfResolver implements IVisibilityResolver, IModifiabilityResolver {
         return $person->isNew() || $this->isSelf($person);
     }
 
-    /**
-     * @param ModelPerson $person
-     * @return bool
-     */
     protected function isSelf(ModelPerson $person): bool {
         if (!$this->user->isLoggedIn()) {
             return false;

@@ -145,11 +145,10 @@ class ApplicationComponent extends BaseComponent {
          * Create containers
          */
         foreach ($this->holder->getBaseHolders() as $name => $baseHolder) {
-            $baseMachine = $this->getMachine()->getBaseMachine($name);
             if (!$baseHolder->isVisible()) {
                 continue;
             }
-            $container = $baseHolder->createFormContainer($baseMachine);
+            $container = $baseHolder->createFormContainer();
             $form->addComponent($container, $name);
         }
 

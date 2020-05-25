@@ -257,7 +257,7 @@ class Holder {
      * Joined data manipulation
      */
     /**
-     * @var
+     * @var mixed[]
      */
     private $groupedHolders;
 

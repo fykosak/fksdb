@@ -109,6 +109,7 @@ class ExtendedPersonHandler {
 
     /**
      * @param ModelContest $contest
+     * @return void
      */
     public function setContest(ModelContest $contest) {
         $this->contest = $contest;
@@ -120,6 +121,7 @@ class ExtendedPersonHandler {
 
     /**
      * @param int $year
+     * @return void
      */
     public function setYear(int $year) {
         $this->year = $year;
@@ -131,6 +133,7 @@ class ExtendedPersonHandler {
 
     /**
      * @param string $invitationLang
+     * @return void
      */
     public function setInvitationLang(string $invitationLang) {
         $this->invitationLang = $invitationLang;

@@ -5,6 +5,7 @@ namespace FKSDB\Events\Model\Holder\SecondaryModelStrategies;
 
 use FKSDB\Events\Model\Holder\BaseHolder;
 use FKSDB\ORM\IModel;
+use Nette\Database\Table\ActiveRow;
 use RuntimeException;
 
 /**
@@ -26,11 +27,11 @@ class SecondaryModelConflictException extends RuntimeException {
     /**
      * SecondaryModelConflictException constructor.
      * @param BaseHolder $baseHolder
-     * @param $conflicts
+     * @param IModel[] $conflicts
      * @param null $code
      * @param null $previous
      */
-    public function __construct(BaseHolder $baseHolder, $conflicts, $code = null, $previous = null) {
+    public function __construct(BaseHolder $baseHolder, array $conflicts, $code = null, $previous = null) {
         parent::__construct($this->createMessage($baseHolder->getModel(), $conflicts), $code, $previous);
         $this->baseHolder = $baseHolder;
         $this->conflicts = $conflicts;
@@ -38,10 +39,10 @@ class SecondaryModelConflictException extends RuntimeException {
 
     /**
      * @param IModel $model
-     * @param $conflicts
+     * @param ActiveRow[]|IModel[] $conflicts
      * @return string
      */
-    private function createMessage(IModel $model, $conflicts) {
+    private function createMessage(IModel $model, array $conflicts) {
         $ids = null;
         foreach ($conflicts as $conflict) {
             $ids = $conflict->getPrimary();
@@ -50,17 +51,14 @@ class SecondaryModelConflictException extends RuntimeException {
         return sprintf('Model with PK %s conflicts with other models: %s.', $id, $ids);
     }
 
-    /**
-     * @return BaseHolder
-     */
-    public function getBaseHolder() {
+    public function getBaseHolder(): BaseHolder {
         return $this->baseHolder;
     }
 
     /**
      * @return IModel[]
      */
-    public function getConflicts() {
+    public function getConflicts(): array {
         return $this->conflicts;
     }
 

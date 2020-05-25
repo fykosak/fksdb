@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
-use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Model\Holder\Field;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Container;
@@ -18,11 +17,10 @@ class PasswordFactory extends AbstractFactory {
 
     /**
      * @param Field $field
-     * @param BaseMachine $machine
      * @param Container $container
      * @return TextInput
      */
-    protected function createComponent(Field $field, BaseMachine $machine, Container $container) {
+    protected function createComponent(Field $field, Container $container) {
         $element = new TextInput($field->getLabel());
         $element->setType('password');
         $element->setOption('description', $field->getDescription());
@@ -30,27 +28,25 @@ class PasswordFactory extends AbstractFactory {
     }
 
     /**
-     * @param TextInput $component
+     * @param IControl $component
      * @param Field $field
-     * @param BaseMachine $machine
      * @param Container $container
      */
-    protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container) {
+    protected function setDefaultValue($component, Field $field, Container $container) {
         $component->setDefaultValue('');
     }
 
     /**
-     * @param TextInput $component
+     * @param IControl $component
      * @param Field $field
-     * @param BaseMachine $machine
      * @param Container $container
      */
-    protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container) {
+    protected function setDisabled($component, Field $field, Container $container) {
         $component->setDisabled();
     }
 
     /**
-     * @param Component $component
+     * @param Component|IControl $component
      * @return Component|IControl
      */
     public function getMainControl(Component $component) {

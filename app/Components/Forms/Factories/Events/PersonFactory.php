@@ -14,7 +14,6 @@ use FKSDB\ORM\Services\ServicePerson;
 use Nette\ComponentModel\Component;
 use Nette\DI\Container as DIContainer;
 use Nette\Forms\Container;
-use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\IControl;
 use Nette\Security\User;
 use Persons\SelfResolver;
@@ -29,23 +28,23 @@ class PersonFactory extends AbstractFactory {
     const VALUE_LOGIN = 'fromLogin';
 
     /**
-     * @var
+     * @var array
      */
     private $fieldsDefinition;
     /**
-     * @var
+     * @var string
      */
     private $searchType;
     /**
-     * @var
+     * @var bool
      */
     private $allowClear;
     /**
-     * @var
+     * @var bool
      */
     private $modifiable;
     /**
-     * @var
+     * @var bool
      */
     private $visible;
 
@@ -81,9 +80,9 @@ class PersonFactory extends AbstractFactory {
 
     /**
      * PersonFactory constructor.
-     * @param $fieldsDefinition
-     * @param $searchType
-     * @param $allowClear
+     * @param array $fieldsDefinition
+     * @param string $searchType
+     * @param bool $allowClear
      * @param $modifiable
      * @param $visible
      * @param ReferencedEventPersonFactory $referencedEventPersonFactory
@@ -93,7 +92,19 @@ class PersonFactory extends AbstractFactory {
      * @param ServicePerson $servicePerson
      * @param DIContainer $container
      */
-    public function __construct($fieldsDefinition, $searchType, $allowClear, $modifiable, $visible, ReferencedEventPersonFactory $referencedEventPersonFactory, SelfResolver $selfResolver, ExpressionEvaluator $evaluator, User $user, ServicePerson $servicePerson, DIContainer $container) {
+    public function __construct(
+        array $fieldsDefinition,
+        string $searchType,
+        bool $allowClear,
+        $modifiable,
+        $visible,
+        ReferencedEventPersonFactory $referencedEventPersonFactory,
+        SelfResolver $selfResolver,
+        ExpressionEvaluator $evaluator,
+        User $user,
+        ServicePerson $servicePerson,
+        DIContainer $container
+    ) {
         $this->fieldsDefinition = $fieldsDefinition;
         $this->searchType = $searchType;
         $this->allowClear = $allowClear;
@@ -109,12 +120,11 @@ class PersonFactory extends AbstractFactory {
 
     /**
      * @param Field $field
-     * @param BaseMachine $machine
      * @param Container $container
-     * @return array|mixed
+     * @return IControl[]
      * @throws \Exception
      */
-    protected function createComponent(Field $field, BaseMachine $machine, Container $container) {
+    protected function createComponent(Field $field, Container $container) {
         $searchType = $this->evaluator->evaluate($this->searchType, $field);
         $allowClear = $this->evaluator->evaluate($this->allowClear, $field);
 
@@ -132,12 +142,11 @@ class PersonFactory extends AbstractFactory {
     }
 
     /**
-     * @param HiddenField[] $component
+     * @param IControl[] $component
      * @param Field $field
-     * @param BaseMachine $machine
      * @param Container $container
      */
-    protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container) {
+    protected function setDefaultValue($component, Field $field, Container $container) {
         $hiddenField = reset($component);
         $default = $field->getValue();
         if ($default == self::VALUE_LOGIN) {
@@ -152,13 +161,12 @@ class PersonFactory extends AbstractFactory {
     }
 
     /**
-     * @param $component
+     * @param IControl[] $component
      * @param Field $field
-     * @param BaseMachine $machine
      * @param Container $container
      * @return void
      */
-    protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container) {
+    protected function setDisabled($component, Field $field, Container $container) {
         $hiddenField = reset($component);
         $hiddenField->setDisabled();
     }

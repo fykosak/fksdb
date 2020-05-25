@@ -43,6 +43,7 @@ use Tracy\Debugger;
  */
 class PersonPresenter extends BasePresenter {
     use EntityTrait;
+
     /**
      * @var ServicePerson
      */
@@ -180,6 +181,7 @@ class PersonPresenter extends BasePresenter {
     /**
      * @param $trunkId
      * @param $mergedId
+     * @return void
      */
     public function actionMerge($trunkId, $mergedId) {
         $this->personMerger->setMergedPair($this->trunkPerson, $this->mergedPerson);
@@ -221,6 +223,7 @@ class PersonPresenter extends BasePresenter {
             $userPerson->getFullName(), $userPerson->person_id,
             $person->getFullName(), $person->person_id), 'stalking-log');
     }
+
     /* ******************* COMPONENTS *******************/
 
     public function createComponentStalkingComponent(): StalkingComponent {
@@ -263,12 +266,10 @@ class PersonPresenter extends BasePresenter {
         $container = new ContainerWithOptions();
         $form->addComponent($container, ExtendedPersonHandler::CONT_AGGR);
 
-        $fieldsDefinition = [];
-        //$acYear = $this->getSelectedAcademicYear();
-        $searchType = ReferencedPersonFactory::SEARCH_ID;
-        $allowClear = true;
+       // $form->addComponent($container, ExtendedPersonHandler::CONT_AGGR);
         $modifiabilityResolver = $visibilityResolver = new DenyResolver();
-        $components = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, null, $searchType, $allowClear, $modifiabilityResolver, $visibilityResolver);
+        $acYear = $this->getYearCalculator()->getCurrentAcademicYear();
+        $components = $this->referencedPersonFactory->createReferencedPerson([], $acYear, ReferencedPersonFactory::SEARCH_ID, true, $modifiabilityResolver, $visibilityResolver);
         $components[0]->addRule(Form::FILLED, _('Osobu je třeba zadat.'));
         $components[1]->setOption('label', _('Osoba'));
 
@@ -277,8 +278,8 @@ class PersonPresenter extends BasePresenter {
 
         $submit = $form->addSubmit('send', _('Stalkovat'));
         $submit->onClick[] = function (SubmitButton $button) {
-            $form = $button->getForm();
-            $values = $form->getValues();
+            $values = $button->getForm()->getValues();
+
             $id = $values[ExtendedPersonHandler::CONT_AGGR][ExtendedPersonHandler::EL_PERSON];
             $this->redirect('detail', ['id' => $id]);
         };

@@ -52,12 +52,11 @@ class DBReflectionFactory extends AbstractFactory {
 
     /**
      * @param Field $field
-     * @param BaseMachine $machine
      * @param Container $container
      * @return BaseControl
      * @throws \Exception
      */
-    protected function createComponent(Field $field, BaseMachine $machine, Container $container): BaseControl {
+    protected function createComponent(Field $field, Container $container): BaseControl {
         $element = null;
         try {
             $service = $field->getBaseHolder()->getService();
@@ -111,12 +110,11 @@ class DBReflectionFactory extends AbstractFactory {
     }
 
     /**
-     * @param BaseControl $component
+     * @param IControl $component
      * @param Field $field
-     * @param BaseMachine $machine
      * @param Container $container
      */
-    protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container) {
+    protected function setDefaultValue($component, Field $field, Container $container) {
 
         if ($field->getBaseHolder()->getModelState() == BaseMachine::STATE_INIT && $field->getDefault() === null) {
             $column = $this->resolveColumn($field);
@@ -128,12 +126,11 @@ class DBReflectionFactory extends AbstractFactory {
     }
 
     /**
-     * @param BaseControl $component
+     * @param IControl $component
      * @param Field $field
-     * @param BaseMachine $machine
      * @param Container $container
      */
-    protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container) {
+    protected function setDisabled($component, Field $field, Container $container) {
         $component->setDisabled();
     }
 

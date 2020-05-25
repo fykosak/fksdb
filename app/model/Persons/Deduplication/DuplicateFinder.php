@@ -41,6 +41,7 @@ class DuplicateFinder {
     }
 
     public function getPairs(): array {
+        /** @var ModelPerson[][] $buckets */
         $buckets = [];
         /* Create buckets for quadratic search. */
         /** @var ModelPerson $person */

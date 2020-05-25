@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
-use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Model\Holder\DataValidator;
 use FKSDB\Events\Model\Holder\Field;
 use Nette\Forms\Container;
@@ -18,20 +17,19 @@ abstract class AbstractFactory implements IFieldFactory {
 
     /**
      * @param Field $field
-     * @param BaseMachine $machine
      * @param Container $container
      * @return array|mixed
      */
-    public function create(Field $field, BaseMachine $machine, Container $container) {
-        $component = $this->createComponent($field, $machine, $container);
+    public function create(Field $field, Container $container) {
+        $component = $this->createComponent($field, $container);
 
         if (!$field->isModifiable()) {
-            $this->setDisabled($component, $field, $machine, $container);
+            $this->setDisabled($component, $field, $container);
         }
-        $this->setDefaultValue($component, $field, $machine, $container);
+        $this->setDefaultValue($component, $field, $container);
 
         $control = $this->getMainControl(is_array($component) ? reset($component) : $component);
-        $this->appendRequiredRule($control, $field, $machine, $container);
+        $this->appendRequiredRule($control, $field, $container);
 
         return $component;
     }
@@ -39,11 +37,10 @@ abstract class AbstractFactory implements IFieldFactory {
     /**
      * @param IControl $element
      * @param Field $field
-     * @param BaseMachine $machine
      * @param Container $container
      * @return void
      */
-    final protected function appendRequiredRule(IControl $element, Field $field, BaseMachine $machine, Container $container) {
+    final protected function appendRequiredRule(IControl $element, Field $field, Container $container) {
         if ($field->isRequired()) {
             $conditioned = $element;
             foreach ($field->getBaseHolder()->getDeterminingFields() as $name => $determiningField) {
@@ -75,28 +72,25 @@ abstract class AbstractFactory implements IFieldFactory {
     }
 
     /**
-     * @param $component
+     * @param IControl $component
      * @param Field $field
-     * @param BaseMachine $machine
      * @param Container $container
      * @return void
      */
-    abstract protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container);
+    abstract protected function setDisabled($component, Field $field, Container $container);
 
     /**
-     * @param $component
+     * @param IControl $component
      * @param Field $field
-     * @param BaseMachine $machine
      * @param Container $container
      * @return void
      */
-    abstract protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container);
+    abstract protected function setDefaultValue($component, Field $field, Container $container);
 
     /**
      * @param Field $field
-     * @param BaseMachine $machine
      * @param Container $container
-     * @return mixed
+     * @return IControl
      */
-    abstract protected function createComponent(Field $field, BaseMachine $machine, Container $container);
+    abstract protected function createComponent(Field $field, Container $container);
 }
