@@ -133,7 +133,7 @@ class SubmitPresenter extends BasePresenter {
              * @var ModelPerson $person
              */
             $person = $this->getUser()->getIdentity()->getPerson();
-            $contestants = $person->getActiveContestants($this->yearCalculator);
+            $contestants = $person->getActiveContestants($this->getYearCalculator());
             $contestant = $contestants[$this->getSelectedContest()->contest_id];
             $currentYear = $this->getYearCalculator()->getCurrentYear($this->getSelectedContest());
             $this->template->canRegister = ($contestant->year < $currentYear + $this->getYearCalculator()->getForwardShift($this->getSelectedContest()));
@@ -237,10 +237,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentSubmitsGrid(): SubmitsGrid {
-        return new SubmitsGrid(
-            $this->context,
-            $this->getContestant()
-        );
+        return new SubmitsGrid($this->getContext(), $this->getContestant());
     }
 
     /**

@@ -70,11 +70,6 @@ class ApplicationPresenter extends BasePresenter {
     private $serviceEvent;
 
     /**
-     * @var Container
-     */
-    private $container;
-
-    /**
      * @var RelatedPersonAuthorizator
      */
     private $relatedPersonAuthorizator;
@@ -95,14 +90,6 @@ class ApplicationPresenter extends BasePresenter {
      */
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;
-    }
-
-    /**
-     * @param Container $container
-     * @return void
-     */
-    public function injectContainer(Container $container) {
-        $this->container = $container;
     }
 
     /**
@@ -299,7 +286,7 @@ class ApplicationPresenter extends BasePresenter {
     protected function createComponentApplication() {
         $logger = new MemoryLogger();
         $handler = $this->handlerFactory->create($this->getEvent(), $logger);
-        $component = new ApplicationComponent($handler, $this->getHolder());
+        $component = new ApplicationComponent($this->getContext(), $handler, $this->getHolder());
         $component->setRedirectCallback(function ($modelId, $eventId) {
             $this->backLinkRedirect();
             $this->redirect('this', [
@@ -321,9 +308,9 @@ class ApplicationPresenter extends BasePresenter {
         $events = $this->serviceEvent->getTable();
         $events->where('event_type.contest_id', $this->getSelectedContest()->contest_id);
 
-        $source = new RelatedPersonSource($person, $events, $this->container);
+        $source = new RelatedPersonSource($person, $events, $this->getContext());
 
-        $grid = new ApplicationsGrid($this->container, $source, $this->handlerFactory);
+        $grid = new ApplicationsGrid($this->getContext(), $source, $this->handlerFactory);
 
         $grid->setTemplate('myApplications');
 
@@ -340,8 +327,8 @@ class ApplicationPresenter extends BasePresenter {
             ->where('registration_begin <= NOW()')
             ->where('registration_end >= NOW()');
 
-        $source = new InitSource($events, $this->container);
-        $grid = new ApplicationsGrid($this->container, $source, $this->handlerFactory);
+        $source = new InitSource($events, $this->getContext());
+        $grid = new ApplicationsGrid($this->getContext(), $source, $this->handlerFactory);
         $grid->setTemplate('myApplications');
 
         return $grid;
@@ -405,7 +392,7 @@ class ApplicationPresenter extends BasePresenter {
     private function getHolder() {
         if (!$this->holder) {
             /** @var EventDispatchFactory $factory */
-            $factory = $this->container->getByType(EventDispatchFactory::class);
+            $factory = $this->getContext()->getByType(EventDispatchFactory::class);
             $this->holder = $factory->getDummyHolder($this->getEvent());
         }
         return $this->holder;

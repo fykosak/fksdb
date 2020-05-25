@@ -34,7 +34,7 @@ class TestLog extends Message {
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public static function getAvailableLevels(): array {
         return [self::LVL_DANGER, self::LVL_WARNING, self::LVL_SUCCESS, self::LVL_INFO];

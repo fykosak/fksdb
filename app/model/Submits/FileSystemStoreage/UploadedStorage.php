@@ -63,7 +63,7 @@ class UploadedStorage implements ISubmitStorage {
     private $contestMap;
 
     /**
-     * @var array of IStorageProcessing
+     * @var IStorageProcessing[]
      */
     private $processings = [];
 
@@ -83,6 +83,7 @@ class UploadedStorage implements ISubmitStorage {
 
     /**
      * @param IStorageProcessing $processing
+     * @return void
      */
     public function addProcessing(IStorageProcessing $processing) {
         $this->processings[] = $processing;
@@ -212,6 +213,7 @@ class UploadedStorage implements ISubmitStorage {
 
     /**
      * @param ModelSubmit $submit
+     * @return void
      */
     public function deleteFile(ModelSubmit $submit) {
         $fails = [];

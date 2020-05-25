@@ -24,9 +24,9 @@ class ViewDataSource extends NDataSource {
     }
 
     /**
-     * @return string
+     * @return string|int
      */
-    public function getPrimaryKey(): string {
+    public function getPrimaryKey() {
         return $this->primaryKey;
     }
 }

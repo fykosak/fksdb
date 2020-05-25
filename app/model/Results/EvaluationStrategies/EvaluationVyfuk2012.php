@@ -49,17 +49,10 @@ class EvaluationVyfuk2012 extends EvaluationStrategy {
         }
     }
 
-    /**
-     * @param ActiveRow $task
-     * @return string
-     */
     public function getPointsColumn(ActiveRow $task): string {
         return "s.raw_points";
     }
 
-    /**
-     * @return string
-     */
     public function getSumColumn(): string {
         return "s.raw_points";
     }
@@ -73,10 +66,6 @@ class EvaluationVyfuk2012 extends EvaluationStrategy {
         return $task->points;
     }
 
-    /**
-     * @param ModelCategory $category
-     * @return string
-     */
     public function getTaskPointsColumn(ModelCategory $category): string {
         return 'IF(s.raw_points IS NOT NULL, t.points, NULL)';
     }

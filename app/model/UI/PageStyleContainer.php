@@ -8,7 +8,7 @@ namespace FKSDB\UI;
 class PageStyleContainer {
     /** @var string */
     public $styleId;
-    /** @var */
+    /** @var string */
     public $navBarClassName;
     /** @var string */
     public $mainContainerClassName;

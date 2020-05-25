@@ -56,16 +56,10 @@ abstract class PersonFileLevelTest extends PersonTest {
         return $this->rowFactory;
     }
 
-    /**
-     * @return string
-     */
     final public function getTitle(): string {
         return $this->getRowFactory()->getTitle();
     }
 
-    /**
-     * @return string
-     */
     final public function getAction(): string {
         return $this->actionName;
     }

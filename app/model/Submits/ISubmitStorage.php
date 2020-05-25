@@ -63,6 +63,7 @@ interface ISubmitStorage {
 
     /**
      * @param ModelSubmit $submit
+     * @return mixed
      */
     public function deleteFile(ModelSubmit $submit);
 }

@@ -24,10 +24,6 @@ class EventPrice implements IPreprocess {
         $this->serviceEventParticipant = $serviceEventParticipant;
     }
 
-    /**
-     * @param ModelPayment $modelPayment
-     * @return Price
-     */
     public static function calculate(ModelPayment $modelPayment): Price {
         /* $price = new Price(0, $modelPayment->currency);
          $ids = $this->getData($modelPayment);
@@ -39,10 +35,6 @@ class EventPrice implements IPreprocess {
         return new Price(0, $modelPayment->currency);
     }
 
-    /**
-     * @param ModelPayment $modelPayment
-     * @return array
-     */
     public static function getGridItems(ModelPayment $modelPayment): array {
         /*$price = new Price(0, $modelPayment->currency);
         $items = [];

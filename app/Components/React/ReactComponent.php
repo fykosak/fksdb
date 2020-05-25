@@ -6,6 +6,7 @@ use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Exceptions\BadTypeException;
 use Nette\Application\BadRequestException;
 use Nette\ComponentModel\IComponent;
+use Nette\DI\Container;
 use Nette\Http\IRequest;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
@@ -17,6 +18,16 @@ use Nette\Utils\JsonException;
 abstract class ReactComponent extends BaseComponent {
 
     use ReactField;
+
+    /**
+     * ReactComponent constructor.
+     * @param Container $container
+     */
+    public function __construct(Container $container) {
+        parent::__construct($container);
+        $this->registerMonitor();
+    }
+
     /**
      * @param IComponent $obj
      */
@@ -33,7 +44,6 @@ abstract class ReactComponent extends BaseComponent {
         $this->template->reactId = $this->getReactId();
         $this->template->actions = Json::encode($this->actions);
         $this->template->data = $this->getData();
-
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ReactComponent.latte');
         $this->template->render();
     }
@@ -43,7 +53,7 @@ abstract class ReactComponent extends BaseComponent {
      * @throws BadRequestException
      */
     protected function getHttpRequest(): IRequest {
-        $service = $this->container->getByType(IRequest::class);
+        $service = $this->getContext()->getByType(IRequest::class);
         if ($service instanceof IRequest) {
             return $service;
         }
@@ -55,7 +65,6 @@ abstract class ReactComponent extends BaseComponent {
      * @throws BadRequestException
      */
     protected function getReactRequest() {
-
         $requestData = $this->getHttpRequest()->getPost('requestData');
         $act = $this->getHttpRequest()->getPost('act');
         return (object)['requestData' => $requestData, 'act' => $act];

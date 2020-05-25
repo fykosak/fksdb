@@ -78,6 +78,7 @@ class SeriesData {
     /**
      * @param int $taskNr
      * @param ModelTask $task
+     * @return void
      */
     public function addTask(int $taskNr, ModelTask $task) {
         $this->tasks[$taskNr] = $task;

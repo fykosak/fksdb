@@ -5,6 +5,7 @@ namespace FKSDB\Components\Events;
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Application\IJavaScriptCollector;
+use Nette\ComponentModel\IComponent;
 use Nette\DI\Container;
 
 /**
@@ -45,7 +46,7 @@ class GraphComponent extends BaseComponent {
     private $attachedJS = false;
 
     /**
-     * @param $obj
+     * @param IComponent $obj
      * @return void
      */
     protected function attached($obj) {

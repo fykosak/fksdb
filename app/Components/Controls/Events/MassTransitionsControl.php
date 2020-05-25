@@ -4,7 +4,7 @@ namespace FKSDB\Components\Events;
 
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Config\NeonSchemaException;
-use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Events\Model\ApplicationHandlerFactory;
 use FKSDB\Events\Model\Grid\SingleEventSource;
 use FKSDB\Logging\FlashMessageDump;
@@ -23,6 +23,8 @@ class MassTransitionsControl extends BaseComponent {
      * @var ModelEvent
      */
     private $event;
+    /** @var EventDispatchFactory */
+    private $eventDispatchFactory;
 
     /**
      * MassTransitionsControl constructor.
@@ -34,11 +36,21 @@ class MassTransitionsControl extends BaseComponent {
         $this->event = $event;
     }
 
+    /**
+     * @param EventDispatchFactory $eventDispatchFactory
+     * @return void
+     */
+    public function injectEventDispatchFactory(EventDispatchFactory $eventDispatchFactory) {
+        $this->eventDispatchFactory = $eventDispatchFactory;
+    }
+
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function render() {
-        /**
-         * @var Machine $machine
-         */
-        $machine = $this->container->createEventMachine($this->event);
+        /** @var  $machine */
+        $machine = $this->eventDispatchFactory->getEventMachine($this->event);
         $this->template->transitions = $machine->getPrimaryMachine()->getTransitions();
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'MassTransitions.latte');
         $this->template->render();
@@ -46,12 +58,13 @@ class MassTransitionsControl extends BaseComponent {
 
     /**
      * @param string $name
-     * @throws AbortException
+     * @return void
      * @throws NeonSchemaException
      * @throws BadRequestException
+     * @throws AbortException
      */
     public function handleTransition(string $name) {
-        $source = new SingleEventSource($this->event, $this->container);
+        $source = new SingleEventSource($this->event, $this->getContext());
         /** @var ApplicationHandlerFactory $applicationHandlerFactory */
         $applicationHandlerFactory = $this->getContext()->getByType(ApplicationHandlerFactory::class);
         $logger = new MemoryLogger();

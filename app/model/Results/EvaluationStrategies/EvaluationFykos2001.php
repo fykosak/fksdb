@@ -46,17 +46,10 @@ class EvaluationFykos2001 extends EvaluationStrategy {
         }
     }
 
-    /**
-     * @param ActiveRow $task
-     * @return string
-     */
     public function getPointsColumn(ActiveRow $task): string {
         return 's.raw_points';
     }
 
-    /**
-     * @return string
-     */
     public function getSumColumn(): string {
         return 's.raw_points';
     }

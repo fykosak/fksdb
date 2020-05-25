@@ -224,7 +224,7 @@ class InboxPresenter extends SeriesPresenter {
         $formControl = new FormControl();
         $form = $formControl->getForm();
         $orgProvider = new PersonProvider($this->servicePerson);
-        $orgProvider->filterOrgs($this->getSelectedContest(), $this->yearCalculator);
+        $orgProvider->filterOrgs($this->getSelectedContest(), $this->getYearCalculator());
         /** @var ModelTask $task */
         foreach ($this->seriesTable->getTasks() as $task) {
             $control = $this->personFactory->createPersonSelect(false, $task->getFQName(), $orgProvider);

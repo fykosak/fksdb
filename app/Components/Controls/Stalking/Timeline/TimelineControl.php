@@ -12,6 +12,7 @@ use FKSDB\ORM\Models\ModelOrg;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\YearCalculator;
 use Nette\DI\Container;
+use Nette\InvalidStateException;
 
 /**
  * Class TimelineControl
@@ -49,7 +50,7 @@ class TimelineControl extends ReactComponent {
     }
 
     /**
-     * @return array
+     * @return \array[][]
      * @throws \Exception
      */
     private function calculateData() {
@@ -166,15 +167,12 @@ class TimelineControl extends ReactComponent {
         return [$first, $last];
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function getReactId(): string {
         return 'person.detail.timeline';
     }
 
     /**
-     * @inheritDoc
+     * @return string
      * @throws \Exception
      */
     public function getData(): string {
