@@ -32,6 +32,10 @@
 ../vyfuk8/q/aesop.ct?ha=1&format=aesop&p_category=7
 ../vyfuk8/q/aesop.ct?ha=1&format=aesop&p_category=8
 ../vyfuk8/q/aesop.ct?ha=1&format=aesop&p_category=9
+../vyfuk9/q/aesop.ct?ha=1&format=aesop&p_category=6
+../vyfuk9/q/aesop.ct?ha=1&format=aesop&p_category=7
+../vyfuk9/q/aesop.ct?ha=1&format=aesop&p_category=8
+../vyfuk9/q/aesop.ct?ha=1&format=aesop&p_category=9
 ../vyfuk1/q/aesop.tabor?ha=1&format=aesop
 ../vyfuk2/q/aesop.tabor?ha=1&format=aesop
 ../vyfuk3/q/aesop.tabor?ha=1&format=aesop
@@ -54,3 +58,4 @@
 ../vyfuk6/q/aesop.setkani.p?ha=1&format=aesop
 ../vyfuk7/q/aesop.setkani.p?ha=1&format=aesop
 ../vyfuk8/q/aesop.setkani.p?ha=1&format=aesop
+../vyfuk9/q/aesop.setkani.p?ha=1&format=aesop
