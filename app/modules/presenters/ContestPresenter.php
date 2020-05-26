@@ -16,12 +16,14 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
     /**
      * @var int
      * @persistent
+     * @internal
      */
     public $contestId;
 
     /**
      * @var int
      * @persistent
+     * @internal
      */
     public $year;
 

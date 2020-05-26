@@ -8,6 +8,7 @@ use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelRole;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 
 /**
  * Current year of FYKOS.
@@ -19,7 +20,7 @@ use Nette\Application\BadRequestException;
 abstract class BasePresenter extends \ContestPresenter {
 
     /**
-     * @var ModelContestant|null|false
+     * @var ModelContestant
      */
     private $contestant = false;
 
@@ -33,16 +34,18 @@ abstract class BasePresenter extends \ContestPresenter {
      * @return false|ModelContestant|null
      * @throws BadRequestException
      */
-    public function getContestant() {
-        if ($this->contestant === false) {
+    public function getContestant(): ModelContestant {
+        if (!$this->contestant) {
             /** @var ModelPerson $person */
             $person = $this->user->getIdentity()->getPerson();
             $contestant = $person->related(DbNames::TAB_CONTESTANT_BASE, 'person_id')->where([
                 'contest_id' => $this->getSelectedContest()->contest_id,
                 'year' => $this->getSelectedYear()
             ])->fetch();
-
-            $this->contestant = $contestant ? ModelContestant::createFromActiveRow($contestant) : null;
+            if (!$contestant) {
+                throw new ForbiddenRequestException();
+            }
+            $this->contestant = ModelContestant::createFromActiveRow($contestant);
         }
         return $this->contestant;
     }

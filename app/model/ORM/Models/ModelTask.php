@@ -4,6 +4,7 @@ namespace FKSDB\ORM\Models;
 
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
+use Nette\Application\BadRequestException;
 use Nette\Utils\Strings;
 use Utils;
 
@@ -64,5 +65,16 @@ class ModelTask extends AbstractModelSingle implements IContestReferencedModel {
 
     public function getContest(): ModelContest {
         return ModelContest::createFromActiveRow($this->ref(DbNames::TAB_CONTEST, 'contest_id'));
+    }
+
+    public function isAvailableForContestant(ModelContestant $contestant, int $acYear): bool {
+        $personHistory = $contestant->getPerson()->getHistory($acYear);
+        if (!$personHistory) {
+            return false;
+        }
+        if (!$personHistory->study_year) {
+            return false;
+        }
+        return in_array($personHistory->study_year, array_keys($this->getStudyYears()));
     }
 }

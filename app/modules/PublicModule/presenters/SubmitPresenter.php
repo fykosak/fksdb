@@ -22,6 +22,7 @@ use FKSDB\Exceptions\ModelException;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
+use Nette\Database\Table\ActiveRow;
 use Tracy\Debugger;
 use FKSDB\ORM\Services\ServiceQuizQuestion;
 use FKSDB\ORM\Services\ServiceSubmitQuizQuestion;
@@ -180,7 +181,7 @@ class SubmitPresenter extends BasePresenter {
                     ->addCondition(Form::FILLED)
                     ->addRule(Form::MIME_TYPE, _('Lze nahrávat pouze PDF soubory.'), 'application/pdf'); //TODO verify this check at production server
 
-                if (!in_array($studyYear, array_keys($task->getStudyYears()))) {
+                if (!$task->isAvailableForContestant($this->getContestant(), $this->getSelectedAcademicYear())) {
                     $upload->setOption('description', _('Úloha není určena pro Tvou kategorii.'));
                     $upload->setDisabled();
                 }
@@ -314,29 +315,16 @@ class SubmitPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function getAvailableTasks(): TypedTableSelection {
-        $tasks = $this->taskService->getTable();
-        $tasks->where('contest_id = ? AND year = ?', $this->getSelectedContest()->contest_id, $this->getSelectedYear());
-        $tasks->where('submit_start IS NULL OR submit_start < NOW()');
-        $tasks->where('submit_deadline IS NULL OR submit_deadline >= NOW()');
-        $tasks->order('ISNULL(submit_deadline) ASC, submit_deadline ASC');
-
-        return $tasks;
+        return $this->taskService->getAvailableTasks($this->getSelectedContest(), $this->getSelectedYear());
     }
 
     /**
      * @param int $taskId
-     * @return ModelTask|null
-     *
+     * @return ModelTask|ActiveRow|null
      * @throws BadRequestException
      */
     public function isAvailableSubmit($taskId) {
-        /** @var ModelTask $task */
-        foreach ($this->getAvailableTasks() as $task) {
-            if ($task->task_id == $taskId) {
-                return $task;
-            }
-        }
-        return null;
+        return $this->getAvailableTasks()->where('task_id', $taskId)->fetch() ?: null;
     }
 
     protected function getUploadedStorage(): UploadedStorage {
