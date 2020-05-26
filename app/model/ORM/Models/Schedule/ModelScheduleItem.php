@@ -12,10 +12,11 @@ use FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException;
 use LogicException;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
+use Nette\Security\IResource;
 
 /**
  * Class ModelScheduleItem
- * @package FKSDB\ORM\Models\Schedule
+ * *
  * @property-read ActiveRow schedule_group
  * @property-read float price_eur
  * @property-read float price_czk
@@ -28,17 +29,13 @@ use Nette\Database\Table\GroupedSelection;
  * @property-read string description_cs
  * @property-read string description_en
  */
-class ModelScheduleItem extends AbstractModelSingle implements IScheduleGroupReferencedModel, IEventReferencedModel {
-    /**
-     * @return ModelScheduleGroup
-     */
+class ModelScheduleItem extends AbstractModelSingle implements IScheduleGroupReferencedModel, IEventReferencedModel, IResource {
+    const RESOURCE_ID = 'event.scheduleItem';
+
     public function getScheduleGroup(): ModelScheduleGroup {
         return ModelScheduleGroup::createFromActiveRow($this->schedule_group);
     }
 
-    /**
-     * @return ModelEvent
-     */
     public function getEvent(): ModelEvent {
         return $this->getScheduleGroup()->getEvent();
     }
@@ -59,44 +56,29 @@ class ModelScheduleItem extends AbstractModelSingle implements IScheduleGroupRef
         }
     }
 
-    /**
-     * @return GroupedSelection
-     */
     public function getInterested(): GroupedSelection {
         return $this->related(DbNames::TAB_PERSON_SCHEDULE);
     }
     /* ****** CAPACITY CALCULATION *******/
     /**
-     * @return integer|null
+     * @return int|null
      */
     public function getCapacity() {
         return $this->capacity;
     }
 
-    /**
-     * @return bool
-     */
     public function isUnlimitedCapacity(): bool {
         return is_null($this->getCapacity());
     }
 
-    /**
-     * @return int
-     */
     public function getUsedCapacity(): int {
         return $this->getInterested()->count();
     }
 
-    /**
-     * @return int
-     */
     private function calculateAvailableCapacity(): int {
         return ($this->getCapacity() - $this->getUsedCapacity());
     }
 
-    /**
-     * @return bool
-     */
     public function hasFreeCapacity(): bool {
         if ($this->isUnlimitedCapacity()) {
             return true;
@@ -108,31 +90,21 @@ class ModelScheduleItem extends AbstractModelSingle implements IScheduleGroupRef
      * @return int
      * @throws LogicException
      */
-    public function getAvailableCapacity() {
+    public function getAvailableCapacity(): int {
         if ($this->isUnlimitedCapacity()) {
             throw new LogicException(_('Unlimited capacity'));
         }
         return $this->calculateAvailableCapacity();
     }
 
-    /**
-     * @return string
-     * Label include datetime from schedule group
-     */
     public function getLabel(): string {
         return $this->name_cs . '/' . $this->name_en;
     }
 
-    /**
-     * @return string
-     */
     public function __toString(): string {
         return $this->getLabel();
     }
 
-    /**
-     * @return array
-     */
     public function __toArray(): array {
         return [
             'scheduleGroupId' => $this->schedule_group_id,
@@ -153,5 +125,12 @@ class ModelScheduleItem extends AbstractModelSingle implements IScheduleGroupRef
                 'en' => $this->description_en,
             ],
         ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getResourceId() {
+        return self::RESOURCE_ID;
     }
 }

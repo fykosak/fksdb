@@ -3,81 +3,35 @@
 namespace EventModule;
 
 use AuthenticatedPresenter;
-use FKSDB\Components\Controls\Helpers\Badges\ContestBadge;
-use FKSDB\Components\Controls\LanguageChooser;
+use FKSDB\Components\Controls\Badges\ContestBadge;
 use FKSDB\Components\Grids\Events\DispatchGrid;
-use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\ORM\Services\ServiceEvent;
-use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
-use Nette\DI\Container;
+use FKSDB\ORM\Models\ModelLogin;
+use FKSDB\UI\PageStyleContainer;
 
 /**
  * Class DispatchPresenter
- * @package EventModule
+ * *
  */
 class DispatchPresenter extends AuthenticatedPresenter {
 
-    /**
-     * @var ServiceEvent
-     */
-    protected $serviceEvent;
-
-    /**
-     * @param ServiceEvent $serviceEvent
-     */
-    public function injectServiceEvent(ServiceEvent $serviceEvent) {
-        $this->serviceEvent = $serviceEvent;
-    }
-
-    /**
-     * @return LanguageChooser
-     */
-    protected function createComponentLanguageChooser(): LanguageChooser {
-        return new LanguageChooser($this->session);
-    }
-
-    /**
-     * @return ContestBadge
-     */
     public function createComponentContestBadge(): ContestBadge {
-        return new ContestBadge();
+        return new ContestBadge($this->getContext());
     }
 
-    /**
-     * @return DispatchGrid
-     */
     public function createComponentDispatchGrid(): DispatchGrid {
-        /**
-         * @var ModelPerson $person
-         */
-        $person = $this->user->getIdentity()->getPerson();
-        return new DispatchGrid($this->serviceEvent, $person, $this->yearCalculator);
+        /** @var ModelLogin $login */
+        $login = $this->user->getIdentity();
+        return new DispatchGrid($login->getPerson(), $this->getContext());
     }
 
     public function titleDefault() {
-        $this->setTitle(_('List of events'));
-        $this->setIcon('fa fa-calendar');
+        $this->setTitle(_('List of events'), 'fa fa-calendar');
     }
 
-    /**
-     * @throws AbortException
-     * @throws BadRequestException
-     */
-    public function startup() {
-        /**
-         * @var LanguageChooser $languageChooser
-         */
-        $languageChooser = $this->getComponent('languageChooser');
-        $languageChooser->syncRedirect();
-
-        parent::startup();
-    }
-
-    /**
-     * @return array
-     */
-    public function getNavBarVariant(): array {
-        return ['event', 'bg-dark navbar-dark'];
+    protected function getPageStyleContainer(): PageStyleContainer {
+        $container = parent::getPageStyleContainer();
+        $container->styleId = 'event';
+        $container->navBarClassName = 'bg-dark navbar-dark';
+        return $container;
     }
 }

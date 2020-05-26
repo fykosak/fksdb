@@ -2,19 +2,17 @@
 
 namespace FKSDB\Components\DatabaseReflection;
 
-use FKSDB\Components\Controls\Helpers\Badges\PermissionDeniedBadge;
+use FKSDB\Components\Controls\Badges\PermissionDeniedBadge;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
-use Nette\Localization\ITranslator;
 use Nette\SmartObject;
 use Nette\Utils\Html;
-use Tracy\Debugger;
 
 /**
  * Class AbstractField
- * @package FKSDB\Components\Forms\Factories
+ * *
  */
 abstract class AbstractRow {
     use SmartObject;
@@ -22,11 +20,7 @@ abstract class AbstractRow {
     const PERMISSION_USE_GLOBAL_ACL = 1;
     const PERMISSION_ALLOW_BASIC = 16;
     const PERMISSION_ALLOW_RESTRICT = 128;
-    CONST PERMISSION_ALLOW_FULL = 1024;
-    /**
-     * @var ITranslator
-     */
-    protected $translator;
+    const PERMISSION_ALLOW_FULL = 1024;
     /**
      * @var string
      */
@@ -37,17 +31,10 @@ abstract class AbstractRow {
     private $referencedAccess;
 
     /**
-     * AbstractField constructor.
-     * @param ITranslator $translator
-     */
-    public function __construct(ITranslator $translator) {
-        $this->translator = $translator;
-    }
-
-    /**
+     * @param array $args
      * @return BaseControl
      */
-    public function createField(): BaseControl {
+    public function createField(...$args): BaseControl {
         return new TextInput($this->getTitle());
     }
 
@@ -64,7 +51,7 @@ abstract class AbstractRow {
      * @return Html
      * @throws BadRequestException
      */
-    public final function renderValue(AbstractModelSingle $model, int $userPermissionsLevel): Html {
+    final public function renderValue(AbstractModelSingle $model, int $userPermissionsLevel): Html {
         if (!$this->hasPermissions($userPermissionsLevel)) {
             return PermissionDeniedBadge::getHtml();
         }
@@ -74,8 +61,9 @@ abstract class AbstractRow {
     /**
      * @param string $modelClassName
      * @param array $referencedAccess
+     * @return void
      */
-    public final function setReferencedParams(string $modelClassName, array $referencedAccess) {
+    final public function setReferencedParams(string $modelClassName, array $referencedAccess) {
         $this->modelClassName = $modelClassName;
         $this->referencedAccess = $referencedAccess;
     }
@@ -108,35 +96,20 @@ abstract class AbstractRow {
         throw new BadRequestException('Can not access model');
     }
 
-    /**
-     * @param AbstractModelSingle $model
-     * @return Html
-     */
     abstract protected function createHtmlValue(AbstractModelSingle $model): Html;
 
-    /**
-     * @param int $userValue
-     * @return bool
-     */
-    protected final function hasPermissions(int $userValue): bool {
+    final protected function hasPermissions(int $userValue): bool {
         return $userValue >= $this->getPermissionsValue();
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    protected final function getModelClassName() {
+    final protected function getModelClassName() {
         return $this->modelClassName;
     }
 
-    /**
-     * @return int
-     */
     abstract public function getPermissionsValue(): int;
 
-    /**
-     * @return string
-     */
     abstract public function getTitle(): string;
-
 }

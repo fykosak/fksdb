@@ -17,22 +17,22 @@ use Nette\Forms\Controls\BaseControl;
 class OrgFactory extends SingleReflectionFactory {
 
     /**
-     * @var \FKSDB\ORM\Services\ServicePerson
+     * @var ServicePerson
      */
     private $servicePerson;
 
     /**
-     * @var \FKSDB\YearCalculator
+     * @var YearCalculator
      */
     private $yearCalculator;
 
     /**
      * OrgFactory constructor.
      * @param ServicePerson $servicePerson
-     * @param \FKSDB\YearCalculator $yearCalculator
+     * @param YearCalculator $yearCalculator
      * @param TableReflectionFactory $tableReflectionFactory
      */
-    function __construct(ServicePerson $servicePerson, YearCalculator $yearCalculator, TableReflectionFactory $tableReflectionFactory) {
+    public function __construct(ServicePerson $servicePerson, YearCalculator $yearCalculator, TableReflectionFactory $tableReflectionFactory) {
         parent::__construct($tableReflectionFactory);
         $this->servicePerson = $servicePerson;
         $this->yearCalculator = $yearCalculator;
@@ -62,14 +62,16 @@ class OrgFactory extends SingleReflectionFactory {
 
     /**
      * @param string $fieldName
-     * @param ModelContest $contest
+     * @param array $args
      * @return mixed
      * @throws \Exception
      */
-    public function createField(string $fieldName, ModelContest $contest = null): BaseControl {
+    public function createField(string $fieldName, ...$args): BaseControl {
+
         switch ($fieldName) {
             case 'since':
             case 'until':
+                list($contest) = $args;
                 $min = $this->yearCalculator->getFirstYear($contest);
                 $max = $this->yearCalculator->getLastYear($contest);
                 return $this->loadFactory($fieldName)->createField($min, $max);

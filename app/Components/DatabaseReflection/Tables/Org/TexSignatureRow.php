@@ -9,7 +9,7 @@ use Nette\Forms\Form;
 
 /**
  * Class TexSignatureRow
- * @package FKSDB\Components\DatabaseReflection\Org
+ * *
  */
 class TexSignatureRow extends AbstractOrgRowFactory {
     use DefaultPrinterTrait;
@@ -29,9 +29,10 @@ class TexSignatureRow extends AbstractOrgRowFactory {
     }
 
     /**
+     * @param array $args
      * @return BaseControl
      */
-    public function createField(): BaseControl {
+    public function createField(...$args): BaseControl {
         $control = new TextInput($this->getTitle());
 
         $control->addRule(Form::MAX_LENGTH, null, 32);

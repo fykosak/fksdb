@@ -10,18 +10,12 @@ use FKSDB\ORM\Models\ModelRole;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceRole extends AbstractServiceSingle {
-    /**
-     * @return string
-     */
+
     public function getModelClassName(): string {
         return ModelRole::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_ROLE;
     }
 }
-

@@ -12,13 +12,10 @@ use Nette\Utils\Html;
 
 /**
  * Class EndRow
- * @package FKSDB\Components\DatabaseReflection\Event
+ * *
  */
 class EndRow extends AbstractEventRowFactory {
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Event end');
     }
@@ -31,9 +28,10 @@ class EndRow extends AbstractEventRowFactory {
     }
 
     /**
+     * @param array $args
      * @return BaseControl
      */
-    public function createField(): BaseControl {
+    public function createField(...$args): BaseControl {
         $control = new DateTimeLocalInput($this->getTitle());
         $control->addRule(Form::FILLED, _('%label je povinný.'))
             ->setOption('description', $this->getDescription());

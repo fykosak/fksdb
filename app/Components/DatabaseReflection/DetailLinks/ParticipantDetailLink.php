@@ -7,7 +7,7 @@ use Nette\Application\BadRequestException;
 
 /**
  * Class ParticipantDetailLink
- * @package FKSDB\Components\DatabaseReflection\Links
+ * *
  */
 class ParticipantDetailLink extends AbstractLink {
 
@@ -50,9 +50,6 @@ class ParticipantDetailLink extends AbstractLink {
         }
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getModelClassName(): string {
         return ModelEventParticipant::class;
     }

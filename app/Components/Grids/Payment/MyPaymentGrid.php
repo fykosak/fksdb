@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Grids\Payment;
 
 use BasePresenter;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelPayment;
 use NiftyGrid\DataSource\NDataSource;
@@ -11,7 +12,7 @@ use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class MyPaymentGrid
- * @package FKSDB\Components\Grids\Payment
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class MyPaymentGrid extends PaymentGrid {
 
@@ -19,6 +20,7 @@ class MyPaymentGrid extends PaymentGrid {
      * @param BasePresenter $presenter
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
+     * @throws NotImplementedException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -35,8 +37,8 @@ class MyPaymentGrid extends PaymentGrid {
             DbNames::TAB_PAYMENT . '.state',
         ]);
 
-        $this->addColumn('event', _('Event'))->setRenderer(function ($row) {
-            return ModelPayment::createFromActiveRow($row)->getEvent()->name;
+        $this->addColumn('event', _('Event'))->setRenderer(function (ModelPayment $payment) {
+            return $payment->getEvent()->name;
         });
         $this->addLink('payment.detail', true);
     }

@@ -1,11 +1,5 @@
 navigation:
     nodes:
-        org.dashboard.default:
-            # title: Organizátorský pultík
-            # params:
-            # link:
-            # visible:
-
         vyfuk:
             title: Web Výfuku
             link: http://vyfuk.mff.cuni.cz/
@@ -14,79 +8,86 @@ navigation:
             title: Web FYKOSu
             link: http://%domain.cz%/
             icon: 'fa fa-external-link'
-        fyziklani:
+        Fyziklani:
             title: Web Fyziklani
-            link: http://fyziklani.cz/
+            link: http://Fyziklani.cz/
             icon: 'fa fa-external-link'
-        public.submit.default:
+        Public.Submit.default:
             visible: true
 
     structure:
-        org.dashboard.default:
-            - dispatch.default
-            - org.inbox.default
-            - org.inbox.handout
-            - org.points.default
-            - org.tasks.import
-            - org.contestant.list
-            - common.school.list
-            - org.teacher.list
-            - org.export.list
-            - org.org.list
-            - org.event.list
-            - common.deduplicate.person
-            - common.person.search
-            - common.dashboard.default
-            -  org.dashboard.default
-        common.dashboard.default:
-            - common.dashboard.default
-            - common.validation.default
-            - common.person.search
-            - common.spam.list
-            - common.chart.list
-            - common.school.list
-        common.validation.default:
-            - common.validation.preview
-            - common.validation.list
-        public.dashboard.default:
-            - dispatch.default
-            - public.submit.default
-            - public.application.list
+        Org.Dashboard.default:
+            - Dispatch.default
+            - Org.Inbox.default
+            - Org.Points.entry
+            - Org.Tasks.import
+            - Org.Contestant.list
+            - Common.School.list
+            - Org.Teacher.list
+            - Org.Export.list
+            - Org.Org.list
+            - Org.Event.list
+            - Common.Deduplicate.person
+            - Common.Person.search
+            - Common.Dashboard.default
+            - Org.Dashboard.default
+        Common.Dashboard.default:
+            - Common.Dashboard.default
+            - Common.Validation.default
+            - Common.Person.search
+            - Common.Spam.list
+            - Common.Chart.list
+            - Common.School.list
+        Common.Validation.default:
+            - Common.Validation.preview
+            - Common.Validation.list
+        Public.Dashboard.default:
+            - Dispatch.Default
+            - Public.Submit.default
+            - Public.Application.list
             - fykos
             - vyfuk
-            - fyziklani
-        fyziklani.dashboard.default:
-            - fyziklani.submit.entry
-            - fyziklani.submit.list
-            - fyziklani.close.list
-            - fyziklani.results.default
-            - fyziklani.diplomas.default
-            - fyziklani.task.list
-            - fyziklani.task.import
-            - fyziklani.gameSetup.default
+            - Fyziklani
+        Fyziklani.Dashboard.default:
+            - Fyziklani.Submit.create
+            - Fyziklani.Submit.list
+            - Fyziklani.Close.list
+            - Fyziklani.Results.list
+            - Fyziklani.Diplomas.default
+            - Fyziklani.Task.list
+            - Fyziklani.Task.import
+            - Fyziklani.GameSetup.default
 
-        event.seating.default:
-            - event.seating.edit
-            - event.seating.download
-            - event.seating.preview
-            - event.seating.list
-        fyziklani.results.default:
-            - fyziklani.dashboard.default
-            - fyziklani.diplomas.results
-            - fyziklani.results.presentation
-            - fyziklani.results.table
-            - fyziklani.results.teamStatistics
-            - fyziklani.results.taskStatistics
-            - fyziklani.results.correlationStatistics
-        event.dashboard.default:
-            - event.dispatch.default
-            - event.dashboard.default
-            - event.payment.list
-            - event.payment.create
-            - fyziklani.dashboard.default
-            - event.schedule.groups
-            - event.application.list
-            - event.teamApplication.list
-            - event.model.default
-            - event.seating.default
-            - event.chart.default
+        Event.Seating.default:
+            - Event.Seating.edit
+            - Event.Seating.download
+            - Event.Seating.preview
+            - Event.Seating.list
+        Fyziklani.Results.default:
+            - Fyziklani.Dashboard.default
+            - Fyziklani.Diplomas.results
+            - Fyziklani.Results.presentation
+            - Fyziklani.Results.table
+            - Fyziklani.Results.teamStatistics
+            - Fyziklani.Results.taskStatistics
+            - Fyziklani.Results.correlationStatistics
+        Event.Dashboard.default:
+            - Event.TeamApplication.list
+            - Event.Application.list
+            - Event.EventOrg.list
+            - Event.Payment.create
+            - Event.Payment.list
+            - Fyziklani.Dashboard.default
+            - Event.ScheduleGroup.list
+            - Event.Seating.default
+            - Event.Model.default
+            - Event.Chart.list
+            - Event.Dispatch.default
+            - Event.Dashboard.default
+        Org.Inbox.default:
+            - Org.Inbox.list
+            - Org.Inbox.inbox
+            - Org.Inbox.handout
+            - Org.Points.preview
+            - Org.Points.entry
+            - Org.Inbox.corrected

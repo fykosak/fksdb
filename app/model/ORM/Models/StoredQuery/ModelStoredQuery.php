@@ -6,7 +6,7 @@ use Exports\StoredQueryPostProcessing;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use InvalidArgumentException;
-use ModelMStoredQueryTag;
+use FKSDB\ORM\ModelsMulti\ModelMStoredQueryTag;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Security\IResource;
 
@@ -15,6 +15,7 @@ use Nette\Security\IResource;
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @property-read string php_post_proc
+ * @property-read int query_id
  */
 class ModelStoredQuery extends AbstractModelSingle implements IResource {
     /**
@@ -54,7 +55,7 @@ class ModelStoredQuery extends AbstractModelSingle implements IResource {
     }
 
     /**
-     * @return StoredQueryPostProcessing
+     * @return StoredQueryPostProcessing|null
      */
     public function getPostProcessing() {
         if ($this->postProcessing == null && $this->php_post_proc) {
@@ -67,9 +68,6 @@ class ModelStoredQuery extends AbstractModelSingle implements IResource {
         return $this->postProcessing;
     }
 
-    /**
-     * @return \Nette\Database\Table\GroupedSelection
-     */
     public function getTags(): GroupedSelection {
         return $this->related(DbNames::TAB_STORED_QUERY_TAG, 'query_id');
     }
@@ -84,6 +82,7 @@ class ModelStoredQuery extends AbstractModelSingle implements IResource {
             return [];
         }
         $result = [];
+        /** @var ModelStoredQueryTag $tag */
         foreach ($tags as $tag) {
             $tag->tag_type_id; // stupid touch
             $tagType = $tag->ref(DbNames::TAB_STORED_QUERY_TAG_TYPE, 'tag_type_id');
@@ -94,11 +93,7 @@ class ModelStoredQuery extends AbstractModelSingle implements IResource {
         return $result;
     }
 
-    /**
-     * @return string
-     */
     public function getResourceId(): string {
         return 'storedQuery';
     }
-
 }

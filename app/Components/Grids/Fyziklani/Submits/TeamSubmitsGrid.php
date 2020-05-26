@@ -2,18 +2,19 @@
 
 namespace FKSDB\Components\Grids\Fyziklani;
 
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FyziklaniModule\BasePresenter;
+use Nette\DI\Container;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class TeamSubmitsGrid
- * @package FKSDB\Components\Grids\Fyziklani
+ * @author Michal Červeňák <miso@fykos.cz>
+ * @author Lukáš Timko
  */
 class TeamSubmitsGrid extends SubmitsGrid {
 
@@ -25,18 +26,21 @@ class TeamSubmitsGrid extends SubmitsGrid {
     /**
      * FyziklaniSubmitsGrid constructor.
      * @param ModelFyziklaniTeam $team
-     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
-     * @param TableReflectionFactory $tableReflectionFactory
+     * @param Container $container
      */
-    public function __construct(ModelFyziklaniTeam $team, ServiceFyziklaniSubmit $serviceFyziklaniSubmit, TableReflectionFactory $tableReflectionFactory) {
+    public function __construct(ModelFyziklaniTeam $team, Container $container) {
         $this->team = $team;
-        parent::__construct($serviceFyziklaniSubmit, $tableReflectionFactory);
+        parent::__construct($container);
     }
 
     /**
      * @param BasePresenter $presenter
      * @throws DuplicateColumnException
      * @throws DuplicateButtonException
+     * @throws NotImplementedException
+     * @throws NotImplementedException
+     * @throws NotImplementedException
+     * @throws NotImplementedException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -48,8 +52,8 @@ class TeamSubmitsGrid extends SubmitsGrid {
             DbNames::TAB_FYZIKLANI_SUBMIT . '.created',
             DbNames::TAB_FYZIKLANI_SUBMIT . '.state',
         ]);
-        $this->addLinkButton($presenter, ':Fyziklani:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);
-        $this->addLinkButton($presenter, ':Fyziklani:Submit:detail', 'detail', _('Detail'), false, ['id' => 'fyziklani_submit_id']);
+        $this->addLinkButton( ':Fyziklani:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);
+        $this->addLinkButton( ':Fyziklani:Submit:detail', 'detail', _('Detail'), false, ['id' => 'fyziklani_submit_id']);
 
         $submits = $this->team->getAllSubmits()
             ->order('fyziklani_submit.created');

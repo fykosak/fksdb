@@ -7,23 +7,23 @@ use Exception;
 use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Components\Controls\Fyziklani\FyziklaniReactControl;
 use FKSDB\Messages\Message;
-use FKSDB\model\Fyziklani\ClosedSubmittingException;
-use FKSDB\model\Fyziklani\SubmitHandler;
-use FKSDB\model\Fyziklani\TaskCodeException;
+use FKSDB\Fyziklani\ClosedSubmittingException;
+use FKSDB\Fyziklani\NotSetGameParametersException;
+use FKSDB\Fyziklani\SubmitHandler;
+use FKSDB\Fyziklani\TaskCodeException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\React\ReactResponse;
 use Nette\Application\AbortException;
 use Nette\Application\UI\InvalidLinkException;
-use Nette\ComponentModel\IComponent;
 use Nette\DI\Container;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 
 /**
  * Class TaskCodeInput
- * @package FKSDB\Components\Controls\Fyziklani
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class TaskCodeInput extends FyziklaniReactControl {
     /**
@@ -35,36 +35,31 @@ class TaskCodeInput extends FyziklaniReactControl {
      * @var ServiceFyziklaniTask
      */
     private $serviceFyziklaniTask;
-    /**
-     * @var SubmitHandler
-     */
-    private $handler;
 
     /**
      * TaskCodeInput constructor.
-     * @param SubmitHandler $handler
      * @param Container $container
      * @param ModelEvent $event
-     * @param ServiceFyziklaniTask $serviceFyziklaniTask
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
      */
-    public function __construct(
-        SubmitHandler $handler,
-        Container $container,
-        ModelEvent $event,
-        ServiceFyziklaniTask $serviceFyziklaniTask,
-        ServiceFyziklaniTeam $serviceFyziklaniTeam
-    ) {
-        $this->handler = $handler;
-        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
-        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+    public function __construct(Container $container, ModelEvent $event) {
         parent::__construct($container, $event);
         $this->monitor(IJavaScriptCollector::class);
     }
 
     /**
+     * @param ServiceFyziklaniTask $serviceFyziklaniTask
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @return void
+     */
+    public function injectPrimary(ServiceFyziklaniTask $serviceFyziklaniTask, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
+        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
+        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+    }
+
+    /**
      * @return string
      * @throws JsonException
+     * @throws NotSetGameParametersException
      */
     public function getData(): string {
         return Json::encode([
@@ -75,7 +70,8 @@ class TaskCodeInput extends FyziklaniReactControl {
     }
 
     /**
-     * @param IComponent $obj
+     * @param $obj
+     * @return void
      */
     protected function attached($obj) {
         if ($obj instanceof IJavaScriptCollector) {
@@ -85,6 +81,7 @@ class TaskCodeInput extends FyziklaniReactControl {
     }
 
     /**
+     * @return void
      * @throws InvalidLinkException
      */
     protected function configure() {
@@ -93,15 +90,17 @@ class TaskCodeInput extends FyziklaniReactControl {
     }
 
     /**
-     * @throws AbortException
+     * @return void
      * @throws Exception
+     * @throws AbortException
      */
     public function handleSave() {
         $request = $this->getReactRequest();
         $response = new ReactResponse();
         $response->setAct($request->act);
         try {
-            $log = $this->handler->preProcess($request->requestData['code'], +$request->requestData['points'], $this->getPresenter()->getUser());
+            $handler = new SubmitHandler($this->getContext(), $this->getEvent());
+            $log = $handler->preProcess($request->requestData['code'], +$request->requestData['points'], $this->getPresenter()->getUser());
             $response->addMessage($log);
         } catch (TaskCodeException $exception) {
             $response->addMessage(new Message($exception->getMessage(), BasePresenter::FLASH_ERROR));
@@ -112,9 +111,6 @@ class TaskCodeInput extends FyziklaniReactControl {
 
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function getReactId(): string {
         return 'fyziklani.submit-form';
     }

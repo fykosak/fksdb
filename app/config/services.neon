@@ -4,7 +4,7 @@
 
 services:
     accountManager:
-        class: Authentication\AccountManager
+        class: FKSDB\Authentication\AccountManager
         setup:
             - setInvitationExpiration(%invitation.expiration%)
             - setRecoveryExpiration(%recovery.expiration%)
@@ -17,8 +17,9 @@ services:
     - Authorization\EventAuthorizator
     - Authorization\RelatedPersonAuthorizator
     - FKSDB\Components\Events\ExpressionPrinter
-    downloader: Astrid\Downloader(%astrid.user%, %astrid.password%, %astrid.host%, %tempDir%, %contestMapping%, ...)
-    Facebook: self({appId: %facebook.appId%, secret: %facebook.secret%})
+    downloader: FKSDB\Astrid\Downloader(%astrid.user%, %astrid.password%, %astrid.host%, %tempDir%, %contestMapping%, ...)
+    Facebook:
+        class: Facebook({appId: %facebook.appId%, secret: %facebook.secret%})
     globalParameters: FKSDB\Config\GlobalParameters
     yearCalculator: FKSDB\YearCalculator
     news: News
@@ -39,10 +40,12 @@ services:
         setup:
             - start()
     - Authentication\SSO\TokenGSIDHolder
-    submitStorage:
-        class: FKSDB\Submits\FilesystemSubmitStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, %contestMapping%)
+    submitUploatedStorage:
+        class: FKSDB\Submits\FileSystemStorage\UploadedStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, %contestMapping%)
         setup:
             - addProcessing(@PDFStamper)
+    submitCorrectedStorage:
+                    class: FKSDB\Submits\FileSystemStorage\CorrectedStorage(%corrected.root%, %corrected.directoryMask%, %corrected.filenameMask%, %contestMapping%)
     - FKSDB\Components\Forms\Controls\Schedule\Handler
     PDFStamper: FKSDB\Submits\PDFStamper(%stamper.fontSize%)
     readOnlyConnection:
@@ -63,16 +66,16 @@ services:
         class: LoggingMailer(Nette\Mail\SendmailMailer())
         setup:
             - setLogPath(%logDir%/mail)
-    - FKSDB\ValidationTest\ValidationFactory
+    - FKSDB\DataTesting\DataTestingFactory
 
 
     #
     # Events
     #
-    events.dataValidator: Events\Model\Holder\DataValidator
-    events.expressionEvaluator: Events\Model\ExpressionEvaluator
-    events.privacyPolicy: Events\FormAdjustments\PrivacyPolicy
-    events.captcha: Events\FormAdjustments\Captcha
+    events.dataValidator: FKSDB\Events\Model\Holder\DataValidator
+    events.expressionEvaluator: FKSDB\Events\Model\ExpressionEvaluator
+    events.privacyPolicy: FKSDB\Events\FormAdjustments\PrivacyPolicy
+    events.captcha: FKSDB\Events\FormAdjustments\Captcha
 
     #
     # Fyziklani

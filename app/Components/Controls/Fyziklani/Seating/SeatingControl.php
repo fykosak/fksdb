@@ -2,38 +2,39 @@
 
 namespace FKSDB\Components\Controls\Fyziklani;
 
+use FKSDB\Components\Controls\BaseComponent;
+use FKSDB\Config\NeonSchemaException;
+use FKSDB\Events\EventDispatchFactory;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
-use Nette\Application\UI\Control;
-use Nette\Localization\ITranslator;
+use Nette\Application\BadRequestException;
 
 /**
- * Class SittingControl
- * @package FKSDB\Components\Controls\Fyziklani
+ * Class SeatingControl
+ * @author Michal Červeňák <miso@fykos.cz>
  */
-class SeatingControl extends Control {
+class SeatingControl extends BaseComponent {
     /**
      * @var ServiceFyziklaniTeamPosition
      */
     private $serviceFyziklaniTeamPosition;
-    /**
-     * @var ITranslator
-     */
-    private $translator;
+    /** @var EventDispatchFactory */
+    private $eventDispatchFactory;
 
     /**
-     * SeatingControl constructor.
      * @param ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
-     * @param ITranslator $translator
+     * @param EventDispatchFactory $eventDispatchFactory
+     * @return void
      */
-    public function __construct(ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition, ITranslator $translator) {
-        parent::__construct();
+    public function injectServicePrimary(ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition, EventDispatchFactory $eventDispatchFactory) {
         $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
-        $this->translator = $translator;
+        $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
     /**
      * @param ModelEvent $event
+     * @return void
+     * @throws NeonSchemaException
      */
     public function renderAll(ModelEvent $event) {
         $this->render($event, 'all');
@@ -43,6 +44,8 @@ class SeatingControl extends Control {
      * @param ModelEvent $event
      * @param int $teamId
      * @param string $lang
+     * @return void
+     * @throws NeonSchemaException
      */
     public function renderTeam(ModelEvent $event, int $teamId, string $lang) {
         $this->template->teamId = $teamId;
@@ -51,6 +54,8 @@ class SeatingControl extends Control {
 
     /**
      * @param ModelEvent $event
+     * @return void
+     * @throws NeonSchemaException
      */
     public function renderDev(ModelEvent $event) {
         $this->template->teams = $this->serviceFyziklaniTeamPosition->getAllPlaces($this->getRooms($event))
@@ -62,24 +67,26 @@ class SeatingControl extends Control {
      * @param ModelEvent $event
      * @param string $mode
      * @param string $lang
+     * @return void
+     * @throws NeonSchemaException
      */
     public function render(ModelEvent $event, string $mode, string $lang = 'cs') {
         $this->template->places = $this->serviceFyziklaniTeamPosition->getAllPlaces($this->getRooms($event));
         $this->template->mode = $mode;
         $this->template->lang = $lang;
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Seating.' . $mode . '.latte');
-        $this->template->setTranslator($this->translator);
         $this->template->render();
     }
 
     /**
      * @param ModelEvent $event
      * @return int[]
+     * @throws NeonSchemaException
      */
     private function getRooms(ModelEvent $event): array {
         try {
-            return $event->getParameter('rooms');
-        } catch (\Exception $exception) {
+            return $this->eventDispatchFactory->getDummyHolder($event)->getParameter('rooms');
+        } catch (BadRequestException $exception) {
             return [];
         }
     }

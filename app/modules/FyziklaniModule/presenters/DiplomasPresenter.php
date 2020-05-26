@@ -3,45 +3,47 @@
 namespace FyziklaniModule;
 
 use FKSDB\Components\Controls\Fyziklani\FinalResults;
-use FKSDB\model\Fyziklani\CloseStrategy;
+use FKSDB\Fyziklani\CloseStrategy;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Utils\Html;
 
 /**
  * Class DiplomasPresenter
- * @package FyziklaniModule
+ * *
  */
 class DiplomasPresenter extends BasePresenter {
-
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleResults() {
-        $this->setTitle(_('Final results'));
-        $this->setIcon('fa fa-trophy');
+        $this->setTitle(_('Final results'), 'fa fa-trophy');
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleDefault() {
-        $this->setTitle(_('Calculate ranking'));
-        $this->setIcon('fa fa-check');
+        $this->setTitle(_('Calculate ranking'), 'fa fa-check');
     }
 
     /**
      * @throws BadRequestException
-     * @throws AbortException
      */
     public function authorizedResults() {
-        $this->setAuthorized($this->isContestsOrgAllowed('fyziklani.diplomas', 'results'));
+        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.diplomas', 'results'));
     }
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function authorizeDefault() {
-        $this->setAuthorized($this->eventIsAllowed('fyziklani.diplomas', 'calculate'));
+        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.diplomas', 'calculate'));
     }
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function renderDefault() {
@@ -78,7 +80,6 @@ class DiplomasPresenter extends BasePresenter {
     /**
      * @param string $category
      * @return bool
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function isReadyAllToCalculate(string $category = null): bool {
@@ -88,9 +89,8 @@ class DiplomasPresenter extends BasePresenter {
     /**
      * @return FinalResults
      * @throws BadRequestException
-     * @throws AbortException
      */
     public function createComponentResults(): FinalResults {
-        return new FinalResults($this->getEvent(), $this->getServiceFyziklaniTeam(), $this->translator, $this->getTableReflectionFactory());
+        return new FinalResults($this->getContext(), $this->getEvent());
     }
 }

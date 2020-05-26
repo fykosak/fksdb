@@ -1,11 +1,12 @@
 <?php
 
-namespace Events;
+namespace FKSDB\Events;
 
 use DatabaseTestCase;
 use MockEnvironment\MockApplicationTrait;
 use Nette\Application\Request;
-use Nette\Config\Helpers;
+use Nette\DI\Container;
+use Nette\DI\Config\Helpers;
 use Nette\Database\Row;
 use Tester\Assert;
 
@@ -13,6 +14,16 @@ abstract class EventTestCase extends DatabaseTestCase {
 
     use MockApplicationTrait;
 
+    /**
+     * EventTestCase constructor.
+     * @param Container $container
+     */
+    public function __construct(Container $container) {
+        parent::__construct($container);
+        $this->setContainer($container);
+    }
+
+    /** @var int */
     protected $eventId;
 
     protected function setUp() {
@@ -55,21 +66,20 @@ abstract class EventTestCase extends DatabaseTestCase {
             $data['end'] = '2016-01-01';
         }
         $this->connection->query('INSERT INTO event', $data);
-        return $this->connection->lastInsertId();
+        return $this->connection->getInsertId();
     }
 
-    protected function createPostRequest($postData, $post = array()) {
-        $post = Helpers::merge($post, array(
-                    'action' => 'default',
-                    'lang' => 'cs',
-                    'contestId' => 1,
-                    'year' => 1,
-                    'eventId' => $this->eventId,
-                    'do' => 'application-form-form-submit',
-        ));
+    protected function createPostRequest($postData, $post = []) {
+        $post = Helpers::merge($post, [
+            'action' => 'default',
+            'lang' => 'cs',
+            'contestId' => 1,
+            'year' => 1,
+            'eventId' => $this->eventId,
+            'do' => 'application-form-form-submit',
+        ]);
 
-        $request = new Request('Public:Application', 'POST', $post, $postData);
-        return $request;
+        return new Request('Public:Application', 'POST', $post, $postData);
     }
 
     protected function assertApplication($eventId, $email) {

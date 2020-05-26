@@ -2,16 +2,12 @@
 
 namespace EventModule;
 
-use FKSDB\Components\Controls\Fyziklani\RoutingDownload;
-use FKSDB\Components\Controls\Fyziklani\RoutingEdit;
 use FKSDB\Components\Controls\Fyziklani\SeatingControl;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use FKSDB\React\ReactResponse;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\DeprecatedException;
 use ReactMessage;
 
 /**
@@ -27,42 +23,58 @@ class SeatingPresenter extends BasePresenter {
 
     /**
      * @param ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
+     * @return void
      */
     public function injectServiceFyziklaniTeamPosition(ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition) {
         $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleDefault() {
-        $this->setTitle(_('Rozdělení do místností'));
-        $this->setIcon('fa fa-arrows');
-    }
-
-    public function titleEdit() {
-        $this->setTitle(_('Edit routing'));
-        $this->setIcon('fa fa-pencil');
-    }
-
-    public function titleDownload() {
-        $this->setTitle(_('Download routing'));
-        $this->setIcon('fa fa-download');
-    }
-
-    public function titleList() {
-        $this->setTitle(_('List of all teams'));
-        $this->setIcon('fa fa-print');
-    }
-
-    public function titlePreview() {
-        $this->setTitle(_('Preview'));
-        $this->setIcon('fa fa-search');
+        $this->setTitle(_('Rooming'), 'fa fa-arrows');
     }
 
     /**
-     * @param ModelEvent $event
-     * @return bool
+     * @return void
+     * @throws BadRequestException
      */
-    protected function isEnabledForEvent(ModelEvent $event): bool {
-        return $event->event_type_id === 1;
+    public function titleEdit() {
+        $this->setTitle(_('Edit routing'), 'fa fa-pencil');
+    }
+
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
+    public function titleDownload() {
+        $this->setTitle(_('Download routing'), 'fa fa-download');
+    }
+
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
+    public function titleList() {
+        $this->setTitle(_('List of all teams'), 'fa fa-print');
+    }
+
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
+    public function titlePreview() {
+        $this->setTitle(_('Preview'), 'fa fa-search');
+    }
+
+    /**
+     * @return bool
+     * @throws BadRequestException
+     */
+    protected function isEnabled(): bool {
+        return $this->getEvent()->event_type_id === 1;
     }
 
     public function authorizedEdit() {
@@ -76,28 +88,25 @@ class SeatingPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function authorizedPreview() {
-        $this->setAuthorized(($this->eventIsAllowed('event.seating', 'preview')));
+        $this->setAuthorized($this->isContestsOrgAuthorized('event.seating', 'preview'));
     }
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function authorizedList() {
-        $this->setAuthorized(($this->eventIsAllowed('event.seating', 'list')));
+        $this->setAuthorized($this->isContestsOrgAuthorized('event.seating', 'list'));
     }
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function authorizedDefault() {
-        $download = $this->eventIsAllowed('event.seating', 'download');
-        $edit = $this->eventIsAllowed('event.seating', 'edit');
+        $download = $this->isContestsOrgAuthorized('event.seating', 'download');
+        $edit = $this->isContestsOrgAuthorized('event.seating', 'edit');
         $this->setAuthorized($download || $edit);
     }
 
@@ -112,13 +121,12 @@ class SeatingPresenter extends BasePresenter {
             $response = new ReactResponse();
             $response->setAct('update-teams');
             $response->setData(['updatedTeams' => $updatedTeams]);
-            $response->addMessage(new ReactMessage(_('Zmeny boli uložené'), \BasePresenter::FLASH_SUCCESS));
+            $response->addMessage(new ReactMessage(_('changes has been saved'), \BasePresenter::FLASH_SUCCESS));
             $this->sendResponse($response);
         }
     }
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function renderList() {
@@ -135,31 +143,13 @@ class SeatingPresenter extends BasePresenter {
 
 
     /**
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function renderPreview() {
         $this->template->event = $this->getEvent();
     }
 
-    /**
-     * @return RoutingDownload
-     */
-    public function createComponentDownload(): RoutingDownload {
-        throw new DeprecatedException();
-    }
-
-    /**
-     * @return RoutingEdit
-     */
-    public function createComponentRouting(): RoutingEdit {
-        throw new DeprecatedException();
-    }
-
-    /**
-     * @return SeatingControl
-     */
     public function createComponentSeating(): SeatingControl {
-        return new SeatingControl($this->serviceFyziklaniTeamPosition, $this->getTranslator());
+        return new SeatingControl($this->getContext());
     }
 }

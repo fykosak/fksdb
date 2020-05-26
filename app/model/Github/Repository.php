@@ -6,7 +6,7 @@ use Nette\SmartObject;
 
 /**
  * Class Repository
- * @package Github
+ * *
  */
 class Repository {
 

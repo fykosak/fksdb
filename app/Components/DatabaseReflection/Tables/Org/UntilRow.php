@@ -5,7 +5,6 @@ namespace FKSDB\Components\DatabaseReflection\Org;
 use FKSDB\Components\DatabaseReflection\ValuePrinters\StringPrinter;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelOrg;
-use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
@@ -13,7 +12,7 @@ use Nette\Utils\Html;
 
 /**
  * Class UntilRow
- * @package FKSDB\Components\DatabaseReflection\Org
+ * *
  */
 class UntilRow extends AbstractOrgRowFactory {
     /**
@@ -31,19 +30,19 @@ class UntilRow extends AbstractOrgRowFactory {
         if (\is_null($model->until)) {
             return Html::el('span')->addAttributes(['class' => 'badge badge-success'])->addText(_('Still organizes'));
         } else {
-            return (new StringPrinter)($model->until);
+            return (new StringPrinter())($model->until);
         }
     }
 
     /**
-     * @param int|null $min
-     * @param int|null $max
+     * @param array $args
      * @return BaseControl
-     * @throws BadRequestException
+     * @throws \InvalidArgumentException
      */
-    public function createField(int $min = null, int $max = null): BaseControl {
+    public function createField(...$args): BaseControl {
+        list($min, $max) = $args;
         if (\is_null($max) || \is_null($min)) {
-            throw new BadRequestException();
+            throw new \InvalidArgumentException();
         }
         $control = new TextInput($this->getTitle());
 

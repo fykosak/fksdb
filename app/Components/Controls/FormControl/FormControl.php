@@ -2,10 +2,10 @@
 
 namespace FKSDB\Components\Controls\FormControl;
 
+use FKSDB\Exceptions\BadTypeException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\ComponentModel\IContainer;
 use Nette\Templating\FileTemplate;
 
 /**
@@ -21,22 +21,7 @@ class FormControl extends Control {
 
     const TEMPLATE_PATH = 'FormControl.containers.latte';
 
-    /**
-     * FormControl constructor.
-     * @param IContainer|NULL $parent
-     * @param null $name
-     */
-    public function __construct(IContainer $parent = NULL, $name = NULL) {
-        parent::__construct($parent, $name);
-
-        $form = $this->createForm();
-        $this->addComponent($form, 'form');
-    }
-
-    /**
-     * @return Form
-     */
-    protected function createForm(): Form {
+    protected function createComponentForm(): Form {
         return new Form();
     }
 
@@ -44,18 +29,15 @@ class FormControl extends Control {
      * @return Form
      * @throws BadRequestException
      */
-    public final function getForm(): Form {
+    final public function getForm(): Form {
         $component = $this->getComponent('form');
         if (!$component instanceof Form) {
-            throw new BadRequestException();
+            throw new BadTypeException(Form::class, $component);
         }
         return $component;
     }
 
-    /**
-     * @return string
-     */
-    private function getTemplateFile() {
+    private function getTemplateFile(): string {
         return __DIR__ . DIRECTORY_SEPARATOR . self::TEMPLATE_PATH;
     }
 

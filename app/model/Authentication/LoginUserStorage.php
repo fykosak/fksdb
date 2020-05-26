@@ -8,6 +8,7 @@ use AuthenticationPresenter;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceLogin;
 use FKSDB\YearCalculator;
+use Nette\Application\AbortException;
 use Nette\Application\Application;
 use Nette\Application\IPresenter;
 use Nette\Http\Request;
@@ -63,12 +64,12 @@ class LoginUserStorage extends UserStorage {
      * LoginUserStorage constructor.
      * @param Session $sessionHandler
      * @param ServiceLogin $loginService
-     * @param \FKSDB\YearCalculator $yearCalculator
+     * @param YearCalculator $yearCalculator
      * @param GlobalSession $globalSession
      * @param Application $application
      * @param Request $request
      */
-    function __construct(Session $sessionHandler, ServiceLogin $loginService, YearCalculator $yearCalculator, GlobalSession $globalSession, Application $application, Request $request) {
+    public function __construct(Session $sessionHandler, ServiceLogin $loginService, YearCalculator $yearCalculator, GlobalSession $globalSession, Application $application, Request $request) {
         parent::__construct($sessionHandler);
         $this->loginService = $loginService;
         $this->yearCalculator = $yearCalculator;
@@ -89,9 +90,9 @@ class LoginUserStorage extends UserStorage {
     }
 
     /**
+     * @param IPresenter $presenter
      * @internal Used internally or for testing purposes only.
      *
-     * @param IPresenter $presenter
      */
     public function setPresenter(IPresenter $presenter) {
         $this->presenter = $presenter;
@@ -113,7 +114,7 @@ class LoginUserStorage extends UserStorage {
 
     /**
      * @return bool
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function isAuthenticated() {
         $local = parent::isAuthenticated();
@@ -148,11 +149,11 @@ class LoginUserStorage extends UserStorage {
                 $allowedNonlogin = ($presenter->getAllowedAuthMethods() &
                     (AuthenticatedPresenter::AUTH_ALLOW_HTTP | AuthenticatedPresenter::AUTH_ALLOW_GITHUB));
                 if ($presenter->requiresLogin() && !$allowedNonlogin) {
-                    $params = array(
+                    $params = [
                         'backlink' => (string)$this->request->getUrl(),
                         AuthenticationPresenter::PARAM_FLAG => AuthenticationPresenter::FLAG_SSO_PROBE,
                         AuthenticationPresenter::PARAM_REASON => AuthenticationPresenter::REASON_AUTH,
-                    );
+                    ];
 
                     $presenter->redirect(':Authentication:login', $params);
                 }
@@ -189,12 +190,12 @@ class LoginUserStorage extends UserStorage {
         }
 
         // Find login
-        $row = $this->loginService->findByPrimary($local->getId());
+        /** @var ModelLogin $login */
+        $login = $this->loginService->findByPrimary($local->getId());
 
-        if (!$row) {
+        if (!$login) {
             return null;
         }
-        $login = ModelLogin::createFromActiveRow($row);
         $login->person_id; // stupid... touch the field in order to have it loaded via ActiveRow
         $login->injectYearCalculator($this->yearCalculator);
         return $login;

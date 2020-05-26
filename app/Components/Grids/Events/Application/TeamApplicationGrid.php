@@ -2,13 +2,14 @@
 
 namespace FKSDB\Components\Grids\Events\Application;
 
-use FKSDB\Components\Controls\Helpers\Badges\NotSetBadge;
+use FKSDB\Components\Controls\Badges\NotSetBadge;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use Nette\Application\AbortException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\ActiveRow;
+use Nette\Database\Table\GroupedSelection;
 use Nette\Database\Table\Selection;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
@@ -17,15 +18,16 @@ use SQL\SearchableDataSource;
 
 /**
  * Class TeamApplicationGrid
- * @package FKSDB\Components\Grids\Events
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class TeamApplicationGrid extends AbstractApplicationGrid {
     /**
      * @param Presenter $presenter
-     * @throws InvalidLinkException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
+     * @throws InvalidLinkException
+     * @throws NotImplementedException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -49,20 +51,17 @@ class TeamApplicationGrid extends AbstractApplicationGrid {
             }
             return $position->getRoom()->name;
         });
-        $this->addLinkButton($presenter, 'detail', 'detail', _('Detail'), false, ['id' => 'e_fyziklani_team_id']);
+        $this->addLinkButton('detail', 'detail', _('Detail'), false, ['id' => 'e_fyziklani_team_id']);
         $this->addCSVDownloadButton();
     }
 
     /**
-     * @return Selection
+     * @return GroupedSelection
      */
     protected function getSource(): Selection {
         return $this->event->getTeams();
     }
 
-    /**
-     * @return array
-     */
     protected function getHoldersColumns(): array {
         return [
             'note',
@@ -74,16 +73,10 @@ class TeamApplicationGrid extends AbstractApplicationGrid {
         ];
     }
 
-    /**
-     * @return string
-     */
     protected function getModelClassName(): string {
         return ModelFyziklaniTeam::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_E_FYZIKLANI_TEAM;
     }

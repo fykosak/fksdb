@@ -11,32 +11,38 @@ use FKSDB\Expressions\EvaluatedExpression;
  */
 class Leq extends EvaluatedExpression {
 
-    private $a;
-    private $b;
+    /**
+     * @var
+     */
+    private $aValue;
+    /**
+     * @var
+     */
+    private $bValue;
 
     /**
      * Leq constructor.
-     * @param $a
-     * @param $b
+     * @param $aValue
+     * @param $bValue
      */
-    function __construct($a, $b) {
-        $this->a = $a;
-        $this->b = $b;
+    public function __construct($aValue, $bValue) {
+        $this->aValue = $aValue;
+        $this->bValue = $bValue;
     }
 
     /**
+     * @param array $args
      * @return bool
      */
-    public function __invoke() {
-        $args = func_get_args();
-        return $this->evalArg($this->a, $args) <= $this->evalArg($this->b, $args);
+    public function __invoke(...$args): bool {
+        return $this->evaluateArgument($this->aValue, ...$args) <= $this->evaluateArgument($this->bValue, ...$args);
     }
 
     /**
      * @return string
      */
     public function __toString() {
-        return "{$this->a} <= {$this->b}";
+        return "{$this->aValue} <= {$this->bValue}";
     }
 
 }

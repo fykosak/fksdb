@@ -14,12 +14,11 @@ class DashboardPresenter extends BasePresenter {
          * @var ModelLogin $login
          */
         $login = $this->getUser()->getIdentity();
-        $access = $login ? $login->isOrg($this->yearCalculator) : false;
+        $access = $login ? $login->isOrg($this->getYearCalculator()) : false;
         $this->setAuthorized($access);
     }
 
     public function titleDefault() {
-        $this->setTitle(_('Organizátorský pultík'));
-        $this->setIcon('fa fa-dashboard');
+        $this->setTitle(_('Organizátorský pultík'), 'fa fa-dashboard');
     }
 }

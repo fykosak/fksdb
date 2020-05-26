@@ -14,9 +14,9 @@ interface IWriteOnly {
 
     /**
      * @param bool $value
-     * @return mixed
+     * @return void
      */
-    public function setWriteOnly($value = true);
+    public function setWriteOnly(bool $value = true);
 
-    public function getWriteOnly();
+    public function getWriteOnly(): bool;
 }

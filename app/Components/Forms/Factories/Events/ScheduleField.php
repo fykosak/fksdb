@@ -9,7 +9,7 @@ use Nette\Utils\JsonException;
 
 /**
  * Class ScheduleField
- * @package FKSDB\Components\Forms\Factories\Events
+ * *
  * @deprecated
  */
 class ScheduleField extends TextInput {
@@ -32,37 +32,10 @@ class ScheduleField extends TextInput {
         $this->registerMonitor();
     }
 
-    /**
-     * @return string
-     */
     protected function getReactId(): string {
         throw new DeprecatedException();
     }
 
-    /**
-     * @return string
-     */
-    public function getComponentName(): string {
-        return 'schedule';
-    }
-
-    /**
-     * @return string
-     */
-    public function getModuleName(): string {
-        return 'fyziklani';
-    }
-
-    /**
-     * @return string
-     */
-    public function getMode(): string {
-        return '';
-    }
-
-    /**
-     * @return string
-     */
     public function getData(): string {
         return json_encode($this->data);
     }

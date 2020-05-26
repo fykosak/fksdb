@@ -6,11 +6,12 @@ use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException;
 use FKSDB\Payment\SymbolGenerator\Generators\AbstractSymbolGenerator;
 use FKSDB\Payment\SymbolGenerator\AlreadyGeneratedSymbolsException;
+use Nette\Http\Response;
 use Nette\OutOfRangeException;
 
 /**
  * Class Fyziklani13Generator
- * @package FKSDB\Payment\SymbolGenerator\Generators
+ * *
  */
 class DefaultGenerator extends AbstractSymbolGenerator {
     /**
@@ -30,6 +31,7 @@ class DefaultGenerator extends AbstractSymbolGenerator {
      * @param int $variableSymbolStart
      * @param int $variableSymbolEnd
      * @param array $info
+     * @return void
      */
     public function setUp(int $variableSymbolStart, int $variableSymbolEnd, array $info) {
         $this->variableSymbolEnd = $variableSymbolEnd;
@@ -37,16 +39,10 @@ class DefaultGenerator extends AbstractSymbolGenerator {
         $this->info = $info;
     }
 
-    /**
-     * @return int
-     */
     protected function getVariableSymbolStart(): int {
         return $this->variableSymbolStart;
     }
 
-    /**
-     * @return int
-     */
     protected function getVariableSymbolEnd(): int {
         return $this->variableSymbolEnd;
     }
@@ -63,7 +59,7 @@ class DefaultGenerator extends AbstractSymbolGenerator {
             $info['variable_symbol'] = $variableNumber;
             return $info;
         }
-        throw new UnsupportedCurrencyException($modelPayment->currency, 501);
+        throw new UnsupportedCurrencyException($modelPayment->currency, Response::S501_NOT_IMPLEMENTED);
     }
 
     /**

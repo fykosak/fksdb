@@ -1,6 +1,5 @@
 {block content}
-    {control valuePrinter__referenced__person_link:row $model,true}
-    {foreach ['org_id','contest_id','since','until','role','order','contribution','tex_signature','domain_alias'] as $field}
-        {control valuePrinter__org__$field:row $model,true}
+    {foreach ['org.org_id','referenced.person_link','referenced.contest','org.since','org.until','org.role','org.order','org.contribution','org.tex_signature','org.domain_alias'] as $field}
+        {control valuePrinter:row $field, $model}
     {/foreach}
 {/block}

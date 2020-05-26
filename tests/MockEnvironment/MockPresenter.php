@@ -6,11 +6,11 @@ use BasePresenter;
 
 class MockPresenter extends BasePresenter {
 
-    public function link($destination, $args = array()) {
+    public function link($destination, $args = []) {
         return '';
     }
 
-    public function getLang() {
+    public function getLang(): string {
         return 'cs';
     }
 }

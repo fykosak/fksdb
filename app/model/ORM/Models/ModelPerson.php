@@ -6,26 +6,28 @@ use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
+use FKSDB\ORM\Models\Schedule\ModelSchedulePayment;
 use FKSDB\YearCalculator;
-use ModelMPersonHasFlag;
-use ModelMPostContact;
+use FKSDB\ORM\ModelsMulti\ModelMPersonHasFlag;
+use FKSDB\ORM\ModelsMulti\ModelMPostContact;
 use Nette\Database\Table\GroupedSelection;
-use Nette\Database\Table\Selection;
 use Nette\Security\IResource;
-use Nette\Utils\DateTime;
 use Nette\Utils\Json;
+use Nette\Utils\JsonException;
 
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property-read integer person_id
+ * @property-read int person_id
  * @property-read string other_name
  * @property-read string family_name
  * @property-read string display_name
  * @property-read string gender
- * @property-read DateTime created
+ * @property-read \DateTimeInterface created
  */
-class ModelPerson extends AbstractModelSingle implements IResource, IPersonReferencedModel {
+class ModelPerson extends AbstractModelSingle implements IResource {
+    const RESOURCE_ID = 'person';
+
     /**
      * Returns first of the person's logins.
      * (so far, there's not support for multiple login in DB schema)
@@ -33,9 +35,6 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
      *
      */
     public function getLogin() {
-        if (!isset($this->person_id)) {
-            $this->person_id = null;
-        }
         $logins = $this->related(DbNames::TAB_LOGIN, 'person_id');
         $logins->rewind();
         if (!$logins->valid()) {
@@ -46,20 +45,16 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
     }
 
     /**
-     * @return ModelPerson
+     * @return string|null
      */
-    public function getPerson(): ModelPerson {
-        return $this;
+    public function getPreferredLang() {
+        return $this->getInfo() ? $this->getInfo()->preferred_lang : null;
     }
 
     /**
      * @return ModelPersonInfo|null
      */
     public function getInfo() {
-        if (!isset($this->person_id)) {
-            $this->person_id = null;
-        }
-
         $infos = $this->related(DbNames::TAB_PERSON_INFO, 'person_id');
         $infos->rewind();
         if (!$infos->valid()) {
@@ -70,17 +65,13 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
     }
 
     /**
-     * @param $acYear
+     * @param int $acYear
      * @param bool $extrapolated
      * @return ModelPersonHistory|null
      */
     public function getHistory($acYear, $extrapolated = false) {
-        if (!isset($this->person_id)) {
-            $this->person_id = null;
-        }
-        $histories = $this->related(DbNames::TAB_PERSON_HISTORY, 'person_id')
-            ->where('ac_year', $acYear);
-        $history = $histories->fetch();
+        $history = $this->related(DbNames::TAB_PERSON_HISTORY, 'person_id')
+            ->where('ac_year', $acYear)->fetch();
         if ($history) {
             return ModelPersonHistory::createFromActiveRow($history);
         }
@@ -97,12 +88,15 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
     }
 
     /**
-     * @param null $contestId
-     * @return \Nette\Database\Table\GroupedSelection
+     * @param int|ModelContest $contest
+     * @return GroupedSelection
      */
-    public function getContestants($contestId = null): GroupedSelection {
-        if (!isset($this->person_id)) {
-            $this->person_id = null;
+    public function getContestants($contest = null): GroupedSelection {
+        $contestId = null;
+        if ($contest instanceof ModelContest) {
+            $contestId = $contest->contest_id;
+        } else {
+            $contestId = $contest;
         }
         $related = $this->related(DbNames::TAB_CONTESTANT_BASE, 'person_id');
         if ($contestId) {
@@ -112,13 +106,10 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
     }
 
     /**
-     * @param null $contestId
-     * @return \Nette\Database\Table\GroupedSelection
+     * @param int|null $contestId
+     * @return GroupedSelection
      */
     public function getOrgs($contestId = null): GroupedSelection {
-        if (!isset($this->person_id)) {
-            $this->person_id = null;
-        }
         $related = $this->related(DbNames::TAB_ORG, 'person_id');
         if ($contestId) {
             $related->where('contest_id', $contestId);
@@ -126,18 +117,13 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
         return $related;
     }
 
-    /**
-     * @return GroupedSelection
-     */
     public function getFlags(): GroupedSelection {
-        if (!isset($this->person_id)) {
-            $this->person_id = null;
-        }
         return $this->related(DbNames::TAB_PERSON_HAS_FLAG, 'person_id');
     }
 
     /**
-     * @return ModelMPersonHasFlag[]
+     * @return ModelMPersonHasFlag[]|null
+     * TODO wtf array|null? -- mišo 2020-05-22
      */
     public function getMPersonHasFlags() {
         $personFlags = $this->getFlags();
@@ -175,13 +161,7 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
         return null;
     }
 
-    /**
-     * @return GroupedSelection
-     */
-    public function getPostContacts() {
-        if (!isset($this->person_id)) {
-            $this->person_id = null;
-        }
+    public function getPostContacts(): GroupedSelection {
         return $this->related(DbNames::TAB_POST_CONTACT, 'person_id');
     }
 
@@ -201,7 +181,6 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
 
         $result = [];
         foreach ($postContacts as $postContact) {
-            $postContact->address_id; // stupid touch
             $address = $postContact->ref(DbNames::TAB_ADDRESS, 'address_id');
             $result[] = ModelMPostContact::createFromExistingModels(
                 ModelAddress::createFromActiveRow($address), ModelPostContact::createFromActiveRow($postContact)
@@ -226,30 +205,24 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
 
     /**
      * @param bool $noFallback
-     * @return mixed|ModelPostContact|null
+     * @return ModelPostContact|null
      */
     public function getPermanentAddress($noFallback = false) {
         $pAddresses = $this->getMPostContacts(ModelPostContact::TYPE_PERMANENT);
         if (count($pAddresses)) {
             return reset($pAddresses);
-        } else if (!$noFallback) {
+        } elseif (!$noFallback) {
             return $this->getDeliveryAddress();
         } else {
             return null;
         }
     }
 
-    /**
-     * @return GroupedSelection
-     */
-    public function getEventParticipant(): Selection {
-        return (new Selection(DbNames::TAB_EVENT_PARTICIPANT, $this->getTable()->getConnection()))->where('person_id', $this->person_id);
-        // return $this->related(DbNames::TAB_EVENT_PARTICIPANT, 'person_id');
+    public function getEventParticipant(): GroupedSelection {
+        //return (new Selection($this->getTable()->data,bNames::TAB_EVENT_PARTICIPANT, $this->getTable()->getConnection()))->where('person_id', $this->person_id);
+        return $this->related(DbNames::TAB_EVENT_PARTICIPANT, 'person_id');
     }
 
-    /**
-     * @return GroupedSelection
-     */
     public function getEventTeacher(): GroupedSelection {
         return $this->related(DbNames::TAB_E_FYZIKLANI_TEAM, 'teacher_id');
     }
@@ -271,13 +244,7 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
         }
     }
 
-    /**
-     * @return GroupedSelection
-     */
-    public function getEventOrg() {
-        if (!isset($this->person_id)) {
-            $this->person_id = null;
-        }
+    public function getEventOrg(): GroupedSelection {
         return $this->related(DbNames::TAB_EVENT_ORG, 'person_id');
     }
 
@@ -285,9 +252,6 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
      * @return null|ModelPersonHistory the most recent person's history record (if any)
      */
     private function getLastHistory() {
-        if (!isset($this->person_id)) {
-            $this->person_id = null;
-        }
         $history = $this->related(DbNames::TAB_PERSON_HISTORY, 'person_id')->order(('ac_year DESC'))->fetch();
 
         if ($history) {
@@ -297,22 +261,16 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
         }
     }
 
-    /**
-     * @return string
-     */
     public function getFullName(): string {
         return $this->display_name ?: $this->other_name . ' ' . $this->family_name;
     }
 
-    /**
-     * @return string
-     */
     public function __toString(): string {
         return $this->getFullName();
     }
 
     /**
-     * @param \FKSDB\YearCalculator $yearCalculator
+     * @param YearCalculator $yearCalculator
      * @return ModelOrg[] indexed by contest_id
      * @internal To get active orgs call FKSDB\ORM\Models\ModelLogin::getActiveOrgs
      */
@@ -331,7 +289,7 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
     /**
      * Active contestant := contestant in the highest year but not older than the current year.
      *
-     * @param \FKSDB\YearCalculator $yearCalculator
+     * @param YearCalculator $yearCalculator
      * @return ModelContestant[] indexed by contest_id
      */
     public function getActiveContestants(YearCalculator $yearCalculator) {
@@ -384,18 +342,15 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
         }
     }
 
-    /**
-     * @return string
-     */
     public function getResourceId(): string {
-        return 'person';
+        return self::RESOURCE_ID;
     }
 
     /**
-     * @param integer eventId
+     * @param int eventId
      * @param string $type
-     * @return string
-     * @throws \Nette\Utils\JsonException
+     * @return string|null
+     * @throws JsonException
      */
     public function getSerializedSchedule(int $eventId, string $type) {
         if (!$eventId) {
@@ -418,55 +373,64 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
     }
 
     /**
-     * @param $eventId
+     * @param int $eventId
      * Definitely ugly but, there is only this way... Mišo
+     * TODO refactoring
      */
-    public function removeScheduleForEvent($eventId) {
+    public function removeScheduleForEvent(int $eventId) {
         $query = $this->related(DbNames::TAB_PERSON_SCHEDULE, 'person_id')->where('schedule_item.schedule_group.event_id=?', $eventId);
-        /**
-         * @var ModelPersonSchedule $row
-         */
+        /** @var ModelPersonSchedule $row */
         foreach ($query as $row) {
             $row->delete();
         }
     }
 
-    /**
-     * @return GroupedSelection
-     */
     public function getPayments(): GroupedSelection {
         return $this->related(DbNames::TAB_PAYMENT, 'person_id');
     }
 
     /**
      * @param ModelEvent $event
-     * @return Selection
+     * @return GroupedSelection
      */
-    public function getPaymentsForEvent(ModelEvent $event): Selection {
+    public function getPaymentsForEvent(ModelEvent $event): GroupedSelection {
         return $this->getPayments()->where('event_id', $event->event_id);
     }
 
-    /**
-     * @param ModelEvent $event
-     * @return Selection
-     */
-    public function getScheduleForEvent(ModelEvent $event): Selection {
+    public function getScheduleForEvent(ModelEvent $event): GroupedSelection {
         return $this->getSchedule()->where('schedule_item.schedule_group.event_id', $event->event_id);
     }
 
-    /**
-     * @return GroupedSelection
-     */
     public function getSchedule(): GroupedSelection {
         return $this->related(DbNames::TAB_PERSON_SCHEDULE, 'person_id');
     }
 
     /**
      * @param ModelEvent $event
-     * @param $yearCalculator
-     * @return array
+     * @param string[] $types
+     * @return ModelSchedulePayment[]
      */
-    public function getRolesForEvent(ModelEvent $event, $yearCalculator): array {
+    public function getScheduleRests(ModelEvent $event, array $types = ['accommodation', 'weekend']): array {
+        $toPay = [];
+        $schedule = $this->getScheduleForEvent($event)
+            ->where('schedule_item.schedule_group.schedule_group_type', $types)
+            ->where('schedule_item.price_czk IS NOT NULL');
+        foreach ($schedule as $pSchRow) {
+            $pSchedule = ModelPersonSchedule::createFromActiveRow($pSchRow);
+            $payment = $pSchedule->getPayment();
+            if (!$payment || $payment->state !== ModelPayment::STATE_RECEIVED) {
+                $toPay[] = $pSchedule;
+            }
+        }
+        return $toPay;
+    }
+
+    /**
+     * @param ModelEvent $event
+     * @param YearCalculator $yearCalculator
+     * @return array[]
+     */
+    public function getRolesForEvent(ModelEvent $event, YearCalculator $yearCalculator): array {
         $roles = [];
         $eventId = $event->event_id;
         $teachers = $this->getEventTeacher()->where('event_id', $eventId);
@@ -502,4 +466,3 @@ class ModelPerson extends AbstractModelSingle implements IResource, IPersonRefer
     }
 
 }
-

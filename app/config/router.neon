@@ -35,21 +35,24 @@ parameters:
 fksrouter:
     routes:
         # PHP-like scripts compatibility
-        'index.php':
+        -
+            mask: 'index.php'
             module: Public
             presenter: Dashboard
             action: default
             flags: [ONE_WAY, SECURED]
 
         # Backward compatibility
-        'web-service/<action>':
+        -
+            mask: 'web-service/<action>'
             module: Org
             presenter: WebService
             action: default
             flags: [ONE_WAY, SECURED]
 
         # Cool URL
-        '%path%<contestId %contests%><year [0-9]+>[.<series [0-9]+>]/q/<qid>':
+        -
+            mask: '%path%<contestId %contests%><year [0-9]+>[.<series [0-9]+>]/q/<qid>'
             subdomain: %subdomain.db%
             tld: %domain.tld%
             module: Org
@@ -59,20 +62,23 @@ fksrouter:
             flags: SECURED
 
         # Central authentication domain (+ logout must be enabled at each domain too)
-        '//[!<subdomain>].%domain.host%.[!<tld>]%path%<action logout>':
+        -
+            mask: '//[!<subdomain>].%domain.host%.[!<tld>]%path%<action logout>'
             presenter: Authentication
             subdomain: %subdomain.db%
             tld: %domain.tld%
             flags: SECURED
 
-        '//%subdomain.auth%.%domain.cz%%path%<action login|logout|fb-login|recover>':
+        -
+            mask: '//%subdomain.auth%.%domain.cz%%path%<action login|logout|fb-login|recover>'
             presenter: Authentication
             subdomain: %subdomain.auth%
             tld: %domain.tld%
             flags: SECURED
 
         # Registration must be at the same domain as central authentication.
-        '//[!<subdomain>].%domain.cz%%path%<presenter register>/[<contestId %contests%>/[year<year [0-9]+>/[person<personId -?[0-9]+>/]]]<action=default>':
+        -
+            mask: '//[!<subdomain>].%domain.cz%%path%<presenter register>/[<contestId %contests%>/[year<year [0-9]+>/[person<personId -?[0-9]+>/]]]<action=default>'
             module: Public
             subdomain: %subdomain.auth%
             tld: %domain.tld%
@@ -80,14 +86,16 @@ fksrouter:
             flags: SECURED
             year: null
 
-        '//%subdomain.db%.%domain.host%.[!<tld>]%path%[<contestId %contests%>/]<presenter register>/<action=default>':
+        -
+            mask: '//%subdomain.db%.%domain.host%.[!<tld>]%path%[<contestId %contests%>/]<presenter register>/<action=default>'
             module: Public
             subdomain: %subdomain.auth%
             tld: %domain.tld%
             contestId: [filterTable: %inverseContestMapping%]
             flags: [ONE_WAY, SECURED]
 
-        '//[!<subdomain>].%domain.host%.[!<tld>]%path%':
+        -
+            mask: '//[!<subdomain>].%domain.host%.[!<tld>]%path%'
             subdomain: %subdomain.db%
             presenter: Dispatch
             tld: %domain.tld%
@@ -95,42 +103,55 @@ fksrouter:
             flags:  SECURED
 
         # Application itself (note the presenters w/out module are handled specially)
-        '//[!<subdomain>].%domain.host%.[!<tld>]%path%[<contestId %contests%>[<year [0-9]+>]/]<presenter %rootPresenters%>/<action=default>[/<id>]':
+        -
+            mask: '//[!<subdomain>].%domain.host%.[!<tld>]%path%[<contestId %contests%>[<year [0-9]+>]/]<presenter %rootPresenters%>/<action=default>[/<id>]'
             subdomain: %subdomain.db%
             tld: %domain.tld%
             contestId: [filterTable: %inverseContestMapping%]
             flags: SECURED
 
         # Application itself (note the presenters w/out module are handled specially)
-        '//[!<subdomain>].%domain.host%.[!<tld>]%path%common/<presenter>/<action=default>[/<id>]':
+        -
+            mask: '//[!<subdomain>].%domain.host%.[!<tld>]%path%common/<presenter>/<action=default>[/<id>]'
             module: Common
             presenter: Dashboard
             subdomain: %subdomain.db%
             tld: %domain.tld%
             flags: SECURED
 
-        '//[!<subdomain>].%domain.host%.[!<tld>]%path%fyziklani[<eventId [0-9]+>]/<presenter>/<action=default>[/<id>]':
+        -
+            mask: '//[!<subdomain>].%domain.host%.[!<tld>]%path%fyziklani[<eventId [0-9]+>]/<presenter>/<action=default>[/<id>]'
             subdomain: %subdomain.db%
             tld: %domain.tld%
             module: Fyziklani
             flags: SECURED
 
-        '//[!<subdomain>].%domain.host%.[!<tld>]%path%event[<eventId [0-9]+>]/<presenter>/<action=default>[/<id>]':
+        -
+            mask: '//[!<subdomain>].%domain.host%.[!<tld>]%path%event[<eventId [0-9]+>]/<presenter>/<action=default>[/<id>]'
             subdomain: %subdomain.db%
             tld: %domain.tld%
             module: Event
             presenter: Dashboard
             flags: SECURED
 
-        '//[!<subdomain>].%domain.host%.[!<tld>]%path%f[<eventId [0-9]+>]/s/q[/<id>]':
+        -
+            mask: '//[!<subdomain>].%domain.host%.[!<tld>]%path%f[<eventId [0-9]+>]/s/q[/<id>]'
             subdomain: %subdomain.db%
             presenter: Submit
             action: qrEntry
             tld: %domain.tld%
             module: Fyziklani
             flags: SECURED
+        -
+            mask:  '//[!<subdomain>].%domain.host%.[!<tld>]%path%[<contestId %contests%>[<year [0-9]+>]/][series<series [0-9]+>/]<module %modules%>/<presenter>/<action=default>[/<id>]'
+            presenter: Dashboard
+            subdomain: %subdomain.db%
+            tld: %domain.tld%
+            contestId: [filterTable: %inverseContestMapping%]
+            flags: SECURED
 
-        '//[!<subdomain>].%domain.host%.[!<tld>]%path%[<contestId %contests%>[<year [0-9]+>]/]<module %modules%>/<presenter>/<action=default>[/<id>]':
+        -
+            mask: '//[!<subdomain>].%domain.host%.[!<tld>]%path%[<contestId %contests%>[<year [0-9]+>]/]<module %modules%>/<presenter>/<action=default>[/<id>]'
             presenter: Dashboard
             subdomain: %subdomain.db%
             tld: %domain.tld%

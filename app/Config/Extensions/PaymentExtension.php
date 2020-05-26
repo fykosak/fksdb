@@ -5,11 +5,11 @@ namespace FKSDB\Config\Extensions;
 use FKSDB\Payment\PriceCalculator\PriceCalculator;
 use FKSDB\Payment\SymbolGenerator\Generators\Generators\DefaultGenerator;
 use FKSDB\Payment\Transition\PaymentMachine;
-use Nette\Config\CompilerExtension;
+use Nette\DI\CompilerExtension;
 
 /**
  * Class PaymentExtension
- * @package FKSDB\Config\Extensions
+ * *
  */
 class PaymentExtension extends CompilerExtension {
     const MACHINE_PREFIX = 'machine.';
@@ -43,4 +43,3 @@ class PaymentExtension extends CompilerExtension {
         }
     }
 }
-

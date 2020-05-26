@@ -12,37 +12,34 @@ use Nette\Utils\Html;
 
 /**
  * Trait EmailRowTrait
- * @package FKSDB\Components\DatabaseReflection
+ * *
  */
 trait EmailRowTrait {
 
     /**
+     * @param array $args
      * @return BaseControl
      */
-    public function createField(): BaseControl {
+    public function createField(...$args): BaseControl {
         $control = new TextInput($this->getTitle());
         $control->addCondition(Form::FILLED)
             ->addRule(Form::EMAIL, _('Neplatný tvar e-mailu.'));
         return $control;
     }
 
-    /**
-     * @param AbstractModelSingle $model
-     * @return Html
-     */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        return (new EmailPrinter)($model->{$this->getModelAccessKey()});
+        return (new EmailPrinter())($model->{$this->getModelAccessKey()});
     }
 
     /**
      * @return string
      * only must exists
      */
-    abstract function getTitle(): string;
+    abstract public function getTitle(): string;
 
     /**
      * @return string
      * only must exists
      */
-    abstract function getModelAccessKey(): string;
+    abstract public function getModelAccessKey(): string;
 }

@@ -11,7 +11,7 @@ use Nette\Utils\Html;
 
 /**
  * Class UntilRow
- * @package FKSDB\Components\DatabaseReflection\Tables\Teacher
+ * *
  */
 class UntilRow extends AbstractTeacherRow {
 
@@ -34,9 +34,10 @@ class UntilRow extends AbstractTeacherRow {
     }
 
     /**
+     * @param array $args
      * @return BaseControl
      */
-    public function createField(): BaseControl {
+    public function createField(...$args): BaseControl {
         return new DateInput($this->getTitle());
     }
 }

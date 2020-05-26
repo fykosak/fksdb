@@ -1,11 +1,11 @@
 <?php
 
-namespace Events\FormAdjustments;
+namespace FKSDB\Events\FormAdjustments;
 
-use Events\Machine\BaseMachine;
-use Events\Machine\Machine;
-use Events\Model\Holder\Holder;
-use Events\Processings\IProcessing;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\Holder\Holder;
+use FKSDB\Events\Processings\IProcessing;
 use FKSDB\Components\Forms\Factories\PersonInfoFactory;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Services\ServicePersonInfo;
@@ -27,7 +27,7 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
     const CONTROL_NAME = 'privacy';
 
     /**
-     * @var \FKSDB\ORM\Services\ServicePersonInfo
+     * @var ServicePersonInfo
      */
     private $servicePersonInfo;
     /**
@@ -40,9 +40,9 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
      * @param ServicePersonInfo $servicePersonInfo
      * @param PersonInfoFactory $personInfoFactory
      */
-    function __construct(ServicePersonInfo $servicePersonInfo, PersonInfoFactory $personInfoFactory) {
+    public function __construct(ServicePersonInfo $servicePersonInfo, PersonInfoFactory $personInfoFactory) {
         $this->servicePersonInfo = $servicePersonInfo;
-        $this->personInfoFactory=$personInfoFactory;
+        $this->personInfoFactory = $personInfoFactory;
     }
 
     /**
@@ -52,7 +52,7 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
      * @throws \Exception
      */
     public function adjust(Form $form, Machine $machine, Holder $holder) {
-        if ($machine->getPrimaryMachine()->getState() != BaseMachine::STATE_INIT) {
+        if ($holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT) {
             return;
         }
 
@@ -84,19 +84,18 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
         foreach ($values as $key => $value) {
             if ($value instanceof ArrayHash) {
                 $this->trySetAgreed($value);
-            } else {
-                if (isset($values[$key . '_1']) && isset($values[$key . '_1']['person_info'])) {
-                    $personId = $value;
-                    $personInfo = $this->servicePersonInfo->findByPrimary($personId);
-                    if ($personInfo) {
-                        $this->servicePersonInfo->updateModel($personInfo, array('agreed' => 1));
-                        // This is done in ApplicationHandler transaction, still can be rolled back.
-                        $this->servicePersonInfo->save($personInfo);
-                        $values[$key . '_1']['person_info']['agreed'] = 1;
-                    }
+            } elseif (isset($values[$key . '_1']) && isset($values[$key . '_1']['person_info'])) {
+                $personId = $value;
+                $personInfo = $this->servicePersonInfo->findByPrimary($personId);
+                if ($personInfo) {
+
+                    $this->servicePersonInfo->updateModel($personInfo, ['agreed' => 1]);
+
+                    // This is done in ApplicationHandler transaction, still can be rolled back.
+                    $this->servicePersonInfo->save($personInfo);
+                    $values[$key . '_1']['person_info']['agreed'] = 1;
                 }
             }
         }
     }
-
 }

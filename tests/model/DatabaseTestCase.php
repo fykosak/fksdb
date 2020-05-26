@@ -2,24 +2,37 @@
 
 use Authentication\PasswordAuthenticator;
 use Nette\Database\Connection;
+use Nette\Database\Context;
 use Nette\DI\Container;
 use Tester\Assert;
 use Tester\Environment;
 use Tester\TestCase;
 
 abstract class DatabaseTestCase extends TestCase {
+    /** @var Container */
+    private $container;
 
     /**
      * @var Connection
      */
     protected $connection;
+    /**
+     * @var int
+     */
     private $instanceNo;
 
     function __construct(Container $container) {
-        $this->connection = $container->getService('nette.database.default');
+        $this->container = $container;
+        /** @var Context $context */
+        $context = $container->getByType(Context::class);
+        $this->connection = $context->getConnection();
         $max = $container->parameters['tester']['dbInstances'];
         $this->instanceNo = (getmypid() % $max) + 1;
-        $this->connection->exec('USE fksdb_test' . $this->instanceNo);
+        $this->connection->query('USE fksdb_test' . $this->instanceNo);
+    }
+
+    protected function getContext(): Container {
+        return $this->container;
     }
 
     protected function setUp() {
@@ -49,9 +62,9 @@ abstract class DatabaseTestCase extends TestCase {
      * @param boolean|array $loginData Login credentials
      * @return int
      */
-    protected function createPerson($name, $surname, $info = array(), $loginData = false) {
+    protected function createPerson($name, $surname, $info = [], $loginData = false) {
         $this->connection->query("INSERT INTO person (other_name, family_name) VALUES(?, ?)", $name, $surname);
-        $personId = $this->connection->lastInsertId();
+        $personId = $this->connection->getInsertId();
 
         if ($info) {
             $info['person_id'] = $personId;
@@ -59,11 +72,11 @@ abstract class DatabaseTestCase extends TestCase {
         }
 
         if ($loginData) {
-            $data = array(
+            $data = [
                 'login_id' => $personId,
                 'person_id' => $personId,
                 'active' => 1
-            );
+            ];
 
             if (is_array($loginData)) {
                 $loginData = array_merge($data, $loginData);
@@ -74,7 +87,7 @@ abstract class DatabaseTestCase extends TestCase {
             $this->connection->query("INSERT INTO login", $loginData);
 
             if (isset($loginData['hash'])) {
-                $pseudoLogin = (object) $loginData;
+                $pseudoLogin = (object)$loginData;
                 $hash = PasswordAuthenticator::calculateHash($loginData['hash'], $pseudoLogin);
                 $this->connection->query("UPDATE login SET `hash` = ? WHERE person_id = ?", $hash, $personId);
             }
@@ -91,7 +104,7 @@ abstract class DatabaseTestCase extends TestCase {
 
     protected function createPersonHistory($personId, $acYear, $school = null, $studyYear = null, $class = null) {
         $this->connection->query("INSERT INTO person_history (person_id, ac_year, school_id, class, study_year) VALUES(?, ?, ?, ?, ?)", $personId, $acYear, $school, $class, $studyYear);
-        $personHistoryId = $this->connection->lastInsertId();
+        $personHistoryId = $this->connection->getInsertId();
 
 
         return $personHistoryId;
@@ -99,7 +112,7 @@ abstract class DatabaseTestCase extends TestCase {
 
     protected function insert($table, $data) {
         $this->connection->query("INSERT INTO `$table`", $data);
-        return $this->connection->lastInsertId();
+        return $this->connection->getInsertId();
     }
 
 }

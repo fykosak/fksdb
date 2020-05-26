@@ -2,9 +2,9 @@
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
-use Events\Machine\BaseMachine;
-use Events\Model\Holder\DataValidator;
-use Events\Model\Holder\Field;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Model\Holder\DataValidator;
+use FKSDB\Events\Model\Holder\Field;
 use Nette\Forms\Container;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
@@ -41,8 +41,9 @@ abstract class AbstractFactory implements IFieldFactory {
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
+     * @return void
      */
-    protected final function appendRequiredRule(IControl $element, Field $field, BaseMachine $machine, Container $container) {
+    final protected function appendRequiredRule(IControl $element, Field $field, BaseMachine $machine, Container $container) {
         if ($field->isRequired()) {
             $conditioned = $element;
             foreach ($field->getBaseHolder()->getDeterminingFields() as $name => $determiningField) {
@@ -78,7 +79,7 @@ abstract class AbstractFactory implements IFieldFactory {
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
-     * @return mixed
+     * @return void
      */
     abstract protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container);
 
@@ -87,7 +88,7 @@ abstract class AbstractFactory implements IFieldFactory {
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
-     * @return mixed
+     * @return void
      */
     abstract protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container);
 

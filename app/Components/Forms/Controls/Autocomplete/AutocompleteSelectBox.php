@@ -3,9 +3,11 @@
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
 use FKSDB\Application\IJavaScriptCollector;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextBase;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Arrays;
+use Nette\Utils\Html;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -30,12 +32,12 @@ class AutocompleteSelectBox extends TextBase {
     private $dataProvider;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $ajax;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $multiSelect;
 
@@ -58,7 +60,7 @@ class AutocompleteSelectBox extends TextBase {
      * @param null $label
      * @param null $renderMethod
      */
-    function __construct($ajax, $label = null, $renderMethod = null) {
+    public function __construct($ajax, $label = null, $renderMethod = null) {
         parent::__construct($label);
 
         $this->monitor(IAutocompleteJSONProvider::class);
@@ -67,7 +69,13 @@ class AutocompleteSelectBox extends TextBase {
         $this->renderMethod = $renderMethod;
     }
 
+    /**
+     * @var bool
+     */
     private $attachedJSON = false;
+    /**
+     * @var bool
+     */
     private $attachedJS = false;
 
     /**
@@ -79,20 +87,16 @@ class AutocompleteSelectBox extends TextBase {
             $this->attachedJSON = true;
             $name = $this->lookupPath(IAutocompleteJSONProvider::class);
 
-            $this->ajaxUrl = $obj->link('autocomplete!', array(
+            $this->ajaxUrl = $obj->link('autocomplete!', [
                 self::PARAM_NAME => $name,
-            ));
+            ]);
         }
         if (!$this->attachedJS && $obj instanceof IJavaScriptCollector) {
-            // Debugger::barDump($obj);
             $this->attachedJS = true;
             $obj->registerJSFile('js/autocompleteSelect.js');
         }
     }
 
-    /**
-     * @return IDataProvider
-     */
     public function getDataProvider(): IDataProvider {
         return $this->dataProvider;
     }
@@ -120,6 +124,7 @@ class AutocompleteSelectBox extends TextBase {
 
     /**
      * @param IDataProvider $dataProvider
+     * @return void
      */
     public function setDataProvider(IDataProvider $dataProvider) {
         if ($this->ajax && !($dataProvider instanceof IFilteredDataProvider)) {
@@ -130,7 +135,7 @@ class AutocompleteSelectBox extends TextBase {
     }
 
     /**
-     * @return \Nette\Utils\Html
+     * @return Html
      */
     public function getControl() {
         $control = parent::getControl();
@@ -176,7 +181,7 @@ class AutocompleteSelectBox extends TextBase {
     }
 
     public function loadHttpData() {
-        $path = explode('[', strtr(str_replace(array('[]', ']'), '', $this->getHtmlName()), '.', '_'));
+        $path = explode('[', strtr(str_replace(['[]', ']'], '', $this->getHtmlName()), '.', '_'));
         $metaPath = $path;
         $metaPath[count($metaPath) - 1] .= self::META_ELEMENT_SUFFIX;
         try {
@@ -200,17 +205,15 @@ class AutocompleteSelectBox extends TextBase {
         if ($this->isMultiSelect()) {
             if (is_array($value)) {
                 $this->value = $value;
-            } else if ($value === '') {
+            } elseif ($value === '') {
                 $this->value = [];
             } else {
                 $this->value = explode(self::INTERNAL_DELIMITER, $value);
             }
+        } elseif ($value === '') {
+            $this->value = null;
         } else {
-            if ($value === '') {
-                $this->value = null;
-            } else {
-                $this->value = $value;
-            }
+            $this->value = $value;
         }
         if ($this->dataProvider) {
             $this->dataProvider->setDefaultValue($this->value);
@@ -219,7 +222,7 @@ class AutocompleteSelectBox extends TextBase {
 
     /**
      * @param $value
-     * @return \Nette\Forms\Controls\BaseControl
+     * @return BaseControl
      */
     public function setDefaultValue($value) {
         if ($this->dataProvider) {
@@ -237,6 +240,7 @@ class AutocompleteSelectBox extends TextBase {
 
     /**
      * @param $multiSelect
+     * @return void
      */
     public function setMultiSelect($multiSelect) {
         $this->multiSelect = $multiSelect;

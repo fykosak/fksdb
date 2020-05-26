@@ -2,22 +2,23 @@
 
 namespace FKSDB\Components\DatabaseReflection\Tables;
 
-use FKSDB\Components\Controls\Helpers\Badges\NotSetBadge;
+use FKSDB\Components\Controls\Badges\NotSetBadge;
 use FKSDB\Components\Controls\PhoneNumber\PhoneNumberFactory;
 use FKSDB\Components\DatabaseReflection\DefaultRow;
+use FKSDB\Components\DatabaseReflection\MetaDataFactory;
 use FKSDB\Components\Forms\Controls\WriteOnlyInput;
 use FKSDB\Components\Forms\Factories\ITestedRowFactory;
+use FKSDB\DataTesting\TestsLogger;
 use FKSDB\ORM\AbstractModelSingle;
-use FKSDB\ValidationTest\ValidationLog;
+use FKSDB\DataTesting\TestLog;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
-use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
 
 /**
  * Class PhoneRow
- * @package FKSDB\Components\DatabaseReflection\Tables
+ * *
  */
 class PhoneRow extends DefaultRow implements ITestedRowFactory {
     /**
@@ -32,25 +33,26 @@ class PhoneRow extends DefaultRow implements ITestedRowFactory {
     /**
      * PhoneRow constructor.
      * @param PhoneNumberFactory $phoneNumberFactory
-     * @param ITranslator $translator
      * @param MetaDataFactory $metaDataFactory
      */
-    public function __construct(PhoneNumberFactory $phoneNumberFactory, ITranslator $translator, MetaDataFactory $metaDataFactory) {
+    public function __construct(PhoneNumberFactory $phoneNumberFactory, MetaDataFactory $metaDataFactory) {
         $this->phoneNumberFactory = $phoneNumberFactory;
-        parent::__construct($translator, $metaDataFactory);
+        parent::__construct($metaDataFactory);
     }
 
     /**
      * @param bool $isWriteOnly
+     * @return void
      */
     public function setWriteOnly(bool $isWriteOnly) {
         $this->isWriteOnly = $isWriteOnly;
     }
 
     /**
+     * @param array $args
      * @return BaseControl
      */
-    public function createField(): BaseControl {
+    public function createField(...$args): BaseControl {
         $control = null;
         if ($this->isWriteOnly) {
             $control = new WriteOnlyInput($this->getTitle());
@@ -71,26 +73,23 @@ class PhoneRow extends DefaultRow implements ITestedRowFactory {
     }
 
     /**
+     * @param TestsLogger $logger
      * @param AbstractModelSingle $model
-     * @return ValidationLog
+     * @return void
      */
-    public final function runTest(AbstractModelSingle $model): ValidationLog {
+    final public function runTest(TestsLogger $logger, AbstractModelSingle $model) {
 
         $value = $model->{$this->getModelAccessKey()};
         if (\is_null($value)) {
-            return new ValidationLog($this->getTitle(), \sprintf('%s is not set', $this->getTitle()), ValidationLog::LVL_INFO);
+            return;
         }
         if (!$this->phoneNumberFactory->isValid($value)) {
-            return new ValidationLog($this->getTitle(), \sprintf('%s number (%s) is not valid', $this->getTitle(), $value), ValidationLog::LVL_DANGER);
+            $logger->log(new TestLog($this->getTitle(), \sprintf('%s number (%s) is not valid', $this->getTitle(), $value), TestLog::LVL_DANGER));
         } else {
-            return new ValidationLog($this->getTitle(), \sprintf('%s is valid', $this->getTitle()), ValidationLog::LVL_SUCCESS);
+            $logger->log(new TestLog($this->getTitle(), \sprintf('%s is valid', $this->getTitle()), TestLog::LVL_SUCCESS));
         }
     }
 
-    /**
-     * @param AbstractModelSingle $model
-     * @return Html
-     */
     public function createHtmlValue(AbstractModelSingle $model): Html {
         $value = $model->{$this->getModelAccessKey()};
         if (\is_null($value)) {

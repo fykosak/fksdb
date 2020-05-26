@@ -121,16 +121,16 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
 
     /**
      * @param array $fieldsDefinition
-     * @param integer $acYear
+     * @param int $acYear
      * @param string $searchType
-     * @param boolean $allowClear
+     * @param bool $allowClear
      * @param IModifiabilityResolver $modifiabilityResolver is person's filled field modifiable?
      * @param IVisibilityResolver $visibilityResolver is person's writeOnly field visible? (i.e. not writeOnly then)
      * @param int $evenId
      * @return array
      * @throws \Exception
      */
-    public function createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, IModifiabilityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver, $evenId = 0) {
+    public function createReferencedPerson(array $fieldsDefinition, int $acYear, string $searchType, bool $allowClear, IModifiabilityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver, $evenId = 0) {
         $handler = $this->referencedPersonHandlerFactory->create($acYear, null, $evenId);
 
         $hiddenField = new ReferencedId($this->servicePerson, $handler, $this);
@@ -151,7 +151,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
             if ($sub == ReferencedPersonHandler::POST_CONTACT_DELIVERY) {
                 $subcontainer->setOption('showGroup', true);
                 $subcontainer->setOption('label', _('Doručovací adresa'));
-            } else if ($sub == ReferencedPersonHandler::POST_CONTACT_PERMANENT) {
+            } elseif ($sub == ReferencedPersonHandler::POST_CONTACT_PERMANENT) {
                 $subcontainer->setOption('showGroup', true);
                 $label = _('Trvalá adresa');
                 if (isset($container[ReferencedPersonHandler::POST_CONTACT_DELIVERY])) {
@@ -188,24 +188,28 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
             $container->addComponent($subcontainer, $sub);
         }
 
-        return array(
+        return [
             $hiddenField,
             $container,
-        );
+        ];
     }
 
 
     /**
      * @param ReferencedContainer $container
-     * @param IModel|null $model
+     * @param IModel|ModelPerson|null $model
      * @param string $mode
-     * @return mixed|void
+     * @return void
      */
     public function setModel(ReferencedContainer $container, IModel $model = null, $mode = self::MODE_NORMAL) {
         $acYear = $container->getOption('acYear');
-        $modifiable = $model ? $container->getOption('modifiabilityResolver')->isModifiable($model) : true;
-        $resolution = $model ? $container->getOption('modifiabilityResolver')->getResolutionMode($model) : ReferencedPersonHandler::RESOLUTION_OVERWRITE;
-        $visible = $model ? $container->getOption('visibilityResolver')->isVisible($model) : true;
+        /** @var IModifiabilityResolver $modifiabilityResolver */
+        $modifiabilityResolver = $container->getOption('modifiabilityResolver');
+        /** @var IVisibilityResolver $visibilityResolver */
+        $visibilityResolver = $container->getOption('visibilityResolver');
+        $modifiable = $model ? $modifiabilityResolver->isModifiable($model) : true;
+        $resolution = $model ? $modifiabilityResolver->getResolutionMode($model) : ReferencedPersonHandler::RESOLUTION_OVERWRITE;
+        $visible = $model ? $visibilityResolver->isVisible($model) : true;
         $submittedBySearch = $container->isSearchSubmitted();
         $force = ($mode == self::MODE_FORCE);
         if ($mode == self::MODE_ROLLBACK) {
@@ -213,12 +217,16 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
         }
 
         $container->getReferencedId()->getHandler()->setResolution($resolution);
-        $container->getComponent(ReferencedContainer::CONTROL_COMPACT)->setValue($model ? $model->getFullname() : null);
+        $container->getComponent(ReferencedContainer::CONTROL_COMPACT)->setValue($model ? $model->getFullName() : null);
         foreach ($container->getComponents() as $sub => $subcontainer) {
             if (!$subcontainer instanceof Container) {
                 continue;
             }
-
+            /**
+             * @var string $fieldName
+             * @var BaseControl $component
+             * TODO type safe
+             */
             foreach ($subcontainer->getComponents() as $fieldName => $component) {
                 if (isset($container[ReferencedPersonHandler::POST_CONTACT_DELIVERY])) {
                     $options = self::TARGET_FORM | self::HAS_DELIVERY;
@@ -232,13 +240,13 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
 
                 if (!$controlVisible && !$controlModifiable) {
                     $container[$sub]->removeComponent($component);
-                } else if (!$controlVisible && $controlModifiable) {
+                } elseif (!$controlVisible && $controlModifiable) {
                     $this->setWriteOnly($component, true);
                     $component->setDisabled(false);
-                } else if ($controlVisible && !$controlModifiable) {
+                } elseif ($controlVisible && !$controlModifiable) {
                     $component->setDisabled();
                     $component->setValue($value);
-                } else if ($controlVisible && $controlModifiable) {
+                } elseif ($controlVisible && $controlModifiable) {
                     $this->setWriteOnly($component, false);
                     $component->setDisabled(false);
                 }
@@ -281,14 +289,12 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
                 } else {
                     $options = 0;
                 }
-                $container = $this->addressFactory->createAddress($options, $hiddenField);
-                return $container;
+                return $this->addressFactory->createAddress($options, $hiddenField);
             } else {
                 throw new InvalidArgumentException("Only 'address' field is supported.");
             }
-        } else if ($sub == 'person_has_flag') {
-            $control = $this->flagFactory->createFlag($hiddenField, $metadata);
-            return $control;
+        } elseif ($sub == 'person_has_flag') {
+            return $this->flagFactory->createFlag($hiddenField, $metadata);
         } else {
             $control = null;
             switch ($sub) {
@@ -314,10 +320,11 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
     /**
      * @param BaseControl $control
      * @param HiddenField $hiddenField
-     * @param $fieldName
+     * @param string $fieldName
      * @param array $metadata
+     * @return void
      */
-    protected function appendMetadata(BaseControl &$control, HiddenField $hiddenField, $fieldName, array $metadata) {
+    protected function appendMetadata(BaseControl &$control, HiddenField $hiddenField, string $fieldName, array $metadata) {
         foreach ($metadata as $key => $value) {
             switch ($key) {
                 case 'required':
@@ -349,11 +356,12 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
     /**
      * @param $component
      * @param $value
+     * @return void
      */
     protected function setWriteOnly($component, $value) {
         if ($component instanceof IWriteOnly) {
             $component->setWriteOnly($value);
-        } else if ($component instanceof Container) {
+        } elseif ($component instanceof Container) {
             foreach ($component->getComponents() as $subcomponent) {
                 $this->setWriteOnly($subcomponent, $value);
             }
@@ -367,7 +375,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
     protected function isWriteOnly($component) {
         if ($component instanceof IWriteOnly) {
             return true;
-        } else if ($component instanceof Container) {
+        } elseif ($component instanceof Container) {
             foreach ($component->getComponents() as $subcomponent) {
                 if ($this->isWriteOnly($subcomponent)) {
                     return true;
@@ -451,7 +459,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
      * @param $acYear
      * @return bool
      */
-    public final function isFilled(ModelPerson $person, $sub, $field, $acYear) {
+    final public function isFilled(ModelPerson $person, $sub, $field, $acYear) {
         $value = $this->getPersonValue($person, $sub, $field, $acYear, self::TARGET_VALIDATION);
         return !($value === null || $value === '');
     }
@@ -495,6 +503,4 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
                 throw new InvalidArgumentException("Unknown person sub '$sub'.");
         }
     }
-
 }
-

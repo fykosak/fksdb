@@ -11,22 +11,25 @@ use FKSDB\Expressions\EvaluatedExpression;
  */
 class Not extends EvaluatedExpression {
 
+    /**
+     * @var
+     */
     private $expression;
 
     /**
      * Not constructor.
      * @param $expression
      */
-    function __construct($expression) {
+    public function __construct($expression) {
         $this->expression = $expression;
     }
 
     /**
+     * @param array $args
      * @return bool
      */
-    public function __invoke() {
-        $args = func_get_args();
-        return !$this->evalArg($this->expression, $args);
+    final public function __invoke(...$args): bool {
+        return !$this->evaluateArgument($this->expression, ...$args);
     }
 
     /**

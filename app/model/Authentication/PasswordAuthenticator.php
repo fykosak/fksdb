@@ -22,11 +22,11 @@ class PasswordAuthenticator extends AbstractAuthenticator implements IAuthentica
 
     /**
      * PasswordAuthenticator constructor.
-     * @param \FKSDB\ORM\Services\ServiceLogin $serviceLogin
-     * @param \FKSDB\YearCalculator $yearCalculator
+     * @param ServiceLogin $serviceLogin
+     * @param YearCalculator $yearCalculator
      * @param ServicePerson $servicePerson
      */
-    function __construct(ServiceLogin $serviceLogin, YearCalculator $yearCalculator, ServicePerson $servicePerson) {
+    public function __construct(ServiceLogin $serviceLogin, YearCalculator $yearCalculator, ServicePerson $servicePerson) {
         parent::__construct($serviceLogin, $yearCalculator);
         $this->servicePerson = $servicePerson;
     }
@@ -57,18 +57,18 @@ class PasswordAuthenticator extends AbstractAuthenticator implements IAuthentica
     }
 
     /**
-     * @param $id
+     * @param string $id
      * @return ModelLogin
      * @throws InactiveLoginException
      * @throws NoLoginException
      * @throws UnknownLoginException
      */
     public function findLogin($id) {
-        $row = $this->servicePerson->getTable()->where('person_info:email = ?', $id)->fetch();
+        /** @var ModelPerson $person */
+        $person = $this->servicePerson->getTable()->where(':person_info.email = ?', $id)->fetch();
         $login = null;
 
-        if ($row) {
-            $person = ModelPerson::createFromActiveRow($row);
+        if ($person) {
             $login = $person->getLogin();
             if (!$login) {
                 throw new NoLoginException();
@@ -77,7 +77,6 @@ class PasswordAuthenticator extends AbstractAuthenticator implements IAuthentica
         if (!$login) {
             $login = $this->serviceLogin->getTable()->where('login = ?', $id)->fetch();
         }
-
 
         if (!$login) {
             throw new UnknownLoginException();
@@ -91,7 +90,7 @@ class PasswordAuthenticator extends AbstractAuthenticator implements IAuthentica
 
     /**
      * @param string $password
-     * @param \FKSDB\ORM\Models\ModelLogin $login
+     * @param ModelLogin $login
      * @return string
      */
     public static function calculateHash($password, $login) {

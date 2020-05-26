@@ -2,17 +2,19 @@
 
 namespace FKSDB\Components\Grids\Payment;
 
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Services\ServicePayment;
+use Nette\Application\UI\InvalidLinkException;
+use Nette\DI\Container;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
+use NiftyGrid\DuplicateGlobalButtonException;
 
 /**
- *
- * @author Mišo <miso@fykos.cz>
+ * Class OrgPaymentGrid
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class OrgPaymentGrid extends PaymentGrid {
     /**
@@ -22,12 +24,11 @@ class OrgPaymentGrid extends PaymentGrid {
 
     /**
      * OrgPaymentGrid constructor.
-     * @param ServicePayment $servicePayment
      * @param ModelEvent $event
-     * @param TableReflectionFactory $tableReflectionFactory
+     * @param Container $container
      */
-    public function __construct(ServicePayment $servicePayment, ModelEvent $event, TableReflectionFactory $tableReflectionFactory) {
-        parent::__construct($servicePayment, $tableReflectionFactory);
+    public function __construct(ModelEvent $event, Container $container) {
+        parent::__construct($container);
         $this->event = $event;
     }
 
@@ -35,8 +36,10 @@ class OrgPaymentGrid extends PaymentGrid {
      * @param $presenter
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
-     * @throws \Nette\Application\UI\InvalidLinkException
-     * @throws \NiftyGrid\DuplicateGlobalButtonException
+     * @throws InvalidLinkException
+     * @throws DuplicateGlobalButtonException
+     * @throws NotImplementedException
+     * @throws NotImplementedException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

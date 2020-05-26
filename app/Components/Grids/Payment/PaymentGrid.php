@@ -2,14 +2,14 @@
 
 namespace FKSDB\Components\Grids\Payment;
 
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServicePayment;
+use Nette\DI\Container;
 
 /**
  * Class PaymentGrid
- * @package FKSDB\Components\Grids\Payment
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class PaymentGrid extends BaseGrid {
     /**
@@ -19,17 +19,13 @@ abstract class PaymentGrid extends BaseGrid {
 
     /**
      * PaymentGrid constructor.
-     * @param ServicePayment $servicePayment
-     * @param TableReflectionFactory $tableReflectionFactory
+     * @param Container $container
      */
-    function __construct(ServicePayment $servicePayment, TableReflectionFactory $tableReflectionFactory) {
-        parent::__construct($tableReflectionFactory);
-        $this->servicePayment = $servicePayment;
+    public function __construct(Container $container) {
+        parent::__construct($container);
+        $this->servicePayment = $container->getByType(ServicePayment::class);
     }
 
-    /**
-     * @return string
-     */
     protected function getModelClassName(): string {
         return ModelPayment::class;
     }

@@ -9,7 +9,7 @@ use Nette\Forms\Controls\BaseControl;
 
 /**
  * Class HomepageField
- * @package FKSDB\Components\Forms\Factories\PersonInfo
+ * *
  */
 class HomepageRow extends AbstractRow {
     use DefaultPrinterTrait;
@@ -22,9 +22,10 @@ class HomepageRow extends AbstractRow {
     }
 
     /**
+     * @param array $args
      * @return BaseControl
      */
-    public function createField(): BaseControl {
+    public function createField(...$args): BaseControl {
         return new URLTextBox();
     }
 

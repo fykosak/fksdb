@@ -3,16 +3,17 @@
 namespace EventModule;
 
 use AuthenticatedPresenter;
-use FKSDB\Components\Controls\LanguageChooser;
-use FKSDB\NotImplementedException;
+use FKSDB\Config\NeonSchemaException;
+use FKSDB\Events\EventDispatchFactory;
+use FKSDB\Exceptions\NotFoundException;
+use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Services\ServiceContestYear;
 use FKSDB\ORM\Services\ServiceEvent;
-use FKSDB\YearCalculator;
+use FKSDB\UI\PageStyleContainer;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\DI\Container;
 use Nette\Security\IResource;
 
 /**
@@ -22,214 +23,180 @@ use Nette\Security\IResource;
  */
 abstract class BasePresenter extends AuthenticatedPresenter {
 
-    const TEAM_EVENTS = [1, 9];
+    const TEAM_EVENTS = [1, 9, 13];
 
-    /**
-     *
-     * @var ModelEvent
-     */
+    /** @var ModelEvent */
     private $event;
+    /** @var Holder */
+    private $holder;
 
     /**
      * @var int
      * @persistent
      */
     public $eventId;
-    /**
-     *
-     * @var Container
-     */
-    protected $container;
 
-    /**
-     * @var ServiceEvent
-     */
-    protected $serviceEvent;
-
-    /**
-     * @var ServiceContestYear
-     */
-    protected $serviceContestYear;
-
-    /**
-     * @param ServiceContestYear $serviceContestYear
-     */
-    public function injectServiceContestYear(ServiceContestYear $serviceContestYear) {
-        $this->serviceContestYear = $serviceContestYear;
-    }
-
-    /**
-     * @var YearCalculator
-     */
-    protected $yearCalculator;
-
-    /**
-     * @param YearCalculator $yearCalculator
-     */
-    public function injectYearCalculator(YearCalculator $yearCalculator) {
-        $this->yearCalculator = $yearCalculator;
-    }
-
-    /**
-     * @param Container $container
-     */
-    public function injectContainer(Container $container) {
-        $this->container = $container;
-    }
+    /** @var ServiceEvent */
+    private $serviceEvent;
 
     /**
      * @param ServiceEvent $serviceEvent
+     * @return void
      */
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;
     }
 
-    /**+
-     * @return LanguageChooser
-     */
-    protected function createComponentLanguageChooser(): LanguageChooser {
-        return new LanguageChooser($this->session);
+    protected function getServiceEvent(): ServiceEvent {
+        return $this->serviceEvent;
     }
 
     /**
      * @throws BadRequestException
      * @throws AbortException
+     * @throws \Exception
      */
     protected function startup() {
-        /**
-         * @var LanguageChooser $languageChooser
-         */
-        $languageChooser = $this->getComponent('languageChooser');
-        $languageChooser->syncRedirect();
-
-        if (!$this->eventExist()) {
-            throw new BadRequestException('Event not found.', 404);
-        }
-        if (!$this->isEnabledForEvent($this->getEvent())) {
+        if (!$this->isEnabled()) {
             throw new NotImplementedException();
         }
         parent::startup();
     }
 
-    /**
-     * @return bool
-     * @throws AbortException
-     * @throws BadRequestException
-     */
     public function isAuthorized(): bool {
-        if (!$this->isEnabledForEvent($this->getEvent())) {
+        if (!$this->isEnabled()) {
             return false;
         }
         return parent::isAuthorized();
     }
 
     /**
-     * @return bool
-     * @throws BadRequestException
-     * @throws AbortException
-     */
-    protected function eventExist(): bool {
-        return !!$this->getEvent();
-    }
-
-    /**
-     * @return int
-     * @throws BadRequestException
-     * @throws AbortException
-     */
-    protected function getAcYear(): int {
-        return $this->yearCalculator->getAcademicYear($this->getEvent()->getContest(), $this->getEvent()->year);
-    }
-
-    /**
-     * @return string
-     * @throws BadRequestException
-     * @throws AbortException
-     */
-    public function getSubTitle(): string {
-        return $this->getEvent()->__toString();
-    }
-
-    /**
      * @return ModelEvent
      * @throws BadRequestException
-     * @throws AbortException
      */
     protected function getEvent(): ModelEvent {
         if (!$this->event) {
-            $row = $this->serviceEvent->findByPrimary($this->eventId);
-            if (!$row) {
-                throw new BadRequestException('Event not found');
+            $model = $this->getServiceEvent()->findByPrimary($this->eventId);
+            if (!$model) {
+                throw new NotFoundException('Event not found.');
             }
-            $this->event = ModelEvent::createFromActiveRow($row);
-            if ($this->event) {
-                $holder = $this->container->createEventHolder($this->getEvent());
-                $this->event->setHolder($holder);
-            }
+            $this->event = $model;
         }
         return $this->event;
     }
 
     /**
-     * @param IResource|string $resource
-     * @param string $privilege
-     * @return bool
+     * @return Holder
      * @throws BadRequestException
-     * @throws AbortException
+     * @throws NeonSchemaException
      */
-    protected function eventIsAllowed($resource, string $privilege): bool {
-        $event = $this->getEvent();
-        if (!$event) {
-            return false;
+    protected function getHolder(): Holder {
+        if (!$this->holder) {
+            /** @var EventDispatchFactory $factory */
+            $factory = $this->getContext()->getByType(EventDispatchFactory::class);
+            $this->holder = $factory->getDummyHolder($this->getEvent());
         }
-        return $this->getEventAuthorizator()->isAllowed($resource, $privilege, $event);
+        return $this->holder;
     }
 
     /**
-     * @param IResource|string $resource
-     * @param string $privilege
-     * @return bool
+     * @return int
      * @throws BadRequestException
-     * @throws AbortException
      */
-    protected function isContestsOrgAllowed($resource, string $privilege): bool {
-        $contest = $this->getContest();
-        if (!$contest) {
-            return false;
-        }
-        return $this->getContestAuthorizator()->isAllowed($resource, $privilege, $contest);
-    }
-
-    /**
-     * @return array
-     * @throws BadRequestException
-     * @throws AbortException
-     */
-    protected function getNavBarVariant(): array {
-        return ['event event-type-' . $this->getEvent()->event_type_id, ($this->getEvent()->event_type_id == 1) ? 'bg-fyziklani navbar-dark' : 'bg-light navbar-light'];
-    }
-
-    /**
-     * @return array
-     */
-    protected function getNavRoots(): array {
-        return ['event.dashboard.default'];
+    protected function getAcYear(): int {
+        return $this->getYearCalculator()->getAcademicYear($this->getContest(), $this->getEvent()->year);
     }
 
     /**
      * @return ModelContest
      * @throws BadRequestException
-     * @throws AbortException
      */
-    protected final function getContest(): ModelContest {
+    final protected function getContest(): ModelContest {
         return $this->getEvent()->getContest();
     }
 
-    /**
-     * @param ModelEvent $event
-     * @return bool
-     */
-    protected function isEnabledForEvent(ModelEvent $event): bool {
+    protected function isEnabled(): bool {
         return true;
+    }
+
+    /**
+     * @return bool
+     * @throws BadRequestException
+     */
+    protected function isTeamEvent(): bool {
+        return (bool)in_array($this->getEvent()->event_type_id, self::TEAM_EVENTS);
+    }
+
+    /* **************** ACL *********************** */
+    /**
+     * @param IResource|string $resource
+     * @param string $privilege
+     * @return bool
+     * Standard ACL from acl.neon
+     * @throws BadRequestException
+     */
+    protected function isContestsOrgAuthorized($resource, string $privilege): bool {
+        return $this->getEventAuthorizator()->isContestOrgAllowed($resource, $privilege, $this->getEvent());
+    }
+
+    /**
+     * @param $resource
+     * @param string $privilege
+     * @return bool
+     * @throws BadRequestException
+     * Check if is contest and event org
+     * TODO vyfakuje to aj cartesianov
+     */
+    protected function isEventAndContestOrgAuthorized($resource, string $privilege): bool {
+        return $this->getEventAuthorizator()->isEventAndContestOrgAllowed($resource, $privilege, $this->getEvent());
+    }
+
+    /**
+     * @param $resource
+     * @param $privilege
+     * @return bool
+     * @throws BadRequestException
+     * Check if has contest permission or is Event org
+     */
+    public function isEventOrContestOrgAuthorized($resource, $privilege): bool {
+        return $this->getEventAuthorizator()->isEventOrContestOrgAllowed($resource, $privilege, $this->getEvent());
+    }
+
+    /* ********************** GUI ************************ */
+    /**
+     * @param string $title
+     * @param string $icon
+     * @param string $subTitle
+     * @throws BadRequestException
+     */
+    protected function setTitle(string $title, string $icon = '', string $subTitle = '') {
+        parent::setTitle($title, $icon, $subTitle ?: $this->getEvent()->__toString());
+    }
+
+    /**
+     * @return PageStyleContainer
+     * @throws BadRequestException
+     */
+    protected function getPageStyleContainer(): PageStyleContainer {
+        $container = parent::getPageStyleContainer();
+        $container->styleId = 'event event-type-' . $this->getEvent()->event_type_id;
+        switch ($this->getEvent()->event_type_id) {
+            case 1:
+                $container->navBarClassName = 'bg-fyziklani navbar-dark';
+                break;
+            case 9:
+                $container->navBarClassName = 'bg-fol navbar-light';
+                break;
+            default:
+                $container->navBarClassName = 'bg-light navbar-light';
+        }
+        return $container;
+    }
+
+    /**
+     * @return array|string[]
+     */
+    protected function getNavRoots(): array {
+        return ['Event.Dashboard.default'];
     }
 }

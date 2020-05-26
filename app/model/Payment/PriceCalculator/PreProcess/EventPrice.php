@@ -2,17 +2,15 @@
 
 namespace FKSDB\Payment\PriceCalculator\PreProcess;
 
-use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServiceEventParticipant;
 use FKSDB\Payment\Price;
-use FKSDB\NotImplementedException;
 
 /**
  * Class EventPrice
- * @package FKSDB\Payment\PriceCalculator\PreProcess
+ * *
  */
-class EventPrice extends AbstractPreProcess {
+class EventPrice implements IPreprocess {
     /**
      * @var ServiceEventParticipant
      */
@@ -26,32 +24,24 @@ class EventPrice extends AbstractPreProcess {
         $this->serviceEventParticipant = $serviceEventParticipant;
     }
 
-    /**
-     * @param ModelPayment $modelPayment
-     * @return Price
-     */
     public static function calculate(ModelPayment $modelPayment): Price {
         /* $price = new Price(0, $modelPayment->currency);
          $ids = $this->getData($modelPayment);
          foreach ($ids as $id) {
              $row = $this->serviceEventParticipant->findByPrimary($id);
-             $model = ModelEventParticipant::createFromTableRow($row);
+             $model = ModelEventParticipant::createFromActiveRow($row);
              $price->add($this->getPriceFromModel($model, $price));
          }*/
         return new Price(0, $modelPayment->currency);
     }
 
-    /**
-     * @param ModelPayment $modelPayment
-     * @return array
-     */
     public static function getGridItems(ModelPayment $modelPayment): array {
         /*$price = new Price(0, $modelPayment->currency);
         $items = [];
         $ids = $this->getData([]);
         foreach ($ids as $id) {
             $row = $this->serviceEventParticipant->findByPrimary($id);
-            $model = ModelEventParticipant::createFromTableRow($row);
+            $model = ModelEventParticipant::createFromActiveRow($row);
             $items[] = [
                 'price' => $this->getPriceFromModel($model, $price),
                 'label' => '',// TODO
@@ -59,14 +49,5 @@ class EventPrice extends AbstractPreProcess {
         }
         return $items;*/
         return [];
-    }
-
-    /**
-     * @param ModelEventParticipant $modelEventParticipant
-     * @param Price $price
-     * @return Price
-     */
-    private function getPriceFromModel(ModelEventParticipant $modelEventParticipant, Price $price): Price {
-        throw new NotImplementedException();
     }
 }

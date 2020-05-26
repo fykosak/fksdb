@@ -9,7 +9,7 @@ use Nette\Utils\Html;
 
 /**
  * Class HashRow
- * @package FKSDB\Components\DatabaseReflection\Login
+ * *
  */
 class HashRow extends AbstractLoginRow {
     /**
@@ -24,6 +24,6 @@ class HashRow extends AbstractLoginRow {
      * @return Html
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        return (new HashPrinter)($model->hash);
+        return (new HashPrinter())($model->hash);
     }
 }

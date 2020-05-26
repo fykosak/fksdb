@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
-use Events\Machine\BaseMachine;
-use Events\Model\Holder\Field;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Model\Holder\Field;
 use FKSDB\Components\Forms\Controls\TimeBox;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\AbstractServiceMulti;
@@ -16,6 +16,7 @@ use Nette\Forms\Controls\Checkbox;
 use Nette\Forms\Controls\TextArea;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
+use Nette\Forms\IControl;
 use Nette\InvalidArgumentException;
 
 /**
@@ -44,7 +45,7 @@ class DBReflectionFactory extends AbstractFactory {
      * @param Connection $connection
      * @param TableReflectionFactory $tableReflectionFactory
      */
-    function __construct(Connection $connection, TableReflectionFactory $tableReflectionFactory) {
+    public function __construct(Connection $connection, TableReflectionFactory $tableReflectionFactory) {
         $this->connection = $connection;
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
@@ -84,14 +85,14 @@ class DBReflectionFactory extends AbstractFactory {
         if (!$element) {
             if ($type == 'TINYINT' && $size == 1) {
                 $element = new Checkbox($field->getLabel());
-            } else if (substr_compare($type, 'INT', '-3') == 0) {
+            } elseif (substr_compare($type, 'INT', '-3') == 0) {
                 $element = new TextInput($field->getLabel());
                 $element->addCondition(Form::FILLED)
                     ->addRule(Form::INTEGER, _('%label musí být celé číslo.'))
                     ->addRule(Form::MAX_LENGTH, null, $size);
-            } else if ($type == 'TEXT') {
+            } elseif ($type == 'TEXT') {
                 $element = new TextArea($field->getLabel());
-            } else if ($type == 'TIME') {
+            } elseif ($type == 'TIME') {
                 $element = new TimeBox($field->getLabel());
             } else {
                 $element = new TextInput($field->getLabel());
@@ -101,7 +102,6 @@ class DBReflectionFactory extends AbstractFactory {
             }
         }
         $element->caption = $field->getLabel();
-       // Debugger::barDump($field);
         if ($field->getDescription()) {
 
             $element->setOption('description', $field->getDescription());
@@ -111,13 +111,14 @@ class DBReflectionFactory extends AbstractFactory {
     }
 
     /**
-     * @param $component
+     * @param BaseControl $component
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
      */
     protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container) {
-        if ($machine->getState() == BaseMachine::STATE_INIT && $field->getDefault() === null) {
+
+        if ($field->getBaseHolder()->getModelState() == BaseMachine::STATE_INIT && $field->getDefault() === null) {
             $column = $this->resolveColumn($field);
             $default = $column['default'];
         } else {
@@ -127,7 +128,7 @@ class DBReflectionFactory extends AbstractFactory {
     }
 
     /**
-     * @param $component
+     * @param BaseControl $component
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
@@ -138,7 +139,7 @@ class DBReflectionFactory extends AbstractFactory {
 
     /**
      * @param Component $component
-     * @return Component|\Nette\Forms\IControl
+     * @return Component|IControl
      */
     public function getMainControl(Component $component) {
         return $component;
@@ -156,7 +157,7 @@ class DBReflectionFactory extends AbstractFactory {
         if ($service instanceof AbstractServiceSingle) {
             $tableName = $service->getTable()->getName();
             $column = $this->getColumnMetadata($tableName, $columnName);
-        } else if ($service instanceof AbstractServiceMulti) {
+        } elseif ($service instanceof AbstractServiceMulti) {
             $tableName = $service->getMainService()->getTable()->getName();
             $column = $this->getColumnMetadata($tableName, $columnName);
             if ($column === null) {
@@ -191,4 +192,3 @@ class DBReflectionFactory extends AbstractFactory {
     }
 
 }
-

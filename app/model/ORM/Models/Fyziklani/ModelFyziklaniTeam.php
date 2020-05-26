@@ -2,30 +2,27 @@
 
 namespace FKSDB\ORM\Models\Fyziklani;
 
-use FKSDB\model\Fyziklani\ClosedSubmittingException;
-use FKSDB\model\Fyziklani\NotCheckedSubmitsException;
+use FKSDB\Fyziklani\ClosedSubmittingException;
+use FKSDB\Fyziklani\NotCheckedSubmitsException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\IEventReferencedModel;
 use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use Nette\Database\Table\ActiveRow;
-use Nette\Database\Table\Selection;
+use Nette\Database\Table\GroupedSelection;
 use Nette\Security\IResource;
-use Nette\Utils\DateTime;
-use Tracy\Debugger;
 
 /**
  * @property-read  string category
  * @property-read  string name
- * @property-read  integer e_fyziklani_team_id
- * @property-read  integer event_id
- * @property-read  integer points
+ * @property-read  int e_fyziklani_team_id
+ * @property-read  int event_id
+ * @property-read  int points
  * @property-read  string status
- * @property-read  DateTime created
- * @property-read  DateTime modified
+ * @property-read  \DateTimeInterface created
+ * @property-read  \DateTimeInterface modified
  * @property-read  string phone
  * @property-read  bool force_a
  * @property-read  string password
@@ -38,9 +35,6 @@ use Tracy\Debugger;
 class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferencedModel, IResource {
     const RESOURCE_ID = 'fyziklani.team';
 
-    /**
-     * @return string
-     */
     public function __toString(): string {
         return $this->name;
     }
@@ -56,17 +50,11 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
         return null;
     }
 
-    /**
-     * @return ModelEvent
-     */
     public function getEvent(): ModelEvent {
         return ModelEvent::createFromActiveRow($this->event);
     }
 
-    /**
-     * @return Selection
-     */
-    public function getParticipants(): Selection {
+    public function getParticipants(): GroupedSelection {
         return $this->related(DbNames::TAB_E_FYZIKLANI_PARTICIPANT, 'e_fyziklani_team_id');
     }
 
@@ -80,48 +68,30 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
         }
         return null;
     }
+
     /* ******************** SUBMITS ******************************* */
 
-    /**
-     * @return Selection
-     */
-    public function getAllSubmits(): Selection {
+    public function getAllSubmits(): GroupedSelection {
         return $this->related(DbNames::TAB_FYZIKLANI_SUBMIT, 'e_fyziklani_team_id');
     }
 
-    /**
-     * @return Selection
-     */
-    public function getNonRevokedSubmits(): Selection {
+    public function getNonRevokedSubmits(): GroupedSelection {
         return $this->getAllSubmits()->where('points IS NOT NULL');
     }
 
-    /**
-     * @return Selection
-     */
-    public function getNonCheckedSubmits(): Selection {
+    public function getNonCheckedSubmits(): GroupedSelection {
         return $this->getNonRevokedSubmits()->where('state IS NULL OR state != ?', ModelFyziklaniSubmit::STATE_CHECKED);
     }
 
-    /**
-     * @return bool
-     */
     public function hasAllSubmitsChecked(): bool {
         return $this->getNonCheckedSubmits()->count() === 0;
     }
 
-
-    /**
-     * @return bool
-     */
     public function hasOpenSubmitting(): bool {
         $points = $this->points;
         return !is_numeric($points);
     }
 
-    /**
-     * @return bool
-     */
     public function isReadyForClosing(): bool {
         return $this->hasAllSubmitsChecked() && $this->hasOpenSubmitting();
     }
@@ -146,6 +116,17 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
      * @return ModelPersonSchedule[]
      */
     public function getScheduleRest(array $types = ['accommodation', 'weekend']): array {
+        $toPay = [];
+        foreach ($this->getPersons() as $person) {
+            $toPay[] = $person->getScheduleRests($this->getEvent(), $types);
+        }
+        return $toPay;
+    }
+
+    /**
+     * @return ModelPerson[]
+     */
+    public function getPersons(): array {
         $persons = [];
         foreach ($this->getParticipants() as $pRow) {
             $persons[] = ModelPerson::createFromActiveRow($pRow->event_participant->person);
@@ -154,23 +135,7 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
         if ($teacher) {
             $persons[] = $teacher;
         }
-        $toPay = [];
-        /**
-         * @var ModelPerson $person
-         */
-        foreach ($persons as $person) {
-            $schedule = $person->getScheduleForEvent($this->getEvent())
-                ->where('schedule_item.schedule_group.schedule_group_type', $types)
-                ->where('schedule_item.price_czk IS NOT NULL');
-            foreach ($schedule as $pSchRow) {
-                $pSchedule = ModelPersonSchedule::createFromActiveRow($pSchRow);
-                $payment = $pSchedule->getPayment();
-                if (!$payment || $payment->state !== ModelPayment::STATE_RECEIVED) {
-                    $toPay[] = $pSchedule;
-                }
-            }
-        }
-        return $toPay;
+        return $persons;
     }
 
     /**
@@ -194,11 +159,7 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
         return $data;
     }
 
-    /**
-     * Returns a string identifier of the Resource.
-     * @return string
-     */
-    public function getResourceId() {
+    public function getResourceId(): string {
         return self::RESOURCE_ID;
     }
 }

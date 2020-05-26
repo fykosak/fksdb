@@ -11,7 +11,7 @@ use Nette\Utils\Html;
 
 /**
  * Class NumberBrochuresRow
- * @package FKSDB\Components\DatabaseReflection\Tables\Teacher
+ * *
  */
 class NumberBrochuresRow extends AbstractTeacherRow {
 
@@ -38,9 +38,10 @@ class NumberBrochuresRow extends AbstractTeacherRow {
     }
 
     /**
+     * @param array $args
      * @return BaseControl
      */
-    public function createField(): BaseControl {
+    public function createField(...$args): BaseControl {
         return (new TextInput(_('Number of brochures')))->addRule(Form::INTEGER)->setOption('description', $this->getDescription());
     }
 }

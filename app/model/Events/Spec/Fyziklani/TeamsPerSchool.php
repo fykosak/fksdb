@@ -1,14 +1,15 @@
 <?php
 
-namespace Events\Spec\Fyziklani;
+namespace FKSDB\Events\Spec\Fyziklani;
 
-use Events\FormAdjustments\IFormAdjustment;
-use Events\Machine\Machine;
-use Events\Model\ExpressionEvaluator;
-use Events\Model\Holder\Holder;
+use FKSDB\Events\FormAdjustments\IFormAdjustment;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\ExpressionEvaluator;
+use FKSDB\Events\Model\Holder\BaseHolder;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Services\ServicePersonHistory;
-use Nette\Database\Connection;
+use Nette\Database\Context;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 
@@ -20,9 +21,9 @@ use Nette\Forms\IControl;
 class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
 
     /**
-     * @var Connection
+     * @var Context
      */
-    private $connection;
+    private $context;
 
     /**
      * @var mixed
@@ -60,12 +61,12 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
      * TeamsPerSchool constructor.
      * @param $teamsPerSchool
      * @param ExpressionEvaluator $evaluator
-     * @param Connection $connection
+     * @param Context $context
      * @param ServicePersonHistory $servicePersonHistory
      */
-    function __construct($teamsPerSchool, ExpressionEvaluator $evaluator, Connection $connection, ServicePersonHistory $servicePersonHistory) {
+    public function __construct($teamsPerSchool, ExpressionEvaluator $evaluator, Context $context, ServicePersonHistory $servicePersonHistory) {
         parent::__construct($servicePersonHistory);
-        $this->connection = $connection;
+        $this->context = $context;
         $this->evaluator = $evaluator;
         $this->setTeamsPerSchool($teamsPerSchool);
     }
@@ -74,7 +75,7 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
      * @param Form $form
      * @param Machine $machine
      * @param Holder $holder
-     * @return mixed|void
+     * @return void
      */
     protected function _adjust(Form $form, Machine $machine, Holder $holder) {
         $this->setHolder($holder);
@@ -100,11 +101,14 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
         };
     }
 
+    /**
+     * @var
+     */
     private $cache;
 
     /**
      * @param $first
-     * @param $control
+     * @param IControl $control
      * @param $schools
      * @return bool
      */
@@ -115,14 +119,15 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
         $secondaryGroups = $this->getHolder()->getGroupedSecondaryHolders();
         $group = reset($secondaryGroups);
         $baseHolders = $group['holders'];
+        /** @var BaseHolder $baseHolder */
         $baseHolder = reset($baseHolders);
 
         if (!$this->cache || $first) {
             /*
              * This may not be optimal.
              */
-            $acYear = $event->event_type->contest->related('contest_year')->where('year', $event->year)->fetch()->ac_year;
-            $result = $this->connection->table(DbNames::TAB_EVENT_PARTICIPANT)
+            $acYear = $event->getContest()->related('contest_year')->where('year', $event->year)->fetch()->ac_year;
+            $result = $this->context->table(DbNames::TAB_EVENT_PARTICIPANT)
                 ->select('person.person_history:school_id')
                 ->select("GROUP_CONCAT(DISTINCT e_fyziklani_participant:e_fyziklani_team.name ORDER BY e_fyziklani_participant:e_fyziklani_team.created SEPARATOR ', ') AS teams")
                 ->where($baseHolder->getEventId(), $event->getPrimary())
@@ -148,4 +153,3 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
     }
 
 }
-

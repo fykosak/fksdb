@@ -21,12 +21,12 @@ class UniqueLoginFactory {
      * UniqueLoginFactory constructor.
      * @param ServiceLogin $serviceLogin
      */
-    function __construct(ServiceLogin $serviceLogin) {
+    public function __construct(ServiceLogin $serviceLogin) {
         $this->serviceLogin = $serviceLogin;
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelLogin|null $login
+     * @param ModelLogin|null $login
      * @return UniqueLogin
      */
     public function create(ModelLogin $login = null) {

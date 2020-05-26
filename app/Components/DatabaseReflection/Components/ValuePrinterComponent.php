@@ -2,39 +2,29 @@
 
 namespace FKSDB\Components\DatabaseReflection;
 
-use FKSDB\Components\Forms\Factories\ITestedRowFactory;
+use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\AbstractModelSingle;
-use Nette\Application\UI\Control;
-use Nette\Localization\ITranslator;
 
 /**
  * Class ValuePrinterComponent
- * @package FKSDB\Components\DatabaseReflection
+ * *
  */
-class ValuePrinterComponent extends Control {
+class ValuePrinterComponent extends BaseComponent {
     const LAYOUT_LIST_ITEM = 'list-item';
     const LAYOUT_ROW = 'row';
     const LAYOUT_ONLY_VALUE = 'only-value';
     /**
-     * @var ITranslator
-     */
-    private $translator;
-    /**
      * @var TableReflectionFactory
      */
-private $tableReflectionFactory;
+    private $tableReflectionFactory;
 
     /**
-     * StalkingRowComponent constructor.
-     * @param ITranslator $translator
      * @param TableReflectionFactory $tableReflectionFactory
+     * @return void
      */
-    public function __construct(ITranslator $translator, TableReflectionFactory $tableReflectionFactory) {
-        parent::__construct();
-        $this->translator = $translator;
-        $this->tableReflectionFactory=$tableReflectionFactory;
-
+    public function injectTableReflectionFactory(TableReflectionFactory $tableReflectionFactory) {
+        $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
     /**
@@ -47,14 +37,12 @@ private $tableReflectionFactory;
     public function render(string $field, AbstractModelSingle $model, int $userPermission, bool $tested) {
         list($tableName, $fieldName) = TableReflectionFactory::parseRow($field);
         $factory = $this->tableReflectionFactory->loadService($tableName, $fieldName);
-
-        $this->template->setTranslator($this->translator);
         $this->template->title = $factory->getTitle();
         $this->template->description = $factory->getDescription();
         $this->template->testLog = null;
-        if ($factory instanceof ITestedRowFactory && $tested) {
-            $this->template->testLog = $factory->runTest($model);
-        }
+        // if ($factory instanceof ITestedRowFactory && $tested) {
+        //  $this->template->testLog = $factory->runTest($model); TODO FIX
+        // }
         $this->template->html = $factory->renderValue($model, $userPermission);
         $this->template->setFile(__DIR__ . '/layout.latte');
         $this->template->render();

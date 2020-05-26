@@ -2,83 +2,54 @@
 
 namespace EventModule;
 
+use FKSDB\Components\Controls\Fyziklani\SchoolCheckComponent;
 use FKSDB\Components\Controls\Fyziklani\SeatingControl;
+use FKSDB\Components\Controls\Schedule\Rests\TeamRestsComponent;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
 use FKSDB\Components\Grids\Events\Application\ApplicationGrid;
 use FKSDB\Components\Grids\Events\Application\TeamApplicationGrid;
-use FKSDB\model\Fyziklani\NotSetGameParametersException;
+use FKSDB\Config\NeonSchemaException;
+use FKSDB\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 
 /**
  * Class ApplicationPresenter
- * @package EventModule
+ * *
  * @method ModelFyziklaniTeam getEntity()
  */
 class TeamApplicationPresenter extends AbstractApplicationPresenter {
-    /**
-     * @var ServiceFyziklaniTeam
-     */
+    /** @var ServiceFyziklaniTeam */
     private $serviceFyziklaniTeam;
-    /**
-     * @var ServiceFyziklaniTeamPosition
-     */
-    private $serviceFyziklaniTeamPosition;
 
     /**
      * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @return void
      */
     public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam) {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 
     /**
-     * @param ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
-     */
-    public function injectServiceFyziklaniTeamPosition(ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition) {
-        $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
-    }
-
-    public function titleList() {
-        $this->setTitle(_('List of team applications'));
-        $this->setIcon('fa fa-users');
-    }
-
-    public function titleDetail() {
-        $this->setTitle(_('Team application detail'));
-        $this->setIcon('fa fa-user');
-    }
-
-    /**
-     * @param ModelEvent $event
      * @return bool
-     * @throws AbortException
      * @throws BadRequestException
      */
-    protected function isEnabledForEvent(ModelEvent $event): bool {
+    protected function isEnabled(): bool {
         return $this->isTeamEvent();
     }
 
     /**
-     * @return ApplicationGrid
+     * @param int $id
      * @throws AbortException
      * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
-    public function createComponentGrid(): AbstractApplicationGrid {
-        return new TeamApplicationGrid($this->getEvent(), $this->getTableReflectionFactory());
-    }
-
-    /**
-     * @throws BadRequestException
-     * @throws AbortException
-     */
-    public function renderDetail() {
-        parent::renderDetail();
+    public function renderDetail(int $id) {
+        parent::renderDetail($id);
         $this->template->acYear = $this->getAcYear();
         try {
             $setup = $this->getEvent()->getFyziklaniGameSetup();
@@ -87,28 +58,40 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
             $rankVisible = false;
         }
         $this->template->rankVisible = $rankVisible;
-        $this->template->model = $this->getEntity();
-        $this->template->toPay = $this->getEntity()->getScheduleRest();
+        $this->template->model = $this->loadEntity($id);
+    }
+
+    protected function createComponentSeating(): SeatingControl {
+        return new SeatingControl($this->getContext());
     }
 
     /**
-     * @return SeatingControl
+     * @return SchoolCheckComponent
+     * @throws AbortException
+     * @throws BadRequestException
      */
-    public function createComponentSeating(): SeatingControl {
-        return new SeatingControl($this->serviceFyziklaniTeamPosition, $this->getTranslator());
+    protected function createComponentSchoolCheck(): SchoolCheckComponent {
+        return new SchoolCheckComponent($this->getEvent(), $this->getAcYear(), $this->getContext());
     }
 
     /**
-     * @return AbstractServiceSingle
+     * @return ApplicationGrid
+     * @throws AbortException
+     * @throws BadRequestException
+     * @throws NeonSchemaException
      */
-    function getORMService() {
+    protected function createComponentGrid(): AbstractApplicationGrid {
+        return new TeamApplicationGrid($this->getEvent(), $this->getHolder(), $this->getContext());
+    }
+
+    protected function createComponentTeamRestsControl(): TeamRestsComponent {
+        return new TeamRestsComponent($this->getContext());
+    }
+
+    /**
+     * @return AbstractServiceSingle|ServiceFyziklaniTeam
+     */
+    protected function getORMService(): ServiceFyziklaniTeam {
         return $this->serviceFyziklaniTeam;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getModelResource(): string {
-        return ModelFyziklaniTeam::RESOURCE_ID;
     }
 }

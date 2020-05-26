@@ -3,20 +3,20 @@
 namespace CommonModule;
 
 use AuthenticatedPresenter;
-use FKSDB\Components\Controls\Choosers\ThemeSwitcher;
+use FKSDB\UI\PageStyleContainer;
 use Nette\Security\IResource;
 
 /**
  * Class BasePresenter
- * @package CoreModule
+ * *
  */
 abstract class BasePresenter extends AuthenticatedPresenter {
 
-    /**
-     * @return array
-     */
-    protected function getNavBarVariant(): array {
-        return ['theme-light common', 'bg-dark navbar-dark'];
+    protected function getPageStyleContainer(): PageStyleContainer {
+        $container = parent::getPageStyleContainer();
+        $container->styleId = 'theme-light common';
+        $container->navBarClassName = 'bg-dark navbar-dark';
+        return $container;
     }
 
     protected function beforeRender() {
@@ -24,11 +24,11 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     protected function getNavRoots(): array {
         $roots = parent::getNavRoots();
-        $roots[] = 'common.dashboard.default';
+        $roots[] = 'Common.Dashboard.default';
         return $roots;
 
     }
@@ -38,7 +38,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @param string $privilege
      * @return bool
      */
-    protected function isAllowed($resource, string $privilege): bool {
+    protected function isAnyContestAuthorized($resource, string $privilege): bool {
         return $this->getContestAuthorizator()->isAllowedForAnyContest($resource, $privilege);
     }
 }

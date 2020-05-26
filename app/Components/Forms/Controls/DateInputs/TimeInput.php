@@ -1,11 +1,10 @@
 <?php
 
-
 namespace FKSDB\Components\Forms\Controls\DateInputs;
 
 /**
  * Class TimeInput
- * @package FKSDB\Components\Forms\Controls\DateInputs
+ * *
  */
 class TimeInput extends AbstractDateInput {
 

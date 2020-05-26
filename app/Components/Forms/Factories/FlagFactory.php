@@ -42,9 +42,7 @@ class FlagFactory {
      * @return PersonFlag
      */
     public function createSpamMff(): PersonFlag {
-        $control = new PersonFlag(_('Přeji si dostávat informace o dění na MFF a akcích, které pořádáme'));
-        return $control;
+        return new PersonFlag(_('Přeji si dostávat informace o dění na MFF a akcích, které pořádáme'));
     }
 
 }
-

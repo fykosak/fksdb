@@ -12,7 +12,7 @@ use Nette\Utils\Html;
 
 /**
  * Class OrderRow
- * @package FKSDB\Components\DatabaseReflection\Org
+ * *
  */
 class OrderRow extends AbstractOrgRowFactory {
     const ORDER_MAPPING = [
@@ -44,15 +44,16 @@ class OrderRow extends AbstractOrgRowFactory {
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         if (\array_key_exists($model->order, self::ORDER_MAPPING)) {
-            return (new StringPrinter)(self::ORDER_MAPPING[$model->order]);
+            return (new StringPrinter())(self::ORDER_MAPPING[$model->order]);
         }
-        return (new StringPrinter)($model->order);
+        return (new StringPrinter())($model->order);
     }
 
     /**
+     * @param array $args
      * @return BaseControl
      */
-    public function createField(): BaseControl {
+    public function createField(...$args): BaseControl {
         $control = new SelectBox($this->getTitle());
         $control->setOption('description', $this->getDescription());
         $control->setItems(self::ORDER_MAPPING);

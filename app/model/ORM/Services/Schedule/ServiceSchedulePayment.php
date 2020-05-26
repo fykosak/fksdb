@@ -13,20 +13,14 @@ use Nette\Utils\ArrayHash;
 
 /**
  * Class ServiceSchedulePayment
- * @package FKSDB\ORM\Services\Schedule
+ * *
  */
 class ServiceSchedulePayment extends AbstractServiceSingle {
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_SCHEDULE_PAYMENT;
     }
 
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelSchedulePayment::class;
     }
@@ -57,15 +51,15 @@ class ServiceSchedulePayment extends AbstractServiceSingle {
                 $row->delete();
             }
         }
-        if (!$this->connection->inTransaction()) {
+        if (!$this->getConnection()->getPdo()->inTransaction()) {
             throw new StorageException(_('Not in transaction!'));
         }
         foreach ($newScheduleIds as $id) {
             $query = $this->getTable()->where('person_schedule_id', $id)->where('payment.state !=? OR payment.state IS NULL', ModelPayment::STATE_CANCELED);
             $count = $query->count();
             if ($count > 0) {
-                $row = $query->fetch();
-                $model = ModelSchedulePayment::createFromActiveRow($row);
+                /** @var ModelSchedulePayment $model */
+                $model = $query->fetch();
                 throw new DuplicatePaymentException(sprintf(
                     _('Item "%s" has already another payment.'),
                     $model->getPersonSchedule()->getLabel()
@@ -77,7 +71,7 @@ class ServiceSchedulePayment extends AbstractServiceSingle {
 
     /**
      * @param ArrayHash $data
-     * @return integer[]
+     * @return array
      */
     private function prepareData($data): array {
         $data = (array)json_decode($data);

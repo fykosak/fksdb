@@ -2,19 +2,20 @@
 
 namespace FKSDB\Components\DatabaseReflection\ValuePrinters;
 
-use FKSDB\Components\Controls\Helpers\Badges\NotSetBadge;
+use FKSDB\Components\Controls\Badges\NotSetBadge;
 use FKSDB\Payment\Price;
+use FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException;
 use Nette\Utils\Html;
 
 /**
  * Class PricePrinter
- * @package FKSDB\Components\DatabaseReflection\ValuePrinters
+ * *
  */
 class PricePrinter extends AbstractValuePrinter {
     /**
      * @param Price|null $value
      * @return Html
-     * @throws \FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException
+     * @throws UnsupportedCurrencyException
      */
     protected function getHtml($value): Html {
         if (\is_null($value)) {

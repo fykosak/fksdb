@@ -2,63 +2,33 @@
 
 namespace FKSDB\Components\DatabaseReflection;
 
-use Exception;
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
-use Nette\Application\UI\Control;
-use Nette\ComponentModel\IComponent;
-use Nette\Localization\ITranslator;
-use Nette\Templating\FileTemplate;
+use FKSDB\Components\Controls\BaseComponent;
 
-/**
- * Class DetailComponent
- * @package FKSDB\Components\DatabaseReflection
- * @property FileTemplate $template
- */
-class DetailComponent extends Control {
-    /**
-     * @var TableReflectionFactory
-     */
-    private $tableReflectionFactory;
-    /**
-     * @var ITranslator
-     */
-    private $translator;
+class DetailComponent extends BaseComponent {
     /**
      * @var DetailFactory
      */
     private $detailFactory;
 
     /**
-     * DetailComponent constructor.
      * @param DetailFactory $detailFactory
-     * @param TableReflectionFactory $tableReflectionFactory
-     * @param ITranslator $translator
+     * @return void
      */
-    public function __construct(DetailFactory$detailFactory,TableReflectionFactory $tableReflectionFactory, ITranslator $translator) {
-        parent::__construct();
-        $this->detailFactory=$detailFactory;
-        $this->tableReflectionFactory = $tableReflectionFactory;
-        $this->translator = $translator;
+    public function injectDetailFactory(DetailFactory $detailFactory) {
+        $this->detailFactory = $detailFactory;
+    }
+
+    public function createComponentValuePrinter(): ValuePrinterComponent {
+        return new ValuePrinterComponent($this->getContext());
     }
 
     /**
-     * @param string $name
-     * @return IComponent|null
-     * @throws Exception
+     * @param $section
+     * @param $model
+     * @return void
      */
-    public function createComponent($name) {
-        $printerComponent = $this->tableReflectionFactory->createComponent($name, 2048);
-        if ($printerComponent) {
-            return $printerComponent;
-        }
-        return parent::createComponent($name);
-    }
-
-    public function render($section,$model) {
-        $this->template->setTranslator($this->translator);
-
-     $this->template->data = $this->detailFactory->getSection($section);
-
+    public function render($section, $model) {
+        $this->template->data = $this->detailFactory->getSection($section);
         $this->template->model = $model;
         $this->template->setFile(__DIR__ . '/detail.latte');
         $this->template->render();

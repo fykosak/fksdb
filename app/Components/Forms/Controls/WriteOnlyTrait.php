@@ -20,8 +20,17 @@ use Nette\Utils\Html;
  */
 trait WriteOnlyTrait {
 
+    /**
+     * @var bool
+     */
     private $writeOnly = true;
+    /**
+     * @var bool
+     */
     private $actuallyDisabled = false;
+    /**
+     * @var bool
+     */
     private $hasManualValue = false;
 
     private function writeOnlyAppendMonitors() {
@@ -32,14 +41,14 @@ trait WriteOnlyTrait {
     /**
      * @return bool
      */
-    public function getWriteOnly() {
+    public function getWriteOnly(): bool {
         return $this->writeOnly;
     }
 
     /**
      * @param bool $writeOnly
      */
-    public function setWriteOnly($writeOnly = true) {
+    public function setWriteOnly(bool $writeOnly = true) {
         $this->writeOnly = $writeOnly;
     }
 
@@ -77,14 +86,19 @@ trait WriteOnlyTrait {
         $this->setDisabled();
     }
 
+    /**
+     * @var bool
+     */
     private $writeOnlyAttachedOnValidate = false;
+    /**
+     * @var bool
+     */
     private $writeOnlyAttachedJS = false;
 
     /**
      * @param $obj
      */
     protected function writeOnlyAttached($obj) {
-        parent::attached($obj);
         if (!$this->writeOnlyAttachedOnValidate && $obj instanceof Form) {
             $that = $this;
             $obj->onValidate = $obj->onValidate ?: [];

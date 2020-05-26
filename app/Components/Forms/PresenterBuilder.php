@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Controls;
 
+use Nette\Application\BadRequestException;
 use Nette\Application\PresenterFactory;
 use Nette\Application\UI\Presenter;
 
@@ -16,13 +17,16 @@ class PresenterBuilder {
      * @var PresenterFactory
      */
     private $presenterFactory;
+    /**
+     * @var array
+     */
     private $presenterCache = [];
 
     /**
      * PresenterBuilder constructor.
      * @param PresenterFactory $presenterFactory
      */
-    function __construct(PresenterFactory $presenterFactory) {
+    public function __construct(PresenterFactory $presenterFactory) {
         $this->presenterFactory = $presenterFactory;
     }
 
@@ -33,9 +37,9 @@ class PresenterBuilder {
      * @param string $action
      * @param string $params
      * @param array $baseParams
-     * @param boolean $newInstance when false all instances of the same class will be the same and only initilization methods are called
+     * @param bool $newInstance when false all instances of the same class will be the same and only initilization methods are called
      * @return Presenter
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     public function preparePresenter($presenterName, $action, $params, $baseParams = [], $newInstance = false) {
         if ($newInstance) {
@@ -44,7 +48,7 @@ class PresenterBuilder {
             $presenter = $this->getCachePresenter($presenterName);
         }
 
-        $params = $params ? : [];
+        $params = $params ?: [];
 
         unset($baseParams[Presenter::ACTION_KEY]);
         foreach ($params as $key => $value) {
@@ -55,6 +59,7 @@ class PresenterBuilder {
 
         return $presenter;
     }
+
     /**
      * @param string $presenterName
      * @return Presenter

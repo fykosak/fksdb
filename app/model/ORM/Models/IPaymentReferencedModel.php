@@ -3,7 +3,7 @@
 namespace FKSDB\ORM\Models;
 /**
  * Interface IPaymentReferencedModel
- * @package FKSDB\ORM\Models
+ * *
  */
 interface IPaymentReferencedModel {
     /**

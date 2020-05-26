@@ -13,36 +13,18 @@ use Nette\Application\UI\Control;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class FlashMessageDump {
-
-    /**
-     * @var mixed[]  logger level => flash message type
-     */
-    private $levelMap;
-
-    /**
-     * FlashMessageDump constructor.
-     * @param $levelMap
-     */
-    function __construct($levelMap) {
-        $this->levelMap = $levelMap;
-    }
-
     /**
      * @param MemoryLogger $logger
      * @param Control $control
      * @param bool $clear
+     * @return void
      */
-    public function dump(MemoryLogger $logger, Control $control, $clear = true) {
+    public static function dump(MemoryLogger $logger, Control $control, bool $clear = true) {
         foreach ($logger->getMessages() as $message) {
-            if (!isset($this->levelMap[$message[MemoryLogger::IDX_LEVEL]])) {
-                continue;
-            }
-            $type = $this->levelMap[$message[MemoryLogger::IDX_LEVEL]];
-            $control->flashMessage($message[MemoryLogger::IDX_MESSAGE], $type);
+            $control->flashMessage($message->getMessage(), $message->getLevel());
         }
         if ($clear) {
             $logger->clear();
         }
     }
-
 }

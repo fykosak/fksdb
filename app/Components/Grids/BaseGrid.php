@@ -5,13 +5,15 @@ namespace FKSDB\Components\Grids;
 use Exception;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\Application\IPresenter;
 use Nette\Application\UI\Form;
+use Nette\Application\UI\InvalidLinkException;
+use Nette\DI\Container;
 use Nette\InvalidStateException;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 use Nette\Templating\FileTemplate;
 use Nette\Templating\ITemplate;
 use Nette\Utils\Html;
@@ -32,7 +34,6 @@ use SQL\SearchableDataSource;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 abstract class BaseGrid extends Grid {
-
     /** @persistent string */
     public $searchTerm;
     /**
@@ -42,39 +43,50 @@ abstract class BaseGrid extends Grid {
 
     /**
      * BaseGrid constructor.
-     * @param TableReflectionFactory|null $tableReflectionFactory
+     * @param Container $container
      */
-    public function __construct(TableReflectionFactory $tableReflectionFactory = null) {
+    public function __construct(Container $container) {
         parent::__construct();
+        $container->callInjects($this);
+    }
+
+    /**
+     * @param TableReflectionFactory $tableReflectionFactory
+     * @return void
+     */
+    public function injectTableReflectionFactory(TableReflectionFactory $tableReflectionFactory) {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
     /**
      * @param $presenter
+     * @return void
      */
     protected function configure($presenter) {
         $this->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.latte');
-        /**
-         * @var GridPaginator $paginator
-         */
+        /** @var GridPaginator $paginator */
         $paginator = $this->getComponent('paginator');
         $paginator->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.paginator.latte');
     }
 
-
     /**
      * @param null $class
      * @return ITemplate
+     * @throws BadTypeException
      */
     protected function createTemplate($class = NULL): ITemplate {
+        $presenter = $this->getPresenter();
+        if (!$presenter instanceof \BasePresenter) {
+            throw new BadTypeException(\BasePresenter::class, $presenter);
+        }
         /**
          * @var GridPaginator $paginator
          * @var FileTemplate $template
          */
         $paginator = $this->getComponent('paginator');
-        $paginator->getTemplate()->setTranslator($this->presenter->getTranslator());
+        $paginator->getTemplate()->setTranslator($presenter->getTranslator());
         $template = parent::createTemplate($class);
-        $template->setTranslator($this->presenter->getTranslator());
+        $template->setTranslator($presenter->getTranslator());
         return $template;
     }
 
@@ -99,7 +111,7 @@ abstract class BaseGrid extends Grid {
          */
         $page = $paginator->page;
         if ($paginator->pageCount < 2) {
-            $steps = array($page);
+            $steps = [$page];
         } else {
             $arr = range(max($paginator->firstPage, $page - 3), min($paginator->lastPage, $page + 3));
             $count = 4;
@@ -119,9 +131,6 @@ abstract class BaseGrid extends Grid {
      * Search
      * ****************************** */
 
-    /**
-     * @return bool
-     */
     public function isSearchable(): bool {
         return $this->dataSource instanceof SearchableDataSource;
     }
@@ -183,17 +192,19 @@ abstract class BaseGrid extends Grid {
     /**
      * @param string $tableName
      * @param string $fieldName
-     * @param string|AbstractModelSingle $modelClassName
      * @throws DuplicateColumnException
      * @throws Exception
      */
-    protected function addReflectionColumn(string $tableName, string $fieldName, string $modelClassName) {
+    private function addReflectionColumn(string $tableName, string $fieldName) {
+        $modelClassName = $this->getModelClassName();
         $factory = $this->tableReflectionFactory->loadService($tableName, $fieldName);
 
-        $this->addColumn($fieldName, $factory->getTitle())->setRenderer(function ($row) use ($factory, $fieldName, $modelClassName) {
-            $model = $modelClassName::createFromActiveRow($row);
+        $this->addColumn($fieldName, $factory->getTitle())->setRenderer(function ($model) use ($factory, $fieldName, $modelClassName) {
+            if (!$model instanceof $modelClassName) {
+                $model = $modelClassName::createFromActiveRow($model);
+            }
             return $factory->renderValue($model, 1);
-        });
+        })->setSortable(false);
     }
 
     /**
@@ -202,6 +213,7 @@ abstract class BaseGrid extends Grid {
      * @param callable $accessCallback ActiveRow=>AbstractModelSingle
      * @throws DuplicateColumnException
      * @throws Exception
+     * @deprecated this functionality is moved to getModel in DBReflection AbstractRow
      */
     protected function addJoinedColumn(string $tableName, string $fieldName, callable $accessCallback) {
         $factory = $this->tableReflectionFactory->loadService($tableName, $fieldName);
@@ -213,6 +225,7 @@ abstract class BaseGrid extends Grid {
 
     /**
      * @return string|AbstractModelSingle
+     * @throws NotImplementedException
      */
     protected function getModelClassName(): string {
         throw new NotImplementedException();
@@ -223,19 +236,13 @@ abstract class BaseGrid extends Grid {
      * @throws DuplicateColumnException
      */
     protected function addColumns(array $fields) {
-
         foreach ($fields as $name) {
-            if (preg_match('/.*\..*/', $name)) {
-                list($table, $field) = TableReflectionFactory::parseRow($name);
-                $this->addReflectionColumn($table, $field, $this->getModelClassName());
-            } else {
-                $this->addReflectionColumn($this->getTableName(), $name, $this->getModelClassName());
-            }
+            list($table, $field) = TableReflectionFactory::parseRow($name);
+            $this->addReflectionColumn($table, $field);
         }
     }
 
     /**
-     * @param IPresenter $presenter
      * @param string $destination
      * @param string $id
      * @param string $label
@@ -243,53 +250,61 @@ abstract class BaseGrid extends Grid {
      * @param array $params
      * @return Button
      * @throws DuplicateButtonException
+     * @throws NotImplementedException
      */
-    protected function addLinkButton(IPresenter $presenter, string $destination, string $id, string $label, bool $checkACL = true, array $params = []): Button {
+    protected function addLinkButton(string $destination, string $id, string $label, bool $checkACL = true, array $params = []): Button {
         $modelClassName = $this->getModelClassName();
         $paramMapCallback = function ($model) use ($params): array {
-            $URLParams = [];
+            $hrefParams = [];
             foreach ($params as $key => $value) {
-                $URLParams[$key] = $model->{$value};
+                $hrefParams[$key] = $model->{$value};
             }
-            return $URLParams;
+            return $hrefParams;
         };
-        return $this->addButton($id, $label)
+        /** @var Button $button */
+        $button = $this->addButton($id, $label)
             ->setText($label)
-            ->setShow(function ($row) use ($presenter, $modelClassName, $destination, $checkACL, $paramMapCallback) {
-                if (!$checkACL) {
-                    return true;
+            ->setLink(function ($model) use ($modelClassName, $destination, $paramMapCallback) {
+                if (!$model instanceof $modelClassName) {
+                    $model = $modelClassName::createFromActiveRow($model);
                 }
-                $model = $modelClassName::createFromActiveRow($row);
-                return $presenter->authorized($destination, $paramMapCallback($model));
-            })
-            ->setLink(function ($row) use ($modelClassName, $destination, $paramMapCallback) {
-                $model = $modelClassName::createFromActiveRow($row);
                 return $this->getPresenter()->link($destination, $paramMapCallback($model));
             });
+        if ($checkACL) {
+            $button->setShow(function ($model) use ($modelClassName, $destination, $paramMapCallback) {
+                if (!$model instanceof $modelClassName) {
+                    $model = $modelClassName::createFromActiveRow($model);
+                }
+                return $this->getPresenter()->authorized($destination, $paramMapCallback($model));
+            });
+        }
+        return $button;
     }
 
     /**
-     * @param $linkId
+     * @param string $linkId
      * @param bool $checkACL
-     * @return mixed
+     * @return Button
      * @throws DuplicateButtonException
      * @throws Exception
      */
-    protected function addLink($linkId, bool $checkACL = false) {
+    protected function addLink(string $linkId, bool $checkACL = false): Button {
         $modelClassName = $this->getModelClassName();
         $factory = $this->tableReflectionFactory->loadLinkFactory($linkId);
+        /** @var Button $button */
         $button = $this->addButton(str_replace('.', '_', $linkId), $factory->getText())
             ->setText($factory->getText())
-            ->setLink(function ($row) use ($modelClassName, $factory) {
-                $model = $modelClassName::createFromActiveRow($row);
+            ->setLink(function ($model) use ($modelClassName, $factory) {
+                if (!$model instanceof $modelClassName) {
+                    $model = $modelClassName::createFromActiveRow($model);
+                }
                 return $this->getPresenter()->link($factory->getDestination($model), $factory->prepareParams($model));
             });
         if ($checkACL) {
-            $button->setShow(function ($row) use ($modelClassName, $checkACL, $factory) {
-                if (!$checkACL) {
-                    return true;
+            $button->setShow(function ($model) use ($modelClassName, $factory) {
+                if (!$model instanceof $modelClassName) {
+                    $model = $modelClassName::createFromActiveRow($model);
                 }
-                $model = $modelClassName::createFromActiveRow($row);
                 return $this->getPresenter()->authorized($factory->getDestination($model), $factory->prepareParams($model));
             });
         }
@@ -297,9 +312,9 @@ abstract class BaseGrid extends Grid {
     }
 
     /**
-     * @return GlobalButton
+     * @return GlobalButton|Button
      * @throws DuplicateGlobalButtonException
-     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws InvalidLinkException
      */
     protected function addCSVDownloadButton(): GlobalButton {
         return $this->addGlobalButton('csv')
@@ -316,9 +331,7 @@ abstract class BaseGrid extends Grid {
         $data = [];
         foreach ($rows as $row) {
             $datum = [];
-            /**
-             * @var Column $column
-             */
+            /** @var Column $column */
             foreach ($columns as $column) {
                 $item = $column->prepareValue($row);
                 if ($item instanceof Html) {
@@ -334,5 +347,4 @@ abstract class BaseGrid extends Grid {
         $response->setGlue(',');
         $this->getPresenter()->sendResponse($response);
     }
-
 }

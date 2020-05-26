@@ -7,7 +7,7 @@ use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 
 /**
  * Class NameCSRow
- * @package FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem
+ * *
  */
 class NameCSRow extends AbstractScheduleItemRow {
     use DefaultPrinterTrait;

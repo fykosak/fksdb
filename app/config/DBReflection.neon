@@ -31,6 +31,9 @@ parameters:
 DBReflection:
     tables:
          event:
+             event_id:
+                 type: primaryKey
+                 title: _('Event Id')
              event_year: FKSDB\Components\DatabaseReflection\Event\EventYearRow
              name: FKSDB\Components\DatabaseReflection\Event\NameRow
              begin: FKSDB\Components\DatabaseReflection\Event\BeginRow
@@ -85,7 +88,6 @@ DBReflection:
              order: FKSDB\Components\DatabaseReflection\Org\OrderRow
              tex_signature: FKSDB\Components\DatabaseReflection\Org\TexSignatureRow
              domain_alias: FKSDB\Components\DatabaseReflection\Org\DomainAliasRow
-             contest_id: FKSDB\Components\DatabaseReflection\Org\ContestRow
              contribution:
                  type: string
                  title: _(Contribution)
@@ -124,9 +126,15 @@ DBReflection:
              citizenship: FKSDB\Components\DatabaseReflection\PersonInfo\CitizenshipRow
              account: FKSDB\Components\DatabaseReflection\PersonInfo\AccountRow
              homepage: FKSDB\Components\DatabaseReflection\PersonInfo\HomepageRow
-             phone: FKSDB\Components\DatabaseReflection\PersonInfo\PhoneRow
-             phone_parent_m: FKSDB\Components\DatabaseReflection\PersonInfo\PhoneParentMRow
-             phone_parent_d: FKSDB\Components\DatabaseReflection\PersonInfo\PhoneParentDRow
+             phone:
+                 type: phone
+                 title: _('Phone')
+             phone_parent_m:
+                 type: phone
+                 title: _('Telefonní číslo (matka)')
+             phone_parent_d:
+                 type: phone
+                 title: _('Telefonní číslo (otec)')
              email_parent_m: FKSDB\Components\DatabaseReflection\PersonInfo\EmailParentMRow
              email_parent_d: FKSDB\Components\DatabaseReflection\PersonInfo\EmailParentDRow
              id_number: FKSDB\Components\DatabaseReflection\PersonInfo\IdNumberRow
@@ -216,8 +224,9 @@ DBReflection:
              ct_id:
                  type: primaryKey
                  title: _(Contestant Id)
-             year: FKSDB\Components\DatabaseReflection\Tables\ContestantBase\YearRow
-             contest_id: FKSDB\Components\DatabaseReflection\Tables\ContestantBase\ContestId
+             year:
+                 type: string
+                 title: _(Year)
          event_org:
              event_org_id:
                  accessKey: e_org_id
@@ -315,7 +324,10 @@ DBReflection:
                   states: %event_participant.states%
                 name: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\NameRow
                 name_n_id: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\NameNIdRow
-                phone: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\PhoneRow
+                phone:
+                    type: phone
+                    title: _(Phone)
+                    writeOnly: false
                 note: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\NoteRow
                 password: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\PasswordRow
                 category: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\CategoryRow
@@ -356,6 +368,38 @@ DBReflection:
              event_link: FKSDB\Components\DatabaseReflection\ReferencedRows\EventLink
              person_name: FKSDB\Components\DatabaseReflection\ReferencedRows\PersonNameRow
              payment_id: FKSDB\Components\DatabaseReflection\ReferencedRows\PaymentRow
+             contest: FKSDB\Components\DatabaseReflection\ReferencedRows\ContestRow
+         task_contribution:
+             type:
+                type: string
+                title: _(Type)
+         task:
+             modelClassName: FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask
+             referencedAccess:
+                modelClassName: FKSDB\ORM\Models\ITaskReferencedModel
+                method: getTask
+                nullable: false
+             fields:
+                 fq_name: FKSDB\Components\DatabaseReflection\Tables\Task\FQNameRow
+                 series:
+                    type: string
+                    title: _(Series)
+                 label:
+                     type: string
+                     title: _(Label)
+                 name_cs:
+                     type: string
+                     title: _(Name cs)
+                 task_id:
+                     type: primaryKey
+                     title: _(Task Id)
+                 points:
+                     type: string
+                     title: _(Points)
+                 year:
+                     type: string
+                     title: _(Year)
+
     links:
         payment.detail:
             destination: ':Event:Payment:detail'

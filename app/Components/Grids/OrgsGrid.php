@@ -2,13 +2,13 @@
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelOrg;
 use FKSDB\ORM\Services\ServiceOrg;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Database\Table\Selection;
+use Nette\DI\Container;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
@@ -28,13 +28,11 @@ class OrgsGrid extends BaseGrid {
 
     /**
      * OrgsGrid constructor.
-     * @param ServiceOrg $serviceOrg
-     * @param TableReflectionFactory $tableReflectionFactory
+     * @param Container $container
      */
-    function __construct(ServiceOrg $serviceOrg, TableReflectionFactory $tableReflectionFactory) {
-        parent::__construct($tableReflectionFactory);
-
-        $this->serviceOrg = $serviceOrg;
+    public function __construct(Container $container) {
+        parent::__construct($container);
+        $this->serviceOrg = $container->getByType(ServiceOrg::class);
     }
 
     /**
@@ -65,10 +63,10 @@ class OrgsGrid extends BaseGrid {
         $this->setDefaultOrder('since DESC');
 
         $this->addColumns([
+            'referenced.person_name',
             DbNames::TAB_ORG . '.since',
             DbNames::TAB_ORG . '.until',
             DbNames::TAB_ORG . '.role',
-            'referenced.person_name'
         ]);
 
         $this->addLink('org.edit', true);
@@ -81,9 +79,6 @@ class OrgsGrid extends BaseGrid {
         }
     }
 
-    /**
-     * @return string
-     */
     protected function getModelClassName(): string {
         return ModelOrg::class;
     }

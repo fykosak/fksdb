@@ -10,20 +10,17 @@ use Nette\Forms\IControl;
 
 /**
  * Class AccountField
- * @package FKSDB\Components\Forms\Factories\PersonInfo
+ * *
  */
 class AccountRow extends AbstractRow {
     use DefaultPrinterTrait;
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Bank account');
     }
 
     /**
-     * @return IControl
+     * @return WriteOnlyInput
      */
     public function creteField(): IControl {
         $control = new WriteOnlyInput($this->getTitle());
@@ -31,16 +28,10 @@ class AccountRow extends AbstractRow {
         return $control;
     }
 
-    /**
-     * @return int
-     */
     public function getPermissionsValue(): int {
         return self::PERMISSION_ALLOW_FULL;
     }
 
-    /**
-     * @return string
-     */
     protected function getModelAccessKey(): string {
         return 'account';
     }

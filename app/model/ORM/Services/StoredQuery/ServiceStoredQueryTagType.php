@@ -11,16 +11,10 @@ use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryTagType;
  */
 class ServiceStoredQueryTagType extends AbstractServiceSingle {
 
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelStoredQueryTagType::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_STORED_QUERY_TAG_TYPE;
     }

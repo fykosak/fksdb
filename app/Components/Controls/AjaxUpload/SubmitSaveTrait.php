@@ -1,6 +1,5 @@
 <?php
 
-
 namespace FKSDB\Components\Control\AjaxUpload;
 
 use FKSDB\ORM\AbstractModelSingle;
@@ -8,15 +7,13 @@ use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceSubmit;
-use FKSDB\Submits\ISubmitStorage;
-use Nette\Application\BadRequestException;
-use Nette\Database\Table\Selection;
+use FKSDB\Submits\FileSystemStorage\UploadedStorage;
 use Nette\Http\FileUpload;
 use Nette\Utils\DateTime;
 
 /**
  * Trait SubmitSaveTrait
- * @package FKSDB\Components\Control\AjaxUpload
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 trait SubmitSaveTrait {
     /**
@@ -36,23 +33,17 @@ trait SubmitSaveTrait {
                 'source' => ModelSubmit::SOURCE_UPLOAD,
             ]);
         } else {
-            $submit->update([
+            $this->getServiceSubmit()->updateModel2($submit, [
                 'submitted_on' => new DateTime(),
                 'source' => ModelSubmit::SOURCE_UPLOAD,
             ]);
         }
         // store file
-        $this->getSubmitStorage()->storeFile($file->getTemporaryFile(), $submit);
+        $this->getUploadedStorage()->storeFile($file->getTemporaryFile(), $submit);
         return $submit;
     }
 
-    /**
-     * @return ServiceSubmit
-     */
-    abstract protected function getServiceSubmit(): ServiceSubmit;
+    abstract protected function getUploadedStorage(): UploadedStorage;
 
-    /**
-     * @return ISubmitStorage
-     */
-    abstract protected function getSubmitStorage():ISubmitStorage;
+    abstract protected function getServiceSubmit(): ServiceSubmit;
 }

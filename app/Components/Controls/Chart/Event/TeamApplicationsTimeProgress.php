@@ -8,7 +8,6 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventType;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\ORM\Services\ServiceEvent;
-use FKSDB\ORM\Services\ServiceEventParticipant;
 use Nette\Application\UI\Control;
 use Nette\DI\Container;
 use Nette\Utils\Json;
@@ -16,7 +15,7 @@ use Nette\Utils\JsonException;
 
 /**
  * Class TeamApplicationsTimeProgress
- * @package FKSDB\Components\React\ReactComponent\Events
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class TeamApplicationsTimeProgress extends ReactComponent implements IChart {
     /**
@@ -46,9 +45,6 @@ class TeamApplicationsTimeProgress extends ReactComponent implements IChart {
         $this->serviceEvent = $context->getByType(ServiceEvent::class);
     }
 
-    /**
-     * @return string
-     */
     protected function getReactId(): string {
         return 'events.applications-time-progress.teams';
     }
@@ -57,7 +53,7 @@ class TeamApplicationsTimeProgress extends ReactComponent implements IChart {
      * @return string
      * @throws JsonException
      */
-    function getData(): string {
+    public function getData(): string {
         $data = [
             'teams' => [],
             'events' => [],
@@ -72,23 +68,14 @@ class TeamApplicationsTimeProgress extends ReactComponent implements IChart {
         return Json::encode($data);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getAction(): string {
         return 'teamApplicationProgress';
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getTitle(): string {
         return 'Team applications time progress';
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getControl(): Control {
         return $this;
     }

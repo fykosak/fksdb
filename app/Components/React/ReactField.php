@@ -3,12 +3,13 @@
 namespace FKSDB\Components\React;
 
 use FKSDB\Application\IJavaScriptCollector;
+use Nette\ComponentModel\IComponent;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 
 /**
  * Trait ReactField
- * @package FKSDB\Components\React
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 trait ReactField {
     /**
@@ -18,7 +19,7 @@ trait ReactField {
     /**
      * @var bool
      */
-    static private $attachedJS = false;
+    private static $attachedJS = false;
 
     /**
      * @throws JsonException
@@ -32,7 +33,7 @@ trait ReactField {
     }
 
     /**
-     * @param object $obj
+     * @param IComponent $obj
      */
     protected function attachedReact($obj) {
         if (!self::$attachedJS && $obj instanceof IJavaScriptCollector) {
@@ -67,5 +68,5 @@ trait ReactField {
     /**
      * @return string
      */
-    abstract function getData(): string;
+    abstract public function getData(): string;
 }

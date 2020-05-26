@@ -2,21 +2,14 @@
 
 namespace FKSDB\Components\Controls\Stalking\StalkingComponent;
 
-use Exception;
 use FKSDB\Components\Controls\Stalking\StalkingControl;
 use FKSDB\Components\Controls\Stalking\StalkingService;
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\Models\ModelPerson;
 use Nette\Application\BadRequestException;
-use Nette\Localization\ITranslator;
-use FKSDB\NotImplementedException;
-use Nette\Templating\FileTemplate;
+use Nette\DI\Container;
+use FKSDB\Exceptions\NotImplementedException;
+use Nette\InvalidStateException;
 
-/**
- * Class StalkingComponent
- * @package FKSDB\Components\Controls\Stalking
- * @property-read FileTemplate $template
- */
 class StalkingComponent extends StalkingControl {
     /**
      * @var StalkingService
@@ -25,102 +18,86 @@ class StalkingComponent extends StalkingControl {
 
     /**
      * StalkingComponent constructor.
-     * @param StalkingService $stalkingService
-     * @param ModelPerson $modelPerson
-     * @param TableReflectionFactory $tableReflectionFactory
-     * @param ITranslator $translator
-     * @param int $userPermission
+     * @param Container $container
      */
-    public function __construct(StalkingService $stalkingService, ModelPerson $modelPerson, TableReflectionFactory $tableReflectionFactory, ITranslator $translator, int $userPermission) {
-        parent::__construct($modelPerson, $tableReflectionFactory, $translator, $userPermission);
-        $this->stalkingService = $stalkingService;
+    public function __construct(Container $container) {
+        parent::__construct($container);
+        $this->stalkingService = $container->getByType(StalkingService::class);
     }
 
     /**
      * @param string $section
+     * @param ModelPerson $person
+     * @param int $userPermissions
+     * @return void
      * @throws BadRequestException
-     * @throws Exception
+     * @throws NotImplementedException
      */
-    public function render(string $section) {
+    public function render(string $section, ModelPerson $person, int $userPermissions) {
         $definition = $this->stalkingService->getSection($section);
-        $this->beforeRender();
+        $this->beforeRender($person, $userPermissions);
         $this->template->headline = _($definition['label']);
         $this->template->minimalPermissions = $definition['minimalPermission'];
 
         switch ($definition['layout']) {
             case 'single':
-                return $this->renderSingle($definition);
+                $this->renderSingle($definition, $person);
+                return;
             case 'multi':
-                return $this->renderMulti($definition);
+                $this->renderMulti($definition, $person);
+                return;
             default:
-                throw new BadRequestException();
+                throw new InvalidStateException();
         }
     }
 
     /**
      * @param array $definition
+     * @param ModelPerson $person
+     * @return void
      * @throws NotImplementedException
      */
-    private function renderSingle(array $definition) {
+    private function renderSingle(array $definition, ModelPerson $person) {
 
         $model = null;
         switch ($definition['table']) {
             case 'person_info':
-                $model = $this->modelPerson->getInfo();
+                $model = $person->getInfo();
                 break;
             case 'person':
-                $model = $this->modelPerson;
+                $model = $person;
                 break;
             case 'login':
-                $model = $this->modelPerson->getLogin();
+                $model = $person->getLogin();
                 break;
             default:
                 throw new NotImplementedException();
         }
 
         $this->template->model = $model;
-        $this->template->rows = $this->parseRows($definition['rows']);
+        $this->template->rows = $definition['rows'];
         $this->template->setFile(__DIR__ . '/layout.single.latte');
         $this->template->render();
     }
 
     /**
      * @param array $definition
+     * @param ModelPerson $person
+     * @return void
      */
-    private function renderMulti(array $definition) {
+    private function renderMulti(array $definition, ModelPerson $person) {
         $models = [];
-        $query = $this->modelPerson->related($definition['table']);
+        $query = $person->related($definition['table']);
         foreach ($query as $datum) {
             $models[] = ($definition['model'])::createFromActiveRow($datum);
         }
         $this->template->links = array_map(function ($link) {
             return $this->tableReflectionFactory->loadLinkFactory($link);
         }, $definition['links']);
-        $this->template->rows = $this->parseRows($definition['rows']);
+        $this->template->rows = $definition['rows'];
         $this->template->models = $models;
-        $this->template->itemHeadline = $this->parseRow($definition['itemHeadline']);
+        $this->template->itemHeadline = $definition['itemHeadline'];
         $this->template->setFile(__DIR__ . '/layout.multi.latte');
         $this->template->render();
     }
-
-    /**
-     * @param array $rows
-     * @return array
-     */
-    private function parseRows(array $rows): array {
-        $items = [];
-        foreach ($rows as $item) {
-            $items[] = $this->parseRow($item);
-        }
-        return $items;
-    }
-
-    /**
-     * @param string $row
-     * @return array
-     */
-    private function parseRow(string $row): array {
-        return explode('.', $row);
-    }
-
 }

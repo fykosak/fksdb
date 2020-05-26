@@ -4,6 +4,7 @@ namespace FKSDB\Components\DatabaseReflection\ReferencedRows;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\DatabaseReflection\Payment\StateRow;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\IPaymentReferencedModel;
 use Nette\Application\BadRequestException;
@@ -11,7 +12,7 @@ use Nette\Utils\Html;
 
 /**
  * Class PaymentRow
- * @package FKSDB\Components\DatabaseReflection\ReferencedRows
+ * *
  */
 class PaymentRow extends AbstractRow {
 
@@ -21,7 +22,7 @@ class PaymentRow extends AbstractRow {
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         if (!$model instanceof IPaymentReferencedModel) {
-            throw new BadRequestException();
+            throw new BadTypeException(IPaymentReferencedModel::class, $model);
         }
         $payment = $model->getPayment();
         if (is_null($payment)) {

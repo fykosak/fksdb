@@ -6,11 +6,8 @@ use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
 
 /**
  * Interface IFyziklaniTaskReferencedModel
- * @package FKSDB\ORM\Models
+ * *
  */
 interface IFyziklaniTaskReferencedModel {
-    /**
-     * @return ModelFyziklaniTask
-     */
-    public function getFyziklaniTask();
+    public function getFyziklaniTask(): ModelFyziklaniTask;
 }

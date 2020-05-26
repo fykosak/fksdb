@@ -5,6 +5,7 @@ namespace FyziklaniModule;
 use DatabaseTestCase;
 use FKSDB\ORM\DbNames;
 use MockEnvironment\MockApplicationTrait;
+use Nette\DI\Container;
 use Nette\Utils\DateTime;
 
 abstract class FyziklaniTestCase extends DatabaseTestCase {
@@ -14,6 +15,11 @@ abstract class FyziklaniTestCase extends DatabaseTestCase {
     protected $eventId;
 
     protected $userPersonId;
+
+    public function __construct(Container $container) {
+        parent::__construct($container);
+        $this->setContainer($container);
+    }
 
     protected function setUp() {
         parent::setUp();
@@ -30,8 +36,8 @@ abstract class FyziklaniTestCase extends DatabaseTestCase {
             ('applied.tsaf'),
             ('applied.notsaf')");
 
-        $this->userPersonId = $this->createPerson('Paní', 'Černá', array('email' => 'cerna@hrad.cz', 'born' => DateTime::from('2000-01-01')), true);
-        $this->insert(DbNames::TAB_ORG, array('person_id' => $this->userPersonId, 'contest_id' => 1, 'since' => 0, 'order' => 0));
+        $this->userPersonId = $this->createPerson('Paní', 'Černá', ['email' => 'cerna@hrad.cz', 'born' => DateTime::from('2000-01-01')], true);
+        $this->insert(DbNames::TAB_ORG, ['person_id' => $this->userPersonId, 'contest_id' => 1, 'since' => 0, 'order' => 0]);
     }
 
     protected function tearDown() {
@@ -66,7 +72,7 @@ abstract class FyziklaniTestCase extends DatabaseTestCase {
             $data['end'] = '2016-01-01';
         }
         $this->connection->query('INSERT INTO event', $data);
-        $eventId = $this->connection->lastInsertId();
+        $eventId = $this->connection->getInsertId();
         $this->connection->query('INSERT INTO fyziklani_game_setup', [
             'event_id' => $eventId,
             'game_start' => new DateTime('2016-01-01T10:00:00'),
@@ -98,7 +104,7 @@ abstract class FyziklaniTestCase extends DatabaseTestCase {
             $data['room'] = '101';
         }
         $this->connection->query('INSERT INTO e_fyziklani_team', $data);
-        return $this->connection->lastInsertId();
+        return $this->connection->getInsertId();
     }
 
     protected function createTask($data) {
@@ -109,12 +115,12 @@ abstract class FyziklaniTestCase extends DatabaseTestCase {
             $data['name'] = 'Dummy úloha';
         }
         $this->connection->query('INSERT INTO fyziklani_task', $data);
-        return $this->connection->lastInsertId();
+        return $this->connection->getInsertId();
     }
 
     protected function createSubmit($data) {
         $this->connection->query('INSERT INTO fyziklani_submit', $data);
-        return $this->connection->lastInsertId();
+        return $this->connection->getInsertId();
     }
 
     protected function findSubmit($taskId, $teamId) {

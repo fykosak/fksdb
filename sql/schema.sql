@@ -393,8 +393,14 @@ CREATE TABLE IF NOT EXISTS `org` (
   `order`        TINYINT(4)   NOT NULL
   COMMENT 'pořadí pro řazení ve výpisech',
   `contribution` TEXT         NULL     DEFAULT NULL,
+  `tex_signature`          VARCHAR(32)  NULL DEFAULT NULL
+      COMMENT 'zkratka používaná v TeXových vzorácích',
+  `domain_alias`           VARCHAR(32)  NULL DEFAULT NULL
+      COMMENT 'alias v doméně fykos.cz',
   PRIMARY KEY (`org_id`),
   UNIQUE INDEX `contest_id` (`contest_id` ASC, `person_id` ASC),
+  UNIQUE INDEX `domain_alias_UNIQUE` (`contest_id` ASC, `domain_alias` ASC),
+  UNIQUE INDEX `tex_signature_UNIQUE` (`contest_id` ASC, `tex_signature` ASC),
   INDEX `person_id` (`person_id` ASC),
   CONSTRAINT `org_ibfk_1`
   FOREIGN KEY (`person_id`)
@@ -458,6 +464,8 @@ CREATE TABLE IF NOT EXISTS `grant` (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `person_info` (
   `person_id`              INT(11)      NOT NULL,
+  `preferred_lang`         ENUM('cs','en') NULL DEFAULT NULL
+  COMMENT 'Prefer language code by ISO 639-1',
   `born`                   DATE         NULL DEFAULT NULL
   COMMENT 'datum narození',
   `id_number`              VARCHAR(32)  NULL DEFAULT NULL
@@ -664,6 +672,8 @@ CREATE TABLE IF NOT EXISTS `submit` (
   COMMENT 'Pred prepoctem',
   `calc_points`  DECIMAL(4, 2)           NULL     DEFAULT NULL
   COMMENT 'Cache spoctenych bodu.',
+  `corrected`       TINYINT(1)   NULL DEFAULT 0
+  COMMENT 'Má uloha nahrané riešnie?',
   PRIMARY KEY (`submit_id`),
   UNIQUE INDEX `cons_uniq` (`ct_id` ASC, `task_id` ASC),
   INDEX `task_id` (`task_id` ASC),
@@ -1352,7 +1362,7 @@ CREATE TABLE IF NOT EXISTS `fyziklani_game_setup` (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `schedule_group` (
     `schedule_group_id`   INT(11)      NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `schedule_group_type` VARCHAR(64)  NOT NULL,
+    `schedule_group_type` ENUM ('accommodation','weekend','visa','accommodation_gender','accommodation_teacher','teacher_present','weekend_info') NOT NULL,
     `name_cs`             VARCHAR(256) NULL DEFAULT NULL,
     `name_en`             VARCHAR(256) NULL DEFAULT NULL,
     `event_id`            INT(11)      NOT NULL,
@@ -1450,6 +1460,47 @@ CREATE TABLE IF NOT EXISTS `email_message`
     `sent`             DATETIME     NULL DEFAULT NULL
 )
     ENGINE = 'InnoDB';
+-- -----------------------------------------------------
+-- Table `quiz`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `quiz` (
+	`question_id`   INT(11)     NOT NULL  AUTO_INCREMENT,
+	`task_id`       INT(11)     NOT NULL,
+	`question_nr`   TINYINT(4)  NULL      DEFAULT NULL
+	COMMENT 'Cislo otazky',
+	`points`        TINYINT(4)  NULL      DEFAULT NULL
+	COMMENT 'Pocet bodu',
+	`answer`        VARCHAR(1)  NULL      DEFAULT NULL
+	COMMENT 'Spravna odpoved',
+	PRIMARY KEY (`question_id`),
+	INDEX `quiz_task_ui` (`task_id` ASC),
+	CONSTRAINT `quiz_ibfk_1`
+	FOREIGN KEY (`task_id`)
+	REFERENCES `task` (`task_id`)
+)
+	ENGINE = InnoDB;
+-- -----------------------------------------------------
+-- Table `submit_quiz`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `submit_quiz` (
+	`submit_question_id`  INT(11)    NOT NULL AUTO_INCREMENT,
+	`ct_id`               INT(11)    NOT NULL
+	COMMENT 'Resitel',
+	`question_id`         INT(11)    NOT NULL
+	COMMENT 'Otazka',
+	`submitted_on`        DATETIME   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`answer`              VARCHAR(1) NULL,
+	PRIMARY KEY (`submit_question_id`),
+	UNIQUE INDEX `submit_qstn` (`ct_id` ASC, `question_id` ASC),
+	INDEX `question_id` (`question_id` ASC),
+	CONSTRAINT `submit_qstn_ibfk_1`
+	FOREIGN KEY (`ct_id`)
+	REFERENCES `contestant_base` (`ct_id`),
+	CONSTRAINT `submit_qstn_ibfk_2`
+	FOREIGN KEY (`question_id`)
+	REFERENCES `quiz` (`question_id`)
+)
+	ENGINE = InnoDB;
 
 SET SQL_MODE = @OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS = @OLD_FOREIGN_KEY_CHECKS;

@@ -2,20 +2,20 @@
 
 namespace FKSDB\ORM\Services\Fyziklani;
 
+use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
-use FKSDB\model\Fyziklani\ClosedSubmittingException;
-use FKSDB\model\Fyziklani\PointsMismatchException;
+use FKSDB\Fyziklani\ClosedSubmittingException;
+use FKSDB\Fyziklani\PointsMismatchException;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Tables\TypedTableSelection;
 use Nette\Application\BadRequestException;
-use Nette\Database\Table\Selection;
 use Nette\Security\User;
 use Tracy\Debugger;
-use function sprintf;
 
 /**
  * @author Lukáš Timko <lukast@fykos.cz>
@@ -26,16 +26,10 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
 
     const LOG_FORMAT = 'Submit %d was %s by %s';
 
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelFyziklaniSubmit::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_FYZIKLANI_SUBMIT;
     }
@@ -46,19 +40,15 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
      * @return ModelFyziklaniSubmit|null
      */
     public function findByTaskAndTeam(ModelFyziklaniTask $task, ModelFyziklaniTeam $team) {
+        /** @var ModelFyziklaniSubmit $row */
         $row = $this->getTable()->where([
             'fyziklani_task_id' => $task->fyziklani_task_id,
             'e_fyziklani_team_id' => $team->e_fyziklani_team_id,
         ])->fetch();
-        return $row ? ModelFyziklaniSubmit::createFromActiveRow($row) : null;
+        return $row ?: null;
     }
 
-    /**
-     * Syntactic sugar.
-     * @param ModelEvent $event
-     * @return Selection
-     */
-    public function findAll(ModelEvent $event): Selection {
+    public function findAll(ModelEvent $event): TypedTableSelection {
         return $this->getTable()->where('e_fyziklani_team_id.event_id', $event->event_id);
     }
 
@@ -80,13 +70,6 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
         return $submits;
     }
 
-    /**
-     * @param ModelFyziklaniTask $task
-     * @param ModelFyziklaniTeam $team
-     * @param int $points
-     * @param User $user
-     * @return Message
-     */
     public function createSubmit(ModelFyziklaniTask $task, ModelFyziklaniTeam $team, int $points, User $user): Message {
         $submit = $this->createNewModel([
             'points' => $points,
@@ -98,14 +81,14 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
              */
             'created' => null
         ]);
-        $this->logEvent($submit, $user, 'created', sprintf(' points %d', $points));
+        $this->logEvent($submit, $user, 'created', \sprintf(' points %d', $points));
 
-        return new Message(sprintf(_('Body byly uloženy. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
+        return new Message(\sprintf(_('Body byly uloženy. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
             $points,
             $team->name,
             $team->e_fyziklani_team_id,
             $task->label,
-            $task->name), Message::LVL_SUCCESS);
+            $task->name), ILogger::SUCCESS);
     }
 
     /**
@@ -128,13 +111,13 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
             'state' => ModelFyziklaniSubmit::STATE_CHECKED,
             'modified' => null,
         ]);
-        $this->logEvent($submit, $user, 'edited', sprintf(' points %d', $points));
-        return new Message(sprintf(_('Body byly upraveny. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
+        $this->logEvent($submit, $user, 'edited', \sprintf(' points %d', $points));
+        return new Message(\sprintf(_('Body byly upraveny. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
             $points,
             $submit->getFyziklaniTeam()->name,
             $submit->getFyziklaniTeam()->e_fyziklani_team_id,
-            $submit->getTask()->label,
-            $submit->getTask()->name), Message::LVL_SUCCESS);
+            $submit->getFyziklaniTask()->label,
+            $submit->getFyziklaniTask()->name), ILogger::SUCCESS);
     }
 
     /**
@@ -161,7 +144,7 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
             'modified' => null
         ]);
         $this->logEvent($submit, $user, 'revoked');
-        return new Message(sprintf(_('Submit %d has been revoked.'), $submit->fyziklani_submit_id), Message::LVL_SUCCESS);
+        return new Message(\sprintf(_('Submit %d has been revoked.'), $submit->fyziklani_submit_id), ILogger::SUCCESS);
     }
 
     /**
@@ -189,12 +172,12 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
         ]);
         $this->logEvent($submit, $user, 'checked');
 
-        return new Message(sprintf(_('Bodovanie bolo overené. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
+        return new Message(\sprintf(_('Bodovanie bolo overené. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
             $points,
             $submit->getFyziklaniTeam()->name,
             $submit->getFyziklaniTeam()->e_fyziklani_team_id,
-            $submit->getTask()->label,
-            $submit->getTask()->name), Message::LVL_SUCCESS);
+            $submit->getFyziklaniTask()->label,
+            $submit->getFyziklaniTask()->name), ILogger::SUCCESS);
     }
 
     /**
@@ -204,6 +187,6 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
      * @param string|null $appendLog
      */
     public function logEvent(ModelFyziklaniSubmit $submit, User $user, string $action, string $appendLog = null) {
-        Debugger::log(sprintf(self::LOG_FORMAT . $appendLog, $submit->getPrimary(), $action, $user->getIdentity()->getId()), self::DEBUGGER_LOG_PRIORITY);
+        Debugger::log(\sprintf(self::LOG_FORMAT . $appendLog, $submit->getPrimary(), $action, $user->getIdentity()->getId()), self::DEBUGGER_LOG_PRIORITY);
     }
 }

@@ -12,7 +12,7 @@ use Nette\Application\UI\Form;
 
 /**
  * Class PizzaPresenter
- * @package CommonModule
+ * *
  */
 class PizzaPresenter extends BasePresenter {
     /**
@@ -30,6 +30,7 @@ class PizzaPresenter extends BasePresenter {
 
     /**
      * @param PersonFactory $personFactory
+     * @return void
      */
     public function injectPersonFactory(PersonFactory $personFactory) {
         $this->personFactory = $personFactory;
@@ -37,6 +38,7 @@ class PizzaPresenter extends BasePresenter {
 
     /**
      * @param ServicePerson $servicePerson
+     * @return void
      */
     public function injectServicePerson(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
@@ -57,7 +59,7 @@ class PizzaPresenter extends BasePresenter {
             $values = $form->getValues();
             foreach ($values->persons as $personId) {
                 $this->persons[] = $this->servicePerson->findByPrimary($personId);
-            };
+            }
         };
         return $control;
     }
@@ -67,7 +69,6 @@ class PizzaPresenter extends BasePresenter {
     }
 
     public function titleDefault() {
-        $this->setTitle(_('Pizza'));
-        $this->setIcon('fa fa-cutlery');
+        $this->setTitle(_('Pizza'),'fa fa-cutlery');
     }
 }

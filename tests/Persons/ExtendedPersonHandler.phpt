@@ -10,9 +10,12 @@ use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Services\ServiceContest;
+use FKSDB\ORM\Services\ServiceContestant;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Tester\Assert;
+use Tester\Environment;
 
 class ExtendedPersonHandlerTest extends DatabaseTestCase {
 
@@ -39,15 +42,15 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
     protected function setUp() {
         parent::setUp();
 
-        $handlerFactory = $this->container->getByType('Persons\ExtendedPersonHandlerFactory');
+        $handlerFactory = $this->container->getByType(ExtendedPersonHandlerFactory::class);
 
-        $service = $this->container->getService('ServiceContestant');
-        $contest = $this->container->getService('ServiceContest')->findByPrimary(ModelContest::ID_FYKOS);
+        $service = $this->container->getByType(ServiceContestant::class);
+        $contest = $this->container->getByType(ServiceContest::class)->findByPrimary(ModelContest::ID_FYKOS);
         $year = 1;
         $invitationLang = 'cs';
         $this->fixture = $handlerFactory->create($service, $contest, $year, $invitationLang);
 
-        $this->referencedPersonFactory = $this->container->getByType('FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory');
+        $this->referencedPersonFactory = $this->container->getByType(ReferencedPersonFactory::class);
     }
 
     protected function tearDown() {
@@ -58,13 +61,13 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
         parent::tearDown();
     }
 
+
     public function testNewPerson() {
-        Assert::notEqual('pojeb sa', 'vyprcany test');
+        Assert::true(true);
         return;
         $presenter = new PersonPresenter();
-        /*
-         * Define a form
-         */
+        // Define a form
+
         $form = $this->createForm([
             'person' => [
                 'other_name' => [
@@ -103,9 +106,7 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
             ],
         ], 2000);
 
-        /*
-         * Fill user data
-         */
+        // Fill user data
         $form->setValues([
             ExtendedPersonHandler::CONT_AGGR => [
                 ExtendedPersonHandler::EL_PERSON => "__promise",
@@ -139,10 +140,8 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
         ]);
         $form->validate();
 
-        /*
-         * Check
-         */
-        $result = $this->fixture->handleForm($form, $presenter);
+        // Check
+        $result = $this->fixture->handleForm($form, $presenter, true);
         Assert::same(ExtendedPersonHandler::RESULT_OK_NEW_LOGIN, $result);
 
         $person = $this->fixture->getPerson();
@@ -189,20 +188,20 @@ class PersonPresenter extends BasePresenter implements IExtendedPersonPresenter 
 
     }
 
-    public function messageCreate() {
-
+    public function messageCreate(): string {
+        return '';
     }
 
-    public function messageEdit() {
-
+    public function messageEdit(): string {
+        return '';
     }
 
-    public function messageError() {
-
+    public function messageError(): string {
+        return '';
     }
 
-    public function messageExists() {
-
+    public function messageExists(): string {
+        return '';
     }
 
     public function flashMessage($message, $type = 'info') {
@@ -213,15 +212,15 @@ class PersonPresenter extends BasePresenter implements IExtendedPersonPresenter 
 
 class TestResolver implements IVisibilityResolver, IModifiabilityResolver {
 
-    public function getResolutionMode(ModelPerson $person) {
+    public function getResolutionMode(ModelPerson $person): string {
         return ReferencedPersonHandler::RESOLUTION_EXCEPTION;
     }
 
-    public function isModifiable(ModelPerson $person) {
+    public function isModifiable(ModelPerson $person): bool {
         return true;
     }
 
-    public function isVisible(ModelPerson $person) {
+    public function isVisible(ModelPerson $person): bool {
         return true;
     }
 

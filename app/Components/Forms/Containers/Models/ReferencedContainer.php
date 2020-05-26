@@ -42,12 +42,12 @@ class ReferencedContainer extends ContainerWithOptions {
     private $referencedId;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $hasSearch;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $allowClear = true;
 
@@ -65,7 +65,7 @@ class ReferencedContainer extends ContainerWithOptions {
      * ReferencedContainer constructor.
      * @param ReferencedId $referencedId
      */
-    function __construct(ReferencedId $referencedId) {
+    public function __construct(ReferencedId $referencedId) {
         parent::__construct();
         $this->monitor(IJavaScriptCollector::class);
         $this->monitor(Form::class);
@@ -143,16 +143,16 @@ class ReferencedContainer extends ContainerWithOptions {
     }
 
     /**
-     * @param ArrayHash $conflicts
+     * @param array|ArrayHash $conflicts
      * @param null $container
      */
-    public function setConflicts(ArrayHash $conflicts, $container = null) {
+    public function setConflicts($conflicts, $container = null) {
         $container = $container ?: $this;
         foreach ($conflicts as $key => $value) {
             $component = $container->getComponent($key, false);
             if ($component instanceof Container) {
                 $this->setConflicts($value, $component);
-            } else if ($component instanceof BaseControl) {
+            } elseif ($component instanceof BaseControl) {
                 $component->addError(null);
             }
         }
@@ -162,13 +162,13 @@ class ReferencedContainer extends ContainerWithOptions {
      * Swaps hidden and attached components from/to the container.
      *
      * @staticvar array $searchComponents
-     * @param boolean $value
+     * @param bool $value
      */
     public function setSearchButton($value) {
-        static $searchComponents = array(
+        static $searchComponents = [
             self::CONTROL_SEARCH,
             self::SUBMIT_SEARCH,
-        );
+        ];
 
         $value = $value && $this->hasSearch;
 
@@ -189,7 +189,7 @@ class ReferencedContainer extends ContainerWithOptions {
     /**
      * Toggles button used for clearing the element.
      *
-     * @param boolean $value
+     * @param bool $value
      */
     public function setClearButton($value) {
         if (!$this->getAllowClear()) {
@@ -253,14 +253,20 @@ class ReferencedContainer extends ContainerWithOptions {
             $control->getTemplate()->mainContainer = $this;
             $control->getTemplate()->level = 2; //TODO should depend on lookup path
             $payload = $presenter->getPayload();
-            $payload->{self::JSON_DATA} = (object)array(
+            $payload->{self::JSON_DATA} = (object)[
                 'id' => $this->referencedId->getHtmlId(),
                 'value' => $this->referencedId->getValue(),
-            );
+            ];
         }
     }
 
+    /**
+     * @var bool
+     */
     private $attachedJS = false;
+    /**
+     * @var bool
+     */
     private $attachedAjax = false;
 
     /**
@@ -312,7 +318,7 @@ class ReferencedContainer extends ContainerWithOptions {
         if ($component instanceof BaseControl) {
             //$component->setOption('wasDisabled', $component->isDisabled());
             $component->setDisabled(true);
-        } else if ($component instanceof Container) {
+        } elseif ($component instanceof Container) {
             foreach ($component->getComponents() as $subcomponent) {
                 $this->hideComponent(null, $subcomponent);
             }
@@ -331,7 +337,7 @@ class ReferencedContainer extends ContainerWithOptions {
         if ($component instanceof BaseControl) {
             //$component->setDisabled($component->getOption('wasDisabled', $component->isDisabled()));
             $component->setDisabled(false);
-        } else if ($component instanceof Container) {
+        } elseif ($component instanceof Container) {
             foreach ($component->getComponents() as $subcomponent) {
                 $this->showComponent(null, $subcomponent);
             }

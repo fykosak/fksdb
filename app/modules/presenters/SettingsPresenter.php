@@ -6,7 +6,10 @@ use FKSDB\Components\Forms\Factories\LoginFactory;
 use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use FKSDB\Components\Forms\Rules\UniqueLoginFactory;
 use FKSDB\ORM\Models\ModelAuthToken;
+use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceLogin;
+use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\BaseControl;
 
@@ -41,9 +44,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
 
     /**
      * @param LoginFactory $loginFactory
-     */
-    /**
-     * @param LoginFactory $loginFactory
+     * @return void
      */
     public function injectLoginFactory(LoginFactory $loginFactory) {
         $this->loginFactory = $loginFactory;
@@ -51,9 +52,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
 
     /**
      * @param ServiceLogin $loginService
-     */
-    /**
-     * @param ServiceLogin $loginService
+     * @return void
      */
     public function injectLoginService(ServiceLogin $loginService) {
         $this->loginService = $loginService;
@@ -61,9 +60,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
 
     /**
      * @param UniqueEmailFactory $uniqueEmailFactory
-     */
-    /**
-     * @param UniqueEmailFactory $uniqueEmailFactory
+     * @return void
      */
     public function injectUniqueEmailFactory(UniqueEmailFactory $uniqueEmailFactory) {
         $this->uniqueEmailFactory = $uniqueEmailFactory;
@@ -71,22 +68,19 @@ class SettingsPresenter extends AuthenticatedPresenter {
 
     /**
      * @param UniqueLoginFactory $uniqueLoginFactory
-     */
-    /**
-     * @param UniqueLoginFactory $uniqueLoginFactory
+     * @return void
      */
     public function injectUniqueLoginFactory(UniqueLoginFactory $uniqueLoginFactory) {
         $this->uniqueLoginFactory = $uniqueLoginFactory;
     }
 
     public function titleDefault() {
-        $this->setTitle(_('Settings'));
-        $this->setIcon('fa fa-cogs');
+        $this->setTitle(_('Settings'), 'fa fa-cogs');
     }
 
     public function renderDefault() {
         /**
-         * @var \FKSDB\ORM\Models\ModelLogin $login
+         * @var ModelLogin $login
          */
         $login = $this->getUser()->getIdentity();
 
@@ -105,15 +99,14 @@ class SettingsPresenter extends AuthenticatedPresenter {
     }
 
     /**
-     * @param $name
      * @return FormControl
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
-    protected function createComponentSettingsForm($name) {
+    protected function createComponentSettingsForm() {
         $control = new FormControl();
         $form = $control->getForm();
         /**
-         * @var \FKSDB\ORM\Models\ModelLogin $login
+         * @var ModelLogin $login
          */
         $login = $this->getUser()->getIdentity();
         $tokenAuthentication =
@@ -126,7 +119,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
 
         if ($tokenAuthentication) {
             $options = LoginFactory::SHOW_PASSWORD | LoginFactory::REQUIRE_PASSWORD;
-        } else if (!$login->hash) {
+        } elseif (!$login->hash) {
             $options = LoginFactory::SHOW_PASSWORD;
         } else {
             $options = LoginFactory::SHOW_PASSWORD | LoginFactory::VERIFY_OLD_PASSWORD;
@@ -135,7 +128,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
         $form->addComponent($loginContainer, self::CONT_LOGIN);
 
         if ($loginContainer->getComponent('old_password', false)) {
-            $loginContainer['old_password']
+            $loginContainer->getComponent('old_password')
                 ->addCondition(Form::FILLED)
                 ->addRule(function (BaseControl $control) use ($login) {
                     $hash = PasswordAuthenticator::calculateHash($control->getValue(), $login);
@@ -147,29 +140,32 @@ class SettingsPresenter extends AuthenticatedPresenter {
 
         $form->addSubmit('send', _('Save'));
 
-        $form->onSuccess[] = array($this, 'handleSettingsFormSuccess');
+        $form->onSuccess[] = function (Form $form) {
+            $this->handleSettingsFormSuccess($form);
+        };
         return $control;
     }
 
     /**
-     * @internal
      * @param Form $form
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
+     * @internal
      */
-    public function handleSettingsFormSuccess(Form $form) {
+    private function handleSettingsFormSuccess(Form $form) {
         $values = $form->getValues();
         $tokenAuthentication =
             $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN) ||
             $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_RECOVERY);
+        /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
 
         $loginData = FormUtils::emptyStrToNull($values[self::CONT_LOGIN]);
         if ($loginData['password']) {
-            $login->setHash($loginData['password']);
+            $loginData['hash'] = $login->createHash($loginData['password']);
         }
 
-        $this->loginService->updateModel($login, $loginData);
-        $this->loginService->save($login);
+        $this->loginService->updateModel2($login, $loginData);
+
         $this->flashMessage(_('Uživatelské informace upraveny.'), self::FLASH_SUCCESS);
         if ($tokenAuthentication) {
             $this->flashMessage(_('Heslo nastaveno.'), self::FLASH_SUCCESS); //TODO here may be Facebook ID

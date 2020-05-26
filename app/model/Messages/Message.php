@@ -2,19 +2,20 @@
 
 namespace FKSDB\Messages;
 
+use FKSDB\Logging\ILogger;
 use Nette\SmartObject;
 
 /**
  * Class Message
- * @package FKSDB\Messages
+ * *
  */
 class Message {
     use SmartObject;
 
-    const LVL_DANGER = 'danger';
-    const LVL_SUCCESS = 'success';
-    const LVL_WARNING = 'warning';
-    const LVL_INFO = 'info';
+    const LVL_DANGER = ILogger::ERROR;
+    const LVL_SUCCESS = ILogger::SUCCESS;
+    const LVL_WARNING = ILogger::WARNING;
+    const LVL_INFO = ILogger::INFO;
     /**
      * @var string
      */
@@ -45,6 +46,7 @@ class Message {
 
     /**
      * @param string $message
+     * @return void
      * @deprecated
      */
     public function setText(string $message) {
@@ -53,35 +55,28 @@ class Message {
 
     /**
      * @param string $message
+     * @return void
      */
     public function setMessage(string $message) {
         $this->message = $message;
     }
 
-    /**
-     * @return string
-     */
     public function getMessage(): string {
         return $this->message;
     }
 
-    /**
-     * @return string
-     */
     public function getLevel(): string {
         return $this->level;
     }
 
     /**
      * @param string $level
+     * @return void
      */
     public function setLevel(string $level) {
         $this->level = $level;
     }
 
-    /**
-     * @return array
-     */
     public function __toArray(): array {
         return [
             'text' => $this->message,
@@ -89,5 +84,4 @@ class Message {
             'level' => $this->level,
         ];
     }
-
 }

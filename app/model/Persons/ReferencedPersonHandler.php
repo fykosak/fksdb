@@ -4,10 +4,14 @@ namespace Persons;
 
 use FKSDB\Components\Forms\Controls\IReferencedHandler;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
+use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
+use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\ORM\AbstractServiceMulti;
+use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
 use FKSDB\Components\Forms\Controls\Schedule\Handler;
-use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
+use FKSDB\ORM\IService;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelPostContact;
 use FKSDB\ORM\Services\ServicePerson;
@@ -15,14 +19,14 @@ use FKSDB\ORM\Services\ServicePersonHistory;
 use FKSDB\ORM\Services\ServicePersonInfo;
 use FKSDB\Submits\StorageException;
 use FormUtils;
-use ModelException;
+use FKSDB\Exceptions\ModelException;
+use FKSDB\ORM\ModelsMulti\ModelMPostContact;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\JsonException;
-use ServiceMPersonHasFlag;
-use ServiceMPostContact;
-use function array_keys;
+use FKSDB\ORM\ServicesMulti\ServiceMPersonHasFlag;
+use FKSDB\ORM\ServicesMulti\ServiceMPostContact;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -31,50 +35,35 @@ use function array_keys;
  */
 class ReferencedPersonHandler implements IReferencedHandler {
     use SmartObject;
+
     const POST_CONTACT_DELIVERY = 'post_contact_d';
     const POST_CONTACT_PERMANENT = 'post_contact_p';
 
-    /**
-     * @var ServicePerson
-     */
+    /** @var ServicePerson */
     private $servicePerson;
 
-    /**
-     * @var ServicePersonInfo
-     */
+    /** @var ServicePersonInfo */
     private $servicePersonInfo;
 
-    /**
-     * @var ServicePersonHistory
-     */
+    /** @var ServicePersonHistory */
     private $servicePersonHistory;
 
-    /**
-     * @var ServiceMPostContact
-     */
+    /** @var ServiceMPostContact */
     private $serviceMPostContact;
 
-    /**
-     * @var ServiceMPersonHasFlag
-     */
+    /** @var ServiceMPersonHasFlag */
     private $serviceMPersonHasFlag;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $acYear;
-    /**
-     * @var integer
-     */
+
+    /** @var int */
     private $eventId;
 
-    /**
-     * @var mixed
-     */
+    /** @var string */
     private $resolution;
-    /**
-     * @var Handler
-     */
+
+    /** @var Handler */
     private $eventScheduleHandler;
 
     /**
@@ -85,17 +74,17 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @param ServiceMPostContact $serviceMPostContact
      * @param ServiceMPersonHasFlag $serviceMPersonHasFlag
      * @param Handler $eventScheduleHandler
-     * @param $acYear
-     * @param $resolution
+     * @param int $acYear
+     * @param string $resolution
      */
-    function __construct(
+    public function __construct(
         ServicePerson $servicePerson,
         ServicePersonInfo $servicePersonInfo,
         ServicePersonHistory $servicePersonHistory,
         ServiceMPostContact $serviceMPostContact,
         ServiceMPersonHasFlag $serviceMPersonHasFlag,
         Handler $eventScheduleHandler,
-        $acYear,
+        int $acYear,
         $resolution
     ) {
         $this->servicePerson = $servicePerson;
@@ -108,28 +97,27 @@ class ReferencedPersonHandler implements IReferencedHandler {
         $this->eventScheduleHandler = $eventScheduleHandler;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getResolution() {
+    public function getResolution(): string {
         return $this->resolution;
     }
 
     /**
-     * @param $resolution
-     * @return mixed|void
+     * @param string $resolution
+     * @return void
      */
-    public function setResolution($resolution) {
+    public function setResolution(string $resolution) {
         $this->resolution = $resolution;
     }
 
     /**
      * @param ArrayHash $values
-     * @return AbstractModelSingle|ModelPerson|null
-     * @throws JsonException
+     * @return ModelPerson
      * @throws ExistingPaymentException
+     * @throws FullCapacityException
+     * @throws JsonException
+     * @throws NotImplementedException
      */
-    public function createFromValues(ArrayHash $values) {
+    public function createFromValues(ArrayHash $values): ModelPerson {
         $email = isset($values['person_info']['email']) ? $values['person_info']['email'] : null;
         $person = $this->servicePerson->findByEmail($email);
         if (!$person) {
@@ -142,20 +130,22 @@ class ReferencedPersonHandler implements IReferencedHandler {
     /**
      * @param IModel $model
      * @param ArrayHash $values
-     * @throws JsonException
+     * @return void
      * @throws ExistingPaymentException
+     * @throws FullCapacityException
+     * @throws JsonException
+     * @throws NotImplementedException
      */
     public function update(IModel $model, ArrayHash $values) {
-        /**
-         * @var ModelPerson $model
-         */
+        /** @var ModelPerson $model */
         $this->store($model, $values);
     }
 
     /**
-     * @param $eventId
+     * @param int $eventId
+     * @return void
      */
-    public function setEventId($eventId) {
+    public function setEventId(int $eventId) {
         $this->eventId = $eventId;
     }
 
@@ -168,7 +158,8 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @throws JsonException
      * @throws ExistingPaymentException
      * @throws StorageException
-     * @throws \Exception
+     * @throws FullCapacityException
+     * @throws NotImplementedException
      */
     private function store(ModelPerson &$person, ArrayHash $data) {
         /*
@@ -176,7 +167,6 @@ class ReferencedPersonHandler implements IReferencedHandler {
          */
         try {
             $this->beginTransaction();
-            // Debugger::barDump($data);
             /*
              * Person & its extensions
              */
@@ -185,10 +175,13 @@ class ReferencedPersonHandler implements IReferencedHandler {
                 'person' => &$person,
                 'person_info' => ($info = $person->getInfo()) ?: $this->servicePersonInfo->createNew(),
                 'person_history' => ($history = $person->getHistory($this->acYear)) ?: $this->servicePersonHistory->createNew(['ac_year' => $this->acYear]),
-                'person_schedule' => (($this->eventId && isset($data['person_schedule']) && $person->getSerializedSchedule($this->eventId, array_keys((array)$data['person_schedule'])[0])) ?: null),
+                'person_schedule' => (($this->eventId && isset($data['person_schedule']) && $person->getSerializedSchedule($this->eventId, \array_keys((array)$data['person_schedule'])[0])) ?: null),
                 self::POST_CONTACT_DELIVERY => ($dataPostContact = $person->getDeliveryAddress()) ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_DELIVERY]),
                 self::POST_CONTACT_PERMANENT => ($dataPostContact = $person->getPermanentAddress(true)) ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_PERMANENT])
             ];
+            /**
+             * @var AbstractServiceSingle[] $services
+             */
             $services = [
                 'person' => $this->servicePerson,
                 'person_info' => $this->servicePersonInfo,
@@ -198,7 +191,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
                 self::POST_CONTACT_PERMANENT => $this->serviceMPostContact,
             ];
 
-            $originalModels = array_keys(iterator_to_array($data));
+            $originalModels = \array_keys(iterator_to_array($data));
 
             $this->prepareFlagServices($data, $services);
             $this->prepareFlagModels($person, $data, $models);
@@ -214,7 +207,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
                 if (count($conflicts)) {
                     throw new ModelDataConflictException($conflicts);
                 }
-            } else if ($this->resolution == self::RESOLUTION_KEEP) {
+            } elseif ($this->resolution == self::RESOLUTION_KEEP) {
                 $data = $this->removeConflicts($data, $conflicts);
             }
             // It's like this: $this->resolution == self::RESOLUTION_OVERWRITE) {
@@ -223,7 +216,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
             foreach ($models as $t => & $model) {
 
                 if (!isset($data[$t])) {
-                    if (in_array($t, $originalModels) && in_array($t, array(self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT))) {
+                    if (\in_array($t, $originalModels) && \in_array($t, [self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT])) {
                         // delete only post contacts, other "children" could be left all-nulls
                         $services[$t]->dispose($model);
                     }
@@ -235,9 +228,12 @@ class ReferencedPersonHandler implements IReferencedHandler {
                     continue;
                 }
                 $data[$t]['person_id'] = $models['person']->person_id; // this works even for person itself
-
+                // if ($services[$t] instanceof AbstractServiceSingle) {
+                //     $services[$t]->updateModel2($model, $data[$t]);
+                //  } else {
                 $services[$t]->updateModel($model, $data[$t]);
                 $services[$t]->save($model);
+                //  }
             }
 
             $this->commit();
@@ -253,15 +249,16 @@ class ReferencedPersonHandler implements IReferencedHandler {
         }
     }
 
+    /** @var bool */
     private $outerTransaction = false;
 
     /**
-     * @param $model
+     * @param mixed $model
      * @param ArrayHash $values
-     * @return ArrayHash
+     * @return array
      */
-    private function getConflicts($model, ArrayHash $values) {
-        $conflicts = new ArrayHash();
+    private function getConflicts($model, ArrayHash $values): array {
+        $conflicts = [];
         foreach ($values as $key => $value) {
             if (isset($model[$key])) {
                 if ($model[$key] instanceof IModel) {
@@ -269,10 +266,8 @@ class ReferencedPersonHandler implements IReferencedHandler {
                     if (count($subConflicts)) {
                         $conflicts[$key] = $subConflicts;
                     }
-                } else {
-                    if ($model[$key] != $value) {
-                        $conflicts[$key] = $value;
-                    }
+                } elseif (!is_null($model[$key]) && $model[$key] != $value) {
+                    $conflicts[$key] = $value;
                 }
             }
         }
@@ -282,10 +277,10 @@ class ReferencedPersonHandler implements IReferencedHandler {
 
     /**
      * @param ArrayHash $data
-     * @param ArrayHash $conflicts
+     * @param ArrayHash|array $conflicts
      * @return ArrayHash
      */
-    private function removeConflicts(ArrayHash $data, ArrayHash $conflicts) {
+    private function removeConflicts($data, $conflicts) {
         $result = $data;
         foreach ($conflicts as $key => $value) {
             if (isset($data[$key])) {
@@ -301,7 +296,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
     }
 
     /**
-     * @param $models
+     * @param ModelMPostContact[] $models
      */
     private function preparePostContactModels(&$models) {
         if ($models[self::POST_CONTACT_PERMANENT]->isNew()) {
@@ -315,9 +310,10 @@ class ReferencedPersonHandler implements IReferencedHandler {
 
     /**
      * @param ArrayHash $data
+     * @return void
      */
     private function resolvePostContacts(ArrayHash $data) {
-        foreach (array(self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT) as $type) {
+        foreach ([self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT] as $type) {
             if (!isset($data[$type])) {
                 continue;
             }
@@ -342,6 +338,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @param ModelPerson $person
      * @param ArrayHash $data
      * @param $models
+     * @throws ModelException
      */
     private function prepareFlagModels(ModelPerson &$person, ArrayHash &$data, &$models) {
         if (!isset($data['person_has_flag'])) {
@@ -353,7 +350,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
                 continue;
             }
 
-            $models[$fid] = ($flag = $person->getMPersonHasFlag($fid)) ?: $this->serviceMPersonHasFlag->createNew(array('fid' => $fid));
+            $models[$fid] = ($flag = $person->getMPersonHasFlag($fid)) ?: $this->serviceMPersonHasFlag->createNew(['fid' => $fid]);
 
             $data[$fid] = new ArrayHash();
             $data[$fid]['value'] = $value;
@@ -363,7 +360,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
 
     /**
      * @param ArrayHash $data
-     * @param $services
+     * @param IService[]|AbstractServiceSingle[]|AbstractServiceMulti[] $services
      */
     private function prepareFlagServices(ArrayHash &$data, &$services) {
         if (!isset($data['person_has_flag'])) {
@@ -377,7 +374,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
 
     private function beginTransaction() {
         $connection = $this->servicePerson->getConnection();
-        if (!$connection->inTransaction()) {
+        if (!$connection->getPdo()->inTransaction()) {
             $connection->beginTransaction();
         } else {
             $this->outerTransaction = true;
@@ -399,11 +396,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
         //else: TODO ? throw an exception?
     }
 
-    /**
-     * @param $field
-     * @return bool|mixed
-     */
-    public function isSecondaryKey($field) {
+    public function isSecondaryKey(string $field): bool {
         return $field == 'person_info.email';
     }
 
@@ -412,7 +405,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @param mixed $key
      * @return ModelPerson|null|IModel
      */
-    public function findBySecondaryKey($field, $key) {
+    public function findBySecondaryKey(string $field, string $key) {
         if (!$this->isSecondaryKey($field)) {
             throw new InvalidArgumentException("'$field' is not a secondary key.");
         }

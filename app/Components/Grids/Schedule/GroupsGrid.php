@@ -2,18 +2,18 @@
 
 namespace FKSDB\Components\Grids\Schedule;
 
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
+use Nette\DI\Container;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class GroupsGrid
- * @package FKSDB\Components\Grids\Schedule
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class GroupsGrid extends BaseGrid {
     /**
@@ -24,16 +24,13 @@ class GroupsGrid extends BaseGrid {
     /**
      * GroupsGrid constructor.
      * @param ModelEvent $event
-     * @param TableReflectionFactory $tableReflectionFactory
+     * @param Container $container
      */
-    public function __construct(ModelEvent $event, TableReflectionFactory $tableReflectionFactory) {
-        parent::__construct($tableReflectionFactory);
+    public function __construct(ModelEvent $event, Container $container) {
+        parent::__construct($container);
         $this->event = $event;
     }
 
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelScheduleGroup::class;
     }
@@ -66,7 +63,8 @@ class GroupsGrid extends BaseGrid {
 
         $this->addButton('detail', _('Detail'))->setText(_('Detail'))
             ->setLink(function ($row) {
-                return $this->getPresenter()->link('group', ['id' => $row->schedule_group_id]);
+                /** @var ModelScheduleGroup $row */
+                return $this->getPresenter()->link('ScheduleItem:list', ['groupId' => $row->schedule_group_id]);
             });
     }
 }

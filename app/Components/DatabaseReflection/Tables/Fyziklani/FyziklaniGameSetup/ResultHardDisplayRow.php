@@ -9,7 +9,7 @@ use Nette\Utils\Html;
 
 /**
  * Class GameStartRow
- * @package FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniGameSetup
+ * *
  */
 class ResultHardDisplayRow extends AbstractFyziklaniGameSetupRow {
     /**
@@ -24,6 +24,6 @@ class ResultHardDisplayRow extends AbstractFyziklaniGameSetupRow {
      * @return Html
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        return (new BinaryPrinter)($model->result_hard_display);
+        return (new BinaryPrinter())($model->result_hard_display);
     }
 }

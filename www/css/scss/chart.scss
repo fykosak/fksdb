@@ -1,3 +1,5 @@
+@import "colors";
+
 .chart {
   &.chart-participant-acquaintance {
     text, path {
@@ -26,6 +28,48 @@
       &.inactive {
         opacity: 0;
       }
+    }
+  }
+
+  &.person-timeline .content {
+    circle {
+      stroke: black;
+      stroke-width: 1;
+
+      &[data-contest-id="2"] {
+        fill: $vyfukMainColor;
+      }
+
+      &[data-contest-id="1"] {
+        fill: $fykosMainColor;
+      }
+
+      &[data-event-type-id="1"] {
+        fill: $fyziklaniMainColor;
+      }
+
+      &[data-event-type-id="9"] {
+        fill: $folMainColor;
+      }
+    }
+
+    rect {
+      stroke: white;
+      stroke-width: 1;
+    }
+
+    g[data-contest-id="1"] rect {
+      fill: $fykosMainColor;
+    }
+
+    g[data-contest-id="2"] rect {
+      fill: $vyfukMainColor;
+    }
+
+    text {
+      text-anchor: middle;
+      alignment-baseline: middle;
+      fill: white;
     }
   }
 }

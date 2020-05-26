@@ -4,17 +4,19 @@ namespace FKSDB\Components\Grids\Events;
 
 use FKSDB\Components\DatabaseReflection\ValuePrinters\EventRole;
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceEvent;
 use FKSDB\YearCalculator;
+use Nette\DI\Container;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class DispatchGrid
- * @package FKSDB\Components\Grids\Events
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class DispatchGrid extends BaseGrid {
 
@@ -33,62 +35,39 @@ class DispatchGrid extends BaseGrid {
 
     /**
      * DispatchGrid constructor.
-     * @param ServiceEvent $serviceEvent
      * @param ModelPerson $person
-     * @param YearCalculator $yearCalculator
+     * @param Container $container
      */
-    function __construct(ServiceEvent $serviceEvent, ModelPerson $person, YearCalculator $yearCalculator) {
-        parent::__construct();
+    public function __construct(ModelPerson $person, Container $container) {
+        parent::__construct($container);
         $this->person = $person;
-        $this->serviceEvent = $serviceEvent;
-        $this->yearCalculator = $yearCalculator;
+        $this->serviceEvent = $container->getByType(ServiceEvent::class);
+        $this->yearCalculator = $container->getByType(YearCalculator::class);
     }
 
     /**
      * @param $presenter
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
+     * @throws NotImplementedException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
-        //
-        // data
-        //
-        $events = $this->serviceEvent->getTable();
 
-        $dataSource = new NDataSource($events);
+        $events = $this->serviceEvent->getTable()->order('begin DESC');
+        $this->setDataSource(new NDataSource($events));
 
-        $this->setDataSource($dataSource);
-        $this->setDefaultOrder('begin DESC');
+        $this->addColumns(['event.event_id', 'event.name', 'referenced.contest', 'event.year']);
 
-
-        //
-        // columns
-        //
-        $this->addColumn('event_id', _('Event Id'))->setRenderer(function ($row) {
-            return '#' . $row->event_id;
-        });
-        $this->addColumn('name', _('Name'));
-        $this->addColumn('contest_id', _('Contest'))->setRenderer(function ($row) {
-            return $row->event_type->contest->name;
-        })->setSortable(false);
-        $this->addColumn('year', _('Year'));
-        $this->addColumn('roles', _('Roles'))->setRenderer(function ($row) {
-            $modelEvent = ModelEvent::createFromActiveRow($row);
-            $roles = $this->person->getRolesForEvent($modelEvent, $this->yearCalculator);
+        $this->addColumn('roles', _('Roles'))->setRenderer(function (ModelEvent $event) {
+            $roles = $this->person->getRolesForEvent($event, $this->yearCalculator);
             return EventRole::getHtml($roles);
         })->setSortable(false);
 
-        //
-        // operations
-        //
+        $this->addLinkButton('Dashboard:default', 'detail', _('Detail'), false, ['eventId' => 'event_id']);
+    }
 
-        $this->addButton('detail', _('Detail'))
-            ->setText(_('Detail'))
-            ->setLink(function ($row) {
-                return $this->getPresenter()->link('Dashboard:default', [
-                    'eventId' => $row->event_id,
-                ]);
-            })->setClass('btn btn-sm btn-primary');
+    protected function getModelClassName(): string {
+        return ModelEvent::class;
     }
 }

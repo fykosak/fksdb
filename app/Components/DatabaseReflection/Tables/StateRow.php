@@ -4,12 +4,12 @@ namespace FKSDB\Components\DatabaseReflection;
 
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Forms\Controls\BaseControl;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 use Nette\Utils\Html;
 
 /**
  * Class StateRow
- * @package FKSDB\Components\DatabaseReflection
+ * *
  */
 class StateRow extends DefaultRow {
     /**
@@ -44,9 +44,11 @@ class StateRow extends DefaultRow {
     }
 
     /**
+     * @param array $args
      * @return BaseControl
+     * @throws NotImplementedException
      */
-    public function createField(): BaseControl {
+    public function createField(...$args): BaseControl {
         throw new NotImplementedException();
     }
 }
