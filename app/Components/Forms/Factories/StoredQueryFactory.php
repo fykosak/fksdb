@@ -35,11 +35,7 @@ class StoredQueryFactory {
         $this->serviceStoredQueryTagType = $serviceStoredQueryTagType;
     }
 
-    /**
-     * @param ControlGroup|null $group
-     * @return ModelContainer
-     */
-    public function createConsole(ControlGroup $group = null) {
+    public function createConsole(ControlGroup $group = null): ModelContainer {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
 
@@ -49,11 +45,7 @@ class StoredQueryFactory {
         return $container;
     }
 
-    /**
-     * @param ControlGroup|null $group
-     * @return ModelContainer
-     */
-    public function createMetadata(ControlGroup $group = null) {
+    public function createMetadata(ControlGroup $group): ModelContainer {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
 
@@ -75,27 +67,21 @@ class StoredQueryFactory {
             ->setOption('description', _('Název třídy pro zpracování výsledku v PHP. Lze upravit jen v databázi.'))
             ->setDisabled();
 
-
         return $container;
     }
 
-    /**
-     * @param ControlGroup|null $group
-     * @return Replicator
-     */
-    public function createParametersMetadata(ControlGroup $group = null) {
-        $replicator = new Replicator(function ($replContainer) use ($group) {
+    public function createParametersMetadata(ControlGroup $group): Replicator {
+        $replicator = new Replicator(function (Container $replContainer) use ($group) {
             $this->buildParameterMetadata($replContainer, $group);
 
             $submit = $replContainer->addSubmit('remove', _('Odebrat parametr'));
-            $submit->getControlPrototype()->addClass('btn-danger');
-            $submit->getControlPrototype()->addClass('btn-sm'); // TODO doesn't work
+            $submit->getControlPrototype()->addAttributes(['class' => 'btn-danger btn-sm']);
             $submit->addRemoveOnClick();
         }, 0, true);
         $replicator->containerClass = ModelContainer::class;
         $replicator->setCurrentGroup($group);
         $submit = $replicator->addSubmit('addParam', _('Přidat parametr'));
-        $submit->getControlPrototype()->addClass('btn-sm btn-success');
+        $submit->getControlPrototype()->addAttributes(['class' => 'btn-sm btn-success']);
 
         $submit->setValidationScope(false)
             ->addCreateOnClick();
@@ -105,10 +91,11 @@ class StoredQueryFactory {
 
     /**
      * @param Container $container
-     * @param mixed $group
+     * @param ControlGroup $group
+     * @return void
      * @internal
      */
-    public function buildParameterMetadata(Container $container, $group) {
+    private function buildParameterMetadata(Container $container, ControlGroup $group) {
         $container->setCurrentGroup($group);
 
         $container->addText('name', _('Název'))
@@ -130,24 +117,23 @@ class StoredQueryFactory {
 
     /**
      * @param ModelStoredQuery $queryPattern
-     * @param int $options
      * @param ControlGroup|null $group
      * @return ModelContainer
      */
-    public function createParametersValues(ModelStoredQuery $queryPattern, $options = 0, ControlGroup $group = null) {
+    public function createParametersValues(ModelStoredQuery $queryPattern, ControlGroup $group = null): ModelContainer {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
 
-        foreach ($queryPattern->getParameters() as $parameter) {
+        foreach ($queryPattern->getParametersAsArray() as $parameter) {
             $name = $parameter->name;
-            $subcontainer = new ModelContainer();
-            $container->addComponent($subcontainer, $name);
+            $subContainer = new ModelContainer();
+            $container->addComponent($subContainer, $name);
             // $subcontainer = $container->addContainer($name);
 
             switch ($parameter->type) {
                 case ModelStoredQueryParameter::TYPE_INT:
                 case ModelStoredQueryParameter::TYPE_STRING:
-                    $valueElement = $subcontainer->addText('value', $name);
+                    $valueElement = $subContainer->addText('value', $name);
                     $valueElement->setOption('description', $parameter->description);
                     if ($parameter->type == ModelStoredQueryParameter::TYPE_INT) {
                         $valueElement->addRule(Form::INTEGER, _('Parametr %label je číselný.'));
@@ -156,7 +142,7 @@ class StoredQueryFactory {
                     $valueElement->setDefaultValue($parameter->getDefaultValue());
                     break;
                 case ModelStoredQueryParameter::TYPE_BOOL:
-                    $valueElement = $subcontainer->addCheckbox('value', $name);
+                    $valueElement = $subContainer->addCheckbox('value', $name);
                     $valueElement->setOption('description', $parameter->description);
                     $valueElement->setDefaultValue((bool)$parameter->getDefaultValue());
                     break;
@@ -167,13 +153,13 @@ class StoredQueryFactory {
     }
 
     /**
-     * @param $ajax
-     * @param $label
+     * @param bool $ajax
+     * @param string $label
      * @param IDataProvider $dataProvider
      * @param null $renderMethod
      * @return AutocompleteSelectBox
      */
-    private function createTagSelect($ajax, $label, IDataProvider $dataProvider, $renderMethod = null) {
+    private function createTagSelect(bool $ajax, string $label, IDataProvider $dataProvider, $renderMethod = null): AutocompleteSelectBox {
         if ($renderMethod === null) {
             $renderMethod = '$("<li>")
                         .append("<a>" + item.label + "<br>" + item.description + ", ID: " + item.value + "</a>")
@@ -184,5 +170,4 @@ class StoredQueryFactory {
         $select->setMultiSelect(true);
         return $select;
     }
-
 }

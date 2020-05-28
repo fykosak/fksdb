@@ -4,7 +4,7 @@ namespace FKSDB\Components\Grids;
 
 use Exports\ExportFormatFactory;
 use Exports\StoredQuery;
-use FKSDB\Components\Controls\StoredQueryComponent;
+use FKSDB\Components\Controls\StoredQuery\StoredQueryComponent;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use NiftyGrid\DuplicateColumnException;
@@ -78,12 +78,12 @@ class StoredQueryGrid extends BaseGrid {
         }
 
 
-        if (!$this->storedQuery->getQueryPattern()->isNew()) {
+        if (!$this->storedQuery->getModelQuery()->isNew()) {
             $this->addGlobalButton('show')
                 ->setLabel(_('Podrobnosti dotazu'))
                 ->setClass('btn btn-sm btn-secondary')
-                ->setLink($this->getPresenter()->link('Export:show', $this->storedQuery->getQueryPattern()->getPrimary()));
-            $qid = $this->storedQuery->getQueryPattern()->qid;
+                ->setLink($this->getPresenter()->link('Export:show', $this->storedQuery->getModelQuery()->getPrimary()));
+            $qid = $this->storedQuery->getModelQuery()->qid;
             if ($qid) {
                 $parameters = ['qid' => $qid, 'bc' => null];
                 $queryParameters = $this->storedQuery->getParameters();

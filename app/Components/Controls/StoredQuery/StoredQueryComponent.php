@@ -1,11 +1,12 @@
 <?php
 
-namespace FKSDB\Components\Controls;
+namespace FKSDB\Components\Controls\StoredQuery;
 
 use Authorization\ContestAuthorizator;
 use Exports\ExportFormatFactory;
 use Exports\StoredQuery;
 use Exports\StoredQueryFactory as StoredQueryFactorySQL;
+use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory;
 use FKSDB\Components\Grids\StoredQueryGrid;
@@ -32,7 +33,7 @@ class StoredQueryComponent extends BaseComponent {
      * @persistent
      * @var array
      */
-    public $parameters;
+    public $parameters = [];
 
     /**
      * @var StoredQuery
@@ -87,34 +88,31 @@ class StoredQueryComponent extends BaseComponent {
         $this->exportFormatFactory = $exportFormatFactory;
     }
 
-    /**
-     * @return bool
-     */
-    public function getShowParametrize() {
+    public function getShowParametrize(): bool {
         return $this->showParametrize;
     }
 
     /**
-     * @param $showParametrize
+     * @param bool $showParametrize
      * @return void
      */
-    public function setShowParametrize($showParametrize) {
+    public function setShowParametrize(bool $showParametrize) {
         $this->showParametrize = $showParametrize;
     }
 
     /**
-     * @param $parameters
+     * @param array $parameters
      * @return void
      */
-    public function setParameters($parameters) {
+    public function setParameters(array $parameters) {
         $this->parameters = $parameters;
     }
 
     /**
-     * @param $parameters
+     * @param array $parameters
      * @return void
      */
-    public function updateParameters($parameters) {
+    public function updateParameters(array $parameters) {
         if (!$this->parameters) {
             $this->parameters = [];
         }
@@ -133,7 +131,7 @@ class StoredQueryComponent extends BaseComponent {
         $control = new FormControl();
         $form = $control->getForm();
 
-        $queryPattern = $this->storedQuery->getQueryPattern();
+        $queryPattern = $this->storedQuery->getModelQuery();
         $parameters = $this->storedQueryFormFactory->createParametersValues($queryPattern);
         $form->addComponent($parameters, self::CONT_PARAMS);
 
@@ -183,19 +181,20 @@ class StoredQueryComponent extends BaseComponent {
         } else {
             $this->template->error = $this->getSqlError();
         }
-        $this->template->hasParameters = $this->showParametrize && count($this->storedQuery->getQueryPattern()->getParameters());
+        $this->template->hasParameters = $this->showParametrize && count($this->storedQuery->getModelQuery()->getParametersAsArray());
 
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'StoredQueryComponent.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR);
         $this->template->render();
     }
 
     /**
-     * @param $format
-     * @throws BadRequestException
-     * @throws ForbiddenRequestException
+     * @param string $format
+     * @return void
      * @throws AbortException
+     * @throws ForbiddenRequestException
+     * @throws NotFoundException
      */
-    public function handleFormat($format) {
+    public function handleFormat(string $format) {
         if ($this->parameters) {
             $this->storedQuery->setParameters($this->parameters);
         }

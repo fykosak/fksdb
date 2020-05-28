@@ -3,6 +3,7 @@
 namespace Exports\Formats;
 
 use Nette\Application\IResponse;
+use Nette\Http\IResponse as HttpResponse;
 use Nette\Http\IRequest;
 use Nette\SmartObject;
 
@@ -16,7 +17,7 @@ class PlainTextResponse implements IResponse {
 
     /** @var string */
     private $content;
-    /** @var */
+    /** @var string */
     private $name;
 
     /**
@@ -34,6 +35,7 @@ class PlainTextResponse implements IResponse {
 
     /**
      * @param string $name
+     * @return void
      */
     public function setName(string $name) {
         $this->name = $name;
@@ -41,9 +43,9 @@ class PlainTextResponse implements IResponse {
 
     /**
      * @param IRequest $httpRequest
-     * @param \Nette\Http\IResponse $httpResponse
+     * @param HttpResponse $httpResponse
      */
-    public function send(IRequest $httpRequest, \Nette\Http\IResponse $httpResponse) {
+    public function send(IRequest $httpRequest, HttpResponse $httpResponse) {
         $httpResponse->setContentType('text/plain', 'utf-8');
 
         if ($this->name) {

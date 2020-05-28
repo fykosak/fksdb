@@ -24,8 +24,9 @@ abstract class WebLoader extends Control {
     private $inlines = [];
 
     /**
-     * @param $file
+     * @param string $file
      * @param array $attributes
+     * @return void
      */
     public function addFile(string $file, array $attributes = []) {
         $hash = $file . join(':', $attributes);
@@ -37,8 +38,9 @@ abstract class WebLoader extends Control {
     }
 
     /**
-     * @param $file
+     * @param string $file
      * @param array $attributes
+     * @return void
      */
     public function removeFile(string $file, array $attributes = []) {
         $hash = $file . join(':', $attributes);
@@ -47,8 +49,9 @@ abstract class WebLoader extends Control {
     }
 
     /**
-     * @param $inline
+     * @param string $inline
      * @param string $tag
+     * @return void
      */
     public function addInline(string $inline, string $tag = self::UNTAGGED) {
         $this->inlines[$tag] = $inline;
@@ -56,7 +59,8 @@ abstract class WebLoader extends Control {
     }
 
     /**
-     * @param $tag
+     * @param string $tag
+     * @return void
      */
     public function removeInline(string $tag) {
         if ($tag != self::UNTAGGED) {
@@ -67,6 +71,7 @@ abstract class WebLoader extends Control {
 
     /**
      * @param mixed ...$args
+     * @return void
      */
     public function render(...$args) {
         $files = [];
@@ -99,31 +104,17 @@ abstract class WebLoader extends Control {
         $template->render();
     }
 
-    /**
-     * @param $file
-     * @return bool
-     */
     public static function isRelative(string $file): bool {
         return !preg_match('@https?://|/@Ai', $file);
     }
 
-    /**
-     * @return string
-     */
     abstract protected function getTemplateFilePrefix(): string;
 
-    /**
-     * @return array
-     */
     protected function getFiles(): array {
         return $this->files;
     }
 
-    /**
-     * @return array
-     */
     protected function getInLines(): array {
         return $this->inlines;
     }
-
 }

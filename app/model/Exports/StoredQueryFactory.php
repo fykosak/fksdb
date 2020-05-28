@@ -61,13 +61,13 @@ class StoredQueryFactory implements IXMLNodeSerializer {
 
     /**
      * @param ISeriesPresenter $presenter
-     * @param $sql
-     * @param $parameters
+     * @param string $sql
+     * @param array $parameters
      * @param array $queryData
      * @return StoredQuery
      * @throws BadRequestException
      */
-    public function createQueryFromSQL(ISeriesPresenter $presenter, $sql, $parameters, $queryData = []): StoredQuery {
+    public function createQueryFromSQL(ISeriesPresenter $presenter, string $sql, array $parameters, array $queryData = []): StoredQuery {
         /** @var ModelStoredQuery $patternQuery */
         $patternQuery = $this->serviceStoredQuery->createNew(array_merge([
             'sql' => $sql,
@@ -81,12 +81,7 @@ class StoredQueryFactory implements IXMLNodeSerializer {
         return $storedQuery;
     }
 
-    /**
-     * @param $qid
-     * @param $parameters
-     * @return StoredQuery
-     */
-    public function createQueryFromQid($qid, $parameters): StoredQuery {
+    public function createQueryFromQid(string $qid, array $parameters): StoredQuery {
         $patternQuery = $this->serviceStoredQuery->findByQid($qid);
         if (!$patternQuery) {
             throw new InvalidArgumentException("Unknown QID '$qid'.");
@@ -100,6 +95,7 @@ class StoredQueryFactory implements IXMLNodeSerializer {
     /**
      * @param ISeriesPresenter $presenter
      * @param StoredQuery $storedQuery
+     * @return void
      * @throws BadRequestException
      */
     private function presenterContextToQuery(ISeriesPresenter $presenter, StoredQuery $storedQuery) {
@@ -126,7 +122,7 @@ class StoredQueryFactory implements IXMLNodeSerializer {
     }
 
     /**
-     * @param $dataSource
+     * @param StoredQuery $dataSource
      * @param DOMNode $node
      * @param DOMDocument $doc
      * @param int $format
@@ -181,5 +177,4 @@ class StoredQueryFactory implements IXMLNodeSerializer {
             }
         }
     }
-
 }

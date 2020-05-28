@@ -7,8 +7,8 @@ use Exports\StoredQuery;
 use Exports\StoredQueryFactory;
 use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Controls\StoredQueryComponent;
-use FKSDB\Components\Controls\StoredQueryTagCloud;
+use FKSDB\Components\Controls\StoredQuery\StoredQueryComponent;
+use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloud;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory as StoredQueryFormFactory;
 use FKSDB\Components\Grids\StoredQueriesGrid;
 use FKSDB\EntityTrait;
@@ -208,6 +208,7 @@ class ExportPresenter extends SeriesPresenter {
 
     /**
      * @return void
+     * @throws BadRequestException
      * @throws NotFoundException
      */
     public function authorizedExecute() {
@@ -215,7 +216,7 @@ class ExportPresenter extends SeriesPresenter {
         if (!$query) {
             throw new NotFoundException('Neexistující dotaz.');
         }
-        // proper authorization is done in StoredQueryComponent
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($query, 'execute', $this->getSelectedContest()));
     }
 
     /**
@@ -295,7 +296,7 @@ class ExportPresenter extends SeriesPresenter {
             $values[self::CONT_META]['tags'] = $this->getPatternQuery()->getTags()->fetchPairs('tag_type_id', 'tag_type_id');
             $values[self::CONT_PARAMS_META] = [];
 
-            foreach ($query->getParameters() as $parameter) {
+            foreach ($query->getParametersAsArray() as $parameter) {
                 $paramData = $parameter->toArray();
                 $paramData['default'] = $parameter->getDefaultValue();
                 $values[self::CONT_PARAMS_META][] = $paramData;

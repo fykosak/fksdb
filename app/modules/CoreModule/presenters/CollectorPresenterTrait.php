@@ -6,8 +6,9 @@ use FKSDB\Components\Controls\Loaders\JavaScript\JavaScriptLoader;
 use FKSDB\Components\Controls\Loaders\Stylesheet\StylesheetLoader;
 
 /**
- * Class CollectorPresenter
- * *
+ * Trait CollectorPresenterTrait
+ * @author Michal Červeňák <miso@fykos.cz>
+ * @author Michal Koutny
  */
 trait CollectorPresenterTrait {
 
@@ -34,27 +35,6 @@ trait CollectorPresenterTrait {
         /** @var JavaScriptLoader $component */
         $component = $this->getComponent('jsLoader');
         $component->addFile($file);
-    }
-
-    /**
-     * @param string $code
-     * @param string|null $tag
-     * @return void
-     */
-    public function registerJSCode(string $code, string $tag = null) {
-        /** @var JavaScriptLoader $component */
-        $component = $this->getComponent('jsLoader');
-        $component->addInline($code, $tag);
-    }
-
-    /**
-     * @param string $tag
-     * @return void
-     */
-    public function unregisterJSCode(string $tag) {
-        /** @var JavaScriptLoader $component */
-        $component = $this->getComponent('jsLoader');
-        $component->removeInline($tag);
     }
 
     /**

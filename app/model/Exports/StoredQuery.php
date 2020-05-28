@@ -21,7 +21,7 @@ class StoredQuery implements IDataSource, IResource {
     /**
      * @var ModelStoredQuery
      */
-    private $queryPattern;
+    private $modelQuery;
 
     /**
      * @var Connection
@@ -74,33 +74,32 @@ class StoredQuery implements IDataSource, IResource {
     private $columnNames;
 
     /**
-     * @var StoredQueryPostProcessing
-     */
-    private $postProcessing;
-
-    /**
      * StoredQuery constructor.
      * @param ModelStoredQuery $queryPattern
      * @param Connection $connection
      */
     public function __construct(ModelStoredQuery $queryPattern, Connection $connection) {
-        $this->setQueryPattern($queryPattern);
+        $this->modelQuery = $queryPattern;
         $this->connection = $connection;
     }
 
-    /**
-     * @param ModelStoredQuery $queryPattern
-     */
-    private function setQueryPattern(ModelStoredQuery $queryPattern) {
-        $this->queryPattern = $queryPattern;
-        $this->postProcessing = $this->queryPattern->getPostProcessing();
+    public function getModelQuery(): ModelStoredQuery {
+        return $this->modelQuery;
     }
 
     /**
-     * @param $parameters
-     * @param bool $strict
+     * @return StoredQueryPostProcessing|null
      */
-    public function setImplicitParameters($parameters, $strict = true) {
+    public function getPostProcessing() {
+        return $this->getModelQuery()->getPostProcessing();
+    }
+
+    /**
+     * @param array $parameters
+     * @param bool $strict
+     * @return void
+     */
+    public function setImplicitParameters(array $parameters, bool $strict = true) {
         $parameterNames = $this->getParameterNames();
         foreach ($parameters as $key => $value) {
             if ($strict && in_array($key, $parameterNames)) {
@@ -113,24 +112,15 @@ class StoredQuery implements IDataSource, IResource {
         }
     }
 
-    /**
-     * @return StoredQueryPostProcessing
-     */
-    public function getPostProcessing() {
-        return $this->postProcessing;
-    }
-
-    /**
-     * @return array
-     */
-    public function getImplicitParameters() {
+    public function getImplicitParameters(): array {
         return $this->implicitParameterValues;
     }
 
     /**
-     * @param $parameters
+     * @param array $parameters
+     * @return void
      */
-    public function setParameters($parameters) {
+    public function setParameters(array $parameters) {
         $parameterNames = $this->getParameterNames();
         foreach ($parameters as $key => $value) {
             if (!in_array($key, $parameterNames)) {
@@ -143,11 +133,7 @@ class StoredQuery implements IDataSource, IResource {
         }
     }
 
-    /**
-     * @param bool $all
-     * @return array
-     */
-    public function getParameters($all = false) {
+    public function getParameters(bool $all = false): array {
         if ($all) {
             return array_merge($this->parameterDefaults, $this->parameterValues, $this->implicitParameterValues);
         } else {
@@ -155,20 +141,10 @@ class StoredQuery implements IDataSource, IResource {
         }
     }
 
-    /**
-     * @return ModelStoredQuery
-     */
-    public function getQueryPattern() {
-        return $this->queryPattern;
-    }
-
-    /**
-     * @return array
-     */
-    public function getColumnNames() {
+    public function getColumnNames(): array {
         if (!$this->columnNames) {
             $this->columnNames = [];
-            $innerSql = $this->getQueryPattern()->sql;
+            $innerSql = $this->getModelQuery()->sql;
             $sql = "SELECT * FROM ($innerSql) " . self::INNER_QUERY . "";
 
             $statement = $this->bindParams($sql);
@@ -188,34 +164,26 @@ class StoredQuery implements IDataSource, IResource {
         return $this->columnNames;
     }
 
-    /**
-     * @return array
-     */
-    public function getParameterNames() {
+    public function getParameterNames(): array {
         if ($this->parameterDefaults === null) {
             $this->parameterDefaults = [];
-            foreach ($this->queryPattern->getParameters() as $parameter) {
+            foreach ($this->getModelQuery()->getParametersAsArray() as $parameter) {
                 $this->parameterDefaults[$parameter->name] = $parameter->getDefaultValue();
             }
         }
         return array_keys($this->parameterDefaults);
     }
 
-    /**
-     *
-     * @param string $sql
-     * @return \PDOStatement
-     */
-    private function bindParams($sql): \PDOStatement {
+    private function bindParams(string $sql): \PDOStatement {
         $statement = $this->connection->getPdo()->prepare($sql);
-        if ($this->postProcessing) {
-            $this->postProcessing->resetParameters();
+        if ($this->getPostProcessing()) {
+            $this->getPostProcessing()->resetParameters();
         }
 
         // bind implicit parameters
         foreach ($this->implicitParameterValues as $key => $value) {
-            if ($this->postProcessing) {
-                $this->postProcessing->bindValue($key, $value);
+            if ($this->getPostProcessing()) {
+                $this->getPostProcessing()->bindValue($key, $value);
             }
             if (!preg_match("/:$key/", $sql)) { // this ain't foolproof
                 continue;
@@ -225,7 +193,7 @@ class StoredQuery implements IDataSource, IResource {
         }
 
         // bind explicit parameters
-        foreach ($this->getQueryPattern()->getParameters() as $parameter) {
+        foreach ($this->getModelQuery()->getParametersAsArray() as $parameter) {
             $key = $parameter->name;
             if (array_key_exists($key, $this->parameterValues)) {
                 $value = $this->parameterValues[$key];
@@ -235,18 +203,24 @@ class StoredQuery implements IDataSource, IResource {
             $type = $parameter->getPDOType();
 
             $statement->bindValue($key, $value, $type);
-            if ($this->postProcessing) {
-                $this->postProcessing->bindValue($key, $value);
+            if ($this->getPostProcessing()) {
+                $this->getPostProcessing()->bindValue($key, $value);
             }
         }
         return $statement;
     }
 
+    /**
+     * @return void
+     */
     private function invalidateAll() {
         $this->count = null;
         $this->data = null;
     }
 
+    /**
+     * @return void
+     */
     private function invalidateData() {
         $this->data = null;
     }
@@ -269,13 +243,13 @@ class StoredQuery implements IDataSource, IResource {
      */
     public function getCount($column = "*") {
         if ($this->count === null) {
-            $innerSql = $this->getQueryPattern()->sql;
+            $innerSql = $this->getModelQuery()->sql;
             $sql = "SELECT COUNT(1) FROM ($innerSql) " . self::INNER_QUERY;
             $statement = $this->bindParams($sql);
             $statement->execute();
             $this->count = $statement->fetchColumn();
-            if ($this->postProcessing) {
-                if (!$this->postProcessing->keepsCount()) {
+            if ($this->getPostProcessing()) {
+                if (!$this->getPostProcessing()->keepsCount()) {
                     $this->count = count($this->getData());
                 }
             }
@@ -288,7 +262,7 @@ class StoredQuery implements IDataSource, IResource {
      */
     public function getData() {
         if ($this->data === null) {
-            $innerSql = $this->getQueryPattern()->sql;
+            $innerSql = $this->getModelQuery()->sql;
             if ($this->orders || $this->limit !== null || $this->offset !== null) {
                 $sql = "SELECT * FROM ($innerSql) " . self::INNER_QUERY;
             } else {
@@ -306,8 +280,8 @@ class StoredQuery implements IDataSource, IResource {
             $statement = $this->bindParams($sql);
             $statement->execute();
             $this->data = $statement;
-            if ($this->postProcessing) {
-                $this->data = $this->postProcessing->processData($this->data);
+            if ($this->getPostProcessing()) {
+                $this->data = $this->getPostProcessing()->processData($this->data);
             }
         }
         return $this->data; // lazy load during iteration?
@@ -345,11 +319,7 @@ class StoredQuery implements IDataSource, IResource {
         $this->invalidateData();
     }
 
-    /**
-     * @return string
-     */
     public function getResourceId(): string {
         return 'export';
     }
-
 }

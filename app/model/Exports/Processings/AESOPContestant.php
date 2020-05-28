@@ -44,11 +44,11 @@ class AESOPContestant extends StoredQueryPostProcessing {
      * Processing itself is not injectable so we ask the dependency explicitly per method (the task service).
      *
      * @param ServiceTask $serviceTask
-     * @return int|double
+     * @return int|null
      * @throws BadRequestException
      */
     public function getMaxPoints(ServiceTask $serviceTask) {
-        $evalutationStrategy = $this->getEvaluationStrategy();
+        $evaluationStrategy = $this->getEvaluationStrategy();
         $category = $this->getCategory();
         if (!$category) {
             return null;
@@ -59,17 +59,17 @@ class AESOPContestant extends StoredQueryPostProcessing {
             ->where('series BETWEEN 1 AND 6');
         $sum = 0;
         foreach ($tasks as $task) {
-            $sum += $evalutationStrategy->getTaskPoints($task, $category);
+            $sum += $evaluationStrategy->getTaskPoints($task, $category);
         }
         return $sum;
     }
 
     /**
-     * @param $data
+     * @param iterable $data
      * @return array
      * @throws BadRequestException
      */
-    private function filterCategory($data) {
+    private function filterCategory($data): array {
         $evaluationStrategy = $this->getEvaluationStrategy();
 
         $studyYears = [];
@@ -95,8 +95,8 @@ class AESOPContestant extends StoredQueryPostProcessing {
     }
 
     /**
-     * @param array|\Traversable $data
-     * @return array|\Traversable
+     * @param iterable $data
+     * @return iterable
      */
     private function calculateRank($data) {
         $points = [];
@@ -139,11 +139,11 @@ class AESOPContestant extends StoredQueryPostProcessing {
     }
 
     /**
-     * @param $studyYear
-     * @param $acYear
+     * @param int $studyYear
+     * @param int $acYear
      * @return int|null
      */
-    private function studyYearToGraduation($studyYear, $acYear) {
+    private function studyYearToGraduation(int $studyYear, int $acYear) {
         if ($studyYear >= 1 && $studyYear <= 4) {
             return $acYear + (5 - $studyYear);
         } elseif ($studyYear >= 6 && $studyYear <= 9) {
@@ -157,7 +157,7 @@ class AESOPContestant extends StoredQueryPostProcessing {
      * @return EvaluationStrategy
      * @throws BadRequestException
      */
-    private function getEvaluationStrategy() {
+    private function getEvaluationStrategy(): EvaluationStrategy {
         return ResultsModelFactory::findEvaluationStrategy($this->parameters['contest'], $this->parameters['year']);
     }
 

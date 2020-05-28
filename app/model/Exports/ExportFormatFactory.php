@@ -74,17 +74,11 @@ class ExportFormatFactory {
         $this->defaultFormats = [
             self::CSV_HEAD => _('Save CSV'),
             self::CSV_HEADLESS => _('Uložit CSV (bez hlavičky)'),
-            self::CSV_QUOTE_HEAD => _('Uložit CSV s uvozovkami')
+            self::CSV_QUOTE_HEAD => _('Uložit CSV s uvozovkami'),
         ];
     }
 
-    /**
-     *
-     * @param mixed $name
-     * @param StoredQuery $storedQuery
-     * @return IExportFormat
-     */
-    public function createFormat($name, StoredQuery $storedQuery) {
+    public function createFormat(string $name, StoredQuery $storedQuery): IExportFormat {
         switch (strtolower($name)) {
             case self::AESOP:
                 return $this->createAesop($name, $storedQuery);
@@ -104,7 +98,7 @@ class ExportFormatFactory {
      * @return array|mixed
      */
     public function getFormats(StoredQuery $storedQuery) {
-        $queryPattern = $storedQuery->getQueryPattern();
+        $queryPattern = $storedQuery->getModelQuery();
         $qid = isset($queryPattern->qid) ? $queryPattern->qid : null;
         if (!$qid) {
             return $this->defaultFormats;
@@ -114,16 +108,11 @@ class ExportFormatFactory {
         }
     }
 
-    /**
-     * @param $name
-     * @param StoredQuery $storedQuery
-     * @return AESOPFormat
-     */
-    private function createAesop($name, StoredQuery $storedQuery) {
+    private function createAesop(string $name, StoredQuery $storedQuery): AESOPFormat {
         $parameters = $this->globalParameters['exports']['formats'][$name];
         $queryParameters = $storedQuery->getParameters(true);
 
-        $qid = $storedQuery->getQueryPattern()->qid;
+        $qid = $storedQuery->getModelQuery()->qid;
 
         $xslFile = $parameters['template'];
         $contestName = $this->globalParameters['contestMapping'][$queryParameters['contest']];

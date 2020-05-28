@@ -13,6 +13,8 @@ use PDO;
  * @property-read int default_integer
  * @property-read string default_string
  * @property-read int query_id
+ * @property-read string name
+ * @property-read string description
  */
 class ModelStoredQueryParameter extends AbstractModelSingle {
 

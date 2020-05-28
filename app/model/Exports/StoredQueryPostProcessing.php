@@ -17,6 +17,9 @@ abstract class StoredQueryPostProcessing {
      */
     protected $parameters;
 
+    /**
+     * @return void
+     */
     final public function resetParameters() {
         $this->parameters = [];
     }
@@ -24,14 +27,12 @@ abstract class StoredQueryPostProcessing {
     /**
      * @param $key
      * @param $value
+     * @return void
      */
     final public function bindValue($key, $value) {
-        $this->parameters[$key] = $value; // type is ignored so far
+        $this->parameters[$key] = $value;
     }
 
-    /**
-     * @return bool
-     */
     public function keepsCount(): bool {
         return true;
     }

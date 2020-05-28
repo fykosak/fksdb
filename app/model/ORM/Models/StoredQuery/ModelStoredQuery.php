@@ -18,6 +18,7 @@ use Nette\Security\IResource;
  * @property-read int query_id
  * @property-read string name
  * @property-read string|null qid
+ * @property-read string sql
  */
 class ModelStoredQuery extends AbstractModelSingle implements IResource {
 
@@ -28,23 +29,23 @@ class ModelStoredQuery extends AbstractModelSingle implements IResource {
     private $outerParameters;
 
     /**
-     * @var StoredQueryPostProcessing
+     * @var StoredQueryPostProcessing|null
      */
     private $postProcessing;
 
+    public function getParameters(): GroupedSelection {
+        return $this->related(DbNames::TAB_STORED_QUERY_PARAM, 'query_id');
+    }
+
     /**
-     * @param bool $outer
      * @return ModelStoredQueryParameter[]
      */
-    public function getParameters($outer = true): array {
-        if ($this->outerParameters && $outer) {
+    public function getParametersAsArray(): array {
+        if ($this->outerParameters) {
             return $this->outerParameters;
         } else {
-            if (!isset($this->query_id)) {
-                $this->query_id = null;
-            }
             $result = [];
-            foreach ($this->related(DbNames::TAB_STORED_QUERY_PARAM, 'query_id') as $row) {
+            foreach ($this->getParameters() as $row) {
                 $result[] = ModelStoredQueryParameter::createFromActiveRow($row);
             }
             return $result;

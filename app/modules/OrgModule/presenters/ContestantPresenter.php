@@ -30,15 +30,22 @@ class ContestantPresenter extends ExtendedPersonPresenter {
     }
 
     /**
+     * @return void
      */
     public function titleEdit() {
         $this->setTitle(sprintf(_('Úprava řešitele %s'), $this->getModel()->getPerson()->getFullName()), 'fa fa-user');
     }
 
+    /**
+     * @return void
+     */
     public function titleCreate() {
         $this->setTitle(_('Založit řešitele'), 'fa fa-user-plus');
     }
 
+    /**
+     * @return void
+     */
     public function titleList() {
         $this->setTitle(_('Řešitelé'), 'fa fa-users');
     }

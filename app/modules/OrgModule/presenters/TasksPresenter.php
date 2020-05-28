@@ -12,6 +12,7 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\DeprecatedException;
+use Nette\Http\FileUpload;
 use Tracy\Debugger;
 use Pipeline\PipelineException;
 use SimpleXMLElement;
@@ -68,14 +69,18 @@ class TasksPresenter extends BasePresenter {
     }
 
     /**
+     * @return void
      * @throws BadRequestException
      */
     public function authorizedImport() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('task', 'insert', $this->getSelectedContest()));
     }
 
+    /**
+     * @return void
+     */
     public function titleImport() {
-        $this->setTitle(_('Import úloh'), 'fa fa-upload');
+        $this->setTitle(_('Tasks import'), 'fa fa-upload');
     }
 
     /**
@@ -86,24 +91,24 @@ class TasksPresenter extends BasePresenter {
         $control = new FormControl();
         $form = $control->getForm();
 
-        $source = $form->addRadioList('source', _('Zdroj úloh'), [
+        $source = $form->addRadioList('source', _('Source'), [
             self::SOURCE_ASTRID => _('Astrid'),
-            self::SOURCE_FILE => _('XML soubor (nové XML)'),
+            self::SOURCE_FILE => _('XML file (new XML)'),
         ]);
         $source->setDefaultValue(self::SOURCE_ASTRID);
 
         // Astrid download
         $seriesItems = range(1, $this->seriesCalculator->getTotalSeries($this->getSelectedContest(), $this->getSelectedYear()));
-        $form->addSelect('series', _('Série'))
+        $form->addSelect('series', _('Series'))
             ->setItems($seriesItems, false);
 
-        $upload = $form->addUpload('file', _('XML soubor úloh'));
+        $upload = $form->addUpload('file', _('XML file'));
         $upload->addConditionOn($source, Form::EQUAL, self::SOURCE_FILE)->toggle($upload->getHtmlId() . '-pair');
 
-        $form->addSubmit('submit', _('Importovat'));
+        $form->addSubmit('submit', _('Import'));
 
         $form->onSuccess[] = function (Form $seriesForm) {
-            return $this->validSubmitSeriesForm($seriesForm);
+            $this->validSubmitSeriesForm($seriesForm);
         };
         return $control;
     }
@@ -114,6 +119,7 @@ class TasksPresenter extends BasePresenter {
 
     /**
      * @param Form $seriesForm
+     * @return void
      * @throws AbortException
      * @throws BadRequestException
      */
@@ -127,10 +133,12 @@ class TasksPresenter extends BasePresenter {
                 $file = $this->downloader->downloadSeriesTasks($this->getSelectedContest(), $this->getSelectedYear(), $series);
                 break;
             case self::SOURCE_FILE:
-                if (!$values['file']->isOk()) {
+                /** @var FileUpload $file */
+                $file = $values['file'];
+                if (!$file->isOk()) {
                     throw new UploadException();
                 }
-                $file = $values['file']->getTemporaryFile();
+                $file = $file->getTemporaryFile();
                 break;
             default:
                 throw new BadRequestException();

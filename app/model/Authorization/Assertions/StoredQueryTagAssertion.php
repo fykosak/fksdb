@@ -44,7 +44,7 @@ class StoredQueryTagAssertion {
         if (!$storedQuery instanceof StoredQuery) {
             throw new InvalidArgumentException('Expected StoredQuery, got \'' . get_class($storedQuery) . '\'.');
         }
-        foreach ($storedQuery->getQueryPattern()->getMStoredQueryTags() as $modelMStoredQueryTag) {
+        foreach ($storedQuery->getModelQuery()->getMStoredQueryTags() as $modelMStoredQueryTag) {
             $tagName = $modelMStoredQueryTag->getStoredQueryTagType()->name;
             if (in_array($tagName, $this->tagNames)) {
                 return true;

@@ -14,6 +14,7 @@ use FKSDB\WebService\SoapResponse;
  */
 class WebServicePresenter extends BasePresenter {
     /**
+     * @return void
      * @throws AbortException
      */
     public function renderDefault() {

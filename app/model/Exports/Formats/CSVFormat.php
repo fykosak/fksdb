@@ -45,7 +45,7 @@ class CSVFormat implements IExportFormat {
      */
     public function getResponse(): IResponse {
         $data = $this->storedQuery->getData();
-        $name = isset($this->storedQuery->getQueryPattern()->name) ? $this->storedQuery->getQueryPattern()->name : 'adhoc';
+        $name = isset($this->storedQuery->getModelQuery()->name) ? $this->storedQuery->getModelQuery()->name : 'adhoc';
         $name .= '.csv';
         $response = new CSVResponse($data, $name);
         $response->setAddHeading($this->header);

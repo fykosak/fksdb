@@ -38,13 +38,13 @@ class StoredQueriesGrid extends BaseGrid {
     private $isFilteredByTag = false;
 
     /**
-     * StoredQueriesGrid constructor.
-     * @param Container $container
+     * @param ServiceStoredQuery $serviceStoredQuery
+     * @param ContestAuthorizator $contestAuthorizator
+     * @return void
      */
-    public function __construct(Container $container) {
-        parent::__construct($container);
-        $this->serviceStoredQuery = $container->getByType(ServiceStoredQuery::class);
-        $this->contestAuthorizator = $container->getByType(ContestAuthorizator::class);
+    public function injectPrimary(ServiceStoredQuery $serviceStoredQuery, ContestAuthorizator $contestAuthorizator) {
+        $this->serviceStoredQuery = $serviceStoredQuery;
+        $this->contestAuthorizator = $contestAuthorizator;
     }
 
     public function getFilterByTagCallback(): Closure {
