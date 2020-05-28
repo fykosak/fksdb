@@ -2,92 +2,105 @@
 
 namespace EventModule;
 
-use Events\Model\ApplicationHandlerFactory;
-use Events\Model\Grid\SingleEventSource;
+use FKSDB\Config\NeonSchemaException;
+use FKSDB\Events\Model\ApplicationHandlerFactory;
+use FKSDB\Events\Model\Grid\SingleEventSource;
 use FKSDB\Components\Events\ApplicationComponent;
+use FKSDB\Components\Events\MassTransitionsControl;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
-use FKSDB\Logging\FlashDumpFactory;
+use FKSDB\Components\Grids\Schedule\PersonGrid;
 use FKSDB\Logging\MemoryLogger;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\ORM\Models\ModelEventParticipant;
+use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\ORM\Services\ServiceEventParticipant;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use function in_array;
+use Nette\Application\UI\Control;
+use Nette\InvalidStateException;
 
 /**
  * Class ApplicationPresenter
- * @package EventModule
+ * *
  */
 abstract class AbstractApplicationPresenter extends BasePresenter {
-    const TEAM_EVENTS = [1, 9];
-    /**
-     * @var ModelEventParticipant|ModelFyziklaniTeam
-     */
-    protected $model;
-    /**
-     * @var ApplicationHandlerFactory
-     */
+    use EventEntityTrait;
+
+    /** @var ApplicationHandlerFactory */
     protected $applicationHandlerFactory;
-    /**
-     * @var FlashDumpFactory
-     */
-    protected $dumpFactory;
+
+    /** @var ServiceEventParticipant */
+    protected $serviceEventParticipant;
 
     /**
      * @param ApplicationHandlerFactory $applicationHandlerFactory
+     * @return void
      */
     public function injectHandlerFactory(ApplicationHandlerFactory $applicationHandlerFactory) {
         $this->applicationHandlerFactory = $applicationHandlerFactory;
     }
 
     /**
-     * @param FlashDumpFactory $dumpFactory
+     * @param ServiceEventParticipant $serviceEventParticipant
+     * @return void
      */
-    public function injectFlashDumpFactory(FlashDumpFactory $dumpFactory) {
-        $this->dumpFactory = $dumpFactory;
+    public function injectServiceEventParticipant(ServiceEventParticipant $serviceEventParticipant) {
+        $this->serviceEventParticipant = $serviceEventParticipant;
     }
 
     /**
-     * @return ApplicationComponent
      * @throws BadRequestException
-     * @throws AbortException
      */
-    public function createComponentApplicationComponent() {
-        $holders = [];
-        $handlers = [];
-        $flashDump = $this->dumpFactory->create('application');
-        $source = new SingleEventSource($this->getEvent(), $this->container);
-        foreach ($source as $key => $holder) {
-            $holders[$key] = $holder;
-            $handlers[$key] = $this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger()); //TODO it's a bit weird to create new logger for each handler
-        }
-
-        $component = new ApplicationComponent($handlers[$this->model->getPrimary()], $holders[$this->model->getPrimary()], $flashDump);
-        return $component;
+    final public function titleList() {
+        $this->setTitle(_('List of applications'), 'fa fa-users');
     }
 
     /**
-     * @return bool
-     * @throws BadRequestException
+     * @param int $id
      * @throws AbortException
-     */
-    protected function isTeamEvent(): bool {
-        if (in_array($this->getEvent()->event_type_id, self::TEAM_EVENTS)) {
-            $this->setAuthorized(false);
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * @param $id
      * @throws BadRequestException
      * @throws ForbiddenRequestException
-     * @throws AbortException
+     * @throws \Throwable
      */
-    public function actionDetail($id) {
-        $this->loadModel($id);
+    final public function titleDetail(int $id) {
+        $this->setTitle(sprintf(_('Application detail "%s"'), $this->loadEntity($id)->__toString()), 'fa fa-user');
+    }
+
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
+    final public function titleTransitions() {
+        $this->setTitle(_('Group transitions'), 'fa fa-user');
+    }
+
+    /**
+     * @param $resource
+     * @param string $privilege
+     * @return bool
+     * @throws BadRequestException
+     */
+    protected function traitIsAuthorized($resource, string $privilege): bool {
+        return $this->isContestsOrgAuthorized($resource, $privilege);
+    }
+
+    /**
+     * @param int $id
+     * @throws AbortException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     */
+    protected function actionDetail(int $id) {
+        $this->loadEntity($id);
+    }
+
+    /**
+     * @param int $id
+     * @throws AbortException
+     * @throws BadRequestException
+     */
+    public function renderDetail(int $id) {
+        $this->template->event = $this->getEvent();
+        $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
     }
 
     /**
@@ -98,47 +111,53 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
         $this->template->event = $this->getEvent();
     }
 
-    /**
-     * @return void
-     */
-    abstract public function titleList();
+    protected function createComponentPersonScheduleGrid(): PersonGrid {
+        return new PersonGrid($this->getContext());
+    }
 
     /**
-     * @return void
-     */
-    abstract public function titleDetail();
-
-    /**
-     * @return void;
-     *@throws BadRequestException
-     * @throws AbortException
-     */
-    abstract public function authorizedDetail();
-
-    /**
-     * @return void;
-     *@throws BadRequestException
-     * @throws AbortException
-     */
-    abstract public function authorizedList();
-
-    /**
-     * @param int $id
+     * @return ApplicationComponent
      * @throws BadRequestException
-     * @throws ForbiddenRequestException
      * @throws AbortException
+     * @throws NeonSchemaException
      */
-    abstract protected function loadModel(int $id);
+    protected function createComponentApplicationComponent(): ApplicationComponent {
+        $source = new SingleEventSource($this->getEvent(), $this->getContext());
+        foreach ($source->getHolders() as $key => $holder) {
+            if ($key === $this->getEntity()->getPrimary()) {
+                return new ApplicationComponent($this->getContext(), $this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger()), $holder);
+            }
+        }
+        throw new InvalidStateException();
+    }
 
     /**
-     * @return ModelEventParticipant|ModelFyziklaniTeam
+     * @return MassTransitionsControl
+     * @throws AbortException
+     * @throws BadRequestException
      */
-    abstract protected function getModel();
+    final protected function createComponentMassTransitions(): MassTransitionsControl {
+        return new MassTransitionsControl($this->getContext(), $this->getEvent());
+    }
 
     /**
      * @return AbstractApplicationGrid
      * @throws AbortException
      * @throws BadRequestException
      */
-    abstract function createComponentGrid(): AbstractApplicationGrid;
+    abstract protected function createComponentGrid(): AbstractApplicationGrid;
+
+    /**
+     * @inheritDoc
+     */
+    public function createComponentCreateForm(): Control {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function createComponentEditForm(): Control {
+        throw new NotImplementedException();
+    }
 }

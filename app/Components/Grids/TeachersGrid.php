@@ -2,13 +2,13 @@
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelTeacher;
 use FKSDB\ORM\Services\ServiceTeacher;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Database\Table\Selection;
+use Nette\DI\Container;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
@@ -28,12 +28,11 @@ class TeachersGrid extends BaseGrid {
 
     /**
      * TeachersGrid constructor.
-     * @param ServiceTeacher $serviceTeacher
-     * @param TableReflectionFactory $tableReflectionFactory
+     * @param Container $container
      */
-    function __construct(ServiceTeacher $serviceTeacher, TableReflectionFactory $tableReflectionFactory) {
-        parent::__construct($tableReflectionFactory);
-        $this->serviceTeacher = $serviceTeacher;
+    public function __construct(Container $container) {
+        parent::__construct($container);
+        $this->serviceTeacher = $container->getByType(ServiceTeacher::class);
     }
 
     /**
@@ -62,28 +61,28 @@ class TeachersGrid extends BaseGrid {
         //
         // columns
         //
-        $this->addReflectionColumn('referenced', 'person_name', ModelTeacher::class);
-
-        $this->addColumn('school_id', _('School'))->setRenderer(function ($row) {
+        $this->addColumns([
+            'referenced.person_name',
+            DbNames::TAB_TEACHER . '.note',
+            DbNames::TAB_TEACHER . '.state',
+            DbNames::TAB_TEACHER . '.since',
+            DbNames::TAB_TEACHER . '.until',
+            DbNames::TAB_TEACHER . '.number_brochures',
+        ]);
+        $this->addColumn('school_id', _('School'))->setRenderer(function (ModelTeacher $row) {
             return $row->getSchool()->name_abbrev;
         });
-
-        $this->addReflectionColumn(DbNames::TAB_TEACHER, 'note', ModelTeacher::class);
-        $this->addReflectionColumn(DbNames::TAB_TEACHER, 'state', ModelTeacher::class);
-        $this->addReflectionColumn(DbNames::TAB_TEACHER, 'since', ModelTeacher::class);
-        $this->addReflectionColumn(DbNames::TAB_TEACHER, 'until', ModelTeacher::class);
-        $this->addReflectionColumn(DbNames::TAB_TEACHER, 'number_brochures', ModelTeacher::class);
         //
         // operations
         //
         $this->addButton('edit', _('Edit'))
             ->setText(_('Edit'))
-            ->setLink(function ($row) {
+            ->setLink(function (ModelTeacher $row) {
                 return $this->getPresenter()->link('edit', $row->teacher_id);
             });
         $this->addButton('detail', _('Detail'))
             ->setText(_('Detail'))
-            ->setLink(function ($row) {
+            ->setLink(function (ModelTeacher $row) {
                 return $this->getPresenter()->link('detail', ['id' => $row->teacher_id]);
             });
 

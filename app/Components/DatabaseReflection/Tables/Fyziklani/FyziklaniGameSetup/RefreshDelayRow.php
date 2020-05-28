@@ -8,7 +8,7 @@ use Nette\Utils\Html;
 
 /**
  * Class RefreshDelayRow
- * @package FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniGameSetup
+ * *
  */
 class RefreshDelayRow extends AbstractFyziklaniGameSetupRow {
     /**

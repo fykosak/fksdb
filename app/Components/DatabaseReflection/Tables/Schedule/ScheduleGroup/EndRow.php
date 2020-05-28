@@ -9,12 +9,10 @@ use Nette\Utils\Html;
 
 /**
  * Class EndRow
- * @package FKSDB\Components\DatabaseReflection\Tables\Schedule
+ * *
  */
 class EndRow extends AbstractScheduleGroupRow {
-    /**
-     * @return string
-     */
+
     public function getTitle(): string {
         return _('Schedule end');
     }
@@ -24,6 +22,6 @@ class EndRow extends AbstractScheduleGroupRow {
      * @return Html
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        return (new DatePrinter())($model->end);
+        return (new DatePrinter('d. m. Y H:i'))($model->end);
     }
 }

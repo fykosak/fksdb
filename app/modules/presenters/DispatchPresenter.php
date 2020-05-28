@@ -3,26 +3,26 @@
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelRole;
+use FKSDB\UI\PageStyleContainer;
+use Nette\Application\UI\InvalidLinkException;
 
 /**
  * Class DispatchPresenter
  */
 class DispatchPresenter extends AuthenticatedPresenter {
 
-    use \LanguageNav;
-
     /**
-     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws InvalidLinkException
      */
     public function renderDefault() {
         /**
-         * @var \FKSDB\ORM\Models\ModelLogin $login
+         * @var ModelLogin $login
          */
         $login = $this->getUser()->getIdentity();
-        $query = $this->serviceContest->getTable();
+        $query = $this->getServiceContest()->getTable();
         $result = [];
-        foreach ($query as $row) {
-            $contest = ModelContest::createFromActiveRow($row);
+        /** @var ModelContest $contest */
+        foreach ($query as $contest) {
             $symbol = $contest->getContestSymbol();
             $allowed = [];
             foreach ([ModelRole::ORG, ModelRole::CONTESTANT] as $role) {
@@ -34,16 +34,16 @@ class DispatchPresenter extends AuthenticatedPresenter {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelLogin $login
+     * @param ModelLogin $login
      * @param ModelContest $contest
      * @param $role
      * @return array
-     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws InvalidLinkException
      */
     private function check(ModelLogin $login, ModelContest $contest, $role) {
         switch ($role) {
             case ModelRole::ORG:
-                foreach ($login->getActiveOrgs($this->yearCalculator) as $contestId => $org) {
+                foreach ($login->getActiveOrgs($this->getYearCalculator()) as $contestId => $org) {
                     if ($contest->contest_id == $contestId) {
                         return [
                             'link' => $this->link(':Org:Dashboard:default', [
@@ -53,7 +53,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
                             'label' => $this->getLabel($contest, $role),
                         ];
                     }
-                };
+                }
                 return [
                     'link' => null,
                     'active' => false,
@@ -63,7 +63,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
             case ModelRole::CONTESTANT:
                 $person = $login->getPerson();
                 if ($person) {
-                    foreach ($person->getActiveContestants($this->yearCalculator) as $contestId => $org) {
+                    foreach ($person->getActiveContestants($this->getYearCalculator()) as $contestId => $org) {
                         if ($contest->contest_id == $contestId) {
                             return [
                                 'link' => $this->link(':Public:Dashboard:default', [
@@ -95,14 +95,12 @@ class DispatchPresenter extends AuthenticatedPresenter {
     }
 
     public function titleDefault() {
-        $this->setTitle(_('Rozcestník'));
-        $this->setIcon('fa fa-home');
+        $this->setTitle(_('Rozcestník'), 'fa fa-home');
     }
 
-    /**
-     * @return array
-     */
-    public function getNavBarVariant(): array {
-        return [null, 'bg-dark navbar-dark'];
+    protected function getPageStyleContainer(): PageStyleContainer {
+        $container = parent::getPageStyleContainer();
+        $container->navBarClassName = 'bg-dark navbar-dark';
+        return $container;
     }
 }

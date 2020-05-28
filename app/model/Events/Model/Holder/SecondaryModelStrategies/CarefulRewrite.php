@@ -1,8 +1,8 @@
 <?php
 
-namespace Events\Model\Holder\SecondaryModelStrategies;
+namespace FKSDB\Events\Model\Holder\SecondaryModelStrategies;
 
-use Events\Model\Holder\BaseHolder;
+use FKSDB\Events\Model\Holder\BaseHolder;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
 
@@ -13,13 +13,16 @@ use FKSDB\ORM\IService;
  */
 class CarefulRewrite extends SecondaryModelStrategy {
 
+    /**
+     * @var array
+     */
     private $safeKeys = [];
 
     /**
      * CarefulRewrite constructor.
      * @param array $safeKeys
      */
-    function __construct($safeKeys = []) {
+    public function __construct($safeKeys = []) {
         $this->safeKeys = $safeKeys;
     }
 
@@ -27,11 +30,11 @@ class CarefulRewrite extends SecondaryModelStrategy {
      * @param BaseHolder $holder
      * @param $secondaries
      * @param $joinData
-     * @return mixed|void
+     * @return void
      */
     protected function resolveMultipleSecondaries(BaseHolder $holder, $secondaries, $joinData) {
         if (count($secondaries) > 1) {
-            throw new SecondaryModelConflictException($holder->getModel(), $secondaries);
+            throw new SecondaryModelConflictException($holder, $secondaries);
         }
 
         $currentModel = $holder->getModel();
@@ -53,7 +56,7 @@ class CarefulRewrite extends SecondaryModelStrategy {
      * @param IService $service
      * @return array
      */
-    private function getConflicts(IModel $currentModel, IModel $foundModel, $joinData, IService $service) {
+    private function getConflicts(IModel $currentModel, IModel $foundModel, $joinData, IService $service): array {
         $currentArray = $currentModel->toArray();
         $foundArray = $foundModel->toArray();
         $result = [];
@@ -73,7 +76,7 @@ class CarefulRewrite extends SecondaryModelStrategy {
     }
 
     /**
-     * @param \FKSDB\ORM\IModel $currentModel
+     * @param IModel $currentModel
      * @param IModel $foundModel
      * @param $joinData
      * @param IService $service

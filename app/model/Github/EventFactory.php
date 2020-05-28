@@ -14,11 +14,17 @@ class EventFactory {
     use SmartObject;
     const HTTP_HEADER = 'X-GitHub-Event';
 
-    private static $typeMap = array(
+    /**
+     * @var string[]
+     */
+    private static $typeMap = [
         'ping' => 'createPing',
         'push' => 'createPush',
-    );
+    ];
 
+    /**
+     * @var array
+     */
     private $repositoryCache = [];
 
     /**
@@ -41,7 +47,7 @@ class EventFactory {
     private function createPing($data) {
         $event = new Events\PingEvent();
         $this->fillBase($event, $data);
-        self::fillHelper(array('zen', 'hook_id'), $event, $data);
+        self::fillHelper(['zen', 'hook_id'], $event, $data);
         return $event;
     }
 
@@ -52,7 +58,7 @@ class EventFactory {
     private function createPush($data) {
         $event = new Events\PushEvent();
         $this->fillBase($event, $data);
-        self::fillHelper(array('before', 'after', 'ref'), $event, $data);
+        self::fillHelper(['before', 'after', 'ref'], $event, $data);
         return $event;
     }
 
@@ -100,7 +106,7 @@ class EventFactory {
           * whatever we can store.
         */
         $user = new User();
-        self::fillHelper(array('login', 'id'), $user, $data, false);
+        self::fillHelper(['login', 'id'], $user, $data, false);
 
         return $user;
     }
@@ -144,7 +150,7 @@ class EventFactory {
 
 /**
  * Class UnsupportedEventException
- * @package Github
+ * *
  */
 class UnsupportedEventException extends InvalidArgumentException {
 
@@ -152,7 +158,7 @@ class UnsupportedEventException extends InvalidArgumentException {
 
 /**
  * Class MissingEventFieldException
- * @package Github
+ * *
  */
 class MissingEventFieldException extends InvalidArgumentException {
 

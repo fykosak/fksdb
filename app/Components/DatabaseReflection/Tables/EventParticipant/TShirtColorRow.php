@@ -2,14 +2,14 @@
 
 namespace FKSDB\Components\DatabaseReflection\EventParticipant;
 
-use FKSDB\Components\Controls\Helpers\Badges\NotSetBadge;
+use FKSDB\Components\Controls\Badges\NotSetBadge;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use Nette\Utils\Html;
 
 /**
  * Class TShirtColor
- * @package FKSDB\Components\DatabaseReflection\EventParticipant
+ * *
  */
 class TShirtColorRow extends AbstractParticipantRow {
     /**

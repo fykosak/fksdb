@@ -7,12 +7,12 @@ use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Config\Expressions\Helpers;
 use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\AbstractServiceMulti;
+use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\IModel;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
-use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Utils\RegexpException;
 use Persons\AclResolver;
 use Persons\ExtendedPersonHandler;
 use Persons\ExtendedPersonHandlerFactory;
@@ -20,7 +20,7 @@ use Persons\IExtendedPersonPresenter;
 
 /**
  * Class ExtendedPersonPresenter
- * @package OrgModule
+ * *
  */
 abstract class ExtendedPersonPresenter extends EntityPresenter implements IExtendedPersonPresenter {
     /**
@@ -39,12 +39,8 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     private $handlerFactory;
 
     /**
-     * @var Container
-     */
-    private $container;
-
-    /**
      * @param ReferencedPersonFactory $referencedPersonFactory
+     * @return void
      */
     public function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory) {
         $this->referencedPersonFactory = $referencedPersonFactory;
@@ -52,16 +48,10 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
 
     /**
      * @param ExtendedPersonHandlerFactory $handlerFactory
+     * @return void
      */
     public function injectHandlerFactory(ExtendedPersonHandlerFactory $handlerFactory) {
         $this->handlerFactory = $handlerFactory;
-    }
-
-    /**
-     * @param Container $container
-     */
-    public function injectContainer(Container $container) {
-        $this->container = $container;
     }
 
     /**
@@ -79,23 +69,23 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     }
 
     /**
-     * @return array|mixed
+     * @return array
      * @throws BadRequestException
      */
     private function getFieldsDefinition() {
         $contestId = $this->getSelectedContest()->contest_id;
         $contestName = $this->globalParameters['contestMapping'][$contestId];
-        return Helpers::evalExpressionArray($this->globalParameters[$contestName][$this->fieldsDefinition], $this->container);
+        return Helpers::evalExpressionArray($this->globalParameters[$contestName][$this->fieldsDefinition], $this->getContext());
     }
 
     /**
      * @param Form $form
-     * @return mixed
+     * @return void
      */
     abstract protected function appendExtendedContainer(Form $form);
 
     /**
-     * @return mixed
+     * @return AbstractServiceMulti|AbstractServiceSingle
      */
     abstract protected function getORMService();
 
@@ -110,7 +100,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
      * @param $create
      * @return FormControl
      * @throws BadRequestException
-     * @throws RegexpException
+     * @throws \Exception
      */
     private function createComponentFormControl($create) {
         $control = new FormControl();
@@ -134,7 +124,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
         $this->appendExtendedContainer($form);
 
         $handler = $this->handlerFactory->create($this->getORMService(), $this->getSelectedContest(), $this->getSelectedYear(), $this->globalParameters['invitation']['defaultLang']);
-        $submit = $form->addSubmit('send', $create ? _('Založit') : _('Uložit'));
+        $submit = $form->addSubmit('send', $create ? _('Založit') : _('Save'));
 
         $submit->onClick[] = function (SubmitButton $button) use ($handler) {
             $form = $button->getForm();
@@ -147,25 +137,19 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     }
 
     /**
-     * @param $name
      * @return FormControl
      * @throws BadRequestException
-     * @throws RegexpException
      */
-    protected final function createComponentCreateComponent($name) {
-        $control = $this->createComponentFormControl(true);
-        return $control;
+    final protected function createComponentCreateComponent() {
+        return $this->createComponentFormControl(true);
     }
 
     /**
-     * @param $name
      * @return FormControl
      * @throws BadRequestException
-     * @throws RegexpException
      */
-    protected final function createComponentEditComponent($name) {
-        $control = $this->createComponentFormControl(false);
-        return $control;
+    final protected function createComponentEditComponent() {
+        return $this->createComponentFormControl(false);
     }
 
     /**
@@ -175,5 +159,4 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     protected function loadModel($id) {
         return $this->getORMService()->findByPrimary($id);
     }
-
 }

@@ -7,10 +7,12 @@ use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Utils\Html;
 
+/**
+ * Class CreatedRow
+ * *
+ */
 class CreatedRow extends AbstractFyziklaniSubmitRow {
-    /**
-     * @return string
-     */
+
     public function getTitle(): string {
         return _('Created');
     }

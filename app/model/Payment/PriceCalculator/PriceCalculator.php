@@ -2,66 +2,44 @@
 
 namespace FKSDB\Payment\PriceCalculator;
 
-use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\Payment\Price;
-use FKSDB\Payment\PriceCalculator\PreProcess\AbstractPreProcess;
+use FKSDB\Payment\PriceCalculator\PreProcess\IPreprocess;
 
 /**
  * Class PriceCalculator
- * @package FKSDB\Payment\PriceCalculator
+ * *
  */
 class PriceCalculator {
     /**
-     * @var AbstractPreProcess[]
+     * @var IPreprocess[]
      */
     private $preProcess = [];
-    /**
-     * @var \FKSDB\ORM\Models\ModelEvent
-     */
-    private $event;
-    /**
-     * @var string
-     */
-    private $currency;
 
     /**
-     * PriceCalculator constructor.
-     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @param IPreprocess $preProcess
+     * @return void
      */
-    public function __construct(ModelEvent $event) {
-        $this->event = $event;
-    }
-
-    /**
-     * @param $currency
-     */
-    public function setCurrency(string $currency) {
-        $this->currency = $currency;
-    }
-
-    /**
-     * @param AbstractPreProcess $preProcess
-     */
-    public function addPreProcess(AbstractPreProcess $preProcess) {
+    public function addPreProcess(IPreprocess $preProcess) {
         $this->preProcess[] = $preProcess;
     }
 
     /**
      * @param ModelPayment $modelPayment
-     * @return Price
+     * @return void
      */
-    public function execute(ModelPayment $modelPayment): Price {
-        $price = new Price(0, $this->getCurrency());
+    final public function __invoke(ModelPayment $modelPayment) {
+        $price = new Price(0, $modelPayment->currency);
         foreach ($this->preProcess as $preProcess) {
             $subPrice = $preProcess->calculate($modelPayment);
             $price->add($subPrice);
         }
-        return $price;
+        // TODO to service
+        $modelPayment->update(['price' => $price->getAmount(), 'currency' => $price->getCurrency()]);
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelPayment $modelPayment
+     * @param ModelPayment $modelPayment
      * @return array[]
      */
     public function getGridItems(ModelPayment $modelPayment): array {
@@ -71,22 +49,4 @@ class PriceCalculator {
         }
         return $items;
     }
-
-    /**
-     * @return string
-     */
-    private function getCurrency(): string {
-        if ($this->currency == null) {
-            throw new \InvalidArgumentException('Currency is not set');
-        }
-        return $this->currency;
-    }
-
-    /**
-     * @return array
-     */
-    public function getCurrencies(): array {
-        return Price::getAllCurrencies();
-    }
-
 }

@@ -15,7 +15,9 @@ use Persons\ExtendedPersonHandler;
 
 /**
  * Class TeacherPresenter
- * @package OrgModule
+ * *
+ * @method ModelTeacher getModel2()
+ * @method ModelTeacher getModel()
  */
 class TeacherPresenter extends ExtendedPersonPresenter {
     /**
@@ -27,7 +29,7 @@ class TeacherPresenter extends ExtendedPersonPresenter {
         parent::__construct($context);
     }
 
-    protected $modelResourceId = 'teacher';
+    /** @var string */
     protected $fieldsDefinition = 'adminTeacher';
 
     /**
@@ -46,6 +48,7 @@ class TeacherPresenter extends ExtendedPersonPresenter {
 
     /**
      * @param ServiceTeacher $serviceTeacher
+     * @return void
      */
     public function injectServiceTeacher(ServiceTeacher $serviceTeacher) {
         $this->serviceTeacher = $serviceTeacher;
@@ -53,6 +56,7 @@ class TeacherPresenter extends ExtendedPersonPresenter {
 
     /**
      * @param TeacherFactory $teacherFactory
+     * @return void
      */
     public function injectTeacherFactory(TeacherFactory $teacherFactory) {
         $this->teacherFactory = $teacherFactory;
@@ -60,6 +64,7 @@ class TeacherPresenter extends ExtendedPersonPresenter {
 
     /**
      * @param SchoolFactory $schoolFactory
+     * @return void
      */
     public function injectSchoolFactory(SchoolFactory $schoolFactory) {
         $this->schoolFactory = $schoolFactory;
@@ -69,40 +74,29 @@ class TeacherPresenter extends ExtendedPersonPresenter {
      * @throws BadRequestException
      */
     public function titleEdit() {
-        /**
-         * @var ModelTeacher $model
-         */
         $model = $this->getModel2();
-        $this->setTitle(sprintf(_('Edit teacher %s'), $model->getPerson()->getFullName()));
-        $this->setIcon('fa fa-pencil');
+        $this->setTitle(sprintf(_('Edit teacher %s'), $model->getPerson()->getFullName()), 'fa fa-pencil');
     }
 
     public function titleCreate() {
-        $this->setTitle(_('Create new teacher'));
-        $this->setIcon('fa fa-plus');
+        $this->setTitle(_('Create new teacher'), 'fa fa-plus');
     }
 
     public function titleList() {
-        $this->setTitle(_('Teacher'));
-        $this->setIcon('fa fa-graduation-cap');
+        $this->setTitle(_('Teacher'), 'fa fa-graduation-cap');
     }
 
     public function titleDetail() {
-        $this->setTitle(_('Teacher detail'));
-        $this->setIcon('fa fa-graduation-cap');
+        $this->setTitle(_('Teacher detail'), 'fa fa-graduation-cap');
     }
 
-    /**
-     * @param $name
-     * @return TeachersGrid
-     */
-    protected function createComponentGrid($name): TeachersGrid {
-        return new TeachersGrid($this->serviceTeacher, $this->getTableReflectionFactory());
+    protected function createComponentGrid(): TeachersGrid {
+        return new TeachersGrid($this->getContext());
     }
 
     /**
      * @param Form $form
-     * @return mixed|void
+     * @return void
      * @throws Exception
      */
     protected function appendExtendedContainer(Form $form) {
@@ -120,38 +114,32 @@ class TeacherPresenter extends ExtendedPersonPresenter {
     }
 
     /**
-     * @return mixed|ServiceTeacher
+     * @return ServiceTeacher
      */
     protected function getORMService() {
         return $this->serviceTeacher;
     }
 
-    /**
-     * @return string
-     */
-    public function messageCreate() {
+    public function messageCreate(): string {
         return _('Teacher %s has been created.');
     }
 
-    /**
-     * @return string
-     */
-    public function messageEdit() {
+    public function messageEdit(): string {
         return _('Teacher has been edited');
     }
 
-    /**
-     * @return string
-     */
-    public function messageError() {
+    public function messageError(): string {
         return _('Error during creating new teacher.');
     }
 
-    /**
-     * @return string
-     */
-    public function messageExists() {
+    public function messageExists(): string {
         return _('Teacher already exist');
     }
-}
 
+    /**
+     * @inheritDoc
+     */
+    protected function getModelResource(): string {
+        return ModelTeacher::RESOURCE_ID;
+    }
+}

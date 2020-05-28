@@ -3,16 +3,17 @@
 namespace OrgModule;
 
 use FKSDB\Components\Grids\ContestantsGrid;
+use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Services\ServiceContestant;
 use Nette\Application\UI\Form;
 
 /**
  * Class ContestantPresenter
- * @package OrgModule
+ * *
+ * @method ModelContestant getModel()
  */
 class ContestantPresenter extends ExtendedPersonPresenter {
-
-    protected $modelResourceId = 'contestant';
+    /** @var string */
     protected $fieldsDefinition = 'adminContestant';
 
     /**
@@ -22,48 +23,41 @@ class ContestantPresenter extends ExtendedPersonPresenter {
 
     /**
      * @param ServiceContestant $serviceContestant
+     * @return void
      */
     public function injectServiceContestant(ServiceContestant $serviceContestant) {
         $this->serviceContestant = $serviceContestant;
     }
 
     /**
-     * @param $id
+     * @param int $id
      */
     public function titleEdit($id) {
-        $this->setTitle(sprintf(_('Úprava řešitele %s'), $this->getModel()->getPerson()->getFullname()));
-        $this->setIcon('fa fa-user');
+        $this->setTitle(sprintf(_('Úprava řešitele %s'), $this->getModel()->getPerson()->getFullName()), 'fa fa-user');
     }
 
     public function titleCreate() {
-        $this->setTitle(_('Založit řešitele'));
-        $this->setIcon('fa fa-user-plus');
+        $this->setTitle(_('Založit řešitele'), 'fa fa-user-plus');
     }
 
     public function titleList() {
-        $this->setTitle(_('Řešitelé'));
-        $this->setIcon('fa fa-users');
+        $this->setTitle(_('Řešitelé'), 'fa fa-users');
     }
 
-    /**
-     * @param $name
-     * @return ContestantsGrid
-     */
-    protected function createComponentGrid($name) {
-        $grid = new ContestantsGrid($this->serviceContestant);
-        return $grid;
+    protected function createComponentGrid(): ContestantsGrid {
+        return new ContestantsGrid($this->getContext());
     }
 
     /**
      * @param Form $form
-     * @return mixed|void
+     * @return void
      */
     protected function appendExtendedContainer(Form $form) {
         // no container for contestant
     }
 
     /**
-     * @return mixed|ServiceContestant
+     * @return ServiceContestant
      */
     protected function getORMService() {
         return $this->serviceContestant;
@@ -71,43 +65,33 @@ class ContestantPresenter extends ExtendedPersonPresenter {
 
     /**
      * @return null
+     * TODO refactoring
      */
     protected function getAcYearFromModel() {
         $model = $this->getModel();
         if (!$model) {
             return null;
         }
-        return $this->yearCalculator->getAcademicYear($this->serviceContest->findByPrimary($model->contest_id), $model->year);
+        return $this->getYearCalculator()->getAcademicYear($this->getServiceContest()->findByPrimary($model->contest_id), $model->year);
     }
 
-    /**
-     * @return string
-     */
-    public function messageCreate() {
+    public function messageCreate(): string {
         return _('Řešitel %s založen.');
     }
 
-    /**
-     * @return string
-     */
-    public function messageEdit() {
+    public function messageEdit(): string {
         return _('Řešitel %s upraven.');
     }
 
-    /**
-     * @return string
-     */
-    public function messageError() {
+    public function messageError(): string {
         return _('Chyba při zakládání řešitele.');
     }
 
-    /**
-     * @return string
-     */
-    public function messageExists() {
+    public function messageExists(): string {
         return _('Řešitel už existuje.');
     }
 
-
+    protected function getModelResource(): string {
+        return ModelContestant::RESOURCE_ID;
+    }
 }
-

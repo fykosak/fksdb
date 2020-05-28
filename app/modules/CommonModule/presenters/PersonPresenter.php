@@ -2,46 +2,50 @@
 
 namespace CommonModule;
 
-use Authentication\AccountManager;
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Controls\Stalking\StalkingComponent\StalkingComponent;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
-use FKSDB\Components\Forms\Factories\AddressFactory;
-use FKSDB\Components\Forms\Factories\PersonFactory;
-use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
-use FKSDB\Logging\FlashDumpFactory;
+use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
+use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\EntityTrait;
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Exceptions\NotFoundException;
+use FKSDB\Logging\FlashMessageDump;
+use FKSDB\Logging\ILogger;
 use FKSDB\Logging\MemoryLogger;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\ORM\Services\ServiceLogin;
 use FKSDB\ORM\Services\ServicePerson;
-use FKSDB\ORM\Services\ServicePersonHistory;
 use FKSDB\ORM\Services\ServicePersonInfo;
 use FormUtils;
-use Mail\MailTemplateFactory;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
+use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Html;
 use Persons\Deduplication\Merger;
-use ServiceMPostContact;
+use Persons\DenyResolver;
+use Persons\ExtendedPersonHandler;
+use ReflectionException;
+use FKSDB\Components\Controls\Stalking;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
- * @deprecated Do not use this presenter to create/modify persons.
+ * Do not use this presenter to create/modify persons.
  *             It's better to use ReferencedId and ReferencedContainer
  *             inside the particular form.
  * @author Michal Koutný <michal@fykos.cz>
+ * @method ModelPerson loadEntity(int $id)
+ * @method ModelPerson getEntity()
  */
 class PersonPresenter extends BasePresenter {
-
-    const CONT_PERSON = 'person';
-    const CONT_ADDRESSES = 'addresses';
-    const CONT_PERSON_INFO = 'personInfo';
-    const CONT_PERSON_HISTORY = 'personHistory';
-
-    protected $modelResourceId = 'person';
+    use EntityTrait;
 
     /**
-     * @var \FKSDB\ORM\Services\ServicePerson
+     * @var ServicePerson
      */
     private $servicePerson;
 
@@ -51,47 +55,11 @@ class PersonPresenter extends BasePresenter {
     private $servicePersonInfo;
 
     /**
-     * @var \FKSDB\ORM\Services\ServicePersonHistory
-     */
-    private $servicePersonHistory;
-
-    /**
-     * @var ServiceLogin
-     */
-    private $serviceLogin;
-
-    /**
-     * @var ServiceMPostContact
-     */
-    private $serviceMPostContact;
-
-    /**
-     * @var AddressFactory
-     */
-    private $addressFactory;
-
-    /**
-     * @var PersonFactory
-     */
-    private $personFactory;
-
-    /**
-     * @var UniqueEmailFactory
-     */
-    private $uniqueEmailFactory;
-
-    /**
      * @var Merger
      */
     private $personMerger;
-
     /**
-     * @var FlashDumpFactory
-     */
-    private $flashDumpFactory;
-
-    /**
-     * @var \FKSDB\ORM\Models\ModelPerson
+     * @var ModelPerson
      */
     private $trunkPerson;
 
@@ -101,97 +69,87 @@ class PersonPresenter extends BasePresenter {
     private $mergedPerson;
 
     /**
-     * @var AccountManager
+     * @var ReferencedPersonFactory
      */
-    private $accountManager;
+    private $referencedPersonFactory;
 
     /**
-     * @var MailTemplateFactory
+     * @var ModelPerson
      */
-    private $mailTemplateFactory;
+    private $person;
+    /**
+     * @var int
+     */
+    private $mode;
 
     /**
      * @param ServicePerson $servicePerson
+     * @return void
      */
     public function injectServicePerson(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
     }
 
     /**
-     * @param \FKSDB\ORM\Services\ServicePersonInfo $servicePersonInfo
+     * @param ServicePersonInfo $servicePersonInfo
+     * @return void
      */
     public function injectServicePersonInfo(ServicePersonInfo $servicePersonInfo) {
         $this->servicePersonInfo = $servicePersonInfo;
     }
 
     /**
-     * @param \FKSDB\ORM\Services\ServicePersonHistory $servicePersonHistory
-     */
-    public function injectServicePersonHistory(ServicePersonHistory $servicePersonHistory) {
-        $this->servicePersonHistory = $servicePersonHistory;
-    }
-
-    /**
-     * @param ServiceLogin $serviceLogin
-     */
-    public function injectServiceLogin(ServiceLogin $serviceLogin) {
-        $this->serviceLogin = $serviceLogin;
-    }
-
-    /**
-     * @param ServiceMPostContact $serviceMPostContact
-     */
-    public function injectServiceMPostContact(ServiceMPostContact $serviceMPostContact) {
-        $this->serviceMPostContact = $serviceMPostContact;
-    }
-
-    /**
-     * @param AddressFactory $addressFactory
-     */
-    public function injectAddressFactory(AddressFactory $addressFactory) {
-        $this->addressFactory = $addressFactory;
-    }
-
-    /**
-     * @param PersonFactory $personFactory
-     */
-    public function injectPersonFactory(PersonFactory $personFactory) {
-        $this->personFactory = $personFactory;
-    }
-
-    /**
-     * @param UniqueEmailFactory $uniqueEmailFactory
-     */
-    public function injectUniqueEmailFactory(UniqueEmailFactory $uniqueEmailFactory) {
-        $this->uniqueEmailFactory = $uniqueEmailFactory;
-    }
-
-    /**
      * @param Merger $personMerger
+     * @return void
      */
     public function injectPersonMerger(Merger $personMerger) {
         $this->personMerger = $personMerger;
     }
 
     /**
-     * @param FlashDumpFactory $flashDumpFactory
+     * @param ReferencedPersonFactory $referencedPersonFactory
+     * @return void
      */
-    public function injectFlashDumpFactory(FlashDumpFactory $flashDumpFactory) {
-        $this->flashDumpFactory = $flashDumpFactory;
+    public function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory) {
+        $this->referencedPersonFactory = $referencedPersonFactory;
+    }
+
+    /* *********** TITLE ***************/
+    public function titleSearch() {
+        $this->setTitle(_('Find person'), 'fa fa-search');
     }
 
     /**
-     * @param AccountManager $accountManager
+     * @param int $id
+     * @throws BadRequestException
      */
-    public function injectAccountManager(AccountManager $accountManager) {
-        $this->accountManager = $accountManager;
+    public function titleDetail(int $id) {
+        $this->setTitle(sprintf(_('Detail of person %s'), $this->loadEntity($id)->getFullName()), 'fa fa-eye');
+    }
+
+    public function titleMerge() {
+        $this->setTitle(sprintf(_('Sloučení osob %s (%d) a %s (%d)'), $this->trunkPerson->getFullName(), $this->trunkPerson->person_id, $this->mergedPerson->getFullName(), $this->mergedPerson->person_id));
+    }
+
+    /* *********** AUTH ***************/
+    public function authorizedSearch() {
+        $this->setAuthorized($this->isAnyContestAuthorized('person', 'stalk.search'));
     }
 
     /**
-     * @param MailTemplateFactory $mailTemplateFactory
+     * @param int $id
+     * @throws BadRequestException
      */
-    public function injectMailTemplateFactory(MailTemplateFactory $mailTemplateFactory) {
-        $this->mailTemplateFactory = $mailTemplateFactory;
+    public function authorizedDetail(int $id) {
+        $person = $this->loadEntity($id);
+
+        $full = $this->isAnyContestAuthorized($person, 'stalk.full');
+
+        $restrict = $this->isAnyContestAuthorized($person, 'stalk.restrict');
+
+        $basic = $this->isAnyContestAuthorized($person, 'stalk.basic');
+
+        $this->setAuthorized($full || $restrict || $basic);
     }
 
     /**
@@ -203,7 +161,7 @@ class PersonPresenter extends BasePresenter {
         $this->trunkPerson = $this->servicePerson->findByPrimary($trunkId);
         $this->mergedPerson = $this->servicePerson->findByPrimary($mergedId);
         if (!$this->trunkPerson || !$this->mergedPerson) {
-            throw new BadRequestException('Neexistující osoba.', 404);
+            throw new NotFoundException('Neexistující osoba.');
         }
         $authorized = $this->getContestAuthorizator()->isAllowedForAnyContest($this->trunkPerson, 'merge') &&
             $this->getContestAuthorizator()->isAllowedForAnyContest($this->mergedPerson, 'merge');
@@ -219,6 +177,7 @@ class PersonPresenter extends BasePresenter {
         $this->authorizedMerge($trunkId, $mergedId);
     }
 
+    /* ********************* ACTIONS **************/
     /**
      * @param $trunkId
      * @param $mergedId
@@ -231,34 +190,119 @@ class PersonPresenter extends BasePresenter {
     /**
      * @param $trunkId
      * @param $mergedId
-     * @throws \Nette\Application\AbortException
-     * @throws \ReflectionException
+     * @throws AbortException
+     * @throws ReflectionException
+     * @throws \Exception
      */
     public function actionDontMerge($trunkId, $mergedId) {
         $mergedPI = $this->servicePersonInfo->findByPrimary($mergedId);
         $mergedData = ['duplicates' => trim($mergedPI->duplicates . ",not-same($trunkId)", ',')];
-        $this->servicePersonInfo->updateModel($mergedPI, $mergedData);
-        $this->servicePersonInfo->save($mergedPI);
+        $this->servicePersonInfo->updateModel2($mergedPI, $mergedData);
 
         $trunkPI = $this->servicePersonInfo->findByPrimary($trunkId);
         $trunkData = ['duplicates' => trim($trunkPI->duplicates . ",not-same($mergedId)", ',')];
-        $this->servicePersonInfo->updateModel($trunkPI, $trunkData);
-        $this->servicePersonInfo->save($trunkPI);
+        $this->servicePersonInfo->updateModel2($trunkPI, $trunkData);
 
-        $this->flashMessage(_('Osoby úspešně nesloučeny.'), self::FLASH_SUCCESS);
+        $this->flashMessage(_('Osoby úspešně nesloučeny.'), ILogger::SUCCESS);
         $this->backLinkRedirect(true);
     }
 
-    public function titleMerge() {
-        $this->setTitle(sprintf(_('Sloučení osob %s (%d) a %s (%d)'), $this->trunkPerson->getFullName(), $this->trunkPerson->person_id, $this->mergedPerson->getFullName(), $this->mergedPerson->person_id));
+    /**
+     * @param int $id
+     * @throws BadRequestException
+     */
+    public function renderDetail(int $id) {
+        $person = $this->loadEntity($id);
+        $this->template->userPermissions = $this->getUserPermissions($person);
+        $this->template->person = $person;
+        $this->template->isSelf = $this->getUser()->getIdentity()->getPerson()->person_id === $person->person_id;
+        /** @var ModelPerson $userPerson */
+        $userPerson = $this->getUser()->getIdentity()->getPerson();
+        Debugger::log(sprintf('%s (%d) stalk %s (%d)',
+            $userPerson->getFullName(), $userPerson->person_id,
+            $person->getFullName(), $person->person_id), 'stalking-log');
+    }
+
+    /* ******************* COMPONENTS *******************/
+
+    public function createComponentStalkingComponent(): StalkingComponent {
+        return new StalkingComponent($this->getContext());
+    }
+
+    public function createComponentAddress(): Stalking\Address {
+        return new Stalking\Address($this->getContext());
+    }
+
+    public function createComponentRole(): Stalking\Role {
+        return new Stalking\Role($this->getContext());
+    }
+
+    public function createComponentFlag(): Stalking\Flag {
+        return new Stalking\Flag($this->getContext());
+    }
+
+    public function createComponentSchedule(): Stalking\Schedule {
+        return new Stalking\Schedule($this->getContext());
+    }
+
+    public function createComponentValidation(): Stalking\Validation {
+        return new Stalking\Validation($this->getContext());
+    }
+
+    public function createComponentTimeline(): Stalking\Timeline\TimelineControl {
+        return new Stalking\Timeline\TimelineControl($this->getContext(), $this->getEntity());
     }
 
     /**
-     * @param $name
+     * @return FormControl
+     * @throws BadRequestException
+     * @throws \Exception
+     */
+    public function createComponentFormSearch(): FormControl {
+        $control = new FormControl();
+        $form = $control->getForm();
+
+        $container = new ContainerWithOptions();
+        $form->addComponent($container, ExtendedPersonHandler::CONT_AGGR);
+        $modifiabilityResolver = $visibilityResolver = new DenyResolver();
+        $acYear = $this->getYearCalculator()->getCurrentAcademicYear();
+        $components = $this->referencedPersonFactory->createReferencedPerson([], $acYear, ReferencedPersonFactory::SEARCH_ID, true, $modifiabilityResolver, $visibilityResolver);
+        $components[0]->addRule(Form::FILLED, _('Osobu je třeba zadat.'));
+        $components[1]->setOption('label', _('Osoba'));
+
+        $container->addComponent($components[0], ExtendedPersonHandler::EL_PERSON);
+        $container->addComponent($components[1], ExtendedPersonHandler::CONT_PERSON);
+
+        $submit = $form->addSubmit('send', _('Stalkovat'));
+        $submit->onClick[] = function (SubmitButton $button) {
+            $values = $button->getForm()->getValues();
+            $id = $values[ExtendedPersonHandler::CONT_AGGR][ExtendedPersonHandler::EL_PERSON];
+            $this->redirect('detail', ['id' => $id]);
+        };
+
+        return $control;
+    }
+
+    private function getUserPermissions(ModelPerson $person): int {
+        if (!$this->mode) {
+            if ($this->isAnyContestAuthorized($person, 'stalk.basic')) {
+                $this->mode = Stalking\AbstractStalkingComponent::PERMISSION_BASIC;
+            }
+            if ($this->isAnyContestAuthorized($person, 'stalk.restrict')) {
+                $this->mode = Stalking\AbstractStalkingComponent::PERMISSION_RESTRICT;
+            }
+            if ($this->isAnyContestAuthorized($person, 'stalk.full')) {
+                $this->mode = Stalking\AbstractStalkingComponent::PERMISSION_FULL;
+            }
+        }
+        return $this->mode;
+    }
+
+    /**
      * @return FormControl
      * @throws BadRequestException
      */
-    protected function createComponentMergeForm($name) {
+    protected function createComponentMergeForm() {
         $control = new FormControl();
         $form = $control->getForm();
 
@@ -266,12 +310,15 @@ class PersonPresenter extends BasePresenter {
 
         $form->addSubmit('cancel', _('Storno'))
             ->getControlPrototype()->addAttributes(['class' => 'btn-lg']);
-        $form->onSuccess[] = array($this, 'handleMergeFormSuccess');
+        $form->onSuccess[] = function (Form $form) {
+            $this->handleMergeFormSuccess($form);
+        };
         return $control;
     }
 
     /**
      * @param Form $form
+     * @return void
      */
     private function updateMergeForm(Form $form) {
         if (false && !$form->isSubmitted()) { // new form is without any conflict, we use it to clear the session
@@ -340,8 +387,9 @@ class PersonPresenter extends BasePresenter {
 
     /**
      * @param Form $form
-     * @throws \Nette\Application\AbortException
-     * @throws \ReflectionException
+     * @throws AbortException
+     * @throws ReflectionException
+     * @throws BadTypeException
      */
     public function handleMergeFormSuccess(Form $form) {
         if ($form['cancel']->isSubmittedBy()) {
@@ -359,8 +407,7 @@ class PersonPresenter extends BasePresenter {
         if ($merger->merge()) {
             $this->setMergeConflicts(null); // flush the session
             $this->flashMessage(_('Osoby úspešně sloučeny.'), self::FLASH_SUCCESS);
-            $flashDump = $this->flashDumpFactory->createPersonMerge();
-            $flashDump->dump($logger, $this);
+            FlashMessageDump::dump($logger, $this);
             $this->backLinkRedirect(true);
         } else {
             $this->setMergeConflicts($merger->getConflicts());
@@ -375,6 +422,7 @@ class PersonPresenter extends BasePresenter {
 
     /**
      * @param $conflicts
+     * @return void
      */
     private function setMergeConflicts($conflicts) {
         $section = $this->session->getSection('conflicts');
@@ -397,4 +445,39 @@ class PersonPresenter extends BasePresenter {
         }
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function createComponentCreateForm(): Control {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function createComponentEditForm(): Control {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function createComponentGrid(): BaseGrid {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getORMService() {
+        return $this->servicePerson;
+    }
+
+    /**
+     * @inheritDoc
+     * all auth method is overwritten
+     */
+    protected function traitIsAuthorized($resource, string $privilege): bool {
+        return false;
+    }
 }

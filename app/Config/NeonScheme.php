@@ -5,7 +5,6 @@ namespace FKSDB\Config;
 use FKSDB\Config\Expressions\Helpers;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Arrays;
-use Nette\Utils\NeonException;
 
 /**
  * So far only helper methods to "checked" laoding of Neon configuration.
@@ -54,12 +53,12 @@ class NeonScheme {
                     $result[$key] = array_map(function($it) {
                                 return Helpers::statementFromExpression($it);
                             }, $result[$key]);
-                } else if ($qualifier === null) {
+                } elseif ($qualifier === null) {
                     $result[$key] = Helpers::statementFromExpression($result[$key]);
                 } else {
                     throw new NeonSchemaException("Unknown type qualifier '$qualifier'.");
                 }
-            } else if ($type != self::TYPE_NEON) {
+            } elseif ($type != self::TYPE_NEON) {
                 throw new NeonSchemaException("Unknown type '$type'.");
             }
         }
@@ -71,12 +70,3 @@ class NeonScheme {
     }
 
 }
-
-/**
- * Class NeonSchemaException
- * @package FKSDB\Config
- */
-class NeonSchemaException extends NeonException {
-
-}
-

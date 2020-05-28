@@ -3,68 +3,70 @@
 namespace FKSDB\Components\Controls\Choosers;
 
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Models\ModelEventType;
 use FKSDB\ORM\Services\ServiceEvent;
-use Nette\Application\UI\Control;
+use FKSDB\ORM\Tables\TypedTableSelection;
+use FKSDB\UI\Title;
+use Nette\Application\UI\InvalidLinkException;
+use Nette\DI\Container;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class FyziklaniChooser extends Control {
-
-    const EVENT_TYPE_ID = 1;
+class FyziklaniChooser extends Chooser {
     /**
-     * @var \FKSDB\ORM\Models\ModelEvent
+     * @var ModelEvent
      */
     private $event;
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceEvent
+     * @var ServiceEvent
      */
     private $serviceEvent;
 
     /**
      * FyziklaniChooser constructor.
-     * @param ServiceEvent $serviceEvent
-     */
-    function __construct(ServiceEvent $serviceEvent) {
-        parent::__construct();
-        $this->serviceEvent = $serviceEvent;
-    }
-
-    /**
+     * @param Container $container
      * @param ModelEvent $event
      */
-    public function setEvent(ModelEvent $event) {
+    public function __construct(Container $container, ModelEvent $event) {
+        parent::__construct($container);
+        $this->serviceEvent = $container->getByType(ServiceEvent::class);
         $this->event = $event;
     }
 
-    /**
-     * @return ModelEvent[]
-     */
-    private function getAllFyziklani(): array {
-        $events = [];
-        $query = $this->serviceEvent->getTable()->where('event_type_id=?', self::EVENT_TYPE_ID)->order('event_year DESC');
-        foreach ($query as $row) {
-            $events[] = ModelEvent::createFromActiveRow($row);
-        }
-        return $events;
-    }
-
-    public function render() {
-        $this->template->availableFyziklani = $this->getAllFyziklani();
-        $this->template->currentEvent = $this->event;
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'FyziklaniChooser.latte');
-        $this->template->render();
+    protected function getItems(): TypedTableSelection {
+        return $this->serviceEvent->getTable()->where('event_type_id=?', ModelEventType::FYZIKLANI)->order('event_year DESC');
     }
 
     /**
-     * @param $eventId
-     * @throws \Nette\Application\AbortException
+     * @param ModelEvent $item
+     * @return bool
      */
-    public function handleChange($eventId) {
-        $presenter = $this->getPresenter();
-        $presenter->redirect('this', ['eventId' => $eventId]);
+    public function isItemActive($item): bool {
+        return $item->event_id === $this->event->event_id;
+    }
+
+    public function getTitle(): Title {
+        return new Title(_('Event'));
+    }
+
+    /**
+     * @param ModelEvent $item
+     * @return string
+     */
+    public function getItemLabel($item): string {
+        return $item->name;
+    }
+
+    /**
+     * @param ModelEvent $item
+     * @return string
+     * @throws InvalidLinkException
+     */
+    public function getItemLink($item): string {
+        return $this->getPresenter()->link('this', ['eventId' => $item->event_id]);
     }
 }

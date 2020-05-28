@@ -3,54 +3,42 @@
 namespace CommonModule;
 
 use AuthenticatedPresenter;
-use FKSDB\Components\Controls\Choosers\ThemeSwitcher;
+use FKSDB\UI\PageStyleContainer;
+use Nette\Security\IResource;
 
 /**
  * Class BasePresenter
- * @package CoreModule
+ * *
  */
 abstract class BasePresenter extends AuthenticatedPresenter {
-    /**
-     * @var bool
-     * @persistent
-     */
-    public $theme = 'light';
 
-    /**
-     * @return array
-     */
-    protected function getNavBarVariant(): array {
-        return [('theme-' . $this->getComponent('themeSwitcher')->getSelectedTheme()) . ' common', 'bg-dark navbar-dark'];
+    protected function getPageStyleContainer(): PageStyleContainer {
+        $container = parent::getPageStyleContainer();
+        $container->styleId = 'theme-light common';
+        $container->navBarClassName = 'bg-dark navbar-dark';
+        return $container;
     }
 
     protected function beforeRender() {
-        $this->template->theme = $this->theme;
         parent::beforeRender();
     }
 
     /**
-     * @return ThemeSwitcher
-     */
-    public function createComponentThemeSwitcher(): ThemeSwitcher {
-        return new ThemeSwitcher($this->session, $this->getTranslator());
-    }
-
-    /**
-     * @return array
+     * @return string[]
      */
     protected function getNavRoots(): array {
         $roots = parent::getNavRoots();
-        $roots[] = 'common.dashboard.default';
+        $roots[] = 'Common.Dashboard.default';
         return $roots;
 
     }
 
     /**
-     * @param $resource
-     * @param $privilege
+     * @param IResource|string $resource
+     * @param string $privilege
      * @return bool
      */
-    protected function isAllowed($resource, $privilege): bool {
+    protected function isAnyContestAuthorized($resource, string $privilege): bool {
         return $this->getContestAuthorizator()->isAllowedForAnyContest($resource, $privilege);
     }
 }

@@ -1,3 +1,0 @@
-services:
-    row.stored_query.qid: FKSDB\Components\DatabaseReflection\StoredQuery\StoredQuery\QIDRow
-    row.stored_query.tags: FKSDB\Components\DatabaseReflection\StoredQuery\StoredQuery\TagsRow

@@ -10,7 +10,7 @@ use Nette\Forms\Form;
 
 /**
  * Class ImField
- * @package FKSDB\Components\Forms\Factories\PersonInfo
+ * *
  */
 class ImRow extends AbstractRow {
     use DefaultPrinterTrait;
@@ -22,9 +22,10 @@ class ImRow extends AbstractRow {
     }
 
     /**
+     * @param array $args
      * @return BaseControl
      */
-    public function createField(): BaseControl {
+    public function createField(...$args): BaseControl {
         $control = new  WriteOnlyInput($this->getTitle());
         $control->addRule(Form::MAX_LENGTH, null, 32);
         return $control;

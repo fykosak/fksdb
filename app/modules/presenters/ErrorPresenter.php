@@ -1,6 +1,9 @@
 <?php
 
+use FKSDB\UI\PageStyleContainer;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Http\Response;
 use Tracy\Debugger;
 
 /**
@@ -8,11 +11,11 @@ use Tracy\Debugger;
  */
 class ErrorPresenter extends BasePresenter {
 
-    /**
-     * @return array
-     */
-    public function getNavBarVariant(): array {
-        return ['error', 'bg-error navbar-dark'];
+    protected function getPageStyleContainer(): PageStyleContainer {
+        $container = parent::getPageStyleContainer();
+        $container->styleId = 'error';
+        $container->navBarClassName = 'bg-error navbar-dark';
+        return $container;
     }
 
     protected function putIntoBreadcrumbs() {
@@ -24,9 +27,9 @@ class ErrorPresenter extends BasePresenter {
     }
 
     /**
-     * @param  Exception
+     * @param Exception
      * @return void
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function renderDefault($exception) {
         if ($this->isAjax()) { // AJAX request? Just note this error in payload.
@@ -35,7 +38,7 @@ class ErrorPresenter extends BasePresenter {
         } elseif ($exception instanceof BadRequestException) {
             $code = $exception->getCode();
             // known exception or general 500
-            $this->setView(in_array($code, [403, 404, 405]) ? $code : '500');
+            $this->setView(in_array($code, [Response::S403_FORBIDDEN, Response::S404_NOT_FOUND, Response::S405_METHOD_NOT_ALLOWED, Response::S410_GONE]) ? $code : '500');
             // log to access.log
             Debugger::log("HTTP code $code: {$exception->getMessage()} in {$exception->getFile()}:{$exception->getLine()}", 'access');
         } else {

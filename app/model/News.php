@@ -2,7 +2,6 @@
 
 use FKSDB\Config\GlobalParameters;
 use FKSDB\ORM\Models\ModelContest;
-use FKSDB\ORM\Services\ServiceContest;
 use Nette\SmartObject;
 
 /**
@@ -12,19 +11,15 @@ class News {
     use SmartObject;
 
     /**
-     * @var ServiceContest
-     */
-    /**
      * @var GlobalParameters
      */
     private $globalParameters;
-
 
     /**
      * News constructor.
      * @param GlobalParameters $globalParameters
      */
-    function __construct(GlobalParameters $globalParameters) {
+    public function __construct(GlobalParameters $globalParameters) {
         $this->globalParameters = $globalParameters;
     }
 

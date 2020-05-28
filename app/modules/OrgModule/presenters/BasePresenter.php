@@ -12,11 +12,8 @@ use FKSDB\ORM\Models\ModelRole;
  */
 abstract class BasePresenter extends \ContestPresenter {
 
-    /**
-     * @return ContestChooser
-     */
     protected function createComponentContestChooser(): ContestChooser {
-        $control = new ContestChooser($this->session, $this->yearCalculator, $this->serviceContest);
+        $control = new ContestChooser($this->getContext());
         $control->setContests(ModelRole::ORG);
         return $control;
     }
@@ -25,6 +22,6 @@ abstract class BasePresenter extends \ContestPresenter {
      * @return string[]
      */
     public function getNavRoots(): array {
-        return ['org.dashboard.default'];
+        return ['Org.Dashboard.default'];
     }
 }

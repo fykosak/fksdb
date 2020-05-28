@@ -8,7 +8,7 @@ use Nette\Utils\Html;
 
 /**
  * Class PointsRow
- * @package FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniSubmit
+ * *
  */
 class PointsRow extends AbstractFyziklaniSubmitRow {
     /**

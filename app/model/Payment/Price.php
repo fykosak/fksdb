@@ -1,14 +1,13 @@
 <?php
 
-
 namespace FKSDB\Payment;
 
-
 use FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException;
+use LogicException;
 
 /**
  * Class Price
- * @package FKSDB\Payment\PriceCalculator
+ * *
  */
 class Price {
 
@@ -21,59 +20,47 @@ class Price {
     /**
      * @var float
      */
-    private $amount = 0;
+    private $amount;
 
     /**
      * Price constructor.
-     * @param float|null $amount
-     * @param string|null $currency
+     * @param float $amount
+     * @param string $currency
      */
-    public function __construct(float $amount = null, string $currency = null) {
+    public function __construct(float $amount, string $currency) {
         $this->amount = $amount;
         $this->currency = $currency;
     }
 
     /**
      * @param Price $price
-     * @throws \LogicException
+     * @throws LogicException
      */
     public function add(Price $price) {
         if ($this->currency !== $price->getCurrency()) {
-            throw new \LogicException('Currencies are not a same');
+            throw new LogicException('Currencies are not a same');
         }
         $this->amount += $price->getAmount();
     }
 
-    /**
-     * @param string $currency
-     */
-    public function setCurrency(string $currency) {
-        $this->currency = $currency;
-    }
-
-    /**
-     * @return string
-     */
     public function getCurrency(): string {
         return $this->currency;
     }
 
-    /**
-     * @return float
-     */
     public function getAmount(): float {
         return $this->amount;
     }
 
     /**
      * @param float $amount
+     * @return void
      */
     public function addAmount(float $amount) {
         $this->amount += $amount;
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public static function getAllCurrencies(): array {
         return [self::CURRENCY_CZK, self::CURRENCY_EUR];

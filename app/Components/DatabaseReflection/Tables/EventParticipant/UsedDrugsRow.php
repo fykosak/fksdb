@@ -6,7 +6,7 @@ use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 
 /**
  * Class UsedDrugsRow
- * @package FKSDB\Components\DatabaseReflection\EventParticipant
+ * *
  */
 class UsedDrugsRow extends AbstractParticipantRow {
     use DefaultPrinterTrait;

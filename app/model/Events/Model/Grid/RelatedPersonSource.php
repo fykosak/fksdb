@@ -1,11 +1,13 @@
 <?php
 
-namespace Events\Model\Grid;
+namespace FKSDB\Events\Model\Grid;
 
-use Events\UndeclaredEventException;
+use FKSDB\Config\NeonSchemaException;
+use FKSDB\Events\UndeclaredEventException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Tables\TypedTableSelection;
+use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 
 /**
@@ -21,47 +23,49 @@ use Nette\DI\Container;
 class RelatedPersonSource extends AggregatedPersonSource implements IHolderSource {
 
     /**
-     * @var \FKSDB\ORM\Models\ModelPerson
+     * @var ModelPerson
      */
     private $person;
 
     /**
      * RelatedPersonSource constructor.
-     * @param \FKSDB\ORM\Models\ModelPerson $person
-     * @param \FKSDB\ORM\Tables\TypedTableSelection $events
+     * @param ModelPerson $person
+     * @param TypedTableSelection $events
      * @param Container $container
      */
-    function __construct(ModelPerson $person, TypedTableSelection $events, Container $container) {
+    public function __construct(ModelPerson $person, TypedTableSelection $events, Container $container) {
         parent::__construct($events, $container);
         $this->person = $person;
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @param ModelEvent $event
      * @return SingleEventSource|null
+     * @throws NeonSchemaException
+     * @throws BadRequestException
      */
     public function processEvent(ModelEvent $event) {
         $personId = $this->person->getPrimary();
 
-	try {
+        try {
             $eventSource = new SingleEventSource($event, $this->container);
-	} catch (UndeclaredEventException $exception) {
-	    return null;
-	}
+        } catch (UndeclaredEventException $exception) {
+            return null;
+        }
 
 
-        $subconditions = [];
+        $subConditions = [];
         $count = 0;
 
         $primaryPersonIds = $eventSource->getDummyHolder()->getPrimaryHolder()->getPersonIds();
         if ($primaryPersonIds) {
-            $subconditions[] = implode(' = ?  OR ', $primaryPersonIds) . ' = ?';
+            $subConditions[] = implode(' = ?  OR ', $primaryPersonIds) . ' = ?';
             $count += count($primaryPersonIds);
         }
 
         foreach ($eventSource->getDummyHolder()->getGroupedSecondaryHolders() as $group) {
             if ($group['personIds']) {
-                $subconditions[] = implode(' = ?  OR ', $group['personIds']) . ' = ?';
+                $subConditions[] = implode(' = ?  OR ', $group['personIds']) . ' = ?';
                 $count += count($group['personIds']);
             }
         }
@@ -71,7 +75,7 @@ class RelatedPersonSource extends AggregatedPersonSource implements IHolderSourc
         } else {
             $parameters = array_fill(0, $count, $personId);
         }
-        $eventSource->where(implode(' OR ', $subconditions), $parameters);
+        $eventSource->where(implode(' OR ', $subConditions), $parameters);
 
         return $eventSource;
     }

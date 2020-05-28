@@ -4,15 +4,17 @@ namespace FKSDB\Payment\Transition;
 
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPayment;
+use FKSDB\ORM\Services\ServiceEvent;
 use FKSDB\ORM\Services\ServicePayment;
 use FKSDB\Payment\PriceCalculator\PriceCalculator;
-use FKSDB\Payment\SymbolGenerator\AbstractSymbolGenerator;
+use FKSDB\Payment\SymbolGenerator\Generators\AbstractSymbolGenerator;
+use FKSDB\Transitions\AbstractTransitionsGenerator;
 use FKSDB\Transitions\Machine;
-use Nette\Database\Connection;
+use Nette\Database\Context;
 
 /**
  * Class PaymentMachine
- * @package FKSDB\Payment\Transition
+ * *
  */
 class PaymentMachine extends Machine {
     /**
@@ -27,46 +29,66 @@ class PaymentMachine extends Machine {
      * @var ModelEvent
      */
     private $event;
+    /**
+     * @var ServiceEvent
+     */
+    private $serviceEvent;
 
     /**
      * PaymentMachine constructor.
-     * @param ModelEvent $event
-     * @param PriceCalculator $priceCalculator
-     * @param AbstractSymbolGenerator $abstractSymbolGenerator
-     * @param Connection $connection
+     * @param Context $connection
      * @param ServicePayment $servicePayment
+     * @param ServiceEvent $serviceEvent
      */
-    public function __construct(ModelEvent $event, PriceCalculator $priceCalculator, AbstractSymbolGenerator $abstractSymbolGenerator, Connection $connection, ServicePayment $servicePayment) {
+    public function __construct(Context $connection, ServicePayment $servicePayment, ServiceEvent $serviceEvent) {
         parent::__construct($connection, $servicePayment);
-        $this->priceCalculator = $priceCalculator;
-        $this->symbolGenerator = $abstractSymbolGenerator;
-        $this->event = $event;
+        $this->serviceEvent = $serviceEvent;
     }
 
     /**
-     * @return AbstractSymbolGenerator
+     * @param AbstractTransitionsGenerator $factory
+     * @return void
      */
+    public function setTransitions(AbstractTransitionsGenerator $factory) {
+        $factory->createTransitions($this);
+    }
+
+    /**
+     * @param int $eventId
+     * @return void
+     */
+    public function setEventId(int $eventId) {
+        $this->event = $this->serviceEvent->findByPrimary($eventId);
+    }
+
+    /**
+     * @param AbstractSymbolGenerator $abstractSymbolGenerator
+     * @return void
+     */
+    public function setSymbolGenerator(AbstractSymbolGenerator $abstractSymbolGenerator) {
+        $this->symbolGenerator = $abstractSymbolGenerator;
+    }
+
+    /**
+     * @param PriceCalculator $priceCalculator
+     * @return void
+     */
+    public function setPriceCalculator(PriceCalculator $priceCalculator) {
+        $this->priceCalculator = $priceCalculator;
+    }
+
     public function getSymbolGenerator(): AbstractSymbolGenerator {
         return $this->symbolGenerator;
     }
 
-    /**
-     * @return PriceCalculator
-     */
     public function getPriceCalculator(): PriceCalculator {
         return $this->priceCalculator;
     }
 
-    /**
-     * @return ModelEvent
-     */
     public function getEvent(): ModelEvent {
         return $this->event;
     }
 
-    /**
-     * @return string
-     */
     public function getCreatingState(): string {
         return ModelPayment::STATE_NEW;
     }

@@ -8,7 +8,7 @@ use Nette\Forms\Form;
 
 /**
  * Class EventYearRow
- * @package FKSDB\Components\DatabaseReflection\Event
+ * *
  */
 class EventYearRow extends AbstractEventRowFactory {
     use DefaultPrinterTrait;
@@ -21,10 +21,11 @@ class EventYearRow extends AbstractEventRowFactory {
     }
 
     /**
+     * @param array $args
      * @return BaseControl
      */
-    public function createField(): BaseControl {
-        $control = parent::createField();
+    public function createField(...$args): BaseControl {
+        $control = parent::createField($args);
         $control->addRule(Form::INTEGER, _('%label musí být číslo.'))
             ->addRule(Form::FILLED, _('%label je povinný.'))
             ->setOption('description', _('Ročník akce musí být unikátní pro daný typ akce.'));

@@ -2,18 +2,31 @@
 
 namespace FKSDB\Components\Grids;
 
+use Exception;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
+use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
+use Nette\Application\UI\InvalidLinkException;
+use Nette\DI\Container;
 use Nette\InvalidStateException;
-use Nette\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 use Nette\Templating\FileTemplate;
 use Nette\Templating\ITemplate;
+use Nette\Utils\Html;
 use NiftyGrid\Components\Button;
+use NiftyGrid\Components\Column;
 use NiftyGrid\Components\GlobalButton;
+use NiftyGrid\DuplicateButtonException;
+use NiftyGrid\DuplicateColumnException;
+use NiftyGrid\DuplicateGlobalButtonException;
 use NiftyGrid\Grid;
+use NiftyGrid\GridException;
 use NiftyGrid\GridPaginator;
+use PePa\CSVResponse;
 use SQL\SearchableDataSource;
 
 /**
@@ -21,7 +34,6 @@ use SQL\SearchableDataSource;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 abstract class BaseGrid extends Grid {
-
     /** @persistent string */
     public $searchTerm;
     /**
@@ -31,39 +43,50 @@ abstract class BaseGrid extends Grid {
 
     /**
      * BaseGrid constructor.
-     * @param TableReflectionFactory|null $tableReflectionFactory
+     * @param Container $container
      */
-    public function __construct(TableReflectionFactory $tableReflectionFactory = null) {
+    public function __construct(Container $container) {
         parent::__construct();
+        $container->callInjects($this);
+    }
+
+    /**
+     * @param TableReflectionFactory $tableReflectionFactory
+     * @return void
+     */
+    public function injectTableReflectionFactory(TableReflectionFactory $tableReflectionFactory) {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
     /**
      * @param $presenter
+     * @return void
      */
     protected function configure($presenter) {
         $this->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.latte');
-        /**
-         * @var GridPaginator $paginator
-         */
+        /** @var GridPaginator $paginator */
         $paginator = $this->getComponent('paginator');
         $paginator->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.paginator.latte');
     }
 
-
     /**
      * @param null $class
-     * @return \Nette\Templating\ITemplate
+     * @return ITemplate
+     * @throws BadTypeException
      */
     protected function createTemplate($class = NULL): ITemplate {
+        $presenter = $this->getPresenter();
+        if (!$presenter instanceof \BasePresenter) {
+            throw new BadTypeException(\BasePresenter::class, $presenter);
+        }
         /**
          * @var GridPaginator $paginator
          * @var FileTemplate $template
          */
         $paginator = $this->getComponent('paginator');
-        $paginator->getTemplate()->setTranslator($this->presenter->getTranslator());
+        $paginator->getTemplate()->setTranslator($presenter->getTranslator());
         $template = parent::createTemplate($class);
-        $template->setTranslator($this->presenter->getTranslator());
+        $template->setTranslator($presenter->getTranslator());
         return $template;
     }
 
@@ -71,7 +94,7 @@ abstract class BaseGrid extends Grid {
      * Extended rendering for the paginator
      * ***************************** */
     /**
-     * @throws \NiftyGrid\GridException
+     * @throws GridException
      */
     public function render() {
         $paginator = $this->getPaginator();
@@ -88,7 +111,7 @@ abstract class BaseGrid extends Grid {
          */
         $page = $paginator->page;
         if ($paginator->pageCount < 2) {
-            $steps = array($page);
+            $steps = [$page];
         } else {
             $arr = range(max($paginator->firstPage, $page - 3), min($paginator->lastPage, $page + 3));
             $count = 4;
@@ -108,16 +131,13 @@ abstract class BaseGrid extends Grid {
      * Search
      * ****************************** */
 
-    /**
-     * @return bool
-     */
     public function isSearchable(): bool {
         return $this->dataSource instanceof SearchableDataSource;
     }
 
     /**
      * @return FormControl
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     protected function createComponentSearchForm(): FormControl {
         if (!$this->isSearchable()) {
@@ -149,7 +169,7 @@ abstract class BaseGrid extends Grid {
      * @param string $name
      * @param string $label
      * @return Button
-     * @throws \NiftyGrid\DuplicateButtonException
+     * @throws DuplicateButtonException
      */
     protected function addButton($name, $label = NULL): Button {
         $button = parent::addButton($name, $label);
@@ -161,7 +181,7 @@ abstract class BaseGrid extends Grid {
      * @param $name
      * @param null $label
      * @return GlobalButton
-     * @throws \NiftyGrid\DuplicateGlobalButtonException
+     * @throws DuplicateGlobalButtonException
      */
     public function addGlobalButton($name, $label = NULL): GlobalButton {
         $button = parent::addGlobalButton($name, $label);
@@ -172,24 +192,28 @@ abstract class BaseGrid extends Grid {
     /**
      * @param string $tableName
      * @param string $fieldName
-     * @param string|AbstractModelSingle $modelClassName
-     * @throws \NiftyGrid\DuplicateColumnException
-     * @throws \Exception
+     * @throws DuplicateColumnException
+     * @throws Exception
      */
-    protected function addReflectionColumn(string $tableName, string $fieldName, string $modelClassName) {
+    private function addReflectionColumn(string $tableName, string $fieldName) {
+        $modelClassName = $this->getModelClassName();
         $factory = $this->tableReflectionFactory->loadService($tableName, $fieldName);
-        $this->addColumn($fieldName, $factory->getTitle())->setRenderer(function ($row) use ($factory, $fieldName, $modelClassName) {
-            $model = $modelClassName::createFromActiveRow($row);
+
+        $this->addColumn($fieldName, $factory->getTitle())->setRenderer(function ($model) use ($factory, $fieldName, $modelClassName) {
+            if (!$model instanceof $modelClassName) {
+                $model = $modelClassName::createFromActiveRow($model);
+            }
             return $factory->renderValue($model, 1);
-        });
+        })->setSortable(false);
     }
 
     /**
      * @param string $tableName
      * @param string $fieldName
      * @param callable $accessCallback ActiveRow=>AbstractModelSingle
-     * @throws \NiftyGrid\DuplicateColumnException
-     * @throws \Exception
+     * @throws DuplicateColumnException
+     * @throws Exception
+     * @deprecated this functionality is moved to getModel in DBReflection AbstractRow
      */
     protected function addJoinedColumn(string $tableName, string $fieldName, callable $accessCallback) {
         $factory = $this->tableReflectionFactory->loadService($tableName, $fieldName);
@@ -200,14 +224,8 @@ abstract class BaseGrid extends Grid {
     }
 
     /**
-     * @return string
-     */
-    protected function getTableName(): string {
-        throw new NotImplementedException();
-    }
-
-    /**
-     * @return string
+     * @return string|AbstractModelSingle
+     * @throws NotImplementedException
      */
     protected function getModelClassName(): string {
         throw new NotImplementedException();
@@ -215,13 +233,118 @@ abstract class BaseGrid extends Grid {
 
     /**
      * @param array $fields
-     * @throws \NiftyGrid\DuplicateColumnException
+     * @throws DuplicateColumnException
      */
     protected function addColumns(array $fields) {
-
         foreach ($fields as $name) {
-            $this->addReflectionColumn($this->getTableName(), $name, $this->getModelClassName());
+            list($table, $field) = TableReflectionFactory::parseRow($name);
+            $this->addReflectionColumn($table, $field);
         }
     }
 
+    /**
+     * @param string $destination
+     * @param string $id
+     * @param string $label
+     * @param bool $checkACL
+     * @param array $params
+     * @return Button
+     * @throws DuplicateButtonException
+     * @throws NotImplementedException
+     */
+    protected function addLinkButton(string $destination, string $id, string $label, bool $checkACL = true, array $params = []): Button {
+        $modelClassName = $this->getModelClassName();
+        $paramMapCallback = function ($model) use ($params): array {
+            $hrefParams = [];
+            foreach ($params as $key => $value) {
+                $hrefParams[$key] = $model->{$value};
+            }
+            return $hrefParams;
+        };
+        /** @var Button $button */
+        $button = $this->addButton($id, $label)
+            ->setText($label)
+            ->setLink(function ($model) use ($modelClassName, $destination, $paramMapCallback) {
+                if (!$model instanceof $modelClassName) {
+                    $model = $modelClassName::createFromActiveRow($model);
+                }
+                return $this->getPresenter()->link($destination, $paramMapCallback($model));
+            });
+        if ($checkACL) {
+            $button->setShow(function ($model) use ($modelClassName, $destination, $paramMapCallback) {
+                if (!$model instanceof $modelClassName) {
+                    $model = $modelClassName::createFromActiveRow($model);
+                }
+                return $this->getPresenter()->authorized($destination, $paramMapCallback($model));
+            });
+        }
+        return $button;
+    }
+
+    /**
+     * @param string $linkId
+     * @param bool $checkACL
+     * @return Button
+     * @throws DuplicateButtonException
+     * @throws Exception
+     */
+    protected function addLink(string $linkId, bool $checkACL = false): Button {
+        $modelClassName = $this->getModelClassName();
+        $factory = $this->tableReflectionFactory->loadLinkFactory($linkId);
+        /** @var Button $button */
+        $button = $this->addButton(str_replace('.', '_', $linkId), $factory->getText())
+            ->setText($factory->getText())
+            ->setLink(function ($model) use ($modelClassName, $factory) {
+                if (!$model instanceof $modelClassName) {
+                    $model = $modelClassName::createFromActiveRow($model);
+                }
+                return $this->getPresenter()->link($factory->getDestination($model), $factory->prepareParams($model));
+            });
+        if ($checkACL) {
+            $button->setShow(function ($model) use ($modelClassName, $factory) {
+                if (!$model instanceof $modelClassName) {
+                    $model = $modelClassName::createFromActiveRow($model);
+                }
+                return $this->getPresenter()->authorized($factory->getDestination($model), $factory->prepareParams($model));
+            });
+        }
+        return $button;
+    }
+
+    /**
+     * @return GlobalButton|Button
+     * @throws DuplicateGlobalButtonException
+     * @throws InvalidLinkException
+     */
+    protected function addCSVDownloadButton(): GlobalButton {
+        return $this->addGlobalButton('csv')
+            ->setLabel(_('Download as csv'))
+            ->setLink($this->link('csv!'));
+    }
+
+    /**
+     * @throws AbortException
+     */
+    public function handleCsv() {
+        $columns = $this['columns']->components;
+        $rows = $this->dataSource->getData();
+        $data = [];
+        foreach ($rows as $row) {
+            $datum = [];
+            /** @var Column $column */
+            foreach ($columns as $column) {
+                $item = $column->prepareValue($row);
+                if ($item instanceof Html) {
+                    $item = $item->getText();
+                }
+                $datum[$column->name] = $item;
+            }
+            $data[] = $datum;
+        }
+        $response = new CSVResponse($data, 'test.csv');
+        $response->setAddHeading(true);
+        $response->setQuotes(true);
+        $response->setGlue(',');
+        $this->getPresenter()->sendResponse($response);
+    }
 }

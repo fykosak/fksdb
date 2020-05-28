@@ -21,12 +21,15 @@ class DbNames {
     const TAB_GRANT = 'grant';
     const TAB_LOGIN = 'login';
     const TAB_ORG = 'org';
+    const TAB_EMAIL_MESSAGE = 'email_message';
 
     const TAB_PERSON = 'person';
     const TAB_PERSON_HAS_FLAG = 'person_has_flag';
     const TAB_PERSON_HISTORY = 'person_history';
     const TAB_PERSON_INFO = 'person_info';
     const TAB_POST_CONTACT = 'post_contact';
+    const TAB_PSC_REGION = 'psc_region';
+    const TAB_QUIZ = 'quiz';
     const TAB_REGION = 'region';
     const TAB_ROLE = 'role';
     const TAB_SCHOOL = 'school';
@@ -36,6 +39,7 @@ class DbNames {
     const TAB_STORED_QUERY_TAG_TYPE = 'stored_query_tag_type';
     const TAB_STUDY_YEAR = 'study_year';
     const TAB_SUBMIT = 'submit';
+    const TAB_SUBMIT_QUIZ = 'submit_quiz';
     const TAB_TASK = 'task';
     const TAB_TASK_CONTRIBUTION = 'task_contribution';
     const TAB_TASK_STUDY_YEAR = 'task_study_year';
@@ -57,8 +61,8 @@ class DbNames {
     const TAB_FYZIKLANI_SUBMIT = 'fyziklani_submit';
     const TAB_FYZIKLANI_GAME_SETUP = 'fyziklani_game_setup';
 
-    const TAB_FYZIKLANI_ROOM = 'brawl_room';
-    const TAB_FYZIKLANI_TEAM_POSITION = 'brawl_team_position';
+    const TAB_FYZIKLANI_ROOM = 'fyziklani_room';
+    const TAB_FYZIKLANI_TEAM_POSITION = 'fyziklani_team_position';
 
     const TAB_SCHEDULE_GROUP = 'schedule_group';
     const TAB_SCHEDULE_ITEM = 'schedule_item';

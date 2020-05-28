@@ -2,38 +2,40 @@
 
 namespace FKSDB\Transitions\Statements\Conditions;
 
-use FKSDB\Transitions\IStateModel;
+use DateTime;
+use Exception;
 use FKSDB\Transitions\Statements\Statement;
 
 /**
  * Class DateBetween
- * @package FKSDB\Transitions\Statements\Conditions
+ * *
  */
 class DateBetween extends Statement {
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     private $to;
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     private $from;
 
     /**
      * DateBetween constructor.
-     * @param \DateTime $from
-     * @param \DateTime $to
+     * @param string $from
+     * @param string $to
+     * @throws Exception
      */
-    public function __construct(\DateTime $from, \DateTime $to) {
-        $this->from = $from;
-        $this->to = $to;
+    public function __construct(string $from, string $to) {
+        $this->from = new DateTime($from);
+        $this->to = new DateTime($to);
     }
 
     /**
-     * @param IStateModel $model
+     * @param array $args
      * @return bool
      */
-    protected function evaluate(IStateModel $model = null): bool {
+    protected function evaluate(...$args): bool {
         return (\time() <= $this->to->getTimestamp()) && (\time() >= $this->from->getTimestamp());
     }
 

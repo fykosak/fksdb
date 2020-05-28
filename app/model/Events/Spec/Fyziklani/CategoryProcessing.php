@@ -1,13 +1,15 @@
 <?php
 
-namespace Events\Spec\Fyziklani;
+namespace FKSDB\Events\Spec\Fyziklani;
 
-use Events\Machine\BaseMachine;
-use Events\Machine\Machine;
-use Events\Model\Holder\Holder;
-use Events\Processings\AbstractProcessing;
-use Events\SubmitProcessingException;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\Holder\Holder;
+use FKSDB\Events\Processings\AbstractProcessing;
+use FKSDB\Events\SubmitProcessingException;
 use FKSDB\Logging\ILogger;
+use FKSDB\Messages\Message;
+use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceSchool;
 use FKSDB\YearCalculator;
 use Nette\Forms\Form;
@@ -23,7 +25,7 @@ use Nette\Utils\ArrayHash;
 class CategoryProcessing extends AbstractProcessing {
 
     /**
-     * @var \FKSDB\YearCalculator
+     * @var YearCalculator
      */
     private $yearCalculator;
 
@@ -34,10 +36,10 @@ class CategoryProcessing extends AbstractProcessing {
 
     /**
      * CategoryProcessing constructor.
-     * @param \FKSDB\YearCalculator $yearCalculator
+     * @param YearCalculator $yearCalculator
      * @param ServiceSchool $serviceSchool
      */
-    function __construct(YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
+    public function __construct(YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
         $this->yearCalculator = $yearCalculator;
         $this->serviceSchool = $serviceSchool;
     }
@@ -49,7 +51,7 @@ class CategoryProcessing extends AbstractProcessing {
      * @param Holder $holder
      * @param ILogger $logger
      * @param Form|null $form
-     * @return mixed|void
+     * @return void
      */
     protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
 
@@ -57,14 +59,13 @@ class CategoryProcessing extends AbstractProcessing {
             return;
         }
 
-
-        $event = $holder->getEvent();
+        $event = $holder->getPrimaryHolder()->getEvent();
         $contest = $event->getEventType()->contest;
         $year = $event->year;
         $acYear = $this->yearCalculator->getAcademicYear($contest, $year);
 
         $participants = [];
-        foreach ($holder as $name => $baseHolder) {
+        foreach ($holder->getBaseHolders() as $name => $baseHolder) {
             if ($name == 'team') {
                 continue;
             }
@@ -81,9 +82,7 @@ class CategoryProcessing extends AbstractProcessing {
                 if ($this->isBaseReallyEmpty($name)) {
                     continue;
                 }
-                /**
-                 * @var \FKSDB\ORM\Models\ModelPerson $person
-                 */
+                /** @var ModelPerson $person */
                 $person = $baseHolder->getModel()->getMainModel()->person;
                 $history = $person->related('person_history')->where('ac_year', $acYear)->fetch();
                 $participantData = [
@@ -104,7 +103,7 @@ class CategoryProcessing extends AbstractProcessing {
         $original = $holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
 
         if ($original != $values['team']['category']) {
-            $logger->log(sprintf(_('Tým zařazen do kategorie %s.'), $values['team']['category']), ILogger::INFO);
+            $logger->log(new Message(sprintf(_('Tým zařazen do kategorie %s.'), $values['team']['category']), ILogger::INFO));
         }
     }
 
@@ -113,40 +112,32 @@ class CategoryProcessing extends AbstractProcessing {
      * @return string
      */
     private function getCategory($participants) {
-        $coefficient_sum = 0;
-        $count_4 = 0;
-        $count_3 = 0;
-        $abroad = 0;
+        $coefficientSum = 0;
+        $count4 = 0;
+        $count3 = 0;
 
         foreach ($participants as $participant) {
-            $country = $this->serviceSchool->getTable()
-                ->select('address.region.country_iso')
-                ->where(['school_id' => $participant['school_id']])->fetch();
-            if (!in_array($country->country_iso, array('CZ', 'SK'))) {
-                $abroad += 1;
-            }
-
             $studyYear = $participant['study_year'];
             $coefficient = ($studyYear >= 1 && $studyYear <= 4) ? $studyYear : 0;
-            $coefficient_sum += $coefficient;
+            $coefficientSum += $coefficient;
 
-            if ($coefficient == 4)
-                $count_4++;
-            else if ($coefficient == 3)
-                $count_3++;
+            if ($coefficient == 4) {
+                $count4++;
+            } elseif ($coefficient == 3) {
+                $count3++;
+            }
         }
 
-
-        $category_handle = $participants ? ($coefficient_sum / count($participants)) : 999;
+        $categoryHandle = $participants ? ($coefficientSum / count($participants)) : 999;
 
         // if ($abroad > 0) {
         //     $result = 'F';
         // } else
-        if ($category_handle <= 2 && $count_4 == 0 && $count_3 <= 2) {
+        if ($categoryHandle <= 2 && $count4 == 0 && $count3 <= 2) {
             $result = 'C';
-        } else if ($category_handle <= 3 && $count_4 <= 2) {
+        } elseif ($categoryHandle <= 3 && $count4 <= 2) {
             $result = 'B';
-        } else if ($category_handle <= 4) {
+        } elseif ($categoryHandle <= 4) {
             $result = 'A';
         } else {
             throw new SubmitProcessingException(_('Nelze spočítat kategorii.'));

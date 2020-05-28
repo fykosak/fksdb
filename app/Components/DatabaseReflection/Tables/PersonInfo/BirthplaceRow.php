@@ -10,14 +10,11 @@ use Nette\Forms\Form;
 
 /**
  * Class BirthplaceField
- * @package FKSDB\Components\Forms\Factories\PersonInfo
+ * *
  */
 class BirthplaceRow extends AbstractRow {
     use DefaultPrinterTrait;
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Místo narození');
     }
@@ -30,25 +27,20 @@ class BirthplaceRow extends AbstractRow {
     }
 
     /**
+     * @param array $args
      * @return BaseControl
      */
-    public function createField(): BaseControl {
+    public function createField(...$args): BaseControl {
         $control = new WriteOnlyInput($this->getTitle());
         $control->setOption('description', $this->getDescription());
         $control->addRule(Form::MAX_LENGTH, null, 255);
         return $control;
     }
 
-    /**
-     * @return int
-     */
     public function getPermissionsValue(): int {
         return self::PERMISSION_ALLOW_FULL;
     }
 
-    /**
-     * @return string
-     */
     protected function getModelAccessKey(): string {
         return 'birthplace';
     }

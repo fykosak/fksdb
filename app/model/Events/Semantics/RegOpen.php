@@ -1,7 +1,8 @@
 <?php
 
-namespace Events\Semantics;
+namespace FKSDB\Events\Semantics;
 
+use FKSDB\Expressions\EvaluatedExpression;;
 use Nette\SmartObject;
 
 /**
@@ -9,16 +10,16 @@ use Nette\SmartObject;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class RegOpen {
+class RegOpen extends EvaluatedExpression {
     use SmartObject;
     use WithEventTrait;
 
     /**
-     * @param $obj
+     * @param array $args
      * @return bool
      */
-    public function __invoke($obj) {
-        $event = $this->getEvent($obj);
+    public function __invoke(...$args): bool {
+        $event = $this->getEvent($args[0]);
         return (!$event->registration_begin || $event->registration_begin->getTimestamp() <= time()) && (!$event->registration_end || $event->registration_end->getTimestamp() >= time());
     }
 

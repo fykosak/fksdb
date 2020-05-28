@@ -1,15 +1,15 @@
 <?php
 
-namespace Events;
+namespace FKSDB\Events;
 
-use Events\Machine\Transition;
+use FKSDB\Events\Machine\Transition;
 use Nette\InvalidArgumentException;
 use RuntimeException;
 use Traversable;
 
 /**
  * Class MachineExecutionException
- * @package Events
+ * *
  */
 class MachineExecutionException extends RuntimeException {
 
@@ -17,7 +17,7 @@ class MachineExecutionException extends RuntimeException {
 
 /**
  * Class TransitionConditionFailedException
- * @package Events
+ * *
  */
 class TransitionConditionFailedException extends MachineExecutionException {
 
@@ -33,7 +33,7 @@ class TransitionConditionFailedException extends MachineExecutionException {
      * @param null $previous
      */
     public function __construct(Transition $blockingTransition, $code = null, $previous = null) {
-        $message = sprintf(_("Nelze provést akci '%s' v automatu '%s'."), $blockingTransition->getLabel(), $blockingTransition->getBaseHolder()->getLabel());
+        $message = sprintf(_("Nelze provést akci '%s' v automatu '%s'."), $blockingTransition->getLabel(), $blockingTransition->getBaseMachine()->getName());
         parent::__construct($message, $code, $previous);
         $this->transition = $blockingTransition;
     }
@@ -49,7 +49,7 @@ class TransitionConditionFailedException extends MachineExecutionException {
 
 /**
  * Class TransitionUnsatisfiedTargetException
- * @package Events
+ * *
  */
 class TransitionUnsatisfiedTargetException extends MachineExecutionException {
 
@@ -84,7 +84,7 @@ class TransitionUnsatisfiedTargetException extends MachineExecutionException {
 
 /**
  * Class SubmitProcessingException
- * @package Events
+ * *
  */
 class SubmitProcessingException extends RuntimeException {
 
@@ -92,7 +92,7 @@ class SubmitProcessingException extends RuntimeException {
 
 /**
  * Class TransitionOnExecutedException
- * @package Events
+ * *
  */
 class TransitionOnExecutedException extends MachineExecutionException {
 
@@ -100,7 +100,7 @@ class TransitionOnExecutedException extends MachineExecutionException {
 
 /**
  * Class UndeclaredEventException
- * @package Events
+ * *
  */
 class UndeclaredEventException extends InvalidArgumentException {
 

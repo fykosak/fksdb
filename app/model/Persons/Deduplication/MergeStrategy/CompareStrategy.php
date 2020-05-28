@@ -12,16 +12,19 @@ use Nette\InvalidArgumentException;
  */
 class CompareStrategy implements IMergeStrategy {
 
+    /**
+     * @var int
+     */
     private $sign;
 
     /**
      *
      * @param mixed $compare greater|less
      */
-    function __construct($compare) {
+    public function __construct($compare) {
         if ($compare == 'greater') {
             $this->sign = 1;
-        } else if ($compare == 'less') {
+        } elseif ($compare == 'less') {
             $this->sign = -1;
         } else {
             throw new InvalidArgumentException();
@@ -55,9 +58,9 @@ class CompareStrategy implements IMergeStrategy {
     private function compare($trunk, $merged) {
         if ($trunk instanceof DateTime && $merged instanceof DateTime) {
             return $trunk->getTimestamp() - $merged->getTimestamp();
-        } else if (is_string($trunk) && is_string($merged)) {
+        } elseif (is_string($trunk) && is_string($merged)) {
             return strcmp($trunk, $merged);
-        } else if (is_numeric($trunk) && is_numeric($merged)) {
+        } elseif (is_numeric($trunk) && is_numeric($merged)) {
             return $trunk - $merged;
         } else {
             throw new CannotMergeException();

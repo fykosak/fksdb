@@ -4,6 +4,7 @@ namespace FKSDB\Components\Forms\Controls;
 
 use FKSDB\Components\Forms\Containers\IWriteOnly;
 use Nette\Forms\Controls\TextInput;
+use Nette\Utils\Html;
 
 /**
  * When user doesn't fill it (i.e. desires original value), it behaves like disabled.
@@ -18,16 +19,15 @@ class WriteOnlyInput extends TextInput implements IWriteOnly {
     /**
      * WriteOnlyInput constructor.
      * @param null $label
-     * @param null $cols
      * @param null $maxLength
      */
-    public function __construct($label = NULL, $cols = NULL, $maxLength = NULL) {
-        parent::__construct($label, $cols, $maxLength);
+    public function __construct($label = NULL, $maxLength = NULL) {
+        parent::__construct($label, null, $maxLength);
         $this->writeOnlyAppendMonitors();
     }
 
     /**
-     * @return \Nette\Utils\Html
+     * @return Html
      */
     public function getControl() {
         $control = parent::getControl();

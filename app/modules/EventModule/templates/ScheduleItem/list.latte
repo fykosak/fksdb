@@ -1,0 +1,8 @@
+{block content}
+    <div class="mb-3">
+        {include './group.detail.latte' group=>$group}
+    </div>
+    <a class="btn btn-primary" href="{plink ScheduleGroup:list}">{_'List of groups'}</a>
+    <hr/>
+    {control grid}
+{/block}

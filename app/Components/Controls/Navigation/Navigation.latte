@@ -1,35 +1,23 @@
 {define #link}
     <a href="{$control->getLink($node)}"
-       class="{($control->isActive($node)?'active':'').' card mb-3'}" data-background-id="{rand(0,5)}">
-
-        <div class="card-body text-center">
-            <span class="display-3 d-block card-text"><i class="{$control->getIcon($node)}"></i></span>
-            <span class="d-block card-text">{$control->getTitle($node)}</span>
-            {*<span class="d-block card-text small">{$control->getSubTitle($node)}</span>*}
-        </div>
+       class="mb-3 d-block navigation-item p-2">
+        <span class="icon d-sm-inline-block d-md-block mx-2"><i class="{$control->getTitle($node)->icon}"></i></span>
+        <span class="text d-xs-inline-block d-md-block">{$control->getTitle($node)->title}</span>
     </a>
 {/define}
 
-{var level => 0}
 {block #menu}
     {var $hasNode = false}
-    <div class="align-items-center d-flex justify-content-around flex-wrap">
-
+    <nav class="d-md-flex justify-content-md-around flex-wrap">
         {foreach $nodes as $nodeId => $item}
-            {var node => is_array($item) ? $control->getNode($nodeId) : $control->getNode($item)}
-
+            {var $node => is_array($item) ? $control->getNode($nodeId) : $control->getNode($item)}
             {if $control->isVisible($node)}
                 {var $hasNode = true}
-                <div class="navigation-item">
-                    {include #link, node => $node, level => $level}
-                </div>
+                {include #link, node => $node}
             {/if}
         {/foreach}
-
-    </div>
+    </nav>
     {if !$hasNode}
         <p class="alert alert-info">Ups, zdá sa, že tu nič nespravíte :(</p>
     {/if}
 {/block}
-
-

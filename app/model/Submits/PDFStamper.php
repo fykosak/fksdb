@@ -40,54 +40,44 @@ class PDFStamper implements IStorageProcessing {
      * PDFStamper constructor.
      * @param int $fontSize
      */
-    function __construct(int $fontSize) {
+    public function __construct(int $fontSize) {
         $this->fontSize = $fontSize;
     }
 
-    /**
-     * @return string
-     */
     public function getInputFile(): string {
         return $this->inputFile;
     }
 
     /**
      * @param string $inputFile
+     * @return void
      */
     public function setInputFile(string $inputFile) {
         $this->inputFile = $inputFile;
     }
 
-    /**
-     * @return string
-     */
     public function getOutputFile(): string {
         return $this->outputFile;
     }
 
     /**
      * @param string $outputFile
+     * @return void
      */
     public function setOutputFile(string $outputFile) {
         $this->outputFile = $outputFile;
     }
 
-    /**
-     * @return int
-     */
     public function getFontSize(): int {
         return $this->fontSize;
     }
 
-    /**
-     * @return string
-     */
     public function getStampMask(): string {
         return self::STAMP_MASK;
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelSubmit $submit
+     * @param ModelSubmit $submit
      * @throws ProcessingException
      * @throws InvalidStateException
      */
@@ -114,6 +104,7 @@ class PDFStamper implements IStorageProcessing {
 
     /**
      * @param string $text
+     * @return void
      */
     private function stampText(string $text) {
         $pdf = new FPDI();

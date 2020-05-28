@@ -3,14 +3,16 @@
 namespace FKSDB\Components\Forms\Factories\Events;
 
 
-use Events\Machine\BaseMachine;
-use Events\Model\Holder\Field;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Model\Holder\Field;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Container;
+use Nette\Forms\IControl;
+use Nette\Utils\JsonException;
 
 /**
  * Class ScheduleFactory
- * @package FKSDB\Components\Forms\Factories\Events
+ * *
  */
 class ScheduleFactory extends AbstractFactory {
     /**
@@ -35,6 +37,7 @@ class ScheduleFactory extends AbstractFactory {
      * @param BaseMachine $machine
      * @param Container $container
      * @return ScheduleField
+     * @throws JsonException
      */
     protected function createComponent(Field $field, BaseMachine $machine, Container $container) {
         $component = new ScheduleField($this->data);
@@ -64,7 +67,7 @@ class ScheduleFactory extends AbstractFactory {
 
     /**
      * @param Component $component
-     * @return Component|\Nette\Forms\IControl
+     * @return Component|IControl
      */
     public function getMainControl(Component $component) {
         return $component;

@@ -4,7 +4,7 @@ namespace FKSDB\Components\Forms\Controls\DateInputs;
 
 /**
  * Class DateInput
- * @package FKSDB\Components\Forms\Controls\DateInputs
+ * *
  */
 class DateInput extends AbstractDateInput {
 

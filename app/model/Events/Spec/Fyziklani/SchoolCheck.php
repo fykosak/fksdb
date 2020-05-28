@@ -1,10 +1,11 @@
 <?php
 
-namespace Events\Spec\Fyziklani;
+namespace FKSDB\Events\Spec\Fyziklani;
 
-use Events\FormAdjustments\AbstractAdjustment;
-use Events\FormAdjustments\IFormAdjustment;
-use Events\Model\Holder\Holder;
+use FKSDB\Events\FormAdjustments\AbstractAdjustment;
+use FKSDB\Events\FormAdjustments\IFormAdjustment;
+use FKSDB\Events\Model\Holder\Holder;
+use FKSDB\Components\Forms\Controls\ModelDataConflictException;
 use FKSDB\ORM\Services\ServicePersonHistory;
 use Nette\Forms\Controls\BaseControl;
 
@@ -29,7 +30,7 @@ abstract class SchoolCheck extends AbstractAdjustment implements IFormAdjustment
      * SchoolCheck constructor.
      * @param ServicePersonHistory $servicePersonHistory
      */
-    function __construct(ServicePersonHistory $servicePersonHistory) {
+    public function __construct(ServicePersonHistory $servicePersonHistory) {
         $this->servicePersonHistory = $servicePersonHistory;
     }
 
@@ -52,21 +53,25 @@ abstract class SchoolCheck extends AbstractAdjustment implements IFormAdjustment
      * @param $personControls
      * @return array
      */
-    protected final function getSchools($schoolControls, $personControls) {
-        $personIds = array_filter(array_map(function(BaseControl $control) {
-                            return $control->getValue();
-                        }, $personControls));
+    final protected function getSchools($schoolControls, $personControls) {
+        $personIds = array_filter(array_map(function (BaseControl $control) {
+            try {
+                return $control->getValue();
+            } catch (ModelDataConflictException $exception) {
+                $control->addError(sprintf(_('Některá pole skupiny "%s" neodpovídají existujícímu záznamu.'), $control->getLabel()));
+            }
+        }, $personControls));
 
         $schools = $this->servicePersonHistory->getTable()
-                ->where('person_id', $personIds)
-                ->where('ac_year', $this->getHolder()->getEvent()->getAcYear())
-                ->fetchPairs('person_id', 'school_id');
+            ->where('person_id', $personIds)
+            ->where('ac_year', $this->getHolder()->getPrimaryHolder()->getEvent()->getAcYear())
+            ->fetchPairs('person_id', 'school_id');
 
         $result = [];
         foreach ($schoolControls as $key => $control) {
             if ($control->getValue()) {
                 $result[] = $control->getValue();
-            } else if ($personId = $personControls[$key]->getValue(false)) { // intentionally =
+            } elseif ($personId = $personControls[$key]->getValue(false)) { // intentionally =
                 if ($personId && isset($schools[$personId])) {
                     $result[] = $schools[$personId];
                 }
@@ -74,6 +79,4 @@ abstract class SchoolCheck extends AbstractAdjustment implements IFormAdjustment
         }
         return $result;
     }
-
 }
-

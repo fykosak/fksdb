@@ -6,7 +6,7 @@ use Exception;
 
 /**
  * Class NotValidPhoneNumberException
- * @package FKSDB\Components\Controls
+ * *
  */
 class InvalidPhoneNumberException extends Exception {
 

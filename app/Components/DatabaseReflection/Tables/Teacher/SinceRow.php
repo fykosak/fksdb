@@ -11,7 +11,7 @@ use Nette\Utils\Html;
 
 /**
  * Class SinceRow
- * @package FKSDB\Components\DatabaseReflection\Tables\Teacher
+ * *
  */
 class SinceRow extends AbstractTeacherRow {
 
@@ -23,7 +23,7 @@ class SinceRow extends AbstractTeacherRow {
         if ($model->since === null) {
             return Html::el('span')->addAttributes(['class' => 'badge badge-secondary'])->addText(_('undefined'));
         }
-        return (new DatePrinter(_('d. m. Y')))($model->since);
+        return (new DatePrinter(_('__date_format')))($model->since);
     }
 
     /**
@@ -34,9 +34,10 @@ class SinceRow extends AbstractTeacherRow {
     }
 
     /**
+     * @param array $args
      * @return BaseControl
      */
-    public function createField(): BaseControl {
+    public function createField(...$args): BaseControl {
         return new DateInput($this->getTitle());
     }
 }

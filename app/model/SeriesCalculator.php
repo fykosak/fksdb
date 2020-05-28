@@ -6,7 +6,6 @@ use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Services\ServiceTask;
 use Nette\Utils\DateTime;
 
-
 /**
  * Class FKSDB\SeriesCalculator
  */
@@ -15,7 +14,6 @@ class SeriesCalculator {
     /**
      * @var ServiceTask
      */
-
     private $serviceTask;
 
     /**
@@ -37,6 +35,7 @@ class SeriesCalculator {
     /**
      * @param ModelContest $contest
      * @return int
+     * @throws \Exception
      */
     public function getCurrentSeries(ModelContest $contest): int {
         $year = $this->yearCalculator->getCurrentYear($contest);
@@ -48,18 +47,11 @@ class SeriesCalculator {
         return ($currentSeries === null) ? 1 : $currentSeries;
     }
 
-    /**
-     *
-     * @param ModelContest $contest
-     * @param int $year
-     * @return int
-     */
     public function getLastSeries(ModelContest $contest, int $year): int {
-        $row = $this->serviceTask->getTable()->where([
+        return $this->serviceTask->getTable()->where([
             'contest_id' => $contest->contest_id,
             'year' => $year
-        ])->max('series');
-        return $row;
+        ])->max('series') ?: 1;
     }
 
     /**
@@ -70,7 +62,11 @@ class SeriesCalculator {
      */
     public function getTotalSeries(ModelContest $contest, $year): int {
         //TODO allow variance?
-        return 6;
+        if ($contest->contest_id === ModelContest::ID_VYFUK && $year >= 9) { //TODO Think of better solution of deciding
+            return 8;
+        } else {
+            return 6;
+        }
     }
 
 }

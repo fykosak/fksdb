@@ -33,7 +33,7 @@ interface ISubmitStorage {
     public function rollback();
 
     /**
-     * @param \FKSDB\Submits\IStorageProcessing $processing
+     * @param IStorageProcessing $processing
      * @return void
      */
     public function addProcessing(IStorageProcessing $processing);
@@ -49,22 +49,21 @@ interface ISubmitStorage {
 
     /**
      *
-     * @param \FKSDB\ORM\Models\ModelSubmit $submit
+     * @param ModelSubmit $submit
      * @param int $type
      * @return string filename with absolute path
      */
     public function retrieveFile(ModelSubmit $submit, $type = self::TYPE_PROCESSED);
 
     /**
-     * @param \FKSDB\ORM\Models\ModelSubmit $submit
+     * @param ModelSubmit $submit
      * @return bool
      */
-    public function existsFile(ModelSubmit $submit);
+    public function fileExists(ModelSubmit $submit);
 
     /**
-     * @param \FKSDB\ORM\Models\ModelSubmit $submit
+     * @param ModelSubmit $submit
+     * @return mixed
      */
     public function deleteFile(ModelSubmit $submit);
 }
-
-

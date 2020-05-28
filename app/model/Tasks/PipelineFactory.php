@@ -1,6 +1,6 @@
 <?php
 
-namespace Tasks;
+namespace FKSDB\Tasks;
 
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Services\ServiceOrg;
@@ -9,10 +9,6 @@ use FKSDB\ORM\Services\ServiceTask;
 use FKSDB\ORM\Services\ServiceTaskContribution;
 use FKSDB\ORM\Services\ServiceTaskStudyYear;
 use Pipeline\Pipeline;
-use Tasks\Legacy\ContributionsFromXML;
-use Tasks\Legacy\DeadlineFromXML;
-use Tasks\Legacy\StudyYearsFromXML;
-use Tasks\Legacy\TasksFromXML;
 
 /**
  * This is not real factory, it's only used as an internode for defining
@@ -41,12 +37,12 @@ class PipelineFactory {
     private $defaultStudyYears;
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceTask
+     * @var ServiceTask
      */
     private $serviceTask;
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceTaskContribution
+     * @var ServiceTaskContribution
      */
     private $serviceTaskContribution;
 
@@ -56,12 +52,12 @@ class PipelineFactory {
     private $serviceTaskStudyYear;
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceStudyYear
+     * @var ServiceStudyYear
      */
     private $serviceStudyYear;
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceOrg
+     * @var ServiceOrg
      */
     private $serviceOrg;
 
@@ -70,13 +66,13 @@ class PipelineFactory {
      * @param $columnMappings
      * @param $contributionMappings
      * @param $defaultStudyYears
-     * @param \FKSDB\ORM\Services\ServiceTask $serviceTask
+     * @param ServiceTask $serviceTask
      * @param ServiceTaskContribution $serviceTaskContribution
      * @param ServiceTaskStudyYear $serviceTaskStudyYear
      * @param ServiceStudyYear $serviceStudyYear
-     * @param \FKSDB\ORM\Services\ServiceOrg $serviceOrg
+     * @param ServiceOrg $serviceOrg
      */
-    function __construct($columnMappings, $contributionMappings, $defaultStudyYears, ServiceTask $serviceTask, ServiceTaskContribution $serviceTaskContribution, ServiceTaskStudyYear $serviceTaskStudyYear, ServiceStudyYear $serviceStudyYear, ServiceOrg $serviceOrg) {
+    public function __construct($columnMappings, $contributionMappings, $defaultStudyYears, ServiceTask $serviceTask, ServiceTaskContribution $serviceTaskContribution, ServiceTaskStudyYear $serviceTaskStudyYear, ServiceStudyYear $serviceStudyYear, ServiceOrg $serviceOrg) {
         $this->columnMappings = $columnMappings;
         $this->contributionMappings = $contributionMappings;
         $this->defaultStudyYears = $defaultStudyYears;
@@ -87,56 +83,16 @@ class PipelineFactory {
         $this->serviceOrg = $serviceOrg;
     }
 
-    /**
-     *
-     * @param $language
-     * @return \Pipeline\Pipeline
-     */
-    public function create($language) {
-        $pipeline = new Pipeline();
-        $pipeline->setLogger(new MemoryLogger());
-
-
-        // common stages
-        $metadataStage = new TasksFromXML($this->columnMappings[$language], $this->serviceTask);
-        $pipeline->addStage($metadataStage);
-
-        if ($language == 'cs') {
-            $deadlineStage = new DeadlineFromXML($this->serviceTask);
-            $pipeline->addStage($deadlineStage);
-
-            $contributionStage = new ContributionsFromXML($this->contributionMappings, $this->serviceTaskContribution, $this->serviceOrg);
-            $pipeline->addStage($contributionStage);
-
-            $studyYearStage = new StudyYearsFromXML($this->defaultStudyYears, $this->serviceTaskStudyYear, $this->serviceStudyYear);
-            $pipeline->addStage($studyYearStage);
-        }
-
-        return $pipeline;
-    }
-
-    /**
-     *
-     * @return \Pipeline\Pipeline
-     */
-    public function create2() {
+    public function create(): Pipeline {
         $pipeline = new Pipeline();
         $pipeline->setLogger(new MemoryLogger());
 
         // common stages
-        $metadataStage = new TasksFromXML2($this->serviceTask);
-        $pipeline->addStage($metadataStage);
-
-        $deadlineStage = new DeadlineFromXML2($this->serviceTask);
-        $pipeline->addStage($deadlineStage);
-
-        $contributionStage = new ContributionsFromXML2($this->serviceTaskContribution, $this->serviceOrg);
-        $pipeline->addStage($contributionStage);
-
-        $studyYearStage = new StudyYearsFromXML2($this->defaultStudyYears, $this->serviceTaskStudyYear, $this->serviceStudyYear);
-        $pipeline->addStage($studyYearStage);
+        $pipeline->addStage(new TasksFromXML($this->serviceTask));
+        $pipeline->addStage(new DeadlineFromXML($this->serviceTask));
+        $pipeline->addStage(new ContributionsFromXML($this->serviceTaskContribution, $this->serviceOrg));
+        $pipeline->addStage(new StudyYearsFromXML($this->defaultStudyYears, $this->serviceTaskStudyYear, $this->serviceStudyYear));
 
         return $pipeline;
     }
-
 }

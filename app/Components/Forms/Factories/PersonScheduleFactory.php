@@ -3,17 +3,15 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Controls\Schedule\ScheduleField;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleItem;
 use Nette\Forms\Controls\BaseControl;
-use Nette\Forms\Controls\RadioList;
 use Nette\Utils\JsonException;
-use Tracy\Debugger;
 
 /**
  * Class PersonScheduleFactory
- * @package FKSDB\Components\Forms\Factories
+ * *
  */
 class PersonScheduleFactory {
     /**
@@ -26,7 +24,7 @@ class PersonScheduleFactory {
      * @param ServiceScheduleItem $serviceScheduleItem
      */
     public function __construct(ServiceScheduleItem $serviceScheduleItem) {
-        $this->serviceScheduleItem=$serviceScheduleItem;
+        $this->serviceScheduleItem = $serviceScheduleItem;
     }
 
     /**
@@ -34,8 +32,9 @@ class PersonScheduleFactory {
      * @param ModelEvent $event
      * @return BaseControl
      * @throws JsonException
+     * @throws NotImplementedException
      */
     public function createField($fieldName, ModelEvent $event) {
-        return new ScheduleField($event, $fieldName,$this->serviceScheduleItem);
+        return new ScheduleField($event, $fieldName, $this->serviceScheduleItem);
     }
 }

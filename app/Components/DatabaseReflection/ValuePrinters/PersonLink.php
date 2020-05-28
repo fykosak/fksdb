@@ -2,16 +2,18 @@
 
 namespace FKSDB\Components\DatabaseReflection\ValuePrinters;
 
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\IPersonReferencedModel;
 use FKSDB\ORM\Models\ModelPerson;
 use Nette\Application\BadRequestException;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\PresenterComponent;
 use Nette\MemberAccessException;
 use Nette\Utils\Html;
 
 /**
  * Class PersonLink
- * @package FKSDB\Components\DatabaseReflection\ValuePrinters
+ * *
  */
 class PersonLink extends AbstractValuePrinter {
     /**
@@ -30,7 +32,7 @@ class PersonLink extends AbstractValuePrinter {
     /**
      * @param ModelPerson|IPersonReferencedModel $model
      * @return Html
-     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws InvalidLinkException
      * @throws BadRequestException
      */
     public function getHtml($model): Html {
@@ -41,12 +43,12 @@ class PersonLink extends AbstractValuePrinter {
             $person = $model;
         }
         if (!$person instanceof ModelPerson) {
-            throw new BadRequestException();
+            throw new BadTypeException(ModelPerson::class, $person);
         }
         try {
-            if ($this->presenterComponent->getPresenter()->authorized(':Common:Stalking:view', ['id' => $person->person_id])) {
+            if ($this->presenterComponent->getPresenter()->authorized(':Common:Person:detail', ['id' => $person->person_id])) {
                 return Html::el('a')
-                    ->addAttributes(['href' => $this->presenterComponent->getPresenter()->link(':Common:Stalking:view', [
+                    ->addAttributes(['href' => $this->presenterComponent->getPresenter()->link(':Common:Person:detail', [
                         'id' => $person->person_id,
                     ])])
                     ->addText($person->getFullName());

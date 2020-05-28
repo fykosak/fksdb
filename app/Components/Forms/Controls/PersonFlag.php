@@ -2,7 +2,9 @@
 
 namespace FKSDB\Components\Forms\Controls;
 
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
+use Nette\Utils\Html;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -36,7 +38,7 @@ class PersonFlag extends SelectBox {
     }
 
     /**
-     * @return bool|mixed|null
+     * @return bool|float|int|mixed|string|null
      */
     public function getValue() {
 	if ($this->useExplicitValues) {
@@ -55,12 +57,12 @@ class PersonFlag extends SelectBox {
 
     /**
      * @param $value
-     * @return \Nette\Forms\Controls\BaseControl|void
+     * @return BaseControl|void
      */
     public function setValue($value) {
 	if ($value === true || $value === '1' || $value === 1) {
 	    parent::setValue(self::FLAG_YES);
-	} else if ($value === false || $value === '0' || $value === 0) {
+	} elseif ($value === false || $value === '0' || $value === 0) {
 	    parent::setValue(self::FLAG_NO);
 	} else {
 	    parent::setValue($value);
@@ -68,7 +70,7 @@ class PersonFlag extends SelectBox {
     }
 
     /**
-     * @return \Nette\Utils\Html
+     * @return Html
      */
     public function getControl() {
 	$oldMapped = $this->useExplicitValues;

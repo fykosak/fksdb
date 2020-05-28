@@ -2,18 +2,18 @@
 
 namespace FKSDB\Components\Controls;
 
-use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\SeriesCalculator;
-use Nette\Application\UI\Control;
+use Nette\Application\BadRequestException;
 use Nette\Http\Session;
-use Nette\Localization\ITranslator;
+use OrgModule\SeriesPresenter;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
+ * @method SeriesPresenter getPresenter($need = TRUE)
  */
-class SeriesChooser extends Control {
+class SeriesChooser extends BaseComponent {
 
     const SESSION_SECTION = 'seriesPreset';
     const SESSION_KEY = 'series';
@@ -29,61 +29,51 @@ class SeriesChooser extends Control {
     private $seriesCalculator;
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceContest
-     */
-    private $serviceContest;
-
-    /**
-     * @var ITranslator
-     */
-    private $translator;
-
-    /**
      * @var int
      */
     private $series;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $initialized = false;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $valid;
 
     /**
-     * SeriesChooser constructor.
      * @param Session $session
      * @param SeriesCalculator $seriesCalculator
-     * @param \FKSDB\ORM\Services\ServiceContest $serviceContest
-     * @param ITranslator $translator
+     * @return void
      */
-    function __construct(Session $session, SeriesCalculator $seriesCalculator, ServiceContest $serviceContest, ITranslator $translator) {
-        parent::__construct();
+    public function injectPrimary(Session $session, SeriesCalculator $seriesCalculator) {
         $this->session = $session;
         $this->seriesCalculator = $seriesCalculator;
-        $this->serviceContest = $serviceContest;
-        $this->translator = $translator;
     }
 
     /**
      * @return bool
+     * @throws \Exception
      */
-    public function isValid() {
+    public function isValid(): bool {
         $this->init();
         return $this->valid;
     }
 
     /**
      * @return int
+     * @throws \Exception
      */
-    public function getSeries() {
+    public function getSeries(): int {
         $this->init();
         return $this->series;
     }
 
+    /**
+     * @throws \Exception
+     */
     private function init() {
         if ($this->initialized) {
             return;
@@ -99,7 +89,7 @@ class SeriesChooser extends Control {
         $session = $this->session->getSection(self::SESSION_SECTION);
         $presenter = $this->getPresenter();
         $contest = $presenter->getSelectedContest();
-        $year = $presenter->getSelectedYear();
+        //  $year = $presenter->getSelectedYear();
         $series = null;
 
         // 1) URL (overrides)
@@ -126,6 +116,9 @@ class SeriesChooser extends Control {
         $session[self::SESSION_KEY] = $this->series;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function render() {
         if (!$this->isValid()) {
             return;
@@ -139,34 +132,10 @@ class SeriesChooser extends Control {
     }
 
     /**
-     * @param $contestId
-     * @throws \Nette\Application\AbortException
+     * @return int[] of allowed series
+     * @throws BadRequestException
      */
-    public function handleChange($contestId) {
-        $presenter = $this->getPresenter();
-        $backupYear = null;
-        if (isset($presenter->year)) {
-            $backupYear = $presenter->year;
-            $presenter->year = null;
-        }
-        $contest = $this->serviceContest->findByPrimary($contestId);
-
-        $year = $this->calculateYear($this->session, $contest);
-        if (isset($presenter->year)) {
-            $presenter->year = $backupYear;
-        }
-
-        if ($backupYear && $backupYear != $year) {
-            $presenter->redirect('this', array('contestId' => $contestId, 'year' => $year));
-        } else {
-            $presenter->redirect('this', array('contestId' => $contestId));
-        }
-    }
-
-    /**
-     * @return array of int of allowed series
-     */
-    private function getAllowedSeries() {
+    private function getAllowedSeries(): array {
         $presenter = $this->getPresenter();
         $contest = $presenter->getSelectedContest();
         $year = $presenter->getSelectedYear();
@@ -180,21 +149,11 @@ class SeriesChooser extends Control {
     }
 
     /**
-     * @param $series
+     * @param int $series
      * @return bool
+     * @throws BadRequestException
      */
-    private function isValidSeries($series) {
+    private function isValidSeries(int $series): bool {
         return in_array($series, $this->getAllowedSeries());
     }
-
-    /**
-     * @param null $class
-     * @return \Nette\Templating\ITemplate
-     */
-    protected function createTemplate($class = NULL) {
-        $template = parent::createTemplate($class);
-        $template->setTranslator($this->translator);
-        return $template;
-    }
-
 }

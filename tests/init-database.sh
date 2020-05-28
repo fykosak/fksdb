@@ -13,7 +13,7 @@ for i in `seq 1 $COUNT` ; do
 	INS_NAME=$DB_NAME$i
 	mysql -e "DROP DATABASE \`$INS_NAME\`" 2>/dev/null
 
-	mysql -e "CREATE DATABASE \`$INS_NAME\`"
+	mysql -e "CREATE DATABASE \`$INS_NAME\` CHARACTER SET utf8  COLLATE utf8_czech_ci"
 
 	mysql $INS_NAME <${SCRIPT_PATH}/../sql/schema.sql && echo "Created schema $INS_NAME"
 

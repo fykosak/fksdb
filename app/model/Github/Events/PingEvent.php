@@ -17,4 +17,3 @@ class PingEvent extends Event {
 	/** @var string */
 	public $hook_id;
 }
-

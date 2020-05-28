@@ -4,16 +4,20 @@ namespace FKSDB\ORM\Models\Schedule;
 
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\IPaymentReferencedModel;
 use FKSDB\ORM\Models\IPersonReferencedModel;
+use FKSDB\ORM\Models\IScheduleGroupReferencedModel;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\Transitions\IStateModel;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 use Nette\Database\Table\ActiveRow;
-use Nette\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 
 /**
  * Class ModelPersonSchedule
- * @package FKSDB\ORM\Models\Schedule
+ * *
  * @property-read ActiveRow person
  * @property-read ActiveRow schedule_item
  * @property-read int person_id
@@ -21,19 +25,18 @@ use Nette\NotImplementedException;
  * @property-read string state
  * @property-read int person_schedule_id
  */
-class ModelPersonSchedule extends AbstractModelSingle implements IStateModel, IPersonReferencedModel {
-    /**
-     * @return ModelPerson
-     */
+class ModelPersonSchedule extends AbstractModelSingle implements IStateModel, IPersonReferencedModel, IScheduleGroupReferencedModel, IPaymentReferencedModel {
+
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromActiveRow($this->person);
     }
 
-    /**
-     * @return ModelScheduleItem
-     */
     public function getScheduleItem(): ModelScheduleItem {
         return ModelScheduleItem::createFromActiveRow($this->schedule_item);
+    }
+
+    public function getScheduleGroup(): ModelScheduleGroup {
+        return $this->getScheduleItem()->getScheduleGroup();
     }
 
     /**
@@ -47,9 +50,6 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel, IP
         return ModelPayment::createFromActiveRow($data);
     }
 
-    /**
-     * @return bool
-     */
     public function hasActivePayment(): bool {
         $payment = $this->getPayment();
         if (!$payment) {
@@ -63,16 +63,20 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel, IP
 
     /**
      * @return string
+     * @throws NotImplementedException
      */
     public function getLabel(): string {
         $item = $this->getScheduleItem();
-        $group = $item->getGroup();
-        $itemLabel = $item->getLabel();
+        $group = $item->getScheduleGroup();
         switch ($group->schedule_group_type) {
             case ModelScheduleGroup::TYPE_ACCOMMODATION:
-                return \sprintf(_('%s: '),
-                        $this->getPerson()->getFullName()
-                    ) . $itemLabel;
+                return sprintf(_('Accommodation for %s from %s to %s in %s'),
+                    $this->getPerson()->getFullName(),
+                    $group->start->format(_('__date_format')),
+                    $group->end->format(_('__date_format')),
+                    $item->name_cs);
+            case ModelScheduleGroup::TYPE_WEEKEND:
+                return $item->getLabel();
             default:
                 throw new NotImplementedException();
         }
@@ -94,10 +98,12 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel, IP
     }
 
     /**
+     * @param Context $connection
+     * @param IConventions $conventions
      * @return IStateModel
      * @throws NotImplementedException
      */
-    public function refresh(): IStateModel {
+    public function refresh(Context $connection, IConventions $conventions): IStateModel {
         throw new NotImplementedException();
     }
 }

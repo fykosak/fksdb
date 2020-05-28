@@ -2,12 +2,12 @@
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
-use Events\EventsExtension;
-use Events\Machine\BaseMachine;
-use Events\Model\ExpressionEvaluator;
-use Events\Model\Holder\DataValidator;
-use Events\Model\Holder\Field;
-use Events\Model\PersonContainerResolver;
+use FKSDB\Events\EventsExtension;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Model\ExpressionEvaluator;
+use FKSDB\Events\Model\Holder\DataValidator;
+use FKSDB\Events\Model\Holder\Field;
+use FKSDB\Events\Model\PersonContainerResolver;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedEventPersonFactory;
 use FKSDB\Config\Expressions\Helpers;
 use FKSDB\ORM\Services\ServicePerson;
@@ -15,6 +15,7 @@ use Nette\ComponentModel\Component;
 use Nette\DI\Container as DIContainer;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\HiddenField;
+use Nette\Forms\IControl;
 use Nette\Security\User;
 use Persons\SelfResolver;
 
@@ -27,10 +28,25 @@ class PersonFactory extends AbstractFactory {
 
     const VALUE_LOGIN = 'fromLogin';
 
+    /**
+     * @var
+     */
     private $fieldsDefinition;
+    /**
+     * @var
+     */
     private $searchType;
+    /**
+     * @var
+     */
     private $allowClear;
+    /**
+     * @var
+     */
     private $modifiable;
+    /**
+     * @var
+     */
     private $visible;
 
     /**
@@ -77,7 +93,7 @@ class PersonFactory extends AbstractFactory {
      * @param ServicePerson $servicePerson
      * @param DIContainer $container
      */
-    function __construct($fieldsDefinition, $searchType, $allowClear, $modifiable, $visible, ReferencedEventPersonFactory $referencedEventPersonFactory, SelfResolver $selfResolver, ExpressionEvaluator $evaluator, User $user, ServicePerson $servicePerson, DIContainer $container) {
+    public function __construct($fieldsDefinition, $searchType, $allowClear, $modifiable, $visible, ReferencedEventPersonFactory $referencedEventPersonFactory, SelfResolver $selfResolver, ExpressionEvaluator $evaluator, User $user, ServicePerson $servicePerson, DIContainer $container) {
         $this->fieldsDefinition = $fieldsDefinition;
         $this->searchType = $searchType;
         $this->allowClear = $allowClear;
@@ -96,7 +112,7 @@ class PersonFactory extends AbstractFactory {
      * @param BaseMachine $machine
      * @param Container $container
      * @return array|mixed
-     * @throws \Nette\Utils\RegexpException
+     * @throws \Exception
      */
     protected function createComponent(Field $field, BaseMachine $machine, Container $container) {
         $searchType = $this->evaluator->evaluate($this->searchType, $field);
@@ -140,7 +156,7 @@ class PersonFactory extends AbstractFactory {
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
-     * @return mixed|void
+     * @return void
      */
     protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container) {
         $hiddenField = reset($component);
@@ -149,7 +165,7 @@ class PersonFactory extends AbstractFactory {
 
     /**
      * @param Component $component
-     * @return Component|\Nette\Forms\IControl
+     * @return Component|IControl
      */
     public function getMainControl(Component $component) {
         return $component;
@@ -177,7 +193,7 @@ class PersonFactory extends AbstractFactory {
         foreach ($fieldsDefinition as $subName => $sub) {
             foreach ($sub as $fieldName => $metadata) {
                 if (!is_array($metadata)) {
-                    $metadata = array('required' => $metadata);
+                    $metadata = ['required' => $metadata];
                 }
                 if ($metadata['required'] && !$this->referencedEventPersonFactory->isFilled($person, $subName, $fieldName, $acYear)) {
                     $validator->addError(sprintf(_('%s: %s je povinná položka.'), $field->getBaseHolder()->getLabel(), $field->getLabel() . '.' . $subName . '.' . $fieldName)); //TODO better GUI name than DB identifier
@@ -209,4 +225,3 @@ class PersonFactory extends AbstractFactory {
     }
 
 }
-

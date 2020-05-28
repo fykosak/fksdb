@@ -10,10 +10,10 @@ use Nette\Utils\Strings;
 class Utils {
 
     /**
-     * @todo Copy+paste from old fksweb, engage more general algorithm.
-     * 
      * @param int $arabic
      * @return string
+     * @todo Copy+paste from old fksweb, engage more general algorithm.
+     *
      */
     public static function toRoman($arabic) {
         if (!is_numeric($arabic)) {
@@ -102,7 +102,7 @@ class Utils {
     /**
      * Returns fingerprint of an object.
      * Uses __toString conversion.
-     * 
+     *
      * @param mixed $object
      * @return string
      */
@@ -114,13 +114,13 @@ class Utils {
             }
             return md5($raw);
         } else {
-            return (string) $object;
+            return (string)$object;
         }
     }
 
     /**
      * Returns string represetation of iterable objects.
-     *  
+     *
      * @param mixed $object
      * @return string
      */
@@ -131,14 +131,16 @@ class Utils {
                 $items[] = "$key: " . self::getRepr($item);
             }
             return '{' . implode(', ', $items) . '}';
+        } elseif ($object instanceof DateTimeInterface) {
+            return $object->format('c');
         } else {
-            return (string) $object;
+            return (string)$object;
         }
     }
 
     /**
      * Tranform an address in order only the owner could recongize it.
-     * 
+     *
      * @param string $email
      * @return string
      */
@@ -155,9 +157,9 @@ class Utils {
 
     /**
      * Converts string to (hopefully) valid XML element name.
-     * 
+     *
      * @see http://www.w3.org/TR/REC-xml/#NT-NameChar
-     * 
+     *
      * @param string $string
      * @param string $prefix
      * @return string

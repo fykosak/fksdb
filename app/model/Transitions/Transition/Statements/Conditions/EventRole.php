@@ -1,15 +1,13 @@
 <?php
 
-
 namespace FKSDB\Transitions\Statements\Conditions;
-
 
 use Authorization\EventAuthorizator;
 use FKSDB\Transitions\Statements\Statement;
 
 /**
  * Class EventRole
- * @package FKSDB\Transitions\Statements\Conditions
+ * *
  */
 abstract class EventRole extends Statement {
     /**

@@ -3,16 +3,18 @@
 namespace FKSDB\Components\Controls;
 
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
+use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryTag;
 use Nette\Application\UI\Control;
+use Nette\DI\Container;
 use Nette\InvalidArgumentException;
-use ServiceMStoredQueryTag;
+use FKSDB\ORM\ServicesMulti\ServiceMStoredQueryTag;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Lukáš Timko <lukast@fykos.cz>
  */
-class StoredQueryTagCloud extends Control {
+class StoredQueryTagCloud extends BaseComponent {
 
     const MODE_LIST = 'mode-list';
     const MODE_DETAIL = 'mode-detail';
@@ -26,7 +28,7 @@ class StoredQueryTagCloud extends Control {
      * @var ModelStoredQuery
      */
     private $modelStoredQuery;
-
+    /** @var string */
     private $mode;
 
     /** @persistent */
@@ -34,17 +36,25 @@ class StoredQueryTagCloud extends Control {
 
     /**
      * StoredQueryTagCloud constructor.
-     * @param $mode
-     * @param ServiceMStoredQueryTag $serviceMStoredQueryTag
+     * @param string $mode
+     * @param Container $container
      */
-    function __construct($mode, ServiceMStoredQueryTag $serviceMStoredQueryTag) {
-        parent::__construct();
-        $this->serviceMStoredQueryTag = $serviceMStoredQueryTag;
+    public function __construct(string $mode, Container $container) {
+        parent::__construct($container);
         $this->mode = $mode;
     }
 
     /**
+     * @param ServiceMStoredQueryTag $serviceMStoredQueryTag
+     * @return void
+     */
+    public function injectPrimary(ServiceMStoredQueryTag $serviceMStoredQueryTag) {
+        $this->serviceMStoredQueryTag = $serviceMStoredQueryTag;
+    }
+
+    /**
      * @param ModelStoredQuery $modelStoredQuery
+     * @return void
      */
     public function setModelStoredQuery(ModelStoredQuery $modelStoredQuery) {
         $this->modelStoredQuery = $modelStoredQuery;
@@ -52,13 +62,14 @@ class StoredQueryTagCloud extends Control {
 
     /**
      * @param array $activeTagIds
+     * @return void
      */
-    public function handleOnClick(array $activeTagIds){
+    public function handleOnClick(array $activeTagIds) {
         $this->activeTagIds = $activeTagIds;
     }
 
     public function render() {
-        switch ($this->mode){
+        switch ($this->mode) {
             case self::MODE_LIST:
                 $this->template->tags = $this->serviceMStoredQueryTag->getMainService();
                 $this->template->activeTagIds = $this->activeTagIds;
@@ -68,7 +79,7 @@ class StoredQueryTagCloud extends Control {
                 $this->template->tags = $this->modelStoredQuery->getMStoredQueryTags();
                 break;
             default :
-                throw new InvalidArgumentException;
+                throw new InvalidArgumentException();
         }
 
         $this->template->mode = $this->mode;
@@ -79,20 +90,19 @@ class StoredQueryTagCloud extends Control {
     /**
      * @return array
      */
-    private function createNextActiveTagIds(){
+    private function createNextActiveTagIds() {
         $tags = $this->serviceMStoredQueryTag->getMainService();
         $nextActiveTagIds = [];
-        foreach($tags as $tag) {
+        /** @var ModelStoredQueryTag $tag */
+        foreach ($tags as $tag) {
             $activeTagIds = $this->activeTagIds;
-            if(array_key_exists($tag->tag_type_id, $activeTagIds)) {
+            if (array_key_exists($tag->tag_type_id, $activeTagIds)) {
                 unset($activeTagIds[$tag->tag_type_id]);
-            }
-            else {
+            } else {
                 $activeTagIds[$tag->tag_type_id] = $tag->tag_type_id;
             }
             $nextActiveTagIds[$tag->tag_type_id] = $activeTagIds;
         }
         return $nextActiveTagIds;
     }
-
 }

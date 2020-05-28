@@ -31,7 +31,7 @@ class StoredQueryFactory {
      * StoredQueryFactory constructor.
      * @param ServiceStoredQueryTagType $serviceStoredQueryTagType
      */
-    function __construct(ServiceStoredQueryTagType $serviceStoredQueryTagType) {
+    public function __construct(ServiceStoredQueryTagType $serviceStoredQueryTagType) {
         $this->serviceStoredQueryTagType = $serviceStoredQueryTagType;
     }
 
@@ -64,7 +64,7 @@ class StoredQueryFactory {
         $container->addText('qid', _('QID'))
             ->setOption('description', _('Dotazy s QIDem nelze smazat a QID lze použít pro práva a trvalé odkazování.'))
             ->addCondition(Form::FILLED)
-            ->addRule(Form::MAX_LENGTH, _('Název dotazu je moc dlouhý.'), 16)
+            ->addRule(Form::MAX_LENGTH, _('Název dotazu je moc dlouhý.'), 64)
             ->addRule(Form::REGEXP, _('QID může být jen z písmen anglické abecedy a číslic a tečky.'), '/^[a-z][a-z0-9.]*$/i');
 
         $container->addComponent($this->createTagSelect(false, _('Štítky'), new StoredQueryTagTypeProvider($this->serviceStoredQueryTagType)), 'tags');
@@ -104,9 +104,9 @@ class StoredQueryFactory {
     }
 
     /**
-     * @internal
      * @param Container $container
      * @param mixed $group
+     * @internal
      */
     public function buildParameterMetadata(Container $container, $group) {
         $container->setCurrentGroup($group);

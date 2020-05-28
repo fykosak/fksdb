@@ -3,9 +3,13 @@
 namespace FKSDB\Components\Forms\Containers;
 
 use FKSDB\ORM\AbstractModelMulti;
+use FKSDB\ORM\Models\ModelAddress;
+use FKSDB\ORM\Models\ModelRegion;
 use FKSDB\ORM\Services\ServiceRegion;
 use Nette\Database\Table\ActiveRow;
+use Nette\Forms\Container;
 use Nette\InvalidStateException;
+use Nette\Utils\ArrayHash;
 
 /**
  *
@@ -14,12 +18,13 @@ use Nette\InvalidStateException;
 class AddressContainer extends ModelContainer {
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceRegion
+     * @var ServiceRegion
      */
     private $serviceRegion;
 
     /**
-     * @param \FKSDB\ORM\Services\ServiceRegion $serviceRegion
+     * @param ServiceRegion $serviceRegion
+     * @return void
      */
     public function setServiceRegion(ServiceRegion $serviceRegion) {
         $this->serviceRegion = $serviceRegion;
@@ -46,7 +51,7 @@ class AddressContainer extends ModelContainer {
     /**
      * @param $values
      * @param bool $erase
-     * @return \Nette\Forms\Container|void
+     * @return Container|void
      */
     public function setValues($values, $erase = FALSE) {
         if ($values instanceof ActiveRow || $values instanceof AbstractModelMulti) { //assert its from address table
@@ -55,10 +60,11 @@ class AddressContainer extends ModelContainer {
             } else {
                 $address = $values;
             }
+            /** @var ModelAddress $address */
 
             $values = $address->toArray();
             $values['country_iso'] = $address->region_id ? $address->region->country_iso : null;
-        } else if (is_array($values) && isset($values['region_id'])) {
+        } elseif (is_array($values) && isset($values['region_id'])) {
             $region = $this->serviceRegion->findByPrimary($values['region_id']);
             $values['country_iso'] = $region->country_iso;
         }
@@ -68,7 +74,7 @@ class AddressContainer extends ModelContainer {
 
     /**
      * @param bool $asArray
-     * @return array|\Nette\Utils\ArrayHash
+     * @return array|ArrayHash
      */
     public function getValues($asArray = FALSE) {
         $values = parent::getValues($asArray);
@@ -76,11 +82,10 @@ class AddressContainer extends ModelContainer {
             if (!$this->serviceRegion) {
                 throw new InvalidStateException("You must set FKSDB\ORM\Services\ServiceRegion before getting values from the address container.");
             }
+            /** @var ModelRegion|false $region */
             $region = $this->serviceRegion->getCountries()->where('country_iso', $values['country_iso'])->fetch();
             $values['region_id'] = $region ? $region->region_id : null;
         }
-
         return $values;
     }
-
 }

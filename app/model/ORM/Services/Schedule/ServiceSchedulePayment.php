@@ -13,20 +13,14 @@ use Nette\Utils\ArrayHash;
 
 /**
  * Class ServiceSchedulePayment
- * @package FKSDB\ORM\Services\Schedule
+ * *
  */
 class ServiceSchedulePayment extends AbstractServiceSingle {
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_SCHEDULE_PAYMENT;
     }
 
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelSchedulePayment::class;
     }
@@ -53,35 +47,31 @@ class ServiceSchedulePayment extends AbstractServiceSingle {
                 // do nothing
                 $index = array_search($row->person_schedule_id, $newScheduleIds);
                 unset($newScheduleIds[$index]);
-                // Debugger::barDump('do nothing');
             } else {
-                // Debugger::barDump('delete');
                 $row->delete();
             }
         }
-        if (!$this->connection->inTransaction()) {
+        if (!$this->getConnection()->getPdo()->inTransaction()) {
             throw new StorageException(_('Not in transaction!'));
         }
         foreach ($newScheduleIds as $id) {
-
-            /**
-             * @var ModelSchedulePayment $model
-             */
-
-            $count = $this->getTable()->where('person_schedule_id', $id)->where('payment.state !=? OR payment.state IS NULL', ModelPayment::STATE_CANCELED)->count();
+            $query = $this->getTable()->where('person_schedule_id', $id)->where('payment.state !=? OR payment.state IS NULL', ModelPayment::STATE_CANCELED);
+            $count = $query->count();
             if ($count > 0) {
+                /** @var ModelSchedulePayment $model */
+                $model = $query->fetch();
                 throw new DuplicatePaymentException(sprintf(
                     _('Item "%s" has already another payment.'),
                     $model->getPersonSchedule()->getLabel()
                 ));
             }
-            $model = $this->createNewModel(['payment_id' => $payment->payment_id, 'person_schedule_id' => $id]);
+            $this->createNewModel(['payment_id' => $payment->payment_id, 'person_schedule_id' => $id]);
         }
     }
 
     /**
      * @param ArrayHash $data
-     * @return integer[]
+     * @return array
      */
     private function prepareData($data): array {
         $data = (array)json_decode($data);

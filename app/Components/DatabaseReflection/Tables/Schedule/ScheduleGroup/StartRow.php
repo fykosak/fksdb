@@ -9,7 +9,7 @@ use Nette\Utils\Html;
 
 /**
  * Class EndRow
- * @package FKSDB\Components\DatabaseReflection\Tables\Schedule
+ * *
  */
 class StartRow extends AbstractScheduleGroupRow {
     /**
@@ -24,6 +24,6 @@ class StartRow extends AbstractScheduleGroupRow {
      * @return Html
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        return (new DatePrinter())($model->start);
+        return (new DatePrinter('d. m. Y H:i'))($model->start);
     }
 }

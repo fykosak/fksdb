@@ -1,23 +1,20 @@
 <?php
 
-namespace Events\Model\Holder;
+namespace FKSDB\Events\Model\Holder;
 
-use ArrayAccess;
-use ArrayIterator;
-use Events\FormAdjustments\IFormAdjustment;
-use Events\Machine\BaseMachine;
-use Events\Machine\Machine;
-use Events\Machine\Transition;
-use Events\Model\Holder\SecondaryModelStrategies\SecondaryModelStrategy;
-use Events\Processings\GenKillProcessing;
-use Events\Processings\IProcessing;
+use FKSDB\Config\NeonSchemaException;
+use FKSDB\Events\FormAdjustments\IFormAdjustment;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Machine\Transition;
+use FKSDB\Events\Model\Holder\SecondaryModelStrategies\SecondaryModelStrategy;
+use FKSDB\Events\Processings\GenKillProcessing;
+use FKSDB\Events\Processings\IProcessing;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\IModel;
-use IteratorAggregate;
-use LogicException;
-use Nette\Application\UI\Form;
+use FKSDB\ORM\Models\ModelEvent;
+use Nette\Forms\Form;
 use Nette\Database\Connection;
-use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
 use Nette\Utils\ArrayHash;
 
@@ -28,7 +25,7 @@ use Nette\Utils\ArrayHash;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
+class Holder {
 
     /**
      * @var IFormAdjustment[]
@@ -61,11 +58,6 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
     private $connection;
 
     /**
-     * @var Machine
-     */
-    private $machine;
-
-    /**
      * @var SecondaryModelStrategy
      */
     private $secondaryModelStrategy;
@@ -74,7 +66,7 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
      * Holder constructor.
      * @param Connection $connection
      */
-    function __construct(Connection $connection) {
+    public function __construct(Connection $connection) {
         $this->connection = $connection;
 
         /*
@@ -84,64 +76,52 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
         $this->processings[] = new GenKillProcessing();
     }
 
-    /**
-     * @return Connection
-     */
-    public function getConnection() {
+    public function getConnection(): Connection {
         return $this->connection;
     }
 
     /**
-     * @param $name
+     * @param string $name
+     * @return void
      */
-    public function setPrimaryHolder($name) {
-        $this->updating();
+    public function setPrimaryHolder(string $name) {
         $primaryHolder = $this->primaryHolder = $this->getBaseHolder($name);
         $this->secondaryBaseHolders = array_filter($this->baseHolders, function (BaseHolder $baseHolder) use ($primaryHolder) {
             return $baseHolder !== $primaryHolder;
         });
     }
 
-    /**
-     * @return BaseHolder
-     */
-    public function getPrimaryHolder() {
+    public function getPrimaryHolder(): BaseHolder {
         return $this->primaryHolder;
     }
 
     /**
      * @param BaseHolder $baseHolder
+     * @return void
      */
     public function addBaseHolder(BaseHolder $baseHolder) {
-        $this->updating();
         $baseHolder->setHolder($this);
-        $baseHolder->freeze();
-
         $name = $baseHolder->getName();
         $this->baseHolders[$name] = $baseHolder;
     }
 
     /**
      * @param IFormAdjustment $formAdjusment
+     * @return void
      */
     public function addFormAdjustment(IFormAdjustment $formAdjusment) {
-        $this->updating();
         $this->formAdjustments[] = $formAdjusment;
     }
 
     /**
      * @param IProcessing $processing
+     * @return void
      */
     public function addProcessing(IProcessing $processing) {
-        $this->updating();
         $this->processings[] = $processing;
     }
 
-    /**
-     * @param $name
-     * @return BaseHolder
-     */
-    public function getBaseHolder($name) {
+    public function getBaseHolder(string $name): BaseHolder {
         if (!array_key_exists($name, $this->baseHolders)) {
             throw new InvalidArgumentException("Unknown base holder '$name'.");
         }
@@ -149,55 +129,44 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
     }
 
     /**
-     * @param $name
+     * @return BaseHolder[]
+     */
+    public function getBaseHolders(): array {
+        return $this->baseHolders;
+    }
+
+    /**
+     * @param string $name
      * @return bool
      */
-    public function hasBaseHolder($name) {
+    public function hasBaseHolder($name): bool {
         return isset($this->baseHolders[$name]);
     }
 
-    /**
-     * @deprecated Use getEvent on primary holder explicitly.
-     * @return \FKSDB\ORM\Models\ModelEvent
-     */
-    public function getEvent() {
-        return $this->primaryHolder->getEvent();
-    }
-
-    /**
-     * @return Machine
-     */
-    public function getMachine() {
-        return $this->machine;
-    }
-
-    /**
-     * @param Machine $machine
-     */
-    public function setMachine(Machine $machine) {
-        $this->machine = $machine;
-        if ($machine->getHolder() !== $this) {
-            $machine->setHolder($this);
-        }
-    }
-
-    /**
-     * @return SecondaryModelStrategy
-     */
-    public function getSecondaryModelStrategy() {
+    public function getSecondaryModelStrategy(): SecondaryModelStrategy {
         return $this->secondaryModelStrategy;
     }
 
     /**
      * @param SecondaryModelStrategy $secondaryModelStrategy
+     * @return void
      */
     public function setSecondaryModelStrategy(SecondaryModelStrategy $secondaryModelStrategy) {
-        $this->updating();
         $this->secondaryModelStrategy = $secondaryModelStrategy;
     }
 
     /**
-     * @param \FKSDB\ORM\IModel|null $primaryModel
+     * @param ModelEvent $event
+     * @throws NeonSchemaException
+     */
+    public function inferEvent(ModelEvent $event) {
+        foreach ($this->getBaseHolders() as $baseHolder) {
+            $baseHolder->inferEvent($event);
+        }
+    }
+
+    /**
+     * @param IModel|null $primaryModel
      * @param array|null $secondaryModels
      */
     public function setModel(IModel $primaryModel = null, array $secondaryModels = null) {
@@ -247,7 +216,7 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
      * @param Form $form
      * @return string[] machineName => new state
      */
-    public function processFormValues(ArrayHash $values, Machine $machine, $transitions, ILogger $logger, Form $form = null) {
+    public function processFormValues(ArrayHash $values, Machine $machine, $transitions, ILogger $logger, Form $form = null): array {
         $newStates = [];
         foreach ($transitions as $name => $transition) {
             $newStates[$name] = $transition->getTarget();
@@ -276,6 +245,7 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
     /**
      * @param Form $form
      * @param Machine $machine
+     * @return void
      */
     public function adjustForm(Form $form, Machine $machine) {
         foreach ($this->formAdjustments as $adjustment) {
@@ -286,27 +256,29 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
     /*
      * Joined data manipulation
      */
-
+    /**
+     * @var
+     */
     private $groupedHolders;
 
     /**
      * Group secondary by service
-     * @return array[] items: joinOn, service, holders
+     * @return BaseHolder[][]|array[] items: joinOn, service, holders
      */
-    public function getGroupedSecondaryHolders() {
+    public function getGroupedSecondaryHolders(): array {
         if ($this->groupedHolders == null) {
             $this->groupedHolders = [];
 
             foreach ($this->secondaryBaseHolders as $baseHolder) {
                 $key = spl_object_hash($baseHolder->getService());
                 if (!isset($this->groupedHolders[$key])) {
-                    $this->groupedHolders[$key] = array(
+                    $this->groupedHolders[$key] = [
                         'joinOn' => $baseHolder->getJoinOn(),
                         'joinTo' => $baseHolder->getJoinTo(),
                         'service' => $baseHolder->getService(),
                         'personIds' => $baseHolder->getPersonIds(),
                         'holders' => [],
-                    );
+                    ];
                 }
                 $this->groupedHolders[$key]['holders'][] = $baseHolder;
                 /*
@@ -324,60 +296,17 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
      */
 
     /**
-     * @param $name
+     * @param string $name
      * @return mixed
      */
-    public function getParameter($name) {
+    public function getParameter(string $name) {
         $parts = explode('.', $name, 2);
         if (count($parts) == 1) {
             return $this->primaryHolder->getParameter($name);
-        } else if (isset($this->baseHolders[$parts[0]])) {
+        } elseif (isset($this->baseHolders[$parts[0]])) {
             return $this->baseHolders[$parts[0]]->getParameter($parts[1]);
         } else {
             throw new InvalidArgumentException("Invalid parameter '$name' from a base holder.");
         }
     }
-
-    /*
-     * Syntax-sugar Interfaces
-     */
-
-    /**
-     * @return ArrayIterator|\Traversable
-     */
-    public function getIterator() {
-        return new ArrayIterator($this->baseHolders);
-    }
-
-    /**
-     * @param mixed $offset
-     * @return bool
-     */
-    public function offsetExists($offset) {
-        return isset($this->baseHolders[$offset]);
-    }
-
-    /**
-     * @param mixed $offset
-     * @return BaseHolder|mixed
-     */
-    public function offsetGet($offset) {
-        return $this->baseHolders[$offset];
-    }
-
-    /**
-     * @param mixed $offset
-     * @param mixed $value
-     */
-    public function offsetSet($offset, $value) {
-        throw new LogicException('Use addBaseHolder method.');
-    }
-
-    /**
-     * @param mixed $offset
-     */
-    public function offsetUnset($offset) {
-        throw new LogicException('Cannot delete a base holder.');
-    }
-
 }

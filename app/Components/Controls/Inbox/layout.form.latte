@@ -1,0 +1,7 @@
+{layout './layout.latte'}
+{block content}
+    {form 'form'}
+        {include #parent}
+        {input 'submit','class'=>'btn btn-success'}
+    {/form}
+{/block}

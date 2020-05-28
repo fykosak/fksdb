@@ -2,11 +2,11 @@ import { lang } from '@i18n/i18n';
 import * as React from 'react';
 import { Price } from './interfaces';
 
-interface Props {
+interface OwnProps {
     price: Price;
 }
 
-export default class PriceDisplay extends React.Component<Props, {}> {
+export default class PriceDisplay extends React.Component<OwnProps, {}> {
 
     public render() {
         const {price: {eur, czk}} = this.props;

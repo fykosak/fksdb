@@ -11,7 +11,6 @@ use FKSDB\Utils\Promise;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
-use Nette\Utils\RegexpException;
 
 /**
  * Be careful when calling getValue as it executes SQL queries and thus
@@ -49,7 +48,7 @@ class ReferencedId extends HiddenField {
     private $referencedSetter;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $modelCreated;
 
@@ -64,7 +63,7 @@ class ReferencedId extends HiddenField {
      * @param IReferencedHandler $handler
      * @param IReferencedSetter $referencedSetter
      */
-    function __construct(IService $service, IReferencedHandler $handler, IReferencedSetter $referencedSetter) {
+    public function __construct(IService $service, IReferencedHandler $handler, IReferencedSetter $referencedSetter) {
         parent::__construct();
         $this->monitor(Form::class);
 
@@ -96,6 +95,7 @@ class ReferencedId extends HiddenField {
 
     /**
      * @param Promise $promise
+     * @return void
      */
     private function setPromise(Promise $promise) {
         $this->promise = $promise;
@@ -140,15 +140,14 @@ class ReferencedId extends HiddenField {
      * @param $pvalue
      * @param bool $force
      * @return HiddenField|void
-     * @throws RegexpException
      */
     public function setValue($pvalue, $force = false) {
         $isPromise = ($pvalue === self::VALUE_PROMISE);
         if (!($pvalue instanceof IModel) && !$isPromise) {
             $pvalue = $this->service->findByPrimary($pvalue);
-        } else if ($isPromise) {
+        } elseif ($isPromise) {
             $pvalue = $this->service->createNew();
-        } else if ($pvalue instanceof IModel) {
+        } elseif ($pvalue instanceof IModel) {
             $this->model = $pvalue;
         }
         $container = $this->referencedContainer;
@@ -163,7 +162,7 @@ class ReferencedId extends HiddenField {
 
         if ($isPromise) {
             $value = self::VALUE_PROMISE;
-        } else if ($pvalue instanceof IModel) {
+        } elseif ($pvalue instanceof IModel) {
             $value = $pvalue->getPrimary();
         } else {
             $value = $pvalue;
@@ -175,7 +174,7 @@ class ReferencedId extends HiddenField {
      * If you are calling this method out of transaction, set $fullfilPromise to
      * false. This is the case for event form adjustments.
      *
-     * @param boolean $fullfilPromise
+     * @param bool $fullfilPromise
      * @return mixed
      */
     public function getValue($fullfilPromise = true) {
@@ -205,7 +204,7 @@ class ReferencedId extends HiddenField {
     }
 
     /**
-     * @throws RegexpException
+     * @return void
      */
     private function createPromise() {
         $referencedId = $this->getValue();
@@ -218,7 +217,7 @@ class ReferencedId extends HiddenField {
                     $this->setValue($model, IReferencedSetter::MODE_FORCE);
                     $this->setModelCreated(true);
                     return $model->getPrimary();
-                } else if ($referencedId) {
+                } elseif ($referencedId) {
                     $model = $this->getService()->findByPrimary($referencedId);
                     $this->handler->update($model, $values);
                     // reload the model (this is workaround to avoid caching of empty but newly created referenced/related models)
@@ -240,10 +239,12 @@ class ReferencedId extends HiddenField {
         $this->setPromise($promise);
     }
 
+    /** @var bool */
     private $attachedOnValidate = false;
 
     /**
-     * @param $obj
+     * @param mixed $obj
+     * @return void
      */
     protected function attached($obj) {
         parent::attached($obj);

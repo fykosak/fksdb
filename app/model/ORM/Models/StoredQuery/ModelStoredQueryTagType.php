@@ -14,5 +14,4 @@ use FKSDB\ORM\AbstractModelSingle;
  * @property-read int color
  */
 class ModelStoredQueryTagType extends AbstractModelSingle {
-
 }

@@ -59,9 +59,6 @@ class EvaluationFykos2011 extends EvaluationStrategy {
         }
     }
 
-    /**
-     * @return string
-     */
     public function getSumColumn(): string {
         return "IF(t.label IN ('1', '2'), IF(ct.study_year IN (6,7,8,9,1,2), 2 * s.raw_points, s.raw_points), s.raw_points)";
     }
@@ -90,10 +87,6 @@ class EvaluationFykos2011 extends EvaluationStrategy {
         }
     }
 
-    /**
-     * @param ModelCategory $category
-     * @return string
-     */
     public function getTaskPointsColumn(ModelCategory $category): string {
         switch ($category->id) {
             case ModelCategory::CAT_ES_6:
@@ -107,7 +100,5 @@ class EvaluationFykos2011 extends EvaluationStrategy {
             default:
                 return 'IF(s.raw_points IS NOT NULL, t.points, NULL)';
         }
-
     }
-
 }

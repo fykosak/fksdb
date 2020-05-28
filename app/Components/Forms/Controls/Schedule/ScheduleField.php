@@ -4,23 +4,23 @@ namespace FKSDB\Components\Forms\Controls\Schedule;
 
 use Exception;
 use FKSDB\Components\React\ReactField;
-use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleItem;
+use Nette\ComponentModel\IComponent;
 use Nette\Forms\Controls\TextInput;
-use Nette\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 use Nette\Utils\JsonException;
-use Tracy\Debugger;
 
 /**
  * Class ScheduleField
- * @package FKSDB\Components\Forms\Controls\Schedule
+ * *
  */
 class ScheduleField extends TextInput {
 
     use ReactField;
+
     /**
      * @var ModelEvent
      */
@@ -40,6 +40,7 @@ class ScheduleField extends TextInput {
      * @param string $type
      * @param ServiceScheduleItem $serviceScheduleItem
      * @throws JsonException
+     * @throws NotImplementedException
      */
     public function __construct(ModelEvent $event, string $type, ServiceScheduleItem $serviceScheduleItem) {
         parent::__construct($this->getLabelByType($type));
@@ -51,7 +52,7 @@ class ScheduleField extends TextInput {
     }
 
     /**
-     * @param $obj
+     * @param IComponent $obj
      */
     public function attached($obj) {
         parent::attached($obj);
@@ -61,43 +62,29 @@ class ScheduleField extends TextInput {
     /**
      * @param string $type
      * @return string
+     * @throws NotImplementedException
      */
     private function getLabelByType(string $type): string {
         switch ($type) {
             case ModelScheduleGroup::TYPE_ACCOMMODATION:
                 return _('Accommodation');
-            case ModelScheduleGroup::TYPE_ACCOMMODATION_SAME_GENDER:
+            case ModelScheduleGroup::TYPE_ACCOMMODATION_GENDER:
                 return _('Accommodation with same gender');
-            case ModelScheduleGroup::TYPE_VISA_REQUIREMENT:
+            case ModelScheduleGroup::TYPE_VISA:
                 return _('Visa');
-            case ModelScheduleGroup::TYPE_ACCOMMODATION_TEACHER_SEPARATED:
-                return _('Teacher separate accommodation');
-            case ModelScheduleGroup::TYPE_WEEKEND_SCHEDULE:
-                return _('Weekend schedule');
+            case ModelScheduleGroup::TYPE_ACCOMMODATION_TEACHER:
+                return _('Teacher accommodation');
+            case ModelScheduleGroup::TYPE_WEEKEND:
+                return _('Weekend after competition');
+            case ModelScheduleGroup::TYPE_TEACHER_PRESENT:
+                return _('Program during competition');
             default:
                 throw new NotImplementedException();
         }
     }
 
-    /**
-     * @return string
-     */
-    public function getMode(): string {
-        return $this->type;
-    }
-
-    /**
-     * @return string
-     */
-    public function getComponentName(): string {
-        return 'schedule';
-    }
-
-    /**
-     * @return string
-     */
-    public function getModuleName(): string {
-        return 'event';
+    protected function getReactId(): string {
+        return 'event.schedule.' . $this->type;
     }
 
     /**
@@ -111,30 +98,47 @@ class ScheduleField extends TextInput {
             $group = ModelScheduleGroup::createFromActiveRow($row);
             $groupList[] = $this->serializeGroup($group);
         }
-        return json_encode($groupList);
+        $options = $this->getRenderOptions();
+        return json_encode(['groups' => $groupList, 'options' => $options]);
     }
 
-    /**
-     * @param ModelScheduleGroup $group
-     * @return array
-     */
+    private function getRenderOptions(): array {
+        $params = [
+            'display' => [
+                'capacity' => true,
+                'description' => true,
+                'groupLabel' => true,
+                'price' => true,
+                'groupTime' => false,
+            ],
+        ];
+        switch ($this->type) {
+            case ModelScheduleGroup::TYPE_ACCOMMODATION:
+                break;
+            case ModelScheduleGroup::TYPE_ACCOMMODATION_TEACHER:
+            case ModelScheduleGroup::TYPE_ACCOMMODATION_GENDER:
+            case ModelScheduleGroup::TYPE_VISA:
+            case ModelScheduleGroup::TYPE_TEACHER_PRESENT:
+                $params['display']['capacity'] = false;
+                $params['display']['price'] = false;
+                $params['display']['groupLabel'] = false;
+                break;
+            case ModelScheduleGroup::TYPE_WEEKEND:
+                $params['display']['groupTime'] = true;
+        }
+        return $params;
+    }
+
     private function serializeGroup(ModelScheduleGroup $group): array {
         $groupArray = $group->__toArray();
         $itemList = [];
         $items = $this->serviceScheduleItem->getTable()->where('schedule_group_id', $group->schedule_group_id);
-        foreach ($items as $itemRow) {
-            $item = ModelScheduleItem::createFromActiveRow($itemRow);
+        /** @var ModelScheduleItem $item */
+        foreach ($items as $item) {
             $itemList[] = $item->__toArray();
         }
 
         $groupArray['items'] = $itemList;
         return $groupArray;
-    }
-
-    /**
-     * @return array
-     */
-    public function getActions(): array {
-        return [];
     }
 }

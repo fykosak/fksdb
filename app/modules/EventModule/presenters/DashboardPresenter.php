@@ -2,33 +2,31 @@
 
 namespace EventModule;
 
+use Nette\Application\BadRequestException;
+
 /**
  * Class DashboardPresenter
- * @package EventModule
+ * *
  */
 class DashboardPresenter extends BasePresenter {
 
 
     /**
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     public function titleDefault() {
-        $this->setTitle(\sprintf(_('Event %s'), $this->getEvent()->name));
-        $this->setIcon('fa fa-dashboard');
+        $this->setTitle(\sprintf(_('Event %s'), $this->getEvent()->name), 'fa fa-dashboard');
     }
 
     /**
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     public function authorizedDefault() {
-        $this->setAuthorized($this->eventIsAllowed('event.dashboard', 'default'));
+        $this->setAuthorized($this->isEventOrContestOrgAuthorized('event.dashboard', 'default'));
     }
 
     /**
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     public function renderDefault() {
         $this->template->event = $this->getEvent();
@@ -38,8 +36,7 @@ class DashboardPresenter extends BasePresenter {
 
     /**
      * @return string
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     private function getWebUrl() {
         switch ($this->getEvent()->event_type_id) {

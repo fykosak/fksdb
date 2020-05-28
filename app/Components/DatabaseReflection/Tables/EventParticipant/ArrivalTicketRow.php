@@ -9,12 +9,10 @@ use Nette\Utils\Html;
 
 /**
  * Class ArrivalTicketRow
- * @package FKSDB\Components\DatabaseReflection\EventParticipant
+ * *
  */
 class ArrivalTicketRow extends AbstractParticipantRow {
-    /**
-     * @return string
-     */
+
     public function getTitle(): string {
         return _('Arrival ticket');
     }
@@ -24,6 +22,6 @@ class ArrivalTicketRow extends AbstractParticipantRow {
      * @return Html
      */
     public function createHtmlValue(AbstractModelSingle $model): Html {
-        return (new BinaryPrinter)($model->arrival_ticket);
+        return (new BinaryPrinter())($model->arrival_ticket);
     }
 }

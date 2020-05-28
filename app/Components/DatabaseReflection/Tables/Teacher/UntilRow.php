@@ -11,7 +11,7 @@ use Nette\Utils\Html;
 
 /**
  * Class UntilRow
- * @package FKSDB\Components\DatabaseReflection\Tables\Teacher
+ * *
  */
 class UntilRow extends AbstractTeacherRow {
 
@@ -23,7 +23,7 @@ class UntilRow extends AbstractTeacherRow {
         if ($model->until === null) {
             return Html::el('span')->addAttributes(['class' => 'badge badge-success'])->addText(_('Still teaches'));
         }
-        return (new DatePrinter(_('d. m. Y')))($model->until);
+        return (new DatePrinter(_('__date_format')))($model->until);
     }
 
     /**
@@ -34,9 +34,10 @@ class UntilRow extends AbstractTeacherRow {
     }
 
     /**
+     * @param array $args
      * @return BaseControl
      */
-    public function createField(): BaseControl {
+    public function createField(...$args): BaseControl {
         return new DateInput($this->getTitle());
     }
 }

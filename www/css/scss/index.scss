@@ -11,6 +11,8 @@
 @import "contests";
 @import "callout";
 @import "badge";
+@import "upload";
+@import "chart";
 
 .bg-white-container {
   background-color: rgba(255, 255, 255, .85);
@@ -32,17 +34,18 @@ h1 .small {
 
 html, body {
   font-family: 'Source Sans Pro', sans-serif;
-  /*padding-top: 35px;*/
   height: 100%;
   /* The html and body elements cannot have any padding or margin. */
 }
 
-/* Wrapper for page content to push down footer */
+$footerHeight: 65px;
+body {
+  margin: 0 auto;
+  padding: $footerHeight 0;
+}
+
 main {
-  /* Negative indent footer by its height */
-  margin: 0 auto -55px;
-  /* Pad bottom by footer height */
-  padding: 55px 0;
+  min-height: 100%;
 }
 
 .list-piped {
@@ -166,5 +169,30 @@ main {
 }
 
 footer {
+  min-height: $footerHeight;
   background-color: rgba(255, 255, 255, .7);
+}
+
+.legend {
+  &.line-chart-legend {
+    .legend-item {
+      margin-bottom: 1rem;
+
+      .legend-item-icon {
+        display: flex;
+        align-items: center;
+
+        .line {
+          border-width: 1rem;
+          border-radius: 1rem;
+          width: 100%;
+          height: 2px;
+        }
+      }
+
+      .legend-item-name {
+        font-weight: bold;
+      }
+    }
+  }
 }

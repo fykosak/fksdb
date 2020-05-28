@@ -8,7 +8,7 @@ use Nette\Utils\Html;
 
 /**
  * Class FyziklaniTeamIdTeamRow
- * @package FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam
+ * *
  */
 class NameNIdRow extends AbstractFyziklaniTeamRow {
     /**

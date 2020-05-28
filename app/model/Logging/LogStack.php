@@ -2,6 +2,8 @@
 
 namespace FKSDB\Logging;
 
+use FKSDB\Messages\Message;
+
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
@@ -23,26 +25,26 @@ abstract class StackedLogger implements ILogger {
 
     /**
      * @param ILogger $child
+     * @return void
      */
     public function setChild(ILogger $child) {
         $this->child = $child;
     }
 
     /**
-     * @param $message
-     * @param int $level
+     * @param Message $message
+     * @return void
      */
-    public final function log($message, $level = self::INFO) {
-        $this->doLog($message, $level);
+    final public function log(Message $message) {
+        $this->doLog($message);
         if ($this->getChild()) {
-            $this->getChild()->log($message, $level);
+            $this->getChild()->log($message);
         }
     }
 
     /**
-     * @param $message
-     * @param $level
-     * @return mixed
+     * @param Message $message
+     * @return void
      */
-    abstract protected function doLog($message, $level);
+    abstract protected function doLog(Message $message);
 }

@@ -2,6 +2,7 @@
 
 namespace FKSDB\Transitions;
 
+use FKSDB\Logging\ILogger;
 use FKSDB\Transitions\Statements\Statement;
 
 /**
@@ -10,15 +11,18 @@ use FKSDB\Transitions\Statements\Statement;
  * @author Michal Koutný <michal@fykos.cz>
  */
 final class Transition {
-    const TYPE_SUCCESS = 'success';
-    const TYPE_WARNING = 'warning';
-    const TYPE_DANGER = 'danger';
-    const TYPE_PRIMARY = 'primary';
+    const TYPE_SUCCESS = ILogger::SUCCESS;
+    const TYPE_WARNING = ILogger::WARNING;
+    const TYPE_DANGER = ILogger::ERROR;
+    const TYPE_PRIMARY = ILogger::PRIMARY;
     /**
      * @var Callable
      */
     private $condition;
 
+    /**
+     * @var string
+     */
     private $type = self::TYPE_PRIMARY;
     /**
      * @var string
@@ -62,7 +66,7 @@ final class Transition {
      * @param string $toState
      * @param string $label
      */
-    function __construct(string $fromState, string $toState, string $label) {
+    public function __construct(string $fromState, string $toState, string $label) {
         $this->fromState = $fromState;
         $this->toState = $toState;
         $this->label = $label;
@@ -121,7 +125,7 @@ final class Transition {
     /**
      * @param IStateModel $model
      */
-    public final function beforeExecute(IStateModel &$model) {
+    final public function beforeExecute(IStateModel &$model) {
         foreach ($this->beforeExecuteCallbacks as $callback) {
             $callback($model);
         }
@@ -130,10 +134,9 @@ final class Transition {
     /**
      * @param IStateModel $model
      */
-    public final function afterExecute(IStateModel &$model) {
+    final public function afterExecute(IStateModel &$model) {
         foreach ($this->afterExecuteCallbacks as $callback) {
             $callback($model);
         }
     }
 }
-

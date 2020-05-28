@@ -2,13 +2,16 @@
 
 namespace FKSDB\ORM\Tables;
 
-use Nette\Database\Connection;
-use Nette\Database\Table\Selection as TableSelection;
+use FKSDB\ORM\AbstractModelSingle;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
+use Nette\Database\Table\Selection;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @template TModel
  */
-class TypedTableSelection extends TableSelection {
+class TypedTableSelection extends Selection {
 
     /**
      * @var string
@@ -19,10 +22,11 @@ class TypedTableSelection extends TableSelection {
      * TypedTableSelection constructor.
      * @param $modelClassName
      * @param $table
-     * @param Connection $connection
+     * @param Context $connection
+     * @param IConventions $conventions
      */
-    public function __construct($modelClassName, $table, Connection $connection) {
-        parent::__construct($table, $connection);
+    public function __construct(string $modelClassName, string $table, Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, $table);
         $this->modelClassName = $modelClassName;
     }
 
@@ -30,12 +34,10 @@ class TypedTableSelection extends TableSelection {
      * This override ensures returned objects are of correct class.
      *
      * @param array $row
-     * @return \FKSDB\ORM\AbstractModelSingle
+     * @return AbstractModelSingle
      */
-    protected function createRow(array $row) {
+    protected function createRow(array $row): AbstractModelSingle {
         $className = $this->modelClassName;
         return new $className($row, $this);
     }
-
 }
-

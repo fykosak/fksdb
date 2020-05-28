@@ -5,6 +5,7 @@ namespace FKSDB\Components\Forms\Controls;
 use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Application\IStylesheetCollector;
 use Nette\Forms\Controls\TextArea;
+use Nette\Utils\Html;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -28,7 +29,13 @@ class SQLConsole extends TextArea {
         $this->monitor(IStylesheetCollector::class);
     }
 
+    /**
+     * @var bool
+     */
     private $attachedJS = false;
+    /**
+     * @var bool
+     */
     private $attachedCSS = false;
 
     /**
@@ -48,7 +55,7 @@ class SQLConsole extends TextArea {
     }
 
     /**
-     * @return \Nette\Utils\Html
+     * @return Html
      */
     public function getControl() {
         $control = parent::getControl();

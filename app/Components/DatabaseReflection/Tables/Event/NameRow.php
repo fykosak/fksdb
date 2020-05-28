@@ -8,7 +8,7 @@ use Nette\Forms\Form;
 
 /**
  * Class NameRow
- * @package FKSDB\Components\DatabaseReflection\Event
+ * *
  */
 class NameRow extends AbstractEventRowFactory {
     use DefaultPrinterTrait;
@@ -28,10 +28,11 @@ class NameRow extends AbstractEventRowFactory {
     }
 
     /**
+     * @param array $args
      * @return BaseControl
      */
-    public function createField(): BaseControl {
-        $control = parent::createField();
+    public function createField(...$args): BaseControl {
+        $control = parent::createField($args);
         $control->addRule(Form::FILLED, _('%label je povinný.'))
             ->addRule(Form::MAX_LENGTH, null, 255)
             ->setOption('description', $this->getDescription());

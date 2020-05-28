@@ -1,13 +1,12 @@
 <?php
 
-
 namespace FKSDB\Components\Controls\Stalking;
 
 use Nette\Application\BadRequestException;
 
 /**
  * Class StalkingService
- * @package FKSDB\Components\Controls\Stalking
+ * *
  */
 class StalkingService {
     /**
@@ -17,6 +16,7 @@ class StalkingService {
 
     /**
      * @param array $definition
+     * @return void
      */
     public function setSections(array $definition) {
         $this->definition = $definition;

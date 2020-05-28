@@ -13,6 +13,7 @@ use Tracy\Debugger;
  */
 class Updater {
     use SmartObject;
+
     /** @var GlobalParameters */
     private $globalParameters;
 
@@ -20,7 +21,7 @@ class Updater {
      * Updater constructor.
      * @param GlobalParameters $globalParameters
      */
-    function __construct(GlobalParameters $globalParameters) {
+    public function __construct(GlobalParameters $globalParameters) {
         $this->globalParameters = $globalParameters;
     }
 
